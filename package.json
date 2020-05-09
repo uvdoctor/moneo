@@ -1,5 +1,5 @@
 {
-  "name": "nextjs",
+  "name": "dollardarwin",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "next": "^9.3.3",
+    "next-pwa": "^2.4.0",
+    "nextjs": "0.0.3",
     "react": "^16.13.0",
     "react-dom": "^16.13.0"
   }
