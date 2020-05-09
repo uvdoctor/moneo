@@ -13,7 +13,7 @@ const Home = () => (
 			<link rel="manifest" href="manifest.json" />
 		</Head>
 		<main>
-			<h1 className="title">
+			<h1 className="text-lg">
 				Welcome to <a href="https://nextjs.org">Next.js!</a>
 			</h1>
 
