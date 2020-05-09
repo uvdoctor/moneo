@@ -8,7 +8,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "autoprefixer": "^9.7.6",
     "next": "^9.3.3",
     "next-pwa": "^2.4.0",
     "nextjs": "0.0.3",
@@ -16,8 +15,7 @@
     "react-dom": "^16.13.0"
   },
   "devDependencies": {
-    "@zeit/next-css": "^1.0.1",
-    "next-purgecss": "^4.0.0",
+    "autoprefixer": "^9.7.6",
     "postcss-preset-env": "^6.7.0",
     "tailwindcss": "^1.4.6"
   }
