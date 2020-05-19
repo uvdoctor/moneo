@@ -61,7 +61,7 @@ const Landing = () => {
 					<p className="ml-4">No Budgets.</p>
 				</div>
 				<div className="flex justify-center mt-4 md:mt-8 lg:mt-12">
-					<Link href={ROUTES.CALCULATE}>
+					<Link href={ROUTES.DASHBOARD}>
 						<a><label className="px-4 py-2 rounded bg-red-600 text-white font-bold">
                             Get Started
 						</label></a>
