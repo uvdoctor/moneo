@@ -1,7 +1,11 @@
-import Head from 'next/head';
-import App from './_app';
+import Head from 'next/head'
+import { NextPage } from 'next'
+import React from 'react'
+import Link from 'next/link'
 
-const Home = () => (
+interface Props { }
+
+const Home: NextPage<Props> = () => (
 	<div className="container">
 		<Head>
 			<meta charSet="utf-8" />
@@ -14,9 +18,10 @@ const Home = () => (
 			<link rel="manifest" href="manifest.json" />
 		</Head>
 		<main>
-			<App />
+			<div className="font-black">Index</div>
+			<Link href="/dashboard"><a>Dashboard</a></Link>
 		</main>
 	</div>
 );
 
-export default Home;
+export default Home
