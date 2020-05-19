@@ -1,0 +1,24 @@
+enum LMH {
+  L, M, H
+}
+
+type Target {
+  year: Int!
+  val: Int!
+}
+
+type Milestone {
+  month: Int!
+  year: Int!
+  val: Int!
+  prob: LMH
+}
+
+type Goal @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  name: String!
+  targets: [Target!]!
+  milestones: [Milestone]
+  imp: LMH!
+  prob: LMH
+}
