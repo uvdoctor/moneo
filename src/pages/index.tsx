@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import { NextPage } from 'next'
 import React from 'react'
-import LandingPage from '../components/landing'
-
+import Landing from '../components/landing'
+import Features from '../components/features/features'
 interface Props { }
 
 const Home: NextPage<Props> = () => (
@@ -18,7 +18,10 @@ const Home: NextPage<Props> = () => (
 			<link rel="manifest" href="manifest.json" />
 		</Head>
 		<main>
-			<LandingPage />
+			<div>
+				<Landing />
+				<Features />
+			</div>
 		</main>
 	</div>
 );

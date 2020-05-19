@@ -15,18 +15,9 @@ export const SVGS = {
     PORTFOLIORRR: 'PortfolioRRRSvg',
     CHEAPER: 'CheaperSvg',
     INCREASE_RATE: 'IncreaseRateSvg',
-    FUN: 'FunSvg',
-    PERSONALIZED: 'PersonalizedSvg',
-    ACTIONABLE: 'ActionableSvg',
-    REPORT: 'ReportSvg',
-    INSTANT: 'InstantSvg',
-    ANALYTICS: 'AnalyticsSvg',
     PERCENTAGE: 'PercentSvg',
     TARGET: 'TargetSvg',
-    PIGGYBANK: 'PiggybankSvg',
-    SECURE: 'SecureSvg',
-    PRIVATE: 'PrivateSvg',
-    GLOBAL: 'GlobaSvg'
+    PIGGYBANK: 'PiggybankSvg'
 }
 
 export const CALCS = {

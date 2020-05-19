@@ -1,10 +1,7 @@
 import React from 'react'
 import Logo from './logo'
-import { NextPage } from 'next'
 
-interface Props {}
-
-const Header: NextPage<Props> = () => {
+const Header = () => {
 	return (
 		<nav className="flex justify-center flex-align-center">
 			<Logo />

@@ -1,12 +1,9 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
-import { NextPage } from 'next'
 import { ROUTES } from '../CONSTANTS'
 import Link from 'next/link'
 
-interface Props {}
-
-const Logo: NextPage<Props> = () => {
+const Logo = () => {
 	return (
 		<Link href={ROUTES.HOME}><a>
 			<svg className="w-12 h-12" viewBox="0 0 192 192" enableBackground="new 0 0 192 192">

@@ -1,8 +1,12 @@
 import React from 'react'
 
-export default function HomeSVG() {
+interface HomeSVGProps {
+	animationStyle: string
+}
+
+export default function HomeSVG({animationStyle} : HomeSVGProps) {
     return (
-        <svg viewBox="0 0 495.398 495.398" style={{animation:"transient 2s linear"}}>
+        <svg viewBox="0 0 495.398 495.398" style={{animation: animationStyle}}>
 							<g>
 								<path d="M487.083,225.514l-75.08-75.08V63.704c0-15.682-12.708-28.391-28.413-28.391c-15.669,0-28.377,12.709-28.377,28.391
 				v29.941L299.31,37.74c-27.639-27.624-75.694-27.575-103.27,0.05L8.312,225.514c-11.082,11.104-11.082,29.071,0,40.158

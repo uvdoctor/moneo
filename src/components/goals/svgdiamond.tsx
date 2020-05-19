@@ -1,9 +1,13 @@
 import React from 'react'
 
-export default function DiamondSVG() {
+interface DiamondSVGProps {
+	animationStyle: string
+}
+
+export default function DiamondSVG({animationStyle} : DiamondSVGProps) {
 
     return (
-        <svg viewBox="0 0 59.986 59.986" style={{animation:"transient 2s linear"}}>
+        <svg viewBox="0 0 59.986 59.986" style={{animation: animationStyle}}>
             <path d="M59.972,20.164c0.007-0.041,0.011-0.081,0.013-0.123c0.002-0.049,0.001-0.096-0.003-0.145
 	c-0.004-0.042-0.01-0.082-0.02-0.123c-0.011-0.048-0.026-0.094-0.044-0.14c-0.009-0.024-0.011-0.049-0.022-0.072
 	c-0.008-0.017-0.022-0.03-0.031-0.047c-0.009-0.017-0.013-0.035-0.023-0.052l-10-16c-0.046-0.073-0.1-0.139-0.161-0.197

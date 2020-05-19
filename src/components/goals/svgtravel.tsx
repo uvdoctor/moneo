@@ -1,8 +1,12 @@
 import React from 'react'
 
-export default function TravelSVG() {
+interface TravelSVGProps {
+	animationStyle: string
+}
+
+export default function TravelSVG({animationStyle} : TravelSVGProps) {
     return (
-        <svg viewBox="0 0 512 512" style={{animation:"transient 2s linear"}}>
+        <svg viewBox="0 0 512 512" style={{animation: animationStyle}}>
 							<g>
 								<g>
 									<g>
