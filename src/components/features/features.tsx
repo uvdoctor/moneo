@@ -53,8 +53,8 @@ const Features = () => {
 			<p className="text-center">Make money work hard to fulfill them.</p>
 
 			<div className="flex flex-wrap justify-around">
-				{features.map((f: Feature) =>
-					<ul className="w-full flex flex-col justify-center flex-align-center md:w-1/2 lg:w-1/3 mt-4 ml-2 mr-2 text-center max-w-sm rounded overflow-hidden shadow-xl">
+				{features.map((f: Feature, i: number) =>
+					<ul key={i} className="w-full flex flex-col justify-center flex-align-center md:w-1/2 lg:w-1/3 mt-4 ml-2 mr-2 text-center max-w-sm rounded overflow-hidden shadow-xl">
 						<li className="mt-4 w-12 h-12">
 							{f.svg}
 						</li>
