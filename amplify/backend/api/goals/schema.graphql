@@ -2,15 +2,15 @@ enum LMH {
   L, M, H
 }
 
-type Target {
-  year: Int!
-  val: Int!
+enum YN {
+  Y, N
 }
 
-type Milestone {
-  month: Int!
+type Target {
+  month: Int
   year: Int!
   val: Int!
+  met: YN
   prob: LMH
 }
 
@@ -18,7 +18,8 @@ type Goal @model @auth(rules: [{allow: owner}]) {
   id: ID!
   name: String!
   targets: [Target!]!
-  milestones: [Milestone]
+  milestones: [Target]
   imp: LMH!
+  met: YN
   prob: LMH
 }

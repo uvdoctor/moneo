@@ -8,16 +8,21 @@ export const getGoal = /* GraphQL */ `
       id
       name
       targets {
+        month
         year
         val
+        met
+        prob
       }
       milestones {
         month
         year
         val
+        met
         prob
       }
       imp
+      met
       prob
       createdAt
       updatedAt
@@ -36,16 +41,21 @@ export const listGoals = /* GraphQL */ `
         id
         name
         targets {
+          month
           year
           val
+          met
+          prob
         }
         milestones {
           month
           year
           val
+          met
           prob
         }
         imp
+        met
         prob
         createdAt
         updatedAt

@@ -8,16 +8,21 @@ export const onCreateGoal = /* GraphQL */ `
       id
       name
       targets {
+        month
         year
         val
+        met
+        prob
       }
       milestones {
         month
         year
         val
+        met
         prob
       }
       imp
+      met
       prob
       createdAt
       updatedAt
@@ -31,16 +36,21 @@ export const onUpdateGoal = /* GraphQL */ `
       id
       name
       targets {
+        month
         year
         val
+        met
+        prob
       }
       milestones {
         month
         year
         val
+        met
         prob
       }
       imp
+      met
       prob
       createdAt
       updatedAt
@@ -54,16 +64,21 @@ export const onDeleteGoal = /* GraphQL */ `
       id
       name
       targets {
+        month
         year
         val
+        met
+        prob
       }
       milestones {
         month
         year
         val
+        met
         prob
       }
       imp
+      met
       prob
       createdAt
       updatedAt

@@ -5,6 +5,7 @@ import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 import Input from '../components/input'
 import { API, graphqlOperation } from 'aws-amplify'
 import * as mutations from '../graphql/mutations';
+import * as queries from '../graphql/queries';
 
 interface Props { }
 
@@ -13,6 +14,7 @@ const Dashboard: NextPage<Props> = () => {
   const [year, setYear] = useState(2021)
   const [val, setVal] = useState(0)
   const [name, setName] = useState("")
+  const [goals, setGoals] = useState([])
 
   const createNewGoal = async () => {
     const newGoal = {
@@ -25,6 +27,12 @@ const Dashboard: NextPage<Props> = () => {
     }
     const createdGoal = await API.graphql(graphqlOperation(mutations.createGoal, { input: newGoal }))
     console.log("New goal created in db: ", createdGoal);
+    listAllGoals();
+  }
+
+  const listAllGoals = async() => {
+    const allGoals = await API.graphql(graphqlOperation(queries.listGoals));
+    console.log(allGoals);
   }
 
   return (
@@ -58,7 +66,9 @@ const Dashboard: NextPage<Props> = () => {
           Create Goal
 						</label>
       </div>
-      
+      <ul className="mt-4">
+
+      </ul>
     </div>
   )
 
