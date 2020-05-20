@@ -36,21 +36,17 @@ const Landing = () => {
 	);
 
 	return (
-		<div
-			className="h-screen w-screen bg-cover"
-			//style={{ backgroundColor: '#F8FDFA' }}
-			style={{ backgroundImage: "url('images/family-freedom.jpg')" }}
-		>
-			<div className="text-xl md:text-2xl lg:text-4xl text-center">
+		<div className="text-xl md:text-2xl lg:text-4xl text-center overflow-hidden w-screen" style={{ backgroundColor: '#F8FDFA' }}>
+			<div>
 				<Header />
-				<ul className="mt-4 md:mt-8 lg:mt-12">
+				<ul className="mt-4">
 					<li>Evolves Savings, Investments & Habits to</li>
 					<li className="flex justify-center mt-4">
 						<Link href={ROUTES.DASHBOARD}>
 							<a>
-								<div className="flex flex-align-center px-4 rounded bg-red-600 text-white font-bold">
-									<label className="px-4 py-2 rounded bg-red-600 text-white font-bold">Meet Your Goals</label>
-									<div className="mr-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12">
+								<div className="flex flex-align-center px-4 py-2 rounded bg-red-600 text-white font-bold">
+									<label>Meet Your Goals</label>
+									<div className="ml-2 md:ml-4 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12">
 										{homeSvg && <HomeSVG animationStyle={animationStyle} />}
 										{carSvg && <CarSVG animationStyle={animationStyle} />}
 										{diamondSvg && <DiamondSVG animationStyle={animationStyle} />}
@@ -63,12 +59,16 @@ const Landing = () => {
 					</li>
 					<li className="mt-4">No Budgets. No Commissions.</li>
 				</ul>
-				{/**<div className="md:w-1/3 ml-2 mr-2 mt-4 md:ml-0 md:mr-8 lg:mr-12 xl:mr-24">
-				<img alt="Calculator" src="images/mobile.png" />
-	</div>**/}
+			</div>
+			<div className="m-4">
+				<Link href={ROUTES.DASHBOARD}>
+					<a>
+						<img className="object-cover w-full" alt="Works across devices" src="images/devices.png" />
+					</a>
+				</Link>
 			</div>
 		</div>
-	);
+	)
 }
 
 export default Landing
