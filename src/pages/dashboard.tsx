@@ -14,7 +14,6 @@ const Dashboard: NextPage<Props> = () => {
   const [year, setYear] = useState(2021)
   const [val, setVal] = useState(0)
   const [name, setName] = useState("")
-  const [goals, setGoals] = useState([])
 
   const createNewGoal = async () => {
     const newGoal = {
