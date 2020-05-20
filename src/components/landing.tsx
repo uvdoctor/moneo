@@ -44,23 +44,25 @@ const Landing = () => {
 			<div className="text-xl md:text-2xl lg:text-4xl text-center">
 				<Header />
 				<p className="mt-4 md:mt-8 lg:mt-12">Evolves Savings, Investments & Habits to</p>
-				<p className="flex justify-center mt-2">
-					<Link href={ROUTES.DASHBOARD}><a>
-					<div className="flex flex-align-center px-4 rounded bg-red-600 text-white font-bold">
-						<label className="px-4 py-2 rounded bg-red-600 text-white font-bold">Meet Your Goals</label>
-						<div className="mr-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12">
-							{homeSvg && <HomeSVG animationStyle={animationStyle} />}
-							{carSvg && <CarSVG animationStyle={animationStyle} />}
-							{diamondSvg && <DiamondSVG animationStyle={animationStyle} />}
-							{degreeSvg && <DegreeSVG animationStyle={animationStyle} />}
-							{worldTravelSvg && <TravelSVG animationStyle={animationStyle} />}
+				<p className="flex justify-center mt-4">
+					<Link href={ROUTES.DASHBOARD}>
+						<a>
+						<div className="flex flex-align-center px-4 rounded bg-red-600 text-white font-bold">
+							<label className="px-4 py-2 rounded bg-red-600 text-white font-bold">Meet Your Goals</label>
+							<div className="mr-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12">
+								{homeSvg && <HomeSVG animationStyle={animationStyle} />}
+								{carSvg && <CarSVG animationStyle={animationStyle} />}
+								{diamondSvg && <DiamondSVG animationStyle={animationStyle} />}
+								{degreeSvg && <DegreeSVG animationStyle={animationStyle} />}
+								{worldTravelSvg && <TravelSVG animationStyle={animationStyle} />}
+							</div>
 						</div>
-					</div>
-					</a></Link>
+						</a>
+					</Link>
 				</p>
-				<div className="flex justify-center mt-4">
-					<p>No Budgets.</p>
-					<p className="ml-4">No Commissions.</p>
+				<div className="mt-4">
+					<label>No Budgets.</label>
+					<label className="ml-4">No Commissions.</label>
 				</div>
 			</div>
 			{/**<div className="md:w-1/3 ml-2 mr-2 mt-4 md:ml-0 md:mr-8 lg:mr-12 xl:mr-24">
