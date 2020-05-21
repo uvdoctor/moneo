@@ -52,7 +52,7 @@ const Features = () => {
 	return (
 		<div className="w-screen mt-4 flex flex-col justify-center text-xl md:text-2xl">
 			<p className="text-center lg:text-4xl font-black">Hello Financial Freedom!</p>
-			<p className="mt-4 text-center">GET  >  SET  >  GO...</p>
+			<p className="mt-4 text-center">GET...SET...GO...</p>
 			<div className="mt-4 flex flex-wrap justify-around" >
 				<img alt="Step 1" src="images/step1.png" />
 				<img alt="Step 2" src="images/step2.png" />
