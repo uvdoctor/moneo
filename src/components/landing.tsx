@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { ROUTES } from '../CONSTANTS'
-import Header from './header'
 import Link from 'next/link'
 import HomeSVG from './goals/svghome'
 import CarSVG from './goals/svgcar'
