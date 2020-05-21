@@ -36,7 +36,7 @@ const Landing = () => {
 
 	return (
 		<div className="text-lg md:text-xl lg:text-2xl text-center overflow-hidden w-screen" style={{ backgroundColor: '#f8fDfA' }}>
-			<p className="text-xl md:text-2xl lg:text-4xl font-black mt-24">Your Financial Analyst</p>
+			<p className="text-2xl md:text-4xl font-black mt-16 md:mt-24">Your Financial Analyst</p>
 			<div className="md:flex">
 				<div className="flex justify-center w-full md:w-1/3">
 					<img className="object-fit" alt="Smart Money" src="images/smartmoney.png" />
@@ -46,7 +46,7 @@ const Landing = () => {
 					<li className="flex justify-center mt-4 cursor">
 						<Link href={ROUTES.DASHBOARD}>
 							<a>
-								<div className="flex flex-align-center px-4 py-2 rounded bg-red-600 text-white font-bold cursor">
+								<div className="flex flex-align-center px-4 py-2 rounded bg-green-600 text-white font-bold cursor">
 									Meet Your Goals
 								<div className="ml-2 md:ml-4 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 cursor">
 										{homeSvg && <HomeSVG animationStyle={animationStyle} />}

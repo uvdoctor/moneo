@@ -9,10 +9,12 @@ const Header = () => {
 			<Link href={ROUTES.HOME}><a><Logo /></a></Link>
 			<Link href="#"><a>Pricing</a></Link>
 			<Link href="#"><a>About</a></Link>
-			<Link href={ROUTES.DASHBOARD}><a>Sign In</a></Link>
+			<div className="flex flex-align-center">
+			<Link href={ROUTES.DASHBOARD}><a>Login</a></Link>
 			<Link href={ROUTES.DASHBOARD}><a>
-				<div className="px-2 md:px-4 py-1 md:py-2 rounded bg-red-600 text-white font-bold">Get Started</div>
+				<div className="ml-2 md:ml-4 px-2 md:px-4 py-1 md:py-2 rounded bg-green-600 text-white font-bold">Start</div>
 			</a></Link>
+			</div>
 		</nav>
 	);
 }

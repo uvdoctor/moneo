@@ -4,9 +4,9 @@
 @import url('<link href="https://fonts.googleapis.com/css?family=Quicksand:300,500" rel="stylesheet">');
 
 :root {
-  --amplify-primary-color: #000000;
-  --amplify-primary-tint: #ff7359;
-  --amplify-primary-shade: #e0573e;
+  --amplify-primary-color: #38C172;
+  --amplify-primary-tint: #1F9D55;
+  --amplify-primary-shade: #51D88A;
   --amplify-font-family: 'Quicksand', sans-serif; 
 }
 
