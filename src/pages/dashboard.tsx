@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { GetServerSideProps } from 'next'
 import { change } from '../components/utils';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 import Input from '../components/input'
 import { API, graphqlOperation } from 'aws-amplify'
 import * as mutations from '../graphql/mutations';
-import * as queries from '../graphql/queries';
+//import * as queries from '../graphql/queries';
 
 const Dashboard = () => {
 
@@ -24,7 +23,7 @@ const Dashboard = () => {
     }
     const createdGoal = await API.graphql(graphqlOperation(mutations.createGoal, { input: newGoal }))
     console.log("New goal created in db: ", createdGoal)
-    const allGoals = await API.graphql(graphqlOperation(queries.listGoals))
+    //const allGoals = await API.graphql(graphqlOperation(queries.listGoals))
   }
 
   
