@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { NextPage } from 'next'
 import React from 'react'
+import Header from '../components/header'
 import Landing from '../components/landing'
 import Features from '../components/features/features'
 interface Props { }
@@ -19,6 +20,7 @@ const Home: NextPage<Props> = () => (
 		</Head>
 		<main>
 			<div>
+				<Header />
 				<Landing />
 				<Features />
 			</div>

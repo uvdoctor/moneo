@@ -1,4 +1,6 @@
-import React from 'react';
+import React from 'react'
+import Link from 'next/link'
+import { ROUTES } from '../../CONSTANTS'
 import ActionableSVG from './svgactionable'
 import FunSVG from './svgfun'
 import PersonalizedSVG from './svgpersonalized'
@@ -49,8 +51,20 @@ const Features = () => {
 
 	return (
 		<div className="w-screen mt-4 flex flex-col justify-center text-xl md:text-2xl">
-			<p className="text-center">Super Simple to set Goals.</p>
-			<p className="text-center">Make money work hard to fulfill them.</p>
+			<p className="text-center lg:text-4xl font-black">Hello Financial Freedom!</p>
+			<p className="mt-4 text-center">Just 3 steps to Get Started...</p>
+			<div className="mt-4 flex flex-wrap justify-around" >
+				<img alt="Step 1" src="images/step1.png" />
+				<img alt="Step 2" src="images/step2.png" />
+				<img alt="Step 3" src="images/step3.png" />
+			</div>
+			<div className="m-4 mt-8">
+				<Link href={ROUTES.DASHBOARD}>
+					<a>
+						<img className="object-cover w-full" alt="Works across devices" src="images/devices.png" />
+					</a>
+				</Link>
+			</div>
 
 			<div className="flex flex-wrap justify-around">
 				{features.map((f: Feature, i: number) =>

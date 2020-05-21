@@ -6,11 +6,9 @@ import Link from 'next/link'
 const Logo = () => {
 	return (
 		<Link href={ROUTES.HOME}><a>
-			<svg className="w-12 h-12" viewBox="0 0 192 192" enableBackground="new 0 0 192 192">
+			<svg className="w-8 md:w-12 h-8 md:h-12" viewBox="0 0 192 192" enableBackground="new 0 0 192 192">
 				{' '}
 				<image
-					width="192"
-					height="192"
 					x="0"
 					y="0"
 					href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAABGdBTUEAALGPC/xhBQAAACBjSFJN

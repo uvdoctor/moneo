@@ -36,17 +36,20 @@ const Landing = () => {
 	);
 
 	return (
-		<div className="text-xl md:text-2xl lg:text-4xl text-center overflow-hidden w-screen" style={{ backgroundColor: '#F8FDFA' }}>
-			<div>
-				<Header />
-				<ul className="mt-4">
-					<li>Evolves Savings, Investments & Habits to</li>
-					<li className="flex justify-center mt-4">
+		<div className="text-lg md:text-xl lg:text-2xl text-center overflow-hidden w-screen" style={{ backgroundColor: '#f8fDfA' }}>
+			<p className="text-xl md:text-2xl lg:text-4xl font-black mt-24">Your Financial Analyst</p>
+			<div className="md:flex">
+				<div className="flex justify-center w-full md:w-1/3">
+					<img className="object-fit" alt="Smart Money" src="images/smartmoney.png" />
+				</div>
+				<ul className="mt-4 md:mt-24 w-full md:w-2/3">
+					<li>Evolve Savings, Investments & Habits</li>
+					<li className="flex justify-center mt-4 cursor">
 						<Link href={ROUTES.DASHBOARD}>
 							<a>
-								<div className="flex flex-align-center px-4 py-2 rounded bg-red-600 text-white font-bold">
-									<label>Meet Your Goals</label>
-									<div className="ml-2 md:ml-4 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12">
+								<div className="flex flex-align-center px-4 py-2 rounded bg-red-600 text-white font-bold cursor">
+									Meet Your Goals
+								<div className="ml-2 md:ml-4 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 cursor">
 										{homeSvg && <HomeSVG animationStyle={animationStyle} />}
 										{carSvg && <CarSVG animationStyle={animationStyle} />}
 										{diamondSvg && <DiamondSVG animationStyle={animationStyle} />}
@@ -59,13 +62,6 @@ const Landing = () => {
 					</li>
 					<li className="mt-4">No Budgets. No Commissions.</li>
 				</ul>
-			</div>
-			<div className="m-4">
-				<Link href={ROUTES.DASHBOARD}>
-					<a>
-						<img className="object-cover w-full" alt="Works across devices" src="images/devices.png" />
-					</a>
-				</Link>
 			</div>
 		</div>
 	)

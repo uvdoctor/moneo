@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps } from 'next'
 import { change } from '../components/utils';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 import Input from '../components/input'
@@ -7,9 +7,7 @@ import { API, graphqlOperation } from 'aws-amplify'
 import * as mutations from '../graphql/mutations';
 import * as queries from '../graphql/queries';
 
-interface Props { }
-
-const Dashboard: NextPage<Props> = () => {
+const Dashboard = () => {
 
   const [year, setYear] = useState(2021)
   const [val, setVal] = useState(0)
@@ -25,14 +23,11 @@ const Dashboard: NextPage<Props> = () => {
       imp: 'H'
     }
     const createdGoal = await API.graphql(graphqlOperation(mutations.createGoal, { input: newGoal }))
-    console.log("New goal created in db: ", createdGoal);
-    listAllGoals();
+    console.log("New goal created in db: ", createdGoal)
+    const allGoals = await API.graphql(graphqlOperation(queries.listGoals))
   }
 
-  const listAllGoals = async() => {
-    const allGoals = await API.graphql(graphqlOperation(queries.listGoals));
-    console.log(allGoals);
-  }
+  
 
   return (
     <div>

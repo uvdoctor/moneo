@@ -1,9 +1,16 @@
-const withPWA = require('next-pwa')
-const isProd = process.env.NODE_ENV === "production"
+const withPWA = require('next-pwa');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = withPWA({
-    pwa: {
-        disable: !isProd,
-        dest: 'public'
-    }
-})
+	pwa: {
+		disable: !isProd,
+		dest: 'public'
+	}
+});
+
+module.exports = {
+	optimization: {
+		minimizer: [ new UglifyJsPlugin() ]
+	}
+};
