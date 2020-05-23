@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Amplify from 'aws-amplify'
 import SecureDash from '../components/securedash'
 import UserHeader from '../components/userheader'
