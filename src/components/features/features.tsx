@@ -53,22 +53,39 @@ const Features = () => {
 		<div className="w-screen mt-4 flex flex-col justify-center text-xl md:text-2xl">
 			<p className="text-center lg:text-4xl font-black">Hello Financial Freedom!</p>
 			<p className="mt-4 text-center">GET...SET...GO...</p>
-			<div className="mt-4 flex flex-wrap justify-around" >
-				<img alt="Step 1" src="images/step1.png" />
-				<img alt="Step 2" src="images/step2.png" />
-				<img alt="Step 3" src="images/step3.png" />
+			<div className="mt-4 flex flex-wrap items-center" >
+				<img className="w-full md:w-1/2 p-2 md:p-4" alt="Step 1" src="images/step1.png" />
+				<img className="w-full md:w-1/2 p-2 md:p-4" alt="Step 2" src="images/step2.png" />
+				<img className="w-full md:w-1/2 p-2 md:p-4" alt="Step 3" src="images/step3.png" />
+				<ul className="cursor w-full md:w-1/2">
+					<li>
+						<Link href={ROUTES.DASHBOARD}>
+							<a>
+								<div className="flex justify-center">
+									<label className="button">Start FREE Trial</label>
+								</div>
+							</a>
+						</Link>
+					</li>
+					<li className="mt-4 text-center">
+						Kick-start Your Financial Freedom.
+					</li>
+				</ul>
 			</div>
-			<div className="m-4 mt-8">
+			<div className="m-4 mt-8 text-center" style={{ backgroundColor: "#f8fDfA" }}>
+				<p className="mt-4 text-xl md:text-2xl lg:text-4xl font-black">Works Instantly.</p>
+				<p className="mt-4">Keeps working offline too.</p>
+				<p>No App Store Download Needed.</p>
 				<Link href={ROUTES.DASHBOARD}>
 					<a>
-						<img className="object-cover w-full" alt="Works across devices" src="images/devices.png" />
+						<img className="object-cover w-full mt-4" alt="Works across devices" src="images/devices.png" />
 					</a>
 				</Link>
 			</div>
 
 			<div className="flex flex-wrap justify-around">
 				{features.map((f: Feature, i: number) =>
-					<ul key={i} className="w-full flex flex-col justify-center flex-align-center md:w-1/2 lg:w-1/3 mt-4 ml-2 mr-2 text-center max-w-sm rounded overflow-hidden shadow-xl">
+					<ul key={i} className="w-full flex flex-col justify-center items-center md:w-1/2 lg:w-1/3 mt-4 ml-2 mr-2 text-center max-w-sm rounded overflow-hidden shadow-xl">
 						<li className="mt-4 w-12 h-12">
 							{f.svg}
 						</li>

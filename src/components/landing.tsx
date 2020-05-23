@@ -8,59 +8,50 @@ import DegreeSVG from './goals/svgdegree'
 import TravelSVG from './goals/svgtravel'
 
 const Landing = () => {
-	const [homeSvg, setHomeSvg] = useState(false);
-	const [carSvg, setCarSvg] = useState(false);
-	const [diamondSvg, setDiamondSvg] = useState(false);
-	const [degreeSvg, setDegreeSvg] = useState(false);
-	const [worldTravelSvg, setWorldTravelSvg] = useState(false);
-	const svgs = [
-		{ svg: homeSvg, setter: setHomeSvg },
-		{ svg: carSvg, setter: setCarSvg },
-		{ svg: degreeSvg, setter: setDegreeSvg },
-		{ svg: worldTravelSvg, setter: setWorldTravelSvg },
-		{ svg: diamondSvg, setter: setDiamondSvg }
-	];
 	const [svgCtr, setSvgCtr] = useState(0);
 	const animationStyle = "transient 2s linear";
 
 	useEffect(
 		() => {
-			setTimeout(() => {
-				svgs[svgCtr].svg ? svgs[svgCtr].setter(false) : svgs[svgCtr].setter(true);
-				if (svgCtr > 0) svgs[svgCtr - 1].setter(false);
-				svgCtr === svgs.length - 1 ? setSvgCtr(0) : setSvgCtr(svgCtr + 1);
-			}, 2000);
+			let timer = setTimeout(() => {
+				setSvgCtr(svgCtr + 1)
+			}, 1900);
+
+			return() => clearInterval(timer)
 		},
-		[svgCtr, svgs]
+		[svgCtr]
 	);
 
 	return (
 		<div className="text-lg md:text-xl lg:text-2xl text-center overflow-hidden w-screen" style={{ backgroundColor: '#f8fDfA' }}>
-			<p className="text-2xl md:text-4xl font-black mt-16 md:mt-24">Your Financial Analyst</p>
-			<div className="md:flex">
-				<div className="flex justify-center w-full md:w-1/3">
-					<img className="object-fit" alt="Smart Money" src="images/smartmoney.png" />
-				</div>
-				<ul className="mt-4 md:mt-24 w-full md:w-2/3">
+			<p className="text-2xl md:text-4xl font-black mt-16">Your Financial Analyst</p>
+			<div className="md:flex p-2">
+				<ul className="mt-4 md:mt-12 w-full md:w-1/2">
 					<li>Evolve Savings, Investments & Habits</li>
 					<li className="flex justify-center mt-4 cursor">
 						<Link href={ROUTES.DASHBOARD}>
 							<a>
-								<div className="flex flex-align-center px-4 py-2 rounded bg-green-600 text-white font-bold cursor">
+								<button type="button" style={{animation: "fadeIn 1s linear 1"}} className="flex items-center button">
 									Meet Your Goals
-								<div className="ml-2 md:ml-4 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 cursor">
-										{homeSvg && <HomeSVG animationStyle={animationStyle} />}
-										{carSvg && <CarSVG animationStyle={animationStyle} />}
-										{diamondSvg && <DiamondSVG animationStyle={animationStyle} />}
-										{degreeSvg && <DegreeSVG animationStyle={animationStyle} />}
-										{worldTravelSvg && <TravelSVG animationStyle={animationStyle} />}
+									<div className="ml-2 md:ml-4 w-8 h-8 md:w-10 md:h-10">
+										{svgCtr % 5 === 1 && <HomeSVG animationStyle={animationStyle} />}
+										{svgCtr % 5 === 2 && <CarSVG animationStyle={animationStyle} />}
+										{svgCtr % 5 === 3 && <DiamondSVG animationStyle={animationStyle} />}
+										{svgCtr % 5 === 4 && <DegreeSVG animationStyle={animationStyle} />}
+										{svgCtr % 5 === 0 && <TravelSVG animationStyle={animationStyle} />}
 									</div>
-								</div>
+								</button>
 							</a>
 						</Link>
 					</li>
-					<li className="mt-4">No Budgets. No Commissions.</li>
+					<li className="mt-2">Across Multiple Currencies.</li>
+					<li className="mt-8 md:mt-16 lg:mt-24">Unbiased. No Commissions.</li>
+					<li>Secure. You Own Your Data.</li>
+					<li>No More Boring Budgets.</li>
 				</ul>
+				<div className="w-full md:w-1/2 xl:w-1/3">
+					<img className="p-3 object-fit" alt="Smart Money" src="images/smartmoney.png" />
+				</div>
 			</div>
 		</div>
 	)

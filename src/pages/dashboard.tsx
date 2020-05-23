@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { change } from '../components/utils';
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
+import { change } from '../components/utils'
+import { withAuthenticator } from '@aws-amplify/ui-react'
 import Input from '../components/input'
 import { API, graphqlOperation } from 'aws-amplify'
-import * as mutations from '../graphql/mutations';
+import * as mutations from '../graphql/mutations'
 //import * as queries from '../graphql/queries';
 
-const Dashboard = () => {
 
+const Dashboard = () => {
   const [year, setYear] = useState(2021)
   const [val, setVal] = useState(0)
   const [name, setName] = useState("")
@@ -26,13 +26,10 @@ const Dashboard = () => {
     //const allGoals = await API.graphql(graphqlOperation(queries.listGoals))
   }
 
-  
-
   return (
     <div>
-      <AmplifySignOut />
-      <div className="flex flex-col mt-4">
-        <div className="flex flex-align-center justify-center">
+      <div className="flex flex-col mt-16 md:mt-20">
+        <div className="flex items-center justify-center">
           Name
         <input className="ml-2 inner-block px-2 font-bold appearance-none border border-2 focus:border-indigo-800" type="text" name="name"
             placeholder="My Goal" value={name} onChange={(e: React.FormEvent<HTMLInputElement>) => setName(e.currentTarget.value)}
