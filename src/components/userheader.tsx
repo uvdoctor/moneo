@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Logo from './logo'
 import { Auth, Hub } from 'aws-amplify'
+import { useRouter } from 'next/router'
+import { ROUTES } from '../CONSTANTS'
 
 const UserHeader = () => {
     const [username, setUsername] = useState<string | null>(null)
+    const router = useRouter()
 
     const updateUser = (username: string | null) => {
         if (username) {
@@ -18,13 +21,11 @@ const UserHeader = () => {
     useEffect(() => {
         const listener = (capsule: any) => {
             let eventType: string = capsule.payload.event
-            console.log("Event is ", eventType)
             if (eventType === 'signIn') updateUser(capsule.payload.data.username)
             else if (eventType !== 'configured') updateUser(null)
         }
         Hub.listen('auth', listener)
         let username = localStorage.getItem("username")
-        console.log("Local storage user is ", username)
         if (username) setUsername(username)
         return () => Hub.remove('auth', listener)
     }, [])
@@ -33,8 +34,11 @@ const UserHeader = () => {
         e.preventDefault()
         try {
             await Auth.signOut()
+            Hub.dispatch('auth', {event: 'signOut'} )
         } catch (error) {
             console.log('error signing out: ', error)
+        } finally {
+            router.reload()
         }
     }
 
