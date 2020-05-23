@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Logo from './logo'
 import { Auth, Hub } from 'aws-amplify'
 import { useRouter } from 'next/router'
-import { ROUTES } from '../CONSTANTS'
 
 const UserHeader = () => {
     const [username, setUsername] = useState<string | null>(null)
