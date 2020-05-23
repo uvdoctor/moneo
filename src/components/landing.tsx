@@ -8,14 +8,14 @@ import DegreeSVG from './goals/svgdegree'
 import TravelSVG from './goals/svgtravel'
 
 const Landing = () => {
-	const [svgCtr, setSvgCtr] = useState(0);
+	const [svgCtr, setSvgCtr] = useState(-1);
 	const animationStyle = "transient 2s linear";
 
 	useEffect(
 		() => {
 			let timer = setTimeout(() => {
 				setSvgCtr(svgCtr + 1)
-			}, 1900);
+			}, 2000);
 
 			return() => clearInterval(timer)
 		},
@@ -31,7 +31,7 @@ const Landing = () => {
 					<li className="flex justify-center mt-4 cursor">
 						<Link href={ROUTES.DASHBOARD}>
 							<a>
-								<button type="button" style={{animation: "fadeIn 1s linear 1"}} className="flex items-center button">
+								<button type="button" style={{animation: "fadeIn 2s ease-in 1"}} className="flex items-center button">
 									Meet Your Goals
 									<div className="ml-2 md:ml-4 w-8 h-8 md:w-10 md:h-10">
 										{svgCtr % 5 === 1 && <HomeSVG animationStyle={animationStyle} />}

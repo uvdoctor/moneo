@@ -10,6 +10,18 @@
 	--amplify-font-family: 'Quicksand', sans-serif;
 }
 
+.signInButton {
+	position: relative;
+	width: 100%;
+	border-radius: 4px;
+	margin-bottom: 10px;
+	cursor: pointer;
+	padding: 0;
+	color: var(--deepSquidInk);
+	font-size: 4px;
+	box-sizing: content-box;
+}
+
 body {
 	margin: 0;
 	/*font-family: "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen",
@@ -31,25 +43,39 @@ h6 {
 }
 
 .button {
-  border-radius: 9999px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  outline: 0;
-  background-color: #38a169;
-  color: #fff;
-  font-weight: 700;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-right: 1rem;
-  padding-left: 1rem;
-  transition: "all .15s ease"
+	border-radius: 9999px;
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+	outline: 0;
+	background-color: #38a169;
+	color: #fff;
+	font-weight: 700;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+	padding-right: 1rem;
+	padding-left: 1rem;
+	transition: "all .15s ease";
 }
 
+.dashmi {
+	color: #ffffff;
+	background-color: transparent;
+	outline: 0;
+	display: inline-block;
+	border-top-left-radius: 0.25rem;
+	border-top-right-radius: 0.25rem;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+	padding-right: 0.5rem;
+	padding-left: 0.5rem;
+	font-weight: 600;
+	margin-top: 0.5rem;
+}
 .button:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .button-focus {
-  outline: 0;
+	outline: 0;
 }
 
 @keyframes transient {
