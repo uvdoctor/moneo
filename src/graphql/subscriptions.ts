@@ -11,6 +11,7 @@ export const onCreateGoal = /* GraphQL */ `
         month
         year
         val
+        curr
         met
         prob
       }
@@ -18,6 +19,7 @@ export const onCreateGoal = /* GraphQL */ `
         month
         year
         val
+        curr
         met
         prob
       }
@@ -39,6 +41,7 @@ export const onUpdateGoal = /* GraphQL */ `
         month
         year
         val
+        curr
         met
         prob
       }
@@ -46,6 +49,7 @@ export const onUpdateGoal = /* GraphQL */ `
         month
         year
         val
+        curr
         met
         prob
       }
@@ -67,6 +71,7 @@ export const onDeleteGoal = /* GraphQL */ `
         month
         year
         val
+        curr
         met
         prob
       }
@@ -74,6 +79,7 @@ export const onDeleteGoal = /* GraphQL */ `
         month
         year
         val
+        curr
         met
         prob
       }

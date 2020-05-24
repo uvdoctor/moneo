@@ -11,6 +11,7 @@ export const getGoal = /* GraphQL */ `
         month
         year
         val
+        curr
         met
         prob
       }
@@ -18,6 +19,7 @@ export const getGoal = /* GraphQL */ `
         month
         year
         val
+        curr
         met
         prob
       }
@@ -44,6 +46,7 @@ export const listGoals = /* GraphQL */ `
           month
           year
           val
+          curr
           met
           prob
         }
@@ -51,6 +54,7 @@ export const listGoals = /* GraphQL */ `
           month
           year
           val
+          curr
           met
           prob
         }

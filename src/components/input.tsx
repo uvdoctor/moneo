@@ -29,7 +29,7 @@ export default function Input(props: InputProps) {
 			{props.pre !== '' && <label className="mr-2"> </label>}
 			{!props.options ? (
 				<input
-					className="inner-block px-2 font-bold appearance-none border border-2 focus:border-indigo-800"
+					className="inner-block px-2 font-bold appearance-none border border-2 focus:border-green-600"
 					type="number"
 					value={props.value}
 					min={props.min}
