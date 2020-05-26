@@ -16,7 +16,7 @@ const SecureDash = () => {
     
     return (
         <div className="mt-12">
-            <ul className="flex bg-black">
+            <ul className="flex bg-black w-screen">
                 {viewItems.map((item, i) => (
                 <li key={"viewItem"+i} className="ml-2">
                     <button onClick={changeViewMode} style={{color: viewMode === item ? "green" : "white", backgroundColor: viewMode === item ? "white" : "transparent"}} className="dashmi md:mt-4 md:px-4 hover:bg-white hover:border-t hover:text-green-600 focus:outline-none">{item}</button>

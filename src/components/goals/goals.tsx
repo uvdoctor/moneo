@@ -7,8 +7,9 @@ import { API, graphqlOperation } from 'aws-amplify'
 import * as mutations from '../../graphql/mutations'
 import * as queries from '../../graphql/queries';
 import * as APIt from '../../api/goals'
-import { getCurrencyList } from '../utils'
-import { toCurrency } from '../input'
+import { getCurrencyList, getCriticalityOptions, getRAOptions } from '../utils'
+import { toCurrency } from '../utils'
+import TimeCost from '../calc/timecost'
 
 const Goals = () => {
     const minStartYear = new Date().getFullYear()
@@ -76,6 +77,8 @@ const Goals = () => {
     const [loanAnnualInt, setLoanAnnualInt] = useState(4)
     const [loanMonths, setLoanMonths] = useState(60)
     const [currency, setCurrency] = useState("USD")
+    const [criticality, setCriticality] = useState(APIt.LMH.H)
+    const [ra, setRA] = useState(APIt.LMH.L)
     const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(initTargets(startYear, endYear, amount, inflation, currency) as Array<APIt.TargetInput>)
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(null)
 
@@ -115,8 +118,8 @@ const Goals = () => {
         let goal: APIt.CreateGoalInput = {
             name: name,
             targets: wipTargets,
-            imp: APIt.LMH.H,
-            ra: APIt.LMH.L
+            imp: criticality,
+            ra: ra
         }
         try {
             const { data } = (await API.graphql(graphqlOperation(mutations.createGoal, { input: goal }))) as {
@@ -188,55 +191,73 @@ const Goals = () => {
 
     const changeCurrency = (curr: string) => {
         setCurrency(curr)
-        if(loan) changeWIPTargets(initLoanTargets(startYear, loanMonths, loanDPInPer, amount, loanAnnualInt, curr) as Array<APIt.TargetInput>)
+        if (loan) changeWIPTargets(initLoanTargets(startYear, loanMonths, loanDPInPer, amount, loanAnnualInt, curr) as Array<APIt.TargetInput>)
         else changeWIPTargets(initTargets(startYear, endYear, amount, inflation, curr, true) as Array<APIt.TargetInput>)
     }
 
     return (
         <div className="ml-2 mr-2 md:ml-4 md:mr-4">
-            <Input
-                pre="Name"
-                type="text"
-                placeholder="My Goal"
-                value={name}
-                changeHandler={(e: React.FormEvent<HTMLInputElement>) => setName(e.currentTarget.value)}
-                width="200px"
-            />
-            <Input
-                name="currency"
-                pre="Currency"
-                value={currency}
-                options={getCurrencyList()}
-                changeHandler={(e: React.FormEvent<HTMLInputElement>) => changeCurrency(e.currentTarget.value)}
-                width="200px"
-            />
-            <div className="flex flex-wrap items-center">
+            <div className="flex justify-between items-center">
+                <Input
+                    pre="Name"
+                    type="text"
+                    placeholder="My Goal"
+                    value={name}
+                    changeHandler={(e: React.FormEvent<HTMLInputElement>) => setName(e.currentTarget.value)}
+                    width="200px"
+                />
+                <Input name="criticality"
+                    pre="Criticality"
+                    value={criticality}
+                    changeHandler={(e: React.FormEvent<HTMLSelectElement>) => setCriticality(e.currentTarget.value as APIt.LMH)}
+                    options={getCriticalityOptions()}
+                />
+                <Input name="ra"
+                    pre="Investment Loss Appetite"
+                    value={ra}
+                    changeHandler={(e: React.FormEvent<HTMLSelectElement>) => setRA(e.currentTarget.value as APIt.LMH)}
+                    options={getRAOptions()}
+                />
+            </div>
+            <div className="flex flex-wrap justify-between items-center">
+                <Input
+                    name="currency"
+                    pre="Currency"
+                    value={currency}
+                    options={getCurrencyList()}
+                    changeHandler={(e: React.FormEvent<HTMLSelectElement>) => changeCurrency(e.currentTarget.value)}
+                    width="200px"
+                />
+                <Input
+                    name="amount"
+                    pre="Amount"
+                    value={amount}
+                    currency={currency}
+                    changeHandler={(e: React.FormEvent<HTMLInputElement>) => changeAmount(e.currentTarget.valueAsNumber)}
+                    width="100px"
+                    min="100"
+                    max="1000000"
+                />
+                <Toggle text="Loan" attr={loan} setter={changeEmiMode} />
+            </div>
+            <div className="flex justify-center mt-4">
+                <TimeCost amount={amount} workHoursPerWeek = {60} annualWorkWeeks={47} />
+            </div>
+            <div className="flex flex-wrap items-center justify-center">
                 <Input name="sy"
                     pre="Start Year"
                     value={startYear}
-                    changeHandler={(e: React.FormEvent<HTMLInputElement>) => changeStartYear(e.currentTarget.value)}
+                    changeHandler={(e: React.FormEvent<HTMLSelectElement>) => changeStartYear(e.currentTarget.value)}
                     options={syOptions}
                 />
+
                 {!loan && <Input name="ey"
                     pre="End Year"
                     value={endYear}
-                    changeHandler={(e: React.FormEvent<HTMLInputElement>) => changeEndYear(e.currentTarget.value)}
+                    changeHandler={(e: React.FormEvent<HTMLSelectElement>) => changeEndYear(e.currentTarget.value)}
                     options={eyOptions}
                 />}
-                <div className="flex items-end mr-4">
-
-                    <Input
-                        name="amount"
-                        pre="Amount"
-                        value={amount}
-                        currency={currency}
-                        changeHandler={(e: React.FormEvent<HTMLInputElement>) => changeAmount(e.currentTarget.valueAsNumber)}
-                        width="100px"
-                        min="100"
-                    />
-                    <Toggle text="Emi" attr={loan} setter={changeEmiMode} />
-                </div>
-                {!loan && endYear > startYear && <div className="ml-4 md:ml-8"><Input
+                {!loan && endYear > startYear && <Input
                     pre="Value changes"
                     post="every year"
                     unit="%"
@@ -245,7 +266,7 @@ const Goals = () => {
                     changeHandler={(e: React.FormEvent<HTMLInputElement>) => changeInflation(e.currentTarget.valueAsNumber)}
                     min="-20"
                     max="20"
-                /></div>}
+                />}
             </div>
             <div className="mt-4">
                 {loan &&
