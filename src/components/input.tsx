@@ -29,6 +29,7 @@ export const toCurrency = (num: number | undefined, currency: string, decimal: b
 
 export default function Input(props: InputProps) {
 	const formRef = useRef<HTMLFormElement>(null);
+	const editableCurrRef = useRef<HTMLInputElement>(null);
 	const [editing, setEditing] = useState<boolean>(false)
 
 	useEffect(
@@ -61,9 +62,11 @@ export default function Input(props: InputProps) {
 								required style={{ width: `${props.width}` }} />
 						) : (
 
-								(!props.currency || (props.currency && editing)) ? <input
+								(!props.currency || (props.currency && editing)) ? 
+								<input
 									className="input"
 									type="number"
+									ref={editableCurrRef}
 									name={props.name}
 									value={props.value}
 									min={props.min}
@@ -78,7 +81,10 @@ export default function Input(props: InputProps) {
 										type="text"
 										name={props.name}
 										value={toCurrency(props.value as number, props.currency)}
-										onFocus={() => setEditing(true)}
+										onFocus={() => {
+											editableCurrRef.current?.focus()
+											setEditing(true)
+										}}
 										style={{ width: `${props.width ? props.width : "30px"}` }}
 										readOnly
 									/>
