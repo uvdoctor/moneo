@@ -27,6 +27,7 @@ export const createGoal = /* GraphQL */ `
         prob
       }
       imp
+      ra
       met
       prob
       createdAt
@@ -60,6 +61,7 @@ export const updateGoal = /* GraphQL */ `
         prob
       }
       imp
+      ra
       met
       prob
       createdAt
@@ -93,6 +95,7 @@ export const deleteGoal = /* GraphQL */ `
         prob
       }
       imp
+      ra
       met
       prob
       createdAt

@@ -21,6 +21,7 @@ type Goal @model @auth(rules: [{allow: owner}]) {
   targets: [Target!]!
   milestones: [Target]
   imp: LMH!
+  ra: LMH!
   met: YN
   prob: LMH
 }

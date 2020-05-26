@@ -8,6 +8,7 @@
 	--amplify-primary-tint: #1f9d55;
 	--amplify-primary-shade: #51d88a;
 	--amplify-font-family: 'Quicksand', sans-serif;
+	color: #4a5568;
 }
 
 .signInButton {
@@ -42,12 +43,77 @@ h6 {
 	font-weight: 500;
 }
 
+.input {
+	display: inline-block;
+	padding: 0;
+	font-weight: 600;
+	appearance: none;
+	border-bottom-width: 1px;
+	border-bottom-color: #4a5568;
+	line-height: 1.25;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+	text-align: right;
+}
+
+/* Firefox */
+input[type=number] {
+	-moz-appearance: textfield;
+	text-align: right;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+	input[type="range"]::-webkit-slider-thumb {
+		width: 1.1rem;
+		-webkit-appearance: none;
+		appearance: none;
+		height: 1.1rem;
+		cursor: ew-resize;
+		background: #fff;
+		box-shadow: -405px 0 0 400px #48bb78;
+		border-radius: 50%;
+	}
+
+	input[type="range"]::-moz-range-thumb {
+		width: 1.1rem;
+		appearance: none;
+		height: 1.1rem;
+		cursor: ew-resize;
+		background: #fff;
+		box-shadow: -405px 0 0 400px #48bb78;
+		border-radius: 50%;
+	}
+}
+
+.input:focus {
+	outline: 0;
+	border-color: #38a169;
+}
+
 .button {
 	border-radius: 9999px;
 	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 	outline: 0;
 	background-color: #38a169;
 	color: #fff;
+	font-weight: 700;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+	padding-right: 1rem;
+	padding-left: 1rem;
+	transition: "all .15s ease";
+}
+
+.cancel {
+	border-radius: 9999px;
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+	border-width: 1px;
+	background-color: #fff;
+	border-color: #000;
 	font-weight: 700;
 	padding-top: 0.5rem;
 	padding-bottom: 0.5rem;
@@ -68,11 +134,31 @@ h6 {
 	font-weight: 600;
 	margin-top: 0.5rem;
 }
+
+.toggle__dot {
+	top: -.25rem;
+	left: -.25rem;
+	transition: all 0.3s ease-in-out;
+}
+
+input:checked ~ .toggle__dot {
+	transform: translateX(100%);
+	background-color: #48bb78;
+}
+
 .button:hover {
 	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-.button-focus {
+.button:focus {
+	outline: 0;
+}
+
+.cancel:hover {
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.cancel:focus {
 	outline: 0;
 }
 
