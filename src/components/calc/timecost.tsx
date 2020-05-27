@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import SVGTimeCost from './svgtimecost';
 import Input from '../input'
 import { toReadableNumber, toCurrency } from '../utils';
-import SVGPiggy from '../svgpiggy';
 
 interface TimeCostProps {
     amount: number,
