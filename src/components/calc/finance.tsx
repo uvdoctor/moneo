@@ -21,3 +21,11 @@ export function getCompoundedRate(rate: number, years: number, frequency: number
 export function getCompoundedIncome(rate: number, value: number, years: number, frequency: number = 1) {
     return value * getCompoundedRate(rate, years, frequency);
 }
+
+export function getTotalInt(amt: number, dpInPer: number, emi: number, months: number) {
+    if (emi <= 0 || months <= 0) return 0
+    let totalEmi = emi * months
+    let paidAmt = amt * (dpInPer / 100)
+    let totalAmt = totalEmi + paidAmt
+    return totalAmt - amt
+}

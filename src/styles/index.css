@@ -51,6 +51,7 @@ h6 {
 	border-bottom-width: 1px;
 	border-bottom-color: #4a5568;
 	line-height: 1.25;
+	background-color: transparent;
 }
 
 input[type=number]::-webkit-inner-spin-button,

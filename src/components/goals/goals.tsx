@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import Input from '../input'
+import TextInput from '../form/textinput'
+import SelectInput from '../form/selectinput'
+import NumberInput from '../form/numberinput'
 import SVGRemove from '../svgremove'
-import Toggle from '../toggle'
-import { getEmi } from '../calc/finance'
 import { API, graphqlOperation } from 'aws-amplify'
 import * as mutations from '../../graphql/mutations'
 import * as queries from '../../graphql/queries';
 import * as APIt from '../../api/goals'
-import { getCurrencyList, getCriticalityOptions, getRAOptions } from '../utils'
+import { getCriticalityOptions, getRAOptions } from '../utils'
 import { toCurrency } from '../utils'
 import TimeCost from '../calc/timecost'
+import EmiCost from '../calc/emicost'
+import { getTotalInt } from '../calc/finance'
 
 const Goals = () => {
     const minStartYear = new Date().getFullYear()
@@ -37,8 +39,7 @@ const Goals = () => {
         return targets
     }
 
-    const initLoanTargets = (startYear: number, months: number, dpInPer: number, total: number, loanAnnualInt: number, curr: string) => {
-        let emi = getLoanEmi(total, dpInPer, loanAnnualInt, months)
+    const initLoanTargets = (emi: number, startYear: number, months: number, dpInPer: number, total: number, curr: string) => {
         let targets: Array<APIt.TargetInput> = []
         if (!emi || emi <= 0) return targets
         let totalMonths = months > 12 ? months - 12 : months
@@ -59,12 +60,6 @@ const Goals = () => {
         return targets
     }
 
-    const getLoanEmi = (total: number, dpInPer: number, annualInt: number, dur: number) => {
-        let emi = getEmi(total, dpInPer, annualInt, dur)
-        if (emi) return Math.round(emi)
-        return null
-    }
-
     const [startYear, setStartYear] = useState(minStartYear + 1)
     const [endYear, setEndYear] = useState(startYear)
     const [syOptions] = useState(initYearOptions(startYear, 50))
@@ -73,9 +68,9 @@ const Goals = () => {
     const [name, setName] = useState("")
     const [inflation, setInflation] = useState(3)
     const [loan, setLoan] = useState(false)
-    const [loanDPInPer, setLoanDPInPer] = useState(20)
-    const [loanAnnualInt, setLoanAnnualInt] = useState(4)
-    const [loanMonths, setLoanMonths] = useState(60)
+    const [emi, setEmi] = useState(0)
+    const [loanMonths, setLoanMonths] = useState(0)
+    const [loanDPInPer, setLoanDPInPer] = useState(0)
     const [currency, setCurrency] = useState("USD")
     const [criticality, setCriticality] = useState(APIt.LMH.H)
     const [ra, setRA] = useState(APIt.LMH.L)
@@ -154,157 +149,104 @@ const Goals = () => {
         changeWIPTargets(initTargets(startYear, ey, amount, inflation, currency) as Array<APIt.TargetInput>)
     }
 
-    const changeAmount = (amt: number) => {
-        if (amt <= 0) return
-        setAmount(amt)
-        if (loan) changeWIPTargets(initLoanTargets(startYear, loanMonths, loanDPInPer, amt, loanAnnualInt, currency) as Array<APIt.TargetInput>)
-        else changeWIPTargets(initTargets(startYear, endYear, amt, inflation, currency, true) as Array<APIt.TargetInput>)
+    const emiChanged = (emi: number, loanDPInPer: number, loanMonths: number) => {
+        setEmi(emi)
+        setLoanMonths(loanMonths)
+        setLoanDPInPer(loanDPInPer)
     }
 
-    const changeLoanDPInPer = (dp: number) => {
-        setLoanDPInPer(dp)
-        changeWIPTargets(initLoanTargets(startYear, loanMonths, dp, amount, loanAnnualInt, currency) as Array<APIt.TargetInput>)
-    }
+    useEffect(() => {
+        if(loan) changeWIPTargets(initLoanTargets(emi, startYear, loanMonths, loanDPInPer, amount, currency) as Array<APIt.TargetInput>)
+    }, [emi, loanMonths, loanDPInPer, loan, currency, startYear])
+
+    useEffect(() => {
+        if (!loan) changeWIPTargets(initTargets(startYear, endYear, amount, inflation, currency, true) as Array<APIt.TargetInput>)
+    }, [startYear, endYear, amount, inflation, currency, loan])
 
     const changeEmiMode = (emi: boolean) => {
         setLoan(emi)
-        if (emi) changeWIPTargets(initLoanTargets(startYear, loanMonths, loanDPInPer, amount, loanAnnualInt, currency) as Array<APIt.TargetInput>)
-        else {
+        if (!emi) {
             setEndYear(startYear)
-            changeWIPTargets(initTargets(startYear, startYear, amount, 0, currency, true) as Array<APIt.TargetInput>)
         }
-    }
-
-    const changeLoanInt = (int: number) => {
-        setLoanAnnualInt(int)
-        changeWIPTargets(initLoanTargets(startYear, loanMonths, loanDPInPer, amount, int, currency) as Array<APIt.TargetInput>)
-    }
-    const changeLoanDur = (dur: number) => {
-        setLoanMonths(dur)
-        changeWIPTargets(initLoanTargets(startYear, dur, loanDPInPer, amount, loanAnnualInt, currency) as Array<APIt.TargetInput>)
-    }
-
-    const changeInflation = (infl: number) => {
-        setInflation(infl)
-        changeWIPTargets(initTargets(startYear, endYear, amount, infl, currency, true) as Array<APIt.TargetInput>)
-    }
-
-    const changeCurrency = (curr: string) => {
-        setCurrency(curr)
-        if (loan) changeWIPTargets(initLoanTargets(startYear, loanMonths, loanDPInPer, amount, loanAnnualInt, curr) as Array<APIt.TargetInput>)
-        else changeWIPTargets(initTargets(startYear, endYear, amount, inflation, curr, true) as Array<APIt.TargetInput>)
     }
 
     return (
         <div className="ml-2 mr-2 md:ml-4 md:mr-4">
             <div className="flex justify-between items-center">
-                <Input
-                    pre="Name"
-                    type="text"
+                <TextInput
+                    name="name"
+                    pre="Goal Name"
                     placeholder="My Goal"
                     value={name}
                     changeHandler={(e: React.FormEvent<HTMLInputElement>) => setName(e.currentTarget.value)}
                     width="200px"
                 />
-                <Input name="criticality"
+                <SelectInput name="criticality"
                     pre="Criticality"
                     value={criticality}
                     changeHandler={(e: React.FormEvent<HTMLSelectElement>) => setCriticality(e.currentTarget.value as APIt.LMH)}
                     options={getCriticalityOptions()}
                 />
-                <Input name="ra"
+                <SelectInput name="ra"
                     pre="Investment Loss Appetite"
                     value={ra}
                     changeHandler={(e: React.FormEvent<HTMLSelectElement>) => setRA(e.currentTarget.value as APIt.LMH)}
                     options={getRAOptions()}
                 />
             </div>
-            <div className="flex flex-wrap justify-between items-center">
-                <Input
-                    name="currency"
-                    pre="Currency"
-                    value={currency}
-                    options={getCurrencyList()}
-                    changeHandler={(e: React.FormEvent<HTMLSelectElement>) => changeCurrency(e.currentTarget.value)}
-                    width="200px"
-                />
-                <Input
+            <div className="flex items-center">
+                <NumberInput
                     name="amount"
                     pre="Amount"
                     value={amount}
                     currency={currency}
-                    changeHandler={(e: React.FormEvent<HTMLInputElement>) => changeAmount(e.currentTarget.valueAsNumber)}
+                    changeHandler={(e: React.FormEvent<HTMLInputElement>) => setAmount(e.currentTarget.valueAsNumber)}
+                    currencyHandler={(e: React.FormEvent<HTMLSelectElement>) => setCurrency(e.currentTarget.value)}
                     width="100px"
                     min="100"
-                    max="1000000"
+                    max="10000000"
                 />
-                <Toggle text="Loan" attr={loan} setter={changeEmiMode} />
+            </div>
+            <div className="mt-4">
+                <EmiCost amount={amount} currency={currency} emiHandler={emiChanged} borrow={false} borrowModeHandler={changeEmiMode} />
             </div>
             <div className="flex justify-center mt-4">
-                <TimeCost amount={amount} workHoursPerWeek = {60} annualWorkWeeks={47} />
+                <TimeCost amount={!loan ? amount : amount + getTotalInt(amount, loanDPInPer, emi, loanMonths)} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} />
             </div>
             <div className="flex flex-wrap items-center justify-center">
-                <Input name="sy"
+                <SelectInput name="sy"
                     pre="Start Year"
                     value={startYear}
                     changeHandler={(e: React.FormEvent<HTMLSelectElement>) => changeStartYear(e.currentTarget.value)}
                     options={syOptions}
                 />
 
-                {!loan && <Input name="ey"
+                {!loan && <SelectInput name="ey"
                     pre="End Year"
                     value={endYear}
                     changeHandler={(e: React.FormEvent<HTMLSelectElement>) => changeEndYear(e.currentTarget.value)}
                     options={eyOptions}
                 />}
-                {!loan && endYear > startYear && <Input
-                    pre="Value changes"
+                {!loan && endYear > startYear && <NumberInput
+                    name="inflation"
+                    pre="Auto change"
                     post="every year"
                     unit="%"
                     value={inflation}
                     float="0.1"
-                    changeHandler={(e: React.FormEvent<HTMLInputElement>) => changeInflation(e.currentTarget.valueAsNumber)}
+                    changeHandler={(e: React.FormEvent<HTMLInputElement>) => setInflation(e.currentTarget.valueAsNumber)}
                     min="-20"
                     max="20"
                 />}
             </div>
-            <div className="mt-4">
-                {loan &&
-                    <div className="flex flex-wrap justify-between">
-                        <Input
-                            pre="Down payment"
-                            unit="%"
-                            value={loanDPInPer}
-                            changeHandler={(e: React.FormEvent<HTMLInputElement>) => changeLoanDPInPer(e.currentTarget.valueAsNumber)}
-                            float="0.1"
-                            min="0"
-                            max="90" />
-
-                        <Input
-                            pre="Interest rate"
-                            unit="%"
-                            value={loanAnnualInt}
-                            changeHandler={(e: React.FormEvent<HTMLInputElement>) => changeLoanInt(e.currentTarget.valueAsNumber)}
-                            float="0.1"
-                            min="0"
-                            max="50" />
-
-                        <Input
-                            pre="Duration"
-                            unit="months"
-                            value={loanMonths}
-                            changeHandler={(e: React.FormEvent<HTMLInputElement>) => changeLoanDur(e.currentTarget.valueAsNumber)}
-                            min="6"
-                            max="360" />
-                    </div>
-                }
-            </div>
+            
 
             {(loan || endYear > startYear) && <p className="font-bold mt-8">Money Needed to Meet the Goal</p>}
             <div className="flex flex-wrap">
                 {(loan || endYear > startYear) && wipTargets && wipTargets.map((t, i) =>
                     <div key={"t" + i}>
-                        <Input
+                        <NumberInput
+                            name="year"
                             pre={`${t.year}`}
                             currency={currency}
                             value={t.val}

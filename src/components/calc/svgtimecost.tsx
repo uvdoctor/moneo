@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function SVGTimeCost() {
     return(
-        <svg width="40px" viewBox="0 0 1000 1000">
+        <svg width="30px" viewBox="0 0 1000 1000">
 							<g transform="translate(0.000000,511.000000) scale(0.100000,-0.100000)">
 								<path
 									fill="#718096"

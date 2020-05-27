@@ -41,18 +41,14 @@ export default function Input(props: InputProps) {
 					{props.options ?
 						(
 							<select name={props.name} className="input" value={props.value} onChange={props.changeHandler}>
-							{Object.keys(props.options).map(key =>
+								{Object.keys(props.options).map(key =>
 									<option key={key} value={key}>
 										{props.options[key]}
 									</option>)}
 							</select>
-						) : (props.type ? (
-							<input className="input" type="text" name={props.name}
-								placeholder={props.placeholder} value={props.value} onChange={props.changeHandler}
-								required style={{ width: `${props.width}` }} />
 						) : (
 
-								(!props.currency || (props.currency && editing)) ? 
+							(!props.currency || (props.currency && editing)) ?
 								<input
 									className="input"
 									type="number"
@@ -66,16 +62,16 @@ export default function Input(props: InputProps) {
 									required
 									style={{ width: `${props.width ? props.width : "30px"}` }}
 								/> :
-									<input className="input"
-										type="text"
-										name={props.name}
-										value={toCurrency(props.value as number, props.currency)}
-										onFocus={() => setEditing(true)}
-										style={{ width: `${props.width ? props.width : "30px"}` }}
-										readOnly
-									/>
-							)
+								<input className="input"
+									type="text"
+									name={props.name}
+									value={toCurrency(props.value as number, props.currency)}
+									onFocus={() => setEditing(true)}
+									style={{ width: `${props.width ? props.width : "30px"}` }}
+									readOnly
+								/>
 						)
+
 					}
 					{props.unit && <label className="ml-1">{props.unit}</label>}
 				</div>
