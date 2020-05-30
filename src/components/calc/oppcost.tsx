@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect } from 'react'
 import { getCompoundedIncome } from './finance'
 import { toCurrency, initYearOptions } from '../utils'
 import NumberInput from '../form/numberinput'
