@@ -67,6 +67,41 @@ input[type=number] {
 	text-align: right;
 }
 
+.noUi-tooltip {
+	display: none;
+}
+.noUi-active .noUi-tooltip {
+	display: block;
+}
+
+#slider-toggle {
+	height: 50px;
+}
+
+.noUi-handle-lower {
+	width: 1.1rem;
+	-webkit-appearance: none;
+	appearance: none;
+	height: 1.3rem;
+	cursor: ew-resize;
+	background: #fff;
+	border-radius: 50%;
+	border: none;
+}
+
+.noUi-handle-lower:focus {
+	border: none;
+}
+
+#slider-toggle.on .noUi-connects {
+	background-color: #48bb78
+}
+
+.noUi-connect {
+	background-color: #48bb78;
+	position: relative;
+}
+
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
 	input[type="range"]::-webkit-slider-thumb {
 		width: 1.1rem;

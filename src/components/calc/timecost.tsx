@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Input from '../input'
+import NumberInput from '../form/numberinput'
 import { toReadableNumber, toCurrency } from '../utils';
 
 interface TimeCostProps {
@@ -18,7 +18,10 @@ export default function TimeCost(props: TimeCostProps) {
         let hours = props.workHoursPerWeek ? props.workHoursPerWeek : 0
         let weeks = props.workHoursPerWeek ? props.annualWorkWeeks : 0
         let amt = props.amount ? props.amount : 0
-        if (hours <= 0 || weeks <= 0 || amt <= 0 || savings <= 0) return
+        if (hours <= 0 || weeks <= 0 || amt <= 0 || savings <= 0) {
+            setTimeCost(0)
+            return
+        }
         setTimeCost((Math.round(amt / (savings / (weeks * hours)))));
     }
 
@@ -29,7 +32,7 @@ export default function TimeCost(props: TimeCostProps) {
     return (
         <div className="flex items-center justify-between w-full md:w-1/2 lg:w-1/3 xl:w-1/2">
             <div className="flex flex-col items-center justify-center">
-                You Need to Work
+                You Have to Work
             <div className="flex justify-center items-center font-semibold">
                     {timeCostUnit === 'hours' && toReadableNumber(timeCost)}
                     {timeCostUnit === 'weeks' && toReadableNumber(timeCost / props.workHoursPerWeek)}
@@ -45,9 +48,9 @@ export default function TimeCost(props: TimeCostProps) {
                     <label className="ml-2 font-semibold">{toCurrency(props.amount, props.currency)}</label>
                 </div>
             </div>
-            <Input name="savings" pre="Given Yearly" post="Saving of" currency={props.currency} value={annualSavings}
-                changeHandler={(e: React.FormEvent<HTMLInputElement>) => setAnnualSavings(e.currentTarget.valueAsNumber)}
-                min="100" max="1000000" width="70px" />
+            <NumberInput name="savings" pre="Given Yearly" post="Savings of" currency={props.currency} value={annualSavings}
+                changeHandler={setAnnualSavings}
+                min={1000} max={200000} width="80px" />
         </div>
     );
 }

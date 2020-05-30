@@ -23,16 +23,14 @@ export default function SelectInput(props: SelectInputProps) {
 
     return (
         <form ref={formRef} className="flex flex-col">
-            <div className="flex flex-col">
-                {props.pre && <label>{props.pre}</label>}
-                {props.post && <label>{props.post}</label>}
-            </div>
-            <select name={props.name} className="input" value={props.value} onChange={props.changeHandler}>
+            {props.pre && <label>{props.pre}</label>}
+            <select name={props.name} className="input" value={props.value} onChange={(e) => props.changeHandler(e.currentTarget.value)}>
                 {Object.keys(props.options).map(key =>
                     <option key={key} value={key}>
                         {props.options[key]}
                     </option>)}
             </select>
+            {props.post && <label>{props.post}</label>}
         </form>
     )
 }

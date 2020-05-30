@@ -7,24 +7,19 @@ import { API, graphqlOperation } from 'aws-amplify'
 import * as mutations from '../../graphql/mutations'
 import * as queries from '../../graphql/queries';
 import * as APIt from '../../api/goals'
-import { getCriticalityOptions, getRAOptions } from '../utils'
-import { toCurrency } from '../utils'
+import { getCriticalityOptions, getRAOptions, initYearOptions, toCurrency } from '../utils'
 import TimeCost from '../calc/timecost'
 import EmiCost from '../calc/emicost'
-import { getTotalInt } from '../calc/finance'
+import OppCost from '../calc/oppcost'
+import Toggle from '../toggle'
 
 const Goals = () => {
     const minStartYear = new Date().getFullYear()
-
-    const initYearOptions = (firstYear: number, duration: number) => {
-        let years: any = {}
-        for (let i = firstYear; i <= firstYear + duration; i++) years[i] = i
-        return years
-    }
-
+    const [amount, setAmount] = useState(100000)
+    const [totalCost, setTotalCost] = useState<number>(amount)
     const initTargets = (startYear: number, endYear: number, val: number, inflation: number, curr: string, updateVal: boolean = false) => {
-        if (!val || val < 0) return
         let targets: Array<APIt.TargetInput> = []
+        if (!val || val < 0) return targets
         for (let year = startYear, value = val; year <= endYear; year++, value *= (1 + (inflation / 100))) {
             let t: APIt.TargetInput | null = null
             if (wipTargets && wipTargets.length > 0) {
@@ -64,7 +59,6 @@ const Goals = () => {
     const [endYear, setEndYear] = useState(startYear)
     const [syOptions] = useState(initYearOptions(startYear, 50))
     const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 100))
-    const [amount, setAmount] = useState(100000)
     const [name, setName] = useState("")
     const [inflation, setInflation] = useState(3)
     const [loan, setLoan] = useState(false)
@@ -74,9 +68,12 @@ const Goals = () => {
     const [currency, setCurrency] = useState("USD")
     const [criticality, setCriticality] = useState(APIt.LMH.H)
     const [ra, setRA] = useState(APIt.LMH.L)
-    const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(initTargets(startYear, endYear, amount, inflation, currency) as Array<APIt.TargetInput>)
+    const [manualMode, setManualMode] = useState(0)
+    const [customEdit, setCustomEdit] = useState(false)
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(null)
 
+
+    const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(initTargets(startYear, endYear, amount, inflation, currency) as Array<APIt.TargetInput>)
     const getAllGoals = async () => {
         try {
             const { data: { listGoals } } = (await API.graphql(graphqlOperation(queries.listGoals))) as {
@@ -128,7 +125,12 @@ const Goals = () => {
     }
 
     const changeWIPTargets = (newTargets: Array<APIt.TargetInput>) => {
-        setWIPTargets([...newTargets])
+        let totalCost = 0
+        if (newTargets[0].val) {
+            for (let i = 0; i < newTargets.length; i++) totalCost += newTargets[i].val
+            setWIPTargets([...newTargets])
+        }
+        setTotalCost(totalCost)
     }
 
     const changeTargetVal = (val: number, i: number) => {
@@ -156,105 +158,116 @@ const Goals = () => {
     }
 
     useEffect(() => {
-        if(loan) changeWIPTargets(initLoanTargets(emi, startYear, loanMonths, loanDPInPer, amount, currency) as Array<APIt.TargetInput>)
+        if (loan) changeWIPTargets(initLoanTargets(emi, startYear, loanMonths, loanDPInPer, amount, currency) as Array<APIt.TargetInput>)
     }, [emi, loanMonths, loanDPInPer, loan, currency, startYear])
 
     useEffect(() => {
         if (!loan) changeWIPTargets(initTargets(startYear, endYear, amount, inflation, currency, true) as Array<APIt.TargetInput>)
     }, [startYear, endYear, amount, inflation, currency, loan])
 
-    const changeEmiMode = (emi: boolean) => {
+    const changeEmiMode = (val: number) => {
+        let emi = val > 0 ? true : false
         setLoan(emi)
         if (!emi) {
             setEndYear(startYear)
         }
     }
 
+    const changeCustomEdit = (val: number) => {
+        setCustomEdit(val > 0 ? true : false)
+    }
+
     return (
-        <div className="ml-2 mr-2 md:ml-4 md:mr-4">
-            <div className="flex justify-between items-center">
+        <div className="ml-1 mr-1 md:ml-4 md:mr-4 mt-2 md:mt-4">
+            <div className="flex flex-wrap justify-between items-center">
                 <TextInput
                     name="name"
                     pre="Goal Name"
                     placeholder="My Goal"
                     value={name}
-                    changeHandler={(e: React.FormEvent<HTMLInputElement>) => setName(e.currentTarget.value)}
-                    width="200px"
+                    changeHandler={setName}
+                    width="150px"
                 />
                 <SelectInput name="criticality"
                     pre="Criticality"
                     value={criticality}
-                    changeHandler={(e: React.FormEvent<HTMLSelectElement>) => setCriticality(e.currentTarget.value as APIt.LMH)}
+                    changeHandler={setCriticality}
                     options={getCriticalityOptions()}
                 />
                 <SelectInput name="ra"
-                    pre="Investment Loss Appetite"
+                    pre="OK with loss"
+                    post="Of Investment"
                     value={ra}
-                    changeHandler={(e: React.FormEvent<HTMLSelectElement>) => setRA(e.currentTarget.value as APIt.LMH)}
+                    changeHandler={setRA}
                     options={getRAOptions()}
                 />
+
             </div>
-            <div className="flex items-center">
+            <div className="flex flex-wrap items-center mt-4">
                 <NumberInput
                     name="amount"
                     pre="Amount"
                     value={amount}
                     currency={currency}
-                    changeHandler={(e: React.FormEvent<HTMLInputElement>) => setAmount(e.currentTarget.valueAsNumber)}
-                    currencyHandler={(e: React.FormEvent<HTMLSelectElement>) => setCurrency(e.currentTarget.value)}
-                    width="100px"
-                    min="100"
-                    max="10000000"
+                    changeHandler={setAmount}
+                    currencyHandler={setCurrency}
+                    width="90px"
+                    min={500}
+                    note="Including taxes & fees."
                 />
-            </div>
-            <div className="mt-4">
-                <EmiCost amount={amount} currency={currency} emiHandler={emiChanged} borrow={false} borrowModeHandler={changeEmiMode} />
-            </div>
-            <div className="flex justify-center mt-4">
-                <TimeCost amount={!loan ? amount : amount + getTotalInt(amount, loanDPInPer, emi, loanMonths)} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} />
-            </div>
-            <div className="flex flex-wrap items-center justify-center">
+                <label className="ml-4 mr-4">Needed</label>
                 <SelectInput name="sy"
-                    pre="Start Year"
+                    pre="From"
                     value={startYear}
-                    changeHandler={(e: React.FormEvent<HTMLSelectElement>) => changeStartYear(e.currentTarget.value)}
+                    changeHandler={changeStartYear}
                     options={syOptions}
                 />
-
-                {!loan && <SelectInput name="ey"
-                    pre="End Year"
+                {!loan || (loan && customEdit) && <div className="ml-4"><SelectInput name="ey"
+                    pre="To"
                     value={endYear}
-                    changeHandler={(e: React.FormEvent<HTMLSelectElement>) => changeEndYear(e.currentTarget.value)}
+                    changeHandler={changeEndYear}
                     options={eyOptions}
-                />}
-                {!loan && endYear > startYear && <NumberInput
+                /></div>}
+                <EmiCost amount={amount} currency={currency} emiHandler={emiChanged} borrow={0} borrowModeHandler={changeEmiMode} customEditHandler={changeCustomEdit} />
+                {!loan && endYear > startYear && <Toggle topText="Manual" bottomText="Auto" value={manualMode} setter={setManualMode} />}
+                {!loan && endYear > startYear && manualMode < 1 && <div className="mt-12"><NumberInput
                     name="inflation"
-                    pre="Auto change"
-                    post="every year"
+                    pre="Change"
                     unit="%"
+                    width="30px"
                     value={inflation}
-                    float="0.1"
-                    changeHandler={(e: React.FormEvent<HTMLInputElement>) => setInflation(e.currentTarget.valueAsNumber)}
-                    min="-20"
-                    max="20"
-                />}
+                    changeHandler={setInflation}
+                    min={-10}
+                    max={10}
+                /></div>}
             </div>
-            
 
-            {(loan || endYear > startYear) && <p className="font-bold mt-8">Money Needed to Meet the Goal</p>}
-            <div className="flex flex-wrap">
+            <div className="flex flex-wrap justify-between mt-4">
                 {(loan || endYear > startYear) && wipTargets && wipTargets.map((t, i) =>
                     <div key={"t" + i}>
-                        <NumberInput
+                        {manualMode > 0 || (loan && customEdit) ? <NumberInput
                             name="year"
                             pre={`${t.year}`}
                             currency={currency}
                             value={t.val}
-                            changeHandler={(e: React.FormEvent<HTMLInputElement>) => changeTargetVal(e.currentTarget.valueAsNumber, i)}
-                            min="0"
-                            width="100px"
-                        />
+                            changeHandler={(val: number) => changeTargetVal(val, i)}
+                            width="80px"
+                        /> :
+                            <div className="ml-2 md:ml-4 lg:ml-8 flex flex-col text-right">
+                                <label>{t.year}</label>
+                                <label className="font-semibold">{toCurrency(t.val, currency)}</label>
+                            </div>}
                     </div>)}
+            </div>
+            <div className="flex flex-wrap items-center justify-between mt-4">
+                {totalCost !== amount && <div className="flex flex-col mt-4">
+                    <label>Total Cost</label>
+                    <label className="font-semibold">{toCurrency(totalCost, currency)}</label>
+                </div>}
+                <TimeCost amount={totalCost} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} />
+            </div>
+            <div className="mt-4">
+                <OppCost targets={wipTargets} currency={currency} startYear={startYear} endYear={endYear} />
             </div>
             <div className="flex justify-center mt-8">
                 <button className="cancel" onClick={createNewGoal}>
@@ -283,7 +296,7 @@ const Goals = () => {
                         </li>
                     </ul>)}
             </div>
-        </div>
+        </div >
     )
 }
 

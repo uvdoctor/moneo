@@ -5,23 +5,21 @@ export function getCurrencyList() {
 }
 
 export const toCurrency = (num: number | undefined, currency: string, decimal: boolean = false) => {
-	if (!num) return ""
 	const formatter = new Intl.NumberFormat(undefined, {
 		style: "currency",
 		currency: currency,
 		minimumFractionDigits: decimal ? 2 : 0,
 		maximumFractionDigits: decimal ? 2 : 0
-	});
-	return formatter.format(num);
+	})
+	return num ? formatter.format(num) : formatter.format(0) 
 }
 
 export const toReadableNumber = (num: number, decimalDigits: number = 0) => {
-    if (!num) return ""
 	const formatter = new Intl.NumberFormat(undefined, {
 		minimumFractionDigits: decimalDigits,
 		maximumFractionDigits: decimalDigits
 	});
-	return formatter.format(num);
+	return num ? formatter.format(num) : formatter.format(0);
 }
 
 export function getCriticalityOptions() {
@@ -32,10 +30,16 @@ export function getCriticalityOptions() {
 
 export function getRAOptions() {
     return {
-        "L": "None", "M": "Up to 20%", "H": "Up to 50%"
+        "L": "Up to 0%", "M": "Up to 20%", "H": "Up to 50%"
     }
 }
 
 export function getTimeCostUnits() {
     return { 'hours' : 'hours', 'weeks' : 'weeks', 'years' : 'years'}
+}
+
+export function initYearOptions(firstYear: number, duration: number) {
+	let years: any = {}
+	for (let i = firstYear; i <= firstYear + duration; i++) years[i] = i
+	return years
 }

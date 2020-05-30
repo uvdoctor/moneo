@@ -23,9 +23,10 @@ export function getCompoundedIncome(rate: number, value: number, years: number, 
 }
 
 export function getTotalInt(amt: number, dpInPer: number, emi: number, months: number) {
+    return Math.round(getTotalAmtIncludingInt(amt, dpInPer, emi, months) - amt)
+}
+
+export function getTotalAmtIncludingInt(amt: number, dpInPer: number, emi: number, months: number) {
     if (emi <= 0 || months <= 0) return 0
-    let totalEmi = emi * months
-    let paidAmt = amt * (dpInPer / 100)
-    let totalAmt = totalEmi + paidAmt
-    return totalAmt - amt
+    return Math.round((emi * months) + (amt * (dpInPer / 100)))
 }
