@@ -37,7 +37,7 @@ export default function NumberInput(props: NumberInputProps) {
     );
 
     return (
-        <form ref={formRef}>
+        <form ref={formRef} className="mt-4 mr-4">
             <div className={props.min && props.max ? "flex items-center justify-between" : "flex flex-col justify-between"}>
                 <ul className={props.min && props.max ? "text-left" : "text-right"}>
                     {props.pre && <li>{props.pre}</li>}
@@ -96,9 +96,9 @@ export default function NumberInput(props: NumberInputProps) {
                         <label>{props.min}</label>
                         <label>{props.max}</label>
                     </div>
-                    <label className="text-center">{props.note}</label>
                 </div>
             }
+            <label className="text-center">{props.note}</label>
         </form >
     );
 }

@@ -22,7 +22,7 @@ export default function TextInput(props: TextInputProps) {
     );
 
     return (
-        <form ref={formRef} className="flex flex-col w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6">
+        <form ref={formRef} className="flex flex-col mt-4 mr-4">
             {props.pre && <label>{props.pre}</label>}
             <input className="input" type="text" name={props.name}
                 placeholder={props.placeholder} value={props.value} onChange={(e) => props.changeHandler(e.currentTarget.value)}

@@ -35,7 +35,7 @@ export default function EmiCost(props: EmiProps) {
         setEmi(emi)
         let totalInt = getTotalInt(props.amount, dpInPer, emi, loanMonths)
         setTotalIntAmt(Math.round(totalInt))
-        props.emiHandler(emi, dpInPer, dur)
+        props.emiHandler(emi, dpInPer, dur, loanAnnualInt)
     }
 
     const changeBorrowMode = (val: number) => {
@@ -68,39 +68,39 @@ export default function EmiCost(props: EmiProps) {
                             changeHandler={setLoanDPInPer}
                             min={10}
                             max={90} />
-                        <div className="flex justify-between">
+                        <div className="flex justify-between mr-4">
                             <label>Amount</label>
                             <label className="font-semibold text-right">{toCurrency(Math.round(props.amount * (loanDPInPer / 100)), props.currency)}</label>
                         </div>
                     </div>
-                    <div className="flex flex-col mt-4 ml-4">
+                    <div className="flex flex-col mt-4 ml-8">
                         <NumberInput
                             name="intRate"
                             pre="Interest"
                             unit="%"
-                            width="30px"
+                            width="50px"
                             value={loanAnnualInt}
                             changeHandler={setLoanAnnualInt}
                             min={1}
                             max={30}
                             step={0.1} />
-                        <div className="flex justify-between">
+                        <div className="flex justify-between mr-4">
                             <label>Total</label>
                             <label className="font-semibold text-right">{toCurrency(totalIntAmt, props.currency)}</label>
                         </div>
                     </div>
-                    <div className="flex flex-col mt-4 ml-4">
+                    <div className="flex flex-col mt-4 ml-8">
                         <NumberInput
                             name="duration"
-                            pre="Duration"
+                            pre="Term"
                             unit="months"
-                            width="30px"
+                            width="40px"
                             value={loanMonths}
                             changeHandler={setLoanMonths}
                             min={6}
                             max={360} />
-                        <div className="flex justify-between">
-                            <label>Monthy EMI</label>
+                        <div className="flex justify-between mr-4">
+                            <label>EMI</label>
                             <label className="font-semibold">{toCurrency(emi, props.currency)}</label>
                         </div>
                     </div>

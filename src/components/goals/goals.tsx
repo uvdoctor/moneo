@@ -17,9 +17,10 @@ const Goals = () => {
     const minStartYear = new Date().getFullYear()
     const [amount, setAmount] = useState(100000)
     const [totalCost, setTotalCost] = useState<number>(amount)
+
     const initTargets = (startYear: number, endYear: number, val: number, inflation: number, curr: string, updateVal: boolean = false) => {
         let targets: Array<APIt.TargetInput> = []
-        if (!val || val < 0) return targets
+        if (!val) return targets
         for (let year = startYear, value = val; year <= endYear; year++, value *= (1 + (inflation / 100))) {
             let t: APIt.TargetInput | null = null
             if (wipTargets && wipTargets.length > 0) {
@@ -28,7 +29,8 @@ const Goals = () => {
             targets.push({
                 year: year,
                 val: t && t.val > 0 ? (updateVal ? Math.round(value) : t.val) : Math.round(value),
-                curr: curr
+                curr: curr,
+                fx: 1.0
             })
         }
         return targets
@@ -49,6 +51,7 @@ const Goals = () => {
                 year: year,
                 val: year === startYear ? (total * (dpInPer / 100)) + annualEmiAmt : annualEmiAmt,
                 curr: curr,
+                fx: 1.0
             })
         }
         console.log("New targets: ", targets)
@@ -65,15 +68,16 @@ const Goals = () => {
     const [emi, setEmi] = useState(0)
     const [loanMonths, setLoanMonths] = useState(0)
     const [loanDPInPer, setLoanDPInPer] = useState(0)
+    const [loanIntRate, setLoanIntRate] = useState(0)
     const [currency, setCurrency] = useState("USD")
     const [criticality, setCriticality] = useState(APIt.LMH.H)
     const [ra, setRA] = useState(APIt.LMH.L)
     const [manualMode, setManualMode] = useState(0)
     const [customEdit, setCustomEdit] = useState(false)
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(null)
-
-
+    const [goalType, setGoalType] = useState<APIt.GoalType>(APIt.GoalType.B)
     const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(initTargets(startYear, endYear, amount, inflation, currency) as Array<APIt.TargetInput>)
+
     const getAllGoals = async () => {
         try {
             const { data: { listGoals } } = (await API.graphql(graphqlOperation(queries.listGoals))) as {
@@ -109,9 +113,11 @@ const Goals = () => {
     const createNewGoal = async () => {
         let goal: APIt.CreateGoalInput = {
             name: name,
-            targets: wipTargets,
+            type: goalType as APIt.GoalType,
+            tgts: wipTargets,
             imp: criticality,
-            ra: ra
+            ra: ra,
+            emi: loan ? {rate: loanIntRate, dur: loanMonths, dp: loanDPInPer} as APIt.EmiInput: null,
         }
         try {
             const { data } = (await API.graphql(graphqlOperation(mutations.createGoal, { input: goal }))) as {
@@ -126,10 +132,8 @@ const Goals = () => {
 
     const changeWIPTargets = (newTargets: Array<APIt.TargetInput>) => {
         let totalCost = 0
-        if (newTargets[0].val) {
-            for (let i = 0; i < newTargets.length; i++) totalCost += newTargets[i].val
-            setWIPTargets([...newTargets])
-        }
+        if (newTargets[0]?.val) setWIPTargets([...newTargets])
+        for (let i = 0; i < newTargets.length; i++) totalCost += Math.round(newTargets[i].val * newTargets[i].fx)
         setTotalCost(totalCost)
     }
 
@@ -151,10 +155,11 @@ const Goals = () => {
         changeWIPTargets(initTargets(startYear, ey, amount, inflation, currency) as Array<APIt.TargetInput>)
     }
 
-    const emiChanged = (emi: number, loanDPInPer: number, loanMonths: number) => {
+    const emiChanged = (emi: number, loanDPInPer: number, loanMonths: number, loanIntRate: number) => {
         setEmi(emi)
         setLoanMonths(loanMonths)
         setLoanDPInPer(loanDPInPer)
+        setLoanIntRate(loanIntRate)
     }
 
     useEffect(() => {
@@ -177,9 +182,29 @@ const Goals = () => {
         setCustomEdit(val > 0 ? true : false)
     }
 
+    const changeTargetCurrency = (val: string, index: number) => {
+        wipTargets[index].curr = val
+        changeWIPTargets(wipTargets)
+    }
+
+    const getGoalTypes = () => {
+        return {
+            "B": "Buy",
+            "R": "Rent",
+            "X": "Experience",
+            "L": "Learn",
+            "C": "Celebrate",
+            "F": "Provide for Family",
+            "FF": "Be Financially Free",
+            "D": "Donate",
+            "O": "Spend for Other Things"
+        }
+    }
+
     return (
-        <div className="ml-1 mr-1 md:ml-4 md:mr-4 mt-2 md:mt-4">
+        <div className="ml-1 mr-1 md:ml-4 md:mr-4">
             <div className="flex flex-wrap justify-between items-center">
+                <SelectInput name="goalType" pre="I want to" value={goalType} options={getGoalTypes()} changeHandler={setGoalType} />
                 <TextInput
                     name="name"
                     pre="Goal Name"
@@ -203,26 +228,29 @@ const Goals = () => {
                 />
 
             </div>
-            <div className="flex flex-wrap items-center mt-4">
-                <NumberInput
+            <div className="flex flex-wrap items-center">
+                {((!loan && manualMode < 1) || endYear === startYear || (loan && !customEdit)) ? <div className="mr-4"><NumberInput
                     name="amount"
-                    pre="Amount"
+                    pre="Amount +"
+                    post="Taxes & Fees"
                     value={amount}
                     currency={currency}
                     changeHandler={setAmount}
                     currencyHandler={setCurrency}
                     width="90px"
                     min={500}
-                    note="Including taxes & fees."
-                />
-                <label className="ml-4 mr-4">Needed</label>
+                /></div> : <div className="flex flex-col items-center mr-8 mt-4">
+                        <label>Amount +</label>
+                        <label>Taxes & Fees</label>
+                        <label className="font-semibold">{toCurrency(totalCost, currency)}</label>
+                </div>}
                 <SelectInput name="sy"
                     pre="From"
                     value={startYear}
                     changeHandler={changeStartYear}
                     options={syOptions}
                 />
-                {!loan || (loan && customEdit) && <div className="ml-4"><SelectInput name="ey"
+                {(!loan || (loan && customEdit)) && <div className="ml-4"><SelectInput name="ey"
                     pre="To"
                     value={endYear}
                     changeHandler={changeEndYear}
@@ -242,27 +270,28 @@ const Goals = () => {
                 /></div>}
             </div>
 
-            <div className="flex flex-wrap justify-between mt-4">
-                {(loan || endYear > startYear) && wipTargets && wipTargets.map((t, i) =>
-                    <div key={"t" + i}>
-                        {manualMode > 0 || (loan && customEdit) ? <NumberInput
+            <div className="flex flex-wrap mt-4">
+                {((loan && customEdit) || (endYear > startYear)) && wipTargets && wipTargets.map((t, i) =>
+                    <div key={"t" + i} className="mr-2 md:mr-4">
+                        {((!loan && manualMode > 0) || (loan && customEdit)) ? <NumberInput
                             name="year"
                             pre={`${t.year}`}
-                            currency={currency}
+                            currency={t.curr}
                             value={t.val}
                             changeHandler={(val: number) => changeTargetVal(val, i)}
+                            currencyHandler={(val: string) => changeTargetCurrency(val, i)}
                             width="80px"
                         /> :
-                            <div className="ml-2 md:ml-4 lg:ml-8 flex flex-col text-right">
+                            <div className="mr-2 md:mr-4 flex flex-col text-right">
                                 <label>{t.year}</label>
                                 <label className="font-semibold">{toCurrency(t.val, currency)}</label>
                             </div>}
                     </div>)}
             </div>
-            <div className="flex flex-wrap items-center justify-between mt-4">
-                {totalCost !== amount && <div className="flex flex-col mt-4">
-                    <label>Total Cost</label>
-                    <label className="font-semibold">{toCurrency(totalCost, currency)}</label>
+            <div className="flex flex-wrap items-center mt-8">
+                {((loan && !customEdit) || (!loan && manualMode < 1 && endYear > startYear))&& <div className="flex flex-col items-center mr-8">
+                            <label>Total Needed</label>
+                            <label className="font-semibold">{toCurrency(totalCost, currency)}</label>
                 </div>}
                 <TimeCost amount={totalCost} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} />
             </div>
@@ -285,10 +314,11 @@ const Goals = () => {
                                 <label>{g.name}</label>
                                 <label className="cursor" onClick={() => deleteGoal(g.id)}><SVGRemove /></label>
                             </div>
+                            {g.emi && <label>{`EMI @ ${g.emi.rate} for ${g.emi.dur}`}</label>}
                         </li>
                         <li className="mt-4">Chart</li>
                         <li className="mt-4 ml-4">
-                            {g.targets && g.targets.map((t: APIt.TargetInput, i: number) =>
+                            {g.tgts && g.tgts.map((t: APIt.TargetInput, i: number) =>
                                 <div key={"milestone" + i} className="flex flex-wrap flex-col">
                                     <label>{t.year}</label>
                                     <label className="mt-2">{toCurrency(t.val, t.curr)}</label>

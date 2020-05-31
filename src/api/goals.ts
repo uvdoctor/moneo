@@ -5,19 +5,34 @@
 export type CreateGoalInput = {
   id?: string | null,
   name: string,
-  targets: Array< TargetInput >,
-  milestones?: Array< TargetInput | null > | null,
+  type: GoalType,
+  tgts: Array< TargetInput >,
+  emi?: EmiInput | null,
   imp: LMH,
   ra: LMH,
   met?: YN | null,
   prob?: LMH | null,
 };
 
+export enum GoalType {
+  B = "B",
+  R = "R",
+  L = "L",
+  X = "X",
+  C = "C",
+  F = "F",
+  FF = "FF",
+  D = "D",
+  O = "O",
+}
+
+
 export type TargetInput = {
   month?: number | null,
   year: number,
   val: number,
   curr: string,
+  fx: number,
   met?: YN | null,
   prob?: LMH | null,
 };
@@ -35,8 +50,15 @@ export enum LMH {
 }
 
 
+export type EmiInput = {
+  rate: number,
+  dur: number,
+  dp: number,
+};
+
 export type ModelGoalConditionInput = {
   name?: ModelStringInput | null,
+  type?: ModelGoalTypeInput | null,
   imp?: ModelLMHInput | null,
   ra?: ModelLMHInput | null,
   met?: ModelYNInput | null,
@@ -86,6 +108,11 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export type ModelGoalTypeInput = {
+  eq?: GoalType | null,
+  ne?: GoalType | null,
+};
+
 export type ModelLMHInput = {
   eq?: LMH | null,
   ne?: LMH | null,
@@ -99,8 +126,9 @@ export type ModelYNInput = {
 export type UpdateGoalInput = {
   id: string,
   name?: string | null,
-  targets?: Array< TargetInput > | null,
-  milestones?: Array< TargetInput | null > | null,
+  type?: GoalType | null,
+  tgts?: Array< TargetInput > | null,
+  emi?: EmiInput | null,
   imp?: LMH | null,
   ra?: LMH | null,
   met?: YN | null,
@@ -111,9 +139,92 @@ export type DeleteGoalInput = {
   id?: string | null,
 };
 
+export type CreateMilestoneInput = {
+  id?: string | null,
+  tgt: TargetInput,
+  attr: MilestoneAttr,
+};
+
+export enum MilestoneAttr {
+  NW = "NW",
+  D = "D",
+  AS = "AS",
+  C = "C",
+  R = "R",
+}
+
+
+export type ModelMilestoneConditionInput = {
+  attr?: ModelMilestoneAttrInput | null,
+  and?: Array< ModelMilestoneConditionInput | null > | null,
+  or?: Array< ModelMilestoneConditionInput | null > | null,
+  not?: ModelMilestoneConditionInput | null,
+};
+
+export type ModelMilestoneAttrInput = {
+  eq?: MilestoneAttr | null,
+  ne?: MilestoneAttr | null,
+};
+
+export type UpdateMilestoneInput = {
+  id: string,
+  tgt?: TargetInput | null,
+  attr?: MilestoneAttr | null,
+};
+
+export type DeleteMilestoneInput = {
+  id?: string | null,
+};
+
+export type CreateProfileInput = {
+  id?: string | null,
+  citizen: string,
+  tr: string,
+  itr: number,
+  cgtr: number,
+  curr: string,
+};
+
+export type ModelProfileConditionInput = {
+  citizen?: ModelStringInput | null,
+  tr?: ModelStringInput | null,
+  itr?: ModelIntInput | null,
+  cgtr?: ModelIntInput | null,
+  curr?: ModelStringInput | null,
+  and?: Array< ModelProfileConditionInput | null > | null,
+  or?: Array< ModelProfileConditionInput | null > | null,
+  not?: ModelProfileConditionInput | null,
+};
+
+export type ModelIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type UpdateProfileInput = {
+  id: string,
+  citizen?: string | null,
+  tr?: string | null,
+  itr?: number | null,
+  cgtr?: number | null,
+  curr?: string | null,
+};
+
+export type DeleteProfileInput = {
+  id?: string | null,
+};
+
 export type ModelGoalFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
+  type?: ModelGoalTypeInput | null,
   imp?: ModelLMHInput | null,
   ra?: ModelLMHInput | null,
   met?: ModelYNInput | null,
@@ -139,6 +250,26 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
+export type ModelMilestoneFilterInput = {
+  id?: ModelIDInput | null,
+  attr?: ModelMilestoneAttrInput | null,
+  and?: Array< ModelMilestoneFilterInput | null > | null,
+  or?: Array< ModelMilestoneFilterInput | null > | null,
+  not?: ModelMilestoneFilterInput | null,
+};
+
+export type ModelProfileFilterInput = {
+  id?: ModelIDInput | null,
+  citizen?: ModelStringInput | null,
+  tr?: ModelStringInput | null,
+  itr?: ModelIntInput | null,
+  cgtr?: ModelIntInput | null,
+  curr?: ModelStringInput | null,
+  and?: Array< ModelProfileFilterInput | null > | null,
+  or?: Array< ModelProfileFilterInput | null > | null,
+  not?: ModelProfileFilterInput | null,
+};
+
 export type CreateGoalMutationVariables = {
   input: CreateGoalInput,
   condition?: ModelGoalConditionInput | null,
@@ -149,24 +280,23 @@ export type CreateGoalMutation = {
     __typename: "Goal",
     id: string,
     name: string,
-    targets:  Array< {
+    type: GoalType,
+    tgts:  Array< {
       __typename: "Target",
       month: number | null,
       year: number,
       val: number,
       curr: string,
+      fx: number,
       met: YN | null,
       prob: LMH | null,
     } >,
-    milestones:  Array< {
-      __typename: "Target",
-      month: number | null,
-      year: number,
-      val: number,
-      curr: string,
-      met: YN | null,
-      prob: LMH | null,
-    } | null > | null,
+    emi:  {
+      __typename: "Emi",
+      rate: number,
+      dur: number,
+      dp: number,
+    } | null,
     imp: LMH,
     ra: LMH,
     met: YN | null,
@@ -187,24 +317,23 @@ export type UpdateGoalMutation = {
     __typename: "Goal",
     id: string,
     name: string,
-    targets:  Array< {
+    type: GoalType,
+    tgts:  Array< {
       __typename: "Target",
       month: number | null,
       year: number,
       val: number,
       curr: string,
+      fx: number,
       met: YN | null,
       prob: LMH | null,
     } >,
-    milestones:  Array< {
-      __typename: "Target",
-      month: number | null,
-      year: number,
-      val: number,
-      curr: string,
-      met: YN | null,
-      prob: LMH | null,
-    } | null > | null,
+    emi:  {
+      __typename: "Emi",
+      rate: number,
+      dur: number,
+      dp: number,
+    } | null,
     imp: LMH,
     ra: LMH,
     met: YN | null,
@@ -225,28 +354,252 @@ export type DeleteGoalMutation = {
     __typename: "Goal",
     id: string,
     name: string,
-    targets:  Array< {
+    type: GoalType,
+    tgts:  Array< {
       __typename: "Target",
       month: number | null,
       year: number,
       val: number,
       curr: string,
+      fx: number,
       met: YN | null,
       prob: LMH | null,
     } >,
-    milestones:  Array< {
-      __typename: "Target",
-      month: number | null,
-      year: number,
-      val: number,
-      curr: string,
-      met: YN | null,
-      prob: LMH | null,
-    } | null > | null,
+    emi:  {
+      __typename: "Emi",
+      rate: number,
+      dur: number,
+      dp: number,
+    } | null,
     imp: LMH,
     ra: LMH,
     met: YN | null,
     prob: LMH | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type CreateMilestoneMutationVariables = {
+  input: CreateMilestoneInput,
+  condition?: ModelMilestoneConditionInput | null,
+};
+
+export type CreateMilestoneMutation = {
+  createMilestone:  {
+    __typename: "Milestone",
+    id: string,
+    tgt:  {
+      __typename: "Target",
+      month: number | null,
+      year: number,
+      val: number,
+      curr: string,
+      fx: number,
+      met: YN | null,
+      prob: LMH | null,
+    },
+    attr: MilestoneAttr,
+    goals:  Array< {
+      __typename: "Goal",
+      id: string,
+      name: string,
+      type: GoalType,
+      tgts:  Array< {
+        __typename: "Target",
+        month: number | null,
+        year: number,
+        val: number,
+        curr: string,
+        fx: number,
+        met: YN | null,
+        prob: LMH | null,
+      } >,
+      emi:  {
+        __typename: "Emi",
+        rate: number,
+        dur: number,
+        dp: number,
+      } | null,
+      imp: LMH,
+      ra: LMH,
+      met: YN | null,
+      prob: LMH | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type UpdateMilestoneMutationVariables = {
+  input: UpdateMilestoneInput,
+  condition?: ModelMilestoneConditionInput | null,
+};
+
+export type UpdateMilestoneMutation = {
+  updateMilestone:  {
+    __typename: "Milestone",
+    id: string,
+    tgt:  {
+      __typename: "Target",
+      month: number | null,
+      year: number,
+      val: number,
+      curr: string,
+      fx: number,
+      met: YN | null,
+      prob: LMH | null,
+    },
+    attr: MilestoneAttr,
+    goals:  Array< {
+      __typename: "Goal",
+      id: string,
+      name: string,
+      type: GoalType,
+      tgts:  Array< {
+        __typename: "Target",
+        month: number | null,
+        year: number,
+        val: number,
+        curr: string,
+        fx: number,
+        met: YN | null,
+        prob: LMH | null,
+      } >,
+      emi:  {
+        __typename: "Emi",
+        rate: number,
+        dur: number,
+        dp: number,
+      } | null,
+      imp: LMH,
+      ra: LMH,
+      met: YN | null,
+      prob: LMH | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type DeleteMilestoneMutationVariables = {
+  input: DeleteMilestoneInput,
+  condition?: ModelMilestoneConditionInput | null,
+};
+
+export type DeleteMilestoneMutation = {
+  deleteMilestone:  {
+    __typename: "Milestone",
+    id: string,
+    tgt:  {
+      __typename: "Target",
+      month: number | null,
+      year: number,
+      val: number,
+      curr: string,
+      fx: number,
+      met: YN | null,
+      prob: LMH | null,
+    },
+    attr: MilestoneAttr,
+    goals:  Array< {
+      __typename: "Goal",
+      id: string,
+      name: string,
+      type: GoalType,
+      tgts:  Array< {
+        __typename: "Target",
+        month: number | null,
+        year: number,
+        val: number,
+        curr: string,
+        fx: number,
+        met: YN | null,
+        prob: LMH | null,
+      } >,
+      emi:  {
+        __typename: "Emi",
+        rate: number,
+        dur: number,
+        dp: number,
+      } | null,
+      imp: LMH,
+      ra: LMH,
+      met: YN | null,
+      prob: LMH | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type CreateProfileMutationVariables = {
+  input: CreateProfileInput,
+  condition?: ModelProfileConditionInput | null,
+};
+
+export type CreateProfileMutation = {
+  createProfile:  {
+    __typename: "Profile",
+    id: string,
+    citizen: string,
+    tr: string,
+    itr: number,
+    cgtr: number,
+    curr: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type UpdateProfileMutationVariables = {
+  input: UpdateProfileInput,
+  condition?: ModelProfileConditionInput | null,
+};
+
+export type UpdateProfileMutation = {
+  updateProfile:  {
+    __typename: "Profile",
+    id: string,
+    citizen: string,
+    tr: string,
+    itr: number,
+    cgtr: number,
+    curr: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type DeleteProfileMutationVariables = {
+  input: DeleteProfileInput,
+  condition?: ModelProfileConditionInput | null,
+};
+
+export type DeleteProfileMutation = {
+  deleteProfile:  {
+    __typename: "Profile",
+    id: string,
+    citizen: string,
+    tr: string,
+    itr: number,
+    cgtr: number,
+    curr: string,
     createdAt: string,
     updatedAt: string,
     owner: string | null,
@@ -262,24 +615,23 @@ export type GetGoalQuery = {
     __typename: "Goal",
     id: string,
     name: string,
-    targets:  Array< {
+    type: GoalType,
+    tgts:  Array< {
       __typename: "Target",
       month: number | null,
       year: number,
       val: number,
       curr: string,
+      fx: number,
       met: YN | null,
       prob: LMH | null,
     } >,
-    milestones:  Array< {
-      __typename: "Target",
-      month: number | null,
-      year: number,
-      val: number,
-      curr: string,
-      met: YN | null,
-      prob: LMH | null,
-    } | null > | null,
+    emi:  {
+      __typename: "Emi",
+      rate: number,
+      dur: number,
+      dp: number,
+    } | null,
     imp: LMH,
     ra: LMH,
     met: YN | null,
@@ -303,28 +655,169 @@ export type ListGoalsQuery = {
       __typename: "Goal",
       id: string,
       name: string,
-      targets:  Array< {
+      type: GoalType,
+      tgts:  Array< {
         __typename: "Target",
         month: number | null,
         year: number,
         val: number,
         curr: string,
+        fx: number,
         met: YN | null,
         prob: LMH | null,
       } >,
-      milestones:  Array< {
-        __typename: "Target",
-        month: number | null,
-        year: number,
-        val: number,
-        curr: string,
-        met: YN | null,
-        prob: LMH | null,
-      } | null > | null,
+      emi:  {
+        __typename: "Emi",
+        rate: number,
+        dur: number,
+        dp: number,
+      } | null,
       imp: LMH,
       ra: LMH,
       met: YN | null,
       prob: LMH | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetMilestoneQueryVariables = {
+  id: string,
+};
+
+export type GetMilestoneQuery = {
+  getMilestone:  {
+    __typename: "Milestone",
+    id: string,
+    tgt:  {
+      __typename: "Target",
+      month: number | null,
+      year: number,
+      val: number,
+      curr: string,
+      fx: number,
+      met: YN | null,
+      prob: LMH | null,
+    },
+    attr: MilestoneAttr,
+    goals:  Array< {
+      __typename: "Goal",
+      id: string,
+      name: string,
+      type: GoalType,
+      tgts:  Array< {
+        __typename: "Target",
+        month: number | null,
+        year: number,
+        val: number,
+        curr: string,
+        fx: number,
+        met: YN | null,
+        prob: LMH | null,
+      } >,
+      emi:  {
+        __typename: "Emi",
+        rate: number,
+        dur: number,
+        dp: number,
+      } | null,
+      imp: LMH,
+      ra: LMH,
+      met: YN | null,
+      prob: LMH | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type ListMilestonesQueryVariables = {
+  filter?: ModelMilestoneFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListMilestonesQuery = {
+  listMilestones:  {
+    __typename: "ModelMilestoneConnection",
+    items:  Array< {
+      __typename: "Milestone",
+      id: string,
+      tgt:  {
+        __typename: "Target",
+        month: number | null,
+        year: number,
+        val: number,
+        curr: string,
+        fx: number,
+        met: YN | null,
+        prob: LMH | null,
+      },
+      attr: MilestoneAttr,
+      goals:  Array< {
+        __typename: "Goal",
+        id: string,
+        name: string,
+        type: GoalType,
+        imp: LMH,
+        ra: LMH,
+        met: YN | null,
+        prob: LMH | null,
+        createdAt: string,
+        updatedAt: string,
+        owner: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetProfileQueryVariables = {
+  id: string,
+};
+
+export type GetProfileQuery = {
+  getProfile:  {
+    __typename: "Profile",
+    id: string,
+    citizen: string,
+    tr: string,
+    itr: number,
+    cgtr: number,
+    curr: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type ListProfilesQueryVariables = {
+  filter?: ModelProfileFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListProfilesQuery = {
+  listProfiles:  {
+    __typename: "ModelProfileConnection",
+    items:  Array< {
+      __typename: "Profile",
+      id: string,
+      citizen: string,
+      tr: string,
+      itr: number,
+      cgtr: number,
+      curr: string,
       createdAt: string,
       updatedAt: string,
       owner: string | null,
@@ -342,24 +835,23 @@ export type OnCreateGoalSubscription = {
     __typename: "Goal",
     id: string,
     name: string,
-    targets:  Array< {
+    type: GoalType,
+    tgts:  Array< {
       __typename: "Target",
       month: number | null,
       year: number,
       val: number,
       curr: string,
+      fx: number,
       met: YN | null,
       prob: LMH | null,
     } >,
-    milestones:  Array< {
-      __typename: "Target",
-      month: number | null,
-      year: number,
-      val: number,
-      curr: string,
-      met: YN | null,
-      prob: LMH | null,
-    } | null > | null,
+    emi:  {
+      __typename: "Emi",
+      rate: number,
+      dur: number,
+      dp: number,
+    } | null,
     imp: LMH,
     ra: LMH,
     met: YN | null,
@@ -379,24 +871,23 @@ export type OnUpdateGoalSubscription = {
     __typename: "Goal",
     id: string,
     name: string,
-    targets:  Array< {
+    type: GoalType,
+    tgts:  Array< {
       __typename: "Target",
       month: number | null,
       year: number,
       val: number,
       curr: string,
+      fx: number,
       met: YN | null,
       prob: LMH | null,
     } >,
-    milestones:  Array< {
-      __typename: "Target",
-      month: number | null,
-      year: number,
-      val: number,
-      curr: string,
-      met: YN | null,
-      prob: LMH | null,
-    } | null > | null,
+    emi:  {
+      __typename: "Emi",
+      rate: number,
+      dur: number,
+      dp: number,
+    } | null,
     imp: LMH,
     ra: LMH,
     met: YN | null,
@@ -416,28 +907,246 @@ export type OnDeleteGoalSubscription = {
     __typename: "Goal",
     id: string,
     name: string,
-    targets:  Array< {
+    type: GoalType,
+    tgts:  Array< {
       __typename: "Target",
       month: number | null,
       year: number,
       val: number,
       curr: string,
+      fx: number,
       met: YN | null,
       prob: LMH | null,
     } >,
-    milestones:  Array< {
-      __typename: "Target",
-      month: number | null,
-      year: number,
-      val: number,
-      curr: string,
-      met: YN | null,
-      prob: LMH | null,
-    } | null > | null,
+    emi:  {
+      __typename: "Emi",
+      rate: number,
+      dur: number,
+      dp: number,
+    } | null,
     imp: LMH,
     ra: LMH,
     met: YN | null,
     prob: LMH | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnCreateMilestoneSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnCreateMilestoneSubscription = {
+  onCreateMilestone:  {
+    __typename: "Milestone",
+    id: string,
+    tgt:  {
+      __typename: "Target",
+      month: number | null,
+      year: number,
+      val: number,
+      curr: string,
+      fx: number,
+      met: YN | null,
+      prob: LMH | null,
+    },
+    attr: MilestoneAttr,
+    goals:  Array< {
+      __typename: "Goal",
+      id: string,
+      name: string,
+      type: GoalType,
+      tgts:  Array< {
+        __typename: "Target",
+        month: number | null,
+        year: number,
+        val: number,
+        curr: string,
+        fx: number,
+        met: YN | null,
+        prob: LMH | null,
+      } >,
+      emi:  {
+        __typename: "Emi",
+        rate: number,
+        dur: number,
+        dp: number,
+      } | null,
+      imp: LMH,
+      ra: LMH,
+      met: YN | null,
+      prob: LMH | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnUpdateMilestoneSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnUpdateMilestoneSubscription = {
+  onUpdateMilestone:  {
+    __typename: "Milestone",
+    id: string,
+    tgt:  {
+      __typename: "Target",
+      month: number | null,
+      year: number,
+      val: number,
+      curr: string,
+      fx: number,
+      met: YN | null,
+      prob: LMH | null,
+    },
+    attr: MilestoneAttr,
+    goals:  Array< {
+      __typename: "Goal",
+      id: string,
+      name: string,
+      type: GoalType,
+      tgts:  Array< {
+        __typename: "Target",
+        month: number | null,
+        year: number,
+        val: number,
+        curr: string,
+        fx: number,
+        met: YN | null,
+        prob: LMH | null,
+      } >,
+      emi:  {
+        __typename: "Emi",
+        rate: number,
+        dur: number,
+        dp: number,
+      } | null,
+      imp: LMH,
+      ra: LMH,
+      met: YN | null,
+      prob: LMH | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnDeleteMilestoneSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnDeleteMilestoneSubscription = {
+  onDeleteMilestone:  {
+    __typename: "Milestone",
+    id: string,
+    tgt:  {
+      __typename: "Target",
+      month: number | null,
+      year: number,
+      val: number,
+      curr: string,
+      fx: number,
+      met: YN | null,
+      prob: LMH | null,
+    },
+    attr: MilestoneAttr,
+    goals:  Array< {
+      __typename: "Goal",
+      id: string,
+      name: string,
+      type: GoalType,
+      tgts:  Array< {
+        __typename: "Target",
+        month: number | null,
+        year: number,
+        val: number,
+        curr: string,
+        fx: number,
+        met: YN | null,
+        prob: LMH | null,
+      } >,
+      emi:  {
+        __typename: "Emi",
+        rate: number,
+        dur: number,
+        dp: number,
+      } | null,
+      imp: LMH,
+      ra: LMH,
+      met: YN | null,
+      prob: LMH | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnCreateProfileSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnCreateProfileSubscription = {
+  onCreateProfile:  {
+    __typename: "Profile",
+    id: string,
+    citizen: string,
+    tr: string,
+    itr: number,
+    cgtr: number,
+    curr: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnUpdateProfileSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnUpdateProfileSubscription = {
+  onUpdateProfile:  {
+    __typename: "Profile",
+    id: string,
+    citizen: string,
+    tr: string,
+    itr: number,
+    cgtr: number,
+    curr: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnDeleteProfileSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnDeleteProfileSubscription = {
+  onDeleteProfile:  {
+    __typename: "Profile",
+    id: string,
+    citizen: string,
+    tr: string,
+    itr: number,
+    cgtr: number,
+    curr: string,
     createdAt: string,
     updatedAt: string,
     owner: string | null,

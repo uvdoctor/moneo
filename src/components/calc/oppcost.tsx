@@ -68,6 +68,7 @@ export default function OppCost(props: OppCostProps) {
                     post="Return of"
                     unit="%"
                     width="30px"
+                    note="after taxes & fees."
                     value={oppDR}
                     changeHandler={setOppDR}
                     min={1}

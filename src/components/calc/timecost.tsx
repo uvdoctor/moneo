@@ -30,8 +30,8 @@ export default function TimeCost(props: TimeCostProps) {
     }, [props, annualSavings])
 
     return (
-        <div className="flex items-center justify-between w-full md:w-1/2 lg:w-1/3 xl:w-1/2">
-            <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-wrap items-center">
+            <div className="flex flex-col items-center justify-center mr-8 md:mr-12">
                 You Have to Work
             <div className="flex justify-center items-center font-semibold">
                     {timeCostUnit === 'hours' && toReadableNumber(timeCost)}

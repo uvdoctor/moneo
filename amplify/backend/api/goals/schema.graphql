@@ -11,17 +11,49 @@ type Target {
   year: Int!
   val: Int!
   curr: String!
+  fx: Float!
   met: YN
   prob: LMH
+}
+
+enum GoalType {
+B, R, L, X, C, F, FF, D, O
+}
+
+type Emi {
+  rate: Float!
+  dur: Int!
+  dp: Int!
 }
 
 type Goal @model @auth(rules: [{allow: owner}]) {
   id: ID!
   name: String!
-  targets: [Target!]!
-  milestones: [Target]
+  type: GoalType!
+  tgts: [Target!]!
+  emi: Emi
   imp: LMH!
   ra: LMH!
   met: YN
   prob: LMH
+}
+
+enum MilestoneAttr {
+  NW,D,AS,C,R
+}
+
+type Milestone @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  tgt: Target!
+  attr: MilestoneAttr!
+  goals: [Goal]
+}
+
+type Profile @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  citizen: String!
+  tr: String!
+  itr: Int!
+  cgtr: Int!
+  curr: String!
 }
