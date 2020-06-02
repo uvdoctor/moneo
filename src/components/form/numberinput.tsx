@@ -1,8 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { toCurrency } from '../utils'
+import { toCurrency, toReadableNumber } from '../utils'
 import CurrencyInput from './currencyinput'
 import Nouislider from "nouislider-react"
-import wnumb from "wnumb"
 
 interface NumberInputProps {
     pre: string,
@@ -37,7 +36,7 @@ export default function NumberInput(props: NumberInputProps) {
     );
 
     return (
-        <form ref={formRef} className="mt-4 mr-4">
+        <form ref={formRef} className="mr-4 md:mr-8">
             <div className={props.min && props.max ? "flex items-center justify-between" : "flex flex-col justify-between"}>
                 <ul className={props.min && props.max ? "text-left" : "text-right"}>
                     {props.pre && <li>{props.pre}</li>}
@@ -74,31 +73,28 @@ export default function NumberInput(props: NumberInputProps) {
                 {props.unit && <label className="ml-1 text-right">{props.unit}</label>}
                 {props.currencyHandler &&
                     <div className={props.min && props.max ? "text-left" : "text-right"}>
-                        <CurrencyInput name="currList" value={props.currency as string} changeHandler={(e: React.FormEvent<HTMLSelectElement>) => props.currencyHandler(e.currentTarget.value)} />
+                        <CurrencyInput name="currList" value={props.currency as string} changeHandler={props.currencyHandler} />
                     </div>}
             </div>
             {props.min && props.max &&
                 <div className="flex flex-col mt-1">
-                    {/*<input className="rounded-lg overflow-hidden appearance-none bg-gray-400 h-3 md:h-4 w-full cursor-default outline-none focus:outline-none shadow focus:shadow-lg" 
-                    type="range" min={props.min} max={props.max} step={props.float ? props.float : "1"} value={props.value}
-            onChange={props.changeHandler} />*/}
                     <Nouislider className="rounded-full" tooltips={true}
                     instanceRef = {
                         instance => {
                             if(instance && !sliderRef) setSliderRef(instance as any)
                         }
                     }
-                    format={wnumb({decimals: (props.step && props.step < 1) ? 2 : 0})}
+                    format={{ from:(val) => props.step as number < 1 ? parseFloat(val) : parseInt(val),  to:(val) => toReadableNumber(val, props.step as number < 1 ? 2 : 0) }}
                     range={{ min: [props.min], max: [props.max]}} start={[props.value as number]} step={props.step ? props.step : 1} connect={[true, false]}
                     onChange={values => props.changeHandler(values[0] as number)}
                     orientation={props.orientation ? "vertical" : "horizontal"} />    
                     <div className="flex justify-between w-full text-gray-400">
-                        <label>{props.min}</label>
+                        <label>{props.min === 0.001 ? 0 : props.min}</label>
                         <label>{props.max}</label>
-                    </div>
+                </div>
                 </div>
             }
-            <label className="text-center">{props.note}</label>
+            <label className="flex justify-center">{props.note}</label>
         </form >
     );
 }

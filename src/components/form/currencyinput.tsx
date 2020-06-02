@@ -11,7 +11,7 @@ export default function CurrencyInput(props: CurrencyInputProps) {
     const options = getCurrencyList();
 
     return (
-        <select name={props.name} className="input" value={props.value} onChange={props.changeHandler}>
+        <select name={props.name} className="input" value={props.value} onChange={(e: React.FormEvent<HTMLSelectElement>) => props.changeHandler(e.currentTarget.value)}>
             {Object.keys(options).map(key =>
                 <option key={key} value={key}>
                     {key}
