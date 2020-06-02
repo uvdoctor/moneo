@@ -14,6 +14,7 @@ import OppCost from '../calc/oppcost'
 import Toggle from '../toggle'
 import TaxBenefit from '../calc/taxbenefit'
 import CurrencyInput from '../form/currencyinput'
+import { getIntAmtByYear } from '../calc/finance'
 
 const Goals = () => {
     const minStartYear = new Date().getFullYear()
@@ -22,7 +23,7 @@ const Goals = () => {
     const [taxDeductionLimit, setTaxDeductionLimit] = useState<number>(0)
     const [maxTaxDeduction, setMaxTaxDeduction] = useState<number>(10000)
     const [taxBenefitIntOnly, setTaxBenefitIntOnly] = useState<number>(0)
-    
+
     const getTaxBenefit = (val: number, tr: number, taxDL: number, maxTaxDL: number) => {
         if (val <= 0 || tr <= 0 || (taxDL > 0 && maxTaxDL <= 0)) return 0
         if (taxDL > 0 && val > maxTaxDL) val = maxTaxDL
@@ -43,7 +44,6 @@ const Goals = () => {
         let curr = currency
         let fx = fxRate
         let targets: Array<APIt.TargetInput> = []
-        console.log(`Init targets: ${startYear}, ${endYear}`)
         for (let year = startYear; year <= endYear; year++, value *= manualMode < 1 ? (1 + (inflation / 100)) : 1) {
             let existingT = null
             if (wipTargets.length > 0 && manualMode > 0) {
@@ -51,9 +51,10 @@ const Goals = () => {
             }
             let t = existingT ? Object.assign({}, existingT) : createNewTarget(year, value, curr, fx)
             if (t.val > 0 && manualMode < 1) t.val -= getTaxBenefit(value, taxRate, taxDeductionLimit, maxTaxDeduction)
+            t.val = Math.round(t.val)
             targets.push(t)
         }
-        console.log("New targets created: ",targets)
+        console.log("New targets created: ", targets)
         setWIPTargets([...targets])
     }
 
@@ -62,19 +63,22 @@ const Goals = () => {
         let ey = loanMonths <= 12 ? loanRepaymentSY : loanRepaymentSY + Math.floor(totalMonths / 12)
         setEndYear(ey)
         let targets: Array<APIt.TargetInput> = []
+        let annualInts = taxBenefitIntOnly ? getIntAmtByYear(loanBorrowAmt, emi, loanIntRate, loanMonths) : []
         for (let year = startYear; year <= endYear; year++, year >= loanRepaymentSY ? totalMonths -= 12 : totalMonths -= 0) {
             let cf = 0
             let extraMonths = loanMonths % 12
             let factor = 12
             if (year === ey && extraMonths !== 0) factor = extraMonths
             let annualEmiAmt = emi * factor
-            if (year === startYear) cf += loanDP
+            if (year === startYear) cf += taxBenefitIntOnly > 0 ? loanDP : loanDP - getTaxBenefit(loanDP, taxRate, taxDeductionLimit, maxTaxDeduction)
             if (year >= loanRepaymentSY) {
-                cf += annualEmiAmt
-                cf -= getTaxBenefit(cf, taxRate, taxDeductionLimit, maxTaxDeduction)
+                let i = year - loanRepaymentSY
+                let taxBenefitEligibleAmt = taxBenefitIntOnly > 0 ? annualInts[i] : annualEmiAmt
+                cf += annualEmiAmt - getTaxBenefit(taxBenefitEligibleAmt, taxRate, taxDeductionLimit, maxTaxDeduction)
             }
-            targets.push(createNewTarget(year, cf, currency, fxRate))
+            targets.push(createNewTarget(year, Math.round(cf), currency, fxRate))
         }
+        console.log("Loan targets are...", targets)
         setWIPTargets([...targets])
     }
 
@@ -163,11 +167,11 @@ const Goals = () => {
     }
 
     useEffect(() => {
-        setEYOptions(initYearOptions(startYear, 100))
-        setRYOptions(initYearOptions(startYear, 10))
-        if(startYear > endYear) setEndYear(startYear)
-        if(startYear > loanRepaymentSY) setLoanRepaymentSY(startYear)
-    }, [startYear, loan])
+        if (!loan) setEYOptions(initYearOptions(startYear, 100))
+        if (loan) setRYOptions(initYearOptions(startYear, 10))
+        if (!loan && (startYear > endYear || endYear - startYear > 100)) setEndYear(startYear)
+        if (loan && (startYear > loanRepaymentSY || loanRepaymentSY - startYear > 10)) setLoanRepaymentSY(startYear)
+    }, [startYear, endYear, loan, loanRepaymentSY, loan])
 
     const changeEndYear = (str: string) => {
         let ey = parseInt(str)
@@ -176,7 +180,7 @@ const Goals = () => {
 
     useEffect(() => {
         if (loan) initLoanTargets()
-    }, [emi, loanBorrowAmt, loanRepaymentSY, loanMonths, loanDP, loan, currency, startYear, endYear, taxRate, taxDeductionLimit, maxTaxDeduction])
+    }, [emi, loanBorrowAmt, loanRepaymentSY, loanMonths, loanDP, loan, currency, startYear, endYear, taxRate, taxDeductionLimit, maxTaxDeduction, taxBenefitIntOnly])
 
     useEffect(() => {
         if (!loan) initTargets()
@@ -216,7 +220,7 @@ const Goals = () => {
     }
 
     return (
-        <div className="ml-1 mr-1 md:ml-4 md:mr-4">
+        <div className="ml-1 mr-1 md:ml-4 md:mr-4 w-full">
             <div className="flex flex-wrap justify-between items-center">
                 <SelectInput name="goalType" pre="I want to" value={goalType} options={getGoalTypes()} changeHandler={setGoalType} />
                 <TextInput
@@ -242,55 +246,55 @@ const Goals = () => {
                 />
 
             </div>
-            <div className="flex items-center justify-center mt-4 mb-4 text-xl md:text-2xl">
-                <label>Total Needed is</label>
-                <label className="ml-2 mr-4 font-semibold">{toCurrency(totalCost, currency)}</label>
-                <CurrencyInput name="mainCurr" value={currency} changeHandler={setCurrency} />
-            </div>
-            <div className="flex flex-wrap items-center">
+            <div className="flex items-center justify-center mt-4 mb-4">
                 <SelectInput name="sy"
                     pre="From"
                     value={startYear}
                     changeHandler={changeStartYear}
                     options={syOptions}
                 />
-                {!loan && <Fragment>
-                    <SelectInput name="ey"
-                        pre="To"
-                        value={endYear}
-                        changeHandler={changeEndYear}
-                        options={eyOptions}
-                    />
-                    {(!loan && manualMode < 1) && <NumberInput name="selfAmt" pre="Amount" width="100px"
-                        currency={currency} value={selfAmt} changeHandler={setSelfAmt} min={500}
-                    />}
-                </Fragment>}
+                {!loan ? <SelectInput name="ey" pre="To" value={endYear}
+                    changeHandler={changeEndYear} options={eyOptions} />
+                    : <div className="flex flex-col mr-4 md:mr-8">
+                        <label>To</label>
+                        <label className="font-semibold">{endYear}</label>
+                    </div>}
+                <label className="mr-4 font-semibold text-xl md:text-2xl">{toCurrency(totalCost, currency)}</label>
+                <CurrencyInput name="mainCurr" value={currency} changeHandler={setCurrency} />
+            </div>
+            <div className="flex flex-wrap items-center w-full">
+                {(!loan && manualMode < 1) && <NumberInput name="selfAmt" pre="Amount" width="100px"
+                    currency={currency} value={selfAmt} changeHandler={setSelfAmt} min={500}
+                />}
                 <EmiCost currency={currency} startYear={startYear} repaymentSY={loanRepaymentSY} repaymentSYOptions={ryOptions}
                     loanMonths={loanMonths} emi={emi} loanAnnualInt={loanIntRate} loanDP={loanDP} borrowAmt={loanBorrowAmt}
                     loanAnnualIntHandler={setLoanIntRate} loanDPHandler={setLoanDP} borrowAmtHandler={setLoanBorrowAmt}
                     emiHandler={setEmi} loanMonthsHandler={setLoanMonths} borrow={loan ? 1 : 0} borrowModeHandler={changeBorrowMode}
                     repaymentSYHandler={setLoanRepaymentSY} />
-                {!loan && endYear > startYear && <Toggle topText="Manual" bottomText="Auto" value={manualMode} setter={setManualMode} />}
-                {!loan && endYear > startYear && manualMode < 1 && <div className="mt-12"><NumberInput
-                    name="inflation"
-                    pre="Change"
-                    unit="%"
-                    width="50px"
-                    value={inflation}
-                    changeHandler={setInflation}
-                    min={-10.0}
-                    max={10.0}
-                    step={0.1}
-                /></div>}
+                {!loan && endYear > startYear && <Fragment>
+                    <Toggle topText="Manual" bottomText="Auto" value={manualMode} setter={setManualMode} />
+                    {manualMode < 1 &&
+                        <NumberInput
+                            name="inflation"
+                            pre="Change"
+                            unit="%"
+                            width="50px"
+                            value={inflation}
+                            changeHandler={setInflation}
+                            min={-10.0}
+                            max={10.0}
+                            step={0.1}
+                        />}
+                </Fragment>}
                 {(manualMode < 1 || loan) &&
                     <TaxBenefit loan={loan} taxDeductionLimit={taxDeductionLimit} taxDeductionLimitHandler={setTaxDeductionLimit}
                         taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}
-                        maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction} 
+                        maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction}
                         taxBenefitIntOnly={taxBenefitIntOnly} taxBenefitIntOnlyHandler={setTaxBenefitIntOnly} />
                 }
             </div>
 
-            <div className="flex flex-wrap mt-4">
+            {endYear > startYear && <div className="flex flex-wrap mt-4">
                 {wipTargets && wipTargets.map((t, i) =>
                     <div key={"t" + i} className="mr-2 md:mr-4 items-center">
                         {(!loan && manualMode > 0) ? <NumberInput
@@ -307,7 +311,8 @@ const Goals = () => {
                                 <label className="font-semibold">{toCurrency(t.val, currency)}</label>
                             </div>}
                     </div>)}
-            </div>
+            </div>}
+
             <div className="flex flex-wrap items-center mt-8">
                 <TimeCost amount={totalCost} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} />
             </div>

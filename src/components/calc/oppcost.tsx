@@ -72,7 +72,8 @@ export default function OppCost(props: OppCostProps) {
                     value={oppDR}
                     changeHandler={setOppDR}
                     min={1}
-                    max={20} /></div>
+                    max={20} 
+                    step={0.1} /></div>
         </div>
     );
 }

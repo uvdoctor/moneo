@@ -25,3 +25,20 @@ export function getTotalAmtIncludingInt(dpAmt: number, emi: number, months: numb
     if (emi <= 0 || months <= 0) return 0
     return Math.round((emi * months) + dpAmt)
 }
+
+export function getIntAmtByYear(borrowAmt: number, emi: number, intRate: number, months: number) {
+    let principal = borrowAmt
+    let annualInts = []
+    let monthlyRate = intRate / 1200
+    let annualInt = 0
+    let monthlyInt = 0
+    for(let i = 0; i < months; i++, principal -= (emi - monthlyInt)) {
+        monthlyInt = principal * monthlyRate
+        annualInt += monthlyInt
+        if(i % 11 === 0 || i === months - 1) {
+            annualInts.push(annualInt)
+            annualInt = 0
+        }
+    }
+    return annualInts
+}

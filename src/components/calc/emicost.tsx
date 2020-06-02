@@ -50,7 +50,7 @@ export default function EmiCost(props: EmiProps) {
             {props.borrow > 0 && <Fragment>
                 <NumberInput
                     name="borrowAmt"
-                    pre="Amount"
+                    pre="Loan Amount"
                     width="100px"
                     currency={props.currency}
                     value={props.borrowAmt}

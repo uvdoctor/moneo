@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { toCurrency, toReadableNumber } from '../utils'
+import { toCurrency } from '../utils'
 import CurrencyInput from './currencyinput'
-import Nouislider from "nouislider-react"
+import Nouislider from 'nouislider-react'
 
 interface NumberInputProps {
     pre: string,
@@ -51,6 +51,7 @@ export default function NumberInput(props: NumberInputProps) {
                             value={props.value}
                             min={props.min}
                             max={props.max}
+                            step={props.step ? props.step : 1}
                             onChange={(e) => {
                                 // @ts-ignore: Object is possibly 'null'.
                                 if(sliderRef && sliderRef.noUiSlider) sliderRef.noUiSlider.set(e.currentTarget.valueAsNumber)
@@ -84,7 +85,7 @@ export default function NumberInput(props: NumberInputProps) {
                             if(instance && !sliderRef) setSliderRef(instance as any)
                         }
                     }
-                    format={{ from:(val) => props.step as number < 1 ? parseFloat(val) : parseInt(val),  to:(val) => toReadableNumber(val, props.step as number < 1 ? 2 : 0) }}
+                    format={{ from:val => (props.step as number < 1) ? parseFloat(val) : parseInt(val),  to:val => props.step as number < 1 ? ""+val.toFixed(2) : "" + val.toFixed(0)}}
                     range={{ min: [props.min], max: [props.max]}} start={[props.value as number]} step={props.step ? props.step : 1} connect={[true, false]}
                     onChange={values => props.changeHandler(values[0] as number)}
                     orientation={props.orientation ? "vertical" : "horizontal"} />    

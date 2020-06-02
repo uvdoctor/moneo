@@ -24,7 +24,7 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                 {props.loan && props.taxRate > 0 && <Toggle topText="On Interest Only" bottomText="On Full Amount" value={props.taxBenefitIntOnly} setter={props.taxBenefitIntOnlyHandler} />}
                 <Toggle bottomText="No Limit" topText="Limit Tax Deduction" value={props.taxDeductionLimit} setter={props.taxDeductionLimitHandler} />
                 {props.taxDeductionLimit > 0 && <NumberInput name="tbLimit" pre="Up To" note="Yearly" currency={props.currency} width="80px"
-                    value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} min={10000} max={50000} />}
+                    value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} min={1000} max={50000} step={100} />}
             </Fragment>}
         </div>
     )
