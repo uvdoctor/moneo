@@ -42,3 +42,14 @@ export function getIntAmtByYear(borrowAmt: number, emi: number, intRate: number,
     }
     return annualInts
 }
+
+export function getRemainingPrincipal(borrowAmt: number, emi: number, intRate: number, loanPaidForMonths: number) {
+    let principal = borrowAmt
+    let monthlyRate = intRate / 1200
+    let monthlyInt = 0
+    for(let i = 0; i < loanPaidForMonths; i++) {
+        monthlyInt = principal * monthlyRate
+        principal -= (emi - monthlyInt)
+    }
+    return principal < 0 ? 0 : principal
+}

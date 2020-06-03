@@ -43,6 +43,7 @@ export default function NumberInput(props: NumberInputProps) {
                     {props.post && <li>{props.post}</li>}
                 </ul>
                 <div className="flex justify-end">
+                    {console.log("Props.currency: ", props.currency)}
                     {!props.currency || (props.currency && editing) ?
                         <input
                             className="input"
@@ -87,7 +88,7 @@ export default function NumberInput(props: NumberInputProps) {
                     }
                     format={{ from:val => (props.step as number < 1) ? parseFloat(val) : parseInt(val),  to:val => props.step as number < 1 ? ""+val.toFixed(2) : "" + val.toFixed(0)}}
                     range={{ min: [props.min], max: [props.max]}} start={[props.value as number]} step={props.step ? props.step : 1} connect={[true, false]}
-                    onChange={values => props.changeHandler(values[0] as number)}
+                    onChange={values => props.changeHandler((props.step as number < 1) ? parseFloat(values[0]) : parseInt(values[0]))}
                     orientation={props.orientation ? "vertical" : "horizontal"} />    
                     <div className="flex justify-between w-full text-gray-400">
                         <label>{props.min === 0.001 ? 0 : props.min}</label>

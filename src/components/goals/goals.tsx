@@ -14,15 +14,37 @@ import OppCost from '../calc/oppcost'
 import Toggle from '../toggle'
 import TaxBenefit from '../calc/taxbenefit'
 import CurrencyInput from '../form/currencyinput'
-import { getIntAmtByYear } from '../calc/finance'
+import { getIntAmtByYear, getRemainingPrincipal, getTotalAmtIncludingInt } from '../calc/finance'
 
 const Goals = () => {
     const minStartYear = new Date().getFullYear()
+    const [startYear, setStartYear] = useState<number>(minStartYear + 1)
+    const [endYear, setEndYear] = useState<number>(startYear)
+    const [syOptions] = useState(initYearOptions(startYear, 50))
+    const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 100))
+    const [loanRepaymentSY, setLoanRepaymentSY] = useState<number>(startYear)
+    const [ryOptions, setRYOptions] = useState(initYearOptions(startYear, 10))
     const [totalCost, setTotalCost] = useState<number>(0)
     const [taxRate, setTaxRate] = useState<number>(10)
     const [taxDeductionLimit, setTaxDeductionLimit] = useState<number>(0)
     const [maxTaxDeduction, setMaxTaxDeduction] = useState<number>(10000)
     const [taxBenefitIntOnly, setTaxBenefitIntOnly] = useState<number>(0)
+    const [sellAfter, setSellAfter] = useState<number>(5)
+    const [sellPrice, setSellPrice] = useState<number>(0)
+    const [capitalGainTax, setCapitalGainTax] = useState<number>(0)
+    const [loanBorrowAmt, setLoanBorrowAmt] = useState<number>(0)
+    const [selfAmt, setSelfAmt] = useState<number>(0)
+    const [currency, setCurrency] = useState<string>("USD")
+    const [criticality, setCriticality] = useState<APIt.LMH>(APIt.LMH.H)
+    const [ra, setRA] = useState<APIt.LMH>(APIt.LMH.L)
+    const [manualMode, setManualMode] = useState<number>(0)
+    const [name, setName] = useState<string>("")
+    const [inflation, setInflation] = useState<number>(3)
+    const [loan, setLoan] = useState<boolean>(false)
+    const [emi, setEmi] = useState<number>(0)
+    const [loanMonths, setLoanMonths] = useState<number>(60)
+    const [loanDP, setLoanDP] = useState<number>(0)
+    const [loanIntRate, setLoanIntRate] = useState<number>(4)
 
     const getTaxBenefit = (val: number, tr: number, taxDL: number, maxTaxDL: number) => {
         if (val <= 0 || tr <= 0 || (taxDL > 0 && maxTaxDL <= 0)) return 0
@@ -44,13 +66,24 @@ const Goals = () => {
         let curr = currency
         let fx = fxRate
         let targets: Array<APIt.TargetInput> = []
-        for (let year = startYear; year <= endYear; year++, value *= manualMode < 1 ? (1 + (inflation / 100)) : 1) {
+        let ey = endYear
+        if (sellPrice > 0) {
+            ey = startYear + sellAfter
+            setEndYear(ey)
+        }
+        for (let year = startYear; year <= ey; year++, value *= (manualMode < 1 && sellPrice === 0) ? (1 + (inflation / 100)) : 0) {
             let existingT = null
             if (wipTargets.length > 0 && manualMode > 0) {
                 existingT = (wipTargets.filter((target) => target.year === year))[0] as APIt.TargetInput
             }
             let t = existingT ? Object.assign({}, existingT) : createNewTarget(year, value, curr, fx)
             if (t.val > 0 && manualMode < 1) t.val -= getTaxBenefit(value, taxRate, taxDeductionLimit, maxTaxDeduction)
+            if (year === ey && sellPrice > 0) {
+                t.val -= sellPrice
+                if(t.val < 0 && capitalGainTax > 0) {
+                    t.val += (sellPrice - selfAmt) * (capitalGainTax/100)
+                }  
+            }
             t.val = Math.round(t.val)
             targets.push(t)
         }
@@ -60,21 +93,50 @@ const Goals = () => {
 
     const initLoanTargets = (fxRate: number = 1.0) => {
         let totalMonths = loanMonths > 12 ? loanMonths - 12 : loanMonths
-        let ey = loanMonths <= 12 ? loanRepaymentSY : loanRepaymentSY + Math.floor(totalMonths / 12)
-        setEndYear(ey)
+        let ey: number = loanMonths <= 12 ? loanRepaymentSY : loanRepaymentSY + Math.floor(totalMonths / 12)
         let targets: Array<APIt.TargetInput> = []
         let annualInts = taxBenefitIntOnly ? getIntAmtByYear(loanBorrowAmt, emi, loanIntRate, loanMonths) : []
+        let remLoanAdj = 0
+        let sp = 0
+        if (sellPrice > 0) {
+            sp = sellPrice
+            ey = startYear + sellAfter
+            if (ey > loanRepaymentSY) {
+                let loanPaidForMonths = (ey - loanRepaymentSY) * 12
+                let remPrincipal = getRemainingPrincipal(loanBorrowAmt, emi, loanIntRate, loanPaidForMonths)
+                if (remPrincipal > 0) {
+                    if (sellPrice >= remPrincipal) {
+                        sp -= remPrincipal
+                    } else {
+                        remLoanAdj = remPrincipal - sp
+                        sp = 0
+                    }
+                }
+            } else {
+                sp -= loanBorrowAmt
+            }
+        }
+        setEndYear(ey)
         for (let year = startYear; year <= endYear; year++, year >= loanRepaymentSY ? totalMonths -= 12 : totalMonths -= 0) {
             let cf = 0
-            let extraMonths = loanMonths % 12
-            let factor = 12
-            if (year === ey && extraMonths !== 0) factor = extraMonths
-            let annualEmiAmt = emi * factor
             if (year === startYear) cf += taxBenefitIntOnly > 0 ? loanDP : loanDP - getTaxBenefit(loanDP, taxRate, taxDeductionLimit, maxTaxDeduction)
-            if (year >= loanRepaymentSY) {
+            if (year >= loanRepaymentSY && totalMonths >= 0) {
+                let extraMonths = loanMonths % 12
+                let factor = 12
+                if (year === ey && extraMonths !== 0) factor = extraMonths
+                let annualEmiAmt = emi * factor
                 let i = year - loanRepaymentSY
                 let taxBenefitEligibleAmt = taxBenefitIntOnly > 0 ? annualInts[i] : annualEmiAmt
                 cf += annualEmiAmt - getTaxBenefit(taxBenefitEligibleAmt, taxRate, taxDeductionLimit, maxTaxDeduction)
+            }
+            if (year === endYear && sellPrice > 0) {
+                cf += remLoanAdj
+                cf -= sp
+                let totalCost = getTotalAmtIncludingInt(loanDP, emi, loanMonths) - remLoanAdj
+                if(cf < 0 && capitalGainTax > 0 && sellPrice > totalCost) {
+                    let cgt = (sellPrice - totalCost) * (capitalGainTax/100)
+                    cf += cgt
+                }
             }
             targets.push(createNewTarget(year, Math.round(cf), currency, fxRate))
         }
@@ -82,25 +144,6 @@ const Goals = () => {
         setWIPTargets([...targets])
     }
 
-    const [startYear, setStartYear] = useState<number>(minStartYear + 1)
-    const [endYear, setEndYear] = useState<number>(startYear)
-    const [syOptions] = useState(initYearOptions(startYear, 50))
-    const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 100))
-    const [name, setName] = useState<string>("")
-    const [inflation, setInflation] = useState<number>(3)
-    const [loan, setLoan] = useState<boolean>(false)
-    const [emi, setEmi] = useState<number>(0)
-    const [loanMonths, setLoanMonths] = useState<number>(60)
-    const [loanDP, setLoanDP] = useState<number>(0)
-    const [loanIntRate, setLoanIntRate] = useState<number>(4)
-    const [loanRepaymentSY, setLoanRepaymentSY] = useState<number>(startYear)
-    const [ryOptions, setRYOptions] = useState(initYearOptions(startYear, 10))
-    const [loanBorrowAmt, setLoanBorrowAmt] = useState<number>(0)
-    const [selfAmt, setSelfAmt] = useState<number>(0)
-    const [currency, setCurrency] = useState<string>("USD")
-    const [criticality, setCriticality] = useState<APIt.LMH>(APIt.LMH.H)
-    const [ra, setRA] = useState<APIt.LMH>(APIt.LMH.L)
-    const [manualMode, setManualMode] = useState<number>(0)
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(null)
     const [goalType, setGoalType] = useState<APIt.GoalType>(APIt.GoalType.B)
     const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>([createNewTarget(startYear, totalCost, currency, 1.0)])
@@ -180,11 +223,11 @@ const Goals = () => {
 
     useEffect(() => {
         if (loan) initLoanTargets()
-    }, [emi, loanBorrowAmt, loanRepaymentSY, loanMonths, loanDP, loan, currency, startYear, endYear, taxRate, taxDeductionLimit, maxTaxDeduction, taxBenefitIntOnly])
+    }, [emi, loanBorrowAmt, loanRepaymentSY, loanMonths, loanDP, loan, currency, startYear, endYear, sellAfter, sellPrice, taxRate, taxDeductionLimit, maxTaxDeduction, taxBenefitIntOnly])
 
     useEffect(() => {
         if (!loan) initTargets()
-    }, [startYear, endYear, selfAmt, inflation, currency, loan, taxRate, taxDeductionLimit, maxTaxDeduction, manualMode])
+    }, [startYear, endYear, selfAmt, inflation, currency, loan, sellAfter, sellPrice, taxRate, taxDeductionLimit, maxTaxDeduction, manualMode])
 
     useEffect(() => {
         let totalCost = 0
@@ -266,6 +309,7 @@ const Goals = () => {
                 {(!loan && manualMode < 1) && <NumberInput name="selfAmt" pre="Amount" width="100px"
                     currency={currency} value={selfAmt} changeHandler={setSelfAmt} min={500}
                 />}
+
                 <EmiCost currency={currency} startYear={startYear} repaymentSY={loanRepaymentSY} repaymentSYOptions={ryOptions}
                     loanMonths={loanMonths} emi={emi} loanAnnualInt={loanIntRate} loanDP={loanDP} borrowAmt={loanBorrowAmt}
                     loanAnnualIntHandler={setLoanIntRate} loanDPHandler={setLoanDP} borrowAmtHandler={setLoanBorrowAmt}
@@ -273,7 +317,7 @@ const Goals = () => {
                     repaymentSYHandler={setLoanRepaymentSY} />
                 {!loan && endYear > startYear && <Fragment>
                     <Toggle topText="Manual" bottomText="Auto" value={manualMode} setter={setManualMode} />
-                    {manualMode < 1 &&
+                    {manualMode < 1 && goalType === APIt.GoalType.B && sellPrice === 0 &&
                         <NumberInput
                             name="inflation"
                             pre="Change"
@@ -286,15 +330,25 @@ const Goals = () => {
                             step={0.1}
                         />}
                 </Fragment>}
+                {goalType === APIt.GoalType.B && manualMode < 1 && <Fragment>
+                    <NumberInput name="sellAfter" pre="Sell" post="After"
+                        width="30px" unit="years" value={sellAfter} changeHandler={setSellAfter} min={1} max={10} />
+                    {sellAfter >= 1 && <NumberInput name="sellPrice" pre="At Price"
+                        width="90px" currency={currency} value={sellPrice} changeHandler={setSellPrice} />}
+                </Fragment>}
                 {(manualMode < 1 || loan) &&
                     <TaxBenefit loan={loan} taxDeductionLimit={taxDeductionLimit} taxDeductionLimitHandler={setTaxDeductionLimit}
                         taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}
                         maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction}
                         taxBenefitIntOnly={taxBenefitIntOnly} taxBenefitIntOnlyHandler={setTaxBenefitIntOnly} />
                 }
+                {goalType === APIt.GoalType.B && (loan || (!loan && manualMode < 1)) && sellPrice > 0 && sellAfter > 0 &&
+                    <NumberInput name="cgt" pre="Capital Gain" post="Tax Rate" value={capitalGainTax} changeHandler={setCapitalGainTax}
+                    min={0.001} max={30} step={1} unit="%" width="30px" />
+                }
             </div>
 
-            {endYear > startYear && <div className="flex flex-wrap mt-4">
+            {endYear > startYear && <div className="flex flex-wrap mt-4 mb-4">
                 {wipTargets && wipTargets.map((t, i) =>
                     <div key={"t" + i} className="mr-2 md:mr-4 items-center">
                         {(!loan && manualMode > 0) ? <NumberInput
@@ -313,12 +367,10 @@ const Goals = () => {
                     </div>)}
             </div>}
 
-            <div className="flex flex-wrap items-center mt-8">
+            {totalCost > 0 && <Fragment>
                 <TimeCost amount={totalCost} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} />
-            </div>
-            <div className="mt-4">
                 <OppCost targets={wipTargets} currency={currency} startYear={startYear} endYear={endYear} />
-            </div>
+            </Fragment>}
             <div className="flex justify-center mt-8">
                 <button className="cancel" onClick={createNewGoal}>
                     Cancel
