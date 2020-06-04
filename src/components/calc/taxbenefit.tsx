@@ -19,7 +19,7 @@ export default function TaxBenefit(props: TaxBenefitProps) {
     return (
         <div className="flex items-center">
             <NumberInput name="taxRate" pre="Tax Benefit" unit="%" width="30px"
-                value={props.taxRate} changeHandler={props.taxRateHandler} min={0.001} max={45} />
+                value={props.taxRate} changeHandler={props.taxRateHandler} max={45} />
             {props.taxRate > 0 && <Fragment>
                 {props.loan && props.taxRate > 0 && <Toggle topText="On Interest Only" bottomText="On Full Amount" value={props.taxBenefitIntOnly} setter={props.taxBenefitIntOnlyHandler} />}
                 <Toggle bottomText="No Limit" topText="Limit Tax Deduction" value={props.taxDeductionLimit} setter={props.taxDeductionLimitHandler} />

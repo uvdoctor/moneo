@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import NumberInput from '../form/numberinput'
 import { getEmi, getTotalInt } from '../calc/finance'
-import Toggle from '../toggle'
 import { toCurrency } from '../utils'
 import SelectInput from '../form/selectinput'
 
@@ -17,7 +16,6 @@ interface EmiProps {
     emi: number,
     borrowAmt: number,
     emiHandler: any,
-    borrowModeHandler: any,
     repaymentSYHandler: any,
     loanMonthsHandler: any,
     loanDPHandler: any,
@@ -34,10 +32,6 @@ export default function EmiCost(props: EmiProps) {
         setTotalIntAmt(Math.round(getTotalInt(props.borrowAmt, emi, props.loanMonths)))
     }
 
-    const changeBorrowMode = (val: number) => {
-        props.borrowModeHandler(val)
-    }
-
     useEffect(
         () =>
             {if(props.borrow > 0) calculateEmi()}
@@ -46,9 +40,7 @@ export default function EmiCost(props: EmiProps) {
 
     return (
         <div className="flex flex-wrap items-center">
-            <Toggle topText="Borrow" bottomText="Self" value={props.borrow} setter={changeBorrowMode} />
-            {props.borrow > 0 && <Fragment>
-                <NumberInput
+                {props.borrow > 0 && <Fragment><NumberInput
                     name="borrowAmt"
                     pre="Loan Amount"
                     width="100px"
@@ -66,18 +58,18 @@ export default function EmiCost(props: EmiProps) {
                     />
                 <SelectInput name="repaymentSY" options={props.repaymentSYOptions}
                     value={props.repaymentSY} pre="Repayment Starts" changeHandler={(year: string) => props.repaymentSYHandler(parseInt(year))} />
-                <div className="flex flex-col">
+                <div className="flex flex-col justify-end mr-4">
                     <NumberInput
                         name="intRate"
                         pre="Interest"
                         unit="%"
-                        width="50px"
+                        width="40px"
                         value={props.loanAnnualInt}
                         changeHandler={props.loanAnnualIntHandler}
                         min={1.0}
                         max={30.0}
                         step={0.1} />
-                    <div className="flex justify-between mr-4">
+                    <div className="flex justify-between mr-8">
                         <label>Total</label>
                         <label className="font-semibold text-right">{toCurrency(totalIntAmt, props.currency)}</label>
                     </div>
@@ -92,12 +84,11 @@ export default function EmiCost(props: EmiProps) {
                         changeHandler={props.loanMonthsHandler}
                         min={6}
                         max={360} />
-                    <div className="flex justify-between mr-4">
+                    <div className="flex justify-between mr-8">
                         <label>EMI</label>
                         <label className="font-semibold">{toCurrency(props.emi, props.currency)}</label>
                     </div>
-                </div>
-            </Fragment>}
-        </div >
+                </div></Fragment>}
+        </div>
     );
 }

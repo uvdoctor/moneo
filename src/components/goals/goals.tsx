@@ -25,13 +25,13 @@ const Goals = () => {
     const [loanRepaymentSY, setLoanRepaymentSY] = useState<number>(startYear)
     const [ryOptions, setRYOptions] = useState(initYearOptions(startYear, 10))
     const [totalCost, setTotalCost] = useState<number>(0)
-    const [taxRate, setTaxRate] = useState<number>(10)
+    const [taxRate, setTaxRate] = useState<number>(0)
     const [taxDeductionLimit, setTaxDeductionLimit] = useState<number>(0)
     const [maxTaxDeduction, setMaxTaxDeduction] = useState<number>(10000)
     const [taxBenefitIntOnly, setTaxBenefitIntOnly] = useState<number>(0)
     const [sellAfter, setSellAfter] = useState<number>(5)
     const [sellPrice, setSellPrice] = useState<number>(0)
-    const [capitalGainTax, setCapitalGainTax] = useState<number>(0)
+    const [capitalGainTax, setCapitalGainTax] = useState<number>(10)
     const [loanBorrowAmt, setLoanBorrowAmt] = useState<number>(0)
     const [selfAmt, setSelfAmt] = useState<number>(0)
     const [currency, setCurrency] = useState<string>("USD")
@@ -40,7 +40,7 @@ const Goals = () => {
     const [manualMode, setManualMode] = useState<number>(0)
     const [name, setName] = useState<string>("")
     const [inflation, setInflation] = useState<number>(3)
-    const [loan, setLoan] = useState<boolean>(false)
+    const [borrowMode, setBorrowMode] = useState<number>(0)
     const [emi, setEmi] = useState<number>(0)
     const [loanMonths, setLoanMonths] = useState<number>(60)
     const [loanDP, setLoanDP] = useState<number>(0)
@@ -67,7 +67,7 @@ const Goals = () => {
         let fx = fxRate
         let targets: Array<APIt.TargetInput> = []
         let ey = endYear
-        if (sellPrice > 0) {
+        if (sellPrice > 0 && manualMode < 1) {
             ey = startYear + sellAfter
             setEndYear(ey)
         }
@@ -78,11 +78,11 @@ const Goals = () => {
             }
             let t = existingT ? Object.assign({}, existingT) : createNewTarget(year, value, curr, fx)
             if (t.val > 0 && manualMode < 1) t.val -= getTaxBenefit(value, taxRate, taxDeductionLimit, maxTaxDeduction)
-            if (year === ey && sellPrice > 0) {
+            if (year === ey && sellPrice > 0 && manualMode < 1) {
                 t.val -= sellPrice
-                if(t.val < 0 && capitalGainTax > 0) {
-                    t.val += (sellPrice - selfAmt) * (capitalGainTax/100)
-                }  
+                if (t.val < 0 && capitalGainTax > 0) {
+                    t.val += (sellPrice - selfAmt) * (capitalGainTax / 100)
+                }
             }
             t.val = Math.round(t.val)
             targets.push(t)
@@ -133,8 +133,8 @@ const Goals = () => {
                 cf += remLoanAdj
                 cf -= sp
                 let totalCost = getTotalAmtIncludingInt(loanDP, emi, loanMonths) - remLoanAdj
-                if(cf < 0 && capitalGainTax > 0 && sellPrice > totalCost) {
-                    let cgt = (sellPrice - totalCost) * (capitalGainTax/100)
+                if (capitalGainTax > 0 && sellPrice > totalCost) {
+                    let cgt = (sellPrice - totalCost) * (capitalGainTax / 100)
                     cf += cgt
                 }
             }
@@ -187,7 +187,7 @@ const Goals = () => {
             tgts: wipTargets,
             imp: criticality,
             ra: ra,
-            emi: loan ? { rate: loanIntRate, dur: loanMonths, dp: loanDP } as APIt.EmiInput : null,
+            emi: borrowMode > 0 ? { rate: loanIntRate, dur: loanMonths, dp: loanDP } as APIt.EmiInput : null,
         }
         try {
             const { data } = (await API.graphql(graphqlOperation(mutations.createGoal, { input: goal }))) as {
@@ -210,11 +210,11 @@ const Goals = () => {
     }
 
     useEffect(() => {
-        if (!loan) setEYOptions(initYearOptions(startYear, 100))
-        if (loan) setRYOptions(initYearOptions(startYear, 10))
-        if (!loan && (startYear > endYear || endYear - startYear > 100)) setEndYear(startYear)
-        if (loan && (startYear > loanRepaymentSY || loanRepaymentSY - startYear > 10)) setLoanRepaymentSY(startYear)
-    }, [startYear, endYear, loan, loanRepaymentSY, loan])
+        if (borrowMode < 1) setEYOptions(initYearOptions(startYear, 100))
+        if (borrowMode > 0) setRYOptions(initYearOptions(startYear, 10))
+        if (borrowMode < 1 && (startYear > endYear || endYear - startYear > 100)) setEndYear(startYear)
+        if (borrowMode > 0 && (startYear > loanRepaymentSY || loanRepaymentSY - startYear > 10)) setLoanRepaymentSY(startYear)
+    }, [startYear, endYear, borrowMode, loanRepaymentSY])
 
     const changeEndYear = (str: string) => {
         let ey = parseInt(str)
@@ -222,12 +222,12 @@ const Goals = () => {
     }
 
     useEffect(() => {
-        if (loan) initLoanTargets()
-    }, [emi, loanBorrowAmt, loanRepaymentSY, loanMonths, loanDP, loan, currency, startYear, endYear, sellAfter, sellPrice, taxRate, taxDeductionLimit, maxTaxDeduction, taxBenefitIntOnly])
+        if (borrowMode > 0) initLoanTargets()
+    }, [emi, loanBorrowAmt, loanRepaymentSY, loanMonths, loanDP, borrowMode, currency, startYear, endYear, sellAfter, sellPrice, taxRate, taxDeductionLimit, maxTaxDeduction, taxBenefitIntOnly, capitalGainTax])
 
     useEffect(() => {
-        if (!loan) initTargets()
-    }, [startYear, endYear, selfAmt, inflation, currency, loan, sellAfter, sellPrice, taxRate, taxDeductionLimit, maxTaxDeduction, manualMode])
+        if (borrowMode < 1) initTargets()
+    }, [startYear, endYear, selfAmt, inflation, currency, borrowMode, sellAfter, sellPrice, taxRate, taxDeductionLimit, maxTaxDeduction, manualMode, capitalGainTax])
 
     useEffect(() => {
         let totalCost = 0
@@ -236,9 +236,8 @@ const Goals = () => {
     }, [wipTargets])
 
     const changeBorrowMode = (val: number) => {
-        let emi = val > 0 ? true : false
-        setLoan(emi)
-        if (!emi) {
+        setBorrowMode(val)
+        if (val < 1) {
             setEndYear(startYear)
         }
     }
@@ -296,28 +295,33 @@ const Goals = () => {
                     changeHandler={changeStartYear}
                     options={syOptions}
                 />
-                {!loan ? <SelectInput name="ey" pre="To" value={endYear}
+                {(borrowMode < 1 && (sellPrice === 0 || manualMode > 0)) ? <SelectInput name="ey" pre="To" value={endYear}
                     changeHandler={changeEndYear} options={eyOptions} />
                     : <div className="flex flex-col mr-4 md:mr-8">
                         <label>To</label>
                         <label className="font-semibold">{endYear}</label>
                     </div>}
-                <label className="mr-4 font-semibold text-xl md:text-2xl">{toCurrency(totalCost, currency)}</label>
-                <CurrencyInput name="mainCurr" value={currency} changeHandler={setCurrency} />
+                <div className="mr-4 font-semibold flex flex-col justify-center">
+                    <label>{`Net ${totalCost < 0 ? 'Gain' : 'Cost'}`}</label>
+                    <div className="flex items-center">
+                        <label className="text-xl md:text-2xl mr-4">{toCurrency(Math.abs(totalCost), currency)}</label>
+                        <CurrencyInput name="mainCurr" value={currency} changeHandler={setCurrency} />
+                    </div>
+                </div>
+                <Toggle topText="Borrow" value={borrowMode} setter={changeBorrowMode} />
             </div>
             <div className="flex flex-wrap items-center w-full">
-                {(!loan && manualMode < 1) && <NumberInput name="selfAmt" pre="Amount" width="100px"
+                {(borrowMode < 1 && manualMode < 1) && <NumberInput name="selfAmt" pre="Amount" width="100px"
                     currency={currency} value={selfAmt} changeHandler={setSelfAmt} min={500}
                 />}
 
                 <EmiCost currency={currency} startYear={startYear} repaymentSY={loanRepaymentSY} repaymentSYOptions={ryOptions}
                     loanMonths={loanMonths} emi={emi} loanAnnualInt={loanIntRate} loanDP={loanDP} borrowAmt={loanBorrowAmt}
                     loanAnnualIntHandler={setLoanIntRate} loanDPHandler={setLoanDP} borrowAmtHandler={setLoanBorrowAmt}
-                    emiHandler={setEmi} loanMonthsHandler={setLoanMonths} borrow={loan ? 1 : 0} borrowModeHandler={changeBorrowMode}
-                    repaymentSYHandler={setLoanRepaymentSY} />
-                {!loan && endYear > startYear && <Fragment>
+                    emiHandler={setEmi} loanMonthsHandler={setLoanMonths} borrow={borrowMode} repaymentSYHandler={setLoanRepaymentSY} />
+                {borrowMode < 1 && <Fragment>
                     <Toggle topText="Manual" bottomText="Auto" value={manualMode} setter={setManualMode} />
-                    {manualMode < 1 && goalType === APIt.GoalType.B && sellPrice === 0 &&
+                    {endYear > startYear && manualMode < 1 && goalType === APIt.GoalType.B && sellPrice === 0 &&
                         <NumberInput
                             name="inflation"
                             pre="Change"
@@ -336,22 +340,22 @@ const Goals = () => {
                     {sellAfter >= 1 && <NumberInput name="sellPrice" pre="At Price"
                         width="90px" currency={currency} value={sellPrice} changeHandler={setSellPrice} />}
                 </Fragment>}
-                {(manualMode < 1 || loan) &&
-                    <TaxBenefit loan={loan} taxDeductionLimit={taxDeductionLimit} taxDeductionLimitHandler={setTaxDeductionLimit}
+                {(manualMode < 1 || borrowMode > 0) &&
+                    <TaxBenefit loan={borrowMode > 0 ? true : false} taxDeductionLimit={taxDeductionLimit} taxDeductionLimitHandler={setTaxDeductionLimit}
                         taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}
                         maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction}
                         taxBenefitIntOnly={taxBenefitIntOnly} taxBenefitIntOnlyHandler={setTaxBenefitIntOnly} />
                 }
-                {goalType === APIt.GoalType.B && (loan || (!loan && manualMode < 1)) && sellPrice > 0 && sellAfter > 0 &&
+                {goalType === APIt.GoalType.B && (borrowMode > 0 || (borrowMode < 1 && manualMode < 1)) && sellPrice > 0 && totalCost < 0 &&
                     <NumberInput name="cgt" pre="Capital Gain" post="Tax Rate" value={capitalGainTax} changeHandler={setCapitalGainTax}
-                    min={0.001} max={30} step={1} unit="%" width="30px" />
+                        max={30} unit="%" width="30px" />
                 }
             </div>
 
-            {endYear > startYear && <div className="flex flex-wrap mt-4 mb-4">
+            {(endYear > startYear || manualMode > 0) && <div className="flex flex-wrap mt-4 mb-4">
                 {wipTargets && wipTargets.map((t, i) =>
                     <div key={"t" + i} className="mr-2 md:mr-4 items-center">
-                        {(!loan && manualMode > 0) ? <NumberInput
+                        {(borrowMode < 1 && manualMode > 0) ? <NumberInput
                             name="year"
                             pre={`${t.year}`}
                             currency={t.curr}

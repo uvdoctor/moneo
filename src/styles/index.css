@@ -96,6 +96,11 @@ input[type=number] {
 	position: relative;
 }
 
+.rc-slider-handle::after {
+	background-color: green;
+	box-shadow: unset;
+}
+
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
 	input[type="range"]::-webkit-slider-thumb {
 		width: 1.1rem;

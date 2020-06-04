@@ -1,8 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { toCurrency } from '../utils'
 import CurrencyInput from './currencyinput'
-import Nouislider from 'nouislider-react'
-
+import Slider from 'rc-slider'
 interface NumberInputProps {
     pre: string,
     post?: string,
@@ -23,7 +22,6 @@ interface NumberInputProps {
 
 export default function NumberInput(props: NumberInputProps) {
     const formRef = useRef<HTMLFormElement>(null)
-    const [sliderRef, setSliderRef] = useState(null)
     const [editing, setEditing] = useState<boolean>(false)
     const defaultWidth = '70px'
 
@@ -37,8 +35,8 @@ export default function NumberInput(props: NumberInputProps) {
 
     return (
         <form ref={formRef} className="mr-4 md:mr-8">
-            <div className={props.min && props.max ? "flex items-center justify-between" : "flex flex-col justify-between"}>
-                <ul className={props.min && props.max ? "text-left" : "text-right"}>
+            <div className={props.max ? "flex items-center justify-between" : "flex flex-col justify-between"}>
+                <ul className={props.max ? "text-left" : "text-right"}>
                     {props.pre && <li>{props.pre}</li>}
                     {props.post && <li>{props.post}</li>}
                 </ul>
@@ -53,11 +51,7 @@ export default function NumberInput(props: NumberInputProps) {
                             min={props.min}
                             max={props.max}
                             step={props.step ? props.step : 1}
-                            onChange={(e) => {
-                                // @ts-ignore: Object is possibly 'null'.
-                                if(sliderRef && sliderRef.noUiSlider) sliderRef.noUiSlider.set(e.currentTarget.valueAsNumber)
-                                props.changeHandler(e.currentTarget.valueAsNumber)
-                            }}
+                            onChange={(e) => props.changeHandler(e.currentTarget.valueAsNumber)}
                             onBlur={() => setEditing(false)}
                             required
                             style={{ textAlign: "right", width: `${props.width ? props.width : defaultWidth}` }}
@@ -78,22 +72,38 @@ export default function NumberInput(props: NumberInputProps) {
                         <CurrencyInput name="currList" value={props.currency as string} changeHandler={props.currencyHandler} />
                     </div>}
             </div>
-            {props.min && props.max &&
+            {props.max &&
                 <div className="flex flex-col mt-1">
-                    <Nouislider className="rounded-full" tooltips={true}
-                    instanceRef = {
-                        instance => {
-                            if(instance && !sliderRef) setSliderRef(instance as any)
-                        }
-                    }
-                    format={{ from:val => (props.step as number < 1) ? parseFloat(val) : parseInt(val),  to:val => props.step as number < 1 ? ""+val.toFixed(2) : "" + val.toFixed(0)}}
-                    range={{ min: [props.min], max: [props.max]}} start={[props.value as number]} step={props.step ? props.step : 1} connect={[true, false]}
-                    onChange={values => props.changeHandler((props.step as number < 1) ? parseFloat(values[0]) : parseInt(values[0]))}
-                    orientation={props.orientation ? "vertical" : "horizontal"} />    
+                    {/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
+                    <Slider className="bg-gray-200 rounded-full shadow" min={props.min} max={props.max} step={props.step}
+                        value={props.value} onChange={props.changeHandler}
+                        handleStyle={{
+                            cursor: "pointer",
+                            width: "1.2rem",
+                            height: "1.2rem",
+                            background: "#ffffff",
+                            borderRadius: "50%",
+                            webkitAppearance: "none",
+                            appearance: "none",
+                            border: "none",
+                            outline: "none",
+                            left: 0,
+                            top: 2,
+                            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
+                        }}
+                        trackStyle={{
+                            backgroundColor: '#48bb78',
+                            top: 0,
+                            left: 0,
+                            height:'0.9rem'
+                        }}
+                        railStyle={{
+                            background: 'none',
+                        }} />
                     <div className="flex justify-between w-full text-gray-400">
-                        <label>{props.min === 0.001 ? 0 : props.min}</label>
+                        <label>{props.min ? props.min: 0}</label>
                         <label>{props.max}</label>
-                </div>
+                    </div>
                 </div>
             }
             <label className="flex justify-center">{props.note}</label>
