@@ -7,7 +7,7 @@ interface NumberInputProps {
     post?: string,
     min?: number,
     max?: number,
-    value?: number,
+    value: number,
     width?: string,
     name: string,
     currency?: string,
@@ -15,7 +15,6 @@ interface NumberInputProps {
     unit?: string,
     changeHandler: any,
     note?: string,
-    orientation?: string,
     step?: number
 }
 

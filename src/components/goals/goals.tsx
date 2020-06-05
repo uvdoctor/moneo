@@ -14,7 +14,9 @@ import OppCost from '../calc/oppcost'
 import Toggle from '../toggle'
 import TaxBenefit from '../calc/taxbenefit'
 import CurrencyInput from '../form/currencyinput'
+
 import { getIntAmtByYear, getRemainingPrincipal, getTotalAmtIncludingInt } from '../calc/finance'
+import { LineChart } from './linechart'
 
 const Goals = () => {
     const minStartYear = new Date().getFullYear()
@@ -26,8 +28,7 @@ const Goals = () => {
     const [ryOptions, setRYOptions] = useState(initYearOptions(startYear, 10))
     const [totalCost, setTotalCost] = useState<number>(0)
     const [taxRate, setTaxRate] = useState<number>(0)
-    const [taxDeductionLimit, setTaxDeductionLimit] = useState<number>(0)
-    const [maxTaxDeduction, setMaxTaxDeduction] = useState<number>(10000)
+    const [maxTaxDeduction, setMaxTaxDeduction] = useState<number>(0)
     const [taxBenefitIntOnly, setTaxBenefitIntOnly] = useState<number>(0)
     const [sellAfter, setSellAfter] = useState<number>(5)
     const [sellPrice, setSellPrice] = useState<number>(0)
@@ -46,9 +47,9 @@ const Goals = () => {
     const [loanDP, setLoanDP] = useState<number>(0)
     const [loanIntRate, setLoanIntRate] = useState<number>(4)
 
-    const getTaxBenefit = (val: number, tr: number, taxDL: number, maxTaxDL: number) => {
-        if (val <= 0 || tr <= 0 || (taxDL > 0 && maxTaxDL <= 0)) return 0
-        if (taxDL > 0 && val > maxTaxDL) val = maxTaxDL
+    const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
+        if (val <= 0 || tr <= 0 || maxTaxDL <= 0) return 0
+        if (maxTaxDL > 0 && val > maxTaxDL) val = maxTaxDL
         return Math.round(val * (tr / 100))
     }
 
@@ -77,7 +78,7 @@ const Goals = () => {
                 existingT = (wipTargets.filter((target) => target.year === year))[0] as APIt.TargetInput
             }
             let t = existingT ? Object.assign({}, existingT) : createNewTarget(year, value, curr, fx)
-            if (t.val > 0 && manualMode < 1) t.val -= getTaxBenefit(value, taxRate, taxDeductionLimit, maxTaxDeduction)
+            if (t.val > 0 && manualMode < 1) t.val -= getTaxBenefit(value, taxRate, maxTaxDeduction)
             if (year === ey && sellPrice > 0 && manualMode < 1) {
                 t.val -= sellPrice
                 if (t.val < 0 && capitalGainTax > 0) {
@@ -119,7 +120,7 @@ const Goals = () => {
         setEndYear(ey)
         for (let year = startYear; year <= endYear; year++, year >= loanRepaymentSY ? totalMonths -= 12 : totalMonths -= 0) {
             let cf = 0
-            if (year === startYear) cf += taxBenefitIntOnly > 0 ? loanDP : loanDP - getTaxBenefit(loanDP, taxRate, taxDeductionLimit, maxTaxDeduction)
+            if (year === startYear) cf += taxBenefitIntOnly > 0 ? loanDP : loanDP - getTaxBenefit(loanDP, taxRate, maxTaxDeduction)
             if (year >= loanRepaymentSY && totalMonths >= 0) {
                 let extraMonths = loanMonths % 12
                 let factor = 12
@@ -127,7 +128,7 @@ const Goals = () => {
                 let annualEmiAmt = emi * factor
                 let i = year - loanRepaymentSY
                 let taxBenefitEligibleAmt = taxBenefitIntOnly > 0 ? annualInts[i] : annualEmiAmt
-                cf += annualEmiAmt - getTaxBenefit(taxBenefitEligibleAmt, taxRate, taxDeductionLimit, maxTaxDeduction)
+                cf += annualEmiAmt - getTaxBenefit(taxBenefitEligibleAmt, taxRate, maxTaxDeduction)
             }
             if (year === endYear && sellPrice > 0) {
                 cf += remLoanAdj
@@ -223,11 +224,11 @@ const Goals = () => {
 
     useEffect(() => {
         if (borrowMode > 0) initLoanTargets()
-    }, [emi, loanBorrowAmt, loanRepaymentSY, loanMonths, loanDP, borrowMode, currency, startYear, endYear, sellAfter, sellPrice, taxRate, taxDeductionLimit, maxTaxDeduction, taxBenefitIntOnly, capitalGainTax])
+    }, [emi, loanBorrowAmt, loanRepaymentSY, loanMonths, loanDP, borrowMode, currency, startYear, endYear, sellAfter, sellPrice, taxRate, maxTaxDeduction, taxBenefitIntOnly, capitalGainTax])
 
     useEffect(() => {
         if (borrowMode < 1) initTargets()
-    }, [startYear, endYear, selfAmt, inflation, currency, borrowMode, sellAfter, sellPrice, taxRate, taxDeductionLimit, maxTaxDeduction, manualMode, capitalGainTax])
+    }, [startYear, endYear, selfAmt, inflation, currency, borrowMode, sellAfter, sellPrice, taxRate, maxTaxDeduction, manualMode, capitalGainTax])
 
     useEffect(() => {
         let totalCost = 0
@@ -302,7 +303,7 @@ const Goals = () => {
                         <label className="font-semibold">{endYear}</label>
                     </div>}
                 <div className="mr-4 font-semibold flex flex-col justify-center">
-                    <label>{`Net ${totalCost < 0 ? 'Gain' : 'Cost'}`}</label>
+                    <label>{`${totalCost < 0 ? 'Net Gain' : `${sellPrice > 0 && !(borrowMode < 1 && manualMode > 0) && totalCost > 0 ? 'Net Loss' : 'Total Cost'}`}`}</label>
                     <div className="flex items-center">
                         <label className="text-xl md:text-2xl mr-4">{toCurrency(Math.abs(totalCost), currency)}</label>
                         <CurrencyInput name="mainCurr" value={currency} changeHandler={setCurrency} />
@@ -341,8 +342,7 @@ const Goals = () => {
                         width="90px" currency={currency} value={sellPrice} changeHandler={setSellPrice} />}
                 </Fragment>}
                 {(manualMode < 1 || borrowMode > 0) &&
-                    <TaxBenefit loan={borrowMode > 0 ? true : false} taxDeductionLimit={taxDeductionLimit} taxDeductionLimitHandler={setTaxDeductionLimit}
-                        taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}
+                    <TaxBenefit loan={borrowMode > 0 ? true : false} taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}
                         maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction}
                         taxBenefitIntOnly={taxBenefitIntOnly} taxBenefitIntOnlyHandler={setTaxBenefitIntOnly} />
                 }
@@ -352,23 +352,26 @@ const Goals = () => {
                 }
             </div>
 
-            {(endYear > startYear || manualMode > 0) && <div className="flex flex-wrap mt-4 mb-4">
-                {wipTargets && wipTargets.map((t, i) =>
-                    <div key={"t" + i} className="mr-2 md:mr-4 items-center">
-                        {(borrowMode < 1 && manualMode > 0) ? <NumberInput
-                            name="year"
-                            pre={`${t.year}`}
-                            currency={t.curr}
-                            value={t.val}
-                            changeHandler={(val: number) => changeTargetVal(val, i)}
-                            currencyHandler={(val: string) => changeTargetCurrency(val, i)}
-                            width="80px"
-                        /> :
-                            <div className="mt-4 flex flex-col w-16 md:w-20 lg:w-24 justify-between text-right">
-                                <label>{t.year}</label>
-                                <label className="font-semibold">{toCurrency(t.val, currency)}</label>
-                            </div>}
-                    </div>)}
+            {(endYear > startYear || manualMode > 0) && <div className="flex flex-col mt-4 mb-4">
+                {totalCost !== 0 && wipTargets.length > 1 && <LineChart tgts={wipTargets} currency={currency} />}
+                <div className="mt-4 flex flex-wrap">
+                    {wipTargets && wipTargets.map((t, i) =>
+                        <div key={"t" + i} className="mr-2 md:mr-4 items-center">
+                            {(borrowMode < 1 && manualMode > 0) ? <NumberInput
+                                name="year"
+                                pre={`${t.year}`}
+                                currency={t.curr}
+                                value={t.val}
+                                changeHandler={(val: number) => changeTargetVal(val, i)}
+                                currencyHandler={(val: string) => changeTargetCurrency(val, i)}
+                                width="80px"
+                            /> :
+                                <div className="mt-4 flex flex-col w-16 md:w-20 lg:w-24 justify-between text-right">
+                                    <label>{t.year}</label>
+                                    <label className="font-semibold">{toCurrency(t.val, currency)}</label>
+                                </div>}
+                        </div>)}
+                </div>
             </div>}
 
             {totalCost > 0 && <Fragment>

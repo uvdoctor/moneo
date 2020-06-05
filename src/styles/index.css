@@ -67,63 +67,6 @@ input[type=number] {
 	text-align: right;
 }
 
-.noUi-tooltip {
-	display: none;
-}
-.noUi-active .noUi-tooltip {
-	display: block;
-}
-
-#slider-toggle {
-	height: 50px;
-}
-
-.noUi-handle-lower {
-	width: 1rem;
-	-webkit-appearance: none;
-	appearance: none;
-	height: 1rem;
-	cursor: ew-resize;
-	background: #ffffff;
-	border-radius: 50%;
-	border: none;
-	outline: none;
-	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-}
-
-.noUi-connect {
-	background-color: #48bb78;
-	position: relative;
-}
-
-.rc-slider-handle::after {
-	background-color: green;
-	box-shadow: unset;
-}
-
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-	input[type="range"]::-webkit-slider-thumb {
-		width: 1.1rem;
-		-webkit-appearance: none;
-		appearance: none;
-		height: 1.1rem;
-		cursor: ew-resize;
-		background: #fff;
-		box-shadow: -405px 0 0 400px #48bb78;
-		border-radius: 50%;
-	}
-
-	input[type="range"]::-moz-range-thumb {
-		width: 1.1rem;
-		appearance: none;
-		height: 1.1rem;
-		cursor: ew-resize;
-		background: #fff;
-		box-shadow: -405px 0 0 400px #48bb78;
-		border-radius: 50%;
-	}
-}
-
 .input:focus {
 	outline: 0;
 	border-color: #38a169;

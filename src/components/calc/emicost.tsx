@@ -24,6 +24,12 @@ interface EmiProps {
 }
 
 export default function EmiCost(props: EmiProps) {
+    const initMonthsData = (start: number, end: number) => {
+        let months = []
+        for(let i = start; i <= end; i++) months.push(""+i)
+        return months
+    }
+
     const [totalIntAmt, setTotalIntAmt] = useState<number>(0)
 
     const calculateEmi = () => {
