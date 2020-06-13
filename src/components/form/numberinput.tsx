@@ -40,7 +40,6 @@ export default function NumberInput(props: NumberInputProps) {
                     {props.post && <li>{props.post}</li>}
                 </ul>
                 <div className="flex justify-end">
-                    {console.log("Props.currency: ", props.currency)}
                     {!props.currency || (props.currency && editing) ?
                         <input
                             className="input"
@@ -77,12 +76,11 @@ export default function NumberInput(props: NumberInputProps) {
                     <Slider className="bg-gray-200 rounded-full shadow" min={props.min} max={props.max} step={props.step}
                         value={props.value} onChange={props.changeHandler}
                         handleStyle={{
-                            cursor: "pointer",
+                            cursor: "grab",
                             width: "1.2rem",
                             height: "1.2rem",
                             background: "#ffffff",
                             borderRadius: "50%",
-                            webkitAppearance: "none",
                             appearance: "none",
                             border: "none",
                             outline: "none",

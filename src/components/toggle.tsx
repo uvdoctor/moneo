@@ -21,7 +21,6 @@ const Toggle = (props: ToggleProps) => {
                     height: "1.2rem",
                     background: "#ffffff",
                     borderRadius: "50%",
-                    webkitAppearance: "none",
                     appearance: "none",
                     border: "none",
                     outline: "none",

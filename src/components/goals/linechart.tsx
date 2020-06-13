@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react'
-import { Line } from 'nivo'
+import React, { useState } from 'react'
 import { CreateGoalInput, TargetInput } from '../../api/goals'
-import { toCurrency } from '../utils'
-import AutoSizer from 'react-virtualized-auto-sizer'
+import dynamic from 'next/dynamic'
 
 interface LineChartProps {
     goals?: Array<CreateGoalInput>
     tgts?: Array<TargetInput>
-    currency: string
+    data?: Array<any>
+    currency?: string
+    title?: string
 }
 
 export function LineChart(props: LineChartProps) {
     const [minY, setMinY] = useState(0)
+    const Plot = dynamic(
+        () => import('react-plotly.js'), {ssr: false}
+    )
 
     const buildDataFromGoals = (goals: Array<CreateGoalInput>) => {
         let resultItems: Array<any> = []
@@ -45,15 +48,15 @@ export function LineChart(props: LineChartProps) {
         return resultItems
     }
 
-    const dataItems: Array<any> = buildDataFromTargets(props.tgts as Array<TargetInput>)
+    //const dataItems: Array<any> = buildDataFromTargets(props.tgts as Array<TargetInput>)
     const [tgtIndex, setTgtIndex] = useState(0)
     const commonProperties = {
         margin: { top: 60, right: 20, bottom: 60, left: 80 },
         animate: true,
     }
 
-    const [points, setPoints] = useState([dataItems[tgtIndex]])
-
+    //const [points, setPoints] = useState([dataItems[tgtIndex]])
+//@ts-ignore: Binding element 'size' implicitly has an 'any' type.ts(7031)
     const CustomSymbol = ({ size, color, borderWidth, borderColor }) => (
         <g>
             <circle fill="#fff" r={size / 2} strokeWidth={borderWidth} stroke={borderColor} />
@@ -88,60 +91,29 @@ export function LineChart(props: LineChartProps) {
     }, [points, setPoints])*/
 
     return (
-        <div>
-            <AutoSizer disableHeight>
-                {({ width }) => (
-                    <div style={{ width: width + 'px' }}>
-                        <Line
-                            {...commonProperties}
-                            yScale={{ type: 'linear', min: -100000, max: 'auto', stacked: false }}
-                            curve="monotoneY"
-                            width={width}
-                            height={500}
-                            data={[
-                                { id: 'tgts', data: buildDataFromTargets(props.tgts as Array<TargetInput>) },
-                                { id: 'rent', data:buildDataFromTargets(props.tgts as Array<TargetInput>)}
-                            ]}
-                            xScale={{
-                                type: 'linear',
-                                min: 'auto',
-                                max: 'auto',
-                            }}
-                            axisLeft={{
-                                legend: 'Total Cost',
-                                legendOffset: -50,
-                                legendPosition: 'middle',
-                                //@ts-ignore: Parameter 'val' implicitly has an 'any' type
-                                format: val => toCurrency(val, props.currency)
-                            }}
-                            axisBottom={{
-                                legend: 'Year',
-                                legendOffset: 40,
-                                legendPosition: 'middle',
-                            }}
-                            enablePointLabel={true}
-                            pointLabel='y'
-                            tooltipFormat={
-                                val => toCurrency(val, props.currency)
-                            }
-                            enableArea={true}
-                            areaOpacity={0.07}
-                            enableSlices={false}
-                            useMesh={true}
-                            crosshairType="cross"
-                            pointSymbol={CustomSymbol}
-                            pointSize={14}
-                            pointBorderWidth={1}
-                            pointBorderColor={{
-                                from: 'color',
-                                modifiers: [['darker', 0.3]],
-                            }}
-                            pointLabelYOffset={-20}
-                            enableGridX={false}
-                            colors={['rgb(97, 205, 187)', 'rgb(244, 117, 96)']}
-                        /></div>)}
-            </AutoSizer>
-            {/*<Line
+        <div className="mt-4 mb-4">
+            <Plot layout={{title: props.title}}
+            data={[
+                {type: 'scatter', mode: 'lines+markers', x: props.data[0].values.x, y: props.data[0].values.y, name: props.data[0].name}, 
+                {type: 'scatter', mode: 'lines+markers', x: props.data[1].values.x, y: props.data[1].values.y, name: props.data[1].name} 
+            ]} 
+            config={{responsive: true, editable: false, displayModeBar: false, scrollZoom: true}} />
+            {/**<Line
+                {...commonProperties}
+                yScale={{ type: 'linear', stacked: false, min: -2000000, max: 2000000 }}
+                curve="linear"
+                width={900}
+                height={500}
+                enableSlices="x"
+                data={props.xirrs}
+                xScale={{
+                    type: 'linear',
+                    min: 1,
+                    max: 30,
+                }}
+            />
+
+            <Line
             {...commonProperties}
             yScale={{
                 type: 'linear',

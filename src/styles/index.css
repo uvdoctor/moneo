@@ -9,6 +9,8 @@
 	--amplify-primary-shade: #51d88a;
 	--amplify-font-family: 'Quicksand', sans-serif;
 	color: #4a5568;
+	font-family: 'Quicksand', sans-serif;
+	font-weight: 300;
 }
 
 .signInButton {
@@ -16,7 +18,7 @@
 	width: 100%;
 	border-radius: 4px;
 	margin-bottom: 10px;
-	cursor: pointer;
+	cursor: grab;
 	padding: 0;
 	color: var(--deepSquidInk);
 	font-size: 4px;
@@ -50,6 +52,7 @@ h6 {
 	appearance: none;
 	border-bottom-width: 1px;
 	border-bottom-color: #4a5568;
+	border-bottom-width: thick;
 	line-height: 1.25;
 	background-color: transparent;
 }
@@ -112,17 +115,6 @@ input[type=number] {
 	padding-left: 0.5rem;
 	font-weight: 600;
 	margin-top: 0.5rem;
-}
-
-.toggle__dot {
-	top: -.25rem;
-	left: -.25rem;
-	transition: all 0.3s ease-in-out;
-}
-
-input:checked ~ .toggle__dot {
-	transform: translateX(100%);
-	background-color: #48bb78;
 }
 
 .button:hover {
@@ -194,4 +186,9 @@ body.modal-active {
 
 .hoverable:hover .dropdown-menu {
 	display: block;
+}
+
+#knob > div[style] {
+	z-index: 0;
+	cursor: pointer;
 }
