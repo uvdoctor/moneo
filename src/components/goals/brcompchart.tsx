@@ -1,7 +1,7 @@
 import React from 'react'
 import dynamic from 'next/dynamic'
 
-interface LineChartProps {
+interface BRCompChartProps {
     data?: Array<any>
     currency?: string
     title?: string
@@ -9,13 +9,13 @@ interface LineChartProps {
     yTitle?: string
 }
 
-export function LineChart(props: LineChartProps) {
+export function BRCompChart(props: BRCompChartProps) {
     const Plot = dynamic(
         () => import('react-plotly.js'), {ssr: false}
     )
 
     return (
-        <div>
+        <div className="mt-4 mb-4">
             {/*@ts-ignore*/}
             <Plot layout={{
                 title: {text: props.title, xref:'container'}, 
@@ -26,9 +26,11 @@ export function LineChart(props: LineChartProps) {
             }} useResizeHandler={true}
             data={[
                 //@ts-ignore: Object is possible undefined
-                {type: 'scatter', mode: 'lines', x: props.data[0], y: props.data[1], } 
+                {type: 'scatter', mode: 'lines+markers', x: props.data[0].values.x, y: props.data[0].values.y, name: props.data[0].name}, 
+                //@ts-ignore: Object is possible undefined
+                {type: 'scatter', mode: 'lines+markers', x: props.data[1].values.x, y: props.data[1].values.y, name: props.data[1].name} 
             ]} 
-            config={{responsive: true, editable: false, displayModeBar: false}} />
+            config={{responsive: true, editable: false, displayModeBar: false, scrollZoom: true}} />
         </div>
     )
 }

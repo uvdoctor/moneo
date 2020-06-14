@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react'
 import Toggle from '../toggle'
 import NumberInput from '../form/numberinput'
+import RadialInput from '../form/radialinput'
+import { toStringArr } from '../utils'
 
 interface TaxBenefitProps {
     taxRate: number,
@@ -15,14 +17,19 @@ interface TaxBenefitProps {
 
 export default function TaxBenefit(props: TaxBenefitProps) {
     return (
-        <div className="flex items-center">
-            <NumberInput name="taxRate" pre="Tax" post="Benefit" unit="%" width="30px"
-                value={props.taxRate} changeHandler={props.taxRateHandler} max={45} />
-            {props.taxRate > 0 && <Fragment>
-                {props.loan && props.taxRate > 0 && <Toggle topText="On Interest Only" bottomText="On Full Amount" value={props.taxBenefitIntOnly} setter={props.taxBenefitIntOnlyHandler} />}
-                {props.taxRate > 0 && <NumberInput name="tbLimit" pre="Tax Deduction" post="Yearly Limit" currency={props.currency} width="80px"
-                    value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} max={300000} step={1000} />}
-            </Fragment>}
+        <div className="flex flex-col items-center">
+            <label className="font-semibold">Tax Deduction Allowed is</label>
+            <div className="flex items-center">
+                <RadialInput label="Yearly" data={toStringArr(0, 25, 0.5)} unit="%" width={120}
+                    dataIndex={0} changeHandler={props.taxRateHandler} labelBottom={true} />
+                <Fragment>
+                    <div className="ml-8 mr-4">
+                        <NumberInput name="tbLimit" pre="Up to" currency={props.currency} width="100px"
+                            value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} max={300000} step={1000} />
+                    </div>
+                    {props.loan && <Toggle topText="On Interest Only" bottomText="On Full Amount" value={props.taxBenefitIntOnly} setter={props.taxBenefitIntOnlyHandler} />}
+                </Fragment>
+            </div>
         </div>
     )
 }

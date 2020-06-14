@@ -55,6 +55,9 @@ export const createNewTarget = (year: number, val: number, curr: string, fx: num
 
 export const toStringArr = (startNum: number, endNum: number, step: number = 1) => {
 	let returnArr: Array<string> = []
-	for (let i = startNum; i <= endNum; i += step) returnArr.push("" + i)
+	for (let i = startNum; i <= endNum; i += step) {
+		if(step < 1) returnArr.push(toReadableNumber(i, 1)) 
+		else returnArr.push(""+i)
+	}
 	return returnArr
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react'
 import NumberInput from '../form/numberinput'
 import Toggle from '../toggle'
 import { getNPV } from '../calc/finance'
-import { LineChart } from '../goals/linechart'
+import { BRCompChart } from '../goals/brcompchart'
 import { toCurrency } from '../utils'
 
 interface BRComparisonProps {
@@ -101,7 +101,7 @@ export default function BRComparison(props: BRComparisonProps) {
         if(buyValues.length >= props.sellAfter) {
             if(buyValues[props.sellAfter - 1] < rentValues[props.sellAfter - 1]) {
                 let diff = rentValues[props.sellAfter - 1] - buyValues[props.sellAfter - 1]
-                props.setRentAns(`You may save about ${toCurrency(diff, props.currency)} by Renting instead.`)
+                props.setRentAns(`Save ~ ${toCurrency(diff, props.currency)} by Renting instead.`)
                 return
             }
         }
@@ -153,7 +153,7 @@ export default function BRComparison(props: BRComparisonProps) {
                 <NumberInput name="oppDR" pre="Investment" post="Earns" value={discountRate} changeHandler={setDiscountRate}
                     min={0} max={10} unit="%" note="Yearly after taxes" width="30px" />
             </div>
-            {compData && compData.length === 2 && <LineChart data={compData} title={answer} />}
+            {compData && compData.length === 2 && <BRCompChart data={compData} title={answer} xTitle="Number of Years" yTitle="Profit or Loss" />}
         </Fragment>
     )
 }
