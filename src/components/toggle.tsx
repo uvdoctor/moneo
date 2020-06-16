@@ -9,7 +9,7 @@ interface ToggleProps {
 
 const Toggle = (props: ToggleProps) => {
     return (
-        <div className="flex flex-col items-center justify-center mr-4 md:mr-8">
+        <div className="flex flex-col items-center justify-center">
             <label className="mb-2">{props.topText}</label>
             {/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
             <Slider className="bg-gray-200 rounded-full h-10 w-3 left-0"

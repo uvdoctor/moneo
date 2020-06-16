@@ -35,7 +35,7 @@ export default function NumberInput(props: NumberInputProps) {
     return (
         <form ref={formRef} className="mr-4 md:mr-8">
             <div className={props.max ? "flex items-center justify-between" : "flex flex-col justify-between"}>
-                <ul className={props.max ? "text-left" : "text-right"}>
+                <ul className={props.max ? "text-left mr-1" : "text-right mr-1"}>
                     {props.pre && <li>{props.pre}</li>}
                     {props.post && <li>{props.post}</li>}
                 </ul>

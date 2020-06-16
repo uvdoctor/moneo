@@ -6,17 +6,21 @@ interface ResultItemProps {
     svg: any,
     result: number,
     currency?: string,
-    unit?: string
+    unit?: string,
+    footer?: string
 }
 
 export default function ResultItem(props: ResultItemProps) {
     return (
         <div className="flex flex-col items-center justify-center">
-                        <label>{props.label}</label>
-                        <div className="flex justify-center items-center">
-                            {props.svg}
-                            <label className="ml-2 font-semibold">{props.currency ? toCurrency(props.result, props.currency) : toReadableNumber(props.result)}</label>
-                        </div>
-                    </div>
+            <label>{props.label}</label>
+            <div className="flex justify-center items-center">
+                {props.svg}
+                <label className="ml-2 font-semibold">{props.currency ?
+                    toCurrency(props.result, props.currency) : (toReadableNumber(props.result) + props.unit)}
+                </label>
+            </div>
+            <label>{props.footer}</label>
+        </div>
     )
 }

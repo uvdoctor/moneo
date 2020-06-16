@@ -33,32 +33,34 @@ export default function EmiCost(props: EmiProps) {
     }
 
     useEffect(
-        () =>
-            {if(props.borrow > 0) calculateEmi()}
+        () => { if (props.borrow > 0) calculateEmi() }
         , [props]
     );
 
     return (
-        <div className="flex flex-wrap items-center">
-                {props.borrow > 0 && <Fragment><NumberInput
-                    name="borrowAmt"
-                    pre="Loan Amount"
-                    width="100px"
-                    currency={props.currency}
-                    value={props.borrowAmt}
-                    changeHandler={props.borrowAmtHandler}
-                    min={500} />
+        <div className="flex flex-wrap items-center justify-between w-full">
+            {props.borrow > 0 && <Fragment>
                 <NumberInput
                     name="dp"
-                    pre="Down Payment"
-                    width="90px"
+                    pre="Down"
+                    post="Payment"
+                    width="100px"
                     currency={props.currency}
                     value={props.loanDP}
                     changeHandler={props.loanDPHandler}
-                    />
-                <SelectInput name="repaymentSY" options={props.repaymentSYOptions}
-                    value={props.repaymentSY} pre="Repayment Starts" changeHandler={(year: string) => props.repaymentSYHandler(parseInt(year))} />
-                <div className="flex flex-col justify-end mr-4">
+                    min={500} max={999999}
+                />
+                <NumberInput
+                    name="borrowAmt"
+                    pre="Loan"
+                    post="Amount"
+                    width="120px"
+                    currency={props.currency}
+                    value={props.borrowAmt}
+                    changeHandler={props.borrowAmtHandler}
+                    min={500} max={9999999} />
+
+                <div className="flex flex-col justify-end">
                     <NumberInput
                         name="intRate"
                         pre="Interest"
@@ -88,7 +90,10 @@ export default function EmiCost(props: EmiProps) {
                         <label>EMI</label>
                         <label className="font-semibold">{toCurrency(props.emi, props.currency)}</label>
                     </div>
-                </div></Fragment>}
+                </div>
+                <SelectInput name="repaymentSY" options={props.repaymentSYOptions}
+                    value={props.repaymentSY} pre="Repay From" changeHandler={(year: string) => props.repaymentSYHandler(parseInt(year))} />
+            </Fragment>}
         </div>
     );
 }
