@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { toCurrency } from '../utils'
+import { toCurrency, toReadableNumber } from '../utils'
 import CurrencyInput from './currencyinput'
 import Slider from 'rc-slider'
 interface NumberInputProps {
@@ -33,12 +33,12 @@ export default function NumberInput(props: NumberInputProps) {
     );
 
     return (
-        <form ref={formRef} className="mr-4 md:mr-8">
-            <div className={props.max ? "flex items-center justify-between" : "flex flex-col justify-between"}>
-                <ul className={props.max ? "text-left mr-1" : "text-right mr-1"}>
-                    {props.pre && <li>{props.pre}</li>}
-                    {props.post && <li>{props.post}</li>}
-                </ul>
+        <form ref={formRef}>
+            <div className={props.max ? "w-full flex items-center justify-between" : "w-full flex flex-col justify-between"}>
+                <div className={props.max ? "w-full flex flex-col text-left mr-1" : "w-full flex flex-col text-right mr-1"}>
+                    {props.pre && <label>{props.pre}</label>}
+                    {props.post && <label>{props.post}</label>}
+                </div>
                 <div className="flex justify-end">
                     {!props.currency || (props.currency && editing) ?
                         <input
@@ -92,15 +92,17 @@ export default function NumberInput(props: NumberInputProps) {
                             backgroundColor: '#48bb78',
                             top: 0,
                             left: 0,
-                            height:'0.9rem'
+                            height: '0.9rem'
                         }}
                         railStyle={{
                             background: 'none',
                         }} />
-                    <div className="flex justify-between w-full text-gray-400">
-                        <label>{props.min ? props.min: 0}</label>
-                        <label>{props.max}</label>
-                    </div>
+                    {props.max && <div className="flex justify-between w-full text-gray-400">
+                        <label className="mr-2">{props.currency ? toCurrency(props.min, props.currency)
+                            : `${toReadableNumber(props.min ? props.min : 0)}${props.unit}`}</label>
+                        <label>{props.currency ? toCurrency(props.max, props.currency)
+                            : `${toReadableNumber(props.max)}${props.unit}`}</label>
+                    </div>}
                 </div>
             }
             <label className="flex justify-center">{props.note}</label>

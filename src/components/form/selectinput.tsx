@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 
 interface SelectInputProps {
     pre: string,
@@ -11,18 +11,8 @@ interface SelectInputProps {
 }
 
 export default function SelectInput(props: SelectInputProps) {
-    const formRef = useRef<HTMLFormElement>(null);
-
-    useEffect(
-        () => {
-            // @ts-ignore: Object is possibly 'null'.
-            formRef.current.reportValidity();
-        },
-        [formRef]
-    );
-
     return (
-        <form ref={formRef} className="flex flex-col mr-4 md:mr-8">
+        <div className="flex flex-col">
             {props.pre && <label>{props.pre}</label>}
             <select name={props.name} className="input" value={props.value} onChange={(e) => props.changeHandler(e.currentTarget.value)}>
                 {Object.keys(props.options).map(key =>
@@ -31,6 +21,6 @@ export default function SelectInput(props: SelectInputProps) {
                     </option>)}
             </select>
             {props.post && <label>{props.post}</label>}
-        </form>
+        </div>
     )
 }

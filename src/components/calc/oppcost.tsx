@@ -6,12 +6,13 @@ import SVGPiggy from '../svgpiggy'
 interface OppCostProps {
     cfs: Array<number>,
     currency: string,
-    startYear: number
+    startYear: number,
+    discountRate: number,
+    discountRateHandler: Function
 }
 
 export default function OppCost(props: OppCostProps) {
     const [oppCost, setOppCost] = useState<number>(0)
-    const [oppDR, setOppDR] = useState<number>(6)
 
     const calculateOppCost = () => {
         let cfs = props.cfs
@@ -21,7 +22,7 @@ export default function OppCost(props: OppCostProps) {
         }
         let oc: number = cfs.reduce(
             (accumulator, currentValue, index) =>
-                accumulator + getCompoundedIncome(oppDR, currentValue, props.cfs.length - index), 0
+                accumulator + getCompoundedIncome(props.discountRate, currentValue, props.cfs.length - index), 0
         )
         setOppCost(oc)
     }
@@ -30,7 +31,7 @@ export default function OppCost(props: OppCostProps) {
         () => {
             calculateOppCost()
         }
-        , [props, oppDR]
+        , [props]
     );
 
     return (
@@ -45,13 +46,12 @@ export default function OppCost(props: OppCostProps) {
             </div>
             <NumberInput
                 name="oppDR"
-                pre="Given Yearly"
-                post="Return of"
+                pre="Given Yearly Return"
                 unit="%"
-                width="50px"
-                note="after taxes & fees."
-                value={oppDR}
-                changeHandler={setOppDR}
+                width="40px"
+                note="after paying taxes & fees."
+                value={props.discountRate}
+                changeHandler={props.discountRateHandler}
                 min={0}
                 max={20}
                 step={0.1} />

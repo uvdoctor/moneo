@@ -5,21 +5,19 @@ import { toCurrency } from '../utils'
 import SelectInput from '../form/selectinput'
 
 interface EmiProps {
-    borrow: number,
+    price: number,
     currency: string,
     startYear: number,
     repaymentSY: number,
     repaymentSYOptions: any,
     loanMonths: number,
-    loanDP: number,
     loanAnnualInt: number,
     emi: number,
-    borrowAmt: number,
+    loanPer: number,
     emiHandler: any,
     repaymentSYHandler: any,
     loanMonthsHandler: any,
-    loanDPHandler: any,
-    borrowAmtHandler: any,
+    loanPerHandler: any,
     loanAnnualIntHandler: any
 }
 
@@ -27,73 +25,56 @@ export default function EmiCost(props: EmiProps) {
     const [totalIntAmt, setTotalIntAmt] = useState<number>(0)
 
     const calculateEmi = () => {
-        let emi = Math.round(getEmi(props.borrowAmt, props.loanAnnualInt, props.loanMonths) as number)
+        let loanBorrowAmt = Math.round(props.price * (props.loanPer / 100))
+        let emi = Math.round(getEmi(loanBorrowAmt, props.loanAnnualInt, props.loanMonths) as number)
         props.emiHandler(emi)
-        setTotalIntAmt(Math.round(getTotalInt(props.borrowAmt, emi, props.loanMonths)))
+        setTotalIntAmt(Math.round(getTotalInt(loanBorrowAmt, emi, props.loanMonths)))
     }
 
     useEffect(
-        () => { if (props.borrow > 0) calculateEmi() }
+        () => { if (props.loanPer > 0) calculateEmi() }
         , [props]
     );
 
     return (
-        <div className="flex flex-wrap items-center justify-between w-full">
-            {props.borrow > 0 && <Fragment>
-                <NumberInput
-                    name="dp"
-                    pre="Down"
-                    post="Payment"
-                    width="100px"
-                    currency={props.currency}
-                    value={props.loanDP}
-                    changeHandler={props.loanDPHandler}
-                    min={500} max={999999}
-                />
-                <NumberInput
-                    name="borrowAmt"
-                    pre="Loan"
-                    post="Amount"
-                    width="120px"
-                    currency={props.currency}
-                    value={props.borrowAmt}
-                    changeHandler={props.borrowAmtHandler}
-                    min={500} max={9999999} />
 
-                <div className="flex flex-col justify-end">
-                    <NumberInput
-                        name="intRate"
-                        pre="Interest"
-                        unit="%"
-                        width="40px"
-                        value={props.loanAnnualInt}
-                        changeHandler={props.loanAnnualIntHandler}
-                        min={1.0}
-                        max={30.0}
-                        step={0.1} />
-                    <div className="flex justify-between mr-8">
-                        <label>Total</label>
-                        <label className="font-semibold text-right">{toCurrency(totalIntAmt, props.currency)}</label>
-                    </div>
-                </div>
-                <div className="flex flex-col">
-                    <NumberInput
-                        name="duration"
-                        pre="Term"
-                        unit="months"
-                        width="40px"
-                        value={props.loanMonths}
-                        changeHandler={props.loanMonthsHandler}
-                        min={6}
-                        max={360} />
-                    <div className="flex justify-between mr-8">
-                        <label>EMI</label>
-                        <label className="font-semibold">{toCurrency(props.emi, props.currency)}</label>
-                    </div>
-                </div>
+        <Fragment>
+            <div className="mt-4 md:mt-8 flex justify-around items-center">
+                <NumberInput
+                    name="loanPer"
+                    pre="Borrow"
+                    width="30px"
+                    note={`Loan Amount ${toCurrency(Math.round((props.loanPer / 100) * props.price), props.currency)}`}
+                    unit="%"
+                    value={props.loanPer}
+                    changeHandler={props.loanPerHandler}
+                    min={0} max={90} />
                 <SelectInput name="repaymentSY" options={props.repaymentSYOptions}
                     value={props.repaymentSY} pre="Repay From" changeHandler={(year: string) => props.repaymentSYHandler(parseInt(year))} />
-            </Fragment>}
-        </div>
+            </div>
+            {props.loanPer > 0 && <div className="mt-4 flex flex-wrap items-center justify-around w-full">
+                <NumberInput
+                    name="intRate"
+                    pre="Interest"
+                    unit="%"
+                    width="40px"
+                    note={`Total ${toCurrency(totalIntAmt, props.currency)}`}
+                    value={props.loanAnnualInt}
+                    changeHandler={props.loanAnnualIntHandler}
+                    min={1.0}
+                    max={30.0}
+                    step={0.1} />
+                <NumberInput
+                    name="duration"
+                    pre="Term"
+                    unit="months"
+                    width="40px"
+                    note={`EMI ${toCurrency(props.emi, props.currency)}`}
+                    value={props.loanMonths}
+                    changeHandler={props.loanMonthsHandler}
+                    min={6}
+                    max={360} step={3} />
+            </div>}
+        </Fragment>
     );
 }

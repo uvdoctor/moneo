@@ -18,9 +18,13 @@ import { createNewTarget } from '../utils'
 import xirr from 'xirr'
 import { getIntAmtByYear, getRemainingPrincipal, getCompoundedIncome } from '../calc/finance'
 import BRComparison from '../calc/brcomparison'
-import { toReadableNumber } from '../utils'
 import RadialInput from '../form/radialinput'
 import { LineChart } from './linechart'
+import SVGExpand from '../svgexpand'
+import SVGCollapse from '../svgcollapse'
+import ResultItem from '../calc/resultitem'
+import SVGPercentage from '../svgpercentage'
+import SVGMoneyBagPer from '../svgmoneybagper'
 
 const Goals = () => {
     const minStartYear = new Date().getFullYear()
@@ -38,38 +42,41 @@ const Goals = () => {
     const [taxBenefitIntOnly, setTaxBenefitIntOnly] = useState<number>(0)
     const [sellAfter, setSellAfter] = useState<number>(5)
     const [sellPrice, setSellPrice] = useState<number>(0)
+    const [buyTaxRate, setBuyTaxRate] = useState<number>(10)
+    const [sellTaxRate, setSellTaxRate] = useState<number>(5)
     const [annualReturnPer, setAnnualReturnPer] = useState<number | null>(0)
-    const [loanBorrowAmt, setLoanBorrowAmt] = useState<number>(0)
-    const [selfAmt, setSelfAmt] = useState<number>(0)
+    const [loanPer, setLoanPer] = useState<number>(0)
+    const [currentPrice, setCurrentPrice] = useState<number>(0)
     const [currency, setCurrency] = useState<string>("USD")
     const [criticality, setCriticality] = useState<APIt.LMH>(APIt.LMH.H)
     const [ra, setRA] = useState<APIt.LMH>(APIt.LMH.L)
     const [manualMode, setManualMode] = useState<number>(0)
     const [name, setName] = useState<string>("")
-    const [inflation, setInflation] = useState<number>(3)
-    const [borrowMode, setBorrowMode] = useState<number>(0)
     const [emi, setEmi] = useState<number>(0)
     const [loanMonths, setLoanMonths] = useState<number>(60)
-    const [loanDP, setLoanDP] = useState<number>(0)
     const [loanIntRate, setLoanIntRate] = useState<number>(4)
-    const [priceChgRate, setPriceChgRate] = useState<number>(0)
+    const [priceChgRate, setPriceChgRate] = useState<number>(3)
     const [amCostPer, setAMCostPer] = useState<number>(2)
     const [amStartYear, setAMStartYear] = useState<number>(startYear)
-    const [rentAns, setRentAns] = useState<string>('')
+    const [oppDR, setOppDR] = useState<number>(6)
+    const [rentAmt, setRentAmt] = useState(0)
+    const [rentChgPer, setRentChgPer] = useState(5)
+    const [rentTaxBenefit, setRentTaxBenefit] = useState(0)
     const [chartData, setChartData] = useState<Array<Array<number>>>([])
-    const scheduleLabel = "Schedule"
+    const detailsLabel = "Details"
+    const chartLabel = "Show Chart"
     const taxLabel = "Tax"
     const maintainLabel = "Maintain"
-    const brLabel = "Rent?"
-    const [viewItems, setViewItems] = useState([scheduleLabel, taxLabel, maintainLabel, brLabel])
-    const [viewMode, setViewMode] = useState(scheduleLabel)
+    const [showRentOption, setShowRentOption] = useState<boolean>(false)
+    const [viewItems, setViewItems] = useState([detailsLabel, taxLabel, maintainLabel, chartLabel])
+    const [viewMode, setViewMode] = useState(detailsLabel)
     const [goalType, setGoalType] = useState<APIt.GoalType>(APIt.GoalType.B)
     const analyzeFor = 30
     const [oppCostCFs, setOppCostCFs] = useState<Array<number>>([])
 
     useEffect(() => {
-        if (goalType === APIt.GoalType.B) setViewItems([scheduleLabel, taxLabel, maintainLabel, brLabel])
-        else setViewItems([scheduleLabel, taxLabel])
+        if (goalType === APIt.GoalType.B) setViewItems([detailsLabel, taxLabel, maintainLabel, chartLabel])
+        else setViewItems([detailsLabel, taxLabel, chartLabel])
     }, [goalType])
 
     const changeViewMode = (e: any) => {
@@ -82,20 +89,22 @@ const Goals = () => {
         return Math.round(val * (tr / 100))
     }
 
-    const initTargets = (val: number = 0, fxRate: number = 1.0) => {
-        let value = selfAmt ? selfAmt : val
+    const initTargets = (val: number | null, fxRate: number = 1.0) => {
+        let value = val ? val : price
         let curr = currency
         let fx = fxRate
         let targets: Array<APIt.TargetInput> = []
-        for (let year = startYear; year <= endYear; year++, value *= (manualMode < 1 && sellPrice === 0 && goalType !== APIt.GoalType.B) ? (1 + (inflation / 100)) : 0) {
+        for (let year = startYear; year <= endYear; year++, value *= !isManualEntry() ? (1 + (priceChgRate / 100)) : 0) {
             let existingT = null
-            if (wipTargets.length > 0 && manualMode > 0) {
+            if (wipTargets.length > 0 && isManualEntry() && !val) {
                 existingT = (wipTargets.filter((target) => target.year === year))[0] as APIt.TargetInput
-                existingT.curr = curr
-                existingT.fx = fx
+                if (existingT) {
+                    existingT.curr = curr
+                    existingT.fx = fx
+                }
             }
             let t = existingT ? Object.assign({}, existingT) : createNewTarget(year, value, curr, fx)
-            if (t.val > 0 && manualMode < 1) t.val -= getTaxBenefit(value, taxRate, maxTaxDeduction)
+            if (t.val > 0 && !isManualEntry()) t.val -= getTaxBenefit(value, taxRate, maxTaxDeduction)
             t.val = Math.round(t.val)
             targets.push(t)
         }
@@ -106,6 +115,8 @@ const Goals = () => {
     const initLoanTargets = (fxRate: number = 1.0, duration: number, changeState: boolean = true) => {
         let totalMonths = loanMonths > 12 ? loanMonths - 12 : loanMonths
         let ey: number = loanMonths <= 12 ? loanRepaymentSY : loanRepaymentSY + Math.floor(totalMonths / 12)
+        let loanBorrowAmt = Math.round(price * (loanPer / 100))
+        let loanDP = price - loanBorrowAmt
         let targets: Array<APIt.TargetInput> = []
         let annualInts = taxBenefitIntOnly ? getIntAmtByYear(loanBorrowAmt, emi, loanIntRate, loanMonths) : []
         let remPrincipal = 0
@@ -174,15 +185,8 @@ const Goals = () => {
         getAllGoals()
     }, [])
 
-    const calculatePrice = () => {
-        if (borrowMode > 0) return (loanDP + loanBorrowAmt)
-        else {
-            let price = 0
-            for (let i = 0; i < wipTargets.length; i++) {
-                price += (wipTargets[i].val * wipTargets[i].fx)
-            }
-            return Math.round(price)
-        }
+    const isManualEntry = () => {
+        return (endYear > startYear && loanPer === 0 && (goalType === APIt.GoalType.B || manualMode > 0))
     }
 
     const createNewGoal = async () => {
@@ -192,7 +196,7 @@ const Goals = () => {
             tgts: wipTargets,
             imp: criticality,
             ra: ra,
-            emi: borrowMode > 0 ? { rate: loanIntRate, dur: loanMonths, dp: loanDP } as APIt.EmiInput : null,
+            emi: loanPer > 0 ? { rate: loanIntRate, dur: loanMonths, dp: loanPer } as APIt.EmiInput : null,
         }
         try {
             const { data } = (await API.graphql(graphqlOperation(mutations.createGoal, { input: goal }))) as {
@@ -215,12 +219,12 @@ const Goals = () => {
     }
 
     useEffect(() => {
-        if (borrowMode < 1) setEYOptions(initYearOptions(startYear, 100))
-        if (borrowMode > 0) setRYOptions(initYearOptions(startYear, 10))
+        if (loanPer === 0) setEYOptions(initYearOptions(startYear, 100))
+        if (loanPer > 0) setRYOptions(initYearOptions(startYear, 10))
         setAMSYOptions(initYearOptions(startYear, 10))
-        if (borrowMode < 1 && (startYear > endYear || endYear - startYear > 100)) setEndYear(startYear)
-        if (borrowMode > 0 && (startYear > loanRepaymentSY || loanRepaymentSY - startYear > 10)) setLoanRepaymentSY(startYear)
-    }, [startYear, endYear, borrowMode, loanRepaymentSY])
+        if (loanPer === 0 && (startYear > endYear || endYear - startYear > 100)) setEndYear(startYear)
+        if (loanPer > 0 && (startYear > loanRepaymentSY || loanRepaymentSY - startYear > 10)) setLoanRepaymentSY(startYear)
+    }, [startYear, endYear, loanPer, loanRepaymentSY])
 
     const changeEndYear = (str: string) => {
         let ey = parseInt(str)
@@ -228,12 +232,15 @@ const Goals = () => {
     }
 
     useEffect(() => {
-        if (borrowMode > 0) setWIPTargets([...initLoanTargets(1.0, sellAfter, true)])
-    }, [goalType, emi, loanBorrowAmt, loanRepaymentSY, loanMonths, loanDP, borrowMode, currency, startYear, endYear, sellAfter, taxRate, maxTaxDeduction, taxBenefitIntOnly])
+        if (loanPer > 0) setWIPTargets([...initLoanTargets(1.0, sellAfter, true)])
+    }, [goalType, price, emi, loanPer, loanRepaymentSY, loanMonths, currency, startYear, endYear, sellAfter, taxRate, maxTaxDeduction, taxBenefitIntOnly])
 
     useEffect(() => {
-        if (borrowMode < 1) initTargets()
-    }, [goalType, startYear, endYear, selfAmt, inflation, currency, borrowMode, sellAfter, taxRate, maxTaxDeduction, manualMode])
+        if (loanPer === 0) {
+            if (endYear > startYear) initTargets(0)
+            else initTargets(null)
+        }
+    }, [goalType, startYear, endYear, price, priceChgRate, currency, sellAfter, taxRate, maxTaxDeduction, manualMode])
 
     const getTotalMaintCost = () => {
         let total = 0
@@ -252,7 +259,7 @@ const Goals = () => {
 
     const initBuyCFs = (duration: number) => {
         let tgts = wipTargets
-        if (duration !== sellAfter && borrowMode > 0) tgts = initLoanTargets(1.0, duration, false)
+        if (duration !== sellAfter && loanPer > 0) tgts = initLoanTargets(1.0, duration, false)
         let cfs: Array<number> = []
         for (let i = 0; i < duration; i++) {
             let cf = getAnnualMaintCost(i)
@@ -264,7 +271,7 @@ const Goals = () => {
 
     const initBuyCFsForComparison = () => {
         let allCFs: Array<Array<number>> = []
-        for (let i = 1, sp = price * (1 + (priceChgRate / 100)); i <= analyzeFor; i++, sp *= (1 + (priceChgRate / 100))) {
+        for (let i = 1; i <= analyzeFor; i++) {
             allCFs.push(initBuyCFs(i))
         }
         return allCFs
@@ -275,7 +282,11 @@ const Goals = () => {
         let x = [], y = []
         for (let i = 0; i < cfs.length; i++) {
             x.push(startYear + i)
-            y.push(cfs[i] * -1)
+            y.push(cfs[i])
+        }
+        if(sellPrice > 0) {
+            x.push(startYear + sellAfter)
+            y.push(Math.round(sellPrice * (1 + (sellTaxRate/100))))
         }
         return [x, y]
     }
@@ -300,7 +311,7 @@ const Goals = () => {
         }
         xirrCFs.push({
             amount: sellPrice < 0 ? 0 : sellPrice,
-            when: new Date(startYear + cfs.length - 1, 1, 1)
+            when: new Date(startYear + cfs.length, 0, 1)
         })
         try {
             setAnnualReturnPer(xirr(xirrCFs) * 100)
@@ -312,29 +323,46 @@ const Goals = () => {
 
     useEffect(() => {
         if (goalType === APIt.GoalType.B && price > 0 && sellAfter > 0) {
-            let cagr = (Math.pow((sellPrice / price), (1 / sellAfter)) - 1) * 100
-            console.log("CAGR calculated: ", cagr)
-            setPriceChgRate(cagr)
+            setSellPrice(Math.round(getCompoundedIncome(priceChgRate, price, sellAfter)))
             calculateAnnualReturn()
+        } else {
+            setSellPrice(0)
+            setAnnualReturnPer(null)
         }
-    }, [price, sellPrice, sellAfter])
+    }, [wipTargets, priceChgRate, sellAfter, price])
 
     useEffect(() => {
-        setPrice(calculatePrice())
+        let price = 0
+        if (isManualEntry()) {
+            for (let i = 0; i < wipTargets.length; i++) {
+                price += (wipTargets[i].val * wipTargets[i].fx)
+            }
+            price = currentPrice * (1 - (buyTaxRate/100))
+        } else {
+            let currentYear = new Date().getFullYear()
+            let compoundPeriod = startYear - currentYear
+            price = currentPrice * (1 - (buyTaxRate/100))
+            price = getCompoundedIncome(priceChgRate, price, compoundPeriod)
+        }
+        setPrice(Math.round(price))
+    }, [currentPrice, priceChgRate, startYear, goalType, manualMode, wipTargets, loanPer, buyTaxRate])
+
+    useEffect(() => {
         let totalCost = 0
         if (goalType === APIt.GoalType.B) totalCost += getTotalMaintCost()
         for (let i = 0; i < wipTargets.length; i++) totalCost += wipTargets[i].val * wipTargets[i].fx
         setTotalCost(totalCost)
-        setChartData(createChartCFs())
         setOppCostCFs(createOppCostCFs())
-    }, [wipTargets, amStartYear, amCostPer])
+        setChartData(createChartCFs())
+    }, [wipTargets, sellAfter, amStartYear, amCostPer])
 
-    const changeBorrowMode = (val: number) => {
-        setBorrowMode(val)
-        if (val < 1) {
-            setEndYear(startYear)
-        }
-    }
+    useEffect(() => {
+        setChartData(createChartCFs())
+    }, [sellTaxRate])
+
+    useEffect(() => {
+        if (loanPer === 0) setEndYear(startYear)
+    }, [loanPer])
 
     const changeTargetCurrency = (val: string, index: number) => {
         wipTargets[index].curr = val
@@ -388,127 +416,125 @@ const Goals = () => {
                         <button onClick={changeViewMode} style={{ color: viewMode === item ? "green" : "#4a5568", backgroundColor: viewMode === item ? "#edf2f7" : "#f7fafc" }} className="dashmi md:mt-4 md:px-4 hover:bg-white hover:border-t hover:text-green-600 focus:outline-none">{item}</button>
                     </li>))}
             </ul>
-            <div className="mt-4">
-                {viewMode === scheduleLabel &&
-                    <div className="flex flex-col">
-                        <div className="flex items-center justify-around">
-                            <SelectInput name="sy"
-                                pre="Starts"
-                                value={startYear}
-                                changeHandler={changeStartYear}
-                                options={syOptions}
-                            />
-                            {(borrowMode < 1 || (goalType !== APIt.GoalType.B && manualMode > 0)) ? <SelectInput name="ey" pre="Ends" value={endYear}
-                                changeHandler={changeEndYear} options={eyOptions} />
-                                : <div className="flex flex-col">
-                                    <label>Ends</label>
-                                    <label className="font-semibold">{endYear}</label>
-                                </div>}
-                            <div className="flex flex-col">
-                                <label>Pay In</label>
-                                <CurrencyInput name="mainCurr" value={currency} changeHandler={setCurrency} />
-                            </div>
-                            <Toggle topText="Borrow" value={borrowMode} setter={changeBorrowMode} />
-                            {borrowMode < 1 && goalType !== APIt.GoalType.B && endYear > startYear && <Toggle topText="Manual" value={manualMode} setter={setManualMode} />}
-                        </div>
-                        <div className="mt-4 md:mt-8 flex flex-wrap justify-around items-center">
-                            {((endYear === startYear && goalType === APIt.GoalType.B) || (goalType !== APIt.GoalType.B && manualMode < 1 && borrowMode < 1)) &&
-                                <NumberInput name="selfAmt" pre="Amount" note="including taxes & fees" width="120px"
-                                    currency={currency} value={selfAmt} changeHandler={setSelfAmt} min={500} max={9999999} />}
-                            {borrowMode < 1 && endYear > startYear && manualMode < 1 && goalType !== APIt.GoalType.B &&
-                                <NumberInput
-                                    name="inflation"
-                                    pre="Changes"
-                                    unit="%"
-                                    note="every Year"
-                                    width="50px"
-                                    value={inflation}
-                                    changeHandler={setInflation}
-                                    min={-10.0}
-                                    max={10.0}
-                                    step={0.1}
-                                />}
-                            {borrowMode < 1 && endYear > startYear && (goalType === APIt.GoalType.B || manualMode > 0) &&
-                                <div className="flex flex-wrap items-center justify-center w-full">
-                                    {wipTargets && wipTargets.map((t, i) =>
-                                        <div key={"t" + i} className="mr-2 md:mr-4 mt-4 items-center">
-                                            <NumberInput name="year" pre={`${t.year}`} currency={t.curr}
-                                                value={t.val} changeHandler={(val: number) => changeTargetVal(val, i)}
-                                                currencyHandler={(val: string) => changeTargetCurrency(val, i)}
-                                                width="100px" min={0} />
-                                        </div>)}
-                                </div>}
-
-                            <EmiCost currency={currency} startYear={startYear} repaymentSY={loanRepaymentSY} repaymentSYOptions={ryOptions}
-                                loanMonths={loanMonths} emi={emi} loanAnnualInt={loanIntRate} loanDP={loanDP} borrowAmt={loanBorrowAmt}
-                                loanAnnualIntHandler={setLoanIntRate} loanDPHandler={setLoanDP} borrowAmtHandler={setLoanBorrowAmt}
-                                emiHandler={setEmi} loanMonthsHandler={setLoanMonths} borrow={borrowMode} repaymentSYHandler={setLoanRepaymentSY} />
-                        </div>
-                        <div className="flex flex-col items-center mt-4 md:mt-8">
-                            <p className="font-semibold text-xl md:text-2xl">To Pay Total {toCurrency(totalCost, currency)},</p>
-                            <TimeCost amount={totalCost} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} displayFooter={false} />
-                        </div>
-                        {goalType === APIt.GoalType.B &&
-                            <div className="flex flex-col mt-4 items-center justify-center">
-                                <p className="font-semibold text-xl md:text-2xl">Sell After</p>
-                                <div className="flex items-center justify-around w-full mt-2">
-                                    <RadialInput width={120} label="Years" labelBottom={true} data={toStringArr(1, 30)}
-                                        value={sellAfter} step={1} changeHandler={setSellAfter} />
-                                    <div className="ml-4">
-                                        <NumberInput name="sellPrice" pre="For" note="after taxes & fees"
-                                            width="150px" currency={currency} value={sellPrice} changeHandler={setSellPrice} />
-                                    </div>
-                                    <div className="flex flex-col items-center">
-                                        <p>{`Yearly ${annualReturnPer as number < 0 ? 'Loss' : 'Gain'}`}</p>
-                                        <p className="font-semibold">{`${toReadableNumber(Math.abs(annualReturnPer as number), 2)}%`}</p>
-                                    </div>
-                                </div>
+            {viewMode === detailsLabel &&
+                <Fragment>
+                    <div className="flex items-center justify-around">
+                        <SelectInput name="sy"
+                            pre="Starts"
+                            value={startYear}
+                            changeHandler={changeStartYear}
+                            options={syOptions}
+                        />
+                        {(loanPer === 0 || (goalType !== APIt.GoalType.B && manualMode > 0)) ? <SelectInput name="ey" pre="Ends" value={endYear}
+                            changeHandler={changeEndYear} options={eyOptions} />
+                            : <div className="flex flex-col">
+                                <label>Ends</label>
+                                <label className="font-semibold">{endYear}</label>
                             </div>}
-                        <div className="mt-4 md:mt-8">
-                            <p className="text-center text-xl md:text-2xl font-semibold">If You Invest instead of Buying,</p>
-                            <OppCost cfs={oppCostCFs} currency={currency} startYear={startYear} />
+                        <div className="flex flex-col">
+                            <label>Pay In</label>
+                            <CurrencyInput name="mainCurr" value={currency} changeHandler={setCurrency} />
                         </div>
-                        {goalType === APIt.GoalType.B && rentAns && <p className="mb-4 text-center">{rentAns}</p>}
-                    </div>}
-                {viewMode === maintainLabel && <div className="flex flex-col items-center w-full justify-around text-lg md:text-xl lg:text-2xl">
-                    <label>Wear & Tear, Insurance, Taxes, etc costs</label>
-                    <div className="flex items-center mt-4 justify-around w-full">
-                        <RadialInput data={toStringArr(0, 10, 0.1)} float={true} changeHandler={setAMCostPer} width={120}
-                            unit="%" labelBottom={true} label="of Price" value={amCostPer} step={0.1} />
-                        <label className="mr-4 ml-4">Every Year</label>
-                        <SelectInput name="maintainFrom" pre="Starting" options={amSYOptions} value={amStartYear}
-                            changeHandler={setAMStartYear} />
+                        {loanPer === 0 && goalType !== APIt.GoalType.B && endYear > startYear && <Toggle topText="Manual Entry" value={manualMode} setter={setManualMode} />}
                     </div>
-                </div>}
-                {viewMode === taxLabel && (borrowMode > 0 || manualMode < 1) &&
-                    <TaxBenefit loan={borrowMode > 0 ? true : false} taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}
-                        maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction}
-                        taxBenefitIntOnly={taxBenefitIntOnly} taxBenefitIntOnlyHandler={setTaxBenefitIntOnly} />
-                }
-            </div>
-            {viewMode !== brLabel && totalCost > 0 &&
-                <div className="flex flex-col w-full items-center justify-center">
-                    {viewMode === scheduleLabel && <Fragment>
-                        <div className="flex justify-center mt-8">
-                            <button className="cancel" onClick={createNewGoal}>
-                                Cancel
-			                    </button>
-                            <button className="ml-8 button" onClick={createNewGoal}>
-                                Create Goal
-			                    </button>
+                    {!isManualEntry() ?
+                        <Fragment>
+                            <div className="mt-4 flex flex-wrap justify-around items-center">
+                                <NumberInput name="selfAmt" pre="Current" post="Price" note="including taxes & fees" width="120px"
+                                    currency={currency} value={currentPrice} changeHandler={setCurrentPrice} min={500} max={2000000} />
+                                <NumberInput name="priceChgRate" pre="Yearly" post="Change" note={`${toCurrency(Math.round(price * (1 + (buyTaxRate/100))), currency)} in ${startYear}`} unit="%"
+                                    width="30px" min={-20} max={20} value={priceChgRate} changeHandler={setPriceChgRate} />
+                            </div>
+                            <EmiCost price={price} currency={currency} startYear={startYear} repaymentSY={loanRepaymentSY} repaymentSYOptions={ryOptions}
+                                loanMonths={loanMonths} emi={emi} loanAnnualInt={loanIntRate} loanPer={loanPer}
+                                loanAnnualIntHandler={setLoanIntRate} loanPerHandler={setLoanPer}
+                                emiHandler={setEmi} loanMonthsHandler={setLoanMonths} repaymentSYHandler={setLoanRepaymentSY} />
+                        </Fragment> :
+                        <div className="flex flex-wrap items-center justify-center w-full">
+                            {wipTargets && wipTargets.map((t, i) =>
+                                <div key={"t" + i} className="mr-4 md:mr-8 mt-4 flex flex-col justify-end items-end">
+                                    <label>{t.year}</label>
+                                    <NumberInput name="year" pre="" currency={t.curr}
+                                        value={t.val} changeHandler={(val: number) => changeTargetVal(val, i)}
+                                        width="120px" min={0} max={999999} step={100} />
+                                    <CurrencyInput name={"curr" + i} value={currency} changeHandler={(val: string) => changeTargetCurrency(val, i)} />
+                                </div>)}
+                        </div>}
+
+
+
+                    <div className="flex flex-col items-center mt-4 md:mt-8">
+                        <p className="font-semibold text-xl md:text-2xl">To Pay Total {toCurrency(totalCost, currency)}</p>
+                        <TimeCost amount={totalCost} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} displayFooter={false} />
+                    </div>
+
+                    {goalType === APIt.GoalType.B && <div className="flex flex-col items-center mt-4">
+                        <div className="flex items-center justify-center">
+                            <label className="mr-4 text-xl md:text-2xl font-semibold">Sell After</label>
+                            <RadialInput width={100} label="Years" labelBottom={true} data={toStringArr(1, 30)}
+                                value={sellAfter} step={1} changeHandler={setSellAfter} />
                         </div>
-                        <LineChart data={chartData} xTitle="Year" title="Payment Schedule" />
-                    </Fragment>}
-                </div>}
+                        <div className="w-full flex justify-around items-center mt-4">
+                            {isManualEntry() && <NumberInput name="priceChgRate" pre="Given Price" post="Changes" note="Yearly" unit="%"
+                                width="30px" min={-20} max={20} value={priceChgRate} changeHandler={setPriceChgRate} />}
+                            <ResultItem svg={<SVGMoneyBagPer />} label={`In ${startYear + sellAfter}, You May Get`} result={Math.round(sellPrice * (1 + (sellTaxRate/100)))} currency={currency} footer="including taxes & fees." />
+                            <ResultItem svg={<SVGMoneyBagPer />} label="You May Earn" footer="Yearly" result={annualReturnPer ? annualReturnPer : 0} unit="%" decimal={2} />
+                        </div>
+                    </div>}
 
-            {viewMode === brLabel &&
-                <div className="flex flex-wrap items-center mt-4 mb-4">
-                    <BRComparison price={price} currency={currency} taxRate={taxRate} priceChgRate={priceChgRate} sellAfter={sellAfter}
-                        initAllBuyCFsForComparison={initBuyCFsForComparison} setRentAns={setRentAns} />
+                    <div className="mt-4 md:mt-8">
+                        <p className="mb-2 text-center text-xl md:text-2xl font-semibold">If You Invest Instead,</p>
+                        <OppCost cfs={oppCostCFs} currency={currency} startYear={startYear}
+                            discountRate={oppDR} discountRateHandler={setOppDR} />
+                    </div>
+                    {goalType === APIt.GoalType.B && <div className="flex justify-center items-center mt-4 md:mt-8">
+                        <label className="mr-2 text-xl md:text-2xl font-semibold">Evaluate Rent Option</label>
+                        {showRentOption ?
+                            <div className="cursor-pointer" onClick={() => setShowRentOption(false)}>
+                                <SVGCollapse />
+                            </div>
+                            : <div className="cursor-pointer" onClick={() => setShowRentOption(true)}>
+                                <SVGExpand />
+                            </div>}
+                    </div>}
+                    {goalType === APIt.GoalType.B && showRentOption &&
+                        <div className="flex flex-wrap items-center">
+                            <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
+                                discountRate={oppDR} initAllBuyCFsForComparison={initBuyCFsForComparison}
+                                rentAmt={rentAmt} rentAmtHandler={setRentAmt} rentChgPer={rentChgPer}
+                                rentChgPerHandler={setRentChgPer} rentTaxBenefit={rentTaxBenefit}
+                                rentTaxBenefitHandler={setRentTaxBenefit} />
+                        </div>}
+                    <div className="flex justify-center mt-8">
+                        <button className="cancel" onClick={createNewGoal}>
+                            Cancel
+			                        </button>
+                        <button className="ml-8 button" onClick={createNewGoal}>
+                            Create Goal
+			                        </button>
+                    </div>
+                </Fragment>}
+            {viewMode === maintainLabel && <div className="mt-4 md:mt-8 flex flex-col items-center w-full justify-around text-lg md:text-xl lg:text-2xl">
+                <label>Wear & Tear, Insurance, Taxes, etc costs</label>
+                <div className="flex items-center mt-4 justify-around w-full">
+                    <RadialInput data={toStringArr(0, 10, 0.1)} float={true} changeHandler={setAMCostPer} width={120}
+                        unit="%" labelBottom={true} label="of Price" value={amCostPer} step={0.1} />
+                    <label className="mr-4 ml-4">Every Year</label>
+                    <SelectInput name="maintainFrom" pre="Starting" options={amSYOptions} value={amStartYear}
+                        changeHandler={setAMStartYear} />
                 </div>
+            </div>}
+            {viewMode === taxLabel && (loanPer > 0 || manualMode < 1) &&
+                <TaxBenefit loan={loanPer > 0 ? true : false} taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}
+                    maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction}
+                    taxBenefitIntOnly={taxBenefitIntOnly} taxBenefitIntOnlyHandler={setTaxBenefitIntOnly} 
+                    buyTaxRate={buyTaxRate} buyTaxRateHandler={setBuyTaxRate} sellTaxRate={sellTaxRate} 
+                    sellTaxRateHandler={setSellTaxRate} showBuySellTaxes={goalType === APIt.GoalType.B} />
             }
-
-
+            {
+                viewMode === chartLabel &&
+                <LineChart data={chartData} xTitle="Year" title="Yearly Cash Flows" />
+            }
 
             <div className="flex flex-wrap justify-around">
                 {allGoals && allGoals.map((g: any, i: number) =>

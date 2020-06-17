@@ -3,11 +3,12 @@ import { toCurrency, toReadableNumber } from '../utils'
 
 interface ResultItemProps {
     label: string
-    svg: any,
+    svg?: any,
     result: number,
     currency?: string,
     unit?: string,
-    footer?: string
+    footer?: string,
+    decimal?: number
 }
 
 export default function ResultItem(props: ResultItemProps) {
@@ -17,7 +18,7 @@ export default function ResultItem(props: ResultItemProps) {
             <div className="flex justify-center items-center">
                 {props.svg}
                 <label className="ml-2 font-semibold">{props.currency ?
-                    toCurrency(props.result, props.currency) : (toReadableNumber(props.result) + props.unit)}
+                    toCurrency(props.result, props.currency) : (toReadableNumber(props.result, props.decimal ? props.decimal : 0) + props.unit)}
                 </label>
             </div>
             <label>{props.footer}</label>
