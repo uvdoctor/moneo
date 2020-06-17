@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { getCompoundedIncome } from './finance'
-import { toCurrency } from '../utils'
-import NumberInput from '../form/numberinput'
+import { toStringArr } from '../utils'
 import SVGPiggy from '../svgpiggy'
+import RadialInput from '../form/radialinput'
+import ResultItem from './resultitem'
 interface OppCostProps {
     cfs: Array<number>,
     currency: string,
@@ -35,28 +36,15 @@ export default function OppCost(props: OppCostProps) {
     );
 
     return (
-        <div className="flex justify-around flex-wrap items-center w-full">
-            <div className="flex flex-col items-center justify-center">
-                <label>You May Get</label>
-                <div className="flex justify-center items-center">
-                    <SVGPiggy />
-                    <label className="ml-2 font-semibold">{toCurrency(oppCost, props.currency)}</label>
-                </div>
-                <label>{`In ${props.startYear + props.cfs.length}`}</label>
+        <div className="flex flex-col items-center w-full justify-center">
+            <label className="text-xl md:text-2xl font-semibold">Instead, If You Invest</label>
+            <div className="flex justify-around w-full">
+                <RadialInput data={toStringArr(2, 15, 0.5)} value={props.discountRate} unit="%"
+                    label="Yearly" labelBottom={true} changeHandler={props.discountRateHandler} width={110}
+                    post="After-tax Return" step={0.5} colorFrom="#f0fff4" colorTo="#742a2a" />
+                <ResultItem svg={<SVGPiggy />} result={oppCost} currency={props.currency} label="You May Get"
+                    footer={`In ${props.startYear + props.cfs.length}`} />
             </div>
-            <NumberInput
-                name="oppDR"
-                pre="Given Yearly Return"
-                unit="%"
-                width="40px"
-                note="after paying taxes & fees."
-                value={props.discountRate}
-                changeHandler={props.discountRateHandler}
-                min={0}
-                max={20}
-                step={0.1} />
-
-
         </div>
     );
 }

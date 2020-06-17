@@ -34,14 +34,16 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                     </div>
                 </div>}
 
-            <div className="flex flex-col items-center">
-                <label className="text-lg md:text-xl lg:text-2xl font-semibold">Tax Deduction Allowed is</label>
+            <div className="flex flex-col items-center mt-4 md:mt-8">
+                <div className="flex justify-center items-center">
+                    <label className="text-lg md:text-xl lg:text-2xl font-semibold">Tax Deduction Allowed</label>
+                    {props.loan && <Toggle topText="On Interest Only" bottomText="On Full Amount" value={props.taxBenefitIntOnly} setter={props.taxBenefitIntOnlyHandler} />}
+                </div>
                 <div className="flex items-center w-full justify-around mt-4">
                     <RadialInput label="Yearly" data={toStringArr(0, 25, 0.5)} unit="%" width={120}
                         value={props.taxRate} step={0.5} changeHandler={props.taxRateHandler} labelBottom={true} />
                     <NumberInput name="tbLimit" pre="Maximum" post="Limit" currency={props.currency} width="100px"
                         value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} max={300000} step={1000} />
-                    {props.loan && <Toggle topText="On Interest Only" bottomText="On Full Amount" value={props.taxBenefitIntOnly} setter={props.taxBenefitIntOnlyHandler} />}
                 </div>
             </div>
         </div>

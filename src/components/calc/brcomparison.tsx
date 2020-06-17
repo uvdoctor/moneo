@@ -159,9 +159,10 @@ export default function BRComparison(props: BRComparisonProps) {
             </div>
             {answer && <div className="mt-4 md:mt-8 w-full flex justify-center items-center">
                 <SVGBalance />
-                <div className="ml-4 flex flex-wrap">
-                    <label className="mr-1">{`If Money Saved by Not Buying Earns ${props.discountRate}% Yearly after taxes & fees, then `}</label>
-                    <label>{answer}</label>
+                <div className="ml-4 flex flex-col">
+                    <label className="mr-1">If Money Saved by Not Buying Earns</label>
+                    <label className="mr-1">{props.discountRate}% Yearly after taxes & fees, then</label>
+                    <label className="font-semibold">{answer}</label>
                 </div>
             </div>}
             {compData && compData.length === 2 && <BRCompChart data={compData} xTitle="Number of Years" />}

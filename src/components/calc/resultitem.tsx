@@ -8,13 +8,14 @@ interface ResultItemProps {
     currency?: string,
     unit?: string,
     footer?: string,
-    decimal?: number
+    decimal?: number,
+    titleFormat?: boolean
 }
 
 export default function ResultItem(props: ResultItemProps) {
     return (
         <div className="flex flex-col items-center justify-center">
-            <label>{props.label}</label>
+            <label className={props.titleFormat ? "text-xl md:text-2xl font-semibold" : ""}>{props.label}</label>
             <div className="flex justify-center items-center">
                 {props.svg}
                 <label className="ml-2 font-semibold">{props.currency ?
