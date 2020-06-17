@@ -23,7 +23,6 @@ import { LineChart } from './linechart'
 import SVGExpand from '../svgexpand'
 import SVGCollapse from '../svgcollapse'
 import ResultItem from '../calc/resultitem'
-import SVGPercentage from '../svgpercentage'
 import SVGMoneyBagPer from '../svgmoneybagper'
 
 const Goals = () => {
