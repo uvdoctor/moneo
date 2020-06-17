@@ -441,7 +441,7 @@ const Goals = () => {
                             <div className="mt-4 flex flex-wrap justify-around items-center">
                                 <NumberInput name="selfAmt" pre="Current" post="Price" note="including taxes & fees" width="120px"
                                     currency={currency} value={currentPrice} changeHandler={setCurrentPrice} min={500} max={2000000} />
-                                <NumberInput name="priceChgRate" pre="Yearly" post="Change" note={`${toCurrency(Math.round(price * (1 + (buyTaxRate/100))), currency)} in ${startYear}`} unit="%"
+                                <NumberInput name="priceChgRate" pre="Yearly" post="Change" note={`Price ${toCurrency(Math.round(price * (1 + (buyTaxRate/100))), currency)} in ${startYear}`} unit="%"
                                     width="30px" min={-20} max={20} value={priceChgRate} changeHandler={setPriceChgRate} />
                             </div>
                             <EmiCost price={price} currency={currency} startYear={startYear} repaymentSY={loanRepaymentSY} repaymentSYOptions={ryOptions}
