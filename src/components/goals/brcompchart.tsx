@@ -5,6 +5,9 @@ interface BRCompChartProps {
     data?: Array<any>
     currency?: string
     xTitle?: string
+    sellAfter: number
+    rentAns: string
+    title: string
 }
 
 export function BRCompChart(props: BRCompChartProps) {
@@ -16,26 +19,39 @@ export function BRCompChart(props: BRCompChartProps) {
         <div className="w-full">
             {/*@ts-ignore*/}
             <Plot layout={{
-                font:{family: "'Quicksand', sans-serif", color: "#4a5568", size:20}, 
+                font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
                 autosize: true, 
-                xaxis: {title: props.xTitle, type:'category', fixedrange: true},
-                yaxis: {fixedrange: true},
-                showlegend: true,
+                title: {text:props.title + ' as shown below:', font:{size: 20}}, 
+                xaxis: {title: props.xTitle, type:'category', fixedrange: true, showgrid: false, range: [1, 20]},
+                yaxis: {fixedrange: true, showgrid: false},
 	            legend: {
-                    x:1,
-                    y:1,
-                    xanchor: 'right'
-                }
+                    orientation: 'h',
+                    x:0.5,
+                    y:1.5
+                },
+                annotations:[
+                    {
+                        text: props.rentAns,
+                        x: props.data[1].values.x[props.sellAfter - 1],
+                        y: props.data[1].values.y[props.sellAfter - 1],
+                        showarrow: true,
+                        yref: 'y', xref: 'x',
+                        ax: -0, ay: -50,
+                        font: {size: 15} // since there is no font.color attribute for this object,
+                                         // it will use the annotationdefaults' color
+                    }
+                ]
             }} 
             useResizeHandler={true}
             style={{width: "100%", height: "100%"}}
             data={[
                 //@ts-ignore: Object is possible undefined
-                {type: 'scatter', mode: 'lines+markers', x: props.data[0].values.x, y: props.data[0].values.y, name: props.data[0].name}, 
+                {type: 'scatter', fill: 'tozeroy', mode: 'none', x: props.data[0].values.x, y: props.data[0].values.y, name: props.data[0].name}, 
                 //@ts-ignore: Object is possible undefined
-                {type: 'scatter', mode: 'lines+markers', x: props.data[1].values.x, y: props.data[1].values.y, name: props.data[1].name} 
+                {type: 'scatter', fill: 'tonexty', mode:'none', x: props.data[1].values.x, y: props.data[1].values.y, name: props.data[1].name} 
             ]} 
-            config={{responsive: true, editable: false, displayModeBar: false, scrollZoom: true}} />
+            config={{responsive: true, editable: false, displayModeBar: false, scrollZoom: true}} 
+             />
         </div>
     )
 }

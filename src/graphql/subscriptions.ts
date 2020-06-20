@@ -6,8 +6,17 @@ export const onCreateGoal = /* GraphQL */ `
   subscription OnCreateGoal($owner: String!) {
     onCreateGoal(owner: $owner) {
       id
+      sy
+      ey
+      btr
+      str
+      tdr
+      tdl
       name
       type
+      ccy
+      cp
+      chg
       tgts {
         month
         year
@@ -18,14 +27,19 @@ export const onCreateGoal = /* GraphQL */ `
         prob
       }
       emi {
+        per
         rate
         dur
-        dp
+        ry
       }
       imp
       ra
       met
       prob
+      manual
+      amper
+      amsy
+      dr
       createdAt
       updatedAt
       owner
@@ -36,8 +50,17 @@ export const onUpdateGoal = /* GraphQL */ `
   subscription OnUpdateGoal($owner: String!) {
     onUpdateGoal(owner: $owner) {
       id
+      sy
+      ey
+      btr
+      str
+      tdr
+      tdl
       name
       type
+      ccy
+      cp
+      chg
       tgts {
         month
         year
@@ -48,14 +71,19 @@ export const onUpdateGoal = /* GraphQL */ `
         prob
       }
       emi {
+        per
         rate
         dur
-        dp
+        ry
       }
       imp
       ra
       met
       prob
+      manual
+      amper
+      amsy
+      dr
       createdAt
       updatedAt
       owner
@@ -66,8 +94,17 @@ export const onDeleteGoal = /* GraphQL */ `
   subscription OnDeleteGoal($owner: String!) {
     onDeleteGoal(owner: $owner) {
       id
+      sy
+      ey
+      btr
+      str
+      tdr
+      tdl
       name
       type
+      ccy
+      cp
+      chg
       tgts {
         month
         year
@@ -78,14 +115,19 @@ export const onDeleteGoal = /* GraphQL */ `
         prob
       }
       emi {
+        per
         rate
         dur
-        dp
+        ry
       }
       imp
       ra
       met
       prob
+      manual
+      amper
+      amsy
+      dr
       createdAt
       updatedAt
       owner
@@ -108,8 +150,17 @@ export const onCreateMilestone = /* GraphQL */ `
       attr
       goals {
         id
+        sy
+        ey
+        btr
+        str
+        tdr
+        tdl
         name
         type
+        ccy
+        cp
+        chg
         tgts {
           month
           year
@@ -120,14 +171,19 @@ export const onCreateMilestone = /* GraphQL */ `
           prob
         }
         emi {
+          per
           rate
           dur
-          dp
+          ry
         }
         imp
         ra
         met
         prob
+        manual
+        amper
+        amsy
+        dr
         createdAt
         updatedAt
         owner
@@ -154,8 +210,17 @@ export const onUpdateMilestone = /* GraphQL */ `
       attr
       goals {
         id
+        sy
+        ey
+        btr
+        str
+        tdr
+        tdl
         name
         type
+        ccy
+        cp
+        chg
         tgts {
           month
           year
@@ -166,14 +231,19 @@ export const onUpdateMilestone = /* GraphQL */ `
           prob
         }
         emi {
+          per
           rate
           dur
-          dp
+          ry
         }
         imp
         ra
         met
         prob
+        manual
+        amper
+        amsy
+        dr
         createdAt
         updatedAt
         owner
@@ -200,8 +270,17 @@ export const onDeleteMilestone = /* GraphQL */ `
       attr
       goals {
         id
+        sy
+        ey
+        btr
+        str
+        tdr
+        tdl
         name
         type
+        ccy
+        cp
+        chg
         tgts {
           month
           year
@@ -212,14 +291,19 @@ export const onDeleteMilestone = /* GraphQL */ `
           prob
         }
         emi {
+          per
           rate
           dur
-          dp
+          ry
         }
         imp
         ra
         met
         prob
+        manual
+        amper
+        amsy
+        dr
         createdAt
         updatedAt
         owner

@@ -6,8 +6,17 @@ export const getGoal = /* GraphQL */ `
   query GetGoal($id: ID!) {
     getGoal(id: $id) {
       id
+      sy
+      ey
+      btr
+      str
+      tdr
+      tdl
       name
       type
+      ccy
+      cp
+      chg
       tgts {
         month
         year
@@ -18,14 +27,19 @@ export const getGoal = /* GraphQL */ `
         prob
       }
       emi {
+        per
         rate
         dur
-        dp
+        ry
       }
       imp
       ra
       met
       prob
+      manual
+      amper
+      amsy
+      dr
       createdAt
       updatedAt
       owner
@@ -41,8 +55,17 @@ export const listGoals = /* GraphQL */ `
     listGoals(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        sy
+        ey
+        btr
+        str
+        tdr
+        tdl
         name
         type
+        ccy
+        cp
+        chg
         tgts {
           month
           year
@@ -53,14 +76,19 @@ export const listGoals = /* GraphQL */ `
           prob
         }
         emi {
+          per
           rate
           dur
-          dp
+          ry
         }
         imp
         ra
         met
         prob
+        manual
+        amper
+        amsy
+        dr
         createdAt
         updatedAt
         owner
@@ -85,8 +113,17 @@ export const getMilestone = /* GraphQL */ `
       attr
       goals {
         id
+        sy
+        ey
+        btr
+        str
+        tdr
+        tdl
         name
         type
+        ccy
+        cp
+        chg
         tgts {
           month
           year
@@ -97,14 +134,19 @@ export const getMilestone = /* GraphQL */ `
           prob
         }
         emi {
+          per
           rate
           dur
-          dp
+          ry
         }
         imp
         ra
         met
         prob
+        manual
+        amper
+        amsy
+        dr
         createdAt
         updatedAt
         owner
@@ -136,12 +178,25 @@ export const listMilestones = /* GraphQL */ `
         attr
         goals {
           id
+          sy
+          ey
+          btr
+          str
+          tdr
+          tdl
           name
           type
+          ccy
+          cp
+          chg
           imp
           ra
           met
           prob
+          manual
+          amper
+          amsy
+          dr
           createdAt
           updatedAt
           owner

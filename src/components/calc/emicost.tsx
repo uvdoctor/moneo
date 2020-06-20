@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import NumberInput from '../form/numberinput'
 import { getEmi, getTotalInt } from '../calc/finance'
-import { toCurrency } from '../utils'
+import { toCurrency, toStringArr } from '../utils'
 import SelectInput from '../form/selectinput'
-
+import RadialInput from '../form/radialinput'
+import Section from '../form/section'
 interface EmiProps {
     price: number,
     currency: string,
@@ -32,49 +33,48 @@ export default function EmiCost(props: EmiProps) {
     }
 
     useEffect(
-        () => { if (props.loanPer > 0) calculateEmi() }
+        () => calculateEmi()
         , [props]
     );
 
     return (
+        <Fragment>
+            <Section title="Borrow"
+                left={
+                    <RadialInput width={150} unit="%" data={toStringArr(0, 90, 5)}
+                        value={props.loanPer} changeHandler={props.loanPerHandler} step={5} labelBottom={true}
+                        label={`${toCurrency(Math.round((props.loanPer / 100) * props.price), props.currency)}`} />
+                } right={
+                    <SelectInput name="repaymentSY" options={props.repaymentSYOptions}
+                        value={props.repaymentSY} pre="Repay From" changeHandler={(year: string) => props.repaymentSYHandler(parseInt(year))} />
+                }
+            />
+            <Section title="Loan Details"
+                left={
+                    <NumberInput
+                        name="duration"
+                        pre="Term"
+                        unit="months"
+                        width="40px"
+                        note={`EMI ${toCurrency(props.emi, props.currency)}`}
+                        value={props.loanMonths}
+                        changeHandler={props.loanMonthsHandler}
+                        min={6}
+                        max={360} step={6} />
+                } right={
+                    <NumberInput
+                        name="intRate"
+                        pre="Interest"
+                        unit="%"
+                        width="40px"
+                        note={`Total ${toCurrency(totalIntAmt, props.currency)}`}
+                        value={props.loanAnnualInt}
+                        changeHandler={props.loanAnnualIntHandler}
+                        min={0.0}
+                        max={30.0}
+                        step={0.1} />
+                } />
 
-        <div className="flex flex-col md:flex-row md:justify-center">
-            <div className="mt-4 md:mt-8 flex justify-around items-center w-full md:w-1/2 lg:w-1/3">
-                <NumberInput
-                    name="loanPer"
-                    pre="Borrow"
-                    width="30px"
-                    note={`${toCurrency(Math.round((props.loanPer / 100) * props.price), props.currency)}`}
-                    unit="%"
-                    value={props.loanPer}
-                    changeHandler={props.loanPerHandler}
-                    min={0} max={90} />
-                <NumberInput
-                    name="intRate"
-                    pre="Interest"
-                    unit="%"
-                    width="40px"
-                    note={`Total ${toCurrency(totalIntAmt, props.currency)}`}
-                    value={props.loanAnnualInt}
-                    changeHandler={props.loanAnnualIntHandler}
-                    min={0.0}
-                    max={30.0}
-                    step={0.1} />
-            </div>
-            {props.loanPer > 0 && <div className="mt-4 md:mt-8 flex flex-wrap items-center justify-around w-full md:w-1/2 lg:w-1/3">
-                <NumberInput
-                    name="duration"
-                    pre="Term"
-                    unit="months"
-                    width="40px"
-                    note={`EMI ${toCurrency(props.emi, props.currency)}`}
-                    value={props.loanMonths}
-                    changeHandler={props.loanMonthsHandler}
-                    min={6}
-                    max={360} step={3} />
-                <SelectInput name="repaymentSY" options={props.repaymentSYOptions}
-                    value={props.repaymentSY} pre="Repay From" changeHandler={(year: string) => props.repaymentSYHandler(parseInt(year))} />
-            </div>}
-        </div>
+        </Fragment>
     );
 }

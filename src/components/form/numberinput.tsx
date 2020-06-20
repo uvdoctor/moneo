@@ -99,9 +99,9 @@ export default function NumberInput(props: NumberInputProps) {
                         }} />
                     {props.max && <div className="flex justify-between w-full text-gray-400">
                         <label className="mr-2">{props.currency ? toCurrency(props.min, props.currency)
-                            : `${toReadableNumber(props.min ? props.min : 0)}${props.unit}`}</label>
+                            : `${toReadableNumber(props.min ? props.min : 0)}${props.unit !== 'months' ? props.unit : 'm'}`}</label>
                         <label>{props.currency ? toCurrency(props.max, props.currency)
-                            : `${toReadableNumber(props.max)}${props.unit}`}</label>
+                            : `${toReadableNumber(props.max)}${props.unit !== 'months' ? props.unit : 'm'}`}</label>
                     </div>}
                 </div>
             }

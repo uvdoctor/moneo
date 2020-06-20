@@ -21,21 +21,35 @@ B, R, L, X, C, F, FF, D, O
 }
 
 type Emi {
+  per: Int!
   rate: Float!
   dur: Int!
-  dp: Int!
+  ry: Int!
 }
 
 type Goal @model @auth(rules: [{allow: owner}]) {
   id: ID!
+  sy: Int!
+  ey: Int!
+  btr: Int
+  str: Int
+  tdr: Int!
+  tdl: Int!
   name: String!
   type: GoalType!
-  tgts: [Target!]!
+  ccy: String!
+  cp: Int
+  chg: Float!
+  tgts: [Target!]
   emi: Emi
   imp: LMH!
   ra: LMH!
   met: YN
   prob: LMH
+  manual: Int
+  amper: Float
+  amsy: Int
+  dr: Float
 }
 
 enum MilestoneAttr {

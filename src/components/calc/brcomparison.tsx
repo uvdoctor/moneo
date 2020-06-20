@@ -1,12 +1,10 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import NumberInput from '../form/numberinput'
-import Toggle from '../toggle'
 import { getNPV } from '../calc/finance'
 import { BRCompChart } from '../goals/brcompchart'
 import { toCurrency } from '../utils'
-import SVGBalance from './svgbalance'
-
 interface BRComparisonProps {
+    price: number,
     taxRate: number,
     currency: string,
     sellAfter: number,
@@ -24,7 +22,7 @@ export default function BRComparison(props: BRComparisonProps) {
     const [compData, setCompData] = useState<Array<any>>([])
     const [answer, setAnswer] = useState<string>('')
     const [rentAns, setRentAns] = useState<string>('')
-    const analyzeFor = 30
+    const analyzeFor = 20
 
     const getNextTaxAdjRentAmt = (val: number) => {
         return (val * (1 + (props.rentChgPer / 100))) * (props.rentTaxBenefit > 0 ? (1 - (props.taxRate / 100)) : 1)
@@ -100,11 +98,10 @@ export default function BRComparison(props: BRComparisonProps) {
         let buyValues = data[0].values.y
         let rentValues = data[1].values.y
         if (buyValues.length >= props.sellAfter) {
-            if (buyValues[props.sellAfter - 1] < rentValues[props.sellAfter - 1]) {
-                let diff = rentValues[props.sellAfter - 1] - buyValues[props.sellAfter - 1]
-                setRentAns(`You may Save ${toCurrency(diff, props.currency)} by Renting instead for ${props.sellAfter} Years.`)
-                return
-            }
+            let diff = rentValues[props.sellAfter - 1] - buyValues[props.sellAfter - 1]
+            if (diff === 0) setRentAns(`Renting costs similar to Buying for ${props.sellAfter} ${props.sellAfter === 1 ? 'year' : 'years'}.`)
+            else setRentAns(`Renting costs ${diff > 0 ? 'lesser' : 'more'} by ${toCurrency(Math.abs(diff), props.currency)}`)
+            return
         }
         setRentAns('')
     }
@@ -115,20 +112,20 @@ export default function BRComparison(props: BRComparisonProps) {
         let buyValues = data[0].values.y
         let rentValues = data[1].values.y
         if (buyValues[0] < rentValues[0]) {
-            answer += 'Renting is better'
-        } else if (buyValues[0] > rentValues[0]) answer += 'Buying is better than Renting'
-        else if (buyValues[0] === rentValues[0]) answer += 'Both are suitable options'
+            answer += 'Renting costs lesser'
+        } else if (buyValues[0] > rentValues[0]) answer += 'Buying costs lesser'
+        else if (buyValues[0] === rentValues[0]) answer += 'Both options cost similar'
         for (let i = 1; i < buyValues.length; i++) {
             let alternative = ''
             if (buyValues[i] < rentValues[i]) alternative += 'Renting'
             else if (buyValues[i] > rentValues[i]) alternative += 'Buying'
             else if (buyValues[i] === rentValues[i]) alternative += 'Both'
             if (!answer.startsWith(alternative)) {
-                condition = ` till ${i} ${i === 1 ? 'year' : 'years'}.\n${alternative} is better after that.`
+                condition = ` till ${i} ${i === 1 ? 'year' : 'years'}`
                 break
             }
         }
-        return answer + (condition ? condition : '.')
+        return answer + condition
     }
 
     useEffect(() => {
@@ -149,23 +146,16 @@ export default function BRComparison(props: BRComparisonProps) {
 
     return (
         <Fragment>
-            {rentAns && <p className="w-full text-center mt-4 font-semibold">{rentAns}</p>}
-            <div className="flex flex-wrap justify-between items-center w-full">
+            <div className="mt-4 w-full flex justify-around items-center">
                 <NumberInput name="rentAmt" pre="Yearly" post="Rent" value={props.rentAmt} changeHandler={props.rentAmtHandler}
-                    min={1000} max={200000} width="120px" currency={props.currency} note="Including Taxes & Fees" />
+                    min={1000} max={200000} step={500} width="120px" currency={props.currency} note="Including Taxes & Fees" />
                 <NumberInput name="rentChg" pre="Changes" value={props.rentChgPer} changeHandler={props.rentChgPerHandler}
                     min={-10} max={10} step={0.5} unit="%" note="Every Year" width="50px" />
-                <Toggle topText="Tax Benefit" value={props.rentTaxBenefit} setter={props.rentTaxBenefitHandler} />
             </div>
-            {answer && <div className="mt-4 md:mt-8 w-full flex justify-center items-center">
-                <SVGBalance />
-                <div className="ml-4 flex flex-col">
-                    <label className="mr-1">If Money Saved by Not Buying Earns</label>
-                    <label className="mr-1">{props.discountRate}% Yearly after taxes & fees, then</label>
-                    <label className="font-semibold">{answer}</label>
-                </div>
-            </div>}
-            {compData && compData.length === 2 && <BRCompChart data={compData} xTitle="Number of Years" />}
+            {props.price > 0 && props.rentAmt > 0 && compData && compData.length === 2 && compData[1].values.y[props.sellAfter - 1] &&
+                <BRCompChart data={compData} xTitle="Number of Years" rentAns={rentAns}
+                    sellAfter={props.sellAfter} title={answer} />}
+            <p className="mt-2 w-full text-center text-base">Assumes that Money Saved by Not Buying is Invested to Earn {props.discountRate}% Yearly after taxes & fees.</p>
         </Fragment>
     )
 }

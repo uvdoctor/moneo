@@ -185,17 +185,6 @@ input[type=number] {
 	top: -1px;
 }
 
-.modal {
-	transition: opacity 0.25s ease;
-}
-body.modal-active {
-	overflow-x: hidden;
-	overflow-y: visible !important;
-}
-.opacity-95 {
-	opacity: .95;
-}
-
 .hoverable:hover .dropdown-menu {
 	display: block;
 }

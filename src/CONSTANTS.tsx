@@ -1,8 +1,8 @@
 export const ROUTES = {
     HOME: '/',
     DASHBOARD: '/dashboard',
-    PLAN: '/plan',
-    CALCULATE: '/calculate'
+    PLAN: '/goals',
+    CALCULATE: '/calculate',
 }
 
 export const SVGS = {

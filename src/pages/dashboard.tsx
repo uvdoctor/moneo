@@ -6,7 +6,7 @@ import awsconfig from '../aws-exports'
 
 Amplify.configure(awsconfig)
 
-const Dashboard = () => {
+export default function Dashboard() {
   return (
     <div>
       <UserHeader />
@@ -15,5 +15,3 @@ const Dashboard = () => {
   )
 
 }
-
-export default Dashboard

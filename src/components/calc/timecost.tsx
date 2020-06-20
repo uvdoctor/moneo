@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import NumberInput from '../form/numberinput'
 import { toReadableNumber } from '../utils'
 import SVGTimeCost from './svgtimecost'
-import ResultItem from './resultitem'
+import Section from '../form/section'
 import { toCurrency } from '../utils'
 interface TimeCostProps {
     amount: number,
@@ -32,11 +32,10 @@ export default function TimeCost(props: TimeCostProps) {
     }, [props, annualSavings])
 
     return (
-        <div className="flex flex-col justify-center items-center w-full">
-            <p className="text-xl md:text-2xl font-semibold">Total Cost is {toCurrency(props.amount, props.currency)}</p>
-            <div className="mt-4 flex flex-wrap items-center w-full justify-between">
+        <Section title={`Total Cost is ${toCurrency(props.amount, props.currency)}`}
+            left={
                 <div className="flex flex-col items-center justify-between">
-                    You Work
+                    Time Cost is
                     <div className="flex items-center justify-between">
                         <SVGTimeCost />
                         <div className="flex ml-2 justify-center items-center font-semibold">
@@ -52,10 +51,12 @@ export default function TimeCost(props: TimeCostProps) {
                     </div>
                     To Save {toCurrency(props.amount, props.currency)}
                 </div>
+            }
+            right={
                 <NumberInput name="savings" pre="Save" note="Every Year" currency={props.currency} value={annualSavings}
                     changeHandler={setAnnualSavings}
                     min={1000} max={200000} step={1000} width="100px" />
-            </div>
-        </div>
+            } />
+
     );
 }

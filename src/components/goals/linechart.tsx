@@ -9,7 +9,7 @@ interface LineChartProps {
     yTitle?: string
 }
 
-export function LineChart(props: LineChartProps) {
+export default function LineChart(props: LineChartProps) {
     const Plot = dynamic(
         () => import('react-plotly.js'), {ssr: false}
     )
@@ -18,11 +18,12 @@ export function LineChart(props: LineChartProps) {
         <div className="mt-4 mb-4 w-full">
             {/*@ts-ignore*/}
             <Plot layout={{
-                font:{family: "'Quicksand', sans-serif", color: "#4a5568", size:20}, 
+                font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
                 autosize: true, 
-                xaxis: {title: props.xTitle, type:'category', fixedrange: true},
-                yaxis: {fixedrange: true},
-                title: props.title
+                xaxis: {title: props.xTitle, type:'category', fixedrange: true, showgrid: false},
+                yaxis: {fixedrange: true, showgrid: false},
+                title: props.title,
+                legend: {orientation: "h"}
             }} useResizeHandler={true}
             style={{width: "100%", height: "100%"}}
             data={[
