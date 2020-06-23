@@ -11,6 +11,7 @@ interface OppCostProps {
     currency: string,
     startYear: number,
     discountRate: number,
+    duration: number,
     discountRateHandler: Function
 }
 
@@ -27,7 +28,7 @@ export default function OppCost(props: OppCostProps) {
             (accumulator, currentValue, index) =>
                 accumulator + getCompoundedIncome(props.discountRate, currentValue, props.cfs.length - index), 0
         )
-        setOppCost(oc)
+        setOppCost(Math.abs(oc))
     }
 
     useEffect(
@@ -46,7 +47,7 @@ export default function OppCost(props: OppCostProps) {
             }
             right={
                 <ResultItem svg={<SVGMoneyBag />} result={oppCost} currency={props.currency} label="You May Get"
-                    footer={`In ${props.startYear + props.cfs.length}`} />
+                    footer={`In ${props.startYear + props.duration}`} />
             } />
     )
 }

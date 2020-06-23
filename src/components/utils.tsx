@@ -56,8 +56,35 @@ export const createNewTarget = (year: number, val: number, curr: string, fx: num
 export const toStringArr = (startNum: number, endNum: number, step: number = 1) => {
 	let returnArr: Array<string> = []
 	for (let i = startNum; i <= endNum; i += step) {
-		if(step < 1) returnArr.push(toReadableNumber(i, 1)) 
-		else returnArr.push(""+i)
+		if (step < 1) returnArr.push(toReadableNumber(i, 1))
+		else returnArr.push("" + i)
 	}
 	return returnArr
+}
+
+export const getGoalTypes = () => {
+	return {
+		"B": "Buy",
+		"R": "Rent",
+		"X": "Experience",
+		"L": "Learn",
+		"C": "Celebrate",
+		"F": "Provide for Family",
+		"FF": "Be Financially Free",
+		"D": "Donate",
+		"O": "Spend for Other Things"
+	}
+}
+
+export const removeFromArray = (arr: Array<any>, attr: string, value: any) => {
+	let i = arr.length;
+	while (i--) {
+		if (arr[i]
+			&& arr[i].hasOwnProperty(attr) && arr[i][attr] === value) {
+			console.log("Array arguments validated...going to remove")
+			arr.splice(i, 1);
+
+		}
+	}
+	return arr;
 }

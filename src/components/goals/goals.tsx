@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 import * as APIt from '../../api/goals'
 import * as queries from '../../graphql/queries'
 import { API, graphqlOperation } from 'aws-amplify'
 import Goal from './goal'
+import {removeFromArray} from '../utils'
 
 export default function Goals() {
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([])
@@ -27,43 +28,56 @@ export default function Goals() {
         }
     }
 
+    const cancelGoal = () => {
+        setWIPGoal(null)
+        setShowModal(false)
+    }
+
     const removeGoal = (id: string) => {
-        allGoals?.forEach((goal, i) => goal.id === id ? allGoals.splice(i, 1) : console.log("No need to delete id: ", goal.id))
+        removeFromArray(allGoals as Array<APIt.CreateGoalInput>, 'id', id)
         setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
         setWIPGoal(null)
+        setShowModal(false)
     }
 
     const addGoal = (goal: APIt.CreateGoalInput) => {
         allGoals?.push(goal)
         setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
         setWIPGoal(null)
+        setShowModal(false)
     }
 
-    const changeModalState = (state: boolean) => {
-        setShowModal(state)
-        if(!state) setWIPGoal(null)
+    const editGoal = (goal: APIt.CreateGoalInput) => {
+        setWIPGoal(goal)
+        setShowModal(true)
+    }
+
+    const updateGoal = (oldGoalId: string, newGoal: APIt.CreateGoalInput) => {
+        removeFromArray(allGoals as Array<APIt.CreateGoalInput>, 'id', oldGoalId)
+        allGoals?.push(newGoal)
+        setWIPGoal(null)
+        setShowModal(false)
+        setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
     }
 
     return (
-        <>
+        <Fragment>
             <div className="mt-4 flex justify-center">
                 <button className="button" onClick={() => setShowModal(true)}>
                     Create Goal
 			    </button>
             </div>
             {showModal ?
-                <div className="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-                    <div className="relative w-screen h-screen z-50">
-                        <div className="z-50 border-0 shadow-lg relative flex flex-col w-full h-full bg-white outline-none focus:outline-none">
-                            <Goal goal={wipGoal} summary={false} deleteCallback={removeGoal} addCallback={addGoal} modalCallback={changeModalState} wipGoalCallback={setWIPGoal} />
-                        </div>
+                <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
+                    <div className="relative bg-white border-0">
+                            <Goal goal={wipGoal} summary={false} deleteCallback={removeGoal} addCallback={addGoal} cancelCallback={cancelGoal} editCallback={editGoal} updateCallback={updateGoal} />
                     </div>
                 </div>
             :
                 <div className="w-screen flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
                     {allGoals && allGoals.map((g: any) =>
-                        <Goal goal={g} summary={true} deleteCallback={removeGoal} modalCallback={setShowModal} wipGoalCallback={setWIPGoal} />)}
+                        <Goal goal={g} summary={true} addCallback={addGoal} deleteCallback={removeGoal} cancelCallback={cancelGoal} editCallback={editGoal} updateCallback={updateGoal} />)}
                 </div>}
-        </ >
+        </Fragment>
     )
 }

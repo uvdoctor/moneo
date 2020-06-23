@@ -12,7 +12,6 @@ export const createGoal = /* GraphQL */ `
       sy
       ey
       btr
-      str
       tdr
       tdl
       name
@@ -20,6 +19,7 @@ export const createGoal = /* GraphQL */ `
       ccy
       cp
       chg
+      achg
       tgts {
         month
         year
@@ -43,6 +43,7 @@ export const createGoal = /* GraphQL */ `
       amper
       amsy
       dr
+      sa
       createdAt
       updatedAt
       owner
@@ -59,7 +60,6 @@ export const updateGoal = /* GraphQL */ `
       sy
       ey
       btr
-      str
       tdr
       tdl
       name
@@ -67,6 +67,7 @@ export const updateGoal = /* GraphQL */ `
       ccy
       cp
       chg
+      achg
       tgts {
         month
         year
@@ -90,6 +91,7 @@ export const updateGoal = /* GraphQL */ `
       amper
       amsy
       dr
+      sa
       createdAt
       updatedAt
       owner
@@ -106,7 +108,6 @@ export const deleteGoal = /* GraphQL */ `
       sy
       ey
       btr
-      str
       tdr
       tdl
       name
@@ -114,6 +115,7 @@ export const deleteGoal = /* GraphQL */ `
       ccy
       cp
       chg
+      achg
       tgts {
         month
         year
@@ -137,6 +139,7 @@ export const deleteGoal = /* GraphQL */ `
       amper
       amsy
       dr
+      sa
       createdAt
       updatedAt
       owner
@@ -165,7 +168,6 @@ export const createMilestone = /* GraphQL */ `
         sy
         ey
         btr
-        str
         tdr
         tdl
         name
@@ -173,6 +175,7 @@ export const createMilestone = /* GraphQL */ `
         ccy
         cp
         chg
+        achg
         tgts {
           month
           year
@@ -196,6 +199,7 @@ export const createMilestone = /* GraphQL */ `
         amper
         amsy
         dr
+        sa
         createdAt
         updatedAt
         owner
@@ -228,7 +232,6 @@ export const updateMilestone = /* GraphQL */ `
         sy
         ey
         btr
-        str
         tdr
         tdl
         name
@@ -236,6 +239,7 @@ export const updateMilestone = /* GraphQL */ `
         ccy
         cp
         chg
+        achg
         tgts {
           month
           year
@@ -259,6 +263,7 @@ export const updateMilestone = /* GraphQL */ `
         amper
         amsy
         dr
+        sa
         createdAt
         updatedAt
         owner
@@ -291,7 +296,6 @@ export const deleteMilestone = /* GraphQL */ `
         sy
         ey
         btr
-        str
         tdr
         tdl
         name
@@ -299,6 +303,7 @@ export const deleteMilestone = /* GraphQL */ `
         ccy
         cp
         chg
+        achg
         tgts {
           month
           year
@@ -322,6 +327,7 @@ export const deleteMilestone = /* GraphQL */ `
         amper
         amsy
         dr
+        sa
         createdAt
         updatedAt
         owner

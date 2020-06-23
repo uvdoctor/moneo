@@ -31,15 +31,15 @@ type Goal @model @auth(rules: [{allow: owner}]) {
   id: ID!
   sy: Int!
   ey: Int!
-  btr: Int
-  str: Int
+  btr: Float!
   tdr: Int!
   tdl: Int!
   name: String!
   type: GoalType!
   ccy: String!
   cp: Int
-  chg: Float!
+  chg: Float
+  achg: Float
   tgts: [Target!]
   emi: Emi
   imp: LMH!
@@ -50,6 +50,7 @@ type Goal @model @auth(rules: [{allow: owner}]) {
   amper: Float
   amsy: Int
   dr: Float
+  sa: Int
 }
 
 enum MilestoneAttr {

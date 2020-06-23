@@ -9,7 +9,6 @@ export const getGoal = /* GraphQL */ `
       sy
       ey
       btr
-      str
       tdr
       tdl
       name
@@ -17,6 +16,7 @@ export const getGoal = /* GraphQL */ `
       ccy
       cp
       chg
+      achg
       tgts {
         month
         year
@@ -40,6 +40,7 @@ export const getGoal = /* GraphQL */ `
       amper
       amsy
       dr
+      sa
       createdAt
       updatedAt
       owner
@@ -58,7 +59,6 @@ export const listGoals = /* GraphQL */ `
         sy
         ey
         btr
-        str
         tdr
         tdl
         name
@@ -66,6 +66,7 @@ export const listGoals = /* GraphQL */ `
         ccy
         cp
         chg
+        achg
         tgts {
           month
           year
@@ -89,6 +90,7 @@ export const listGoals = /* GraphQL */ `
         amper
         amsy
         dr
+        sa
         createdAt
         updatedAt
         owner
@@ -116,7 +118,6 @@ export const getMilestone = /* GraphQL */ `
         sy
         ey
         btr
-        str
         tdr
         tdl
         name
@@ -124,6 +125,7 @@ export const getMilestone = /* GraphQL */ `
         ccy
         cp
         chg
+        achg
         tgts {
           month
           year
@@ -147,6 +149,7 @@ export const getMilestone = /* GraphQL */ `
         amper
         amsy
         dr
+        sa
         createdAt
         updatedAt
         owner
@@ -181,7 +184,6 @@ export const listMilestones = /* GraphQL */ `
           sy
           ey
           btr
-          str
           tdr
           tdl
           name
@@ -189,6 +191,7 @@ export const listMilestones = /* GraphQL */ `
           ccy
           cp
           chg
+          achg
           imp
           ra
           met
@@ -197,6 +200,7 @@ export const listMilestones = /* GraphQL */ `
           amper
           amsy
           dr
+          sa
           createdAt
           updatedAt
           owner
