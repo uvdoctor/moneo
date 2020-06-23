@@ -32,7 +32,9 @@ export function BRCompChart(props: BRCompChartProps) {
                 annotations:[
                     {
                         text: props.rentAns,
+                        //@ts-ignore
                         x: props.data[1].values.x[props.sellAfter - 1],
+                        //@ts-ignore
                         y: props.data[1].values.y[props.sellAfter - 1],
                         showarrow: true,
                         yref: 'y', xref: 'x',
