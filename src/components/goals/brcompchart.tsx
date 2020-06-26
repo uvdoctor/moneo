@@ -52,7 +52,7 @@ export function BRCompChart(props: BRCompChartProps) {
                 //@ts-ignore: Object is possible undefined
                 {type: 'scatter', fill: 'tonexty', mode:'none', x: props.data[1].values.x, y: props.data[1].values.y, name: props.data[1].name} 
             ]} 
-            config={{responsive: true, editable: false, displayModeBar: false, scrollZoom: true}} 
+            config={{responsive: true, editable: false, displayModeBar: false}} 
              />
         </div>
     )

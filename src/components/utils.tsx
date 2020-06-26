@@ -22,18 +22,6 @@ export const toReadableNumber = (num: number, decimalDigits: number = 0) => {
 	return num ? formatter.format(num) : formatter.format(0);
 }
 
-export function getCriticalityOptions() {
-	return {
-		"H": "Must Meet", "M": "Try Best", "L": "OK if Not Met"
-	}
-}
-
-export function getRAOptions() {
-	return {
-		"L": "Up to 0%", "M": "Up to 20%", "H": "Up to 50%"
-	}
-}
-
 export function getTimeCostUnits() {
 	return { 'hours': 'hours', 'weeks': 'weeks', 'years': 'years' }
 }
@@ -44,15 +32,6 @@ export function initYearOptions(firstYear: number, duration: number) {
 	return years
 }
 
-export const createNewTarget = (year: number, val: number, curr: string, fx: number) => {
-	return {
-		year: year,
-		val: val,
-		curr: curr,
-		fx: fx
-	}
-}
-
 export const toStringArr = (startNum: number, endNum: number, step: number = 1) => {
 	let returnArr: Array<string> = []
 	for (let i = startNum; i <= endNum; i += step) {
@@ -60,20 +39,6 @@ export const toStringArr = (startNum: number, endNum: number, step: number = 1) 
 		else returnArr.push("" + i)
 	}
 	return returnArr
-}
-
-export const getGoalTypes = () => {
-	return {
-		"B": "Buy",
-		"R": "Rent",
-		"X": "Experience",
-		"L": "Learn",
-		"C": "Celebrate",
-		"F": "Provide for Family",
-		"FF": "Be Financially Free",
-		"D": "Donate",
-		"O": "Spend for Other Things"
-	}
 }
 
 export const removeFromArray = (arr: Array<any>, attr: string, value: any) => {

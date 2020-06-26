@@ -8,9 +8,12 @@ export const getGoal = /* GraphQL */ `
       id
       sy
       ey
+      by
       btr
       tdr
       tdl
+      tbi
+      tbr
       name
       type
       ccy
@@ -58,9 +61,12 @@ export const listGoals = /* GraphQL */ `
         id
         sy
         ey
+        by
         btr
         tdr
         tdl
+        tbi
+        tbr
         name
         type
         ccy
@@ -117,9 +123,12 @@ export const getMilestone = /* GraphQL */ `
         id
         sy
         ey
+        by
         btr
         tdr
         tdl
+        tbi
+        tbr
         name
         type
         ccy
@@ -183,9 +192,12 @@ export const listMilestones = /* GraphQL */ `
           id
           sy
           ey
+          by
           btr
           tdr
           tdl
+          tbi
+          tbr
           name
           type
           ccy

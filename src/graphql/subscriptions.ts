@@ -8,9 +8,12 @@ export const onCreateGoal = /* GraphQL */ `
       id
       sy
       ey
+      by
       btr
       tdr
       tdl
+      tbi
+      tbr
       name
       type
       ccy
@@ -53,9 +56,12 @@ export const onUpdateGoal = /* GraphQL */ `
       id
       sy
       ey
+      by
       btr
       tdr
       tdl
+      tbi
+      tbr
       name
       type
       ccy
@@ -98,9 +104,12 @@ export const onDeleteGoal = /* GraphQL */ `
       id
       sy
       ey
+      by
       btr
       tdr
       tdl
+      tbi
+      tbr
       name
       type
       ccy
@@ -155,9 +164,12 @@ export const onCreateMilestone = /* GraphQL */ `
         id
         sy
         ey
+        by
         btr
         tdr
         tdl
+        tbi
+        tbr
         name
         type
         ccy
@@ -216,9 +228,12 @@ export const onUpdateMilestone = /* GraphQL */ `
         id
         sy
         ey
+        by
         btr
         tdr
         tdl
+        tbi
+        tbr
         name
         type
         ccy
@@ -277,9 +292,12 @@ export const onDeleteMilestone = /* GraphQL */ `
         id
         sy
         ey
+        by
         btr
         tdr
         tdl
+        tbi
+        tbr
         name
         type
         ccy

@@ -17,13 +17,16 @@ export function getCompoundedIncome(rate: number, value: number, years: number, 
     return value * getCompoundedRate(rate, years, frequency);
 }
 
-export function getTotalInt(borrowAmt: number, emi: number, months: number) {
-    return Math.round((emi * months) - borrowAmt)
-}
-
-export function getTotalAmtIncludingInt(dpAmt: number, emi: number, months: number) {
-    if (emi <= 0 || months <= 0) return 0
-    return Math.round((emi * months) + dpAmt)
+export function getTotalInt(borrowAmt: number, emi: number, intRate: number, loanPaidForMonths: number) {
+    let principal = borrowAmt
+    let monthlyRate = intRate / 1200
+    let totalInt = 0
+    for(let i = 0; i < loanPaidForMonths; i++) {
+        let monthlyInt = principal * monthlyRate
+        totalInt += monthlyInt
+        principal -= (emi - monthlyInt)
+    }
+    return totalInt
 }
 
 export function getIntAmtByYear(borrowAmt: number, emi: number, intRate: number, months: number) {

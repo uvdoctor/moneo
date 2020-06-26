@@ -5,10 +5,13 @@ import { toCurrency, toStringArr, initYearOptions } from '../utils'
 import SelectInput from '../form/selectinput'
 import RadialInput from '../form/radialinput'
 import Section from '../form/section'
+import {getLoanPaidForMonths} from '../goals/cfutils'
+
 interface EmiProps {
     price: number,
     currency: string,
     startYear: number,
+    endYear: number,
     repaymentSY: number,
     loanYears: number,
     loanAnnualInt: number,
@@ -28,7 +31,8 @@ export default function EmiCost(props: EmiProps) {
     const calculateEmi = () => {
         let emi = Math.round(getEmi(props.loanBorrowAmt, props.loanAnnualInt, props.loanYears * 12) as number)
         setEMI(emi)
-        setTotalIntAmt(Math.round(getTotalInt(props.loanBorrowAmt, emi, props.loanYears * 12)))
+        let loanPaidForMonths = getLoanPaidForMonths(props.endYear, props.repaymentSY, props.loanYears)
+        setTotalIntAmt(Math.round(getTotalInt(props.loanBorrowAmt, emi, props.loanAnnualInt, loanPaidForMonths)))
     }
 
     useEffect(
