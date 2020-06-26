@@ -20,17 +20,19 @@ export default function CFChart(props: CFChartProps) {
             {/*@ts-ignore*/}
             <Plot layout={{
                 barmode: 'stack',
-                title: props.title
+                title: props.title,
+                yaxis: {type:'category', fixedrange: true, showgrid: false, autorange: 'reversed'},
+                xaxis: {showgrid: false }
             }}
                 useResizeHandler={true}
                 style={{ width: "100%", height: "100%" }}
                 data={[
                     //@ts-ignore: Object is possible undefined
-                    { type: 'bar', x: props.mustCFs.x, y: props.mustCFs.y, name: "Must" },
+                    { type: 'bar', orientation: 'h', x: props.mustCFs.x, y: props.mustCFs.y, name: "Must" },
                     //@ts-ignore: Object is possible undefined
-                    { type: 'bar', x: props.tryCFs.x, y: props.tryCFs.y, name: "Try" },
+                    { type: 'bar', orientation: 'h', x: props.tryCFs.x, y: props.tryCFs.y, name: "Try" },
                     //@ts-ignore: Object is possible undefined
-                    { type: 'bar', x: props.optCFs.x, y: props.optCFs.y, name: "Optional" }
+                    { type: 'bar', orientation: 'h', x: props.optCFs.x, y: props.optCFs.y, name: "Optional" }
                 ]}
                 config={{ responsive: true, editable: false, displayModeBar: false }}
             />

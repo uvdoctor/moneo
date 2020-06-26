@@ -3,8 +3,8 @@ import Goal from './goal'
 import { removeFromArray } from '../utils'
 import CFChart from './cfchart'
 import * as APIt from '../../api/goals'
-import { getGoalsList, createNewGoal, changeGoal, deleteGoal, isManualMode, getDuration } from './goalutils'
-import { createAutoCFs, createManualCFs, createLoanCFs } from './cfutils'
+import { getGoalsList, createNewGoal, changeGoal, deleteGoal, getDuration } from './goalutils'
+import { calculateCFs } from './cfutils'
 
 export default function Goals() {
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([])
@@ -65,52 +65,68 @@ export default function Goals() {
         setShowModal(true)
     }
 
+    const getYearRange = () => {
+        let firstYear: number = 0
+        let lastYear: number = 0
+        allGoals?.forEach((g, i) => {
+            if(i === 0) firstYear = g.sy
+            else if(g.sy < firstYear) firstYear = g.sy
+            let duration = getDuration(g.type, g.sa as number, g.sy, g.ey)
+            if(i === 0) lastYear = g.sy + duration
+            else if(g.sy + duration > lastYear) lastYear = g.sy + duration
+        })
+        return {from: firstYear, to: lastYear}
+    }
+
+    const populateWithZeros = (firstYear: number, lastYear: number) => {
+        let cfList: any = { x: [], y: [] }
+        for(let year = firstYear; year <= lastYear; year++) {
+            //@ts-ignore
+            cfList.y.push(year)
+            //@ts-ignore
+            cfList.x.push(0)
+        }
+        return cfList
+    }
+
     const createChartData = () => {
         if(!allGoals) return
-        let mustCFs = { x: [], y: [] }
-        let optCFs = { x: [], y: [] }
-        let tryCFs = { x: [], y: [] }
         console.log("All goals are...", allGoals)
-        /*allGoals?.forEach(g => {
-            let cfs: Array<number> = []
+        let yearRange = getYearRange()
+        let mustCFs = populateWithZeros(yearRange.from, yearRange.to)
+        let tryCFs = populateWithZeros(yearRange.from, yearRange.to)
+        let optCFs = populateWithZeros(yearRange.from, yearRange.to)
+        allGoals?.forEach(g => {
             let duration = getDuration(g.type, g.sa as number, g.sy, g.ey)
-            if (isManualMode(g.sy, g.ey, g.type, g?.manual as number, g?.emi?.per as number)) 
-                cfs = createManualCFs(g, duration)
-            else if (g?.emi?.per as number > 0) 
-                cfs = createLoanCFs(g, duration)
-            else cfs = createAutoCFs(g, duration)
+            let cfs: Array<number> = calculateCFs(g, duration)
             if (g.imp === APIt.LMH.H) {
                 cfs.forEach((cf, i) => {
                     //@ts-ignore
-                    mustCFs.x.push(g.sy + i)
-                    //@ts-ignore
-                    mustCFs.y.push(cf)
+                    mustCFs.x[g.sy + i - yearRange.from] += cf
                 })
             } else if (g.imp === APIt.LMH.M) {
                 cfs.forEach((cf, i) => {
                     //@ts-ignore
-                    tryCFs.x.push(g.sy + i)
-                    //@ts-ignore
-                    tryCFs.y.push(cf)
+                    tryCFs.x[g.sy + i - yearRange.from] += cf
                 })
             } else {
                 cfs.forEach((cf, i) => {
                     //@ts-ignore
-                    optCFs.x.push(g.sy + i)
-                    //@ts-ignore
-                    optCFs.y.push(cf)
+                    optCFs.x[g.sy + i - yearRange.from] += cf
                 })
             }
-        })*/
+        })
         console.log("Must CFs are ", mustCFs)
+        console.log("Opt CFs are ", optCFs)
+        console.log("Try CFs are ", tryCFs)
         setMustCFs(mustCFs)
         setOptCFs(optCFs)
         setTryCFs(tryCFs)
     }
 
-    /*useEffect(() => {
-        if(allGoals && allGoals.length > 0) createChartData()
-    }, [allGoals])*/
+    useEffect(() => {
+        if(allGoals) createChartData()
+    }, [allGoals])
 
     return (
         <Fragment>
@@ -119,7 +135,7 @@ export default function Goals() {
                     Create Goal
 			    </button>
             </div>
-            {/*allGoals && <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} title="Cash Flow Requirements" />*/}
+            {allGoals && mustCFs && tryCFs && optCFs && <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} title="Cash Flow Requirements" />}
             {showModal ?
                 <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
                     <div className="relative bg-white border-0">
