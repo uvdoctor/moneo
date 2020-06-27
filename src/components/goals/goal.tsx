@@ -13,12 +13,11 @@ import CurrencyInput from '../form/currencyinput'
 import BRComparison from '../calc/brcomparison'
 import RadialInput from '../form/radialinput'
 import LineChart from './linechart'
-import ResultItem from '../calc/resultitem'
-import SVGMoneyBag from '../calc/svgmoneybag'
 import Section from '../form/section'
 import Summary from './summary'
-import { calculateCFs, calculatePrice, calculateTMCost, calculateSellPrice, calculateXIRR, getLoanBorrowAmt, calculateManualPrice } from './cfutils'
-import { getDuration, createNewTarget, getGoalTypes, getCriticalityOptions, getRAOptions } from './goalutils'
+import Sell from './sell'
+import { calculateCFs, calculatePrice, calculateTMCost, calculateSellPrice, getLoanBorrowAmt, calculateManualPrice } from './cfutils'
+import { getDuration, createNewTarget, getGoalTypes, getCriticalityOptions } from './goalutils'
 
 interface GoalProps {
     goal?: APIt.CreateGoalInput | null
@@ -46,36 +45,30 @@ export default function Goal({ goal, summary, deleteCallback, cancelCallback, ad
     const [maxTaxDeduction, setMaxTaxDeduction] = useState<number>(id && goal?.tdl ? goal.tdl : 0)
     const [taxBenefitIntOnly, setTaxBenefitIntOnly] = useState<number>(id && goal?.tbi ? goal.tbi : 0)
     const [sellAfter, setSellAfter] = useState<number>(id && goal?.sa ? goal.sa : 5)
-    const [sellPrice, setSellPrice] = useState<number>(0)
     const [buyTaxRate, setBuyTaxRate] = useState<number>(id && goal?.btr ? goal.btr : 10)
-    const [annualReturnPer, setAnnualReturnPer] = useState<number | null>(0)
     const [loanPer, setLoanPer] = useState<number>(id && goal?.emi?.per ? goal.emi.per : 0)
     const [startingPrice, setStartingPrice] = useState<number>(id && goal?.cp ? goal.cp : 0)
     const [currency, setCurrency] = useState<string>(id && goal?.ccy ? goal.ccy : "USD")
-    const fxRate = 1.0
     const [criticality, setCriticality] = useState<APIt.LMH>(id && goal?.imp ? goal.imp : APIt.LMH.M)
-    const [ra, setRA] = useState<APIt.LMH>(id && goal?.ra ? goal.ra : APIt.LMH.L)
     const [manualMode, setManualMode] = useState<number>(id && goal?.manual ? goal.manual : 0)
     const [name, setName] = useState<string>(id && goal?.name ? goal.name : "")
     const [loanYears, setLoanYears] = useState<number>(id && goal?.emi?.dur ? goal.emi.dur : 10)
     const [loanIntRate, setLoanIntRate] = useState<number>(id && goal?.emi?.rate ? goal.emi.rate : 4)
     const [priceChgRate, setPriceChgRate] = useState<number>(id && goal?.chg ? goal.chg : 3)
+    const [sellPrice, setSellPrice] = useState<number>(0)
     const [assetChgRate, setAssetChgRate] = useState<number>(id && goal?.achg ? goal.achg : 3)
     const [amCostPer, setAMCostPer] = useState<number>(id && goal?.amper ? goal.amper : 2)
     const [amStartYear, setAMStartYear] = useState<number>(id && goal?.amsy ? goal.amsy : startYear)
     const [totalMaintCost, setTotalMaintCost] = useState<number>(0)
     const [oppDR, setOppDR] = useState<number>(id && goal?.dr ? goal.dr : 6)
-    const [rentAmt, setRentAmt] = useState(0)
-    const [rentChgPer, setRentChgPer] = useState(5)
     const [rentTaxBenefit, setRentTaxBenefit] = useState(id && goal?.tbr ? goal.tbr : 0)
     const detailsLabel = "Details"
     const chartLabel = "Cash Flows"
     const taxLabel = "Tax Benefit"
-    const rentLabel = "v/s Rent?"
+    const rentLabel = "Rent?"
     const [viewItems, setViewItems] = useState([detailsLabel, taxLabel, chartLabel, rentLabel])
     const [viewMode, setViewMode] = useState(detailsLabel)
     const [goalType, setGoalType] = useState<APIt.GoalType>(APIt.GoalType.B)
-    const analyzeFor = 20
     const [cfs, setCFs] = useState<Array<number>>([])
 
     const createNewGoalInput = () => {
@@ -101,7 +94,6 @@ export default function Goal({ goal, summary, deleteCallback, cancelCallback, ad
             amsy: amStartYear,
             dr: oppDR,
             imp: criticality,
-            ra: ra,
             manual: manualMode,
             emi: loanPer > 0 ? { rate: loanIntRate, dur: loanYears, per: loanPer, ry: loanRepaymentSY } as APIt.EmiInput : null,
         } as APIt.CreateGoalInput
@@ -123,7 +115,7 @@ export default function Goal({ goal, summary, deleteCallback, cancelCallback, ad
             if (wipTargets.length > 0) {
                 existingT = (wipTargets.filter((target) => target.year === year))[0] as APIt.TargetInput
             }
-            let t = createNewTarget(year, existingT ? existingT.val : 0, currency, fxRate)
+            let t = createNewTarget(year, existingT ? existingT.val : 0)
             targets.push(t)
         }
         setWIPTargets([...targets])
@@ -144,8 +136,6 @@ export default function Goal({ goal, summary, deleteCallback, cancelCallback, ad
         setCFs([...cfs])
         if (goalType === APIt.GoalType.B) {
             setTotalMaintCost(calculateTMCost(g.sy, g.btr, g?.amper as number, g?.amsy as number, p, g?.achg as number, duration))
-            setSellPrice(sp)
-            setAnnualReturnPer(calculateXIRR(cfs, g.sy, p, g.sa as number, sp))
         }
     }
 
@@ -187,11 +177,7 @@ export default function Goal({ goal, summary, deleteCallback, cancelCallback, ad
         calculateYearlyCFs(getDuration(goalType, sellAfter, startYear, endYear))
     }, [goalType, startingPrice, priceChgRate, wipTargets, assetChgRate, loanPer, loanRepaymentSY, loanYears, currency, startYear, endYear, sellAfter, buyTaxRate, taxRate, maxTaxDeduction, taxBenefitIntOnly, amCostPer, amStartYear, manualMode])
 
-    useEffect(() => {
-        setRentAmt(Math.round(price * 0.04))
-    }, [price])
-
-    const initBuyCFsForComparison = () => {
+    const initBuyCFsForComparison = (analyzeFor: number) => {
         console.log("Going to initiate comparison CFs...")
         let allCFs: Array<Array<number>> = []
         for (let i = 1; i <= analyzeFor; i++)
@@ -210,18 +196,22 @@ export default function Goal({ goal, summary, deleteCallback, cancelCallback, ad
     }
 
     const createOppCostCFs = () => {
-        if (goalType !== APIt.GoalType.B || sellPrice === 0) return cfs
         let oppCostCFs: Array<number> = Object.assign([], cfs)
         if (oppCostCFs[sellAfter]) oppCostCFs[sellAfter] -= sellPrice
         return oppCostCFs
     }
 
+    useEffect(() => {
+        if(manualMode > 0 && endYear === startYear) setEndYear(startYear + 2)
+        else if(manualMode < 1 && loanPer === 0) setEndYear(startYear)
+    }, [manualMode, loanPer])
+
     return (
         summary && id ? <Summary goal={goal as APIt.CreateGoalInput} chartData={createChartCFs()} deleteCallback={deleteCallback} editCallback={editCallback} />
             :
             <div className="flex flex-col text-lg md:text-xl w-screen">
-                <div className="flex flex-wrap justify-around items-center w-full bg-black text-white">
-                    <div className="flex flex-wrap justify-around items-center">
+                <div className="flex flex-wrap justify-around items-center w-full">
+                    <div className="w-11/12 flex flex-wrap justify-between items-center">
                         <SelectInput name="goalType" pre="I want to" value={goalType} options={getGoalTypes()} changeHandler={setGoalType} />
                         <TextInput
                             name="name"
@@ -236,13 +226,6 @@ export default function Goal({ goal, summary, deleteCallback, cancelCallback, ad
                             value={criticality}
                             changeHandler={setCriticality}
                             options={getCriticalityOptions()}
-                        />
-                        <SelectInput name="ra"
-                            pre="OK with loss"
-                            post="Of Investment"
-                            value={ra}
-                            changeHandler={setRA}
-                            options={getRAOptions()}
                         />
                     </div>
                     <label className="1/12 cursor-pointer border-0 outline-none focus:outline-none"
@@ -305,7 +288,7 @@ export default function Goal({ goal, summary, deleteCallback, cancelCallback, ad
                                 {wipTargets && wipTargets.map((t, i) =>
                                     <div key={"t" + i} className="mr-4 md:mr-8 mt-4 flex flex-col justify-end items-end">
                                         <label>{t.year}</label>
-                                        <NumberInput name="year" pre="" currency={t.curr}
+                                        <NumberInput name="year" pre="" currency={currency}
                                             value={t.val} changeHandler={(val: number) => changeTargetVal(val, i)}
                                             width="120px" min={0} max={999999} step={100} />
                                     </div>)}
@@ -321,18 +304,10 @@ export default function Goal({ goal, summary, deleteCallback, cancelCallback, ad
                                     <SelectInput name="maintainFrom" pre="Starting" options={amSYOptions} value={amStartYear}
                                         changeHandler={setAMStartYear} />
                                 } />
-                            <Section title="Sell After" left={
-                                <RadialInput width={120} label="Years" labelBottom={true} data={toStringArr(1, analyzeFor)}
-                                    value={sellAfter} step={1} changeHandler={setSellAfter} />
-                            } right={
-                                <ResultItem svg={<SVGMoneyBag />} label={`In ${startYear + sellAfter} for`}
-                                    result={Math.round(sellPrice)} currency={currency}
-                                    footer={annualReturnPer ? `${annualReturnPer.toFixed(2)}% Yearly ${annualReturnPer > 0 ? 'Gain' : 'Loss'}` : ''} />
-                            } bottomLeft="Assume" bottomRight="Yearly"
-                                bottom={
-                                    <NumberInput name="assetChgRate" pre="Sell Price" post="Changes" unit="%"
-                                        width="30px" min={-20} max={20} step={0.5} value={assetChgRate} changeHandler={setAssetChgRate} />
-                                } footer='Amount after paying taxes & fees.' />
+                            <Sell price={price} startYear={startYear} endYear={endYear} sellAfter={sellAfter} 
+                            sellPrice={sellPrice} sellPriceHandler={setSellPrice} sellAfterHandler={setSellAfter} 
+                            cfs={cfs} type={goalType} currency={currency} assetChgRate={assetChgRate} 
+                            assetChgRateHandler={setAssetChgRate} buyTaxRate={buyTaxRate} />                        
                         </div>}
 
                         <div className="flex flex-wrap justify-around items-center w-full">
@@ -352,10 +327,9 @@ export default function Goal({ goal, summary, deleteCallback, cancelCallback, ad
                     </Fragment>}
                 {viewMode === rentLabel &&
                     <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
-                        discountRate={oppDR} initAllBuyCFsForComparison={initBuyCFsForComparison}
-                        rentAmt={rentAmt} rentAmtHandler={setRentAmt} rentChgPer={rentChgPer}
-                        rentChgPerHandler={setRentChgPer} rentTaxBenefit={rentTaxBenefit}
-                        rentTaxBenefitHandler={setRentTaxBenefit} price={price} />
+                        discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(20)}
+                        rentTaxBenefit={rentTaxBenefit} rentTaxBenefitHandler={setRentTaxBenefit} 
+                        price={price} discountRateHandler={setOppDR} />
                 }
 
                 {viewMode === taxLabel && (loanPer > 0 || manualMode < 1) &&

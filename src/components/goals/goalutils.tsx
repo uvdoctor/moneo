@@ -55,12 +55,10 @@ export const deleteGoal = async (id: string) => {
 
 export const getDuration = (type: string, sellAfter: number, startYear: number, endYear: number) => type === APIt.GoalType.B ? sellAfter : endYear - startYear
 
-export const createNewTarget = (year: number, val: number, curr: string, fx: number) => {
+export const createNewTarget = (year: number, val: number) => {
     return {
         year: year,
-        val: val,
-        curr: curr,
-        fx: fx
+        val: val
     }
 }
 

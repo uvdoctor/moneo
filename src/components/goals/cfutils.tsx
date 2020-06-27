@@ -4,7 +4,7 @@ import xirr from 'xirr'
 
 export const calculatePrice = (startingPrice: number, priceChgRate: number, buyTaxRate: number, startYear: number, goalCreatedYear: number) => {
     if (!startingPrice) return 0
-    let p = getCompoundedIncome(priceChgRate, startingPrice * (1 - (buyTaxRate / 100)), startYear - goalCreatedYear)
+    let p = getCompoundedIncome(priceChgRate, startingPrice / (1 + (buyTaxRate / 100)), startYear - goalCreatedYear)
     return (Math.round(p * (1 + (buyTaxRate / 100))))
 }
 
@@ -146,7 +146,7 @@ const getRemPrincipal = (startYear: number, loanBorrowAmt: number, emi: number, 
 
 export const calculateManualPrice = (targets: Array<APIt.TargetInput>) => {
     let p = 0
-    targets.forEach(t => p += t.val * t.fx)
+    targets.forEach(t => p += t.val)
     return Math.round(p)
 }
 
@@ -157,7 +157,7 @@ const createManualCFs = (goal: APIt.CreateGoalInput, duration: number) => {
     let cfs: Array<number> = []
     for (let i = 0; i < duration; i++) {
         let v = 0
-        if (i < targets.length) v = targets[i].val * targets[i].fx
+        if (i < targets.length) v = targets[i].val
         if (v > 0) v -= getTaxBenefit(v, goal.tbr as number, goal.tdl)
         if (goal.type === APIt.GoalType.B && duration) {
             let amCost = Math.round(calculateAMCost(goal.sy, goal.btr, goal?.amper as number, goal?.amsy as number, goal?.achg as number, i, p))
@@ -169,7 +169,7 @@ const createManualCFs = (goal: APIt.CreateGoalInput, duration: number) => {
         let remPayment = 0
         if (duration <= goal.ey - goal.sy) {
             for (let i = duration; i < goal.ey; i++) {
-                if (targets[i]) remPayment += targets[i].val * targets[i].fx
+                if (targets[i]) remPayment += targets[i].val
             }
         }
         let sp = calculateSellPrice(p, goal.btr, goal?.achg as number, duration)

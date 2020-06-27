@@ -24,8 +24,6 @@ export const getGoal = /* GraphQL */ `
         month
         year
         val
-        curr
-        fx
         met
         prob
       }
@@ -36,7 +34,6 @@ export const getGoal = /* GraphQL */ `
         ry
       }
       imp
-      ra
       met
       prob
       manual
@@ -77,8 +74,6 @@ export const listGoals = /* GraphQL */ `
           month
           year
           val
-          curr
-          fx
           met
           prob
         }
@@ -89,7 +84,6 @@ export const listGoals = /* GraphQL */ `
           ry
         }
         imp
-        ra
         met
         prob
         manual
@@ -113,8 +107,6 @@ export const getMilestone = /* GraphQL */ `
         month
         year
         val
-        curr
-        fx
         met
         prob
       }
@@ -139,8 +131,6 @@ export const getMilestone = /* GraphQL */ `
           month
           year
           val
-          curr
-          fx
           met
           prob
         }
@@ -151,7 +141,6 @@ export const getMilestone = /* GraphQL */ `
           ry
         }
         imp
-        ra
         met
         prob
         manual
@@ -182,8 +171,6 @@ export const listMilestones = /* GraphQL */ `
           month
           year
           val
-          curr
-          fx
           met
           prob
         }
@@ -205,7 +192,6 @@ export const listMilestones = /* GraphQL */ `
           chg
           achg
           imp
-          ra
           met
           prob
           manual

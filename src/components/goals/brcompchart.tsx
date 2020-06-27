@@ -21,7 +21,7 @@ export function BRCompChart(props: BRCompChartProps) {
             <Plot layout={{
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
                 autosize: true, 
-                title: {text:props.title + ' as shown below:', font:{size: 20}}, 
+                title: {text:props.title, font:{size: 20}}, 
                 xaxis: {title: props.xTitle, type:'category', fixedrange: true, showgrid: false, range: [1, 20]},
                 yaxis: {fixedrange: true, showgrid: false},
 	            legend: {

@@ -10,8 +10,6 @@ type Target {
   month: Int
   year: Int!
   val: Int!
-  curr: String!
-  fx: Float!
   met: YN
   prob: LMH
 }
@@ -46,10 +44,9 @@ type Goal @model @auth(rules: [{allow: owner}]) {
   tgts: [Target!]
   emi: Emi
   imp: LMH!
-  ra: LMH!
   met: YN
   prob: LMH
-  manual: Int
+  manual: Int!
   amper: Float
   amsy: Int
   dr: Float

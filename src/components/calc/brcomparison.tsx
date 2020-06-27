@@ -3,34 +3,34 @@ import NumberInput from '../form/numberinput'
 import { getNPV } from '../calc/finance'
 import { BRCompChart } from '../goals/brcompchart'
 import { toCurrency } from '../utils'
+import Section from '../form/section'
 interface BRComparisonProps {
     price: number,
     taxRate: number,
     currency: string,
     sellAfter: number,
     discountRate: number,
-    rentAmt: number,
-    rentAmtHandler: Function,
-    rentChgPer: number,
-    rentChgPerHandler: Function,
+    discountRateHandler: Function,
     rentTaxBenefit: number,
     rentTaxBenefitHandler: Function,
-    initAllBuyCFsForComparison: Function
+    allBuyCFs: Array<Array<number>>
 }
 
 export default function BRComparison(props: BRComparisonProps) {
     const [compData, setCompData] = useState<Array<any>>([])
     const [answer, setAnswer] = useState<string>('')
     const [rentAns, setRentAns] = useState<string>('')
+    const [rentChgPer, setRentChgPer] = useState<number>(5)
+    const [rentAmt, setRentAmt] = useState<number>(0)
     const analyzeFor = 20
 
     const getNextTaxAdjRentAmt = (val: number) => {
-        return (val * (1 + (props.rentChgPer / 100))) * (props.rentTaxBenefit > 0 ? (1 - (props.taxRate / 100)) : 1)
+        return (val * (1 + (rentChgPer / 100))) * (props.rentTaxBenefit > 0 ? (1 - (props.taxRate / 100)) : 1)
     }
 
     const initAllRentCFs = (allBuyCFs: Array<Array<number>>) => {
-        if (props.rentAmt <= 0) return []
-        let taxAdjustedRentAmt = props.rentAmt * (1 - (props.taxRate / 100))
+        if (rentAmt <= 0) return []
+        let taxAdjustedRentAmt = rentAmt * (1 - (props.taxRate / 100))
         if (!allBuyCFs || allBuyCFs.length < 1) return []
         let x: Array<number> = []
         let y: Array<number> = []
@@ -80,17 +80,17 @@ export default function BRComparison(props: BRComparisonProps) {
 
     const buildComparisonData = () => {
         let results: Array<any> = []
-        let allBuyCFs: Array<Array<number>> = props.initAllBuyCFsForComparison()
-        if (allBuyCFs && allBuyCFs.length > 0) {
+        if (props.allBuyCFs && props.allBuyCFs.length > 0) {
             results.push({
                 name: 'Buy',
-                values: initAllBuyCFs(allBuyCFs)
+                values: initAllBuyCFs(props.allBuyCFs)
             })
             results.push({
                 name: 'Rent',
-                values: initAllRentCFs(allBuyCFs)
+                values: initAllRentCFs(props.allBuyCFs)
             })
         }
+        console.log("Results are: ", results)
         return results
     }
 
@@ -129,7 +129,7 @@ export default function BRComparison(props: BRComparisonProps) {
     }
 
     useEffect(() => {
-        if (props.rentAmt > 0) {
+        if (rentAmt > 0) {
             let data = buildComparisonData()
             console.log("Chart data is ", data)
             if (data && data.length == 2) {
@@ -142,20 +142,27 @@ export default function BRComparison(props: BRComparisonProps) {
             setAnswer("")
             setRentAns("")
         }
-    }, [props])
+    }, [props, rentAmt, rentChgPer])
+
+    useEffect(() => setRentAmt(Math.round(props.price * 0.04)), [props.price])
 
     return (
         <Fragment>
-            <div className="mt-4 w-full flex justify-around items-center">
-                <NumberInput name="rentAmt" pre="Yearly" post="Rent" value={props.rentAmt} changeHandler={props.rentAmtHandler}
-                    min={1000} max={200000} step={500} width="120px" currency={props.currency} note="Including Taxes & Fees" />
-                <NumberInput name="rentChg" pre="Changes" value={props.rentChgPer} changeHandler={props.rentChgPerHandler}
-                    min={-10} max={10} step={0.5} unit="%" note="Every Year" width="50px" />
-            </div>
-            {props.price > 0 && props.rentAmt > 0 && compData && compData.length === 2 && compData[1].values.y[props.sellAfter - 1] &&
+            <div className="w-full flex justify-around">
+            <Section title="Including Taxes & Fees," left={
+                <NumberInput name="rentAmt" pre="Yearly" post="Rent is" value={rentAmt} changeHandler={setRentAmt}
+                    min={1000} max={200000} step={500} width="100px" currency={props.currency} />
+            } right={
+                <NumberInput name="rentChg" pre="Yearly" post="Change" value={rentChgPer} changeHandler={setRentChgPer}
+                    min={-10} max={10} step={0.5} unit="%" width="30px" />
+            } bottomLeft="Given" bottomRight="Yearly"
+            bottom={
+                <NumberInput name="discountRate" pre="Investment" post="Earns" unit="%" note="after taxes & fees"
+                    width="30px" min={2} max={15} step={0.5} value={props.discountRate} changeHandler={props.discountRateHandler} />
+            } /></div>
+            {props.price > 0 && rentAmt > 0 && compData && compData.length === 2 && compData[1].values.y[props.sellAfter - 1] &&
                 <BRCompChart data={compData} xTitle="Number of Years" rentAns={rentAns}
                     sellAfter={props.sellAfter} title={answer} />}
-            <p className="mt-2 w-full text-center text-base">Assumes that Money Saved by Not Buying is Invested to Earn {props.discountRate}% Yearly after taxes & fees.</p>
         </Fragment>
     )
 }

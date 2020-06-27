@@ -24,8 +24,6 @@ export const onCreateGoal = /* GraphQL */ `
         month
         year
         val
-        curr
-        fx
         met
         prob
       }
@@ -36,7 +34,6 @@ export const onCreateGoal = /* GraphQL */ `
         ry
       }
       imp
-      ra
       met
       prob
       manual
@@ -72,8 +69,6 @@ export const onUpdateGoal = /* GraphQL */ `
         month
         year
         val
-        curr
-        fx
         met
         prob
       }
@@ -84,7 +79,6 @@ export const onUpdateGoal = /* GraphQL */ `
         ry
       }
       imp
-      ra
       met
       prob
       manual
@@ -120,8 +114,6 @@ export const onDeleteGoal = /* GraphQL */ `
         month
         year
         val
-        curr
-        fx
         met
         prob
       }
@@ -132,7 +124,6 @@ export const onDeleteGoal = /* GraphQL */ `
         ry
       }
       imp
-      ra
       met
       prob
       manual
@@ -154,8 +145,6 @@ export const onCreateMilestone = /* GraphQL */ `
         month
         year
         val
-        curr
-        fx
         met
         prob
       }
@@ -180,8 +169,6 @@ export const onCreateMilestone = /* GraphQL */ `
           month
           year
           val
-          curr
-          fx
           met
           prob
         }
@@ -192,7 +179,6 @@ export const onCreateMilestone = /* GraphQL */ `
           ry
         }
         imp
-        ra
         met
         prob
         manual
@@ -218,8 +204,6 @@ export const onUpdateMilestone = /* GraphQL */ `
         month
         year
         val
-        curr
-        fx
         met
         prob
       }
@@ -244,8 +228,6 @@ export const onUpdateMilestone = /* GraphQL */ `
           month
           year
           val
-          curr
-          fx
           met
           prob
         }
@@ -256,7 +238,6 @@ export const onUpdateMilestone = /* GraphQL */ `
           ry
         }
         imp
-        ra
         met
         prob
         manual
@@ -282,8 +263,6 @@ export const onDeleteMilestone = /* GraphQL */ `
         month
         year
         val
-        curr
-        fx
         met
         prob
       }
@@ -308,8 +287,6 @@ export const onDeleteMilestone = /* GraphQL */ `
           month
           year
           val
-          curr
-          fx
           met
           prob
         }
@@ -320,7 +297,6 @@ export const onDeleteMilestone = /* GraphQL */ `
           ry
         }
         imp
-        ra
         met
         prob
         manual
