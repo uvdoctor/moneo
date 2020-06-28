@@ -18,6 +18,7 @@ export const getGoalsList = async () => {
 }
 
 export const createNewGoal = async (goal: APIt.CreateGoalInput) => {
+    console.log("Going to create goal...", goal)
     try {
         const { data } = (await API.graphql(graphqlOperation(mutations.createGoal, { input: goal }))) as {
             data: APIt.CreateGoalMutation
@@ -30,13 +31,13 @@ export const createNewGoal = async (goal: APIt.CreateGoalInput) => {
     }
 }
 
-export const changeGoal = async (goal: APIt.CreateGoalInput) => {
+export const changeGoal = async (goal: APIt.UpdateGoalInput) => {
     try {
         const { data } = (await API.graphql(graphqlOperation(mutations.updateGoal, { input: goal }))) as {
             data: APIt.UpdateGoalMutation
         }
         console.log("Goal updated in db: ", data ? data.updateGoal : "")
-        return data.updateGoal as APIt.CreateGoalInput
+        return data.updateGoal as APIt.UpdateGoalInput
     } catch (e) {
         console.log("Error while updating goal: ", e)
         return null
@@ -53,13 +54,43 @@ export const deleteGoal = async (id: string) => {
     }
 }
 
-export const getDuration = (type: string, sellAfter: number, startYear: number, endYear: number) => type === APIt.GoalType.B ? sellAfter : endYear - startYear
+export const getDuration = (type: string, sellAfter: number, startYear: number, endYear: number) => type === APIt.GoalType.B ? sellAfter : endYear - startYear + 1
 
 export const createNewTarget = (year: number, val: number) => {
     return {
         year: year,
         val: val
     }
+}
+
+export const createNewGoalInput = (goalType: APIt.GoalType) => {
+    let nowYear = new Date().getFullYear()
+    let startYear = nowYear + 1
+    return {
+        id: '',
+        name: '',
+        sy: startYear,
+        ey: startYear,
+        by: nowYear,
+        sa: 5,
+        btr: 10,
+        tdr: 0,
+        tdl: 0,
+        tbi: 0,
+        tbr: 0,
+        ccy: 'USD',
+        cp: 0,
+        chg: 3,
+        achg: 3,
+        type: goalType,
+        tgts: [],
+        amper: 2,
+        amsy: startYear,
+        dr: 6,
+        imp: APIt.LMH.M,
+        manual: 0,
+        emi: { rate: 4, dur: 10, per: 0, ry: startYear }
+    } as APIt.CreateGoalInput
 }
 
 export const getGoalTypes = () => {
@@ -76,7 +107,7 @@ export const getGoalTypes = () => {
     }
 }
 
-export function getCriticalityOptions() {
+export function getImpLevels() {
     return {
         "H": "Must Meet", "M": "Try Best", "L": "OK if Not Met"
     }

@@ -6,8 +6,6 @@ interface SectionProps {
     bottomLeft?: string,
     bottomRight?: string,
     bottom?: any,
-    toggle1?: any,
-    toggle2?: any,
     footer?: string
 }
 

@@ -1,8 +1,9 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import dynamic from 'next/dynamic'
 
 interface LineChartProps {
-    data?: Array<any>
+    cfs: Array<number>
+    startYear: number
     currency?: string
     title?: string
     xTitle?: string
@@ -10,6 +11,14 @@ interface LineChartProps {
 }
 
 export default function LineChart(props: LineChartProps) {
+    const [years, setYears] = useState<Array<number>>([])
+    
+    useEffect(() => {
+        let years = []
+        for (let i = 0; i < props.cfs.length; i++) years.push(props.startYear + i)
+        setYears([...years])
+    }, [props.cfs, props.startYear])
+
     const Plot = dynamic(
         () => import('react-plotly.js'), {ssr: false}
     )
@@ -28,7 +37,7 @@ export default function LineChart(props: LineChartProps) {
             style={{width: "100%", height: "100%"}}
             data={[
                 //@ts-ignore: Object is possible undefined
-                {type: 'scatter', mode: 'lines+markers', x: props.data[0], y: props.data[1]} 
+                {type: 'scatter', mode: 'lines+markers', x: years, y: props.cfs} 
             ]} 
             config={{responsive: true, editable: false, displayModeBar: false}} />
         </div>

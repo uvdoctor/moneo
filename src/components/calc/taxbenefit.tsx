@@ -4,7 +4,9 @@ import NumberInput from '../form/numberinput'
 import RadialInput from '../form/radialinput'
 import { toStringArr } from '../utils'
 import Section from '../form/section'
+import {GoalType} from '../../api/goals'
 interface TaxBenefitProps {
+    type: GoalType,
     taxRate: number,
     maxTaxDeduction: number,
     taxBenefitIntOnly: number,
@@ -30,12 +32,14 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                     <NumberInput name="tbLimit" pre="Max" post="Limit" currency={props.currency} width="100px"
                         value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} max={300000} step={1000} />
                 } />
-            <Section title="Claim Tax Benefit"
+            {props.type === GoalType.B && 
+                <Section title="Claim Tax Benefit"
                 left={
                     <Toggle topText="For Loan Interest Only" bottomText="For Full Amount" value={props.taxBenefitIntOnly} setter={props.taxBenefitIntOnlyHandler} />
                 } right={
                     <Toggle topText="For Rent" bottomText="Not for Rent" value={props.rentTaxBenefit} setter={props.rentTaxBenefitHandler} />
                 } />
+            }
         </div>
     )
 }

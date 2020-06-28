@@ -3,12 +3,13 @@ import Goal from './goal'
 import { removeFromArray, initYearOptions } from '../utils'
 import CFChart from './cfchart'
 import * as APIt from '../../api/goals'
-import { getGoalsList, createNewGoal, changeGoal, deleteGoal, getDuration } from './goalutils'
+import { getGoalsList, createNewGoal, changeGoal, deleteGoal, getDuration, createNewGoalInput } from './goalutils'
 import { calculateCFs } from './cfutils'
 import SelectInput from '../form/selectinput'
 
 export default function Goals() {
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([])
+    const [allCFs, setAllCFs] = useState<Object>({})
     const [showModal, setShowModal] = useState<boolean>(false)
     const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null)
     const [mustCFs, setMustCFs] = useState<any>(null)
@@ -26,40 +27,53 @@ export default function Goals() {
     }, [])
 
     const loadAllGoals = async () => {
-        let goals = await getGoalsList()
-        setAllGoals(goals)
+        let goals: Array<APIt.CreateGoalInput> | null = await getGoalsList()
+        if(!goals) return
+        let allCFs = {}
+        goals?.forEach((g) => 
+            //@ts-ignore
+            allCFs[g.id] = calculateCFs(g, getDuration(g.type, g.sa as number, g.sy, g.ey))
+        )
+        setAllCFs(allCFs)
         setWIPGoal(null)
+        setAllGoals([...goals])
     }
 
-    const addGoal = async (goal: APIt.CreateGoalInput) => {
-        console.log('Going to add goal...')
-        let newGoal = await createNewGoal(goal)
-        if (!newGoal) return
-        allGoals?.push(newGoal as APIt.CreateGoalInput)
-        setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
+    const addGoal = async (goal: APIt.CreateGoalInput, cfs: Array<number>) => {
+        let g = await createNewGoal(goal)
+        if (!g) return
+        allGoals?.push(g as APIt.CreateGoalInput)
+        //@ts-ignore
+        allCFs[g.id] = cfs
+        setAllCFs(allCFs)
         setWIPGoal(null)
         setShowModal(false)
-        console.log("Goal added...")
+        setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
     }
 
-    const updateGoal = async (goal: APIt.CreateGoalInput) => {
-        let g: APIt.CreateGoalInput | null = await changeGoal(goal)
+    const updateGoal = async (goal: APIt.UpdateGoalInput, cfs: Array<number>) => {
+        let g: APIt.UpdateGoalInput | null = await changeGoal(goal)
         if (!g) return
         removeFromArray(allGoals as Array<APIt.CreateGoalInput>, 'id', goal.id)
         allGoals?.push(g as APIt.CreateGoalInput)
+        //@ts-ignore
+        allCFs[g.id] = cfs
         setWIPGoal(null)
         setShowModal(false)
+        setAllCFs(allCFs)
         setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
     }
 
     const removeGoal = async (id: string) => {
-        console.log("Going to remove goal...")
         let result = await deleteGoal(id)
         if (!result) return false
         removeFromArray(allGoals as Array<APIt.CreateGoalInput>, 'id', id)
-        setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
+        //@ts-ignore
+        delete allCFs[id]
+        setAllCFs(allCFs)
         setWIPGoal(null)
         setShowModal(false)
+        setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
     }
 
     const cancelGoal = () => {
@@ -96,9 +110,16 @@ export default function Goals() {
         return cfList
     }
 
+    const populateData = (obj: Object, cfs: Array<number>, sy: number, firstYear: number) => {
+        cfs.forEach((cf, i) => {
+            //@ts-ignore
+            obj.x[sy + i - firstYear] += cf
+        })
+    }
+
     const createChartData = () => {
         if (!allGoals) return
-        console.log("All goals are...", allGoals)
+        console.log("All goals for creating chart are...", allGoals)
         let yearRange = getYearRange()
         setFromYear(yearRange.from)
         setFirstYear(yearRange.from)
@@ -110,24 +131,12 @@ export default function Goals() {
         let tryCFs = populateWithZeros(yearRange.from, yearRange.to)
         let optCFs = populateWithZeros(yearRange.from, yearRange.to)
         allGoals?.forEach(g => {
-            let duration = getDuration(g.type, g.sa as number, g.sy, g.ey)
-            let cfs: Array<number> = calculateCFs(g, duration)
-            if (g.imp === APIt.LMH.H) {
-                cfs.forEach((cf, i) => {
-                    //@ts-ignore
-                    mustCFs.x[g.sy + i - yearRange.from] += cf
-                })
-            } else if (g.imp === APIt.LMH.M) {
-                cfs.forEach((cf, i) => {
-                    //@ts-ignore
-                    tryCFs.x[g.sy + i - yearRange.from] += cf
-                })
-            } else {
-                cfs.forEach((cf, i) => {
-                    //@ts-ignore
-                    optCFs.x[g.sy + i - yearRange.from] += cf
-                })
-            }
+            //@ts-ignore
+            let cfs: Array<number> = allCFs[g.id]
+            if(!cfs) return
+            if (g.imp === APIt.LMH.H) populateData(mustCFs, cfs, g.sy, yearRange.from)
+            else if (g.imp === APIt.LMH.M) populateData(tryCFs, cfs, g.sy, yearRange.from)
+            else populateData(optCFs, cfs, g.sy, yearRange.from)
         })
         setMustCFs(mustCFs)
         setOptCFs(optCFs)
@@ -135,7 +144,7 @@ export default function Goals() {
     }
 
     useEffect(() => {
-        if (allGoals) createChartData()
+        if (allCFs && allGoals) createChartData()
     }, [allGoals])
 
     const changeFromYear = (str: string) => {
@@ -150,14 +159,26 @@ export default function Goals() {
         if(toYear < fromYear) setToYear(fromYear)
     }, [fromYear])
 
+    const createGoal = (type: APIt.GoalType) => {
+        let g: APIt.CreateGoalInput = createNewGoalInput(type)
+        setWIPGoal(g)
+        setShowModal(true)
+    }
+
     return (
         <Fragment>
-            <div className="mt-4 flex justify-center">
-                <button className="button" onClick={() => setShowModal(true)}>
-                    Create Goal
+            <div className="mt-4 flex flex-wrap justify-around">
+                <button className="button" onClick={() => createGoal(APIt.GoalType.B)}>
+                    Buy
+			    </button>
+                <button className="button" onClick={() => createGoal(APIt.GoalType.R)}>
+                    Rent
+			    </button>
+                <button className="button" onClick={() => createGoal(APIt.GoalType.X)}>
+                    Experience
 			    </button>
             </div>
-            {!showModal && allGoals && mustCFs && tryCFs && optCFs && <Fragment>
+            {!showModal && allGoals && mustCFs && tryCFs && optCFs && fromYear > 0 && toYear > 0 && <Fragment>
                 <div className="mt-4 flex justify-around">
                     <SelectInput name="fy"
                         pre="From"
@@ -177,13 +198,15 @@ export default function Goals() {
             {showModal ?
                 <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
                     <div className="relative bg-white border-0">
-                        <Goal goal={wipGoal} summary={false} deleteCallback={removeGoal} addCallback={addGoal} cancelCallback={cancelGoal} editCallback={editGoal} updateCallback={updateGoal} />
+                        <Goal goal={wipGoal as APIt.CreateGoalInput} deleteCallback={removeGoal} addCallback={addGoal} cancelCallback={cancelGoal} 
+                        editCallback={editGoal} updateCallback={updateGoal} />
                     </div>
                 </div>
                 :
                 <div className="w-screen flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
                     {allGoals && allGoals.map((g: APIt.CreateGoalInput, i: number) =>
-                        <Goal key={"g" + i} goal={g} summary={true} addCallback={addGoal} deleteCallback={removeGoal} cancelCallback={cancelGoal} editCallback={editGoal} updateCallback={updateGoal} />)}
+                        //@ts-ignore
+                        <Goal key={"g" + i} goal={g} cashFlows={allCFs[g?.id]} addCallback={addGoal} deleteCallback={removeGoal} cancelCallback={cancelGoal} editCallback={editGoal} updateCallback={updateGoal} />)}
                 </div>}
         </Fragment>
     )

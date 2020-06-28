@@ -55,10 +55,9 @@ const createAutoCFs = (goal: APIt.CreateGoalInput, duration: number) => {
         }
         cfs.push(calculateSellPrice(p, goal.btr, goal?.achg as number, duration))
     } else {
-        for (let i = 0, v = p * (1 - (goal.btr / 100)); i < duration; i++, v = getCompoundedIncome(goal.chg as number, v, i)) {
-            let value = i === 0 ? p : v * (1 + (goal.btr / 100))
-            if (value > 0) value -= getTaxBenefit(value, goal.tdr, goal.tdl)
-            cfs.push(Math.round(-value))
+        for (let i = 0, v = p; i < duration; i++, v = getCompoundedIncome(goal.chg as number, p/(1+(goal.btr/100)), i) * (1+(goal.btr/100))) {
+            if (v > 0) v -= getTaxBenefit(v, goal.tdr, goal.tdl)
+            cfs.push(Math.round(-v))
         }
     }
     return cfs
@@ -68,7 +67,6 @@ export const calculateXIRR = (cfs: Array<number>, startYear: number, price: numb
     if (!price || !sellPrice || !cfs) return null
     let xirrCFs: Array<any> = []
     let addSellCF = false
-    console.log("Going to calculate xirr from cfs...")
     cfs.forEach((cf, i) => {
         if (i === sellAfter && cf <= 0) {
             cf -= sellPrice
