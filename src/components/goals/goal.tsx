@@ -18,6 +18,9 @@ import Sell from './sell'
 import SVGClose from '../svgclose'
 import { calculateCFs, calculatePrice, calculateTMCost, calculateSellPrice, getLoanBorrowAmt, calculateManualPrice } from './cfutils'
 import { getDuration, createNewTarget, getGoalTypes, getImpLevels } from './goalutils'
+//@ts-ignore
+import { AwesomeButton, AwesomeButtonProgress } from "react-awesome-button"
+import Logo from '../logo'
 
 interface GoalProps {
     goal: APIt.CreateGoalInput
@@ -201,22 +204,21 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
         else if (manualMode < 1 && loanPer === 0 && goalType === APIt.GoalType.B) setEndYear(startYear)
     }, [manualMode, loanPer])
 
+    const handleClick = () => 
+        id ? updateCallback(createUpdateGoalInput(), cfs) 
+        : addCallback(createNewGoalInput(), cfs)
+
     return (
         <div className="flex flex-col text-lg md:text-xl w-full">
             <div className="flex flex-wrap justify-between items-center w-full">
-                <SelectInput name="imp"
-                    pre="Importance"
-                    value={impLevel}
-                    changeHandler={setImpLevel}
-                    options={getImpLevels()}
-                />
+                <Logo />
                 <TextInput
                     name="name"
                     pre={getGoalTypes()[goalType]}
                     placeholder="My Goal"
                     value={name}
                     changeHandler={setName}
-                    width="150px"
+                    width="250px"
                 />
                 <div className="cursor-pointer border-0 outline-none focus:outline-none"
                     onClick={() => cancelCallback()}>
@@ -306,13 +308,19 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         <OppCost cfs={createOppCostCFs()} currency={currency} startYear={startYear}
                             duration={goalType === APIt.GoalType.B ? sellAfter : endYear - startYear} discountRate={oppDR} discountRateHandler={setOppDR} />
                     </div>
+                    <SelectInput name="imp"
+                    pre="Importance"
+                    value={impLevel}
+                    changeHandler={setImpLevel}
+                    options={getImpLevels()}
+                    />
                     <div className="flex justify-center mt-8 mb-4">
-                        <button className="cancel" onClick={() => cancelCallback()}>
+                        <AwesomeButton type="secondary" onPress={() => cancelCallback()}>
                             Cancel
-			                    </button>
-                        <button className="ml-8 button" onClick={() => id ? updateCallback(createUpdateGoalInput(), cfs) : addCallback(createNewGoalInput(), cfs)}>
+			            </AwesomeButton>
+                        <AwesomeButton className="ml-8" type="primary" ripple onPress={handleClick}>
                             {`${id ? 'Update' : 'Create'} Goal`}
-                        </button>
+                        </AwesomeButton>
                     </div>
                 </Fragment>}
             {viewMode === rentLabel &&

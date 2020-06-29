@@ -45,9 +45,9 @@ export default function RangeInput(props: RangeInputProps) {
                 railStyle={{
                     background: 'none',
                 }} />
-                <div className="flex justify-between">
-                    <label className="text-gray-400">{props.min}</label>
-                    <label className="text-gray-400">{props.max}</label>
+                <div className="flex justify-between text-gray-300 text-base">
+                    <label>{props.min}</label>
+                    <label>{props.max}</label>
                 </div>
         </div>
     )

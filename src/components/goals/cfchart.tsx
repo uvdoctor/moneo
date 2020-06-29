@@ -56,7 +56,7 @@ export default function CFChart({ mustCFs, tryCFs, optCFs, fromYear, toYear, imp
             {/*@ts-ignore*/}
             <Plot layout={{
                 barmode: 'stack',
-                title: `Planned Cash Flow from ${fromYear} to ${toYear}`,
+                //title: `Planned Cash Flow between ${fromYear} to ${toYear}`,
                 autosize: true,
                 yaxis: { fixedrange: true, showgrid: false },
                 xaxis: { showgrid: false },

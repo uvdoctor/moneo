@@ -101,9 +101,9 @@ export const getGoalTypes = () => {
         "L": "Learn",
         "C": "Celebrate",
         "F": "Provide",
-        "FF": "Financial Freedom",
+        "FF": "Retire",
         "D": "Donate",
-        "O": "Spend for Other Things"
+        "O": "Other"
     }
 }
 

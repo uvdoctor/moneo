@@ -1,5 +1,6 @@
 import '@aws-amplify/ui/dist/style.css'
 import 'rc-slider/assets/index.css'
+import 'react-awesome-button/dist/styles.css';
 import { AppProps } from 'next/app'
 import '../styles/index.css'
 

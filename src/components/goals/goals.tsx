@@ -9,6 +9,9 @@ import Summary from './summary'
 import RangeInput from '../form/rangeinput'
 import SelectInput from '../form/selectinput'
 import HToggle from '../horizontaltoggle'
+//@ts-ignore
+import { AwesomeButton } from 'react-awesome-button'
+import CurrencyInput from '../form/currencyinput'
 
 export default function Goals() {
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([])
@@ -23,6 +26,7 @@ export default function Goals() {
     const [optCFs, setOptCFs] = useState<Object>({})
     const [viewMode, setViewMode] = useState<number>(0)
     const [impFilter, setImpFilter] = useState<string>("")
+    const [currency, setCurrency] = useState<string>("USD")
 
     useEffect(() => {
         loadAllGoals()
@@ -150,12 +154,12 @@ export default function Goals() {
 
     return (
         <Fragment>
-            <div className="mt-4 flex flex-wrap justify-around">
+            {!wipGoal && <div className="flex flex-wrap justify-around">
                 {Object.keys(getGoalTypes()).map(key =>
-                    <button className="button" key={key} onClick={() => createGoal(key as APIt.GoalType)}>
+                    <AwesomeButton className="mt-4" type="primary" ripple size="medium" key={key} onPress={() => createGoal(key as APIt.GoalType)}>
                         {getGoalTypes()[key as APIt.GoalType]}
-                    </button>)}
-            </div>
+                    </AwesomeButton>)}
+            </div>}
             {wipGoal ?
                 <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
                     <div className="relative bg-white border-0">
@@ -166,20 +170,22 @@ export default function Goals() {
                 :
                 allGoals && allCFs && <Fragment>
                     {firstYear > 0 && lastYear > 0 &&
-                        <div className="flex flex-col items-center justify-center text-lg md:text-xl">
-                            <div className="mt-4 mb-2 md:mt-8 flex justify-center items-center text-lg md:text-xl">
-                                <SelectInput name="typeFilter" pre="Show" options={getImpOptions()} value={impFilter as string} changeHandler={setImpFilter} />
-                                <label className="ml-4 md:ml-8 mr-4 md:mr-8">From</label>
-                                <RangeInput value={[fromYear, toYear]} min={firstYear} max={lastYear} allowCross={false} changeHandler={changeYears} />
+                        <div className="mt-4 mb-2 md:mt-8 flex justify-center items-baseline text-base md:text-lg">
+                            <div className="flex flex-col items-center justify-center mr-8 md:mr-12">
+                                <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
+                                <div className={`flex w-full ${viewMode < 1 ? 'justify-start' : 'justify-between'} items-center`}>
+                                    <SelectInput name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string} changeHandler={setImpFilter} />
+                                    {viewMode > 0 && <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />}
+                                </div>
                             </div>
-                            <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
+                            <RangeInput value={[fromYear, toYear]} min={firstYear} max={lastYear} allowCross={false} changeHandler={changeYears} />
                         </div>}
                     {viewMode > 0 ? <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} fromYear={fromYear} toYear={toYear} impFilter={impFilter} />
                         : fromYear > 0 && toYear > 0 && <Fragment>
                             <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
                                 {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
                                     //@ts-ignore
-                                    g.sy >= fromYear && g.sy <= toYear && (!impFilter || impFilter === g.imp as string) && <Summary key={"g" + i} id={g.id} name={g.name} type={g.type} imp={g.imp} startYear={g.sy} currency={g.ccy} cfs={allCFs[g?.id]} deleteCallback={removeGoal} editCallback={editGoal} />)}
+                                    g.ey >= fromYear && g.ey <= toYear && (!impFilter || impFilter === g.imp as string) && <Summary key={"g" + i} id={g.id} name={g.name} type={g.type} imp={g.imp} startYear={g.sy} currency={g.ccy} cfs={allCFs[g?.id]} deleteCallback={removeGoal} editCallback={editGoal} />)}
                             </div>
                         </Fragment>}
                 </Fragment>

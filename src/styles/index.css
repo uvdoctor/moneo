@@ -104,6 +104,33 @@ input[type=number] {
 	transition: "all .15s ease";
 }
 
+.aws-btn {
+	--button-default-height: 48px;
+	--button-default-font-size: 1rem;
+	--button-default-border-radius: 9999px;
+	--button-horizontal-padding: 1rem;
+	--button-raise-level: 5px;
+	--button-hover-pressure: 2;
+	--transform-speed: 0.185s;
+	--button-primary-color: #38a169;
+	--button-primary-color-dark: #276749;
+	--button-primary-color-light: #ffffff;
+	--button-primary-color-hover: #48bb78;
+	--button-primary-color-active: #276749;
+	--button-primary-border: 0px solid #FFFFFF;
+	--button-secondary-color: #edf2f7;
+	--button-secondary-color-dark: #cbd5e0;
+	--button-secondary-color-light: #38a169;
+	--button-secondary-color-hover: #edf2f7;
+	--button-secondary-color-active: #a0aec0;
+	--button-secondary-border: none;
+	--button-anchor-color: #f3c8ad;
+	--button-anchor-color-dark: #734922;
+	--button-anchor-color-light: #4c3016;
+	--button-anchor-color-hover: #f1bfa0;
+	--button-anchor-border: 1px solid #8c633c;
+	}
+	
 .dashmi {
 	outline: 0;
 	display: inline-block;
