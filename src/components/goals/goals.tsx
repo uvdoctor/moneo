@@ -1,25 +1,28 @@
 import React, { useEffect, useState, Fragment } from 'react'
 import Goal from './goal'
-import { removeFromArray, initYearOptions } from '../utils'
+import { removeFromArray } from '../utils'
 import CFChart from './cfchart'
 import * as APIt from '../../api/goals'
-import { getGoalsList, createNewGoal, changeGoal, deleteGoal, getDuration, createNewGoalInput } from './goalutils'
+import { getGoalsList, createNewGoal, changeGoal, deleteGoal, getDuration, createNewGoalInput, getGoalTypes, getImpOptions } from './goalutils'
 import { calculateCFs } from './cfutils'
+import Summary from './summary'
+import RangeInput from '../form/rangeinput'
 import SelectInput from '../form/selectinput'
+import HToggle from '../horizontaltoggle'
 
 export default function Goals() {
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([])
     const [allCFs, setAllCFs] = useState<Object>({})
-    const [showModal, setShowModal] = useState<boolean>(false)
     const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null)
-    const [mustCFs, setMustCFs] = useState<any>(null)
-    const [tryCFs, setTryCFs] = useState<any>(null)
-    const [optCFs, setOptCFs] = useState<any>(null)
+    const [firstYear, setFirstYear] = useState<number>(0)
     const [lastYear, setLastYear] = useState<number>(0)
     const [fromYear, setFromYear] = useState<number>(0)
     const [toYear, setToYear] = useState<number>(0)
-    const [fyOptions, setFYOptions] = useState([])
-    const [tyOptions, setTYOptions] = useState([])
+    const [mustCFs, setMustCFs] = useState<Object>({})
+    const [tryCFs, setTryCFs] = useState<Object>({})
+    const [optCFs, setOptCFs] = useState<Object>({})
+    const [viewMode, setViewMode] = useState<number>(0)
+    const [impFilter, setImpFilter] = useState<string>("")
 
     useEffect(() => {
         loadAllGoals()
@@ -27,9 +30,9 @@ export default function Goals() {
 
     const loadAllGoals = async () => {
         let goals: Array<APIt.CreateGoalInput> | null = await getGoalsList()
-        if(!goals) return
+        if (!goals) return
         let allCFs = {}
-        goals?.forEach((g) => 
+        goals?.forEach((g) =>
             //@ts-ignore
             allCFs[g.id] = calculateCFs(g, getDuration(g.type, g.sa as number, g.sy, g.ey))
         )
@@ -46,7 +49,6 @@ export default function Goals() {
         allCFs[g.id] = cfs
         setAllCFs(allCFs)
         setWIPGoal(null)
-        setShowModal(false)
         setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
     }
 
@@ -58,7 +60,6 @@ export default function Goals() {
         //@ts-ignore
         allCFs[g.id] = cfs
         setWIPGoal(null)
-        setShowModal(false)
         setAllCFs(allCFs)
         setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
     }
@@ -71,19 +72,20 @@ export default function Goals() {
         delete allCFs[id]
         setAllCFs(allCFs)
         setWIPGoal(null)
-        setShowModal(false)
         setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
     }
 
-    const cancelGoal = () => {
-        setWIPGoal(null)
-        setShowModal(false)
+    const cancelGoal = () => setWIPGoal(null)
+
+    const editGoal = (id: string) => {
+        if (!allGoals) return
+        let g: Array<APIt.CreateGoalInput> = allGoals.filter(g => g.id === id)
+        if (g && g.length === 1) {
+            setWIPGoal(g[0])
+        }
     }
 
-    const editGoal = (goal: APIt.CreateGoalInput) => {
-        setWIPGoal(goal)
-        setShowModal(true)
-    }
+    const createGoal = (type: APIt.GoalType) => setWIPGoal(createNewGoalInput(type))
 
     const getYearRange = () => {
         let firstYear: number = 0
@@ -102,9 +104,9 @@ export default function Goals() {
         let cfList: any = { x: [], y: [] }
         for (let year = firstYear; year <= lastYear; year++) {
             //@ts-ignore
-            cfList.y.push(year)
+            cfList.x.push(year)
             //@ts-ignore
-            cfList.x.push(0)
+            cfList.y.push(0)
         }
         return cfList
     }
@@ -112,26 +114,24 @@ export default function Goals() {
     const populateData = (obj: Object, cfs: Array<number>, sy: number, firstYear: number) => {
         cfs.forEach((cf, i) => {
             //@ts-ignore
-            obj.x[sy + i - firstYear] += cf
+            obj.y[sy + i - firstYear] += cf
         })
     }
 
     const createChartData = () => {
         if (!allGoals) return
-        console.log("All goals for creating chart are...", allGoals)
         let yearRange = getYearRange()
+        setFirstYear(yearRange.from)
         setFromYear(yearRange.from)
         setToYear(yearRange.to)
         setLastYear(yearRange.to)
-        setFYOptions(initYearOptions(yearRange.from, yearRange.to))
-        setTYOptions(initYearOptions(yearRange.from, yearRange.to))
         let mustCFs = populateWithZeros(yearRange.from, yearRange.to)
         let tryCFs = populateWithZeros(yearRange.from, yearRange.to)
         let optCFs = populateWithZeros(yearRange.from, yearRange.to)
         allGoals?.forEach(g => {
             //@ts-ignore
             let cfs: Array<number> = allCFs[g.id]
-            if(!cfs) return
+            if (!cfs) return
             if (g.imp === APIt.LMH.H) populateData(mustCFs, cfs, g.sy, yearRange.from)
             else if (g.imp === APIt.LMH.M) populateData(tryCFs, cfs, g.sy, yearRange.from)
             else populateData(optCFs, cfs, g.sy, yearRange.from)
@@ -141,71 +141,49 @@ export default function Goals() {
         setTryCFs(tryCFs)
     }
 
-    useEffect(() => {
-        if (allCFs && allGoals) createChartData()
-    }, [allGoals])
+    useEffect(() => createChartData(), [allGoals])
 
-    const changeFromYear = (str: string) => {
-        setFromYear(parseInt(str))
-    }
-    const changeToYear = (str: string) => {
-        setToYear(parseInt(str))
-    }
-
-    useEffect(() => {
-        setTYOptions(initYearOptions(fromYear, lastYear))
-        if(toYear < fromYear) setToYear(fromYear)
-    }, [fromYear])
-
-    const createGoal = (type: APIt.GoalType) => {
-        let g: APIt.CreateGoalInput = createNewGoalInput(type)
-        setWIPGoal(g)
-        setShowModal(true)
+    const changeYears = (val: Array<number>) => {
+        setFromYear(val[0])
+        setToYear(val[1])
     }
 
     return (
         <Fragment>
             <div className="mt-4 flex flex-wrap justify-around">
-                <button className="button" onClick={() => createGoal(APIt.GoalType.B)}>
-                    Buy
-			    </button>
-                <button className="button" onClick={() => createGoal(APIt.GoalType.R)}>
-                    Rent
-			    </button>
-                <button className="button" onClick={() => createGoal(APIt.GoalType.X)}>
-                    Experience
-			    </button>
+                {Object.keys(getGoalTypes()).map(key =>
+                    <button className="button" key={key} onClick={() => createGoal(key as APIt.GoalType)}>
+                        {getGoalTypes()[key as APIt.GoalType]}
+                    </button>)}
             </div>
-            {!showModal && allGoals && mustCFs && tryCFs && optCFs && fromYear > 0 && toYear > 0 && <Fragment>
-                <div className="mt-4 flex justify-around">
-                    <SelectInput name="fy"
-                        pre="From"
-                        value={fromYear}
-                        changeHandler={changeFromYear}
-                        options={fyOptions}
-                    />
-                    <SelectInput name="ty"
-                        pre="To"
-                        value={toYear}
-                        changeHandler={changeToYear}
-                        options={tyOptions}
-                    />
-                </div>
-                <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} fromYear={fromYear} toYear={toYear} title="Cash Flow Requirements" />
-            </Fragment>}
-            {showModal ?
+            {wipGoal ?
                 <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
                     <div className="relative bg-white border-0">
-                        <Goal goal={wipGoal as APIt.CreateGoalInput} deleteCallback={removeGoal} addCallback={addGoal} cancelCallback={cancelGoal} 
-                        editCallback={editGoal} updateCallback={updateGoal} />
+                        <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
+                            updateCallback={updateGoal} />
                     </div>
                 </div>
                 :
-                <div className="w-screen flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
-                    {allGoals && allGoals.map((g: APIt.CreateGoalInput, i: number) =>
-                        //@ts-ignore
-                        <Goal key={"g" + i} goal={g} cashFlows={allCFs[g?.id]} addCallback={addGoal} deleteCallback={removeGoal} cancelCallback={cancelGoal} editCallback={editGoal} updateCallback={updateGoal} />)}
-                </div>}
-        </Fragment>
+                allGoals && allCFs && <Fragment>
+                    {firstYear > 0 && lastYear > 0 &&
+                        <div className="flex flex-col items-center justify-center text-lg md:text-xl">
+                            <div className="mt-4 mb-2 md:mt-8 flex justify-center items-center text-lg md:text-xl">
+                                <SelectInput name="typeFilter" pre="Show" options={getImpOptions()} value={impFilter as string} changeHandler={setImpFilter} />
+                                <label className="ml-4 md:ml-8 mr-4 md:mr-8">From</label>
+                                <RangeInput value={[fromYear, toYear]} min={firstYear} max={lastYear} allowCross={false} changeHandler={changeYears} />
+                            </div>
+                            <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
+                        </div>}
+                    {viewMode > 0 ? <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} fromYear={fromYear} toYear={toYear} impFilter={impFilter} />
+                        : fromYear > 0 && toYear > 0 && <Fragment>
+                            <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
+                                {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
+                                    //@ts-ignore
+                                    g.sy >= fromYear && g.sy <= toYear && (!impFilter || impFilter === g.imp as string) && <Summary key={"g" + i} id={g.id} name={g.name} type={g.type} imp={g.imp} startYear={g.sy} currency={g.ccy} cfs={allCFs[g?.id]} deleteCallback={removeGoal} editCallback={editGoal} />)}
+                            </div>
+                        </Fragment>}
+                </Fragment>
+            }
+        </Fragment >
     )
 }

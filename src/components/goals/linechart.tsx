@@ -5,9 +5,6 @@ interface LineChartProps {
     cfs: Array<number>
     startYear: number
     currency?: string
-    title?: string
-    xTitle?: string
-    yTitle?: string
 }
 
 export default function LineChart(props: LineChartProps) {
@@ -29,15 +26,16 @@ export default function LineChart(props: LineChartProps) {
             <Plot layout={{
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
                 autosize: true, 
-                xaxis: {title: props.xTitle, type:'category', fixedrange: true, showgrid: false},
+                xaxis: {title: 'Year', type:'category', fixedrange: true, showgrid: false},
                 yaxis: {fixedrange: true, showgrid: false},
-                title: props.title,
+                title: `Yearly Cash Flows in ${props.currency}`,
                 legend: {orientation: "h"}
             }} useResizeHandler={true}
             style={{width: "100%", height: "100%"}}
             data={[
                 //@ts-ignore: Object is possible undefined
-                {type: 'scatter', mode: 'lines+markers', x: years, y: props.cfs} 
+                {type: 'scatter', mode: 'lines+markers', x: years, y: props.cfs, 
+                line: {color: 'green', size: 3, shape:'spline'}, marker: {color: '#556B2F', size: 8}} 
             ]} 
             config={{responsive: true, editable: false, displayModeBar: false}} />
         </div>

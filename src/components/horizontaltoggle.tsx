@@ -9,7 +9,7 @@ interface ToggleProps {
 
 const HToggle = (props: ToggleProps) => {
     return (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center">
             <label className="mr-4">{props.leftText}</label>
             {/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
             <Slider className={`bg-gray-200 rounded-full h-3 w-8`}

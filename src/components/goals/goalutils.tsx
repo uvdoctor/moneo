@@ -100,8 +100,8 @@ export const getGoalTypes = () => {
         "X": "Experience",
         "L": "Learn",
         "C": "Celebrate",
-        "F": "Provide for Family",
-        "FF": "Be Financially Free",
+        "F": "Provide",
+        "FF": "Financial Freedom",
         "D": "Donate",
         "O": "Spend for Other Things"
     }
@@ -109,7 +109,13 @@ export const getGoalTypes = () => {
 
 export function getImpLevels() {
     return {
-        "H": "Must Meet", "M": "Try Best", "L": "OK if Not Met"
+        "H": "Must Meet", "M": "Try Best", "L": "Optional"
+    }
+}
+
+export function getImpOptions() {
+    return {
+        "": "All", "H": "Must Meet", "M": "Try Best", "L": "Optional"
     }
 }
 
