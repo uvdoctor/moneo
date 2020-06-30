@@ -22,7 +22,6 @@
     "react-awesome-button": "^6.5.1",
     "react-dom": "^16.13.0",
     "react-plotly.js": "^2.4.0",
-    "sass": "^1.26.9",
     "swr": "^0.2.2",
     "xirr": "^1.0.3"
   },
