@@ -39,6 +39,8 @@ export const getGoal = /* GraphQL */ `
       manual
       amper
       amsy
+      aiper
+      aisy
       dr
       sa
       createdAt
@@ -89,6 +91,8 @@ export const listGoals = /* GraphQL */ `
         manual
         amper
         amsy
+        aiper
+        aisy
         dr
         sa
         createdAt
@@ -146,6 +150,8 @@ export const getMilestone = /* GraphQL */ `
         manual
         amper
         amsy
+        aiper
+        aisy
         dr
         sa
         createdAt
@@ -197,6 +203,8 @@ export const listMilestones = /* GraphQL */ `
           manual
           amper
           amsy
+          aiper
+          aisy
           dr
           sa
           createdAt

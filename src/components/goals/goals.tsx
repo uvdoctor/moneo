@@ -38,7 +38,7 @@ export default function Goals() {
         let allCFs = {}
         goals?.forEach((g) =>
             //@ts-ignore
-            allCFs[g.id] = calculateCFs(g, getDuration(g.type, g.sa as number, g.sy, g.ey))
+            allCFs[g.id] = calculateCFs(g, getDuration(g.sa as number, g.sy, g.ey))
         )
         setAllCFs(allCFs)
         setWIPGoal(null)
@@ -97,7 +97,7 @@ export default function Goals() {
         allGoals?.forEach((g, i) => {
             if (i === 0) firstYear = g.sy
             else if (g.sy < firstYear) firstYear = g.sy
-            let duration = getDuration(g.type, g.sa as number, g.sy, g.ey)
+            let duration = getDuration(g.sa as number, g.sy, g.ey)
             if (i === 0) lastYear = g.sy + duration
             else if (g.sy + duration > lastYear) lastYear = g.sy + duration
         })
@@ -169,17 +169,16 @@ export default function Goals() {
                 </div>
                 :
                 allGoals && allCFs && <Fragment>
-                    {firstYear > 0 && lastYear > 0 &&
-                        <div className="mt-4 mb-2 md:mt-8 flex justify-center items-baseline text-base md:text-lg">
-                            <div className="flex flex-col items-center justify-center mr-8 md:mr-12">
-                                <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
-                                <div className={`flex w-full ${viewMode < 1 ? 'justify-start' : 'justify-between'} items-center`}>
-                                    <SelectInput name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string} changeHandler={setImpFilter} />
-                                    {viewMode > 0 && <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />}
-                                </div>
+                    <div className="mt-4 mb-2 md:mt-8 flex justify-center items-baseline text-base md:text-lg">
+                        <div className="flex flex-col items-center justify-center mr-8 md:mr-12">
+                            <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
+                            <div className={`flex w-full ${viewMode < 1 ? 'justify-start' : 'justify-between'} items-center`}>
+                                <SelectInput name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string} changeHandler={setImpFilter} />
+                                {viewMode > 0 && <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />}
                             </div>
-                            <RangeInput value={[fromYear, toYear]} min={firstYear} max={lastYear} allowCross={false} changeHandler={changeYears} />
-                        </div>}
+                        </div>
+                        {firstYear > 0 && lastYear > 0 && <RangeInput value={[fromYear, toYear]} min={firstYear} max={lastYear} allowCross={false} changeHandler={changeYears} />}
+                    </div>
                     {viewMode > 0 ? <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} fromYear={fromYear} toYear={toYear} impFilter={impFilter} />
                         : fromYear > 0 && toYear > 0 && <Fragment>
                             <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">

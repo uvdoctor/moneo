@@ -54,7 +54,7 @@ export const deleteGoal = async (id: string) => {
     }
 }
 
-export const getDuration = (type: string, sellAfter: number, startYear: number, endYear: number) => type === APIt.GoalType.B ? sellAfter : endYear - startYear + 1
+export const getDuration = (sellAfter: number | null | undefined, startYear: number, endYear: number) => sellAfter ? sellAfter : endYear - startYear + 1
 
 export const createNewTarget = (year: number, val: number) => {
     return {
@@ -63,7 +63,7 @@ export const createNewTarget = (year: number, val: number) => {
     }
 }
 
-export const createNewGoalInput = (goalType: APIt.GoalType) => {
+const createBaseGoalInput = (goalType: APIt.GoalType) => {
     let nowYear = new Date().getFullYear()
     let startYear = nowYear + 1
     return {
@@ -72,25 +72,35 @@ export const createNewGoalInput = (goalType: APIt.GoalType) => {
         sy: startYear,
         ey: startYear,
         by: nowYear,
-        sa: 5,
-        btr: 10,
         tdr: 0,
         tdl: 0,
-        tbi: 0,
-        tbr: 0,
         ccy: 'USD',
         cp: 0,
         chg: 3,
-        achg: 3,
         type: goalType,
         tgts: [],
-        amper: 2,
-        amsy: startYear,
         dr: 6,
         imp: APIt.LMH.M,
         manual: 0,
-        emi: { rate: 4, dur: 10, per: 0, ry: startYear }
     } as APIt.CreateGoalInput
+}
+
+export const createNewGoalInput = (goalType: APIt.GoalType) => {
+    let bg: APIt.CreateGoalInput = createBaseGoalInput(goalType)
+    if(goalType !== APIt.GoalType.D) bg.btr = 10
+    if(goalType === APIt.GoalType.B || goalType === APIt.GoalType.L) {
+        bg.tbi = 0
+        bg.emi = { rate: 4, dur: 10, per: 0, ry: bg.sy }
+    }
+    if(goalType === APIt.GoalType.B) {
+        bg.sa = 5 
+        bg.achg = 3
+        bg.amper = 2
+        bg.amsy = bg.sy
+        bg.aiper = 0
+        bg.aisy = bg.sy
+    }
+    return bg
 }
 
 export const getGoalTypes = () => {

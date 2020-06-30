@@ -42,6 +42,8 @@ export const createGoal = /* GraphQL */ `
       manual
       amper
       amsy
+      aiper
+      aisy
       dr
       sa
       createdAt
@@ -90,6 +92,8 @@ export const updateGoal = /* GraphQL */ `
       manual
       amper
       amsy
+      aiper
+      aisy
       dr
       sa
       createdAt
@@ -138,6 +142,8 @@ export const deleteGoal = /* GraphQL */ `
       manual
       amper
       amsy
+      aiper
+      aisy
       dr
       sa
       createdAt
@@ -196,6 +202,8 @@ export const createMilestone = /* GraphQL */ `
         manual
         amper
         amsy
+        aiper
+        aisy
         dr
         sa
         createdAt
@@ -258,6 +266,8 @@ export const updateMilestone = /* GraphQL */ `
         manual
         amper
         amsy
+        aiper
+        aisy
         dr
         sa
         createdAt
@@ -320,6 +330,8 @@ export const deleteMilestone = /* GraphQL */ `
         manual
         amper
         amsy
+        aiper
+        aisy
         dr
         sa
         createdAt

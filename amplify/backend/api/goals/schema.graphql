@@ -30,7 +30,7 @@ type Goal @model @auth(rules: [{allow: owner}]) {
   sy: Int!
   ey: Int!
   by: Int!
-  btr: Float!
+  btr: Float
   tdr: Int!
   tdl: Int!
   tbi: Int
@@ -49,6 +49,8 @@ type Goal @model @auth(rules: [{allow: owner}]) {
   manual: Int!
   amper: Float
   amsy: Int
+  aiper: Float
+  aisy: Int
   dr: Float
   sa: Int
 }

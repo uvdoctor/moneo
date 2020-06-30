@@ -35,7 +35,9 @@ export default function LineChart(props: LineChartProps) {
             data={[
                 //@ts-ignore: Object is possible undefined
                 {type: 'scatter', mode: 'lines+markers', x: years, y: props.cfs, 
-                line: {color: 'green', size: 3, shape:'spline'}, marker: {color: '#556B2F', size: 8}} 
+                    line: {color: '#48bb78', size: 3}, 
+                    marker: {color: '#276749', size: 8, symbol: 'circle-x'}
+                }
             ]} 
             config={{responsive: true, editable: false, displayModeBar: false}} />
         </div>

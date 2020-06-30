@@ -47,7 +47,7 @@ export default function Sell(props: SellProps) {
             bottom={
                 <NumberInput name="assetChgRate" pre="Sell Price" post="Changes" unit="%"
                     width="30px" min={-20} max={20} step={0.5} value={props.assetChgRate} changeHandler={props.assetChgRateHandler} />
-            } footer='Amount after paying taxes & fees.' />
+            } footer='Sell Price above excludes taxes & fees.' />
 
     )
 }
