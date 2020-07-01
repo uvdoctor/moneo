@@ -13,6 +13,7 @@ export const onCreateGoal = /* GraphQL */ `
       tdr
       tdl
       tbi
+      tdli
       tbr
       name
       type
@@ -60,6 +61,7 @@ export const onUpdateGoal = /* GraphQL */ `
       tdr
       tdl
       tbi
+      tdli
       tbr
       name
       type
@@ -107,6 +109,7 @@ export const onDeleteGoal = /* GraphQL */ `
       tdr
       tdl
       tbi
+      tdli
       tbr
       name
       type
@@ -164,6 +167,7 @@ export const onCreateMilestone = /* GraphQL */ `
         tdr
         tdl
         tbi
+        tdli
         tbr
         name
         type
@@ -225,6 +229,7 @@ export const onUpdateMilestone = /* GraphQL */ `
         tdr
         tdl
         tbi
+        tdli
         tbr
         name
         type
@@ -286,6 +291,7 @@ export const onDeleteMilestone = /* GraphQL */ `
         tdr
         tdl
         tbi
+        tdli
         tbr
         name
         type

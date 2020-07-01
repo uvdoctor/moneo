@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import ResultItem from '../calc/resultitem'
 import SVGMoneyBag from '../calc/svgmoneybag'
 import Section from '../form/section'
@@ -7,32 +7,30 @@ import NumberInput from '../form/numberinput'
 import { toStringArr } from '../utils'
 import { calculateSellPrice, calculateXIRR } from './cfutils'
 import { getDuration } from './goalutils'
-import { GoalType } from '../../api/goals'
 
 interface SellProps {
-    type: GoalType
-    price: number,
-    buyTaxRate: number,
-    startYear: number,
-    endYear: number,
-    sellAfter: number,
-    sellPrice: number,
-    sellPriceHandler: Function,
-    sellAfterHandler: Function,
-    currency: string,
-    assetChgRate: number,
-    assetChgRateHandler: Function,
+    price: number
+    buyTaxRate: number
+    startYear: number
+    endYear: number
+    sellAfter: number
+    sellPrice: number
+    annualReturnPer: number
+    sellPriceHandler: Function
+    sellAfterHandler: Function
+    annualReturnPerHandler: Function
+    currency: string
+    assetChgRate: number
+    assetChgRateHandler: Function
     cfs: Array<number>
 }
 
 export default function Sell(props: SellProps) {
-    const [annualReturnPer, setAnnualReturnPer] = useState<number | null>(0)
-    
     useEffect(() => {
-        let duration = getDuration(props.type, props.sellAfter, props.startYear, props.endYear)
+        let duration = getDuration(props.sellAfter, props.startYear, props.endYear)
         let sellPrice = calculateSellPrice(props.price, props.buyTaxRate, props.assetChgRate, duration)
         props.sellPriceHandler(sellPrice)
-        setAnnualReturnPer(calculateXIRR(props.cfs, props.startYear, props.price, props.sellAfter, props.sellPrice))
+        props.annualReturnPerHandler(calculateXIRR(props.cfs, props.startYear, props.price, props.sellAfter, props.sellPrice))
     }, [props.currency, props.cfs])
 
     return (
@@ -42,7 +40,7 @@ export default function Sell(props: SellProps) {
         } right={
             <ResultItem svg={<SVGMoneyBag />} label={`In ${props.startYear + props.sellAfter} for`}
                 result={Math.round(props.sellPrice)} currency={props.currency}
-                footer={annualReturnPer ? `${annualReturnPer.toFixed(2)}% Yearly ${annualReturnPer > 0 ? 'Gain' : 'Loss'}` : ''} />
+                footer={props.annualReturnPer ? `${props.annualReturnPer.toFixed(2)}% Yearly ${props.annualReturnPer > 0 ? 'Gain' : 'Loss'}` : ''} />
         } bottomLeft="Assume" bottomRight="Yearly"
             bottom={
                 <NumberInput name="assetChgRate" pre="Sell Price" post="Changes" unit="%"

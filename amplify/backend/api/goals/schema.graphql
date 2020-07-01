@@ -34,6 +34,7 @@ type Goal @model @auth(rules: [{allow: owner}]) {
   tdr: Int!
   tdl: Int!
   tbi: Int
+  tdli: Int
   tbr: Int
   name: String!
   type: GoalType!

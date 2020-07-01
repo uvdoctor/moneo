@@ -13,6 +13,7 @@ export const getGoal = /* GraphQL */ `
       tdr
       tdl
       tbi
+      tdli
       tbr
       name
       type
@@ -65,6 +66,7 @@ export const listGoals = /* GraphQL */ `
         tdr
         tdl
         tbi
+        tdli
         tbr
         name
         type
@@ -124,6 +126,7 @@ export const getMilestone = /* GraphQL */ `
         tdr
         tdl
         tbi
+        tdli
         tbr
         name
         type
@@ -190,6 +193,7 @@ export const listMilestones = /* GraphQL */ `
           tdr
           tdl
           tbi
+          tdli
           tbr
           name
           type

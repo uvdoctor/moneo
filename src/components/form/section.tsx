@@ -3,16 +3,20 @@ interface SectionProps {
     title: any,
     left: any,
     right: any,
-    bottomLeft?: string,
-    bottomRight?: string,
+    bottomLeft?: any,
+    bottomRight?: any,
     bottom?: any,
     footer?: string
+    toggle?: any
 }
 
 export default function Section(props: SectionProps) {
     return (
-        <div className="px-1 py-2 mt-4 mb-4 w-full md:w-1/2 max-w-sm rounded overflow-hidden shadow-xl">
-            <p className="text-xl md:text-2xl font-semibold text-center">{props.title}</p>
+        <div className="px-1 py-2 mt-4 mb-4 w-full max-w-sm rounded overflow-hidden shadow-xl">
+            <p className="text-center text-xl md:text-2xl font-semibold">{props.title}</p>
+            {props.toggle && <div className="flex justify-end mt-1 mr-4 mb-4">
+                {props.toggle}
+            </div>}
             <div className="flex justify-around items-center w-full">
                 {props.left}
                 {props.right}

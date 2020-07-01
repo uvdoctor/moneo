@@ -90,6 +90,7 @@ export const createNewGoalInput = (goalType: APIt.GoalType) => {
     if(goalType !== APIt.GoalType.D) bg.btr = 10
     if(goalType === APIt.GoalType.B || goalType === APIt.GoalType.L) {
         bg.tbi = 0
+        bg.tdli = 0
         bg.emi = { rate: 4, dur: 10, per: 0, ry: bg.sy }
     }
     if(goalType === APIt.GoalType.B) {
@@ -99,6 +100,7 @@ export const createNewGoalInput = (goalType: APIt.GoalType) => {
         bg.amsy = bg.sy
         bg.aiper = 0
         bg.aisy = bg.sy
+        bg.tbr = 0
     }
     return bg
 }
