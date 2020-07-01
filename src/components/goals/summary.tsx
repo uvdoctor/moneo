@@ -17,7 +17,6 @@ interface SummaryProps {
 }
 
 export default function Summary({ id, name, type, imp, startYear, currency, cfs, deleteCallback, editCallback }: SummaryProps) {
-
     return (
         <div className="mt-4 mb-4 p-4 max-w-sm rounded shadow-xl text-lg md:text-xl w-full md:w-1/2 lg:w-1/3">
             <div className="flex justify-between items-center w-full">

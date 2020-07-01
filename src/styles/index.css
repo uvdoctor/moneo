@@ -124,11 +124,12 @@ input[type=number] {
 	--button-secondary-color-hover: #edf2f7;
 	--button-secondary-color-active: #a0aec0;
 	--button-secondary-border: none;
-	--button-anchor-color: #f3c8ad;
-	--button-anchor-color-dark: #734922;
-	--button-anchor-color-light: #4c3016;
-	--button-anchor-color-hover: #f1bfa0;
-	--button-anchor-border: 1px solid #8c633c;
+	--button-anchor-color: #4299e1;
+	--button-anchor-color-dark: #2b6cb0;
+	--button-anchor-color-light: #ffffff;
+	--button-anchor-color-hover: #3182ce;
+	--button-anchor-color-active: #a0aec0;
+	--button-anchor-border: 1px solid #2c5282;
 	}
 	
 .dashmi {

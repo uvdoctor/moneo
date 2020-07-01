@@ -9,13 +9,15 @@ import Summary from './summary'
 import RangeInput from '../form/rangeinput'
 import SelectInput from '../form/selectinput'
 import HToggle from '../horizontaltoggle'
+import SVGTargetPath from './svgtargetpath'
+
 //@ts-ignore
 import { AwesomeButton } from 'react-awesome-button'
 import CurrencyInput from '../form/currencyinput'
 
 export default function Goals() {
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([])
-    const [allCFs, setAllCFs] = useState<Object>({})
+    const [allCFs, setAllCFs] = useState<any>({})
     const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null)
     const [firstYear, setFirstYear] = useState<number>(0)
     const [lastYear, setLastYear] = useState<number>(0)
@@ -153,42 +155,52 @@ export default function Goals() {
     }
 
     return (
-        <Fragment>
-            {!wipGoal && <div className="flex flex-wrap justify-around">
-                {Object.keys(getGoalTypes()).map(key =>
-                    <AwesomeButton className="mt-4" type="primary" ripple size="medium" key={key} onPress={() => createGoal(key as APIt.GoalType)}>
-                        {getGoalTypes()[key as APIt.GoalType]}
-                    </AwesomeButton>)}
-            </div>}
-            {wipGoal ?
-                <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
-                    <div className="relative bg-white border-0">
-                        <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
-                            updateCallback={updateGoal} />
-                    </div>
+        wipGoal ?
+            <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
+                <div className="relative bg-white border-0">
+                    <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
+                        updateCallback={updateGoal} />
                 </div>
-                :
-                allGoals && allCFs && <Fragment>
-                    <div className="mt-4 mb-2 md:mt-8 flex justify-center items-baseline text-base md:text-lg">
-                        <div className="flex flex-col items-center justify-center mr-8 md:mr-12">
-                            <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
-                            <div className={`flex w-full ${viewMode < 1 ? 'justify-start' : 'justify-between'} items-center`}>
-                                <SelectInput name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string} changeHandler={setImpFilter} />
-                                {viewMode > 0 && <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />}
+            </div>
+            :
+            <Fragment>
+                <div className="flex mt-4 items-center justify-center">
+                    <SVGTargetPath />
+                    <label className="ml-2 text-xl md:text-2xl">Define Your Goals.</label>
+                </div>
+                <p className="text-center text-lg mt-1">Make Money Work Hard to Meet Them.</p>
+                <div className="flex flex-wrap justify-around">
+                    {Object.keys(getGoalTypes()).map(key =>
+                        <AwesomeButton className="mt-4" type="primary" ripple size="medium" key={key} onPress={() => createGoal(key as APIt.GoalType)}>
+                            {getGoalTypes()[key as APIt.GoalType]}
+                        </AwesomeButton>)}
+                </div>
+                <Fragment>
+                    {allGoals && allGoals.length > 0 && allCFs &&
+                        <Fragment>
+                            <div className="mt-4 mb-2 md:mt-8 flex justify-center items-baseline">
+                                <div className="flex flex-col items-center justify-center mr-8 md:mr-12">
+                                    <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
+                                    <div className={`flex w-full ${viewMode < 1 ? 'justify-start' : 'justify-between'} items-center`}>
+                                        <SelectInput name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string}
+                                            changeHandler={setImpFilter} />
+                                        {viewMode > 0 && <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />}
+                                    </div>
+                                </div>
+                                <RangeInput value={[fromYear, toYear]} min={firstYear} max={lastYear} allowCross={false} changeHandler={changeYears} />
                             </div>
-                        </div>
-                        {firstYear > 0 && lastYear > 0 && <RangeInput value={[fromYear, toYear]} min={firstYear} max={lastYear} allowCross={false} changeHandler={changeYears} />}
-                    </div>
-                    {viewMode > 0 ? <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} fromYear={fromYear} toYear={toYear} impFilter={impFilter} />
-                        : fromYear > 0 && toYear > 0 && <Fragment>
-                            <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
-                                {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
-                                    //@ts-ignore
-                                    g.ey >= fromYear && g.ey <= toYear && (!impFilter || impFilter === g.imp as string) && <Summary key={"g" + i} id={g.id} name={g.name} type={g.type} imp={g.imp} startYear={g.sy} currency={g.ccy} cfs={allCFs[g?.id]} deleteCallback={removeGoal} editCallback={editGoal} />)}
-                            </div>
+                            {viewMode > 0 ?
+                                <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} fromYear={fromYear}
+                                    toYear={toYear} impFilter={impFilter} />
+                                :
+                                <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
+                                    {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
+                                        g.id && g.ey >= fromYear && g.ey <= toYear && (!impFilter || impFilter === g.imp) &&
+                                        <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} startYear={g.sy}
+                                            currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal} />)}
+                                </div>}
                         </Fragment>}
                 </Fragment>
-            }
-        </Fragment >
+            </Fragment>
     )
 }

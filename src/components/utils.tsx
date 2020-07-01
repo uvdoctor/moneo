@@ -15,7 +15,7 @@ export const toCurrency = (num: number | undefined, currency: string, decimal: b
 }
 
 export const toReadableNumber = (num: number, decimalDigits: number = 0) => {
-	const formatter = new Intl.NumberFormat(undefined, {
+	const formatter = new Intl.NumberFormat(navigator.language, {
 		minimumFractionDigits: decimalDigits,
 		maximumFractionDigits: decimalDigits
 	});

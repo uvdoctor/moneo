@@ -6,11 +6,13 @@ import CarSVG from './goals/svgcar'
 import DiamondSVG from './goals/svgdiamond'
 import DegreeSVG from './goals/svgdegree'
 import TravelSVG from './goals/svgtravel'
+//@ts-ignore
+import { AwesomeButton } from 'react-awesome-button'
 
 const Landing = () => {
 	const [svgCtr, setSvgCtr] = useState(-1);
 	const animationStyle = "transient 2s linear";
-
+	
 	useEffect(
 		() => {
 			let timer = setTimeout(() => {
@@ -31,7 +33,7 @@ const Landing = () => {
 					<li className="flex justify-center mt-4 cursor">
 						<Link href={ROUTES.DASHBOARD}>
 							<a>
-								<button type="button" style={{animation: "fadeIn 2s ease-in 1"}} className="flex items-center button">
+								<AwesomeButton ripple type="link" className="text-lg" style={{animation: "fadeIn 2s ease-in 1"}}>
 									Meet Your Goals
 									<div className="ml-2 md:ml-4 w-8 h-8 md:w-10 md:h-10">
 										{svgCtr % 5 === 1 && <HomeSVG animationStyle={animationStyle} />}
@@ -40,7 +42,7 @@ const Landing = () => {
 										{svgCtr % 5 === 4 && <DegreeSVG animationStyle={animationStyle} />}
 										{svgCtr % 5 === 0 && <TravelSVG animationStyle={animationStyle} />}
 									</div>
-								</button>
+								</AwesomeButton>
 							</a>
 						</Link>
 					</li>

@@ -22,7 +22,7 @@ interface NumberInputProps {
 export default function NumberInput(props: NumberInputProps) {
     const formRef = useRef<HTMLFormElement>(null)
     const [editing, setEditing] = useState<boolean>(false)
-    const width: string = props.currency ? '140px' : props.unit ? '40px' : '70px'
+    const width: string = props.width ? props.width: props.currency ? '140px' : props.unit ? '40px' : '70px'
 
     useEffect(
         () => {
@@ -98,10 +98,8 @@ export default function NumberInput(props: NumberInputProps) {
                             background: 'none',
                         }} />
                     {props.max && <div className="flex justify-between w-full text-gray-400">
-                        <label className="mr-2">{props.currency ? toCurrency(props.min, props.currency)
-                            : `${toReadableNumber(props.min ? props.min : 0)}${props.unit !== 'months' ? props.unit : 'm'}`}</label>
-                        <label>{props.currency ? toCurrency(props.max, props.currency)
-                            : `${toReadableNumber(props.max)}${props.unit !== 'months' ? props.unit : 'm'}`}</label>
+                        <label className="mr-2">{toReadableNumber(props.min ? props.min : 0)}</label>
+                        <label>{toReadableNumber(props.max)}</label>
                     </div>}
                 </div>
             }

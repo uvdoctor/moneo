@@ -2,6 +2,8 @@ import React from 'react'
 import Logo from './logo'
 import Link from 'next/link'
 import { ROUTES } from '../CONSTANTS'
+//@ts-ignore
+import {AwesomeButton} from 'react-awesome-button'
 
 const Header = () => {
 	return (
@@ -20,7 +22,7 @@ const Header = () => {
 				<div className="ml-3 sm:ml-8 md:ml-12 flex items-center">
 					<div className="hover:text-green-600"><Link href={ROUTES.DASHBOARD}><a>Login</a></Link></div>
 					<Link href={ROUTES.DASHBOARD}><a>
-						<div className="ml-1 sm:ml-2 md:ml-4 button">FREE Trial</div>
+						<AwesomeButton ripple className="text-lg" type="link">FREE Trial</AwesomeButton>
 					</a></Link>
 				</div>
 			</div>

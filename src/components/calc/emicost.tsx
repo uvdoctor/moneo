@@ -48,7 +48,7 @@ export default function EmiCost(props: EmiProps) {
         <Fragment>
             <Section title="Borrow"
                 left={
-                    <RadialInput width={150} unit="%" data={toStringArr(0, 90, 5)}
+                    <RadialInput width={200} unit="%" data={toStringArr(0, 90, 5)}
                         value={props.loanPer} changeHandler={props.loanPerHandler} step={5} labelBottom={true}
                         label={`${toCurrency(props.loanBorrowAmt, props.currency)}`} />
                 } right={

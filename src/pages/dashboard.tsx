@@ -8,7 +8,7 @@ Amplify.configure(awsconfig)
 
 export default function Dashboard() {
   return (
-    <div>
+    <div className="text-lg">
       <UserHeader />
       <SecureDash />
     </div>

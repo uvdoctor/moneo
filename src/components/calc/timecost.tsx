@@ -34,7 +34,7 @@ export default function TimeCost(props: TimeCostProps) {
     return (
         <Section title={`Total Cost is ${toCurrency(props.amount, props.currency)}`}
             left={
-                <div className="flex flex-col items-center justify-between">
+                <div className="flex flex-col items-center justify-around w-full">
                     Time Cost is
                     <div className="flex items-center justify-between">
                         <SVGTimeCost />
@@ -54,8 +54,7 @@ export default function TimeCost(props: TimeCostProps) {
             }
             right={
                 <NumberInput name="savings" pre="Save" note="Every Year" currency={props.currency} value={annualSavings}
-                    changeHandler={setAnnualSavings}
-                    min={1000} max={200000} step={1000} width="100px" />
+                    changeHandler={setAnnualSavings} min={1000} max={200000} step={1000} width="120px" />
             } />
 
     );

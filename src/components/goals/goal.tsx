@@ -20,7 +20,7 @@ import { calculateCFs, calculatePrice, calculateSellPrice, getLoanBorrowAmt,
     calculateManualPrice, calculateTotalTaxBenefit,calculatePrincipalTaxBenefit,  calculateTotalIntTaxBenefit} from './cfutils'
 import { getDuration, createNewTarget, getGoalTypes, getImpLevels } from './goalutils'
 //@ts-ignore
-import { AwesomeButton, AwesomeButtonProgress } from "react-awesome-button"
+import { AwesomeButton } from "react-awesome-button"
 import SVGLogo from '../svglogo'
 import AnnualAmt from './annualamt'
 interface GoalProps {
@@ -81,7 +81,6 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
 
     const createNewBaseGoal = () => {
         return {
-            id: id,
             name: name,
             sy: startYear,
             ey: startYear,
@@ -240,13 +239,13 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
         name && price > 500 && cfs.length > 0 ? setSubmitDisabled(false) : setSubmitDisabled(true)
         , [name, cfs])
     return (
-        <div className="flex flex-col text-lg md:text-xl w-full">
+        <div className="flex flex-col w-full">
             <div className="flex flex-wrap justify-between items-center w-full">
                 <SVGLogo />
                 <TextInput
                     name="name"
                     pre={getGoalTypes()[goalType]}
-                    placeholder="My Goal"
+                    placeholder="Goal Name"
                     value={name}
                     changeHandler={setName}
                     width="200px"
@@ -353,7 +352,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         <AwesomeButton type="secondary" onPress={() => cancelCallback()}>
                             Cancel
 			            </AwesomeButton>
-                        <AwesomeButton className="ml-8" type="primary" ripple onPress={handleClick}
+                        <AwesomeButton className={`ml-8 ${submitDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`} type="primary" ripple onPress={handleClick}
                             disabled={submitDisabled}>
                             {`${id ? 'Update' : 'Create'} Goal`}
                         </AwesomeButton>
