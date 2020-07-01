@@ -29,11 +29,11 @@ export default function TaxBenefit(props: TaxBenefitProps) {
         <div className="flex flex-wrap items-center justify-around w-full">
             <Section title="Claim Tax Benefit"
                 left={
-                    <RadialInput pre="Rate" label="Yearly" data={toStringArr(0, 25, 0.5)} unit="%" width={120}
+                    <RadialInput pre="Rate" label="Yearly" data={toStringArr(0, 25, 0.5)} unit="%" 
                         value={props.taxRate} step={0.5} changeHandler={props.taxRateHandler} labelBottom={true} 
                         post = {`Total ${toCurrency(props.totalTaxBenefit, props.currency)}`} />
                 } right={
-                    <NumberInput name="tbLimit" pre="Max" post="Limit" currency={props.currency} width="100px"
+                    <NumberInput name="tbLimit" pre="Deduction" post="Limit" currency={props.currency} 
                         value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} max={300000} step={1000} />
                 } />
             {(props.goalType === GoalType.B || props.goalType === GoalType.L) &&  
@@ -41,7 +41,7 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                 left={
                     <Toggle topText="Claim Benefit" bottomText="No Benefit" value={props.taxBenefitInt as number} setter={props.taxBenefitIntHandler} />
                 } right={
-                    <NumberInput name="tbLimit" pre="Max" post="Limit" currency={props.currency} width="100px"
+                    <NumberInput name="tbLimit" pre="Deduction" post="Limit" currency={props.currency} 
                         value={props.maxTaxDeductionInt as number} changeHandler={props.maxTaxDeductionIntHandler} max={300000} step={1000}
                         note = {`Total ${toCurrency(props.totalIntTaxBenefit as number, props.currency)}`} />
                 } />

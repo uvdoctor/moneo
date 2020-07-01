@@ -62,7 +62,6 @@ export default function EmiCost(props: EmiProps) {
                         name="duration"
                         pre="Term"
                         unit="years"
-                        width="40px"
                         note={`EMI ${toCurrency(emi, props.currency)}`}
                         value={props.loanYears}
                         changeHandler={props.loanMonthsHandler}
@@ -73,7 +72,6 @@ export default function EmiCost(props: EmiProps) {
                         name="intRate"
                         pre="Interest"
                         unit="%"
-                        width="40px"
                         note={`Total ${toCurrency(totalIntAmt, props.currency)}`}
                         value={props.loanAnnualInt}
                         changeHandler={props.loanAnnualIntHandler}

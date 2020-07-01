@@ -151,10 +151,10 @@ export default function BRComparison(props: BRComparisonProps) {
         <Fragment>
             <Section title="Yearly Rent + Taxes & Fees" left={
                 <NumberInput name="rentAmt" pre="Amount" value={props.rentAmt} changeHandler={props.rentAmtHandler}
-                    min={1000} max={200000} step={500} width="100px" currency={props.currency} />
+                    min={1000} max={200000} step={500} currency={props.currency} />
             } right={
                 <NumberInput name="rentChg" pre="Changes" value={props.rentChgPer} changeHandler={props.rentChgPerHandler}
-                    min={-10} max={10} step={0.5} unit="%" width="30px" />
+                    min={-10} max={10} step={0.5} unit="%" />
             } bottomLeft={
                 <div className="flex flex-col">
                     <label>Money</label>
@@ -164,7 +164,7 @@ export default function BRComparison(props: BRComparisonProps) {
             } 
             bottom={
                 <NumberInput name="discountRate" pre="Earns" post="Yearly" unit="%" 
-                    width="30px" min={2} max={15} step={0.5} value={props.discountRate} 
+                    min={2} max={15} step={0.5} value={props.discountRate} 
                     changeHandler={props.discountRateHandler} />
             }
             bottomRight={

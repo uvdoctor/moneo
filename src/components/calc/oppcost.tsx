@@ -42,7 +42,7 @@ export default function OppCost(props: OppCostProps) {
         <Section title="Instead, If You Invest"
             left={
                 <RadialInput data={toStringArr(2, 15, 0.5)} value={props.discountRate} unit="%"
-                    label="Yearly" labelBottom={true} changeHandler={props.discountRateHandler} width={110}
+                    label="Yearly" labelBottom={true} changeHandler={props.discountRateHandler} 
                     post="After-tax Return" step={0.5} />
             }
             right={

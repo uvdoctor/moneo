@@ -272,7 +272,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                             </div>
                             <div className="mt-1 w-full flex items-center justify-around w-full">
                                 {buyTaxRate && <RadialInput data={toStringArr(0, 20, 0.5)} step={0.5} value={buyTaxRate}
-                                    width={120} unit="%" label="of Price" pre="Taxes & Fees" labelBottom={true} changeHandler={setBuyTaxRate} />}
+                                    unit="%" label="of Price" pre="Taxes & Fees" labelBottom={true} changeHandler={setBuyTaxRate} />}
                                 <SelectInput name="sy"
                                     pre="Starts"
                                     value={startYear}
@@ -296,11 +296,11 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                     {manualMode < 1 ?
                         <div className="flex flex-wrap justify-around items-center">
                             <Section title={`Amount in ${startYear} ~ ${toCurrency(price, currency)}`} left={
-                                <NumberInput name="startingPrice" pre="Amount" post={`in ${goal.by}`} width="110px"
+                                <NumberInput name="startingPrice" pre="Amount" post={`in ${goal.by}`} 
                                     currency={currency} value={startingPrice} changeHandler={setStartingPrice} min={500} max={2000000} />
                             } right={
                                 <NumberInput name="priceChgRate" pre="Yearly" post="Change" unit="%"
-                                    width="30px" min={-20} max={20} step={0.5} value={priceChgRate} changeHandler={setPriceChgRate} />
+                                    min={-20} max={20} step={0.5} value={priceChgRate} changeHandler={setPriceChgRate} />
                             } />
                             {goal?.emi &&
                                 <EmiCost price={price} currency={currency} startYear={startYear}
@@ -313,10 +313,10 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         <div className="flex flex-wrap items-center justify-center w-full">
                             {wipTargets && wipTargets.map((t, i) =>
                                 <div key={"t" + i} className="mr-4 md:mr-8 mt-4 flex flex-col justify-end items-end">
-                                    <label>{t.year}</label>
+                                <label>{t.year}</label>
                                     <NumberInput name="year" pre="" currency={currency}
                                         value={t.val} changeHandler={(val: number) => changeTargetVal(val, i)}
-                                        width="120px" min={0} max={900000} step={100} />
+                                        min={0} max={900000} step={100} />
                                 </div>)}
                         </div>}
 
@@ -360,12 +360,13 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                     </div>
                 </Fragment>}
             {viewMode === rentLabel && sellAfter &&
+            <div className="flex flex-wrap justify-around items-center">
                 <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
                     discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(20)}
                     rentTaxBenefit={rentTaxBenefit as number} rentTaxBenefitHandler={setRentTaxBenefit}
                     price={price} discountRateHandler={setOppDR} rentAmt={rentAmt} rentAmtHandler={setRentAmt}
                     rentChgPer={rentChgPer} rentChgPerHandler={setRentChgPer} />
-            }
+            </div>}
 
             {viewMode === taxLabel &&
                 <TaxBenefit goalType={goalType} taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}

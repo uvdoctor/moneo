@@ -22,7 +22,7 @@ interface NumberInputProps {
 export default function NumberInput(props: NumberInputProps) {
     const formRef = useRef<HTMLFormElement>(null)
     const [editing, setEditing] = useState<boolean>(false)
-    const defaultWidth = '70px'
+    const width: string = props.currency ? '140px' : props.unit ? '40px' : '70px'
 
     useEffect(
         () => {
@@ -52,14 +52,14 @@ export default function NumberInput(props: NumberInputProps) {
                             onChange={(e) => props.changeHandler(e.currentTarget.valueAsNumber)}
                             onBlur={() => setEditing(false)}
                             required
-                            style={{ textAlign: "right", width: `${props.width ? props.width : defaultWidth}` }}
+                            style={{ textAlign: "right", width: width }}
                         /> :
                         <input className="input"
                             type="text"
                             name={props.name}
                             value={toCurrency(props.value, props.currency)}
                             onFocus={() => setEditing(true)}
-                            style={{ textAlign: "right", width: `${props.width ? props.width : defaultWidth}` }}
+                            style={{ textAlign: "right", width: width }}
                             readOnly
                         />
                     }

@@ -5,7 +5,7 @@ export function getCurrencyList() {
 }
 
 export const toCurrency = (num: number | undefined, currency: string, decimal: boolean = false) => {
-	const formatter = new Intl.NumberFormat(undefined, {
+	const formatter = new Intl.NumberFormat(navigator.language, {
 		style: "currency",
 		currency: currency,
 		minimumFractionDigits: decimal ? 2 : 0,
