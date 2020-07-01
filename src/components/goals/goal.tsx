@@ -83,7 +83,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
         return {
             name: name,
             sy: startYear,
-            ey: startYear,
+            ey: endYear,
             by: goal.by,
             tdr: taxRate,
             tdl: maxTaxDeduction,
@@ -170,7 +170,6 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
 
     const calculateYearlyCFs = (duration: number, changeState: boolean = true) => {
         let g: APIt.CreateGoalInput = createNewGoalInput()
-        console.log("CFs to be calculated for goal: ", g)
         let cfs = calculateCFs(g, duration)
         console.log("New cfs created: ", cfs)
         if (changeState) {
@@ -255,7 +254,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                     <SVGClose />
                 </div>
             </div>
-            <ul className="flex w-full">
+            <ul className="flex w-full focus:none outline:none">
                 {viewItems.map((item, i) => (
                     <li key={"viewItem" + i}>
                         <button onClick={changeViewMode} style={{ color: viewMode === item ? "white" : "#718096", backgroundColor: viewMode === item ? "black" : "#edf2f7" }} className="dashmi md:mt-4 md:px-4 hover:bg-white hover:border-t hover:text-green-600 focus:outline-none rounded-full">{item}</button>
@@ -335,10 +334,9 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                     </div>}
 
                     <div className="flex flex-wrap justify-around items-center w-full">
-                        <TimeCost amount={totalCost} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} />
-
                         <OppCost cfs={createOppCostCFs()} currency={currency} startYear={startYear}
                             duration={getDuration(sellAfter, startYear, endYear)} discountRate={oppDR} discountRateHandler={setOppDR} />
+                        <TimeCost amount={totalCost} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} />
                     </div>
                     <div className="flex justify-center">
                         <SelectInput name="imp"

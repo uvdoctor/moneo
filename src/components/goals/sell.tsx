@@ -35,7 +35,7 @@ export default function Sell(props: SellProps) {
 
     return (
         <Section title="Sell After" left={
-            <RadialInput width={120} label="Years" labelBottom={true} data={toStringArr(1, 20)}
+            <RadialInput label="Years" labelBottom={true} data={toStringArr(1, 20)}
                 value={props.sellAfter} step={1} changeHandler={props.sellAfterHandler} />
         } right={
             <ResultItem svg={<SVGMoneyBag />} label={`In ${props.startYear + props.sellAfter} for`}
@@ -44,7 +44,7 @@ export default function Sell(props: SellProps) {
         } bottomLeft="Assume" bottomRight="Yearly"
             bottom={
                 <NumberInput name="assetChgRate" pre="Sell Price" post="Changes" unit="%"
-                    width="30px" min={-20} max={20} step={0.5} value={props.assetChgRate} changeHandler={props.assetChgRateHandler} />
+                    min={-20} max={20} step={0.5} value={props.assetChgRate} changeHandler={props.assetChgRateHandler} />
             } footer='Sell Price above excludes taxes & fees.' />
 
     )
