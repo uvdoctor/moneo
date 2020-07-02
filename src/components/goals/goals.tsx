@@ -14,7 +14,11 @@ import SVGTargetPath from './svgtargetpath'
 import { AwesomeButton } from 'react-awesome-button'
 import CurrencyInput from '../form/currencyinput'
 
-export default function Goals() {
+interface GoalsProps {
+    showModalHandler: Function
+}
+
+export default function Goals({showModalHandler}: GoalsProps) {
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([])
     const [allCFs, setAllCFs] = useState<any>({})
     const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null)
@@ -29,6 +33,8 @@ export default function Goals() {
         loadAllGoals()
     }, [])
 
+    useEffect(() => wipGoal ? showModalHandler(true) : showModalHandler(false), [wipGoal])
+    
     const loadAllGoals = async () => {
         let goals: Array<APIt.CreateGoalInput> | null = await getGoalsList()
         if (!goals) return

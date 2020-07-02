@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react'
 
 interface TextInputProps {
-    pre: string,
-    post?: string,
-    value: string,
-    width?: string,
-    name: string,
+    pre: string
+    post?: string
+    value: string
+    width?: string
+    name: string
     placeholder?: string
-    changeHandler: any,
+    changeHandler: Function
 }
 
 export default function TextInput(props: TextInputProps) {
@@ -16,17 +16,23 @@ export default function TextInput(props: TextInputProps) {
     useEffect(
         () => {
             // @ts-ignore: Object is possibly 'null'.
-            formRef.current.reportValidity();
+            let valid = formRef.current.reportValidity();
         },
         [formRef]
     );
+
+    const handleKeyDown = (e: any) => {
+        if (e.key === 'Enter') {
+            e.preventDefault()
+        }
+    }
 
     return (
         <form ref={formRef} className="flex flex-col">
             {props.pre && <label>{props.pre}</label>}
             <input className="input" type="text" name={props.name}
                 placeholder={props.placeholder} value={props.value} onChange={(e) => props.changeHandler(e.currentTarget.value)}
-                required style={{ width: `${props.width}` }} />
+                required style={{ width: `${props.width}` }} onKeyDown={handleKeyDown} />
             {props.post && <label>{props.post}</label>}
         </form>
     )

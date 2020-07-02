@@ -19,9 +19,9 @@ export default function Section(props: SectionProps) {
             </div>}
             <div className="flex flex-col md:flex-row justify-around items-center w-full">
                 {props.left}
-                <div className="mt-4 md:mt-0">
+                {props.right && <div className="mt-4 md:mt-0">
                     {props.right}
-                </div>
+                </div>}
             </div>
             {props.bottom && <div className="flex mt-4 items-center justify-center">
                 <label className="mr-4">{props.bottomLeft}</label>

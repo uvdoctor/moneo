@@ -18,13 +18,15 @@ interface BRComparisonProps {
     rentChgPerHandler: Function
     rentTaxBenefit: number
     rentTaxBenefitHandler: Function
+    answer: string
+    answerHandler: Function
+    rentAns: string
+    rentAnsHandler: Function
     allBuyCFs: Array<Array<number>>
 }
 
 export default function BRComparison(props: BRComparisonProps) {
     const [compData, setCompData] = useState<Array<any>>([])
-    const [answer, setAnswer] = useState<string>('')
-    const [rentAns, setRentAns] = useState<string>('')
     const analyzeFor = 20
 
     const getNextTaxAdjRentAmt = (val: number) => {
@@ -102,11 +104,11 @@ export default function BRComparison(props: BRComparisonProps) {
         let rentValues = data[1].values.y
         if (buyValues.length >= props.sellAfter) {
             let diff = rentValues[props.sellAfter - 1] - buyValues[props.sellAfter - 1]
-            if (diff === 0) setRentAns(`Renting costs similar to Buying for ${props.sellAfter} ${props.sellAfter === 1 ? 'year' : 'years'}.`)
-            else setRentAns(`Renting costs ${diff > 0 ? 'lesser' : 'more'} by ${toCurrency(Math.abs(diff), props.currency)}`)
+            if (diff === 0) props.rentAnsHandler(`Renting costs similar to Buying for ${props.sellAfter} ${props.sellAfter === 1 ? 'year' : 'years'}.`)
+            else props.rentAnsHandler(`Renting costs ${diff > 0 ? 'lesser' : 'more'} by ${toCurrency(Math.abs(diff), props.currency)}`)
             return
         }
-        setRentAns('')
+        props.rentAnsHandler('')
     }
 
     const findAnswer = (data: Array<any>) => {
@@ -137,20 +139,20 @@ export default function BRComparison(props: BRComparisonProps) {
             console.log("Chart data is ", data)
             if (data && data.length == 2) {
                 setCompData(data)
-                setAnswer(findAnswer(data))
+                props.answerHandler(findAnswer(data))
                 provideRentAns(data)
             }
         } else {
             setCompData([])
-            setAnswer("")
-            setRentAns("")
+            props.answerHandler("")
+            props.rentAnsHandler("")
         }
     }, [props])
 
     return (
         <Fragment>
-            <Section title="Yearly Rent + Taxes & Fees" left={
-                <NumberInput name="rentAmt" pre="Amount" value={props.rentAmt} changeHandler={props.rentAmtHandler}
+            <Section title="If You Rent Instead" left={
+                <NumberInput name="rentAmt" pre="Yearly" post="Rent" value={props.rentAmt} changeHandler={props.rentAmtHandler}
                     min={1000} max={200000} step={500} currency={props.currency} />
             } right={
                 <NumberInput name="rentChg" pre="Changes" value={props.rentChgPer} changeHandler={props.rentChgPerHandler}
@@ -175,10 +177,10 @@ export default function BRComparison(props: BRComparisonProps) {
             }
             toggle= {
                 <HToggle rightText="Claim Tax Benefit" value={props.rentTaxBenefit} setter={props.rentTaxBenefitHandler} />
-            } />
+            } footer="Yearly Rent includes taxes & fees" />
             {props.price > 0 && props.rentAmt > 0 && compData && compData.length === 2 && compData[1].values.y[props.sellAfter - 1] &&
-                <BRCompChart data={compData} xTitle="Number of Years" rentAns={rentAns}
-                    sellAfter={props.sellAfter} title={answer} />}
+                <BRCompChart data={compData} xTitle="Number of Years" rentAns={props.rentAns}
+                    sellAfter={props.sellAfter} title={props.answer} />}
         </Fragment>
     )
 }
