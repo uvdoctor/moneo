@@ -4,7 +4,6 @@ import LineChart from './linechart'
 import SVGRemove from '../svgremove'
 import SVGEdit from '../svgedit'
 import { getGoalTypes, getImpLevels } from './goalutils'
-import { API } from 'aws-amplify'
 interface SummaryProps {
     id: string
     name: string

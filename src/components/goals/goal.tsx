@@ -16,6 +16,7 @@ import LineChart from './linechart'
 import Section from '../form/section'
 import Sell from './sell'
 import SVGClose from '../svgclose'
+import SVGChart from '../svgchart'
 import {
     calculateCFs, calculatePrice, calculateSellPrice, getLoanBorrowAmt,
     calculateManualPrice, calculateTotalTaxBenefit, calculatePrincipalTaxBenefit, calculateTotalIntTaxBenefit
@@ -378,7 +379,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         </Fragment>}
 
                     {price > 500 && <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
-                        handler={setShowCFChart} svg={<SVGBalance />} />}
+                        handler={setShowCFChart} svg={<SVGChart />} />}
                     {showCFChart &&
                         <LineChart cfs={cfs} startYear={startYear} currency={currency} />}
                     {price > 500 && <div className="mt-8 flex justify-center">
