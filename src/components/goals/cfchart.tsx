@@ -1,65 +1,31 @@
 import React from 'react'
 import dynamic from 'next/dynamic'
-import {LMH} from '../../api/goals'
 interface CFChartProps {
     mustCFs: any
     tryCFs: any
     optCFs: any
-    fromYear: number
-    toYear: number
-    impFilter: string
 }
 
-export default function CFChart({ mustCFs, tryCFs, optCFs, fromYear, toYear, impFilter }: CFChartProps) {
+export default function CFChart({ mustCFs, tryCFs, optCFs }: CFChartProps) {
     const Plot = dynamic(
         () => import('react-plotly.js'), { ssr: false }
     )
 
-    const fromFilter = {
-        type: 'filter',
-        target: 'x',
-        operation: '>=',
-        value: fromYear
-    }
-
-    const toFilter = {
-        type: 'filter',
-        target: 'x',
-        operation: '<=',
-        value: toYear
-    }
-
     const createBarTrace = (cfs: any, name: string) => {
         return {
-            type: 'bar', x: cfs.x, y: cfs.y, name: name,
-            transforms: [fromFilter, toFilter]
+            type: 'bar', x: cfs.x, y: cfs.y, name: name
         }
     }
 
-    const modifyColor = (trace: any, val: string) => trace.marker = {color: val}
-
-    const createFilteredTraces = () => {
-        let mustTrace = createBarTrace(mustCFs, "Must Meet")
-        let tryTrace = createBarTrace(tryCFs, "Try Best")
-        let optTrace = createBarTrace(optCFs, "Optional")
-        if(!impFilter) return [mustTrace, tryTrace, optTrace]
-        modifyColor(mustTrace, '#48bb78')
-        modifyColor(tryTrace, '#48bb78')
-        modifyColor(optTrace, '#48bb78')
-        if(impFilter === LMH.L as string) return [optTrace]
-        else if(impFilter === LMH.M as string) return [tryTrace]
-        else return [mustTrace]
-    }
-
     return (
-        <div className="w-full">
+        <div className="w-full h-100">
             {/*@ts-ignore*/}
             <Plot layout={{
                 barmode: 'stack',
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
                 autosize: true,
                 yaxis: { fixedrange: true, showgrid: false },
-                xaxis: { showgrid: false, type: 'category', fixedrange: true },
+                xaxis: { showgrid: false, type: 'category', rangeslider: {} },
                 legend: {
                     orientation: 'h',
                     x: 0.5,
@@ -68,7 +34,11 @@ export default function CFChart({ mustCFs, tryCFs, optCFs, fromYear, toYear, imp
             }}
                 useResizeHandler={true}
                 style={{ width: "100%", height: "100%" }}
-                data={createFilteredTraces()}
+                data={[
+                    createBarTrace(mustCFs, 'Must Meet'),
+                    createBarTrace(tryCFs, 'Try Best'),
+                    createBarTrace(optCFs, 'Optional'),
+                ]}
                 config={{ responsive: true, editable: false, displayModeBar: false }}
             />
         </div>

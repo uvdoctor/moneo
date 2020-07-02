@@ -9,7 +9,6 @@ interface LineChartProps {
 
 export default function LineChart(props: LineChartProps) {
     const [years, setYears] = useState<Array<number>>([])
-    
     useEffect(() => {
         let years = []
         for (let i = 0; i < props.cfs.length; i++) years.push(props.startYear + i)
@@ -21,13 +20,13 @@ export default function LineChart(props: LineChartProps) {
     )
 
     return (
-        <div className="mt-4 mb-4 w-full">
+        <div className="mb-4 w-full h-100">
             {/*@ts-ignore*/}
             <Plot layout={{
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
                 autosize: true, 
-                xaxis: {title: 'Year', type:'category', fixedrange: true, showgrid: false},
-                yaxis: {fixedrange: true, showgrid: false},
+                xaxis: {title: 'Year', type:'category', fixedrange: years.length > 3 ? false : true, rangeslider: years.length > 3 ? {} : '', showgrid: false},
+                yaxis: {fixedrange: true, type: props.cfs.length > 3 ? '' : 'category', showgrid: false},
                 title: `Yearly Cash Flows in ${props.currency}`,
                 legend: {orientation: "h"}
             }} useResizeHandler={true}

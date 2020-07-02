@@ -159,10 +159,11 @@ const createLoanCFs = (goal: APIt.CreateGoalInput, duration: number) => {
             let i = year - (goal.emi?.ry as number)
             let taxBenefit = getTaxBenefit(annualEmiAmt - annualInts[i], goal.tdr, goal.tdl)
             taxBenefit += goal.tbi as number > 0 ? getTaxBenefit(annualInts[i], goal.tdr, goal.tdli as number) : 0
-            let netAmt = calculateBuyAnnualNetCF(goal.sy, goal?.btr as number, goal.amper as number, goal.amsy as number, goal.achg as number, i, p, goal.aiper as number, goal.aisy as number)
-            cf += annualEmiAmt - netAmt - taxBenefit
+            cf += annualEmiAmt - taxBenefit
             ly--
         }
+        cf -= calculateBuyAnnualNetCF(goal.sy, goal?.btr as number, goal.amper as number, goal.amsy as number, goal.achg as number, 
+            year - goal.sy, p, goal.aiper as number, goal.aisy as number)
         cfs.push(Math.round(-cf))
     }
     if (goal.type === APIt.GoalType.B) {

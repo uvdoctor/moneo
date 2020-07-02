@@ -16,7 +16,7 @@ export function BRCompChart(props: BRCompChartProps) {
     )
 
     return (
-        <div className="w-full">
+        <div className="w-full h-100">
             {/*@ts-ignore*/}
             <Plot layout={{
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 

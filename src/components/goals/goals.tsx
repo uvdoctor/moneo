@@ -6,7 +6,6 @@ import * as APIt from '../../api/goals'
 import { getGoalsList, createNewGoal, changeGoal, deleteGoal, getDuration, createNewGoalInput, getGoalTypes, getImpOptions } from './goalutils'
 import { calculateCFs } from './cfutils'
 import Summary from './summary'
-import RangeInput from '../form/rangeinput'
 import SelectInput from '../form/selectinput'
 import HToggle from '../horizontaltoggle'
 import SVGTargetPath from './svgtargetpath'
@@ -19,10 +18,6 @@ export default function Goals() {
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([])
     const [allCFs, setAllCFs] = useState<any>({})
     const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null)
-    const [firstYear, setFirstYear] = useState<number>(0)
-    const [lastYear, setLastYear] = useState<number>(0)
-    const [fromYear, setFromYear] = useState<number>(0)
-    const [toYear, setToYear] = useState<number>(0)
     const [mustCFs, setMustCFs] = useState<Object>({})
     const [tryCFs, setTryCFs] = useState<Object>({})
     const [optCFs, setOptCFs] = useState<Object>({})
@@ -94,15 +89,16 @@ export default function Goals() {
     const createGoal = (type: APIt.GoalType) => setWIPGoal(createNewGoalInput(type))
 
     const getYearRange = () => {
-        let firstYear: number = 0
-        let lastYear: number = 0
-        allGoals?.forEach((g, i) => {
-            if (i === 0) firstYear = g.sy
-            else if (g.sy < firstYear) firstYear = g.sy
-            let duration = getDuration(g.sa as number, g.sy, g.ey)
-            if (i === 0) lastYear = g.sy + duration
-            else if (g.sy + duration > lastYear) lastYear = g.sy + duration
-        })
+        if (!allGoals || !allGoals[0]) return { from: 0, to: 0 }
+        let firstYear: number = allGoals[0].sy
+        let lastYear: number = allGoals[0].sy +
+            getDuration(allGoals[0].sa, allGoals[0].sy, allGoals[0].ey)
+        for (let i = 1; i < allGoals.length; i++) {
+            let g = allGoals[i]
+            if (g.sy < firstYear) firstYear = g.sy
+            let duration = getDuration(g.sa, g.sy, g.ey)
+            if (g.sy + duration > lastYear) lastYear = g.sy + duration
+        }
         return { from: firstYear, to: lastYear }
     }
 
@@ -124,13 +120,11 @@ export default function Goals() {
         })
     }
 
+    useEffect(() => createChartData(), [allGoals])
+
     const createChartData = () => {
-        if (!allGoals) return
+        if (!allGoals || !allGoals[0]) return
         let yearRange = getYearRange()
-        setFirstYear(yearRange.from)
-        setFromYear(yearRange.from)
-        setToYear(yearRange.to)
-        setLastYear(yearRange.to)
         let mustCFs = populateWithZeros(yearRange.from, yearRange.to)
         let tryCFs = populateWithZeros(yearRange.from, yearRange.to)
         let optCFs = populateWithZeros(yearRange.from, yearRange.to)
@@ -145,13 +139,6 @@ export default function Goals() {
         setMustCFs(mustCFs)
         setOptCFs(optCFs)
         setTryCFs(tryCFs)
-    }
-
-    useEffect(() => createChartData(), [allGoals])
-
-    const changeYears = (val: Array<number>) => {
-        setFromYear(val[0])
-        setToYear(val[1])
     }
 
     return (
@@ -178,24 +165,22 @@ export default function Goals() {
                 <Fragment>
                     {allGoals && allGoals.length > 0 && allCFs &&
                         <Fragment>
-                            <div className="mt-4 mb-2 md:mt-8 flex justify-center items-baseline">
-                                <div className="flex flex-col items-center justify-center mr-8 md:mr-12">
-                                    <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
-                                    <div className={`flex w-full ${viewMode < 1 ? 'justify-start' : 'justify-between'} items-center`}>
-                                        <SelectInput name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string}
-                                            changeHandler={setImpFilter} />
-                                        {viewMode > 0 && <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />}
-                                    </div>
-                                </div>
-                                <RangeInput value={[fromYear, toYear]} min={firstYear} max={lastYear} allowCross={false} changeHandler={changeYears} />
+                            <div className="mt-4 md:mt-8 flex justify-center">
+                                {viewMode < 1 && <div className="mr-2"><SelectInput name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string}
+                                    changeHandler={setImpFilter} /></div>}
+                                <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
+                                {viewMode > 0 &&
+                                    <div className="flex">
+                                        <label className="ml-1 mr-2">in</label>
+                                        <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />
+                                    </div>}
                             </div>
                             {viewMode > 0 ?
-                                <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} fromYear={fromYear}
-                                    toYear={toYear} impFilter={impFilter} />
+                                <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} />
                                 :
                                 <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
                                     {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
-                                        g.id && g.ey >= fromYear && g.ey <= toYear && (!impFilter || impFilter === g.imp) &&
+                                        g.id && (!impFilter || impFilter === g.imp) &&
                                         <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} startYear={g.sy}
                                             currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal} />)}
                                 </div>}
