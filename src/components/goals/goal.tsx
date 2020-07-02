@@ -69,10 +69,10 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     const [oppDR, setOppDR] = useState<number>(id && goal?.dr ? goal.dr : 6)
     const [rentTaxBenefit, setRentTaxBenefit] = useState<number | null | undefined>(goal?.tbr)
     const paymentLabel = "Payment"
-    const chartLabel = "Chart"
     const taxLabel = "Tax Benefit"
     const [showRentChart, setShowRentChart] = useState<boolean>(true)
-    const viewItems = [paymentLabel, taxLabel, chartLabel]
+    const [showCFChart, setShowCFChart] = useState<boolean>(true)
+    const viewItems = [paymentLabel, taxLabel]
     const [viewMode, setViewMode] = useState(paymentLabel)
     const goalType = goal?.type as APIt.GoalType
     const [cfs, setCFs] = useState<Array<number>>(cashFlows ? cashFlows : [])
@@ -330,11 +330,11 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         </div>}
 
                     {price > 500 && <div className="flex flex-wrap justify-around items-center">
-                        {sellAfter && <Fragment> 
+                        {sellAfter && <Fragment>
                             <AnnualAmt currency={currency} startYear={startYear} percentage={aiPer as number} chgRate={assetChgRate as number}
-                            percentageHandler={setAIPer} annualSY={aiStartYear as number} annualSYHandler={setAIStartYear}
-                            price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
-                            title="Yearly Income Expected" footer="Exclude taxes & fees" />
+                                percentageHandler={setAIPer} annualSY={aiStartYear as number} annualSYHandler={setAIStartYear}
+                                price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
+                                title="Yearly Income Expected" footer="Exclude taxes & fees" />
                             <AnnualAmt currency={currency} startYear={startYear} percentage={amCostPer as number} chgRate={assetChgRate as number}
                                 percentageHandler={setAMCostPer} annualSY={amStartYear as number} annualSYHandler={setAMStartYear}
                                 price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
@@ -377,6 +377,10 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                                 rentAns={rentAns} answerHandler={setAnswer} rentAnsHandler={setRentAns} showRentChart={showRentChart} />
                         </Fragment>}
 
+                    {price > 500 && <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
+                        handler={setShowCFChart} svg={<SVGBalance />} />}
+                    {showCFChart &&
+                        <LineChart cfs={cfs} startYear={startYear} currency={currency} />}
                     {price > 500 && <div className="mt-8 flex justify-center">
                         <SelectInput name="imp"
                             pre="How Important is this Goal?"
@@ -403,10 +407,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                     totalTaxBenefit={totalTaxBenefit} totalTaxBenefitHandler={setTotalTaxBenefit}
                     totalIntTaxBenefit={totalIntTaxBenefit} totalIntTaxBenefitHandler={setTotalIntTaxBenefit} />
             }
-            {
-                viewMode === chartLabel &&
-                <LineChart cfs={cfs} startYear={startYear} currency={currency} />
-            }
+
         </div >
     )
 }

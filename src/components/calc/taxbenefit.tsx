@@ -37,7 +37,7 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                         value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} max={300000} step={1000} />
                 } />
             {(props.goalType === GoalType.B || props.goalType === GoalType.L) &&  
-                <Section title="Tax Benefit For Interest"
+                <Section title="For Loan Interest"
                 left={
                     <Toggle topText="Claim Benefit" bottomText="No Benefit" value={props.taxBenefitInt as number} setter={props.taxBenefitIntHandler} />
                 } right={
