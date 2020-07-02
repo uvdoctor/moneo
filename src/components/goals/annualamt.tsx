@@ -17,6 +17,7 @@ interface AnnualAmtProps {
     duration: number
     buyTaxRate: number
     chgRate: number
+    footer?: string
 }
 
 export default function AnnualAmt(props: AnnualAmtProps) {
@@ -37,6 +38,6 @@ export default function AnnualAmt(props: AnnualAmtProps) {
             } right={
                 <SelectInput name="startFrom" pre="Starting" options={syOptions} value={props.annualSY}
                     changeHandler={props.annualSYHandler} />
-            } />
+            } footer={props.footer} />
     )
 }

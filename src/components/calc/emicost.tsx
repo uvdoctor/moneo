@@ -48,9 +48,10 @@ export default function EmiCost(props: EmiProps) {
         <Fragment>
             <Section title="Borrow"
                 left={
-                    <RadialInput width={180} unit="%" data={toStringArr(0, 90, 5)}
-                        value={props.loanPer} changeHandler={props.loanPerHandler} step={5} labelBottom={true}
-                        label={`${toCurrency(props.loanBorrowAmt, props.currency)}`} />
+                    <RadialInput width={120} unit="%" data={toStringArr(0, 90, 5)}
+                        value={props.loanPer} changeHandler={props.loanPerHandler} 
+                        step={5} labelBottom={true} label="of Price"
+                        post={`${toCurrency(props.loanBorrowAmt, props.currency)}`} />
                 } right={
                     <SelectInput name="repaymentSY" options={ryOptions}
                         value={props.repaymentSY} pre="Repay From" changeHandler={(year: string) => props.repaymentSYHandler(parseInt(year))} />

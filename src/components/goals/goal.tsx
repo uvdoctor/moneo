@@ -68,7 +68,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     const [rentTaxBenefit, setRentTaxBenefit] = useState<number | null | undefined>(goal?.tbr)
     const paymentLabel = "Payment"
     const chartLabel = "Chart"
-    const taxLabel = "Tax Benefit"
+    const taxLabel = "Tax"
     const rentLabel = "Rent?"
     const [viewItems, setViewItems] = useState([paymentLabel, taxLabel, chartLabel, rentLabel])
     const [viewMode, setViewMode] = useState(paymentLabel)
@@ -301,8 +301,9 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
 
                     {manualMode < 1 ?
                         <div className="flex flex-wrap justify-around items-center">
-                            <Section title={startYear > goal.by &&
-                                `${goalType === APIt.GoalType.B ? 'Price' : 'Amount'} in ${startYear} ~ ${toCurrency(price, currency)}`} left={
+                            <Section title={
+                                `${goalType === APIt.GoalType.B ? 'Price' : 'Amount'}${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
+                                left={
                                     <NumberInput name="startingPrice" pre={`${goalType === APIt.GoalType.B ? 'Price' : 'Amount'}`} post={`in ${goal.by}`}
                                         currency={currency} value={startingPrice} changeHandler={setStartingPrice} min={0} max={2000000} step={500} 
                                         note={buyTaxRate ? `including ${buyTaxRate}% taxes & fees` : ''} />
@@ -332,11 +333,11 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         {aiStartYear && <AnnualAmt currency={currency} startYear={startYear} percentage={aiPer as number} chgRate={assetChgRate as number}
                             percentageHandler={setAIPer} annualSY={aiStartYear} annualSYHandler={setAIStartYear}
                             price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
-                            title="Yearly Income Expected After Excluding Taxes & Fees" />}
+                            title="Yearly Income Expected" footer="Exclude taxes & fees" />}
                         {amStartYear && <AnnualAmt currency={currency} startYear={startYear} percentage={amCostPer as number} chgRate={assetChgRate as number}
                             percentageHandler={setAMCostPer} annualSY={amStartYear} annualSYHandler={setAMStartYear}
                             price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
-                            title="Yearly Fixes, Taxes, Fees, Insurance, etc costs" />}
+                            title="Yearly Fixes, Insurance, etc costs" footer="Include taxes & fees" />}
                         <Sell price={price} startYear={startYear} endYear={endYear} sellAfter={sellAfter}
                             sellPrice={sellPrice} sellPriceHandler={setSellPrice} sellAfterHandler={setSellAfter}
                             cfs={cfs} currency={currency} assetChgRate={assetChgRate as number} annualReturnPer={annualReturnPer as number}
