@@ -27,7 +27,7 @@ export default function RadialInput(props: RadialInputProps) {
                 appendToValue={props.unit} width={width} labelColor="#4a5568" labelBottom={props.labelBottom}
                 valueFontSize="1.25rem" labelFontSize="1.25rem" progressColorFrom="#48bb78"
                 progressColorTo="#48bb78" knobColor="#cbd5e0" />
-            <label className="mt-1">{props.post}</label>
+            <label className="mt-2">{props.post}</label>
         </div>
     )
 }

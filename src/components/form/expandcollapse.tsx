@@ -16,7 +16,7 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
         <div className="cursor-pointer flex justify-center items-center mt-4"
             onClick={toggle}>
             {props.svg}
-            <label className="ml-4 mr-2 text-lg md:text-xl font-semibold">{props.title}</label>
+            <label className="cursor-pointer text-blue-600 ml-4 mr-2 text-lg md:text-xl font-semibold">{props.title}</label>
             {props.value ? <SVGCollapse /> : <SVGExpand />}
         </div>
     )

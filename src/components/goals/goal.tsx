@@ -25,6 +25,8 @@ import { getDuration, createNewTarget, getGoalTypes, getImpLevels } from './goal
 import { AwesomeButton } from "react-awesome-button"
 import SVGLogo from '../svglogo'
 import AnnualAmt from './annualamt'
+import ExpandCollapse from '../form/expandcollapse'
+import SVGBalance from '../calc/svgbalance'
 interface GoalProps {
     goal: APIt.CreateGoalInput
     cashFlows?: Array<number>
@@ -68,9 +70,9 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     const [rentTaxBenefit, setRentTaxBenefit] = useState<number | null | undefined>(goal?.tbr)
     const paymentLabel = "Payment"
     const chartLabel = "Chart"
-    const taxLabel = "Tax"
-    const rentLabel = "Rent?"
-    const [viewItems, setViewItems] = useState([paymentLabel, taxLabel, chartLabel, rentLabel])
+    const taxLabel = "Tax Benefit"
+    const [showRentChart, setShowRentChart] = useState<boolean>(true)
+    const viewItems = [paymentLabel, taxLabel, chartLabel]
     const [viewMode, setViewMode] = useState(paymentLabel)
     const goalType = goal?.type as APIt.GoalType
     const [cfs, setCFs] = useState<Array<number>>(cashFlows ? cashFlows : [])
@@ -128,11 +130,6 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
         goal.id = id
         return goal as APIt.UpdateGoalInput
     }
-
-    useEffect(() => {
-        if (goalType === APIt.GoalType.B) setViewItems([paymentLabel, taxLabel, chartLabel, rentLabel])
-        else setViewItems([paymentLabel, taxLabel, chartLabel])
-    }, [goalType])
 
     const changeViewMode = (e: any) => {
         setViewMode(e.target.innerText)
@@ -270,33 +267,35 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
             </ul>}
             {viewMode === paymentLabel && nameValid &&
                 <Fragment>
-                    <div className="ml-1 md:ml-2 mr-1 md:mr-2 mt-4 flex flex-col items-center justify-center w-full">
-                        <div className="flex justify-around items-end w-full">
-                            <SelectInput name="sy"
-                                pre="Starts"
-                                value={startYear}
-                                changeHandler={changeStartYear}
-                                options={syOptions}
-                            />
-                            {(manualMode > 0 || goalType !== APIt.GoalType.B) ? <SelectInput name="ey" pre="Ends" value={endYear}
-                                changeHandler={changeEndYear} options={eyOptions} />
-                                : <div className="flex flex-col">
-                                    <label>Ends</label>
-                                    <label className="font-semibold">{endYear}</label>
-                                </div>}
+                    <div className="ml-1 md:ml-2 mr-1 md:mr-2 mt-4 flex justify-around items-center w-full">
+                        <div className="flex flex-col w-1/2 md:w-1/4 justify-start">
+                            <div className="flex justify-between w-full items-center mb-8">
+                                <SelectInput name="sy"
+                                    pre="Starts"
+                                    value={startYear}
+                                    changeHandler={changeStartYear}
+                                    options={syOptions}
+                                />
+                                {(manualMode > 0 || goalType !== APIt.GoalType.B) ? <SelectInput name="ey" pre="Ends" value={endYear}
+                                    changeHandler={changeEndYear} options={eyOptions} />
+                                    : <div className="flex flex-col">
+                                        <label>Ends</label>
+                                        <label className="font-semibold">{endYear}</label>
+                                    </div>}
                                 <div className="flex flex-col">
                                     <label>In</label>
                                     <CurrencyInput name="mainCurr" value={currency} changeHandler={setCurrency} />
                                 </div>
-                            {goalType !== APIt.GoalType.D &&
-                                <RadialInput data={toStringArr(0, 20, 0.5)} step={0.5} value={buyTaxRate as number}
-                                    unit="%" label="of Price" pre="Taxes & Fees" 
-                                    post={`Total ${toCurrency(Math.round(price * (buyTaxRate as number/100)), currency)}`} 
-                                    labelBottom={true} changeHandler={setBuyTaxRate} />}
+                            </div>
+                            <HToggle rightText="Custom Plan" value={manualMode} setter={setManualMode} />
                         </div>
-                        <div className="mt-4 w-full ml-2 flex justify-start">
-                            <HToggle rightText="Custom Payment Plan" value={manualMode} setter={setManualMode} />
-                        </div>
+                        {goalType !== APIt.GoalType.D && <div className="flex justify-center w-1/2 md:w-1/4">
+                            <RadialInput data={toStringArr(0, 20, 0.5)} step={0.5} value={buyTaxRate as number}
+                                unit="%" label="of Price" pre="Taxes & Fees"
+                                post={`Total ${toCurrency(Math.round(price * (buyTaxRate as number / 100)), currency)}`}
+                                labelBottom={true} changeHandler={setBuyTaxRate} />
+                        </div>}
+
                     </div>
 
                     {manualMode < 1 ?
@@ -304,8 +303,9 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                             <Section title={
                                 `${goalType === APIt.GoalType.B ? 'Price' : 'Amount'}${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
                                 left={
-                                    <NumberInput name="startingPrice" pre={`${goalType === APIt.GoalType.B ? 'Price' : 'Amount'}`} post={`in ${goal.by}`}
-                                        currency={currency} value={startingPrice} changeHandler={setStartingPrice} min={0} max={2000000} step={500} 
+                                    <NumberInput name="startingPrice" pre={startYear > goal.by ? `${goalType === APIt.GoalType.B ? 'Price' : 'Amount'}` : ''}
+                                        post={startYear > goal.by ? `in ${goal.by}` : ''} currency={currency} value={startingPrice}
+                                        changeHandler={setStartingPrice} min={0} max={2000000} step={500}
                                         note={buyTaxRate ? `including ${buyTaxRate}% taxes & fees` : ''} />
                                 } right={
                                     startYear > goal.by && <NumberInput name="priceChgRate" pre="Changes" note="Every Year" unit="%"
@@ -329,27 +329,55 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                                 </div>)}
                         </div>}
 
-                    {sellAfter && price > 500 && <div className="flex flex-wrap justify-around items-center">
-                        {aiStartYear && <AnnualAmt currency={currency} startYear={startYear} percentage={aiPer as number} chgRate={assetChgRate as number}
-                            percentageHandler={setAIPer} annualSY={aiStartYear} annualSYHandler={setAIStartYear}
+                    {price > 500 && <div className="flex flex-wrap justify-around items-center">
+                        {sellAfter && <Fragment> 
+                            <AnnualAmt currency={currency} startYear={startYear} percentage={aiPer as number} chgRate={assetChgRate as number}
+                            percentageHandler={setAIPer} annualSY={aiStartYear as number} annualSYHandler={setAIStartYear}
                             price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
-                            title="Yearly Income Expected" footer="Exclude taxes & fees" />}
-                        {amStartYear && <AnnualAmt currency={currency} startYear={startYear} percentage={amCostPer as number} chgRate={assetChgRate as number}
-                            percentageHandler={setAMCostPer} annualSY={amStartYear} annualSYHandler={setAMStartYear}
-                            price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
-                            title="Yearly Fixes, Insurance, etc costs" footer="Include taxes & fees" />}
-                        <Sell price={price} startYear={startYear} endYear={endYear} sellAfter={sellAfter}
+                            title="Yearly Income Expected" footer="Exclude taxes & fees" />
+                            <AnnualAmt currency={currency} startYear={startYear} percentage={amCostPer as number} chgRate={assetChgRate as number}
+                                percentageHandler={setAMCostPer} annualSY={amStartYear as number} annualSYHandler={setAMStartYear}
+                                price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
+                                title="Yearly Fixes, Insurance, etc costs" footer="Include taxes & fees" />
+                        </Fragment>}
+                        <TimeCost amount={totalCost} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} />
+                        {sellAfter && <Sell price={price} startYear={startYear} endYear={endYear} sellAfter={sellAfter}
                             sellPrice={sellPrice} sellPriceHandler={setSellPrice} sellAfterHandler={setSellAfter}
                             cfs={cfs} currency={currency} assetChgRate={assetChgRate as number} annualReturnPer={annualReturnPer as number}
-                            assetChgRateHandler={setAssetChgRate} buyTaxRate={buyTaxRate as number} annualReturnPerHandler={setAnnualReturnPer} />
-                    </div>}
-
-                    {price > 500 && <div className="flex flex-wrap justify-around items-center w-full">
+                            assetChgRateHandler={setAssetChgRate} buyTaxRate={buyTaxRate as number} annualReturnPerHandler={setAnnualReturnPer} />}
                         <OppCost cfs={createOppCostCFs()} currency={currency} startYear={startYear}
                             duration={getDuration(sellAfter, startYear, endYear)} discountRate={oppDR} discountRateHandler={setOppDR} />
-                        <TimeCost amount={totalCost} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} />
+                        {sellAfter &&
+                            <Section title="Instead, If You Rent" left={<div className="pl-4 pr-4">
+                                <NumberInput name="rentAmt" pre="Yearly" post="Rent" value={rentAmt} changeHandler={setRentAmt}
+                                    min={1000} max={200000} step={500} currency={currency} />
+                            </div>}
+                                right={
+                                    <NumberInput name="rentChg" pre="Changes" value={rentChgPer} changeHandler={setRentChgPer}
+                                        min={-10} max={10} step={0.5} unit="%" />}
+                                toggle={
+                                    <HToggle rightText="Claim Tax Benefit" value={rentTaxBenefit as number} setter={setRentTaxBenefit} />
+                                }
+                                bottom={<div className="flex items-center">
+                                    <SVGBalance />
+                                    <label className="ml-2">{rentAns}</label>
+                                </div>}
+                            />}
                     </div>}
-                    {price > 500 && <div className="mt-4 flex justify-center">
+
+                    {sellAfter && rentAmt && price > 500 &&
+                        <Fragment>
+                            <ExpandCollapse title="20 years of Buy v/s Rent Comparison" value={showRentChart}
+                                handler={setShowRentChart} svg={<SVGBalance />} />
+                            <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
+                                discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(20)}
+                                rentTaxBenefit={rentTaxBenefit as number} rentTaxBenefitHandler={setRentTaxBenefit}
+                                discountRateHandler={setOppDR} rentAmt={rentAmt} rentAmtHandler={setRentAmt}
+                                rentChgPer={rentChgPer} rentChgPerHandler={setRentChgPer} answer={answer}
+                                rentAns={rentAns} answerHandler={setAnswer} rentAnsHandler={setRentAns} showRentChart={showRentChart} />
+                        </Fragment>}
+
+                    {price > 500 && <div className="mt-8 flex justify-center">
                         <SelectInput name="imp"
                             pre="How Important is this Goal?"
                             value={impLevel}
@@ -367,16 +395,6 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         </AwesomeButton>
                     </div>
                 </Fragment>}
-            {viewMode === rentLabel && sellAfter &&
-                <div className="flex flex-wrap justify-around items-center">
-                    <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
-                        discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(20)}
-                        rentTaxBenefit={rentTaxBenefit as number} rentTaxBenefitHandler={setRentTaxBenefit}
-                        price={price} discountRateHandler={setOppDR} rentAmt={rentAmt} rentAmtHandler={setRentAmt}
-                        rentChgPer={rentChgPer} rentChgPerHandler={setRentChgPer} answer={answer}
-                        rentAns={rentAns} answerHandler={setAnswer} rentAnsHandler={setRentAns} />
-                </div>}
-
             {viewMode === taxLabel &&
                 <TaxBenefit goalType={goalType} taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}
                     maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction} taxBenefitInt={taxBenefitInt}

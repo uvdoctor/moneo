@@ -7,7 +7,7 @@ interface SectionProps {
     bottomLeft?: any
     bottomRight?: any
     bottom?: any
-    footer?: string
+    footer?: any
     toggle?: any
 }
 
@@ -22,7 +22,7 @@ export default function Section(props: SectionProps) {
                 {props.toggle}
             </div>}
             {showSection && <Fragment>
-                <div className="flex flex-col md:flex-row justify-around items-center w-full">
+                <div className="mt-2 flex flex-col md:flex-row justify-around items-center w-full">
                     {props.left}
                     {props.right && <div className="mt-4 md:mt-0">
                         {props.right}
@@ -33,7 +33,7 @@ export default function Section(props: SectionProps) {
                     {props.bottom}
                     <label className="ml-4">{props.bottomRight}</label>
                 </div>}
-                {props.footer && <p className="mt-2 text-base text-center">{props.footer}</p>}
+                {props.footer && <div className="mt-2 flex justify-center text-base">{props.footer}</div>}
             </Fragment>}
         </div>
     )

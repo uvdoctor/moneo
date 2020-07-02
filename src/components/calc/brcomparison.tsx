@@ -1,12 +1,8 @@
-import React, { useState, useEffect, Fragment } from 'react'
-import NumberInput from '../form/numberinput'
+import React, { useState, useEffect } from 'react'
 import { getNPV } from '../calc/finance'
 import { BRCompChart } from '../goals/brcompchart'
 import { toCurrency } from '../utils'
-import Section from '../form/section'
-import HToggle from '../../components/horizontaltoggle'
 interface BRComparisonProps {
-    price: number
     taxRate: number
     currency: string
     sellAfter: number
@@ -23,6 +19,7 @@ interface BRComparisonProps {
     rentAns: string
     rentAnsHandler: Function
     allBuyCFs: Array<Array<number>>
+    showRentChart: boolean
 }
 
 export default function BRComparison(props: BRComparisonProps) {
@@ -134,53 +131,28 @@ export default function BRComparison(props: BRComparisonProps) {
     }
 
     useEffect(() => {
-        if (props.rentAmt > 0) {
-            let data = buildComparisonData()
-            console.log("Chart data is ", data)
-            if (data && data.length == 2) {
-                setCompData(data)
-                props.answerHandler(findAnswer(data))
-                provideRentAns(data)
-            }
+        if(compData && compData.length === 2) {
+            props.answerHandler(findAnswer(compData))
+            provideRentAns(compData)
         } else {
-            setCompData([])
             props.answerHandler("")
             props.rentAnsHandler("")
         }
-    }, [props])
+    }, [compData, props.sellAfter])
+
+    useEffect(() => {
+        if (props.rentAmt > 0) {
+            let data = buildComparisonData()
+            console.log("Chart data is ", data)
+            if (data && data.length == 2) setCompData([...data])
+        } else setCompData([...[]])
+    }, [props.taxRate, props.discountRate, props.rentAmt, props.rentChgPer, props.rentTaxBenefit, props.allBuyCFs])
 
     return (
-        <Fragment>
-            <Section title="If You Rent Instead" left={
-                <NumberInput name="rentAmt" pre="Yearly" post="Rent" value={props.rentAmt} changeHandler={props.rentAmtHandler}
-                    min={1000} max={200000} step={500} currency={props.currency} />
-            } right={
-                <NumberInput name="rentChg" pre="Changes" value={props.rentChgPer} changeHandler={props.rentChgPerHandler}
-                    min={-10} max={10} step={0.5} unit="%" />
-            } bottomLeft={
-                <div className="flex flex-col">
-                    <label>Money</label>
-                    <label>Saved from</label>
-                    <label>Not Buying</label>
-                </div>
-            } 
-            bottom={
-                <NumberInput name="discountRate" pre="Earns" post="Yearly" unit="%" 
-                    min={2} max={15} step={0.5} value={props.discountRate} 
-                    changeHandler={props.discountRateHandler} />
-            }
-            bottomRight={
-                <div className="flex flex-col">
-                    <label>Excluding</label>
-                    <label>Taxes & Fees</label>
-                </div>
-            }
-            toggle= {
-                <HToggle rightText="Claim Tax Benefit" value={props.rentTaxBenefit} setter={props.rentTaxBenefitHandler} />
-            } footer="Yearly Rent includes taxes & fees" />
-            {props.price > 0 && props.rentAmt > 0 && compData && compData.length === 2 && compData[1].values.y[props.sellAfter - 1] &&
+            <div>
+            {props.showRentChart && compData && compData.length === 2 && compData[1].values.y[props.sellAfter - 1] &&
                 <BRCompChart data={compData} xTitle="Number of Years" rentAns={props.rentAns}
                     sellAfter={props.sellAfter} title={props.answer} />}
-        </Fragment>
+            </div>
     )
 }
