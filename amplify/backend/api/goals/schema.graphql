@@ -75,3 +75,27 @@ type Profile @model @auth(rules: [{allow: owner}]) {
   cgtr: Int!
   curr: String!
 }
+
+type Item @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  p_at: String!
+  p_id: String!
+  p_instid: String!
+  instname: String!
+  status: String!
+}
+
+type Account @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  item: Item
+  p_id: String!
+  name: String!
+  mask: String!
+  offname: String!
+  currbal: Int!
+  availbal: Int!
+  curr: String!
+  uncurr: String
+  type: String!
+  subtype: String!
+}

@@ -404,3 +404,159 @@ export const deleteProfile = /* GraphQL */ `
     }
   }
 `;
+export const createItem = /* GraphQL */ `
+  mutation CreateItem(
+    $input: CreateItemInput!
+    $condition: ModelItemConditionInput
+  ) {
+    createItem(input: $input, condition: $condition) {
+      id
+      p_at
+      p_id
+      p_instid
+      instname
+      status
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateItem = /* GraphQL */ `
+  mutation UpdateItem(
+    $input: UpdateItemInput!
+    $condition: ModelItemConditionInput
+  ) {
+    updateItem(input: $input, condition: $condition) {
+      id
+      p_at
+      p_id
+      p_instid
+      instname
+      status
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteItem = /* GraphQL */ `
+  mutation DeleteItem(
+    $input: DeleteItemInput!
+    $condition: ModelItemConditionInput
+  ) {
+    deleteItem(input: $input, condition: $condition) {
+      id
+      p_at
+      p_id
+      p_instid
+      instname
+      status
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createAccount = /* GraphQL */ `
+  mutation CreateAccount(
+    $input: CreateAccountInput!
+    $condition: ModelAccountConditionInput
+  ) {
+    createAccount(input: $input, condition: $condition) {
+      id
+      item {
+        id
+        p_at
+        p_id
+        p_instid
+        instname
+        status
+        createdAt
+        updatedAt
+        owner
+      }
+      p_id
+      name
+      mask
+      offname
+      currbal
+      availbal
+      curr
+      uncurr
+      type
+      subtype
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateAccount = /* GraphQL */ `
+  mutation UpdateAccount(
+    $input: UpdateAccountInput!
+    $condition: ModelAccountConditionInput
+  ) {
+    updateAccount(input: $input, condition: $condition) {
+      id
+      item {
+        id
+        p_at
+        p_id
+        p_instid
+        instname
+        status
+        createdAt
+        updatedAt
+        owner
+      }
+      p_id
+      name
+      mask
+      offname
+      currbal
+      availbal
+      curr
+      uncurr
+      type
+      subtype
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteAccount = /* GraphQL */ `
+  mutation DeleteAccount(
+    $input: DeleteAccountInput!
+    $condition: ModelAccountConditionInput
+  ) {
+    deleteAccount(input: $input, condition: $condition) {
+      id
+      item {
+        id
+        p_at
+        p_id
+        p_instid
+        instname
+        status
+        createdAt
+        updatedAt
+        owner
+      }
+      p_id
+      name
+      mask
+      offname
+      currbal
+      availbal
+      curr
+      uncurr
+      type
+      subtype
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;

@@ -260,3 +260,109 @@ export const listProfiles = /* GraphQL */ `
     }
   }
 `;
+export const getItem = /* GraphQL */ `
+  query GetItem($id: ID!) {
+    getItem(id: $id) {
+      id
+      p_at
+      p_id
+      p_instid
+      instname
+      status
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listItems = /* GraphQL */ `
+  query ListItems(
+    $filter: ModelItemFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listItems(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        p_at
+        p_id
+        p_instid
+        instname
+        status
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getAccount = /* GraphQL */ `
+  query GetAccount($id: ID!) {
+    getAccount(id: $id) {
+      id
+      item {
+        id
+        p_at
+        p_id
+        p_instid
+        instname
+        status
+        createdAt
+        updatedAt
+        owner
+      }
+      p_id
+      name
+      mask
+      offname
+      currbal
+      availbal
+      curr
+      uncurr
+      type
+      subtype
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listAccounts = /* GraphQL */ `
+  query ListAccounts(
+    $filter: ModelAccountFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAccounts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        item {
+          id
+          p_at
+          p_id
+          p_instid
+          instname
+          status
+          createdAt
+          updatedAt
+          owner
+        }
+        p_id
+        name
+        mask
+        offname
+        currbal
+        availbal
+        curr
+        uncurr
+        type
+        subtype
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;

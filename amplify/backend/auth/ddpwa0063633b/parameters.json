@@ -4,7 +4,7 @@
     "resourceNameTruncated": "ddpwa0063633b",
     "userPoolName": "ddpwa0063633b_userpool_0063633b",
     "autoVerifiedAttributes": [
-        "email"
+        "email","phone_number"
     ],
     "mfaConfiguration": "OFF",
     "mfaTypes": [
@@ -18,15 +18,15 @@
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
-        "email"
+        "email","phone_number"
     ],
     "userpoolClientGenerateSecret": true,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [
-        "email"
+        "email","phone_number"
     ],
     "userpoolClientReadAttributes": [
-        "email"
+        "email","phone_number"
     ],
     "userpoolClientLambdaRole": "ddpwa00063633b_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,

@@ -289,6 +289,87 @@ export type DeleteProfileInput = {
   id?: string | null,
 };
 
+export type CreateItemInput = {
+  id?: string | null,
+  p_at: string,
+  p_id: string,
+  p_instid: string,
+  instname: string,
+  status: string,
+};
+
+export type ModelItemConditionInput = {
+  p_at?: ModelStringInput | null,
+  p_id?: ModelStringInput | null,
+  p_instid?: ModelStringInput | null,
+  instname?: ModelStringInput | null,
+  status?: ModelStringInput | null,
+  and?: Array< ModelItemConditionInput | null > | null,
+  or?: Array< ModelItemConditionInput | null > | null,
+  not?: ModelItemConditionInput | null,
+};
+
+export type UpdateItemInput = {
+  id: string,
+  p_at?: string | null,
+  p_id?: string | null,
+  p_instid?: string | null,
+  instname?: string | null,
+  status?: string | null,
+};
+
+export type DeleteItemInput = {
+  id?: string | null,
+};
+
+export type CreateAccountInput = {
+  id?: string | null,
+  p_id: string,
+  name: string,
+  mask: string,
+  offname: string,
+  currbal: number,
+  availbal: number,
+  curr: string,
+  uncurr?: string | null,
+  type: string,
+  subtype: string,
+};
+
+export type ModelAccountConditionInput = {
+  p_id?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  mask?: ModelStringInput | null,
+  offname?: ModelStringInput | null,
+  currbal?: ModelIntInput | null,
+  availbal?: ModelIntInput | null,
+  curr?: ModelStringInput | null,
+  uncurr?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  subtype?: ModelStringInput | null,
+  and?: Array< ModelAccountConditionInput | null > | null,
+  or?: Array< ModelAccountConditionInput | null > | null,
+  not?: ModelAccountConditionInput | null,
+};
+
+export type UpdateAccountInput = {
+  id: string,
+  p_id?: string | null,
+  name?: string | null,
+  mask?: string | null,
+  offname?: string | null,
+  currbal?: number | null,
+  availbal?: number | null,
+  curr?: string | null,
+  uncurr?: string | null,
+  type?: string | null,
+  subtype?: string | null,
+};
+
+export type DeleteAccountInput = {
+  id?: string | null,
+};
+
 export type ModelGoalFilterInput = {
   id?: ModelIDInput | null,
   sy?: ModelIntInput | null,
@@ -355,6 +436,35 @@ export type ModelProfileFilterInput = {
   and?: Array< ModelProfileFilterInput | null > | null,
   or?: Array< ModelProfileFilterInput | null > | null,
   not?: ModelProfileFilterInput | null,
+};
+
+export type ModelItemFilterInput = {
+  id?: ModelIDInput | null,
+  p_at?: ModelStringInput | null,
+  p_id?: ModelStringInput | null,
+  p_instid?: ModelStringInput | null,
+  instname?: ModelStringInput | null,
+  status?: ModelStringInput | null,
+  and?: Array< ModelItemFilterInput | null > | null,
+  or?: Array< ModelItemFilterInput | null > | null,
+  not?: ModelItemFilterInput | null,
+};
+
+export type ModelAccountFilterInput = {
+  id?: ModelIDInput | null,
+  p_id?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  mask?: ModelStringInput | null,
+  offname?: ModelStringInput | null,
+  currbal?: ModelIntInput | null,
+  availbal?: ModelIntInput | null,
+  curr?: ModelStringInput | null,
+  uncurr?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  subtype?: ModelStringInput | null,
+  and?: Array< ModelAccountFilterInput | null > | null,
+  or?: Array< ModelAccountFilterInput | null > | null,
+  not?: ModelAccountFilterInput | null,
 };
 
 export type CreateGoalMutationVariables = {
@@ -795,6 +905,177 @@ export type DeleteProfileMutation = {
   } | null,
 };
 
+export type CreateItemMutationVariables = {
+  input: CreateItemInput,
+  condition?: ModelItemConditionInput | null,
+};
+
+export type CreateItemMutation = {
+  createItem:  {
+    __typename: "Item",
+    id: string,
+    p_at: string,
+    p_id: string,
+    p_instid: string,
+    instname: string,
+    status: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type UpdateItemMutationVariables = {
+  input: UpdateItemInput,
+  condition?: ModelItemConditionInput | null,
+};
+
+export type UpdateItemMutation = {
+  updateItem:  {
+    __typename: "Item",
+    id: string,
+    p_at: string,
+    p_id: string,
+    p_instid: string,
+    instname: string,
+    status: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type DeleteItemMutationVariables = {
+  input: DeleteItemInput,
+  condition?: ModelItemConditionInput | null,
+};
+
+export type DeleteItemMutation = {
+  deleteItem:  {
+    __typename: "Item",
+    id: string,
+    p_at: string,
+    p_id: string,
+    p_instid: string,
+    instname: string,
+    status: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type CreateAccountMutationVariables = {
+  input: CreateAccountInput,
+  condition?: ModelAccountConditionInput | null,
+};
+
+export type CreateAccountMutation = {
+  createAccount:  {
+    __typename: "Account",
+    id: string,
+    item:  {
+      __typename: "Item",
+      id: string,
+      p_at: string,
+      p_id: string,
+      p_instid: string,
+      instname: string,
+      status: string,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null,
+    p_id: string,
+    name: string,
+    mask: string,
+    offname: string,
+    currbal: number,
+    availbal: number,
+    curr: string,
+    uncurr: string | null,
+    type: string,
+    subtype: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type UpdateAccountMutationVariables = {
+  input: UpdateAccountInput,
+  condition?: ModelAccountConditionInput | null,
+};
+
+export type UpdateAccountMutation = {
+  updateAccount:  {
+    __typename: "Account",
+    id: string,
+    item:  {
+      __typename: "Item",
+      id: string,
+      p_at: string,
+      p_id: string,
+      p_instid: string,
+      instname: string,
+      status: string,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null,
+    p_id: string,
+    name: string,
+    mask: string,
+    offname: string,
+    currbal: number,
+    availbal: number,
+    curr: string,
+    uncurr: string | null,
+    type: string,
+    subtype: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type DeleteAccountMutationVariables = {
+  input: DeleteAccountInput,
+  condition?: ModelAccountConditionInput | null,
+};
+
+export type DeleteAccountMutation = {
+  deleteAccount:  {
+    __typename: "Account",
+    id: string,
+    item:  {
+      __typename: "Item",
+      id: string,
+      p_at: string,
+      p_id: string,
+      p_instid: string,
+      instname: string,
+      status: string,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null,
+    p_id: string,
+    name: string,
+    mask: string,
+    offname: string,
+    currbal: number,
+    availbal: number,
+    curr: string,
+    uncurr: string | null,
+    type: string,
+    subtype: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
 export type GetGoalQueryVariables = {
   id: string,
 };
@@ -1076,6 +1357,128 @@ export type ListProfilesQuery = {
       itr: number,
       cgtr: number,
       curr: string,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetItemQueryVariables = {
+  id: string,
+};
+
+export type GetItemQuery = {
+  getItem:  {
+    __typename: "Item",
+    id: string,
+    p_at: string,
+    p_id: string,
+    p_instid: string,
+    instname: string,
+    status: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type ListItemsQueryVariables = {
+  filter?: ModelItemFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListItemsQuery = {
+  listItems:  {
+    __typename: "ModelItemConnection",
+    items:  Array< {
+      __typename: "Item",
+      id: string,
+      p_at: string,
+      p_id: string,
+      p_instid: string,
+      instname: string,
+      status: string,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetAccountQueryVariables = {
+  id: string,
+};
+
+export type GetAccountQuery = {
+  getAccount:  {
+    __typename: "Account",
+    id: string,
+    item:  {
+      __typename: "Item",
+      id: string,
+      p_at: string,
+      p_id: string,
+      p_instid: string,
+      instname: string,
+      status: string,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null,
+    p_id: string,
+    name: string,
+    mask: string,
+    offname: string,
+    currbal: number,
+    availbal: number,
+    curr: string,
+    uncurr: string | null,
+    type: string,
+    subtype: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type ListAccountsQueryVariables = {
+  filter?: ModelAccountFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListAccountsQuery = {
+  listAccounts:  {
+    __typename: "ModelAccountConnection",
+    items:  Array< {
+      __typename: "Account",
+      id: string,
+      item:  {
+        __typename: "Item",
+        id: string,
+        p_at: string,
+        p_id: string,
+        p_instid: string,
+        instname: string,
+        status: string,
+        createdAt: string,
+        updatedAt: string,
+        owner: string | null,
+      } | null,
+      p_id: string,
+      name: string,
+      mask: string,
+      offname: string,
+      currbal: number,
+      availbal: number,
+      curr: string,
+      uncurr: string | null,
+      type: string,
+      subtype: string,
       createdAt: string,
       updatedAt: string,
       owner: string | null,
@@ -1507,6 +1910,171 @@ export type OnDeleteProfileSubscription = {
     itr: number,
     cgtr: number,
     curr: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnCreateItemSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnCreateItemSubscription = {
+  onCreateItem:  {
+    __typename: "Item",
+    id: string,
+    p_at: string,
+    p_id: string,
+    p_instid: string,
+    instname: string,
+    status: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnUpdateItemSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnUpdateItemSubscription = {
+  onUpdateItem:  {
+    __typename: "Item",
+    id: string,
+    p_at: string,
+    p_id: string,
+    p_instid: string,
+    instname: string,
+    status: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnDeleteItemSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnDeleteItemSubscription = {
+  onDeleteItem:  {
+    __typename: "Item",
+    id: string,
+    p_at: string,
+    p_id: string,
+    p_instid: string,
+    instname: string,
+    status: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnCreateAccountSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnCreateAccountSubscription = {
+  onCreateAccount:  {
+    __typename: "Account",
+    id: string,
+    item:  {
+      __typename: "Item",
+      id: string,
+      p_at: string,
+      p_id: string,
+      p_instid: string,
+      instname: string,
+      status: string,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null,
+    p_id: string,
+    name: string,
+    mask: string,
+    offname: string,
+    currbal: number,
+    availbal: number,
+    curr: string,
+    uncurr: string | null,
+    type: string,
+    subtype: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnUpdateAccountSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnUpdateAccountSubscription = {
+  onUpdateAccount:  {
+    __typename: "Account",
+    id: string,
+    item:  {
+      __typename: "Item",
+      id: string,
+      p_at: string,
+      p_id: string,
+      p_instid: string,
+      instname: string,
+      status: string,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null,
+    p_id: string,
+    name: string,
+    mask: string,
+    offname: string,
+    currbal: number,
+    availbal: number,
+    curr: string,
+    uncurr: string | null,
+    type: string,
+    subtype: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnDeleteAccountSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnDeleteAccountSubscription = {
+  onDeleteAccount:  {
+    __typename: "Account",
+    id: string,
+    item:  {
+      __typename: "Item",
+      id: string,
+      p_at: string,
+      p_id: string,
+      p_instid: string,
+      instname: string,
+      status: string,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null,
+    p_id: string,
+    name: string,
+    mask: string,
+    offname: string,
+    currbal: number,
+    availbal: number,
+    curr: string,
+    uncurr: string | null,
+    type: string,
+    subtype: string,
     createdAt: string,
     updatedAt: string,
     owner: string | null,

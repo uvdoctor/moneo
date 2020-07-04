@@ -377,3 +377,141 @@ export const onDeleteProfile = /* GraphQL */ `
     }
   }
 `;
+export const onCreateItem = /* GraphQL */ `
+  subscription OnCreateItem($owner: String!) {
+    onCreateItem(owner: $owner) {
+      id
+      p_at
+      p_id
+      p_instid
+      instname
+      status
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateItem = /* GraphQL */ `
+  subscription OnUpdateItem($owner: String!) {
+    onUpdateItem(owner: $owner) {
+      id
+      p_at
+      p_id
+      p_instid
+      instname
+      status
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteItem = /* GraphQL */ `
+  subscription OnDeleteItem($owner: String!) {
+    onDeleteItem(owner: $owner) {
+      id
+      p_at
+      p_id
+      p_instid
+      instname
+      status
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateAccount = /* GraphQL */ `
+  subscription OnCreateAccount($owner: String!) {
+    onCreateAccount(owner: $owner) {
+      id
+      item {
+        id
+        p_at
+        p_id
+        p_instid
+        instname
+        status
+        createdAt
+        updatedAt
+        owner
+      }
+      p_id
+      name
+      mask
+      offname
+      currbal
+      availbal
+      curr
+      uncurr
+      type
+      subtype
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateAccount = /* GraphQL */ `
+  subscription OnUpdateAccount($owner: String!) {
+    onUpdateAccount(owner: $owner) {
+      id
+      item {
+        id
+        p_at
+        p_id
+        p_instid
+        instname
+        status
+        createdAt
+        updatedAt
+        owner
+      }
+      p_id
+      name
+      mask
+      offname
+      currbal
+      availbal
+      curr
+      uncurr
+      type
+      subtype
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteAccount = /* GraphQL */ `
+  subscription OnDeleteAccount($owner: String!) {
+    onDeleteAccount(owner: $owner) {
+      id
+      item {
+        id
+        p_at
+        p_id
+        p_instid
+        instname
+        status
+        createdAt
+        updatedAt
+        owner
+      }
+      p_id
+      name
+      mask
+      offname
+      currbal
+      availbal
+      curr
+      uncurr
+      type
+      subtype
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
