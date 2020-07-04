@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 import { usePlaidLink } from "react-plaid-link"
 //@ts-ignore
 import { AwesomeButton } from 'react-awesome-button'
-import { CreateItemInput } from '../../api/goals'
+//import { CreateItemInput } from '../../api/goals'
 
 export default function Snapshot() {
     const onSuccess = useCallback((token, metadata) => {
