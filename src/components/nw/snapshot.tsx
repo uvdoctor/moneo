@@ -2,20 +2,20 @@ import React, { useCallback, useEffect } from 'react'
 import { usePlaidLink } from "react-plaid-link"
 //@ts-ignore
 import { AwesomeButton } from 'react-awesome-button'
-import { CreateItemInput, CreateAccountInput } from '../../api/goals'
+import { CreateItemInput } from '../../api/goals'
 
 export default function Snapshot() {
     const onSuccess = useCallback((token, metadata) => {
         // send token to server
-        let item: CreateItemInput = {
+        /*let item: CreateItemInput = {
             pt: token,
             pid: '',
             pinstid: metadata.institution.institution_id,
             status: 'success',
-        }
+        }*/
         console.log("Token is ", token)
         console.log("Metadata is ", metadata)
-        console.log("Item is ", item)
+        //console.log("Item is ", item)
     }, []);
 
     const config = {
