@@ -7,6 +7,8 @@ import PersonalizedSVG from './svgpersonalized'
 import SecureSVG from './svgsecure'
 import GlobalSVG from './svgglobal'
 import PrivateSVG from './svgprivate'
+//@ts-ignore
+import {AwesomeButton} from 'react-awesome-button'
 
 interface Feature {
 	svg: React.ReactNode,
@@ -62,7 +64,7 @@ const Features = () => {
 						<Link href={ROUTES.DASHBOARD}>
 							<a>
 								<div className="flex justify-center">
-									<label className="button">Start FREE Trial</label>
+									<AwesomeButton type="link" ripple>GET STARTED</AwesomeButton>
 								</div>
 							</a>
 						</Link>

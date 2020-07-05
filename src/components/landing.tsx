@@ -33,8 +33,8 @@ const Landing = () => {
 					<li className="flex justify-center mt-4 cursor">
 						<Link href={ROUTES.DASHBOARD}>
 							<a>
-								<AwesomeButton ripple type="link" className="text-lg" style={{animation: "fadeIn 2s ease-in 1"}}>
-									Meet Your Goals
+								<AwesomeButton ripple type="link" style={{animation: "fadeIn 2s ease-in 1"}}>
+									MEET YOUR GOALS
 									<div className="ml-2 md:ml-4 w-8 h-8 md:w-10 md:h-10">
 										{svgCtr % 5 === 1 && <HomeSVG animationStyle={animationStyle} />}
 										{svgCtr % 5 === 2 && <CarSVG animationStyle={animationStyle} />}

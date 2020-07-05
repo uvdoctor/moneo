@@ -22,7 +22,7 @@ const Header = () => {
 				<div className="ml-3 sm:ml-8 md:ml-12 flex items-center">
 					<div className="hover:text-green-600"><Link href={ROUTES.DASHBOARD}><a>Login</a></Link></div>
 					<Link href={ROUTES.DASHBOARD}><a>
-						<AwesomeButton ripple className="text-lg" type="link">FREE Trial</AwesomeButton>
+						<AwesomeButton ripple type="link">FREE TRIAL</AwesomeButton>
 					</a></Link>
 				</div>
 			</div>
