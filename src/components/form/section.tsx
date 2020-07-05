@@ -9,16 +9,18 @@ interface SectionProps {
     bottom?: any
     footer?: any
     toggle?: any
+    inputText?: string
+    showInputCondition?: any
+    showOnLoad?: boolean
 }
 
 export default function Section(props: SectionProps) {
-    const [showSection, setShowSection] = useState<boolean>(true)
+    const [showSection, setShowSection] = useState<boolean>(props.showOnLoad ? props.showOnLoad : false)
 
     return (
         <div className="px-1 py-2 mt-4 mb-4 w-full max-w-sm rounded overflow-hidden shadow-lg md:shadow-xl">
-            {/*<p className="text-center md:text-xl font-semibold mb-2">{props.title}</p>*/}
-            {props.title && <ExpandCollapse title={props.title} value={showSection} handler={setShowSection} />}
-            {props.toggle && <div className="flex justify-end mr-4 mb-4">
+            <ExpandCollapse title={props.inputText && props.showInputCondition ? props.inputText : props.title} value={showSection} handler={setShowSection} />
+            {props.toggle && showSection && <div className="flex justify-end mr-4 mb-4">
                 {props.toggle}
             </div>}
             {showSection && <Fragment>

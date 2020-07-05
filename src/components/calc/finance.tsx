@@ -54,7 +54,7 @@ export function getRemainingPrincipal(borrowAmt: number, emi: number, intRate: n
         monthlyInt = principal * monthlyRate
         principal -= (emi - monthlyInt)
     }
-    return principal < 0 ? 0 : principal
+    return principal <= 0 ? 0 : principal
 }
 
 export function getNPV(rate: number, initialCost: number, cashFlows: number[], annualFrequency = 1) {
