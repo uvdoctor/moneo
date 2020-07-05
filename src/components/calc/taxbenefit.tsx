@@ -17,7 +17,7 @@ interface TaxBenefitProps {
 
 export default function TaxBenefit(props: TaxBenefitProps) {
     return (
-            <Section title="Claim Tax Benefit"
+            <Section title="Claim Tax Benefit" showOnLoad={true}
                 left={
                     <RadialInput pre="Rate" label="Yearly" data={toStringArr(0, 25, 0.5)} unit="%" 
                         value={props.taxRate} step={0.5} changeHandler={props.taxRateHandler} labelBottom={true} 

@@ -18,8 +18,10 @@ export default function Section(props: SectionProps) {
     const [showSection, setShowSection] = useState<boolean>(props.showOnLoad ? props.showOnLoad : false)
 
     return (
-        <div className="px-1 py-2 mt-4 mb-4 w-full max-w-sm rounded overflow-hidden shadow-lg md:shadow-xl">
-            <ExpandCollapse title={props.inputText && props.showInputCondition ? props.inputText : props.title} value={showSection} handler={setShowSection} />
+        <div className={`px-1 py-2 mt-4 mb-4 w-full max-w-sm rounded overflow-hidden 
+                        shadow-lg md:shadow-xl ${props.inputText && props.showInputCondition ? 'border-2 border-orange-600' : ''}`}>
+            <ExpandCollapse title={props.inputText && props.showInputCondition ? props.inputText : props.title} value={showSection} 
+                handler={setShowSection} />
             {props.toggle && showSection && <div className="flex justify-end mr-4 mb-4">
                 {props.toggle}
             </div>}

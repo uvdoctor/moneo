@@ -46,8 +46,9 @@ const Landing = () => {
 							</a>
 						</Link>
 					</li>
-					<li className="mt-2">Across Multiple Currencies.</li>
-					<li className="mt-8 md:mt-16 lg:mt-24">Unbiased. No Commissions.</li>
+					<li className="mt-2">Across Currencies.</li>
+					<li>Across Borders.</li>
+					<li className="mt-8 md:mt-12 lg:mt-16">Unbiased. No Commissions.</li>
 					<li>Secure. You Own Your Data.</li>
 					<li>No More Boring Budgets.</li>
 				</ul>

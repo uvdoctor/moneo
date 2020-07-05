@@ -34,7 +34,8 @@ export default function Sell(props: SellProps) {
     }, [props.currency, props.cfs])
 
     return (
-        <Section title="Sell After" left={
+        <Section title="Sell After" showOnLoad={true}
+        left={
             <RadialInput label="Years" labelBottom={true} data={toStringArr(1, 20)}
                 value={props.sellAfter} step={1} changeHandler={props.sellAfterHandler} />
         } right={

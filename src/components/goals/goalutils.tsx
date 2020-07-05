@@ -87,7 +87,7 @@ const createBaseGoalInput = (goalType: APIt.GoalType) => {
 
 export const createNewGoalInput = (goalType: APIt.GoalType) => {
     let bg: APIt.CreateGoalInput = createBaseGoalInput(goalType)
-    if(goalType !== APIt.GoalType.D) bg.btr = 0
+    if(goalType !== APIt.GoalType.D) bg.btr = 10
     if(goalType === APIt.GoalType.B || goalType === APIt.GoalType.L) {
         bg.tbi = 0
         bg.tdli = 0

@@ -268,14 +268,14 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                             <label>Until?</label>
                             <label className="font-semibold">{endYear}</label>
                         </div>}
-                    <HToggle rightText="Custom Payment Plan" value={manualMode} setter={setManualMode} />
+                    <HToggle rightText="Multi-Year Custom Plan" value={manualMode} setter={setManualMode} />
                 </div>
                 <div className="flex flex-wrap items-center justify-center w-full">
                     {manualMode < 1 ?
-                        <Section inputText="How Much Amount?" showInputCondition={price < 500} title={
-                            `${goalType === APIt.GoalType.B ? 'Price' : 'Amount'}${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
+                        <Section inputText="How Much Does it Cost?" showInputCondition={price < 500} title={
+                            `Cost${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
                             left={
-                                <NumberInput name="startingPrice" pre={startYear > goal.by ? `${goalType === APIt.GoalType.B ? 'Price' : 'Amount'}` : ''}
+                                <NumberInput name="startingPrice" pre={startYear > goal.by ? 'Cost' : ''}
                                     post={startYear > goal.by ? `in ${goal.by}` : ''} currency={currency} value={startingPrice}
                                     changeHandler={setStartingPrice} min={0} max={2000000} step={500}
                                     note={buyTaxRate ? `including ${buyTaxRate}% taxes & fees` : ''} />
@@ -294,13 +294,13 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                 </div>
             </Fragment>}
 
-            {nameValid && price > 0 && <Fragment>
+            {nameValid && <Fragment>
                 <div className="flex flex-wrap justify-around items-center mt-4">
                     {goalType !== APIt.GoalType.D &&
-                        <Section title="Taxes & Fees" 
+                        <Section title="Taxes & Fees" showOnLoad={true}
                             left={
                                 <RadialInput data={toStringArr(0, 20, 0.5)} step={0.5} value={buyTaxRate as number}
-                                    unit="%" label="of Price" labelBottom={true} changeHandler={setBuyTaxRate} />
+                                    unit="%" label="of Cost" labelBottom={true} changeHandler={setBuyTaxRate} />
                             } right={
                                 <ResultItem label="Total" result={Math.round(price * (buyTaxRate as number / 100))} currency={currency} />
                             } />}
@@ -308,7 +308,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction}
                         totalTaxBenefit={totalTaxBenefit} totalTaxBenefitHandler={setTotalTaxBenefit} />
                 </div>
-                <div className="ml-1 md:ml-2 mr-1 md:mr-2 mt-4 flex flex-wrap justify-around items-center w-full">
+                {price > 0 && <div className="ml-1 md:ml-2 mr-1 md:mr-2 mt-4 flex flex-wrap justify-around items-center w-full">
                     {goal?.emi &&
                         <EmiCost price={price} currency={currency} startYear={startYear}
                             repaymentSY={loanRepaymentSY ? loanRepaymentSY : startYear} endYear={endYear}
@@ -319,7 +319,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                             maxTaxDeductionInt={maxTaxDeductionInt as number} maxTaxDeductionIntHandler={setMaxTaxDeductionInt}
                         />}
 
-                    {price > 0 && <div className="flex flex-wrap justify-around items-center">
+                    <div className="flex flex-wrap justify-around items-center">
                         {sellAfter && <Fragment>
                             <AnnualAmt currency={currency} startYear={startYear} percentage={aiPer as number} chgRate={assetChgRate as number}
                                 percentageHandler={setAIPer} annualSY={aiStartYear as number} annualSYHandler={setAIStartYear}
@@ -353,12 +353,12 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                                     <label className="ml-2">{rentAns}</label>
                                 </div>}
                             />}
-                    </div>}
-                </div>
+                    </div>
+                </div>}
             </Fragment>}
-            {sellAfter && rentAmt && price > 0 &&
+            {nameValid && sellAfter && rentAmt > 0 && price > 0 &&
                 <Fragment>
-                    <ExpandCollapse title="20 years of Buy v/s Rent Comparison" value={showRentChart}
+                    <ExpandCollapse title="Buy v/s Rent for 20 Years" value={showRentChart}
                         handler={setShowRentChart} svg={<SVGBalance />} />
                     <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
                         discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(20)}
@@ -368,7 +368,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         rentAns={rentAns} answerHandler={setAnswer} rentAnsHandler={setRentAns} showRentChart={showRentChart} />
                 </Fragment>}
 
-            {price > 0 && <Fragment>
+            {nameValid && price > 0 && <Fragment>
                 <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
                     handler={setShowCFChart} svg={<SVGChart />} />
                 {showCFChart &&

@@ -163,9 +163,9 @@ const createLoanCFs = (goal: APIt.CreateGoalInput, duration: number) => {
     }
     if (goal.type === APIt.GoalType.B) {
         let remPayment = getRemPrincipal(goal.sy, loanBorrowAmt, emi, goal?.emi?.rate as number, goal?.emi?.ry as number, goal?.emi?.dur as number, duration)
-        taxBenefit = getTaxBenefit(remPayment, goal.tdr, goal.tdl)
         sp = calculateSellPrice(p, goal?.btr as number, goal?.achg as number, duration)
-        cfs.push(Math.round(sp - remPayment))
+        cfs.push(Math.round(sp + taxBenefit - remPayment))
+        taxBenefit = getTaxBenefit(remPayment, goal.tdr, goal.tdl)
     }
     if (taxBenefit > 0) cfs.push(Math.round(taxBenefit))
     return cfs
@@ -211,9 +211,9 @@ const createManualCFs = (goal: APIt.CreateGoalInput, duration: number) => {
                 if (targets[i]) remPayment += targets[i].val
             }
         }
-        taxBenefitPrev = getTaxBenefit(remPayment, goal.tdr, goal.tdl)
         let sp = calculateSellPrice(p, goal?.btr as number, goal?.achg as number, duration)
-        cfs.push(Math.round(sp - remPayment))
+        cfs.push(Math.round(sp + taxBenefitPrev - remPayment))
+        taxBenefitPrev = getTaxBenefit(remPayment, goal.tdr, goal.tdl)
     }
     if (taxBenefitPrev > 0) cfs.push(Math.round(taxBenefitPrev))
     return cfs

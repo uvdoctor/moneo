@@ -31,7 +31,7 @@ export default function AnnualAmt(props: AnnualAmtProps) {
     , [props.startYear, props.buyTaxRate, props.percentage, props.annualSY, props.price, props.chgRate, props.duration])
 
     return (
-        <Section title={props.title}
+        <Section title={props.title} showOnLoad={true}
             left={
                 <RadialInput data={toStringArr(0, 10, 0.1)} float={true} changeHandler={props.percentageHandler} width={120}
                     unit="%" labelBottom={true} label="of Price" post={`Total ${toCurrency(totalAmt, props.currency)}`} value={props.percentage} step={0.1} />
