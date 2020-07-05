@@ -22,7 +22,7 @@ export default function Section(props: SectionProps) {
                         shadow-lg md:shadow-xl ${props.inputText && props.showInputCondition ? 'border-2 border-orange-600' : ''}`}>
             <ExpandCollapse title={props.inputText && props.showInputCondition ? props.inputText : props.title} value={showSection} 
                 handler={setShowSection} />
-            {props.toggle && showSection && <div className="flex justify-end mr-4 mb-4">
+            {props.toggle && showSection && <div className="flex justify-end mt-2 mr-4 mb-4">
                 {props.toggle}
             </div>}
             {showSection && <Fragment>

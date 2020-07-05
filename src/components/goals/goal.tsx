@@ -262,15 +262,16 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
 
             {nameValid && <Fragment>
                 <div className="flex justify-center w-full items-end mt-4">
-                    {(manualMode > 0 || goalType !== APIt.GoalType.B) ? <SelectInput name="ey" pre="Until?" value={endYear}
+                    {(manualMode > 0 || goalType !== APIt.GoalType.B) ? <SelectInput name="ey" pre="Pay Until" value={endYear}
                         changeHandler={changeEndYear} options={eyOptions} />
                         : <div className="flex flex-col">
-                            <label>Until?</label>
+                            <label>Pay Until</label>
                             <label className="font-semibold">{endYear}</label>
                         </div>}
                     <HToggle rightText="Multi-Year Custom Plan" value={manualMode} setter={setManualMode} />
                 </div>
                 <div className="flex flex-wrap items-center justify-center w-full">
+                    {console.log("Buy tax rate is ", buyTaxRate)}
                     {manualMode < 1 ?
                         <Section inputText="How Much Does it Cost?" showInputCondition={price < 500} title={
                             `Cost${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
@@ -289,7 +290,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                                 <label>{t.year}</label>
                                 <NumberInput name="year" pre="" currency={currency}
                                     value={t.val} changeHandler={(val: number) => changeTargetVal(val, i)}
-                                    min={0} max={900000} step={100} />
+                                    min={0} max={900000} step={500} />
                             </div>)}
                 </div>
             </Fragment>}

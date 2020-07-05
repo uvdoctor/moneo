@@ -101,8 +101,10 @@ export default function BRComparison(props: BRComparisonProps) {
         let rentValues = data[1].values.y
         if (buyValues.length >= props.sellAfter) {
             let diff = rentValues[props.sellAfter - 1] - buyValues[props.sellAfter - 1]
-            if (diff === 0) props.rentAnsHandler(`Renting costs similar to Buying for ${props.sellAfter} ${props.sellAfter === 1 ? 'year' : 'years'}.`)
-            else props.rentAnsHandler(`Renting costs ${diff > 0 ? 'lesser' : 'more'} by ${toCurrency(Math.abs(diff), props.currency)}`)
+            let rentAns = `Over ${props.sellAfter} ${props.sellAfter === 1 ? 'year' : 'years'}, `
+            if (diff === 0) rentAns += `Renting costs similar to Buying.`
+            else rentAns += `Renting costs ${diff > 0 ? 'lesser' : 'more'} by ${toCurrency(Math.abs(diff), props.currency)}`
+            props.rentAnsHandler(rentAns)
             return
         }
         props.rentAnsHandler('')

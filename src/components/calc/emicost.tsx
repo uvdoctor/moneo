@@ -63,7 +63,8 @@ export default function EmiCost(props: EmiProps) {
                         post={`${toCurrency(props.loanBorrowAmt, props.currency)}`} />
                 } right={
                     <SelectInput name="repaymentSY" options={ryOptions}
-                        value={props.repaymentSY} pre="Repay From" changeHandler={(year: string) => props.repaymentSYHandler(parseInt(year))} />
+                        value={props.repaymentSY} pre="Repay From" post="Onwards" 
+                        changeHandler={(year: string) => props.repaymentSYHandler(parseInt(year))} />
                 }
             />
             <Section title="Loan Details"
@@ -92,9 +93,9 @@ export default function EmiCost(props: EmiProps) {
                         max={30.0}
                         step={0.1} />
                 }
-                bottomLeft={props.taxBenefitInt && "Deduction"}
-                bottomRight={props.taxBenefitInt && "In a Year"}
-                bottom={props.taxBenefitInt &&
+                bottomLeft={props.taxBenefitInt > 0 && "Deduction"}
+                bottomRight={props.taxBenefitInt > 0 && "In a Year"}
+                bottom={props.taxBenefitInt > 0 &&
                     <NumberInput name="maxTaxDeductionInt" pre="Limited" post="Up to" value={props.maxTaxDeductionInt}
                         changeHandler={props.maxTaxDeductionIntHandler} min={0} max={150000} step={1000} 
                         note={`Total ${toCurrency(totalIntTaxBenefit, props.currency)}`} />
