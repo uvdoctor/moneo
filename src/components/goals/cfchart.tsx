@@ -18,13 +18,13 @@ export default function CFChart({ mustCFs, tryCFs, optCFs }: CFChartProps) {
     }
 
     return (
-        <div className="w-full h-100">
+        <div className="w-full">
             {/*@ts-ignore*/}
             <Plot layout={{
                 barmode: 'stack',
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
                 autosize: true,
-                yaxis: { fixedrange: true, showgrid: false },
+                yaxis: { fixedrange: true, tickformat: ',', showgrid: false },
                 xaxis: { showgrid: false, type: 'category', rangeslider: {} },
                 legend: {
                     orientation: 'h',

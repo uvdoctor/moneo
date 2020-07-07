@@ -1,6 +1,7 @@
 import * as APIt from '../../api/goals'
-import { getIntAmtByYear, getRemainingPrincipal, getCompoundedIncome, getEmi, getTotalInt } from '../calc/finance'
+import { getIntAmtByYear, getRemainingPrincipal, getCompoundedIncome, getEmi } from '../calc/finance'
 import xirr from 'xirr'
+import { getDuration } from './goalutils'
 
 export const calculatePrice = (startingPrice: number, priceChgRate: number, buyTaxRate: number | null | undefined, startYear: number, goalCreatedYear: number) => {
     if (!startingPrice) return 0
@@ -10,7 +11,7 @@ export const calculatePrice = (startingPrice: number, priceChgRate: number, buyT
 }
 
 export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
-    if (!val || !tr) return 0
+    if (!val || val < 0 || !tr) return 0
     if (maxTaxDL > 0 && val > maxTaxDL) val = maxTaxDL
     return Math.round(val * (tr / 100))
 }
@@ -64,14 +65,47 @@ export const calculateTotalTaxBenefit = (goal: APIt.CreateGoalInput, duration: n
     return 0
 }
 
-export const calculatePrincipalTaxBenefit = (price: number, loanPer: number, loanInt: number, loanYears: number,
-    loanRepaymentSY: number, endYear: number, buyTaxRate: number, taxRate: number, maxTaxDL: number) => {
+export const calculatePrincipalTaxBenefit = (type: APIt.GoalType, price: number, loanPer: number, loanInt: number, loanYears: number,
+    loanRepaymentSY: number, startYear: number, endYear: number, sellAfter: number | null | undefined, buyTaxRate: number, 
+    taxRate: number, maxTaxDL: number) => {
     let loanBorrowAmt = getLoanBorrowAmt(price, buyTaxRate, loanPer)
     let emi = getEmi(loanBorrowAmt, loanInt as number, loanYears * 12)
-    let loanPaidForMonths = getLoanPaidForMonths(endYear, loanRepaymentSY, loanYears)
-    let totalInt = getTotalInt(loanBorrowAmt, emi, loanInt, loanPaidForMonths)
-    return getTaxBenefit(loanBorrowAmt - totalInt, taxRate, maxTaxDL as number)
+    let annualInts = getIntAmtByYear(loanBorrowAmt, emi, loanInt, loanYears * 12)
+    let duration = getDuration(sellAfter, startYear, endYear)
+    let ey = startYear + duration - 1
+    let taxBenefit = 0
+    for (let year = startYear, ly = loanYears; year <= ey; year++) {
+        if (year >= loanRepaymentSY && ly > 0) {
+            let i = year - loanRepaymentSY
+            taxBenefit += getTaxBenefit(emi - annualInts[i], taxRate, maxTaxDL)
+            ly--
+        }
+    }
+    if (type === APIt.GoalType.B) {
+        let remPayment = getRemPrincipal(startYear, loanBorrowAmt, emi, loanInt, loanRepaymentSY, loanYears, duration)
+        taxBenefit += getTaxBenefit(remPayment, taxRate, maxTaxDL)
+    }
+    return taxBenefit
 }
+
+export const calculateInterestTaxBenefit = (loanBorrowAmt: number, loanInt: number, loanYears: number,
+    loanRepaymentSY: number, startYear: number, endYear: number, sellAfter: number | null | undefined, 
+    taxRate: number, maxTaxDL: number) => {
+    let emi = getEmi(loanBorrowAmt, loanInt as number, loanYears * 12)
+    let annualInts = getIntAmtByYear(loanBorrowAmt, emi, loanInt, loanYears * 12)
+    let duration = getDuration(sellAfter, startYear, endYear)
+    let ey = startYear + duration - 1
+    let taxBenefit = 0
+    for (let year = startYear, ly = loanYears; year <= ey; year++) {
+        if (year >= loanRepaymentSY && ly > 0) {
+            let i = year - loanRepaymentSY
+            taxBenefit += getTaxBenefit(annualInts[i], taxRate, maxTaxDL)
+            ly--
+        }
+    }
+    return taxBenefit
+}
+
 
 const createAutoCFs = (goal: APIt.CreateGoalInput, duration: number) => {
     let p = calculatePrice(goal?.cp as number, goal.chg as number, goal.btr, goal.sy, goal.by)

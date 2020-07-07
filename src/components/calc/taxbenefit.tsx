@@ -20,11 +20,11 @@ export default function TaxBenefit(props: TaxBenefitProps) {
             <Section title="Claim Tax Benefit" showOnLoad={true}
                 left={
                     <RadialInput pre="Rate" label="Yearly" data={toStringArr(0, 25, 0.5)} unit="%" 
-                        value={props.taxRate} step={0.5} changeHandler={props.taxRateHandler} labelBottom={true} 
-                        post = {`Total ${toCurrency(props.totalTaxBenefit, props.currency)}`} />
+                        value={props.taxRate} step={0.5} changeHandler={props.taxRateHandler} labelBottom={true} />
                 } right={
-                    <NumberInput name="tbLimit" pre="Deduction" post="Limit" currency={props.currency} 
-                        value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} max={300000} step={1000} />
+                    <NumberInput name="tbLimit" pre="Max Yearly" post="Deduction" currency={props.currency} 
+                        value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} max={300000} step={1000} 
+                        note={`Total ${toCurrency(props.totalTaxBenefit, props.currency)}`} />
                 } />
     )
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react'
 import Goal from './goal'
+import FFGoal from './ffgoal'
 import { removeFromArray } from '../utils'
 import CFChart from './cfchart'
 import * as APIt from '../../api/goals'
@@ -18,7 +19,7 @@ interface GoalsProps {
     showModalHandler: Function
 }
 
-export default function Goals({showModalHandler}: GoalsProps) {
+export default function Goals({ showModalHandler }: GoalsProps) {
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([])
     const [allCFs, setAllCFs] = useState<any>({})
     const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null)
@@ -34,7 +35,7 @@ export default function Goals({showModalHandler}: GoalsProps) {
     }, [])
 
     useEffect(() => wipGoal ? showModalHandler(true) : showModalHandler(false), [wipGoal])
-    
+
     const loadAllGoals = async () => {
         let goals: Array<APIt.CreateGoalInput> | null = await getGoalsList()
         if (!goals) return
@@ -151,8 +152,11 @@ export default function Goals({showModalHandler}: GoalsProps) {
         wipGoal ?
             <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
                 <div className="relative bg-white border-0">
-                    <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
-                        updateCallback={updateGoal} />
+                    {wipGoal.type === APIt.GoalType.FF ?
+                        <FFGoal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
+                            updateCallback={updateGoal} />
+                        : <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
+                            updateCallback={updateGoal} />}
                 </div>
             </div>
             :
@@ -164,7 +168,8 @@ export default function Goals({showModalHandler}: GoalsProps) {
                 <p className="text-center text-lg mt-1">Make Money Work Hard to Meet Them.</p>
                 <div className="flex flex-wrap justify-around">
                     {Object.keys(getGoalTypes()).map(key =>
-                        <AwesomeButton className="mt-4" type="primary" ripple size="medium" key={key} onPress={() => createGoal(key as APIt.GoalType)}>
+                        <AwesomeButton className="mt-4" type="primary" ripple size="medium" key={key} 
+                        onPress={() => createGoal(key as APIt.GoalType)}>
                             {getGoalTypes()[key as APIt.GoalType]}
                         </AwesomeButton>)}
                 </div>

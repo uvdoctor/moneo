@@ -103,7 +103,7 @@ export default function BRComparison(props: BRComparisonProps) {
             let diff = rentValues[props.sellAfter - 1] - buyValues[props.sellAfter - 1]
             let rentAns = `Over ${props.sellAfter} ${props.sellAfter === 1 ? 'year' : 'years'}, `
             if (diff === 0) rentAns += `Renting costs similar to Buying.`
-            else rentAns += `Renting costs ${diff > 0 ? 'lesser' : 'more'} by ${toCurrency(Math.abs(diff), props.currency)}`
+            else rentAns += `Rent is ${diff > 0 ? 'cheaper' : 'costlier'} by ${toCurrency(Math.abs(diff), props.currency)}`
             props.rentAnsHandler(rentAns)
             return
         }
@@ -152,6 +152,7 @@ export default function BRComparison(props: BRComparisonProps) {
 
     return (
             <div>
+            <p className="text-center text-base mt-4">Negative values indicate Loss, while Positive values indicate Gain</p>
             {props.showRentChart && compData && compData.length === 2 && compData[1].values.y[props.sellAfter - 1] &&
                 <BRCompChart data={compData} xTitle="Number of Years" rentAns={props.rentAns}
                     sellAfter={props.sellAfter} title={props.answer} />}

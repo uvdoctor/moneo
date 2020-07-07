@@ -17,15 +17,26 @@ const UserHeader = () => {
         }
     }
 
-    useEffect(() => {
-        const listener = (capsule: any) => {
-            let eventType: string = capsule.payload.event
-            if (eventType === 'signIn') updateUser(capsule.payload.data.username)
-            else if (eventType !== 'configured') updateUser(null)
+    const listener = (capsule: any) => {
+        let eventType: string = capsule.payload.event
+        if (eventType === 'signIn') updateUser(capsule.payload.data.username)
+        else if (eventType !== 'configured') updateUser(null)
+    }
+
+    const getUsername = async() => {
+        try {
+            let user = await Auth.currentAuthenticatedUser()
+            if(user) updateUser(user.username)
+        } catch(e) {
+            console.log("Error while logging in: ", e)
+            updateUser(null)
         }
+    }
+
+    useEffect(() => {
         Hub.listen('auth', listener)
-        let username = localStorage.getItem("username")
-        if (username) setUsername(username)
+        let username =  localStorage.getItem("username")
+        username ? setUsername(username) : getUsername()
         return () => Hub.remove('auth', listener)
     }, [])
 

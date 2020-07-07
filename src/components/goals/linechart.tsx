@@ -20,13 +20,13 @@ export default function LineChart(props: LineChartProps) {
     )
 
     return (
-        <div className="mb-4 w-full h-100">
+        <div className="mb-4 w-full">
             {/*@ts-ignore*/}
             <Plot layout={{
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
                 autosize: true, 
                 xaxis: {title: 'Year', type:'category', fixedrange: years.length > 3 ? false : true, rangeslider: years.length > 3 ? {} : '', showgrid: false},
-                yaxis: {fixedrange: true, type: props.cfs.length > 3 ? '' : 'category', showgrid: false},
+                yaxis: {fixedrange: true, tickformat: ',', type: props.cfs.length > 3 ? '' : 'category', showgrid: false},
                 title: `Yearly Cash Flows in ${props.currency}`,
                 legend: {orientation: "h"}
             }} useResizeHandler={true}

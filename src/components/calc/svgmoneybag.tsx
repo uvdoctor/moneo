@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function SVGMoneyBag() {
-    return (<svg x="0px" y="0px" width="40px" viewBox="0 0 512 512" enableBackground="new 0 0 512 512">
+    return (<svg className="w-10" viewBox="0 0 512 512" enableBackground="new 0 0 512 512">
         <g>
             <path fill="#4CAF50" d="M306.347,131.264c-2.011-2.086-4.783-3.264-7.68-3.264h-85.333c-2.897,0-5.669,1.178-7.68,3.264
 		C190.059,147.413,53.333,290.859,53.333,352c0,88.235,90.923,160,202.667,160s202.667-71.765,202.667-160

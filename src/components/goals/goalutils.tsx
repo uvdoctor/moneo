@@ -63,6 +63,34 @@ export const createNewTarget = (year: number, val: number) => {
     }
 }
 
+const createFFGoalInput = () => {
+    let nowYear = new Date().getFullYear()
+    let startYear = nowYear + 20
+    return {
+        id: '',
+        name: 'Financial Freedom',
+        sy: startYear,
+        ey: startYear + 30,
+        by: nowYear,
+        tdr: 0,
+        tdl: 0,
+        ccy: 'USD',
+        cp: 0,
+        chg: 3,
+        type: APIt.GoalType.FF,
+        imp: APIt.LMH.H,
+        manual: 0,
+        tgts: [],
+        aiper: 3,
+        aisy: 0,
+        amper: 0,
+        amsy: startYear + 10,
+        dr: 0,
+        sa: 0,
+        achg: 5
+    } as APIt.CreateGoalInput
+}
+
 const createBaseGoalInput = (goalType: APIt.GoalType) => {
     let nowYear = new Date().getFullYear()
     let startYear = nowYear + 1
@@ -86,15 +114,16 @@ const createBaseGoalInput = (goalType: APIt.GoalType) => {
 }
 
 export const createNewGoalInput = (goalType: APIt.GoalType) => {
+    if(goalType === APIt.GoalType.FF) return createFFGoalInput()
     let bg: APIt.CreateGoalInput = createBaseGoalInput(goalType)
-    if(goalType !== APIt.GoalType.D) bg.btr = 10
-    if(goalType === APIt.GoalType.B || goalType === APIt.GoalType.L) {
+    if (goalType !== APIt.GoalType.D) bg.btr = 10
+    if (goalType === APIt.GoalType.B || goalType === APIt.GoalType.L) {
         bg.tbi = 0
         bg.tdli = 0
         bg.emi = { rate: 4, dur: 10, per: 0, ry: bg.sy }
     }
-    if(goalType === APIt.GoalType.B) {
-        bg.sa = 5 
+    if (goalType === APIt.GoalType.B) {
+        bg.sa = 5
         bg.achg = 3
         bg.amper = 2
         bg.amsy = bg.sy

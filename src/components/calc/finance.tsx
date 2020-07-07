@@ -35,10 +35,10 @@ export function getIntAmtByYear(borrowAmt: number, emi: number, intRate: number,
     let monthlyRate = intRate / 1200
     let annualInt = 0
     let monthlyInt = 0
-    for(let i = 0; i < months; i++, principal -= (emi - monthlyInt)) {
+    for(let i = 1; i <= months; i++, principal -= (emi - monthlyInt)) {
         monthlyInt = principal * monthlyRate
         annualInt += monthlyInt
-        if(i % 11 === 0 || i === months - 1) {
+        if(i % 12 === 0 || i === months) {
             annualInts.push(annualInt)
             annualInt = 0
         }

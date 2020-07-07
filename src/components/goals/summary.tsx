@@ -26,12 +26,14 @@ export default function Summary({ id, name, type, imp, startYear, currency, cfs,
                     <label>{getGoalTypes()[type]}</label>
                     <label>{name}</label>
                 </div>
-                <div className="flex">
-                    <div className="cursor-pointer" onClick={() => editCallback(id)}>
+                <div className="flex text-base">
+                    <div className="hover:text-blue-600 cursor-pointer" onClick={() => editCallback(id)}>
                         <SVGEdit />
+                        Edit
                     </div>
-                    <div className="cursor-pointer" onClick={() => deleteCallback(id)}>
+                    <div className="flex flex-col items-center ml-2 cursor-pointer hover:text-blue-600" onClick={() => deleteCallback(id)}>
                         <SVGRemove />
+                        Delete
                     </div>
                 </div>
             </div>
