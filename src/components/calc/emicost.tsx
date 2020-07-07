@@ -7,7 +7,6 @@ import RadialInput from '../form/radialinput'
 import Section from '../form/section'
 import { getLoanPaidForMonths, calculateInterestTaxBenefit } from '../goals/cfutils'
 import HToggle from '../horizontaltoggle'
-import ResultItem from '../calc/resultitem'
 interface EmiProps {
     price: number
     currency: string
