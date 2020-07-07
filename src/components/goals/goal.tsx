@@ -336,8 +336,10 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                 {price > 0 && <Fragment>
                     <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
                         handler={setShowCFChart} svg={<SVGChart />} />
-                    {showCFChart &&
-                        <LineChart cfs={cfs} startYear={startYear} currency={currency} />}
+                    {showCFChart && <Fragment>
+                        <p className="text-center text-base mt-4">Negative sign indicates You Pay, while Positive sign indicates You Receive</p>
+                        <LineChart cfs={cfs} startYear={startYear} currency={currency} />
+                    </Fragment>}
                 </Fragment>}
                 <div className="mt-8 flex justify-center">
                     <SelectInput name="imp"

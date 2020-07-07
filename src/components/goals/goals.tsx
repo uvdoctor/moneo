@@ -5,7 +5,7 @@ import { removeFromArray } from '../utils'
 import CFChart from './cfchart'
 import * as APIt from '../../api/goals'
 import { getGoalsList, createNewGoal, changeGoal, deleteGoal, getDuration, createNewGoalInput, getGoalTypes, getImpOptions } from './goalutils'
-import { calculateCFs } from './cfutils'
+import { calculateCFs, calculateFFCFs } from './cfutils'
 import Summary from './summary'
 import SelectInput from '../form/selectinput'
 import HToggle from '../horizontaltoggle'
@@ -41,8 +41,10 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         if (!goals) return
         let allCFs = {}
         goals?.forEach((g) =>
-            //@ts-ignore
-            allCFs[g.id] = calculateCFs(g, getDuration(g.sa as number, g.sy, g.ey))
+            //@ts-ignore    
+            allCFs[g.id] = g.type === APIt.GoalType.FF ? calculateFFCFs(g)
+                //@ts-ignore
+                : calculateCFs(g, getDuration(g.sa as number, g.sy, g.ey))
         )
         setAllCFs(allCFs)
         setWIPGoal(null)
@@ -97,16 +99,8 @@ export default function Goals({ showModalHandler }: GoalsProps) {
 
     const getYearRange = () => {
         if (!allGoals || !allGoals[0]) return { from: 0, to: 0 }
-        let firstYear: number = allGoals[0].sy
-        let lastYear: number = allGoals[0].sy +
-            getDuration(allGoals[0].sa, allGoals[0].sy, allGoals[0].ey)
-        for (let i = 1; i < allGoals.length; i++) {
-            let g = allGoals[i]
-            if (g.sy < firstYear) firstYear = g.sy
-            let duration = getDuration(g.sa, g.sy, g.ey)
-            if (g.sy + duration > lastYear) lastYear = g.sy + duration
-        }
-        return { from: firstYear, to: lastYear }
+        let ffGoal: APIt.CreateGoalInput = (allGoals.filter((g) => g.type === APIt.GoalType.FF))[0]
+        return { from: ffGoal.by, to: ffGoal.ey }
     }
 
     const populateWithZeros = (firstYear: number, lastYear: number) => {
@@ -168,8 +162,8 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                 <p className="text-center text-lg mt-1">Make Money Work Hard to Meet Them.</p>
                 <div className="flex flex-wrap justify-around">
                     {Object.keys(getGoalTypes()).map(key =>
-                        <AwesomeButton className="mt-4" type="primary" ripple size="medium" key={key} 
-                        onPress={() => createGoal(key as APIt.GoalType)}>
+                        <AwesomeButton className="mt-4" type="primary" ripple size="medium" key={key}
+                            onPress={() => createGoal(key as APIt.GoalType)}>
                             {getGoalTypes()[key as APIt.GoalType]}
                         </AwesomeButton>)}
                 </div>

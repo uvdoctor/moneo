@@ -16,7 +16,7 @@ import NumberInput from '../form/numberinput'
 import { getCompoundedIncome } from '../calc/finance'
 import Cost from './cost'
 import ActionButtons from '../form/actionbuttons'
-
+import { calculateFFCFs } from '../goals/cfutils'
 interface FFGoalProps {
     goal: APIt.CreateGoalInput
     cashFlows?: Array<number>
@@ -111,31 +111,16 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
             setSubmitDisabled(false) : setSubmitDisabled(true)
         , [startingCost, retirementCost, cfs])
 
-    const calculateCFs = () => {
-        let cfs: Array<number> = []
-        let duration = startYear - goal.by
-        for (let i = 0, val = annualSavings; i < duration; i++,
-            val = getCompoundedIncome(savingsPer, annualSavings, i)) {
-                cfs.push(Math.round(manualMode < 1 ? val : wipTargets[i].val))
-        }
-        let firstYearCost = getCompoundedIncome(costChgRate, startingCost, duration)
-        for (let year = startYear, lc = firstYearCost; year <= endYear; year++,
-            lc = getCompoundedIncome(costChgRate, lc, 1)) {
-            cfs.push(Math.round(-lc * (1 + taxRate / 100)))
-        }
-        cfs.push(-leaveBehind)
-        return cfs
-    }
 
     useEffect(() => {
-        setCFs([...calculateCFs()])
+        setCFs([...calculateFFCFs(createGoal())])
     }, [startYear, endYear, taxRate, careTaxDedLimit, startingCost,
         costChgRate, wipTargets, annualSavings, savingsPer,
         carePremiumSY, carePremiumChgPer, carePremiumDur, carePremium, leaveBehind])
 
     const hasInput = (tgts: Array<APIt.TargetInput>) => {
-        for(let i = 0; i < tgts.length; i++) {
-            if(tgts[i].val) return true
+        for (let i = 0; i < tgts.length; i++) {
+            if (tgts[i].val) return true
         }
         return false
     }
@@ -165,7 +150,7 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
                 costChgRate={savingsPer} costChgRateHandler={setSavingsPer} endYear={startYear - 1}
                 manualMode={manualMode} manualModeHandler={setManualMode} startYear={goal.by}
                 inputText="How Much Do You Save?" showInputCondition={((manualMode < 1 && annualSavings === 0) || (manualMode > 0 && !hasInput(wipTargets)))} rightPre="Savings" rightNote={`Yearly till ${startYear - 1}`}
-                title={manualMode > 0 ? `Annual Savings from ${goal.by} to ${startYear - 1}` 
+                title={manualMode > 0 ? `Annual Savings from ${goal.by} to ${startYear - 1}`
                     : `Annual Savings in ${startYear - 1} ~ ${toCurrency(Math.round(getCompoundedIncome(savingsPer, annualSavings, startYear - 1 - goal.by)), currency)}`}
                 showRightCondition={true} leftPre='Savings' leftPost={`in ${goal.by}`} leftMin={-50000} leftMax={200000}
                 footer={`${annualSavings === 0 ? ' Include retirement fund contribution. Deduct taxes & all expenses including insurance premiums.' : `${startYear - 1} may be the last year for work income given You want to be Financially Free before ${startYear}.`}`} />
@@ -212,8 +197,10 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
             <Fragment>
                 <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
                     handler={setShowCFChart} svg={<SVGChart />} />
-                {showCFChart &&
-                    <LineChart cfs={cfs} startYear={goal.by} currency={currency} />}
+                {showCFChart && <Fragment>
+                    <p className="text-center text-base mt-4">Negative sign indicates You Pay, while Positive sign indicates You Receive</p>
+                    <LineChart cfs={cfs} startYear={goal.by} currency={currency} />
+                </Fragment>}
             </Fragment>
             <ActionButtons submitDisabled={submitDisabled}
                 cancelHandler={cancelCallback} submitHandler={handleSubmit}
