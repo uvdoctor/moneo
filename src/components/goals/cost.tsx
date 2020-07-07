@@ -13,6 +13,7 @@ interface CostProps {
     leftNote?: string
     footer?: string
     rightPre: string
+    rightNote: string
     leftMin: number
     leftMax: number
     startingCost: number
@@ -22,6 +23,7 @@ interface CostProps {
     currency: string
     startYear: number
     endYear: number
+    manualTgtMin?: number
     manualModeHandler: Function
     manualTargetsHandler: Function
     startingCostHandler: Function
@@ -61,11 +63,11 @@ export default function Cost(props: CostProps) {
                     currency={props.currency} value={props.startingCost} changeHandler={props.startingCostHandler} 
                     min={props.leftMin} max={props.leftMax} step={500} note={props.leftNote} />
                 } right={
-                    props.showRightCondition && <NumberInput name="priceChgRate" pre={props.rightPre} post="Changes" note="Every Year" unit="%"
+                    props.showRightCondition && <NumberInput name="priceChgRate" pre={props.rightPre} post="Changes" note={props.rightNote} unit="%"
                         min={-10} max={10} step={0.5} value={props.costChgRate} changeHandler={props.costChgRateHandler} />
                 } showOnLoad={true}
                 toggle={
-                    <HToggle rightText="Multi-Year Manual Entry" value={props.manualMode} setter={props.manualModeHandler} />
+                    <HToggle rightText={`Input Values Manually from ${props.startYear} to ${props.endYear}`} value={props.manualMode} setter={props.manualModeHandler} />
                 } manualInput={
                     <div className="flex flex-wrap justify-around">
                         {props.manualTargets && props.manualTargets.map((t, i) =>
@@ -73,7 +75,7 @@ export default function Cost(props: CostProps) {
                                 <label>{t.year}</label>
                                 <NumberInput name="year" pre="" currency={props.currency}
                                     value={t.val} changeHandler={(val: number) => changeTargetVal(val, i)}
-                                    min={0} max={900000} step={500} />
+                                    min={props.manualTgtMin ? props.manualTgtMin : 0} max={900000} step={500} />
                             </div>)}
                     </div>
                 } manualMode={props.manualMode} footer={props.footer} />

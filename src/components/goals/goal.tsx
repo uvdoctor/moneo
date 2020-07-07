@@ -264,7 +264,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                     title={`Cost${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
                     showRightCondition={startYear > goal.by} leftPre={startYear > goal.by ? 'Cost' : ''}
                     leftPost={startYear > goal.by ? `in ${goal.by}` : ''} leftMin={0} leftMax={2000000}
-                    leftNote={buyTaxRate ? `including ${buyTaxRate}% taxes & fees` : ''} />
+                    leftNote={buyTaxRate ? `including ${buyTaxRate}% taxes & fees` : ''} rightNote={`Yearly till ${startYear}`} />
             </Fragment>}
             {nameValid && price > 0 && sellAfter && <div className="flex justify-center w-full">
                 <Sell price={price} startYear={startYear} endYear={endYear} sellAfter={sellAfter}

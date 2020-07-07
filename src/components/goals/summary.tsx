@@ -23,7 +23,7 @@ export default function Summary({ id, name, type, imp, startYear, currency, cfs,
             <div className="flex justify-between items-center w-full">
                 <label className={`${bgColor} text-white py-1 px-2`}>{getImpLevels()[imp]}</label>
                 <div className="flex flex-col justify-center items-center font-semibold">
-                    <label>{getGoalTypes()[type]}</label>
+                    {type!== APIt.GoalType.FF && <label>{getGoalTypes()[type]}</label>}
                     <label>{name}</label>
                 </div>
                 <div className="flex text-base">
@@ -31,10 +31,10 @@ export default function Summary({ id, name, type, imp, startYear, currency, cfs,
                         <SVGEdit />
                         Edit
                     </div>
-                    <div className="flex flex-col items-center ml-2 cursor-pointer hover:text-blue-600" onClick={() => deleteCallback(id)}>
+                    {type!==APIt.GoalType.FF && <div className="flex flex-col items-center ml-2 cursor-pointer hover:text-blue-600" onClick={() => deleteCallback(id)}>
                         <SVGRemove />
                         Delete
-                    </div>
+                    </div>}
                 </div>
             </div>
             <LineChart cfs={cfs} startYear={startYear} currency={currency} />

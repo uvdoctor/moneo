@@ -31,11 +31,11 @@ type Goal @model @auth(rules: [{allow: owner}]) {
   ey: Int!
   by: Int!
   btr: Float
-  tdr: Int!
+  tdr: Float!
   tdl: Int!
   tbi: Int
   tdli: Int
-  tbr: Int
+  tbr: Float
   name: String!
   type: GoalType!
   ccy: String!
