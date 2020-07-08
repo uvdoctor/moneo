@@ -55,7 +55,7 @@ export default function TimeCost(props: TimeCostProps) {
             }
             right={
                 <NumberInput name="savings" pre="Save" note="Every Year" currency={props.currency} value={annualSavings}
-                    changeHandler={setAnnualSavings} min={1000} max={200000} step={1000} rangeFactor={getRangeFactor} />
+                    changeHandler={setAnnualSavings} min={1000} max={200000} step={1000} rangeFactor={props.rangeFactor} />
             }  showOnLoad={true} />
 
     );
