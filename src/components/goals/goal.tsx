@@ -41,7 +41,7 @@ interface GoalProps {
 export default function Goal({ goal, cashFlows, cancelCallback, addCallback, updateCallback }: GoalProps) {
     const [startYear, setStartYear] = useState<number>(goal.sy)
     const [endYear, setEndYear] = useState<number>(goal.ey)
-    const [syOptions] = useState(initYearOptions(goal.by, 50))
+    const [syOptions] = useState(initYearOptions(goal.by + 1, 50))
     const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 80))
     const [loanRepaymentSY, setLoanRepaymentSY] = useState<number | null | undefined>(goal?.emi?.ry)
     const [price, setPrice] = useState<number>(0)
@@ -256,6 +256,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                                 changeHandler={setBuyTaxRate} />
                         </div>}
                 </div>
+                <div className="flex justify-center w-full">
                 <Cost startingCost={startingPrice} startingCostHandler={setStartingPrice}
                     manualTargets={wipTargets} manualTargetsHandler={setWIPTargets} currency={currency}
                     costChgRate={priceChgRate} costChgRateHandler={setPriceChgRate} endYear={endYear}
@@ -265,6 +266,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                     showRightCondition={startYear > goal.by} leftPre={startYear > goal.by ? 'Cost' : ''}
                     leftPost={startYear > goal.by ? `in ${goal.by}` : ''} leftMin={0} leftMax={2000000}
                     leftNote={buyTaxRate ? `including ${buyTaxRate}% taxes & fees` : ''} rightNote={`Yearly till ${startYear}`} />
+                </div>
             </Fragment>}
             {nameValid && price > 0 && sellAfter && <div className="flex justify-center w-full">
                 <Sell price={price} startYear={startYear} endYear={endYear} sellAfter={sellAfter}
@@ -337,7 +339,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                     <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
                         handler={setShowCFChart} svg={<SVGChart />} />
                     {showCFChart &&
-                        <LineChart cfs={cfs} startYear={goal.by} currency={currency} />
+                        <LineChart cfs={cfs} startYear={startYear} currency={currency} />
                     }
                 </Fragment>}
                 <div className="mt-8 flex justify-center">
