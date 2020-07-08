@@ -99,8 +99,13 @@ export default function Goals({ showModalHandler }: GoalsProps) {
 
     const getYearRange = () => {
         if (!allGoals || !allGoals[0]) return { from: 0, to: 0 }
-        let ffGoal: APIt.CreateGoalInput = (allGoals.filter((g) => g.type === APIt.GoalType.FF))[0]
-        return { from: ffGoal.by, to: ffGoal.ey }
+        let fromYear = allGoals[0].by
+        let toYear = allGoals[0].ey + 2
+        allGoals.forEach((g) => {
+            if(g.by < fromYear) fromYear = g.by
+            if(g.ey > toYear) toYear = g.ey + 2
+        })
+        return { from: fromYear, to: toYear }
     }
 
     const populateWithZeros = (firstYear: number, lastYear: number) => {
@@ -133,7 +138,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
             //@ts-ignore
             let cfs: Array<number> = allCFs[g.id]
             if (!cfs) return
-            if (g.imp === APIt.LMH.H) populateData(mustCFs, cfs, g.sy, yearRange.from)
+            if (g.imp === APIt.LMH.H) populateData(mustCFs, cfs, g.type === APIt.GoalType.FF ? g.by : g.sy, yearRange.from)
             else if (g.imp === APIt.LMH.M) populateData(tryCFs, cfs, g.sy, yearRange.from)
             else populateData(optCFs, cfs, g.sy, yearRange.from)
         })
@@ -180,13 +185,15 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                                         <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />
                                     </div>}
                             </div>
+                            <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>
                             {viewMode > 0 ?
                                 <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} />
                                 :
                                 <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
                                     {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
                                         g.id && (!impFilter || impFilter === g.imp) &&
-                                        <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} startYear={g.sy}
+                                        <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} 
+                                        startYear={g.type === APIt.GoalType.FF ? g.by : g.sy}
                                             currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal} />)}
                                 </div>}
                         </Fragment>}

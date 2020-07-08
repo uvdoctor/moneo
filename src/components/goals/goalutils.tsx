@@ -71,7 +71,7 @@ const createFFGoalInput = () => {
         name: 'Financial Freedom',
         sy: startYear,
         ey: startYear + 30,
-        by: nowYear,
+        by: nowYear + 1,
         tdr: 0,
         tdl: 0,
         ccy: 'USD',
@@ -84,10 +84,11 @@ const createFFGoalInput = () => {
         aiper: 3,
         aisy: 0,
         amper: 0,
-        amsy: startYear + 10,
+        amsy: startYear,
         dr: 0,
         sa: 0,
-        achg: 5
+        achg: 5,
+        btr: 0
     } as APIt.CreateGoalInput
 }
 

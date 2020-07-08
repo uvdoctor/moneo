@@ -14,7 +14,7 @@ interface NumberInputProps {
     currencyHandler?: any,
     unit?: string,
     changeHandler: any,
-    note?: string,
+    note?: any,
     step?: number
 }
 

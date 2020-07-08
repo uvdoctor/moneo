@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import Section from '../form/section'
 import NumberInput from '../form/numberinput'
 import HToggle from '../horizontaltoggle'
-import {TargetInput} from '../../api/goals'
-import {createNewTarget} from './goalutils'
+import { TargetInput } from '../../api/goals'
+import { createNewTarget } from './goalutils'
 
 interface CostProps {
     inputText: string
@@ -56,29 +56,27 @@ export default function Cost(props: CostProps) {
     }, [props.manualMode, props.startYear, props.endYear])
 
     return (
-        <div className="flex flex-wrap items-center justify-center w-full">
-            <Section inputText={props.inputText} showInputCondition={props.showInputCondition} title={props.title}
-                left={
-                    <NumberInput name="startingCost" pre={props.leftPre} post={props.leftPost} 
-                    currency={props.currency} value={props.startingCost} changeHandler={props.startingCostHandler} 
+        <Section inputText={props.inputText} showInputCondition={props.showInputCondition} title={props.title}
+            left={
+                <NumberInput name="startingCost" pre={props.leftPre} post={props.leftPost}
+                    currency={props.currency} value={props.startingCost} changeHandler={props.startingCostHandler}
                     min={props.leftMin} max={props.leftMax} step={500} note={props.leftNote} />
-                } right={
-                    props.showRightCondition && <NumberInput name="priceChgRate" pre={props.rightPre} post="Changes" note={props.rightNote} unit="%"
-                        min={-10} max={10} step={0.5} value={props.costChgRate} changeHandler={props.costChgRateHandler} />
-                } showOnLoad={true}
-                toggle={
-                    <HToggle rightText={`Input Values Manually from ${props.startYear} to ${props.endYear}`} value={props.manualMode} setter={props.manualModeHandler} />
-                } manualInput={
-                    <div className="flex flex-wrap justify-around">
-                        {props.manualTargets && props.manualTargets.map((t, i) =>
-                            <div key={"t" + i} className="mr-4 md:mr-8 mt-8 flex flex-col justify-end items-end">
-                                <label>{t.year}</label>
-                                <NumberInput name="year" pre="" currency={props.currency}
-                                    value={t.val} changeHandler={(val: number) => changeTargetVal(val, i)}
-                                    min={props.manualTgtMin ? props.manualTgtMin : 0} max={900000} step={500} />
-                            </div>)}
-                    </div>
-                } manualMode={props.manualMode} footer={props.footer} />
-        </div>
+            } right={
+                props.showRightCondition && <NumberInput name="priceChgRate" pre={props.rightPre} post="Changes" note={props.rightNote} unit="%"
+                    min={-10} max={10} step={0.5} value={props.costChgRate} changeHandler={props.costChgRateHandler} />
+            } showOnLoad={true}
+            toggle={
+                <HToggle rightText={`Manual Input for Years ${props.startYear} to ${props.endYear}`} value={props.manualMode} setter={props.manualModeHandler} />
+            } manualInput={
+                <div className="flex flex-wrap justify-around">
+                    {props.manualTargets && props.manualTargets.map((t, i) =>
+                        <div key={"t" + i} className="mr-4 md:mr-8 mt-8 flex flex-col justify-end items-end">
+                            <label>{t.year}</label>
+                            <NumberInput name="year" pre="" currency={props.currency}
+                                value={t.val} changeHandler={(val: number) => changeTargetVal(val, i)}
+                                min={props.manualTgtMin ? props.manualTgtMin : 0} max={900000} step={500} />
+                        </div>)}
+                </div>
+            } manualMode={props.manualMode} footer={props.footer} />
     )
 }

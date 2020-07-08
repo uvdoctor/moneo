@@ -19,7 +19,6 @@ export default function CFChart({ mustCFs, tryCFs, optCFs }: CFChartProps) {
 
     return (
         <div className="w-full">
-            <p className="text-center text-base mt-4">Negative Values indicate You Pay, while Positive Values indicate You Receive</p>
             {/*@ts-ignore*/}
             <Plot layout={{
                 barmode: 'stack',

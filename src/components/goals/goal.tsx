@@ -293,7 +293,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         <AnnualAmt currency={currency} startYear={startYear} percentage={aiPer as number} chgRate={assetChgRate as number}
                             percentageHandler={setAIPer} annualSY={aiStartYear as number} annualSYHandler={setAIStartYear}
                             price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
-                            title="Yearly Income Expected" footer="Exclude taxes & fees" />
+                            title="Yearly Income Potential through Rent, Dividend, etc" footer="Exclude taxes & fees" />
                         <AnnualAmt currency={currency} startYear={startYear} percentage={amCostPer as number} chgRate={assetChgRate as number}
                             percentageHandler={setAMCostPer} annualSY={amStartYear as number} annualSYHandler={setAMStartYear}
                             price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
@@ -336,10 +336,9 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                 {price > 0 && <Fragment>
                     <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
                         handler={setShowCFChart} svg={<SVGChart />} />
-                    {showCFChart && <Fragment>
-                        <p className="text-center text-base mt-4">Negative sign indicates You Pay, while Positive sign indicates You Receive</p>
-                        <LineChart cfs={cfs} startYear={startYear} currency={currency} />
-                    </Fragment>}
+                    {showCFChart &&
+                        <LineChart cfs={cfs} startYear={goal.by} currency={currency} />
+                    }
                 </Fragment>}
                 <div className="mt-8 flex justify-center">
                     <SelectInput name="imp"

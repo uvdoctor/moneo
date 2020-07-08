@@ -11,7 +11,7 @@ export default function LineChart(props: LineChartProps) {
     const [years, setYears] = useState<Array<number>>([])
     const layout = {
         font: { family: "'Quicksand', sans-serif", color: "#4a5568", size: 15 },
-        autosize: true,
+        autosize: true, plot_bgcolor:'#edf2f7',
         xaxis: { title: 'Year', type: 'category', fixedrange: years.length > 3 ? false : true, rangeslider: years.length > 3 ? {} : '', showgrid: false },
         yaxis: { fixedrange: true, tickformat: ',', type: props.cfs.length > 3 ? '' : 'category', showgrid: false },
         title: `Yearly Cash Flows in ${props.currency}`,
@@ -20,8 +20,8 @@ export default function LineChart(props: LineChartProps) {
     const track = //@ts-ignore: Object is possible undefined
     {
         type: 'scatter', mode: 'lines+markers', x: years, y: props.cfs,
-        line: { color: '#48bb78', size: 3 },
-        marker: { color: '#276749', size: 8, symbol: 'circle-x' }
+        line: { color: '#68d391', size: 3 },
+        marker: { color: '#276749', symbol: 'circle-x' }
     }
 
     useEffect(() => {

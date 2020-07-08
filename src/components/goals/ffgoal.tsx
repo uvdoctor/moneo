@@ -16,7 +16,8 @@ import NumberInput from '../form/numberinput'
 import { getCompoundedIncome } from '../calc/finance'
 import Cost from './cost'
 import ActionButtons from '../form/actionbuttons'
-import { calculateFFCFs } from '../goals/cfutils'
+import ResultItem from '../calc/resultitem'
+import { calculateFFCFs, calculateTotalCarePremiumTaxBenefit } from '../goals/cfutils'
 interface FFGoalProps {
     goal: APIt.CreateGoalInput
     cashFlows?: Array<number>
@@ -49,6 +50,8 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
     const [careTaxDedLimit, setCareTaxDedLimit] = useState<number>(goal.tdl)
     const [manualMode, setManualMode] = useState<number>(goal.manual)
     const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(goal.tgts as Array<APIt.TargetInput>)
+    const [totalTaxBenefit, setTotalTaxBenfit] = useState<number>(0)
+    const [successionTaxRate, setSuccessionTaxRate] = useState<number>(goal?.btr as number)
 
     const createGoal = () => {
         return {
@@ -71,7 +74,8 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
             amper: carePremiumChgPer,
             achg: carePremiumDur,
             dr: carePremium,
-            sa: leaveBehind
+            sa: leaveBehind,
+            btr: successionTaxRate
         } as APIt.CreateGoalInput
     }
 
@@ -113,10 +117,15 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
 
 
     useEffect(() => {
-        setCFs([...calculateFFCFs(createGoal())])
+        if (!cashFlows) setCFs([...calculateFFCFs(createGoal())])
     }, [startYear, endYear, taxRate, careTaxDedLimit, startingCost,
-        costChgRate, wipTargets, annualSavings, savingsPer,
+        costChgRate, wipTargets, annualSavings, savingsPer, successionTaxRate,
         carePremiumSY, carePremiumChgPer, carePremiumDur, carePremium, leaveBehind])
+
+    useEffect(() => {
+        setTotalTaxBenfit(calculateTotalCarePremiumTaxBenefit(taxRate, careTaxDedLimit,
+            carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur))
+    }, [taxRate, careTaxDedLimit, carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur])
 
     const hasInput = (tgts: Array<APIt.TargetInput>) => {
         for (let i = 0; i < tgts.length; i++) {
@@ -135,7 +144,7 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
                     <SVGClose />
                 </div>
             </div>
-            <div className="mt-4 flex justify-around items-center w-full">
+            <div className="mt-4 flex justify-around items-start w-full">
                 <SelectInput name="sy" pre="Achieve By" post="Or Earlier"
                     value={startYear} changeHandler={changeStartYear} options={syOptions} />
                 <SelectInput name="ey" pre="Plan Until" value={endYear}
@@ -145,16 +154,17 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
                     <CurrencyInput name="mainCurr" value={currency} changeHandler={setCurrency} />
                 </div>
             </div>
-            <Cost startingCost={annualSavings} startingCostHandler={setAnnualSavings}
-                manualTargets={wipTargets} manualTgtMin={-50000} manualTargetsHandler={setWIPTargets} currency={currency}
-                costChgRate={savingsPer} costChgRateHandler={setSavingsPer} endYear={startYear - 1}
-                manualMode={manualMode} manualModeHandler={setManualMode} startYear={goal.by}
-                inputText="How Much Do You Save?" showInputCondition={((manualMode < 1 && annualSavings === 0) || (manualMode > 0 && !hasInput(wipTargets)))} rightPre="Savings" rightNote={`Yearly till ${startYear - 1}`}
-                title={manualMode > 0 ? `Annual Savings from ${goal.by} to ${startYear - 1}`
-                    : `Annual Savings in ${startYear - 1} ~ ${toCurrency(Math.round(getCompoundedIncome(savingsPer, annualSavings, startYear - 1 - goal.by)), currency)}`}
-                showRightCondition={true} leftPre='Savings' leftPost={`in ${goal.by}`} leftMin={-50000} leftMax={200000}
-                footer={`${annualSavings === 0 ? ' Include retirement fund contribution. Deduct taxes & all expenses including insurance premiums.' : `${startYear - 1} may be the last year for work income given You want to be Financially Free before ${startYear}.`}`} />
-
+            <div className="flex justify-around w-full">
+                <Cost startingCost={annualSavings} startingCostHandler={setAnnualSavings}
+                    manualTargets={wipTargets} manualTgtMin={-50000} manualTargetsHandler={setWIPTargets} currency={currency}
+                    costChgRate={savingsPer} costChgRateHandler={setSavingsPer} endYear={startYear - 1}
+                    manualMode={manualMode} manualModeHandler={setManualMode} startYear={goal.by}
+                    inputText="How Much Do You Save?" showInputCondition={((manualMode < 1 && annualSavings === 0) || (manualMode > 0 && !hasInput(wipTargets)))} rightPre="Savings" rightNote={`Yearly till ${startYear - 1}`}
+                    title={manualMode > 0 ? `Annual Savings from ${goal.by} to ${startYear - 1}`
+                        : `Annual Savings in ${startYear - 1} ~ ${toCurrency(Math.round(getCompoundedIncome(savingsPer, annualSavings, startYear - 1 - goal.by)), currency)}`}
+                    showRightCondition={true} leftPre='Savings' leftPost={`in ${goal.by}`} leftMin={-50000} leftMax={200000}
+                    footer={`${annualSavings === 0 ? ' Include retirement fund contribution. Deduct taxes & all expenses including insurance premiums.' : `${startYear - 1} may be the last year for work income given You want to be Financially Free before ${startYear}.`}`} />
+            </div>
             <div className="flex flex-wrap justify-around w-full">
                 <Section inputText={`Living Cost after Financial Freedom`} showInputCondition={((manualMode < 1 && annualSavings != 0) || (manualMode > 0 && hasInput(wipTargets))) && startingCost < 5000} title={
                     `Living Cost${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(retirementCost, currency)}` : ''}`}
@@ -182,23 +192,29 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
                     </div>
                 } right={
                     <RadialInput value={carePremiumChgPer} changeHandler={setCarePremiumChgPer}
-                        pre="Premium Changes" label="Yearly"
+                        pre="Premium Changes" label="Yearly" labelBottom
                         data={toStringArr(0, 10, 0.5)} step={0.5} unit="%" />
                 } bottomLeft="Max Yearly" bottomRight="Allowed" bottom={
-                    <NumberInput name="maxTDL" pre="Tax" post="Deduction"
-                        value={careTaxDedLimit} changeHandler={setCareTaxDedLimit}
-                        min={0} max={5000} step={500} note={`Total ${toCurrency(carePremium, currency)}`} />
+                    <NumberInput name="maxTDL" pre="Tax" post="Deduction" currency={currency}
+                        value={careTaxDedLimit} changeHandler={setCareTaxDedLimit} width="80px"
+                        min={0} max={5000} step={500} note={
+                            <ResultItem label='Total Tax Benefit' currency={currency} result={totalTaxBenefit} />
+                        } />
                 } />
-            </div>
-            <div className="mt-4 flex justify-center">
-                <NumberInput name="lb" value={leaveBehind} changeHandler={setLeaveBehind}
-                    min={0} max={900000} pre="Leave Behind" note="For Loved Ones" currency={currency} step={1000} />
+                <Section title={`Leave Behind ~ ${toCurrency(Math.round(leaveBehind * (1 + (successionTaxRate / 100))), currency)} in ${endYear + 1}`} left={
+                    <NumberInput name="lb" value={leaveBehind} changeHandler={setLeaveBehind}
+                        min={0} max={900000} pre="Amount" note="For Loved Ones" currency={currency} step={1000} />
+                } right={
+                    <NumberInput name="str" pre="Inheritance" post="Tax Rate" min={0} max={20} step={0.1}
+                        value={successionTaxRate} changeHandler={setSuccessionTaxRate} unit="%"
+                        note={`Total ${toCurrency(Math.round(leaveBehind * (successionTaxRate / 100)), currency)}`} />
+                } />
             </div>
             <Fragment>
                 <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
                     handler={setShowCFChart} svg={<SVGChart />} />
                 {showCFChart && <Fragment>
-                    <p className="text-center text-base mt-4">Negative sign indicates You Pay, while Positive sign indicates You Receive</p>
+                    <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>
                     <LineChart cfs={cfs} startYear={goal.by} currency={currency} />
                 </Fragment>}
             </Fragment>

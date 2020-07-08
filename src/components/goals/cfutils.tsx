@@ -46,6 +46,19 @@ export const calculateCFs = (goal: APIt.CreateGoalInput, duration: number) => {
     else return createAutoCFs(goal, duration)
 }
 
+export const calculateTotalCarePremiumTaxBenefit = (taxRate: number, maxTDL: number, 
+    paymentSY: number, payment: number, paymentChgRate: number, duration: number) => {
+    if (!taxRate) return 0
+    let totalTaxBenefit = 0
+    //@ts-ignore
+    for (let year = paymentSY; year < paymentSY + duration; year++) {
+        //@ts-ignore
+        let premium = getCompoundedIncome(paymentChgRate, payment, year - paymentSY)
+        totalTaxBenefit += getTaxBenefit(premium, taxRate, maxTDL)
+    }
+    return totalTaxBenefit
+}
+
 export const calculateFFCFs = (g: APIt.CreateGoalInput) => {
     let cfs: Array<number> = []
     let duration = g.sy - g.by
@@ -55,12 +68,22 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput) => {
         cfs.push(Math.round(g.manual < 1 ? val : g?.tgts[i].val as number))
     }
     let firstYearCost = getCompoundedIncome(g.chg as number, g.cp as number, duration)
-    for (let year = g.sy, lc = firstYearCost; year <= g.ey; year++,
-        lc = getCompoundedIncome(g.chg as number, lc, 1)) {
-        cfs.push(Math.round(-lc * (1 + g.tdr / 100)))
+    let taxBenefit = 0
+    for (let year = g.sy, cf = firstYearCost; year <= g.ey; year++,
+        cf = getCompoundedIncome(g.chg as number, cf, 1)) {
+        cf -= taxBenefit
+        taxBenefit = 0
+        //@ts-ignore
+        if (year >= g?.amsy && year < g?.amsy + g?.achg) {
+            //@ts-ignore
+            let premium = getCompoundedIncome(g?.amper, g.dr, year - g.amsy)
+            taxBenefit = getTaxBenefit(premium, g.tdr, g.tdl)
+            cf += premium
+        }
+        cfs.push(Math.round(-cf * (1 + g.tdr / 100)))
     }
     //@ts-ignore
-    cfs.push(-g?.sa as number)
+    cfs.push(Math.round((-g?.sa * (1 + g.btr / 100)) + taxBenefit))
     return cfs
 }
 
