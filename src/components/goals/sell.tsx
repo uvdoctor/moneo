@@ -32,7 +32,7 @@ export default function Sell(props: SellProps) {
         let sellPrice = calculateSellPrice(props.price, props.buyTaxRate, props.assetChgRate, duration)
         props.sellPriceHandler(sellPrice)
         props.annualReturnPerHandler(calculateXIRR(props.cfs, props.startYear, props.price, props.sellAfter, props.sellPrice))
-    }, [props.currency, props.cfs])
+    }, [props.cfs])
 
     return (
         <Section title="Sell After" showOnLoad={true}

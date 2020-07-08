@@ -3,7 +3,7 @@ import TextInput from '../form/textinput'
 import SelectInput from '../form/selectinput'
 import NumberInput from '../form/numberinput'
 import * as APIt from '../../api/goals'
-import { initYearOptions, toCurrency, toStringArr } from '../utils'
+import { initYearOptions, toCurrency, toStringArr, getRangeFactor } from '../utils'
 import TimeCost from '../calc/timecost'
 import EmiCost from '../calc/emicost'
 import OppCost from '../calc/oppcost'
@@ -82,6 +82,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     const [answer, setAnswer] = useState<string>('')
     const [rentAns, setRentAns] = useState<string>('')
     const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(goal?.tgts as Array<APIt.TargetInput>)
+    const [rangeFactor, setRangeFactor] = useState<number>(getRangeFactor(currency))
 
     const createNewBaseGoal = () => {
         return {
@@ -173,14 +174,12 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     useEffect(() => {
         if (!cashFlows) calculateYearlyCFs(getDuration(sellAfter, startYear, endYear))
     }, [goalType, startingPrice, priceChgRate, wipTargets, assetChgRate, loanPer, loanRepaymentSY,
-        loanYears, currency, startYear, sellAfter, buyTaxRate, taxRate, maxTaxDeduction, taxBenefitInt,
+        loanYears, startYear, sellAfter, buyTaxRate, taxRate, maxTaxDeduction, taxBenefitInt,
         maxTaxDeductionInt, amCostPer, amStartYear, aiPer, aiStartYear, manualMode, cashFlows])
 
     useEffect(() => {
         if (goalType !== APIt.GoalType.B && manualMode < 1) calculateYearlyCFs(getDuration(sellAfter, startYear, endYear))
     }, [endYear])
-
-    useEffect(() => setRentAmt(Math.round(price * 0.04)), [price])
 
     const initBuyCFsForComparison = (analyzeFor: number) => {
         let allCFs: Array<Array<number>> = []
@@ -210,6 +209,11 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
         nameValid && price > 0 && cfs.length > 0 ? setSubmitDisabled(false) : setSubmitDisabled(true)
         , [nameValid, price, cfs])
 
+    const changeCurrency = (curr: string) => {
+        setRangeFactor(Math.round(getRangeFactor(curr) / getRangeFactor(currency)))
+        setCurrency(curr)
+    }
+
     return (
         <div className="flex flex-col w-full h-full">
             <div className="flex flex-wrap justify-between items-center w-full">
@@ -224,7 +228,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                 />
                 <div className="flex flex-col">
                     <label>In</label>
-                    <CurrencyInput name="mainCurr" value={currency} changeHandler={setCurrency} />
+                    <CurrencyInput name="mainCurr" value={currency} changeHandler={changeCurrency} />
                 </div>
                 <div className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
                     onClick={() => cancelCallback()}>
@@ -257,15 +261,15 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         </div>}
                 </div>
                 <div className="flex justify-center w-full">
-                <Cost startingCost={startingPrice} startingCostHandler={setStartingPrice}
-                    manualTargets={wipTargets} manualTargetsHandler={setWIPTargets} currency={currency}
-                    costChgRate={priceChgRate} costChgRateHandler={setPriceChgRate} endYear={endYear}
-                    manualMode={manualMode} manualModeHandler={setManualMode} startYear={startYear}
-                    inputText="How Much Does it Cost?" showInputCondition={price < 500} rightPre="Cost"
-                    title={`Cost${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
-                    showRightCondition={startYear > goal.by} leftPre={startYear > goal.by ? 'Cost' : ''}
-                    leftPost={startYear > goal.by ? `in ${goal.by}` : ''} leftMin={0} leftMax={2000000}
-                    leftNote={buyTaxRate ? `including ${buyTaxRate}% taxes & fees` : ''} rightNote={`Yearly till ${startYear}`} />
+                    <Cost startingCost={startingPrice} startingCostHandler={setStartingPrice} rangeFactor={rangeFactor}
+                        manualTargets={wipTargets} manualTargetsHandler={setWIPTargets} currency={currency}
+                        costChgRate={priceChgRate} costChgRateHandler={setPriceChgRate} endYear={endYear}
+                        manualMode={manualMode} manualModeHandler={setManualMode} startYear={startYear}
+                        inputText="How Much Does it Cost?" showInputCondition={price < 500} rightPre="Cost"
+                        title={`Cost${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
+                        showRightCondition={startYear > goal.by} leftPre={startYear > goal.by ? 'Cost' : ''}
+                        leftPost={startYear > goal.by ? `in ${goal.by}` : ''} leftMin={0} leftMax={2000000}
+                        leftNote={buyTaxRate ? `including ${buyTaxRate}% taxes & fees` : ''} rightNote={`Yearly till ${startYear}`} />
                 </div>
             </Fragment>}
             {nameValid && price > 0 && sellAfter && <div className="flex justify-center w-full">
@@ -278,12 +282,12 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
             {nameValid && price > 0 && <Fragment>
                 <div className="flex justify-center">
                     <TaxBenefit goalType={goalType} taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}
-                        maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction}
+                        maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction} rangeFactor={rangeFactor}
                         totalTaxBenefit={totalTaxBenefit} totalTaxBenefitHandler={setTotalTaxBenefit} />
                 </div>
                 {goal?.emi && <div className="flex w-full flex-wrap justify-around">
                     <EmiCost price={price} currency={currency} startYear={startYear} sellAfter={sellAfter}
-                        repaymentSY={loanRepaymentSY ? loanRepaymentSY : startYear} endYear={endYear}
+                        repaymentSY={loanRepaymentSY ? loanRepaymentSY : startYear} endYear={endYear} rangeFactor={rangeFactor}
                         loanYears={loanYears as number} loanAnnualInt={loanIntRate as number} loanPer={loanPer as number}
                         loanBorrowAmt={getLoanBorrowAmt(price, buyTaxRate as number, loanPer as number)} loanAnnualIntHandler={setLoanIntRate}
                         loanPerHandler={setLoanPer} loanMonthsHandler={setLoanYears} repaymentSYHandler={setLoanRepaymentSY}
@@ -301,13 +305,13 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                             price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
                             title="Yearly Fixes, Insurance, etc costs" footer="Include taxes & fees" />
                     </Fragment>}
-                    <TimeCost amount={totalCost} currency={currency} workHoursPerWeek={60} annualWorkWeeks={47} />
+                    <TimeCost amount={totalCost} currency={currency} rangeFactor={rangeFactor} workHoursPerWeek={60} annualWorkWeeks={47} />
                     <OppCost cfs={createOppCostCFs()} currency={currency} startYear={startYear}
                         duration={getDuration(sellAfter, startYear, endYear)} discountRate={oppDR} discountRateHandler={setOppDR} />
                     {sellAfter &&
                         <Section title="Instead, If You Rent" left={<div className="pl-4 pr-4">
                             <NumberInput name="rentAmt" pre="Yearly" post="Rent" value={rentAmt} changeHandler={setRentAmt}
-                                min={1000} max={200000} step={500} currency={currency} />
+                                min={1000} max={200000} step={500} currency={currency} rangeFactor={rangeFactor} />
                         </div>}
                             right={
                                 <NumberInput name="rentChg" pre="Changes" value={rentChgPer} changeHandler={setRentChgPer}

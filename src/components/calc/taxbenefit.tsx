@@ -13,6 +13,7 @@ interface TaxBenefitProps {
     taxRateHandler: Function
     maxTaxDeductionHandler: Function
     currency: string
+    rangeFactor: number
 }
 
 export default function TaxBenefit(props: TaxBenefitProps) {
@@ -23,8 +24,8 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                         value={props.taxRate} step={0.5} changeHandler={props.taxRateHandler} labelBottom={true} />
                 } right={
                     <NumberInput name="tbLimit" pre="Max Yearly" post="Deduction" currency={props.currency} 
-                        value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} max={300000} step={1000} 
-                        note={`Total ${toCurrency(props.totalTaxBenefit, props.currency)}`} />
+                        value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} min={0} max={300000} step={1000} 
+                        note={`Total ${toCurrency(props.totalTaxBenefit, props.currency)}`} rangeFactor={props.rangeFactor} />
                 } />
     )
 }

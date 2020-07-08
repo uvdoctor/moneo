@@ -2,7 +2,7 @@ import React, { useState, Fragment, useEffect } from 'react'
 import * as APIt from '../../api/goals'
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button"
-import { initYearOptions, toCurrency, toStringArr } from '../utils'
+import { initYearOptions, toCurrency, toStringArr, getRangeFactor } from '../utils'
 import SVGClose from '../svgclose'
 import SVGChart from '../svgchart'
 import SVGLogo from '../svglogo'
@@ -52,6 +52,7 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
     const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(goal.tgts as Array<APIt.TargetInput>)
     const [totalTaxBenefit, setTotalTaxBenfit] = useState<number>(0)
     const [successionTaxRate, setSuccessionTaxRate] = useState<number>(goal?.btr as number)
+    const [rangeFactor, setRangeFactor] = useState<number>(getRangeFactor(currency))
 
     const createGoal = () => {
         return {
@@ -134,6 +135,11 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
         return false
     }
 
+    const changeCurrency = (curr: string) => {
+        setRangeFactor(Math.round(getRangeFactor(curr) / getRangeFactor(currency)))
+        setCurrency(curr)
+    }
+
     return (
         <Fragment>
             <div className="flex justify-between items-center">
@@ -151,11 +157,11 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
                     changeHandler={changeEndYear} options={eyOptions} />
                 <div className="flex flex-col">
                     <label>Currency</label>
-                    <CurrencyInput name="mainCurr" value={currency} changeHandler={setCurrency} />
+                    <CurrencyInput name="mainCurr" value={currency} changeHandler={changeCurrency} />
                 </div>
             </div>
             <div className="flex justify-around w-full">
-                <Cost startingCost={annualSavings} startingCostHandler={setAnnualSavings}
+                <Cost startingCost={annualSavings} startingCostHandler={setAnnualSavings} rangeFactor={rangeFactor}
                     manualTargets={wipTargets} manualTgtMin={-50000} manualTargetsHandler={setWIPTargets} currency={currency}
                     costChgRate={savingsPer} costChgRateHandler={setSavingsPer} endYear={startYear - 1}
                     manualMode={manualMode} manualModeHandler={setManualMode} startYear={goal.by}
@@ -170,7 +176,7 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
                     `Living Cost${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(retirementCost, currency)}` : ''}`}
                     left={
                         <NumberInput name="currExpense" pre='Yearly' post='Cost' note={`In Today's Money`}
-                            currency={currency} value={startingCost} changeHandler={setStartingCost} min={0} max={200000} step={1000} width="120px" />
+                            currency={currency} rangeFactor={rangeFactor} value={startingCost} changeHandler={setStartingCost} min={0} max={200000} step={1000} width="120px" />
                     } right={
                         <NumberInput name="priceChgRate" pre="Cost" post="Changes" note='Yearly' unit="%"
                             min={0} max={10} step={0.1} value={costChgRate} changeHandler={setCostChgRate} />
@@ -181,8 +187,8 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
                     footer={`Use Savings to meet expenses from ${startYear} to ${endYear}. You may have to pay income tax on retirement account withdrawals or gains from selling investments.`} />
                 <Section title="Long-term Care Insurance" left={
                     <div className="flex flex-col items-center justify-center">
-                        <NumberInput name="cp" value={carePremium} changeHandler={setCarePremium}
-                            pre="Yearly" post="Premium" min={0} max={10000} step={100} />
+                        <NumberInput name="cp" value={carePremium} changeHandler={setCarePremium} rangeFactor={rangeFactor}
+                            pre="Yearly" post="Premium" min={0} max={10000} step={100} currency={currency} />
                         <div className="flex justify-between items-start w-full">
                             <SelectInput name="cpsy" value={carePremiumSY} options={cyOptions}
                                 pre="Pay" post="Onwards" changeHandler={changeCarePremiumYear} />
@@ -197,12 +203,12 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
                 } bottomLeft="Max Yearly" bottomRight="Allowed" bottom={
                     <NumberInput name="maxTDL" pre="Tax" post="Deduction" currency={currency}
                         value={careTaxDedLimit} changeHandler={setCareTaxDedLimit} width="80px"
-                        min={0} max={5000} step={500} note={
+                        min={0} max={5000} step={500} rangeFactor={rangeFactor} note={
                             <ResultItem label='Total Tax Benefit' currency={currency} result={totalTaxBenefit} />
                         } />
                 } />
                 <Section title={`Leave Behind ~ ${toCurrency(Math.round(leaveBehind * (1 + (successionTaxRate / 100))), currency)} in ${endYear + 1}`} left={
-                    <NumberInput name="lb" value={leaveBehind} changeHandler={setLeaveBehind}
+                    <NumberInput name="lb" value={leaveBehind} changeHandler={setLeaveBehind} rangeFactor={rangeFactor}
                         min={0} max={900000} pre="Amount" note="For Loved Ones" currency={currency} step={1000} />
                 } right={
                     <NumberInput name="str" pre="Inheritance" post="Tax Rate" min={0} max={20} step={0.1}

@@ -10,6 +10,7 @@ import HToggle from '../horizontaltoggle'
 interface EmiProps {
     price: number
     currency: string
+    rangeFactor: number
     startYear: number
     endYear: number
     repaymentSY: number
@@ -86,8 +87,8 @@ export default function EmiCost(props: EmiProps) {
                         note={`Total ${toCurrency(totalIntAmt, props.currency)}`}
                         value={props.loanAnnualInt} changeHandler={props.loanAnnualIntHandler}
                         min={0.0} max={30.0} step={0.1} />
-                    {props.taxBenefitInt > 0 && <NumberInput name="maxTaxDeductionInt" pre="Max Yearly" post="Deduction"
-                        value={props.maxTaxDeductionInt} changeHandler={props.maxTaxDeductionIntHandler}
+                    {props.taxBenefitInt > 0 && <NumberInput name="maxTaxDeductionInt" pre="Max Yearly" post="Deduction" rangeFactor={props.rangeFactor}
+                        value={props.maxTaxDeductionInt} changeHandler={props.maxTaxDeductionIntHandler} currency={props.currency}
                         min={0} max={150000} step={1000} note={`Total ${toCurrency(totalIntTaxBenefit, props.currency)}`} />}
                 </div>
             } 

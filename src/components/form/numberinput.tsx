@@ -3,18 +3,19 @@ import { toCurrency, toReadableNumber } from '../utils'
 import CurrencyInput from './currencyinput'
 import Slider from 'rc-slider'
 interface NumberInputProps {
-    pre: string,
-    post?: string,
-    min?: number,
-    max?: number,
-    value: number,
-    width?: string,
-    name: string,
-    currency?: string,
-    currencyHandler?: any,
-    unit?: string,
-    changeHandler: any,
-    note?: any,
+    pre: string
+    post?: string
+    min: number
+    max: number
+    value: number
+    width?: string
+    name: string
+    currency?: string
+    rangeFactor?: number
+    currencyHandler?: any
+    unit?: string
+    changeHandler: any
+    note?: any
     step?: number
 }
 
@@ -22,7 +23,8 @@ interface NumberInputProps {
 export default function NumberInput(props: NumberInputProps) {
     const formRef = useRef<HTMLFormElement>(null)
     const [editing, setEditing] = useState<boolean>(false)
-    const width: string = props.width ? props.width: props.currency ? '140px' : props.unit ? '40px' : '70px'
+    const width: string = props.width ? props.width : props.currency ? '140px' : props.unit ? '40px' : '70px'
+    const [rangeFactor, setRangeFactor] = useState<number>(props.rangeFactor ? props.rangeFactor : 1)
 
     useEffect(
         () => {
@@ -31,6 +33,11 @@ export default function NumberInput(props: NumberInputProps) {
         },
         [formRef]
     );
+
+    useEffect(() => {
+        if(props.rangeFactor) setRangeFactor(props.rangeFactor)
+        else setRangeFactor(1)
+    }, [props.rangeFactor])
 
     return (
         <form ref={formRef}>
@@ -46,9 +53,9 @@ export default function NumberInput(props: NumberInputProps) {
                             type="number"
                             name={props.name}
                             value={props?.value ? props.value : 0}
-                            min={props.min}
-                            max={props.max}
-                            step={props.step ? props.step : 1}
+                            min={props.min * rangeFactor}
+                            max={props.max * rangeFactor}
+                            step={props.step ? props.step * rangeFactor : 1}
                             onChange={(e) => props.changeHandler(e.currentTarget.valueAsNumber)}
                             onBlur={() => setEditing(false)}
                             required
@@ -73,7 +80,7 @@ export default function NumberInput(props: NumberInputProps) {
             {props.max &&
                 <div className="flex flex-col mt-1">
                     {/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
-                    <Slider className="bg-gray-200 rounded-full shadow" min={props.min} max={props.max} step={props.step}
+                    <Slider className="bg-gray-200 rounded-full shadow" min={props.min * rangeFactor} max={props.max * rangeFactor} step={props.step * rangeFactor}
                         value={props.value} onChange={props.changeHandler}
                         handleStyle={{
                             cursor: "grab",
@@ -98,8 +105,8 @@ export default function NumberInput(props: NumberInputProps) {
                             background: 'none',
                         }} />
                     {props.max && <div className="flex justify-between w-full text-gray-400">
-                        <label className="mr-2">{toReadableNumber(props.min ? props.min : 0)}</label>
-                        <label>{toReadableNumber(props.max)}</label>
+                        <label className="mr-2">{toReadableNumber(props.min ? props.min * rangeFactor : 0)}</label>
+                        <label>{toReadableNumber(props.max * rangeFactor)}</label>
                     </div>}
                 </div>
             }

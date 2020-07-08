@@ -21,6 +21,7 @@ interface CostProps {
     manualMode: number
     manualTargets: Array<TargetInput>
     currency: string
+    rangeFactor: number
     startYear: number
     endYear: number
     manualTgtMin?: number
@@ -59,7 +60,7 @@ export default function Cost(props: CostProps) {
         <Section inputText={props.inputText} showInputCondition={props.showInputCondition} title={props.title}
             left={
                 <NumberInput name="startingCost" pre={props.leftPre} post={props.leftPost}
-                    currency={props.currency} value={props.startingCost} changeHandler={props.startingCostHandler}
+                    currency={props.currency} rangeFactor={props.rangeFactor} value={props.startingCost} changeHandler={props.startingCostHandler}
                     min={props.leftMin} max={props.leftMax} step={500} note={props.leftNote} />
             } right={
                 props.showRightCondition && <NumberInput name="priceChgRate" pre={props.rightPre} post="Changes" note={props.rightNote} unit="%"
@@ -72,7 +73,7 @@ export default function Cost(props: CostProps) {
                     {props.manualTargets && props.manualTargets.map((t, i) =>
                         <div key={"t" + i} className="mr-4 md:mr-8 mt-8 flex flex-col justify-end items-end">
                             <label>{t.year}</label>
-                            <NumberInput name="year" pre="" currency={props.currency}
+                            <NumberInput name="year" pre="" currency={props.currency} rangeFactor={props.rangeFactor}
                                 value={t.val} changeHandler={(val: number) => changeTargetVal(val, i)}
                                 min={props.manualTgtMin ? props.manualTgtMin : 0} max={900000} step={500} />
                         </div>)}

@@ -5,9 +5,10 @@ import SVGTimeCost from './svgtimecost'
 import Section from '../form/section'
 import { toCurrency } from '../utils'
 interface TimeCostProps {
-    amount: number,
-    currency: string,
-    annualWorkWeeks: number,
+    amount: number
+    currency: string
+    rangeFactor: number
+    annualWorkWeeks: number
     workHoursPerWeek: number
 }
 
@@ -54,7 +55,7 @@ export default function TimeCost(props: TimeCostProps) {
             }
             right={
                 <NumberInput name="savings" pre="Save" note="Every Year" currency={props.currency} value={annualSavings}
-                    changeHandler={setAnnualSavings} min={1000} max={200000} step={1000} width="120px" />
+                    changeHandler={setAnnualSavings} min={1000} max={200000} step={1000} rangeFactor={getRangeFactor} />
             }  showOnLoad={true} />
 
     );
