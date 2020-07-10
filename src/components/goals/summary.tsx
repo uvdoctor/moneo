@@ -31,10 +31,10 @@ export default function Summary({ id, name, type, imp, startYear, currency, cfs,
                         <SVGEdit />
                         Edit
                     </div>
-                    {type!==APIt.GoalType.FF && <div className="flex flex-col items-center ml-2 cursor-pointer hover:text-blue-600" onClick={() => deleteCallback(id)}>
+                    <div className="flex flex-col items-center ml-2 cursor-pointer hover:text-blue-600" onClick={() => deleteCallback(id)}>
                         <SVGRemove />
                         Delete
-                    </div>}
+                    </div>
                 </div>
             </div>
             <LineChart cfs={cfs} startYear={startYear} currency={currency} />

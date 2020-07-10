@@ -71,7 +71,7 @@ const createFFGoalInput = () => {
         name: 'Financial Freedom',
         sy: startYear,
         ey: startYear + 30,
-        by: nowYear + 1,
+        by: nowYear,
         tdr: 0,
         tdl: 0,
         ccy: 'USD',
@@ -88,7 +88,8 @@ const createFFGoalInput = () => {
         dr: 0,
         sa: 0,
         achg: 5,
-        btr: 0
+        btr: 0,
+        tbi: 5
     } as APIt.CreateGoalInput
 }
 
@@ -110,7 +111,7 @@ const createBaseGoalInput = (goalType: APIt.GoalType) => {
         tgts: [],
         dr: 6,
         imp: APIt.LMH.M,
-        manual: 0,
+        manual: 0
     } as APIt.CreateGoalInput
 }
 
@@ -118,7 +119,7 @@ export const createNewGoalInput = (goalType: APIt.GoalType) => {
     if(goalType === APIt.GoalType.FF) return createFFGoalInput()
     let bg: APIt.CreateGoalInput = createBaseGoalInput(goalType)
     if (goalType !== APIt.GoalType.D) bg.btr = 10
-    if (goalType === APIt.GoalType.B || goalType === APIt.GoalType.L) {
+    if (goalType === APIt.GoalType.B || goalType === APIt.GoalType.E) {
         bg.tbi = 0
         bg.tdli = 0
         bg.emi = { rate: 4, dur: 10, per: 0, ry: bg.sy }
@@ -138,14 +139,16 @@ export const createNewGoalInput = (goalType: APIt.GoalType) => {
 export const getGoalTypes = () => {
     return {
         "B": "Buy",
+        "S": "Sell",
         "R": "Rent",
+        "E": "Educate",
         "X": "Experience",
-        "L": "Learn",
         "C": "Celebrate",
-        "F": "Provide",
-        "FF": "Retire",
+        "I": "Insure",
+        "IN": "Inherit",
         "D": "Donate",
-        "O": "Other"
+        "O": "Other",
+        "FF": "Financial Freedom"
     }
 }
 

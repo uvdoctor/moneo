@@ -35,11 +35,13 @@ export type CreateGoalInput = {
 
 export enum GoalType {
   B = "B",
+  S = "S",
   R = "R",
-  L = "L",
+  E = "E",
   X = "X",
   C = "C",
-  F = "F",
+  I = "I",
+  IN = "IN",
   FF = "FF",
   D = "D",
   O = "O",

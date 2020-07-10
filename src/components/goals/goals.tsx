@@ -102,8 +102,8 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         let fromYear = allGoals[0].by
         let toYear = allGoals[0].ey + 2
         allGoals.forEach((g) => {
-            if(g.by < fromYear) fromYear = g.by
-            if(g.ey > toYear) toYear = g.ey + 2
+            if (g.by < fromYear) fromYear = g.by
+            if (g.ey > toYear) toYear = g.ey + 2
         })
         return { from: fromYear, to: toYear }
     }
@@ -147,6 +147,11 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         setTryCFs(tryCFs)
     }
 
+    const hasFFGoal = () => {
+        if (!allGoals) return false
+        let ffGoal = allGoals.filter((g) => g.type === APIt.GoalType.FF)
+        return ffGoal && ffGoal.length === 1
+    }
     return (
         wipGoal ?
             <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
@@ -165,39 +170,47 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                     <label className="ml-2 text-xl md:text-2xl">Define Your Goals.</label>
                 </div>
                 <p className="text-center text-lg mt-1">Make Money Work Hard to Meet Them.</p>
-                <div className="flex flex-wrap justify-around">
-                    {Object.keys(getGoalTypes()).map(key =>
-                        <AwesomeButton className="mt-4" type="primary" ripple size="medium" key={key}
-                            onPress={() => createGoal(key as APIt.GoalType)}>
-                            {getGoalTypes()[key as APIt.GoalType]}
-                        </AwesomeButton>)}
-                </div>
-                <Fragment>
-                    {allGoals && allGoals.length > 0 && allCFs &&
-                        <Fragment>
-                            <div className="mt-4 md:mt-8 flex justify-center">
-                                {viewMode < 1 && <div className="mr-2"><SelectInput name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string}
-                                    changeHandler={setImpFilter} /></div>}
-                                <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
-                                {viewMode > 0 &&
-                                    <div className="flex">
-                                        <label className="ml-1 mr-2">in</label>
-                                        <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />
+
+                {hasFFGoal() ? <Fragment>
+                    <div className="flex flex-wrap justify-around">
+                        {Object.keys(getGoalTypes()).map(key =>
+                            <AwesomeButton className="mt-4" type="primary" ripple size="medium" key={key}
+                                onPress={() => createGoal(key as APIt.GoalType)}>
+                                {getGoalTypes()[key as APIt.GoalType]}
+                            </AwesomeButton>)}
+                    </div>
+                    <Fragment>
+                        {allGoals && allGoals.length > 0 && allCFs &&
+                            <Fragment>
+                                <div className="mt-4 md:mt-8 flex justify-center">
+                                    {viewMode < 1 && <div className="mr-2"><SelectInput name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string}
+                                        changeHandler={setImpFilter} /></div>}
+                                    <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
+                                    {viewMode > 0 &&
+                                        <div className="flex">
+                                            <label className="ml-1 mr-2">in</label>
+                                            <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />
+                                        </div>}
+                                </div>
+                                <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>
+                                {viewMode > 0 ?
+                                    <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} />
+                                    :
+                                    <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
+                                        {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
+                                            g.id && (!impFilter || impFilter === g.imp) &&
+                                            <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp}
+                                                startYear={g.type === APIt.GoalType.FF ? g.by : g.sy}
+                                                currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal} />)}
                                     </div>}
-                            </div>
-                            <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>
-                            {viewMode > 0 ?
-                                <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} />
-                                :
-                                <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
-                                    {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
-                                        g.id && (!impFilter || impFilter === g.imp) &&
-                                        <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} 
-                                        startYear={g.type === APIt.GoalType.FF ? g.by : g.sy}
-                                            currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal} />)}
-                                </div>}
-                        </Fragment>}
-                </Fragment>
+                            </Fragment>}
+                    </Fragment>
+                </Fragment> : <div className="text-center align-center">
+                    <p className="mt-8 mb-2">Start with Financial Freedom Goal.</p>
+                    <AwesomeButton ripple type="primary" onPress={() => createGoal(APIt.GoalType.FF)}>
+                        GET STARTED
+                    </AwesomeButton>
+                </div>}
             </Fragment>
     )
 }

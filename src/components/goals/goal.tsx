@@ -83,6 +83,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     const [rentAns, setRentAns] = useState<string>('')
     const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(goal?.tgts as Array<APIt.TargetInput>)
     const [rangeFactor, setRangeFactor] = useState<number>(getRangeFactor(currency))
+    const typesList = getGoalTypes()
 
     const createNewBaseGoal = () => {
         return {
@@ -106,7 +107,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     const createNewGoalInput = () => {
         let bg: APIt.CreateGoalInput = createNewBaseGoal()
         if (goalType !== APIt.GoalType.D) bg.btr = buyTaxRate
-        if (goalType === APIt.GoalType.B || goalType === APIt.GoalType.L) {
+        if (goalType === APIt.GoalType.B || goalType === APIt.GoalType.E) {
             bg.tbi = taxBenefitInt
             bg.tdli = maxTaxDeductionInt
             bg.emi = { rate: loanIntRate as number, dur: loanYears as number, per: loanPer as number, ry: loanRepaymentSY as number }
@@ -214,13 +215,17 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
         setCurrency(curr)
     }
 
+    useEffect(() => {
+
+    }, [])
+
     return (
         <div className="flex flex-col w-full h-full">
             <div className="flex flex-wrap justify-between items-center w-full">
                 <SVGLogo />
                 <TextInput
                     name="name"
-                    pre={getGoalTypes()[goalType]}
+                    pre={typesList[goalType]}
                     placeholder="Goal Name"
                     value={name}
                     changeHandler={setName}

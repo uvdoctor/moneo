@@ -67,7 +67,7 @@ export default function Cost(props: CostProps) {
                     min={-10} max={10} step={0.5} value={props.costChgRate} changeHandler={props.costChgRateHandler} />
             } showOnLoad={true}
             toggle={
-                <HToggle rightText={`Manual Input for Years ${props.startYear} to ${props.endYear}`} value={props.manualMode} setter={props.manualModeHandler} />
+                props.endYear > props.startYear && <HToggle rightText={`Manual Input for Years ${props.startYear} to ${props.endYear}`} value={props.manualMode} setter={props.manualModeHandler} />
             } manualInput={
                 <div className="flex flex-wrap justify-around">
                     {props.manualTargets && props.manualTargets.map((t, i) =>
