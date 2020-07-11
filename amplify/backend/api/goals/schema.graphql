@@ -15,7 +15,7 @@ type Target {
 }
 
 enum GoalType {
-B, S, R, E, X, C, I, IN, FF, D, O
+B, S, R, E, X, C, I, IN, FF, D, O, T, ST
 }
 
 type Emi {

@@ -45,6 +45,8 @@ export enum GoalType {
   FF = "FF",
   D = "D",
   O = "O",
+  T = "T",
+  ST = "ST",
 }
 
 

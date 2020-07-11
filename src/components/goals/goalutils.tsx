@@ -138,17 +138,19 @@ export const createNewGoalInput = (goalType: APIt.GoalType) => {
 
 export const getGoalTypes = () => {
     return {
-        "B": "Buy",
-        "S": "Sell",
-        "R": "Rent",
-        "E": "Educate",
-        "X": "Experience",
-        "C": "Celebrate",
-        "I": "Insure",
-        "IN": "Inherit",
-        "D": "Donate",
-        "O": "Other",
-        "FF": "Financial Freedom"
+        "B": "BUY",
+        "S": "SELL",
+        "R": "RENT",
+        "E": "EDUCATE",
+        "T": "TRAVEL",
+        "X": "EXPERIENCE",
+        "C": "CELEBRATE",
+        "I": "INSURE",
+        "IN": "INHERIT",
+        "D": "DONATE",
+        "ST": "START-UP",
+        "O": "OTHER",
+        "FF": "FINANCIAL FREEDOM"
     }
 }
 

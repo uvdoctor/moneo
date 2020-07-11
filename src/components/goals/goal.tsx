@@ -344,7 +344,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                 </div>}
 
             {nameValid && <Fragment>
-                {price > 0 && <Fragment>
+                {price > 0 && cfs && cfs.length > 1 && <Fragment>
                     <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
                         handler={setShowCFChart} svg={<SVGChart />} />
                     {showCFChart &&
