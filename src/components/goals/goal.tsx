@@ -216,149 +216,152 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     }
 
     return (
-        <div className="flex flex-col w-full h-full">
-            <div className="flex flex-wrap justify-between items-center w-full">
-                <SVGLogo />
-                <TextInput
-                    name="name"
-                    pre={typesList[goalType]}
-                    placeholder="Goal Name"
-                    value={name}
-                    changeHandler={setName}
-                    width="180px"
-                />
-                <div className="flex flex-col">
-                    <label>In</label>
-                    <CurrencyInput name="mainCurr" value={currency} changeHandler={changeCurrency} />
+        <div className="flex flex-col w-full h-screen">
+            <div className="container mx-auto overflow-y-auto flex flex-1 flex-col">
+                <div className="flex flex-wrap justify-between items-center w-full">
+                    <SVGLogo />
+                    <TextInput
+                        name="name"
+                        pre={typesList[goalType]}
+                        placeholder="Goal Name"
+                        value={name}
+                        changeHandler={setName}
+                        width="180px"
+                    />
+                    <div className="flex flex-col">
+                        <label>In</label>
+                        <CurrencyInput name="mainCurr" value={currency} changeHandler={changeCurrency} />
+                    </div>
+                    <div className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
+                        onClick={() => cancelCallback()}>
+                        <SVGClose />
+                    </div>
                 </div>
-                <div className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
-                    onClick={() => cancelCallback()}>
-                    <SVGClose />
-                </div>
-            </div>
 
-            {nameValid && <Fragment>
-                <div className="flex justify-center w-full items-center mt-4">
-                    <div className="mr-8">
-                        <SelectInput name="sy"
-                            pre="When?"
-                            value={startYear}
-                            changeHandler={changeStartYear}
-                            options={syOptions}
+                {nameValid && <Fragment>
+                    <div className="flex justify-center w-full items-center mt-4">
+                        <div className="mr-8">
+                            <SelectInput name="sy"
+                                pre="When?"
+                                value={startYear}
+                                changeHandler={changeStartYear}
+                                options={syOptions}
+                            />
+                        </div>
+                        {(manualMode > 0 || goalType !== APIt.GoalType.B) ? <SelectInput name="ey" pre="Pay Until" value={endYear}
+                            changeHandler={changeEndYear} options={eyOptions} />
+                            : <div className="flex flex-col">
+                                <label>Pay Until</label>
+                                <label className="font-semibold">{endYear}</label>
+                            </div>}
+                        {goalType !== APIt.GoalType.D &&
+                            <div className="ml-8">
+                                <RadialInput data={toStringArr(0, 20, 0.5)} step={0.5} value={buyTaxRate as number}
+                                    unit="%" pre="Taxes & Fees" label="of Cost" labelBottom={true}
+                                    post={`Total ${toCurrency(Math.round(price * (buyTaxRate as number / 100)), currency)}`}
+                                    changeHandler={setBuyTaxRate} />
+                            </div>}
+                    </div>
+                    <div className="flex justify-center w-full">
+                        <Cost startingCost={startingPrice} startingCostHandler={setStartingPrice} rangeFactor={rangeFactor}
+                            manualTargets={wipTargets} manualTargetsHandler={setWIPTargets} currency={currency}
+                            costChgRate={priceChgRate} costChgRateHandler={setPriceChgRate} endYear={endYear}
+                            manualMode={manualMode} manualModeHandler={setManualMode} startYear={startYear}
+                            inputText="How Much Does it Cost?" showInputCondition={price < 500} rightPre="Cost"
+                            title={`Cost${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
+                            showRightCondition={startYear > goal.by} leftPre={startYear > goal.by ? 'Cost' : ''}
+                            leftPost={startYear > goal.by ? `in ${goal.by}` : ''} leftMin={0} leftMax={2000000}
+                            leftNote={buyTaxRate ? `including ${buyTaxRate}% taxes & fees` : ''} rightNote={`Yearly till ${startYear}`} />
+                    </div>
+                </Fragment>}
+                {nameValid && price > 0 && sellAfter && <div className="flex justify-center w-full">
+                    <Sell price={price} startYear={startYear} endYear={endYear} sellAfter={sellAfter}
+                        sellPrice={sellPrice} sellPriceHandler={setSellPrice} sellAfterHandler={setSellAfter}
+                        cfs={cfs} currency={currency} assetChgRate={assetChgRate as number} annualReturnPer={annualReturnPer as number}
+                        assetChgRateHandler={setAssetChgRate} buyTaxRate={buyTaxRate as number}
+                        annualReturnPerHandler={setAnnualReturnPer} />
+                </div>}
+                {nameValid && price > 0 && <Fragment>
+                    <div className="flex justify-center">
+                        <TaxBenefit goalType={goalType} taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}
+                            maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction} rangeFactor={rangeFactor}
+                            totalTaxBenefit={totalTaxBenefit} totalTaxBenefitHandler={setTotalTaxBenefit} />
+                    </div>
+                    {goal?.emi && <div className="flex w-full flex-wrap justify-around">
+                        <EmiCost price={price} currency={currency} startYear={startYear} sellAfter={sellAfter}
+                            repaymentSY={loanRepaymentSY ? loanRepaymentSY : startYear} endYear={endYear} rangeFactor={rangeFactor}
+                            loanYears={loanYears as number} loanAnnualInt={loanIntRate as number} loanPer={loanPer as number}
+                            loanBorrowAmt={getLoanBorrowAmt(price, buyTaxRate as number, loanPer as number)} loanAnnualIntHandler={setLoanIntRate}
+                            loanPerHandler={setLoanPer} loanMonthsHandler={setLoanYears} repaymentSYHandler={setLoanRepaymentSY}
+                            taxBenefitInt={taxBenefitInt as number} taxBenefitIntHandler={setTaxBenefitInt} taxRate={taxRate}
+                            maxTaxDeductionInt={maxTaxDeductionInt as number} maxTaxDeductionIntHandler={setMaxTaxDeductionInt}
+                        /></div>}
+                    <div className="flex flex-wrap justify-around items-center">
+                        {sellAfter && <Fragment>
+                            <AnnualAmt currency={currency} startYear={startYear} percentage={aiPer as number} chgRate={assetChgRate as number}
+                                percentageHandler={setAIPer} annualSY={aiStartYear as number} annualSYHandler={setAIStartYear}
+                                price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
+                                title="Yearly Income Potential through Rent, Dividend, etc" footer="Exclude taxes & fees" />
+                            <AnnualAmt currency={currency} startYear={startYear} percentage={amCostPer as number} chgRate={assetChgRate as number}
+                                percentageHandler={setAMCostPer} annualSY={amStartYear as number} annualSYHandler={setAMStartYear}
+                                price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
+                                title="Yearly Fixes, Insurance, etc costs" footer="Include taxes & fees" />
+                        </Fragment>}
+                        <TimeCost amount={totalCost} currency={currency} rangeFactor={rangeFactor} workHoursPerWeek={60} annualWorkWeeks={47} />
+                        <OppCost cfs={createOppCostCFs()} currency={currency} startYear={startYear}
+                            duration={getDuration(sellAfter, startYear, endYear)} discountRate={oppDR} discountRateHandler={setOppDR} />
+                        {sellAfter &&
+                            <Section title="Instead, If You Rent" left={<div className="pl-4 pr-4">
+                                <NumberInput name="rentAmt" pre="Yearly" post="Rent" value={rentAmt} changeHandler={setRentAmt}
+                                    min={1000} max={200000} step={500} currency={currency} rangeFactor={rangeFactor} />
+                            </div>}
+                                right={
+                                    <NumberInput name="rentChg" pre="Changes" value={rentChgPer} changeHandler={setRentChgPer}
+                                        min={-10} max={10} step={0.5} unit="%" />}
+                                toggle={
+                                    <HToggle rightText="Claim Tax Benefit" value={rentTaxBenefit as number} setter={setRentTaxBenefit} />
+                                }
+                                bottom={<div className="flex items-center">
+                                    <SVGBalance />
+                                    <label className="ml-2">{rentAns}</label>
+                                </div>}
+                            />}
+                    </div>
+                </Fragment>}
+                {nameValid && sellAfter && rentAmt > 0 && price > 0 &&
+                    <div className="mb-4">
+                        <ExpandCollapse title="Buy v/s Rent for 20 Years" value={showRentChart}
+                            handler={setShowRentChart} svg={<SVGBalance />} />
+                        <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
+                            discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(20)}
+                            rentTaxBenefit={rentTaxBenefit as number} rentTaxBenefitHandler={setRentTaxBenefit}
+                            discountRateHandler={setOppDR} rentAmt={rentAmt} rentAmtHandler={setRentAmt}
+                            rentChgPer={rentChgPer} rentChgPerHandler={setRentChgPer} answer={answer}
+                            rentAns={rentAns} answerHandler={setAnswer} rentAnsHandler={setRentAns} showRentChart={showRentChart} />
+                    </div>}
+
+                {nameValid && <Fragment>
+                    {price > 0 && cfs && cfs.length > 1 && <Fragment>
+                        <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
+                            handler={setShowCFChart} svg={<SVGChart />} />
+                        {showCFChart &&
+                            <LineChart cfs={cfs} startYear={startYear} currency={currency} />
+                        }
+                    </Fragment>}
+                    <div className="mt-8 flex justify-center">
+                        <SelectInput name="imp"
+                            pre="How Important is this Goal?"
+                            value={impLevel}
+                            changeHandler={setImpLevel}
+                            options={getImpLevels()}
                         />
                     </div>
-                    {(manualMode > 0 || goalType !== APIt.GoalType.B) ? <SelectInput name="ey" pre="Pay Until" value={endYear}
-                        changeHandler={changeEndYear} options={eyOptions} />
-                        : <div className="flex flex-col">
-                            <label>Pay Until</label>
-                            <label className="font-semibold">{endYear}</label>
-                        </div>}
-                    {goalType !== APIt.GoalType.D &&
-                        <div className="ml-8">
-                            <RadialInput data={toStringArr(0, 20, 0.5)} step={0.5} value={buyTaxRate as number}
-                                unit="%" pre="Taxes & Fees" label="of Cost" labelBottom={true}
-                                post={`Total ${toCurrency(Math.round(price * (buyTaxRate as number / 100)), currency)}`}
-                                changeHandler={setBuyTaxRate} />
-                        </div>}
-                </div>
-                <div className="flex justify-center w-full">
-                    <Cost startingCost={startingPrice} startingCostHandler={setStartingPrice} rangeFactor={rangeFactor}
-                        manualTargets={wipTargets} manualTargetsHandler={setWIPTargets} currency={currency}
-                        costChgRate={priceChgRate} costChgRateHandler={setPriceChgRate} endYear={endYear}
-                        manualMode={manualMode} manualModeHandler={setManualMode} startYear={startYear}
-                        inputText="How Much Does it Cost?" showInputCondition={price < 500} rightPre="Cost"
-                        title={`Cost${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
-                        showRightCondition={startYear > goal.by} leftPre={startYear > goal.by ? 'Cost' : ''}
-                        leftPost={startYear > goal.by ? `in ${goal.by}` : ''} leftMin={0} leftMax={2000000}
-                        leftNote={buyTaxRate ? `including ${buyTaxRate}% taxes & fees` : ''} rightNote={`Yearly till ${startYear}`} />
-                </div>
-            </Fragment>}
-            {nameValid && price > 0 && sellAfter && <div className="flex justify-center w-full">
-                <Sell price={price} startYear={startYear} endYear={endYear} sellAfter={sellAfter}
-                    sellPrice={sellPrice} sellPriceHandler={setSellPrice} sellAfterHandler={setSellAfter}
-                    cfs={cfs} currency={currency} assetChgRate={assetChgRate as number} annualReturnPer={annualReturnPer as number}
-                    assetChgRateHandler={setAssetChgRate} buyTaxRate={buyTaxRate as number}
-                    annualReturnPerHandler={setAnnualReturnPer} />
-            </div>}
-            {nameValid && price > 0 && <Fragment>
-                <div className="flex justify-center">
-                    <TaxBenefit goalType={goalType} taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}
-                        maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction} rangeFactor={rangeFactor}
-                        totalTaxBenefit={totalTaxBenefit} totalTaxBenefitHandler={setTotalTaxBenefit} />
-                </div>
-                {goal?.emi && <div className="flex w-full flex-wrap justify-around">
-                    <EmiCost price={price} currency={currency} startYear={startYear} sellAfter={sellAfter}
-                        repaymentSY={loanRepaymentSY ? loanRepaymentSY : startYear} endYear={endYear} rangeFactor={rangeFactor}
-                        loanYears={loanYears as number} loanAnnualInt={loanIntRate as number} loanPer={loanPer as number}
-                        loanBorrowAmt={getLoanBorrowAmt(price, buyTaxRate as number, loanPer as number)} loanAnnualIntHandler={setLoanIntRate}
-                        loanPerHandler={setLoanPer} loanMonthsHandler={setLoanYears} repaymentSYHandler={setLoanRepaymentSY}
-                        taxBenefitInt={taxBenefitInt as number} taxBenefitIntHandler={setTaxBenefitInt} taxRate={taxRate}
-                        maxTaxDeductionInt={maxTaxDeductionInt as number} maxTaxDeductionIntHandler={setMaxTaxDeductionInt}
-                    /></div>}
-                <div className="flex flex-wrap justify-around items-center">
-                    {sellAfter && <Fragment>
-                        <AnnualAmt currency={currency} startYear={startYear} percentage={aiPer as number} chgRate={assetChgRate as number}
-                            percentageHandler={setAIPer} annualSY={aiStartYear as number} annualSYHandler={setAIStartYear}
-                            price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
-                            title="Yearly Income Potential through Rent, Dividend, etc" footer="Exclude taxes & fees" />
-                        <AnnualAmt currency={currency} startYear={startYear} percentage={amCostPer as number} chgRate={assetChgRate as number}
-                            percentageHandler={setAMCostPer} annualSY={amStartYear as number} annualSYHandler={setAMStartYear}
-                            price={price} buyTaxRate={buyTaxRate as number} duration={getDuration(sellAfter, startYear, endYear)}
-                            title="Yearly Fixes, Insurance, etc costs" footer="Include taxes & fees" />
-                    </Fragment>}
-                    <TimeCost amount={totalCost} currency={currency} rangeFactor={rangeFactor} workHoursPerWeek={60} annualWorkWeeks={47} />
-                    <OppCost cfs={createOppCostCFs()} currency={currency} startYear={startYear}
-                        duration={getDuration(sellAfter, startYear, endYear)} discountRate={oppDR} discountRateHandler={setOppDR} />
-                    {sellAfter &&
-                        <Section title="Instead, If You Rent" left={<div className="pl-4 pr-4">
-                            <NumberInput name="rentAmt" pre="Yearly" post="Rent" value={rentAmt} changeHandler={setRentAmt}
-                                min={1000} max={200000} step={500} currency={currency} rangeFactor={rangeFactor} />
-                        </div>}
-                            right={
-                                <NumberInput name="rentChg" pre="Changes" value={rentChgPer} changeHandler={setRentChgPer}
-                                    min={-10} max={10} step={0.5} unit="%" />}
-                            toggle={
-                                <HToggle rightText="Claim Tax Benefit" value={rentTaxBenefit as number} setter={setRentTaxBenefit} />
-                            }
-                            bottom={<div className="flex items-center">
-                                <SVGBalance />
-                                <label className="ml-2">{rentAns}</label>
-                            </div>}
-                        />}
-                </div>
-            </Fragment>}
-            {nameValid && sellAfter && rentAmt > 0 && price > 0 &&
-                <div className="mb-4">
-                    <ExpandCollapse title="Buy v/s Rent for 20 Years" value={showRentChart}
-                        handler={setShowRentChart} svg={<SVGBalance />} />
-                    <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
-                        discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(20)}
-                        rentTaxBenefit={rentTaxBenefit as number} rentTaxBenefitHandler={setRentTaxBenefit}
-                        discountRateHandler={setOppDR} rentAmt={rentAmt} rentAmtHandler={setRentAmt}
-                        rentChgPer={rentChgPer} rentChgPerHandler={setRentChgPer} answer={answer}
-                        rentAns={rentAns} answerHandler={setAnswer} rentAnsHandler={setRentAns} showRentChart={showRentChart} />
-                </div>}
-
-            {nameValid && <Fragment>
-                {price > 0 && cfs && cfs.length > 1 && <Fragment>
-                    <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
-                        handler={setShowCFChart} svg={<SVGChart />} />
-                    {showCFChart &&
-                        <LineChart cfs={cfs} startYear={startYear} currency={currency} />
-                    }
                 </Fragment>}
-                <div className="mt-8 flex justify-center">
-                    <SelectInput name="imp"
-                        pre="How Important is this Goal?"
-                        value={impLevel}
-                        changeHandler={setImpLevel}
-                        options={getImpLevels()}
-                    />
-                </div>
+            </div>
+            
                 <ActionButtons submitDisabled={submitDisabled}
                     cancelHandler={cancelCallback} submitHandler={handleSubmit}
                     submitText={`${goal.id ? 'Update' : 'Create'} Goal`} />
-            </Fragment>}
         </div>
     )
 }

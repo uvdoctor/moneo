@@ -11,14 +11,14 @@ interface ActionButtonsProps {
 
 export default function ActionButtons(props: ActionButtonsProps) {
     return (
-        <div className="flex justify-center mt-8 mb-4 w-full">
-        <AwesomeButton type="secondary" onPress={props.cancelHandler}>
-            Cancel
-        </AwesomeButton>
-        <AwesomeButton className={`ml-8 ${props.submitDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`} 
-        type="primary" ripple onPress={props.submitHandler} disabled={props.submitDisabled}>
-            {props.submitText}
-        </AwesomeButton>
-    </div>
+        <footer className="w-full p-4 border-t flex justify-center border-grey pin-b">
+            <AwesomeButton type="secondary" onPress={props.cancelHandler}>
+                Cancel
+            </AwesomeButton>
+            <AwesomeButton className={`ml-8 ${props.submitDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                type="primary" ripple onPress={props.submitHandler} disabled={props.submitDisabled}>
+                {props.submitText}
+            </AwesomeButton>
+        </footer>
     )
 }

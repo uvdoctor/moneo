@@ -153,110 +153,112 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
     }
 
     return (
-        <Fragment>
-            <div className="flex justify-between items-center">
-                <SVGLogo />
-                <label className="font-semibold text-xl md:text-2xl">Hello Financial Freedom!</label>
-                <div className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
-                    onClick={() => cancelCallback()}>
-                    <SVGClose />
-                </div>
-            </div>
-            <div className="mt-4 flex justify-around items-start w-full">
-                <SelectInput name="sy" pre="Achieve By" post="Or Earlier"
-                    value={startYear} changeHandler={changeStartYear} options={syOptions} />
-                <SelectInput name="ey" pre="Plan Until" value={endYear}
-                    changeHandler={changeEndYear} options={eyOptions} />
-                <div className="flex flex-col">
-                    <label>Currency</label>
-                    <CurrencyInput name="mainCurr" value={currency} changeHandler={changeCurrency} />
-                </div>
-            </div>
-            <div className="flex justify-around w-full">
-                <Cost startingCost={annualSavings} startingCostHandler={setAnnualSavings} rangeFactor={rangeFactor}
-                    manualTargets={wipTargets} manualTgtMin={-50000} manualTargetsHandler={setWIPTargets} currency={currency}
-                    costChgRate={savingsPer} costChgRateHandler={setSavingsPer} endYear={startYear - 1}
-                    manualMode={manualMode} manualModeHandler={setManualMode} startYear={goal.by}
-                    inputText="How Much Can You Save?" showInputCondition={((manualMode < 1 && annualSavings === 0) || (manualMode > 0 && !hasInput(wipTargets)))} rightPre="Savings" rightNote={`Yearly till ${startYear - 1}`}
-                    title={manualMode > 0 ? `Annual Savings from ${goal.by} to ${startYear - 1}`
-                        : startYear - 1 > goal.by ? `Annual Savings in ${startYear - 1} ~ ${toCurrency(Math.round(getCompoundedIncome(savingsPer, annualSavings, startYear - 1 - goal.by)), currency)}` : 'Annual Savings'}
-                    showRightCondition={startYear - 1 > goal.by} leftPre='Savings' leftPost={`in ${goal.by}`} leftMin={-50000} leftMax={200000}
-                    footer={`${annualSavings === 0 ? ' Include retirement fund contribution. Deduct taxes & all expenses including insurance premiums.' : `${startYear - 1} may be the last year for work income given You want to be Financially Free before ${startYear}.`}`} />
-            </div>
-            <div className="flex flex-wrap justify-around w-full">
-                <Section inputText={`Living Cost after Financial Freedom`} showInputCondition={((manualMode < 1 && annualSavings != 0) || (manualMode > 0 && hasInput(wipTargets))) && startingCost < 5000} title={
-                    `Withdraw Savings ~ ${toCurrency(Math.round(retirementCost * (1 + taxRate / 100)), currency)} in ${startYear}`}
-                    left={
-                        <NumberInput name="currExpense" pre='Yearly' post='Cost' note={`In Today's Money`}
-                            currency={currency} rangeFactor={rangeFactor} value={startingCost} changeHandler={setStartingCost} min={0} max={100000} step={1000} width="120px" />
-                    } right={
-                        <NumberInput name="priceChgRate" pre="Cost" post="Changes" note='Yearly' unit="%"
-                            min={0} max={10} step={0.1} value={costChgRate} changeHandler={setCostChgRate} />
-                    } bottom={
-                        <div className="flex flex-wrap w-full justify-around items-center">
-                            <RadialInput data={toStringArr(0, 10)} value={bufferPer} changeHandler={setBufferPer}
-                                step={1} unit="%" pre="Unplanned Expense" post="Yearly Expense" label="of Total" labelBottom />
-                            <NumberInput name="tr" pre="Income" post="Tax Rate" min={0} max={20} step={0.1}
-                                value={taxRate} changeHandler={setTaxRate} unit="%" />
-                        </div>
-                    }
-                    footer={`Use Savings to meet expenses from ${startYear} to ${endYear}. You may have to pay income tax on retirement account withdrawals or gains from selling investments.`} />
-                <Section title="Long-term Care Insurance" left={
-                    <div className="flex flex-col items-center justify-center">
-                        <NumberInput name="cp" value={carePremium} changeHandler={setCarePremium} rangeFactor={rangeFactor}
-                            pre="Yearly" post="Premium" min={0} max={10000} step={100} currency={currency} />
-                        <div className="flex justify-between items-start w-full">
-                            <SelectInput name="cpsy" value={carePremiumSY} options={cyOptions}
-                                pre="Pay" post="Onwards" changeHandler={changeCarePremiumYear} />
-                            <SelectInput name="cpdur" value={carePremiumDur} options={initYearOptions(5, 15)}
-                                pre="For" post='Years' changeHandler={changeCarePremiumDur} />
-                        </div>
+        <div className="flex flex-col w-full h-screen">
+            <div className="container mx-auto overflow-y-auto flex flex-1 flex-col">
+                <div className="flex justify-between items-center">
+                    <SVGLogo />
+                    <label className="font-semibold text-xl md:text-2xl">Hello Financial Freedom!</label>
+                    <div className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
+                        onClick={() => cancelCallback()}>
+                        <SVGClose />
                     </div>
-                } right={
-                    <RadialInput value={carePremiumChgPer} changeHandler={setCarePremiumChgPer}
-                        pre="Premium Changes" label="Yearly" labelBottom post={`Total ${toCurrency(totalCP, currency)}`}
-                        data={toStringArr(0, 10, 0.5)} step={0.5} unit="%" />
-                } bottomLeft={`${taxRate > 0 ? 'Max Yearly' : ''}`}
-                    bottomRight={`${taxRate > 0 ? 'Allowed' : ''}`}
-                    bottom={taxRate > 0 &&
-                        <NumberInput name="maxTDL" pre="Tax" post="Deduction" currency={currency}
-                            value={careTaxDedLimit} changeHandler={setCareTaxDedLimit} width="80px"
-                            min={0} max={5000} step={500} rangeFactor={rangeFactor} note={
-                                <ResultItem label='Total Tax Benefit' currency={currency} result={totalTaxBenefit} />
-                            } />
+                </div>
+                <div className="mt-4 flex justify-around items-start w-full">
+                    <SelectInput name="sy" pre="Achieve By" post="Or Earlier"
+                        value={startYear} changeHandler={changeStartYear} options={syOptions} />
+                    <SelectInput name="ey" pre="Plan Until" value={endYear}
+                        changeHandler={changeEndYear} options={eyOptions} />
+                    <div className="flex flex-col">
+                        <label>Currency</label>
+                        <CurrencyInput name="mainCurr" value={currency} changeHandler={changeCurrency} />
+                    </div>
+                </div>
+                <div className="flex justify-around w-full">
+                    <Cost startingCost={annualSavings} startingCostHandler={setAnnualSavings} rangeFactor={rangeFactor}
+                        manualTargets={wipTargets} manualTgtMin={-50000} manualTargetsHandler={setWIPTargets} currency={currency}
+                        costChgRate={savingsPer} costChgRateHandler={setSavingsPer} endYear={startYear - 1}
+                        manualMode={manualMode} manualModeHandler={setManualMode} startYear={goal.by}
+                        inputText="How Much Can You Save?" showInputCondition={((manualMode < 1 && annualSavings === 0) || (manualMode > 0 && !hasInput(wipTargets)))} rightPre="Savings" rightNote={`Yearly till ${startYear - 1}`}
+                        title={manualMode > 0 ? `Annual Savings from ${goal.by} to ${startYear - 1}`
+                            : startYear - 1 > goal.by ? `Annual Savings in ${startYear - 1} ~ ${toCurrency(Math.round(getCompoundedIncome(savingsPer, annualSavings, startYear - 1 - goal.by)), currency)}` : 'Annual Savings'}
+                        showRightCondition={startYear - 1 > goal.by} leftPre='Savings' leftPost={`in ${goal.by}`} leftMin={-50000} leftMax={200000}
+                        footer={`${annualSavings === 0 ? ' Include retirement fund contribution. Deduct taxes & all expenses including insurance premiums.' : `${startYear - 1} may be the last year for work income given You want to be Financially Free before ${startYear}.`}`} />
+                </div>
+                <div className="flex flex-wrap justify-around w-full">
+                    <Section inputText={`Living Cost after Financial Freedom`} showInputCondition={((manualMode < 1 && annualSavings != 0) || (manualMode > 0 && hasInput(wipTargets))) && startingCost < 5000} title={
+                        `Withdraw Savings ~ ${toCurrency(Math.round(retirementCost * (1 + taxRate / 100)), currency)} in ${startYear}`}
+                        left={
+                            <NumberInput name="currExpense" pre='Yearly' post='Cost' note={`In Today's Money`}
+                                currency={currency} rangeFactor={rangeFactor} value={startingCost} changeHandler={setStartingCost} min={0} max={100000} step={1000} width="120px" />
+                        } right={
+                            <NumberInput name="priceChgRate" pre="Cost" post="Changes" note='Yearly' unit="%"
+                                min={0} max={10} step={0.1} value={costChgRate} changeHandler={setCostChgRate} />
+                        } bottom={
+                            <div className="flex flex-wrap w-full justify-around items-center">
+                                <RadialInput data={toStringArr(0, 10)} value={bufferPer} changeHandler={setBufferPer}
+                                    step={1} unit="%" pre="Unplanned Expense" post="Yearly Expense" label="of Total" labelBottom />
+                                <NumberInput name="tr" pre="Income" post="Tax Rate" min={0} max={20} step={0.1}
+                                    value={taxRate} changeHandler={setTaxRate} unit="%" />
+                            </div>
+                        }
+                        footer={`Use Savings to meet expenses from ${startYear} to ${endYear}. You may have to pay income tax on retirement account withdrawals or gains from selling investments.`} />
+                    <Section title="Long-term Care Insurance" left={
+                        <div className="flex flex-col items-center justify-center">
+                            <NumberInput name="cp" value={carePremium} changeHandler={setCarePremium} rangeFactor={rangeFactor}
+                                pre="Yearly" post="Premium" min={0} max={10000} step={100} currency={currency} />
+                            <div className="flex justify-between items-start w-full">
+                                <SelectInput name="cpsy" value={carePremiumSY} options={cyOptions}
+                                    pre="Pay" post="Onwards" changeHandler={changeCarePremiumYear} />
+                                <SelectInput name="cpdur" value={carePremiumDur} options={initYearOptions(5, 15)}
+                                    pre="For" post='Years' changeHandler={changeCarePremiumDur} />
+                            </div>
+                        </div>
+                    } right={
+                        <RadialInput value={carePremiumChgPer} changeHandler={setCarePremiumChgPer}
+                            pre="Premium Changes" label="Yearly" labelBottom post={`Total ${toCurrency(totalCP, currency)}`}
+                            data={toStringArr(0, 10, 0.5)} step={0.5} unit="%" />
+                    } bottomLeft={`${taxRate > 0 ? 'Max Yearly' : ''}`}
+                        bottomRight={`${taxRate > 0 ? 'Allowed' : ''}`}
+                        bottom={taxRate > 0 &&
+                            <NumberInput name="maxTDL" pre="Tax" post="Deduction" currency={currency}
+                                value={careTaxDedLimit} changeHandler={setCareTaxDedLimit} width="80px"
+                                min={0} max={5000} step={500} rangeFactor={rangeFactor} note={
+                                    <ResultItem label='Total Tax Benefit' currency={currency} result={totalTaxBenefit} />
+                                } />
+                        } />
+                    <Section title={`Leave Behind ~ ${toCurrency(Math.round(leaveBehind * (1 + (successionTaxRate / 100))), currency)} in ${endYear + 1}`} left={
+                        <NumberInput name="lb" value={leaveBehind} changeHandler={setLeaveBehind} rangeFactor={rangeFactor}
+                            min={0} max={500000} pre="Amount" note="For Loved Ones" currency={currency} step={1000} />
+                    } right={
+                        <NumberInput name="str" pre="Inheritance" post="Tax Rate" min={0} max={20} step={0.1}
+                            value={successionTaxRate} changeHandler={setSuccessionTaxRate} unit="%"
+                            note={`Total ${toCurrency(Math.round(leaveBehind * (successionTaxRate / 100)), currency)}`} />
                     } />
-                <Section title={`Leave Behind ~ ${toCurrency(Math.round(leaveBehind * (1 + (successionTaxRate / 100))), currency)} in ${endYear + 1}`} left={
-                    <NumberInput name="lb" value={leaveBehind} changeHandler={setLeaveBehind} rangeFactor={rangeFactor}
-                        min={0} max={500000} pre="Amount" note="For Loved Ones" currency={currency} step={1000} />
-                } right={
-                    <NumberInput name="str" pre="Inheritance" post="Tax Rate" min={0} max={20} step={0.1}
-                        value={successionTaxRate} changeHandler={setSuccessionTaxRate} unit="%"
-                        note={`Total ${toCurrency(Math.round(leaveBehind * (successionTaxRate / 100)), currency)}`} />
-                } />
+                </div>
+                <div className="flex justify-center w-full">
+                    <Section title="Potential Gains due to Inheritance, Selling Assets or Investments, etc." left={
+                        <DynamicTgtInput startYear={goal.by} endYear={endYear} currency={currency}
+                            rangeFactor={rangeFactor} tgts={gains} tgtsHandler={setGains} />
+                    } right={<div />} footer="Exclude taxes & fees." />
+                </div>
+                <div className="flex justify-center w-full">
+                    <Section title="Potential Losses due to Selling Assets, Investments, etc." left={
+                        <DynamicTgtInput startYear={goal.by} endYear={endYear} currency={currency}
+                            rangeFactor={rangeFactor} tgts={losses} tgtsHandler={setLosses} />
+                    } right={<div />} footer="Include taxes & fees." />
+                </div>
+                <Fragment>
+                    <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
+                        handler={setShowCFChart} svg={<SVGChart />} />
+                    {showCFChart && <Fragment>
+                        <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>
+                        <LineChart cfs={cfs} startYear={goal.by} currency={currency} />
+                    </Fragment>}
+                </Fragment>
             </div>
-            <div className="flex justify-center w-full">
-                <Section title="Potential Gains due to Inheritance, Selling Assets or Investments, etc." left={
-                    <DynamicTgtInput startYear={goal.by} endYear={endYear} currency={currency}
-                        rangeFactor={rangeFactor} tgts={gains} tgtsHandler={setGains} />
-                } right={<div />} footer="Exclude taxes & fees." />
-            </div>
-            <div className="flex justify-center w-full">
-                <Section title="Potential Losses due to Selling Assets, Investments, etc." left={
-                    <DynamicTgtInput startYear={goal.by} endYear={endYear} currency={currency}
-                        rangeFactor={rangeFactor} tgts={losses} tgtsHandler={setLosses} />
-                } right={<div />} footer="Include taxes & fees." />
-            </div>
-            <Fragment>
-                <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
-                    handler={setShowCFChart} svg={<SVGChart />} />
-                {showCFChart && <Fragment>
-                    <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>
-                    <LineChart cfs={cfs} startYear={goal.by} currency={currency} />
-                </Fragment>}
-            </Fragment>
             <ActionButtons submitDisabled={submitDisabled}
                 cancelHandler={cancelCallback} submitHandler={handleSubmit}
                 submitText={`${goal.id ? 'Update' : 'Create'} Goal`} />
-        </Fragment >
+        </div>
     )
 }

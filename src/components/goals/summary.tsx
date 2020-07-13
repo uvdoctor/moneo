@@ -19,7 +19,7 @@ interface SummaryProps {
 export default function Summary({ id, name, type, imp, startYear, currency, cfs, deleteCallback, editCallback }: SummaryProps) {
     const bgColor = imp === APIt.LMH.H ? 'bg-blue-600' : (imp === APIt.LMH.M ? 'bg-orange-600' : 'bg-green-600')
     return (
-        <div className="mt-4 mb-4 pr-1 max-w-sm rounded shadow-lg text-lg md:text-xl w-full">
+        <div className="mt-4 mb-4 pr-1 max-w-sm md:max-w-md rounded shadow-lg text-lg md:text-xl w-full">
             <div className="flex justify-between items-center w-full">
                 <label className={`${bgColor} text-white py-1 px-2`}>{getImpLevels()[imp]}</label>
                 <div className="flex flex-col justify-center items-center font-semibold">
