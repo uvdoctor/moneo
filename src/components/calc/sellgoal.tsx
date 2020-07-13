@@ -1,23 +1,23 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect } from 'react'
 import TextInput from '../form/textinput'
 import SelectInput from '../form/selectinput'
 import NumberInput from '../form/numberinput'
 import * as APIt from '../../api/goals'
 import { initYearOptions, getRangeFactor } from '../utils'
 import CurrencyInput from '../form/currencyinput'
-import BRComparison from '../calc/brcomparison'
+import BRComparison from './brcomparison'
 import Section from '../form/section'
 import SVGClose from '../svgclose'
-import { calculateSellCFs, calculateSellPrice } from './cfutils'
-import { getGoalTypes } from './goalutils'
+import { calculateSellCFs } from '../goals/cfutils'
+import { getGoalTypes } from '../goals/goalutils'
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button"
 import SVGLogo from '../svglogo'
-import AnnualAmt from './annualamt'
+import AnnualAmt from '../goals/annualamt'
 import ExpandCollapse from '../form/expandcollapse'
-import SVGBalance from '../calc/svgbalance'
+import SVGBalance from './svgbalance'
 import ActionButtons from '../form/actionbuttons'
-import OppCost from '../calc/oppcost'
+import OppCost from './oppcost'
 import HToggle from '../horizontaltoggle'
 
 interface SellGoalProps {
@@ -33,13 +33,9 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
     const [sellYear, setSellYear] = useState<number>(0)
     const [cost, setCost] = useState<number>(goal?.cp as number)
     const [byOptions] = useState(initYearOptions(goal.by, -50))
-    const [syOptions] = useState(initYearOptions(goal.by, 20))
     const [currentMarketPrice, setCurrentMarketPrice] = useState<number>(0)
-    const [taxRate, setTaxRate] = useState<number>(goal?.tdr)
-    const [maxTaxDeduction, setMaxTaxDeduction] = useState<number>(goal?.tdl)
     const [currency, setCurrency] = useState<string>(goal?.ccy)
     const [name, setName] = useState<string>(goal?.name)
-    const [sellPrice, setSellPrice] = useState<number>(0)
     const [assetChgRate, setAssetChgRate] = useState<number | null | undefined>(goal?.achg)
     const [amCostPer, setAMCostPer] = useState<number | null | undefined>(goal?.amper)
     const [amStartYear, setAMStartYear] = useState<number | null | undefined>(goal?.amsy)
@@ -48,14 +44,11 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
     const [oppDR, setOppDR] = useState<number>(goal?.dr ? goal.dr : 6)
     const [rentTaxBenefit, setRentTaxBenefit] = useState<number | null | undefined>(goal?.tbr)
     const [showRentChart, setShowRentChart] = useState<boolean>(true)
-    const [showCFChart, setShowCFChart] = useState<boolean>(true)
     const goalType = goal?.type as APIt.GoalType
     const [cfs, setCFs] = useState<Array<number>>(cashFlows ? cashFlows : [])
     const [submitDisabled, setSubmitDisabled] = useState<boolean>(true)
     const [rentAmt, setRentAmt] = useState<number>(0)
     const [rentChgPer, setRentChgPer] = useState<number>(5)
-    const [annualReturnPer, setAnnualReturnPer] = useState<number | null>(0)
-    const [totalTaxBenefit, setTotalTaxBenefit] = useState<number>(0)
     const [nameValid, setNameValid] = useState<boolean>(false)
     const [answer, setAnswer] = useState<string>('')
     const [rentAns, setRentAns] = useState<string>('')
@@ -64,6 +57,10 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
 
     const changeBoughtYear = (str: string) => {
         setBoughtYear(parseInt(str))
+    }
+
+    const changeSellYear = (str: string) => {
+        setSellYear(parseInt(str))
     }
 
     useEffect(() => setNameValid(name.length >= 3), [name])
@@ -128,7 +125,7 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
 
     useEffect(() => {
         if (!cashFlows) calculateYearlyCFs(sellYear - goal.by)
-    }, [currentMarketPrice, assetChgRate, sellYear, taxRate, maxTaxDeduction,
+    }, [currentMarketPrice, assetChgRate, sellYear,
         amCostPer, amStartYear, aiPer, aiStartYear, cashFlows])
 
     return (
@@ -165,16 +162,19 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
                                 value={cost} changeHandler={setCost} currency={currency}
                                 rangeFactor={rangeFactor} min={0} max={900000} step={500} />
                         } />
-                    <Section title="Sell Details" left={
+                    <Section title="Sell Details" right={
                         <SelectInput name="by"
                             pre="When?"
                             value={sellYear}
-                            changeHandler={changeBoughtYear}
+                            changeHandler={changeSellYear}
                             options={byOptions}
-                        />} right={
-                            <NumberInput name="cost" pre="Cost" post={`in ${boughtYear}`}
-                                value={cost} changeHandler={setCost} currency={currency}
+                        />} left={
+                            <NumberInput name="sp" pre="Current" post="Price"
+                                value={currentMarketPrice} changeHandler={setCurrentMarketPrice} currency={currency}
                                 rangeFactor={rangeFactor} min={0} max={900000} step={500} />
+                        } bottomLeft="Assume" bottomRight="Yearly" bottom={
+                            <NumberInput name="assetChgRate" pre="Sell Price" post="Changes" unit="%"
+                                min={-20} max={20} step={0.5} value={assetChgRate as number} changeHandler={setAssetChgRate} />
                         } />
                     <AnnualAmt currency={currency} startYear={goal.by} percentage={aiPer as number} chgRate={assetChgRate as number}
                         percentageHandler={setAIPer} annualSY={aiStartYear as number} annualSYHandler={setAIStartYear}
@@ -205,20 +205,13 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
             <div className="mb-4">
                 <ExpandCollapse title="Hold v/s Sell & Rent for 20 Years" value={showRentChart}
                     handler={setShowRentChart} svg={<SVGBalance />} />
-                <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellYear - goal.by}
+                <BRComparison currency={currency} taxRate={0} sellAfter={sellYear - goal.by}
                     discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(20)}
                     rentTaxBenefit={rentTaxBenefit as number} rentTaxBenefitHandler={setRentTaxBenefit}
                     discountRateHandler={setOppDR} rentAmt={rentAmt} rentAmtHandler={setRentAmt}
                     rentChgPer={rentChgPer} rentChgPerHandler={setRentChgPer} answer={answer}
                     rentAns={rentAns} answerHandler={setAnswer} rentAnsHandler={setRentAns} showRentChart={showRentChart} />
             </div>
-            {currentMarketPrice > 0 && cfs && cfs.length > 1 && <Fragment>
-                    <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
-                        handler={setShowCFChart} svg={<SVGChart />} />
-                    {showCFChart &&
-                        <LineChart cfs={cfs} startYear={goal.by} currency={currency} />
-                    }
-                </Fragment>}
             <ActionButtons submitDisabled={submitDisabled}
                 cancelHandler={cancelCallback} submitHandler={handleSubmit}
                 submitText={`${goal.id ? 'Update' : 'Create'} Goal`} />
