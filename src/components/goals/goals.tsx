@@ -68,6 +68,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         setAllCFs(allCFs)
         setWIPGoal(null)
         setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
+        if(g.type === APIt.GoalType.FF) setFFGoalFlag(true)
     }
 
     const updateGoal = async (goal: APIt.UpdateGoalInput, cfs: Array<number>) => {
@@ -176,11 +177,13 @@ export default function Goals({ showModalHandler }: GoalsProps) {
 
                 <div className="flex flex-wrap justify-around">
                     {Object.keys(getGoalTypes()).map(key =>
-                        key !== APIt.GoalType.FF && <AwesomeButton className="mt-4" type="primary" ripple size="medium" key={key}
+                        key !== APIt.GoalType.FF && 
+                        <AwesomeButton className={`mt-4 ${!ffGoalFlag ? 'cursor-not-allowed' : 'cursor-pointer'}`} type="primary" ripple size="medium" key={key}
                             disabled={!ffGoalFlag} onPress={() => createGoal(key as APIt.GoalType)}>
                             {getGoalTypes()[key as APIt.GoalType]}
                         </AwesomeButton>)}
                 </div>
+                {goalsLoaded && <Fragment>
                 {ffGoalFlag && allGoals && allGoals.length > 0 && allCFs ?
                     <Fragment>
                         <div className="mt-4 md:mt-8 flex justify-center">
@@ -209,8 +212,9 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                         <p className="mt-8 mb-2">Start with Financial Freedom Goal.</p>
                         <AwesomeButton ripple type="primary" onPress={() => createGoal(APIt.GoalType.FF)}>
                             GET STARTED
-                    </AwesomeButton>
+                        </AwesomeButton>
                     </div>}
+                </Fragment>}
             </Fragment>
     )
 }

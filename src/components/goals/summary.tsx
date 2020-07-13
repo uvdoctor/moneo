@@ -1,7 +1,7 @@
 import React from 'react'
 import * as APIt from '../../api/goals'
 import LineChart from './linechart'
-import SVGRemove from '../svgremove'
+import SVGTrash from '../svgtrash'
 import SVGEdit from '../svgedit'
 import { getGoalTypes, getImpLevels } from './goalutils'
 interface SummaryProps {
@@ -32,7 +32,7 @@ export default function Summary({ id, name, type, imp, startYear, currency, cfs,
                         Edit
                     </div>
                     <div className="flex flex-col items-center ml-2 cursor-pointer hover:text-blue-600" onClick={() => deleteCallback(id)}>
-                        <SVGRemove />
+                        <SVGTrash />
                         Delete
                     </div>
                 </div>

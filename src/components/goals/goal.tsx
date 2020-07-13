@@ -215,10 +215,6 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
         setCurrency(curr)
     }
 
-    useEffect(() => {
-
-    }, [])
-
     return (
         <div className="flex flex-col w-full h-full">
             <div className="flex flex-wrap justify-between items-center w-full">

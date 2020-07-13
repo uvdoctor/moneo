@@ -46,7 +46,7 @@ export const calculateCFs = (goal: APIt.CreateGoalInput, duration: number) => {
     else return createAutoCFs(goal, duration)
 }
 
-export const calculateTotalCPTaxBenefit = (taxRate: number, maxTDL: number, 
+export const calculateTotalCPTaxBenefit = (taxRate: number, maxTDL: number,
     paymentSY: number, payment: number, paymentChgRate: number, duration: number) => {
     if (!taxRate) return 0
     let totalTaxBenefit = 0
@@ -77,7 +77,7 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput) => {
     let firstYearCost = getCompoundedIncome(g.chg as number, g.cp as number, duration)
     let taxBenefit = 0
     for (let year = g.sy, cf = firstYearCost; year <= g.ey; year++) {
-        cf = getCompoundedIncome(g.chg as number, firstYearCost, year - g.sy) * (1 + (g.tbi as number/100))
+        cf = getCompoundedIncome(g.chg as number, firstYearCost, year - g.sy) * (1 + (g.tbi as number / 100))
         cf -= taxBenefit
         taxBenefit = 0
         //@ts-ignore
@@ -92,6 +92,25 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput) => {
     }
     //@ts-ignore
     cfs.push(Math.round((-g?.sa * (1 + g.btr / 100)) + taxBenefit))
+    g.pg?.forEach((t) => {
+        let index = t.year - g.by
+        cfs[index] += t.val
+    })
+    g.pl?.forEach((t) => {
+        let index = t.year - g.by
+        cfs[index] -= t.val
+    })
+    return cfs
+}
+
+export const calculateSellCFs = (goal: APIt.CreateGoalInput, duration: number) => {
+    let cfs: Array<number> = []
+    let p = goal.cp as number
+    for (let i = 0; i < duration; i++) {
+        let netAnnualAmt = calculateBuyAnnualNetCF(goal.sy, 0, goal.amper as number, goal.amsy as number, goal.achg as number, 0, p, goal.aiper as number, goal.aisy as number)
+        cfs.push(Math.round(netAnnualAmt))
+    }
+    cfs.push(calculateSellPrice(p, 0, goal?.achg as number, duration))
     return cfs
 }
 

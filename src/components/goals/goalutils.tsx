@@ -89,7 +89,9 @@ const createFFGoalInput = () => {
         sa: 0,
         achg: 5,
         btr: 0,
-        tbi: 5
+        tbi: 5,
+        pg: [createNewTarget(nowYear, 0)],
+        pl: [createNewTarget(nowYear, 0)]
     } as APIt.CreateGoalInput
 }
 
@@ -115,8 +117,33 @@ const createBaseGoalInput = (goalType: APIt.GoalType) => {
     } as APIt.CreateGoalInput
 }
 
+const createSellGoalInput = () => {
+    let nowYear = new Date().getFullYear()
+    return {
+        name: name,
+        sy: nowYear - 5,
+        ey: nowYear,
+        by: nowYear,
+        tdr: 0,
+        tdl: 0,
+        ccy: 'USD',
+        cp: 0,
+        chg: 3,
+        type: APIt.GoalType.S,
+        tgts: [],
+        dr: 6,
+        imp: APIt.LMH.L,
+        manual: 0,
+        amper: 2,
+        amsy: nowYear,
+        aiper: 0,
+        aisy: nowYear,
+        tbr: 0
+    }
+}
 export const createNewGoalInput = (goalType: APIt.GoalType) => {
-    if(goalType === APIt.GoalType.FF) return createFFGoalInput()
+    if (goalType === APIt.GoalType.FF) return createFFGoalInput()
+    if (goalType === APIt.GoalType.S) return createSellGoalInput()
     let bg: APIt.CreateGoalInput = createBaseGoalInput(goalType)
     if (goalType !== APIt.GoalType.D) bg.btr = 10
     if (goalType === APIt.GoalType.B || goalType === APIt.GoalType.E) {
@@ -139,16 +166,13 @@ export const createNewGoalInput = (goalType: APIt.GoalType) => {
 export const getGoalTypes = () => {
     return {
         "B": "BUY",
-        "S": "SELL",
         "R": "RENT",
         "E": "EDUCATE",
         "T": "TRAVEL",
         "X": "EXPERIENCE",
         "C": "CELEBRATE",
-        "I": "INSURE",
-        "IN": "INHERIT",
         "D": "DONATE",
-        "ST": "START-UP",
+        "S": "START-UP",
         "O": "OTHER",
         "FF": "FINANCIAL FREEDOM"
     }

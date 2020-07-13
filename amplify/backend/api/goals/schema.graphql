@@ -15,7 +15,7 @@ type Target {
 }
 
 enum GoalType {
-B, S, R, E, X, C, I, IN, FF, D, O, T, ST
+B, S, R, E, X, C, FF, D, O, T
 }
 
 type Emi {
@@ -54,6 +54,8 @@ type Goal @model @auth(rules: [{allow: owner}]) {
   aisy: Int
   dr: Float
   sa: Int
+  pg: [Target!]
+  pl: [Target!]
 }
 
 enum MilestoneAttr {

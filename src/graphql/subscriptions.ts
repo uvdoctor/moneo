@@ -44,6 +44,20 @@ export const onCreateGoal = /* GraphQL */ `
       aisy
       dr
       sa
+      pg {
+        month
+        year
+        val
+        met
+        prob
+      }
+      pl {
+        month
+        year
+        val
+        met
+        prob
+      }
       createdAt
       updatedAt
       owner
@@ -92,6 +106,20 @@ export const onUpdateGoal = /* GraphQL */ `
       aisy
       dr
       sa
+      pg {
+        month
+        year
+        val
+        met
+        prob
+      }
+      pl {
+        month
+        year
+        val
+        met
+        prob
+      }
       createdAt
       updatedAt
       owner
@@ -140,6 +168,20 @@ export const onDeleteGoal = /* GraphQL */ `
       aisy
       dr
       sa
+      pg {
+        month
+        year
+        val
+        met
+        prob
+      }
+      pl {
+        month
+        year
+        val
+        met
+        prob
+      }
       createdAt
       updatedAt
       owner
@@ -198,6 +240,20 @@ export const onCreateMilestone = /* GraphQL */ `
         aisy
         dr
         sa
+        pg {
+          month
+          year
+          val
+          met
+          prob
+        }
+        pl {
+          month
+          year
+          val
+          met
+          prob
+        }
         createdAt
         updatedAt
         owner
@@ -260,6 +316,20 @@ export const onUpdateMilestone = /* GraphQL */ `
         aisy
         dr
         sa
+        pg {
+          month
+          year
+          val
+          met
+          prob
+        }
+        pl {
+          month
+          year
+          val
+          met
+          prob
+        }
         createdAt
         updatedAt
         owner
@@ -322,6 +392,20 @@ export const onDeleteMilestone = /* GraphQL */ `
         aisy
         dr
         sa
+        pg {
+          month
+          year
+          val
+          met
+          prob
+        }
+        pl {
+          month
+          year
+          val
+          met
+          prob
+        }
         createdAt
         updatedAt
         owner

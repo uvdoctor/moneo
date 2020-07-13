@@ -47,6 +47,20 @@ export const createGoal = /* GraphQL */ `
       aisy
       dr
       sa
+      pg {
+        month
+        year
+        val
+        met
+        prob
+      }
+      pl {
+        month
+        year
+        val
+        met
+        prob
+      }
       createdAt
       updatedAt
       owner
@@ -98,6 +112,20 @@ export const updateGoal = /* GraphQL */ `
       aisy
       dr
       sa
+      pg {
+        month
+        year
+        val
+        met
+        prob
+      }
+      pl {
+        month
+        year
+        val
+        met
+        prob
+      }
       createdAt
       updatedAt
       owner
@@ -149,6 +177,20 @@ export const deleteGoal = /* GraphQL */ `
       aisy
       dr
       sa
+      pg {
+        month
+        year
+        val
+        met
+        prob
+      }
+      pl {
+        month
+        year
+        val
+        met
+        prob
+      }
       createdAt
       updatedAt
       owner
@@ -210,6 +252,20 @@ export const createMilestone = /* GraphQL */ `
         aisy
         dr
         sa
+        pg {
+          month
+          year
+          val
+          met
+          prob
+        }
+        pl {
+          month
+          year
+          val
+          met
+          prob
+        }
         createdAt
         updatedAt
         owner
@@ -275,6 +331,20 @@ export const updateMilestone = /* GraphQL */ `
         aisy
         dr
         sa
+        pg {
+          month
+          year
+          val
+          met
+          prob
+        }
+        pl {
+          month
+          year
+          val
+          met
+          prob
+        }
         createdAt
         updatedAt
         owner
@@ -340,6 +410,20 @@ export const deleteMilestone = /* GraphQL */ `
         aisy
         dr
         sa
+        pg {
+          month
+          year
+          val
+          met
+          prob
+        }
+        pl {
+          month
+          year
+          val
+          met
+          prob
+        }
         createdAt
         updatedAt
         owner
