@@ -19,7 +19,6 @@ import ActionButtons from '../form/actionbuttons'
 import ResultItem from '../calc/resultitem'
 import { calculateFFCFs, calculateTotalCP, calculateTotalCPTaxBenefit } from '../goals/cfutils'
 import DynamicTgtInput from '../form/dynamictgtinput'
-import { createNewTarget } from './goalutils'
 interface FFGoalProps {
     goal: APIt.CreateGoalInput
     cashFlows?: Array<number>
