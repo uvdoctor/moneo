@@ -320,38 +320,43 @@ const createManualCFs = (goal: APIt.CreateGoalInput, duration: number) => {
     return cfs
 }
 
-const checkForFF = (savings: number, dr: number, ffGoal: APIt.CreateGoalInput, ffYear: number) => {
+const checkForFF = (savings: number, dr: number, ffGoal: APIt.CreateGoalInput, ffYear: number, mergedCFs: Object) => {
     let goal = Object.assign({}, ffGoal)
+    let mCFs = Object.assign({}, mergedCFs)
+    console.log("Input merged cfs are ", mCFs)
     goal.sy = ffYear
     let cs = savings
     let cfs: Array<number> = calculateFFCFs(goal)
-    let year = 0
+    cfs.forEach((cf, i) => {
+        //@ts-ignore
+        mCFs[goal.by + i] += cf
+    })
+    console.log("Merged CFs after adding FF cfs are ", mCFs)
     let ffAmt = 0
     let nowYear = new Date().getFullYear()
-    let index = nowYear - goal.by
-    for (let i = index; i < cfs.length; i++) {
-        year = nowYear + i
-        if (cfs[i] < 0) cs += cfs[i]
-        if (cs < 0) {
-            break
-        }
+    for(let [year, value] of Object.entries(mCFs)) {
+        let y = parseInt(year)
+        let v = parseInt(value)
+        if(y <= nowYear) continue
+        if(v < 0) cs += v
+        if(cs < 0) break
         cs *= (1 + (dr / 100))
-        if (cfs[i] > 0) cs += cfs[i]
-        if (year === ffYear - 1) ffAmt = cs
+        if(v > 0) cs += v
+        if (y === ffYear - 1) ffAmt = cs
     }
     return { amt: Math.round(cs), ffAmt: Math.round(ffAmt) }
 }
 
-export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, oppDR: number, savings: number) => {
+export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, oppDR: number, savings: number, mergedCFs: Object) => {
     let nowYear = new Date().getFullYear()
     if(nowYear >= ffGoal.ey) return {year: -1, amt: -1, ffAmt: -1}
     let yearToTry = ffGoal.sy
-    let {amt, ffAmt} = checkForFF(savings, oppDR, ffGoal, yearToTry)
+    let {amt, ffAmt} = checkForFF(savings, oppDR, ffGoal, yearToTry, mergedCFs)
     let prevResult = {year: yearToTry, amt: amt, ffAmt: ffAmt}
     let increment = prevResult.amt > 0 ? -1 : 1
     for (let currYear = yearToTry + increment; currYear <= ffGoal.ey && currYear >= ffGoal.by; currYear += increment) {
         console.log("Going to calculate FF for year ", currYear)
-        let {amt, ffAmt} = checkForFF(savings, oppDR, ffGoal, currYear)
+        let {amt, ffAmt} = checkForFF(savings, oppDR, ffGoal, currYear, mergedCFs)
         console.log("Prev result is ", prevResult)
         if ((amt < 0 || ffAmt < 0)&& (prevResult.amt > 0 && prevResult.ffAmt >= 0)) 
             return prevResult
