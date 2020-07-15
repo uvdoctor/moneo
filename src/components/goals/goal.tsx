@@ -97,7 +97,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
             cp: startingPrice,
             chg: priceChgRate,
             type: goalType,
-            tgts: wipTargets,
+            tgts: manualMode ? wipTargets : [],
             dr: oppDR,
             imp: impLevel,
             manual: manualMode,
@@ -215,6 +215,10 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
         setCurrency(curr)
     }
 
+    useEffect(() => {
+        if(!rentAmt) setRentAns('')
+    }, [rentAmt])
+
     return (
         <div className="flex flex-col w-full h-screen">
             <div className="container mx-auto overflow-y-auto flex flex-1 flex-col">
@@ -313,7 +317,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         {sellAfter &&
                             <Section title="Instead, If You Rent" left={<div className="pl-4 pr-4">
                                 <NumberInput name="rentAmt" pre="Yearly" post="Rent" value={rentAmt} changeHandler={setRentAmt}
-                                    min={1000} max={200000} step={500} currency={currency} rangeFactor={rangeFactor} />
+                                    min={0} max={200000} step={500} currency={currency} rangeFactor={rangeFactor} />
                             </div>}
                                 right={
                                     <NumberInput name="rentChg" pre="Changes" value={rentChgPer} changeHandler={setRentChgPer}
@@ -321,7 +325,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                                 toggle={
                                     <HToggle rightText="Claim Tax Benefit" value={rentTaxBenefit as number} setter={setRentTaxBenefit} />
                                 }
-                                bottom={<div className="flex items-center">
+                                bottom={rentAns && <div className="flex items-center">
                                     <SVGBalance />
                                     <label className="ml-2">{rentAns}</label>
                                 </div>}

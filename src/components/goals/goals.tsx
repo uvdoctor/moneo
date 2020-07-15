@@ -1,19 +1,24 @@
 import React, { useEffect, useState, Fragment } from 'react'
 import Goal from './goal'
 import FFGoal from './ffgoal'
-import { removeFromArray } from '../utils'
+import { removeFromArray, getRangeFactor } from '../utils'
 import CFChart from './cfchart'
 import * as APIt from '../../api/goals'
 import { getGoalsList, createNewGoal, changeGoal, deleteGoal, getDuration, createNewGoalInput, getGoalTypes, getImpOptions } from './goalutils'
-import { calculateCFs, calculateFFCFs } from './cfutils'
+import { calculateCFs, calculateFFCFs, findEarliestFFYear } from './cfutils'
 import Summary from './summary'
 import SelectInput from '../form/selectinput'
 import HToggle from '../horizontaltoggle'
 import SVGTargetPath from './svgtargetpath'
-
+import Section from '../form/section'
 //@ts-ignore
 import { AwesomeButton } from 'react-awesome-button'
 import CurrencyInput from '../form/currencyinput'
+import NumberInput from '../form/numberinput'
+import ResultItem from '../calc/resultitem'
+import SVGHourGlass from '../svghourglass'
+import SVGMoneyBag from '../calc/svgmoneybag'
+import SVGInheritance from './svginheritance'
 
 interface GoalsProps {
     showModalHandler: Function
@@ -29,17 +34,30 @@ export default function Goals({ showModalHandler }: GoalsProps) {
     const [viewMode, setViewMode] = useState<number>(0)
     const [impFilter, setImpFilter] = useState<string>("")
     const [currency, setCurrency] = useState<string>("USD")
-    const [ffGoalFlag, setFFGoalFlag] = useState<boolean>(false)
     const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false)
+    const [oppDR, setOppDR] = useState<number>(6)
+    const [savings, setSavings] = useState<number>(100000)
+    const [ffYear, setFFYear] = useState<number>(0)
+    const [ffAmt, setFFAmt] = useState<number>(0)
+    const [ffGoal, setFFGoal] = useState<APIt.CreateGoalInput>()
+    const [ffLeftOverAmt, setFFLeftOverAmt] = useState<number>(0)
 
     useEffect(() => {
         loadAllGoals()
     }, [])
 
-    useEffect(() => wipGoal ? showModalHandler(true) : showModalHandler(false), [wipGoal])
+    useEffect(() => {
+        if (!ffGoal) return
+        let result = findEarliestFFYear(ffGoal, oppDR, savings)
+        setFFAmt(result.ffAmt)
+        setFFYear(result.year)
+        setFFLeftOverAmt(result.amt)
+    }, [ffGoal, oppDR, savings])
 
+    useEffect(() => wipGoal ? showModalHandler(true) : showModalHandler(false), [wipGoal])
+ 
     const handleFFGoal = (g: APIt.CreateGoalInput) => {
-        setFFGoalFlag(true)
+        setFFGoal(g)
         return calculateFFCFs(g)
     }
 
@@ -68,7 +86,9 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         setAllCFs(allCFs)
         setWIPGoal(null)
         setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
-        if(g.type === APIt.GoalType.FF) setFFGoalFlag(true)
+        if (g.type === APIt.GoalType.FF) {
+            setFFGoal(g)
+        }
     }
 
     const updateGoal = async (goal: APIt.UpdateGoalInput, cfs: Array<number>) => {
@@ -81,6 +101,9 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         setWIPGoal(null)
         setAllCFs(allCFs)
         setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
+        if (g.type === APIt.GoalType.FF) {
+            setFFGoal(g as APIt.CreateGoalInput)
+        }
     }
 
     const removeGoal = async (id: string) => {
@@ -171,49 +194,69 @@ export default function Goals({ showModalHandler }: GoalsProps) {
             <Fragment>
                 <div className="flex mt-4 items-center justify-center">
                     <SVGTargetPath />
-                    <label className="ml-2 text-xl md:text-2xl">Define Your Goals.</label>
+                    <label className="ml-2 text-xl md:text-2xl">Define Your Dreams.</label>
                 </div>
                 <p className="text-center text-lg mt-1">Make Money Work Hard to Meet Them.</p>
 
                 <div className="flex flex-wrap justify-around">
                     {Object.keys(getGoalTypes()).map(key =>
-                        key !== APIt.GoalType.FF && 
-                        <AwesomeButton className={`mt-4 ${!ffGoalFlag ? 'cursor-not-allowed' : 'cursor-pointer'}`} type="primary" ripple size="medium" key={key}
-                            disabled={!ffGoalFlag} onPress={() => createGoal(key as APIt.GoalType)}>
+                        key !== APIt.GoalType.FF &&
+                        <AwesomeButton className={`mt-4 ${!ffGoal ? 'cursor-not-allowed' : 'cursor-pointer'}`} type="primary" ripple size="medium" key={key}
+                            disabled={!ffGoal} onPress={() => createGoal(key as APIt.GoalType)}>
                             {getGoalTypes()[key as APIt.GoalType]}
                         </AwesomeButton>)}
                 </div>
                 {goalsLoaded && <Fragment>
-                {ffGoalFlag && allGoals && allGoals.length > 0 && allCFs ?
-                    <Fragment>
-                        <div className="mt-4 md:mt-8 flex justify-center">
-                            {viewMode < 1 && <div className="mr-2"><SelectInput name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string}
-                                changeHandler={setImpFilter} /></div>}
-                            <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
-                            {viewMode > 0 &&
-                                <div className="flex">
-                                    <label className="ml-1 mr-2">in</label>
-                                    <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />
+                    {ffGoal && allGoals && allGoals.length > 0 && allCFs ?
+                        <Fragment>
+                            {ffYear >= ffGoal.by ? <div className="flex justify-center items-center">
+                                <Section title='Financial Freedom Scorecard'
+                                    left={
+                                        ffAmt >= 0 && ffLeftOverAmt >= 0 ? <div className="flex flex-wrap justify-around w-full items-start">
+                                            <ResultItem svg={<SVGHourGlass />} label="Achievable by" result={ffYear} noResultFormat />
+                                            <ResultItem result={ffAmt} svg={<SVGMoneyBag />} label={`Savings by ${ffYear}`}
+                                                currency={ffGoal.ccy} />
+                                            <ResultItem result={ffLeftOverAmt} svg={<SVGInheritance />} label="Nominees Get"
+                                                currency={ffGoal.ccy} footer={`Remaining In ${ffGoal.ey + 1}`} />
+                                        </div> : `Analyzed till ${ffYear}. Please try again with higher Savings And / Or Investment Return.`
+                                    } right={<div />} bottom={
+                                        <div className="flex flex-wrap justify-around items-center w-full">
+                                            <NumberInput name="dr" value={oppDR} unit="%" pre="Savings" min={0} max={15}
+                                                post="Earn" changeHandler={setOppDR} note="After taxes & fees" step={0.1} />
+                                            <NumberInput name="savings" value={savings} pre="Total" min={-100000} max={900000}
+                                                post="Savings" changeHandler={setSavings} step={500} currency={ffGoal.ccy}
+                                                note={`Available in ${new Date().getFullYear()}`} rangeFactor={getRangeFactor(ffGoal.ccy)} />
+                                        </div>
+                                    } />
+                            </div> : <div />}
+                            <div className="mt-4 md:mt-8 flex justify-center">
+                                {viewMode < 1 && <div className="mr-2"><SelectInput name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string}
+                                    changeHandler={setImpFilter} /></div>}
+                                <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
+                                {viewMode > 0 &&
+                                    <div className="flex">
+                                        <label className="ml-1 mr-2">in</label>
+                                        <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />
+                                    </div>}
+                            </div>
+                            <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>
+                            {viewMode > 0 ?
+                                <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} />
+                                :
+                                <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
+                                    {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
+                                        g.id && (!impFilter || impFilter === g.imp) &&
+                                        <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp}
+                                            startYear={g.type === APIt.GoalType.FF ? g.by : g.sy}
+                                            currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal} />)}
                                 </div>}
-                        </div>
-                        <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>
-                        {viewMode > 0 ?
-                            <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} />
-                            :
-                            <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
-                                {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
-                                    g.id && (!impFilter || impFilter === g.imp) &&
-                                    <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp}
-                                        startYear={g.type === APIt.GoalType.FF ? g.by : g.sy}
-                                        currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal} />)}
-                            </div>}
-                    </Fragment>
-                    : <div className="text-center align-center">
-                        <p className="mt-8 mb-2">Start with Financial Freedom Goal.</p>
-                        <AwesomeButton ripple type="primary" onPress={() => createGoal(APIt.GoalType.FF)}>
-                            GET STARTED
+                        </Fragment>
+                        : <div className="text-center align-center">
+                            <p className="mt-8 mb-2">Start with Financial Freedom Goal.</p>
+                            <AwesomeButton ripple type="primary" onPress={() => createGoal(APIt.GoalType.FF)}>
+                                GET STARTED
                         </AwesomeButton>
-                    </div>}
+                        </div>}
                 </Fragment>}
             </Fragment>
     )

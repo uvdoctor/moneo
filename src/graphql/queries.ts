@@ -22,11 +22,8 @@ export const getGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        month
         year
         val
-        met
-        prob
       }
       emi {
         per
@@ -45,18 +42,12 @@ export const getGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        month
         year
         val
-        met
-        prob
       }
       pl {
-        month
         year
         val
-        met
-        prob
       }
       createdAt
       updatedAt
@@ -89,11 +80,8 @@ export const listGoals = /* GraphQL */ `
         chg
         achg
         tgts {
-          month
           year
           val
-          met
-          prob
         }
         emi {
           per
@@ -112,18 +100,12 @@ export const listGoals = /* GraphQL */ `
         dr
         sa
         pg {
-          month
           year
           val
-          met
-          prob
         }
         pl {
-          month
           year
           val
-          met
-          prob
         }
         createdAt
         updatedAt
@@ -138,11 +120,8 @@ export const getMilestone = /* GraphQL */ `
     getMilestone(id: $id) {
       id
       tgt {
-        month
         year
         val
-        met
-        prob
       }
       attr
       goals {
@@ -163,11 +142,8 @@ export const getMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          month
           year
           val
-          met
-          prob
         }
         emi {
           per
@@ -186,18 +162,12 @@ export const getMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          month
           year
           val
-          met
-          prob
         }
         pl {
-          month
           year
           val
-          met
-          prob
         }
         createdAt
         updatedAt
@@ -219,11 +189,8 @@ export const listMilestones = /* GraphQL */ `
       items {
         id
         tgt {
-          month
           year
           val
-          met
-          prob
         }
         attr
         goals {

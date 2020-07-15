@@ -22,11 +22,8 @@ export const onCreateGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        month
         year
         val
-        met
-        prob
       }
       emi {
         per
@@ -45,18 +42,12 @@ export const onCreateGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        month
         year
         val
-        met
-        prob
       }
       pl {
-        month
         year
         val
-        met
-        prob
       }
       createdAt
       updatedAt
@@ -84,11 +75,8 @@ export const onUpdateGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        month
         year
         val
-        met
-        prob
       }
       emi {
         per
@@ -107,18 +95,12 @@ export const onUpdateGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        month
         year
         val
-        met
-        prob
       }
       pl {
-        month
         year
         val
-        met
-        prob
       }
       createdAt
       updatedAt
@@ -146,11 +128,8 @@ export const onDeleteGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        month
         year
         val
-        met
-        prob
       }
       emi {
         per
@@ -169,18 +148,12 @@ export const onDeleteGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        month
         year
         val
-        met
-        prob
       }
       pl {
-        month
         year
         val
-        met
-        prob
       }
       createdAt
       updatedAt
@@ -193,11 +166,8 @@ export const onCreateMilestone = /* GraphQL */ `
     onCreateMilestone(owner: $owner) {
       id
       tgt {
-        month
         year
         val
-        met
-        prob
       }
       attr
       goals {
@@ -218,11 +188,8 @@ export const onCreateMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          month
           year
           val
-          met
-          prob
         }
         emi {
           per
@@ -241,18 +208,12 @@ export const onCreateMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          month
           year
           val
-          met
-          prob
         }
         pl {
-          month
           year
           val
-          met
-          prob
         }
         createdAt
         updatedAt
@@ -269,11 +230,8 @@ export const onUpdateMilestone = /* GraphQL */ `
     onUpdateMilestone(owner: $owner) {
       id
       tgt {
-        month
         year
         val
-        met
-        prob
       }
       attr
       goals {
@@ -294,11 +252,8 @@ export const onUpdateMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          month
           year
           val
-          met
-          prob
         }
         emi {
           per
@@ -317,18 +272,12 @@ export const onUpdateMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          month
           year
           val
-          met
-          prob
         }
         pl {
-          month
           year
           val
-          met
-          prob
         }
         createdAt
         updatedAt
@@ -345,11 +294,8 @@ export const onDeleteMilestone = /* GraphQL */ `
     onDeleteMilestone(owner: $owner) {
       id
       tgt {
-        month
         year
         val
-        met
-        prob
       }
       attr
       goals {
@@ -370,11 +316,8 @@ export const onDeleteMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          month
           year
           val
-          met
-          prob
         }
         emi {
           per
@@ -393,18 +336,12 @@ export const onDeleteMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          month
           year
           val
-          met
-          prob
         }
         pl {
-          month
           year
           val
-          met
-          prob
         }
         createdAt
         updatedAt

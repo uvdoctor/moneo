@@ -19,14 +19,14 @@ interface CostProps {
     startingCost: number
     costChgRate: number
     manualMode: number
-    manualTargets: Array<TargetInput>
+    manualTargets?: Array<TargetInput>
     currency: string
     rangeFactor: number
     startYear: number
     endYear: number
     manualTgtMin?: number
     manualModeHandler: Function
-    manualTargetsHandler: Function
+    manualTargetsHandler?: Function
     startingCostHandler: Function
     costChgRateHandler: Function
     showInputCondition: boolean
@@ -35,11 +35,13 @@ interface CostProps {
 
 export default function Cost(props: CostProps) {
     const changeTargetVal = (val: number, i: number) => {
+        if(!props.manualTargets || !props.manualTargetsHandler) return
         props.manualTargets[i].val = val
         props.manualTargetsHandler([...props.manualTargets])
     }
 
     const initManualTargets = () => {
+        if(!props.manualTargets || !props.manualTargetsHandler) return
         let targets: Array<TargetInput> = []
         for (let year = props.startYear; year <= props.endYear; year++) {
             let existingT = null
@@ -65,11 +67,11 @@ export default function Cost(props: CostProps) {
             } right={
                 props.showRightCondition && <NumberInput name="priceChgRate" pre={props.rightPre} post="Changes" note={props.rightNote} unit="%"
                     min={-10} max={10} step={0.5} value={props.costChgRate} changeHandler={props.costChgRateHandler} />
-            } showOnLoad={true}
+            } showOnLoad
             toggle={
-                props.endYear > props.startYear && <HToggle rightText={`Manual Input for Years ${props.startYear} to ${props.endYear}`} value={props.manualMode} setter={props.manualModeHandler} />
+                props.manualTargets && <HToggle rightText={`Manual Input for Multiple Years`} value={props.manualMode} setter={props.manualModeHandler} />
             } manualInput={
-                <div className="flex flex-wrap justify-around">
+                props.manualTargets && <div className="flex flex-wrap justify-around">
                     {props.manualTargets && props.manualTargets.map((t, i) =>
                         <div key={"t" + i} className="mr-4 md:mr-8 mt-8 flex flex-col justify-end items-end">
                             <label>{t.year}</label>

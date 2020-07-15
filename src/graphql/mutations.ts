@@ -25,11 +25,8 @@ export const createGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        month
         year
         val
-        met
-        prob
       }
       emi {
         per
@@ -48,18 +45,12 @@ export const createGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        month
         year
         val
-        met
-        prob
       }
       pl {
-        month
         year
         val
-        met
-        prob
       }
       createdAt
       updatedAt
@@ -90,11 +81,8 @@ export const updateGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        month
         year
         val
-        met
-        prob
       }
       emi {
         per
@@ -113,18 +101,12 @@ export const updateGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        month
         year
         val
-        met
-        prob
       }
       pl {
-        month
         year
         val
-        met
-        prob
       }
       createdAt
       updatedAt
@@ -155,11 +137,8 @@ export const deleteGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        month
         year
         val
-        met
-        prob
       }
       emi {
         per
@@ -178,18 +157,12 @@ export const deleteGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        month
         year
         val
-        met
-        prob
       }
       pl {
-        month
         year
         val
-        met
-        prob
       }
       createdAt
       updatedAt
@@ -205,11 +178,8 @@ export const createMilestone = /* GraphQL */ `
     createMilestone(input: $input, condition: $condition) {
       id
       tgt {
-        month
         year
         val
-        met
-        prob
       }
       attr
       goals {
@@ -230,11 +200,8 @@ export const createMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          month
           year
           val
-          met
-          prob
         }
         emi {
           per
@@ -253,18 +220,12 @@ export const createMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          month
           year
           val
-          met
-          prob
         }
         pl {
-          month
           year
           val
-          met
-          prob
         }
         createdAt
         updatedAt
@@ -284,11 +245,8 @@ export const updateMilestone = /* GraphQL */ `
     updateMilestone(input: $input, condition: $condition) {
       id
       tgt {
-        month
         year
         val
-        met
-        prob
       }
       attr
       goals {
@@ -309,11 +267,8 @@ export const updateMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          month
           year
           val
-          met
-          prob
         }
         emi {
           per
@@ -332,18 +287,12 @@ export const updateMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          month
           year
           val
-          met
-          prob
         }
         pl {
-          month
           year
           val
-          met
-          prob
         }
         createdAt
         updatedAt
@@ -363,11 +312,8 @@ export const deleteMilestone = /* GraphQL */ `
     deleteMilestone(input: $input, condition: $condition) {
       id
       tgt {
-        month
         year
         val
-        met
-        prob
       }
       attr
       goals {
@@ -388,11 +334,8 @@ export const deleteMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          month
           year
           val
-          met
-          prob
         }
         emi {
           per
@@ -411,18 +354,12 @@ export const deleteMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          month
           year
           val
-          met
-          prob
         }
         pl {
-          month
           year
           val
-          met
-          prob
         }
         createdAt
         updatedAt

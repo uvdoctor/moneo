@@ -65,13 +65,13 @@ export const createNewTarget = (year: number, val: number) => {
 
 const createFFGoalInput = () => {
     let nowYear = new Date().getFullYear()
-    let startYear = nowYear + 20
+    let startYear = nowYear + 21
     return {
         id: '',
         name: 'Financial Freedom',
         sy: startYear,
         ey: startYear + 30,
-        by: nowYear,
+        by: nowYear + 1,
         tdr: 0,
         tdl: 0,
         ccy: 'USD',
@@ -80,7 +80,6 @@ const createFFGoalInput = () => {
         type: APIt.GoalType.FF,
         imp: APIt.LMH.H,
         manual: 0,
-        tgts: [],
         aiper: 3,
         aisy: 0,
         amper: 0,
@@ -90,8 +89,8 @@ const createFFGoalInput = () => {
         achg: 5,
         btr: 0,
         tbi: 5,
-        pg: [createNewTarget(nowYear, 0)],
-        pl: [createNewTarget(nowYear, 0)]
+        pg: [],
+        pl: []
     } as APIt.CreateGoalInput
 }
 

@@ -30,7 +30,7 @@ interface FFGoalProps {
 export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, updateCallback }: FFGoalProps) {
     const [startYear, setStartYear] = useState<number>(goal.sy)
     const [endYear, setEndYear] = useState<number>(goal.ey)
-    const [syOptions] = useState(initYearOptions(goal.by + 1, 50))
+    const [syOptions] = useState(initYearOptions(goal.by, 50))
     const [eyOptions, setEYOptions] = useState(initYearOptions(startYear + 30, 50))
     const [cyOptions, setCYOptions] = useState(initYearOptions(endYear - 30, 20))
     const [startingCost, setStartingCost] = useState<number>(goal?.cp as number)
@@ -50,7 +50,6 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
     const [carePremiumDur, setCarePremiumDur] = useState<number>(goal?.achg as number)
     const [careTaxDedLimit, setCareTaxDedLimit] = useState<number>(goal.tdl)
     const [manualMode, setManualMode] = useState<number>(goal.manual)
-    const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(goal.tgts as Array<APIt.TargetInput>)
     const [totalCP, setTotalCP] = useState<number>(0)
     const [totalTaxBenefit, setTotalTaxBenfit] = useState<number>(0)
     const [successionTaxRate, setSuccessionTaxRate] = useState<number>(goal?.btr as number)
@@ -71,7 +70,6 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
             cp: startingCost,
             chg: costChgRate,
             type: goal.type,
-            tgts: wipTargets,
             imp: goal.imp,
             manual: manualMode,
             aisy: annualSavings,
@@ -110,8 +108,9 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
     }, [startYear, endYear, carePremiumSY])
 
     useEffect(() => {
-        if (!startingCost) setRetirementCost(0)
-        setRetirementCost(Math.round((getCompoundedIncome(costChgRate, startingCost, startYear - goal.by) * (1 + (bufferPer / 100)))))
+        startingCost > 0 ?
+            setRetirementCost(Math.round((getCompoundedIncome(costChgRate, startingCost, startYear - goal.by) * (1 + (bufferPer / 100)))))
+            : setRetirementCost(0)
     }, [startingCost, costChgRate, startYear, bufferPer])
 
     const handleSubmit = () =>
@@ -126,26 +125,21 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
 
 
     useEffect(() => {
-        if (!cashFlows) setCFs([...calculateFFCFs(createGoal())])
-    }, [startYear, endYear, taxRate, careTaxDedLimit, startingCost, bufferPer, gains,
-        costChgRate, wipTargets, annualSavings, savingsPer, successionTaxRate, losses,
-        carePremiumSY, carePremiumChgPer, carePremiumDur, carePremium, leaveBehind])
+        if (!cashFlows && !manualMode) setCFs([...calculateFFCFs(createGoal())])
+    }, [retirementCost, endYear, taxRate, careTaxDedLimit, bufferPer, gains,
+        annualSavings, savingsPer, successionTaxRate, losses, totalCP, 
+        leaveBehind, manualMode, cashFlows])
 
     useEffect(() => {
-        setTotalTaxBenfit(calculateTotalCPTaxBenefit(taxRate, careTaxDedLimit,
+        taxRate > 0 ? setTotalTaxBenfit(calculateTotalCPTaxBenefit(taxRate, careTaxDedLimit,
             carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur))
+            : setTotalTaxBenfit(0)
     }, [taxRate, careTaxDedLimit, carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur])
 
     useEffect(() => {
-        setTotalCP(Math.round(calculateTotalCP(carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur)))
+        carePremium > 0 ? setTotalCP(Math.round(calculateTotalCP(carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur)))
+        : setTotalCP(0)
     }, [carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur])
-
-    const hasInput = (tgts: Array<APIt.TargetInput>) => {
-        for (let i = 0; i < tgts.length; i++) {
-            if (tgts[i].val) return true
-        }
-        return false
-    }
 
     const changeCurrency = (curr: string) => {
         setRangeFactor(Math.round(getRangeFactor(curr) / getRangeFactor(currency)))
@@ -175,17 +169,16 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
                 </div>
                 <div className="flex justify-around w-full">
                     <Cost startingCost={annualSavings} startingCostHandler={setAnnualSavings} rangeFactor={rangeFactor}
-                        manualTargets={wipTargets} manualTgtMin={-50000} manualTargetsHandler={setWIPTargets} currency={currency}
-                        costChgRate={savingsPer} costChgRateHandler={setSavingsPer} endYear={startYear - 1}
+                        manualTgtMin={-50000} currency={currency} costChgRate={savingsPer} costChgRateHandler={setSavingsPer} endYear={startYear - 1}
                         manualMode={manualMode} manualModeHandler={setManualMode} startYear={goal.by}
-                        inputText="How Much Can You Save?" showInputCondition={((manualMode < 1 && annualSavings === 0) || (manualMode > 0 && !hasInput(wipTargets)))} rightPre="Savings" rightNote={`Yearly till ${startYear - 1}`}
+                        inputText="How Much Can You Save?" showInputCondition={annualSavings === 0} rightPre="Savings" rightNote='Yearly'
                         title={manualMode > 0 ? `Annual Savings from ${goal.by} to ${startYear - 1}`
                             : startYear - 1 > goal.by ? `Annual Savings in ${startYear - 1} ~ ${toCurrency(Math.round(getCompoundedIncome(savingsPer, annualSavings, startYear - 1 - goal.by)), currency)}` : 'Annual Savings'}
-                        showRightCondition={startYear - 1 > goal.by} leftPre='Savings' leftPost={`in ${goal.by}`} leftMin={-50000} leftMax={200000}
+                        showRightCondition leftPre='Savings' leftPost={`in ${goal.by}`} leftMin={-50000} leftMax={200000}
                         footer={`${annualSavings === 0 ? ' Include retirement fund contribution. Deduct taxes & all expenses including insurance premiums.' : `${startYear - 1} may be the last year for work income given You want to be Financially Free before ${startYear}.`}`} />
                 </div>
                 <div className="flex flex-wrap justify-around w-full">
-                    <Section inputText={`Living Cost after Financial Freedom`} showInputCondition={((manualMode < 1 && annualSavings != 0) || (manualMode > 0 && hasInput(wipTargets))) && startingCost < 5000} title={
+                    <Section inputText={`Living Cost after Financial Freedom`} showInputCondition={annualSavings != 0 && startingCost < 5000} title={
                         `Withdraw Savings ~ ${toCurrency(Math.round(retirementCost * (1 + taxRate / 100)), currency)} in ${startYear}`}
                         left={
                             <NumberInput name="currExpense" pre='Yearly' post='Cost' note={`In Today's Money`}
@@ -226,6 +219,16 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
                                     <ResultItem label='Total Tax Benefit' currency={currency} result={totalTaxBenefit} />
                                 } />
                         } />
+                </div>
+                <div className="flex flex-wrap justify-around w-full">
+                    <Section title="Potential Gains due to Inheritance, Selling Assets or Investments, etc." left={
+                        <DynamicTgtInput startYear={goal.by} endYear={endYear} currency={currency}
+                            rangeFactor={rangeFactor} tgts={gains} tgtsHandler={setGains} />
+                    } right={<div />} footer="Exclude taxes & fees." />
+                    <Section title="Potential Losses due to Selling Assets, Investments, etc." left={
+                        <DynamicTgtInput startYear={goal.by} endYear={endYear} currency={currency}
+                            rangeFactor={rangeFactor} tgts={losses} tgtsHandler={setLosses} />
+                    } right={<div />} footer="Include taxes & fees." />
                     <Section title={`Leave Behind ~ ${toCurrency(Math.round(leaveBehind * (1 + (successionTaxRate / 100))), currency)} in ${endYear + 1}`} left={
                         <NumberInput name="lb" value={leaveBehind} changeHandler={setLeaveBehind} rangeFactor={rangeFactor}
                             min={0} max={500000} pre="Amount" note="For Loved Ones" currency={currency} step={1000} />
@@ -234,18 +237,6 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
                             value={successionTaxRate} changeHandler={setSuccessionTaxRate} unit="%"
                             note={`Total ${toCurrency(Math.round(leaveBehind * (successionTaxRate / 100)), currency)}`} />
                     } />
-                </div>
-                <div className="flex justify-center w-full">
-                    <Section title="Potential Gains due to Inheritance, Selling Assets or Investments, etc." left={
-                        <DynamicTgtInput startYear={goal.by} endYear={endYear} currency={currency}
-                            rangeFactor={rangeFactor} tgts={gains} tgtsHandler={setGains} />
-                    } right={<div />} footer="Exclude taxes & fees." />
-                </div>
-                <div className="flex justify-center w-full">
-                    <Section title="Potential Losses due to Selling Assets, Investments, etc." left={
-                        <DynamicTgtInput startYear={goal.by} endYear={endYear} currency={currency}
-                            rangeFactor={rangeFactor} tgts={losses} tgtsHandler={setLosses} />
-                    } right={<div />} footer="Include taxes & fees." />
                 </div>
                 <Fragment>
                     <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
@@ -256,6 +247,7 @@ export default function FFGoal({ goal, cashFlows, cancelCallback, addCallback, u
                     </Fragment>}
                 </Fragment>
             </div>
+
             <ActionButtons submitDisabled={submitDisabled}
                 cancelHandler={cancelCallback} submitHandler={handleSubmit}
                 submitText={`${goal.id ? 'Update' : 'Create'} Goal`} />

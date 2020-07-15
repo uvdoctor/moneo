@@ -31,8 +31,8 @@ export type CreateGoalInput = {
   aisy?: number | null,
   dr?: number | null,
   sa?: number | null,
-  pg?: Array< TargetInput > | null,
-  pl?: Array< TargetInput > | null,
+  pg?: Array< TargetInput | null > | null,
+  pl?: Array< TargetInput | null > | null,
 };
 
 export enum GoalType {
@@ -50,18 +50,16 @@ export enum GoalType {
 
 
 export type TargetInput = {
-  month?: number | null,
   year: number,
   val: number,
-  met?: YN | null,
-  prob?: LMH | null,
 };
 
-export enum YN {
-  Y = "Y",
-  N = "N",
-}
-
+export type EmiInput = {
+  per: number,
+  rate: number,
+  dur: number,
+  ry: number,
+};
 
 export enum LMH {
   L = "L",
@@ -70,12 +68,11 @@ export enum LMH {
 }
 
 
-export type EmiInput = {
-  per: number,
-  rate: number,
-  dur: number,
-  ry: number,
-};
+export enum YN {
+  Y = "Y",
+  N = "N",
+}
+
 
 export type ModelGoalConditionInput = {
   sy?: ModelIntInput | null,
@@ -216,8 +213,8 @@ export type UpdateGoalInput = {
   aisy?: number | null,
   dr?: number | null,
   sa?: number | null,
-  pg?: Array< TargetInput > | null,
-  pl?: Array< TargetInput > | null,
+  pg?: Array< TargetInput | null > | null,
+  pl?: Array< TargetInput | null > | null,
 };
 
 export type DeleteGoalInput = {
@@ -498,11 +495,8 @@ export type CreateGoalMutation = {
     achg: number | null,
     tgts:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     } > | null,
     emi:  {
       __typename: "Emi",
@@ -523,20 +517,14 @@ export type CreateGoalMutation = {
     sa: number | null,
     pg:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     pl:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
     owner: string | null,
@@ -569,11 +557,8 @@ export type UpdateGoalMutation = {
     achg: number | null,
     tgts:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     } > | null,
     emi:  {
       __typename: "Emi",
@@ -594,20 +579,14 @@ export type UpdateGoalMutation = {
     sa: number | null,
     pg:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     pl:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
     owner: string | null,
@@ -640,11 +619,8 @@ export type DeleteGoalMutation = {
     achg: number | null,
     tgts:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     } > | null,
     emi:  {
       __typename: "Emi",
@@ -665,20 +641,14 @@ export type DeleteGoalMutation = {
     sa: number | null,
     pg:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     pl:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
     owner: string | null,
@@ -696,11 +666,8 @@ export type CreateMilestoneMutation = {
     id: string,
     tgt:  {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     },
     attr: MilestoneAttr,
     goals:  Array< {
@@ -723,11 +690,8 @@ export type CreateMilestoneMutation = {
       achg: number | null,
       tgts:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
       } > | null,
       emi:  {
         __typename: "Emi",
@@ -748,20 +712,14 @@ export type CreateMilestoneMutation = {
       sa: number | null,
       pg:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       pl:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
       owner: string | null,
@@ -783,11 +741,8 @@ export type UpdateMilestoneMutation = {
     id: string,
     tgt:  {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     },
     attr: MilestoneAttr,
     goals:  Array< {
@@ -810,11 +765,8 @@ export type UpdateMilestoneMutation = {
       achg: number | null,
       tgts:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
       } > | null,
       emi:  {
         __typename: "Emi",
@@ -835,20 +787,14 @@ export type UpdateMilestoneMutation = {
       sa: number | null,
       pg:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       pl:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
       owner: string | null,
@@ -870,11 +816,8 @@ export type DeleteMilestoneMutation = {
     id: string,
     tgt:  {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     },
     attr: MilestoneAttr,
     goals:  Array< {
@@ -897,11 +840,8 @@ export type DeleteMilestoneMutation = {
       achg: number | null,
       tgts:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
       } > | null,
       emi:  {
         __typename: "Emi",
@@ -922,20 +862,14 @@ export type DeleteMilestoneMutation = {
       sa: number | null,
       pg:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       pl:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
       owner: string | null,
@@ -1202,11 +1136,8 @@ export type GetGoalQuery = {
     achg: number | null,
     tgts:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     } > | null,
     emi:  {
       __typename: "Emi",
@@ -1227,20 +1158,14 @@ export type GetGoalQuery = {
     sa: number | null,
     pg:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     pl:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
     owner: string | null,
@@ -1276,11 +1201,8 @@ export type ListGoalsQuery = {
       achg: number | null,
       tgts:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
       } > | null,
       emi:  {
         __typename: "Emi",
@@ -1301,20 +1223,14 @@ export type ListGoalsQuery = {
       sa: number | null,
       pg:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       pl:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
       owner: string | null,
@@ -1333,11 +1249,8 @@ export type GetMilestoneQuery = {
     id: string,
     tgt:  {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     },
     attr: MilestoneAttr,
     goals:  Array< {
@@ -1360,11 +1273,8 @@ export type GetMilestoneQuery = {
       achg: number | null,
       tgts:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
       } > | null,
       emi:  {
         __typename: "Emi",
@@ -1385,20 +1295,14 @@ export type GetMilestoneQuery = {
       sa: number | null,
       pg:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       pl:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
       owner: string | null,
@@ -1423,11 +1327,8 @@ export type ListMilestonesQuery = {
       id: string,
       tgt:  {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
       },
       attr: MilestoneAttr,
       goals:  Array< {
@@ -1661,11 +1562,8 @@ export type OnCreateGoalSubscription = {
     achg: number | null,
     tgts:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     } > | null,
     emi:  {
       __typename: "Emi",
@@ -1686,20 +1584,14 @@ export type OnCreateGoalSubscription = {
     sa: number | null,
     pg:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     pl:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
     owner: string | null,
@@ -1731,11 +1623,8 @@ export type OnUpdateGoalSubscription = {
     achg: number | null,
     tgts:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     } > | null,
     emi:  {
       __typename: "Emi",
@@ -1756,20 +1645,14 @@ export type OnUpdateGoalSubscription = {
     sa: number | null,
     pg:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     pl:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
     owner: string | null,
@@ -1801,11 +1684,8 @@ export type OnDeleteGoalSubscription = {
     achg: number | null,
     tgts:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     } > | null,
     emi:  {
       __typename: "Emi",
@@ -1826,20 +1706,14 @@ export type OnDeleteGoalSubscription = {
     sa: number | null,
     pg:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     pl:  Array< {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
-    } > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
     owner: string | null,
@@ -1856,11 +1730,8 @@ export type OnCreateMilestoneSubscription = {
     id: string,
     tgt:  {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     },
     attr: MilestoneAttr,
     goals:  Array< {
@@ -1883,11 +1754,8 @@ export type OnCreateMilestoneSubscription = {
       achg: number | null,
       tgts:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
       } > | null,
       emi:  {
         __typename: "Emi",
@@ -1908,20 +1776,14 @@ export type OnCreateMilestoneSubscription = {
       sa: number | null,
       pg:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       pl:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
       owner: string | null,
@@ -1942,11 +1804,8 @@ export type OnUpdateMilestoneSubscription = {
     id: string,
     tgt:  {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     },
     attr: MilestoneAttr,
     goals:  Array< {
@@ -1969,11 +1828,8 @@ export type OnUpdateMilestoneSubscription = {
       achg: number | null,
       tgts:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
       } > | null,
       emi:  {
         __typename: "Emi",
@@ -1994,20 +1850,14 @@ export type OnUpdateMilestoneSubscription = {
       sa: number | null,
       pg:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       pl:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
       owner: string | null,
@@ -2028,11 +1878,8 @@ export type OnDeleteMilestoneSubscription = {
     id: string,
     tgt:  {
       __typename: "Target",
-      month: number | null,
       year: number,
       val: number,
-      met: YN | null,
-      prob: LMH | null,
     },
     attr: MilestoneAttr,
     goals:  Array< {
@@ -2055,11 +1902,8 @@ export type OnDeleteMilestoneSubscription = {
       achg: number | null,
       tgts:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
       } > | null,
       emi:  {
         __typename: "Emi",
@@ -2080,20 +1924,14 @@ export type OnDeleteMilestoneSubscription = {
       sa: number | null,
       pg:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       pl:  Array< {
         __typename: "Target",
-        month: number | null,
         year: number,
         val: number,
-        met: YN | null,
-        prob: LMH | null,
-      } > | null,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
       owner: string | null,

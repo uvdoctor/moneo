@@ -31,7 +31,7 @@ export default function Sell(props: SellProps) {
         let duration = getDuration(props.sellAfter, props.startYear, props.endYear)
         let sellPrice = calculateSellPrice(props.price, props.buyTaxRate, props.assetChgRate, duration)
         props.sellPriceHandler(sellPrice)
-        props.annualReturnPerHandler(calculateXIRR(props.cfs, props.startYear, props.price, props.sellAfter, props.sellPrice))
+        props.annualReturnPerHandler(calculateXIRR(props.cfs, props.startYear, props.price, props.sellAfter, sellPrice))
     }, [props.cfs])
 
     return (

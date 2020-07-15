@@ -69,10 +69,9 @@ export const calculateTotalCP = (paymentSY: number, payment: number, paymentChgR
 export const calculateFFCFs = (g: APIt.CreateGoalInput) => {
     let cfs: Array<number> = []
     let duration = g.sy - g.by
-    for (let i = 0, val = g.aisy; i < duration; i++,
-        val = getCompoundedIncome(g.aiper as number, g.aisy as number, i)) {
-        //@ts-ignore
-        cfs.push(Math.round(g.manual < 1 ? val : g?.tgts[i].val as number))
+    for (let i = 0; i < duration; i++) {
+        let val = getCompoundedIncome(g.aiper as number, g.aisy as number, i)
+        cfs.push(Math.round(val))
     }
     let firstYearCost = getCompoundedIncome(g.chg as number, g.cp as number, duration)
     let taxBenefit = 0
@@ -93,12 +92,12 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput) => {
     //@ts-ignore
     cfs.push(Math.round((-g?.sa * (1 + g.btr / 100)) + taxBenefit))
     g.pg?.forEach((t) => {
-        let index = t.year - g.by
-        cfs[index] += t.val
+        let index = t?.year as number - g.by
+        cfs[index] += t?.val as number
     })
     g.pl?.forEach((t) => {
-        let index = t.year - g.by
-        cfs[index] -= t.val
+        let index = t?.year as number - g.by
+        cfs[index] -= t?.val as number
     })
     return cfs
 }
@@ -319,4 +318,46 @@ const createManualCFs = (goal: APIt.CreateGoalInput, duration: number) => {
     }
     if (taxBenefitPrev > 0) cfs.push(Math.round(taxBenefitPrev))
     return cfs
+}
+
+const checkForFF = (savings: number, dr: number, ffGoal: APIt.CreateGoalInput, ffYear: number) => {
+    let goal = Object.assign({}, ffGoal)
+    goal.sy = ffYear
+    let cs = savings
+    let cfs: Array<number> = calculateFFCFs(goal)
+    let year = 0
+    let ffAmt = 0
+    let nowYear = new Date().getFullYear()
+    let index = nowYear - goal.by
+    for (let i = index; i < cfs.length; i++) {
+        year = nowYear + i
+        if (cfs[i] < 0) cs += cfs[i]
+        if (cs < 0) {
+            break
+        }
+        cs *= (1 + (dr / 100))
+        if (cfs[i] > 0) cs += cfs[i]
+        if (year === ffYear - 1) ffAmt = cs
+    }
+    return { amt: Math.round(cs), ffAmt: Math.round(ffAmt) }
+}
+
+export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, oppDR: number, savings: number) => {
+    let nowYear = new Date().getFullYear()
+    if(nowYear >= ffGoal.ey) return {year: -1, amt: -1, ffAmt: -1}
+    let yearToTry = ffGoal.sy
+    let {amt, ffAmt} = checkForFF(savings, oppDR, ffGoal, yearToTry)
+    let prevResult = {year: yearToTry, amt: amt, ffAmt: ffAmt}
+    let increment = prevResult.amt > 0 ? -1 : 1
+    for (let currYear = yearToTry + increment; currYear <= ffGoal.ey && currYear >= ffGoal.by; currYear += increment) {
+        console.log("Going to calculate FF for year ", currYear)
+        let {amt, ffAmt} = checkForFF(savings, oppDR, ffGoal, currYear)
+        console.log("Prev result is ", prevResult)
+        if ((amt < 0 || ffAmt < 0)&& (prevResult.amt > 0 && prevResult.ffAmt >= 0)) 
+            return prevResult
+        else if((prevResult.amt < 0 || prevResult.ffAmt < 0) && (amt > 0 && ffAmt > 0)) 
+            return {year: currYear, amt: amt, ffAmt: ffAmt}
+        prevResult = {year: currYear, amt: amt, ffAmt: ffAmt}
+    }
+    return prevResult
 }

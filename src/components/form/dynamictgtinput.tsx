@@ -5,6 +5,7 @@ import SelectInput from './selectinput'
 import SVGAdd from '../svgadd'
 import SVGRemove from '../svgremove'
 import { initYearOptions } from '../utils'
+import { createNewTarget } from '../goals/goalutils'
 
 interface DynamicTgtInputProps {
     tgts: Array<TargetInput>
@@ -24,17 +25,10 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
         return props.tgts[props.tgts.length - 1].year + 1
     }
 
-    const newRec = () =>
-        Object.create(
-            {
-                year: getDefaultYear(),
-                val: 0
-            } as TargetInput
-        )
+    const newRec = () => createNewTarget(getDefaultYear(), 0)
 
     const filterTgts = () => {
         let ft = props.tgts.filter((t) => t.year >= props.startYear && t.year <= props.endYear)
-        if (ft.length === 0) ft.push(newRec())
         props.tgtsHandler([...ft])
     }
 
@@ -44,11 +38,13 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
             props.endYear - props.startYear))
     }, [props.startYear, props.endYear])
 
-    const addTgt = () => props.tgtsHandler([...props.tgts, newRec()])
+    const addTgt = () => {
+        props.tgts.push(newRec())
+        props.tgtsHandler([...props.tgts])
+    }
 
     const removeTgt = (index: number) => {
         props.tgts.splice(index, 1)
-        if(props.tgts.length === 0) props.tgts.push(newRec())
         props.tgtsHandler([...props.tgts])
     }
 
@@ -58,20 +54,23 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
     }
 
     const changeTargetVal = (index: number, val: number) => {
+        console.log("Index is ", index)
+        console.log("Tgt is ", props.tgts[index])
         props.tgts[index].val = val
         props.tgtsHandler([...props.tgts])
     }
 
     return (
         <div className="w-full">
-            {props.tgts && props.tgts.map((t, i) =>
-                <div className="flex items-center justify-around w-full">
+            {props.tgts && props.tgts[0] ? props.tgts.map((t, i) =>
+                <div key={"ctr" + i} className="flex items-center justify-around w-full">
                     <div className="flex justify-center w-5/6 md:w-11/12">
-                        <SelectInput name={"year" + i} pre="Year" options={yearOpts} value={t.year} changeHandler={(year: string) => changeTargetYear(i, year)} />
+                        <SelectInput name={"year" + i} pre="Year" options={yearOpts} value={t.year}
+                            changeHandler={(year: string) => changeTargetYear(i, year)} />
                         <div className="ml-4 md:ml-8">
-                        <NumberInput name={"val" + i} pre="Amount" currency={props.currency} rangeFactor={props.rangeFactor}
-                            value={t.val} changeHandler={(val: number) => changeTargetVal(i, val)}
-                            min={0} max={900000} step={500} width="120px" />
+                            <NumberInput name={"val" + i} pre="Amount" currency={props.currency} rangeFactor={props.rangeFactor}
+                                value={t.val} changeHandler={(val: number) => changeTargetVal(i, val)}
+                                min={0} max={900000} step={500} width="120px" />
                         </div>
                     </div>
                     <div className="flex justify-end w-1/6 md:w-1/12">
@@ -83,7 +82,10 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
                         </div>}
                     </div>
                 </div>
-            )}
+            ) : <div className="flex justify-center" onClick={() => addTgt()}>
+                    <SVGAdd />
+                </div>
+            }
 
         </div>
     )
