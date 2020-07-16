@@ -22,6 +22,10 @@ interface SummaryProps {
     mergedCFs: Object
     oppDR: number
     savings: number
+    annualSavings: number
+    savingsChgRate: number
+    expense: number
+    expenseChgRate: number
     deleteCallback: Function
     editCallback: Function
 }
@@ -33,13 +37,12 @@ export default function Summary(props: SummaryProps) {
     useEffect(() => {
         if (!props.ffGoal || !props.cfs || props.cfs.length === 0) return
         let mCFs = Object.assign({}, props.mergedCFs)
-        console.log("Goal gets input merged cfs..", props.mergedCFs)
         props.cfs.forEach((cf, i) => {
             //@ts-ignore
-            mCFs[props.startYear + i] -= cf
+            if(mCFs[props.startYear + i] !== 'undefined') mCFs[props.startYear + i] -= cf
         })
-        let result = findEarliestFFYear(props.ffGoal, props.oppDR, props.savings, mCFs)
-        console.log("Result for goal is ", result)
+        let result = findEarliestFFYear(props.ffGoal, props.oppDR, props.savings, mCFs, 
+            props.annualSavings, props.savingsChgRate, props.expense, props.expenseChgRate)
         setFFImpactYears(props.ffYear - result.year)
     }, [props.ffGoal, props.oppDR, props.savings, props.cfs, props.ffAmt, props.ffYear, props.mergedCFs])
 

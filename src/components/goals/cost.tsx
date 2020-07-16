@@ -18,14 +18,14 @@ interface CostProps {
     leftMax: number
     startingCost: number
     costChgRate: number
-    manualMode: number
+    manualMode?: number
     manualTargets?: Array<TargetInput>
     currency: string
     rangeFactor: number
     startYear: number
     endYear: number
     manualTgtMin?: number
-    manualModeHandler: Function
+    manualModeHandler?: Function
     manualTargetsHandler?: Function
     startingCostHandler: Function
     costChgRateHandler: Function
@@ -55,7 +55,7 @@ export default function Cost(props: CostProps) {
     }
 
     useEffect(() => {
-        if (props.manualMode > 0) initManualTargets()
+        if (props.manualMode && props.manualMode > 0) initManualTargets()
     }, [props.manualMode, props.startYear, props.endYear])
 
     return (
@@ -69,7 +69,7 @@ export default function Cost(props: CostProps) {
                     min={-10} max={10} step={0.5} value={props.costChgRate} changeHandler={props.costChgRateHandler} />
             } showOnLoad
             toggle={
-                props.manualTargets && <HToggle rightText={`Manual Input for Multiple Years`} value={props.manualMode} setter={props.manualModeHandler} />
+                props.manualModeHandler && <HToggle rightText={`Manual Input for Multiple Years`} value={props.manualMode} setter={props.manualModeHandler} />
             } manualInput={
                 props.manualTargets && <div className="flex flex-wrap justify-around">
                     {props.manualTargets && props.manualTargets.map((t, i) =>
