@@ -323,7 +323,6 @@ const createManualCFs = (goal: APIt.CreateGoalInput, duration: number) => {
 const checkForFF = (savings: number, dr: number, ffGoal: APIt.CreateGoalInput, ffYear: number, mergedCFs: Object) => {
     let goal = Object.assign({}, ffGoal)
     let mCFs = Object.assign({}, mergedCFs)
-    console.log("Input merged cfs are ", mCFs)
     goal.sy = ffYear
     let cs = savings
     let cfs: Array<number> = calculateFFCFs(goal)
@@ -331,16 +330,13 @@ const checkForFF = (savings: number, dr: number, ffGoal: APIt.CreateGoalInput, f
         //@ts-ignore
         mCFs[goal.by + i] += cf
     })
-    console.log("Merged CFs after adding FF cfs are ", mCFs)
     let ffAmt = 0
-    let nowYear = new Date().getFullYear()
     for(let [year, value] of Object.entries(mCFs)) {
         let y = parseInt(year)
         let v = parseInt(value)
-        if(y <= nowYear) continue
         if(v < 0) cs += v
-        if(cs < 0) break
-        cs *= (1 + (dr / 100))
+        if(y >= ffYear && cs <= 0) break
+        if(cs > 0) cs *= (1 + (dr / 100))
         if(v > 0) cs += v
         if (y === ffYear - 1) ffAmt = cs
     }

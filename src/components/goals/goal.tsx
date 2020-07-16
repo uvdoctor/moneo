@@ -274,7 +274,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                             inputText="How Much Does it Cost?" showInputCondition={price < 500} rightPre="Cost"
                             title={`Cost${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
                             showRightCondition={startYear > goal.by} leftPre={startYear > goal.by ? 'Cost' : ''}
-                            leftPost={startYear > goal.by ? `in ${goal.by}` : ''} leftMin={0} leftMax={2000000}
+                            leftPost={startYear > goal.by ? `in ${goal.by}` : ''} leftMin={0} leftMax={goalType === APIt.GoalType.B ? 2000000 : 100000}
                             leftNote={buyTaxRate ? `including ${buyTaxRate}% taxes & fees` : ''} rightNote={`Yearly till ${startYear}`} />
                     </div>
                 </Fragment>}

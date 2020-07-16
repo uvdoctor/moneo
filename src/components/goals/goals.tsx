@@ -47,10 +47,12 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         loadAllGoals()
     }, [])
 
-    const buildEmptyMergedCFs = () => {
-        if (!ffGoal) return []
+    const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
+        if (!ffGoal) return {}
         let mCFs = {}
-        for (let year = ffGoal.by; year <= ffGoal.ey + 1; year++)
+        let ffToYear = ffGoal.ey + 1
+        if (toYear < ffToYear) toYear = ffToYear
+        for (let year = fromYear; year <= toYear; year++)
             //@ts-ignore
             mCFs[year] = 0
         return mCFs
@@ -58,15 +60,19 @@ export default function Goals({ showModalHandler }: GoalsProps) {
 
     useEffect(() => {
         if (!ffGoal || !goalsLoaded) return
-        let mCFs = !allGoals || !allGoals[0] ?
-            buildEmptyMergedCFs()
-            : mergedCFs
+        let yearRange = getYearRange()
+        let mCFs = buildEmptyMergedCFs(yearRange.from, yearRange.to)
+        if (allGoals && allGoals[0]) allGoals.forEach(g => {
+            //@ts-ignore
+            mergeCFs(mCFs, allCFs[g.id], g.sy)
+        })
         setMergedCFs(mCFs)
+        console.log("Going to calculate FF scorecard with merged CFs: ", mCFs)
         let result = findEarliestFFYear(ffGoal, oppDR, savings, mCFs)
         setFFAmt(result.ffAmt)
         setFFYear(result.year)
         setFFLeftOverAmt(result.amt)
-    }, [ffGoal, oppDR, savings, goalsLoaded])
+    }, [ffGoal, oppDR, savings, goalsLoaded, allGoals])
 
     useEffect(() => wipGoal ? showModalHandler(true) : showModalHandler(false), [wipGoal])
 
@@ -147,7 +153,8 @@ export default function Goals({ showModalHandler }: GoalsProps) {
 
     const getYearRange = () => {
         let nowYear = new Date().getFullYear()
-        if (!allGoals || !allGoals[0]) return { from: nowYear, to: nowYear }
+        if (!ffGoal) return { from: nowYear, to: nowYear }
+        if (!allGoals || !allGoals[0]) return { from: nowYear, to: ffGoal.ey + 1 }
         //@ts-ignore
         let toYear = nowYear
         allGoals.forEach((g) => {
@@ -172,31 +179,27 @@ export default function Goals({ showModalHandler }: GoalsProps) {
     const populateData = (obj: Object, cfs: Array<number>, sy: number, firstYear: number) => {
         cfs.forEach((cf, i) => {
             let year = sy + i
-            if (year >= firstYear)
-                //@ts-ignore
-                obj.y[year - firstYear] += cf
+            //@ts-ignore
+            if (obj.y[year - firstYear] !== 'undefined') obj.y[year - firstYear] += cf
         })
     }
 
-    const mergeCFs = (obj: Object, cfs: Array<number>, sy: number, firstYear: number) => {
+    const mergeCFs = (obj: Object, cfs: Array<number>, sy: number) => {
         cfs.forEach((cf, i) => {
             let year = sy + i
-            if (year >= firstYear)
-                //@ts-ignore
-                obj[year] += cf
+            //@ts-ignore
+            if (obj[year] !== 'undefined') obj[year] += cf
         })
     }
 
-    useEffect(() => {
-        if (ffGoal && allGoals && allGoals[0]) createChartData()
-    }, [ffGoal, allGoals])
+    useEffect(() => createChartData(), [allGoals])
 
     const createChartData = () => {
+        if (!allGoals || !allGoals[0]) return
         let yearRange = getYearRange()
         let mustCFs = populateWithZeros(yearRange.from, yearRange.to)
         let tryCFs = populateWithZeros(yearRange.from, yearRange.to)
         let optCFs = populateWithZeros(yearRange.from, yearRange.to)
-        let mCFs = buildEmptyMergedCFs()
         allGoals?.forEach(g => {
             //@ts-ignore
             let cfs: Array<number> = allCFs[g.id]
@@ -204,17 +207,10 @@ export default function Goals({ showModalHandler }: GoalsProps) {
             if (g.imp === APIt.LMH.H) populateData(mustCFs, cfs, g.sy, yearRange.from)
             else if (g.imp === APIt.LMH.M) populateData(tryCFs, cfs, g.sy, yearRange.from)
             else populateData(optCFs, cfs, g.sy, yearRange.from)
-            mergeCFs(mCFs, cfs, g.sy, yearRange.from)
         })
-        console.log("Merged CFs are: ", mCFs)
         setMustCFs(mustCFs)
         setOptCFs(optCFs)
         setTryCFs(tryCFs)
-        setMergedCFs(mCFs)
-        let result = findEarliestFFYear(ffGoal as APIt.CreateGoalInput, oppDR, savings, mCFs)
-        setFFAmt(result.ffAmt)
-        setFFYear(result.year)
-        setFFLeftOverAmt(result.amt)
     }
 
     return (
@@ -284,7 +280,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                                 <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
                                     {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
                                         g.id && (!impFilter || impFilter === g.imp) &&
-                                        <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp}
+                                        <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} oppDR={oppDR} savings={savings}
                                             startYear={g.sy} currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal}
                                             ffYear={ffYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffGoal={ffGoal} mergedCFs={mergedCFs} />)}
                                 </div>}
