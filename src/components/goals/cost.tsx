@@ -18,7 +18,7 @@ interface CostProps {
     leftMax: number
     startingCost: number
     costChgRate: number
-    manualMode?: number
+    manualMode: number
     manualTargets?: Array<TargetInput>
     currency: string
     rangeFactor: number
@@ -55,7 +55,7 @@ export default function Cost(props: CostProps) {
     }
 
     useEffect(() => {
-        if (props.manualMode && props.manualMode > 0) initManualTargets()
+        if (props.manualMode > 0) initManualTargets()
     }, [props.manualMode, props.startYear, props.endYear])
 
     return (

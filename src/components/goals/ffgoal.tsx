@@ -169,7 +169,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                         <NumberInput name="dr" value={oppDR} unit="%" pre="Investment" min={0} max={15}
                             post="Earns" changeHandler={oppDRHandler} note="After taxes & fees" step={0.1} />
                     } footer="Total Savings includes cash, deposits, gold, stocks, bonds, etc. Deduct money owed on credit cards, loans, etc." />
-                    <Cost startingCost={annualSavings} startingCostHandler={annualSavingsHandler} rangeFactor={rangeFactor}
+                    <Cost startingCost={annualSavings} startingCostHandler={annualSavingsHandler} rangeFactor={rangeFactor} manualMode={0}
                         currency={currency} costChgRate={savingsChgRate} costChgRateHandler={savingsChgRateHandler} endYear={startYear - 1}
                         startYear={nowYear} inputText="How Much Can You Save?" showInputCondition={annualSavings === 0}
                         rightPre="Savings" rightNote='Yearly' title={startYear - 1 > nowYear ?
