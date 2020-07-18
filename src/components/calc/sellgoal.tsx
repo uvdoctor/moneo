@@ -1,4 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import { useEffect } from "react";
+
+useEffect(() => {
+  () => {};
+});/*import React, { useState, useEffect } from 'react'
 import TextInput from '../form/textinput'
 import SelectInput from '../form/selectinput'
 import NumberInput from '../form/numberinput'
@@ -217,4 +221,4 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
                 submitText={`${goal.id ? 'Update' : 'Create'} Goal`} />
         </div>
     )
-}
+}*/
