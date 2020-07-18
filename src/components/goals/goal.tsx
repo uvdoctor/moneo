@@ -54,7 +54,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     const [buyTaxRate, setBuyTaxRate] = useState<number | undefined | null>(goal?.btr)
     const [loanPer, setLoanPer] = useState<number | undefined | null>(goal?.emi?.per)
     const [startingPrice, setStartingPrice] = useState<number>(goal?.cp as number)
-    const [currency, setCurrency] = useState<string>(goal?.ccy)
+    const [currency, setCurrency] = useState<string>(goal.ccy)
     const [impLevel, setImpLevel] = useState<APIt.LMH>(goal?.imp)
     const [manualMode, setManualMode] = useState<number>(goal?.manual)
     const [name, setName] = useState<string>(goal?.name)

@@ -42,8 +42,8 @@ export default function Summary(props: SummaryProps) {
             if(mCFs[props.startYear + i] !== 'undefined') mCFs[props.startYear + i] -= cf
         })
         let result = findEarliestFFYear(props.ffGoal, props.oppDR, props.savings, mCFs, 
-            props.annualSavings, props.savingsChgRate, props.expense, props.expenseChgRate)
-        setFFImpactYears(props.ffYear - result.year)
+            props.annualSavings, props.savingsChgRate, props.expense, props.expenseChgRate, props.ffYear)
+        setFFImpactYears(props.ffYear - result.ffYear)
     }, [props.ffGoal, props.oppDR, props.savings, props.cfs, props.ffAmt, props.ffYear, props.mergedCFs])
 
     return (
@@ -67,7 +67,7 @@ export default function Summary(props: SummaryProps) {
             </div>
             <div className="mt-2">
                 <ResultItem svg={<SVGHourGlass />} label="Financial Freedom Impact"
-                    unit={`${Math.abs(ffImpactYears) > 1 ? ' Years ' : ' Year '}${ffImpactYears > 0 ? 'Later' : 'Earlier'}`}
+                    unit={`${Math.abs(ffImpactYears) > 1 ? ' Years ' : ' Year '}${ffImpactYears > 0 ? 'Delay' : 'Earlier'}`}
                     result={Math.abs(ffImpactYears)} />
             </div>
             <LineChart cfs={props.cfs} startYear={props.startYear} currency={props.currency} />

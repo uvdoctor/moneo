@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react'
 import Goal from './goal'
 import FFGoal from './ffgoal'
-import { removeFromArray, getRangeFactor } from '../utils'
+import { removeFromArray } from '../utils'
 import CFChart from './cfchart'
 import * as APIt from '../../api/goals'
 import { getGoalsList, createNewGoal, changeGoal, deleteGoal, getDuration, createNewGoalInput, getGoalTypes, getImpOptions } from './goalutils'
@@ -36,7 +36,6 @@ export default function Goals({ showModalHandler }: GoalsProps) {
     const [viewMode, setViewMode] = useState<number>(0)
     const [impFilter, setImpFilter] = useState<string>("")
     const [currency, setCurrency] = useState<string>("USD")
-    const [rangeFactor, setRangeFactor] = useState<number>(getRangeFactor(currency))
     const [oppDR, setOppDR] = useState<number>(6)
     const [savings, setSavings] = useState<number>(100000)
     const [annualSavings, setAnnualSavings] = useState<number>(100000)
@@ -48,7 +47,6 @@ export default function Goals({ showModalHandler }: GoalsProps) {
     const [ffGoal, setFFGoal] = useState<APIt.CreateGoalInput>()
     const [ffLeftOverAmt, setFFLeftOverAmt] = useState<number>(0)
     const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false)
-    const nowYear = new Date().getFullYear()
 
     useEffect(() => {
         loadAllGoals()
@@ -75,10 +73,10 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         })
         setMergedCFs(mCFs)
         let result = findEarliestFFYear(ffGoal, oppDR, savings, mCFs,
-            annualSavings, savingsChgRate, expense, expenseChgRate)
+            annualSavings, savingsChgRate, expense, expenseChgRate, null)
         setFFAmt(result.ffAmt)
-        setFFYear(result.year)
-        setFFLeftOverAmt(result.amt)
+        setFFYear(result.ffYear)
+        setFFLeftOverAmt(result.leftAmt)
     }, [ffGoal, oppDR, savings, goalsLoaded, allGoals, annualSavings, savingsChgRate,
         expense, expenseChgRate])
 
@@ -129,7 +127,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
             return
         }
         removeFromArray(allGoals as Array<APIt.CreateGoalInput>, 'id', goal.id)
-        allGoals?.push(g as APIt.CreateGoalInput)
+        allGoals?.unshift(g as APIt.CreateGoalInput)
         //@ts-ignore
         allCFs[g.id] = cfs
         setAllCFs(allCFs)
@@ -157,12 +155,12 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         }
     }
 
-    const createGoal = (type: APIt.GoalType) => setWIPGoal(createNewGoalInput(type))
+    const createGoal = (type: APIt.GoalType) => setWIPGoal(createNewGoalInput(type, ffGoal?.ccy as string))
 
     const getYearRange = () => {
         let nowYear = new Date().getFullYear()
-        if (!ffGoal) return { from: nowYear, to: nowYear }
-        if (!allGoals || !allGoals[0]) return { from: nowYear, to: ffGoal.ey + 1 }
+        if (!ffGoal) return { from: nowYear + 1, to: nowYear }
+        if (!allGoals || !allGoals[0]) return { from: nowYear + 1, to: ffGoal.ey + 1 }
         //@ts-ignore
         let toYear = nowYear
         allGoals.forEach((g) => {
@@ -170,7 +168,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
             let endYear = g.sy + allCFs[g.id].length
             if (endYear > toYear) toYear = endYear
         })
-        return { from: nowYear, to: toYear }
+        return { from: nowYear + 1, to: toYear }
     }
 
     const populateWithZeros = (firstYear: number, lastYear: number) => {
@@ -202,6 +200,8 @@ export default function Goals({ showModalHandler }: GoalsProps) {
 
     useEffect(() => createChartData(), [allGoals])
 
+    useEffect(() => setCurrency(ffGoal?.ccy as string), [ffGoal])
+
     const createChartData = () => {
         if (!allGoals || !allGoals[0]) return
         let yearRange = getYearRange()
@@ -221,13 +221,6 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         setTryCFs(tryCFs)
     }
 
-    useEffect(() => {
-        if (ffGoal) {
-            setRangeFactor(Math.round(getRangeFactor(ffGoal?.ccy) / getRangeFactor(currency)))
-            setCurrency(ffGoal?.ccy)
-        }
-    }, [ffGoal])
-
     return (
         wipGoal ?
             <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
@@ -238,7 +231,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                             expense={expense} expenseChgRate={expenseChgRate} annualSavingsHandler={setAnnualSavings}
                             savingsChgRateHandler={setSavingsChgRate} expenseHandler={setExpense} oppDR={oppDR} oppDRHandler={setOppDR}
                             expenseChgRateHandler={setExpenseChgRate} totalSavings={savings} totalSavingsHandler={setSavings} />
-                        : <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
+                        : ffGoal && <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
                             updateCallback={updateGoal} />}
                 </div>
             </div>
@@ -277,35 +270,11 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                                         currency={ffGoal.ccy} footer={`Remaining In ${ffGoal.ey + 1}`} />
                                 </div> : `Analyzed till ${ffYear}. Please try again with higher Savings And / Or Investment Return.`
                             } right={<div />} bottom={
-                                <div className="flex flex-wrap justify-between items-center w-full">
-                                    <div className="mt-4">
-                                        <NumberInput name="savings" value={savings} pre="Total" min={-100000} max={900000}
-                                            post="Savings" changeHandler={setSavings} step={500} currency={ffGoal.ccy}
-                                            note={`Accumulated So Far`} rangeFactor={getRangeFactor(ffGoal.ccy)} />
-                                    </div>
-                                    <div className="mt-4">
-                                        <NumberInput name="dr" value={oppDR} unit="%" pre="Investment" min={0} max={15}
-                                            post="Earns" changeHandler={setOppDR} note="After taxes & fees" step={0.1} />
-                                    </div>
-                                    <div className="mt-4">
-                                        <NumberInput name="as" pre='Annual' post='Savings' note={`In ${nowYear}`}
-                                            currency={currency} rangeFactor={rangeFactor} value={annualSavings} changeHandler={setAnnualSavings}
-                                            min={0} max={200000} step={1000} />
-                                    </div>
-                                    <div className="mt-4">
-                                        <NumberInput name="asChgRate" pre="Savings" post="Increases" note='Every Year' unit="%"
-                                            min={0} max={10} step={0.1} value={savingsChgRate} changeHandler={setSavingsChgRate} />
-                                    </div>
-                                    <div className="mt-4">
-                                        <p className="text-center font-semibold">After Financial Freedom</p>
-                                        <NumberInput name="currExpense" pre='Annual' post='Spend of' note={`In Today's Money`}
-                                            currency={currency} rangeFactor={rangeFactor} value={expense} changeHandler={setExpense}
-                                            min={0} max={100000} step={1000} width="120px" />
-                                    </div>
-                                    <div className="mt-4">
-                                        <NumberInput name="expChgRate" pre="Spend" post="Increases" note='Every Year' unit="%"
-                                            min={0} max={10} step={0.1} value={expenseChgRate} changeHandler={setExpenseChgRate} />
-                                    </div>
+                                <div className="flex flex-wrap justify-around items-center w-full">
+                                    <NumberInput name="dr" value={oppDR} unit="%" pre="Investment" min={0} max={15}
+                                        post="Earns" changeHandler={setOppDR} note="After taxes & fees" step={0.1} />
+                                    <NumberInput name="asChgRate" pre="Savings" post="Increases" note='Every Year' unit="%"
+                                        min={0} max={10} step={0.1} value={savingsChgRate} changeHandler={setSavingsChgRate} />
                                 </div>
                             } />
                         </div> : <div />}

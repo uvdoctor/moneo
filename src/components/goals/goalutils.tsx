@@ -63,23 +63,22 @@ export const createNewTarget = (year: number, val: number) => {
     }
 }
 
-const createFFGoalInput = () => {
+const createFFGoalInput = (currency: string) => {
     let nowYear = new Date().getFullYear()
-    let startYear = nowYear + 21
     return {
         id: '',
         name: 'Financial Freedom',
-        sy: startYear,
-        ey: startYear + 30,
+        sy: nowYear,
+        ey: nowYear + 30,
         by: nowYear + 1,
         tdr: 0,
         tdl: 0,
-        ccy: 'USD',
+        ccy: currency,
         type: APIt.GoalType.FF,
         imp: APIt.LMH.H,
         manual: 0,
         amper: 0,
-        amsy: startYear,
+        amsy: nowYear + 10,
         dr: 0,
         sa: 0,
         achg: 5,
@@ -89,7 +88,7 @@ const createFFGoalInput = () => {
     } as APIt.CreateGoalInput
 }
 
-const createBaseGoalInput = (goalType: APIt.GoalType) => {
+const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
     let nowYear = new Date().getFullYear()
     let startYear = nowYear + 1
     return {
@@ -100,7 +99,7 @@ const createBaseGoalInput = (goalType: APIt.GoalType) => {
         by: nowYear,
         tdr: 0,
         tdl: 0,
-        ccy: 'USD',
+        ccy: currency,
         cp: 0,
         chg: 3,
         type: goalType,
@@ -111,7 +110,7 @@ const createBaseGoalInput = (goalType: APIt.GoalType) => {
     } as APIt.CreateGoalInput
 }
 
-const createSellGoalInput = () => {
+/*const createSellGoalInput = () => {
     let nowYear = new Date().getFullYear()
     return {
         name: name,
@@ -134,11 +133,11 @@ const createSellGoalInput = () => {
         aisy: nowYear,
         tbr: 0
     }
-}
-export const createNewGoalInput = (goalType: APIt.GoalType) => {
-    if (goalType === APIt.GoalType.FF) return createFFGoalInput()
-    if (goalType === APIt.GoalType.S) return createSellGoalInput()
-    let bg: APIt.CreateGoalInput = createBaseGoalInput(goalType)
+}*/
+
+export const createNewGoalInput = (goalType: APIt.GoalType, currency: string) => {
+    if (goalType === APIt.GoalType.FF) return createFFGoalInput(currency)
+    let bg: APIt.CreateGoalInput = createBaseGoalInput(goalType, currency)
     if (goalType !== APIt.GoalType.D) bg.btr = 10
     if (goalType === APIt.GoalType.B || goalType === APIt.GoalType.E) {
         bg.tbi = 0

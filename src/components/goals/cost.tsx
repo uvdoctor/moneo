@@ -22,8 +22,8 @@ interface CostProps {
     manualTargets?: Array<TargetInput>
     currency: string
     rangeFactor: number
-    startYear: number
-    endYear: number
+    startYear?: number
+    endYear?: number
     manualTgtMin?: number
     manualModeHandler?: Function
     manualTargetsHandler?: Function
@@ -41,7 +41,8 @@ export default function Cost(props: CostProps) {
     }
 
     const initManualTargets = () => {
-        if(!props.manualTargets || !props.manualTargetsHandler) return
+        if(!props.manualTargets || !props.manualTargetsHandler
+            || !props.startYear || !props.endYear) return
         let targets: Array<TargetInput> = []
         for (let year = props.startYear; year <= props.endYear; year++) {
             let existingT = null

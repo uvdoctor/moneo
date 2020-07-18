@@ -10,7 +10,6 @@ import CurrencyInput from '../form/currencyinput'
 import SelectInput from '../form/selectinput'
 import RadialInput from '../form/radialinput'
 import NumberInput from '../form/numberinput'
-import { getCompoundedIncome } from '../calc/finance'
 import Cost from './cost'
 import ActionButtons from '../form/actionbuttons'
 import ResultItem from '../calc/resultitem'
@@ -37,13 +36,11 @@ interface FFGoalProps {
 
 export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgRate, annualSavings, savingsChgRate, totalSavingsHandler, oppDRHandler, expenseHandler, expenseChgRateHandler,
     annualSavingsHandler, savingsChgRateHandler, cancelCallback, addCallback, updateCallback }: FFGoalProps) {
-    const [startYear, setStartYear] = useState<number>(goal.sy)
+    const [expenseBY, setExpenseBY] = useState<number>(goal.sy)
     const [endYear, setEndYear] = useState<number>(goal.ey)
-    const [syOptions] = useState(initYearOptions(goal.by, 50))
-    const [eyOptions, setEYOptions] = useState(initYearOptions(startYear + 30, 50))
+    const eyOptions = initYearOptions(goal.by + 30, 50)
     const [cyOptions, setCYOptions] = useState(initYearOptions(endYear - 30, 20))
     const [currency, setCurrency] = useState<string>(goal?.ccy)
-    const [retirementCost, setRetirementCost] = useState<number>(0)
     const [submitDisabled, setSubmitDisabled] = useState<boolean>(true)
     const [taxRate, setTaxRate] = useState<number>(goal.tdr)
     const [leaveBehind, setLeaveBehind] = useState<number>(goal?.sa as number)
@@ -63,7 +60,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
     const createGoal = () => {
         return {
             name: goal.name,
-            sy: startYear,
+            sy: expenseBY,
             ey: endYear,
             by: goal.by,
             tdr: taxRate,
@@ -91,36 +88,27 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
 
     const changeEndYear = (str: string) => setEndYear(parseInt(str))
 
-    const changeStartYear = (str: string) => setStartYear(parseInt(str))
-
     const changeCarePremiumYear = (str: string) => setCarePremiumSY(parseInt(str))
 
     const changeCarePremiumDur = (str: string) => setCarePremiumDur(parseInt(str))
 
     useEffect(() => {
-        setEYOptions(initYearOptions(startYear + 30, 50))
-        if (startYear > endYear - 30) setEndYear(startYear + 30)
         setCYOptions(initYearOptions(endYear - 30, 10))
         if (carePremiumSY > endYear - 20 || carePremiumSY < endYear - 30) setCarePremiumSY(endYear - 20)
-    }, [startYear, endYear, carePremiumSY])
+    }, [endYear, carePremiumSY])
 
     useEffect(() => {
-        if (!expense) {
-            setRetirementCost(0)
-            return
-        }
-        if (startYear <= nowYear) setRetirementCost(expense)
-        else setRetirementCost(Math.round((getCompoundedIncome(expenseChgRate, expense, startYear - nowYear))))
-    }, [expense, expenseChgRate, startYear])
+        setExpenseBY(nowYear)
+    }, [expense])
 
     const handleSubmit = () =>
         goal.id ? updateCallback(updateGoal())
             : addCallback(createGoal())
 
     useEffect(() =>
-        retirementCost >= 5000 ?
+        annualSavings !== 0 && expense >= 5000 ?
             setSubmitDisabled(false) : setSubmitDisabled(true)
-        , [retirementCost])
+        , [expense, annualSavings])
 
 
     useEffect(() => {
@@ -151,8 +139,6 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                     </div>
                 </div>
                 <div className="mt-4 flex justify-around items-start w-full">
-                    <SelectInput name="sy" pre="Achieve By" post="Or Earlier"
-                        value={startYear} changeHandler={changeStartYear} options={syOptions} />
                     <SelectInput name="ey" pre="Plan Until" value={endYear}
                         changeHandler={changeEndYear} options={eyOptions} />
                     <div className="flex flex-col">
@@ -170,20 +156,16 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                             post="Earns" changeHandler={oppDRHandler} note="After taxes & fees" step={0.1} />
                     } footer="Total Savings includes cash, deposits, gold, stocks, bonds, etc. Deduct money owed on credit cards, loans, etc." />
                     <Cost startingCost={annualSavings} startingCostHandler={annualSavingsHandler} rangeFactor={rangeFactor} manualMode={0}
-                        currency={currency} costChgRate={savingsChgRate} costChgRateHandler={savingsChgRateHandler} endYear={startYear - 1}
-                        startYear={nowYear} inputText="How Much Can You Save?" showInputCondition={annualSavings === 0}
-                        rightPre="Savings" rightNote='Yearly' title={startYear - 1 > nowYear ?
-                            `Annual Savings in ${startYear - 1} ~ ${toCurrency(Math.round(getCompoundedIncome(savingsChgRate, annualSavings, startYear - nowYear - 1)), currency)}`
-                            : 'Annual Savings'}
+                        currency={currency} costChgRate={savingsChgRate} costChgRateHandler={savingsChgRateHandler} inputText="How Much Can You Save?" 
+                        showInputCondition={annualSavings === 0} rightPre="Savings" rightNote='Yearly' title='Annual Savings'
                         showRightCondition leftPre='Savings' leftPost={`in ${nowYear}`} leftMin={-50000} leftMax={200000}
-                        footer={`${annualSavings === 0 ? ' Include retirement fund contribution. Deduct taxes & all expenses including insurance premiums.' : `${startYear - 1} may be the last year for work income given You want to be Financially Free before ${startYear}.`}`} />
-                    <Section inputText={`Living Cost after Financial Freedom`} showInputCondition={annualSavings != 0 && retirementCost < 5000} title={
-                        `Withdraw Savings ~ ${toCurrency(Math.round(retirementCost * (1 + taxRate / 100)), currency)} in ${startYear}`}
+                        footer='Include retirement fund contribution. Deduct taxes & all expenses including insurance premiums.' />
+                    <Section inputText={`How Much Do You Need for Annual Living Expenses After Financial Freedom?`} showInputCondition={annualSavings != 0 && expense < 5000} title='Annual Living Cost after Financial Freedom'
                         left={
-                            <NumberInput name="currExpense" pre='Yearly' post='Cost' note={`In Today's Money`}
+                            <NumberInput name="currExpense" pre="In Today's" post='Money'
                                 currency={currency} rangeFactor={rangeFactor} value={expense} changeHandler={expenseHandler} min={0} max={100000} step={1000} width="120px" />
                         } right={
-                            <NumberInput name="priceChgRate" pre="Cost" post="Changes" note='Yearly' unit="%"
+                            <NumberInput name="expChgRate" pre="Expense" post="Changes" note='Yearly' unit="%"
                                 min={0} max={10} step={0.1} value={expenseChgRate} changeHandler={expenseChgRateHandler} />
                         } bottom={
                             <NumberInput name="tr" pre="Income" post="Tax Rate" min={0} max={20} step={0.1}
