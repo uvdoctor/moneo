@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { getCompoundedIncome } from './finance'
 import { toStringArr } from '../utils'
 import SVGMoneyBag from './svgmoneybag'
 import RadialInput from '../form/radialinput'
 import ResultItem from './resultitem'
 import Section from '../form/section'
-
+import NextStep from '../form/nextstep'
 interface OppCostProps {
+    inputOrder: number
+    currentOrder: number
+    nextStepDisabled: boolean
+    nextStepHandler: Function
+    allInputDone: boolean
     cfs: Array<number>,
     currency: string,
     startYear: number,
@@ -39,15 +44,29 @@ export default function OppCost(props: OppCostProps) {
     );
 
     return (
-        <Section title="Instead, If You Invest"
-            left={
-                <RadialInput data={toStringArr(2, 15, 0.5)} value={props.discountRate} unit="%"
-                    label="Yearly" labelBottom={true} changeHandler={props.discountRateHandler} 
-                    post="After-tax Return" step={0.5} />
-            }
-            right={
-                <ResultItem svg={<SVGMoneyBag />} result={oppCost} currency={props.currency} label="You May Get"
-                    footer={`In ${props.startYear + props.duration}`} />
-            } />
+        <Fragment>
+            {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
+                <Section title="Instead, If You Invest"
+                    left={
+                        <RadialInput
+                            inputOrder={props.inputOrder}
+                            currentOrder={props.currentOrder}
+                            nextStepDisabled={false}
+                            nextStepHandler={props.nextStepHandler}
+                            allInputDone={props.allInputDone}
+                            data={toStringArr(2, 15, 0.5)} value={props.discountRate} unit="%"
+                            label="Yearly" labelBottom={true} changeHandler={props.discountRateHandler}
+                            post="After-tax Return" step={0.5} />
+                    }
+                    right={
+                        <div className="flex flex-col">
+                            <ResultItem svg={<SVGMoneyBag />} result={oppCost} currency={props.currency} label="You May Get"
+                                footer={`In ${props.startYear + props.duration}`} />
+                            {!props.allInputDone && props.inputOrder + 1 === props.currentOrder &&
+                                <NextStep nextStepHandler={() => props.nextStepHandler(1)}
+                                    disabled={props.nextStepDisabled} />}
+                        </div>
+                    } />}
+        </Fragment>
     )
 }

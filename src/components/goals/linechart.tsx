@@ -13,7 +13,7 @@ export default function LineChart(props: LineChartProps) {
         font: { family: "'Quicksand', sans-serif", color: "#4a5568", size: 15 },
         autosize: true, plot_bgcolor:'#edf2f7',
         xaxis: { title: 'Year', type: 'category', fixedrange: years.length > 3 ? false : true, rangeslider: years.length > 3 ? {} : '', showgrid: false },
-        yaxis: { fixedrange: true, tickformat: ',', type: props.cfs.length > 3 ? '' : 'category', showgrid: false },
+        yaxis: { fixedrange: true, tickformat: ',', showgrid: false },
         title: `Yearly Cash Flows in ${props.currency}`,
         legend: { orientation: "h" }
     }

@@ -1,6 +1,5 @@
 import React from 'react'
 import { getCurrencyList } from '../utils';
-
 interface CurrencyInputProps {
     value: string | number,
     name: string,

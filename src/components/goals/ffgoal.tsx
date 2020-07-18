@@ -6,7 +6,6 @@ import { initYearOptions, toCurrency, toStringArr, getRangeFactor } from '../uti
 import SVGClose from '../svgclose'
 import SVGLogo from '../svglogo'
 import Section from '../form/section'
-import CurrencyInput from '../form/currencyinput'
 import SelectInput from '../form/selectinput'
 import RadialInput from '../form/radialinput'
 import NumberInput from '../form/numberinput'
@@ -41,7 +40,6 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
     const eyOptions = initYearOptions(goal.by + 30, 50)
     const [cyOptions, setCYOptions] = useState(initYearOptions(endYear - 30, 20))
     const [currency, setCurrency] = useState<string>(goal?.ccy)
-    const [submitDisabled, setSubmitDisabled] = useState<boolean>(true)
     const [taxRate, setTaxRate] = useState<number>(goal.tdr)
     const [leaveBehind, setLeaveBehind] = useState<number>(goal?.sa as number)
     const [carePremium, setCarePremium] = useState<number>(goal?.dr as number)
@@ -56,6 +54,9 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
     const [gains, setGains] = useState<Array<APIt.TargetInput>>(goal.pg as Array<APIt.TargetInput>)
     const [losses, setLosses] = useState<Array<APIt.TargetInput>>(goal.pl as Array<APIt.TargetInput>)
     const nowYear = new Date().getFullYear()
+    const [currentOrder, setCurrentOrder] = useState<number>(1)
+    const [allInputDone, setAllInputDone] = useState<boolean>(goal.id ? true : false)
+    const [btnClicked, setBtnClicked] = useState<boolean>(false)
 
     const createGoal = () => {
         return {
@@ -101,16 +102,12 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
         setExpenseBY(nowYear)
     }, [expense])
 
-    const handleSubmit = () =>
+    const handleSubmit = () => {
         goal.id ? updateCallback(updateGoal())
-            : addCallback(createGoal())
-
-    useEffect(() =>
-        annualSavings !== 0 && expense >= 5000 ?
-            setSubmitDisabled(false) : setSubmitDisabled(true)
-        , [expense, annualSavings])
-
-
+        : addCallback(createGoal())
+        setBtnClicked(true)
+    }
+        
     useEffect(() => {
         taxRate > 0 ? setTotalTaxBenfit(calculateTotalCPTaxBenefit(taxRate, careTaxDedLimit,
             carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur))
@@ -127,6 +124,14 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
         setCurrency(curr)
     }
 
+    const handleNextStep = (count: number = 1) => {
+        if (!allInputDone) {
+            let co = currentOrder + count
+            setCurrentOrder(co)
+            if (co === 19) setAllInputDone(true)
+        }
+    }
+
     return (
         <div className="flex flex-col w-full h-screen">
             <div className="container mx-auto overflow-y-auto flex flex-1 flex-col">
@@ -139,57 +144,101 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                     </div>
                 </div>
                 <div className="mt-4 flex justify-around items-start w-full">
-                    <SelectInput name="ey" pre="Plan Until" value={endYear}
+                    <SelectInput name="ey"
+                        inputOrder={1}
+                        currentOrder={currentOrder}
+                        nextStepDisabled={false}
+                        allInputDone={allInputDone}
+                        nextStepHandler={handleNextStep}
+                        pre="Plan Until" value={endYear}
                         changeHandler={changeEndYear} options={eyOptions} />
-                    <div className="flex flex-col">
-                        <label>Currency</label>
-                        <CurrencyInput name="mainCurr" value={currency} changeHandler={changeCurrency} />
-                    </div>
+                    <SelectInput name="ccy" inputOrder={2} currentOrder={currentOrder}
+                        nextStepDisabled={false}
+                        allInputDone={allInputDone}
+                        nextStepHandler={handleNextStep}
+                        pre="Currency"
+                        value={currency}
+                        changeHandler={changeCurrency}
+                        currency
+                    />
                 </div>
                 <div className="flex flex-wrap justify-around w-full">
                     <Section title="Total Savings Accumulated" left={
-                        <NumberInput name="ts" value={totalSavings} pre="By End" min={-100000} max={900000}
+                        <NumberInput name="ts" inputOrder={3} currentOrder={currentOrder}
+                            nextStepDisabled={false}
+                            allInputDone={allInputDone}
+                            nextStepHandler={handleNextStep}
+                            value={totalSavings} pre="By End" min={-100000} max={900000}
                             post={`of ${nowYear}`} changeHandler={totalSavingsHandler} step={500} currency={currency}
                             rangeFactor={rangeFactor} />
                     } right={
-                        <NumberInput name="dr" value={oppDR} unit="%" pre="Investment" min={0} max={15}
+                        <NumberInput name="dr" inputOrder={4} currentOrder={currentOrder}
+                            nextStepDisabled={false}
+                            allInputDone={allInputDone}
+                            nextStepHandler={handleNextStep} value={oppDR} unit="%" pre="Investment" min={0} max={15}
                             post="Earns" changeHandler={oppDRHandler} note="After taxes & fees" step={0.1} />
                     } footer="Total Savings includes cash, deposits, gold, stocks, bonds, etc. Deduct money owed on credit cards, loans, etc." />
                     <Cost startingCost={annualSavings} startingCostHandler={annualSavingsHandler} rangeFactor={rangeFactor} manualMode={0}
-                        currency={currency} costChgRate={savingsChgRate} costChgRateHandler={savingsChgRateHandler} inputText="How Much Can You Save?" 
+                        currency={currency} costChgRate={savingsChgRate} costChgRateHandler={savingsChgRateHandler} inputText="How Much Can You Save?"
                         showInputCondition={annualSavings === 0} rightPre="Savings" rightNote='Yearly' title='Annual Savings'
                         showRightCondition leftPre='Savings' leftPost={`in ${nowYear}`} leftMin={-50000} leftMax={200000}
-                        footer='Include retirement fund contribution. Deduct taxes & all expenses including insurance premiums.' />
+                        footer='Include retirement fund contribution. Deduct taxes & all expenses including insurance premiums.'
+                        inputOrder={5} currentOrder={currentOrder} nextStepDisabled={false}
+                        nextStepHandler={handleNextStep} allInputDone={allInputDone} />
                     <Section inputText={`How Much Do You Need for Annual Living Expenses After Financial Freedom?`} showInputCondition={annualSavings != 0 && expense < 5000} title='Annual Living Cost after Financial Freedom'
                         left={
-                            <NumberInput name="currExpense" pre="In Today's" post='Money'
+                            <NumberInput name="currExpense" inputOrder={7} currentOrder={currentOrder}
+                                nextStepDisabled={false}
+                                allInputDone={allInputDone}
+                                nextStepHandler={handleNextStep} pre="In Today's" post='Money'
                                 currency={currency} rangeFactor={rangeFactor} value={expense} changeHandler={expenseHandler} min={0} max={100000} step={1000} width="120px" />
                         } right={
-                            <NumberInput name="expChgRate" pre="Expense" post="Changes" note='Yearly' unit="%"
+                            <NumberInput name="expChgRate" inputOrder={8} currentOrder={currentOrder}
+                                nextStepDisabled={false}
+                                allInputDone={allInputDone}
+                                nextStepHandler={handleNextStep} pre="Expense" post="Changes" note='Yearly' unit="%"
                                 min={0} max={10} step={0.1} value={expenseChgRate} changeHandler={expenseChgRateHandler} />
                         } bottom={
-                            <NumberInput name="tr" pre="Income" post="Tax Rate" min={0} max={20} step={0.1}
+                            <NumberInput name="tr" inputOrder={9} currentOrder={currentOrder}
+                                nextStepDisabled={false}
+                                allInputDone={allInputDone}
+                                nextStepHandler={handleNextStep} pre="Income" post="Tax Rate" min={0} max={20} step={0.1}
                                 value={taxRate} changeHandler={setTaxRate} unit="%" note="On Withdrawals And Gains" />
                         } />
                     <Section title="Long-term Care Insurance" left={
                         <div className="flex flex-col items-center justify-center">
-                            <NumberInput name="cp" value={carePremium} changeHandler={setCarePremium} rangeFactor={rangeFactor}
+                            <NumberInput name="cp" inputOrder={10} currentOrder={currentOrder}
+                                nextStepDisabled={false}
+                                allInputDone={allInputDone}
+                                nextStepHandler={handleNextStep} value={carePremium} changeHandler={setCarePremium} rangeFactor={rangeFactor}
                                 pre="Yearly" post="Premium" min={0} max={10000} step={100} currency={currency} />
                             <div className="flex justify-between items-start w-full">
-                                <SelectInput name="cpsy" value={carePremiumSY} options={cyOptions}
+                                <SelectInput name="cpsy" inputOrder={11} currentOrder={currentOrder}
+                                    nextStepDisabled={false}
+                                    allInputDone={allInputDone}
+                                    nextStepHandler={handleNextStep} value={carePremiumSY} options={cyOptions}
                                     pre="Pay" post="Onwards" changeHandler={changeCarePremiumYear} />
-                                <SelectInput name="cpdur" value={carePremiumDur} options={initYearOptions(5, 15)}
+                                <SelectInput name="cpdur" inputOrder={12} currentOrder={currentOrder}
+                                    nextStepDisabled={false}
+                                    allInputDone={allInputDone}
+                                    nextStepHandler={handleNextStep} value={carePremiumDur} options={initYearOptions(5, 15)}
                                     pre="For" post='Years' changeHandler={changeCarePremiumDur} />
                             </div>
                         </div>
                     } right={
-                        <RadialInput value={carePremiumChgPer} changeHandler={setCarePremiumChgPer}
+                        <RadialInput inputOrder={13} currentOrder={currentOrder}
+                            nextStepDisabled={false}
+                            allInputDone={allInputDone}
+                            nextStepHandler={handleNextStep} value={carePremiumChgPer} changeHandler={setCarePremiumChgPer}
                             pre="Premium Changes" label="Yearly" labelBottom post={`Total ${toCurrency(totalCP, currency)}`}
                             data={toStringArr(0, 10, 0.5)} step={0.5} unit="%" />
                     } bottomLeft={`${taxRate > 0 ? 'Max Yearly' : ''}`}
                         bottomRight={`${taxRate > 0 ? 'Allowed' : ''}`}
-                        bottom={taxRate > 0 &&
-                            <NumberInput name="maxTDL" pre="Tax" post="Deduction" currency={currency}
+                        bottom={
+                            <NumberInput name="maxTDL" inputOrder={14} currentOrder={currentOrder}
+                                nextStepDisabled={false}
+                                allInputDone={allInputDone}
+                                nextStepHandler={handleNextStep} pre="Tax" post="Deduction" currency={currency}
                                 value={careTaxDedLimit} changeHandler={setCareTaxDedLimit} width="80px"
                                 min={0} max={5000} step={500} rangeFactor={rangeFactor} note={
                                     <ResultItem label='Total Tax Benefit' currency={currency} result={totalTaxBenefit} />
@@ -206,17 +255,23 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                             rangeFactor={rangeFactor} tgts={losses} tgtsHandler={setLosses} />
                     } right={<div />} footer="Include taxes & fees." />
                     <Section title={`Loved Ones Get At least ~ ${toCurrency(Math.round(leaveBehind * (1 - (successionTaxRate / 100))), currency)}`} left={
-                        <NumberInput name="lb" value={leaveBehind} changeHandler={setLeaveBehind} rangeFactor={rangeFactor}
+                        <NumberInput name="lb" inputOrder={17} currentOrder={currentOrder}
+                            nextStepDisabled={false}
+                            allInputDone={allInputDone}
+                            nextStepHandler={handleNextStep} value={leaveBehind} changeHandler={setLeaveBehind} rangeFactor={rangeFactor}
                             min={0} max={500000} pre="Amount" currency={currency} step={1000} note={`in ${endYear + 1}`} />
                     } right={
-                        <NumberInput name="str" pre="Inheritance" post="Tax Rate" min={0} max={20} step={0.1}
+                        <NumberInput name="str" inputOrder={18} currentOrder={currentOrder}
+                            nextStepDisabled={false}
+                            allInputDone={allInputDone}
+                            nextStepHandler={handleNextStep} pre="Inheritance" post="Tax Rate" min={0} max={20} step={0.1}
                             value={successionTaxRate} changeHandler={setSuccessionTaxRate} unit="%"
                             note={`Total ${toCurrency(Math.round(leaveBehind * (successionTaxRate / 100)), currency)}`} />
                     } />
                 </div>
             </div>
 
-            <ActionButtons submitDisabled={submitDisabled}
+            <ActionButtons submitDisabled={annualSavings === 0 && expense < 5000 || btnClicked} cancelDisabled={btnClicked}
                 cancelHandler={cancelCallback} submitHandler={handleSubmit}
                 submitText='Calculate' />
         </div>

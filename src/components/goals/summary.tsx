@@ -16,8 +16,6 @@ interface SummaryProps {
     currency: string
     cfs: Array<number>
     ffYear: number
-    ffAmt: number
-    ffLeftOverAmt: number
     ffGoal: APIt.CreateGoalInput
     mergedCFs: Object
     oppDR: number
@@ -44,7 +42,7 @@ export default function Summary(props: SummaryProps) {
         let result = findEarliestFFYear(props.ffGoal, props.oppDR, props.savings, mCFs, 
             props.annualSavings, props.savingsChgRate, props.expense, props.expenseChgRate, props.ffYear)
         setFFImpactYears(props.ffYear - result.ffYear)
-    }, [props.ffGoal, props.oppDR, props.savings, props.cfs, props.ffAmt, props.ffYear, props.mergedCFs])
+    }, [props.ffGoal, props.oppDR, props.savings, props.cfs, props.ffYear, props.mergedCFs])
 
     return (
         <div className="mt-4 mb-4 pr-1 max-w-sm md:max-w-md rounded shadow-lg text-lg md:text-xl w-full">

@@ -76,7 +76,8 @@ export default function Goals({ showModalHandler }: GoalsProps) {
             annualSavings, savingsChgRate, expense, expenseChgRate, null)
         setFFAmt(result.ffAmt)
         setFFYear(result.ffYear)
-        setFFLeftOverAmt(result.leftAmt)
+        //@ts-ignore
+        setFFLeftOverAmt(result.leftAmt + ffGoal.sa)
     }, [ffGoal, oppDR, savings, goalsLoaded, allGoals, annualSavings, savingsChgRate,
         expense, expenseChgRate])
 
@@ -155,7 +156,8 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         }
     }
 
-    const createGoal = (type: APIt.GoalType) => setWIPGoal(createNewGoalInput(type, ffGoal?.ccy as string))
+    const createGoal = (type: APIt.GoalType) => setWIPGoal(
+        createNewGoalInput(type, type === APIt.GoalType.FF ? "USD" : ffGoal?.ccy as string))
 
     const getYearRange = () => {
         let nowYear = new Date().getFullYear()
@@ -271,16 +273,33 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                                 </div> : `Analyzed till ${ffYear}. Please try again with higher Savings And / Or Investment Return.`
                             } right={<div />} bottom={
                                 <div className="flex flex-wrap justify-around items-center w-full">
-                                    <NumberInput name="dr" value={oppDR} unit="%" pre="Investment" min={0} max={15}
+                                    <NumberInput name="dr" inputOrder={1}
+                                        currentOrder={0}
+                                        nextStepDisabled
+                                        allInputDone
+                                        nextStepHandler={() => true}
+                                        value={oppDR} unit="%" pre="Investment" min={0} max={15}
                                         post="Earns" changeHandler={setOppDR} note="After taxes & fees" step={0.1} />
-                                    <NumberInput name="asChgRate" pre="Savings" post="Increases" note='Every Year' unit="%"
+                                    <NumberInput name="asChgRate"
+                                        inputOrder={1}
+                                        currentOrder={0}
+                                        nextStepDisabled
+                                        allInputDone
+                                        nextStepHandler={() => true}
+                                        pre="Savings" post="Increases" note='Every Year' unit="%"
                                         min={0} max={10} step={0.1} value={savingsChgRate} changeHandler={setSavingsChgRate} />
                                 </div>
                             } />
                         </div> : <div />}
                         {ffGoal && allGoals && allGoals.length > 0 && <Fragment>
                             <div className="mt-4 md:mt-8 flex justify-center">
-                                {viewMode < 1 && <div className="mr-2"><SelectInput name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string}
+                                {viewMode < 1 && <div className="mr-2"><SelectInput
+                                    inputOrder={1}
+                                    currentOrder={0}
+                                    nextStepDisabled={true}
+                                    allInputDone={true}
+                                    nextStepHandler={() => true}
+                                    name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string}
                                     changeHandler={setImpFilter} /></div>}
                                 <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
                                 {viewMode > 0 &&
@@ -298,7 +317,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                                         g.id && (!impFilter || impFilter === g.imp) &&
                                         <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} oppDR={oppDR} savings={savings}
                                             startYear={g.sy} currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal}
-                                            ffYear={ffYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffGoal={ffGoal} mergedCFs={mergedCFs}
+                                            ffYear={ffYear} ffGoal={ffGoal} mergedCFs={mergedCFs}
                                             annualSavings={annualSavings} savingsChgRate={savingsChgRate} expense={expense} expenseChgRate={expenseChgRate} />)}
                                 </div>}
                         </Fragment>}
