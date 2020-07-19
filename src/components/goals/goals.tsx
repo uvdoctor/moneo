@@ -20,6 +20,7 @@ import SVGHourGlass from '../svghourglass'
 import SVGMoneyBag from '../calc/svgmoneybag'
 import SVGInheritance from './svginheritance'
 import SVGEdit from '../svgedit'
+import { toast } from 'react-toastify'
 
 interface GoalsProps {
     showModalHandler: Function
@@ -108,6 +109,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         let g = await createNewGoal(goal)
         if (!g) return
         setWIPGoal(null)
+        toast.success(`Success! New Goal ${g.type}: ${g.name} has been Created.`)
         if (g.type === APIt.GoalType.FF) {
             setFFGoal(g)
             return
@@ -123,6 +125,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         let g: APIt.UpdateGoalInput | null = await changeGoal(goal)
         if (!g) return
         setWIPGoal(null)
+        toast.success(`Success! Goal ${g.type}: ${g.name} has been Updated.`)
         if (g.type === APIt.GoalType.FF) {
             setFFGoal(g as APIt.CreateGoalInput)
             return
@@ -136,8 +139,13 @@ export default function Goals({ showModalHandler }: GoalsProps) {
     }
 
     const removeGoal = async (id: string) => {
-        let result = await deleteGoal(id)
-        if (!result) return false
+        try {
+            await deleteGoal(id)
+        } catch(err) {
+            toast.error("Sorry! Error while trying to delete this Goal: ", err)
+            return false
+        }
+        toast.success(`Success! Goal has been Deleted.`)
         removeFromArray(allGoals as Array<APIt.CreateGoalInput>, 'id', id)
         //@ts-ignore
         delete allCFs[id]

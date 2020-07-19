@@ -1,7 +1,10 @@
 import React, { useState, Fragment } from 'react'
+import { toast } from 'react-toastify'
+import SVGInfo from '../svginfo'
 import ExpandCollapse from './expandcollapse'
 interface SectionProps {
     title: any
+    titleInfo?: string
     left: any
     right: any
     bottomLeft?: any
@@ -23,7 +26,7 @@ export default function Section(props: SectionProps) {
         <div className='px-1 py-2 mt-4 mb-4 w-full max-w-sm md:max-w-md rounded overflow-hidden 
                         shadow-lg md:shadow-xl'>
             <ExpandCollapse title={props.inputText && props.showInputCondition ? props.inputText : props.title} value={showSection}
-                handler={setShowSection} />
+                handler={setShowSection} titleInfo={props.titleInfo} />
             {props.toggle && showSection && <div className="flex justify-end mt-2 mr-4 mb-4">
                 {props.toggle}
             </div>}

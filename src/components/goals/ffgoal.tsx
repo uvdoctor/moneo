@@ -164,7 +164,9 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                 </div>
                 <div className="flex flex-wrap justify-around w-full">
                     {((!allInputDone && currentOrder >= 3) || allInputDone) &&
-                        <Section title="Total Savings Accumulated" left={
+                        <Section title="Total Savings Accumulated" 
+                        titleInfo="Total Savings includes cash, deposits, gold, stocks, bonds, etc. Deduct money owed on credit cards, loans, etc."
+                        left={
                             <NumberInput name="ts" inputOrder={3} currentOrder={currentOrder}
                                 nextStepDisabled={false}
                                 allInputDone={allInputDone}
@@ -178,7 +180,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                                 allInputDone={allInputDone}
                                 nextStepHandler={handleNextStep} value={oppDR} unit="%" pre="Investment" min={0} max={15}
                                 post="Earns" changeHandler={oppDRHandler} note="After taxes & fees" step={0.1} />
-                        } footer="Total Savings includes cash, deposits, gold, stocks, bonds, etc. Deduct money owed on credit cards, loans, etc." />
+                        } />
                     }
                     <Cost startingCost={annualSavings} startingCostHandler={annualSavingsHandler} rangeFactor={rangeFactor} manualMode={0}
                         currency={currency} costChgRate={savingsChgRate} costChgRateHandler={savingsChgRateHandler} inputText="How Much Can You Save?"

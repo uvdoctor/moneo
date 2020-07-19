@@ -22,6 +22,7 @@
     "react-dom": "^16.13.0",
     "react-plaid-link": "^2.2.3",
     "react-plotly.js": "^2.4.0",
+    "react-toastify": "^6.0.8",
     "swr": "^0.2.2",
     "xirr": "^1.0.3"
   },
