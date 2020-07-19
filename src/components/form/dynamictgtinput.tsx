@@ -6,8 +6,14 @@ import SVGAdd from '../svgadd'
 import SVGRemove from '../svgremove'
 import { initYearOptions } from '../utils'
 import { createNewTarget } from '../goals/goalutils'
-
+import NextStep from './nextstep'
 interface DynamicTgtInputProps {
+    inputOrder: number
+    currentOrder: number
+    nextStepDisabled: boolean
+    nextStepHandler: Function
+    allInputDone: boolean
+    actionCount?: number
     tgts: Array<TargetInput>
     currency: string
     rangeFactor: number
@@ -54,39 +60,49 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
     }
 
     const changeTargetVal = (index: number, val: number) => {
-        console.log("Index is ", index)
-        console.log("Tgt is ", props.tgts[index])
         props.tgts[index].val = val
         props.tgtsHandler([...props.tgts])
     }
 
     return (
         <div className="w-full">
-            {props.tgts && props.tgts[0] ? props.tgts.map((t, i) =>
-                <div key={"ctr" + i} className="flex items-center justify-around w-full">
-                    <div className="flex justify-center w-5/6 md:w-11/12">
-                        <SelectInput name={"year" + i} pre="Year" options={yearOpts} value={t.year}
-                            changeHandler={(year: string) => changeTargetYear(i, year)} />
-                        <div className="ml-4 md:ml-8">
-                            <NumberInput name={"val" + i} pre="Amount" currency={props.currency} rangeFactor={props.rangeFactor}
-                                value={t.val} changeHandler={(val: number) => changeTargetVal(i, val)}
-                                min={0} max={900000} step={500} width="120px" />
+            {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
+                <div className={`${!props.allInputDone && props.inputOrder === props.currentOrder ? 'p-2 border-2 border-orange-600' : ''}`}>
+                    {props.tgts && props.tgts[0] ? props.tgts.map((t, i) =>
+                        <div key={"ctr" + i} className="flex items-center justify-around w-full">
+                            <div className="flex justify-center w-5/6 md:w-11/12">
+                                <SelectInput name={"year" + i}
+                                    inputOrder={0} currentOrder={1}
+                                    nextStepDisabled
+                                    allInputDone nextStepHandler={() => true}
+                                    pre="Year" options={yearOpts} value={t.year}
+                                    changeHandler={(year: string) => changeTargetYear(i, year)} />
+                                <div className="ml-4 md:ml-8">
+                                    <NumberInput name={"val" + i} inputOrder={0} currentOrder={1}
+                                        nextStepDisabled
+                                        allInputDone nextStepHandler={() => true}
+                                        pre="Amount" currency={props.currency} rangeFactor={props.rangeFactor}
+                                        value={t.val} changeHandler={(val: number) => changeTargetVal(i, val)}
+                                        min={0} max={900000} step={500} width="120px" />
+                                </div>
+                            </div>
+                            <div className="flex justify-end w-1/6 md:w-1/12">
+                                <div onClick={() => removeTgt(i)}>
+                                    <SVGRemove />
+                                </div>
+                                {i === props.tgts.length - 1 && <div onClick={() => addTgt()}>
+                                    <SVGAdd />
+                                </div>}
+                            </div>
                         </div>
-                    </div>
-                    <div className="flex justify-end w-1/6 md:w-1/12">
-                        <div onClick={() => removeTgt(i)}>
-                            <SVGRemove />
-                        </div>
-                        {i === props.tgts.length - 1 && <div onClick={() => addTgt()}>
+                    ) : <div className="flex justify-center" onClick={() => addTgt()}>
                             <SVGAdd />
-                        </div>}
-                    </div>
-                </div>
-            ) : <div className="flex justify-center" onClick={() => addTgt()}>
-                    <SVGAdd />
-                </div>
-            }
-
+                        </div>
+                    }
+                </div>}
+            {!props.allInputDone && props.inputOrder === props.currentOrder && <NextStep
+                nextStepHandler={() => props.nextStepHandler(props.actionCount ? props.actionCount : 1)}
+                disabled={props.nextStepDisabled} />}
         </div>
     )
 }

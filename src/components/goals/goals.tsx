@@ -324,7 +324,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                     </Fragment>
                     : goalsLoaded && <div className="text-center align-center">
                         <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>
-                        <p className="mb-2">Set Up Financial Freedom Expectations.</p>
+                        <p className="mb-2">Set Up Financial Freedom Target.</p>
                         <AwesomeButton ripple type="primary" onPress={() => createGoal(APIt.GoalType.FF)}>
                             GET STARTED
                         </AwesomeButton>

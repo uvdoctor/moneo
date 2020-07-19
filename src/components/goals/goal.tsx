@@ -66,7 +66,6 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     const [aiStartYear, setAIStartYear] = useState<number | null | undefined>(goal?.aisy)
     const [oppDR, setOppDR] = useState<number>(goal?.dr ? goal.dr : 6)
     const [rentTaxBenefit, setRentTaxBenefit] = useState<number | null | undefined>(goal?.tbr)
-    const [showRentChart, setShowRentChart] = useState<boolean>(true)
     const [showCFChart, setShowCFChart] = useState<boolean>(true)
     const goalType = goal?.type as APIt.GoalType
     const [cfs, setCFs] = useState<Array<number>>(cashFlows ? cashFlows : [])
@@ -199,10 +198,10 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
 
     const handleSubmit = () => {
         goal.id ? updateCallback(createUpdateGoalInput(), cfs)
-        : addCallback(createNewGoalInput(), cfs)
+            : addCallback(createNewGoalInput(), cfs)
         setBtnClicked(true)
     }
-        
+
     const changeCurrency = (curr: string) => {
         setRangeFactor(Math.round(getRangeFactor(curr) / getRangeFactor(currency)))
         setCurrency(curr)
@@ -369,16 +368,13 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                     </div>
                 </Fragment>
                 {sellAfter && rentAmt > 0 && price > 0 &&
-                    <div className="mb-4">
-                        <ExpandCollapse title="Buy v/s Rent for 20 Years" value={showRentChart}
-                            handler={setShowRentChart} svg={<SVGBalance />} />
-                        <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
-                            discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(20)}
-                            rentTaxBenefit={rentTaxBenefit as number} rentTaxBenefitHandler={setRentTaxBenefit}
-                            discountRateHandler={setOppDR} rentAmt={rentAmt} rentAmtHandler={setRentAmt}
-                            rentChgPer={rentChgPer} rentChgPerHandler={setRentChgPer} answer={answer}
-                            rentAns={rentAns} answerHandler={setAnswer} rentAnsHandler={setRentAns} showRentChart={showRentChart} />
-                    </div>}
+                    <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
+                        discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(20)}
+                        rentTaxBenefit={rentTaxBenefit as number} rentTaxBenefitHandler={setRentTaxBenefit}
+                        discountRateHandler={setOppDR} rentAmt={rentAmt} rentAmtHandler={setRentAmt}
+                        rentChgPer={rentChgPer} rentChgPerHandler={setRentChgPer} answer={answer}
+                        rentAns={rentAns} answerHandler={setAnswer} rentAnsHandler={setRentAns} />
+                }
 
                 {((!allInputDone && currentOrder > 24) || allInputDone) &&
                     <Fragment>
@@ -405,9 +401,9 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                     </Fragment>}
             </div>
 
-            <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
+            {allInputDone && <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
                 cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
-                submitText={`${goal.id ? 'Update' : 'Create'} Goal`} />
+                submitText={`${goal.id ? 'Update' : 'Create'} Goal`} />}
         </div>
     )
 }

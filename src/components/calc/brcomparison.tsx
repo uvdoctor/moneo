@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { getNPV } from '../calc/finance'
 import { BRCompChart } from '../goals/brcompchart'
 import { toCurrency } from '../utils'
+import SVGBalance from '../calc/svgbalance'
+import ExpandCollapse from '../form/expandcollapse'
+
 interface BRComparisonProps {
     taxRate: number
     currency: string
@@ -19,10 +22,10 @@ interface BRComparisonProps {
     rentAns: string
     rentAnsHandler: Function
     allBuyCFs: Array<Array<number>>
-    showRentChart: boolean
 }
 
 export default function BRComparison(props: BRComparisonProps) {
+    const [showRentChart, setShowRentChart] = useState<boolean>(true)
     const [compData, setCompData] = useState<Array<any>>([])
     const analyzeFor = 20
 
@@ -133,7 +136,7 @@ export default function BRComparison(props: BRComparisonProps) {
     }
 
     useEffect(() => {
-        if(compData && compData.length === 2) {
+        if (compData && compData.length === 2) {
             props.answerHandler(findAnswer(compData))
             provideRentAns(compData)
         } else {
@@ -151,11 +154,15 @@ export default function BRComparison(props: BRComparisonProps) {
     }, [props.taxRate, props.discountRate, props.rentAmt, props.rentChgPer, props.rentTaxBenefit, props.allBuyCFs])
 
     return (
-            <div>
-            <p className="text-center text-base mt-4">Negative values indicate Loss, while Positive values indicate Gain</p>
-            {props.showRentChart && compData && compData.length === 2 && compData[1].values.y[props.sellAfter - 1] &&
+        <div className="mb-4">
+            <ExpandCollapse title="Buy v/s Rent for 20 Years" value={showRentChart}
+                handler={setShowRentChart} svg={<SVGBalance />} />
+            {showRentChart && compData && compData.length === 2 && compData[1].values.y[props.sellAfter - 1] &&
+            <Fragment>
+                <p className="text-center text-base mt-4">Negative values indicate Loss, while Positive values indicate Gain</p>
                 <BRCompChart data={compData} xTitle="Number of Years" rentAns={props.rentAns}
-                    sellAfter={props.sellAfter} title={props.answer} />}
-            </div>
+                    sellAfter={props.sellAfter} title={props.answer} />
+            </Fragment>}
+        </div>
     )
 }
