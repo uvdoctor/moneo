@@ -1,6 +1,4 @@
 import React, { useState, Fragment } from 'react'
-import { toast } from 'react-toastify'
-import SVGInfo from '../svginfo'
 import ExpandCollapse from './expandcollapse'
 interface SectionProps {
     title: any
