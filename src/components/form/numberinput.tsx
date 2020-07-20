@@ -1,8 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { toCurrency, toReadableNumber } from '../utils'
-import CurrencyInput from './currencyinput'
 import Slider from 'rc-slider'
 import NextStep from './nextstep'
+import SVGInfo from '../svginfo'
+import { toast } from 'react-toastify'
+
 interface NumberInputProps {
     inputOrder: number
     currentOrder: number
@@ -10,6 +12,8 @@ interface NumberInputProps {
     nextStepHandler: Function
     allInputDone: boolean
     actionCount?: number
+    info?: string
+    infoDurationInMs?: number
     pre: string
     post?: string
     min: number
@@ -19,7 +23,6 @@ interface NumberInputProps {
     name: string
     currency?: string
     rangeFactor?: number
-    currencyHandler?: any
     unit?: string
     changeHandler: any
     note?: any
@@ -50,8 +53,12 @@ export default function NumberInput(props: NumberInputProps) {
         <div>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <form ref={formRef} className={`${!props.allInputDone && props.inputOrder === props.currentOrder ? 'py-2 px-4 border-2 border-orange-600' : ''}`}>
+                    {props.info && <div className="w-full flex justify-end cursor-pointer" onClick={
+                        () => toast.info(props.info, {autoClose: props.infoDurationInMs ? props.infoDurationInMs : 5000})}>
+                        <SVGInfo />
+                    </div>}
                     <div className={props.max ? "w-full flex items-center justify-between" : "w-full flex flex-col justify-between"}>
-                        <div className={props.max ? "w-full flex flex-col text-left mr-1" : "w-full flex flex-col text-right mr-1"}>
+                        <div className={`w-full flex flex-col mr-1 ${props.max ? "text-left" : "text-right"}`}>
                             {props.pre && <label>{props.pre}</label>}
                             {props.post && <label>{props.post}</label>}
                         </div>
@@ -81,10 +88,6 @@ export default function NumberInput(props: NumberInputProps) {
                             }
                         </div>
                         {props.unit && <label className="ml-1 text-right">{props.unit}</label>}
-                        {props.currencyHandler &&
-                            <div className={props.min && props.max ? "text-left" : "text-right"}>
-                                <CurrencyInput name="currList" value={props.currency as string} changeHandler={props.currencyHandler} />
-                            </div>}
                     </div>
                     {props.max &&
                         <div className="flex flex-col mt-1">

@@ -13,7 +13,6 @@ import SVGTargetPath from './svgtargetpath'
 import Section from '../form/section'
 //@ts-ignore
 import { AwesomeButton } from 'react-awesome-button'
-import CurrencyInput from '../form/currencyinput'
 import NumberInput from '../form/numberinput'
 import ResultItem from '../calc/resultitem'
 import SVGHourGlass from '../svghourglass'
@@ -141,7 +140,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
     const removeGoal = async (id: string) => {
         try {
             await deleteGoal(id)
-        } catch(err) {
+        } catch (err) {
             toast.error("Sorry! Error while trying to delete this Goal: ", err)
             return false
         }
@@ -311,10 +310,15 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                                     changeHandler={setImpFilter} /></div>}
                                 <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
                                 {viewMode > 0 &&
-                                    <div className="flex">
-                                        <label className="ml-1 mr-2">in</label>
-                                        <CurrencyInput name="currInput" value={currency} changeHandler={setCurrency} />
-                                    </div>}
+                                    <SelectInput name="ccy" inputOrder={2} currentOrder={1}
+                                        nextStepDisabled
+                                        allInputDone
+                                        nextStepHandler={() => true}
+                                        pre="Currency"
+                                        value={currency}
+                                        changeHandler={setCurrency}
+                                        currency
+                                    />}
                             </div>
                             <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>
                             {viewMode > 0 ?

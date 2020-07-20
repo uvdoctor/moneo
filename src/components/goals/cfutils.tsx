@@ -44,21 +44,25 @@ export const calculateCFs = (goal: APIt.CreateGoalInput, duration: number) => {
 }
 
 export const calculateTotalCPTaxBenefit = (taxRate: number, maxTDL: number,
-    paymentSY: number, payment: number, paymentChgRate: number, duration: number) => {
+    paymentSY: number, payment: number, paymentChgRate: number, duration: number, premiumBY: number) => {
     if (!taxRate) return 0
     let totalTaxBenefit = 0
-    for (let year = paymentSY; year < paymentSY + duration; year++) {
-        let premium = getCompoundedIncome(paymentChgRate, payment, year - paymentSY)
+    let nowYear = new Date().getFullYear() 
+    let premiumYear = nowYear > paymentSY ? nowYear + 1 : paymentSY
+    for (let year = premiumYear; year < paymentSY + duration; year++) {
+        let premium = getCompoundedIncome(paymentChgRate, payment, year - (premiumBY + 1))
         totalTaxBenefit += getTaxBenefit(premium, taxRate, maxTDL)
     }
     return totalTaxBenefit
 }
 
-export const calculateTotalCP = (paymentSY: number, payment: number, paymentChgRate: number, duration: number) => {
+export const calculateTotalCP = (paymentSY: number, payment: number, paymentChgRate: number, duration: number, premiumBY: number) => {
     if (!payment) return 0
     let total = 0
-    for (let year = paymentSY; year < paymentSY + duration; year++) {
-        total += getCompoundedIncome(paymentChgRate, payment, year - paymentSY)
+    let nowYear = new Date().getFullYear() 
+    let premiumYear = nowYear > paymentSY ? nowYear + 1 : paymentSY
+    for (let year = premiumYear; year < paymentSY + duration; year++) {
+        total += getCompoundedIncome(paymentChgRate, payment, year - (premiumBY + 1))
     }
     return total
 }
@@ -78,17 +82,30 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, s
         cfs.push(Math.round(-cf))
     }
     //@ts-ignore
-    if (g?.dr as number > 0 && nowYear < g.amsy + g.achg) {
+    if (g?.cp as number > 0 && nowYear < g.amsy + g.achg) {
         //@ts-ignore
-        let premiumYear = nowYear > g.amsy ? nowYear : g.amsy
+        let premiumYear = nowYear >= g.amsy ? nowYear + 1 : g.amsy
         //@ts-ignore
         for (let year = premiumYear; year < g.amsy + g.achg; year++) {
             //@ts-ignore
-            let premium = getCompoundedIncome(g.amper, g.dr, year - premiumYear)
+            let premium = getCompoundedIncome(g.amper, g.cp, year - (g.chg + 1))
             //@ts-ignore
             let index = cfs.length - (g.ey - year)
             cfs[index] -= premium
             cfs[index + 1] += getTaxBenefit(premium, g.tdr, g.tdl)
+        }
+    }
+    //@ts-ignore
+    if(g?.tbi > 0) {
+        //@ts-ignore
+        let incomeYear = nowYear >= g.aisy ? nowYear + 1 : g.aisy
+        //@ts-ignore
+        for(let year = incomeYear; year <= g.ey; year++) {
+            //@ts-ignore
+            let income = getCompoundedIncome(g.aiper, g.tbi, year - incomeYear)
+            //@ts-ignore
+            let index = cfs.length - (g.ey - year)
+            cfs[index] += income
         }
     }
     g.pg?.forEach((t) => {
@@ -102,7 +119,7 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, s
         cfs[index] -= t?.val as number
     })
     //@ts-ignore
-    cfs.push(-Math.round((g?.sa * (1 + g.btr / 100))))
+    cfs.push(-Math.round((g?.sa * (1 + g.dr / 100))))
     return cfs
 }
 
@@ -338,6 +355,7 @@ const checkForFF = (savings: number, dr: number, ffGoal: APIt.CreateGoalInput, f
         let y = parseInt(year)
         let v = parseInt(value)
         if (v < 0) cs += v
+        if(y < ffYear && cs < 0) cs *= 1.1 //10% debt cost assumption as savings goes negative
         if (y >= ffYear && cs <= 0) break
         if (cs > 0) cs *= (1 + (dr / 100))
         if (v > 0) cs += v

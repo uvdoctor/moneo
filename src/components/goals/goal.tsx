@@ -279,8 +279,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                             manualTargets={wipTargets} manualTargetsHandler={setWIPTargets} currency={currency}
                             costChgRate={priceChgRate} costChgRateHandler={setPriceChgRate} endYear={endYear}
                             manualMode={manualMode} manualModeHandler={setManualMode} startYear={startYear}
-                            inputText="How Much Amount?" showInputCondition={price < 500} rightPre="Amount"
-                            title={`Amount${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
+                            rightPre="Amount" title={`Amount${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
                             showRightCondition={startYear > goal.by} leftPre={startYear > goal.by ? 'Amount' : ''}
                             leftPost={startYear > goal.by ? `in ${goal.by}` : ''} leftMin={0} leftMax={goalType === APIt.GoalType.B ? 1500000 : 50000}
                             leftNote={goalType !== APIt.GoalType.D ? 'including taxes & fees' : ''} rightNote={`Yearly till ${startYear}`}

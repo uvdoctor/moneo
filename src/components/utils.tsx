@@ -4,6 +4,8 @@ export function getCurrencyList() {
 	}
 }
 
+export const changeSelection = (str: string, setter: Function) => setter(parseInt(str))
+
 export const toCurrency = (num: number | undefined, currency: string, decimal: boolean = false) => {
 	const formatter = new Intl.NumberFormat(navigator.language, {
 		style: "currency",

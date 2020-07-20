@@ -10,8 +10,6 @@ interface SectionProps {
     bottom?: any
     footer?: any
     toggle?: any
-    inputText?: string
-    showInputCondition?: any
     showOnLoad?: boolean
     manualInput?: any
     manualMode?: number
@@ -21,9 +19,9 @@ export default function Section(props: SectionProps) {
     const [showSection, setShowSection] = useState<boolean>(props.showOnLoad ? props.showOnLoad : true)
 
     return (
-        <div className='px-1 py-2 mt-4 mb-4 w-full max-w-sm md:max-w-md rounded overflow-hidden 
+        <div className='px-1 py-2 mt-2 mb-2 w-full max-w-sm md:max-w-md rounded overflow-hidden 
                         shadow-lg md:shadow-xl'>
-            <ExpandCollapse title={props.inputText && props.showInputCondition ? props.inputText : props.title} value={showSection}
+            <ExpandCollapse title={props.title} value={showSection}
                 handler={setShowSection} titleInfo={props.titleInfo} />
             {props.toggle && showSection && <div className="flex justify-end mt-2 mr-4 mb-4">
                 {props.toggle}
@@ -31,7 +29,7 @@ export default function Section(props: SectionProps) {
             {showSection && <Fragment>
                 {props.manualMode && props.manualMode > 0 ? props.manualInput
                     : <Fragment>
-                        <div className="mt-2 flex flex-col md:flex-row justify-around items-center w-full">
+                        <div className="flex flex-col md:flex-row justify-around items-center w-full">
                             {props.left}
                             {props.right && <div className="mt-4 md:mt-0">
                                 {props.right}

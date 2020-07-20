@@ -11,7 +11,6 @@ interface CostProps {
     nextStepDisabled: boolean
     nextStepHandler: Function
     allInputDone: boolean
-    inputText: string
     title: string
     leftPre: string
     leftPost: string
@@ -34,7 +33,6 @@ interface CostProps {
     manualTargetsHandler?: Function
     startingCostHandler: Function
     costChgRateHandler: Function
-    showInputCondition: boolean
     showRightCondition: boolean
 }
 
@@ -79,7 +77,7 @@ export default function Cost(props: CostProps) {
     return (
         <Fragment>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
-                <Section inputText={props.inputText} showInputCondition={props.showInputCondition} title={props.title}
+                <Section title={props.title}
                     left={
                         <NumberInput name="startingCost" inputOrder={props.inputOrder}
                             currentOrder={props.currentOrder}

@@ -1,6 +1,8 @@
 import React from 'react'
 import CircularSlider from '@fseehawer/react-circular-slider'
 import NextStep from '../form/nextstep'
+import SVGInfo from '../svginfo'
+import {toast} from 'react-toastify'
 interface RadialInputProps {
     inputOrder: number
     currentOrder: number
@@ -8,6 +10,7 @@ interface RadialInputProps {
     nextStepHandler: Function
     allInputDone: boolean
     actionCount?: number
+    info?: string
     label: string
     data: Array<string>
     width?: number
@@ -17,7 +20,7 @@ interface RadialInputProps {
     value: number
     step: number
     pre?: string
-    post?: string
+    post?: any
 }
 
 export default function RadialInput(props: RadialInputProps) {
@@ -29,6 +32,9 @@ export default function RadialInput(props: RadialInputProps) {
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <div className={`flex flex-col items-center justify-center
                                 ${!props.allInputDone && props.inputOrder === props.currentOrder ? 'p-2 border-2 border-orange-600' : ''}`}>
+                    {props.info && <div className="w-full flex justify-end cursor-pointer" onClick={() => toast.info(props.info)}>
+                        <SVGInfo />
+                    </div>}
                     <label className="mb-1">{props.pre}</label>
                     <CircularSlider onChange={(val: string) => props.changeHandler(props.step < 1 ? parseFloat(val) : parseInt(val))}
                         label={props.label} trackColor="#edf2f7" data={props.data} dataIndex={(props.value - getVal(props.data[0])) / props.step}

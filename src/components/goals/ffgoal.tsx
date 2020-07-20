@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react'
 import * as APIt from '../../api/goals'
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button"
-import { initYearOptions, toCurrency, toStringArr, getRangeFactor } from '../utils'
+import { initYearOptions, toCurrency, toStringArr, getRangeFactor, changeSelection } from '../utils'
 import SVGClose from '../svgclose'
 import SVGLogo from '../svglogo'
 import Section from '../form/section'
 import SelectInput from '../form/selectinput'
 import RadialInput from '../form/radialinput'
 import NumberInput from '../form/numberinput'
-import Cost from './cost'
 import ActionButtons from '../form/actionbuttons'
 import ResultItem from '../calc/resultitem'
 import { calculateTotalCP, calculateTotalCPTaxBenefit } from '../goals/cfutils'
@@ -42,14 +41,19 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
     const [currency, setCurrency] = useState<string>(goal?.ccy)
     const [taxRate, setTaxRate] = useState<number>(goal.tdr)
     const [leaveBehind, setLeaveBehind] = useState<number>(goal?.sa as number)
-    const [carePremium, setCarePremium] = useState<number>(goal?.dr as number)
+    const [carePremium, setCarePremium] = useState<number>(goal?.cp as number)
     const [carePremiumChgPer, setCarePremiumChgPer] = useState<number>(goal?.amper as number)
     const [carePremiumSY, setCarePremiumSY] = useState<number>(goal?.amsy as number)
     const [carePremiumDur, setCarePremiumDur] = useState<number>(goal?.achg as number)
     const [careTaxDedLimit, setCareTaxDedLimit] = useState<number>(goal.tdl)
+    const [cpBY, setCPBY] = useState<number>(goal?.chg as number)
     const [totalCP, setTotalCP] = useState<number>(0)
+    const [retirementIncomePer, setRetirementIncomePer] = useState<number>(goal?.aiper as number)
+    const [retirementIncomeSY, setRetirementIncomeSY] = useState<number>(goal?.aisy as number)
+    const [retirementIncome, setRetirementIncome] = useState<number>(goal?.tbi as number)
+    const [ryOptions, setRYOptions] = useState(initYearOptions(endYear - 30, 15))
     const [totalTaxBenefit, setTotalTaxBenfit] = useState<number>(0)
-    const [successionTaxRate, setSuccessionTaxRate] = useState<number>(goal?.btr as number)
+    const [successionTaxRate, setSuccessionTaxRate] = useState<number>(goal?.dr as number)
     const [rangeFactor, setRangeFactor] = useState<number>(getRangeFactor(currency))
     const [gains, setGains] = useState<Array<APIt.TargetInput>>(goal.pg as Array<APIt.TargetInput>)
     const [losses, setLosses] = useState<Array<APIt.TargetInput>>(goal.pl as Array<APIt.TargetInput>)
@@ -73,9 +77,13 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
             amsy: carePremiumSY,
             amper: carePremiumChgPer,
             achg: carePremiumDur,
-            dr: carePremium,
+            cp: carePremium,
+            chg: cpBY,
+            aisy: retirementIncomeSY,
+            aiper: retirementIncomePer,
+            tbi: retirementIncome,
             sa: leaveBehind,
-            btr: successionTaxRate,
+            dr: successionTaxRate,
             pg: gains,
             pl: losses
         } as APIt.CreateGoalInput
@@ -87,20 +95,23 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
         return g as APIt.UpdateGoalInput
     }
 
-    const changeEndYear = (str: string) => setEndYear(parseInt(str))
-
-    const changeCarePremiumYear = (str: string) => setCarePremiumSY(parseInt(str))
-
-    const changeCarePremiumDur = (str: string) => setCarePremiumDur(parseInt(str))
-
     useEffect(() => {
         setCYOptions(initYearOptions(endYear - 30, 10))
         if (carePremiumSY > endYear - 20 || carePremiumSY < endYear - 30) setCarePremiumSY(endYear - 20)
     }, [endYear, carePremiumSY])
 
     useEffect(() => {
+        setRYOptions(initYearOptions(endYear - 30, 15))
+        if (retirementIncomeSY > endYear - 15 || retirementIncomeSY < endYear - 30) setRetirementIncomeSY(endYear - 20)
+    }, [endYear, retirementIncomeSY])
+
+    useEffect(() => {
         setExpenseBY(nowYear)
     }, [expense])
+
+    useEffect(() => {
+        setCPBY(nowYear)
+    }, [carePremium])
 
     const handleSubmit = () => {
         goal.id ? updateCallback(updateGoal())
@@ -110,12 +121,13 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
 
     useEffect(() => {
         taxRate > 0 ? setTotalTaxBenfit(calculateTotalCPTaxBenefit(taxRate, careTaxDedLimit,
-            carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur))
+            carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur, cpBY))
             : setTotalTaxBenfit(0)
     }, [taxRate, careTaxDedLimit, carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur])
 
     useEffect(() => {
-        carePremium > 0 ? setTotalCP(Math.round(calculateTotalCP(carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur)))
+        carePremium > 0 ?
+            setTotalCP(Math.round(calculateTotalCP(carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur, cpBY)))
             : setTotalCP(0)
     }, [carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur])
 
@@ -128,7 +140,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
         if (!allInputDone) {
             let co = currentOrder + count
             setCurrentOrder(co)
-            if (co === 19) setAllInputDone(true)
+            if (co === 22) setAllInputDone(true)
         }
     }
 
@@ -143,15 +155,16 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                         <SVGClose />
                     </div>
                 </div>
-                <div className="mt-4 flex justify-around items-start w-full">
+                <div className="mt-4 flex justify-around items-end w-full">
                     <SelectInput name="ey"
+                        info="Select the Year till You Want to Plan. After this Year, it is assumed that You will leave behind inheritance for Your Nominees, if any."
                         inputOrder={1}
                         currentOrder={currentOrder}
                         nextStepDisabled={false}
                         allInputDone={allInputDone}
                         nextStepHandler={handleNextStep}
                         pre="Plan Until" value={endYear}
-                        changeHandler={changeEndYear} options={eyOptions} />
+                        changeHandler={(val: string) => changeSelection(val, setEndYear)} options={eyOptions} />
                     <SelectInput name="ccy" inputOrder={2} currentOrder={currentOrder}
                         nextStepDisabled={false}
                         allInputDone={allInputDone}
@@ -159,121 +172,171 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                         pre="Currency"
                         value={currency}
                         changeHandler={changeCurrency}
-                        currency
-                    />
+                        currency />
                 </div>
-                <div className="flex flex-wrap justify-around w-full">
+                <div className="flex flex-wrap justify-around items-center w-full">
                     {((!allInputDone && currentOrder >= 3) || allInputDone) &&
-                        <Section title="Total Savings Accumulated" 
-                        titleInfo="Total Savings includes cash, deposits, gold, stocks, bonds, etc. Deduct money owed on credit cards, loans, etc."
-                        left={
-                            <NumberInput name="ts" inputOrder={3} currentOrder={currentOrder}
-                                nextStepDisabled={false}
-                                allInputDone={allInputDone}
-                                nextStepHandler={handleNextStep}
-                                value={totalSavings} pre="By End" min={-100000} max={900000}
-                                post={`of ${nowYear}`} changeHandler={totalSavingsHandler} step={500} currency={currency}
-                                rangeFactor={rangeFactor} />
-                        } right={
-                            <NumberInput name="dr" inputOrder={4} currentOrder={currentOrder}
-                                nextStepDisabled={false}
-                                allInputDone={allInputDone}
-                                nextStepHandler={handleNextStep} value={oppDR} unit="%" pre="Investment" min={0} max={15}
-                                post="Earns" changeHandler={oppDRHandler} note="After taxes & fees" step={0.1} />
-                        } />
-                    }
-                    <Cost startingCost={annualSavings} startingCostHandler={annualSavingsHandler} rangeFactor={rangeFactor} manualMode={0}
-                        currency={currency} costChgRate={savingsChgRate} costChgRateHandler={savingsChgRateHandler} inputText="How Much Can You Save?"
-                        showInputCondition={annualSavings === 0} rightPre="Savings" rightNote='Yearly' title='Annual Savings'
-                        showRightCondition leftPre='Savings' leftPost={`in ${nowYear}`} leftMin={-50000} leftMax={200000}
-                        footer='Include retirement fund contribution. Deduct taxes & all expenses including insurance premiums.'
-                        inputOrder={5} currentOrder={currentOrder} nextStepDisabled={false}
-                        nextStepHandler={handleNextStep} allInputDone={allInputDone} />
-                    {((!allInputDone && currentOrder >= 7) || allInputDone) &&
-                        <Section inputText={`How Much Do You Need for Annual Living Expenses After Financial Freedom?`} showInputCondition={annualSavings != 0 && expense < 5000} title='Annual Living Cost after Financial Freedom'
+                        <Section title="Total Savings Accumulated"
+                            titleInfo="Total Savings includes cash, deposits, gold, stocks, bonds, etc. Deduct money owed on credit cards, loans, etc."
                             left={
-                                <NumberInput name="currExpense" inputOrder={7} currentOrder={currentOrder}
+                                <NumberInput
+                                    name="ts" inputOrder={3} currentOrder={currentOrder}
                                     nextStepDisabled={false}
                                     allInputDone={allInputDone}
-                                    nextStepHandler={handleNextStep} pre="In Today's" post='Money'
+                                    nextStepHandler={handleNextStep}
+                                    info={`Total Savings by end of ${nowYear} across cash, deposits, gold, stocks, bonds, retirement accounts, etc.`}
+                                    value={totalSavings} pre="By End" min={-100000} max={900000}
+                                    post={`of ${nowYear}`} changeHandler={totalSavingsHandler} step={500} currency={currency}
+                                    rangeFactor={rangeFactor} />
+                            } right={
+                                <NumberInput name="dr" inputOrder={4} currentOrder={currentOrder}
+                                    nextStepDisabled={false}
+                                    allInputDone={allInputDone}
+                                    nextStepHandler={handleNextStep}
+                                    info={`Your best guess about how much percentage Your Investments May Earn across Deposits, Stocks, Bonds, etc., after paying taxes (eg: capital gains tax) & investment fees, if any.`}
+                                    infoDurationInMs={10000}
+                                    value={oppDR} unit="%" pre="Investment" min={0} max={15}
+                                    post="Earns" changeHandler={oppDRHandler} note="After taxes & fees" step={0.1} />
+                            } />
+                    }
+
+                    {((!allInputDone && currentOrder >= 5) || allInputDone) &&
+                        <Section title={`How Much Can You Save?`}
+                            titleInfo={`How Much Can You Save from Work Income by end of ${nowYear} after paying all taxes & expenses?
+                            This, along with savings rate, will be used to project Your Savings in the Future.`}
+                            left={
+                                <NumberInput
+                                    name="as" inputOrder={5} currentOrder={currentOrder}
+                                    nextStepDisabled={false} allInputDone={allInputDone}
+                                    nextStepHandler={handleNextStep} infoDurationInMs={10000}
+                                    info={`Amount You can Save by end of ${nowYear} after paying all taxes & expenses. 
+                                    Include Your Retirement Contributions as a part of Your Savings. 
+                                    You Can Put Negative Value if Your Expenses are Expected to be More than Income.`}
+                                    value={annualSavings} pre="By End" min={-100000} max={900000}
+                                    post={`of ${nowYear}`} changeHandler={annualSavingsHandler} step={500} currency={currency}
+                                    rangeFactor={rangeFactor} />
+                            } right={
+                                <NumberInput name="sr" inputOrder={6} currentOrder={currentOrder}
+                                    nextStepDisabled={false} allInputDone={allInputDone}
+                                    nextStepHandler={handleNextStep}
+                                    info={`Your best guess about how much can You increase Your Savings Every Year. 
+                                    More You Save, Earlier You Can Achieve Financial Freedom.`}
+                                    value={savingsChgRate} unit="%" pre="Savings" min={0} max={10}
+                                    post="Changes" changeHandler={savingsChgRateHandler} note="Yearly" step={0.5} />
+                            } />
+                    }
+                    {((!allInputDone && currentOrder >= 7) || allInputDone) &&
+                        <Section title='Expenses after Financial Freedom'
+                            titleInfo="After You Achieve Financial Freedom, how much Money do You Need in Today's terms for Your Expenses? This will be used to derive the amount needed after Financial Freedom."
+                            left={
+                                <NumberInput name="currExpense" inputOrder={7} currentOrder={currentOrder}
+                                    nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
+                                    info="If You had already achieved Financial Freedom this year, How Much Money Would You Need for Your Living Expenses?"
+                                    pre="Yearly" post='Expenses' note="In Today's Money"
                                     currency={currency} rangeFactor={rangeFactor} value={expense} changeHandler={expenseHandler} min={0} max={100000} step={1000} width="120px" />
                             } right={
                                 <NumberInput name="expChgRate" inputOrder={8} currentOrder={currentOrder}
-                                    nextStepDisabled={false}
-                                    allInputDone={allInputDone}
-                                    nextStepHandler={handleNextStep} pre="Expense" post="Changes" note='Yearly' unit="%"
+                                    nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
+                                    info="Rate at which Your Living Expenses increase every Year."
+                                    pre="Expense" post="Changes" note='Yearly' unit="%"
                                     min={0} max={10} step={0.1} value={expenseChgRate} changeHandler={expenseChgRateHandler} />
                             } bottom={
                                 <NumberInput name="tr" inputOrder={9} currentOrder={currentOrder}
-                                    nextStepDisabled={false}
-                                    allInputDone={allInputDone}
-                                    nextStepHandler={handleNextStep} pre="Income" post="Tax Rate" min={0} max={20} step={0.1}
-                                    value={taxRate} changeHandler={setTaxRate} unit="%" note="On Withdrawals And Gains" />
+                                    nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
+                                    info="Tax Rate, in case You have to pay tax for Investment Gains and Withdrawing from Retirement Accounts beyond the allowed Yearly Limit."
+                                    pre="Tax" post="Rate" min={0} max={20} step={0.1}
+                                    value={taxRate} changeHandler={setTaxRate} unit="%" />
                             } />}
+
                     {((!allInputDone && currentOrder >= 10) || allInputDone) &&
-                        <Section title="Long-term Care Insurance" left={
-                            <div className="flex flex-col items-center justify-center">
-                                <NumberInput name="cp" inputOrder={10} currentOrder={currentOrder}
+                        <Section title="Retirement Income Benefit (eg: Pension, Social Security, etc.)"
+                            left={
+                                <NumberInput name="ri" inputOrder={10} currentOrder={currentOrder}
+                                    nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
+                                    value={retirementIncome} changeHandler={setRetirementIncome} rangeFactor={rangeFactor}
+                                    pre="Yearly" post="Benefit" min={0} max={50000} step={500} currency={currency} />
+                            } right={
+                                <NumberInput name="richgper" inputOrder={11} currentOrder={currentOrder}
+                                    nextStepDisabled={false} allInputDone={allInputDone}
+                                    nextStepHandler={handleNextStep} value={retirementIncomePer} changeHandler={setRetirementIncomePer}
+                                    pre="Benefit" post="Increases" note="Yearly" min={0} max={3} step={0.1} unit="%" />
+                            } bottom={
+                                <SelectInput name="risy" inputOrder={12} currentOrder={currentOrder}
+                                    nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
+                                    info="When do You Plan to Receive the Benefit? Around 70 years of age is preferable for optimal benefit."
+                                    value={retirementIncomeSY} options={ryOptions}
+                                    pre="From" post="Onwards" changeHandler={(val: string) => {
+                                        changeSelection(val, setRetirementIncomeSY)
+                                    }} />
+                            } />}
+
+                    {(currency === 'USD' || currency === 'CAD' || currency === 'GBP') ?
+                        ((!allInputDone && currentOrder >= 13) || allInputDone) &&
+                        <Section title="Long-term Care Insurance"
+                            titleInfo="About 70% individuals over age 65 need some form of living assistance for activities such as bathing, dressing, eating, toileting, walking, etc. 
+                        It isn't covered by traditional health insurance or government-sponsored old-age care programs."
+                            left={
+                                <div className="flex flex-col items-center justify-center">
+                                    <NumberInput name="cp" inputOrder={13} currentOrder={currentOrder}
+                                        nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
+                                        info="How much does annual insurance premium cost today? Actual price will be derived based on this price."
+                                        value={carePremium} changeHandler={setCarePremium} rangeFactor={rangeFactor}
+                                        pre="Yearly" post="Premium" note="In Today's Money" min={0} max={7000} step={100} currency={currency} />
+                                    <div className="flex justify-between items-end w-full">
+                                        <SelectInput name="cpsy" inputOrder={14} currentOrder={currentOrder}
+                                            nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
+                                            info="It may be a good option to buy this insurance when You are healthier (between 60 to 65 years of age) to get lower premiums."
+                                            value={carePremiumSY} options={cyOptions}
+                                            pre="Pay" post="Onwards" changeHandler={(val: string) => changeSelection(val, setCarePremiumSY)} />
+                                        <SelectInput name="cpdur" inputOrder={15} currentOrder={currentOrder}
+                                            nextStepDisabled={false}
+                                            allInputDone={allInputDone}
+                                            nextStepHandler={handleNextStep} value={carePremiumDur} options={initYearOptions(1, 15)}
+                                            pre="For" post='Years' changeHandler={(val: string) => changeSelection(val, setCarePremiumDur)} />
+                                    </div>
+                                </div>
+                            } right={
+                                <RadialInput inputOrder={16} currentOrder={currentOrder}
                                     nextStepDisabled={false}
                                     allInputDone={allInputDone}
-                                    nextStepHandler={handleNextStep} value={carePremium} changeHandler={setCarePremium} rangeFactor={rangeFactor}
-                                    pre="Yearly" post="Premium" min={0} max={10000} step={100} currency={currency} />
-                                <div className="flex justify-between items-start w-full">
-                                    <SelectInput name="cpsy" inputOrder={11} currentOrder={currentOrder}
-                                        nextStepDisabled={false}
-                                        allInputDone={allInputDone}
-                                        nextStepHandler={handleNextStep} value={carePremiumSY} options={cyOptions}
-                                        pre="Pay" post="Onwards" changeHandler={changeCarePremiumYear} />
-                                    <SelectInput name="cpdur" inputOrder={12} currentOrder={currentOrder}
-                                        nextStepDisabled={false}
-                                        allInputDone={allInputDone}
-                                        nextStepHandler={handleNextStep} value={carePremiumDur} options={initYearOptions(5, 15)}
-                                        pre="For" post='Years' changeHandler={changeCarePremiumDur} />
-                                </div>
-                            </div>
-                        } right={
-                            <RadialInput inputOrder={13} currentOrder={currentOrder}
-                                nextStepDisabled={false}
-                                allInputDone={allInputDone}
-                                nextStepHandler={handleNextStep} value={carePremiumChgPer} changeHandler={setCarePremiumChgPer}
-                                pre="Premium Changes" label="Yearly" labelBottom post={`Total ${toCurrency(totalCP, currency)}`}
-                                data={toStringArr(0, 10, 0.5)} step={0.5} unit="%" />
-                        } bottomLeft={`${taxRate > 0 ? 'Max Yearly' : ''}`}
-                            bottomRight={`${taxRate > 0 ? 'Allowed' : ''}`}
+                                    nextStepHandler={handleNextStep} value={carePremiumChgPer} changeHandler={setCarePremiumChgPer}
+                                    pre="Premium Changes" label="Yearly" labelBottom post={<ResultItem label='Total Premium' result={totalCP} currency={currency} />}
+                                    data={toStringArr(0, 10, 0.5)} step={0.5} unit="%" />
+                            } bottomLeft={currentOrder >= 17 && 'Max Yearly'} bottomRight={currentOrder >= 17 && 'Allowed'}
                             bottom={
-                                <NumberInput name="maxTDL" inputOrder={14} currentOrder={currentOrder}
+                                <NumberInput name="maxTDL" inputOrder={17} currentOrder={currentOrder}
                                     nextStepDisabled={false} allInputDone={allInputDone}
                                     nextStepHandler={handleNextStep} pre="Tax" post="Deduction" currency={currency}
                                     value={careTaxDedLimit} changeHandler={setCareTaxDedLimit} width="80px"
                                     min={0} max={5000} step={500} rangeFactor={rangeFactor} note={
                                         <ResultItem label='Total Tax Benefit' currency={currency} result={totalTaxBenefit} />
                                     } />
-                            } />}
+                            } /> : !allInputDone && currentOrder === 13 && handleNextStep(5)}
                 </div>
-                <div className="flex flex-wrap justify-around w-full">
-                    {((!allInputDone && currentOrder >= 15) || allInputDone) &&
-                        <Section title="Potential Gains due to Inheritance, Selling Assets or Investments, etc." left={
-                            <DynamicTgtInput inputOrder={15} currentOrder={currentOrder}
+                <div className="flex flex-wrap justify-around items-center w-full">
+                    {((!allInputDone && currentOrder >= 18) || allInputDone) &&
+                        <Section title="Major Wealth Expected due to Gifts, Inheritance, Selling Property, etc." left={
+                            <DynamicTgtInput inputOrder={18} currentOrder={currentOrder}
                                 nextStepDisabled={false} allInputDone={allInputDone}
                                 nextStepHandler={handleNextStep} startYear={goal.by} endYear={endYear} currency={currency}
                                 rangeFactor={rangeFactor} tgts={gains} tgtsHandler={setGains} />
                         } right={<div />} footer="Exclude taxes & fees." />}
-                    {((!allInputDone && currentOrder >= 16) || allInputDone) &&
-                        <Section title="Potential Losses due to Selling Assets, Investments, etc." left={
-                            <DynamicTgtInput inputOrder={16} currentOrder={currentOrder}
+                    {((!allInputDone && currentOrder >= 19) || allInputDone) &&
+                        <Section title="Major Losses Expected due to Selling Existing Assets, Investments, etc." left={
+                            <DynamicTgtInput inputOrder={19} currentOrder={currentOrder}
                                 nextStepDisabled={false} allInputDone={allInputDone}
                                 nextStepHandler={handleNextStep} startYear={goal.by} endYear={endYear} currency={currency}
                                 rangeFactor={rangeFactor} tgts={losses} tgtsHandler={setLosses} />
                         } right={<div />} footer="Include taxes & fees." />}
-                    {((!allInputDone && currentOrder >= 17) || allInputDone) &&
-                        <Section title={`Loved Ones Get At least ~ ${toCurrency(Math.round(leaveBehind * (1 - (successionTaxRate / 100))), currency)}`} left={
-                            <NumberInput name="lb" inputOrder={17} currentOrder={currentOrder}
+                    {((!allInputDone && currentOrder >= 20) || allInputDone) &&
+                        <Section title={`Loved Ones Inherit At least ~ ${toCurrency(Math.round(leaveBehind * (1 - (successionTaxRate / 100))), currency)}`} left={
+                            <NumberInput name="lb" inputOrder={20} currentOrder={currentOrder}
                                 nextStepDisabled={false}
                                 allInputDone={allInputDone}
                                 nextStepHandler={handleNextStep} value={leaveBehind} changeHandler={setLeaveBehind} rangeFactor={rangeFactor}
                                 min={0} max={500000} pre="Amount" currency={currency} step={1000} note={`in ${endYear + 1}`} />
                         } right={
-                            <NumberInput name="str" inputOrder={18} currentOrder={currentOrder}
+                            <NumberInput name="str" inputOrder={21} currentOrder={currentOrder}
                                 nextStepDisabled={false}
                                 allInputDone={allInputDone}
                                 nextStepHandler={handleNextStep} pre="Inheritance" post="Tax Rate" min={0} max={20} step={0.1}
