@@ -15,6 +15,9 @@ import { calculateTotalCP, calculateTotalCPTaxBenefit } from '../goals/cfutils'
 import DynamicTgtInput from '../form/dynamictgtinput'
 import { findEarliestFFYear } from './cfutils'
 import FFResult from './ffresult'
+import SVGChart from '../svgchart'
+import ExpandCollapse from '../form/expandcollapse'
+import LineChart from './linechart'
 
 interface FFGoalProps {
     goal: APIt.CreateGoalInput
@@ -75,7 +78,8 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
     const [currentOrder, setCurrentOrder] = useState<number>(1)
     const [allInputDone, setAllInputDone] = useState<boolean>(goal.id ? true : false)
     const [btnClicked, setBtnClicked] = useState<boolean>(false)
-
+    const [showCFChart, setShowCFChart] = useState<boolean>(true)
+    
     const createGoal = () => {
         return {
             name: goal.name,
@@ -110,16 +114,16 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
     }
 
     useEffect(() => {
-        if(!allInputDone && currentOrder < 18) return
+        if (!allInputDone && currentOrder < 18) return
         let result = findEarliestFFYear(createGoal(), oppDR, totalSavings, mergedCfs,
             annualSavings, savingsChgRate, expense, expenseChgRate, ffYear ? ffYear : null)
         ffAmtHandler(result.ffAmt)
         ffYearHandler(result.ffYear)
-        ffLeftOverAmtHandler(result.leftAmt + leaveBehind)
+        ffLeftOverAmtHandler(result.leftAmt)
         ffCfsHandler(result.ffCfs)
     }, [expenseBY, endYear, taxRate, careTaxDedLimit, carePremiumSY, carePremiumChgPer,
         carePremiumDur, carePremium, cpBY, retirementIncomeSY, retirementIncomePer,
-        retirementIncome, leaveBehind, successionTaxRate, gains, losses, totalSavings, 
+        retirementIncome, leaveBehind, successionTaxRate, gains, losses, totalSavings,
         annualSavings, expense, expenseChgRate, savingsChgRate, allInputDone, currentOrder])
 
     useEffect(() => {
@@ -170,6 +174,8 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
             if (co === 22) setAllInputDone(true)
         }
     }
+
+    const buildChartCFs = (ffCfs: Object) => Object.values(ffCfs)
 
     return (
         <div className="flex flex-col w-full h-screen">
@@ -356,7 +362,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                                 rangeFactor={rangeFactor} tgts={losses} tgtsHandler={setLosses} />
                         } insideForm footer="Include taxes & fees." />}
                     {((!allInputDone && currentOrder >= 20) || allInputDone) &&
-                        <Section title={`Loved Ones Inherit At least ~ ${toCurrency(Math.round(leaveBehind * (1 - (successionTaxRate / 100))), currency)}`} left={
+                        <Section title={`Nominees Inherit At least ~ ${toCurrency(Math.round(leaveBehind * (1 - (successionTaxRate / 100))), currency)}`} left={
                             <NumberInput name="lb" inputOrder={20} currentOrder={currentOrder}
                                 nextStepDisabled={false}
                                 allInputDone={allInputDone}
@@ -370,12 +376,21 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                                 note={`Total ${toCurrency(Math.round(leaveBehind * (successionTaxRate / 100)), currency)}`} />
                         } insideForm />}
                 </div>
+                {((!allInputDone && currentOrder >= 22) || allInputDone) &&
+                <div className="mt-2 md:mt-4 text-xl">
+                    <ExpandCollapse title={`Total Savings Chart in ${currency}`} value={showCFChart}
+                        handler={setShowCFChart} svg={<SVGChart />} />
+                    {showCFChart &&
+                        <LineChart cfs={buildChartCFs(ffCfs)} startYear={nowYear + 1} annotationYear={ffYear - 1} 
+                        annotationText={`Congratulations! You Reach Enough Savings by end of ${ffYear - 1}`} />
+                    }
+                </div>}
             </div>
             {allInputDone &&
                 <Fragment>
                     <FFResult endYear={endYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} currency={currency} />
                     <ActionButtons submitDisabled={annualSavings === 0 && expense < 5000 || btnClicked} cancelDisabled={btnClicked}
-                        cancelHandler={cancelCallback} submitHandler={handleSubmit} submitText='SET TARGET' />
+                        cancelHandler={cancelCallback} submitHandler={handleSubmit} submitText={`${goal.id ? 'UPDATE' : 'CREATE'} TARGET`} />
                 </Fragment>}
         </div>
     )

@@ -42,7 +42,7 @@ export default function TimeCost(props: TimeCostProps) {
         <Fragment>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <Section title={`Total Cost is ${toCurrency(props.amount, props.currency)}`}
-                    left={
+                    insideForm left={
                         <div className="flex flex-col items-center justify-around w-full">
                             Time Cost is
                     <div className="flex items-center justify-between">

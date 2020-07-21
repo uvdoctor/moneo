@@ -28,7 +28,7 @@ export function BRCompChart(props: BRCompChartProps) {
                     orientation: 'h',
                     x:0.5,
                     y:1.5
-                },
+                }, margin:{t:10},
                 annotations:[
                     {
                         text: props.rentAns,
@@ -38,9 +38,8 @@ export function BRCompChart(props: BRCompChartProps) {
                         y: props.data[1].values.y[props.sellAfter - 1],
                         showarrow: true,
                         yref: 'y', xref: 'x',
-                        ax: -50, ay: -50,
-                        font: {size: 14} // since there is no font.color attribute for this object,
-                                         // it will use the annotationdefaults' color
+                        ax: -50, ay: -60,
+                        font: {size: 14}
                     }
                 ]
             }} 

@@ -21,7 +21,7 @@ export default function Section(props: SectionProps) {
     const [showSection, setShowSection] = useState<boolean>(props.showOnLoad ? props.showOnLoad : true)
 
     return (
-        <div className='ml-1 mr-1 mt-2 mb-2 w-full max-w-sm md:max-w-md rounded overflow-hidden 
+        <div className='ml-1 mr-1 mt-2 mb-4 w-full max-w-sm md:max-w-md rounded overflow-hidden 
                         shadow-lg md:shadow-xl'>
             <ExpandCollapse title={props.title} value={showSection}
                 handler={setShowSection} titleInfo={props.titleInfo} insideForm={props.insideForm} />
@@ -31,7 +31,7 @@ export default function Section(props: SectionProps) {
             {showSection && <Fragment>
                 {props.manualMode && props.manualMode > 0 ? props.manualInput
                     : <Fragment>
-                        <div className="pt-2 flex flex-col md:flex-row justify-around items-start w-full">
+                        <div className="pt-2 flex flex-wrap justify-around items-start w-full">
                             <div className={`${props.hasResult && 'w-full'}`}>
                                 {props.left}
                             </div>

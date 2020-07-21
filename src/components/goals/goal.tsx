@@ -169,14 +169,16 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     }
 
     useEffect(() => {
+        if (cashFlows || (!allInputDone && (currentOrder < 7 || currentOrder > 19))) return
         if (!cashFlows) calculateYearlyCFs(getDuration(sellAfter, startYear, endYear))
     }, [goalType, startingPrice, priceChgRate, wipTargets, assetChgRate, loanPer, loanRepaymentSY,
-        loanYears, startYear, sellAfter, taxRate, maxTaxDeduction, taxBenefitInt,
+        loanYears, startYear, sellAfter, taxRate, maxTaxDeduction, taxBenefitInt, allInputDone, currentOrder,
         maxTaxDeductionInt, amCostPer, amStartYear, aiPer, aiStartYear, manualMode, cashFlows])
 
     useEffect(() => {
+        if (!allInputDone && (currentOrder < 7 || currentOrder > 19)) return
         if (goalType !== APIt.GoalType.B && manualMode < 1) calculateYearlyCFs(getDuration(sellAfter, startYear, endYear))
-    }, [endYear])
+    }, [endYear, allInputDone, currentOrder])
 
     const initBuyCFsForComparison = (analyzeFor: number) => {
         let allCFs: Array<Array<number>> = []
@@ -235,16 +237,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                         placeholder="Goal Name"
                         value={name}
                         changeHandler={setName}
-                        width="180px"
-                    />
-                    <SelectInput name="ccy" inputOrder={2} currentOrder={currentOrder}
-                        nextStepDisabled={false}
-                        allInputDone={allInputDone}
-                        nextStepHandler={handleNextStep}
-                        pre="Currency"
-                        value={currency}
-                        changeHandler={changeCurrency}
-                        currency
+                        width="200px"
                     />
                     <div className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
                         onClick={() => cancelCallback()}>
@@ -253,28 +246,37 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                 </div>
 
                 <Fragment>
-                    <div className="flex justify-center w-full items-center mt-4">
-                        <div className="mr-8">
-                            <SelectInput name="sy" inputOrder={3} currentOrder={currentOrder}
-                                nextStepDisabled={false}
-                                allInputDone={allInputDone}
-                                nextStepHandler={handleNextStep}
-                                pre="When?"
-                                value={startYear}
-                                changeHandler={changeStartYear}
-                                options={syOptions}
-                                actionCount={goalType === APIt.GoalType.B && manualMode < 1 ? 2 : 1}
-                            />
-                        </div>
+                    <div className="flex justify-around w-full items-center mt-4">
+                        <SelectInput name="ccy" inputOrder={2} currentOrder={currentOrder}
+                            nextStepDisabled={false}
+                            allInputDone={allInputDone}
+                            nextStepHandler={handleNextStep}
+                            pre="Currency"
+                            value={currency}
+                            changeHandler={changeCurrency}
+                            currency
+                        />
+                        <SelectInput name="sy" inputOrder={3} currentOrder={currentOrder}
+                            nextStepDisabled={false}
+                            allInputDone={allInputDone}
+                            nextStepHandler={handleNextStep}
+                            pre="When?"
+                            info="Year in which You Start Paying for the Goal"
+                            value={startYear}
+                            changeHandler={changeStartYear}
+                            options={syOptions}
+                            actionCount={goalType === APIt.GoalType.B && manualMode < 1 ? 2 : 1}
+                        />
                         <SelectInput name="ey" pre="Pay Until" value={endYear}
                             inputOrder={4} currentOrder={currentOrder}
                             nextStepDisabled={false}
                             allInputDone={allInputDone}
                             nextStepHandler={handleNextStep}
+                            info="Year in which You End Paying for the Goal"
                             disabled={!(manualMode > 0 || goalType !== APIt.GoalType.B)}
                             changeHandler={changeEndYear} options={eyOptions} />
                     </div>
-                    <div className="flex justify-center w-full">
+                    <div className="flex justify-center w-full mt-4">
                         <Cost startingCost={startingPrice} startingCostHandler={setStartingPrice} rangeFactor={rangeFactor}
                             manualTargets={wipTargets} manualTargetsHandler={setWIPTargets} currency={currency}
                             costChgRate={priceChgRate} costChgRateHandler={setPriceChgRate} endYear={endYear}
@@ -303,7 +305,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                             inputOrder={9} currentOrder={currentOrder} nextStepDisabled={false}
                             nextStepHandler={handleNextStep} allInputDone={allInputDone} />
                     </div>
-                    {goal?.emi ? <div className="flex w-full flex-wrap justify-around">
+                    {goal?.emi ? <div className="flex w-full justify-around">
                         <EmiCost price={price} currency={currency} startYear={startYear} sellAfter={sellAfter}
                             repaymentSY={loanRepaymentSY ? loanRepaymentSY : startYear} endYear={endYear} rangeFactor={rangeFactor}
                             loanYears={loanYears as number} loanAnnualInt={loanIntRate as number} loanPer={loanPer as number}
@@ -314,7 +316,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                             inputOrder={11} currentOrder={currentOrder} nextStepDisabled={false}
                             nextStepHandler={handleNextStep} allInputDone={allInputDone} />
                     </div> : !allInputDone && currentOrder === 11 && handleNextStep(5)}
-                    <div className="flex flex-wrap justify-around items-center">
+                    <div className="flex flex-wrap justify-around items-start">
                         {sellAfter ? <Fragment>
                             <AnnualAmt currency={currency} startYear={startYear} percentage={aiPer as number} chgRate={assetChgRate as number}
                                 percentageHandler={setAIPer} annualSY={aiStartYear as number} annualSYHandler={setAIStartYear}
@@ -338,7 +340,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                             nextStepHandler={handleNextStep} allInputDone={allInputDone} />
                         {sellAfter ?
                             ((!allInputDone && currentOrder >= 24) || allInputDone) &&
-                            <Section title="Instead, If You Rent"
+                            <Section title="Instead, If You Rent" insideForm
                                 left={<div className="pl-4 pr-4">
                                     <NumberInput inputOrder={24}
                                         currentOrder={currentOrder}
@@ -357,7 +359,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                                         allInputDone={allInputDone} pre="Changes" value={rentChgPer} changeHandler={setRentChgPer}
                                         min={-10} max={10} step={0.5} unit="%" />}
                                 toggle={
-                                    <HToggle rightText="Claim Tax Benefit" value={rentTaxBenefit as number} setter={setRentTaxBenefit} />
+                                    <HToggle rightText="Claim Tax Deduction" value={rentTaxBenefit as number} setter={setRentTaxBenefit} />
                                 }
                                 bottom={rentAns && <div className="flex items-center">
                                     <SVGBalance />
@@ -381,10 +383,10 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                             <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
                                 handler={setShowCFChart} svg={<SVGChart />} />
                             {showCFChart &&
-                                <LineChart cfs={cfs} startYear={startYear} currency={currency} />
+                                <LineChart cfs={cfs} startYear={startYear} />
                             }
                         </Fragment>}
-                        <div className="mt-8 flex justify-center">
+                        <div className="mt-4 mb-4 flex justify-center">
                             <SelectInput name="imp"
                                 inputOrder={26}
                                 currentOrder={currentOrder}
@@ -402,7 +404,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
 
             {allInputDone && <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
                 cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
-                submitText={`${goal.id ? 'Update' : 'Create'} Goal`} />}
+                submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />}
         </div>
     )
 }

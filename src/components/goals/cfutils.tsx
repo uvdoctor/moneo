@@ -90,7 +90,7 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, s
             //@ts-ignore
             let premium = getCompoundedIncome(g.amper, g.cp, year - (g.chg + 1))
             //@ts-ignore
-            let index = cfs.length - (g.ey - year)
+            let index = cfs.length - 1 - (g.ey - year)
             cfs[index] -= premium
             cfs[index + 1] += getTaxBenefit(premium, g.tdr, g.tdl)
         }
@@ -104,18 +104,19 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, s
             //@ts-ignore
             let income = getCompoundedIncome(g.aiper, g.tbi, year - incomeYear)
             //@ts-ignore
-            let index = cfs.length - (g.ey - year)
+            let index = cfs.length - 1 - (g.ey - year)
             cfs[index] += income
         }
     }
+    console.log("CFs before gains/losses are ", cfs)
     g.pg?.forEach((t) => {
         //@ts-ignore
-        let index = cfs.length - (g.ey - t?.year)
+        let index = cfs.length - 1 - (g.ey - t?.year)
         cfs[index] += t?.val as number
     })
     g.pl?.forEach((t) => {
         //@ts-ignore
-        let index = cfs.length - (g.ey - t?.year)
+        let index = cfs.length - 1 - (g.ey - t?.year)
         cfs[index] -= t?.val as number
     })
     //@ts-ignore

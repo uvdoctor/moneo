@@ -46,7 +46,7 @@ export default function OppCost(props: OppCostProps) {
     return (
         <Fragment>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
-                <Section title="Instead, If You Invest"
+                <Section title="Instead, If You Invest" insideForm
                     left={
                         <RadialInput
                             inputOrder={props.inputOrder}

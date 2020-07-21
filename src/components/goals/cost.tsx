@@ -122,7 +122,7 @@ export default function Cost(props: CostProps) {
                                     disabled={!manualInputPresent} 
                                     actionCount={props.currentOrder > props.inputOrder ? 1 : 2} />}
                         </Fragment>
-                    } manualMode={props.manualMode} footer={props.footer} />}
+                    } manualMode={props.manualMode} footer={props.footer} insideForm />}
         </Fragment>
     )
 }

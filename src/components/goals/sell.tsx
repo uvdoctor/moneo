@@ -41,7 +41,9 @@ export default function Sell(props: SellProps) {
     return (
         <Fragment>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
-                <Section title="Sell After" showOnLoad={true}
+                <Section title="Sell After" 
+                    titleInfo="When do You Plan to Sell this? It will help to calculate Gain / Loss on this Purchase."
+                    insideForm
                     left={
                         <RadialInput
                             inputOrder={props.inputOrder}
@@ -49,6 +51,7 @@ export default function Sell(props: SellProps) {
                             nextStepDisabled={false}
                             allInputDone={props.allInputDone}
                             nextStepHandler={props.nextStepHandler}
+                            info="Years after which You Plan to Sell this Purchase."
                             label="Years" labelBottom={true} data={toStringArr(1, 20)}
                             value={props.sellAfter} step={1} changeHandler={props.sellAfterHandler} />
                     } right={
@@ -57,7 +60,9 @@ export default function Sell(props: SellProps) {
                             currentOrder={props.currentOrder}
                             nextStepDisabled={false}
                             nextStepHandler={props.nextStepHandler}
-                            allInputDone={props.allInputDone} pre="Sell Price" post="Changes" unit="%" note="Yearly"
+                            allInputDone={props.allInputDone} 
+                            info="Rate at which Price may change Yearly."
+                            pre="Sell Price" post="Changes" unit="%" note="Yearly"
                             min={-20} max={20} step={0.5} value={props.assetChgRate} changeHandler={props.assetChgRateHandler} />
                     }
                     bottom={

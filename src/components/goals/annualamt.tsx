@@ -36,7 +36,7 @@ export default function AnnualAmt(props: AnnualAmtProps) {
     return (
         <Fragment>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
-                <Section title={props.title} showOnLoad={true}
+                <Section title={props.title} insideForm
                     left={
                         <RadialInput inputOrder={props.inputOrder}
                             currentOrder={props.currentOrder}
@@ -44,7 +44,7 @@ export default function AnnualAmt(props: AnnualAmtProps) {
                             nextStepHandler={props.nextStepHandler}
                             allInputDone={props.allInputDone}
                             data={toStringArr(0, 10, 0.2)} changeHandler={props.percentageHandler} width={120}
-                            unit="%" labelBottom={true} label="of Price" post={`Total ${toCurrency(totalAmt, props.currency)}`}
+                            unit="%" labelBottom={true} label="of Amount" post={`Total ${toCurrency(totalAmt, props.currency)}`}
                             value={props.percentage} step={0.2} />
                     } right={
                         <SelectInput inputOrder={props.inputOrder + 1}

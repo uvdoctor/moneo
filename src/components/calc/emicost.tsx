@@ -67,9 +67,9 @@ export default function EmiCost(props: EmiProps) {
     return (
         <Fragment>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
-                <Section title="Loan Details"
+                <Section title="Loan Details" insideForm
                     toggle={
-                        <HToggle rightText="Claim Interest Tax Benefit" value={props.taxBenefitInt} setter={props.taxBenefitIntHandler} />
+                        <HToggle rightText="Claim Interest Tax Deduction" value={props.taxBenefitInt} setter={props.taxBenefitIntHandler} />
                     }
                     left={
                         <RadialInput
@@ -110,7 +110,7 @@ export default function EmiCost(props: EmiProps) {
                                 currentOrder={props.currentOrder}
                                 nextStepDisabled={false}
                                 nextStepHandler={props.nextStepHandler}
-                                allInputDone={props.allInputDone} pre="Interest" unit="%"
+                                allInputDone={props.allInputDone} pre="Yearly" post="Interest" unit="%"
                                 note={`Total ${toCurrency(totalIntAmt, props.currency)}`}
                                 value={props.loanAnnualInt} changeHandler={props.loanAnnualIntHandler}
                                 min={0.0} max={30.0} step={0.1} />

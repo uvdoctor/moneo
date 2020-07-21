@@ -154,7 +154,7 @@ export default function BRComparison(props: BRComparisonProps) {
     }, [props.taxRate, props.discountRate, props.rentAmt, props.rentChgPer, props.rentTaxBenefit, props.allBuyCFs])
 
     return (
-        <div className="mb-4">
+        <div className="mt-4 mb-4">
             <ExpandCollapse title="Buy v/s Rent for 20 Years" value={showRentChart}
                 handler={setShowRentChart} svg={<SVGBalance />} />
             {showRentChart && compData && compData.length === 2 && compData[1].values.y[props.sellAfter - 1] &&
