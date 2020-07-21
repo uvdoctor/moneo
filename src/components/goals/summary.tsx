@@ -37,9 +37,9 @@ export default function Summary(props: SummaryProps) {
         let mCFs = Object.assign({}, props.mergedCFs)
         props.cfs.forEach((cf, i) => {
             //@ts-ignore
-            if(mCFs[props.startYear + i] !== 'undefined') mCFs[props.startYear + i] -= cf
+            if (mCFs[props.startYear + i] !== 'undefined') mCFs[props.startYear + i] -= cf
         })
-        let result = findEarliestFFYear(props.ffGoal, props.oppDR, props.savings, mCFs, 
+        let result = findEarliestFFYear(props.ffGoal, props.oppDR, props.savings, mCFs,
             props.annualSavings, props.savingsChgRate, props.expense, props.expenseChgRate, props.ffYear)
         setFFImpactYears(props.ffYear - result.ffYear)
     }, [props.ffGoal, props.oppDR, props.savings, props.cfs, props.ffYear, props.mergedCFs])
@@ -63,12 +63,13 @@ export default function Summary(props: SummaryProps) {
                     </div>
                 </div>
             </div>
-            <div className="mt-2">
+            <div className="mt-2 mb-2">
                 <ResultItem svg={<SVGHourGlass />} label="Financial Freedom Impact"
                     unit={`${Math.abs(ffImpactYears) > 1 ? ' Years ' : ' Year '}${ffImpactYears > 0 ? 'Delay' : 'Earlier'}`}
                     result={Math.abs(ffImpactYears)} />
             </div>
-            <LineChart cfs={props.cfs} startYear={props.startYear} currency={props.currency} />
+            <p className="w-full text-center mb-2">Yearly Cash Flows in {props.currency}</p>
+            <LineChart cfs={props.cfs} startYear={props.startYear} />
         </div>
     )
 }
