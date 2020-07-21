@@ -386,7 +386,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                                 <LineChart cfs={cfs} startYear={startYear} />
                             }
                         </Fragment>}
-                        <div className="mt-4 mb-4 flex justify-center">
+                        <div className="mt-2 mb-4 flex justify-center">
                             <SelectInput name="imp"
                                 inputOrder={26}
                                 currentOrder={currentOrder}

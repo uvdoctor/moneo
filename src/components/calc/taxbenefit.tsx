@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import NumberInput from '../form/numberinput'
 import RadialInput from '../form/radialinput'
-import { toStringArr, toCurrency } from '../utils'
+import { toStringArr } from '../utils'
 import Section from '../form/section'
 import { GoalType } from '../../api/goals'
 import ResultItem from './resultitem'
