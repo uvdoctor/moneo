@@ -356,10 +356,15 @@ const checkForFF = (savings: number, dr: number, ffGoal: APIt.CreateGoalInput, f
         let v = parseInt(value)
         if (v < 0) cs += v
         if(y < ffYear && cs < 0) cs *= 1.1 //10% debt cost assumption as savings goes negative
-        if (y >= ffYear && cs <= 0) break
+        if (y >= ffYear && cs <= 0) {
+            //@ts-ignore
+            ffCfs[y] = Math.round(cs)
+            break
+        }
         if (cs > 0) cs *= (1 + (dr / 100))
         if (v > 0) cs += v
-        if (y === ffYear - 1) ffAmt = cs
+        if (y === nowYear + 1) ffAmt = savings
+        else if(y === ffYear - 1) ffAmt = cs
         //@ts-ignore
         ffCfs[y] = Math.round(cs)
     }
@@ -370,7 +375,7 @@ export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, oppDR: number, 
     annualSavings: number, savingsChgRate: number, expense: number, expenseChgRate: number, 
     yearToTry: number | undefined | null) => {
     let nowYear = new Date().getFullYear()
-    if(nowYear >= ffGoal.ey ) return { ffYear: -1, leftAmt: -1, ffAmt: -1, ffCfs:[]}
+    if(nowYear >= ffGoal.ey ) return { ffYear: -1, leftAmt: -1, ffAmt: -1, ffCfs:{}}
     if(!yearToTry || yearToTry <= nowYear) yearToTry = nowYear + Math.round((ffGoal.ey - nowYear)/2)
     let prevResult = checkForFF(savings, oppDR, ffGoal, yearToTry, mergedCFs, annualSavings, savingsChgRate, expense, expenseChgRate)
     let increment = prevResult.ffAmt > 0 && prevResult.leftAmt > 0 ? -1 : 1
@@ -378,9 +383,9 @@ export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, oppDR: number, 
         console.log("Prev result is ", prevResult)
         console.log("Going to calculate FF for year ", currYear)
         let result = checkForFF(savings, oppDR, ffGoal, currYear, mergedCFs, annualSavings, savingsChgRate, expense, expenseChgRate)
-        if ((result.leftAmt < 0 || result.ffAmt < 0) && (prevResult.leftAmt > 0 && prevResult.ffAmt >= 0))
+        if ((result.leftAmt < 0 || result.ffAmt < 0) && (prevResult.leftAmt >= 0 && prevResult.ffAmt > 0))
             return prevResult
-        else if ((prevResult.leftAmt < 0 || prevResult.ffAmt < 0) && (result.ffAmt > 0 && result.leftAmt > 0))
+        else if ((prevResult.leftAmt < 0 || prevResult.ffAmt < 0) && (result.ffAmt > 0 && result.leftAmt >= 0))
             return result
         prevResult = result
     }

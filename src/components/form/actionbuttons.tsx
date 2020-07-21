@@ -12,9 +12,9 @@ interface ActionButtonsProps {
 
 export default function ActionButtons(props: ActionButtonsProps) {
     return (
-        <footer className="w-full p-4 border-t flex justify-center border-grey pin-b">
+        <footer className="w-full py-2 flex justify-center">
             <AwesomeButton type="secondary" disabled={props.cancelDisabled} onPress={props.cancelHandler}>
-                Cancel
+                CANCEL
             </AwesomeButton>
             <AwesomeButton className={`ml-8 ${props.submitDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                 type="primary" ripple onPress={props.submitHandler} disabled={props.submitDisabled}>

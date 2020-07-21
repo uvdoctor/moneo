@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import SVGExpand from '../svgexpand'
 import SVGCollapse from '../svgcollapse'
 import SVGInfo from '../svginfo'
@@ -9,24 +9,25 @@ interface ExpandCollapseProps {
     value: boolean
     handler: Function
     svg?: any
+    insideForm?: boolean
 }
 
 export default function ExpandCollapse(props: ExpandCollapseProps) {
     const toggle = () => props.value ? props.handler(false) : props.handler(true)
 
     return (
-        <Fragment>
+        <div className={`w-full ${props.insideForm && 'bg-black text-white py-1'}`}>
             {props.titleInfo && <div className="w-full flex justify-end cursor-pointer" onClick={() => toast.info(props.titleInfo)}>
                 <SVGInfo />
             </div>}
             <div className="cursor-pointer flex justify-center items-center w-full"
                 onClick={toggle}>
                 {props.svg}
-                <label className="cursor-pointer text-blue-600 ml-2 mr-1 text-lg md:text-xl font-semibold">{props.title}</label>
+                <label className="pl-2 pr-1">{props.title}</label>
                 <div className="w-1/12">
                     {props.value ? <SVGCollapse /> : <SVGExpand />}
                 </div>
             </div>
-        </Fragment>
+        </div>
     )
 }

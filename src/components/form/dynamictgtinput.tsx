@@ -69,8 +69,8 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <div className={`${!props.allInputDone && props.inputOrder === props.currentOrder ? 'p-2 border-2 border-orange-600' : ''}`}>
                     {props.tgts && props.tgts[0] ? props.tgts.map((t, i) =>
-                        <div key={"ctr" + i} className="flex items-center justify-around w-full">
-                            <div className="flex justify-center w-5/6 md:w-11/12">
+                        <div key={"ctr" + i} className="mt-2 flex items-center justify-start w-full">
+                            <div className="flex justify-center mr-4">
                                 <SelectInput name={"year" + i}
                                     inputOrder={0} currentOrder={1}
                                     nextStepDisabled
@@ -86,14 +86,12 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
                                         min={0} max={900000} step={500} width="120px" />
                                 </div>
                             </div>
-                            <div className="flex justify-end w-1/6 md:w-1/12">
-                                <div onClick={() => removeTgt(i)}>
-                                    <SVGRemove />
-                                </div>
-                                {i === props.tgts.length - 1 && <div onClick={() => addTgt()}>
-                                    <SVGAdd />
-                                </div>}
+                            <div onClick={() => removeTgt(i)}>
+                                <SVGRemove />
                             </div>
+                            {i === props.tgts.length - 1 && <div className="ml-2" onClick={() => addTgt()}>
+                                <SVGAdd />
+                            </div>}
                         </div>
                     ) : <div className="flex justify-center" onClick={() => addTgt()}>
                             <SVGAdd />

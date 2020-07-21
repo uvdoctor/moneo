@@ -14,10 +14,7 @@ import Section from '../form/section'
 //@ts-ignore
 import { AwesomeButton } from 'react-awesome-button'
 import NumberInput from '../form/numberinput'
-import ResultItem from '../calc/resultitem'
-import SVGHourGlass from '../svghourglass'
-import SVGMoneyBag from '../calc/svgmoneybag'
-import SVGInheritance from './svginheritance'
+import FFResult from './ffresult'
 import SVGEdit from '../svgedit'
 import { toast } from 'react-toastify'
 
@@ -42,10 +39,11 @@ export default function Goals({ showModalHandler }: GoalsProps) {
     const [savingsChgRate, setSavingsChgRate] = useState<number>(3)
     const [expense, setExpense] = useState<number>(24000)
     const [expenseChgRate, setExpenseChgRate] = useState<number>(3)
+    const [ffGoal, setFFGoal] = useState<APIt.CreateGoalInput>()
     const [ffYear, setFFYear] = useState<number>(0)
     const [ffAmt, setFFAmt] = useState<number>(0)
-    const [ffGoal, setFFGoal] = useState<APIt.CreateGoalInput>()
     const [ffLeftOverAmt, setFFLeftOverAmt] = useState<number>(0)
+    const [ffCfs, setFFCfs] = useState<any>({})
     const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false)
 
     useEffect(() => {
@@ -78,7 +76,8 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         setFFYear(result.ffYear)
         //@ts-ignore
         setFFLeftOverAmt(result.leftAmt + ffGoal.sa)
-    }, [ffGoal, oppDR, savings, goalsLoaded, allGoals, annualSavings, savingsChgRate,
+        setFFCfs(result.ffCfs)
+    }, [oppDR, savings, goalsLoaded, allGoals, annualSavings, savingsChgRate,
         expense, expenseChgRate])
 
     useEffect(() => wipGoal ? showModalHandler(true) : showModalHandler(false), [wipGoal])
@@ -108,11 +107,11 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         let g = await createNewGoal(goal)
         if (!g) return
         setWIPGoal(null)
-        toast.success(`Success! New Goal ${g.type}: ${g.name} has been Created.`)
         if (g.type === APIt.GoalType.FF) {
             setFFGoal(g)
             return
         }
+        toast.success(`Success! New Goal ${g.type}: ${g.name} has been Created.`)
         allGoals?.push(g as APIt.CreateGoalInput)
         //@ts-ignore
         allCFs[g.id] = cfs
@@ -124,11 +123,12 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         let g: APIt.UpdateGoalInput | null = await changeGoal(goal)
         if (!g) return
         setWIPGoal(null)
-        toast.success(`Success! Goal ${g.type}: ${g.name} has been Updated.`)
         if (g.type === APIt.GoalType.FF) {
+            toast.success('Success! Your Financial Freedom Target has been Updated.')
             setFFGoal(g as APIt.CreateGoalInput)
             return
         }
+        toast.success(`Success! Goal ${g.type}: ${g.name} has been Updated.`)
         removeFromArray(allGoals as Array<APIt.CreateGoalInput>, 'id', goal.id)
         allGoals?.unshift(g as APIt.CreateGoalInput)
         //@ts-ignore
@@ -141,7 +141,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         try {
             await deleteGoal(id)
         } catch (err) {
-            toast.error("Sorry! Error while trying to delete this Goal: ", err)
+            toast.error("Sorry! Unable to delete this Goal: ", err)
             return false
         }
         toast.success(`Success! Goal has been Deleted.`)
@@ -239,7 +239,10 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                             updateCallback={updateGoal} annualSavings={annualSavings} savingsChgRate={savingsChgRate}
                             expense={expense} expenseChgRate={expenseChgRate} annualSavingsHandler={setAnnualSavings}
                             savingsChgRateHandler={setSavingsChgRate} expenseHandler={setExpense} oppDR={oppDR} oppDRHandler={setOppDR}
-                            expenseChgRateHandler={setExpenseChgRate} totalSavings={savings} totalSavingsHandler={setSavings} />
+                            expenseChgRateHandler={setExpenseChgRate} totalSavings={savings} totalSavingsHandler={setSavings} 
+                            ffYear={ffYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffCfs={ffCfs} mergedCfs={mergedCFs} 
+                            ffYearHandler={setFFYear} ffAmtHandler={setFFAmt} ffLeftOverAmtHandler={setFFLeftOverAmt} 
+                            ffCfsHandler={setFFCfs} />
                         : ffGoal && <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
                             updateCallback={updateGoal} />}
                 </div>
@@ -252,7 +255,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                 </div>
                 <p className="text-center text-lg mt-1">Make Money Work Hard to Meet Them.</p>
 
-                <div className="flex flex-wrap justify-around">
+                <div className="flex flex-wrap justify-around mb-4">
                     {Object.keys(getGoalTypes()).map(key =>
                         key !== APIt.GoalType.FF &&
                         <AwesomeButton className={`mt-4 ${!ffGoal ? 'cursor-not-allowed' : 'cursor-pointer'}`} type="primary" ripple size="medium" key={key}
@@ -271,14 +274,8 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                                     </div>
                                 </div>
                             } left={
-                                ffAmt >= 0 && ffLeftOverAmt >= 0 ? <div className="flex flex-wrap justify-around w-full items-start">
-                                    <ResultItem svg={<SVGHourGlass />} label="Achievable by" result={ffYear} noResultFormat />
-                                    <ResultItem result={ffAmt} svg={<SVGMoneyBag />} label={`Savings by ${ffYear}`}
-                                        currency={ffGoal.ccy} />
-                                    <ResultItem result={ffLeftOverAmt} svg={<SVGInheritance />} label="Nominees Get"
-                                        currency={ffGoal.ccy} footer={`Remaining In ${ffGoal.ey + 1}`} />
-                                </div> : `Analyzed till ${ffYear}. Please try again with higher Savings And / Or Investment Return.`
-                            } right={<div />} bottom={
+                                <FFResult endYear={ffGoal.ey} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} currency={ffGoal.ccy} />
+                            } bottom={
                                 <div className="flex flex-wrap justify-around items-center w-full">
                                     <NumberInput name="dr" inputOrder={1}
                                         currentOrder={0}
@@ -296,7 +293,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                                         pre="Savings" post="Increases" note='Every Year' unit="%"
                                         min={0} max={10} step={0.1} value={savingsChgRate} changeHandler={setSavingsChgRate} />
                                 </div>
-                            } />
+                            } hasResult />
                         </div> : <div />}
                         {ffGoal && allGoals && allGoals.length > 0 && <Fragment>
                             <div className="mt-4 md:mt-8 flex justify-center">

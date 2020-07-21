@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import * as APIt from '../../api/goals'
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button"
@@ -13,6 +13,9 @@ import ActionButtons from '../form/actionbuttons'
 import ResultItem from '../calc/resultitem'
 import { calculateTotalCP, calculateTotalCPTaxBenefit } from '../goals/cfutils'
 import DynamicTgtInput from '../form/dynamictgtinput'
+import { findEarliestFFYear } from './cfutils'
+import FFResult from './ffresult'
+
 interface FFGoalProps {
     goal: APIt.CreateGoalInput
     totalSavings: number
@@ -21,6 +24,15 @@ interface FFGoalProps {
     expenseChgRate: number
     annualSavings: number
     savingsChgRate: number
+    ffYear: number
+    ffAmt: number
+    ffLeftOverAmt: number
+    ffCfs: any
+    mergedCfs: any
+    ffYearHandler: Function
+    ffAmtHandler: Function
+    ffLeftOverAmtHandler: Function
+    ffCfsHandler: Function
     totalSavingsHandler: Function
     oppDRHandler: Function
     expenseHandler: Function
@@ -32,8 +44,10 @@ interface FFGoalProps {
     updateCallback: Function
 }
 
-export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgRate, annualSavings, savingsChgRate, totalSavingsHandler, oppDRHandler, expenseHandler, expenseChgRateHandler,
-    annualSavingsHandler, savingsChgRateHandler, cancelCallback, addCallback, updateCallback }: FFGoalProps) {
+export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgRate, annualSavings, savingsChgRate,
+    ffYear, ffAmt, ffLeftOverAmt, ffCfs, mergedCfs, ffYearHandler, ffAmtHandler, ffLeftOverAmtHandler, ffCfsHandler,
+    totalSavingsHandler, oppDRHandler, expenseHandler, expenseChgRateHandler, annualSavingsHandler, savingsChgRateHandler,
+    cancelCallback, addCallback, updateCallback }: FFGoalProps) {
     const [expenseBY, setExpenseBY] = useState<number>(goal.sy)
     const [endYear, setEndYear] = useState<number>(goal.ey)
     const eyOptions = initYearOptions(goal.by + 30, 50)
@@ -94,6 +108,19 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
         g.id = goal.id
         return g as APIt.UpdateGoalInput
     }
+
+    useEffect(() => {
+        if(!allInputDone && currentOrder < 18) return
+        let result = findEarliestFFYear(createGoal(), oppDR, totalSavings, mergedCfs,
+            annualSavings, savingsChgRate, expense, expenseChgRate, ffYear ? ffYear : null)
+        ffAmtHandler(result.ffAmt)
+        ffYearHandler(result.ffYear)
+        ffLeftOverAmtHandler(result.leftAmt + leaveBehind)
+        ffCfsHandler(result.ffCfs)
+    }, [expenseBY, endYear, taxRate, careTaxDedLimit, carePremiumSY, carePremiumChgPer,
+        carePremiumDur, carePremium, cpBY, retirementIncomeSY, retirementIncomePer,
+        retirementIncome, leaveBehind, successionTaxRate, gains, losses, totalSavings, 
+        annualSavings, expense, expenseChgRate, savingsChgRate, allInputDone, currentOrder])
 
     useEffect(() => {
         setCYOptions(initYearOptions(endYear - 30, 10))
@@ -174,7 +201,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                         changeHandler={changeCurrency}
                         currency />
                 </div>
-                <div className="flex flex-wrap justify-around items-center w-full">
+                <div className="flex flex-wrap justify-around items-start w-full">
                     {((!allInputDone && currentOrder >= 3) || allInputDone) &&
                         <Section title="Total Savings Accumulated"
                             titleInfo="Total Savings includes cash, deposits, gold, stocks, bonds, etc. Deduct money owed on credit cards, loans, etc."
@@ -197,7 +224,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                                     infoDurationInMs={10000}
                                     value={oppDR} unit="%" pre="Investment" min={0} max={15}
                                     post="Earns" changeHandler={oppDRHandler} note="After taxes & fees" step={0.1} />
-                            } />
+                            } insideForm />
                     }
 
                     {((!allInputDone && currentOrder >= 5) || allInputDone) &&
@@ -223,7 +250,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                                     More You Save, Earlier You Can Achieve Financial Freedom.`}
                                     value={savingsChgRate} unit="%" pre="Savings" min={0} max={10}
                                     post="Changes" changeHandler={savingsChgRateHandler} note="Yearly" step={0.5} />
-                            } />
+                            } insideForm />
                     }
                     {((!allInputDone && currentOrder >= 7) || allInputDone) &&
                         <Section title='Expenses after Financial Freedom'
@@ -246,7 +273,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                                     info="Tax Rate, in case You have to pay tax for Investment Gains and Withdrawing from Retirement Accounts beyond the allowed Yearly Limit."
                                     pre="Tax" post="Rate" min={0} max={20} step={0.1}
                                     value={taxRate} changeHandler={setTaxRate} unit="%" />
-                            } />}
+                            } insideForm />}
 
                     {((!allInputDone && currentOrder >= 10) || allInputDone) &&
                         <Section title="Retirement Income Benefit (eg: Pension, Social Security, etc.)"
@@ -268,7 +295,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                                     pre="From" post="Onwards" changeHandler={(val: string) => {
                                         changeSelection(val, setRetirementIncomeSY)
                                     }} />
-                            } />}
+                            } insideForm />}
 
                     {(currency === 'USD' || currency === 'CAD' || currency === 'GBP') ?
                         ((!allInputDone && currentOrder >= 13) || allInputDone) &&
@@ -311,44 +338,45 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                                     min={0} max={5000} step={500} rangeFactor={rangeFactor} note={
                                         <ResultItem label='Total Tax Benefit' currency={currency} result={totalTaxBenefit} />
                                     } />
-                            } /> : !allInputDone && currentOrder === 13 && handleNextStep(5)}
+                            } insideForm /> : !allInputDone && currentOrder === 13 && handleNextStep(5)}
                 </div>
-                <div className="flex flex-wrap justify-around items-center w-full">
+                <div className="flex flex-wrap justify-around items-start w-full">
                     {((!allInputDone && currentOrder >= 18) || allInputDone) &&
                         <Section title="Major Wealth Expected due to Gifts, Inheritance, Selling Property, etc." left={
                             <DynamicTgtInput inputOrder={18} currentOrder={currentOrder}
                                 nextStepDisabled={false} allInputDone={allInputDone}
                                 nextStepHandler={handleNextStep} startYear={goal.by} endYear={endYear} currency={currency}
                                 rangeFactor={rangeFactor} tgts={gains} tgtsHandler={setGains} />
-                        } right={<div />} footer="Exclude taxes & fees." />}
+                        } insideForm footer="Exclude taxes & fees." />}
                     {((!allInputDone && currentOrder >= 19) || allInputDone) &&
                         <Section title="Major Losses Expected due to Selling Existing Assets, Investments, etc." left={
                             <DynamicTgtInput inputOrder={19} currentOrder={currentOrder}
                                 nextStepDisabled={false} allInputDone={allInputDone}
                                 nextStepHandler={handleNextStep} startYear={goal.by} endYear={endYear} currency={currency}
                                 rangeFactor={rangeFactor} tgts={losses} tgtsHandler={setLosses} />
-                        } right={<div />} footer="Include taxes & fees." />}
+                        } insideForm footer="Include taxes & fees." />}
                     {((!allInputDone && currentOrder >= 20) || allInputDone) &&
                         <Section title={`Loved Ones Inherit At least ~ ${toCurrency(Math.round(leaveBehind * (1 - (successionTaxRate / 100))), currency)}`} left={
                             <NumberInput name="lb" inputOrder={20} currentOrder={currentOrder}
                                 nextStepDisabled={false}
                                 allInputDone={allInputDone}
                                 nextStepHandler={handleNextStep} value={leaveBehind} changeHandler={setLeaveBehind} rangeFactor={rangeFactor}
-                                min={0} max={500000} pre="Amount" currency={currency} step={1000} note={`in ${endYear + 1}`} />
+                                min={0} max={500000} pre="Amount" currency={currency} step={1000} post={`in ${endYear + 1}`} />
                         } right={
                             <NumberInput name="str" inputOrder={21} currentOrder={currentOrder}
-                                nextStepDisabled={false}
-                                allInputDone={allInputDone}
+                                nextStepDisabled={false} allInputDone={allInputDone}
                                 nextStepHandler={handleNextStep} pre="Inheritance" post="Tax Rate" min={0} max={20} step={0.1}
                                 value={successionTaxRate} changeHandler={setSuccessionTaxRate} unit="%"
                                 note={`Total ${toCurrency(Math.round(leaveBehind * (successionTaxRate / 100)), currency)}`} />
-                        } />}
+                        } insideForm />}
                 </div>
             </div>
-
-            {allInputDone && <ActionButtons submitDisabled={annualSavings === 0 && expense < 5000 || btnClicked} cancelDisabled={btnClicked}
-                cancelHandler={cancelCallback} submitHandler={handleSubmit}
-                submitText='Calculate' />}
+            {allInputDone &&
+                <Fragment>
+                    <FFResult endYear={endYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} currency={currency} />
+                    <ActionButtons submitDisabled={annualSavings === 0 && expense < 5000 || btnClicked} cancelDisabled={btnClicked}
+                        cancelHandler={cancelCallback} submitHandler={handleSubmit} submitText='SET TARGET' />
+                </Fragment>}
         </div>
     )
 }
