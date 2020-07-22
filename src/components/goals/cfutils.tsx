@@ -47,7 +47,7 @@ export const calculateTotalCPTaxBenefit = (taxRate: number, maxTDL: number,
     paymentSY: number, payment: number, paymentChgRate: number, duration: number, premiumBY: number) => {
     if (!taxRate) return 0
     let totalTaxBenefit = 0
-    let nowYear = new Date().getFullYear() 
+    let nowYear = new Date().getFullYear()
     let premiumYear = nowYear > paymentSY ? nowYear + 1 : paymentSY
     for (let year = premiumYear; year < paymentSY + duration; year++) {
         let premium = getCompoundedIncome(paymentChgRate, payment, year - (premiumBY + 1))
@@ -59,7 +59,7 @@ export const calculateTotalCPTaxBenefit = (taxRate: number, maxTDL: number,
 export const calculateTotalCP = (paymentSY: number, payment: number, paymentChgRate: number, duration: number, premiumBY: number) => {
     if (!payment) return 0
     let total = 0
-    let nowYear = new Date().getFullYear() 
+    let nowYear = new Date().getFullYear()
     let premiumYear = nowYear > paymentSY ? nowYear + 1 : paymentSY
     for (let year = premiumYear; year < paymentSY + duration; year++) {
         total += getCompoundedIncome(paymentChgRate, payment, year - (premiumBY + 1))
@@ -67,7 +67,7 @@ export const calculateTotalCP = (paymentSY: number, payment: number, paymentChgR
     return total
 }
 
-export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, savingsChgRate: number, expense: number, 
+export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, savingsChgRate: number, expense: number,
     expenseChgRate: number, ffYear: number) => {
     let cfs: Array<number> = []
     let nowYear = new Date().getFullYear()
@@ -78,7 +78,7 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, s
     }
     for (let year = ffYear; year <= g.ey; year++) {
         let cf = getCompoundedIncome(expenseChgRate, expense, year - (g.sy + 1))
-                    * (1 + (g.tdr / 100))
+            * (1 + (g.tdr / 100))
         cfs.push(Math.round(-cf))
     }
     //@ts-ignore
@@ -96,11 +96,11 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, s
         }
     }
     //@ts-ignore
-    if(g?.tbi > 0) {
+    if (g?.tbi > 0) {
         //@ts-ignore
         let incomeYear = nowYear >= g.aisy ? nowYear + 1 : g.aisy
         //@ts-ignore
-        for(let year = incomeYear; year <= g.ey; year++) {
+        for (let year = incomeYear; year <= g.ey; year++) {
             //@ts-ignore
             let income = getCompoundedIncome(g.aiper, g.tbi, year - incomeYear)
             //@ts-ignore
@@ -339,10 +339,10 @@ const createManualCFs = (goal: APIt.CreateGoalInput, duration: number) => {
 }
 
 export const getExpectedRR = (year: number, ffYear: number | null, ffEndYear: number, rate: number, fallDuration: number) => {
-    if(ffEndYear - year <= 5) return 0
+    if (ffEndYear - year <= 5) return 0
     let fallStartYear = ffYear ? ffYear : (ffEndYear - 30) - fallDuration
-    if(rate <= 0 || year < fallStartYear) return rate
-    if(year === fallStartYear) return rate - 1 > 0 ? rate - 1 : 0
+    if (rate <= 0 || year < fallStartYear) return rate
+    if (year === fallStartYear) return rate - 1 > 0 ? rate - 1 : 0
     let expectedRR = (rate - 1) - ((year - fallStartYear) / fallDuration)
     return expectedRR < 0 ? 0 : expectedRR
 }
@@ -356,7 +356,7 @@ const checkForFF = (savings: number, dr: number, rrFallDuration: number, ffGoal:
     let nowYear = new Date().getFullYear()
     cfs.forEach((cf, i) => {
         //@ts-ignore
-        mCFs[nowYear + 1 + i] += cf
+        !mCFs[nowYear + 1 + i] ? mCFs[nowYear + 1 + i] = cf : mCFs[nowYear + 1 + i] += cf
     })
     let ffAmt = 0
     let ffCfs = {}
@@ -364,7 +364,7 @@ const checkForFF = (savings: number, dr: number, rrFallDuration: number, ffGoal:
         let y = parseInt(year)
         let v = parseInt(value)
         if (v < 0) cs += v
-        if(y < ffYear && cs < 0) cs *= 1.1 //10% debt cost assumption as savings goes negative
+        if (y < ffYear && cs < 0) cs *= 1.1 //10% debt cost assumption as savings goes negative
         if (y >= ffYear && cs <= 0) {
             //@ts-ignore
             ffCfs[y] = Math.round(cs)
@@ -375,8 +375,8 @@ const checkForFF = (savings: number, dr: number, rrFallDuration: number, ffGoal:
             cs *= (1 + (rr / 100))
         }
         if (v > 0) cs += v
-        if (y === nowYear + 1) ffAmt = savings
-        else if(y === ffYear - 1) ffAmt = cs
+        if (ffYear === nowYear + 1 && y === nowYear + 1) ffAmt = savings
+        else if (y === ffYear - 1) ffAmt = cs
         //@ts-ignore
         ffCfs[y] = Math.round(cs)
     }
@@ -384,11 +384,11 @@ const checkForFF = (savings: number, dr: number, rrFallDuration: number, ffGoal:
 }
 
 export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, oppDR: number, rrFallDuration: number, savings: number, mergedCFs: Object,
-    annualSavings: number, savingsChgRate: number, expense: number, expenseChgRate: number, 
+    annualSavings: number, savingsChgRate: number, expense: number, expenseChgRate: number,
     yearToTry: number | undefined | null) => {
     let nowYear = new Date().getFullYear()
-    if(nowYear >= ffGoal.ey ) return { ffYear: -1, leftAmt: -1, ffAmt: -1, ffCfs:{}}
-    if(!yearToTry || yearToTry <= nowYear) yearToTry = nowYear + Math.round((ffGoal.ey - nowYear)/2)
+    if (nowYear >= ffGoal.ey) return { ffYear: -1, leftAmt: -1, ffAmt: -1, ffCfs: {} }
+    if (!yearToTry || yearToTry <= nowYear) yearToTry = nowYear + Math.round((ffGoal.ey - nowYear) / 2)
     let prevResult = checkForFF(savings, oppDR, rrFallDuration, ffGoal, yearToTry, mergedCFs, annualSavings, savingsChgRate, expense, expenseChgRate)
     let increment = prevResult.ffAmt > 0 && prevResult.leftAmt > 0 ? -1 : 1
     for (let currYear = yearToTry + increment; currYear <= ffGoal.ey && currYear > nowYear; currYear += increment) {
@@ -399,6 +399,6 @@ export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, oppDR: number, 
             return result
         prevResult = result
     }
-    if(prevResult.ffAmt < 0 || prevResult.leftAmt < 0) prevResult.ffYear = -1
+    if (prevResult.ffAmt < 0 || prevResult.leftAmt < 0) prevResult.ffYear = -1
     return prevResult
 }

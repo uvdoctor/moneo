@@ -4,8 +4,6 @@ import dynamic from 'next/dynamic'
 interface LineChartProps {
     cfs: Array<number>
     startYear: number
-    annotationText?: string
-    annotationYear?: number
 }
 
 export default function LineChart(props: LineChartProps) {
@@ -16,19 +14,6 @@ export default function LineChart(props: LineChartProps) {
         xaxis: { title: 'Year', type: 'category', fixedrange: years.length > 3 ? false : true, rangeslider: years.length > 3 ? {} : '', showgrid: false },
         yaxis: { fixedrange: true, tickformat: ',', showgrid: false },
         legend: { orientation: "h" }, margin: {t:20},
-        annotations: props.annotationText && props.annotationYear ? [
-            {
-                text: props.annotationText,
-                //@ts-ignore
-                x: years[props.annotationYear - props.startYear],
-                //@ts-ignore
-                y: props.cfs[props.annotationYear - props.startYear],
-                showarrow: true,
-                yref: 'y', xref: 'x',
-                ax: -50, ay: -50,
-                font: {size: 16} 
-            }
-        ] : []
     }
     const track = //@ts-ignore: Object is possible undefined
     {

@@ -167,7 +167,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
     }
 
     const createGoal = (type: APIt.GoalType) => setWIPGoal(
-        createNewGoalInput(type, type === APIt.GoalType.FF ? "USD" : ffGoal?.ccy as string))
+        createNewGoalInput(type, type === APIt.GoalType.FF ? currency : ffGoal?.ccy as string))
 
     const getYearRange = () => {
         let nowYear = new Date().getFullYear()

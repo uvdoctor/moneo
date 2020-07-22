@@ -113,16 +113,16 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expe
     }
 
     useEffect(() => {
-        if (!allInputDone && currentOrder < 18) return
+        if (!allInputDone) return
         let result = findEarliestFFYear(createGoal(), oppDR, rrFallDuration, totalSavings, mergedCfs,
             annualSavings, savingsChgRate, expense, expenseChgRate, ffYear ? ffYear : null)
         ffAmtHandler(result.ffAmt)
-        ffYearHandler(result.ffYear)
+        ffYearHandler(result.ffYear < 0 ? null : result.ffYear)
         ffLeftOverAmtHandler(result.leftAmt)
         ffCfsHandler(result.ffCfs)
     }, [expenseBY, endYear, taxRate, careTaxDedLimit, carePremiumSY, carePremiumChgPer,
         carePremiumDur, carePremium, cpBY, retirementIncomeSY, retirementIncomePer,
-        retirementIncome, leaveBehind, successionTaxRate, gains, losses, totalSavings,
+        retirementIncome, leaveBehind, successionTaxRate, gains, losses, totalSavings, oppDR,
         annualSavings, expense, expenseChgRate, savingsChgRate, allInputDone, currentOrder])
 
     useEffect(() => {
@@ -359,14 +359,12 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expe
                                 note={`Total ${toCurrency(Math.round(leaveBehind * (successionTaxRate / 100)), currency)}`} />
                         } insideForm />}
                 </div>
-                {((!allInputDone && currentOrder >= 19) || allInputDone) &&
+                {((!allInputDone && currentOrder > 19) || allInputDone) &&
                     <div className="mt-2 md:mt-4 text-xl">
                         <ExpandCollapse title={`Total Savings Chart in ${currency}`} value={showCFChart}
                             handler={setShowCFChart} svg={<SVGChart />} />
                         {showCFChart &&
-                            <LineChart cfs={buildChartCFs(ffCfs)} startYear={nowYear + 1} annotationYear={ffYear ? (ffYear - 1) : endYear}
-                                annotationText={ffYear ? `Congratulations! You Reach Enough Savings by end of ${ffYear - 1}`
-                                    : `Analyzed till ${endYear}, but not enough savings to achieve Financial Freedom.`} />
+                            <LineChart cfs={buildChartCFs(ffCfs)} startYear={nowYear + 1} />
                         }
                     </div>}
             </div>
