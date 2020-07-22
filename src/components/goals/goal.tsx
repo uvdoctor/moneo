@@ -15,7 +15,7 @@ import SVGClose from '../svgclose'
 import SVGChart from '../svgchart'
 import Cost from './cost'
 import {
-    calculateCFs, calculatePrice, calculateSellPrice, getLoanBorrowAmt,
+    calculateCFs, calculatePrice, getLoanBorrowAmt,
     calculateManualPrice, calculateTotalTaxBenefit, calculatePrincipalTaxBenefit
 } from './cfutils'
 import { getDuration, getGoalTypes, getImpLevels } from './goalutils'
@@ -33,7 +33,8 @@ interface GoalProps {
     mergedCFs: Array<number>
     ffGoalEndYear: number
     ffYear: number | null
-    annualSavings: number
+    ffAmt: number
+    ffLeftAmt: number
     oppDR: number
     rrFallDuration: number
     ffImpactYearsHandler: Function
@@ -42,7 +43,7 @@ interface GoalProps {
     updateCallback: Function
 }
 
-export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear, annualSavings, oppDR, 
+export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear, ffAmt, ffLeftAmt, oppDR,
     rrFallDuration, ffImpactYearsHandler, cancelCallback, addCallback, updateCallback }: GoalProps) {
     const [startYear, setStartYear] = useState<number>(goal.sy)
     const [endYear, setEndYear] = useState<number>(goal.ey)
@@ -50,7 +51,6 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
     const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 80))
     const [loanRepaymentSY, setLoanRepaymentSY] = useState<number | null | undefined>(goal?.emi?.ry)
     const [price, setPrice] = useState<number>(0)
-    const [totalCost, setTotalCost] = useState<number>(0)
     const [taxRate, setTaxRate] = useState<number>(goal?.tdr)
     const [maxTaxDeduction, setMaxTaxDeduction] = useState<number>(goal?.tdl)
     const [taxBenefitInt, setTaxBenefitInt] = useState<number | null | undefined>(goal?.tbi)
@@ -77,7 +77,6 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
     const [cfs, setCFs] = useState<Array<number>>(cashFlows ? cashFlows : [])
     const [rentAmt, setRentAmt] = useState<number>(0)
     const [rentChgPer, setRentChgPer] = useState<number>(5)
-    const [annualReturnPer, setAnnualReturnPer] = useState<number | null>(0)
     const [totalTaxBenefit, setTotalTaxBenefit] = useState<number>(0)
     const [answer, setAnswer] = useState<string>('')
     const [rentAns, setRentAns] = useState<string>('')
@@ -87,7 +86,6 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
     const [currentOrder, setCurrentOrder] = useState<number>(1)
     const [allInputDone, setAllInputDone] = useState<boolean>(goal.id ? true : false)
     const [btnClicked, setBtnClicked] = useState<boolean>(false)
-    const [ffImpactYears, setFFImpactYears] = useState<number>(0)
 
     const createNewBaseGoal = () => {
         return {
@@ -137,9 +135,6 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
         let p = manualMode > 0 ? calculateManualPrice(g?.tgts as Array<APIt.TargetInput>)
             : calculatePrice(g?.cp as number, g?.chg as number, g.sy, g.by)
         setPrice(p)
-        let totalCost = goalType === APIt.GoalType.B ? -calculateSellPrice(p, g?.achg as number, duration) : 0
-        cfs.forEach(cf => totalCost += cf)
-        setTotalCost(Math.abs(totalCost))
         if (g.emi?.per && g.manual < 1) {
             setTotalTaxBenefit(calculatePrincipalTaxBenefit(goalType, p, g.emi.per, g.emi.rate, g.emi.dur,
                 g.emi.ry, g.sy, g.ey, g.sa, g.tdr, g.tdl))
@@ -186,15 +181,6 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
         if (!allInputDone && (currentOrder < 7 || currentOrder > 19)) return
         if (goalType !== APIt.GoalType.B && manualMode < 1) calculateYearlyCFs(getDuration(sellAfter, startYear, endYear))
     }, [endYear, allInputDone, currentOrder])
-
-    useEffect(() => {
-        let mCFs = Object.assign({}, mergedCFs)
-        cfs.forEach((cf, i) => {
-            //@ts-ignore
-            if (mCFs[startYear + i] !== 'undefined') mCFs[startYear + i] -= cf
-        })
-        setFFImpactYears(ffImpactYearsHandler(mCFs))
-    }, [cfs])
 
     const initBuyCFsForComparison = (analyzeFor: number) => {
         let allCFs: Array<Array<number>> = []
@@ -302,8 +288,8 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
                 {sellAfter ? <div className="flex justify-center w-full">
                     <Sell price={price} startYear={startYear} endYear={endYear} sellAfter={sellAfter}
                         sellPrice={sellPrice} sellPriceHandler={setSellPrice} sellAfterHandler={setSellAfter}
-                        cfs={cfs} currency={currency} assetChgRate={assetChgRate as number} annualReturnPer={annualReturnPer as number}
-                        assetChgRateHandler={setAssetChgRate} annualReturnPerHandler={setAnnualReturnPer}
+                        cfs={cfs} currency={currency} assetChgRate={assetChgRate as number} 
+                        assetChgRateHandler={setAssetChgRate} 
                         inputOrder={7} currentOrder={currentOrder} nextStepDisabled={false}
                         nextStepHandler={handleNextStep} allInputDone={allInputDone} />
                 </div> : !allInputDone && currentOrder === 7 && handleNextStep(2)}
@@ -389,28 +375,27 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
                                 <LineChart cfs={cfs} startYear={startYear} />
                             }
                         </Fragment>}
-                        {console.log("Current order is ", currentOrder)}
-                            <div className="mt-2 mb-4 flex justify-center">
-                                <SelectInput name="imp"
-                                    inputOrder={22}
-                                    currentOrder={currentOrder}
-                                    nextStepDisabled={false}
-                                    nextStepHandler={handleNextStep}
-                                    allInputDone={allInputDone}
-                                    pre="How Important is this Goal?"
-                                    value={impLevel}
-                                    changeHandler={setImpLevel}
-                                    options={getImpLevels()}
-                                />
-                            </div>
+                        <div className="mt-2 mb-4 flex justify-center">
+                            <SelectInput name="imp"
+                                inputOrder={22}
+                                currentOrder={currentOrder}
+                                nextStepDisabled={false}
+                                nextStepHandler={handleNextStep}
+                                allInputDone={allInputDone}
+                                pre="How Important is this Goal?"
+                                value={impLevel}
+                                changeHandler={setImpLevel}
+                                options={getImpLevels()}
+                            />
+                        </div>
                     </Fragment>}
             </div>
 
             {allInputDone &&
                 <Fragment>
-                    <GoalResult duration={getDuration(sellAfter, startYear, endYear)} discountRate={oppDR}
-                        totalCost={totalCost} annualSavings={annualSavings} currency={currency} ffImpactYears={ffImpactYears} 
-                        ffGoalEndYear={ffGoalEndYear} cfs={cfs} rrFallDuration={rrFallDuration} startYear={startYear} ffYear={ffYear} />
+                    <GoalResult discountRate={oppDR} currency={currency} ffAmt={ffAmt} ffLeftAmt={ffLeftAmt}
+                        ffGoalEndYear={ffGoalEndYear} cfs={cfs} rrFallDuration={rrFallDuration} startYear={startYear} ffYear={ffYear} 
+                        ffImpactYearCalculator={ffImpactYearsHandler} mergedCFs={mergedCFs} />
                     <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
                         submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />

@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import * as APIt from '../../api/goals'
 import LineChart from './linechart'
 import SVGTrash from '../svgtrash'
 import SVGEdit from '../svgedit'
-import ResultItem from '../calc/resultitem'
-import SVGHourGlass from '../svghourglass'
 import { getGoalTypes, getImpLevels } from './goalutils'
-import { findEarliestFFYear } from './cfutils'
+import GoalResult from './goalresult'
 interface SummaryProps {
     id: string
     name: string
@@ -16,6 +14,8 @@ interface SummaryProps {
     currency: string
     cfs: Array<number>
     ffYear: number | null
+    ffAmt: number
+    ffLeftAmt: number
     ffGoal: APIt.CreateGoalInput
     mergedCFs: Object
     oppDR: number
@@ -27,25 +27,11 @@ interface SummaryProps {
     expenseChgRate: number
     deleteCallback: Function
     editCallback: Function
+    ffImpactYearsCalculator: Function
 }
 
 export default function Summary(props: SummaryProps) {
     const bgColor = props.imp === APIt.LMH.H ? 'bg-blue-600' : (props.imp === APIt.LMH.M ? 'bg-orange-600' : 'bg-green-600')
-    const [ffImpactYears, setFFImpactYears] = useState<number | null>(0)
-
-    useEffect(() => {
-        if (!props.ffGoal || !props.cfs || props.cfs.length === 0) return
-        let mCFs = Object.assign({}, props.mergedCFs)
-        props.cfs.forEach((cf, i) => {
-            //@ts-ignore
-            if (mCFs[props.startYear + i] !== 'undefined') mCFs[props.startYear + i] -= cf
-        })
-        if(props.ffYear) {
-            let result = findEarliestFFYear(props.ffGoal, props.oppDR, props.rrFallDuration, props.savings, mCFs,
-                props.annualSavings, props.savingsChgRate, props.expense, props.expenseChgRate, props.ffYear)
-            setFFImpactYears(props.ffYear - result.ffYear)
-        } else setFFImpactYears(null)
-    }, [props.ffGoal, props.oppDR, props.savings, props.cfs, props.ffYear, props.mergedCFs])
 
     return (
         <div className="mt-4 mb-4 pr-1 max-w-sm md:max-w-md rounded shadow-lg text-lg md:text-xl w-full">
@@ -66,12 +52,10 @@ export default function Summary(props: SummaryProps) {
                     </div>
                 </div>
             </div>
-            <div className="mt-2">
-                {ffImpactYears ? <ResultItem svg={<SVGHourGlass />} label="Financial Freedom Impact"
-                    unit={`${Math.abs(ffImpactYears) > 1 ? ' Years ' : ' Year '}${ffImpactYears > 0 ? 'Delay' : 'Earlier'}`}
-                    result={Math.abs(ffImpactYears)} />
-                : <ResultItem label="Financial Freedom Impact" result="Unable to determine" />}
-            </div>
+            <GoalResult discountRate={props.oppDR} currency={props.currency}
+                        ffGoalEndYear={props.ffGoal.ey} cfs={props.cfs} rrFallDuration={props.rrFallDuration} 
+                        startYear={props.startYear} ffYear={props.ffYear} ffAmt={props.ffAmt} ffLeftAmt={props.ffLeftAmt} 
+                        mergedCFs={props.mergedCFs} ffImpactYearCalculator={props.ffImpactYearsCalculator} />
             <p className="w-full text-center mt-4 mb-2">Yearly Cash Flows in {props.currency}</p>
             <LineChart cfs={props.cfs} startYear={props.startYear} />
         </div>

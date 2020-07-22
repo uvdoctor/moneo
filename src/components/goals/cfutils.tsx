@@ -108,7 +108,6 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, s
             cfs[index] += income
         }
     }
-    console.log("CFs before gains/losses are ", cfs)
     g.pg?.forEach((t) => {
         //@ts-ignore
         let index = cfs.length - 1 - (g.ey - t?.year)
@@ -393,8 +392,6 @@ export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, oppDR: number, 
     let prevResult = checkForFF(savings, oppDR, rrFallDuration, ffGoal, yearToTry, mergedCFs, annualSavings, savingsChgRate, expense, expenseChgRate)
     let increment = prevResult.ffAmt > 0 && prevResult.leftAmt > 0 ? -1 : 1
     for (let currYear = yearToTry + increment; currYear <= ffGoal.ey && currYear > nowYear; currYear += increment) {
-        console.log("Prev result is ", prevResult)
-        console.log("Going to calculate FF for year ", currYear)
         let result = checkForFF(savings, oppDR, rrFallDuration, ffGoal, currYear, mergedCFs, annualSavings, savingsChgRate, expense, expenseChgRate)
         if ((result.leftAmt < 0 || result.ffAmt < 0) && (prevResult.leftAmt >= 0 && prevResult.ffAmt > 0))
             return prevResult

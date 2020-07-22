@@ -256,7 +256,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                             ffCfsHandler={setFFCfs} rrFallDuration={rrFallDuration} />
                         : ffGoal && <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
                             updateCallback={updateGoal} mergedCFs={mergedCFs} ffImpactYearsHandler={calculateFFImpactYear} ffGoalEndYear={ffGoal.ey}
-                            annualSavings={annualSavings} oppDR={oppDR} rrFallDuration={rrFallDuration} ffYear={ffYear} />}
+                            oppDR={oppDR} rrFallDuration={rrFallDuration} ffYear={ffYear} ffAmt={ffAmt} ffLeftAmt={ffLeftOverAmt} />}
                 </div>
             </div>
             :
@@ -338,8 +338,9 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                                         g.id && (!impFilter || impFilter === g.imp) &&
                                         <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} oppDR={oppDR} savings={savings}
                                             startYear={g.sy} currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal}
-                                            ffYear={ffYear} ffGoal={ffGoal} mergedCFs={mergedCFs} rrFallDuration={rrFallDuration}
-                                            annualSavings={annualSavings} savingsChgRate={savingsChgRate} expense={expense} expenseChgRate={expenseChgRate} />)}
+                                            ffYear={ffYear} ffGoal={ffGoal} mergedCFs={mergedCFs} rrFallDuration={rrFallDuration} ffAmt={ffAmt} ffLeftAmt={ffLeftOverAmt}
+                                            annualSavings={annualSavings} savingsChgRate={savingsChgRate} expense={expense} expenseChgRate={expenseChgRate} 
+                                            ffImpactYearsCalculator={calculateFFImpactYear} />)}
                                 </div>}
                         </Fragment>}
                     </Fragment>

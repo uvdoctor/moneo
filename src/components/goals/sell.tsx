@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import ResultItem from '../calc/resultitem'
 import SVGMoneyBag from '../calc/svgmoneybag'
 import SVGMoneyBagPer from '../svgmoneybagper'
@@ -20,10 +20,8 @@ interface SellProps {
     endYear: number
     sellAfter: number
     sellPrice: number
-    annualReturnPer: number
     sellPriceHandler: Function
     sellAfterHandler: Function
-    annualReturnPerHandler: Function
     currency: string
     assetChgRate: number
     assetChgRateHandler: Function
@@ -31,11 +29,13 @@ interface SellProps {
 }
 
 export default function Sell(props: SellProps) {
+    const [annualReturnPer, setAnnualReturnPer] = useState<number | null>(0)
+
     useEffect(() => {
         let duration = getDuration(props.sellAfter, props.startYear, props.endYear)
         let sellPrice = calculateSellPrice(props.price, props.assetChgRate, duration)
         props.sellPriceHandler(sellPrice)
-        props.annualReturnPerHandler(calculateXIRR(props.cfs, props.startYear, props.price, props.sellAfter, sellPrice))
+        setAnnualReturnPer(calculateXIRR(props.cfs, props.startYear, props.price, props.sellAfter, sellPrice))
     }, [props.cfs])
 
     return (
@@ -69,8 +69,8 @@ export default function Sell(props: SellProps) {
                         <div className="flex justify-around w-full items-center">
                             <ResultItem svg={<SVGMoneyBag />} label="You May Get" footer={`In ${props.startYear + props.sellAfter}`}
                                 result={Math.round(props.sellPrice)} currency={props.currency} />
-                            <ResultItem svg={<SVGMoneyBagPer />} label={`You May ${props.annualReturnPer > 0 ? 'Gain' : 'Lose'}`}
-                                result={props.annualReturnPer} decimal={2} unit="%" footer='Yearly' />
+                            {annualReturnPer && <ResultItem svg={<SVGMoneyBagPer />} label={`You May ${annualReturnPer > 0 ? 'Gain' : 'Lose'}`}
+                                result={annualReturnPer} decimal={2} unit="%" footer='Yearly' />}
                         </div>
                     } footer='Sell Price above excludes taxes & fees.' />}
         </Fragment>

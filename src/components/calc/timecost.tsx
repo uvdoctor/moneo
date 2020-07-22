@@ -3,7 +3,7 @@ import SVGTimeCost from './svgtimecost'
 import ResultItem from './resultitem'
 import {toCurrency} from '../utils'
 interface TimeCostProps {
-    amount: number
+    cfs: Array<number>
     annualSavings: number
     currency: string
 }
@@ -12,11 +12,14 @@ export default function TimeCost(props: TimeCostProps) {
     const [timeCost, setTimeCost] = useState<number>(0)
 
     useEffect(() => {
-        setTimeCost(props.amount / props.annualSavings)
-    }, [props.amount, props.annualSavings])
+        let netAmt = 0
+        props.cfs.forEach(cf => netAmt += cf)
+        setTimeCost(netAmt / props.annualSavings)
+    }, [props.cfs, props.annualSavings])
 
     return (
-        <ResultItem label={`It May Take`} footer={`To Save ${toCurrency(props.amount, props.currency)}`} result={timeCost} 
-        unit={` Year${timeCost > 1 ? 's' : ''}`} svg={<SVGTimeCost />} decimal={2} />
+        <ResultItem label='' result={timeCost} 
+        unit={` Year${timeCost > 1 ? 's' : ''}`} svg={<SVGTimeCost />} decimal={2} 
+        info={`Number of Years it takes to save the Net Amount for this Goal considering Annual Savings of ${toCurrency(props.annualSavings, props.currency)} in ${new Date().getFullYear()}.`} />
     );
 }

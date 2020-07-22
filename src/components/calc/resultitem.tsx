@@ -13,6 +13,7 @@ interface ResultItemProps {
     decimal?: number
     titleFormat?: boolean
     info?: string
+    pl?: boolean
 }
 
 export default function ResultItem(props: ResultItemProps) {
@@ -23,12 +24,13 @@ export default function ResultItem(props: ResultItemProps) {
                 <SVGInfo />
             </div>}
             <label className={props.titleFormat ? "text-xl md:text-2xl font-semibold" : ""}>{props.label}</label>
-            <div className="flex justify-center items-center ml-1 font-semibold">
+            <div className="flex justify-center items-center font-semibold">
                 {props.svg}
-                <div className="mr-1" />
+                <div className={`ml-1 ${props.pl ? (props.result > 0 ? 'text-green-600' : 'text-red-600') : ''}`}>
                 {typeof(props.result) === 'string' ? `${props.result} ${props.unit ? props.unit : ''}` :
                 props.currency ?
-                    toCurrency(props.result, props.currency) : props.noResultFormat ? props.result : (toReadableNumber(props.result, props.decimal ? props.decimal : 0) + props.unit)}
+                    toCurrency(Math.abs(props.result), props.currency) : props.noResultFormat ? props.result : (toReadableNumber(props.result, props.decimal ? props.decimal : 0) + props.unit)}
+                </div>
             </div>
             <label>{props.footer}</label>
         </div>
