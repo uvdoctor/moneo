@@ -34,7 +34,8 @@ export default function Goals({ showModalHandler }: GoalsProps) {
     const [impFilter, setImpFilter] = useState<string>("")
     const [currency, setCurrency] = useState<string>("USD")
     const [oppDR, setOppDR] = useState<number>(6)
-    const [rrFallDuration, setRRFallDuration] = useState<number>(5)
+    //const [rrFallDuration, setRRFallDuration] = useState<number>(5)
+    const rrFallDuration = 5
     const [savings, setSavings] = useState<number>(100000)
     const [annualSavings, setAnnualSavings] = useState<number>(100000)
     const [savingsChgRate, setSavingsChgRate] = useState<number>(3)
