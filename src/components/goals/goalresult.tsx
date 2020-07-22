@@ -1,8 +1,5 @@
 import React from 'react'
 import ResultItem from '../calc/resultitem'
-import SVGMoneyBag from '../calc/svgmoneybag'
-import SVGMoneyBagPer from '../svgmoneybagper'
-import SVGBalance from '../calc/svgbalance'
 import SVGHourGlass from '../svghourglass'
 import TimeCost from '../calc/timecost'
 import OppCost from '../calc/oppcost'
@@ -13,7 +10,6 @@ interface ResultProps {
     duration: number
     totalCost: number
     annualSavings: number
-    annualReturnPer: number | null
     ffImpactYears: number
     ffYear: number | null
     currency: string
@@ -25,18 +21,13 @@ interface ResultProps {
 export default function FFResult(props: ResultProps) {
     return (
         <div className="w-full py-2 flex flex-wrap justify-around w-full items-start bg-green-100 border-t border-b border-green-200">
-            <ResultItem result={props.totalCost} svg={<SVGMoneyBag />} label='Total Cost is' footer={`Over ${props.duration} Years`}
-                currency={props.currency} info={`Total Cost of this Goal over ${props.duration} ${props.duration > 1 ? 'Years' : 'Year'}`} />
-            <TimeCost amount={props.totalCost} annualSavings={props.annualSavings} currency={props.currency} />
-            <OppCost discountRate={props.discountRate} cfs={props.cfs} currency={props.currency} rrFallDuration={props.rrFallDuration}
-                startYear={props.startYear} ffEndYear={props.ffGoalEndYear} ffYear={props.ffYear} />
             {props.ffImpactYears !== null ? <ResultItem svg={<SVGHourGlass />} label="Financial Freedom Impact"
                 unit={`${Math.abs(props.ffImpactYears) > 1 ? ' Years ' : ' Year '}${props.ffImpactYears >= 0 ? 'Delay' : 'Earlier'}`}
                 result={props.ffImpactYears === 0 ? '< 1' : Math.abs(props.ffImpactYears)} info="Estimate of how this Goal impacts Financial Freedom" />
                 : <ResultItem label="Financial Freedom Impact" result="Unable to Determine" info={`Analyzed till ${props.ffGoalEndYear}. You may try again by changing this Goal, Financial Freedom Target, or other Goals.`} />}
-            {props.annualReturnPer && <ResultItem svg={<SVGMoneyBagPer />} label={`You May ${props.annualReturnPer < 0 ? 'Lose' : 'Gain'}`} footer="Yearly"
-                result={props.annualReturnPer} unit="%" decimal={2}
-                info={`Estimate of Loss / Gain by Selling after ${props.duration} ${props.duration > 1 ? 'Years' : 'Year'}`} />}
+            <TimeCost amount={props.totalCost} annualSavings={props.annualSavings} currency={props.currency} />
+            <OppCost discountRate={props.discountRate} cfs={props.cfs} currency={props.currency} rrFallDuration={props.rrFallDuration}
+                startYear={props.startYear} ffEndYear={props.ffGoalEndYear} ffYear={props.ffYear} />
         </div>
     )
 }

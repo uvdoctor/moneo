@@ -409,9 +409,8 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
             {allInputDone &&
                 <Fragment>
                     <GoalResult duration={getDuration(sellAfter, startYear, endYear)} discountRate={oppDR}
-                        totalCost={totalCost} annualReturnPer={annualReturnPer} annualSavings={annualSavings}
-                        currency={currency} ffImpactYears={ffImpactYears} ffGoalEndYear={ffGoalEndYear} 
-                        cfs={cfs} rrFallDuration={rrFallDuration} startYear={startYear} ffYear={ffYear} />
+                        totalCost={totalCost} annualSavings={annualSavings} currency={currency} ffImpactYears={ffImpactYears} 
+                        ffGoalEndYear={ffGoalEndYear} cfs={cfs} rrFallDuration={rrFallDuration} startYear={startYear} ffYear={ffYear} />
                     <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
                         submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />
