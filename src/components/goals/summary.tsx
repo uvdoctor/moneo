@@ -15,10 +15,11 @@ interface SummaryProps {
     startYear: number
     currency: string
     cfs: Array<number>
-    ffYear: number
+    ffYear: number | null
     ffGoal: APIt.CreateGoalInput
     mergedCFs: Object
     oppDR: number
+    rrFallDuration: number
     savings: number
     annualSavings: number
     savingsChgRate: number
@@ -30,7 +31,7 @@ interface SummaryProps {
 
 export default function Summary(props: SummaryProps) {
     const bgColor = props.imp === APIt.LMH.H ? 'bg-blue-600' : (props.imp === APIt.LMH.M ? 'bg-orange-600' : 'bg-green-600')
-    const [ffImpactYears, setFFImpactYears] = useState<number>(0)
+    const [ffImpactYears, setFFImpactYears] = useState<number | null>(0)
 
     useEffect(() => {
         if (!props.ffGoal || !props.cfs || props.cfs.length === 0) return
@@ -39,9 +40,11 @@ export default function Summary(props: SummaryProps) {
             //@ts-ignore
             if (mCFs[props.startYear + i] !== 'undefined') mCFs[props.startYear + i] -= cf
         })
-        let result = findEarliestFFYear(props.ffGoal, props.oppDR, props.savings, mCFs,
-            props.annualSavings, props.savingsChgRate, props.expense, props.expenseChgRate, props.ffYear)
-        setFFImpactYears(props.ffYear - result.ffYear)
+        if(props.ffYear) {
+            let result = findEarliestFFYear(props.ffGoal, props.oppDR, props.rrFallDuration, props.savings, mCFs,
+                props.annualSavings, props.savingsChgRate, props.expense, props.expenseChgRate, props.ffYear)
+            setFFImpactYears(props.ffYear - result.ffYear)
+        } else setFFImpactYears(null)
     }, [props.ffGoal, props.oppDR, props.savings, props.cfs, props.ffYear, props.mergedCFs])
 
     return (
@@ -63,12 +66,13 @@ export default function Summary(props: SummaryProps) {
                     </div>
                 </div>
             </div>
-            <div className="mt-2 mb-2">
-                <ResultItem svg={<SVGHourGlass />} label="Financial Freedom Impact"
+            <div className="mt-2">
+                {ffImpactYears ? <ResultItem svg={<SVGHourGlass />} label="Financial Freedom Impact"
                     unit={`${Math.abs(ffImpactYears) > 1 ? ' Years ' : ' Year '}${ffImpactYears > 0 ? 'Delay' : 'Earlier'}`}
                     result={Math.abs(ffImpactYears)} />
+                : <ResultItem label="Financial Freedom Impact" result="Unable to determine" />}
             </div>
-            <p className="w-full text-center mb-2">Yearly Cash Flows in {props.currency}</p>
+            <p className="w-full text-center mt-4 mb-2">Yearly Cash Flows in {props.currency}</p>
             <LineChart cfs={props.cfs} startYear={props.startYear} />
         </div>
     )

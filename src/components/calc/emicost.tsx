@@ -104,7 +104,7 @@ export default function EmiCost(props: EmiProps) {
                             </div>
                         </div>
                     } bottom={
-                        <div className="flex justify-around items-center w-full">
+                        <div className="flex flex-wrap justify-around items-center w-full">
                             <NumberInput name="intRate"
                                 inputOrder={props.inputOrder + 3}
                                 currentOrder={props.currentOrder}

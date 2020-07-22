@@ -38,7 +38,7 @@ export function BRCompChart(props: BRCompChartProps) {
                         y: props.data[1].values.y[props.sellAfter - 1],
                         showarrow: true,
                         yref: 'y', xref: 'x',
-                        ax: -50, ay: -60,
+                        ax: -40, ay: -40,
                         font: {size: 14}
                     }
                 ]

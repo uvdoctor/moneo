@@ -10,7 +10,6 @@ interface BRComparisonProps {
     currency: string
     sellAfter: number
     discountRate: number
-    discountRateHandler: Function
     rentAmt: number
     rentAmtHandler: Function
     rentChgPer: number

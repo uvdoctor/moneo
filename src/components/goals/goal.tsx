@@ -4,9 +4,7 @@ import SelectInput from '../form/selectinput'
 import NumberInput from '../form/numberinput'
 import * as APIt from '../../api/goals'
 import { initYearOptions, toCurrency, getRangeFactor } from '../utils'
-import TimeCost from '../calc/timecost'
 import EmiCost from '../calc/emicost'
-import OppCost from '../calc/oppcost'
 import HToggle from '../horizontaltoggle'
 import TaxBenefit from '../calc/taxbenefit'
 import BRComparison from '../calc/brcomparison'
@@ -28,15 +26,24 @@ import AnnualAmt from './annualamt'
 import ExpandCollapse from '../form/expandcollapse'
 import SVGBalance from '../calc/svgbalance'
 import ActionButtons from '../form/actionbuttons'
+import GoalResult from './goalresult'
 interface GoalProps {
     goal: APIt.CreateGoalInput
     cashFlows?: Array<number>
+    mergedCFs: Array<number>
+    ffGoalEndYear: number
+    ffYear: number | null
+    annualSavings: number
+    oppDR: number
+    rrFallDuration: number
+    ffImpactYearsHandler: Function
     cancelCallback: Function
     addCallback: Function
     updateCallback: Function
 }
 
-export default function Goal({ goal, cashFlows, cancelCallback, addCallback, updateCallback }: GoalProps) {
+export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear, annualSavings, oppDR, 
+    rrFallDuration, ffImpactYearsHandler, cancelCallback, addCallback, updateCallback }: GoalProps) {
     const [startYear, setStartYear] = useState<number>(goal.sy)
     const [endYear, setEndYear] = useState<number>(goal.ey)
     const [syOptions] = useState(initYearOptions(goal.by + 1, 50))
@@ -64,7 +71,6 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     const [amStartYear, setAMStartYear] = useState<number | null | undefined>(goal?.amsy)
     const [aiPer, setAIPer] = useState<number | null | undefined>(goal?.aiper)
     const [aiStartYear, setAIStartYear] = useState<number | null | undefined>(goal?.aisy)
-    const [oppDR, setOppDR] = useState<number>(goal?.dr ? goal.dr : 6)
     const [rentTaxBenefit, setRentTaxBenefit] = useState<number | null | undefined>(goal?.tbr)
     const [showCFChart, setShowCFChart] = useState<boolean>(true)
     const goalType = goal?.type as APIt.GoalType
@@ -81,6 +87,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
     const [currentOrder, setCurrentOrder] = useState<number>(1)
     const [allInputDone, setAllInputDone] = useState<boolean>(goal.id ? true : false)
     const [btnClicked, setBtnClicked] = useState<boolean>(false)
+    const [ffImpactYears, setFFImpactYears] = useState<number>(0)
 
     const createNewBaseGoal = () => {
         return {
@@ -180,17 +187,20 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
         if (goalType !== APIt.GoalType.B && manualMode < 1) calculateYearlyCFs(getDuration(sellAfter, startYear, endYear))
     }, [endYear, allInputDone, currentOrder])
 
+    useEffect(() => {
+        let mCFs = Object.assign({}, mergedCFs)
+        cfs.forEach((cf, i) => {
+            //@ts-ignore
+            if (mCFs[startYear + i] !== 'undefined') mCFs[startYear + i] -= cf
+        })
+        setFFImpactYears(ffImpactYearsHandler(mCFs))
+    }, [cfs])
+
     const initBuyCFsForComparison = (analyzeFor: number) => {
         let allCFs: Array<Array<number>> = []
         for (let i = 1; i <= analyzeFor; i++)
             allCFs.push(i === sellAfter ? cfs : calculateYearlyCFs(i, false))
         return allCFs
-    }
-
-    const createOppCostCFs = () => {
-        let oppCostCFs: Array<number> = Object.assign([], cfs)
-        if (sellAfter && sellAfter > 0 && oppCostCFs[sellAfter]) oppCostCFs[sellAfter] -= sellPrice
-        return oppCostCFs
     }
 
     useEffect(() => {
@@ -217,7 +227,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
         if (!allInputDone) {
             let co = currentOrder + count
             setCurrentOrder(co)
-            if (co === 27) setAllInputDone(true)
+            if (co === 23) setAllInputDone(true)
         }
     }
 
@@ -331,18 +341,11 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                                 inputOrder={18} currentOrder={currentOrder} nextStepDisabled={false}
                                 nextStepHandler={handleNextStep} allInputDone={allInputDone} />
                         </Fragment> : !allInputDone && currentOrder === 16 && handleNextStep(4)}
-                        <TimeCost amount={totalCost} currency={currency} rangeFactor={rangeFactor} workHoursPerWeek={60} annualWorkWeeks={47}
-                            inputOrder={20} currentOrder={currentOrder} nextStepDisabled={false}
-                            nextStepHandler={handleNextStep} allInputDone={allInputDone} />
-                        <OppCost cfs={createOppCostCFs()} currency={currency} startYear={startYear}
-                            duration={getDuration(sellAfter, startYear, endYear)} discountRate={oppDR} discountRateHandler={setOppDR}
-                            inputOrder={22} currentOrder={currentOrder} nextStepDisabled={false}
-                            nextStepHandler={handleNextStep} allInputDone={allInputDone} />
                         {sellAfter ?
-                            ((!allInputDone && currentOrder >= 24) || allInputDone) &&
+                            ((!allInputDone && currentOrder >= 20) || allInputDone) &&
                             <Section title="Instead, If You Rent" insideForm
                                 left={<div className="pl-4 pr-4">
-                                    <NumberInput inputOrder={24}
+                                    <NumberInput inputOrder={20}
                                         currentOrder={currentOrder}
                                         nextStepDisabled={false}
                                         nextStepHandler={handleNextStep}
@@ -352,7 +355,7 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                                 </div>}
                                 right={
                                     <NumberInput name="rentChg"
-                                        inputOrder={25}
+                                        inputOrder={21}
                                         currentOrder={currentOrder}
                                         nextStepDisabled={false}
                                         nextStepHandler={handleNextStep}
@@ -365,19 +368,19 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                                     <SVGBalance />
                                     <label className="ml-2">{rentAns}</label>
                                 </div>} />
-                            : !allInputDone && currentOrder === 24 && handleNextStep(2)}
+                            : !allInputDone && currentOrder === 20 && handleNextStep(2)}
                     </div>
                 </Fragment>
                 {sellAfter && rentAmt > 0 && price > 0 &&
                     <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
-                        discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(20)}
+                        discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(22)}
                         rentTaxBenefit={rentTaxBenefit as number} rentTaxBenefitHandler={setRentTaxBenefit}
-                        discountRateHandler={setOppDR} rentAmt={rentAmt} rentAmtHandler={setRentAmt}
+                        rentAmt={rentAmt} rentAmtHandler={setRentAmt}
                         rentChgPer={rentChgPer} rentChgPerHandler={setRentChgPer} answer={answer}
                         rentAns={rentAns} answerHandler={setAnswer} rentAnsHandler={setRentAns} />
                 }
 
-                {((!allInputDone && currentOrder > 24) || allInputDone) &&
+                {((!allInputDone && currentOrder > 20) || allInputDone) &&
                     <Fragment>
                         {price > 0 && cfs && cfs.length > 1 && <Fragment>
                             <ExpandCollapse title="Cash Flow Chart" value={showCFChart}
@@ -386,25 +389,33 @@ export default function Goal({ goal, cashFlows, cancelCallback, addCallback, upd
                                 <LineChart cfs={cfs} startYear={startYear} />
                             }
                         </Fragment>}
-                        <div className="mt-2 mb-4 flex justify-center">
-                            <SelectInput name="imp"
-                                inputOrder={26}
-                                currentOrder={currentOrder}
-                                nextStepDisabled={false}
-                                nextStepHandler={handleNextStep}
-                                allInputDone={allInputDone}
-                                pre="How Important is this Goal?"
-                                value={impLevel}
-                                changeHandler={setImpLevel}
-                                options={getImpLevels()}
-                            />
-                        </div>
+                        {console.log("Current order is ", currentOrder)}
+                            <div className="mt-2 mb-4 flex justify-center">
+                                <SelectInput name="imp"
+                                    inputOrder={22}
+                                    currentOrder={currentOrder}
+                                    nextStepDisabled={false}
+                                    nextStepHandler={handleNextStep}
+                                    allInputDone={allInputDone}
+                                    pre="How Important is this Goal?"
+                                    value={impLevel}
+                                    changeHandler={setImpLevel}
+                                    options={getImpLevels()}
+                                />
+                            </div>
                     </Fragment>}
             </div>
 
-            {allInputDone && <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
-                cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
-                submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />}
+            {allInputDone &&
+                <Fragment>
+                    <GoalResult duration={getDuration(sellAfter, startYear, endYear)} discountRate={oppDR}
+                        totalCost={totalCost} annualReturnPer={annualReturnPer} annualSavings={annualSavings}
+                        currency={currency} ffImpactYears={ffImpactYears} ffGoalEndYear={ffGoalEndYear} 
+                        cfs={cfs} rrFallDuration={rrFallDuration} startYear={startYear} ffYear={ffYear} />
+                    <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
+                        cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
+                        submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />
+                </Fragment>}
         </div>
     )
 }

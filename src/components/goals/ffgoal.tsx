@@ -23,11 +23,12 @@ interface FFGoalProps {
     goal: APIt.CreateGoalInput
     totalSavings: number
     oppDR: number
+    rrFallDuration: number
     expense: number
     expenseChgRate: number
     annualSavings: number
     savingsChgRate: number
-    ffYear: number
+    ffYear: number | null
     ffAmt: number
     ffLeftOverAmt: number
     ffCfs: any
@@ -47,7 +48,7 @@ interface FFGoalProps {
     updateCallback: Function
 }
 
-export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgRate, annualSavings, savingsChgRate,
+export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expense, expenseChgRate, annualSavings, savingsChgRate,
     ffYear, ffAmt, ffLeftOverAmt, ffCfs, mergedCfs, ffYearHandler, ffAmtHandler, ffLeftOverAmtHandler, ffCfsHandler,
     totalSavingsHandler, oppDRHandler, expenseHandler, expenseChgRateHandler, annualSavingsHandler, savingsChgRateHandler,
     cancelCallback, addCallback, updateCallback }: FFGoalProps) {
@@ -115,7 +116,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
 
     useEffect(() => {
         if (!allInputDone && currentOrder < 18) return
-        let result = findEarliestFFYear(createGoal(), oppDR, totalSavings, mergedCfs,
+        let result = findEarliestFFYear(createGoal(), oppDR, rrFallDuration, totalSavings, mergedCfs,
             annualSavings, savingsChgRate, expense, expenseChgRate, ffYear ? ffYear : null)
         ffAmtHandler(result.ffAmt)
         ffYearHandler(result.ffYear)
@@ -381,8 +382,9 @@ export default function FFGoal({ goal, totalSavings, oppDR, expense, expenseChgR
                     <ExpandCollapse title={`Total Savings Chart in ${currency}`} value={showCFChart}
                         handler={setShowCFChart} svg={<SVGChart />} />
                     {showCFChart &&
-                        <LineChart cfs={buildChartCFs(ffCfs)} startYear={nowYear + 1} annotationYear={ffYear - 1} 
-                        annotationText={`Congratulations! You Reach Enough Savings by end of ${ffYear - 1}`} />
+                        <LineChart cfs={buildChartCFs(ffCfs)} startYear={nowYear + 1} annotationYear={ffYear ? (ffYear - 1) : endYear} 
+                        annotationText={ffYear ? `Congratulations! You Reach Enough Savings by end of ${ffYear - 1}`
+                                        : `Analyzed till ${endYear}, but not enough savings to achieve Financial Freedom.`} />
                     }
                 </div>}
             </div>

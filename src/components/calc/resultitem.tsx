@@ -5,7 +5,7 @@ import {toast} from 'react-toastify'
 interface ResultItemProps {
     label: string
     svg?: any
-    result: number
+    result: number | string
     noResultFormat?: boolean
     currency?: string
     unit?: string
@@ -23,11 +23,12 @@ export default function ResultItem(props: ResultItemProps) {
                 <SVGInfo />
             </div>}
             <label className={props.titleFormat ? "text-xl md:text-2xl font-semibold" : ""}>{props.label}</label>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center ml-1 font-semibold">
                 {props.svg}
-                <label className="ml-1 font-semibold">{props.currency ?
+                <div className="mr-1" />
+                {typeof(props.result) === 'string' ? `${props.result} ${props.unit ? props.unit : ''}` :
+                props.currency ?
                     toCurrency(props.result, props.currency) : props.noResultFormat ? props.result : (toReadableNumber(props.result, props.decimal ? props.decimal : 0) + props.unit)}
-                </label>
             </div>
             <label>{props.footer}</label>
         </div>

@@ -6,7 +6,7 @@ import SVGMoneyBag from '../calc/svgmoneybag'
 
 interface FFResultProps {
     endYear: number
-    ffYear: number
+    ffYear: number | null
     ffAmt: number
     ffLeftOverAmt: number
     currency: string
@@ -15,7 +15,7 @@ interface FFResultProps {
 export default function FFResult({ endYear, ffYear, ffAmt, ffLeftOverAmt, currency }: FFResultProps) {
     return (
         <div className="w-full">
-            {ffAmt > 0 && ffLeftOverAmt >= 0 ?
+            {ffYear ?
                 <div className="py-2 flex flex-wrap justify-around w-full items-start bg-green-100 border-t border-b border-green-200">
                     <ResultItem svg={<SVGHourGlass />} label="Achievable from" footer="Onwards" result={ffYear} noResultFormat
                         info={`${ffYear} may be the Earliest You can Achieve Financial Freedom.`} />

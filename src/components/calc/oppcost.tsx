@@ -1,72 +1,58 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect } from 'react'
 import { getCompoundedIncome } from './finance'
-import { toStringArr } from '../utils'
 import SVGMoneyBag from './svgmoneybag'
-import RadialInput from '../form/radialinput'
 import ResultItem from './resultitem'
-import Section from '../form/section'
-import NextStep from '../form/nextstep'
+import { getExpectedRR } from '../goals/cfutils'
 interface OppCostProps {
-    inputOrder: number
-    currentOrder: number
-    nextStepDisabled: boolean
-    nextStepHandler: Function
-    allInputDone: boolean
-    cfs: Array<number>,
-    currency: string,
-    startYear: number,
-    discountRate: number,
-    duration: number,
-    discountRateHandler: Function
+    cfs: Array<number>
+    currency: string
+    discountRate: number
+    rrFallDuration: number
+    ffYear: number | null
+    ffEndYear: number
+    startYear: number
 }
 
 export default function OppCost(props: OppCostProps) {
     const [oppCost, setOppCost] = useState<number>(0)
+    const [netCost, setNetCost] = useState<number>(0)
+    const [oppCostCfs, setOppCostCfs] = useState<Array<number>>([])
+
+    const createOppCostCFs = () => {
+        let netCost = 0
+        let cfs: Array<number> = []
+        props.cfs.forEach(cf => {
+            netCost += cf
+            cfs.push(cf < 0 ? cf : 0)
+        })
+        setNetCost(netCost)
+        setOppCostCfs(cfs)
+    }
+
+    useEffect(() => createOppCostCFs(), [props.cfs])
 
     const calculateOppCost = () => {
-        let cfs = props.cfs
-        if (!cfs || cfs.length === 0) {
+        if (!oppCostCfs || oppCostCfs.length === 0) {
             setOppCost(0)
             return
         }
-        let oc: number = cfs.reduce(
+        let potentialEarnings: number = oppCostCfs.reduce(
             (accumulator, currentValue, index) =>
-                accumulator + getCompoundedIncome(props.discountRate, currentValue, props.cfs.length - index), 0
-        )
-        setOppCost(Math.abs(oc))
+                accumulator + getCompoundedIncome(
+                    getExpectedRR(props.startYear + index, props.ffYear, props.ffEndYear, 
+                        props.discountRate, props.rrFallDuration), 
+                    currentValue, oppCostCfs.length - index), 0)
+        setOppCost(potentialEarnings - netCost)
     }
 
     useEffect(
-        () => {
-            calculateOppCost()
-        }
-        , [props]
-    );
+        () => calculateOppCost()
+        , [oppCostCfs, props.discountRate]
+    )
 
     return (
-        <Fragment>
-            {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
-                <Section title="Instead, If You Invest" insideForm
-                    left={
-                        <RadialInput
-                            inputOrder={props.inputOrder}
-                            currentOrder={props.currentOrder}
-                            nextStepDisabled={false}
-                            nextStepHandler={props.nextStepHandler}
-                            allInputDone={props.allInputDone}
-                            data={toStringArr(2, 15, 0.5)} value={props.discountRate} unit="%"
-                            label="Yearly" labelBottom={true} changeHandler={props.discountRateHandler}
-                            post="After-tax Return" step={0.5} />
-                    }
-                    right={
-                        <div className="flex flex-col">
-                            <ResultItem svg={<SVGMoneyBag />} result={oppCost} currency={props.currency} label="You May Get"
-                                footer={`In ${props.startYear + props.duration}`} />
-                            {!props.allInputDone && props.inputOrder + 1 === props.currentOrder &&
-                                <NextStep nextStepHandler={() => props.nextStepHandler(1)}
-                                    disabled={props.nextStepDisabled} />}
-                        </div>
-                    } />}
-        </Fragment>
+        <ResultItem svg={<SVGMoneyBag />} result={Math.abs(oppCost)} currency={props.currency} label={`You May ${oppCost > 0 ? 'Gain' : 'Lose'}`}
+            footer={`Over ${props.cfs.length} Year${props.cfs.length > 1 && 's'}`} />
+
     )
 }
