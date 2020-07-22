@@ -14,6 +14,7 @@ interface NWProps {
     totalSavingsHandler: Function
     annualSavingsHandler: Function
     currencyHandler: Function
+    viewModeHandler: Function
 }
 
 export default function NW(props: NWProps) {
@@ -56,16 +57,18 @@ export default function NW(props: NWProps) {
 
     return (
         <div className="mt-8">
-            <AwesomeButton type="primary" ripple onPress={() => open()} disabled={!ready}>
-                Add a bank account
+            <div className="flex justify-center">
+                <AwesomeButton type="primary" ripple onPress={() => open()} disabled={!ready}>
+                    LINK ACCOUNT
             </AwesomeButton>
+            </div>
             {error && <div className="text-red">
                 {error}
             </div>
             }
-            <div className="flex w-full justify-around">
+            <div className="mt-8 flex w-full justify-center">
                 <Section title={`How Much Can You Save by End of ${nowYear}?`}
-                    titleInfo={`Your Total Savings & Annual Savings will be used in order to help You Plan for Financial Freedom.`}
+                    titleInfo={`Your Lifetime Savings & Annual Savings will be used in order to help You Plan for Financial Freedom.`}
                     left={
                         <NumberInput
                             name="ts" inputOrder={1} currentOrder={2}
@@ -97,6 +100,11 @@ export default function NW(props: NWProps) {
                             changeHandler={changeCurrency}
                             currency />
                     } insideForm />
+            </div>
+            <div className="mt-2 flex justify-center">
+                <AwesomeButton type="primary" ripple onPress={() => props.viewModeHandler("Plan")} disabled={!ready}>
+                    SET UP MY PLAN
+            </AwesomeButton>
             </div>
         </div >
     )

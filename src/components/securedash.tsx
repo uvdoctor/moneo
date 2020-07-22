@@ -27,7 +27,7 @@ const SecureDash = () => {
                         <button onClick={changeViewMode} style={{ color: viewMode === item ? "green" : "white", backgroundColor: viewMode === item ? "white" : "transparent" }} className="dashmi md:mt-4 md:px-4 hover:bg-white hover:border-t hover:text-green-600 focus:outline-none">{item}</button>
                     </li>))}
             </ul>}
-            {viewMode === netWorthLabel && <NW totalSavings={savings} annualSavings={annualSavings} 
+            {viewMode === netWorthLabel && <NW totalSavings={savings} annualSavings={annualSavings} viewModeHandler={setViewMode}
             totalSavingsHandler={setSavings} annualSavingsHandler={setAnnualSavings} currency={currency} currencyHandler={setCurrency} />}
             {viewMode === goalsLabel && <Goals showModalHandler={setShowModal} savings={savings} annualSavings={annualSavings} 
             currency={currency} />}
