@@ -20,9 +20,12 @@ import { toast } from 'react-toastify'
 
 interface GoalsProps {
     showModalHandler: Function
+    savings: number
+    annualSavings: number
+    currency: string
 }
 
-export default function Goals({ showModalHandler }: GoalsProps) {
+export default function Goals({ showModalHandler, savings, annualSavings, currency }: GoalsProps) {
     const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([])
     const [allCFs, setAllCFs] = useState<any>({})
     const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null)
@@ -32,12 +35,9 @@ export default function Goals({ showModalHandler }: GoalsProps) {
     const [mergedCFs, setMergedCFs] = useState<any>({})
     const [viewMode, setViewMode] = useState<number>(0)
     const [impFilter, setImpFilter] = useState<string>("")
-    const [currency, setCurrency] = useState<string>("USD")
     const [oppDR, setOppDR] = useState<number>(6)
     //const [rrFallDuration, setRRFallDuration] = useState<number>(5)
     const rrFallDuration = 5
-    const [savings, setSavings] = useState<number>(100000)
-    const [annualSavings, setAnnualSavings] = useState<number>(100000)
     const [savingsChgRate, setSavingsChgRate] = useState<number>(3)
     const [expense, setExpense] = useState<number>(24000)
     const [expenseChgRate, setExpenseChgRate] = useState<number>(3)
@@ -212,8 +212,6 @@ export default function Goals({ showModalHandler }: GoalsProps) {
 
     useEffect(() => createChartData(), [allGoals])
 
-    useEffect(() => setCurrency(ffGoal?.ccy as string), [ffGoal])
-
     const createChartData = () => {
         if (!allGoals || !allGoals[0]) return
         let yearRange = getYearRange()
@@ -238,7 +236,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
         if (!ffYear) return null
         let result = findEarliestFFYear(ffGoal, oppDR, rrFallDuration, savings, mCFs,
             annualSavings, savingsChgRate, expense, expenseChgRate, ffYear)
-        return result.ffYear < 0 || result.ffAmt <= 0 || result.leftAmt < 0 ? null : (ffYear as number - result.ffYear)
+        return result.ffYear < 0 || result.ffAmt <= 0 || result.leftAmt < 0 ? null : (result.ffYear - ffYear as number)
     }
 
     return (
@@ -248,9 +246,9 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                     {wipGoal.type === APIt.GoalType.FF ?
                         <FFGoal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
                             updateCallback={updateGoal} annualSavings={annualSavings} savingsChgRate={savingsChgRate}
-                            expense={expense} expenseChgRate={expenseChgRate} annualSavingsHandler={setAnnualSavings}
+                            expense={expense} expenseChgRate={expenseChgRate} 
                             savingsChgRateHandler={setSavingsChgRate} expenseHandler={setExpense} oppDR={oppDR} oppDRHandler={setOppDR}
-                            expenseChgRateHandler={setExpenseChgRate} totalSavings={savings} totalSavingsHandler={setSavings}
+                            expenseChgRateHandler={setExpenseChgRate} totalSavings={savings} 
                             ffYear={ffYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffCfs={ffCfs} mergedCfs={mergedCFs}
                             ffYearHandler={setFFYear} ffAmtHandler={setFFAmt} ffLeftOverAmtHandler={setFFLeftOverAmt}
                             ffCfsHandler={setFFCfs} rrFallDuration={rrFallDuration} />
@@ -317,17 +315,7 @@ export default function Goals({ showModalHandler }: GoalsProps) {
                                     nextStepHandler={() => true}
                                     name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string}
                                     changeHandler={setImpFilter} /></div>}
-                                <HToggle leftText="Goals" rightText="Cash Flows" value={viewMode} setter={setViewMode} />
-                                {viewMode > 0 &&
-                                    <SelectInput name="ccy" inputOrder={2} currentOrder={1}
-                                        nextStepDisabled
-                                        allInputDone
-                                        nextStepHandler={() => true}
-                                        pre="Currency"
-                                        value={currency}
-                                        changeHandler={setCurrency}
-                                        currency
-                                    />}
+                                <HToggle leftText="Goals" rightText={`Cash Flows in ${currency}`} value={viewMode} setter={setViewMode} />
                             </div>
                             <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>
                             {viewMode > 0 ?

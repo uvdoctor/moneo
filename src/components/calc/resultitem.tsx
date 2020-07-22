@@ -29,7 +29,7 @@ export default function ResultItem(props: ResultItemProps) {
                 <div className={`ml-1 ${props.pl ? (props.result > 0 ? 'text-green-600' : 'text-red-600') : ''}`}>
                 {typeof(props.result) === 'string' ? `${props.result} ${props.unit ? props.unit : ''}` :
                 props.currency ?
-                    toCurrency(Math.abs(props.result), props.currency) : props.noResultFormat ? props.result : (toReadableNumber(props.result, props.decimal ? props.decimal : 0) + props.unit)}
+                    toCurrency(Math.abs(props.result), props.currency) : props.noResultFormat ? props.result : (toReadableNumber(Math.abs(props.result), props.decimal ? props.decimal : 0) + props.unit)}
                 </div>
             </div>
             <label>{props.footer}</label>

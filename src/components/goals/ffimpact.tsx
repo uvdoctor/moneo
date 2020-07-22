@@ -31,9 +31,9 @@ export default function FFImpact(props: FFImpactProps) {
 
     return (
         <Fragment>
-            {ffImpactYears ? <ResultItem svg={<SVGHourGlass />} label="Financial Freedom Impact"
-                unit={`${Math.abs(ffImpactYears) > 1 ? ' Years ' : ' Year '}${ffImpactYears >= 0 ? 'Delay' : 'Earlier'}`}
-                result={ffImpactYears === 0 ? '< 1' : Math.abs(ffImpactYears)} info="Estimate of how this Goal impacts Financial Freedom" />
+            {ffImpactYears !== null ? <ResultItem svg={<SVGHourGlass />} label="Financial Freedom Impact" pl
+                unit={`${Math.abs(ffImpactYears) > 1 ? ' Years ' : ' Year '}${ffImpactYears > 0 ? 'Earlier' : 'Delay'}`}
+                result={ffImpactYears === 0 ? '< 1' : ffImpactYears} info="Estimate of how this Goal impacts Financial Freedom" />
                 : <ResultItem label="Financial Freedom Impact" result="Unable to Determine" info={`Analyzed till ${props.ffGoalEndYear}. You may try again by changing this Goal, Financial Freedom Target, or other Goals.`} />}
         </Fragment>
     )
