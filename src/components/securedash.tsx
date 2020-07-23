@@ -1,7 +1,11 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { withAuthenticator } from '@aws-amplify/ui-react'
 import Goals from '../components/goals/goals'
 import NW from './nw/nw'
+import {CreateGoalInput, GoalType} from '../api/goals'
+import {getGoalsList, getDuration} from './goals/goalutils'
+import { calculateCFs } from './goals/cfutils'
+import {removeFromArray} from './utils'
 
 const SecureDash = () => {
     const netWorthLabel = "Net Worth"
@@ -11,12 +15,40 @@ const SecureDash = () => {
     const viewItems = [netWorthLabel, goalsLabel, saveLabel, investLabel]
     const [viewMode, setViewMode] = useState(netWorthLabel)
     const [showModal, setShowModal] = useState<boolean>(false)
-    const [savings, setSavings] = useState<number>(100000)
-    const [annualSavings, setAnnualSavings] = useState<number>(100000)
+    const [savings, setSavings] = useState<number>(0)
+    const [annualSavings, setAnnualSavings] = useState<number>(0)
     const [currency, setCurrency] = useState<string>("USD")
+    const [allGoals, setAllGoals] = useState<Array<CreateGoalInput> | null>([])
+    const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false)
+    const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(null)
+    const [allCFs, setAllCFs] = useState<any>({})
     
     const changeViewMode = (e: any) => {
         setViewMode(e.target.innerText)
+    }
+
+    useEffect(() => {
+        loadAllGoals()
+    }, [])
+
+    const loadAllGoals = async () => {
+        let goals: Array<CreateGoalInput> | null = await getGoalsList()
+        if (!goals) return
+        let allCFs = {}
+        let ffGoalId = ""
+        goals?.forEach((g) => {
+            if (g.type === GoalType.FF) {
+                setFFGoal(g)
+                ffGoalId = g.id as string
+            } else {
+                //@ts-ignore    
+                allCFs[g.id] = calculateCFs(g, getDuration(g.sa as number, g.sy, g.ey))
+            }
+        })
+        removeFromArray(goals, "id", ffGoalId)
+        setAllCFs(allCFs)
+        setAllGoals([...goals])
+        setGoalsLoaded(true)
     }
 
     return (
@@ -30,7 +62,8 @@ const SecureDash = () => {
             {viewMode === netWorthLabel && <NW totalSavings={savings} annualSavings={annualSavings} viewModeHandler={setViewMode}
             totalSavingsHandler={setSavings} annualSavingsHandler={setAnnualSavings} currency={currency} currencyHandler={setCurrency} />}
             {viewMode === goalsLabel && <Goals showModalHandler={setShowModal} savings={savings} annualSavings={annualSavings} 
-            currency={currency} />}
+                    allGoals={allGoals} goalsLoaded={goalsLoaded} allGoalsHandler={setAllGoals} currency={currency} allCFs={allCFs}
+                    allCFsHandler={setAllCFs} ffGoal={ffGoal} ffGoalHandler={setFFGoal} />}
         </Fragment>
     )
 }

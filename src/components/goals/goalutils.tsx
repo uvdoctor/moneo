@@ -88,7 +88,9 @@ const createFFGoalInput = (currency: string) => {
         achg: 5,
         dr: 0,
         pg: [],
-        pl: []
+        pl: [],
+        tbr: 0,
+        btr: 3
     } as APIt.CreateGoalInput
 }
 
@@ -142,7 +144,6 @@ const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
 export const createNewGoalInput = (goalType: APIt.GoalType, currency: string) => {
     if (goalType === APIt.GoalType.FF) return createFFGoalInput(currency)
     let bg: APIt.CreateGoalInput = createBaseGoalInput(goalType, currency)
-    if (goalType !== APIt.GoalType.D) bg.btr = 10
     if (goalType === APIt.GoalType.B || goalType === APIt.GoalType.E) {
         bg.tbi = 0
         bg.tdli = 0

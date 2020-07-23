@@ -58,7 +58,7 @@ export default function NW(props: NWProps) {
     return (
         <div className="mt-8">
             <div className="flex justify-center">
-                <AwesomeButton type="primary" ripple onPress={() => open()} disabled={!ready}>
+                <AwesomeButton type="primary" ripple onPress={() => open()} disabled={ready}>
                     LINK ACCOUNT
             </AwesomeButton>
             </div>
@@ -68,15 +68,15 @@ export default function NW(props: NWProps) {
             }
             <div className="mt-8 flex w-full justify-center">
                 <Section title={`How Much Can You Save by End of ${nowYear}?`}
-                    titleInfo={`Your Lifetime Savings & Annual Savings will be used in order to help You Plan for Financial Freedom.`}
+                    titleInfo={`Your Total Savings & Annual Savings will be used in order to help You Plan for Financial Freedom.`}
                     left={
                         <NumberInput
                             name="ts" inputOrder={1} currentOrder={2}
                             nextStepDisabled
                             allInputDone
                             nextStepHandler={() => true}
-                            info={`Lifetime Savings by end of ${nowYear} across cash, deposits, gold, stocks, bonds, retirement accounts, etc.`}
-                            value={props.totalSavings} pre="Lifetime" min={-100000} max={900000}
+                            info={`Total Savings by end of ${nowYear} across cash, deposits, gold, stocks, bonds, retirement accounts, etc.`}
+                            value={props.totalSavings} pre="Total" min={-100000} max={900000}
                             post='Savings' changeHandler={props.totalSavingsHandler} step={1000} currency={props.currency}
                             rangeFactor={rangeFactor} />
                     } right={
@@ -88,7 +88,7 @@ export default function NW(props: NWProps) {
                         Include Your Retirement Contributions as a part of Your Savings. 
                         You Can Put Negative Value if Your Expenses are Expected to be More than Income. 
                         This will be used to forecast Your Future Savings.`}
-                            value={props.annualSavings} pre="Annual" min={-100000} max={900000}
+                            value={props.annualSavings} pre="Annual" min={-50000} max={200000}
                             post='Savings' changeHandler={props.annualSavingsHandler} step={1000} currency={props.currency}
                             rangeFactor={rangeFactor} />
                     } bottom={
@@ -101,9 +101,9 @@ export default function NW(props: NWProps) {
                             currency />
                     } insideForm />
             </div>
-            <div className="mt-2 flex justify-center">
-                <AwesomeButton type="primary" ripple onPress={() => props.viewModeHandler("Plan")} disabled={!ready}>
-                    SET UP MY PLAN
+            <div className="mt-2 mb-2 flex justify-center">
+                <AwesomeButton type="link" size="medium" disabled={props.annualSavings === 0 || props.totalSavings === 0} ripple onPress={() => props.viewModeHandler("Plan")}>
+                    PLAN
             </AwesomeButton>
             </div>
         </div >

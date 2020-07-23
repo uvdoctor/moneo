@@ -4,8 +4,8 @@ import FFGoal from './ffgoal'
 import { removeFromArray } from '../utils'
 import CFChart from './cfchart'
 import * as APIt from '../../api/goals'
-import { getGoalsList, createNewGoal, changeGoal, deleteGoal, getDuration, createNewGoalInput, getGoalTypes, getImpOptions } from './goalutils'
-import { calculateCFs, findEarliestFFYear } from './cfutils'
+import { createNewGoal, changeGoal, deleteGoal, createNewGoalInput, getGoalTypes, getImpOptions } from './goalutils'
+import { findEarliestFFYear } from './cfutils'
 import Summary from './summary'
 import SelectInput from '../form/selectinput'
 import HToggle from '../horizontaltoggle'
@@ -23,11 +23,17 @@ interface GoalsProps {
     savings: number
     annualSavings: number
     currency: string
+    allGoals: Array<APIt.CreateGoalInput> | null
+    allCFs: Object
+    goalsLoaded: boolean
+    ffGoal: APIt.CreateGoalInput | null
+    allGoalsHandler: Function
+    allCFsHandler: Function
+    ffGoalHandler: Function
 }
 
-export default function Goals({ showModalHandler, savings, annualSavings, currency }: GoalsProps) {
-    const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([])
-    const [allCFs, setAllCFs] = useState<any>({})
+export default function Goals({ showModalHandler, savings, annualSavings, currency, allGoals, allCFs,
+    goalsLoaded, ffGoal, allGoalsHandler, allCFsHandler, ffGoalHandler }: GoalsProps) {
     const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null)
     const [mustCFs, setMustCFs] = useState<Object>({})
     const [tryCFs, setTryCFs] = useState<Object>({})
@@ -39,18 +45,11 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
     //const [rrFallDuration, setRRFallDuration] = useState<number>(5)
     const rrFallDuration = 5
     const [savingsChgRate, setSavingsChgRate] = useState<number>(3)
-    const [expense, setExpense] = useState<number>(24000)
-    const [expenseChgRate, setExpenseChgRate] = useState<number>(3)
-    const [ffGoal, setFFGoal] = useState<APIt.CreateGoalInput>()
     const [ffYear, setFFYear] = useState<number | null>(0)
     const [ffAmt, setFFAmt] = useState<number>(0)
     const [ffLeftOverAmt, setFFLeftOverAmt] = useState<number>(0)
     const [ffCfs, setFFCfs] = useState<any>({})
-    const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false)
-
-    useEffect(() => {
-        loadAllGoals()
-    }, [])
+    const [cfsUpdated, setCfsUpdated] = useState<boolean>(false)
 
     const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
         if (!ffGoal) return {}
@@ -63,63 +62,69 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
         return mCFs
     }
 
-    useEffect(() => {
-        if (!ffGoal || !goalsLoaded) return
-        let yearRange = getYearRange()
-        let mCFs = buildEmptyMergedCFs(yearRange.from, yearRange.to)
-        if (allGoals && allGoals[0]) allGoals.forEach(g => {
-            //@ts-ignore
-            mergeCFs(mCFs, allCFs[g.id], g.sy)
-        })
-        setMergedCFs(mCFs)
-        let result = findEarliestFFYear(ffGoal, oppDR, rrFallDuration, savings, mCFs,
-            annualSavings, savingsChgRate, expense, expenseChgRate, null)
+    const calculateFFYear = () => {
+        if (!ffGoal) return
+        let result = findEarliestFFYear(ffGoal, oppDR, rrFallDuration, savings, mergedCFs,
+            annualSavings, savingsChgRate, null)
         if (result.ffYear < 0) setFFYear(null)
+        else setFFYear(result.ffYear)
         setFFAmt(result.ffAmt)
-        setFFYear(result.ffYear)
         //@ts-ignore
         setFFLeftOverAmt(result.leftAmt)
         setFFCfs(result.ffCfs)
-    }, [oppDR, savings, goalsLoaded, allGoals, annualSavings, savingsChgRate,
-        expense, expenseChgRate, rrFallDuration])
+    }
+
+    useEffect(() => {
+        calculateFFYear()
+    }, [oppDR, savings, annualSavings, savingsChgRate])
+
+    useEffect(() => {
+        if (!cfsUpdated) return
+        calculateFFYear()
+        setCfsUpdated(false)
+    }, [cfsUpdated])
+
+    useEffect(() => {
+        if (!goalsLoaded) return
+        let yearRange = getYearRange()
+        let mustCFs = populateWithZeros(yearRange.from, yearRange.to)
+        let tryCFs = populateWithZeros(yearRange.from, yearRange.to)
+        let optCFs = populateWithZeros(yearRange.from, yearRange.to)
+        let mCFs = buildEmptyMergedCFs(yearRange.from, yearRange.to)
+        allGoals?.forEach(g => {
+            //@ts-ignore
+            let cfs: Array<number> = allCFs[g.id]
+            if (!cfs) return
+            if (g.imp === APIt.LMH.H) populateData(mustCFs, cfs, g.sy, yearRange.from)
+            else if (g.imp === APIt.LMH.M) populateData(tryCFs, cfs, g.sy, yearRange.from)
+            else populateData(optCFs, cfs, g.sy, yearRange.from)
+            //@ts-ignore
+            mergeCFs(mCFs, allCFs[g.id], g.sy)
+        })
+        setMustCFs(mustCFs)
+        setOptCFs(optCFs)
+        setTryCFs(tryCFs)
+        setMergedCFs(mCFs)
+        setCfsUpdated(true)
+    }, [allGoals, goalsLoaded])
 
     useEffect(() => wipGoal ? showModalHandler(true) : showModalHandler(false), [wipGoal])
 
-    const loadAllGoals = async () => {
-        let goals: Array<APIt.CreateGoalInput> | null = await getGoalsList()
-        if (!goals) return
-        let allCFs = {}
-        let ffGoalId = ""
-        goals?.forEach((g) => {
-            if (g.type === APIt.GoalType.FF) {
-                setFFGoal(g)
-                ffGoalId = g.id as string
-            } else {
-                //@ts-ignore    
-                allCFs[g.id] = calculateCFs(g, getDuration(g.sa as number, g.sy, g.ey))
-            }
-        })
-        removeFromArray(goals, "id", ffGoalId)
-        setWIPGoal(null)
-        setAllCFs(allCFs)
-        setAllGoals([...goals])
-        setGoalsLoaded(true)
-    }
 
     const addGoal = async (goal: APIt.CreateGoalInput, cfs: Array<number> = []) => {
         let g = await createNewGoal(goal)
         if (!g) return
         setWIPGoal(null)
         if (g.type === APIt.GoalType.FF) {
-            setFFGoal(g)
+            ffGoalHandler(g)
             return
         }
         toast.success(`Success! New Goal ${g.name} has been Created.`, { autoClose: 3000 })
         allGoals?.push(g as APIt.CreateGoalInput)
         //@ts-ignore
         allCFs[g.id] = cfs
-        setAllCFs(allCFs)
-        setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
+        allCFsHandler(allCFs)
+        allGoalsHandler([...allGoals as Array<APIt.CreateGoalInput>])
     }
 
     const updateGoal = async (goal: APIt.UpdateGoalInput, cfs: Array<number> = []) => {
@@ -128,7 +133,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
         setWIPGoal(null)
         if (g.type === APIt.GoalType.FF) {
             toast.success('Success! Your Financial Freedom Target has been Updated.', { autoClose: 3000 })
-            setFFGoal(g as APIt.CreateGoalInput)
+            ffGoalHandler(g as APIt.CreateGoalInput)
             return
         }
         toast.success(`Success! Goal ${g.name} has been Updated.`)
@@ -136,8 +141,8 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
         allGoals?.unshift(g as APIt.CreateGoalInput)
         //@ts-ignore
         allCFs[g.id] = cfs
-        setAllCFs(allCFs)
-        setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
+        allCFsHandler(allCFs)
+        allGoalsHandler([...allGoals as Array<APIt.CreateGoalInput>])
     }
 
     const removeGoal = async (id: string) => {
@@ -151,9 +156,9 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
         removeFromArray(allGoals as Array<APIt.CreateGoalInput>, 'id', id)
         //@ts-ignore
         delete allCFs[id]
-        setAllCFs(allCFs)
+        allCFsHandler(allCFs)
         setWIPGoal(null)
-        setAllGoals([...allGoals as Array<APIt.CreateGoalInput>])
+        allGoalsHandler([...allGoals as Array<APIt.CreateGoalInput>])
     }
 
     const cancelGoal = () => setWIPGoal(null)
@@ -210,32 +215,13 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
         })
     }
 
-    useEffect(() => createChartData(), [allGoals])
-
-    const createChartData = () => {
-        if (!allGoals || !allGoals[0]) return
-        let yearRange = getYearRange()
-        let mustCFs = populateWithZeros(yearRange.from, yearRange.to)
-        let tryCFs = populateWithZeros(yearRange.from, yearRange.to)
-        let optCFs = populateWithZeros(yearRange.from, yearRange.to)
-        allGoals?.forEach(g => {
-            //@ts-ignore
-            let cfs: Array<number> = allCFs[g.id]
-            if (!cfs) return
-            if (g.imp === APIt.LMH.H) populateData(mustCFs, cfs, g.sy, yearRange.from)
-            else if (g.imp === APIt.LMH.M) populateData(tryCFs, cfs, g.sy, yearRange.from)
-            else populateData(optCFs, cfs, g.sy, yearRange.from)
-        })
-        setMustCFs(mustCFs)
-        setOptCFs(optCFs)
-        setTryCFs(tryCFs)
-    }
-
     const calculateFFImpactYear = (mCFs: Object) => {
         if (!ffGoal) return
         if (!ffYear) return null
         let result = findEarliestFFYear(ffGoal, oppDR, rrFallDuration, savings, mCFs,
-            annualSavings, savingsChgRate, expense, expenseChgRate, ffYear)
+            annualSavings, savingsChgRate, ffYear)
+        console.log("Result is ", result)
+        console.log("FF Year is ", ffYear)
         return result.ffYear < 0 || result.ffAmt <= 0 || result.leftAmt < 0 ? null : (result.ffYear - ffYear as number)
     }
 
@@ -246,9 +232,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
                     {wipGoal.type === APIt.GoalType.FF ?
                         <FFGoal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
                             updateCallback={updateGoal} annualSavings={annualSavings} savingsChgRate={savingsChgRate}
-                            expense={expense} expenseChgRate={expenseChgRate} 
-                            savingsChgRateHandler={setSavingsChgRate} expenseHandler={setExpense} oppDR={oppDR} oppDRHandler={setOppDR}
-                            expenseChgRateHandler={setExpenseChgRate} totalSavings={savings} 
+                            savingsChgRateHandler={setSavingsChgRate} oppDR={oppDR} oppDRHandler={setOppDR} totalSavings={savings}
                             ffYear={ffYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffCfs={ffCfs} mergedCfs={mergedCFs}
                             ffYearHandler={setFFYear} ffAmtHandler={setFFAmt} ffLeftOverAmtHandler={setFFLeftOverAmt}
                             ffCfsHandler={setFFCfs} rrFallDuration={rrFallDuration} />
@@ -292,7 +276,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
                                         nextStepDisabled
                                         allInputDone
                                         nextStepHandler={() => true}
-                                        value={oppDR} unit="%" pre="Investment" min={0} max={15}
+                                        value={oppDR} unit="%" pre="Investment" min={0} max={10}
                                         post="Earns" changeHandler={setOppDR} note="After taxes & fees" step={0.1} />
                                     <NumberInput name="asChgRate"
                                         inputOrder={1}
@@ -301,7 +285,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
                                         allInputDone
                                         nextStepHandler={() => true}
                                         pre="Savings" post="Increases" note='Every Year' unit="%"
-                                        min={0} max={10} step={0.1} value={savingsChgRate} changeHandler={setSavingsChgRate} />
+                                        min={0} max={20} step={0.1} value={savingsChgRate} changeHandler={setSavingsChgRate} />
                                 </div>
                             } hasResult />
                         </div> : <div />}
@@ -325,9 +309,9 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
                                     {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
                                         g.id && (!impFilter || impFilter === g.imp) &&
                                         <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} oppDR={oppDR} savings={savings}
+                                            //@ts-ignore
                                             startYear={g.sy} currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal}
-                                            ffYear={ffYear} ffGoal={ffGoal} mergedCFs={mergedCFs} rrFallDuration={rrFallDuration} ffAmt={ffAmt} ffLeftAmt={ffLeftOverAmt}
-                                            annualSavings={annualSavings} savingsChgRate={savingsChgRate} expense={expense} expenseChgRate={expenseChgRate} 
+                                            ffYear={ffYear} ffGoalEndYear={ffGoal.ey} mergedCFs={mergedCFs} rrFallDuration={rrFallDuration} ffAmt={ffAmt} ffLeftAmt={ffLeftOverAmt}
                                             ffImpactYearsCalculator={calculateFFImpactYear} />)}
                                 </div>}
                         </Fragment>}

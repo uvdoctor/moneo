@@ -67,8 +67,7 @@ export const calculateTotalCP = (paymentSY: number, payment: number, paymentChgR
     return total
 }
 
-export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, savingsChgRate: number, expense: number,
-    expenseChgRate: number, ffYear: number) => {
+export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, savingsChgRate: number, ffYear: number) => {
     let cfs: Array<number> = []
     let nowYear = new Date().getFullYear()
     let duration = ffYear - (nowYear + 1)
@@ -77,7 +76,7 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, s
         cfs.push(Math.round(val))
     }
     for (let year = ffYear; year <= g.ey; year++) {
-        let cf = getCompoundedIncome(expenseChgRate, expense, year - (g.sy + 1))
+        let cf = getCompoundedIncome(g.btr as number, g.tbr as number, year - (g.sy + 1))
             * (1 + (g.tdr / 100))
         cfs.push(Math.round(-cf))
     }
@@ -348,11 +347,11 @@ export const getExpectedRR = (year: number, ffYear: number | null, ffEndYear: nu
 }
 
 const checkForFF = (savings: number, dr: number, rrFallDuration: number, ffGoal: APIt.CreateGoalInput, ffYear: number, mergedCFs: Object,
-    annualSavings: number, savingsChgRate: number, expense: number, expenseChgRate: number) => {
+    annualSavings: number, savingsChgRate: number) => {
     let goal = Object.assign({}, ffGoal)
     let mCFs = Object.assign({}, mergedCFs)
     let cs = savings
-    let cfs: Array<number> = calculateFFCFs(goal, annualSavings, savingsChgRate, expense, expenseChgRate, ffYear)
+    let cfs: Array<number> = calculateFFCFs(goal, annualSavings, savingsChgRate, ffYear)
     let nowYear = new Date().getFullYear()
     cfs.forEach((cf, i) => {
         //@ts-ignore
@@ -384,15 +383,14 @@ const checkForFF = (savings: number, dr: number, rrFallDuration: number, ffGoal:
 }
 
 export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, oppDR: number, rrFallDuration: number, savings: number, mergedCFs: Object,
-    annualSavings: number, savingsChgRate: number, expense: number, expenseChgRate: number,
-    yearToTry: number | undefined | null) => {
+    annualSavings: number, savingsChgRate: number, yearToTry: number | undefined | null) => {
     let nowYear = new Date().getFullYear()
     if (nowYear >= ffGoal.ey) return { ffYear: -1, leftAmt: -1, ffAmt: -1, ffCfs: {} }
     if (!yearToTry || yearToTry <= nowYear) yearToTry = nowYear + Math.round((ffGoal.ey - nowYear) / 2)
-    let prevResult = checkForFF(savings, oppDR, rrFallDuration, ffGoal, yearToTry, mergedCFs, annualSavings, savingsChgRate, expense, expenseChgRate)
+    let prevResult = checkForFF(savings, oppDR, rrFallDuration, ffGoal, yearToTry, mergedCFs, annualSavings, savingsChgRate)
     let increment = prevResult.ffAmt > 0 && prevResult.leftAmt > 0 ? -1 : 1
     for (let currYear = yearToTry + increment; currYear <= ffGoal.ey && currYear > nowYear; currYear += increment) {
-        let result = checkForFF(savings, oppDR, rrFallDuration, ffGoal, currYear, mergedCFs, annualSavings, savingsChgRate, expense, expenseChgRate)
+        let result = checkForFF(savings, oppDR, rrFallDuration, ffGoal, currYear, mergedCFs, annualSavings, savingsChgRate)
         if ((result.leftAmt < 0 || result.ffAmt < 0) && (prevResult.leftAmt >= 0 && prevResult.ffAmt > 0))
             return prevResult
         else if ((prevResult.leftAmt < 0 || prevResult.ffAmt < 0) && (result.ffAmt > 0 && result.leftAmt >= 0))

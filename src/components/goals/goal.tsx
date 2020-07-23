@@ -173,7 +173,7 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
     useEffect(() => {
         if (cashFlows || (!allInputDone && (currentOrder < 7 || currentOrder > 19))) return
         if (!cashFlows) calculateYearlyCFs(getDuration(sellAfter, startYear, endYear))
-    }, [goalType, startingPrice, priceChgRate, wipTargets, assetChgRate, loanPer, loanRepaymentSY,
+    }, [startingPrice, priceChgRate, wipTargets, assetChgRate, loanPer, loanRepaymentSY,
         loanYears, startYear, sellAfter, taxRate, maxTaxDeduction, taxBenefitInt, allInputDone, currentOrder,
         maxTaxDeductionInt, amCostPer, amStartYear, aiPer, aiStartYear, manualMode, cashFlows])
 
@@ -337,7 +337,7 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
                                         nextStepHandler={handleNextStep}
                                         allInputDone={allInputDone} name="rentAmt"
                                         pre="Yearly" post="Rent" value={rentAmt} changeHandler={setRentAmt}
-                                        min={0} max={200000} step={500} currency={currency} rangeFactor={rangeFactor} />
+                                        min={0} max={100000} step={1000} currency={currency} rangeFactor={rangeFactor} />
                                 </div>}
                                 right={
                                     <NumberInput name="rentChg"
@@ -395,7 +395,7 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
                 <Fragment>
                     <GoalResult discountRate={oppDR} currency={currency} ffAmt={ffAmt} ffLeftAmt={ffLeftAmt}
                         ffGoalEndYear={ffGoalEndYear} cfs={cfs} rrFallDuration={rrFallDuration} startYear={startYear} ffYear={ffYear} 
-                        ffImpactYearCalculator={ffImpactYearsHandler} mergedCFs={mergedCFs} />
+                        ffImpactYearCalculator={ffImpactYearsHandler} mergedCFs={mergedCFs} goalNotSaved={!goal.id} />
                     <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
                         submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />

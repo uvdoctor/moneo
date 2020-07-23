@@ -1,37 +1,33 @@
 import React from 'react'
-import * as APIt from '../../api/goals'
 import LineChart from './linechart'
 import SVGTrash from '../svgtrash'
 import SVGEdit from '../svgedit'
 import { getGoalTypes, getImpLevels } from './goalutils'
 import GoalResult from './goalresult'
+import {LMH, GoalType} from '../../api/goals'
 interface SummaryProps {
     id: string
     name: string
-    type: APIt.GoalType
-    imp: APIt.LMH
+    type: GoalType
+    imp: LMH
     startYear: number
     currency: string
     cfs: Array<number>
     ffYear: number | null
     ffAmt: number
     ffLeftAmt: number
-    ffGoal: APIt.CreateGoalInput
+    ffGoalEndYear: number
     mergedCFs: Object
     oppDR: number
     rrFallDuration: number
     savings: number
-    annualSavings: number
-    savingsChgRate: number
-    expense: number
-    expenseChgRate: number
     deleteCallback: Function
     editCallback: Function
     ffImpactYearsCalculator: Function
 }
 
 export default function Summary(props: SummaryProps) {
-    const bgColor = props.imp === APIt.LMH.H ? 'bg-blue-600' : (props.imp === APIt.LMH.M ? 'bg-orange-600' : 'bg-green-600')
+    const bgColor = props.imp === LMH.H ? 'bg-blue-600' : (props.imp === LMH.M ? 'bg-orange-600' : 'bg-green-600')
 
     return (
         <div className="mt-4 mb-4 pr-1 max-w-sm md:max-w-md rounded shadow-lg text-lg md:text-xl w-full">
@@ -52,8 +48,8 @@ export default function Summary(props: SummaryProps) {
                     </div>
                 </div>
             </div>
-            <GoalResult discountRate={props.oppDR} currency={props.currency}
-                        ffGoalEndYear={props.ffGoal.ey} cfs={props.cfs} rrFallDuration={props.rrFallDuration} 
+            <GoalResult discountRate={props.oppDR} currency={props.currency} goalNotSaved={false}
+                        ffGoalEndYear={props.ffGoalEndYear} cfs={props.cfs} rrFallDuration={props.rrFallDuration} 
                         startYear={props.startYear} ffYear={props.ffYear} ffAmt={props.ffAmt} ffLeftAmt={props.ffLeftAmt} 
                         mergedCFs={props.mergedCFs} ffImpactYearCalculator={props.ffImpactYearsCalculator} />
             <p className="w-full text-center mt-4 mb-2">Yearly Cash Flows in {props.currency}</p>

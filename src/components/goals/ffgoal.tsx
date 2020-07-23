@@ -24,8 +24,6 @@ interface FFGoalProps {
     totalSavings: number
     oppDR: number
     rrFallDuration: number
-    expense: number
-    expenseChgRate: number
     annualSavings: number
     savingsChgRate: number
     ffYear: number | null
@@ -38,23 +36,22 @@ interface FFGoalProps {
     ffLeftOverAmtHandler: Function
     ffCfsHandler: Function
     oppDRHandler: Function
-    expenseHandler: Function
-    expenseChgRateHandler: Function
     savingsChgRateHandler: Function
     cancelCallback: Function
     addCallback: Function
     updateCallback: Function
 }
 
-export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expense, expenseChgRate, annualSavings, savingsChgRate,
+export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, annualSavings, savingsChgRate,
     ffYear, ffAmt, ffLeftOverAmt, ffCfs, mergedCfs, ffYearHandler, ffAmtHandler, ffLeftOverAmtHandler, ffCfsHandler,
-    oppDRHandler, expenseHandler, expenseChgRateHandler, savingsChgRateHandler,
-    cancelCallback, addCallback, updateCallback }: FFGoalProps) {
+    oppDRHandler, savingsChgRateHandler, cancelCallback, addCallback, updateCallback }: FFGoalProps) {
     const [expenseBY, setExpenseBY] = useState<number>(goal.sy)
+    const [expenseAfterFF, setExpenseAfterFF] = useState<number>(goal?.tbr as number)
+    const [expenseChgRate, setExpenseChgRate] = useState<number>(goal?.btr as number)
     const [endYear, setEndYear] = useState<number>(goal.ey)
     const eyOptions = initYearOptions(goal.by + 30, 50)
     const [cyOptions, setCYOptions] = useState(initYearOptions(endYear - 30, 20))
-    const [currency, setCurrency] = useState<string>(goal?.ccy)
+    const [currency, setCurrency] = useState<string>(goal.ccy)
     const [taxRate, setTaxRate] = useState<number>(goal.tdr)
     const [leaveBehind, setLeaveBehind] = useState<number>(goal?.sa as number)
     const [carePremium, setCarePremium] = useState<number>(goal?.cp as number)
@@ -102,7 +99,9 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expe
             sa: leaveBehind,
             dr: successionTaxRate,
             pg: gains,
-            pl: losses
+            pl: losses,
+            tbr: expenseAfterFF,
+            btr: expenseChgRate
         } as APIt.CreateGoalInput
     }
 
@@ -115,7 +114,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expe
     useEffect(() => {
         if (!allInputDone) return
         let result = findEarliestFFYear(createGoal(), oppDR, rrFallDuration, totalSavings, mergedCfs,
-            annualSavings, savingsChgRate, expense, expenseChgRate, ffYear ? ffYear : null)
+            annualSavings, savingsChgRate, ffYear ? ffYear : null)
         ffAmtHandler(result.ffAmt)
         ffYearHandler(result.ffYear < 0 ? null : result.ffYear)
         ffLeftOverAmtHandler(result.leftAmt)
@@ -123,7 +122,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expe
     }, [expenseBY, endYear, taxRate, careTaxDedLimit, carePremiumSY, carePremiumChgPer,
         carePremiumDur, carePremium, cpBY, retirementIncomeSY, retirementIncomePer,
         retirementIncome, leaveBehind, successionTaxRate, gains, losses, totalSavings, oppDR,
-        annualSavings, expense, expenseChgRate, savingsChgRate, allInputDone, currentOrder])
+        annualSavings, expenseAfterFF, expenseChgRate, savingsChgRate, allInputDone, currentOrder])
 
     useEffect(() => {
         setCYOptions(initYearOptions(endYear - 30, 10))
@@ -137,7 +136,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expe
 
     useEffect(() => {
         setExpenseBY(nowYear)
-    }, [expense])
+    }, [expenseAfterFF])
 
     useEffect(() => {
         setCPBY(nowYear)
@@ -210,7 +209,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expe
                     {((!allInputDone && currentOrder >= 3) || allInputDone) &&
                         <Section title="How Much Will Your Savings Earn?"
                             left={
-                                <ResultItem label="Lifetime Savings Available" footer={`By end of ${nowYear}`} result={totalSavings} currency={currency}
+                                <ResultItem label="Total Savings Available" footer={`By end of ${nowYear}`} result={totalSavings} currency={currency}
                                     info="Total Savings includes cash, deposits, gold, stocks, bonds, etc. after deducting money owed on credit cards, loans, etc." />
                             } right={
                                 <NumberInput name="dr" inputOrder={3} currentOrder={currentOrder}
@@ -219,7 +218,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expe
                                     nextStepHandler={handleNextStep}
                                     info={`Your best guess about how much percentage Your Savings May Earn across Deposits, Stocks, Bonds, etc., after paying taxes (eg: capital gains tax) & investment fees, if any.`}
                                     infoDurationInMs={10000}
-                                    value={oppDR} unit="%" pre="Savings" min={0} max={15}
+                                    value={oppDR} unit="%" pre="Savings" min={0} max={10}
                                     post="Earns" changeHandler={oppDRHandler} note="After taxes & fees" step={0.1} />
                             } insideForm />
                     }
@@ -237,8 +236,8 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expe
                                     nextStepHandler={handleNextStep}
                                     info={`Your best guess about how much can You increase Your Savings Every Year. 
                                     More You Save, Earlier You Can Achieve Financial Freedom.`}
-                                    value={savingsChgRate} unit="%" pre="Savings" min={0} max={10}
-                                    post="Changes" changeHandler={savingsChgRateHandler} note="Yearly" step={0.5} />
+                                    value={savingsChgRate} unit="%" pre="Savings" min={0} max={20}
+                                    post="Changes" changeHandler={savingsChgRateHandler} note="Yearly" step={0.1} />
                             } insideForm />
                     }
                     {((!allInputDone && currentOrder >= 5) || allInputDone) &&
@@ -246,16 +245,16 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expe
                             titleInfo="After You Achieve Financial Freedom, how much Money do You Need in Today's terms for Your Expenses? This will be used to derive the amount needed after Financial Freedom."
                             left={
                                 <NumberInput name="currExpense" inputOrder={5} currentOrder={currentOrder}
-                                    nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
+                                    nextStepDisabled={expenseAfterFF === 0} allInputDone={allInputDone} nextStepHandler={handleNextStep}
                                     info="If You had already achieved Financial Freedom this year, How Much Money Would You Need for Your Living Expenses?"
                                     pre="Yearly" post='Expenses' note="In Today's Money"
-                                    currency={currency} rangeFactor={rangeFactor} value={expense} changeHandler={expenseHandler} min={0} max={100000} step={1000} width="120px" />
+                                    currency={currency} rangeFactor={rangeFactor} value={expenseAfterFF} changeHandler={setExpenseAfterFF} min={0} max={50000} step={100} width="120px" />
                             } right={
                                 <NumberInput name="expChgRate" inputOrder={6} currentOrder={currentOrder}
                                     nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
                                     info="Rate at which Your Living Expenses increase every Year."
                                     pre="Expense" post="Changes" note='Yearly' unit="%"
-                                    min={0} max={10} step={0.1} value={expenseChgRate} changeHandler={expenseChgRateHandler} />
+                                    min={0} max={10} step={0.1} value={expenseChgRate} changeHandler={setExpenseChgRate} />
                             } bottom={
                                 <NumberInput name="tr" inputOrder={7} currentOrder={currentOrder}
                                     nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
@@ -371,7 +370,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, expe
             {allInputDone &&
                 <Fragment>
                     <FFResult endYear={endYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} currency={currency} />
-                    <ActionButtons submitDisabled={annualSavings === 0 && expense < 5000 || btnClicked} cancelDisabled={btnClicked}
+                    <ActionButtons submitDisabled={annualSavings === 0 && expenseAfterFF < 5000 || btnClicked} cancelDisabled={btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} submitText={`${goal.id ? 'UPDATE' : 'CREATE'} TARGET`} />
                 </Fragment>}
         </div>
