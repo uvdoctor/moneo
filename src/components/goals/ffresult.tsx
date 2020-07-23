@@ -23,9 +23,11 @@ export default function FFResult({ endYear, ffYear, ffAmt, ffLeftOverAmt, curren
                         currency={currency} info={`You can Withdraw from this Savings for Your expenses from ${ffYear} onwards`} />
                     <ResultItem result={ffLeftOverAmt} svg={<SVGInheritance />} label="Nominees Get"
                         currency={currency}
-                        info={`This is the savings amount left over in ${endYear + 1}. As Your Plan ends in ${endYear}, this may be inherited by Your Nominees. This is in addition to the Inheritance Amount for Nominees as per the Plan.`} />
+                        info={`This is the savings amount left over in ${endYear + 1}. 
+                        As Your Plan ends in ${endYear}, this may be inherited by Your Nominees. 
+                        This includes the Inheritance Amount for Nominees as per the Plan.`} />
                 </div>
-                : <p className="text-center bg-red-100 font-semibold py-2">{`Analyzed till ${endYear}, but unable to determine.`}</p>}
+                : <p className="text-center bg-red-100 font-semibold py-2">{`Analyzed till ${endYear}. Please try again with different inputs / goals.`}</p>}
         </div>
     )
 }

@@ -369,7 +369,7 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, annu
             </div>
             {allInputDone &&
                 <Fragment>
-                    <FFResult endYear={endYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} currency={currency} />
+                    <FFResult endYear={endYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt + leaveBehind} ffYear={ffYear} currency={currency} />
                     <ActionButtons submitDisabled={annualSavings === 0 && expenseAfterFF < 5000 || btnClicked} cancelDisabled={btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} submitText={`${goal.id ? 'UPDATE' : 'CREATE'} TARGET`} />
                 </Fragment>}

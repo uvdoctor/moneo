@@ -395,7 +395,7 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
                 <Fragment>
                     <GoalResult discountRate={oppDR} currency={currency} ffAmt={ffAmt} ffLeftAmt={ffLeftAmt}
                         ffGoalEndYear={ffGoalEndYear} cfs={cfs} rrFallDuration={rrFallDuration} startYear={startYear} ffYear={ffYear} 
-                        ffImpactYearCalculator={ffImpactYearsHandler} mergedCFs={mergedCFs} goalNotSaved={!goal.id} />
+                        ffImpactYearCalculator={ffImpactYearsHandler} mergedCFs={mergedCFs} goalId={goal.id} />
                     <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
                         submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />

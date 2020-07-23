@@ -8,7 +8,7 @@ import SecureSVG from './svgsecure'
 import GlobalSVG from './svgglobal'
 import PrivateSVG from './svgprivate'
 //@ts-ignore
-import {AwesomeButton} from 'react-awesome-button'
+import { AwesomeButton } from 'react-awesome-button'
 
 interface Feature {
 	svg: React.ReactNode,
@@ -56,9 +56,27 @@ const Features = () => {
 			<p className="text-center lg:text-4xl font-black">Hello Financial Freedom!</p>
 			<p className="mt-4 text-center">GET...SET...GO...</p>
 			<div className="mt-4 flex flex-wrap items-center" >
-				<img className="w-full md:w-1/2 p-2 md:p-4" alt="Step 1" src="images/step1.png" />
-				<img className="w-full md:w-1/2 p-2 md:p-4" alt="Step 2" src="images/step2.png" />
-				<img className="w-full md:w-1/2 p-2 md:p-4" alt="Step 3" src="images/step3.png" />
+				<div className="w-full md:w-1/2 p-2 md:p-4">
+					<Link href={ROUTES.DASHBOARD}>
+						<a>
+							<img alt="Step 1" src="images/step1.png" />
+						</a>
+					</Link>
+				</div>
+				<div className="w-full md:w-1/2 p-2 md:p-4">
+					<Link href={ROUTES.DASHBOARD}>
+						<a>
+							<img alt="Step 2" src="images/step2.png" />
+						</a>
+					</Link>
+				</div>
+				<div className="w-full md:w-1/2 p-2 md:p-4">
+					<Link href={ROUTES.DASHBOARD}>
+						<a>
+							<img alt="Step 3" src="images/step3.png" />
+						</a>
+					</Link>
+				</div>
 				<ul className="cursor w-full md:w-1/2">
 					<li>
 						<Link href={ROUTES.DASHBOARD}>

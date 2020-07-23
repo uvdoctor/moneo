@@ -70,7 +70,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
         else setFFYear(result.ffYear)
         setFFAmt(result.ffAmt)
         //@ts-ignore
-        setFFLeftOverAmt(result.leftAmt)
+        setFFLeftOverAmt(result.leftAmt + ffGoal.sa)
         setFFCfs(result.ffCfs)
     }
 
@@ -207,6 +207,25 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
         })
     }
 
+    /*const calculateAA = () => {
+        if (!ffGoal) return
+        let yearRange = getYearRange()
+        for (let year = yearRange.from; year <= yearRange.to; year++) {
+            let aa = buildEmptyAA()
+        }
+    }
+
+    const buildEmptyAA = () => {
+        return {
+            cash: 0,
+            deposits: 0,
+            bonds: 0,
+            property: 0,
+            gold: 0,
+            stocks: 0
+        }
+    }*/
+
     const mergeCFs = (obj: Object, cfs: Array<number>, sy: number) => {
         cfs.forEach((cf, i) => {
             let year = sy + i
@@ -215,14 +234,36 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
         })
     }
 
-    const calculateFFImpactYear = (mCFs: Object) => {
-        if (!ffGoal) return
-        if (!ffYear) return null
-        let result = findEarliestFFYear(ffGoal, oppDR, rrFallDuration, savings, mCFs,
+    const calculateFFImpactYear = (startYear: number, cfs: Array<number>, goalId: string) => {
+        if (!ffGoal || !ffYear) return null
+        let mCFs = Object.assign({}, mergedCFs)
+        if (goalId) {
+            //@ts-ignore
+            let existingCFs = allCFs[goalId]
+            existingCFs.forEach((cf: number, i: number) => {
+                //@ts-ignore
+                if (mCFs[startYear + i] !== 'undefined') {
+                    //@ts-ignore
+                    mCFs[startYear + i] -= cf
+                }
+            })
+        }
+        let resultWithoutGoal = findEarliestFFYear(ffGoal, oppDR, rrFallDuration, savings, mCFs,
             annualSavings, savingsChgRate, ffYear)
-        console.log("Result is ", result)
-        console.log("FF Year is ", ffYear)
-        return result.ffYear < 0 || result.ffAmt <= 0 || result.leftAmt < 0 ? null : (result.ffYear - ffYear as number)
+        if(resultWithoutGoal.ffYear < 0) return null
+        cfs.forEach((cf, i) => {
+            //@ts-ignore
+            if (mCFs[startYear + i] !== 'undefined') {
+                //@ts-ignore
+                mCFs[startYear + i] += cf
+            }
+        })
+        let resultWithGoal = findEarliestFFYear(ffGoal, oppDR, rrFallDuration, savings, mCFs,
+            annualSavings, savingsChgRate, resultWithoutGoal.ffYear)
+        if(resultWithGoal.ffYear < 0) return null
+        console.log("Impact Result without goal is ", resultWithoutGoal)
+        console.log("Impact Result with goal is ", resultWithGoal)
+        return (resultWithoutGoal.ffYear - resultWithGoal.ffYear)
     }
 
     return (

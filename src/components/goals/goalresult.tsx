@@ -14,7 +14,7 @@ interface GoalResultProps {
     discountRate: number
     rrFallDuration: number
     ffImpactYearCalculator: Function
-    goalNotSaved: boolean
+    goalId: string | null | undefined
 }
 
 export default function GoalResult(props: GoalResultProps) {
@@ -23,7 +23,7 @@ export default function GoalResult(props: GoalResultProps) {
             <FFImpact ffGoalEndYear={props.ffGoalEndYear} cfs={props.cfs} ffYear={props.ffYear}
                 mergedCFs={props.mergedCFs} ffAmt={props.ffAmt} ffLeftAmt={props.ffLeftAmt}
                 ffImpactYearCalculator={props.ffImpactYearCalculator} startYear={props.startYear}  
-                goalNotSaved={props.goalNotSaved} />
+                goalId={props.goalId} />
             <OppCost discountRate={props.discountRate} cfs={props.cfs} currency={props.currency} rrFallDuration={props.rrFallDuration}
                 startYear={props.startYear} ffEndYear={props.ffGoalEndYear} ffYear={props.ffYear} />
         </div>

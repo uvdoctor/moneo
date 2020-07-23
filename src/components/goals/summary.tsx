@@ -30,7 +30,7 @@ export default function Summary(props: SummaryProps) {
     const bgColor = props.imp === LMH.H ? 'bg-blue-600' : (props.imp === LMH.M ? 'bg-orange-600' : 'bg-green-600')
 
     return (
-        <div className="mt-4 mb-4 pr-1 max-w-sm md:max-w-md rounded shadow-lg text-lg md:text-xl w-full">
+        <div className="mt-4 mb-4 max-w-sm md:max-w-md rounded shadow-lg text-lg md:text-xl w-full">
             <div className="flex justify-between items-center w-full">
                 <label className={`${bgColor} text-white py-1 px-2`}>{getImpLevels()[props.imp]}</label>
                 <div className="flex flex-col justify-center items-center font-semibold">
@@ -48,7 +48,7 @@ export default function Summary(props: SummaryProps) {
                     </div>
                 </div>
             </div>
-            <GoalResult discountRate={props.oppDR} currency={props.currency} goalNotSaved={false}
+            <GoalResult discountRate={props.oppDR} currency={props.currency} goalId={props.id}
                         ffGoalEndYear={props.ffGoalEndYear} cfs={props.cfs} rrFallDuration={props.rrFallDuration} 
                         startYear={props.startYear} ffYear={props.ffYear} ffAmt={props.ffAmt} ffLeftAmt={props.ffLeftAmt} 
                         mergedCFs={props.mergedCFs} ffImpactYearCalculator={props.ffImpactYearsCalculator} />
