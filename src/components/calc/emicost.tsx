@@ -18,6 +18,7 @@ interface EmiProps {
     rangeFactor: number
     startYear: number
     endYear: number
+    duration: number
     repaymentSY: number
     loanYears: number
     loanAnnualInt: number
@@ -26,7 +27,6 @@ interface EmiProps {
     taxBenefitInt: number
     maxTaxDeductionInt: number
     taxRate: number
-    sellAfter: number | null | undefined
     repaymentSYHandler: Function
     loanMonthsHandler: Function
     loanPerHandler: Function
@@ -49,7 +49,7 @@ export default function EmiCost(props: EmiProps) {
         setTotalIntAmt(Math.round(totalIntAmt))
         if (props.taxBenefitInt > 0) {
             let intTaxBenefit = calculateInterestTaxBenefit(props.loanBorrowAmt, props.loanAnnualInt,
-                props.loanYears, props.repaymentSY, props.startYear, props.endYear, props.sellAfter,
+                props.loanYears, props.repaymentSY, props.startYear, props.duration,
                 props.taxRate, props.maxTaxDeductionInt)
             setTotalIntTaxBenefit(Math.round(intTaxBenefit))
         } else setTotalIntTaxBenefit(0)
@@ -113,7 +113,7 @@ export default function EmiCost(props: EmiProps) {
                                 allInputDone={props.allInputDone} pre="Yearly" post="Interest" unit="%"
                                 note={`Total ${toCurrency(totalIntAmt, props.currency)}`}
                                 value={props.loanAnnualInt} changeHandler={props.loanAnnualIntHandler}
-                                min={0.0} max={30.0} step={0.1} />
+                                min={0.0} max={25.0} step={0.1} />
                             <NumberInput name="maxTaxDeductionInt"
                                 inputOrder={props.inputOrder + 4}
                                 currentOrder={props.currentOrder}
@@ -121,7 +121,7 @@ export default function EmiCost(props: EmiProps) {
                                 nextStepHandler={props.nextStepHandler}
                                 allInputDone={props.allInputDone} pre="Max Yearly" post="Deduction" rangeFactor={props.rangeFactor}
                                 value={props.maxTaxDeductionInt} changeHandler={props.maxTaxDeductionIntHandler} currency={props.currency}
-                                min={0} max={150000} step={1000} note={`Total ${toCurrency(totalIntTaxBenefit, props.currency)}`} />
+                                min={0} max={50000} step={1000} note={`Total ${toCurrency(totalIntTaxBenefit, props.currency)}`} />
                         </div>
                     }
                 />}

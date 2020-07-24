@@ -98,7 +98,7 @@ export default function Cost(props: CostProps) {
                             : props.nextStepHandler()
                     } showOnLoad
                     toggle={
-                        props.manualModeHandler && <HToggle rightText={`Manual Input for Multiple Years`} value={props.manualMode} setter={props.manualModeHandler} />
+                        props.manualModeHandler && <HToggle rightText={`Custom Payment Plan`} value={props.manualMode} setter={props.manualModeHandler} />
                     } manualInput={
                         props.manualTargets && <Fragment>
                             <div className="flex flex-wrap justify-around">

@@ -16,7 +16,7 @@ import SVGChart from '../svgchart'
 import Cost from './cost'
 import {
     calculateCFs, calculatePrice, getLoanBorrowAmt,
-    calculateManualPrice, calculateTotalTaxBenefit, calculatePrincipalTaxBenefit
+    calculateManualPrice
 } from './cfutils'
 import { getDuration, getGoalTypes, getImpLevels } from './goalutils'
 //@ts-ignore
@@ -77,7 +77,6 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
     const [cfs, setCFs] = useState<Array<number>>(cashFlows ? cashFlows : [])
     const [rentAmt, setRentAmt] = useState<number>(0)
     const [rentChgPer, setRentChgPer] = useState<number>(5)
-    const [totalTaxBenefit, setTotalTaxBenefit] = useState<number>(0)
     const [answer, setAnswer] = useState<string>('')
     const [rentAns, setRentAns] = useState<string>('')
     const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(goal?.tgts as Array<APIt.TargetInput>)
@@ -131,16 +130,10 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
         return g as APIt.UpdateGoalInput
     }
 
-    const updateState = (cfs: Array<number>, g: APIt.CreateGoalInput, duration: number) => {
+    const updateState = (cfs: Array<number>, g: APIt.CreateGoalInput) => {
         let p = manualMode > 0 ? calculateManualPrice(g?.tgts as Array<APIt.TargetInput>)
             : calculatePrice(g?.cp as number, g?.chg as number, g.sy, g.by)
         setPrice(p)
-        if (g.emi?.per && g.manual < 1) {
-            setTotalTaxBenefit(calculatePrincipalTaxBenefit(goalType, p, g.emi.per, g.emi.rate, g.emi.dur,
-                g.emi.ry, g.sy, g.ey, g.sa, g.tdr, g.tdl))
-        } else {
-            setTotalTaxBenefit(calculateTotalTaxBenefit(g, duration))
-        }
         setCFs([...cfs])
     }
 
@@ -150,7 +143,7 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
         console.log("New cfs created: ", cfs)
         if (changeState) {
             if (g.emi?.per as number > 0 && manualMode < 1) setEndYear(g.sy + duration - 1)
-            updateState(cfs, g, duration)
+            updateState(cfs, g)
         }
         return cfs
     }
@@ -173,7 +166,7 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
     useEffect(() => {
         if (cashFlows || (!allInputDone && (currentOrder < 7 || currentOrder > 19))) return
         if (!cashFlows) calculateYearlyCFs(getDuration(sellAfter, startYear, endYear))
-    }, [startingPrice, priceChgRate, wipTargets, assetChgRate, loanPer, loanRepaymentSY,
+    }, [startingPrice, priceChgRate, wipTargets, assetChgRate, loanPer, loanRepaymentSY, loanIntRate,
         loanYears, startYear, sellAfter, taxRate, maxTaxDeduction, taxBenefitInt, allInputDone, currentOrder,
         maxTaxDeductionInt, amCostPer, amStartYear, aiPer, aiStartYear, manualMode, cashFlows])
 
@@ -297,12 +290,13 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
                     <div className="flex justify-center">
                         <TaxBenefit goalType={goalType} taxRate={taxRate} taxRateHandler={setTaxRate} currency={currency}
                             maxTaxDeduction={maxTaxDeduction} maxTaxDeductionHandler={setMaxTaxDeduction} rangeFactor={rangeFactor}
-                            totalTaxBenefit={totalTaxBenefit} totalTaxBenefitHandler={setTotalTaxBenefit}
-                            inputOrder={9} currentOrder={currentOrder} nextStepDisabled={false}
-                            nextStepHandler={handleNextStep} allInputDone={allInputDone} />
+                            inputOrder={9} currentOrder={currentOrder} nextStepDisabled={false} loanDur={loanYears} loanPer={loanPer}
+                            nextStepHandler={handleNextStep} allInputDone={allInputDone} price={price} loanRY={loanRepaymentSY}
+                            startYear={startYear} manualMode={manualMode} loanRate={loanIntRate}
+                            duration={getDuration(sellAfter, startYear, endYear)} priceChgRate={priceChgRate} />
                     </div>
                     {goal?.emi ? <div className="flex w-full justify-around">
-                        <EmiCost price={price} currency={currency} startYear={startYear} sellAfter={sellAfter}
+                        <EmiCost price={price} currency={currency} startYear={startYear} duration={getDuration(sellAfter, startYear, endYear)}
                             repaymentSY={loanRepaymentSY ? loanRepaymentSY : startYear} endYear={endYear} rangeFactor={rangeFactor}
                             loanYears={loanYears as number} loanAnnualInt={loanIntRate as number} loanPer={loanPer as number}
                             loanBorrowAmt={getLoanBorrowAmt(price, loanPer as number)} loanAnnualIntHandler={setLoanIntRate}
