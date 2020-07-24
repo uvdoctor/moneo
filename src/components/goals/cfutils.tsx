@@ -137,7 +137,7 @@ export const calculateTotalTaxBenefit = (goalType: APIt.GoalType, price: number,
     if (manualMode > 0) {
         return Math.round(getTaxBenefit(price, taxRate, maxTaxDL))
     }
-    if (goalType === APIt.GoalType.B && duration) {
+    if (goalType === APIt.GoalType.B) {
         return Math.round(getTaxBenefit(price, taxRate, maxTaxDL))
     }
     let tb = 0
@@ -152,14 +152,11 @@ export const calculatePrincipalTaxBenefit = (price: number, loanPer: number, loa
     let loanBorrowAmt = getLoanBorrowAmt(price, loanPer)
     let emi = getEmi(loanBorrowAmt, loanInt as number, loanYears * 12)
     let annualInts = getIntAmtByYear(loanBorrowAmt, emi, loanInt, loanYears * 12)
-    let ey = startYear + duration - 1
     let taxBenefit = 0
-    for (let year = startYear, ly = loanYears; year <= ey; year++) {
-        if (year >= loanRepaymentSY && ly > 0) {
-            let i = year - loanRepaymentSY
-            taxBenefit += getTaxBenefit(emi - annualInts[i], taxRate, maxTaxDL)
-            ly--
-        }
+    for (let index = loanRepaymentSY - startYear, ly = loanYears; index < (duration < loanYears ? duration : loanYears); index++, ly--) {
+        let annualEmiAmt = emi * (ly === 0.5 ? 6 : 12)
+        let i = index - (loanRepaymentSY - startYear)
+        taxBenefit += getTaxBenefit(annualEmiAmt - annualInts[i], taxRate, maxTaxDL)
     }
     let remPayment = getRemPrincipal(startYear, loanBorrowAmt, emi, loanInt, loanRepaymentSY, loanYears, duration)
     taxBenefit += getTaxBenefit(remPayment, taxRate, maxTaxDL)

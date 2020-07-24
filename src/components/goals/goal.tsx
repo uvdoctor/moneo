@@ -127,6 +127,7 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
     const createUpdateGoalInput = () => {
         let g: APIt.CreateGoalInput = createNewGoalInput()
         g.id = goal.id
+        console.log("Goal to be updated...", g)
         return g as APIt.UpdateGoalInput
     }
 
@@ -187,10 +188,11 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
         else if (manualMode < 1 && loanPer === 0 && goalType === APIt.GoalType.B) setEndYear(startYear)
     }, [manualMode, loanPer])
 
-    const handleSubmit = () => {
-        goal.id ? updateCallback(createUpdateGoalInput(), cfs)
-            : addCallback(createNewGoalInput(), cfs)
+    const handleSubmit = async() => {
         setBtnClicked(true)
+        goal.id ? await updateCallback(createUpdateGoalInput(), cfs)
+            : await addCallback(createNewGoalInput(), cfs)
+        setBtnClicked(false)
     }
 
     const changeCurrency = (curr: string) => {

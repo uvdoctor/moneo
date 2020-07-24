@@ -142,10 +142,11 @@ export default function FFGoal({ goal, totalSavings, oppDR, rrFallDuration, annu
         setCPBY(nowYear)
     }, [carePremium])
 
-    const handleSubmit = () => {
-        goal.id ? updateCallback(updateGoal())
-            : addCallback(createGoal())
+    const handleSubmit = async() => {
         setBtnClicked(true)
+        goal.id ? await updateCallback(updateGoal())
+            : await addCallback(createGoal())
+        setBtnClicked(false)
     }
 
     useEffect(() => {

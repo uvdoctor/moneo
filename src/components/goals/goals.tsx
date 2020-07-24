@@ -112,12 +112,18 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
 
 
     const addGoal = async (goal: APIt.CreateGoalInput, cfs: Array<number> = []) => {
-        let g = await createNewGoal(goal)
-        if (!g) return
+        let g = null
+        try {
+            g = await createNewGoal(goal)
+        } catch(err) {
+            toast.error("Sorry! Unable to create this Goal: " + err, { autoClose: 7000 })
+            return false
+        }
+        if (!g) return false
         setWIPGoal(null)
         if (g.type === APIt.GoalType.FF) {
             ffGoalHandler(g)
-            return
+            return true
         }
         toast.success(`Success! New Goal ${g.name} has been Created.`, { autoClose: 3000 })
         allGoals?.push(g as APIt.CreateGoalInput)
@@ -128,13 +134,19 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
     }
 
     const updateGoal = async (goal: APIt.UpdateGoalInput, cfs: Array<number> = []) => {
-        let g: APIt.UpdateGoalInput | null = await changeGoal(goal)
-        if (!g) return
+        let g: APIt.UpdateGoalInput | null = null
+        try {
+            g = await changeGoal(goal)
+        } catch(err) {
+            toast.error("Sorry! Unable to update this Goal: " + err, { autoClose: 7000 })
+            return false
+        }
+        if (!g) return false
         setWIPGoal(null)
         if (g.type === APIt.GoalType.FF) {
             toast.success('Success! Your Financial Freedom Target has been Updated.', { autoClose: 3000 })
             ffGoalHandler(g as APIt.CreateGoalInput)
-            return
+            return true
         }
         toast.success(`Success! Goal ${g.name} has been Updated.`)
         removeFromArray(allGoals as Array<APIt.CreateGoalInput>, 'id', goal.id)
@@ -143,6 +155,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
         allCFs[g.id] = cfs
         allCFsHandler(allCFs)
         allGoalsHandler([...allGoals as Array<APIt.CreateGoalInput>])
+        return true
     }
 
     const removeGoal = async (id: string) => {
