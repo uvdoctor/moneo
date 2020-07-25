@@ -5,35 +5,31 @@ import HToggle from '../horizontaltoggle'
 import { TargetInput } from '../../api/goals'
 import { createNewTarget } from './goalutils'
 import NextStep from '../form/nextstep'
+import {toCurrency} from '../utils'
 interface CostProps {
     inputOrder: number
     currentOrder: number
     nextStepDisabled: boolean
     nextStepHandler: Function
     allInputDone: boolean
-    title: string
-    leftPre: string
-    leftPost: string
     leftNote?: string
     footer?: string
-    rightPre: string
-    rightNote: string
-    leftMin: number
     leftMax: number
     startingCost: number
     costChgRate: number
+    cost: number
     manualMode: number
     manualTargets?: Array<TargetInput>
     currency: string
     rangeFactor: number
-    startYear?: number
+    startYear: number
     endYear?: number
+    baseYear: number
     manualTgtMin?: number
     manualModeHandler?: Function
     manualTargetsHandler?: Function
     startingCostHandler: Function
     costChgRateHandler: Function
-    showRightCondition: boolean
 }
 
 export default function Cost(props: CostProps) {
@@ -77,23 +73,25 @@ export default function Cost(props: CostProps) {
     return (
         <Fragment>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
-                <Section title={props.title}
+                <Section title={props.manualMode > 0 ? `Total Amount is ${toCurrency(props.cost, props.currency)}`
+                                : `Amount${props.startYear > props.baseYear ? ` in ${props.startYear} ~ ${toCurrency(props.cost, props.currency)}` : ''}`}
                     left={
                         <NumberInput name="startingCost" inputOrder={props.inputOrder}
                             currentOrder={props.currentOrder}
                             nextStepDisabled={props.startingCost === 0}
                             nextStepHandler={props.nextStepHandler}
                             allInputDone={props.allInputDone}
-                            pre={props.leftPre} post={props.leftPost}
+                            pre={props.startYear > props.baseYear ? 'Amount' : ''} 
+                            post={props.startYear > props.baseYear ? `in ${props.baseYear}` : ''}
                             currency={props.currency} rangeFactor={props.rangeFactor} value={props.startingCost} changeHandler={props.startingCostHandler}
-                            min={props.leftMin} max={props.leftMax} step={500} note={props.leftNote} />
+                            min={0} max={props.leftMax} step={500} note={props.leftNote} />
                     } right={
-                        props.showRightCondition ? <NumberInput name="priceChgRate"
+                        props.startYear > props.baseYear ? <NumberInput name="priceChgRate"
                             inputOrder={props.inputOrder + 1}
                             currentOrder={props.currentOrder}
                             nextStepDisabled={false}
                             nextStepHandler={props.nextStepHandler}
-                            allInputDone={props.allInputDone} pre={props.rightPre} post="Changes" note={props.rightNote} unit="%"
+                            allInputDone={props.allInputDone} pre="Amount" post="Changes" note={`Yearly till ${props.startYear}`} unit="%"
                             min={-10} max={10} step={0.5} value={props.costChgRate} changeHandler={props.costChgRateHandler} />
                             : props.nextStepHandler()
                     } showOnLoad

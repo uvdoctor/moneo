@@ -28,7 +28,7 @@ interface BRComparisonProps {
 export default function BRComparison(props: BRComparisonProps) {
     const [showRentChart, setShowRentChart] = useState<boolean>(true)
     const [compData, setCompData] = useState<Array<any>>([])
-    const firstRRIndex = new Date().getFullYear() + 1 - props.startYear
+    const firstRRIndex = props.startYear - (new Date().getFullYear() + 1)
 
     const getNextTaxAdjRentAmt = (val: number) => {
         return (val * (1 + (props.rentChgPer / 100))) * (props.rentTaxBenefit > 0 ? (1 - (props.taxRate / 100)) : 1)
@@ -60,7 +60,7 @@ export default function BRComparison(props: BRComparisonProps) {
             }
             if (cfs.length > 0) {
                 x.push(i + 1)
-                y.push(i === 0 ? Math.round(cfs[0]) : getNPV(props.rr, cfs, firstRRIndex))
+                y.push(getNPV(props.rr, cfs, firstRRIndex))
             }
 
         }
@@ -73,13 +73,8 @@ export default function BRComparison(props: BRComparisonProps) {
         for (let i = 0; i < props.analyzeFor; i++) {
             let buyCFs = allBuyCFs[i]
             if (buyCFs && buyCFs.length > 0) {
-                let year0amt = buyCFs[0]
-                let cfs = []
-                for (let j = 1; j <= i; j++) {
-                    cfs.push(buyCFs[j])
-                }
                 x.push(i + 1)
-                y.push(i === 0 ? Math.round(year0amt) : Math.round(getNPV(props.rr, cfs, firstRRIndex)))
+                y.push(getNPV(props.rr, buyCFs, firstRRIndex))
             }
         }
         return { x: x, y: y }

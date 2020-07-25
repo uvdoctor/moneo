@@ -3,7 +3,7 @@ import TextInput from '../form/textinput'
 import SelectInput from '../form/selectinput'
 import NumberInput from '../form/numberinput'
 import * as APIt from '../../api/goals'
-import { initYearOptions, toCurrency, getRangeFactor } from '../utils'
+import { initYearOptions, getRangeFactor } from '../utils'
 import EmiCost from '../calc/emicost'
 import HToggle from '../horizontaltoggle'
 import TaxBenefit from '../calc/taxbenefit'
@@ -184,7 +184,7 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
     const initBuyCFsForComparison = (analyzeFor: number) => {
         let allCFs: Array<Array<number>> = []
         for (let i = 1; i <= analyzeFor; i++)
-            allCFs.push(i === sellAfter ? cfs : calculateYearlyCFs(i, false))
+            allCFs.push(calculateYearlyCFs(i, false))
         return allCFs
     }
 
@@ -274,13 +274,11 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
                     </div>
                     <div className="flex justify-center w-full mt-4">
                         <Cost startingCost={startingPrice} startingCostHandler={setStartingPrice} rangeFactor={rangeFactor}
-                            manualTargets={wipTargets} manualTargetsHandler={setWIPTargets} currency={currency}
+                            manualTargets={wipTargets} manualTargetsHandler={setWIPTargets} currency={currency} cost={price}
                             costChgRate={priceChgRate} costChgRateHandler={setPriceChgRate} endYear={endYear}
-                            manualMode={manualMode} manualModeHandler={setManualMode} startYear={startYear}
-                            rightPre="Amount" title={`Amount${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`}
-                            showRightCondition={startYear > goal.by} leftPre={startYear > goal.by ? 'Amount' : ''}
-                            leftPost={startYear > goal.by ? `in ${goal.by}` : ''} leftMin={0} leftMax={goalType === APIt.GoalType.B ? 1500000 : 50000}
-                            leftNote={goalType !== APIt.GoalType.D ? 'including taxes & fees' : ''} rightNote={`Yearly till ${startYear}`}
+                            manualMode={manualMode} manualModeHandler={setManualMode} startYear={startYear} baseYear={goal.by}
+                            leftMax={goalType === APIt.GoalType.B ? 1500000 : 50000}
+                            leftNote={goalType !== APIt.GoalType.D ? 'including taxes & fees' : ''}
                             inputOrder={5} currentOrder={currentOrder} nextStepDisabled={false}
                             nextStepHandler={handleNextStep} allInputDone={allInputDone} />
                     </div>
