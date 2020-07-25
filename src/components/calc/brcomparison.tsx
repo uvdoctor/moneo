@@ -9,7 +9,9 @@ interface BRComparisonProps {
     taxRate: number
     currency: string
     sellAfter: number
-    discountRate: number
+    startYear: number
+    analyzeFor: number
+    rr: Array<number>
     rentAmt: number
     rentAmtHandler: Function
     rentChgPer: number
@@ -26,7 +28,7 @@ interface BRComparisonProps {
 export default function BRComparison(props: BRComparisonProps) {
     const [showRentChart, setShowRentChart] = useState<boolean>(true)
     const [compData, setCompData] = useState<Array<any>>([])
-    const analyzeFor = 20
+    const firstRRIndex = new Date().getFullYear() + 1 - props.startYear
 
     const getNextTaxAdjRentAmt = (val: number) => {
         return (val * (1 + (props.rentChgPer / 100))) * (props.rentTaxBenefit > 0 ? (1 - (props.taxRate / 100)) : 1)
@@ -38,7 +40,7 @@ export default function BRComparison(props: BRComparisonProps) {
         if (!allBuyCFs || allBuyCFs.length < 1) return []
         let x: Array<number> = []
         let y: Array<number> = []
-        for (let i = 0; i < analyzeFor; i++) {
+        for (let i = 0; i < props.analyzeFor; i++) {
             let cfs = []
             let buyCFs = allBuyCFs[i]
             if (buyCFs && buyCFs.length > 0) {
@@ -48,16 +50,17 @@ export default function BRComparison(props: BRComparisonProps) {
                     let rentAmt = -1 * value
                     let diff = buyAmt - rentAmt
                     inv -= diff
-                    if (inv > 0) inv += inv * (props.discountRate / 100)
+                    if (inv > 0) {
+                        let dr = props.rr[firstRRIndex + j]
+                        inv += inv * (dr / 100)
+                    }
                     cfs.push(buyAmt < rentAmt ? buyAmt : rentAmt)
                 }
                 cfs[cfs.length - 1] += inv
             }
             if (cfs.length > 0) {
-                let initialAmt = cfs[0]
-                if (cfs.length > 1) cfs.splice(0, 1)
                 x.push(i + 1)
-                y.push(i === 0 ? Math.round(initialAmt) : Math.round(getNPV(props.discountRate, initialAmt, cfs)))
+                y.push(i === 0 ? Math.round(cfs[0]) : getNPV(props.rr, cfs, firstRRIndex))
             }
 
         }
@@ -67,7 +70,7 @@ export default function BRComparison(props: BRComparisonProps) {
     const initAllBuyCFs = (allBuyCFs: Array<Array<number>>) => {
         let x: Array<number> = []
         let y: Array<number> = []
-        for (let i = 0; i < analyzeFor; i++) {
+        for (let i = 0; i < props.analyzeFor; i++) {
             let buyCFs = allBuyCFs[i]
             if (buyCFs && buyCFs.length > 0) {
                 let year0amt = buyCFs[0]
@@ -76,7 +79,7 @@ export default function BRComparison(props: BRComparisonProps) {
                     cfs.push(buyCFs[j])
                 }
                 x.push(i + 1)
-                y.push(i === 0 ? Math.round(year0amt) : Math.round(getNPV(props.discountRate, year0amt, cfs)))
+                y.push(i === 0 ? Math.round(year0amt) : Math.round(getNPV(props.rr, cfs, firstRRIndex)))
             }
         }
         return { x: x, y: y }
@@ -150,7 +153,7 @@ export default function BRComparison(props: BRComparisonProps) {
             console.log("Chart data is ", data)
             if (data && data.length == 2) setCompData([...data])
         } else setCompData([...[]])
-    }, [props.taxRate, props.discountRate, props.rentAmt, props.rentChgPer, props.rentTaxBenefit, props.allBuyCFs])
+    }, [props.taxRate, props.rr, props.rentAmt, props.rentChgPer, props.rentTaxBenefit, props.allBuyCFs])
 
     return (
         <div className="mt-4 mb-4">

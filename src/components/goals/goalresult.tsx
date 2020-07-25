@@ -11,8 +11,8 @@ interface GoalResultProps {
     mergedCFs: Object
     currency: string
     ffGoalEndYear: number
-    discountRate: number
-    rrFallDuration: number
+    rr: Array<number>
+    startIndex: number
     ffImpactYearCalculator: Function
     goalId: string | null | undefined
 }
@@ -24,8 +24,8 @@ export default function GoalResult(props: GoalResultProps) {
                 mergedCFs={props.mergedCFs} ffAmt={props.ffAmt} ffLeftAmt={props.ffLeftAmt}
                 ffImpactYearCalculator={props.ffImpactYearCalculator} startYear={props.startYear}  
                 goalId={props.goalId} />
-            <OppCost discountRate={props.discountRate} cfs={props.cfs} currency={props.currency} rrFallDuration={props.rrFallDuration}
-                startYear={props.startYear} ffEndYear={props.ffGoalEndYear} ffYear={props.ffYear} />
+            <OppCost discountRate={props.rr} cfs={props.cfs} currency={props.currency}
+                startIndex={props.startIndex} />
         </div>
     )
 }

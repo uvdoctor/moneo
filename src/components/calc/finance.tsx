@@ -57,9 +57,10 @@ export function getRemainingPrincipal(borrowAmt: number, emi: number, intRate: n
     return principal <= 0 ? 0 : principal
 }
 
-export function getNPV(rate: number, initialCost: number, cashFlows: number[], annualFrequency = 1) {
-    let pr = Math.pow(1 + rate / 100, 1 / annualFrequency) - 1;
-    return cashFlows.reduce((accumulator, currentValue, index) => 
-        accumulator + (currentValue / Math.pow(pr + 1, index + 1)), 
-        initialCost);
+export function getNPV(rr: Array<number>, cashFlows: Array<number>, startIndex: number) {
+    let npv = 0
+    for(let i = cashFlows.length - 1; i > 0; i--) {
+        npv = (cashFlows[i] + npv) / (1 + (rr[startIndex + i]/100))
+    }
+    return Math.round(npv + cashFlows[0])
 }

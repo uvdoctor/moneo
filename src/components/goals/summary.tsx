@@ -18,8 +18,7 @@ interface SummaryProps {
     ffLeftAmt: number
     ffGoalEndYear: number
     mergedCFs: Object
-    oppDR: number
-    rrFallDuration: number
+    rr: Array<number>
     savings: number
     deleteCallback: Function
     editCallback: Function
@@ -28,6 +27,7 @@ interface SummaryProps {
 
 export default function Summary(props: SummaryProps) {
     const bgColor = props.imp === LMH.H ? 'bg-blue-600' : (props.imp === LMH.M ? 'bg-orange-600' : 'bg-green-600')
+    const nowYear = new Date().getFullYear()
 
     return (
         <div className="mt-4 mb-4 max-w-sm md:max-w-md rounded shadow-lg text-lg md:text-xl w-full">
@@ -48,10 +48,10 @@ export default function Summary(props: SummaryProps) {
                     </div>
                 </div>
             </div>
-            <GoalResult discountRate={props.oppDR} currency={props.currency} goalId={props.id}
-                        ffGoalEndYear={props.ffGoalEndYear} cfs={props.cfs} rrFallDuration={props.rrFallDuration} 
+            {props.startYear > nowYear && <GoalResult rr={props.rr} currency={props.currency} goalId={props.id}
+                        ffGoalEndYear={props.ffGoalEndYear} cfs={props.cfs} startIndex={props.startYear - (nowYear + 1)}
                         startYear={props.startYear} ffYear={props.ffYear} ffAmt={props.ffAmt} ffLeftAmt={props.ffLeftAmt} 
-                        mergedCFs={props.mergedCFs} ffImpactYearCalculator={props.ffImpactYearsCalculator} />
+                        mergedCFs={props.mergedCFs} ffImpactYearCalculator={props.ffImpactYearsCalculator} />}
             <p className="w-full text-center mt-4 mb-2">Yearly Cash Flows in {props.currency}</p>
             <LineChart cfs={props.cfs} startYear={props.startYear} />
         </div>

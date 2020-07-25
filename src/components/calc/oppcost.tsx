@@ -2,16 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { getCompoundedIncome } from './finance'
 import SVGBalance from './svgbalance'
 import ResultItem from './resultitem'
-import { getExpectedRR } from '../goals/cfutils'
 import { toCurrency } from '../utils'
 interface OppCostProps {
     cfs: Array<number>
     currency: string
-    discountRate: number
-    rrFallDuration: number
-    ffYear: number | null
-    ffEndYear: number
-    startYear: number
+    discountRate: Array<number>
+    startIndex: number
 }
 
 export default function OppCost(props: OppCostProps) {
@@ -24,11 +20,9 @@ export default function OppCost(props: OppCostProps) {
         }
         let oppCost = 0
         props.cfs.forEach((cf, index) => {
-            let expectedRR = getExpectedRR(props.startYear + index, props.ffYear, props.ffEndYear, 
-                props.discountRate, props.rrFallDuration)
             oppCost += cf
             if(index < props.cfs.length - 1)
-                oppCost = getCompoundedIncome(expectedRR, oppCost, 1)
+                oppCost = getCompoundedIncome(props.discountRate[props.startIndex + index], oppCost, 1)
         })
         setOppCost(oppCost)
     }

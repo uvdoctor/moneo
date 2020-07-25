@@ -35,16 +35,15 @@ interface GoalProps {
     ffYear: number | null
     ffAmt: number
     ffLeftAmt: number
-    oppDR: number
-    rrFallDuration: number
+    rr: Array<number>
     ffImpactYearsHandler: Function
     cancelCallback: Function
     addCallback: Function
     updateCallback: Function
 }
 
-export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear, ffAmt, ffLeftAmt, oppDR,
-    rrFallDuration, ffImpactYearsHandler, cancelCallback, addCallback, updateCallback }: GoalProps) {
+export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear, ffAmt, ffLeftAmt, rr,
+    ffImpactYearsHandler, cancelCallback, addCallback, updateCallback }: GoalProps) {
     const [startYear, setStartYear] = useState<number>(goal.sy)
     const [endYear, setEndYear] = useState<number>(goal.ey)
     const [syOptions] = useState(initYearOptions(goal.by + 1, 50))
@@ -85,6 +84,13 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
     const [currentOrder, setCurrentOrder] = useState<number>(1)
     const [allInputDone, setAllInputDone] = useState<boolean>(goal.id ? true : false)
     const [btnClicked, setBtnClicked] = useState<boolean>(false)
+    const [analyzeFor, setAnalyzeFor] = useState<number>(20)
+    const nowYear = new Date().getFullYear()
+
+    useEffect(() => {
+        let diff = ffGoalEndYear - startYear
+        if(diff < 20) setAnalyzeFor(diff)
+    }, [startYear])
 
     const createNewBaseGoal = () => {
         return {
@@ -99,7 +105,6 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
             chg: priceChgRate,
             type: goalType,
             tgts: manualMode ? wipTargets : [],
-            dr: oppDR,
             imp: impLevel,
             manual: manualMode,
         } as APIt.CreateGoalInput
@@ -323,7 +328,7 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
                                 inputOrder={18} currentOrder={currentOrder} nextStepDisabled={false}
                                 nextStepHandler={handleNextStep} allInputDone={allInputDone} />
                         </Fragment> : !allInputDone && currentOrder === 16 && handleNextStep(4)}
-                        {sellAfter ?
+                        {sellAfter && nowYear < startYear ?
                             ((!allInputDone && currentOrder >= 20) || allInputDone) &&
                             <Section title="Instead, If You Rent" insideForm
                                 left={<div className="pl-4 pr-4">
@@ -353,11 +358,11 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
                             : !allInputDone && currentOrder === 20 && handleNextStep(2)}
                     </div>
                 </Fragment>
-                {sellAfter && rentAmt > 0 && price > 0 &&
+                {sellAfter && rentAmt > 0 && price > 0 && nowYear < startYear &&
                     <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
-                        discountRate={oppDR} allBuyCFs={initBuyCFsForComparison(22)}
+                        rr={rr} allBuyCFs={initBuyCFsForComparison(analyzeFor)} startYear={startYear}
                         rentTaxBenefit={rentTaxBenefit as number} rentTaxBenefitHandler={setRentTaxBenefit}
-                        rentAmt={rentAmt} rentAmtHandler={setRentAmt}
+                        rentAmt={rentAmt} rentAmtHandler={setRentAmt} analyzeFor={analyzeFor}
                         rentChgPer={rentChgPer} rentChgPerHandler={setRentChgPer} answer={answer}
                         rentAns={rentAns} answerHandler={setAnswer} rentAnsHandler={setRentAns} />
                 }
@@ -389,9 +394,9 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
 
             {allInputDone &&
                 <Fragment>
-                    <GoalResult discountRate={oppDR} currency={currency} ffAmt={ffAmt} ffLeftAmt={ffLeftAmt}
-                        ffGoalEndYear={ffGoalEndYear} cfs={cfs} rrFallDuration={rrFallDuration} startYear={startYear} ffYear={ffYear} 
-                        ffImpactYearCalculator={ffImpactYearsHandler} mergedCFs={mergedCFs} goalId={goal.id} />
+                    {nowYear < startYear && <GoalResult rr={rr} startIndex={startYear - (nowYear + 1)} currency={currency} ffAmt={ffAmt} ffLeftAmt={ffLeftAmt}
+                        ffGoalEndYear={ffGoalEndYear} cfs={cfs} startYear={startYear} ffYear={ffYear} 
+                        ffImpactYearCalculator={ffImpactYearsHandler} mergedCFs={mergedCFs} goalId={goal.id} />}
                     <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
                         submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />

@@ -36,6 +36,19 @@ export function initYearOptions(startYear: number, duration: number, exclusions:
 	return years
 }
 
+export const buildArray = (fromYear: number, toYear: number, num: number = 0) => {
+	let arr: Array<number> = []
+	for(let year = fromYear; year <= toYear; year++)
+		arr.push(num)
+	return arr
+}
+
+export const buildYearsArray = (startYear: number, endYear: number) => {
+	let years = []
+	for(let i = startYear; i <= endYear; i++) years.push(i)
+	return years
+}
+
 export const toStringArr = (startNum: number, endNum: number, step: number = 1) => {
 	let returnArr: Array<string> = []
 	for (let i = startNum; i <= endNum; i += step) {

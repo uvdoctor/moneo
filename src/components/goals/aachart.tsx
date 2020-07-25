@@ -1,29 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import dynamic from 'next/dynamic'
-interface CFChartProps {
-    mustCFs: Array<number>
-    tryCFs: Array<number>
-    optCFs: Array<number>
-    from: number
-    to: number
+interface AAChartProps {
+    aa: any
+    rr: Array<number>
+    years: Array<number>
 }
 
-export default function CFChart({ mustCFs, tryCFs, optCFs, from, to }: CFChartProps) {
-    const [years, setYears] = useState<Array<number>>([])
-    
-    useEffect(() => {
-        for(let year = from; year <= to; year++)
-            years.push(year)
-        setYears([...years])
-    }, [from, to])
+export default function AAChart(props: AAChartProps) {
 
     const Plot = dynamic(
         () => import('react-plotly.js'), { ssr: false }
     )
 
-    const createBarTrace = (cfs: Array<number>, name: string) => {
+    const createScatterTrace = (cfs: any, name: string, color: string) => {
         return {
-            type: 'bar', x: years, y: cfs, name: name
+            type: 'scatter', x: props.years, y: cfs, name: name,
+            marker: {
+                color: color
+            }
         }
     }
 
@@ -45,9 +39,13 @@ export default function CFChart({ mustCFs, tryCFs, optCFs, from, to }: CFChartPr
                 useResizeHandler={true}
                 style={{ width: "100%", height: "100%" }}
                 data={[
-                    createBarTrace(mustCFs, 'Must Meet'),
-                    createBarTrace(tryCFs, 'Try Best'),
-                    createBarTrace(optCFs, 'Optional'),
+                    createScatterTrace(props.aa.cash, 'Cash', 'green'),
+                    createScatterTrace(props.aa.deposits, 'Deposits', 'pink'),
+                    createScatterTrace(props.aa.bonds, 'Bonds', 'brown'),
+                    createScatterTrace(props.aa.stocks, 'Equity', 'red'),
+                    createScatterTrace(props.aa.property, 'Property', 'purple'),
+                    createScatterTrace(props.aa.gold, 'Gold', 'gold'),
+                    createScatterTrace(props.rr, 'Rate of Return', 'blue')
                 ]}
                 config={{ responsive: true, editable: false, displayModeBar: false }}
             />

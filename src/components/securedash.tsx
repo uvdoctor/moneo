@@ -5,7 +5,7 @@ import NW from './nw/nw'
 import {CreateGoalInput, GoalType} from '../api/goals'
 import {getGoalsList, getDuration} from './goals/goalutils'
 import { calculateCFs } from './goals/cfutils'
-import {removeFromArray} from './utils'
+import {removeFromArray, buildArray} from './utils'
 
 const SecureDash = () => {
     const netWorthLabel = "Net Worth"
@@ -21,8 +21,10 @@ const SecureDash = () => {
     const [allGoals, setAllGoals] = useState<Array<CreateGoalInput> | null>([])
     const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false)
     const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(null)
-    const [allCFs, setAllCFs] = useState<any>({})
-    
+    const [allCFs, setAllCFs] = useState<Object>({})
+    const [aa, setAA] = useState<Object>({})
+    const [rr, setRR] = useState<Array<number>>([])
+
     const changeViewMode = (e: any) => {
         setViewMode(e.target.innerText)
     }
@@ -51,6 +53,66 @@ const SecureDash = () => {
         setGoalsLoaded(true)
     }
 
+    const calculateRR = () => {
+        let aa: any = populateDefaultAA()
+        setAA(aa)
+        setRR([...populateRR(aa)])
+    }
+
+    const populateDefaultAA = () => {
+        let fromYear = new Date().getFullYear() + 1
+        let toYear = ffGoal?.ey as number + 1
+        let aa = buildEmptyAA(fromYear, toYear)
+        for(let i = 0; i < aa.cash.length; i++) {
+            aa.cash[i] = 5
+            aa.gold[i] = 5
+            aa.property[i] = 10
+            aa.deposits[i] = 10
+            aa.bonds[i] = 20
+            aa.stocks[i] = 50
+        }
+        return aa
+    }
+
+    const populateRR = (aa: any) => {
+        console.log("Going to calculate rr for aa...", aa)
+        const dp = getDefaultPerf()
+        let rr = []
+        for(let i = 0; i < aa.cash.length; i++) {
+            let perf = 0
+            for(const prop in aa) {
+                //@ts-ignore
+                perf += (dp[prop] * aa[prop][i]) / 100
+            }
+            rr.push(Math.round((perf + Math.random()) * 100 + Number.EPSILON) / 100)
+        }
+        console.log("RR...", rr)
+        return rr
+    }
+
+    const getDefaultPerf = () => {
+        return {
+            cash: 0.5,
+            deposits: 1.5,
+            bonds: 3.5,
+            property: 5,
+            gold: 5,
+            stocks: 7
+        }
+    }
+
+    const buildEmptyAA = (fromYear: number, toYear: number) => {
+        return {
+            cash: buildArray(fromYear, toYear),
+            deposits: buildArray(fromYear, toYear),
+            bonds: buildArray(fromYear, toYear),
+            property: buildArray(fromYear, toYear),
+            gold: buildArray(fromYear, toYear),
+            stocks: buildArray(fromYear, toYear)
+        }
+    }
+
+
     return (
         <Fragment>
             {!showModal && <ul className="flex mt-12 bg-black w-screen">
@@ -63,7 +125,7 @@ const SecureDash = () => {
             totalSavingsHandler={setSavings} annualSavingsHandler={setAnnualSavings} currency={currency} currencyHandler={setCurrency} />}
             {viewMode === goalsLabel && <Goals showModalHandler={setShowModal} savings={savings} annualSavings={annualSavings} 
                     allGoals={allGoals} goalsLoaded={goalsLoaded} allGoalsHandler={setAllGoals} currency={currency} allCFs={allCFs}
-                    allCFsHandler={setAllCFs} ffGoal={ffGoal} ffGoalHandler={setFFGoal} />}
+                    allCFsHandler={setAllCFs} ffGoal={ffGoal} ffGoalHandler={setFFGoal} aa={aa} rr={rr} rrCalculator={calculateRR} />}
         </Fragment>
     )
 }
