@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react'
 import Goal from './goal'
 import FFGoal from './ffgoal'
-import { buildYearsArray, removeFromArray } from '../utils'
+import { buildYearsArray, removeFromArray, toCurrency } from '../utils'
 import CFChart from './cfchart'
 import AAChart from './aachart'
 import * as APIt from '../../api/goals'
@@ -22,6 +22,7 @@ interface GoalsProps {
     showModalHandler: Function
     savings: number
     annualSavings: number
+    savingsChgRate: number
     currency: string
     allGoals: Array<APIt.CreateGoalInput> | null
     allCFs: Object
@@ -32,18 +33,18 @@ interface GoalsProps {
     allGoalsHandler: Function
     allCFsHandler: Function
     ffGoalHandler: Function
+    savingsChgRateHandler: Function
     rrCalculator: Function
 }
 
-export default function Goals({ showModalHandler, savings, annualSavings, currency, allGoals, allCFs,
-    goalsLoaded, ffGoal, aa, rr, allGoalsHandler, allCFsHandler, ffGoalHandler, rrCalculator }: GoalsProps) {
+export default function Goals({ showModalHandler, savings, annualSavings, savingsChgRate, currency, allGoals, allCFs,
+    goalsLoaded, ffGoal, aa, rr, allGoalsHandler, allCFsHandler, ffGoalHandler, savingsChgRateHandler, rrCalculator }: GoalsProps) {
     const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null)
     const [mustCFs, setMustCFs] = useState<Array<number>>([])
     const [tryCFs, setTryCFs] = useState<Array<number>>([])
     const [optCFs, setOptCFs] = useState<Array<number>>([])
     const [mergedCFs, setMergedCFs] = useState<any>({})
     const [impFilter, setImpFilter] = useState<string>("")
-    const [savingsChgRate, setSavingsChgRate] = useState<number>(3)
     const [ffYear, setFFYear] = useState<number | null>(0)
     const [ffAmt, setFFAmt] = useState<number>(0)
     const [ffLeftOverAmt, setFFLeftOverAmt] = useState<number>(0)
@@ -53,6 +54,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
     const aaLabel = "Asset Allocation"
     const viewItems = [goalsLabel, cfLabel, aaLabel]
     const [viewMode, setViewMode] = useState(goalsLabel)
+    const nowYear = new Date().getFullYear()
 
     const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
         if (!ffGoal) return {}
@@ -185,7 +187,6 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
         createNewGoalInput(type, type === APIt.GoalType.FF ? currency : ffGoal?.ccy as string))
 
     const getYearRange = () => {
-        let nowYear = new Date().getFullYear()
         let fromYear = nowYear + 1
         if (!ffGoal) return { from: fromYear, to: fromYear }
         let toYear = nowYear + 1
@@ -195,7 +196,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
             let endYear = g.sy + allCFs[g.id].length
             if (endYear > toYear) toYear = endYear
         })
-        if(toYear > ffGoal.ey + 1) toYear = ffGoal.ey + 1
+        if (toYear > ffGoal.ey + 1) toYear = ffGoal.ey + 1
         return { from: fromYear, to: toYear }
     }
 
@@ -260,8 +261,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
                 <div className="relative bg-white border-0">
                     {wipGoal.type === APIt.GoalType.FF ?
                         <FFGoal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
-                            updateCallback={updateGoal} annualSavings={annualSavings} savingsChgRate={savingsChgRate}
-                            savingsChgRateHandler={setSavingsChgRate} totalSavings={savings}
+                            updateCallback={updateGoal} annualSavings={annualSavings} savingsChgRate={savingsChgRate} totalSavings={savings}
                             ffYear={ffYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffCfs={ffCfs} mergedCfs={mergedCFs}
                             ffYearHandler={setFFYear} ffAmtHandler={setFFAmt} ffLeftOverAmtHandler={setFFLeftOverAmt}
                             ffCfsHandler={setFFCfs} rr={rr} />
@@ -297,20 +297,28 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
                                 </div>
                             } left={
                                 <FFResult endYear={ffGoal.ey} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} currency={ffGoal.ccy} />
-                            } bottom={
-                                <div className="flex flex-wrap justify-around items-center w-full">
+                            } bottomLeft="Savings" bottomRight={
+                                <AwesomeButton type="primary" ripple>
+                                    SET TARGET
+                                </AwesomeButton>
+                            }
+                                bottom={
                                     <NumberInput name="asChgRate"
                                         inputOrder={1}
                                         currentOrder={0}
                                         nextStepDisabled
                                         allInputDone
                                         nextStepHandler={() => true}
-                                        pre="Savings" post="Increases" note='Every Year' unit="%"
-                                        min={0} max={20} step={0.1} value={savingsChgRate} changeHandler={setSavingsChgRate} />
-                                </div>
-                            } hasResult />
+                                        pre="Increases" post="Every Month" unit="%" note={`${toCurrency(Math.round(annualSavings * (savingsChgRate / 100)), currency)} Monthly in ${nowYear + 1}`}
+                                        min={0} max={5} step={0.1} value={savingsChgRate} changeHandler={savingsChgRateHandler}
+                                        info={`Given Annual Savings of ${toCurrency(annualSavings, currency)} by end of ${nowYear}, 
+                                        ${savingsChgRate}% increase in savings comes to about 
+                                        ${toCurrency(Math.round(annualSavings * (savingsChgRate / 100)), currency)} per month. However,
+                                        due to the power of compounding, even small increase in savings done regularly on a monthly basis can make a significant impact 
+                                        in the long term.`} infoDurationInMs={7000} />
+                                } hasResult />
                         </div> : <div />}
-                        {ffGoal && <ul className="flex justify-center border-b mt-4 md:mt-8 w-screen">
+                        {ffGoal && <ul className="flex flex-wrap justify-center items-center border-b mt-4 md:mt-8 w-screen">
                             {viewItems.map((item, i) => (
                                 <li key={"viewItem" + i} className="cursor-pointer py-1 bg-gray-200">
                                     <a onClick={changeViewMode} style={{ color: viewMode === item ? "white" : "gray", backgroundColor: viewMode === item ? "black" : "transparent" }} className="px-4 py-2">{item}</a>
@@ -329,7 +337,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
                             </div>}
                             <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>
                             {viewMode === cfLabel ?
-                                <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} from={new Date().getFullYear() + 1} to={ffGoal.ey} />
+                                <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} from={nowYear + 1} to={ffGoal.ey} />
                                 :
                                 viewMode === goalsLabel ? <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
                                     {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
@@ -340,8 +348,8 @@ export default function Goals({ showModalHandler, savings, annualSavings, curren
                                             ffYear={ffYear} ffGoalEndYear={ffGoal.ey} mergedCFs={mergedCFs} ffAmt={ffAmt} ffLeftAmt={ffLeftOverAmt}
                                             ffImpactYearsCalculator={calculateFFImpactYear} />)}
                                 </div> : <div>
-                                        <AAChart aa={aa} years={buildYearsArray(new Date().getFullYear() + 1, ffGoal.ey + 1)} rr={rr} />
-                                </div>}
+                                        <AAChart aa={aa} years={buildYearsArray(nowYear, ffGoal.ey + 1)} rr={rr} />
+                                    </div>}
                         </Fragment>}
                     </Fragment>
                     : goalsLoaded && <div className="text-center align-center">

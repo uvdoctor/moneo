@@ -71,7 +71,7 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, s
     let nowYear = new Date().getFullYear()
     let duration = ffYear - (nowYear + 1)
     for (let i = 1; i <= duration; i++) {
-        let val = getCompoundedIncome(savingsChgRate, annualSavings, i)
+        let val = getCompoundedIncome(savingsChgRate * 12, annualSavings, i, 12)
         cfs.push(Math.round(val))
     }
     for (let year = ffYear; year <= g.ey; year++) {

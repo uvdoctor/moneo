@@ -39,7 +39,7 @@ export default function Section(props: SectionProps) {
                                 {props.right}
                             </div>}
                         </div>
-                        {props.bottom && <div className="flex mt-2 items-center justify-center">
+                        {props.bottom && <div className="flex flex-wrap mt-2 items-center justify-center">
                             <label className="mr-4">{props.bottomLeft}</label>
                             {props.bottom}
                             <label className="ml-4">{props.bottomRight}</label>

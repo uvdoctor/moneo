@@ -49,6 +49,12 @@ export const buildYearsArray = (startYear: number, endYear: number) => {
 	return years
 }
 
+export const convertPerToDec = (arr: Array<number>) => {
+	let retArr: Array<number> = []
+	arr.forEach(val => retArr.push(val/100))
+	return retArr
+}
+
 export const toStringArr = (startNum: number, endNum: number, step: number = 1) => {
 	let returnArr: Array<string> = []
 	for (let i = startNum; i <= endNum; i += step) {

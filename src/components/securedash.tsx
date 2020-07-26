@@ -17,6 +17,7 @@ const SecureDash = () => {
     const [showModal, setShowModal] = useState<boolean>(false)
     const [savings, setSavings] = useState<number>(0)
     const [annualSavings, setAnnualSavings] = useState<number>(0)
+    const [savingsChgRate, setSavingsChgRate] = useState<number>(1)
     const [currency, setCurrency] = useState<string>("USD")
     const [allGoals, setAllGoals] = useState<Array<CreateGoalInput> | null>([])
     const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false)
@@ -75,7 +76,6 @@ const SecureDash = () => {
     }
 
     const populateRR = (aa: any) => {
-        console.log("Going to calculate rr for aa...", aa)
         const dp = getDefaultPerf()
         let rr = []
         for(let i = 0; i < aa.cash.length; i++) {
@@ -86,7 +86,6 @@ const SecureDash = () => {
             }
             rr.push(Math.round((perf + Math.random()) * 100 + Number.EPSILON) / 100)
         }
-        console.log("RR...", rr)
         return rr
     }
 
@@ -121,11 +120,12 @@ const SecureDash = () => {
                         <button onClick={changeViewMode} style={{ color: viewMode === item ? "green" : "white", backgroundColor: viewMode === item ? "white" : "transparent" }} className="dashmi md:mt-4 md:px-4 hover:bg-white hover:border-t hover:text-green-600 focus:outline-none">{item}</button>
                     </li>))}
             </ul>}
-            {viewMode === netWorthLabel && <NW totalSavings={savings} annualSavings={annualSavings} viewModeHandler={setViewMode}
+            {viewMode === netWorthLabel && <NW totalSavings={savings} annualSavings={annualSavings} viewModeHandler={setViewMode} 
+            savingsChgRateHandler={setSavingsChgRate} savingsChgRate={savingsChgRate}
             totalSavingsHandler={setSavings} annualSavingsHandler={setAnnualSavings} currency={currency} currencyHandler={setCurrency} />}
-            {viewMode === goalsLabel && <Goals showModalHandler={setShowModal} savings={savings} annualSavings={annualSavings} 
+            {viewMode === goalsLabel && <Goals showModalHandler={setShowModal} savings={savings} annualSavings={annualSavings} savingsChgRate={savingsChgRate}
                     allGoals={allGoals} goalsLoaded={goalsLoaded} allGoalsHandler={setAllGoals} currency={currency} allCFs={allCFs}
-                    allCFsHandler={setAllCFs} ffGoal={ffGoal} ffGoalHandler={setFFGoal} aa={aa} rr={rr} rrCalculator={calculateRR} />}
+                    allCFsHandler={setAllCFs} ffGoal={ffGoal} ffGoalHandler={setFFGoal} savingsChgRateHandler={setSavingsChgRate} aa={aa} rr={rr} rrCalculator={calculateRR} />}
         </Fragment>
     )
 }
