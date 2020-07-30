@@ -7,18 +7,16 @@ interface AAChartProps {
     years: Array<number>
 }
 
+const Plot = dynamic(
+    () => import('react-plotly.js'), { ssr: false }
+)
+
 export default function AAChart(props: AAChartProps) {
-
-    const Plot = dynamic(
-        () => import('react-plotly.js'), { ssr: false }
-    )
-
-    const createScatterTrace = (cfs: any, name: string, color: string) => {
+    
+    const createScatterTrace = (cfs: any, name: string, color: string, mode: string = 'line') => {
         return {
             type: 'scatter', x: props.years, y: convertPerToDec(cfs), name: name,
-            marker: {
-                color: color
-            }
+            mode: mode, marker:{color: color}, line: {shape: 'spline'}
         }
     }
 
@@ -28,7 +26,7 @@ export default function AAChart(props: AAChartProps) {
             <Plot layout={{
                 barmode: 'stack',
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
-                autosize: true,
+                autosize: true, margin:{t:0},
                 yaxis: { fixedrange: true, tickformat: '%', showgrid: false },
                 xaxis: { showgrid: false, type: 'category', rangeslider: {} },
                 legend: {
@@ -40,13 +38,12 @@ export default function AAChart(props: AAChartProps) {
                 useResizeHandler={true}
                 style={{ width: "100%", height: "100%" }}
                 data={[
-                    createScatterTrace(props.aa.cash, 'Cash', 'green'),
-                    createScatterTrace(props.aa.deposits, 'Deposits', 'pink'),
-                    createScatterTrace(props.aa.bonds, 'Bonds', 'brown'),
-                    createScatterTrace(props.aa.stocks, 'Equity', 'red'),
-                    createScatterTrace(props.aa.property, 'Property', 'purple'),
+                    createScatterTrace(props.aa.cash, 'Cash', '#38a169'),
+                    createScatterTrace(props.aa.bonds, 'Bonds', '#3182ce'),
+                    createScatterTrace(props.aa.stocks, 'Stocks', '#dd6b20'),
+                    createScatterTrace(props.aa.reit, 'REIT', '#434190'),
                     createScatterTrace(props.aa.gold, 'Gold', 'gold'),
-                    createScatterTrace(props.rr, 'Yearly Potential Return', 'blue')
+                    createScatterTrace(props.rr, 'Potential Return', 'brown', 'lines+markers')
                 ]}
                 config={{ responsive: true, editable: false, displayModeBar: false }}
             />

@@ -8,6 +8,10 @@ interface CFChartProps {
     to: number
 }
 
+const Plot = dynamic(
+    () => import('react-plotly.js'), { ssr: false }
+)
+
 export default function CFChart({ mustCFs, tryCFs, optCFs, from, to }: CFChartProps) {
     const [years, setYears] = useState<Array<number>>([])
     
@@ -16,10 +20,6 @@ export default function CFChart({ mustCFs, tryCFs, optCFs, from, to }: CFChartPr
             years.push(year)
         setYears([...years])
     }, [from, to])
-
-    const Plot = dynamic(
-        () => import('react-plotly.js'), { ssr: false }
-    )
 
     const createBarTrace = (cfs: Array<number>, name: string) => {
         return {
