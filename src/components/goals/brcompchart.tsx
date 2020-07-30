@@ -10,10 +10,11 @@ interface BRCompChartProps {
     title: string
 }
 
+const Plot = dynamic(
+    () => import('react-plotly.js'), {ssr: false}
+);
+
 export function BRCompChart(props: BRCompChartProps) {
-    const Plot = dynamic(
-        () => import('react-plotly.js'), {ssr: false}
-    )
 
     return (
         <div className="w-full">
