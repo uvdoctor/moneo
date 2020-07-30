@@ -6,6 +6,11 @@ interface LineChartProps {
     startYear: number
 }
 
+
+const Plot = dynamic(
+    () => import('react-plotly.js'), { ssr: false }
+);
+
 export default function LineChart(props: LineChartProps) {
     const [years, setYears] = useState<Array<number>>([])
     const layout = {
@@ -27,10 +32,6 @@ export default function LineChart(props: LineChartProps) {
         for (let i = 0; i < props.cfs.length; i++) years.push(props.startYear + i)
         setYears([...years])
     }, [props.cfs, props.startYear])
-
-    const Plot = dynamic(
-        () => import('react-plotly.js'), { ssr: false }
-    )
 
     return (
         <div className="w-full">
