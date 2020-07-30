@@ -7,12 +7,11 @@ interface AAChartProps {
     years: Array<number>
 }
 
+const Plot = dynamic(
+    () => import('react-plotly.js'), { ssr: false }
+)
+
 export default function AAChart(props: AAChartProps) {
-
-    const Plot = dynamic(
-        () => import('react-plotly.js'), { ssr: false }
-    )
-
     const createScatterTrace = (cfs: any, name: string, color: string) => {
         return {
             type: 'scatter', x: props.years, y: convertPerToDec(cfs), name: name,
