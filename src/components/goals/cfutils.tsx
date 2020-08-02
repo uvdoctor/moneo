@@ -395,6 +395,8 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
     let ffCfs = {}
     let cash = calculateCashAllocation(ffGoal, mustCFs, avgAnnualExpense, expChgRate, ffYear)
     let bonds = calculateBondAllocation(ffGoal, mustCFs, tryCFs, avgAnnualExpense, expChgRate, ffYear)
+    console.log("Cash allocation calculate: ", cash)
+    console.log("Bond allocation calculated: ", bonds)
     let aa: any = buildEmptyAA(nowYear + 1, ffGoal.ey)
     let rr: Array<number> = []
     let minReq = 0
@@ -402,8 +404,8 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
         let y = parseInt(year)
         let v = parseInt(value)
         if (v < 0) cs += v
-        let ca = cash[y]
-        let ba = bonds[y]
+        let ca = cash[y] ? cash[y] : 0
+        let ba = bonds[y] ? bonds[y] : 0
         minReq = ca + ba
         if (cs < minReq) {
             //@ts-ignore
@@ -452,7 +454,7 @@ export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, savings: number
     let prevResult = checkForFF(savings, ffGoal, yearToTry, mergedCFs, annualSavings, savingsChgRate,
         mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
     let increment = prevResult.ffAmt > 0 && prevResult.leftAmt > 0 ? -1 : 1
-    for (let currYear = yearToTry + increment; currYear <= ffGoal.ey && currYear > nowYear; currYear += increment) {
+    for (let currYear = yearToTry + increment; currYear <= ffGoal.ey - 20 && currYear > nowYear; currYear += increment) {
         let result = checkForFF(savings, ffGoal, currYear, mergedCFs, annualSavings, savingsChgRate,
             mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
         if ((result.leftAmt < 0 || result.ffAmt < 0) && (prevResult.leftAmt >= 0 && prevResult.ffAmt > 0))

@@ -54,6 +54,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
     const [ffAmt, setFFAmt] = useState<number>(0)
     const [ffLeftOverAmt, setFFLeftOverAmt] = useState<number>(0)
     const [ffCfs, setFFCfs] = useState<any>({})
+    const [ffMinReq, setFFMinReq] = useState<number>(0)
     const goalsLabel = "Goals"
     const cfLabel = "Cash Flows"
     const aaLabel = "Asset Allocation"
@@ -84,6 +85,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
         setFFCfs(result.ffCfs)
         aaHandler(result.aa)
         rrHandler([...result.rr])
+        setFFMinReq(result.minReq)
     }
 
     useEffect(() => {
@@ -274,8 +276,8 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                         <FFGoal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
                             updateCallback={updateGoal} annualSavings={annualSavings} savingsChgRate={savingsChgRate} totalSavings={savings}
                             ffYear={ffYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffCfs={ffCfs} mergedCfs={mergedCFs}
-                            ffYearHandler={setFFYear} ffAmtHandler={setFFAmt} ffLeftOverAmtHandler={setFFLeftOverAmt}
-                            ffCfsHandler={setFFCfs} rr={rr} rrHandler={rrHandler} aaHandler={aaHandler} pp={pp}
+                            ffYearHandler={setFFYear} ffAmtHandler={setFFAmt} ffLeftOverAmtHandler={setFFLeftOverAmt} ffMinReqHandler={setFFMinReq}
+                            ffCfsHandler={setFFCfs} rr={rr} rrHandler={rrHandler} aaHandler={aaHandler} pp={pp} ffMinReq={ffMinReq}
                             avgAnnualExp={avgAnnualExpense} expChgRate={expChgRate} mustCFs={mustCFs} tryCFs={tryCFs} />
                         : ffGoal && <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
                             updateCallback={updateGoal} mergedCFs={mergedCFs} ffImpactYearsHandler={calculateFFImpactYear} ffGoalEndYear={ffGoal.ey}
@@ -308,7 +310,8 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                                     </div>
                                 </div>
                             } left={
-                                <FFResult endYear={ffGoal.ey} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} currency={ffGoal.ccy} />
+                                <FFResult endYear={ffGoal.ey} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} currency={ffGoal.ccy} 
+                                        ffMinReq={ffMinReq} />
                             } bottomLeft="Savings" bottomRight={
                                 <AwesomeButton type="primary" ripple>
                                     SET TARGET

@@ -31,6 +31,7 @@ interface FFGoalProps {
     ffAmt: number
     ffLeftOverAmt: number
     ffCfs: any
+    ffMinReq: number
     mustCFs: Array<number>
     tryCFs: Array<number>
     mergedCfs: any
@@ -41,14 +42,15 @@ interface FFGoalProps {
     ffAmtHandler: Function
     ffLeftOverAmtHandler: Function
     ffCfsHandler: Function
+    ffMinReqHandler: Function
     cancelCallback: Function
     addCallback: Function
     updateCallback: Function
 }
 
 export default function FFGoal({ goal, totalSavings, rr, annualSavings, savingsChgRate,
-    avgAnnualExp, expChgRate, ffYear, ffAmt, ffLeftOverAmt, ffCfs, mustCFs, tryCFs, mergedCfs, pp,
-    aaHandler, rrHandler, ffYearHandler, ffAmtHandler, ffLeftOverAmtHandler, ffCfsHandler,
+    avgAnnualExp, expChgRate, ffYear, ffAmt, ffLeftOverAmt, ffCfs, ffMinReq, mustCFs, tryCFs, mergedCfs, pp,
+    aaHandler, rrHandler, ffYearHandler, ffAmtHandler, ffLeftOverAmtHandler, ffCfsHandler, ffMinReqHandler,
     cancelCallback, addCallback, updateCallback }: FFGoalProps) {
     const [expenseBY, setExpenseBY] = useState<number>(goal.sy)
     const [expenseAfterFF, setExpenseAfterFF] = useState<number>(goal?.tbr as number)
@@ -127,10 +129,12 @@ export default function FFGoal({ goal, totalSavings, rr, annualSavings, savingsC
         ffCfsHandler(result.ffCfs)
         aaHandler(result.aa)
         rrHandler([...result.rr])
+        ffMinReqHandler(result.minReq)
+        console.log("FF Result is ", result)
     }, [expenseBY, endYear, taxRate, careTaxDedLimit, carePremiumSY, carePremiumChgPer,
         carePremiumDur, carePremium, cpBY, retirementIncomeSY, retirementIncomePer,
-        retirementIncome, leaveBehind, successionTaxRate, gains, losses, totalSavings, rr,
-        annualSavings, expenseAfterFF, expenseChgRate, savingsChgRate, allInputDone, currentOrder])
+        retirementIncome, leaveBehind, successionTaxRate, gains, losses, totalSavings,
+        annualSavings, expenseAfterFF, expenseChgRate, savingsChgRate, allInputDone])
 
     useEffect(() => {
         setCYOptions(initYearOptions(endYear - 30, 10))
@@ -344,7 +348,8 @@ export default function FFGoal({ goal, totalSavings, rr, annualSavings, savingsC
             </div>
             {allInputDone &&
                 <Fragment>
-                    <FFResult endYear={endYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt + leaveBehind} ffYear={ffYear} currency={currency} />
+                    <FFResult endYear={endYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt + leaveBehind} ffYear={ffYear} 
+                        ffMinReq={ffMinReq} currency={currency} />
                     <ActionButtons submitDisabled={annualSavings === 0 && expenseAfterFF < 5000 || btnClicked} cancelDisabled={btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} submitText={`${goal.id ? 'UPDATE' : 'CREATE'} TARGET`} />
                 </Fragment>}

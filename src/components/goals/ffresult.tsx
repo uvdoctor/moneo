@@ -9,13 +9,14 @@ interface FFResultProps {
     ffYear: number | null
     ffAmt: number
     ffLeftOverAmt: number
+    ffMinReq: number
     currency: string
 }
 
-export default function FFResult({ endYear, ffYear, ffAmt, ffLeftOverAmt, currency }: FFResultProps) {
+export default function FFResult({ endYear, ffYear, ffAmt, ffLeftOverAmt, ffMinReq, currency }: FFResultProps) {
     return (
         <div className="w-full">
-            {ffYear && ffLeftOverAmt >= 0 && ffAmt > 0 ?
+            {ffYear && ffLeftOverAmt >= 0 && ffAmt > ffMinReq ?
                 <div className="py-2 flex flex-wrap justify-around w-full items-start bg-green-100 border-t border-b border-green-200">
                     <ResultItem svg={<SVGHourGlass />} label="Achievable from" result={ffYear} noResultFormat
                         info={`${ffYear} may be the Earliest You can Achieve Financial Freedom.`} />
