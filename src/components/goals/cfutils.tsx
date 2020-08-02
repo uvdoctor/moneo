@@ -403,6 +403,7 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
     for (let [year, value] of Object.entries(mCFs)) {
         let y = parseInt(year)
         let v = parseInt(value)
+        console.log("Y is ", y)
         if (v < 0) cs += v
         let ca = cash[y] ? cash[y] : 0
         let ba = bonds[y] ? bonds[y] : 0
@@ -435,6 +436,7 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
         let rate = getRR(aa, y - (nowYear + 1), pp)
         rr.push(rate)
         cs *= (1 + (rate / 100))
+        console.log("CS after multiplying rr is ", cs)
         if (v > 0) cs += v
         if (ffYear === nowYear + 1 && y === nowYear + 1) ffAmt = savings
         else if (y === ffYear - 1) ffAmt = cs
@@ -453,13 +455,13 @@ export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, savings: number
     if (!yearToTry || yearToTry <= nowYear) yearToTry = nowYear + Math.round((ffGoal.ey - nowYear) / 2)
     let prevResult = checkForFF(savings, ffGoal, yearToTry, mergedCFs, annualSavings, savingsChgRate,
         mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
-    let increment = prevResult.ffAmt > 0 && prevResult.leftAmt > 0 ? -1 : 1
+    let increment = prevResult.ffAmt >= prevResult.minReq && prevResult.leftAmt >= 0 ? -1 : 1
     for (let currYear = yearToTry + increment; currYear <= ffGoal.ey - 20 && currYear > nowYear; currYear += increment) {
         let result = checkForFF(savings, ffGoal, currYear, mergedCFs, annualSavings, savingsChgRate,
             mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
-        if ((result.leftAmt < 0 || result.ffAmt < 0) && (prevResult.leftAmt >= 0 && prevResult.ffAmt > 0))
+        if ((result.leftAmt < 0 || result.ffAmt < result.minReq) && (prevResult.leftAmt >= 0 && prevResult.ffAmt >= prevResult.minReq))
             return prevResult
-        else if ((prevResult.leftAmt < 0 || prevResult.ffAmt < 0) && (result.ffAmt > 0 && result.leftAmt >= 0))
+        else if ((prevResult.leftAmt < 0 || prevResult.ffAmt < prevResult.minReq) && (result.ffAmt >= result.minReq && result.leftAmt >= 0))
             return result
         prevResult = result
     }

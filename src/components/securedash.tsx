@@ -25,7 +25,7 @@ const SecureDash = () => {
     const [allCFs, setAllCFs] = useState<Object>({})
     const [aa, setAA] = useState<Object>({})
     const [rr, setRR] = useState<Array<number>>([])
-    const avgAnnualExpense = 500000
+    const avgAnnualExpense = 50000
     const expChgRate = 3
 
     const changeViewMode = (e: any) => {

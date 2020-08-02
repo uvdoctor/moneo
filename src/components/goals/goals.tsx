@@ -65,7 +65,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
     const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
         if (!ffGoal) return {}
         let mCFs = {}
-        let ffToYear = ffGoal.ey + 1
+        let ffToYear = ffGoal.ey
         if (toYear < ffToYear) toYear = ffToYear
         for (let year = fromYear; year <= toYear; year++)
             //@ts-ignore
@@ -93,12 +93,12 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
     }, [savings, annualSavings, savingsChgRate, mustCFs])
 
     useEffect(() => {
-        if (!allGoals || allGoals.length === 0) return
+        if (!ffGoal) return
         let yearRange = getYearRange()
         let mustCFs = populateWithZeros(yearRange.from, yearRange.to)
         let tryCFs = populateWithZeros(yearRange.from, yearRange.to)
         let optCFs = populateWithZeros(yearRange.from, yearRange.to)
-        let mCFs = buildEmptyMergedCFs(yearRange.from, yearRange.to)
+        let mCFs = buildEmptyMergedCFs(yearRange.from, ffGoal.ey)
         allGoals?.forEach(g => {
             //@ts-ignore
             let cfs: Array<number> = allCFs[g.id]
@@ -195,15 +195,14 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
 
     const getYearRange = () => {
         let fromYear = nowYear + 1
-        if (!ffGoal) return { from: fromYear, to: fromYear }
+        if (!ffGoal || !allGoals || !allGoals[0]) return { from: fromYear, to: fromYear }
         let toYear = nowYear + 1
-        if (!allGoals || !allGoals[0]) return { from: fromYear, to: toYear }
         allGoals.forEach((g) => {
             //@ts-ignore
             let endYear = g.sy + allCFs[g.id].length
             if (endYear > toYear) toYear = endYear
         })
-        if (toYear > ffGoal.ey + 1) toYear = ffGoal.ey + 1
+        if (toYear > ffGoal.ey) toYear = ffGoal.ey
         return { from: fromYear, to: toYear }
     }
 
@@ -362,7 +361,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                                             ffYear={ffYear} ffGoalEndYear={ffGoal.ey} mergedCFs={mergedCFs} ffAmt={ffAmt} ffLeftAmt={ffLeftOverAmt}
                                             ffImpactYearsCalculator={calculateFFImpactYear} />)}
                                 </div> : <div>
-                                        <AAChart aa={aa} years={buildYearsArray(nowYear + 1, ffGoal.ey + 1)} rr={rr} />
+                                        <AAChart aa={aa} years={buildYearsArray(nowYear + 1, ffGoal.ey)} rr={rr} />
                                     </div>}
                         </Fragment>}
                     </Fragment>
