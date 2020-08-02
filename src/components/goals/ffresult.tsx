@@ -10,13 +10,14 @@ interface FFResultProps {
     ffAmt: number
     ffLeftOverAmt: number
     ffMinReq: number
+    ffNomineeAmt: number
     currency: string
 }
 
-export default function FFResult({ endYear, ffYear, ffAmt, ffLeftOverAmt, ffMinReq, currency }: FFResultProps) {
+export default function FFResult({ endYear, ffYear, ffAmt, ffLeftOverAmt, ffMinReq, ffNomineeAmt, currency }: FFResultProps) {
     return (
         <div className="w-full">
-            {ffYear && ffLeftOverAmt >= 0 && ffAmt > ffMinReq ?
+            {ffYear && ffLeftOverAmt >= ffNomineeAmt && ffAmt >= ffMinReq ?
                 <div className="py-2 flex flex-wrap justify-around w-full items-start bg-green-100 border-t border-b border-green-200">
                     <ResultItem svg={<SVGHourGlass />} label="Achievable from" result={ffYear} noResultFormat
                         info={`${ffYear} may be the Earliest You can Achieve Financial Freedom.`} />
@@ -29,7 +30,7 @@ export default function FFResult({ endYear, ffYear, ffAmt, ffLeftOverAmt, ffMinR
                         This includes the Inheritance Amount for Nominees as per the Plan.`} />
                 </div>
                 : <p className="text-center bg-red-100 font-semibold py-2">
-                    {!ffYear || ffYear === endYear ? `Analyzed till ${endYear}` : `You May Not have Enough Savings in ${ffYear}`} 
+                    {!ffYear || ffYear === endYear - 20 ? `Analyzed till ${ffYear}` : `You May Not have Enough Savings in ${ffYear}`} 
                     {`. Please try again with different inputs / goals.`}
                 </p>}
         </div>

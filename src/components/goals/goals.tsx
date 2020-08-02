@@ -81,7 +81,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
         else setFFYear(result.ffYear)
         setFFAmt(result.ffAmt)
         //@ts-ignore
-        setFFLeftOverAmt(result.leftAmt + ffGoal.sa)
+        setFFLeftOverAmt(result.leftAmt)
         setFFCfs(result.ffCfs)
         aaHandler(result.aa)
         rrHandler([...result.rr])
@@ -243,11 +243,13 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                 }
             })
         }
+        //@ts-ignore
+        let nomineeAmt = Math.round((ffGoal?.sa * (1 + ffGoal?.dr / 100)))
         let resultWithoutGoal = findEarliestFFYear(ffGoal, savings, mCFs,
             annualSavings, savingsChgRate, ffYear, mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
         if (resultWithoutGoal.ffYear < 0 ||
             resultWithoutGoal.ffAmt < resultWithoutGoal.minReq ||
-            resultWithoutGoal.leftAmt < 0) return null
+            resultWithoutGoal.leftAmt < nomineeAmt) return null
         cfs.forEach((cf, i) => {
             //@ts-ignore
             if (mCFs[startYear + i] !== 'undefined') {
@@ -259,7 +261,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
             annualSavings, savingsChgRate, resultWithoutGoal.ffYear, mustCFs, tryCFs,
             avgAnnualExpense, expChgRate, pp)
         if (resultWithGoal.ffYear < 0 || resultWithGoal.ffAmt < resultWithGoal.minReq
-            || resultWithGoal.leftAmt < 0) return null
+            || resultWithGoal.leftAmt < nomineeAmt) return null
         return (resultWithoutGoal.ffYear - resultWithGoal.ffYear)
     }
 
@@ -310,7 +312,8 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                                 </div>
                             } left={
                                 <FFResult endYear={ffGoal.ey} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} currency={ffGoal.ccy}
-                                    ffMinReq={ffMinReq} />
+                                    //@ts-ignore    
+                                    ffMinReq={ffMinReq} ffNomineeAmt={Math.round((ffGoal?.sa * (1 + ffGoal?.dr / 100)))} />
                             } bottomLeft="Savings" bottomRight={
                                 <AwesomeButton type="primary" ripple>
                                     SET TARGET

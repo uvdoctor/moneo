@@ -327,8 +327,8 @@ const calculateCashAllocation = (ffGoal: APIt.CreateGoalInput, mustCFs: Array<nu
     let cashAA: any = {}
     for (let year = nowYear + 1; year <= ffGoal.ey; year++) {
         let livingExp: number = !ffYear || year < ffYear ?
-            getCompoundedIncome(expChgRate, avgAnnualExpense, year - nowYear)
-            : getCompoundedIncome(ffGoal.btr as number, ffGoal.tbr as number, year - ffYear)
+            Math.round(getCompoundedIncome(expChgRate, avgAnnualExpense, year - nowYear) / 2)
+            : Math.round(getCompoundedIncome(ffGoal.btr as number, ffGoal.tbr as number, year - ffYear) / 2)
         let mustCF = mustCFs[year - (nowYear + 1)]
         livingExp -= mustCF < 0 ? mustCF : 0
         cashAA[year] = livingExp
@@ -345,9 +345,6 @@ const calculateBondAllocation = (ffGoal: APIt.CreateGoalInput, mustCFs: Array<nu
         for (let bondYear = year + 1; bondYear < year + 5; bondYear++) {
             let mustCF = mustCFs[bondYear - (nowYear + 1)]
             if (mustCF && mustCF < 0) bondCF -= mustCF
-            bondCF += !ffYear || bondYear < ffYear ?
-                getCompoundedIncome(expChgRate, avgAnnualExpense, bondYear - nowYear)
-                : getCompoundedIncome(ffGoal.btr as number, ffGoal.tbr as number, bondYear - ffYear)
         }
         for (let bondYear = year; bondYear < year + 3; bondYear++) {
             let tryCF = tryCFs[bondYear - (nowYear + 1)]
@@ -421,7 +418,7 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
             let remPer = 100 - (cashPer + bondsPer + reitPer)
             if (remPer > 0) {
                 if (y <= ffGoal.ey - 5) {
-                    let stocksPer = Math.round(remPer * 0.8)
+                    let stocksPer = Math.round(remPer * 0.9)
                     aa.stocks[y - (nowYear + 1)] = stocksPer
                     aa.gold[y - (nowYear + 1)] = remPer - stocksPer
                 } else {

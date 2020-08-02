@@ -348,7 +348,7 @@ export default function FFGoal({ goal, totalSavings, annualSavings, savingsChgRa
             {allInputDone &&
                 <Fragment>
                     <FFResult endYear={endYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt + leaveBehind} ffYear={ffYear} 
-                        ffMinReq={ffMinReq} currency={currency} />
+                        ffMinReq={ffMinReq} ffNomineeAmt={Math.round(leaveBehind * (1 + successionTaxRate/100))} currency={currency} />
                     <ActionButtons submitDisabled={annualSavings === 0 && expenseAfterFF < 5000 || btnClicked} cancelDisabled={btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} submitText={`${goal.id ? 'UPDATE' : 'CREATE'} TARGET`} />
                 </Fragment>}
