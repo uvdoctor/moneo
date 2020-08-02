@@ -2,10 +2,10 @@ import React, { useState, useEffect, Fragment } from 'react'
 import { withAuthenticator } from '@aws-amplify/ui-react'
 import Goals from '../components/goals/goals'
 import NW from './nw/nw'
-import {CreateGoalInput, GoalType} from '../api/goals'
-import {getGoalsList, getDuration} from './goals/goalutils'
+import { CreateGoalInput, GoalType } from '../api/goals'
+import { getGoalsList, getDuration } from './goals/goalutils'
 import { calculateCFs } from './goals/cfutils'
-import {removeFromArray, buildArray} from './utils'
+import { removeFromArray } from './utils'
 
 const SecureDash = () => {
     const netWorthLabel = "Net Worth"
@@ -30,13 +30,23 @@ const SecureDash = () => {
         setViewMode(e.target.innerText)
     }
 
+    const pp = {
+        cash: 1,
+        bonds: 3.5,
+        reit: 7,
+        gold: 6.5,
+        stocks: 8.5
+    }
+
     useEffect(() => {
         loadAllGoals()
     }, [])
 
     const loadAllGoals = async () => {
         let goals: Array<CreateGoalInput> | null = await getGoalsList()
-        if (!goals) return
+        if (!goals || goals.length === 0) {
+            return
+        }
         let allCFs = {}
         let ffGoalId = ""
         goals?.forEach((g) => {
@@ -54,72 +64,6 @@ const SecureDash = () => {
         setGoalsLoaded(true)
     }
 
-    const getAverageAnnualLivingExpense = (year: number) => {
-        return 50000
-    }
-
-    const calculateRR = () => {
-        let aa: any = populateDefaultAA()
-        setAA(aa)
-        setRR([...populateRR(aa)])
-    }
-
-    const populateDefaultAA = () => {
-        let fromYear = new Date().getFullYear() + 1
-        let toYear = ffGoal?.ey as number + 1
-        let aa = buildEmptyAA(fromYear, toYear)
-        for(let i = 0; i < aa.cash.length; i++) {
-            if(i >= aa.cash.length - 6) {
-                aa.bonds[i] = 70
-                aa.stocks[i] = 0
-                aa.gold[i] = 0
-                aa.cash[i] = 20
-            } else {
-                aa.stocks[i] = 50 - i > 0 ? 50 - i : 0
-                aa.gold[i] = aa.stocks[i] * 0.2
-                aa.cash[i] = 5
-                aa.bonds[i] = (90 - (aa.stocks[i] + aa.gold[i] + aa.cash[i]))
-            }
-            aa.reit[i] = 10
-        }
-        return aa
-    }
-
-    const populateRR = (aa: any) => {
-        const dp = getDefaultPerf()
-        let rr = []
-        for(let i = 0; i < aa.cash.length; i++) {
-            let perf = 0
-            for(const prop in aa) {
-                //@ts-ignore
-                perf += (dp[prop] * aa[prop][i]) / 100
-            }
-            rr.push(perf)
-        }
-        return rr
-    }
-
-    const getDefaultPerf = () => {
-        return {
-            cash: 1,
-            bonds: 3.5,
-            reit: 7,
-            gold: 6.5,
-            stocks: 8.5
-        }
-    }
-
-    const buildEmptyAA = (fromYear: number, toYear: number) => {
-        return {
-            cash: buildArray(fromYear, toYear),
-            bonds: buildArray(fromYear, toYear),
-            reit: buildArray(fromYear, toYear),
-            gold: buildArray(fromYear, toYear),
-            stocks: buildArray(fromYear, toYear)
-        }
-    }
-
-
     return (
         <Fragment>
             {!showModal && <ul className="flex mt-12 bg-black w-screen">
@@ -128,12 +72,13 @@ const SecureDash = () => {
                         <button onClick={changeViewMode} style={{ color: viewMode === item ? "green" : "white", backgroundColor: viewMode === item ? "white" : "transparent" }} className="dashmi md:mt-4 md:px-4 hover:bg-white hover:border-t hover:text-green-600 focus:outline-none">{item}</button>
                     </li>))}
             </ul>}
-            {viewMode === netWorthLabel && <NW totalSavings={savings} annualSavings={annualSavings} viewModeHandler={setViewMode} 
-            savingsChgRateHandler={setSavingsChgRate} savingsChgRate={savingsChgRate}
-            totalSavingsHandler={setSavings} annualSavingsHandler={setAnnualSavings} currency={currency} currencyHandler={setCurrency} />}
+            {viewMode === netWorthLabel && <NW totalSavings={savings} annualSavings={annualSavings} viewModeHandler={setViewMode}
+                savingsChgRateHandler={setSavingsChgRate} savingsChgRate={savingsChgRate}
+                totalSavingsHandler={setSavings} annualSavingsHandler={setAnnualSavings} currency={currency} currencyHandler={setCurrency} />}
             {viewMode === goalsLabel && <Goals showModalHandler={setShowModal} savings={savings} annualSavings={annualSavings} savingsChgRate={savingsChgRate}
-                    allGoals={allGoals} goalsLoaded={goalsLoaded} allGoalsHandler={setAllGoals} currency={currency} allCFs={allCFs}
-                    allCFsHandler={setAllCFs} ffGoal={ffGoal} ffGoalHandler={setFFGoal} savingsChgRateHandler={setSavingsChgRate} aa={aa} rr={rr} rrCalculator={calculateRR} />}
+                allGoals={allGoals} goalsLoaded={goalsLoaded} allGoalsHandler={setAllGoals} currency={currency} allCFs={allCFs} aa={aa} aaHandler={setAA}
+                allCFsHandler={setAllCFs} ffGoal={ffGoal} ffGoalHandler={setFFGoal} savingsChgRateHandler={setSavingsChgRate} rr={rr} rrHandler={setRR}
+                pp={pp} />}
         </Fragment>
     )
 }

@@ -28,16 +28,19 @@ interface GoalsProps {
     allCFs: Object
     goalsLoaded: boolean
     ffGoal: APIt.CreateGoalInput | null
+    aa: Object
     rr: Array<number>
+    pp: Object
+    aaHandler: Function
+    rrHandler: Function
     allGoalsHandler: Function
     allCFsHandler: Function
     ffGoalHandler: Function
     savingsChgRateHandler: Function
-    rrCalculator: Function
 }
 
 export default function Goals({ showModalHandler, savings, annualSavings, savingsChgRate, currency, allGoals, allCFs,
-    goalsLoaded, ffGoal, rr, allGoalsHandler, allCFsHandler, ffGoalHandler, savingsChgRateHandler, rrCalculator }: GoalsProps) {
+    goalsLoaded, ffGoal, aa, rr, pp, aaHandler, rrHandler, allGoalsHandler, allCFsHandler, ffGoalHandler, savingsChgRateHandler }: GoalsProps) {
     const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null)
     const [mustCFs, setMustCFs] = useState<Array<number>>([])
     const [tryCFs, setTryCFs] = useState<Array<number>>([])
@@ -54,7 +57,6 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
     const viewItems = [goalsLabel, cfLabel, aaLabel]
     const [viewMode, setViewMode] = useState(goalsLabel)
     const nowYear = new Date().getFullYear()
-    const [aa, setAA] = useState<any>({})
 
     const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
         if (!ffGoal) return {}
@@ -69,20 +71,21 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
 
     const calculateFFYear = () => {
         if (!ffGoal) return
-        if(!aa || !aa.cash || !aa.bonds) return
-        let result = findEarliestFFYear(ffGoal, rr, savings, mergedCFs,
-            annualSavings, savingsChgRate, null)
+        let result = findEarliestFFYear(ffGoal, savings, mergedCFs,
+            annualSavings, savingsChgRate, null, mustCFs, tryCFs, 50000, 3, pp)
         if (result.ffYear < 0) setFFYear(null)
         else setFFYear(result.ffYear)
         setFFAmt(result.ffAmt)
         //@ts-ignore
         setFFLeftOverAmt(result.leftAmt + ffGoal.sa)
         setFFCfs(result.ffCfs)
+        aaHandler(result.aa)
+        rrHandler([...result.rr])
     }
 
     useEffect(() => {
         calculateFFYear()
-    }, [savings, annualSavings, savingsChgRate, rr])
+    }, [savings, annualSavings, savingsChgRate, mustCFs])
 
     useEffect(() => {
         if (!allGoals || allGoals.length === 0) return
@@ -105,8 +108,6 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
         setOptCFs([...optCFs])
         setTryCFs([...tryCFs])
         setMergedCFs(mCFs)
-        let aa = buildAA(mustCFs, tryCFs)
-        setAA(aa)
     }, [allGoals])
 
     useEffect(() => wipGoal ? showModalHandler(true) : showModalHandler(false), [wipGoal])
@@ -212,45 +213,8 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
     const populateData = (totalCfs: Array<number>, cfs: Array<number>, sy: number, firstYear: number) => {
         let firstIndex = sy - firstYear
         cfs.forEach((cf, i) => {
-            if(firstIndex + i >= 0) totalCfs[firstIndex + i] += cf
+            if (firstIndex + i >= 0) totalCfs[firstIndex + i] += cf
         })
-    }
-
-    const buildAA = (mustCFs: Array<number>, tryCFs: Array<number>) => {
-        let cashAA = calculateCashAllocation(mustCFs)
-        let bondAA = calculateBondAllocation(mustCFs, tryCFs)
-        return {cash: cashAA, bonds: bondAA}
-    }
-
-    const getAverageAnnualLivingExpense = (year: number) => {
-        return 50000
-    }
-
-    const calculateCashAllocation = (mustCFs: Array<number>) => {
-        let cashAA: any = {}
-        for(let y = nowYear + 1; y <= (ffGoal ? ffGoal.ey : nowYear + 80); y++) {
-            let livingExp: number = getAverageAnnualLivingExpense(y)
-            let mustCF = mustCFs[y - (nowYear + 1)]
-            livingExp -= mustCF < 0 ? mustCF : 0
-            cashAA[y] = livingExp
-        }
-        return cashAA
-    }
-
-    const calculateBondAllocation = (mustCFs: Array<number>, tryCFs: Array<number>) => {
-        let bondAA: any = {}
-        for(let y = nowYear + 1; y < (ffGoal ? ffGoal.ey : nowYear + 80) - 5; y++) {
-            let bondCF = 0
-            for(let bondYear = y + 1; bondYear < y + 5; bondYear++) {
-                bondCF -= mustCFs[bondYear] < 0 ? mustCFs[bondYear] : 0
-                bondCF += getAverageAnnualLivingExpense(bondYear)
-            }
-            for(let bondYear = y; bondYear < y + 3; bondYear++) {
-                bondCF -= tryCFs[bondYear] < 0 ? tryCFs[bondYear] : 0
-            }
-            bondAA[y] = bondCF
-        }
-        return bondAA
     }
 
     const mergeCFs = (obj: Object, cfs: Array<number>, sy: number) => {
@@ -275,9 +239,11 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                 }
             })
         }
-        let resultWithoutGoal = findEarliestFFYear(ffGoal, rr, savings, mCFs,
-            annualSavings, savingsChgRate, ffYear)
-        if (resultWithoutGoal.ffYear < 0) return null
+        let resultWithoutGoal = findEarliestFFYear(ffGoal, savings, mCFs,
+            annualSavings, savingsChgRate, ffYear, mustCFs, tryCFs, 50000, 3, pp)
+        if (resultWithoutGoal.ffYear < 0 ||
+            resultWithoutGoal.ffAmt < resultWithoutGoal.minReq ||
+            resultWithoutGoal.leftAmt < 0) return null
         cfs.forEach((cf, i) => {
             //@ts-ignore
             if (mCFs[startYear + i] !== 'undefined') {
@@ -285,9 +251,11 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                 mCFs[startYear + i] += cf
             }
         })
-        let resultWithGoal = findEarliestFFYear(ffGoal, rr, savings, mCFs,
-            annualSavings, savingsChgRate, resultWithoutGoal.ffYear)
-        if (resultWithGoal.ffYear < 0) return null
+        let resultWithGoal = findEarliestFFYear(ffGoal, savings, mCFs,
+            annualSavings, savingsChgRate, resultWithoutGoal.ffYear, mustCFs, tryCFs,
+            50000, 3, pp)
+        if (resultWithGoal.ffYear < 0 || resultWithGoal.ffAmt < resultWithGoal.minReq
+            || resultWithGoal.leftAmt < 0) return null
         return (resultWithoutGoal.ffYear - resultWithGoal.ffYear)
     }
 
@@ -342,20 +310,20 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                                     SET TARGET
                                 </AwesomeButton>
                             } bottom={
-                                    <NumberInput name="asChgRate"
-                                        inputOrder={1}
-                                        currentOrder={0}
-                                        nextStepDisabled
-                                        allInputDone
-                                        nextStepHandler={() => true}
-                                        pre="Increases" post="Every Month" unit="%" note={`${toCurrency(Math.round(annualSavings * (savingsChgRate / 100)), currency)} Monthly in ${nowYear + 1}`}
-                                        min={0} max={5} step={0.1} value={savingsChgRate} changeHandler={savingsChgRateHandler}
-                                        info={`Given Annual Savings of ${toCurrency(annualSavings, currency)} by end of ${nowYear}, 
+                                <NumberInput name="asChgRate"
+                                    inputOrder={1}
+                                    currentOrder={0}
+                                    nextStepDisabled
+                                    allInputDone
+                                    nextStepHandler={() => true}
+                                    pre="Increases" post="Every Month" unit="%" note={`${toCurrency(Math.round(annualSavings * (savingsChgRate / 100)), currency)} Monthly in ${nowYear + 1}`}
+                                    min={0} max={5} step={0.1} value={savingsChgRate} changeHandler={savingsChgRateHandler}
+                                    info={`Given Annual Savings of ${toCurrency(annualSavings, currency)} by end of ${nowYear}, 
                                         ${savingsChgRate}% increase in savings comes to about 
                                         ${toCurrency(Math.round(annualSavings * (savingsChgRate / 100)), currency)} per month. Due to the power of compounding, 
-                                        even small regular increase in savings can make a significant impact in the long term.`} 
-                                        infoDurationInMs={7000} />
-                                } hasResult />
+                                        even small regular increase in savings can make a significant impact in the long term.`}
+                                    infoDurationInMs={7000} />
+                            } hasResult />
                         </div> : <div />}
                         {ffGoal && <ul className="flex flex-wrap justify-center items-center border-b mt-4 md:mt-8 w-screen">
                             {viewItems.map((item, i) => (
