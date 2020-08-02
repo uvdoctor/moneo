@@ -42,7 +42,7 @@ interface GoalsProps {
 }
 
 export default function Goals({ showModalHandler, savings, annualSavings, savingsChgRate, avgAnnualExpense, expChgRate,
-    currency, allGoals, allCFs, goalsLoaded, ffGoal, aa, rr, pp, aaHandler, rrHandler, allGoalsHandler, allCFsHandler, 
+    currency, allGoals, allCFs, goalsLoaded, ffGoal, aa, rr, pp, aaHandler, rrHandler, allGoalsHandler, allCFsHandler,
     ffGoalHandler, savingsChgRateHandler }: GoalsProps) {
     const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null)
     const [mustCFs, setMustCFs] = useState<Array<number>>([])
@@ -276,7 +276,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                             updateCallback={updateGoal} annualSavings={annualSavings} savingsChgRate={savingsChgRate} totalSavings={savings}
                             ffYear={ffYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffCfs={ffCfs} mergedCfs={mergedCFs}
                             ffYearHandler={setFFYear} ffAmtHandler={setFFAmt} ffLeftOverAmtHandler={setFFLeftOverAmt} ffMinReqHandler={setFFMinReq}
-                            ffCfsHandler={setFFCfs} rr={rr} rrHandler={rrHandler} aaHandler={aaHandler} pp={pp} ffMinReq={ffMinReq}
+                            ffCfsHandler={setFFCfs} rrHandler={rrHandler} aaHandler={aaHandler} pp={pp} ffMinReq={ffMinReq}
                             avgAnnualExp={avgAnnualExpense} expChgRate={expChgRate} mustCFs={mustCFs} tryCFs={tryCFs} />
                         : ffGoal && <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
                             updateCallback={updateGoal} mergedCFs={mergedCFs} ffImpactYearsHandler={calculateFFImpactYear} ffGoalEndYear={ffGoal.ey}
@@ -309,8 +309,8 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                                     </div>
                                 </div>
                             } left={
-                                <FFResult endYear={ffGoal.ey} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} currency={ffGoal.ccy} 
-                                        ffMinReq={ffMinReq} />
+                                <FFResult endYear={ffGoal.ey} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} currency={ffGoal.ccy}
+                                    ffMinReq={ffMinReq} />
                             } bottomLeft="Savings" bottomRight={
                                 <AwesomeButton type="primary" ripple>
                                     SET TARGET
@@ -349,21 +349,21 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                                     changeHandler={setImpFilter} />
                             </div>}
                             {viewMode !== aaLabel && <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>}
-                            {viewMode === cfLabel ?
-                                <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} from={nowYear + 1} to={ffGoal.ey} />
-                                :
-                                viewMode === goalsLabel ? <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
-                                    {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
-                                        g.id && (!impFilter || impFilter === g.imp) &&
-                                        <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} rr={rr} savings={savings}
-                                            //@ts-ignore
-                                            startYear={g.sy} currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal}
-                                            ffYear={ffYear} ffGoalEndYear={ffGoal.ey} mergedCFs={mergedCFs} ffAmt={ffAmt} ffLeftAmt={ffLeftOverAmt}
-                                            ffImpactYearsCalculator={calculateFFImpactYear} />)}
-                                </div> : <div>
-                                        <AAChart aa={aa} years={buildYearsArray(nowYear + 1, ffGoal.ey)} rr={rr} />
-                                    </div>}
+                            {viewMode === cfLabel &&
+                                <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} from={nowYear + 1} to={ffGoal.ey} />}
+                            {viewMode === goalsLabel && <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
+                                {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
+                                    g.id && (!impFilter || impFilter === g.imp) &&
+                                    <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} rr={rr} savings={savings}
+                                        //@ts-ignore
+                                        startYear={g.sy} currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal}
+                                        ffYear={ffYear} ffGoalEndYear={ffGoal.ey} mergedCFs={mergedCFs} ffAmt={ffAmt} ffLeftAmt={ffLeftOverAmt}
+                                        ffImpactYearsCalculator={calculateFFImpactYear} />)}
+                            </div>}
                         </Fragment>}
+                        {ffGoal && viewMode === aaLabel &&
+                            <AAChart aa={aa} years={buildYearsArray(nowYear + 1, ffGoal.ey)} rr={rr} />
+                        }
                     </Fragment>
                     : goalsLoaded && <div className="text-center align-center">
                         <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>

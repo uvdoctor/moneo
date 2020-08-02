@@ -22,7 +22,6 @@ import LineChart from './linechart'
 interface FFGoalProps {
     goal: APIt.CreateGoalInput
     totalSavings: number
-    rr: Array<number>
     annualSavings: number
     savingsChgRate: number
     avgAnnualExp: number
@@ -48,7 +47,7 @@ interface FFGoalProps {
     updateCallback: Function
 }
 
-export default function FFGoal({ goal, totalSavings, rr, annualSavings, savingsChgRate,
+export default function FFGoal({ goal, totalSavings, annualSavings, savingsChgRate,
     avgAnnualExp, expChgRate, ffYear, ffAmt, ffLeftOverAmt, ffCfs, ffMinReq, mustCFs, tryCFs, mergedCfs, pp,
     aaHandler, rrHandler, ffYearHandler, ffAmtHandler, ffLeftOverAmtHandler, ffCfsHandler, ffMinReqHandler,
     cancelCallback, addCallback, updateCallback }: FFGoalProps) {
