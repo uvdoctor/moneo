@@ -23,6 +23,8 @@ interface GoalsProps {
     savings: number
     annualSavings: number
     savingsChgRate: number
+    avgAnnualExpense: number
+    expChgRate: number
     currency: string
     allGoals: Array<APIt.CreateGoalInput> | null
     allCFs: Object
@@ -39,8 +41,9 @@ interface GoalsProps {
     savingsChgRateHandler: Function
 }
 
-export default function Goals({ showModalHandler, savings, annualSavings, savingsChgRate, currency, allGoals, allCFs,
-    goalsLoaded, ffGoal, aa, rr, pp, aaHandler, rrHandler, allGoalsHandler, allCFsHandler, ffGoalHandler, savingsChgRateHandler }: GoalsProps) {
+export default function Goals({ showModalHandler, savings, annualSavings, savingsChgRate, avgAnnualExpense, expChgRate,
+    currency, allGoals, allCFs, goalsLoaded, ffGoal, aa, rr, pp, aaHandler, rrHandler, allGoalsHandler, allCFsHandler, 
+    ffGoalHandler, savingsChgRateHandler }: GoalsProps) {
     const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null)
     const [mustCFs, setMustCFs] = useState<Array<number>>([])
     const [tryCFs, setTryCFs] = useState<Array<number>>([])
@@ -72,7 +75,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
     const calculateFFYear = () => {
         if (!ffGoal) return
         let result = findEarliestFFYear(ffGoal, savings, mergedCFs,
-            annualSavings, savingsChgRate, null, mustCFs, tryCFs, 50000, 3, pp)
+            annualSavings, savingsChgRate, null, mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
         if (result.ffYear < 0) setFFYear(null)
         else setFFYear(result.ffYear)
         setFFAmt(result.ffAmt)
@@ -240,7 +243,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
             })
         }
         let resultWithoutGoal = findEarliestFFYear(ffGoal, savings, mCFs,
-            annualSavings, savingsChgRate, ffYear, mustCFs, tryCFs, 50000, 3, pp)
+            annualSavings, savingsChgRate, ffYear, mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
         if (resultWithoutGoal.ffYear < 0 ||
             resultWithoutGoal.ffAmt < resultWithoutGoal.minReq ||
             resultWithoutGoal.leftAmt < 0) return null
@@ -253,7 +256,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
         })
         let resultWithGoal = findEarliestFFYear(ffGoal, savings, mCFs,
             annualSavings, savingsChgRate, resultWithoutGoal.ffYear, mustCFs, tryCFs,
-            50000, 3, pp)
+            avgAnnualExpense, expChgRate, pp)
         if (resultWithGoal.ffYear < 0 || resultWithGoal.ffAmt < resultWithGoal.minReq
             || resultWithGoal.leftAmt < 0) return null
         return (resultWithoutGoal.ffYear - resultWithGoal.ffYear)
@@ -272,7 +275,8 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                             updateCallback={updateGoal} annualSavings={annualSavings} savingsChgRate={savingsChgRate} totalSavings={savings}
                             ffYear={ffYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffCfs={ffCfs} mergedCfs={mergedCFs}
                             ffYearHandler={setFFYear} ffAmtHandler={setFFAmt} ffLeftOverAmtHandler={setFFLeftOverAmt}
-                            ffCfsHandler={setFFCfs} rr={rr} />
+                            ffCfsHandler={setFFCfs} rr={rr} rrHandler={rrHandler} aaHandler={aaHandler} pp={pp}
+                            avgAnnualExp={avgAnnualExpense} expChgRate={expChgRate} mustCFs={mustCFs} tryCFs={tryCFs} />
                         : ffGoal && <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
                             updateCallback={updateGoal} mergedCFs={mergedCFs} ffImpactYearsHandler={calculateFFImpactYear} ffGoalEndYear={ffGoal.ey}
                             ffYear={ffYear} ffAmt={ffAmt} ffLeftAmt={ffLeftOverAmt} rr={rr} />}

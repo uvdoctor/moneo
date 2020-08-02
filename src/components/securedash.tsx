@@ -25,6 +25,8 @@ const SecureDash = () => {
     const [allCFs, setAllCFs] = useState<Object>({})
     const [aa, setAA] = useState<Object>({})
     const [rr, setRR] = useState<Array<number>>([])
+    const avgAnnualExpense = 500000
+    const expChgRate = 3
 
     const changeViewMode = (e: any) => {
         setViewMode(e.target.innerText)
@@ -78,7 +80,7 @@ const SecureDash = () => {
             {viewMode === goalsLabel && <Goals showModalHandler={setShowModal} savings={savings} annualSavings={annualSavings} savingsChgRate={savingsChgRate}
                 allGoals={allGoals} goalsLoaded={goalsLoaded} allGoalsHandler={setAllGoals} currency={currency} allCFs={allCFs} aa={aa} aaHandler={setAA}
                 allCFsHandler={setAllCFs} ffGoal={ffGoal} ffGoalHandler={setFFGoal} savingsChgRateHandler={setSavingsChgRate} rr={rr} rrHandler={setRR}
-                pp={pp} />}
+                pp={pp} avgAnnualExpense={avgAnnualExpense} expChgRate={expChgRate} />}
         </Fragment>
     )
 }

@@ -25,11 +25,18 @@ interface FFGoalProps {
     rr: Array<number>
     annualSavings: number
     savingsChgRate: number
+    avgAnnualExp: number
+    expChgRate: number
     ffYear: number | null
     ffAmt: number
     ffLeftOverAmt: number
     ffCfs: any
+    mustCFs: Array<number>
+    tryCFs: Array<number>
     mergedCfs: any
+    pp: Object
+    aaHandler: Function
+    rrHandler: Function
     ffYearHandler: Function
     ffAmtHandler: Function
     ffLeftOverAmtHandler: Function
@@ -40,7 +47,8 @@ interface FFGoalProps {
 }
 
 export default function FFGoal({ goal, totalSavings, rr, annualSavings, savingsChgRate,
-    ffYear, ffAmt, ffLeftOverAmt, ffCfs, mergedCfs, ffYearHandler, ffAmtHandler, ffLeftOverAmtHandler, ffCfsHandler,
+    avgAnnualExp, expChgRate, ffYear, ffAmt, ffLeftOverAmt, ffCfs, mustCFs, tryCFs, mergedCfs, pp,
+    aaHandler, rrHandler, ffYearHandler, ffAmtHandler, ffLeftOverAmtHandler, ffCfsHandler,
     cancelCallback, addCallback, updateCallback }: FFGoalProps) {
     const [expenseBY, setExpenseBY] = useState<number>(goal.sy)
     const [expenseAfterFF, setExpenseAfterFF] = useState<number>(goal?.tbr as number)
@@ -110,12 +118,15 @@ export default function FFGoal({ goal, totalSavings, rr, annualSavings, savingsC
 
     useEffect(() => {
         if (!allInputDone) return
-        let result = findEarliestFFYear(createGoal(), rr, totalSavings, mergedCfs,
-            annualSavings, savingsChgRate, ffYear ? ffYear : null)
+        let result = findEarliestFFYear(createGoal(), totalSavings, mergedCfs,
+            annualSavings, savingsChgRate, ffYear ? ffYear : null, mustCFs, tryCFs, 
+            avgAnnualExp, expChgRate, pp)
         ffAmtHandler(result.ffAmt)
         ffYearHandler(result.ffYear < 0 ? null : result.ffYear)
         ffLeftOverAmtHandler(result.leftAmt)
         ffCfsHandler(result.ffCfs)
+        aaHandler(result.aa)
+        rrHandler([...result.rr])
     }, [expenseBY, endYear, taxRate, careTaxDedLimit, carePremiumSY, carePremiumChgPer,
         carePremiumDur, carePremium, cpBY, retirementIncomeSY, retirementIncomePer,
         retirementIncome, leaveBehind, successionTaxRate, gains, losses, totalSavings, rr,
