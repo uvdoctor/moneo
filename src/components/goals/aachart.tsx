@@ -36,7 +36,7 @@ export default function AAChart(props: AAChartProps) {
                 },
             }}
                 useResizeHandler={true}
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "100%", height: "100%", minHeight: "450px" }}
                 data={[
                     createScatterTrace(props.aa.cash, 'Cash', '#38a169'),
                     createScatterTrace(props.aa.bonds, 'Bonds', '#3182ce'),

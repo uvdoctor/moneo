@@ -43,7 +43,7 @@ export default function CFChart({ mustCFs, tryCFs, optCFs, from, to }: CFChartPr
                 },
             }}
                 useResizeHandler={true}
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "100%", height: "100%", minHeight: "450px" }}
                 data={[
                     createBarTrace(mustCFs, 'Must Meet'),
                     createBarTrace(tryCFs, 'Try Best'),
