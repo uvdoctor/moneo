@@ -32,7 +32,7 @@ export default function FFImpact(props: FFImpactProps) {
                         For instance, if You Delete this Goal, You May Observe that not only has Financial Freedom Year changed, but Financial Freedom impact of other Goals also changes.
                         This happens because Money Needed for this Goal can be Invested instead." />)
                 : <ResultItem label="Financial Freedom Impact" result="Unable to Determine"
-                        info={`Analyzed till ${props.ffGoalEndYear}. You may try again by changing this Goal, Financial Freedom Target, or other Goals.`} />}
+                        info={`Analyzed till ${props.ffGoalEndYear - 20}. Please try again with different inputs / goals.`} />}
         </Fragment>
     )
 }
