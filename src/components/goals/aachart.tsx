@@ -20,6 +20,13 @@ export default function AAChart(props: AAChartProps) {
         }
     }
 
+    const createBarTrace = (cfs: any, name: string, color: string, mode: string = 'line') => {
+        return {
+            type: 'bar', x: props.years, y: convertPerToDec(cfs), name: name,
+            mode: mode, marker:{color: color}
+        }
+    }
+
     return (
         <div className="w-full">
             {/*@ts-ignore*/}
@@ -38,11 +45,11 @@ export default function AAChart(props: AAChartProps) {
                 useResizeHandler={true}
                 style={{ width: "100%", height: "100%", minHeight: "450px" }}
                 data={[
-                    createScatterTrace(props.aa.cash, 'Cash', '#38a169'),
-                    createScatterTrace(props.aa.bonds, 'Bonds', '#3182ce'),
-                    createScatterTrace(props.aa.stocks, 'Stocks', '#dd6b20'),
-                    createScatterTrace(props.aa.reit, 'REIT', '#434190'),
-                    createScatterTrace(props.aa.gold, 'Gold', 'gold'),
+                    createBarTrace(props.aa.cash, 'Cash', '#38a169'),
+                    createBarTrace(props.aa.bonds, 'Bonds', '#3182ce'),
+                    createBarTrace(props.aa.stocks, 'Stocks', '#dd6b20'),
+                    createBarTrace(props.aa.reit, 'REIT', '#434190'),
+                    createBarTrace(props.aa.gold, 'Gold', 'gold'),
                     createScatterTrace(props.rr, 'Potential Return', 'brown', 'lines+markers')
                 ]}
                 config={{ responsive: true, editable: false, displayModeBar: false }}
