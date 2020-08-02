@@ -45,7 +45,7 @@ export function BRCompChart(props: BRCompChartProps) {
                 ]
             }} 
             useResizeHandler={true}
-            style={{width: "100%", height:"100%"}}
+            style={{width: "100%"}}
             data={[
                 //@ts-ignore: Object is possible undefined
                 {type: 'scatter', fill: 'tozeroy', mode: 'none', x: props.data[0].values.x, y: props.data[0].values.y, name: props.data[0].name}, 

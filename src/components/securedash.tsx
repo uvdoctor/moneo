@@ -54,6 +54,10 @@ const SecureDash = () => {
         setGoalsLoaded(true)
     }
 
+    const getAverageAnnualLivingExpense = (year: number) => {
+        return 50000
+    }
+
     const calculateRR = () => {
         let aa: any = populateDefaultAA()
         setAA(aa)
@@ -65,12 +69,18 @@ const SecureDash = () => {
         let toYear = ffGoal?.ey as number + 1
         let aa = buildEmptyAA(fromYear, toYear)
         for(let i = 0; i < aa.cash.length; i++) {
-            aa.cash[i] = 5
-            aa.gold[i] = 5
-            aa.property[i] = 10
-            aa.deposits[i] = 10
-            aa.bonds[i] = 20
-            aa.stocks[i] = 50
+            if(i >= aa.cash.length - 6) {
+                aa.bonds[i] = 70
+                aa.stocks[i] = 0
+                aa.gold[i] = 0
+                aa.cash[i] = 20
+            } else {
+                aa.stocks[i] = 50 - i > 0 ? 50 - i : 0
+                aa.gold[i] = aa.stocks[i] * 0.2
+                aa.cash[i] = 5
+                aa.bonds[i] = (90 - (aa.stocks[i] + aa.gold[i] + aa.cash[i]))
+            }
+            aa.reit[i] = 10
         }
         return aa
     }
@@ -84,28 +94,26 @@ const SecureDash = () => {
                 //@ts-ignore
                 perf += (dp[prop] * aa[prop][i]) / 100
             }
-            rr.push(Math.round((perf + Math.random()) * 100 + Number.EPSILON) / 100)
+            rr.push(perf)
         }
         return rr
     }
 
     const getDefaultPerf = () => {
         return {
-            cash: 0.5,
-            deposits: 1.5,
+            cash: 1,
             bonds: 3.5,
-            property: 5,
-            gold: 5,
-            stocks: 7
+            reit: 7,
+            gold: 6.5,
+            stocks: 8.5
         }
     }
 
     const buildEmptyAA = (fromYear: number, toYear: number) => {
         return {
             cash: buildArray(fromYear, toYear),
-            deposits: buildArray(fromYear, toYear),
             bonds: buildArray(fromYear, toYear),
-            property: buildArray(fromYear, toYear),
+            reit: buildArray(fromYear, toYear),
             gold: buildArray(fromYear, toYear),
             stocks: buildArray(fromYear, toYear)
         }

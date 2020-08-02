@@ -24,10 +24,6 @@ export const toReadableNumber = (num: number, decimalDigits: number = 0) => {
 	return num ? formatter.format(num) : formatter.format(0);
 }
 
-export function getTimeCostUnits() {
-	return { 'hours': 'hours', 'weeks': 'weeks', 'years': 'years' }
-}
-
 export function initYearOptions(startYear: number, duration: number, exclusions: Array<number> = []) {
 	let years: any = {}
 	for (let i = startYear; duration > 0 ? (i <= startYear + duration) : (i >= startYear + duration); duration > 0 ? i++ : i--) {

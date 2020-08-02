@@ -194,6 +194,7 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
     }, [manualMode, loanPer])
 
     const handleSubmit = async() => {
+        console.log("Processing button submit...")
         setBtnClicked(true)
         goal.id ? await updateCallback(createUpdateGoalInput(), cfs)
             : await addCallback(createNewGoalInput(), cfs)

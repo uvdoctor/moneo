@@ -16,6 +16,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
             <AwesomeButton type="secondary" disabled={props.cancelDisabled} onPress={props.cancelHandler}>
                 CANCEL
             </AwesomeButton>
+
             <AwesomeButton className={`ml-8 ${props.submitDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                 type="primary" ripple onPress={props.submitHandler} disabled={props.submitDisabled}>
                 {props.submitText}
