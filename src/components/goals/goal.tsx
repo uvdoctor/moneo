@@ -220,7 +220,8 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
 
     return (
         <div className="flex flex-col w-full h-screen">
-            <div className="container mx-auto overflow-y-auto flex flex-1 flex-col">
+            <div className="overflow-y-auto">
+            <div className="container mx-auto flex flex-1 flex-col">
                 <div className="flex flex-wrap justify-between items-start w-full">
                     <SVGLogo />
                     <TextInput
@@ -400,6 +401,7 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
                         submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />
                 </Fragment>}
+                </div>
         </div>
     )
 }
