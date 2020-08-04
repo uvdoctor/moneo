@@ -221,7 +221,3 @@ input[type=number] {
 	z-index: 0;
 	cursor: pointer;
 }
-
-svg {
-	height: 100%;
-}
