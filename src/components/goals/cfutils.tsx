@@ -345,7 +345,7 @@ const calculateBondAllocation = (ffGoal: APIt.CreateGoalInput, mustCFs: Array<nu
         for (let bondYear = year + 1; bondYear < year + 5; bondYear++) {
             let mustCF = mustCFs[bondYear - (nowYear + 1)]
             if (mustCF && mustCF < 0) bondCF -= mustCF
-            if(ffYear && bondYear >= ffYear) {
+            if (ffYear && bondYear >= ffYear) {
                 bondCF += getCompoundedIncome(ffGoal.btr as number, ffGoal.tbr as number, bondYear - ffYear)
             }
         }
@@ -399,6 +399,7 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
     for (let [year, value] of Object.entries(mCFs)) {
         let y = parseInt(year)
         let v = parseInt(value)
+        console.log("Year is ", y)
         let ca = cash[y] ? parseInt(cash[y]) : 0
         let ba = bonds[y] ? parseInt(bonds[y]) : 0
         minReq = y < ffYear ? ca : ca + ba
@@ -410,27 +411,35 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
         }
         let i = y - (nowYear + 1)
         let cashPer = Math.round((ca / cs) * 100)
-        if(y > ffGoal.ey - 5 && cashPer < 20) cashPer = 20
+        if (y > ffGoal.ey - 5 && cashPer < 20) cashPer = 20
         aa.cash[i] = cashPer
         let bondsPer = cs > ca ? Math.round((ba / cs) * 100) : 0
         if (bondsPer + cashPer > 100) bondsPer = 100 - cashPer
         aa.bonds[i] = bondsPer
-        if (cashPer + bondsPer < 100) {
-            let reitPer = cashPer + bondsPer > 90 ?
-                (100 - (cashPer + bondsPer)) : 10
+        let remPer = 100 - (cashPer + bondsPer)
+        console.log("Rem per before reit allocation is ", remPer)
+        if (remPer > 0) {
+            let reitPer = remPer > 10 ? 10 : remPer
             aa.reit[i] = reitPer
-            let remPer = 100 - (cashPer + bondsPer + reitPer)
+            remPer -= reitPer
             if (remPer > 0) {
                 if (y <= ffGoal.ey - 5) {
                     let stocksPer = Math.round(remPer * 0.9)
-                    if(y >= ffYear && stocksPer > 50) stocksPer = 50
-                    if(y >= ffGoal.ey - 20) {
+                    if (y >= ffYear && stocksPer > 50) stocksPer = 50
+                    if (y >= ffGoal.ey - 20) {
                         let maxPer = 2 * (ffGoal.ey - y)
-                        if(stocksPer > maxPer) stocksPer = maxPer
+                        if (stocksPer > maxPer) stocksPer = maxPer
                     }
+                    if (stocksPer > remPer) stocksPer = remPer
                     aa.stocks[i] = stocksPer
-                    aa.gold[i] = Math.round(stocksPer * 0.1)
-                    aa.bonds[i] += 100 - (aa.cash[i] + aa.gold[i] + aa.stocks[i] + aa.reit[i])
+                    remPer -= stocksPer
+                    if (remPer > 0) {
+                        let goldPer = Math.round(stocksPer * 0.1)
+                        if (goldPer > remPer) goldPer = remPer
+                        aa.gold[i] = goldPer
+                        remPer -= goldPer
+                    }
+                    if(remPer > 0) aa.bonds[i] += remPer
                 } else {
                     aa.bonds[i] += remPer
                 }
@@ -439,15 +448,17 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
         let rate = getRR(aa, i, pp)
         rr.push(rate)
         if (v < 0) cs += v
-        if(cs > 0) cs *= (1 + (rate / 100))
+        if (cs > 0) cs *= (1 + (rate / 100))
         if (v > 0) cs += v
         if (ffYear === y && i === 0) ffAmt = savings
         else if (y === ffYear - 1) ffAmt = cs
         //@ts-ignore
         ffCfs[y] = Math.round(cs)
     }
-    return { ffYear: ffYear, leftAmt: Math.round(cs), ffAmt: Math.round(ffAmt), ffCfs: ffCfs,
-                minReq: minReq, aa: aa, rr: rr }
+    return {
+        ffYear: ffYear, leftAmt: Math.round(cs), ffAmt: Math.round(ffAmt), ffCfs: ffCfs,
+        minReq: minReq, aa: aa, rr: rr
+    }
 }
 
 export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, savings: number, mergedCFs: Object,

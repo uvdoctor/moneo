@@ -86,6 +86,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
         aaHandler(result.aa)
         rrHandler([...result.rr])
         setFFMinReq(result.minReq)
+        console.log("Result is ", result)
     }
 
     useEffect(() => {

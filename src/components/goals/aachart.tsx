@@ -39,7 +39,7 @@ export default function AAChart(props: AAChartProps) {
                 legend: {
                     orientation: 'h',
                     x: 0.5,
-                    y: 1.5
+                    y: -0.5
                 },
             }}
                 useResizeHandler={true}
