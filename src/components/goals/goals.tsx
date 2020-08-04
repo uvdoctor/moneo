@@ -244,7 +244,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
             })
         }
         //@ts-ignore
-        let nomineeAmt = Math.round((ffGoal?.sa * (1 + ffGoal?.dr / 100)))
+        let nomineeAmt = ffGoal?.sa as number
         let resultWithoutGoal = findEarliestFFYear(ffGoal, savings, mCFs,
             annualSavings, savingsChgRate, ffYear, mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
         if (resultWithoutGoal.ffYear < 0 ||

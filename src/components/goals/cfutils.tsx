@@ -380,7 +380,6 @@ const getRR = (aa: any, index: number, pp: any) => {
 const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: number, mergedCFs: Object,
     annualSavings: number, savingsChgRate: number, mustCFs: Array<number>, tryCFs: Array<number>,
     avgAnnualExpense: number, expChgRate: number, pp: any) => {
-    console.log("Checking for FF Year: ", ffYear)
     let goal = Object.assign({}, ffGoal)
     let mCFs = Object.assign({}, mergedCFs)
     let cs = savings
@@ -424,23 +423,25 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
             if (remPer > 0) {
                 if (y <= ffGoal.ey - 5) {
                     let stocksPer = Math.round(remPer * 0.9)
-                    if(y >= ffYear && stocksPer > 50) {
-                        aa.bonds[i] += stocksPer - 50
-                        stocksPer = 50
-                    } 
+                    if(y >= ffYear && stocksPer > 50) stocksPer = 50
+                    if(y >= ffGoal.ey - 20) {
+                        let maxPer = 2 * (ffGoal.ey - y)
+                        if(stocksPer > maxPer) stocksPer = maxPer
+                    }
                     aa.stocks[i] = stocksPer
-                    aa.gold[i] = 100 - (aa.cash[i] + aa.bonds[i] + aa.stocks[i] + aa.reit[i])
+                    aa.gold[i] = Math.round(stocksPer * 0.1)
+                    aa.bonds[i] += 100 - (aa.cash[i] + aa.gold[i] + aa.stocks[i] + aa.reit[i])
                 } else {
                     aa.bonds[i] += remPer
                 }
             }
         }
-        let rate = getRR(aa, y - (nowYear + 1), pp)
+        let rate = getRR(aa, i, pp)
         rr.push(rate)
         if (v < 0) cs += v
         if(cs > 0) cs *= (1 + (rate / 100))
         if (v > 0) cs += v
-        if (ffYear === nowYear + 1 && y === nowYear + 1) ffAmt = savings
+        if (ffYear === y && i === 0) ffAmt = savings
         else if (y === ffYear - 1) ffAmt = cs
         //@ts-ignore
         ffCfs[y] = Math.round(cs)
@@ -456,7 +457,7 @@ export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, savings: number
     if (nowYear >= ffGoal.ey) return { ffYear: -1, leftAmt: -1, ffAmt: -1, ffCfs: {}, minReq: -1, aa: {}, rr: [] }
     if (!yearToTry || yearToTry <= nowYear) yearToTry = nowYear + Math.round((ffGoal.ey - nowYear) / 2)
     //@ts-ignore
-    let nomineeAmt = Math.round((ffGoal?.sa * (1 + ffGoal?.dr / 100)))
+    let nomineeAmt = ffGoal?.sa as number
     let prevResult = checkForFF(savings, ffGoal, yearToTry, mergedCFs, annualSavings, savingsChgRate,
         mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
     let increment = prevResult.ffAmt >= prevResult.minReq && prevResult.leftAmt >= nomineeAmt ? -1 : 1
