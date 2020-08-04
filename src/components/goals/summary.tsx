@@ -13,16 +13,12 @@ interface SummaryProps {
     startYear: number
     currency: string
     cfs: Array<number>
-    ffYear: number | null
-    ffAmt: number
-    ffLeftAmt: number
+    ffOOM: Array<number> | null
     ffGoalEndYear: number
-    mergedCFs: Object
+    ffImpactYears: number | null
     rr: Array<number>
-    savings: number
     deleteCallback: Function
     editCallback: Function
-    ffImpactYearsCalculator: Function
 }
 
 export default function Summary(props: SummaryProps) {
@@ -48,10 +44,9 @@ export default function Summary(props: SummaryProps) {
                     </div>
                 </div>
             </div>
-            {props.startYear > nowYear && <GoalResult rr={props.rr} currency={props.currency} goalId={props.id}
+            {props.startYear > nowYear && <GoalResult rr={props.rr} currency={props.currency} 
                         ffGoalEndYear={props.ffGoalEndYear} cfs={props.cfs} startIndex={props.startYear - (nowYear + 1)}
-                        startYear={props.startYear} ffYear={props.ffYear} ffAmt={props.ffAmt} ffLeftAmt={props.ffLeftAmt} 
-                        mergedCFs={props.mergedCFs} ffImpactYearCalculator={props.ffImpactYearsCalculator} />}
+                        ffImpactYears={props.ffImpactYears} ffOOM={props.ffOOM} />}
             <p className="w-full text-center mt-4 mb-2">Yearly Cash Flows in {props.currency}</p>
             <LineChart cfs={props.cfs} startYear={props.startYear} />
         </div>

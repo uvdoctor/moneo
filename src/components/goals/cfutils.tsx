@@ -377,6 +377,46 @@ const getRR = (aa: any, index: number, pp: any) => {
     return perf
 }
 
+const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number, aa: any,
+    ca: number, ba: number, ffYear: number) => {
+    let nowYear = new Date().getFullYear()
+    let i = y - (nowYear + 1)
+    let cashPer = Math.round((ca / cs) * 100)
+    if (y > ffGoal.ey - 5 && cashPer < 20) cashPer = 20
+    aa.cash[i] = cashPer
+    let bondsPer = cs > ca ? Math.round((ba / cs) * 100) : 0
+    if (bondsPer + cashPer > 100) bondsPer = 100 - cashPer
+    aa.bonds[i] = bondsPer
+    let remPer = 100 - (cashPer + bondsPer)
+    if (remPer > 0) {
+        let reitPer = remPer > 10 ? 10 : remPer
+        aa.reit[i] = reitPer
+        remPer -= reitPer
+        if (remPer > 0) {
+            if (y <= ffGoal.ey - 5) {
+                let stocksPer = Math.round(remPer * 0.9)
+                if (y >= ffYear && stocksPer > 50) stocksPer = 50
+                if (y >= ffGoal.ey - 20) {
+                    let maxPer = 2 * (ffGoal.ey - y)
+                    if (stocksPer > maxPer) stocksPer = maxPer
+                }
+                if (stocksPer > remPer) stocksPer = remPer
+                aa.stocks[i] = stocksPer
+                remPer -= stocksPer
+                if (remPer > 0) {
+                    let goldPer = Math.round(stocksPer * 0.1)
+                    if (goldPer > remPer) goldPer = remPer
+                    aa.gold[i] = goldPer
+                    remPer -= goldPer
+                }
+                if(remPer > 0) aa.bonds[i] += remPer
+            } else {
+                aa.bonds[i] += remPer
+            }
+        }
+    }
+}
+
 const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: number, mergedCFs: Object,
     annualSavings: number, savingsChgRate: number, mustCFs: Array<number>, tryCFs: Array<number>,
     avgAnnualExpense: number, expChgRate: number, pp: any) => {
@@ -396,56 +436,26 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
     let aa: any = buildEmptyAA(nowYear + 1, ffGoal.ey)
     let rr: Array<number> = []
     let minReq = 0
+    let oom = []
     for (let [year, value] of Object.entries(mCFs)) {
         let y = parseInt(year)
         let v = parseInt(value)
-        console.log("Year is ", y)
         let ca = cash[y] ? parseInt(cash[y]) : 0
         let ba = bonds[y] ? parseInt(bonds[y]) : 0
         minReq = y < ffYear ? ca : ca + ba
-        if (cs < minReq) {
-            //@ts-ignore
-            ffCfs[y] = Math.round(cs)
-            ffAmt = cs
-            break
-        }
         let i = y - (nowYear + 1)
-        let cashPer = Math.round((ca / cs) * 100)
-        if (y > ffGoal.ey - 5 && cashPer < 20) cashPer = 20
-        aa.cash[i] = cashPer
-        let bondsPer = cs > ca ? Math.round((ba / cs) * 100) : 0
-        if (bondsPer + cashPer > 100) bondsPer = 100 - cashPer
-        aa.bonds[i] = bondsPer
-        let remPer = 100 - (cashPer + bondsPer)
-        console.log("Rem per before reit allocation is ", remPer)
-        if (remPer > 0) {
-            let reitPer = remPer > 10 ? 10 : remPer
-            aa.reit[i] = reitPer
-            remPer -= reitPer
-            if (remPer > 0) {
-                if (y <= ffGoal.ey - 5) {
-                    let stocksPer = Math.round(remPer * 0.9)
-                    if (y >= ffYear && stocksPer > 50) stocksPer = 50
-                    if (y >= ffGoal.ey - 20) {
-                        let maxPer = 2 * (ffGoal.ey - y)
-                        if (stocksPer > maxPer) stocksPer = maxPer
-                    }
-                    if (stocksPer > remPer) stocksPer = remPer
-                    aa.stocks[i] = stocksPer
-                    remPer -= stocksPer
-                    if (remPer > 0) {
-                        let goldPer = Math.round(stocksPer * 0.1)
-                        if (goldPer > remPer) goldPer = remPer
-                        aa.gold[i] = goldPer
-                        remPer -= goldPer
-                    }
-                    if(remPer > 0) aa.bonds[i] += remPer
-                } else {
-                    aa.bonds[i] += remPer
-                }
+        let rate = 0
+        if(cs >= minReq) {
+            calculateAllocation(ffGoal, y, cs, aa, ca, ba, ffYear)
+        } else {
+            if(cs <= ca) aa.cash[i] = 100
+            else {
+                aa.cash[i] = Math.round((ca / cs) * 100)
+                aa.bonds[i] = 100 - aa.cash[i]
             }
+            oom.push(y)
         }
-        let rate = getRR(aa, i, pp)
+        rate = getRR(aa, i, pp)
         rr.push(rate)
         if (v < 0) cs += v
         if (cs > 0) cs *= (1 + (rate / 100))
@@ -457,7 +467,7 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
     }
     return {
         ffYear: ffYear, leftAmt: Math.round(cs), ffAmt: Math.round(ffAmt), ffCfs: ffCfs,
-        minReq: minReq, aa: aa, rr: rr
+        minReq: minReq, aa: aa, rr: rr, oom: oom.length > 0 ? oom : null
     }
 }
 
@@ -465,19 +475,19 @@ export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, savings: number
     annualSavings: number, savingsChgRate: number, yearToTry: number | undefined | null,
     mustCFs: Array<number>, tryCFs: Array<number>, avgAnnualExpense: number, expChgRate: number, pp: any) => {
     let nowYear = new Date().getFullYear()
-    if (nowYear >= ffGoal.ey) return { ffYear: -1, leftAmt: -1, ffAmt: -1, ffCfs: {}, minReq: -1, aa: {}, rr: [] }
+    if (nowYear >= ffGoal.ey) return { ffYear: -1, leftAmt: -1, ffAmt: -1, ffCfs: {}, minReq: -1, aa: {}, rr: [], oom: [] }
     if (!yearToTry || yearToTry <= nowYear) yearToTry = nowYear + Math.round((ffGoal.ey - nowYear) / 2)
     //@ts-ignore
     let nomineeAmt = ffGoal?.sa as number
     let prevResult = checkForFF(savings, ffGoal, yearToTry, mergedCFs, annualSavings, savingsChgRate,
         mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
-    let increment = prevResult.ffAmt >= prevResult.minReq && prevResult.leftAmt >= nomineeAmt ? -1 : 1
+    let increment = prevResult.ffAmt >= prevResult.minReq && prevResult.leftAmt >= nomineeAmt && !prevResult.oom ? -1 : 1
     for (let currYear = yearToTry + increment; currYear <= ffGoal.ey - 20 && currYear > nowYear; currYear += increment) {
         let result = checkForFF(savings, ffGoal, currYear, mergedCFs, annualSavings, savingsChgRate,
             mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
-        if ((result.leftAmt < nomineeAmt || result.ffAmt < result.minReq) && (prevResult.leftAmt >= nomineeAmt && prevResult.ffAmt >= prevResult.minReq))
+        if ((result.leftAmt < nomineeAmt || result.ffAmt < result.minReq || result.oom) && (prevResult.leftAmt >= nomineeAmt && prevResult.ffAmt >= prevResult.minReq && !prevResult.oom))
             return prevResult
-        else if ((prevResult.leftAmt < nomineeAmt || prevResult.ffAmt < prevResult.minReq) && (result.ffAmt >= result.minReq && result.leftAmt >= nomineeAmt))
+        else if ((prevResult.leftAmt < nomineeAmt || prevResult.ffAmt < prevResult.minReq || prevResult.oom) && (result.ffAmt >= result.minReq && result.leftAmt >= nomineeAmt && !result.oom))
             return result
         prevResult = result
     }

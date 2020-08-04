@@ -11,26 +11,32 @@ interface FFResultProps {
     ffLeftOverAmt: number
     ffMinReq: number
     ffNomineeAmt: number
+    ffOOM: Array<number> | null
     currency: string
 }
 
-export default function FFResult({ endYear, ffYear, ffAmt, ffLeftOverAmt, ffMinReq, ffNomineeAmt, currency }: FFResultProps) {
+export default function FFResult({ endYear, ffYear, ffAmt, ffLeftOverAmt, ffMinReq, ffNomineeAmt, ffOOM, currency }: FFResultProps) {
     return (
         <div className="w-full">
             {ffYear && ffLeftOverAmt >= ffNomineeAmt && ffAmt >= ffMinReq ?
-                <div className="py-2 flex flex-wrap justify-around w-full items-start bg-green-100 border-t border-b border-green-200">
-                    <ResultItem svg={<SVGHourGlass />} label="Achievable from" result={ffYear} noResultFormat
-                        info={`${ffYear} may be the Earliest You can Achieve Financial Freedom.`} />
-                    <ResultItem result={ffAmt} svg={<SVGPiggy />} label={`Savings by ${ffYear - 1}`}
-                        currency={currency} info={`You can Withdraw from this Savings for Your expenses from ${ffYear} onwards`} />
-                    <ResultItem result={ffLeftOverAmt} svg={<SVGInheritance />} label={`Nominees Get`}
-                        currency={currency}
-                        info={`This is the savings amount left over in ${endYear + 1}. 
+                <div>
+                    <div className="py-2 flex flex-wrap justify-around w-full items-start bg-green-100 border-t border-b border-green-200">
+                        <ResultItem svg={<SVGHourGlass />} label="Achievable from" result={ffYear} noResultFormat
+                            info={`${ffYear} may be the Earliest You can Achieve Financial Freedom.`} />
+                        <ResultItem result={ffAmt} svg={<SVGPiggy />} label={`Savings by ${ffYear - 1}`}
+                            currency={currency} info={`You can Withdraw from this Savings for Your expenses from ${ffYear} onwards`} />
+                        <ResultItem result={ffLeftOverAmt} svg={<SVGInheritance />} label={`Nominees Get`}
+                            currency={currency}
+                            info={`This is the savings amount left over in ${endYear + 1}. 
                         As Your Plan ends in ${endYear}, this may be inherited by Your Nominees. 
                         This includes the Inheritance Amount for Nominees as per the Plan.`} />
+                    </div>
+                    {ffOOM && <p className="text-center bg-red-100">
+                        {`You May Not Have Enough Savings in Years ${ffOOM}`}
+                    </p>}
                 </div>
                 : <p className="text-center bg-red-100 font-semibold py-2">
-                    {!ffYear || ffYear === endYear - 20 ? `Analyzed till ${ffYear}` : `You May Not have Enough Savings in ${ffYear}`} 
+                    {!ffYear || ffYear === endYear - 20 ? `Analyzed till ${ffYear}` : `You May Not have Enough Savings in ${ffYear}`}
                     {`. Please try again with different inputs / goals.`}
                 </p>}
         </div>

@@ -31,6 +31,7 @@ interface FFGoalProps {
     ffLeftOverAmt: number
     ffCfs: any
     ffMinReq: number
+    ffOOM: Array<number> | null
     mustCFs: Array<number>
     tryCFs: Array<number>
     mergedCfs: any
@@ -42,15 +43,16 @@ interface FFGoalProps {
     ffLeftOverAmtHandler: Function
     ffCfsHandler: Function
     ffMinReqHandler: Function
+    ffOOMHandler: Function
     cancelCallback: Function
     addCallback: Function
     updateCallback: Function
 }
 
 export default function FFGoal({ goal, totalSavings, annualSavings, savingsChgRate,
-    avgAnnualExp, expChgRate, ffYear, ffAmt, ffLeftOverAmt, ffCfs, ffMinReq, mustCFs, tryCFs, mergedCfs, pp,
+    avgAnnualExp, expChgRate, ffYear, ffAmt, ffLeftOverAmt, ffCfs, ffMinReq, ffOOM, mustCFs, tryCFs, mergedCfs, pp,
     aaHandler, rrHandler, ffYearHandler, ffAmtHandler, ffLeftOverAmtHandler, ffCfsHandler, ffMinReqHandler,
-    cancelCallback, addCallback, updateCallback }: FFGoalProps) {
+    ffOOMHandler, cancelCallback, addCallback, updateCallback }: FFGoalProps) {
     const [expenseBY, setExpenseBY] = useState<number>(goal.sy)
     const [expenseAfterFF, setExpenseAfterFF] = useState<number>(goal?.tbr as number)
     const [expenseChgRate, setExpenseChgRate] = useState<number>(goal?.btr as number)
@@ -129,6 +131,7 @@ export default function FFGoal({ goal, totalSavings, annualSavings, savingsChgRa
         aaHandler(result.aa)
         rrHandler([...result.rr])
         ffMinReqHandler(result.minReq)
+        ffOOMHandler(result.oom)
         console.log("FF Result is ", result)
     }, [expenseBY, endYear, taxRate, careTaxDedLimit, carePremiumSY, carePremiumChgPer,
         carePremiumDur, carePremium, cpBY, retirementIncomeSY, retirementIncomePer,
@@ -348,7 +351,7 @@ export default function FFGoal({ goal, totalSavings, annualSavings, savingsChgRa
             {allInputDone &&
                 <Fragment>
                     <FFResult endYear={endYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} 
-                        ffMinReq={ffMinReq} ffNomineeAmt={leaveBehind} currency={currency} />
+                        ffMinReq={ffMinReq} ffNomineeAmt={leaveBehind} ffOOM={ffOOM} currency={currency} />
                     <ActionButtons submitDisabled={annualSavings === 0 && expenseAfterFF < 5000 || btnClicked} cancelDisabled={btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} submitText={`${goal.id ? 'UPDATE' : 'CREATE'} TARGET`} />
                 </Fragment>}

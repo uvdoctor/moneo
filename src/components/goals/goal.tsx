@@ -30,19 +30,14 @@ import GoalResult from './goalresult'
 interface GoalProps {
     goal: APIt.CreateGoalInput
     cashFlows?: Array<number>
-    mergedCFs: Array<number>
     ffGoalEndYear: number
-    ffYear: number | null
-    ffAmt: number
-    ffLeftAmt: number
-    rr: Array<number>
     ffImpactYearsHandler: Function
     cancelCallback: Function
     addCallback: Function
     updateCallback: Function
 }
 
-export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear, ffAmt, ffLeftAmt, rr,
+export default function Goal({ goal, cashFlows, ffGoalEndYear, 
     ffImpactYearsHandler, cancelCallback, addCallback, updateCallback }: GoalProps) {
     const [startYear, setStartYear] = useState<number>(goal.sy)
     const [endYear, setEndYear] = useState<number>(goal.ey)
@@ -85,6 +80,9 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
     const [allInputDone, setAllInputDone] = useState<boolean>(goal.id ? true : false)
     const [btnClicked, setBtnClicked] = useState<boolean>(false)
     const [analyzeFor, setAnalyzeFor] = useState<number>(20)
+    const [ffImpactYears, setFFImpactYears] = useState<number | null>(null)
+    const [rr, setRR] = useState<Array<number>>([])
+    const [ffOOM, setFFOOM] = useState<Array<number> | null>(null)
     const nowYear = new Date().getFullYear()
 
     useEffect(() => {
@@ -179,6 +177,13 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
         if (!allInputDone && (currentOrder < 7 || currentOrder > 19)) return
         if (goalType !== APIt.GoalType.B && manualMode < 1) calculateYearlyCFs(getDuration(sellAfter, startYear, endYear))
     }, [endYear, allInputDone, currentOrder])
+
+    useEffect(() => {
+        let result = ffImpactYearsHandler(startYear, cfs, goal.id)
+        setFFImpactYears(result.ffImpactYears)
+        setRR([...result.rr])
+        setFFOOM(result.ffOOM)
+    }, [cfs])
 
     const initBuyCFsForComparison = (analyzeFor: number) => {
         let allCFs: Array<Array<number>> = []
@@ -390,11 +395,10 @@ export default function Goal({ goal, cashFlows, mergedCFs, ffGoalEndYear, ffYear
                     </Fragment>}
             </div>
 
-            {allInputDone &&
+            {allInputDone && cfs.length > 0 && rr.length > 0 &&
                 <Fragment>
-                    {nowYear < startYear && <GoalResult rr={rr} startIndex={startYear - (nowYear + 1)} currency={currency} ffAmt={ffAmt} ffLeftAmt={ffLeftAmt}
-                        ffGoalEndYear={ffGoalEndYear} cfs={cfs} startYear={startYear} ffYear={ffYear} 
-                        ffImpactYearCalculator={ffImpactYearsHandler} mergedCFs={mergedCFs} goalId={goal.id} />}
+                    {nowYear < startYear && <GoalResult rr={rr} startIndex={startYear - (nowYear + 1)} currency={currency} 
+                        ffGoalEndYear={ffGoalEndYear} cfs={cfs} ffOOM={ffOOM} ffImpactYears={ffImpactYears} />}
                     <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
                         submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />

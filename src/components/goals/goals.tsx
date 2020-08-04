@@ -55,6 +55,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
     const [ffLeftOverAmt, setFFLeftOverAmt] = useState<number>(0)
     const [ffCfs, setFFCfs] = useState<any>({})
     const [ffMinReq, setFFMinReq] = useState<number>(0)
+    const [ffOOM, setFFOOM] = useState<Array<number> | null>(null)
     const goalsLabel = "Goals"
     const cfLabel = "Cash Flows"
     const aaLabel = "Asset Allocation"
@@ -83,6 +84,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
         //@ts-ignore
         setFFLeftOverAmt(result.leftAmt)
         setFFCfs(result.ffCfs)
+        setFFOOM(result.oom)
         aaHandler(result.aa)
         rrHandler([...result.rr])
         setFFMinReq(result.minReq)
@@ -250,7 +252,8 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
             annualSavings, savingsChgRate, ffYear, mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
         if (resultWithoutGoal.ffYear < 0 ||
             resultWithoutGoal.ffAmt < resultWithoutGoal.minReq ||
-            resultWithoutGoal.leftAmt < nomineeAmt) return null
+            resultWithoutGoal.leftAmt < nomineeAmt || resultWithoutGoal.oom) 
+            return {ffImpactYears: null, rr: resultWithoutGoal.rr, ffOOM: resultWithoutGoal.oom}
         cfs.forEach((cf, i) => {
             //@ts-ignore
             if (mCFs[startYear + i] !== 'undefined') {
@@ -262,8 +265,10 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
             annualSavings, savingsChgRate, resultWithoutGoal.ffYear, mustCFs, tryCFs,
             avgAnnualExpense, expChgRate, pp)
         if (resultWithGoal.ffYear < 0 || resultWithGoal.ffAmt < resultWithGoal.minReq
-            || resultWithGoal.leftAmt < nomineeAmt) return null
-        return (resultWithoutGoal.ffYear - resultWithGoal.ffYear)
+            || resultWithGoal.leftAmt < nomineeAmt || resultWithGoal.oom) 
+            return {ffImpactYears: null, rr: resultWithoutGoal.rr, ffOOM: resultWithGoal.oom}
+        return {ffImpactYears: (resultWithoutGoal.ffYear - resultWithGoal.ffYear),
+            rr: resultWithoutGoal.rr, ffOOM: resultWithGoal.oom}
     }
 
     const changeViewMode = (e: any) => {
@@ -277,13 +282,12 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                     {wipGoal.type === APIt.GoalType.FF ?
                         <FFGoal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
                             updateCallback={updateGoal} annualSavings={annualSavings} savingsChgRate={savingsChgRate} totalSavings={savings}
-                            ffYear={ffYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffCfs={ffCfs} mergedCfs={mergedCFs}
+                            ffYear={ffYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffCfs={ffCfs} mergedCfs={mergedCFs} ffOOM={ffOOM}
                             ffYearHandler={setFFYear} ffAmtHandler={setFFAmt} ffLeftOverAmtHandler={setFFLeftOverAmt} ffMinReqHandler={setFFMinReq}
-                            ffCfsHandler={setFFCfs} rrHandler={rrHandler} aaHandler={aaHandler} pp={pp} ffMinReq={ffMinReq}
+                            ffOOMHandler={setFFOOM} ffCfsHandler={setFFCfs} rrHandler={rrHandler} aaHandler={aaHandler} pp={pp} ffMinReq={ffMinReq} 
                             avgAnnualExp={avgAnnualExpense} expChgRate={expChgRate} mustCFs={mustCFs} tryCFs={tryCFs} />
                         : ffGoal && <Goal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
-                            updateCallback={updateGoal} mergedCFs={mergedCFs} ffImpactYearsHandler={calculateFFImpactYear} ffGoalEndYear={ffGoal.ey}
-                            ffYear={ffYear} ffAmt={ffAmt} ffLeftAmt={ffLeftOverAmt} rr={rr} />}
+                            updateCallback={updateGoal} ffImpactYearsHandler={calculateFFImpactYear} ffGoalEndYear={ffGoal.ey} />}
                 </div>
             </div>
             :
@@ -313,8 +317,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                                 </div>
                             } left={
                                 <FFResult endYear={ffGoal.ey} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} currency={ffGoal.ccy}
-                                    //@ts-ignore    
-                                    ffMinReq={ffMinReq} ffNomineeAmt={Math.round((ffGoal?.sa * (1 + ffGoal?.dr / 100)))} />
+                                    ffMinReq={ffMinReq} ffNomineeAmt={ffGoal?.sa as number} ffOOM={ffOOM} />
                             } bottomLeft="Savings" bottomRight={
                                 <AwesomeButton type="primary" ripple>
                                     SET TARGET
@@ -356,13 +359,15 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                             {viewMode === cfLabel &&
                                 <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} from={nowYear + 1} to={ffGoal.ey} />}
                             {viewMode === goalsLabel && <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
-                                {allGoals.map((g: APIt.CreateGoalInput, i: number) =>
-                                    g.id && (!impFilter || impFilter === g.imp) &&
-                                    <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} rr={rr} savings={savings}
+                                {allGoals.map((g: APIt.CreateGoalInput, i: number) => {
+                                    //@ts-ignore
+                                    let result = calculateFFImpactYear(g.sy, allCFs[g.id], g.id)
+                                    return (g.id && (!impFilter || impFilter === g.imp) && result &&
+                                    <Summary key={"g" + i} id={g.id as string} name={g.name} type={g.type} imp={g.imp} rr={result.rr} 
                                         //@ts-ignore
                                         startYear={g.sy} currency={g.ccy} cfs={allCFs[g.id]} deleteCallback={removeGoal} editCallback={editGoal}
-                                        ffYear={ffYear} ffGoalEndYear={ffGoal.ey} mergedCFs={mergedCFs} ffAmt={ffAmt} ffLeftAmt={ffLeftOverAmt}
-                                        ffImpactYearsCalculator={calculateFFImpactYear} />)}
+                                        ffGoalEndYear={ffGoal.ey} ffOOM={ffOOM} ffImpactYears={result.ffImpactYears} />)
+                                })}
                             </div>}
                         </Fragment>}
                         {ffGoal && viewMode === aaLabel &&
