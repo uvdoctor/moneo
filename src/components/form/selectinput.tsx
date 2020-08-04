@@ -28,10 +28,12 @@ export default function SelectInput(props: SelectInputProps) {
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <div className={`flex flex-col
                 ${!props.allInputDone && props.inputOrder === props.currentOrder ? 'p-2 border-2 border-orange-600' : ''}`}>
-                    {props.info && <div className="w-full flex justify-end cursor-pointer" onClick={() => toast.info(props.info)}>
-                        <SVGInfo />
-                    </div>}
-                    {props.pre && <label>{props.pre}</label>}
+                    <div className="w-full flex cursor-pointer flex-row-reverse items-center">
+                        {props.info && <div className="px-1 flex justify-end cursor-pointer" onClick={() => toast.info(props.info)}>
+                            <SVGInfo />
+                        </div>}
+                        {props.pre && <label>{props.pre}</label>}
+                    </div>
                     {!props.disabled ?
                         <Fragment>
                             <select name={props.name} className="input" value={props.value} onChange={(e) => props.changeHandler(e.currentTarget.value)}>
