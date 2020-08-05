@@ -33,7 +33,8 @@ const SecureDash = () => {
     }
 
     const pp = {
-        cash: 1,
+        savings: 1,
+        deposits: 2,
         bonds: 3.5,
         reit: 7,
         gold: 6.5,

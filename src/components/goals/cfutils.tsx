@@ -324,16 +324,18 @@ const createManualCFs = (goal: APIt.CreateGoalInput, duration: number) => {
 const calculateCashAllocation = (ffGoal: APIt.CreateGoalInput, mustCFs: Array<number>,
     avgAnnualExpense: number, expChgRate: number, ffYear: number | null) => {
     let nowYear = new Date().getFullYear()
-    let cashAA: any = {}
+    let savingsAA: any = {}
+    let depositsAA: any = {}
     for (let year = nowYear + 1; year <= ffGoal.ey; year++) {
         let livingExp: number = !ffYear || year < ffYear ?
             Math.round(getCompoundedIncome(expChgRate, avgAnnualExpense, year - nowYear) / 2)
             : getCompoundedIncome(ffGoal.btr as number, ffGoal.tbr as number, year - ffYear)
+        savingsAA[year] = livingExp / 2
+        depositsAA[year] = livingExp / 2
         let mustCF = mustCFs[year - (nowYear + 1)]
-        livingExp -= mustCF < 0 ? mustCF : 0
-        cashAA[year] = livingExp
+        depositsAA[year] -= mustCF < 0 ? mustCF : 0
     }
-    return cashAA
+    return { savings: savingsAA, deposits: depositsAA }
 }
 
 const calculateBondAllocation = (ffGoal: APIt.CreateGoalInput, mustCFs: Array<number>, tryCFs: Array<number>,
@@ -360,7 +362,8 @@ const calculateBondAllocation = (ffGoal: APIt.CreateGoalInput, mustCFs: Array<nu
 
 const buildEmptyAA = (fromYear: number, toYear: number) => {
     return {
-        cash: buildArray(fromYear, toYear),
+        savings: buildArray(fromYear, toYear),
+        deposits: buildArray(fromYear, toYear),
         bonds: buildArray(fromYear, toYear),
         reit: buildArray(fromYear, toYear),
         gold: buildArray(fromYear, toYear),
@@ -378,13 +381,19 @@ const getRR = (aa: any, index: number, pp: any) => {
 }
 
 const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number, aa: any,
-    ca: number, ba: number, ffYear: number) => {
+    sa: number, da: number, ba: number, ffYear: number) => {
     let nowYear = new Date().getFullYear()
     let i = y - (nowYear + 1)
-    let cashPer = Math.round((ca / cs) * 100)
-    if (y > ffGoal.ey - 5 && cashPer < 20) cashPer = 20
-    aa.cash[i] = cashPer
-    let bondsPer = cs > ca ? Math.round((ba / cs) * 100) : 0
+    let savingsPer = Math.round((sa / cs) * 100)
+    let depPer = Math.round((da / cs) * 100)
+    let cashPer = savingsPer + depPer
+    if (y > ffGoal.ey - 5 && cashPer < 20) {
+        depPer = (20 - cashPer)
+        cashPer = 20
+    }
+    aa.savings[i] = savingsPer
+    aa.deposits[i] = depPer
+    let bondsPer = cs > sa + da ? Math.round((ba / cs) * 100) : 0
     if (bondsPer + cashPer > 100) bondsPer = 100 - cashPer
     aa.bonds[i] = bondsPer
     let remPer = 100 - (cashPer + bondsPer)
@@ -409,7 +418,7 @@ const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number
                     aa.gold[i] = goldPer
                     remPer -= goldPer
                 }
-                if(remPer > 0) aa.bonds[i] += remPer
+                if (remPer > 0) aa.bonds[i] += remPer
             } else {
                 aa.bonds[i] += remPer
             }
@@ -440,18 +449,23 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
     for (let [year, value] of Object.entries(mCFs)) {
         let y = parseInt(year)
         let v = parseInt(value)
-        let ca = cash[y] ? parseInt(cash[y]) : 0
+        let sa = cash.savings[y] ? parseFloat(cash.savings[y]) : 0
+        let da = cash.deposits[y] ? parseFloat(cash.deposits[y]) : 0
         let ba = bonds[y] ? parseInt(bonds[y]) : 0
-        minReq = y < ffYear ? ca : ca + ba
+        minReq = y < ffYear ? sa + da : sa + da + ba
         let i = y - (nowYear + 1)
         let rate = 0
-        if(cs >= minReq) {
-            calculateAllocation(ffGoal, y, cs, aa, ca, ba, ffYear)
+        if (cs >= minReq) {
+            calculateAllocation(ffGoal, y, cs, aa, sa, da, ba, ffYear)
         } else {
-            if(cs <= ca) aa.cash[i] = 100
+            if (cs <= sa) aa.savings[i] = 100
             else {
-                aa.cash[i] = Math.round((ca / cs) * 100)
-                aa.bonds[i] = 100 - aa.cash[i]
+                aa.savings[i] = Math.round((sa / cs) * 100)
+                let depPer = Math.round((da / cs) * 100)
+                let remPer = 100 - aa.savings[i]
+                aa.deposits[i] = depPer < remPer ? depPer : remPer
+                remPer -= aa.deposits[i]
+                if (remPer > 0) aa.bonds[i] = remPer
             }
             oom.push(y)
         }
