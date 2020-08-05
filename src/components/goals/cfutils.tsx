@@ -364,7 +364,7 @@ const buildEmptyAA = (fromYear: number, toYear: number) => {
         savings: buildArray(fromYear, toYear),
         deposits: buildArray(fromYear, toYear),
         sbonds: buildArray(fromYear, toYear),
-        lbonds: buildArray(fromYear, toYear),
+        mbonds: buildArray(fromYear, toYear),
         reit: buildArray(fromYear, toYear),
         gold: buildArray(fromYear, toYear),
         growthstocks: buildArray(fromYear, toYear),
@@ -409,13 +409,8 @@ const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number
         if (remPer > 0) {
             if (y <= ffGoal.ey - 5) {
                 let stocksPer = Math.round(remPer * 0.9)
-                let maxStocksPer = 10 + (ffGoal.ey - y)
-                if (y >= ffYear && stocksPer > maxStocksPer) stocksPer = maxStocksPer
-                if (y >= ffGoal.ey - 20) {
-                    let maxPer = 2 * (ffGoal.ey - y)
-                    if (stocksPer > maxPer) stocksPer = maxPer
-                }
-                if (stocksPer > remPer) stocksPer = remPer
+                let maxStocksPer = y >= ffGoal.ey - 20 ? 2 * (ffGoal.ey - y) : 120 - (ffGoal.ey - y)
+                if (stocksPer > maxStocksPer) stocksPer = maxStocksPer
                 if(y >= ffGoal.ey - 10) aa.divstocks[i] = stocksPer
                 else if(y >= ffGoal.ey - 20) {
                     aa.divstocks[i] = ((100 - 2 * (ffGoal.ey - y)) / 100) * stocksPer
@@ -428,7 +423,7 @@ const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number
                     aa.gold[i] = goldPer
                     remPer -= goldPer
                 }
-                if (remPer > 0) aa.lbonds[i] += remPer
+                if (remPer > 0) aa.mbonds[i] += remPer
             } else {
                 aa.sbonds[i] += remPer
             }
