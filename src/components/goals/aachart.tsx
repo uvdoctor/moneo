@@ -47,8 +47,10 @@ export default function AAChart(props: AAChartProps) {
                 data={[
                     createBarTrace(props.aa.savings, 'Savings Account', '#b7791f'),
                     createBarTrace(props.aa.deposits, 'Deposits', '#38a169'),
-                    createBarTrace(props.aa.bonds, 'Bonds ETF', '#3182ce'),
-                    createBarTrace(props.aa.stocks, 'Stocks Index ETF', '#dd6b20'),
+                    createBarTrace(props.aa.sbonds, 'Short-term Bonds ETF', '#4299e1'),
+                    createBarTrace(props.aa.lbonds, 'Long-term Bonds ETF', '#3182ce'),
+                    createBarTrace(props.aa.growthstocks, 'Growth Stocks ETF', '#dd6b20'),
+                    createBarTrace(props.aa.divstocks, 'High Yield Stocks ETF', '#ed8936'),
                     createBarTrace(props.aa.reit, 'REIT ETF', '#805ad5'),
                     createBarTrace(props.aa.gold, 'Gold ETF', 'gold'),
                     createScatterTrace(props.rr, 'Potential Return', '#e53e3e', 'lines+markers')

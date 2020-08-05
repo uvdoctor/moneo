@@ -35,10 +35,12 @@ const SecureDash = () => {
     const pp = {
         savings: 1,
         deposits: 2,
-        bonds: 3.5,
+        sbonds: 3,
+        lbonds: 4.5,
         reit: 7,
-        gold: 6.5,
-        stocks: 8.5
+        gold: 6,
+        growthstocks: 8,
+        divstocks: 6
     }
 
     useEffect(() => {

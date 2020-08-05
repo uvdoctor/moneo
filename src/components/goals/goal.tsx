@@ -179,11 +179,11 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
     }, [endYear, allInputDone, currentOrder])
 
     useEffect(() => {
-        let result = ffImpactYearsHandler(startYear, cfs, goal.id)
+        let result = ffImpactYearsHandler(startYear, cfs, goal.id, impLevel)
         setFFImpactYears(result.ffImpactYears)
         setRR([...result.rr])
         setFFOOM(result.ffOOM)
-    }, [cfs])
+    }, [cfs, impLevel])
 
     const initBuyCFsForComparison = (analyzeFor: number) => {
         let allCFs: Array<Array<number>> = []

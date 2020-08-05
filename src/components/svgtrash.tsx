@@ -2,6 +2,9 @@ import React from 'react'
 
 export default function SVGTrash() {
     return (
-        <svg className="cursor-pointer w-8" viewBox="0 0 24 24"><path stroke="green" fill="none" d="M5 5h14l-.89 15.12a2 2 0 0 1-2 1.88H7.9a2 2 0 0 1-2-1.88L5 5zm5 5a1 1 0 0 0-1 1v6a1 1 0 0 0 2 0v-6a1 1 0 0 0-1-1zm4 0a1 1 0 0 0-1 1v6a1 1 0 0 0 2 0v-6a1 1 0 0 0-1-1z"/><path stroke="green" d="M8.59 4l1.7-1.7A1 1 0 0 1 11 2h2a1 1 0 0 1 .7.3L15.42 4H19a1 1 0 0 1 0 2H5a1 1 0 1 1 0-2h3.59z"/></svg>
+        <svg viewBox="0 0 24 24" className="w-8 cursor-pointer">
+            <path stroke="green" fill="none" d="M5.23 3h13.54a2 2 0 0 1 1.98 2.22l-1.55 14A2 2 0 0 1 17.2 21H6.79a2 2 0 0 1-1.99-1.78l-1.55-14A2 2 0 0 1 5.23 3z"/>
+            <path fill="#e53e3e" d="M10.59 14l-2.3-2.3a1 1 0 0 1 1.42-1.4L12 12.58l2.3-2.3a1 1 0 0 1 1.4 1.42L13.42 14l2.3 2.3a1 1 0 0 1-1.42 1.4L12 15.42l-2.3 2.3a1 1 0 1 1-1.4-1.42L10.58 14zM4 3h16a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5c0-1.1.9-2 2-2z"/>
+        </svg>    
     )
 }

@@ -334,40 +334,41 @@ const calculateCashAllocation = (ffGoal: APIt.CreateGoalInput, mustCFs: Array<nu
         depositsAA[year] = livingExp / 2
         let mustCF = mustCFs[year - (nowYear + 1)]
         depositsAA[year] -= mustCF < 0 ? mustCF : 0
+        let depCF = 0
+        for (let depYear = year + 1; depYear < year + 5; depYear++) {
+            let mustCF = mustCFs[depYear - (nowYear + 1)]
+            if (mustCF && mustCF < 0) depCF -= mustCF
+            if (ffYear && depYear >= ffYear) {
+                depCF += getCompoundedIncome(ffGoal.btr as number, ffGoal.tbr as number, depYear - ffYear)
+            }
+        }
+        depositsAA[year] += depCF
     }
     return { savings: savingsAA, deposits: depositsAA }
 }
 
-const calculateBondAllocation = (ffGoal: APIt.CreateGoalInput, mustCFs: Array<number>, tryCFs: Array<number>,
-    ffYear: number | null) => {
+const calculateBondAllocation = (ffGoal: APIt.CreateGoalInput, tryCFs: Array<number>) => {
     let nowYear = new Date().getFullYear()
-    let bondAA: any = {}
+    let stbondAA: any = {}
     for (let year = nowYear + 1; year <= ffGoal.ey; year++) {
-        let bondCF = 0
-        for (let bondYear = year + 1; bondYear < year + 5; bondYear++) {
-            let mustCF = mustCFs[bondYear - (nowYear + 1)]
-            if (mustCF && mustCF < 0) bondCF -= mustCF
-            if (ffYear && bondYear >= ffYear) {
-                bondCF += getCompoundedIncome(ffGoal.btr as number, ffGoal.tbr as number, bondYear - ffYear)
-            }
-        }
         for (let bondYear = year; bondYear < year + 3; bondYear++) {
             let tryCF = tryCFs[bondYear - (nowYear + 1)]
-            if (tryCF && tryCF < 0) bondCF -= tryCF
+            if (tryCF && tryCF < 0) stbondAA[year] -= tryCF
         }
-        bondAA[year] = bondCF
     }
-    return bondAA
+    return stbondAA
 }
 
 const buildEmptyAA = (fromYear: number, toYear: number) => {
     return {
         savings: buildArray(fromYear, toYear),
         deposits: buildArray(fromYear, toYear),
-        bonds: buildArray(fromYear, toYear),
+        sbonds: buildArray(fromYear, toYear),
+        lbonds: buildArray(fromYear, toYear),
         reit: buildArray(fromYear, toYear),
         gold: buildArray(fromYear, toYear),
-        stocks: buildArray(fromYear, toYear)
+        growthstocks: buildArray(fromYear, toYear),
+        divstocks: buildArray(fromYear, toYear)
     }
 }
 
@@ -385,32 +386,41 @@ const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number
     let nowYear = new Date().getFullYear()
     let i = y - (nowYear + 1)
     let savingsPer = Math.round((sa / cs) * 100)
+    if(savingsPer < 1) savingsPer = 1
     let depPer = Math.round((da / cs) * 100)
     let cashPer = savingsPer + depPer
-    if (y > ffGoal.ey - 5 && cashPer < 20) {
-        depPer = (20 - cashPer)
-        cashPer = 20
+    if (y >= ffGoal.ey - 10) {
+        let maxCashPer = 30 - 2 * (ffGoal.ey - y)
+        if(cashPer < maxCashPer) cashPer = maxCashPer
+        depPer = (cashPer - savingsPer)
     }
     aa.savings[i] = savingsPer
     aa.deposits[i] = depPer
     let bondsPer = cs > sa + da ? Math.round((ba / cs) * 100) : 0
     if (bondsPer + cashPer > 100) bondsPer = 100 - cashPer
-    aa.bonds[i] = bondsPer
+    aa.sbonds[i] = bondsPer
     let remPer = 100 - (cashPer + bondsPer)
     if (remPer > 0) {
-        let reitPer = remPer > 10 ? 10 : remPer
+        let reitPer = 5
+        if(y >= ffYear) reitPer = (y > ffGoal.ey - 5) ? 20 : 10
+        if(reitPer > remPer) reitPer = remPer
         aa.reit[i] = reitPer
         remPer -= reitPer
         if (remPer > 0) {
             if (y <= ffGoal.ey - 5) {
                 let stocksPer = Math.round(remPer * 0.9)
-                if (y >= ffYear && stocksPer > 50) stocksPer = 50
+                let maxStocksPer = 10 + (ffGoal.ey - y)
+                if (y >= ffYear && stocksPer > maxStocksPer) stocksPer = maxStocksPer
                 if (y >= ffGoal.ey - 20) {
                     let maxPer = 2 * (ffGoal.ey - y)
                     if (stocksPer > maxPer) stocksPer = maxPer
                 }
                 if (stocksPer > remPer) stocksPer = remPer
-                aa.stocks[i] = stocksPer
+                if(y >= ffGoal.ey - 10) aa.divstocks[i] = stocksPer
+                else if(y >= ffGoal.ey - 20) {
+                    aa.divstocks[i] = ((100 - 2 * (ffGoal.ey - y)) / 100) * stocksPer
+                    aa.growthstocks[i] = stocksPer - aa.divstocks[i]
+                } else aa.growthstocks[i] = stocksPer
                 remPer -= stocksPer
                 if (remPer > 0) {
                     let goldPer = Math.round(stocksPer * 0.1)
@@ -418,9 +428,9 @@ const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number
                     aa.gold[i] = goldPer
                     remPer -= goldPer
                 }
-                if (remPer > 0) aa.bonds[i] += remPer
+                if (remPer > 0) aa.lbonds[i] += remPer
             } else {
-                aa.bonds[i] += remPer
+                aa.sbonds[i] += remPer
             }
         }
     }
@@ -441,7 +451,7 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
     let ffAmt = 0
     let ffCfs = {}
     let cash = calculateCashAllocation(ffGoal, mustCFs, avgAnnualExpense, expChgRate, ffYear)
-    let bonds = calculateBondAllocation(ffGoal, mustCFs, tryCFs, ffYear)
+    let bonds = calculateBondAllocation(ffGoal, tryCFs)
     let aa: any = buildEmptyAA(nowYear + 1, ffGoal.ey)
     let rr: Array<number> = []
     let minReq = 0
@@ -449,6 +459,7 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
     for (let [year, value] of Object.entries(mCFs)) {
         let y = parseInt(year)
         let v = parseInt(value)
+        if (v > 0) cs += v
         let sa = cash.savings[y] ? parseFloat(cash.savings[y]) : 0
         let da = cash.deposits[y] ? parseFloat(cash.deposits[y]) : 0
         let ba = bonds[y] ? parseInt(bonds[y]) : 0
@@ -473,7 +484,6 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
         rr.push(rate)
         if (v < 0) cs += v
         if (cs > 0) cs *= (1 + (rate / 100))
-        if (v > 0) cs += v
         if (ffYear === y && i === 0) ffAmt = savings
         else if (y === ffYear - 1) ffAmt = cs
         //@ts-ignore
