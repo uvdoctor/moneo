@@ -49,7 +49,7 @@ export default function AAChart(props: AAChartProps) {
                     createBarTrace(props.aa.deposits, 'Deposits', '#38a169'),
                     createBarTrace(props.aa.bonds, 'Bonds ETF', '#3182ce'),
                     createBarTrace(props.aa.stocks, 'Stocks Index ETF', '#dd6b20'),
-                    createBarTrace(props.aa.reit, 'REIT Fund', '#805ad5'),
+                    createBarTrace(props.aa.reit, 'REIT ETF', '#805ad5'),
                     createBarTrace(props.aa.gold, 'Gold ETF', 'gold'),
                     createScatterTrace(props.rr, 'Potential Return', 'red', 'lines+markers')
                 ]}
