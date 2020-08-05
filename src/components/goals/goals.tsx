@@ -252,7 +252,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
             annualSavings, savingsChgRate, ffYear, mustCFs, tryCFs, avgAnnualExpense, expChgRate, pp)
         if (resultWithoutGoal.ffYear < 0 ||
             resultWithoutGoal.ffAmt < resultWithoutGoal.minReq ||
-            resultWithoutGoal.leftAmt < nomineeAmt || resultWithoutGoal.oom) 
+            resultWithoutGoal.leftAmt < nomineeAmt) 
             return {ffImpactYears: null, rr: resultWithoutGoal.rr, ffOOM: resultWithoutGoal.oom}
         cfs.forEach((cf, i) => {
             //@ts-ignore
@@ -265,7 +265,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
             annualSavings, savingsChgRate, resultWithoutGoal.ffYear, mustCFs, tryCFs,
             avgAnnualExpense, expChgRate, pp)
         if (resultWithGoal.ffYear < 0 || resultWithGoal.ffAmt < resultWithGoal.minReq
-            || resultWithGoal.leftAmt < nomineeAmt || resultWithGoal.oom) 
+            || resultWithGoal.leftAmt < nomineeAmt) 
             return {ffImpactYears: null, rr: resultWithoutGoal.rr, ffOOM: resultWithGoal.oom}
         return {ffImpactYears: (resultWithoutGoal.ffYear - resultWithGoal.ffYear),
             rr: resultWithoutGoal.rr, ffOOM: resultWithGoal.oom}

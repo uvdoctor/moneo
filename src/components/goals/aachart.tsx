@@ -45,13 +45,13 @@ export default function AAChart(props: AAChartProps) {
                 useResizeHandler={true}
                 style={{ width: "100%", height: "100%", minHeight: "450px" }}
                 data={[
-                    createBarTrace(props.aa.savings, 'Savings Account', '#975a16'),
+                    createBarTrace(props.aa.savings, 'Savings Account', '#b7791f'),
                     createBarTrace(props.aa.deposits, 'Deposits', '#38a169'),
                     createBarTrace(props.aa.bonds, 'Bonds ETF', '#3182ce'),
                     createBarTrace(props.aa.stocks, 'Stocks Index ETF', '#dd6b20'),
                     createBarTrace(props.aa.reit, 'REIT ETF', '#805ad5'),
                     createBarTrace(props.aa.gold, 'Gold ETF', 'gold'),
-                    createScatterTrace(props.rr, 'Potential Return', 'red', 'lines+markers')
+                    createScatterTrace(props.rr, 'Potential Return', '#e53e3e', 'lines+markers')
                 ]}
                 config={{ responsive: true, editable: false, displayModeBar: false }}
             />
