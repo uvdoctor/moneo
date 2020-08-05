@@ -394,7 +394,7 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
                         </div>
                     </Fragment>}
             </div>
-
+            </div>
             {allInputDone && cfs.length > 0 && rr.length > 0 &&
                 <Fragment>
                     {nowYear < startYear && <GoalResult rr={rr} startIndex={startYear - (nowYear + 1)} currency={currency} 
@@ -403,7 +403,7 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
                         submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />
                 </Fragment>}
-                </div>
+                
         </div>
     )
 }
