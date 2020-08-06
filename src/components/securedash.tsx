@@ -50,6 +50,7 @@ const SecureDash = () => {
     const loadAllGoals = async () => {
         let goals: Array<CreateGoalInput> | null = await getGoalsList()
         if (!goals || goals.length === 0) {
+            setGoalsLoaded(true)
             return
         }
         let allCFs = {}
