@@ -39,8 +39,8 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
     ffImpactYearsHandler, cancelCallback, addCallback, updateCallback }: GoalProps) {
     const [startYear, setStartYear] = useState<number>(goal.sy)
     const [endYear, setEndYear] = useState<number>(goal.ey)
-    const [syOptions] = useState(initYearOptions(goal.by + 1, 50))
-    const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 80))
+    const [syOptions] = useState(initYearOptions(goal.by + 1, ffGoalEndYear - 20 - (goal.by + 1)))
+    const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 20))
     const [loanRepaymentSY, setLoanRepaymentSY] = useState<number | null | undefined>(goal?.emi?.ry)
     const [price, setPrice] = useState<number>(0)
     const [taxRate, setTaxRate] = useState<number>(goal?.tdr)
@@ -77,16 +77,11 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
     const [currentOrder, setCurrentOrder] = useState<number>(1)
     const [allInputDone, setAllInputDone] = useState<boolean>(goal.id ? true : false)
     const [btnClicked, setBtnClicked] = useState<boolean>(false)
-    const [analyzeFor, setAnalyzeFor] = useState<number>(20)
+    const analyzeFor = 20
     const [ffImpactYears, setFFImpactYears] = useState<number | null>(null)
     const [rr, setRR] = useState<Array<number>>([])
     const [ffOOM, setFFOOM] = useState<Array<number> | null>(null)
     const nowYear = new Date().getFullYear()
-
-    useEffect(() => {
-        let diff = ffGoalEndYear - startYear
-        if(diff < 20) setAnalyzeFor(diff)
-    }, [startYear])
 
     const createNewBaseGoal = () => {
         return {
@@ -147,8 +142,8 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
     }
 
     useEffect(() => {
-        if (!loanPer) setEYOptions(initYearOptions(startYear, 80))
-        if (!loanPer && (startYear > endYear || endYear - startYear > 100)) setEndYear(startYear)
+        if (!loanPer) setEYOptions(initYearOptions(startYear, 20))
+        if (!loanPer && (startYear > endYear || endYear - startYear > 20)) setEndYear(startYear)
         if (loanPer && loanRepaymentSY && (startYear > loanRepaymentSY || loanRepaymentSY - startYear > 10)) setLoanRepaymentSY(startYear)
     }, [startYear, endYear, loanPer, loanRepaymentSY])
 

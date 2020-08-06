@@ -77,7 +77,7 @@ export default function EmiCost(props: EmiProps) {
                             currentOrder={props.currentOrder}
                             nextStepDisabled={false}
                             nextStepHandler={props.nextStepHandler}
-                            allInputDone={props.allInputDone} width={120} unit="%" data={toStringArr(0, 90, 5)}
+                            allInputDone={props.allInputDone} width={120} unit="%" data={toStringArr(0, 80, 5)}
                             value={props.loanPer} changeHandler={props.loanPerHandler}
                             step={5} labelBottom={true} label="of Amount" pre="Principal"
                             post={`${toCurrency(props.loanBorrowAmt, props.currency)}`} />
