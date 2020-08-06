@@ -237,26 +237,32 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
         let mCFs = Object.assign({}, mergedCFs)
         let highImpCFs = Object.assign([], mustCFs)
         let medImpCFs = Object.assign([], tryCFs)
+        let nowYear = new Date().getFullYear()
         if (goalId) {
+            //@ts-ignore
+            let existingGoal = (allGoals?.filter(g => g.id === goalId))[0]
+            let existingSY = existingGoal.sy
+            let existingImp = existingGoal.imp
             //@ts-ignore
             let existingCFs = allCFs[goalId]
             existingCFs.forEach((cf: number, i: number) => {
                 //@ts-ignore
-                if (mCFs[startYear + i] !== 'undefined') {
+                if (mCFs[existingSY + i] !== 'undefined') {
                     //@ts-ignore
-                    mCFs[startYear + i] -= cf
+                    mCFs[existingSY + i] -= cf
                 }
-                if (goalImp === APIt.LMH.H) {
+                let index = existingSY + i - (nowYear + 1)
+                if (existingImp === APIt.LMH.H) {
                     //@ts-ignore
-                    if (highImpCFs[startYear + i] !== 'undefined') {
+                    if (highImpCFs[index] !== 'undefined') {
                         //@ts-ignore
-                        highImpCFs[startYear + i] -= cf
+                        highImpCFs[index] -= cf
                     }
-                } else if (goalImp === APIt.LMH.M) {
+                } else if (existingImp === APIt.LMH.M) {
                     //@ts-ignore
-                    if (medImpCFs[startYear + i] !== 'undefined') {
+                    if (medImpCFs[index] !== 'undefined') {
                         //@ts-ignore
-                        medImpCFs[startYear + i] -= cf
+                        medImpCFs[index] -= cf
                     }
                 }
             })
@@ -275,17 +281,18 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                 //@ts-ignore
                 mCFs[startYear + i] += cf
             }
+            let index = startYear + i - (nowYear + 1)
             if (goalImp === APIt.LMH.H) {
                 //@ts-ignore
-                if (highImpCFs[startYear + i] !== 'undefined') {
+                if (highImpCFs[index] !== 'undefined') {
                     //@ts-ignore
-                    highImpCFs[startYear + i] += cf
+                    highImpCFs[index] += cf
                 }
             } else if (goalImp === APIt.LMH.M) {
                 //@ts-ignore
-                if (medImpCFs[startYear + i] !== 'undefined') {
+                if (medImpCFs[index] !== 'undefined') {
                     //@ts-ignore
-                    medImpCFs[startYear + i] += cf
+                    medImpCFs[index] += cf
                 }
             }
         })
@@ -390,7 +397,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                                 <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} from={nowYear + 1} to={ffGoal.ey} />}
                             {viewMode === goalsLabel && <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
                                 {allGoals.map((g: APIt.CreateGoalInput, i: number) => {
-                                    if(!g.id || (impFilter && impFilter !== g.imp)) return
+                                    if (!g.id || (impFilter && impFilter !== g.imp)) return
                                     //@ts-ignore
                                     let result = calculateFFImpactYear(g.sy, allCFs[g.id], g.id, g.imp)
                                     return (result &&

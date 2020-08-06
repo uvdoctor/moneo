@@ -18,12 +18,10 @@ export const getGoalsList = async () => {
 }
 
 export const createNewGoal = async (goal: APIt.CreateGoalInput) => {
-    console.log("Going to create goal...", goal)
     try {
         const { data } = (await API.graphql(graphqlOperation(mutations.createGoal, { input: goal }))) as {
             data: APIt.CreateGoalMutation
         }
-        console.log("New goal created in db: ", data ? data.createGoal : "")
         return data.createGoal as APIt.CreateGoalInput
     } catch (e) {
         console.log("Error while creating goal: ", e)
@@ -36,7 +34,6 @@ export const changeGoal = async (goal: APIt.UpdateGoalInput) => {
         const { data } = (await API.graphql(graphqlOperation(mutations.updateGoal, { input: goal }))) as {
             data: APIt.UpdateGoalMutation
         }
-        console.log("Goal updated in db: ", data ? data.updateGoal : "")
         return data.updateGoal as APIt.UpdateGoalInput
     } catch (e) {
         console.log("Error while updating goal: ", e)

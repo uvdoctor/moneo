@@ -36,7 +36,7 @@ const SecureDash = () => {
         savings: 1,
         deposits: 2,
         sbonds: 3,
-        mbonds: 5,
+        mbonds: 5.5,
         reit: 7,
         gold: 6,
         growthstocks: 8,
