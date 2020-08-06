@@ -18,7 +18,7 @@ B, S, R, E, X, C, FF, D, O, T
 type Emi {
   per: Int!
   rate: Float!
-  dur: Int!
+  dur: Float!
   ry: Int!
 }
 

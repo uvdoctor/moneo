@@ -61,7 +61,7 @@ const SecureDash = () => {
                 ffGoalId = g.id as string
             } else {
                 //@ts-ignore    
-                allCFs[g.id] = calculateCFs(g, getDuration(g.sa as number, g.sy, g.ey))
+                allCFs[g.id] = calculateCFs(null, g, getDuration(g.sa as number, g.sy, g.ey))
             }
         })
         removeFromArray(goals, "id", ffGoalId)

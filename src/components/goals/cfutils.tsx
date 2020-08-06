@@ -31,7 +31,18 @@ export const calculateSellPrice = (price: number, chgRate: number, duration: num
     return Math.round(getCompoundedIncome(chgRate, price, duration))
 }
 
-export const calculateCFs = (price: number, goal: APIt.CreateGoalInput, duration: number) => {
+const calculatePrice = (goal: APIt.CreateGoalInput) => {
+    let price = 0
+    if(goal.manual && goal.tgts) {
+        goal.tgts.forEach(t => price += t.val)
+    } else if(!goal.manual && goal.cp) {
+        price = getCompoundedIncome(goal.chg as number, goal.cp as number, goal.sy - goal.by)
+    }
+    return price
+}
+
+export const calculateCFs = (price: number | null, goal: APIt.CreateGoalInput, duration: number) => {
+    if(price === null) price = calculatePrice(goal)
     if (goal?.manual as number > 0) return createManualCFs(price, goal, duration)
     else if (goal?.emi?.per as number > 0) return createLoanCFs(price, goal, duration)
     else return createAutoCFs(price, goal, duration)
