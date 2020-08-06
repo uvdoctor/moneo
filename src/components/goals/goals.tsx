@@ -17,7 +17,7 @@ import NumberInput from '../form/numberinput'
 import FFResult from './ffresult'
 import SVGEdit from '../svgedit'
 import { toast } from 'react-toastify'
-
+import {getCompoundedIncome} from '../calc/finance'
 interface GoalsProps {
     showModalHandler: Function
     savings: number
@@ -366,11 +366,11 @@ export default function Goals({ showModalHandler, savings, annualSavings, saving
                                     nextStepDisabled
                                     allInputDone
                                     nextStepHandler={() => true}
-                                    pre="Increases" post="Every Month" unit="%" note={`${toCurrency(Math.round(annualSavings * (savingsChgRate / 100)), currency)} Monthly in ${nowYear + 1}`}
+                                    pre="Increases" post="Every Month" unit="%" note={`${toCurrency(Math.round(getCompoundedIncome(savingsChgRate * 12, annualSavings, 1, 12)), currency)} in ${nowYear + 1}`}
                                     min={0} max={5} step={0.1} value={savingsChgRate} changeHandler={savingsChgRateHandler}
                                     info={`Given Annual Savings of ${toCurrency(annualSavings, currency)} by end of ${nowYear}, 
                                         ${savingsChgRate}% increase in savings comes to about 
-                                        ${toCurrency(Math.round(annualSavings * (savingsChgRate / 100)), currency)} per month. Due to the power of compounding, 
+                                        ${toCurrency(Math.round(getCompoundedIncome(savingsChgRate * 12, annualSavings, 1, 12)), currency)} in ${nowYear + 1}. Due to the power of compounding, 
                                         even small regular increase in savings can make a significant impact in the long term.`}
                                     infoDurationInMs={7000} />
                             } hasResult />
