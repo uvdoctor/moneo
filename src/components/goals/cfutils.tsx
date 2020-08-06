@@ -3,12 +3,6 @@ import { getIntAmtByYear, getRemainingPrincipal, getCompoundedIncome, getEmi } f
 import xirr from 'xirr'
 import { buildArray } from '../utils'
 
-export const calculatePrice = (startingPrice: number, priceChgRate: number, startYear: number, goalCreatedYear: number) => {
-    if (!startingPrice) return 0
-    let p = getCompoundedIncome(priceChgRate, startingPrice, startYear - goalCreatedYear)
-    return (Math.round(p))
-}
-
 export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
     if (!val || val < 0 || !tr) return 0
     if (maxTaxDL > 0 && val > maxTaxDL) val = maxTaxDL
@@ -37,10 +31,10 @@ export const calculateSellPrice = (price: number, chgRate: number, duration: num
     return Math.round(getCompoundedIncome(chgRate, price, duration))
 }
 
-export const calculateCFs = (goal: APIt.CreateGoalInput, duration: number) => {
-    if (goal?.manual as number > 0) return createManualCFs(goal, duration)
-    else if (goal?.emi?.per as number > 0) return createLoanCFs(goal, duration)
-    else return createAutoCFs(goal, duration)
+export const calculateCFs = (price: number, goal: APIt.CreateGoalInput, duration: number) => {
+    if (goal?.manual as number > 0) return createManualCFs(price, goal, duration)
+    else if (goal?.emi?.per as number > 0) return createLoanCFs(price, goal, duration)
+    else return createAutoCFs(price, goal, duration)
 }
 
 export const calculateTotalCPTaxBenefit = (taxRate: number, maxTDL: number,
@@ -175,8 +169,7 @@ export const calculateInterestTaxBenefit = (loanBorrowAmt: number, loanInt: numb
 }
 
 
-const createAutoCFs = (goal: APIt.CreateGoalInput, duration: number) => {
-    let p = calculatePrice(goal?.cp as number, goal.chg as number, goal.sy, goal.by)
+const createAutoCFs = (p: number, goal: APIt.CreateGoalInput, duration: number) => {
     let cfs: Array<number> = []
     if (goal.type === APIt.GoalType.B && duration) {
         let netAnnualAmt = calculateBuyAnnualNetCF(goal.sy, goal.amper as number, goal.amsy as number, goal.achg as number, 0, p, goal.aiper as number, goal.aisy as number)
@@ -236,8 +229,7 @@ export const getLoanPaidForMonths = (endYear: number, loanRepaymentYear: number,
     return loanPaidForMonths < totalMonths ? loanPaidForMonths : totalMonths
 }
 
-const createLoanCFs = (goal: APIt.CreateGoalInput, duration: number) => {
-    let p = calculatePrice(goal?.cp as number, goal?.chg as number, goal.sy, goal.by)
+const createLoanCFs = (p: number, goal: APIt.CreateGoalInput, duration: number) => {
     let cfs: Array<number> = []
     let loanBorrowAmt = getLoanBorrowAmt(p, goal.emi?.per as number)
     let loanDP = p - loanBorrowAmt
@@ -289,10 +281,9 @@ export const calculateManualPrice = (targets: Array<APIt.TargetInput>) => {
     return Math.round(p)
 }
 
-const createManualCFs = (goal: APIt.CreateGoalInput, duration: number) => {
+const createManualCFs = (p: number, goal: APIt.CreateGoalInput, duration: number) => {
     if (!goal.tgts) return []
     let targets = goal.tgts
-    let p = calculateManualPrice(targets)
     let cfs: Array<number> = []
     let taxBenefitPrev = 0
     for (let i = 0; i < duration; i++) {

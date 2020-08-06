@@ -14,10 +14,7 @@ import Sell from './sell'
 import SVGClose from '../svgclose'
 import SVGChart from '../svgchart'
 import Cost from './cost'
-import {
-    calculateCFs, calculatePrice, getLoanBorrowAmt,
-    calculateManualPrice
-} from './cfutils'
+import {calculateCFs, getLoanBorrowAmt} from './cfutils'
 import { getDuration, getGoalTypes, getImpLevels } from './goalutils'
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button"
@@ -27,6 +24,7 @@ import ExpandCollapse from '../form/expandcollapse'
 import SVGBalance from '../calc/svgbalance'
 import ActionButtons from '../form/actionbuttons'
 import GoalResult from './goalresult'
+import {getCompoundedIncome} from '../calc/finance'
 interface GoalProps {
     goal: APIt.CreateGoalInput
     cashFlows?: Array<number>
@@ -133,20 +131,13 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
         return g as APIt.UpdateGoalInput
     }
 
-    const updateState = (cfs: Array<number>, g: APIt.CreateGoalInput) => {
-        let p = manualMode > 0 ? calculateManualPrice(g?.tgts as Array<APIt.TargetInput>)
-            : calculatePrice(g?.cp as number, g?.chg as number, g.sy, g.by)
-        setPrice(p)
-        setCFs([...cfs])
-    }
-
-    const calculateYearlyCFs = (duration: number, changeState: boolean = true) => {
+    const calculateYearlyCFs = (price: number, duration: number, changeState: boolean = true) => {
         let g: APIt.CreateGoalInput = createNewGoalInput()
-        let cfs = calculateCFs(g, duration)
+        let cfs = calculateCFs(price, g, duration)
         console.log("New cfs created: ", cfs)
         if (changeState) {
             if (g.emi?.per as number > 0 && manualMode < 1) setEndYear(g.sy + duration - 1)
-            updateState(cfs, g)
+            setCFs([...cfs])
         }
         return cfs
     }
@@ -167,16 +158,30 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
     }
 
     useEffect(() => {
+        if(manualMode) return
+        let p = 0
+        if(startingPrice) p = getCompoundedIncome(priceChgRate, startingPrice, startYear - goal.by)
+        setPrice(Math.round(p))
+    }, [startingPrice, priceChgRate, startYear, manualMode])
+
+    useEffect(() => {
+        if(!manualMode) return
+        let p = 0
+        wipTargets.forEach(t => p += t.val)
+        setPrice(Math.round(p))
+    }, [wipTargets, manualMode])
+
+    useEffect(() => {
         if (cashFlows || (!allInputDone && (currentOrder < 7 || currentOrder > 19))) return
-        if (!cashFlows) calculateYearlyCFs(getDuration(sellAfter, startYear, endYear))
-    }, [startingPrice, priceChgRate, wipTargets, assetChgRate, loanPer, loanRepaymentSY, loanIntRate,
+        if (!cashFlows) calculateYearlyCFs(price, getDuration(sellAfter, startYear, endYear))
+    }, [price, assetChgRate, loanPer, loanRepaymentSY, loanIntRate,
         loanYears, startYear, sellAfter, taxRate, maxTaxDeduction, taxBenefitInt, allInputDone, currentOrder,
-        maxTaxDeductionInt, amCostPer, amStartYear, aiPer, aiStartYear, manualMode, cashFlows])
+        maxTaxDeductionInt, amCostPer, amStartYear, aiPer, aiStartYear, cashFlows])
 
     useEffect(() => {
         if (!allInputDone && (currentOrder < 7 || currentOrder > 19)) return
-        if (goalType !== APIt.GoalType.B && manualMode < 1) calculateYearlyCFs(getDuration(sellAfter, startYear, endYear))
-    }, [endYear, allInputDone, currentOrder])
+        if (goalType !== APIt.GoalType.B && manualMode < 1) calculateYearlyCFs(price, getDuration(sellAfter, startYear, endYear))
+    }, [price, endYear, allInputDone, currentOrder])
 
     useEffect(() => {
         let result = ffImpactYearsHandler(startYear, cfs, goal.id, impLevel)
@@ -188,7 +193,7 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
     const initBuyCFsForComparison = (analyzeFor: number) => {
         let allCFs: Array<Array<number>> = []
         for (let i = 1; i <= analyzeFor; i++)
-            allCFs.push(calculateYearlyCFs(i, false))
+            allCFs.push(calculateYearlyCFs(price, i, false))
         return allCFs
     }
 

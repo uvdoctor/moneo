@@ -48,7 +48,7 @@ export default function AAChart(props: AAChartProps) {
                     createBarTrace(props.aa.savings, 'Savings Account', '#b7791f'),
                     createBarTrace(props.aa.deposits, 'Deposits', '#38a169'),
                     createBarTrace(props.aa.sbonds, 'Short-term Bonds Fund', '#4299e1'),
-                    createBarTrace(props.aa.mbonds, 'Long-term Bonds Fund', '#3182ce'),
+                    createBarTrace(props.aa.mbonds, 'Intermediate-term Bonds Fund', '#3182ce'),
                     createBarTrace(props.aa.growthstocks, 'Growth Stocks ETF', '#dd6b20'),
                     createBarTrace(props.aa.divstocks, 'High Yield Stocks ETF', '#ed8936'),
                     createBarTrace(props.aa.reit, 'REIT ETF', '#805ad5'),
