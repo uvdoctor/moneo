@@ -398,7 +398,7 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
             {allInputDone && cfs.length > 0 && rr.length > 0 &&
                 <Fragment>
                     {nowYear < startYear && <GoalResult rr={rr} startIndex={startYear - (nowYear + 1)} currency={currency} 
-                        ffGoalEndYear={ffGoalEndYear} cfs={cfs} ffOOM={ffOOM} ffImpactYears={ffImpactYears} />}
+                        ffGoalEndYear={ffGoalEndYear} cfs={cfs} ffOOM={ffOOM} ffImpactYears={ffImpactYears} buyGoal={goalType === APIt.GoalType.B} />}
                     <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}
                         submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />

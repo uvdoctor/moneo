@@ -46,7 +46,7 @@ export default function Summary(props: SummaryProps) {
             </div>
             {props.startYear > nowYear && <GoalResult rr={props.rr} currency={props.currency} 
                         ffGoalEndYear={props.ffGoalEndYear} cfs={props.cfs} startIndex={props.startYear - (nowYear + 1)}
-                        ffImpactYears={props.ffImpactYears} ffOOM={props.ffOOM} />}
+                        ffImpactYears={props.ffImpactYears} ffOOM={props.ffOOM} buyGoal={props.type === GoalType.B} />}
             <p className="w-full text-center mt-4 mb-2">Yearly Cash Flows in {props.currency}</p>
             <LineChart cfs={props.cfs} startYear={props.startYear} />
         </div>
