@@ -49,11 +49,16 @@ export default function AAChart(props: AAChartProps) {
                     createBarTrace(props.aa.deposits, 'Deposits', '#38a169'),
                     createBarTrace(props.aa.sbonds, 'Short-term Bonds Fund', '#4299e1'),
                     createBarTrace(props.aa.mbonds, 'Intermediate-term Bonds Fund', '#3182ce'),
-                    createBarTrace(props.aa.growthstocks, 'Growth Stocks ETF', '#dd6b20'),
-                    createBarTrace(props.aa.divstocks, 'High Yield Stocks ETF', '#ed8936'),
-                    createBarTrace(props.aa.reit, 'REIT ETF', '#805ad5'),
+                    createBarTrace(props.aa.mtebonds, 'Tax-Exempt Bonds Fund', '#2b6cb0'),
+                    createBarTrace(props.aa.divstocks, 'Dividend Growth Stocks ETF', '#ed8936'),
+                    createBarTrace(props.aa.largecapstocks, 'Large-cap Growth Stocks ETF', '#dd6b20'),
+                    createBarTrace(props.aa.multicapstocks, 'Multi-cap Growth Stocks ETF', '#c05621'),
+                    createBarTrace(props.aa.istocks, 'International Stocks ETF', '#7b341e'),
+                    createBarTrace(props.aa.dreit, 'Domestic REIT ETF', '#805ad5'),
+                    createBarTrace(props.aa.ireit, 'International REIT ETF', '#b794f4'),
                     createBarTrace(props.aa.gold, 'Gold ETF', 'gold'),
-                    createScatterTrace(props.rr, 'Potential Return', '#e53e3e', 'lines+markers')
+                    createBarTrace(props.aa.digitalcurrency, 'Digital Currencies', '#e53e3e'),
+                    createScatterTrace(props.rr, 'Potential Return', '#3c366b', 'lines+markers')
                 ]}
                 config={{ responsive: true, editable: false, displayModeBar: false }}
             />

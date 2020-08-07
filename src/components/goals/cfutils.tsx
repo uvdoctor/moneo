@@ -33,16 +33,16 @@ export const calculateSellPrice = (price: number, chgRate: number, duration: num
 
 const calculatePrice = (goal: APIt.CreateGoalInput) => {
     let price = 0
-    if(goal.manual && goal.tgts) {
+    if (goal.manual && goal.tgts) {
         goal.tgts.forEach(t => price += t.val)
-    } else if(!goal.manual && goal.cp) {
+    } else if (!goal.manual && goal.cp) {
         price = getCompoundedIncome(goal.chg as number, goal.cp as number, goal.sy - goal.by)
     }
     return price
 }
 
 export const calculateCFs = (price: number | null, goal: APIt.CreateGoalInput, duration: number) => {
-    if(price === null) price = calculatePrice(goal)
+    if (price === null) price = calculatePrice(goal)
     if (goal?.manual as number > 0) return createManualCFs(price, goal, duration)
     else if (goal?.emi?.per as number > 0) return createLoanCFs(price, goal, duration)
     else return createAutoCFs(price, goal, duration)
@@ -369,10 +369,15 @@ const buildEmptyAA = (fromYear: number, toYear: number) => {
         deposits: buildArray(fromYear, toYear),
         sbonds: buildArray(fromYear, toYear),
         mbonds: buildArray(fromYear, toYear),
-        reit: buildArray(fromYear, toYear),
+        mtebonds: buildArray(fromYear, toYear),
+        dreit: buildArray(fromYear, toYear),
+        ireit: buildArray(fromYear, toYear),
         gold: buildArray(fromYear, toYear),
-        growthstocks: buildArray(fromYear, toYear),
-        divstocks: buildArray(fromYear, toYear)
+        largecapstocks: buildArray(fromYear, toYear),
+        multicapstocks: buildArray(fromYear, toYear),
+        divstocks: buildArray(fromYear, toYear),
+        istocks: buildArray(fromYear, toYear),
+        digitalcurrency: buildArray(fromYear, toYear)
     }
 }
 
@@ -390,44 +395,71 @@ const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number
     let nowYear = new Date().getFullYear()
     let i = y - (nowYear + 1)
     let savingsPer = Math.round((sa / cs) * 100)
-    if(savingsPer < 1) savingsPer = 1
     let depPer = Math.round((da / cs) * 100)
     let cashPer = savingsPer + depPer
     if (y >= ffGoal.ey - 10) {
         let maxCashPer = 30 - 2 * (ffGoal.ey - y)
-        if(cashPer < maxCashPer) cashPer = maxCashPer
+        if (cashPer < maxCashPer) cashPer = maxCashPer
         depPer = (cashPer - savingsPer)
     }
     aa.savings[i] = savingsPer
     aa.deposits[i] = depPer
     let bondsPer = cs > sa + da ? Math.round((ba / cs) * 100) : 0
     if (bondsPer + cashPer > 100) bondsPer = 100 - cashPer
-    aa.mbonds[i] = bondsPer
+    if(y < ffYear) aa.mtebonds[i] = Math.round(bondsPer * 0.5)
+    aa.mbonds[i] = bondsPer - aa.mtebonds[i]
     let remPer = 100 - (cashPer + bondsPer)
     if (remPer > 0) {
-        let reitPer = 5
-        if(y >= ffYear) reitPer = (y > ffGoal.ey - 5) ? 20 : 10
-        if(reitPer > remPer) reitPer = remPer
-        aa.reit[i] = reitPer
+        let reitPer = ffGoal.imp === APIt.LMH.L ? 10 : 5
+        if (y >= ffYear) {
+            if(y > ffGoal.ey - 5) reitPer = 25
+            else if(y >= ffGoal.ey - 20) reitPer = 20
+            else reitPer += 5
+        }
+        if (reitPer > remPer) reitPer = remPer
+        aa.dreit[i] = Math.round(reitPer * 0.8)
+        aa.ireit[i] = reitPer - aa.dreit[i]
         remPer -= reitPer
         if (remPer > 0) {
             if (y <= ffGoal.ey - 5) {
-                let stocksPer = Math.round(remPer * 0.9)
-                let maxStocksPer = y >= ffGoal.ey - 20 ? 2 * (ffGoal.ey - y) : 120 - (ffGoal.ey - y)
-                if (stocksPer > maxStocksPer) stocksPer = maxStocksPer
-                if(y >= ffGoal.ey - 10) aa.divstocks[i] = stocksPer
-                else if(y >= ffGoal.ey - 20) {
-                    aa.divstocks[i] = ((100 - 2 * (ffGoal.ey - y)) / 100) * stocksPer
-                    aa.growthstocks[i] = stocksPer - aa.divstocks[i]
-                } else aa.growthstocks[i] = stocksPer
-                remPer -= stocksPer
-                if (remPer > 0) {
-                    let goldPer = Math.round(stocksPer * 0.1)
-                    if (goldPer > remPer) goldPer = remPer
-                    aa.gold[i] = goldPer
-                    remPer -= goldPer
+                if (ffGoal.imp === APIt.LMH.L) {
+                    let mteBondsPer = 0
+                    if(y < ffYear) mteBondsPer = Math.round(remPer * 0.5)
+                    aa.mtebonds[i] += mteBondsPer
+                    aa.mbonds[i] += remPer - mteBondsPer
+                } else {
+                    let stocksPer = Math.round(remPer * 0.9)
+                    let maxStocksPer = y >= ffGoal.ey - 20 ? 2 * (ffGoal.ey - y) : 120 - (ffGoal.ey - y)
+                    if (y >= ffYear && maxStocksPer > 60) maxStocksPer = 60
+                    if (stocksPer > maxStocksPer) stocksPer = maxStocksPer
+                    if (y >= ffGoal.ey - 10) aa.divstocks[i] = stocksPer
+                    else if (y >= ffGoal.ey - 20) {
+                        aa.divstocks[i] = ((100 - 2 * (ffGoal.ey - y)) / 100) * stocksPer
+                        aa.largecapstocks[i] = stocksPer - aa.divstocks[i]
+                    } else {
+                        if(ffGoal.imp === APIt.LMH.M || y >= ffYear) {
+                            aa.largecapstocks[i] = Math.round(stocksPer * 0.7)
+                            aa.istocks[i] = stocksPer - aa.largecapstocks[i]
+                        } else {
+                            aa.digitalcurrency[i] = 1
+                            aa.multicapstocks[i] = Math.round((stocksPer - 1) * 0.7)
+                            aa.istocks[i] = stocksPer - 1 - aa.multicapstocks[i]
+                        }
+                    }
+                    remPer -= stocksPer
+                    if (remPer > 0) {
+                        let goldPer = Math.round(stocksPer * 0.1)
+                        if (goldPer > remPer) goldPer = remPer
+                        aa.gold[i] = goldPer
+                        remPer -= goldPer
+                    }
+                    if (remPer > 0) {
+                        let mteBondsPer = 0
+                        if(y < ffYear) mteBondsPer = Math.round(remPer / 2)
+                        aa.mtebonds[i] += mteBondsPer
+                        aa.mbonds[i] += remPer - mteBondsPer
+                    }
                 }
-                if (remPer > 0) aa.mbonds[i] += remPer
             } else {
                 aa.sbonds[i] += remPer
             }
