@@ -21,7 +21,7 @@ export default function Section(props: SectionProps) {
     const [showSection, setShowSection] = useState<boolean>(props.showOnLoad ? props.showOnLoad : true)
 
     return (
-        <div className='ml-1 mr-1 mt-2 mb-4 pb-2 w-full max-w-sm md:max-w-md rounded overflow-hidden 
+        <div className='ml-1 mr-1 mt-2 mb-4 w-full max-w-sm md:max-w-md rounded overflow-hidden 
                         shadow-lg md:shadow-xl'>
             <ExpandCollapse title={props.title} value={showSection}
                 handler={setShowSection} titleInfo={props.titleInfo} insideForm={props.insideForm} />

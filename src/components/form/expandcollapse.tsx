@@ -17,7 +17,7 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
 
     return (
         <div className={`w-full ${props.insideForm && 'bg-black text-white py-1'}`}>
-            {props.titleInfo && <div className="w-full flex justify-end cursor-pointer" onClick={() => toast.info(props.titleInfo)}>
+            {props.titleInfo && <div className="w-full flex justify-center cursor-pointer" onClick={() => toast.info(props.titleInfo)}>
                 <SVGInfo />
             </div>}
             <div className="cursor-pointer flex justify-center items-center w-full"

@@ -358,20 +358,6 @@ export default function Goals({ showModalHandler, savings, annualSavings, avgAnn
                                 <AwesomeButton type="primary" ripple>
                                     SET TARGET
                                 </AwesomeButton>
-                            } bottom={
-                                <NumberInput name="asChgRate"
-                                    inputOrder={1}
-                                    currentOrder={0}
-                                    nextStepDisabled
-                                    allInputDone
-                                    nextStepHandler={() => true}
-                                    pre="Increases" post="Every Month" unit="%" note={`${toCurrency(Math.round(getCompoundedIncome(monthlySavingsRate * 12, annualSavings, 1, 12)), currency)} in ${nowYear + 1}`}
-                                    min={0} max={5} step={0.1} value={monthlySavingsRate} changeHandler={setMonthlySavingsRate}
-                                    info={`Given Annual Savings of ${toCurrency(annualSavings, currency)} by end of ${nowYear}, 
-                                        ${monthlySavingsRate}% increase in savings comes to about 
-                                        ${toCurrency(Math.round(getCompoundedIncome(monthlySavingsRate * 12, annualSavings, 1, 12)), currency)} in ${nowYear + 1}. Due to the power of compounding, 
-                                        even small regular increase in savings can make a significant impact in the long term.`}
-                                    infoDurationInMs={7000} />
                             } hasResult />
                         </div> : <div />}
                         {ffGoal && <ul className="flex flex-wrap justify-center items-center border-b mt-4 md:mt-8 w-screen">

@@ -353,10 +353,12 @@ const calculateBondAllocation = (ffGoal: APIt.CreateGoalInput, tryCFs: Array<num
     let nowYear = new Date().getFullYear()
     let stbondAA: any = {}
     for (let year = nowYear + 1; year <= ffGoal.ey; year++) {
+        let cf = 0
         for (let bondYear = year; bondYear < year + 3; bondYear++) {
             let tryCF = tryCFs[bondYear - (nowYear + 1)]
-            if (tryCF && tryCF < 0) stbondAA[year] -= tryCF
+            if (tryCF && tryCF < 0) cf -= tryCF
         }
+        stbondAA[year] = cf
     }
     return stbondAA
 }
@@ -400,7 +402,7 @@ const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number
     aa.deposits[i] = depPer
     let bondsPer = cs > sa + da ? Math.round((ba / cs) * 100) : 0
     if (bondsPer + cashPer > 100) bondsPer = 100 - cashPer
-    aa.sbonds[i] = bondsPer
+    aa.mbonds[i] = bondsPer
     let remPer = 100 - (cashPer + bondsPer)
     if (remPer > 0) {
         let reitPer = 5
@@ -472,7 +474,7 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
                 let remPer = 100 - aa.savings[i]
                 aa.deposits[i] = depPer < remPer ? depPer : remPer
                 remPer -= aa.deposits[i]
-                if (remPer > 0) aa.bonds[i] = remPer
+                if (remPer > 0) aa.mbonds[i] = remPer
             }
             oom.push(y)
         }

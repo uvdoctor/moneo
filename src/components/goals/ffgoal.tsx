@@ -19,7 +19,7 @@ import SVGChart from '../svgchart'
 import ExpandCollapse from '../form/expandcollapse'
 import LineChart from './linechart'
 import { getRAOptions } from './goalutils'
-
+import { getCompoundedIncome } from '../calc/finance'
 interface FFGoalProps {
     goal: APIt.CreateGoalInput
     totalSavings: number
@@ -49,7 +49,7 @@ interface FFGoalProps {
     updateCallback: Function
 }
 
-export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp, expChgRate, ffYear, ffAmt, 
+export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp, expChgRate, ffYear, ffAmt,
     ffLeftOverAmt, ffCfs, ffMinReq, ffOOM, mustCFs, tryCFs, mergedCfs, pp,
     aaHandler, rrHandler, ffYearHandler, ffAmtHandler, ffLeftOverAmtHandler, ffCfsHandler, ffMinReqHandler,
     ffOOMHandler, cancelCallback, addCallback, updateCallback }: FFGoalProps) {
@@ -125,7 +125,7 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
     useEffect(() => {
         if (!allInputDone) return
         let result = findEarliestFFYear(createGoal(), totalSavings, mergedCfs,
-            annualSavings, ffYear ? ffYear : null, mustCFs, tryCFs, 
+            annualSavings, ffYear ? ffYear : null, mustCFs, tryCFs,
             avgAnnualExp, expChgRate, pp)
         ffAmtHandler(result.ffAmt)
         ffYearHandler(result.ffYear < 0 ? null : result.ffYear)
@@ -159,7 +159,7 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
         setCPBY(nowYear)
     }, [carePremium])
 
-    const handleSubmit = async() => {
+    const handleSubmit = async () => {
         setBtnClicked(true)
         goal.id ? await updateCallback(updateGoal())
             : await addCallback(createGoal())
@@ -224,15 +224,18 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
                         currency />
                 </div>
                 <div className="flex flex-wrap justify-around items-start w-full">
-                {((!allInputDone && currentOrder >= 3) || allInputDone) &&
+                    {((!allInputDone && currentOrder >= 3) || allInputDone) &&
                         <Section title='Before Financial Freedom'
                             left={
                                 <NumberInput name="savingsRate" inputOrder={3} currentOrder={currentOrder}
                                     nextStepDisabled={expenseAfterFF === 0} allInputDone={allInputDone} nextStepHandler={handleNextStep}
-                                    info="Your best guess about how much can You increase Your Savings Every Month. 
-                                    More You Save, Earlier You Can Achieve Financial Freedom."
-                                    pre="Increase" post='Savings by' note="Every Month" unit="%"
-                                    value={monthlySavingsRate} changeHandler={setMonthlySavingsRate} min={0} max={5} step={0.1} />
+                                    info={`Given Annual Savings of ${toCurrency(annualSavings, currency)} by end of ${nowYear}, 
+                                        ${monthlySavingsRate}% monthly increase in savings comes to about 
+                                        ${toCurrency(Math.round(getCompoundedIncome(monthlySavingsRate * 12, annualSavings, 1, 12)), currency)} in ${nowYear + 1}. Due to the power of compounding, 
+                                        even small regular increase in savings can make a significant impact in the long term.`}
+                                    infoDurationInMs={7000} pre="Monthly Savings" post='Increases by' unit="%"
+                                    value={monthlySavingsRate} changeHandler={setMonthlySavingsRate} min={0} max={5} step={0.1}
+                                    note={`Total ${toCurrency(Math.round(getCompoundedIncome(monthlySavingsRate * 12, annualSavings, 1, 12)), currency)} in ${nowYear + 1}`} />
                             } right={
                                 <SelectInput name="riskProfile" inputOrder={4} currentOrder={currentOrder} options={getRAOptions()}
                                     nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
@@ -368,7 +371,7 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
             </div>
             {allInputDone &&
                 <Fragment>
-                    <FFResult endYear={endYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear} 
+                    <FFResult endYear={endYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffYear={ffYear}
                         ffMinReq={ffMinReq} ffNomineeAmt={leaveBehind} ffOOM={ffOOM} currency={currency} />
                     <ActionButtons submitDisabled={annualSavings === 0 && expenseAfterFF < 5000 || btnClicked} cancelDisabled={btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} submitText={`${goal.id ? 'UPDATE' : 'CREATE'} TARGET`} />
