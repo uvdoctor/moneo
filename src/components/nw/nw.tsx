@@ -10,11 +10,9 @@ import SelectInput from '../form/selectinput'
 interface NWProps {
     totalSavings: number
     annualSavings: number
-    savingsChgRate: number
     currency: string
     totalSavingsHandler: Function
     annualSavingsHandler: Function
-    savingsChgRateHandler: Function
     currencyHandler: Function
     viewModeHandler: Function
 }
@@ -94,25 +92,17 @@ export default function NW(props: NWProps) {
                             post='Savings' changeHandler={props.annualSavingsHandler} step={1000} currency={props.currency}
                             rangeFactor={rangeFactor} />
                     } bottom={
-                        <div className="flex flex-wrap w-full justify-around items-center">
-                            <NumberInput name="sr" inputOrder={2} currentOrder={1}
-                                nextStepDisabled allInputDone nextStepHandler={() => true}
-                                info={`Your best guess about how much can You increase Your Savings Every Month. 
-                                    More You Save, Earlier You Can Achieve Financial Freedom.`}
-                                value={props.savingsChgRate} unit="%" pre="Savings" min={0} max={5}
-                                post="Increases" changeHandler={props.savingsChgRateHandler} note="Every Month" step={0.1} />
-                            <SelectInput name="ccy" inputOrder={2} currentOrder={1}
-                                nextStepDisabled allInputDone
-                                nextStepHandler={() => true}
-                                pre="Currency"
-                                value={props.currency}
-                                changeHandler={changeCurrency}
-                                currency />
-                        </div>
+                        <SelectInput name="ccy" inputOrder={2} currentOrder={1}
+                            nextStepDisabled allInputDone
+                            nextStepHandler={() => true}
+                            pre="Currency"
+                            value={props.currency}
+                            changeHandler={changeCurrency}
+                            currency />
                     } insideForm />
             </div>
             <div className="mt-2 mb-2 flex justify-center">
-                <AwesomeButton type="link" size="medium" disabled={props.annualSavings === 0 || props.totalSavings === 0 || props.savingsChgRate === 0} ripple onPress={() => props.viewModeHandler("Plan")}>
+                <AwesomeButton type="link" size="medium" disabled={props.annualSavings === 0 || props.totalSavings === 0} ripple onPress={() => props.viewModeHandler("Plan")}>
                     PLAN
             </AwesomeButton>
             </div>

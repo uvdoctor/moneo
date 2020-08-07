@@ -72,7 +72,7 @@ const createFFGoalInput = (currency: string) => {
         tdl: 0,
         ccy: currency,
         type: APIt.GoalType.FF,
-        imp: APIt.LMH.H,
+        imp: APIt.LMH.M,
         manual: 0,
         amper: 5,
         amsy: nowYear + 10,
@@ -86,7 +86,8 @@ const createFFGoalInput = (currency: string) => {
         dr: 0,
         pg: [],
         pl: [],
-        tbr: 0,
+        tbr: 1,
+        tdli: 0,
         btr: 3
     } as APIt.CreateGoalInput
 }

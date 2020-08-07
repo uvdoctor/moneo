@@ -17,7 +17,6 @@ const SecureDash = () => {
     const [showModal, setShowModal] = useState<boolean>(false)
     const [savings, setSavings] = useState<number>(0)
     const [annualSavings, setAnnualSavings] = useState<number>(0)
-    const [savingsChgRate, setSavingsChgRate] = useState<number>(1)
     const [currency, setCurrency] = useState<string>("USD")
     const [allGoals, setAllGoals] = useState<Array<CreateGoalInput> | null>([])
     const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false)
@@ -79,12 +78,10 @@ const SecureDash = () => {
                     </li>))}
             </ul>}
             {viewMode === netWorthLabel && <NW totalSavings={savings} annualSavings={annualSavings} viewModeHandler={setViewMode}
-                savingsChgRateHandler={setSavingsChgRate} savingsChgRate={savingsChgRate}
                 totalSavingsHandler={setSavings} annualSavingsHandler={setAnnualSavings} currency={currency} currencyHandler={setCurrency} />}
-            {viewMode === goalsLabel && <Goals showModalHandler={setShowModal} savings={savings} annualSavings={annualSavings} savingsChgRate={savingsChgRate}
+            {viewMode === goalsLabel && <Goals showModalHandler={setShowModal} savings={savings} annualSavings={annualSavings} 
                 allGoals={allGoals} goalsLoaded={goalsLoaded} allGoalsHandler={setAllGoals} currency={currency} allCFs={allCFs} aa={aa} aaHandler={setAA}
-                allCFsHandler={setAllCFs} ffGoal={ffGoal} ffGoalHandler={setFFGoal} savingsChgRateHandler={setSavingsChgRate} rr={rr} rrHandler={setRR}
-                pp={pp} avgAnnualExpense={avgAnnualExpense} expChgRate={expChgRate} />}
+                allCFsHandler={setAllCFs} ffGoal={ffGoal} ffGoalHandler={setFFGoal} rr={rr} rrHandler={setRR} pp={pp} avgAnnualExpense={avgAnnualExpense} expChgRate={expChgRate} />}
         </Fragment>
     )
 }
