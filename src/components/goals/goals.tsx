@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react'
 import Goal from './goal'
 import FFGoal from './ffgoal'
-import { removeFromArray, toCurrency } from '../utils'
+import { removeFromArray } from '../utils'
 import CFChart from './cfchart'
 import AA from './aa'
 import * as APIt from '../../api/goals'
@@ -13,11 +13,9 @@ import SVGTargetPath from './svgtargetpath'
 import Section from '../form/section'
 //@ts-ignore
 import { AwesomeButton } from 'react-awesome-button'
-import NumberInput from '../form/numberinput'
 import FFResult from './ffresult'
 import SVGEdit from '../svgedit'
 import { toast } from 'react-toastify'
-import {getCompoundedIncome} from '../calc/finance'
 interface GoalsProps {
     showModalHandler: Function
     savings: number
@@ -54,7 +52,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, avgAnn
     const [ffCfs, setFFCfs] = useState<any>({})
     const [ffMinReq, setFFMinReq] = useState<number>(0)
     const [ffOOM, setFFOOM] = useState<Array<number> | null>(null)
-    const [monthlySavingsRate, setMonthlySavingsRate] = useState<number>(ffGoal ? ffGoal.tbr as number : 1)
+    //const [monthlySavingsRate, setMonthlySavingsRate] = useState<number>(ffGoal ? ffGoal.tbr as number : 1)
     const goalsLabel = "Goals"
     const cfLabel = "Cash Flows"
     const aaLabel = "Asset Allocation"
@@ -92,7 +90,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, avgAnn
 
     useEffect(() => {
         calculateFFYear()
-    }, [savings, annualSavings, monthlySavingsRate, mustCFs])
+    }, [savings, annualSavings, mustCFs])
 
     useEffect(() => {
         if (!ffGoal) return
