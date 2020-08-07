@@ -144,8 +144,8 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
     useEffect(() => {
         if (!loanPer) setEYOptions(initYearOptions(startYear, 20))
         if (!loanPer && (startYear > endYear || endYear - startYear > 20)) setEndYear(startYear)
-        if (loanPer && loanRepaymentSY && (startYear > loanRepaymentSY || loanRepaymentSY - startYear > 10)) setLoanRepaymentSY(startYear)
-    }, [startYear, endYear, loanPer, loanRepaymentSY])
+        if (loanPer) setLoanRepaymentSY(startYear)
+    }, [startYear, endYear, loanPer])
 
     const changeEndYear = (str: string) => {
         let ey = parseInt(str)
