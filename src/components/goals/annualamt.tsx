@@ -47,13 +47,14 @@ export default function AnnualAmt(props: AnnualAmtProps) {
                             unit="%" labelBottom={true} label="of Amount" post={`Total ${toCurrency(totalAmt, props.currency)}`}
                             value={props.percentage} step={0.2} />
                     } right={
-                        <SelectInput inputOrder={props.inputOrder + 1}
+                        props.percentage ? <SelectInput inputOrder={props.inputOrder + 1}
                             currentOrder={props.currentOrder}
                             nextStepDisabled={false}
                             nextStepHandler={props.nextStepHandler}
                             allInputDone={props.allInputDone} name="startFrom"
                             pre="From Year" post="Onwards" options={syOptions} value={props.annualSY}
                             changeHandler={props.annualSYHandler} />
+                        : !props.allInputDone && props.currentOrder === props.inputOrder + 1 && props.nextStepHandler()
                     } footer={props.footer} />}
         </Fragment>
     )

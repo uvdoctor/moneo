@@ -57,7 +57,7 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                             pre="Tax" post="Rate" min={0} max={40} step={0.1} unit="%"
                             value={props.taxRate} changeHandler={props.taxRateHandler} />
                     } right={
-                        <NumberInput
+                        props.taxRate ? <NumberInput
                             inputOrder={props.inputOrder + 1}
                             currentOrder={props.currentOrder}
                             nextStepDisabled={false}
@@ -68,6 +68,7 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                             value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} min={0} max={50000} step={1000}
                             note={<ResultItem label='Total Tax Benefit' result={taxBenefit} currency={props.currency} />} 
                             rangeFactor={props.rangeFactor} />
+                        : !props.allInputDone && props.currentOrder === props.inputOrder + 1 && props.nextStepHandler()
                     } />}
         </Fragment>
     )

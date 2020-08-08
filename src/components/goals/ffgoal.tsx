@@ -276,18 +276,20 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
                                     value={retirementIncome} changeHandler={setRetirementIncome} rangeFactor={rangeFactor}
                                     pre="Yearly" post="Benefit" min={0} max={50000} step={500} currency={currency} />
                             } right={
-                                <NumberInput name="richgper" inputOrder={9} currentOrder={currentOrder}
+                                retirementIncome ? <NumberInput name="richgper" inputOrder={9} currentOrder={currentOrder}
                                     nextStepDisabled={false} allInputDone={allInputDone}
                                     nextStepHandler={handleNextStep} value={retirementIncomePer} changeHandler={setRetirementIncomePer}
                                     pre="Benefit" post="Increases" note="Yearly" min={0} max={3} step={0.1} unit="%" />
+                                    : !allInputDone && currentOrder === 9 && handleNextStep()
                             } bottom={
-                                <SelectInput name="risy" inputOrder={10} currentOrder={currentOrder}
+                                retirementIncome ? <SelectInput name="risy" inputOrder={10} currentOrder={currentOrder}
                                     nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
                                     info="When do You Plan to Receive the Benefit? Around 70 years of age is preferable for optimal benefit."
                                     value={retirementIncomeSY} options={ryOptions}
                                     pre="From" post="Onwards" changeHandler={(val: string) => {
                                         changeSelection(val, setRetirementIncomeSY)
                                     }} />
+                                    : !allInputDone && currentOrder === 10 && handleNextStep()
                             } insideForm />}
 
                     {(currency === 'USD' || currency === 'CAD' || currency === 'GBP') ?
@@ -302,7 +304,7 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
                                         info="How much does annual insurance premium cost today? Actual price will be derived based on this price."
                                         value={carePremium} changeHandler={setCarePremium} rangeFactor={rangeFactor}
                                         pre="Yearly" post="Premium" note="In Today's Money" min={0} max={7000} step={100} currency={currency} />
-                                    <div className="flex justify-between items-end w-full">
+                                    {carePremium ? <div className="flex justify-between items-end w-full">
                                         <SelectInput name="cpsy" inputOrder={12} currentOrder={currentOrder}
                                             nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
                                             info="It may be a good option to buy this insurance when You are healthier (between 60 to 65 years of age) to get lower premiums."
@@ -313,24 +315,27 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
                                             allInputDone={allInputDone}
                                             nextStepHandler={handleNextStep} value={carePremiumDur} options={initYearOptions(1, 15)}
                                             pre="For" post='Years' changeHandler={(val: string) => changeSelection(val, setCarePremiumDur)} />
-                                    </div>
+                                    </div> : !allInputDone && currentOrder === 12 && handleNextStep(2)}
                                 </div>
                             } right={
-                                <RadialInput inputOrder={14} currentOrder={currentOrder}
+                                carePremium ? <RadialInput inputOrder={14} currentOrder={currentOrder}
                                     nextStepDisabled={false}
                                     allInputDone={allInputDone}
                                     nextStepHandler={handleNextStep} value={carePremiumChgPer} changeHandler={setCarePremiumChgPer}
                                     pre="Premium Changes" label="Yearly" labelBottom post={<ResultItem label='Total Premium' result={totalCP} currency={currency} />}
                                     data={toStringArr(0, 10, 0.5)} step={0.5} unit="%" />
-                            } bottomLeft={currentOrder >= 15 && 'Max Yearly'} bottomRight={currentOrder >= 15 && 'Allowed'}
+                                    : !allInputDone && currentOrder === 14 && handleNextStep()
+                            } bottomLeft={carePremium && taxRate && (allInputDone || currentOrder >= 15) && 'Max Yearly'} 
+                            bottomRight={carePremium && taxRate && (allInputDone || currentOrder >= 15) && 'Allowed'}
                             bottom={
-                                <NumberInput name="maxTDL" inputOrder={15} currentOrder={currentOrder}
+                                carePremium && taxRate ? <NumberInput name="maxTDL" inputOrder={15} currentOrder={currentOrder}
                                     nextStepDisabled={false} allInputDone={allInputDone}
                                     nextStepHandler={handleNextStep} pre="Tax" post="Deduction" currency={currency}
                                     value={careTaxDedLimit} changeHandler={setCareTaxDedLimit} width="80px"
                                     min={0} max={5000} step={500} rangeFactor={rangeFactor} note={
                                         <ResultItem label='Total Tax Benefit' currency={currency} result={totalTaxBenefit} />
                                     } />
+                                : !allInputDone && currentOrder === 15 && handleNextStep()
                             } insideForm /> : !allInputDone && currentOrder === 11 && handleNextStep(5)}
                 </div>
                 <div className="flex flex-wrap justify-around items-start w-full">

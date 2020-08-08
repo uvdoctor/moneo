@@ -344,13 +344,15 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
                                         min={0} max={100000} step={1000} currency={currency} rangeFactor={rangeFactor} />
                                 </div>}
                                 right={
-                                    <NumberInput name="rentChg"
+                                    rentAmt ? <NumberInput name="rentChg"
                                         inputOrder={21}
                                         currentOrder={currentOrder}
                                         nextStepDisabled={false}
                                         nextStepHandler={handleNextStep}
                                         allInputDone={allInputDone} pre="Changes" value={rentChgPer} changeHandler={setRentChgPer}
-                                        min={-10} max={10} step={0.5} unit="%" />}
+                                        min={-10} max={10} step={0.5} unit="%" />
+                                        : !allInputDone && currentOrder === 21 && handleNextStep()
+                                }
                                 toggle={
                                     <HToggle rightText="Claim Tax Deduction" value={rentTaxBenefit as number} setter={setRentTaxBenefit} />
                                 }

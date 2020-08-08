@@ -82,7 +82,7 @@ export default function EmiCost(props: EmiProps) {
                             step={5} labelBottom={true} label="of Amount" pre="Principal"
                             post={`${toCurrency(props.loanBorrowAmt, props.currency)}`} />
                     } right={
-                        <div className="flex flex-col">
+                        props.loanBorrowAmt ? <div className="flex flex-col">
                             <SelectInput name="repaymentSY"
                                 inputOrder={props.inputOrder + 1}
                                 currentOrder={props.currentOrder}
@@ -102,9 +102,9 @@ export default function EmiCost(props: EmiProps) {
                                     value={props.loanYears} changeHandler={props.loanMonthsHandler}
                                     min={0.5} max={30} step={0.5} />
                             </div>
-                        </div>
+                        </div> : !props.allInputDone && props.currentOrder === props.inputOrder + 1 && props.nextStepHandler(2)
                     } bottom={
-                        <div className="flex flex-wrap justify-around items-center w-full">
+                        props.loanBorrowAmt ? <div className="flex flex-wrap justify-around items-center w-full">
                             <NumberInput name="intRate"
                                 inputOrder={props.inputOrder + 3}
                                 currentOrder={props.currentOrder}
@@ -122,7 +122,7 @@ export default function EmiCost(props: EmiProps) {
                                 allInputDone={props.allInputDone} pre="Max Yearly" post="Deduction" rangeFactor={props.rangeFactor}
                                 value={props.maxTaxDeductionInt} changeHandler={props.maxTaxDeductionIntHandler} currency={props.currency}
                                 min={0} max={50000} step={1000} note={`Total ${toCurrency(totalIntTaxBenefit, props.currency)}`} />
-                        </div>
+                        </div> : !props.allInputDone && props.currentOrder === props.inputOrder + 3 && props.nextStepHandler(2)
                     }
                 />}
         </Fragment>
