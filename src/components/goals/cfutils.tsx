@@ -531,8 +531,8 @@ export const findEarliestFFYear = (ffGoal: APIt.CreateGoalInput, savings: number
     annualSavings: number, yearToTry: number | undefined | null,
     mustCFs: Array<number>, tryCFs: Array<number>, avgAnnualExpense: number, expChgRate: number, pp: any) => {
     let nowYear = new Date().getFullYear()
-    if (nowYear >= ffGoal.ey) return { ffYear: -1, leftAmt: -1, ffAmt: -1, ffCfs: {}, minReq: -1, aa: {}, rr: [], oom: [] }
-    if (!yearToTry || yearToTry <= nowYear) yearToTry = nowYear + Math.round((ffGoal.ey - nowYear) / 2)
+    if (nowYear > ffGoal.ey - 20) return { ffYear: -1, leftAmt: -1, ffAmt: -1, ffCfs: {}, minReq: -1, aa: {}, rr: [], oom: [] }
+    if (!yearToTry || yearToTry <= nowYear || yearToTry > ffGoal.ey - 20) yearToTry = nowYear + Math.round((ffGoal.ey - 20 - nowYear) / 2)
     //@ts-ignore
     let nomineeAmt = ffGoal?.sa as number
     let prevResult = checkForFF(savings, ffGoal, yearToTry, mergedCFs, annualSavings,
