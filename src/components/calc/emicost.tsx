@@ -69,7 +69,8 @@ export default function EmiCost(props: EmiProps) {
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <Section title="Loan Details" insideForm
                     toggle={
-                        <HToggle rightText="Claim Interest Tax Deduction" value={props.taxBenefitInt} setter={props.taxBenefitIntHandler} />
+                        props.taxRate ? <HToggle rightText="Claim Interest Tax Deduction" value={props.taxBenefitInt} setter={props.taxBenefitIntHandler} /> 
+                        : <div />
                     }
                     left={
                         <RadialInput
@@ -114,7 +115,7 @@ export default function EmiCost(props: EmiProps) {
                                 note={`Total ${toCurrency(totalIntAmt, props.currency)}`}
                                 value={props.loanAnnualInt} changeHandler={props.loanAnnualIntHandler}
                                 min={0.0} max={25.0} step={0.1} />
-                            <NumberInput name="maxTaxDeductionInt"
+                            {props.taxRate ? <NumberInput name="maxTaxDeductionInt"
                                 inputOrder={props.inputOrder + 4}
                                 currentOrder={props.currentOrder}
                                 nextStepDisabled={false}
@@ -122,6 +123,7 @@ export default function EmiCost(props: EmiProps) {
                                 allInputDone={props.allInputDone} pre="Max Yearly" post="Deduction" rangeFactor={props.rangeFactor}
                                 value={props.maxTaxDeductionInt} changeHandler={props.maxTaxDeductionIntHandler} currency={props.currency}
                                 min={0} max={50000} step={1000} note={`Total ${toCurrency(totalIntTaxBenefit, props.currency)}`} />
+                                : !props.allInputDone && props.currentOrder === props.inputOrder + 4 && props.nextStepHandler()}
                         </div> : !props.allInputDone && props.currentOrder === props.inputOrder + 3 && props.nextStepHandler(2)
                     }
                 />}

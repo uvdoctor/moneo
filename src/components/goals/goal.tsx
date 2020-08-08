@@ -354,7 +354,8 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
                                         : !allInputDone && currentOrder === 21 && handleNextStep()
                                 }
                                 toggle={
-                                    <HToggle rightText="Claim Tax Deduction" value={rentTaxBenefit as number} setter={setRentTaxBenefit} />
+                                    taxRate ? <HToggle rightText="Claim Tax Deduction" value={rentTaxBenefit as number} setter={setRentTaxBenefit} />
+                                        : <div />
                                 }
                                 bottom={rentAns && <div className="flex items-center">
                                     <SVGBalance />
