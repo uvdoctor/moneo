@@ -33,7 +33,7 @@ export default function AAChart(props: AAChartProps) {
 
     return (
         <div className="w-full">
-            {props.rr.length > 0 && <div className="mt-4 mb-4">
+            {props.rr.length > 0 && <div className={`mt-4 mb-4 ${showAAChart && 'border-b'}`}>
                 <ExpandCollapse title="Asset Allocation Chart" value={showAAChart}
                     handler={setShowAAChart} svg={<SVGBarChart />} />
                 {/*@ts-ignore*/}
