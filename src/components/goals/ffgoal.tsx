@@ -231,7 +231,7 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
                         <Section title='Before Financial Freedom'
                             left={
                                 <NumberInput name="savingsRate" inputOrder={3} currentOrder={currentOrder}
-                                    nextStepDisabled={expenseAfterFF === 0} allInputDone={allInputDone} nextStepHandler={handleNextStep}
+                                    nextStepDisabled={false} allInputDone={allInputDone} nextStepHandler={handleNextStep}
                                     info={`Given Annual Savings of ${toCurrency(annualSavings, currency)} by end of ${nowYear}, 
                                         ${monthlySavingsRate}% monthly increase in savings comes to about 
                                         ${toCurrency(Math.round(getCompoundedIncome(monthlySavingsRate * 12, annualSavings, 1, 12)), currency)} in ${nowYear + 1}. Due to the power of compounding, 
