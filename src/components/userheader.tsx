@@ -21,8 +21,9 @@ const UserHeader = () => {
 
     const listener = (capsule: any) => {
         let eventType: string = capsule.payload.event
+        console.log("Event type: ", eventType)
         if (eventType === 'signIn') updateUser(capsule.payload.data.username)
-        else if (eventType !== 'configured') updateUser(null)
+        else updateUser(null)
     }
 
     const getUsername = async () => {

@@ -489,6 +489,7 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
     let oom = []
     for (let [year, value] of Object.entries(mCFs)) {
         let y = parseInt(year)
+        if(y > ffGoal.ey) break
         let v = parseInt(value)
         let sa = cash.savings[y] ? parseFloat(cash.savings[y]) : 0
         let da = cash.deposits[y] ? parseFloat(cash.deposits[y]) : 0

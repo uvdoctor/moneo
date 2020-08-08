@@ -20,6 +20,7 @@ import ExpandCollapse from '../form/expandcollapse'
 import LineChart from './linechart'
 import { getRAOptions } from './goalutils'
 import { getCompoundedIncome } from '../calc/finance'
+import AA from './aa'
 interface FFGoalProps {
     goal: APIt.CreateGoalInput
     totalSavings: number
@@ -32,6 +33,8 @@ interface FFGoalProps {
     ffCfs: any
     ffMinReq: number
     ffOOM: Array<number> | null
+    aa: Object
+    rr: Array<number>
     mustCFs: Array<number>
     tryCFs: Array<number>
     mergedCfs: any
@@ -50,7 +53,7 @@ interface FFGoalProps {
 }
 
 export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp, expChgRate, ffYear, ffAmt,
-    ffLeftOverAmt, ffCfs, ffMinReq, ffOOM, mustCFs, tryCFs, mergedCfs, pp,
+    ffLeftOverAmt, ffCfs, ffMinReq, ffOOM, aa, rr, mustCFs, tryCFs, mergedCfs, pp,
     aaHandler, rrHandler, ffYearHandler, ffAmtHandler, ffLeftOverAmtHandler, ffCfsHandler, ffMinReqHandler,
     ffOOMHandler, cancelCallback, addCallback, updateCallback }: FFGoalProps) {
     const [riskProfile, setRiskProfile] = useState<APIt.LMH>(goal.imp)
@@ -264,7 +267,7 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
                                     pre="Tax" post="Rate" min={0} max={20} step={0.1}
                                     value={taxRate} changeHandler={setTaxRate} unit="%" />
                             } insideForm />}
-
+                    <AA ffGoalEndYear={endYear} rr={rr} aa={aa} />
                     {((!allInputDone && currentOrder >= 8) || allInputDone) &&
                         <Section title="Retirement Income Benefit (eg: Pension, Social Security, etc.)"
                             left={

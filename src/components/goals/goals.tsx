@@ -3,7 +3,6 @@ import Goal from './goal'
 import FFGoal from './ffgoal'
 import { removeFromArray } from '../utils'
 import CFChart from './cfchart'
-import AA from './aa'
 import * as APIt from '../../api/goals'
 import { createNewGoal, changeGoal, deleteGoal, createNewGoalInput, getGoalTypes, getImpOptions } from './goalutils'
 import { findEarliestFFYear } from './cfutils'
@@ -52,11 +51,9 @@ export default function Goals({ showModalHandler, savings, annualSavings, avgAnn
     const [ffCfs, setFFCfs] = useState<any>({})
     const [ffMinReq, setFFMinReq] = useState<number>(0)
     const [ffOOM, setFFOOM] = useState<Array<number> | null>(null)
-    //const [monthlySavingsRate, setMonthlySavingsRate] = useState<number>(ffGoal ? ffGoal.tbr as number : 1)
     const goalsLabel = "Goals"
     const cfLabel = "Cash Flows"
-    const aaLabel = "Asset Allocation"
-    const viewItems = [goalsLabel, cfLabel, aaLabel]
+    const viewItems = [goalsLabel, cfLabel]
     const [viewMode, setViewMode] = useState(goalsLabel)
     const nowYear = new Date().getFullYear()
 
@@ -315,7 +312,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, avgAnn
                 <div className="relative bg-white border-0">
                     {wipGoal.type === APIt.GoalType.FF ?
                         <FFGoal goal={wipGoal as APIt.CreateGoalInput} addCallback={addGoal} cancelCallback={cancelGoal}
-                            updateCallback={updateGoal} annualSavings={annualSavings} totalSavings={savings}
+                            updateCallback={updateGoal} annualSavings={annualSavings} totalSavings={savings} aa={aa} rr={rr}
                             ffYear={ffYear} ffAmt={ffAmt} ffLeftOverAmt={ffLeftOverAmt} ffCfs={ffCfs} mergedCfs={mergedCFs} ffOOM={ffOOM}
                             ffYearHandler={setFFYear} ffAmtHandler={setFFAmt} ffLeftOverAmtHandler={setFFLeftOverAmt} ffMinReqHandler={setFFMinReq}
                             ffOOMHandler={setFFOOM} ffCfsHandler={setFFCfs} rrHandler={rrHandler} aaHandler={aaHandler} pp={pp} ffMinReq={ffMinReq}
@@ -375,7 +372,7 @@ export default function Goals({ showModalHandler, savings, annualSavings, avgAnn
                                     name="typeFilter" pre="" options={getImpOptions()} value={impFilter as string}
                                     changeHandler={setImpFilter} />
                             </div>}
-                            {viewMode !== aaLabel && <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>}
+                            <p className="text-center text-base mt-4">Negative values imply You Pay, while Positive values imply You Receive</p>
                             {viewMode === cfLabel &&
                                 <CFChart mustCFs={mustCFs} tryCFs={tryCFs} optCFs={optCFs} from={nowYear + 1} to={ffGoal.ey} />}
                             {viewMode === goalsLabel && <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
@@ -391,9 +388,6 @@ export default function Goals({ showModalHandler, savings, annualSavings, avgAnn
                                 })}
                             </div>}
                         </Fragment>}
-                        {ffGoal && viewMode === aaLabel &&
-                            <AA ffGoalEndYear={ffGoal.ey} rr={rr} aa={aa} />
-                        }
                     </Fragment>
                     : goalsLoaded && <div className="text-center align-center">
                         <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>
