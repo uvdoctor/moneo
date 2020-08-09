@@ -40,6 +40,6 @@ export default function OppCost(props: OppCostProps) {
 
     return (
         <ResultItem svg={<SVGBalance />} result={oppCost} currency={props.currency} label="Spend v/s Invest" pl
-        info={`You May ${oppCost < 0 ? 'Lose' : 'Gain'} ${toCurrency(Math.abs(oppCost), props.currency)} by Spending for this Goal instead of Investing.`} />
+        info={`You May ${oppCost < 0 ? 'Lose' : 'Gain'} ${toCurrency(Math.abs(oppCost), props.currency)} if You Invest this Money instead of ${props.buyGoal ? 'Buying' : 'Spending'}.`} />
     )
 }

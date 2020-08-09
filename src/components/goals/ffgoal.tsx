@@ -207,7 +207,7 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
                         <SVGClose />
                     </div>
                 </div>
-                <div className="mt-4 flex justify-around items-end w-full">
+                <div className="mt-4 flex justify-around items-center w-full">
                     <SelectInput name="ey"
                         info="Select the Year till You Want to Plan. After this Year, it is assumed that You will leave behind inheritance for Your Nominees, if any."
                         inputOrder={1}
@@ -217,6 +217,7 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
                         nextStepHandler={handleNextStep}
                         pre="Plan Until" value={endYear}
                         changeHandler={(val: string) => changeSelection(val, setEndYear)} options={eyOptions} />
+                    <ResultItem label="Achieve by" footer="Or Earlier" result={endYear - 20} noResultFormat />
                     <SelectInput name="ccy" inputOrder={2} currentOrder={currentOrder}
                         nextStepDisabled={false}
                         allInputDone={allInputDone}

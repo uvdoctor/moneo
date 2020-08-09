@@ -355,13 +355,13 @@ export default function Goals({ showModalHandler, savings, annualSavings, avgAnn
                                 </AwesomeButton>
                             } hasResult />
                         </div> : <div />}
-                        {ffGoal && <ul className="flex flex-wrap justify-center items-center border-b mt-4 md:mt-8 w-screen">
+                        {ffGoal && allGoals && allGoals.length > 0 && <Fragment>
+                            <ul className="flex flex-wrap justify-center items-center border-b mt-4 md:mt-8 w-screen">
                             {viewItems.map((item, i) => (
                                 <li key={"viewItem" + i} className="cursor-pointer py-1 bg-gray-200">
                                     <a onClick={changeViewMode} style={{ color: viewMode === item ? "white" : "gray", backgroundColor: viewMode === item ? "black" : "transparent" }} className="px-4 py-2">{item}</a>
                                 </li>))}
-                        </ul>}
-                        {ffGoal && allGoals && allGoals.length > 0 && <Fragment>
+                            </ul>
                             {viewMode === goalsLabel && <div className="mt-4 flex justify-center">
                                 <SelectInput
                                     inputOrder={1}
