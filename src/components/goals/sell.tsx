@@ -32,7 +32,8 @@ export default function Sell(props: SellProps) {
     const [annualReturnPer, setAnnualReturnPer] = useState<number | null>(0)
 
     useEffect(() => {
-        let duration = getDuration(props.sellAfter, props.startYear, props.endYear)
+        let duration = getDuration(props.sellAfter, props.startYear, props.endYear, 
+            0, null, null, null)
         let sellPrice = calculateSellPrice(props.price, props.assetChgRate, duration)
         props.sellPriceHandler(sellPrice)
         setAnnualReturnPer(calculateXIRR(props.cfs, props.startYear, props.price, props.sellAfter, sellPrice))
