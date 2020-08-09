@@ -51,7 +51,14 @@ export const deleteGoal = async (id: string) => {
     }
 }
 
-export const getDuration = (sellAfter: number | null | undefined, startYear: number, endYear: number) => sellAfter ? sellAfter : endYear - startYear + 1
+export const getDuration = (sellAfter: number | null | undefined, startYear: number, endYear: number, manualMode: number,
+    loanPer: number | null | undefined, loanRY: number | null | undefined, loanYears: number | null | undefined) => {
+    if(sellAfter) return sellAfter 
+    if(manualMode < 1 && loanPer && loanRY && loanYears) {
+        return Math.round(loanRY + loanYears) - startYear + 1
+    }
+    return endYear - startYear + 1
+}
 
 export const createNewTarget = (year: number, val: number) => {
     return {

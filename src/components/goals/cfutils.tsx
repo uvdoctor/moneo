@@ -9,7 +9,8 @@ export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
     return Math.round(val * (tr / 100))
 }
 
-const calculateBuyAnnualNetCF = (startYear: number, amCostPer: number, amStartYear: number, chgRate: number, index: number, p: number, aiPer: number, aiSY: number) => {
+const calculateBuyAnnualNetCF = (startYear: number, amCostPer: number, amStartYear: number, chgRate: number, index: number,
+    p: number, aiPer: number, aiSY: number) => {
     let annualNetCF = 0
     let yearlyPrice = index === 0 ? p : getCompoundedIncome(chgRate, p, index)
     if (startYear + index >= amStartYear) annualNetCF -= yearlyPrice * (amCostPer / 100)
@@ -17,7 +18,8 @@ const calculateBuyAnnualNetCF = (startYear: number, amCostPer: number, amStartYe
     return Math.round(annualNetCF)
 }
 
-export const calculateTotalAmt = (startYear: number, annualPer: number, annualSY: number, price: number, chgRate: number, duration: number) => {
+export const calculateTotalAmt = (startYear: number, annualPer: number, annualSY: number,
+    price: number, chgRate: number, duration: number) => {
     let ta = 0
     for (let i = 0; i < duration; i++) {
         if (startYear + i < annualSY) continue
@@ -151,9 +153,9 @@ export const calculateTotalTaxBenefit = (goalType: APIt.GoalType, price: number,
     return Math.round(tb)
 }
 
-export const calculatePrincipalTaxBenefit = (price: number, loanPer: number, loanInt: number, loanYears: number,
-    loanRepaymentSY: number, startYear: number, duration: number, taxRate: number, maxTaxDL: number) => {
-    let loanBorrowAmt = getLoanBorrowAmt(price, loanPer)
+export const calculatePrincipalTaxBenefit = (goalType: APIt.GoalType, price: number, chgRate: number, manualMode: number, loanPer: number, loanInt: number, loanYears: number,
+    loanRepaymentSY: number, startYear: number, endYear: number, duration: number, taxRate: number, maxTaxDL: number) => {
+    let loanBorrowAmt = getLoanBorrowAmt(price, goalType, manualMode, chgRate, endYear - startYear, loanPer) as number
     let emi = getEmi(loanBorrowAmt, loanInt as number, loanYears * 12)
     let annualInts = getIntAmtByYear(loanBorrowAmt, emi, loanInt, loanYears * 12)
     let taxBenefit = 0
@@ -185,7 +187,7 @@ const createAutoCFs = (p: number, goal: APIt.CreateGoalInput, duration: number) 
     if (goal.type === APIt.GoalType.B && duration) {
         let netAnnualAmt = calculateBuyAnnualNetCF(goal.sy, goal.amper as number, goal.amsy as number, goal.achg as number, 0, p, goal.aiper as number, goal.aisy as number)
         let v = Math.round(p - netAnnualAmt)
-        cfs.push(-v)
+        cfs.push(v ? -v : 0)
         for (let i = 1; i < duration; i++)
             cfs.push(calculateBuyAnnualNetCF(goal.sy, goal.amper as number, goal.amsy as number, goal.achg as number, i, p, goal.aiper as number, goal.aisy as number))
         cfs.push(calculateSellPrice(p, goal?.achg as number, duration))
@@ -230,8 +232,15 @@ export const calculateXIRR = (cfs: Array<number>, startYear: number, price: numb
     }
 }
 
-export const getLoanBorrowAmt = (price: number, loanPer: number) => {
-    return Math.round(price * (loanPer / 100))
+export const getLoanBorrowAmt = (price: number, goalType: APIt.GoalType, manualMode: number,
+    chgRate: number, numOfYears: number, loanPer: number) => {
+    let p = price
+    if (goalType !== APIt.GoalType.B && !manualMode) {
+        for (let i = 0, v = 0; i <= numOfYears; i++, v = getCompoundedIncome(chgRate, price, i)) {
+            p += v
+        }
+    }
+    return p * (loanPer as number / 100)
 }
 
 export const getLoanPaidForMonths = (endYear: number, loanRepaymentYear: number, loanYears: number) => {
@@ -242,10 +251,15 @@ export const getLoanPaidForMonths = (endYear: number, loanRepaymentYear: number,
 
 const createLoanCFs = (p: number, goal: APIt.CreateGoalInput, duration: number) => {
     let cfs: Array<number> = []
-    let loanBorrowAmt = getLoanBorrowAmt(p, goal.emi?.per as number)
-    let loanDP = p - loanBorrowAmt
-    let emi = Math.round(getEmi(loanBorrowAmt, goal.emi?.rate as number, goal.emi?.dur as number * 12))
-    let annualInts = getIntAmtByYear(loanBorrowAmt, emi, goal.emi?.rate as number, goal.emi?.dur as number * 12)
+    if (!goal.emi?.per || !goal.emi?.dur || !goal.emi?.rate) return cfs
+    let loanBorrowAmt = getLoanBorrowAmt(p, goal.type, goal.manual, goal?.chg as number, goal.ey - goal.sy, goal.emi?.per)
+    let loanDP = Math.round(loanBorrowAmt / (goal.emi.per / 100))
+    for (let y = goal.sy; y < goal.emi?.ry; y++) {
+        let intAmt = loanBorrowAmt * (goal.emi?.rate / 100)
+        loanBorrowAmt += intAmt
+    }
+    let emi = Math.round(getEmi(loanBorrowAmt, goal.emi?.rate, goal.emi?.dur * 12))
+    let annualInts = getIntAmtByYear(loanBorrowAmt, emi, goal.emi?.rate, goal.emi?.dur * 12)
     let ey = goal.sy + duration - 1
     let sp = 0
     let taxBenefit = 0
@@ -261,9 +275,11 @@ const createLoanCFs = (p: number, goal: APIt.CreateGoalInput, duration: number) 
             taxBenefit += goal.tbi as number > 0 ? getTaxBenefit(annualInts[i], goal.tdr, goal.tdli as number) : 0
             ly--
         }
-        cf -= calculateBuyAnnualNetCF(goal.sy, goal.amper as number, goal.amsy as number, goal.achg as number,
-            year - goal.sy, p, goal.aiper as number, goal.aisy as number)
-        cfs.push(Math.round(-cf))
+        if (goal.type === APIt.GoalType.B) {
+            cf -= calculateBuyAnnualNetCF(goal.sy, goal.amper as number, goal.amsy as number, goal.achg as number,
+                year - goal.sy, p, goal.aiper as number, goal.aisy as number)
+        }
+        cfs.push(cf ? Math.round(-cf) : 0)
     }
     if (goal.type === APIt.GoalType.B) {
         let remPayment = getRemPrincipal(goal.sy, loanBorrowAmt, emi, goal?.emi?.rate as number, goal?.emi?.ry as number, goal?.emi?.dur as number, duration)
@@ -275,7 +291,8 @@ const createLoanCFs = (p: number, goal: APIt.CreateGoalInput, duration: number) 
     return cfs
 }
 
-const getRemPrincipal = (startYear: number, loanBorrowAmt: number, emi: number, loanIntRate: number, loanRepaymentSY: number, loanYears: number, duration: number) => {
+const getRemPrincipal = (startYear: number, loanBorrowAmt: number, emi: number, loanIntRate: number,
+    loanRepaymentSY: number, loanYears: number, duration: number) => {
     let ey = startYear + duration - 1
     if (loanRepaymentSY + loanYears - 1 <= ey) return 0
     let remPrincipal = loanBorrowAmt
@@ -284,12 +301,6 @@ const getRemPrincipal = (startYear: number, loanBorrowAmt: number, emi: number, 
         remPrincipal = getRemainingPrincipal(loanBorrowAmt, emi, loanIntRate, loanPaidForMonths)
     }
     return remPrincipal
-}
-
-export const calculateManualPrice = (targets: Array<APIt.TargetInput>) => {
-    let p = 0
-    targets.forEach(t => p += t.val)
-    return Math.round(p)
 }
 
 const createManualCFs = (p: number, goal: APIt.CreateGoalInput, duration: number) => {
@@ -305,7 +316,7 @@ const createManualCFs = (p: number, goal: APIt.CreateGoalInput, duration: number
         taxBenefitPrev = taxBenefit
         if (goal.type === APIt.GoalType.B && duration)
             v -= Math.round(calculateBuyAnnualNetCF(goal.sy, goal?.amper as number, goal?.amsy as number, goal?.achg as number, i, p, goal.aiper as number, goal.aisy as number))
-        cfs.push(-v)
+        cfs.push(v ? -v : 0)
     }
     if (goal.type === APIt.GoalType.B) {
         let remPayment = 0
@@ -406,14 +417,14 @@ const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number
     aa.deposits[i] = depPer
     let bondsPer = cs > sa + da ? Math.round((ba / cs) * 100) : 0
     if (bondsPer + cashPer > 100) bondsPer = 100 - cashPer
-    if(y < ffYear) aa.mtebonds[i] = Math.round(bondsPer * 0.5)
+    if (y < ffYear) aa.mtebonds[i] = Math.round(bondsPer * 0.5)
     aa.mbonds[i] = bondsPer - aa.mtebonds[i]
     let remPer = 100 - (cashPer + bondsPer)
     if (remPer > 0) {
         let reitPer = ffGoal.imp === APIt.LMH.L ? 10 : 5
         if (y >= ffYear) {
-            if(y > ffGoal.ey - 5) reitPer = 25
-            else if(y >= ffGoal.ey - 20) reitPer = 20
+            if (y > ffGoal.ey - 5) reitPer = 25
+            else if (y >= ffGoal.ey - 20) reitPer = 20
             else reitPer += 5
         }
         if (reitPer > remPer) reitPer = remPer
@@ -424,7 +435,7 @@ const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number
             if (y <= ffGoal.ey - 5) {
                 if (ffGoal.imp === APIt.LMH.L) {
                     let mteBondsPer = 0
-                    if(y < ffYear) mteBondsPer = Math.round(remPer * 0.5)
+                    if (y < ffYear) mteBondsPer = Math.round(remPer * 0.5)
                     aa.mtebonds[i] += mteBondsPer
                     aa.mbonds[i] += remPer - mteBondsPer
                 } else {
@@ -437,7 +448,7 @@ const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number
                         aa.divstocks[i] = ((100 - 2 * (ffGoal.ey - y)) / 100) * stocksPer
                         aa.largecapstocks[i] = stocksPer - aa.divstocks[i]
                     } else {
-                        if(ffGoal.imp === APIt.LMH.M || y >= ffYear) {
+                        if (ffGoal.imp === APIt.LMH.M || y >= ffYear) {
                             aa.largecapstocks[i] = Math.round(stocksPer * 0.7)
                             aa.istocks[i] = stocksPer - aa.largecapstocks[i]
                         } else {
@@ -455,7 +466,7 @@ const calculateAllocation = (ffGoal: APIt.CreateGoalInput, y: number, cs: number
                     }
                     if (remPer > 0) {
                         let mteBondsPer = 0
-                        if(y < ffYear) mteBondsPer = Math.round(remPer / 2)
+                        if (y < ffYear) mteBondsPer = Math.round(remPer / 2)
                         aa.mtebonds[i] += mteBondsPer
                         aa.mbonds[i] += remPer - mteBondsPer
                     }
@@ -489,7 +500,7 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
     let oom = []
     for (let [year, value] of Object.entries(mCFs)) {
         let y = parseInt(year)
-        if(y > ffGoal.ey) break
+        if (y > ffGoal.ey) break
         let v = parseInt(value)
         let sa = cash.savings[y] ? parseFloat(cash.savings[y]) : 0
         let da = cash.deposits[y] ? parseFloat(cash.deposits[y]) : 0

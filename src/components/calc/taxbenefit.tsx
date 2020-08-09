@@ -19,6 +19,7 @@ interface TaxBenefitProps {
     currency: string
     rangeFactor: number
     startYear: number
+    endYear: number
     duration: number
     price: number
     priceChgRate?: number
@@ -34,8 +35,9 @@ export default function TaxBenefit(props: TaxBenefitProps) {
 
     useEffect(() => {
         if (props.loanPer && props.loanRate && props.loanDur && props.loanRY && props.manualMode < 1) {
-            setTaxBenefit(calculatePrincipalTaxBenefit(props.price, props.loanPer, props.loanRate, props.loanDur,
-                props.loanRY, props.startYear, props.duration, props.taxRate, props.maxTaxDeduction))
+            setTaxBenefit(calculatePrincipalTaxBenefit(props.goalType, props.price, props.priceChgRate as number, props.manualMode, 
+                props.loanPer, props.loanRate, props.loanDur, props.loanRY, props.startYear, props.endYear, props.duration, 
+                props.taxRate, props.maxTaxDeduction))
         } else {
             setTaxBenefit(calculateTotalTaxBenefit(props.goalType, props.price, props.manualMode, 
                 props.duration, props.taxRate, props.maxTaxDeduction, props.priceChgRate))
