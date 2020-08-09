@@ -374,7 +374,7 @@ export default function Goal({
               />
             </div>
           </div>
-          <div className="overflow-y-auto">
+          <div className="overflow-y-auto w-full">
             <div className="container mx-auto items-start flex flex-1 flex-col p-5">
               {activeTab === 0 ? (
                 <Fragment>
@@ -582,7 +582,6 @@ export default function Goal({
                     )}
                   </Fragment>
                 ) : null}
-
                 <div className="flex flex-wrap sm:justify-around items-start">
                   {activeTab === 4 ? (
                     <Fragment>
@@ -784,7 +783,6 @@ export default function Goal({
           ) : null}
         </div>
       </div>
-
       {showStickyResult && (
         <div className="fixed w-full bottom-0 bg-white z-10">
           {nowYear < startYear && (
