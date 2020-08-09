@@ -32,19 +32,19 @@ const SecureDash = () => {
     }
 
     const pp = {
-        savings: 1,
-        deposits: 2,
-        sbonds: 3,
-        mbonds: 5,
-        mtebonds: 5.5,
-        dreit: 7,
-        ireit: 7,
-        gold: 6,
-        largecapstocks: 8,
-        multicapstocks: 10,
-        divstocks: 6,
-        istocks: 8,
-        digitalcurrency: 12
+        savings: 0.5,
+        deposits: 1.5,
+        sbonds: 2,
+        mbonds: 3,
+        mtebonds: 3.5,
+        dreit: 5,
+        ireit: 5,
+        gold: 3,
+        largecapstocks: 5,
+        multicapstocks: 6,
+        divstocks: 5,
+        istocks: 7,
+        digitalcurrency: 10
     }
 
     useEffect(() => {
