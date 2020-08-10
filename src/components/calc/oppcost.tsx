@@ -28,7 +28,7 @@ export default function OppCost(props: OppCostProps) {
                 oppCost = getCompoundedIncome(props.discountRate[startIndex + index], oppCost, 1)
             })
         if(!props.buyGoal) {
-            for(let i = startIndex + props.cfs.length; i < props.discountRate.length - 20; i++) {
+            for(let i = startIndex + props.cfs.length - 1; i < props.discountRate.length - 20; i++) {
                 oppCost = getCompoundedIncome(props.discountRate[i], oppCost, 1)
             }
         }
