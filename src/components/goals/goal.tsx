@@ -310,7 +310,7 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
                                 startYear={startYear} manualMode={manualMode} loanRate={loanIntRate} endYear={endYear}
                                 duration={getDur()} priceChgRate={priceChgRate} />
                         </div>
-                        {manualMode < 1 && goal?.emi ? <div className="flex w-full justify-around">
+                        {goalType !== APIt.GoalType.D && goalType !== APIt.GoalType.R && manualMode < 1 && goal?.emi ? <div className="flex w-full justify-around">
                             <EmiCost price={price} currency={currency} startYear={startYear} duration={getDur()}
                                 repaymentSY={loanRepaymentSY ? loanRepaymentSY : startYear} endYear={endYear} rangeFactor={rangeFactor}
                                 loanYears={loanYears as number} loanAnnualInt={loanIntRate as number} loanPer={loanPer as number}
@@ -406,7 +406,7 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
             </div>
             {allInputDone && cfs.length > 0 && rr.length > 0 &&
                 <Fragment>
-                    {nowYear < startYear && <GoalResult rr={rr} startIndex={startYear - (nowYear + 1)} currency={currency}
+                    {nowYear < startYear && <GoalResult rr={rr} startYear={startYear} currency={currency}
                         ffGoalEndYear={ffGoalEndYear} cfs={cfs} ffOOM={ffOOM} ffImpactYears={ffImpactYears} buyGoal={goalType === APIt.GoalType.B} />}
                     <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked}
                         cancelHandler={cancelCallback} submitHandler={handleSubmit} cancelDisabled={btnClicked}

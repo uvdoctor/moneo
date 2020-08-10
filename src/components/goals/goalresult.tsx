@@ -7,9 +7,9 @@ interface GoalResultProps {
     ffOOM: Array<number> | null
     ffImpactYears: number | null
     currency: string
+    startYear: number
     ffGoalEndYear: number
     rr: Array<number>
-    startIndex: number
     buyGoal: boolean
 }
 
@@ -19,8 +19,8 @@ export default function GoalResult(props: GoalResultProps) {
         <div className="w-full py-2 flex flex-wrap justify-around w-full items-start bg-green-100 border-t border-b border-green-200">
             <FFImpact ffGoalEndYear={props.ffGoalEndYear} ffOOM={props.ffOOM} 
                 ffImpactYears={props.ffImpactYears} />
-            <OppCost discountRate={props.rr} cfs={props.cfs} currency={props.currency}
-                startIndex={props.startIndex} buyGoal={props.buyGoal} />
+            <OppCost discountRate={props.rr} cfs={props.cfs} currency={props.currency} startYear={props.startYear}
+                buyGoal={props.buyGoal} ffGoalEndYear={props.ffGoalEndYear} />
         </div>
     )
 }

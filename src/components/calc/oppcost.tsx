@@ -7,7 +7,8 @@ interface OppCostProps {
     cfs: Array<number>
     currency: string
     discountRate: Array<number>
-    startIndex: number
+    startYear: number
+    ffGoalEndYear: number
     buyGoal: boolean
 }
 
@@ -20,13 +21,14 @@ export default function OppCost(props: OppCostProps) {
             return
         }
         let oppCost = 0
+        const startIndex = props.startYear - (new Date().getFullYear() + 1)
         props.cfs.forEach((cf, index) => {
             oppCost += cf
             if(index < props.cfs.length - 1)
-                oppCost = getCompoundedIncome(props.discountRate[props.startIndex + index], oppCost, 1)
-        })
+                oppCost = getCompoundedIncome(props.discountRate[startIndex + index], oppCost, 1)
+            })
         if(!props.buyGoal) {
-            for(let i = props.startIndex + props.cfs.length; i < props.discountRate.length; i++) {
+            for(let i = startIndex + props.cfs.length; i < props.discountRate.length - 20; i++) {
                 oppCost = getCompoundedIncome(props.discountRate[i], oppCost, 1)
             }
         }
@@ -39,7 +41,8 @@ export default function OppCost(props: OppCostProps) {
     )
 
     return (
-        <ResultItem svg={<SVGBalance />} result={oppCost} currency={props.currency} label="Spend v/s Invest" pl
-        info={`You May ${oppCost < 0 ? 'Lose' : 'Gain'} ${toCurrency(Math.abs(oppCost), props.currency)} if You Invest this Money instead of ${props.buyGoal ? 'Buying' : 'Spending'}.`} />
+        <ResultItem svg={<SVGBalance />} result={oppCost} currency={props.currency} label={`${props.buyGoal ? 'Buy' : 'Spend'} v/s Invest`} pl
+        info={`You May Have ${toCurrency(Math.abs(oppCost), props.currency)} More in ${props.buyGoal ? props.startYear + props.cfs.length - 1 : props.ffGoalEndYear - 20} 
+            if You ${oppCost < 0 ? 'Invest' : 'Buy'} instead of ${oppCost < 0 ? (props.buyGoal ? 'Buying' : 'Spending') : 'Investing'}.`} />
     )
 }
