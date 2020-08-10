@@ -1,8 +1,6 @@
 import React from 'react';
-import { render, cleanup } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import Index from '../src/pages/index';
-
-afterEach(cleanup)
 
 describe("IndexPage", () => {
     describe("when index page loaded", () => {
