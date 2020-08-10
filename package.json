@@ -12,9 +12,6 @@
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.7",
     "@fseehawer/react-circular-slider": "^2.3.2",
-    "@testing-library/jest-dom": "^5.11.2",
-    "@testing-library/react": "^10.4.8",
-    "@types/jest": "^26.0.9",
     "aws-amplify": "^3.0.13",
     "next": "^9.4.4",
     "next-pwa": "^2.4.1",
@@ -33,7 +30,9 @@
     "xirr": "^1.0.3"
   },
   "devDependencies": {
-    "@types/node": "^13.13.9",
+    "@testing-library/jest-dom": "^5.11.2",
+    "@testing-library/react": "^10.4.8",
+    "@types/jest": "^26.0.9",
     "@types/react": "^16.9.35",
     "autoprefixer": "^9.8.0",
     "babel-jest": "^26.2.2",
