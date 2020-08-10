@@ -6,11 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "jest --watch"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.7",
     "@fseehawer/react-circular-slider": "^2.3.2",
+    "@testing-library/jest-dom": "^5.11.2",
+    "@testing-library/react": "^10.4.8",
+    "@types/jest": "^26.0.9",
     "aws-amplify": "^3.0.13",
     "next": "^9.4.4",
     "next-pwa": "^2.4.1",
@@ -25,6 +29,7 @@
     "react-plotly.js": "^2.4.0",
     "react-toastify": "^6.0.8",
     "swr": "^0.2.2",
+    "ts-jest": "^26.1.4",
     "xirr": "^1.0.3"
   },
   "devDependencies": {
