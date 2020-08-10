@@ -29,6 +29,6 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx", "config/jest/cssTransform.js"
+    "**/*.tsx"
   ]
 }
