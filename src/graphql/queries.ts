@@ -49,6 +49,8 @@ export const getGoal = /* GraphQL */ `
         year
         val
       }
+      ra
+      rachg
       createdAt
       updatedAt
       owner
@@ -107,6 +109,8 @@ export const listGoals = /* GraphQL */ `
           year
           val
         }
+        ra
+        rachg
         createdAt
         updatedAt
         owner
@@ -169,6 +173,8 @@ export const getMilestone = /* GraphQL */ `
           year
           val
         }
+        ra
+        rachg
         createdAt
         updatedAt
         owner
@@ -220,6 +226,8 @@ export const listMilestones = /* GraphQL */ `
           aisy
           dr
           sa
+          ra
+          rachg
           createdAt
           updatedAt
           owner

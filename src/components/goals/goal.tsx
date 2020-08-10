@@ -67,8 +67,8 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
     const [showCFChart, setShowCFChart] = useState<boolean>(true)
     const goalType = goal?.type as APIt.GoalType
     const [cfs, setCFs] = useState<Array<number>>(cashFlows ? cashFlows : [])
-    const [rentAmt, setRentAmt] = useState<number>(0)
-    const [rentChgPer, setRentChgPer] = useState<number>(5)
+    const [rentAmt, setRentAmt] = useState<number | null | undefined>(goal?.ra)
+    const [rentChgPer, setRentChgPer] = useState<number | null | undefined>(goal?.rachg)
     const [answer, setAnswer] = useState<string>('')
     const [rentAns, setRentAns] = useState<string>('')
     const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(goal?.tgts as Array<APIt.TargetInput>)
@@ -116,6 +116,8 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
             bg.aiper = aiPer
             bg.aisy = aiStartYear
             bg.tbr = rentTaxBenefit
+            bg.ra = rentAmt
+            bg.rachg = rentChgPer
         }
         return bg
     }
@@ -344,7 +346,7 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
                                             nextStepDisabled={false}
                                             nextStepHandler={handleNextStep}
                                             allInputDone={allInputDone} name="rentAmt"
-                                            pre="Yearly" post="Rent" value={rentAmt} changeHandler={setRentAmt}
+                                            pre="Yearly" post="Rent" value={rentAmt as number} changeHandler={setRentAmt}
                                             min={0} max={100000} step={1000} currency={currency} rangeFactor={rangeFactor} />
                                     </div>}
                                     right={
@@ -353,7 +355,7 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
                                             currentOrder={currentOrder}
                                             nextStepDisabled={false}
                                             nextStepHandler={handleNextStep}
-                                            allInputDone={allInputDone} pre="Changes" value={rentChgPer} changeHandler={setRentChgPer}
+                                            allInputDone={allInputDone} pre="Changes" value={rentChgPer as number} changeHandler={setRentChgPer}
                                             min={-10} max={10} step={0.5} unit="%" />
                                             : !allInputDone && currentOrder === 21 && handleNextStep()
                                     }
@@ -368,12 +370,12 @@ export default function Goal({ goal, cashFlows, ffGoalEndYear,
                                 : !allInputDone && currentOrder === 20 && handleNextStep(2)}
                         </div>
                     </Fragment>
-                    {sellAfter && rentAmt > 0 && price > 0 && nowYear < startYear &&
+                    {sellAfter && rentAmt && price && nowYear < startYear &&
                         <BRComparison currency={currency} taxRate={taxRate} sellAfter={sellAfter}
                             rr={rr} allBuyCFs={initBuyCFsForComparison(analyzeFor)} startYear={startYear}
                             rentTaxBenefit={rentTaxBenefit as number} rentTaxBenefitHandler={setRentTaxBenefit}
-                            rentAmt={rentAmt} rentAmtHandler={setRentAmt} analyzeFor={analyzeFor}
-                            rentChgPer={rentChgPer} rentChgPerHandler={setRentChgPer} answer={answer}
+                            rentAmt={rentAmt as number} rentAmtHandler={setRentAmt} analyzeFor={analyzeFor}
+                            rentChgPer={rentChgPer as number} rentChgPerHandler={setRentChgPer} answer={answer}
                             rentAns={rentAns} answerHandler={setAnswer} rentAnsHandler={setRentAns} />
                     }
 

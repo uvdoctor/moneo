@@ -162,6 +162,8 @@ export const createNewGoalInput = (goalType: APIt.GoalType, currency: string) =>
         bg.aiper = 0
         bg.aisy = bg.sy
         bg.tbr = 0
+        bg.ra = 0
+        bg.rachg = 5
     }
     return bg
 }

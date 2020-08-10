@@ -52,6 +52,8 @@ export const createGoal = /* GraphQL */ `
         year
         val
       }
+      ra
+      rachg
       createdAt
       updatedAt
       owner
@@ -108,6 +110,8 @@ export const updateGoal = /* GraphQL */ `
         year
         val
       }
+      ra
+      rachg
       createdAt
       updatedAt
       owner
@@ -164,6 +168,8 @@ export const deleteGoal = /* GraphQL */ `
         year
         val
       }
+      ra
+      rachg
       createdAt
       updatedAt
       owner
@@ -227,6 +233,8 @@ export const createMilestone = /* GraphQL */ `
           year
           val
         }
+        ra
+        rachg
         createdAt
         updatedAt
         owner
@@ -294,6 +302,8 @@ export const updateMilestone = /* GraphQL */ `
           year
           val
         }
+        ra
+        rachg
         createdAt
         updatedAt
         owner
@@ -361,6 +371,8 @@ export const deleteMilestone = /* GraphQL */ `
           year
           val
         }
+        ra
+        rachg
         createdAt
         updatedAt
         owner
