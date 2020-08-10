@@ -26,7 +26,6 @@
     "react-plotly.js": "^2.4.0",
     "react-toastify": "^6.0.8",
     "swr": "^0.2.2",
-    "ts-jest": "^26.1.4",
     "xirr": "^1.0.3"
   },
   "devDependencies": {
@@ -36,6 +35,7 @@
     "@types/react": "^16.9.35",
     "autoprefixer": "^9.8.0",
     "babel-jest": "^26.2.2",
+    "ts-jest": "^26.1.4",
     "jest": "^26.2.2",
     "postcss-preset-env": "^6.7.0",
     "tailwindcss": "^1.4.6",

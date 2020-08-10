@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "..\\dd-backend\\functions\\sample"
 		}
 	],
 	"settings": {}
