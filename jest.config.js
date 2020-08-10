@@ -37,4 +37,9 @@ module.exports = {
 
   coverageReporters: ["html"],
 
+  collectCoverageFrom: [
+    "<rootDir>/src/**/*.{tsx}",
+    "!**/node_modules/**",
+  ]
+
 };
