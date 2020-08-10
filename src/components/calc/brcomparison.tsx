@@ -156,9 +156,9 @@ export default function BRComparison(props: BRComparisonProps) {
                 handler={setShowRentChart} svg={<SVGBalance />} />
             {showRentChart && compData && compData.length === 2 && compData[1].values.y[props.sellAfter - 1] &&
             <Fragment>
-                <p className="text-center text-base mt-4">Negative values indicate Loss, while Positive values indicate Gain</p>
                 <BRCompChart data={compData} xTitle="Number of Years" rentAns={props.rentAns}
                     sellAfter={props.sellAfter} title={props.answer} />
+                <p className="text-center text-base mt-4">Negative values indicate Loss, while Positive values indicate Gain</p>
             </Fragment>}
         </div>
     )

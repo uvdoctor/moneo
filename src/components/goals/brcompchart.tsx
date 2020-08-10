@@ -27,9 +27,9 @@ export function BRCompChart(props: BRCompChartProps) {
                 yaxis: {fixedrange: true, tickformat: ',', showgrid: false},
 	            legend: {
                     orientation: 'h',
-                    x:0.5,
-                    y:1.5
-                }, margin:{t:10},
+                    x:0.7,
+                    y:-0.1
+                }, margin:{t:50},
                 annotations:[
                     {
                         text: props.rentAns,
