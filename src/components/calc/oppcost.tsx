@@ -14,7 +14,8 @@ interface OppCostProps {
 
 export default function OppCost(props: OppCostProps) {
     const [oppCost, setOppCost] = useState<number>(0)
-
+    const [lastYear, setLastYear] = useState<number>(props.startYear + props.cfs.length - 1)
+    
     const calculateOppCost = () => {
         if (!props.cfs || props.cfs.length === 0) {
             setOppCost(0)
@@ -26,11 +27,12 @@ export default function OppCost(props: OppCostProps) {
             oppCost += cf
             if(index < props.cfs.length - 1)
                 oppCost = getCompoundedIncome(props.discountRate[startIndex + index], oppCost, 1)
-            })
+        })
         if(!props.buyGoal) {
-            for(let i = startIndex + props.cfs.length - 1; i < props.discountRate.length - 20; i++) {
+            let year = props.startYear + props.cfs.length - 1
+            for(let i = startIndex + props.cfs.length - 1; i < props.discountRate.length - 21; i++, year++) 
                 oppCost = getCompoundedIncome(props.discountRate[i], oppCost, 1)
-            }
+            setLastYear(year)
         }
         setOppCost(oppCost)
     }
@@ -42,7 +44,7 @@ export default function OppCost(props: OppCostProps) {
 
     return (
         <ResultItem svg={<SVGBalance />} result={oppCost} currency={props.currency} label={`${props.buyGoal ? 'Buy' : 'Spend'} v/s Invest`} pl
-        info={`You May Have ${toCurrency(Math.abs(oppCost), props.currency)} More in ${props.buyGoal ? props.startYear + props.cfs.length - 1 : props.ffGoalEndYear - 20} 
-            if You ${oppCost < 0 ? 'Invest' : 'Buy'} instead of ${oppCost < 0 ? (props.buyGoal ? 'Buying' : 'Spending') : 'Investing'}.`} />
+        info={`You May Have ${toCurrency(Math.abs(oppCost), props.currency)} More in ${lastYear} if You 
+        ${oppCost < 0 ? 'Invest' : 'Buy'} instead of ${oppCost < 0 ? (props.buyGoal ? 'Buying' : 'Spending') : 'Investing'}.`} />
     )
 }
