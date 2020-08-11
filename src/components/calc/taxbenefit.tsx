@@ -69,7 +69,7 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                             name="tbLimit" pre="Max Yearly" post="Deduction" currency={props.currency}
                             value={props.maxTaxDeduction} changeHandler={props.maxTaxDeductionHandler} min={0} max={50000} step={1000}
                             note={<ResultItem label='Total Tax Benefit' result={taxBenefit} currency={props.currency} />} 
-                            rangeFactor={props.rangeFactor} />
+                            rangeFactor={props.rangeFactor} width="100px" />
                         : !props.allInputDone && props.currentOrder === props.inputOrder + 1 && props.nextStepHandler()
                     } />}
         </Fragment>

@@ -122,7 +122,7 @@ export default function EmiCost(props: EmiProps) {
                                 nextStepHandler={props.nextStepHandler}
                                 allInputDone={props.allInputDone} pre="Max Yearly" post="Deduction" rangeFactor={props.rangeFactor}
                                 value={props.maxTaxDeductionInt} changeHandler={props.maxTaxDeductionIntHandler} currency={props.currency}
-                                min={0} max={50000} step={1000} note={`Total ${toCurrency(totalIntTaxBenefit, props.currency)}`} />
+                                min={0} max={50000} step={1000} note={`Total ${toCurrency(totalIntTaxBenefit, props.currency)}`} width="100px" />
                                 : !props.allInputDone && props.currentOrder === props.inputOrder + 4 && props.nextStepHandler()}
                         </div> : !props.allInputDone && props.currentOrder === props.inputOrder + 3 && props.nextStepHandler(2)
                     }

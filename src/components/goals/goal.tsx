@@ -42,8 +42,9 @@ const tabsOptionList: any = {
     { label: "Sell", tabNumber: 1, nextStepIndex: 8 },
     { label: "Tax", tabNumber: 2, nextStepIndex: 10 },
     { label: "Loan", tabNumber: 3, nextStepIndex: 12 },
-    { label: "Income", tabNumber: 4, nextStepIndex: 17 },
-    { label: "Rent?", tabNumber: 5, nextStepIndex: 21 },
+    { label: "Maintain", tabNumber: 4, nextStepIndex: 17 },
+    { label: "Income", tabNumber: 5, nextStepIndex: 19 },
+    { label: "Rent?", tabNumber: 6, nextStepIndex: 21 },
   ],
   R: [
     { label: "Amount", tabNumber: 0, nextStepIndex: 6 },
@@ -349,11 +350,6 @@ export default function Goal({
       loanYears
     );
 
-  const showStickyResult = allInputDone && cfs.length > 0 && rr.length > 0;
-  const containerStyle = {
-    paddingBottom: showStickyResult ? "200px" : "0",
-  };
-
   const showResultSection =
     (sellAfter && rentAmt && price && nowYear < startYear) ||
     (!allInputDone && currentOrder >= 22) ||
@@ -397,13 +393,10 @@ export default function Goal({
           <SVGClose />
         </div>
       </div>
-      <div
-        style={containerStyle}
-        className="container mx-auto flex flex-1 md:flex-row flex-col-reverse items-start"
-      >
-        <div className="w-full md:w-1/2 items-start transition-width duration-500 ease-in-out">
+      <div className="container mx-auto flex flex-1 md:flex-row flex-col-reverse items-start">
+        <div className="w-full lg:w-5/12 items-start transition-width duration-500 ease-in-out">
           <div className="relative w-full h-10">
-            <div className="absolute w-full overflow-x-auto md:overflow-x-hidden overflow-y-hidden">
+            <div className="absolute w-full overflow-x-scroll scrolling-touch hide-scrollbar">
               <Tabs
                 activeTab={activeTab}
                 changeHandler={(tabIndex: number, nextStepIndex: number) => {
@@ -603,24 +596,6 @@ export default function Goal({
                   <AnnualAmt
                     currency={currency}
                     startYear={startYear}
-                    percentage={aiPer as number}
-                    chgRate={assetChgRate as number}
-                    percentageHandler={setAIPer}
-                    annualSY={aiStartYear as number}
-                    annualSYHandler={setAIStartYear}
-                    price={price}
-                    duration={getDur()}
-                    title="Yearly Income Potential through Rent, Dividend, etc"
-                    footer="Exclude taxes & fees"
-                    inputOrder={17}
-                    currentOrder={currentOrder}
-                    nextStepDisabled={false}
-                    nextStepHandler={handleNextStep}
-                    allInputDone={allInputDone}
-                  />
-                  <AnnualAmt
-                    currency={currency}
-                    startYear={startYear}
                     percentage={amCostPer as number}
                     chgRate={assetChgRate as number}
                     percentageHandler={setAMCostPer}
@@ -630,7 +605,7 @@ export default function Goal({
                     duration={getDur()}
                     title="Yearly Fixes, Insurance, etc costs"
                     footer="Include taxes & fees"
-                    inputOrder={19}
+                    inputOrder={17}
                     currentOrder={currentOrder}
                     nextStepDisabled={false}
                     nextStepHandler={handleNextStep}
@@ -640,9 +615,33 @@ export default function Goal({
               ) : (
                 !allInputDone && currentOrder === 17 && handleNextStep(4)
               )}
+            {activeTab === 5 && sellAfter ? (
+                <div className="flex flex-wrap sm:justify-around items-start">
+                  <AnnualAmt
+                    currency={currency}
+                    startYear={startYear}
+                    percentage={aiPer as number}
+                    chgRate={assetChgRate as number}
+                    percentageHandler={setAIPer}
+                    annualSY={aiStartYear as number}
+                    annualSYHandler={setAIStartYear}
+                    price={price}
+                    duration={getDur()}
+                    title="Yearly Income Potential through Rent, Dividend, etc"
+                    footer="Exclude taxes & fees"
+                    inputOrder={19}
+                    currentOrder={currentOrder}
+                    nextStepDisabled={false}
+                    nextStepHandler={handleNextStep}
+                    allInputDone={allInputDone}
+                  />
+                </div>
+              ) : (
+                !allInputDone && currentOrder === 19 && handleNextStep(4)
+              )}
             </div>
 
-            {activeTab === 5 &&
+            {activeTab === 6 &&
             sellAfter &&
             nowYear < startYear &&
             ((!allInputDone && currentOrder >= 21) || allInputDone) ? (
@@ -719,7 +718,7 @@ export default function Goal({
           </div>
         </div>
         {showResultSection && (
-          <div className="w-full md:w-1/2 transition-width duration-1000 ease-in-out">
+          <div className="w-full lg:w-7/12 transition-width duration-1000 ease-in-out">
             {nowYear < startYear && (
               <GoalResult
                 rr={rr}
@@ -737,66 +736,67 @@ export default function Goal({
               <SVGChart />
               <label className="ml-1">Yearly Cash Flows</label>
               {sellAfter && rentAmt && price > 0 && nowYear < startYear && (
-                <HToggle
-                  value={showBRChart}
-                  setter={setShowBRChart}
-                  rightText="Buy v/s Rent"
-                />
+                <div className="flex">
+                  <HToggle
+                    value={showBRChart}
+                    setter={setShowBRChart}
+                    rightText={`${
+                      !showBRChart ? `Buy v/s Rent for ${analyzeFor} Years` : ""
+                    }`}
+                  />
+                  {showBRChart > 0 && (
+                    <div className="ml-2">
+                      <NumberInput
+                        name="af"
+                        pre="Buy v/s Rent for"
+                        inputOrder={0}
+                        currentOrder={-1}
+                        nextStepDisabled={false}
+                        allInputDone
+                        nextStepHandler={() => true}
+                        value={analyzeFor}
+                        unit="Years"
+                        changeHandler={setAnalyzeFor}
+                        min={0}
+                        max={50}
+                        step={5}
+                      />
+                    </div>
+                  )}
+                </div>
               )}
             </div>
             {showBRChart > 0 &&
             sellAfter &&
             rentAmt &&
             price &&
+            analyzeFor &&
             nowYear < startYear ? (
-              <div>
-                <div className="mt-2 flex w-full justify-center items-center">
-                  <label className="mr-1">Compare for</label>
-                  <SelectInput
-                    name="af"
-                    pre=""
-                    inputOrder={0}
-                    currentOrder={-1}
-                    nextStepDisabled={false}
-                    allInputDone
-                    nextStepHandler={() => true}
-                    value={analyzeFor}
-                    unit="Years"
-                    changeHandler={setAnalyzeFor}
-                    options={initYearOptions(5, 45)}
-                    disabled={!showBRChart}
-                  />
-                  <label className="ml-1">Years</label>
-                </div>
-                <BRComparison
-                  currency={currency}
-                  taxRate={taxRate}
-                  sellAfter={sellAfter}
-                  rr={rr}
-                  allBuyCFs={initBuyCFsForComparison(analyzeFor)}
-                  startYear={startYear}
-                  rentTaxBenefit={rentTaxBenefit as number}
-                  rentTaxBenefitHandler={setRentTaxBenefit}
-                  rentAmt={rentAmt as number}
-                  rentAmtHandler={setRentAmt}
-                  analyzeFor={analyzeFor}
-                  rentChgPer={rentChgPer as number}
-                  rentChgPerHandler={setRentChgPer}
-                  answer={answer}
-                  rentAns={rentAns}
-                  answerHandler={setAnswer}
-                  rentAnsHandler={setRentAns}
-                />
-              </div>
+              <BRComparison
+                currency={currency}
+                taxRate={taxRate}
+                sellAfter={sellAfter}
+                rr={rr}
+                allBuyCFs={initBuyCFsForComparison(analyzeFor)}
+                startYear={startYear}
+                rentTaxBenefit={rentTaxBenefit as number}
+                rentTaxBenefitHandler={setRentTaxBenefit}
+                rentAmt={rentAmt as number}
+                rentAmtHandler={setRentAmt}
+                analyzeFor={analyzeFor}
+                rentChgPer={rentChgPer as number}
+                rentChgPerHandler={setRentChgPer}
+                answer={answer}
+                rentAns={rentAns}
+                answerHandler={setAnswer}
+                rentAnsHandler={setRentAns}
+              />
             ) : (
               price > 0 &&
               cfs &&
               cfs.length > 1 &&
               showBRChart < 1 && <LineChart cfs={cfs} startYear={startYear} />
             )}
-            <p className="text-center text-base mt-4">
-              Negative values indicate Loss, while Positive values indicate Gain
-            </p>
           </div>
         )}
         <div className="flex items-center fixed w-full bottom-0 bg-white z-10">

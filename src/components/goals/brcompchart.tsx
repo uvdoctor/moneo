@@ -15,27 +15,27 @@ const Plot = dynamic(
 );
 
 export function BRCompChart(props: BRCompChartProps) {
-    const customWidth = props.data[0].values.x.length * 60
+    const customWidth = props.data[0].values.x.length * 40
 
     return (
-        <div className="w-full overflow-x-auto overflow-hidden relative">
+        <div className="w-full overflow-x-scroll scrolling-touch hide-scrollbar">
             {/*@ts-ignore*/}
             <Plot layout={{
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
                 autosize: true, 
                 width: customWidth,
                 aspectratio: 0,
-                title: {x:0.07, text:props.title, font:{size: 20}}, 
+                title: {x:0.05, text:props.title, font:{size: 20}}, 
                 xaxis: {title: props.xTitle, type:'category', fixedrange: true, showgrid: false, range: [1, props.data[0].values.x.length]},
                 yaxis: {fixedrange: true, tickformat: ',', showgrid: false},
 	            legend: {
                     orientation: 'h',
                     x:0.7,
                     y:-0.1
-                }, margin:{t:50}
+                }, margin:{t:40}
             }} 
             useResizeHandler={false}
-            style={{width: "100%", height:"100%", minHeight: "450px", overflow: "auto"}}
+            style={{width: "100%", height:"100%", minHeight: "400px"}}
             data={[
                 //@ts-ignore: Object is possible undefined
                 {type: 'scatter', fill: 'tozeroy', mode: 'none', x: props.data[0].values.x, y: props.data[0].values.y, 

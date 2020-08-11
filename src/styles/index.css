@@ -4,36 +4,36 @@
 @import url('<link href="https://fonts.googleapis.com/css?family=Quicksand:300,500" rel="stylesheet">');
 
 :root {
-	--amplify-primary-color: #38c172;
-	--amplify-primary-tint: #1f9d55;
-	--amplify-primary-shade: #51d88a;
-	--amplify-font-family: 'Quicksand', sans-serif;
-	color: #4a5568;
-	font-family: 'Quicksand', sans-serif;
-	font-weight: 300;
+  --amplify-primary-color: #38c172;
+  --amplify-primary-tint: #1f9d55;
+  --amplify-primary-shade: #51d88a;
+  --amplify-font-family: "Quicksand", sans-serif;
+  color: #4a5568;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 300;
 }
 
 .signInButton {
-	position: relative;
-	width: 100%;
-	border-radius: 4px;
-	margin-bottom: 10px;
-	cursor: grab;
-	padding: 0;
-	color: var(--deepSquidInk);
-	font-size: 4px;
-	box-sizing: content-box;
+  position: relative;
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  cursor: grab;
+  padding: 0;
+  color: var(--deepSquidInk);
+  font-size: 4px;
+  box-sizing: content-box;
 }
 
 body {
-	margin: 0;
-	/*font-family: "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen",
+  margin: 0;
+  /*font-family: "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;*/
-	font-family: 'Quicksand', sans-serif;
-	font-weight: 300;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1,
@@ -42,193 +42,205 @@ h3,
 h4,
 h5,
 h6 {
-	font-weight: 500;
+  font-weight: 500;
 }
 
 .input {
-	display: inline-block;
-	padding: 0;
-	font-weight: 600;
-	appearance: none;
-	border-bottom-width: 1px;
-	border-bottom-color: #4a5568;
-	border-bottom-width: thick;
-	line-height: 1.25;
-	background-color: transparent;
+  display: inline-block;
+  padding: 0;
+  font-weight: 600;
+  appearance: none;
+  border-bottom-width: 1px;
+  border-bottom-color: #4a5568;
+  border-bottom-width: thick;
+  line-height: 1.25;
+  background-color: transparent;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-	-webkit-appearance: none;
-	margin: 0;
-	text-align: right;
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  text-align: right;
 }
 
 /* Firefox */
-input[type=number] {
-	-moz-appearance: textfield;
-	text-align: right;
+input[type="number"] {
+  -moz-appearance: textfield;
+  text-align: right;
 }
 
 .input:focus {
-	outline: 0;
-	border-color: #38a169;
+  outline: 0;
+  border-color: #38a169;
 }
 
 .button {
-	border-radius: 9999px;
-	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-	outline: 0;
-	background-color: #38a169;
-	color: #fff;
-	font-weight: 700;
-	padding-top: 0.5rem;
-	padding-bottom: 0.5rem;
-	padding-right: 1rem;
-	padding-left: 1rem;
-	transition: "all .15s ease";
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  outline: 0;
+  background-color: #38a169;
+  color: #fff;
+  font-weight: 700;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  transition: "all .15s ease";
 }
 
 .cancel {
-	border-radius: 9999px;
-	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-	border-width: 1px;
-	background-color: #fff;
-	border-color: #38a169;
-	color: #38a169;
-	font-weight: 700;
-	padding-top: 0.5rem;
-	padding-bottom: 0.5rem;
-	padding-right: 1rem;
-	padding-left: 1rem;
-	transition: "all .15s ease";
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border-width: 1px;
+  background-color: #fff;
+  border-color: #38a169;
+  color: #38a169;
+  font-weight: 700;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  transition: "all .15s ease";
 }
 
 .aws-btn {
-	--button-default-height: 48px;
-	--button-default-font-size: 1rem;
-	--button-default-border-radius: 9999px;
-	--button-horizontal-padding: 1rem;
-	--button-raise-level: 5px;
-	--button-hover-pressure: 2;
-	--transform-speed: 0.185s;
-	--button-primary-color: #38a169;
-	--button-primary-color-dark: #276749;
-	--button-primary-color-light: #ffffff;
-	--button-primary-color-hover: #48bb78;
-	--button-primary-color-active: #276749;
-	--button-primary-border: 0px solid #FFFFFF;
-	--button-secondary-color: #edf2f7;
-	--button-secondary-color-dark: #cbd5e0;
-	--button-secondary-color-light: #38a169;
-	--button-secondary-color-hover: #edf2f7;
-	--button-secondary-color-active: #a0aec0;
-	--button-secondary-border: none;
-	--button-anchor-color: #4299e1;
-	--button-anchor-color-dark: #2b6cb0;
-	--button-anchor-color-light: #ffffff;
-	--button-anchor-color-hover: #3182ce;
-	--button-anchor-color-active: #a0aec0;
-	--button-anchor-border: 1px solid #2c5282;
-	}
-	
+  --button-default-height: 48px;
+  --button-default-font-size: 1rem;
+  --button-default-border-radius: 9999px;
+  --button-horizontal-padding: 1rem;
+  --button-raise-level: 5px;
+  --button-hover-pressure: 2;
+  --transform-speed: 0.185s;
+  --button-primary-color: #38a169;
+  --button-primary-color-dark: #276749;
+  --button-primary-color-light: #ffffff;
+  --button-primary-color-hover: #48bb78;
+  --button-primary-color-active: #276749;
+  --button-primary-border: 0px solid #ffffff;
+  --button-secondary-color: #edf2f7;
+  --button-secondary-color-dark: #cbd5e0;
+  --button-secondary-color-light: #38a169;
+  --button-secondary-color-hover: #edf2f7;
+  --button-secondary-color-active: #a0aec0;
+  --button-secondary-border: none;
+  --button-anchor-color: #4299e1;
+  --button-anchor-color-dark: #2b6cb0;
+  --button-anchor-color-light: #ffffff;
+  --button-anchor-color-hover: #3182ce;
+  --button-anchor-color-active: #a0aec0;
+  --button-anchor-border: 1px solid #2c5282;
+}
+
 .dashmi {
-	outline: 0;
-	display: inline-block;
-	border-top-left-radius: 0.25rem;
-	border-top-right-radius: 0.25rem;
-	padding-top: 0.5rem;
-	padding-bottom: 0.5rem;
-	padding-right: 0.5rem;
-	padding-left: 0.5rem;
-	font-weight: 600;
-	margin-top: 0.5rem;
+  outline: 0;
+  display: inline-block;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
 }
 
 .button:hover {
-	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .button:focus {
-	outline: 0;
+  outline: 0;
 }
 
 .cancel:hover {
-	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .cancel:focus {
-	outline: 0;
+  outline: 0;
 }
 
 @keyframes transient {
-	0%,
-	100% {
-		opacity: 0;
-	}
-	20%,
-	80% {
-		opacity: 1;
-	}
+  0%,
+  100% {
+    opacity: 0;
+  }
+  20%,
+  80% {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeIn {
-	0%,
-	20% {
-		opacity: 0;
-	}
-	80% {
-		opacity: 0.5;
-	}
-	100% {
-		opacity: 1;
-	}
+  0%,
+  20% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes pulse {
-	0% {
-		transform: scale(1);
-	}
-	50% {
-		transform: scale(0.8);
-	}
-	100% {
-		transform: scale(1);
-	}
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .dropdown-menu {
-	display: none;
+  display: none;
 }
 
 .hoverable {
-	position: static;
+  position: static;
 }
 
 .hoverable > label:after {
-	content: "\25BC";
-	font-size: 10px;
-	padding-left: 2px;
-	position: relative;
-	top: -1px;
+  content: "\25BC";
+  font-size: 10px;
+  padding-left: 2px;
+  position: relative;
+  top: -1px;
 }
 
 .hoverable:hover .dropdown-menu {
-	display: block;
+  display: block;
 }
 
 #knob > div[style] {
-	z-index: 0;
-	cursor: pointer;
+  z-index: 0;
+  cursor: pointer;
 }
 
 .tooltip .tooltip-text {
-	visibility: hidden;
-	text-align: center;
-	padding: 2px 6px;
-	position: absolute;
-	z-index: 100;
-  }
-  .tooltip:hover .tooltip-text {
-	visibility: visible;
-  }
+  visibility: hidden;
+  text-align: center;
+  padding: 2px 6px;
+  position: absolute;
+  z-index: 100;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
