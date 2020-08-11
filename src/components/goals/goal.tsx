@@ -120,7 +120,7 @@ export default function Goal({
     goal.id ? true : false
   );
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
-  const analyzeFor = 20;
+  const analyzeFor = 30;
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
   const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);

@@ -52,6 +52,7 @@ export default function BRComparison(props: BRComparisonProps) {
                     inv -= diff
                     if (inv > 0) {
                         let dr = props.rr[firstRRIndex + j]
+                        if(!dr) dr = 3
                         inv += inv * (dr / 100)
                     }
                     cfs.push(buyAmt < rentAmt ? buyAmt : rentAmt)
