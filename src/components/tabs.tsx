@@ -3,6 +3,7 @@ import React from "react";
 interface TabsProps {
   activeTab: number;
   tabs: Array<{
+    tabNumber: number;
     label: string;
     nextStepIndex: number;
   }>;
@@ -16,16 +17,16 @@ const Tabs = ({ activeTab, changeHandler, tabs }: TabsProps) => {
   return (
     <ul className="flex border-b w-full">
       {tabs &&
-        tabs.map((tab, index) => (
+        tabs.map((tab) => (
           <li className="-mb-px mr-1">
             <a
               className={`bg-white inline-block  py-2 px-4 font-semibold ${
-                activeTab === index ? selectedClass : unSelectedClass
+                activeTab === tab.tabNumber ? selectedClass : unSelectedClass
               }`}
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                changeHandler(index, tab.nextStepIndex);
+                changeHandler(tab.tabNumber, tab.nextStepIndex);
               }}
             >
               {tab.label}

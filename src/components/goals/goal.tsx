@@ -38,6 +38,29 @@ interface GoalProps {
   updateCallback: Function;
 }
 
+const tabsOptionList: any = {
+  B: [
+    { label: "Goal", tabNumber: 0, nextStepIndex: 5 },
+    { label: "Sell", tabNumber: 1, nextStepIndex: 7 },
+    { label: "Tax", tabNumber: 2, nextStepIndex: 9 },
+    { label: "Loan", tabNumber: 3, nextStepIndex: 11 },
+    { label: "Income", tabNumber: 4, nextStepIndex: 16 },
+    { label: "Conclusion", tabNumber: 5, nextStepIndex: 20 },
+  ],
+  R: [
+    { label: "Goal", tabNumber: 0, nextStepIndex: 5 },
+    { label: "Tax", tabNumber: 2, nextStepIndex: 7 },
+  ],
+  C: [],
+  D: [],
+  E: [],
+  FF: [],
+  O: [],
+  S: [],
+  T: [],
+  X: [],
+};
+
 export default function Goal({
   goal,
   cashFlows,
@@ -47,14 +70,9 @@ export default function Goal({
   addCallback,
   updateCallback,
 }: GoalProps) {
-  const tabsOptions = [
-    { label: "Goal", nextStepIndex: 5 },
-    { label: "Sell", nextStepIndex: 7 },
-    { label: "Tax", nextStepIndex: 9 },
-    { label: "Loan", nextStepIndex: 11 },
-    { label: "Income", nextStepIndex: 16 },
-    { label: "Conclusion", nextStepIndex: 20 },
-  ];
+  const typesList = getGoalTypes();
+  const goalType = goal?.type as APIt.GoalType;
+  const tabsOptions = tabsOptionList[goalType];
   const [startYear, setStartYear] = useState<number>(goal.sy);
   const [endYear, setEndYear] = useState<number>(goal.ey);
   const [syOptions] = useState(
@@ -111,7 +129,6 @@ export default function Goal({
     number | null | undefined
   >(goal?.tbr);
   const [showCFChart, setShowCFChart] = useState<boolean>(true);
-  const goalType = goal?.type as APIt.GoalType;
   const [cfs, setCFs] = useState<Array<number>>(cashFlows ? cashFlows : []);
   const [rentAmt, setRentAmt] = useState<number | null | undefined>(goal?.ra);
   const [rentChgPer, setRentChgPer] = useState<number | null | undefined>(
@@ -125,7 +142,6 @@ export default function Goal({
   const [rangeFactor, setRangeFactor] = useState<number>(
     getRangeFactor(currency)
   );
-  const typesList = getGoalTypes();
   const [currentOrder, setCurrentOrder] = useState<number>(1);
   const [allInputDone, setAllInputDone] = useState<boolean>(
     goal.id ? true : false
@@ -309,15 +325,17 @@ export default function Goal({
       // Move to Next tab
       let findTabIndex: null | number = null;
 
-      tabsOptions.forEach((tab, index) => {
-        if (tab.nextStepIndex == co) {
-          findTabIndex = index;
-        }
+      tabsOptions.forEach(
+        (tab: { nextStepIndex: number; tabNumber: number }) => {
+          if (tab.nextStepIndex == co) {
+            findTabIndex = tab.tabNumber;
+          }
 
-        if (findTabIndex !== null) {
-          setActiveTab(findTabIndex);
+          if (findTabIndex !== null) {
+            setActiveTab(findTabIndex);
+          }
         }
-      });
+      );
       if (co === 23) setAllInputDone(true);
     }
   };
@@ -342,6 +360,8 @@ export default function Goal({
     (sellAfter && rentAmt && price && nowYear < startYear) ||
     (!allInputDone && currentOrder >= 22) ||
     allInputDone;
+
+    console.log(activeTab, 'activeTab');
 
   return (
     <div className="flex flex-col w-full h-screen">
@@ -719,7 +739,11 @@ export default function Goal({
             </Fragment>
           </div>
         </div>
-        <div className={`flex ${showResultSection ? 'w-full flex-1 flex-col': 'w-0' } transition-width duration-1000 ease-in-out`}>
+        <div
+          className={`flex ${
+            showResultSection ? "w-full flex-1 flex-col" : "w-0"
+          } transition-width duration-1000 ease-in-out`}
+        >
           {showResultSection ? (
             <div className="">
               <h2 className="text-center">Result</h2>
