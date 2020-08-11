@@ -381,7 +381,7 @@ export default function Goal({
         style={containerStyle}
         className="container mx-auto flex flex-1 md:flex-row xl:flex-row lg:flex-row flex-col-reverse items-start"
       >
-        <div className="flex flex-1 flex-col w-full items-start transition-width duration-500 ease-in-out">
+        <div className="flex flex-1/2 flex-col w-1/2 items-start transition-width duration-500 ease-in-out">
           <div className="relative w-full h-10">
             <div className="absolute w-full sm:overflow-x-auto md:overflow-x-hidden overflow-y-hidden">
               <Tabs
@@ -394,7 +394,7 @@ export default function Goal({
               />
             </div>
           </div>
-          <div className="overflow-y-auto w-full">
+          <div className="overflow-y-auto w-full ">
             <div className="container mx-auto items-start flex flex-1 flex-col p-5">
               {activeTab === 0 ? (
                 <Fragment>
@@ -741,15 +741,15 @@ export default function Goal({
         </div>
         <div
           className={`flex ${
-            showResultSection ? "w-full flex-1 flex-col" : "w-0"
+            showResultSection ? "w-1/2 flex-1/2 flex-col" : "w-0"
           } transition-width duration-1000 ease-in-out`}
         >
           {showResultSection ? (
             <div className="">
               <h2 className="text-center">Result</h2>
-              <div className="overflow-auto">
+              <div className="overflow-y-auto overflow-x-hidden">
                 <Fragment>
-                  {sellAfter && rentAmt && price && nowYear < startYear && (
+                  {(sellAfter && rentAmt && price && nowYear < startYear) ? (
                     <BRComparison
                       currency={currency}
                       taxRate={taxRate}
@@ -769,7 +769,7 @@ export default function Goal({
                       answerHandler={setAnswer}
                       rentAnsHandler={setRentAns}
                     />
-                  )}
+                  ): null}
                 </Fragment>
                 {(!allInputDone && currentOrder >= 22) || allInputDone ? (
                   <Fragment>
