@@ -15,8 +15,8 @@ const Plot = dynamic(
 );
 
 export function BRCompChart(props: BRCompChartProps) {
-    const customWidth = props.data[0].values.x.length * 550
-
+    const customWidth = props.data[0].values.x.length * 60
+    console.log("Custom width is ", customWidth)
     return (
         <div className="w-full overflow-x-auto relative">
             {/*@ts-ignore*/}
@@ -24,6 +24,7 @@ export function BRCompChart(props: BRCompChartProps) {
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
                 autosize: true, 
                 width: customWidth,
+                aspectratio: 0,
                 title: {text:props.title, font:{size: 20}}, 
                 xaxis: {title: props.xTitle, type:'category', fixedrange: true, showgrid: false, range: [1, 20]},
                 yaxis: {fixedrange: true, tickformat: ',', showgrid: false},
@@ -46,7 +47,7 @@ export function BRCompChart(props: BRCompChartProps) {
                     }
                 ]
             }} 
-            useResizeHandler={true}
+            useResizeHandler={false}
             style={{width: "100%", height:"100%", minHeight: "450px", overflow: "auto"}}
             data={[
                 //@ts-ignore: Object is possible undefined
