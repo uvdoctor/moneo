@@ -1,5 +1,4 @@
 import React, { useState, useEffect, Fragment } from "react";
-import TextInput from "../form/textinput";
 import SelectInput from "../form/selectinput";
 import NumberInput from "../form/numberinput";
 import * as APIt from "../../api/goals";
@@ -40,15 +39,15 @@ interface GoalProps {
 
 const tabsOptionList: any = {
   B: [
-    { label: "Goal", tabNumber: 0, nextStepIndex: 5 },
+    { label: "Amount", tabNumber: 0, nextStepIndex: 5 },
     { label: "Sell", tabNumber: 1, nextStepIndex: 7 },
     { label: "Tax", tabNumber: 2, nextStepIndex: 9 },
     { label: "Loan", tabNumber: 3, nextStepIndex: 11 },
     { label: "Income", tabNumber: 4, nextStepIndex: 16 },
-    { label: "Conclusion", tabNumber: 5, nextStepIndex: 20 },
+    { label: "Buy/Rent", tabNumber: 5, nextStepIndex: 20 },
   ],
   R: [
-    { label: "Goal", tabNumber: 0, nextStepIndex: 5 },
+    { label: "Amount", tabNumber: 0, nextStepIndex: 5 },
     { label: "Tax", tabNumber: 2, nextStepIndex: 7 },
   ],
   C: [],
@@ -361,7 +360,7 @@ export default function Goal({
     (!allInputDone && currentOrder >= 22) ||
     allInputDone;
 
-    console.log(activeTab, 'activeTab');
+  console.log(activeTab, "activeTab");
 
   return (
     <div className="flex flex-col w-full h-screen">
@@ -456,6 +455,21 @@ export default function Goal({
                         changeHandler={changeEndYear}
                         options={eyOptions}
                       />
+
+<div className="mt-2 mb-4 flex justify-center">
+                    <SelectInput
+                      name="imp"
+                      inputOrder={22}
+                      currentOrder={currentOrder}
+                      nextStepDisabled={false}
+                      nextStepHandler={handleNextStep}
+                      allInputDone={allInputDone}
+                      pre="How Important is this Goal?"
+                      value={impLevel}
+                      changeHandler={setImpLevel}
+                      options={getImpLevels()}
+                    />
+                  </div>
                     </div>
                     <div className="flex sm:justify-center w-full mt-4">
                       <Cost
@@ -749,7 +763,7 @@ export default function Goal({
               <h2 className="text-center">Result</h2>
               <div className="overflow-y-auto overflow-x-hidden">
                 <Fragment>
-                  {(sellAfter && rentAmt && price && nowYear < startYear) ? (
+                  {sellAfter && rentAmt && price && nowYear < startYear ? (
                     <BRComparison
                       currency={currency}
                       taxRate={taxRate}
@@ -769,7 +783,7 @@ export default function Goal({
                       answerHandler={setAnswer}
                       rentAnsHandler={setRentAns}
                     />
-                  ): null}
+                  ) : null}
                 </Fragment>
                 {(!allInputDone && currentOrder >= 22) || allInputDone ? (
                   <Fragment>
@@ -786,20 +800,6 @@ export default function Goal({
                         )}
                       </Fragment>
                     )}
-                    <div className="mt-2 mb-4 flex justify-center">
-                      <SelectInput
-                        name="imp"
-                        inputOrder={22}
-                        currentOrder={currentOrder}
-                        nextStepDisabled={false}
-                        nextStepHandler={handleNextStep}
-                        allInputDone={allInputDone}
-                        pre="How Important is this Goal?"
-                        value={impLevel}
-                        changeHandler={setImpLevel}
-                        options={getImpLevels()}
-                      />
-                    </div>
                   </Fragment>
                 ) : null}
               </div>
