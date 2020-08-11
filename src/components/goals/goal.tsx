@@ -351,11 +351,7 @@ export default function Goal({
     );
 
   const showResultSection =
-    (sellAfter && rentAmt && price && nowYear < startYear) ||
-    (!allInputDone && currentOrder >= 22) ||
-    allInputDone;
-
-  console.log(activeTab, "activeTab");
+    sellAfter && price > 0 && nowYear < startYear && allInputDone;
 
   return (
     <div className="flex flex-col w-full h-screen">
@@ -395,18 +391,20 @@ export default function Goal({
       </div>
       <div className="container mx-auto flex flex-1 md:flex-row flex-col-reverse items-start">
         <div className="w-full lg:w-1/3 items-start transition-width duration-500 ease-in-out">
-          <div className="relative w-full h-10">
-            <div className="absolute w-full overflow-x-scroll scrolling-touch hide-scrollbar">
-              <Tabs
-                activeTab={activeTab}
-                changeHandler={(tabIndex: number, nextStepIndex: number) => {
-                  setActiveTab(tabIndex);
-                  handleNextStep(nextStepIndex);
-                }}
-                tabs={tabsOptions}
-              />
+          {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
+            <div className="relative w-full h-10">
+              <div className="absolute w-full overflow-x-scroll scrolling-touch hide-scrollbar">
+                <Tabs
+                  activeTab={activeTab}
+                  changeHandler={(tabIndex: number, nextStepIndex: number) => {
+                    setActiveTab(tabIndex);
+                    handleNextStep(nextStepIndex);
+                  }}
+                  tabs={tabsOptions}
+                />
+              </div>
             </div>
-          </div>
+          )}
           <div className="overflow-y-auto w-full ">
             <div className="container mx-auto items-start flex flex-1 flex-col p-5">
               {activeTab === 0 && (
@@ -450,11 +448,7 @@ export default function Goal({
                       allInputDone={allInputDone}
                       nextStepHandler={handleNextStep}
                       info="Year in which You End Paying for the Goal"
-                      disabled={
-                        loanPer && goalType === APIt.GoalType.B
-                          ? manualMode < 1
-                          : false
-                      }
+                      disabled={goalType === APIt.GoalType.B && manualMode < 1}
                       changeHandler={changeEndYear}
                       options={eyOptions}
                     />
@@ -526,7 +520,7 @@ export default function Goal({
                     maxTaxDeduction={maxTaxDeduction}
                     maxTaxDeductionHandler={setMaxTaxDeduction}
                     rangeFactor={rangeFactor}
-                    inputOrder={9}
+                    inputOrder={10}
                     currentOrder={currentOrder}
                     nextStepDisabled={false}
                     loanDur={loanYears}
@@ -613,9 +607,9 @@ export default function Goal({
                   />
                 </div>
               ) : (
-                !allInputDone && currentOrder === 17 && handleNextStep(4)
+                !allInputDone && currentOrder === 17 && handleNextStep(2)
               )}
-            {activeTab === 5 && sellAfter ? (
+              {activeTab === 5 && sellAfter ? (
                 <div className="flex flex-wrap sm:justify-around items-start">
                   <AnnualAmt
                     currency={currency}
@@ -637,7 +631,7 @@ export default function Goal({
                   />
                 </div>
               ) : (
-                !allInputDone && currentOrder === 19 && handleNextStep(4)
+                !allInputDone && currentOrder === 19 && handleNextStep(2)
               )}
             </div>
 
@@ -735,7 +729,7 @@ export default function Goal({
             <div className="flex mt-1 w-full justify-center items-center">
               <SVGChart />
               <label className="ml-1">Yearly Cash Flows</label>
-              {sellAfter && rentAmt && price > 0 && nowYear < startYear && (
+              {sellAfter && !!rentAmt && price > 0 && nowYear < startYear && (
                 <div className="flex">
                   <HToggle
                     value={showBRChart}
@@ -766,36 +760,34 @@ export default function Goal({
                 </div>
               )}
             </div>
-            {showBRChart > 0 &&
-            sellAfter &&
-            rentAmt &&
-            price &&
-            analyzeFor &&
-            nowYear < startYear ? (
-              <BRComparison
-                currency={currency}
-                taxRate={taxRate}
-                sellAfter={sellAfter}
-                rr={rr}
-                allBuyCFs={initBuyCFsForComparison(analyzeFor)}
-                startYear={startYear}
-                rentTaxBenefit={rentTaxBenefit as number}
-                rentTaxBenefitHandler={setRentTaxBenefit}
-                rentAmt={rentAmt as number}
-                rentAmtHandler={setRentAmt}
-                analyzeFor={analyzeFor}
-                rentChgPer={rentChgPer as number}
-                rentChgPerHandler={setRentChgPer}
-                answer={answer}
-                rentAns={rentAns}
-                answerHandler={setAnswer}
-                rentAnsHandler={setRentAns}
-              />
-            ) : (
+            {sellAfter &&
+              !!rentAmt &&
               price > 0 &&
-              cfs &&
-              cfs.length > 1 &&
-              showBRChart < 1 && <LineChart cfs={cfs} startYear={startYear} />
+              analyzeFor > 0 &&
+              nowYear < startYear && (
+                <BRComparison
+                  currency={currency}
+                  taxRate={taxRate}
+                  sellAfter={sellAfter}
+                  rr={rr}
+                  allBuyCFs={initBuyCFsForComparison(analyzeFor)}
+                  startYear={startYear}
+                  rentTaxBenefit={rentTaxBenefit as number}
+                  rentTaxBenefitHandler={setRentTaxBenefit}
+                  rentAmt={rentAmt as number}
+                  rentAmtHandler={setRentAmt}
+                  analyzeFor={analyzeFor}
+                  rentChgPer={rentChgPer as number}
+                  rentChgPerHandler={setRentChgPer}
+                  answer={answer}
+                  rentAns={rentAns}
+                  answerHandler={setAnswer}
+                  rentAnsHandler={setRentAns}
+                  showChart={showBRChart > 0}
+                />
+              )}
+            {price > 0 && cfs && cfs.length > 1 && showBRChart < 1 && (
+              <LineChart cfs={cfs} startYear={startYear} />
             )}
           </div>
         )}

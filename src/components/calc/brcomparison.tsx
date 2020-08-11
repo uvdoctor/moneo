@@ -21,6 +21,7 @@ interface BRComparisonProps {
   rentAns: string;
   rentAnsHandler: Function;
   allBuyCFs: Array<Array<number>>;
+  showChart: boolean;
 }
 
 export default function BRComparison(props: BRComparisonProps) {
@@ -172,7 +173,7 @@ export default function BRComparison(props: BRComparisonProps) {
 
   return (
     <div>
-      {compData && compData.length === 2 &&
+      {compData && compData.length === 2 && props.showChart &&
       <BRCompChart
         data={compData}
         xTitle="Number of Years"
