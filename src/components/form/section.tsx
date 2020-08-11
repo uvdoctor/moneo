@@ -25,7 +25,7 @@ export default function Section(props: SectionProps) {
                         shadow-lg md:shadow-xl'>
             <ExpandCollapse title={props.title} value={showSection}
                 handler={setShowSection} titleInfo={props.titleInfo} insideForm={props.insideForm} />
-            {props.toggle && showSection && <div className="flex justify-end mt-2 mr-4 mb-4">
+            {props.toggle && showSection && <div className="flex justify-end mt-2 mr-4">
                 {props.toggle}
             </div>}
             {showSection && <Fragment>

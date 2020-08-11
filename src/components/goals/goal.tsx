@@ -394,7 +394,7 @@ export default function Goal({
         </div>
       </div>
       <div className="container mx-auto flex flex-1 md:flex-row flex-col-reverse items-start">
-        <div className="w-full lg:w-5/12 items-start transition-width duration-500 ease-in-out">
+        <div className="w-full lg:w-1/3 items-start transition-width duration-500 ease-in-out">
           <div className="relative w-full h-10">
             <div className="absolute w-full overflow-x-scroll scrolling-touch hide-scrollbar">
               <Tabs
@@ -718,7 +718,7 @@ export default function Goal({
           </div>
         </div>
         {showResultSection && (
-          <div className="w-full lg:w-7/12 transition-width duration-1000 ease-in-out">
+          <div className="w-full lg:w-2/3 transition-width duration-1000 ease-in-out">
             {nowYear < startYear && (
               <GoalResult
                 rr={rr}
