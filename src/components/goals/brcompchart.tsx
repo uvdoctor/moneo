@@ -16,7 +16,7 @@ const Plot = dynamic(
 
 export function BRCompChart(props: BRCompChartProps) {
     const customWidth = props.data[0].values.x.length * 60
-    console.log("Custom width is ", customWidth)
+    
     return (
         <div className="w-full overflow-x-auto relative">
             {/*@ts-ignore*/}
@@ -48,7 +48,7 @@ export function BRCompChart(props: BRCompChartProps) {
                 ]
             }} 
             useResizeHandler={false}
-            style={{width: "100%", height:"100%", minHeight: "450px", overflow: "auto"}}
+            style={{width: "100%", height:"100%", minHeight: "450px"}}
             data={[
                 //@ts-ignore: Object is possible undefined
                 {type: 'scatter', fill: 'tozeroy', mode: 'none', x: props.data[0].values.x, y: props.data[0].values.y, name: props.data[0].name}, 
