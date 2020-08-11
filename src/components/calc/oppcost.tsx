@@ -10,6 +10,7 @@ interface OppCostProps {
     startYear: number
     ffGoalEndYear: number
     buyGoal: boolean
+    hideResultLabel: boolean
 }
 
 export default function OppCost(props: OppCostProps) {
@@ -45,6 +46,6 @@ export default function OppCost(props: OppCostProps) {
     return (
         <ResultItem svg={<SVGBalance />} result={oppCost} currency={props.currency} label={`${props.buyGoal ? 'Buy' : 'Spend'} v/s Invest`} pl
         info={`You May Have ${toCurrency(Math.abs(oppCost), props.currency)} More in ${lastYear} if You 
-        ${oppCost < 0 ? 'Invest' : 'Buy'} instead of ${oppCost < 0 ? (props.buyGoal ? 'Buying' : 'Spending') : 'Investing'}.`} />
+        ${oppCost < 0 ? 'Invest' : 'Buy'} instead of ${oppCost < 0 ? (props.buyGoal ? 'Buying' : 'Spending') : 'Investing'}.`} hideLabel={props.hideResultLabel} />
     )
 }

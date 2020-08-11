@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import SelectInput from "../form/selectinput";
+import TextInput from "../form/textinput";
 import NumberInput from "../form/numberinput";
 import * as APIt from "../../api/goals";
 import { initYearOptions, getRangeFactor } from "../utils";
@@ -19,12 +20,10 @@ import { getDuration, getGoalTypes, getImpLevels } from "./goalutils";
 import { AwesomeButton } from "react-awesome-button";
 import SVGLogo from "../svglogo";
 import AnnualAmt from "./annualamt";
-import ExpandCollapse from "../form/expandcollapse";
 import SVGBalance from "../calc/svgbalance";
 import ActionButtons from "../form/actionbuttons";
 import GoalResult from "./goalresult";
 import { getCompoundedIncome } from "../calc/finance";
-import GoalDetails from "./details";
 import Tabs from "./../tabs";
 
 interface GoalProps {
@@ -39,16 +38,16 @@ interface GoalProps {
 
 const tabsOptionList: any = {
   B: [
-    { label: "Amount", tabNumber: 0, nextStepIndex: 5 },
-    { label: "Sell", tabNumber: 1, nextStepIndex: 7 },
-    { label: "Tax", tabNumber: 2, nextStepIndex: 9 },
-    { label: "Loan", tabNumber: 3, nextStepIndex: 11 },
-    { label: "Income", tabNumber: 4, nextStepIndex: 16 },
-    { label: "Buy/Rent", tabNumber: 5, nextStepIndex: 20 },
+    { label: "Amount", tabNumber: 0, nextStepIndex: 6 },
+    { label: "Sell", tabNumber: 1, nextStepIndex: 8 },
+    { label: "Tax", tabNumber: 2, nextStepIndex: 10 },
+    { label: "Loan", tabNumber: 3, nextStepIndex: 12 },
+    { label: "Income", tabNumber: 4, nextStepIndex: 17 },
+    { label: "Rent?", tabNumber: 5, nextStepIndex: 21 },
   ],
   R: [
-    { label: "Amount", tabNumber: 0, nextStepIndex: 5 },
-    { label: "Tax", tabNumber: 2, nextStepIndex: 7 },
+    { label: "Amount", tabNumber: 0, nextStepIndex: 6 },
+    { label: "Tax", tabNumber: 2, nextStepIndex: 8 },
   ],
   C: [],
   D: [],
@@ -127,7 +126,6 @@ export default function Goal({
   const [rentTaxBenefit, setRentTaxBenefit] = useState<
     number | null | undefined
   >(goal?.tbr);
-  const [showCFChart, setShowCFChart] = useState<boolean>(true);
   const [cfs, setCFs] = useState<Array<number>>(cashFlows ? cashFlows : []);
   const [rentAmt, setRentAmt] = useState<number | null | undefined>(goal?.ra);
   const [rentChgPer, setRentChgPer] = useState<number | null | undefined>(
@@ -146,12 +144,13 @@ export default function Goal({
     goal.id ? true : false
   );
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
-  const analyzeFor = 30;
+  const [analyzeFor, setAnalyzeFor] = useState<number>(20);
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
   const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const nowYear = new Date().getFullYear();
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [showBRChart, setShowBRChart] = useState<number>(0);
 
   const createNewBaseGoal = () => {
     return {
@@ -364,11 +363,33 @@ export default function Goal({
 
   return (
     <div className="flex flex-col w-full h-screen">
-      <div className="container mx-auto flex pb-4 flex-row">
+      <div className="container mx-auto flex pb-4 w-full justify-between items-center">
         <SVGLogo />
-        <h1 className="text-center flex-1">
-          {typesList[goalType]} {name}
-        </h1>
+        <TextInput
+          name="name"
+          inputOrder={1}
+          currentOrder={currentOrder}
+          nextStepDisabled={name.length < 3}
+          allInputDone={allInputDone}
+          nextStepHandler={handleNextStep}
+          pre={typesList[goalType]}
+          placeholder="Goal Name"
+          value={name}
+          changeHandler={setName}
+          width="150px"
+        />
+        <SelectInput
+          name="imp"
+          inputOrder={2}
+          currentOrder={currentOrder}
+          nextStepDisabled={false}
+          nextStepHandler={handleNextStep}
+          allInputDone={allInputDone}
+          pre="Importance"
+          value={impLevel}
+          changeHandler={setImpLevel}
+          options={getImpLevels()}
+        />
         <div
           className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
           onClick={() => cancelCallback()}
@@ -378,11 +399,11 @@ export default function Goal({
       </div>
       <div
         style={containerStyle}
-        className="container mx-auto flex flex-1 md:flex-row xl:flex-row lg:flex-row flex-col-reverse items-start"
+        className="container mx-auto flex flex-1 md:flex-row flex-col-reverse items-start"
       >
-        <div className="flex flex-1/2 flex-col w-1/2 items-start transition-width duration-500 ease-in-out">
+        <div className="w-full md:w-1/2 items-start transition-width duration-500 ease-in-out">
           <div className="relative w-full h-10">
-            <div className="absolute w-full sm:overflow-x-auto md:overflow-x-hidden overflow-y-hidden">
+            <div className="absolute w-full overflow-x-auto md:overflow-x-hidden overflow-y-hidden">
               <Tabs
                 activeTab={activeTab}
                 changeHandler={(tabIndex: number, nextStepIndex: number) => {
@@ -395,432 +416,390 @@ export default function Goal({
           </div>
           <div className="overflow-y-auto w-full ">
             <div className="container mx-auto items-start flex flex-1 flex-col p-5">
-              {activeTab === 0 ? (
+              {activeTab === 0 && (
                 <Fragment>
-                  <GoalDetails
-                    currentOrder={currentOrder}
-                    nextStepDisabled={name.length < 3}
-                    allInputDone={allInputDone}
-                    nextStepHandler={handleNextStep}
-                    pre={typesList[goalType]}
-                    value={name}
-                    changeHandler={setName}
-                  />
-
-                  <Fragment>
-                    <div className="flex justify-around w-full items-center mt-4">
-                      <SelectInput
-                        name="ccy"
-                        inputOrder={2}
-                        currentOrder={currentOrder}
-                        nextStepDisabled={false}
-                        allInputDone={allInputDone}
-                        nextStepHandler={handleNextStep}
-                        pre="Currency"
-                        value={currency}
-                        changeHandler={changeCurrency}
-                        currency
-                      />
-                      <SelectInput
-                        name="sy"
-                        inputOrder={3}
-                        currentOrder={currentOrder}
-                        nextStepDisabled={false}
-                        allInputDone={allInputDone}
-                        nextStepHandler={handleNextStep}
-                        pre="When?"
-                        info="Year in which You Start Paying for the Goal"
-                        value={startYear}
-                        changeHandler={changeStartYear}
-                        options={syOptions}
-                        actionCount={
-                          goalType === APIt.GoalType.B && manualMode < 1 ? 2 : 1
-                        }
-                      />
-                      <SelectInput
-                        name="ey"
-                        pre="Pay Until"
-                        value={endYear}
-                        inputOrder={4}
-                        currentOrder={currentOrder}
-                        nextStepDisabled={false}
-                        allInputDone={allInputDone}
-                        nextStepHandler={handleNextStep}
-                        info="Year in which You End Paying for the Goal"
-                        disabled={
-                          loanPer && goalType === APIt.GoalType.B
-                            ? manualMode < 1
-                            : false
-                        }
-                        changeHandler={changeEndYear}
-                        options={eyOptions}
-                      />
-
-<div className="mt-2 mb-4 flex justify-center">
+                  <div className="flex justify-around w-full items-end">
                     <SelectInput
-                      name="imp"
-                      inputOrder={22}
+                      name="ccy"
+                      inputOrder={3}
+                      currentOrder={currentOrder}
+                      nextStepDisabled={false}
+                      allInputDone={allInputDone}
+                      nextStepHandler={handleNextStep}
+                      pre="Currency"
+                      value={currency}
+                      changeHandler={changeCurrency}
+                      currency
+                    />
+                    <SelectInput
+                      name="sy"
+                      inputOrder={4}
+                      currentOrder={currentOrder}
+                      nextStepDisabled={false}
+                      allInputDone={allInputDone}
+                      nextStepHandler={handleNextStep}
+                      pre="When?"
+                      info="Year in which You Start Paying for the Goal"
+                      value={startYear}
+                      changeHandler={changeStartYear}
+                      options={syOptions}
+                      actionCount={
+                        goalType === APIt.GoalType.B && manualMode < 1 ? 2 : 1
+                      }
+                    />
+                    <SelectInput
+                      name="ey"
+                      pre="Pay Until"
+                      value={endYear}
+                      inputOrder={5}
+                      currentOrder={currentOrder}
+                      nextStepDisabled={false}
+                      allInputDone={allInputDone}
+                      nextStepHandler={handleNextStep}
+                      info="Year in which You End Paying for the Goal"
+                      disabled={
+                        loanPer && goalType === APIt.GoalType.B
+                          ? manualMode < 1
+                          : false
+                      }
+                      changeHandler={changeEndYear}
+                      options={eyOptions}
+                    />
+                  </div>
+                  <div className="flex sm:justify-center w-full mt-4">
+                    <Cost
+                      startingCost={startingPrice}
+                      startingCostHandler={setStartingPrice}
+                      rangeFactor={rangeFactor}
+                      manualTargets={wipTargets}
+                      manualTargetsHandler={setWIPTargets}
+                      currency={currency}
+                      cost={price}
+                      costChgRate={priceChgRate}
+                      costChgRateHandler={setPriceChgRate}
+                      endYear={endYear}
+                      manualMode={manualMode}
+                      manualModeHandler={setManualMode}
+                      startYear={startYear}
+                      baseYear={goal.by}
+                      leftMax={goalType === APIt.GoalType.B ? 1500000 : 50000}
+                      leftNote={
+                        goalType !== APIt.GoalType.D
+                          ? "including taxes & fees"
+                          : ""
+                      }
+                      inputOrder={6}
                       currentOrder={currentOrder}
                       nextStepDisabled={false}
                       nextStepHandler={handleNextStep}
                       allInputDone={allInputDone}
-                      pre="How Important is this Goal?"
-                      value={impLevel}
-                      changeHandler={setImpLevel}
-                      options={getImpLevels()}
                     />
                   </div>
-                    </div>
-                    <div className="flex sm:justify-center w-full mt-4">
-                      <Cost
-                        startingCost={startingPrice}
-                        startingCostHandler={setStartingPrice}
-                        rangeFactor={rangeFactor}
-                        manualTargets={wipTargets}
-                        manualTargetsHandler={setWIPTargets}
-                        currency={currency}
-                        cost={price}
-                        costChgRate={priceChgRate}
-                        costChgRateHandler={setPriceChgRate}
-                        endYear={endYear}
-                        manualMode={manualMode}
-                        manualModeHandler={setManualMode}
-                        startYear={startYear}
-                        baseYear={goal.by}
-                        leftMax={goalType === APIt.GoalType.B ? 1500000 : 50000}
-                        leftNote={
-                          goalType !== APIt.GoalType.D
-                            ? "including taxes & fees"
-                            : ""
-                        }
-                        inputOrder={5}
-                        currentOrder={currentOrder}
-                        nextStepDisabled={false}
-                        nextStepHandler={handleNextStep}
-                        allInputDone={allInputDone}
-                      />
-                    </div>
-                  </Fragment>
                 </Fragment>
-              ) : null}
+              )}
 
-              {activeTab === 1 ? (
-                <Fragment>
-                  {sellAfter ? (
-                    <div className="flex sm:justify-center w-full">
-                      <Sell
-                        price={price}
-                        startYear={startYear}
-                        endYear={endYear}
-                        sellAfter={sellAfter}
-                        sellPrice={sellPrice}
-                        sellPriceHandler={setSellPrice}
-                        sellAfterHandler={setSellAfter}
-                        cfs={cfs}
-                        currency={currency}
-                        assetChgRate={assetChgRate as number}
-                        assetChgRateHandler={setAssetChgRate}
-                        inputOrder={7}
-                        currentOrder={currentOrder}
-                        nextStepDisabled={false}
-                        nextStepHandler={handleNextStep}
-                        allInputDone={allInputDone}
-                      />
-                    </div>
-                  ) : (
-                    !allInputDone && currentOrder === 7 && handleNextStep(2)
-                  )}
-                </Fragment>
-              ) : null}
-
-              <Fragment>
-                {activeTab === 2 ? (
-                  <Fragment>
-                    <div className="flex sm:justify-center">
-                      <TaxBenefit
-                        goalType={goalType}
-                        taxRate={taxRate}
-                        taxRateHandler={setTaxRate}
-                        currency={currency}
-                        maxTaxDeduction={maxTaxDeduction}
-                        maxTaxDeductionHandler={setMaxTaxDeduction}
-                        rangeFactor={rangeFactor}
-                        inputOrder={9}
-                        currentOrder={currentOrder}
-                        nextStepDisabled={false}
-                        loanDur={loanYears}
-                        loanPer={loanPer}
-                        nextStepHandler={handleNextStep}
-                        allInputDone={allInputDone}
-                        price={price}
-                        loanRY={loanRepaymentSY}
-                        startYear={startYear}
-                        manualMode={manualMode}
-                        loanRate={loanIntRate}
-                        endYear={endYear}
-                        duration={getDur()}
-                        priceChgRate={priceChgRate}
-                      />
-                    </div>
-                  </Fragment>
-                ) : null}
-
-                {activeTab === 3 ? (
-                  <Fragment>
-                    {goalType !== APIt.GoalType.D &&
-                    goalType !== APIt.GoalType.R &&
-                    manualMode < 1 &&
-                    goal?.emi ? (
-                      <div className="flex w-full sm:justify-around">
-                        <EmiCost
-                          price={price}
-                          currency={currency}
-                          startYear={startYear}
-                          duration={getDur()}
-                          repaymentSY={
-                            loanRepaymentSY ? loanRepaymentSY : startYear
-                          }
-                          endYear={endYear}
-                          rangeFactor={rangeFactor}
-                          loanYears={loanYears as number}
-                          loanAnnualInt={loanIntRate as number}
-                          loanPer={loanPer as number}
-                          loanBorrowAmt={
-                            getLoanBorrowAmt(
-                              price,
-                              goalType,
-                              manualMode,
-                              priceChgRate,
-                              endYear - startYear,
-                              loanPer as number
-                            ) as number
-                          }
-                          loanAnnualIntHandler={setLoanIntRate}
-                          loanPerHandler={setLoanPer}
-                          loanMonthsHandler={setLoanYears}
-                          repaymentSYHandler={setLoanRepaymentSY}
-                          taxBenefitInt={taxBenefitInt as number}
-                          taxBenefitIntHandler={setTaxBenefitInt}
-                          taxRate={taxRate}
-                          maxTaxDeductionInt={maxTaxDeductionInt as number}
-                          maxTaxDeductionIntHandler={setMaxTaxDeductionInt}
-                          inputOrder={11}
-                          currentOrder={currentOrder}
-                          nextStepDisabled={false}
-                          nextStepHandler={handleNextStep}
-                          allInputDone={allInputDone}
-                        />
-                      </div>
-                    ) : (
-                      !allInputDone && currentOrder === 11 && handleNextStep(5)
-                    )}
-                  </Fragment>
-                ) : null}
-                <div className="flex flex-wrap sm:justify-around items-start">
-                  {activeTab === 4 ? (
-                    <Fragment>
-                      {sellAfter ? (
-                        <Fragment>
-                          <AnnualAmt
-                            currency={currency}
-                            startYear={startYear}
-                            percentage={aiPer as number}
-                            chgRate={assetChgRate as number}
-                            percentageHandler={setAIPer}
-                            annualSY={aiStartYear as number}
-                            annualSYHandler={setAIStartYear}
-                            price={price}
-                            duration={getDur()}
-                            title="Yearly Income Potential through Rent, Dividend, etc"
-                            footer="Exclude taxes & fees"
-                            inputOrder={16}
-                            currentOrder={currentOrder}
-                            nextStepDisabled={false}
-                            nextStepHandler={handleNextStep}
-                            allInputDone={allInputDone}
-                          />
-                          <AnnualAmt
-                            currency={currency}
-                            startYear={startYear}
-                            percentage={amCostPer as number}
-                            chgRate={assetChgRate as number}
-                            percentageHandler={setAMCostPer}
-                            annualSY={amStartYear as number}
-                            annualSYHandler={setAMStartYear}
-                            price={price}
-                            duration={getDur()}
-                            title="Yearly Fixes, Insurance, etc costs"
-                            footer="Include taxes & fees"
-                            inputOrder={18}
-                            currentOrder={currentOrder}
-                            nextStepDisabled={false}
-                            nextStepHandler={handleNextStep}
-                            allInputDone={allInputDone}
-                          />
-                        </Fragment>
-                      ) : (
-                        !allInputDone &&
-                        currentOrder === 16 &&
-                        handleNextStep(4)
-                      )}
-                    </Fragment>
-                  ) : null}
+              {activeTab === 1 && sellAfter ? (
+                <div className="flex sm:justify-center w-full">
+                  <Sell
+                    price={price}
+                    startYear={startYear}
+                    endYear={endYear}
+                    sellAfter={sellAfter}
+                    sellPrice={sellPrice}
+                    sellPriceHandler={setSellPrice}
+                    sellAfterHandler={setSellAfter}
+                    cfs={cfs}
+                    currency={currency}
+                    assetChgRate={assetChgRate as number}
+                    assetChgRateHandler={setAssetChgRate}
+                    inputOrder={8}
+                    currentOrder={currentOrder}
+                    nextStepDisabled={false}
+                    nextStepHandler={handleNextStep}
+                    allInputDone={allInputDone}
+                  />
                 </div>
-              </Fragment>
+              ) : (
+                !allInputDone && currentOrder === 8 && handleNextStep(2)
+              )}
+
+              {activeTab === 2 && (
+                <div className="flex sm:justify-center w-full">
+                  <TaxBenefit
+                    goalType={goalType}
+                    taxRate={taxRate}
+                    taxRateHandler={setTaxRate}
+                    currency={currency}
+                    maxTaxDeduction={maxTaxDeduction}
+                    maxTaxDeductionHandler={setMaxTaxDeduction}
+                    rangeFactor={rangeFactor}
+                    inputOrder={9}
+                    currentOrder={currentOrder}
+                    nextStepDisabled={false}
+                    loanDur={loanYears}
+                    loanPer={loanPer}
+                    nextStepHandler={handleNextStep}
+                    allInputDone={allInputDone}
+                    price={price}
+                    loanRY={loanRepaymentSY}
+                    startYear={startYear}
+                    manualMode={manualMode}
+                    loanRate={loanIntRate}
+                    endYear={endYear}
+                    duration={getDur()}
+                    priceChgRate={priceChgRate}
+                  />
+                </div>
+              )}
+
+              {activeTab === 3 &&
+              goalType !== APIt.GoalType.D &&
+              goalType !== APIt.GoalType.R &&
+              manualMode < 1 &&
+              goal?.emi ? (
+                <div className="flex w-full sm:justify-around">
+                  <EmiCost
+                    price={price}
+                    currency={currency}
+                    startYear={startYear}
+                    duration={getDur()}
+                    repaymentSY={loanRepaymentSY ? loanRepaymentSY : startYear}
+                    endYear={endYear}
+                    rangeFactor={rangeFactor}
+                    loanYears={loanYears as number}
+                    loanAnnualInt={loanIntRate as number}
+                    loanPer={loanPer as number}
+                    loanBorrowAmt={
+                      getLoanBorrowAmt(
+                        price,
+                        goalType,
+                        manualMode,
+                        priceChgRate,
+                        endYear - startYear,
+                        loanPer as number
+                      ) as number
+                    }
+                    loanAnnualIntHandler={setLoanIntRate}
+                    loanPerHandler={setLoanPer}
+                    loanMonthsHandler={setLoanYears}
+                    repaymentSYHandler={setLoanRepaymentSY}
+                    taxBenefitInt={taxBenefitInt as number}
+                    taxBenefitIntHandler={setTaxBenefitInt}
+                    taxRate={taxRate}
+                    maxTaxDeductionInt={maxTaxDeductionInt as number}
+                    maxTaxDeductionIntHandler={setMaxTaxDeductionInt}
+                    inputOrder={12}
+                    currentOrder={currentOrder}
+                    nextStepDisabled={false}
+                    nextStepHandler={handleNextStep}
+                    allInputDone={allInputDone}
+                  />
+                </div>
+              ) : (
+                !allInputDone && currentOrder === 12 && handleNextStep(5)
+              )}
+              {activeTab === 4 && sellAfter ? (
+                <div className="flex flex-wrap sm:justify-around items-start">
+                  <AnnualAmt
+                    currency={currency}
+                    startYear={startYear}
+                    percentage={aiPer as number}
+                    chgRate={assetChgRate as number}
+                    percentageHandler={setAIPer}
+                    annualSY={aiStartYear as number}
+                    annualSYHandler={setAIStartYear}
+                    price={price}
+                    duration={getDur()}
+                    title="Yearly Income Potential through Rent, Dividend, etc"
+                    footer="Exclude taxes & fees"
+                    inputOrder={17}
+                    currentOrder={currentOrder}
+                    nextStepDisabled={false}
+                    nextStepHandler={handleNextStep}
+                    allInputDone={allInputDone}
+                  />
+                  <AnnualAmt
+                    currency={currency}
+                    startYear={startYear}
+                    percentage={amCostPer as number}
+                    chgRate={assetChgRate as number}
+                    percentageHandler={setAMCostPer}
+                    annualSY={amStartYear as number}
+                    annualSYHandler={setAMStartYear}
+                    price={price}
+                    duration={getDur()}
+                    title="Yearly Fixes, Insurance, etc costs"
+                    footer="Include taxes & fees"
+                    inputOrder={19}
+                    currentOrder={currentOrder}
+                    nextStepDisabled={false}
+                    nextStepHandler={handleNextStep}
+                    allInputDone={allInputDone}
+                  />
+                </div>
+              ) : (
+                !allInputDone && currentOrder === 17 && handleNextStep(4)
+              )}
             </div>
 
-            <Fragment>
-              {activeTab === 5 ? (
-                <Fragment>
-                  <div className="flex flex-wrap sm:justify-around items-start">
-                    {sellAfter && nowYear < startYear
-                      ? ((!allInputDone && currentOrder >= 20) ||
-                          allInputDone) && (
-                          <Section
-                            title="Instead, If You Rent"
-                            insideForm
-                            left={
-                              <div className="pl-4 pr-4">
-                                <NumberInput
-                                  inputOrder={20}
-                                  currentOrder={currentOrder}
-                                  nextStepDisabled={false}
-                                  nextStepHandler={handleNextStep}
-                                  allInputDone={allInputDone}
-                                  name="rentAmt"
-                                  pre="Yearly"
-                                  post="Rent"
-                                  value={rentAmt as number}
-                                  changeHandler={setRentAmt}
-                                  min={0}
-                                  max={100000}
-                                  step={1000}
-                                  currency={currency}
-                                  rangeFactor={rangeFactor}
-                                />
-                              </div>
-                            }
-                            right={
-                              rentAmt ? (
-                                <NumberInput
-                                  name="rentChg"
-                                  inputOrder={21}
-                                  currentOrder={currentOrder}
-                                  nextStepDisabled={false}
-                                  nextStepHandler={handleNextStep}
-                                  allInputDone={allInputDone}
-                                  pre="Changes"
-                                  value={rentChgPer as number}
-                                  changeHandler={setRentChgPer}
-                                  min={-10}
-                                  max={10}
-                                  step={0.5}
-                                  unit="%"
-                                />
-                              ) : (
-                                !allInputDone &&
-                                currentOrder === 21 &&
-                                handleNextStep()
-                              )
-                            }
-                            toggle={
-                              taxRate ? (
-                                <HToggle
-                                  rightText="Claim Tax Deduction"
-                                  value={rentTaxBenefit as number}
-                                  setter={setRentTaxBenefit}
-                                />
-                              ) : (
-                                <div />
-                              )
-                            }
-                            bottom={
-                              rentAns && (
-                                <div className="flex items-center">
-                                  <SVGBalance />
-                                  <label className="ml-2">{rentAns}</label>
-                                </div>
-                              )
-                            }
-                          />
-                        )
-                      : !allInputDone &&
-                        currentOrder === 20 &&
-                        handleNextStep(2)}
-                  </div>
-                </Fragment>
-              ) : null}
-            </Fragment>
+            {activeTab === 5 &&
+            sellAfter &&
+            nowYear < startYear &&
+            ((!allInputDone && currentOrder >= 21) || allInputDone) ? (
+              <div className="flex flex-wrap sm:justify-around items-start">
+                <Section
+                  title="Instead, If You Rent"
+                  insideForm
+                  left={
+                    <div className="pl-4 pr-4">
+                      <NumberInput
+                        inputOrder={21}
+                        currentOrder={currentOrder}
+                        nextStepDisabled={false}
+                        nextStepHandler={handleNextStep}
+                        allInputDone={allInputDone}
+                        name="rentAmt"
+                        pre="Yearly"
+                        post="Rent"
+                        value={rentAmt as number}
+                        changeHandler={setRentAmt}
+                        min={0}
+                        max={100000}
+                        step={1000}
+                        currency={currency}
+                        rangeFactor={rangeFactor}
+                      />
+                    </div>
+                  }
+                  right={
+                    rentAmt ? (
+                      <NumberInput
+                        name="rentChg"
+                        inputOrder={22}
+                        currentOrder={currentOrder}
+                        nextStepDisabled={false}
+                        nextStepHandler={handleNextStep}
+                        allInputDone={allInputDone}
+                        pre="Changes"
+                        value={rentChgPer as number}
+                        changeHandler={setRentChgPer}
+                        min={-10}
+                        max={10}
+                        step={0.5}
+                        unit="%"
+                      />
+                    ) : (
+                      !allInputDone && currentOrder === 22 && handleNextStep()
+                    )
+                  }
+                  toggle={
+                    taxRate ? (
+                      <HToggle
+                        rightText="Claim Tax Deduction"
+                        value={rentTaxBenefit as number}
+                        setter={setRentTaxBenefit}
+                      />
+                    ) : (
+                      <div />
+                    )
+                  }
+                  bottom={
+                    rentAns && (
+                      <div className="flex items-center">
+                        <SVGBalance />
+                        <label className="ml-2">{rentAns}</label>
+                      </div>
+                    )
+                  }
+                />
+              </div>
+            ) : (
+              !allInputDone && currentOrder === 21 && handleNextStep(2)
+            )}
           </div>
         </div>
-        <div
-          className={`flex ${
-            showResultSection ? "w-1/2 flex-1/2 flex-col" : "w-0"
-          } transition-width duration-1000 ease-in-out`}
-        >
-          {showResultSection ? (
-            <div className="">
-              <h2 className="text-center">Result</h2>
-              <div className="overflow-y-auto overflow-x-hidden">
-                <Fragment>
-                  {sellAfter && rentAmt && price && nowYear < startYear ? (
-                    <BRComparison
-                      currency={currency}
-                      taxRate={taxRate}
-                      sellAfter={sellAfter}
-                      rr={rr}
-                      allBuyCFs={initBuyCFsForComparison(analyzeFor)}
-                      startYear={startYear}
-                      rentTaxBenefit={rentTaxBenefit as number}
-                      rentTaxBenefitHandler={setRentTaxBenefit}
-                      rentAmt={rentAmt as number}
-                      rentAmtHandler={setRentAmt}
-                      analyzeFor={analyzeFor}
-                      rentChgPer={rentChgPer as number}
-                      rentChgPerHandler={setRentChgPer}
-                      answer={answer}
-                      rentAns={rentAns}
-                      answerHandler={setAnswer}
-                      rentAnsHandler={setRentAns}
-                    />
-                  ) : null}
-                </Fragment>
-                {(!allInputDone && currentOrder >= 22) || allInputDone ? (
-                  <Fragment>
-                    {price > 0 && cfs && cfs.length > 1 && (
-                      <Fragment>
-                        <ExpandCollapse
-                          title="Cash Flow Chart"
-                          value={showCFChart}
-                          handler={setShowCFChart}
-                          svg={<SVGChart />}
-                        />
-                        {showCFChart && (
-                          <LineChart cfs={cfs} startYear={startYear} />
-                        )}
-                      </Fragment>
-                    )}
-                  </Fragment>
-                ) : null}
-              </div>
+        {showResultSection && (
+          <div className="w-full md:w-1/2 transition-width duration-1000 ease-in-out">
+            {nowYear < startYear && (
+              <GoalResult
+                rr={rr}
+                startYear={startYear}
+                currency={currency}
+                ffGoalEndYear={ffGoalEndYear}
+                cfs={cfs}
+                ffOOM={ffOOM}
+                ffImpactYears={ffImpactYears}
+                buyGoal={goalType === APIt.GoalType.B}
+                hideResultLabel
+              />
+            )}
+            <div className="flex mt-1 w-full justify-center items-center">
+              <SVGChart />
+              <label className="ml-1">Yearly Cash Flows</label>
+              {sellAfter && rentAmt && price > 0 && nowYear < startYear && (
+                <HToggle
+                  value={showBRChart}
+                  setter={setShowBRChart}
+                  rightText="Buy v/s Rent"
+                />
+              )}
             </div>
-          ) : null}
-        </div>
-      </div>
-      {showStickyResult && (
-        <div className="fixed w-full bottom-0 bg-white z-10">
-          {nowYear < startYear && (
-            <GoalResult
-              rr={rr}
-              startYear={startYear}
-              currency={currency}
-              ffGoalEndYear={ffGoalEndYear}
-              cfs={cfs}
-              ffOOM={ffOOM}
-              ffImpactYears={ffImpactYears}
-              buyGoal={goalType === APIt.GoalType.B}
-            />
-          )}
+            {showBRChart > 0 &&
+            sellAfter &&
+            rentAmt &&
+            price &&
+            nowYear < startYear ? (
+              <div>
+                <div className="mt-2 flex w-full justify-center items-center">
+                  <label className="mr-1">Compare for</label>
+                  <SelectInput
+                    name="af"
+                    pre=""
+                    inputOrder={0}
+                    currentOrder={-1}
+                    nextStepDisabled={false}
+                    allInputDone
+                    nextStepHandler={() => true}
+                    value={analyzeFor}
+                    unit="Years"
+                    changeHandler={setAnalyzeFor}
+                    options={initYearOptions(5, 45)}
+                    disabled={!showBRChart}
+                  />
+                  <label className="ml-1">Years</label>
+                </div>
+                <BRComparison
+                  currency={currency}
+                  taxRate={taxRate}
+                  sellAfter={sellAfter}
+                  rr={rr}
+                  allBuyCFs={initBuyCFsForComparison(analyzeFor)}
+                  startYear={startYear}
+                  rentTaxBenefit={rentTaxBenefit as number}
+                  rentTaxBenefitHandler={setRentTaxBenefit}
+                  rentAmt={rentAmt as number}
+                  rentAmtHandler={setRentAmt}
+                  analyzeFor={analyzeFor}
+                  rentChgPer={rentChgPer as number}
+                  rentChgPerHandler={setRentChgPer}
+                  answer={answer}
+                  rentAns={rentAns}
+                  answerHandler={setAnswer}
+                  rentAnsHandler={setRentAns}
+                />
+              </div>
+            ) : (
+              price > 0 &&
+              cfs &&
+              cfs.length > 1 &&
+              showBRChart < 1 && <LineChart cfs={cfs} startYear={startYear} />
+            )}
+            <p className="text-center text-base mt-4">
+              Negative values indicate Loss, while Positive values indicate Gain
+            </p>
+          </div>
+        )}
+        <div className="flex items-center fixed w-full bottom-0 bg-white z-10">
           <ActionButtons
             submitDisabled={
               !allInputDone || name.length < 3 || !price || btnClicked
@@ -831,7 +810,7 @@ export default function Goal({
             submitText={`${goal.id ? "UPDATE" : "CREATE"} GOAL`}
           />
         </div>
-      )}
+      </div>
     </div>
   );
 }

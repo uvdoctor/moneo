@@ -18,7 +18,7 @@ export function BRCompChart(props: BRCompChartProps) {
     const customWidth = props.data[0].values.x.length * 60
 
     return (
-        <div className="w-full overflow-x-auto relative">
+        <div className="w-full overflow-x-auto overflow-hidden relative">
             {/*@ts-ignore*/}
             <Plot layout={{
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
@@ -32,23 +32,10 @@ export function BRCompChart(props: BRCompChartProps) {
                     orientation: 'h',
                     x:0.7,
                     y:-0.1
-                }, margin:{t:50},
-                annotations:[
-                    {
-                        text: props.rentAns,
-                        //@ts-ignore
-                        x: props.data[1].values.x[props.sellAfter - 1],
-                        //@ts-ignore
-                        y: props.data[1].values.y[props.sellAfter - 1],
-                        showarrow: true,
-                        yref: 'y', xref: 'x',
-                        ax: -40, ay: -40,
-                        font: {size: 14}
-                    }
-                ]
+                }, margin:{t:50}
             }} 
             useResizeHandler={false}
-            style={{width: "100%", height:"100%", minHeight: "450px"}}
+            style={{width: "100%", height:"100%", minHeight: "450px", overflow: "auto"}}
             data={[
                 //@ts-ignore: Object is possible undefined
                 {type: 'scatter', fill: 'tozeroy', mode: 'none', x: props.data[0].values.x, y: props.data[0].values.y, 
