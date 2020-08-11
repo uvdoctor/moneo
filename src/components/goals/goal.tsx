@@ -390,7 +390,7 @@ export default function Goal({
         </div>
       </div>
       <div className="container mx-auto flex flex-1 md:flex-row flex-col-reverse items-start">
-        <div className="w-full lg:w-1/3 items-start transition-width duration-500 ease-in-out">
+        <div className={`w-full ${allInputDone && 'lg:w-1/3'} items-start transition-width duration-500 ease-in-out`}>
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
             <div className="relative w-full h-10">
               <div className="absolute w-full overflow-x-scroll scrolling-touch hide-scrollbar">
@@ -586,7 +586,7 @@ export default function Goal({
                 !allInputDone && currentOrder === 12 && handleNextStep(5)
               )}
               {activeTab === 4 && sellAfter ? (
-                <div className="flex flex-wrap sm:justify-around items-start">
+                <div className="flex w-full justify-around">
                   <AnnualAmt
                     currency={currency}
                     startYear={startYear}
@@ -610,7 +610,7 @@ export default function Goal({
                 !allInputDone && currentOrder === 17 && handleNextStep(2)
               )}
               {activeTab === 5 && sellAfter ? (
-                <div className="flex flex-wrap sm:justify-around items-start">
+                <div className="flex w-full justify-around">
                   <AnnualAmt
                     currency={currency}
                     startYear={startYear}
@@ -639,7 +639,7 @@ export default function Goal({
             sellAfter &&
             nowYear < startYear &&
             ((!allInputDone && currentOrder >= 21) || allInputDone) ? (
-              <div className="flex flex-wrap sm:justify-around items-start">
+              <div className="flex w-full justify-around items-start">
                 <Section
                   title="Instead, If You Rent"
                   insideForm
