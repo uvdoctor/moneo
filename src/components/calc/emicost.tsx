@@ -42,8 +42,8 @@ export default function EmiCost(props: EmiProps) {
     const [emi, setEMI] = useState<number>(0)
 
     const calculateEmi = () => {
-        let emi = Math.round(getEmi(props.loanBorrowAmt, props.loanAnnualInt, props.loanYears * 12) as number)
-        setEMI(emi)
+        let emi = getEmi(props.loanBorrowAmt, props.loanAnnualInt, props.loanYears * 12) as number
+        setEMI(Math.round(emi))
         let loanPaidForMonths = getLoanPaidForMonths(props.endYear, props.repaymentSY, props.loanYears)
         let totalIntAmt = getTotalInt(props.loanBorrowAmt, emi, props.loanAnnualInt, loanPaidForMonths)
         setTotalIntAmt(Math.round(totalIntAmt))
