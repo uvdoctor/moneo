@@ -5,17 +5,19 @@ export function getEmi(loanAmt: number, annualRate: number, months: number) {
     Math.pow(1 + monthlyRate, months) /
     (Math.pow(1 + monthlyRate, months) - 1);
 }
-
+//Tested
 export function getCompoundedRate(rate: number, years: number, frequency: number = 1) {
     let r = rate ? rate : 0
     let y = years ? years: 0
-    let f = frequency ? frequency : 0
+    let f = frequency ? frequency : 1
     return Math.pow(1 + r / (f * 100), f * y);
 }
+//Tested
 
 export function getCompoundedIncome(rate: number, value: number, years: number, frequency: number = 1) {
     return value * getCompoundedRate(rate, years, frequency);
 }
+//Tested
 
 export function getTotalInt(borrowAmt: number, emi: number, intRate: number, loanPaidForMonths: number) {
     let principal = borrowAmt
@@ -28,6 +30,7 @@ export function getTotalInt(borrowAmt: number, emi: number, intRate: number, loa
     }
     return totalInt
 }
+//Tested
 
 export function getIntAmtByYear(borrowAmt: number, emi: number, intRate: number, months: number) {
     let principal = borrowAmt
@@ -56,6 +59,7 @@ export function getRemainingPrincipal(borrowAmt: number, emi: number, intRate: n
     }
     return principal <= 0 ? 0 : principal
 }
+//Tested
 
 export function getNPV(rr: Array<number>, cashFlows: Array<number>, startIndex: number) {
     let npv = 0
