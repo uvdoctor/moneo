@@ -2,7 +2,7 @@ import React from 'react'
 import dynamic from 'next/dynamic'
 
 interface BRCompChartProps {
-    data?: Array<any>
+    data: Array<any>
     currency?: string
     xTitle?: string
     sellAfter: number
@@ -15,13 +15,15 @@ const Plot = dynamic(
 );
 
 export function BRCompChart(props: BRCompChartProps) {
+    const customWidth = props.data[0].values.x.length * 550
 
     return (
-        <div className="w-full">
+        <div className="w-full overflow-x-auto relative">
             {/*@ts-ignore*/}
             <Plot layout={{
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
                 autosize: true, 
+                width: customWidth,
                 title: {text:props.title, font:{size: 20}}, 
                 xaxis: {title: props.xTitle, type:'category', fixedrange: true, showgrid: false, range: [1, 20]},
                 yaxis: {fixedrange: true, tickformat: ',', showgrid: false},
@@ -45,7 +47,7 @@ export function BRCompChart(props: BRCompChartProps) {
                 ]
             }} 
             useResizeHandler={true}
-            style={{width: "100%", height:"100%", minHeight: "450px"}}
+            style={{width: "100%", height:"100%", minHeight: "450px", overflow: "auto"}}
             data={[
                 //@ts-ignore: Object is possible undefined
                 {type: 'scatter', fill: 'tozeroy', mode: 'none', x: props.data[0].values.x, y: props.data[0].values.y, name: props.data[0].name}, 
