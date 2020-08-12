@@ -139,8 +139,8 @@ export default function Goal({
           amtLabel,
           taxLabel,
           loanLabel,
-          earnLabel,
           maintainLabel,
+          earnLabel,
           sellLabel,
           rentLabel,
         ]
@@ -289,7 +289,7 @@ export default function Goal({
       tabOptions.splice(2, 1);
       setTabOptions([...tabOptions]);
     } else {
-      if (!hasTab(loanLabel)) {
+      if (!hasTab(loanLabel) && goalType !== APIt.GoalType.D && goalType !== APIt.GoalType.R) {
         tabOptions.splice(2, 0, loanLabel);
         setTabOptions([...tabOptions]);
       }
@@ -298,35 +298,8 @@ export default function Goal({
 
   const hasTab = (option: string) => {
     let options = tabOptions.filter((tab) => tab === option);
-    return options && options.length > 0;
+    return options && options.length === 1;
   };
-
-  useEffect(() => {
-    if (allInputDone) return;
-    switch (currentOrder) {
-      case 3:
-        setShowTab(amtLabel);
-        break;
-      case 8:
-        setShowTab(taxLabel);
-        break;
-      case 10:
-        if (hasTab(loanLabel)) setShowTab(loanLabel);
-        break;
-      case 15:
-        if (sellAfter) setShowTab(maintainLabel);
-        break;
-      case 17:
-        if (sellAfter) setShowTab(earnLabel);
-        break;
-      case 19:
-        if (sellAfter) setShowTab(sellLabel);
-        break;
-      case 21:
-        if (sellAfter) setShowTab(rentLabel);
-        break;
-    }
-  }, [currentOrder]);
 
   const initBuyCFsForComparison = (analyzeFor: number) => {
     let allCFs: Array<Array<number>> = [];
@@ -358,7 +331,7 @@ export default function Goal({
     if (!rentAmt) setRentAns("");
   }, [rentAmt]);
 
-  const isBRCompAvailable = () => sellAfter && price && rentAmt;
+  const isBRCompAvailable = () => sellAfter && price > 0 && !!rentAmt;
 
   useEffect(() => {
     if (isBRCompAvailable() && showTab === rentLabel) setShowBRChart(true);
@@ -367,6 +340,29 @@ export default function Goal({
   const handleNextStep = (count: number = 1) => {
     if (!allInputDone) {
       let co = currentOrder + count;
+      switch (co) {
+        case 3:
+          setShowTab(amtLabel);
+          break;
+        case 8:
+          setShowTab(taxLabel);
+          break;
+        case 10:
+          if (hasTab(loanLabel)) setShowTab(loanLabel);
+          break;
+        case 15:
+          if (sellAfter) setShowTab(maintainLabel);
+          break;
+        case 17:
+          if (sellAfter) setShowTab(earnLabel);
+          break;
+        case 19:
+          if (sellAfter) setShowTab(sellLabel);
+          break;
+        case 21:
+          if (sellAfter) setShowTab(rentLabel);
+          break;
+      }
       setCurrentOrder(co);
       if (co === 23) setAllInputDone(true);
     }
@@ -383,7 +379,7 @@ export default function Goal({
       loanYears
     );
 
-  const showResultSection = price > 0 && nowYear < startYear && allInputDone;
+  const showResultSection = () => price > 0 && nowYear < startYear && allInputDone;
 
   return (
     <div className="flex flex-col w-full h-screen">
@@ -525,7 +521,7 @@ export default function Goal({
                 </Fragment>
               )}
 
-              {showTab === taxLabel && (
+              {showTab === taxLabel && currentOrder >= 8 && (
                 <div className="flex sm:justify-center w-full">
                   <TaxBenefit
                     goalType={goalType}
@@ -765,7 +761,7 @@ export default function Goal({
             </div>
           </div>
         </div>
-        {showResultSection && (
+        {showResultSection() ? (
           <div className="w-full lg:w-2/3 transition-width duration-1000 ease-in-out">
             {nowYear < startYear && (
               <GoalResult
@@ -850,7 +846,7 @@ export default function Goal({
               )}
             </div>
           </div>
-        )}
+        ) : null}
         <div className="flex items-center fixed w-full bottom-0 bg-white z-10">
           <ActionButtons
             submitDisabled={
