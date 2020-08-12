@@ -15,10 +15,9 @@ export default function LineChart(props: LineChartProps) {
     const [years, setYears] = useState<Array<number>>([])
     const layout = {
         font: { family: "'Quicksand', sans-serif", color: "#4a5568", size: 15 },
-        autosize: true, plot_bgcolor:'#edf2f7',
-        xaxis: { title: 'Year', type: 'category', fixedrange: years.length > 3 ? false : true, rangeslider: years.length > 3 ? {} : '', showgrid: false },
+        xaxis: { title: 'Year', type: 'category', fixedrange: years.length > 3, showgrid: false },
         yaxis: { fixedrange: true, tickformat: ',', showgrid: false },
-        legend: { orientation: "h" }, margin: {t:20},
+        legend: { orientation: "h" }, margin: {t:20, r:10},
     }
     const track = //@ts-ignore: Object is possible undefined
     {
@@ -34,12 +33,12 @@ export default function LineChart(props: LineChartProps) {
     }, [props.cfs, props.startYear])
 
     return (
-        <div className="w-full">
+        <div className="w-full overflow-x-scroll scrolling-touch hide-scrollbar">
             {/*@ts-ignore*/}
-            <Plot layout={layout} useResizeHandler={true}
-                style={{ width: "100%", height: "100%", minHeight: "450px" }}
+            <Plot layout={layout} 
+                style={{ width: "100%", height: "100%", minHeight: "400px" }}
                 data={[track]}
-                config={{ responsive: true, editable: false, displayModeBar: false, scrollZoom: true }} />
+                config={{ displayModeBar: false, scrollZoom: true }} />
         </div>
     )
 }

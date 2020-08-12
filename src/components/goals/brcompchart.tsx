@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic'
 interface BRCompChartProps {
     data: Array<any>
     currency?: string
-    xTitle?: string
     sellAfter: number
     rentAns: string
     title: string
@@ -22,19 +21,17 @@ export function BRCompChart(props: BRCompChartProps) {
             {/*@ts-ignore*/}
             <Plot layout={{
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
-                autosize: true, 
                 width: customWidth,
                 aspectratio: 0,
                 title: {x:0.05, text:props.title, font:{size: 20}}, 
-                xaxis: {title: props.xTitle, type:'category', fixedrange: true, showgrid: false, range: [1, props.data[0].values.x.length]},
+                xaxis: {type:'category', fixedrange: true, showgrid: false, range: [1, props.data[0].values.x.length]},
                 yaxis: {fixedrange: true, tickformat: ',', showgrid: false},
 	            legend: {
                     orientation: 'h',
-                    x:0.7,
-                    y:-0.1
-                }, margin:{t:40}
+                    x:0,
+                    y:1.05
+                }, margin:{t:40, r:10}
             }} 
-            useResizeHandler={false}
             style={{width: "100%", height:"100%", minHeight: "400px"}}
             data={[
                 //@ts-ignore: Object is possible undefined
@@ -43,7 +40,7 @@ export function BRCompChart(props: BRCompChartProps) {
                 //@ts-ignore: Object is possible undefined
                 {type: 'scatter', fill: 'tonexty', mode:'none', x: props.data[1].values.x, y: props.data[1].values.y, name: props.data[1].name} 
             ]} 
-            config={{responsive: true, editable: false, displayModeBar: false, scrollZoom: true}} 
+            config={{displayModeBar: false, scrollZoom: true}} 
              />
         </div>
     )

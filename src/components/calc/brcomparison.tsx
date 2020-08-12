@@ -176,7 +176,6 @@ export default function BRComparison(props: BRComparisonProps) {
       {compData && compData.length === 2 && props.showChart &&
       <BRCompChart
         data={compData}
-        xTitle="Number of Years"
         rentAns={props.rentAns}
         sellAfter={props.sellAfter}
         title={props.answer}

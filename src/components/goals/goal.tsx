@@ -25,6 +25,7 @@ import ActionButtons from "../form/actionbuttons";
 import GoalResult from "./goalresult";
 import { getCompoundedIncome } from "../calc/finance";
 import Tabs from "./../tabs";
+import SVGScale from "../svgscale";
 
 interface GoalProps {
   goal: APIt.CreateGoalInput;
@@ -43,7 +44,7 @@ const tabsOptionList: any = {
     { label: "Tax", tabNumber: 2, nextStepIndex: 10 },
     { label: "Loan", tabNumber: 3, nextStepIndex: 12 },
     { label: "Maintain", tabNumber: 4, nextStepIndex: 17 },
-    { label: "Income", tabNumber: 5, nextStepIndex: 19 },
+    { label: "Earn", tabNumber: 5, nextStepIndex: 19 },
     { label: "Rent?", tabNumber: 6, nextStepIndex: 21 },
   ],
   R: [
@@ -151,7 +152,7 @@ export default function Goal({
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const nowYear = new Date().getFullYear();
   const [activeTab, setActiveTab] = useState<number>(0);
-  const [showBRChart, setShowBRChart] = useState<number>(0);
+  const [showBRChart, setShowBRChart] = useState<boolean>(false);
 
   const createNewBaseGoal = () => {
     return {
@@ -317,6 +318,11 @@ export default function Goal({
     if (!rentAmt) setRentAns("");
   }, [rentAmt]);
 
+  useEffect(() => {
+    if (goalType === APIt.GoalType.B && activeTab === 6 && rentAmt)
+      setShowBRChart(true);
+  }, [activeTab]);
+
   const handleNextStep = (count: number = 1) => {
     if (!allInputDone) {
       let co = currentOrder + count;
@@ -390,7 +396,11 @@ export default function Goal({
         </div>
       </div>
       <div className="container mx-auto flex flex-1 md:flex-row flex-col-reverse items-start">
-        <div className={`w-full ${allInputDone && 'lg:w-1/3'} items-start transition-width duration-500 ease-in-out`}>
+        <div
+          className={`w-full ${
+            allInputDone && "lg:w-1/3"
+          } items-start transition-width duration-500 ease-in-out`}
+        >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
             <div className="relative w-full h-10">
               <div className="absolute w-full overflow-x-scroll scrolling-touch hide-scrollbar">
@@ -727,37 +737,56 @@ export default function Goal({
               />
             )}
             <div className="flex mt-1 w-full justify-center items-center">
-              <SVGChart />
-              <label className="ml-1">Yearly Cash Flows</label>
-              {sellAfter && !!rentAmt && price > 0 && nowYear < startYear && (
-                <div className="flex">
-                  <HToggle
-                    value={showBRChart}
-                    setter={setShowBRChart}
-                    rightText={`${
-                      !showBRChart ? `Buy v/s Rent for ${analyzeFor} Years` : ""
-                    }`}
-                  />
-                  {showBRChart > 0 && (
-                    <div className="ml-2">
-                      <NumberInput
-                        name="af"
-                        pre="Buy v/s Rent for"
-                        inputOrder={0}
-                        currentOrder={-1}
-                        nextStepDisabled={false}
-                        allInputDone
-                        nextStepHandler={() => true}
-                        value={analyzeFor}
-                        unit="Years"
-                        changeHandler={setAnalyzeFor}
-                        min={0}
-                        max={50}
-                        step={5}
-                      />
+              {!showBRChart ? (
+                <Fragment>
+                  <SVGChart />
+                  <label className="ml-2">
+                    Yearly Cash Flows in {currency}
+                  </label>
+                  {sellAfter && !!rentAmt && price > 0 && nowYear < startYear && (
+                    <div className="flex">
+                      {showBRChart && (
+                        <div className="ml-2">
+                          <NumberInput
+                            name="af"
+                            pre="Buy v/s Rent for"
+                            inputOrder={0}
+                            currentOrder={-1}
+                            nextStepDisabled={false}
+                            allInputDone
+                            nextStepHandler={() => true}
+                            value={analyzeFor}
+                            unit="Years"
+                            changeHandler={setAnalyzeFor}
+                            min={0}
+                            max={50}
+                            step={5}
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
-                </div>
+                </Fragment>
+              ) : (
+                <Fragment>
+                  <SVGScale />
+                  <label className="mr-2"></label>
+                  <NumberInput
+                    name="af"
+                    pre="Buy v/s Rent Comparison for"
+                    value={analyzeFor}
+                    changeHandler={setAnalyzeFor}
+                    currentOrder={-1}
+                    inputOrder={0}
+                    nextStepDisabled={false}
+                    nextStepHandler={() => true}
+                    allInputDone
+                    min={5}
+                    max={50}
+                    step={5}
+                    unit="Years"
+                  />
+                </Fragment>
               )}
             </div>
             {sellAfter &&
@@ -783,10 +812,10 @@ export default function Goal({
                   rentAns={rentAns}
                   answerHandler={setAnswer}
                   rentAnsHandler={setRentAns}
-                  showChart={showBRChart > 0}
+                  showChart={showBRChart}
                 />
               )}
-            {price > 0 && cfs && cfs.length > 1 && showBRChart < 1 && (
+            {price > 0 && cfs && cfs.length > 1 && !showBRChart && (
               <LineChart cfs={cfs} startYear={startYear} />
             )}
           </div>
