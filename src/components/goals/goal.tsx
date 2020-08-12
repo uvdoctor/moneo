@@ -424,7 +424,7 @@ export default function Goal({
           } items-start transition-width duration-500 ease-in-out`}
         >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
-            <Tabs tabs={tabOptions} selectedTab={showTab} selectedTabHandler={setShowTab} capacity={4} allInputDone={allInputDone} />
+            <Tabs tabs={tabOptions} selectedTab={showTab} selectedTabHandler={setShowTab} capacity={3} allInputDone={allInputDone} />
           )}
           <div className="overflow-y-auto w-full ">
             <div className="container mx-auto items-start flex flex-1 flex-col p-5">
