@@ -14,7 +14,7 @@ const Plot = dynamic(
 );
 
 export function BRCompChart(props: BRCompChartProps) {
-    const customWidth = props.data[0].values.x.length * 40
+    const customWidth = props.data[0].values.x.length * 30
 
     return (
         <div className="w-full overflow-x-scroll scrolling-touch hide-scrollbar">
@@ -29,7 +29,7 @@ export function BRCompChart(props: BRCompChartProps) {
 	            legend: {
                     orientation: 'h',
                     x:0,
-                    y:1.05
+                    y:1.08
                 }, margin:{t:40, r:10}
             }} 
             style={{width: "100%", height:"100%", minHeight: "400px"}}

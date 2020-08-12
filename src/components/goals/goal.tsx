@@ -318,9 +318,10 @@ export default function Goal({
     if (!rentAmt) setRentAns("");
   }, [rentAmt]);
 
+  const isBRCompAvailable = () => sellAfter && price && rentAmt;
+
   useEffect(() => {
-    if (goalType === APIt.GoalType.B && activeTab === 6 && rentAmt)
-      setShowBRChart(true);
+    if (isBRCompAvailable() && activeTab === 6) setShowBRChart(true);
   }, [activeTab]);
 
   const handleNextStep = (count: number = 1) => {
@@ -737,87 +738,87 @@ export default function Goal({
               />
             )}
             <div className="flex mt-1 w-full justify-center items-center">
-              {!showBRChart ? (
-                <Fragment>
-                  <SVGChart />
-                  <label className="ml-2">
-                    Yearly Cash Flows in {currency}
-                  </label>
-                  {sellAfter && !!rentAmt && price > 0 && nowYear < startYear && (
-                    <div className="flex">
-                      {showBRChart && (
-                        <div className="ml-2">
-                          <NumberInput
-                            name="af"
-                            pre="Buy v/s Rent for"
-                            inputOrder={0}
-                            currentOrder={-1}
-                            nextStepDisabled={false}
-                            allInputDone
-                            nextStepHandler={() => true}
-                            value={analyzeFor}
-                            unit="Years"
-                            changeHandler={setAnalyzeFor}
-                            min={0}
-                            max={50}
-                            step={5}
-                          />
-                        </div>
-                      )}
+              {!showBRChart || !isBRCompAvailable() ? (
+                <div className="w-full">
+                  <div className="w-full flex">
+                    <div className="w-11/12 flex items-center justify-center">
+                      <SVGChart />
+                      <label className="ml-2">
+                        Yearly Cash Flows in {currency}
+                      </label>
                     </div>
-                  )}
-                </Fragment>
+                    {isBRCompAvailable() && (
+                      <div
+                        className="w-1/12 mr-2 flex cursor-pointer tooltip"
+                        onClick={() => setShowBRChart(true)}
+                      >
+                        <SVGScale />
+                        <span className="tooltip-text mt-12 -ml-8 mr-2">
+                          View Buy v/s Rent Comparison
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <LineChart cfs={cfs} startYear={startYear} />
+                </div>
               ) : (
-                <Fragment>
-                  <SVGScale />
-                  <label className="mr-2"></label>
-                  <NumberInput
-                    name="af"
-                    pre="Buy v/s Rent Comparison for"
-                    value={analyzeFor}
-                    changeHandler={setAnalyzeFor}
-                    currentOrder={-1}
-                    inputOrder={0}
-                    nextStepDisabled={false}
-                    nextStepHandler={() => true}
-                    allInputDone
-                    min={5}
-                    max={50}
-                    step={5}
-                    unit="Years"
-                  />
-                </Fragment>
+                isBRCompAvailable() &&
+                showBRChart && (
+                  <div className="w-full">
+                    <div className="w-full flex">
+                      <div className="w-11/12 flex items-center justify-center">
+                        <SVGScale />
+                        <label className="mr-2"></label>
+                        <NumberInput
+                          name="af"
+                          pre="Buy v/s Rent"
+                          value={analyzeFor}
+                          changeHandler={setAnalyzeFor}
+                          currentOrder={-1}
+                          inputOrder={0}
+                          nextStepDisabled={false}
+                          nextStepHandler={() => true}
+                          allInputDone
+                          min={10}
+                          max={50}
+                          step={5}
+                          unit="Years"
+                        />
+                      </div>
+                      <div
+                        className="w-1/12 mr-2 flex cursor-pointer tooltip"
+                        onClick={() => setShowBRChart(false)}
+                      >
+                        <SVGChart />
+                        <span className="tooltip-text mr-2 -ml-8 mt-12">
+                          View Cash Flows
+                        </span>
+                      </div>
+                    </div>
+                    <BRComparison
+                      currency={currency}
+                      taxRate={taxRate}
+                      sellAfter={sellAfter as number}
+                      rr={rr}
+                      allBuyCFs={initBuyCFsForComparison(analyzeFor)}
+                      startYear={startYear}
+                      rentTaxBenefit={rentTaxBenefit as number}
+                      rentTaxBenefitHandler={setRentTaxBenefit}
+                      rentAmt={rentAmt as number}
+                      rentAmtHandler={setRentAmt}
+                      analyzeFor={analyzeFor}
+                      rentChgPer={rentChgPer as number}
+                      rentChgPerHandler={setRentChgPer}
+                      answer={answer}
+                      rentAns={rentAns}
+                      answerHandler={setAnswer}
+                      rentAnsHandler={setRentAns}
+                      showChart={showBRChart}
+                    />
+                  </div>
+                )
               )}
             </div>
-            {sellAfter &&
-              !!rentAmt &&
-              price > 0 &&
-              analyzeFor > 0 &&
-              nowYear < startYear && (
-                <BRComparison
-                  currency={currency}
-                  taxRate={taxRate}
-                  sellAfter={sellAfter}
-                  rr={rr}
-                  allBuyCFs={initBuyCFsForComparison(analyzeFor)}
-                  startYear={startYear}
-                  rentTaxBenefit={rentTaxBenefit as number}
-                  rentTaxBenefitHandler={setRentTaxBenefit}
-                  rentAmt={rentAmt as number}
-                  rentAmtHandler={setRentAmt}
-                  analyzeFor={analyzeFor}
-                  rentChgPer={rentChgPer as number}
-                  rentChgPerHandler={setRentChgPer}
-                  answer={answer}
-                  rentAns={rentAns}
-                  answerHandler={setAnswer}
-                  rentAnsHandler={setRentAns}
-                  showChart={showBRChart}
-                />
-              )}
-            {price > 0 && cfs && cfs.length > 1 && !showBRChart && (
-              <LineChart cfs={cfs} startYear={startYear} />
-            )}
           </div>
         )}
         <div className="flex items-center fixed w-full bottom-0 bg-white z-10">
