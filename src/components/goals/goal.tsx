@@ -24,7 +24,6 @@ import SVGBalance from "../calc/svgbalance";
 import ActionButtons from "../form/actionbuttons";
 import GoalResult from "./goalresult";
 import { getCompoundedIncome } from "../calc/finance";
-import Tabs from "./../tabs";
 import SVGScale from "../svgscale";
 
 interface GoalProps {
@@ -37,30 +36,6 @@ interface GoalProps {
   updateCallback: Function;
 }
 
-const tabsOptionList: any = {
-  B: [
-    { label: "Amount", tabNumber: 0, nextStepIndex: 6 },
-    { label: "Sell", tabNumber: 1, nextStepIndex: 8 },
-    { label: "Tax", tabNumber: 2, nextStepIndex: 10 },
-    { label: "Loan", tabNumber: 3, nextStepIndex: 12 },
-    { label: "Maintain", tabNumber: 4, nextStepIndex: 17 },
-    { label: "Earn", tabNumber: 5, nextStepIndex: 19 },
-    { label: "Rent?", tabNumber: 6, nextStepIndex: 21 },
-  ],
-  R: [
-    { label: "Amount", tabNumber: 0, nextStepIndex: 6 },
-    { label: "Tax", tabNumber: 2, nextStepIndex: 8 },
-  ],
-  C: [],
-  D: [],
-  E: [],
-  FF: [],
-  O: [],
-  S: [],
-  T: [],
-  X: [],
-};
-
 export default function Goal({
   goal,
   cashFlows,
@@ -72,7 +47,6 @@ export default function Goal({
 }: GoalProps) {
   const typesList = getGoalTypes();
   const goalType = goal?.type as APIt.GoalType;
-  const tabsOptions = tabsOptionList[goalType];
   const [startYear, setStartYear] = useState<number>(goal.sy);
   const [endYear, setEndYear] = useState<number>(goal.ey);
   const [syOptions] = useState(
@@ -151,8 +125,30 @@ export default function Goal({
   const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const nowYear = new Date().getFullYear();
-  const [activeTab, setActiveTab] = useState<number>(0);
   const [showBRChart, setShowBRChart] = useState<boolean>(false);
+  const amtLabel = "Amount";
+  const taxLabel = "Tax";
+  const sellLabel = "Sell";
+  const loanLabel = "Loan";
+  const earnLabel = "Earn";
+  const maintainLabel = "Maintain";
+  const rentLabel = "Rent?";
+  const [tabOptions, setTabOptions] = useState<Array<string>>(
+    goalType === APIt.GoalType.B
+      ? [
+          amtLabel,
+          taxLabel,
+          loanLabel,
+          earnLabel,
+          maintainLabel,
+          sellLabel,
+          rentLabel,
+        ]
+      : goalType === APIt.GoalType.D || goalType === APIt.GoalType.R
+      ? [amtLabel, taxLabel]
+      : [amtLabel, taxLabel, loanLabel]
+  );
+  const [showTab, setShowTab] = useState(amtLabel);
 
   const createNewBaseGoal = () => {
     return {
@@ -288,6 +284,50 @@ export default function Goal({
     setFFOOM(result.ffOOM);
   }, [cfs, impLevel]);
 
+  useEffect(() => {
+    if (manualMode > 0) {
+      tabOptions.splice(2, 1);
+      setTabOptions([...tabOptions]);
+    } else {
+      if (!hasTab(loanLabel)) {
+        tabOptions.splice(2, 0, loanLabel);
+        setTabOptions([...tabOptions]);
+      }
+    }
+  }, [manualMode]);
+
+  const hasTab = (option: string) => {
+    let options = tabOptions.filter((tab) => tab === option);
+    return options && options.length > 0;
+  };
+
+  useEffect(() => {
+    if (allInputDone) return;
+    switch (currentOrder) {
+      case 3:
+        setShowTab(amtLabel);
+        break;
+      case 8:
+        setShowTab(taxLabel);
+        break;
+      case 10:
+        if (hasTab(loanLabel)) setShowTab(loanLabel);
+        break;
+      case 15:
+        if (sellAfter) setShowTab(maintainLabel);
+        break;
+      case 17:
+        if (sellAfter) setShowTab(earnLabel);
+        break;
+      case 19:
+        if (sellAfter) setShowTab(sellLabel);
+        break;
+      case 21:
+        if (sellAfter) setShowTab(rentLabel);
+        break;
+    }
+  }, [currentOrder]);
+
   const initBuyCFsForComparison = (analyzeFor: number) => {
     let allCFs: Array<Array<number>> = [];
     for (let i = 1; i <= analyzeFor; i++)
@@ -321,27 +361,13 @@ export default function Goal({
   const isBRCompAvailable = () => sellAfter && price && rentAmt;
 
   useEffect(() => {
-    if (isBRCompAvailable() && activeTab === 6) setShowBRChart(true);
-  }, [activeTab]);
+    if (isBRCompAvailable() && showTab === rentLabel) setShowBRChart(true);
+  }, [showTab]);
 
   const handleNextStep = (count: number = 1) => {
     if (!allInputDone) {
       let co = currentOrder + count;
       setCurrentOrder(co);
-      // Move to Next tab
-      let findTabIndex: null | number = null;
-
-      tabsOptions.forEach(
-        (tab: { nextStepIndex: number; tabNumber: number }) => {
-          if (tab.nextStepIndex == co) {
-            findTabIndex = tab.tabNumber;
-          }
-
-          if (findTabIndex !== null) {
-            setActiveTab(findTabIndex);
-          }
-        }
-      );
       if (co === 23) setAllInputDone(true);
     }
   };
@@ -357,8 +383,7 @@ export default function Goal({
       loanYears
     );
 
-  const showResultSection =
-    sellAfter && price > 0 && nowYear < startYear && allInputDone;
+  const showResultSection = price > 0 && nowYear < startYear && allInputDone;
 
   return (
     <div className="flex flex-col w-full h-screen">
@@ -403,22 +428,26 @@ export default function Goal({
           } items-start transition-width duration-500 ease-in-out`}
         >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
-            <div className="relative w-full h-10">
-              <div className="absolute w-full overflow-x-scroll scrolling-touch hide-scrollbar">
-                <Tabs
-                  activeTab={activeTab}
-                  changeHandler={(tabIndex: number, nextStepIndex: number) => {
-                    setActiveTab(tabIndex);
-                    handleNextStep(nextStepIndex);
-                  }}
-                  tabs={tabsOptions}
-                />
-              </div>
-            </div>
+            <ul className="w-full flex overflow-x-scroll scrolling-touch hide-scrollbar cursor-pointer text-blue-600">
+              {tabOptions.map((tab, i) => (
+                <li
+                  key={"tab" + i}
+                  className={`-mb-px mr-1 py-2 px-4 hover:text-blue-800 font-semibold
+                    ${
+                      showTab === tab
+                        ? "border-t border-l border-r text-blue-800 rounded-t"
+                        : "border-b"
+                    }`}
+                  onClick={(e: any) => setShowTab(e.target.innerText)}
+                >
+                  {tab}
+                </li>
+              ))}
+            </ul>
           )}
           <div className="overflow-y-auto w-full ">
             <div className="container mx-auto items-start flex flex-1 flex-col p-5">
-              {activeTab === 0 && (
+              {showTab === amtLabel && (
                 <Fragment>
                   <div className="flex justify-around w-full items-end">
                     <SelectInput
@@ -496,32 +525,7 @@ export default function Goal({
                 </Fragment>
               )}
 
-              {activeTab === 1 && sellAfter ? (
-                <div className="flex sm:justify-center w-full">
-                  <Sell
-                    price={price}
-                    startYear={startYear}
-                    endYear={endYear}
-                    sellAfter={sellAfter}
-                    sellPrice={sellPrice}
-                    sellPriceHandler={setSellPrice}
-                    sellAfterHandler={setSellAfter}
-                    cfs={cfs}
-                    currency={currency}
-                    assetChgRate={assetChgRate as number}
-                    assetChgRateHandler={setAssetChgRate}
-                    inputOrder={8}
-                    currentOrder={currentOrder}
-                    nextStepDisabled={false}
-                    nextStepHandler={handleNextStep}
-                    allInputDone={allInputDone}
-                  />
-                </div>
-              ) : (
-                !allInputDone && currentOrder === 8 && handleNextStep(2)
-              )}
-
-              {activeTab === 2 && (
+              {showTab === taxLabel && (
                 <div className="flex sm:justify-center w-full">
                   <TaxBenefit
                     goalType={goalType}
@@ -531,7 +535,7 @@ export default function Goal({
                     maxTaxDeduction={maxTaxDeduction}
                     maxTaxDeductionHandler={setMaxTaxDeduction}
                     rangeFactor={rangeFactor}
-                    inputOrder={10}
+                    inputOrder={8}
                     currentOrder={currentOrder}
                     nextStepDisabled={false}
                     loanDur={loanYears}
@@ -550,11 +554,7 @@ export default function Goal({
                 </div>
               )}
 
-              {activeTab === 3 &&
-              goalType !== APIt.GoalType.D &&
-              goalType !== APIt.GoalType.R &&
-              manualMode < 1 &&
-              goal?.emi ? (
+              {showTab === loanLabel && goal?.emi ? (
                 <div className="flex w-full sm:justify-around">
                   <EmiCost
                     price={price}
@@ -586,7 +586,7 @@ export default function Goal({
                     taxRate={taxRate}
                     maxTaxDeductionInt={maxTaxDeductionInt as number}
                     maxTaxDeductionIntHandler={setMaxTaxDeductionInt}
-                    inputOrder={12}
+                    inputOrder={10}
                     currentOrder={currentOrder}
                     nextStepDisabled={false}
                     nextStepHandler={handleNextStep}
@@ -594,9 +594,9 @@ export default function Goal({
                   />
                 </div>
               ) : (
-                !allInputDone && currentOrder === 12 && handleNextStep(5)
+                !allInputDone && currentOrder === 10 && handleNextStep(5)
               )}
-              {activeTab === 4 && sellAfter ? (
+              {showTab === maintainLabel && sellAfter ? (
                 <div className="flex w-full justify-around">
                   <AnnualAmt
                     currency={currency}
@@ -610,7 +610,7 @@ export default function Goal({
                     duration={getDur()}
                     title="Yearly Fixes, Insurance, etc costs"
                     footer="Include taxes & fees"
-                    inputOrder={17}
+                    inputOrder={15}
                     currentOrder={currentOrder}
                     nextStepDisabled={false}
                     nextStepHandler={handleNextStep}
@@ -618,9 +618,9 @@ export default function Goal({
                   />
                 </div>
               ) : (
-                !allInputDone && currentOrder === 17 && handleNextStep(2)
+                !allInputDone && currentOrder === 15 && handleNextStep(2)
               )}
-              {activeTab === 5 && sellAfter ? (
+              {showTab === earnLabel && sellAfter ? (
                 <div className="flex w-full justify-around">
                   <AnnualAmt
                     currency={currency}
@@ -634,6 +634,31 @@ export default function Goal({
                     duration={getDur()}
                     title="Yearly Income through Rent, Dividend, etc"
                     footer="Exclude taxes & fees"
+                    inputOrder={17}
+                    currentOrder={currentOrder}
+                    nextStepDisabled={false}
+                    nextStepHandler={handleNextStep}
+                    allInputDone={allInputDone}
+                  />
+                </div>
+              ) : (
+                !allInputDone && currentOrder === 17 && handleNextStep(2)
+              )}
+
+              {showTab === sellLabel && sellAfter ? (
+                <div className="flex sm:justify-center w-full">
+                  <Sell
+                    price={price}
+                    startYear={startYear}
+                    endYear={endYear}
+                    sellAfter={sellAfter}
+                    sellPrice={sellPrice}
+                    sellPriceHandler={setSellPrice}
+                    sellAfterHandler={setSellAfter}
+                    cfs={cfs}
+                    currency={currency}
+                    assetChgRate={assetChgRate as number}
+                    assetChgRateHandler={setAssetChgRate}
                     inputOrder={19}
                     currentOrder={currentOrder}
                     nextStepDisabled={false}
@@ -644,17 +669,16 @@ export default function Goal({
               ) : (
                 !allInputDone && currentOrder === 19 && handleNextStep(2)
               )}
-            </div>
 
-            {activeTab === 6 &&
-            sellAfter &&
-            nowYear < startYear &&
-            ((!allInputDone && currentOrder >= 21) || allInputDone) ? (
-              <div className="flex w-full justify-around items-start">
-                <Section
-                  title="Instead, If You Rent"
-                  insideForm
-                  left={
+              {showTab === rentLabel &&
+              sellAfter &&
+              nowYear < startYear &&
+              ((!allInputDone && currentOrder >= 21) || allInputDone) ? (
+                <div className="flex w-full justify-around items-start">
+                  <Section
+                    title="Instead, If You Rent"
+                    insideForm
+                    left={
                       <NumberInput
                         inputOrder={21}
                         currentOrder={currentOrder}
@@ -672,31 +696,32 @@ export default function Goal({
                         currency={currency}
                         rangeFactor={rangeFactor}
                       />
-                  }
-                  right={
-                    rentAmt ? (
-                      <NumberInput
-                        name="rentChg"
-                        inputOrder={22}
-                        currentOrder={currentOrder}
-                        nextStepDisabled={false}
-                        nextStepHandler={handleNextStep}
-                        allInputDone={allInputDone}
-                        pre="Yearly"
-                        post="Change"
-                        value={rentChgPer as number}
-                        changeHandler={setRentChgPer}
-                        min={-10}
-                        max={10}
-                        step={0.5}
-                        unit="%"
-                      />
-                    ) : (
-                      !allInputDone && currentOrder === 22 && handleNextStep()
-                    )
-                  }
-                  bottom={rentAmt && 
-                    <NumberInput
+                    }
+                    right={
+                      rentAmt ? (
+                        <NumberInput
+                          name="rentChg"
+                          inputOrder={22}
+                          currentOrder={currentOrder}
+                          nextStepDisabled={false}
+                          nextStepHandler={handleNextStep}
+                          allInputDone={allInputDone}
+                          pre="Yearly"
+                          post="Change"
+                          value={rentChgPer as number}
+                          changeHandler={setRentChgPer}
+                          min={-10}
+                          max={10}
+                          step={0.5}
+                          unit="%"
+                        />
+                      ) : (
+                        !allInputDone && currentOrder === 22 && handleNextStep()
+                      )
+                    }
+                    bottom={
+                      rentAmt && (
+                        <NumberInput
                           name="af"
                           pre="Analyze for"
                           value={analyzeFor}
@@ -711,31 +736,33 @@ export default function Goal({
                           step={5}
                           unit="Years"
                         />
-                  }
-                  toggle={
-                    taxRate ? (
-                      <HToggle
-                        rightText="Claim Tax Deduction"
-                        value={rentTaxBenefit as number}
-                        setter={setRentTaxBenefit}
-                      />
-                    ) : (
-                      <div />
-                    )
-                  }
-                  footer={
-                    rentAns && (
-                      <div className="flex items-center">
-                        <SVGBalance />
-                        <label className="ml-2">{rentAns}</label>
-                      </div>
-                    )
-                  }
-                />
-              </div>
-            ) : (
-              !allInputDone && currentOrder === 21 && handleNextStep(2)
-            )}
+                      )
+                    }
+                    toggle={
+                      taxRate ? (
+                        <HToggle
+                          rightText="Claim Tax Deduction"
+                          value={rentTaxBenefit as number}
+                          setter={setRentTaxBenefit}
+                        />
+                      ) : (
+                        <div />
+                      )
+                    }
+                    footer={
+                      rentAns && (
+                        <div className="flex items-center">
+                          <SVGBalance />
+                          <label className="ml-2">{rentAns}</label>
+                        </div>
+                      )
+                    }
+                  />
+                </div>
+              ) : (
+                !allInputDone && currentOrder === 21 && handleNextStep(2)
+              )}
+            </div>
           </div>
         </div>
         {showResultSection && (
@@ -784,7 +811,9 @@ export default function Goal({
                     <div className="w-full flex">
                       <div className="w-11/12 flex items-center justify-center">
                         <SVGScale />
-                        <label className="ml-2">Buy v/s Rent for {analyzeFor} Years</label>
+                        <label className="ml-2">
+                          Buy v/s Rent for {analyzeFor} Years
+                        </label>
                       </div>
                       <div
                         className="w-1/12 mr-2 flex cursor-pointer tooltip"
