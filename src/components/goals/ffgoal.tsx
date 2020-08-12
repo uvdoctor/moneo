@@ -296,8 +296,8 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
                     {(currency === 'USD' || currency === 'CAD' || currency === 'GBP') ?
                         ((!allInputDone && currentOrder >= 11) || allInputDone) &&
                         <Section title="Long-term Care Insurance"
-                            titleInfo="About 70% individuals over age 65 need some form of living assistance for activities such as bathing, dressing, eating, toileting, walking, etc. 
-                        It isn't covered by traditional health insurance or government-sponsored old-age care programs."
+                            //titleInfo="About 70% individuals over age 65 need some form of living assistance for activities such as bathing, dressing, eating, toileting, walking, etc. 
+                        //It isn't covered by traditional health insurance or government-sponsored old-age care programs."
                             left={
                                 <div className="flex flex-col items-center justify-center">
                                     <NumberInput name="cp" inputOrder={11} currentOrder={currentOrder}
