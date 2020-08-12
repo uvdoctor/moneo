@@ -521,7 +521,7 @@ export default function Goal({
                 </Fragment>
               )}
 
-              {showTab === taxLabel && currentOrder >= 8 && (
+              {showTab === taxLabel && (
                 <div className="flex sm:justify-center w-full">
                   <TaxBenefit
                     goalType={goalType}
@@ -592,7 +592,7 @@ export default function Goal({
               ) : (
                 !allInputDone && currentOrder === 10 && handleNextStep(5)
               )}
-              {showTab === maintainLabel && sellAfter ? (
+              {showTab === maintainLabel ? (
                 <div className="flex w-full justify-around">
                   <AnnualAmt
                     currency={currency}
@@ -616,7 +616,7 @@ export default function Goal({
               ) : (
                 !allInputDone && currentOrder === 15 && handleNextStep(2)
               )}
-              {showTab === earnLabel && sellAfter ? (
+              {showTab === earnLabel ? (
                 <div className="flex w-full justify-around">
                   <AnnualAmt
                     currency={currency}
@@ -641,13 +641,13 @@ export default function Goal({
                 !allInputDone && currentOrder === 17 && handleNextStep(2)
               )}
 
-              {showTab === sellLabel && sellAfter ? (
+              {showTab === sellLabel ? (
                 <div className="flex sm:justify-center w-full">
                   <Sell
                     price={price}
                     startYear={startYear}
                     endYear={endYear}
-                    sellAfter={sellAfter}
+                    sellAfter={sellAfter as number}
                     sellPrice={sellPrice}
                     sellPriceHandler={setSellPrice}
                     sellAfterHandler={setSellAfter}
@@ -667,9 +667,7 @@ export default function Goal({
               )}
 
               {showTab === rentLabel &&
-              sellAfter &&
-              nowYear < startYear &&
-              ((!allInputDone && currentOrder >= 21) || allInputDone) ? (
+              nowYear < startYear  ? (
                 <div className="flex w-full justify-around items-start">
                   <Section
                     title="Instead, If You Rent"
