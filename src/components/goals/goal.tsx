@@ -417,7 +417,7 @@ export default function Goal({
           <SVGClose />
         </div>
       </div>
-      <div className="container mx-auto flex flex-1 md:flex-row flex-col-reverse items-start">
+      <div className={`container mx-auto flex flex-1 md:flex-row ${showResultSection() ? 'flex-col-reverse' : ''} items-start`}>
         <div
           className={`w-full ${
             allInputDone && "lg:w-1/3"
