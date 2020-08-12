@@ -632,7 +632,7 @@ export default function Goal({
                     annualSYHandler={setAIStartYear}
                     price={price}
                     duration={getDur()}
-                    title="Yearly Income Potential through Rent, Dividend, etc"
+                    title="Yearly Income through Rent, Dividend, etc"
                     footer="Exclude taxes & fees"
                     inputOrder={19}
                     currentOrder={currentOrder}
@@ -684,7 +684,8 @@ export default function Goal({
                         nextStepDisabled={false}
                         nextStepHandler={handleNextStep}
                         allInputDone={allInputDone}
-                        pre="Changes"
+                        pre="Yearly"
+                        post="Change"
                         value={rentChgPer as number}
                         changeHandler={setRentChgPer}
                         min={-10}
@@ -695,6 +696,23 @@ export default function Goal({
                     ) : (
                       !allInputDone && currentOrder === 22 && handleNextStep()
                     )
+                  }
+                  bottom={rentAmt && 
+                    <NumberInput
+                          name="af"
+                          pre="Analyze for"
+                          value={analyzeFor}
+                          changeHandler={setAnalyzeFor}
+                          currentOrder={-1}
+                          inputOrder={0}
+                          nextStepDisabled={false}
+                          nextStepHandler={() => true}
+                          allInputDone
+                          min={10}
+                          max={50}
+                          step={5}
+                          unit="Years"
+                        />
                   }
                   toggle={
                     taxRate ? (
@@ -707,7 +725,7 @@ export default function Goal({
                       <div />
                     )
                   }
-                  bottom={
+                  footer={
                     rentAns && (
                       <div className="flex items-center">
                         <SVGBalance />
@@ -768,22 +786,7 @@ export default function Goal({
                     <div className="w-full flex">
                       <div className="w-11/12 flex items-center justify-center">
                         <SVGScale />
-                        <label className="mr-2"></label>
-                        <NumberInput
-                          name="af"
-                          pre="Buy v/s Rent"
-                          value={analyzeFor}
-                          changeHandler={setAnalyzeFor}
-                          currentOrder={-1}
-                          inputOrder={0}
-                          nextStepDisabled={false}
-                          nextStepHandler={() => true}
-                          allInputDone
-                          min={10}
-                          max={50}
-                          step={5}
-                          unit="Years"
-                        />
+                        <label className="ml-2">Buy v/s Rent for {analyzeFor} Years</label>
                       </div>
                       <div
                         className="w-1/12 mr-2 flex cursor-pointer tooltip"
