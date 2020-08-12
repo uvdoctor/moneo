@@ -655,7 +655,6 @@ export default function Goal({
                   title="Instead, If You Rent"
                   insideForm
                   left={
-                    <div className="pl-4 pr-4">
                       <NumberInput
                         inputOrder={21}
                         currentOrder={currentOrder}
@@ -673,7 +672,6 @@ export default function Goal({
                         currency={currency}
                         rangeFactor={rangeFactor}
                       />
-                    </div>
                   }
                   right={
                     rentAmt ? (

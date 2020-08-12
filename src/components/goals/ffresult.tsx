@@ -19,14 +19,14 @@ export default function FFResult({ endYear, ffYear, ffAmt, ffLeftOverAmt, ffMinR
     return (
         <div className="w-full">
             {ffYear && ffLeftOverAmt >= ffNomineeAmt && ffAmt >= ffMinReq ?
-                <div className="py-2 flex flex-wrap justify-around w-full items-start bg-green-100 border-t border-b border-green-200">
+                <div className="py-2 flex flex-wrap justify-around w-full items-start bg-green-100">
                     <ResultItem svg={<SVGHourGlass />} label="Achievable from" result={ffYear} noResultFormat
-                        info={`${ffYear} may be the Earliest You can Achieve Financial Freedom.`}
+                        info={`${ffYear} may be the Earliest You can Achieve Financial Freedom.`} hideLabel
                         imp={ffOOM ? `You May Not Have Enough Savings in Years ${ffOOM.map(year => ` ${year}`)}` : ''} />
-                    <ResultItem result={ffAmt} svg={<SVGPiggy />} label={`Savings by ${ffYear - 1}`}
+                    <ResultItem result={ffAmt} svg={<SVGPiggy />} label={`Savings by ${ffYear - 1}`} hideLabel
                         currency={currency} info={`You can Withdraw from this Savings for Your expenses from ${ffYear} onwards`} />
                     <ResultItem result={ffLeftOverAmt} svg={<SVGInheritance />} label={`Nominees Get`}
-                        currency={currency}
+                        currency={currency} hideLabel
                         info={`This is the savings amount left over in ${endYear + 1}. 
                         As Your Plan ends in ${endYear}, this may be inherited by Your Nominees. 
                         This includes the Inheritance Amount for Nominees as per the Plan.`} />
