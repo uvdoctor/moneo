@@ -39,7 +39,7 @@ export default function LineChart(props: LineChartProps) {
             <Plot layout={layout} useResizeHandler={true}
                 style={{ width: "100%", height: "100%", minHeight: "450px" }}
                 data={[track]}
-                config={{ responsive: true, editable: false, displayModeBar: false }} />
+                config={{ responsive: true, editable: false, displayModeBar: false, scrollZoom: true }} />
         </div>
     )
 }
