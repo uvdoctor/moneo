@@ -25,7 +25,7 @@ import ActionButtons from "../form/actionbuttons";
 import GoalResult from "./goalresult";
 import { getCompoundedIncome } from "../calc/finance";
 import SVGScale from "../svgscale";
-
+import Tabs from "../tabs"
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -424,22 +424,7 @@ export default function Goal({
           } items-start transition-width duration-500 ease-in-out`}
         >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
-            <ul className="w-full flex overflow-x-scroll scrolling-touch hide-scrollbar cursor-pointer text-blue-600">
-              {tabOptions.map((tab, i) => (
-                <li
-                  key={"tab" + i}
-                  className={`-mb-px mr-1 py-2 px-4 hover:text-blue-800 font-semibold
-                    ${
-                      showTab === tab
-                        ? "border-t border-l border-r text-blue-800 rounded-t"
-                        : "border-b"
-                    }`}
-                  onClick={(e: any) => setShowTab(e.target.innerText)}
-                >
-                  {tab}
-                </li>
-              ))}
-            </ul>
+            <Tabs tabs={tabOptions} selectedTab={showTab} selectedTabHandler={setShowTab} capacity={4} allInputDone={allInputDone} />
           )}
           <div className="overflow-y-auto w-full ">
             <div className="container mx-auto items-start flex flex-1 flex-col p-5">
@@ -714,7 +699,7 @@ export default function Goal({
                       )
                     }
                     bottom={
-                      rentAmt && (
+                      !!rentAmt && (
                         <NumberInput
                           name="af"
                           pre="Analyze for"

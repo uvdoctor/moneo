@@ -17,7 +17,7 @@ export function BRCompChart(props: BRCompChartProps) {
     const customWidth = props.data[0].values.x.length * 30
 
     return (
-        <div className="w-full overflow-x-scroll scrolling-touch hide-scrollbar">
+        <div className="w-full flex justify-center overflow-x-scroll scrolling-touch hide-scrollbar">
             {/*@ts-ignore*/}
             <Plot layout={{
                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 

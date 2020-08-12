@@ -33,7 +33,7 @@ export default function LineChart(props: LineChartProps) {
     }, [props.cfs, props.startYear])
 
     return (
-        <div className="w-full overflow-x-scroll scrolling-touch hide-scrollbar">
+        <div className="w-full flex justify-center overflow-x-scroll scrolling-touch hide-scrollbar">
             {/*@ts-ignore*/}
             <Plot layout={layout} 
                 style={{ width: "100%", height: "100%", minHeight: "400px" }}
