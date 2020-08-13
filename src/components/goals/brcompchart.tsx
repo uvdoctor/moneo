@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import dynamic from "next/dynamic";
 import {
   getCommonConfig,
@@ -17,15 +17,7 @@ interface BRCompChartProps {
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 export function BRCompChart(props: BRCompChartProps) {
-  const [customWidth, setCustomWidth] = useState<number>(600);
-
-  useEffect(() => {
-      const handleResize = () => {
-        console.log("Resize invoked...")
-      }
-      window.addEventListener('resize', handleResize)
-      window.dispatchEvent(new Event('resize'))
-  }, []);
+  const customWidth = props.data[0].values.x.length * 40;
 
   return (
     <div id="graphDiv" className="w-full">
@@ -33,7 +25,7 @@ export function BRCompChart(props: BRCompChartProps) {
         //@ts-ignore
         layout={{
           ...getCommonLayoutProps(props.title),
-          //width: customWidth < 600 ? 600 : customWidth,
+          width: customWidth < 600 ? 600 : customWidth,
           xaxis: {
             type: "category",
             showgrid: false,
