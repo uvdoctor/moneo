@@ -17,7 +17,7 @@ interface SectionProps {
 export default function Section(props: SectionProps) {
   return (
     <div
-      className="ml-1 mr-1 mt-2 mb-4 w-full max-w-sm rounded overflow-hidden 
+      className="ml-1 mr-1 w-full max-w-sm rounded overflow-hidden 
                         shadow-lg md:shadow-xl"
     >
       <div className={`w-full ${props.insideForm && "bg-black text-white"}`}>

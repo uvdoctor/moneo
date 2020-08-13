@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function SVGChart() {
     return (
-        <svg className="w-10" viewBox="0 0 512 512"
+        <svg className="w-8" viewBox="0 0 512 512"
             enableBackground="new 0 0 512 512">
                 <g>
                     <path fill="orange" d="M460.8,25.6c-28.22-0.051-51.139,22.785-51.19,51.006c-0.024,13.301,5.14,26.088,14.394,35.642l-93.542,187.051

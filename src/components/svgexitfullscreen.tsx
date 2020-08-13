@@ -2,7 +2,7 @@ import React from "react";
 
 export default function SVGExitFullScreen() {
   return (
-    <svg viewBox="0 0 493.9104 493.9104" className="w-6">
+    <svg viewBox="0 0 493.9104 493.9104" className="w-6 cursor-pointer">
       <path
         d="m45.257812 67.878906 22.628907-22.628906 158.390625 158.390625-22.628906 22.628906zm0 0"
         fill="#38a169"

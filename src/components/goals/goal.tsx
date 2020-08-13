@@ -803,81 +803,77 @@ export default function Goal({
                 hideResultLabel
               />
             )}
-            <div className="flex mt-1 w-full justify-center items-center">
-              {!showBRChart || !isBRCompAvailable() ? (
-                <div className="w-full">
-                  <div className="w-full flex">
-                    <div
-                      className="w-1/12 flex items-center justify-center cursor-pointer"
-                      onClick={() => setShowFullScreen(!showFullScreen)}
-                    >
-                      {!showFullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
-                    </div> 
-                    <div className="w-10/12 flex items-center justify-center">
+            <div className="flex mt-1 w-full items-center">
+              <div
+                className="ml-1 w-1/12 cursor-pointer"
+                onClick={() => setShowFullScreen(!showFullScreen)}
+              >
+                {!showFullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
+              </div>
+              <div className="w-11/12 flex items-center justify-around">
+                <div className={`flex ${!isBRCompAvailable ? 'w-full' : 'w-3/4'} justify-center items-center`}>
+                  {!showBRChart || !isBRCompAvailable() ? (
+                    <Fragment>
                       <SVGChart />
-                      <label className="ml-2">
+                      <label className="ml-1">
                         Yearly Cash Flows in {currency}
                       </label>
-                    </div>
-                    {isBRCompAvailable() && (
-                      <div
-                        className="w-1/12 mr-2 flex cursor-pointer tooltip"
-                        onClick={() => setShowBRChart(true)}
-                      >
+                    </Fragment>
+                  ) : (
+                    <Fragment>
+                      <SVGScale />
+                      <label className="ml-1">
+                        Buy v/s Rent for {analyzeFor} Years
+                      </label>
+                    </Fragment>
+                  )}
+                </div>
+                {isBRCompAvailable() && (
+                  <div
+                    className="w-1/4 mr-1 flex items-center cursor-pointer"
+                    onClick={() => setShowBRChart(!showBRChart)}
+                  >
+                    {!showBRChart ? (
+                      <Fragment>
                         <SVGScale />
-                        <span className="tooltip-text mt-12 -ml-8 mr-2">
-                          View Buy v/s Rent Comparison
-                        </span>
-                      </div>
+                        <label className="ml-1 cursor-pointer">Buy v/s Rent</label>
+                      </Fragment>
+                    ) : (
+                      <Fragment>
+                        <SVGChart />
+                        <label className="ml-1 cursor-pointer">Cash Flows</label>
+                      </Fragment>
                     )}
                   </div>
-                  <LineChart cfs={cfs} startYear={startYear} />
-                </div>
-              ) : (
-                isBRCompAvailable() &&
-                showBRChart && (
-                  <div className="w-full">
-                    <div className="w-full flex">
-                      <div className="w-11/12 flex items-center justify-center">
-                        <SVGScale />
-                        <label className="ml-2">
-                          Buy v/s Rent for {analyzeFor} Years
-                        </label>
-                      </div>
-                      <div
-                        className="w-1/12 mr-2 flex cursor-pointer tooltip"
-                        onClick={() => setShowBRChart(false)}
-                      >
-                        <SVGChart />
-                        <span className="tooltip-text mr-2 -ml-8 mt-12">
-                          View Cash Flows
-                        </span>
-                      </div>
-                    </div>
-                    <BRComparison
-                      currency={currency}
-                      taxRate={taxRate}
-                      sellAfter={sellAfter as number}
-                      rr={rr}
-                      allBuyCFs={initBuyCFsForComparison(analyzeFor)}
-                      startYear={startYear}
-                      rentTaxBenefit={rentTaxBenefit as number}
-                      rentTaxBenefitHandler={setRentTaxBenefit}
-                      rentAmt={rentAmt as number}
-                      rentAmtHandler={setRentAmt}
-                      analyzeFor={analyzeFor}
-                      rentChgPer={rentChgPer as number}
-                      rentChgPerHandler={setRentChgPer}
-                      answer={answer}
-                      rentAns={rentAns}
-                      answerHandler={setAnswer}
-                      rentAnsHandler={setRentAns}
-                      showChart={showBRChart}
-                    />
-                  </div>
-                )
-              )}
+                )}
+              </div>
             </div>
+            {!showBRChart || !isBRCompAvailable() ? (
+              <LineChart cfs={cfs} startYear={startYear} />
+            ) : (
+              isBRCompAvailable() && (
+                <BRComparison
+                  currency={currency}
+                  taxRate={taxRate}
+                  sellAfter={sellAfter as number}
+                  rr={rr}
+                  allBuyCFs={initBuyCFsForComparison(analyzeFor)}
+                  startYear={startYear}
+                  rentTaxBenefit={rentTaxBenefit as number}
+                  rentTaxBenefitHandler={setRentTaxBenefit}
+                  rentAmt={rentAmt as number}
+                  rentAmtHandler={setRentAmt}
+                  analyzeFor={analyzeFor}
+                  rentChgPer={rentChgPer as number}
+                  rentChgPerHandler={setRentChgPer}
+                  answer={answer}
+                  rentAns={rentAns}
+                  answerHandler={setAnswer}
+                  rentAnsHandler={setRentAns}
+                  showChart={showBRChart}
+                />
+              )
+            )}
           </div>
         )}
       </div>
