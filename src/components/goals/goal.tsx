@@ -871,6 +871,7 @@ export default function Goal({
                   answerHandler={setAnswer}
                   rentAnsHandler={setRentAns}
                   showChart={showBRChart}
+                  fullScreen={showFullScreen}
                 />
               )
             )}

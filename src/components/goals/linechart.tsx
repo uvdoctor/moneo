@@ -32,12 +32,12 @@ export default function LineChart(props: LineChartProps) {
     }, [props.cfs, props.startYear])
 
     return (
-        <div className="w-full">
+        <div className="w-full flex">
             {/*@ts-ignore*/}
             <Plot layout={layout} 
                 style={getCommonStyle()}
                 data={[track]}
-                useResizeHandler={true}
+                useResizeHandler
                 config={getCommonConfig()} />
         </div>
     )

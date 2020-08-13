@@ -48,8 +48,14 @@ export default function Tabs(props: TabsProps) {
 
   const handleIncrement = () => setEndIndex(endIndex + 1);
 
+  const [endIndexOnLoad, setEndIndexOnLoad] = useState<number>(endIndex)
+
   useEffect(() => {
-    if (props.allInputDone) setEndIndex(props.tabs.length - 1);
+    if(!props.allInputDone) setEndIndexOnLoad(props.tabs.length - 1)
+  }, [])
+
+  useEffect(() => {
+    if (props.allInputDone) setEndIndex(endIndexOnLoad);
   }, [props.allInputDone]);
 
   const isLinkDisabled = (tab: any) => {

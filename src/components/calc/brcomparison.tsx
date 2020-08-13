@@ -22,6 +22,7 @@ interface BRComparisonProps {
   rentAnsHandler: Function;
   allBuyCFs: Array<Array<number>>;
   showChart: boolean;
+  fullScreen: boolean;
 }
 
 export default function BRComparison(props: BRComparisonProps) {
@@ -179,6 +180,7 @@ export default function BRComparison(props: BRComparisonProps) {
         rentAns={props.rentAns}
         sellAfter={props.sellAfter}
         title={props.answer}
+        fullScreen={props.fullScreen}
       />}
     </div>
   );
