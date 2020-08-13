@@ -18,8 +18,9 @@ export default function LineChart(props: LineChartProps) {
         xaxis: { title: 'Year', type: 'category', fixedrange: years.length > 3, showgrid: false },
         yaxis: { fixedrange: true, tickformat: ',', showgrid: false },
         legend: { orientation: "h" }, margin: {t:20, r:10},
+        autosize: true
     }
-    const track = //@ts-ignore: Object is possible undefined
+    const track = 
     {
         type: 'scatter', mode: 'lines+markers', x: years, y: props.cfs,
         line: { color: '#68d391', size: 3 },
@@ -38,7 +39,8 @@ export default function LineChart(props: LineChartProps) {
             <Plot layout={layout} 
                 style={{ width: "100%", height: "100%", minHeight: "400px" }}
                 data={[track]}
-                config={{ displayModeBar: false, scrollZoom: true }} />
+                useResizeHandler={true}
+                config={{ responsive: true, displayModeBar: false, scrollZoom: true }} />
         </div>
     )
 }
