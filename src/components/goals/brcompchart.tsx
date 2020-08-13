@@ -14,18 +14,19 @@ const Plot = dynamic(
 );
 
 export function BRCompChart(props: BRCompChartProps) {
-    const customWidth = props.data[0].values.x.length * 30
+     const customWidth = props.data[0].values.x.length * 30
 
     return (
         <div className="w-full overflow-x-scroll scrolling-touch hide-scrollbar">
             {/*@ts-ignore*/}
             <Plot layout={{
-                font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
-                width: customWidth < 600 ? 600 : customWidth,
-                aspectratio: 0,
-                title: {x:0.05, text:props.title, font:{size: 20}}, 
-                xaxis: {type:'category', fixedrange: true, showgrid: false, range: [1, props.data[0].values.x.length]},
-                yaxis: {fixedrange: true, tickformat: ',', showgrid: false},
+                dragmode: 'pan',
+                 font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
+                 width: customWidth < 600 ? 600 : customWidth,
+                 aspectratio: 0,
+                 title: {x:0.05, text:props.title, font:{size: 20}}, 
+                 xaxis: {type:'category', fixedrange: false, showgrid: false, range: [1, props.data[0].values.x.length]},
+                 yaxis: {fixedrange: false, tickformat: ',', showgrid: false},
 	            legend: {
                     orientation: 'h',
                     x:0,
@@ -40,7 +41,7 @@ export function BRCompChart(props: BRCompChartProps) {
                 //@ts-ignore: Object is possible undefined
                 {type: 'scatter', fill: 'tonexty', mode:'none', x: props.data[1].values.x, y: props.data[1].values.y, name: props.data[1].name} 
             ]} 
-            config={{displayModeBar: false, scrollZoom: true}} 
+            config={{displayModeBar: false, scrollZoom: true}}
              />
         </div>
     )
