@@ -34,7 +34,7 @@ export default function LineChart(props: LineChartProps) {
     }, [props.cfs, props.startYear])
 
     return (
-        <div className="w-full h-full flex justify-center">
+        <div className="w-full flex justify-center">
             {/*@ts-ignore*/}
             <Plot layout={layout} 
                 style={{ width: "100%", height: "100%", minHeight: "450px" }}
