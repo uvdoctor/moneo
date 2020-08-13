@@ -52,13 +52,29 @@ export default function Tabs(props: TabsProps) {
   }, [props.allInputDone]);
 
   const isLinkDisabled = (tab: any) => {
-    if(props.allInputDone && tab.active) return false 
-    return tab.enableOrder > props.currentOrder
-  }
+    if (props.allInputDone && tab.active) return false;
+    return tab.enableOrder > props.currentOrder;
+  };
 
   return (
-    <div className="flex">
-      <ul className={`flex ${!props.allInputDone && "flex-wrap"}`}>
+    <div className="w-full flex items-center">
+      {props.allInputDone && props.tabs.length > props.capacity && (
+        <div className="w-1/12 ml-4 md:ml-8 text-xl">
+          {endIndex > props.capacity - 1 ? (
+            <label
+              className="text-blue-600 hover:text-blue-800 cursor-pointer font-semibold"
+              onClick={handleDecrement}
+            >{`<<`}</label>
+          ) : (
+            <label className="text-gray-400 cursor-not-allowed">{`<<`}</label>
+          )}
+        </div>
+      )}
+      <ul
+        className={`flex justify-center w-10/12 ${
+          !props.allInputDone && "flex-wrap"
+        }`}
+      >
         {props.tabs.map((tab, i) => {
           if (props.allInputDone) {
             if (i > endIndex) return;
@@ -74,7 +90,7 @@ export default function Tabs(props: TabsProps) {
               } py-2 px-4 items-start 
                     ${
                       props.selectedTab === tab.label
-                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} rounded-t`
+                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} rounded-b rounded-t`
                         : !isLinkDisabled(tab)
                         ? `${currentStyle.unselected.text} ${currentStyle.unselected.background} 
                           hover:${currentStyle.unselected.hover}`
@@ -92,25 +108,17 @@ export default function Tabs(props: TabsProps) {
         })}
       </ul>
       {props.allInputDone && props.tabs.length > props.capacity && (
-        <ul className="w-full flex items-center justify-end mr-4 md:mr-8">
-          {endIndex > props.capacity - 1 ? (
-            <li
-              className="text-blue-600 hover:text-blue-800 cursor-pointer"
-              onClick={handleDecrement}
-            >{`<`}</li>
-          ) : (
-            <label className="text-gray-400">{`<`}</label>
-          )}
+        <div className="w-1/12 mr-4 md:mr-8 text-xl">
           {endIndex >= props.capacity - 1 &&
           endIndex < props.tabs.length - 1 ? (
-            <li
-              className="ml-2 text-blue-600 hover:text-blue-800 cursor-pointer"
+            <label
+              className="text-blue-600 hover:text-blue-800 cursor-pointer font-semibold"
               onClick={handleIncrement}
-            >{`>`}</li>
+            >{`>>`}</label>
           ) : (
-            <label className="ml-2 text-gray-400">{`>`}</label>
+            <label className="text-gray-400 cursor-not-allowed">{`>>`}</label>
           )}
-        </ul>
+        </div>
       )}
     </div>
   );

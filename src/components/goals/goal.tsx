@@ -448,7 +448,7 @@ export default function Goal({
           <div
             className={`w-full ${
               allInputDone && "lg:w-1/3"
-            } items-start transition-width duration-500 ease-in-out`}
+            } items-start transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col`}
           >
             {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
               <Tabs
