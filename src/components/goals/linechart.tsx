@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
+import { getCommonConfig, getCommonLayoutProps, getCommonStyle } from '../chartutils';
 
 interface LineChartProps {
     cfs: Array<number>
@@ -14,11 +15,8 @@ const Plot = dynamic(
 export default function LineChart(props: LineChartProps) {
     const [years, setYears] = useState<Array<number>>([])
     const layout = {
-        font: { family: "'Quicksand', sans-serif", color: "#4a5568", size: 15 },
-        xaxis: { title: 'Year', type: 'category', fixedrange: years.length > 3, showgrid: false },
-        yaxis: { fixedrange: true, tickformat: ',', showgrid: false },
-        legend: { orientation: "h" }, margin: {t:20, r:10},
-        autosize: true
+        ...getCommonLayoutProps(),
+        xaxis: { title: 'Year', type: 'category', showgrid: false },
     }
     const track = 
     {
@@ -34,13 +32,13 @@ export default function LineChart(props: LineChartProps) {
     }, [props.cfs, props.startYear])
 
     return (
-        <div className="w-full flex justify-center">
+        <div className="w-full">
             {/*@ts-ignore*/}
             <Plot layout={layout} 
-                style={{ width: "100%", height: "100%", minHeight: "450px" }}
+                style={getCommonStyle()}
                 data={[track]}
                 useResizeHandler={true}
-                config={{ responsive: true, displayModeBar: false, scrollZoom: true }} />
+                config={getCommonConfig()} />
         </div>
     )
 }
