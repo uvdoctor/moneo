@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-
+import SVGLeft from "./svgleft";
+import SVGRight from "./svgright";
 interface TabsProps {
   tabs: Array<any>;
   selectedTab: string;
@@ -59,14 +60,13 @@ export default function Tabs(props: TabsProps) {
   return (
     <div className="w-full flex items-center">
       {props.allInputDone && props.tabs.length > props.capacity && (
-        <div className="w-1/12 ml-4 md:ml-8 text-xl">
+        <div className="w-1/12 ml-4 md:ml-8">
           {endIndex > props.capacity - 1 ? (
-            <label
-              className="text-blue-600 hover:text-blue-800 cursor-pointer font-semibold"
-              onClick={handleDecrement}
-            >{`<<`}</label>
+            <div onClick={handleDecrement}>
+              <SVGLeft />
+            </div>
           ) : (
-            <label className="text-gray-400 cursor-not-allowed">{`<<`}</label>
+            <SVGLeft disable />
           )}
         </div>
       )}
@@ -111,12 +111,11 @@ export default function Tabs(props: TabsProps) {
         <div className="w-1/12 mr-4 md:mr-8 text-xl">
           {endIndex >= props.capacity - 1 &&
           endIndex < props.tabs.length - 1 ? (
-            <label
-              className="text-blue-600 hover:text-blue-800 cursor-pointer font-semibold"
-              onClick={handleIncrement}
-            >{`>>`}</label>
+            <div onClick={handleIncrement}>
+              <SVGRight />
+            </div>
           ) : (
-            <label className="text-gray-400 cursor-not-allowed">{`>>`}</label>
+            <SVGRight disable />
           )}
         </div>
       )}
