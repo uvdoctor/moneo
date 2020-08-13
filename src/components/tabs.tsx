@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface TabsProps {
-  tabs: Array<string>;
+  tabs: Array<any>;
   selectedTab: string;
   customStyle?: string;
   capacity: number;
+  currentOrder: number;
   allInputDone: boolean;
   selectedTabHandler: Function;
 }
@@ -19,16 +20,18 @@ export default function Tabs(props: TabsProps) {
       unselected: {
         background: "bg-black",
         text: "text-white",
+        hover: "text-green-600",
       },
     },
     standard: {
       selected: {
-        background: "bg-white",
-        text: "text-blue-800",
+        background: "bg-blue-600",
+        text: "text-white",
       },
       unselected: {
         background: "bg-white",
         text: "text-blue-600",
+        hover: "text-blue-800",
       },
     },
   };
@@ -44,27 +47,46 @@ export default function Tabs(props: TabsProps) {
 
   const handleIncrement = () => setEndIndex(endIndex + 1);
 
+  useEffect(() => {
+    if (props.allInputDone) setEndIndex(props.tabs.length - 1);
+  }, [props.allInputDone]);
+
+  const isLinkDisabled = (tab: any) => {
+    if(props.allInputDone && tab.active) return false 
+    return tab.enableOrder > props.currentOrder
+  }
+
   return (
     <div className="flex">
-      <ul
-        className={`flex overflow-none cursor-pointer ${currentStyle.unselected.text} ${currentStyle.unselected.background}`}
-      >
+      <ul className={`flex ${!props.allInputDone && "flex-wrap"}`}>
         {props.tabs.map((tab, i) => {
-          if(props.allInputDone && (i > endIndex || i <= endIndex - props.capacity)) return
+          if (props.allInputDone) {
+            if (i > endIndex) return;
+            if (Math.abs(endIndex - i) >= props.capacity) return;
+          }
           return (
             <li
               key={"tab" + i}
-              className={`-mb-px mr-1 py-2 px-4 items-start hover:${
-                currentStyle.selected.text
-              } font-semibold
+              className={`${
+                isLinkDisabled(tab)
+                  ? "text-gray-400 cursor-not-allowed"
+                  : "cursor-pointer font-semibold"
+              } py-2 px-4 items-start 
                     ${
-                      props.selectedTab === tab
-                        ? `border-t border-l border-r ${currentStyle.selected.text} ${currentStyle.selected.background} rounded-t`
-                        : "border-b"
-                    }`}
-              onClick={(e: any) => props.selectedTabHandler(e.target.innerText)}
+                      props.selectedTab === tab.label
+                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} rounded-t`
+                        : !isLinkDisabled(tab)
+                        ? `${currentStyle.unselected.text} ${currentStyle.unselected.background} 
+                          hover:${currentStyle.unselected.hover}`
+                        : ""
+                    }
+                    `}
+              onClick={(e: any) =>
+                !isLinkDisabled(tab) &&
+                props.selectedTabHandler(e.target.innerText)
+              }
             >
-              {tab}
+              {tab.label}
             </li>
           );
         })}

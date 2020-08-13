@@ -25,7 +25,7 @@ import ActionButtons from "../form/actionbuttons";
 import GoalResult from "./goalresult";
 import { getCompoundedIncome } from "../calc/finance";
 import SVGScale from "../svgscale";
-import Tabs from "../tabs"
+import Tabs from "../tabs";
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -133,20 +133,27 @@ export default function Goal({
   const earnLabel = "Earn";
   const maintainLabel = "Maintain";
   const rentLabel = "Rent?";
-  const [tabOptions, setTabOptions] = useState<Array<string>>(
+  const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
       ? [
-          amtLabel,
-          taxLabel,
-          loanLabel,
-          maintainLabel,
-          earnLabel,
-          sellLabel,
-          rentLabel,
+          { label: amtLabel, enableOrder: 3, active: true },
+          { label: taxLabel, enableOrder: 8, active: true },
+          { label: loanLabel, enableOrder: 10, active: true },
+          { label: maintainLabel, enableOrder: 15, active: true },
+          { label: earnLabel, enableOrder: 17, active: true },
+          { label: sellLabel, enableOrder: 19, active: true },
+          { label: rentLabel, enableOrder: 21, active: true },
         ]
       : goalType === APIt.GoalType.D || goalType === APIt.GoalType.R
-      ? [amtLabel, taxLabel]
-      : [amtLabel, taxLabel, loanLabel]
+      ? [
+          { label: amtLabel, enableOrder: 3, active: true },
+          { label: taxLabel, enableOrder: 8, active: true },
+        ]
+      : [
+          { label: amtLabel, enableOrder: 3, active: true },
+          { label: taxLabel, enableOrder: 8, active: true },
+          { label: loanLabel, enableOrder: 10, active: true },
+        ]
   );
   const [showTab, setShowTab] = useState(amtLabel);
 
@@ -204,8 +211,13 @@ export default function Goal({
     duration: number = getDur(),
     changeState: boolean = true
   ) => {
+    let cfs: Array<number> = [];
+    if (!price) {
+      setCFs([...cfs]);
+      return cfs;
+    }
     let g: APIt.CreateGoalInput = createNewGoalInput();
-    let cfs = calculateCFs(price, g, duration);
+    cfs = calculateCFs(price, g, duration);
     console.log("New cfs created: ", cfs);
     if (changeState) {
       if ((loanPer as number) && manualMode < 1 && goalType === APIt.GoalType.B)
@@ -285,19 +297,15 @@ export default function Goal({
   }, [cfs, impLevel]);
 
   useEffect(() => {
-    if (manualMode > 0) {
-      tabOptions.splice(2, 1);
-      setTabOptions([...tabOptions]);
-    } else {
-      if (!hasTab(loanLabel) && goalType !== APIt.GoalType.D && goalType !== APIt.GoalType.R) {
-        tabOptions.splice(2, 0, loanLabel);
-        setTabOptions([...tabOptions]);
-      }
-    }
+    if (!hasTab(loanLabel)) return;
+    manualMode > 0
+      ? (tabOptions[2].active = false)
+      : (tabOptions[2].active = true);
+    setTabOptions([...tabOptions]);
   }, [manualMode]);
 
   const hasTab = (option: string) => {
-    let options = tabOptions.filter((tab) => tab === option);
+    let options = tabOptions.filter((tab) => tab.label === option);
     return options && options.length === 1;
   };
 
@@ -379,11 +387,12 @@ export default function Goal({
       loanYears
     );
 
-  const showResultSection = () => price > 0 && nowYear < startYear && allInputDone;
+  const showResultSection = () =>
+    nowYear < startYear && allInputDone && cfs.length > 0;
 
   return (
     <div className="flex flex-col w-full h-screen">
-      <div className="container mx-auto flex pb-4 w-full justify-between items-center">
+      <div className="container mx-auto flex pb-4 w-full justify-between items-start">
         <SVGLogo />
         <TextInput
           name="name"
@@ -417,14 +426,25 @@ export default function Goal({
           <SVGClose />
         </div>
       </div>
-      <div className={`container mx-auto flex flex-1 md:flex-row ${showResultSection() ? 'flex-col-reverse' : ''} items-start`}>
+      <div
+        className={`container mx-auto flex flex-1 md:flex-row ${
+          showResultSection() && "flex-col-reverse"
+        } items-start`}
+      >
         <div
           className={`w-full ${
             allInputDone && "lg:w-1/3"
           } items-start transition-width duration-500 ease-in-out`}
         >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
-            <Tabs tabs={tabOptions} selectedTab={showTab} selectedTabHandler={setShowTab} capacity={3} allInputDone={allInputDone} />
+            <Tabs
+              tabs={tabOptions}
+              selectedTab={showTab}
+              selectedTabHandler={setShowTab}
+              capacity={3}
+              currentOrder={currentOrder}
+              allInputDone={allInputDone}
+            />
           )}
           <div className="overflow-y-auto w-full ">
             <div className="container mx-auto items-start flex flex-1 flex-col p-5">
@@ -651,8 +671,7 @@ export default function Goal({
                 !allInputDone && currentOrder === 19 && handleNextStep(2)
               )}
 
-              {showTab === rentLabel &&
-              nowYear < startYear  ? (
+              {showTab === rentLabel && nowYear < startYear ? (
                 <div className="flex w-full justify-around items-start">
                   <Section
                     title="Instead, If You Rent"
@@ -744,7 +763,7 @@ export default function Goal({
             </div>
           </div>
         </div>
-        {showResultSection() ? (
+        {showResultSection() && (
           <div className="w-full lg:w-2/3 transition-width duration-1000 ease-in-out">
             {nowYear < startYear && (
               <GoalResult
@@ -829,7 +848,7 @@ export default function Goal({
               )}
             </div>
           </div>
-        ) : null}
+        )}
         <div className="flex items-center fixed w-full bottom-0 bg-white z-10">
           <ActionButtons
             submitDisabled={
