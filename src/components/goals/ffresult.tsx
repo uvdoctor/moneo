@@ -32,7 +32,7 @@ export default function FFResult({ endYear, ffYear, ffAmt, ffLeftOverAmt, ffMinR
                         This includes the Inheritance Amount for Nominees as per the Plan.`} />
                 </div>
                 : <p className="text-center bg-red-100 font-semibold py-2">
-                    {ffYear === endYear - 20 ? `Analyzed till ${ffYear}` : `You May Not have Enough Savings in ${ffYear}`}
+                    {!ffYear ? `Analyzed till ${endYear - 20}` : `You May Not have Enough Savings in ${ffYear}`}
                     {`. Please try again with different inputs / goals.`}
                 </p>}
         </div>

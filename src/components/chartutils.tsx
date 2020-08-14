@@ -18,5 +18,5 @@ export const getCommonStyle = () => {
 };
 
 export const getCommonConfig = () => {
-    return {responsive: true, displayModeBar: true, staticPlot: true, editable: false}
+    return {responsive: true, editable: false, scrollZoom: true, displayModeBar: false}
 }
