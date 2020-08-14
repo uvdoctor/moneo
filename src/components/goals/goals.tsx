@@ -489,7 +489,7 @@ export default function Goals({
       </div>
       {ffGoal ? (
         <Fragment>
-          <div className="flex items-center w-full bg-green-100 border-green-200 border-2">
+          <div className={`flex items-center w-full ${ffYear ? 'bg-green-100 border-green-200' : 'bg-red-100 border-red-200'} border-2`}>
             <FFResult
               endYear={ffGoal.ey}
               ffAmt={ffAmt}
@@ -501,7 +501,7 @@ export default function Goals({
               ffOOM={ffOOM}
             />
             <div
-              className="p-0 pr-1 hover:text-blue-600 cursor-pointer text-base"
+              className="p-0 pr-1 cursor-pointer"
               onClick={() => setWIPGoal(ffGoal)}
             >
               <SVGEdit />

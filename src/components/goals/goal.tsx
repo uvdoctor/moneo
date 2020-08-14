@@ -397,7 +397,7 @@ export default function Goal({
     nowYear < startYear && allInputDone && cfs.length > 0;
 
   return (
-    <div className="w-screen h-screen">
+    <div className="w-full h-full">
       <div className="container mx-auto flex pb-4 w-full justify-between items-start">
         <div onClick={() => cancelCallback()}>
           <SVGLogo />
