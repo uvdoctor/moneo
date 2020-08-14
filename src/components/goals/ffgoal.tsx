@@ -474,7 +474,7 @@ export default function FFGoal({
           )}
           <div className="overflow-y-auto lg:overflow-hidden w-full ">
             <div className="p-2">
-              {showTab === beforeLabel && (
+              {showTab === beforeLabel && (allInputDone || (!allInputDone && currentOrder >= 3)) && (
                 <Section
                   title="Before Financial Freedom"
                   left={
