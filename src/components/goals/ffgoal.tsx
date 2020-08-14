@@ -374,7 +374,7 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
                         <ExpandCollapse title={`Total Savings Chart in ${currency}`} value={showCFChart}
                             handler={setShowCFChart} svg={<SVGChart />} />
                         {showCFChart &&
-                            <LineChart cfs={buildChartCFs(ffCfs)} startYear={nowYear + 1} />
+                            <LineChart cfs={buildChartCFs(ffCfs)} startYear={nowYear + 1} fullScreen={false} />
                         }
                     </div>}
             </div>
