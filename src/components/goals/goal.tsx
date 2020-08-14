@@ -29,7 +29,7 @@ import SVGScale from "../svgscale";
 import Tabs from "../tabs";
 import SVGFullScreen from "../svgfullscreen";
 import { useFullScreen } from "react-browser-hooks";
-import ActionButtons from "../form/actionbuttons"
+import ActionButtons from "../form/actionbuttons";
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -780,8 +780,15 @@ export default function Goal({
               )}
             </div>
           </div>
-          <ActionButtons submitDisabled={!allInputDone || name.length < 3 || !price || btnClicked} cancelDisabled={btnClicked}
-                        cancelHandler={cancelCallback} submitHandler={handleSubmit} submitText={`${goal.id ? 'UPDATE' : 'CREATE'} GOAL`} />
+          <ActionButtons
+            submitDisabled={
+              !allInputDone || name.length < 3 || !price || btnClicked
+            }
+            cancelDisabled={btnClicked}
+            cancelHandler={cancelCallback}
+            submitHandler={handleSubmit}
+            submitText={`${goal.id ? "UPDATE" : "CREATE"} GOAL`}
+          />
         </div>
         {showResultSection() && (
           <div
@@ -801,46 +808,43 @@ export default function Goal({
                 hideResultLabel
               />
             )}
-            <div
-              className="flex mt-1 w-full items-center font-semibold">
+            <div className="flex mt-1 w-full items-center font-semibold">
               <div className="ml-1 w-1/12 cursor-pointer" onClick={toggle}>
                 {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
               </div>
               <div className="w-11/12 flex items-center justify-around">
-                <div
-                  className={`flex ${
-                    !isBRCompAvailable ? "w-full" : "w-3/4"
-                  } justify-center items-center`}
-                >
-                  <div className="p-2 flex items-center rounded-t rounded-b text-white bg-blue-600">
-                    {!showBRChart || !isBRCompAvailable() ? <SVGChart /> : <SVGScale />}
-                    <label className="ml-1">
-                      {!showBRChart || !isBRCompAvailable() ? "Cash Flows" : "Buy v/s Rent"}
-                    </label>
-                  </div>
+                <div className="p-2 flex items-center rounded-t rounded-b text-white bg-blue-600">
+                  {!showBRChart || !isBRCompAvailable() ? (
+                    <SVGChart />
+                  ) : (
+                    <SVGScale />
+                  )}
+                  <label className="ml-1">
+                    {!showBRChart || !isBRCompAvailable()
+                      ? "Cash Flows"
+                      : "Buy v/s Rent"}
+                  </label>
                 </div>
-                {isBRCompAvailable() && (
-                  <div
-                    className="w-1/4 mr-1 flex items-center cursor-pointer text-blue-600"
-                    onClick={() => setShowBRChart(!showBRChart)}
-                  >
-                    {!showBRChart ? (
-                      <Fragment>
-                        <SVGScale />
-                        <label className="ml-1 cursor-pointer">
-                          Buy v/s Rent
-                        </label>
-                      </Fragment>
-                    ) : (
-                      <Fragment>
-                        <SVGChart />
-                        <label className="ml-1 cursor-pointer">
-                          Cash Flows
-                        </label>
-                      </Fragment>
-                    )}
-                  </div>
-                )}
+              {isBRCompAvailable() && (
+                <div
+                  className="mr-1 flex items-center cursor-pointer text-blue-600"
+                  onClick={() => setShowBRChart(!showBRChart)}
+                >
+                  {!showBRChart ? (
+                    <Fragment>
+                      <SVGScale />
+                      <label className="ml-1 cursor-pointer">
+                        Buy v/s Rent
+                      </label>
+                    </Fragment>
+                  ) : (
+                    <Fragment>
+                      <SVGChart />
+                      <label className="ml-1 cursor-pointer">Cash Flows</label>
+                    </Fragment>
+                  )}
+                </div>
+              )}
               </div>
             </div>
             {!showBRChart || !isBRCompAvailable() ? (

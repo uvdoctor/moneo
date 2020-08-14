@@ -10,6 +10,7 @@ export const getCommonLayoutProps = (
     title: title ? { x: 0.05, text: title, font: { size: 20 } } : false,
     yaxis: { tickformat: tickFormat, fixedrange: true, showgrid: false },
     margin: { t: title ? 40 : 0, r: 10, b:50},
+    hoverlabel: { bgcolor: "#000" },
   };
 };
 
