@@ -14,9 +14,9 @@ export const getCommonLayoutProps = (
 };
 
 export const getCommonStyle = () => {
-    return {width: "100%", height:"100%", minHeight: "450px"}
+    return {width: "100%", height: "100%", minHeight: "450px"}
 };
 
 export const getCommonConfig = () => {
-    return {responsive: true, editable: false, displayModeBar: false, scrollZoom: true}
+    return {displayModeBar: false, staticPlot: true, editable: false}
 }
