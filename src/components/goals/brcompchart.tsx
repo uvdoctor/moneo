@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useFullScreenBrowser } from "react-browser-hooks";
 import {
   getCommonConfig,
   getCommonLayoutProps,
@@ -17,15 +18,30 @@ interface BRCompChartProps {
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 export function BRCompChart(props: BRCompChartProps) {
-  const customWidth = props.data[0].values.x.length * 40;
+  const customWidth = props.data[0].values.x.length * 30;
+  const fsb = useFullScreenBrowser();
+  const autoResize = 800;
 
+  useEffect(() => {
+    if (fsb.info.screenWidth > autoResize) {
+      setTimeout(() => {
+        window.dispatchEvent(new Event("resize"));
+      }, 300);
+    }
+  }, [props.fullScreen]);
+
+  useEffect;
   return (
-    <div id="graphDiv" className="w-full">
+    <div className="w-full">
       <Plot
         //@ts-ignore
         layout={{
-          ...getCommonLayoutProps(props.title),
-          width: customWidth < 600 ? 600 : customWidth,
+          ...getCommonLayoutProps(
+            props.title,
+            ",",
+            fsb.info.screenWidth > autoResize
+          ),
+          width: fsb.info.screenWidth < autoResize ? customWidth : 0,
           xaxis: {
             type: "category",
             showgrid: false,
@@ -34,7 +50,7 @@ export function BRCompChart(props: BRCompChartProps) {
           legend: {
             orientation: "h",
             x: 0,
-            y: 1.08,
+            y: 1.05,
           },
         }}
         style={getCommonStyle()}

@@ -22,7 +22,7 @@ interface BRComparisonProps {
   rentAnsHandler: Function;
   allBuyCFs: Array<Array<number>>;
   showChart: boolean;
-  fullScreen: boolean;
+  fullScreen: boolean
 }
 
 export default function BRComparison(props: BRComparisonProps) {

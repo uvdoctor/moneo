@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useRef } from "react";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import NumberInput from "../form/numberinput";
@@ -28,6 +28,8 @@ import { getCompoundedIncome } from "../calc/finance";
 import SVGScale from "../svgscale";
 import Tabs from "../tabs";
 import SVGFullScreen from "../svgfullscreen";
+import { useFullScreen } from "react-browser-hooks";
+
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -47,6 +49,8 @@ export default function Goal({
   addCallback,
   updateCallback,
 }: GoalProps) {
+  const chartDiv = useRef(null)
+  const { toggle, fullScreen } = useFullScreen({element: chartDiv});
   const typesList = getGoalTypes();
   const goalType = goal?.type as APIt.GoalType;
   const [startYear, setStartYear] = useState<number>(goal.sy);
@@ -158,7 +162,6 @@ export default function Goal({
         ]
   );
   const [showTab, setShowTab] = useState(amtLabel);
-  const [showFullScreen, setShowFullScreen] = useState<boolean>(false);
 
   const createNewBaseGoal = () => {
     return {
@@ -394,57 +397,58 @@ export default function Goal({
     nowYear < startYear && allInputDone && cfs.length > 0;
 
   return (
-    <div className="flex flex-col w-full h-screen">
-      <div className="container mx-auto flex pb-4 w-full justify-between items-start">
-        <SVGLogo />
-        <TextInput
-          name="name"
-          inputOrder={1}
-          currentOrder={currentOrder}
-          nextStepDisabled={name.length < 3}
-          allInputDone={allInputDone}
-          nextStepHandler={handleNextStep}
-          pre={typesList[goalType]}
-          placeholder="Goal Name"
-          value={name}
-          changeHandler={setName}
-          width="150px"
-        />
-        <SelectInput
-          name="imp"
-          inputOrder={2}
-          currentOrder={currentOrder}
-          nextStepDisabled={false}
-          nextStepHandler={handleNextStep}
-          allInputDone={allInputDone}
-          pre="Importance"
-          value={impLevel}
-          changeHandler={setImpLevel}
-          options={getImpLevels()}
-        />
-        <div>
-          <div
-            className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
-            onClick={() => cancelCallback()}
-          >
-            <SVGClose />
-          </div>
-          <div
-            className="mt-1 border-0 outline-none focus:outline-none"
-            onClick={() => handleSubmit()}
-          >
-            <SVGSave
-              disable={!allInputDone || name.length < 3 || !price || btnClicked}
-            />
+    <div className="w-screen h-screen">
+        <div className="container mx-auto flex pb-4 w-full justify-between items-start">
+          <SVGLogo />
+          <TextInput
+            name="name"
+            inputOrder={1}
+            currentOrder={currentOrder}
+            nextStepDisabled={name.length < 3}
+            allInputDone={allInputDone}
+            nextStepHandler={handleNextStep}
+            pre={typesList[goalType]}
+            placeholder="Goal Name"
+            value={name}
+            changeHandler={setName}
+            width="150px"
+          />
+          <SelectInput
+            name="imp"
+            inputOrder={2}
+            currentOrder={currentOrder}
+            nextStepDisabled={false}
+            nextStepHandler={handleNextStep}
+            allInputDone={allInputDone}
+            pre="Importance"
+            value={impLevel}
+            changeHandler={setImpLevel}
+            options={getImpLevels()}
+          />
+          <div>
+            <div
+              className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
+              onClick={() => cancelCallback()}
+            >
+              <SVGClose />
+            </div>
+            <div
+              className="mt-1 border-0 outline-none focus:outline-none"
+              onClick={() => handleSubmit()}
+            >
+              <SVGSave
+                disable={
+                  !allInputDone || name.length < 3 || !price || btnClicked
+                }
+              />
+            </div>
           </div>
         </div>
-      </div>
       <div
         className={`container mx-auto flex flex-1 md:flex-row ${
           showResultSection() && "flex-col-reverse"
         } items-start`}
       >
-        {!showFullScreen && (
           <div
             className={`w-full ${
               allInputDone && "lg:w-1/3"
@@ -460,8 +464,8 @@ export default function Goal({
                 allInputDone={allInputDone}
               />
             )}
-            <div className="overflow-y-auto w-full ">
-              <div className="container mx-auto items-start flex flex-1 flex-col p-5">
+            <div className="overflow-y-auto lg:overflow-hidden w-full ">
+              <div className="container mx-auto items-start flex flex-1 flex-col p-2">
                 {showTab === amtLabel && (
                   <Fragment>
                     <div className="flex justify-around w-full items-end">
@@ -783,12 +787,9 @@ export default function Goal({
               </div>
             </div>
           </div>
-        )}
         {showResultSection() && (
-          <div
-            className={`w-full ${
-              !showFullScreen && "lg:w-2/3"
-            } transition-width duration-1000 ease-in-out`}
+          <div ref={chartDiv}
+            className={`w-full lg:w-2/3 transition-width duration-1000 ease-in-out`}
           >
             {nowYear < startYear && (
               <GoalResult
@@ -806,12 +807,16 @@ export default function Goal({
             <div className="flex mt-1 w-full items-center">
               <div
                 className="ml-1 w-1/12 cursor-pointer"
-                onClick={() => setShowFullScreen(!showFullScreen)}
+                onClick={toggle}
               >
-                {!showFullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
+                {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
               </div>
               <div className="w-11/12 flex items-center justify-around">
-                <div className={`flex ${!isBRCompAvailable ? 'w-full' : 'w-3/4'} justify-center items-center`}>
+                <div
+                  className={`flex ${
+                    !isBRCompAvailable ? "w-full" : "w-3/4"
+                  } justify-center items-center`}
+                >
                   {!showBRChart || !isBRCompAvailable() ? (
                     <Fragment>
                       <SVGChart />
@@ -836,12 +841,16 @@ export default function Goal({
                     {!showBRChart ? (
                       <Fragment>
                         <SVGScale />
-                        <label className="ml-1 cursor-pointer">Buy v/s Rent</label>
+                        <label className="ml-1 cursor-pointer">
+                          Buy v/s Rent
+                        </label>
                       </Fragment>
                     ) : (
                       <Fragment>
                         <SVGChart />
-                        <label className="ml-1 cursor-pointer">Cash Flows</label>
+                        <label className="ml-1 cursor-pointer">
+                          Cash Flows
+                        </label>
                       </Fragment>
                     )}
                   </div>
@@ -849,7 +858,7 @@ export default function Goal({
               </div>
             </div>
             {!showBRChart || !isBRCompAvailable() ? (
-              <LineChart cfs={cfs} startYear={startYear} />
+              <LineChart cfs={cfs} startYear={startYear} fullScreen={fullScreen} />
             ) : (
               isBRCompAvailable() && (
                 <BRComparison
@@ -871,7 +880,7 @@ export default function Goal({
                   answerHandler={setAnswer}
                   rentAnsHandler={setRentAns}
                   showChart={showBRChart}
-                  fullScreen={showFullScreen}
+                  fullScreen={fullScreen}
                 />
               )
             )}
