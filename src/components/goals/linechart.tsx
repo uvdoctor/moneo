@@ -17,7 +17,7 @@ export default function LineChart(props: LineChartProps) {
   const [years, setYears] = useState<Array<number>>([]);
   const layout = {
     ...getCommonLayoutProps(),
-    xaxis: { title: "Year", type: "category", showgrid: false },
+    xaxis: {type: "category", showgrid: false },
   };
   const track = {
     type: "scatter",

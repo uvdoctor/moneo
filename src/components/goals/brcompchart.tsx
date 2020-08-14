@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
-import { useFullScreenBrowser } from "react-browser-hooks";
 import {
   getCommonConfig,
   getCommonLayoutProps,
@@ -18,16 +17,11 @@ interface BRCompChartProps {
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 export function BRCompChart(props: BRCompChartProps) {
-  const customWidth = props.data[0].values.x.length * 30;
-  const fsb = useFullScreenBrowser();
-  const autoResize = 800;
 
   useEffect(() => {
-    if (fsb.info.screenWidth > autoResize) {
-      setTimeout(() => {
-        window.dispatchEvent(new Event("resize"));
-      }, 300);
-    }
+    setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 300);
   }, [props.fullScreen]);
 
   useEffect;
@@ -39,9 +33,7 @@ export function BRCompChart(props: BRCompChartProps) {
           ...getCommonLayoutProps(
             props.title,
             ",",
-            fsb.info.screenWidth > autoResize
           ),
-          width: fsb.info.screenWidth < autoResize ? customWidth : 0,
           xaxis: {
             type: "category",
             showgrid: false,
@@ -49,8 +41,8 @@ export function BRCompChart(props: BRCompChartProps) {
           },
           legend: {
             orientation: "h",
-            x: 0,
-            y: 1.05,
+            x: 0.5,
+            y: 1.07,
           },
         }}
         style={getCommonStyle()}

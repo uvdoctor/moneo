@@ -125,13 +125,22 @@ export default function FFGoal({ goal, totalSavings, annualSavings, avgAnnualExp
         return g as APIt.UpdateGoalInput
     }
 
+    const isFFResultAcceptable = (result: any) => {
+        if(!result.ffYear || result.ffYear < 0) return false
+        if(result.oom && result.oom.length === 0) return true
+        result.oom.forEach((y: number) => {
+            if(y >= result.ffYear) return false
+        })
+        return true
+    }
+
     useEffect(() => {
         if (!allInputDone) return
         let result = findEarliestFFYear(createGoal(), totalSavings, mergedCfs,
             annualSavings, ffYear ? ffYear : null, mustCFs, tryCFs,
             avgAnnualExp, expChgRate, pp)
         ffAmtHandler(result.ffAmt)
-        ffYearHandler(result.ffYear < 0 ? null : result.ffYear)
+        ffYearHandler(isFFResultAcceptable(result) ? null : result.ffYear)
         ffLeftOverAmtHandler(result.leftAmt)
         ffCfsHandler(result.ffCfs)
         aaHandler(result.aa)
