@@ -464,7 +464,7 @@ export default function Goal({
               allInputDone={allInputDone}
             />
           )}
-          <div className="overflow-y-auto lg:overflow-hidden w-full ">
+          <div className="overflow-y-auto lg:overflow-hidden w-full flex justify-center">
             <div className="p-2">
               {showTab === amtLabel && (
                 <Fragment>

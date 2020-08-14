@@ -397,7 +397,7 @@ export default function FFGoal({
 
   const buildChartCFs = (ffCfs: Object) => Object.values(ffCfs);
 
-  const showResultSection = () => allInputDone;
+  const showResultSection = () => allInputDone && rr && rr.length > 0;
 
   return (
     <div className="w-full h-full overflow-hidden">
@@ -472,7 +472,7 @@ export default function FFGoal({
               allInputDone={allInputDone}
             />
           )}
-          <div className="overflow-y-auto lg:overflow-hidden w-full ">
+          <div className="overflow-y-auto lg:overflow-hidden w-full flex justify-center">
             <div className="p-2">
               {showTab === beforeLabel && (allInputDone || (!allInputDone && currentOrder >= 3)) && (
                 <Section
