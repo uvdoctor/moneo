@@ -955,26 +955,19 @@ export default function FFGoal({
             />
 
             <div
-              className={`flex mt-1 w-full items-center font-semibold ${
-                fullScreen && "text-white"
-              }`}
+              className="flex mt-1 w-full items-center font-semibold"
             >
               <div className="ml-1 w-1/12 cursor-pointer" onClick={toggle}>
                 {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
               </div>
               <div className="w-11/12 flex items-center justify-around">
                 <div className="flex w-3/4 justify-center items-center">
-                  {showCFChart ? (
-                    <Fragment>
-                      <SVGChart />
-                      <label className="ml-1">Yearly Savings</label>
-                    </Fragment>
-                  ) : (
-                    <Fragment>
-                      <SVGBarChart />
-                      <label className="ml-1">Asset Allocation</label>
-                    </Fragment>
-                  )}
+                  <div className="p-2 flex items-center rounded-t rounded-b text-white bg-blue-600">
+                    {showCFChart ? <SVGChart /> : <SVGBarChart />}
+                    <label className="ml-1">
+                      {showCFChart ? "Yearly Savings" : "Asset Allocation"}
+                    </label>
+                  </div>
                 </div>
                 <div
                   className="w-1/4 mr-1 flex items-center cursor-pointer"
@@ -983,14 +976,14 @@ export default function FFGoal({
                   {showCFChart ? (
                     <Fragment>
                       <SVGBarChart />
-                      <label className="ml-1 cursor-pointer">
+                      <label className="ml-1 cursor-pointer text-blue-600">
                         Asset Allocation
                       </label>
                     </Fragment>
                   ) : (
                     <Fragment>
                       <SVGChart />
-                      <label className="ml-1 cursor-pointer">
+                      <label className="ml-1 cursor-pointer text-blue-600">
                         Yearly Savings
                       </label>
                     </Fragment>

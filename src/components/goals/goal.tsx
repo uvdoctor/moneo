@@ -802,10 +802,7 @@ export default function Goal({
               />
             )}
             <div
-              className={`flex mt-1 w-full items-center font-semibold ${
-                fullScreen && "text-white"
-              }`}
-            >
+              className="flex mt-1 w-full items-center font-semibold">
               <div className="ml-1 w-1/12 cursor-pointer" onClick={toggle}>
                 {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
               </div>
@@ -815,21 +812,16 @@ export default function Goal({
                     !isBRCompAvailable ? "w-full" : "w-3/4"
                   } justify-center items-center`}
                 >
-                  {!showBRChart || !isBRCompAvailable() ? (
-                    <Fragment>
-                      <SVGChart />
-                      <label className="ml-1">{currency} Cash Flows</label>
-                    </Fragment>
-                  ) : (
-                    <Fragment>
-                      <SVGScale />
-                      <label className="ml-1">Buy v/s Rent</label>
-                    </Fragment>
-                  )}
+                  <div className="p-2 flex items-center rounded-t rounded-b text-white bg-blue-600">
+                    {!showBRChart || !isBRCompAvailable() ? <SVGChart /> : <SVGScale />}
+                    <label className="ml-1">
+                      {!showBRChart || !isBRCompAvailable() ? "Cash Flows" : "Buy v/s Rent"}
+                    </label>
+                  </div>
                 </div>
                 {isBRCompAvailable() && (
                   <div
-                    className="w-1/4 mr-1 flex items-center cursor-pointer"
+                    className="w-1/4 mr-1 flex items-center cursor-pointer text-blue-600"
                     onClick={() => setShowBRChart(!showBRChart)}
                   >
                     {!showBRChart ? (
