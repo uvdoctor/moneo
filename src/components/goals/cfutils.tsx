@@ -487,8 +487,9 @@ const checkForFF = (savings: number, ffGoal: APIt.CreateGoalInput, ffYear: numbe
     let cfs: Array<number> = calculateFFCFs(goal, annualSavings, ffYear)
     let nowYear = new Date().getFullYear()
     cfs.forEach((cf, i) => {
+        let index = nowYear + 1 + i
         //@ts-ignore
-        mCFs[nowYear + 1 + i] += cf
+        mCFs[index] ? mCFs[nowYear + 1 + i] += cf : mCFs[index] = cf
     })
     let ffAmt = 0
     let ffCfs = {}
