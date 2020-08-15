@@ -244,3 +244,23 @@ input[type="number"] {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* Chrome, Safari and Opera syntax */
+:-webkit-full-screen {
+  background-color: #FFFFFF;
+}
+
+/* Firefox syntax */
+:-moz-full-screen {
+  background-color: #FFFFFF;
+}
+
+/* IE/Edge syntax */
+:-ms-fullscreen {
+  background-color: #FFFFFF;
+}
+
+/* Standard syntax */
+:fullscreen {
+  background-color: #FFFFFF;
+}
