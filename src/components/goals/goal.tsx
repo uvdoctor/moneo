@@ -175,24 +175,29 @@ export default function Goal({
         ]
   );
   const [showTab, setShowTab] = useState(amtLabel);
-  const [showResultTab, setShowResultTab] = useState<number>(1);
+  const [showResultTab, setShowResultTab] = useState<string>("CashFlow");
   const [resultTabOptions, setResultTabOptions] = useState<Array<any>>([]);
+
+  const resultsTabCodeMapping: {
+    [key: string]: number;
+  } = {
+    CashFlow: 1,
+    BuyAndRent: 2,
+  };
 
   useEffect(() => {
     const resultTabs = [
       {
-        code: 1,
+        code: "CashFlow",
         label: <CashFlowLabel />,
-        enableOrder: 1,
         active: true,
       },
     ];
 
     if (showBRChart) {
       resultTabs.push({
-        code: 2,
+        code: "BuyAndRent",
         label: <BuyAndRentLabel />,
-        enableOrder: 2,
         active: true,
       });
     }
@@ -862,9 +867,16 @@ export default function Goal({
               </div>
             </div>
             <Slider
-              setSlide={setShowResultTab}
+              setSlide={(updatedItem: number) => {
+                for (let i in resultsTabCodeMapping) {
+                  if (resultsTabCodeMapping[i] === updatedItem) {
+                    setShowResultTab(i);
+                    break;
+                  }
+                }
+              }}
               totalItems={resultTabOptions.length}
-              currentItem={showResultTab}
+              currentItem={resultsTabCodeMapping[showResultTab] as number}
             >
               <div
                 className={`${

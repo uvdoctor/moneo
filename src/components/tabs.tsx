@@ -15,6 +15,7 @@ interface TabsProps {
 export default function Tabs(props: TabsProps) {
   const styleMap: any = {
     dashboard: {
+      parent: "w-10/12 justify-center",
       selected: {
         background: "bg-white",
         text: "text-green-600",
@@ -26,6 +27,7 @@ export default function Tabs(props: TabsProps) {
       },
     },
     standard: {
+      parent: "w-10/12 justify-center",
       selected: {
         background: "bg-blue-600",
         text: "text-white",
@@ -91,7 +93,7 @@ export default function Tabs(props: TabsProps) {
       <ul
         className={`flex  ${
           !props.allInputDone && "flex-wrap"
-        } ${currentStyle.parent || 'w-10/12 justify-center'}` }
+        } ${currentStyle.parent}` }
       >
         {props.tabs.map((tab, i) => {
           if (props.allInputDone) {
