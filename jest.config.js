@@ -5,6 +5,10 @@ module.exports = {
 
   // Jest transformations -- this adds support for TypeScript
   // using ts-jest
+  preset: 'ts-jest',
+  transform: {
+    '^.+\\.tsx?$': 'babel-jest',
+  },
   transform: {
     "^.+\\.tsx?$": "ts-jest"
   },

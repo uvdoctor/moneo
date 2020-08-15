@@ -2,7 +2,7 @@ import * as APIt from '../../api/goals'
 import { getIntAmtByYear, getRemainingPrincipal, getCompoundedIncome, getEmi } from '../calc/finance'
 import xirr from 'xirr'
 import { buildArray } from '../utils'
-
+//Tested
 export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
     if (!val || val < 0 || !tr) return 0
     if (maxTaxDL > 0 && val > maxTaxDL) val = maxTaxDL
@@ -17,7 +17,7 @@ const calculateBuyAnnualNetCF = (startYear: number, amCostPer: number, amStartYe
     if (startYear + index >= aiSY) annualNetCF += yearlyPrice * (aiPer / 100)
     return Math.round(annualNetCF)
 }
-
+//Tested
 export const calculateTotalAmt = (startYear: number, annualPer: number, annualSY: number,
     price: number, chgRate: number, duration: number) => {
     let ta = 0
@@ -28,7 +28,7 @@ export const calculateTotalAmt = (startYear: number, annualPer: number, annualSY
     }
     return Math.round(ta)
 }
-
+//Tested
 export const calculateSellPrice = (price: number, chgRate: number, duration: number) => {
     return Math.round(getCompoundedIncome(chgRate, price, duration))
 }
@@ -42,9 +42,9 @@ const calculatePrice = (goal: APIt.CreateGoalInput) => {
     }
     return price
 }
-
+// Need to test
 export const calculateCFs = (price: number | null, goal: APIt.CreateGoalInput, duration: number) => {
-    if (price === null) price = calculatePrice(goal)
+    if (price === null) price = calculatePrice(goal) //tested
     if (goal?.manual as number > 0) return createManualCFs(price, goal, duration)
     else if (goal?.emi?.per as number > 0) return createLoanCFs(price, goal, duration)
     else return createAutoCFs(price, goal, duration)
@@ -127,6 +127,7 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, annualSavings: number, f
     return cfs
 }
 
+// not used at present
 export const calculateSellCFs = (goal: APIt.CreateGoalInput, duration: number) => {
     let cfs: Array<number> = []
     let p = goal.cp as number

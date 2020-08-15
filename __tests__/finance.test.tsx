@@ -260,3 +260,40 @@ describe('getTotalInt functionality check 3 with different loan paid for months'
     expect(remainingPrinciple).toBe(0);
   })
 })
+
+describe('Get NPV Suite', ()=>{
+  const rr = 
+    [
+      0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1.49, 0.5, 0.5, 0.5, 0.5, 0.5, 5.765, 5.765, 5.765, 5.765, 5.765, 5.875, 5.875, 5.875, 5.875, 5.875, 5.875, 5.875, 4.2, 4.16, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5
+    ];
+    const cashflows= [-13086499, 13618106];
+    test('getNPV not null', ()=> {
+      let npv = finance.getNPV(rr, cashflows, 2);
+      expect(npv).not.toBe(null);
+    });
+    test('Correct NPV', ()=> {
+      let npv = finance.getNPV(rr, cashflows, 0); //buy today
+      expect(npv).toBe(463855);
+    });
+    test('Correct NPV', ()=> {
+      let npv = finance.getNPV(rr, cashflows, 2); //buy today
+      expect(npv).toBe(463855);
+    });
+
+  // const pp = {
+  //   savings: 0.5,
+  //   deposits: 1.5, 
+  //   sbonds: 2, //short term bond <1
+  //   mbonds: 3, // 1-5 medium term
+  //   mtebonds: 3.5, //medium term tax efficient bonds
+  //   dreit: 5,
+  //   ireit: 5,
+  //   gold: 3,
+  //   largecapstocks: 5,
+  //   multicapstocks: 6,
+  //   divstocks: 5,
+  //   istocks: 7,
+  //   digitalcurrency: 10
+  // }
+
+})

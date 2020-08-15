@@ -30,13 +30,13 @@ const SecureDash = () => {
     const changeViewMode = (e: any) => {
         setViewMode(e.target.innerText)
     }
-
+    // potential performance 
     const pp = {
         savings: 0.5,
-        deposits: 1.5,
-        sbonds: 2,
-        mbonds: 3,
-        mtebonds: 3.5,
+        deposits: 1.5, 
+        sbonds: 2, //short term bond <1
+        mbonds: 3, // 1-5 medium term
+        mtebonds: 3.5, //medium term tax efficient bonds
         dreit: 5,
         ireit: 5,
         gold: 3,
