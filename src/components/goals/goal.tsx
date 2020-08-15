@@ -27,6 +27,7 @@ import GoalResult from "./goalresult";
 import { getCompoundedIncome } from "../calc/finance";
 import SVGScale from "../svgscale";
 import Tabs from "../tabs";
+import Slider from "../Slider";
 import SVGFullScreen from "../svgfullscreen";
 import { useFullScreen } from "react-browser-hooks";
 import ActionButtons from "../form/actionbuttons";
@@ -139,6 +140,18 @@ export default function Goal({
   const earnLabel = "Earn";
   const maintainLabel = "Maintain";
   const rentLabel = "Rent?";
+  const BuyAndRentLabel = () => (
+    <Fragment>
+      <SVGScale className="inline" />
+      <label className="ml-1 cursor-pointer">Buy v/s Rent</label>
+    </Fragment>
+  );
+  const CashFlowLabel = () => (
+    <Fragment>
+      <SVGChart className="inline" />
+      <label className="ml-1 cursor-pointer">Cash Flows</label>
+    </Fragment>
+  );
   const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
       ? [
@@ -162,6 +175,30 @@ export default function Goal({
         ]
   );
   const [showTab, setShowTab] = useState(amtLabel);
+  const [showResultTab, setShowResultTab] = useState<number>(1);
+  const [resultTabOptions, setResultTabOptions] = useState<Array<any>>([]);
+
+  useEffect(() => {
+    const resultTabs = [
+      {
+        code: 1,
+        label: <CashFlowLabel />,
+        enableOrder: 1,
+        active: true,
+      },
+    ];
+
+    if (showBRChart) {
+      resultTabs.push({
+        code: 2,
+        label: <BuyAndRentLabel />,
+        enableOrder: 2,
+        active: true,
+      });
+    }
+
+    setResultTabOptions(resultTabs);
+  }, [showBRChart]);
 
   const createNewBaseGoal = () => {
     return {
@@ -813,71 +850,65 @@ export default function Goal({
                 {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
               </div>
               <div className="w-11/12 flex items-center justify-around">
-                <div className="p-2 flex items-center rounded-t rounded-b text-white bg-blue-600">
-                  {!showBRChart || !isBRCompAvailable() ? (
-                    <SVGChart />
-                  ) : (
-                    <SVGScale />
-                  )}
-                  <label className="ml-1">
-                    {!showBRChart || !isBRCompAvailable()
-                      ? "Cash Flows"
-                      : "Buy v/s Rent"}
-                  </label>
-                </div>
-              {isBRCompAvailable() && (
-                <div
-                  className="mr-1 flex items-center cursor-pointer text-blue-600"
-                  onClick={() => setShowBRChart(!showBRChart)}
-                >
-                  {!showBRChart ? (
-                    <Fragment>
-                      <SVGScale />
-                      <label className="ml-1 cursor-pointer">
-                        Buy v/s Rent
-                      </label>
-                    </Fragment>
-                  ) : (
-                    <Fragment>
-                      <SVGChart />
-                      <label className="ml-1 cursor-pointer">Cash Flows</label>
-                    </Fragment>
-                  )}
-                </div>
-              )}
+                {isBRCompAvailable() && (
+                  <div className="mr-1 flex items-end w-full">
+                    <Tabs
+                      tabs={resultTabOptions}
+                      selectedTab={showResultTab}
+                      selectedTabHandler={setShowResultTab}
+                      capacity={1}
+                      customStyle="resultTab"
+                    />
+                  </div>
+                )}
               </div>
             </div>
-            {!showBRChart || !isBRCompAvailable() ? (
-              <LineChart
-                cfs={cfs}
-                startYear={startYear}
-                fullScreen={fullScreen}
-              />
-            ) : (
-              isBRCompAvailable() && (
-                <BRComparison
-                  currency={currency}
-                  taxRate={taxRate}
-                  sellAfter={sellAfter as number}
-                  rr={rr}
-                  allBuyCFs={initBuyCFsForComparison(analyzeFor)}
+            <Slider
+              setSlide={setShowResultTab}
+              totalItems={resultTabOptions.length}
+              currentItem={showResultTab}
+            >
+              <div
+                className={`${
+                  resultTabOptions.length === 1 ? "w-full" : "w-1/2"
+                } inline-block`}
+              >
+                <LineChart
+                  cfs={cfs}
                   startYear={startYear}
-                  rentTaxBenefit={rentTaxBenefit as number}
-                  rentTaxBenefitHandler={setRentTaxBenefit}
-                  rentAmt={rentAmt as number}
-                  rentAmtHandler={setRentAmt}
-                  analyzeFor={analyzeFor}
-                  rentChgPer={rentChgPer as number}
-                  rentChgPerHandler={setRentChgPer}
-                  answer={answer}
-                  rentAns={rentAns}
-                  answerHandler={setAnswer}
-                  rentAnsHandler={setRentAns}
-                  showChart={showBRChart}
                   fullScreen={fullScreen}
                 />
-              )
-            )}
+              </div>
+              <div
+                className={`${
+                  resultTabOptions.length === 1 ? "w-full" : "w-1/2"
+                } inline-block`}
+              >
+                {isBRCompAvailable() && (
+                  <BRComparison
+                    currency={currency}
+                    taxRate={taxRate}
+                    sellAfter={sellAfter as number}
+                    rr={rr}
+                    allBuyCFs={initBuyCFsForComparison(analyzeFor)}
+                    startYear={startYear}
+                    rentTaxBenefit={rentTaxBenefit as number}
+                    rentTaxBenefitHandler={setRentTaxBenefit}
+                    rentAmt={rentAmt as number}
+                    rentAmtHandler={setRentAmt}
+                    analyzeFor={analyzeFor}
+                    rentChgPer={rentChgPer as number}
+                    rentChgPerHandler={setRentChgPer}
+                    answer={answer}
+                    rentAns={rentAns}
+                    answerHandler={setAnswer}
+                    rentAnsHandler={setRentAns}
+                    showChart={showBRChart}
+                    fullScreen={fullScreen}
+                  />
+                )}
+              </div>
+            </Slider>
           </div>
         )}
       </div>
