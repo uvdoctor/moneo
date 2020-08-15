@@ -20,7 +20,7 @@ export default function SliderComponent({
       className="relative overflow-hidden w-full"
       style={{ minHeight: "500px" }}
     >
-      <div
+      { currentItem !== 1 ? <div
         className="absolute left-0 z-10 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
         style={{ top: "48%" }}
         onClick={() => {
@@ -28,7 +28,7 @@ export default function SliderComponent({
         }}
       >
         <SVGLeft className="w-10" disable={currentItem === 1} />
-      </div>
+      </div> : null}
       <div
         className="absolute transition-left duration-1000 ease-in-out"
         style={{
@@ -38,7 +38,7 @@ export default function SliderComponent({
       >
         {children}
       </div>
-      <div
+      {currentItem !== totalItems ? <div
         className="absolute right-0 z-10 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
         style={{ top: "48%" }}
         onClick={() => {
@@ -46,7 +46,7 @@ export default function SliderComponent({
         }}
       >
         <SVGRight className="w-10" disable={currentItem === totalItems} />
-      </div>
+      </div>: null}
     </div>
   );
 }
