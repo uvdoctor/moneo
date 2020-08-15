@@ -386,7 +386,7 @@ export default function Goal({
 
   useEffect(() => {
     if (isBRCompAvailable() && showTab === rentLabel) setShowBRChart(true);
-  }, [showTab]);
+  }, [showTab, rentAmt]);
 
   const handleNextStep = (count: number = 1) => {
     if (!allInputDone) {
