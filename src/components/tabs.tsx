@@ -3,11 +3,11 @@ import SVGLeft from "./svgleft";
 import SVGRight from "./svgright";
 interface TabsProps {
   tabs: Array<any>;
-  selectedTab: string;
+  selectedTab: string | number;
   customStyle?: string;
   capacity: number;
-  currentOrder: number;
-  allInputDone: boolean;
+  currentOrder?: number;
+  allInputDone?: boolean;
   selectedTabHandler: Function;
 }
 
@@ -25,6 +25,18 @@ export default function Tabs(props: TabsProps) {
       },
     },
     standard: {
+      selected: {
+        background: "bg-blue-600",
+        text: "text-white",
+      },
+      unselected: {
+        background: "bg-white",
+        text: "text-blue-600",
+        hover: "text-blue-800",
+      },
+    },
+    resultTab: {
+      parent: "w-full justify-end",
       selected: {
         background: "bg-blue-600",
         text: "text-white",
@@ -60,6 +72,9 @@ export default function Tabs(props: TabsProps) {
 
   const isLinkDisabled = (tab: any) => {
     if (props.allInputDone && tab.active) return false;
+    if (!props.currentOrder) {
+      return false;
+    }
     return tab.enableOrder > props.currentOrder;
   };
 
@@ -77,15 +92,16 @@ export default function Tabs(props: TabsProps) {
         </div>
       )}
       <ul
-        className={`flex justify-center w-10/12 ${
+        className={`flex  ${
           !props.allInputDone && "flex-wrap"
-        }`}
+        } ${currentStyle.parent || 'w-10/12 justify-center'}` }
       >
         {props.tabs.map((tab, i) => {
           if (props.allInputDone) {
             if (i > endIndex) return;
             if (Math.abs(endIndex - i) >= props.capacity) return;
           }
+          const code = tab.code || tab.label;
           return (
             <li
               key={"tab" + i}
@@ -95,7 +111,7 @@ export default function Tabs(props: TabsProps) {
                   : "cursor-pointer font-semibold"
               } py-2 px-4 items-start 
                     ${
-                      props.selectedTab === tab.label
+                      props.selectedTab === code
                         ? `${currentStyle.selected.text} ${currentStyle.selected.background} rounded-b rounded-t`
                         : !isLinkDisabled(tab)
                         ? `${currentStyle.unselected.text} ${currentStyle.unselected.background} 
@@ -103,9 +119,9 @@ export default function Tabs(props: TabsProps) {
                         : ""
                     }
                     `}
-              onClick={(e: any) =>
+              onClick={() =>
                 !isLinkDisabled(tab) &&
-                props.selectedTabHandler(e.target.innerText)
+                props.selectedTabHandler(code)
               }
             >
               {tab.label}
