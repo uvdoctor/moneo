@@ -55,20 +55,14 @@ export default function ResultItem(props: ResultItemProps) {
                 ) + props.unit}
           </div>
         </div>
-        <div className="ml-1 flex justify-end items-start">
+        <div className="ml-1 flex justify-end items-start cursor-pointer">
           {props.imp && (
-            <div
-              className="cursor-pointer"
-              onClick={() => toast.error(props.imp)}
-            >
+            <div onClick={() => toast.error(props.imp)}>
               <SVGImp />
             </div>
           )}
           {props.info && (
-            <div
-              className="cursor-pointer"
-              onClick={() => toast.info(props.info)}
-            >
+            <div onClick={() => toast.info(props.info)}>
               <SVGInfo />
             </div>
           )}

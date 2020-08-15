@@ -68,7 +68,7 @@ export default function NW(props: NWProps) {
             }
             <div className="mt-8 flex w-full justify-center">
                 <Section title={`How Much Can You Save by End of ${nowYear}?`}
-                    titleInfo={`Your Total Savings & Annual Savings will be used in order to help You Plan for Financial Freedom.`}
+                    //titleInfo={`Your Total Savings & Annual Savings will be used in order to help You Plan for Financial Freedom.`}
                     left={
                         <NumberInput
                             name="ts" inputOrder={1} currentOrder={2}

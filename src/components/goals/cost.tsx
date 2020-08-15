@@ -94,7 +94,7 @@ export default function Cost(props: CostProps) {
                             allInputDone={props.allInputDone} pre="Amount" post="Changes" note={`Yearly till ${props.startYear}`} unit="%"
                             min={-10} max={10} step={0.5} value={props.costChgRate} changeHandler={props.costChgRateHandler} />
                             : props.nextStepHandler()
-                    } showOnLoad
+                    } 
                     toggle={
                         props.manualModeHandler && <HToggle rightText={`Custom Payment Plan`} value={props.manualMode} setter={props.manualModeHandler} />
                     } manualInput={

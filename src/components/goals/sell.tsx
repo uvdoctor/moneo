@@ -43,7 +43,6 @@ export default function Sell(props: SellProps) {
         <Fragment>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <Section title="Sell After" 
-                    titleInfo="When do You Plan to Sell this? It will help to calculate Gain / Loss on this Purchase."
                     insideForm
                     left={
                         <RadialInput

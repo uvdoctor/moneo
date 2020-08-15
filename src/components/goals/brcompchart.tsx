@@ -1,50 +1,74 @@
-import React from 'react'
-import dynamic from 'next/dynamic'
-
+import React, { useEffect } from "react";
+import dynamic from "next/dynamic";
+import {
+  getCommonConfig,
+  getCommonLayoutProps,
+  getCommonStyle,
+} from "../chartutils";
 interface BRCompChartProps {
-    data: Array<any>
-    currency?: string
-    xTitle?: string
-    sellAfter: number
-    rentAns: string
-    title: string
+  data: Array<any>;
+  currency?: string;
+  sellAfter: number;
+  rentAns: string;
+  title: string;
+  fullScreen: boolean;
 }
 
-const Plot = dynamic(
-    () => import('react-plotly.js'), {ssr: false}
-);
+const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 export function BRCompChart(props: BRCompChartProps) {
-    const customWidth = props.data[0].values.x.length * 40
 
-    return (
-        <div className="w-full overflow-x-scroll scrolling-touch hide-scrollbar">
-            {/*@ts-ignore*/}
-            <Plot layout={{
-                font:{family: "'Quicksand', sans-serif", color: "#4a5568", size: 15}, 
-                autosize: true, 
-                width: customWidth,
-                aspectratio: 0,
-                title: {x:0.05, text:props.title, font:{size: 20}}, 
-                xaxis: {title: props.xTitle, type:'category', fixedrange: true, showgrid: false, range: [1, props.data[0].values.x.length]},
-                yaxis: {fixedrange: true, tickformat: ',', showgrid: false},
-	            legend: {
-                    orientation: 'h',
-                    x:0.7,
-                    y:-0.1
-                }, margin:{t:40}
-            }} 
-            useResizeHandler={false}
-            style={{width: "100%", height:"100%", minHeight: "400px"}}
-            data={[
-                //@ts-ignore: Object is possible undefined
-                {type: 'scatter', fill: 'tozeroy', mode: 'none', x: props.data[0].values.x, y: props.data[0].values.y, 
-                name: props.data[0].name}, 
-                //@ts-ignore: Object is possible undefined
-                {type: 'scatter', fill: 'tonexty', mode:'none', x: props.data[1].values.x, y: props.data[1].values.y, name: props.data[1].name} 
-            ]} 
-            config={{responsive: true, editable: false, displayModeBar: false}} 
-             />
-        </div>
-    )
+  useEffect(() => {
+    setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 300);
+  }, [props.fullScreen]);
+
+  useEffect;
+  return (
+    <div className="w-full">
+      <Plot
+        //@ts-ignore
+        layout={{
+          ...getCommonLayoutProps(
+            props.title,
+            ",",
+          ),
+          xaxis: {
+            type: "category",
+            showgrid: false,
+            range: [1, props.data[0].values.x.length],
+          },
+          legend: {
+            orientation: "h",
+            x: 0.5,
+            y: 1.07,
+          },
+        }}
+        style={getCommonStyle()}
+        useResizeHandler
+        data={[
+          //@ts-ignore: Object is possible undefined
+          {
+            type: "scatter",
+            fill: "tozeroy",
+            mode: "none",
+            x: props.data[0].values.x,
+            y: props.data[0].values.y,
+            name: props.data[0].name,
+          },
+          //@ts-ignore: Object is possible undefined
+          {
+            type: "scatter",
+            fill: "tonexty",
+            mode: "none",
+            x: props.data[1].values.x,
+            y: props.data[1].values.y,
+            name: props.data[1].name,
+          },
+        ]}
+        config={getCommonConfig()}
+      />
+    </div>
+  );
 }
