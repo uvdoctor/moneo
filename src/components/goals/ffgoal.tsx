@@ -156,8 +156,8 @@ export default function FFGoal({
   );
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
   const [showCFChart, setShowCFChart] = useState<boolean>(false);
-  const beforeLabel = "Before";
-  const afterLabel = "After";
+  const investLabel = "Invest";
+  const expLabel = "Expenses";
   const incomeLabel = "Income";
   const careLabel = "Care";
   const gainsLabel = "Gains";
@@ -165,15 +165,15 @@ export default function FFGoal({
   const nomineeLabel = "Nominees";
 
   const [tabOptions, setTabOptions] = useState<Array<any>>([
-    { label: beforeLabel, enableOrder: 3, active: true },
-    { label: afterLabel, enableOrder: 5, active: true },
+    { label: investLabel, enableOrder: 3, active: true },
+    { label: expLabel, enableOrder: 5, active: true },
     { label: incomeLabel, enableOrder: 8, active: true },
     { label: careLabel, enableOrder: 11, active: true },
     { label: gainsLabel, enableOrder: 16, active: true },
     { label: lossesLabel, enableOrder: 17, active: true },
     { label: nomineeLabel, enableOrder: 18, active: true },
   ]);
-  const [showTab, setShowTab] = useState(beforeLabel);
+  const [showTab, setShowTab] = useState(investLabel);
 
   const createGoal = () => {
     return {
@@ -369,10 +369,10 @@ export default function FFGoal({
       let co = currentOrder + count;
       switch (co) {
         case 3:
-          setShowTab(beforeLabel);
+          setShowTab(investLabel);
           break;
         case 5:
-          setShowTab(afterLabel);
+          setShowTab(expLabel);
           break;
         case 8:
           setShowTab(incomeLabel);
@@ -474,7 +474,7 @@ export default function FFGoal({
           )}
           <div className="overflow-y-auto lg:overflow-hidden w-full flex justify-center">
             <div className="p-2">
-              {showTab === beforeLabel && (allInputDone || (!allInputDone && currentOrder >= 3)) && (
+              {showTab === investLabel && (allInputDone || (!allInputDone && currentOrder >= 3)) && (
                 <Section
                   title="Before Financial Freedom"
                   left={
@@ -546,7 +546,7 @@ export default function FFGoal({
                 />
               )}
 
-              {showTab === afterLabel && (
+              {showTab === expLabel && (
                 <Section
                   title="After Financial Freedom"
                   left={
@@ -899,7 +899,7 @@ export default function FFGoal({
                     />
                   }
                   right={
-                    <NumberInput
+                    leaveBehind > 0 ? <NumberInput
                       name="str"
                       inputOrder={19}
                       currentOrder={currentOrder}
@@ -918,7 +918,7 @@ export default function FFGoal({
                         Math.round(leaveBehind * (successionTaxRate / 100)),
                         currency
                       )}`}
-                    />
+                    /> : !allInputDone && currentOrder === 19 && handleNextStep()
                   }
                   insideForm
                 />
