@@ -856,7 +856,7 @@ export default function Goal({
                       tabs={resultTabOptions}
                       selectedTab={showResultTab}
                       selectedTabHandler={setShowResultTab}
-                      capacity={1}
+                      capacity={2}
                       customStyle="resultTab"
                     />
                   </div>

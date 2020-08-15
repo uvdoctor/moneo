@@ -554,7 +554,7 @@ export default function FFGoal({
                       name="currExpense"
                       inputOrder={5}
                       currentOrder={currentOrder}
-                      nextStepDisabled={expenseAfterFF === 0}
+                      nextStepDisabled={expenseAfterFF < 5000}
                       allInputDone={allInputDone}
                       nextStepHandler={handleNextStep}
                       info="If You had already achieved Financial Freedom this year, How Much Money Would You Need for Your Living Expenses?"

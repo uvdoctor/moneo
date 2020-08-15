@@ -36,7 +36,7 @@ export default function Tabs(props: TabsProps) {
       },
     },
     resultTab: {
-      parent: "w-full justify-end",
+      parent: "w-full justify-center",
       selected: {
         background: "bg-blue-600",
         text: "text-white",
