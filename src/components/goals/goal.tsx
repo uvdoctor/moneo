@@ -167,6 +167,7 @@ export default function Goal({
   );
   const [showTab, setShowTab] = useState(amtLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
+  const [totalActiveCharts, setTotalActiveCharts] = useState<number>(1)
   const [resultTabOptions, setResultTabOptions] = useState<Array<any>>([
     {
       label: cfChartLabel,
@@ -183,10 +184,10 @@ export default function Goal({
   ]);
 
   const getOrder = (label: string) => {
-    for(let i in resultTabOptions) {
-      if(resultTabOptions[i].label === label) return resultTabOptions[i].order
+    for (let i in resultTabOptions) {
+      if (resultTabOptions[i].label === label) return resultTabOptions[i].order;
     }
-  }
+  };
 
   const createNewBaseGoal = () => {
     return {
@@ -369,14 +370,21 @@ export default function Goal({
   useEffect(() => {
     if (!rentAmt) {
       setRentAns("");
-      if(resultTabOptions[1].active) {
-        resultTabOptions[1].active = false
-        setResultTabOptions([...resultTabOptions])
+      if (resultTabOptions[1].active) {
+        resultTabOptions[1].active = false;
+        setResultTabOptions([...resultTabOptions]);
+        setTotalActiveCharts(totalActiveCharts - 1)
+        setShowBRChart(false)
+        if(showResultTab === brChartLabel) setShowResultTab(cfChartLabel)
       }
-    } else if(!resultTabOptions[1].active && isBRCompAvailable()) {
-        resultTabOptions[1].active = true
-        setShowBRChart(true)
-        setResultTabOptions([...resultTabOptions])
+    } else if (isBRCompAvailable()) {
+      if (!resultTabOptions[1].active) {
+        resultTabOptions[1].active = true;
+        setResultTabOptions([...resultTabOptions]);
+        setTotalActiveCharts(totalActiveCharts + 1)
+      }
+      setShowBRChart(true);
+      if (showResultTab !== brChartLabel) setShowResultTab(brChartLabel);
     }
   }, [rentAmt]);
 
@@ -426,14 +434,6 @@ export default function Goal({
 
   const showResultSection = () =>
     nowYear < startYear && allInputDone && cfs.length > 0;
-
-  const getActiveResultTabsCount = () => {
-    let count = 0
-    resultTabOptions.forEach((tab) => {
-      if(tab.active) count++
-    }, 0)
-    return count
-  } 
 
   return (
     <div className="w-full h-full">
@@ -850,7 +850,6 @@ export default function Goal({
                 {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
               </div>
               <div className="w-11/12 flex items-center justify-around">
-                {isBRCompAvailable() && (
                   <div className="mr-1 flex items-end w-full">
                     <Tabs
                       tabs={resultTabOptions}
@@ -860,7 +859,6 @@ export default function Goal({
                       customStyle="resultTab"
                     />
                   </div>
-                )}
               </div>
             </div>
             <Slider
@@ -872,7 +870,7 @@ export default function Goal({
                   }
                 }
               }}
-              totalItems={getActiveResultTabsCount()}
+              totalItems={totalActiveCharts}
               currentItem={getOrder(showResultTab)}
             >
               <div

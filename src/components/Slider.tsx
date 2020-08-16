@@ -20,7 +20,7 @@ export default function SliderComponent({
       className="relative overflow-hidden w-full"
       style={{ minHeight: "500px" }}
     >
-      { currentItem !== 1 ? 
+      { totalItems > 1 && currentItem !== 1 ? 
       <LeftArrow svgClasses="w-10" style={{ top: "48%" }} className="absolute left-0 z-10" clickHandler={() => {
         setSlide(currentItem - 1);
       }} />
@@ -34,7 +34,7 @@ export default function SliderComponent({
       >
         {children}
       </div>
-      {currentItem !== totalItems ? 
+      {totalItems > 1 && currentItem !== totalItems ? 
       <RightArrow svgClasses="w-10" style={{ top: "48%" }} className="absolute right-0 z-10" clickHandler={() => {
         setSlide(currentItem + 1);
       }} />: null}

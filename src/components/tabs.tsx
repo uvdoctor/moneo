@@ -74,7 +74,7 @@ export default function Tabs(props: TabsProps) {
   }, [props.allInputDone]);
 
   const isLinkDisabled = (tab: any) => {
-    if (props.allInputDone && tab.active) return false;
+    if (props.allInputDone) return !tab.active;
     if (!props.currentOrder) {
       return false;
     }
@@ -100,6 +100,7 @@ export default function Tabs(props: TabsProps) {
             if (i > endIndex) return;
             if (Math.abs(endIndex - i) >= props.capacity) return;
           }
+          {console.log("Tab active status: ", tab.active)}
           return (
             <li
               key={"tab" + i}
