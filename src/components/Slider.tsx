@@ -64,9 +64,10 @@ export default function SliderComponent({
       >
         {React.Children.map(children, (child: any) => (
           <div
-            className={`${
-              activeSlides.length === 1 ? "w-full" : "w-1/2"
-            } inline-block`}
+            style={{
+              width: `${100 / activeSlides.length}%`
+            }}
+            className="inline-block"
           >
             {child}
           </div>
