@@ -384,32 +384,17 @@ export default function Goal({
 
   const isBRCompAvailable = () => sellAfter && price > 0 && !!rentAmt;
 
+  const getTabLabelByOrder = (order: number) => {
+    let result = tabOptions.filter((t) => t.order === order && t.active)
+    if(result && result.length === 1) return result[0].label
+    return null
+  }
+
   const handleNextStep = (count: number = 1) => {
     if (!allInputDone) {
       let co = currentOrder + count;
-      switch (co) {
-        case 3:
-          setShowTab(amtLabel);
-          break;
-        case 8:
-          setShowTab(taxLabel);
-          break;
-        case 10:
-          if (hasTab(loanLabel)) setShowTab(loanLabel);
-          break;
-        case 15:
-          if (sellAfter) setShowTab(maintainLabel);
-          break;
-        case 17:
-          if (sellAfter) setShowTab(earnLabel);
-          break;
-        case 19:
-          if (sellAfter) setShowTab(sellLabel);
-          break;
-        case 21:
-          if (sellAfter) setShowTab(rentLabel);
-          break;
-      }
+      let label = getTabLabelByOrder(co)
+      if(label) setShowTab(label)
       setCurrentOrder(co);
       if (co === 23) setAllInputDone(true);
     }

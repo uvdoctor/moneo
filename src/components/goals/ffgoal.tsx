@@ -364,34 +364,19 @@ export default function FFGoal({
     setCurrency(curr);
   };
 
+  const getTabLabelByOrder = (order: number) => {
+    let result = tabOptions.filter((t) => t.order === order && t.active)
+    if(result && result.length === 1) return result[0].label
+    return null
+  }
+
   const handleNextStep = (count: number = 1) => {
     if (!allInputDone) {
       let co = currentOrder + count;
-      switch (co) {
-        case 3:
-          setShowTab(investLabel);
-          break;
-        case 5:
-          setShowTab(expLabel);
-          break;
-        case 8:
-          setShowTab(incomeLabel);
-          break;
-        case 11:
-          setShowTab(careLabel);
-          break;
-        case 16:
-          setShowTab(gainsLabel);
-          break;
-        case 17:
-          setShowTab(lossesLabel);
-          break;
-        case 18:
-          setShowTab(nomineeLabel);
-          break;
-      }
+      let label = getTabLabelByOrder(co)
+      if(label) setShowTab(label)
       setCurrentOrder(co);
-      if (co === 20) setAllInputDone(true);
+      if (co === 23) setAllInputDone(true);
     }
   };
 
