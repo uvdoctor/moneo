@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useRef } from "react";
 import { useFullScreen } from "react-browser-hooks";
 import SVGFullScreen from "../svgfullscreen";
 import SVGExitFullScreen from "../svgexitfullscreen";
-import Slider from "../slider";
+import DynamicSlider from "../dynamicslider";
 import Tabs from "../tabs"
 interface ResultSectionProps {
     result: ReactNode
@@ -42,13 +42,13 @@ export default function ResultSection(props: ResultSectionProps) {
           />
         </div>
       </div>
-      <Slider
+      <DynamicSlider
         setSlide={props.showResultTabHandler}
         totalItems={props.resultTabOptions}
         currentItem={props.showResultTab}
       >
         {props.children}
-      </Slider>
+      </DynamicSlider>
     </div>
   );
 }

@@ -2,19 +2,19 @@ import React, { ReactNode } from "react";
 import LeftArrow from "./leftArrow";
 import RightArrow from "./rightArrow";
 
-interface SliderProps {
+interface DynamicSliderProps {
   totalItems: Array<any>;
   currentItem: string;
   children: ReactNode;
   setSlide: Function;
 }
 
-export default function SliderComponent({
+export default function DynamicSlider({
   totalItems,
   currentItem,
   children,
   setSlide,
-}: SliderProps) {
+}: DynamicSliderProps) {
   const getOrder = (label: string) => {
     for (let i in totalItems) {
       if (totalItems[i].label === label) return totalItems[i].order;
