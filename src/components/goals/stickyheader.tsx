@@ -2,7 +2,6 @@ import React, { ReactNode } from "react";
 import SVGLogo from "../svglogo";
 import SVGClose from "../svgclose";
 import FullScreen from "../fullscreen";
-import SVGLeft from "../svgleft";
 
 interface StickyHeaderProps {
   children: ReactNode;
