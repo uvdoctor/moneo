@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useRef } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import NumberInput from "../form/numberinput";
@@ -7,8 +7,6 @@ import { initYearOptions, getRangeFactor } from "../utils";
 import EmiCost from "../calc/emicost";
 import HToggle from "../horizontaltoggle";
 import TaxBenefit from "../calc/taxbenefit";
-import BRComparison from "../calc/brcomparison";
-import LineChart from "./linechart";
 import Section from "../form/section";
 import Sell from "./sell";
 import StickyHeader from "./stickyheader";
@@ -20,15 +18,15 @@ import { getDuration, getGoalTypes, getImpLevels } from "./goalutils";
 import { AwesomeButton } from "react-awesome-button";
 import AnnualAmt from "./annualamt";
 import SVGBalance from "../calc/svgbalance";
-import SVGExitFullScreen from "../svgexitfullscreen";
-import GoalResult from "./goalresult";
 import { getCompoundedIncome } from "../calc/finance";
 import SVGScale from "../svgscale";
 import Tabs from "../tabs";
-import Slider from "../Slider";
-import SVGFullScreen from "../svgfullscreen";
-import { useFullScreen } from "react-browser-hooks";
 import ActionButtons from "../form/actionbuttons";
+import ResultSection from "./resultsection";
+import GoalResult from "./goalresult";
+import LineChart from "./linechart"
+import BRComparison from "../calc/brcomparison"
+
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -48,8 +46,6 @@ export default function Goal({
   addCallback,
   updateCallback,
 }: GoalProps) {
-  const chartDiv = useRef(null);
-  const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
   const typesList = getGoalTypes();
   const goalType = goal?.type as APIt.GoalType;
   const [startYear, setStartYear] = useState<number>(goal.sy);
@@ -140,6 +136,7 @@ export default function Goal({
   const rentLabel = "Rent?";
   const cfChartLabel = "Cash Flows";
   const brChartLabel = "Buy v/s Rent";
+  const [chartFullScreen, setChartFullScreen] = useState<boolean>(false)
 
   const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
@@ -165,7 +162,6 @@ export default function Goal({
   );
   const [showTab, setShowTab] = useState(amtLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
-  const [totalActiveCharts, setTotalActiveCharts] = useState<number>(1);
   const [resultTabOptions, setResultTabOptions] = useState<Array<any>>([
     {
       label: cfChartLabel,
@@ -365,7 +361,6 @@ export default function Goal({
       if (resultTabOptions[1].active) {
         resultTabOptions[1].active = false;
         setResultTabOptions([...resultTabOptions]);
-        setTotalActiveCharts(totalActiveCharts - 1);
         setShowBRChart(false);
         if (showResultTab === brChartLabel) setShowResultTab(cfChartLabel);
       }
@@ -373,12 +368,15 @@ export default function Goal({
       if (!resultTabOptions[1].active) {
         resultTabOptions[1].active = true;
         setResultTabOptions([...resultTabOptions]);
-        setTotalActiveCharts(totalActiveCharts + 1);
       }
       setShowBRChart(true);
       if (showResultTab !== brChartLabel) setShowResultTab(brChartLabel);
     }
   }, [rentAmt]);
+
+  useEffect(() => {
+    if(showTab === rentLabel && isBRCompAvailable()) setShowResultTab(brChartLabel)
+  }, [showTab])
 
   const isBRCompAvailable = () => sellAfter && price > 0 && !!rentAmt;
 
@@ -786,85 +784,49 @@ export default function Goal({
           />
         </div>
         {showResultSection() && (
-          <div
-            ref={chartDiv}
-            className={`w-full lg:w-2/3 transition-width duration-1000 ease-in-out`}
-          >
-            {nowYear < startYear && (
-              <GoalResult
-                rr={rr}
-                startYear={startYear}
-                currency={currency}
-                ffGoalEndYear={ffGoalEndYear}
-                cfs={cfs}
-                ffOOM={ffOOM}
-                ffImpactYears={ffImpactYears}
-                buyGoal={goalType === APIt.GoalType.B}
-                hideResultLabel
-              />
-            )}
-            <div className="flex w-full items-center font-semibold">
-              <div className="ml-1 w-1/12 cursor-pointer" onClick={toggle}>
-                {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
-              </div>
-              <div className="w-11/12">
-                <Tabs
-                  tabs={resultTabOptions}
-                  selectedTab={showResultTab}
-                  selectedTabHandler={setShowResultTab}
-                  capacity={2}
-                  customStyle="resultTab"
-                  allInputDone
-                />
-              </div>
-            </div>
-            <Slider
-              setSlide={setShowResultTab}
-              totalItems={resultTabOptions}
-              currentItem={showResultTab}
-            >
-              <div
-                className={`${
-                  totalActiveCharts === 1 ? "w-full" : "w-1/2"
-                } inline-block`}
-              >
-                <LineChart
-                  cfs={cfs}
+          <ResultSection resultTabOptions={resultTabOptions} showResultTab={showResultTab}
+          showResultTabHandler={setShowResultTab} chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
+            result={
+              nowYear < startYear && (
+                <GoalResult
+                  rr={rr}
                   startYear={startYear}
-                  fullScreen={fullScreen}
+                  currency={currency}
+                  ffGoalEndYear={ffGoalEndYear}
+                  cfs={cfs}
+                  ffOOM={ffOOM}
+                  ffImpactYears={ffImpactYears}
+                  buyGoal={goalType === APIt.GoalType.B}
+                  hideResultLabel
                 />
-              </div>
-              <div
-                className={`${
-                  totalActiveCharts === 1 ? "w-full" : "w-1/2"
-                } inline-block`}
-              >
-                {isBRCompAvailable() && (
-                  <BRComparison
-                    currency={currency}
-                    taxRate={taxRate}
-                    sellAfter={sellAfter as number}
-                    rr={rr}
-                    allBuyCFs={initBuyCFsForComparison(analyzeFor)}
-                    startYear={startYear}
-                    rentTaxBenefit={rentTaxBenefit as number}
-                    rentTaxBenefitHandler={setRentTaxBenefit}
-                    rentAmt={rentAmt as number}
-                    rentAmtHandler={setRentAmt}
-                    analyzeFor={analyzeFor}
-                    rentChgPer={rentChgPer as number}
-                    rentChgPerHandler={setRentChgPer}
-                    answer={answer}
-                    rentAns={rentAns}
-                    answerHandler={setAnswer}
-                    rentAnsHandler={setRentAns}
-                    showChart={showBRChart}
-                    fullScreen={fullScreen}
-                  />
-                )}
-              </div>
-            </Slider>
-          </div>
+              )
+            }
+          >
+          <LineChart cfs={cfs} startYear={startYear} fullScreen={chartFullScreen} />
+          {isBRCompAvailable() && (
+            <BRComparison
+              currency={currency}
+              taxRate={taxRate}
+              sellAfter={sellAfter as number}
+              rr={rr}
+              allBuyCFs={initBuyCFsForComparison(analyzeFor)}
+              startYear={startYear}
+              rentTaxBenefit={rentTaxBenefit as number}
+              rentTaxBenefitHandler={setRentTaxBenefit}
+              rentAmt={rentAmt as number}
+              rentAmtHandler={setRentAmt}
+              analyzeFor={analyzeFor}
+              rentChgPer={rentChgPer as number}
+              rentChgPerHandler={setRentChgPer}
+              answer={answer}
+              rentAns={rentAns}
+              answerHandler={setAnswer}
+              rentAnsHandler={setRentAns}
+              showChart={showBRChart}
+              fullScreen={chartFullScreen}
+            />
+          )}
+          </ResultSection>
         )}
       </div>
     </div>

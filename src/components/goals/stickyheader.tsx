@@ -15,9 +15,9 @@ export default function StickyHeader({ children, cancelCallback }: StickyHeaderP
         <SVGLogo />
       </div>
       {children}
-      <div>
+      <div className="mr-1">
         <div
-          className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
+          className="mb-1 cursor-pointer border-0 outline-none focus:outline-none"
           onClick={() => cancelCallback()}
         >
           <SVGClose />

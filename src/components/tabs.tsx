@@ -33,7 +33,7 @@ export default function Tabs(props: TabsProps) {
         text: "text-white",
       },
       unselected: {
-        background: "bg-white",
+        background: "bg-gray-200",
         text: "text-blue-600",
         hover: "text-blue-800",
       },
@@ -45,7 +45,7 @@ export default function Tabs(props: TabsProps) {
         text: "text-white",
       },
       unselected: {
-        background: "bg-white",
+        background: "bg-gray-200",
         text: "text-blue-600",
         hover: "text-blue-800",
       },
@@ -106,10 +106,10 @@ export default function Tabs(props: TabsProps) {
               className={`py-2 px-4 items-start 
                     ${
                       props.selectedTab === tab.label
-                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} font-semibold cursor-pointer rounded-b lg:rounded-t`
+                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} font-semibold cursor-pointer rounded-b lg:rounded-b-none lg:rounded-t`
                         : !isLinkDisabled(tab)
                         ? `${currentStyle.unselected.text} ${currentStyle.unselected.background} 
-                          cursor-pointer font-semibold shadow-lg lg:shadow-xl bg-gray-200 hover:${currentStyle.unselected.hover}`
+                          cursor-pointer font-semibold shadow-lg lg:shadow-xl rounded-b lg:rounded-b-none lg:rounded-t hover:${currentStyle.unselected.hover}`
                         : "cursor-not-allowed text-gray-400"
                     }
                     `}
