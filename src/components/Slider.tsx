@@ -3,8 +3,8 @@ import LeftArrow from "./leftArrow";
 import RightArrow from "./rightArrow";
 
 interface SliderProps {
-  totalItems: number;
-  currentItem: number;
+  totalItems: Array<any>;
+  currentItem: string;
   children: ReactNode;
   setSlide: Function;
 }
@@ -15,29 +15,65 @@ export default function SliderComponent({
   children,
   setSlide,
 }: SliderProps) {
+  const getOrder = (label: string) => {
+    for (let i in totalItems) {
+      if (totalItems[i].label === label) return totalItems[i].order;
+    }
+  };
+
+  const currentItemOrder = getOrder(currentItem);
+  const activeSlides = totalItems.filter((item) => item.active);
+
+  const getNextItemLabel = (order: number) => {
+    for (let i = 0; i < activeSlides.length; i++) {
+      if (activeSlides[i].order === order) {
+        return activeSlides[i + 1].label;
+      }
+    }
+  };
+
+  const getPrevItemLabel = (order: number) => {
+    for (let i = 0; i < activeSlides.length; i++) {
+      if (activeSlides[i].order === order) {
+        return activeSlides[i - 1].label;
+      }
+    }
+  };
+
   return (
     <div
       className="relative overflow-hidden w-full"
       style={{ minHeight: "500px" }}
     >
-      { totalItems > 1 && currentItem !== 1 ? 
-      <LeftArrow svgClasses="w-10" style={{ top: "48%" }} className="absolute left-0 z-10" clickHandler={() => {
-        setSlide(currentItem - 1);
-      }} />
-       : null}
+      {activeSlides.length > 1 && currentItemOrder !== 1 ? (
+        <LeftArrow
+          svgClasses="w-10"
+          style={{ top: "48%" }}
+          className="absolute left-0 z-10"
+          clickHandler={() => {
+            setSlide(getPrevItemLabel(currentItemOrder));
+          }}
+        />
+      ) : null}
       <div
         className="absolute transition-left duration-1000 ease-in-out"
         style={{
-          width: `${totalItems * 100}%`,
-          left: `-${(currentItem - 1) * 100}%`,
+          width: `${activeSlides.length * 100}%`,
+          left: `-${(currentItemOrder - 1) * 100}%`,
         }}
       >
         {children}
       </div>
-      {totalItems > 1 && currentItem !== totalItems ? 
-      <RightArrow svgClasses="w-10" style={{ top: "48%" }} className="absolute right-0 z-10" clickHandler={() => {
-        setSlide(currentItem + 1);
-      }} />: null}
+      {activeSlides.length > 1 && currentItemOrder !== activeSlides.length ? (
+        <RightArrow
+          svgClasses="w-10"
+          style={{ top: "48%" }}
+          className="absolute right-0 z-10"
+          clickHandler={() => {
+            setSlide(getNextItemLabel(currentItemOrder));
+          }}
+        />
+      ) : null}
     </div>
   );
 }

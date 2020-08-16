@@ -183,12 +183,6 @@ export default function Goal({
     },
   ]);
 
-  const getOrder = (label: string) => {
-    for (let i in resultTabOptions) {
-      if (resultTabOptions[i].label === label) return resultTabOptions[i].order;
-    }
-  };
-
   const createNewBaseGoal = () => {
     return {
       name: name,
@@ -861,16 +855,9 @@ export default function Goal({
                   </div>
             </div>
             <Slider
-              setSlide={(updatedItem: number) => {
-                for (let i in resultTabOptions) {
-                  if (resultTabOptions[i].order === updatedItem) {
-                    setShowResultTab(resultTabOptions[i].label);
-                    break;
-                  }
-                }
-              }}
-              totalItems={totalActiveCharts}
-              currentItem={getOrder(showResultTab)}
+              setSlide={setShowResultTab}
+              totalItems={resultTabOptions}
+              currentItem={showResultTab}
             >
               <div
                 className={`${
