@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
-import dynamic from "next/dynamic";
-import {
-  getCommonConfig,
-  getCommonLayoutProps,
-  getCommonStyle,
-} from "../chartutils";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 interface BRCompChartProps {
   data: Array<any>;
   currency?: string;
@@ -14,61 +10,52 @@ interface BRCompChartProps {
   fullScreen: boolean;
 }
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
-
 export function BRCompChart(props: BRCompChartProps) {
-
   useEffect(() => {
     setTimeout(() => {
       window.dispatchEvent(new Event("resize"));
     }, 500);
   }, [props.fullScreen]);
 
-  useEffect;
+  const options = {
+    title: {
+      text: props.title,
+    },
+    xAxis: {
+      categories: props.data[0].values.x,
+    },
+    credits: {
+      enabled: false,
+    },
+    plotOptions: {
+      areaspline: {
+        fillOpacity: 0.1,
+      },
+    },
+    tooltip: {
+      shared: true,
+    },
+    series: [
+      {
+        name: props.data[0].name,
+        data: props.data[0].values.y,
+      },
+      {
+        name: props.data[1].name,
+        data: props.data[1].values.y,
+      },
+    ],
+    chart: {
+      type: "areaspline",
+      zoomType: "x",
+      panning: true,
+      panKey: "shift",
+    },
+  };
+
   return (
     <div className="w-full">
-      <Plot
-        //@ts-ignore
-        layout={{
-          ...getCommonLayoutProps(
-            props.title,
-            ",",
-          ),
-          xaxis: {
-            type: "category",
-            showgrid: false,
-            range: [1, props.data[0].values.x.length],
-          },
-          legend: {
-            orientation: "h",
-            x: 0.5,
-            y: 1.07,
-          },
-        }}
-        style={getCommonStyle()}
-        useResizeHandler
-        data={[
-          //@ts-ignore: Object is possible undefined
-          {
-            type: "scatter",
-            fill: "tozeroy",
-            mode: "none",
-            x: props.data[0].values.x,
-            y: props.data[0].values.y,
-            name: props.data[0].name,
-          },
-          //@ts-ignore: Object is possible undefined
-          {
-            type: "scatter",
-            fill: "tonexty",
-            mode: "none",
-            x: props.data[1].values.x,
-            y: props.data[1].values.y,
-            name: props.data[1].name,
-          },
-        ]}
-        config={getCommonConfig()}
-      />
+      <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
 }

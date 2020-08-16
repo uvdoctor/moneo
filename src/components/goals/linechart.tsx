@@ -1,32 +1,14 @@
 import React, { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import {
-  getCommonConfig,
-  getCommonLayoutProps,
-  getCommonStyle,
-} from "../chartutils";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 interface LineChartProps {
   cfs: Array<number>;
   startYear: number;
   fullScreen: boolean;
 }
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
-
 export default function LineChart(props: LineChartProps) {
   const [years, setYears] = useState<Array<number>>([]);
-  const layout = {
-    ...getCommonLayoutProps(),
-    xaxis: {type: "category", showgrid: false },
-  };
-  const track = {
-    type: "scatter",
-    mode: "lines+markers",
-    x: years,
-    y: props.cfs,
-    line: { color: "#68d391", size: 3 },
-    marker: { color: "#276749", symbol: "circle-x" },
-  };
 
   useEffect(() => {
     let years = [];
@@ -40,16 +22,30 @@ export default function LineChart(props: LineChartProps) {
     }, 500);
   }, [props.fullScreen]);
 
+  const options = {
+    title: {
+      text: "Cash Flow Chart",
+    },
+    xAxis: {
+      categories: years,
+    },
+    constructorType: "chart",
+    series: [
+      {
+        name: '',
+        data: props.cfs,
+      },
+    ],
+    chart: {
+      type: "line",
+      zoomType: "x",
+      panning: true,
+      panKey: "shift",
+    },
+  };
   return (
     <div className="w-full">
-      <Plot
-        /*@ts-ignore*/
-        layout={layout}
-        style={getCommonStyle()}
-        data={[track]}
-        useResizeHandler
-        config={getCommonConfig()}
-      />
+      <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
 }
