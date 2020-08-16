@@ -63,11 +63,11 @@ export default function Tabs(props: TabsProps) {
 
   const handleIncrement = () => setEndIndex(endIndex + 1);
 
-  const [endIndexOnLoad, setEndIndexOnLoad] = useState<number>(endIndex)
+  const [endIndexOnLoad, setEndIndexOnLoad] = useState<number>(endIndex);
 
   useEffect(() => {
-    if(!props.allInputDone) setEndIndexOnLoad(props.tabs.length - 1)
-  }, [])
+    if (!props.allInputDone) setEndIndexOnLoad(props.tabs.length - 1);
+  }, []);
 
   useEffect(() => {
     if (props.allInputDone) setEndIndex(endIndexOnLoad);
@@ -78,7 +78,7 @@ export default function Tabs(props: TabsProps) {
     if (!props.currentOrder) {
       return false;
     }
-    return tab.enableOrder > props.currentOrder;
+    return tab.order > props.currentOrder;
   };
 
   return (
@@ -91,16 +91,15 @@ export default function Tabs(props: TabsProps) {
         </div>
       )}
       <ul
-        className={`flex  ${
-          !props.allInputDone && "flex-wrap"
-        } ${currentStyle.parent}` }
+        className={`flex  ${!props.allInputDone && "flex-wrap"} ${
+          currentStyle.parent
+        }`}
       >
         {props.tabs.map((tab, i) => {
           if (props.allInputDone) {
             if (i > endIndex) return;
             if (Math.abs(endIndex - i) >= props.capacity) return;
           }
-          const code = tab.code || tab.label;
           return (
             <li
               key={"tab" + i}
@@ -110,7 +109,7 @@ export default function Tabs(props: TabsProps) {
                   : "cursor-pointer font-semibold"
               } py-2 px-4 items-start 
                     ${
-                      props.selectedTab === code
+                      props.selectedTab === tab.label
                         ? `${currentStyle.selected.text} ${currentStyle.selected.background} rounded-b rounded-t`
                         : !isLinkDisabled(tab)
                         ? `${currentStyle.unselected.text} ${currentStyle.unselected.background} 
@@ -119,11 +118,13 @@ export default function Tabs(props: TabsProps) {
                     }
                     `}
               onClick={() =>
-                !isLinkDisabled(tab) &&
-                props.selectedTabHandler(code)
+                !isLinkDisabled(tab) && props.selectedTabHandler(tab.label)
               }
             >
-              {tab.label}
+              <div className="flex items-center">
+                {tab.svg && <div className="inline mr-1">{tab.svg}</div>}
+                {tab.label}
+              </div>
             </li>
           );
         })}

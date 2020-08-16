@@ -1,12 +1,9 @@
 import React from "react";
-interface svgProps {
-  className?: string;
-}
 
-export default function SVGChart({ className }: svgProps) {
+export default function SVGChart() {
   return (
     <svg
-      className={`w-8 ${className}`}
+      className="w-8"
       viewBox="0 0 512 512"
       enableBackground="new 0 0 512 512"
     >

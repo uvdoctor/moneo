@@ -140,70 +140,53 @@ export default function Goal({
   const earnLabel = "Earn";
   const maintainLabel = "Maintain";
   const rentLabel = "Rent?";
-  const BuyAndRentLabel = () => (
-    <Fragment>
-      <SVGScale className="inline" />
-      <label className="ml-1 cursor-pointer">Buy v/s Rent</label>
-    </Fragment>
-  );
-  const CashFlowLabel = () => (
-    <Fragment>
-      <SVGChart className="inline" />
-      <label className="ml-1 cursor-pointer">Cash Flows</label>
-    </Fragment>
-  );
+  const cfChartLabel = "Cash Flows";
+  const brChartLabel = "Buy v/s Rent";
+
   const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
       ? [
-          { label: amtLabel, enableOrder: 3, active: true },
-          { label: taxLabel, enableOrder: 8, active: true },
-          { label: loanLabel, enableOrder: 10, active: true },
-          { label: maintainLabel, enableOrder: 15, active: true },
-          { label: earnLabel, enableOrder: 17, active: true },
-          { label: sellLabel, enableOrder: 19, active: true },
-          { label: rentLabel, enableOrder: 21, active: true },
+          { label: amtLabel, order: 3, active: true },
+          { label: taxLabel, order: 8, active: true },
+          { label: loanLabel, order: 10, active: true },
+          { label: maintainLabel, order: 15, active: true },
+          { label: earnLabel, order: 17, active: true },
+          { label: sellLabel, order: 19, active: true },
+          { label: rentLabel, order: 21, active: true },
         ]
       : goalType === APIt.GoalType.D || goalType === APIt.GoalType.R
       ? [
-          { label: amtLabel, enableOrder: 3, active: true },
-          { label: taxLabel, enableOrder: 8, active: true },
+          { label: amtLabel, order: 3, active: true },
+          { label: taxLabel, order: 8, active: true },
         ]
       : [
-          { label: amtLabel, enableOrder: 3, active: true },
-          { label: taxLabel, enableOrder: 8, active: true },
-          { label: loanLabel, enableOrder: 10, active: true },
+          { label: amtLabel, order: 3, active: true },
+          { label: taxLabel, order: 8, active: true },
+          { label: loanLabel, order: 10, active: true },
         ]
   );
   const [showTab, setShowTab] = useState(amtLabel);
-  const [showResultTab, setShowResultTab] = useState<string>("CashFlow");
-  const [resultTabOptions, setResultTabOptions] = useState<Array<any>>([]);
+  const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
+  const [resultTabOptions, setResultTabOptions] = useState<Array<any>>([
+    {
+      label: cfChartLabel,
+      order: 1,
+      active: true,
+      svg: <SVGChart />,
+    },
+    {
+      label: brChartLabel,
+      order: 2,
+      active: false,
+      svg: <SVGScale />,
+    },
+  ]);
 
-  const resultsTabCodeMapping: {
-    [key: string]: number;
-  } = {
-    CashFlow: 1,
-    BuyAndRent: 2,
-  };
-
-  useEffect(() => {
-    const resultTabs = [
-      {
-        code: "CashFlow",
-        label: <CashFlowLabel />,
-        active: true,
-      },
-    ];
-
-    if (showBRChart) {
-      resultTabs.push({
-        code: "BuyAndRent",
-        label: <BuyAndRentLabel />,
-        active: true,
-      });
+  const getOrder = (label: string) => {
+    for(let i in resultTabOptions) {
+      if(resultTabOptions[i].label === label) return resultTabOptions[i].order
     }
-
-    setResultTabOptions(resultTabs);
-  }, [showBRChart]);
+  }
 
   const createNewBaseGoal = () => {
     return {
@@ -384,14 +367,20 @@ export default function Goal({
   };
 
   useEffect(() => {
-    if (!rentAmt) setRentAns("");
+    if (!rentAmt) {
+      setRentAns("");
+      if(resultTabOptions[1].active) {
+        resultTabOptions[1].active = false
+        setResultTabOptions([...resultTabOptions])
+      }
+    } else if(!resultTabOptions[1].active && isBRCompAvailable()) {
+        resultTabOptions[1].active = true
+        setShowBRChart(true)
+        setResultTabOptions([...resultTabOptions])
+    }
   }, [rentAmt]);
 
   const isBRCompAvailable = () => sellAfter && price > 0 && !!rentAmt;
-
-  useEffect(() => {
-    if (isBRCompAvailable() && showTab === rentLabel) setShowBRChart(true);
-  }, [showTab, rentAmt]);
 
   const handleNextStep = (count: number = 1) => {
     if (!allInputDone) {
@@ -437,6 +426,14 @@ export default function Goal({
 
   const showResultSection = () =>
     nowYear < startYear && allInputDone && cfs.length > 0;
+
+  const getActiveResultTabsCount = () => {
+    let count = 0
+    resultTabOptions.forEach((tab) => {
+      if(tab.active) count++
+    }, 0)
+    return count
+  } 
 
   return (
     <div className="w-full h-full">
@@ -487,14 +484,14 @@ export default function Goal({
         </div>
       </div>
       <div
-        className={`container mx-auto w-full flex flex-1 md:flex-row ${
+        className={`container mx-auto w-full h-full flex flex-1 md:flex-row ${
           showResultSection() && "flex-col-reverse"
         } items-start`}
       >
         <div
-          className={`w-full ${
+          className={`w-full h-full ${
             allInputDone && "lg:w-1/3"
-          } items-start transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col`}
+          } transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col justify-center items-center`}
         >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
             <Tabs
@@ -506,7 +503,7 @@ export default function Goal({
               allInputDone={allInputDone}
             />
           )}
-          <div className="overflow-y-auto lg:overflow-hidden w-full">
+          <div className="overflow-y-auto lg:overflow-hidden w-full h-full">
             {showTab === amtLabel && (
               <Fragment>
                 <div className="flex justify-around w-full items-end">
@@ -868,15 +865,15 @@ export default function Goal({
             </div>
             <Slider
               setSlide={(updatedItem: number) => {
-                for (let i in resultsTabCodeMapping) {
-                  if (resultsTabCodeMapping[i] === updatedItem) {
-                    setShowResultTab(i);
+                for (let i in resultTabOptions) {
+                  if (resultTabOptions[i].order === updatedItem) {
+                    setShowResultTab(resultTabOptions[i].label);
                     break;
                   }
                 }
               }}
-              totalItems={resultTabOptions.length}
-              currentItem={resultsTabCodeMapping[showResultTab] as number}
+              totalItems={getActiveResultTabsCount()}
+              currentItem={getOrder(showResultTab)}
             >
               <div
                 className={`${
