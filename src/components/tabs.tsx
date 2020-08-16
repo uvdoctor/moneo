@@ -39,7 +39,7 @@ export default function Tabs(props: TabsProps) {
       },
     },
     resultTab: {
-      parent: "w-full justify-end",
+      parent: "w-full flex justify-end",
       selected: {
         background: "bg-blue-600",
         text: "text-white",
@@ -104,18 +104,14 @@ export default function Tabs(props: TabsProps) {
           return (
             <li
               key={"tab" + i}
-              className={`${
-                isLinkDisabled(tab)
-                  ? "text-gray-400 cursor-not-allowed"
-                  : "cursor-pointer font-semibold"
-              } py-2 px-4 items-start 
+              className={`py-2 px-4 items-start 
                     ${
                       props.selectedTab === tab.label
-                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} rounded-b rounded-t`
+                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} cursor-pointer rounded-b rounded-t`
                         : !isLinkDisabled(tab)
                         ? `${currentStyle.unselected.text} ${currentStyle.unselected.background} 
-                          hover:${currentStyle.unselected.hover}`
-                        : ""
+                          cursor-pointer shadow-lg lg:shadow-xl bg-gray-200 hover:${currentStyle.unselected.hover}`
+                        : "cursor-not-allowed text-gray-400"
                     }
                     `}
               onClick={() =>

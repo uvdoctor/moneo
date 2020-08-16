@@ -857,6 +857,7 @@ export default function Goal({
                       selectedTabHandler={setShowResultTab}
                       capacity={2}
                       customStyle="resultTab"
+                      allInputDone={true}
                     />
                   </div>
               </div>
