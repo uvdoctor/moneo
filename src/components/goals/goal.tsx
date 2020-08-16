@@ -491,7 +491,7 @@ export default function Goal({
         <div
           className={`w-full h-full ${
             allInputDone && "lg:w-1/3"
-          } transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col justify-center items-center`}
+          } transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col justify-between items-stretch`}
         >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
             <Tabs
@@ -503,7 +503,7 @@ export default function Goal({
               allInputDone={allInputDone}
             />
           )}
-          <div className="overflow-y-auto lg:overflow-hidden w-full h-full">
+          <div className="overflow-y-auto lg:overflow-hidden w-full">
             {showTab === amtLabel && (
               <Fragment>
                 <div className="flex justify-around w-full items-end">
@@ -845,7 +845,7 @@ export default function Goal({
                 hideResultLabel
               />
             )}
-            <div className="flex mt-1 w-full items-center font-semibold">
+            <div className="flex w-full items-center font-semibold">
               <div className="ml-1 w-1/12 cursor-pointer" onClick={toggle}>
                 {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
               </div>
