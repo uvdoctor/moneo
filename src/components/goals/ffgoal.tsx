@@ -160,13 +160,13 @@ export default function FFGoal({
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false)
 
   const [tabOptions, setTabOptions] = useState<Array<any>>([
-    { label: investLabel, enableOrder: 3, active: true },
-    { label: expLabel, enableOrder: 5, active: true },
-    { label: incomeLabel, enableOrder: 8, active: true },
-    { label: careLabel, enableOrder: 11, active: true },
-    { label: gainsLabel, enableOrder: 16, active: true },
-    { label: lossesLabel, enableOrder: 17, active: true },
-    { label: nomineeLabel, enableOrder: 18, active: true },
+    { label: investLabel, order: 3, active: true },
+    { label: expLabel, order: 5, active: true },
+    { label: incomeLabel, order: 8, active: true },
+    { label: careLabel, order: 11, active: true },
+    { label: gainsLabel, order: 16, active: true },
+    { label: lossesLabel, order: 17, active: true },
+    { label: nomineeLabel, order: 18, active: true },
   ]);
 
   const resultTabOptions = [
@@ -242,7 +242,7 @@ export default function FFGoal({
       if (!hasCareTab()) {
         tabOptions.splice(3, 0, {
           label: careLabel,
-          enableOrder: 11,
+          order: 11,
           active: true,
         });
         setTabOptions([...tabOptions]);
@@ -388,7 +388,7 @@ export default function FFGoal({
       let label = getTabLabelByOrder(co)
       if(label) setShowTab(label)
       setCurrentOrder(co);
-      if (co === 23) setAllInputDone(true);
+      if (label === gainsLabel) setAllInputDone(true);
     }
   };
 
@@ -446,7 +446,6 @@ export default function FFGoal({
             />
           )}
           <div className="overflow-y-auto lg:overflow-hidden w-full flex justify-center">
-            <div className="p-2">
               {showTab === investLabel && (allInputDone || (!allInputDone && currentOrder >= 3)) && (
                 <Section
                   title="Before Financial Freedom"
@@ -896,7 +895,6 @@ export default function FFGoal({
                   insideForm
                 />
               )}
-            </div>
           </div>
           <ActionButtons
             submitDisabled={
