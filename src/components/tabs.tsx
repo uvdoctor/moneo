@@ -106,7 +106,7 @@ export default function Tabs(props: TabsProps) {
               className={`py-2 px-4 items-start 
                     ${
                       props.selectedTab === tab.label
-                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} cursor-pointer rounded-b rounded-t`
+                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} font-semibold cursor-pointer rounded-b rounded-t`
                         : !isLinkDisabled(tab)
                         ? `${currentStyle.unselected.text} ${currentStyle.unselected.background} 
                           cursor-pointer font-semibold shadow-lg lg:shadow-xl bg-gray-200 hover:${currentStyle.unselected.hover}`
