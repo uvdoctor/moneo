@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Logo from "./logo";
 import SVGOff from "./svgoff";
-import SVGFullScreen from "./svgfullscreen";
-import SVGExitFullScreen from "./svgexitfullscreen";
 import { Auth, Hub } from "aws-amplify";
 import { useRouter } from "next/router";
+import FullScreen from "./fullscreen";
 
-interface UserHeaderProps {
-  fullScreen: boolean;
-  fullScreenHandler: Function;
-}
-
-const UserHeader = ({ fullScreen, fullScreenHandler }: UserHeaderProps) => {
+const UserHeader = () => {
   const [username, setUsername] = useState<string | null>(null);
   const router = useRouter();
 
@@ -75,9 +69,7 @@ const UserHeader = ({ fullScreen, fullScreenHandler }: UserHeaderProps) => {
                             <li className="py-1 hover:text-black" onClick={handleLogout}>Logout</li>
                         </ul>
             </div>*/}
-          <div onClick={() => fullScreenHandler()}>
-            {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
-          </div>
+          <FullScreen />
           {/*<div onClick={handleHelp}><a>Help</a></div>*/}
           <div className="ml-2 mr-2" onClick={handleLogout}>
             <a>

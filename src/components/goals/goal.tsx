@@ -11,15 +11,13 @@ import BRComparison from "../calc/brcomparison";
 import LineChart from "./linechart";
 import Section from "../form/section";
 import Sell from "./sell";
-import SVGClose from "../svgclose";
+import StickyHeader from "./stickyheader";
 import SVGChart from "../svgchart";
-import SVGSave from "../svgsave";
 import Cost from "./cost";
 import { calculateCFs, getLoanBorrowAmt } from "./cfutils";
 import { getDuration, getGoalTypes, getImpLevels } from "./goalutils";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
-import SVGLogo from "../svglogo";
 import AnnualAmt from "./annualamt";
 import SVGBalance from "../calc/svgbalance";
 import SVGExitFullScreen from "../svgexitfullscreen";
@@ -167,7 +165,7 @@ export default function Goal({
   );
   const [showTab, setShowTab] = useState(amtLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
-  const [totalActiveCharts, setTotalActiveCharts] = useState<number>(1)
+  const [totalActiveCharts, setTotalActiveCharts] = useState<number>(1);
   const [resultTabOptions, setResultTabOptions] = useState<Array<any>>([
     {
       label: cfChartLabel,
@@ -367,15 +365,15 @@ export default function Goal({
       if (resultTabOptions[1].active) {
         resultTabOptions[1].active = false;
         setResultTabOptions([...resultTabOptions]);
-        setTotalActiveCharts(totalActiveCharts - 1)
-        setShowBRChart(false)
-        if(showResultTab === brChartLabel) setShowResultTab(cfChartLabel)
+        setTotalActiveCharts(totalActiveCharts - 1);
+        setShowBRChart(false);
+        if (showResultTab === brChartLabel) setShowResultTab(cfChartLabel);
       }
     } else if (isBRCompAvailable()) {
       if (!resultTabOptions[1].active) {
         resultTabOptions[1].active = true;
         setResultTabOptions([...resultTabOptions]);
-        setTotalActiveCharts(totalActiveCharts + 1)
+        setTotalActiveCharts(totalActiveCharts + 1);
       }
       setShowBRChart(true);
       if (showResultTab !== brChartLabel) setShowResultTab(brChartLabel);
@@ -385,16 +383,16 @@ export default function Goal({
   const isBRCompAvailable = () => sellAfter && price > 0 && !!rentAmt;
 
   const getTabLabelByOrder = (order: number) => {
-    let result = tabOptions.filter((t) => t.order === order && t.active)
-    if(result && result.length === 1) return result[0].label
-    return null
-  }
+    let result = tabOptions.filter((t) => t.order === order && t.active);
+    if (result && result.length === 1) return result[0].label;
+    return null;
+  };
 
   const handleNextStep = (count: number = 1) => {
     if (!allInputDone) {
       let co = currentOrder + count;
-      let label = getTabLabelByOrder(co)
-      if(label) setShowTab(label)
+      let label = getTabLabelByOrder(co);
+      if (label) setShowTab(label);
       setCurrentOrder(co);
       if (co === 23) setAllInputDone(true);
     }
@@ -416,10 +414,7 @@ export default function Goal({
 
   return (
     <div className="w-full h-full">
-      <div className="container mx-auto flex pb-4 w-full justify-between items-start">
-        <div onClick={() => cancelCallback()}>
-          <SVGLogo />
-        </div>
+      <StickyHeader cancelCallback={cancelCallback}>
         <TextInput
           name="name"
           inputOrder={1}
@@ -445,23 +440,7 @@ export default function Goal({
           changeHandler={setImpLevel}
           options={getImpLevels()}
         />
-        <div>
-          <div
-            className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
-            onClick={() => cancelCallback()}
-          >
-            <SVGClose />
-          </div>
-          <div
-            className="mt-1 border-0 outline-none focus:outline-none"
-            onClick={() => handleSubmit()}
-          >
-            <SVGSave
-              disable={!allInputDone || name.length < 3 || !price || btnClicked}
-            />
-          </div>
-        </div>
-      </div>
+      </StickyHeader>
       <div
         className={`container mx-auto w-full h-full flex flex-1 md:flex-row ${
           showResultSection() && "flex-col-reverse"
@@ -829,15 +808,15 @@ export default function Goal({
                 {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
               </div>
               <div className="w-11/12">
-                    <Tabs
-                      tabs={resultTabOptions}
-                      selectedTab={showResultTab}
-                      selectedTabHandler={setShowResultTab}
-                      capacity={2}
-                      customStyle="resultTab"
-                      allInputDone
-                    />
-                  </div>
+                <Tabs
+                  tabs={resultTabOptions}
+                  selectedTab={showResultTab}
+                  selectedTabHandler={setShowResultTab}
+                  capacity={2}
+                  customStyle="resultTab"
+                  allInputDone
+                />
+              </div>
             </div>
             <Slider
               setSlide={setShowResultTab}

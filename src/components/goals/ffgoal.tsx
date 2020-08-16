@@ -9,9 +9,6 @@ import {
   getRangeFactor,
   changeSelection,
 } from "../utils";
-import SVGClose from "../svgclose";
-import SVGLogo from "../svglogo";
-import SVGSave from "../svgsave";
 import Section from "../form/section";
 import SelectInput from "../form/selectinput";
 import RadialInput from "../form/radialinput";
@@ -32,6 +29,7 @@ import SVGFullScreen from "../svgfullscreen";
 import SVGExitFullScreen from "../svgexitfullscreen";
 import { useFullScreen } from "react-browser-hooks";
 import SVGBarChart from "../svgbarchart";
+import StickyHeader from "./stickyheader";
 
 interface FFGoalProps {
   goal: APIt.CreateGoalInput;
@@ -386,10 +384,7 @@ export default function FFGoal({
 
   return (
     <div className="w-full h-full overflow-hidden">
-      <div className="container mx-auto pb-4 w-full flex justify-between items-start">
-        <div onClick={() => cancelCallback()}>
-          <SVGLogo />
-        </div>
+      <StickyHeader cancelCallback={cancelCallback}>
         <SelectInput
           name="ey"
           info="Select the Year till You Want to Plan. After this Year, it is assumed that You will leave behind inheritance for Your Nominees, if any."
@@ -415,28 +410,7 @@ export default function FFGoal({
           changeHandler={changeCurrency}
           currency
         />
-        <div>
-          <div
-            className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
-            onClick={() => cancelCallback()}
-          >
-            <SVGClose />
-          </div>
-          <div
-            className="mt-1 border-0 outline-none focus:outline-none"
-            onClick={() => handleSubmit()}
-          >
-            <SVGSave
-              disable={
-                !allInputDone ||
-                annualSavings === 0 ||
-                expenseAfterFF < 5000 ||
-                btnClicked
-              }
-            />
-          </div>
-        </div>
-      </div>
+      </StickyHeader>
       <div
         className={`container mx-auto flex flex-1 md:flex-row ${
           showResultSection() && "flex-col-reverse"
