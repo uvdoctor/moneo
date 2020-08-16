@@ -91,7 +91,7 @@ export default function Tabs(props: TabsProps) {
         </div>
       )}
       <ul
-        className={`flex  ${!props.allInputDone && "flex-wrap"} ${
+        className={`flex  ${!props.allInputDone && "flex-wrap w-full justify-around"} ${
           currentStyle.parent
         }`}
       >
@@ -100,7 +100,6 @@ export default function Tabs(props: TabsProps) {
             if (i > endIndex) return;
             if (Math.abs(endIndex - i) >= props.capacity) return;
           }
-          {console.log("Tab active status: ", tab.active)}
           return (
             <li
               key={"tab" + i}
@@ -110,7 +109,7 @@ export default function Tabs(props: TabsProps) {
                         ? `${currentStyle.selected.text} ${currentStyle.selected.background} cursor-pointer rounded-b rounded-t`
                         : !isLinkDisabled(tab)
                         ? `${currentStyle.unselected.text} ${currentStyle.unselected.background} 
-                          cursor-pointer shadow-lg lg:shadow-xl bg-gray-200 hover:${currentStyle.unselected.hover}`
+                          cursor-pointer font-semibold shadow-lg lg:shadow-xl bg-gray-200 hover:${currentStyle.unselected.hover}`
                         : "cursor-not-allowed text-gray-400"
                     }
                     `}
@@ -119,7 +118,7 @@ export default function Tabs(props: TabsProps) {
               }
             >
               <div className="flex items-center">
-                {tab.svg && <div className="inline mr-1">{tab.svg}</div>}
+                {tab.svg && !isLinkDisabled(tab) && <div className="inline mr-1">{tab.svg}</div>}
                 {tab.label}
               </div>
             </li>

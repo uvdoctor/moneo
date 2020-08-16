@@ -849,8 +849,7 @@ export default function Goal({
               <div className="ml-1 w-1/12 cursor-pointer" onClick={toggle}>
                 {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
               </div>
-              <div className="w-11/12 flex items-center justify-around">
-                  <div className="mr-1 flex items-end w-full">
+              <div className="w-11/12">
                     <Tabs
                       tabs={resultTabOptions}
                       selectedTab={showResultTab}
@@ -860,7 +859,6 @@ export default function Goal({
                       allInputDone={true}
                     />
                   </div>
-              </div>
             </div>
             <Slider
               setSlide={(updatedItem: number) => {
@@ -876,7 +874,7 @@ export default function Goal({
             >
               <div
                 className={`${
-                  resultTabOptions.length === 1 ? "w-full" : "w-1/2"
+                  totalActiveCharts === 1 ? "w-full" : "w-1/2"
                 } inline-block`}
               >
                 <LineChart
@@ -887,7 +885,7 @@ export default function Goal({
               </div>
               <div
                 className={`${
-                  resultTabOptions.length === 1 ? "w-full" : "w-1/2"
+                  totalActiveCharts === 1 ? "w-full" : "w-1/2"
                 } inline-block`}
               >
                 {isBRCompAvailable() && (
