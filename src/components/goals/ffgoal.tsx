@@ -388,7 +388,7 @@ export default function FFGoal({
       let label = getTabLabelByOrder(co)
       if(label) setShowTab(label)
       setCurrentOrder(co);
-      if (label === gainsLabel) setAllInputDone(true);
+      if (label === nomineeLabel) setAllInputDone(true);
     }
   };
 
@@ -407,7 +407,7 @@ export default function FFGoal({
           nextStepDisabled={false}
           allInputDone={allInputDone}
           nextStepHandler={handleNextStep}
-          pre="Plan Until"
+          pre="Plan End Year"
           value={endYear}
           changeHandler={(val: string) => changeSelection(val, setEndYear)}
           options={eyOptions}
@@ -432,7 +432,7 @@ export default function FFGoal({
       >
         <div
           className={`w-full ${
-            allInputDone && "lg:w-1/3"
+            allInputDone && "lg:w-1/3 xl:w-1/4"
           } items-start transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col`}
         >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (

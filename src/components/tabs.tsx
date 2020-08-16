@@ -84,10 +84,10 @@ export default function Tabs(props: TabsProps) {
   return (
     <div className="w-full flex items-center">
       {props.allInputDone && props.tabs.length > props.capacity && (
-        <div className="w-1/12 ml-4 md:ml-8">
-          {endIndex > props.capacity - 1 ? (
+        <div className="mr-2">
+          {endIndex > props.capacity - 1 && (
             <LeftArrow clickHandler={handleDecrement} />
-          ) : null}
+          )}
         </div>
       )}
       <ul
@@ -126,11 +126,11 @@ export default function Tabs(props: TabsProps) {
         })}
       </ul>
       {props.allInputDone && props.tabs.length > props.capacity && (
-        <div className="w-1/12 mr-4 md:mr-8 text-xl">
+        <div className="ml-2">
           {endIndex >= props.capacity - 1 &&
-          endIndex < props.tabs.length - 1 ? (
+          endIndex < props.tabs.length - 1 && (
             <RightArrow clickHandler={handleIncrement} />
-          ) : null}
+          )}
         </div>
       )}
     </div>

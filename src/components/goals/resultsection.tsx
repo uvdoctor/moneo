@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useRef } from "react";
 import { useFullScreen } from "react-browser-hooks";
 import SVGFullScreen from "../svgfullscreen";
 import SVGExitFullScreen from "../svgexitfullscreen";
-import Slider from "../Slider";
+import Slider from "../slider";
 import Tabs from "../tabs"
 interface ResultSectionProps {
     result: ReactNode
@@ -24,7 +24,7 @@ export default function ResultSection(props: ResultSectionProps) {
   return (
     <div
       ref={chartDiv}
-      className={`w-full lg:w-2/3 transition-width duration-1000 ease-in-out`}
+      className={`w-full lg:w-2/3 xl:w-3/4 transition-width duration-1000 ease-in-out`}
     >
       {props.result}
       <div className="flex w-full items-center font-semibold">

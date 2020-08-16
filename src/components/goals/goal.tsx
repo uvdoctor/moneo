@@ -392,7 +392,7 @@ export default function Goal({
       let label = getTabLabelByOrder(co);
       if (label) setShowTab(label);
       setCurrentOrder(co);
-      if (co === 23) setAllInputDone(true);
+      if (label === rentLabel) setAllInputDone(true);
     }
   };
 
@@ -446,7 +446,7 @@ export default function Goal({
       >
         <div
           className={`w-full h-full ${
-            allInputDone && "lg:w-1/3"
+            allInputDone && "lg:w-1/3 xl:w-1/4"
           } transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col justify-between items-stretch`}
         >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
@@ -567,8 +567,8 @@ export default function Goal({
               </div>
             )}
 
-            {showTab === loanLabel && goal?.emi ? (
-              <div className="flex w-full sm:justify-around">
+            {showTab === loanLabel && (
+              <div className="flex w-full justify-around">
                 <EmiCost
                   price={price}
                   currency={currency}
@@ -606,10 +606,9 @@ export default function Goal({
                   allInputDone={allInputDone}
                 />
               </div>
-            ) : (
-              !allInputDone && currentOrder === 10 && handleNextStep(5)
             )}
-            {showTab === maintainLabel ? (
+
+            {showTab === maintainLabel && (
               <div className="flex w-full justify-around">
                 <AnnualAmt
                   currency={currency}
@@ -630,10 +629,9 @@ export default function Goal({
                   allInputDone={allInputDone}
                 />
               </div>
-            ) : (
-              !allInputDone && currentOrder === 15 && handleNextStep(2)
             )}
-            {showTab === earnLabel ? (
+
+            {showTab === earnLabel && (
               <div className="flex w-full justify-around">
                 <AnnualAmt
                   currency={currency}
@@ -654,11 +652,9 @@ export default function Goal({
                   allInputDone={allInputDone}
                 />
               </div>
-            ) : (
-              !allInputDone && currentOrder === 17 && handleNextStep(2)
             )}
 
-            {showTab === sellLabel ? (
+            {showTab === sellLabel && (
               <div className="flex sm:justify-center w-full">
                 <Sell
                   price={price}
@@ -679,14 +675,12 @@ export default function Goal({
                   allInputDone={allInputDone}
                 />
               </div>
-            ) : (
-              !allInputDone && currentOrder === 19 && handleNextStep(2)
             )}
 
             {showTab === rentLabel && nowYear < startYear ? (
               <div className="flex w-full justify-around items-start">
                 <Section
-                  title="Instead, If You Rent"
+                  title="If You Rent Instead of Buying"
                   insideForm
                   left={
                     <NumberInput
