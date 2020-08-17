@@ -254,12 +254,12 @@ const createLoanCFs = (p: number, goal: APIt.CreateGoalInput, duration: number) 
     let cfs: Array<number> = []
     if (!goal.emi?.per || !goal.emi?.dur || !goal.emi?.rate) return cfs
     let loanBorrowAmt = getLoanBorrowAmt(p, goal.type, goal.manual, goal?.chg as number, goal.ey - goal.sy, goal.emi?.per)
-    let loanDP = Math.round(loanBorrowAmt / (goal.emi.per / 100))
-    for (let y = goal.sy; y < goal.emi?.ry; y++) {
+    let loanDP = Math.round(loanBorrowAmt / (goal.emi.per / 100));
+    for (let y = goal.sy; y < goal.emi?.ry; y++) { // Interest amount before repayment starts
         let intAmt = loanBorrowAmt * (goal.emi?.rate / 100)
         loanBorrowAmt += intAmt
     }
-    let emi = Math.round(getEmi(loanBorrowAmt, goal.emi?.rate, goal.emi?.dur * 12))
+    let emi = Math.round(getEmi(loanBorrowAmt, goal.emi?.rate, goal.emi?.dur * 12)) //tested
     let annualInts = getIntAmtByYear(loanBorrowAmt, emi, goal.emi?.rate, goal.emi?.dur * 12)
     let ey = goal.sy + duration - 1
     let sp = 0
@@ -268,7 +268,7 @@ const createLoanCFs = (p: number, goal: APIt.CreateGoalInput, duration: number) 
         let cf = year === goal.sy ? loanDP : 0
         cf -= taxBenefit
         taxBenefit = 0
-        if (year >= (goal.emi?.ry as number) && ly > 0) {
+        if (year >= (goal.emi?.ry as number) && ly > 0) { // First CF is sy, second CF starts when RY starts
             let annualEmiAmt = emi * (ly === 0.5 ? 6 : 12)
             cf += annualEmiAmt
             let i = year - (goal.emi?.ry as number)

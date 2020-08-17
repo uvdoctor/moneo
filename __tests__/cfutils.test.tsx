@@ -1,6 +1,4 @@
-//import type { CreateGoalInput } from '../src/api/goals';
-//import * as APIt from '../../api/goals'
-//import { GoalType } from '../src/api/goals';
+import * as goals from '../src/api/goals';
 import * as cfutils from '../src/components/goals/cfutils';
 
 describe('getTaxBenefit test suite', () => {
@@ -57,43 +55,53 @@ describe('calculateSellPrice',()=>{
     })
 })
 describe('calculateCFs Test suite',()=>{
-    // createGoalInput goal = {
-    //     id: "75004807-9102-4858-88ce-b01df75d3fa4", 
-    //     sy: 2027, 
-    //     ey: 2027, 
-    //     by: 2020, 
-    //     btr: null,
-    //     ccy: "INR",
-    //     chg: 3,
-    //     cp: 400000,
-    //     createdAt: "2020-08-06T06:21:39.492Z",
-    //     dr: null,
-    //     emi: {per: 0, rate: 4, dur: 10, ry: 2021},
-    //     imp: "H",
-    //     manual: 0,
-    //     met: null,
-    //     name: "House",
-    //     owner: "manishagarg",
-    //     pg: null,
-    //     pl: null,
-    //     prob: null,
-    //     ra: null,
-    //     rachg: null,
-    //     sa: 5,
-    //     tbi: 0,
-    //     tbr: 0,
-    //     tdl: 0,
-    //     tdli: 0,
-    //     tdr: 0,
-    //     tgts: [],
-    //     type: "B",
-    //     updatedAt: "2020-08-06T06:21:39.492Z"
-    // };
-    // test('price is null', () => {
-    //     let sellPrice = cfutils.calculateCFs(2232, null, 12);
-    //     expect(sellPrice).not.toBe(null);
+    
+    const goal: goals.CreateGoalInput = {
+        achg: 3,
+        aiper: 0,
+        aisy: 2021,
+        amper: 2,
+        amsy: 2021,
+        by: 2020,
+        ccy: "INR",
+        chg: 3,
+        cp: 5800000,
+        emi: {rate: 4, dur: 10, per: 0, ry: 2021},
+        ey: 2021,
+        imp: goals.LMH.M,
+        manual: 0,
+        name: "House",
+        ra: 0,
+        rachg: 5,
+        sa: 5,
+        sy: 2021,
+        tbi: 0,
+        tbr: 0,
+        tdl: 0,
+        tdli: 0,
+        tdr: 0,
+        tgts: [],
+        type: goals.GoalType.B,
+        id: "75004807-9102-4858-88ce-b01df75d3fa4"
+       
+    };
+    test('price is passed', () => {
+        let duration = 5;
+        let sellPrice = cfutils.calculateCFs(5974000, goal, duration);
+        expect(sellPrice).not.toBe(null);
+        expect(sellPrice).toEqual([-6093480,-123064,-126756,-130559,-134476,6925503]);
+        expect(sellPrice).toHaveLength(duration+1);
         
-    // })
+    })
+    test('price is null', () => {
+        let duration = 5;
+        let sellPrice = cfutils.calculateCFs(null, goal, duration);
+        let sellPriceExpected = cfutils.calculateCFs(5974000, goal, duration);
+        expect(sellPrice).not.toBe(null);
+        expect(sellPrice).toEqual(sellPriceExpected);
+        expect(sellPrice).toHaveLength(duration+1);
+    });
+
 })
 
 describe('getLoanBorrowAmt test suite', ()=>{
@@ -132,4 +140,5 @@ describe('getLoanPaidForMonths test suite', ()=>{
     // If negative that means loan is taken till loan years
     // Include that check
 })
+
 

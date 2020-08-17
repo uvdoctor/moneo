@@ -297,3 +297,33 @@ describe('Get NPV Suite', ()=>{
   // }
 
 })
+describe('get interest by year test suite', ()=>{
+  test('getIntAmtByYear is a number and not null', ()=> {
+    let interest = finance.getIntAmtByYear(0,21,1,144);
+    expect(interest).not.toBe(null);
+    expect(interest).not.toBeNaN();
+  });
+  test('getIntAmtByYear returns array with length = LY', ()=> {
+    let loanYears = 12;
+    let months: number = loanYears*12;
+    let interest = finance.getIntAmtByYear(2821453.6,32268,9.1,months);
+    expect(interest).not.toBe(null);
+    expect(interest).toHaveLength(loanYears)
+  });
+
+  test('getIntAmtByYear check each years annual interest', ()=> {
+    let interest = finance.getIntAmtByYear(2821453.6,32268,9.1,144);
+    expect(interest[0]).toBe(251170.93043394785);
+    expect(interest[1]).toBe(238261.1980136186);
+    expect(interest[2]).toBe(224126.42163031368);
+    expect(interest[3]).toBe(208650.3531185125);
+    expect(interest[4]).toBe(191705.71316900107);
+    expect(interest[5]).toBe(173153.1445499335);
+    expect(interest[6]).toBe(152840.06599584265);
+    expect(interest[7]).toBe(130599.41733867567);
+    expect(interest[8]).toBe(106248.28556047815);
+    expect(interest[9]).toBe(79586.40046801895);
+    expect(interest[10]).toBe(50394.487617382976);
+    expect(interest[11]).toBe(18432.46494254415);
+  });
+});
