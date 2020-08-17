@@ -185,7 +185,7 @@ export default function FFGoal({
   ];
 
   const [showTab, setShowTab] = useState(investLabel);
-  const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
+  const [showResultTab, setShowResultTab] = useState<string>(aaChartLabel);
   
   const createGoal = () => {
     return {

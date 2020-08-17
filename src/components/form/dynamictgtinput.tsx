@@ -67,7 +67,7 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
     return (
         <div className="w-full">
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
-                <div className={`${!props.allInputDone && props.inputOrder === props.currentOrder ? 'p-2 border-2 border-orange-600' : ''}`}>
+                <div className={`${!props.allInputDone && props.inputOrder === props.currentOrder ? 'p-2 border-2 border-blue-600' : ''}`}>
                     {props.tgts && props.tgts[0] ? props.tgts.map((t, i) =>
                         <div key={"ctr" + i} className="mt-2 flex items-center justify-start w-full">
                             <div className="flex justify-center mr-1 pl-2">
