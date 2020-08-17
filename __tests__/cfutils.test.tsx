@@ -141,4 +141,94 @@ describe('getLoanPaidForMonths test suite', ()=>{
     // Include that check
 })
 
+describe('calculateCFs Test with createAutoCF suite',()=>{
+    
+    const goal: goals.CreateGoalInput = {
+        achg: 3,
+        aiper: 0,
+        aisy: 2021,
+        amper: 2,
+        amsy: 2021,
+        by: 2020,
+        ccy: "INR",
+        chg: 2.5,
+        cp: 6550000,
+        emi: {rate: 4, dur: 10, per: 0, ry: 2021},
+        ey: 2023,
+        imp: goals.LMH.M,
+        manual: 0,
+        name: "House",
+        ra: 0,
+        rachg: 5,
+        sa: 5,
+        sy: 2023,
+        tbi: 0,
+        tbr: 0,
+        tdl: 0,
+        tdli: 0,
+        tdr: 0,
+        tgts: [],
+        type: goals.GoalType.B,
+        id: "75004807-9102-4858-88ce-b01df75d3fa4"
+       
+    };
+    test('AutoCF is called', () => {
+        let duration = 5;
+        let price = 7157362;
+        let cashFlows = cfutils.calculateCFs(price, goal, duration);
+        expect(cashFlows).not.toBe(null);
+        expect(cashFlows).toEqual([-7300509, -147442, -151865, -156421, -161113, 8297344]);
+    })
+    
+
+})
+
+describe('calculateCFs Test with createLoanCF suite',()=>{
+    
+    const goal: goals.CreateGoalInput = {
+        achg: 3,
+        aiper: 0,
+        aisy: 2021,
+        amper: 2,
+        amsy: 2021,
+        by: 2020,
+        ccy: "INR",
+        chg: 2.5,
+        cp: 6550000,
+        emi: {rate: 9, dur: 12, per: 40, ry: 2024},
+        ey: 2023,
+        imp: goals.LMH.M,
+        manual: 0,
+        name: "House",
+        ra: 0,
+        rachg: 5,
+        sa: 5,
+        sy: 2023,
+        tbi: 0,
+        tbr: 0,
+        tdl: 800000,
+        tdli: 0,
+        tdr: 10,
+        tgts: [],
+        type: goals.GoalType.B
+    };
+
+    test('price is passed', () => {
+        let duration = 5;
+        let price = 7053634;
+        // ey = sy+duration-1 = 2027, sy =2023, loan for 12 years.
+        //loanDP = price = 7053634
+        //tax benefit on LoanDP = 0
+        //First CF = -loanDP
+        //emi = 32109 tested
+        //received annualInt array of length 12 = loan years (correct)
+        let loanCF = cfutils.calculateCFs(price, goal, duration);
+        expect(loanCF).not.toBe(null);
+        expect(loanCF).toHaveLength(duration+1);
+
+    })
+    
+
+})
+
 
