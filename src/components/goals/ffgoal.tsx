@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import * as APIt from "../../api/goals";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
@@ -9,9 +9,6 @@ import {
   getRangeFactor,
   changeSelection,
 } from "../utils";
-import SVGClose from "../svgclose";
-import SVGLogo from "../svglogo";
-import SVGSave from "../svgsave";
 import Section from "../form/section";
 import SelectInput from "../form/selectinput";
 import RadialInput from "../form/radialinput";
@@ -28,11 +25,9 @@ import { getRAOptions } from "./goalutils";
 import { getCompoundedIncome } from "../calc/finance";
 import AA from "./aa";
 import Tabs from "../tabs";
-import SVGFullScreen from "../svgfullscreen";
-import SVGExitFullScreen from "../svgexitfullscreen";
-import { useFullScreen } from "react-browser-hooks";
 import SVGBarChart from "../svgbarchart";
-
+import StickyHeader from "./stickyheader";
+import ResultSection from "./resultsection"
 interface FFGoalProps {
   goal: APIt.CreateGoalInput;
   totalSavings: number;
@@ -94,8 +89,6 @@ export default function FFGoal({
   addCallback,
   updateCallback,
 }: FFGoalProps) {
-  const chartDiv = useRef(null);
-  const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
   const [riskProfile, setRiskProfile] = useState<APIt.LMH>(goal.imp);
   const [expenseBY, setExpenseBY] = useState<number>(goal.sy);
   const [expenseAfterFF, setExpenseAfterFF] = useState<number>(
@@ -155,26 +148,45 @@ export default function FFGoal({
     goal.id ? true : false
   );
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
-  const [showCFChart, setShowCFChart] = useState<boolean>(false);
-  const beforeLabel = "Before";
-  const afterLabel = "After";
+  const investLabel = "Invest";
+  const expLabel = "Expenses";
   const incomeLabel = "Income";
   const careLabel = "Care";
   const gainsLabel = "Gains";
   const lossesLabel = "Losses";
   const nomineeLabel = "Nominees";
+  const cfChartLabel = "Cash Flows";
+  const aaChartLabel = "Asset Allocation";
+  const [chartFullScreen, setChartFullScreen] = useState<boolean>(false)
 
   const [tabOptions, setTabOptions] = useState<Array<any>>([
-    { label: beforeLabel, enableOrder: 3, active: true },
-    { label: afterLabel, enableOrder: 5, active: true },
-    { label: incomeLabel, enableOrder: 8, active: true },
-    { label: careLabel, enableOrder: 11, active: true },
-    { label: gainsLabel, enableOrder: 16, active: true },
-    { label: lossesLabel, enableOrder: 17, active: true },
-    { label: nomineeLabel, enableOrder: 18, active: true },
+    { label: investLabel, order: 3, active: true },
+    { label: expLabel, order: 5, active: true },
+    { label: incomeLabel, order: 8, active: true },
+    { label: careLabel, order: 11, active: true },
+    { label: gainsLabel, order: 16, active: true },
+    { label: lossesLabel, order: 17, active: true },
+    { label: nomineeLabel, order: 18, active: true },
   ]);
-  const [showTab, setShowTab] = useState(beforeLabel);
 
+  const resultTabOptions = [
+    {
+      label: cfChartLabel,
+      order: 1,
+      active: true,
+      svg: <SVGChart />,
+    },
+    {
+      label: aaChartLabel,
+      order: 2,
+      active: true,
+      svg: <SVGBarChart />,
+    },
+  ];
+
+  const [showTab, setShowTab] = useState(investLabel);
+  const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
+  
   const createGoal = () => {
     return {
       name: goal.name,
@@ -230,7 +242,7 @@ export default function FFGoal({
       if (!hasCareTab()) {
         tabOptions.splice(3, 0, {
           label: careLabel,
-          enableOrder: 11,
+          order: 11,
           active: true,
         });
         setTabOptions([...tabOptions]);
@@ -364,34 +376,19 @@ export default function FFGoal({
     setCurrency(curr);
   };
 
+  const getTabLabelByOrder = (order: number) => {
+    let result = tabOptions.filter((t) => t.order === order && t.active)
+    if(result && result.length === 1) return result[0].label
+    return null
+  }
+
   const handleNextStep = (count: number = 1) => {
     if (!allInputDone) {
       let co = currentOrder + count;
-      switch (co) {
-        case 3:
-          setShowTab(beforeLabel);
-          break;
-        case 5:
-          setShowTab(afterLabel);
-          break;
-        case 8:
-          setShowTab(incomeLabel);
-          break;
-        case 11:
-          setShowTab(careLabel);
-          break;
-        case 16:
-          setShowTab(gainsLabel);
-          break;
-        case 17:
-          setShowTab(lossesLabel);
-          break;
-        case 18:
-          setShowTab(nomineeLabel);
-          break;
-      }
+      let label = getTabLabelByOrder(co)
+      if(label) setShowTab(label)
       setCurrentOrder(co);
-      if (co === 20) setAllInputDone(true);
+      if (label === nomineeLabel) setAllInputDone(true);
     }
   };
 
@@ -401,10 +398,7 @@ export default function FFGoal({
 
   return (
     <div className="w-full h-full overflow-hidden">
-      <div className="container mx-auto pb-4 w-full flex justify-between items-start">
-        <div onClick={() => cancelCallback()}>
-          <SVGLogo />
-        </div>
+      <StickyHeader cancelCallback={cancelCallback}>
         <SelectInput
           name="ey"
           info="Select the Year till You Want to Plan. After this Year, it is assumed that You will leave behind inheritance for Your Nominees, if any."
@@ -413,7 +407,7 @@ export default function FFGoal({
           nextStepDisabled={false}
           allInputDone={allInputDone}
           nextStepHandler={handleNextStep}
-          pre="Plan Until"
+          pre="Plan End Year"
           value={endYear}
           changeHandler={(val: string) => changeSelection(val, setEndYear)}
           options={eyOptions}
@@ -430,28 +424,7 @@ export default function FFGoal({
           changeHandler={changeCurrency}
           currency
         />
-        <div>
-          <div
-            className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
-            onClick={() => cancelCallback()}
-          >
-            <SVGClose />
-          </div>
-          <div
-            className="mt-1 border-0 outline-none focus:outline-none"
-            onClick={() => handleSubmit()}
-          >
-            <SVGSave
-              disable={
-                !allInputDone ||
-                annualSavings === 0 ||
-                expenseAfterFF < 5000 ||
-                btnClicked
-              }
-            />
-          </div>
-        </div>
-      </div>
+      </StickyHeader>
       <div
         className={`container mx-auto flex flex-1 md:flex-row ${
           showResultSection() && "flex-col-reverse"
@@ -459,7 +432,7 @@ export default function FFGoal({
       >
         <div
           className={`w-full ${
-            allInputDone && "lg:w-1/3"
+            allInputDone && "lg:w-1/3 xl:w-1/4"
           } items-start transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col`}
         >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
@@ -473,8 +446,7 @@ export default function FFGoal({
             />
           )}
           <div className="overflow-y-auto lg:overflow-hidden w-full flex justify-center">
-            <div className="p-2">
-              {showTab === beforeLabel && (allInputDone || (!allInputDone && currentOrder >= 3)) && (
+              {showTab === investLabel && (allInputDone || (!allInputDone && currentOrder >= 3)) && (
                 <Section
                   title="Before Financial Freedom"
                   left={
@@ -546,7 +518,7 @@ export default function FFGoal({
                 />
               )}
 
-              {showTab === afterLabel && (
+              {showTab === expLabel && (
                 <Section
                   title="After Financial Freedom"
                   left={
@@ -899,7 +871,7 @@ export default function FFGoal({
                     />
                   }
                   right={
-                    <NumberInput
+                    leaveBehind > 0 ? <NumberInput
                       name="str"
                       inputOrder={19}
                       currentOrder={currentOrder}
@@ -918,12 +890,11 @@ export default function FFGoal({
                         Math.round(leaveBehind * (successionTaxRate / 100)),
                         currency
                       )}`}
-                    />
+                    /> : !allInputDone && currentOrder === 19 && handleNextStep()
                   }
                   insideForm
                 />
               )}
-            </div>
           </div>
           <ActionButtons
             submitDisabled={
@@ -939,11 +910,10 @@ export default function FFGoal({
           />
         </div>
         {showResultSection() && (
-          <div
-            ref={chartDiv}
-            className={`w-full lg:w-2/3 transition-width duration-1000 ease-in-out`}
-          >
-            <FFResult
+          <ResultSection resultTabOptions={resultTabOptions} showResultTab={showResultTab}
+          showResultTabHandler={setShowResultTab} chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
+            result={
+              <FFResult
               endYear={endYear}
               ffAmt={ffAmt}
               ffLeftOverAmt={ffLeftOverAmt}
@@ -953,57 +923,19 @@ export default function FFGoal({
               ffOOM={ffOOM}
               currency={currency}
             />
-
-            <div className="flex mt-1 w-full items-center font-semibold">
-              <div className="ml-1 w-1/12 cursor-pointer" onClick={toggle}>
-                {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
-              </div>
-              <div className="w-11/12 flex items-center justify-around">
-                <div className="p-2 flex items-center rounded-t rounded-b text-white bg-blue-600">
-                  {showCFChart ? <SVGChart /> : <SVGBarChart />}
-                  <label className="ml-1">
-                    {showCFChart ? "Yearly Savings" : "Asset Allocation"}
-                  </label>
-                </div>
-                <div
-                  className="mr-1 flex items-center cursor-pointer"
-                  onClick={() => setShowCFChart(!showCFChart)}
-                >
-                  {showCFChart ? (
-                    <div className="flex items-center">
-                      <SVGBarChart />
-                      <label className="ml-1 cursor-pointer text-blue-600">
-                        Asset Allocation
-                      </label>
-                    </div>
-                  ) : (
-                    <div className="flex items-center">
-                      <SVGChart />
-                      <label className="ml-1 cursor-pointer text-blue-600">
-                        Yearly Savings
-                      </label>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {showCFChart ? (
-              <LineChart
+            }>
+            <LineChart
                 cfs={buildChartCFs(ffCfs)}
                 startYear={nowYear + 1}
-                fullScreen={fullScreen}
+                fullScreen={chartFullScreen}
               />
-            ) : (
-              <AA
+            <AA
                 ffGoalEndYear={endYear}
                 aa={aa}
                 rr={rr}
-                fullScreen={fullScreen}
+                fullScreen={chartFullScreen}
               />
-            )}
-          </div>
-        )}
+          </ResultSection>)}
       </div>
     </div>
   );

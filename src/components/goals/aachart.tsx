@@ -6,6 +6,7 @@ import {
   getCommonLayoutProps,
   getCommonStyle,
 } from "../chartutils";
+import { useFullScreenBrowser } from "react-browser-hooks";
 
 interface AAChartProps {
   aa: any;
@@ -17,6 +18,7 @@ interface AAChartProps {
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 export default function AAChart(props: AAChartProps) {
+  const fsb = useFullScreenBrowser();
   const createScatterTrace = (
     cfs: any,
     name: string,
@@ -51,9 +53,10 @@ export default function AAChart(props: AAChartProps) {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      window.dispatchEvent(new Event("resize"));
-    }, 300);
+    if (fsb.info.screenWidth > 800)
+      setTimeout(() => {
+        window.dispatchEvent(new Event("resize"));
+      }, 300);
   }, [props.fullScreen]);
 
   return (
@@ -67,7 +70,7 @@ export default function AAChart(props: AAChartProps) {
           legend: {
             orientation: "h",
             x: 0.25,
-            y: -0.2,
+            y: -0.25,
           },
         }}
         useResizeHandler

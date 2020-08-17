@@ -37,7 +37,7 @@ export default function LineChart(props: LineChartProps) {
   useEffect(() => {
     setTimeout(() => {
       window.dispatchEvent(new Event("resize"));
-    }, 300);
+    }, 500);
   }, [props.fullScreen]);
 
   return (

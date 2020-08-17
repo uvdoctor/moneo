@@ -21,7 +21,7 @@ export function BRCompChart(props: BRCompChartProps) {
   useEffect(() => {
     setTimeout(() => {
       window.dispatchEvent(new Event("resize"));
-    }, 300);
+    }, 500);
   }, [props.fullScreen]);
 
   useEffect;

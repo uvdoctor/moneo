@@ -489,7 +489,7 @@ export default function Goals({
       </div>
       {ffGoal ? (
         <Fragment>
-          <div className={`flex items-center w-full ${ffYear ? 'bg-green-100 border-green-200' : 'bg-red-100 border-red-200'} border-2`}>
+          <div className={`flex items-center w-full ${ffYear ? 'bg-green-100' : 'bg-red-100'} shadow-lg lg:shadow-xl`}>
             <FFResult
               endYear={ffGoal.ey}
               ffAmt={ffAmt}
