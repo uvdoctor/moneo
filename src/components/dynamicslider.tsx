@@ -22,7 +22,7 @@ export default function DynamicSlider({
   };
 
   const currentItemOrder = getOrder(currentItem);
-  const activeSlides = totalItems.filter((item) => item.active);
+  const activeSlides = totalItems.filter((item) => item.active)
 
   const getNextItemLabel = (order: number) => {
     for (let i = 0; i < activeSlides.length; i++) {
@@ -65,7 +65,7 @@ export default function DynamicSlider({
         {React.Children.map(children, (child: any) => (
           <div
             style={{
-              width: `${100 / activeSlides.length}%`
+              width: `${100 / activeSlides.length}%`,
             }}
             className="inline-block"
           >
