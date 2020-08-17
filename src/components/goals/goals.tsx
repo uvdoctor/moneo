@@ -412,7 +412,7 @@ export default function Goals({
 
   return wipGoal ? (
     <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
-      <div className="relative bg-white border-0">
+      <div className="relative h-full bg-white border-0">
         {wipGoal.type === APIt.GoalType.FF ? (
           <FFGoal
             goal={wipGoal as APIt.CreateGoalInput}
