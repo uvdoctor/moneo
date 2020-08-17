@@ -21,6 +21,7 @@ import { AwesomeButton } from "react-awesome-button";
 import FFResult from "./ffresult";
 import SVGEdit from "../svgedit";
 import { toast } from "react-toastify";
+import {useFullScreen} from "react-browser-hooks"
 interface GoalsProps {
   showModalHandler: Function;
   savings: number;
@@ -62,6 +63,7 @@ export default function Goals({
   allCFsHandler,
   ffGoalHandler,
 }: GoalsProps) {
+  const {fullScreen} = useFullScreen()
   const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null);
   const [mustCFs, setMustCFs] = useState<Array<number>>([]);
   const [tryCFs, setTryCFs] = useState<Array<number>>([]);
@@ -556,6 +558,7 @@ export default function Goals({
                   optCFs={optCFs}
                   from={nowYear + 1}
                   to={ffGoal.ey}
+                  fullScreen={fullScreen}
                 />
               )}
               {viewMode === goalsLabel && (
