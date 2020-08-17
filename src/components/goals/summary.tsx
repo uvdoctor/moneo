@@ -26,7 +26,7 @@ export default function Summary(props: SummaryProps) {
     const nowYear = new Date().getFullYear()
 
     return (
-        <div className="mt-4 mb-4 max-w-sm md:max-w-md rounded shadow-lg text-lg md:text-xl w-full">
+        <div className="mt-2 mb-2 max-w-sm md:max-w-md rounded shadow-lg text-lg md:text-xl w-full">
             <div className="flex justify-between items-center w-full">
                 <label className={`${bgColor} text-white py-1 px-2`}>{getImpLevels()[props.imp]}</label>
                 <div className="flex flex-col justify-center items-center font-semibold">

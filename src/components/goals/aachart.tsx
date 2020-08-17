@@ -66,7 +66,7 @@ export default function AAChart(props: AAChartProps) {
         layout={{
           barmode: "stack",
           ...getCommonLayoutProps("", "%", true),
-          xaxis: { showgrid: false, type: "category" },
+          xaxis: { title: "Years", showgrid: false, type: "category" },
           legend: {
             orientation: "h",
             x: 0.25,
