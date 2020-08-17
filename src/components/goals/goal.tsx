@@ -417,6 +417,8 @@ export default function Goal({
   const showResultSection = () =>
     nowYear < startYear && allInputDone && cfs.length > 0;
 
+    const dynamicHeight = "calc(100% - 70px)";
+
   return (
     <div className="w-full h-full">
       <StickyHeader cancelCallback={cancelCallback}>
@@ -447,9 +449,10 @@ export default function Goal({
         />
       </StickyHeader>
       <div
-        className={`container mx-auto w-full h-full flex flex-1 md:flex-row ${
+        style={{minHeight: dynamicHeight}}
+        className={`container mx-auto w-full flex flex-1 md:flex-row ${
           showResultSection() && "flex-col-reverse"
-        } items-start`}
+        } justify-between`}
       >
         <div
           className={`w-full h-full ${
