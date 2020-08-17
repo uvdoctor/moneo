@@ -455,9 +455,9 @@ export default function Goal({
         } justify-between`}
       >
         <div
-          className={`w-full h-full ${
+          className={`w-full ${
             allInputDone && "lg:w-1/3 xl:w-1/4"
-          } transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col justify-between items-stretch`}
+          } relative transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col justify-between items-stretch`}
         >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
             <Tabs
