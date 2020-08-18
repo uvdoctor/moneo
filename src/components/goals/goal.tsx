@@ -162,6 +162,9 @@ export default function Goal({
   );
   const [showTab, setShowTab] = useState(amtLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
+  
+  const isBRCompAvailable = () => sellAfter && price > 0 && !!rentAmt;
+
   const [resultTabOptions, setResultTabOptions] = useState<Array<any>>([
     {
       label: cfChartLabel,
@@ -172,7 +175,7 @@ export default function Goal({
     {
       label: brChartLabel,
       order: 2,
-      active: false,
+      active: goal.id && !!rentAmt,
       svg: <SVGScale />,
     },
   ]);
@@ -252,6 +255,12 @@ export default function Goal({
   };
 
   useEffect(() => {
+    console.log("Inside useEffect...")
+    console.log("BR Comparision available", isBRCompAvailable())
+    if(isBRCompAvailable()) setShowBRChart(true)
+  }, [cfs, cashFlows])
+
+  useEffect(() => {
     if (!loanPer) setEYOptions(initYearOptions(startYear, 20));
     else setLoanRepaymentSY(startYear);
     if (goalType === APIt.GoalType.B && loanPer) return;
@@ -305,7 +314,7 @@ export default function Goal({
   ]);
 
   useEffect(() => {
-    if (!allInputDone && (currentOrder < 7 || currentOrder > 16)) return;
+    if (!allInputDone && showTab === rentLabel) return;
     if (goalType !== APIt.GoalType.B && manualMode < 1) calculateYearlyCFs();
   }, [endYear]);
 
@@ -377,8 +386,6 @@ export default function Goal({
   useEffect(() => {
     if(showTab === rentLabel && isBRCompAvailable()) setShowResultTab(brChartLabel)
   }, [showTab])
-
-  const isBRCompAvailable = () => sellAfter && price > 0 && !!rentAmt;
 
   const getTabLabelByOrder = (order: number) => {
     let result = tabOptions.filter((t) => t.order === order && t.active);

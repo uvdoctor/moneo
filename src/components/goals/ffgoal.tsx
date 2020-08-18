@@ -155,7 +155,7 @@ export default function FFGoal({
   const gainsLabel = "Gains";
   const lossesLabel = "Losses";
   const nomineeLabel = "Nominees";
-  const cfChartLabel = "Cash Flows";
+  const cfChartLabel = "Total Savings";
   const aaChartLabel = "Asset Allocation";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false)
 
@@ -171,21 +171,21 @@ export default function FFGoal({
 
   const resultTabOptions = [
     {
-      label: cfChartLabel,
+      label: aaChartLabel,
       order: 1,
       active: true,
-      svg: <SVGChart />,
+      svg: <SVGBarChart />,
     },
     {
-      label: aaChartLabel,
+      label: cfChartLabel,
       order: 2,
       active: true,
-      svg: <SVGBarChart />,
+      svg: <SVGChart />,
     },
   ];
 
   const [showTab, setShowTab] = useState(investLabel);
-  const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
+  const [showResultTab, setShowResultTab] = useState<string>(aaChartLabel);
   
   const createGoal = () => {
     return {
@@ -924,15 +924,15 @@ export default function FFGoal({
               currency={currency}
             />
             }>
-            <LineChart
-                cfs={buildChartCFs(ffCfs)}
-                startYear={nowYear + 1}
-                fullScreen={chartFullScreen}
-              />
             <AA
                 ffGoalEndYear={endYear}
                 aa={aa}
                 rr={rr}
+                fullScreen={chartFullScreen}
+              />  
+            <LineChart
+                cfs={buildChartCFs(ffCfs)}
+                startYear={nowYear + 1}
                 fullScreen={chartFullScreen}
               />
           </ResultSection>)}

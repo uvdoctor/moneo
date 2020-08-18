@@ -56,7 +56,7 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                             nextStepHandler={props.nextStepHandler}
                             allInputDone={props.allInputDone}
                             info="Income Tax slab based on Your Income"
-                            pre="Tax" post="Rate" min={0} max={40} step={0.1} unit="%"
+                            pre="Tax" post="Rate" min={0} max={50} step={0.1} unit="%"
                             value={props.taxRate} changeHandler={props.taxRateHandler} />
                     } right={
                         props.taxRate ? <NumberInput

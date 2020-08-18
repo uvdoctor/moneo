@@ -27,7 +27,7 @@ export default function SelectInput(props: SelectInputProps) {
         <div>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <div className={`flex flex-col
-                ${!props.allInputDone && props.inputOrder === props.currentOrder ? 'p-2 border-2 border-orange-600' : ''}`}>
+                ${!props.allInputDone && props.inputOrder === props.currentOrder ? 'p-2 border-2 border-blue-600' : ''}`}>
                     {props.info && <div className="w-full flex justify-end cursor-pointer" onClick={() => toast.info(props.info)}>
                         <SVGInfo />
                     </div>}

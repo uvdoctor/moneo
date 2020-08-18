@@ -52,7 +52,7 @@ export default function NumberInput(props: NumberInputProps) {
     return (
         <div>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
-                <form ref={formRef} className={`${!props.allInputDone && props.inputOrder === props.currentOrder ? 'py-2 px-4 border-2 border-orange-600' : ''}`}>
+                <form ref={formRef} className={`${!props.allInputDone && props.inputOrder === props.currentOrder ? 'py-2 px-4 border-2 border-blue-600' : ''}`}>
                     {props.info && <div className="w-full flex justify-end cursor-pointer" onClick={
                         () => toast.info(props.info, {autoClose: props.infoDurationInMs ? props.infoDurationInMs : 5000})}>
                         <SVGInfo />

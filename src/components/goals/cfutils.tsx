@@ -254,8 +254,8 @@ const createLoanCFs = (p: number, goal: APIt.CreateGoalInput, duration: number) 
     let cfs: Array<number> = []
     if (!goal.emi?.per || !goal.emi?.dur || !goal.emi?.rate) return cfs
     let loanBorrowAmt = getLoanBorrowAmt(p, goal.type, goal.manual, goal?.chg as number, goal.ey - goal.sy, goal.emi?.per)
-    let loanDP = Math.round(loanBorrowAmt / (goal.emi.per / 100));
-    for (let y = goal.sy; y < goal.emi?.ry; y++) { // Interest amount before repayment starts
+    let loanDP = Math.round(loanBorrowAmt / (goal.emi.per / 100)) - loanBorrowAmt
+    for (let y = goal.sy; y < goal.emi?.ry; y++) {
         let intAmt = loanBorrowAmt * (goal.emi?.rate / 100)
         loanBorrowAmt += intAmt
     }
