@@ -30,22 +30,30 @@ const SecureDash = () => {
     const changeViewMode = (e: any) => {
         setViewMode(e.target.innerText)
     }
+
+    const irDiffByCurrency: any = {
+        INR: 3
+    }
+
     // potential performance 
-    const pp = {
+    const getPP = () => {
+        let irDiff = irDiffByCurrency[currency]
+        if(!irDiff) irDiff = 0
+        return {
         savings: 0.5,
-        deposits: 1.5, 
-        sbonds: 2, //short term bond <1
-        mbonds: 3, // 1-5 medium term
-        mtebonds: 3.5, //medium term tax efficient bonds
-        dreit: 5,
-        ireit: 5,
+        deposits: 1.5 + irDiff, 
+        sbonds: 2 + irDiff, //short term bond <1
+        mbonds: 3 + irDiff, // 1-5 medium term
+        mtebonds: 3.5 + irDiff, //medium term tax efficient bonds
+        dreit: 5 + irDiff,
+        ireit: 5 + irDiff,
         gold: 3,
-        largecapstocks: 5,
-        multicapstocks: 6,
-        divstocks: 5,
+        largecapstocks: 5 + irDiff,
+        multicapstocks: 6 + irDiff,
+        divstocks: 5 + irDiff,
         istocks: 7,
         digitalcurrency: 10
-    }
+    }}
 
     useEffect(() => {
         loadAllGoals()
@@ -86,7 +94,7 @@ const SecureDash = () => {
                 totalSavingsHandler={setSavings} annualSavingsHandler={setAnnualSavings} currency={currency} currencyHandler={setCurrency} />}
             {viewMode === goalsLabel && <Goals showModalHandler={setShowModal} savings={savings} annualSavings={annualSavings} 
                 allGoals={allGoals} goalsLoaded={goalsLoaded} allGoalsHandler={setAllGoals} currency={currency} allCFs={allCFs} aa={aa} aaHandler={setAA}
-                allCFsHandler={setAllCFs} ffGoal={ffGoal} ffGoalHandler={setFFGoal} rr={rr} rrHandler={setRR} pp={pp} avgAnnualExpense={avgAnnualExpense} expChgRate={expChgRate} />}
+                allCFsHandler={setAllCFs} ffGoal={ffGoal} ffGoalHandler={setFFGoal} rr={rr} rrHandler={setRR} pp={getPP()} avgAnnualExpense={avgAnnualExpense} expChgRate={expChgRate} />}
         </Fragment>
     )
 }
