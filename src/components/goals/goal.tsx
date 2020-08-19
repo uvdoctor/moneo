@@ -452,9 +452,9 @@ export default function Goal({
         } items-start`}
       >
         <div
-          className={`w-full ${
+          className={`w-full h-full ${
             allInputDone && "lg:w-1/3 xl:w-1/4"
-          } relative transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col justify-between items-stretch`}
+          } transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col justify-between items-stretch`}
         >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
             <Tabs
