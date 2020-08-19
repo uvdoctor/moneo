@@ -40,7 +40,7 @@ const SecureDash = () => {
         let irDiff = irDiffByCurrency[currency]
         if(!irDiff) irDiff = 0
         return {
-        savings: 0.5,
+        savings: 0.5 + irDiff,
         deposits: 1.5 + irDiff, 
         sbonds: 2 + irDiff, //short term bond <1
         mbonds: 3 + irDiff, // 1-5 medium term
