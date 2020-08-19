@@ -417,8 +417,6 @@ export default function Goal({
   const showResultSection = () =>
     nowYear < startYear && allInputDone && cfs.length > 0;
 
-    const dynamicHeight = "calc(100% - 70px)";
-
   return (
     <div className="w-full h-full">
       <StickyHeader cancelCallback={cancelCallback}>
@@ -449,15 +447,14 @@ export default function Goal({
         />
       </StickyHeader>
       <div
-        style={{minHeight: dynamicHeight}}
-        className={`container mx-auto w-full flex flex-1 md:flex-row ${
+        className={`container mx-auto w-full h-full flex flex-1 md:flex-row ${
           showResultSection() && "flex-col-reverse"
-        } justify-between`}
+        } items-start`}
       >
         <div
-          className={`w-full ${
+          className={`w-full h-full ${
             allInputDone && "lg:w-1/3 xl:w-1/4"
-          } relative transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col justify-between items-stretch`}
+          } transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col justify-between items-stretch`}
         >
           {(allInputDone || (!allInputDone && currentOrder >= 3)) && (
             <Tabs
