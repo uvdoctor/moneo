@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { TargetInput } from "../../api/goals";
 import { getNPV } from "../calc/finance";
 import { BRCompChart } from "../goals/brcompchart";
 import { toCurrency } from "../utils";
@@ -21,8 +22,10 @@ interface BRComparisonProps {
   rentAns: string;
   rentAnsHandler: Function;
   allBuyCFs: Array<Array<number>>;
+  manualMode: number;
+  manualTgts: Array<TargetInput>;
   showChart: boolean;
-  fullScreen: boolean
+  fullScreen: boolean;
 }
 
 export default function BRComparison(props: BRComparisonProps) {
@@ -37,59 +40,58 @@ export default function BRComparison(props: BRComparisonProps) {
     );
   };
 
-  const initAllRentCFs = (allBuyCFs: Array<Array<number>>) => {
+  const initAllRentCFs = (buyCFs: Array<number>) => {
     if (props.rentAmt <= 0) return [];
     let taxAdjustedRentAmt = props.rentAmt * (1 - props.taxRate / 100);
-    if (!allBuyCFs || allBuyCFs.length < 1) return [];
-    let x: Array<number> = [];
-    let y: Array<number> = [];
+    if (!buyCFs || buyCFs.length === 0) return [];
+    let npv: Array<number> = [];
     for (let i = 0; i < props.analyzeFor; i++) {
       let cfs = [];
-      let buyCFs = allBuyCFs[i];
-      if (buyCFs && buyCFs.length > 0) {
-        let inv = 0;
-        for (
-          let j = 0, value = taxAdjustedRentAmt;
-          j < buyCFs.length;
-          j++, value = getNextTaxAdjRentAmt(value)
-        ) {
-          let buyAmt = buyCFs[j];
-          let rentAmt = 0
-          if(j <= i) rentAmt = -1 * value;
-          let diff = buyAmt - rentAmt;
-          inv -= diff;
-          if (inv > 0) {
-            let dr = props.rr[firstRRIndex + j];
-            if (!dr) dr = 3;
-            inv += inv * (dr / 100);
-          }
-          cfs.push(rentAmt)
+      let inv = 0;
+      for (
+        let j = 0, value = taxAdjustedRentAmt;
+        j <= i;
+        j++, value = getNextTaxAdjRentAmt(value)
+      ) {
+        if (buyCFs[j]) inv += buyCFs[j];
+        inv -= value;
+        if (inv > 0) {
+          let dr = props.rr[firstRRIndex + j];
+          if (!dr) dr = 3;
+          inv += inv * (dr / 100);
         }
-        cfs[cfs.length - 1] += inv;
+        cfs.push(-value);
       }
+      cfs.push(inv);
       if (cfs.length > 0) {
-        x.push(i + 1);
-        y.push(getNPV(props.rr, cfs, firstRRIndex));
+        npv.push(getNPV(props.rr, cfs, firstRRIndex));
       }
     }
-    return { x: x, y: y };
+    return npv;
   };
 
   const initAllBuyCFs = (allBuyCFs: Array<Array<number>>) => {
-    let x: Array<number> = [];
-    let y: Array<number> = [];
+    let npv: Array<number> = [];
     for (let i = 0; i < props.analyzeFor; i++) {
       let buyCFs = allBuyCFs[i];
       if (buyCFs && buyCFs.length > 0) {
-        x.push(i + 1);
-        y.push(getNPV(props.rr, buyCFs, firstRRIndex));
+        npv.push(getNPV(props.rr, buyCFs, firstRRIndex));
       }
     }
-    return { x: x, y: y };
+    return npv;
+  };
+
+  const getBuyCFForRentAnalysis = () => {
+    let arr: Array<number> = [];
+    if (!props.allBuyCFs || props.allBuyCFs.length === 0) return arr;
+    if (props.manualMode < 1) arr.push(-props.allBuyCFs[0][0]);
+    else props.manualTgts.forEach((t) => arr.push(t.val));
+    return arr;
   };
 
   const buildComparisonData = () => {
     let results: Array<any> = [];
+    const buyCFforRentComp = getBuyCFForRentAnalysis();
     if (props.allBuyCFs && props.allBuyCFs.length > 0) {
       results.push({
         name: "Buy",
@@ -97,7 +99,7 @@ export default function BRComparison(props: BRComparisonProps) {
       });
       results.push({
         name: "Rent",
-        values: initAllRentCFs(props.allBuyCFs),
+        values: initAllRentCFs(buyCFforRentComp),
       });
     }
     console.log("Results are: ", results);
@@ -105,8 +107,8 @@ export default function BRComparison(props: BRComparisonProps) {
   };
 
   const provideRentAns = (data: Array<any>) => {
-    let buyValues = data[0].values.y;
-    let rentValues = data[1].values.y;
+    let buyValues = data[0].values;
+    let rentValues = data[1].values;
     if (buyValues.length >= props.sellAfter) {
       let diff =
         rentValues[props.sellAfter - 1] - buyValues[props.sellAfter - 1];
@@ -127,8 +129,8 @@ export default function BRComparison(props: BRComparisonProps) {
   const findAnswer = (data: Array<any>) => {
     let answer = "";
     let condition = "";
-    let buyValues = data[0].values.y;
-    let rentValues = data[1].values.y;
+    let buyValues = data[0].values;
+    let rentValues = data[1].values;
     if (buyValues[0] < rentValues[0]) {
       answer += "Renting costs lesser";
     } else if (buyValues[0] > rentValues[0]) answer += "Buying costs lesser";
@@ -175,14 +177,16 @@ export default function BRComparison(props: BRComparisonProps) {
 
   return (
     <div>
-      {compData && compData.length === 2 && props.showChart &&
-      <BRCompChart
-        data={compData}
-        rentAns={props.rentAns}
-        sellAfter={props.sellAfter}
-        title={props.answer}
-        fullScreen={props.fullScreen}
-      />}
+      {compData && compData.length === 2 && props.showChart && (
+        <BRCompChart
+          analyzeFor={props.analyzeFor}
+          data={compData}
+          rentAns={props.rentAns}
+          sellAfter={props.sellAfter}
+          title={props.answer}
+          fullScreen={props.fullScreen}
+        />
+      )}
     </div>
   );
 }

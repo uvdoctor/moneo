@@ -13,7 +13,7 @@ export default function StickyHeader({
   cancelCallback,
 }: StickyHeaderProps) {
   return (
-    <div className="container mx-auto flex pb-4 w-full justify-between items-end">
+    <div className="container mx-auto flex pb-4 w-full h-full justify-between items-end">
       <SVGLogo />
       {children}
       <div className="flex flex-col h-full self-stretch mr-1">
