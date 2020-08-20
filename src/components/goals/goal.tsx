@@ -825,6 +825,8 @@ export default function Goal({
               rentAnsHandler={setRentAns}
               showChart={showBRChart}
               fullScreen={chartFullScreen}
+              manualMode={manualMode}
+              manualTgts={wipTargets}
             />
           )}
           </ResultSection>
