@@ -91,7 +91,7 @@ export default function Tabs(props: TabsProps) {
         </div>
       )}
       <ul
-        className={`flex  ${!props.allInputDone && "flex-wrap w-full justify-around"} ${
+        className={`flex  ${!props.allInputDone && "flex-wrap w-full"} ${
           currentStyle.parent
         }`}
       >

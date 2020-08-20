@@ -4,14 +4,12 @@ import * as APIt from "../../api/goals";
 import { AwesomeButton } from "react-awesome-button";
 import { initYearOptions, getRangeFactor, changeSelection } from "../utils";
 import SelectInput from "../form/selectinput";
-import ActionButtons from "../form/actionbuttons";
 import { findEarliestFFYear } from "./cfutils";
 import FFResult from "./ffresult";
 import SVGChart from "../svgchart";
 import LineChart from "./linechart";
 import { getOrderByTabLabel, getTabLabelByOrder } from "./goalutils";
 import AA from "./aa";
-import Tabs from "../tabs";
 import SVGBarChart from "../svgbarchart";
 import StickyHeader from "./stickyheader";
 import ResultSection from "./resultsection";
@@ -21,6 +19,7 @@ import RetIncome from "./retincome";
 import CareInsurance from "./careinsurance";
 import Nominees from "./nominees";
 import DynamicTargets from "./dynamictargets";
+import InputSection from "./inputsection";
 interface FFGoalProps {
   goal: APIt.CreateGoalInput;
   totalSavings: number;
@@ -236,9 +235,9 @@ export default function FFGoal({
           order: 11,
           active: true,
         });
-        tabOptions[4].order=16
-        tabOptions[5].order=17
-        tabOptions[6].order=18
+        tabOptions[4].order = 16;
+        tabOptions[5].order = 17;
+        tabOptions[6].order = 18;
         setTabOptions([...tabOptions]);
       }
     } else {
@@ -332,13 +331,13 @@ export default function FFGoal({
   };
 
   const handleNextStep = (count: number = 1) => {
-    if (!allInputDone) {
-      let co = currentOrder + count;
-      let label = getTabLabelByOrder(tabOptions, co);
-      if (label) setShowTab(label);
-      setCurrentOrder(co);
-      if (label === nomineeLabel) setAllInputDone(true);
-    }
+    if (allInputDone) return;
+    let co = currentOrder + count;
+    if (co === 11 && !hasCareTab()) co += 5;
+    let label = getTabLabelByOrder(tabOptions, co);
+    if (label) setShowTab(label);
+    setCurrentOrder(co);
+    if (label === nomineeLabel) setAllInputDone(true);
   };
 
   const buildChartCFs = (ffCfs: Object) => Object.values(ffCfs);
@@ -379,163 +378,141 @@ export default function FFGoal({
           showResultSection() && "flex-col-reverse"
         } items-start`}
       >
-        <div
-          className={`w-full ${
-            allInputDone && "lg:w-1/3 xl:w-1/4"
-          } items-start transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col`}
+        <InputSection
+          currentOrder={currentOrder}
+          allInputDone={allInputDone}
+          showTab={showTab}
+          showTabHandler={setShowTab}
+          tabOptions={tabOptions}
+          cancelCallback={cancelCallback}
+          handleSubmit={handleSubmit}
+          btnDisabled={!allInputDone || expenseAfterFF < 5000 || btnClicked}
         >
-          {(allInputDone || currentOrder >= tabOptions[0].order) && (
-            <Tabs
-              tabs={tabOptions}
-              selectedTab={showTab}
-              selectedTabHandler={setShowTab}
-              capacity={3}
+          {showTab === investLabel && (
+            <Invest
+              currency={currency}
+              riskProfile={riskProfile}
+              riskProfileHandler={setRiskProfile}
               currentOrder={currentOrder}
               allInputDone={allInputDone}
+              inputOrder={getOrderByTabLabel(tabOptions, investLabel)}
+              nextStepHandler={handleNextStep}
+              annualSavings={annualSavings}
+              monthlySavingsRate={monthlySavingsRate}
+              monthlySavingsRateHandler={setMonthlySavingsRate}
             />
           )}
-          <div className="overflow-y-auto overflow-x-hidden w-full flex justify-center">
-            {showTab === investLabel && (
-              <Invest
-                currency={currency}
-                riskProfile={riskProfile}
-                riskProfileHandler={setRiskProfile}
-                currentOrder={currentOrder}
-                allInputDone={allInputDone}
-                inputOrder={getOrderByTabLabel(tabOptions, investLabel)}
-                nextStepHandler={handleNextStep}
-                annualSavings={annualSavings}
-                monthlySavingsRate={monthlySavingsRate}
-                monthlySavingsRateHandler={setMonthlySavingsRate}
-              />
-            )}
 
-            {showTab === expLabel && (
-              <ExpenseAfterFF
-                currency={currency}
-                rangeFactor={rangeFactor}
-                inputOrder={getOrderByTabLabel(tabOptions, expLabel)}
-                currentOrder={currentOrder}
-                allInputDone={allInputDone}
-                nextStepHandler={handleNextStep}
-                expenseAfterFF={expenseAfterFF}
-                expenseAfterFFHandler={setExpenseAfterFF}
-                expenseChgRate={expenseChgRate}
-                expenseChgRateHandler={setExpenseChgRate}
-                taxRate={taxRate}
-                taxRateHandler={setTaxRate}
-              />
-            )}
+          {showTab === expLabel && (
+            <ExpenseAfterFF
+              currency={currency}
+              rangeFactor={rangeFactor}
+              inputOrder={getOrderByTabLabel(tabOptions, expLabel)}
+              currentOrder={currentOrder}
+              allInputDone={allInputDone}
+              nextStepHandler={handleNextStep}
+              expenseAfterFF={expenseAfterFF}
+              expenseAfterFFHandler={setExpenseAfterFF}
+              expenseChgRate={expenseChgRate}
+              expenseChgRateHandler={setExpenseChgRate}
+              taxRate={taxRate}
+              taxRateHandler={setTaxRate}
+            />
+          )}
 
-            {showTab === incomeLabel && (
-              <RetIncome
-                currency={currency}
-                rangeFactor={rangeFactor}
-                inputOrder={getOrderByTabLabel(tabOptions, incomeLabel)}
-                currentOrder={currentOrder}
-                allInputDone={allInputDone}
-                nextStepHandler={handleNextStep}
-                retirementIncome={retirementIncome}
-                retirementIncomeHandler={setRetirementIncome}
-                retirementIncomePer={retirementIncomePer}
-                retirementIncomePerHandler={setRetirementIncomePer}
-                retirementIncomeSY={retirementIncomeSY}
-                retirementIncomeSYHandler={setRetirementIncomeSY}
-                ryOptions={ryOptions}
-              />
-            )}
+          {showTab === incomeLabel && (
+            <RetIncome
+              currency={currency}
+              rangeFactor={rangeFactor}
+              inputOrder={getOrderByTabLabel(tabOptions, incomeLabel)}
+              currentOrder={currentOrder}
+              allInputDone={allInputDone}
+              nextStepHandler={handleNextStep}
+              retirementIncome={retirementIncome}
+              retirementIncomeHandler={setRetirementIncome}
+              retirementIncomePer={retirementIncomePer}
+              retirementIncomePerHandler={setRetirementIncomePer}
+              retirementIncomeSY={retirementIncomeSY}
+              retirementIncomeSYHandler={setRetirementIncomeSY}
+              ryOptions={ryOptions}
+            />
+          )}
 
-            {showTab === careLabel ? (
-              <CareInsurance
-                currency={currency}
-                rangeFactor={rangeFactor}
-                inputOrder={getOrderByTabLabel(tabOptions, careLabel)}
-                currentOrder={currentOrder}
-                allInputDone={allInputDone}
-                nextStepHandler={handleNextStep}
-                carePremium={carePremium}
-                carePremiumHandler={setCarePremium}
-                carePremiumSY={carePremiumSY}
-                carePremiumSYHandler={setCarePremiumSY}
-                premiumDur={carePremiumDur}
-                premiumDurHandler={setCarePremiumDur}
-                maxTaxDed={careTaxDedLimit}
-                maxTaxDedHandler={setCareTaxDedLimit}
-                cpBY={cpBY}
-                chgPer={carePremiumChgPer}
-                chgPerHandler={setCarePremiumChgPer}
-                taxRate={taxRate}
-                cyOptions={cyOptions}
-              />
-            ) : (
-              !allInputDone &&
-              currentOrder === getOrderByTabLabel(tabOptions, careLabel) &&
-              handleNextStep(5)
-            )}
+          {showTab === careLabel && (
+            <CareInsurance
+              currency={currency}
+              rangeFactor={rangeFactor}
+              inputOrder={getOrderByTabLabel(tabOptions, careLabel)}
+              currentOrder={currentOrder}
+              allInputDone={allInputDone}
+              nextStepHandler={handleNextStep}
+              carePremium={carePremium}
+              carePremiumHandler={setCarePremium}
+              carePremiumSY={carePremiumSY}
+              carePremiumSYHandler={setCarePremiumSY}
+              premiumDur={carePremiumDur}
+              premiumDurHandler={setCarePremiumDur}
+              maxTaxDed={careTaxDedLimit}
+              maxTaxDedHandler={setCareTaxDedLimit}
+              cpBY={cpBY}
+              chgPer={carePremiumChgPer}
+              chgPerHandler={setCarePremiumChgPer}
+              taxRate={taxRate}
+              cyOptions={cyOptions}
+            />
+          )}
 
-            {showTab === gainsLabel && (
-              <DynamicTargets
-                title="Major Gains Expected due to Inheritance, Selling Existing Assets, Investments, etc."
-                footer="Exclude taxes & fees."
-                inputOrder={getOrderByTabLabel(tabOptions, gainsLabel)}
-                currentOrder={currentOrder}
-                allInputDone={allInputDone}
-                nextStepHandler={handleNextStep}
-                by={goal.by}
-                ey={endYear}
-                currency={currency}
-                rangeFactor={rangeFactor}
-                tgts={losses}
-                tgtsHandler={setGains}
-              />
-            )}
+          {showTab === gainsLabel && (
+            <DynamicTargets
+              title="Major Gains Expected due to Inheritance, Selling Existing Assets, Investments, etc."
+              footer="Exclude taxes & fees."
+              inputOrder={getOrderByTabLabel(tabOptions, gainsLabel)}
+              currentOrder={currentOrder}
+              allInputDone={allInputDone}
+              nextStepHandler={handleNextStep}
+              by={goal.by}
+              ey={endYear}
+              currency={currency}
+              rangeFactor={rangeFactor}
+              tgts={losses}
+              tgtsHandler={setGains}
+            />
+          )}
 
-            {showTab === lossesLabel && (
-              <DynamicTargets
-                title="Major Losses Expected due to Selling Existing Assets, Investments, etc."
-                footer="Include taxes & fees."
-                inputOrder={getOrderByTabLabel(tabOptions, lossesLabel)}
-                currentOrder={currentOrder}
-                allInputDone={allInputDone}
-                nextStepHandler={handleNextStep}
-                by={goal.by}
-                ey={endYear}
-                currency={currency}
-                rangeFactor={rangeFactor}
-                tgts={losses}
-                tgtsHandler={setLosses}
-              />
-            )}
+          {showTab === lossesLabel && (
+            <DynamicTargets
+              title="Major Losses Expected due to Selling Existing Assets, Investments, etc."
+              footer="Include taxes & fees."
+              inputOrder={getOrderByTabLabel(tabOptions, lossesLabel)}
+              currentOrder={currentOrder}
+              allInputDone={allInputDone}
+              nextStepHandler={handleNextStep}
+              by={goal.by}
+              ey={endYear}
+              currency={currency}
+              rangeFactor={rangeFactor}
+              tgts={losses}
+              tgtsHandler={setLosses}
+            />
+          )}
 
-            {showTab === nomineeLabel && (
-              <Nominees
-                currency={currency}
-                rangeFactor={rangeFactor}
-                inputOrder={getOrderByTabLabel(tabOptions, nomineeLabel)}
-                currentOrder={currentOrder}
-                allInputDone={allInputDone}
-                nextStepHandler={handleNextStep}
-                leaveBehind={leaveBehind}
-                leaveBehindHandler={setLeaveBehind}
-                successionTaxRate={successionTaxRate}
-                successionTaxRateHandler={setSuccessionTaxRate}
-                endYear={endYear}
-              />
-            )}
+          {showTab === nomineeLabel && (
+            <Nominees
+              currency={currency}
+              rangeFactor={rangeFactor}
+              inputOrder={getOrderByTabLabel(tabOptions, nomineeLabel)}
+              currentOrder={currentOrder}
+              allInputDone={allInputDone}
+              nextStepHandler={handleNextStep}
+              leaveBehind={leaveBehind}
+              leaveBehindHandler={setLeaveBehind}
+              successionTaxRate={successionTaxRate}
+              successionTaxRateHandler={setSuccessionTaxRate}
+              endYear={endYear}
+            />
+          )}
+        </InputSection>
 
-          </div>
-          <ActionButtons
-            submitDisabled={
-              !allInputDone ||
-              expenseAfterFF < 5000 ||
-              btnClicked
-            }
-            cancelDisabled={btnClicked}
-            cancelHandler={cancelCallback}
-            submitHandler={handleSubmit}
-            submitText={`${goal.id ? "UPDATE" : "CREATE"} TARGET`}
-          />
-        </div>
         {showResultSection() && (
           <ResultSection
             resultTabOptions={resultTabOptions}

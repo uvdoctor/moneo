@@ -6,7 +6,6 @@ import {
   getCommonStyle,
 } from "../chartutils";
 import { buildYearsArray } from "../utils";
-import { useFullScreenBrowser } from "react-browser-hooks";
 interface BRCompChartProps {
   analyzeFor: number;
   data: Array<any>;
@@ -23,18 +22,15 @@ export function BRCompChart(props: BRCompChartProps) {
   const [numOfYears, setNumOfYears] = useState<Array<number>>(
     buildYearsArray(1, props.analyzeFor)
   );
-  const fsb = useFullScreenBrowser();
 
   useEffect(() => {
     setNumOfYears([...buildYearsArray(1, props.analyzeFor)]);
   }, [props.analyzeFor]);
 
   useEffect(() => {
-    if (fsb.info.screenWidth > 800) {
       setTimeout(() => {
         window.dispatchEvent(new Event("resize"));
       }, 500);
-    }
   }, [props.fullScreen]);
 
   useEffect;
