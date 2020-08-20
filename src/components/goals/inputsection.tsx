@@ -42,7 +42,11 @@ export default function InputSection({
         />
       )}
       <div className="overflow-y-auto overflow-x-hidden w-full flex justify-center">
-        {React.Children.map(children, (child: any) => (child ? child : null))}
+        {React.Children.map(children, (child: any) =>
+          (allInputDone || currentOrder >= tabOptions[0].order) && child
+            ? child
+            : null
+        )}
       </div>
       <ActionButtons
         submitDisabled={btnDisabled}

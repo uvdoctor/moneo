@@ -147,7 +147,7 @@ export default function CareInsurance({
             </div>
           ) : (
             !allInputDone &&
-            currentOrder === inputOrder + 2 &&
+            currentOrder === inputOrder + 1 &&
             nextStepHandler(2)
           )}
         </div>
