@@ -72,7 +72,7 @@ export default function Cost(props: CostProps) {
 
     return (
         <Fragment>
-            {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
+            {(props.allInputDone || props.inputOrder <= props.currentOrder) &&
                 <Section title={props.manualMode > 0 ? `Total Amount is ${toCurrency(props.cost, props.currency)}`
                                 : `Amount${props.startYear > props.baseYear ? ` in ${props.startYear} ~ ${toCurrency(props.cost, props.currency)}` : ''}`}
                     left={
@@ -93,7 +93,7 @@ export default function Cost(props: CostProps) {
                             nextStepHandler={props.nextStepHandler}
                             allInputDone={props.allInputDone} pre="Amount" post="Changes" note={`Yearly till ${props.startYear}`} unit="%"
                             min={-10} max={10} step={0.5} value={props.costChgRate} changeHandler={props.costChgRateHandler} />
-                            : props.nextStepHandler()
+                            : !props.allInputDone && props.currentOrder === props.inputOrder && props.nextStepHandler()
                     } 
                     toggle={
                         props.manualModeHandler && <HToggle rightText={`Custom Payment Plan`} value={props.manualMode} setter={props.manualModeHandler} />

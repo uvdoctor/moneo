@@ -254,9 +254,8 @@ export default function Goal({
   };
 
   useEffect(() => {
-    console.log("Inside useEffect...");
-    console.log("BR Comparision available", isBRCompAvailable());
     if (isBRCompAvailable()) setShowBRChart(true);
+    else setShowBRChart(false)
   }, [cfs, cashFlows]);
 
   useEffect(() => {
@@ -465,7 +464,7 @@ export default function Goal({
           cancelDisabled={btnClicked}
         >
           {showTab === amtLabel && (
-            <Fragment>
+            <div className="flex flex-col w-full">
               <div className="flex justify-around w-full items-end">
                 <SelectInput
                   name="ccy"
@@ -537,7 +536,7 @@ export default function Goal({
                   allInputDone={allInputDone}
                 />
               </div>
-            </Fragment>
+            </div>
           )}
 
           {showTab === taxLabel && (
