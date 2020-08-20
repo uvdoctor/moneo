@@ -323,8 +323,8 @@ export default function FFGoal({
   const showResultSection = () => allInputDone && rr && rr.length > 0;
 
   return (
-    <div className="w-full h-full overflow-hidden">
-      <StickyHeader cancelCallback={cancelCallback}>
+    <div className="w-full h-full">
+      <StickyHeader cancelCallback={cancelCallback} cancelDisabled={btnClicked}>
         <SelectInput
           name="ey"
           info="Select the Year till You Want to Plan. After this Year, it is assumed that You will leave behind inheritance for Your Nominees, if any."
@@ -364,7 +364,8 @@ export default function FFGoal({
           tabOptions={tabOptions}
           cancelCallback={cancelCallback}
           handleSubmit={handleSubmit}
-          btnDisabled={!allInputDone || expenseAfterFF < 5000 || btnClicked}
+          submitDisabled={!allInputDone || expenseAfterFF < 5000 || btnClicked}
+          cancelDisabled={btnClicked}
         >
           {showTab === investLabel && (
             <Invest

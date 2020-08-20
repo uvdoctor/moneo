@@ -6,7 +6,8 @@ interface InputSectionProps {
   tabOptions: Array<any>;
   currentOrder: number;
   allInputDone: boolean;
-  btnDisabled: boolean;
+  submitDisabled: boolean;
+  cancelDisabled: boolean
   showTab: string;
   children: ReactNode;
   showTabHandler: Function;
@@ -18,7 +19,8 @@ export default function InputSection({
   tabOptions,
   currentOrder,
   allInputDone,
-  btnDisabled,
+  submitDisabled,
+  cancelDisabled,
   showTab,
   children,
   showTabHandler,
@@ -49,8 +51,8 @@ export default function InputSection({
         )}
       </div>
       <ActionButtons
-        submitDisabled={btnDisabled}
-        cancelDisabled={btnDisabled}
+        submitDisabled={submitDisabled}
+        cancelDisabled={cancelDisabled}
         cancelHandler={cancelCallback}
         submitHandler={handleSubmit}
         submitText="SAVE"
