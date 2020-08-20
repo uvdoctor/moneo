@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import NumberInput from "../form/numberinput";
 import Section from "../form/section";
 interface ExpenseAfterFFProps {
@@ -14,6 +14,7 @@ interface ExpenseAfterFFProps {
   expenseChgRateHandler: Function;
   taxRate: number;
   taxRateHandler: Function;
+  expenseBYHandler: Function
 }
 
 export function ExpenseAfterFF({
@@ -29,7 +30,14 @@ export function ExpenseAfterFF({
   expenseChgRateHandler,
   taxRate,
   taxRateHandler,
+  expenseBYHandler
 }: ExpenseAfterFFProps) {
+  const nowYear = new Date().getFullYear()
+
+  useEffect(() => {
+    expenseBYHandler(nowYear);
+  }, [expenseAfterFF]);
+
   return (
     <Section
       title="After Financial Freedom"

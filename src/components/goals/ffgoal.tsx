@@ -94,7 +94,6 @@ export default function FFGoal({
   );
   const [endYear, setEndYear] = useState<number>(goal.ey);
   const eyOptions = initYearOptions(goal.by + 30, 50);
-  const [cyOptions, setCYOptions] = useState(initYearOptions(endYear - 30, 20));
   const [currency, setCurrency] = useState<string>(goal.ccy);
   const [taxRate, setTaxRate] = useState<number>(goal.tdr);
   const [leaveBehind, setLeaveBehind] = useState<number>(goal?.sa as number);
@@ -119,7 +118,6 @@ export default function FFGoal({
   const [retirementIncome, setRetirementIncome] = useState<number>(
     goal?.tbi as number
   );
-  const [ryOptions, setRYOptions] = useState(initYearOptions(endYear - 30, 15));
   const [successionTaxRate, setSuccessionTaxRate] = useState<number>(
     goal?.dr as number
   );
@@ -297,26 +295,6 @@ export default function FFGoal({
     allInputDone,
   ]);
 
-  useEffect(() => {
-    setCYOptions(initYearOptions(endYear - 30, 10));
-    if (carePremiumSY > endYear - 20 || carePremiumSY < endYear - 30)
-      setCarePremiumSY(endYear - 20);
-  }, [endYear, carePremiumSY]);
-
-  useEffect(() => {
-    setRYOptions(initYearOptions(endYear - 30, 15));
-    if (retirementIncomeSY > endYear - 15 || retirementIncomeSY < endYear - 30)
-      setRetirementIncomeSY(endYear - 20);
-  }, [endYear, retirementIncomeSY]);
-
-  useEffect(() => {
-    setExpenseBY(nowYear);
-  }, [expenseAfterFF]);
-
-  useEffect(() => {
-    setCPBY(nowYear);
-  }, [carePremium]);
-
   const handleSubmit = async () => {
     setBtnClicked(true);
     goal.id
@@ -417,6 +395,7 @@ export default function FFGoal({
               expenseChgRateHandler={setExpenseChgRate}
               taxRate={taxRate}
               taxRateHandler={setTaxRate}
+              expenseBYHandler={setExpenseBY}
             />
           )}
 
@@ -434,7 +413,7 @@ export default function FFGoal({
               retirementIncomePerHandler={setRetirementIncomePer}
               retirementIncomeSY={retirementIncomeSY}
               retirementIncomeSYHandler={setRetirementIncomeSY}
-              ryOptions={ryOptions}
+              endYear={endYear}
             />
           )}
 
@@ -458,7 +437,8 @@ export default function FFGoal({
               chgPer={carePremiumChgPer}
               chgPerHandler={setCarePremiumChgPer}
               taxRate={taxRate}
-              cyOptions={cyOptions}
+              endYear={endYear}
+              cpBYHandler={setCPBY}
             />
           )}
 
