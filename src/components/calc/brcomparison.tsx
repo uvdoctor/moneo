@@ -50,12 +50,11 @@ export default function BRComparison(props: BRComparisonProps) {
         let inv = 0;
         for (
           let j = 0, value = taxAdjustedRentAmt;
-          j < buyCFs.length;
+          j <= i;
           j++, value = getNextTaxAdjRentAmt(value)
         ) {
           let buyAmt = buyCFs[j];
-          let rentAmt = 0
-          if(j <= i) rentAmt = -1 * value;
+          let rentAmt = -1 * value;
           let diff = buyAmt - rentAmt;
           inv -= diff;
           if (inv > 0) {
@@ -65,7 +64,7 @@ export default function BRComparison(props: BRComparisonProps) {
           }
           cfs.push(rentAmt)
         }
-        cfs[cfs.length - 1] += inv;
+        cfs.push(inv);
       }
       if (cfs.length > 0) {
         x.push(i + 1);
