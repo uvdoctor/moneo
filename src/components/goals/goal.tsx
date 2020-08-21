@@ -8,7 +8,7 @@ import TaxBenefit from "../calc/taxbenefit";
 import Sell from "./sell";
 import StickyHeader from "./stickyheader";
 import SVGChart from "../svgchart";
-import Cost from "./cost";
+import Amt from "./amt";
 import { calculateCFs, getLoanBorrowAmt } from "./cfutils";
 import {
   getDuration,
@@ -51,10 +51,6 @@ export default function Goal({
   const goalType = goal?.type as APIt.GoalType;
   const [startYear, setStartYear] = useState<number>(goal.sy);
   const [endYear, setEndYear] = useState<number>(goal.ey);
-  const [syOptions] = useState(
-    initYearOptions(goal.by + 1, ffGoalEndYear - 20 - (goal.by + 1))
-  );
-  const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 20));
   const [loanRepaymentSY, setLoanRepaymentSY] = useState<
     number | null | undefined
   >(goal?.emi?.ry);
@@ -136,6 +132,7 @@ export default function Goal({
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [showBRChart, setShowBRChart] = useState<boolean>(false);
+  const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 20));
   const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
       ? [
@@ -350,9 +347,6 @@ export default function Goal({
   useEffect(() => {
     resultTabOptions[1].active = showBRChart;
     setResultTabOptions([...resultTabOptions]);
-    if (showBRChart && showResultTab !== brChartLabel)
-      setShowResultTab(brChartLabel);
-    else setShowResultTab(cfChartLabel);
   }, [showBRChart]);
 
   useEffect(() => {
@@ -368,8 +362,10 @@ export default function Goal({
   }, [sellAfter, price, rentAmt, brChartData]);
 
   useEffect(() => {
-    if (showTab === rentLabel && showBRChart) setShowResultTab(brChartLabel);
-  }, [showTab, showBRChart]);
+    if (resultTabOptions[1].active) {
+      if (showTab === rentLabel) setShowResultTab(brChartLabel);
+    } else setShowResultTab(cfChartLabel);
+  }, [resultTabOptions]);
 
   const getTabLabelByOrder = (order: number) => {
     let result = tabOptions.filter((t) => t.order === order && t.active);
@@ -449,81 +445,32 @@ export default function Goal({
           cancelDisabled={btnClicked}
         >
           {showTab === amtLabel && (
-            <div className="flex flex-col w-full">
-              <div className="flex justify-center w-full">
-                <div className="flex justify-between w-full max-w-sm md:max-w-md items-end">
-                  <SelectInput
-                    name="ccy"
-                    inputOrder={getOrderByTabLabel(tabOptions, amtLabel)}
-                    currentOrder={currentOrder}
-                    nextStepDisabled={false}
-                    allInputDone={allInputDone}
-                    nextStepHandler={handleNextStep}
-                    pre="Currency"
-                    value={currency}
-                    changeHandler={changeCurrency}
-                    currency
-                  />
-                  <SelectInput
-                    name="sy"
-                    inputOrder={4}
-                    currentOrder={currentOrder}
-                    nextStepDisabled={false}
-                    allInputDone={allInputDone}
-                    nextStepHandler={handleNextStep}
-                    pre="When?"
-                    info="Year in which You Start Paying for the Goal"
-                    value={startYear}
-                    changeHandler={changeStartYear}
-                    options={syOptions}
-                    actionCount={
-                      goalType === APIt.GoalType.B && manualMode < 1 ? 2 : 1
-                    }
-                  />
-                  <SelectInput
-                    name="ey"
-                    pre="Pay Until"
-                    value={endYear}
-                    inputOrder={5}
-                    currentOrder={currentOrder}
-                    nextStepDisabled={false}
-                    allInputDone={allInputDone}
-                    nextStepHandler={handleNextStep}
-                    info="Year in which You End Paying for the Goal"
-                    disabled={goalType === APIt.GoalType.B && manualMode < 1}
-                    changeHandler={changeEndYear}
-                    options={eyOptions}
-                  />
-                </div>
-              </div>
-              <div className="flex justify-around w-full mt-4">
-                <Cost
-                  startingCost={startingPrice}
-                  startingCostHandler={setStartingPrice}
-                  rangeFactor={rangeFactor}
-                  manualTargets={wipTargets}
-                  manualTargetsHandler={setWIPTargets}
-                  currency={currency}
-                  cost={price}
-                  costChgRate={priceChgRate}
-                  costChgRateHandler={setPriceChgRate}
-                  endYear={endYear}
-                  manualMode={manualMode}
-                  manualModeHandler={setManualMode}
-                  startYear={startYear}
-                  baseYear={goal.by}
-                  leftMax={goalType === APIt.GoalType.B ? 1500000 : 50000}
-                  leftNote={
-                    goalType !== APIt.GoalType.D ? "including taxes & fees" : ""
-                  }
-                  inputOrder={6}
-                  currentOrder={currentOrder}
-                  nextStepDisabled={false}
-                  nextStepHandler={handleNextStep}
-                  allInputDone={allInputDone}
-                />
-              </div>
-            </div>
+            <Amt
+              inputOrder={getOrderByTabLabel(tabOptions, amtLabel)}
+              currentOrder={currentOrder}
+              allInputDone={allInputDone}
+              nextStepHandler={handleNextStep}
+              startYear={startYear}
+              endYear={endYear}
+              startYearHandler={changeStartYear}
+              endYearHandler={changeEndYear}
+              currency={currency}
+              currencyHandler={changeCurrency}
+              goalType={goalType}
+              goalBY={goal.by}
+              ffGoalEndYear={ffGoalEndYear}
+              rangeFactor={rangeFactor}
+              manualMode={manualMode}
+              manualTgts={wipTargets}
+              manualModeHandler={setManualMode}
+              manualTgtsHandler={setWIPTargets}
+              startingPrice={startingPrice}
+              price={price}
+              startingPriceHandler={setStartingPrice}
+              priceChgRate={priceChgRate}
+              priceChgRateHandler={setPriceChgRate}
+              eyOptions={eyOptions}
+            />
           )}
 
           {showTab === taxLabel && (
