@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect } from 'react'
 import Section from '../form/section'
 import RadialInput from '../form/radialinput'
 import SelectInput from '../form/selectinput'
@@ -35,7 +35,7 @@ export default function AnnualAmt(props: AnnualAmtProps) {
         , [props.startYear, props.percentage, props.annualSY, props.price, props.chgRate, props.duration])
 
     return (
-        <Fragment>
+        <div className="flex w-full justify-around">
             {(props.allInputDone || props.inputOrder <= props.currentOrder) &&
                 <Section title={props.title} insideForm
                     left={
@@ -58,6 +58,6 @@ export default function AnnualAmt(props: AnnualAmtProps) {
                             changeHandler={props.annualSYHandler} />
                         : !props.allInputDone && props.currentOrder === props.inputOrder + 1 && props.nextStepHandler()
                     } footer={props.footer} />}
-        </Fragment>
+        </div>
     )
 }

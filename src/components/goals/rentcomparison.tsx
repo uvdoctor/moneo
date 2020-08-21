@@ -120,7 +120,6 @@ export default function RentComparison({
         values: initAllRentCFs(buyCFforRentComp),
       });
     }
-    console.log("Results are: ", results);
     return results;
   };
 
@@ -161,7 +160,7 @@ export default function RentComparison({
   }, [analyzeFor]);
 
   return (
-    <div className="flex w-full justify-around items-start">
+    <div className="flex w-full justify-around">
       <Section
         title="If You Rent Instead of Buying"
         insideForm
