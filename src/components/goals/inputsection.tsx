@@ -43,7 +43,7 @@ export default function InputSection({
           allInputDone={allInputDone}
         />
       )}
-      <div className="overflow-y-auto overflow-x-hidden w-full flex justify-center">
+      <div className="w-full flex flex-wrap justify-center">
         {React.Children.map(children, (child: any) =>
           (allInputDone || currentOrder >= tabOptions[0].order) && child
             ? child

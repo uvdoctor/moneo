@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from "react";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
-import NumberInput from "../form/numberinput";
 import * as APIt from "../../api/goals";
 import { initYearOptions, getRangeFactor } from "../utils";
 import EmiCost from "../calc/emicost";
-import HToggle from "../horizontaltoggle";
 import TaxBenefit from "../calc/taxbenefit";
-import Section from "../form/section";
 import Sell from "./sell";
 import StickyHeader from "./stickyheader";
 import SVGChart from "../svgchart";
 import Cost from "./cost";
 import { calculateCFs, getLoanBorrowAmt } from "./cfutils";
-import { getDuration, getGoalTypes, getImpLevels } from "./goalutils";
+import {
+  getDuration,
+  getGoalTypes,
+  getImpLevels,
+  getOrderByTabLabel,
+} from "./goalutils";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import AnnualAmt from "./annualamt";
-import SVGBalance from "../calc/svgbalance";
 import { getCompoundedIncome } from "../calc/finance";
 import SVGScale from "../svgscale";
 import ResultSection from "./resultsection";
 import GoalResult from "./goalresult";
 import LineChart from "./linechart";
-import BRComparison from "../calc/brcomparison";
 import InputSection from "./inputsection";
+import RentComparison from "./rentcomparison";
+import BRCompChart from "./brcompchart";
 
 interface GoalProps {
   goal: APIt.CreateGoalInput;
@@ -107,8 +109,6 @@ export default function Goal({
   const [rentChgPer, setRentChgPer] = useState<number | null | undefined>(
     goal?.rachg
   );
-  const [answer, setAnswer] = useState<string>("");
-  const [rentAns, setRentAns] = useState<string>("");
   const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(
     goal?.tgts as Array<APIt.TargetInput>
   );
@@ -120,12 +120,10 @@ export default function Goal({
     goal.id ? true : false
   );
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
-  const [analyzeFor, setAnalyzeFor] = useState<number>(20);
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
   const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const nowYear = new Date().getFullYear();
-  const [showBRChart, setShowBRChart] = useState<boolean>(false);
   const amtLabel = "Amount";
   const taxLabel = "Tax";
   const sellLabel = "Sell";
@@ -136,7 +134,8 @@ export default function Goal({
   const cfChartLabel = "Cash Flows";
   const brChartLabel = "Buy v/s Rent";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
-
+  const [brChartData, setBRChartData] = useState<Array<any>>([]);
+  const [showBRChart, setShowBRChart] = useState<boolean>(false);
   const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
       ? [
@@ -161,8 +160,6 @@ export default function Goal({
   );
   const [showTab, setShowTab] = useState(amtLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
-
-  const isBRCompAvailable = () => sellAfter && price > 0 && !!rentAmt;
 
   const [resultTabOptions, setResultTabOptions] = useState<Array<any>>([
     {
@@ -254,11 +251,6 @@ export default function Goal({
   };
 
   useEffect(() => {
-    if (isBRCompAvailable()) setShowBRChart(true);
-    else setShowBRChart(false)
-  }, [cfs, cashFlows]);
-
-  useEffect(() => {
     if (!loanPer) setEYOptions(initYearOptions(startYear, 20));
     else setLoanRepaymentSY(startYear);
     if (goalType === APIt.GoalType.B && loanPer) return;
@@ -336,13 +328,6 @@ export default function Goal({
     return options && options.length === 1;
   };
 
-  const initBuyCFsForComparison = (analyzeFor: number) => {
-    let allCFs: Array<Array<number>> = [];
-    for (let i = 1; i <= analyzeFor; i++)
-      allCFs.push(calculateYearlyCFs(i, false));
-    return allCFs;
-  };
-
   useEffect(() => {
     if (manualMode > 0 && endYear === startYear) setEndYear(startYear + 2);
     else if (manualMode < 1 && loanPer === 0 && goalType === APIt.GoalType.B)
@@ -363,28 +348,28 @@ export default function Goal({
   };
 
   useEffect(() => {
-    if (!rentAmt) {
-      setRentAns("");
-      if (resultTabOptions[1].active) {
-        resultTabOptions[1].active = false;
-        setResultTabOptions([...resultTabOptions]);
-        setShowBRChart(false);
-        if (showResultTab === brChartLabel) setShowResultTab(cfChartLabel);
-      }
-    } else if (isBRCompAvailable()) {
-      if (!resultTabOptions[1].active) {
-        resultTabOptions[1].active = true;
-        setResultTabOptions([...resultTabOptions]);
-      }
-      setShowBRChart(true);
-      if (showResultTab !== brChartLabel) setShowResultTab(brChartLabel);
-    }
-  }, [rentAmt]);
+    resultTabOptions[1].active = showBRChart;
+    setResultTabOptions([...resultTabOptions]);
+    if (showBRChart && showResultTab !== brChartLabel)
+      setShowResultTab(brChartLabel);
+    else setShowResultTab(cfChartLabel);
+  }, [showBRChart]);
 
   useEffect(() => {
-    if (showTab === rentLabel && isBRCompAvailable())
-      setShowResultTab(brChartLabel);
-  }, [showTab]);
+    if (
+      !sellAfter ||
+      !rentAmt ||
+      !price ||
+      !brChartData ||
+      brChartData.length !== 2
+    )
+      setShowBRChart(false);
+    else setShowBRChart(true);
+  }, [sellAfter, price, rentAmt, brChartData]);
+
+  useEffect(() => {
+    if (showTab === rentLabel && showBRChart) setShowResultTab(brChartLabel);
+  }, [showTab, showBRChart]);
 
   const getTabLabelByOrder = (order: number) => {
     let result = tabOptions.filter((t) => t.order === order && t.active);
@@ -465,49 +450,51 @@ export default function Goal({
         >
           {showTab === amtLabel && (
             <div className="flex flex-col w-full">
-              <div className="flex justify-around w-full items-end">
-                <SelectInput
-                  name="ccy"
-                  inputOrder={3}
-                  currentOrder={currentOrder}
-                  nextStepDisabled={false}
-                  allInputDone={allInputDone}
-                  nextStepHandler={handleNextStep}
-                  pre="Currency"
-                  value={currency}
-                  changeHandler={changeCurrency}
-                  currency
-                />
-                <SelectInput
-                  name="sy"
-                  inputOrder={4}
-                  currentOrder={currentOrder}
-                  nextStepDisabled={false}
-                  allInputDone={allInputDone}
-                  nextStepHandler={handleNextStep}
-                  pre="When?"
-                  info="Year in which You Start Paying for the Goal"
-                  value={startYear}
-                  changeHandler={changeStartYear}
-                  options={syOptions}
-                  actionCount={
-                    goalType === APIt.GoalType.B && manualMode < 1 ? 2 : 1
-                  }
-                />
-                <SelectInput
-                  name="ey"
-                  pre="Pay Until"
-                  value={endYear}
-                  inputOrder={5}
-                  currentOrder={currentOrder}
-                  nextStepDisabled={false}
-                  allInputDone={allInputDone}
-                  nextStepHandler={handleNextStep}
-                  info="Year in which You End Paying for the Goal"
-                  disabled={goalType === APIt.GoalType.B && manualMode < 1}
-                  changeHandler={changeEndYear}
-                  options={eyOptions}
-                />
+              <div className="flex justify-center w-full">
+                <div className="flex justify-between w-full max-w-sm md:max-w-md items-end">
+                  <SelectInput
+                    name="ccy"
+                    inputOrder={getOrderByTabLabel(tabOptions, amtLabel)}
+                    currentOrder={currentOrder}
+                    nextStepDisabled={false}
+                    allInputDone={allInputDone}
+                    nextStepHandler={handleNextStep}
+                    pre="Currency"
+                    value={currency}
+                    changeHandler={changeCurrency}
+                    currency
+                  />
+                  <SelectInput
+                    name="sy"
+                    inputOrder={4}
+                    currentOrder={currentOrder}
+                    nextStepDisabled={false}
+                    allInputDone={allInputDone}
+                    nextStepHandler={handleNextStep}
+                    pre="When?"
+                    info="Year in which You Start Paying for the Goal"
+                    value={startYear}
+                    changeHandler={changeStartYear}
+                    options={syOptions}
+                    actionCount={
+                      goalType === APIt.GoalType.B && manualMode < 1 ? 2 : 1
+                    }
+                  />
+                  <SelectInput
+                    name="ey"
+                    pre="Pay Until"
+                    value={endYear}
+                    inputOrder={5}
+                    currentOrder={currentOrder}
+                    nextStepDisabled={false}
+                    allInputDone={allInputDone}
+                    nextStepHandler={handleNextStep}
+                    info="Year in which You End Paying for the Goal"
+                    disabled={goalType === APIt.GoalType.B && manualMode < 1}
+                    changeHandler={changeEndYear}
+                    options={eyOptions}
+                  />
+                </div>
               </div>
               <div className="flex justify-around w-full mt-4">
                 <Cost
@@ -549,7 +536,7 @@ export default function Goal({
                 maxTaxDeduction={maxTaxDeduction}
                 maxTaxDeductionHandler={setMaxTaxDeduction}
                 rangeFactor={rangeFactor}
-                inputOrder={8}
+                inputOrder={getOrderByTabLabel(tabOptions, taxLabel)}
                 currentOrder={currentOrder}
                 nextStepDisabled={false}
                 loanDur={loanYears}
@@ -600,7 +587,7 @@ export default function Goal({
                 taxRate={taxRate}
                 maxTaxDeductionInt={maxTaxDeductionInt as number}
                 maxTaxDeductionIntHandler={setMaxTaxDeductionInt}
-                inputOrder={10}
+                inputOrder={getOrderByTabLabel(tabOptions, loanLabel)}
                 currentOrder={currentOrder}
                 nextStepDisabled={false}
                 nextStepHandler={handleNextStep}
@@ -623,11 +610,12 @@ export default function Goal({
                 duration={getDur()}
                 title="Yearly Fixes, Insurance, etc costs"
                 footer="Include taxes & fees"
-                inputOrder={15}
+                inputOrder={getOrderByTabLabel(tabOptions, maintainLabel)}
                 currentOrder={currentOrder}
                 nextStepDisabled={false}
                 nextStepHandler={handleNextStep}
                 allInputDone={allInputDone}
+                colorTo
               />
             </div>
           )}
@@ -646,7 +634,7 @@ export default function Goal({
                 duration={getDur()}
                 title="Yearly Income through Rent, Dividend, etc"
                 footer="Exclude taxes & fees"
-                inputOrder={17}
+                inputOrder={getOrderByTabLabel(tabOptions, earnLabel)}
                 currentOrder={currentOrder}
                 nextStepDisabled={false}
                 nextStepHandler={handleNextStep}
@@ -679,91 +667,25 @@ export default function Goal({
           )}
 
           {showTab === rentLabel && nowYear < startYear && (
-            <div className="flex w-full justify-around items-start">
-              <Section
-                title="If You Rent Instead of Buying"
-                insideForm
-                left={
-                  <NumberInput
-                    inputOrder={21}
-                    currentOrder={currentOrder}
-                    nextStepDisabled={false}
-                    nextStepHandler={handleNextStep}
-                    allInputDone={allInputDone}
-                    name="rentAmt"
-                    pre="Yearly"
-                    post="Rent"
-                    value={rentAmt as number}
-                    changeHandler={setRentAmt}
-                    min={0}
-                    max={100000}
-                    step={1000}
-                    currency={currency}
-                    rangeFactor={rangeFactor}
-                  />
-                }
-                right={
-                  rentAmt ? (
-                    <NumberInput
-                      name="rentChg"
-                      inputOrder={22}
-                      currentOrder={currentOrder}
-                      nextStepDisabled={false}
-                      nextStepHandler={handleNextStep}
-                      allInputDone={allInputDone}
-                      pre="Yearly"
-                      post="Change"
-                      value={rentChgPer as number}
-                      changeHandler={setRentChgPer}
-                      min={-10}
-                      max={10}
-                      step={0.5}
-                      unit="%"
-                    />
-                  ) : (
-                    !allInputDone && currentOrder === 22 && handleNextStep()
-                  )
-                }
-                bottom={
-                  !!rentAmt && (
-                    <NumberInput
-                      name="af"
-                      pre="Analyze for"
-                      value={analyzeFor}
-                      changeHandler={setAnalyzeFor}
-                      currentOrder={-1}
-                      inputOrder={0}
-                      nextStepDisabled={false}
-                      nextStepHandler={() => true}
-                      allInputDone
-                      min={10}
-                      max={50}
-                      step={5}
-                      unit="Years"
-                    />
-                  )
-                }
-                toggle={
-                  taxRate ? (
-                    <HToggle
-                      rightText="Claim Tax Deduction"
-                      value={rentTaxBenefit as number}
-                      setter={setRentTaxBenefit}
-                    />
-                  ) : (
-                    <div />
-                  )
-                }
-                footer={
-                  rentAns && (
-                    <div className="flex items-center">
-                      <SVGBalance />
-                      <label className="ml-2">{rentAns}</label>
-                    </div>
-                  )
-                }
-              />
-            </div>
+            <RentComparison
+              currency={currency}
+              rangeFactor={rangeFactor}
+              rentAmt={rentAmt as number}
+              rentAmtHandler={setRentAmt}
+              rentChgPer={rentChgPer as number}
+              rentChgPerHandler={setRentChgPer}
+              rentTaxBenefit={rentTaxBenefit as number}
+              rentTaxBenefitHandler={setRentTaxBenefit}
+              taxRate={taxRate}
+              sellAfter={sellAfter as number}
+              manualMode={manualMode}
+              manualTgts={wipTargets}
+              startYear={startYear}
+              buyCFsHandler={calculateYearlyCFs}
+              rr={rr}
+              brChartData={brChartData}
+              brChartDataHandler={setBRChartData}
+            />
           )}
         </InputSection>
         {showResultSection() && (
@@ -793,30 +715,8 @@ export default function Goal({
               startYear={startYear}
               fullScreen={chartFullScreen}
             />
-            {isBRCompAvailable() && (
-              <BRComparison
-                currency={currency}
-                taxRate={taxRate}
-                sellAfter={sellAfter as number}
-                rr={rr}
-                allBuyCFs={initBuyCFsForComparison(analyzeFor)}
-                startYear={startYear}
-                rentTaxBenefit={rentTaxBenefit as number}
-                rentTaxBenefitHandler={setRentTaxBenefit}
-                rentAmt={rentAmt as number}
-                rentAmtHandler={setRentAmt}
-                analyzeFor={analyzeFor}
-                rentChgPer={rentChgPer as number}
-                rentChgPerHandler={setRentChgPer}
-                answer={answer}
-                rentAns={rentAns}
-                answerHandler={setAnswer}
-                rentAnsHandler={setRentAns}
-                showChart={showBRChart}
-                fullScreen={chartFullScreen}
-                manualMode={manualMode}
-                manualTgts={wipTargets}
-              />
+            {showBRChart && (
+              <BRCompChart data={brChartData} fullScreen={chartFullScreen} />
             )}
           </ResultSection>
         )}

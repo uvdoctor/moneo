@@ -22,6 +22,7 @@ interface AnnualAmtProps {
     duration: number
     chgRate: number
     footer?: string
+    colorTo?: boolean
 }
 
 export default function AnnualAmt(props: AnnualAmtProps) {
@@ -35,14 +36,15 @@ export default function AnnualAmt(props: AnnualAmtProps) {
 
     return (
         <Fragment>
-            {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
+            {(props.allInputDone || props.inputOrder <= props.currentOrder) &&
                 <Section title={props.title} insideForm
                     left={
                         <RadialInput inputOrder={props.inputOrder}
                             currentOrder={props.currentOrder}
                             nextStepDisabled={false}
                             nextStepHandler={props.nextStepHandler}
-                            allInputDone={props.allInputDone}
+                            allInputDone={props.allInputDone} 
+                            colorTo={props.colorTo ? "#FF0000" : null}
                             data={toStringArr(0, 10, 0.2)} changeHandler={props.percentageHandler} width={120}
                             unit="%" labelBottom={true} label="of Amount" post={`Total ${toCurrency(totalAmt, props.currency)}`}
                             value={props.percentage} step={0.2} />

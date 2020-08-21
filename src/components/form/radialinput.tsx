@@ -21,6 +21,7 @@ interface RadialInputProps {
     step: number
     pre?: string
     post?: any
+    colorTo?: string | null
 }
 
 export default function RadialInput(props: RadialInputProps) {
@@ -40,7 +41,7 @@ export default function RadialInput(props: RadialInputProps) {
                         label={props.label} trackColor="#edf2f7" data={props.data} dataIndex={(props.value - getVal(props.data[0])) / props.step}
                         appendToValue={props.unit} width={width} labelColor="#4a5568" labelBottom={props.labelBottom}
                         valueFontSize="1.25rem" labelFontSize="1.25rem" progressColorFrom="#48bb78"
-                        progressColorTo="#48bb78" knobColor="#cbd5e0" />
+                        progressColorTo={props.colorTo ? props.colorTo : "#48bb78"} knobColor="#cbd5e0" />
                     <label className="mt-2">{props.post}</label>
                     {!props.allInputDone && props.inputOrder === props.currentOrder &&
                         <NextStep nextStepHandler={() => props.nextStepHandler(props.actionCount ? props.actionCount : 1)}
