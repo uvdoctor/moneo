@@ -64,7 +64,7 @@ export default function Amt({
   return (
     <div className="flex flex-col w-full">
       <div className="flex justify-center w-full">
-        <div className="flex justify-between w-full max-w-sm md:max-w-md items-end">
+        <div className="flex justify-around w-full max-w-sm md:max-w-md items-end">
           <SelectInput
             name="ccy"
             inputOrder={inputOrder}

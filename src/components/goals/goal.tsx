@@ -145,6 +145,7 @@ export default function Goal({
           { label: rentLabel, order: 21, active: true },
         ]
       : goalType === APIt.GoalType.D || goalType === APIt.GoalType.R
+      || goalType === APIt.GoalType.T
       ? [
           { label: amtLabel, order: 3, active: true },
           { label: taxLabel, order: 8, active: true },
