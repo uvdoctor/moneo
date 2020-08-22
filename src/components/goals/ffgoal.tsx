@@ -18,8 +18,9 @@ import { ExpenseAfterFF } from "./expenseafterff";
 import RetIncome from "./retincome";
 import CareInsurance from "./careinsurance";
 import Nominees from "./nominees";
-import DynamicTargets from "./dynamictargets";
 import InputSection from "./inputsection";
+import DynamicTgtInput from "../form/dynamictgtinput";
+import Section from "../form/section";
 interface FFGoalProps {
   goal: APIt.CreateGoalInput;
   totalSavings: number;
@@ -444,36 +445,46 @@ export default function FFGoal({
           )}
 
           {showTab === gainsLabel && (
-            <DynamicTargets
-              title="Major Gains Expected due to Inheritance, Selling Existing Assets, Investments, etc."
+            <Section
+              title="Potential Gains (eg: Inheritance, Selling Investments, etc.)"
+              left={
+                <DynamicTgtInput
+                  inputOrder={getOrderByTabLabel(tabOptions, gainsLabel)}
+                  currentOrder={currentOrder}
+                  allInputDone={allInputDone}
+                  nextStepHandler={handleNextStep}
+                  startYear={goal.by}
+                  endYear={endYear}
+                  currency={currency}
+                  rangeFactor={rangeFactor}
+                  tgts={gains}
+                  tgtsHandler={setGains}
+                />
+              }
+              insideForm
               footer="Exclude taxes & fees."
-              inputOrder={getOrderByTabLabel(tabOptions, gainsLabel)}
-              currentOrder={currentOrder}
-              allInputDone={allInputDone}
-              nextStepHandler={handleNextStep}
-              by={goal.by}
-              ey={endYear}
-              currency={currency}
-              rangeFactor={rangeFactor}
-              tgts={losses}
-              tgtsHandler={setGains}
             />
           )}
 
           {showTab === lossesLabel && (
-            <DynamicTargets
-              title="Major Losses Expected due to Selling Existing Assets, Investments, etc."
+            <Section
+              title="Potential Losses (eg: Inheritance, Selling Investments, etc.)"
               footer="Include taxes & fees."
-              inputOrder={getOrderByTabLabel(tabOptions, lossesLabel)}
-              currentOrder={currentOrder}
-              allInputDone={allInputDone}
-              nextStepHandler={handleNextStep}
-              by={goal.by}
-              ey={endYear}
-              currency={currency}
-              rangeFactor={rangeFactor}
-              tgts={losses}
-              tgtsHandler={setLosses}
+              insideForm
+              left={
+                <DynamicTgtInput
+                  inputOrder={getOrderByTabLabel(tabOptions, lossesLabel)}
+                  currentOrder={currentOrder}
+                  allInputDone={allInputDone}
+                  nextStepHandler={handleNextStep}
+                  startYear={goal.by}
+                  endYear={endYear}
+                  currency={currency}
+                  rangeFactor={rangeFactor}
+                  tgts={losses}
+                  tgtsHandler={setLosses}
+                />
+              }
             />
           )}
 
