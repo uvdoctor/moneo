@@ -91,7 +91,7 @@ export default function Tabs(props: TabsProps) {
         </div>
       )}
       <ul
-        className={`flex  ${!props.allInputDone && "flex-wrap w-full justify-around"} ${
+        className={`flex  ${!props.allInputDone && "flex-wrap w-full"} ${
           currentStyle.parent
         }`}
       >
@@ -118,7 +118,10 @@ export default function Tabs(props: TabsProps) {
               }
             >
               <div className="flex items-center">
-                {tab.svg && !isLinkDisabled(tab) && <div className="inline mr-1">{tab.svg}</div>}
+                {console.log("Tab is ", tab)}
+                {tab.svg && !isLinkDisabled(tab) && (
+                  <div className="inline mr-1">{tab.svg}</div>
+                )}
                 {tab.label}
               </div>
             </li>
@@ -128,9 +131,9 @@ export default function Tabs(props: TabsProps) {
       {props.allInputDone && props.tabs.length > props.capacity && (
         <div className="ml-2">
           {endIndex >= props.capacity - 1 &&
-          endIndex < props.tabs.length - 1 && (
-            <RightArrow clickHandler={handleIncrement} />
-          )}
+            endIndex < props.tabs.length - 1 && (
+              <RightArrow clickHandler={handleIncrement} />
+            )}
         </div>
       )}
     </div>

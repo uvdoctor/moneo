@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect } from 'react'
 import Section from '../form/section'
 import RadialInput from '../form/radialinput'
 import SelectInput from '../form/selectinput'
@@ -22,6 +22,7 @@ interface AnnualAmtProps {
     duration: number
     chgRate: number
     footer?: string
+    colorTo?: boolean
 }
 
 export default function AnnualAmt(props: AnnualAmtProps) {
@@ -34,15 +35,16 @@ export default function AnnualAmt(props: AnnualAmtProps) {
         , [props.startYear, props.percentage, props.annualSY, props.price, props.chgRate, props.duration])
 
     return (
-        <Fragment>
-            {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
+        <div className="flex w-full justify-around">
+            {(props.allInputDone || props.inputOrder <= props.currentOrder) &&
                 <Section title={props.title} insideForm
                     left={
                         <RadialInput inputOrder={props.inputOrder}
                             currentOrder={props.currentOrder}
                             nextStepDisabled={false}
                             nextStepHandler={props.nextStepHandler}
-                            allInputDone={props.allInputDone}
+                            allInputDone={props.allInputDone} 
+                            colorTo={props.colorTo ? "#FF0000" : null}
                             data={toStringArr(0, 10, 0.2)} changeHandler={props.percentageHandler} width={120}
                             unit="%" labelBottom={true} label="of Amount" post={`Total ${toCurrency(totalAmt, props.currency)}`}
                             value={props.percentage} step={0.2} />
@@ -56,6 +58,6 @@ export default function AnnualAmt(props: AnnualAmtProps) {
                             changeHandler={props.annualSYHandler} />
                         : !props.allInputDone && props.currentOrder === props.inputOrder + 1 && props.nextStepHandler()
                     } footer={props.footer} />}
-        </Fragment>
+        </div>
     )
 }

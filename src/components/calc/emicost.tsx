@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect } from 'react'
 import NumberInput from '../form/numberinput'
 import { getEmi, getTotalInt } from '../calc/finance'
 import { toCurrency, toStringArr, initYearOptions } from '../utils'
@@ -65,7 +65,7 @@ export default function EmiCost(props: EmiProps) {
     }, [props.startYear])
 
     return (
-        <Fragment>
+        <div className="flex w-full justify-around">
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <Section title="Loan Details" insideForm
                     toggle={
@@ -127,6 +127,6 @@ export default function EmiCost(props: EmiProps) {
                         </div> : !props.allInputDone && props.currentOrder === props.inputOrder + 3 && props.nextStepHandler(2)
                     }
                 />}
-        </Fragment>
+        </div>
     );
 }

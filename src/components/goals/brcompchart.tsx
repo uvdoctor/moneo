@@ -6,35 +6,51 @@ import {
   getCommonStyle,
 } from "../chartutils";
 import { buildYearsArray } from "../utils";
-import { useFullScreenBrowser } from "react-browser-hooks";
 interface BRCompChartProps {
-  analyzeFor: number;
   data: Array<any>;
-  currency?: string;
-  sellAfter: number;
-  rentAns: string;
-  title: string;
   fullScreen: boolean;
 }
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
-export function BRCompChart(props: BRCompChartProps) {
+export default function BRCompChart(props: BRCompChartProps) {
+  const [answer, setAnswer] = useState<string>("");
   const [numOfYears, setNumOfYears] = useState<Array<number>>(
-    buildYearsArray(1, props.analyzeFor)
+    buildYearsArray(1, props.data[0].values.length)
   );
-  const fsb = useFullScreenBrowser();
+
+  const findAnswer = (data: Array<any>) => {
+    let answer = "";
+    let condition = "";
+    let buyValues = data[0].values;
+    let rentValues = data[1].values;
+    if (buyValues[0] < rentValues[0]) {
+      answer += "Renting costs lesser";
+    } else if (buyValues[0] > rentValues[0]) answer += "Buying costs lesser";
+    else if (buyValues[0] === rentValues[0])
+      answer += "Both options cost similar";
+    for (let i = 1; i < buyValues.length; i++) {
+      let alternative = "";
+      if (buyValues[i] < rentValues[i]) alternative += "Renting";
+      else if (buyValues[i] > rentValues[i]) alternative += "Buying";
+      else if (buyValues[i] === rentValues[i]) alternative += "Both";
+      if (!answer.startsWith(alternative)) {
+        condition = ` till ${i} ${i === 1 ? "year" : "years"}`;
+        break;
+      }
+    }
+    setAnswer(answer + condition);
+  };
 
   useEffect(() => {
-    setNumOfYears([...buildYearsArray(1, props.analyzeFor)]);
-  }, [props.analyzeFor]);
+    setNumOfYears([...buildYearsArray(1, props.data[0].values.length)]);
+    findAnswer(props.data)
+  }, [props.data])
 
   useEffect(() => {
-    if (fsb.info.screenWidth > 800) {
       setTimeout(() => {
         window.dispatchEvent(new Event("resize"));
       }, 500);
-    }
   }, [props.fullScreen]);
 
   useEffect;
@@ -43,8 +59,9 @@ export function BRCompChart(props: BRCompChartProps) {
       <Plot
         //@ts-ignore
         layout={{
-          ...getCommonLayoutProps(props.title, ","),
+          ...getCommonLayoutProps(answer, ","),
           xaxis: {
+            title: "Number of Years",
             type: "category",
             showgrid: false,
             range: [1, numOfYears.length],

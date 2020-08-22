@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NumberInput from "../form/numberinput";
 import Section from "../form/section";
 import SelectInput from "../form/selectinput";
-import { changeSelection } from "../utils";
+import { changeSelection, initYearOptions } from "../utils";
 interface RetIncomeProps {
   inputOrder: number;
   currentOrder: number;
@@ -10,13 +10,13 @@ interface RetIncomeProps {
   nextStepHandler: Function;
   currency: string;
   rangeFactor: number;
+  endYear: number;
   retirementIncome: number;
   retirementIncomeHandler: Function;
   retirementIncomePer: number;
   retirementIncomePerHandler: Function;
   retirementIncomeSY: number;
   retirementIncomeSYHandler: Function;
-  ryOptions: any;
 }
 
 export default function RetIncome({
@@ -26,14 +26,22 @@ export default function RetIncome({
   nextStepHandler,
   currency,
   rangeFactor,
+  endYear,
   retirementIncome,
   retirementIncomeHandler,
   retirementIncomePer,
   retirementIncomePerHandler,
   retirementIncomeSY,
   retirementIncomeSYHandler,
-  ryOptions,
 }: RetIncomeProps) {
+  const [ryOptions, setRYOptions] = useState(initYearOptions(endYear - 30, 15));
+
+  useEffect(() => {
+    setRYOptions(initYearOptions(endYear - 30, 15));
+    if (retirementIncomeSY > endYear - 15 || retirementIncomeSY < endYear - 30)
+      retirementIncomeSYHandler(endYear - 20);
+  }, [endYear]);
+
   return (
     <Section
       title="Retirement Income Benefit (eg: Pension, Social Security, etc.)"

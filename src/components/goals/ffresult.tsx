@@ -27,7 +27,6 @@ export default function FFResult({
 }: FFResultProps) {
   return (
     <div className="w-full">
-      {console.log("FFYear is ", ffYear)}
       {ffYear && ffLeftOverAmt >= ffNomineeAmt && ffAmt >= ffMinReq ? (
         <div className="py-2 flex flex-wrap justify-around w-full items-start bg-green-100">
           <ResultItem

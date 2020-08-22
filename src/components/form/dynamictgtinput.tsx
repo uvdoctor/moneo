@@ -10,7 +10,6 @@ import NextStep from './nextstep'
 interface DynamicTgtInputProps {
     inputOrder: number
     currentOrder: number
-    nextStepDisabled: boolean
     nextStepHandler: Function
     allInputDone: boolean
     actionCount?: number
@@ -77,7 +76,7 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
                                     allInputDone nextStepHandler={() => true}
                                     pre="Year" options={yearOpts} value={t.year}
                                     changeHandler={(year: string) => changeTargetYear(i, year)} />
-                                <div className="ml-4 md:ml-8">
+                                <div className="ml-4">
                                     <NumberInput name={"val" + i} inputOrder={0} currentOrder={1}
                                         nextStepDisabled
                                         allInputDone nextStepHandler={() => true}
@@ -100,7 +99,7 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
                 </div>}
             {!props.allInputDone && props.inputOrder === props.currentOrder && <NextStep
                 nextStepHandler={() => props.nextStepHandler(props.actionCount ? props.actionCount : 1)}
-                disabled={props.nextStepDisabled} />}
+                disabled={false} />}
         </div>
     )
 }

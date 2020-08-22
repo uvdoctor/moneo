@@ -21,7 +21,8 @@ import { AwesomeButton } from "react-awesome-button";
 import FFResult from "./ffresult";
 import SVGEdit from "../svgedit";
 import { toast } from "react-toastify";
-import {useFullScreen} from "react-browser-hooks"
+import { useFullScreen } from "react-browser-hooks";
+import Tabs from "../tabs";
 interface GoalsProps {
   showModalHandler: Function;
   savings: number;
@@ -63,7 +64,7 @@ export default function Goals({
   allCFsHandler,
   ffGoalHandler,
 }: GoalsProps) {
-  const {fullScreen} = useFullScreen()
+  const { fullScreen } = useFullScreen();
   const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null);
   const [mustCFs, setMustCFs] = useState<Array<number>>([]);
   const [tryCFs, setTryCFs] = useState<Array<number>>([]);
@@ -78,10 +79,12 @@ export default function Goals({
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const goalsLabel = "Goals";
   const cfLabel = "Cash Flows";
-  const viewItems = [goalsLabel, cfLabel];
-  const [viewMode, setViewMode] = useState(goalsLabel);
+  const [viewMode, setViewMode] = useState<string>(goalsLabel);
   const nowYear = new Date().getFullYear();
-
+  const tabOptions = useState<Array<any>>([
+    { label: goalsLabel, order: 1, active: true },
+    { label: cfLabel, order: 2, active: true }
+  ]);
   const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
     if (!ffGoal) return {};
     let mCFs = {};
@@ -408,10 +411,6 @@ export default function Goals({
     };
   };
 
-  const changeViewMode = (e: any) => {
-    setViewMode(e.target.innerText);
-  };
-
   return wipGoal ? (
     <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
       <div className="relative bg-white border-0">
@@ -460,8 +459,32 @@ export default function Goals({
         )}
       </div>
     </div>
-  ) : (
+  ) : goalsLoaded && (
     <Fragment>
+      {ffGoal && (
+        <div
+          className={`flex items-center w-full ${
+            ffYear && ffAmt >= ffMinReq ? "bg-green-100" : "bg-red-100"
+          } shadow-lg lg:shadow-xl`}
+        >
+          <FFResult
+            endYear={ffGoal.ey}
+            ffAmt={ffAmt}
+            ffLeftOverAmt={ffLeftOverAmt}
+            ffYear={ffYear}
+            currency={ffGoal.ccy}
+            ffMinReq={ffMinReq}
+            ffNomineeAmt={ffGoal?.sa as number}
+            ffOOM={ffOOM}
+          />
+          <div
+            className="p-0 pr-1 cursor-pointer"
+            onClick={() => setWIPGoal(ffGoal)}
+          >
+            <SVGEdit />
+          </div>
+        </div>
+      )}
       <div className="flex mt-4 items-center justify-center">
         <SVGTargetPath />
         <label className="ml-2 text-xl md:text-2xl">Define Your Dreams.</label>
@@ -469,6 +492,7 @@ export default function Goals({
       <p className="text-center text-lg mt-1">
         Make Money Work Hard to Meet Them.
       </p>
+      {console.log("Running...")}
       <div className="flex flex-wrap justify-around mb-4">
         {Object.keys(getGoalTypes()).map(
           (key) =>
@@ -489,48 +513,22 @@ export default function Goals({
             )
         )}
       </div>
-      {ffGoal ? (
-        <Fragment>
-          <div className={`flex items-center w-full ${ffYear ? 'bg-green-100' : 'bg-red-100'} shadow-lg lg:shadow-xl`}>
-            <FFResult
-              endYear={ffGoal.ey}
-              ffAmt={ffAmt}
-              ffLeftOverAmt={ffLeftOverAmt}
-              ffYear={ffYear}
-              currency={ffGoal.ccy}
-              ffMinReq={ffMinReq}
-              ffNomineeAmt={ffGoal?.sa as number}
-              ffOOM={ffOOM}
-            />
-            <div
-              className="p-0 pr-1 cursor-pointer"
-              onClick={() => setWIPGoal(ffGoal)}
-            >
-              <SVGEdit />
-            </div>
-          </div>
-          {allGoals && allGoals.length > 0 && (
+      {ffGoal
+        ? allGoals &&
+          allGoals.length > 0 && (
             <Fragment>
-              <ul className="flex flex-wrap justify-center items-center border-b mt-4 w-screen">
-                {viewItems.map((item, i) => (
-                  <li
-                    key={"viewItem" + i}
-                    className="cursor-pointer py-1 bg-gray-200"
-                  >
-                    <a
-                      onClick={changeViewMode}
-                      style={{
-                        color: viewMode === item ? "white" : "gray",
-                        backgroundColor:
-                          viewMode === item ? "black" : "transparent",
-                      }}
-                      className="px-4 py-2"
-                    >
-                      {item}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <Tabs
+                tabs={tabOptions}
+                selectedTab={viewMode}
+                capacity={2}
+                selectedTabHandler={setViewMode}
+                allInputDone
+                currentOrder={1}
+              />
+              <p className="text-center text-base mt-4">
+                Negative values imply You Pay, while Positive values imply You
+                Receive
+              </p>
               {viewMode === goalsLabel && (
                 <div className="mt-4 flex justify-center">
                   <SelectInput
@@ -547,10 +545,7 @@ export default function Goals({
                   />
                 </div>
               )}
-              <p className="text-center text-base mt-4">
-                Negative values imply You Pay, while Positive values imply You
-                Receive
-              </p>
+              
               {viewMode === cfLabel && (
                 <CFChart
                   mustCFs={mustCFs}
@@ -597,23 +592,20 @@ export default function Goals({
                 </div>
               )}
             </Fragment>
+          )
+        : (
+            <div className="text-center align-center">
+              <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>
+              <p className="mb-2">Set Up Financial Freedom Target.</p>
+              <AwesomeButton
+                ripple
+                type="primary"
+                onPress={() => createGoal(APIt.GoalType.FF)}
+              >
+                GET STARTED
+              </AwesomeButton>
+            </div>
           )}
-        </Fragment>
-      ) : (
-        goalsLoaded && (
-          <div className="text-center align-center">
-            <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>
-            <p className="mb-2">Set Up Financial Freedom Target.</p>
-            <AwesomeButton
-              ripple
-              type="primary"
-              onPress={() => createGoal(APIt.GoalType.FF)}
-            >
-              GET STARTED
-            </AwesomeButton>
-          </div>
-        )
-      )}
     </Fragment>
   );
 }

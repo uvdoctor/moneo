@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import NumberInput from '../form/numberinput'
 import Section from '../form/section'
 import { GoalType } from '../../api/goals'
@@ -45,7 +45,7 @@ export default function TaxBenefit(props: TaxBenefitProps) {
     }, [props])
 
     return (
-        <Fragment>
+        <div className="flex w-full justify-around">
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <Section title="Claim Tax Deduction" insideForm
                     left={
@@ -72,6 +72,6 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                             rangeFactor={props.rangeFactor} width="100px" />
                         : !props.allInputDone && props.currentOrder === props.inputOrder + 1 && props.nextStepHandler()
                     } />}
-        </Fragment>
+        </div>
     )
 }

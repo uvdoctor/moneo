@@ -14,6 +14,7 @@ interface CareInsuranceProps {
   nextStepHandler: Function;
   currency: string;
   rangeFactor: number;
+  endYear: number;
   carePremium: number;
   carePremiumHandler: Function;
   carePremiumSY: number;
@@ -26,7 +27,7 @@ interface CareInsuranceProps {
   premiumDur: number;
   premiumDurHandler: Function;
   cpBY: number;
-  cyOptions: any;
+  cpBYHandler: Function
 }
 
 export default function CareInsurance({
@@ -36,6 +37,7 @@ export default function CareInsurance({
   nextStepHandler,
   currency,
   rangeFactor,
+  endYear,
   carePremium,
   carePremiumHandler,
   carePremiumSY,
@@ -48,10 +50,12 @@ export default function CareInsurance({
   premiumDur,
   premiumDurHandler,
   cpBY,
-  cyOptions,
+  cpBYHandler
 }: CareInsuranceProps) {
   const [totalCP, setTotalCP] = useState<number>(0);
   const [totalTaxBenefit, setTotalTaxBenfit] = useState<number>(0);
+  const [cyOptions, setCYOptions] = useState(initYearOptions(endYear - 30, 20));
+  const nowYear = new Date().getFullYear()
 
   useEffect(() => {
     carePremium > 0
@@ -84,6 +88,16 @@ export default function CareInsurance({
         )
       : setTotalTaxBenfit(0);
   }, [taxRate, maxTaxDed, carePremiumSY, carePremium, chgPer, premiumDur]);
+
+  useEffect(() => {
+    setCYOptions(initYearOptions(endYear - 30, 10));
+    if (carePremiumSY > endYear - 20 || carePremiumSY < endYear - 30)
+      carePremiumSYHandler(endYear - 20);
+  }, [endYear]);
+
+  useEffect(() => {
+    cpBYHandler(nowYear);
+  }, [carePremium]);
 
   return (
     <Section
@@ -147,7 +161,7 @@ export default function CareInsurance({
             </div>
           ) : (
             !allInputDone &&
-            currentOrder === inputOrder + 2 &&
+            currentOrder === inputOrder + 1 &&
             nextStepHandler(2)
           )}
         </div>
