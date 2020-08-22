@@ -145,7 +145,7 @@ export default function FFGoal({
   const lossesLabel = "Losses";
   const nomineeLabel = "Nominees";
   const cfChartLabel = "Total Savings";
-  const aaChartLabel = "Asset Allocation";
+  const aaChartLabel = "Where to Invest?";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
 
   const [tabOptions, setTabOptions] = useState<Array<any>>([

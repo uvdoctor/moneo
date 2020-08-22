@@ -1,6 +1,8 @@
 import React from 'react'
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button"
+import SVGClose from '../svgclose'
+import SVGSave from '../svgsave'
 
 interface ActionButtonsProps {
     submitDisabled: boolean
@@ -13,13 +15,15 @@ interface ActionButtonsProps {
 export default function ActionButtons(props: ActionButtonsProps) {
     return (
         <footer className="w-full py-2 flex justify-center">
-            <AwesomeButton type="secondary" disabled={props.cancelDisabled} onPress={props.cancelHandler}>
+            <AwesomeButton type="secondary" size="medium" disabled={props.cancelDisabled} onPress={props.cancelHandler}>
+                <SVGClose />
                 CANCEL
             </AwesomeButton>
 
             <AwesomeButton className={`ml-8 ${props.submitDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                type="primary" ripple onPress={props.submitHandler} disabled={props.submitDisabled}>
-                {props.submitText}
+                type="primary" size="medium" ripple onPress={props.submitHandler} disabled={props.submitDisabled}>
+                <SVGSave />
+                <span className="ml-1">{props.submitText}</span>
             </AwesomeButton>
         </footer>
     )

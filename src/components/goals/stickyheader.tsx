@@ -15,12 +15,15 @@ export default function StickyHeader({
   cancelCallback,
 }: StickyHeaderProps) {
   return (
-    <div className="container mx-auto flex pb-4 w-full h-full justify-between items-end">
+    <div className="container mx-auto flex mb-1 w-full h-full items-end justify-between">
+      <div className="flex flex-col h-full items-center" onClick={() => !cancelDisabled && cancelCallback()}>
       <SVGLogo />
+      <label className="mt-1 hover:text-blue-600">Back</label>
+      </div>
       {children}
-      <div className="flex flex-col h-full self-stretch mr-1">
+      <div className="mr-1 flex flex-col h-full">
         <div
-          className={`mb-1 ${
+          className={`mb-6 ${
             cancelDisabled ? "cursor-not-allowed" : "cursor-pointer"
           } border-0 outline-none focus:outline-none`}
           onClick={() => !cancelDisabled && cancelCallback()}
