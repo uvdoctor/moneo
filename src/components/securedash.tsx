@@ -98,7 +98,7 @@ const SecureDash = () => {
             <li key={"viewItem" + i} className="ml-2">
               <button
                 onClick={changeViewMode}
-                className={`dashmi md:mt-4 md:px-4 hover:bg-white hover:border-t hover:text-green-600 focus:outline-none
+                className={`font-semibold rounded-t p-2 md:mt-4 text-white hover:bg-white hover:border-t hover:text-green-600 focus:outline-none
                         ${viewMode === item && "text-green-600 bg-white"}`}
               >
                 {item}

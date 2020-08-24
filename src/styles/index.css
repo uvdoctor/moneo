@@ -132,19 +132,6 @@ input[type="number"] {
   --button-anchor-border: 1px solid #2c5282;
 }
 
-.dashmi {
-  outline: 0;
-  display: inline-block;
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-right: 0.5rem;
-  padding-left: 0.5rem;
-  font-weight: 600;
-  margin-top: 0.5rem;
-}
-
 .button:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);

@@ -26,7 +26,6 @@ export default function ResultSection(props: ResultSectionProps) {
   }, [fullScreen])
 
   useEffect(() => {
-    console.log("Inner width changed: ", fsb.info.innerWidth)
     setNumOfTabs(getNumOfTabs())
   }, [fsb.info.innerWidth])
 

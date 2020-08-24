@@ -147,8 +147,8 @@ export default function FFGoal({
   const lossesLabel = "Losses";
   const nomineeLabel = "Nominees";
   const cfChartLabel = "Total Savings";
-  const aaChartLabel = `Where to Invest from ${nowYear + 2} onwards?`;
-  const treemapChartLabel = `Where to Invest in ${nowYear + 1}?`;
+  const aaChartLabel = `Asset Allocation from ${nowYear + 2} onwards?`;
+  const treemapChartLabel = `${nowYear + 1} Asset Allocation?`;
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
 
   const [tabOptions, setTabOptions] = useState<Array<any>>([
