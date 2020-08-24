@@ -160,30 +160,30 @@ export default function FFGoal({
     { label: lossesLabel, order: 17, active: true },
     { label: nomineeLabel, order: 18, active: true },
   ]);
-
+  
   const resultTabOptions = [
     {
-      label: treemapChartLabel,
+      label: cfChartLabel,
       order: 1,
+      active: true,
+      svg: <SVGChart />,
+    },
+    {
+      label: treemapChartLabel,
+      order: 2,
       active: true,
       svg: <SVGAAChart />,
     },
     {
       label: aaChartLabel,
-      order: 2,
-      active: true,
-      svg: <SVGBarChart />,
-    },
-    {
-      label: cfChartLabel,
       order: 3,
       active: true,
-      svg: <SVGChart />,
+      svg: <SVGBarChart />,
     },
   ];
 
   const [showTab, setShowTab] = useState(investLabel);
-  const [showResultTab, setShowResultTab] = useState<string>(treemapChartLabel);
+  const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
 
   const createGoal = () => {
     return {
@@ -532,17 +532,17 @@ export default function FFGoal({
                 currency={currency}
               />
             }
-          >
+            >
+            <LineChart
+              cfs={buildChartCFs(ffCfs)}
+              startYear={nowYear + 1}
+              fullScreen={chartFullScreen}
+            />
             <TreeMapChart aa={aa} rr={rr} />
             <AAChart
               aa={aa}
               years={buildYearsArray(nowYear + 2, endYear)}
               rr={rr}
-              fullScreen={chartFullScreen}
-            />
-            <LineChart
-              cfs={buildChartCFs(ffCfs)}
-              startYear={nowYear + 1}
               fullScreen={chartFullScreen}
             />
           </ResultSection>

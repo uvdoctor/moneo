@@ -73,6 +73,24 @@ export default function Tabs(props: TabsProps) {
     if (props.allInputDone) setEndIndex(endIndexOnLoad);
   }, [props.allInputDone]);
 
+  useEffect(() => {
+    setEndIndex(props.capacity - 1);
+  }, [props.capacity]);
+
+  useEffect(() => {
+    let selectedIndex = 0;
+    props.tabs.filter((tab, i) => {
+      if (tab.label === props.selectedTab) {
+        selectedIndex = i;
+      }
+    });
+    if (selectedIndex <= endIndex && endIndex - selectedIndex < props.capacity)
+      return;
+    if (selectedIndex > endIndex) {
+      setEndIndex(selectedIndex);
+    } else setEndIndex(selectedIndex + props.capacity - 1);
+  }, [props.selectedTab]);
+
   const isLinkDisabled = (tab: any) => {
     if (props.allInputDone) return !tab.active;
     if (!props.currentOrder) {
