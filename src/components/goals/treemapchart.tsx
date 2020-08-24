@@ -96,16 +96,16 @@ export default function TreeMapChart({ aa }: TreeMapChartProps) {
               "#dd6b20",
               "#c05621",
               "#9c4221",
-              "brown",
-              "#805ad5",
-              "#b794f4",
-              "gold",
-              "#e53e3e",
+              "#744210",
+              "#b7791f",
+              "#d69e2e",
+              "#f6e05e",
+              "#faf089",
             ],
           },
+          hovertext: "Portfolio",
           textinfo: "label+percent entry",
-          name: "Total Investment",
-          hoverinfo: "label+parent entry" 
+          hoverinfo: "label+percent entry+text"
         },
       ]}
       config={getCommonConfig()}
