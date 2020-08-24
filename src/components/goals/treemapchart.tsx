@@ -18,6 +18,7 @@ export default function TreeMapChart({ aa }: TreeMapChartProps) {
       //@ts-ignore
       layout={{
         ...getCommonLayoutProps(),
+        hoverlabel: { labelformat: "%"}
       }}
       useResizeHandler
       style={getCommonStyle()}
@@ -102,7 +103,9 @@ export default function TreeMapChart({ aa }: TreeMapChartProps) {
               "#e53e3e",
             ],
           },
-          textinfo: "label+percent entry"
+          textinfo: "label+percent entry",
+          name: "Total Investment",
+          hoverinfo: "label+parent entry" 
         },
       ]}
       config={getCommonConfig()}

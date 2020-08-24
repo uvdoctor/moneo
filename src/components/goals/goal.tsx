@@ -144,8 +144,9 @@ export default function Goal({
           { label: sellLabel, order: 19, active: true },
           { label: rentLabel, order: 21, active: true },
         ]
-      : goalType === APIt.GoalType.D || goalType === APIt.GoalType.R
-      || goalType === APIt.GoalType.T
+      : goalType === APIt.GoalType.D ||
+        goalType === APIt.GoalType.R ||
+        goalType === APIt.GoalType.T
       ? [
           { label: amtLabel, order: 3, active: true },
           { label: taxLabel, order: 8, active: true },
@@ -381,7 +382,11 @@ export default function Goal({
       let label = getTabLabelByOrder(co);
       if (label) setShowTab(label);
       setCurrentOrder(co);
-      if (label === rentLabel) setAllInputDone(true);
+      if (goalType === APIt.GoalType.B) {
+        if (label === rentLabel) setAllInputDone(true);
+      } else if (hasTab(loanLabel)) {
+        if (co === 13) setAllInputDone(true);
+      } else if (co === 10) setAllInputDone(true);
     }
   };
 

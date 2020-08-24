@@ -66,7 +66,7 @@ export default function EmiCost(props: EmiProps) {
 
     return (
         <div className="flex w-full justify-around">
-            {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
+            {(props.allInputDone || props.inputOrder <= props.currentOrder) &&
                 <Section title="Loan Details" insideForm
                     toggle={
                         props.taxRate ? <HToggle rightText="Claim Interest Tax Deduction" value={props.taxBenefitInt} setter={props.taxBenefitIntHandler} /> 
