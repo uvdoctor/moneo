@@ -20,6 +20,7 @@ const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 export default function AAChart(props: AAChartProps) {
   const fsb = useFullScreenBrowser();
+  const hoverTemplate = "%{y} %{fullData.name}<extra></extra>"
   const filterAA = () => {
     let result: any = {};
     for (let key in props.aa) {
@@ -45,6 +46,7 @@ export default function AAChart(props: AAChartProps) {
       mode: mode,
       marker: { color: color },
       line: { shape: "spline" },
+      hovertemplate: hoverTemplate
     };
   };
 
@@ -61,6 +63,7 @@ export default function AAChart(props: AAChartProps) {
       name: name,
       mode: mode,
       marker: { color: color },
+      hovertemplate: hoverTemplate
     };
   };
 
@@ -81,7 +84,7 @@ export default function AAChart(props: AAChartProps) {
   };
 
   useEffect(() => {
-    if (fsb.info.screenWidth > 800)
+    if (fsb.info.innerWidth > 800)
       setTimeout(() => {
         window.dispatchEvent(new Event("resize"));
       }, 300);
