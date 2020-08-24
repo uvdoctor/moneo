@@ -533,7 +533,7 @@ export default function FFGoal({
               />
             }
           >
-            <TreeMapChart aa={aa} />
+            <TreeMapChart aa={aa} rr={rr} />
             <AAChart
               aa={aa}
               years={buildYearsArray(nowYear + 2, endYear)}

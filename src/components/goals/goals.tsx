@@ -303,6 +303,7 @@ export default function Goals({
     goalId: string,
     goalImp: APIt.LMH
   ) => {
+    debugger;
     if (!ffGoal || !ffYear) return null;
     let mCFs = Object.assign({}, mergedCFs);
     let highImpCFs = Object.assign([], mustCFs);

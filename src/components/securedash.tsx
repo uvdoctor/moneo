@@ -6,6 +6,7 @@ import { CreateGoalInput, GoalType } from "../api/goals";
 import { getGoalsList, getDuration } from "./goals/goalutils";
 import { calculateCFs } from "./goals/cfutils";
 import { removeFromArray } from "./utils";
+import { ASSET_TYPES } from "../CONSTANTS";
 
 const SecureDash = () => {
   const netWorthLabel = "Net Worth";
@@ -40,19 +41,20 @@ const SecureDash = () => {
     let irDiff = irDiffByCurrency[currency];
     if (!irDiff) irDiff = 0;
     return {
-      savings: 0.5 + irDiff,
-      deposits: 1.5 + irDiff,
-      sbonds: 2 + irDiff, //short term bond <1
-      mbonds: 3 + irDiff, // 1-5 medium term
-      mtebonds: 3.5 + irDiff, //medium term tax efficient bonds
-      dreit: 5 + irDiff,
-      ireit: 5 + irDiff,
-      gold: 3,
-      largecapstocks: 5 + irDiff,
-      multicapstocks: 6 + irDiff,
-      divstocks: 5 + irDiff,
-      istocks: 7,
-      digitalcurrency: 10,
+      [ASSET_TYPES.SAVINGS]: 0.5 + irDiff,
+      [ASSET_TYPES.DEPOSITS]: 1.5 + irDiff,
+      [ASSET_TYPES.SHORT_TERM_BONDS]: 2 + irDiff, //short term bond <1
+      [ASSET_TYPES.MED_TERM_BONDS]: 3 + irDiff, // 1-5 medium term
+      [ASSET_TYPES.TAX_EXEMPT_BONDS]: 3.5 + irDiff, //medium term tax efficient bonds
+      [ASSET_TYPES.DOMESTIC_REIT]: 5 + irDiff,
+      [ASSET_TYPES.INTERNATIONAL_REIT]: 5 + irDiff,
+      [ASSET_TYPES.GOLD]: 3,
+      [ASSET_TYPES.LARGE_CAP_STOCKS]: 5 + irDiff,
+      [ASSET_TYPES.MID_CAP_STOCKS]: 6 + irDiff,
+      [ASSET_TYPES.DIVIDEND_GROWTH_STOCKS]: 5 + irDiff,
+      [ASSET_TYPES.INTERNATIONAL_STOCKS]: 9,
+      [ASSET_TYPES.SMALL_CAP_STOCKS]: 9,
+      [ASSET_TYPES.DIGITAL_CURRENCIES]: 10,
     };
   };
 
@@ -73,11 +75,11 @@ const SecureDash = () => {
         setFFGoal(g);
         ffGoalId = g.id as string;
       } else {
+        //@ts-ignore
+        allCFs[g.id] = calculateCFs(
+          null,
+          g,
           //@ts-ignore
-          allCFs[g.id] = calculateCFs(
-              null,
-              g,
-              //@ts-ignore
           getDuration(g.sa as number, g.sy, g.ey)
         );
       }
