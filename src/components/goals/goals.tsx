@@ -459,7 +459,7 @@ export default function Goals({
         )}
       </div>
     </div>
-  ) : goalsLoaded && (
+  ) : (
     <Fragment>
       {ffGoal && (
         <div
@@ -593,7 +593,7 @@ export default function Goals({
               )}
             </Fragment>
           )
-        : (
+        : goalsLoaded &&(
             <div className="text-center align-center">
               <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>
               <p className="mb-2">Set Up Financial Freedom Target.</p>

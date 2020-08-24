@@ -36,7 +36,7 @@ export default function ResultSection(props: ResultSectionProps) {
             tabs={props.resultTabOptions}
             selectedTab={props.showResultTab}
             selectedTabHandler={props.showResultTabHandler}
-            capacity={2}
+            capacity={3}
             customStyle="resultTab"
             allInputDone
           />

@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import * as APIt from "../../api/goals";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
-import { initYearOptions, getRangeFactor, changeSelection } from "../utils";
+import { initYearOptions, getRangeFactor, changeSelection, buildYearsArray } from "../utils";
 import SelectInput from "../form/selectinput";
 import { findEarliestFFYear } from "./cfutils";
 import FFResult from "./ffresult";
 import SVGChart from "../svgchart";
 import LineChart from "./linechart";
 import { getOrderByTabLabel, getTabLabelByOrder } from "./goalutils";
-import AA from "./aa";
 import SVGBarChart from "../svgbarchart";
 import StickyHeader from "./stickyheader";
 import ResultSection from "./resultsection";
@@ -21,6 +20,9 @@ import Nominees from "./nominees";
 import InputSection from "./inputsection";
 import DynamicTgtInput from "../form/dynamictgtinput";
 import Section from "../form/section";
+import TreeMapChart from "./treemapchart";
+import SVGAAChart from "./svgaachart";
+import AAChart from "./aachart";
 interface FFGoalProps {
   goal: APIt.CreateGoalInput;
   totalSavings: number;
@@ -145,7 +147,8 @@ export default function FFGoal({
   const lossesLabel = "Losses";
   const nomineeLabel = "Nominees";
   const cfChartLabel = "Total Savings";
-  const aaChartLabel = "Asset Allocation";
+  const aaChartLabel = `Where to Invest from ${nowYear + 2} onwards?`;
+  const treemapChartLabel = `Where to Invest in ${nowYear + 1}?`;
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
 
   const [tabOptions, setTabOptions] = useState<Array<any>>([
@@ -160,21 +163,27 @@ export default function FFGoal({
 
   const resultTabOptions = [
     {
-      label: aaChartLabel,
+      label: treemapChartLabel,
       order: 1,
+      active: true,
+      svg: <SVGAAChart />,
+    },
+    {
+      label: aaChartLabel,
+      order: 2,
       active: true,
       svg: <SVGBarChart />,
     },
     {
       label: cfChartLabel,
-      order: 2,
+      order: 3,
       active: true,
       svg: <SVGChart />,
     },
   ];
 
   const [showTab, setShowTab] = useState(investLabel);
-  const [showResultTab, setShowResultTab] = useState<string>(aaChartLabel);
+  const [showResultTab, setShowResultTab] = useState<string>(treemapChartLabel);
 
   const createGoal = () => {
     return {
@@ -524,9 +533,10 @@ export default function FFGoal({
               />
             }
           >
-            <AA
-              ffGoalEndYear={endYear}
+            <TreeMapChart aa={aa} />
+            <AAChart
               aa={aa}
+              years={buildYearsArray(nowYear + 2, endYear)}
               rr={rr}
               fullScreen={chartFullScreen}
             />
