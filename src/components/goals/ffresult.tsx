@@ -13,6 +13,7 @@ interface FFResultProps {
   ffNomineeAmt: number;
   ffOOM: Array<number> | null;
   currency: string;
+  hideLabel?: boolean
 }
 
 export default function FFResult({
@@ -24,6 +25,7 @@ export default function FFResult({
   ffNomineeAmt,
   ffOOM,
   currency,
+  hideLabel
 }: FFResultProps) {
   return (
     <div className="w-full">
@@ -35,7 +37,7 @@ export default function FFResult({
             result={ffYear}
             noResultFormat
             info={`${ffYear} may be the Earliest You can Achieve Financial Freedom.`}
-            hideLabel
+            hideLabel={hideLabel}
             imp={
               ffOOM
                 ? `You May Not Have Enough Savings in Years ${ffOOM.map(
@@ -48,7 +50,7 @@ export default function FFResult({
             result={ffAmt}
             svg={<SVGPiggy />}
             label={`Savings by ${ffYear - 1}`}
-            hideLabel
+            hideLabel={hideLabel}
             currency={currency}
             info={`You can Withdraw from this Savings for Your expenses from ${ffYear} onwards`}
           />
@@ -57,7 +59,7 @@ export default function FFResult({
             svg={<SVGInheritance />}
             label={`Nominees Get`}
             currency={currency}
-            hideLabel
+            hideLabel={hideLabel}
             info={`This is the savings amount left over in ${endYear + 1}. 
                         As Your Plan ends in ${endYear}, this may be inherited by Your Nominees. 
                         This includes the Inheritance Amount for Nominees as per the Plan.`}

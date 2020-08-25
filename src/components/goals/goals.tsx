@@ -460,10 +460,21 @@ export default function Goals({
     <Fragment>
       {ffGoal && (
         <div
-          className={`flex items-center w-full ${
+          className={`w-full ${
             ffYear && ffAmt >= ffMinReq ? "bg-green-100" : "bg-red-100"
           } shadow-lg lg:shadow-xl`}
         >
+          <div className="w-full flex justify-center items-center">
+            <label className="mr-2 font-semibold text-lg md:text-xl">
+              Financial Freedom
+            </label>
+            <div
+              className="cursor-pointer"
+              onClick={() => setWIPGoal(ffGoal)}
+            >
+              <SVGEdit />
+            </div>
+          </div>
           <FFResult
             endYear={ffGoal.ey}
             ffAmt={ffAmt}
@@ -474,12 +485,6 @@ export default function Goals({
             ffNomineeAmt={ffGoal?.sa as number}
             ffOOM={ffOOM}
           />
-          <div
-            className="p-0 pr-1 cursor-pointer"
-            onClick={() => setWIPGoal(ffGoal)}
-          >
-            <SVGEdit />
-          </div>
         </div>
       )}
       <div className="flex mt-4 items-center justify-center">
@@ -539,9 +544,9 @@ export default function Goals({
                     selectedTabHandler={setViewMode}
                     allInputDone
                   />
-                  {viewMode === cfLabel &&
+                  {viewMode === cfLabel && (
                     <span className="ml-1 font-semibold">{currency}</span>
-                  }
+                  )}
                 </div>
               </div>
               <p className="text-center text-base mt-4">

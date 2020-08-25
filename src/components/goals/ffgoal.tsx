@@ -530,6 +530,7 @@ export default function FFGoal({
                 ffNomineeAmt={leaveBehind}
                 ffOOM={ffOOM}
                 currency={currency}
+                hideLabel
               />
             }
             >
