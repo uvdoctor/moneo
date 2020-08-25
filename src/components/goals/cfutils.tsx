@@ -589,7 +589,7 @@ const createManualCFs = (
   return cfs;
 };
 
-const calculateCashAllocation = (
+const calculateMustAllocation = (
   ffGoal: APIt.CreateGoalInput,
   mustCFs: Array<number>,
   avgAnnualExpense: number,
@@ -599,6 +599,7 @@ const calculateCashAllocation = (
   let nowYear = new Date().getFullYear();
   let savingsAA: any = {};
   let depositsAA: any = {};
+  let bondsAA: any = {}
   for (let year = nowYear + 1; year <= ffGoal.ey; year++) {
     let livingExp: number =
       !ffYear || year < ffYear
@@ -614,41 +615,44 @@ const calculateCashAllocation = (
     savingsAA[year] = livingExp / 2;
     depositsAA[year] = livingExp / 2;
     let mustCF = mustCFs[year - (nowYear + 1)];
-    depositsAA[year] -= mustCF < 0 ? mustCF : 0;
+    if(mustCF && mustCF < 0) depositsAA[year] -= mustCF
     let depCF = 0;
+    let bondsCF = 0
     for (let depYear = year + 1; depYear < year + 5; depYear++) {
+      let cf = 0
       let mustCF = mustCFs[depYear - (nowYear + 1)];
-      if (mustCF && mustCF < 0) depCF -= mustCF;
+      if (mustCF && mustCF < 0) cf -= mustCF;
       if (ffYear && depYear >= ffYear) {
-        depCF += getCompoundedIncome(
+        cf += getCompoundedIncome(
           ffGoal.btr as number,
           ffGoal.tdli as number,
           depYear - ffYear
         );
       }
+      if(depYear === year + 1) depCF += cf 
+      else bondsCF += cf
     }
     depositsAA[year] += depCF;
+    bondsAA[year] = bondsCF;
   }
-  console.log("Savings AA is ", savingsAA)
-  console.log("Deposits AA is ", depositsAA)
-  return { savings: savingsAA, deposits: depositsAA };
+  return { savings: savingsAA, deposits: depositsAA, bonds: bondsAA };
 };
 
-const calculateBondAllocation = (
+const calculateTryAllocation = (
   ffGoal: APIt.CreateGoalInput,
   tryCFs: Array<number>
 ) => {
   let nowYear = new Date().getFullYear();
-  let stbondAA: any = {};
+  let bondAA: any = {};
   for (let year = nowYear + 1; year <= ffGoal.ey; year++) {
     let cf = 0;
     for (let bondYear = year; bondYear < year + 3; bondYear++) {
       let tryCF = tryCFs[bondYear - (nowYear + 1)];
       if (tryCF && tryCF < 0) cf -= tryCF;
     }
-    stbondAA[year] = cf;
+    bondAA[year] = cf;
   }
-  return stbondAA;
+  return bondAA;
 };
 
 const buildEmptyAA = (fromYear: number, toYear: number) => {
@@ -673,7 +677,8 @@ const calculateAllocation = (
   aa: any,
   sa: number,
   da: number,
-  ba: number,
+  mustBA: number,
+  tryBA: number,
   ffYear: number
 ) => {
   let nowYear = new Date().getFullYear();
@@ -688,13 +693,15 @@ const calculateAllocation = (
   }
   aa[ASSET_TYPES.SAVINGS][i] = savingsPer;
   aa[ASSET_TYPES.DEPOSITS][i] = depPer;
-  let bondsPer = cs > sa + da ? Math.round((ba / cs) * 100) : 0;
-  if (bondsPer + cashPer > 100) bondsPer = 100 - cashPer;
-  if (y < ffYear)
-    aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = Math.round(bondsPer * 0.5);
-  aa[ASSET_TYPES.MED_TERM_BONDS][i] =
-    bondsPer - aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i];
-  let remPer = 100 - (cashPer + bondsPer);
+  let remPer = 100 - cashPer
+  let mustBondsPer = remPer > 0 ? Math.round((mustBA / cs) * 100) : 0;
+  if (mustBondsPer > remPer) mustBondsPer = remPer;
+  aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = mustBondsPer;
+  remPer -= mustBondsPer
+  let tryBondsPer = remPer > 0 ? Math.round((tryBA / cs) * 100) : 0;
+  if(tryBondsPer > remPer) tryBondsPer = remPer 
+  aa[ASSET_TYPES.MED_TERM_BONDS][i] = tryBondsPer
+  remPer -= tryBondsPer
   if (remPer > 0) {
     let reitPer = ffGoal.imp === APIt.LMH.L ? 10 : 5;
     if (y >= ffYear) {
@@ -786,14 +793,14 @@ const checkForFF = (
   });
   let ffAmt = 0;
   let ffCfs = {};
-  let cash = calculateCashAllocation(
+  let mustAllocation = calculateMustAllocation(
     ffGoal,
     mustCFs,
     avgAnnualExpense,
     expChgRate,
     ffYear
   );
-  let bonds = calculateBondAllocation(ffGoal, tryCFs);
+  let tryAllocation = calculateTryAllocation(ffGoal, tryCFs);
   let aa: any = buildEmptyAA(nowYear + 1, ffGoal.ey);
   let rr: Array<number> = [];
   let minReq = 0;
@@ -802,14 +809,16 @@ const checkForFF = (
     let y = parseInt(year);
     if (y > ffGoal.ey) break;
     let v = parseInt(value);
-    let sa = cash.savings[y];
-    let da = cash.deposits[y];
-    let ba = bonds[y];
-    minReq = y < ffYear ? sa + da : sa + da + ba;
+    let sa = mustAllocation.savings[y];
+    let da = mustAllocation.deposits[y];
+    let mustBA = mustAllocation.bonds[y] 
+    let tryBA = tryAllocation[y];
+    minReq = sa + da + mustBA;
+    if(y >= ffYear) minReq += tryBA
     let i = y - (nowYear + 1);
     let rate = 0;
     if (cs >= minReq) {
-      calculateAllocation(ffGoal, y, cs, aa, sa, da, ba, ffYear);
+      calculateAllocation(ffGoal, y, cs, aa, sa, da, mustBA, tryBA, ffYear);
     } else {
       if (cs <= sa) aa[ASSET_TYPES.SAVINGS][i] = 100;
       else {
@@ -818,7 +827,10 @@ const checkForFF = (
         let remPer = 100 - aa[ASSET_TYPES.SAVINGS][i];
         aa[ASSET_TYPES.DEPOSITS][i] = depPer < remPer ? depPer : remPer;
         remPer -= aa[ASSET_TYPES.DEPOSITS][i];
-        if (remPer > 0) aa[ASSET_TYPES.MED_TERM_BONDS][i] = remPer;
+        if (remPer > 0) {
+          if(y >= ffYear) aa[ASSET_TYPES.MED_TERM_BONDS][i] = remPer;
+          else aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = remPer
+        }
       }
       oom.push(y);
     }
