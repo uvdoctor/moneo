@@ -70,7 +70,7 @@ export function Invest({
           value={monthlySavingsRate}
           changeHandler={monthlySavingsRateHandler}
           min={0}
-          max={5}
+          max={3}
           step={0.1}
           note={`Total ${toCurrency(
             Math.round(

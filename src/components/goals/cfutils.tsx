@@ -855,7 +855,7 @@ export const findEarliestFFYear = (
   pp: any
 ) => {
   let nowYear = new Date().getFullYear();
-  if (nowYear > ffGoal.ey - 20)
+  if (nowYear > ffGoal.ey - 30)
     return {
       ffYear: -1,
       leftAmt: -1,
@@ -866,8 +866,8 @@ export const findEarliestFFYear = (
       rr: [],
       oom: [],
     };
-  if (!yearToTry || yearToTry <= nowYear || yearToTry > ffGoal.ey - 20)
-    yearToTry = nowYear + Math.round((ffGoal.ey - 20 - nowYear) / 2);
+  if (!yearToTry || yearToTry <= nowYear || yearToTry > ffGoal.ey - 30)
+    yearToTry = nowYear + Math.round((ffGoal.ey - 30 - nowYear) / 2);
   //@ts-ignore
   let nomineeAmt = ffGoal?.sa as number;
   let prevResult = checkForFF(
@@ -890,7 +890,7 @@ export const findEarliestFFYear = (
       : 1;
   for (
     let currYear = yearToTry + increment;
-    currYear <= ffGoal.ey - 20 && currYear > nowYear;
+    currYear <= ffGoal.ey - 30 && currYear > nowYear;
     currYear += increment
   ) {
     let result = checkForFF(

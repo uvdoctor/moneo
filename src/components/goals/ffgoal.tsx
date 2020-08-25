@@ -84,6 +84,7 @@ export default function FFGoal({
   addCallback,
   updateCallback,
 }: FFGoalProps) {
+  const nowYear = new Date().getFullYear();
   const [riskProfile, setRiskProfile] = useState<APIt.LMH>(goal.imp);
   const [expenseBY, setExpenseBY] = useState<number>(goal.sy);
   const [expenseAfterFF, setExpenseAfterFF] = useState<number>(
@@ -96,7 +97,7 @@ export default function FFGoal({
     goal?.tbr as number
   );
   const [endYear, setEndYear] = useState<number>(goal.ey);
-  const eyOptions = initYearOptions(goal.by + 30, 50);
+  const eyOptions = initYearOptions(1960, nowYear - 15 - 1960);
   const [currency, setCurrency] = useState<string>(goal.ccy);
   const [taxRate, setTaxRate] = useState<number>(goal.tdr);
   const [leaveBehind, setLeaveBehind] = useState<number>(goal?.sa as number);
@@ -133,7 +134,6 @@ export default function FFGoal({
   const [losses, setLosses] = useState<Array<APIt.TargetInput>>(
     goal.pl as Array<APIt.TargetInput>
   );
-  const nowYear = new Date().getFullYear();
   const [currentOrder, setCurrentOrder] = useState<number>(1);
   const [allInputDone, setAllInputDone] = useState<boolean>(
     goal.id ? true : false
@@ -337,15 +337,17 @@ export default function FFGoal({
       <StickyHeader cancelCallback={cancelCallback} cancelDisabled={btnClicked}>
         <SelectInput
           name="ey"
-          info="Select the Year till You Want to Plan. After this Year, it is assumed that You will leave behind inheritance for Your Nominees, if any."
+          info="Financial Plan will be created assuming that You live till 100 Years, after which You leave behind inheritance. 
+          DollarDarwin will try to find the earliest possible year for Your Financial Freedom based on Your inputs and Other Goals that You Create. 
+          Given that You May not be able to work beyond 70 years of age, DollarDarwin may request You to reconsider Your inputs and other Goals so that You Achieve Financial Freedom before hitting 70."
           inputOrder={1}
           currentOrder={currentOrder}
           nextStepDisabled={false}
           allInputDone={allInputDone}
           nextStepHandler={handleNextStep}
-          pre="Plan End Year"
-          value={endYear}
-          changeHandler={(val: string) => changeSelection(val, setEndYear)}
+          pre="Birth Year"
+          value={endYear - 100}
+          changeHandler={(val: string) => changeSelection(val, setEndYear, 100)}
           options={eyOptions}
         />
         <SelectInput

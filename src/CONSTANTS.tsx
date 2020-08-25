@@ -68,3 +68,8 @@ export const ASSET_TYPES = {
     DIVIDEND_GROWTH_STOCKS: 'Dividend-Growth Stocks',
     HIGH_YIELD_STOCKS: 'High-Yield Stocks'
 }
+
+export const COLORS = {
+    GREEN: "#48bb78",
+    RED: "#FF0000"
+}

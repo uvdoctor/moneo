@@ -166,8 +166,8 @@ export function getCurrencyList() {
   };
 }
 
-export const changeSelection = (str: string, setter: Function) =>
-  setter(parseInt(str));
+export const changeSelection = (str: string, setter: Function, increment: number = 0) =>
+  setter(parseInt(str) + increment);
 
 export const toCurrency = (
   num: number | undefined,

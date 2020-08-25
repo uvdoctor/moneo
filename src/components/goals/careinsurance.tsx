@@ -6,6 +6,7 @@ import { changeSelection, initYearOptions, toStringArr } from "../utils";
 import RadialInput from "../form/radialinput";
 import ResultItem from "../calc/resultitem";
 import { calculateTotalCP, calculateTotalCPTaxBenefit } from "../goals/cfutils";
+import { COLORS } from "../../CONSTANTS";
 
 interface CareInsuranceProps {
   inputOrder: number;
@@ -54,7 +55,7 @@ export default function CareInsurance({
 }: CareInsuranceProps) {
   const [totalCP, setTotalCP] = useState<number>(0);
   const [totalTaxBenefit, setTotalTaxBenfit] = useState<number>(0);
-  const [cyOptions, setCYOptions] = useState(initYearOptions(endYear - 30, 20));
+  const [cyOptions, setCYOptions] = useState(initYearOptions(endYear - 45, 10));
   const nowYear = new Date().getFullYear()
 
   useEffect(() => {
@@ -90,9 +91,9 @@ export default function CareInsurance({
   }, [taxRate, maxTaxDed, carePremiumSY, carePremium, chgPer, premiumDur]);
 
   useEffect(() => {
-    setCYOptions(initYearOptions(endYear - 30, 10));
-    if (carePremiumSY > endYear - 20 || carePremiumSY < endYear - 30)
-      carePremiumSYHandler(endYear - 20);
+    setCYOptions(initYearOptions(endYear - 45, 10));
+    if (carePremiumSY > endYear - 35 || carePremiumSY < endYear - 45)
+      carePremiumSYHandler(endYear - 40);
   }, [endYear]);
 
   useEffect(() => {
@@ -189,6 +190,7 @@ export default function CareInsurance({
             data={toStringArr(0, 10, 0.5)}
             step={0.5}
             unit="%"
+            colorTo={COLORS.RED}
           />
         ) : (
           !allInputDone && currentOrder === inputOrder + 3 && nextStepHandler()

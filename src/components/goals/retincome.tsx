@@ -34,12 +34,12 @@ export default function RetIncome({
   retirementIncomeSY,
   retirementIncomeSYHandler,
 }: RetIncomeProps) {
-  const [ryOptions, setRYOptions] = useState(initYearOptions(endYear - 30, 15));
+  const [ryOptions, setRYOptions] = useState(initYearOptions(endYear - 35, 10));
 
   useEffect(() => {
-    setRYOptions(initYearOptions(endYear - 30, 15));
-    if (retirementIncomeSY > endYear - 15 || retirementIncomeSY < endYear - 30)
-      retirementIncomeSYHandler(endYear - 20);
+    setRYOptions(initYearOptions(endYear - 35, 10));
+    if (retirementIncomeSY > endYear - 25 || retirementIncomeSY < endYear - 35)
+      retirementIncomeSYHandler(endYear - 30);
   }, [endYear]);
 
   return (

@@ -4,6 +4,7 @@ import Slider from 'rc-slider'
 import NextStep from './nextstep'
 import SVGInfo from '../svginfo'
 import { toast } from 'react-toastify'
+import { COLORS } from '../../CONSTANTS'
 
 interface NumberInputProps {
     inputOrder: number
@@ -108,7 +109,7 @@ export default function NumberInput(props: NumberInputProps) {
                                     boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
                                 }}
                                 trackStyle={{
-                                    backgroundColor: '#48bb78',
+                                    backgroundColor: COLORS.GREEN,
                                     top: 0,
                                     left: 0,
                                     height: '0.9rem'
