@@ -608,7 +608,7 @@ const calculateCashAllocation = (
           )
         : getCompoundedIncome(
             ffGoal.btr as number,
-            ffGoal.tbr as number,
+            ffGoal.tdli as number,
             year - ffYear
           );
     savingsAA[year] = livingExp / 2;
@@ -622,13 +622,15 @@ const calculateCashAllocation = (
       if (ffYear && depYear >= ffYear) {
         depCF += getCompoundedIncome(
           ffGoal.btr as number,
-          ffGoal.tbr as number,
+          ffGoal.tdli as number,
           depYear - ffYear
         );
       }
     }
     depositsAA[year] += depCF;
   }
+  console.log("Savings AA is ", savingsAA)
+  console.log("Deposits AA is ", depositsAA)
   return { savings: savingsAA, deposits: depositsAA };
 };
 
@@ -800,9 +802,9 @@ const checkForFF = (
     let y = parseInt(year);
     if (y > ffGoal.ey) break;
     let v = parseInt(value);
-    let sa = cash.savings[y] ? parseFloat(cash.savings[y]) : 0;
-    let da = cash.deposits[y] ? parseFloat(cash.deposits[y]) : 0;
-    let ba = bonds[y] ? parseInt(bonds[y]) : 0;
+    let sa = cash.savings[y];
+    let da = cash.deposits[y];
+    let ba = bonds[y];
     minReq = y < ffYear ? sa + da : sa + da + ba;
     let i = y - (nowYear + 1);
     let rate = 0;
@@ -840,6 +842,20 @@ const checkForFF = (
     rr: rr,
     oom: oom.length > 0 ? oom : null,
   };
+};
+
+const isOOMAfterFF = (ffYear: number, oom: Array<number>) => {
+  for (let oomYear of oom) if (oomYear >= ffYear) return true;
+  return false;
+};
+
+export const isFFPossible = (result: any, nomineeAmt: number) => {
+  if (!result.ffYear || result.ffYear < 0) return false;
+  return (
+    result.ffAmt >= result.minReq &&
+    result.leftAmt >= nomineeAmt &&
+    (!result.oom || !isOOMAfterFF(result.ffYear, result.oom))
+  );
 };
 
 export const findEarliestFFYear = (
@@ -882,12 +898,7 @@ export const findEarliestFFYear = (
     expChgRate,
     pp
   );
-  let increment =
-    prevResult.ffAmt >= prevResult.minReq &&
-    prevResult.leftAmt >= nomineeAmt &&
-    !prevResult.oom
-      ? -1
-      : 1;
+  let increment = isFFPossible(prevResult, nomineeAmt) ? -1 : 1;
   for (
     let currYear = yearToTry + increment;
     currYear <= ffGoal.ey - 30 && currYear > nowYear;
@@ -906,21 +917,13 @@ export const findEarliestFFYear = (
       pp
     );
     if (
-      (result.leftAmt < nomineeAmt ||
-        result.ffAmt < result.minReq ||
-        result.oom) &&
-      prevResult.leftAmt >= nomineeAmt &&
-      prevResult.ffAmt >= prevResult.minReq &&
-      !prevResult.oom
+      !isFFPossible(result, nomineeAmt) &&
+      isFFPossible(prevResult, nomineeAmt)
     )
       return prevResult;
     else if (
-      (prevResult.leftAmt < nomineeAmt ||
-        prevResult.ffAmt < prevResult.minReq ||
-        prevResult.oom) &&
-      result.ffAmt >= result.minReq &&
-      result.leftAmt >= nomineeAmt &&
-      !result.oom
+      !isFFPossible(prevResult, nomineeAmt) &&
+      isFFPossible(result, nomineeAmt)
     )
       return result;
     prevResult = result;

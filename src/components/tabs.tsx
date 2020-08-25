@@ -139,7 +139,6 @@ export default function Tabs(props: TabsProps) {
               }
             >
               <div className="flex items-center">
-                {console.log("Tab is ", tab)}
                 {tab.svg && !isLinkDisabled(tab) && (
                   <div className="inline mr-1">{tab.svg}</div>
                 )}

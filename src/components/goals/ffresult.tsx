@@ -3,59 +3,52 @@ import ResultItem from "../calc/resultitem";
 import SVGHourGlass from "../svghourglass";
 import SVGInheritance from "./svginheritance";
 import SVGPiggy from "../svgpiggy";
+import { isFFPossible } from "./cfutils";
 
 interface FFResultProps {
   endYear: number;
-  ffYear: number | null;
-  ffAmt: number;
-  ffLeftOverAmt: number;
-  ffMinReq: number;
+  result: any | null;
   ffNomineeAmt: number;
-  ffOOM: Array<number> | null;
   currency: string;
   hideLabel?: boolean
 }
 
 export default function FFResult({
   endYear,
-  ffYear,
-  ffAmt,
-  ffLeftOverAmt,
-  ffMinReq,
+  result,
   ffNomineeAmt,
-  ffOOM,
   currency,
   hideLabel
 }: FFResultProps) {
   return (
     <div className="w-full">
-      {ffYear && ffLeftOverAmt >= ffNomineeAmt && ffAmt >= ffMinReq ? (
+      {isFFPossible(result, ffNomineeAmt) ? (
         <div className="py-2 flex flex-wrap justify-around w-full items-start bg-green-100">
           <ResultItem
             svg={<SVGHourGlass />}
             label="Achievable from"
-            result={ffYear}
+            result={result.ffYear}
             noResultFormat
-            info={`${ffYear} may be the Earliest You can Achieve Financial Freedom.`}
+            info={`${result.ffYear} may be the Earliest You can Achieve Financial Freedom.`}
             hideLabel={hideLabel}
             imp={
-              ffOOM
-                ? `You May Not Have Enough Savings in Years ${ffOOM.map(
-                    (year) => ` ${year}`
+              result.oom
+                ? `You May Not Have Enough Savings in Years ${result.oom.map(
+                    (year: number) => ` ${year}`
                   )}`
                 : ""
             }
           />
           <ResultItem
-            result={ffAmt}
+            result={result.ffAmt}
             svg={<SVGPiggy />}
-            label={`Savings by ${ffYear - 1}`}
+            label={`Savings by ${result.ffYear - 1}`}
             hideLabel={hideLabel}
             currency={currency}
-            info={`You can Withdraw from this Savings for Your expenses from ${ffYear} onwards`}
+            info={`You can Withdraw from this Savings for Your expenses from ${result.ffYear} onwards`}
           />
           <ResultItem
-            result={ffLeftOverAmt}
+            result={result.leftAmt}
             svg={<SVGInheritance />}
             label={`Nominees Get`}
             currency={currency}
@@ -67,9 +60,9 @@ export default function FFResult({
         </div>
       ) : (
         <p className="text-center bg-red-100 font-semibold py-2">
-          {!ffYear
+          {!result.ffYear
             ? `Analyzed till ${endYear - 20}`
-            : `You May Not have Enough Savings in ${ffYear}`}
+            : `You May Not have Enough Savings in ${result.ffYear}`}
           {`. Please try again with different inputs / goals.`}
         </p>
       )}

@@ -2,9 +2,14 @@ import React, { useState, useEffect } from "react";
 import * as APIt from "../../api/goals";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
-import { initYearOptions, getRangeFactor, changeSelection, buildYearsArray } from "../utils";
+import {
+  initYearOptions,
+  getRangeFactor,
+  changeSelection,
+  buildYearsArray,
+} from "../utils";
 import SelectInput from "../form/selectinput";
-import { findEarliestFFYear } from "./cfutils";
+import { findEarliestFFYear, isFFPossible } from "./cfutils";
 import FFResult from "./ffresult";
 import SVGChart from "../svgchart";
 import LineChart from "./linechart";
@@ -30,11 +35,8 @@ interface FFGoalProps {
   avgAnnualExp: number;
   expChgRate: number;
   ffYear: number | null;
-  ffAmt: number;
-  ffLeftOverAmt: number;
+  ffResult: any | null;
   ffCfs: any;
-  ffMinReq: number;
-  ffOOM: Array<number> | null;
   aa: Object;
   rr: Array<number>;
   mustCFs: Array<number>;
@@ -44,11 +46,8 @@ interface FFGoalProps {
   aaHandler: Function;
   rrHandler: Function;
   ffYearHandler: Function;
-  ffAmtHandler: Function;
-  ffLeftOverAmtHandler: Function;
+  ffResultHandler: Function;
   ffCfsHandler: Function;
-  ffMinReqHandler: Function;
-  ffOOMHandler: Function;
   cancelCallback: Function;
   addCallback: Function;
   updateCallback: Function;
@@ -61,11 +60,8 @@ export default function FFGoal({
   avgAnnualExp,
   expChgRate,
   ffYear,
-  ffAmt,
-  ffLeftOverAmt,
+  ffResult,
   ffCfs,
-  ffMinReq,
-  ffOOM,
   aa,
   rr,
   mustCFs,
@@ -75,11 +71,8 @@ export default function FFGoal({
   aaHandler,
   rrHandler,
   ffYearHandler,
-  ffAmtHandler,
-  ffLeftOverAmtHandler,
+  ffResultHandler,
   ffCfsHandler,
-  ffMinReqHandler,
-  ffOOMHandler,
   cancelCallback,
   addCallback,
   updateCallback,
@@ -160,7 +153,7 @@ export default function FFGoal({
     { label: lossesLabel, order: 17, active: true },
     { label: nomineeLabel, order: 18, active: true },
   ]);
-  
+
   const resultTabOptions = [
     {
       label: cfChartLabel,
@@ -221,15 +214,6 @@ export default function FFGoal({
     return g as APIt.UpdateGoalInput;
   };
 
-  const isFFResultAcceptable = (result: any) => {
-    if (!result.ffYear || result.ffYear < 0) return false;
-    if (!result.oom || result.oom.length === 0) return true;
-    result.oom.forEach((y: number) => {
-      if (y >= result.ffYear) return false;
-    });
-    return true;
-  };
-
   const hasCareTab = () => {
     let careTab = tabOptions.filter((tab) => tab.label === careLabel);
     return careTab && careTab.length === 1;
@@ -270,14 +254,11 @@ export default function FFGoal({
       expChgRate,
       pp
     );
-    ffAmtHandler(result.ffAmt);
-    ffYearHandler(!isFFResultAcceptable(result) ? null : result.ffYear);
-    ffLeftOverAmtHandler(result.leftAmt);
+    ffResultHandler(result);
+    ffYearHandler(!isFFPossible(result, leaveBehind) ? null : result.ffYear);
     ffCfsHandler(result.ffCfs);
     aaHandler(result.aa);
     rrHandler([...result.rr]);
-    ffMinReqHandler(result.minReq);
-    ffOOMHandler(result.oom);
     console.log("FF Result is ", result);
   }, [
     expenseBY,
@@ -525,17 +506,13 @@ export default function FFGoal({
             result={
               <FFResult
                 endYear={endYear}
-                ffAmt={ffAmt}
-                ffLeftOverAmt={ffLeftOverAmt}
-                ffYear={ffYear}
-                ffMinReq={ffMinReq}
+                result={ffResult}
                 ffNomineeAmt={leaveBehind}
-                ffOOM={ffOOM}
                 currency={currency}
                 hideLabel
               />
             }
-            >
+          >
             <LineChart
               cfs={buildChartCFs(ffCfs)}
               startYear={nowYear + 1}

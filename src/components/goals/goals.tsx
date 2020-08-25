@@ -12,7 +12,7 @@ import {
   getGoalTypes,
   getImpOptions,
 } from "./goalutils";
-import { findEarliestFFYear } from "./cfutils";
+import { findEarliestFFYear, isFFPossible } from "./cfutils";
 import Summary from "./summary";
 import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
@@ -71,17 +71,15 @@ export default function Goals({
   const [optCFs, setOptCFs] = useState<Array<number>>([]);
   const [mergedCFs, setMergedCFs] = useState<any>({});
   const [impFilter, setImpFilter] = useState<string>("");
+  const [ffResult, setFFResult] = useState<any>({})
   const [ffYear, setFFYear] = useState<number | null>(0);
-  const [ffAmt, setFFAmt] = useState<number>(0);
-  const [ffLeftOverAmt, setFFLeftOverAmt] = useState<number>(0);
   const [ffCfs, setFFCfs] = useState<any>({});
-  const [ffMinReq, setFFMinReq] = useState<number>(0);
-  const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const goalsLabel = "Goals";
   const cfLabel = "Cash Flows";
   const [viewMode, setViewMode] = useState<string>(goalsLabel);
   const nowYear = new Date().getFullYear();
   const tabOptions = buildTabsArray([goalsLabel, cfLabel]);
+  
   const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
     if (!ffGoal) return {};
     let mCFs = {};
@@ -107,16 +105,12 @@ export default function Goals({
       expChgRate,
       pp
     );
+    setFFResult(result)
     if (result.ffYear < 0) setFFYear(null);
     else setFFYear(result.ffYear);
-    setFFAmt(result.ffAmt);
-    //@ts-ignore
-    setFFLeftOverAmt(result.leftAmt);
     setFFCfs(result.ffCfs);
-    setFFOOM(result.oom);
     aaHandler(result.aa);
     rrHandler([...result.rr]);
-    setFFMinReq(result.minReq);
     console.log("Result is ", result);
   };
 
@@ -349,9 +343,7 @@ export default function Goals({
       pp
     );
     if (
-      resultWithoutGoal.ffYear < 0 ||
-      resultWithoutGoal.ffAmt < resultWithoutGoal.minReq ||
-      resultWithoutGoal.leftAmt < nomineeAmt
+      !isFFPossible(resultWithoutGoal, nomineeAmt)
     )
       return {
         ffImpactYears: null,
@@ -392,15 +384,15 @@ export default function Goals({
       pp
     );
     if (
-      resultWithGoal.ffYear < 0 ||
-      resultWithGoal.ffAmt < resultWithGoal.minReq ||
-      resultWithGoal.leftAmt < nomineeAmt
+      !isFFPossible(resultWithGoal, nomineeAmt)
     )
       return {
         ffImpactYears: null,
         rr: resultWithoutGoal.rr,
         ffOOM: resultWithGoal.oom,
       };
+    console.log("Result with goal...", resultWithGoal)
+    console.log("Result without goal...", resultWithoutGoal)
     return {
       ffImpactYears: resultWithoutGoal.ffYear - resultWithGoal.ffYear,
       rr: resultWithoutGoal.rr,
@@ -422,21 +414,15 @@ export default function Goals({
             aa={aa}
             rr={rr}
             ffYear={ffYear}
-            ffAmt={ffAmt}
-            ffLeftOverAmt={ffLeftOverAmt}
+            ffResult={ffResult}
             ffCfs={ffCfs}
             mergedCfs={mergedCFs}
-            ffOOM={ffOOM}
             ffYearHandler={setFFYear}
-            ffAmtHandler={setFFAmt}
-            ffLeftOverAmtHandler={setFFLeftOverAmt}
-            ffMinReqHandler={setFFMinReq}
-            ffOOMHandler={setFFOOM}
             ffCfsHandler={setFFCfs}
+            ffResultHandler={setFFResult}
             rrHandler={rrHandler}
             aaHandler={aaHandler}
             pp={pp}
-            ffMinReq={ffMinReq}
             avgAnnualExp={avgAnnualExpense}
             expChgRate={expChgRate}
             mustCFs={mustCFs}
@@ -461,7 +447,7 @@ export default function Goals({
       {ffGoal && (
         <div
           className={`w-full ${
-            ffYear && ffAmt >= ffMinReq ? "bg-green-100" : "bg-red-100"
+            isFFPossible(ffResult, ffGoal.sa as number) ? "bg-green-100" : "bg-red-100"
           } shadow-lg lg:shadow-xl`}
         >
           <div className="w-full flex justify-center items-center">
@@ -477,13 +463,9 @@ export default function Goals({
           </div>
           <FFResult
             endYear={ffGoal.ey}
-            ffAmt={ffAmt}
-            ffLeftOverAmt={ffLeftOverAmt}
-            ffYear={ffYear}
+            result={ffResult}
             currency={ffGoal.ccy}
-            ffMinReq={ffMinReq}
             ffNomineeAmt={ffGoal?.sa as number}
-            ffOOM={ffOOM}
           />
         </div>
       )}
@@ -590,7 +572,7 @@ export default function Goals({
                           deleteCallback={removeGoal}
                           editCallback={editGoal}
                           ffGoalEndYear={ffGoal.ey}
-                          ffOOM={ffOOM}
+                          ffOOM={result.ffOOM}
                           ffImpactYears={result.ffImpactYears}
                         />
                       )
