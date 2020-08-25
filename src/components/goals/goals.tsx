@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Goal from "./goal";
 import FFGoal from "./ffgoal";
-import { removeFromArray } from "../utils";
+import { buildTabsArray, removeFromArray } from "../utils";
 import CFChart from "./cfchart";
 import * as APIt from "../../api/goals";
 import {
@@ -81,10 +81,7 @@ export default function Goals({
   const cfLabel = "Cash Flows";
   const [viewMode, setViewMode] = useState<string>(goalsLabel);
   const nowYear = new Date().getFullYear();
-  const tabOptions = [
-    { label: goalsLabel, order: 1, active: true },
-    { label: cfLabel, order: 2, active: true }
-  ];
+  const tabOptions = buildTabsArray([goalsLabel, cfLabel]);
   const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
     if (!ffGoal) return {};
     let mCFs = {};
@@ -303,7 +300,6 @@ export default function Goals({
     goalId: string,
     goalImp: APIt.LMH
   ) => {
-    debugger;
     if (!ffGoal || !ffYear) return null;
     let mCFs = Object.assign({}, mergedCFs);
     let highImpCFs = Object.assign([], mustCFs);
@@ -518,35 +514,40 @@ export default function Goals({
         ? allGoals &&
           allGoals.length > 0 && (
             <Fragment>
-              <Tabs
-                tabs={tabOptions}
-                selectedTab={viewMode}
-                capacity={2}
-                selectedTabHandler={setViewMode}
-                allInputDone
-                currentOrder={1}
-              />
+              <div className="w-full flex justify-center">
+                <div className="flex items-center">
+                  {viewMode === goalsLabel && (
+                    <div className="mr-2">
+                      <SelectInput
+                        inputOrder={1}
+                        currentOrder={0}
+                        nextStepDisabled={true}
+                        allInputDone={true}
+                        nextStepHandler={() => true}
+                        name="typeFilter"
+                        pre=""
+                        options={getImpOptions()}
+                        value={impFilter as string}
+                        changeHandler={setImpFilter}
+                      />
+                    </div>
+                  )}
+                  <Tabs
+                    tabs={tabOptions}
+                    selectedTab={viewMode}
+                    capacity={tabOptions.length}
+                    selectedTabHandler={setViewMode}
+                    allInputDone
+                  />
+                  {viewMode === cfLabel &&
+                    <span className="ml-1 font-semibold">{currency}</span>
+                  }
+                </div>
+              </div>
               <p className="text-center text-base mt-4">
                 Negative values imply You Pay, while Positive values imply You
                 Receive
               </p>
-              {viewMode === goalsLabel && (
-                <div className="mt-4 flex justify-center">
-                  <SelectInput
-                    inputOrder={1}
-                    currentOrder={0}
-                    nextStepDisabled={true}
-                    allInputDone={true}
-                    nextStepHandler={() => true}
-                    name="typeFilter"
-                    pre=""
-                    options={getImpOptions()}
-                    value={impFilter as string}
-                    changeHandler={setImpFilter}
-                  />
-                </div>
-              )}
-              
               {viewMode === cfLabel && (
                 <CFChart
                   mustCFs={mustCFs}
@@ -594,7 +595,7 @@ export default function Goals({
               )}
             </Fragment>
           )
-        : goalsLoaded &&(
+        : goalsLoaded && (
             <div className="text-center align-center">
               <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>
               <p className="mb-2">Set Up Financial Freedom Target.</p>

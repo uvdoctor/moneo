@@ -533,3 +533,12 @@ export const getAllAssetTypes = () => [
   ASSET_TYPES.GOLD,
   ASSET_TYPES.DIGITAL_CURRENCIES,
 ];
+
+export const buildTabsArray = (arr: Array<string>) => {
+  if (!arr || arr.length === 0) return [];
+  let result: Array<any> = [];
+  arr.forEach((item, i) => {
+    result.push({ label: item, order: i + 1, active: true });
+  });
+  return result;
+};

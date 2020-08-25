@@ -5,15 +5,21 @@ import NW from "./nw/nw";
 import { CreateGoalInput, GoalType } from "../api/goals";
 import { getGoalsList, getDuration } from "./goals/goalutils";
 import { calculateCFs } from "./goals/cfutils";
-import { removeFromArray } from "./utils";
+import { buildTabsArray, removeFromArray } from "./utils";
 import { ASSET_TYPES } from "../CONSTANTS";
+import Tabs, { DASHBOARD_STYLE } from "./tabs";
 
 const SecureDash = () => {
   const netWorthLabel = "Net Worth";
   const goalsLabel = "Plan";
   const saveLabel = "Save";
   const investLabel = "Invest";
-  const viewItems = [netWorthLabel, goalsLabel, saveLabel, investLabel];
+  const tabs = buildTabsArray([
+    netWorthLabel,
+    goalsLabel,
+    saveLabel,
+    investLabel,
+  ]);
   const [viewMode, setViewMode] = useState(netWorthLabel);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [savings, setSavings] = useState<number>(0);
@@ -27,10 +33,6 @@ const SecureDash = () => {
   const [rr, setRR] = useState<Array<number>>([]);
   const avgAnnualExpense = 24000;
   const expChgRate = 3;
-
-  const changeViewMode = (e: any) => {
-    setViewMode(e.target.innerText);
-  };
 
   const irDiffByCurrency: any = {
     INR: 3,
@@ -93,19 +95,14 @@ const SecureDash = () => {
   return (
     <Fragment>
       {!showModal && (
-        <ul className="flex mt-12 bg-black w-screen">
-          {viewItems.map((item, i) => (
-            <li key={"viewItem" + i} className="ml-2">
-              <button
-                onClick={changeViewMode}
-                className={`font-semibold rounded-t p-2 md:mt-4 text-white hover:bg-white hover:border-t hover:text-green-600 focus:outline-none
-                        ${viewMode === item && "text-green-600 bg-white"}`}
-              >
-                {item}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <Tabs
+          tabs={tabs}
+          allInputDone
+          capacity={tabs.length}
+          selectedTab={viewMode}
+          selectedTabHandler={setViewMode}
+          customStyle={DASHBOARD_STYLE}
+        />
       )}
       {viewMode === netWorthLabel && (
         <NW

@@ -12,22 +12,25 @@ interface TabsProps {
   selectedTabHandler: Function;
 }
 
+export const DASHBOARD_STYLE = "dashboard"
+export const RESULT_TAB_STYLE = "resultTab"
+
 export default function Tabs(props: TabsProps) {
   const styleMap: any = {
-    dashboard: {
-      parent: "w-10/12 justify-center",
+    [DASHBOARD_STYLE]: {
+      parent: "mt-12 p-2 pb-0 bg-black",
       selected: {
-        background: "bg-white",
+        background: "mt-2 bg-white",
         text: "text-green-600",
       },
       unselected: {
-        background: "bg-black",
+        background: "mt-2 bg-black",
         text: "text-white",
         hover: "text-green-600",
       },
     },
     standard: {
-      parent: "w-10/12 justify-center",
+      parent: "",
       selected: {
         background: "bg-blue-600",
         text: "text-white",
@@ -38,8 +41,8 @@ export default function Tabs(props: TabsProps) {
         hover: "text-blue-800",
       },
     },
-    resultTab: {
-      parent: "w-full flex justify-end",
+    [RESULT_TAB_STYLE]: {
+      parent: "justify-end",
       selected: {
         background: "bg-blue-600",
         text: "text-white",
@@ -109,7 +112,7 @@ export default function Tabs(props: TabsProps) {
         </div>
       )}
       <ul
-        className={`flex  ${!props.allInputDone && "flex-wrap w-full"} ${
+        className={`flex w-full ${!props.allInputDone && "flex-wrap"} ${
           currentStyle.parent
         }`}
       >

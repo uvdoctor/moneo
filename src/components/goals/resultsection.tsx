@@ -3,7 +3,7 @@ import { useFullScreen, useFullScreenBrowser } from "react-browser-hooks";
 import SVGFullScreen from "../svgfullscreen";
 import SVGExitFullScreen from "../svgexitfullscreen";
 import DynamicSlider from "../dynamicslider";
-import Tabs from "../tabs"
+import Tabs, { RESULT_TAB_STYLE } from "../tabs"
 interface ResultSectionProps {
     result: ReactNode
     resultTabOptions: Array<any>
@@ -45,7 +45,7 @@ export default function ResultSection(props: ResultSectionProps) {
             selectedTab={props.showResultTab}
             selectedTabHandler={props.showResultTabHandler}
             capacity={numOfTabs}
-            customStyle="resultTab"
+            customStyle={RESULT_TAB_STYLE}
             allInputDone
           />
         </div>
