@@ -81,10 +81,10 @@ export default function Goals({
   const cfLabel = "Cash Flows";
   const [viewMode, setViewMode] = useState<string>(goalsLabel);
   const nowYear = new Date().getFullYear();
-  const tabOptions = useState<Array<any>>([
+  const tabOptions = [
     { label: goalsLabel, order: 1, active: true },
     { label: cfLabel, order: 2, active: true }
-  ]);
+  ];
   const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
     if (!ffGoal) return {};
     let mCFs = {};
