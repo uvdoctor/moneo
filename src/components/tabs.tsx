@@ -10,11 +10,11 @@ interface TabsProps {
   currentOrder?: number;
   allInputDone?: boolean;
   selectedTabHandler: Function;
-  bottomRounded?: boolean
+  bottomRounded?: boolean;
 }
 
-export const DASHBOARD_STYLE = "dashboard"
-export const RESULT_TAB_STYLE = "resultTab"
+export const DASHBOARD_STYLE = "dashboard";
+export const RESULT_TAB_STYLE = "resultTab";
 
 export default function Tabs(props: TabsProps) {
   const styleMap: any = {
@@ -31,7 +31,7 @@ export default function Tabs(props: TabsProps) {
       },
     },
     standard: {
-      parent: "",
+      parent: "justify-center",
       selected: {
         background: "bg-blue-600",
         text: "text-white",
@@ -105,13 +105,11 @@ export default function Tabs(props: TabsProps) {
 
   return (
     <div className="w-full flex items-center">
-      {props.allInputDone && props.tabs.length > props.capacity && (
-        <div className="mr-2">
-          {endIndex > props.capacity - 1 && (
-            <LeftArrow clickHandler={handleDecrement} />
-          )}
-        </div>
-      )}
+      {props.allInputDone &&
+        props.tabs.length > props.capacity &&
+        endIndex > props.capacity - 1 && (
+          <LeftArrow clickHandler={handleDecrement} />
+        )}
       <ul
         className={`flex w-full ${!props.allInputDone && "flex-wrap"} ${
           currentStyle.parent
@@ -128,10 +126,20 @@ export default function Tabs(props: TabsProps) {
               className={`py-2 px-4 items-start 
                     ${
                       props.selectedTab === tab.label
-                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} font-semibold cursor-pointer ${props.bottomRounded ? 'rounded-b' : 'rounded-t'} lg:rounded-b-none lg:rounded-t`
+                        ? `${currentStyle.selected.text} ${
+                            currentStyle.selected.background
+                          } font-semibold cursor-pointer ${
+                            props.bottomRounded ? "rounded-b" : "rounded-t"
+                          } lg:rounded-b-none lg:rounded-t`
                         : !isLinkDisabled(tab)
-                        ? `${currentStyle.unselected.text} ${currentStyle.unselected.background} 
-                          cursor-pointer font-semibold shadow-lg lg:shadow-xl ${props.bottomRounded ? 'rounded-b' : 'rounded-t'} lg:rounded-b-none lg:rounded-t hover:${currentStyle.unselected.hover}`
+                        ? `${currentStyle.unselected.text} ${
+                            currentStyle.unselected.background
+                          } 
+                          cursor-pointer font-semibold shadow-lg lg:shadow-xl ${
+                            props.bottomRounded ? "rounded-b" : "rounded-t"
+                          } lg:rounded-b-none lg:rounded-t hover:${
+                            currentStyle.unselected.hover
+                          }`
                         : "cursor-not-allowed text-gray-400"
                     }
                     `}
@@ -149,14 +157,12 @@ export default function Tabs(props: TabsProps) {
           );
         })}
       </ul>
-      {props.allInputDone && props.tabs.length > props.capacity && (
-        <div className="ml-2">
-          {endIndex >= props.capacity - 1 &&
-            endIndex < props.tabs.length - 1 && (
-              <RightArrow clickHandler={handleIncrement} />
-            )}
-        </div>
-      )}
+      {props.allInputDone &&
+        props.tabs.length > props.capacity &&
+        endIndex >= props.capacity - 1 &&
+        endIndex < props.tabs.length - 1 && (
+          <RightArrow clickHandler={handleIncrement} />
+        )}
     </div>
   );
 }

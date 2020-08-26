@@ -205,7 +205,7 @@ export default function RentComparison({
         }
         bottom={
           !!rentAmt && (
-            <div className="flex flex-wrap justify-around">
+            <div className="flex flex-col justify-center">
               <NumberInput
                 name="af"
                 pre="Analyze for"

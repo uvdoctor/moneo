@@ -30,7 +30,7 @@ export default function Section(props: SectionProps) {
         props.manualInput
       ) : (
         <Fragment>
-          <div className="p-2 flex flex-wrap justify-around items-start w-full">
+          <div className="p-2 flex flex-col md:flex-row md:flex-wrap justify-around items-center md:items-start w-full">
             <div className={`${props.hasResult && "w-full"}`}>{props.left}</div>
             {props.right && <div className="mt-2 md:mt-0">{props.right}</div>}
           </div>

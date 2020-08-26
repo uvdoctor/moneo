@@ -404,6 +404,8 @@ export default function Goals({
       expChgRate,
       getPP()
     );
+    console.log("Result without goal: ", resultWithoutGoal)
+    console.log("Result with goal...", resultWithGoal)
     if (
       !isFFPossible(resultWithGoal, nomineeAmt)
     )
@@ -491,7 +493,6 @@ export default function Goals({
       <p className="text-center text-lg mt-1">
         Make Money Work Hard to Meet Them.
       </p>
-      {console.log("Running...")}
       <div className="flex flex-wrap justify-around mb-4">
         {Object.keys(getGoalTypes()).map(
           (key) =>

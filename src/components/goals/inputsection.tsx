@@ -1,13 +1,14 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import ActionButtons from "../form/actionbuttons";
 import Tabs from "../tabs";
+import { useFullScreenBrowser } from "react-browser-hooks";
 
 interface InputSectionProps {
   tabOptions: Array<any>;
   currentOrder: number;
   allInputDone: boolean;
   submitDisabled: boolean;
-  cancelDisabled: boolean
+  cancelDisabled: boolean;
   showTab: string;
   children: ReactNode;
   showTabHandler: Function;
@@ -27,6 +28,15 @@ export default function InputSection({
   cancelCallback,
   handleSubmit,
 }: InputSectionProps) {
+  const fsb = useFullScreenBrowser();
+  const [tabsCapacity, setTabsCapacity] = useState<number>(3);
+
+  useEffect(() => {
+    let width = fsb.info.innerWidth
+    if(width >= 1024) setTabsCapacity(3)
+    else setTabsCapacity(Math.floor(fsb.info.innerWidth / 100));
+  }, [fsb.info.innerWidth]);
+
   return (
     <div
       className={`w-full ${
@@ -38,7 +48,7 @@ export default function InputSection({
           tabs={tabOptions}
           selectedTab={showTab}
           selectedTabHandler={showTabHandler}
-          capacity={3}
+          capacity={tabsCapacity}
           currentOrder={currentOrder}
           allInputDone={allInputDone}
           bottomRounded

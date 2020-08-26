@@ -27,7 +27,6 @@ import LineChart from "./linechart";
 import InputSection from "./inputsection";
 import RentComparison from "./rentcomparison";
 import BRCompChart from "./brcompchart";
-
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -159,7 +158,6 @@ export default function Goal({
   );
   const [showTab, setShowTab] = useState(amtLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
-
   const [resultTabOptions, setResultTabOptions] = useState<Array<any>>([
     {
       label: cfChartLabel,
@@ -434,7 +432,7 @@ export default function Goal({
         />
       </StickyHeader>
       <div
-        className={`container mx-auto w-full h-full flex flex-1 md:flex-row ${
+        className={`container mx-auto w-full h-full flex flex-1 lg:flex-row ${
           showResultSection() && "flex-col-reverse"
         } items-start`}
       >
