@@ -35,11 +35,12 @@ export default function FFResult({
           {!ffYearHandler ? (
             <ResultItem
               svg={<SVGHourGlass />}
-              label="Starts from"
-              result={result.ffYear}
+              label="Age"
+              result={(result.ffYear - (endYear - 100)).toString()}
               noResultFormat
               info={`${result.ffYear} may be the Earliest You can Achieve Financial Freedom.`}
               hideLabel={hideLabel}
+              unit="Years"
               imp={
                 result.oom
                   ? `You May Not Have Enough Savings in Years ${result.oom.map(
@@ -56,9 +57,10 @@ export default function FFResult({
               allInputDone
               nextStepDisabled={false}
               nextStepHandler={() => true}
-              pre=""
-              value={result.ffYear}
-              changeHandler={(val: string) => changeSelection(val, ffYearHandler)}
+              pre="Age"
+              unit="Years"
+              value={result.ffYear - (endYear - 100)}
+              changeHandler={(val: string) => changeSelection(val, ffYearHandler, endYear - 100)}
               options={ffYearOptions}
             />
           )}
@@ -73,17 +75,16 @@ export default function FFResult({
           <ResultItem
             result={result.leftAmt}
             svg={<SVGInheritance />}
-            label={`Nominees Get`}
+            label={`Savings by ${endYear}`}
             currency={currency}
             hideLabel={hideLabel}
-            info={`This is the savings amount left over in ${endYear + 1}. 
-                        As Your Plan ends in ${endYear}, this may be inherited by Your Nominees. 
+            info={`This is the savings amount by end of ${endYear}, which may be inherited by Your Nominees. 
                         This includes the Inheritance Amount for Nominees as per the Plan.`}
           />
         </div>
       ) : (
         <p className="text-center bg-red-100 font-semibold py-2">
-          Analyzed till ${endYear - 30}. Please try again with different inputs
+          May not be possible till You turn 70. Please try again with different inputs
           / goals.
         </p>
       )}

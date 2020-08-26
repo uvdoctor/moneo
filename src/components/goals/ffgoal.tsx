@@ -264,7 +264,7 @@ export default function FFGoal({
       pp
     );
     setFFYearOptions(
-      initYearOptions(result.ffYear, endYear - 30 - result.ffYear)
+      initYearOptions(result.ffYear - (endYear - 100), 70 - (result.ffYear - (endYear - 100)))
     );
     ffResultHandler(result);
     rrHandler([...result.rr]);
@@ -329,9 +329,9 @@ export default function FFGoal({
       <StickyHeader cancelCallback={cancelCallback} cancelDisabled={btnClicked}>
         <SelectInput
           name="ey"
-          info="Financial Plan will be created assuming that You live till 100 Years, after which You leave behind inheritance. 
-          DollarDarwin will try to find the earliest possible year for Your Financial Freedom based on Your inputs and Other Goals that You Create. 
-          Given that You May not be able to work beyond 70 years of age, DollarDarwin may request You to reconsider Your inputs and other Goals so that You Achieve Financial Freedom before hitting 70."
+          //info="Financial Plan will be created assuming that You live till 100 Years, after which You leave behind inheritance. 
+          //DollarDarwin will try to find the earliest possible year for Your Financial Freedom based on Your inputs and Other Goals that You Create. 
+          //Given that You May not be able to work beyond 70 years of age, DollarDarwin may request You to reconsider Your inputs and other Goals so that You Achieve Financial Freedom before hitting 70."
           inputOrder={1}
           currentOrder={currentOrder}
           nextStepDisabled={false}
@@ -521,7 +521,6 @@ export default function FFGoal({
                 result={ffResult}
                 ffNomineeAmt={leaveBehind}
                 currency={currency}
-                hideLabel
                 ffYearHandler={ffYearHandler}
                 ffYearOptions={ffYearOptions}
               />

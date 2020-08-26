@@ -55,7 +55,6 @@ export default function CareInsurance({
 }: CareInsuranceProps) {
   const [totalCP, setTotalCP] = useState<number>(0);
   const [totalTaxBenefit, setTotalTaxBenfit] = useState<number>(0);
-  const [cyOptions, setCYOptions] = useState(initYearOptions(endYear - 45, 10));
   const nowYear = new Date().getFullYear()
 
   useEffect(() => {
@@ -91,7 +90,6 @@ export default function CareInsurance({
   }, [taxRate, maxTaxDed, carePremiumSY, carePremium, chgPer, premiumDur]);
 
   useEffect(() => {
-    setCYOptions(initYearOptions(endYear - 45, 10));
     if (carePremiumSY > endYear - 35 || carePremiumSY < endYear - 45)
       carePremiumSYHandler(endYear - 40);
   }, [endYear]);
@@ -127,7 +125,7 @@ export default function CareInsurance({
             currency={currency}
           />
           {carePremium ? (
-            <div className="flex justify-between items-end w-full">
+            <div className="flex justify-between items-end w-full mb-2">
               <SelectInput
                 name="cpsy"
                 inputOrder={inputOrder + 1}
@@ -136,12 +134,12 @@ export default function CareInsurance({
                 allInputDone={allInputDone}
                 nextStepHandler={nextStepHandler}
                 info="It may be a good option to buy this insurance when You are healthier (between 60 to 65 years of age) to get lower premiums."
-                value={carePremiumSY}
-                options={cyOptions}
-                pre="Pay"
-                post="Onwards"
+                value={carePremiumSY - (endYear - 100)}
+                options={initYearOptions(55, 10)}
+                pre="Buy Policy At"
+                unit="Years Age"
                 changeHandler={(val: string) =>
-                  changeSelection(val, carePremiumSYHandler)
+                  changeSelection(val, carePremiumSYHandler, endYear - 100)
                 }
               />
               <SelectInput
@@ -153,8 +151,8 @@ export default function CareInsurance({
                 nextStepHandler={nextStepHandler}
                 value={premiumDur}
                 options={initYearOptions(1, 15)}
-                pre="For"
-                post="Years"
+                pre="Pay For"
+                unit="Years"
                 changeHandler={(val: string) =>
                   changeSelection(val, premiumDurHandler)
                 }

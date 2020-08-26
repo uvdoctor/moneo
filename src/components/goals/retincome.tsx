@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import NumberInput from "../form/numberinput";
 import Section from "../form/section";
 import SelectInput from "../form/selectinput";
@@ -34,11 +34,9 @@ export default function RetIncome({
   retirementIncomeSY,
   retirementIncomeSYHandler,
 }: RetIncomeProps) {
-  const [ryOptions, setRYOptions] = useState(initYearOptions(endYear - 35, 10));
 
   useEffect(() => {
-    setRYOptions(initYearOptions(endYear - 35, 10));
-    if (retirementIncomeSY > endYear - 25 || retirementIncomeSY < endYear - 35)
+    if (retirementIncomeSY > endYear - 28 || retirementIncomeSY < endYear - 35)
       retirementIncomeSYHandler(endYear - 30);
   }, [endYear]);
 
@@ -97,12 +95,12 @@ export default function RetIncome({
             allInputDone={allInputDone}
             nextStepHandler={nextStepHandler}
             info="When do You Plan to Receive the Benefit? Around 70 years of age is preferable for optimal benefit."
-            value={retirementIncomeSY}
-            options={ryOptions}
-            pre="From"
-            post="Onwards"
+            value={retirementIncomeSY - (endYear - 100)}
+            options={initYearOptions(65, 7)}
+            pre="Withdrawal Age"
+            unit="Onwards"
             changeHandler={(val: string) => {
-              changeSelection(val, retirementIncomeSYHandler);
+              changeSelection(val, retirementIncomeSYHandler, endYear - 100);
             }}
           />
         ) : (

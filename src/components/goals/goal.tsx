@@ -130,7 +130,8 @@ export default function Goal({
   const brChartLabel = "Buy v/s Rent";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
-  const [showBRChart, setShowBRChart] = useState<boolean>(false);
+  const [showBRChart, setShowBRChart] = useState<boolean>(sellAfter && rentAmt ? true : false);
+  console.log("Showbrchart: ", showBRChart)
   const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 20));
   const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
@@ -168,7 +169,7 @@ export default function Goal({
     {
       label: brChartLabel,
       order: 2,
-      active: goal.id && !!rentAmt,
+      active: showBRChart,
       svg: <SVGScale />,
     },
   ]);

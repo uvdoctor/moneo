@@ -62,7 +62,7 @@ export default function Goals({
   const [optCFs, setOptCFs] = useState<Array<number>>([]);
   const [mergedCFs, setMergedCFs] = useState<any>({});
   const [impFilter, setImpFilter] = useState<string>("");
-  const [ffResult, setFFResult] = useState<any>({})
+  const [ffResult, setFFResult] = useState<any>({});
   const [ffYear, setFFYear] = useState<number | null>(0);
   const [rr, setRR] = useState<Array<number>>([]);
   const goalsLabel = "Goals";
@@ -70,7 +70,7 @@ export default function Goals({
   const [viewMode, setViewMode] = useState<string>(goalsLabel);
   const nowYear = new Date().getFullYear();
   const tabOptions = buildTabsArray([goalsLabel, cfLabel]);
-  
+
   const irDiffByCurrency: any = {
     INR: 3,
   };
@@ -124,13 +124,13 @@ export default function Goals({
     );
     if (!isFFPossible(result, ffGoal.sa as number)) {
       setFFYear(null);
-      setFFResult(result)
+      setFFResult(result);
       setRR([...result.rr]);
     } else {
-      if(!ffYear || ffYear < result.ffYear || ffYear > ffGoal.ey - 30) {
-        setFFYear(result.ffYear)
-        setFFResult(result)
-        setRR([...result.rr])
+      if (!ffYear || ffYear < result.ffYear || ffYear > ffGoal.ey - 30) {
+        setFFYear(result.ffYear);
+        setFFResult(result);
+        setRR([...result.rr]);
       }
     }
   };
@@ -164,10 +164,7 @@ export default function Goals({
     setMergedCFs(mCFs);
   }, [allGoals]);
 
-  useEffect(
-    () => (wipGoal ? showModalHandler(true) : showModalHandler(false)),
-    [wipGoal]
-  );
+  useEffect(() => showModalHandler(wipGoal), [wipGoal]);
 
   const addGoal = async (
     goal: APIt.CreateGoalInput,
@@ -363,9 +360,7 @@ export default function Goals({
       expChgRate,
       getPP()
     );
-    if (
-      !isFFPossible(resultWithoutGoal, nomineeAmt)
-    )
+    if (!isFFPossible(resultWithoutGoal, nomineeAmt))
       return {
         ffImpactYears: null,
         rr: resultWithoutGoal.rr,
@@ -404,11 +399,9 @@ export default function Goals({
       expChgRate,
       getPP()
     );
-    console.log("Result without goal: ", resultWithoutGoal)
-    console.log("Result with goal...", resultWithGoal)
-    if (
-      !isFFPossible(resultWithGoal, nomineeAmt)
-    )
+    console.log("Result without goal: ", resultWithoutGoal);
+    console.log("Result with goal...", resultWithGoal);
+    if (!isFFPossible(resultWithGoal, nomineeAmt))
       return {
         ffImpactYears: null,
         rr: resultWithoutGoal.rr,
@@ -463,17 +456,16 @@ export default function Goals({
       {ffGoal && (
         <div
           className={`w-full ${
-            isFFPossible(ffResult, ffGoal.sa as number) ? "bg-green-100" : "bg-red-100"
+            isFFPossible(ffResult, ffGoal.sa as number)
+              ? "bg-green-100"
+              : "bg-red-100"
           } shadow-lg lg:shadow-xl`}
         >
           <div className="w-full flex justify-center items-center">
             <label className="mr-2 font-semibold text-lg md:text-xl">
               Financial Freedom
             </label>
-            <div
-              className="cursor-pointer"
-              onClick={() => setWIPGoal(ffGoal)}
-            >
+            <div className="cursor-pointer" onClick={() => setWIPGoal(ffGoal)}>
               <SVGEdit />
             </div>
           </div>
