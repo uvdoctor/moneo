@@ -769,7 +769,7 @@ const calculateAllocation = (
   }
 };
 
-const checkForFF = (
+export const checkForFF = (
   savings: number,
   ffGoal: APIt.CreateGoalInput,
   ffYear: number,
@@ -896,7 +896,6 @@ export const findEarliestFFYear = (
     };
   if (!yearToTry || yearToTry <= nowYear || yearToTry > ffGoal.ey - 30)
     yearToTry = nowYear + Math.round((ffGoal.ey - 30 - nowYear) / 2);
-  //@ts-ignore
   let nomineeAmt = ffGoal?.sa as number;
   let prevResult = checkForFF(
     savings,

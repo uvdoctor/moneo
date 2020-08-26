@@ -4,41 +4,64 @@ import SVGHourGlass from "../svghourglass";
 import SVGInheritance from "./svginheritance";
 import SVGPiggy from "../svgpiggy";
 import { isFFPossible } from "./cfutils";
-
+import SelectInput from "../form/selectinput";
+import { changeSelection } from "../utils";
 interface FFResultProps {
   endYear: number;
+  ffYear: number | null;
   result: any | null;
   ffNomineeAmt: number;
   currency: string;
-  hideLabel?: boolean
+  hideLabel?: boolean;
+  ffYearHandler?: Function;
+  ffYearOptions?: any
 }
 
 export default function FFResult({
   endYear,
+  ffYear,
   result,
   ffNomineeAmt,
   currency,
-  hideLabel
+  hideLabel,
+  ffYearHandler,
+  ffYearOptions
 }: FFResultProps) {
+  
   return (
     <div className="w-full">
-      {isFFPossible(result, ffNomineeAmt) ? (
+      {ffYear && isFFPossible(result, ffNomineeAmt) ? (
         <div className="py-2 flex flex-wrap justify-around w-full items-start bg-green-100">
-          <ResultItem
-            svg={<SVGHourGlass />}
-            label="Achievable from"
-            result={result.ffYear}
-            noResultFormat
-            info={`${result.ffYear} may be the Earliest You can Achieve Financial Freedom.`}
-            hideLabel={hideLabel}
-            imp={
-              result.oom
-                ? `You May Not Have Enough Savings in Years ${result.oom.map(
-                    (year: number) => ` ${year}`
-                  )}`
-                : ""
-            }
-          />
+          {!ffYearHandler ? (
+            <ResultItem
+              svg={<SVGHourGlass />}
+              label="Achievable from"
+              result={result.ffYear}
+              noResultFormat
+              info={`${result.ffYear} may be the Earliest You can Achieve Financial Freedom.`}
+              hideLabel={hideLabel}
+              imp={
+                result.oom
+                  ? `You May Not Have Enough Savings in Years ${result.oom.map(
+                      (year: number) => ` ${year}`
+                    )}`
+                  : ""
+              }
+            />
+          ) : (
+            <SelectInput
+              name="ffy"
+              inputOrder={1}
+              currentOrder={0}
+              allInputDone
+              nextStepDisabled={false}
+              nextStepHandler={() => true}
+              pre=""
+              value={result.ffYear}
+              changeHandler={(val: string) => changeSelection(val, ffYearHandler)}
+              options={ffYearOptions}
+            />
+          )}
           <ResultItem
             result={result.ffAmt}
             svg={<SVGPiggy />}
@@ -60,10 +83,8 @@ export default function FFResult({
         </div>
       ) : (
         <p className="text-center bg-red-100 font-semibold py-2">
-          {!result.ffYear
-            ? `Analyzed till ${endYear - 20}`
-            : `You May Not have Enough Savings in ${result.ffYear}`}
-          {`. Please try again with different inputs / goals.`}
+          Analyzed till ${endYear - 30}. Please try again with different inputs
+          / goals.
         </p>
       )}
     </div>

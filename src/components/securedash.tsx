@@ -6,7 +6,6 @@ import { CreateGoalInput, GoalType } from "../api/goals";
 import { getGoalsList, getDuration } from "./goals/goalutils";
 import { calculateCFs } from "./goals/cfutils";
 import { buildTabsArray, removeFromArray } from "./utils";
-import { ASSET_TYPES } from "../CONSTANTS";
 import Tabs, { DASHBOARD_STYLE } from "./tabs";
 
 const SecureDash = () => {
@@ -29,36 +28,8 @@ const SecureDash = () => {
   const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
   const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(null);
   const [allCFs, setAllCFs] = useState<Object>({});
-  const [aa, setAA] = useState<Object>({});
-  const [rr, setRR] = useState<Array<number>>([]);
   const avgAnnualExpense = 24000;
   const expChgRate = 3;
-
-  const irDiffByCurrency: any = {
-    INR: 3,
-  };
-
-  // potential performance
-  const getPP = () => {
-    let irDiff = irDiffByCurrency[currency];
-    if (!irDiff) irDiff = 0;
-    return {
-      [ASSET_TYPES.SAVINGS]: 0.5 + irDiff,
-      [ASSET_TYPES.DEPOSITS]: 1.5 + irDiff,
-      [ASSET_TYPES.SHORT_TERM_BONDS]: 2 + irDiff, //short term bond <1
-      [ASSET_TYPES.MED_TERM_BONDS]: 3 + irDiff, // 1-5 medium term
-      [ASSET_TYPES.TAX_EXEMPT_BONDS]: 3.5 + irDiff, //medium term tax efficient bonds
-      [ASSET_TYPES.DOMESTIC_REIT]: 5 + irDiff,
-      [ASSET_TYPES.INTERNATIONAL_REIT]: 5 + irDiff,
-      [ASSET_TYPES.GOLD]: 3,
-      [ASSET_TYPES.LARGE_CAP_STOCKS]: 5 + irDiff,
-      [ASSET_TYPES.MID_CAP_STOCKS]: 6 + irDiff,
-      [ASSET_TYPES.DIVIDEND_GROWTH_STOCKS]: 5 + irDiff,
-      [ASSET_TYPES.INTERNATIONAL_STOCKS]: 9,
-      [ASSET_TYPES.SMALL_CAP_STOCKS]: 9,
-      [ASSET_TYPES.DIGITAL_CURRENCIES]: 10,
-    };
-  };
 
   useEffect(() => {
     loadAllGoals();
@@ -125,14 +96,9 @@ const SecureDash = () => {
           allGoalsHandler={setAllGoals}
           currency={currency}
           allCFs={allCFs}
-          aa={aa}
-          aaHandler={setAA}
           allCFsHandler={setAllCFs}
           ffGoal={ffGoal}
           ffGoalHandler={setFFGoal}
-          rr={rr}
-          rrHandler={setRR}
-          pp={getPP()}
           avgAnnualExpense={avgAnnualExpense}
           expChgRate={expChgRate}
         />

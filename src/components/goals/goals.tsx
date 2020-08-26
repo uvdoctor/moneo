@@ -23,6 +23,7 @@ import SVGEdit from "../svgedit";
 import { toast } from "react-toastify";
 import { useFullScreen } from "react-browser-hooks";
 import Tabs from "../tabs";
+import { ASSET_TYPES } from "../../CONSTANTS";
 interface GoalsProps {
   showModalHandler: Function;
   savings: number;
@@ -34,11 +35,6 @@ interface GoalsProps {
   allCFs: any;
   goalsLoaded: boolean;
   ffGoal: APIt.CreateGoalInput | null;
-  aa: Object;
-  rr: Array<number>;
-  pp: Object;
-  aaHandler: Function;
-  rrHandler: Function;
   allGoalsHandler: Function;
   allCFsHandler: Function;
   ffGoalHandler: Function;
@@ -55,11 +51,6 @@ export default function Goals({
   allCFs,
   goalsLoaded,
   ffGoal,
-  aa,
-  rr,
-  pp,
-  aaHandler,
-  rrHandler,
   allGoalsHandler,
   allCFsHandler,
   ffGoalHandler,
@@ -73,13 +64,39 @@ export default function Goals({
   const [impFilter, setImpFilter] = useState<string>("");
   const [ffResult, setFFResult] = useState<any>({})
   const [ffYear, setFFYear] = useState<number | null>(0);
-  const [ffCfs, setFFCfs] = useState<any>({});
+  const [rr, setRR] = useState<Array<number>>([]);
   const goalsLabel = "Goals";
   const cfLabel = "Cash Flows";
   const [viewMode, setViewMode] = useState<string>(goalsLabel);
   const nowYear = new Date().getFullYear();
   const tabOptions = buildTabsArray([goalsLabel, cfLabel]);
   
+  const irDiffByCurrency: any = {
+    INR: 3,
+  };
+
+  // potential performance
+  const getPP = () => {
+    let irDiff = irDiffByCurrency[currency];
+    if (!irDiff) irDiff = 0;
+    return {
+      [ASSET_TYPES.SAVINGS]: 0.5 + irDiff,
+      [ASSET_TYPES.DEPOSITS]: 1.5 + irDiff,
+      [ASSET_TYPES.SHORT_TERM_BONDS]: 2 + irDiff, //short term bond <1
+      [ASSET_TYPES.MED_TERM_BONDS]: 3 + irDiff, // 1-5 medium term
+      [ASSET_TYPES.TAX_EXEMPT_BONDS]: 3.5 + irDiff, //medium term tax efficient bonds
+      [ASSET_TYPES.DOMESTIC_REIT]: 5 + irDiff,
+      [ASSET_TYPES.INTERNATIONAL_REIT]: 5 + irDiff,
+      [ASSET_TYPES.GOLD]: 3,
+      [ASSET_TYPES.LARGE_CAP_STOCKS]: 5 + irDiff,
+      [ASSET_TYPES.MID_CAP_STOCKS]: 6 + irDiff,
+      [ASSET_TYPES.DIVIDEND_GROWTH_STOCKS]: 5 + irDiff,
+      [ASSET_TYPES.INTERNATIONAL_STOCKS]: 9,
+      [ASSET_TYPES.SMALL_CAP_STOCKS]: 9,
+      [ASSET_TYPES.DIGITAL_CURRENCIES]: 10,
+    };
+  };
+
   const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
     if (!ffGoal) return {};
     let mCFs = {};
@@ -98,20 +115,24 @@ export default function Goals({
       savings,
       mergedCFs,
       annualSavings,
-      null,
+      ffYear,
       mustCFs,
       tryCFs,
       avgAnnualExpense,
       expChgRate,
-      pp
+      getPP()
     );
-    setFFResult(result)
-    if (result.ffYear < 0) setFFYear(null);
-    else setFFYear(result.ffYear);
-    setFFCfs(result.ffCfs);
-    aaHandler(result.aa);
-    rrHandler([...result.rr]);
-    console.log("Result is ", result);
+    if (!isFFPossible(result, ffGoal.sa as number)) {
+      setFFYear(null);
+      setFFResult(result)
+      setRR([...result.rr]);
+    } else {
+      if(!ffYear || ffYear < result.ffYear || ffYear > ffGoal.ey - 30) {
+        setFFYear(result.ffYear)
+        setFFResult(result)
+        setRR([...result.rr])
+      }
+    }
   };
 
   useEffect(() => {
@@ -340,7 +361,7 @@ export default function Goals({
       medImpCFs,
       avgAnnualExpense,
       expChgRate,
-      pp
+      getPP()
     );
     if (
       !isFFPossible(resultWithoutGoal, nomineeAmt)
@@ -381,7 +402,7 @@ export default function Goals({
       medImpCFs,
       avgAnnualExpense,
       expChgRate,
-      pp
+      getPP()
     );
     if (
       !isFFPossible(resultWithGoal, nomineeAmt)
@@ -391,8 +412,6 @@ export default function Goals({
         rr: resultWithoutGoal.rr,
         ffOOM: resultWithGoal.oom,
       };
-    console.log("Result with goal...", resultWithGoal)
-    console.log("Result without goal...", resultWithoutGoal)
     return {
       ffImpactYears: resultWithoutGoal.ffYear - resultWithGoal.ffYear,
       rr: resultWithoutGoal.rr,
@@ -411,18 +430,13 @@ export default function Goals({
             updateCallback={updateGoal}
             annualSavings={annualSavings}
             totalSavings={savings}
-            aa={aa}
-            rr={rr}
             ffYear={ffYear}
             ffResult={ffResult}
-            ffCfs={ffCfs}
             mergedCfs={mergedCFs}
             ffYearHandler={setFFYear}
-            ffCfsHandler={setFFCfs}
             ffResultHandler={setFFResult}
-            rrHandler={rrHandler}
-            aaHandler={aaHandler}
-            pp={pp}
+            rrHandler={setRR}
+            pp={getPP()}
             avgAnnualExp={avgAnnualExpense}
             expChgRate={expChgRate}
             mustCFs={mustCFs}
@@ -462,6 +476,7 @@ export default function Goals({
             </div>
           </div>
           <FFResult
+            ffYear={ffYear}
             endYear={ffGoal.ey}
             result={ffResult}
             currency={ffGoal.ccy}
@@ -564,7 +579,7 @@ export default function Goals({
                           name={g.name}
                           type={g.type}
                           imp={g.imp}
-                          rr={result.rr}
+                          rr={rr}
                           //@ts-ignore
                           startYear={g.sy}
                           currency={g.ccy}

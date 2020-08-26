@@ -9,7 +9,7 @@ import {
   buildYearsArray,
 } from "../utils";
 import SelectInput from "../form/selectinput";
-import { findEarliestFFYear, isFFPossible } from "./cfutils";
+import { checkForFF, findEarliestFFYear, isFFPossible } from "./cfutils";
 import FFResult from "./ffresult";
 import SVGChart from "../svgchart";
 import LineChart from "./linechart";
@@ -36,18 +36,13 @@ interface FFGoalProps {
   expChgRate: number;
   ffYear: number | null;
   ffResult: any | null;
-  ffCfs: any;
-  aa: Object;
-  rr: Array<number>;
   mustCFs: Array<number>;
   tryCFs: Array<number>;
   mergedCfs: any;
   pp: Object;
-  aaHandler: Function;
-  rrHandler: Function;
   ffYearHandler: Function;
   ffResultHandler: Function;
-  ffCfsHandler: Function;
+  rrHandler: Function;
   cancelCallback: Function;
   addCallback: Function;
   updateCallback: Function;
@@ -61,18 +56,13 @@ export default function FFGoal({
   expChgRate,
   ffYear,
   ffResult,
-  ffCfs,
-  aa,
-  rr,
   mustCFs,
   tryCFs,
   mergedCfs,
   pp,
-  aaHandler,
-  rrHandler,
   ffYearHandler,
   ffResultHandler,
-  ffCfsHandler,
+  rrHandler,
   cancelCallback,
   addCallback,
   updateCallback,
@@ -143,7 +133,6 @@ export default function FFGoal({
   const aaChartLabel = `Asset Allocation from ${nowYear + 2} onwards`;
   const treemapChartLabel = `${nowYear + 1} Asset Allocation`;
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
-
   const [tabOptions, setTabOptions] = useState<Array<any>>([
     { label: investLabel, order: 3, active: true },
     { label: expLabel, order: 5, active: true },
@@ -177,6 +166,7 @@ export default function FFGoal({
 
   const [showTab, setShowTab] = useState(investLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
+  const [ffYearOptions, setFFYearOptions] = useState<any>({});
 
   const createGoal = () => {
     return {
@@ -241,6 +231,25 @@ export default function FFGoal({
   }, [currency]);
 
   useEffect(() => {
+    if (!ffYear || ffYear === ffResult.ffYear) return;
+    let result = checkForFF(
+      totalSavings,
+      createGoal(),
+      ffYear as number,
+      mergedCfs,
+      annualSavings,
+      mustCFs,
+      tryCFs,
+      avgAnnualExp,
+      expChgRate,
+      pp
+    );
+    ffResultHandler(result);
+    rrHandler([...result.rr]);
+    console.log("FF Result is ", result);
+  }, [ffYear]);
+
+  useEffect(() => {
     if (!allInputDone) return;
     let result = findEarliestFFYear(
       createGoal(),
@@ -254,11 +263,20 @@ export default function FFGoal({
       expChgRate,
       pp
     );
-    ffResultHandler(result);
-    ffYearHandler(!isFFPossible(result, leaveBehind) ? null : result.ffYear);
-    ffCfsHandler(result.ffCfs);
-    aaHandler(result.aa);
-    rrHandler([...result.rr]);
+    setFFYearOptions(
+      initYearOptions(result.ffYear, endYear - 30 - result.ffYear)
+    );
+    if (!isFFPossible(result, leaveBehind)) {
+      ffYearHandler(null);
+      ffResultHandler(result)
+      rrHandler([...result.rr]);
+    } else {
+      if(!ffYear || ffYear < result.ffYear || ffYear > endYear - 30) {
+        ffYearHandler(result.ffYear)
+        ffResultHandler(result)
+        rrHandler([...result.rr])
+      }
+    }
     console.log("FF Result is ", result);
   }, [
     expenseBY,
@@ -311,7 +329,7 @@ export default function FFGoal({
 
   const buildChartCFs = (ffCfs: Object) => Object.values(ffCfs);
 
-  const showResultSection = () => allInputDone && rr && rr.length > 0;
+  const showResultSection = () => allInputDone && ffResult.rr && ffResult.rr.length > 0;
 
   return (
     <div className="w-full h-full">
@@ -506,23 +524,26 @@ export default function FFGoal({
             result={
               <FFResult
                 endYear={endYear}
+                ffYear={ffYear}
                 result={ffResult}
                 ffNomineeAmt={leaveBehind}
                 currency={currency}
                 hideLabel
+                ffYearHandler={ffYearHandler}
+                ffYearOptions={ffYearOptions}
               />
             }
           >
             <LineChart
-              cfs={buildChartCFs(ffCfs)}
+              cfs={buildChartCFs(ffResult.ffCfs)}
               startYear={nowYear + 1}
               fullScreen={chartFullScreen}
             />
-            <TreeMapChart aa={aa} rr={rr} />
+            <TreeMapChart aa={ffResult.aa} rr={ffResult.rr} />
             <AAChart
-              aa={aa}
+              aa={ffResult.aa}
               years={buildYearsArray(nowYear + 2, endYear)}
-              rr={rr}
+              rr={ffResult.rr}
               fullScreen={chartFullScreen}
             />
           </ResultSection>

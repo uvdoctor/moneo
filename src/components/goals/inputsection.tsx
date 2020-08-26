@@ -41,6 +41,7 @@ export default function InputSection({
           capacity={3}
           currentOrder={currentOrder}
           allInputDone={allInputDone}
+          bottomRounded
         />
       )}
       <div className="w-full flex flex-wrap justify-center">
