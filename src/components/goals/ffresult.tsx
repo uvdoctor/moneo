@@ -35,7 +35,7 @@ export default function FFResult({
           {!ffYearHandler ? (
             <ResultItem
               svg={<SVGHourGlass />}
-              label="Achievable from"
+              label="Starts from"
               result={result.ffYear}
               noResultFormat
               info={`${result.ffYear} may be the Earliest You can Achieve Financial Freedom.`}

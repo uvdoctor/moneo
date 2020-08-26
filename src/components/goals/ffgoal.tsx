@@ -266,17 +266,9 @@ export default function FFGoal({
     setFFYearOptions(
       initYearOptions(result.ffYear, endYear - 30 - result.ffYear)
     );
-    if (!isFFPossible(result, leaveBehind)) {
-      ffYearHandler(null);
-      ffResultHandler(result)
-      rrHandler([...result.rr]);
-    } else {
-      if(!ffYear || ffYear < result.ffYear || ffYear > endYear - 30) {
-        ffYearHandler(result.ffYear)
-        ffResultHandler(result)
-        rrHandler([...result.rr])
-      }
-    }
+    ffResultHandler(result);
+    rrHandler([...result.rr]);
+    ffYearHandler(!isFFPossible(result, leaveBehind) ? null : result.ffYear)
     console.log("FF Result is ", result);
   }, [
     expenseBY,
@@ -329,7 +321,8 @@ export default function FFGoal({
 
   const buildChartCFs = (ffCfs: Object) => Object.values(ffCfs);
 
-  const showResultSection = () => allInputDone && ffResult.rr && ffResult.rr.length > 0;
+  const showResultSection = () =>
+    allInputDone && ffResult.rr && ffResult.rr.length > 0;
 
   return (
     <div className="w-full h-full">
