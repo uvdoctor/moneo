@@ -127,7 +127,7 @@ export default function RentComparison({
     if (
       !brChartData ||
       brChartData.length === 0 ||
-      brChartData[0].values.lenth < sellAfter
+      brChartData[0].values.length < sellAfter
     ) {
       setRentDiff(null);
       return;

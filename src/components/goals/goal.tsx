@@ -359,15 +359,16 @@ export default function Goal({
 
   useEffect(() => {
     if (
-      !sellAfter ||
-      !rentAmt ||
-      !price ||
-      !brChartData ||
-      brChartData.length !== 2 ||
+      sellAfter &&
+      rentAmt &&
+      rentAmt > 0 &&
+      price > 0 &&
+      brChartData &&
+      brChartData.length === 2 &&
       nowYear >= startYear
     )
-      setShowBRChart(false);
-    else setShowBRChart(true);
+      setShowBRChart(true);
+    else setShowBRChart(false);
   }, [sellAfter, price, rentAmt, brChartData]);
 
   useEffect(() => {
