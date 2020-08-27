@@ -166,6 +166,10 @@ export function getCurrencyList() {
   };
 }
 
+export const appendValue = (obj: any, prop: string | number, val: number) => {
+  obj.hasOwnProperty(prop) ? obj[prop] += val : obj[prop] = val
+}
+
 export const changeSelection = (str: string, setter: Function, increment: number = 0) =>
   setter(parseInt(str) + increment);
 

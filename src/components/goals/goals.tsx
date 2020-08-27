@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Goal from "./goal";
 import FFGoal from "./ffgoal";
-import { buildTabsArray, removeFromArray } from "../utils";
+import { appendValue, buildTabsArray, removeFromArray } from "../utils";
 import CFChart from "./cfchart";
 import * as APIt from "../../api/goals";
 import {
@@ -301,8 +301,7 @@ export default function Goals({
   const mergeCFs = (obj: Object, cfs: Array<number>, sy: number) => {
     cfs.forEach((cf, i) => {
       let year = sy + i;
-      //@ts-ignore
-      if (obj[year] !== "undefined") obj[year] += cf;
+      appendValue(obj, year, cf)
     });
   };
 
@@ -313,36 +312,23 @@ export default function Goals({
     goalImp: APIt.LMH
   ) => {
     if (!ffGoal || !ffYear) return null;
-    let mCFs = Object.assign({}, mergedCFs);
-    let highImpCFs = Object.assign([], mustCFs);
-    let medImpCFs = Object.assign([], tryCFs);
+    let mCFs: any = Object.assign({}, mergedCFs);
+    let highImpCFs: any = Object.assign([], mustCFs);
+    let medImpCFs: any = Object.assign([], tryCFs);
     let nowYear = new Date().getFullYear();
     if (goalId) {
       //@ts-ignore
       let existingGoal = (allGoals?.filter((g) => g.id === goalId))[0];
       let existingSY = existingGoal.sy;
       let existingImp = existingGoal.imp;
-      //@ts-ignore
       let existingCFs = allCFs[goalId];
       existingCFs.forEach((cf: number, i: number) => {
-        //@ts-ignore
-        if (mCFs[existingSY + i] !== "undefined") {
-          //@ts-ignore
-          mCFs[existingSY + i] -= cf;
-        }
+        appendValue(mCFs, existingSY + i, -cf)
         let index = existingSY + i - (nowYear + 1);
         if (existingImp === APIt.LMH.H) {
-          //@ts-ignore
-          if (highImpCFs[index] !== "undefined") {
-            //@ts-ignore
-            highImpCFs[index] -= cf;
-          }
+          appendValue(highImpCFs, index, -cf)
         } else if (existingImp === APIt.LMH.M) {
-          //@ts-ignore
-          if (medImpCFs[index] !== "undefined") {
-            //@ts-ignore
-            medImpCFs[index] -= cf;
-          }
+          appendValue(medImpCFs, index, -cf)
         }
       });
     }
@@ -367,26 +353,16 @@ export default function Goals({
         ffOOM: resultWithoutGoal.oom,
       };
     cfs.forEach((cf, i) => {
-      //@ts-ignore
-      if (mCFs[startYear + i] !== "undefined") {
-        //@ts-ignore
-        mCFs[startYear + i] += cf;
-      }
+      appendValue(mCFs, startYear + i, cf)
       let index = startYear + i - (nowYear + 1);
       if (goalImp === APIt.LMH.H) {
-        //@ts-ignore
-        if (highImpCFs[index] !== "undefined") {
-          //@ts-ignore
-          highImpCFs[index] += cf;
-        }
+        appendValue(highImpCFs, index, cf)
       } else if (goalImp === APIt.LMH.M) {
-        //@ts-ignore
-        if (medImpCFs[index] !== "undefined") {
-          //@ts-ignore
-          medImpCFs[index] += cf;
-        }
+        appendValue(medImpCFs, index, cf)
       }
     });
+    console.log("New merged cfs are...", mCFs);
+    console.log("New must cfs are...", highImpCFs);
     let resultWithGoal = findEarliestFFYear(
       ffGoal,
       savings,

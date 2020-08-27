@@ -691,19 +691,17 @@ const calculateAllocation = (
     if (cashPer < maxCashPer) cashPer = maxCashPer;
     depPer = cashPer - savingsPer;
   }
-  console.log("Year is ", y)
-  console.log("Savings per is ", savingsPer)
-  console.log("Dep per is ", depPer)
-  aa[ASSET_TYPES.SAVINGS][i] = savingsPer;
-  aa[ASSET_TYPES.DEPOSITS][i] = depPer;
+  aa[ASSET_TYPES.SAVINGS][i] += savingsPer;
+  aa[ASSET_TYPES.DEPOSITS][i] += depPer;
   let remPer = 100 - cashPer;
   let mustBondsPer = remPer > 0 ? Math.round((mustBA / cs) * 100) : 0;
   if (mustBondsPer > remPer) mustBondsPer = remPer;
-  aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = mustBondsPer;
+  if(y < ffYear) aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] += mustBondsPer;
+  else aa[ASSET_TYPES.MED_TERM_BONDS][i] += mustBondsPer
   remPer -= mustBondsPer;
   let tryBondsPer = remPer > 0 ? Math.round((tryBA / cs) * 100) : 0;
   if (tryBondsPer > remPer) tryBondsPer = remPer;
-  aa[ASSET_TYPES.MED_TERM_BONDS][i] = tryBondsPer;
+  aa[ASSET_TYPES.MED_TERM_BONDS][i] += tryBondsPer;
   remPer -= tryBondsPer;
   if (remPer > 0) {
     let reitPer = ffGoal.imp === APIt.LMH.L ? 10 : 5;
@@ -713,8 +711,8 @@ const calculateAllocation = (
       else reitPer += 5;
     }
     if (reitPer > remPer) reitPer = remPer;
-    aa[ASSET_TYPES.DOMESTIC_REIT][i] = Math.round(reitPer * 0.8);
-    aa[ASSET_TYPES.INTERNATIONAL_REIT][i] =
+    aa[ASSET_TYPES.DOMESTIC_REIT][i] += Math.round(reitPer * 0.8);
+    aa[ASSET_TYPES.INTERNATIONAL_REIT][i] +=
       reitPer - aa[ASSET_TYPES.DOMESTIC_REIT][i];
     remPer -= reitPer;
     if (remPer > 0) {
@@ -731,23 +729,23 @@ const calculateAllocation = (
           if (y >= ffYear && maxStocksPer > 60) maxStocksPer = 60;
           if (stocksPer > maxStocksPer) stocksPer = maxStocksPer;
           if (y >= ffGoal.ey - 10)
-            aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i] = stocksPer;
+            aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i] += stocksPer;
           else if (y >= ffGoal.ey - 20) {
-            aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i] =
+            aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i] +=
               ((100 - 2 * (ffGoal.ey - y)) / 100) * stocksPer;
-            aa[ASSET_TYPES.LARGE_CAP_STOCKS][i] =
+            aa[ASSET_TYPES.LARGE_CAP_STOCKS][i] +=
               stocksPer - aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i];
           } else {
             if (ffGoal.imp === APIt.LMH.M || y >= ffYear) {
-              aa[ASSET_TYPES.LARGE_CAP_STOCKS][i] = Math.round(stocksPer * 0.7);
-              aa[ASSET_TYPES.INTERNATIONAL_STOCKS][i] =
+              aa[ASSET_TYPES.LARGE_CAP_STOCKS][i] += Math.round(stocksPer * 0.7);
+              aa[ASSET_TYPES.INTERNATIONAL_STOCKS][i] +=
                 stocksPer - aa[ASSET_TYPES.LARGE_CAP_STOCKS][i];
             } else {
-              aa[ASSET_TYPES.DIGITAL_CURRENCIES][i] = 1;
-              aa[ASSET_TYPES.MID_CAP_STOCKS][i] = Math.round(
+              aa[ASSET_TYPES.DIGITAL_CURRENCIES][i] += 1;
+              aa[ASSET_TYPES.MID_CAP_STOCKS][i] += Math.round(
                 (stocksPer - 1) * 0.7
               );
-              aa[ASSET_TYPES.INTERNATIONAL_STOCKS][i] =
+              aa[ASSET_TYPES.INTERNATIONAL_STOCKS][i] +=
                 stocksPer - 1 - aa[ASSET_TYPES.MID_CAP_STOCKS][i];
             }
           }
@@ -755,7 +753,7 @@ const calculateAllocation = (
           if (remPer > 0) {
             let goldPer = Math.round(stocksPer * 0.1);
             if (goldPer > remPer) goldPer = remPer;
-            aa[ASSET_TYPES.GOLD][i] = goldPer;
+            aa[ASSET_TYPES.GOLD][i] += goldPer;
             remPer -= goldPer;
           }
           if (remPer > 0) {
@@ -786,6 +784,7 @@ export const checkForFF = (
 ) => {
   let goal = Object.assign({}, ffGoal);
   let mCFs = Object.assign({}, mergedCFs);
+  console.log("Input merged cfs are...", mCFs)
   let cs = savings;
   let cfs: Array<number> = calculateFFCFs(goal, annualSavings, ffYear);
   let nowYear = new Date().getFullYear();
@@ -814,16 +813,11 @@ export const checkForFF = (
     if (y > ffGoal.ey) break;
     let v = parseInt(value);
     let sa = mustAllocation.savings[y];
-    //console.log("Savings allocation is ", sa)
     let da = mustAllocation.deposits[y];
-    //console.log("Deposits allocation is ", da)
     let mustBA = mustAllocation.bonds[y];
-    //console.log("Must bonds allocation is ", mustBA)
     let tryBA = tryAllocation[y];
-    //console.log("Try bonds allocation is ", tryBA)
     minReq = sa + da + mustBA;
     if (y >= ffYear) minReq += tryBA;
-    //console.log("Min req is ", minReq)
     let i = y - (nowYear + 1);
     let rate = 0;
     if (cs >= minReq) {
