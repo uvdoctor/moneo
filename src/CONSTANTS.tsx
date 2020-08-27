@@ -74,4 +74,4 @@ export const COLORS = {
     RED: "#FF0000"
 }
 
-export const INPUT_HIGHLIGHT = 'p-2 shadow-2xl'
+export const INPUT_HIGHLIGHT = 'p-2 shadow-2xl rounded-lg'

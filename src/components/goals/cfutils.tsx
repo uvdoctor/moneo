@@ -629,16 +629,11 @@ const calculateMustAllocation = (
           futureYear - ffYear
         );
       }
-      console.log("CF for future year: ", futureYear);
-      console.log("CF is ", cf);
       if (futureYear === year + 1) depCF += cf;
       else bondsCF += cf;
     }
     depositsAA[year] += depCF;
     bondsAA[year] = bondsCF;
-    console.log("Savings allocation: ", savingsAA[year]);
-    console.log("Deposits allocation: ", depositsAA[year]);
-    console.log("Bonds allocation: ", bondsAA[year]);
   }
   return { savings: savingsAA, deposits: depositsAA, bonds: bondsAA };
 };
@@ -696,6 +691,9 @@ const calculateAllocation = (
     if (cashPer < maxCashPer) cashPer = maxCashPer;
     depPer = cashPer - savingsPer;
   }
+  console.log("Year is ", y)
+  console.log("Savings per is ", savingsPer)
+  console.log("Dep per is ", depPer)
   aa[ASSET_TYPES.SAVINGS][i] = savingsPer;
   aa[ASSET_TYPES.DEPOSITS][i] = depPer;
   let remPer = 100 - cashPer;
