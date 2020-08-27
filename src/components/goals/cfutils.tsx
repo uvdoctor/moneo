@@ -8,7 +8,6 @@ import {
 import xirr from "xirr";
 import { buildArray, getAllAssetTypes } from "../utils";
 import { ASSET_TYPES } from "../../CONSTANTS";
-import { API } from "aws-amplify";
 //Tested
 export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
   if (!val || val < 0 || !tr) return 0;
