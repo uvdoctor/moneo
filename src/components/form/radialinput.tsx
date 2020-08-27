@@ -3,7 +3,7 @@ import CircularSlider from '@fseehawer/react-circular-slider'
 import NextStep from '../form/nextstep'
 import SVGInfo from '../svginfo'
 import {toast} from 'react-toastify'
-import { COLORS } from '../../CONSTANTS'
+import { COLORS, INPUT_HIGHLIGHT } from '../../CONSTANTS'
 interface RadialInputProps {
     inputOrder: number
     currentOrder: number
@@ -33,7 +33,7 @@ export default function RadialInput(props: RadialInputProps) {
         <div>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <div className={`flex flex-col items-center justify-center
-                                ${!props.allInputDone && props.inputOrder === props.currentOrder ? 'p-2 border-2 border-orange-600' : ''}`}>
+                                ${!props.allInputDone && props.inputOrder === props.currentOrder && INPUT_HIGHLIGHT}`}>
                     {props.info && <div className="w-full flex justify-end cursor-pointer" onClick={() => toast.info(props.info)}>
                         <SVGInfo />
                     </div>}

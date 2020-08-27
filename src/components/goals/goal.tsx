@@ -130,8 +130,9 @@ export default function Goal({
   const brChartLabel = "Buy v/s Rent";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
-  const [showBRChart, setShowBRChart] = useState<boolean>(sellAfter && rentAmt ? true : false);
-  console.log("Showbrchart: ", showBRChart)
+  const [showBRChart, setShowBRChart] = useState<boolean>(
+    sellAfter && rentAmt ? true : false
+  );
   const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 20));
   const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
@@ -261,7 +262,7 @@ export default function Goal({
   };
 
   useEffect(() => {
-    if (manualMode) return;
+    if (manualMode > 0) return;
     let p = 0;
     if (startingPrice)
       p = getCompoundedIncome(priceChgRate, startingPrice, startYear - goal.by);
@@ -269,7 +270,7 @@ export default function Goal({
   }, [startingPrice, priceChgRate, startYear, manualMode]);
 
   useEffect(() => {
-    if (!manualMode) return;
+    if (manualMode < 1) return;
     let p = 0;
     wipTargets.forEach((t) => (p += t.val));
     setPrice(Math.round(p));
@@ -315,9 +316,15 @@ export default function Goal({
 
   useEffect(() => {
     if (!hasTab(loanLabel)) return;
-    manualMode > 0
-      ? (tabOptions[2].active = false)
-      : (tabOptions[2].active = true);
+    if (manualMode > 0) {
+      tabOptions[2].active = false;
+      if (!allInputDone && currentOrder >= tabOptions[2].order) {
+        if (tabOptions[3]) {
+          if (currentOrder < tabOptions[3].order)
+            setCurrentOrder(tabOptions[3].order);
+        } else setCurrentOrder(tabOptions[1].order);
+      }
+    } else tabOptions[2].active = true;
     setTabOptions([...tabOptions]);
   }, [manualMode]);
 

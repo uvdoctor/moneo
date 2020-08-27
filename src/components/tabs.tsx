@@ -96,11 +96,12 @@ export default function Tabs(props: TabsProps) {
   }, [props.selectedTab]);
 
   const isLinkDisabled = (tab: any) => {
-    if (props.allInputDone) return !tab.active;
-    if (!props.currentOrder) {
-      return false;
+    if (!tab.active) return true;
+    if (!props.allInputDone) {
+      if (!props.currentOrder) return false;
+      return tab.order > props.currentOrder;
     }
-    return tab.order > props.currentOrder;
+    return false;
   };
 
   return (

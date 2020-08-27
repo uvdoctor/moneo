@@ -599,7 +599,7 @@ const calculateMustAllocation = (
   let nowYear = new Date().getFullYear();
   let savingsAA: any = {};
   let depositsAA: any = {};
-  let bondsAA: any = {}
+  let bondsAA: any = {};
   for (let year = nowYear + 1; year <= ffGoal.ey; year++) {
     let livingExp: number =
       !ffYear || year < ffYear
@@ -615,25 +615,30 @@ const calculateMustAllocation = (
     savingsAA[year] = livingExp / 2;
     depositsAA[year] = livingExp / 2;
     let mustCF = mustCFs[year - (nowYear + 1)];
-    if(mustCF && mustCF < 0) depositsAA[year] -= mustCF
+    if (mustCF && mustCF < 0) depositsAA[year] -= mustCF;
     let depCF = 0;
-    let bondsCF = 0
-    for (let depYear = year + 1; depYear < year + 5; depYear++) {
-      let cf = 0
-      let mustCF = mustCFs[depYear - (nowYear + 1)];
+    let bondsCF = 0;
+    for (let futureYear = year + 1; futureYear < year + 5; futureYear++) {
+      let cf = 0;
+      let mustCF = mustCFs[futureYear - (nowYear + 1)];
       if (mustCF && mustCF < 0) cf -= mustCF;
-      if (ffYear && depYear >= ffYear) {
+      if (ffYear && futureYear >= ffYear) {
         cf += getCompoundedIncome(
           ffGoal.btr as number,
           ffGoal.tdli as number,
-          depYear - ffYear
+          futureYear - ffYear
         );
       }
-      if(depYear === year + 1) depCF += cf 
-      else bondsCF += cf
+      console.log("CF for future year: ", futureYear);
+      console.log("CF is ", cf);
+      if (futureYear === year + 1) depCF += cf;
+      else bondsCF += cf;
     }
     depositsAA[year] += depCF;
     bondsAA[year] = bondsCF;
+    console.log("Savings allocation: ", savingsAA[year]);
+    console.log("Deposits allocation: ", depositsAA[year]);
+    console.log("Bonds allocation: ", bondsAA[year]);
   }
   return { savings: savingsAA, deposits: depositsAA, bonds: bondsAA };
 };
@@ -693,15 +698,15 @@ const calculateAllocation = (
   }
   aa[ASSET_TYPES.SAVINGS][i] = savingsPer;
   aa[ASSET_TYPES.DEPOSITS][i] = depPer;
-  let remPer = 100 - cashPer
+  let remPer = 100 - cashPer;
   let mustBondsPer = remPer > 0 ? Math.round((mustBA / cs) * 100) : 0;
   if (mustBondsPer > remPer) mustBondsPer = remPer;
   aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = mustBondsPer;
-  remPer -= mustBondsPer
+  remPer -= mustBondsPer;
   let tryBondsPer = remPer > 0 ? Math.round((tryBA / cs) * 100) : 0;
-  if(tryBondsPer > remPer) tryBondsPer = remPer 
-  aa[ASSET_TYPES.MED_TERM_BONDS][i] = tryBondsPer
-  remPer -= tryBondsPer
+  if (tryBondsPer > remPer) tryBondsPer = remPer;
+  aa[ASSET_TYPES.MED_TERM_BONDS][i] = tryBondsPer;
+  remPer -= tryBondsPer;
   if (remPer > 0) {
     let reitPer = ffGoal.imp === APIt.LMH.L ? 10 : 5;
     if (y >= ffYear) {
@@ -789,7 +794,7 @@ export const checkForFF = (
   cfs.forEach((cf, i) => {
     let index = nowYear + 1 + i;
     //@ts-ignore
-    mCFs[index] ? (mCFs[nowYear + 1 + i] += cf) : (mCFs[index] = cf);
+    mCFs[index] ? (mCFs[index] += cf) : (mCFs[index] = cf);
   });
   let ffAmt = 0;
   let ffCfs = {};
@@ -807,14 +812,20 @@ export const checkForFF = (
   let oom = [];
   for (let [year, value] of Object.entries(mCFs)) {
     let y = parseInt(year);
+    //console.log("Year is ", y)
     if (y > ffGoal.ey) break;
     let v = parseInt(value);
     let sa = mustAllocation.savings[y];
+    //console.log("Savings allocation is ", sa)
     let da = mustAllocation.deposits[y];
-    let mustBA = mustAllocation.bonds[y] 
+    //console.log("Deposits allocation is ", da)
+    let mustBA = mustAllocation.bonds[y];
+    //console.log("Must bonds allocation is ", mustBA)
     let tryBA = tryAllocation[y];
+    //console.log("Try bonds allocation is ", tryBA)
     minReq = sa + da + mustBA;
-    if(y >= ffYear) minReq += tryBA
+    if (y >= ffYear) minReq += tryBA;
+    //console.log("Min req is ", minReq)
     let i = y - (nowYear + 1);
     let rate = 0;
     if (cs >= minReq) {
@@ -828,8 +839,8 @@ export const checkForFF = (
         aa[ASSET_TYPES.DEPOSITS][i] = depPer < remPer ? depPer : remPer;
         remPer -= aa[ASSET_TYPES.DEPOSITS][i];
         if (remPer > 0) {
-          if(y >= ffYear) aa[ASSET_TYPES.MED_TERM_BONDS][i] = remPer;
-          else aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = remPer
+          if (y >= ffYear) aa[ASSET_TYPES.MED_TERM_BONDS][i] = remPer;
+          else aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = remPer;
         }
       }
       oom.push(y);
@@ -932,7 +943,7 @@ export const findEarliestFFYear = (
       isFFPossible(prevResult, nomineeAmt)
     )
       return prevResult;
-    else if (
+    if (
       !isFFPossible(prevResult, nomineeAmt) &&
       isFFPossible(result, nomineeAmt)
     )

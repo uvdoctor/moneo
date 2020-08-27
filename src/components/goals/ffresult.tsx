@@ -38,7 +38,7 @@ export default function FFResult({
               label="Age"
               result={(result.ffYear - (endYear - 100)).toString()}
               noResultFormat
-              info={`${result.ffYear} may be the Earliest You can Achieve Financial Freedom.`}
+              info={`You May achieve Financial Freedom earliest at an age of ${result.ffYear - (endYear - 100)} Years.`}
               hideLabel={hideLabel}
               unit="Years"
               imp={
@@ -67,18 +67,18 @@ export default function FFResult({
           <ResultItem
             result={result.ffAmt}
             svg={<SVGPiggy />}
-            label={`Savings by ${result.ffYear - 1}`}
+            label={`Savings @ ${result.ffYear - (endYear - 100) - 1} Years`}
             hideLabel={hideLabel}
             currency={currency}
-            info={`You can Withdraw from this Savings for Your expenses from ${result.ffYear} onwards`}
+            info="You can Withdraw from this Savings for Your expenses after gaining Financial Freedom."
           />
           <ResultItem
             result={result.leftAmt}
             svg={<SVGInheritance />}
-            label={`Savings by ${endYear}`}
+            label="Savings @ 100 Years"
             currency={currency}
             hideLabel={hideLabel}
-            info={`This is the savings amount by end of ${endYear}, which may be inherited by Your Nominees. 
+            info={`This is the savings amount when You turn 100 Years old, which may be inherited by Your Nominees. 
                         This includes the Inheritance Amount for Nominees as per the Plan.`}
           />
         </div>

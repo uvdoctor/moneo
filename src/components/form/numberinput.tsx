@@ -4,7 +4,7 @@ import Slider from 'rc-slider'
 import NextStep from './nextstep'
 import SVGInfo from '../svginfo'
 import { toast } from 'react-toastify'
-import { COLORS } from '../../CONSTANTS'
+import { COLORS, INPUT_HIGHLIGHT } from '../../CONSTANTS'
 
 interface NumberInputProps {
     inputOrder: number
@@ -53,7 +53,7 @@ export default function NumberInput(props: NumberInputProps) {
     return (
         <div>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
-                <form ref={formRef} className={`${!props.allInputDone && props.inputOrder === props.currentOrder ? 'py-2 px-4 border-2 border-blue-600' : ''}`}>
+                <form ref={formRef} className={`${!props.allInputDone && props.inputOrder === props.currentOrder && `${INPUT_HIGHLIGHT} px-4`}`}>
                     {props.info && <div className="w-full flex justify-end cursor-pointer" onClick={
                         () => toast.info(props.info, {autoClose: props.infoDurationInMs ? props.infoDurationInMs : 5000})}>
                         <SVGInfo />

@@ -3,6 +3,7 @@ import NextStep from "./nextstep";
 import { getCurrencyList } from "../utils";
 import SVGInfo from "../svginfo";
 import { toast } from "react-toastify";
+import { INPUT_HIGHLIGHT } from "../../CONSTANTS";
 interface SelectInputProps {
   inputOrder: number;
   currentOrder: number;
@@ -30,9 +31,9 @@ export default function SelectInput(props: SelectInputProps) {
         <div
           className={`flex flex-col
                 ${
-                  !props.allInputDone && props.inputOrder === props.currentOrder
-                    ? "p-2 border-2 border-blue-600"
-                    : ""
+                  !props.allInputDone &&
+                  props.inputOrder === props.currentOrder &&
+                  INPUT_HIGHLIGHT
                 }`}
         >
           {props.info && (
@@ -50,6 +51,7 @@ export default function SelectInput(props: SelectInputProps) {
                 <select
                   name={props.name}
                   className="input"
+                  style={{ minWidth: "40px" }}
                   value={props.value}
                   onChange={(e) => props.changeHandler(e.currentTarget.value)}
                 >
