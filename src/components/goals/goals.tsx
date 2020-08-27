@@ -361,8 +361,6 @@ export default function Goals({
         appendValue(medImpCFs, index, cf)
       }
     });
-    console.log("New merged cfs are...", mCFs);
-    console.log("New must cfs are...", highImpCFs);
     let resultWithGoal = findEarliestFFYear(
       ffGoal,
       savings,

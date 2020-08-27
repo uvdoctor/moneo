@@ -195,7 +195,8 @@ export default function Goal({
 
   const createNewGoalInput = () => {
     let bg: APIt.CreateGoalInput = createNewBaseGoal();
-    if (goalType === APIt.GoalType.B || goalType === APIt.GoalType.E) {
+    if (goalType !== APIt.GoalType.D && goalType !== APIt.GoalType.T 
+      && goalType !== APIt.GoalType.R) {
       bg.tbi = taxBenefitInt;
       bg.tdli = maxTaxDeductionInt;
       bg.emi = {
@@ -266,7 +267,8 @@ export default function Goal({
     let p = 0;
     if (startingPrice)
       p = getCompoundedIncome(priceChgRate, startingPrice, startYear - goal.by);
-    setPrice(Math.round(p));
+    console.log("Price is ", p)
+      setPrice(Math.round(p));
   }, [startingPrice, priceChgRate, startYear, manualMode]);
 
   useEffect(() => {
@@ -526,6 +528,7 @@ export default function Goal({
               loanYears={loanYears as number}
               loanAnnualInt={loanIntRate as number}
               loanPer={loanPer as number}
+              goalType={goalType}
               loanBorrowAmt={
                 getLoanBorrowAmt(
                   price,

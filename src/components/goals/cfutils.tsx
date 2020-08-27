@@ -8,6 +8,7 @@ import {
 import xirr from "xirr";
 import { buildArray, getAllAssetTypes } from "../utils";
 import { ASSET_TYPES } from "../../CONSTANTS";
+import { API } from "aws-amplify";
 //Tested
 export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
   if (!val || val < 0 || !tr) return 0;
@@ -80,7 +81,7 @@ export const calculateCFs = (
   if (price === null) price = calculatePrice(goal); //tested
   if ((goal?.manual as number) > 0)
     return createManualCFs(price, goal, duration);
-  else if ((goal?.emi?.per as number) > 0)
+  else if ((goal?.emi?.per as number) > 0) 
     return createLoanCFs(price, goal, duration);
   else return createAutoCFs(price, goal, duration);
 };
@@ -288,7 +289,8 @@ export const calculatePrincipalTaxBenefit = (
     loanInt,
     loanRepaymentSY,
     loanYears,
-    duration
+    duration,
+    goalType
   );
   taxBenefit += getTaxBenefit(remPayment, taxRate, maxTaxDL);
   return taxBenefit;
@@ -393,7 +395,6 @@ export const calculateXIRR = (
       when: new Date(startYear + sellAfter, 1, 1),
     });
   }
-  console.log("XIRR cfs are ", xirrCFs);
   try {
     return xirr(xirrCFs) * 100;
   } catch (e) {
@@ -420,17 +421,32 @@ export const getLoanBorrowAmt = (
       p += v;
     }
   }
-  return p * ((loanPer as number) / 100);
+  let result = p * ((loanPer as number) / 100);
+  return result
 };
 
 export const getLoanPaidForMonths = (
   endYear: number,
   loanRepaymentYear: number,
-  loanYears: number
+  loanYears: number,
+  goalType: APIt.GoalType
 ) => {
-  let totalMonths = loanYears * 12;
-  let loanPaidForMonths = (endYear + 1 - loanRepaymentYear) * 12;
-  return loanPaidForMonths < totalMonths ? loanPaidForMonths : totalMonths;
+  if (goalType === APIt.GoalType.B)
+    return (endYear + 1 - loanRepaymentYear) * 12;
+  return loanYears * 12;
+};
+
+export const adjustAccruedInterest = (
+  loanBorrowAmt: number,
+  startYear: number,
+  repaymentSY: number,
+  loanRate: number
+) => {
+  for (let y = startYear; y < repaymentSY; y++) {
+    let intAmt = loanBorrowAmt * (loanRate / 100);
+    loanBorrowAmt += intAmt;
+  }
+  return loanBorrowAmt;
 };
 
 const createLoanCFs = (
@@ -449,10 +465,7 @@ const createLoanCFs = (
     goal.emi?.per
   );
   let loanDP = Math.round(loanBorrowAmt / (goal.emi.per / 100)) - loanBorrowAmt;
-  for (let y = goal.sy; y < goal.emi?.ry; y++) {
-    let intAmt = loanBorrowAmt * (goal.emi?.rate / 100);
-    loanBorrowAmt += intAmt;
-  }
+  loanBorrowAmt = adjustAccruedInterest(loanBorrowAmt, goal.sy, goal.emi.ry, goal.emi.rate)
   let emi = Math.round(
     getEmi(loanBorrowAmt, goal.emi?.rate, goal.emi?.dur * 12)
   );
@@ -506,7 +519,8 @@ const createLoanCFs = (
       goal?.emi?.rate as number,
       goal?.emi?.ry as number,
       goal?.emi?.dur as number,
-      duration
+      duration,
+      goal.type
     );
     sp = calculateSellPrice(p, goal?.achg as number, duration);
     cfs.push(Math.round(sp + taxBenefit - remPayment));
@@ -523,7 +537,8 @@ const getRemPrincipal = (
   loanIntRate: number,
   loanRepaymentSY: number,
   loanYears: number,
-  duration: number
+  duration: number,
+  goalType: APIt.GoalType
 ) => {
   let ey = startYear + duration - 1;
   if (loanRepaymentSY + loanYears - 1 <= ey) return 0;
@@ -532,7 +547,8 @@ const getRemPrincipal = (
     let loanPaidForMonths = getLoanPaidForMonths(
       ey,
       loanRepaymentSY,
-      loanYears
+      loanYears,
+      goalType
     );
     remPrincipal = getRemainingPrincipal(
       loanBorrowAmt,
@@ -696,8 +712,8 @@ const calculateAllocation = (
   let remPer = 100 - cashPer;
   let mustBondsPer = remPer > 0 ? Math.round((mustBA / cs) * 100) : 0;
   if (mustBondsPer > remPer) mustBondsPer = remPer;
-  if(y < ffYear) aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] += mustBondsPer;
-  else aa[ASSET_TYPES.MED_TERM_BONDS][i] += mustBondsPer
+  if (y < ffYear) aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] += mustBondsPer;
+  else aa[ASSET_TYPES.MED_TERM_BONDS][i] += mustBondsPer;
   remPer -= mustBondsPer;
   let tryBondsPer = remPer > 0 ? Math.round((tryBA / cs) * 100) : 0;
   if (tryBondsPer > remPer) tryBondsPer = remPer;
@@ -737,7 +753,9 @@ const calculateAllocation = (
               stocksPer - aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i];
           } else {
             if (ffGoal.imp === APIt.LMH.M || y >= ffYear) {
-              aa[ASSET_TYPES.LARGE_CAP_STOCKS][i] += Math.round(stocksPer * 0.7);
+              aa[ASSET_TYPES.LARGE_CAP_STOCKS][i] += Math.round(
+                stocksPer * 0.7
+              );
               aa[ASSET_TYPES.INTERNATIONAL_STOCKS][i] +=
                 stocksPer - aa[ASSET_TYPES.LARGE_CAP_STOCKS][i];
             } else {
@@ -784,7 +802,6 @@ export const checkForFF = (
 ) => {
   let goal = Object.assign({}, ffGoal);
   let mCFs = Object.assign({}, mergedCFs);
-  console.log("Input merged cfs are...", mCFs)
   let cs = savings;
   let cfs: Array<number> = calculateFFCFs(goal, annualSavings, ffYear);
   let nowYear = new Date().getFullYear();

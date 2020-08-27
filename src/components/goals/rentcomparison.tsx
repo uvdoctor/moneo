@@ -145,7 +145,6 @@ export default function RentComparison({
   useEffect(() => {
     if (rentAmt > 0) {
       let data = buildComparisonData();
-      console.log("Chart data is ", data);
       if (data && data.length == 2) brChartDataHandler([...data]);
     } else {
       brChartDataHandler([...[]]);
