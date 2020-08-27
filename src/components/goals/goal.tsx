@@ -15,6 +15,7 @@ import {
   getGoalTypes,
   getImpLevels,
   getOrderByTabLabel,
+  isLoanEligible,
 } from "./goalutils";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
@@ -145,9 +146,7 @@ export default function Goal({
           { label: sellLabel, order: 19, active: true },
           { label: rentLabel, order: 21, active: true },
         ]
-      : goalType === APIt.GoalType.D ||
-        goalType === APIt.GoalType.R ||
-        goalType === APIt.GoalType.T
+      : !isLoanEligible(goalType)
       ? [
           { label: amtLabel, order: 3, active: true },
           { label: taxLabel, order: 8, active: true },
@@ -160,20 +159,31 @@ export default function Goal({
   );
   const [showTab, setShowTab] = useState(amtLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
-  const [resultTabOptions, setResultTabOptions] = useState<Array<any>>([
-    {
-      label: cfChartLabel,
-      order: 1,
-      active: true,
-      svg: <SVGChart />,
-    },
-    {
-      label: brChartLabel,
-      order: 2,
-      active: showBRChart,
-      svg: <SVGScale />,
-    },
-  ]);
+  const [resultTabOptions, setResultTabOptions] = useState<Array<any>>(
+    sellAfter
+      ? [
+          {
+            label: cfChartLabel,
+            order: 1,
+            active: true,
+            svg: <SVGChart />,
+          },
+          {
+            label: brChartLabel,
+            order: 2,
+            active: showBRChart,
+            svg: <SVGScale />,
+          },
+        ]
+      : [
+          {
+            label: cfChartLabel,
+            order: 1,
+            active: true,
+            svg: <SVGChart />,
+          }
+        ]
+  );
 
   const createNewBaseGoal = () => {
     return {
@@ -195,8 +205,9 @@ export default function Goal({
 
   const createNewGoalInput = () => {
     let bg: APIt.CreateGoalInput = createNewBaseGoal();
-    if (goalType !== APIt.GoalType.D && goalType !== APIt.GoalType.T 
-      && goalType !== APIt.GoalType.R) {
+    if (
+      isLoanEligible(goalType)
+    ) {
       bg.tbi = taxBenefitInt;
       bg.tdli = maxTaxDeductionInt;
       bg.emi = {
@@ -206,7 +217,7 @@ export default function Goal({
         ry: loanRepaymentSY as number,
       };
     }
-    if (goalType === APIt.GoalType.B) {
+    if (sellAfter) {
       bg.sa = sellAfter;
       bg.achg = assetChgRate;
       bg.amper = amCostPer;
@@ -267,8 +278,8 @@ export default function Goal({
     let p = 0;
     if (startingPrice)
       p = getCompoundedIncome(priceChgRate, startingPrice, startYear - goal.by);
-    console.log("Price is ", p)
-      setPrice(Math.round(p));
+    console.log("Price is ", p);
+    setPrice(Math.round(p));
   }, [startingPrice, priceChgRate, startYear, manualMode]);
 
   useEffect(() => {
@@ -355,6 +366,7 @@ export default function Goal({
   };
 
   useEffect(() => {
+    if(!sellAfter) return
     resultTabOptions[1].active = showBRChart;
     setResultTabOptions([...resultTabOptions]);
   }, [showBRChart]);
@@ -374,6 +386,7 @@ export default function Goal({
   }, [sellAfter, price, rentAmt, brChartData]);
 
   useEffect(() => {
+    if(!sellAfter) return
     if (resultTabOptions[1].active) {
       if (showTab === rentLabel) setShowResultTab(brChartLabel);
     } else setShowResultTab(cfChartLabel);
@@ -391,11 +404,11 @@ export default function Goal({
       let label = getTabLabelByOrder(co);
       if (label) setShowTab(label);
       setCurrentOrder(co);
-      if (goalType === APIt.GoalType.B) {
+      if (sellAfter) {
         if (label === rentLabel) setAllInputDone(true);
       } else if (hasTab(loanLabel)) {
-        if (co === 13) setAllInputDone(true);
-      } else if (co === 10) setAllInputDone(true);
+        if (label === loanLabel) setAllInputDone(true);
+      } else if (label === taxLabel) setAllInputDone(true);
     }
   };
 

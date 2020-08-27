@@ -175,13 +175,18 @@ export const getOrderByTabLabel = (tabOptions: Array<any>, label: string) => {
     }
 }*/
 
+export const isLoanEligible = (goalType: APIt.GoalType) =>
+  goalType !== APIt.GoalType.D &&
+  goalType !== APIt.GoalType.R &&
+  goalType !== APIt.GoalType.T;
+
 export const createNewGoalInput = (
   goalType: APIt.GoalType,
   currency: string
 ) => {
   if (goalType === APIt.GoalType.FF) return createFFGoalInput(currency);
   let bg: APIt.CreateGoalInput = createBaseGoalInput(goalType, currency);
-  if (goalType === APIt.GoalType.B || goalType === APIt.GoalType.E) {
+  if (isLoanEligible(goalType)) {
     bg.tbi = 0;
     bg.tdli = 0;
     bg.emi = { rate: 4, dur: 10, per: 0, ry: bg.sy };
