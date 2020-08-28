@@ -263,7 +263,7 @@ export default function Goal({
 
   useEffect(() => {
     if (!loanPer) setEYOptions(initYearOptions(startYear, 20));
-    else setLoanRepaymentSY(startYear);
+    else if(goalType !== APIt.GoalType.E) setLoanRepaymentSY(startYear);
     if (goalType === APIt.GoalType.B && loanPer) return;
     if (startYear > endYear || endYear - startYear > 20) setEndYear(startYear);
   }, [startYear]);
@@ -317,7 +317,11 @@ export default function Goal({
 
   useEffect(() => {
     if (!allInputDone && showTab === rentLabel) return;
-    if (goalType !== APIt.GoalType.B && manualMode < 1) calculateYearlyCFs();
+    if (goalType !== APIt.GoalType.B && manualMode < 1) {
+      if(goalType === APIt.GoalType.E && loanRepaymentSY && loanRepaymentSY <= endYear)
+        setLoanRepaymentSY(endYear + 1)
+      calculateYearlyCFs();
+    }
   }, [endYear]);
 
   useEffect(() => {
@@ -532,10 +536,11 @@ export default function Goal({
           {showTab === loanLabel && (
             <EmiCost
               price={price}
+              priceChgRate={priceChgRate}
               currency={currency}
               startYear={startYear}
               duration={getDur()}
-              repaymentSY={loanRepaymentSY ? loanRepaymentSY : startYear}
+              repaymentSY={loanRepaymentSY as number}
               endYear={endYear}
               rangeFactor={rangeFactor}
               loanYears={loanYears as number}
@@ -672,7 +677,6 @@ export default function Goal({
                   ffOOM={ffOOM}
                   ffImpactYears={ffImpactYears}
                   buyGoal={goalType === APIt.GoalType.B}
-                  hideResultLabel
                 />
               )
             }

@@ -7,10 +7,13 @@ import RadialInput from "../form/radialinput";
 import Section from "../form/section";
 import {
   getLoanPaidForMonths,
-  calculateInterestTaxBenefit, adjustAccruedInterest
+  calculateInterestTaxBenefit,
+  adjustAccruedInterest,
+  createEduLoanDPWithSICFs, getTaxBenefit
 } from "../goals/cfutils";
 import HToggle from "../horizontaltoggle";
 import { GoalType } from "../../api/goals";
+import ResultItem from "./resultitem";
 interface EmiProps {
   inputOrder: number;
   currentOrder: number;
@@ -18,6 +21,7 @@ interface EmiProps {
   nextStepHandler: Function;
   allInputDone: boolean;
   price: number;
+  priceChgRate: number;
   currency: string;
   rangeFactor: number;
   startYear: number;
@@ -44,31 +48,50 @@ export default function EmiCost(props: EmiProps) {
   const [totalIntAmt, setTotalIntAmt] = useState<number>(0);
   const [totalIntTaxBenefit, setTotalIntTaxBenefit] = useState<number>(0);
   const [ryOptions, setRYOptions] = useState(
-    initYearOptions(props.startYear, 10)
+    initYearOptions(
+      props.goalType === GoalType.E ? props.endYear + 1 : props.startYear,
+      10
+    )
   );
   const [emi, setEMI] = useState<number>(0);
 
   const calculateEmi = () => {
-    let borrowAmt = adjustAccruedInterest(props.loanBorrowAmt, props.startYear, 
-        props.repaymentSY, props.loanAnnualInt)   
-    let loanPaidForMonths = getLoanPaidForMonths(
-            props.endYear,
-            props.repaymentSY,
-            props.loanYears,
-            props.goalType
-            );
-    let emi = getEmi(
-                borrowAmt,
-                props.loanAnnualInt,
-                props.loanYears * 12
-                ) as number;
-    setEMI(Math.round(emi));
-    let totalIntAmt = getTotalInt(
-      borrowAmt,
-      emi,
-      props.loanAnnualInt,
-      loanPaidForMonths
+    let borrowAmt = 0;
+    let simpleInts: Array<number> = []
+    if (props.goalType === GoalType.E) {
+      let result = createEduLoanDPWithSICFs(
+        props.price,
+        props.priceChgRate,
+        props.loanPer,
+        props.startYear,
+        props.endYear,
+        props.loanAnnualInt,
+        100
+      );
+      borrowAmt = result.borrowAmt;
+      simpleInts = result.ints
+    }
+    borrowAmt = adjustAccruedInterest(
+      props.loanBorrowAmt,
+      props.goalType === GoalType.E ? props.endYear + 1 : props.startYear,
+      props.repaymentSY,
+      props.loanAnnualInt
     );
+    let loanPaidForMonths = getLoanPaidForMonths(
+      props.endYear,
+      props.repaymentSY,
+      props.loanYears,
+      props.goalType
+    );
+    let emi = getEmi(
+      borrowAmt,
+      props.loanAnnualInt,
+      props.loanYears * 12
+    ) as number;
+    setEMI(Math.round(emi));
+    let totalIntAmt =
+      getTotalInt(borrowAmt, emi, props.loanAnnualInt, loanPaidForMonths) +
+      simpleInts.reduce((prev, curr) => prev + curr, 0);
     setTotalIntAmt(Math.round(totalIntAmt));
     if (props.taxBenefitInt > 0) {
       let intTaxBenefit = calculateInterestTaxBenefit(
@@ -81,15 +104,22 @@ export default function EmiCost(props: EmiProps) {
         props.taxRate,
         props.maxTaxDeductionInt
       );
-      setTotalIntTaxBenefit(Math.round(intTaxBenefit));
+      let simpleTaxBenefit = 0
+      simpleInts.forEach(int => simpleTaxBenefit += getTaxBenefit(int, props.taxRate, props.maxTaxDeductionInt))
+      setTotalIntTaxBenefit(Math.round(intTaxBenefit + simpleTaxBenefit));
     } else setTotalIntTaxBenefit(0);
   };
 
   useEffect(() => calculateEmi(), [props]);
 
   useEffect(() => {
-    setRYOptions(initYearOptions(props.startYear, 10));
-  }, [props.startYear]);
+    setRYOptions(
+      initYearOptions(
+        props.goalType === GoalType.E ? props.endYear + 1 : props.startYear,
+        10
+      )
+    );
+  }, [props.startYear, props.endYear]);
 
   return (
     <div className="flex w-full justify-around">
@@ -172,7 +202,7 @@ export default function EmiCost(props: EmiProps) {
           }
           bottom={
             props.loanBorrowAmt ? (
-              <div className="flex flex-wrap justify-around items-center w-full">
+              <div className="flex flex-col justify-around items-center w-full">
                 <NumberInput
                   name="intRate"
                   inputOrder={props.inputOrder + 3}
@@ -183,36 +213,49 @@ export default function EmiCost(props: EmiProps) {
                   pre="Yearly"
                   post="Interest"
                   unit="%"
-                  note={`Total ${toCurrency(totalIntAmt, props.currency)}`}
+                  note={
+                    <ResultItem
+                      label="Total Interest"
+                      result={totalIntAmt}
+                      currency={props.currency}
+                      footer={`Over ${props.duration} Years`}
+                    />
+                  }
                   value={props.loanAnnualInt}
                   changeHandler={props.loanAnnualIntHandler}
                   min={0.0}
                   max={25.0}
                   step={0.1}
                 />
-                {props.taxRate ? (
-                  <NumberInput
-                    name="maxTaxDeductionInt"
-                    inputOrder={props.inputOrder + 4}
-                    currentOrder={props.currentOrder}
-                    nextStepDisabled={false}
-                    nextStepHandler={props.nextStepHandler}
-                    allInputDone={props.allInputDone}
-                    pre="Max Yearly"
-                    post="Deduction"
-                    rangeFactor={props.rangeFactor}
-                    value={props.maxTaxDeductionInt}
-                    changeHandler={props.maxTaxDeductionIntHandler}
-                    currency={props.currency}
-                    min={0}
-                    max={50000}
-                    step={1000}
-                    note={`Total ${toCurrency(
-                      totalIntTaxBenefit,
-                      props.currency
-                    )}`}
-                    width="100px"
-                  />
+                {props.taxRate && props.taxBenefitInt ? (
+                  <div className="mt-2">
+                    <NumberInput
+                      name="maxTaxDeductionInt"
+                      inputOrder={props.inputOrder + 4}
+                      currentOrder={props.currentOrder}
+                      nextStepDisabled={false}
+                      nextStepHandler={props.nextStepHandler}
+                      allInputDone={props.allInputDone}
+                      pre="Max Interest"
+                      post="Deduction"
+                      rangeFactor={props.rangeFactor}
+                      value={props.maxTaxDeductionInt}
+                      changeHandler={props.maxTaxDeductionIntHandler}
+                      currency={props.currency}
+                      min={0}
+                      max={50000}
+                      step={1000}
+                      note={
+                        <ResultItem
+                          label="Total Tax Benefit"
+                          result={totalIntTaxBenefit}
+                          currency={props.currency}
+                          footer={`Over ${props.duration} Years`}
+                        />
+                      }
+                      width="100px"
+                    />
+                  </div>
                 ) : (
                   !props.allInputDone &&
                   props.currentOrder === props.inputOrder + 4 &&

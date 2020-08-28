@@ -177,8 +177,7 @@ export const getOrderByTabLabel = (tabOptions: Array<any>, label: string) => {
 
 export const isLoanEligible = (goalType: APIt.GoalType) =>
   goalType !== APIt.GoalType.D &&
-  goalType !== APIt.GoalType.R &&
-  goalType !== APIt.GoalType.T;
+  goalType !== APIt.GoalType.R;
 
 export const createNewGoalInput = (
   goalType: APIt.GoalType,
@@ -189,7 +188,7 @@ export const createNewGoalInput = (
   if (isLoanEligible(goalType)) {
     bg.tbi = 0;
     bg.tdli = 0;
-    bg.emi = { rate: 4, dur: 10, per: 0, ry: bg.sy };
+    bg.emi = { rate: 4, dur: 10, per: 0, ry: goalType === APIt.GoalType.E ? bg.ey + 1 : bg.sy };
   }
   if (goalType === APIt.GoalType.B) {
     bg.sa = 5;
