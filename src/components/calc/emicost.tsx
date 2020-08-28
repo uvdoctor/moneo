@@ -5,6 +5,7 @@ import { toCurrency, toStringArr, initYearOptions } from "../utils";
 import SelectInput from "../form/selectinput";
 import RadialInput from "../form/radialinput";
 import Section from "../form/section";
+import ExpandCollapse from "../form/expandcollapse";
 import {
   getLoanPaidForMonths,
   calculateInterestTaxBenefit,
@@ -57,7 +58,8 @@ export default function EmiCost(props: EmiProps) {
     )
   );
   const [emi, setEMI] = useState<number>(0);
-  const [simpleInts, setSimpleInts] = useState<Array<number>>([])
+  const [simpleInts, setSimpleInts] = useState<Array<number>>([]);
+  const [showIntSchedule, setShowIntSchedule] = useState<boolean>(false);
 
   const calculateEmi = () => {
     let borrowAmt = 0;
@@ -74,7 +76,7 @@ export default function EmiCost(props: EmiProps) {
       );
       borrowAmt = result.borrowAmt;
       simpleInts = result.ints;
-      setSimpleInts([...simpleInts])
+      setSimpleInts([...simpleInts]);
     }
     borrowAmt = adjustAccruedInterest(
       borrowAmt,
@@ -216,7 +218,7 @@ export default function EmiCost(props: EmiProps) {
           }
           bottom={
             props.loanBorrowAmt ? (
-              <div className="flex flex-col justify-around items-center w-full">
+              <div className="flex flex-wrap justify-around items-center w-full">
                 <div className="mt-2">
                   <NumberInput
                     name="intRate"
@@ -260,7 +262,28 @@ export default function EmiCost(props: EmiProps) {
                       labelBottom={true}
                       pre="Pay While Studying"
                       label="of Interest"
-                      post={`Monthly ${toCurrency(Math.round(simpleInts[0] / 12), props.currency)} in ${props.startYear}`}
+                      post={
+                        !!props.loanSIPayPer && (
+                          <div className="flex flex-col justify-center w-full">
+                            <ExpandCollapse
+                              title="Interest Schedule"
+                              value={showIntSchedule}
+                              handler={setShowIntSchedule}
+                            />
+                            {showIntSchedule &&
+                              simpleInts.map((int, i) => (
+                                <p key={"si" + i}>
+                                  Monthly{" "}
+                                  {toCurrency(
+                                    Math.round(int / 12),
+                                    props.currency
+                                  )}{" "}
+                                  in {props.startYear + i}
+                                </p>
+                              ))}
+                          </div>
+                        )
+                      }
                     />
                   </div>
                 )}
