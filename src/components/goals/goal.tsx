@@ -69,6 +69,9 @@ export default function Goal({
   const [loanPer, setLoanPer] = useState<number | undefined | null>(
     goal?.emi?.per
   );
+  const [loanSIPayPer, setLoanSIPayPer] = useState<number | undefined | null>(
+    goal.btr
+  );
   const [startingPrice, setStartingPrice] = useState<number>(
     goal?.cp as number
   );
@@ -228,6 +231,9 @@ export default function Goal({
       bg.ra = rentAmt;
       bg.rachg = rentChgPer;
     }
+    if(goalType === APIt.GoalType.E) {
+      bg.btr = loanSIPayPer
+    }
     return bg;
   };
 
@@ -263,7 +269,7 @@ export default function Goal({
 
   useEffect(() => {
     if (!loanPer) setEYOptions(initYearOptions(startYear, 20));
-    else setLoanRepaymentSY(startYear);
+    else if(goalType !== APIt.GoalType.E) setLoanRepaymentSY(startYear);
     if (goalType === APIt.GoalType.B && loanPer) return;
     if (startYear > endYear || endYear - startYear > 20) setEndYear(startYear);
   }, [startYear]);
@@ -297,6 +303,7 @@ export default function Goal({
     price,
     assetChgRate,
     loanPer,
+    loanSIPayPer,
     loanRepaymentSY,
     loanIntRate,
     loanYears,
@@ -317,7 +324,11 @@ export default function Goal({
 
   useEffect(() => {
     if (!allInputDone && showTab === rentLabel) return;
-    if (goalType !== APIt.GoalType.B && manualMode < 1) calculateYearlyCFs();
+    if (goalType !== APIt.GoalType.B && manualMode < 1) {
+      if(goalType === APIt.GoalType.E && loanRepaymentSY && loanRepaymentSY <= endYear)
+        setLoanRepaymentSY(endYear + 1)
+      calculateYearlyCFs();
+    }
   }, [endYear]);
 
   useEffect(() => {
@@ -532,16 +543,18 @@ export default function Goal({
           {showTab === loanLabel && (
             <EmiCost
               price={price}
+              priceChgRate={priceChgRate}
               currency={currency}
               startYear={startYear}
               duration={getDur()}
-              repaymentSY={loanRepaymentSY ? loanRepaymentSY : startYear}
+              repaymentSY={loanRepaymentSY as number}
               endYear={endYear}
               rangeFactor={rangeFactor}
               loanYears={loanYears as number}
               loanAnnualInt={loanIntRate as number}
               loanPer={loanPer as number}
               goalType={goalType}
+              loanSIPayPer={loanSIPayPer}
               loanBorrowAmt={
                 getLoanBorrowAmt(
                   price,
@@ -554,6 +567,7 @@ export default function Goal({
               }
               loanAnnualIntHandler={setLoanIntRate}
               loanPerHandler={setLoanPer}
+              loanSIPayPerHandler={setLoanSIPayPer}
               loanMonthsHandler={setLoanYears}
               repaymentSYHandler={setLoanRepaymentSY}
               taxBenefitInt={taxBenefitInt as number}
@@ -672,7 +686,6 @@ export default function Goal({
                   ffOOM={ffOOM}
                   ffImpactYears={ffImpactYears}
                   buyGoal={goalType === APIt.GoalType.B}
-                  hideResultLabel
                 />
               )
             }

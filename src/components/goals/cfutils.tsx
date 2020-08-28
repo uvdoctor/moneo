@@ -80,7 +80,7 @@ export const calculateCFs = (
   if (price === null) price = calculatePrice(goal); //tested
   if ((goal?.manual as number) > 0)
     return createManualCFs(price, goal, duration);
-  else if ((goal?.emi?.per as number) > 0) 
+  else if ((goal?.emi?.per as number) > 0)
     return createLoanCFs(price, goal, duration);
   else return createAutoCFs(price, goal, duration);
 };
@@ -421,7 +421,7 @@ export const getLoanBorrowAmt = (
     }
   }
   let result = p * ((loanPer as number) / 100);
-  return result
+  return result;
 };
 
 export const getLoanPaidForMonths = (
@@ -448,6 +448,31 @@ export const adjustAccruedInterest = (
   return loanBorrowAmt;
 };
 
+export const createEduLoanDPWithSICFs = (
+  price: number,
+  chgRate: number,
+  loanPer: number,
+  startYear: number,
+  endYear: number,
+  intRate: number,
+  intPer: number
+) => {
+  let result: Array<number> = [];
+  let totalLoanPayment = 0;
+  let ints: Array<number> = [];
+  for (let y = startYear; y <= endYear; y++) {
+    let p = getCompoundedIncome(chgRate, price, y - startYear);
+    totalLoanPayment += p * (loanPer / 100);
+    let dp = p * (1 - loanPer / 100);
+    let totalIntDue = totalLoanPayment * (intRate / 100)
+    let interestPaid = totalIntDue * (intPer / 100);
+    result.push(Math.round(dp + interestPaid));
+    ints.push(interestPaid);
+    totalLoanPayment += totalIntDue - interestPaid;
+  }
+  return { borrowAmt: totalLoanPayment, cfs: result, ints: ints };
+};
+
 const createLoanCFs = (
   p: number,
   goal: APIt.CreateGoalInput,
@@ -455,16 +480,40 @@ const createLoanCFs = (
 ) => {
   let cfs: Array<number> = [];
   if (!goal.emi?.per || !goal.emi?.dur || !goal.emi?.rate) return cfs;
-  let loanBorrowAmt = getLoanBorrowAmt(
-    p,
-    goal.type,
-    goal.manual,
-    goal?.chg as number,
-    goal.ey - goal.sy,
-    goal.emi?.per
+  let loanBorrowAmt = 0;
+  let loanDP = 0;
+  let simpleInts: Array<number> = [];
+  if (goal.type !== APIt.GoalType.E) {
+    loanBorrowAmt = getLoanBorrowAmt(
+      p,
+      goal.type,
+      goal.manual,
+      goal?.chg as number,
+      goal.ey - goal.sy,
+      goal.emi?.per
+    );
+    loanDP = Math.round(loanBorrowAmt / (goal.emi.per / 100)) - loanBorrowAmt;
+    cfs.push(loanDP);
+  } else {
+    let result = createEduLoanDPWithSICFs(
+      p,
+      goal.chg as number,
+      goal.emi?.per,
+      goal.sy,
+      goal.ey,
+      goal.emi?.rate,
+      goal.btr as number
+    );
+    cfs = result.cfs;
+    loanBorrowAmt = result.borrowAmt;
+    simpleInts = result.ints;
+  }
+  loanBorrowAmt = adjustAccruedInterest(
+    loanBorrowAmt,
+    goal.type === APIt.GoalType.E ? goal.ey + 1 : goal.sy,
+    goal.emi.ry,
+    goal.emi.rate
   );
-  let loanDP = Math.round(loanBorrowAmt / (goal.emi.per / 100)) - loanBorrowAmt;
-  loanBorrowAmt = adjustAccruedInterest(loanBorrowAmt, goal.sy, goal.emi.ry, goal.emi.rate)
   let emi = Math.round(
     getEmi(loanBorrowAmt, goal.emi?.rate, goal.emi?.dur * 12)
   );
@@ -478,23 +527,35 @@ const createLoanCFs = (
   let sp = 0;
   let taxBenefit = 0;
   for (let year = goal.sy, ly = goal.emi?.dur as number; year <= ey; year++) {
-    let cf = year === goal.sy ? loanDP : 0;
+    let index = year - goal.sy;
+    let cf = cfs[index] ? cfs[index] : 0;
     cf -= taxBenefit;
     taxBenefit = 0;
-    if (year >= (goal.emi?.ry as number) && ly > 0) {
+    if (year >= goal.emi.ry && ly > 0) {
       let annualEmiAmt = emi * (ly === 0.5 ? 6 : 12);
       cf += annualEmiAmt;
-      let i = year - (goal.emi?.ry as number);
-      taxBenefit = getTaxBenefit(
-        annualEmiAmt - annualInts[i],
-        goal.tdr,
-        goal.tdl
-      );
+      let i = year - goal.emi.ry;
+      if (goal.type !== APIt.GoalType.E)
+        taxBenefit = getTaxBenefit(
+          annualEmiAmt - annualInts[i],
+          goal.tdr,
+          goal.tdl
+        );
       taxBenefit +=
         (goal.tbi as number) > 0
           ? getTaxBenefit(annualInts[i], goal.tdr, goal.tdli as number)
           : 0;
       ly--;
+    } else if (
+      year < goal.emi.ry &&
+      (goal.tbi as number) > 0 &&
+      simpleInts[index]
+    ) {
+      taxBenefit = getTaxBenefit(
+        simpleInts[index],
+        goal.tdr,
+        goal.tdli as number
+      );
     }
     if (goal.type === APIt.GoalType.B) {
       cf -= calculateBuyAnnualNetCF(
@@ -508,7 +569,8 @@ const createLoanCFs = (
         goal.aisy as number
       );
     }
-    cfs.push(cf ? Math.round(-cf) : 0);
+    if (cfs[year - goal.sy]) cfs[year - goal.sy] = Math.round(-cf);
+    else cfs.push(cf ? Math.round(-cf) : 0);
   }
   if (goal.type === APIt.GoalType.B) {
     let remPayment = getRemPrincipal(
