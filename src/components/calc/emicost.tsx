@@ -57,6 +57,7 @@ export default function EmiCost(props: EmiProps) {
     )
   );
   const [emi, setEMI] = useState<number>(0);
+  const [simpleInts, setSimpleInts] = useState<Array<number>>([])
 
   const calculateEmi = () => {
     let borrowAmt = 0;
@@ -73,9 +74,10 @@ export default function EmiCost(props: EmiProps) {
       );
       borrowAmt = result.borrowAmt;
       simpleInts = result.ints;
+      setSimpleInts([...simpleInts])
     }
     borrowAmt = adjustAccruedInterest(
-      props.loanBorrowAmt,
+      borrowAmt,
       props.goalType === GoalType.E ? props.endYear + 1 : props.startYear,
       props.repaymentSY,
       props.loanAnnualInt
@@ -92,9 +94,11 @@ export default function EmiCost(props: EmiProps) {
       props.loanYears * 12
     ) as number;
     setEMI(Math.round(emi));
+    let totalSimpleIntAmt = 0;
+    simpleInts.forEach((int) => (totalSimpleIntAmt += int));
     let totalIntAmt =
       getTotalInt(borrowAmt, emi, props.loanAnnualInt, loanPaidForMonths) +
-      simpleInts.reduce((prev, curr) => prev + curr, 0);
+      totalSimpleIntAmt;
     setTotalIntAmt(Math.round(totalIntAmt));
     if (props.taxBenefitInt > 0) {
       let intTaxBenefit = calculateInterestTaxBenefit(
@@ -212,7 +216,7 @@ export default function EmiCost(props: EmiProps) {
           }
           bottom={
             props.loanBorrowAmt ? (
-              <div className="flex flex-wrap justify-around items-center w-full">
+              <div className="flex flex-col justify-around items-center w-full">
                 <div className="mt-2">
                   <NumberInput
                     name="intRate"
@@ -256,7 +260,7 @@ export default function EmiCost(props: EmiProps) {
                       labelBottom={true}
                       pre="Pay While Studying"
                       label="of Interest"
-                      post={`from ${props.startYear} to ${props.endYear}`}
+                      post={`Monthly ${toCurrency(Math.round(simpleInts[0] / 12), props.currency)} in ${props.startYear}`}
                     />
                   </div>
                 )}
