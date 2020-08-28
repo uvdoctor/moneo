@@ -15,6 +15,7 @@ import {
   getGoalTypes,
   getImpLevels,
   getOrderByTabLabel,
+  isLoanEligible,
 } from "./goalutils";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
@@ -27,7 +28,6 @@ import LineChart from "./linechart";
 import InputSection from "./inputsection";
 import RentComparison from "./rentcomparison";
 import BRCompChart from "./brcompchart";
-
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -131,7 +131,9 @@ export default function Goal({
   const brChartLabel = "Buy v/s Rent";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
-  const [showBRChart, setShowBRChart] = useState<boolean>(false);
+  const [showBRChart, setShowBRChart] = useState<boolean>(
+    sellAfter && rentAmt ? true : false
+  );
   const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 20));
   const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
@@ -144,9 +146,7 @@ export default function Goal({
           { label: sellLabel, order: 19, active: true },
           { label: rentLabel, order: 21, active: true },
         ]
-      : goalType === APIt.GoalType.D ||
-        goalType === APIt.GoalType.R ||
-        goalType === APIt.GoalType.T
+      : !isLoanEligible(goalType)
       ? [
           { label: amtLabel, order: 3, active: true },
           { label: taxLabel, order: 8, active: true },
@@ -159,21 +159,31 @@ export default function Goal({
   );
   const [showTab, setShowTab] = useState(amtLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
-
-  const [resultTabOptions, setResultTabOptions] = useState<Array<any>>([
-    {
-      label: cfChartLabel,
-      order: 1,
-      active: true,
-      svg: <SVGChart />,
-    },
-    {
-      label: brChartLabel,
-      order: 2,
-      active: goal.id && !!rentAmt,
-      svg: <SVGScale />,
-    },
-  ]);
+  const [resultTabOptions, setResultTabOptions] = useState<Array<any>>(
+    sellAfter
+      ? [
+          {
+            label: cfChartLabel,
+            order: 1,
+            active: true,
+            svg: <SVGChart />,
+          },
+          {
+            label: brChartLabel,
+            order: 2,
+            active: showBRChart,
+            svg: <SVGScale />,
+          },
+        ]
+      : [
+          {
+            label: cfChartLabel,
+            order: 1,
+            active: true,
+            svg: <SVGChart />,
+          }
+        ]
+  );
 
   const createNewBaseGoal = () => {
     return {
@@ -195,7 +205,9 @@ export default function Goal({
 
   const createNewGoalInput = () => {
     let bg: APIt.CreateGoalInput = createNewBaseGoal();
-    if (goalType === APIt.GoalType.B || goalType === APIt.GoalType.E) {
+    if (
+      isLoanEligible(goalType)
+    ) {
       bg.tbi = taxBenefitInt;
       bg.tdli = maxTaxDeductionInt;
       bg.emi = {
@@ -205,7 +217,7 @@ export default function Goal({
         ry: loanRepaymentSY as number,
       };
     }
-    if (goalType === APIt.GoalType.B) {
+    if (sellAfter) {
       bg.sa = sellAfter;
       bg.achg = assetChgRate;
       bg.amper = amCostPer;
@@ -262,15 +274,16 @@ export default function Goal({
   };
 
   useEffect(() => {
-    if (manualMode) return;
+    if (manualMode > 0) return;
     let p = 0;
     if (startingPrice)
       p = getCompoundedIncome(priceChgRate, startingPrice, startYear - goal.by);
+    console.log("Price is ", p);
     setPrice(Math.round(p));
   }, [startingPrice, priceChgRate, startYear, manualMode]);
 
   useEffect(() => {
-    if (!manualMode) return;
+    if (manualMode < 1) return;
     let p = 0;
     wipTargets.forEach((t) => (p += t.val));
     setPrice(Math.round(p));
@@ -316,9 +329,15 @@ export default function Goal({
 
   useEffect(() => {
     if (!hasTab(loanLabel)) return;
-    manualMode > 0
-      ? (tabOptions[2].active = false)
-      : (tabOptions[2].active = true);
+    if (manualMode > 0) {
+      tabOptions[2].active = false;
+      if (!allInputDone && currentOrder >= tabOptions[2].order) {
+        if (tabOptions[3]) {
+          if (currentOrder < tabOptions[3].order)
+            setCurrentOrder(tabOptions[3].order);
+        } else setCurrentOrder(tabOptions[1].order);
+      }
+    } else tabOptions[2].active = true;
     setTabOptions([...tabOptions]);
   }, [manualMode]);
 
@@ -347,24 +366,27 @@ export default function Goal({
   };
 
   useEffect(() => {
+    if(!sellAfter) return
     resultTabOptions[1].active = showBRChart;
     setResultTabOptions([...resultTabOptions]);
   }, [showBRChart]);
 
   useEffect(() => {
     if (
-      !sellAfter ||
-      !rentAmt ||
-      !price ||
-      !brChartData ||
-      brChartData.length !== 2 ||
+      sellAfter &&
+      rentAmt &&
+      rentAmt > 0 &&
+      price > 0 &&
+      brChartData &&
+      brChartData.length === 2 &&
       nowYear >= startYear
     )
-      setShowBRChart(false);
-    else setShowBRChart(true);
+      setShowBRChart(true);
+    else setShowBRChart(false);
   }, [sellAfter, price, rentAmt, brChartData]);
 
   useEffect(() => {
+    if(!sellAfter) return
     if (resultTabOptions[1].active) {
       if (showTab === rentLabel) setShowResultTab(brChartLabel);
     } else setShowResultTab(cfChartLabel);
@@ -382,11 +404,11 @@ export default function Goal({
       let label = getTabLabelByOrder(co);
       if (label) setShowTab(label);
       setCurrentOrder(co);
-      if (goalType === APIt.GoalType.B) {
+      if (sellAfter) {
         if (label === rentLabel) setAllInputDone(true);
       } else if (hasTab(loanLabel)) {
-        if (co === 13) setAllInputDone(true);
-      } else if (co === 10) setAllInputDone(true);
+        if (label === loanLabel) setAllInputDone(true);
+      } else if (label === taxLabel) setAllInputDone(true);
     }
   };
 
@@ -434,7 +456,7 @@ export default function Goal({
         />
       </StickyHeader>
       <div
-        className={`container mx-auto w-full h-full flex flex-1 md:flex-row ${
+        className={`container mx-auto w-full h-full flex flex-1 lg:flex-row ${
           showResultSection() && "flex-col-reverse"
         } items-start`}
       >
@@ -519,6 +541,7 @@ export default function Goal({
               loanYears={loanYears as number}
               loanAnnualInt={loanIntRate as number}
               loanPer={loanPer as number}
+              goalType={goalType}
               loanBorrowAmt={
                 getLoanBorrowAmt(
                   price,

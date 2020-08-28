@@ -4,7 +4,7 @@ import RadialInput from '../form/radialinput'
 import SelectInput from '../form/selectinput'
 import { toStringArr, toCurrency, initYearOptions } from '../utils'
 import { calculateTotalAmt } from './cfutils'
-
+import { COLORS } from '../../CONSTANTS'
 interface AnnualAmtProps {
     inputOrder: number
     currentOrder: number
@@ -44,7 +44,7 @@ export default function AnnualAmt(props: AnnualAmtProps) {
                             nextStepDisabled={false}
                             nextStepHandler={props.nextStepHandler}
                             allInputDone={props.allInputDone} 
-                            colorTo={props.colorTo ? "#FF0000" : null}
+                            colorTo={props.colorTo ? COLORS.RED : null}
                             data={toStringArr(0, 10, 0.2)} changeHandler={props.percentageHandler} width={120}
                             unit="%" labelBottom={true} label="of Amount" post={`Total ${toCurrency(totalAmt, props.currency)}`}
                             value={props.percentage} step={0.2} />

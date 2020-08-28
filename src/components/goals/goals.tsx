@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Goal from "./goal";
 import FFGoal from "./ffgoal";
-import { removeFromArray } from "../utils";
+import { appendValue, buildTabsArray, removeFromArray } from "../utils";
 import CFChart from "./cfchart";
 import * as APIt from "../../api/goals";
 import {
@@ -12,7 +12,7 @@ import {
   getGoalTypes,
   getImpOptions,
 } from "./goalutils";
-import { findEarliestFFYear } from "./cfutils";
+import { findEarliestFFYear, isFFPossible } from "./cfutils";
 import Summary from "./summary";
 import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
@@ -23,6 +23,7 @@ import SVGEdit from "../svgedit";
 import { toast } from "react-toastify";
 import { useFullScreen } from "react-browser-hooks";
 import Tabs from "../tabs";
+import { ASSET_TYPES } from "../../CONSTANTS";
 interface GoalsProps {
   showModalHandler: Function;
   savings: number;
@@ -34,11 +35,6 @@ interface GoalsProps {
   allCFs: any;
   goalsLoaded: boolean;
   ffGoal: APIt.CreateGoalInput | null;
-  aa: Object;
-  rr: Array<number>;
-  pp: Object;
-  aaHandler: Function;
-  rrHandler: Function;
   allGoalsHandler: Function;
   allCFsHandler: Function;
   ffGoalHandler: Function;
@@ -55,11 +51,6 @@ export default function Goals({
   allCFs,
   goalsLoaded,
   ffGoal,
-  aa,
-  rr,
-  pp,
-  aaHandler,
-  rrHandler,
   allGoalsHandler,
   allCFsHandler,
   ffGoalHandler,
@@ -71,20 +62,41 @@ export default function Goals({
   const [optCFs, setOptCFs] = useState<Array<number>>([]);
   const [mergedCFs, setMergedCFs] = useState<any>({});
   const [impFilter, setImpFilter] = useState<string>("");
+  const [ffResult, setFFResult] = useState<any>({});
   const [ffYear, setFFYear] = useState<number | null>(0);
-  const [ffAmt, setFFAmt] = useState<number>(0);
-  const [ffLeftOverAmt, setFFLeftOverAmt] = useState<number>(0);
-  const [ffCfs, setFFCfs] = useState<any>({});
-  const [ffMinReq, setFFMinReq] = useState<number>(0);
-  const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
+  const [rr, setRR] = useState<Array<number>>([]);
   const goalsLabel = "Goals";
   const cfLabel = "Cash Flows";
   const [viewMode, setViewMode] = useState<string>(goalsLabel);
   const nowYear = new Date().getFullYear();
-  const tabOptions = useState<Array<any>>([
-    { label: goalsLabel, order: 1, active: true },
-    { label: cfLabel, order: 2, active: true }
-  ]);
+  const tabOptions = buildTabsArray([goalsLabel, cfLabel]);
+
+  const irDiffByCurrency: any = {
+    INR: 3,
+  };
+
+  // potential performance
+  const getPP = () => {
+    let irDiff = irDiffByCurrency[currency];
+    if (!irDiff) irDiff = 0;
+    return {
+      [ASSET_TYPES.SAVINGS]: 0.5 + irDiff,
+      [ASSET_TYPES.DEPOSITS]: 1.5 + irDiff,
+      [ASSET_TYPES.SHORT_TERM_BONDS]: 2 + irDiff, //short term bond <1
+      [ASSET_TYPES.MED_TERM_BONDS]: 3 + irDiff, // 1-5 medium term
+      [ASSET_TYPES.TAX_EXEMPT_BONDS]: 3.5 + irDiff, //medium term tax efficient bonds
+      [ASSET_TYPES.DOMESTIC_REIT]: 5 + irDiff,
+      [ASSET_TYPES.INTERNATIONAL_REIT]: 5 + irDiff,
+      [ASSET_TYPES.GOLD]: 3,
+      [ASSET_TYPES.LARGE_CAP_STOCKS]: 5 + irDiff,
+      [ASSET_TYPES.MID_CAP_STOCKS]: 6 + irDiff,
+      [ASSET_TYPES.DIVIDEND_GROWTH_STOCKS]: 5 + irDiff,
+      [ASSET_TYPES.INTERNATIONAL_STOCKS]: 9,
+      [ASSET_TYPES.SMALL_CAP_STOCKS]: 9,
+      [ASSET_TYPES.DIGITAL_CURRENCIES]: 10,
+    };
+  };
+
   const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
     if (!ffGoal) return {};
     let mCFs = {};
@@ -103,24 +115,24 @@ export default function Goals({
       savings,
       mergedCFs,
       annualSavings,
-      null,
+      ffYear,
       mustCFs,
       tryCFs,
       avgAnnualExpense,
       expChgRate,
-      pp
+      getPP()
     );
-    if (result.ffYear < 0) setFFYear(null);
-    else setFFYear(result.ffYear);
-    setFFAmt(result.ffAmt);
-    //@ts-ignore
-    setFFLeftOverAmt(result.leftAmt);
-    setFFCfs(result.ffCfs);
-    setFFOOM(result.oom);
-    aaHandler(result.aa);
-    rrHandler([...result.rr]);
-    setFFMinReq(result.minReq);
-    console.log("Result is ", result);
+    if (!isFFPossible(result, ffGoal.sa as number)) {
+      setFFYear(null);
+      setFFResult(result);
+      setRR([...result.rr]);
+    } else {
+      if (!ffYear || ffYear < result.ffYear || ffYear > ffGoal.ey - 30) {
+        setFFYear(result.ffYear);
+        setFFResult(result);
+        setRR([...result.rr]);
+      }
+    }
   };
 
   useEffect(() => {
@@ -152,10 +164,7 @@ export default function Goals({
     setMergedCFs(mCFs);
   }, [allGoals]);
 
-  useEffect(
-    () => (wipGoal ? showModalHandler(true) : showModalHandler(false)),
-    [wipGoal]
-  );
+  useEffect(() => showModalHandler(wipGoal), [wipGoal]);
 
   const addGoal = async (
     goal: APIt.CreateGoalInput,
@@ -292,8 +301,7 @@ export default function Goals({
   const mergeCFs = (obj: Object, cfs: Array<number>, sy: number) => {
     cfs.forEach((cf, i) => {
       let year = sy + i;
-      //@ts-ignore
-      if (obj[year] !== "undefined") obj[year] += cf;
+      appendValue(obj, year, cf)
     });
   };
 
@@ -304,36 +312,23 @@ export default function Goals({
     goalImp: APIt.LMH
   ) => {
     if (!ffGoal || !ffYear) return null;
-    let mCFs = Object.assign({}, mergedCFs);
-    let highImpCFs = Object.assign([], mustCFs);
-    let medImpCFs = Object.assign([], tryCFs);
+    let mCFs: any = Object.assign({}, mergedCFs);
+    let highImpCFs: any = Object.assign([], mustCFs);
+    let medImpCFs: any = Object.assign([], tryCFs);
     let nowYear = new Date().getFullYear();
     if (goalId) {
       //@ts-ignore
       let existingGoal = (allGoals?.filter((g) => g.id === goalId))[0];
       let existingSY = existingGoal.sy;
       let existingImp = existingGoal.imp;
-      //@ts-ignore
       let existingCFs = allCFs[goalId];
       existingCFs.forEach((cf: number, i: number) => {
-        //@ts-ignore
-        if (mCFs[existingSY + i] !== "undefined") {
-          //@ts-ignore
-          mCFs[existingSY + i] -= cf;
-        }
+        appendValue(mCFs, existingSY + i, -cf)
         let index = existingSY + i - (nowYear + 1);
         if (existingImp === APIt.LMH.H) {
-          //@ts-ignore
-          if (highImpCFs[index] !== "undefined") {
-            //@ts-ignore
-            highImpCFs[index] -= cf;
-          }
+          appendValue(highImpCFs, index, -cf)
         } else if (existingImp === APIt.LMH.M) {
-          //@ts-ignore
-          if (medImpCFs[index] !== "undefined") {
-            //@ts-ignore
-            medImpCFs[index] -= cf;
-          }
+          appendValue(medImpCFs, index, -cf)
         }
       });
     }
@@ -349,37 +344,21 @@ export default function Goals({
       medImpCFs,
       avgAnnualExpense,
       expChgRate,
-      pp
+      getPP()
     );
-    if (
-      resultWithoutGoal.ffYear < 0 ||
-      resultWithoutGoal.ffAmt < resultWithoutGoal.minReq ||
-      resultWithoutGoal.leftAmt < nomineeAmt
-    )
+    if (!isFFPossible(resultWithoutGoal, nomineeAmt))
       return {
         ffImpactYears: null,
         rr: resultWithoutGoal.rr,
         ffOOM: resultWithoutGoal.oom,
       };
     cfs.forEach((cf, i) => {
-      //@ts-ignore
-      if (mCFs[startYear + i] !== "undefined") {
-        //@ts-ignore
-        mCFs[startYear + i] += cf;
-      }
+      appendValue(mCFs, startYear + i, cf)
       let index = startYear + i - (nowYear + 1);
       if (goalImp === APIt.LMH.H) {
-        //@ts-ignore
-        if (highImpCFs[index] !== "undefined") {
-          //@ts-ignore
-          highImpCFs[index] += cf;
-        }
+        appendValue(highImpCFs, index, cf)
       } else if (goalImp === APIt.LMH.M) {
-        //@ts-ignore
-        if (medImpCFs[index] !== "undefined") {
-          //@ts-ignore
-          medImpCFs[index] += cf;
-        }
+        appendValue(medImpCFs, index, cf)
       }
     });
     let resultWithGoal = findEarliestFFYear(
@@ -392,13 +371,11 @@ export default function Goals({
       medImpCFs,
       avgAnnualExpense,
       expChgRate,
-      pp
+      getPP()
     );
-    if (
-      resultWithGoal.ffYear < 0 ||
-      resultWithGoal.ffAmt < resultWithGoal.minReq ||
-      resultWithGoal.leftAmt < nomineeAmt
-    )
+    console.log("Result without goal: ", resultWithoutGoal);
+    console.log("Result with goal...", resultWithGoal);
+    if (!isFFPossible(resultWithGoal, nomineeAmt))
       return {
         ffImpactYears: null,
         rr: resultWithoutGoal.rr,
@@ -422,24 +399,13 @@ export default function Goals({
             updateCallback={updateGoal}
             annualSavings={annualSavings}
             totalSavings={savings}
-            aa={aa}
-            rr={rr}
             ffYear={ffYear}
-            ffAmt={ffAmt}
-            ffLeftOverAmt={ffLeftOverAmt}
-            ffCfs={ffCfs}
+            ffResult={ffResult}
             mergedCfs={mergedCFs}
-            ffOOM={ffOOM}
             ffYearHandler={setFFYear}
-            ffAmtHandler={setFFAmt}
-            ffLeftOverAmtHandler={setFFLeftOverAmt}
-            ffMinReqHandler={setFFMinReq}
-            ffOOMHandler={setFFOOM}
-            ffCfsHandler={setFFCfs}
-            rrHandler={rrHandler}
-            aaHandler={aaHandler}
-            pp={pp}
-            ffMinReq={ffMinReq}
+            ffResultHandler={setFFResult}
+            rrHandler={setRR}
+            pp={getPP()}
             avgAnnualExp={avgAnnualExpense}
             expChgRate={expChgRate}
             mustCFs={mustCFs}
@@ -463,26 +429,27 @@ export default function Goals({
     <Fragment>
       {ffGoal && (
         <div
-          className={`flex items-center w-full ${
-            ffYear && ffAmt >= ffMinReq ? "bg-green-100" : "bg-red-100"
+          className={`w-full ${
+            isFFPossible(ffResult, ffGoal.sa as number)
+              ? "bg-green-100"
+              : "bg-red-100"
           } shadow-lg lg:shadow-xl`}
         >
-          <FFResult
-            endYear={ffGoal.ey}
-            ffAmt={ffAmt}
-            ffLeftOverAmt={ffLeftOverAmt}
-            ffYear={ffYear}
-            currency={ffGoal.ccy}
-            ffMinReq={ffMinReq}
-            ffNomineeAmt={ffGoal?.sa as number}
-            ffOOM={ffOOM}
-          />
-          <div
-            className="p-0 pr-1 cursor-pointer"
-            onClick={() => setWIPGoal(ffGoal)}
-          >
-            <SVGEdit />
+          <div className="w-full flex justify-center items-center">
+            <label className="mr-2 font-semibold text-lg md:text-xl">
+              Financial Freedom
+            </label>
+            <div className="cursor-pointer" onClick={() => setWIPGoal(ffGoal)}>
+              <SVGEdit />
+            </div>
           </div>
+          <FFResult
+            ffYear={ffYear}
+            endYear={ffGoal.ey}
+            result={ffResult}
+            currency={ffGoal.ccy}
+            ffNomineeAmt={ffGoal?.sa as number}
+          />
         </div>
       )}
       <div className="flex mt-4 items-center justify-center">
@@ -492,7 +459,6 @@ export default function Goals({
       <p className="text-center text-lg mt-1">
         Make Money Work Hard to Meet Them.
       </p>
-      {console.log("Running...")}
       <div className="flex flex-wrap justify-around mb-4">
         {Object.keys(getGoalTypes()).map(
           (key) =>
@@ -517,35 +483,40 @@ export default function Goals({
         ? allGoals &&
           allGoals.length > 0 && (
             <Fragment>
-              <Tabs
-                tabs={tabOptions}
-                selectedTab={viewMode}
-                capacity={2}
-                selectedTabHandler={setViewMode}
-                allInputDone
-                currentOrder={1}
-              />
+              <div className="w-full flex justify-center">
+                <div className="flex items-center">
+                  {viewMode === goalsLabel && (
+                    <div className="mr-2">
+                      <SelectInput
+                        inputOrder={1}
+                        currentOrder={0}
+                        nextStepDisabled={true}
+                        allInputDone={true}
+                        nextStepHandler={() => true}
+                        name="typeFilter"
+                        pre=""
+                        options={getImpOptions()}
+                        value={impFilter as string}
+                        changeHandler={setImpFilter}
+                      />
+                    </div>
+                  )}
+                  <Tabs
+                    tabs={tabOptions}
+                    selectedTab={viewMode}
+                    capacity={tabOptions.length}
+                    selectedTabHandler={setViewMode}
+                    allInputDone
+                  />
+                  {viewMode === cfLabel && (
+                    <span className="ml-1 font-semibold">{currency}</span>
+                  )}
+                </div>
+              </div>
               <p className="text-center text-base mt-4">
                 Negative values imply You Pay, while Positive values imply You
                 Receive
               </p>
-              {viewMode === goalsLabel && (
-                <div className="mt-4 flex justify-center">
-                  <SelectInput
-                    inputOrder={1}
-                    currentOrder={0}
-                    nextStepDisabled={true}
-                    allInputDone={true}
-                    nextStepHandler={() => true}
-                    name="typeFilter"
-                    pre=""
-                    options={getImpOptions()}
-                    value={impFilter as string}
-                    changeHandler={setImpFilter}
-                  />
-                </div>
-              )}
-              
               {viewMode === cfLabel && (
                 <CFChart
                   mustCFs={mustCFs}
@@ -575,7 +546,7 @@ export default function Goals({
                           name={g.name}
                           type={g.type}
                           imp={g.imp}
-                          rr={result.rr}
+                          rr={rr}
                           //@ts-ignore
                           startYear={g.sy}
                           currency={g.ccy}
@@ -583,7 +554,7 @@ export default function Goals({
                           deleteCallback={removeGoal}
                           editCallback={editGoal}
                           ffGoalEndYear={ffGoal.ey}
-                          ffOOM={ffOOM}
+                          ffOOM={result.ffOOM}
                           ffImpactYears={result.ffImpactYears}
                         />
                       )
@@ -593,7 +564,7 @@ export default function Goals({
               )}
             </Fragment>
           )
-        : goalsLoaded &&(
+        : goalsLoaded && (
             <div className="text-center align-center">
               <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>
               <p className="mb-2">Set Up Financial Freedom Target.</p>

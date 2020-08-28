@@ -6,7 +6,7 @@
     "verbose": true
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "test": "jest",
@@ -44,6 +44,7 @@
     "postcss-preset-env": "^6.7.0",
     "tailwindcss": "^1.4.6",
     "typescript": "^3.9.3",
-    "uglifyjs-webpack-plugin": "^2.2.0"
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "cross-env": "^7.0.2"
   }
 }

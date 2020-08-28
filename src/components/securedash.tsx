@@ -5,14 +5,20 @@ import NW from "./nw/nw";
 import { CreateGoalInput, GoalType } from "../api/goals";
 import { getGoalsList, getDuration } from "./goals/goalutils";
 import { calculateCFs } from "./goals/cfutils";
-import { removeFromArray } from "./utils";
+import { buildTabsArray, removeFromArray } from "./utils";
+import Tabs, { DASHBOARD_STYLE } from "./tabs";
 
 const SecureDash = () => {
   const netWorthLabel = "Net Worth";
   const goalsLabel = "Plan";
   const saveLabel = "Save";
   const investLabel = "Invest";
-  const viewItems = [netWorthLabel, goalsLabel, saveLabel, investLabel];
+  const tabs = buildTabsArray([
+    netWorthLabel,
+    goalsLabel,
+    saveLabel,
+    investLabel,
+  ]);
   const [viewMode, setViewMode] = useState(netWorthLabel);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [savings, setSavings] = useState<number>(0);
@@ -22,39 +28,8 @@ const SecureDash = () => {
   const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
   const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(null);
   const [allCFs, setAllCFs] = useState<Object>({});
-  const [aa, setAA] = useState<Object>({});
-  const [rr, setRR] = useState<Array<number>>([]);
   const avgAnnualExpense = 24000;
   const expChgRate = 3;
-
-  const changeViewMode = (e: any) => {
-    setViewMode(e.target.innerText);
-  };
-
-  const irDiffByCurrency: any = {
-    INR: 3,
-  };
-
-  // potential performance
-  const getPP = () => {
-    let irDiff = irDiffByCurrency[currency];
-    if (!irDiff) irDiff = 0;
-    return {
-      savings: 0.5 + irDiff,
-      deposits: 1.5 + irDiff,
-      sbonds: 2 + irDiff, //short term bond <1
-      mbonds: 3 + irDiff, // 1-5 medium term
-      mtebonds: 3.5 + irDiff, //medium term tax efficient bonds
-      dreit: 5 + irDiff,
-      ireit: 5 + irDiff,
-      gold: 3,
-      largecapstocks: 5 + irDiff,
-      multicapstocks: 6 + irDiff,
-      divstocks: 5 + irDiff,
-      istocks: 7,
-      digitalcurrency: 10,
-    };
-  };
 
   useEffect(() => {
     loadAllGoals();
@@ -73,11 +48,11 @@ const SecureDash = () => {
         setFFGoal(g);
         ffGoalId = g.id as string;
       } else {
+        //@ts-ignore
+        allCFs[g.id] = calculateCFs(
+          null,
+          g,
           //@ts-ignore
-          allCFs[g.id] = calculateCFs(
-              null,
-              g,
-              //@ts-ignore
           getDuration(g.sa as number, g.sy, g.ey)
         );
       }
@@ -91,19 +66,14 @@ const SecureDash = () => {
   return (
     <Fragment>
       {!showModal && (
-        <ul className="flex mt-12 bg-black w-screen">
-          {viewItems.map((item, i) => (
-            <li key={"viewItem" + i} className="ml-2">
-              <button
-                onClick={changeViewMode}
-                className={`dashmi md:mt-4 md:px-4 hover:bg-white hover:border-t hover:text-green-600 focus:outline-none
-                        ${viewMode === item && "text-green-600 bg-white"}`}
-              >
-                {item}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <Tabs
+          tabs={tabs}
+          allInputDone
+          capacity={tabs.length}
+          selectedTab={viewMode}
+          selectedTabHandler={setViewMode}
+          customStyle={DASHBOARD_STYLE}
+        />
       )}
       {viewMode === netWorthLabel && (
         <NW
@@ -126,14 +96,9 @@ const SecureDash = () => {
           allGoalsHandler={setAllGoals}
           currency={currency}
           allCFs={allCFs}
-          aa={aa}
-          aaHandler={setAA}
           allCFsHandler={setAllCFs}
           ffGoal={ffGoal}
           ffGoalHandler={setFFGoal}
-          rr={rr}
-          rrHandler={setRR}
-          pp={getPP()}
           avgAnnualExpense={avgAnnualExpense}
           expChgRate={expChgRate}
         />

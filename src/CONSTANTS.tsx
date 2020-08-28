@@ -44,23 +44,34 @@ export const DIRECTION = {
     INCREASING: 'increasing'
 }
 
-export const LS = {
-    DI: 'di',
-    WEEKS: 'weeks',
-    HOURS: 'hours',
-    OPP_YEARS: 'oppYrs',
-    OPP_DR: 'oppDR',
-    SI_ASS_REVIEWED: 'siAssReviewed',
-    FI_ASS_REVIEWED: 'fiAssReviewed',
-    DEP_ASS_REVIEWED: 'depAssReviewed',
-    BR_ASS_REVIEWED: 'brAssReviewed',
-    NW_ASS_REVIEWED: 'nwAssReviewed',
-    TAX_RATE: 'taxRate',
-    RISK_TOLERANCE: 'riskTolerance',
-    INT_RATES: 'intRates',
-    BUY_COST_RATE: 'buyCostRate',
-    SELL_COST_RATE: 'sellCostRate',
-    ANNUAL_BUY_COST_RATE: 'annualBuyCostRate',
-    RENT_COST: 'rentCost',
-    RENT_DEPOSIT_FACTOR: 'rentDepositFactor'
+export const ASSET_CATEGORIES = {
+    STOCKS: 'Stocks',
+    BONDS: 'Bonds',
+    CASH: 'Cash',
+    ALTERNATIVE: 'Alternative'
 }
+
+export const ASSET_TYPES = {
+    SAVINGS: 'Savings',
+    DEPOSITS: 'Deposits',
+    SHORT_TERM_BONDS: 'Short-term Bonds',
+    MED_TERM_BONDS: 'Intermediate-term Bonds',
+    TAX_EXEMPT_BONDS: 'Tax-exempt Bonds',
+    DOMESTIC_REIT: 'Domestic REIT',
+    INTERNATIONAL_REIT: 'International REIT',
+    GOLD: 'Gold',
+    DIGITAL_CURRENCIES: 'Digital Currencies',
+    LARGE_CAP_STOCKS: 'Large-cap Stocks',
+    MID_CAP_STOCKS: 'Mid-cap Stocks',
+    SMALL_CAP_STOCKS: 'Small-cap Stocks',
+    INTERNATIONAL_STOCKS: 'International Stocks',
+    DIVIDEND_GROWTH_STOCKS: 'Dividend-Growth Stocks',
+    HIGH_YIELD_STOCKS: 'High-Yield Stocks'
+}
+
+export const COLORS = {
+    GREEN: "#48bb78",
+    RED: "#FF0000"
+}
+
+export const INPUT_HIGHLIGHT = 'p-2 shadow-2xl rounded-lg'

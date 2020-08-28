@@ -15,20 +15,23 @@ export default function StickyHeader({
   cancelCallback,
 }: StickyHeaderProps) {
   return (
-    <div className="container mx-auto flex mb-1 w-full h-full items-end justify-between">
-      <div className="flex flex-col h-full items-center" onClick={() => !cancelDisabled && cancelCallback()}>
-      <SVGLogo />
-      <label className="mt-1 hover:text-blue-600">Back</label>
+    <div className="container mx-auto flex mb-2 w-full h-full items-center justify-between">
+      <div
+        className="flex flex-col h-full items-center"
+        onClick={() => !cancelDisabled && cancelCallback()}
+      >
+        <SVGLogo />
+        <label className={`mt-1 ${cancelDisabled ? 'text-gray-400' : 'text-blue-600 hover:text-blue-800'}`}>Back</label>
       </div>
       {children}
       <div className="mr-1 flex flex-col h-full">
         <div
-          className={`mb-6 ${
+          className={`mb-2 md:mb-4 ${
             cancelDisabled ? "cursor-not-allowed" : "cursor-pointer"
           } border-0 outline-none focus:outline-none`}
           onClick={() => !cancelDisabled && cancelCallback()}
         >
-          <SVGClose />
+          <SVGClose disable={cancelDisabled} />
         </div>
         <FullScreen />
       </div>

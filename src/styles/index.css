@@ -58,6 +58,7 @@ h6 {
 }
 
 input[type="number"]::-webkit-inner-spin-button,
+
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
@@ -130,19 +131,6 @@ input[type="number"] {
   --button-anchor-color-hover: #3182ce;
   --button-anchor-color-active: #a0aec0;
   --button-anchor-border: 1px solid #2c5282;
-}
-
-.dashmi {
-  outline: 0;
-  display: inline-block;
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-right: 0.5rem;
-  padding-left: 0.5rem;
-  font-weight: 600;
-  margin-top: 0.5rem;
 }
 
 .button:hover {

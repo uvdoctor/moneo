@@ -3,72 +3,89 @@ import ResultItem from "../calc/resultitem";
 import SVGHourGlass from "../svghourglass";
 import SVGInheritance from "./svginheritance";
 import SVGPiggy from "../svgpiggy";
-
+import { isFFPossible } from "./cfutils";
+import SelectInput from "../form/selectinput";
+import { changeSelection } from "../utils";
 interface FFResultProps {
   endYear: number;
   ffYear: number | null;
-  ffAmt: number;
-  ffLeftOverAmt: number;
-  ffMinReq: number;
+  result: any | null;
   ffNomineeAmt: number;
-  ffOOM: Array<number> | null;
   currency: string;
+  hideLabel?: boolean;
+  ffYearHandler?: Function;
+  ffYearOptions?: any
 }
 
 export default function FFResult({
   endYear,
   ffYear,
-  ffAmt,
-  ffLeftOverAmt,
-  ffMinReq,
+  result,
   ffNomineeAmt,
-  ffOOM,
   currency,
+  hideLabel,
+  ffYearHandler,
+  ffYearOptions
 }: FFResultProps) {
+  
   return (
     <div className="w-full">
-      {ffYear && ffLeftOverAmt >= ffNomineeAmt && ffAmt >= ffMinReq ? (
+      {ffYear && isFFPossible(result, ffNomineeAmt) ? (
         <div className="py-2 flex flex-wrap justify-around w-full items-start bg-green-100">
+          {!ffYearHandler ? (
+            <ResultItem
+              svg={<SVGHourGlass />}
+              label="Age"
+              result={(result.ffYear - (endYear - 100)).toString()}
+              noResultFormat
+              info={`You May achieve Financial Freedom earliest at an age of ${result.ffYear - (endYear - 100)} Years.`}
+              hideLabel={hideLabel}
+              unit="Years"
+              imp={
+                result.oom
+                  ? `You May Not Have Enough Savings in Years ${result.oom.map(
+                      (year: number) => ` ${year}`
+                    )}`
+                  : ""
+              }
+            />
+          ) : (
+            <SelectInput
+              name="ffy"
+              inputOrder={1}
+              currentOrder={0}
+              allInputDone
+              nextStepDisabled={false}
+              nextStepHandler={() => true}
+              pre="Age"
+              unit="Years"
+              value={result.ffYear - (endYear - 100)}
+              changeHandler={(val: string) => changeSelection(val, ffYearHandler, endYear - 100)}
+              options={ffYearOptions}
+            />
+          )}
           <ResultItem
-            svg={<SVGHourGlass />}
-            label="Achievable from"
-            result={ffYear}
-            noResultFormat
-            info={`${ffYear} may be the Earliest You can Achieve Financial Freedom.`}
-            hideLabel
-            imp={
-              ffOOM
-                ? `You May Not Have Enough Savings in Years ${ffOOM.map(
-                    (year) => ` ${year}`
-                  )}`
-                : ""
-            }
-          />
-          <ResultItem
-            result={ffAmt}
+            result={result.ffAmt}
             svg={<SVGPiggy />}
-            label={`Savings by ${ffYear - 1}`}
-            hideLabel
+            label={`Savings @ ${result.ffYear - (endYear - 100) - 1} Years`}
+            hideLabel={hideLabel}
             currency={currency}
-            info={`You can Withdraw from this Savings for Your expenses from ${ffYear} onwards`}
+            info="You can Withdraw from this Savings for Your expenses after gaining Financial Freedom."
           />
           <ResultItem
-            result={ffLeftOverAmt}
+            result={result.leftAmt}
             svg={<SVGInheritance />}
-            label={`Nominees Get`}
+            label="Savings @ 100 Years"
             currency={currency}
-            hideLabel
-            info={`This is the savings amount left over in ${endYear + 1}. 
-                        As Your Plan ends in ${endYear}, this may be inherited by Your Nominees. 
+            hideLabel={hideLabel}
+            info={`This is the savings amount when You turn 100 Years old, which may be inherited by Your Nominees. 
                         This includes the Inheritance Amount for Nominees as per the Plan.`}
           />
         </div>
       ) : (
         <p className="text-center bg-red-100 font-semibold py-2">
-          {!ffYear
-            ? `Analyzed till ${endYear - 20}`
-            : `You May Not have Enough Savings in ${ffYear}`}
-          {`. Please try again with different inputs / goals.`}
+          May not be possible till You turn 70. Please try again with different inputs
+          / goals.
         </p>
       )}
     </div>

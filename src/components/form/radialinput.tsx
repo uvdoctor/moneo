@@ -3,6 +3,7 @@ import CircularSlider from '@fseehawer/react-circular-slider'
 import NextStep from '../form/nextstep'
 import SVGInfo from '../svginfo'
 import {toast} from 'react-toastify'
+import { COLORS, INPUT_HIGHLIGHT } from '../../CONSTANTS'
 interface RadialInputProps {
     inputOrder: number
     currentOrder: number
@@ -32,7 +33,7 @@ export default function RadialInput(props: RadialInputProps) {
         <div>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <div className={`flex flex-col items-center justify-center
-                                ${!props.allInputDone && props.inputOrder === props.currentOrder ? 'p-2 border-2 border-orange-600' : ''}`}>
+                                ${!props.allInputDone && props.inputOrder === props.currentOrder && INPUT_HIGHLIGHT}`}>
                     {props.info && <div className="w-full flex justify-end cursor-pointer" onClick={() => toast.info(props.info)}>
                         <SVGInfo />
                     </div>}
@@ -40,8 +41,8 @@ export default function RadialInput(props: RadialInputProps) {
                     <CircularSlider onChange={(val: string) => props.changeHandler(props.step < 1 ? parseFloat(val) : parseInt(val))}
                         label={props.label} trackColor="#edf2f7" data={props.data} dataIndex={(props.value - getVal(props.data[0])) / props.step}
                         appendToValue={props.unit} width={width} labelColor="#4a5568" labelBottom={props.labelBottom}
-                        valueFontSize="1.25rem" labelFontSize="1.25rem" progressColorFrom="#48bb78"
-                        progressColorTo={props.colorTo ? props.colorTo : "#48bb78"} knobColor="#cbd5e0" />
+                        valueFontSize="1.25rem" labelFontSize="1.25rem" progressColorFrom={COLORS.GREEN}
+                        progressColorTo={props.colorTo ? props.colorTo : COLORS.GREEN} knobColor="#cbd5e0" />
                     <label className="mt-2">{props.post}</label>
                     {!props.allInputDone && props.inputOrder === props.currentOrder &&
                         <NextStep nextStepHandler={() => props.nextStepHandler(props.actionCount ? props.actionCount : 1)}

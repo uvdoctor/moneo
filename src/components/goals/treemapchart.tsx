@@ -1,18 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import {
   getCommonConfig,
   getCommonLayoutProps,
   getCommonStyle,
 } from "../chartutils";
+import { getAllAssetCategories, getAllAssetTypesByCategory, getAssetColour } from "../utils";
+import { ASSET_CATEGORIES, ASSET_TYPES } from "../../CONSTANTS";
 
 interface TreeMapChartProps {
   aa: any;
+  rr: Array<number>
 }
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
-export default function TreeMapChart({ aa }: TreeMapChartProps) {
+export default function TreeMapChart({ aa, rr }: TreeMapChartProps) {
+  const [labels, setLabels] = useState<Array<string>>([])
+  const [values, setValues] = useState<Array<string>>([])
+  const [colors, setColors] = useState<Array<string>>([])
+  const [parents, setParents] = useState<Array<string>>([])
+  
+  const initChartData = () => {
+      let labels: Array<string> = []
+      let values: Array<string> = []
+      let colors: Array<string> = []
+      let parents: Array<string> = []
+      getAllAssetCategories().forEach(cat => {
+        labels.push(cat)
+        values.push("0")
+        colors.push(getAssetColour(cat))
+        parents.push("")
+        getAllAssetTypesByCategory(cat).forEach(at => {
+          values.push(aa[at][0])
+          colors.push(getAssetColour(at))
+          if(at.endsWith("nds") || at.endsWith("cks")) {
+            labels.push(at.split(" ")[0])
+            parents.push(at.split(" ")[1])
+          } else {
+            labels.push(at)
+            if(at === ASSET_TYPES.SAVINGS || at === ASSET_TYPES.DEPOSITS)
+              parents.push(ASSET_CATEGORIES.CASH)
+            else parents.push(ASSET_CATEGORIES.ALTERNATIVE)
+          }
+        })
+      })
+      setLabels([...labels])
+      setValues([...values])
+      setColors([...colors])
+      setParents([...parents])
+  }
+
+  useEffect(() => {
+    initChartData()
+  }, [rr])
+
   return (
     <Plot
       //@ts-ignore
@@ -25,87 +67,15 @@ export default function TreeMapChart({ aa }: TreeMapChartProps) {
       data={[
         {
           type: "treemap",
-          labels: [
-            "Cash",
-            "Savings",
-            "Deposits",
-            "Bonds",
-            "Short-term",
-            "Intermediate-term",
-            "Tax Exempt",
-            "Stocks",
-            "Dividend-growth",
-            "Large-cap",
-            "Multi-cap",
-            "International",
-            "Alternative",
-            "Domestic REIT",
-            "International REIT",
-            "Gold",
-            "Digital Currencies",
-          ],
-          values: [
-            "0",
-            aa["savings"][0],
-            aa["deposits"][0],
-            "0",
-            aa["sbonds"][0],
-            aa["mbonds"][0],
-            aa["mtebonds"][0],
-            "0",
-            aa["divstocks"][0],
-            aa["largecapstocks"][0],
-            aa["multicapstocks"][0],
-            aa["istocks"][0],
-            "0",
-            aa["dreit"][0],
-            aa["ireit"][0],
-            aa["gold"][0],
-            aa["digitalcurrency"][0],
-          ],
-          parents: [
-            "",
-            "Cash",
-            "Cash",
-            "",
-            "Bonds",
-            "Bonds",
-            "Bonds",
-            "",
-            "Stocks",
-            "Stocks",
-            "Stocks",
-            "Stocks",
-            "",
-            "Alternative",
-            "Alternative",
-            "Alternative",
-            "Alternative",
-          ],
+          labels: labels,
+          values: values,
+          parents: parents,
           marker: {
-            colors: [
-              "green",
-              "#68d391",
-              "#38a169",
-              "blue",
-              "#4299e1",
-              "#3182ce",
-              "#2b6cb0",
-              "orange",
-              "#ed8936",
-              "#dd6b20",
-              "#c05621",
-              "#9c4221",
-              "brown",
-              "#805ad5",
-              "#b794f4",
-              "gold",
-              "#e53e3e",
-            ],
+            colors: colors,
           },
+          hovertext: "Portfolio",
           textinfo: "label+percent entry",
-          name: "Total Investment",
-          hoverinfo: "label+parent entry" 
+          hoverinfo: "label+percent entry+text"
         },
       ]}
       config={getCommonConfig()}

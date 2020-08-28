@@ -1,5 +1,6 @@
 import React from 'react'
 import Slider from 'rc-slider'
+import { COLORS } from '../CONSTANTS'
 interface ToggleProps {
     topText?: string,
     bottomText?: string,
@@ -28,7 +29,7 @@ const Toggle = (props: ToggleProps) => {
                     boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
                 }}
                 trackStyle={{
-                    backgroundColor: '#48bb78',
+                    backgroundColor: COLORS.GREEN,
                     width: '0.75rem',
                     left: 0
                 }}

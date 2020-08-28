@@ -10,24 +10,28 @@ interface TabsProps {
   currentOrder?: number;
   allInputDone?: boolean;
   selectedTabHandler: Function;
+  bottomRounded?: boolean;
 }
+
+export const DASHBOARD_STYLE = "dashboard";
+export const RESULT_TAB_STYLE = "resultTab";
 
 export default function Tabs(props: TabsProps) {
   const styleMap: any = {
-    dashboard: {
-      parent: "w-10/12 justify-center",
+    [DASHBOARD_STYLE]: {
+      parent: "mt-12 p-2 pb-0 bg-black",
       selected: {
-        background: "bg-white",
+        background: "mt-2 bg-white",
         text: "text-green-600",
       },
       unselected: {
-        background: "bg-black",
+        background: "mt-2 bg-black",
         text: "text-white",
         hover: "text-green-600",
       },
     },
     standard: {
-      parent: "w-10/12 justify-center",
+      parent: "justify-center",
       selected: {
         background: "bg-blue-600",
         text: "text-white",
@@ -38,8 +42,8 @@ export default function Tabs(props: TabsProps) {
         hover: "text-blue-800",
       },
     },
-    resultTab: {
-      parent: "w-full flex justify-end",
+    [RESULT_TAB_STYLE]: {
+      parent: "justify-end",
       selected: {
         background: "bg-blue-600",
         text: "text-white",
@@ -73,25 +77,42 @@ export default function Tabs(props: TabsProps) {
     if (props.allInputDone) setEndIndex(endIndexOnLoad);
   }, [props.allInputDone]);
 
+  useEffect(() => {
+    setEndIndex(props.capacity - 1);
+  }, [props.capacity]);
+
+  useEffect(() => {
+    let selectedIndex = 0;
+    props.tabs.filter((tab, i) => {
+      if (tab.label === props.selectedTab) {
+        selectedIndex = i;
+      }
+    });
+    if (selectedIndex <= endIndex && endIndex - selectedIndex < props.capacity)
+      return;
+    if (selectedIndex > endIndex) {
+      setEndIndex(selectedIndex);
+    } else setEndIndex(selectedIndex + props.capacity - 1);
+  }, [props.selectedTab]);
+
   const isLinkDisabled = (tab: any) => {
-    if (props.allInputDone) return !tab.active;
-    if (!props.currentOrder) {
-      return false;
+    if (!tab.active) return true;
+    if (!props.allInputDone) {
+      if (!props.currentOrder) return false;
+      return tab.order > props.currentOrder;
     }
-    return tab.order > props.currentOrder;
+    return false;
   };
 
   return (
     <div className="w-full flex items-center">
-      {props.allInputDone && props.tabs.length > props.capacity && (
-        <div className="mr-2">
-          {endIndex > props.capacity - 1 && (
-            <LeftArrow clickHandler={handleDecrement} />
-          )}
-        </div>
-      )}
+      {props.allInputDone &&
+        props.tabs.length > props.capacity &&
+        endIndex > props.capacity - 1 && (
+          <LeftArrow clickHandler={handleDecrement} />
+        )}
       <ul
-        className={`flex  ${!props.allInputDone && "flex-wrap w-full"} ${
+        className={`flex w-full ${!props.allInputDone && "flex-wrap"} ${
           currentStyle.parent
         }`}
       >
@@ -106,10 +127,20 @@ export default function Tabs(props: TabsProps) {
               className={`py-2 px-4 items-start 
                     ${
                       props.selectedTab === tab.label
-                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} font-semibold cursor-pointer rounded-b lg:rounded-b-none lg:rounded-t`
+                        ? `${currentStyle.selected.text} ${
+                            currentStyle.selected.background
+                          } font-semibold cursor-pointer ${
+                            props.bottomRounded ? "rounded-b" : "rounded-t"
+                          } lg:rounded-b-none lg:rounded-t`
                         : !isLinkDisabled(tab)
-                        ? `${currentStyle.unselected.text} ${currentStyle.unselected.background} 
-                          cursor-pointer font-semibold shadow-lg lg:shadow-xl rounded-b lg:rounded-b-none lg:rounded-t hover:${currentStyle.unselected.hover}`
+                        ? `${currentStyle.unselected.text} ${
+                            currentStyle.unselected.background
+                          } 
+                          cursor-pointer font-semibold shadow-lg lg:shadow-xl ${
+                            props.bottomRounded ? "rounded-b" : "rounded-t"
+                          } lg:rounded-b-none lg:rounded-t hover:${
+                            currentStyle.unselected.hover
+                          }`
                         : "cursor-not-allowed text-gray-400"
                     }
                     `}
@@ -118,7 +149,6 @@ export default function Tabs(props: TabsProps) {
               }
             >
               <div className="flex items-center">
-                {console.log("Tab is ", tab)}
                 {tab.svg && !isLinkDisabled(tab) && (
                   <div className="inline mr-1">{tab.svg}</div>
                 )}
@@ -128,14 +158,12 @@ export default function Tabs(props: TabsProps) {
           );
         })}
       </ul>
-      {props.allInputDone && props.tabs.length > props.capacity && (
-        <div className="ml-2">
-          {endIndex >= props.capacity - 1 &&
-            endIndex < props.tabs.length - 1 && (
-              <RightArrow clickHandler={handleIncrement} />
-            )}
-        </div>
-      )}
+      {props.allInputDone &&
+        props.tabs.length > props.capacity &&
+        endIndex >= props.capacity - 1 &&
+        endIndex < props.tabs.length - 1 && (
+          <RightArrow clickHandler={handleIncrement} />
+        )}
     </div>
   );
 }

@@ -127,7 +127,7 @@ export default function RentComparison({
     if (
       !brChartData ||
       brChartData.length === 0 ||
-      brChartData[0].values.lenth < sellAfter
+      brChartData[0].values.length < sellAfter
     ) {
       setRentDiff(null);
       return;
@@ -145,7 +145,6 @@ export default function RentComparison({
   useEffect(() => {
     if (rentAmt > 0) {
       let data = buildComparisonData();
-      console.log("Chart data is ", data);
       if (data && data.length == 2) brChartDataHandler([...data]);
     } else {
       brChartDataHandler([...[]]);
@@ -205,7 +204,7 @@ export default function RentComparison({
         }
         bottom={
           !!rentAmt && (
-            <div className="flex flex-wrap justify-around">
+            <div className="flex flex-col justify-center">
               <NumberInput
                 name="af"
                 pre="Analyze for"
