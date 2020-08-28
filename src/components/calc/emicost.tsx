@@ -9,7 +9,8 @@ import {
   getLoanPaidForMonths,
   calculateInterestTaxBenefit,
   adjustAccruedInterest,
-  createEduLoanDPWithSICFs, getTaxBenefit
+  createEduLoanDPWithSICFs,
+  getTaxBenefit,
 } from "../goals/cfutils";
 import HToggle from "../horizontaltoggle";
 import { GoalType } from "../../api/goals";
@@ -31,6 +32,7 @@ interface EmiProps {
   loanYears: number;
   loanAnnualInt: number;
   loanPer: number;
+  loanSIPayPer: number | undefined | null;
   loanBorrowAmt: number;
   taxBenefitInt: number;
   maxTaxDeductionInt: number;
@@ -39,6 +41,7 @@ interface EmiProps {
   repaymentSYHandler: Function;
   loanMonthsHandler: Function;
   loanPerHandler: Function;
+  loanSIPayPerHandler: Function;
   loanAnnualIntHandler: Function;
   taxBenefitIntHandler: Function;
   maxTaxDeductionIntHandler: Function;
@@ -57,7 +60,7 @@ export default function EmiCost(props: EmiProps) {
 
   const calculateEmi = () => {
     let borrowAmt = 0;
-    let simpleInts: Array<number> = []
+    let simpleInts: Array<number> = [];
     if (props.goalType === GoalType.E) {
       let result = createEduLoanDPWithSICFs(
         props.price,
@@ -66,10 +69,10 @@ export default function EmiCost(props: EmiProps) {
         props.startYear,
         props.endYear,
         props.loanAnnualInt,
-        100
+        props.loanSIPayPer as number
       );
       borrowAmt = result.borrowAmt;
-      simpleInts = result.ints
+      simpleInts = result.ints;
     }
     borrowAmt = adjustAccruedInterest(
       props.loanBorrowAmt,
@@ -104,8 +107,15 @@ export default function EmiCost(props: EmiProps) {
         props.taxRate,
         props.maxTaxDeductionInt
       );
-      let simpleTaxBenefit = 0
-      simpleInts.forEach(int => simpleTaxBenefit += getTaxBenefit(int, props.taxRate, props.maxTaxDeductionInt))
+      let simpleTaxBenefit = 0;
+      simpleInts.forEach(
+        (int) =>
+          (simpleTaxBenefit += getTaxBenefit(
+            int,
+            props.taxRate,
+            props.maxTaxDeductionInt
+          ))
+      );
       setTotalIntTaxBenefit(Math.round(intTaxBenefit + simpleTaxBenefit));
     } else setTotalIntTaxBenefit(0);
   };
@@ -202,31 +212,54 @@ export default function EmiCost(props: EmiProps) {
           }
           bottom={
             props.loanBorrowAmt ? (
-              <div className="flex flex-col justify-around items-center w-full">
-                <NumberInput
-                  name="intRate"
-                  inputOrder={props.inputOrder + 3}
-                  currentOrder={props.currentOrder}
-                  nextStepDisabled={false}
-                  nextStepHandler={props.nextStepHandler}
-                  allInputDone={props.allInputDone}
-                  pre="Yearly"
-                  post="Interest"
-                  unit="%"
-                  note={
-                    <ResultItem
-                      label="Total Interest"
-                      result={totalIntAmt}
-                      currency={props.currency}
-                      footer={`Over ${props.duration} Years`}
+              <div className="flex flex-wrap justify-around items-center w-full">
+                <div className="mt-2">
+                  <NumberInput
+                    name="intRate"
+                    inputOrder={props.inputOrder + 3}
+                    currentOrder={props.currentOrder}
+                    nextStepDisabled={false}
+                    nextStepHandler={props.nextStepHandler}
+                    allInputDone={props.allInputDone}
+                    pre="Yearly"
+                    post="Interest"
+                    unit="%"
+                    note={
+                      <ResultItem
+                        label="Total Interest"
+                        result={totalIntAmt}
+                        currency={props.currency}
+                        footer={`Over ${props.duration} Years`}
+                      />
+                    }
+                    value={props.loanAnnualInt}
+                    changeHandler={props.loanAnnualIntHandler}
+                    min={0.0}
+                    max={25.0}
+                    step={0.1}
+                  />
+                </div>
+                {props.goalType === GoalType.E && (
+                  <div className="mt-2">
+                    <RadialInput
+                      inputOrder={props.inputOrder}
+                      currentOrder={props.currentOrder}
+                      nextStepDisabled={false}
+                      nextStepHandler={props.nextStepHandler}
+                      allInputDone={props.allInputDone}
+                      width={120}
+                      unit="%"
+                      data={toStringArr(0, 100, 5)}
+                      value={props.loanSIPayPer as number}
+                      changeHandler={props.loanSIPayPerHandler}
+                      step={5}
+                      labelBottom={true}
+                      pre="Pay While Studying"
+                      label="of Interest"
+                      post={`from ${props.startYear} to ${props.endYear}`}
                     />
-                  }
-                  value={props.loanAnnualInt}
-                  changeHandler={props.loanAnnualIntHandler}
-                  min={0.0}
-                  max={25.0}
-                  step={0.1}
-                />
+                  </div>
+                )}
                 {props.taxRate && props.taxBenefitInt ? (
                   <div className="mt-2">
                     <NumberInput

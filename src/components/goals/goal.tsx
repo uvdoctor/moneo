@@ -69,6 +69,9 @@ export default function Goal({
   const [loanPer, setLoanPer] = useState<number | undefined | null>(
     goal?.emi?.per
   );
+  const [loanSIPayPer, setLoanSIPayPer] = useState<number | undefined | null>(
+    goal.btr
+  );
   const [startingPrice, setStartingPrice] = useState<number>(
     goal?.cp as number
   );
@@ -228,6 +231,9 @@ export default function Goal({
       bg.ra = rentAmt;
       bg.rachg = rentChgPer;
     }
+    if(goalType === APIt.GoalType.E) {
+      bg.btr = loanSIPayPer
+    }
     return bg;
   };
 
@@ -297,6 +303,7 @@ export default function Goal({
     price,
     assetChgRate,
     loanPer,
+    loanSIPayPer,
     loanRepaymentSY,
     loanIntRate,
     loanYears,
@@ -547,6 +554,7 @@ export default function Goal({
               loanAnnualInt={loanIntRate as number}
               loanPer={loanPer as number}
               goalType={goalType}
+              loanSIPayPer={loanSIPayPer}
               loanBorrowAmt={
                 getLoanBorrowAmt(
                   price,
@@ -559,6 +567,7 @@ export default function Goal({
               }
               loanAnnualIntHandler={setLoanIntRate}
               loanPerHandler={setLoanPer}
+              loanSIPayPerHandler={setLoanSIPayPer}
               loanMonthsHandler={setLoanYears}
               repaymentSYHandler={setLoanRepaymentSY}
               taxBenefitInt={taxBenefitInt as number}

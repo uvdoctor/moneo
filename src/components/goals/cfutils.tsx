@@ -464,10 +464,11 @@ export const createEduLoanDPWithSICFs = (
     let p = getCompoundedIncome(chgRate, price, y - startYear);
     totalLoanPayment += p * (loanPer / 100);
     let dp = p * (1 - loanPer / 100);
-    let interestPaid = totalLoanPayment * ((intRate * intPer) / 10000);
+    let totalIntDue = totalLoanPayment * (intRate / 100)
+    let interestPaid = totalIntDue * (intPer / 100);
     result.push(Math.round(dp + interestPaid));
     ints.push(interestPaid);
-    totalLoanPayment += totalLoanPayment * (1 - intPer / 100);
+    totalLoanPayment += totalIntDue - interestPaid;
   }
   return { borrowAmt: totalLoanPayment, cfs: result, ints: ints };
 };
@@ -496,12 +497,12 @@ const createLoanCFs = (
   } else {
     let result = createEduLoanDPWithSICFs(
       p,
-      goal?.chg as number,
+      goal.chg as number,
       goal.emi?.per,
       goal.sy,
       goal.ey,
       goal.emi?.rate,
-      100
+      goal.btr as number
     );
     cfs = result.cfs;
     loanBorrowAmt = result.borrowAmt;
