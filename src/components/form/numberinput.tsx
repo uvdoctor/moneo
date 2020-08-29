@@ -5,6 +5,8 @@ import NextStep from "./nextstep";
 import SVGInfo from "../svginfo";
 import { toast } from "react-toastify";
 import { COLORS, INPUT_HIGHLIGHT } from "../../CONSTANTS";
+import SVGPlay from "../svgplay";
+import SVGPause from "../svgpause";
 
 interface NumberInputProps {
   inputOrder: number;
@@ -29,6 +31,8 @@ interface NumberInputProps {
   note?: any;
   step?: number;
   feedback?: any;
+  video?: string;
+  videoHandler?: Function;
 }
 
 export default function NumberInput(props: NumberInputProps) {
@@ -36,6 +40,7 @@ export default function NumberInput(props: NumberInputProps) {
   const [editing, setEditing] = useState<boolean>(false);
   const [sliderButtonColor, setSliderButtonColor] = useState<string>("white");
   const [feedbackText, setFeedbackText] = useState<string>("");
+  const [videoPlaying, setVideoPlaying] = useState<boolean>(false);
   const width: string = props.width
     ? props.width
     : props.currency
@@ -114,6 +119,19 @@ export default function NumberInput(props: NumberInputProps) {
               }
             >
               <SVGInfo />
+            </div>
+          )}
+          {props.videoHandler && (
+            <div
+              className="w-full flex justify-end cursor-pointer"
+              onClick={() => {
+                if (props.videoHandler) {
+                  props.videoHandler(!videoPlaying ? props.video : "");
+                  setVideoPlaying(!videoPlaying);
+                }
+              }}
+            >
+              {!videoPlaying ? <SVGPlay /> : <SVGPause />}
             </div>
           )}
           <div

@@ -132,6 +132,7 @@ export default function Goal({
   const rentLabel = "Rent?";
   const cfChartLabel = "Cash Flows";
   const brChartLabel = "Buy v/s Rent";
+  const [videoUrl, setVideoUrl] = useState<string>("");
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [showBRChart, setShowBRChart] = useState<boolean>(
@@ -184,7 +185,7 @@ export default function Goal({
             order: 1,
             active: true,
             svg: <SVGChart />,
-          }
+          },
         ]
   );
 
@@ -208,9 +209,7 @@ export default function Goal({
 
   const createNewGoalInput = () => {
     let bg: APIt.CreateGoalInput = createNewBaseGoal();
-    if (
-      isLoanEligible(goalType)
-    ) {
+    if (isLoanEligible(goalType)) {
       bg.tbi = taxBenefitInt;
       bg.tdli = maxTaxDeductionInt;
       bg.emi = {
@@ -231,8 +230,8 @@ export default function Goal({
       bg.ra = rentAmt;
       bg.rachg = rentChgPer;
     }
-    if(goalType === APIt.GoalType.E) {
-      bg.btr = loanSIPayPer
+    if (goalType === APIt.GoalType.E) {
+      bg.btr = loanSIPayPer;
     }
     return bg;
   };
@@ -269,7 +268,7 @@ export default function Goal({
 
   useEffect(() => {
     if (!loanPer) setEYOptions(initYearOptions(startYear, 20));
-    else if(goalType !== APIt.GoalType.E) setLoanRepaymentSY(startYear);
+    else if (goalType !== APIt.GoalType.E) setLoanRepaymentSY(startYear);
     if (goalType === APIt.GoalType.B && loanPer) return;
     if (startYear > endYear || endYear - startYear > 20) setEndYear(startYear);
   }, [startYear]);
@@ -325,8 +324,12 @@ export default function Goal({
   useEffect(() => {
     if (!allInputDone && showTab === rentLabel) return;
     if (goalType !== APIt.GoalType.B && manualMode < 1) {
-      if(goalType === APIt.GoalType.E && loanRepaymentSY && loanRepaymentSY <= endYear)
-        setLoanRepaymentSY(endYear + 1)
+      if (
+        goalType === APIt.GoalType.E &&
+        loanRepaymentSY &&
+        loanRepaymentSY <= endYear
+      )
+        setLoanRepaymentSY(endYear + 1);
       calculateYearlyCFs();
     }
   }, [endYear]);
@@ -377,7 +380,7 @@ export default function Goal({
   };
 
   useEffect(() => {
-    if(!sellAfter) return
+    if (!sellAfter) return;
     resultTabOptions[1].active = showBRChart;
     setResultTabOptions([...resultTabOptions]);
   }, [showBRChart]);
@@ -397,7 +400,7 @@ export default function Goal({
   }, [sellAfter, price, rentAmt, brChartData]);
 
   useEffect(() => {
-    if(!sellAfter) return
+    if (!sellAfter) return;
     if (resultTabOptions[1].active) {
       if (showTab === rentLabel) setShowResultTab(brChartLabel);
     } else setShowResultTab(cfChartLabel);
@@ -435,7 +438,7 @@ export default function Goal({
     );
 
   const showResultSection = () =>
-    nowYear < startYear && allInputDone && cfs.length > 0;
+    videoUrl || (nowYear < startYear && allInputDone && cfs.length > 0);
 
   return (
     <div className="w-full h-full">
@@ -580,6 +583,7 @@ export default function Goal({
               nextStepDisabled={false}
               nextStepHandler={handleNextStep}
               allInputDone={allInputDone}
+              videoHandler={setVideoUrl}
             />
           )}
 
@@ -675,6 +679,7 @@ export default function Goal({
             showResultTab={showResultTab}
             showResultTabHandler={setShowResultTab}
             chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
+            videoUrl={videoUrl}
             result={
               nowYear < startYear && (
                 <GoalResult

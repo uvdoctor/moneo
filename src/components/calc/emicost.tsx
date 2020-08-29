@@ -41,6 +41,7 @@ interface EmiProps {
   maxTaxDeductionInt: number;
   taxRate: number;
   goalType: GoalType;
+  videoHandler: Function;
   repaymentSYHandler: Function;
   loanMonthsHandler: Function;
   loanPerHandler: Function;
@@ -258,10 +259,10 @@ export default function EmiCost(props: EmiProps) {
                             text="CHEAP"
                             info={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
                             As it is Easy for Your Investment to recover this Yearly Interest with Minimal Risk, this is a Good Deal!`}
-                            color="#3182ce"
+                            color={COLORS.BLUE}
                           />
                         ),
-                        color: "#3182ce",
+                        color: COLORS.BLUE,
                       },
                       3.5: { label: "", color: "" },
                       8: {
@@ -301,6 +302,8 @@ export default function EmiCost(props: EmiProps) {
                     min={0.0}
                     max={25.0}
                     step={0.1}
+                    video={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
+                    videoHandler={props.videoHandler}
                   />
                 </div>
                 {props.goalType === GoalType.E && (
