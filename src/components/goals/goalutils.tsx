@@ -72,7 +72,7 @@ export const getDuration = (
 ) => {
   if (sellAfter) return sellAfter;
   if (manualMode < 1 && loanPer && loanRY && loanYears) {
-    return Math.round(loanRY + loanYears) - startYear + 1;
+    return Math.round(loanRY + loanYears) - startYear;
   }
   return endYear - startYear + 1;
 };

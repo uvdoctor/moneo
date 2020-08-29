@@ -5,16 +5,18 @@ import { toCurrency, toStringArr, initYearOptions } from "../utils";
 import SelectInput from "../form/selectinput";
 import RadialInput from "../form/radialinput";
 import Section from "../form/section";
+import ExpandCollapse from "../form/expandcollapse";
 import {
   getLoanPaidForMonths,
   calculateInterestTaxBenefit,
   adjustAccruedInterest,
   createEduLoanDPWithSICFs,
-  getTaxBenefit,
+  getTaxBenefit, getLoanBorrowAmt
 } from "../goals/cfutils";
 import HToggle from "../horizontaltoggle";
 import { GoalType } from "../../api/goals";
 import ResultItem from "./resultitem";
+import { COLORS } from "../../CONSTANTS"
 interface EmiProps {
   inputOrder: number;
   currentOrder: number;
@@ -57,6 +59,8 @@ export default function EmiCost(props: EmiProps) {
     )
   );
   const [emi, setEMI] = useState<number>(0);
+  const [simpleInts, setSimpleInts] = useState<Array<number>>([]);
+  const [showIntSchedule, setShowIntSchedule] = useState<boolean>(false);
 
   const calculateEmi = () => {
     let borrowAmt = 0;
@@ -73,9 +77,10 @@ export default function EmiCost(props: EmiProps) {
       );
       borrowAmt = result.borrowAmt;
       simpleInts = result.ints;
+      setSimpleInts([...simpleInts]);
     }
     borrowAmt = adjustAccruedInterest(
-      props.loanBorrowAmt,
+      borrowAmt,
       props.goalType === GoalType.E ? props.endYear + 1 : props.startYear,
       props.repaymentSY,
       props.loanAnnualInt
@@ -92,10 +97,6 @@ export default function EmiCost(props: EmiProps) {
       props.loanYears * 12
     ) as number;
     setEMI(Math.round(emi));
-    let totalIntAmt =
-      getTotalInt(borrowAmt, emi, props.loanAnnualInt, loanPaidForMonths) +
-      simpleInts.reduce((prev, curr) => prev + curr, 0);
-    setTotalIntAmt(Math.round(totalIntAmt));
     if (props.taxBenefitInt > 0) {
       let intTaxBenefit = calculateInterestTaxBenefit(
         borrowAmt,
@@ -118,6 +119,18 @@ export default function EmiCost(props: EmiProps) {
       );
       setTotalIntTaxBenefit(Math.round(intTaxBenefit + simpleTaxBenefit));
     } else setTotalIntTaxBenefit(0);
+    let totalSimpleIntAmt = 0;
+    simpleInts.forEach((int) => (totalSimpleIntAmt += int));
+    let totalIntAmt = 0;
+    if (props.goalType !== GoalType.B) {
+      totalIntAmt = (emi * loanPaidForMonths) + totalSimpleIntAmt - props.loanBorrowAmt;
+    } else totalIntAmt = getTotalInt(
+        borrowAmt,
+        emi,
+        props.loanAnnualInt,
+        loanPaidForMonths
+      );
+    setTotalIntAmt(Math.round(totalIntAmt));
   };
 
   useEffect(() => calculateEmi(), [props]);
@@ -253,10 +266,33 @@ export default function EmiCost(props: EmiProps) {
                       value={props.loanSIPayPer as number}
                       changeHandler={props.loanSIPayPerHandler}
                       step={5}
-                      labelBottom={true}
+                      labelBottom
+                      colorFrom={COLORS.RED}
+                      colorTo={COLORS.GREEN}
                       pre="Pay While Studying"
                       label="of Interest"
-                      post={`from ${props.startYear} to ${props.endYear}`}
+                      post={
+                        !!props.loanSIPayPer && (
+                          <div className="flex flex-col cursor-pointer text-blue-600 justify-center w-full">
+                            <ExpandCollapse
+                              title="Interest Schedule"
+                              value={showIntSchedule}
+                              handler={setShowIntSchedule}
+                            />
+                            {showIntSchedule &&
+                              simpleInts.map((int, i) => (
+                                <p key={"si" + i} className="text-gray-800">
+                                  Monthly{" "}
+                                  {toCurrency(
+                                    Math.round(int / 12),
+                                    props.currency
+                                  )}{" "}
+                                  in {props.startYear + i}
+                                </p>
+                              ))}
+                          </div>
+                        )
+                      }
                     />
                   </div>
                 )}
@@ -276,7 +312,7 @@ export default function EmiCost(props: EmiProps) {
                       changeHandler={props.maxTaxDeductionIntHandler}
                       currency={props.currency}
                       min={0}
-                      max={50000}
+                      max={30000}
                       step={1000}
                       note={
                         <ResultItem
