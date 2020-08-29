@@ -272,7 +272,7 @@ export default function EmiCost(props: EmiProps) {
                       label="of Interest"
                       post={
                         !!props.loanSIPayPer && (
-                          <div className="flex flex-col justify-center w-full">
+                          <div className="flex flex-col cursor-pointer text-blue-600 justify-center w-full">
                             <ExpandCollapse
                               title="Interest Schedule"
                               value={showIntSchedule}
@@ -280,7 +280,7 @@ export default function EmiCost(props: EmiProps) {
                             />
                             {showIntSchedule &&
                               simpleInts.map((int, i) => (
-                                <p key={"si" + i}>
+                                <p key={"si" + i} className="text-gray-800">
                                   Monthly{" "}
                                   {toCurrency(
                                     Math.round(int / 12),
