@@ -28,6 +28,7 @@ interface NumberInputProps {
   changeHandler: any;
   note?: any;
   step?: number;
+  sliderMarks?: any
 }
 
 export default function NumberInput(props: NumberInputProps) {
@@ -135,7 +136,10 @@ export default function NumberInput(props: NumberInputProps) {
                 max={props.max * rangeFactor}
                 step={props.step as number * rangeFactor}
                 value={props.value}
-                onChange={props.changeHandler}
+                onChange={
+
+                  props.changeHandler
+                }
                 handleStyle={{
                   cursor: "grab",
                   width: "1.2rem",
@@ -156,9 +160,16 @@ export default function NumberInput(props: NumberInputProps) {
                   left: 0,
                   height: "0.9rem",
                 }}
+                dotStyle={{
+                  width: "0rem",
+                  height: "0rem",
+                  border: "none",
+                  background: "none"
+                }}
                 railStyle={{
                   background: "none",
                 }}
+                marks={props.sliderMarks}
               />
               {props.max && (
                 <div className="flex justify-between w-full text-gray-400">

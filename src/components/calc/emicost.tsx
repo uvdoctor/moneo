@@ -11,12 +11,14 @@ import {
   calculateInterestTaxBenefit,
   adjustAccruedInterest,
   createEduLoanDPWithSICFs,
-  getTaxBenefit, getLoanBorrowAmt
+  getTaxBenefit
 } from "../goals/cfutils";
 import HToggle from "../horizontaltoggle";
 import { GoalType } from "../../api/goals";
 import ResultItem from "./resultitem";
 import { COLORS } from "../../CONSTANTS"
+import SVGWarning from "../svgwarning";
+import SVGAlert from "../svgalert";
 interface EmiProps {
   inputOrder: number;
   currentOrder: number;
@@ -237,6 +239,7 @@ export default function EmiCost(props: EmiProps) {
                     pre="Yearly"
                     post="Interest"
                     unit="%"
+                    sliderMarks={{8: <SVGWarning />, 10: <SVGAlert />}}
                     note={
                       <ResultItem
                         label="Total Interest"
