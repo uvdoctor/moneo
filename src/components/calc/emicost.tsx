@@ -63,7 +63,7 @@ export default function EmiCost(props: EmiProps) {
   const [showIntSchedule, setShowIntSchedule] = useState<boolean>(false);
 
   const calculateEmi = () => {
-    let borrowAmt = 0;
+    let borrowAmt = props.loanBorrowAmt;
     let simpleInts: Array<number> = [];
     if (props.goalType === GoalType.E) {
       let result = createEduLoanDPWithSICFs(
@@ -240,11 +240,11 @@ export default function EmiCost(props: EmiProps) {
                     post="Interest"
                     unit="%"
                     feedback={{
-                      0: {label: "YAY!!!", color: "green"},
-                      1: {label: "CHEAP", color: "blue"},
-                      3: {label: "", color: ""},
-                      8: {label: "HIGH", color: "orange"},
-                      10: {label: "TOO HIGH", color: "red"} 
+                      0: {label: "YAY!!!", color: COLORS.GREEN},
+                      1: {label: "CHEAP", color: "#3182ce"},
+                      3.5: {label: "", color: ""},
+                      8: {label: "COSTLY", color: "#dd6b20"},
+                      10: {label: "COSTLY!!!", color: COLORS.RED} 
                     }}
                     note={
                       <ResultItem

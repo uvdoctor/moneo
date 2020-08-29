@@ -479,7 +479,7 @@ const createLoanCFs = (
   duration: number
 ) => {
   let cfs: Array<number> = [];
-  if (!goal.emi?.per || !goal.emi?.dur || !goal.emi?.rate) return cfs;
+  if (!goal.emi?.per || !goal.emi?.dur) return cfs;
   let loanBorrowAmt = 0;
   let loanDP = 0;
   let simpleInts: Array<number> = [];
