@@ -312,7 +312,7 @@ export default function EmiCost(props: EmiProps) {
                       changeHandler={props.maxTaxDeductionIntHandler}
                       currency={props.currency}
                       min={0}
-                      max={50000}
+                      max={30000}
                       step={1000}
                       note={
                         <ResultItem
