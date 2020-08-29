@@ -32,20 +32,24 @@ interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
   ffGoalEndYear: number;
+  videoUrl: string
   ffImpactYearsHandler: Function;
   cancelCallback: Function;
   addCallback: Function;
   updateCallback: Function;
+  videoHandler: Function
 }
 
 export default function Goal({
   goal,
   cashFlows,
   ffGoalEndYear,
+  videoUrl,
   ffImpactYearsHandler,
   cancelCallback,
   addCallback,
   updateCallback,
+  videoHandler
 }: GoalProps) {
   const typesList = getGoalTypes();
   const goalType = goal?.type as APIt.GoalType;
@@ -132,7 +136,6 @@ export default function Goal({
   const rentLabel = "Rent?";
   const cfChartLabel = "Cash Flows";
   const brChartLabel = "Buy v/s Rent";
-  const [videoUrl, setVideoUrl] = useState<string>("");
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [showBRChart, setShowBRChart] = useState<boolean>(
@@ -583,7 +586,7 @@ export default function Goal({
               nextStepDisabled={false}
               nextStepHandler={handleNextStep}
               allInputDone={allInputDone}
-              videoHandler={setVideoUrl}
+              videoHandler={videoHandler}
             />
           )}
 

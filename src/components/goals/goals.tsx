@@ -70,7 +70,8 @@ export default function Goals({
   const [viewMode, setViewMode] = useState<string>(goalsLabel);
   const nowYear = new Date().getFullYear();
   const tabOptions = buildTabsArray([goalsLabel, cfLabel]);
-
+  const [videoUrl, setVideoUrl] = useState<string>("");
+  
   const irDiffByCurrency: any = {
     INR: 3,
   };
@@ -410,6 +411,8 @@ export default function Goals({
             expChgRate={expChgRate}
             mustCFs={mustCFs}
             tryCFs={tryCFs}
+            videoUrl={videoUrl}
+            videoHandler={setVideoUrl}
           />
         ) : (
           ffGoal && (
@@ -420,6 +423,8 @@ export default function Goals({
               updateCallback={updateGoal}
               ffImpactYearsHandler={calculateFFImpactYear}
               ffGoalEndYear={ffGoal.ey}
+              videoUrl={videoUrl}
+              videoHandler={setVideoUrl}
             />
           )
         )}

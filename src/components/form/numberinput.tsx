@@ -107,33 +107,34 @@ export default function NumberInput(props: NumberInputProps) {
             `${INPUT_HIGHLIGHT} px-4`
           }`}
         >
-          {props.info && (
-            <div
-              className="w-full flex justify-end cursor-pointer"
-              onClick={() =>
-                toast.info(props.info, {
-                  autoClose: props.infoDurationInMs
-                    ? props.infoDurationInMs
-                    : 5000,
-                })
-              }
-            >
-              <SVGInfo />
-            </div>
-          )}
-          {props.videoHandler && (
-            <div
-              className="w-full flex justify-end cursor-pointer"
-              onClick={() => {
-                if (props.videoHandler) {
-                  props.videoHandler(!videoPlaying ? props.video : "");
-                  setVideoPlaying(!videoPlaying);
+          <div className="w-full flex justify-end cursor-pointer">
+            {props.info && (
+              <div
+                className="mr-1"
+                onClick={() =>
+                  toast.info(props.info, {
+                    autoClose: props.infoDurationInMs
+                      ? props.infoDurationInMs
+                      : 5000,
+                  })
                 }
-              }}
-            >
-              {!videoPlaying ? <SVGPlay /> : <SVGPause />}
-            </div>
-          )}
+              >
+                <SVGInfo />
+              </div>
+            )}
+            {props.videoHandler && (
+              <div
+                onClick={() => {
+                  if (props.videoHandler) {
+                    props.videoHandler(!videoPlaying ? props.video : "");
+                    setVideoPlaying(!videoPlaying);
+                  }
+                }}
+              >
+                {!videoPlaying ? <SVGPlay /> : <SVGPause />}
+              </div>
+            )}
+          </div>
           <div
             className={`w-full flex justify-between ${
               props.max ? "items-center" : "flex-col"
