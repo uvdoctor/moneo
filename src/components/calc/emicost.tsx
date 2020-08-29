@@ -123,9 +123,7 @@ export default function EmiCost(props: EmiProps) {
     simpleInts.forEach((int) => (totalSimpleIntAmt += int));
     let totalIntAmt = 0;
     if (props.goalType !== GoalType.B) {
-      let totalBorrowedAmt = getLoanBorrowAmt(props.price, props.goalType, 
-        0, props.priceChgRate, props.endYear - props.startYear, props.loanPer)
-      totalIntAmt = (emi * loanPaidForMonths) + totalSimpleIntAmt - (totalBorrowedAmt * 100 / props.loanPer);
+      totalIntAmt = (emi * loanPaidForMonths) + totalSimpleIntAmt - props.loanBorrowAmt;
     } else totalIntAmt = getTotalInt(
         borrowAmt,
         emi,
