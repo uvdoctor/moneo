@@ -37,7 +37,7 @@ export default function ResultSection(props: ResultSectionProps) {
       ref={chartDiv}
       className={`w-full lg:w-2/3 xl:w-3/4 transition-width duration-1000 ease-in-out`}
     >
-      {props.result}
+      {!props.videoUrl && props.result}
       {props.videoUrl ? (
         <VideoPlayer url={props.videoUrl} />
       ) : (

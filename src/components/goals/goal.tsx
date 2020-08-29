@@ -516,6 +516,7 @@ export default function Goal({
               priceChgRate={priceChgRate}
               priceChgRateHandler={setPriceChgRate}
               eyOptions={eyOptions}
+              videoHandler={videoHandler}
             />
           )}
 

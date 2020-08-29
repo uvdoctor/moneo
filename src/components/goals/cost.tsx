@@ -30,6 +30,7 @@ interface CostProps {
     manualTargetsHandler?: Function
     startingCostHandler: Function
     costChgRateHandler: Function
+    videoHandler: Function
 }
 
 export default function Cost(props: CostProps) {
@@ -81,6 +82,8 @@ export default function Cost(props: CostProps) {
                             nextStepDisabled={props.startingCost === 0}
                             nextStepHandler={props.nextStepHandler}
                             allInputDone={props.allInputDone}
+                            video={`https://www.youtube.com/watch?v=uYMTsmeZyfU`}
+                            videoHandler={props.videoHandler}
                             pre={props.startYear > props.baseYear ? 'Amount' : ''} 
                             post={props.startYear > props.baseYear ? `in ${props.baseYear}` : ''}
                             currency={props.currency} rangeFactor={props.rangeFactor} value={props.startingCost} changeHandler={props.startingCostHandler}
