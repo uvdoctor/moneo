@@ -55,6 +55,13 @@ export default function NumberInput(props: NumberInputProps) {
     else setRangeFactor(1);
   }, [props.rangeFactor]);
 
+  const handleKeyDown = (e: any) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      setEditing(false)
+    }
+  };
+
   return (
     <div>
       {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
@@ -107,6 +114,7 @@ export default function NumberInput(props: NumberInputProps) {
                   onChange={(e) =>
                     props.changeHandler(e.currentTarget.valueAsNumber)
                   }
+                  onKeyDown={handleKeyDown}
                   onBlur={() => setEditing(false)}
                   required
                   style={{ textAlign: "right", width: width }}
