@@ -524,7 +524,6 @@ const createLoanCFs = (
     goal.emi?.dur * 12
   );
   let ey = goal.sy + duration - 1;
-  console.log("EY is ", ey)
   let sp = 0;
   let taxBenefit = 0;
   for (let year = goal.sy, ly = goal.emi?.dur as number; year <= ey; year++) {

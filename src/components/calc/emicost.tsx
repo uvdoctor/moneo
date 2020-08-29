@@ -11,7 +11,7 @@ import {
   calculateInterestTaxBenefit,
   adjustAccruedInterest,
   createEduLoanDPWithSICFs,
-  getTaxBenefit,
+  getTaxBenefit, getLoanBorrowAmt
 } from "../goals/cfutils";
 import HToggle from "../horizontaltoggle";
 import { GoalType } from "../../api/goals";
@@ -96,12 +96,6 @@ export default function EmiCost(props: EmiProps) {
       props.loanYears * 12
     ) as number;
     setEMI(Math.round(emi));
-    let totalSimpleIntAmt = 0;
-    simpleInts.forEach((int) => (totalSimpleIntAmt += int));
-    let totalIntAmt =
-      getTotalInt(borrowAmt, emi, props.loanAnnualInt, loanPaidForMonths) +
-      totalSimpleIntAmt;
-    setTotalIntAmt(Math.round(totalIntAmt));
     if (props.taxBenefitInt > 0) {
       let intTaxBenefit = calculateInterestTaxBenefit(
         borrowAmt,
@@ -124,6 +118,20 @@ export default function EmiCost(props: EmiProps) {
       );
       setTotalIntTaxBenefit(Math.round(intTaxBenefit + simpleTaxBenefit));
     } else setTotalIntTaxBenefit(0);
+    let totalSimpleIntAmt = 0;
+    simpleInts.forEach((int) => (totalSimpleIntAmt += int));
+    let totalIntAmt = 0;
+    if (props.goalType !== GoalType.B) {
+      let totalBorrowedAmt = getLoanBorrowAmt(props.price, props.goalType, 
+        0, props.priceChgRate, props.endYear - props.startYear, props.loanPer)
+      totalIntAmt = (emi * loanPaidForMonths) + totalSimpleIntAmt - (totalBorrowedAmt * 100 / props.loanPer);
+    } else totalIntAmt = getTotalInt(
+        borrowAmt,
+        emi,
+        props.loanAnnualInt,
+        loanPaidForMonths
+      );
+    setTotalIntAmt(Math.round(totalIntAmt));
   };
 
   useEffect(() => calculateEmi(), [props]);
