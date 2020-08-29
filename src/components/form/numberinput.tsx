@@ -28,12 +28,14 @@ interface NumberInputProps {
   changeHandler: any;
   note?: any;
   step?: number;
-  sliderMarks?: any
+  feedback?: any
 }
 
 export default function NumberInput(props: NumberInputProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [editing, setEditing] = useState<boolean>(false);
+  const [sliderButtonColor, setSliderButtonColor] = useState<string>("white")
+  const [feedbackText, setFeedbackText] = useState<string>("")
   const width: string = props.width
     ? props.width
     : props.currency
@@ -61,6 +63,30 @@ export default function NumberInput(props: NumberInputProps) {
       setEditing(false)
     }
   };
+
+  const getClosestKey = (value: number, keys: Array<number>) => {
+    let result: number = keys[0]
+    keys.forEach(k => {
+      if(value >= k) result = k
+      else return result
+    })
+    return result
+  }
+
+  const provideFeedback = (val: number) => {
+    if (props.feedback) {
+      let allKeys = Object.keys(props.feedback);
+      let allSortedKeys = allKeys.map(k => parseFloat(k)).sort((a, b) => a - b);
+      let feedback: any = props.feedback[getClosestKey(val, allSortedKeys)];
+      if (!feedback || !feedback.label) {
+        setSliderButtonColor("white");
+        setFeedbackText("");
+      } else {
+        setSliderButtonColor(feedback.color);
+        setFeedbackText(feedback.label);
+      } 
+    }
+  }
 
   return (
     <div>
@@ -111,9 +137,11 @@ export default function NumberInput(props: NumberInputProps) {
                   min={props.min * rangeFactor}
                   max={props.max * rangeFactor}
                   step={props.step ? props.step * rangeFactor : 1}
-                  onChange={(e) =>
-                    props.changeHandler(e.currentTarget.valueAsNumber)
-                  }
+                  onChange={(e) => {
+                    let val = e.currentTarget.valueAsNumber
+                    provideFeedback(val)
+                    props.changeHandler(val)
+                  }}
                   onKeyDown={handleKeyDown}
                   onBlur={() => setEditing(false)}
                   required
@@ -144,19 +172,17 @@ export default function NumberInput(props: NumberInputProps) {
                 max={props.max * rangeFactor}
                 step={props.step as number * rangeFactor}
                 value={props.value}
-                onChange={
-
-                  props.changeHandler
-                }
+                onChange={(val: number) => {
+                  provideFeedback(val);
+                  props.changeHandler(val)
+                }}
                 handleStyle={{
                   cursor: "grab",
                   width: "1.2rem",
                   height: "1.2rem",
-                  background: "#ffffff",
+                  background: sliderButtonColor,
                   borderRadius: "50%",
-                  appearance: "none",
-                  border: "none",
-                  outline: "none",
+                  borderColor: sliderButtonColor,
                   left: 0,
                   top: 2,
                   boxShadow:
@@ -177,13 +203,13 @@ export default function NumberInput(props: NumberInputProps) {
                 railStyle={{
                   background: "none",
                 }}
-                marks={props.sliderMarks}
               />
               {props.max && (
                 <div className="flex justify-between w-full text-gray-400">
                   <label className="mr-2">
                     {toReadableNumber(props.min ? props.min * rangeFactor : 0)}
                   </label>
+                  <label className="text-base" style={{color: sliderButtonColor}}>{feedbackText}</label>
                   <label>{toReadableNumber(props.max * rangeFactor)}</label>
                 </div>
               )}
@@ -202,4 +228,5 @@ export default function NumberInput(props: NumberInputProps) {
       )}
     </div>
   );
+
 }

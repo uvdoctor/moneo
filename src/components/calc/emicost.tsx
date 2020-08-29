@@ -11,14 +11,12 @@ import {
   calculateInterestTaxBenefit,
   adjustAccruedInterest,
   createEduLoanDPWithSICFs,
-  getTaxBenefit
+  getTaxBenefit,
 } from "../goals/cfutils";
 import HToggle from "../horizontaltoggle";
 import { GoalType } from "../../api/goals";
 import ResultItem from "./resultitem";
-import { COLORS } from "../../CONSTANTS"
-import SVGWarning from "../svgwarning";
-import SVGAlert from "../svgalert";
+import { COLORS } from "../../CONSTANTS";
 interface EmiProps {
   inputOrder: number;
   currentOrder: number;
@@ -125,8 +123,10 @@ export default function EmiCost(props: EmiProps) {
     simpleInts.forEach((int) => (totalSimpleIntAmt += int));
     let totalIntAmt = 0;
     if (props.goalType !== GoalType.B) {
-      totalIntAmt = (emi * loanPaidForMonths) + totalSimpleIntAmt - props.loanBorrowAmt;
-    } else totalIntAmt = getTotalInt(
+      totalIntAmt =
+        emi * loanPaidForMonths + totalSimpleIntAmt - props.loanBorrowAmt;
+    } else
+      totalIntAmt = getTotalInt(
         borrowAmt,
         emi,
         props.loanAnnualInt,
@@ -239,7 +239,13 @@ export default function EmiCost(props: EmiProps) {
                     pre="Yearly"
                     post="Interest"
                     unit="%"
-                    sliderMarks={{8: <SVGWarning />, 10: <SVGAlert />}}
+                    feedback={{
+                      0: {label: "YAY!!!", color: "green"},
+                      1: {label: "CHEAP", color: "blue"},
+                      3: {label: "", color: ""},
+                      8: {label: "HIGH", color: "orange"},
+                      10: {label: "TOO HIGH", color: "red"} 
+                    }}
                     note={
                       <ResultItem
                         label="Total Interest"
