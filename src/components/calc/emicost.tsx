@@ -41,6 +41,7 @@ interface EmiProps {
   maxTaxDeductionInt: number;
   taxRate: number;
   goalType: GoalType;
+  videoUrl: string
   videoHandler: Function;
   repaymentSYHandler: Function;
   loanMonthsHandler: Function;
@@ -302,7 +303,8 @@ export default function EmiCost(props: EmiProps) {
                     min={0.0}
                     max={25.0}
                     step={0.1}
-                    video={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
+                    videoUrl={props.videoUrl}
+                    videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
                     videoHandler={props.videoHandler}
                   />
                 </div>

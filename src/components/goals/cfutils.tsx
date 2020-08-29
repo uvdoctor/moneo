@@ -887,7 +887,6 @@ export const checkForFF = (
   let oom = [];
   for (let [year, value] of Object.entries(mCFs)) {
     let y = parseInt(year);
-    //console.log("Year is ", y)
     if (y > ffGoal.ey) break;
     let v = parseInt(value);
     let sa = mustAllocation.savings[y];

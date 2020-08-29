@@ -13,6 +13,7 @@ interface ResultSectionProps {
   showResultTabHandler: Function;
   chartFullScreenHandler: Function;
   videoUrl: string;
+  videoHandler: Function
 }
 
 export default function ResultSection(props: ResultSectionProps) {
@@ -38,7 +39,7 @@ export default function ResultSection(props: ResultSectionProps) {
       className={`w-full lg:w-2/3 xl:w-3/4 transition-width duration-1000 ease-in-out`}
     >
       {props.videoUrl ? (
-        <VideoPlayer url={props.videoUrl} />
+        <VideoPlayer url={props.videoUrl} urlHandler={props.videoHandler} />
       ) : (
         <Fragment>
           {props.result}

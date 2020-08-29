@@ -516,6 +516,7 @@ export default function Goal({
               priceChgRate={priceChgRate}
               priceChgRateHandler={setPriceChgRate}
               eyOptions={eyOptions}
+              videoUrl={videoUrl}
               videoHandler={videoHandler}
             />
           )}
@@ -587,6 +588,7 @@ export default function Goal({
               nextStepDisabled={false}
               nextStepHandler={handleNextStep}
               allInputDone={allInputDone}
+              videoUrl={videoUrl}
               videoHandler={videoHandler}
             />
           )}
@@ -684,6 +686,7 @@ export default function Goal({
             showResultTabHandler={setShowResultTab}
             chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
             videoUrl={videoUrl}
+            videoHandler={videoHandler}
             result={
               nowYear < startYear && (
                 <GoalResult

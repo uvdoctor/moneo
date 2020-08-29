@@ -26,6 +26,7 @@ interface CostProps {
     endYear?: number
     baseYear: number
     manualTgtMin?: number
+    videoUrl: string
     manualModeHandler?: Function
     manualTargetsHandler?: Function
     startingCostHandler: Function
@@ -82,7 +83,8 @@ export default function Cost(props: CostProps) {
                             nextStepDisabled={props.startingCost === 0}
                             nextStepHandler={props.nextStepHandler}
                             allInputDone={props.allInputDone}
-                            video={`https://www.youtube.com/watch?v=uYMTsmeZyfU`}
+                            videoSrc={`https://www.youtube.com/watch?v=uYMTsmeZyfU`}
+                            videoUrl={props.videoUrl}
                             videoHandler={props.videoHandler}
                             pre={props.startYear > props.baseYear ? 'Amount' : ''} 
                             post={props.startYear > props.baseYear ? `in ${props.baseYear}` : ''}

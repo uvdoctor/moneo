@@ -387,6 +387,7 @@ export default function FFGoal({
               annualSavings={annualSavings}
               monthlySavingsRate={monthlySavingsRate}
               monthlySavingsRateHandler={setMonthlySavingsRate}
+              videoUrl={videoUrl}
               videoHandler={videoHandler}
             />
           )}
@@ -520,6 +521,7 @@ export default function FFGoal({
             showResultTabHandler={setShowResultTab}
             chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
             videoUrl={videoUrl}
+            videoHandler={videoHandler}
             result={
               <FFResult
                 endYear={endYear}

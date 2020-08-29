@@ -29,6 +29,7 @@ interface AmtProps {
   priceChgRateHandler: Function;
   price: number;
   eyOptions: any
+  videoUrl: string
   videoHandler: Function
 }
 
@@ -57,6 +58,7 @@ export default function Amt({
   priceChgRateHandler,
   price,
   eyOptions,
+  videoUrl,
   videoHandler
 }: AmtProps) {
   const [syOptions] = useState(
@@ -133,6 +135,7 @@ export default function Amt({
           nextStepHandler={nextStepHandler}
           allInputDone={allInputDone}
           videoHandler={videoHandler}
+          videoUrl={videoUrl}
         />
       </div>
     </div>
