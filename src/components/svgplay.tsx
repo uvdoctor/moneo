@@ -1,5 +1,4 @@
 import React from "react";
-import { COLORS } from "../CONSTANTS";
 
 export default function SVGPlay() {
   return (
