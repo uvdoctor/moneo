@@ -16,6 +16,7 @@ import {
 import HToggle from "../horizontaltoggle";
 import { GoalType } from "../../api/goals";
 import ResultItem from "./resultitem";
+import { COLORS } from "../../CONSTANTS"
 interface EmiProps {
   inputOrder: number;
   currentOrder: number;
@@ -267,7 +268,9 @@ export default function EmiCost(props: EmiProps) {
                       value={props.loanSIPayPer as number}
                       changeHandler={props.loanSIPayPerHandler}
                       step={5}
-                      labelBottom={true}
+                      labelBottom
+                      colorFrom={COLORS.RED}
+                      colorTo={COLORS.GREEN}
                       pre="Pay While Studying"
                       label="of Interest"
                       post={

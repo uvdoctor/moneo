@@ -23,6 +23,7 @@ interface RadialInputProps {
     pre?: string
     post?: any
     colorTo?: string | null
+    colorFrom?: string | null
 }
 
 export default function RadialInput(props: RadialInputProps) {
@@ -41,7 +42,7 @@ export default function RadialInput(props: RadialInputProps) {
                     <CircularSlider onChange={(val: string) => props.changeHandler(props.step < 1 ? parseFloat(val) : parseInt(val))}
                         label={props.label} trackColor="#edf2f7" data={props.data} dataIndex={(props.value - getVal(props.data[0])) / props.step}
                         appendToValue={props.unit} width={width} labelColor="#4a5568" labelBottom={props.labelBottom}
-                        valueFontSize="1.25rem" labelFontSize="1.25rem" progressColorFrom={COLORS.GREEN}
+                        valueFontSize="1.25rem" labelFontSize="1.25rem" progressColorFrom={props.colorFrom ? props.colorFrom : COLORS.GREEN}
                         progressColorTo={props.colorTo ? props.colorTo : COLORS.GREEN} knobColor="#cbd5e0" />
                     <label className="mt-2">{props.post}</label>
                     {!props.allInputDone && props.inputOrder === props.currentOrder &&
