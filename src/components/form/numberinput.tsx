@@ -152,7 +152,7 @@ export default function NumberInput(props: NumberInputProps) {
                   className="input"
                   type="number"
                   name={props.name}
-                  value={props.value ? props.value : props.currency ? "" : 0}
+                  value={props.value || props.currency ? props.value : 0}
                   min={props.min * rangeFactor}
                   max={props.max * rangeFactor}
                   step={props.step ? props.step * rangeFactor : 1}
@@ -162,7 +162,7 @@ export default function NumberInput(props: NumberInputProps) {
                     props.changeHandler(val);
                   }}
                   onFocus={(e) => {
-                    if(!props.currency && !props.value) e.currentTarget.value = ""  
+                    if(!props.value && e.currentTarget.value === "0") e.currentTarget.value = ""  
                   }}
                   onKeyDown={handleKeyDown}
                   onBlur={(e) => {
