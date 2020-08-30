@@ -152,7 +152,7 @@ export default function NumberInput(props: NumberInputProps) {
                   className="input"
                   type="number"
                   name={props.name}
-                  value={props?.value ? props.value : 0}
+                  value={props.value ? props.value : ""}
                   min={props.min * rangeFactor}
                   max={props.max * rangeFactor}
                   step={props.step ? props.step * rangeFactor : 1}
