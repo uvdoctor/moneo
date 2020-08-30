@@ -152,7 +152,7 @@ export default function NumberInput(props: NumberInputProps) {
                   className="input"
                   type="number"
                   name={props.name}
-                  value={props.value ? props.value : ""}
+                  value={props.value ? props.value : props.currency ? "" : 0}
                   min={props.min * rangeFactor}
                   max={props.max * rangeFactor}
                   step={props.step ? props.step * rangeFactor : 1}
@@ -161,8 +161,14 @@ export default function NumberInput(props: NumberInputProps) {
                     provideFeedback(val);
                     props.changeHandler(val);
                   }}
+                  onFocus={(e) => {
+                    if(!props.currency && !props.value) e.currentTarget.value = ""  
+                  }}
                   onKeyDown={handleKeyDown}
-                  onBlur={() => setEditing(false)}
+                  onBlur={(e) => {
+                    setEditing(false)
+                    if(!props.currency && !props.value) e.currentTarget.valueAsNumber = 0
+                  }}
                   required
                   style={{ textAlign: "right", width: width }}
                 />
@@ -171,7 +177,7 @@ export default function NumberInput(props: NumberInputProps) {
                   className="input"
                   type="text"
                   name={props.name}
-                  value={toCurrency(props.value, props.currency)}
+                  value={toCurrency(!props.value ? 0 : props.value, props.currency)}
                   onFocus={() => setEditing(true)}
                   style={{ textAlign: "right", width: width }}
                   readOnly
