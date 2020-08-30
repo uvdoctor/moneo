@@ -349,7 +349,7 @@ export default function EmiCost(props: EmiProps) {
                       step={1000}
                       note={
                         <ResultItem
-                          label="Total Tax Benefit"
+                          label="Total Interest Tax Benefit"
                           result={props.iTaxBenefit}
                           currency={props.currency}
                           footer={`Over ${props.duration} Years`}

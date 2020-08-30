@@ -33,12 +33,12 @@ export default function Summary(props: SummaryProps) {
                     <label>{getGoalTypes()[props.type]}</label>
                     <label>{props.name}</label>
                 </div>
-                <div className="flex text-base">
-                    <div className="hover:text-blue-600 cursor-pointer" onClick={() => props.editCallback(props.id)}>
+                <div className="flex text-base text-blue-600">
+                    <div className="hover:text-blue-800 cursor-pointer" onClick={() => props.editCallback(props.id)}>
                         <SVGEdit />
                         Edit
                     </div>
-                    <div className="flex flex-col items-center ml-2 cursor-pointer hover:text-blue-600" onClick={() => props.deleteCallback(props.id)}>
+                    <div className="flex flex-col items-center ml-2 cursor-pointer hover:text-blue-800" onClick={() => props.deleteCallback(props.id)}>
                         <SVGTrash />
                         Delete
                     </div>

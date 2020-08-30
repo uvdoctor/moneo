@@ -14,6 +14,7 @@ interface TaxBenefitProps {
   goalType: GoalType;
   taxRate: number;
   maxTaxDeduction: number;
+  duration: number
   taxRateHandler: Function;
   maxTaxDeductionHandler: Function;
   currency: string;
@@ -84,6 +85,7 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                     label="Total Tax Benefit"
                     result={props.pTaxBenefit}
                     currency={props.currency}
+                    footer={`Over ${props.duration} Years`}
                   />
                 }
                 rangeFactor={props.rangeFactor}

@@ -71,7 +71,7 @@ export default function Goals({
   const nowYear = new Date().getFullYear();
   const tabOptions = buildTabsArray([goalsLabel, cfLabel]);
   const [videoUrl, setVideoUrl] = useState<string>("");
-  
+
   const irDiffByCurrency: any = {
     INR: 3,
   };
@@ -302,7 +302,7 @@ export default function Goals({
   const mergeCFs = (obj: Object, cfs: Array<number>, sy: number) => {
     cfs.forEach((cf, i) => {
       let year = sy + i;
-      appendValue(obj, year, cf)
+      appendValue(obj, year, cf);
     });
   };
 
@@ -324,12 +324,12 @@ export default function Goals({
       let existingImp = existingGoal.imp;
       let existingCFs = allCFs[goalId];
       existingCFs.forEach((cf: number, i: number) => {
-        appendValue(mCFs, existingSY + i, -cf)
+        appendValue(mCFs, existingSY + i, -cf);
         let index = existingSY + i - (nowYear + 1);
         if (existingImp === APIt.LMH.H) {
-          appendValue(highImpCFs, index, -cf)
+          appendValue(highImpCFs, index, -cf);
         } else if (existingImp === APIt.LMH.M) {
-          appendValue(medImpCFs, index, -cf)
+          appendValue(medImpCFs, index, -cf);
         }
       });
     }
@@ -354,12 +354,12 @@ export default function Goals({
         ffOOM: resultWithoutGoal.oom,
       };
     cfs.forEach((cf, i) => {
-      appendValue(mCFs, startYear + i, cf)
+      appendValue(mCFs, startYear + i, cf);
       let index = startYear + i - (nowYear + 1);
       if (goalImp === APIt.LMH.H) {
-        appendValue(highImpCFs, index, cf)
+        appendValue(highImpCFs, index, cf);
       } else if (goalImp === APIt.LMH.M) {
-        appendValue(medImpCFs, index, cf)
+        appendValue(medImpCFs, index, cf);
       }
     });
     let resultWithGoal = findEarliestFFYear(
@@ -440,21 +440,25 @@ export default function Goals({
               : "bg-red-100"
           } shadow-lg lg:shadow-xl`}
         >
-          <div className="w-full flex justify-center items-center">
-            <label className="mr-2 font-semibold text-lg md:text-xl">
-              Financial Freedom
+          <div
+            className={`w-full flex justify-center items-center ${
+              isFFPossible(ffResult, ffGoal.sa as number)
+                ? "bg-green-100"
+                : "bg-red-100"
+            }`}
+          >
+            <label className="p-2 font-semibold text-lg md:text-xl">
+              {isFFPossible(ffResult, ffGoal.sa as number)
+                ? `Financial Freedom at ${
+                    (ffYear as number) - (ffGoal.ey - 100)
+                  }`
+                : `Financial Freedom May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
             </label>
-            <div className="cursor-pointer" onClick={() => setWIPGoal(ffGoal)}>
+            <div className="flex items-center cursor-pointer" onClick={() => setWIPGoal(ffGoal)}>
               <SVGEdit />
+              <span className="text-blue-600 hover:text-blue-800">Edit</span>
             </div>
           </div>
-          <FFResult
-            ffYear={ffYear}
-            endYear={ffGoal.ey}
-            result={ffResult}
-            currency={ffGoal.ccy}
-            ffNomineeAmt={ffGoal?.sa as number}
-          />
         </div>
       )}
       <div className="flex mt-4 items-center justify-center">

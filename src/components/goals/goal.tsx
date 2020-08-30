@@ -533,6 +533,7 @@ export default function Goal({
               currency={currency}
               maxTaxDeduction={maxTaxDeduction}
               maxTaxDeductionHandler={setMaxTaxDeduction}
+              duration={getDur()}
               rangeFactor={rangeFactor}
               inputOrder={getOrderByTabLabel(tabOptions, taxLabel)}
               currentOrder={currentOrder}
