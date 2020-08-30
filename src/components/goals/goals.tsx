@@ -18,7 +18,6 @@ import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
-import FFResult from "./ffresult";
 import SVGEdit from "../svgedit";
 import { toast } from "react-toastify";
 import { useFullScreen } from "react-browser-hooks";
