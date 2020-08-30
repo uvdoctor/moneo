@@ -11,7 +11,7 @@ import { ASSET_TYPES } from "../../CONSTANTS";
 import { isTaxCreditEligible } from "./goalutils";
 //Tested
 export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
-  if (!val || val < 0 || !tr) return 0;
+  if (!val || val < 0 || !tr || (tr === 100 && maxTaxDL === 0)) return 0;
   if (maxTaxDL > 0 && val > maxTaxDL) val = maxTaxDL;
   return Math.round(val * (tr / 100));
 };
