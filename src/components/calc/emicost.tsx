@@ -8,16 +8,15 @@ import Section from "../form/section";
 import ExpandCollapse from "../form/expandcollapse";
 import {
   getLoanPaidForMonths,
-  calculateInterestTaxBenefit,
   adjustAccruedInterest,
   createEduLoanDPWithSICFs,
-  getTaxBenefit,
 } from "../goals/cfutils";
 import HToggle from "../horizontaltoggle";
 import { GoalType } from "../../api/goals";
 import ResultItem from "./resultitem";
 import { COLORS } from "../../CONSTANTS";
 import InfoText from "../infotext";
+import {isTaxCreditEligible} from "../goals/goalutils"
 interface EmiProps {
   inputOrder: number;
   currentOrder: number;
@@ -40,6 +39,7 @@ interface EmiProps {
   taxBenefitInt: number;
   maxTaxDeductionInt: number;
   taxRate: number;
+  iTaxBenefit: number;
   goalType: GoalType;
   videoUrl: string
   videoHandler: Function;
@@ -54,7 +54,6 @@ interface EmiProps {
 
 export default function EmiCost(props: EmiProps) {
   const [totalIntAmt, setTotalIntAmt] = useState<number>(0);
-  const [totalIntTaxBenefit, setTotalIntTaxBenefit] = useState<number>(0);
   const [ryOptions, setRYOptions] = useState(
     initYearOptions(
       props.goalType === GoalType.E ? props.endYear + 1 : props.startYear,
@@ -100,28 +99,6 @@ export default function EmiCost(props: EmiProps) {
       props.loanYears * 12
     ) as number;
     setEMI(Math.round(emi));
-    if (props.taxBenefitInt > 0) {
-      let intTaxBenefit = calculateInterestTaxBenefit(
-        borrowAmt,
-        props.loanAnnualInt,
-        props.loanYears,
-        props.repaymentSY,
-        props.startYear,
-        props.duration,
-        props.taxRate,
-        props.maxTaxDeductionInt
-      );
-      let simpleTaxBenefit = 0;
-      simpleInts.forEach(
-        (int) =>
-          (simpleTaxBenefit += getTaxBenefit(
-            int,
-            props.taxRate,
-            props.maxTaxDeductionInt
-          ))
-      );
-      setTotalIntTaxBenefit(Math.round(intTaxBenefit + simpleTaxBenefit));
-    } else setTotalIntTaxBenefit(0);
     let totalSimpleIntAmt = 0;
     simpleInts.forEach((int) => (totalSimpleIntAmt += int));
     let totalIntAmt = 0;
@@ -156,7 +133,7 @@ export default function EmiCost(props: EmiProps) {
           title="Loan Details"
           insideForm
           toggle={
-            props.taxRate ? (
+            !isTaxCreditEligible(props.goalType) && props.taxRate ? (
               <HToggle
                 rightText="Claim Interest Tax Deduction"
                 value={props.taxBenefitInt}
@@ -352,7 +329,7 @@ export default function EmiCost(props: EmiProps) {
                     />
                   </div>
                 )}
-                {props.taxRate && props.taxBenefitInt ? (
+                {props.taxRate && props.taxBenefitInt && !isTaxCreditEligible(props.goalType) ? (
                   <div className="mt-2">
                     <NumberInput
                       name="maxTaxDeductionInt"
@@ -373,7 +350,7 @@ export default function EmiCost(props: EmiProps) {
                       note={
                         <ResultItem
                           label="Total Tax Benefit"
-                          result={totalIntTaxBenefit}
+                          result={props.iTaxBenefit}
                           currency={props.currency}
                           footer={`Over ${props.duration} Years`}
                         />

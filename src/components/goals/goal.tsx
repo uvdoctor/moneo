@@ -67,6 +67,8 @@ export default function Goal({
   const [maxTaxDeductionInt, setMaxTaxDeductionInt] = useState<
     number | null | undefined
   >(goal?.tdli);
+  const [totalPTaxBenefit, setTotalPTaxBenefit] = useState<number>(0)
+  const [totalITaxBenefit, setTotalITaxBenefit] = useState<number>(0)
   const [sellAfter, setSellAfter] = useState<number | undefined | null>(
     goal?.sa
   );
@@ -255,12 +257,15 @@ export default function Goal({
       return cfs;
     }
     let g: APIt.CreateGoalInput = createNewGoalInput();
-    cfs = calculateCFs(price, g, duration);
+    let result: any = calculateCFs(price, g, duration);
+    cfs = result.cfs
     console.log("New cfs created: ", cfs);
     if (changeState) {
       if ((loanPer as number) && manualMode < 1 && goalType === APIt.GoalType.B)
         setEndYear(g.sy + cfs.length - 1);
       setCFs([...cfs]);
+      if(result.hasOwnProperty("itb")) setTotalITaxBenefit(result.itb)
+      setTotalPTaxBenefit(result.ptb)
     }
     return cfs;
   };
@@ -286,7 +291,6 @@ export default function Goal({
     let p = 0;
     if (startingPrice)
       p = getCompoundedIncome(priceChgRate, startingPrice, startYear - goal.by);
-    console.log("Price is ", p);
     setPrice(Math.round(p));
   }, [startingPrice, priceChgRate, startYear, manualMode]);
 
@@ -533,18 +537,9 @@ export default function Goal({
               inputOrder={getOrderByTabLabel(tabOptions, taxLabel)}
               currentOrder={currentOrder}
               nextStepDisabled={false}
-              loanDur={loanYears}
-              loanPer={loanPer}
               nextStepHandler={handleNextStep}
               allInputDone={allInputDone}
-              price={price}
-              loanRY={loanRepaymentSY}
-              startYear={startYear}
-              manualMode={manualMode}
-              loanRate={loanIntRate}
-              endYear={endYear}
-              duration={getDur()}
-              priceChgRate={priceChgRate}
+              pTaxBenefit={totalPTaxBenefit}
             />
           )}
 
@@ -583,6 +578,7 @@ export default function Goal({
               taxRate={taxRate}
               maxTaxDeductionInt={maxTaxDeductionInt as number}
               maxTaxDeductionIntHandler={setMaxTaxDeductionInt}
+              iTaxBenefit={totalITaxBenefit}
               inputOrder={getOrderByTabLabel(tabOptions, loanLabel)}
               currentOrder={currentOrder}
               nextStepDisabled={false}

@@ -41,20 +41,20 @@ const SecureDash = () => {
       setGoalsLoaded(true);
       return;
     }
-    let allCFs = {};
+    let allCFs: any = {};
     let ffGoalId = "";
     goals?.forEach((g) => {
       if (g.type === GoalType.FF) {
         setFFGoal(g);
         ffGoalId = g.id as string;
       } else {
-        //@ts-ignore
-        allCFs[g.id] = calculateCFs(
+        let result: any = calculateCFs(
           null,
           g,
-          //@ts-ignore
-          getDuration(g.sa as number, g.sy, g.ey)
+          getDuration(g.sa as number, g.sy, g.ey, g.manual, g.emi?.per,
+            g.emi?.ry, g.emi?.dur)
         );
+        allCFs[g.id as string] = result.cfs;
       }
     });
     removeFromArray(goals, "id", ffGoalId);

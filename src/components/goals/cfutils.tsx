@@ -8,6 +8,7 @@ import {
 import xirr from "xirr";
 import { buildArray, getAllAssetTypes } from "../utils";
 import { ASSET_TYPES } from "../../CONSTANTS";
+import { isTaxCreditEligible } from "./goalutils";
 //Tested
 export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
   if (!val || val < 0 || !tr) return 0;
@@ -216,115 +217,13 @@ export const calculateSellCFs = (
   return cfs;
 };
 
-export const calculateTotalTaxBenefit = (
-  goalType: APIt.GoalType,
-  price: number,
-  manualMode: number,
-  duration: number,
-  taxRate: number,
-  maxTaxDL: number,
-  priceChgRate: number = 0
-) => {
-  if (manualMode > 0) {
-    return Math.round(getTaxBenefit(price, taxRate, maxTaxDL));
-  }
-  if (goalType === APIt.GoalType.B) {
-    return Math.round(getTaxBenefit(price, taxRate, maxTaxDL));
-  }
-  let tb = 0;
-  for (
-    let i = 0, v = price;
-    i < duration;
-    i++, v = getCompoundedIncome(priceChgRate, price, i)
-  ) {
-    tb += getTaxBenefit(v, taxRate, maxTaxDL);
-  }
-  return Math.round(tb);
-};
-
-export const calculatePrincipalTaxBenefit = (
-  goalType: APIt.GoalType,
-  price: number,
-  chgRate: number,
-  manualMode: number,
-  loanPer: number,
-  loanInt: number,
-  loanYears: number,
-  loanRepaymentSY: number,
-  startYear: number,
-  endYear: number,
-  duration: number,
-  taxRate: number,
-  maxTaxDL: number
-) => {
-  let loanBorrowAmt = getLoanBorrowAmt(
-    price,
-    goalType,
-    manualMode,
-    chgRate,
-    endYear - startYear,
-    loanPer
-  ) as number;
-  let emi = getEmi(loanBorrowAmt, loanInt as number, loanYears * 12);
-  let annualInts = getIntAmtByYear(loanBorrowAmt, emi, loanInt, loanYears * 12);
-  let taxBenefit = 0;
-  for (
-    let index = loanRepaymentSY - startYear, ly = loanYears;
-    index < (duration < loanYears ? duration : loanYears);
-    index++, ly--
-  ) {
-    let annualEmiAmt = emi * (ly === 0.5 ? 6 : 12);
-    let i = index - (loanRepaymentSY - startYear);
-    taxBenefit += getTaxBenefit(
-      annualEmiAmt - annualInts[i],
-      taxRate,
-      maxTaxDL
-    );
-  }
-  let remPayment = getRemPrincipal(
-    startYear,
-    loanBorrowAmt,
-    emi,
-    loanInt,
-    loanRepaymentSY,
-    loanYears,
-    duration,
-    goalType
-  );
-  taxBenefit += getTaxBenefit(remPayment, taxRate, maxTaxDL);
-  return taxBenefit;
-};
-
-export const calculateInterestTaxBenefit = (
-  loanBorrowAmt: number,
-  loanInt: number,
-  loanYears: number,
-  loanRepaymentSY: number,
-  startYear: number,
-  duration: number,
-  taxRate: number,
-  maxTaxDL: number
-) => {
-  let emi = getEmi(loanBorrowAmt, loanInt as number, loanYears * 12);
-  let annualInts = getIntAmtByYear(loanBorrowAmt, emi, loanInt, loanYears * 12);
-  let taxBenefit = 0;
-  for (
-    let index = loanRepaymentSY - startYear;
-    index < (duration < loanYears ? duration : loanYears);
-    index++
-  ) {
-    let i = index - (loanRepaymentSY - startYear);
-    taxBenefit += getTaxBenefit(annualInts[i], taxRate, maxTaxDL);
-  }
-  return taxBenefit;
-};
-
 const createAutoCFs = (
   p: number,
   goal: APIt.CreateGoalInput,
   duration: number
 ) => {
   let cfs: Array<number> = [];
+  let totalTaxBenefit = 0
   if (goal.type === APIt.GoalType.B && duration) {
     let netAnnualAmt = calculateBuyAnnualNetCF(
       goal.sy,
@@ -352,7 +251,9 @@ const createAutoCFs = (
         )
       );
     cfs.push(calculateSellPrice(p, goal?.achg as number, duration));
-    cfs[1] += getTaxBenefit(p, goal.tdr, goal.tdl);
+    let tb = getTaxBenefit(p, isTaxCreditEligible(goal.type) ? 100 : goal.tdr, goal.tdl);
+    cfs[1] += tb
+    totalTaxBenefit += tb
   } else {
     let taxBenefit = 0;
     for (
@@ -361,11 +262,12 @@ const createAutoCFs = (
       i++, v = getCompoundedIncome(goal.chg as number, p, i)
     ) {
       cfs.push(Math.round(-v + taxBenefit));
-      taxBenefit = getTaxBenefit(v, goal.tdr, goal.tdl);
+      taxBenefit = getTaxBenefit(v, isTaxCreditEligible(goal.type) ? 100 : goal.tdr, goal.tdl);
+      totalTaxBenefit += taxBenefit
     }
     if (taxBenefit > 0) cfs.push(taxBenefit);
   }
-  return cfs;
+  return {cfs: cfs, ptb: totalTaxBenefit};
 };
 
 export const calculateXIRR = (
@@ -464,7 +366,7 @@ export const createEduLoanDPWithSICFs = (
     let p = getCompoundedIncome(chgRate, price, y - startYear);
     totalLoanPayment += p * (loanPer / 100);
     let dp = p * (1 - loanPer / 100);
-    let totalIntDue = totalLoanPayment * (intRate / 100)
+    let totalIntDue = totalLoanPayment * (intRate / 100);
     let interestPaid = totalIntDue * (intPer / 100);
     result.push(Math.round(dp + interestPaid));
     ints.push(interestPaid);
@@ -479,6 +381,8 @@ const createLoanCFs = (
   duration: number
 ) => {
   let cfs: Array<number> = [];
+  let totalPTaxBenefit = 0
+  let totalITaxBenefit = 0
   if (!goal.emi?.per || !goal.emi?.dur) return cfs;
   let loanBorrowAmt = 0;
   let loanDP = 0;
@@ -535,16 +439,21 @@ const createLoanCFs = (
       let annualEmiAmt = emi * (ly === 0.5 ? 6 : 12);
       cf += annualEmiAmt;
       let i = year - goal.emi.ry;
-      if (goal.type !== APIt.GoalType.E)
-        taxBenefit = getTaxBenefit(
-          annualEmiAmt - annualInts[i],
-          goal.tdr,
-          goal.tdl
-        );
-      taxBenefit +=
-        (goal.tbi as number) > 0
-          ? getTaxBenefit(annualInts[i], goal.tdr, goal.tdli as number)
-          : 0;
+      if (!isTaxCreditEligible(goal.type)) {
+        if (goal.type !== APIt.GoalType.E)
+          taxBenefit = getTaxBenefit(
+            annualEmiAmt - annualInts[i],
+            goal.tdr,
+            goal.tdl
+          );
+        totalPTaxBenefit += taxBenefit
+        let itb = 
+          (goal.tbi as number) > 0
+            ? getTaxBenefit(annualInts[i], goal.tdr, goal.tdli as number)
+            : 0;
+        taxBenefit += itb
+        totalITaxBenefit += itb
+      }
       ly--;
     } else if (
       year < goal.emi.ry &&
@@ -556,6 +465,7 @@ const createLoanCFs = (
         goal.tdr,
         goal.tdli as number
       );
+      totalITaxBenefit += taxBenefit
     }
     if (goal.type === APIt.GoalType.B) {
       cf -= calculateBuyAnnualNetCF(
@@ -568,6 +478,11 @@ const createLoanCFs = (
         goal.aiper as number,
         goal.aisy as number
       );
+    }
+    if(isTaxCreditEligible(goal.type)) {
+      let ptb = getTaxBenefit(cf, 100, goal.tdl)
+      taxBenefit += ptb
+      totalPTaxBenefit += ptb
     }
     if (cfs[year - goal.sy]) cfs[year - goal.sy] = Math.round(-cf);
     else cfs.push(cf ? Math.round(-cf) : 0);
@@ -586,9 +501,10 @@ const createLoanCFs = (
     sp = calculateSellPrice(p, goal?.achg as number, duration);
     cfs.push(Math.round(sp + taxBenefit - remPayment));
     taxBenefit = getTaxBenefit(remPayment, goal.tdr, goal.tdl);
+    totalPTaxBenefit += taxBenefit
   }
   if (taxBenefit > 0) cfs.push(Math.round(taxBenefit));
-  return cfs;
+  return {cfs: cfs, ptb: totalPTaxBenefit, itb: totalITaxBenefit};
 };
 
 const getRemPrincipal = (
@@ -630,12 +546,14 @@ const createManualCFs = (
   let targets = goal.tgts;
   let cfs: Array<number> = [];
   let taxBenefitPrev = 0;
+  let totalTaxBenefit = 0
   for (let i = 0; i < duration; i++) {
     let v = 0;
     if (i < targets.length) v = targets[i].val;
-    let taxBenefit = getTaxBenefit(v, goal.tdr, goal.tdl);
+    let taxBenefit = getTaxBenefit(v, isTaxCreditEligible(goal.type) ? 100 : goal.tdr, goal.tdl);
     v -= taxBenefitPrev;
     taxBenefitPrev = taxBenefit;
+    totalTaxBenefit += taxBenefit
     if (goal.type === APIt.GoalType.B && duration)
       v -= Math.round(
         calculateBuyAnnualNetCF(
@@ -660,10 +578,11 @@ const createManualCFs = (
     }
     let sp = calculateSellPrice(p, goal?.achg as number, duration);
     cfs.push(Math.round(sp + taxBenefitPrev - remPayment));
-    taxBenefitPrev = getTaxBenefit(remPayment, goal.tdr, goal.tdl);
+    taxBenefitPrev = getTaxBenefit(remPayment, isTaxCreditEligible(goal.type) ? 100 : goal.tdr, goal.tdl);
+    totalTaxBenefit += taxBenefitPrev
   }
   if (taxBenefitPrev > 0) cfs.push(Math.round(taxBenefitPrev));
-  return cfs;
+  return {cfs: cfs, ptb: totalTaxBenefit};
 };
 
 const calculateMustAllocation = (
