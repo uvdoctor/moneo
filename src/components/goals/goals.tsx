@@ -70,7 +70,7 @@ export default function Goals({
   const [rr, setRR] = useState<Array<number>>([]);
   const goalsLabel = "Goals";
   const cfLabel = "Cash Flows";
-  const aaLabel = "Asset Allocation";
+  const aaLabel = "Allocation";
   const [viewMode, setViewMode] = useState<string>(goalsLabel);
   const nowYear = new Date().getFullYear();
   const tabOptions = [
@@ -517,10 +517,10 @@ export default function Goals({
         ? allGoals &&
           allGoals.length > 0 && (
             <Fragment>
-              <div className="w-full flex justify-center bg-green-100 py-1 shadow-lg lg:shadow-xl">
-                <div className="flex mt-2 items-end">
+              <div className="w-full flex justify-center bg-green-100 py-1 shadow-lg lg:shadow-xl text-sm md:text-base">
+                <div className="flex mt-2 items-end justify-center">
                   {viewMode === goalsLabel && (
-                    <div className="mr-2">
+                    <div className="mr-1 md:mr-2">
                       <SelectInput
                         inputOrder={1}
                         currentOrder={0}

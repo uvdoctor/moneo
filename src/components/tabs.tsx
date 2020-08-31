@@ -29,7 +29,7 @@ export default function Tabs(props: TabsProps) {
       },
     },
     standard: {
-      parent: `w-full text-base ${!props.allInputDone || props.keepCentered ? 'justify-center' : 'mr-0 justify-around'}`,
+      parent: `w-full text-sm md:text-base ${!props.allInputDone || props.keepCentered ? 'justify-center' : 'mr-0 justify-around'}`,
       current: `${(!props.allInputDone || props.keepCentered) && 'mr-2 md:mr-4'}`,
       selected: {
         text: "text-blue-600",
@@ -123,9 +123,9 @@ export default function Tabs(props: TabsProps) {
                 !isLinkDisabled(tab) && props.selectedTabHandler(tab.label)
               }
             >
-              <div className="flex flex-col items-center">
+              <div className="w-full flex flex-col justify-center items-center">
                 {tab.svg && (
-                  <div className="flex items-center">
+                  <div className="flex justify-center items-center">
                     <tab.svg
                       disabled={isLinkDisabled(tab)}
                       selected={props.selectedTab === tab.label}

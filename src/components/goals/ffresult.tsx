@@ -83,7 +83,7 @@ export default function FFResult({
       ) : (
         <p className="text-center bg-red-100 font-semibold py-2">
           Financial Freedom May not be possible till You turn 70. Please try
-          again with different Inputs / Goals.
+          again with different Goals / Inputs.
         </p>
       )}
     </div>
