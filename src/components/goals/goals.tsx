@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Goal from "./goal";
 import FFGoal from "./ffgoal";
-import { appendValue, buildTabsArray, removeFromArray } from "../utils";
+import { appendValue, removeFromArray } from "../utils";
 import CFChart from "./cfchart";
 import * as APIt from "../../api/goals";
 import {
@@ -23,7 +23,10 @@ import { toast } from "react-toastify";
 import { useFullScreen } from "react-browser-hooks";
 import Tabs from "../tabs";
 import { ASSET_TYPES } from "../../CONSTANTS";
-import SVGChart from "../svgchart";
+import SVGBarChart from "../svgbarchart";
+import TreeMapChart from "./treemapchart";
+import SVGAAChart from "./svgaachart";
+import SVGList from "../svglist";
 interface GoalsProps {
   showModalHandler: Function;
   savings: number;
@@ -67,11 +70,32 @@ export default function Goals({
   const [rr, setRR] = useState<Array<number>>([]);
   const goalsLabel = "Goals";
   const cfLabel = "Cash Flows";
+  const aaLabel = "Asset Allocation";
   const [viewMode, setViewMode] = useState<string>(goalsLabel);
   const nowYear = new Date().getFullYear();
-  const tabOptions = buildTabsArray({[goalsLabel]: SVGChart, [cfLabel]: SVGChart});
+  const tabOptions = [
+    {
+      label: goalsLabel,
+      order: 1,
+      active: true,
+      svg: SVGList,
+    },
+    {
+      label: aaLabel,
+      order: 2,
+      active: true,
+      svg: SVGAAChart,
+      svglabel: nowYear + 1
+    },
+    {
+      label: cfLabel,
+      order: 3,
+      active: true,
+      svg: SVGBarChart,
+      svglabel: currency
+    }
+  ]
   const [videoUrl, setVideoUrl] = useState<string>("");
-
   const irDiffByCurrency: any = {
     INR: 3,
   };
@@ -452,7 +476,10 @@ export default function Goals({
                   }`
                 : `Financial Freedom May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
             </label>
-            <div className="flex items-center cursor-pointer" onClick={() => setWIPGoal(ffGoal)}>
+            <div
+              className="flex items-center cursor-pointer"
+              onClick={() => setWIPGoal(ffGoal)}
+            >
               <SVGEdit />
               <span className="text-blue-600 hover:text-blue-800">Edit</span>
             </div>
@@ -486,12 +513,12 @@ export default function Goals({
             )
         )}
       </div>
-      {ffGoal
+      {ffGoal && ffResult
         ? allGoals &&
           allGoals.length > 0 && (
             <Fragment>
               <div className="w-full flex justify-center">
-                <div className="flex items-end text-base">
+                <div className="flex mt-2 items-end text-base">
                   {viewMode === goalsLabel && (
                     <div className="mr-2">
                       <SelectInput
@@ -515,15 +542,14 @@ export default function Goals({
                     selectedTabHandler={setViewMode}
                     allInputDone
                   />
-                  {viewMode === cfLabel && (
-                    <span className="ml-1 font-semibold">{currency}</span>
-                  )}
                 </div>
               </div>
-              <p className="text-center text-base mt-4">
-                Negative values imply You Pay, while Positive values imply You
-                Receive
-              </p>
+              {viewMode !== aaLabel && (
+                <p className="text-center text-base mt-4">
+                  Negative values imply You Pay, while Positive values imply You
+                  Receive
+                </p>
+              )}
               {viewMode === cfLabel && (
                 <CFChart
                   mustCFs={mustCFs}
@@ -533,6 +559,9 @@ export default function Goals({
                   to={ffGoal.ey}
                   fullScreen={fullScreen}
                 />
+              )}
+              {viewMode === aaLabel && ffResult.aa && ffResult.rr && (
+                <TreeMapChart aa={ffResult.aa} rr={ffResult.rr} fullScreen={fullScreen} />
               )}
               {viewMode === goalsLabel && (
                 <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">

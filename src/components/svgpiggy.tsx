@@ -8,7 +8,6 @@ interface SVGPiggyProps {
 export default function SVGPiggy({ disabled, selected }: SVGPiggyProps) {
   return (
     <svg className="w-8" viewBox="0 0 512 512">
-      {" "}
       <path
         fill={disabled ? COLORS.DISABLED : selected ? "#fbb6ce" : "white"}
         d="M490.171,278.926l-20.972-6.717c-5.018-1.607-8.916-5.57-10.497-10.596
@@ -93,20 +92,20 @@ export default function SVGPiggy({ disabled, selected }: SVGPiggyProps) {
 		c14.876,7.792,7.084,91.91-15.584,104.749C384.764,252.041,321.234,241.89,336.717,168.411z"
         />
       </g>
-      <circle fill={disabled ? COLORS.DISABLED : selected ? COLORS.GREEN : COLORS.DISABLED} cx="230.68" cy="106.818" r="94.25" />
+      <circle fill={disabled ? COLORS.DISABLED : selected ? COLORS.GREEN : "white"} cx="230.68" cy="106.818" r="94.25" />
       <path
-        fill="#fbb6ce"
+        fill={disabled ? COLORS.DISABLED : selected ? "#fbb6ce" : "white"}
         d="M415.936,144.637c-10.344,0-35.391,8.524-65.367,22.246c-1.637,0.749-2.818,2.163-3.159,3.78
 	c-4.368,20.732-2.032,37.418,6.758,48.252c1.028,1.267,2.155,2.459,3.369,3.574c1.414,1.299,3.693,0.571,4.163-1.29
 	C372.119,179.94,422.677,144.637,415.936,144.637z"
       />
       <path
-        fill={COLORS.GREEN}
+        fill={disabled ? COLORS.DISABLED : selected ? COLORS.GREEN : "white"}
         d="M298.48,41.354L165.22,174.615c36.892,35.643,95.69,35.262,132.106-1.154
 	S334.123,78.246,298.48,41.354z"
       />
       <path
-        fill="white"
+        fill={disabled ? COLORS.DISABLED : selected ? "white" : COLORS.DEFAULT}
         d="M228.513,153.579c-16.288-0.263-27.322-9.064-27.322-15.5c0-3.153,2.758-7.488,6.042-7.488
 	c4.335,0,7.881,9.195,21.28,10.246v-30.869c-11.822-4.203-24.958-8.932-24.958-25.746c0-16.551,12.479-23.119,24.958-24.433V55.98
 	c0-1.576,1.576-3.021,3.81-3.021c1.97,0,3.941,1.445,3.941,3.021v3.547c8.932,0.263,21.543,3.021,21.543,9.458
