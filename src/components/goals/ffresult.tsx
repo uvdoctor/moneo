@@ -73,7 +73,7 @@ export default function FFResult({
           />
           <ResultItem
             result={result.leftAmt}
-            svg={<SVGInheritance />}
+            svg={<SVGInheritance disabled={false} selected />}
             label="Savings @ 100 Years"
             currency={currency}
             info={`This is the savings amount when You turn 100 Years old, which may be inherited by Your Nominees. 

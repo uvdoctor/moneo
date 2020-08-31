@@ -642,7 +642,7 @@ export default function Goal({
                 duration={getDur()}
                 title="Yearly Income through Rent, Dividend, etc"
                 footer="Exclude taxes & fees"
-                inputOrder={getOrderByTabLabel(tabOptions, earnLabel)}
+                inputOrder={getOrderByTabLabel(tabOptions, earnLabel) + 2}
                 currentOrder={currentOrder}
                 nextStepDisabled={false}
                 nextStepHandler={handleNextStep}
