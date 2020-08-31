@@ -104,7 +104,7 @@ export default function Sell(props: SellProps) {
           bottom={
             <div className="flex justify-around w-full items-center">
               <ResultItem
-                svg={<SVGMoneyBag />}
+                svg={<SVGMoneyBag disabled={false} selected />}
                 label="You May Get"
                 footer={`In ${props.startYear + props.sellAfter}`}
                 result={Math.round(props.sellPrice)}
