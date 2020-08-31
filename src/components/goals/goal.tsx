@@ -156,7 +156,7 @@ export default function Goal({
           { label: maintainLabel, order: 15, active: true },
           { label: earnLabel, order: 17, active: true },
           { label: sellLabel, order: 19, active: true },
-          { label: rentLabel, order: 21, active: true },
+          { label: rentLabel, order: 21, active: true, svg: SVGScale },
         ]
       : !isLoanEligible(goalType)
       ? [
@@ -402,9 +402,11 @@ export default function Goal({
       price > 0 &&
       brChartData &&
       brChartData.length === 2 &&
-      nowYear >= startYear
-    )
-      setShowBRChart(true);
+      nowYear < startYear
+    ) {
+      console.log("Yay")
+      setShowBRChart(true)
+    }
     else setShowBRChart(false);
   }, [sellAfter, price, rentAmt, brChartData]);
 
