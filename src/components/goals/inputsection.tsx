@@ -29,13 +29,6 @@ export default function InputSection({
   handleSubmit,
 }: InputSectionProps) {
   const fsb = useFullScreenBrowser();
-  const [tabsCapacity, setTabsCapacity] = useState<number>(3);
-
-  useEffect(() => {
-    let width = fsb.info.innerWidth
-    if(width >= 1024) setTabsCapacity(3)
-    else setTabsCapacity(Math.floor(fsb.info.innerWidth / 100));
-  }, [fsb.info.innerWidth]);
 
   return (
     <div
@@ -48,7 +41,7 @@ export default function InputSection({
           tabs={tabOptions}
           selectedTab={showTab}
           selectedTabHandler={showTabHandler}
-          capacity={tabsCapacity}
+          capacity={tabOptions.length}
           currentOrder={currentOrder}
           allInputDone={allInputDone}
           bottomRounded

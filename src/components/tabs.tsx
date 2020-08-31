@@ -30,7 +30,7 @@ export default function Tabs(props: TabsProps) {
       },
     },
     standard: {
-      parent: "text-base justify-center",
+      parent: `text-base ${!props.allInputDone ? 'justify-center' : 'justify-around'}`,
       selected: {
         background: "",
         text: "text-blue-600",
@@ -111,7 +111,7 @@ export default function Tabs(props: TabsProps) {
           return (
             <div
               key={"tab" + i}
-              className={`mr-2 items-start 
+              className={`${!props.allInputDone ? 'mr-2' : 'mr-0'} items-start 
                     ${
                       props.selectedTab === tab.label
                         ? `${currentStyle.selected.text} ${currentStyle.selected.background} font-semibold`

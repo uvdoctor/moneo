@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import * as APIt from "../../api/goals";
@@ -31,6 +31,8 @@ import BRCompChart from "./brcompchart";
 import SVGPay from "../svgpay";
 import SVGTaxBenefit from "../svgtaxbenefit";
 import SVGLoan from "../svgloan";
+import SVGSell from "../svgsell";
+import SVGCashFlow from "../svgcashflow";
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -132,12 +134,12 @@ export default function Goal({
   const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const nowYear = new Date().getFullYear();
-  const amtLabel = "Amount";
-  const taxLabel = "Benefit";
+  const amtLabel = "Cost";
+  const taxLabel = "Tax";
   const sellLabel = "Sell";
   const loanLabel = "Loan";
   const earnLabel = "Earn";
-  const maintainLabel = "Maintain";
+  const annualNetCostLabel = "Yearly";
   const rentLabel = "Rent?";
   const cfChartLabel = "Cash Flows";
   const brChartLabel = "Buy v/s Rent";
@@ -151,21 +153,35 @@ export default function Goal({
     goalType === APIt.GoalType.B
       ? [
           { label: amtLabel, order: 3, active: true, svg: SVGPay },
-          { label: taxLabel, order: 8, active: true, svg: SVGTaxBenefit, svglabel: 'Tax' },
+          {
+            label: taxLabel,
+            order: 8,
+            active: true,
+            svg: SVGTaxBenefit,
+          },
           { label: loanLabel, order: 10, active: true, svg: SVGLoan },
-          { label: maintainLabel, order: 15, active: true },
-          { label: earnLabel, order: 17, active: true },
-          { label: sellLabel, order: 19, active: true },
+          { label: annualNetCostLabel, order: 15, active: true, svg: SVGCashFlow },
+          { label: sellLabel, order: 19, active: true, svg: SVGSell },
           { label: rentLabel, order: 21, active: true, svg: SVGScale },
         ]
       : !isLoanEligible(goalType)
       ? [
           { label: amtLabel, order: 3, active: true, svg: SVGPay },
-          { label: taxLabel, order: 8, active: true, svg: SVGTaxBenefit, svglabel: 'Tax' },
+          {
+            label: taxLabel,
+            order: 8,
+            active: true,
+            svg: SVGTaxBenefit,
+          },
         ]
       : [
           { label: amtLabel, order: 3, active: true, svg: SVGPay },
-          { label: taxLabel, order: 8, active: true, svg: SVGTaxBenefit, svglabel: 'Tax' },
+          {
+            label: taxLabel,
+            order: 8,
+            active: true,
+            svg: SVGTaxBenefit,
+          },
           { label: loanLabel, order: 10, active: true, svg: SVGLoan },
         ]
   );
@@ -403,10 +419,8 @@ export default function Goal({
       brChartData &&
       brChartData.length === 2 &&
       nowYear < startYear
-    ) {
-      console.log("Yay")
-      setShowBRChart(true)
-    }
+    )
+      setShowBRChart(true);
     else setShowBRChart(false);
   }, [sellAfter, price, rentAmt, brChartData]);
 
@@ -594,47 +608,47 @@ export default function Goal({
             />
           )}
 
-          {showTab === maintainLabel && (
-            <AnnualAmt
-              currency={currency}
-              startYear={startYear}
-              percentage={amCostPer as number}
-              chgRate={assetChgRate as number}
-              percentageHandler={setAMCostPer}
-              annualSY={amStartYear as number}
-              annualSYHandler={setAMStartYear}
-              price={price}
-              duration={getDur()}
-              title="Yearly Fixes, Insurance, etc costs"
-              footer="Include taxes & fees"
-              inputOrder={getOrderByTabLabel(tabOptions, maintainLabel)}
-              currentOrder={currentOrder}
-              nextStepDisabled={false}
-              nextStepHandler={handleNextStep}
-              allInputDone={allInputDone}
-              colorTo
-            />
-          )}
+          {showTab === annualNetCostLabel && (
+            <Fragment>
+              <AnnualAmt
+                currency={currency}
+                startYear={startYear}
+                percentage={amCostPer as number}
+                chgRate={assetChgRate as number}
+                percentageHandler={setAMCostPer}
+                annualSY={amStartYear as number}
+                annualSYHandler={setAMStartYear}
+                price={price}
+                duration={getDur()}
+                title="Yearly Fixes, Insurance, etc costs"
+                footer="Include taxes & fees"
+                inputOrder={getOrderByTabLabel(tabOptions, annualNetCostLabel)}
+                currentOrder={currentOrder}
+                nextStepDisabled={false}
+                nextStepHandler={handleNextStep}
+                allInputDone={allInputDone}
+                colorTo
+              />
 
-          {showTab === earnLabel && (
-            <AnnualAmt
-              currency={currency}
-              startYear={startYear}
-              percentage={aiPer as number}
-              chgRate={assetChgRate as number}
-              percentageHandler={setAIPer}
-              annualSY={aiStartYear as number}
-              annualSYHandler={setAIStartYear}
-              price={price}
-              duration={getDur()}
-              title="Yearly Income through Rent, Dividend, etc"
-              footer="Exclude taxes & fees"
-              inputOrder={getOrderByTabLabel(tabOptions, earnLabel)}
-              currentOrder={currentOrder}
-              nextStepDisabled={false}
-              nextStepHandler={handleNextStep}
-              allInputDone={allInputDone}
-            />
+              <AnnualAmt
+                currency={currency}
+                startYear={startYear}
+                percentage={aiPer as number}
+                chgRate={assetChgRate as number}
+                percentageHandler={setAIPer}
+                annualSY={aiStartYear as number}
+                annualSYHandler={setAIStartYear}
+                price={price}
+                duration={getDur()}
+                title="Yearly Income through Rent, Dividend, etc"
+                footer="Exclude taxes & fees"
+                inputOrder={getOrderByTabLabel(tabOptions, earnLabel)}
+                currentOrder={currentOrder}
+                nextStepDisabled={false}
+                nextStepHandler={handleNextStep}
+                allInputDone={allInputDone}
+              />
+            </Fragment>
           )}
 
           {showTab === sellLabel && (
