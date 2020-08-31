@@ -28,6 +28,9 @@ import LineChart from "./linechart";
 import InputSection from "./inputsection";
 import RentComparison from "./rentcomparison";
 import BRCompChart from "./brcompchart";
+import SVGPay from "../svgpay";
+import SVGTaxBenefit from "../svgtaxbenefit";
+import SVGLoan from "../svgloan";
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -130,7 +133,7 @@ export default function Goal({
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const nowYear = new Date().getFullYear();
   const amtLabel = "Amount";
-  const taxLabel = "Tax";
+  const taxLabel = "Benefit";
   const sellLabel = "Sell";
   const loanLabel = "Loan";
   const earnLabel = "Earn";
@@ -147,9 +150,9 @@ export default function Goal({
   const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
       ? [
-          { label: amtLabel, order: 3, active: true },
-          { label: taxLabel, order: 8, active: true },
-          { label: loanLabel, order: 10, active: true },
+          { label: amtLabel, order: 3, active: true, svg: SVGPay },
+          { label: taxLabel, order: 8, active: true, svg: SVGTaxBenefit, svglabel: 'Tax' },
+          { label: loanLabel, order: 10, active: true, svg: SVGLoan },
           { label: maintainLabel, order: 15, active: true },
           { label: earnLabel, order: 17, active: true },
           { label: sellLabel, order: 19, active: true },
@@ -157,13 +160,13 @@ export default function Goal({
         ]
       : !isLoanEligible(goalType)
       ? [
-          { label: amtLabel, order: 3, active: true },
-          { label: taxLabel, order: 8, active: true },
+          { label: amtLabel, order: 3, active: true, svg: SVGPay },
+          { label: taxLabel, order: 8, active: true, svg: SVGTaxBenefit, svglabel: 'Tax' },
         ]
       : [
-          { label: amtLabel, order: 3, active: true },
-          { label: taxLabel, order: 8, active: true },
-          { label: loanLabel, order: 10, active: true },
+          { label: amtLabel, order: 3, active: true, svg: SVGPay },
+          { label: taxLabel, order: 8, active: true, svg: SVGTaxBenefit, svglabel: 'Tax' },
+          { label: loanLabel, order: 10, active: true, svg: SVGLoan },
         ]
   );
   const [showTab, setShowTab] = useState(amtLabel);
