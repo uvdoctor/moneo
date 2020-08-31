@@ -79,6 +79,7 @@ export default function TreeMapChart({
       layout={{
         ...getCommonLayoutProps(),
         hoverlabel: { labelformat: "%" },
+        margin: { t: 0, l: 0, r: 0, b:0}
       }}
       useResizeHandler
       style={getCommonStyle()}

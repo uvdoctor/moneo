@@ -49,7 +49,7 @@ export default function CFChart({ mustCFs, tryCFs, optCFs, from, to, fullScreen 
                 legend: {
                     orientation: 'h',
                     x: 0.5,
-                    y: 1.5
+                    y: 1
                 },
             }}
                 useResizeHandler

@@ -9,7 +9,7 @@ export const getCommonLayoutProps = (
     autosize: autosize,
     title: title ? { x: 0.05, text: title, font: { size: 20 } } : false,
     yaxis: { tickformat: tickFormat, fixedrange: true, showgrid: false },
-    margin: { t: title ? 40 : 10, r: 0},
+    margin: { t: title ? 40 : 0, r: 0},
   };
 };
 
