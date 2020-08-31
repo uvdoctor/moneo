@@ -26,19 +26,19 @@ export default function Summary(props: SummaryProps) {
     const nowYear = new Date().getFullYear()
 
     return (
-        <div className="mt-2 mb-2 max-w-sm md:max-w-md rounded-full shadow-lg text-lg md:text-xl w-full">
+        <div className="mt-2 mb-2 py-2 border border-red-100 max-w-sm md:max-w-md rounded-lg shadow-xl text-lg md:text-xl w-full">
             <div className="flex justify-between items-center w-full">
                 <label className={`${bgColor} text-white py-1 px-2`}>{getImpLevels()[props.imp]}</label>
                 <div className="flex flex-col justify-center items-center font-semibold">
                     <label>{getGoalTypes()[props.type]}</label>
                     <label>{props.name}</label>
                 </div>
-                <div className="flex text-base">
-                    <div className="hover:text-blue-600 cursor-pointer" onClick={() => props.editCallback(props.id)}>
+                <div className="flex text-base text-blue-600">
+                    <div className="hover:text-blue-800 cursor-pointer" onClick={() => props.editCallback(props.id)}>
                         <SVGEdit />
                         Edit
                     </div>
-                    <div className="flex flex-col items-center ml-2 cursor-pointer hover:text-blue-600" onClick={() => props.deleteCallback(props.id)}>
+                    <div className="flex flex-col items-center ml-2 cursor-pointer hover:text-blue-800" onClick={() => props.deleteCallback(props.id)}>
                         <SVGTrash />
                         Delete
                     </div>

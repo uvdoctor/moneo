@@ -5,6 +5,8 @@ import NextStep from "./nextstep";
 import SVGInfo from "../svginfo";
 import { toast } from "react-toastify";
 import { COLORS, INPUT_HIGHLIGHT } from "../../CONSTANTS";
+import SVGPlay from "../svgplay";
+import SVGStop from "../svgstop";
 
 interface NumberInputProps {
   inputOrder: number;
@@ -28,11 +30,17 @@ interface NumberInputProps {
   changeHandler: any;
   note?: any;
   step?: number;
+  feedback?: any;
+  videoSrc?: string;
+  videoUrl?: string;
+  videoHandler?: Function;
 }
 
 export default function NumberInput(props: NumberInputProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [editing, setEditing] = useState<boolean>(false);
+  const [sliderButtonColor, setSliderButtonColor] = useState<string>("white");
+  const [feedbackText, setFeedbackText] = useState<string>("");
   const width: string = props.width
     ? props.width
     : props.currency
@@ -54,6 +62,39 @@ export default function NumberInput(props: NumberInputProps) {
     else setRangeFactor(1);
   }, [props.rangeFactor]);
 
+  const handleKeyDown = (e: any) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      setEditing(false);
+    }
+  };
+
+  const getClosestKey = (value: number, keys: Array<number>) => {
+    let result: number = keys[0];
+    keys.forEach((k) => {
+      if (value >= k) result = k;
+      else return result;
+    });
+    return result;
+  };
+
+  const provideFeedback = (val: number) => {
+    if (props.feedback) {
+      let allKeys = Object.keys(props.feedback);
+      let allSortedKeys = allKeys
+        .map((k) => parseFloat(k))
+        .sort((a, b) => a - b);
+      let feedback: any = props.feedback[getClosestKey(val, allSortedKeys)];
+      if (!feedback || !feedback.label) {
+        setSliderButtonColor("white");
+        setFeedbackText("");
+      } else {
+        setSliderButtonColor(feedback.color);
+        setFeedbackText(feedback.label);
+      }
+    }
+  };
+
   return (
     <div>
       {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
@@ -66,20 +107,32 @@ export default function NumberInput(props: NumberInputProps) {
             `${INPUT_HIGHLIGHT} px-4`
           }`}
         >
-          {props.info && (
-            <div
-              className="w-full flex justify-end cursor-pointer"
-              onClick={() =>
-                toast.info(props.info, {
-                  autoClose: props.infoDurationInMs
-                    ? props.infoDurationInMs
-                    : 5000,
-                })
-              }
-            >
-              <SVGInfo />
-            </div>
-          )}
+          <div className="w-full flex justify-end cursor-pointer">
+            {props.info && (
+              <div
+                className="mr-1"
+                onClick={() =>
+                  toast.info(props.info, {
+                    autoClose: props.infoDurationInMs
+                      ? props.infoDurationInMs
+                      : 5000,
+                  })
+                }
+              >
+                <SVGInfo />
+              </div>
+            )}
+            {props.videoHandler && props.videoSrc && (
+              <div
+                onClick={() =>
+                  //@ts-ignore
+                  props.videoHandler(!props.videoUrl ? props.videoSrc : "")
+                }
+              >
+                {!props.videoUrl ? <SVGPlay /> : <SVGStop />}
+              </div>
+            )}
+          </div>
           <div
             className={`w-full flex justify-between ${
               props.max ? "items-center" : "flex-col"
@@ -99,14 +152,23 @@ export default function NumberInput(props: NumberInputProps) {
                   className="input"
                   type="number"
                   name={props.name}
-                  value={props?.value ? props.value : 0}
+                  value={props.value || props.currency ? props.value : 0}
                   min={props.min * rangeFactor}
                   max={props.max * rangeFactor}
                   step={props.step ? props.step * rangeFactor : 1}
-                  onChange={(e) =>
-                    props.changeHandler(e.currentTarget.valueAsNumber)
-                  }
-                  onBlur={() => setEditing(false)}
+                  onChange={(e) => {
+                    let val = e.currentTarget.valueAsNumber;
+                    provideFeedback(val);
+                    props.changeHandler(val);
+                  }}
+                  onFocus={(e) => {
+                    if(!props.value && e.currentTarget.value === "0") e.currentTarget.value = ""  
+                  }}
+                  onKeyDown={handleKeyDown}
+                  onBlur={(e) => {
+                    setEditing(false)
+                    if(!props.currency && !props.value) e.currentTarget.valueAsNumber = 0
+                  }}
                   required
                   style={{ textAlign: "right", width: width }}
                 />
@@ -115,16 +177,14 @@ export default function NumberInput(props: NumberInputProps) {
                   className="input"
                   type="text"
                   name={props.name}
-                  value={toCurrency(props.value, props.currency)}
+                  value={toCurrency(!props.value ? 0 : props.value, props.currency)}
                   onFocus={() => setEditing(true)}
                   style={{ textAlign: "right", width: width }}
                   readOnly
                 />
               )}
             </div>
-            {props.unit && (
-              <label className="ml-1">{props.unit}</label>
-            )}
+            {props.unit && <label className="ml-1">{props.unit}</label>}
           </div>
           {props.max && (
             <div className="flex flex-col mt-1">
@@ -133,18 +193,19 @@ export default function NumberInput(props: NumberInputProps) {
                 className="bg-gray-200 rounded-full shadow"
                 min={props.min * rangeFactor}
                 max={props.max * rangeFactor}
-                step={props.step as number * rangeFactor}
+                step={(props.step as number) * rangeFactor}
                 value={props.value}
-                onChange={props.changeHandler}
+                onChange={(val: number) => {
+                  provideFeedback(val);
+                  props.changeHandler(val);
+                }}
                 handleStyle={{
                   cursor: "grab",
                   width: "1.2rem",
                   height: "1.2rem",
-                  background: "#ffffff",
+                  background: sliderButtonColor,
                   borderRadius: "50%",
-                  appearance: "none",
-                  border: "none",
-                  outline: "none",
+                  borderColor: sliderButtonColor,
                   left: 0,
                   top: 2,
                   boxShadow:
@@ -156,6 +217,12 @@ export default function NumberInput(props: NumberInputProps) {
                   left: 0,
                   height: "0.9rem",
                 }}
+                dotStyle={{
+                  width: "0rem",
+                  height: "0rem",
+                  border: "none",
+                  background: "none",
+                }}
                 railStyle={{
                   background: "none",
                 }}
@@ -165,6 +232,7 @@ export default function NumberInput(props: NumberInputProps) {
                   <label className="mr-2">
                     {toReadableNumber(props.min ? props.min * rangeFactor : 0)}
                   </label>
+                  {feedbackText}
                   <label>{toReadableNumber(props.max * rangeFactor)}</label>
                 </div>
               )}

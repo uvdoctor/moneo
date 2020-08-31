@@ -40,6 +40,8 @@ interface FFGoalProps {
   tryCFs: Array<number>;
   mergedCfs: any;
   pp: Object;
+  videoUrl: string
+  videoHandler: Function
   ffYearHandler: Function;
   ffResultHandler: Function;
   rrHandler: Function;
@@ -60,6 +62,8 @@ export default function FFGoal({
   tryCFs,
   mergedCfs,
   pp,
+  videoUrl,
+  videoHandler,
   ffYearHandler,
   ffResultHandler,
   rrHandler,
@@ -322,7 +326,7 @@ export default function FFGoal({
   const buildChartCFs = (ffCfs: Object) => Object.values(ffCfs);
 
   const showResultSection = () =>
-    allInputDone && ffResult.rr && ffResult.rr.length > 0;
+    videoUrl || (allInputDone && ffResult.rr && ffResult.rr.length > 0);
 
   return (
     <div className="w-full h-full">
@@ -383,6 +387,8 @@ export default function FFGoal({
               annualSavings={annualSavings}
               monthlySavingsRate={monthlySavingsRate}
               monthlySavingsRateHandler={setMonthlySavingsRate}
+              videoUrl={videoUrl}
+              videoHandler={videoHandler}
             />
           )}
 
@@ -514,6 +520,8 @@ export default function FFGoal({
             showResultTab={showResultTab}
             showResultTabHandler={setShowResultTab}
             chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
+            videoUrl={videoUrl}
+            videoHandler={videoHandler}
             result={
               <FFResult
                 endYear={endYear}

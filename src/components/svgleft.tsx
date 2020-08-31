@@ -1,4 +1,5 @@
 import React from "react";
+import { COLORS } from "../CONSTANTS";
 
 interface SVGLeftProps {
   disable?: boolean;
@@ -15,7 +16,7 @@ export default function SVGLeft({ disable, className }: SVGLeftProps) {
         cx="12"
         cy="12"
         r="10"
-        fill={`${disable ? "#cbd5e0" : "#3182ce"}`}
+        fill={`${disable ? "#cbd5e0" : COLORS.BLUE}`}
       />
       <path
         fill="white"

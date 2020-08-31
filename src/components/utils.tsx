@@ -1,4 +1,4 @@
-import { ASSET_CATEGORIES, ASSET_TYPES } from "../CONSTANTS";
+import { ASSET_CATEGORIES, ASSET_TYPES, COLORS } from "../CONSTANTS";
 
 export function getCurrencyList() {
   return {
@@ -454,7 +454,7 @@ export const getAssetColour = (type: string) => {
     case ASSET_TYPES.SHORT_TERM_BONDS:
       return "#4299e1";
     case ASSET_TYPES.MED_TERM_BONDS:
-      return "#3182ce";
+      return COLORS.BLUE;
     case ASSET_TYPES.TAX_EXEMPT_BONDS:
       return "#2b6cb0";
     case ASSET_CATEGORIES.STOCKS:

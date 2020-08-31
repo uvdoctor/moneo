@@ -1,5 +1,6 @@
 export function getEmi(loanAmt: number, annualRate: number, months: number) {
-    if(loanAmt <= 0 || annualRate <= 0 || months <= 0) return 0
+    if(loanAmt <= 0 || annualRate < 0 || months <= 0) return 0
+    if(!annualRate) return loanAmt / months
     let monthlyRate = annualRate / 1200
     return loanAmt * monthlyRate *
     Math.pow(1 + monthlyRate, months) /

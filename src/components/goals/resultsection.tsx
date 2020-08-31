@@ -1,9 +1,10 @@
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import React, { Fragment, ReactNode, useEffect, useRef, useState } from "react";
 import { useFullScreen, useFullScreenBrowser } from "react-browser-hooks";
 import SVGFullScreen from "../svgfullscreen";
 import SVGExitFullScreen from "../svgexitfullscreen";
 import DynamicSlider from "../dynamicslider";
 import Tabs, { RESULT_TAB_STYLE } from "../tabs";
+import VideoPlayer from "../videoplayer";
 interface ResultSectionProps {
   result: ReactNode;
   resultTabOptions: Array<any>;
@@ -11,6 +12,8 @@ interface ResultSectionProps {
   children: ReactNode;
   showResultTabHandler: Function;
   chartFullScreenHandler: Function;
+  videoUrl: string;
+  videoHandler: Function
 }
 
 export default function ResultSection(props: ResultSectionProps) {
@@ -35,36 +38,44 @@ export default function ResultSection(props: ResultSectionProps) {
       ref={chartDiv}
       className={`w-full lg:w-2/3 xl:w-3/4 transition-width duration-1000 ease-in-out`}
     >
-      {props.result}
-      <div className="flex w-full items-center font-semibold">
-        <div className="ml-1 w-1/12 cursor-pointer" onClick={toggle}>
-          {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
-        </div>
-        <div className="w-11/12">
-          {props.resultTabOptions.length > 1 ? (
-            <Tabs
-              tabs={props.resultTabOptions}
-              selectedTab={props.showResultTab}
-              selectedTabHandler={props.showResultTabHandler}
-              capacity={numOfTabs}
-              customStyle={RESULT_TAB_STYLE}
-              allInputDone
-            />
-          ) : (
-            <div className="w-full mt-2 flex justify-center items-center">
-              {props.resultTabOptions[0].svg}
-              <label className="ml-1">{props.resultTabOptions[0].label}</label>
+      {props.videoUrl ? (
+        <VideoPlayer url={props.videoUrl} urlHandler={props.videoHandler} />
+      ) : (
+        <Fragment>
+          {props.result}
+          <div className="flex w-full items-center font-semibold">
+            <div className="ml-1 w-1/12 cursor-pointer" onClick={toggle}>
+              {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
             </div>
-          )}
-        </div>
-      </div>
-      <DynamicSlider
-        setSlide={props.showResultTabHandler}
-        totalItems={props.resultTabOptions}
-        currentItem={props.showResultTab}
-      >
-        {props.children}
-      </DynamicSlider>
+            <div className="w-11/12">
+              {props.resultTabOptions.length > 1 ? (
+                <Tabs
+                  tabs={props.resultTabOptions}
+                  selectedTab={props.showResultTab}
+                  selectedTabHandler={props.showResultTabHandler}
+                  capacity={numOfTabs}
+                  customStyle={RESULT_TAB_STYLE}
+                  allInputDone
+                />
+              ) : (
+                <div className="w-full mt-2 flex justify-center items-center">
+                  {props.resultTabOptions[0].svg}
+                  <label className="ml-1">
+                    {props.resultTabOptions[0].label}
+                  </label>
+                </div>
+              )}
+            </div>
+          </div>
+          <DynamicSlider
+            setSlide={props.showResultTabHandler}
+            totalItems={props.resultTabOptions}
+            currentItem={props.showResultTab}
+          >
+            {props.children}
+          </DynamicSlider>
+        </Fragment>
+      )}
     </div>
   );
 }

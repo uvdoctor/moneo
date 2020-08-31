@@ -15,6 +15,8 @@
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.7",
     "@fseehawer/react-circular-slider": "^2.3.2",
+    "@mdx-js/loader": "^1.6.16",
+    "@next/mdx": "^9.5.2",
     "aws-amplify": "^3.0.13",
     "next": "^9.4.4",
     "next-pwa": "^2.4.1",
@@ -27,6 +29,7 @@
     "react-browser-hooks": "^2.2.4",
     "react-dom": "^16.13.0",
     "react-plaid-link": "^2.2.3",
+    "react-player": "^2.6.1",
     "react-plotly.js": "^2.4.0",
     "react-toastify": "^6.0.8",
     "swr": "^0.2.2",

@@ -8,15 +8,15 @@ import Section from "../form/section";
 import ExpandCollapse from "../form/expandcollapse";
 import {
   getLoanPaidForMonths,
-  calculateInterestTaxBenefit,
   adjustAccruedInterest,
   createEduLoanDPWithSICFs,
-  getTaxBenefit, getLoanBorrowAmt
 } from "../goals/cfutils";
 import HToggle from "../horizontaltoggle";
 import { GoalType } from "../../api/goals";
 import ResultItem from "./resultitem";
-import { COLORS } from "../../CONSTANTS"
+import { COLORS } from "../../CONSTANTS";
+import InfoText from "../infotext";
+import {isTaxCreditEligible} from "../goals/goalutils"
 interface EmiProps {
   inputOrder: number;
   currentOrder: number;
@@ -39,7 +39,10 @@ interface EmiProps {
   taxBenefitInt: number;
   maxTaxDeductionInt: number;
   taxRate: number;
+  iTaxBenefit: number;
   goalType: GoalType;
+  videoUrl: string
+  videoHandler: Function;
   repaymentSYHandler: Function;
   loanMonthsHandler: Function;
   loanPerHandler: Function;
@@ -51,7 +54,6 @@ interface EmiProps {
 
 export default function EmiCost(props: EmiProps) {
   const [totalIntAmt, setTotalIntAmt] = useState<number>(0);
-  const [totalIntTaxBenefit, setTotalIntTaxBenefit] = useState<number>(0);
   const [ryOptions, setRYOptions] = useState(
     initYearOptions(
       props.goalType === GoalType.E ? props.endYear + 1 : props.startYear,
@@ -63,7 +65,7 @@ export default function EmiCost(props: EmiProps) {
   const [showIntSchedule, setShowIntSchedule] = useState<boolean>(false);
 
   const calculateEmi = () => {
-    let borrowAmt = 0;
+    let borrowAmt = props.loanBorrowAmt;
     let simpleInts: Array<number> = [];
     if (props.goalType === GoalType.E) {
       let result = createEduLoanDPWithSICFs(
@@ -97,34 +99,14 @@ export default function EmiCost(props: EmiProps) {
       props.loanYears * 12
     ) as number;
     setEMI(Math.round(emi));
-    if (props.taxBenefitInt > 0) {
-      let intTaxBenefit = calculateInterestTaxBenefit(
-        borrowAmt,
-        props.loanAnnualInt,
-        props.loanYears,
-        props.repaymentSY,
-        props.startYear,
-        props.duration,
-        props.taxRate,
-        props.maxTaxDeductionInt
-      );
-      let simpleTaxBenefit = 0;
-      simpleInts.forEach(
-        (int) =>
-          (simpleTaxBenefit += getTaxBenefit(
-            int,
-            props.taxRate,
-            props.maxTaxDeductionInt
-          ))
-      );
-      setTotalIntTaxBenefit(Math.round(intTaxBenefit + simpleTaxBenefit));
-    } else setTotalIntTaxBenefit(0);
     let totalSimpleIntAmt = 0;
     simpleInts.forEach((int) => (totalSimpleIntAmt += int));
     let totalIntAmt = 0;
     if (props.goalType !== GoalType.B) {
-      totalIntAmt = (emi * loanPaidForMonths) + totalSimpleIntAmt - props.loanBorrowAmt;
-    } else totalIntAmt = getTotalInt(
+      totalIntAmt =
+        emi * loanPaidForMonths + totalSimpleIntAmt - props.loanBorrowAmt;
+    } else
+      totalIntAmt = getTotalInt(
         borrowAmt,
         emi,
         props.loanAnnualInt,
@@ -151,7 +133,7 @@ export default function EmiCost(props: EmiProps) {
           title="Loan Details"
           insideForm
           toggle={
-            props.taxRate ? (
+            !isTaxCreditEligible(props.goalType) && props.taxRate ? (
               <HToggle
                 rightText="Claim Interest Tax Deduction"
                 value={props.taxBenefitInt}
@@ -237,6 +219,54 @@ export default function EmiCost(props: EmiProps) {
                     pre="Yearly"
                     post="Interest"
                     unit="%"
+                    feedback={{
+                      0: {
+                        label: (
+                          <InfoText
+                            text="YAY!!!"
+                            info={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
+                            As it is Very Easy for Your Investment to recover this Yearly Interest with Minimal Risk, this is an Excellent Deal!`}
+                            color={COLORS.GREEN}
+                          />
+                        ),
+                        color: COLORS.GREEN,
+                      },
+                      1: {
+                        label: (
+                          <InfoText
+                            text="CHEAP"
+                            info={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
+                            As it is Easy for Your Investment to recover this Yearly Interest with Minimal Risk, this is a Good Deal!`}
+                            color={COLORS.BLUE}
+                          />
+                        ),
+                        color: COLORS.BLUE,
+                      },
+                      3.5: { label: "", color: "" },
+                      8: {
+                        label: (
+                          <InfoText
+                            text="COSTLY"
+                            info={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
+                            As it is Difficult for Your Investment to recover this Yearly Interest even with High Risk, this is an Expensive Loan!`}
+                            color="#dd6b20"
+                          />
+                        ),
+                        color: "#dd6b20",
+                      },
+                      10: {
+                        label: (
+                          <InfoText
+                            text="COSTLY!!!"
+                            info={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
+                            As it is Very Difficult for Your Investment to recover this Yearly Interest even with Very High Risk, 
+                            this is a Very Expensive Loan!!!`}
+                            color={COLORS.RED}
+                          />
+                        ),
+                        color: COLORS.RED,
+                      },
+                    }}
                     note={
                       <ResultItem
                         label="Total Interest"
@@ -250,6 +280,9 @@ export default function EmiCost(props: EmiProps) {
                     min={0.0}
                     max={25.0}
                     step={0.1}
+                    videoUrl={props.videoUrl}
+                    videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
+                    videoHandler={props.videoHandler}
                   />
                 </div>
                 {props.goalType === GoalType.E && (
@@ -296,7 +329,7 @@ export default function EmiCost(props: EmiProps) {
                     />
                   </div>
                 )}
-                {props.taxRate && props.taxBenefitInt ? (
+                {props.taxRate && props.taxBenefitInt && !isTaxCreditEligible(props.goalType) ? (
                   <div className="mt-2">
                     <NumberInput
                       name="maxTaxDeductionInt"
@@ -316,8 +349,8 @@ export default function EmiCost(props: EmiProps) {
                       step={1000}
                       note={
                         <ResultItem
-                          label="Total Tax Benefit"
-                          result={totalIntTaxBenefit}
+                          label="Total Interest Tax Benefit"
+                          result={props.iTaxBenefit}
                           currency={props.currency}
                           footer={`Over ${props.duration} Years`}
                         />
