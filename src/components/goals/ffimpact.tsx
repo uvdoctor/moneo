@@ -17,9 +17,9 @@ export default function FFImpact(props: FFImpactProps) {
     return (
         <Fragment>
             {props.ffImpactYears !== null ?
-                (props.ffImpactYears === 0 ? <ResultItem label="Financial Freedom Impact" result="No Delay"
+                (props.ffImpactYears === 0 ? <ResultItem label="Impact" result="No Delay"
                     info="This Goal does not delay Your Financial Freedom Year." hideLabel={props.hideResultLabel} />
-                    : <ResultItem svg={<SVGHourGlass />} label="Financial Freedom Impact" pl hideLabel={props.hideResultLabel}
+                    : <ResultItem svg={<SVGHourGlass />} label="Impact" pl hideLabel={props.hideResultLabel}
                         unit={`${getUnit()}`}
                         result={props.ffImpactYears} info={`You May Achieve Financial Freedom ${Math.abs(props.ffImpactYears)} ${getUnit()} 
                         ${getImpactText()} due to this Goal. This Goal has impact on other Goals too. 

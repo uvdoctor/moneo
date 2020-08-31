@@ -43,11 +43,11 @@ export default function ResultSection(props: ResultSectionProps) {
       ) : (
         <Fragment>
           {props.result}
-          <div className="flex w-full items-center mt-2">
+          <div className="flex w-full items-center mt-2 mb-2">
             <div className="ml-1 mr-4 cursor-pointer" onClick={toggle}>
               {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
             </div>
-            <div className="w-full flex justify-center">
+            <div className="w-full">
               {props.resultTabOptions.length > 1 ? (
                 <Tabs
                   tabs={props.resultTabOptions}
@@ -55,6 +55,7 @@ export default function ResultSection(props: ResultSectionProps) {
                   selectedTabHandler={props.showResultTabHandler}
                   capacity={numOfTabs}
                   allInputDone
+                  keepCentered
                 />
               ) : (
                 <div className="w-full mt-2 flex justify-center items-center">

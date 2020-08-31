@@ -416,6 +416,8 @@ export default function Goal({
       sellAfter &&
       !!rentAmt &&
       price > 0 &&
+      brChartData &&
+      brChartData.length === 2 &&
       nowYear < startYear
     )
       setShowBRChart(true);
