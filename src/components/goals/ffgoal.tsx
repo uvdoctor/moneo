@@ -541,7 +541,7 @@ export default function FFGoal({
               startYear={nowYear + 1}
               fullScreen={chartFullScreen}
             />
-            <TreeMapChart aa={ffResult.aa} rr={ffResult.rr} />
+            <TreeMapChart aa={ffResult.aa} rr={ffResult.rr} fullScreen={chartFullScreen} />
             <AAChart
               aa={ffResult.aa}
               years={buildYearsArray(nowYear + 2, endYear)}
