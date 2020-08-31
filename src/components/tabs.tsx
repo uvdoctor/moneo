@@ -10,7 +10,7 @@ interface TabsProps {
   currentOrder?: number;
   allInputDone?: boolean;
   selectedTabHandler: Function;
-  bottomRounded?: boolean;
+  keepCentered?: boolean;
 }
 
 export const DASHBOARD_STYLE = "dashboard";
@@ -18,25 +18,23 @@ export const DASHBOARD_STYLE = "dashboard";
 export default function Tabs(props: TabsProps) {
   const styleMap: any = {
     [DASHBOARD_STYLE]: {
-      parent: "mt-12 py-1 bg-black",
+      parent: "mt-12 py-1 bg-black justify-center text-base",
+      current: "pt-2 px-4 md:px-8",
       selected: {
-        background: "pt-2 px-4",
         text: "text-green-600",
       },
       unselected: {
-        background: "pt-2 px-4",
         text: "text-white",
         hover: "text-green-600",
       },
     },
     standard: {
-      parent: `text-base ${!props.allInputDone ? 'justify-center' : 'justify-around'}`,
+      parent: `w-full text-base ${!props.allInputDone || props.keepCentered ? 'justify-center' : 'mr-0 justify-around'}`,
+      current: `${(!props.allInputDone || props.keepCentered) && 'mr-2 md:mr-4'}`,
       selected: {
-        background: "",
         text: "text-blue-600",
       },
       unselected: {
-        background: "",
         text: "text-gray-800",
         hover: "text-blue-600",
       },
@@ -111,12 +109,12 @@ export default function Tabs(props: TabsProps) {
           return (
             <div
               key={"tab" + i}
-              className={`${!props.allInputDone ? 'mr-2' : 'mr-0'} items-start 
+              className={`items-start ${currentStyle.current}
                     ${
                       props.selectedTab === tab.label
-                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} font-semibold`
+                        ? `${currentStyle.selected.text} font-semibold`
                         : !isLinkDisabled(tab)
-                        ? `${currentStyle.unselected.text} ${currentStyle.unselected.background} 
+                        ? `${currentStyle.unselected.text}  
                           cursor-pointer font-semibold hover:${currentStyle.unselected.hover}`
                         : "cursor-not-allowed text-gray-400"
                     }

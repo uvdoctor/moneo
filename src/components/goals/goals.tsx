@@ -517,8 +517,8 @@ export default function Goals({
         ? allGoals &&
           allGoals.length > 0 && (
             <Fragment>
-              <div className="w-full flex justify-center">
-                <div className="flex mt-2 items-end text-base">
+              <div className="w-full flex justify-center bg-green-100 py-1 shadow-lg lg:shadow-xl">
+                <div className="flex mt-2 items-end">
                   {viewMode === goalsLabel && (
                     <div className="mr-2">
                       <SelectInput
@@ -541,6 +541,7 @@ export default function Goals({
                     capacity={tabOptions.length}
                     selectedTabHandler={setViewMode}
                     allInputDone
+                    keepCentered
                   />
                 </div>
               </div>

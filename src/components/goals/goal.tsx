@@ -416,8 +416,6 @@ export default function Goal({
       sellAfter &&
       !!rentAmt &&
       price > 0 &&
-      brChartData &&
-      brChartData.length === 2 &&
       nowYear < startYear
     )
       setShowBRChart(true);
@@ -630,7 +628,7 @@ export default function Goal({
                 colorTo
               />
 
-              <AnnualAmt
+              {(allInputDone || currentOrder === getOrderByTabLabel(tabOptions, annualNetCostLabel) + 2) && <AnnualAmt
                 currency={currency}
                 startYear={startYear}
                 percentage={aiPer as number}
@@ -647,7 +645,7 @@ export default function Goal({
                 nextStepDisabled={false}
                 nextStepHandler={handleNextStep}
                 allInputDone={allInputDone}
-              />
+              />}
             </Fragment>
           )}
 
