@@ -32,12 +32,12 @@ interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
   ffGoalEndYear: number;
-  videoUrl: string
+  videoUrl: string;
   ffImpactYearsHandler: Function;
   cancelCallback: Function;
   addCallback: Function;
   updateCallback: Function;
-  videoHandler: Function
+  videoHandler: Function;
 }
 
 export default function Goal({
@@ -49,7 +49,7 @@ export default function Goal({
   cancelCallback,
   addCallback,
   updateCallback,
-  videoHandler
+  videoHandler,
 }: GoalProps) {
   const typesList = getGoalTypes();
   const goalType = goal?.type as APIt.GoalType;
@@ -67,8 +67,8 @@ export default function Goal({
   const [maxTaxDeductionInt, setMaxTaxDeductionInt] = useState<
     number | null | undefined
   >(goal?.tdli);
-  const [totalPTaxBenefit, setTotalPTaxBenefit] = useState<number>(0)
-  const [totalITaxBenefit, setTotalITaxBenefit] = useState<number>(0)
+  const [totalPTaxBenefit, setTotalPTaxBenefit] = useState<number>(0);
+  const [totalITaxBenefit, setTotalITaxBenefit] = useState<number>(0);
   const [sellAfter, setSellAfter] = useState<number | undefined | null>(
     goal?.sa
   );
@@ -141,7 +141,7 @@ export default function Goal({
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [showBRChart, setShowBRChart] = useState<boolean>(
-    sellAfter && rentAmt ? true : false
+    sellAfter && rentAmt && rentAmt > 0 ? true : false
   );
   const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 20));
   const [tabOptions, setTabOptions] = useState<Array<any>>(
@@ -175,13 +175,13 @@ export default function Goal({
             label: cfChartLabel,
             order: 1,
             active: true,
-            svg: <SVGChart />,
+            svg: SVGChart,
           },
           {
             label: brChartLabel,
             order: 2,
             active: showBRChart,
-            svg: <SVGScale />,
+            svg: SVGScale,
           },
         ]
       : [
@@ -189,7 +189,7 @@ export default function Goal({
             label: cfChartLabel,
             order: 1,
             active: true,
-            svg: <SVGChart />,
+            svg: SVGChart,
           },
         ]
   );
@@ -258,14 +258,14 @@ export default function Goal({
     }
     let g: APIt.CreateGoalInput = createNewGoalInput();
     let result: any = calculateCFs(price, g, duration);
-    cfs = result.cfs
+    cfs = result.cfs;
     console.log("New cfs created: ", cfs);
     if (changeState) {
       if ((loanPer as number) && manualMode < 1 && goalType === APIt.GoalType.B)
         setEndYear(g.sy + cfs.length - 1);
       setCFs([...cfs]);
-      if(result.hasOwnProperty("itb")) setTotalITaxBenefit(result.itb)
-      setTotalPTaxBenefit(result.ptb)
+      if (result.hasOwnProperty("itb")) setTotalITaxBenefit(result.itb);
+      setTotalPTaxBenefit(result.ptb);
     }
     return cfs;
   };
@@ -395,8 +395,7 @@ export default function Goal({
   useEffect(() => {
     if (
       sellAfter &&
-      rentAmt &&
-      rentAmt > 0 &&
+      !!rentAmt &&
       price > 0 &&
       brChartData &&
       brChartData.length === 2 &&

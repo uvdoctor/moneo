@@ -1,6 +1,12 @@
 import React from "react";
+import { COLORS } from "../CONSTANTS";
 
-export default function SVGChart() {
+interface SVGChartProps {
+  disabled: boolean
+  selected: boolean
+}
+
+export default function SVGChart({disabled, selected}: SVGChartProps) {
   return (
     <svg
       className="w-8"
@@ -9,7 +15,7 @@ export default function SVGChart() {
     >
       <g>
         <path
-          fill="orange"
+          fill={disabled ? COLORS.DISABLED : selected ? COLORS.ORANGE : COLORS.DEFAULT}
           d="M460.8,25.6c-28.22-0.051-51.139,22.785-51.19,51.006c-0.024,13.301,5.14,26.088,14.394,35.642l-93.542,187.051
 			c-2.05-0.34-4.119-0.551-6.195-0.631c-6.61,0.013-13.154,1.312-19.268,3.823l-72.619-81.664
 			c4.239-7.495,6.495-15.948,6.554-24.559c0-28.277-22.923-51.2-51.2-51.2s-51.2,22.923-51.2,51.2

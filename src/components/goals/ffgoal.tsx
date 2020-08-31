@@ -134,8 +134,8 @@ export default function FFGoal({
   const lossesLabel = "Losses";
   const nomineeLabel = "Nominees";
   const cfChartLabel = "Total Savings";
-  const aaChartLabel = `Asset Allocation from ${nowYear + 2} onwards`;
-  const treemapChartLabel = `${nowYear + 1} Asset Allocation`;
+  const aaChartLabel = 'Allocation Plan';
+  const treemapChartLabel = 'Asset Allocation';
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [tabOptions, setTabOptions] = useState<Array<any>>([
     { label: investLabel, order: 3, active: true },
@@ -152,19 +152,21 @@ export default function FFGoal({
       label: cfChartLabel,
       order: 1,
       active: true,
-      svg: <SVGChart />,
+      svg: SVGChart ,
     },
     {
       label: treemapChartLabel,
       order: 2,
       active: true,
-      svg: <SVGAAChart />,
+      svg: SVGAAChart,
+      svglabel: nowYear + 1
     },
     {
       label: aaChartLabel,
       order: 3,
       active: true,
-      svg: <SVGBarChart />,
+      svg: SVGBarChart,
+      svglabel: `${nowYear + 2} - ${endYear}`
     },
   ];
 

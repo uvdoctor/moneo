@@ -7,19 +7,23 @@ import { getGoalsList, getDuration } from "./goals/goalutils";
 import { calculateCFs } from "./goals/cfutils";
 import { buildTabsArray, removeFromArray } from "./utils";
 import Tabs, { DASHBOARD_STYLE } from "./tabs";
+import SVGPiggy from "./svgpiggy";
+import SVGMoneyBag from "./calc/svgmoneybag";
+import SVGPlan from "./svgplan";
+import SVGInvest from "./svginvest";
 
 const SecureDash = () => {
-  const netWorthLabel = "Net Worth";
-  const goalsLabel = "Plan";
-  const saveLabel = "Save";
-  const investLabel = "Invest";
-  const tabs = buildTabsArray([
-    netWorthLabel,
-    goalsLabel,
-    saveLabel,
-    investLabel,
-  ]);
-  const [viewMode, setViewMode] = useState(netWorthLabel);
+  const getLabel = "GET";
+  const setLabel = "SET";
+  const saveLabel = "SAVE";
+  const investLabel = "INVEST";
+  const tabs = buildTabsArray({
+    [getLabel]: SVGMoneyBag,
+    [setLabel]: SVGPlan,
+    [saveLabel]: SVGPiggy,
+    [investLabel]: SVGInvest,
+  });
+  const [viewMode, setViewMode] = useState(getLabel);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [savings, setSavings] = useState<number>(0);
   const [annualSavings, setAnnualSavings] = useState<number>(0);
@@ -75,7 +79,7 @@ const SecureDash = () => {
           customStyle={DASHBOARD_STYLE}
         />
       )}
-      {viewMode === netWorthLabel && (
+      {viewMode === getLabel && (
         <NW
           totalSavings={savings}
           annualSavings={annualSavings}
@@ -86,7 +90,7 @@ const SecureDash = () => {
           currencyHandler={setCurrency}
         />
       )}
-      {viewMode === goalsLabel && (
+      {viewMode === setLabel && (
         <Goals
           showModalHandler={setShowModal}
           savings={savings}

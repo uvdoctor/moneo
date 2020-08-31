@@ -538,11 +538,11 @@ export const getAllAssetTypes = () => [
   ASSET_TYPES.DIGITAL_CURRENCIES,
 ];
 
-export const buildTabsArray = (arr: Array<string>) => {
-  if (!arr || arr.length === 0) return [];
+export const buildTabsArray = (items: any) => {
   let result: Array<any> = [];
-  arr.forEach((item, i) => {
-    result.push({ label: item, order: i + 1, active: true });
+  let keys = Object.keys(items)
+  keys.forEach((key, i) => {
+    result.push({ label: key, order: i + 1, active: true, svg: items[key]});
   });
   return result;
 };

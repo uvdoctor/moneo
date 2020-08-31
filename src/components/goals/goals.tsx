@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import { useFullScreen } from "react-browser-hooks";
 import Tabs from "../tabs";
 import { ASSET_TYPES } from "../../CONSTANTS";
+import SVGChart from "../svgchart";
 interface GoalsProps {
   showModalHandler: Function;
   savings: number;
@@ -68,7 +69,7 @@ export default function Goals({
   const cfLabel = "Cash Flows";
   const [viewMode, setViewMode] = useState<string>(goalsLabel);
   const nowYear = new Date().getFullYear();
-  const tabOptions = buildTabsArray([goalsLabel, cfLabel]);
+  const tabOptions = buildTabsArray({[goalsLabel]: SVGChart, [cfLabel]: SVGChart});
   const [videoUrl, setVideoUrl] = useState<string>("");
 
   const irDiffByCurrency: any = {
@@ -373,8 +374,6 @@ export default function Goals({
       expChgRate,
       getPP()
     );
-    console.log("Result without goal: ", resultWithoutGoal);
-    console.log("Result with goal...", resultWithGoal);
     if (!isFFPossible(resultWithGoal, nomineeAmt))
       return {
         ffImpactYears: null,
@@ -492,7 +491,7 @@ export default function Goals({
           allGoals.length > 0 && (
             <Fragment>
               <div className="w-full flex justify-center">
-                <div className="flex items-center">
+                <div className="flex items-end text-base">
                   {viewMode === goalsLabel && (
                     <div className="mr-2">
                       <SelectInput

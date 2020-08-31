@@ -1,11 +1,12 @@
 import React from "react";
+import { COLORS } from "../CONSTANTS";
 
 export default function SVGHourGlass() {
   return (
     <svg viewBox="0 0 24 24" className="w-8">
       <path
         stroke="#7b341e"
-        fill="#edf2f7"
+        fill={COLORS.LIGHT_GRAY}
         d="M19 20h1a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2h1c0-1.8.68-3.58 2.05-4.95L9 13.1v-2.2L7.05 8.95A6.98 6.98 0 0 1 5 4H4a1 1 0 1 1 0-2h16a1 1 0 0 1 0 2h-1c0 1.8-.68 3.58-2.05 4.95L15 10.9v2.2l1.95 1.95A6.98 6.98 0 0 1 19 20z"
       />
       <path

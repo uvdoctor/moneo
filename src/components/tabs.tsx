@@ -14,44 +14,31 @@ interface TabsProps {
 }
 
 export const DASHBOARD_STYLE = "dashboard";
-export const RESULT_TAB_STYLE = "resultTab";
 
 export default function Tabs(props: TabsProps) {
   const styleMap: any = {
     [DASHBOARD_STYLE]: {
-      parent: "mt-12 p-2 pb-0 bg-black",
+      parent: "mt-12 py-1 bg-black",
       selected: {
-        background: "mt-2 bg-white",
+        background: "pt-2 px-4",
         text: "text-green-600",
       },
       unselected: {
-        background: "mt-2 bg-black",
+        background: "pt-2 px-4",
         text: "text-white",
         hover: "text-green-600",
       },
     },
     standard: {
-      parent: "justify-center",
+      parent: "text-base justify-center",
       selected: {
-        background: "bg-blue-600",
-        text: "text-white",
+        background: "",
+        text: "text-blue-600",
       },
       unselected: {
-        background: "bg-gray-200",
-        text: "text-blue-600",
-        hover: "text-blue-800",
-      },
-    },
-    [RESULT_TAB_STYLE]: {
-      parent: "justify-end",
-      selected: {
-        background: "bg-blue-600",
-        text: "text-white",
-      },
-      unselected: {
-        background: "bg-gray-200",
-        text: "text-blue-600",
-        hover: "text-blue-800",
+        background: "",
+        text: "text-gray-800",
+        hover: "text-blue-600",
       },
     },
   };
@@ -111,7 +98,7 @@ export default function Tabs(props: TabsProps) {
         endIndex > props.capacity - 1 && (
           <LeftArrow clickHandler={handleDecrement} />
         )}
-      <ul
+      <div
         className={`flex w-full ${!props.allInputDone && "flex-wrap"} ${
           currentStyle.parent
         }`}
@@ -122,25 +109,15 @@ export default function Tabs(props: TabsProps) {
             if (Math.abs(endIndex - i) >= props.capacity) return;
           }
           return (
-            <li
+            <div
               key={"tab" + i}
-              className={`py-2 px-4 items-start 
+              className={`mr-2 items-start 
                     ${
                       props.selectedTab === tab.label
-                        ? `${currentStyle.selected.text} ${
-                            currentStyle.selected.background
-                          } font-semibold cursor-pointer ${
-                            props.bottomRounded ? "rounded-b" : "rounded-t"
-                          } lg:rounded-b-none lg:rounded-t`
+                        ? `${currentStyle.selected.text} ${currentStyle.selected.background} font-semibold`
                         : !isLinkDisabled(tab)
-                        ? `${currentStyle.unselected.text} ${
-                            currentStyle.unselected.background
-                          } 
-                          cursor-pointer font-semibold shadow-lg lg:shadow-xl ${
-                            props.bottomRounded ? "rounded-b" : "rounded-t"
-                          } lg:rounded-b-none lg:rounded-t hover:${
-                            currentStyle.unselected.hover
-                          }`
+                        ? `${currentStyle.unselected.text} ${currentStyle.unselected.background} 
+                          cursor-pointer font-semibold hover:${currentStyle.unselected.hover}`
                         : "cursor-not-allowed text-gray-400"
                     }
                     `}
@@ -148,16 +125,22 @@ export default function Tabs(props: TabsProps) {
                 !isLinkDisabled(tab) && props.selectedTabHandler(tab.label)
               }
             >
-              <div className="flex items-center">
-                {tab.svg && !isLinkDisabled(tab) && (
-                  <div className="inline mr-1">{tab.svg}</div>
+              <div className="flex flex-col items-center">
+                {tab.svg && (
+                  <div className="flex items-center">
+                    <tab.svg
+                      disabled={isLinkDisabled(tab)}
+                      selected={props.selectedTab === tab.label}
+                    />
+                    {tab.svglabel && <span className="ml-1">{tab.svglabel}</span>}
+                  </div>
                 )}
                 {tab.label}
               </div>
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
       {props.allInputDone &&
         props.tabs.length > props.capacity &&
         endIndex >= props.capacity - 1 &&
