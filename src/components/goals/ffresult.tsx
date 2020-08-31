@@ -12,7 +12,6 @@ interface FFResultProps {
   result: any | null;
   ffNomineeAmt: number;
   currency: string;
-  hideLabel?: boolean;
   ffYearHandler?: Function;
   ffYearOptions?: any;
 }
@@ -23,7 +22,6 @@ export default function FFResult({
   result,
   ffNomineeAmt,
   currency,
-  hideLabel,
   ffYearHandler,
   ffYearOptions,
 }: FFResultProps) {
@@ -40,7 +38,6 @@ export default function FFResult({
               info={`You May achieve Financial Freedom earliest at an age of ${
                 result.ffYear - (endYear - 100)
               } Years.`}
-              hideLabel={hideLabel}
               unit="Years"
               imp={
                 result.oom
@@ -71,7 +68,6 @@ export default function FFResult({
             result={result.ffAmt}
             svg={<SVGPiggy disabled={false} selected />}
             label={`Savings @ ${result.ffYear - (endYear - 100) - 1} Years`}
-            hideLabel={hideLabel}
             currency={currency}
             info="You can Withdraw from this Savings for Your expenses after gaining Financial Freedom."
           />
@@ -80,7 +76,6 @@ export default function FFResult({
             svg={<SVGInheritance />}
             label="Savings @ 100 Years"
             currency={currency}
-            hideLabel={hideLabel}
             info={`This is the savings amount when You turn 100 Years old, which may be inherited by Your Nominees. 
                         This includes the Inheritance Amount for Nominees as per the Plan.`}
           />

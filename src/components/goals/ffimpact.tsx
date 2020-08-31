@@ -6,7 +6,6 @@ interface FFImpactProps {
     ffImpactYears: number | null
     ffOOM: Array<number> | null
     ffGoalEndYear: number
-    hideResultLabel: boolean
 }
 
 export default function FFImpact(props: FFImpactProps) {
@@ -18,16 +17,15 @@ export default function FFImpact(props: FFImpactProps) {
         <Fragment>
             {props.ffImpactYears !== null ?
                 (props.ffImpactYears === 0 ? <ResultItem label="Impact" result="No Delay"
-                    info="This Goal does not delay Your Financial Freedom Year." hideLabel={props.hideResultLabel} />
-                    : <ResultItem svg={<SVGHourGlass />} label="Impact" pl hideLabel={props.hideResultLabel}
+                    info="This Goal does not delay Your Financial Freedom Year." />
+                    : <ResultItem svg={<SVGHourGlass />} label="Impact" pl 
                         unit={`${getUnit()}`}
                         result={props.ffImpactYears} info={`You May Achieve Financial Freedom ${Math.abs(props.ffImpactYears)} ${getUnit()} 
                         ${getImpactText()} due to this Goal. This Goal has impact on other Goals too. 
                         For instance, if You Delete this Goal, You May Observe that not only has Financial Freedom Year changed, 
                         but Financial Freedom impact of other Goals also changes.
                         This happens because Money Needed for this Goal can be Invested instead.`} />)
-                : <ResultItem label="Financial Freedom Impact" result="Unable to Determine" hideLabel={props.hideResultLabel}
-                        info={`Analyzed till ${props.ffGoalEndYear - 20}. You May Not have Enough Savings in Years ${props.ffOOM}`} />}
+                : <ResultItem label="Financial Freedom Impact" result="Unable to Determine" info={`Analyzed till ${props.ffGoalEndYear - 20}. You May Not have Enough Savings in Years ${props.ffOOM}`} />}
         </Fragment>
     )
 }
