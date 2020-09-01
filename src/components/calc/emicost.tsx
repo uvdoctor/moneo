@@ -350,10 +350,11 @@ export default function EmiCost(props: EmiProps) {
                         <Fragment>
                           <div className="mt-4">
                             <HToggle
-                              rightText={`Pay Remaining Interest of ${toCurrency(
+                              rightText={`Pay Remaining in ${props.endYear + 1}`} 
+                              /*${toCurrency(
                                 remIntAmt,
                                 props.currency
-                              )} in ${props.endYear + 1}`}
+                              )} in */
                               value={props.loanSICapitalize as number}
                               setter={props.loanSICapitalizeHandler}
                             />
