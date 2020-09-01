@@ -2,8 +2,6 @@ import React, { Fragment } from "react";
 import CustomVideoPlayer from "../customvideoplayer";
 import SVGPlay from "../svgplay";
 import SVGStop from "../svgstop";
-import { isTopBottomLayout } from "../utils";
-import {useFullScreenBrowser} from "react-browser-hooks"
 interface SectionProps {
   title: any;
   left: any;
@@ -23,13 +21,12 @@ interface SectionProps {
 }
 
 export default function Section(props: SectionProps) {
-  const fsb = useFullScreenBrowser()
   return (
     <div
       className="m-1 w-full max-w-sm md:max-w-md rounded-lg overflow-hidden 
                         shadow-lg md:shadow-xl"
     >
-      {props.videoUrl && props.urlHandler && isTopBottomLayout(fsb) && (
+      {props.videoUrl && props.urlHandler && (
           <CustomVideoPlayer
             videoUrl={props.videoUrl}
             videoHandler={props.urlHandler}

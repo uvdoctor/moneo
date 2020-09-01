@@ -721,8 +721,6 @@ export default function Goal({
             showResultTab={showResultTab}
             showResultTabHandler={setShowResultTab}
             chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
-            videoUrl={videoUrl}
-            videoHandler={videoHandler}
             result={
               nowYear < startYear && (
                 <GoalResult

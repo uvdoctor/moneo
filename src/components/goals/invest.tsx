@@ -40,6 +40,9 @@ export function Invest({
   return (
     <Section
       title="Before Financial Freedom"
+      videoUrl={videoUrl}
+      videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}
+      urlHandler={videoHandler}
       left={
         <NumberInput
           name="savingsRate"
@@ -48,8 +51,6 @@ export function Invest({
           nextStepDisabled={false}
           allInputDone={allInputDone}
           nextStepHandler={nextStepHandler}
-          videoUrl={!videoUrl ? '' : `https://www.youtube.com/watch?v=9I8bMqMPfrc`}
-          videoHandler={videoHandler}
           info={`Given Annual Savings of ${toCurrency(
             annualSavings,
             currency
