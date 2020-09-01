@@ -83,6 +83,7 @@ export default function Goal({
   const [loanSIPayPer, setLoanSIPayPer] = useState<number | undefined | null>(
     goal.btr
   );
+  const [loanSICapitalize, setLoanSICapitalize] = useState<number | undefined | null>(goal.tbr)
   const [startingPrice, setStartingPrice] = useState<number>(
     goal?.cp as number
   );
@@ -257,9 +258,9 @@ export default function Goal({
       bg.tbr = rentTaxBenefit;
       bg.ra = rentAmt;
       bg.rachg = rentChgPer;
-    }
-    if (goalType === APIt.GoalType.E) {
+    } else if (goalType === APIt.GoalType.E) {
       bg.btr = loanSIPayPer;
+      bg.tbr = loanSICapitalize
     }
     return bg;
   };
@@ -581,6 +582,7 @@ export default function Goal({
               loanPer={loanPer as number}
               goalType={goalType}
               loanSIPayPer={loanSIPayPer}
+              loanSICapitalize={loanSICapitalize as number}
               loanBorrowAmt={
                 getLoanBorrowAmt(
                   price,
@@ -594,6 +596,7 @@ export default function Goal({
               loanAnnualIntHandler={setLoanIntRate}
               loanPerHandler={setLoanPer}
               loanSIPayPerHandler={setLoanSIPayPer}
+              loanSICapitalizeHandler={setLoanSICapitalize}
               loanMonthsHandler={setLoanYears}
               repaymentSYHandler={setLoanRepaymentSY}
               taxBenefitInt={taxBenefitInt as number}
@@ -633,7 +636,6 @@ export default function Goal({
                 allInputDone={allInputDone}
                 colorTo
               />
-              {console.log("Current order is ", currentOrder)}
               {(allInputDone ||
                 currentOrder >= getOrderByTabLabel(tabOptions, annualNetCostLabel) + 2) && (
                 <AnnualAmt

@@ -176,14 +176,13 @@ export const getOrderByTabLabel = (tabOptions: Array<any>, label: string) => {
 }*/
 
 export const isLoanEligible = (goalType: APIt.GoalType) =>
-  goalType !== APIt.GoalType.D &&
-  goalType !== APIt.GoalType.R;
+  goalType !== APIt.GoalType.D && goalType !== APIt.GoalType.R;
 
-export const isTaxCreditEligible = (goalType: APIt.GoalType) => 
+export const isTaxCreditEligible = (goalType: APIt.GoalType) =>
   goalType === APIt.GoalType.T ||
   goalType === APIt.GoalType.X ||
-  goalType === APIt.GoalType.C
-  
+  goalType === APIt.GoalType.C;
+
 export const createNewGoalInput = (
   goalType: APIt.GoalType,
   currency: string
@@ -193,7 +192,12 @@ export const createNewGoalInput = (
   if (isLoanEligible(goalType)) {
     bg.tbi = 0;
     bg.tdli = 0;
-    bg.emi = { rate: 4, dur: 10, per: 0, ry: goalType === APIt.GoalType.E ? bg.ey + 1 : bg.sy };
+    bg.emi = {
+      rate: 4,
+      dur: 10,
+      per: 0,
+      ry: goalType === APIt.GoalType.E ? bg.ey + 1 : bg.sy,
+    };
   }
   if (goalType === APIt.GoalType.B) {
     bg.sa = 5;
@@ -205,9 +209,9 @@ export const createNewGoalInput = (
     bg.tbr = 0;
     bg.ra = 0;
     bg.rachg = 5;
-  }
-  if(goalType === APIt.GoalType.E) {
-    bg.btr = 100
+  } else if (goalType === APIt.GoalType.E) {
+    bg.btr = 100;
+    bg.tbr = 1;
   }
   return bg;
 };

@@ -16,7 +16,7 @@ import { GoalType } from "../../api/goals";
 import ResultItem from "./resultitem";
 import { COLORS } from "../../CONSTANTS";
 import InfoText from "../infotext";
-import {isTaxCreditEligible} from "../goals/goalutils"
+import { isTaxCreditEligible } from "../goals/goalutils";
 interface EmiProps {
   inputOrder: number;
   currentOrder: number;
@@ -35,18 +35,20 @@ interface EmiProps {
   loanAnnualInt: number;
   loanPer: number;
   loanSIPayPer: number | undefined | null;
+  loanSICapitalize: number;
   loanBorrowAmt: number;
   taxBenefitInt: number;
   maxTaxDeductionInt: number;
   taxRate: number;
   iTaxBenefit: number;
   goalType: GoalType;
-  videoUrl: string
+  videoUrl: string;
   videoHandler: Function;
   repaymentSYHandler: Function;
   loanMonthsHandler: Function;
   loanPerHandler: Function;
   loanSIPayPerHandler: Function;
+  loanSICapitalizeHandler: Function;
   loanAnnualIntHandler: Function;
   taxBenefitIntHandler: Function;
   maxTaxDeductionIntHandler: Function;
@@ -63,10 +65,14 @@ export default function EmiCost(props: EmiProps) {
   const [emi, setEMI] = useState<number>(0);
   const [simpleInts, setSimpleInts] = useState<Array<number>>([]);
   const [showIntSchedule, setShowIntSchedule] = useState<boolean>(false);
+  const [remIntAmt, setRemIntAmt] = useState<number>(0);
+
+  const loanLimitPer = props.goalType === GoalType.E ? 100 : 80;
 
   const calculateEmi = () => {
     let borrowAmt = props.loanBorrowAmt;
     let simpleInts: Array<number> = [];
+    let totalSimpleIntAmt = 0;
     if (props.goalType === GoalType.E) {
       let result = createEduLoanDPWithSICFs(
         props.price,
@@ -75,10 +81,13 @@ export default function EmiCost(props: EmiProps) {
         props.startYear,
         props.endYear,
         props.loanAnnualInt,
-        props.loanSIPayPer as number
+        props.loanSIPayPer as number,
+        props.loanSICapitalize < 1
       );
       borrowAmt = result.borrowAmt;
       simpleInts = result.ints;
+      totalSimpleIntAmt = result.remIntAmt;
+      setRemIntAmt(Math.round(result.remIntAmt));
       setSimpleInts([...simpleInts]);
     }
     borrowAmt = adjustAccruedInterest(
@@ -99,7 +108,6 @@ export default function EmiCost(props: EmiProps) {
       props.loanYears * 12
     ) as number;
     setEMI(Math.round(emi));
-    let totalSimpleIntAmt = 0;
     simpleInts.forEach((int) => (totalSimpleIntAmt += int));
     let totalIntAmt = 0;
     if (props.goalType !== GoalType.B) {
@@ -152,7 +160,7 @@ export default function EmiCost(props: EmiProps) {
               allInputDone={props.allInputDone}
               width={120}
               unit="%"
-              data={toStringArr(0, 80, 5)}
+              data={toStringArr(0, loanLimitPer, 5)}
               value={props.loanPer}
               changeHandler={props.loanPerHandler}
               step={5}
@@ -329,7 +337,21 @@ export default function EmiCost(props: EmiProps) {
                     />
                   </div>
                 )}
-                {props.taxRate && props.taxBenefitInt && !isTaxCreditEligible(props.goalType) ? (
+                {props.goalType === GoalType.E && !!remIntAmt && (
+                  <div className="mt-2">
+                    <HToggle
+                      rightText={`Pay Remaining Interest of ${toCurrency(
+                        remIntAmt,
+                        props.currency
+                      )} in ${props.endYear + 1}`}
+                      value={props.loanSICapitalize}
+                      setter={props.loanSICapitalizeHandler}
+                    />
+                  </div>
+                )}
+                {props.taxRate &&
+                props.taxBenefitInt &&
+                !isTaxCreditEligible(props.goalType) ? (
                   <div className="mt-2">
                     <NumberInput
                       name="maxTaxDeductionInt"
