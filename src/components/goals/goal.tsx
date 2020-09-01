@@ -635,7 +635,7 @@ export default function Goal({
               />
               {console.log("Current order is ", currentOrder)}
               {(allInputDone ||
-                currentOrder === getOrderByTabLabel(tabOptions, annualNetCostLabel) + 2) && (
+                currentOrder >= getOrderByTabLabel(tabOptions, annualNetCostLabel) + 2) && (
                 <AnnualAmt
                   currency={currency}
                   startYear={startYear}
