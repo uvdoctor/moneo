@@ -1,5 +1,5 @@
-import React, { Fragment, ReactNode, useEffect, useRef, useState } from "react";
-import { useFullScreen, useFullScreenBrowser } from "react-browser-hooks";
+import React, { Fragment, ReactNode, useEffect, useRef } from "react";
+import { useFullScreen } from "react-browser-hooks";
 import SVGFullScreen from "../svgfullscreen";
 import SVGExitFullScreen from "../svgexitfullscreen";
 import DynamicSlider from "../dynamicslider";
@@ -19,19 +19,10 @@ interface ResultSectionProps {
 export default function ResultSection(props: ResultSectionProps) {
   const chartDiv = useRef(null);
   const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
-  const fsb = useFullScreenBrowser();
-  const getNumOfTabs = () =>
-    fsb.info.innerWidth <= 600 ? 2 : 3;
-  const [numOfTabs, setNumOfTabs] = useState<number>(getNumOfTabs());
 
   useEffect(() => {
     props.chartFullScreenHandler(fullScreen);
-    setNumOfTabs(getNumOfTabs());
   }, [fullScreen]);
-
-  useEffect(() => {
-    setNumOfTabs(getNumOfTabs());
-  }, [fsb.info.innerWidth]);
 
   return (
     <div
@@ -53,7 +44,7 @@ export default function ResultSection(props: ResultSectionProps) {
                   tabs={props.resultTabOptions}
                   selectedTab={props.showResultTab}
                   selectedTabHandler={props.showResultTabHandler}
-                  capacity={numOfTabs}
+                  capacity={props.resultTabOptions.length}
                   allInputDone
                   keepCentered
                 />
