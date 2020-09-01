@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { toCurrency, toReadableNumber } from "../utils";
+import { isTopBottomLayout, toCurrency, toReadableNumber } from "../utils";
 import Slider from "rc-slider";
 import NextStep from "./nextstep";
 import SVGInfo from "../svginfo";
@@ -7,7 +7,8 @@ import { toast } from "react-toastify";
 import { COLORS, INPUT_HIGHLIGHT } from "../../CONSTANTS";
 import SVGPlay from "../svgplay";
 import SVGStop from "../svgstop";
-
+import CustomVideoPlayer from "../customvideoplayer";
+import {useFullScreenBrowser} from "react-browser-hooks"
 interface NumberInputProps {
   inputOrder: number;
   currentOrder: number;
@@ -38,6 +39,7 @@ interface NumberInputProps {
 
 export default function NumberInput(props: NumberInputProps) {
   const formRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [editing, setEditing] = useState<boolean>(false);
   const [sliderButtonColor, setSliderButtonColor] = useState<string>("white");
   const [feedbackText, setFeedbackText] = useState<string>("");
@@ -51,6 +53,7 @@ export default function NumberInput(props: NumberInputProps) {
   const [rangeFactor, setRangeFactor] = useState<number>(
     props.rangeFactor ? props.rangeFactor : 1
   );
+  const fsb = useFullScreenBrowser()
 
   useEffect(() => {
     //@ts-ignore
@@ -65,7 +68,7 @@ export default function NumberInput(props: NumberInputProps) {
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      setEditing(false);
+      inputRef.current?.blur();
     }
   };
 
@@ -96,7 +99,13 @@ export default function NumberInput(props: NumberInputProps) {
   };
 
   return (
-    <div>
+    <div className="w-full">
+      {props.videoUrl && props.videoHandler && isTopBottomLayout(fsb) && (
+        <CustomVideoPlayer
+          videoUrl={props.videoUrl}
+          videoHandler={props.videoHandler}
+        />
+      )}
       {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
         props.allInputDone) && (
         <form
@@ -123,7 +132,7 @@ export default function NumberInput(props: NumberInputProps) {
               </div>
             )}
             {props.videoHandler && props.videoSrc && (
-              <div
+              <div className="pt-1"
                 onClick={() =>
                   //@ts-ignore
                   props.videoHandler(!props.videoUrl ? props.videoSrc : "")
@@ -149,6 +158,7 @@ export default function NumberInput(props: NumberInputProps) {
             <div className="flex justify-end">
               {!props.currency || (props.currency && editing) ? (
                 <input
+                  ref={inputRef}
                   className="input"
                   type="number"
                   name={props.name}
@@ -162,12 +172,14 @@ export default function NumberInput(props: NumberInputProps) {
                     props.changeHandler(val);
                   }}
                   onFocus={(e) => {
-                    if(!props.value && e.currentTarget.value === "0") e.currentTarget.value = ""  
+                    if (!props.value && e.currentTarget.value === "0")
+                      e.currentTarget.value = "";
                   }}
                   onKeyDown={handleKeyDown}
                   onBlur={(e) => {
-                    setEditing(false)
-                    if(!props.currency && !props.value) e.currentTarget.valueAsNumber = 0
+                    setEditing(false);
+                    if (!props.currency && !props.value)
+                      e.currentTarget.valueAsNumber = 0;
                   }}
                   required
                   style={{ textAlign: "right", width: width }}
@@ -177,7 +189,10 @@ export default function NumberInput(props: NumberInputProps) {
                   className="input"
                   type="text"
                   name={props.name}
-                  value={toCurrency(!props.value ? 0 : props.value, props.currency)}
+                  value={toCurrency(
+                    !props.value ? 0 : props.value,
+                    props.currency
+                  )}
                   onFocus={() => setEditing(true)}
                   style={{ textAlign: "right", width: width }}
                   readOnly

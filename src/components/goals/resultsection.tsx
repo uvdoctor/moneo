@@ -1,10 +1,11 @@
 import React, { Fragment, ReactNode, useEffect, useRef } from "react";
-import { useFullScreen } from "react-browser-hooks";
+import { useFullScreen, useFullScreenBrowser } from "react-browser-hooks";
 import SVGFullScreen from "../svgfullscreen";
 import SVGExitFullScreen from "../svgexitfullscreen";
 import DynamicSlider from "../dynamicslider";
 import Tabs from "../tabs";
-import VideoPlayer from "../videoplayer";
+import CustomVideoPlayer from "../customvideoplayer";
+import { isTopBottomLayout } from "../utils";
 interface ResultSectionProps {
   result: ReactNode;
   resultTabOptions: Array<any>;
@@ -13,12 +14,13 @@ interface ResultSectionProps {
   showResultTabHandler: Function;
   chartFullScreenHandler: Function;
   videoUrl: string;
-  videoHandler: Function
+  videoHandler: Function;
 }
 
 export default function ResultSection(props: ResultSectionProps) {
   const chartDiv = useRef(null);
   const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
+  const fsb = useFullScreenBrowser()
 
   useEffect(() => {
     props.chartFullScreenHandler(fullScreen);
@@ -29,8 +31,8 @@ export default function ResultSection(props: ResultSectionProps) {
       ref={chartDiv}
       className={`w-full lg:w-2/3 xl:w-3/4 transition-width duration-1000 ease-in-out`}
     >
-      {props.videoUrl ? (
-        <VideoPlayer url={props.videoUrl} urlHandler={props.videoHandler} />
+      {props.videoUrl && !isTopBottomLayout(fsb) ? (
+        <CustomVideoPlayer videoUrl={props.videoUrl} videoHandler={props.videoHandler} />
       ) : (
         <Fragment>
           {props.result}

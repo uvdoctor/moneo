@@ -546,3 +546,6 @@ export const buildTabsArray = (items: any) => {
   });
   return result;
 };
+
+export const isTopBottomLayout = (fsb: any) => fsb.info.innerWidth < 1024
+
