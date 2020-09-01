@@ -549,11 +549,6 @@ export default function FFGoal({
               />
             }
           >
-            <LineChart
-              cfs={buildChartCFs(ffResult.ffCfs)}
-              startYear={nowYear + 1}
-              fullScreen={chartFullScreen}
-            />
             <TreeMapChart
               aa={ffResult.aa}
               rr={ffResult.rr}
@@ -563,6 +558,11 @@ export default function FFGoal({
               aa={ffResult.aa}
               years={buildYearsArray(nowYear + 2, endYear)}
               rr={ffResult.rr}
+              fullScreen={chartFullScreen}
+            />
+            <LineChart
+              cfs={buildChartCFs(ffResult.ffCfs)}
+              startYear={nowYear + 1}
               fullScreen={chartFullScreen}
             />
           </ResultSection>
