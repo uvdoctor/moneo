@@ -475,7 +475,7 @@ export default function Goal({
     );
 
   const showResultSection = () =>
-    videoUrl || (nowYear < startYear && allInputDone && cfs.length > 0);
+    nowYear < startYear && allInputDone && cfs.length > 0;
 
   return (
     <div className="w-full h-full">

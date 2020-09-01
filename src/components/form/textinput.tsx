@@ -32,9 +32,8 @@ export default function TextInput(props: TextInputProps) {
   };
 
   return (
-    <div className="w-full flex items-center justify-center">
-      {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
-        props.allInputDone) && (
+    <div className="w-full flex justify-center items-center">
+      {(props.currentOrder >= props.inputOrder || props.allInputDone) && (
         <form
           ref={formRef}
           className={`flex flex-col 

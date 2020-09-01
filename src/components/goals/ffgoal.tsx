@@ -237,10 +237,11 @@ export default function FFGoal({
       if (hasCareTab()) {
         tabOptions.splice(3, 1);
         setTabOptions([...tabOptions]);
-        if(showTab === careLabel) {
-          setShowTab(expectLabel)
-          setCarePremium(0)
-          if(!allInputDone) setCurrentOrder(getOrderByTabLabel(tabOptions, expectLabel))
+        if (showTab === careLabel) {
+          setShowTab(expectLabel);
+          setCarePremium(0);
+          if (!allInputDone)
+            setCurrentOrder(getOrderByTabLabel(tabOptions, expectLabel));
         }
       }
     }
@@ -341,7 +342,7 @@ export default function FFGoal({
   const buildChartCFs = (ffCfs: Object) => Object.values(ffCfs);
 
   const showResultSection = () =>
-    videoUrl || (allInputDone && ffResult.rr && ffResult.rr.length > 0);
+    allInputDone && ffResult.rr && ffResult.rr.length > 0;
 
   return (
     <div className="w-full h-full">
