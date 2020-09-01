@@ -345,25 +345,27 @@ export default function EmiCost(props: EmiProps) {
                         }
                       />
                     </div>
-                    <div className="mt-4">
-                      <HToggle
-                        rightText="6 Months Grace Period"
-                        value={props.loanGracePeriod as number}
-                        setter={props.loanGracePeriodHandler}
-                      />
-                    </div>
                     {!Number.isNaN(props.loanSIPayPer) && //@ts-ignore
                       props.loanSIPayPer < 100 && (
-                        <div className="mt-2">
-                          <HToggle
-                            rightText={`Pay Remaining Interest of ${toCurrency(
-                              remIntAmt,
-                              props.currency
-                            )} in ${props.endYear + 1}`}
-                            value={props.loanSICapitalize as number}
-                            setter={props.loanSICapitalizeHandler}
-                          />
-                        </div>
+                        <Fragment>
+                          <div className="mt-4">
+                            <HToggle
+                              rightText={`Pay Remaining Interest of ${toCurrency(
+                                remIntAmt,
+                                props.currency
+                              )} in ${props.endYear + 1}`}
+                              value={props.loanSICapitalize as number}
+                              setter={props.loanSICapitalizeHandler}
+                            />
+                          </div>
+                          <div className="mt-2">
+                            <HToggle
+                              rightText="Claim 6 Months Grace Period"
+                              value={props.loanGracePeriod as number}
+                              setter={props.loanGracePeriodHandler}
+                            />
+                          </div>
+                        </Fragment>
                       )}
                   </Fragment>
                 )}
