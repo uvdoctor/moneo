@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import NumberInput from "../form/numberinput";
 import { getEmi, getTotalInt } from "../calc/finance";
 import { toCurrency, toStringArr, initYearOptions } from "../utils";
@@ -144,6 +144,9 @@ export default function EmiCost(props: EmiProps) {
         <Section
           title="Loan Details"
           insideForm
+          videoUrl={props.videoUrl}
+          videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
+          urlHandler={props.videoHandler}
           toggle={
             !isTaxCreditEligible(props.goalType) && props.taxRate ? (
               <HToggle
@@ -192,16 +195,11 @@ export default function EmiCost(props: EmiProps) {
                     props.repaymentSYHandler(parseInt(year))
                   }
                 />
-                {props.goalType === GoalType.E && (
-                  <div className="mt-2">
-                    <HToggle
-                      rightText="6 Months Grace Period"
-                      value={props.loanGracePeriod as number}
-                      setter={props.loanGracePeriodHandler}
-                    />
-                  </div>
-                )}
-                <div className={`${props.goalType === GoalType.E ? 'mt-2' : 'mt-4'}`}>
+                <div
+                  className={`${
+                    props.goalType === GoalType.E ? "mt-2" : "mt-4"
+                  }`}
+                >
                   <NumberInput
                     name="duration"
                     inputOrder={props.inputOrder + 2}
@@ -301,73 +299,78 @@ export default function EmiCost(props: EmiProps) {
                     min={0.0}
                     max={25.0}
                     step={0.1}
-                    videoUrl={props.videoUrl}
-                    videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
-                    videoHandler={props.videoHandler}
                   />
                 </div>
                 {props.goalType === GoalType.E && (
-                  <div className="mt-2">
-                    <RadialInput
-                      inputOrder={props.inputOrder}
-                      currentOrder={props.currentOrder}
-                      nextStepDisabled={false}
-                      nextStepHandler={props.nextStepHandler}
-                      allInputDone={props.allInputDone}
-                      width={120}
-                      unit="%"
-                      data={toStringArr(0, 100, 5)}
-                      value={props.loanSIPayPer as number}
-                      changeHandler={props.loanSIPayPerHandler}
-                      step={5}
-                      labelBottom
-                      colorFrom={COLORS.RED}
-                      colorTo={COLORS.GREEN}
-                      pre="Pay While Studying"
-                      label="of Interest"
-                      post={
-                        !!props.loanSIPayPer && (
-                          <div className="flex flex-col cursor-pointer text-blue-600 justify-center w-full">
-                            <ExpandCollapse
-                              title="Interest Schedule"
-                              value={showIntSchedule}
-                              handler={setShowIntSchedule}
-                            />
-                            {showIntSchedule &&
-                              simpleInts.map((int, i) => (
-                                <p key={"si" + i} className="text-gray-800">
-                                  Monthly{" "}
-                                  {toCurrency(
-                                    Math.round(int / 12),
-                                    props.currency
-                                  )}{" "}
-                                  in {props.startYear + i}
-                                </p>
-                              ))}
-                          </div>
-                        )
-                      }
-                    />
-                  </div>
-                )}
-                {props.goalType === GoalType.E &&
-                  !Number.isNaN(props.loanSIPayPer) && //@ts-ignore
-                  props.loanSIPayPer < 100 && (
+                  <Fragment>
                     <div className="mt-2">
-                      <HToggle
-                        rightText={`Pay Remaining Interest of ${toCurrency(
-                          remIntAmt,
-                          props.currency
-                        )} in ${props.endYear + 1}`}
-                        value={props.loanSICapitalize as number}
-                        setter={props.loanSICapitalizeHandler}
+                      <RadialInput
+                        inputOrder={props.inputOrder}
+                        currentOrder={props.currentOrder}
+                        nextStepDisabled={false}
+                        nextStepHandler={props.nextStepHandler}
+                        allInputDone={props.allInputDone}
+                        width={120}
+                        unit="%"
+                        data={toStringArr(0, 100, 5)}
+                        value={props.loanSIPayPer as number}
+                        changeHandler={props.loanSIPayPerHandler}
+                        step={5}
+                        labelBottom
+                        colorFrom={COLORS.RED}
+                        colorTo={COLORS.GREEN}
+                        pre="Pay While Studying"
+                        label="of Interest"
+                        post={
+                          !!props.loanSIPayPer && (
+                            <div className="flex flex-col cursor-pointer text-blue-600 justify-center w-full">
+                              <ExpandCollapse
+                                title="Interest Schedule"
+                                value={showIntSchedule}
+                                handler={setShowIntSchedule}
+                              />
+                              {showIntSchedule &&
+                                simpleInts.map((int, i) => (
+                                  <p key={"si" + i} className="text-gray-800">
+                                    Monthly{" "}
+                                    {toCurrency(
+                                      Math.round(int / 12),
+                                      props.currency
+                                    )}{" "}
+                                    in {props.startYear + i}
+                                  </p>
+                                ))}
+                            </div>
+                          )
+                        }
                       />
                     </div>
-                  )}
+                    <div className="mt-4">
+                      <HToggle
+                        rightText="6 Months Grace Period"
+                        value={props.loanGracePeriod as number}
+                        setter={props.loanGracePeriodHandler}
+                      />
+                    </div>
+                    {!Number.isNaN(props.loanSIPayPer) && //@ts-ignore
+                      props.loanSIPayPer < 100 && (
+                        <div className="mt-2">
+                          <HToggle
+                            rightText={`Pay Remaining Interest of ${toCurrency(
+                              remIntAmt,
+                              props.currency
+                            )} in ${props.endYear + 1}`}
+                            value={props.loanSICapitalize as number}
+                            setter={props.loanSICapitalizeHandler}
+                          />
+                        </div>
+                      )}
+                  </Fragment>
+                )}
                 {props.taxRate &&
                 props.taxBenefitInt &&
                 !isTaxCreditEligible(props.goalType) ? (
-                  <div className="mt-2">
+                  <div className="mt-4">
                     <NumberInput
                       name="maxTaxDeductionInt"
                       inputOrder={props.inputOrder + 4}

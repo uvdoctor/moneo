@@ -1,4 +1,9 @@
 import React, { Fragment } from "react";
+import CustomVideoPlayer from "../customvideoplayer";
+import SVGPlay from "../svgplay";
+import SVGStop from "../svgstop";
+import { isTopBottomLayout } from "../utils";
+import {useFullScreenBrowser} from "react-browser-hooks"
 interface SectionProps {
   title: any;
   left: any;
@@ -12,16 +17,37 @@ interface SectionProps {
   manualMode?: number;
   hasResult?: boolean;
   insideForm?: boolean;
+  videoSrc?: string
+  videoUrl?: string
+  urlHandler?: Function
 }
 
 export default function Section(props: SectionProps) {
+  const fsb = useFullScreenBrowser()
   return (
     <div
       className="m-1 w-full max-w-sm md:max-w-md rounded-lg overflow-hidden 
                         shadow-lg md:shadow-xl"
     >
-      <div className={`w-full ${props.insideForm && "bg-black text-white"}`}>
+      {props.videoUrl && props.urlHandler && isTopBottomLayout(fsb) && (
+          <CustomVideoPlayer
+            videoUrl={props.videoUrl}
+            videoHandler={props.urlHandler}
+          />
+        )}
+      <div className={`w-full ${props.insideForm && "bg-black text-white flex justify-between"}`}>
         <label className="p-1">{props.title}</label>
+        {props.urlHandler && props.videoSrc && (
+          <div
+            className="p-1"
+            onClick={() =>
+              //@ts-ignore
+              props.urlHandler(!props.videoUrl ? props.videoSrc : "")
+            }
+          >
+            {!props.videoUrl ? <SVGPlay /> : <SVGStop />}
+          </div>
+        )}
       </div>
       {props.toggle && (
         <div className="flex justify-end mt-2 mr-4">{props.toggle}</div>

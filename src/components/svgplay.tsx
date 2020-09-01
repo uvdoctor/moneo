@@ -1,21 +1,22 @@
 import React from "react";
+import { COLORS } from "../CONSTANTS";
 
 export default function SVGPlay() {
   return (
     <svg
       enableBackground="new 0 0 512 512"
-      className="w-6"
+      className="w-6 cursor-pointer"
       viewBox="0 0 512 512"
     >
       <g>
-        <g fill="#dfe7f4">
+        <g fill="white">
           <path d="m15 406v60h241 241v-60h-241z" />
           <path d="m256 46h-241v60h241 241v-60z" />
         </g>
-        <path d="m256 46h241v60h-241z" fill="#c7cfe1" />
-        <path d="m256 406h241v60h-241z" fill="#c7cfe1" />
-        <path d="m256 106h-226v300h226 226v-300z" fill="#ff641a" />
-        <path d="m256 106h226v300h-226z" fill="#f03800" />
+        <path d="m256 46h241v60h-241z" fill="white" />
+        <path d="m256 406h241v60h-241z" fill="white" />
+        <path d="m256 106h-226v300h226 226v-300z" fill="white" />
+        <path d="m256 106h226v300h-226z" fill="white" />
         <g>
           <g fill="#404a80">
             <path d="m0 391v90h256 256v-90h-256zm81 60h-51v-30h51zm80 0h-50v-30h50zm80 0h-50v-30h50zm190-30h51v30h-51zm-80 0h50v30h-50zm-80 0h50v30h-50z" />
@@ -28,9 +29,9 @@ export default function SVGPlay() {
         </g>
         <path
           d="m256 197.976-45-29.998v176.044l45-29.998 87.041-58.024z"
-          fill="#f0f7ff"
+          fill={COLORS.GREEN}
         />
-        <path d="m256 197.976v116.048l87.041-58.024z" fill="#dfe7f4" />
+        <path d="m256 197.976v116.048l87.041-58.024z" fill={COLORS.GREEN} />
       </g>
     </svg>
   );

@@ -15,7 +15,7 @@ export default function NextStep({
 }: NextStepProps) {
   return (
     <div
-      className={`mt-2 flex justify-center w-full ${
+      className={`ml-2 w-full ${
         disabled ? "cursor-not-allowed" : "cursor-pointer"
       }`}
       onClick={() =>
