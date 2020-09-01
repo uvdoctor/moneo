@@ -207,7 +207,7 @@ export default function RentComparison({
             <div className="flex flex-col justify-center">
               <NumberInput
                 name="af"
-                pre="Analyze for"
+                pre="Analyze up to"
                 value={analyzeFor}
                 changeHandler={setAnalyzeFor}
                 currentOrder={-1}
