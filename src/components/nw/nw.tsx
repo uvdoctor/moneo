@@ -102,8 +102,8 @@ export default function NW(props: NWProps) {
                     } insideForm />
             </div>
             <div className="mt-2 mb-2 flex justify-center">
-                <AwesomeButton type="link" size="medium" disabled={props.annualSavings === 0 || props.totalSavings === 0} ripple onPress={() => props.viewModeHandler("Plan")}>
-                    PLAN
+                <AwesomeButton type="link" size="medium" disabled={props.annualSavings === 0 || props.totalSavings === 0} ripple onPress={() => props.viewModeHandler("SET")}>
+                    SET
             </AwesomeButton>
             </div>
         </div >

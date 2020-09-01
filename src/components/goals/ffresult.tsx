@@ -12,9 +12,8 @@ interface FFResultProps {
   result: any | null;
   ffNomineeAmt: number;
   currency: string;
-  hideLabel?: boolean;
   ffYearHandler?: Function;
-  ffYearOptions?: any
+  ffYearOptions?: any;
 }
 
 export default function FFResult({
@@ -23,11 +22,9 @@ export default function FFResult({
   result,
   ffNomineeAmt,
   currency,
-  hideLabel,
   ffYearHandler,
-  ffYearOptions
+  ffYearOptions,
 }: FFResultProps) {
-  
   return (
     <div className="w-full">
       {ffYear && isFFPossible(result, ffNomineeAmt) ? (
@@ -38,8 +35,9 @@ export default function FFResult({
               label="Age"
               result={(result.ffYear - (endYear - 100)).toString()}
               noResultFormat
-              info={`You May achieve Financial Freedom earliest at an age of ${result.ffYear - (endYear - 100)} Years.`}
-              hideLabel={hideLabel}
+              info={`You May achieve Financial Freedom earliest at an age of ${
+                result.ffYear - (endYear - 100)
+              } Years.`}
               unit="Years"
               imp={
                 result.oom
@@ -60,32 +58,32 @@ export default function FFResult({
               pre="Age"
               unit="Years"
               value={result.ffYear - (endYear - 100)}
-              changeHandler={(val: string) => changeSelection(val, ffYearHandler, endYear - 100)}
+              changeHandler={(val: string) =>
+                changeSelection(val, ffYearHandler, endYear - 100)
+              }
               options={ffYearOptions}
             />
           )}
           <ResultItem
             result={result.ffAmt}
-            svg={<SVGPiggy />}
+            svg={<SVGPiggy disabled={false} selected />}
             label={`Savings @ ${result.ffYear - (endYear - 100) - 1} Years`}
-            hideLabel={hideLabel}
             currency={currency}
             info="You can Withdraw from this Savings for Your expenses after gaining Financial Freedom."
           />
           <ResultItem
             result={result.leftAmt}
-            svg={<SVGInheritance />}
+            svg={<SVGInheritance disabled={false} selected />}
             label="Savings @ 100 Years"
             currency={currency}
-            hideLabel={hideLabel}
             info={`This is the savings amount when You turn 100 Years old, which may be inherited by Your Nominees. 
                         This includes the Inheritance Amount for Nominees as per the Plan.`}
           />
         </div>
       ) : (
         <p className="text-center bg-red-100 font-semibold py-2">
-          May not be possible till You turn 70. Please try again with different inputs
-          / goals.
+          Financial Freedom May not be possible till You turn 70. Please try
+          again with different Goals / Inputs.
         </p>
       )}
     </div>

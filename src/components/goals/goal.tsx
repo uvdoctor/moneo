@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import * as APIt from "../../api/goals";
@@ -28,16 +28,21 @@ import LineChart from "./linechart";
 import InputSection from "./inputsection";
 import RentComparison from "./rentcomparison";
 import BRCompChart from "./brcompchart";
+import SVGPay from "../svgpay";
+import SVGTaxBenefit from "../svgtaxbenefit";
+import SVGLoan from "../svgloan";
+import SVGSell from "../svgsell";
+import SVGCashFlow from "../svgcashflow";
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
   ffGoalEndYear: number;
-  videoUrl: string
+  videoUrl: string;
   ffImpactYearsHandler: Function;
   cancelCallback: Function;
   addCallback: Function;
   updateCallback: Function;
-  videoHandler: Function
+  videoHandler: Function;
 }
 
 export default function Goal({
@@ -49,7 +54,7 @@ export default function Goal({
   cancelCallback,
   addCallback,
   updateCallback,
-  videoHandler
+  videoHandler,
 }: GoalProps) {
   const typesList = getGoalTypes();
   const goalType = goal?.type as APIt.GoalType;
@@ -67,8 +72,8 @@ export default function Goal({
   const [maxTaxDeductionInt, setMaxTaxDeductionInt] = useState<
     number | null | undefined
   >(goal?.tdli);
-  const [totalPTaxBenefit, setTotalPTaxBenefit] = useState<number>(0)
-  const [totalITaxBenefit, setTotalITaxBenefit] = useState<number>(0)
+  const [totalPTaxBenefit, setTotalPTaxBenefit] = useState<number>(0);
+  const [totalITaxBenefit, setTotalITaxBenefit] = useState<number>(0);
   const [sellAfter, setSellAfter] = useState<number | undefined | null>(
     goal?.sa
   );
@@ -129,41 +134,59 @@ export default function Goal({
   const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const nowYear = new Date().getFullYear();
-  const amtLabel = "Amount";
+  const amtLabel = "Cost";
   const taxLabel = "Tax";
   const sellLabel = "Sell";
   const loanLabel = "Loan";
-  const earnLabel = "Earn";
-  const maintainLabel = "Maintain";
+  const annualNetCostLabel = "Yearly";
   const rentLabel = "Rent?";
   const cfChartLabel = "Cash Flows";
   const brChartLabel = "Buy v/s Rent";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [showBRChart, setShowBRChart] = useState<boolean>(
-    sellAfter && rentAmt ? true : false
+    sellAfter && rentAmt && rentAmt > 0 ? true : false
   );
   const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 20));
   const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
       ? [
-          { label: amtLabel, order: 3, active: true },
-          { label: taxLabel, order: 8, active: true },
-          { label: loanLabel, order: 10, active: true },
-          { label: maintainLabel, order: 15, active: true },
-          { label: earnLabel, order: 17, active: true },
-          { label: sellLabel, order: 19, active: true },
-          { label: rentLabel, order: 21, active: true },
+          { label: amtLabel, order: 3, active: true, svg: SVGPay },
+          {
+            label: taxLabel,
+            order: 8,
+            active: true,
+            svg: SVGTaxBenefit,
+          },
+          { label: loanLabel, order: 10, active: true, svg: SVGLoan },
+          {
+            label: annualNetCostLabel,
+            order: 15,
+            active: true,
+            svg: SVGCashFlow,
+          },
+          { label: sellLabel, order: 19, active: true, svg: SVGSell },
+          { label: rentLabel, order: 21, active: true, svg: SVGScale },
         ]
       : !isLoanEligible(goalType)
       ? [
-          { label: amtLabel, order: 3, active: true },
-          { label: taxLabel, order: 8, active: true },
+          { label: amtLabel, order: 3, active: true, svg: SVGPay },
+          {
+            label: taxLabel,
+            order: 8,
+            active: true,
+            svg: SVGTaxBenefit,
+          },
         ]
       : [
-          { label: amtLabel, order: 3, active: true },
-          { label: taxLabel, order: 8, active: true },
-          { label: loanLabel, order: 10, active: true },
+          { label: amtLabel, order: 3, active: true, svg: SVGPay },
+          {
+            label: taxLabel,
+            order: 8,
+            active: true,
+            svg: SVGTaxBenefit,
+          },
+          { label: loanLabel, order: 10, active: true, svg: SVGLoan },
         ]
   );
   const [showTab, setShowTab] = useState(amtLabel);
@@ -175,13 +198,13 @@ export default function Goal({
             label: cfChartLabel,
             order: 1,
             active: true,
-            svg: <SVGChart />,
+            svg: SVGChart,
           },
           {
             label: brChartLabel,
             order: 2,
             active: showBRChart,
-            svg: <SVGScale />,
+            svg: SVGScale,
           },
         ]
       : [
@@ -189,7 +212,7 @@ export default function Goal({
             label: cfChartLabel,
             order: 1,
             active: true,
-            svg: <SVGChart />,
+            svg: SVGChart,
           },
         ]
   );
@@ -258,14 +281,14 @@ export default function Goal({
     }
     let g: APIt.CreateGoalInput = createNewGoalInput();
     let result: any = calculateCFs(price, g, duration);
-    cfs = result.cfs
+    cfs = result.cfs;
     console.log("New cfs created: ", cfs);
     if (changeState) {
       if ((loanPer as number) && manualMode < 1 && goalType === APIt.GoalType.B)
         setEndYear(g.sy + cfs.length - 1);
       setCFs([...cfs]);
-      if(result.hasOwnProperty("itb")) setTotalITaxBenefit(result.itb)
-      setTotalPTaxBenefit(result.ptb)
+      if (result.hasOwnProperty("itb")) setTotalITaxBenefit(result.itb);
+      setTotalPTaxBenefit(result.ptb);
     }
     return cfs;
   };
@@ -395,12 +418,11 @@ export default function Goal({
   useEffect(() => {
     if (
       sellAfter &&
-      rentAmt &&
-      rentAmt > 0 &&
+      !!rentAmt &&
       price > 0 &&
       brChartData &&
       brChartData.length === 2 &&
-      nowYear >= startYear
+      nowYear < startYear
     )
       setShowBRChart(true);
     else setShowBRChart(false);
@@ -590,47 +612,50 @@ export default function Goal({
             />
           )}
 
-          {showTab === maintainLabel && (
-            <AnnualAmt
-              currency={currency}
-              startYear={startYear}
-              percentage={amCostPer as number}
-              chgRate={assetChgRate as number}
-              percentageHandler={setAMCostPer}
-              annualSY={amStartYear as number}
-              annualSYHandler={setAMStartYear}
-              price={price}
-              duration={getDur()}
-              title="Yearly Fixes, Insurance, etc costs"
-              footer="Include taxes & fees"
-              inputOrder={getOrderByTabLabel(tabOptions, maintainLabel)}
-              currentOrder={currentOrder}
-              nextStepDisabled={false}
-              nextStepHandler={handleNextStep}
-              allInputDone={allInputDone}
-              colorTo
-            />
-          )}
-
-          {showTab === earnLabel && (
-            <AnnualAmt
-              currency={currency}
-              startYear={startYear}
-              percentage={aiPer as number}
-              chgRate={assetChgRate as number}
-              percentageHandler={setAIPer}
-              annualSY={aiStartYear as number}
-              annualSYHandler={setAIStartYear}
-              price={price}
-              duration={getDur()}
-              title="Yearly Income through Rent, Dividend, etc"
-              footer="Exclude taxes & fees"
-              inputOrder={getOrderByTabLabel(tabOptions, earnLabel)}
-              currentOrder={currentOrder}
-              nextStepDisabled={false}
-              nextStepHandler={handleNextStep}
-              allInputDone={allInputDone}
-            />
+          {showTab === annualNetCostLabel && (
+            <Fragment>
+              <AnnualAmt
+                currency={currency}
+                startYear={startYear}
+                percentage={amCostPer as number}
+                chgRate={assetChgRate as number}
+                percentageHandler={setAMCostPer}
+                annualSY={amStartYear as number}
+                annualSYHandler={setAMStartYear}
+                price={price}
+                duration={getDur()}
+                title="Yearly Fixes, Insurance, etc costs"
+                footer="Include taxes & fees"
+                inputOrder={getOrderByTabLabel(tabOptions, annualNetCostLabel)}
+                currentOrder={currentOrder}
+                nextStepDisabled={false}
+                nextStepHandler={handleNextStep}
+                allInputDone={allInputDone}
+                colorTo
+              />
+              {console.log("Current order is ", currentOrder)}
+              {(allInputDone ||
+                currentOrder >= getOrderByTabLabel(tabOptions, annualNetCostLabel) + 2) && (
+                <AnnualAmt
+                  currency={currency}
+                  startYear={startYear}
+                  percentage={aiPer as number}
+                  chgRate={assetChgRate as number}
+                  percentageHandler={setAIPer}
+                  annualSY={aiStartYear as number}
+                  annualSYHandler={setAIStartYear}
+                  price={price}
+                  duration={getDur()}
+                  title="Yearly Income through Rent, Dividend, etc"
+                  footer="Exclude taxes & fees"
+                  inputOrder={getOrderByTabLabel(tabOptions, annualNetCostLabel) + 2}
+                  currentOrder={currentOrder}
+                  nextStepDisabled={false}
+                  nextStepHandler={handleNextStep}
+                  allInputDone={allInputDone}
+                />
+              )}
+            </Fragment>
           )}
 
           {showTab === sellLabel && (

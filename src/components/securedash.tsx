@@ -5,33 +5,75 @@ import NW from "./nw/nw";
 import { CreateGoalInput, GoalType } from "../api/goals";
 import { getGoalsList, getDuration } from "./goals/goalutils";
 import { calculateCFs } from "./goals/cfutils";
-import { buildTabsArray, removeFromArray } from "./utils";
+import { buildTabsArray, getRangeFactor, removeFromArray } from "./utils";
 import Tabs, { DASHBOARD_STYLE } from "./tabs";
+import SVGPiggy from "./svgpiggy";
+import SVGMoneyBag from "./calc/svgmoneybag";
+import SVGPlan from "./svgplan";
+import SVGInvest from "./svginvest";
 
 const SecureDash = () => {
-  const netWorthLabel = "Net Worth";
-  const goalsLabel = "Plan";
-  const saveLabel = "Save";
-  const investLabel = "Invest";
-  const tabs = buildTabsArray([
-    netWorthLabel,
-    goalsLabel,
-    saveLabel,
-    investLabel,
-  ]);
-  const [viewMode, setViewMode] = useState(netWorthLabel);
+  const getLabel = "GET";
+  const setLabel = "SET";
+  const saveLabel = "SAVE";
+  const investLabel = "INVEST";
+  const tabs = buildTabsArray({
+    [getLabel]: SVGMoneyBag,
+    [setLabel]: SVGPlan,
+    [saveLabel]: SVGPiggy,
+    [investLabel]: SVGInvest,
+  });
+  const [viewMode, setViewMode] = useState(getLabel);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [savings, setSavings] = useState<number>(0);
-  const [annualSavings, setAnnualSavings] = useState<number>(0);
-  const [currency, setCurrency] = useState<string>("USD");
+  const [savings, setSavings] = useState<number>(
+    localStorage.getItem("savings")
+      ? parseInt(
+          //@ts-ignore
+          localStorage.getItem("savings")
+        )
+      : 0
+  );
+  const [annualSavings, setAnnualSavings] = useState<number>(
+    localStorage.getItem("annualSavings")
+      ? parseInt(
+          //@ts-ignore
+          localStorage.getItem("annualSavings")
+        )
+      : 0
+  );
+  const [currency, setCurrency] = useState<string>(
+    //@ts-ignore
+    localStorage.getItem("curr") ? localStorage.getItem("curr") : "USD"
+  );
   const [allGoals, setAllGoals] = useState<Array<CreateGoalInput> | null>([]);
   const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
   const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(null);
   const [allCFs, setAllCFs] = useState<Object>({});
-  const avgAnnualExpense = 24000;
+  const [avgAnnualExpense, setAvgAnnualExpense] = useState<number>(24000);
   const expChgRate = 3;
 
   useEffect(() => {
+    if (currency !== "USD")
+      setAvgAnnualExpense(Math.round(12000 * getRangeFactor(currency)));
+    else setAvgAnnualExpense(24000);
+    localStorage.setItem("curr", currency);
+  }, [currency]);
+
+  useEffect(() => {
+    localStorage.setItem("savings", "" + savings);
+  }, [savings]);
+
+  useEffect(() => {
+    localStorage.setItem("annualSavings", "" + annualSavings);
+  }, [annualSavings]);
+
+  useEffect(() => {
+    let storedVal = localStorage.getItem("curr");
+    if (storedVal) setCurrency(storedVal);
+    storedVal = localStorage.getItem("annualSavings");
+    if (storedVal) setAnnualSavings(parseInt(storedVal));
+    storedVal = localStorage.getItem("savings");
+    if (storedVal) setSavings(parseInt(storedVal));
     loadAllGoals();
   }, []);
 
@@ -51,8 +93,15 @@ const SecureDash = () => {
         let result: any = calculateCFs(
           null,
           g,
-          getDuration(g.sa as number, g.sy, g.ey, g.manual, g.emi?.per,
-            g.emi?.ry, g.emi?.dur)
+          getDuration(
+            g.sa as number,
+            g.sy,
+            g.ey,
+            g.manual,
+            g.emi?.per,
+            g.emi?.ry,
+            g.emi?.dur
+          )
         );
         allCFs[g.id as string] = result.cfs;
       }
@@ -75,7 +124,7 @@ const SecureDash = () => {
           customStyle={DASHBOARD_STYLE}
         />
       )}
-      {viewMode === netWorthLabel && (
+      {viewMode === getLabel && (
         <NW
           totalSavings={savings}
           annualSavings={annualSavings}
@@ -86,7 +135,7 @@ const SecureDash = () => {
           currencyHandler={setCurrency}
         />
       )}
-      {viewMode === goalsLabel && (
+      {viewMode === setLabel && (
         <Goals
           showModalHandler={setShowModal}
           savings={savings}

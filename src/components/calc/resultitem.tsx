@@ -16,21 +16,16 @@ interface ResultItemProps {
   info?: string;
   imp?: string;
   pl?: boolean;
-  hideLabel?: boolean;
 }
 
 export default function ResultItem(props: ResultItemProps) {
   return (
     <div className="flex flex-col items-center justify-center">
-      {!props.hideLabel && (
-        <label
-          className={
-            props.titleFormat ? "text-xl md:text-2xl font-semibold" : ""
-          }
-        >
-          {props.label}
-        </label>
-      )}
+      <label
+        className={props.titleFormat ? "text-xl md:text-2xl font-semibold" : ""}
+      >
+        {props.label}
+      </label>
       <div className="flex justify-between items-start font-semibold">
         <div className="flex justify-center items-center">
           {props.svg}

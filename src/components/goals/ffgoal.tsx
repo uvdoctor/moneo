@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import * as APIt from "../../api/goals";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
@@ -28,6 +28,12 @@ import Section from "../form/section";
 import TreeMapChart from "./treemapchart";
 import SVGAAChart from "./svgaachart";
 import AAChart from "./aachart";
+import SVGPiggy from "../svgpiggy";
+import SVGTaxBenefit from "../svgtaxbenefit";
+import SVGCashFlow from "../svgcashflow";
+import SVGInheritance from "./svginheritance";
+import SVGCare from "./svgcare";
+import SVGPay from "../svgpay";
 interface FFGoalProps {
   goal: APIt.CreateGoalInput;
   totalSavings: number;
@@ -40,8 +46,8 @@ interface FFGoalProps {
   tryCFs: Array<number>;
   mergedCfs: any;
   pp: Object;
-  videoUrl: string
-  videoHandler: Function
+  videoUrl: string;
+  videoHandler: Function;
   ffYearHandler: Function;
   ffResultHandler: Function;
   rrHandler: Function;
@@ -126,50 +132,50 @@ export default function FFGoal({
     goal.id ? true : false
   );
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
-  const investLabel = "Invest";
-  const expLabel = "Expenses";
-  const incomeLabel = "Income";
+  const saveLabel = "Save";
+  const spendLabel = "Spend";
+  const benefitLabel = "Benefit";
   const careLabel = "Care";
-  const gainsLabel = "Gains";
-  const lossesLabel = "Losses";
-  const nomineeLabel = "Nominees";
-  const cfChartLabel = "Total Savings";
-  const aaChartLabel = `Asset Allocation from ${nowYear + 2} onwards`;
-  const treemapChartLabel = `${nowYear + 1} Asset Allocation`;
+  const expectLabel = "Expect";
+  const giveLabel = "Give";
+  const cfChartLabel = "Savings";
+  const aaFutureLabel = "Allocation Plan";
+  const aaNextYearLabel = "Asset Allocation";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [tabOptions, setTabOptions] = useState<Array<any>>([
-    { label: investLabel, order: 3, active: true },
-    { label: expLabel, order: 5, active: true },
-    { label: incomeLabel, order: 8, active: true },
-    { label: careLabel, order: 11, active: true },
-    { label: gainsLabel, order: 16, active: true },
-    { label: lossesLabel, order: 17, active: true },
-    { label: nomineeLabel, order: 18, active: true },
+    { label: saveLabel, order: 3, active: true, svg: SVGPiggy },
+    { label: spendLabel, order: 5, active: true, svg: SVGPay },
+    { label: benefitLabel, order: 8, active: true, svg: SVGTaxBenefit },
+    { label: careLabel, order: 11, active: true, svg: SVGCare },
+    { label: expectLabel, order: 16, active: true, svg: SVGCashFlow },
+    { label: giveLabel, order: 18, active: true, svg: SVGInheritance },
   ]);
 
   const resultTabOptions = [
     {
-      label: cfChartLabel,
+      label: aaNextYearLabel,
       order: 1,
       active: true,
-      svg: <SVGChart />,
+      svg: SVGAAChart,
+      svglabel: nowYear + 1,
     },
     {
-      label: treemapChartLabel,
+      label: aaFutureLabel,
       order: 2,
       active: true,
-      svg: <SVGAAChart />,
+      svg: SVGBarChart,
+      svglabel: `${nowYear + 2} - ${endYear}`,
     },
     {
-      label: aaChartLabel,
+      label: cfChartLabel,
       order: 3,
       active: true,
-      svg: <SVGBarChart />,
-    },
+      svg: SVGChart,
+    }
   ];
 
-  const [showTab, setShowTab] = useState(investLabel);
-  const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
+  const [showTab, setShowTab] = useState(saveLabel);
+  const [showResultTab, setShowResultTab] = useState<string>(aaNextYearLabel);
   const [ffYearOptions, setFFYearOptions] = useState<any>({});
 
   const createGoal = () => {
@@ -268,11 +274,14 @@ export default function FFGoal({
       pp
     );
     setFFYearOptions(
-      initYearOptions(result.ffYear - (endYear - 100), 70 - (result.ffYear - (endYear - 100)))
+      initYearOptions(
+        result.ffYear - (endYear - 100),
+        70 - (result.ffYear - (endYear - 100))
+      )
     );
     ffResultHandler(result);
     rrHandler([...result.rr]);
-    ffYearHandler(!isFFPossible(result, leaveBehind) ? null : result.ffYear)
+    ffYearHandler(!isFFPossible(result, leaveBehind) ? null : result.ffYear);
     console.log("FF Result is ", result);
   }, [
     expenseBY,
@@ -320,7 +329,7 @@ export default function FFGoal({
     let label = getTabLabelByOrder(tabOptions, co);
     if (label) setShowTab(label);
     setCurrentOrder(co);
-    if (label === nomineeLabel) setAllInputDone(true);
+    if (label === giveLabel) setAllInputDone(true);
   };
 
   const buildChartCFs = (ffCfs: Object) => Object.values(ffCfs);
@@ -333,8 +342,8 @@ export default function FFGoal({
       <StickyHeader cancelCallback={cancelCallback} cancelDisabled={btnClicked}>
         <SelectInput
           name="ey"
-          //info="Financial Plan will be created assuming that You live till 100 Years, after which You leave behind inheritance. 
-          //DollarDarwin will try to find the earliest possible year for Your Financial Freedom based on Your inputs and Other Goals that You Create. 
+          //info="Financial Plan will be created assuming that You live till 100 Years, after which You leave behind inheritance.
+          //DollarDarwin will try to find the earliest possible year for Your Financial Freedom based on Your inputs and Other Goals that You Create.
           //Given that You May not be able to work beyond 70 years of age, DollarDarwin may request You to reconsider Your inputs and other Goals so that You Achieve Financial Freedom before hitting 70."
           inputOrder={1}
           currentOrder={currentOrder}
@@ -375,14 +384,14 @@ export default function FFGoal({
           submitDisabled={!allInputDone || expenseAfterFF < 5000 || btnClicked}
           cancelDisabled={btnClicked}
         >
-          {showTab === investLabel && (
+          {showTab === saveLabel && (
             <Invest
               currency={currency}
               riskProfile={riskProfile}
               riskProfileHandler={setRiskProfile}
               currentOrder={currentOrder}
               allInputDone={allInputDone}
-              inputOrder={getOrderByTabLabel(tabOptions, investLabel)}
+              inputOrder={getOrderByTabLabel(tabOptions, saveLabel)}
               nextStepHandler={handleNextStep}
               annualSavings={annualSavings}
               monthlySavingsRate={monthlySavingsRate}
@@ -392,11 +401,11 @@ export default function FFGoal({
             />
           )}
 
-          {showTab === expLabel && (
+          {showTab === spendLabel && (
             <ExpenseAfterFF
               currency={currency}
               rangeFactor={rangeFactor}
-              inputOrder={getOrderByTabLabel(tabOptions, expLabel)}
+              inputOrder={getOrderByTabLabel(tabOptions, spendLabel)}
               currentOrder={currentOrder}
               allInputDone={allInputDone}
               nextStepHandler={handleNextStep}
@@ -410,11 +419,11 @@ export default function FFGoal({
             />
           )}
 
-          {showTab === incomeLabel && (
+          {showTab === benefitLabel && (
             <RetIncome
               currency={currency}
               rangeFactor={rangeFactor}
-              inputOrder={getOrderByTabLabel(tabOptions, incomeLabel)}
+              inputOrder={getOrderByTabLabel(tabOptions, benefitLabel)}
               currentOrder={currentOrder}
               allInputDone={allInputDone}
               nextStepHandler={handleNextStep}
@@ -453,55 +462,61 @@ export default function FFGoal({
             />
           )}
 
-          {showTab === gainsLabel && (
-            <Section
-              title="Potential Gains (eg: Inheritance, Selling Investments, etc.)"
-              left={
-                <DynamicTgtInput
-                  inputOrder={getOrderByTabLabel(tabOptions, gainsLabel)}
-                  currentOrder={currentOrder}
-                  allInputDone={allInputDone}
-                  nextStepHandler={handleNextStep}
-                  startYear={goal.by}
-                  endYear={endYear}
-                  currency={currency}
-                  rangeFactor={rangeFactor}
-                  tgts={gains}
-                  tgtsHandler={setGains}
+          {showTab === expectLabel && (
+            <Fragment>
+              <Section
+                title="Potential Gains (eg: Inheritance, Selling Investments, etc.)"
+                left={
+                  <DynamicTgtInput
+                    inputOrder={getOrderByTabLabel(tabOptions, expectLabel)}
+                    currentOrder={currentOrder}
+                    allInputDone={allInputDone}
+                    nextStepHandler={handleNextStep}
+                    startYear={goal.by}
+                    endYear={endYear}
+                    currency={currency}
+                    rangeFactor={rangeFactor}
+                    tgts={gains}
+                    tgtsHandler={setGains}
+                  />
+                }
+                insideForm
+                footer="Exclude taxes & fees."
+              />
+
+              {(allInputDone ||
+                currentOrder ===
+                  getOrderByTabLabel(tabOptions, expectLabel) + 1) && (
+                <Section
+                  title="Potential Losses (eg: Inheritance, Selling Investments, etc.)"
+                  footer="Include taxes & fees."
+                  insideForm
+                  left={
+                    <DynamicTgtInput
+                      inputOrder={
+                        getOrderByTabLabel(tabOptions, expectLabel) + 1
+                      }
+                      currentOrder={currentOrder}
+                      allInputDone={allInputDone}
+                      nextStepHandler={handleNextStep}
+                      startYear={goal.by}
+                      endYear={endYear}
+                      currency={currency}
+                      rangeFactor={rangeFactor}
+                      tgts={losses}
+                      tgtsHandler={setLosses}
+                    />
+                  }
                 />
-              }
-              insideForm
-              footer="Exclude taxes & fees."
-            />
+              )}
+            </Fragment>
           )}
 
-          {showTab === lossesLabel && (
-            <Section
-              title="Potential Losses (eg: Inheritance, Selling Investments, etc.)"
-              footer="Include taxes & fees."
-              insideForm
-              left={
-                <DynamicTgtInput
-                  inputOrder={getOrderByTabLabel(tabOptions, lossesLabel)}
-                  currentOrder={currentOrder}
-                  allInputDone={allInputDone}
-                  nextStepHandler={handleNextStep}
-                  startYear={goal.by}
-                  endYear={endYear}
-                  currency={currency}
-                  rangeFactor={rangeFactor}
-                  tgts={losses}
-                  tgtsHandler={setLosses}
-                />
-              }
-            />
-          )}
-
-          {showTab === nomineeLabel && (
+          {showTab === giveLabel && (
             <Nominees
               currency={currency}
               rangeFactor={rangeFactor}
-              inputOrder={getOrderByTabLabel(tabOptions, nomineeLabel)}
+              inputOrder={getOrderByTabLabel(tabOptions, giveLabel)}
               currentOrder={currentOrder}
               allInputDone={allInputDone}
               nextStepHandler={handleNextStep}
@@ -534,16 +549,20 @@ export default function FFGoal({
               />
             }
           >
-            <LineChart
-              cfs={buildChartCFs(ffResult.ffCfs)}
-              startYear={nowYear + 1}
+            <TreeMapChart
+              aa={ffResult.aa}
+              rr={ffResult.rr}
               fullScreen={chartFullScreen}
             />
-            <TreeMapChart aa={ffResult.aa} rr={ffResult.rr} />
             <AAChart
               aa={ffResult.aa}
               years={buildYearsArray(nowYear + 2, endYear)}
               rr={ffResult.rr}
+              fullScreen={chartFullScreen}
+            />
+            <LineChart
+              cfs={buildChartCFs(ffResult.ffCfs)}
+              startYear={nowYear + 1}
               fullScreen={chartFullScreen}
             />
           </ResultSection>

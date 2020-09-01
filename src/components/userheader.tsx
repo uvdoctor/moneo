@@ -57,8 +57,9 @@ const UserHeader = () => {
   //const handleHelp = () => { }
 
   return (
-    <nav className="md:text-lg lg:text-xl fixed flex w-full bg-white items-center justify-between flex-wrap py-1 top-0 animated items-center cursor font-bold">
+    <nav className="text-lg lg:text-xl fixed flex w-full bg-white items-center justify-between flex-wrap py-1 top-0 animated items-center cursor font-bold">
       <Logo />
+      <label>Estimates. No Advice.</label>
       {username ? (
         <div className="flex items-center">
           {/*<div className="ml-8 md:ml-12 hoverable relative inline-block hover:text-green-600"><label>{username}</label>

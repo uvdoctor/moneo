@@ -1,7 +1,6 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode } from "react";
 import ActionButtons from "../form/actionbuttons";
 import Tabs from "../tabs";
-import { useFullScreenBrowser } from "react-browser-hooks";
 
 interface InputSectionProps {
   tabOptions: Array<any>;
@@ -28,14 +27,6 @@ export default function InputSection({
   cancelCallback,
   handleSubmit,
 }: InputSectionProps) {
-  const fsb = useFullScreenBrowser();
-  const [tabsCapacity, setTabsCapacity] = useState<number>(3);
-
-  useEffect(() => {
-    let width = fsb.info.innerWidth
-    if(width >= 1024) setTabsCapacity(3)
-    else setTabsCapacity(Math.floor(fsb.info.innerWidth / 100));
-  }, [fsb.info.innerWidth]);
 
   return (
     <div
@@ -48,10 +39,9 @@ export default function InputSection({
           tabs={tabOptions}
           selectedTab={showTab}
           selectedTabHandler={showTabHandler}
-          capacity={tabsCapacity}
+          capacity={tabOptions.length}
           currentOrder={currentOrder}
           allInputDone={allInputDone}
-          bottomRounded
         />
       )}
       <div className="w-full flex flex-wrap justify-center">
