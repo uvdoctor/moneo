@@ -138,9 +138,9 @@ export default function FFGoal({
   const careLabel = "Care";
   const expectLabel = "Expect";
   const giveLabel = "Give";
-  const cfChartLabel = "Total Savings";
-  const aaChartLabel = "Allocation Plan";
-  const treemapChartLabel = "Asset Allocation";
+  const cfChartLabel = "Savings";
+  const aaFutureLabel = "Allocation Plan";
+  const aaNextYearLabel = "Asset Allocation";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [tabOptions, setTabOptions] = useState<Array<any>>([
     { label: saveLabel, order: 3, active: true, svg: SVGPiggy },
@@ -153,29 +153,29 @@ export default function FFGoal({
 
   const resultTabOptions = [
     {
-      label: cfChartLabel,
+      label: aaNextYearLabel,
       order: 1,
-      active: true,
-      svg: SVGChart,
-    },
-    {
-      label: treemapChartLabel,
-      order: 2,
       active: true,
       svg: SVGAAChart,
       svglabel: nowYear + 1,
     },
     {
-      label: aaChartLabel,
-      order: 3,
+      label: aaFutureLabel,
+      order: 2,
       active: true,
       svg: SVGBarChart,
       svglabel: `${nowYear + 2} - ${endYear}`,
     },
+    {
+      label: cfChartLabel,
+      order: 3,
+      active: true,
+      svg: SVGChart,
+    }
   ];
 
   const [showTab, setShowTab] = useState(saveLabel);
-  const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
+  const [showResultTab, setShowResultTab] = useState<string>(aaNextYearLabel);
   const [ffYearOptions, setFFYearOptions] = useState<any>({});
 
   const createGoal = () => {
