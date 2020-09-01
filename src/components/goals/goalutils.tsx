@@ -212,6 +212,7 @@ export const createNewGoalInput = (
   } else if (goalType === APIt.GoalType.E) {
     bg.btr = 100;
     bg.tbr = 1;
+    bg.tdl = 0;
   }
   return bg;
 };

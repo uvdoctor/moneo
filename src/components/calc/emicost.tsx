@@ -35,7 +35,8 @@ interface EmiProps {
   loanAnnualInt: number;
   loanPer: number;
   loanSIPayPer: number | undefined | null;
-  loanSICapitalize: number;
+  loanSICapitalize: number | undefined | null;
+  loanGracePeriod: number | undefined | null;
   loanBorrowAmt: number;
   taxBenefitInt: number;
   maxTaxDeductionInt: number;
@@ -49,6 +50,7 @@ interface EmiProps {
   loanPerHandler: Function;
   loanSIPayPerHandler: Function;
   loanSICapitalizeHandler: Function;
+  loanGracePeriodHandler: Function;
   loanAnnualIntHandler: Function;
   taxBenefitIntHandler: Function;
   maxTaxDeductionIntHandler: Function;
@@ -72,7 +74,6 @@ export default function EmiCost(props: EmiProps) {
   const calculateEmi = () => {
     let borrowAmt = props.loanBorrowAmt;
     let simpleInts: Array<number> = [];
-    let totalSimpleIntAmt = 0;
     if (props.goalType === GoalType.E) {
       let result = createEduLoanDPWithSICFs(
         props.price,
@@ -82,11 +83,10 @@ export default function EmiCost(props: EmiProps) {
         props.endYear,
         props.loanAnnualInt,
         props.loanSIPayPer as number,
-        props.loanSICapitalize < 1
+        (props.loanSICapitalize as number) < 1
       );
       borrowAmt = result.borrowAmt;
       simpleInts = result.ints;
-      totalSimpleIntAmt = result.remIntAmt;
       setRemIntAmt(Math.round(result.remIntAmt));
       setSimpleInts([...simpleInts]);
     }
@@ -108,11 +108,15 @@ export default function EmiCost(props: EmiProps) {
       props.loanYears * 12
     ) as number;
     setEMI(Math.round(emi));
+    let totalSimpleIntAmt = 0;
     simpleInts.forEach((int) => (totalSimpleIntAmt += int));
     let totalIntAmt = 0;
     if (props.goalType !== GoalType.B) {
       totalIntAmt =
-        emi * loanPaidForMonths + totalSimpleIntAmt - props.loanBorrowAmt;
+        emi * loanPaidForMonths +
+        totalSimpleIntAmt +
+        remIntAmt -
+        props.loanBorrowAmt;
     } else
       totalIntAmt = getTotalInt(
         borrowAmt,
@@ -188,7 +192,16 @@ export default function EmiCost(props: EmiProps) {
                     props.repaymentSYHandler(parseInt(year))
                   }
                 />
-                <div className="mt-4">
+                {props.goalType === GoalType.E && (
+                  <div className="mt-2">
+                    <HToggle
+                      rightText="6 Months Grace Period"
+                      value={props.loanGracePeriod as number}
+                      setter={props.loanGracePeriodHandler}
+                    />
+                  </div>
+                )}
+                <div className={`${props.goalType === GoalType.E ? 'mt-2' : 'mt-4'}`}>
                   <NumberInput
                     name="duration"
                     inputOrder={props.inputOrder + 2}
@@ -337,18 +350,20 @@ export default function EmiCost(props: EmiProps) {
                     />
                   </div>
                 )}
-                {props.goalType === GoalType.E && !!remIntAmt && (
-                  <div className="mt-2">
-                    <HToggle
-                      rightText={`Pay Remaining Interest of ${toCurrency(
-                        remIntAmt,
-                        props.currency
-                      )} in ${props.endYear + 1}`}
-                      value={props.loanSICapitalize}
-                      setter={props.loanSICapitalizeHandler}
-                    />
-                  </div>
-                )}
+                {props.goalType === GoalType.E &&
+                  !Number.isNaN(props.loanSIPayPer) && //@ts-ignore
+                  props.loanSIPayPer < 100 && (
+                    <div className="mt-2">
+                      <HToggle
+                        rightText={`Pay Remaining Interest of ${toCurrency(
+                          remIntAmt,
+                          props.currency
+                        )} in ${props.endYear + 1}`}
+                        value={props.loanSICapitalize as number}
+                        setter={props.loanSICapitalizeHandler}
+                      />
+                    </div>
+                  )}
                 {props.taxRate &&
                 props.taxBenefitInt &&
                 !isTaxCreditEligible(props.goalType) ? (
