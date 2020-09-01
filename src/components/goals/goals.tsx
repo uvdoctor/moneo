@@ -85,16 +85,16 @@ export default function Goals({
       order: 2,
       active: true,
       svg: SVGAAChart,
-      svglabel: nowYear + 1
+      svglabel: nowYear + 1,
     },
     {
       label: cfLabel,
       order: 3,
       active: true,
       svg: SVGBarChart,
-      svglabel: currency
-    }
-  ]
+      svglabel: currency,
+    },
+  ];
   const [videoUrl, setVideoUrl] = useState<string>("");
   const irDiffByCurrency: any = {
     INR: 3,
@@ -513,7 +513,7 @@ export default function Goals({
             )
         )}
       </div>
-      {ffGoal && ffResult
+      {ffGoal
         ? allGoals &&
           allGoals.length > 0 && (
             <Fragment>
@@ -561,14 +561,20 @@ export default function Goals({
                   fullScreen={fullScreen}
                 />
               )}
-              {viewMode === aaLabel && ffResult.aa && ffResult.rr && (
-                <TreeMapChart aa={ffResult.aa} rr={ffResult.rr} fullScreen={fullScreen} />
-              )}
+              {viewMode === aaLabel &&
+                ffResult &&
+                ffResult.aa &&
+                ffResult.rr && (
+                  <TreeMapChart
+                    aa={ffResult.aa}
+                    rr={ffResult.rr}
+                    fullScreen={fullScreen}
+                  />
+                )}
               {viewMode === goalsLabel && (
                 <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
                   {allGoals.map((g: APIt.CreateGoalInput, i: number) => {
                     if (!g.id || (impFilter && impFilter !== g.imp)) return;
-                    //@ts-ignore
                     let result = calculateFFImpactYear(
                       g.sy,
                       allCFs[g.id],
@@ -576,25 +582,23 @@ export default function Goals({
                       g.imp
                     );
                     return (
-                      result && (
-                        <Summary
-                          key={"g" + i}
-                          id={g.id as string}
-                          name={g.name}
-                          type={g.type}
-                          imp={g.imp}
-                          rr={rr}
-                          //@ts-ignore
-                          startYear={g.sy}
-                          currency={g.ccy}
-                          cfs={allCFs[g.id]}
-                          deleteCallback={removeGoal}
-                          editCallback={editGoal}
-                          ffGoalEndYear={ffGoal.ey}
-                          ffOOM={result.ffOOM}
-                          ffImpactYears={result.ffImpactYears}
-                        />
-                      )
+                      <Summary
+                        key={"g" + i}
+                        id={g.id as string}
+                        name={g.name}
+                        type={g.type}
+                        imp={g.imp}
+                        rr={rr}
+                        //@ts-ignore
+                        startYear={g.sy}
+                        currency={g.ccy}
+                        cfs={allCFs[g.id]}
+                        deleteCallback={removeGoal}
+                        editCallback={editGoal}
+                        ffGoalEndYear={ffGoal.ey}
+                        ffOOM={result ? result.ffOOM : null}
+                        ffImpactYears={result ? result.ffImpactYears : null}
+                      />
                     );
                   })}
                 </div>

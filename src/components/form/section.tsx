@@ -36,9 +36,9 @@ export default function Section(props: SectionProps) {
           </div>
           {props.bottom && (
             <div className="flex flex-wrap mt-2 items-center justify-center">
-              <label className="mr-4">{props.bottomLeft}</label>
-              {props.bottom}
-              <label className="ml-4">{props.bottomRight}</label>
+              {props.bottomLeft && <label className="mr-4">{props.bottomLeft}</label>}
+              <div>{props.bottom}</div>
+              {props.bottomRight && <label className="ml-4">{props.bottomRight}</label>}
             </div>
           )}
           {props.footer && (
