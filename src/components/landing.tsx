@@ -26,7 +26,7 @@ const Landing = () => {
       className="mt-12 text-white overflow-hidden bg-cover w-screen h-screen"
       style={{ backgroundImage: `url('images/relaxedwoman.png')` }}
     >
-      <div className="text-lg flex flex-col w-full h-full items-center justify-end pr-32">
+      <div className="text-lg flex flex-col w-full h-full items-center justify-center pr-32">
         <Link href={ROUTES.DASHBOARD}>
           <a>
             <AwesomeButton
