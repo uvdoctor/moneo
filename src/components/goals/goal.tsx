@@ -380,10 +380,10 @@ export default function Goal({
   }, [cfs, impLevel]);
 
   useEffect(() => {
-    if (!hasTab(loanLabel)) return;
+    if (!hasTab(loanLabel) || allInputDone) return;
     if (manualMode > 0) {
       tabOptions[2].active = false;
-      if (!allInputDone && currentOrder >= tabOptions[2].order) {
+      if (currentOrder >= tabOptions[2].order) {
         if (tabOptions[3]) {
           if (currentOrder < tabOptions[3].order)
             setCurrentOrder(tabOptions[3].order);
@@ -455,12 +455,10 @@ export default function Goal({
       let label = getTabLabelByOrder(co);
       if (label) setShowTab(label);
       setCurrentOrder(co);
-      console.log("Current order is ", co)
-      if (sellAfter) {
-        if (showTab === rentLabel) setAllInputDone(true);
-      } else if (hasTab(loanLabel)) {
-        if (currentOrder === getOrderByTabLabel(tabOptions, loanLabel) + 3) setAllInputDone(true);
-      } else if (currentOrder === getOrderByTabLabel(tabOptions, taxLabel) + 1) setAllInputDone(true);
+      if (sellAfter) setAllInputDone(co === getOrderByTabLabel(tabOptions, rentLabel) + 1);
+      else if (hasTab(loanLabel)) {
+        if (co === getOrderByTabLabel(tabOptions, loanLabel) + 3) setAllInputDone(true);
+      } else if (co === getOrderByTabLabel(tabOptions, taxLabel) + 1) setAllInputDone(true);
     }
   };
 
@@ -475,7 +473,7 @@ export default function Goal({
       loanYears
     );
 
-  const showResultSection = () =>
+  const showResultSection = () => 
     nowYear < startYear && allInputDone && cfs.length > 0;
 
   return (
@@ -713,6 +711,10 @@ export default function Goal({
               rr={rr}
               brChartData={brChartData}
               brChartDataHandler={setBRChartData}
+              allInputDone={allInputDone}
+              currentOrder={currentOrder}
+              inputOrder={getOrderByTabLabel(tabOptions, rentLabel)}
+              nextStepHandler={handleNextStep}
             />
           )}
         </InputSection>
