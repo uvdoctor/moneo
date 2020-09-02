@@ -88,7 +88,7 @@ export default function Goal({
   >(goal.tbr);
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
-  >(goal.tdl);
+  >(goal.achg);
   const [startingPrice, setStartingPrice] = useState<number>(
     goal?.cp as number
   );
@@ -266,8 +266,7 @@ export default function Goal({
     } else if (goalType === APIt.GoalType.E) {
       bg.btr = loanSIPayPer;
       bg.tbr = loanSICapitalize;
-      //@ts-ignore
-      bg.tdl = loanGracePeriod;
+      bg.achg = loanGracePeriod;
     }
     return bg;
   };

@@ -68,9 +68,6 @@ export default function EmiCost(props: EmiProps) {
   const [simpleInts, setSimpleInts] = useState<Array<number>>([]);
   const [showIntSchedule, setShowIntSchedule] = useState<boolean>(false);
   const [remIntAmt, setRemIntAmt] = useState<number>(0);
-  const [showRemInt, setShowRemInt] = useState<boolean>(
-    (props.loanSIPayPer as number) < 100
-  );
   const loanLimitPer = props.goalType === GoalType.E ? 100 : 80;
 
   const calculateEmi = () => {
@@ -130,10 +127,6 @@ export default function EmiCost(props: EmiProps) {
   };
 
   useEffect(() => calculateEmi(), [props]);
-
-  useEffect(() => {
-    setShowRemInt((props.loanSIPayPer as number) < 100);
-  }, [props.loanSIPayPer]);
 
   useEffect(() => {
     setRYOptions(
@@ -364,39 +357,24 @@ export default function EmiCost(props: EmiProps) {
                       </div>
                       {!Number.isNaN(props.loanSIPayPer) && //@ts-ignore
                         props.loanSIPayPer < 100 && (
-                          <Fragment>
-                            <div className="w-full mt-4">
-                              <ExpandCollapse
-                                title="Remaining Simple Interest"
-                                value={showRemInt}
-                                handler={setShowRemInt}
-                              />
-                            </div>
-                            {showRemInt && (
-                              <Fragment>
-                                <div className="mt-2">
-                                  <HToggle
-                                    rightText={`Pay ${toCurrency(
-                                      remIntAmt,
-                                      props.currency
-                                    )} in ${props.endYear + 1}`}
-                                    value={props.loanSICapitalize as number}
-                                    setter={props.loanSICapitalizeHandler}
-                                  />
-                                </div>
-                                {!!props.loanSICapitalize && (
-                                  <div className="mt-2">
-                                    <HToggle
-                                      rightText="Claim 6 Months Grace Period"
-                                      value={props.loanGracePeriod as number}
-                                      setter={props.loanGracePeriodHandler}
-                                    />
-                                  </div>
-                                )}
-                              </Fragment>
-                            )}
-                          </Fragment>
+                          <div className="mt-2">
+                            <HToggle
+                              rightText={`Pay ${toCurrency(
+                                remIntAmt,
+                                props.currency
+                              )} in ${props.endYear + 1}`}
+                              value={props.loanSICapitalize as number}
+                              setter={props.loanSICapitalizeHandler}
+                            />
+                          </div>
                         )}
+                      <div className="mt-2">
+                        <HToggle
+                          rightText="Claim 6 Months Grace Period"
+                          value={props.loanGracePeriod as number}
+                          setter={props.loanGracePeriodHandler}
+                        />
+                      </div>
                     </Fragment>
                   )}
                 {props.taxRate &&
