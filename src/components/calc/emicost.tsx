@@ -68,7 +68,9 @@ export default function EmiCost(props: EmiProps) {
   const [simpleInts, setSimpleInts] = useState<Array<number>>([]);
   const [showIntSchedule, setShowIntSchedule] = useState<boolean>(false);
   const [remIntAmt, setRemIntAmt] = useState<number>(0);
-
+  const [showRemInt, setShowRemInt] = useState<boolean>(
+    (props.loanSIPayPer as number) < 100
+  );
   const loanLimitPer = props.goalType === GoalType.E ? 100 : 80;
 
   const calculateEmi = () => {
@@ -130,6 +132,10 @@ export default function EmiCost(props: EmiProps) {
   useEffect(() => calculateEmi(), [props]);
 
   useEffect(() => {
+    setShowRemInt((props.loanSIPayPer as number) < 100);
+  }, [props.loanSIPayPer]);
+
+  useEffect(() => {
     setRYOptions(
       initYearOptions(
         props.goalType === GoalType.E ? props.endYear + 1 : props.startYear,
@@ -137,6 +143,15 @@ export default function EmiCost(props: EmiProps) {
       )
     );
   }, [props.startYear, props.endYear]);
+
+  useEffect(() => {
+    if (
+      props.goalType === GoalType.E &&
+      props.taxRate &&
+      props.taxBenefitInt < 1
+    )
+      props.taxBenefitIntHandler(1);
+  }, [props.taxRate]);
 
   return (
     <div className="flex w-full justify-around">
@@ -301,76 +316,92 @@ export default function EmiCost(props: EmiProps) {
                     step={0.1}
                   />
                 </div>
-                {props.goalType === GoalType.E && (props.allInputDone || 
-                props.currentOrder === props.inputOrder + 4) &&(
-                  <Fragment>
-                    <div className="mt-2">
-                      <RadialInput
-                        inputOrder={props.inputOrder}
-                        currentOrder={props.currentOrder}
-                        nextStepDisabled={false}
-                        nextStepHandler={props.nextStepHandler}
-                        allInputDone={props.allInputDone}
-                        width={120}
-                        unit="%"
-                        data={toStringArr(0, 100, 5)}
-                        value={props.loanSIPayPer as number}
-                        changeHandler={props.loanSIPayPerHandler}
-                        step={5}
-                        labelBottom
-                        colorFrom={COLORS.RED}
-                        colorTo={COLORS.GREEN}
-                        pre="Pay While Studying"
-                        label="of Interest"
-                        post={
-                          !!props.loanSIPayPer && (
-                            <div className="flex flex-col cursor-pointer text-blue-600 justify-center w-full">
+                {props.goalType === GoalType.E &&
+                  (props.allInputDone ||
+                    props.currentOrder === props.inputOrder + 4) && (
+                    <Fragment>
+                      <div className="mt-2">
+                        <RadialInput
+                          inputOrder={props.inputOrder}
+                          currentOrder={props.currentOrder}
+                          nextStepDisabled={false}
+                          nextStepHandler={props.nextStepHandler}
+                          allInputDone={props.allInputDone}
+                          width={120}
+                          unit="%"
+                          data={toStringArr(0, 100, 5)}
+                          value={props.loanSIPayPer as number}
+                          changeHandler={props.loanSIPayPerHandler}
+                          step={5}
+                          labelBottom
+                          colorFrom={COLORS.RED}
+                          colorTo={COLORS.GREEN}
+                          pre="Pay While Studying"
+                          label="of Interest"
+                          post={
+                            !!props.loanSIPayPer && (
+                              <div className="flex flex-col justify-center w-full">
+                                <ExpandCollapse
+                                  title="Interest Schedule"
+                                  value={showIntSchedule}
+                                  handler={setShowIntSchedule}
+                                />
+                                {showIntSchedule &&
+                                  simpleInts.map((int, i) => (
+                                    <p key={"si" + i} className="text-gray-800">
+                                      Monthly{" "}
+                                      {toCurrency(
+                                        Math.round(int / 12),
+                                        props.currency
+                                      )}{" "}
+                                      in {props.startYear + i}
+                                    </p>
+                                  ))}
+                              </div>
+                            )
+                          }
+                        />
+                      </div>
+                      {!Number.isNaN(props.loanSIPayPer) && //@ts-ignore
+                        props.loanSIPayPer < 100 && (
+                          <Fragment>
+                            <div className="w-full mt-4">
                               <ExpandCollapse
-                                title="Interest Schedule"
-                                value={showIntSchedule}
-                                handler={setShowIntSchedule}
+                                title="Remaining Simple Interest"
+                                value={showRemInt}
+                                handler={setShowRemInt}
                               />
-                              {showIntSchedule &&
-                                simpleInts.map((int, i) => (
-                                  <p key={"si" + i} className="text-gray-800">
-                                    Monthly{" "}
-                                    {toCurrency(
-                                      Math.round(int / 12),
-                                      props.currency
-                                    )}{" "}
-                                    in {props.startYear + i}
-                                  </p>
-                                ))}
                             </div>
-                          )
-                        }
-                      />
-                    </div>
-                    {!Number.isNaN(props.loanSIPayPer) && //@ts-ignore
-                      props.loanSIPayPer < 100 && (
-                        <Fragment>
-                          <div className="mt-4">
-                            <HToggle
-                              rightText={`Pay Remaining Interest in ${props.endYear + 1}`} 
-                              /*${toCurrency(
+                            {showRemInt && (
+                              <Fragment>
+                                <div className="mt-2">
+                                  <HToggle
+                                    rightText={`Pay Remaining Simple Interest in ${
+                                      props.endYear + 1
+                                    }`}
+                                    /*${toCurrency(
                                 remIntAmt,
                                 props.currency
                               )} in */
-                              value={props.loanSICapitalize as number}
-                              setter={props.loanSICapitalizeHandler}
-                            />
-                          </div>
-                          <div className="mt-2">
-                            <HToggle
-                              rightText="Claim 6 Months Grace Period"
-                              value={props.loanGracePeriod as number}
-                              setter={props.loanGracePeriodHandler}
-                            />
-                          </div>
-                        </Fragment>
-                      )}
-                  </Fragment>
-                )}
+                                    value={props.loanSICapitalize as number}
+                                    setter={props.loanSICapitalizeHandler}
+                                  />
+                                </div>
+                                {!!props.loanSICapitalize && (
+                                  <div className="mt-2">
+                                    <HToggle
+                                      rightText="Claim 6 Months Grace Period"
+                                      value={props.loanGracePeriod as number}
+                                      setter={props.loanGracePeriodHandler}
+                                    />
+                                  </div>
+                                )}
+                              </Fragment>
+                            )}
+                          </Fragment>
+                        )}
+                    </Fragment>
+                  )}
                 {props.taxRate &&
                 props.taxBenefitInt &&
                 !isTaxCreditEligible(props.goalType) ? (
