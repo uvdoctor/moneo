@@ -23,7 +23,7 @@ const Landing = () => {
 
   return (
     <div
-      className="mt-12 text-white overflow-hidden bg-cover w-screen h-screen"
+      className="mt-12 text-white overflow-hidden bg-cover bg-center w-screen h-screen bg-no-repeat"
       style={{ backgroundImage: `url('images/relaxedwoman.png')` }}
     >
       <div className="text-lg flex flex-col w-full h-full items-center justify-center pr-32">
