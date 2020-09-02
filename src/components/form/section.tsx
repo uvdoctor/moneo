@@ -23,7 +23,7 @@ interface SectionProps {
 export default function Section(props: SectionProps) {
   return (
     <div
-      className="m-1 w-full max-w-sm md:max-w-md rounded-lg overflow-hidden 
+      className="m-1 w-full max-w-sm md:max-w-md max-h-md rounded-lg overflow-x-hidden overflow-y-auto 
                         shadow-lg md:shadow-xl"
     >
       {props.videoUrl && props.urlHandler && (

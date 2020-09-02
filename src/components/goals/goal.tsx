@@ -391,7 +391,7 @@ export default function Goal({
       }
     } else tabOptions[2].active = true;
     setTabOptions([...tabOptions]);
-  }, [manualMode]);
+  }, [manualMode, allInputDone, currentOrder]);
 
   const hasTab = (option: string) => {
     let options = tabOptions.filter((tab) => tab.label === option);
@@ -455,11 +455,12 @@ export default function Goal({
       let label = getTabLabelByOrder(co);
       if (label) setShowTab(label);
       setCurrentOrder(co);
+      console.log("Current order is ", co)
       if (sellAfter) {
-        if (label === rentLabel) setAllInputDone(true);
+        if (showTab === rentLabel) setAllInputDone(true);
       } else if (hasTab(loanLabel)) {
-        if (label === loanLabel) setAllInputDone(true);
-      } else if (label === taxLabel) setAllInputDone(true);
+        if (currentOrder === getOrderByTabLabel(tabOptions, loanLabel) + 3) setAllInputDone(true);
+      } else if (currentOrder === getOrderByTabLabel(tabOptions, taxLabel) + 1) setAllInputDone(true);
     }
   };
 

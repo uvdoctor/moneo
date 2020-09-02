@@ -301,7 +301,8 @@ export default function EmiCost(props: EmiProps) {
                     step={0.1}
                   />
                 </div>
-                {props.goalType === GoalType.E && (
+                {props.goalType === GoalType.E && (props.allInputDone || 
+                props.currentOrder === props.inputOrder + 4) &&(
                   <Fragment>
                     <div className="mt-2">
                       <RadialInput
