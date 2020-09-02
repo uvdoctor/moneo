@@ -137,7 +137,8 @@ export default function CareInsurance({
                 value={carePremiumSY - (endYear - 100)}
                 options={initYearOptions(55, 10)}
                 pre="Buy Policy At"
-                unit="Years Age"
+                unit="Years"
+                post="Age"
                 changeHandler={(val: string) =>
                   changeSelection(val, carePremiumSYHandler, endYear - 100)
                 }
