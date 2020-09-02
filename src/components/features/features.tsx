@@ -98,7 +98,7 @@ const Features = () => {
 				<p>No App Store Download Needed.</p>
 				<Link href={ROUTES.DASHBOARD}>
 					<a>
-						<img className="object-cover w-full mt-4" alt="Works across devices" src="images/devices.png" />
+						<img className="w-50 object-fit mt-4" alt="Works across devices" src="images/relaxedwoman.jpeg" />
 					</a>
 				</Link>
 			</div>
