@@ -1,4 +1,7 @@
 import React, { Fragment } from "react";
+import CustomVideoPlayer from "../customvideoplayer";
+import SVGPlay from "../svgplay";
+import SVGStop from "../svgstop";
 interface SectionProps {
   title: any;
   left: any;
@@ -12,6 +15,9 @@ interface SectionProps {
   manualMode?: number;
   hasResult?: boolean;
   insideForm?: boolean;
+  videoSrc?: string
+  videoUrl?: string
+  urlHandler?: Function
 }
 
 export default function Section(props: SectionProps) {
@@ -20,8 +26,25 @@ export default function Section(props: SectionProps) {
       className="m-1 w-full max-w-sm md:max-w-md rounded-lg overflow-hidden 
                         shadow-lg md:shadow-xl"
     >
-      <div className={`w-full ${props.insideForm && "bg-black text-white"}`}>
+      {props.videoUrl && props.urlHandler && (
+          <CustomVideoPlayer
+            videoUrl={props.videoUrl}
+            videoHandler={props.urlHandler}
+          />
+        )}
+      <div className={`w-full ${props.insideForm && "bg-black text-white flex justify-between"}`}>
         <label className="p-1">{props.title}</label>
+        {props.urlHandler && props.videoSrc && (
+          <div
+            className="p-1"
+            onClick={() =>
+              //@ts-ignore
+              props.urlHandler(!props.videoUrl ? props.videoSrc : "")
+            }
+          >
+            {!props.videoUrl ? <SVGPlay /> : <SVGStop />}
+          </div>
+        )}
       </div>
       {props.toggle && (
         <div className="flex justify-end mt-2 mr-4">{props.toggle}</div>
@@ -36,9 +59,9 @@ export default function Section(props: SectionProps) {
           </div>
           {props.bottom && (
             <div className="flex flex-wrap mt-2 items-center justify-center">
-              <label className="mr-4">{props.bottomLeft}</label>
-              {props.bottom}
-              <label className="ml-4">{props.bottomRight}</label>
+              {props.bottomLeft && <label className="mr-4">{props.bottomLeft}</label>}
+              <div>{props.bottom}</div>
+              {props.bottomRight && <label className="ml-4">{props.bottomRight}</label>}
             </div>
           )}
           {props.footer && (

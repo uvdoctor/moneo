@@ -5,7 +5,7 @@ import NW from "./nw/nw";
 import { CreateGoalInput, GoalType } from "../api/goals";
 import { getGoalsList, getDuration } from "./goals/goalutils";
 import { calculateCFs } from "./goals/cfutils";
-import { buildTabsArray, getRangeFactor, removeFromArray } from "./utils";
+import { getRangeFactor, removeFromArray } from "./utils";
 import Tabs, { DASHBOARD_STYLE } from "./tabs";
 import SVGPiggy from "./svgpiggy";
 import SVGMoneyBag from "./calc/svgmoneybag";
@@ -17,12 +17,12 @@ const SecureDash = () => {
   const setLabel = "SET";
   const saveLabel = "SAVE";
   const investLabel = "INVEST";
-  const tabs = buildTabsArray({
-    [getLabel]: SVGMoneyBag,
-    [setLabel]: SVGPlan,
-    [saveLabel]: SVGPiggy,
-    [investLabel]: SVGInvest,
-  });
+  const [tabs, setTabs] = useState<Array<any>>([
+    { label: getLabel, order: 1, active: true, svg: SVGMoneyBag},
+    { label: setLabel, order: 2, active: false, svg: SVGPlan },
+    { label: saveLabel, order: 3, active: false, svg: SVGPiggy },
+    { label: investLabel, order: 4, active: false, svg: SVGInvest },
+  ]);
   const [viewMode, setViewMode] = useState(getLabel);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [savings, setSavings] = useState<number>(
@@ -59,12 +59,30 @@ const SecureDash = () => {
     localStorage.setItem("curr", currency);
   }, [currency]);
 
+  const handleSetOption = () => {
+    tabs[1].active = (savings !== 0 && annualSavings !== 0)
+    setTabs([...tabs])
+  }
+
+  useEffect(() => {
+    if(goalsLoaded && savings && annualSavings && ffGoal) {
+      tabs[2].active = true
+      tabs[3].active = true
+    } else {
+      tabs[2].active = false
+      tabs[3].active = false
+    }
+    setTabs([...tabs])
+  }, [goalsLoaded])
+
   useEffect(() => {
     localStorage.setItem("savings", "" + savings);
+    handleSetOption()
   }, [savings]);
 
   useEffect(() => {
     localStorage.setItem("annualSavings", "" + annualSavings);
+    handleSetOption()
   }, [annualSavings]);
 
   useEffect(() => {
@@ -75,6 +93,7 @@ const SecureDash = () => {
     storedVal = localStorage.getItem("savings");
     if (storedVal) setSavings(parseInt(storedVal));
     loadAllGoals();
+    handleSetOption()
   }, []);
 
   const loadAllGoals = async () => {

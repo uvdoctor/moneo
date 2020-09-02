@@ -17,13 +17,21 @@ export default function StickyHeader({
   return (
     <div className="container mx-auto flex mb-2 w-full justify-between">
       <div
-        className="flex flex-col h-full items-center"
+        className="flex flex-col items-center"
         onClick={() => !cancelDisabled && cancelCallback()}
       >
         <SVGLogo />
-        <label className={`mt-6 ${cancelDisabled ? 'text-gray-400' : 'text-blue-600 hover:text-blue-800'}`}>Back</label>
+        <label
+          className={`mt-6 ${
+            cancelDisabled
+              ? "text-gray-400"
+              : "text-blue-600 hover:text-blue-800"
+          }`}
+        >
+          Back
+        </label>
       </div>
-      {children}
+      <div className="w-full flex justify-around max-w-sm md:max-w-md">{children}</div>
       <div className="mr-1 flex flex-col h-full">
         <div
           className={`mb-10 ${

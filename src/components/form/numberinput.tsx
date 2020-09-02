@@ -1,13 +1,10 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, Fragment } from "react";
 import { toCurrency, toReadableNumber } from "../utils";
 import Slider from "rc-slider";
 import NextStep from "./nextstep";
 import SVGInfo from "../svginfo";
 import { toast } from "react-toastify";
 import { COLORS, INPUT_HIGHLIGHT } from "../../CONSTANTS";
-import SVGPlay from "../svgplay";
-import SVGStop from "../svgstop";
-
 interface NumberInputProps {
   inputOrder: number;
   currentOrder: number;
@@ -31,13 +28,11 @@ interface NumberInputProps {
   note?: any;
   step?: number;
   feedback?: any;
-  videoSrc?: string;
-  videoUrl?: string;
-  videoHandler?: Function;
 }
 
 export default function NumberInput(props: NumberInputProps) {
   const formRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [editing, setEditing] = useState<boolean>(false);
   const [sliderButtonColor, setSliderButtonColor] = useState<string>("white");
   const [feedbackText, setFeedbackText] = useState<string>("");
@@ -65,7 +60,7 @@ export default function NumberInput(props: NumberInputProps) {
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      setEditing(false);
+      inputRef.current?.blur();
     }
   };
 
@@ -96,159 +91,159 @@ export default function NumberInput(props: NumberInputProps) {
   };
 
   return (
-    <div>
-      {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
-        props.allInputDone) && (
-        <form
-          ref={formRef}
-          className={`${
-            !props.allInputDone &&
-            props.inputOrder === props.currentOrder &&
-            `${INPUT_HIGHLIGHT} px-4`
-          }`}
-        >
-          <div className="w-full flex justify-end cursor-pointer">
-            {props.info && (
-              <div
-                className="mr-1"
-                onClick={() =>
-                  toast.info(props.info, {
-                    autoClose: props.infoDurationInMs
-                      ? props.infoDurationInMs
-                      : 5000,
-                  })
-                }
-              >
-                <SVGInfo />
-              </div>
-            )}
-            {props.videoHandler && props.videoSrc && (
-              <div
-                onClick={() =>
-                  //@ts-ignore
-                  props.videoHandler(!props.videoUrl ? props.videoSrc : "")
-                }
-              >
-                {!props.videoUrl ? <SVGPlay /> : <SVGStop />}
-              </div>
-            )}
-          </div>
+    <Fragment>
+      <div className="w-full flex justify-end cursor-pointer">
+        {props.info && (
           <div
-            className={`w-full flex justify-between ${
-              props.max ? "items-center" : "flex-col"
+            className="mr-1"
+            onClick={() =>
+              toast.info(props.info, {
+                autoClose: props.infoDurationInMs
+                  ? props.infoDurationInMs
+                  : 5000,
+              })
+            }
+          >
+            <SVGInfo />
+          </div>
+        )}
+      </div>
+      <div className="w-full flex justify-center items-center">
+        {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
+          props.allInputDone) && (
+          <form
+            ref={formRef}
+            className={`${
+              !props.allInputDone &&
+              props.inputOrder === props.currentOrder &&
+              `${INPUT_HIGHLIGHT} px-4`
             }`}
           >
             <div
-              className={`w-full flex flex-col mr-1 ${
-                props.max ? "text-left" : "text-right"
+              className={`w-full flex justify-between ${
+                props.max ? "items-center" : "flex-col"
               }`}
             >
-              {props.pre && <label>{props.pre}</label>}
-              {props.post && <label>{props.post}</label>}
+              <div
+                className={`w-full flex flex-col mr-1 ${
+                  props.max ? "text-left" : "text-right"
+                }`}
+              >
+                {props.pre && <label>{props.pre}</label>}
+                {props.post && <label>{props.post}</label>}
+              </div>
+              <div className="flex justify-end">
+                {!props.currency || (props.currency && editing) ? (
+                  <input
+                    ref={inputRef}
+                    className="input"
+                    type="number"
+                    name={props.name}
+                    value={props.value || props.currency ? props.value : 0}
+                    min={props.min * rangeFactor}
+                    max={props.max * rangeFactor}
+                    step={props.step ? props.step * rangeFactor : 1}
+                    onChange={(e) => {
+                      let val = e.currentTarget.valueAsNumber;
+                      provideFeedback(val);
+                      props.changeHandler(val);
+                    }}
+                    onFocus={(e) => {
+                      if (!props.value && e.currentTarget.value === "0")
+                        e.currentTarget.value = "";
+                    }}
+                    onKeyDown={handleKeyDown}
+                    onBlur={(e) => {
+                      setEditing(false);
+                      if (!props.currency && !props.value)
+                        e.currentTarget.valueAsNumber = 0;
+                    }}
+                    required
+                    style={{ textAlign: "right", width: width }}
+                  />
+                ) : (
+                  <input
+                    className="input"
+                    type="text"
+                    name={props.name}
+                    value={toCurrency(
+                      !props.value ? 0 : props.value,
+                      props.currency
+                    )}
+                    onFocus={() => setEditing(true)}
+                    style={{ textAlign: "right", width: width }}
+                    readOnly
+                  />
+                )}
+              </div>
+              {props.unit && <label className="ml-1">{props.unit}</label>}
             </div>
-            <div className="flex justify-end">
-              {!props.currency || (props.currency && editing) ? (
-                <input
-                  className="input"
-                  type="number"
-                  name={props.name}
-                  value={props.value || props.currency ? props.value : 0}
+            {props.max && (
+              <div className="flex flex-col mt-1">
+                {/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
+                <Slider
+                  className="bg-gray-200 rounded-full shadow"
                   min={props.min * rangeFactor}
                   max={props.max * rangeFactor}
-                  step={props.step ? props.step * rangeFactor : 1}
-                  onChange={(e) => {
-                    let val = e.currentTarget.valueAsNumber;
+                  step={(props.step as number) * rangeFactor}
+                  value={props.value}
+                  onChange={(val: number) => {
                     provideFeedback(val);
                     props.changeHandler(val);
                   }}
-                  onFocus={(e) => {
-                    if(!props.value && e.currentTarget.value === "0") e.currentTarget.value = ""  
+                  handleStyle={{
+                    cursor: "grab",
+                    width: "1.2rem",
+                    height: "1.2rem",
+                    background: sliderButtonColor,
+                    borderRadius: "50%",
+                    borderColor: sliderButtonColor,
+                    left: 0,
+                    top: 2,
+                    boxShadow:
+                      "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
                   }}
-                  onKeyDown={handleKeyDown}
-                  onBlur={(e) => {
-                    setEditing(false)
-                    if(!props.currency && !props.value) e.currentTarget.valueAsNumber = 0
+                  trackStyle={{
+                    backgroundColor: COLORS.GREEN,
+                    top: 0,
+                    left: 0,
+                    height: "0.9rem",
                   }}
-                  required
-                  style={{ textAlign: "right", width: width }}
+                  dotStyle={{
+                    width: "0rem",
+                    height: "0rem",
+                    border: "none",
+                    background: "none",
+                  }}
+                  railStyle={{
+                    background: "none",
+                  }}
                 />
-              ) : (
-                <input
-                  className="input"
-                  type="text"
-                  name={props.name}
-                  value={toCurrency(!props.value ? 0 : props.value, props.currency)}
-                  onFocus={() => setEditing(true)}
-                  style={{ textAlign: "right", width: width }}
-                  readOnly
-                />
-              )}
-            </div>
-            {props.unit && <label className="ml-1">{props.unit}</label>}
-          </div>
-          {props.max && (
-            <div className="flex flex-col mt-1">
-              {/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
-              <Slider
-                className="bg-gray-200 rounded-full shadow"
-                min={props.min * rangeFactor}
-                max={props.max * rangeFactor}
-                step={(props.step as number) * rangeFactor}
-                value={props.value}
-                onChange={(val: number) => {
-                  provideFeedback(val);
-                  props.changeHandler(val);
-                }}
-                handleStyle={{
-                  cursor: "grab",
-                  width: "1.2rem",
-                  height: "1.2rem",
-                  background: sliderButtonColor,
-                  borderRadius: "50%",
-                  borderColor: sliderButtonColor,
-                  left: 0,
-                  top: 2,
-                  boxShadow:
-                    "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
-                }}
-                trackStyle={{
-                  backgroundColor: COLORS.GREEN,
-                  top: 0,
-                  left: 0,
-                  height: "0.9rem",
-                }}
-                dotStyle={{
-                  width: "0rem",
-                  height: "0rem",
-                  border: "none",
-                  background: "none",
-                }}
-                railStyle={{
-                  background: "none",
-                }}
-              />
-              {props.max && (
-                <div className="flex justify-between w-full text-gray-400">
-                  <label className="mr-2">
-                    {toReadableNumber(props.min ? props.min * rangeFactor : 0)}
-                  </label>
-                  {feedbackText}
-                  <label>{toReadableNumber(props.max * rangeFactor)}</label>
-                </div>
-              )}
-            </div>
-          )}
-          <label className="flex justify-center">{props.note}</label>
-          {!props.allInputDone && props.inputOrder === props.currentOrder && (
-            <NextStep
-              nextStepHandler={() =>
-                props.nextStepHandler(props.actionCount ? props.actionCount : 1)
-              }
-              disabled={props.nextStepDisabled}
-            />
-          )}
-        </form>
-      )}
-    </div>
+                {props.max && (
+                  <div className="flex justify-between w-full text-gray-400">
+                    <label className="mr-2">
+                      {toReadableNumber(
+                        props.min ? props.min * rangeFactor : 0
+                      )}
+                    </label>
+                    {feedbackText}
+                    <label>{toReadableNumber(props.max * rangeFactor)}</label>
+                  </div>
+                )}
+              </div>
+            )}
+            <label className="flex justify-center">{props.note}</label>
+          </form>
+        )}
+        {!props.allInputDone && props.inputOrder === props.currentOrder && (
+          <NextStep
+            nextStepHandler={() =>
+              props.nextStepHandler(props.actionCount ? props.actionCount : 1)
+            }
+            disabled={props.nextStepDisabled}
+          />
+        )}
+      </div>
+    </Fragment>
   );
 }

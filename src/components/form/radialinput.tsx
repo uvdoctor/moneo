@@ -31,7 +31,7 @@ export default function RadialInput(props: RadialInputProps) {
     const width: number = props.width ? props.width : 110
 
     return (
-        <div>
+        <div className="w-full flex justify-center items-center">
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <div className={`flex flex-col items-center justify-center
                                 ${!props.allInputDone && props.inputOrder === props.currentOrder && INPUT_HIGHLIGHT}`}>
@@ -45,10 +45,10 @@ export default function RadialInput(props: RadialInputProps) {
                         valueFontSize="1.25rem" labelFontSize="1.25rem" progressColorFrom={props.colorFrom ? props.colorFrom : COLORS.GREEN}
                         progressColorTo={props.colorTo ? props.colorTo : COLORS.GREEN} knobColor="#cbd5e0" />
                     <label className="mt-2">{props.post}</label>
-                    {!props.allInputDone && props.inputOrder === props.currentOrder &&
+                </div>}
+                {!props.allInputDone && props.inputOrder === props.currentOrder &&
                         <NextStep nextStepHandler={() => props.nextStepHandler(props.actionCount ? props.actionCount : 1)}
                             disabled={props.nextStepDisabled} />}
-                </div>}
         </div>
     )
 }

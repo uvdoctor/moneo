@@ -32,9 +32,8 @@ export default function TextInput(props: TextInputProps) {
   };
 
   return (
-    <div>
-      {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
-        props.allInputDone) && (
+    <div className="w-full flex justify-center items-center">
+      {(props.currentOrder >= props.inputOrder || props.allInputDone) && (
         <form
           ref={formRef}
           className={`flex flex-col 
@@ -57,13 +56,13 @@ export default function TextInput(props: TextInputProps) {
             onKeyDown={handleKeyDown}
           />
           {props.post && <label>{props.post}</label>}
-          {!props.allInputDone && props.inputOrder === props.currentOrder && (
-            <NextStep
-              nextStepHandler={props.nextStepHandler}
-              disabled={props.nextStepDisabled}
-            />
-          )}
         </form>
+      )}
+      {!props.allInputDone && props.inputOrder === props.currentOrder && (
+        <NextStep
+          nextStepHandler={props.nextStepHandler}
+          disabled={props.nextStepDisabled}
+        />
       )}
     </div>
   );

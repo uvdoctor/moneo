@@ -142,11 +142,17 @@ export default function FFGoal({
   const aaFutureLabel = "Allocation Plan";
   const aaNextYearLabel = "Asset Allocation";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
+  const careOption = {
+    label: careLabel,
+    order: 11,
+    active: true,
+    svg: SVGCare,
+  };
   const [tabOptions, setTabOptions] = useState<Array<any>>([
     { label: saveLabel, order: 3, active: true, svg: SVGPiggy },
     { label: spendLabel, order: 5, active: true, svg: SVGPay },
     { label: benefitLabel, order: 8, active: true, svg: SVGTaxBenefit },
-    { label: careLabel, order: 11, active: true, svg: SVGCare },
+    careOption,
     { label: expectLabel, order: 16, active: true, svg: SVGCashFlow },
     { label: giveLabel, order: 18, active: true, svg: SVGInheritance },
   ]);
@@ -171,7 +177,7 @@ export default function FFGoal({
       order: 3,
       active: true,
       svg: SVGChart,
-    }
+    },
   ];
 
   const [showTab, setShowTab] = useState(saveLabel);
@@ -222,20 +228,21 @@ export default function FFGoal({
   useEffect(() => {
     if (currency === "USD" || currency === "CAD" || currency === "GBP") {
       if (!hasCareTab()) {
-        tabOptions.splice(3, 0, {
-          label: careLabel,
-          order: 11,
-          active: true,
-        });
-        tabOptions[4].order = 16;
-        tabOptions[5].order = 17;
-        tabOptions[6].order = 18;
+        tabOptions.splice(3, 0, careOption);
+        //tabOptions[4].order = 16;
+        //tabOptions[5].order = 18;
         setTabOptions([...tabOptions]);
       }
     } else {
       if (hasCareTab()) {
         tabOptions.splice(3, 1);
         setTabOptions([...tabOptions]);
+        if (showTab === careLabel) {
+          setShowTab(expectLabel);
+          setCarePremium(0);
+          if (!allInputDone)
+            setCurrentOrder(getOrderByTabLabel(tabOptions, expectLabel));
+        }
       }
     }
   }, [currency]);
@@ -335,7 +342,7 @@ export default function FFGoal({
   const buildChartCFs = (ffCfs: Object) => Object.values(ffCfs);
 
   const showResultSection = () =>
-    videoUrl || (allInputDone && ffResult.rr && ffResult.rr.length > 0);
+    allInputDone && ffResult.rr && ffResult.rr.length > 0;
 
   return (
     <div className="w-full h-full">
@@ -535,8 +542,6 @@ export default function FFGoal({
             showResultTab={showResultTab}
             showResultTabHandler={setShowResultTab}
             chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
-            videoUrl={videoUrl}
-            videoHandler={videoHandler}
             result={
               <FFResult
                 endYear={endYear}

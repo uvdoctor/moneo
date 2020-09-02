@@ -83,6 +83,12 @@ export default function Goal({
   const [loanSIPayPer, setLoanSIPayPer] = useState<number | undefined | null>(
     goal.btr
   );
+  const [loanSICapitalize, setLoanSICapitalize] = useState<
+    number | undefined | null
+  >(goal.tbr);
+  const [loanGracePeriod, setLoanGracePeriod] = useState<
+    number | undefined | null
+  >(goal.tdl);
   const [startingPrice, setStartingPrice] = useState<number>(
     goal?.cp as number
   );
@@ -257,9 +263,11 @@ export default function Goal({
       bg.tbr = rentTaxBenefit;
       bg.ra = rentAmt;
       bg.rachg = rentChgPer;
-    }
-    if (goalType === APIt.GoalType.E) {
+    } else if (goalType === APIt.GoalType.E) {
       bg.btr = loanSIPayPer;
+      bg.tbr = loanSICapitalize;
+      //@ts-ignore
+      bg.tdl = loanGracePeriod;
     }
     return bg;
   };
@@ -467,7 +475,7 @@ export default function Goal({
     );
 
   const showResultSection = () =>
-    videoUrl || (nowYear < startYear && allInputDone && cfs.length > 0);
+    nowYear < startYear && allInputDone && cfs.length > 0;
 
   return (
     <div className="w-full h-full">
@@ -581,6 +589,8 @@ export default function Goal({
               loanPer={loanPer as number}
               goalType={goalType}
               loanSIPayPer={loanSIPayPer}
+              loanSICapitalize={loanSICapitalize as number}
+              loanGracePeriod={loanGracePeriod as number}
               loanBorrowAmt={
                 getLoanBorrowAmt(
                   price,
@@ -594,6 +604,8 @@ export default function Goal({
               loanAnnualIntHandler={setLoanIntRate}
               loanPerHandler={setLoanPer}
               loanSIPayPerHandler={setLoanSIPayPer}
+              loanSICapitalizeHandler={setLoanSICapitalize}
+              loanGracePeriodHandler={setLoanGracePeriod}
               loanMonthsHandler={setLoanYears}
               repaymentSYHandler={setLoanRepaymentSY}
               taxBenefitInt={taxBenefitInt as number}
@@ -633,9 +645,9 @@ export default function Goal({
                 allInputDone={allInputDone}
                 colorTo
               />
-              {console.log("Current order is ", currentOrder)}
               {(allInputDone ||
-                currentOrder >= getOrderByTabLabel(tabOptions, annualNetCostLabel) + 2) && (
+                currentOrder >=
+                  getOrderByTabLabel(tabOptions, annualNetCostLabel) + 2) && (
                 <AnnualAmt
                   currency={currency}
                   startYear={startYear}
@@ -648,7 +660,9 @@ export default function Goal({
                   duration={getDur()}
                   title="Yearly Income through Rent, Dividend, etc"
                   footer="Exclude taxes & fees"
-                  inputOrder={getOrderByTabLabel(tabOptions, annualNetCostLabel) + 2}
+                  inputOrder={
+                    getOrderByTabLabel(tabOptions, annualNetCostLabel) + 2
+                  }
                   currentOrder={currentOrder}
                   nextStepDisabled={false}
                   nextStepHandler={handleNextStep}
@@ -707,8 +721,6 @@ export default function Goal({
             showResultTab={showResultTab}
             showResultTabHandler={setShowResultTab}
             chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
-            videoUrl={videoUrl}
-            videoHandler={videoHandler}
             result={
               nowYear < startYear && (
                 <GoalResult

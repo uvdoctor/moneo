@@ -23,8 +23,8 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
             <div className="cursor-pointer flex justify-center items-center w-full"
                 onClick={toggle}>
                 {props.svg}
-                <label className="pl-2 pr-1">{props.title}</label>
-                <div className="w-1/12">
+                <label className="pl-2 pr-1 cursor-pointer">{props.title}</label>
+                <div className="w-1/12 cursor-pointer">
                     {props.value ? <SVGCollapse /> : <SVGExpand />}
                 </div>
             </div>

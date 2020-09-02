@@ -25,7 +25,7 @@ interface SelectInputProps {
 
 export default function SelectInput(props: SelectInputProps) {
   return (
-    <div>
+    <div className="w-full flex items-center justify-center">
       {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
         props.allInputDone) && (
         <div
@@ -70,7 +70,9 @@ export default function SelectInput(props: SelectInputProps) {
           ) : (
             <label>{props.value}</label>
           )}
-          {!props.allInputDone && props.inputOrder === props.currentOrder && (
+        </div>
+      )}
+      {!props.allInputDone && props.inputOrder === props.currentOrder && (
             <NextStep
               nextStepHandler={() =>
                 props.nextStepHandler(props.actionCount ? props.actionCount : 1)
@@ -78,8 +80,6 @@ export default function SelectInput(props: SelectInputProps) {
               disabled={props.nextStepDisabled}
             />
           )}
-        </div>
-      )}
     </div>
   );
 }
