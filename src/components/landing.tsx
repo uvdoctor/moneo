@@ -23,8 +23,8 @@ const Landing = () => {
 
   return (
     <div
-      className="mt-12 text-white overflow-hidden bg-cover bg-center w-screen h-screen bg-no-repeat"
-      style={{ backgroundImage: `url('images/relaxedwoman.png')` }}
+      className="mt-12 text-white overflow-hidden bg-cover bg-no-repeat w-screen"
+      style={{ height: "800px", backgroundImage: `url('images/relaxedwoman.png')`, backgroundPosition: "center center" }}
     >
       <div className="text-lg flex flex-col w-full h-full items-center justify-center pr-32">
         <Link href={ROUTES.DASHBOARD}>
