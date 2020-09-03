@@ -1,4 +1,5 @@
 import React from "react";
+import { COLORS } from "../CONSTANTS";
 
 export default function SVGFullScreen() {
   return (
@@ -6,7 +7,7 @@ export default function SVGFullScreen() {
       viewBox="0 0 512 512"
       enableBackground="new 0 0 512 512"
     >
-      <g fill="#38a169">
+      <g fill={COLORS.GREEN}>
         <path d="M128,32V0H16C7.163,0,0,7.163,0,16v112h32V54.56L180.64,203.2l22.56-22.56L54.56,32H128z" />
         <path d="M496,0H384v32h73.44L308.8,180.64l22.56,22.56L480,54.56V128h32V16C512,7.163,504.837,0,496,0z" />
         <path d="M480,457.44L331.36,308.8l-22.56,22.56L457.44,480H384v32h112c8.837,0,16-7.163,16-16V384h-32V457.44z" />

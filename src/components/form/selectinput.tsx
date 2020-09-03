@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 import NextStep from "./nextstep";
 import { getCurrencyList } from "../utils";
 import SVGInfo from "../svginfo";
@@ -24,6 +24,23 @@ interface SelectInputProps {
 }
 
 export default function SelectInput(props: SelectInputProps) {
+  const selectRef = useRef<HTMLSelectElement>(null)
+
+  const handleKeyDown = (e: any) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if(!props.allInputDone) {
+        props.nextStepHandler()
+      }
+    }
+  };
+
+  useEffect(() => {
+    if(!props.allInputDone && props.currentOrder === props.inputOrder) {
+      selectRef.current?.focus()
+    }
+  }, [props.allInputDone, props.currentOrder])
+
   return (
     <div className="w-full flex items-center justify-center">
       {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
@@ -44,15 +61,19 @@ export default function SelectInput(props: SelectInputProps) {
               <SVGInfo />
             </div>
           )}
-          {props.pre && <label className="whitespace-no-wrap">{props.pre}</label>}
+          {props.pre && (
+            <label className="whitespace-no-wrap">{props.pre}</label>
+          )}
           {!props.disabled ? (
             <Fragment>
               <div className="flex items-center">
                 <select
+                  ref={selectRef}
                   name={props.name}
                   className="input"
                   style={{ minWidth: "40px" }}
                   value={props.value}
+                  onKeyDown={handleKeyDown}
                   onChange={(e) => props.changeHandler(e.currentTarget.value)}
                 >
                   {Object.keys(
@@ -73,13 +94,13 @@ export default function SelectInput(props: SelectInputProps) {
         </div>
       )}
       {!props.allInputDone && props.inputOrder === props.currentOrder && (
-            <NextStep
-              nextStepHandler={() =>
-                props.nextStepHandler(props.actionCount ? props.actionCount : 1)
-              }
-              disabled={props.nextStepDisabled}
-            />
-          )}
+        <NextStep
+          nextStepHandler={() =>
+            props.nextStepHandler(props.actionCount ? props.actionCount : 1)
+          }
+          disabled={props.nextStepDisabled}
+        />
+      )}
     </div>
   );
 }

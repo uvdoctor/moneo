@@ -66,7 +66,6 @@ export default function EmiCost(props: EmiProps) {
   );
   const [emi, setEMI] = useState<number>(0);
   const [simpleInts, setSimpleInts] = useState<Array<number>>([]);
-  const [showIntSchedule, setShowIntSchedule] = useState<boolean>(false);
   const [remIntAmt, setRemIntAmt] = useState<number>(0);
   const loanLimitPer = props.goalType === GoalType.E ? 100 : 80;
 
@@ -336,11 +335,8 @@ export default function EmiCost(props: EmiProps) {
                               <div className="flex flex-col justify-center w-full">
                                 <ExpandCollapse
                                   title="Interest Schedule"
-                                  value={showIntSchedule}
-                                  handler={setShowIntSchedule}
-                                />
-                                {showIntSchedule &&
-                                  simpleInts.map((int, i) => (
+                                >
+                                  {simpleInts.map((int, i) => (
                                     <p key={"si" + i} className="text-gray-800">
                                       Monthly{" "}
                                       {toCurrency(
@@ -350,6 +346,7 @@ export default function EmiCost(props: EmiProps) {
                                       in {props.startYear + i}
                                     </p>
                                   ))}
+                                </ExpandCollapse>
                               </div>
                             )
                           }
