@@ -36,7 +36,7 @@ const Landing = () => {
         backgroundImage: `url('images/relaxedwoman.jpeg')`,
       }}
     >
-      <div className="w-full h-full flex flex-col items-end justify-center pr-20">
+      <div className="w-full h-full flex flex-col items-end justify-center md:pr-20">
         <Link href={ROUTES.DASHBOARD}>
           <a>
             <AwesomeButton

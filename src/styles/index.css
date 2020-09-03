@@ -189,7 +189,7 @@ input[type="number"] {
 .hoverable > label:after {
   content: "\25BC";
   font-size: 10px;
-  padding-left: 2px;
+  /*padding-left: 2px;*/
   position: relative;
   top: -1px;
 }
