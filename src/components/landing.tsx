@@ -32,7 +32,6 @@ const Landing = () => {
     <div
       className="mt-12 text-white overflow-hidden bg-contain bg-no-repeat w-screen"
       style={{
-        //width: `${fsb.info.innerWidth}px`,
         height: `${coverHeight}px`,
         backgroundImage: `url('images/relaxedwoman.png')`,
       }}
@@ -45,7 +44,7 @@ const Landing = () => {
               type="link"
               style={{ animation: "fadeIn 2s ease-in 1" }}
             >
-              GET
+              PLAN
               <div className="ml-1 md:ml-4 w-8 h-8">
                 {svgCtr % 5 === 1 && (
                   <HomeSVG animationStyle={animationStyle} />
