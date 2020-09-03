@@ -32,7 +32,7 @@ export default function Section(props: SectionProps) {
             urlHandler={props.urlHandler}
           />
         )}
-      <div className={`w-full ${props.insideForm && "bg-black text-white flex justify-between"}`}>
+      <div className={`w-full ${props.insideForm && "bg-gray-600 text-white flex justify-between"}`}>
         <label className="p-1">{props.title}</label>
         {props.urlHandler && props.videoSrc && (
           <div
