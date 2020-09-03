@@ -11,14 +11,15 @@ import { AwesomeButton } from "react-awesome-button";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import Logo from "./logo";
 import Menu from "./menu";
+import { getLandingPageHeight } from "./utils";
 
 const Landing = () => {
   const [svgCtr, setSvgCtr] = useState(-1);
   const animationStyle = "transient 2s linear";
   const fsb = useFullScreenBrowser();
   const [coverHeight, setCoverHeight] = useState<number>(
-    (fsb.info.innerWidth * 3) / 5
-  );
+    getLandingPageHeight(fsb)
+    );
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -29,7 +30,7 @@ const Landing = () => {
   }, [svgCtr]);
 
   useEffect(() => {
-    setCoverHeight(Math.round((fsb.info.innerWidth * 3) / 5));
+    setCoverHeight(getLandingPageHeight(fsb));
   }, [fsb.info.innerWidth]);
 
   return (

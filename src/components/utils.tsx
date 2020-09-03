@@ -167,11 +167,14 @@ export function getCurrencyList() {
 }
 
 export const appendValue = (obj: any, prop: string | number, val: number) => {
-  obj.hasOwnProperty(prop) ? obj[prop] += val : obj[prop] = val
-}
+  obj.hasOwnProperty(prop) ? (obj[prop] += val) : (obj[prop] = val);
+};
 
-export const changeSelection = (str: string, setter: Function, increment: number = 0) =>
-  setter(parseInt(str) + increment);
+export const changeSelection = (
+  str: string,
+  setter: Function,
+  increment: number = 0
+) => setter(parseInt(str) + increment);
 
 export const toCurrency = (
   num: number | undefined,
@@ -540,12 +543,14 @@ export const getAllAssetTypes = () => [
 
 export const buildTabsArray = (items: any) => {
   let result: Array<any> = [];
-  let keys = Object.keys(items)
+  let keys = Object.keys(items);
   keys.forEach((key, i) => {
-    result.push({ label: key, order: i + 1, active: true, svg: items[key]});
+    result.push({ label: key, order: i + 1, active: true, svg: items[key] });
   });
   return result;
 };
 
-export const isTopBottomLayout = (fsb: any) => fsb.info.innerWidth < 1024
+export const isTopBottomLayout = (fsb: any) => fsb.info.innerWidth < 1024;
 
+export const getLandingPageHeight = (fsb: any) =>
+  Math.round((fsb.info.innerWidth * 3) / 5);
