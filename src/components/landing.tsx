@@ -33,7 +33,7 @@ const Landing = () => {
       className="mt-12 text-white overflow-hidden bg-contain bg-no-repeat w-screen"
       style={{
         height: `${coverHeight}px`,
-        backgroundImage: `url('images/relaxedwoman.png')`,
+        backgroundImage: `url('images/relaxedwoman.jpeg')`,
       }}
     >
       <div className="w-full h-full flex flex-col items-center justify-center pr-20 pb-8">
