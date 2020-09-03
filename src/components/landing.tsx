@@ -38,8 +38,7 @@ const Landing = () => {
       }}
     >
       <div
-        className="w-full text-lg flex flex-col items-center justify-center pr-32"
-        style={{ height: `${coverHeight}px` }}
+        className="w-full h-full flex flex-col items-center justify-center pr-32"
       >
         <Link href={ROUTES.DASHBOARD}>
           <a>
