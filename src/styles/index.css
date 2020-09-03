@@ -76,13 +76,8 @@ input[type="number"] {
 }
 
 .button {
-  background-color: #96d441;
+  background-color: #AAE441;
   transition: "all .15s ease";
-}
-
-.button:hover {
-  border-width: 2px;
-  border: #38a169;
 }
 
 .cancel {
@@ -108,24 +103,24 @@ input[type="number"] {
   --button-raise-level: 5px;
   --button-hover-pressure: 2;
   --transform-speed: 0.185s;
-  --button-primary-color: #38a169;
-  --button-primary-color-dark: #276749;
+  --button-primary-color: #AAE441;
+  --button-primary-color-dark: #96D441;
   --button-primary-color-light: #ffffff;
-  --button-primary-color-hover: #48bb78;
-  --button-primary-color-active: #276749;
+  --button-primary-color-hover: #96D441;
+  --button-primary-color-active: #96D441;
   --button-primary-border: 0px solid #ffffff;
   --button-secondary-color: #edf2f7;
   --button-secondary-color-dark: #cbd5e0;
-  --button-secondary-color-light: #38a169;
+  --button-secondary-color-light: #AAE441;
   --button-secondary-color-hover: #edf2f7;
   --button-secondary-color-active: #a0aec0;
   --button-secondary-border: none;
-  --button-anchor-color: #4299e1;
-  --button-anchor-color-dark: #2b6cb0;
+  --button-anchor-color: #AAE441;
+  --button-anchor-color-dark: #96D441;
   --button-anchor-color-light: #ffffff;
-  --button-anchor-color-hover: #3182ce;
+  --button-anchor-color-hover: #96D441;
   --button-anchor-color-active: #a0aec0;
-  --button-anchor-border: 1px solid #2c5282;
+  --button-anchor-border: 1px solid #96D441;
 }
 
 .button:hover {

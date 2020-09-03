@@ -39,7 +39,8 @@ const Landing = () => {
       <div className="w-full h-full flex flex-col items-center justify-center pr-20 pb-8">
         <Link href={ROUTES.DASHBOARD}>
           <a>
-            <button className="button flex items-center rounded-full py-2 px-4 font-semibold"
+            <AwesomeButton
+              ripple
               style={{ animation: "fadeIn 2s ease-in 1" }}
             >
               Plan
@@ -58,7 +59,7 @@ const Landing = () => {
                   <TravelSVG animationStyle={animationStyle} />
                 )}
               </div>
-            </button>
+            </AwesomeButton>
           </a>
         </Link>
       </div>
