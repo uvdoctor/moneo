@@ -7,7 +7,7 @@ export default function Main() {
   const { top } = useScroll();
 
   return (
-    <div className="overflow-x-none overflow-y-auto">
+    <div className="overflow-x-auto overflow-y-auto">
       {top > 0 && <Header />}
       <Landing />
       <Features />

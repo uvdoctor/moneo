@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { Fragment } from "react";
+import React from "react";
 import { ROUTES } from "../CONSTANTS";
 
 export default function Menu() {
