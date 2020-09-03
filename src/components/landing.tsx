@@ -35,9 +35,8 @@ const Landing = () => {
 
   return (
     <div
-      className="flex flex-col bg-contain bg-no-repeat"
+      className="flex flex-col bg-contain bg-no-repeat w-screen h-full"
       style={{
-        width: `${fsb.info.innerWidth}px`,
         height: `${coverHeight}px`,
         backgroundImage: `url('images/relaxedwoman.png')`,
       }}
