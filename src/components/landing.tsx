@@ -18,7 +18,7 @@ const Landing = () => {
   const animationStyle = "transient 2s linear";
   const fsb = useFullScreenBrowser();
   const [coverHeight, setCoverHeight] = useState<number>(
-    getLandingPageHeight(fsb)
+    800
     );
 
   useEffect(() => {
@@ -35,8 +35,9 @@ const Landing = () => {
 
   return (
     <div
-      className="flex flex-col bg-contain bg-no-repeat w-screen"
+      className="flex flex-col bg-contain bg-no-repeat"
       style={{
+        width: `${fsb.info.innerWidth}px`,
         height: `${coverHeight}px`,
         backgroundImage: `url('images/relaxedwoman.png')`,
       }}
