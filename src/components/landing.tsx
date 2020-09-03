@@ -63,7 +63,7 @@ const Landing = () => {
           </div>
           <label>Savings & Investments</label>
         </div>
-        <div className="md:mr-4 lg:mr-8 xl:mr-16">
+        <div className="md:mr-4 lg:mr-8">
           <Link href={ROUTES.DASHBOARD}>
             <a>
               <AwesomeButton
