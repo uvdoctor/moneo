@@ -30,13 +30,20 @@ const Landing = () => {
 
   return (
     <div
-      className="mt-12 text-white overflow-hidden bg-contain bg-no-repeat w-screen"
+      className="mt-12 text-white overflow-hidden bg-contain bg-no-repeat w-screen h-full"
       style={{
         height: `${coverHeight}px`,
         backgroundImage: `url('images/relaxedwoman.png')`,
       }}
     >
-      <div className="w-full h-full flex flex-col items-end justify-center mt-8 md:pr-20">
+      <div className="w-2/3 lg:w-1/2 flex flex-col text-silver-primary md:text-2xl lg:text-3xl xl:text-4xl font-bold md:mt-16 lg:mt-24 xl:mt-32 items-center"
+      style={{color: "#F1EDED"}}>
+        <label>Your Financial Analyst</label>
+        <label className="text-base items-center">for</label>
+        <label>Stress-free Savings</label>
+        <label>& Investments</label>
+      </div>
+      <div className="w-full flex items-end justify-end mt-4 md:pr-20 lg:pr-32 xl:pr-40">
         <Link href={ROUTES.DASHBOARD}>
           <a>
             <AwesomeButton

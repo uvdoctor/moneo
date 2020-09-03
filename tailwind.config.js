@@ -10,7 +10,10 @@ module.exports = {
           primary: "#AAE441",
           secondary: "#96D441",
         }
-      }
+      },
+      silver: {
+        primary: "#F1EDED"
+      },
     },
   },
   variants: {},
