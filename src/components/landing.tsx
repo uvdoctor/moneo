@@ -39,11 +39,10 @@ const Landing = () => {
       <div
         className="w-2/3 md:w-3/4 flex flex-col text-silver-primary
       flex flex-col xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl 
-      xs:font-semibold sm:font-bold mt-10 md:mt-16 lg:mt-24 xl:mt-32
-      xs:justify-start justify-center items-center"
+      font-bold mt-10 md:mt-16 lg:mt-24 xl:mt-32 xs:justify-start sm:justify-center items-center"
       >
         <label>Your Financial Analyst</label>
-        <div className="flex items-end">
+        <div className="flex">
           <label>for</label>
           <label className="ml-2 text-green-primary">Stress-free</label>
         </div>
