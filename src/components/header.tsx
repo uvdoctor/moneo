@@ -2,7 +2,6 @@ import React from "react";
 import Logo from "./logo";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
-import { COLORS } from "../CONSTANTS";
 import Menu from "./menu";
 
 const Header = () => {
