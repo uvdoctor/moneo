@@ -55,7 +55,7 @@ const Landing = () => {
       xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl 
       md:mt-4 lg:mt-8 xl:mt-12"
       >
-        <div className="sm:ml-2 md:ml-16 lg:ml-24 xl:ml-48 flex flex-col items-center">
+        <div className="ml-4 md:ml-16 lg:ml-24 xl:ml-48 flex flex-col items-center">
           <label>Your Financial Analyst</label>
           <div className="flex">
             <label>for</label>
