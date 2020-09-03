@@ -41,7 +41,6 @@ const Landing = () => {
           <a>
             <AwesomeButton
               ripple
-              type="link"
               style={{ animation: "fadeIn 2s ease-in 1" }}
             >
               PLAN
