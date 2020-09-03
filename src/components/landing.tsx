@@ -36,7 +36,7 @@ const Landing = () => {
         backgroundImage: `url('images/relaxedwoman.png')`,
       }}
     >
-      <div className="w-full h-full text-sm md:text-base lg:text-lg flex flex-col items-center justify-center pr-32 pb-16 md:pb-0">
+      <div className="w-full h-full flex flex-col items-center justify-center pr-20 pb-8">
         <Link href={ROUTES.DASHBOARD}>
           <a>
             <AwesomeButton
@@ -45,7 +45,7 @@ const Landing = () => {
               style={{ animation: "fadeIn 2s ease-in 1" }}
             >
               PLAN
-              <div className="ml-1 md:ml-4 w-8 h-8">
+              <div className="ml-1 md:ml-4 w-6 h-6 md:w-8 md:h-8">
                 {svgCtr % 5 === 1 && (
                   <HomeSVG animationStyle={animationStyle} />
                 )}
