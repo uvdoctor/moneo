@@ -25,56 +25,66 @@ const Landing = () => {
   }, [svgCtr]);
 
   useEffect(() => {
-    setCoverHeight(Math.round((fsb.info.innerWidth * 3) / 5));
+    setCoverHeight(Math.round((fsb.info.innerWidth * 4) / 5));
   }, [fsb.info.innerWidth]);
 
   return (
     <div
-      className="relative overflow-hidden bg-contain bg-no-repeat w-screen h-full"
+      className="relative overflow-hidden bg-contain bg-no-repeat w-screen 
+      flex flex-col items-end text-silver-primary font-bold
+      xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl"
       style={{
         height: `${coverHeight}px`,
-        backgroundImage: `url('images/relaxedwoman.png')`,
+        backgroundImage: `url('images/relaxedwoman.jpeg')`,
       }}
     >
-      <div
-        className="w-2/3 md:w-3/4 flex flex-col text-silver-primary
-      flex flex-col xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl 
-      font-bold mt-10 md:mt-16 lg:mt-24 xl:mt-32 xs:justify-start sm:justify-center items-center"
-      >
-        <label>Your Financial Analyst</label>
-        <div className="flex">
-          <label>for</label>
-          <label className="ml-2 text-green-primary">Stress-free</label>
+      <div className="w-full mt-10 md:mt-24 lg:mt-36 flex justify-between items-center">
+        <div className="ml-4 md:ml-8 lg:ml-16 xl:ml-32 flex flex-col items-center">
+          <label>Your Financial Analyst</label>
+          <div className="flex">
+            <label>for</label>
+            <label className="ml-2 text-green-primary">Stress-free</label>
+          </div>
+          <div className="flex">
+            <label>Savings & Investments</label>
+            <label className="text-green-primary">.</label>
+          </div>
         </div>
-        <div className="flex">
-          <label>Savings & Investments</label>
-          <label className="text-green-primary">.</label>
+        <div className="md:mr-4 lg:mr-8 xl:mr-16">
+          <Link href={ROUTES.DASHBOARD}>
+            <a>
+              <AwesomeButton
+                ripple
+                style={{ animation: "fadeIn 2s ease-in 1" }}
+              >
+                PLAN
+                <div className="ml-1 md:ml-4 w-6 h-6 md:w-8 md:h-8">
+                  {svgCtr % 5 === 1 && (
+                    <HomeSVG animationStyle={animationStyle} />
+                  )}
+                  {svgCtr % 5 === 2 && (
+                    <CarSVG animationStyle={animationStyle} />
+                  )}
+                  {svgCtr % 5 === 3 && (
+                    <DiamondSVG animationStyle={animationStyle} />
+                  )}
+                  {svgCtr % 5 === 4 && (
+                    <DegreeSVG animationStyle={animationStyle} />
+                  )}
+                  {svgCtr % 5 === 0 && (
+                    <TravelSVG animationStyle={animationStyle} />
+                  )}
+                </div>
+              </AwesomeButton>
+            </a>
+          </Link>
         </div>
       </div>
-      <div className="w-full pr-4 md:pr-20 lg:pr-32 xl:pr-40 
-      mt-4 sm:mt-40 pt-4 md:pt-0 md:mt-8 lg:mt-12 flex items-end justify-end">
-        <Link href={ROUTES.DASHBOARD}>
-          <a>
-            <AwesomeButton ripple style={{ animation: "fadeIn 2s ease-in 1" }}>
-              PLAN
-              <div className="ml-1 md:ml-4 w-6 h-6 md:w-8 md:h-8">
-                {svgCtr % 5 === 1 && (
-                  <HomeSVG animationStyle={animationStyle} />
-                )}
-                {svgCtr % 5 === 2 && <CarSVG animationStyle={animationStyle} />}
-                {svgCtr % 5 === 3 && (
-                  <DiamondSVG animationStyle={animationStyle} />
-                )}
-                {svgCtr % 5 === 4 && (
-                  <DegreeSVG animationStyle={animationStyle} />
-                )}
-                {svgCtr % 5 === 0 && (
-                  <TravelSVG animationStyle={animationStyle} />
-                )}
-              </div>
-            </AwesomeButton>
-          </a>
-        </Link>
+      <div
+        className="text-xl md:text-4xl lg:text-6xl 
+      mr-2 md:mr-4 xl:mr-12 lg:mt-8 xl:mt-16"
+      >
+        DARWIN
       </div>
     </div>
   );
