@@ -39,11 +39,10 @@ const Landing = () => {
       <div className="w-full h-full flex flex-col items-center justify-center pr-20 pb-8">
         <Link href={ROUTES.DASHBOARD}>
           <a>
-            <AwesomeButton
-              ripple
+            <button className="button flex items-center rounded-full py-2 px-4 font-semibold"
               style={{ animation: "fadeIn 2s ease-in 1" }}
             >
-              PLAN
+              Plan
               <div className="ml-1 md:ml-4 w-6 h-6 md:w-8 md:h-8">
                 {svgCtr % 5 === 1 && (
                   <HomeSVG animationStyle={animationStyle} />
@@ -59,7 +58,7 @@ const Landing = () => {
                   <TravelSVG animationStyle={animationStyle} />
                 )}
               </div>
-            </AwesomeButton>
+            </button>
           </a>
         </Link>
       </div>
