@@ -8,10 +8,13 @@ import DegreeSVG from "./goals/svgdegree";
 import TravelSVG from "./goals/svgtravel";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
+import { useFullScreenBrowser } from "react-browser-hooks";
 
 const Landing = () => {
   const [svgCtr, setSvgCtr] = useState(-1);
   const animationStyle = "transient 2s linear";
+  const [coverHeight, setCoverHeight] = useState<number>(800);
+  const fsb = useFullScreenBrowser();
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -21,12 +24,23 @@ const Landing = () => {
     return () => clearInterval(timer);
   }, [svgCtr]);
 
+  useEffect(() => {
+    setCoverHeight(Math.round((fsb.info.innerWidth * 3) / 5));
+  }, [fsb.info.innerWidth]);
+
   return (
     <div
-      className="mt-12 text-white overflow-hidden bg-cover bg-no-repeat w-screen"
-      style={{ height: "800px", backgroundImage: `url('images/relaxedwoman.png')`, backgroundPosition: "center center" }}
+      className="mt-12 text-white overflow-hidden bg-contain bg-no-repeat"
+      style={{
+        width: `${fsb.info.innerWidth}px`,
+        height: `${coverHeight}px`,
+        backgroundImage: `url('images/relaxedwoman.png')`,
+      }}
     >
-      <div className="text-lg flex flex-col w-full h-full items-center justify-center pr-32">
+      <div
+        className="w-full text-lg flex flex-col items-center justify-center pr-32"
+        style={{ height: `${coverHeight}px` }}
+      >
         <Link href={ROUTES.DASHBOARD}>
           <a>
             <AwesomeButton
@@ -34,7 +48,7 @@ const Landing = () => {
               type="link"
               style={{ animation: "fadeIn 2s ease-in 1" }}
             >
-              MEET YOUR GOALS
+              SET GOALS
               <div className="ml-2 md:ml-4 w-8 h-8 md:w-10 md:h-10">
                 {svgCtr % 5 === 1 && (
                   <HomeSVG animationStyle={animationStyle} />
