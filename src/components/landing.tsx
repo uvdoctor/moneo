@@ -9,6 +9,7 @@ import TravelSVG from "./goals/svgtravel";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import { useFullScreenBrowser } from "react-browser-hooks";
+import LandingHeader from "./landingheader";
 
 const Landing = () => {
   const [svgCtr, setSvgCtr] = useState(-1);
@@ -30,25 +31,24 @@ const Landing = () => {
 
   return (
     <div
-      className="relative overflow-hidden bg-contain bg-no-repeat w-screen 
-      flex flex-col items-end text-silver-primary font-bold
-      xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl"
+      className="flex flex-col bg-contain bg-no-repeat w-full"
       style={{
         height: `${coverHeight}px`,
-        backgroundImage: `url('images/relaxedwoman.jpeg')`,
+        backgroundImage: `url('images/relaxedwoman.png')`,
       }}
     >
-      <div className="w-full mt-10 md:mt-24 lg:mt-36 flex justify-between items-center">
+      <LandingHeader />
+      <div
+        className="w-full flex justify-between items-center text-silver-primary font-bold
+      xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl"
+      >
         <div className="ml-4 md:ml-8 lg:ml-16 xl:ml-32 flex flex-col items-center">
           <label>Your Financial Analyst</label>
           <div className="flex">
             <label>for</label>
             <label className="ml-2 text-green-primary">Stress-free</label>
           </div>
-          <div className="flex">
-            <label>Savings & Investments</label>
-            <label className="text-green-primary">.</label>
-          </div>
+          <label>Savings & Investments</label>
         </div>
         <div className="md:mr-4 lg:mr-8 xl:mr-16">
           <Link href={ROUTES.DASHBOARD}>
@@ -79,12 +79,6 @@ const Landing = () => {
             </a>
           </Link>
         </div>
-      </div>
-      <div
-        className="text-xl md:text-4xl lg:text-6xl 
-      mr-2 md:mr-4 xl:mr-12 lg:mt-8 xl:mt-16"
-      >
-        DARWIN
       </div>
     </div>
   );

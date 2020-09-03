@@ -76,7 +76,8 @@ export const COLORS = {
     DISABLED: "#cbd5e0",
     DEFAULT: "#4a5568",
     ORANGE: "#dd6b20",
-    LIGHT_GRAY: "#edf2f7"
+    LIGHT_GRAY: "#edf2f7",
+    SILVER: "#F1EDED"
 }
 
 export const INPUT_HIGHLIGHT = 'p-2 shadow-2xl rounded-lg'
