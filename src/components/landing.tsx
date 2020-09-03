@@ -30,21 +30,30 @@ const Landing = () => {
 
   return (
     <div
-      className="overflow-hidden bg-contain bg-no-repeat w-screen h-full"
+      className="relative overflow-hidden bg-contain bg-no-repeat w-screen h-full"
       style={{
         height: `${coverHeight}px`,
         backgroundImage: `url('images/relaxedwoman.png')`,
       }}
     >
-      <div className="mt-10 md:mt-12 w-2/3 lg:w-1/2 flex flex-col text-silver-primary text-base md:text-2xl lg:text-3xl xl:text-4xl font-bold md:mt-16 lg:mt-24 xl:mt-32 items-center">
-        <label>Your Financial Analyst for</label>
-        <label className="text-green-primary">Stress-free</label>
+      <div
+        className="w-2/3 md:w-3/4 flex flex-col text-silver-primary
+      flex flex-col xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl 
+      xs:font-semibold sm:font-bold mt-10 md:mt-16 lg:mt-24 xl:mt-32
+      xs:justify-start justify-center items-center"
+      >
+        <label>Your Financial Analyst</label>
+        <div className="flex items-end">
+          <label>for</label>
+          <label className="ml-2 text-green-primary">Stress-free</label>
+        </div>
         <div className="flex">
           <label>Savings & Investments</label>
           <label className="text-green-primary">.</label>
         </div>
       </div>
-      <div className="w-full flex items-end justify-end mt-4 md:pr-20 lg:pr-32 xl:pr-40">
+      <div className="w-full pr-4 md:pr-20 lg:pr-32 xl:pr-40 
+      mt-4 sm:mt-40 pt-4 md:pt-0 md:mt-8 lg:mt-12 flex items-end justify-end">
         <Link href={ROUTES.DASHBOARD}>
           <a>
             <AwesomeButton ripple style={{ animation: "fadeIn 2s ease-in 1" }}>

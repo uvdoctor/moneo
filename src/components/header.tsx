@@ -7,7 +7,7 @@ import { AwesomeButton } from "react-awesome-button";
 
 const Header = () => {
   return (
-    <nav className="md:text-lg lg:text-xl fixed flex w-full bg-white items-end justify-between flex-wrap py-1 top-0 cursor font-bold">
+    <nav className="md:text-lg lg:text-xl fixed flex w-full bg-white items-end justify-between flex-wrap py-1 top-0 cursor font-bold z-10">
       <Logo />
         <div className="w-2/3 md:w-1/2 flex justify-around">
           <div className="hoverable relative inline-block hover:text-green-primary cursor">
