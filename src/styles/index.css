@@ -4,9 +4,9 @@
 @import url('<link href="https://fonts.googleapis.com/css?family=Quicksand:300,500" rel="stylesheet">');
 
 :root {
-  --amplify-primary-color: #38c172;
-  --amplify-primary-tint: #1f9d55;
-  --amplify-primary-shade: #51d88a;
+  --amplify-primary-color: #AAE441;
+  --amplify-primary-tint: #96D441;
+  --amplify-primary-shade: #96D441;
   --amplify-font-family: "Quicksand", sans-serif;
   color: #4a5568;
   font-family: "Quicksand", sans-serif;
@@ -72,7 +72,7 @@ input[type="number"] {
 
 .input:focus {
   outline: 0;
-  border-color: #38a169;
+  border-color: #AAE441;
 }
 
 .button {
@@ -85,8 +85,8 @@ input[type="number"] {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   border-width: 1px;
   background-color: #fff;
-  border-color: #38a169;
-  color: #38a169;
+  border-color: #AAE441;
+  color: #AAE441;
   font-weight: 700;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -179,6 +179,7 @@ input[type="number"] {
 
 .dropdown-menu {
   display: none;
+  background-color: #AAE441
 }
 
 .hoverable {

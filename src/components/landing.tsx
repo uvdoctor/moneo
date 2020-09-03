@@ -36,14 +36,14 @@ const Landing = () => {
         backgroundImage: `url('images/relaxedwoman.jpeg')`,
       }}
     >
-      <div className="w-full h-full flex flex-col items-end justify-center pr-20 pb-8">
+      <div className="w-full h-full flex flex-col items-end justify-center pr-20">
         <Link href={ROUTES.DASHBOARD}>
           <a>
             <AwesomeButton
               ripple
               style={{ animation: "fadeIn 2s ease-in 1" }}
             >
-              Plan
+              PLAN
               <div className="ml-1 md:ml-4 w-6 h-6 md:w-8 md:h-8">
                 {svgCtr % 5 === 1 && (
                   <HomeSVG animationStyle={animationStyle} />
