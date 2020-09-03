@@ -160,7 +160,6 @@ export default function NumberInput(props: NumberInputProps) {
                       props.changeHandler(val);
                     }}
                     onFocus={(e) => {
-                      console.log("I am in focus")
                       if (!props.value && e.currentTarget.value === "0")
                         e.currentTarget.value = "";
                     }}
@@ -184,7 +183,6 @@ export default function NumberInput(props: NumberInputProps) {
                       props.currency
                     )}
                     onFocus={() => {
-                      console.log("Read only in focus...")
                       setEditing(true)}
                     }
                     style={{ textAlign: "right", width: width }}

@@ -4,13 +4,16 @@
 @import url('<link href="https://fonts.googleapis.com/css?family=Quicksand:300,500" rel="stylesheet">');
 
 :root {
-  --amplify-primary-color: #AAE441;
-  --amplify-primary-tint: #96D441;
-  --amplify-primary-shade: #96D441;
+  --amplify-primary-color: #96D441;
+  --amplify-primary-tint: #AAE441;
+  --amplify-primary-shade: #AAE441;
   --amplify-font-family: "Quicksand", sans-serif;
   color: #4a5568;
   font-family: "Quicksand", sans-serif;
   font-weight: 300;
+  --primary-green-color: #96D441;
+  --secondary-green-color: #AAE441;
+  --primary-gray-color: #4a5568;
 }
 
 .signInButton {
@@ -51,7 +54,7 @@ h6 {
   font-weight: 600;
   appearance: none;
   border-bottom-width: 1px;
-  border-bottom-color: #4a5568;
+  border-bottom-color: var(--primary-gray-color);
   border-bottom-width: thick;
   line-height: 1.25;
   background-color: transparent;
@@ -72,11 +75,11 @@ input[type="number"] {
 
 .input:focus {
   outline: 0;
-  border-color: #AAE441;
+  border-color: var(--primary-green-color);
 }
 
 .button {
-  background-color: #AAE441;
+  background-color: var(--primary-green-color);
   transition: "all .15s ease";
 }
 
@@ -85,8 +88,8 @@ input[type="number"] {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   border-width: 1px;
   background-color: #fff;
-  border-color: #AAE441;
-  color: #AAE441;
+  border-color: var(--primary-green-color);
+  color: var(--primary-green-color);
   font-weight: 700;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -103,24 +106,24 @@ input[type="number"] {
   --button-raise-level: 5px;
   --button-hover-pressure: 2;
   --transform-speed: 0.185s;
-  --button-primary-color: #AAE441;
-  --button-primary-color-dark: #96D441;
+  --button-primary-color: var(--primary-green-color);
+  --button-primary-color-dark: var(--secondary-green-color);
   --button-primary-color-light: #ffffff;
-  --button-primary-color-hover: #96D441;
-  --button-primary-color-active: #96D441;
+  --button-primary-color-hover: var(--secondary-green-color);
+  --button-primary-color-active: var(--secondary-green-color);
   --button-primary-border: 0px solid #ffffff;
   --button-secondary-color: #edf2f7;
   --button-secondary-color-dark: #cbd5e0;
-  --button-secondary-color-light: #AAE441;
+  --button-secondary-color-light: var(--primary-green-color);
   --button-secondary-color-hover: #edf2f7;
   --button-secondary-color-active: #a0aec0;
   --button-secondary-border: none;
-  --button-anchor-color: #AAE441;
-  --button-anchor-color-dark: #96D441;
+  --button-anchor-color: var(--primary-green-color);
+  --button-anchor-color-dark: var(--secondary-green-color);
   --button-anchor-color-light: #ffffff;
-  --button-anchor-color-hover: #96D441;
+  --button-anchor-color-hover: var(--secondary-green-color);
   --button-anchor-color-active: #a0aec0;
-  --button-anchor-border: 1px solid #96D441;
+  --button-anchor-border: 1px solid var(--secondary-green-color);
 }
 
 .button:hover {
@@ -179,7 +182,7 @@ input[type="number"] {
 
 .dropdown-menu {
   display: none;
-  background-color: #AAE441
+  background-color: var(--primary-green-color)
 }
 
 .hoverable {

@@ -70,11 +70,11 @@ export const ASSET_TYPES = {
 }
 
 export const COLORS = {
-    GREEN: "#AAE441",
+    GREEN: "#96D441",
     RED: "#FF0000",
     BLUE: "#3182ce",
     DISABLED: "#cbd5e0",
-    DEFAULT: "#2d3748",
+    DEFAULT: "#4a5568",
     ORANGE: "#dd6b20",
     LIGHT_GRAY: "#edf2f7"
 }
