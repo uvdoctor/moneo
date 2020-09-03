@@ -25,7 +25,7 @@ const Landing = () => {
   }, [svgCtr]);
 
   useEffect(() => {
-    setCoverHeight(Math.round((fsb.info.innerWidth * 3) / 5));
+	setCoverHeight(Math.round((fsb.info.innerWidth * 3) / 5));
   }, [fsb.info.innerWidth]);
 
   return (
@@ -38,7 +38,7 @@ const Landing = () => {
       }}
     >
       <div
-        className="w-full h-full flex flex-col items-center justify-center pr-32"
+        className="w-full h-full text-sm md:text-base lg:text-lg flex flex-col items-center justify-center pr-32"
       >
         <Link href={ROUTES.DASHBOARD}>
           <a>
