@@ -4,16 +4,16 @@ import Logo from "./logo";
 import { AwesomeButton } from "react-awesome-button";
 import { COLORS } from "../CONSTANTS";
 import Menu from "./menu";
-const LandingHeader = () => {
+
+const Header = () => {
   return (
     <nav
-      className="md:text-lg lg:text-xl flex w-full items-end justify-between flex-wrap py-1 cursor font-bold"
-      style={{ color: COLORS.SILVER }}
-    >
+      className="fixed top-0 bg-white md:text-lg lg:text-xl flex w-full items-end 
+      justify-between flex-wrap py-1 cursor font-bold z-10">
       <Logo />
-      <Menu transparent />
+      <Menu />
     </nav>
   );
 };
 
-export default LandingHeader;
+export default Header;

@@ -1,9 +1,7 @@
 import Head from "next/head";
 import { NextPage } from "next";
 import React from "react";
-import Landing from "../components/landing";
-import Features from "../components/features/features";
-import FixedHeader from "../components/fixedheader";
+import Main from "../components/main";
 interface Props {}
 
 const Home: NextPage<Props> = () => (
@@ -19,11 +17,7 @@ const Home: NextPage<Props> = () => (
       <link rel="manifest" href="manifest.json" />
     </Head>
     <main>
-      <div className="overflow-x-none overflow-y-auto">
-        <Landing />
-		<FixedHeader />
-        <Features />
-      </div>
+      <Main />
     </main>
   </div>
 );

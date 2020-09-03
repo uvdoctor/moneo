@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ROUTES } from "../CONSTANTS";
+import { COLORS, ROUTES } from "../CONSTANTS";
 import Link from "next/link";
 import HomeSVG from "./goals/svghome";
 import CarSVG from "./goals/svgcar";
@@ -9,13 +9,16 @@ import TravelSVG from "./goals/svgtravel";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import LandingHeader from "./landingheader";
+import Logo from "./logo";
+import Menu from "./menu";
 
 const Landing = () => {
   const [svgCtr, setSvgCtr] = useState(-1);
   const animationStyle = "transient 2s linear";
-  const [coverHeight, setCoverHeight] = useState<number>(800);
   const fsb = useFullScreenBrowser();
+  const [coverHeight, setCoverHeight] = useState<number>(
+    (fsb.info.innerWidth * 3) / 5
+  );
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -26,18 +29,25 @@ const Landing = () => {
   }, [svgCtr]);
 
   useEffect(() => {
-    setCoverHeight(Math.round((fsb.info.innerWidth * 4) / 5));
+    setCoverHeight(Math.round((fsb.info.innerWidth * 3) / 5));
   }, [fsb.info.innerWidth]);
 
   return (
     <div
-      className="flex flex-col bg-contain bg-no-repeat w-full"
+      className="flex flex-col bg-contain bg-no-repeat w-screen"
       style={{
         height: `${coverHeight}px`,
         backgroundImage: `url('images/relaxedwoman.png')`,
       }}
     >
-      <LandingHeader />
+      <nav
+        className="md:text-lg lg:text-xl flex w-full items-end 
+      justify-between flex-wrap py-1 cursor font-bold"
+        style={{ color: COLORS.SILVER }}
+      >
+        <Logo />
+        <Menu />
+      </nav>
       <div
         className="w-full flex justify-between items-center text-silver-primary font-bold
       xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl"
