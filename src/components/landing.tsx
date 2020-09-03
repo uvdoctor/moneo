@@ -68,10 +68,9 @@ const Landing = () => {
             <a>
               <AwesomeButton
                 ripple
-                size={`${fsb.info.innerWidth < 800 ? 'auto' : 'large'}`}
                 style={{ animation: "fadeIn 2s ease-in 1" }}
               >
-                {`${fsb.info.innerWidth > 800 ? 'SET GOALS' : 'PLAN'}`}
+                PLAN
                 <div className="ml-1 md:ml-4 w-6 h-6 md:w-8 md:h-8">
                   {svgCtr % 5 === 1 && (
                     <HomeSVG animationStyle={animationStyle} />
