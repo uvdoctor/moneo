@@ -25,26 +25,24 @@ const Landing = () => {
   }, [svgCtr]);
 
   useEffect(() => {
-	setCoverHeight(Math.round((fsb.info.innerWidth * 3) / 5));
+    setCoverHeight(Math.round((fsb.info.innerWidth * 3) / 5));
   }, [fsb.info.innerWidth]);
 
   return (
     <div
-      className="mt-12 text-white overflow-hidden bg-contain bg-no-repeat"
+      className="mt-12 text-white overflow-hidden bg-contain bg-no-repeat w-screen"
       style={{
-        width: `${fsb.info.innerWidth}px`,
+        //width: `${fsb.info.innerWidth}px`,
         height: `${coverHeight}px`,
         backgroundImage: `url('images/relaxedwoman.png')`,
       }}
     >
-      <div
-        className="w-full h-full text-sm md:text-base lg:text-lg flex flex-col items-center justify-center pr-32"
-      >
+      <div className="w-full h-full text-sm md:text-base lg:text-lg flex flex-col items-center justify-center pr-32 pb-16 md:pb-0">
         <Link href={ROUTES.DASHBOARD}>
           <a>
             <AwesomeButton
               ripple
-			  type="link"
+              type="link"
               style={{ animation: "fadeIn 2s ease-in 1" }}
             >
               SET GOALS
@@ -66,7 +64,6 @@ const Landing = () => {
             </AwesomeButton>
           </a>
         </Link>
-        <label className="mt-2">Across Currencies.</label>
       </div>
     </div>
   );
