@@ -88,7 +88,7 @@ export default function Goal({
   >(goal.tbr);
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
-  >(goal.tdl);
+  >(goal.achg);
   const [startingPrice, setStartingPrice] = useState<number>(
     goal?.cp as number
   );
@@ -266,8 +266,7 @@ export default function Goal({
     } else if (goalType === APIt.GoalType.E) {
       bg.btr = loanSIPayPer;
       bg.tbr = loanSICapitalize;
-      //@ts-ignore
-      bg.tdl = loanGracePeriod;
+      bg.achg = loanGracePeriod;
     }
     return bg;
   };
@@ -380,10 +379,10 @@ export default function Goal({
   }, [cfs, impLevel]);
 
   useEffect(() => {
-    if (!hasTab(loanLabel)) return;
+    if (!hasTab(loanLabel) || allInputDone) return;
     if (manualMode > 0) {
       tabOptions[2].active = false;
-      if (!allInputDone && currentOrder >= tabOptions[2].order) {
+      if (currentOrder >= tabOptions[2].order) {
         if (tabOptions[3]) {
           if (currentOrder < tabOptions[3].order)
             setCurrentOrder(tabOptions[3].order);
@@ -391,7 +390,7 @@ export default function Goal({
       }
     } else tabOptions[2].active = true;
     setTabOptions([...tabOptions]);
-  }, [manualMode]);
+  }, [manualMode, allInputDone, currentOrder]);
 
   const hasTab = (option: string) => {
     let options = tabOptions.filter((tab) => tab.label === option);
@@ -455,11 +454,10 @@ export default function Goal({
       let label = getTabLabelByOrder(co);
       if (label) setShowTab(label);
       setCurrentOrder(co);
-      if (sellAfter) {
-        if (label === rentLabel) setAllInputDone(true);
-      } else if (hasTab(loanLabel)) {
-        if (label === loanLabel) setAllInputDone(true);
-      } else if (label === taxLabel) setAllInputDone(true);
+      if (sellAfter) setAllInputDone(co === getOrderByTabLabel(tabOptions, rentLabel) + 1);
+      else if (hasTab(loanLabel)) {
+        if (co === getOrderByTabLabel(tabOptions, loanLabel) + 3) setAllInputDone(true);
+      } else if (co === getOrderByTabLabel(tabOptions, taxLabel) + 1) setAllInputDone(true);
     }
   };
 
@@ -474,7 +472,7 @@ export default function Goal({
       loanYears
     );
 
-  const showResultSection = () =>
+  const showResultSection = () => 
     nowYear < startYear && allInputDone && cfs.length > 0;
 
   return (
@@ -712,6 +710,10 @@ export default function Goal({
               rr={rr}
               brChartData={brChartData}
               brChartDataHandler={setBRChartData}
+              allInputDone={allInputDone}
+              currentOrder={currentOrder}
+              inputOrder={getOrderByTabLabel(tabOptions, rentLabel)}
+              nextStepHandler={handleNextStep}
             />
           )}
         </InputSection>

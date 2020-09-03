@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import CustomVideoPlayer from "../customvideoplayer";
+import VideoPlayer from "../videoplayer";
 import SVGPlay from "../svgplay";
 import SVGStop from "../svgstop";
 interface SectionProps {
@@ -23,13 +23,13 @@ interface SectionProps {
 export default function Section(props: SectionProps) {
   return (
     <div
-      className="m-1 w-full max-w-sm md:max-w-md rounded-lg overflow-hidden 
+      className="m-1 w-full max-w-sm md:max-w-md max-h-md rounded-lg overflow-x-hidden overflow-y-auto 
                         shadow-lg md:shadow-xl"
     >
       {props.videoUrl && props.urlHandler && (
-          <CustomVideoPlayer
-            videoUrl={props.videoUrl}
-            videoHandler={props.urlHandler}
+          <VideoPlayer
+            url={props.videoUrl}
+            urlHandler={props.urlHandler}
           />
         )}
       <div className={`w-full ${props.insideForm && "bg-black text-white flex justify-between"}`}>

@@ -44,7 +44,7 @@ export default function SelectInput(props: SelectInputProps) {
               <SVGInfo />
             </div>
           )}
-          {props.pre && <label>{props.pre}</label>}
+          {props.pre && <label className="whitespace-no-wrap">{props.pre}</label>}
           {!props.disabled ? (
             <Fragment>
               <div className="flex items-center">

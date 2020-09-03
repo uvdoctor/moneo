@@ -8,6 +8,9 @@ import Section from "../form/section";
 import HToggle from "../horizontaltoggle";
 
 interface RentComparisonProps {
+  allInputDone: boolean
+  inputOrder: number
+  currentOrder: number
   currency: string;
   rangeFactor: number;
   rentAmt: number;
@@ -25,8 +28,12 @@ interface RentComparisonProps {
   sellAfter: number;
   brChartData: Array<any>;
   brChartDataHandler: Function;
+  nextStepHandler: Function
 }
 export default function RentComparison({
+  allInputDone,
+  inputOrder,
+  currentOrder,
   currency,
   rangeFactor,
   rentAmt,
@@ -44,6 +51,7 @@ export default function RentComparison({
   sellAfter,
   brChartData,
   brChartDataHandler,
+  nextStepHandler
 }: RentComparisonProps) {
   const firstRRIndex = startYear - (new Date().getFullYear() + 1);
   const [rentDiff, setRentDiff] = useState<number | null>(null);
@@ -160,16 +168,17 @@ export default function RentComparison({
 
   return (
     <div className="flex w-full justify-around">
+      {(allInputDone || inputOrder <= currentOrder) && (
       <Section
         title="If You Rent Instead of Buying"
         insideForm
         left={
           <NumberInput
-            inputOrder={0}
-            currentOrder={-1}
+            inputOrder={inputOrder}
+            currentOrder={currentOrder}
             nextStepDisabled={false}
-            nextStepHandler={() => true}
-            allInputDone={true}
+            nextStepHandler={nextStepHandler}
+            allInputDone={allInputDone}
             name="rentAmt"
             pre="Yearly"
             post="Rent"
@@ -244,7 +253,7 @@ export default function RentComparison({
             <div />
           )
         }
-      />
+      />)}
     </div>
   );
 }
