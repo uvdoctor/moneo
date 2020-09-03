@@ -49,10 +49,11 @@ const Landing = () => {
         <Menu />
       </nav>
       <div
-        className="w-full flex justify-between items-center text-silver-primary font-bold
-      xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl"
+        className="w-full flex justify-between items-start md:items-center text-silver-primary font-bold
+      xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl 
+      md:mt-4 lg:mt-8 xl:mt-12"
       >
-        <div className="ml-4 md:ml-8 lg:ml-16 xl:ml-32 flex flex-col items-center">
+        <div className="sm:ml-2 md:ml-16 lg:ml-24 xl:ml-48 flex flex-col items-center">
           <label>Your Financial Analyst</label>
           <div className="flex">
             <label>for</label>
