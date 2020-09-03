@@ -45,11 +45,11 @@ const Landing = () => {
           <a>
             <AwesomeButton
               ripple
-              type="link"
+			  type="link"
               style={{ animation: "fadeIn 2s ease-in 1" }}
             >
               SET GOALS
-              <div className="ml-2 md:ml-4 w-8 h-8 md:w-10 md:h-10">
+              <div className="ml-2 md:ml-4 w-8 h-8">
                 {svgCtr % 5 === 1 && (
                   <HomeSVG animationStyle={animationStyle} />
                 )}

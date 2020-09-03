@@ -6,7 +6,7 @@ interface TravelSVGProps {
 
 export default function TravelSVG({animationStyle} : TravelSVGProps) {
     return (
-        <svg fill="white" viewBox="0 0 512 512" className="w-10" style={{animation: animationStyle}}>
+        <svg fill="white" viewBox="0 0 512 512" style={{animation: animationStyle}}>
 							<g>
 								<g>
 									<g>
