@@ -30,12 +30,13 @@ const Landing = () => {
   }, [svgCtr]);
 
   useEffect(() => {
+    console.log("Inner width is ", fsb.info.innerWidth)
     setCoverHeight(getLandingPageHeight(fsb));
   }, [fsb.info.innerWidth]);
 
   return (
     <div
-      className="flex flex-col bg-contain bg-no-repeat w-screen h-full"
+      className="flex flex-col bg-contain bg-center bg-no-repeat w-screen"
       style={{
         height: `${coverHeight}px`,
         backgroundImage: `url('images/relaxedwoman.png')`,
@@ -62,7 +63,7 @@ const Landing = () => {
           </div>
           <label>Savings & Investments</label>
         </div>
-        <div className="md:mr-4 lg:mr-8">
+        <div className="md:pr-4 lg:pr-8">
           <Link href={ROUTES.DASHBOARD}>
             <a>
               <AwesomeButton
