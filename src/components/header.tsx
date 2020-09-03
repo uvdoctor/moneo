@@ -29,7 +29,7 @@ const Header = () => {
             </Link>
           </div>
         </div>
-        <div className="hover:text-green-primary">
+        <div className="hover:text-green-primary mr-2 md:mr-4">
           <Link href={ROUTES.DASHBOARD}>
             <a>Login</a>
           </Link>
