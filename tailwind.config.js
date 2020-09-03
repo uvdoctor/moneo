@@ -9,10 +9,10 @@ module.exports = {
         green: {
           primary: "#AAE441",
           secondary: "#96D441",
-        }
-      },
-      silver: {
-        primary: "#F1EDED"
+        },
+        silver: {
+          primary: "#F1EDED",
+        },
       },
     },
   },
