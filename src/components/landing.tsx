@@ -1,36 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { ROUTES } from "../CONSTANTS";
-import Link from "next/link";
-import HomeSVG from "./goals/svghome";
-import CarSVG from "./goals/svgcar";
-import DiamondSVG from "./goals/svgdiamond";
-import DegreeSVG from "./goals/svgdegree";
-import TravelSVG from "./goals/svgtravel";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import Logo from "./logo";
 import Menu from "./menu";
 import { getLandingPageHeight } from "./utils";
+import LandingButton from "./landingbutton";
 
 const Landing = () => {
-  const [svgCtr, setSvgCtr] = useState(-1);
-  const animationStyle = "transient 2s linear";
   const fsb = useFullScreenBrowser();
-  const [coverHeight, setCoverHeight] = useState<number>(
-    800
-    );
+  const [coverHeight, setCoverHeight] = useState<number>(800);
 
   useEffect(() => {
-    let timer = setTimeout(() => {
-      setSvgCtr(svgCtr + 1);
-    }, 2000);
-
-    return () => clearInterval(timer);
-  }, [svgCtr]);
-
-  useEffect(() => {
-    console.log("Inner width is ", fsb.info.innerWidth)
+    console.log("Inner width is ", fsb.info.innerWidth);
     setCoverHeight(getLandingPageHeight(fsb));
   }, [fsb.info.innerWidth]);
 
@@ -50,47 +32,29 @@ const Landing = () => {
         <Menu />
       </nav>
       <div
-        className="w-full flex justify-between items-start md:items-center text-silver font-bold
-      xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl 
+        className="w-full flex justify-between md:justify-center items-start md:items-center 
+        text-silver font-bold xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl 
       md:mt-4 lg:mt-8 xl:mt-12"
       >
-        <div className="ml-4 md:ml-16 lg:ml-24 xl:ml-48 flex flex-col items-center">
+        <div className="ml-4 md:mr-48 lg:mr-64 flex flex-col items-center">
           <label>Your Financial Analyst</label>
           <div className="flex">
             <label>for</label>
             <label className="ml-2 text-green-primary">Stress-free</label>
           </div>
           <label>Savings & Investments</label>
+          {fsb.info.innerWidth >= 768 && (
+            <div className="flex flex-col items-center mt-2 lg:mt-4">
+              <LandingButton text="MEET MY GOALS" />
+              <label className="mt-1 text-base">Across Currencies</label>
+            </div>
+          )}
         </div>
-        <div className="md:pr-4 lg:pr-8">
-          <Link href={ROUTES.DASHBOARD}>
-            <a>
-              <AwesomeButton
-                ripple
-                style={{ animation: "fadeIn 2s ease-in 1" }}
-              >
-                PLAN
-                <div className="ml-1 md:ml-4 w-6 h-6 md:w-8 md:h-8">
-                  {svgCtr % 5 === 1 && (
-                    <HomeSVG animationStyle={animationStyle} />
-                  )}
-                  {svgCtr % 5 === 2 && (
-                    <CarSVG animationStyle={animationStyle} />
-                  )}
-                  {svgCtr % 5 === 3 && (
-                    <DiamondSVG animationStyle={animationStyle} />
-                  )}
-                  {svgCtr % 5 === 4 && (
-                    <DegreeSVG animationStyle={animationStyle} />
-                  )}
-                  {svgCtr % 5 === 0 && (
-                    <TravelSVG animationStyle={animationStyle} />
-                  )}
-                </div>
-              </AwesomeButton>
-            </a>
-          </Link>
-        </div>
+        {fsb.info.innerWidth < 768 && (
+          <div className="md:pr-4 lg:pr-8">
+            <LandingButton text="PLAN" />
+          </div>
+        )}
       </div>
     </div>
   );

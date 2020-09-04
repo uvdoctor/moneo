@@ -10,21 +10,21 @@ interface ExpandCollapseProps {
   svg?: any;
   insideForm?: boolean;
   children: ReactNode;
-  hoverColor?: string;
   defaultSVGColor?: string;
   hoverSVGColor?: string;
 }
 
 export default function ExpandCollapse(props: ExpandCollapseProps) {
   const [show, setShow] = useState<boolean>(false);
-  const hoverColor = () =>
-    props.hoverColor ? props.hoverColor : "text-blue-800";
   const defaultSVGColor = () =>
     props.defaultSVGColor ? props.defaultSVGColor : COLORS.BLUE;
   const hoverSVGColor = () =>
     props.hoverSVGColor ? props.hoverSVGColor : COLORS.DARK_BLUE;
-
-  const toggle = () => setShow(!show);
+  const [textColor, setTextColor] = useState<string>(defaultSVGColor());
+  const toggle = () => {
+    setShow(!show);
+    setTextColor(show ? defaultSVGColor() : hoverSVGColor());
+  };
 
   return (
     <div
@@ -41,18 +41,26 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
       <div
         className="cursor-pointer flex flex-col justify-center items-center w-full"
         onClick={toggle}
-        onMouseEnter={() => setShow(true)}
-        onMouseLeave={() => setShow(false)}
+        onMouseEnter={() => {
+          setShow(true);
+          setTextColor(hoverSVGColor());
+        }}
+        onMouseLeave={() => {
+          setShow(false);
+          setTextColor(defaultSVGColor());
+        }}
       >
         <div className="flex items-center">
           {props.svg}
           <div className="flex items-end">
-            <label
-              className={`hover:${hoverColor()} cursor-pointer`}
-            >
+            <label className="cursor-pointer" style={{ color: textColor }}>
               {props.title}
             </label>
-            {show ? <SVGCollapse color={hoverSVGColor()} /> : <SVGExpand color={defaultSVGColor()} />}
+            {show ? (
+              <SVGCollapse color={hoverSVGColor()} />
+            ) : (
+              <SVGExpand color={defaultSVGColor()} />
+            )}
           </div>
         </div>
         {show && props.children}
