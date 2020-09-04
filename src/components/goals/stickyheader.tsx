@@ -32,9 +32,9 @@ export default function StickyHeader({
         </label>
       </div>
       <div className="w-full flex justify-around max-w-sm md:max-w-md">{children}</div>
-      <div className="mr-1 flex flex-col h-full">
+      <div className="mt-2 mr-1 flex flex-col h-full">
         <div
-          className={`mb-10 ${
+          className={`mb-8 ${
             cancelDisabled ? "cursor-not-allowed" : "cursor-pointer"
           } border-0 outline-none focus:outline-none`}
           onClick={() => !cancelDisabled && cancelCallback()}

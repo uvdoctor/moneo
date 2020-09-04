@@ -12,6 +12,7 @@ interface ExpandCollapseProps {
   children: ReactNode;
   defaultSVGColor?: string;
   hoverSVGColor?: string;
+  animate?: boolean
 }
 
 export default function ExpandCollapse(props: ExpandCollapseProps) {
@@ -59,7 +60,7 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
             {show ? (
               <SVGCollapse color={hoverSVGColor()} />
             ) : (
-              <SVGExpand color={defaultSVGColor()} />
+              <SVGExpand color={defaultSVGColor()} animate={props.animate} />
             )}
           </div>
         </div>

@@ -13,7 +13,14 @@ export default function Menu({ fixed }: MenuProps) {
       <div className="w-full flex justify-around">
         <div className="hover:text-green-primary">
           <Link href={ROUTES.CALCULATE}>
-            <a>Calculate</a>
+            <a>
+              <ExpandCollapse
+                title="Calculate"
+                defaultSVGColor={fixed ? COLORS.DEFAULT : COLORS.SILVER}
+                hoverSVGColor={COLORS.GREEN} animate>
+
+                </ExpandCollapse>
+            </a>
           </Link>
         </div>
         <div className="hover:text-green-primary">

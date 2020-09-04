@@ -132,7 +132,7 @@ export default function FFGoal({
     goal.id ? true : false
   );
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
-  const saveLabel = "Save";
+  const investLabel = "Invest";
   const spendLabel = "Spend";
   const benefitLabel = "Benefit";
   const careLabel = "Care";
@@ -149,7 +149,7 @@ export default function FFGoal({
     svg: SVGCare,
   };
   const [tabOptions, setTabOptions] = useState<Array<any>>([
-    { label: saveLabel, order: 3, active: true, svg: SVGPiggy },
+    { label: investLabel, order: 3, active: true, svg: SVGPiggy },
     { label: spendLabel, order: 5, active: true, svg: SVGPay },
     { label: benefitLabel, order: 8, active: true, svg: SVGTaxBenefit },
     careOption,
@@ -180,7 +180,7 @@ export default function FFGoal({
     },
   ];
 
-  const [showTab, setShowTab] = useState(saveLabel);
+  const [showTab, setShowTab] = useState(investLabel);
   const [showResultTab, setShowResultTab] = useState<string>(aaNextYearLabel);
   const [ffYearOptions, setFFYearOptions] = useState<any>({});
 
@@ -391,14 +391,14 @@ export default function FFGoal({
           submitDisabled={!allInputDone || expenseAfterFF < 5000 || btnClicked}
           cancelDisabled={btnClicked}
         >
-          {showTab === saveLabel && (
+          {showTab === investLabel && (
             <Invest
               currency={currency}
               riskProfile={riskProfile}
               riskProfileHandler={setRiskProfile}
               currentOrder={currentOrder}
               allInputDone={allInputDone}
-              inputOrder={getOrderByTabLabel(tabOptions, saveLabel)}
+              inputOrder={getOrderByTabLabel(tabOptions, investLabel)}
               nextStepHandler={handleNextStep}
               annualSavings={annualSavings}
               monthlySavingsRate={monthlySavingsRate}

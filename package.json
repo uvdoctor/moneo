@@ -42,12 +42,12 @@
     "@types/react": "^16.9.35",
     "autoprefixer": "^9.8.0",
     "babel-jest": "^26.2.2",
-    "ts-jest": "^26.1.4",
+    "cross-env": "^7.0.2",
     "jest": "^26.2.2",
     "postcss-preset-env": "^6.7.0",
-    "tailwindcss": "^1.4.6",
+    "tailwindcss": "^1.7.6",
+    "ts-jest": "^26.1.4",
     "typescript": "^3.9.3",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "cross-env": "^7.0.2"
+    "uglifyjs-webpack-plugin": "^2.2.0"
   }
 }

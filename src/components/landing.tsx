@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
-import { useFullScreenBrowser } from "react-browser-hooks";
+import { useScroll, useFullScreenBrowser } from "react-browser-hooks";
 import Logo from "./logo";
 import Menu from "./menu";
 import { getLandingPageHeight } from "./utils";
@@ -9,12 +9,30 @@ import LandingButton from "./landingbutton";
 
 const Landing = () => {
   const fsb = useFullScreenBrowser();
+  const { top } = useScroll();
   const [coverHeight, setCoverHeight] = useState<number>(800);
+  const [opactityFactor, setOpacityFactor] = useState<number>(1);
 
   useEffect(() => {
-    console.log("Inner width is ", fsb.info.innerWidth);
     setCoverHeight(getLandingPageHeight(fsb));
   }, [fsb.info.innerWidth]);
+
+  useEffect(() => {
+    switch (top) {
+      case 50:
+        setOpacityFactor(0.5);
+        break;
+      case 100:
+        setOpacityFactor(0.25);
+        break;
+      case 150:
+        setOpacityFactor(0);
+      case 0:
+        setOpacityFactor(1)
+      default:
+        break;
+    }
+  }, [top]);
 
   return (
     <div
@@ -32,9 +50,9 @@ const Landing = () => {
         <Menu />
       </nav>
       <div
-        className="w-full flex justify-between md:justify-center items-start md:items-center 
+        className={`w-full flex justify-between md:justify-center items-start md:items-center 
         text-silver font-bold xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl 
-      md:mt-4 lg:mt-8 xl:mt-12"
+      md:mt-4 lg:mt-8 xl:mt-12`}
       >
         <div className="ml-4 md:mr-48 lg:mr-64 flex flex-col items-center">
           <label>Your Financial Analyst</label>
