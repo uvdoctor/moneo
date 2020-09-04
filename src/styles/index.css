@@ -180,11 +180,6 @@ input[type="number"] {
   }
 }
 
-.dropdown-menu {
-  display: none;
-  background-color: var(--primary-green-color)
-}
-
 .hoverable {
   position: static;
 }

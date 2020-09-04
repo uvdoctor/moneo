@@ -44,14 +44,13 @@ const Landing = () => {
     >
       <nav
         className="md:text-lg lg:text-xl flex w-full items-end 
-      justify-between flex-wrap py-1 cursor font-bold"
-        style={{ color: COLORS.SILVER }}
+      justify-between flex-wrap py-1 cursor font-bold text-silver"
       >
         <Logo />
         <Menu />
       </nav>
       <div
-        className="w-full flex justify-between items-start md:items-center text-silver-primary font-bold
+        className="w-full flex justify-between items-start md:items-center text-silver font-bold
       xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl 
       md:mt-4 lg:mt-8 xl:mt-12"
       >
