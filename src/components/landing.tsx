@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { COLORS, ROUTES } from "../CONSTANTS";
+import { ROUTES } from "../CONSTANTS";
 import Link from "next/link";
 import HomeSVG from "./goals/svghome";
 import CarSVG from "./goals/svgcar";
