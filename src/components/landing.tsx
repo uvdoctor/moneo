@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
-import { useScroll, useFullScreenBrowser } from "react-browser-hooks";
+import { useFullScreenBrowser } from "react-browser-hooks";
 import Logo from "./logo";
 import Menu from "./menu";
 import { getLandingPageHeight } from "./utils";
@@ -9,30 +9,11 @@ import LandingButton from "./landingbutton";
 
 const Landing = () => {
   const fsb = useFullScreenBrowser();
-  const { top } = useScroll();
   const [coverHeight, setCoverHeight] = useState<number>(800);
-  const [opactityFactor, setOpacityFactor] = useState<number>(1);
 
   useEffect(() => {
     setCoverHeight(getLandingPageHeight(fsb));
   }, [fsb.info.innerWidth]);
-
-  useEffect(() => {
-    switch (top) {
-      case 50:
-        setOpacityFactor(0.5);
-        break;
-      case 100:
-        setOpacityFactor(0.25);
-        break;
-      case 150:
-        setOpacityFactor(0);
-      case 0:
-        setOpacityFactor(1)
-      default:
-        break;
-    }
-  }, [top]);
 
   return (
     <div
