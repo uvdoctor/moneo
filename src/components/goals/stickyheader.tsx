@@ -25,7 +25,7 @@ export default function StickyHeader({
           className={`mt-6 ${
             cancelDisabled
               ? "text-gray-400"
-              : "text-blue-600 hover:text-blue-800"
+              : "cursor-pointer hover:text-green-primary"
           }`}
         >
           Back

@@ -26,25 +26,25 @@ export default function Section(props: SectionProps) {
 
   return (
     <div
-      className="m-1 w-full max-w-sm md:max-w-md max-h-md rounded-lg overflow-x-hidden overflow-y-auto 
-                        shadow-lg md:shadow-xl"
+      className={`m-1 w-full max-w-sm md:max-w-md max-h-md rounded-lg overflow-x-hidden overflow-y-auto 
+                        shadow-lg md:shadow-xl`}
       style={{ backgroundColor: props.color ? props.color : 'transparent' }}
     >
       {videoUrl && <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />}
       <div
         className={`w-full ${
-          props.insideForm && "bg-gray-700 text-white flex justify-between"
+          props.insideForm && "bg-gray-700 text-white"} flex justify-between"
         }`}
       >
         <div
-          className={`flex items-center p-1 ${
-            props.insideMenu && "cursor-pointer"
+          className={`w-full flex items-center p-1 ${
+            !props.insideForm && "cursor-pointer"
           }`}
         >
           {props.titleSVG && props.titleSVG}
           <label
             className={`ml-1 ${
-              props.insideMenu && "hover:text-green-primary cursor-pointer"
+              !props.insideForm && "hover:text-green-primary cursor-pointer"
             }`}
           >
             {props.title}

@@ -7,25 +7,32 @@ import { ROUTES } from "../../CONSTANTS";
 import SVGBalance from "./svgbalance";
 import SVGFreedom from "../svgfreedom";
 import SVGPiggy from "../svgpiggy";
+import SVGMoneyBag from "./svgmoneybag";
+import SVGLoan from "../svgloan";
 
 interface CalculatorsProps {
   insideMenu?: boolean;
+  insideForm?: boolean
 }
 
-export default function Calculators({ insideMenu }: CalculatorsProps) {
+export default function Calculators({ insideMenu, insideForm }: CalculatorsProps) {
   const LIGHT_COLORS = {
-    RED: "#fc8181",
-    ORANGE: "#f6ad55",
-    BLUE: "#63b3ed",
-    TEAL: "#4fd1c5",
-    PURPLE: "#b794f4",
-    YELLOW: "#f6e05e",
+    RED: "#EEA894",
+    ORANGE: "#fbd38d",
+    BLUE: "#90cdf4",
+    TEAL: "#81e6d9",
+    PURPLE: "#d6bcfa",
+    YELLOW: "#faf089",
     GRAY: "#cbd5e0",
-    PINK: "#f687b3"
+    PINK: "#f687b3",
+    BROWN: "#D3B193",
+    //GRAY: "#EEEBEA",
+    //GREEN: "DBEAE9"
+    GREEN: "#9ae6b4"
   };
 
   return (
-    <div className="w-full flex flex-wrap items-start justify-around text-white pb-1">
+    <div className="w-full flex flex-wrap items-start justify-around pb-1 text-white">
       <Link href={ROUTES.CALCULATE}>
         <a>
           <Section
@@ -33,17 +40,18 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
             titleSVG={<SVGFreedom />}
             left={
               <ul>
-                <li className="flex items-center">
+                <li className="flex items-center mb-1">
                   <SVGPiggy disabled={false} selected />
-                  <span className="ml-1 mb-1">How Much Money?</span>
+                  <span className="ml-1">How Much Money?</span>
                 </li>
                 <li className="flex items-center">
                   <SVGHourGlass />
-                  <span className="ml-1 mb-1">By When?</span>
+                  <span className="ml-1">By When?</span>
                 </li>
               </ul>
             }
             insideMenu={insideMenu}
+            insideForm={insideForm}
             color={LIGHT_COLORS.RED}
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
@@ -56,18 +64,19 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
             title="Buy v/s Rent"
             left={
               <ul>
-                <li className="flex items-center">
+                <li className="flex items-center mb-1">
                   <SVGBalance />
-                  <span className="ml-1 mb-1">Which is Cheaper?</span>
+                  <span className="ml-1">Which is Cheaper?</span>
                 </li>
                 <li className="flex items-center">
                   <SVGHourGlass />
-                  <span className="ml-1 mb-1">For how many Years?</span>
+                  <span className="ml-1">For how many Years?</span>
                 </li>
               </ul>
             }
             insideMenu={insideMenu}
-            color={LIGHT_COLORS.PURPLE}
+            insideForm={insideForm}
+            color={LIGHT_COLORS.BROWN}
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
         </a>
@@ -75,45 +84,47 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
       <Link href={ROUTES.CALCULATE}>
         <a>
           <Section
-            title="Financial Freedom"
-            titleSVG={<SVGFreedom />}
+            title="Mortgage Loan"
+            titleSVG={<SVGLoan selected />}
             left={
               <ul>
-                <li className="flex items-center">
-                  <SVGPiggy disabled={false} selected />
-                  <span className="ml-1 mb-1">How Much Money?</span>
+                <li className="flex items-center mb-1">
+                  <SVGBalance />
+                  <span className="ml-1">Pay by Self or Loan?</span>
                 </li>
                 <li className="flex items-center">
-                  <SVGHourGlass />
-                  <span className="ml-1 mb-1">By When?</span>
+                  <SVGMoneyBag selected />
+                  <span className="ml-1">How much Total Interest?</span>
                 </li>
               </ul>
             }
             insideMenu={insideMenu}
-            color={LIGHT_COLORS.TEAL}
-            videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
-          />
-        </a>
-      </Link>
-      <Link href={ROUTES.CALCULATE}>
-        <a>
-          <Section
-            title="Financial Freedom"
-            titleSVG={<SVGFreedom />}
-            left={
-              <ul>
-                <li className="flex items-center">
-                  <SVGPiggy disabled={false} selected />
-                  <span className="ml-1 mb-1">How Much Money?</span>
-                </li>
-                <li className="flex items-center">
-                  <SVGHourGlass />
-                  <span className="ml-1 mb-1">By When?</span>
-                </li>
-              </ul>
-            }
-            insideMenu={insideMenu}
+            insideForm={insideForm}
             color={LIGHT_COLORS.ORANGE}
+            videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
+          />
+        </a>
+      </Link>
+      <Link href={ROUTES.CALCULATE}>
+        <a>
+          <Section
+            title="Education Loan"
+            titleSVG={<SVGLoan selected />}
+            left={
+              <ul>
+                <li className="flex items-center mb-1">
+                  <SVGBalance />
+                  <span className="ml-1">Pay by Self or Loan?</span>
+                </li>
+                <li className="flex items-center">
+                  <SVGMoneyBag selected />
+                  <span className="ml-1">How much Total Interest?</span>
+                </li>
+              </ul>
+            }
+            insideMenu={insideMenu}
+            insideForm={insideForm}
+            color={LIGHT_COLORS.GREEN}
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
         </a>
