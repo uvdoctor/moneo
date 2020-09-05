@@ -37,24 +37,20 @@ interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
   ffGoalEndYear: number;
-  videoUrl: string;
   ffImpactYearsHandler: Function;
   cancelCallback: Function;
   addCallback: Function;
   updateCallback: Function;
-  videoHandler: Function;
 }
 
 export default function Goal({
   goal,
   cashFlows,
   ffGoalEndYear,
-  videoUrl,
   ffImpactYearsHandler,
   cancelCallback,
   addCallback,
   updateCallback,
-  videoHandler,
 }: GoalProps) {
   const typesList = getGoalTypes();
   const goalType = goal?.type as APIt.GoalType;
@@ -553,8 +549,6 @@ export default function Goal({
               priceChgRate={priceChgRate}
               priceChgRateHandler={setPriceChgRate}
               eyOptions={eyOptions}
-              videoUrl={videoUrl}
-              videoHandler={videoHandler}
             />
           )}
 
@@ -622,8 +616,6 @@ export default function Goal({
               nextStepDisabled={false}
               nextStepHandler={handleNextStep}
               allInputDone={allInputDone}
-              videoUrl={videoUrl}
-              videoHandler={videoHandler}
             />
           )}
 

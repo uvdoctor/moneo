@@ -18,8 +18,6 @@ interface InvestProps {
   monthlySavingsRateHandler: Function;
   riskProfile: LMH;
   riskProfileHandler: Function;
-  videoUrl: string
-  videoHandler: Function
 }
 
 export function Invest({
@@ -33,16 +31,12 @@ export function Invest({
   monthlySavingsRateHandler,
   riskProfile,
   riskProfileHandler,
-  videoUrl,
-  videoHandler
 }: InvestProps) {
   const nowYear = new Date().getFullYear();
   return (
     <Section
       title="Before Financial Freedom"
-      videoUrl={videoUrl}
       videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}
-      urlHandler={videoHandler}
       left={
         <NumberInput
           name="savingsRate"

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import VideoPlayer from "../videoplayer";
 import SVGPlay from "../svgplay";
 import SVGStop from "../svgstop";
@@ -18,18 +18,18 @@ interface SectionProps {
   insideForm?: boolean;
   insideMenu?: boolean;
   videoSrc?: string;
-  videoUrl?: string;
-  urlHandler?: Function;
 }
 
 export default function Section(props: SectionProps) {
+  const [videoUrl, setVideoUrl] = useState<string>("")
+  
   return (
     <div
       className="m-1 w-full max-w-sm md:max-w-md max-h-md rounded-lg overflow-x-hidden overflow-y-auto 
                         shadow-lg md:shadow-xl"
     >
-      {props.videoUrl && props.urlHandler && (
-        <VideoPlayer url={props.videoUrl} urlHandler={props.urlHandler} />
+      {videoUrl && (
+        <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
       )}
       <div
         className={`w-full ${
@@ -50,15 +50,15 @@ export default function Section(props: SectionProps) {
             {props.title}
           </label>
         </div>
-        {props.urlHandler && props.videoSrc && (
+        {props.videoSrc && (
           <div
             className="p-1"
             onClick={() =>
               //@ts-ignore
-              props.urlHandler(!props.videoUrl ? props.videoSrc : "")
+              setVideoUrl(!videoUrl ? props.videoSrc : "")
             }
           >
-            {!props.videoUrl ? <SVGPlay /> : <SVGStop />}
+            {!videoUrl ? <SVGPlay /> : <SVGStop />}
           </div>
         )}
       </div>

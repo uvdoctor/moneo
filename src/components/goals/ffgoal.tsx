@@ -46,8 +46,6 @@ interface FFGoalProps {
   tryCFs: Array<number>;
   mergedCfs: any;
   pp: Object;
-  videoUrl: string;
-  videoHandler: Function;
   ffYearHandler: Function;
   ffResultHandler: Function;
   rrHandler: Function;
@@ -68,8 +66,6 @@ export default function FFGoal({
   tryCFs,
   mergedCfs,
   pp,
-  videoUrl,
-  videoHandler,
   ffYearHandler,
   ffResultHandler,
   rrHandler,
@@ -403,8 +399,6 @@ export default function FFGoal({
               annualSavings={annualSavings}
               monthlySavingsRate={monthlySavingsRate}
               monthlySavingsRateHandler={setMonthlySavingsRate}
-              videoUrl={videoUrl}
-              videoHandler={videoHandler}
             />
           )}
 

@@ -26,12 +26,10 @@ interface CostProps {
   endYear?: number;
   baseYear: number;
   manualTgtMin?: number;
-  videoUrl: string;
   manualModeHandler?: Function;
   manualTargetsHandler?: Function;
   startingCostHandler: Function;
   costChgRateHandler: Function;
-  videoHandler: Function;
 }
 
 export default function Cost(props: CostProps) {
@@ -201,8 +199,6 @@ export default function Cost(props: CostProps) {
           footer={props.footer}
           insideForm
           videoSrc={`https://www.youtube.com/watch?v=uYMTsmeZyfU`}
-          videoUrl={props.videoUrl}
-          urlHandler={props.videoHandler}
         />
       )}
     </Fragment>

@@ -43,8 +43,6 @@ interface EmiProps {
   taxRate: number;
   iTaxBenefit: number;
   goalType: GoalType;
-  videoUrl: string;
-  videoHandler: Function;
   repaymentSYHandler: Function;
   loanMonthsHandler: Function;
   loanPerHandler: Function;
@@ -151,9 +149,7 @@ export default function EmiCost(props: EmiProps) {
         <Section
           title="Loan Details"
           insideForm
-          videoUrl={props.videoUrl}
           videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
-          urlHandler={props.videoHandler}
           toggle={
             !isTaxCreditEligible(props.goalType) && props.taxRate ? (
               <HToggle
