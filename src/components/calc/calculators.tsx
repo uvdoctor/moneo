@@ -57,7 +57,6 @@ export default function Calculators({
             insideMenu={insideMenu}
             insideForm={insideForm}
             color={LIGHT_COLORS.RED}
-            link={ROUTES.DASHBOARD}
             imgSrc="images/step1.png"
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
