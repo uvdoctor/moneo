@@ -10,15 +10,13 @@ interface ExpandCollapseProps {
   svg?: any;
   insideForm?: boolean;
   children: ReactNode;
-  defaultSVGColor?: string;
+  coverPage?: boolean;
   animate?: boolean;
   parentStyleDiffHandler?: Function;
 }
 
 export default function ExpandCollapse(props: ExpandCollapseProps) {
   const [show, setShow] = useState<boolean>(false);
-  const defaultSVGColor = () =>
-    props.defaultSVGColor ? props.defaultSVGColor : COLORS.DEFAULT;
   const toggle = () => {
     setShow(!show);
   };
@@ -50,19 +48,14 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
           {props.svg}
           <div className="flex items-end">
             <label
-              className="cursor-pointer hover:text-green-primary"
-              style={{
-                color: props.defaultSVGColor
-                  ? props.defaultSVGColor
-                  : COLORS.DEFAULT,
-              }}
+              className={`${props.coverPage && 'text-silver'} cursor-pointer hover:text-green-primary`}
             >
               {props.title}
             </label>
             {show ? (
               <SVGCollapse />
             ) : (
-              <SVGExpand color={defaultSVGColor()} animate={props.animate} />
+              <SVGExpand color={props.coverPage ? COLORS.SILVER : COLORS.DEFAULT} animate={props.animate} />
             )}
           </div>
         </div>

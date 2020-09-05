@@ -1,16 +1,15 @@
 import Link from "next/link";
 import React from "react";
-import { COLORS, ROUTES } from "../CONSTANTS";
+import { ROUTES } from "../CONSTANTS";
 import Calculators from "./calc/calculators";
 import ExpandCollapse from "./form/expandcollapse";
 
 interface MenuProps {
-  fixed?: boolean
   parentStyleDiff?: boolean
   parentStyleDiffHandler?: Function
 }
 
-export default function Menu({ fixed, parentStyleDiff, parentStyleDiffHandler }: MenuProps) {
+export default function Menu({ parentStyleDiff, parentStyleDiffHandler }: MenuProps) {
   return (
     <div className="w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 flex justify-between">
       <div className="w-full flex justify-around">
@@ -21,7 +20,7 @@ export default function Menu({ fixed, parentStyleDiff, parentStyleDiffHandler }:
             <a>
               <ExpandCollapse
                 title="Calculate"
-                defaultSVGColor={fixed || !parentStyleDiff ? COLORS.DEFAULT : COLORS.SILVER}
+                coverPage={parentStyleDiff}
                 animate
                 parentStyleDiffHandler={parentStyleDiffHandler}
               >
@@ -40,11 +39,11 @@ export default function Menu({ fixed, parentStyleDiff, parentStyleDiffHandler }:
         <div className="flex flex-col relative">
           <ExpandCollapse
             title="About"
-            defaultSVGColor={fixed || !parentStyleDiff ? COLORS.DEFAULT : COLORS.SILVER}
+            coverPage={parentStyleDiff}
           >
             <ul
               className={`mt-32 z-50 ${
-                fixed ? "bg-white" : "pt-4"
+                !parentStyleDiff ? "bg-white" : "pt-4"
               } px-2 md:px-4 absolute shadow-xl`}
             >
               <li className="py-1 hover:text-green-primary">Features</li>
