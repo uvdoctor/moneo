@@ -62,7 +62,7 @@ export default function Calculators({
           />
         </a>
       </Link>
-      <Link href={ROUTES.CALCULATE}>
+      <Link href={ROUTES.DASHBOARD}>
         <a>
           <Section
             titleSVG={<SVGScale disabled={false} selected />}
@@ -114,7 +114,7 @@ export default function Calculators({
           />
         </a>
       </Link>
-      <Link href={ROUTES.CALCULATE}>
+      <Link href={ROUTES.DASHBOARD}>
         <a>
           <Section
             title="Education Loan"

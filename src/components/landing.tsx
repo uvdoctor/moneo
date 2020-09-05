@@ -4,24 +4,26 @@ import { AwesomeButton } from "react-awesome-button";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import Logo from "./logo";
 import Menu from "./menu";
-import { getLandingPageHeight } from "./utils";
+import { getLandingPageHeight, isMobileDevice } from "./utils";
 import LandingButton from "./landingbutton";
 
 const Landing = () => {
   const fsb = useFullScreenBrowser();
   const [coverHeight, setCoverHeight] = useState<number>(800);
   const [coverPage, setCoverPage] = useState<boolean>(true);
+  const [coverWidth, setCoverWidth] = useState<number>(fsb.info.innerWidth)
 
   useEffect(() => {
     setCoverHeight(getLandingPageHeight(fsb));
+    setCoverWidth(fsb.info.coverWidth)
   }, [fsb.info.innerWidth]);
 
   return (
     <div
-      className="flex flex-col bg-cover w-full h-full"
+      className="flex flex-col bg-cover w-screen h-screen"
       style={{
-        minHeight: coverHeight+"px",
-        minWidth: fsb.info.innerWidth+"px",
+        minHeight: coverHeight + "px",
+        minWidth: coverWidth + "px",
         backgroundImage: `url('images/relaxedwoman.png')`,
       }}
     >
@@ -32,10 +34,17 @@ const Landing = () => {
       justify-between flex-wrap py-1 cursor font-bold`}
       >
         <Logo />
-        <Menu parentStyleDiff={coverPage} parentStyleDiffHandler={setCoverPage} />
+        <Menu
+          parentStyleDiff={coverPage}
+          parentStyleDiffHandler={setCoverPage}
+        />
       </nav>
       <div
-        className={`w-full flex justify-between md:justify-center items-start md:items-center 
+        className={`w-full flex ${
+          isMobileDevice(fsb)
+            ? "flex-col items-start"
+            : "justify-center items-center"
+        } 
         text-silver font-bold xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl 
       md:mt-4 lg:mt-8 xl:mt-12`}
       >
@@ -53,8 +62,8 @@ const Landing = () => {
             </div>
           )}
         </div>
-        {fsb.info.innerWidth < 768 && (
-          <div className="md:pr-4 lg:pr-8">
+        {isMobileDevice(fsb) && (
+          <div className="w-full flex justify-end md:pr-4 mt-10">
             <LandingButton text="PLAN" />
           </div>
         )}
