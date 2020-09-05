@@ -16,7 +16,8 @@ interface SectionProps {
   manualMode?: number;
   hasResult?: boolean;
   insideForm?: boolean;
-  insideMenu?: boolean;
+  insideMenu?: boolean
+  color?: string;
   videoSrc?: string;
 }
 
@@ -27,6 +28,7 @@ export default function Section(props: SectionProps) {
     <div
       className="m-1 w-full max-w-sm md:max-w-md max-h-md rounded-lg overflow-x-hidden overflow-y-auto 
                         shadow-lg md:shadow-xl"
+      style={{ backgroundColor: props.color ? props.color : 'transparent' }}
     >
       {videoUrl && <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />}
       <div
@@ -67,9 +69,16 @@ export default function Section(props: SectionProps) {
         props.manualInput
       ) : (
         <Fragment>
-          <div className="p-2 flex flex-col md:flex-row md:flex-wrap justify-around items-center md:items-start w-full">
+          <div
+            className={`p-2 flex flex-col md:flex-row md:flex-wrap justify-around items-center md:items-start w-full
+          ${props.insideMenu && "text-base font-normal"}`}
+          >
             {props.left && (
-              <div className={`${props.hasResult && "w-full"}`}>
+              <div
+                className={`${
+                  (props.hasResult || props.insideMenu) && "w-full"
+                }`}
+              >
                 {props.left}
               </div>
             )}

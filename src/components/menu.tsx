@@ -24,7 +24,7 @@ export default function Menu({ parentStyleDiff, parentStyleDiffHandler }: MenuPr
                 animate
                 parentStyleDiffHandler={parentStyleDiffHandler}
               >
-                <div className="w-full text-default z-50 left-0 absolute mt-40 bg-green-100">
+                <div className="w-full text-default z-50 left-0 absolute mt-40 bg-silver">
                   <Calculators insideMenu />
                 </div>
               </ExpandCollapse>

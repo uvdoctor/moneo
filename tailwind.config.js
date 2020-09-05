@@ -13,6 +13,9 @@ module.exports = {
         silver: "#F1EDED",
         default: "#4a5568"
       },
+      backgroundColor: {
+        silver: "#F1EDED"
+      }
     },
   },
   variants: {},
