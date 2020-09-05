@@ -26,7 +26,7 @@ const Landing = () => {
     >
       <nav
         className={`${
-          !coverPage ? "bg-white text-default" : "bg-transparent text-silver"
+          !coverPage ? "bg-green-100 text-default" : "bg-transparent text-silver"
         } md:text-lg lg:text-xl flex w-full items-end 
       justify-between flex-wrap py-1 cursor font-bold`}
       >
