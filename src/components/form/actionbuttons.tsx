@@ -40,6 +40,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
         size="medium"
         ripple
         onPress={() => {
+          console.log("Button is pressed...")
           setActionInProgress(true);
           props.submitHandler();
         }}

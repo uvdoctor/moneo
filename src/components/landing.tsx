@@ -11,11 +11,9 @@ const Landing = () => {
   const fsb = useFullScreenBrowser();
   const [coverHeight, setCoverHeight] = useState<number>(800);
   const [coverPage, setCoverPage] = useState<boolean>(true);
-  const [coverWidth, setCoverWidth] = useState<number>(fsb.info.innerWidth)
 
   useEffect(() => {
     setCoverHeight(getLandingPageHeight(fsb));
-    setCoverWidth(fsb.info.coverWidth)
   }, [fsb.info.innerWidth]);
 
   return (
@@ -23,7 +21,6 @@ const Landing = () => {
       className="flex flex-col bg-cover w-screen h-screen"
       style={{
         minHeight: coverHeight + "px",
-        minWidth: coverWidth + "px",
         backgroundImage: `url('images/relaxedwoman.png')`,
       }}
     >
