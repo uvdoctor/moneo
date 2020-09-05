@@ -18,7 +18,7 @@ const Landing = () => {
 
   return (
     <div
-      className="flex flex-col bg-cover w-screen h-screen"
+      className="flex flex-col bg-cover w-screen"
       style={{
         minHeight: coverHeight + "px",
         backgroundImage: `url('images/relaxedwoman.png')`,
@@ -37,11 +37,8 @@ const Landing = () => {
         />
       </nav>
       <div
-        className={`w-full flex ${
-          isMobileDevice(fsb)
-            ? "flex-col items-start"
-            : "justify-center items-center"
-        } 
+        className={`w-full flex flex-col justify-start items-start
+            md:justify-center md:items-center md:flex-row"
         text-silver font-bold xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl 
       md:mt-4 lg:mt-8 xl:mt-12`}
       >
