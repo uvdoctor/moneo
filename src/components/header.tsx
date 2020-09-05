@@ -10,7 +10,7 @@ const Header = () => {
       className="fixed top-0 bg-white md:text-lg lg:text-xl flex w-full items-end 
       justify-between flex-wrap py-1 cursor font-bold z-10">
       <Logo />
-      <Menu coverPage />
+      <Menu fixed />
     </nav>
   );
 };

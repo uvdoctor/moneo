@@ -11,20 +11,16 @@ interface ExpandCollapseProps {
   insideForm?: boolean;
   children: ReactNode;
   defaultSVGColor?: string;
-  hoverSVGColor?: string;
-  animate?: boolean
+  animate?: boolean;
+  parentStyleDiffHandler?: Function;
 }
 
 export default function ExpandCollapse(props: ExpandCollapseProps) {
   const [show, setShow] = useState<boolean>(false);
   const defaultSVGColor = () =>
-    props.defaultSVGColor ? props.defaultSVGColor : COLORS.BLUE;
-  const hoverSVGColor = () =>
-    props.hoverSVGColor ? props.hoverSVGColor : COLORS.DARK_BLUE;
-  const [textColor, setTextColor] = useState<string>(defaultSVGColor());
+    props.defaultSVGColor ? props.defaultSVGColor : COLORS.DEFAULT;
   const toggle = () => {
     setShow(!show);
-    setTextColor(show ? defaultSVGColor() : hoverSVGColor());
   };
 
   return (
@@ -41,24 +37,30 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
       )}
       <div
         className="cursor-pointer flex flex-col justify-center items-center w-full"
-        onClick={toggle}
         onMouseEnter={() => {
           setShow(true);
-          setTextColor(hoverSVGColor());
+          if (props.parentStyleDiffHandler) props.parentStyleDiffHandler(false);
         }}
         onMouseLeave={() => {
           setShow(false);
-          setTextColor(defaultSVGColor());
+          if (props.parentStyleDiffHandler) props.parentStyleDiffHandler(true);
         }}
       >
-        <div className="flex items-center">
+        <div className="flex items-center" onClick={toggle}>
           {props.svg}
           <div className="flex items-end">
-            <label className="cursor-pointer" style={{ color: textColor }}>
+            <label
+              className="cursor-pointer hover:text-green-primary"
+              style={{
+                color: props.defaultSVGColor
+                  ? props.defaultSVGColor
+                  : COLORS.DEFAULT,
+              }}
+            >
               {props.title}
             </label>
             {show ? (
-              <SVGCollapse color={hoverSVGColor()} />
+              <SVGCollapse />
             ) : (
               <SVGExpand color={defaultSVGColor()} animate={props.animate} />
             )}

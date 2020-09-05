@@ -10,6 +10,7 @@ import LandingButton from "./landingbutton";
 const Landing = () => {
   const fsb = useFullScreenBrowser();
   const [coverHeight, setCoverHeight] = useState<number>(800);
+  const [coverPage, setCoverPage] = useState<boolean>(true);
 
   useEffect(() => {
     setCoverHeight(getLandingPageHeight(fsb));
@@ -24,11 +25,13 @@ const Landing = () => {
       }}
     >
       <nav
-        className="md:text-lg lg:text-xl flex w-full items-end 
-      justify-between flex-wrap py-1 cursor font-bold text-silver"
+        className={`${
+          !coverPage ? "bg-white text-default" : "bg-transparent text-silver"
+        } md:text-lg lg:text-xl flex w-full items-end 
+      justify-between flex-wrap py-1 cursor font-bold`}
       >
         <Logo />
-        <Menu />
+        <Menu parentStyleDiff={coverPage} parentStyleDiffHandler={setCoverPage} />
       </nav>
       <div
         className={`w-full flex justify-between md:justify-center items-start md:items-center 

@@ -21,16 +21,14 @@ interface SectionProps {
 }
 
 export default function Section(props: SectionProps) {
-  const [videoUrl, setVideoUrl] = useState<string>("")
-  
+  const [videoUrl, setVideoUrl] = useState<string>("");
+
   return (
     <div
       className="m-1 w-full max-w-sm md:max-w-md max-h-md rounded-lg overflow-x-hidden overflow-y-auto 
                         shadow-lg md:shadow-xl"
     >
-      {videoUrl && (
-        <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
-      )}
+      {videoUrl && <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />}
       <div
         className={`w-full ${
           props.insideForm && "bg-gray-700 text-white flex justify-between"
@@ -50,7 +48,7 @@ export default function Section(props: SectionProps) {
             {props.title}
           </label>
         </div>
-        {props.videoSrc && (
+        {!props.insideMenu && props.videoSrc && (
           <div
             className="p-1"
             onClick={() =>
