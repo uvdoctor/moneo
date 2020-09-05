@@ -332,7 +332,7 @@ export default function Goal({
   }, [wipTargets, manualMode]);
 
   useEffect(() => {
-    if (cashFlows || (!allInputDone && (currentOrder < 7 || currentOrder > 19)))
+    if (cashFlows || (!allInputDone && currentOrder < 7))
       return;
     if (!cashFlows) calculateYearlyCFs();
   }, [
@@ -384,9 +384,14 @@ export default function Goal({
       tabOptions[2].active = false;
       if (currentOrder >= tabOptions[2].order) {
         if (tabOptions[3]) {
-          if (currentOrder < tabOptions[3].order)
+          if (currentOrder < tabOptions[3].order) {
+            setShowTab(tabOptions[3].label)
             setCurrentOrder(tabOptions[3].order);
-        } else setCurrentOrder(tabOptions[1].order);
+          }
+        } else {
+          setCurrentOrder(tabOptions[1].order);
+          setShowTab(tabOptions[1].label)
+        }
       }
     } else tabOptions[2].active = true;
     setTabOptions([...tabOptions]);

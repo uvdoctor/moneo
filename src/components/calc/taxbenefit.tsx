@@ -85,7 +85,7 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                     label="Total Tax Benefit"
                     result={props.pTaxBenefit}
                     currency={props.currency}
-                    footer={`Over ${props.duration} Years`}
+                    footer={`For this Goal`}
                   />
                 }
                 rangeFactor={props.rangeFactor}

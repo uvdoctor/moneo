@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { COLORS, ROUTES } from "../CONSTANTS";
+import Calculators from "./calc/calculators";
 import ExpandCollapse from "./form/expandcollapse";
 
 interface MenuProps {
@@ -17,9 +18,13 @@ export default function Menu({ fixed }: MenuProps) {
               <ExpandCollapse
                 title="Calculate"
                 defaultSVGColor={fixed ? COLORS.DEFAULT : COLORS.SILVER}
-                hoverSVGColor={COLORS.GREEN} animate>
-
-                </ExpandCollapse>
+                hoverSVGColor={COLORS.GREEN}
+                animate
+              >
+                <div className="w-full text-default z-50 left-0 absolute mt-40 bg-white">
+                  <Calculators />
+                </div>
+              </ExpandCollapse>
             </a>
           </Link>
         </div>

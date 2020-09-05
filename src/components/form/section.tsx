@@ -4,6 +4,7 @@ import SVGPlay from "../svgplay";
 import SVGStop from "../svgstop";
 interface SectionProps {
   title: any;
+  titleSVG?: any;
   left: any;
   right?: any;
   bottomLeft?: any;
@@ -15,9 +16,10 @@ interface SectionProps {
   manualMode?: number;
   hasResult?: boolean;
   insideForm?: boolean;
-  videoSrc?: string
-  videoUrl?: string
-  urlHandler?: Function
+  insideMenu?: boolean;
+  videoSrc?: string;
+  videoUrl?: string;
+  urlHandler?: Function;
 }
 
 export default function Section(props: SectionProps) {
@@ -27,13 +29,27 @@ export default function Section(props: SectionProps) {
                         shadow-lg md:shadow-xl"
     >
       {props.videoUrl && props.urlHandler && (
-          <VideoPlayer
-            url={props.videoUrl}
-            urlHandler={props.urlHandler}
-          />
-        )}
-      <div className={`w-full ${props.insideForm && "bg-gray-700 text-white flex justify-between"}`}>
-        <label className="p-1">{props.title}</label>
+        <VideoPlayer url={props.videoUrl} urlHandler={props.urlHandler} />
+      )}
+      <div
+        className={`w-full ${
+          props.insideForm && "bg-gray-700 text-white flex justify-between"
+        }`}
+      >
+        <div
+          className={`flex items-center p-1 ${
+            props.insideMenu && "cursor-pointer"
+          }`}
+        >
+          {props.titleSVG && props.titleSVG}
+          <label
+            className={`ml-1 hover:text-green-primary ${
+              props.insideMenu && "cursor-pointer"
+            }`}
+          >
+            {props.title}
+          </label>
+        </div>
         {props.urlHandler && props.videoSrc && (
           <div
             className="p-1"
@@ -54,14 +70,22 @@ export default function Section(props: SectionProps) {
       ) : (
         <Fragment>
           <div className="p-2 flex flex-col md:flex-row md:flex-wrap justify-around items-center md:items-start w-full">
-            {props.left && <div className={`${props.hasResult && "w-full"}`}>{props.left}</div>}
+            {props.left && (
+              <div className={`${props.hasResult && "w-full"}`}>
+                {props.left}
+              </div>
+            )}
             {props.right && <div className="mt-2 md:mt-0">{props.right}</div>}
           </div>
           {props.bottom && (
             <div className="flex flex-wrap mt-2 items-center justify-center">
-              {props.bottomLeft && <label className="mr-4">{props.bottomLeft}</label>}
+              {props.bottomLeft && (
+                <label className="mr-4">{props.bottomLeft}</label>
+              )}
               <div>{props.bottom}</div>
-              {props.bottomRight && <label className="ml-4">{props.bottomRight}</label>}
+              {props.bottomRight && (
+                <label className="ml-4">{props.bottomRight}</label>
+              )}
             </div>
           )}
           {props.footer && (

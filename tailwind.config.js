@@ -11,6 +11,7 @@ module.exports = {
           secondary: "#AAE441",
         },
         silver: "#F1EDED",
+        default: "#4a5568"
       },
     },
   },
