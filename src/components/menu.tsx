@@ -22,7 +22,7 @@ export default function Menu({ fixed }: MenuProps) {
                 animate
               >
                 <div className="w-full text-default z-50 left-0 absolute mt-40 bg-white">
-                  <Calculators />
+                  <Calculators insideMenu />
                 </div>
               </ExpandCollapse>
             </a>

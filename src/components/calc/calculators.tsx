@@ -6,7 +6,10 @@ import Link from "next/link";
 import { ROUTES } from "../../CONSTANTS";
 import SVGBalance from "./svgbalance";
 
-export default function Calculators() {
+interface CalculatorsProps {
+  insideMenu?: boolean
+}
+export default function Calculators({insideMenu}: CalculatorsProps) {
   return (
     <div className="w-full flex flex-wrap items-start justify-around">
       <Link href={ROUTES.CALCULATE}>
@@ -23,7 +26,7 @@ export default function Calculators() {
               </ul>
             }
             insideForm
-            insideMenu
+            insideMenu={insideMenu} 
           />
         </a>
       </Link>
@@ -36,6 +39,7 @@ export default function Calculators() {
           </div>
         }
         insideForm
+        insideMenu={insideMenu}
       />
     </div>
   );
