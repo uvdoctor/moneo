@@ -8,7 +8,9 @@ export default function Calculate() {
     <div className="text-lg">
       <ToastContainer />
       <Header />
-      <Calculators />
+      <div className="w-full mt-16">
+        <Calculators />
+      </div>
     </div>
   );
 }

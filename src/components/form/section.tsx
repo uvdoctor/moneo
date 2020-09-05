@@ -43,8 +43,8 @@ export default function Section(props: SectionProps) {
         >
           {props.titleSVG && props.titleSVG}
           <label
-            className={`ml-1 hover:text-green-primary ${
-              props.insideMenu && "cursor-pointer"
+            className={`ml-1 ${
+              props.insideMenu && "hover:text-green-primary cursor-pointer"
             }`}
           >
             {props.title}
