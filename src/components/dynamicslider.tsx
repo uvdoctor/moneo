@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import LeftArrow from "./leftArrow";
 import RightArrow from "./rightArrow";
-
+import {useFullScreenBrowser} from "react-browser-hooks"
 interface DynamicSliderProps {
   totalItems: Array<any>;
   currentItem: string;
@@ -15,6 +15,7 @@ export default function DynamicSlider({
   children,
   setSlide,
 }: DynamicSliderProps) {
+  const fsb = useFullScreenBrowser()
   const getOrder = (label: string) => {
     for (let i in totalItems) {
       if (totalItems[i].label === label) return totalItems[i].order;
@@ -42,8 +43,8 @@ export default function DynamicSlider({
 
   return (
     <div
-      className="relative overflow-hidden w-full"
-      style={{ minHeight: "500px" }}
+      className="relative overflow-hidden w-full h-full"
+      style={{ minHeight: fsb.info.innerHeight+"px" }}
     >
       {activeSlides.length > 1 && currentItemOrder !== 1 ? (
         <LeftArrow

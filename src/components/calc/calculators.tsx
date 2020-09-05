@@ -12,10 +12,13 @@ import SVGLoan from "../svgloan";
 
 interface CalculatorsProps {
   insideMenu?: boolean;
-  insideForm?: boolean
+  insideForm?: boolean;
 }
 
-export default function Calculators({ insideMenu, insideForm }: CalculatorsProps) {
+export default function Calculators({
+  insideMenu,
+  insideForm,
+}: CalculatorsProps) {
   const LIGHT_COLORS = {
     RED: "#EEA894",
     ORANGE: "#fbd38d",
@@ -28,31 +31,34 @@ export default function Calculators({ insideMenu, insideForm }: CalculatorsProps
     BROWN: "#D3B193",
     //GRAY: "#EEEBEA",
     //GREEN: "DBEAE9"
-    GREEN: "#9ae6b4"
+    GREEN: "#9ae6b4",
   };
 
   return (
     <div className="w-full flex flex-wrap items-start justify-around pb-1 text-white">
-      <Link href={ROUTES.CALCULATE}>
+      <Link href={ROUTES.DASHBOARD}>
         <a>
           <Section
             title="Financial Freedom"
             titleSVG={<SVGFreedom />}
             left={
-              <ul>
-                <li className="flex items-center mb-1">
-                  <SVGPiggy disabled={false} selected />
+              <div className={`flex ${insideMenu ? 'flex-col' : 'flex-wrap justify-between'}`}>
+                <div className="flex items-center mb-1">
+                  <SVGPiggy selected />
                   <span className="ml-1">How Much Money?</span>
-                </li>
-                <li className="flex items-center">
+                </div>
+                <div className="flex items-center">
                   <SVGHourGlass />
                   <span className="ml-1">By When?</span>
-                </li>
-              </ul>
+                </div>
+              </div>
             }
+            hasResult
             insideMenu={insideMenu}
             insideForm={insideForm}
             color={LIGHT_COLORS.RED}
+            link={ROUTES.DASHBOARD}
+            imgSrc="images/step1.png"
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
         </a>
@@ -74,14 +80,16 @@ export default function Calculators({ insideMenu, insideForm }: CalculatorsProps
                 </li>
               </ul>
             }
+            hasResult
             insideMenu={insideMenu}
             insideForm={insideForm}
             color={LIGHT_COLORS.BROWN}
+            imgSrc="images/step1.png"
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
         </a>
       </Link>
-      <Link href={ROUTES.CALCULATE}>
+      <Link href={ROUTES.DASHBOARD}>
         <a>
           <Section
             title="Mortgage Loan"
@@ -98,9 +106,11 @@ export default function Calculators({ insideMenu, insideForm }: CalculatorsProps
                 </li>
               </ul>
             }
+            hasResult
             insideMenu={insideMenu}
             insideForm={insideForm}
             color={LIGHT_COLORS.ORANGE}
+            imgSrc="images/step2.png"
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
         </a>
@@ -122,9 +132,11 @@ export default function Calculators({ insideMenu, insideForm }: CalculatorsProps
                 </li>
               </ul>
             }
+            hasResult
             insideMenu={insideMenu}
             insideForm={insideForm}
             color={LIGHT_COLORS.GREEN}
+            imgSrc="images/step3.png"
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
         </a>

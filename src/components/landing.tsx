@@ -18,9 +18,10 @@ const Landing = () => {
 
   return (
     <div
-      className="flex flex-col bg-contain bg-center bg-no-repeat w-screen"
+      className="flex flex-col bg-cover w-full h-full"
       style={{
-        height: `${coverHeight}px`,
+        minHeight: coverHeight+"px",
+        minWidth: fsb.info.innerWidth+"px",
         backgroundImage: `url('images/relaxedwoman.png')`,
       }}
     >

@@ -16,9 +16,10 @@ interface SectionProps {
   manualMode?: number;
   hasResult?: boolean;
   insideForm?: boolean;
-  insideMenu?: boolean
+  insideMenu?: boolean;
   color?: string;
   videoSrc?: string;
+  imgSrc?: string;
 }
 
 export default function Section(props: SectionProps) {
@@ -26,14 +27,17 @@ export default function Section(props: SectionProps) {
 
   return (
     <div
-      className={`m-1 w-full max-w-sm md:max-w-md max-h-md rounded-lg overflow-x-hidden overflow-y-auto 
+      className={`m-1 w-full ${
+        props.insideMenu ? "max-w-xs" : "max-w-sm md:max-w-md xl:max-w-lg"
+      } rounded-lg overflow-x-hidden overflow-y-auto 
                         shadow-lg md:shadow-xl`}
-      style={{ backgroundColor: props.color ? props.color : 'transparent' }}
+      style={{ backgroundColor: props.color ? props.color : "transparent" }}
     >
       {videoUrl && <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />}
       <div
         className={`w-full ${
-          props.insideForm && "bg-gray-700 text-white"} flex justify-between"
+          props.insideForm && "bg-gray-700 text-white"
+        } flex justify-between"
         }`}
       >
         <div
@@ -52,7 +56,7 @@ export default function Section(props: SectionProps) {
         </div>
         {!props.insideMenu && props.videoSrc && (
           <div
-            className="p-1"
+            className="p-1 flex justify-end"
             onClick={() =>
               //@ts-ignore
               setVideoUrl(!videoUrl ? props.videoSrc : "")
@@ -62,6 +66,11 @@ export default function Section(props: SectionProps) {
           </div>
         )}
       </div>
+      {!props.insideMenu && props.imgSrc && (
+        <div className="w-full">
+          <img alt="Result" src={props.imgSrc} />
+        </div>
+      )}
       {props.toggle && (
         <div className="flex justify-end mt-2 mr-4">{props.toggle}</div>
       )}

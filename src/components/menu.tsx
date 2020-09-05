@@ -24,7 +24,7 @@ export default function Menu({ parentStyleDiff, parentStyleDiffHandler }: MenuPr
                 animate
                 parentStyleDiffHandler={parentStyleDiffHandler}
               >
-                <div className="w-full text-default z-50 left-0 absolute mt-40 bg-silver">
+                <div className="w-full text-default absolute left-0 z-50 mt-40 bg-silver">
                   <Calculators insideMenu />
                 </div>
               </ExpandCollapse>
@@ -43,7 +43,7 @@ export default function Menu({ parentStyleDiff, parentStyleDiffHandler }: MenuPr
           >
             <ul
               className={`mt-32 z-50 ${
-                !parentStyleDiff ? "bg-green-100" : "pt-4"
+                !parentStyleDiff ? "bg-silver" : "pt-4"
               } px-2 md:px-4 absolute shadow-xl`}
             >
               <li className="py-1 hover:text-green-primary">Features</li>
