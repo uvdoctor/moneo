@@ -54,7 +54,7 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
                 </li>
               </ul>
             }
-            insideForm
+            //insideForm
             insideMenu={insideMenu}
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
