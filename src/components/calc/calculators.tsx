@@ -33,7 +33,7 @@ export default function Calculators({
     GREEN: "#9ae6b4",
   };
 
-  const calcItems1 = [
+  const calcItems = [
     {
       title: "Financial Freedom",
       svg: <SVGFreedom />,
@@ -58,9 +58,6 @@ export default function Calculators({
       img: "images/step2.png",
       video: `https://vimeo.com/455216214`,
     },
-  ];
-
-  const calcItems2 = [
     {
       title: "Mortgage Loan",
       svg: <SVGLoan selected />,
@@ -85,86 +82,45 @@ export default function Calculators({
       img: "images/step3.png",
       video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
     },
-  ]
+  ];
 
   return (
     <div className="w-full flex flex-wrap items-start justify-around pb-1 text-white">
-      <div className="flex flex-col text-default">
-        <div className="w-full text-center h-24">
-        <p>Calculators</p>
-          <p>Estimates Only. No Advice.</p>
-        </div>
-        {calcItems2.map((item) => (
-          <Section
-            title={item.title}
-            titleSVG={item.svg}
-            left={
-              <div
-                className={`flex ${
-                  insideMenu
-                    ? "flex-col"
-                    : "flex-wrap items-center justify-around"
-                }`}
-              >
-                {Object.keys(
-                  //@ts-ignore
-                  item.questions
-                ).map((key) => (
-                  <div className="flex items-center mb-1">
-                    {
-                      //@ts-ignore
-                      item.questions[key]
-                    }
-                    <span className="ml-1">{key}</span>
-                  </div>
-                ))}
-              </div>
-            }
-            hasResult
-            insideForm={insideForm}
-            insideMenu={insideMenu}
-            color={item.color}
-            imgSrc={item.img}
-            videoSrc={item.video}
-          />
-        ))}
-      </div>
-      <div className="flex flex-col">
-        {calcItems1.map((item) => (
-          <Section
-            title={item.title}
-            titleSVG={item.svg}
-            left={
-              <div
-                className={`flex ${
-                  insideMenu
-                    ? "flex-col"
-                    : "flex-wrap items-center justify-around"
-                }`}
-              >
-                {Object.keys(
-                  //@ts-ignore
-                  item.questions
-                ).map((key) => (
-                  <div className="flex items-center mb-1">
-                    {
-                      //@ts-ignore
-                      item.questions[key]
-                    }
-                    <span className="ml-1">{key}</span>
-                  </div>
-                ))}
-              </div>
-            }
-            hasResult
-            insideForm={insideForm}
-            insideMenu={insideMenu}
-            color={item.color}
-            imgSrc={item.img}
-            videoSrc={item.video}
-          />
-        ))}
-      </div>
+      {calcItems.map((item, i) => (
+        <Section
+          key={"citem" + i}
+          title={item.title}
+          titleSVG={item.svg}
+          left={
+            <div
+              className={`flex ${
+                insideMenu
+                  ? "flex-col"
+                  : "flex-wrap items-center justify-around"
+              }`}
+            >
+              {Object.keys(
+                //@ts-ignore
+                item.questions
+              ).map((key) => (
+                <div className="flex items-center mb-1">
+                  {
+                    //@ts-ignore
+                    item.questions[key]
+                  }
+                  <span className="ml-1">{key}</span>
+                </div>
+              ))}
+            </div>
+          }
+          hasResult
+          insideForm={insideForm}
+          insideMenu={insideMenu}
+          color={item.color}
+          imgSrc={item.img}
+          videoSrc={item.video}
+        />
+      ))}
     </div>
   );
 }
