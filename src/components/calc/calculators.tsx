@@ -66,7 +66,7 @@ export default function Calculators({
       svg: <SVGLoan selected />,
       questions: {
         "Pay by Self or Loan?": <SVGBalance />,
-        "How much Total Interest?": <SVGMoneyBag />,
+        "How much Total Interest?": <SVGMoneyBag selected />,
       },
       color: LIGHT_COLORS.ORANGE,
       link: ROUTES.DASHBOARD,
@@ -78,7 +78,7 @@ export default function Calculators({
       svg: <SVGLoan selected />,
       questions: {
         "Pay by Self or Loan?": <SVGBalance />,
-        "How much Total Interest?": <SVGMoneyBag />,
+        "How much Total Interest?": <SVGMoneyBag selected />,
       },
       color: LIGHT_COLORS.PINK,
       link: ROUTES.DASHBOARD,
