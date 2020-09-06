@@ -17,7 +17,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
   const [actionInProgress, setActionInProgress] = useState<boolean>(false);
 
   useEffect(() => {
-    setActionInProgress(props.submitDisabled);
+    if(!props.submitDisabled) setActionInProgress(false);
   }, [props.submitDisabled]);
 
   return (

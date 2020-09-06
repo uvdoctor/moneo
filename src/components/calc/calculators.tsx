@@ -2,7 +2,6 @@ import React from "react";
 import Section from "../form/section";
 import SVGHourGlass from "../svghourglass";
 import SVGScale from "../svgscale";
-import Link from "next/link";
 import { ROUTES } from "../../CONSTANTS";
 import SVGBalance from "./svgbalance";
 import SVGFreedom from "../svgfreedom";
@@ -36,8 +35,6 @@ export default function Calculators({
 
   return (
     <div className="w-full flex flex-wrap items-start justify-around pb-1 text-white">
-      <Link href={ROUTES.DASHBOARD}>
-        <a>
           <Section
             title="Financial Freedom"
             titleSVG={<SVGFreedom />}
@@ -57,13 +54,10 @@ export default function Calculators({
             insideMenu={insideMenu}
             insideForm={insideForm}
             color={LIGHT_COLORS.RED}
+            link={ROUTES.DASHBOARD}
             imgSrc="images/step1.png"
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
-        </a>
-      </Link>
-      <Link href={ROUTES.DASHBOARD}>
-        <a>
           <Section
             titleSVG={<SVGScale disabled={false} selected />}
             title="Buy v/s Rent"
@@ -83,13 +77,10 @@ export default function Calculators({
             insideMenu={insideMenu}
             insideForm={insideForm}
             color={LIGHT_COLORS.BROWN}
+            link={ROUTES.DASHBOARD}
             imgSrc="images/step1.png"
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
-        </a>
-      </Link>
-      <Link href={ROUTES.DASHBOARD}>
-        <a>
           <Section
             title="Mortgage Loan"
             titleSVG={<SVGLoan selected />}
@@ -112,10 +103,6 @@ export default function Calculators({
             imgSrc="images/step2.png"
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
-        </a>
-      </Link>
-      <Link href={ROUTES.DASHBOARD}>
-        <a>
           <Section
             title="Education Loan"
             titleSVG={<SVGLoan selected />}
@@ -135,11 +122,10 @@ export default function Calculators({
             insideMenu={insideMenu}
             insideForm={insideForm}
             color={LIGHT_COLORS.GREEN}
+            link={ROUTES.PLAN}
             imgSrc="images/step3.png"
             videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
           />
-        </a>
-      </Link>
     </div>
   );
 }

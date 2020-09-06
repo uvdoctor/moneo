@@ -2,6 +2,7 @@ import React, { Fragment, useState } from "react";
 import VideoPlayer from "../videoplayer";
 import SVGPlay from "../svgplay";
 import SVGStop from "../svgstop";
+import Link from "next/link";
 interface SectionProps {
   title: any;
   titleSVG?: any;
@@ -20,6 +21,7 @@ interface SectionProps {
   color?: string;
   videoSrc?: string;
   imgSrc?: string;
+  link?: string;
 }
 
 export default function Section(props: SectionProps) {
@@ -33,42 +35,51 @@ export default function Section(props: SectionProps) {
                         shadow-lg md:shadow-xl`}
       style={{ backgroundColor: props.color ? props.color : "transparent" }}
     >
-      {videoUrl && <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />}
       <div
         className={`w-full ${
           props.insideForm && "bg-gray-700 text-white"
-        } flex justify-between"
+        } flex justify-between relative"
         }`}
       >
-        <div
-          className={`w-full flex items-center p-1 ${
-            !props.insideForm && "cursor-pointer"
-          }`}
-        >
-          {props.titleSVG && props.titleSVG}
-          <label
-            className={`ml-1 ${
-              !props.insideForm && "hover:text-green-primary cursor-pointer"
-            }`}
-          >
-            {props.title}
-          </label>
-        </div>
+        <Link href={props.link ? props.link : ""}>
+          <a>
+            <div
+              className={`w-full flex items-center p-1 ${
+                !props.insideForm && "cursor-pointer"
+              }`}
+            >
+              {props.titleSVG && props.titleSVG}
+              <label
+                className={`ml-1 ${
+                  !props.insideForm && "hover:text-green-primary cursor-pointer"
+                }`}
+              >
+                {props.title}
+              </label>
+            </div>
+          </a>
+        </Link>
         {!props.insideMenu && props.videoSrc && (
           <div
-            className="p-1 flex justify-end"
+            className="p-1 flex items-center justify-end"
             onClick={() =>
               //@ts-ignore
               setVideoUrl(!videoUrl ? props.videoSrc : "")
             }
           >
             {!videoUrl ? <SVGPlay /> : <SVGStop />}
+            <label className={`ml-1 cursor-pointer ${videoUrl && 'text-green-primary'} hover:text-green-primary`}>Video</label>
           </div>
         )}
       </div>
-      {!props.insideMenu && props.imgSrc && (
+      {videoUrl && <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />}
+      {!props.insideMenu && props.imgSrc && !videoUrl && (
         <div className="w-full">
-          <img alt="Result" src={props.imgSrc} />
+          <Link href={props.link ? props.link : ""}>
+            <a>
+              <img alt="Result" src={props.imgSrc} />
+            </a>
+          </Link>
         </div>
       )}
       {props.toggle && (

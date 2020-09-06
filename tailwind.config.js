@@ -15,7 +15,7 @@ module.exports = {
       },
       backgroundColor: {
         silver: "#F1EDED"
-      }
+      },
     },
   },
   variants: {},
