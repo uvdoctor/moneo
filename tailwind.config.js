@@ -14,7 +14,7 @@ module.exports = {
         default: "#4a5568"
       },
       backgroundColor: {
-        silver: "#F1EDED"
+        silver: "#F1EDED",
       },
     },
   },

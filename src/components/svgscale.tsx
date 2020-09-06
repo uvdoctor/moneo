@@ -2,7 +2,7 @@ import React from "react";
 import { COLORS } from "../CONSTANTS";
 
 interface SVGScaleProps {
-  disabled: boolean;
+  disabled?: boolean;
   selected: boolean;
 }
 

@@ -33,99 +33,93 @@ export default function Calculators({
     GREEN: "#9ae6b4",
   };
 
+  const calcItems = [
+    {
+      title: "Financial Freedom",
+      svg: <SVGFreedom />,
+      questions: {
+        "How much Money?": <SVGPiggy selected />,
+        "By When?": <SVGHourGlass />,
+      },
+      color: LIGHT_COLORS.RED,
+      link: ROUTES.DASHBOARD,
+      img: "images/step1.png",
+      video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
+    },
+    {
+      title: "Buy v/s Rent",
+      svg: <SVGScale selected />,
+      questions: {
+        'Which is Cheaper?': <SVGBalance />,
+        'For how many Years?': <SVGHourGlass />
+      },
+      color: LIGHT_COLORS.BROWN,
+      link: ROUTES.DASHBOARD,
+      img: "images/step2.png",
+      video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
+    },
+    {
+      title: "Mortgage Loan",
+      svg: <SVGLoan selected />,
+      questions: {
+        'Pay by Self or Loan?': <SVGBalance />,
+        'How much Total Interest?': <SVGMoneyBag />
+      },
+      color: LIGHT_COLORS.ORANGE,
+      link: ROUTES.DASHBOARD,
+      img: "images/step3.png",
+      video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
+    },
+    {
+      title: "Education Loan",
+      svg: <SVGLoan selected />,
+      questions: {
+        'Pay by Self or Loan?': <SVGBalance />,
+        'How much Total Interest?': <SVGMoneyBag />
+      },
+      color: LIGHT_COLORS.PINK,
+      link: ROUTES.DASHBOARD,
+      img: "images/step3.png",
+      video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
+    }
+  ];
+
   return (
     <div className="w-full flex flex-wrap items-start justify-around pb-1 text-white">
-          <Section
-            title="Financial Freedom"
-            titleSVG={<SVGFreedom />}
-            left={
-              <div className={`flex ${insideMenu ? 'flex-col' : 'flex-wrap justify-between'}`}>
+      {calcItems.map((item) => (
+        <Section
+          title={item.title}
+          titleSVG={item.svg}
+          left={
+            <div
+              className={`flex ${
+                insideMenu
+                  ? "flex-col"
+                  : "flex-wrap items-center justify-around"
+              }`}
+            >
+              {Object.keys(
+                //@ts-ignore
+                item.questions
+              ).map((key) => (
                 <div className="flex items-center mb-1">
-                  <SVGPiggy selected />
-                  <span className="ml-1">How Much Money?</span>
+                  {
+                    //@ts-ignore
+                    item.questions[key]
+                  }
+                  <span className="ml-1">{key}</span>
                 </div>
-                <div className="flex items-center">
-                  <SVGHourGlass />
-                  <span className="ml-1">By When?</span>
-                </div>
-              </div>
-            }
-            hasResult
-            insideMenu={insideMenu}
-            insideForm={insideForm}
-            color={LIGHT_COLORS.RED}
-            link={ROUTES.DASHBOARD}
-            imgSrc="images/step1.png"
-            videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
-          />
-          <Section
-            titleSVG={<SVGScale disabled={false} selected />}
-            title="Buy v/s Rent"
-            left={
-              <ul>
-                <li className="flex items-center mb-1">
-                  <SVGBalance />
-                  <span className="ml-1">Which is Cheaper?</span>
-                </li>
-                <li className="flex items-center">
-                  <SVGHourGlass />
-                  <span className="ml-1">For how many Years?</span>
-                </li>
-              </ul>
-            }
-            hasResult
-            insideMenu={insideMenu}
-            insideForm={insideForm}
-            color={LIGHT_COLORS.BROWN}
-            link={ROUTES.DASHBOARD}
-            imgSrc="images/step1.png"
-            videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
-          />
-          <Section
-            title="Mortgage Loan"
-            titleSVG={<SVGLoan selected />}
-            left={
-              <ul>
-                <li className="flex items-center mb-1">
-                  <SVGBalance />
-                  <span className="ml-1">Pay by Self or Loan?</span>
-                </li>
-                <li className="flex items-center">
-                  <SVGMoneyBag selected />
-                  <span className="ml-1">How much Total Interest?</span>
-                </li>
-              </ul>
-            }
-            hasResult
-            insideMenu={insideMenu}
-            insideForm={insideForm}
-            color={LIGHT_COLORS.ORANGE}
-            imgSrc="images/step2.png"
-            videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
-          />
-          <Section
-            title="Education Loan"
-            titleSVG={<SVGLoan selected />}
-            left={
-              <ul>
-                <li className="flex items-center mb-1">
-                  <SVGBalance />
-                  <span className="ml-1">Pay by Self or Loan?</span>
-                </li>
-                <li className="flex items-center">
-                  <SVGMoneyBag selected />
-                  <span className="ml-1">How much Total Interest?</span>
-                </li>
-              </ul>
-            }
-            hasResult
-            insideMenu={insideMenu}
-            insideForm={insideForm}
-            color={LIGHT_COLORS.GREEN}
-            link={ROUTES.PLAN}
-            imgSrc="images/step3.png"
-            videoSrc={`https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`}
-          />
+              ))}
+            </div>
+          }
+          hasResult
+          insideForm={insideForm}
+          insideMenu={insideMenu}
+          color={item.color}
+          imgSrc={item.img}
+          videoSrc={item.video}
+        />
+      ))}
     </div>
   );
 }

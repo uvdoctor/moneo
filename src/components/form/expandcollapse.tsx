@@ -12,7 +12,7 @@ interface ExpandCollapseProps {
   children: ReactNode;
   coverPage?: boolean;
   animate?: boolean;
-  parentStyleDiffHandler?: Function;
+  parentStyleDiffHandler?: Function | null;
 }
 
 export default function ExpandCollapse(props: ExpandCollapseProps) {

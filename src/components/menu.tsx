@@ -54,7 +54,9 @@ export default function Menu({
           <ExpandCollapse title="About" coverPage={parentStyleDiff}>
             <ul
               className={`mt-32 z-50 ${
-                !parentStyleDiff ? "bg-silver" : "pt-4"
+                !parentStyleDiff
+                  ? "bg-silver"
+                  : "pt-4 bg-silver text-default md:text-silver md:bg-transparent"
               } px-2 md:px-4 absolute shadow-xl`}
             >
               <li className="py-1 hover:text-green-primary">Features</li>
