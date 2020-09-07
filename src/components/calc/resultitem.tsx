@@ -33,7 +33,7 @@ export default function ResultItem(props: ResultItemProps) {
             className={`ml-1 ${
               props.pl
                 ? props.result > 0
-                  ? "text-green-600"
+                  ? "text-green-primary"
                   : "text-red-600"
                 : ""
             }`}

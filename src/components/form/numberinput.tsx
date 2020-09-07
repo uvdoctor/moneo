@@ -33,6 +33,7 @@ interface NumberInputProps {
 export default function NumberInput(props: NumberInputProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const readOnlyRef = useRef<HTMLInputElement>(null);
   const [editing, setEditing] = useState<boolean>(false);
   const [sliderButtonColor, setSliderButtonColor] = useState<string>("white");
   const [feedbackText, setFeedbackText] = useState<string>("");
@@ -48,8 +49,7 @@ export default function NumberInput(props: NumberInputProps) {
   );
 
   useEffect(() => {
-    //@ts-ignore
-    if (formRef && formRef.current) formRef.current.reportValidity();
+    formRef.current?.reportValidity();
   }, [formRef]);
 
   useEffect(() => {
@@ -57,10 +57,21 @@ export default function NumberInput(props: NumberInputProps) {
     else setRangeFactor(1);
   }, [props.rangeFactor]);
 
+  useEffect(() => {
+    if(!props.allInputDone && props.currentOrder === props.inputOrder) {
+      props.currency ? readOnlyRef.current?.focus() : inputRef.current?.focus()
+    }
+  }, [props.allInputDone, props.currentOrder])
+
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      inputRef.current?.blur();
+      if(!props.allInputDone && !props.nextStepDisabled) {
+        inputRef.current?.blur();
+        props.nextStepHandler()
+      } else if(props.allInputDone) {
+        inputRef.current?.blur()
+      }
     }
   };
 
@@ -163,6 +174,7 @@ export default function NumberInput(props: NumberInputProps) {
                   />
                 ) : (
                   <input
+                    ref={readOnlyRef}
                     className="input"
                     type="text"
                     name={props.name}
@@ -170,7 +182,9 @@ export default function NumberInput(props: NumberInputProps) {
                       !props.value ? 0 : props.value,
                       props.currency
                     )}
-                    onFocus={() => setEditing(true)}
+                    onFocus={() => {
+                      setEditing(true)}
+                    }
                     style={{ textAlign: "right", width: width }}
                     readOnly
                   />

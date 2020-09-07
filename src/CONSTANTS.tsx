@@ -70,13 +70,15 @@ export const ASSET_TYPES = {
 }
 
 export const COLORS = {
-    GREEN: "#48bb78",
+    GREEN: "#96D441",
     RED: "#FF0000",
     BLUE: "#3182ce",
+    DARK_BLUE: "#2c5282",
     DISABLED: "#cbd5e0",
-    DEFAULT: "#2d3748",
+    DEFAULT: "#4a5568",
     ORANGE: "#dd6b20",
-    LIGHT_GRAY: "#edf2f7"
+    LIGHT_GRAY: "#edf2f7",
+    SILVER: "#F1EDED"
 }
 
 export const INPUT_HIGHLIGHT = 'p-2 shadow-2xl rounded-lg'

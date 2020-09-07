@@ -95,7 +95,6 @@ export default function Goals({
       svglabel: currency,
     },
   ];
-  const [videoUrl, setVideoUrl] = useState<string>("");
   const irDiffByCurrency: any = {
     INR: 3,
   };
@@ -414,6 +413,7 @@ export default function Goals({
   return wipGoal ? (
     <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
       <div className="relative bg-white border-0">
+        {console.log("Loading...")}
         {wipGoal.type === APIt.GoalType.FF ? (
           <FFGoal
             goal={wipGoal as APIt.CreateGoalInput}
@@ -433,8 +433,6 @@ export default function Goals({
             expChgRate={expChgRate}
             mustCFs={mustCFs}
             tryCFs={tryCFs}
-            videoUrl={videoUrl}
-            videoHandler={setVideoUrl}
           />
         ) : (
           ffGoal && (
@@ -445,8 +443,6 @@ export default function Goals({
               updateCallback={updateGoal}
               ffImpactYearsHandler={calculateFFImpactYear}
               ffGoalEndYear={ffGoal.ey}
-              videoUrl={videoUrl}
-              videoHandler={setVideoUrl}
             />
           )
         )}

@@ -96,18 +96,6 @@ const Features = () => {
           </li>
         </ul>
       </div>
-      <div className="m-4 mt-8 text-center bg-green-100">
-        <p className="mt-4 text-xl md:text-2xl lg:text-4xl font-black">
-          Works Instantly.
-        </p>
-        <p className="mt-4">Keeps working offline too.</p>
-        <p>No App Store Download Needed.</p>
-        <img
-          className="object-cover w-full mt-4"
-          alt="Works across devices"
-          src="images/relaxedwoman.jpeg"
-        />
-      </div>
 
       <div className="flex flex-wrap justify-around">
         {features.map((f: Feature, i: number) => (

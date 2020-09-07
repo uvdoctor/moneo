@@ -28,6 +28,7 @@ export default function TextInput(props: TextInputProps) {
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
       e.preventDefault();
+      if(!props.allInputDone) props.nextStepHandler()
     }
   };
 

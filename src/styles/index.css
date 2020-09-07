@@ -4,13 +4,16 @@
 @import url('<link href="https://fonts.googleapis.com/css?family=Quicksand:300,500" rel="stylesheet">');
 
 :root {
-  --amplify-primary-color: #38c172;
-  --amplify-primary-tint: #1f9d55;
-  --amplify-primary-shade: #51d88a;
+  --amplify-primary-color: #96D441;
+  --amplify-primary-tint: #AAE441;
+  --amplify-primary-shade: #AAE441;
   --amplify-font-family: "Quicksand", sans-serif;
   color: #4a5568;
   font-family: "Quicksand", sans-serif;
   font-weight: 300;
+  --primary-green-color: #96D441;
+  --secondary-green-color: #AAE441;
+  --primary-gray-color: #4a5568;
 }
 
 .signInButton {
@@ -51,14 +54,13 @@ h6 {
   font-weight: 600;
   appearance: none;
   border-bottom-width: 1px;
-  border-bottom-color: #4a5568;
+  border-bottom-color: var(--primary-gray-color);
   border-bottom-width: thick;
   line-height: 1.25;
   background-color: transparent;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
-
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
@@ -73,20 +75,11 @@ input[type="number"] {
 
 .input:focus {
   outline: 0;
-  border-color: #38a169;
+  border-color: var(--primary-green-color);
 }
 
 .button {
-  border-radius: 9999px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  outline: 0;
-  background-color: #38a169;
-  color: #fff;
-  font-weight: 700;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-right: 1rem;
-  padding-left: 1rem;
+  background-color: var(--primary-green-color);
   transition: "all .15s ease";
 }
 
@@ -95,8 +88,8 @@ input[type="number"] {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   border-width: 1px;
   background-color: #fff;
-  border-color: #38a169;
-  color: #38a169;
+  border-color: var(--primary-green-color);
+  color: var(--primary-green-color);
   font-weight: 700;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -113,24 +106,24 @@ input[type="number"] {
   --button-raise-level: 5px;
   --button-hover-pressure: 2;
   --transform-speed: 0.185s;
-  --button-primary-color: #38a169;
-  --button-primary-color-dark: #276749;
+  --button-primary-color: var(--primary-green-color);
+  --button-primary-color-dark: var(--secondary-green-color);
   --button-primary-color-light: #ffffff;
-  --button-primary-color-hover: #48bb78;
-  --button-primary-color-active: #276749;
+  --button-primary-color-hover: var(--secondary-green-color);
+  --button-primary-color-active: var(--secondary-green-color);
   --button-primary-border: 0px solid #ffffff;
   --button-secondary-color: #edf2f7;
   --button-secondary-color-dark: #cbd5e0;
-  --button-secondary-color-light: #38a169;
+  --button-secondary-color-light: var(--primary-green-color);
   --button-secondary-color-hover: #edf2f7;
   --button-secondary-color-active: #a0aec0;
   --button-secondary-border: none;
-  --button-anchor-color: #4299e1;
-  --button-anchor-color-dark: #2b6cb0;
+  --button-anchor-color: var(--primary-green-color);
+  --button-anchor-color-dark: var(--secondary-green-color);
   --button-anchor-color-light: #ffffff;
-  --button-anchor-color-hover: #3182ce;
+  --button-anchor-color-hover: var(--secondary-green-color);
   --button-anchor-color-active: #a0aec0;
-  --button-anchor-border: 1px solid #2c5282;
+  --button-anchor-border: 1px solid var(--secondary-green-color);
 }
 
 .button:hover {
@@ -187,10 +180,6 @@ input[type="number"] {
   }
 }
 
-.dropdown-menu {
-  display: none;
-}
-
 .hoverable {
   position: static;
 }
@@ -198,7 +187,7 @@ input[type="number"] {
 .hoverable > label:after {
   content: "\25BC";
   font-size: 10px;
-  padding-left: 2px;
+  /*padding-left: 2px;*/
   position: relative;
   top: -1px;
 }
@@ -235,20 +224,20 @@ input[type="number"] {
 
 /* Chrome, Safari and Opera syntax */
 :-webkit-full-screen {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 /* Firefox syntax */
 :-moz-full-screen {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 /* IE/Edge syntax */
 :-ms-fullscreen {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 /* Standard syntax */
 :fullscreen {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }

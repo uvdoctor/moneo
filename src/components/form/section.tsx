@@ -1,9 +1,11 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import VideoPlayer from "../videoplayer";
 import SVGPlay from "../svgplay";
 import SVGStop from "../svgstop";
+import Link from "next/link";
 interface SectionProps {
   title: any;
+  titleSVG?: any;
   left: any;
   right?: any;
   bottomLeft?: any;
@@ -15,37 +17,71 @@ interface SectionProps {
   manualMode?: number;
   hasResult?: boolean;
   insideForm?: boolean;
-  videoSrc?: string
-  videoUrl?: string
-  urlHandler?: Function
+  insideMenu?: boolean;
+  color?: string;
+  videoSrc?: string;
+  imgSrc?: string;
+  link?: string;
 }
 
 export default function Section(props: SectionProps) {
+  const [videoUrl, setVideoUrl] = useState<string>("");
+
   return (
     <div
-      className="m-1 w-full max-w-sm md:max-w-md max-h-md rounded-lg overflow-x-hidden overflow-y-auto 
-                        shadow-lg md:shadow-xl"
+      className={`m-1 w-full ${
+        props.insideMenu ? "max-w-xs" : "max-w-sm md:max-w-md xl:max-w-lg"
+      } rounded-lg overflow-x-hidden overflow-y-auto 
+                        shadow-lg md:shadow-xl`}
+      style={{ backgroundColor: props.color ? props.color : "transparent" }}
     >
-      {props.videoUrl && props.urlHandler && (
-          <VideoPlayer
-            url={props.videoUrl}
-            urlHandler={props.urlHandler}
-          />
-        )}
-      <div className={`w-full ${props.insideForm && "bg-black text-white flex justify-between"}`}>
-        <label className="p-1">{props.title}</label>
-        {props.urlHandler && props.videoSrc && (
+      <div
+        className={`w-full ${
+          props.insideForm && "bg-gray-700 text-white"
+        } flex justify-between relative"
+        }`}
+      >
+        <Link href={props.link ? props.link : ""}>
+          <a>
+            <div
+              className={`w-full flex items-center p-1 ${
+                !props.insideForm && "cursor-pointer"
+              }`}
+            >
+              {props.titleSVG && props.titleSVG}
+              <label
+                className={`ml-1 ${
+                  !props.insideForm && "hover:text-green-primary cursor-pointer"
+                }`}
+              >
+                {props.title}
+              </label>
+            </div>
+          </a>
+        </Link>
+        {!props.insideMenu && props.videoSrc && (
           <div
-            className="p-1"
+            className="p-1 flex items-center justify-end"
             onClick={() =>
               //@ts-ignore
-              props.urlHandler(!props.videoUrl ? props.videoSrc : "")
+              setVideoUrl(!videoUrl ? props.videoSrc : "")
             }
           >
-            {!props.videoUrl ? <SVGPlay /> : <SVGStop />}
+            {!videoUrl ? <SVGPlay /> : <SVGStop />}
+            <label className={`ml-1 cursor-pointer ${videoUrl && 'text-green-primary'} hover:text-green-primary`}>Video</label>
           </div>
         )}
       </div>
+      {videoUrl && <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />}
+      {!props.insideMenu && props.imgSrc && !videoUrl && (
+        <div className="w-full">
+          <Link href={props.link ? props.link : ""}>
+            <a>
+              <img alt="Result" src={props.imgSrc} />
+            </a>
+          </Link>
+        </div>
+      )}
       {props.toggle && (
         <div className="flex justify-end mt-2 mr-4">{props.toggle}</div>
       )}
@@ -53,15 +89,30 @@ export default function Section(props: SectionProps) {
         props.manualInput
       ) : (
         <Fragment>
-          <div className="p-2 flex flex-col md:flex-row md:flex-wrap justify-around items-center md:items-start w-full">
-            {props.left && <div className={`${props.hasResult && "w-full"}`}>{props.left}</div>}
+          <div
+            className={`p-2 flex flex-col md:flex-row md:flex-wrap justify-around items-center md:items-start w-full
+          ${props.insideMenu && "text-base font-normal"}`}
+          >
+            {props.left && (
+              <div
+                className={`${
+                  (props.hasResult || props.insideMenu) && "w-full"
+                }`}
+              >
+                {props.left}
+              </div>
+            )}
             {props.right && <div className="mt-2 md:mt-0">{props.right}</div>}
           </div>
           {props.bottom && (
             <div className="flex flex-wrap mt-2 items-center justify-center">
-              {props.bottomLeft && <label className="mr-4">{props.bottomLeft}</label>}
+              {props.bottomLeft && (
+                <label className="mr-4">{props.bottomLeft}</label>
+              )}
               <div>{props.bottom}</div>
-              {props.bottomRight && <label className="ml-4">{props.bottomRight}</label>}
+              {props.bottomRight && (
+                <label className="ml-4">{props.bottomRight}</label>
+              )}
             </div>
           )}
           {props.footer && (

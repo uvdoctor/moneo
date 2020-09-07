@@ -338,11 +338,11 @@ export const getLoanPaidForMonths = (
   endYear: number,
   loanRepaymentYear: number,
   loanYears: number,
-  goalType: APIt.GoalType
 ) => {
-  if (goalType === APIt.GoalType.B)
-    return (endYear + 1 - loanRepaymentYear) * 12;
-  return loanYears * 12;
+  if(!endYear || !loanRepaymentYear) return loanYears * 12
+  let loanPaidYears = endYear + 1 - loanRepaymentYear 
+  if(loanPaidYears > loanYears) loanPaidYears = loanYears;
+  return loanPaidYears * 12;
 };
 
 export const adjustAccruedInterest = (
@@ -525,7 +525,6 @@ const createLoanCFs = (
       goal?.emi?.ry as number,
       goal?.emi?.dur as number,
       duration,
-      goal.type
     );
     sp = calculateSellPrice(p, goal?.achg as number, duration);
     cfs.push(Math.round(sp + taxBenefit - remPayment));
@@ -544,7 +543,6 @@ const getRemPrincipal = (
   loanRepaymentSY: number,
   loanYears: number,
   duration: number,
-  goalType: APIt.GoalType
 ) => {
   let ey = startYear + duration - 1;
   if (loanRepaymentSY + loanYears - 1 <= ey) return 0;
@@ -554,7 +552,6 @@ const getRemPrincipal = (
       ey,
       loanRepaymentSY,
       loanYears,
-      goalType
     );
     remPrincipal = getRemainingPrincipal(
       loanBorrowAmt,

@@ -62,7 +62,7 @@ const UserHeader = () => {
       <label>Estimates. No Advice.</label>
       {username ? (
         <div className="flex items-center">
-          {/*<div className="ml-8 md:ml-12 hoverable relative inline-block hover:text-green-600"><label>{username}</label>
+          {/*<div className="ml-8 md:ml-12 hoverable relative inline-block hover:text-green-primary"><label>{username}</label>
                         <ul className="px-2 md:px-4 py-1 dropdown-menu absolute shadow-xl bg-green-600 text-white font-normal text-base md:text-lg">
                             <li className="py-1 hover:text-black">Profile</li>
                             <li className="py-1 hover:text-black">Settings</li>
@@ -78,7 +78,7 @@ const UserHeader = () => {
           </div>
         </div>
       ) : (
-        <div className="mr-2 md:mr-4 text-xl md:text-2xl font-black text-green-600">
+        <div className="mr-2 md:mr-4 text-xl md:text-2xl font-black text-green-primary">
           DollarDarwin
         </div>
       )}

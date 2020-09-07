@@ -2,8 +2,8 @@ import React from "react";
 import { COLORS } from "../CONSTANTS";
 
 interface SVGLoanProps {
-  disabled: boolean;
-  selected: boolean;
+  disabled?: boolean;
+  selected?: boolean;
 }
 
 export default function SVGLoan({ disabled, selected }: SVGLoanProps) {

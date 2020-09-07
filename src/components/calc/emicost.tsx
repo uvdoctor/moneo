@@ -43,8 +43,6 @@ interface EmiProps {
   taxRate: number;
   iTaxBenefit: number;
   goalType: GoalType;
-  videoUrl: string;
-  videoHandler: Function;
   repaymentSYHandler: Function;
   loanMonthsHandler: Function;
   loanPerHandler: Function;
@@ -66,7 +64,6 @@ export default function EmiCost(props: EmiProps) {
   );
   const [emi, setEMI] = useState<number>(0);
   const [simpleInts, setSimpleInts] = useState<Array<number>>([]);
-  const [showIntSchedule, setShowIntSchedule] = useState<boolean>(false);
   const [remIntAmt, setRemIntAmt] = useState<number>(0);
   const loanLimitPer = props.goalType === GoalType.E ? 100 : 80;
 
@@ -98,8 +95,7 @@ export default function EmiCost(props: EmiProps) {
     let loanPaidForMonths = getLoanPaidForMonths(
       props.endYear,
       props.repaymentSY,
-      props.loanYears,
-      props.goalType
+      props.loanYears
     );
     let emi = getEmi(
       borrowAmt,
@@ -152,9 +148,7 @@ export default function EmiCost(props: EmiProps) {
         <Section
           title="Loan Details"
           insideForm
-          videoUrl={props.videoUrl}
           videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
-          urlHandler={props.videoHandler}
           toggle={
             !isTaxCreditEligible(props.goalType) && props.taxRate ? (
               <HToggle
@@ -299,7 +293,11 @@ export default function EmiCost(props: EmiProps) {
                         label="Total Interest"
                         result={totalIntAmt}
                         currency={props.currency}
-                        footer={`Over ${props.duration} Years`}
+                        footer={`Over ${getLoanPaidForMonths(
+                          props.endYear,
+                          props.repaymentSY,
+                          props.loanYears
+                        )} Years`}
                       />
                     }
                     value={props.loanAnnualInt}
@@ -334,13 +332,8 @@ export default function EmiCost(props: EmiProps) {
                           post={
                             !!props.loanSIPayPer && (
                               <div className="flex flex-col justify-center w-full">
-                                <ExpandCollapse
-                                  title="Interest Schedule"
-                                  value={showIntSchedule}
-                                  handler={setShowIntSchedule}
-                                />
-                                {showIntSchedule &&
-                                  simpleInts.map((int, i) => (
+                                <ExpandCollapse title="Interest Schedule">
+                                  {simpleInts.map((int, i) => (
                                     <p key={"si" + i} className="text-gray-800">
                                       Monthly{" "}
                                       {toCurrency(
@@ -350,6 +343,7 @@ export default function EmiCost(props: EmiProps) {
                                       in {props.startYear + i}
                                     </p>
                                   ))}
+                                </ExpandCollapse>
                               </div>
                             )
                           }

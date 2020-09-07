@@ -2,7 +2,7 @@ import React from "react";
 import { COLORS } from "../CONSTANTS";
 
 interface SVGPiggyProps {
-  disabled: boolean;
+  disabled?: boolean;
   selected: boolean;
 }
 export default function SVGPiggy({ disabled, selected }: SVGPiggyProps) {
