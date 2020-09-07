@@ -15,7 +15,7 @@ describe('getEMI function absurd values', ()=>{
 
   test('Zero rate', () => {
     let getEMI = finance.getEmi(2000,0,12);
-    expect(getEMI).toBe(0)
+    expect(getEMI).toBe(2000/12)
   })
 
   test('Negative rate', () => {
@@ -280,23 +280,65 @@ describe('Get NPV Suite', ()=>{
       expect(npv).toBe(463855);
     });
 
-  // const pp = {
-  //   savings: 0.5,
-  //   deposits: 1.5, 
-  //   sbonds: 2, //short term bond <1
-  //   mbonds: 3, // 1-5 medium term
-  //   mtebonds: 3.5, //medium term tax efficient bonds
-  //   dreit: 5,
-  //   ireit: 5,
-  //   gold: 3,
-  //   largecapstocks: 5,
-  //   multicapstocks: 6,
-  //   divstocks: 5,
-  //   istocks: 7,
-  //   digitalcurrency: 10
-  // }
-
 })
+
+describe('Get NPV Suite 2 excel data', ()=>{
+  const rr = 
+    [
+    0.5,	0.5,	0.5,	0.5,	0.5,	0.5,	0.5,	0.5,	0.5,	0.5,	0.5,	0.5,	0.5,	0.5,	0.5,	0.5,	5.98,	5.98,	5.98,	4.2,	4.16,	4.12,	4.08
+    ];
+    const startIndex = 2;
+    const buyCashflow1= [-7053634,	0,	0,	0,	7938927.21];
+    const rentCashflow1= [-300000,	-309000,	-318270,	-327818.1,	5925147.045];
+    const buyCashflow2= [-7053634,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,10056795.47];
+    const rentCashflow2= [-300000,	-309000,	-318270,	-327818.1,	-337652.643,	-347782.2223,	-358215.689,-368962.1596,	-380031.0244,	-391431.9551,	-403174.9138,	-415270.1612,	3097844.827];
+    const buyCashflow3= [-7053634,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	12368590];
+    const rentCashflow3= [-300000,	-309000,	-318270,	-327818.1,	-337652.643,	-347782.2223,	-358215.689,	-368962.1596,	-380031.0244,	-391431.9551,	-403174.9138,	-415270.1612,	-427728.2661,	-440560.114,	-453776.9175,	-467390.225,	-481411.9317,	-495854.2897,	-510729.9184,	132266.6572
+    ];
+    
+    test('getNPV buyCF1 not null', ()=> {
+      let npv = finance.getNPV(rr, buyCashflow1, startIndex);
+      expect(npv).not.toBe(null);
+    });
+    test('getNPV rentCF1 not null', ()=> {
+      let npv = finance.getNPV(rr, rentCashflow1, startIndex);
+      expect(npv).not.toBe(null);
+    });
+    test('getNPV buyCF2 not null', ()=> {
+      let npv = finance.getNPV(rr, buyCashflow2, startIndex);
+      expect(npv).not.toBe(null);
+    });
+    test('getNPV rentlCF2 not null', ()=> {
+      let npv = finance.getNPV(rr, rentCashflow2, startIndex);
+      expect(npv).not.toBe(null);
+    });
+    test('Correct NPV for buyCF1', ()=> {
+      let npv = finance.getNPV(rr, buyCashflow1, startIndex); //buy today
+      expect(npv).toBe(Math.round(728479.7221));
+    });
+    test('Correct NPV for rentCF1', ()=> {
+      let npv = finance.getNPV(rr, rentCashflow1, startIndex); //buy today
+      expect(npv).toBe(Math.round(4562587.414));
+    });
+    test('Correct NPV for buyCF2', ()=> {
+      let npv = finance.getNPV(rr, buyCashflow2, startIndex); //buy today
+      expect(npv).toBe(Math.round(2418915.351));
+    });
+    test('Correct NPV for rentCF2', ()=> {
+      let npv = finance.getNPV(rr, rentCashflow2, startIndex); //buy today
+      expect(npv).toBe(Math.round(-1217880.833));
+    });
+    test('Correct NPV for buyCF3', ()=> {
+      let npv = finance.getNPV(rr, buyCashflow3, startIndex); //buy today
+      expect(npv).toBe(Math.round(1563975.204));
+    });
+    test('Correct NPV for rentCF3', ()=> {
+      let npv = finance.getNPV(rr, rentCashflow3, startIndex); //buy today
+      expect(npv).toBe(Math.round(-6774902.875));
+    });
+    
+})
+
 describe('get interest by year test suite', ()=>{
   test('getIntAmtByYear is a number and not null', ()=> {
     let interest = finance.getIntAmtByYear(0,21,1,144);
