@@ -95,8 +95,7 @@ export default function EmiCost(props: EmiProps) {
     let loanPaidForMonths = getLoanPaidForMonths(
       props.endYear,
       props.repaymentSY,
-      props.loanYears,
-      props.goalType
+      props.loanYears
     );
     let emi = getEmi(
       borrowAmt,
@@ -294,7 +293,11 @@ export default function EmiCost(props: EmiProps) {
                         label="Total Interest"
                         result={totalIntAmt}
                         currency={props.currency}
-                        footer={`Over ${props.duration} Years`}
+                        footer={`Over ${getLoanPaidForMonths(
+                          props.endYear,
+                          props.repaymentSY,
+                          props.loanYears
+                        )} Years`}
                       />
                     }
                     value={props.loanAnnualInt}
@@ -329,9 +332,7 @@ export default function EmiCost(props: EmiProps) {
                           post={
                             !!props.loanSIPayPer && (
                               <div className="flex flex-col justify-center w-full">
-                                <ExpandCollapse
-                                  title="Interest Schedule"
-                                >
+                                <ExpandCollapse title="Interest Schedule">
                                   {simpleInts.map((int, i) => (
                                     <p key={"si" + i} className="text-gray-800">
                                       Monthly{" "}
