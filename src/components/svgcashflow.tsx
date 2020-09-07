@@ -1,5 +1,5 @@
 import { COLORS } from "../CONSTANTS";
-
+import React from 'react'
 interface SVGCashFlowProps {
   disabled: boolean;
   selected: boolean;
