@@ -121,13 +121,13 @@ describe('getLoanBorrowAmt test suite', ()=>{
     })
    
 })
-
+/*
 describe('getLoanPaidForMonths test suite', ()=>{
     enum GoalType {
         B = "B",
         S = "S",
         R = "R"
-      }
+    }
     test('getLoanPaidForMonths test not null and duration < loan years',()=>{
         let loanPaidForMonths = cfutils.getLoanPaidForMonths(2030, 2025, 20, GoalType.B);
         expect(loanPaidForMonths).not.toBe(null);
@@ -148,7 +148,7 @@ describe('getLoanPaidForMonths test suite', ()=>{
     })
 })
 
-
+*/
 /*describe('calculateCFs Test with createAutoCF suite',()=>{
     
     const goal: goals.CreateGoalInput = {
