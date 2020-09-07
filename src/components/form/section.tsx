@@ -5,8 +5,7 @@ import SVGStop from "../svgstop";
 import Link from "next/link";
 interface SectionProps {
   title: any;
-  titleSVG?: any;
-  left: any;
+  left?: any;
   right?: any;
   bottomLeft?: any;
   bottomRight?: any;
@@ -43,20 +42,13 @@ export default function Section(props: SectionProps) {
       >
         <Link href={props.link ? props.link : ""}>
           <a>
-            <div
-              className={`w-full flex items-center p-1 ${
-                !props.insideForm && "cursor-pointer"
-              }`}
-            >
-              {props.titleSVG && props.titleSVG}
-              <label
-                className={`ml-1 ${
+              <div
+                className={`${
                   !props.insideForm && "hover:text-green-primary cursor-pointer"
                 }`}
               >
                 {props.title}
-              </label>
-            </div>
+              </div>
           </a>
         </Link>
         {!props.insideMenu && props.videoSrc && (
@@ -68,7 +60,7 @@ export default function Section(props: SectionProps) {
             }
           >
             {!videoUrl ? <SVGPlay /> : <SVGStop />}
-            <label className={`ml-1 cursor-pointer ${videoUrl && 'text-green-primary'} hover:text-green-primary`}>Video</label>
+            <label className={`ml-1 cursor-pointer ${videoUrl && 'text-red-600'} hover:text-red-600`}>Video</label>
           </div>
         )}
       </div>
@@ -89,8 +81,8 @@ export default function Section(props: SectionProps) {
         props.manualInput
       ) : (
         <Fragment>
-          <div
-            className={`p-2 flex flex-col md:flex-row md:flex-wrap justify-around items-center md:items-start w-full
+          {(props.left || props.right) && <div
+            className={`flex flex-col md:flex-row md:flex-wrap justify-around items-center md:items-start w-full
           ${props.insideMenu && "text-base font-normal"}`}
           >
             {props.left && (
@@ -103,7 +95,7 @@ export default function Section(props: SectionProps) {
               </div>
             )}
             {props.right && <div className="mt-2 md:mt-0">{props.right}</div>}
-          </div>
+          </div>}
           {props.bottom && (
             <div className="flex flex-wrap mt-2 items-center justify-center">
               {props.bottomLeft && (

@@ -1,12 +1,8 @@
 import React from "react";
 import Section from "../form/section";
-import SVGHourGlass from "../svghourglass";
 import SVGScale from "../svgscale";
 import { ROUTES } from "../../CONSTANTS";
-import SVGBalance from "./svgbalance";
 import SVGFreedom from "../svgfreedom";
-import SVGPiggy from "../svgpiggy";
-import SVGMoneyBag from "./svgmoneybag";
 import SVGLoan from "../svgloan";
 
 interface CalculatorsProps {
@@ -35,49 +31,61 @@ export default function Calculators({
 
   const calcItems = [
     {
-      title: "Financial Freedom",
+      title1: "Financial",
+      title2:"Freedom",
       svg: <SVGFreedom />,
-      questions: {
-        "How much Money?": <SVGPiggy selected />,
-        "By When?": <SVGHourGlass />,
-      },
-      color: LIGHT_COLORS.RED,
+      desc: "How much Money is Needed? When will I achieve it?",
+      color: LIGHT_COLORS.BLUE,
       link: ROUTES.DASHBOARD,
       img: "images/step1.png",
       video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
     },
     {
-      title: "Buy v/s Rent",
+      title1: "Buy v/s",
+      title2: "Rent",
       svg: <SVGScale selected />,
-      questions: {
-        "Which is Cheaper?": <SVGBalance />,
-        "For how many Years?": <SVGHourGlass />,
-      },
-      color: LIGHT_COLORS.BROWN,
+      desc: "Is it cheaper to Buy or Rent? Till When?",
+      color: LIGHT_COLORS.GREEN,
       link: ROUTES.DASHBOARD,
       img: "images/step2.png",
       video: `https://vimeo.com/455216214`,
     },
     {
-      title: "Mortgage Loan",
+      title1: "Mortgage",
+      title2: "Loan",
       svg: <SVGLoan selected />,
-      questions: {
-        "Pay by Self or Loan?": <SVGBalance />,
-        "How much Total Interest?": <SVGMoneyBag selected />,
-      },
-      color: LIGHT_COLORS.ORANGE,
+      desc: "Should I pay by self or loan? How much total interest will I pay?",
+      color: LIGHT_COLORS.BROWN,
       link: ROUTES.DASHBOARD,
       img: "images/step3.png",
       video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
     },
     {
-      title: "Education Loan",
+      title1: "Education",
+      title2: "Loan",
       svg: <SVGLoan selected />,
-      questions: {
-        "Pay by Self or Loan?": <SVGBalance />,
-        "How much Total Interest?": <SVGMoneyBag selected />,
-      },
-      color: LIGHT_COLORS.PINK,
+      desc: "Should I pay by self or loan? How much total interest will I pay?",
+      color: LIGHT_COLORS.RED,
+      link: ROUTES.DASHBOARD,
+      img: "images/step3.png",
+      video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
+    },
+    {
+      title1: "Debt",
+      title2: "Buster",
+      svg: <SVGLoan selected />,
+      desc: "Should I pay by self or loan? How much total interest will I pay?",
+      color: LIGHT_COLORS.TEAL,
+      link: ROUTES.DASHBOARD,
+      img: "images/step3.png",
+      video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
+    },
+    {
+      title1: "Credit",
+      title2: "Impact",
+      svg: <SVGLoan selected />,
+      desc: "How much will be credit score impact if I do not pay my bills?",
+      color: LIGHT_COLORS.GRAY,
       link: ROUTES.DASHBOARD,
       img: "images/step3.png",
       video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
@@ -85,33 +93,21 @@ export default function Calculators({
   ];
 
   return (
-    <div className="w-full flex flex-wrap items-start justify-around pb-1 text-white">
+    <div className="w-full flex flex-wrap items-start justify-center pb-1">
       {calcItems.map((item, i) => (
         <Section
           key={"citem" + i}
-          title={item.title}
-          titleSVG={item.svg}
-          left={
-            <div
-              className={`flex ${
-                insideMenu
-                  ? "flex-col"
-                  : "flex-wrap items-center justify-around"
-              }`}
-            >
-              {Object.keys(
-                //@ts-ignore
-                item.questions
-              ).map((key) => (
-                <div className="flex items-center mb-1">
-                  {
-                    //@ts-ignore
-                    item.questions[key]
-                  }
-                  <span className="ml-1">{key}</span>
-                </div>
-              ))}
+          title={
+            <div className="w-full flex h-full ">
+            <div className="w-1/3 h-full flex flex-col items-center justify-center bg-silver">
+              {item.svg}
+              <p>{item.title1}</p>
+              <p>{item.title2}</p>
             </div>
+            <div className="w-2/3 p-2 flex justify-center items-center text-base text-white font-normal">
+            {item.desc}
+          </div>
+          </div>
           }
           hasResult
           insideForm={insideForm}
