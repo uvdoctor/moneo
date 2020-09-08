@@ -180,22 +180,6 @@ input[type="number"] {
   }
 }
 
-.hoverable {
-  position: static;
-}
-
-.hoverable > label:after {
-  content: "\25BC";
-  font-size: 10px;
-  /*padding-left: 2px;*/
-  position: relative;
-  top: -1px;
-}
-
-.hoverable:hover .dropdown-menu {
-  display: block;
-}
-
 #knob > div[style] {
   z-index: 0;
   cursor: pointer;
