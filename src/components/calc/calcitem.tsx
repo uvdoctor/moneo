@@ -33,14 +33,14 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
           >
             <div
               className={`${
-                insideMenu ? "w-full" : "w-1/3 text-xl"
+                insideMenu ? "w-full" : "w-1/2 md:w-1/3 text-xl"
               } flex flex-col items-center self-center font-bold hover:text-green-primary`}
             >
               {item.svg}
               <p>{item.title1}</p>
               <p>{item.title2}</p>
             </div>
-            <div className="w-full flex justify-center items-center text-base font-normal">
+            <div className={`w-full flex justify-center items-center ${insideMenu ? 'text-base' : 'text-lg'} font-normal`}>
               {(insideMenu || showDesc) && item.desc}
             </div>
           </div>
@@ -71,7 +71,7 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
                 <Link href={item.link}>
                   <a>
                     <img
-                      className="object-contain cursor-pointer"
+                      className="object-contain rounded-lg cursor-pointer"
                       src={item.img}
                     />
                   </a>

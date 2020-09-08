@@ -89,7 +89,7 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
   ];
 
   return (
-    <div className="w-full flex flex-wrap items-start justify-center pb-1">
+    <div className={`w-full flex flex-wrap items-start justify-center pb-1 ${!insideMenu && 'bg-silver'}`}>
       {calcItems.map((item, i) => (
         <CalcItem key={"ci" + i} item={item} insideMenu={insideMenu} />
       ))}
