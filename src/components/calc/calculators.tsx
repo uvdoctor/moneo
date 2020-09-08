@@ -1,8 +1,5 @@
 import React from "react";
-import SVGScale from "../svgscale";
 import { ROUTES } from "../../CONSTANTS";
-import SVGFreedom from "../svgfreedom";
-import SVGLoan from "../svgloan";
 import CalcItem from "./calcitem";
 
 interface CalculatorsProps {
