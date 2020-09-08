@@ -59,6 +59,7 @@ export const calculateSellPrice = (
   return Math.round(getCompoundedIncome(chgRate, price, duration));
 };
 
+//Tested internally
 const calculatePrice = (goal: APIt.CreateGoalInput) => {
   let price = 0;
   if (goal.manual && goal.tgts) {

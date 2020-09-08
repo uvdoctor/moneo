@@ -55,9 +55,44 @@ describe('calculateSellPrice',()=>{
     })
 })
 
-/*
-describe('calculateCFs Test suite',()=>{
+describe('getLoanBorrowAmt test suite', ()=>{
+    enum GoalType {
+        B = "B"
+      }
     
+    test('Zero amount', () => {
+        let getLoanBorrowAmt = cfutils.getLoanBorrowAmt(100000, GoalType.B, 0, 3, 0, 0);
+        expect(getLoanBorrowAmt).toBe(0);
+    })
+    test('Not null amount', () => {
+        let getLoanBorrowAmt = cfutils.getLoanBorrowAmt(100000, GoalType.B, 0, 3, 0, 0);
+        expect(getLoanBorrowAmt).not.toBe(null);
+    })
+   
+})
+
+describe('getLoanPaidForMonths test suite', ()=>{
+    
+    test('getLoanPaidForMonths test not null and duration < loan years',()=>{
+        let loanPaidForMonths = cfutils.getLoanPaidForMonths(2030, 2025, 20);
+        expect(loanPaidForMonths).not.toBe(null);
+        expect(loanPaidForMonths).toBe(72);     
+    })
+    test('getLoanPaidForMonths test end year is 0',()=>{
+        let loanPaidForMonths = cfutils.getLoanPaidForMonths(0, 2025, 20);
+        expect(loanPaidForMonths).not.toBe(null);
+        expect(loanPaidForMonths).toBe(240);
+    })
+    test('getLoanPaidForMonths test duration > loan years',()=>{
+        let loanPaidForMonths = cfutils.getLoanPaidForMonths(2040, 2025, 10);
+        expect(loanPaidForMonths).toBe(120);
+    })
+    
+})
+
+describe('calculateCFs Test suite via autoCFs',()=>{
+    
+    // We pass emi.per = 0 to invoke autoCFs
     const goal: goals.CreateGoalInput = {
         achg: 3,
         aiper: 0,
@@ -87,68 +122,34 @@ describe('calculateCFs Test suite',()=>{
         id: "75004807-9102-4858-88ce-b01df75d3fa4"
        
     };
-    test('price is passed', () => {
+    test('price is passed, tax benefit is 0', () => {
         let duration = 5;
-        let sellPrice = cfutils.calculateCFs(5974000, goal, duration);
-        expect(sellPrice).not.toBe(null);
-        expect(sellPrice).toEqual([-6093480,-123064,-126756,-130559,-134476,6925503]);
-        expect(sellPrice).toHaveLength(duration+1);
-        
+        let cashflows = cfutils.calculateCFs(5974000, goal, duration);
+        expect(cashflows).not.toBe(null);
+        expect(cashflows).toEqual({"cfs":[-6093480,-123064,-126756,-130559,-134476,6925503], "ptb":0});
     })
-    test('price is null', () => {
+    test('price is null, tax benefit is 0', () => {
         let duration = 5;
         let sellPrice = cfutils.calculateCFs(null, goal, duration);
         let sellPriceExpected = cfutils.calculateCFs(5974000, goal, duration);
         expect(sellPrice).not.toBe(null);
         expect(sellPrice).toEqual(sellPriceExpected);
-        expect(sellPrice).toHaveLength(duration+1);
     });
 
-})
-*/
-describe('getLoanBorrowAmt test suite', ()=>{
-    enum GoalType {
-        B = "B"
-      }
-    
-    test('Zero amount', () => {
-        let getLoanBorrowAmt = cfutils.getLoanBorrowAmt(100000, GoalType.B, 0, 3, 0, 0);
-        expect(getLoanBorrowAmt).toBe(0);
-    })
-    test('Not null amount', () => {
-        let getLoanBorrowAmt = cfutils.getLoanBorrowAmt(100000, GoalType.B, 0, 3, 0, 0);
-        expect(getLoanBorrowAmt).not.toBe(null);
-    })
-   
-})
-/*
-describe('getLoanPaidForMonths test suite', ()=>{
-    enum GoalType {
-        B = "B",
-        S = "S",
-        R = "R"
-    }
-    test('getLoanPaidForMonths test not null and duration < loan years',()=>{
-        let loanPaidForMonths = cfutils.getLoanPaidForMonths(2030, 2025, 20, GoalType.B);
-        expect(loanPaidForMonths).not.toBe(null);
-        expect(loanPaidForMonths).toBe(72);     
-    })
-    test('getLoanPaidForMonths test end year is 0',()=>{
-        let loanPaidForMonths = cfutils.getLoanPaidForMonths(0, 2025, 20 , GoalType.B);
-        expect(loanPaidForMonths).not.toBe(null);
-        expect(loanPaidForMonths).toBe(240);
-    })
-    test('getLoanPaidForMonths test duration > loan years',()=>{
-        let loanPaidForMonths = cfutils.getLoanPaidForMonths(2040, 2025, 10, GoalType.B);
-        expect(loanPaidForMonths).toBe(120);
-    })
-    test('getLoanPaidForMonths test goaltype is not B',()=>{
-        let loanPaidForMonths = cfutils.getLoanPaidForMonths(2030, 2025, 10, GoalType.R);
-        expect(loanPaidForMonths).toBe(120);
-    })
+    test('Tax benefit is non zero', () => {
+        goal.tbr = 10
+        let duration = 5;
+        let sellPrice = cfutils.calculateCFs(null, goal, duration);
+        let sellPriceExpected = cfutils.calculateCFs(5974000, goal, duration);
+        expect(sellPrice).not.toBe(null);
+        expect(sellPrice).toEqual(sellPriceExpected);
+    });
+
+
+
 })
 
-*/
+
 /*describe('calculateCFs Test with createAutoCF suite',()=>{
     
     const goal: goals.CreateGoalInput = {
