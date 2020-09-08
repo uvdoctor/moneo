@@ -6,6 +6,8 @@ import SVGPiggy from "../svgpiggy";
 import { isFFPossible } from "./cfutils";
 import SelectInput from "../form/selectinput";
 import { changeSelection } from "../utils";
+import { getAge } from "./goalutils";
+import { PLAN_DURATION } from "../../CONSTANTS";
 interface FFResultProps {
   endYear: number;
   ffYear: number | null;
@@ -33,10 +35,10 @@ export default function FFResult({
             <ResultItem
               svg={<SVGHourGlass />}
               label="Age"
-              result={(result.ffYear - (endYear - 100)).toString()}
+              result={getAge(result.ffYear, endYear).toString()}
               noResultFormat
               info={`You May achieve Financial Freedom earliest at an age of ${
-                result.ffYear - (endYear - 100)
+                getAge(result.ffYear, endYear)
               } Years.`}
               unit="Years"
               imp={
@@ -57,9 +59,9 @@ export default function FFResult({
               nextStepHandler={() => true}
               pre="Age"
               unit="Years"
-              value={result.ffYear - (endYear - 100)}
+              value={getAge(result.ffYear, endYear)}
               changeHandler={(val: string) =>
-                changeSelection(val, ffYearHandler, endYear - 100)
+                changeSelection(val, ffYearHandler, endYear - PLAN_DURATION)
               }
               options={ffYearOptions}
             />
@@ -67,7 +69,7 @@ export default function FFResult({
           <ResultItem
             result={result.ffAmt}
             svg={<SVGPiggy disabled={false} selected />}
-            label={`Savings @ ${result.ffYear - (endYear - 100) - 1} Years`}
+            label={`Savings @ ${getAge(result.ffYear, endYear) - 1} Years`}
             currency={currency}
             info="You can Withdraw from this Savings for Your expenses after gaining Financial Freedom."
           />

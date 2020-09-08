@@ -6,7 +6,8 @@ import { changeSelection, initYearOptions, toStringArr } from "../utils";
 import RadialInput from "../form/radialinput";
 import ResultItem from "../calc/resultitem";
 import { calculateTotalCP, calculateTotalCPTaxBenefit } from "../goals/cfutils";
-import { COLORS } from "../../CONSTANTS";
+import { COLORS, PLAN_DURATION } from "../../CONSTANTS";
+import { getAge } from "./goalutils";
 
 interface CareInsuranceProps {
   inputOrder: number;
@@ -134,13 +135,13 @@ export default function CareInsurance({
                 allInputDone={allInputDone}
                 nextStepHandler={nextStepHandler}
                 info="It may be a good option to buy this insurance when You are healthier (between 60 to 65 years of age) to get lower premiums."
-                value={carePremiumSY - (endYear - 100)}
+                value={getAge(carePremiumSY, endYear)}
                 options={initYearOptions(55, 10)}
                 pre="Buy Policy At"
                 unit="Years"
                 post="Age"
                 changeHandler={(val: string) =>
-                  changeSelection(val, carePremiumSYHandler, endYear - 100)
+                  changeSelection(val, carePremiumSYHandler, endYear - PLAN_DURATION)
                 }
               />
               <SelectInput

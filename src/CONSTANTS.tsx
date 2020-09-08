@@ -81,4 +81,8 @@ export const COLORS = {
     SILVER: "#F1EDED"
 }
 
+export const PLAN_DURATION = 100
+
+export const MAX_RETIREMENT_AGE = 70
+
 export const INPUT_HIGHLIGHT = 'p-2 shadow-2xl rounded-lg'

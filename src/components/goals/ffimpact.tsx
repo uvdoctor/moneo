@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import SVGHourGlass from "../svghourglass";
 import ResultItem from "../calc/resultitem";
+import { MAX_RETIREMENT_AGE } from "../../CONSTANTS";
 
 interface FFImpactProps {
   ffImpactYears: number | null;
@@ -44,7 +45,7 @@ export default function FFImpact(props: FFImpactProps) {
         <ResultItem
           label="Impact"
           result="Unable to Determine"
-          info={`Financial Freedom Impact can only be determined if Financial Freedom is Possible by 70 Years of Age. Please change Your Goals / Inputs so that You are able to Achieve Financial Freedom before turning 70.`}
+          info={`Financial Freedom Impact can only be determined if Financial Freedom is Possible by ${MAX_RETIREMENT_AGE} Years of Age. Please change Your Goals / Inputs and try again.`}
         />
       )}
     </Fragment>

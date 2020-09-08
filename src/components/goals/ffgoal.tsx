@@ -13,7 +13,7 @@ import { checkForFF, findEarliestFFYear, isFFPossible } from "./cfutils";
 import FFResult from "./ffresult";
 import SVGChart from "../svgchart";
 import LineChart from "./linechart";
-import { getOrderByTabLabel, getTabLabelByOrder } from "./goalutils";
+import { getAge, getOrderByTabLabel, getTabLabelByOrder } from "./goalutils";
 import SVGBarChart from "../svgbarchart";
 import StickyHeader from "./stickyheader";
 import ResultSection from "./resultsection";
@@ -34,6 +34,7 @@ import SVGCashFlow from "../svgcashflow";
 import SVGInheritance from "./svginheritance";
 import SVGCare from "./svgcare";
 import SVGPay from "../svgpay";
+import { MAX_RETIREMENT_AGE, PLAN_DURATION } from "../../CONSTANTS";
 interface FFGoalProps {
   goal: APIt.CreateGoalInput;
   totalSavings: number;
@@ -278,8 +279,8 @@ export default function FFGoal({
     );
     setFFYearOptions(
       initYearOptions(
-        result.ffYear - (endYear - 100),
-        70 - (result.ffYear - (endYear - 100))
+        getAge(result.ffYear, endYear),
+        MAX_RETIREMENT_AGE - getAge(result.ffYear, endYear)
       )
     );
     ffResultHandler(result);
@@ -354,7 +355,7 @@ export default function FFGoal({
           allInputDone={allInputDone}
           nextStepHandler={handleNextStep}
           pre="Birth Year"
-          value={endYear - 100}
+          value={endYear - PLAN_DURATION}
           changeHandler={(val: string) => changeSelection(val, setEndYear, 100)}
           options={eyOptions}
         />

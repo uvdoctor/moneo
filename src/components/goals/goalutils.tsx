@@ -2,6 +2,7 @@ import * as mutations from "../../graphql/mutations";
 import { API, graphqlOperation } from "aws-amplify";
 import * as APIt from "../../api/goals";
 import * as queries from "../../graphql/queries";
+import { MAX_RETIREMENT_AGE, PLAN_DURATION } from "../../CONSTANTS";
 
 export const getGoalsList = async () => {
   try {
@@ -256,3 +257,9 @@ export function getRAOptions() {
     H: "Up to 50%",
   };
 }
+
+export const getMinRetirementDuration = () => PLAN_DURATION - MAX_RETIREMENT_AGE
+
+export const getAge = (year: number, endYear: number) => year - (endYear - PLAN_DURATION) 
+
+export const getLastPossibleFFYear = (endYear: number) => endYear - getMinRetirementDuration()

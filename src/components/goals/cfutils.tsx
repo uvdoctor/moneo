@@ -8,7 +8,7 @@ import {
 import xirr from "xirr";
 import { buildArray, getAllAssetTypes } from "../utils";
 import { ASSET_TYPES } from "../../CONSTANTS";
-import { isTaxCreditEligible } from "./goalutils";
+import { getLastPossibleFFYear, getMinRetirementDuration, isTaxCreditEligible } from "./goalutils";
 //Tested
 export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
   if (!val || val < 0 || !tr || (tr === 100 && maxTaxDL === 0)) return 0;
@@ -916,7 +916,8 @@ export const findEarliestFFYear = (
   pp: any
 ) => {
   let nowYear = new Date().getFullYear();
-  if (nowYear > ffGoal.ey - 30)
+  let lastPossibleFFYear = getLastPossibleFFYear(ffGoal.ey)
+  if (nowYear > lastPossibleFFYear)
     return {
       ffYear: -1,
       leftAmt: -1,
@@ -927,8 +928,8 @@ export const findEarliestFFYear = (
       rr: [],
       oom: [],
     };
-  if (!yearToTry || yearToTry <= nowYear || yearToTry > ffGoal.ey - 30)
-    yearToTry = nowYear + Math.round((ffGoal.ey - 30 - nowYear) / 2);
+  if (!yearToTry || yearToTry <= nowYear || yearToTry > lastPossibleFFYear)
+    yearToTry = nowYear + Math.round((lastPossibleFFYear - nowYear) / 2);
   let nomineeAmt = ffGoal?.sa as number;
   let prevResult = checkForFF(
     savings,
@@ -945,7 +946,7 @@ export const findEarliestFFYear = (
   let increment = isFFPossible(prevResult, nomineeAmt) ? -1 : 1;
   for (
     let currYear = yearToTry + increment;
-    currYear <= ffGoal.ey - 30 && currYear > nowYear;
+    currYear <= lastPossibleFFYear && currYear > nowYear;
     currYear += increment
   ) {
     let result = checkForFF(
