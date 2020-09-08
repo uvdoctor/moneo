@@ -38,7 +38,7 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
                 <p>{item.title1}</p>
                 <p>{item.title2}</p>
               </div>
-              <div className="w-full flex justify-center items-center text-base">
+              <div className="w-full flex justify-center items-center text-base font-normal">
                 {(insideMenu || showDesc) && item.desc}
               </div>
             </div>
