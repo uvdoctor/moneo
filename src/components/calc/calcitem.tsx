@@ -52,7 +52,6 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
       {!insideMenu && (
         <div
           className="w-full flex flex-col justify-end items-end"
-          style={{ minHeight: "15rem" }}
         >
           <div
             className="w-full p-1 flex items-end justify-end"
@@ -70,7 +69,7 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
                 <Link href={item.link}>
                   <a>
                     <img
-                      className="object-contain rounded-lg cursor-pointer"
+                      className="h-64 object-contain rounded-lg cursor-pointer"
                       src={item.img}
                     />
                   </a>

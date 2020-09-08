@@ -39,7 +39,7 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
       desc: "Is it cheaper to Buy or Rent?",
       color: LIGHT_COLORS.BROWN,
       link: ROUTES.DASHBOARD,
-      img: "images/step2.png",
+      img: "images/sample2.png",
       video: `https://vimeo.com/455216214`,
     },
     {
@@ -48,7 +48,7 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
       desc: "Should I pay by self or loan?",
       color: LIGHT_COLORS.INDIGO,
       link: ROUTES.DASHBOARD,
-      img: "images/step3.png",
+      img: "images/sample3.png",
       video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
     },
     {
@@ -57,7 +57,7 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
       desc: "Should I pay by self or loan?",
       color: LIGHT_COLORS.ORANGE,
       link: ROUTES.DASHBOARD,
-      img: "images/step3.png",
+      img: "images/step1.png",
       video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
     },
     {
@@ -66,7 +66,7 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
       desc: "Should I pay by self or loan?",
       color: LIGHT_COLORS.PINK,
       link: ROUTES.DASHBOARD,
-      img: "images/step3.png",
+      img: "images/step2.png",
       video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
     },
     {
