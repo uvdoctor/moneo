@@ -16,7 +16,7 @@ export default function Menu({
 }: MenuProps) {
   const fsb = useFullScreenBrowser();
   const getTopMargin = () =>
-    fsb.info.screenWidth < isMobileDevice(fsb) ? 35 : 19;
+    fsb.info.screenWidth < isMobileDevice(fsb) ? 33 : 15;
   const [topMargin, setTopMargin] = useState<number>(getTopMargin());
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function Menu({
                 parentStyleDiffHandler={parentStyleDiffHandler}
               >
                 <div
-                  className="w-full text-default absolute left-0 z-50 bg-silver"
+                  className="w-full text-default absolute left-0 z-50 bg-white"
                   style={{ marginTop: topMargin + "rem" }}
                 >
                   <Calculators insideMenu />
@@ -55,8 +55,8 @@ export default function Menu({
             <ul
               className={`mt-32 z-50 ${
                 !parentStyleDiff
-                  ? "bg-silver"
-                  : "pt-4 bg-silver text-default md:text-silver md:bg-transparent"
+                  ? "bg-white"
+                  : "pt-4 bg-white text-default md:text-silver md:bg-transparent"
               } px-2 md:px-4 absolute shadow-xl`}
             >
               <li className="py-1 hover:text-green-primary">Features</li>
