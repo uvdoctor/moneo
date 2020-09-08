@@ -30,7 +30,7 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
       desc: "How much Money is Needed?",
       color: LIGHT_COLORS.GRAY,
       link: ROUTES.DASHBOARD,
-      img: "images/step1.png",
+      img: "images/hero-dashboard-v3.png",
       video: `https://www.youtube.com/watch?v=RH7t3p5zXNA&t=0s`,
     },
     {
