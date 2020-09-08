@@ -4,7 +4,7 @@ import NumberInput from "../form/numberinput";
 import Section from "../form/section";
 import SelectInput from "../form/selectinput";
 import { changeSelection, initYearOptions } from "../utils";
-import { getLastPossibleFFYear, getMinRetirementDuration } from "./goalutils";
+import { getLastPossibleFFYear } from "./goalutils";
 interface RetIncomeProps {
   inputOrder: number;
   currentOrder: number;
