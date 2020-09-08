@@ -1,7 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('<link href="https://fonts.googleapis.com/css?family=Quicksand:300,500" rel="stylesheet">');
+/*@import url('<link href="https://fonts.googleapis.com/css?family=Quicksand:300,500" rel="stylesheet">');
+*/
 
 :root {
   --amplify-primary-color: #96D441;
@@ -16,18 +17,6 @@
   --primary-green-color: #96D441;
   --secondary-green-color: #AAE441;
   --primary-gray-color: #4a5568;
-}
-
-.signInButton {
-  position: relative;
-  width: 100%;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  cursor: grab;
-  padding: 0;
-  color: var(--primary-green-color);
-  font-size: 4px;
-  box-sizing: content-box;
 }
 
 body {
@@ -77,26 +66,6 @@ input[type="number"] {
   border-color: var(--primary-green-color);
 }
 
-.button {
-  background-color: var(--primary-green-color);
-  transition: "all .15s ease";
-}
-
-.cancel {
-  border-radius: 9999px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  border-width: 1px;
-  background-color: #fff;
-  border-color: var(--primary-green-color);
-  color: var(--primary-green-color);
-  font-weight: 700;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-right: 1rem;
-  padding-left: 1rem;
-  transition: "all .15s ease";
-}
-
 .aws-btn {
   --button-default-height: 48px;
   --button-default-font-size: 1rem;
@@ -115,32 +84,14 @@ input[type="number"] {
   --button-secondary-color-dark: #cbd5e0;
   --button-secondary-color-light: var(--primary-green-color);
   --button-secondary-color-hover: #edf2f7;
-  --button-secondary-color-active: #a0aec0;
+  --button-secondary-color-active: #edf2f7;
   --button-secondary-border: none;
   --button-anchor-color: var(--primary-green-color);
   --button-anchor-color-dark: var(--secondary-green-color);
   --button-anchor-color-light: #ffffff;
   --button-anchor-color-hover: var(--secondary-green-color);
-  --button-anchor-color-active: #a0aec0;
+  --button-anchor-color-active: var(--secondary-green-color);
   --button-anchor-border: 1px solid var(--secondary-green-color);
-}
-
-.button:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.button:focus {
-  outline: 0;
-}
-
-.cancel:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.cancel:focus {
-  outline: 0;
 }
 
 @keyframes transient {

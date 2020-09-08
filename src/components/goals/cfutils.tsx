@@ -8,7 +8,7 @@ import {
 import xirr from "xirr";
 import { buildArray, getAllAssetTypes } from "../utils";
 import { ASSET_TYPES } from "../../CONSTANTS";
-import { getLastPossibleFFYear, getMinRetirementDuration, isTaxCreditEligible } from "./goalutils";
+import { getLastPossibleFFYear, isTaxCreditEligible } from "./goalutils";
 //Tested
 export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
   if (!val || val < 0 || !tr || (tr === 100 && maxTaxDL === 0)) return 0;
