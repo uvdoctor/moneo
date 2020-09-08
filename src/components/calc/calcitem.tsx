@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import SVGPlay from "../svgplay";
 import SVGStop from "../svgstop";
 import VideoPlayer from "../videoplayer";
@@ -16,7 +16,7 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
   return (
     <div
       className={`w-full flex flex-col text-white cursor-pointer ${
-        insideMenu ? "max-w-xs" : "max-w-sm lg:max-w-md xl:max-w-lg shadow-xl"
+        insideMenu ? "max-w-xs" : "max-w-sm md:max-w-md xl:max-w-lg shadow-xl"
       } rounded-lg m-1`}
       style={{
         backgroundColor: item.color,
@@ -33,21 +33,28 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
           >
             <div
               className={`${
-                insideMenu ? "w-full" : "w-1/2 md:w-1/3 text-xl"
+                insideMenu ? "w-full" : "w-2/3 md:w-1/2 lg:w-1/3 text-2xl"
               } flex flex-col items-center self-center font-bold hover:text-green-primary`}
             >
               {item.svg}
               <p>{item.title1}</p>
               <p>{item.title2}</p>
             </div>
-            <div className={`w-full flex justify-center items-center ${insideMenu ? 'text-base' : 'text-lg'} font-normal`}>
+            <div
+              className={`w-full flex justify-center items-center ${
+                insideMenu ? "text-base" : "m-2 text-lg"
+              } font-normal`}
+            >
               {(insideMenu || showDesc) && item.desc}
             </div>
           </div>
         </a>
       </Link>
       {!insideMenu && (
-        <Fragment>
+        <div
+          className="w-full flex flex-col justify-end items-end"
+          style={{ minHeight: "15rem" }}
+        >
           <div
             className="w-full p-1 flex items-end justify-end"
             onClick={() =>
@@ -64,7 +71,7 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
               Video
             </label>
           </div>
-          <div className="w-full flex justify-end items-end">
+          <div className="w-full flex items-end justify-end">
             <div className="w-1/6"></div>
             <div className="w-full h-full">
               {!videoUrl ? (
@@ -81,7 +88,7 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
               )}
             </div>
           </div>
-        </Fragment>
+        </div>
       )}
     </div>
   );
