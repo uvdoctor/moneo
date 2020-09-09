@@ -127,7 +127,7 @@ describe('calculateCFs Test suite via autoCFs',()=>{
         let cashflows = cfutils.calculateCFs(5974000, goal, duration);
         expect(cashflows).not.toBe(null);
         expect(cashflows).toEqual({"cfs":[-6093480,-123064,-126756,-130559,-134476,6925503], "ptb":0});
-    })
+    });
     test('price is null, tax benefit is 0', () => {
         let duration = 5;
         let sellPrice = cfutils.calculateCFs(null, goal, duration);
@@ -135,22 +135,23 @@ describe('calculateCFs Test suite via autoCFs',()=>{
         expect(sellPrice).not.toBe(null);
         expect(sellPrice).toEqual(sellPriceExpected);
     });
-
     test('Tax benefit is non zero', () => {
-        goal.tbr = 10
+        //goal.tdr = 10;
+        //goal.tdl=800000;
         let duration = 5;
-        let sellPrice = cfutils.calculateCFs(null, goal, duration);
-        let sellPriceExpected = cfutils.calculateCFs(5974000, goal, duration);
-        expect(sellPrice).not.toBe(null);
+        let sellPrice = cfutils.calculateCFs(5974000, goal, duration);
+        let sellPriceExpected = 
+        {
+            cfs: [ -6093480, -123064, -126756, -130559, -134476, 6925503 ],
+            ptb: 0
+        }
         expect(sellPrice).toEqual(sellPriceExpected);
     });
-
-
 
 })
 
 
-/*describe('calculateCFs Test with createAutoCF suite',()=>{
+describe('calculateCFs Test with createAutoCF suite',()=>{
     
     const goal: goals.CreateGoalInput = {
         achg: 3,
@@ -186,12 +187,21 @@ describe('calculateCFs Test suite via autoCFs',()=>{
         let price = 7157362;
         let cashFlows = cfutils.calculateCFs(price, goal, duration);
         expect(cashFlows).not.toBe(null);
-        expect(cashFlows).toEqual([-7300509, -147442, -151865, -156421, -161113, 8297344]);
+        expect(cashFlows).toEqual({"cfs":[-7300509, -147442, -151865, -156421, -161113, 8297344], "ptb":0});
     })
     
-
+    test('AutoCF with tax benefit', () => {
+        let duration = 13;
+        let price = 7053634;
+        goal.tdl = 800000;
+        goal.tdr=10;
+        goal.amper = 0; //no maintenance or income
+        let cashFlows = cfutils.calculateCFs(price, goal, duration);
+        expect(cashFlows).not.toBe(null);
+        expect(cashFlows).toEqual({"cfs":[-7053634,80000,0,0,0,0,0,0,0,0,0,0,0,10358499], "ptb":80000});
+    });
 })
-*/
+
 
 describe('calculateCFs Test with createLoanCF suite',()=>{
     
@@ -223,7 +233,16 @@ describe('calculateCFs Test with createLoanCF suite',()=>{
         type: goals.GoalType.B
     };
 
-    test('price is passed', () => {
+    test('loan years = zerro', () => {
+        goal.emi = {rate: 9, dur: 0, per: 40, ry: 2024};
+        let duration = 5;
+        let price = 7053634;
+        let loanCF = cfutils.calculateCFs(price, goal, duration);
+        expect(loanCF).toHaveLength(0);
+        expect(loanCF).toEqual([]);
+    });
+
+    test('duration < loan years', () => {
         let duration = 5;
         let price = 7053634;
         // ey = sy+duration-1 = 2027, sy =2023, loan for 12 years.
@@ -236,6 +255,15 @@ describe('calculateCFs Test with createLoanCF suite',()=>{
         expect(loanCF).not.toBe(null);
         //expect(loanCF).toHaveLength(duration+1);
 
+    })
+    test('duration >= loan years', () => {
+        
+        goal.emi = {rate: 9, dur: 12, per: 40, ry: 2023};
+        let duration = 13;
+        let price = 7053634;
+        let loanCF = cfutils.calculateCFs(price, goal, duration);
+        expect(loanCF).not.toBe(null);
+        console.log(loanCF);
     })
     
 

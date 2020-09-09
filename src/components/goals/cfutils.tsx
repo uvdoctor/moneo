@@ -313,6 +313,7 @@ export const calculateXIRR = (
   }
 };
 
+//Tested
 export const getLoanBorrowAmt = (
   price: number,
   goalType: APIt.GoalType,
@@ -335,6 +336,7 @@ export const getLoanBorrowAmt = (
   return result;
 };
 
+//Tested
 export const getLoanPaidForMonths = (
   endYear: number,
   loanRepaymentYear: number,
@@ -407,7 +409,7 @@ const createLoanCFs = (
   let cfs: Array<number> = [];
   let totalPTaxBenefit = 0;
   let totalITaxBenefit = 0;
-  if (!goal.emi?.per || !goal.emi?.dur) return cfs;
+  if (!goal.emi?.per || !goal.emi?.dur) return cfs; //tested
   let loanBorrowAmt = 0;
   let loanDP = 0;
   let simpleInts: Array<number> = [];
