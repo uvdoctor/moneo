@@ -52,7 +52,7 @@ const Features = () => {
   ];
 
   return (
-    <div className="w-screen flex flex-col justify-center text-xl md:text-2xl bg-green-100 transition-colors duration-500 linear">
+    <div className="w-screen flex flex-col justify-center text-xl md:text-2xl bg-green-100 transition-colors duration-5000 linear">
       <p className="text-center lg:text-4xl font-black">
         Hello Financial Freedom!
       </p>

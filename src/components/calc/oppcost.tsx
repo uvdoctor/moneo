@@ -3,6 +3,8 @@ import { getCompoundedIncome } from './finance'
 import SVGBalance from './svgbalance'
 import ResultItem from './resultitem'
 import { toCurrency } from '../utils'
+import { getMinRetirementDuration } from '../goals/goalutils'
+import { PLAN_DURATION } from '../../CONSTANTS'
 interface OppCostProps {
     cfs: Array<number>
     currency: string
@@ -30,7 +32,7 @@ export default function OppCost(props: OppCostProps) {
         })
         if(!props.buyGoal) {
             let year = props.startYear + props.cfs.length - 1
-            for(let i = startIndex + props.cfs.length - 1; i < props.discountRate.length - 31; i++, year++) 
+            for(let i = startIndex + props.cfs.length - 1; i < props.discountRate.length - (getMinRetirementDuration() + 1); i++, year++) 
                 oppCost = getCompoundedIncome(props.discountRate[i], oppCost, 1)
             setLastYear(year)
         }
@@ -44,7 +46,7 @@ export default function OppCost(props: OppCostProps) {
 
     return (
         <ResultItem svg={<SVGBalance />} result={oppCost} currency={props.currency} label={`${props.buyGoal ? 'Buy' : 'Spend'} v/s Invest`} pl
-        info={`You May Have ${toCurrency(Math.abs(oppCost), props.currency)} More when You turn ${lastYear - (props.ffGoalEndYear - 100)} if You 
+        info={`You May Have ${toCurrency(Math.abs(oppCost), props.currency)} More when You turn ${lastYear - (props.ffGoalEndYear - PLAN_DURATION)} if You 
         ${oppCost < 0 ? 'Invest' : 'Buy'} instead of ${oppCost < 0 ? (props.buyGoal ? 'Buying' : 'Spending') : 'Investing'}.`} />
     )
 }

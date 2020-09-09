@@ -16,7 +16,7 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
   return (
     <div
       className={`w-full flex flex-col text-white cursor-pointer ${
-        insideMenu ? "max-w-xs" : "max-w-sm md:max-w-md xl:max-w-lg shadow-xl"
+        insideMenu ? "max-w-xs md:ml-3 lg:ml-6 mr-3 lg:mr-6" : "md:m-4 lg:m-8 xl:m-12 max-w-sm md:max-w-md xl:max-w-lg shadow-xl"
       } rounded-lg m-1`}
       style={{
         backgroundColor: item.color,
@@ -32,17 +32,16 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
             style={{ minHeight: !insideMenu ? "9rem" : "6rem" }}
           >
             <div
-              className={`${
-                insideMenu ? "w-full" : "w-2/3 md:w-1/2 lg:w-1/3 text-2xl"
-              } flex flex-col items-center self-center font-bold hover:text-green-primary`}
+              className={`${showDesc ? 'text-default' : 'text-white'} ${
+                insideMenu ? "w-full self-center" : "w-2/3 md:w-1/2 text-2xl self-end"
+              } flex flex-col items-center font-bold`}
             >
-              {item.svg}
               <p>{item.title1}</p>
               <p>{item.title2}</p>
             </div>
             <div
-              className={`w-full flex justify-center items-center ${
-                insideMenu ? "text-base" : "m-2 text-lg"
+              className={`w-full flex ${
+                insideMenu ? "text-base items-center" : "text-lg items-end"
               } font-normal`}
             >
               {(insideMenu || showDesc) && item.desc}
@@ -53,7 +52,6 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
       {!insideMenu && (
         <div
           className="w-full flex flex-col justify-end items-end"
-          style={{ minHeight: "15rem" }}
         >
           <div
             className="w-full p-1 flex items-end justify-end"
@@ -63,22 +61,15 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
             }
           >
             {!videoUrl ? <SVGPlay /> : <SVGStop />}
-            <label
-              className={`ml-1 cursor-pointer ${
-                videoUrl && "text-red-600"
-              } hover:text-red-600`}
-            >
-              Video
-            </label>
           </div>
           <div className="w-full flex items-end justify-end">
-            <div className="w-1/6"></div>
+            <div className="w-1/2"></div>
             <div className="w-full h-full">
               {!videoUrl ? (
                 <Link href={item.link}>
                   <a>
                     <img
-                      className="object-contain rounded-lg cursor-pointer"
+                      className="h-64 object-contain rounded-lg cursor-pointer"
                       src={item.img}
                     />
                   </a>

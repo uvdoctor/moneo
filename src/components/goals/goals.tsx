@@ -11,6 +11,8 @@ import {
   createNewGoalInput,
   getGoalTypes,
   getImpOptions,
+  getLastPossibleFFYear,
+  getAge,
 } from "./goalutils";
 import { findEarliestFFYear, isFFPossible } from "./cfutils";
 import Summary from "./summary";
@@ -151,7 +153,7 @@ export default function Goals({
       setFFResult(result);
       setRR([...result.rr]);
     } else {
-      if (!ffYear || ffYear < result.ffYear || ffYear > ffGoal.ey - 30) {
+      if (!ffYear || ffYear < result.ffYear || ffYear > getLastPossibleFFYear(ffGoal.ey)) {
         setFFYear(result.ffYear);
         setFFResult(result);
         setRR([...result.rr]);
@@ -468,7 +470,7 @@ export default function Goals({
             <label className="p-2 font-semibold text-lg md:text-xl">
               {isFFPossible(ffResult, ffGoal.sa as number)
                 ? `Financial Freedom at ${
-                    (ffYear as number) - (ffGoal.ey - 100)
+                    getAge(ffYear as number, ffGoal.ey)
                   }`
                 : `Financial Freedom May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
             </label>
