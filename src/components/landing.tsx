@@ -49,7 +49,7 @@ const Landing = () => {
             <label className="ml-2 text-green-primary">Stress-free</label>
           </div>
           <label>Savings & Investments</label>
-          {fsb.info.innerWidth >= 768 && (
+          {!isMobileDevice(fsb) && (
             <div className="flex flex-col items-center mt-2 lg:mt-4">
               <LandingButton text="MEET MY GOALS" />
               <label className="mt-1 text-base">Across Currencies</label>
