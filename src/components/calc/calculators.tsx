@@ -1,7 +1,7 @@
 import React from "react";
 import { Parallax } from "react-scroll-parallax";
 import { ROUTES } from "../../CONSTANTS";
-import { isMobileDevice, isTopBottomLayout } from "../utils";
+import { isTopBottomLayout } from "../utils";
 import CalcItem from "./calcitem";
 import { useFullScreenBrowser } from "react-browser-hooks";
 
