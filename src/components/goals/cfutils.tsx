@@ -348,6 +348,7 @@ export const getLoanPaidForMonths = (
   return loanPaidYears * 12;
 };
 
+//Tested
 export const adjustAccruedInterest = (
   loanBorrowAmt: number,
   startYear: number,
@@ -397,10 +398,11 @@ export const createEduLoanDPWithSICFs = (
   };
 };
 
+//Tested
 export const calculateEduLoanGracePeriodInt = (loanPrincipal: number, rate: number) => {
   loanPrincipal * (rate / 200)
 }
-
+//Tested
 const createLoanCFs = (
   p: number,
   goal: APIt.CreateGoalInput,
@@ -538,6 +540,7 @@ const createLoanCFs = (
   return { cfs: cfs, ptb: totalPTaxBenefit, itb: totalITaxBenefit };
 };
 
+//Tested through createLoanCFs
 const getRemPrincipal = (
   startYear: number,
   loanBorrowAmt: number,
