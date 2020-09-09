@@ -31,6 +31,7 @@
     "react-plaid-link": "^2.2.3",
     "react-player": "^2.6.1",
     "react-plotly.js": "^2.4.0",
+    "react-scroll-parallax": "^2.3.4",
     "react-toastify": "^6.0.8",
     "swr": "^0.2.2",
     "xirr": "^1.0.3"

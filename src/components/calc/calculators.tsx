@@ -1,12 +1,16 @@
 import React from "react";
+import { Parallax } from "react-scroll-parallax";
 import { ROUTES } from "../../CONSTANTS";
+import { isMobileDevice, isTopBottomLayout } from "../utils";
 import CalcItem from "./calcitem";
+import { useFullScreenBrowser } from "react-browser-hooks";
 
 interface CalculatorsProps {
   insideMenu?: boolean;
 }
 
 export default function Calculators({ insideMenu }: CalculatorsProps) {
+  const fsb = useFullScreenBrowser();
   const LIGHT_COLORS = {
     RED: "#FEB2B2",
     ORANGE: "#fbd38d",
@@ -20,7 +24,7 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
     //GRAY: "#EEEBEA",
     //GREEN: "DBEAE9"
     GREEN: "#F0FFF4",
-    PURPLE: "#E9D8FD"
+    PURPLE: "#E9D8FD",
   };
 
   const calcItems = [
@@ -81,10 +85,23 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
   ];
 
   return (
-    <div className={`w-full flex flex-wrap items-start justify-center pb-1 ${!insideMenu && 'bg-green-100'}`}>
-      {calcItems.map((item, i) => (
-        <CalcItem key={"ci" + i} item={item} insideMenu={insideMenu} />
-      ))}
+    <div
+      className={`w-full flex flex-wrap items-start justify-center pb-1 ${
+        !insideMenu && "bg-green-100"
+      }`}
+    >
+      {calcItems.map((item, i) =>
+        insideMenu || isTopBottomLayout(fsb) ? (
+          <CalcItem key={"cmi" + i} item={item} insideMenu={insideMenu} />
+        ) : (
+          <Parallax
+            className={`w-full h-full m-1 ${i % 2 === 0 ? 'lg:m-8 xl:m-16' : 'py-8'} max-w-md xl:max-w-lg`}
+            y={[i % 2 !== 0 ? -10 : 10, 0]}
+          >
+            <CalcItem key={"ci" + i} item={item} />
+          </Parallax>
+        )
+      )}
     </div>
   );
 }
