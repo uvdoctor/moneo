@@ -96,7 +96,7 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
         ) : (
           <Parallax
             className={`w-full h-full m-1 ${i % 2 === 0 ? 'lg:m-8 xl:m-16' : 'py-8'} max-w-md xl:max-w-lg`}
-            y={[i % 2 !== 0 ? -10 : 10, 0]}
+            y={[i % 2 !== 0 ? -20 : 20, 0]}
           >
             <CalcItem key={"ci" + i} item={item} />
           </Parallax>
