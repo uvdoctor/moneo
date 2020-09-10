@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { ROUTES } from "../../CONSTANTS";
+import { COLORS, ROUTES } from "../../CONSTANTS";
 import ActionableSVG from "./svgactionable";
 import FunSVG from "./svgfun";
 import PersonalizedSVG from "./svgpersonalized";
@@ -9,6 +9,7 @@ import GlobalSVG from "./svgglobal";
 import PrivateSVG from "./svgprivate";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
+import { useScroll } from "react-browser-hooks"
 
 interface Feature {
   svg: React.ReactNode;
@@ -17,6 +18,8 @@ interface Feature {
 }
 
 const Features = () => {
+  const [bgColor, setBGColor] = useState<string>("")
+  const {top} = useScroll()
   const features: Array<Feature> = [
     {
       svg: <PersonalizedSVG />,
@@ -51,8 +54,15 @@ const Features = () => {
     },
   ];
 
+  useEffect(() => {
+    if(top > 450 && top < 900) setBGColor(COLORS.LIGHT_GREEN)
+    else setBGColor("")
+  }, [top])
+
   return (
-    <div className="w-screen flex flex-col justify-center text-xl md:text-2xl bg-green-100 transition-colors duration-5000 linear">
+    <div className="w-screen flex flex-col justify-center text-xl md:text-2xl bg-white transition-colors duration-1000 ease-in-out"
+    style={{backgroundColor: bgColor}}>
+      
       <p className="text-center lg:text-4xl font-black">
         Hello Financial Freedom!
       </p>

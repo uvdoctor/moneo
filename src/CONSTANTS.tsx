@@ -78,6 +78,7 @@ export const COLORS = {
     DEFAULT: "#4a5568",
     ORANGE: "#dd6b20",
     LIGHT_GRAY: "#edf2f7",
+    LIGHT_GREEN: "#F0FFF4",
     SILVER: "#F1EDED"
 }
 
