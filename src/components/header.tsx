@@ -8,8 +8,8 @@ import { isMobileDevice } from "./utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
 
 interface HeaderProps {
-  parentStyleDiff: boolean;
-  parentStyleDiffHandler: Function;
+  parentStyleDiff?: boolean;
+  parentStyleDiffHandler?: Function;
 }
 
 export default function Header({
