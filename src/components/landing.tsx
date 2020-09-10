@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import Logo from "./logo";
 import Menu from "./menu";
 import { getLandingPageHeight, isMobileDevice } from "./utils";
-import LandingButton from "./landingbutton";
+import GoalImages from "./goalimages";
+import LogoWithName from "./logowithname";
+import SVGMenu from "./svgmenu";
 
 const Landing = () => {
   const fsb = useFullScreenBrowser();
@@ -18,7 +19,7 @@ const Landing = () => {
 
   return (
     <div
-      className="flex flex-col bg-cover lg:bg-fixed w-screen"
+      className="flex flex-col bg-contain bg-no-repeat lg:bg-cover xl:bg-fixed w-screen"
       style={{
         minHeight: coverHeight + "px",
         backgroundImage: `url('images/relaxedwoman.png')`,
@@ -27,38 +28,39 @@ const Landing = () => {
       <nav
         className={`${
           !coverPage ? "bg-white text-default" : "bg-transparent text-silver"
-        } md:text-lg lg:text-xl flex w-full items-end 
-      justify-between flex-wrap py-1 cursor font-bold`}
+        } text-base md:text-lg lg:text-xl flex w-full items-end 
+      justify-between flex-wrap cursor font-bold`}
       >
-        <Logo />
-        <Menu
-          parentStyleDiff={coverPage}
-          parentStyleDiffHandler={setCoverPage}
-        />
+        <LogoWithName />
+        {isMobileDevice(fsb) ? (
+          <Fragment>
+            <label className="whitespace-no-wrap">Your Financial Analyst</label>
+            <div className="cursor-pointer" onClick={() => {}}>
+              <SVGMenu coverPage={coverPage} />
+            </div>
+          </Fragment>
+        ) : (
+          <Menu
+            parentStyleDiff={coverPage}
+            parentStyleDiffHandler={setCoverPage}
+          />
+        )}
       </nav>
       <div
-        className={`w-full flex flex-col justify-start items-start
-            md:justify-center md:items-center md:flex-row"
-        text-silver font-bold xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl 
-      md:mt-4 lg:mt-8 xl:mt-12`}
+        className={`w-full flex flex-col md:flex-row
+        text-silver font-bold xs:text-xs sm:text-base md:text-2xl lg:text-3xl xl:text-4xl`}
       >
-        <div className="ml-4 md:mr-48 lg:mr-64 flex flex-col items-center">
-          <label>Your Financial Analyst</label>
-          <div className="flex">
-            <label>for</label>
-            <label className="ml-2 text-green-primary">Stress-free</label>
+        <div className="w-full mt-2 lg:mt-4 ml-2 md:ml-4 lg:ml-8 flex flex-col">
+          {!isMobileDevice(fsb) && <label>Your Financial Analyst for</label>}
+          <label className="text-green-primary">Stress-free Savings & Investments to</label>
+          <div className="w-full flex items-center text-green-primary">
+            Meet Your Goals            
+            <GoalImages />
           </div>
-          <label>Savings & Investments</label>
-          {!isMobileDevice(fsb) && (
-            <div className="flex flex-col items-center mt-2 lg:mt-4">
-              <LandingButton text="MEET MY GOALS" />
-              <label className="mt-1 text-base">Across Currencies</label>
-            </div>
-          )}
         </div>
         {isMobileDevice(fsb) && (
           <div className="w-full flex justify-end md:pr-4 mt-10">
-            <LandingButton text="PLAN" />
+            <GoalImages />
           </div>
         )}
       </div>

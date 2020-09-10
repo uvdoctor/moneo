@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function SVGLogo() {
     return (
-    <svg className="w-8 md:w-10 cursor-pointer" viewBox="0 0 192 192" enableBackground="new 0 0 192 192">
+    <svg className="w-6 md:w-10 cursor-pointer" viewBox="0 0 192 192" enableBackground="new 0 0 192 192">
         <image
             x="0"
             y="0"
