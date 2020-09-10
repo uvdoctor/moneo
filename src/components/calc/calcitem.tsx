@@ -16,7 +16,7 @@ export default function CalcItem({ item, insideMenu }: CalcItemProps) {
   return (
       <div
         className={`m-1 w-full flex flex-col text-white cursor-pointer ${
-          insideMenu && "md:ml-3 lg:ml-6 mr-3 lg:mr-6"
+          insideMenu && "max-w-xs md:ml-3 lg:ml-6 mr-3 lg:mr-6"
         } rounded-lg`}
         style={{
           backgroundColor: item.color,

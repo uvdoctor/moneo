@@ -21,19 +21,19 @@ export default function Header({
     <nav
       className={`top-0 ${
         !parentStyleDiff
-          ? "fixed bg-white text-default"
+          ? "fixed bg-white text-default p-1 z-10 h-10"
           : "bg-transparent text-silver"
       } text-base md:text-lg lg:text-xl flex w-full items-end 
       justify-between flex-wrap cursor font-bold`}
     >
       <LogoWithName />
       {isMobileDevice(fsb) ? (
-        <Fragment>
+        <div className="w-3/4 flex justify-between">
           <label className="whitespace-no-wrap">Your Financial Analyst</label>
           <div className="cursor-pointer" onClick={() => {}}>
             <SVGMenu coverPage={parentStyleDiff} />
           </div>
-        </Fragment>
+        </div>
       ) : (
         <Menu
           parentStyleDiff={parentStyleDiff}

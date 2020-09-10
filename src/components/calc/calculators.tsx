@@ -92,9 +92,7 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
     >
       {calcItems.map((item, i) =>
         insideMenu || isTopBottomLayout(fsb) ? (
-          <div className="max-w-xs md:max-w-sm">
             <CalcItem key={"cmi" + i} item={item} insideMenu={insideMenu} />
-          </div>
         ) : (
           <Parallax
             className={`w-full h-full m-1 ${
