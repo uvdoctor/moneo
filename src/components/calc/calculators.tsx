@@ -92,10 +92,14 @@ export default function Calculators({ insideMenu }: CalculatorsProps) {
     >
       {calcItems.map((item, i) =>
         insideMenu || isTopBottomLayout(fsb) ? (
-          <CalcItem key={"cmi" + i} item={item} insideMenu={insideMenu} />
+          <div className="max-w-xs md:max-w-sm">
+            <CalcItem key={"cmi" + i} item={item} insideMenu={insideMenu} />
+          </div>
         ) : (
           <Parallax
-            className={`w-full h-full m-1 ${i % 2 === 0 ? 'lg:m-8 xl:m-16' : 'py-8'} max-w-sm md:max-w-md xl:max-w-lg`}
+            className={`w-full h-full m-1 ${
+              i % 2 === 0 ? "lg:m-8 xl:m-16" : "py-8"
+            } max-w-md xl:max-w-lg`}
             y={[i % 2 === 0 ? 50 : 0, 0]}
           >
             <CalcItem key={"ci" + i} item={item} />
