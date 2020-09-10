@@ -17,7 +17,7 @@ const Landing = () => {
 
   return (
     <div
-      className="flex flex-col bg-contain bg-no-repeat lg:bg-cover xl:bg-fixed w-full"
+      className="flex flex-col bg-contain bg-no-repeat lg:bg-cover xl:bg-fixed w-screen"
       style={{
         minHeight: coverHeight + "px",
         backgroundImage: `url('images/relaxedwoman.png')`,
