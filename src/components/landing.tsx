@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import { useFullScreenBrowser } from "react-browser-hooks";
@@ -9,13 +9,19 @@ import JoinUs from "./joinus";
 const Landing = () => {
   const fsb = useFullScreenBrowser();
   const [coverPage, setCoverPage] = useState<boolean>(true);
+  const getCoverHeight = () => Math.round(fsb.info.innerWidth * 3 / 5)
+  const [coverHeight, setCoverHeight] = useState<number>(getCoverHeight())
 
+  useEffect(() => {
+    setCoverHeight(getCoverHeight())
+  }, [fsb.info.innerWidth])
+  
   return (
     <Fragment>
       <div
         className="flex flex-col bg-contain bg-no-repeat w-screen"
         style={{
-          height: fsb.info.innerWidth * 3/5 + "px",
+          height: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
         }}
       >

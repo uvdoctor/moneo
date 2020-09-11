@@ -21,7 +21,7 @@ export default function Header({
   const fsb = useFullScreenBrowser();
   return (
     <nav
-      className={`top-0 pb-2 ${
+      className={`top-0 pb-1 ${
         !parentStyleDiff
           ? "fixed z-10"
           : "text-silver"
