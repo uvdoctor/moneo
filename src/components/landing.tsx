@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import { isMobileDevice, isTopBottomLayout } from "./utils";
+import { isMobileDevice } from "./utils";
 import Header from "./header";
 import JoinUs from "./joinus";
 
