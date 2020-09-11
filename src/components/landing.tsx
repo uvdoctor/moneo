@@ -21,7 +21,7 @@ const Landing = () => {
       <div
         className="flex flex-col bg-contain xl:bg-cover xl:bg-center bg-no-repeat w-screen xl:h-screen"
         style={{
-          height: coverHeight + "px",
+          minHeight: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
           maxWidth: '1400px'
         }}
