@@ -48,7 +48,7 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
           {props.svg}
           <div className="flex items-end">
             <label
-              className={`${props.coverPage && 'text-white'} cursor-pointer hover:text-green-primary`}
+              className={`${props.coverPage && 'text-silver'} cursor-pointer hover:text-green-primary`}
             >
               {props.title}
             </label>

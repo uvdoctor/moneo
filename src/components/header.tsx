@@ -6,6 +6,8 @@ import LogoWithName from "./logowithname";
 import SVGMenu from "./svgmenu";
 import { isMobileDevice } from "./utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
+import Logo from "./logo";
+import { COLORS } from "../CONSTANTS";
 
 interface HeaderProps {
   parentStyleDiff?: boolean;
@@ -19,14 +21,14 @@ export default function Header({
   const fsb = useFullScreenBrowser();
   return (
     <nav
-      className={`top-0 ${
+      className={`top-0 pb-2 ${
         !parentStyleDiff
-          ? "fixed bg-white p-1 z-10 h-12"
-          : "bg-transparent text-white"
+          ? "fixed z-10"
+          : "text-silver"
       } text-base md:text-lg lg:text-xl flex w-full items-end 
       justify-between flex-wrap cursor font-bold`}
-    >
-      <LogoWithName />
+    style={{backgroundImage: `linear-gradient(to right, ${COLORS.SILVER}, ${parentStyleDiff ? COLORS.DEFAULT : COLORS.LIGHT_GRAY})`}}>
+      {parentStyleDiff ? <Logo /> : <LogoWithName />}
       {isMobileDevice(fsb) ? (
         <div className="w-3/4 flex justify-between">
           <label className="whitespace-no-wrap">Your Financial Analyst</label>

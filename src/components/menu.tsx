@@ -53,10 +53,10 @@ export default function Menu({
             <div className="flex flex-col relative">
               <ExpandCollapse title="About" coverPage={parentStyleDiff}>
                 <ul
-                  className={`mt-32 z-50 ${
+                  className={`mt-40 z-50 ${
                     !parentStyleDiff
-                      ? "bg-white"
-                      : "pt-4 bg-white text-default md:text-white md:bg-transparent"
+                      ? "bg-gray-200"
+                      : "bg-gray-600"
                   } px-2 md:px-4 absolute shadow-xl`}
                 >
                   <li className="py-1 hover:text-green-primary">Features</li>

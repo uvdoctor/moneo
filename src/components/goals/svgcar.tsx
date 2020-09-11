@@ -6,7 +6,7 @@ interface CarSVGProps {
 
 export default function CarSVG({animationStyle} : CarSVGProps) {
     return (
-        <svg fill="white" viewBox="0 0 39.055 39.054" style={{animation: animationStyle}}>
+        <svg viewBox="0 0 39.055 39.054" style={{animation: animationStyle}}>
 							<g>
 								<path d="M38.831,14.26c-0.191-0.233-0.476-0.369-0.775-0.369h-3.801c-0.938-2.474-2.16-4.898-3.549-5.813
 			c-4.805-3.161-17.55-3.161-22.355,0c-1.39,0.916-2.607,3.343-3.55,5.813H1c-0.302,0-0.586,0.136-0.775,0.369
