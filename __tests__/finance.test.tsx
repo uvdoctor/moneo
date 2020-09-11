@@ -32,6 +32,11 @@ describe('getEMI function absurd values', ()=>{
     let getEMI = finance.getEmi(2000,2,-12);
     expect(getEMI).toBe(0)
   })
+
+  test('Loan years in decimal', () => {
+    let getEMI = Math.round(finance.getEmi(1000000, 9.6, 30));
+    expect(getEMI).toBe(37626);
+  })
 })
 
 // Suite 2
