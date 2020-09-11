@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import { isMobileDevice } from "./utils";
+import { isMobileDevice, isTopBottomLayout } from "./utils";
 import Header from "./header";
 import JoinUs from "./joinus";
 
@@ -19,10 +19,11 @@ const Landing = () => {
   return (
     <Fragment>
       <div
-        className="flex flex-col bg-contain xl:bg-cover bg-no-repeat w-screen xl:h-screen"
+        className="flex flex-col bg-contain xl:bg-cover xl:bg-center bg-no-repeat w-screen xl:h-screen"
         style={{
           height: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
+          maxWidth: '1400px'
         }}
       >
         <Header

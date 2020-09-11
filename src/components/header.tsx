@@ -27,7 +27,7 @@ export default function Header({
           : "text-silver"
       } text-base md:text-lg lg:text-xl flex w-full items-end 
       justify-between flex-wrap cursor font-bold`}
-    style={{backgroundImage: `linear-gradient(to right, ${COLORS.SILVER}, ${parentStyleDiff ? COLORS.DEFAULT : COLORS.LIGHT_GRAY})`}}>
+    style={{backgroundImage: `linear-gradient(to right, ${COLORS.SILVER}, ${parentStyleDiff ? "#7dc13a" : "white"})`}}>
       {parentStyleDiff ? <Logo /> : <LogoWithName />}
       {isMobileDevice(fsb) ? (
         <div className="w-3/4 flex justify-between">

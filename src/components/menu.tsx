@@ -53,11 +53,8 @@ export default function Menu({
         <div className="flex flex-col relative">
           <ExpandCollapse title="About" coverPage={parentStyleDiff}>
             <ul
-              className="z-50 px-2 md:px-4 absolute shadow-xl"
+              className={`z-50 px-2 md:px-4 absolute shadow-xl ${!parentStyleDiff && 'bg-white'}`}
               style={{
-                backgroundColor: !parentStyleDiff
-                  ? COLORS.LIGHT_GRAY
-                  : "transparent",
                 marginTop: topMargin - 6 + "rem",
               }}
             >
