@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { COLORS, ROUTES } from "../CONSTANTS";
+import { ROUTES } from "../CONSTANTS";
 import Calculators from "./calc/calculators";
 import ExpandCollapse from "./form/expandcollapse";
 import { useFullScreenBrowser } from "react-browser-hooks";
