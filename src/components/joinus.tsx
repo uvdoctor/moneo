@@ -1,26 +1,38 @@
-import React, { Fragment } from "react";
+import React, { useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
+import TextInput from "./form/textinput";
 import GoalImages from "./goalimages";
 
 export default function JoinUs() {
+  const [email, setEmail] = useState<string>("");
+
   return (
-    <Fragment>
-      <div className="w-full flex items-center">
+    <div className="w-full flex flex-col items-center md:items-start">
+      <div className="flex items-center font-bold mt-4 md:mt-0">
         Meet Your Goals
         <GoalImages />
       </div>
-      <form className="w-full flex items-center border-b-2 border-gray-700 focus:border-green-700 py-2 max-w-sm">
-        <input
-          className="appearance-none bg-transparent border-none w-full mr-3 py-1 px-2 leading-tight focus:outline-none"
+      <div className="mt-2 flex flex-col max-w-sm lg:max-w-md items-center md:items-start">
+        <TextInput
+          pre=""
+          name="email"
+          inputOrder={1}
+          currentOrder={0}
+          nextStepDisabled={false}
+          nextStepHandler={() => true}
+          allInputDone
+          value={email}
+          changeHandler={setEmail}
+          placeholder="Enter email address"
           type="email"
-          placeholder="abc@xyz.com"
-          aria-label="Email address"
         />
-        <AwesomeButton ripple type="primary" size="large">
-          JOIN WAITLIST
-        </AwesomeButton>
-      </form>
-    </Fragment>
+        <div className="mt-2 mb-4 md:mb-0">
+          <AwesomeButton ripple type="primary" size="large">
+            JOIN WAITLIST
+          </AwesomeButton>
+        </div>
+      </div>
+    </div>
   );
 }

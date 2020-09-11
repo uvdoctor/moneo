@@ -15,6 +15,7 @@ interface TextInputProps {
   name: string;
   placeholder?: string;
   changeHandler: Function;
+  type?:string
 }
 
 export default function TextInput(props: TextInputProps) {
@@ -27,13 +28,14 @@ export default function TextInput(props: TextInputProps) {
 
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
+      formRef.current?.reportValidity()
       e.preventDefault();
       if(!props.allInputDone) props.nextStepHandler()
     }
   };
 
   return (
-    <div className="w-full flex justify-center items-center">
+    <div className="flex items-center">
       {(props.currentOrder >= props.inputOrder || props.allInputDone) && (
         <form
           ref={formRef}
@@ -47,7 +49,7 @@ export default function TextInput(props: TextInputProps) {
           {props.pre && <label>{props.pre}</label>}
           <input
             className="input"
-            type="text"
+            type={props.type ? props.type : "text"}
             name={props.name}
             placeholder={props.placeholder}
             value={props.value}
@@ -55,6 +57,7 @@ export default function TextInput(props: TextInputProps) {
             required
             style={{ width: `${props.width}` }}
             onKeyDown={handleKeyDown}
+            minLength={props.type ? 8 : 3}
           />
           {props.post && <label>{props.post}</label>}
         </form>

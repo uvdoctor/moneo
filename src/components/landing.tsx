@@ -9,13 +9,13 @@ import JoinUs from "./joinus";
 const Landing = () => {
   const fsb = useFullScreenBrowser();
   const [coverPage, setCoverPage] = useState<boolean>(true);
-  const getCoverHeight = () => Math.round(fsb.info.innerWidth * 3 / 5)
-  const [coverHeight, setCoverHeight] = useState<number>(getCoverHeight())
+  const getCoverHeight = () => Math.round((fsb.info.innerWidth * 3) / 5);
+  const [coverHeight, setCoverHeight] = useState<number>(getCoverHeight());
 
   useEffect(() => {
-    setCoverHeight(getCoverHeight())
-  }, [fsb.info.innerWidth])
-  
+    setCoverHeight(getCoverHeight());
+  }, [fsb.info.innerWidth]);
+
   return (
     <Fragment>
       <div
@@ -23,7 +23,7 @@ const Landing = () => {
         style={{
           minHeight: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
-          maxWidth: '1400px'
+          maxWidth: "1400px",
         }}
       >
         <Header
@@ -31,16 +31,20 @@ const Landing = () => {
           parentStyleDiffHandler={setCoverPage}
         />
         <div
-          className={`w-full flex flex-col md:mt-1 ml-2 
+          className={`flex flex-col md:mt-1 ml-2 
         font-bold xs:text-xs sm:text-base md:text-xl lg:text-2xl`}
         >
-          <div className="w-full flex flex-wrap md:text-2xl lg:text-3xl xl:text-4xl">
-            {!isMobileDevice(fsb) && (
-              <label className="mr-2">Your Financial Analyst for</label>
-            )}
-            <label className="text-green-primary">Stress-free Savings & Investments</label>
-          </div>
-          {!isMobileDevice(fsb) && <div className="md:mt-2 lg:mt-4"><JoinUs /></div>}
+          {!isMobileDevice(fsb) && (
+            <label className="mr-2">Your Financial Analyst for</label>
+          )}
+          <label className="text-green-primary md:text-2xl lg:text-3xl xl:text-4xl">
+            Stress-free Savings & Investments
+          </label>
+          {!isMobileDevice(fsb) && (
+            <div className="md:mt-2 lg:mt-4">
+              <JoinUs />
+            </div>
+          )}
         </div>
       </div>
       {isMobileDevice(fsb) && <JoinUs />}
