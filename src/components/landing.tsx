@@ -21,7 +21,7 @@ const Landing = () => {
       <div
         className="flex flex-col bg-contain bg-no-repeat w-screen h-screen"
         style={{
-          height: coverHeight + "px",
+          height: isMobileDevice(fsb) ? coverHeight + "px" : "",
           backgroundImage: `url('images/cover.jpg')`,
         }}
       >
