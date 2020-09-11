@@ -1,18 +1,45 @@
 import React from "react";
-import Logo from "./logo";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import Menu from "./menu";
+import LogoWithName from "./logowithname";
+import SVGMenu from "./svgmenu";
+import { isMobileDevice } from "./utils";
+import { useFullScreenBrowser } from "react-browser-hooks";
 
-const Header = () => {
+interface HeaderProps {
+  parentStyleDiff?: boolean;
+  parentStyleDiffHandler?: Function;
+}
+
+export default function Header({
+  parentStyleDiff,
+  parentStyleDiffHandler,
+}: HeaderProps) {
+  const fsb = useFullScreenBrowser();
   return (
     <nav
-      className="fixed top-0 bg-white md:text-lg lg:text-xl flex w-full items-end 
-      justify-between flex-wrap py-1 cursor font-bold z-10">
-      <Logo />
-      <Menu />
+      className={`top-0 ${
+        !parentStyleDiff
+          ? "fixed bg-white p-1 z-10 h-12"
+          : "bg-transparent text-white"
+      } text-base md:text-lg lg:text-xl flex w-full items-end 
+      justify-between flex-wrap cursor font-bold`}
+    >
+      <LogoWithName />
+      {isMobileDevice(fsb) ? (
+        <div className="w-3/4 flex justify-between">
+          <label className="whitespace-no-wrap">Your Financial Analyst</label>
+          <div className="cursor-pointer" onClick={() => {}}>
+            <SVGMenu coverPage={parentStyleDiff} />
+          </div>
+        </div>
+      ) : (
+        <Menu
+          parentStyleDiff={parentStyleDiff}
+          parentStyleDiffHandler={parentStyleDiffHandler}
+        />
+      )}
     </nav>
   );
-};
-
-export default Header;
+}
