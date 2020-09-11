@@ -16,7 +16,7 @@ export default function Menu({
 }: MenuProps) {
   const fsb = useFullScreenBrowser();
   const getTopMargin = () =>
-    fsb.info.screenWidth < isMobileDevice(fsb) ? 33 : 15;
+    fsb.info.screenWidth < isMobileDevice(fsb) ? 33 : 14.5;
   const [topMargin, setTopMargin] = useState<number>(getTopMargin());
 
   useEffect(() => {

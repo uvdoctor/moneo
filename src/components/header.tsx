@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import Menu from "./menu";
@@ -21,8 +21,8 @@ export default function Header({
     <nav
       className={`top-0 ${
         !parentStyleDiff
-          ? "fixed bg-white text-default p-1 z-10 h-10"
-          : "bg-transparent text-silver"
+          ? "fixed bg-white p-1 z-10 h-12"
+          : "bg-transparent"
       } text-base md:text-lg lg:text-xl flex w-full items-end 
       justify-between flex-wrap cursor font-bold`}
     >
@@ -31,12 +31,12 @@ export default function Header({
         <div className="w-3/4 flex justify-between">
           <label className="whitespace-no-wrap">Your Financial Analyst</label>
           <div className="cursor-pointer" onClick={() => {}}>
-            <SVGMenu coverPage={parentStyleDiff} />
+            <SVGMenu coverPage={false} />
           </div>
         </div>
       ) : (
         <Menu
-          parentStyleDiff={parentStyleDiff}
+          parentStyleDiff={false}
           parentStyleDiffHandler={parentStyleDiffHandler}
         />
       )}

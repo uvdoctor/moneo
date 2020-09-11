@@ -8,7 +8,7 @@ export default function LogoWithName() {
   return (
     <div className="flex">
       <Logo />
-      {!isMobileDevice(fsb) && <label className="text-base md:text-3xl mt-1">ollarDarwin</label>}
+      {!isMobileDevice(fsb) && <label className="text-base md:text-3xl mt-1 ml-1">$Darwin</label>}
     </div>
   );
 }
