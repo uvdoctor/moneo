@@ -552,7 +552,4 @@ export const buildTabsArray = (items: any) => {
 
 export const isTopBottomLayout = (fsb: any) => fsb.info.innerWidth < 1024;
 
-export const getLandingPageHeight = (fsb: any) =>
-  Math.round((fsb.info.innerWidth));
-
 export const isMobileDevice = (fsb: any) => fsb.info.innerWidth < 500;

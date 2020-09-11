@@ -56,7 +56,7 @@ export default function Menu({
                   className={`mt-32 z-50 ${
                     !parentStyleDiff
                       ? "bg-white"
-                      : "pt-4 bg-white text-default md:text-silver md:bg-transparent"
+                      : "pt-4 bg-white text-default md:text-white md:bg-transparent"
                   } px-2 md:px-4 absolute shadow-xl`}
                 >
                   <li className="py-1 hover:text-green-primary">Features</li>

@@ -22,7 +22,7 @@ export default function Header({
       className={`top-0 ${
         !parentStyleDiff
           ? "fixed bg-white p-1 z-10 h-12"
-          : "bg-transparent"
+          : "bg-transparent text-white"
       } text-base md:text-lg lg:text-xl flex w-full items-end 
       justify-between flex-wrap cursor font-bold`}
     >
@@ -31,12 +31,12 @@ export default function Header({
         <div className="w-3/4 flex justify-between">
           <label className="whitespace-no-wrap">Your Financial Analyst</label>
           <div className="cursor-pointer" onClick={() => {}}>
-            <SVGMenu coverPage={false} />
+            <SVGMenu coverPage={parentStyleDiff} />
           </div>
         </div>
       ) : (
         <Menu
-          parentStyleDiff={false}
+          parentStyleDiff={parentStyleDiff}
           parentStyleDiffHandler={parentStyleDiffHandler}
         />
       )}
