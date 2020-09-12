@@ -1,4 +1,5 @@
 import React from "react";
+import { COLORS } from "../CONSTANTS";
 
 interface DropdownProps {
   parentStyleDiff?: boolean;
@@ -12,10 +13,13 @@ export default function Dropdown({
 }: DropdownProps) {
   return (
     <ul
-      className={`${!topMargin && 'w-full flex flex-col justify-center items-center left-0'} z-50 px-2 md:px-4 absolute shadow-xl`}
+      className={`${!topMargin && 'w-full flex flex-col justify-end items-end left-0'} z-50 px-2 md:px-4 absolute shadow-xl`}
       style={{
         marginTop: topMargin ? topMargin - 6 + "rem" : "",
         backgroundColor: parentStyleDiff ? "#94ca5d" : "white",
+        backgroundImage: topMargin ? "" : `linear-gradient(to right, ${COLORS.SILVER}, ${
+          parentStyleDiff ? "#7dc13a" : "white"
+        })`
       }}
     >
       {Object.keys(options).map((key, i) => 
