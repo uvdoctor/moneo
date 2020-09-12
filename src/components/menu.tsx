@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { ROUTES } from "../CONSTANTS";
+import { HOME_ANCHORS, ROUTES } from "../CONSTANTS";
 import Calculators from "./calc/calculators";
 import ExpandCollapse from "./form/expandcollapse";
 import Dropdown from "./dropdown";
@@ -46,14 +46,14 @@ export default function Menu({
           parentStyleDiff={parentStyleDiff}
           topMargin={topMargin}
           options={{
-            Features: "#features",
-            Price: "#price",
-            Company: "#company",
+            Features: HOME_ANCHORS.FEATURES,
+            Pricing: HOME_ANCHORS.PRICE,
+            Company: HOME_ANCHORS.COMPANY
           }}
         />
       </ExpandCollapse>
       <div className="hover:text-green-primary mr-2 md:mr-4 lg:mr-8 whitespace-no-wrap">
-        <a href="#join">Join Waitlist</a>
+        <a href={HOME_ANCHORS.JOIN}>Join Waitlist</a>
       </div>
     </div>
   );

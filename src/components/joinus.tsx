@@ -5,12 +5,13 @@ import TextInput from "./form/textinput";
 import GoalImages from "./goalimages";
 import { isMobileDevice } from "./utils";
 import {useFullScreenBrowser} from "react-browser-hooks"
+import { HOME_ANCHORS } from "../CONSTANTS";
 export default function JoinUs() {
   const [email, setEmail] = useState<string>("");
   const fsb = useFullScreenBrowser()
 
   return (
-    <div id="join" className={`w-full flex flex-col ${isMobileDevice(fsb) ? 'items-center' : 'items-start'}`}>
+    <div id={HOME_ANCHORS.JOIN} className={`w-full flex flex-col ${isMobileDevice(fsb) ? 'items-center' : 'items-start'}`}>
       <div className="flex items-center font-bold md:mt-4 md:mt-0">
         <h1>Meet Your Goals</h1>
         <GoalImages />

@@ -5,6 +5,14 @@ export const ROUTES = {
     CALCULATE: '/calculate',
 }
 
+export const HOME_ANCHORS = {
+    CALCULATE: '#calculate',
+    JOIN: '#join',
+    FEATURES: '#features',
+    PRICE: '#price',
+    COMPANY: '#company'
+}
+
 export const SVGS = {
     TIME_COST: 'TimeCostSvg',
     OPP_COST: 'OppCostSvg',

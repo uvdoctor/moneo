@@ -6,7 +6,7 @@ import LogoWithName from "./logowithname";
 import SVGMenu from "./svgmenu";
 import { isMobileDevice } from "./utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import { COLORS } from "../CONSTANTS";
+import { COLORS, HOME_ANCHORS } from "../CONSTANTS";
 import Dropdown from "./dropdown";
 import SVGClose from "./svgclose";
 
@@ -43,7 +43,7 @@ export default function Header({
     >
       <LogoWithName />
       {isMobileDevice(fsb) ? (
-        <div className="max-w-xs flex justify-between">
+        <div className="flex">
           <label className="whitespace-no-wrap mr-2">Your Financial Analyst</label>
           <div
             className="cursor-pointer pr-1"
@@ -54,11 +54,11 @@ export default function Header({
               <Dropdown
                 parentStyleDiff={parentStyleDiff}
                 options={{
-                  Calculate: "#calculate",
-                  Features: "#features",
-                  Pricing: "#price",
-                  Company: "#company",
-                  "Join Waitlist": "#join",
+                  Calculate: HOME_ANCHORS.CALCULATE,
+                  Features: HOME_ANCHORS.FEATURES,
+                  Pricing: HOME_ANCHORS.PRICE,
+                  Company: HOME_ANCHORS.COMPANY,
+                  "Join Waitlist": HOME_ANCHORS.JOIN
                 }}
               />
             )}
