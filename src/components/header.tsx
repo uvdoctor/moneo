@@ -49,7 +49,7 @@ export default function Header({
             className="cursor-pointer pr-1"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
           >
-            {showMobileMenu ? <SVGClose disable /> : <SVGMenu coverPage={parentStyleDiff} />}
+            {showMobileMenu ? <SVGClose coverPage={parentStyleDiff} /> : <SVGMenu coverPage={parentStyleDiff} />}
             {showMobileMenu && (
               <Dropdown
                 parentStyleDiff={parentStyleDiff}

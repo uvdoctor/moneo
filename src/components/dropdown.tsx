@@ -19,7 +19,7 @@ export default function Dropdown({
         backgroundColor: parentStyleDiff ? "#94ca5d" : "white",
         backgroundImage: topMargin ? "" : `linear-gradient(to right, ${COLORS.SILVER}, ${
           parentStyleDiff ? "#7dc13a" : "white"
-        })`
+        })`,
       }}
     >
       {Object.keys(options).map((key, i) => 
