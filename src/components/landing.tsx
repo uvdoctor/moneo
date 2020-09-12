@@ -14,12 +14,16 @@ const Landing = () => {
 
   useEffect(() => {
     setCoverHeight(getCoverHeight());
+  }, []);
+
+  useEffect(() => {
+    setCoverHeight(getCoverHeight());
   }, [fsb.info.innerWidth]);
 
   return (
     <Fragment>
       <div
-        className="flex flex-col bg-contain xl:bg-cover xl:bg-center xl:bg-fixed bg-no-repeat w-screen min-h-full xl:h-screen"
+        className="flex flex-col bg-contain xl:bg-cover xl:bg-center xl:bg-fixed bg-no-repeat w-screen h-48 xl:h-screen"
         style={{
           minHeight: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
