@@ -34,7 +34,7 @@ export default function Header({
       className={`top-0 pb-1 ${
         !parentStyleDiff ? "fixed z-10" : "text-silver"
       } text-base md:text-lg lg:text-xl flex w-full items-end 
-      justify-between flex-wrap cursor font-bold`}
+      justify-between cursor font-bold`}
       style={{
         backgroundImage: `linear-gradient(to right, ${COLORS.SILVER}, ${
           parentStyleDiff ? "#7dc13a" : "white"
