@@ -7,7 +7,7 @@ import SVGLogo from './svglogo'
 const Logo = () => {
 	return (
 		<Link href={ROUTES.HOME}><a>
-			<SVGLogo />
+			<div className="p-1"><SVGLogo /></div>
 		</a></Link>
 	);
 }

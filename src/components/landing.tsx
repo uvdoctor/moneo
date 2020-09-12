@@ -31,15 +31,15 @@ const Landing = () => {
           parentStyleDiffHandler={setCoverPage}
         />
         <div
-          className={`flex flex-col md:mt-1 ml-2 
+          className={`flex flex-col md:mt-1 ml-2 md:ml-4 lg:ml-8
         font-bold xs:text-xs sm:text-base md:text-xl lg:text-2xl`}
         >
           {!isMobileDevice(fsb) && (
-            <label className="mr-2">Your Financial Analyst for</label>
+            <h1 className="mr-2">Your Financial Analyst for</h1>
           )}
-          <label className="text-green-primary md:text-2xl lg:text-3xl xl:text-4xl">
+          <h1 className="text-green-primary md:text-2xl lg:text-3xl xl:text-4xl">
             Stress-free Savings & Investments
-          </label>
+          </h1>
           {!isMobileDevice(fsb) && (
             <div className="md:mt-2 lg:mt-4">
               <JoinUs />

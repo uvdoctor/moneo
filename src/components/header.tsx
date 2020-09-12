@@ -6,7 +6,6 @@ import LogoWithName from "./logowithname";
 import SVGMenu from "./svgmenu";
 import { isMobileDevice } from "./utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import Logo from "./logo";
 import { COLORS } from "../CONSTANTS";
 
 interface HeaderProps {
@@ -28,9 +27,9 @@ export default function Header({
       } text-base md:text-lg lg:text-xl flex w-full items-end 
       justify-between flex-wrap cursor font-bold`}
     style={{backgroundImage: `linear-gradient(to right, ${COLORS.SILVER}, ${parentStyleDiff ? "#7dc13a" : "white"})`}}>
-      {parentStyleDiff ? <Logo /> : <LogoWithName />}
+      <LogoWithName />
       {isMobileDevice(fsb) ? (
-        <div className="w-3/4 flex justify-between">
+        <div className="w-2/3 flex justify-between">
           <label className="whitespace-no-wrap">Your Financial Analyst</label>
           <div className="cursor-pointer" onClick={() => {}}>
             <SVGMenu coverPage={parentStyleDiff} />

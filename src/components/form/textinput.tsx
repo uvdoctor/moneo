@@ -16,6 +16,7 @@ interface TextInputProps {
   placeholder?: string;
   changeHandler: Function;
   type?:string
+  autofocus?: boolean
 }
 
 export default function TextInput(props: TextInputProps) {
@@ -58,6 +59,7 @@ export default function TextInput(props: TextInputProps) {
             style={{ width: `${props.width}` }}
             onKeyDown={handleKeyDown}
             minLength={props.type ? 8 : 3}
+            autoFocus={props.autofocus}
           />
           {props.post && <label>{props.post}</label>}
         </form>

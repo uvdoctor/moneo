@@ -1,14 +1,11 @@
 import React from "react";
 import Logo from "./logo";
-import { useFullScreenBrowser } from "react-browser-hooks";
-import { isMobileDevice } from "./utils";
 
 export default function LogoWithName() {
-  const fsb = useFullScreenBrowser();
   return (
     <div className="flex">
       <Logo />
-      {!isMobileDevice(fsb) && <label className="text-base md:text-3xl mt-1 ml-1">$Darwin</label>}
+      <h1 className="text-base md:text-3xl mt-2 text-default">$Darwin</h1>
     </div>
   );
 }
