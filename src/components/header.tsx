@@ -31,8 +31,8 @@ export default function Header({
 
   return (
     <nav
-      className={`w-full top-0 pb-1 ${
-        !parentStyleDiff ? "fixed z-10" : "text-silver relative"
+      className={`w-full top-0 pb-1 z-10 ${
+        !parentStyleDiff ? "fixed z-10" : "text-silver static"
       } text-base md:text-lg lg:text-xl`}
       style={{
         backgroundImage: `linear-gradient(to right, ${COLORS.SILVER}, ${
