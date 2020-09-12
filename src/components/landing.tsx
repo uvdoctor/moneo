@@ -14,10 +14,6 @@ const Landing = () => {
 
   useEffect(() => {
     setCoverHeight(getCoverHeight());
-  }, []);
-
-  useEffect(() => {
-    setCoverHeight(getCoverHeight());
   }, [fsb.info.innerWidth]);
 
   return (

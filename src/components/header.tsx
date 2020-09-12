@@ -31,46 +31,51 @@ export default function Header({
 
   return (
     <nav
-      className={`top-0 pb-1 ${
+      className={`w-full top-0 pb-1 ${
         !parentStyleDiff ? "fixed z-10" : "text-silver"
-      } text-base md:text-lg lg:text-xl flex w-full items-end 
-      justify-between cursor font-bold`}
+      } text-base md:text-lg lg:text-xl`}
       style={{
         backgroundImage: `linear-gradient(to right, ${COLORS.SILVER}, ${
           parentStyleDiff ? "#7dc13a" : "white"
         })`,
       }}
     >
-      <LogoWithName />
-      {isMobileDevice(fsb) ? (
-        <Fragment>
-          <label className="whitespace-no-wrap">Your Financial Analyst</label>
-          <div
-            className="cursor-pointer pr-1"
-            onClick={() => setShowMobileMenu(!showMobileMenu)}
-          >
-            {showMobileMenu ? <SVGClose coverPage={parentStyleDiff} /> : <SVGMenu coverPage={parentStyleDiff} />}
-            {showMobileMenu && (
-              <Dropdown
-                parentStyleDiff={parentStyleDiff}
-                options={{
-                  Calculate: HOME_ANCHORS.CALCULATE,
-                  Features: HOME_ANCHORS.FEATURES,
-                  Pricing: HOME_ANCHORS.PRICE,
-                  Company: HOME_ANCHORS.COMPANY,
-                  "Join Waitlist": HOME_ANCHORS.JOIN
-                }}
-              />
-            )}
-          </div>
-        </Fragment>
-      ) : (
-        <Menu
-          parentStyleDiff={parentStyleDiff}
-          parentStyleDiffHandler={parentStyleDiffHandler}
-          topMargin={topMargin}
-        />
-      )}
+      <div className="w-full flex justify-between cursor font-bold items-end">
+        <LogoWithName />
+        {isMobileDevice(fsb) ? (
+          <Fragment>
+            <label className="whitespace-no-wrap">Your Financial Analyst</label>
+            <div
+              className="cursor-pointer pr-1"
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+            >
+              {showMobileMenu ? (
+                <SVGClose coverPage={parentStyleDiff} />
+              ) : (
+                <SVGMenu coverPage={parentStyleDiff} />
+              )}
+              {showMobileMenu && (
+                <Dropdown
+                  parentStyleDiff={parentStyleDiff}
+                  options={{
+                    Calculate: HOME_ANCHORS.CALCULATE,
+                    Features: HOME_ANCHORS.FEATURES,
+                    Pricing: HOME_ANCHORS.PRICE,
+                    Company: HOME_ANCHORS.COMPANY,
+                    "Join Waitlist": HOME_ANCHORS.JOIN,
+                  }}
+                />
+              )}
+            </div>
+          </Fragment>
+        ) : (
+          <Menu
+            parentStyleDiff={parentStyleDiff}
+            parentStyleDiffHandler={parentStyleDiffHandler}
+            topMargin={topMargin}
+          />
+        )}
+      </div>
     </nav>
   );
 }

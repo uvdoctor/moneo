@@ -12,7 +12,7 @@ export default function JoinUs() {
 
   return (
     <div id={HOME_ANCHORS.JOIN} className={`w-full flex flex-col ${isMobileDevice(fsb) ? 'items-center' : 'items-start'}`}>
-      <div className="flex items-center font-bold md:mt-2">
+      <div className="flex w-full justify-center md:justify-start items-center font-bold md:mt-2">
         <h1>Meet Your Goals</h1>
         <GoalImages />
       </div>
