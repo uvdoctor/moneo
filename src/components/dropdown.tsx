@@ -12,7 +12,7 @@ export default function Dropdown({
 }: DropdownProps) {
   return (
     <ul
-      className={`${!topMargin && 'w-full flex flex-wrap items-center justify-around left-0'} z-50 px-2 md:px-4 absolute shadow-xl`}
+      className={`${!topMargin && 'w-full flex flex-col justify-center items-center left-0'} z-50 px-2 md:px-4 absolute shadow-xl`}
       style={{
         marginTop: topMargin ? topMargin - 6 + "rem" : "",
         backgroundColor: parentStyleDiff ? "#94ca5d" : "white",
