@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import Menu from "./menu";
@@ -43,8 +43,8 @@ export default function Header({
     >
       <LogoWithName />
       {isMobileDevice(fsb) ? (
-        <div className="flex">
-          <label className="whitespace-no-wrap mr-2">Your Financial Analyst</label>
+        <Fragment>
+          <label className="whitespace-no-wrap">Your Financial Analyst</label>
           <div
             className="cursor-pointer pr-1"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
@@ -63,7 +63,7 @@ export default function Header({
               />
             )}
           </div>
-        </div>
+        </Fragment>
       ) : (
         <Menu
           parentStyleDiff={parentStyleDiff}
