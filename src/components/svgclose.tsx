@@ -2,7 +2,7 @@ import React from "react";
 import { COLORS } from "../CONSTANTS";
 
 interface SVGCloseProps {
-    disable: boolean
+    disable?: boolean
 }
 export default function SVGClose({disable}: SVGCloseProps) {
   return (

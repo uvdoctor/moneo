@@ -1,28 +1,20 @@
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ROUTES } from "../CONSTANTS";
 import Calculators from "./calc/calculators";
 import ExpandCollapse from "./form/expandcollapse";
-import { useFullScreenBrowser } from "react-browser-hooks";
-import { isMobileDevice } from "./utils";
+import Dropdown from "./dropdown";
 interface MenuProps {
   parentStyleDiff?: boolean;
   parentStyleDiffHandler?: Function;
+  topMargin: number
 }
 
 export default function Menu({
   parentStyleDiff,
   parentStyleDiffHandler,
+  topMargin
 }: MenuProps) {
-  const fsb = useFullScreenBrowser();
-  const getTopMargin = () =>
-    fsb.info.screenWidth < isMobileDevice(fsb) ? 33 : 14.5;
-  const [topMargin, setTopMargin] = useState<number>(getTopMargin());
-
-  useEffect(() => {
-    setTopMargin(getTopMargin());
-  }, [fsb.info.screenWidth]);
-
   return (
     <div className="max-w-xs md:max-w-sm lg:max-w-md w-full flex items-center justify-between">
       <Link href={ROUTES.CALCULATE}>
@@ -50,16 +42,15 @@ export default function Menu({
               </Link>
   </div>*/}
       <ExpandCollapse title="About" coverPage={parentStyleDiff}>
-        <ul className="z-50 px-2 md:px-4 absolute shadow-xl"
-          style={{
-            marginTop: topMargin - 6 + "rem",
-            backgroundColor : parentStyleDiff ? "#94ca5d" : "white"
+        <Dropdown
+          parentStyleDiff={parentStyleDiff}
+          topMargin={topMargin}
+          options={{
+            Features: "#features",
+            Price: "#price",
+            Company: "#company",
           }}
-        >
-          <li className="hover:text-green-primary">Features</li>
-          <li className="py-1 hover:text-green-primary">Price</li>
-          <li className="py-1 hover:text-green-primary">Company</li>
-        </ul>
+        />
       </ExpandCollapse>
       <div className="hover:text-green-primary mr-2 md:mr-4 lg:mr-8 whitespace-no-wrap">
         <a href="#join">Join Waitlist</a>
