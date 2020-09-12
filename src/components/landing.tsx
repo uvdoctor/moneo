@@ -19,7 +19,7 @@ const Landing = () => {
   return (
     <Fragment>
       <div
-        className="flex flex-col bg-contain xl:bg-cover xl:bg-center xl:bg-fixed bg-no-repeat w-full md:w-screen h-48 xl:h-screen"
+        className="flex flex-col bg-contain xl:bg-cover xl:bg-center xl:bg-fixed bg-no-repeat w-screen min-h-full xl:h-screen"
         style={{
           minHeight: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
@@ -37,9 +37,10 @@ const Landing = () => {
           {!isMobileDevice(fsb) && (
             <h1 className="mr-2">Your Financial Analyst for</h1>
           )}
-          <h1 className="text-green-primary md:text-2xl lg:text-3xl xl:text-4xl">
-            Stress-free Savings & Investments
-          </h1>
+          <div className="flex flex-col md:flex-row text-green-primary md:text-2xl lg:text-3xl xl:text-4xl">
+            <h1>Stress-free Savings &</h1>
+            <h1 className="md:ml-2">Investments</h1>
+          </div>
           {!isMobileDevice(fsb) && (
             <div className="md:mt-2 lg:mt-4">
               <JoinUs />
