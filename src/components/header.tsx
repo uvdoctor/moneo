@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import Menu from "./menu";
@@ -31,7 +31,7 @@ export default function Header({
 
   return (
     <nav
-      className={`w-full top-0 pb-1 z-10 ${
+      className={`w-full flex justify-between cursor font-bold items-end top-0 pb-1 z-10 ${
         !parentStyleDiff ? "fixed z-10" : "text-silver static"
       } text-base md:text-lg lg:text-xl`}
       style={{
@@ -40,42 +40,40 @@ export default function Header({
         })`,
       }}
     >
-      <div className="w-full flex justify-between cursor font-bold items-end">
-        <LogoWithName />
-        {isMobileDevice(fsb) ? (
-          <Fragment>
-            <label className="whitespace-no-wrap">Your Financial Analyst</label>
-            <div
-              className="cursor-pointer pr-1"
-              onClick={() => setShowMobileMenu(!showMobileMenu)}
-            >
-              {showMobileMenu ? (
-                <SVGClose coverPage={parentStyleDiff} />
-              ) : (
-                <SVGMenu coverPage={parentStyleDiff} />
-              )}
-              {showMobileMenu && (
-                <Dropdown
-                  parentStyleDiff={parentStyleDiff}
-                  options={{
-                    Calculate: HOME_ANCHORS.CALCULATE,
-                    Features: HOME_ANCHORS.FEATURES,
-                    Pricing: HOME_ANCHORS.PRICE,
-                    Company: HOME_ANCHORS.COMPANY,
-                    "Join Waitlist": HOME_ANCHORS.JOIN,
-                  }}
-                />
-              )}
-            </div>
-          </Fragment>
-        ) : (
-          <Menu
-            parentStyleDiff={parentStyleDiff}
-            parentStyleDiffHandler={parentStyleDiffHandler}
-            topMargin={topMargin}
-          />
-        )}
-      </div>
+      <LogoWithName />
+      {isMobileDevice(fsb) ? (
+        <div className="max-w-xs w-full flex items-center justify-between">
+          <label className="whitespace-no-wrap">Your Financial Analyst</label>
+          <div
+            className="cursor-pointer pr-1"
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+          >
+            {showMobileMenu ? (
+              <SVGClose coverPage={parentStyleDiff} />
+            ) : (
+              <SVGMenu coverPage={parentStyleDiff} />
+            )}
+            {showMobileMenu && (
+              <Dropdown
+                parentStyleDiff={parentStyleDiff}
+                options={{
+                  Calculate: HOME_ANCHORS.CALCULATE,
+                  Features: HOME_ANCHORS.FEATURES,
+                  Pricing: HOME_ANCHORS.PRICE,
+                  Company: HOME_ANCHORS.COMPANY,
+                  "Join Waitlist": HOME_ANCHORS.JOIN,
+                }}
+              />
+            )}
+          </div>
+        </div>
+      ) : (
+        <Menu
+          parentStyleDiff={parentStyleDiff}
+          parentStyleDiffHandler={parentStyleDiffHandler}
+          topMargin={topMargin}
+        />
+      )}
     </nav>
   );
 }
