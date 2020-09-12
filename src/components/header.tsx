@@ -21,8 +21,7 @@ export default function Header({
 }: HeaderProps) {
   const fsb = useFullScreenBrowser();
   const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
-  const getTopMargin = () =>
-    fsb.info.screenWidth < isMobileDevice(fsb) ? 33 : 14.5;
+  const getTopMargin = () => isMobileDevice(fsb) ? 33 : 14.5;
   const [topMargin, setTopMargin] = useState<number>(getTopMargin());
 
   useEffect(() => {
@@ -32,7 +31,7 @@ export default function Header({
   return (
     <nav
       className={`w-full flex justify-between cursor font-bold items-end top-0 pb-1 z-10 ${
-        !parentStyleDiff ? "fixed z-10" : "text-silver static"
+        !parentStyleDiff ? "fixed" : "text-silver relative"
       } text-base md:text-lg lg:text-xl`}
       style={{
         backgroundImage: `linear-gradient(to right, ${COLORS.SILVER}, ${
@@ -42,8 +41,8 @@ export default function Header({
     >
       <LogoWithName />
       {isMobileDevice(fsb) ? (
-        <div className="max-w-xs w-full flex items-center justify-between">
-          <label className="whitespace-no-wrap">Your Financial Analyst</label>
+        <div className="w-full flex items-center justify-between">
+          <label className="ml-4 whitespace-no-wrap">Your Financial Analyst</label>
           <div
             className="cursor-pointer pr-1"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
