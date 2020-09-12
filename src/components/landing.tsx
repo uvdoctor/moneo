@@ -19,7 +19,7 @@ const Landing = () => {
   return (
     <Fragment>
       <div
-        className="flex flex-col bg-contain xl:bg-cover xl:bg-center xl:bg-fixed bg-no-repeat w-screen h-48 xl:h-screen"
+        className="flex flex-col bg-cover xl:bg-center xl:bg-fixed w-screen h-48 xl:h-screen"
         style={{
           minHeight: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,

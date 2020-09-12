@@ -32,7 +32,7 @@ export default function Header({
   return (
     <nav
       className={`w-full top-0 pb-1 ${
-        !parentStyleDiff ? "fixed z-10" : "text-silver"
+        !parentStyleDiff ? "fixed z-10" : "text-silver relative"
       } text-base md:text-lg lg:text-xl`}
       style={{
         backgroundImage: `linear-gradient(to right, ${COLORS.SILVER}, ${
