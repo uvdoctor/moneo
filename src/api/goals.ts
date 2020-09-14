@@ -378,6 +378,39 @@ export type DeleteAccountInput = {
   id?: string | null,
 };
 
+export type CreateRegistrationInput = {
+  id?: string | null,
+  email: string,
+  code: string,
+  ok: boolean,
+};
+
+export type ModelRegistrationConditionInput = {
+  email?: ModelStringInput | null,
+  code?: ModelStringInput | null,
+  ok?: ModelBooleanInput | null,
+  and?: Array< ModelRegistrationConditionInput | null > | null,
+  or?: Array< ModelRegistrationConditionInput | null > | null,
+  not?: ModelRegistrationConditionInput | null,
+};
+
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type UpdateRegistrationInput = {
+  email?: string | null,
+  code?: string | null,
+  ok?: boolean | null,
+};
+
+export type DeleteRegistrationInput = {
+  id?: string | null,
+};
+
 export type ModelGoalFilterInput = {
   id?: ModelIDInput | null,
   sy?: ModelIntInput | null,
@@ -475,6 +508,15 @@ export type ModelAccountFilterInput = {
   and?: Array< ModelAccountFilterInput | null > | null,
   or?: Array< ModelAccountFilterInput | null > | null,
   not?: ModelAccountFilterInput | null,
+};
+
+export type ModelRegistrationFilterInput = {
+  email?: ModelStringInput | null,
+  code?: ModelStringInput | null,
+  ok?: ModelBooleanInput | null,
+  and?: Array< ModelRegistrationFilterInput | null > | null,
+  or?: Array< ModelRegistrationFilterInput | null > | null,
+  not?: ModelRegistrationFilterInput | null,
 };
 
 export type CreateGoalMutationVariables = {
@@ -1131,6 +1173,120 @@ export type DeleteAccountMutation = {
   } | null,
 };
 
+export type CreateRegistrationMutationVariables = {
+  input: CreateRegistrationInput,
+  condition?: ModelRegistrationConditionInput | null,
+};
+
+export type CreateRegistrationMutation = {
+  createRegistration:  {
+    __typename: "Registration",
+    id: string,
+    email: string,
+    code: string,
+    ok: boolean,
+    ref:  Array< {
+      __typename: "Registration",
+      id: string,
+      email: string,
+      code: string,
+      ok: boolean,
+      ref:  Array< {
+        __typename: "Registration",
+        id: string,
+        email: string,
+        code: string,
+        ok: boolean,
+        createdAt: string,
+        updatedAt: string,
+        owner: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type UpdateRegistrationMutationVariables = {
+  input: UpdateRegistrationInput,
+  condition?: ModelRegistrationConditionInput | null,
+};
+
+export type UpdateRegistrationMutation = {
+  updateRegistration:  {
+    __typename: "Registration",
+    id: string,
+    email: string,
+    code: string,
+    ok: boolean,
+    ref:  Array< {
+      __typename: "Registration",
+      id: string,
+      email: string,
+      code: string,
+      ok: boolean,
+      ref:  Array< {
+        __typename: "Registration",
+        id: string,
+        email: string,
+        code: string,
+        ok: boolean,
+        createdAt: string,
+        updatedAt: string,
+        owner: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type DeleteRegistrationMutationVariables = {
+  input: DeleteRegistrationInput,
+  condition?: ModelRegistrationConditionInput | null,
+};
+
+export type DeleteRegistrationMutation = {
+  deleteRegistration:  {
+    __typename: "Registration",
+    id: string,
+    email: string,
+    code: string,
+    ok: boolean,
+    ref:  Array< {
+      __typename: "Registration",
+      id: string,
+      email: string,
+      code: string,
+      ok: boolean,
+      ref:  Array< {
+        __typename: "Registration",
+        id: string,
+        email: string,
+        code: string,
+        ok: boolean,
+        createdAt: string,
+        updatedAt: string,
+        owner: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
 export type GetGoalQueryVariables = {
   id: string,
 };
@@ -1557,6 +1713,76 @@ export type ListAccountsQuery = {
       uncurr: string | null,
       type: string,
       subtype: string,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetRegistrationQueryVariables = {
+  id: string,
+};
+
+export type GetRegistrationQuery = {
+  getRegistration:  {
+    __typename: "Registration",
+    id: string,
+    email: string,
+    code: string,
+    ok: boolean,
+    ref:  Array< {
+      __typename: "Registration",
+      id: string,
+      email: string,
+      code: string,
+      ok: boolean,
+      ref:  Array< {
+        __typename: "Registration",
+        id: string,
+        email: string,
+        code: string,
+        ok: boolean,
+        createdAt: string,
+        updatedAt: string,
+        owner: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type ListRegistrationsQueryVariables = {
+  filter?: ModelRegistrationFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListRegistrationsQuery = {
+  listRegistrations:  {
+    __typename: "ModelRegistrationConnection",
+    items:  Array< {
+      __typename: "Registration",
+      id: string,
+      email: string,
+      code: string,
+      ok: boolean,
+      ref:  Array< {
+        __typename: "Registration",
+        id: string,
+        email: string,
+        code: string,
+        ok: boolean,
+        createdAt: string,
+        updatedAt: string,
+        owner: string | null,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
       owner: string | null,
@@ -2198,6 +2424,117 @@ export type OnDeleteAccountSubscription = {
     uncurr: string | null,
     type: string,
     subtype: string,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnCreateRegistrationSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnCreateRegistrationSubscription = {
+  onCreateRegistration:  {
+    __typename: "Registration",
+    id: string,
+    email: string,
+    code: string,
+    ok: boolean,
+    ref:  Array< {
+      __typename: "Registration",
+      id: string,
+      email: string,
+      code: string,
+      ok: boolean,
+      ref:  Array< {
+        __typename: "Registration",
+        id: string,
+        email: string,
+        code: string,
+        ok: boolean,
+        createdAt: string,
+        updatedAt: string,
+        owner: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnUpdateRegistrationSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnUpdateRegistrationSubscription = {
+  onUpdateRegistration:  {
+    __typename: "Registration",
+    id: string,
+    email: string,
+    code: string,
+    ok: boolean,
+    ref:  Array< {
+      __typename: "Registration",
+      id: string,
+      email: string,
+      code: string,
+      ok: boolean,
+      ref:  Array< {
+        __typename: "Registration",
+        id: string,
+        email: string,
+        code: string,
+        ok: boolean,
+        createdAt: string,
+        updatedAt: string,
+        owner: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner: string | null,
+  } | null,
+};
+
+export type OnDeleteRegistrationSubscriptionVariables = {
+  owner: string,
+};
+
+export type OnDeleteRegistrationSubscription = {
+  onDeleteRegistration:  {
+    __typename: "Registration",
+    id: string,
+    email: string,
+    code: string,
+    ok: boolean,
+    ref:  Array< {
+      __typename: "Registration",
+      id: string,
+      email: string,
+      code: string,
+      ok: boolean,
+      ref:  Array< {
+        __typename: "Registration",
+        id: string,
+        email: string,
+        code: string,
+        ok: boolean,
+        createdAt: string,
+        updatedAt: string,
+        owner: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+      owner: string | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
     owner: string | null,

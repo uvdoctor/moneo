@@ -548,3 +548,96 @@ export const onDeleteAccount = /* GraphQL */ `
     }
   }
 `;
+export const onCreateRegistration = /* GraphQL */ `
+  subscription OnCreateRegistration($owner: String!) {
+    onCreateRegistration(owner: $owner) {
+      id
+      email
+      code
+      ok
+      ref {
+        id
+        email
+        code
+        ok
+        ref {
+          id
+          email
+          code
+          ok
+          createdAt
+          updatedAt
+          owner
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateRegistration = /* GraphQL */ `
+  subscription OnUpdateRegistration($owner: String!) {
+    onUpdateRegistration(owner: $owner) {
+      id
+      email
+      code
+      ok
+      ref {
+        id
+        email
+        code
+        ok
+        ref {
+          id
+          email
+          code
+          ok
+          createdAt
+          updatedAt
+          owner
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteRegistration = /* GraphQL */ `
+  subscription OnDeleteRegistration($owner: String!) {
+    onDeleteRegistration(owner: $owner) {
+      id
+      email
+      code
+      ok
+      ref {
+        id
+        email
+        code
+        ok
+        ref {
+          id
+          email
+          code
+          ok
+          createdAt
+          updatedAt
+          owner
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;

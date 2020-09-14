@@ -100,3 +100,9 @@ type Account @model @auth(rules: [{allow: owner}]) {
   type: String!
   subtype: String!
 }
+type Registration @model @auth(rules: [{allow: owner}]) {
+  email: String!
+  code: String!
+  ok: Boolean!
+  ref: [Registration]
+}

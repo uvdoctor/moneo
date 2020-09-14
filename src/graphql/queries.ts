@@ -383,3 +383,63 @@ export const listAccounts = /* GraphQL */ `
     }
   }
 `;
+export const getRegistration = /* GraphQL */ `
+  query GetRegistration($id: ID!) {
+    getRegistration(id: $id) {
+      id
+      email
+      code
+      ok
+      ref {
+        id
+        email
+        code
+        ok
+        ref {
+          id
+          email
+          code
+          ok
+          createdAt
+          updatedAt
+          owner
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listRegistrations = /* GraphQL */ `
+  query ListRegistrations(
+    $filter: ModelRegistrationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRegistrations(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        email
+        code
+        ok
+        ref {
+          id
+          email
+          code
+          ok
+          createdAt
+          updatedAt
+          owner
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;

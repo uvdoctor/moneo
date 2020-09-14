@@ -30,8 +30,8 @@ export default function Header({
 
   return (
     <nav
-      className={`w-full flex justify-between cursor font-bold items-end top-0 pb-1 z-10 ${
-        !parentStyleDiff ? "fixed" : "text-silver relative"
+      className={`w-full flex justify-between cursor fixed font-bold items-end top-0 pb-1 z-10 ${
+        !parentStyleDiff ? "fixed" : "text-silver sticky"
       } text-base md:text-lg lg:text-xl`}
       style={{
         backgroundImage: `linear-gradient(to right, ${COLORS.SILVER}, ${
@@ -42,7 +42,7 @@ export default function Header({
       <LogoWithName />
       {isMobileDevice(fsb) ? (
         <div className="w-full flex items-center justify-end">
-          <label className="mr-4 whitespace-no-wrap">Your Financial Analyst</label>
+          <label className="mr-2 whitespace-no-wrap">Your Financial Analyst</label>
           <div
             className="cursor-pointer pr-1"
             onClick={() => setShowMobileMenu(!showMobileMenu)}

@@ -6,9 +6,13 @@ import GoalImages from "./goalimages";
 import { isMobileDevice } from "./utils";
 import {useFullScreenBrowser} from "react-browser-hooks"
 import { HOME_ANCHORS } from "../CONSTANTS";
+
 export default function JoinUs() {
   const [email, setEmail] = useState<string>("");
   const fsb = useFullScreenBrowser()
+
+  const handleEmail = () => {
+  }
 
   return (
     <div id={HOME_ANCHORS.JOIN} className={`w-full flex flex-col ${isMobileDevice(fsb) ? 'items-center' : 'items-start'}`}>
@@ -32,7 +36,7 @@ export default function JoinUs() {
           autofocus
         />
         <div className="mt-2 mb-4 md:mb-0">
-          <AwesomeButton ripple type="primary" size="large">
+          <AwesomeButton ripple type="primary" size="large" onPress={handleEmail}>
             JOIN WAITLIST
           </AwesomeButton>
         </div>
