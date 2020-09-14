@@ -599,31 +599,11 @@ export const createRegistration = /* GraphQL */ `
     $condition: ModelRegistrationConditionInput
   ) {
     createRegistration(input: $input, condition: $condition) {
-      id
       email
+      status
       code
-      ok
-      ref {
-        id
-        email
-        code
-        ok
-        ref {
-          id
-          email
-          code
-          ok
-          createdAt
-          updatedAt
-          owner
-        }
-        createdAt
-        updatedAt
-        owner
-      }
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -633,31 +613,11 @@ export const updateRegistration = /* GraphQL */ `
     $condition: ModelRegistrationConditionInput
   ) {
     updateRegistration(input: $input, condition: $condition) {
-      id
       email
+      status
       code
-      ok
-      ref {
-        id
-        email
-        code
-        ok
-        ref {
-          id
-          email
-          code
-          ok
-          createdAt
-          updatedAt
-          owner
-        }
-        createdAt
-        updatedAt
-        owner
-      }
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -667,31 +627,11 @@ export const deleteRegistration = /* GraphQL */ `
     $condition: ModelRegistrationConditionInput
   ) {
     deleteRegistration(input: $input, condition: $condition) {
-      id
       email
+      status
       code
-      ok
-      ref {
-        id
-        email
-        code
-        ok
-        ref {
-          id
-          email
-          code
-          ok
-          createdAt
-          updatedAt
-          owner
-        }
-        createdAt
-        updatedAt
-        owner
-      }
       createdAt
       updatedAt
-      owner
     }
   }
 `;

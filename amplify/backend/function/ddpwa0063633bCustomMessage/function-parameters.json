@@ -1,0 +1,20 @@
+{
+  "trigger": true,
+  "modules": [
+    "verification-link"
+  ],
+  "parentResource": "ddpwa0063633b",
+  "functionName": "ddpwa0063633bCustomMessage",
+  "resourceName": "ddpwa0063633bCustomMessage",
+  "parentStack": "auth",
+  "triggerEnvs": "[\n  {\n    \"key\": \"RESOURCENAME\",\n    \"value\": \"resourceName\"\n  }\n]",
+  "triggerDir": "C:\\Users\\umang\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\amplify-category-auth\\provider-utils\\awscloudformation\\triggers\\CustomMessage",
+  "triggerTemplate": "CustomMessage.json.ejs",
+  "roleName": "ddpwa0063633bCustomMessage",
+  "skipEdit": true,
+  "REDIRECTURL": "https://www.dollardarwin.com/dashboard",
+  "EMAILSUBJECT": "DollarDarwin account has been verified",
+  "EMAILMESSAGE": "Thank You for verifiying Your account access. Please use the link below to access Your DollarDarwin:",
+  "RESOURCENAME": "resourceName",
+  "triggerEventPath": "CustomMessage.event.json"
+}

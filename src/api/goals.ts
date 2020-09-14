@@ -379,36 +379,39 @@ export type DeleteAccountInput = {
 };
 
 export type CreateRegistrationInput = {
-  id?: string | null,
   email: string,
+  status: Status,
   code: string,
-  ok: boolean,
 };
 
+export enum Status {
+  Y = "Y",
+  N = "N",
+  P = "P",
+}
+
+
 export type ModelRegistrationConditionInput = {
-  email?: ModelStringInput | null,
+  status?: ModelStatusInput | null,
   code?: ModelStringInput | null,
-  ok?: ModelBooleanInput | null,
   and?: Array< ModelRegistrationConditionInput | null > | null,
   or?: Array< ModelRegistrationConditionInput | null > | null,
   not?: ModelRegistrationConditionInput | null,
 };
 
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
+export type ModelStatusInput = {
+  eq?: Status | null,
+  ne?: Status | null,
 };
 
 export type UpdateRegistrationInput = {
-  email?: string | null,
+  email: string,
+  status?: Status | null,
   code?: string | null,
-  ok?: boolean | null,
 };
 
 export type DeleteRegistrationInput = {
-  id?: string | null,
+  email: string,
 };
 
 export type ModelGoalFilterInput = {
@@ -512,12 +515,18 @@ export type ModelAccountFilterInput = {
 
 export type ModelRegistrationFilterInput = {
   email?: ModelStringInput | null,
+  status?: ModelStatusInput | null,
   code?: ModelStringInput | null,
-  ok?: ModelBooleanInput | null,
   and?: Array< ModelRegistrationFilterInput | null > | null,
   or?: Array< ModelRegistrationFilterInput | null > | null,
   not?: ModelRegistrationFilterInput | null,
 };
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
 
 export type CreateGoalMutationVariables = {
   input: CreateGoalInput,
@@ -1181,33 +1190,11 @@ export type CreateRegistrationMutationVariables = {
 export type CreateRegistrationMutation = {
   createRegistration:  {
     __typename: "Registration",
-    id: string,
     email: string,
+    status: Status,
     code: string,
-    ok: boolean,
-    ref:  Array< {
-      __typename: "Registration",
-      id: string,
-      email: string,
-      code: string,
-      ok: boolean,
-      ref:  Array< {
-        __typename: "Registration",
-        id: string,
-        email: string,
-        code: string,
-        ok: boolean,
-        createdAt: string,
-        updatedAt: string,
-        owner: string | null,
-      } | null > | null,
-      createdAt: string,
-      updatedAt: string,
-      owner: string | null,
-    } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
   } | null,
 };
 
@@ -1219,33 +1206,11 @@ export type UpdateRegistrationMutationVariables = {
 export type UpdateRegistrationMutation = {
   updateRegistration:  {
     __typename: "Registration",
-    id: string,
     email: string,
+    status: Status,
     code: string,
-    ok: boolean,
-    ref:  Array< {
-      __typename: "Registration",
-      id: string,
-      email: string,
-      code: string,
-      ok: boolean,
-      ref:  Array< {
-        __typename: "Registration",
-        id: string,
-        email: string,
-        code: string,
-        ok: boolean,
-        createdAt: string,
-        updatedAt: string,
-        owner: string | null,
-      } | null > | null,
-      createdAt: string,
-      updatedAt: string,
-      owner: string | null,
-    } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
   } | null,
 };
 
@@ -1257,33 +1222,11 @@ export type DeleteRegistrationMutationVariables = {
 export type DeleteRegistrationMutation = {
   deleteRegistration:  {
     __typename: "Registration",
-    id: string,
     email: string,
+    status: Status,
     code: string,
-    ok: boolean,
-    ref:  Array< {
-      __typename: "Registration",
-      id: string,
-      email: string,
-      code: string,
-      ok: boolean,
-      ref:  Array< {
-        __typename: "Registration",
-        id: string,
-        email: string,
-        code: string,
-        ok: boolean,
-        createdAt: string,
-        updatedAt: string,
-        owner: string | null,
-      } | null > | null,
-      createdAt: string,
-      updatedAt: string,
-      owner: string | null,
-    } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
   } | null,
 };
 
@@ -1722,46 +1665,26 @@ export type ListAccountsQuery = {
 };
 
 export type GetRegistrationQueryVariables = {
-  id: string,
+  email: string,
 };
 
 export type GetRegistrationQuery = {
   getRegistration:  {
     __typename: "Registration",
-    id: string,
     email: string,
+    status: Status,
     code: string,
-    ok: boolean,
-    ref:  Array< {
-      __typename: "Registration",
-      id: string,
-      email: string,
-      code: string,
-      ok: boolean,
-      ref:  Array< {
-        __typename: "Registration",
-        id: string,
-        email: string,
-        code: string,
-        ok: boolean,
-        createdAt: string,
-        updatedAt: string,
-        owner: string | null,
-      } | null > | null,
-      createdAt: string,
-      updatedAt: string,
-      owner: string | null,
-    } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
   } | null,
 };
 
 export type ListRegistrationsQueryVariables = {
+  email?: string | null,
   filter?: ModelRegistrationFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
 };
 
 export type ListRegistrationsQuery = {
@@ -1769,23 +1692,11 @@ export type ListRegistrationsQuery = {
     __typename: "ModelRegistrationConnection",
     items:  Array< {
       __typename: "Registration",
-      id: string,
       email: string,
+      status: Status,
       code: string,
-      ok: boolean,
-      ref:  Array< {
-        __typename: "Registration",
-        id: string,
-        email: string,
-        code: string,
-        ok: boolean,
-        createdAt: string,
-        updatedAt: string,
-        owner: string | null,
-      } | null > | null,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
     } | null > | null,
     nextToken: string | null,
   } | null,
@@ -2430,113 +2341,35 @@ export type OnDeleteAccountSubscription = {
   } | null,
 };
 
-export type OnCreateRegistrationSubscriptionVariables = {
-  owner: string,
-};
-
 export type OnCreateRegistrationSubscription = {
   onCreateRegistration:  {
     __typename: "Registration",
-    id: string,
     email: string,
+    status: Status,
     code: string,
-    ok: boolean,
-    ref:  Array< {
-      __typename: "Registration",
-      id: string,
-      email: string,
-      code: string,
-      ok: boolean,
-      ref:  Array< {
-        __typename: "Registration",
-        id: string,
-        email: string,
-        code: string,
-        ok: boolean,
-        createdAt: string,
-        updatedAt: string,
-        owner: string | null,
-      } | null > | null,
-      createdAt: string,
-      updatedAt: string,
-      owner: string | null,
-    } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
   } | null,
-};
-
-export type OnUpdateRegistrationSubscriptionVariables = {
-  owner: string,
 };
 
 export type OnUpdateRegistrationSubscription = {
   onUpdateRegistration:  {
     __typename: "Registration",
-    id: string,
     email: string,
+    status: Status,
     code: string,
-    ok: boolean,
-    ref:  Array< {
-      __typename: "Registration",
-      id: string,
-      email: string,
-      code: string,
-      ok: boolean,
-      ref:  Array< {
-        __typename: "Registration",
-        id: string,
-        email: string,
-        code: string,
-        ok: boolean,
-        createdAt: string,
-        updatedAt: string,
-        owner: string | null,
-      } | null > | null,
-      createdAt: string,
-      updatedAt: string,
-      owner: string | null,
-    } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
   } | null,
-};
-
-export type OnDeleteRegistrationSubscriptionVariables = {
-  owner: string,
 };
 
 export type OnDeleteRegistrationSubscription = {
   onDeleteRegistration:  {
     __typename: "Registration",
-    id: string,
     email: string,
+    status: Status,
     code: string,
-    ok: boolean,
-    ref:  Array< {
-      __typename: "Registration",
-      id: string,
-      email: string,
-      code: string,
-      ok: boolean,
-      ref:  Array< {
-        __typename: "Registration",
-        id: string,
-        email: string,
-        code: string,
-        ok: boolean,
-        createdAt: string,
-        updatedAt: string,
-        owner: string | null,
-      } | null > | null,
-      createdAt: string,
-      updatedAt: string,
-      owner: string | null,
-    } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
   } | null,
 };

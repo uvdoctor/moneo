@@ -1,20 +1,32 @@
 {
-    "dev": {
-        "awscloudformation": {
-            "AuthRoleName": "amplify-ddpwa-dev-154010-authRole",
-            "UnauthRoleArn": "arn:aws:iam::099259607472:role/amplify-ddpwa-dev-154010-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::099259607472:role/amplify-ddpwa-dev-154010-authRole",
-            "Region": "us-east-1",
-            "DeploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-            "UnauthRoleName": "amplify-ddpwa-dev-154010-unauthRole",
-            "StackName": "amplify-ddpwa-dev-154010",
-            "StackId": "arn:aws:cloudformation:us-east-1:099259607472:stack/amplify-ddpwa-dev-154010/ef08b960-99b8-11ea-a3cb-1225390e8313",
-            "AmplifyAppId": "d3gydqmgeem77i"
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-ddpwa-dev-154010-authRole",
+      "UnauthRoleArn": "arn:aws:iam::099259607472:role/amplify-ddpwa-dev-154010-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::099259607472:role/amplify-ddpwa-dev-154010-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
+      "UnauthRoleName": "amplify-ddpwa-dev-154010-unauthRole",
+      "StackName": "amplify-ddpwa-dev-154010",
+      "StackId": "arn:aws:cloudformation:us-east-1:099259607472:stack/amplify-ddpwa-dev-154010/ef08b960-99b8-11ea-a3cb-1225390e8313",
+      "AmplifyAppId": "d3gydqmgeem77i"
+    },
+    "categories": {
+      "auth": {
+        "ddpwa0063633b": {}
+      },
+      "function": {
+        "ddpwa0063633bDefineAuthChallenge": {},
+        "ddpwa0063633bCreateAuthChallenge": {},
+        "ddpwa0063633bVerifyAuthChallengeResponse": {
+          "RECAPTCHASECRET": ""
         },
-        "categories": {
-            "auth": {
-                "ddpwa0063633b": {}
-            }
+        "ddpwa0063633bCustomMessage": {
+          "REDIRECTURL": "https://www.dollardarwin.com/dashboard",
+          "EMAILSUBJECT": "DollarDarwin account has been verified",
+          "EMAILMESSAGE": "Thank You for verifiying Your account access. Please use the link below to access Your DollarDarwin:"
         }
+      }
     }
+  }
 }

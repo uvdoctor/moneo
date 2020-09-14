@@ -384,60 +384,37 @@ export const listAccounts = /* GraphQL */ `
   }
 `;
 export const getRegistration = /* GraphQL */ `
-  query GetRegistration($id: ID!) {
-    getRegistration(id: $id) {
-      id
+  query GetRegistration($email: String!) {
+    getRegistration(email: $email) {
       email
+      status
       code
-      ok
-      ref {
-        id
-        email
-        code
-        ok
-        ref {
-          id
-          email
-          code
-          ok
-          createdAt
-          updatedAt
-          owner
-        }
-        createdAt
-        updatedAt
-        owner
-      }
       createdAt
       updatedAt
-      owner
     }
   }
 `;
 export const listRegistrations = /* GraphQL */ `
   query ListRegistrations(
+    $email: String
     $filter: ModelRegistrationFilterInput
     $limit: Int
     $nextToken: String
+    $sortDirection: ModelSortDirection
   ) {
-    listRegistrations(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listRegistrations(
+      email: $email
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
       items {
-        id
         email
+        status
         code
-        ok
-        ref {
-          id
-          email
-          code
-          ok
-          createdAt
-          updatedAt
-          owner
-        }
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
