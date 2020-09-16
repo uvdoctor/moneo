@@ -29,7 +29,7 @@ export default function Header({ parentStyleDiff, parentStyleDiffHandler }: Head
       <div className="w-full flex items-center justify-end">
         {isMobileDevice(fsb) ? (
           <div
-            className="cursor-pointer pr-1"
+            className="w-full flex justify-end cursor-pointer pr-1"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
           >
             {showMobileMenu ? <SVGClose /> : <SVGMenu />}
