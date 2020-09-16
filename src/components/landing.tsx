@@ -4,6 +4,7 @@ import { AwesomeButton } from "react-awesome-button";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import Header from "./header";
 import JoinUs from "./joinus";
+import { isMobileDevice } from "./utils";
 
 const Landing = () => {
   const fsb = useFullScreenBrowser();
@@ -18,7 +19,7 @@ const Landing = () => {
   return (
     <Fragment>
       <div
-        className="flex flex-col bg-contain bg-no-repeat xl:bg-cover bg-center xl:bg-fixed w-screen h-56 xl:h-screen text-base md:text-lg lg:text-xl xl:text-2xl"
+        className="bg-contain bg-no-repeat xl:bg-cover bg-top xl:bg-bottom xl:bg-fixed w-screen h-48 xl:h-screen text-base md:text-lg lg:text-xl xl:text-2xl"
         style={{
           minHeight: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
@@ -29,18 +30,25 @@ const Landing = () => {
           parentStyleDiff={coverPage}
           parentStyleDiffHandler={setCoverPage}
         />
-        <div
-          className={`flex flex-col md:mt-1 ml-1 md:ml-4 lg:ml-8
-        font-bold`}
-        >
-          <h1 className="text-green-primary md:text-2xl lg:text-3xl xl:text-4xl">
-            Stress-free Savings & Investments
-          </h1>
-          <div className="mt-2 lg:mt-4">
-            <JoinUs />
+        <div className="md:mt-1 ml-1 md:ml-4 lg:ml-8 font-bold">
+          <div className="flex flex-col md:flex-row text-green-primary md:text-2xl lg:text-3xl xl:text-4xl">
+            <h1 className="mr-2">
+              Stress-free Savings
+            </h1>
+            <h1> & Investments</h1>
           </div>
+          {!isMobileDevice(fsb) && (
+            <div className="mt-2 lg:mt-4">
+              <JoinUs />
+            </div>
+          )}
         </div>
       </div>
+      {isMobileDevice(fsb) && (
+        <div className="w-full mt-1 flex justify-center mb-4">
+          <JoinUs />
+        </div>
+      )}
     </Fragment>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
-import TextInput from "./form/textinput";
 import GoalImages from "./goalimages";
 import { HOME_ANCHORS } from "../CONSTANTS";
 import Amplify, { API } from "aws-amplify";
@@ -19,18 +18,17 @@ export default function JoinUs() {
 
   const doesEntryExist = async () => {
     try {
-      const result = await API.graphql({
+      const result: any = await API.graphql({
         query: queries.listRegistrations,
         variables: { email: email },
         authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
       });
-      console.log("Result is ", result);
-      /*if (result?.data && result?.data.items.length > 0) {
+      if (result?.data && result?.data.items.length > 0) {
         toast.error(
           "This email has already been registered. Please try again with another email address."
         );
         return true;
-      } else return false;*/
+      } else return false;
       return false;
     } catch (e) {
       console.log("Error while checking for existing registration: ", e);
@@ -62,37 +60,27 @@ export default function JoinUs() {
 
   return (
     <div
-      id={HOME_ANCHORS.JOIN}
+      id={HOME_ANCHORS.JOIN.split("#")[1]}
+      className="w-full max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg"
     >
-      <div className="flex flex-col md:flex-row max-w-xs md:max-w-sm lg:max-w-md">
-        <TextInput
-          pre=""
-          name="email"
-          inputOrder={1}
-          currentOrder={0}
-          nextStepDisabled={false}
-          nextStepHandler={() => true}
-          allInputDone
-          value={email}
-          changeHandler={setEmail}
-          placeholder="Enter email address"
-          type="email"
-          autofocus
-        />
-        <div className="mt-2 md:mt-0">
-          <AwesomeButton
-            ripple
-            type="primary"
-            size="small"
-            onPress={handleEmail}
-          >
-            JOIN
-          </AwesomeButton>
-        </div>
-      </div>
-      <div className="mt-4 flex font-bold">
+      <div className="flex justify-center md:justify-start items-center font-bold">
         <h1>Meet Your Goals</h1>
         <GoalImages />
+      </div>
+      <div className="w-full mt-1 md:mt-2 flex flex-col md:flex-row">
+        <input
+          className="w-full text-center md:text-left appearance-none bg-transparent outline-none border-b-2 border-silver-100"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.currentTarget.value)}
+          placeholder="Enter email address"
+          autoFocus
+        />
+        <div className="w-full flex justify-center md:justify-start mt-1 md:mt-0 whitespace-no-wrap">
+          <AwesomeButton ripple type="primary" onPress={handleEmail}>
+            JOIN WAITLIST
+          </AwesomeButton>
+        </div>
       </div>
     </div>
   );

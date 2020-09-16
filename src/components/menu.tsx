@@ -5,24 +5,21 @@ import Calculators from "./calc/calculators";
 import ExpandCollapse from "./form/expandcollapse";
 import Dropdown from "./dropdown";
 interface MenuProps {
-  parentStyleDiff?: boolean;
   parentStyleDiffHandler?: Function;
-  topMargin: number
 }
 
 export default function Menu({
-  parentStyleDiff,
   parentStyleDiffHandler,
-  topMargin
 }: MenuProps) {
+  const topMargin = 14.5
+  
   return (
     <div className="max-w-xs md:max-w-sm lg:max-w-md w-full flex items-center justify-between">
       <Link href={ROUTES.CALCULATE}>
         <a>
-          <div className="hover:text-green-primary w-full">
+          <div className="w-full">
             <ExpandCollapse
               title="Calculate"
-              coverPage={parentStyleDiff}
               animate
               parentStyleDiffHandler={parentStyleDiffHandler}
             >
@@ -41,9 +38,8 @@ export default function Menu({
                 <a>Learn</a>
               </Link>
   </div>*/}
-      <ExpandCollapse title="About" coverPage={parentStyleDiff}>
+      <ExpandCollapse title="About">
         <Dropdown
-          parentStyleDiff={parentStyleDiff}
           topMargin={topMargin}
           options={{
             Features: HOME_ANCHORS.FEATURES,

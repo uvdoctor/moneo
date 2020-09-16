@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import Menu from "./menu";
@@ -6,7 +6,7 @@ import LogoWithName from "./logowithname";
 import SVGMenu from "./svgmenu";
 import { isMobileDevice } from "./utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import { COLORS, HOME_ANCHORS } from "../CONSTANTS";
+import { HOME_ANCHORS } from "../CONSTANTS";
 import Dropdown from "./dropdown";
 import SVGClose from "./svgclose";
 
@@ -15,29 +15,15 @@ interface HeaderProps {
   parentStyleDiffHandler?: Function;
 }
 
-export default function Header({
-  parentStyleDiff,
-  parentStyleDiffHandler,
-}: HeaderProps) {
+export default function Header({ parentStyleDiff, parentStyleDiffHandler }: HeaderProps) {
   const fsb = useFullScreenBrowser();
   const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
-  const getTopMargin = () => (isMobileDevice(fsb) ? 33 : 14.5);
-  const [topMargin, setTopMargin] = useState<number>(getTopMargin());
-
-  useEffect(() => {
-    setTopMargin(getTopMargin());
-  }, [fsb.info.screenWidth]);
 
   return (
     <nav
       className={`w-full flex justify-between cursor fixed font-bold items-end top-0 pb-1 z-10 ${
-        !parentStyleDiff ? "fixed" : "text-silver sticky"
+        (!parentStyleDiff || showMobileMenu) ? "fixed bg-white" : "sticky"
       } text-base md:text-lg lg:text-xl`}
-      style={{
-        backgroundImage: `linear-gradient(to right, ${COLORS.SILVER}, ${
-          parentStyleDiff ? "#7dc13a" : "white"
-        })`,
-      }}
     >
       <LogoWithName />
       <div className="w-full flex items-center justify-end">
@@ -46,14 +32,9 @@ export default function Header({
             className="cursor-pointer pr-1"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
           >
-            {showMobileMenu ? (
-              <SVGClose coverPage={parentStyleDiff} />
-            ) : (
-              <SVGMenu coverPage={parentStyleDiff} />
-            )}
+            {showMobileMenu ? <SVGClose /> : <SVGMenu />}
             {showMobileMenu && (
               <Dropdown
-                parentStyleDiff={parentStyleDiff}
                 options={{
                   Calculate: HOME_ANCHORS.CALCULATE,
                   Features: HOME_ANCHORS.FEATURES,
@@ -65,11 +46,7 @@ export default function Header({
             )}
           </div>
         ) : (
-          <Menu
-            parentStyleDiff={parentStyleDiff}
-            parentStyleDiffHandler={parentStyleDiffHandler}
-            topMargin={topMargin}
-          />
+          <Menu parentStyleDiffHandler={parentStyleDiffHandler} />
         )}
       </div>
     </nav>
