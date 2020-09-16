@@ -19,7 +19,7 @@ const Landing = () => {
   return (
     <Fragment>
       <div
-        className="bg-contain bg-no-repeat xl:bg-cover bg-top xl:bg-bottom xl:bg-fixed w-screen h-48 xl:h-screen text-base md:text-lg lg:text-xl xl:text-2xl"
+        className="bg-contain bg-no-repeat xl:bg-cover bg-top xl:bg-bottom xl:bg-fixed w-screen h-56 xl:h-screen text-base md:text-lg lg:text-xl xl:text-2xl"
         style={{
           minHeight: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
@@ -45,7 +45,7 @@ const Landing = () => {
         </div>
       </div>
       {isMobileDevice(fsb) && (
-        <div className="w-full mt-1 flex justify-center mb-4">
+        <div className="w-full flex justify-center mb-4">
           <JoinUs />
         </div>
       )}
