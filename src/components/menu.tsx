@@ -8,13 +8,11 @@ interface MenuProps {
   parentStyleDiffHandler?: Function;
 }
 
-export default function Menu({
-  parentStyleDiffHandler,
-}: MenuProps) {
-  const topMargin = 14.5
-  
+export default function Menu({ parentStyleDiffHandler }: MenuProps) {
+  const topMargin = 14.5;
+
   return (
-    <div className="max-w-xs md:max-w-sm lg:max-w-md w-full flex items-center justify-between">
+    <div className="max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg w-full flex items-center justify-between">
       <Link href={ROUTES.CALCULATE}>
         <a>
           <div className="w-full">
@@ -38,16 +36,18 @@ export default function Menu({
                 <a>Learn</a>
               </Link>
   </div>*/}
-      <ExpandCollapse title="About">
-        <Dropdown
-          topMargin={topMargin}
-          options={{
-            Features: HOME_ANCHORS.FEATURES,
-            Pricing: HOME_ANCHORS.PRICE,
-            Company: HOME_ANCHORS.COMPANY
-          }}
-        />
-      </ExpandCollapse>
+      <div className="xl:mr-24">
+        <ExpandCollapse title="About">
+          <Dropdown
+            topMargin={topMargin}
+            options={{
+              Features: HOME_ANCHORS.FEATURES,
+              Pricing: HOME_ANCHORS.PRICE,
+              Company: HOME_ANCHORS.COMPANY,
+            }}
+          />
+        </ExpandCollapse>
+      </div>
       <div className="hover:text-green-primary mr-2 md:mr-4 lg:mr-8 whitespace-no-wrap">
         <a href={HOME_ANCHORS.JOIN}>Join Waitlist</a>
       </div>
