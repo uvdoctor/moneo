@@ -3,9 +3,10 @@ import Logo from "./logo";
 
 export default function LogoWithName() {
   return (
-    <div className="flex">
+    <div className="w-full text-bold flex items-end text-default">
       <Logo />
-      <h1 className="text-base md:text-3xl mt-2 text-default">$Darwin</h1>
+      <h1 className="mr-4">$Darwin</h1>
+      <h3 className="whitespace-no-wrap">Your Analyst</h3>
     </div>
   );
 }

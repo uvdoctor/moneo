@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import { isMobileDevice } from "./utils";
 import Header from "./header";
 import JoinUs from "./joinus";
 
@@ -19,7 +18,7 @@ const Landing = () => {
   return (
     <Fragment>
       <div
-        className="flex flex-col bg-cover xl:bg-center xl:bg-fixed w-screen h-56 xl:h-screen"
+        className="flex flex-col bg-contain bg-no-repeat xl:bg-cover bg-center xl:bg-fixed w-screen h-56 xl:h-screen text-base md:text-lg lg:text-xl xl:text-2xl"
         style={{
           minHeight: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
@@ -31,24 +30,17 @@ const Landing = () => {
           parentStyleDiffHandler={setCoverPage}
         />
         <div
-          className={`flex flex-col md:mt-1 ml-2 md:ml-4 lg:ml-8
-        font-bold xs:text-xs sm:text-base md:text-xl lg:text-2xl`}
+          className={`flex flex-col md:mt-1 ml-1 md:ml-4 lg:ml-8
+        font-bold`}
         >
-          {!isMobileDevice(fsb) && (
-            <h1 className="mr-2">Your Financial Analyst for</h1>
-          )}
-          <div className="flex flex-col md:flex-row text-green-primary md:text-2xl lg:text-3xl xl:text-4xl">
-            <h1>Stress-free Savings &</h1>
-            <h1 className="md:ml-2">Investments</h1>
+          <h1 className="text-green-primary md:text-2xl lg:text-3xl xl:text-4xl">
+            Stress-free Savings & Investments
+          </h1>
+          <div className="mt-2 lg:mt-4">
+            <JoinUs />
           </div>
-          {!isMobileDevice(fsb) && (
-            <div className="md:mt-2 lg:mt-4">
-              <JoinUs />
-            </div>
-          )}
         </div>
       </div>
-      {isMobileDevice(fsb) && <JoinUs />}
     </Fragment>
   );
 };

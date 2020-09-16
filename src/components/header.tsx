@@ -42,7 +42,6 @@ export default function Header({
       <LogoWithName />
       {isMobileDevice(fsb) ? (
         <div className="w-full flex items-center justify-end">
-          <label className="mr-2 whitespace-no-wrap">Your Financial Analyst</label>
           <div
             className="cursor-pointer pr-1"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
