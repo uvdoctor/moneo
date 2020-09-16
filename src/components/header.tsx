@@ -21,7 +21,7 @@ export default function Header({
 }: HeaderProps) {
   const fsb = useFullScreenBrowser();
   const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
-  const getTopMargin = () => isMobileDevice(fsb) ? 33 : 14.5;
+  const getTopMargin = () => (isMobileDevice(fsb) ? 33 : 14.5);
   const [topMargin, setTopMargin] = useState<number>(getTopMargin());
 
   useEffect(() => {
@@ -40,8 +40,8 @@ export default function Header({
       }}
     >
       <LogoWithName />
-      {isMobileDevice(fsb) ? (
-        <div className="w-full flex items-center justify-end">
+      <div className="w-full flex items-center justify-end">
+        {isMobileDevice(fsb) ? (
           <div
             className="cursor-pointer pr-1"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
@@ -64,14 +64,14 @@ export default function Header({
               />
             )}
           </div>
-        </div>
-      ) : (
-        <Menu
-          parentStyleDiff={parentStyleDiff}
-          parentStyleDiffHandler={parentStyleDiffHandler}
-          topMargin={topMargin}
-        />
-      )}
+        ) : (
+          <Menu
+            parentStyleDiff={parentStyleDiff}
+            parentStyleDiffHandler={parentStyleDiffHandler}
+            topMargin={topMargin}
+          />
+        )}
+      </div>
     </nav>
   );
 }
