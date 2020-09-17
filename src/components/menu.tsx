@@ -36,20 +36,18 @@ export default function Menu({ parentStyleDiffHandler }: MenuProps) {
                 <a>Learn</a>
               </Link>
   </div>*/}
-      <div className="xl:mr-24">
-        <ExpandCollapse title="About">
-          <Dropdown
-            topMargin={topMargin}
-            options={{
-              Features: HOME_ANCHORS.FEATURES,
-              Pricing: HOME_ANCHORS.PRICE,
-              Company: HOME_ANCHORS.COMPANY,
-            }}
-          />
-        </ExpandCollapse>
-      </div>
-      <div className="hover:text-green-primary mr-2 md:mr-4 lg:mr-8 whitespace-no-wrap">
-        <a href={"#"+HOME_ANCHORS.JOIN}>Join Waitlist</a>
+      <ExpandCollapse title="About">
+        <Dropdown
+          topMargin={topMargin}
+          options={{
+            Features: HOME_ANCHORS.FEATURES,
+            Pricing: HOME_ANCHORS.PRICE,
+            Company: HOME_ANCHORS.COMPANY,
+          }}
+        />
+      </ExpandCollapse>
+      <div className="hover:text-green-primary md:mr-4 lg:mr-8 whitespace-no-wrap">
+        <a href={"#" + HOME_ANCHORS.JOIN}>Join Waitlist</a>
       </div>
     </div>
   );

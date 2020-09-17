@@ -21,8 +21,8 @@ export default function Header({ parentStyleDiff, parentStyleDiffHandler }: Head
 
   return (
     <nav
-      className={`w-full flex justify-between cursor fixed font-bold items-end top-0 pb-1 z-10 ${
-        (!parentStyleDiff || showMobileMenu) ? "fixed bg-white" : "sticky"
+      className={`w-full flex justify-between cursor font-bold items-end top-0 pb-1 z-10 ${
+        (!parentStyleDiff || showMobileMenu) ? "fixed bg-white" : "static"
       } text-base md:text-lg lg:text-xl`}
     >
       <LogoWithName />

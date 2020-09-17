@@ -19,10 +19,11 @@ const Landing = () => {
   return (
     <Fragment>
       <div
-        className="bg-contain bg-no-repeat md:bg-cover bg-top md:bg-bottom xl:bg-fixed w-screen h-56 xl:h-screen text-base md:text-lg lg:text-xl xl:text-2xl"
+        className="bg-contain bg-no-repeat xl:bg-fixed w-full xl:h-screen text-base md:text-lg lg:text-xl xl:text-2xl"
         style={{
           minHeight: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
+          backgroundSize: '100% 100%',
         }}
       >
         <Header
