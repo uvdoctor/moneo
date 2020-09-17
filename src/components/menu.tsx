@@ -49,7 +49,7 @@ export default function Menu({ parentStyleDiffHandler }: MenuProps) {
         </ExpandCollapse>
       </div>
       <div className="hover:text-green-primary mr-2 md:mr-4 lg:mr-8 whitespace-no-wrap">
-        <a href={HOME_ANCHORS.JOIN}>Join Waitlist</a>
+        <a href={"#"+HOME_ANCHORS.JOIN}>Join Waitlist</a>
       </div>
     </div>
   );

@@ -6,11 +6,11 @@ export const ROUTES = {
 }
 
 export const HOME_ANCHORS = {
-    CALCULATE: '#calculate',
-    JOIN: '#join',
-    FEATURES: '#features',
-    PRICE: '#price',
-    COMPANY: '#company'
+    CALCULATE: 'calculate',
+    JOIN: 'join',
+    FEATURES: 'features',
+    PRICE: 'price',
+    COMPANY: 'company'
 }
 
 export const SVGS = {
