@@ -9,7 +9,7 @@ export default function Main() {
   const { top } = useScroll();
 
   return (
-    <div className="mx-auto container overflow-x-none overflow-y-auto">
+    <div className="overflow-x-none overflow-y-auto">
       <ToastContainer />
       {top > 0 && <Header />}
       <Landing />

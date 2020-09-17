@@ -24,6 +24,7 @@ const Landing = () => {
           minHeight: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
           backgroundSize: '100% 100%',
+          maxWidth: "1400px"
         }}
       >
         <Header
