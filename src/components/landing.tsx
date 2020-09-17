@@ -23,7 +23,6 @@ const Landing = () => {
         style={{
           minHeight: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
-          backgroundSize: '100% 100%',
           maxWidth: "1400px"
         }}
       >
