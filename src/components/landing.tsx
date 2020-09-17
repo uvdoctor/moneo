@@ -19,7 +19,7 @@ const Landing = () => {
   return (
     <Fragment>
       <div
-        className="bg-contain bg-no-repeat xl:bg-fixed w-full xl:h-screen text-base md:text-lg lg:text-xl xl:text-2xl"
+        className={`bg-contain bg-no-repeat xl:bg-fixed w-full ${fsb.info.screenWidth < 300 ? 'h-40' : 'h-56'} xl:h-screen text-base md:text-lg lg:text-xl xl:text-2xl`}
         style={{
           minHeight: coverHeight + "px",
           backgroundImage: `url('images/cover.jpg')`,
