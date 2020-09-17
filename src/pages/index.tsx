@@ -5,7 +5,7 @@ import Main from "../components/main";
 interface Props {}
 
 const Home: NextPage<Props> = () => (
-  <div className="container">
+  <div>
     <Head>
       <meta charSet="utf-8" />
       <link rel="icon" href="images/icons/favicon.ico" />
