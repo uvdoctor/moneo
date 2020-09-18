@@ -93,7 +93,7 @@ export default function EmiCost(props: EmiProps) {
       props.loanAnnualInt
     );
     let loanPaidForMonths = getLoanPaidForMonths(
-      props.endYear,
+      props.startYear + props.duration - 1,
       props.repaymentSY,
       props.loanYears
     );
@@ -294,10 +294,10 @@ export default function EmiCost(props: EmiProps) {
                         result={totalIntAmt}
                         currency={props.currency}
                         footer={`Over ${getLoanPaidForMonths(
-                          props.endYear,
+                          props.startYear + props.duration - 1,
                           props.repaymentSY,
                           props.loanYears
-                        )} Years`}
+                        ) / 12} Years`}
                       />
                     }
                     value={props.loanAnnualInt}

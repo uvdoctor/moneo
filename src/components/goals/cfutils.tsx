@@ -553,6 +553,7 @@ const getRemPrincipal = (
       loanRepaymentSY,
       loanYears,
     );
+    console.log("Loan paid for months is ", loanPaidForMonths)
     remPrincipal = getRemainingPrincipal(
       loanBorrowAmt,
       emi,
