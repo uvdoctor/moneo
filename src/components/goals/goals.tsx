@@ -11,7 +11,6 @@ import {
   createNewGoalInput,
   getGoalTypes,
   getImpOptions,
-  getLastPossibleFFYear,
   getAge,
 } from "./goalutils";
 import { findEarliestFFYear, isFFPossible } from "./cfutils";
@@ -68,7 +67,6 @@ export default function Goals({
   const [mergedCFs, setMergedCFs] = useState<any>({});
   const [impFilter, setImpFilter] = useState<string>("");
   const [ffResult, setFFResult] = useState<any>({});
-  const [ffYear, setFFYear] = useState<number | null>(0);
   const [rr, setRR] = useState<Array<number>>([]);
   const goalsLabel = "Goals";
   const cfLabel = "Cash Flows";
@@ -141,7 +139,7 @@ export default function Goals({
       savings,
       mergedCFs,
       annualSavings,
-      ffYear,
+      ffResult ? ffResult.ffYear : null,
       mustCFs,
       tryCFs,
       avgAnnualExpense,
@@ -149,16 +147,10 @@ export default function Goals({
       getPP()
     );
     if (!isFFPossible(result, ffGoal.sa as number)) {
-      setFFYear(null);
+      result.ffYear = 0
+    }
       setFFResult(result);
       setRR([...result.rr]);
-    } else {
-      if (!ffYear || ffYear < result.ffYear || ffYear > getLastPossibleFFYear(ffGoal.ey)) {
-        setFFYear(result.ffYear);
-        setFFResult(result);
-        setRR([...result.rr]);
-      }
-    }
   };
 
   useEffect(() => {
@@ -337,7 +329,7 @@ export default function Goals({
     goalId: string,
     goalImp: APIt.LMH
   ) => {
-    if (!ffGoal || !ffYear) return null;
+    if (!ffGoal || !ffResult.ffYear) return null;
     let mCFs: any = Object.assign({}, mergedCFs);
     let highImpCFs: any = Object.assign([], mustCFs);
     let medImpCFs: any = Object.assign([], tryCFs);
@@ -365,7 +357,7 @@ export default function Goals({
       savings,
       mCFs,
       annualSavings,
-      ffYear,
+      ffResult ? ffResult.ffYear : null,
       highImpCFs,
       medImpCFs,
       avgAnnualExpense,
@@ -423,10 +415,8 @@ export default function Goals({
             updateCallback={updateGoal}
             annualSavings={annualSavings}
             totalSavings={savings}
-            ffYear={ffYear}
             ffResult={ffResult}
             mergedCfs={mergedCFs}
-            ffYearHandler={setFFYear}
             ffResultHandler={setFFResult}
             rrHandler={setRR}
             pp={getPP()}
@@ -468,8 +458,8 @@ export default function Goals({
           >
             <label className="p-2 font-semibold text-lg md:text-xl">
               {isFFPossible(ffResult, ffGoal.sa as number)
-                ? `Financial Freedom at ${
-                    getAge(ffYear as number, ffGoal.ey)
+                ? `Financial Freedom Earliest at ${
+                    getAge(ffResult.ffYear as number, ffGoal.ey)
                   }`
                 : `Financial Freedom May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
             </label>

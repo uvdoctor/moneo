@@ -9,11 +9,11 @@ import {
   buildYearsArray,
 } from "../utils";
 import SelectInput from "../form/selectinput";
-import { checkForFF, findEarliestFFYear, isFFPossible } from "./cfutils";
+import { findEarliestFFYear } from "./cfutils";
 import FFResult from "./ffresult";
 import SVGChart from "../svgchart";
 import LineChart from "./linechart";
-import { getAge, getOrderByTabLabel, getTabLabelByOrder } from "./goalutils";
+import { getOrderByTabLabel, getTabLabelByOrder } from "./goalutils";
 import SVGBarChart from "../svgbarchart";
 import StickyHeader from "./stickyheader";
 import ResultSection from "./resultsection";
@@ -34,20 +34,18 @@ import SVGCashFlow from "../svgcashflow";
 import SVGInheritance from "./svginheritance";
 import SVGCare from "./svgcare";
 import SVGPay from "../svgpay";
-import { MAX_RETIREMENT_AGE, PLAN_DURATION } from "../../CONSTANTS";
+import { PLAN_DURATION } from "../../CONSTANTS";
 interface FFGoalProps {
   goal: APIt.CreateGoalInput;
   totalSavings: number;
   annualSavings: number;
   avgAnnualExp: number;
   expChgRate: number;
-  ffYear: number | null;
   ffResult: any | null;
   mustCFs: Array<number>;
   tryCFs: Array<number>;
   mergedCfs: any;
   pp: Object;
-  ffYearHandler: Function;
   ffResultHandler: Function;
   rrHandler: Function;
   cancelCallback: Function;
@@ -61,13 +59,11 @@ export default function FFGoal({
   annualSavings,
   avgAnnualExp,
   expChgRate,
-  ffYear,
   ffResult,
   mustCFs,
   tryCFs,
   mergedCfs,
   pp,
-  ffYearHandler,
   ffResultHandler,
   rrHandler,
   cancelCallback,
@@ -179,7 +175,6 @@ export default function FFGoal({
 
   const [showTab, setShowTab] = useState(investLabel);
   const [showResultTab, setShowResultTab] = useState<string>(aaNextYearLabel);
-  const [ffYearOptions, setFFYearOptions] = useState<any>({});
 
   const createGoal = () => {
     return {
@@ -226,8 +221,6 @@ export default function FFGoal({
     if (currency === "USD" || currency === "CAD" || currency === "GBP") {
       if (!hasCareTab()) {
         tabOptions.splice(3, 0, careOption);
-        //tabOptions[4].order = 16;
-        //tabOptions[5].order = 18;
         setTabOptions([...tabOptions]);
       }
     } else {
@@ -245,47 +238,21 @@ export default function FFGoal({
   }, [currency]);
 
   useEffect(() => {
-    if (!ffYear || ffYear === ffResult.ffYear) return;
-    let result = checkForFF(
-      totalSavings,
-      createGoal(),
-      ffYear as number,
-      mergedCfs,
-      annualSavings,
-      mustCFs,
-      tryCFs,
-      avgAnnualExp,
-      expChgRate,
-      pp
-    );
-    ffResultHandler(result);
-    rrHandler([...result.rr]);
-    console.log("FF Result is ", result);
-  }, [ffYear]);
-
-  useEffect(() => {
     if (!allInputDone) return;
     let result = findEarliestFFYear(
       createGoal(),
       totalSavings,
       mergedCfs,
       annualSavings,
-      ffYear ? ffYear : null,
+      ffResult.ffYear ? ffResult.ffYear : null,
       mustCFs,
       tryCFs,
       avgAnnualExp,
       expChgRate,
       pp
     );
-    setFFYearOptions(
-      initYearOptions(
-        getAge(result.ffYear, endYear),
-        MAX_RETIREMENT_AGE - getAge(result.ffYear, endYear)
-      )
-    );
     ffResultHandler(result);
     rrHandler([...result.rr]);
-    ffYearHandler(!isFFPossible(result, leaveBehind) ? null : result.ffYear);
     console.log("FF Result is ", result);
   }, [
     expenseBY,
@@ -540,12 +507,9 @@ export default function FFGoal({
             result={
               <FFResult
                 endYear={endYear}
-                ffYear={ffYear}
                 result={ffResult}
                 ffNomineeAmt={leaveBehind}
                 currency={currency}
-                ffYearHandler={ffYearHandler}
-                ffYearOptions={ffYearOptions}
               />
             }
           >
