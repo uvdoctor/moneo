@@ -18,10 +18,8 @@ interface RentComparisonProps {
   taxRate: number;
   rentTaxBenefit: number;
   rentTaxBenefitHandler: Function;
-  buyCFsHandler: Function;
   sellAfter: number;
   brChartData: Array<any>;
-  allBuyCFsHandler: Function;
   analyzeFor: number
   analyzeForHandler: Function
   nextStepHandler: Function;
@@ -39,10 +37,8 @@ export default function RentComparison({
   taxRate,
   rentTaxBenefit,
   rentTaxBenefitHandler,
-  buyCFsHandler,
   sellAfter,
   brChartData,
-  allBuyCFsHandler,
   analyzeFor,
   analyzeForHandler,
   nextStepHandler,

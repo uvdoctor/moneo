@@ -803,12 +803,10 @@ export default function Goal({
               rentTaxBenefitHandler={setRentTaxBenefit}
               taxRate={taxRate}
               sellAfter={sellAfter as number}
-              buyCFsHandler={calculateYearlyCFs}
               brChartData={brChartData}
               allInputDone={allInputDone}
               currentOrder={currentOrder}
               inputOrder={getOrderByTabLabel(tabOptions, rentLabel)}
-              allBuyCFsHandler={setAllBuyCFs}
               nextStepHandler={handleNextStep}
               analyzeFor={analyzeFor}
               analyzeForHandler={setAnalyzeFor}
