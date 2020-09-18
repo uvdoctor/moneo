@@ -9,48 +9,6 @@ Parameters:
     Type: String
   
   
-  
-  
-  functionddpwa0063633bDefineAuthChallengeArn: 
-    Type: String
-    Default: functionddpwa0063633bDefineAuthChallengeArn
-  
-  functionddpwa0063633bDefineAuthChallengeName: 
-    Type: String
-    Default: functionddpwa0063633bDefineAuthChallengeName
-  
-  
-  
-  functionddpwa0063633bCreateAuthChallengeArn: 
-    Type: String
-    Default: functionddpwa0063633bCreateAuthChallengeArn
-  
-  functionddpwa0063633bCreateAuthChallengeName: 
-    Type: String
-    Default: functionddpwa0063633bCreateAuthChallengeName
-  
-  
-  
-  functionddpwa0063633bVerifyAuthChallengeResponseArn: 
-    Type: String
-    Default: functionddpwa0063633bVerifyAuthChallengeResponseArn
-  
-  functionddpwa0063633bVerifyAuthChallengeResponseName: 
-    Type: String
-    Default: functionddpwa0063633bVerifyAuthChallengeResponseName
-  
-  
-  
-  functionddpwa0063633bCustomMessageArn: 
-    Type: String
-    Default: functionddpwa0063633bCustomMessageArn
-  
-  functionddpwa0063633bCustomMessageName: 
-    Type: String
-    Default: functionddpwa0063633bCustomMessageName
-  
-  
-  
 
     
   identityPoolName:
@@ -235,25 +193,6 @@ Resources:
         
       
       
-      LambdaConfig:
-        
-          CreateAuthChallenge: !Ref functionddpwa0063633bCreateAuthChallengeArn
-        
-        
-          CustomMessage: !Ref functionddpwa0063633bCustomMessageArn
-        
-        
-          DefineAuthChallenge: !Ref functionddpwa0063633bDefineAuthChallengeArn
-        
-        
-        
-        
-        
-        
-        
-          VerifyAuthChallengeResponse: !Ref functionddpwa0063633bVerifyAuthChallengeResponseArn
-        
-      
       
       AutoVerifiedAttributes: !Ref autoVerifiedAttributes
       
@@ -278,50 +217,14 @@ Resources:
     DependsOn: SNSRole
     
   
-  
-  UserPoolCreateAuthChallengeLambdaInvokePermission: 
-    Type: "AWS::Lambda::Permission"
-    DependsOn: UserPool
-    Properties: 
-      Action: "lambda:invokeFunction"
-      Principal: "cognito-idp.amazonaws.com"
-      FunctionName: !Ref functionddpwa0063633bCreateAuthChallengeName
-      SourceArn: !GetAtt UserPool.Arn
     
-  
-  UserPoolCustomMessageLambdaInvokePermission: 
-    Type: "AWS::Lambda::Permission"
-    DependsOn: UserPool
-    Properties: 
-      Action: "lambda:invokeFunction"
-      Principal: "cognito-idp.amazonaws.com"
-      FunctionName: !Ref functionddpwa0063633bCustomMessageName
-      SourceArn: !GetAtt UserPool.Arn
     
-  
-  UserPoolDefineAuthChallengeLambdaInvokePermission: 
-    Type: "AWS::Lambda::Permission"
-    DependsOn: UserPool
-    Properties: 
-      Action: "lambda:invokeFunction"
-      Principal: "cognito-idp.amazonaws.com"
-      FunctionName: !Ref functionddpwa0063633bDefineAuthChallengeName
-      SourceArn: !GetAtt UserPool.Arn
   
     
     
   
   
    
-  
-  UserPoolVerifyAuthChallengeResponseLambdaInvokePermission: 
-    Type: "AWS::Lambda::Permission"
-    DependsOn: UserPool
-    Properties: 
-      Action: "lambda:invokeFunction"
-      Principal: "cognito-idp.amazonaws.com"
-      FunctionName: !Ref functionddpwa0063633bVerifyAuthChallengeResponseName
-      SourceArn: !GetAtt UserPool.Arn
     
   # Updating lambda role with permissions to Cognito
   

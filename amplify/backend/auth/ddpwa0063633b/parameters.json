@@ -55,48 +55,11 @@
     "userPoolGroupList": [
         "app"
     ],
-    "dependsOn": [
-        {
-            "category": "function",
-            "resourceName": "ddpwa0063633bDefineAuthChallenge",
-            "triggerProvider": "Cognito",
-            "attributes": [
-                "Arn",
-                "Name"
-            ]
-        },
-        {
-            "category": "function",
-            "resourceName": "ddpwa0063633bCreateAuthChallenge",
-            "triggerProvider": "Cognito",
-            "attributes": [
-                "Arn",
-                "Name"
-            ]
-        },
-        {
-            "category": "function",
-            "resourceName": "ddpwa0063633bVerifyAuthChallengeResponse",
-            "triggerProvider": "Cognito",
-            "attributes": [
-                "Arn",
-                "Name"
-            ]
-        },
-        {
-            "category": "function",
-            "resourceName": "ddpwa0063633bCustomMessage",
-            "triggerProvider": "Cognito",
-            "attributes": [
-                "Arn",
-                "Name"
-            ]
-        }
-    ],
+    "dependsOn": [],
     "thirdPartyAuth": false,
     "userPoolGroups": false,
     "adminQueries": false,
-    "triggers": "{\n  \"DefineAuthChallenge\": [\n    \"captcha-define-challenge\"\n  ],\n  \"CreateAuthChallenge\": [\n    \"captcha-create-challenge\"\n  ],\n  \"VerifyAuthChallengeResponse\": [\n    \"captcha-verify\"\n  ],\n  \"CustomMessage\": [\n    \"verification-link\"\n  ]\n}",
+    "triggers": "{}",
     "hostedUI": false,
     "serviceName": "Cognito",
     "verificationBucketName": "ddpwa0063633bverificationbucket",

@@ -14,18 +14,6 @@
     "categories": {
       "auth": {
         "ddpwa0063633b": {}
-      },
-      "function": {
-        "ddpwa0063633bDefineAuthChallenge": {},
-        "ddpwa0063633bCreateAuthChallenge": {},
-        "ddpwa0063633bVerifyAuthChallengeResponse": {
-          "RECAPTCHASECRET": ""
-        },
-        "ddpwa0063633bCustomMessage": {
-          "REDIRECTURL": "https://www.dollardarwin.com/dashboard",
-          "EMAILSUBJECT": "DollarDarwin account has been verified",
-          "EMAILMESSAGE": "Thank You for verifiying Your account access. Please use the link below to access Your DollarDarwin:"
-        }
       }
     }
   }

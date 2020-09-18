@@ -563,6 +563,7 @@ export default function Goal({
   };
 
   useEffect(() => {
+    if(!sellAfter) return
     if (!!rentAmt) {
       let data = buildComparisonData();
       if (data && data.length == 2) setBRChartData([...data]);
