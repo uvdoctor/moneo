@@ -20,7 +20,7 @@ import {
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import AnnualAmt from "./annualamt";
-import { getCompoundedIncome } from "../calc/finance";
+import { getCompoundedIncome, getNPV } from "../calc/finance";
 import SVGScale from "../svgscale";
 import ResultSection from "./resultsection";
 import GoalResult from "./goalresult";
@@ -202,7 +202,8 @@ export default function Goal({
       loanYears
     )
   );
-
+  const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
+  const [analyzeFor, setAnalyzeFor] = useState<number>(20);
   const [showTab, setShowTab] = useState(amtLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
   const [resultTabOptions, setResultTabOptions] = useState<Array<any>>(
@@ -488,6 +489,96 @@ export default function Goal({
   const showResultSection = () =>
     nowYear < startYear && allInputDone && cfs.length > 0;
 
+  const getNextTaxAdjRentAmt = (val: number) => {
+    return (
+      val *
+      (1 + (rentChgPer as number) / 100) *
+      ((rentTaxBenefit as number) > 0 ? 1 - taxRate / 100 : 1)
+    );
+  };
+
+  const initAllRentCFs = (buyCFs: Array<number>) => {
+    const firstRRIndex = startYear - (nowYear + 1);
+    if (!rentAmt) return [];
+    let taxAdjustedRentAmt = rentAmt * (1 - taxRate / 100);
+    if (!buyCFs || buyCFs.length === 0) return [];
+    let npv: Array<number> = [];
+    for (let i = 0; i < analyzeFor; i++) {
+      let cfs = [];
+      let inv = 0;
+      for (
+        let j = 0, value = taxAdjustedRentAmt;
+        j <= i;
+        j++, value = getNextTaxAdjRentAmt(value)
+      ) {
+        if (buyCFs[j]) inv += buyCFs[j];
+        inv -= value;
+        if (inv > 0) {
+          let dr = rr[firstRRIndex + j];
+          if (!dr) dr = 3;
+          inv += inv * (dr / 100);
+        }
+        cfs.push(-value);
+      }
+      cfs.push(inv);
+      if (cfs.length > 0) {
+        npv.push(getNPV(rr, cfs, firstRRIndex));
+      }
+    }
+    return npv;
+  };
+
+  const buildComparisonData = () => {
+    let results: Array<any> = [];
+    if (allBuyCFs && allBuyCFs.length > 0) {
+      results.push({
+        name: "Buy",
+        values: initAllBuyCFs(allBuyCFs),
+      });
+      results.push({
+        name: "Rent",
+        values: initAllRentCFs(getBuyCFForRentAnalysis()),
+      });
+    }
+    return results;
+  };
+
+  const getBuyCFForRentAnalysis = () => {
+    let arr: Array<number> = [];
+    if (!allBuyCFs || allBuyCFs.length === 0) return arr;
+    if (manualMode < 1) arr.push(-allBuyCFs[0][0]);
+    else wipTargets.forEach((t) => arr.push(t.val));
+    return arr;
+  };
+
+  const initAllBuyCFs = (allBuyCFs: Array<Array<number>>) => {
+    let npv: Array<number> = [];
+    for (let i = 0; i < analyzeFor; i++) {
+      let buyCFs = allBuyCFs[i];
+      if (buyCFs && buyCFs.length > 0) {
+        npv.push(getNPV(rr, buyCFs, startYear - (nowYear + 1)));
+      }
+    }
+    return npv;
+  };
+
+  useEffect(() => {
+    if (!!rentAmt) {
+      let data = buildComparisonData();
+      if (data && data.length == 2) setBRChartData([...data]);
+    } else {
+      setBRChartData([...[]]);
+    }
+  }, [taxRate, rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs]);
+
+  useEffect(() => {
+    if(!sellAfter) return
+    let allBuyCFs: Array<Array<number>> = [];
+    for (let i = 1; i <= analyzeFor; i++)
+      allBuyCFs.push(calculateYearlyCFs(i, false));
+    setAllBuyCFs([...allBuyCFs]);
+  }, [analyzeFor, cfs]);
+
   return (
     <div className="w-full h-full">
       <StickyHeader cancelCallback={cancelCallback} cancelDisabled={btnClicked}>
@@ -712,17 +803,15 @@ export default function Goal({
               rentTaxBenefitHandler={setRentTaxBenefit}
               taxRate={taxRate}
               sellAfter={sellAfter as number}
-              manualMode={manualMode}
-              manualTgts={wipTargets}
-              startYear={startYear}
               buyCFsHandler={calculateYearlyCFs}
-              rr={rr}
               brChartData={brChartData}
-              brChartDataHandler={setBRChartData}
               allInputDone={allInputDone}
               currentOrder={currentOrder}
               inputOrder={getOrderByTabLabel(tabOptions, rentLabel)}
+              allBuyCFsHandler={setAllBuyCFs}
               nextStepHandler={handleNextStep}
+              analyzeFor={analyzeFor}
+              analyzeForHandler={setAnalyzeFor}
             />
           )}
         </InputSection>
