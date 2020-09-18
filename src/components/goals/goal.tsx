@@ -191,6 +191,18 @@ export default function Goal({
           { label: loanLabel, order: 10, active: true, svg: SVGLoan },
         ]
   );
+  const [duration, setDuration] = useState<number>(
+    getDuration(
+      sellAfter,
+      startYear,
+      endYear,
+      manualMode,
+      loanPer,
+      loanRepaymentSY,
+      loanYears
+    )
+  );
+
   const [showTab, setShowTab] = useState(amtLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
   const [resultTabOptions, setResultTabOptions] = useState<Array<any>>(
@@ -274,7 +286,15 @@ export default function Goal({
   };
 
   const calculateYearlyCFs = (
-    duration: number = getDur(),
+    duration: number = getDuration(
+      sellAfter,
+      startYear,
+      endYear,
+      manualMode,
+      loanPer,
+      loanRepaymentSY,
+      loanYears
+    ),
     changeState: boolean = true
   ) => {
     let cfs: Array<number> = [];
@@ -290,6 +310,7 @@ export default function Goal({
       if ((loanPer as number) && manualMode < 1 && goalType === APIt.GoalType.B)
         setEndYear(g.sy + cfs.length - 1);
       setCFs([...cfs]);
+      setDuration(duration);
       if (result.hasOwnProperty("itb")) setTotalITaxBenefit(result.itb);
       setTotalPTaxBenefit(result.ptb);
     }
@@ -328,8 +349,7 @@ export default function Goal({
   }, [wipTargets, manualMode]);
 
   useEffect(() => {
-    if (cashFlows || (!allInputDone && currentOrder < 7))
-      return;
+    if (cashFlows || (!allInputDone && currentOrder < 7)) return;
     if (!cashFlows) calculateYearlyCFs();
   }, [
     price,
@@ -381,12 +401,12 @@ export default function Goal({
       if (currentOrder >= tabOptions[2].order) {
         if (tabOptions[3]) {
           if (currentOrder < tabOptions[3].order) {
-            setShowTab(tabOptions[3].label)
+            setShowTab(tabOptions[3].label);
             setCurrentOrder(tabOptions[3].order);
           }
         } else {
           setCurrentOrder(tabOptions[1].order);
-          setShowTab(tabOptions[1].label)
+          setShowTab(tabOptions[1].label);
         }
       }
     } else tabOptions[2].active = true;
@@ -455,25 +475,17 @@ export default function Goal({
       let label = getTabLabelByOrder(co);
       if (label) setShowTab(label);
       setCurrentOrder(co);
-      if (sellAfter) setAllInputDone(co === getOrderByTabLabel(tabOptions, rentLabel) + 1);
+      if (sellAfter)
+        setAllInputDone(co === getOrderByTabLabel(tabOptions, rentLabel) + 1);
       else if (hasTab(loanLabel)) {
-        if (co === getOrderByTabLabel(tabOptions, loanLabel) + 3) setAllInputDone(true);
-      } else if (co === getOrderByTabLabel(tabOptions, taxLabel) + 1) setAllInputDone(true);
+        if (co === getOrderByTabLabel(tabOptions, loanLabel) + 3)
+          setAllInputDone(true);
+      } else if (co === getOrderByTabLabel(tabOptions, taxLabel) + 1)
+        setAllInputDone(true);
     }
   };
 
-  const getDur = () =>
-    getDuration(
-      sellAfter,
-      startYear,
-      endYear,
-      manualMode,
-      loanPer,
-      loanRepaymentSY,
-      loanYears
-    );
-
-  const showResultSection = () => 
+  const showResultSection = () =>
     nowYear < startYear && allInputDone && cfs.length > 0;
 
   return (
@@ -560,7 +572,7 @@ export default function Goal({
               currency={currency}
               maxTaxDeduction={maxTaxDeduction}
               maxTaxDeductionHandler={setMaxTaxDeduction}
-              duration={getDur()}
+              duration={duration}
               rangeFactor={rangeFactor}
               inputOrder={getOrderByTabLabel(tabOptions, taxLabel)}
               currentOrder={currentOrder}
@@ -577,7 +589,7 @@ export default function Goal({
               priceChgRate={priceChgRate}
               currency={currency}
               startYear={startYear}
-              duration={getDur()}
+              duration={duration}
               repaymentSY={loanRepaymentSY as number}
               endYear={endYear}
               rangeFactor={rangeFactor}
@@ -630,7 +642,7 @@ export default function Goal({
                 annualSY={amStartYear as number}
                 annualSYHandler={setAMStartYear}
                 price={price}
-                duration={getDur()}
+                duration={duration}
                 title="Yearly Fixes, Insurance, etc costs"
                 footer="Include taxes & fees"
                 inputOrder={getOrderByTabLabel(tabOptions, annualNetCostLabel)}
@@ -652,7 +664,7 @@ export default function Goal({
                   annualSY={aiStartYear as number}
                   annualSYHandler={setAIStartYear}
                   price={price}
-                  duration={getDur()}
+                  duration={duration}
                   title="Yearly Income through Rent, Dividend, etc"
                   footer="Exclude taxes & fees"
                   inputOrder={

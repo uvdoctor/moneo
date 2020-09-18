@@ -339,7 +339,7 @@ export const getLoanPaidForMonths = (
   loanRepaymentYear: number,
   loanYears: number,
 ) => {
-  if(!endYear || !loanRepaymentYear || loanRepaymentYear >= endYear) return loanYears * 12
+  if(!endYear || !loanRepaymentYear || loanRepaymentYear > endYear) return loanYears * 12
   let loanPaidYears = endYear + 1 - loanRepaymentYear 
   if(loanPaidYears > loanYears) loanPaidYears = loanYears;
   return loanPaidYears * 12;
@@ -553,7 +553,6 @@ const getRemPrincipal = (
       loanRepaymentSY,
       loanYears,
     );
-    console.log("Loan paid for months is ", loanPaidForMonths)
     remPrincipal = getRemainingPrincipal(
       loanBorrowAmt,
       emi,
