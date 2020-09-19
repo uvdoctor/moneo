@@ -5,18 +5,21 @@ import Header from "../components/header";
 import * as APIt from "../api/goals";
 import { createNewGoalInput } from "../components/goals/goalutils";
 import Goal from "../components/goals/goal";
+import { ToastContainer } from "react-toastify";
 
 export default function BuyOrRent() {
   const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null);
   const nowYear = new Date().getFullYear();
 
-  const createGoal = () =>
-    setWIPGoal(createNewGoalInput(APIt.GoalType.B, "USD"));
-
-  const handleDone = () => setWIPGoal(null);
+  const createBuyGoal = () => {
+    let g: APIt.CreateGoalInput = createNewGoalInput(APIt.GoalType.B, "USD")
+    g.name="Buy v/s Rent Calculator"
+    setWIPGoal(g)
+  }
 
   return (
     <div className="text-lg">
+      <ToastContainer />  
       {!wipGoal ? (
         <Fragment>
           <Header />
@@ -25,7 +28,7 @@ export default function BuyOrRent() {
               ripple
               type="primary"
               size="medium"
-              onPress={createGoal}
+              onPress={createBuyGoal}
             >
               START
             </AwesomeButton>
@@ -37,7 +40,7 @@ export default function BuyOrRent() {
             <Goal
               goal={wipGoal}
               ffGoalEndYear={nowYear + 30}
-              cancelCallback={handleDone}
+              cancelCallback={() => setWIPGoal(null)}
             />
           </div>
         </div>

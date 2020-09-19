@@ -127,7 +127,9 @@ export default function Goal({
   const [rangeFactor, setRangeFactor] = useState<number>(
     getRangeFactor(currency)
   );
-  const [currentOrder, setCurrentOrder] = useState<number>(1);
+  const [currentOrder, setCurrentOrder] = useState<number>(
+    addCallback && updateCallback ? 1 : 3
+  );
   const [allInputDone, setAllInputDone] = useState<boolean>(
     goal.id ? true : false
   );
@@ -230,6 +232,9 @@ export default function Goal({
             svg: SVGChart,
           },
         ]
+  );
+  const [dr, setDR] = useState<number | null>(
+    addCallback && updateCallback ? null : 6
   );
 
   const createNewBaseGoal = () => {
@@ -517,15 +522,15 @@ export default function Goal({
         if (buyCFs[j]) inv += buyCFs[j];
         inv -= value;
         if (inv > 0) {
-          let dr = rr[firstRRIndex + j];
-          if (!dr) dr = 3;
-          inv += inv * (dr / 100);
+          let rate = dr === null ? rr[firstRRIndex + j] : dr;
+          rate = rate >= 0 ? rate : 3;
+          inv += inv * (rate / 100);
         }
         cfs.push(-value);
       }
       cfs.push(inv);
       if (cfs.length > 0) {
-        npv.push(getNPV(rr, cfs, firstRRIndex));
+        npv.push(getNPV(dr === null ? rr : dr, cfs, firstRRIndex));
       }
     }
     return npv;
@@ -559,7 +564,9 @@ export default function Goal({
     for (let i = 0; i < analyzeFor; i++) {
       let buyCFs = allBuyCFs[i];
       if (buyCFs && buyCFs.length > 0) {
-        npv.push(getNPV(rr, buyCFs, startYear - (nowYear + 1)));
+        npv.push(
+          getNPV(dr === null ? rr : dr, buyCFs, startYear - (nowYear + 1))
+        );
       }
     }
     return npv;
@@ -573,7 +580,7 @@ export default function Goal({
     } else {
       setBRChartData([...[]]);
     }
-  }, [taxRate, rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs]);
+  }, [taxRate, rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs, dr]);
 
   useEffect(() => {
     if (!sellAfter || cfs.length === 0 || !rentAmt) return;
@@ -586,31 +593,37 @@ export default function Goal({
   return (
     <div className="w-full h-full">
       <StickyHeader cancelCallback={cancelCallback} cancelDisabled={btnClicked}>
-        <TextInput
-          name="name"
-          inputOrder={1}
-          currentOrder={currentOrder}
-          nextStepDisabled={name.length < 3}
-          allInputDone={allInputDone}
-          nextStepHandler={handleNextStep}
-          pre={typesList[goalType]}
-          placeholder="Goal Name"
-          value={name}
-          changeHandler={setName}
-          width="150px"
-        />
-        <SelectInput
-          name="imp"
-          inputOrder={2}
-          currentOrder={currentOrder}
-          nextStepDisabled={false}
-          nextStepHandler={handleNextStep}
-          allInputDone={allInputDone}
-          pre="Importance"
-          value={impLevel}
-          changeHandler={setImpLevel}
-          options={getImpLevels()}
-        />
+        {addCallback && updateCallback ? (
+          <Fragment>
+            <TextInput
+              name="name"
+              inputOrder={1}
+              currentOrder={currentOrder}
+              nextStepDisabled={name.length < 3}
+              allInputDone={allInputDone}
+              nextStepHandler={handleNextStep}
+              pre={typesList[goalType]}
+              placeholder="Goal Name"
+              value={name}
+              changeHandler={setName}
+              width="150px"
+            />
+            <SelectInput
+              name="imp"
+              inputOrder={2}
+              currentOrder={currentOrder}
+              nextStepDisabled={false}
+              nextStepHandler={handleNextStep}
+              allInputDone={allInputDone}
+              pre="Importance"
+              value={impLevel}
+              changeHandler={setImpLevel}
+              options={getImpLevels()}
+            />
+          </Fragment>
+        ) : (
+          <h1 className="w-full text-center font-bold mt-4 mb-2 text-lg md:text-xl lg:text-2xl">{name}</h1>
+        )}
       </StickyHeader>
       <div
         className={`container mx-auto w-full h-full flex flex-1 lg:flex-row ${
@@ -835,6 +848,8 @@ export default function Goal({
                   ffOOM={ffOOM}
                   ffImpactYears={ffImpactYears}
                   buyGoal={goalType === APIt.GoalType.B}
+                  dr={dr}
+                  drHandler={setDR}
                 />
               )
             }
