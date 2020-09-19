@@ -12,14 +12,14 @@ interface GoalResultProps {
   ffGoalEndYear: number;
   rr: Array<number>;
   buyGoal: boolean;
-  dr: number | null;
-  drHandler: Function;
+  dr?: number | null;
+  drHandler?: Function;
 }
 
 export default function GoalResult(props: GoalResultProps) {
   return (
     <div className="w-full py-1 flex justify-around items-center w-full items-start bg-green-100 shadow-lg lg:shadow-xl">
-      {props.dr === null ? (
+      {props.dr === null || props.dr === undefined ? (
         <FFImpact
           ffGoalEndYear={props.ffGoalEndYear}
           ffOOM={props.ffOOM}
@@ -48,7 +48,7 @@ export default function GoalResult(props: GoalResultProps) {
       )}
       <div className="w-full">
         <OppCost
-          discountRate={props.dr === null ? props.rr : props.dr}
+          discountRate={props.dr === null || props.dr === undefined ? props.rr : props.dr}
           cfs={props.cfs}
           currency={props.currency}
           startYear={props.startYear}
