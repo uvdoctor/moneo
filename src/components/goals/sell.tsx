@@ -118,6 +118,7 @@ export default function Sell(props: SellProps) {
                   decimal={2}
                   unit="%"
                   footer="Yearly"
+                  pl
                 />
               )}
             </div>
