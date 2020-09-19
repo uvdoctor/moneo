@@ -39,7 +39,7 @@ interface GoalProps {
   ffGoalEndYear: number;
   ffImpactYearsHandler?: Function;
   cancelCallback: Function;
-  addCallback: Function;
+  addCallback?: Function;
   updateCallback?: Function;
 }
 
@@ -389,7 +389,7 @@ export default function Goal({
   }, [endYear]);
 
   useEffect(() => {
-    if(!ffImpactYearsHandler) return
+    if (!ffImpactYearsHandler) return;
     let result = ffImpactYearsHandler(startYear, cfs, goal.id, impLevel);
     setFFImpactYears(result.ffImpactYears);
     setRR([...result.rr]);
@@ -428,9 +428,11 @@ export default function Goal({
 
   const handleSubmit = async () => {
     setBtnClicked(true);
-    goal.id && updateCallback
-      ? await updateCallback(createUpdateGoalInput(), cfs)
-      : await addCallback(createNewGoalInput(), cfs);
+    if (addCallback && updateCallback) {
+      goal.id
+        ? await updateCallback(createUpdateGoalInput(), cfs)
+        : await addCallback(createNewGoalInput(), cfs);
+    } else cancelCallback();
     setBtnClicked(false);
   };
 
@@ -564,7 +566,7 @@ export default function Goal({
   };
 
   useEffect(() => {
-    if(!sellAfter) return
+    if (!sellAfter) return;
     if (!!rentAmt) {
       let data = buildComparisonData();
       if (data && data.length == 2) setBRChartData([...data]);
@@ -574,7 +576,7 @@ export default function Goal({
   }, [taxRate, rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs]);
 
   useEffect(() => {
-    if(!sellAfter || cfs.length === 0 || !rentAmt) return
+    if (!sellAfter || cfs.length === 0 || !rentAmt) return;
     let allBuyCFs: Array<Array<number>> = [];
     for (let i = 1; i <= analyzeFor; i++)
       allBuyCFs.push(calculateYearlyCFs(i, false));
@@ -627,6 +629,7 @@ export default function Goal({
             !allInputDone || name.length < 3 || !price || btnClicked
           }
           cancelDisabled={btnClicked}
+          calc={!addCallback || !updateCallback}
         >
           {showTab === amtLabel && (
             <Amt

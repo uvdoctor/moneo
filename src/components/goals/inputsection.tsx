@@ -1,4 +1,6 @@
 import React, { ReactNode } from "react";
+//@ts-ignore
+import { AwesomeButton } from "react-awesome-button";
 import ActionButtons from "../form/actionbuttons";
 import Tabs from "../tabs";
 
@@ -13,6 +15,7 @@ interface InputSectionProps {
   showTabHandler: Function;
   cancelCallback: Function;
   handleSubmit: Function;
+  calc?: boolean;
 }
 
 export default function InputSection({
@@ -26,8 +29,8 @@ export default function InputSection({
   showTabHandler,
   cancelCallback,
   handleSubmit,
+  calc,
 }: InputSectionProps) {
-
   return (
     <div
       className={`w-full ${
@@ -51,13 +54,26 @@ export default function InputSection({
             : null
         )}
       </div>
-      <ActionButtons
-        submitDisabled={submitDisabled}
-        cancelDisabled={cancelDisabled}
-        cancelHandler={cancelCallback}
-        submitHandler={handleSubmit}
-        submitText="SAVE"
-      />
+      {calc ? (
+        <div className="w-full text-center">
+          <AwesomeButton
+            ripple
+            type="primary"
+            size="medium"
+            onPress={cancelCallback}
+          >
+            CLOSE
+          </AwesomeButton>
+        </div>
+      ) : (
+        <ActionButtons
+          submitDisabled={submitDisabled}
+          cancelDisabled={cancelDisabled}
+          cancelHandler={cancelCallback}
+          submitHandler={handleSubmit}
+          submitText="SAVE"
+        />
+      )}
     </div>
   );
 }

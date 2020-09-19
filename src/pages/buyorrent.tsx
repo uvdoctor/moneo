@@ -8,20 +8,25 @@ import Goal from "../components/goals/goal";
 
 export default function BuyOrRent() {
   const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null);
-  const nowYear = new Date().getFullYear()
+  const nowYear = new Date().getFullYear();
 
   const createGoal = () =>
     setWIPGoal(createNewGoalInput(APIt.GoalType.B, "USD"));
 
-  const handleDone = () => setWIPGoal(null)
+  const handleDone = () => setWIPGoal(null);
 
   return (
     <div className="text-lg">
       {!wipGoal ? (
         <Fragment>
-          <Header />  
+          <Header />
           <div className="mt-16 w-full text-center">
-            <AwesomeButton ripple type="primary" size="medium" onPress={createGoal}>
+            <AwesomeButton
+              ripple
+              type="primary"
+              size="medium"
+              onPress={createGoal}
+            >
               START
             </AwesomeButton>
           </div>
@@ -29,8 +34,11 @@ export default function BuyOrRent() {
       ) : (
         <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
           <div className="relative bg-white border-0">
-              <Goal goal={wipGoal} ffGoalEndYear={nowYear + 30} 
-              addCallback={handleDone} cancelCallback={handleDone} />
+            <Goal
+              goal={wipGoal}
+              ffGoalEndYear={nowYear + 30}
+              cancelCallback={handleDone}
+            />
           </div>
         </div>
       )}
