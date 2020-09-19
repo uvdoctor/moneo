@@ -13,7 +13,7 @@ export default function BuyOrRent() {
 
   const createBuyGoal = () => {
     let g: APIt.CreateGoalInput = createNewGoalInput(APIt.GoalType.B, "USD")
-    g.name="Buy v/s Rent Calculator"
+    g.name="Buy v/s Rent & Invest"
     setWIPGoal(g)
   }
 
