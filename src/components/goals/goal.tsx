@@ -37,10 +37,10 @@ interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
   ffGoalEndYear: number;
-  ffImpactYearsHandler: Function;
+  ffImpactYearsHandler?: Function;
   cancelCallback: Function;
   addCallback: Function;
-  updateCallback: Function;
+  updateCallback?: Function;
 }
 
 export default function Goal({
@@ -389,6 +389,7 @@ export default function Goal({
   }, [endYear]);
 
   useEffect(() => {
+    if(!ffImpactYearsHandler) return
     let result = ffImpactYearsHandler(startYear, cfs, goal.id, impLevel);
     setFFImpactYears(result.ffImpactYears);
     setRR([...result.rr]);
@@ -427,7 +428,7 @@ export default function Goal({
 
   const handleSubmit = async () => {
     setBtnClicked(true);
-    goal.id
+    goal.id && updateCallback
       ? await updateCallback(createUpdateGoalInput(), cfs)
       : await addCallback(createNewGoalInput(), cfs);
     setBtnClicked(false);
@@ -573,7 +574,7 @@ export default function Goal({
   }, [taxRate, rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs]);
 
   useEffect(() => {
-    if(!sellAfter) return
+    if(!sellAfter || cfs.length === 0 || !rentAmt) return
     let allBuyCFs: Array<Array<number>> = [];
     for (let i = 1; i <= analyzeFor; i++)
       allBuyCFs.push(calculateYearlyCFs(i, false));
