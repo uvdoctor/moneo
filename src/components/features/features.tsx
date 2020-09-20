@@ -69,21 +69,21 @@ const Features = () => {
       <p className="mt-4 text-center">GET...SET...GO...</p>
       <div className="mt-4 flex flex-wrap items-center">
         <div className="w-full md:w-1/2 p-2 md:p-4">
-          <Link href={ROUTES.DASHBOARD}>
+          <Link href={ROUTES.GET}>
             <a>
               <img alt="Step 1" src="images/step1.png" />
             </a>
           </Link>
         </div>
         <div className="w-full md:w-1/2 p-2 md:p-4">
-          <Link href={ROUTES.DASHBOARD}>
+          <Link href={ROUTES.SET}>
             <a>
               <img alt="Step 2" src="images/step2.png" />
             </a>
           </Link>
         </div>
         <div className="w-full md:w-1/2 p-2 md:p-4">
-          <Link href={ROUTES.DASHBOARD}>
+          <Link href={ROUTES.SET}>
             <a>
               <img alt="Step 3" src="images/step3.png" />
             </a>
@@ -91,7 +91,7 @@ const Features = () => {
         </div>
         <ul className="cursor w-full md:w-1/2">
           <li>
-            <Link href={ROUTES.DASHBOARD}>
+            <Link href={ROUTES.GET}>
               <a>
                 <div className="flex justify-center">
                   <AwesomeButton type="link" ripple>
