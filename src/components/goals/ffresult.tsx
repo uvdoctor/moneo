@@ -21,7 +21,7 @@ export default function FFResult({
   return (
     <div className="w-full">
       {isFFPossible(result, ffNomineeAmt) ? (
-        <div className="py-2 flex flex-wrap justify-around w-full items-start bg-green-100">
+        <div className="py-2 flex justify-around w-full items-start bg-green-100">
             <ResultItem
               svg={<SVGHourGlass />}
               label="Earliest At"

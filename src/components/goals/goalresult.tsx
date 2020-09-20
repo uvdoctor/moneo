@@ -18,13 +18,15 @@ interface GoalResultProps {
 
 export default function GoalResult(props: GoalResultProps) {
   return (
-    <div className="w-full py-1 flex justify-around items-center w-full items-start bg-green-100 shadow-lg lg:shadow-xl">
+    <div className="w-full py-1 flex justify-around w-full items-center bg-green-100 shadow-lg lg:shadow-xl">
       {props.dr === null || props.dr === undefined ? (
-        <FFImpact
-          ffGoalEndYear={props.ffGoalEndYear}
-          ffOOM={props.ffOOM}
-          ffImpactYears={props.ffImpactYears}
-        />
+        <div className="w-full">
+          <FFImpact
+            ffGoalEndYear={props.ffGoalEndYear}
+            ffOOM={props.ffOOM}
+            ffImpactYears={props.ffImpactYears}
+          />
+        </div>
       ) : (
         <div className="w-full">
           <NumberInput
@@ -48,7 +50,9 @@ export default function GoalResult(props: GoalResultProps) {
       )}
       <div className="w-full">
         <OppCost
-          discountRate={props.dr === null || props.dr === undefined ? props.rr : props.dr}
+          discountRate={
+            props.dr === null || props.dr === undefined ? props.rr : props.dr
+          }
           cfs={props.cfs}
           currency={props.currency}
           startYear={props.startYear}
