@@ -6,7 +6,7 @@ import { getRangeFactor, toCurrency } from "../utils";
 import { LMH } from "../../api/goals";
 import { getRAOptions } from "./goalutils";
 
-interface InvestProps {
+interface FIInvestProps {
   inputOrder: number;
   currentOrder: number;
   allInputDone: boolean;
@@ -22,7 +22,7 @@ interface InvestProps {
   riskProfileHandler: Function;
 }
 
-export function Invest({
+export function FIInvest({
   inputOrder,
   currentOrder,
   allInputDone,
@@ -36,7 +36,7 @@ export function Invest({
   monthlySavingsRateHandler,
   riskProfile,
   riskProfileHandler,
-}: InvestProps) {
+}: FIInvestProps) {
   const nowYear = new Date().getFullYear();
   const rangeFactor = getRangeFactor(currency);
 

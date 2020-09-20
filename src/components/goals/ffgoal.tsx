@@ -17,7 +17,7 @@ import { getOrderByTabLabel, getTabLabelByOrder } from "./goalutils";
 import SVGBarChart from "../svgbarchart";
 import StickyHeader from "./stickyheader";
 import ResultSection from "./resultsection";
-import { Invest } from "./invest";
+import { FIInvest } from "./fiinvest";
 import { ExpenseAfterFF } from "./expenseafterff";
 import RetIncome from "./retincome";
 import CareInsurance from "./careinsurance";
@@ -350,9 +350,10 @@ export default function FFGoal({
           handleSubmit={handleSubmit}
           submitDisabled={!allInputDone || expenseAfterFF < 5000 || btnClicked}
           cancelDisabled={btnClicked}
+          calc={!addCallback && !updateCallback}
         >
           {showTab === investLabel && (
-            <Invest
+            <FIInvest
               currency={currency}
               riskProfile={riskProfile}
               riskProfileHandler={setRiskProfile}
