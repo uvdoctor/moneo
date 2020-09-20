@@ -238,7 +238,7 @@ export default function Goal({
             label: loanChartLabel,
             order: 3,
             active: manualMode < 1 && loanPer,
-            svg: SVGScale,
+            svg: SVGLoan,
           },
         ]
       : [

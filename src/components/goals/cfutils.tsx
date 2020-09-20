@@ -6,7 +6,12 @@ import {
   getEmi,
 } from "../calc/finance";
 import xirr from "xirr";
-import { buildArray, getAllAssetTypes, getRangeFactor } from "../utils";
+import {
+  appendValue,
+  buildArray,
+  getAllAssetTypes,
+  getRangeFactor,
+} from "../utils";
 import { ASSET_TYPES } from "../../CONSTANTS";
 import { getLastPossibleFFYear, isTaxCreditEligible } from "./goalutils";
 //Tested
@@ -153,7 +158,7 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, ffYear: number) => {
   for (let i = 1; i <= duration; i++) {
     let val = getCompoundedIncome(
       (g.tbr as number) * 12,
-      g.rachg as number * 12,
+      (g.rachg as number) * 12,
       i,
       12
     );
@@ -657,8 +662,11 @@ const calculateMustAllocation = (
           );
     savingsAA[year] = livingExp / 2;
     depositsAA[year] = livingExp / 2;
-    let mustCF = mustCFs[year - (nowYear + 1)];
-    if (mustCF && mustCF < 0) depositsAA[year] -= mustCF;
+    if (
+      mustCFs.hasOwnProperty(year - (nowYear + 1)) &&
+      mustCFs[year - (nowYear + 1)] < 0
+    )
+      depositsAA[year] -= mustCFs[year - (nowYear + 1)];
     let depCF = 0;
     let bondsCF = 0;
     for (let futureYear = year + 1; futureYear < year + 5; futureYear++) {
@@ -707,7 +715,6 @@ const buildEmptyAA = (fromYear: number, toYear: number) => {
 const getRR = (aa: any, index: number, pp: any) => {
   let perf = 0;
   for (const prop in aa) {
-    //@ts-ignore
     perf += (pp[prop] * aa[prop][index]) / 100;
   }
   return perf;
@@ -820,18 +827,17 @@ export const checkForFF = (
   tryCFs: Array<number>,
   pp: any
 ) => {
-  let mCFs = Object.assign({}, mergedCFs);
+  let mCFs: any = Object.assign({}, mergedCFs);
   let cs = getAnnualPorfolioValue(
     ffGoal.ra as number,
     ffGoal.rachg as number,
     ffGoal.tbr as number
-  )
+  );
   let cfs: Array<number> = calculateFFCFs(ffGoal, ffYear);
   let nowYear = new Date().getFullYear();
   cfs.forEach((cf, i) => {
     let index = nowYear + 1 + i;
-    //@ts-ignore
-    mCFs[index] ? (mCFs[index] += cf) : (mCFs[index] = cf);
+    appendValue(mCFs, index, cf);
   });
   let ffAmt = 0;
   let ffCfs = {};
@@ -844,7 +850,7 @@ export const checkForFF = (
   for (let [year, value] of Object.entries(mCFs)) {
     let y = parseInt(year);
     if (y > ffGoal.ey) break;
-    let v = parseInt(value);
+    let v = parseInt(value as string);
     let sa = mustAllocation.savings[y];
     let da = mustAllocation.deposits[y];
     let mustBA = mustAllocation.bonds[y];
@@ -856,16 +862,16 @@ export const checkForFF = (
     if (cs >= minReq) {
       calculateAllocation(ffGoal, y, cs, aa, sa, da, mustBA, tryBA, ffYear);
     } else {
-      if (cs <= sa) aa[ASSET_TYPES.SAVINGS][i] = 100;
+      if (cs <= sa) aa[ASSET_TYPES.SAVINGS][i] += 100;
       else {
-        aa[ASSET_TYPES.SAVINGS][i] = Math.round((sa / cs) * 100);
+        aa[ASSET_TYPES.SAVINGS][i] += Math.round((sa / cs) * 100);
         let depPer = Math.round((da / cs) * 100);
         let remPer = 100 - aa[ASSET_TYPES.SAVINGS][i];
-        aa[ASSET_TYPES.DEPOSITS][i] = depPer < remPer ? depPer : remPer;
+        aa[ASSET_TYPES.DEPOSITS][i] += depPer < remPer ? depPer : remPer;
         remPer -= aa[ASSET_TYPES.DEPOSITS][i];
         if (remPer > 0) {
-          if (y >= ffYear) aa[ASSET_TYPES.MED_TERM_BONDS][i] = remPer;
-          else aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = remPer;
+          if (y >= ffYear) aa[ASSET_TYPES.MED_TERM_BONDS][i] += remPer;
+          else aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] += remPer;
         }
       }
       oom.push(y);

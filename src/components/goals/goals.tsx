@@ -33,7 +33,9 @@ import SVGList from "../svglist";
 
 export default function Goals() {
   const { fullScreen } = useFullScreen();
-  const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([]);
+  const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
+    []
+  );
   const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
   const [ffGoal, setFFGoal] = useState<APIt.CreateGoalInput | null>(null);
   const [allCFs, setAllCFs] = useState<any>({});
@@ -72,7 +74,7 @@ export default function Goals() {
       svglabel: "USD",
     },
   ];
-  
+
   const loadAllGoals = async () => {
     let goals: Array<APIt.CreateGoalInput> | null = await getGoalsList();
     if (!goals || goals.length === 0) {
@@ -84,7 +86,7 @@ export default function Goals() {
     goals?.forEach((g) => {
       if (g.type === APIt.GoalType.FF) {
         setFFGoal(g);
-        tabOptions[2].svglabel = g.ccy
+        tabOptions[2].svglabel = g.ccy;
         ffGoalId = g.id as string;
       } else {
         let result: any = calculateCFs(
@@ -113,7 +115,10 @@ export default function Goals() {
     const irDiffByCurrency: any = {
       INR: 3,
     };
-    let irDiff = ffGoal ? irDiffByCurrency[ffGoal.ccy] : 0;
+    let irDiff =
+      ffGoal && irDiffByCurrency.hasOwnProperty(ffGoal.ccy)
+        ? irDiffByCurrency[ffGoal.ccy]
+        : 0;
     return {
       [ASSET_TYPES.SAVINGS]: 0.5 + irDiff,
       [ASSET_TYPES.DEPOSITS]: 1.5 + irDiff,
@@ -136,8 +141,7 @@ export default function Goals() {
     let mCFs: any = {};
     let ffToYear = ffGoal.ey;
     if (toYear < ffToYear) toYear = ffToYear;
-    for (let year = fromYear; year <= toYear; year++)
-      mCFs[year] = 0;
+    for (let year = fromYear; year <= toYear; year++) mCFs[year] = 0;
     return mCFs;
   };
 
@@ -152,15 +156,15 @@ export default function Goals() {
       getPP()
     );
     if (!isFFPossible(result, ffGoal.sa as number)) {
-      result.ffYear = 0
+      result.ffYear = 0;
     }
-      setFFResult(result);
-      setRR([...result.rr]);
+    setFFResult(result);
+    setRR([...result.rr]);
   };
 
   useEffect(() => {
-    loadAllGoals().then(() => setGoalsLoaded(true))
-  }, [])
+    loadAllGoals().then(() => setGoalsLoaded(true));
+  }, []);
 
   useEffect(() => {
     calculateFFYear();
@@ -455,9 +459,10 @@ export default function Goals() {
           >
             <label className="p-2 font-semibold text-lg md:text-xl">
               {isFFPossible(ffResult, ffGoal.sa as number)
-                ? `Financial Freedom Earliest at ${
-                    getAge(ffResult.ffYear as number, ffGoal.ey)
-                  }`
+                ? `Financial Freedom Earliest at ${getAge(
+                    ffResult.ffYear as number,
+                    ffGoal.ey
+                  )}`
                 : `Financial Freedom May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
             </label>
             <div
