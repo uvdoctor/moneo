@@ -411,13 +411,6 @@ export const createEduLoanDPWithSICFs = (
   };
 };
 
-export const calculateEduLoanGracePeriodInt = (
-  loanPrincipal: number,
-  rate: number
-) => {
-  loanPrincipal * (rate / 200);
-};
-
 const createLoanCFs = (
   p: number,
   goal: APIt.CreateGoalInput,

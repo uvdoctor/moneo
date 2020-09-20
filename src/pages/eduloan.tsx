@@ -5,7 +5,7 @@ import * as APIt from "../api/goals";
 import Goal from "../components/goals/goal";
 import CalcLayout from "../components/calc/calclayout";
 
-export default function BuyOrRent() {
+export default function EduLoan() {
   const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null);
   const nowYear = new Date().getFullYear();
 

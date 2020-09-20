@@ -6,7 +6,9 @@ export const ROUTES = {
     INVEST: '/invest',
     CALCULATE: '/calculate',
     FI: '/fi',
-    BR: '/buyorrent'
+    BR: '/buyorrent',
+    EDUCATION: '/eduloan',
+    MORTGAGE: '/mortgage'
 }
 
 export const HOME_ANCHORS = {
@@ -30,24 +32,6 @@ export const SVGS = {
     PERCENTAGE: 'PercentSvg',
     TARGET: 'TargetSvg',
     PIGGYBANK: 'PiggybankSvg'
-}
-
-export const CALCS = {
-    FI: 'Financial Independence',
-    SI: 'SI',
-    BR: 'Buy vs Rent & Invest',
-    DB: 'DB',
-    NW: 'NW',
-    RISK: 'RISK',
-    LOAN: 'LOAN',
-    ED: 'ED',
-    DEP: 'DEP'
-}
-
-export const FIXED = {
-    DEP: 'Deposit',
-    BOND: 'Bond',
-    DEB: 'Debenture'
 }
 
 export const ASSET_CATEGORIES = {

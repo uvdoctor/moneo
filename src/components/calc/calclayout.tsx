@@ -4,7 +4,7 @@ import React, { Fragment} from "react";
 import { AwesomeButton } from "react-awesome-button";
 import { ToastContainer } from "react-toastify";
 import { CreateGoalInput, GoalType } from "../../api/goals";
-import { CALCS, ROUTES } from "../../CONSTANTS";
+import { ROUTES } from "../../CONSTANTS";
 import { createNewGoalInput } from "../goals/goalutils";
 import Header from "../header";
 
@@ -20,9 +20,14 @@ export default function CalcLayout({ wipGoal, wipGoalHandler, children }: CalcLa
   const getCalcDetails = () => {
     switch(router.pathname) {
       case ROUTES.FI: 
-        return {name: CALCS.FI, type: GoalType.FF}
+        return {name: "Financial Independence", type: GoalType.FF}
       case ROUTES.BR:
-        return {name: CALCS.BR, type: GoalType.B}
+        return {name: "Buy v/s Rent & Invest", type: GoalType.B}
+      case ROUTES.EDUCATION: 
+        return {name: "Education Loan", type: GoalType.E}
+      case ROUTES.MORTGAGE:
+        return {name: "Mortgage", type: GoalType.B}
+      
       default:
         return ""
     }

@@ -362,13 +362,6 @@ export default function EmiCost(props: EmiProps) {
                             />
                           </div>
                         )}
-                      <div className="mt-2">
-                        <HToggle
-                          rightText="Claim 6 Months Grace Period"
-                          value={props.loanGracePeriod as number}
-                          setter={props.loanGracePeriodHandler}
-                        />
-                      </div>
                     </Fragment>
                   )}
                 {props.taxRate &&
