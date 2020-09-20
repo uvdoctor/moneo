@@ -42,7 +42,7 @@ export default function GoalResult(props: GoalResultProps) {
             max={10}
             step={0.1}
             pre="Investment"
-            post="Earns"
+            post="Earns Yearly"
             unit="%"
             note="After taxes & fees"
           />
