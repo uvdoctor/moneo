@@ -147,7 +147,7 @@ export default function Goal({
   const [dr, setDR] = useState<number | null>(
     addCallback && updateCallback ? null : 6
   );
-  const cfChartLabel = `${dr === null ? "" : "Buy "}Cash Flows`;
+  const cfChartLabel = "Cash Flows";
   const brChartLabel = "Buy v/s Rent & Invest";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);

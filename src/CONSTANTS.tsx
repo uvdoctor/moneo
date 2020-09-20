@@ -8,7 +8,7 @@ export const ROUTES = {
     FI: '/fi',
     BR: '/buyorrent',
     EDUCATION: '/eduloan',
-    MORTGAGE: '/mortgage'
+    LOAN: '/loan'
 }
 
 export const HOME_ANCHORS = {

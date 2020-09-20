@@ -19,7 +19,7 @@ export default function OppCost(props: OppCostProps) {
   const [lastYear, setLastYear] = useState<number>(
     props.startYear + props.cfs.length - 1
   );
-  const defaultDuration = 20;
+  const minDuration = 20;
 
   const calculateOppCost = () => {
     if (!props.cfs || props.cfs.length === 0) {
@@ -49,11 +49,11 @@ export default function OppCost(props: OppCostProps) {
         )
           oppCost = getCompoundedIncome(props.discountRate[i], oppCost, 1);
         setLastYear(year);
-      } else
+      } else if (props.cfs.length - 1 < minDuration)
         oppCost = getCompoundedIncome(
           props.discountRate,
           oppCost,
-          defaultDuration
+          minDuration - (props.cfs.length - 1)
         );
     }
     setOppCost(oppCost);
@@ -75,7 +75,7 @@ export default function OppCost(props: OppCostProps) {
         props.buyGoal
           ? `in ${props.cfs.length - 1} Years`
           : typeof props.discountRate === "number"
-          ? `in ${defaultDuration} Years`
+          ? `in ${props.cfs.length - 1 > minDuration ? props.cfs.length : minDuration} Years`
           : `when You turn ${lastYear - (props.ffGoalEndYear - PLAN_DURATION)}`
       } if You 
         ${oppCost < 0 ? "Invest" : "Buy"} instead of ${
