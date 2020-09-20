@@ -5,6 +5,8 @@ export const ROUTES = {
     SAVE: '/save',
     INVEST: '/invest',
     CALCULATE: '/calculate',
+    FI: '/fi',
+    BR: '/buyorrent'
 }
 
 export const HOME_ANCHORS = {
@@ -31,9 +33,9 @@ export const SVGS = {
 }
 
 export const CALCS = {
-    FI: 'FI',
+    FI: 'Financial Independence',
     SI: 'SI',
-    BR: 'BR',
+    BR: 'Buy vs Rent & Invest',
     DB: 'DB',
     NW: 'NW',
     RISK: 'RISK',

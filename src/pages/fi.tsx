@@ -1,23 +1,15 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
-import Header from "../components/header";
 import * as APIt from "../api/goals";
-import { createNewGoalInput } from "../components/goals/goalutils";
-import { ToastContainer } from "react-toastify";
 import FFGoal from "../components/goals/ffgoal";
 import { ASSET_TYPES } from "../CONSTANTS";
+import CalcLayout from "../components/calc/calclayout";
 
 export default function FI() {
   const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null);
   const nowYear = new Date().getFullYear();
   const [ffResult, setFFResult] = useState<any>({});
-
-  const createGoal = () => {
-    let g: APIt.CreateGoalInput = createNewGoalInput(APIt.GoalType.FF, "USD");
-    g.name = "Financial Independence";
-    setWIPGoal(g);
-  };
 
   const buildEmptyMergedCFs = () => {
     let mCFs = {};
@@ -46,38 +38,17 @@ export default function FI() {
   };
 
   return (
-    <div className="text-lg">
-      <ToastContainer />
-      {!wipGoal ? (
-        <Fragment>
-          <Header />
-          <div className="mt-16 w-full text-center">
-            <AwesomeButton
-              ripple
-              type="primary"
-              size="medium"
-              onPress={createGoal}
-            >
-              START
-            </AwesomeButton>
-          </div>
-        </Fragment>
-      ) : (
-        <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
-          <div className="relative bg-white border-0">
-            <FFGoal
-              goal={wipGoal}
-              mustCFs={[]}
-              tryCFs={[]}
-              mergedCfs={buildEmptyMergedCFs()}
-              cancelCallback={() => setWIPGoal(null)}
-              ffResult={ffResult}
-              ffResultHandler={setFFResult}
-              pp={getPP()}
-            />
-          </div>
-        </div>
-      )}
-    </div>
+    <CalcLayout wipGoal={wipGoal} wipGoalHandler={setWIPGoal}>
+      <FFGoal
+        goal={wipGoal as APIt.CreateGoalInput}
+        mustCFs={[]}
+        tryCFs={[]}
+        mergedCfs={buildEmptyMergedCFs()}
+        cancelCallback={() => setWIPGoal(null)}
+        ffResult={ffResult}
+        ffResultHandler={setFFResult}
+        pp={getPP()}
+      />
+    </CalcLayout>
   );
 }
