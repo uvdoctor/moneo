@@ -12,8 +12,10 @@ import {
   getGoalTypes,
   getImpOptions,
   getAge,
+  getDuration,
+  getGoalsList,
 } from "./goalutils";
-import { findEarliestFFYear, isFFPossible } from "./cfutils";
+import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import Summary from "./summary";
 import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
@@ -28,38 +30,13 @@ import SVGBarChart from "../svgbarchart";
 import TreeMapChart from "./treemapchart";
 import SVGAAChart from "./svgaachart";
 import SVGList from "../svglist";
-interface GoalsProps {
-  showModalHandler: Function;
-  savings: number;
-  annualSavings: number;
-  avgAnnualExpense: number;
-  expChgRate: number;
-  currency: string;
-  allGoals: Array<APIt.CreateGoalInput> | null;
-  allCFs: any;
-  goalsLoaded: boolean;
-  ffGoal: APIt.CreateGoalInput | null;
-  allGoalsHandler: Function;
-  allCFsHandler: Function;
-  ffGoalHandler: Function;
-}
 
-export default function Goals({
-  showModalHandler,
-  savings,
-  annualSavings,
-  avgAnnualExpense,
-  expChgRate,
-  currency,
-  allGoals,
-  allCFs,
-  goalsLoaded,
-  ffGoal,
-  allGoalsHandler,
-  allCFsHandler,
-  ffGoalHandler,
-}: GoalsProps) {
+export default function Goals() {
   const { fullScreen } = useFullScreen();
+  const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>([]);
+  const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
+  const [ffGoal, setFFGoal] = useState<APIt.CreateGoalInput | null>(null);
+  const [allCFs, setAllCFs] = useState<any>({});
   const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null);
   const [mustCFs, setMustCFs] = useState<Array<number>>([]);
   const [tryCFs, setTryCFs] = useState<Array<number>>([]);
@@ -92,17 +69,51 @@ export default function Goals({
       order: 3,
       active: true,
       svg: SVGBarChart,
-      svglabel: currency,
+      svglabel: "USD",
     },
   ];
-  const irDiffByCurrency: any = {
-    INR: 3,
+  
+  const loadAllGoals = async () => {
+    let goals: Array<APIt.CreateGoalInput> | null = await getGoalsList();
+    if (!goals || goals.length === 0) {
+      setGoalsLoaded(true);
+      return;
+    }
+    let allCFs: any = {};
+    let ffGoalId = "";
+    goals?.forEach((g) => {
+      if (g.type === APIt.GoalType.FF) {
+        setFFGoal(g);
+        tabOptions[2].svglabel = g.ccy
+        ffGoalId = g.id as string;
+      } else {
+        let result: any = calculateCFs(
+          null,
+          g,
+          getDuration(
+            g.sa as number,
+            g.sy,
+            g.ey,
+            g.manual,
+            g.emi?.per,
+            g.emi?.ry,
+            g.emi?.dur
+          )
+        );
+        allCFs[g.id as string] = result.cfs;
+      }
+    });
+    removeFromArray(goals, "id", ffGoalId);
+    setAllCFs(allCFs);
+    setAllGoals([...goals]);
   };
 
   // potential performance
   const getPP = () => {
-    let irDiff = irDiffByCurrency[currency];
-    if (!irDiff) irDiff = 0;
+    const irDiffByCurrency: any = {
+      INR: 3,
+    };
+    let irDiff = ffGoal ? irDiffByCurrency[ffGoal.ccy] : 0;
     return {
       [ASSET_TYPES.SAVINGS]: 0.5 + irDiff,
       [ASSET_TYPES.DEPOSITS]: 1.5 + irDiff,
@@ -117,7 +128,6 @@ export default function Goals({
       [ASSET_TYPES.DIVIDEND_GROWTH_STOCKS]: 5 + irDiff,
       [ASSET_TYPES.INTERNATIONAL_STOCKS]: 9,
       [ASSET_TYPES.SMALL_CAP_STOCKS]: 9,
-      [ASSET_TYPES.DIGITAL_CURRENCIES]: 10,
     };
   };
 
@@ -136,14 +146,10 @@ export default function Goals({
     if (!ffGoal) return;
     let result = findEarliestFFYear(
       ffGoal,
-      savings,
       mergedCFs,
-      annualSavings,
       ffResult ? ffResult.ffYear : null,
       mustCFs,
       tryCFs,
-      avgAnnualExpense,
-      expChgRate,
       getPP()
     );
     if (!isFFPossible(result, ffGoal.sa as number)) {
@@ -154,8 +160,12 @@ export default function Goals({
   };
 
   useEffect(() => {
+    loadAllGoals().then(() => setGoalsLoaded(true))
+  }, [])
+
+  useEffect(() => {
     calculateFFYear();
-  }, [savings, annualSavings, mustCFs]);
+  }, [mustCFs]);
 
   useEffect(() => {
     if (!ffGoal) return;
@@ -182,7 +192,7 @@ export default function Goals({
     setMergedCFs(mCFs);
   }, [allGoals]);
 
-  useEffect(() => showModalHandler(wipGoal), [wipGoal]);
+  useEffect(() => setWIPGoal(wipGoal), [wipGoal]);
 
   const addGoal = async (
     goal: APIt.CreateGoalInput,
@@ -200,7 +210,7 @@ export default function Goals({
     if (!g) return false;
     setWIPGoal(null);
     if (g.type === APIt.GoalType.FF) {
-      ffGoalHandler(g);
+      setFFGoal(g);
       return true;
     }
     toast.success(`Success! New Goal ${g.name} has been Created.`, {
@@ -209,8 +219,8 @@ export default function Goals({
     allGoals?.push(g as APIt.CreateGoalInput);
     //@ts-ignore
     allCFs[g.id] = cfs;
-    allCFsHandler(allCFs);
-    allGoalsHandler([...(allGoals as Array<APIt.CreateGoalInput>)]);
+    setAllCFs(allCFs);
+    setAllGoals([...(allGoals as Array<APIt.CreateGoalInput>)]);
   };
 
   const updateGoal = async (
@@ -233,7 +243,7 @@ export default function Goals({
         "Success! Your Financial Freedom Target has been Updated.",
         { autoClose: 3000 }
       );
-      ffGoalHandler(g as APIt.CreateGoalInput);
+      setFFGoal(g as APIt.CreateGoalInput);
       return true;
     }
     toast.success(`Success! Goal ${g.name} has been Updated.`);
@@ -241,8 +251,8 @@ export default function Goals({
     allGoals?.unshift(g as APIt.CreateGoalInput);
     //@ts-ignore
     allCFs[g.id] = cfs;
-    allCFsHandler(allCFs);
-    allGoalsHandler([...(allGoals as Array<APIt.CreateGoalInput>)]);
+    setAllCFs(allCFs);
+    setAllGoals([...(allGoals as Array<APIt.CreateGoalInput>)]);
     return true;
   };
 
@@ -259,9 +269,9 @@ export default function Goals({
     removeFromArray(allGoals as Array<APIt.CreateGoalInput>, "id", id);
     //@ts-ignore
     delete allCFs[id];
-    allCFsHandler(allCFs);
+    setAllCFs(allCFs);
     setWIPGoal(null);
-    allGoalsHandler([...(allGoals as Array<APIt.CreateGoalInput>)]);
+    setAllGoals([...(allGoals as Array<APIt.CreateGoalInput>)]);
   };
 
   const cancelGoal = () => setWIPGoal(null);
@@ -278,7 +288,7 @@ export default function Goals({
     setWIPGoal(
       createNewGoalInput(
         type,
-        type === APIt.GoalType.FF ? currency : (ffGoal?.ccy as string)
+        type === APIt.GoalType.FF ? "USD" : (ffGoal?.ccy as string)
       )
     );
 
@@ -354,14 +364,10 @@ export default function Goals({
     let nomineeAmt = ffGoal?.sa as number;
     let resultWithoutGoal = findEarliestFFYear(
       ffGoal,
-      savings,
       mCFs,
-      annualSavings,
       ffResult ? ffResult.ffYear : null,
       highImpCFs,
       medImpCFs,
-      avgAnnualExpense,
-      expChgRate,
       getPP()
     );
     if (!isFFPossible(resultWithoutGoal, nomineeAmt))
@@ -381,14 +387,10 @@ export default function Goals({
     });
     let resultWithGoal = findEarliestFFYear(
       ffGoal,
-      savings,
       mCFs,
-      annualSavings,
       resultWithoutGoal.ffYear,
       highImpCFs,
       medImpCFs,
-      avgAnnualExpense,
-      expChgRate,
       getPP()
     );
     if (!isFFPossible(resultWithGoal, nomineeAmt))
@@ -413,15 +415,11 @@ export default function Goals({
             addCallback={addGoal}
             cancelCallback={cancelGoal}
             updateCallback={updateGoal}
-            annualSavings={annualSavings}
-            totalSavings={savings}
             ffResult={ffResult}
             mergedCfs={mergedCFs}
             ffResultHandler={setFFResult}
             rrHandler={setRR}
             pp={getPP()}
-            avgAnnualExp={avgAnnualExpense}
-            expChgRate={expChgRate}
             mustCFs={mustCFs}
             tryCFs={tryCFs}
           />

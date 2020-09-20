@@ -74,8 +74,7 @@ export default function AAChart(props: AAChartProps) {
       if (desc.endsWith("Bonds")) desc += " Fund";
       else if (
         desc !== ASSET_TYPES.SAVINGS &&
-        desc !== ASSET_TYPES.DEPOSITS &&
-        desc != ASSET_TYPES.DIGITAL_CURRENCIES
+        desc !== ASSET_TYPES.DEPOSITS
       )
         desc += " ETF";
       arr.push(createBarTrace(filteredAA[key], desc, getAssetColour(key)));

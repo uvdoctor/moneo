@@ -37,28 +37,20 @@ import SVGPay from "../svgpay";
 import { PLAN_DURATION } from "../../CONSTANTS";
 interface FFGoalProps {
   goal: APIt.CreateGoalInput;
-  totalSavings: number;
-  annualSavings: number;
-  avgAnnualExp: number;
-  expChgRate: number;
-  ffResult: any | null;
+  ffResult?: any | null;
   mustCFs: Array<number>;
   tryCFs: Array<number>;
   mergedCfs: any;
   pp: Object;
   ffResultHandler: Function;
-  rrHandler: Function;
+  rrHandler?: Function;
   cancelCallback: Function;
-  addCallback: Function;
-  updateCallback: Function;
+  addCallback?: Function;
+  updateCallback?: Function;
 }
 
 export default function FFGoal({
   goal,
-  totalSavings,
-  annualSavings,
-  avgAnnualExp,
-  expChgRate,
   ffResult,
   mustCFs,
   tryCFs,
@@ -78,6 +70,10 @@ export default function FFGoal({
   );
   const [expenseChgRate, setExpenseChgRate] = useState<number>(
     goal?.btr as number
+  );
+  const [nw, setNW] = useState<number>(goal?.ra as number);
+  const [avgMonthlySavings, setAvgMonthlySavings] = useState<number>(
+    goal?.rachg as number
   );
   const [monthlySavingsRate, setMonthlySavingsRate] = useState<number>(
     goal?.tbr as number
@@ -120,7 +116,7 @@ export default function FFGoal({
   const [losses, setLosses] = useState<Array<APIt.TargetInput>>(
     goal.pl as Array<APIt.TargetInput>
   );
-  const [currentOrder, setCurrentOrder] = useState<number>(1);
+  const [currentOrder, setCurrentOrder] = useState<number>(-1);
   const [allInputDone, setAllInputDone] = useState<boolean>(
     goal.id ? true : false
   );
@@ -142,7 +138,7 @@ export default function FFGoal({
     svg: SVGCare,
   };
   const [tabOptions, setTabOptions] = useState<Array<any>>([
-    { label: investLabel, order: 3, active: true, svg: SVGPiggy },
+    { label: investLabel, order: 1, active: true, svg: SVGPiggy },
     { label: spendLabel, order: 5, active: true, svg: SVGPay },
     { label: benefitLabel, order: 8, active: true, svg: SVGTaxBenefit },
     careOption,
@@ -182,6 +178,8 @@ export default function FFGoal({
       sy: expenseBY,
       ey: endYear,
       by: goal.by,
+      ra: nw,
+      rachg: avgMonthlySavings,
       tdr: taxRate,
       tdl: careTaxDedLimit,
       ccy: currency,
@@ -241,18 +239,14 @@ export default function FFGoal({
     if (!allInputDone) return;
     let result = findEarliestFFYear(
       createGoal(),
-      totalSavings,
       mergedCfs,
-      annualSavings,
       ffResult.ffYear ? ffResult.ffYear : null,
       mustCFs,
       tryCFs,
-      avgAnnualExp,
-      expChgRate,
       pp
     );
     ffResultHandler(result);
-    rrHandler([...result.rr]);
+    if (rrHandler) rrHandler([...result.rr]);
     console.log("FF Result is ", result);
   }, [
     expenseBY,
@@ -271,8 +265,8 @@ export default function FFGoal({
     successionTaxRate,
     gains,
     losses,
-    totalSavings,
-    annualSavings,
+    nw,
+    avgMonthlySavings,
     expenseAfterFF,
     expenseChgRate,
     monthlySavingsRate,
@@ -282,9 +276,11 @@ export default function FFGoal({
 
   const handleSubmit = async () => {
     setBtnClicked(true);
-    goal.id
-      ? await updateCallback(updateGoal())
-      : await addCallback(createGoal());
+    if (addCallback && updateCallback) {
+      goal.id
+        ? await updateCallback(updateGoal())
+        : await addCallback(createGoal());
+    } else cancelCallback();
     setBtnClicked(false);
   };
 
@@ -316,7 +312,7 @@ export default function FFGoal({
           //info="Financial Plan will be created assuming that You live till 100 Years, after which You leave behind inheritance.
           //DollarDarwin will try to find the earliest possible year for Your Financial Freedom based on Your inputs and Other Goals that You Create.
           //Given that You May not be able to work beyond 70 years of age, DollarDarwin may request You to reconsider Your inputs and other Goals so that You Achieve Financial Freedom before hitting 70."
-          inputOrder={1}
+          inputOrder={-1}
           currentOrder={currentOrder}
           nextStepDisabled={false}
           allInputDone={allInputDone}
@@ -328,7 +324,7 @@ export default function FFGoal({
         />
         <SelectInput
           name="ccy"
-          inputOrder={2}
+          inputOrder={0}
           currentOrder={currentOrder}
           nextStepDisabled={false}
           allInputDone={allInputDone}
@@ -364,7 +360,10 @@ export default function FFGoal({
               allInputDone={allInputDone}
               inputOrder={getOrderByTabLabel(tabOptions, investLabel)}
               nextStepHandler={handleNextStep}
-              annualSavings={annualSavings}
+              nw={nw}
+              nwHandler={setNW}
+              avgMonthlySavings={avgMonthlySavings}
+              avgMonthlySavingsHandler={setAvgMonthlySavings}
               monthlySavingsRate={monthlySavingsRate}
               monthlySavingsRateHandler={setMonthlySavingsRate}
             />

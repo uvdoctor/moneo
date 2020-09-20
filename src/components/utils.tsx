@@ -480,8 +480,6 @@ export const getAssetColour = (type: string) => {
       return "#b7791f";
     case ASSET_TYPES.INTERNATIONAL_REIT:
       return "#d69e2e";
-    case ASSET_TYPES.DIGITAL_CURRENCIES:
-      return "#faf089";
     default:
       return "";
   }
@@ -516,8 +514,7 @@ export const getAllAssetTypesByCategory = (category: string) => {
       return [
         ASSET_TYPES.DOMESTIC_REIT,
         ASSET_TYPES.INTERNATIONAL_REIT,
-        ASSET_TYPES.GOLD,
-        ASSET_TYPES.DIGITAL_CURRENCIES,
+        ASSET_TYPES.GOLD
       ];
     default:
       return [];
@@ -537,8 +534,7 @@ export const getAllAssetTypes = () => [
   ASSET_TYPES.DIVIDEND_GROWTH_STOCKS,
   ASSET_TYPES.DOMESTIC_REIT,
   ASSET_TYPES.INTERNATIONAL_REIT,
-  ASSET_TYPES.GOLD,
-  ASSET_TYPES.DIGITAL_CURRENCIES,
+  ASSET_TYPES.GOLD
 ];
 
 export const buildTabsArray = (items: any) => {

@@ -1,7 +1,9 @@
 export const ROUTES = {
     HOME: '/',
-    DASHBOARD: '/dashboard',
-    PLAN: '/goals',
+    GET: '/get',
+    SET: '/set',
+    SAVE: '/save',
+    INVEST: '/invest',
     CALCULATE: '/calculate',
 }
 
@@ -46,12 +48,6 @@ export const FIXED = {
     DEB: 'Debenture'
 }
 
-export const DIRECTION = {
-    STEADY: 'steady',
-    DECREASING: 'decreasing',
-    INCREASING: 'increasing'
-}
-
 export const ASSET_CATEGORIES = {
     STOCKS: 'Stocks',
     BONDS: 'Bonds',
@@ -68,7 +64,6 @@ export const ASSET_TYPES = {
     DOMESTIC_REIT: 'Domestic REIT',
     INTERNATIONAL_REIT: 'International REIT',
     GOLD: 'Gold',
-    DIGITAL_CURRENCIES: 'Digital Currencies',
     LARGE_CAP_STOCKS: 'Large-cap Stocks',
     MID_CAP_STOCKS: 'Mid-cap Stocks',
     SMALL_CAP_STOCKS: 'Small-cap Stocks',

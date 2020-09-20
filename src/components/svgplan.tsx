@@ -2,7 +2,7 @@ import React from "react";
 import { COLORS } from "../CONSTANTS";
 
 interface SVGPlanProps {
-    disabled: boolean
+    disabled?: boolean
     selected: boolean
 }
 export default function SVGPlan({disabled, selected}: SVGPlanProps) {
