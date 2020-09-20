@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import * as APIt from "../../api/goals";
-import { initYearOptions, getRangeFactor } from "../utils";
+import { initYearOptions, getRangeFactor, buildArray } from "../utils";
 import EmiCost from "../calc/emicost";
 import TaxBenefit from "../calc/taxbenefit";
 import Sell from "./sell";
@@ -33,6 +33,7 @@ import SVGTaxBenefit from "../svgtaxbenefit";
 import SVGLoan from "../svgloan";
 import SVGSell from "../svgsell";
 import SVGCashFlow from "../svgcashflow";
+import IntChart from "./intchart";
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -149,6 +150,7 @@ export default function Goal({
   );
   const cfChartLabel = "Cash Flows";
   const brChartLabel = "Buy v/s Rent & Invest";
+  const loanChartLabel = "Loan Interest %";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [showBRChart, setShowBRChart] = useState<boolean>(
@@ -211,6 +213,12 @@ export default function Goal({
   const [analyzeFor, setAnalyzeFor] = useState<number>(20);
   const [showTab, setShowTab] = useState(amtLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
+
+  const hasTab = (option: string, options: Array<any> = tabOptions) => {
+    let opts = options.filter((tab) => tab.label === option);
+    return opts && opts.length === 1;
+  };
+
   const [resultTabOptions, setResultTabOptions] = useState<Array<any>>(
     sellAfter
       ? [
@@ -226,6 +234,12 @@ export default function Goal({
             active: showBRChart,
             svg: SVGScale,
           },
+          {
+            label: loanChartLabel,
+            order: 3,
+            active: manualMode < 1 && loanPer,
+            svg: SVGScale,
+          },
         ]
       : [
           {
@@ -234,9 +248,29 @@ export default function Goal({
             active: true,
             svg: SVGChart,
           },
+          isLoanEligible(goalType) && {
+            label: loanChartLabel,
+            order: 2,
+            active: manualMode < 1 && loanPer,
+            svg: SVGLoan,
+          },
         ]
   );
-  
+
+  useEffect(() => {
+    const loanOrderNum = getOrderByTabLabel(resultTabOptions, loanChartLabel);
+    if (manualMode < 1 && loanPer) {
+      if (!loanOrderNum) {
+        resultTabOptions[resultTabOptions.length - 1].active = true;
+        setResultTabOptions([...resultTabOptions]);
+      }
+    } else if (loanOrderNum) {
+      resultTabOptions[resultTabOptions.length - 1].active = false;
+      setResultTabOptions([...resultTabOptions]);
+      setShowResultTab(resultTabOptions[0].label)
+    }
+  }, [manualMode, loanPer]);
+
   const createNewBaseGoal = () => {
     return {
       name: name,
@@ -419,11 +453,6 @@ export default function Goal({
     } else tabOptions[2].active = true;
     setTabOptions([...tabOptions]);
   }, [manualMode, allInputDone, currentOrder]);
-
-  const hasTab = (option: string) => {
-    let options = tabOptions.filter((tab) => tab.label === option);
-    return options && options.length === 1;
-  };
 
   useEffect(() => {
     if (manualMode > 0 && endYear === startYear) setEndYear(startYear + 2);
@@ -622,7 +651,9 @@ export default function Goal({
             />
           </Fragment>
         ) : (
-          <h1 className="w-full text-center font-bold mt-4 mb-2 text-lg md:text-xl lg:text-2xl">{name}</h1>
+          <h1 className="w-full text-center font-bold mt-4 mb-2 text-lg md:text-xl lg:text-2xl">
+            {name}
+          </h1>
         )}
       </StickyHeader>
       <div
@@ -861,6 +892,23 @@ export default function Goal({
             />
             {showBRChart && (
               <BRCompChart data={brChartData} fullScreen={chartFullScreen} />
+            )}
+            {manualMode < 1 && loanPer && loanRepaymentSY && loanYears && (
+              <IntChart
+                repaymentSY={loanRepaymentSY}
+                loanYears={loanYears}
+                interestSchedule={buildArray(
+                  loanRepaymentSY,
+                  loanRepaymentSY + loanYears - 1,
+                  80
+                )}
+                principalSchedule={buildArray(
+                  loanRepaymentSY,
+                  loanRepaymentSY + loanYears - 1,
+                  20
+                )}
+                fullScreen={chartFullScreen}
+              />
             )}
           </ResultSection>
         )}

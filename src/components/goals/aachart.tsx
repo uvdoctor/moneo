@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { convertPerToDec, getAssetColour } from "../utils";
+import { convertPerToDec, getAssetColour, isMobileDevice } from "../utils";
 import {
   getCommonConfig,
   getCommonLayoutProps,
@@ -83,7 +83,7 @@ export default function AAChart(props: AAChartProps) {
   };
 
   useEffect(() => {
-    if (fsb.info.innerWidth > 800)
+    if (!isMobileDevice(fsb))
       setTimeout(() => {
         window.dispatchEvent(new Event("resize"));
       }, 300);

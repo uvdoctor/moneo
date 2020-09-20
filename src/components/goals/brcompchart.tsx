@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import {useFullScreenBrowser} from "react-browser-hooks"
 import {
   getCommonConfig,
   getCommonLayoutProps,
   getCommonStyle,
 } from "../chartutils";
-import { buildYearsArray } from "../utils";
+import { buildYearsArray, isMobileDevice } from "../utils";
 interface BRCompChartProps {
   data: Array<any>;
   fullScreen: boolean;
@@ -14,6 +15,7 @@ interface BRCompChartProps {
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 export default function BRCompChart(props: BRCompChartProps) {
+  const fsb = useFullScreenBrowser()
   const [answer, setAnswer] = useState<string>("");
   const [numOfYears, setNumOfYears] = useState<Array<number>>(
     buildYearsArray(1, props.data[0].values.length)
@@ -48,9 +50,10 @@ export default function BRCompChart(props: BRCompChartProps) {
   }, [props.data])
 
   useEffect(() => {
-      setTimeout(() => {
-        window.dispatchEvent(new Event("resize"));
-      }, 500);
+    if (!isMobileDevice(fsb))
+    setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 700);
   }, [props.fullScreen]);
 
   useEffect;

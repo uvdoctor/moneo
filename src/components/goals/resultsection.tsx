@@ -57,7 +57,9 @@ export default function ResultSection(props: ResultSectionProps) {
           totalItems={props.resultTabOptions}
           currentItem={props.showResultTab}
         >
-          {props.children}
+          {React.Children.map(props.children, (child: any) =>
+            child ? child : null
+          )}
         </DynamicSlider>
       </Fragment>
     </div>

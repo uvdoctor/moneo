@@ -201,7 +201,8 @@ export const toReadableNumber = (num: number, decimalDigits: number = 0) => {
 export function initYearOptions(
   startYear: number,
   duration: number,
-  exclusions: Array<number> = []
+  exclusions: Array<number> = [],
+  defaultValue: number | null = null
 ) {
   let years: any = {};
   for (
@@ -209,7 +210,7 @@ export function initYearOptions(
     duration > 0 ? i <= startYear + duration : i >= startYear + duration;
     duration > 0 ? i++ : i--
   ) {
-    if (!exclusions.includes(i)) years[i] = i;
+    if (!exclusions.includes(i)) years[i] = defaultValue !== null ? defaultValue : i;
   }
   return years;
 }

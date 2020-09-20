@@ -37,7 +37,6 @@ export function FIInvest({
   riskProfile,
   riskProfileHandler,
 }: FIInvestProps) {
-  const nowYear = new Date().getFullYear();
   const rangeFactor = getRangeFactor(currency);
 
   return (
@@ -81,7 +80,7 @@ export function FIInvest({
           pre="Monthly"
           min={-5000}
           max={10000}
-          post="Savings"
+          post="Investment"
           changeHandler={avgMonthlySavingsHandler}
           step={100}
           currency={currency}
@@ -99,18 +98,18 @@ export function FIInvest({
               nextStepDisabled={false}
               allInputDone={allInputDone}
               nextStepHandler={nextStepHandler}
-              info={`Given Average Monthly Saving of ${toCurrency(
+              info={`Given Average Monthly Investment of ${toCurrency(
                 avgMonthlySavings,
                 currency
-              )}, ${monthlySavingsRate}% monthly increase in savings comes to about 
+              )}, ${monthlySavingsRate}% monthly increase in investment comes to about 
           ${toCurrency(
             Math.round(avgMonthlySavings * (1 + monthlySavingsRate / 100)),
             currency
           )} 
-          for this month. Due to the power of compounding, even small regular increase in savings can make a significant impact in the long term.`}
+          for this month. Due to the power of compounding, even small regular increase in investment can make a significant impact in the long term.`}
               infoDurationInMs={7000}
-              pre="Monthly"
-              post="Increase"
+              pre="Increase Investment"
+              post="Every Month by"
               unit="%"
               value={monthlySavingsRate}
               changeHandler={monthlySavingsRateHandler}
@@ -120,7 +119,7 @@ export function FIInvest({
               note={`Total ${toCurrency(
                 Math.round(avgMonthlySavings * (1 + monthlySavingsRate / 100)),
                 currency
-              )} in ${nowYear + 1}`}
+              )} this month`}
             />
           </div>
           <div className="mt-2">

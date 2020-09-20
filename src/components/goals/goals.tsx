@@ -133,11 +133,10 @@ export default function Goals() {
 
   const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
     if (!ffGoal) return {};
-    let mCFs = {};
+    let mCFs: any = {};
     let ffToYear = ffGoal.ey;
     if (toYear < ffToYear) toYear = ffToYear;
     for (let year = fromYear; year <= toYear; year++)
-      //@ts-ignore
       mCFs[year] = 0;
     return mCFs;
   };
