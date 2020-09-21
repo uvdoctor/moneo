@@ -145,12 +145,16 @@ export default function Goals() {
     return mCFs;
   };
 
-  const calculateFFYear = () => {
+  const calculateFFYear = (
+    mergedCFs: any,
+    mustCFs: Array<number>,
+    tryCFs: Array<number>
+  ) => {
     if (!ffGoal) return;
     let result = findEarliestFFYear(
       ffGoal,
       mergedCFs,
-      ffResult ? ffResult.ffYear : null,
+      ffResult.ffYear ? ffResult.ffYear : null,
       mustCFs,
       tryCFs,
       getPP()
@@ -160,15 +164,12 @@ export default function Goals() {
     }
     setFFResult(result);
     setRR([...result.rr]);
+    console.log("FF result: ", result);
   };
 
   useEffect(() => {
-    loadAllGoals().then(() => setGoalsLoaded(true));
+    loadAllGoals().then(() => {});
   }, []);
-
-  useEffect(() => {
-    calculateFFYear();
-  }, [mustCFs]);
 
   useEffect(() => {
     if (!ffGoal) return;
@@ -178,21 +179,21 @@ export default function Goals() {
     let optCFs = populateWithZeros(yearRange.from, yearRange.to);
     let mCFs = buildEmptyMergedCFs(yearRange.from, ffGoal.ey);
     allGoals?.forEach((g) => {
-      //@ts-ignore
-      let cfs: Array<number> = allCFs[g.id];
+      let cfs: Array<number> = allCFs[g.id as string];
       if (!cfs) return;
       if (g.imp === APIt.LMH.H)
         populateData(mustCFs, cfs, g.sy, yearRange.from);
       else if (g.imp === APIt.LMH.M)
         populateData(tryCFs, cfs, g.sy, yearRange.from);
       else populateData(optCFs, cfs, g.sy, yearRange.from);
-      //@ts-ignore
-      mergeCFs(mCFs, allCFs[g.id], g.sy);
+      mergeCFs(mCFs, allCFs[g.id as string], g.sy);
     });
     setMustCFs([...mustCFs]);
     setOptCFs([...optCFs]);
     setTryCFs([...tryCFs]);
     setMergedCFs(mCFs);
+    calculateFFYear(mCFs, mustCFs, tryCFs);
+    setGoalsLoaded(true);
   }, [allGoals]);
 
   useEffect(() => setWIPGoal(wipGoal), [wipGoal]);
@@ -342,14 +343,17 @@ export default function Goals() {
     goalId: string,
     goalImp: APIt.LMH
   ) => {
+    console.log("FFGoal: ", ffGoal);
+    console.log("ff result...:", ffResult);
     if (!ffGoal || !ffResult.ffYear) return null;
     let mCFs: any = Object.assign({}, mergedCFs);
     let highImpCFs: any = Object.assign([], mustCFs);
     let medImpCFs: any = Object.assign([], tryCFs);
     let nowYear = new Date().getFullYear();
     if (goalId) {
-      //@ts-ignore
-      let existingGoal = (allGoals?.filter((g) => g.id === goalId))[0];
+      let existingGoal = (allGoals?.filter((g) => g.id === goalId) as Array<
+        APIt.CreateGoalInput
+      >)[0];
       let existingSY = existingGoal.sy;
       let existingImp = existingGoal.imp;
       let existingCFs = allCFs[goalId];
@@ -373,6 +377,7 @@ export default function Goals() {
       medImpCFs,
       getPP()
     );
+    console.log("Result without goal: ", resultWithoutGoal.rr);
     if (!isFFPossible(resultWithoutGoal, nomineeAmt))
       return {
         ffImpactYears: null,
@@ -421,7 +426,6 @@ export default function Goals() {
             ffResult={ffResult}
             mergedCfs={mergedCFs}
             ffResultHandler={setFFResult}
-            rrHandler={setRR}
             pp={getPP()}
             mustCFs={mustCFs}
             tryCFs={tryCFs}
@@ -502,7 +506,7 @@ export default function Goals() {
             )
         )}
       </div>
-      {ffGoal
+      {ffGoal && rr && rr.length > 0
         ? allGoals &&
           allGoals.length > 0 && (
             <Fragment>
@@ -550,16 +554,13 @@ export default function Goals() {
                   fullScreen={fullScreen}
                 />
               )}
-              {viewMode === aaLabel &&
-                ffResult &&
-                ffResult.aa &&
-                ffResult.rr && (
-                  <TreeMapChart
-                    aa={ffResult.aa}
-                    rr={ffResult.rr}
-                    fullScreen={fullScreen}
-                  />
-                )}
+              {viewMode === aaLabel && (
+                <TreeMapChart
+                  aa={ffResult.aa}
+                  rr={rr}
+                  fullScreen={fullScreen}
+                />
+              )}
               {viewMode === goalsLabel && (
                 <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
                   {allGoals.map((g: APIt.CreateGoalInput, i: number) => {
@@ -570,6 +571,7 @@ export default function Goals() {
                       g.id,
                       g.imp
                     );
+                    console.log("Result: ", result);
                     return (
                       <Summary
                         key={"g" + i}
@@ -577,8 +579,7 @@ export default function Goals() {
                         name={g.name}
                         type={g.type}
                         imp={g.imp}
-                        rr={rr}
-                        //@ts-ignore
+                        rr={result?.rr as Array<number>}
                         startYear={g.sy}
                         currency={g.ccy}
                         cfs={allCFs[g.id]}

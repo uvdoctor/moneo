@@ -29,15 +29,24 @@ export default function OppCost(props: OppCostProps) {
     let oppCost = 0;
     const startIndex = props.startYear - (new Date().getFullYear() + 1);
     props.cfs.forEach((cf, index) => {
+      console.log("CF is ", cf);
       oppCost += cf;
-      if (index < props.cfs.length - 1)
-        oppCost = getCompoundedIncome(
+      console.log("Opp cost after adding cf is: ", oppCost);
+      if (index < props.cfs.length - 1 && oppCost < 0) {
+        console.log(
+          "DR is ",
           typeof props.discountRate === "number"
             ? props.discountRate
-            : props.discountRate[startIndex + index],
-          oppCost,
-          1
+            : props.discountRate[startIndex + index]
         );
+        oppCost *=
+          1 +
+          (typeof props.discountRate === "number"
+            ? props.discountRate
+            : props.discountRate[startIndex + index]) /
+            100;
+      }
+      console.log("Opp cost after compounding is: ", oppCost);
     });
     if (!props.buyGoal) {
       if (typeof props.discountRate !== "number") {
@@ -47,9 +56,9 @@ export default function OppCost(props: OppCostProps) {
           i < props.discountRate.length - (getMinRetirementDuration() + 1);
           i++, year++
         )
-          oppCost = getCompoundedIncome(props.discountRate[i], oppCost, 1);
+          if (oppCost < 0) oppCost *= 1 + props.discountRate[i] / 100;
         setLastYear(year);
-      } else if (props.cfs.length - 1 < minDuration)
+      } else if (props.cfs.length - 1 < minDuration && oppCost < 0)
         oppCost = getCompoundedIncome(
           props.discountRate,
           oppCost,
@@ -75,7 +84,11 @@ export default function OppCost(props: OppCostProps) {
         props.buyGoal
           ? `in ${props.cfs.length - 1} Years`
           : typeof props.discountRate === "number"
-          ? `in ${props.cfs.length - 1 > minDuration ? props.cfs.length : minDuration} Years`
+          ? `in ${
+              props.cfs.length - 1 > minDuration
+                ? props.cfs.length
+                : minDuration
+            } Years`
           : `when You turn ${lastYear - (props.ffGoalEndYear - PLAN_DURATION)}`
       } if You 
         ${oppCost < 0 ? "Invest" : "Buy"} instead of ${

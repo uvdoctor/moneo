@@ -37,13 +37,12 @@ import SVGPay from "../svgpay";
 import { PLAN_DURATION } from "../../CONSTANTS";
 interface FFGoalProps {
   goal: APIt.CreateGoalInput;
-  ffResult?: any | null;
+  ffResult: any | null;
   mustCFs: Array<number>;
   tryCFs: Array<number>;
   mergedCfs: any;
   pp: Object;
   ffResultHandler: Function;
-  rrHandler?: Function;
   cancelCallback: Function;
   addCallback?: Function;
   updateCallback?: Function;
@@ -57,7 +56,6 @@ export default function FFGoal({
   mergedCfs,
   pp,
   ffResultHandler,
-  rrHandler,
   cancelCallback,
   addCallback,
   updateCallback,
@@ -246,7 +244,6 @@ export default function FFGoal({
       pp
     );
     ffResultHandler(result);
-    if (rrHandler) rrHandler([...result.rr]);
     console.log("FF Result is ", result);
   }, [
     expenseBY,

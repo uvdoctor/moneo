@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import * as APIt from "../../api/goals";
-import { initYearOptions, getRangeFactor, buildArray } from "../utils";
+import { initYearOptions, getRangeFactor} from "../utils";
 import EmiCost from "../calc/emicost";
 import TaxBenefit from "../calc/taxbenefit";
 import Sell from "./sell";
@@ -99,6 +99,8 @@ export default function Goal({
   const [loanIntRate, setLoanIntRate] = useState<number | null | undefined>(
     goal?.emi?.rate
   );
+  const [iSchedule, setISchedule] = useState<Array<number>>([])
+  const [pSchedule, setPSchedule] = useState<Array<number>>([])
   const [priceChgRate, setPriceChgRate] = useState<number>(goal?.chg as number);
   const [sellPrice, setSellPrice] = useState<number>(0);
   const [assetChgRate, setAssetChgRate] = useState<number | null | undefined>(
@@ -150,13 +152,13 @@ export default function Goal({
   );
   const cfChartLabel = "Cash Flows";
   const brChartLabel = "Buy v/s Rent & Invest";
-  const loanChartLabel = "Loan Interest %";
+  const loanChartLabel = "EMI Schedule";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [showBRChart, setShowBRChart] = useState<boolean>(
     sellAfter && rentAmt && rentAmt > 0 ? true : false
   );
-  const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 20));
+  const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 30));
   const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
       ? [
@@ -353,6 +355,10 @@ export default function Goal({
       setDuration(duration);
       if (result.hasOwnProperty("itb")) setTotalITaxBenefit(result.itb);
       setTotalPTaxBenefit(result.ptb);
+      if(result.hasOwnProperty("iSchedule")) {
+        setISchedule([...result.iSchedule])
+        setPSchedule([...result.pSchedule])
+      }
     }
     return cfs;
   };
@@ -362,10 +368,10 @@ export default function Goal({
   };
 
   useEffect(() => {
-    if (!loanPer) setEYOptions(initYearOptions(startYear, 20));
+    if (!loanPer) setEYOptions(initYearOptions(startYear, 30));
     else if (goalType !== APIt.GoalType.E) setLoanRepaymentSY(startYear);
     if (goalType === APIt.GoalType.B && loanPer) return;
-    if (startYear > endYear || endYear - startYear > 20) setEndYear(startYear);
+    if (startYear > endYear || endYear - startYear > 30) setEndYear(startYear);
   }, [startYear]);
 
   const changeEndYear = (str: string) => {
@@ -896,17 +902,9 @@ export default function Goal({
             {manualMode < 1 && loanPer && loanRepaymentSY && loanYears && (
               <IntChart
                 repaymentSY={loanRepaymentSY}
-                loanYears={loanYears}
-                interestSchedule={buildArray(
-                  loanRepaymentSY,
-                  loanRepaymentSY + loanYears - 1,
-                  80
-                )}
-                principalSchedule={buildArray(
-                  loanRepaymentSY,
-                  loanRepaymentSY + loanYears - 1,
-                  20
-                )}
+                loanYears={iSchedule.length}
+                interestSchedule={iSchedule}
+                principalSchedule={pSchedule}
                 fullScreen={chartFullScreen}
               />
             )}

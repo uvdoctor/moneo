@@ -474,6 +474,8 @@ const createLoanCFs = (
   let ey = goal.sy + duration - 1;
   let sp = 0;
   let taxBenefit = 0;
+  let iSchedule: Array<number> = [];
+  let pSchedule: Array<number> = [];
   for (let year = goal.sy, ly = goal.emi?.dur as number; year <= ey; year++) {
     let index = year - goal.sy;
     let cf = cfs[index] ? cfs[index] : 0;
@@ -483,6 +485,9 @@ const createLoanCFs = (
       let annualEmiAmt = emi * (ly === 0.5 ? 6 : 12);
       cf += annualEmiAmt;
       let i = year - goal.emi.ry;
+      let annualInt = Math.round(annualInts[i]);
+      iSchedule.push(annualInt);
+      pSchedule.push(annualEmiAmt - annualInt);
       if (!isTaxCreditEligible(goal.type)) {
         if (goal.type !== APIt.GoalType.E)
           taxBenefit = getTaxBenefit(
@@ -544,13 +549,23 @@ const createLoanCFs = (
       goal?.emi?.dur as number,
       duration
     );
+    if (remPayment) {
+      iSchedule.push(0);
+      pSchedule.push(Math.round(remPayment));
+    }
     sp = calculateSellPrice(p, goal?.achg as number, duration);
     cfs.push(Math.round(sp + taxBenefit - remPayment));
     taxBenefit = getTaxBenefit(remPayment, goal.tdr, goal.tdl);
     totalPTaxBenefit += taxBenefit;
   }
   if (taxBenefit > 0) cfs.push(Math.round(taxBenefit));
-  return { cfs: cfs, ptb: totalPTaxBenefit, itb: totalITaxBenefit };
+  return {
+    cfs: cfs,
+    ptb: totalPTaxBenefit,
+    itb: totalITaxBenefit,
+    iSchedule: iSchedule,
+    pSchedule: pSchedule,
+  };
 };
 
 const getRemPrincipal = (

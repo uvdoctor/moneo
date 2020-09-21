@@ -115,7 +115,7 @@ export default function RentComparison({
               <div className="flex flex-col justify-center">
                 <NumberInput
                   name="af"
-                  pre="Analyze up to"
+                  pre="Analyze from 1 to "
                   value={analyzeFor}
                   changeHandler={analyzeForHandler}
                   currentOrder={-1}
@@ -123,7 +123,7 @@ export default function RentComparison({
                   nextStepDisabled={false}
                   nextStepHandler={() => true}
                   allInputDone
-                  min={20}
+                  min={10}
                   max={50}
                   step={5}
                   unit="Years"

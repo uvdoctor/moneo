@@ -6,7 +6,7 @@ import {
   getCommonStyle,
 } from "../chartutils";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import { buildYearsArray, convertPerToDec, isMobileDevice } from "../utils";
+import { buildYearsArray, isMobileDevice } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 
 interface IntChartProps {
@@ -49,7 +49,7 @@ export default function IntChart(props: IntChartProps) {
     return {
       type: "bar",
       x: years,
-      y: convertPerToDec(cfs),
+      y: cfs,
       name: name,
       mode: mode,
       marker: { color: color },
@@ -62,7 +62,7 @@ export default function IntChart(props: IntChartProps) {
         //@ts-ignore
         layout={{
           barmode: "stack",
-          ...getCommonLayoutProps("", "%", true),
+          ...getCommonLayoutProps(""),
           xaxis: { title: "Year", showgrid: false, type: "category" },
           legend: {
             orientation: "h",
@@ -74,7 +74,7 @@ export default function IntChart(props: IntChartProps) {
         style={getCommonStyle()}
         data={[
           createBarTrace(props.principalSchedule, "Principal", COLORS.GREEN),
-          createBarTrace(props.interestSchedule, "Interest", COLORS.RED),
+          createBarTrace(props.interestSchedule, "Interest", COLORS.ORANGE),
         ]}
         config={getCommonConfig()}
       />

@@ -75,7 +75,7 @@ export default function Sell(props: SellProps) {
               info="Years after which You Plan to Sell this Purchase."
               label="Years"
               labelBottom={true}
-              data={toStringArr(1, 20)}
+              data={toStringArr(3, 30)}
               value={props.sellAfter}
               step={1}
               changeHandler={props.sellAfterHandler}
