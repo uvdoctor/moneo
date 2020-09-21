@@ -15,8 +15,8 @@ import HToggle from "../horizontaltoggle";
 import { GoalType } from "../../api/goals";
 import ResultItem from "./resultitem";
 import { COLORS } from "../../CONSTANTS";
-import InfoText from "../infotext";
 import { isTaxCreditEligible } from "../goals/goalutils";
+import Tooltip from "../form/tooltip";
 interface EmiProps {
   inputOrder: number;
   currentOrder: number;
@@ -243,7 +243,7 @@ export default function EmiCost(props: EmiProps) {
                     feedback={{
                       0: {
                         label: (
-                          <InfoText
+                          <Tooltip
                             text="YAY!!!"
                             info={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
                             As it is Very Easy for Your Investment to recover this Yearly Interest with Minimal Risk, this is an Excellent Deal!`}
@@ -254,7 +254,7 @@ export default function EmiCost(props: EmiProps) {
                       },
                       1: {
                         label: (
-                          <InfoText
+                          <Tooltip
                             text="CHEAP"
                             info={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
                             As it is Easy for Your Investment to recover this Yearly Interest with Minimal Risk, this is a Good Deal!`}
@@ -266,23 +266,25 @@ export default function EmiCost(props: EmiProps) {
                       3.5: { label: "", color: "" },
                       8: {
                         label: (
-                          <InfoText
+                          <Tooltip
                             text="COSTLY"
                             info={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
                             As it is Difficult for Your Investment to recover this Yearly Interest even with High Risk, this is an Expensive Loan!`}
                             color="#dd6b20"
+                            error
                           />
                         ),
                         color: "#dd6b20",
                       },
                       10: {
                         label: (
-                          <InfoText
+                          <Tooltip
                             text="COSTLY!!!"
                             info={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
                             As it is Very Difficult for Your Investment to recover this Yearly Interest even with Very High Risk, 
                             this is a Very Expensive Loan!!!`}
                             color={COLORS.RED}
+                            error
                           />
                         ),
                         color: COLORS.RED,

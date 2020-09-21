@@ -1,8 +1,6 @@
 import React from "react";
 import { toCurrency, toReadableNumber } from "../utils";
-import SVGInfo from "../svginfo";
-import SVGImp from "../svgimp";
-import { toast } from "react-toastify";
+import Tooltip from "../form/tooltip";
 interface ResultItemProps {
   label: string;
   svg?: any;
@@ -51,15 +49,9 @@ export default function ResultItem(props: ResultItemProps) {
           </div>
         </div>
         <div className="ml-1 flex justify-end items-start cursor-pointer">
-          {props.imp && (
-            <div onClick={() => toast.error(props.imp)}>
-              <SVGImp />
-            </div>
-          )}
+          {props.imp && <Tooltip info={props.imp} error />}
           {props.info && (
-            <div onClick={() => toast.info(props.info)}>
-              <SVGInfo />
-            </div>
+            <Tooltip info={props.info} error={props.pl && props.result < 0} />
           )}
         </div>
       </div>

@@ -35,10 +35,7 @@ export default function FFImpact(props: FFImpactProps) {
             info={`You May Achieve Financial Freedom ${Math.abs(
               props.ffImpactYears
             )} ${getUnit()} 
-                        ${getImpactText()} due to this Goal. This Goal has impact on other Goals too. 
-                        For instance, if You Delete this Goal, You May Observe that not only has Financial Freedom Year changed, 
-                        but Financial Freedom impact of other Goals also changes.
-                        This happens because Money Needed for this Goal can be Invested instead.`}
+                        ${getImpactText()} due to this Goal.`}
           />
         )
       ) : (

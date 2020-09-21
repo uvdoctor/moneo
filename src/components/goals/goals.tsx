@@ -446,7 +446,7 @@ export default function Goals() {
     </div>
   ) : (
     <Fragment>
-      {ffGoal && (
+      {ffGoal && rr && rr.length > 0 && (
         <div
           className={`w-full ${
             isFFPossible(ffResult, ffGoal.sa as number)
