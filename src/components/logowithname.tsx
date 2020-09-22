@@ -8,7 +8,7 @@ export default function LogoWithName() {
         <Logo />
         <h1 className="mr-4 text-xl md:text-2xl lg:text-3xl">$Darwin</h1>
       </div>
-      <h3 className="whitespace-no-wrap">Your Analyst</h3>
+      {/*<h3 className="whitespace-no-wrap">Your Analyst</h3>*/}
     </div>
   );
 }
