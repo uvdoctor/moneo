@@ -1,11 +1,11 @@
+import React, { Fragment } from "react";
 import Head from "next/head";
 import { NextPage } from "next";
-import React from "react";
 import Main from "../components/main";
 interface Props {}
 
 const Home: NextPage<Props> = () => (
-  <div>
+  <Fragment>
     <Head>
       <meta charSet="utf-8" />
       <link rel="icon" href="images/icons/favicon.ico" />
@@ -19,7 +19,7 @@ const Home: NextPage<Props> = () => (
     <main>
       <Main />
     </main>
-  </div>
+  </Fragment>
 );
 
 export default Home;

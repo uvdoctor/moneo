@@ -17,6 +17,7 @@
 }
 
 body {
+  background-color: #f6f6f6;
   margin: 0;
   font-family: var(--font-family);
   font-weight: var(--font-weight);
@@ -125,6 +126,21 @@ input[type="number"] {
   100% {
     transform: scale(1);
   }
+}
+
+.site-nav > a:hover,
+.site-nav > .site-nav-dropdown > span:hover,
+.site-nav > .site-nav-dropdown > a:hover {
+  background-color: #499824;
+  color: #fff;
+}
+
+.site-nav-dropdown:hover div {
+  display: block !important;
+}
+
+.site-nav-dropdown div a:hover {
+  color: #499824;
 }
 
 #knob > div[style] {
