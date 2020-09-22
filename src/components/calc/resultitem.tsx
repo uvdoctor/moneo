@@ -14,6 +14,7 @@ interface ResultItemProps {
   info?: string;
   imp?: string;
   pl?: boolean;
+  vertical?: boolean;
 }
 
 export default function ResultItem(props: ResultItemProps) {
@@ -25,7 +26,7 @@ export default function ResultItem(props: ResultItemProps) {
         {props.label}
       </label>}
       <div className="flex justify-between items-start font-semibold">
-        <div className="flex justify-center items-center">
+        <div className={`flex ${props.vertical && 'flex-col'} justify-center items-center`}>
           {props.svg}
           <div
             className={`ml-1 ${

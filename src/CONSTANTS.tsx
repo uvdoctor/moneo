@@ -24,6 +24,8 @@ export const CALC_NAMES = {
     FI: 'Financial Independence',
     LOAN: 'Simple Loan',
     EDU_LOAN: 'Education Loan',
+    DR: 'Debt Repayment',
+    CI: 'Credit Score Impact'
 }
 
 export const ASSET_CATEGORIES = {

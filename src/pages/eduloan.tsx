@@ -5,7 +5,7 @@ import ResultItem from "../components/calc/resultitem";
 import SVGMoneyBag from "../components/calc/svgmoneybag";
 import SVGBarChart from "../components/svgbarchart";
 import SVGChart from "../components/svgchart";
-import SVGLoan from "../components/svgloan";
+import SVGEduLoan from "../components/svgeduloan";
 import { CALC_NAMES } from "../CONSTANTS";
 
 export default function EduLoan() {
@@ -13,7 +13,7 @@ export default function EduLoan() {
     <CalcLayout
       title={CALC_NAMES.EDU_LOAN}
       type={GoalType.E}
-      titleSVG={<SVGLoan selected />}
+      titleSVG={<SVGEduLoan />}
       assumptions={["adfas", "asdfsad"]}
       features={["fsdgdf", "fgdssdf"]}
       results={[

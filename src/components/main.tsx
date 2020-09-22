@@ -1,9 +1,8 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { useScroll } from "react-browser-hooks";
 import { ToastContainer } from "react-toastify";
-
 import LogoWithName from "./logowithname";
-import { HOME_ANCHORS } from "../CONSTANTS";
+import { CALC_NAMES, COLORS, HOME_ANCHORS, ROUTES } from "../CONSTANTS";
 import GoalImages from "./goalimages";
 import ExpandCollapse from "./form/expandcollapse";
 import FunSVG from "./features/svgfun";
@@ -11,10 +10,62 @@ import ActionableSVG from "./features/svgactionable";
 import GlobalSVG from "./features/svgglobal";
 import PrivateSVG from "./features/svgprivate";
 import SVGPersonalized from "./features/svgpersonalized";
+import ResultItem from "./calc/resultitem";
+import SVGLoan from "./svgloan";
+import SVGScale from "./svgscale";
+import SVGFreedom from "./svgfreedom";
+import SVGEduLoan from "./svgeduloan";
+import SVGScissor from "./svgscissor";
+import SVGAnalyze from "./svganalyze";
+import Link from "next/link";
 
 export default function Main() {
   const { top } = useScroll();
-
+  const [calcIndex, setCalcIndex] = useState<number>(-1);
+  const calcList: Array<any> = [
+    {
+      name: CALC_NAMES.FI,
+      link: ROUTES.FI,
+      svg: SVGFreedom,
+      desc:
+        "Figure out Earliest Possible Year & Minimum Savings needed for FI.",
+    },
+    {
+      name: CALC_NAMES.BR,
+      link: ROUTES.BR,
+      svg: SVGScale,
+      desc:
+        "Find out whether its cheaper to Buy or Rent & Invest remaining amount, as well as duration for which the option is cheaper.",
+    },
+    {
+      name: CALC_NAMES.EDU_LOAN,
+      link: ROUTES.EDUCATION,
+      svg: SVGEduLoan,
+      desc:
+        "Analyze the simple interest to be paid while studying, and EMI payments to be made after study is over.",
+    },
+    {
+      name: CALC_NAMES.DR,
+      link: ROUTES.LOAN,
+      svg: SVGScissor,
+      desc:
+        "Identify the optimal sequence of paying various loans that makes sense for You.",
+    },
+    {
+      name: CALC_NAMES.CI,
+      link: ROUTES.LOAN,
+      svg: SVGAnalyze,
+      desc:
+        "Assess impact on Your credit score for various factors such as hard inquiry, delayed payment, etc.",
+    },
+    {
+      name: CALC_NAMES.LOAN,
+      link: ROUTES.LOAN,
+      svg: SVGLoan,
+      desc:
+        "Understand the amortization schedule and total interest to be paid for a simple loan.",
+    },
+  ];
   return (
     <Fragment>
       <ToastContainer />
@@ -188,73 +239,62 @@ export default function Main() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-10 justify-items-stretch h-56 mt-10">
-                <div
-                  className="bg-gray-400 flex justify-center items-center px-4 py-2 text-white rounded-lg"
-                  style={{
-                    backgroundColor: "#525252",
-                    backgroundImage:
-                      "linear-gradient(to left, #6f6f6f, #4a4a4a)",
-                    border: "5px solid #8b8b8b",
-                  }}
-                >
-                  Financial Independence
-                </div>
-                <div
-                  className="justify-self-auto bg-gray-500 flex justify-center items-center px-4 py-2 text-white rounded-lg"
-                  style={{
-                    backgroundColor: "#525252",
-                    backgroundImage:
-                      "linear-gradient(to left, #6f6f6f, #4a4a4a)",
-                    border: "5px solid #8b8b8b",
-                  }}
-                >
-                  Buy v/s Rent
-                </div>
-                <div
-                  className="bg-gray-400 flex justify-center items-center px-4 py-2 text-white rounded-lg"
-                  style={{
-                    backgroundColor: "#525252",
-                    backgroundImage:
-                      "linear-gradient(to left, #6f6f6f, #4a4a4a)",
-                    border: "5px solid #8b8b8b",
-                  }}
-                >
-                  Education Loan
-                </div>
-                <div
-                  className="bg-gray-400 flex justify-center items-center px-4 py-2 text-white rounded-lg"
-                  style={{
-                    backgroundColor: "#525252",
-                    backgroundImage:
-                      "linear-gradient(to left, #6f6f6f, #4a4a4a)",
-                    border: "5px solid #8b8b8b",
-                  }}
-                >
-                  Debt Buster
-                </div>
-                <div
-                  className="bg-gray-400 flex justify-center items-center px-4 py-2 text-white rounded-lg"
-                  style={{
-                    backgroundColor: "#525252",
-                    backgroundImage:
-                      "linear-gradient(to left, #6f6f6f, #4a4a4a)",
-                    border: "5px solid #8b8b8b",
-                  }}
-                >
-                  Credit Impact
-                </div>
-                <div
-                  className="bg-gray-400 flex justify-center items-center px-4 py-2 text-white rounded-lg"
-                  style={{
-                    backgroundColor: "#525252",
-                    backgroundImage:
-                      "linear-gradient(to left, #6f6f6f, #4a4a4a)",
-                    border: "5px solid #8b8b8b",
-                  }}
-                >
-                  Mortgage Loan
-                </div>
+              <div
+                className={`grid grid-cols-3 gap-10 justify-items-stretch h-56 mt-10`}
+              >
+                {calcList.map((calc: any, i: number) => (
+                  <Link href={calc.link}>
+                    <a>
+                      <div
+                        className={`group cursor-pointer calcbtn flex flex-col justify-center items-center px-4 py-2 text-white rounded-lg transition-all transform ${
+                          calcIndex >= 0 && calcIndex !== i
+                            ? "scale-50 opacity-0"
+                            : calcIndex === i && "text-green-primary"
+                        }`}
+                        style={{
+                          backgroundImage: `linear-gradient(to left, ${
+                            calcIndex === i ? "white" : "#6f6f6f"
+                          }, ${
+                            calcIndex === i ? COLORS.LIGHT_GRAY : "#4a4a4a"
+                          })`,
+                          border: calcIndex === i ? "" : "5px solid #8b8b8b",
+                          width: calcIndex === i ? "400px" : "",
+                          height: calcIndex === i ? "200px" : "",
+                          transform:
+                            calcIndex === i
+                              ? `translate(${
+                                  i > 3
+                                    ? "-120px, -100px"
+                                    : i === 2
+                                    ? "-120px, 0px"
+                                    : i === 3
+                                    ? "0px, -100px"
+                                    : ""
+                                })`
+                              : "",
+                        }}
+                        onMouseEnter={() => setCalcIndex(i)}
+                        onMouseLeave={() => setCalcIndex(-1)}
+                      >
+                        <ResultItem
+                          svg={
+                            <calc.svg
+                              disabled={calcIndex !== i}
+                              selected={calcIndex === i}
+                            />
+                          }
+                          result={calc.name}
+                          vertical
+                        />
+                        {calcIndex === i && (
+                          <label className="mt-4 group-hover:text-default">
+                            {calc.desc}
+                          </label>
+                        )}
+                      </div>
+                    </a>
+                  </Link>
+                ))}
               </div>
             </div>
           </div>

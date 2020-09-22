@@ -49,7 +49,7 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
           <div className="flex items-end">
             <label
               className={`${
-                show && "text-green-primary"
+                show && "cursor-pointer text-green-primary"
               } hover:text-green-primary ${
                 props.insideCalc && "font-bold lg:text-xl"
               }`}

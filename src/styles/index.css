@@ -92,6 +92,12 @@ input[type="number"] {
   --button-anchor-border: 1px solid var(--secondary-green-color);
 }
 
+.calcbtn {
+  width: 250px;
+  height: 100px;
+  transition: all 1s ease-in-out;
+}
+
 @keyframes transient {
   0%,
   100% {
