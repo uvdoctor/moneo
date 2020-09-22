@@ -4,6 +4,13 @@ import { ToastContainer } from "react-toastify";
 
 import LogoWithName from "./logowithname";
 import { HOME_ANCHORS } from "../CONSTANTS";
+import GoalImages from "./goalimages";
+import ExpandCollapse from "./form/expandcollapse";
+import FunSVG from "./features/svgfun";
+import ActionableSVG from "./features/svgactionable";
+import GlobalSVG from "./features/svgglobal";
+import PrivateSVG from "./features/svgprivate";
+import SVGPersonalized from "./features/svgpersonalized";
 
 export default function Main() {
   const { top } = useScroll();
@@ -13,9 +20,7 @@ export default function Main() {
       <ToastContainer />
       <div className="max-w-screen-xl m-auto">
         <div
-          className={`fixed w-full h-16 left-0 z-10 ${
-            top > 10 ? "shadow-lg" : ""
-          }`}
+          className={`fixed w-full h-16 left-0 z-10 ${top > 10 && "shadow-lg"}`}
           style={{
             backgroundImage:
               top > 10
@@ -54,7 +59,10 @@ export default function Main() {
             </div>
           </div>
           <nav className="site-nav px-2 pt-2 pb-4 sm:flex sm:p-0">
-            <a href="#" className="block px-2 py-1 font-semibold rounded">
+            <a
+              href={"#" + HOME_ANCHORS.CALCULATE}
+              className="block px-2 py-1 font-semibold rounded"
+            >
               Calculate
             </a>
             <div className="site-nav-dropdown relative">
@@ -83,7 +91,7 @@ export default function Main() {
               </div>
             </div>
             <a
-              href="#"
+              href={"#" + HOME_ANCHORS.JOIN}
               className="mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
             >
               Join Waitlist
@@ -95,19 +103,21 @@ export default function Main() {
             className="absolute w-full mt-20"
             style={{ top: "90px", left: "1rem" }}
           >
-            <p className="text-xl font-bold">Your financial analyst</p>
+            <p className="text-xl font-bold">Your Financial Analyst</p>
             <h2 className="text-3xl font-bold" style={{ color: "#499824" }}>
-              Stress-free savings &amp; Investments
+              Stress-free Savings &amp; Investments
             </h2>
-            <p className="text-xl font-bold">Meet my goals</p>
-
+            <div className="flex items-center">
+              <p className="text-xl font-bold">Meet Your Goals</p>
+              <GoalImages />
+            </div>
             <h2
               className="text-xl mt-20 font-bold"
               style={{ color: "#499824" }}
             >
               Avail Special offer
             </h2>
-            <p className="w-4/12">
+            <p id={HOME_ANCHORS.JOIN} className="w-4/12">
               For importing CSS required by a third party component, you can do
               so in your component. For example:
             </p>
@@ -150,6 +160,7 @@ export default function Main() {
             }}
           >
             <div
+              id={HOME_ANCHORS.CALCULATE}
               className="bg-white border rounded-lg p-10"
               style={{
                 backgroundImage: "linear-gradient(to bottom, #ebebeb, #d1d1d1)",
@@ -187,7 +198,7 @@ export default function Main() {
                     border: "5px solid #8b8b8b",
                   }}
                 >
-                  Financial Freedom
+                  Financial Independence
                 </div>
                 <div
                   className="justify-self-auto bg-gray-500 flex justify-center items-center px-4 py-2 text-white rounded-lg"
@@ -249,7 +260,7 @@ export default function Main() {
           </div>
 
           <div className="mt-32" style={{ paddingRight: "50%" }}>
-            <h2 className="text-3xl">Hello Financial Freedom!</h2>
+            <h2 className="text-3xl">Hello Financial Independence!</h2>
             <p>
               This is dummy content and will replace in future. Link with
               various accounts to automatically calculate, what you own minus,
@@ -341,7 +352,9 @@ export default function Main() {
                 className="rounded-lg p-16 ml-5 mt-10"
                 style={{ backgroundColor: "#dce7ef" }}
               >
-                <h2 className="text-2xl">Kick-start your financial freedom</h2>
+                <h2 className="text-2xl">
+                  Kick-start Your Financial Independence
+                </h2>
                 <button
                   className="w-1/4 border rounded-md text-white p-2 mt-5"
                   style={{ backgroundColor: "#499824" }}
@@ -357,7 +370,7 @@ export default function Main() {
             <div className="flex-1 flex items-center">
               <div>
                 <h2 className="text-3xl">
-                  We gives <span style={{ color: "#499824" }}>security</span>{" "}
+                  We give <span style={{ color: "#499824" }}>security</span>{" "}
                   &amp;{" "}
                   <span style={{ color: "#499824" }}>control on the go!</span>
                 </h2>
@@ -389,29 +402,85 @@ export default function Main() {
               <h2 className="text-3xl" style={{ color: "#499824" }}>
                 Track &amp; Manage Your Money
               </h2>
-              <dl className="mt-5">
-                <dt className="font-bold mt-2">Personalized</dt>
-                <dd>
-                  Insights based on Your Goals, Risk Threshold &amp; financial
-                  health.
-                </dd>
-                <dt className="font-bold mt-2">Fun</dt>
-                <dd>Games to help You make Smart Money decisions.</dd>
-                <dt className="font-bold mt-2">Actionable</dt>
-                <dd>
-                  See what You have to achieve today &amp; how it will affect
-                  tomorrow.
-                </dd>
-                <dt className="font-bold mt-2">Secure</dt>
-                <dd>
-                  Uses latest encryption technology to keep your Identity &amp;
-                  Data secure.
-                </dd>
-                <dt className="font-bold mt-2">Global</dt>
-                <dd>Time-tested money concepts that work wherever You are.</dd>
-                <dt className="font-bold mt-2">Private</dt>
-                <dd>Respects Data Privacy.</dd>
-              </dl>
+              <div className="mt-2 w-full mb-4">
+                <div className="w-full mt-2 flex justify-between">
+                  <div
+                    className="flex items-center w-5/12 shadow-lg rounded-lg px-2"
+                    style={{
+                      minHeight: "8rem",
+                    }}
+                  >
+                    <ExpandCollapse
+                      title="Personalized"
+                      svg={<SVGPersonalized />}
+                      insideCalc
+                    >
+                      Insights based on Your Goals, Risk Threshold &amp;
+                      financial health.
+                    </ExpandCollapse>
+                  </div>
+                  <div
+                    className="flex items-center w-5/12 shadow-lg rounded-lg px-2"
+                    style={{
+                      minHeight: "8rem",
+                    }}
+                  >
+                    {" "}
+                    <ExpandCollapse title="Fun" svg={<FunSVG />} insideCalc>
+                      Games to help You make Smart Money decisions.
+                    </ExpandCollapse>
+                  </div>
+                </div>
+                <div className="mt-2 w-full flex justify-center">
+                  <div
+                    className="flex justify-center items-center w-1/2 shadow-lg rounded-lg px-2"
+                    style={{
+                      minHeight: "8rem",
+                    }}
+                  >
+                    {" "}
+                    <ExpandCollapse
+                      title="Actionable"
+                      svg={<ActionableSVG />}
+                      insideCalc
+                    >
+                      See what You have to achieve today &amp; how it will
+                      affect tomorrow.
+                    </ExpandCollapse>
+                  </div>
+                </div>
+                <div className="w-full mt-2 flex justify-between">
+                  <div
+                    className="flex items-center w-5/12 shadow-lg rounded-lg px-2"
+                    style={{
+                      minHeight: "8rem",
+                    }}
+                  >
+                    <ExpandCollapse
+                      title="Global"
+                      svg={<GlobalSVG />}
+                      insideCalc
+                    >
+                      Time-tested money concepts that work wherever You are.
+                    </ExpandCollapse>
+                  </div>
+                  <div
+                    className="flex items-center w-5/12 shadow-lg rounded-lg px-2"
+                    style={{
+                      minHeight: "8rem",
+                    }}
+                  >
+                    {" "}
+                    <ExpandCollapse
+                      title="Private"
+                      svg={<PrivateSVG />}
+                      insideCalc
+                    >
+                      Respects Data Privacy.
+                    </ExpandCollapse>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="flex-1 flex items-bottom">
               <img src="images/track-money.jpg" />

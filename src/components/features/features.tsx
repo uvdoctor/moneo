@@ -3,7 +3,7 @@ import Link from "next/link";
 import { COLORS, ROUTES } from "../../CONSTANTS";
 import ActionableSVG from "./svgactionable";
 import FunSVG from "./svgfun";
-import PersonalizedSVG from "./svgpersonalized";
+import SVGPersonalized from "./svgpersonalized";
 import SecureSVG from "./svgsecure";
 import GlobalSVG from "./svgglobal";
 import PrivateSVG from "./svgprivate";
@@ -22,7 +22,7 @@ const Features = () => {
   const {top} = useScroll()
   const features: Array<Feature> = [
     {
-      svg: <PersonalizedSVG />,
+      svg: <SVGPersonalized />,
       title: "Personalized",
       desc: "Insights based on Your Goals, Risk Threshold & financial health.",
     },
