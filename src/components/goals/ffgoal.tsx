@@ -307,8 +307,8 @@ export default function FFGoal({
         <SelectInput
           name="ey"
           //info="Financial Plan will be created assuming that You live till 100 Years, after which You leave behind inheritance.
-          //DollarDarwin will try to find the earliest possible year for Your Financial Freedom based on Your inputs and Other Goals that You Create.
-          //Given that You May not be able to work beyond 70 years of age, DollarDarwin may request You to reconsider Your inputs and other Goals so that You Achieve Financial Freedom before hitting 70."
+          //DollarDarwin will try to find the earliest possible year for Your Financial Independence based on Your inputs and Other Goals that You Create.
+          //Given that You May not be able to work beyond 70 years of age, DollarDarwin may request You to reconsider Your inputs and other Goals so that You Achieve Financial Independence before hitting 70."
           inputOrder={-1}
           currentOrder={currentOrder}
           nextStepDisabled={false}

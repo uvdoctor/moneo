@@ -2,7 +2,7 @@ import React from "react";
 import { toCurrency, toReadableNumber } from "../utils";
 import Tooltip from "../form/tooltip";
 interface ResultItemProps {
-  label: string;
+  label?: string;
   svg?: any;
   result: number | string;
   noResultFormat?: boolean;
@@ -19,11 +19,11 @@ interface ResultItemProps {
 export default function ResultItem(props: ResultItemProps) {
   return (
     <div className="flex flex-col items-center justify-center">
-      <label
+      {props.label && <label
         className={props.titleFormat ? "text-xl md:text-2xl font-semibold" : ""}
       >
         {props.label}
-      </label>
+      </label>}
       <div className="flex justify-between items-start font-semibold">
         <div className="flex justify-center items-center">
           {props.svg}
@@ -48,14 +48,14 @@ export default function ResultItem(props: ResultItemProps) {
                 ) + props.unit}
           </div>
         </div>
-        <div className="ml-1 flex justify-end items-start cursor-pointer">
+        {(props.imp || props.info) && <div className="ml-1 flex justify-end items-start cursor-pointer">
           {props.imp && <Tooltip info={props.imp} error />}
           {props.info && (
             <Tooltip info={props.info} error={props.pl && props.result < 0} />
           )}
-        </div>
+        </div>}
       </div>
-      <label>{props.footer}</label>
+      {props.footer && <label>{props.footer}</label>}
     </div>
   );
 }

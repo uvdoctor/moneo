@@ -64,7 +64,7 @@ const Features = () => {
     style={{backgroundColor: bgColor}}>
       
       <p className="text-center lg:text-4xl font-black">
-        Hello Financial Freedom!
+        Hello Financial Independence!
       </p>
       <p className="mt-4 text-center">GET...SET...GO...</p>
       <div className="mt-4 flex flex-wrap items-center">
@@ -102,7 +102,7 @@ const Features = () => {
             </Link>
           </li>
           <li className="mt-4 text-center">
-            Kick-start Your Financial Freedom.
+            Kick-start Your Financial Independence.
           </li>
         </ul>
       </div>

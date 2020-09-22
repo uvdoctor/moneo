@@ -23,7 +23,7 @@ export default function FFImpact(props: FFImpactProps) {
           <ResultItem
             label="Impact"
             result="No Delay"
-            info="This Goal does not delay Your Financial Freedom Year."
+            info="This Goal does not delay Your Financial Independence Year."
           />
         ) : (
           <ResultItem
@@ -32,7 +32,7 @@ export default function FFImpact(props: FFImpactProps) {
             pl
             unit={`${getUnit()}`}
             result={props.ffImpactYears}
-            info={`You May Achieve Financial Freedom ${Math.abs(
+            info={`You May Achieve Financial Independence ${Math.abs(
               props.ffImpactYears
             )} ${getUnit()} 
                         ${getImpactText()} due to this Goal.`}
@@ -42,7 +42,7 @@ export default function FFImpact(props: FFImpactProps) {
         <ResultItem
           label="Impact"
           result="Unable to Determine"
-          info={`Financial Freedom Impact can only be determined if Financial Freedom is Possible by ${MAX_RETIREMENT_AGE} Years of Age. Please change Your Goals / Inputs and try again.`}
+          info={`Financial Independence Impact can only be determined if Financial Independence is Possible by ${MAX_RETIREMENT_AGE} Years of Age. Please change Your Goals / Inputs and try again.`}
         />
       )}
     </Fragment>

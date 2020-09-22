@@ -89,7 +89,7 @@ const createFFGoalInput = (currency: string) => {
   let nowYear = new Date().getFullYear();
   return {
     id: "",
-    name: "Financial Freedom",
+    name: "Financial Independence",
     sy: nowYear,
     ey: nowYear + 70,
     by: nowYear + 1,
@@ -231,7 +231,7 @@ export const getGoalTypes = () => {
     D: "DONATE",
     S: "START-UP",
     O: "OTHER",
-    FF: "FINANCIAL FREEDOM",
+    FF: "Financial Independence",
   };
 };
 

@@ -12,6 +12,7 @@ interface ExpandCollapseProps {
   children: ReactNode;
   animate?: boolean;
   parentStyleDiffHandler?: Function | null;
+  insideCalc?: boolean
 }
 
 export default function ExpandCollapse(props: ExpandCollapseProps) {
@@ -33,7 +34,7 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
         </div>
       )}
       <div
-        className="cursor-pointer flex flex-col justify-center items-center w-full"
+        className="flex flex-col justify-center items-center w-full"
         onMouseEnter={() => {
           setShow(true);
           if (props.parentStyleDiffHandler) props.parentStyleDiffHandler(false);
@@ -47,7 +48,7 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
           {props.svg}
           <div className="flex items-end">
             <label
-              className={`cursor-pointer ${show && 'text-green-primary'} hover:text-green-primary`}
+              className={`cursor-pointer ${show && 'text-green-primary'} hover:text-green-primary ${props.insideCalc && 'font-bold lg:text-xl'}`}
             >
               {props.title}
             </label>

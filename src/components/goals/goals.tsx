@@ -244,7 +244,7 @@ export default function Goals() {
     setWIPGoal(null);
     if (g.type === APIt.GoalType.FF) {
       toast.success(
-        "Success! Your Financial Freedom Target has been Updated.",
+        "Success! Your Financial Independence Target has been Updated.",
         { autoClose: 3000 }
       );
       setFFGoal(g as APIt.CreateGoalInput);
@@ -463,11 +463,11 @@ export default function Goals() {
           >
             <label className="p-2 font-semibold text-lg md:text-xl">
               {isFFPossible(ffResult, ffGoal.sa as number)
-                ? `Financial Freedom Earliest at ${getAge(
+                ? `Financial Independence Earliest at ${getAge(
                     ffResult.ffYear as number,
                     ffGoal.ey
                   )}`
-                : `Financial Freedom May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
+                : `Financial Independence May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
             </label>
             <div
               className="flex items-center cursor-pointer"
@@ -598,7 +598,7 @@ export default function Goals() {
         : goalsLoaded && (
             <div className="text-center align-center">
               <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>
-              <p className="mb-2">Set Up Financial Freedom Target.</p>
+              <p className="mb-2">Set Up Financial Independence Target.</p>
               <AwesomeButton
                 ripple
                 type="primary"

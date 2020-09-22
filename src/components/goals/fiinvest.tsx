@@ -41,7 +41,7 @@ export function FIInvest({
 
   return (
     <Section
-      title="Before Financial Freedom"
+      title="Before Financial Independence"
       videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}
       left={
         <NumberInput

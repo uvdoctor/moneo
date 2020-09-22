@@ -19,19 +19,11 @@ export const HOME_ANCHORS = {
     COMPANY: 'company'
 }
 
-export const SVGS = {
-    TIME_COST: 'TimeCostSvg',
-    OPP_COST: 'OppCostSvg',
-    TIME: 'TimeSvg',
-    FI_MONEY: 'FIMoneySvg',
-    LOAN: 'LoanSvg',
-    BALANCE: 'BalanceSvg',
-    PORTFOLIORRR: 'PortfolioRRRSvg',
-    CHEAPER: 'CheaperSvg',
-    INCREASE_RATE: 'IncreaseRateSvg',
-    PERCENTAGE: 'PercentSvg',
-    TARGET: 'TargetSvg',
-    PIGGYBANK: 'PiggybankSvg'
+export const CALC_NAMES = {
+    BR: 'Buy v/s Rent & Invest',
+    FI: 'Financial Independence',
+    LOAN: 'Simple Loan',
+    EDU_LOAN: 'Education Loan',
 }
 
 export const ASSET_CATEGORIES = {

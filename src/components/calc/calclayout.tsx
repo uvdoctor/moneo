@@ -5,16 +5,32 @@ import { AwesomeButton } from "react-awesome-button";
 import { ToastContainer } from "react-toastify";
 import { CreateGoalInput, GoalType } from "../../api/goals";
 import { ASSET_TYPES, ROUTES } from "../../CONSTANTS";
+import ExpandCollapse from "../form/expandcollapse";
 import FFGoal from "../goals/ffgoal";
 import Goal from "../goals/goal";
 import { createNewGoalInput } from "../goals/goalutils";
 import Header from "../header";
 
-export default function CalcLayout() {
+interface CalcLayoutProps {
+  title: string;
+  titleSVG: React.ReactNode;
+  type: GoalType;
+  features: Array<any>;
+  assumptions: Array<any>;
+  results: Array<any>;
+  resultImg: string;
+}
+
+export default function CalcLayout(props: CalcLayoutProps) {
   const router = useRouter();
   const [wipGoal, setWIPGoal] = useState<CreateGoalInput | null>(null);
   const [ffResult, setFFResult] = useState<any>({});
   const nowYear = new Date().getFullYear();
+  const sections: any = {
+    "Expected Results": props.results,
+    "Key Features": props.features,
+    "Major Assumptions": props.assumptions,
+  };
 
   const buildEmptyMergedCFs = () => {
     let mCFs = {};
@@ -42,26 +58,9 @@ export default function CalcLayout() {
     };
   };
 
-  const getCalcDetails = () => {
-    switch (router.pathname) {
-      case ROUTES.FI:
-        return { name: "Financial Independence", type: GoalType.FF };
-      case ROUTES.BR:
-        return { name: "Buy v/s Rent & Invest", type: GoalType.B };
-      case ROUTES.EDUCATION:
-        return { name: "Education Loan Calculator", type: GoalType.E };
-      case ROUTES.LOAN:
-        return { name: "Loan Calculator", type: GoalType.O };
-
-      default:
-        return "";
-    }
-  };
-
   const createGoal = () => {
-    let details: any = getCalcDetails();
-    let g: CreateGoalInput = createNewGoalInput(details.type, "USD");
-    g.name = details.name;
+    let g: CreateGoalInput = createNewGoalInput(props.type, "USD");
+    g.name = props.title;
     setWIPGoal(g);
   };
 
@@ -72,14 +71,48 @@ export default function CalcLayout() {
         <Fragment>
           <Header />
           <div className="mt-16 w-full text-center">
-            <AwesomeButton
-              ripple
-              type="primary"
-              size="medium"
-              onPress={createGoal}
-            >
-              START
-            </AwesomeButton>
+            <div className="flex w-full justify-center items-center">
+              {props.titleSVG}
+              <h1 className="ml-1 md:text-xl lg:text-2xl font-bold">
+                {props.title + " Calculator"}
+              </h1>
+            </div>
+            {Object.keys(sections).map((key, i) => (
+              <div key={"section" + i} className="mt-4">
+                <ExpandCollapse title={key} insideCalc>
+                  <Fragment>
+                    <div
+                      className={`w-full flex flex-col justify-center items-center ${
+                        sections[key] === props.results &&
+                        "md:flex-row md:flex-wrap md:justify-around"
+                      }`}
+                    >
+                      {sections[key].map((item: any, i: number) => (
+                        <div className="md:mt-2 md:mr-2" key={"item" + i}>
+                          {item}
+                        </div>
+                      ))}
+                    </div>
+                    {sections[key] === props.results && (
+                      <img className="cursor-pointer object-fit"
+                        src={"/images/"+props.resultImg}
+                        onClick={createGoal}
+                      />
+                    )}
+                  </Fragment>
+                </ExpandCollapse>
+              </div>
+            ))}
+            <div className="mt-4">
+              <AwesomeButton
+                ripple
+                type="primary"
+                size="medium"
+                onPress={createGoal}
+              >
+                START
+              </AwesomeButton>
+            </div>
           </div>
         </Fragment>
       ) : (

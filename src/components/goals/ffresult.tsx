@@ -27,7 +27,7 @@ export default function FFResult({
               label="Earliest At"
               result={getAge(result.ffYear, endYear).toString()}
               noResultFormat
-              info={`You May achieve Financial Freedom earliest at an age of ${
+              info={`You May achieve Financial Independence earliest at an age of ${
                 getAge(result.ffYear, endYear)
               } Years.`}
               unit="Years"
@@ -44,12 +44,12 @@ export default function FFResult({
             svg={<SVGPiggy disabled={false} selected />}
             label={`Potential Savings`}
             currency={currency}
-            info="You can Withdraw from this Savings for Your expenses after gaining Financial Freedom."
+            info="You can Withdraw from this Savings for Your expenses after gaining Financial Independence."
           />
         </div>
       ) : (
         <p className="text-center bg-red-100 font-semibold py-2">
-          Financial Freedom May not be possible till You turn 70. Please try
+          Financial Independence May not be possible till You turn 70. Please try
           again with different Goals / Inputs.
         </p>
       )}

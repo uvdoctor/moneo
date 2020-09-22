@@ -40,7 +40,7 @@ export function ExpenseAfterFF({
 
   return (
     <Section
-      title="After Financial Freedom"
+      title="After Financial Independence"
       left={
         <NumberInput
           name="currExpense"
@@ -49,7 +49,7 @@ export function ExpenseAfterFF({
           nextStepDisabled={expenseAfterFF < 5000}
           allInputDone={allInputDone}
           nextStepHandler={nextStepHandler}
-          info="If You had already achieved Financial Freedom this year, How Much Money Would You Need for Your Living Expenses?"
+          info="If You had already achieved Financial Independence this year, How Much Money Would You Need for Your Living Expenses?"
           pre="Yearly"
           post="Expenses"
           note="In Today's Money"
