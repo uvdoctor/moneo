@@ -1,8 +1,5 @@
 import React, { Fragment } from "react";
-import Features from "./features/features";
-import Landing from "./landing";
 import { useScroll } from "react-browser-hooks";
-import Header from "./header";
 import {ToastContainer} from "react-toastify";
 
 import LogoWithName from "./logowithname";
@@ -13,6 +10,7 @@ export default function Main() {
 
   return (
   	<Fragment>
+		<ToastContainer />  
   		<div className="max-w-screen-xl m-auto">
   			<div className={`fixed w-full h-16 left-0 z-10 ${top > 10 ? 'shadow-lg' : ''}`} style={{ backgroundImage: top > 10 ? "linear-gradient(to bottom, #fff, #fff)" : "linear-gradient(to bottom, #dbedca, rgba(246,246,246,0))" }}></div>
   			<header className="sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3 fixed w-full sm:pl-0 z-20" style={{maxWidth: "1280px", paddingRight: "1rem", paddingLeft: "1rem" }}>
