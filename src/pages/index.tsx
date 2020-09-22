@@ -13,6 +13,7 @@ const Home: NextPage<Props> = () => (
       <meta name="theme-color" content="#000000" />
       <meta name="description" content="Your Financial Analyst" />
       <link rel="apple-touch-icon" href="images/icons/logo57.png" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,500" />
       <title>DollarDarwin</title>
       <link rel="manifest" href="manifest.json" />
     </Head>
