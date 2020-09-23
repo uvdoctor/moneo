@@ -11,14 +11,6 @@ export const ROUTES = {
     LOAN: '/loan'
 }
 
-export const HOME_ANCHORS = {
-    CALCULATE: 'calculate',
-    JOIN: 'join',
-    FEATURES: 'features',
-    PRICE: 'price',
-    COMPANY: 'company'
-}
-
 export const CALC_NAMES = {
     BR: 'Buy v/s Rent & Invest',
     FI: 'Financial Independence',

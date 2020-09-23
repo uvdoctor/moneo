@@ -6,8 +6,6 @@ import LogoWithName from "./logowithname";
 import SVGMenu from "./svgmenu";
 import { isMobileDevice } from "./utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import { HOME_ANCHORS } from "../CONSTANTS";
-import Dropdown from "./dropdown";
 import SVGClose from "./svgclose";
 
 interface HeaderProps {
@@ -33,17 +31,6 @@ export default function Header({ parentStyleDiff, parentStyleDiffHandler }: Head
             onClick={() => setShowMobileMenu(!showMobileMenu)}
           >
             {showMobileMenu ? <SVGClose /> : <SVGMenu />}
-            {showMobileMenu && (
-              <Dropdown
-                options={{
-                  Calculate: HOME_ANCHORS.CALCULATE,
-                  Features: HOME_ANCHORS.FEATURES,
-                  Pricing: HOME_ANCHORS.PRICE,
-                  Company: HOME_ANCHORS.COMPANY,
-                  "Join Waitlist": HOME_ANCHORS.JOIN,
-                }}
-              />
-            )}
           </div>
         ) : (
           <Menu parentStyleDiffHandler={parentStyleDiffHandler} />

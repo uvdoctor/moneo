@@ -1,8 +1,8 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { useScroll } from "react-browser-hooks";
 import { ToastContainer } from "react-toastify";
 import LogoWithName from "./logowithname";
-import { CALC_NAMES, COLORS, HOME_ANCHORS, ROUTES } from "../CONSTANTS";
+import { CALC_NAMES, COLORS, ROUTES } from "../CONSTANTS";
 import GoalImages from "./goalimages";
 import FunSVG from "./features/svgfun";
 import ActionableSVG from "./features/svgactionable";
@@ -21,6 +21,8 @@ import { Parallax } from "react-scroll-parallax";
 export default function Main() {
   const { top } = useScroll();
   const [calcIndex, setCalcIndex] = useState<number>(-1);
+  const joinRef: any = useRef();
+  const calculateRef: any = useRef();
   const calcList: Array<any> = [
     {
       name: CALC_NAMES.FI,
@@ -132,43 +134,40 @@ export default function Main() {
             </div>
           </div>
           <nav className="site-nav px-2 pt-2 pb-4 sm:flex sm:p-0">
-            <a
-              href={"#" + HOME_ANCHORS.CALCULATE}
-              className="block px-2 py-1 font-semibold rounded"
+            <div
+              className="cursor-pointer block px-2 py-1 font-semibold rounded"
+              onClick={() => {calculateRef.current.scrollIntoView({behavior: 'smooth'})}}
             >
               Calculate
-            </a>
+            </div>
             <div className="site-nav-dropdown relative">
               <span className="mt-1 cursor-pointer block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2">
                 About
               </span>
               <div className="absolute bg-white hidden p-5 pl-0 shadow-lg">
-                <a
-                  href={HOME_ANCHORS.FEATURES}
-                  className="mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
+                <div
+                  className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
                 >
                   Features
-                </a>
-                <a
-                  href={HOME_ANCHORS.PRICE}
-                  className="mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
+                </div>
+                <div
+                  className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
                 >
                   Pricing
-                </a>
-                <a
-                  href={HOME_ANCHORS.COMPANY}
-                  className="mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
+                </div>
+                <div
+                  className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
                 >
                   Company
-                </a>
+                </div>
               </div>
             </div>
-            <a
-              href={"#" + HOME_ANCHORS.JOIN}
-              className="mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
+            <div
+              className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
+              onClick={() => joinRef.current.scrollIntoView({behavior: 'smooth'})}
             >
               Join Waitlist
-            </a>
+            </div>
           </nav>
         </header>
         <div className="relative">
@@ -190,7 +189,7 @@ export default function Main() {
             >
               Avail Special offer
             </h2>
-            <p id={HOME_ANCHORS.JOIN} className="w-4/12">
+            <p ref={joinRef} className="w-4/12">
               Join Waitlist NOW to unlock FREE Premium Subscription For 60 days
               - incredible $30 value! Coupon code will be delivered to Your
               email address mentioned below.
@@ -234,7 +233,7 @@ export default function Main() {
             }}
           >
             <div
-              id={HOME_ANCHORS.CALCULATE}
+              ref={calculateRef}
               className="bg-white border rounded-lg p-10"
               style={{
                 backgroundImage: "linear-gradient(to bottom, #ebebeb, #d1d1d1)",
@@ -410,7 +409,7 @@ export default function Main() {
                     goals, but also become more financially savvy via engaging
                     games.
                   </p>
-                  <img className="mt-5" src="images/step3.jpg" />
+                  <img className="mt-5" src="images/step3pig.png" />
                 </div>
               </div>
             </Parallax>
@@ -569,13 +568,6 @@ export default function Main() {
           </div>
         </div>
       </div>
-
-      {/*<div className="overflow-x-none overflow-y-auto">
-	      <ToastContainer />
-	      {top > 0 && <Header />}
-	      <Landing />
-	      <Features />
-	    </div>*/}
     </Fragment>
   );
 }

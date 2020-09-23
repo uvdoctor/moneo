@@ -1,9 +1,8 @@
 import Link from "next/link";
 import React from "react";
-import { HOME_ANCHORS, ROUTES } from "../CONSTANTS";
+import { ROUTES } from "../CONSTANTS";
 import Calculators from "./calc/calculators";
 import ExpandCollapse from "./form/expandcollapse";
-import Dropdown from "./dropdown";
 interface MenuProps {
   parentStyleDiffHandler?: Function;
 }
@@ -36,19 +35,6 @@ export default function Menu({ parentStyleDiffHandler }: MenuProps) {
                 <a>Learn</a>
               </Link>
   </div>*/}
-      <ExpandCollapse title="About">
-        <Dropdown
-          topMargin={topMargin}
-          options={{
-            Features: HOME_ANCHORS.FEATURES,
-            Pricing: HOME_ANCHORS.PRICE,
-            Company: HOME_ANCHORS.COMPANY,
-          }}
-        />
-      </ExpandCollapse>
-      <div className="hover:text-green-primary md:mr-4 lg:mr-8 whitespace-no-wrap">
-        <a href={"#" + HOME_ANCHORS.JOIN}>Join Waitlist</a>
-      </div>
     </div>
   );
 }
