@@ -263,13 +263,13 @@ export default function Main() {
               </div>
 
               <div
-                className={`grid grid-cols-3 gap-10 justify-items-stretch mt-10`}
+                className={`grid grid-cols-3 gap-10 justify-items-stretch mt-10 h-56`}
               >
                 {calcList.map((calc: any, i: number) => (
                   <Link href={calc.link}>
                     <a>
                       <div
-                        className={`group cursor-pointer calcbtn flex flex-col justify-center items-center px-4 py-2 text-white rounded-lg transform ${
+                        className={`absolute group cursor-pointer calcbtn flex flex-col justify-center items-center px-4 py-2 text-white rounded-lg transform ${
                           calcIndex >= 0 && calcIndex !== i
                             ? "scale-50 opacity-0"
                             : calcIndex === i && "text-green-primary"
