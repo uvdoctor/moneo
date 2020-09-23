@@ -16,6 +16,7 @@ import SVGEduLoan from "./svgeduloan";
 import SVGScissor from "./svgscissor";
 import SVGAnalyze from "./svganalyze";
 import Link from "next/link";
+import { Parallax } from "react-scroll-parallax";
 
 export default function Main() {
   const { top } = useScroll();
@@ -69,8 +70,7 @@ export default function Main() {
     {
       label: "Personalized",
       svg: SVGPersonalized,
-      desc:
-        "Insights based on Your Goals, Risk Threshold & financial health.",
+      desc: "Insights based on Your Goals, Risk Threshold & financial health.",
     },
     {
       label: "Fun",
@@ -80,8 +80,7 @@ export default function Main() {
     {
       label: "Actionable",
       svg: ActionableSVG,
-      desc:
-        "See what You have to achieve today & how it will affect tomorrow.",
+      desc: "See what You have to achieve today & how it will affect tomorrow.",
     },
     {
       label: "Global",
@@ -192,8 +191,9 @@ export default function Main() {
               Avail Special offer
             </h2>
             <p id={HOME_ANCHORS.JOIN} className="w-4/12">
-              Join Waitlist NOW to unlock FREE Premium Subscription For 60 days - incredible $30 value! 
-              Coupon code will be delivered to Your email address mentioned below.
+              Join Waitlist NOW to unlock FREE Premium Subscription For 60 days
+              - incredible $30 value! Coupon code will be delivered to Your
+              email address mentioned below.
             </p>
 
             <div className="w-4/12 bg-white border border-gray-500 rounded-md p-1 mt-5">
@@ -272,7 +272,8 @@ export default function Main() {
                         className={`absolute group cursor-pointer calcbtn flex flex-col justify-center px-4 py-2 text-white rounded-lg transform ${
                           calcIndex >= 0 && calcIndex !== i
                             ? "scale-50 opacity-0"
-                            : calcIndex === i && "text-green-primary text-lg md:text-xl lg:text-2xl"
+                            : calcIndex === i &&
+                              "text-green-primary text-lg md:text-xl lg:text-2xl"
                         }`}
                         style={{
                           backgroundImage: `linear-gradient(to left, ${
@@ -334,31 +335,33 @@ export default function Main() {
               what you owe.
             </p>
           </div>
-          <div className="flex flex-wrap mt-10">
-            <div className="w-2/4">
-              <div
-                className="rounded-lg p-16 pb-5 mr-5"
-                style={{ backgroundColor: "#dff1c7" }}
-              >
-                <div className="grid grid-flow-col font-bold uppercase leading-6">
-                  <div className="row-span-2 text-6xl opacity-75 text-white leading-10">
-                    01
+          <div className="w-full flex flex-wrap">
+            <Parallax className={`w-2/4`} y={[20, 10]}>
+              <div className="w-full">
+                <div
+                  className="rounded-lg p-16 pb-5 mr-5"
+                  style={{ backgroundColor: "#dff1c7" }}
+                >
+                  <div className="grid grid-flow-col font-bold uppercase leading-6">
+                    <div className="row-span-2 text-6xl opacity-75 text-white leading-10">
+                      01
+                    </div>
+                    <div
+                      className="col-span-12 text-2xl"
+                      style={{ color: "#499824" }}
+                    >
+                      Get
+                    </div>
+                    <div className="col-span-12 text-xl">Net Worth</div>
                   </div>
-                  <div
-                    className="col-span-12 text-2xl"
-                    style={{ color: "#499824" }}
-                  >
-                    Get
-                  </div>
-                  <div className="col-span-12 text-xl">Net Worth</div>
+                  <p className="mt-5">
+                    Link with various accounts to automatically calculate, what
+                    you own minus, what you owe.
+                  </p>
+                  <img className="mt-5" src="images/step1.jpg" />
                 </div>
-                <p className="mt-5">
-                  Link with various accounts to automatically calculate, what
-                  you own minus, what you owe.
-                </p>
-                <img className="mt-5" src="images/step1.jpg" />
               </div>
-            </div>
+            </Parallax>
             <div
               className="w-2/4"
               style={{ transform: "translate3d(0,-130px,0)" }}
@@ -386,31 +389,33 @@ export default function Main() {
                 <img className="mt-24" src="images/step2.jpg" />
               </div>
             </div>
-            <div className="w-2/4">
-              <div
-                className="rounded-lg p-16 pb-5 mr-5 mt-10"
-                style={{ backgroundColor: "#ffded8" }}
-              >
-                <div className="grid grid-flow-col font-bold uppercase leading-6">
-                  <div className="row-span-2 text-6xl opacity-75 text-white leading-10">
-                    03
+            <Parallax className={`w-2/4`} y={[20, 0]}>
+              <div className="w-full">
+                <div
+                  className="rounded-lg p-16 pb-5 mr-5 mt-10"
+                  style={{ backgroundColor: "#ffded8" }}
+                >
+                  <div className="grid grid-flow-col font-bold uppercase leading-6">
+                    <div className="row-span-2 text-6xl opacity-75 text-white leading-10">
+                      03
+                    </div>
+                    <div
+                      className="col-span-12 text-2xl"
+                      style={{ color: "#d5492e" }}
+                    >
+                      Go
+                    </div>
+                    <div className="col-span-12 text-xl">Make Money work</div>
                   </div>
-                  <div
-                    className="col-span-12 text-2xl"
-                    style={{ color: "#d5492e" }}
-                  >
-                    Go
-                  </div>
-                  <div className="col-span-12 text-xl">Make Money work</div>
+                  <p className="mt-5">
+                    Helps you to not only align savings &amp; investements to
+                    goals, but also become more financially savvy via engaging
+                    games.
+                  </p>
+                  <img className="mt-5" src="images/step3.jpg" />
                 </div>
-                <p className="mt-5">
-                  Helps you to not only align savings &amp; investements to
-                  goals, but also become more financially savvy via engaging
-                  games.
-                </p>
-                <img className="mt-5" src="images/step3.jpg" />
               </div>
-            </div>
+            </Parallax>
             <div
               className="w-2/4"
               style={{ transform: "translate3d(0,-130px,0)" }}
@@ -471,8 +476,10 @@ export default function Main() {
               </h2>
               <div className="w-full mb-4">
                 <div className="w-full md:flex md:flex-wrap md:justify-around">
-                  {featuresList.map(feature => (
-                    <div className={`mt-4 flip-card bg-transparent w-full md:w-5/12 h-40`}>
+                  {featuresList.map((feature) => (
+                    <div
+                      className={`mt-4 flip-card bg-transparent w-full md:w-5/12 h-40`}
+                    >
                       <div className="flip-card-inner relative w-full h-full shadow-lg rounded-lg">
                         <div className="flip-card-front bg-gray-100 text-default w-full h-full absolute flex items-center justify-center rounded-lg cursor-pointer">
                           <ResultItem
@@ -481,8 +488,10 @@ export default function Main() {
                             vertical
                           />
                         </div>
-                        <div className="flip-card-back text-white absolute w-full h-full rounded-lg p-2"
-                        style={{backgroundColor: "#499824"}}>
+                        <div
+                          className="flip-card-back text-white absolute w-full h-full rounded-lg p-2"
+                          style={{ backgroundColor: "#499824" }}
+                        >
                           <ResultItem
                             svg={<feature.svg />}
                             result={feature.label}
