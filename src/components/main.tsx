@@ -287,15 +287,15 @@ export default function Main() {
                             calcIndex === i
                               ? `translate(${
                                   i === 5
-                                    ? "-580px, -150px"
+                                    ? "-570px, -150px"
                                     : i === 2
-                                    ? "-580px, 0px"
+                                    ? "-570px, 0px"
                                     : i === 3
                                     ? "0px, -150px"
                                     : i === 4
-                                    ? "-280px, -150px"
+                                    ? "-290px, -150px"
                                     : i === 1
-                                    ? "-280px, 0px"
+                                    ? "-290px, 0px"
                                     : ""
                                 })`
                               : "",
