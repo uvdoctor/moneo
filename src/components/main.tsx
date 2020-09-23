@@ -328,15 +328,13 @@ export default function Main() {
           </div>
 
           <div className="mt-32" style={{ paddingRight: "50%" }}>
-            <h2 className="text-3xl">Hello Financial Independence!</h2>
-            <p>
-              This is dummy content and will replace in future. Link with
-              various accounts to automatically calculate, what you own minus,
-              what you owe.
-            </p>
+            <h2 className="text-3xl">Say Hi to Financial Independence!</h2>
+            <p className="text-xl mt-2">Stop Trading Time for Money. LIVE on Your Terms.</p>
+            <p className="text-xl mt-2">Realize Your Full Potential. Fulfill Your Dreams.</p>
+            <p className="text-xl mt-2">Just 3 Simple Steps: GET. SET. GO.</p>
           </div>
           <div className="w-full flex flex-wrap">
-            <Parallax className={`w-2/4`} y={[20, 10]}>
+            <Parallax className={`w-2/4`} y={[10, -10]}>
               <div className="w-full">
                 <div
                   className="rounded-lg p-16 pb-5 mr-5"
@@ -389,7 +387,7 @@ export default function Main() {
                 <img className="mt-24" src="images/step2.jpg" />
               </div>
             </div>
-            <Parallax className={`w-2/4`} y={[20, 0]}>
+            <Parallax className={`w-2/4`} y={[0, -20]}>
               <div className="w-full">
                 <div
                   className="rounded-lg p-16 pb-5 mr-5 mt-10"
@@ -438,7 +436,7 @@ export default function Main() {
             </div>
           </div>
 
-          <div className="flex justify-items-auto mt-32">
+          <div className="flex justify-items-auto mt-16">
             <div className="flex-1 flex items-center">
               <div>
                 <h2 className="text-3xl">
