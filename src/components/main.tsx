@@ -470,14 +470,15 @@ export default function Main() {
                   {featuresList.map(feature => (
                     <div className={`mt-4 flip-card bg-transparent w-full md:w-5/12 h-40`}>
                       <div className="flip-card-inner relative w-full h-full shadow-lg rounded-lg">
-                        <div className="flip-card-front bg-white text-default w-full h-full absolute flex items-center justify-center rounded-lg cursor-pointer">
+                        <div className="flip-card-front bg-gray-100 text-default w-full h-full absolute flex items-center justify-center rounded-lg cursor-pointer">
                           <ResultItem
                             svg={<feature.svg />}
                             result={feature.label}
                             vertical
                           />
                         </div>
-                        <div className="flip-card-back bg-green-100 text-default absolute w-full h-full rounded-lg p-2">
+                        <div className="flip-card-back text-white absolute w-full h-full rounded-lg p-2"
+                        style={{backgroundColor: "#499824"}}>
                           <ResultItem
                             svg={<feature.svg />}
                             result={feature.label}
