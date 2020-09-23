@@ -4,11 +4,9 @@ import { ToastContainer } from "react-toastify";
 import LogoWithName from "./logowithname";
 import { CALC_NAMES, COLORS, HOME_ANCHORS, ROUTES } from "../CONSTANTS";
 import GoalImages from "./goalimages";
-import ExpandCollapse from "./form/expandcollapse";
 import FunSVG from "./features/svgfun";
 import ActionableSVG from "./features/svgactionable";
 import GlobalSVG from "./features/svgglobal";
-import PrivateSVG from "./features/svgprivate";
 import SVGPersonalized from "./features/svgpersonalized";
 import ResultItem from "./calc/resultitem";
 import SVGLoan from "./svgloan";
@@ -64,6 +62,31 @@ export default function Main() {
       svg: SVGLoan,
       desc:
         "Understand the amortization schedule and total interest to be paid for a simple loan.",
+    },
+  ];
+
+  const featuresList = [
+    {
+      label: "Personalized",
+      svg: SVGPersonalized,
+      desc:
+        "Insights based on Your Goals, Risk Threshold & financial health.",
+    },
+    {
+      label: "Fun",
+      svg: FunSVG,
+      desc: "Games to help You make Smart Money decisions.",
+    },
+    {
+      label: "Actionable",
+      svg: ActionableSVG,
+      desc:
+        "See what You have to achieve today & how it will affect tomorrow.",
+    },
+    {
+      label: "Global",
+      svg: GlobalSVG,
+      desc: "Time-tested money concepts that work wherever You are.",
     },
   ];
   return (
@@ -442,83 +465,29 @@ export default function Main() {
               <h2 className="text-3xl" style={{ color: "#499824" }}>
                 Track &amp; Manage Your Money
               </h2>
-              <div className="mt-2 w-full mb-4">
-                <div className="w-full mt-2 flex justify-between">
-                  <div
-                    className="flex items-center w-5/12 shadow-lg rounded-lg px-2"
-                    style={{
-                      minHeight: "8rem",
-                    }}
-                  >
-                    <ExpandCollapse
-                      title="Personalized"
-                      svg={<SVGPersonalized />}
-                      insideCalc
-                    >
-                      Insights based on Your Goals, Risk Threshold &amp;
-                      financial health.
-                    </ExpandCollapse>
-                  </div>
-                  <div
-                    className="flex items-center w-5/12 shadow-lg rounded-lg px-2"
-                    style={{
-                      minHeight: "8rem",
-                    }}
-                  >
-                    {" "}
-                    <ExpandCollapse title="Fun" svg={<FunSVG />} insideCalc>
-                      Games to help You make Smart Money decisions.
-                    </ExpandCollapse>
-                  </div>
-                </div>
-                <div className="mt-2 w-full flex justify-center">
-                  <div
-                    className="flex justify-center items-center w-1/2 shadow-lg rounded-lg px-2"
-                    style={{
-                      minHeight: "8rem",
-                    }}
-                  >
-                    {" "}
-                    <ExpandCollapse
-                      title="Actionable"
-                      svg={<ActionableSVG />}
-                      insideCalc
-                    >
-                      See what You have to achieve today &amp; how it will
-                      affect tomorrow.
-                    </ExpandCollapse>
-                  </div>
-                </div>
-                <div className="w-full mt-2 flex justify-between">
-                  <div
-                    className="flex items-center w-5/12 shadow-lg rounded-lg px-2"
-                    style={{
-                      minHeight: "8rem",
-                    }}
-                  >
-                    <ExpandCollapse
-                      title="Global"
-                      svg={<GlobalSVG />}
-                      insideCalc
-                    >
-                      Time-tested money concepts that work wherever You are.
-                    </ExpandCollapse>
-                  </div>
-                  <div
-                    className="flex items-center w-5/12 shadow-lg rounded-lg px-2"
-                    style={{
-                      minHeight: "8rem",
-                    }}
-                  >
-                    {" "}
-                    <ExpandCollapse
-                      title="Private"
-                      svg={<PrivateSVG />}
-                      insideCalc
-                    >
-                      Respects Data Privacy.
-                    </ExpandCollapse>
-                  </div>
+              <div className="w-full mb-4">
+                <div className="w-full md:flex md:flex-wrap md:justify-around">
+                  {featuresList.map(feature => (
+                    <div className={`mt-4 flip-card bg-transparent w-full md:w-5/12 h-40`}>
+                      <div className="flip-card-inner relative w-full h-full shadow-lg rounded-lg">
+                        <div className="flip-card-front bg-white text-default w-full h-full absolute flex items-center justify-center rounded-lg cursor-pointer">
+                          <ResultItem
+                            svg={<feature.svg />}
+                            result={feature.label}
+                            vertical
+                          />
+                        </div>
+                        <div className="flip-card-back bg-green-100 text-default absolute w-full h-full rounded-lg p-2">
+                          <ResultItem
+                            svg={<feature.svg />}
+                            result={feature.label}
+                            vertical
+                          />
+                          <p className="mt-2">{feature.desc}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
