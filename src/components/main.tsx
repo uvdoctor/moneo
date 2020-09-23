@@ -272,7 +272,7 @@ export default function Main() {
                         className={`absolute group cursor-pointer calcbtn flex flex-col justify-center items-center px-4 py-2 text-white rounded-lg transform ${
                           calcIndex >= 0 && calcIndex !== i
                             ? "scale-50 opacity-0"
-                            : calcIndex === i && "text-green-primary"
+                            : calcIndex === i && "text-green-primary text-lg md:text-xl lg:text-2xl"
                         }`}
                         style={{
                           backgroundImage: `linear-gradient(to left, ${
