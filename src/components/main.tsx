@@ -192,8 +192,8 @@ export default function Main() {
               Avail Special offer
             </h2>
             <p id={HOME_ANCHORS.JOIN} className="w-4/12">
-              For importing CSS required by a third party component, you can do
-              so in your component. For example:
+              Join Waitlist NOW to unlock FREE Premium Subscription For 60 days - incredible $30 value! 
+              Coupon code will be delivered to Your email address mentioned below.
             </p>
 
             <div className="w-4/12 bg-white border border-gray-500 rounded-md p-1 mt-5">
@@ -263,13 +263,13 @@ export default function Main() {
               </div>
 
               <div
-                className={`grid grid-cols-3 gap-10 justify-items-stretch h-56 mt-10`}
+                className={`grid grid-cols-3 gap-10 justify-items-stretch mt-10`}
               >
                 {calcList.map((calc: any, i: number) => (
                   <Link href={calc.link}>
                     <a>
                       <div
-                        className={`group cursor-pointer calcbtn flex flex-col justify-center items-center px-4 py-2 text-white rounded-lg transition-all transform ${
+                        className={`group cursor-pointer calcbtn flex flex-col justify-center items-center px-4 py-2 text-white rounded-lg transform ${
                           calcIndex >= 0 && calcIndex !== i
                             ? "scale-50 opacity-0"
                             : calcIndex === i && "text-green-primary"
@@ -281,17 +281,21 @@ export default function Main() {
                             calcIndex === i ? COLORS.LIGHT_GRAY : "#4a4a4a"
                           })`,
                           border: calcIndex === i ? "" : "5px solid #8b8b8b",
-                          width: calcIndex === i ? "400px" : "",
-                          height: calcIndex === i ? "200px" : "",
+                          width: calcIndex === i ? "820px" : "",
+                          height: calcIndex === i ? "250px" : "",
                           transform:
                             calcIndex === i
                               ? `translate(${
-                                  i > 3
-                                    ? "-120px, -100px"
+                                  i === 5
+                                    ? "-580px, -150px"
                                     : i === 2
-                                    ? "-120px, 0px"
+                                    ? "-580px, 0px"
                                     : i === 3
-                                    ? "0px, -100px"
+                                    ? "0px, -150px"
+                                    : i === 4
+                                    ? "-280px, -150px"
+                                    : i === 1
+                                    ? "-280px, 0px"
                                     : ""
                                 })`
                               : "",
