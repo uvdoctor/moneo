@@ -2,7 +2,6 @@ import React, { useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import GoalImages from "./goalimages";
-import { HOME_ANCHORS } from "../CONSTANTS";
 import Amplify, { API } from "aws-amplify";
 import * as APIt from "../api/goals";
 import * as queries from "../graphql/queries";
@@ -59,7 +58,6 @@ export default function JoinUs() {
 
   return (
     <div
-      id={HOME_ANCHORS.JOIN}
       className="w-full max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg"
     >
       <div className="flex justify-center md:justify-start items-center font-bold">
