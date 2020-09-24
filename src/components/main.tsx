@@ -16,7 +16,7 @@ import SVGEduLoan from "./svgeduloan";
 import SVGScissor from "./svgscissor";
 import SVGAnalyze from "./svganalyze";
 import Link from "next/link";
-import { Parallax } from "react-scroll-parallax";
+import PContainer from "./pcontainer";
 
 export default function Main() {
   const { top } = useScroll();
@@ -90,6 +90,7 @@ export default function Main() {
       desc: "Time-tested money concepts that work wherever You are.",
     },
   ];
+
   return (
     <Fragment>
       <ToastContainer />
@@ -263,7 +264,7 @@ export default function Main() {
                 className={`grid grid-cols-3 gap-10 justify-items-stretch mt-10 h-56`}
               >
                 {calcList.map((calc: any, i: number) => (
-                  <Link key={"calc"+i} href={calc.link}>
+                  <Link key={"calc" + i} href={calc.link}>
                     <a>
                       <div
                         className={`w-56 h-24 absolute cursor-pointer flex flex-col justify-center px-4 py-2 text-white rounded-lg transition-all duration-500 linear ${
@@ -312,8 +313,10 @@ export default function Main() {
                           vertical
                         />
                         {calcIndex === i && (
-                          <label className="mt-4 text-default"
-                          style={{animation: "fadeIn 1s 1"}}>
+                          <label
+                            className="mt-4 text-default"
+                            style={{ animation: "fadeIn 1s 1" }}
+                          >
                             {calc.desc}
                           </label>
                         )}
@@ -336,7 +339,7 @@ export default function Main() {
             </p>
           </div>
           <div className="w-full flex flex-wrap">
-            <Parallax className="w-full md:w-2/4 -mt-4" y={[20, 0]}>
+            <PContainer format="w-full md:w-2/4 -mt-4" y={[20, 0]}>
               <div className="w-full">
                 <div
                   className="rounded-lg p-16 pb-5 mr-5"
@@ -358,10 +361,13 @@ export default function Main() {
                     Link with various accounts to automatically calculate, what
                     you own minus, what you owe.
                   </p>
-                  <img className="mt-5" src="images/step1.jpg" />
+                  <img
+                    className="mt-5"
+                    src="images/step1.jpg"
+                  />
                 </div>
               </div>
-            </Parallax>
+            </PContainer>
             <div
               className="w-2/4"
               style={{ transform: "translate3d(0,-130px,0)" }}
@@ -389,7 +395,10 @@ export default function Main() {
                 <img className="mt-24" src="images/step2.jpg" />
               </div>
             </div>
-            <Parallax className="w-full md:w-2/4 -mt-12" y={[20, -10]}>
+            <PContainer
+              format="w-full md:w-2/4 -mt-12"
+              y={[20, -10]}
+            >
               <div className="w-full">
                 <div
                   className="rounded-lg p-16 pb-5 mr-5 mt-10"
@@ -418,7 +427,7 @@ export default function Main() {
                   />
                 </div>
               </div>
-            </Parallax>
+            </PContainer>
             <div
               className="w-2/4"
               style={{ transform: "translate3d(0,-130px,0)" }}
@@ -480,7 +489,8 @@ export default function Main() {
               <div className="w-full mb-4">
                 <div className="w-full md:flex md:flex-wrap md:justify-around">
                   {featuresList.map((feature, i) => (
-                    <div key={"f"+i}
+                    <div
+                      key={"f" + i}
                       className={`mt-4 flip-card bg-transparent w-full md:w-5/12 h-40`}
                     >
                       <div className="flip-card-inner relative w-full h-full shadow-lg rounded-lg">
