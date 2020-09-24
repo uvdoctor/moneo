@@ -51,7 +51,7 @@ export default function Home({ isProduction }: HomeProps) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   return {
     props: {
       isProduction: process.env.NODE_ENV === "production",
