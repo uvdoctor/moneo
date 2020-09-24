@@ -23,6 +23,8 @@ export default function Main() {
   const [calcIndex, setCalcIndex] = useState<number>(-1);
   const joinRef: any = useRef();
   const calculateRef: any = useRef();
+  const featuresRef: any = useRef();
+
   const calcList: Array<any> = [
     {
       name: CALC_NAMES.FI,
@@ -155,38 +157,39 @@ export default function Main() {
             </div>
           </div>
           <nav className="site-nav px-2 pt-2 pb-4 sm:flex sm:p-0">
-            <div
+            <a
               className="cursor-pointer block px-2 py-1 font-semibold rounded"
               onClick={() => {
                 calculateRef.current.scrollIntoView({ behavior: "smooth" });
               }}
             >
               Calculate
-            </div>
+            </a>
             <div className="site-nav-dropdown relative">
               <span className="mt-1 cursor-pointer block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2">
                 About
               </span>
               <div className="absolute bg-white hidden p-5 pl-0 shadow-lg">
-                <div className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2">
+                <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
+                onClick={() => featuresRef.current.scrollIntoView({behavior: "smooth"})}>
                   Features
                 </div>
-                <div className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2">
+                <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2">
                   Pricing
                 </div>
-                <div className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2">
+                <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2">
                   Company
                 </div>
               </div>
             </div>
-            <div
+            <a
               className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
               onClick={() =>
                 joinRef.current.scrollIntoView({ behavior: "smooth" })
               }
             >
               Join Waitlist
-            </div>
+            </a>
           </nav>
         </header>
         <div className="relative">
@@ -492,13 +495,13 @@ export default function Main() {
             paddingLeft: "1rem",
           }}
         >
-          <div className="flex-1">
+          <div ref={featuresRef} className="flex-1">
             <h2 className="text-3xl" style={{ color: "#499824" }}>
               Get Rich Slowly
             </h2>
             <p className="text-xl mt-2">
               No More Boring Budgets or Confusing Investment Choices.
-              DollarDarwin will help You to Grow Your Money without taking any undue stress. 
+              DollarDarwin helps You to Grow Your Money without taking any undue stress. 
             </p>
             <div className="w-full">
               <div className="w-full md:flex md:flex-wrap md:justify-around">
