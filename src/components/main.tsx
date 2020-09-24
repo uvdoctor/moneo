@@ -327,13 +327,15 @@ export default function Main() {
           <div className="mt-32" style={{ paddingRight: "50%" }}>
             <h2 className="text-3xl">Hello Financial Independence!</h2>
             <p className="text-xl mt-2">
-              Stop Trading Time for Money. Live on Your Terms.
-              Realize Your Full Potential. Fulfill Your Dreams.
+              Stop Trading Time for Money. Live on Your Terms. Realize Your Full
+              Potential. Fulfill Your Dreams.
             </p>
-            <p className="text-xl mt-2 text-green-primary font-bold">Just 3 Steps: GET...SET...GO</p>
+            <p className="text-xl mt-2 text-green-primary font-bold">
+              Just 3 Steps: GET...SET...GO
+            </p>
           </div>
           <div className="w-full flex flex-wrap">
-            <Parallax className="w-2/4 -mt-10" y={[20, -10]}>
+            <Parallax className="w-full md:w-2/4" y={[20, -10]}>
               <div className="w-full">
                 <div
                   className="rounded-lg p-16 pb-5 mr-5"
@@ -386,7 +388,7 @@ export default function Main() {
                 <img className="mt-24" src="images/step2.jpg" />
               </div>
             </div>
-            <Parallax className="w-2/4 -mt-32" y={[20, -10]}>
+            <Parallax className="w-full md:w-2/4 md:-mt-16" y={[20, -10]}>
               <div className="w-full">
                 <div
                   className="rounded-lg p-16 pb-5 mr-5 mt-10"
@@ -409,7 +411,10 @@ export default function Main() {
                     goals, but also become more financially savvy via engaging
                     games.
                   </p>
-                  <img className="w-full object-fit mt-5" src="images/step3pig.jpg" />
+                  <img
+                    className="w-full object-fit mt-5"
+                    src="images/step3pig.jpg"
+                  />
                 </div>
               </div>
             </Parallax>
