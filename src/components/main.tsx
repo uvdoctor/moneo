@@ -266,7 +266,7 @@ export default function Main() {
                   <Link href={calc.link}>
                     <a>
                       <div
-                        className={`absolute group cursor-pointer calcbtn flex flex-col justify-center px-4 py-2 text-white rounded-lg transform ${
+                        className={`w-56 h-24 absolute group cursor-pointer flex flex-col justify-center px-4 py-2 text-white rounded-lg transition-all transform duration-500 ease-in-out ${
                           calcIndex >= 0 && calcIndex !== i
                             ? "scale-50 opacity-0"
                             : calcIndex === i &&
