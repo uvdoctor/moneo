@@ -136,7 +136,9 @@ export default function Main() {
           <nav className="site-nav px-2 pt-2 pb-4 sm:flex sm:p-0">
             <div
               className="cursor-pointer block px-2 py-1 font-semibold rounded"
-              onClick={() => {calculateRef.current.scrollIntoView({behavior: 'smooth'})}}
+              onClick={() => {
+                calculateRef.current.scrollIntoView({ behavior: "smooth" });
+              }}
             >
               Calculate
             </div>
@@ -145,26 +147,22 @@ export default function Main() {
                 About
               </span>
               <div className="absolute bg-white hidden p-5 pl-0 shadow-lg">
-                <div
-                  className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
-                >
+                <div className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2">
                   Features
                 </div>
-                <div
-                  className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
-                >
+                <div className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2">
                   Pricing
                 </div>
-                <div
-                  className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
-                >
+                <div className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2">
                   Company
                 </div>
               </div>
             </div>
             <div
               className="cursor-pointer mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
-              onClick={() => joinRef.current.scrollIntoView({behavior: 'smooth'})}
+              onClick={() =>
+                joinRef.current.scrollIntoView({ behavior: "smooth" })
+              }
             >
               Join Waitlist
             </div>
@@ -327,10 +325,12 @@ export default function Main() {
           </div>
 
           <div className="mt-32" style={{ paddingRight: "50%" }}>
-            <h2 className="text-3xl">Say Hi to Financial Independence!</h2>
-            <p className="text-xl mt-2">Stop Trading Time for Money. LIVE on Your Terms.</p>
-            <p className="text-xl mt-2">Realize Your Full Potential. Fulfill Your Dreams.</p>
-            <p className="text-xl mt-2">Just 3 Simple Steps: GET. SET. GO.</p>
+            <h2 className="text-3xl">Hello Financial Independence!</h2>
+            <p className="text-xl mt-2">
+              Stop Trading Time for Money. Live on Your Terms.
+              Realize Your Full Potential. Fulfill Your Dreams.
+            </p>
+            <p className="text-xl mt-2 text-green-primary font-bold">Just 3 Steps: GET...SET...GO</p>
           </div>
           <div className="w-full flex flex-wrap">
             <Parallax className={`w-2/4`} y={[10, -10]}>
@@ -409,7 +409,7 @@ export default function Main() {
                     goals, but also become more financially savvy via engaging
                     games.
                   </p>
-                  <img className="mt-5" src="images/step3pig.png" />
+                  <img className="w-full object-fit mt-5" src="images/step3pig.jpg" />
                 </div>
               </div>
             </Parallax>

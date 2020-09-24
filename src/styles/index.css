@@ -95,7 +95,7 @@ input[type="number"] {
 .calcbtn {
   width: 250px;
   height: 100px;
-  transition: all 1s linear;
+  transition: all 0.5s linear;
 }
 
 @keyframes transient {
