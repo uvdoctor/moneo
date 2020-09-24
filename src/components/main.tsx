@@ -412,8 +412,8 @@ export default function Main() {
                     games.
                   </p>
                   <img
-                    className="w-full object-fit mt-5"
-                    src="images/laptop3d.png"
+                    className="w-full mt-5"
+                    src="images/laptopwithpig.png"
                   />
                 </div>
               </div>
