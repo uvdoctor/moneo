@@ -10,6 +10,7 @@ export default function Home({ isProduction }: HomeProps) {
 
   return (
     <Fragment>
+      {console.log("isProduction: ", isProduction)}
       <Head>
         <meta charSet="utf-8" />
         <link rel="icon" href="images/icons/favicon.ico" />
