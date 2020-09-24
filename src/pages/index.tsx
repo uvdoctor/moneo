@@ -13,21 +13,27 @@ const Home: NextPage<Props> = () => (
       <meta name="theme-color" content="#000000" />
       <meta name="description" content="Your Financial Analyst" />
       <link rel="apple-touch-icon" href="images/icons/logo57.png" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,500" />
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Roboto:300,500"
+      />
       <title>DollarDarwin</title>
       <link rel="manifest" href="manifest.json" />
-      <script dangerouslySetInnerHTML={{
-        __html: `<!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-176180938-1"></script>
-        <script>
+      <script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=UA-176180938-1"
+      />
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-        
           gtag('config', 'UA-176180938-1');
         </script>
-        `
-      }} />
+        `,
+        }}
+      />
     </Head>
     <main>
       <Main />
