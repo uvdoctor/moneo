@@ -70,25 +70,45 @@ export default function Main() {
 
   const featuresList = [
     {
-      label: "Personalized",
-      svg: SVGPersonalized,
-      desc: "Insights based on Your Goals, Risk Threshold & financial health.",
+      label: "Holistic Financial Health",
+      svg: ActionableSVG,
+      desc: "Discover Your Net Worth Across Currencies & if Your Money is working hard enough to fulfill Your Goals.",
     },
     {
-      label: "Fun",
-      svg: FunSVG,
-      desc: "Games to help You make Smart Money decisions.",
-    },
-    {
-      label: "Actionable",
+      label: "Goal-based Savings",
       svg: ActionableSVG,
       desc: "See what You have to achieve today & how it will affect tomorrow.",
     },
     {
-      label: "Global",
-      svg: GlobalSVG,
-      desc: "Time-tested money concepts that work wherever You are.",
+      label: "Uncover Money Leaks",
+      svg: FunSVG,
+      desc: "Uncover hidden fees, unwanted subscriptions & other Money Leaks.",
     },
+    {
+      label: "Intelligent Investment Insights",
+      svg: SVGPersonalized,
+      desc: "Personalized Insights based on Your Goals, Risk Threshold & Financial Health.",
+    },
+    {
+      label: "Invest Globally",
+      svg: GlobalSVG,
+      desc: "Maximize Your Earnings by Maximizing Opportunities & Diversifying across borders. ",
+    },
+    {
+      label: "Adaptable Financial Plan",
+      svg: GlobalSVG,
+      desc: "Plan that Evolves with Your Goals. Understand long-term impact of Your decisions.",
+    },
+    {
+      label: "No Commissions. Ever.",
+      svg: SVGPersonalized,
+      desc: "Analysis that's driven solely by Your Financial Well-being. No hidden agenda or fees.",
+    },
+    {
+      label: "Easy to Use",
+      svg: FunSVG,
+      desc: "No complex jargons. Helps You to take simple clear steps towards Your Financial Independence.",
+    }
   ];
 
   return (
@@ -339,7 +359,7 @@ export default function Main() {
             </p>
           </div>
           <div className="w-full flex flex-wrap">
-            <PContainer format="w-full md:w-2/4 -mt-4" y={[20, 0]}>
+            <PContainer format="w-full md:w-2/4 -mt-8" y={[20, 0]}>
               <div className="w-full">
                 <div
                   className="rounded-lg p-16 pb-5 mr-5"
@@ -361,10 +381,7 @@ export default function Main() {
                     Link with various accounts to automatically calculate, what
                     you own minus, what you owe.
                   </p>
-                  <img
-                    className="mt-5"
-                    src="images/step1.jpg"
-                  />
+                  <img className="mt-5" src="images/step1.jpg" />
                 </div>
               </div>
             </PContainer>
@@ -395,10 +412,7 @@ export default function Main() {
                 <img className="mt-24" src="images/step2.jpg" />
               </div>
             </div>
-            <PContainer
-              format="w-full md:w-2/4 -mt-12"
-              y={[20, -10]}
-            >
+            <PContainer format="w-full md:w-2/4 -mt-12" y={[20, -10]}>
               <div className="w-full">
                 <div
                   className="rounded-lg p-16 pb-5 mr-5 mt-10"
@@ -421,10 +435,7 @@ export default function Main() {
                     goals, but also become more financially savvy via engaging
                     games.
                   </p>
-                  <img
-                    className="w-full mt-5"
-                    src="images/laptopwithpig.png"
-                  />
+                  <img className="w-full mt-5" src="images/laptopwithpig.png" />
                 </div>
               </div>
             </PContainer>
@@ -472,7 +483,7 @@ export default function Main() {
         </div>
       </div>
 
-      <div className="bg-white">
+      <div className="bg-white pb-10">
         <div
           className="pt-10 m-auto"
           style={{
@@ -481,45 +492,44 @@ export default function Main() {
             paddingLeft: "1rem",
           }}
         >
-          <div className="flex justify-items-auto">
-            <div className="flex-1">
-              <h2 className="text-3xl" style={{ color: "#499824" }}>
-                Track &amp; Manage Your Money
-              </h2>
-              <div className="w-full mb-4">
-                <div className="w-full md:flex md:flex-wrap md:justify-around">
-                  {featuresList.map((feature, i) => (
-                    <div
-                      key={"f" + i}
-                      className={`mt-4 flip-card bg-transparent w-full md:w-5/12 h-40`}
-                    >
-                      <div className="flip-card-inner relative w-full h-full shadow-lg rounded-lg">
-                        <div className="flip-card-front bg-gray-100 text-default w-full h-full absolute flex items-center justify-center rounded-lg cursor-pointer">
-                          <ResultItem
-                            svg={<feature.svg />}
-                            result={feature.label}
-                            vertical
-                          />
-                        </div>
-                        <div
-                          className="flip-card-back text-white absolute w-full h-full rounded-lg p-2"
-                          style={{ backgroundColor: "#499824" }}
-                        >
-                          <ResultItem
-                            svg={<feature.svg />}
-                            result={feature.label}
-                            vertical
-                          />
-                          <p className="mt-2">{feature.desc}</p>
-                        </div>
+          <div className="flex-1">
+            <h2 className="text-3xl" style={{ color: "#499824" }}>
+              Get Rich Slowly
+            </h2>
+            <p className="text-xl mt-2">
+              No More Boring Budgets or Confusing Investment Choices.
+              DollarDarwin will help You to Grow Your Money without taking any undue stress. 
+            </p>
+            <div className="w-full">
+              <div className="w-full md:flex md:flex-wrap md:justify-around">
+                {featuresList.map((feature, i) => (
+                  <div
+                    key={"f" + i}
+                    className={`mt-4 flip-card bg-transparent w-full md:w-64 h-40`}
+                  >
+                    <div className="flip-card-inner relative w-full h-full shadow-lg rounded-lg">
+                      <div className="flip-card-front bg-gray-100 text-default w-full h-full absolute flex items-center justify-center rounded-lg cursor-pointer">
+                        <ResultItem
+                          svg={<feature.svg />}
+                          result={feature.label}
+                          vertical
+                        />
+                      </div>
+                      <div
+                        className="flip-card-back text-white absolute w-full h-full rounded-lg p-2"
+                        style={{ backgroundColor: "#499824" }}
+                      >
+                        <ResultItem
+                          svg={<feature.svg />}
+                          result={feature.label}
+                          vertical
+                        />
+                        <p className="mt-2">{feature.desc}</p>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-            </div>
-            <div className="flex-1 flex items-bottom">
-              <img src="images/track-money.jpg" />
             </div>
           </div>
         </div>

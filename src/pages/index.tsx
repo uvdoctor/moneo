@@ -1,13 +1,16 @@
 import React, { Fragment } from "react";
 import Head from "next/head";
 import Main from "../components/main";
+import { ParallaxProvider } from "react-scroll-parallax";
+import { isMobileDevice } from "../components/utils";
+import { useFullScreenBrowser } from "react-browser-hooks";
 interface HomeProps {
   isProduction: boolean;
 }
 
 export default function Home({ isProduction }: HomeProps) {
   const gaId = "UA-176180938-1";
-
+  const fsb = useFullScreenBrowser();
   return (
     <Fragment>
       <Head>
@@ -45,7 +48,13 @@ export default function Home({ isProduction }: HomeProps) {
         )}
       </Head>
       <main>
-        <Main />
+        {!isMobileDevice(fsb) ? (
+          <ParallaxProvider>
+            <Main />
+          </ParallaxProvider>
+        ) : (
+          <Main />
+        )}
       </main>
     </Fragment>
   );
