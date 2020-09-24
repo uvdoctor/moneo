@@ -266,7 +266,7 @@ export default function Main() {
                   <Link href={calc.link}>
                     <a>
                       <div
-                        className={`w-56 h-24 absolute group cursor-pointer flex flex-col justify-center px-4 py-2 text-white rounded-lg transition-all transform duration-500 ease-in-out ${
+                        className={`w-56 h-24 absolute cursor-pointer group flex flex-col justify-center px-4 py-2 text-white rounded-lg transition-all duration-500 ease-in-out ${
                           calcIndex >= 0 && calcIndex !== i
                             ? "scale-50 opacity-0"
                             : calcIndex === i &&
@@ -312,7 +312,8 @@ export default function Main() {
                           vertical
                         />
                         {calcIndex === i && (
-                          <label className="mt-4 group-hover:text-default">
+                          <label className="mt-4 text-default group-hover:text-default"
+                          style={{animation: "fadeIn 1s 1"}}>
                             {calc.desc}
                           </label>
                         )}
