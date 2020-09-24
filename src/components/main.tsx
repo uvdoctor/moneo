@@ -388,7 +388,7 @@ export default function Main() {
                 <img className="mt-24" src="images/step2.jpg" />
               </div>
             </div>
-            <Parallax className="w-full md:w-2/4 md:-mt-20" y={[20, -10]}>
+            <Parallax className="w-full md:w-2/4 md:-mt-16" y={[20, -10]}>
               <div className="w-full">
                 <div
                   className="rounded-lg p-16 pb-5 mr-5 mt-10"
