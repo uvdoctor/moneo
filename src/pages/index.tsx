@@ -16,6 +16,18 @@ const Home: NextPage<Props> = () => (
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,500" />
       <title>DollarDarwin</title>
       <link rel="manifest" href="manifest.json" />
+      <script dangerouslySetInnerHTML={{
+        __html: `<!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-176180938-1"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+        
+          gtag('config', 'UA-176180938-1');
+        </script>
+        `
+      }} />
     </Head>
     <main>
       <Main />
