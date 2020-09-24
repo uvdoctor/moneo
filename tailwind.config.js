@@ -8,9 +8,6 @@ module.exports = {
     "./src/components/**/*.{js,jsx,ts,tsx}",
     ]
   },
-  variants: {
-    textColor: ['responsive', 'hover', 'focus', 'group-hover']
-  },
   theme: {
     extend: {
       textColor: {
