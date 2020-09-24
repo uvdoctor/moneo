@@ -263,10 +263,10 @@ export default function Main() {
                 className={`grid grid-cols-3 gap-10 justify-items-stretch mt-10 h-56`}
               >
                 {calcList.map((calc: any, i: number) => (
-                  <Link href={calc.link}>
+                  <Link key={"calc"+i} href={calc.link}>
                     <a>
                       <div
-                        className={`w-56 h-24 absolute cursor-pointer flex flex-col justify-center px-4 py-2 text-white rounded-lg transition-all duration-500 ease-in-out ${
+                        className={`w-56 h-24 absolute cursor-pointer flex flex-col justify-center px-4 py-2 text-white rounded-lg transition-all duration-500 linear ${
                           calcIndex >= 0 && calcIndex !== i
                             ? "scale-50 opacity-0"
                             : calcIndex === i &&
@@ -479,8 +479,8 @@ export default function Main() {
               </h2>
               <div className="w-full mb-4">
                 <div className="w-full md:flex md:flex-wrap md:justify-around">
-                  {featuresList.map((feature) => (
-                    <div
+                  {featuresList.map((feature, i) => (
+                    <div key={"f"+i}
                       className={`mt-4 flip-card bg-transparent w-full md:w-5/12 h-40`}
                     >
                       <div className="flip-card-inner relative w-full h-full shadow-lg rounded-lg">

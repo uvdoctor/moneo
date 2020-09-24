@@ -16,8 +16,8 @@ export default function SVGEduLoan({ disabled }: SVGEduLoanProps) {
         y1="436.878"
         y2="187.122"
       >
-        <stop offset=".011" stop-color={disabled ? COLORS.LIGHT_GRAY : COLORS.GREEN} />
-        <stop offset="1" stop-color={disabled ? COLORS.LIGHT_GRAY : COLORS.LIGHT_GREEN} />
+        <stop offset=".011" stopColor={disabled ? COLORS.LIGHT_GRAY : COLORS.GREEN} />
+        <stop offset="1" stopColor={disabled ? COLORS.LIGHT_GRAY : COLORS.LIGHT_GREEN} />
       </linearGradient>
       <linearGradient
         id="New_Gradient_Swatch_3"
@@ -27,8 +27,8 @@ export default function SVGEduLoan({ disabled }: SVGEduLoanProps) {
         y1="149"
         y2="-27"
       >
-        <stop offset=".011" stop-color={disabled ? "white" : "#606082"} />
-        <stop offset="1" stop-color={disabled ? "white" : "#83839e"} />
+        <stop offset=".011" stopColor={disabled ? "white" : "#606082"} />
+        <stop offset="1" stopColor={disabled ? "white" : "#83839e"} />
       </linearGradient>
       <linearGradient
         id="New_Gradient_Swatch_18"
@@ -38,8 +38,8 @@ export default function SVGEduLoan({ disabled }: SVGEduLoanProps) {
         y1="209"
         y2="57"
       >
-        <stop offset=".015" stop-color={disabled ? "white" : "#83839e"} />
-        <stop offset="1" stop-color={disabled ? "white" : "#b8b8c7"} />
+        <stop offset=".015" stopColor={disabled ? "white" : "#83839e"} />
+        <stop offset="1" stopColor={disabled ? "white" : "#b8b8c7"} />
       </linearGradient>
       <g id="_08-money" data-name="08-money">
         <g id="linear_color" data-name="linear color">
