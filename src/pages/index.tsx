@@ -10,7 +10,6 @@ export default function Home({ isProduction }: HomeProps) {
 
   return (
     <Fragment>
-      {console.log("isProduction: ", isProduction)}
       <Head>
         <meta charSet="utf-8" />
         <link rel="icon" href="images/icons/favicon.ico" />
@@ -35,8 +34,8 @@ export default function Home({ isProduction }: HomeProps) {
                 __html: `
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
-          gtag("js", new Date());
-          gtag("config", ${gaId}, {
+          gtag('js', new Date());
+          gtag('config', '${gaId}', {
             page_path: window.location.pathname,
           });
         `,
