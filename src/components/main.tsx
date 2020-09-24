@@ -333,7 +333,7 @@ export default function Main() {
             <p className="text-xl mt-2 text-green-primary font-bold">Just 3 Steps: GET...SET...GO</p>
           </div>
           <div className="w-full flex flex-wrap">
-            <Parallax className={`w-2/4`} y={[10, -10]}>
+            <Parallax className={`w-2/4`} y={[15, 0]}>
               <div className="w-full">
                 <div
                   className="rounded-lg p-16 pb-5 mr-5"
@@ -386,7 +386,7 @@ export default function Main() {
                 <img className="mt-24" src="images/step2.jpg" />
               </div>
             </div>
-            <Parallax className={`w-2/4`} y={[0, -20]}>
+            <Parallax className={`w-2/4`} y={[10, -10]}>
               <div className="w-full">
                 <div
                   className="rounded-lg p-16 pb-5 mr-5 mt-10"
