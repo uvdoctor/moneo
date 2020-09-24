@@ -72,7 +72,7 @@ export default function Main() {
     {
       label: "Holistic Financial Health",
       svg: ActionableSVG,
-      desc: "Discover Your Net Worth Across Currencies & if Your Money is working hard enough to fulfill Your Goals.",
+      desc: "Discover Your Net Worth Across Currencies & if Your Money is working hard enough.",
     },
     {
       label: "Goal-based Savings",
