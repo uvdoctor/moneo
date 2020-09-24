@@ -413,7 +413,7 @@ export default function Main() {
                   </p>
                   <img
                     className="w-full object-fit mt-5"
-                    src="images/step3pig.jpg"
+                    src="images/pig3d.png"
                   />
                 </div>
               </div>
