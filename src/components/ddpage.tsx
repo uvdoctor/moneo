@@ -8,7 +8,7 @@ import UserHeader from "./userheader";
 import UserMenu from "./usermenu";
 
 export interface EnvProps {
-  readonly isProduction: boolean
+  readonly isProduction?: boolean
 }
 interface DDPageProps extends EnvProps {
   children: React.ReactNode;

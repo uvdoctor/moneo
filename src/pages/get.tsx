@@ -16,3 +16,4 @@ const Get = () => {
 };
 
 export default withAuthenticator(Get);
+
