@@ -2,9 +2,9 @@ import { useRouter } from "next/router";
 import React, { Fragment, useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
-import { ToastContainer } from "react-toastify";
 import { CreateGoalInput, GoalType } from "../../api/goals";
 import { ASSET_TYPES, ROUTES } from "../../CONSTANTS";
+import DDPage from "../ddpage";
 import ExpandCollapse from "../form/expandcollapse";
 import FFGoal from "../goals/ffgoal";
 import Goal from "../goals/goal";
@@ -19,6 +19,7 @@ interface CalcLayoutProps {
   assumptions: Array<any>;
   results: Array<any>;
   resultImg: string;
+  isProduction?: boolean
 }
 
 export default function CalcLayout(props: CalcLayoutProps) {
@@ -65,8 +66,7 @@ export default function CalcLayout(props: CalcLayoutProps) {
   };
 
   return (
-    <div className="text-lg">
-      <ToastContainer />
+    <DDPage isProduction={props.isProduction}>
       {!wipGoal ? (
         <Fragment>
           <Header />
@@ -94,8 +94,9 @@ export default function CalcLayout(props: CalcLayoutProps) {
                       ))}
                     </div>
                     {sections[key] === props.results && (
-                      <img className="cursor-pointer object-fit"
-                        src={"/images/"+props.resultImg}
+                      <img
+                        className="cursor-pointer object-fit"
+                        src={"/images/" + props.resultImg}
                         onClick={createGoal}
                       />
                     )}
@@ -139,6 +140,6 @@ export default function CalcLayout(props: CalcLayoutProps) {
           </div>
         </div>
       )}
-    </div>
+    </DDPage>
   );
 }
