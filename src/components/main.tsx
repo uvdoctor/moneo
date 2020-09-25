@@ -137,12 +137,16 @@ export default function Main() {
               label: "Features Intersection Ratio",
               value: entry.intersectionRatio,
             });
-          } catch(e) {}
-        };
+          } catch (e) {
+            observerScroll.unobserve(featuresRef.current)
+            observerScroll.disconnect()
+          }
+        }
       });
     };
     const observerScroll = new IntersectionObserver(callback, opts);
     observerScroll.observe(featuresRef.current);
+    return () => observerScroll.disconnect();
   }, []);
 
   return (
@@ -531,10 +535,7 @@ export default function Main() {
             paddingLeft: "1rem",
           }}
         >
-          <div
-            ref={featuresRef}
-            className="flex-1"
-          >
+          <div ref={featuresRef} className="flex-1">
             <h2 className="text-3xl" style={{ color: "#499824" }}>
               Get Rich Slowly
             </h2>
