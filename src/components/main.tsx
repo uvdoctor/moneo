@@ -290,11 +290,11 @@ export default function Main() {
                   <Link key={"calc" + i} href={calc.link}>
                     <a>
                       <div
-                        className={`w-56 h-24 absolute cursor-pointer flex flex-col justify-center px-4 py-2 text-white rounded-lg transition-all transform duration-500 linear ${
+                        className={`w-56 h-24 absolute cursor-pointer flex flex-col justify-center p-2 text-white rounded-lg transition-all transform duration-500 linear ${
                           calcIndex >= 0 && calcIndex !== i
                             ? "scale-50 opacity-0"
                             : calcIndex === i &&
-                              "text-green-primary text-lg md:text-xl lg:text-2xl"
+                              "text-green-primary md:text-xl lg:text-2xl"
                         }`}
                         style={{
                           backgroundImage: `linear-gradient(to left, ${
@@ -519,7 +519,7 @@ export default function Main() {
                         />
                       </div>
                       <div
-                        className="flip-card-back text-white absolute w-full h-full rounded-lg p-2"
+                        className="flip-card-back text-white absolute w-full h-full rounded-lg p-1"
                         style={{ backgroundColor: "#499824" }}
                       >
                         <ResultItem
@@ -527,7 +527,7 @@ export default function Main() {
                           result={feature.label}
                           vertical
                         />
-                        <p className="mt-2">{feature.desc}</p>
+                        <p className="mt-2 text-base">{feature.desc}</p>
                       </div>
                     </div>
                   </div>

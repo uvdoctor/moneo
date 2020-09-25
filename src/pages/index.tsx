@@ -1,20 +1,19 @@
 import React from "react";
 import Main from "../components/main";
-import DDPage, { EnvProps } from "../components/ddpage";
-import { GetStaticProps } from "next";
+import DDPage from "../components/ddpage";
 
-export default function Home({isProduction}: EnvProps) {
+export default function Home() {
   return (
-    <DDPage isProduction={isProduction}>
+    <DDPage>
       <Main />
     </DDPage>
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+/*export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
       isProduction: process.env.NODE_ENV === "production",
     },
   };
-}
+}*/
