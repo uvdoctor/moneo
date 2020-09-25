@@ -7,8 +7,10 @@ import { ToastContainer } from "react-toastify";
 import UserHeader from "./userheader";
 import UserMenu from "./usermenu";
 
-interface DDPageProps {
-  isProduction?: boolean;  
+export interface EnvProps {
+  readonly isProduction: boolean
+}
+interface DDPageProps extends EnvProps {
   children: React.ReactNode;
   secure?: boolean;
 }

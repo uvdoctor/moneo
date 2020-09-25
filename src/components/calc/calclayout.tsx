@@ -4,14 +4,14 @@ import React, { Fragment, useState } from "react";
 import { AwesomeButton } from "react-awesome-button";
 import { CreateGoalInput, GoalType } from "../../api/goals";
 import { ASSET_TYPES, ROUTES } from "../../CONSTANTS";
-import DDPage from "../ddpage";
+import DDPage, { EnvProps } from "../ddpage";
 import ExpandCollapse from "../form/expandcollapse";
 import FFGoal from "../goals/ffgoal";
 import Goal from "../goals/goal";
 import { createNewGoalInput } from "../goals/goalutils";
 import Header from "../header";
 
-interface CalcLayoutProps {
+interface CalcLayoutProps extends EnvProps {
   title: string;
   titleSVG: React.ReactNode;
   type: GoalType;
@@ -19,7 +19,6 @@ interface CalcLayoutProps {
   assumptions: Array<any>;
   results: Array<any>;
   resultImg: string;
-  isProduction?: boolean
 }
 
 export default function CalcLayout(props: CalcLayoutProps) {
