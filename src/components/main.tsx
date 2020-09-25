@@ -18,15 +18,13 @@ import SVGAnalyze from "./svganalyze";
 import Link from "next/link";
 import PContainer from "./pcontainer";
 import * as gtag from "../lib/gtag";
-import { DDDocumentProps } from "../pages/_document";
 
-export default function Main({ isProduction }: DDDocumentProps) {
+export default function Main() {
   const { top } = useScroll();
   const [calcIndex, setCalcIndex] = useState<number>(-1);
   const joinRef: any = useRef();
   const calculateRef: any = useRef();
   const featuresRef: any = useRef();
-  const [featuresBGColor, setFeaturesBGColor] = useState<string>("");
 
   const calcList: Array<any> = [
     {
@@ -132,15 +130,15 @@ export default function Main({ isProduction }: DDDocumentProps) {
     const callback = (list: Array<any>) => {
       list.forEach((entry: any) => {
         if (entry.isIntersecting) {
-          setFeaturesBGColor("bg-green-100");
-          if (isProduction)
+          try {
             gtag.event({
               category: "Scroll",
               action: "Scrolled to features",
               label: "Features Intersection Ratio",
               value: entry.intersectionRatio,
             });
-        } else setFeaturesBGColor("");
+          } catch(e) {}
+        };
       });
     };
     const observerScroll = new IntersectionObserver(callback, opts);
@@ -535,7 +533,7 @@ export default function Main({ isProduction }: DDDocumentProps) {
         >
           <div
             ref={featuresRef}
-            className={`flex-1 ${featuresBGColor} transition-all duration-500 ease-in-out`}
+            className="flex-1"
           >
             <h2 className="text-3xl" style={{ color: "#499824" }}>
               Get Rich Slowly
