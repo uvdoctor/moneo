@@ -4,7 +4,7 @@ import DDPage from "../components/ddpage";
 
 export default function Home() {
   return (
-    <DDPage>
+    <DDPage title="DollarDarwin">
       <Main />
     </DDPage>
   );

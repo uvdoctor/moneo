@@ -65,7 +65,7 @@ export default function CalcLayout(props: CalcLayoutProps) {
   };
 
   return (
-    <DDPage>
+    <DDPage title={props.title}>
       {!wipGoal ? (
         <Fragment>
           <Header />

@@ -8,7 +8,7 @@ Amplify.configure(awsmobile);
 
 const Invest = () => {
   return (
-    <DDPage secure>
+    <DDPage title="Invest" secure>
       <div />
     </DDPage>
   );
