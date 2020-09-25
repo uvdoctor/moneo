@@ -1,4 +1,3 @@
-import { GetStaticProps } from "next";
 import React from "react";
 import { GoalType } from "../api/goals";
 import CalcLayout from "../components/calc/calclayout";
