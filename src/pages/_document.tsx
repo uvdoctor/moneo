@@ -8,7 +8,7 @@ import NextDocument, {
 import React, { Fragment } from "react";
 import { GA_TRACKING_ID } from "../lib/gtag";
 
-interface DDDocumentProps {
+export interface DDDocumentProps {
   readonly isProduction: boolean;
 }
 
