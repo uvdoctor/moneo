@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useScroll } from "react-browser-hooks";
 import { ToastContainer } from "react-toastify";
 import LogoWithName from "./logowithname";
@@ -17,7 +17,7 @@ import SVGScissor from "./svgscissor";
 import SVGAnalyze from "./svganalyze";
 import Link from "next/link";
 import PContainer from "./pcontainer";
-
+import * as gtag from "../lib/gtag";
 export default function Main() {
   const { top } = useScroll();
   const [calcIndex, setCalcIndex] = useState<number>(-1);
@@ -74,7 +74,8 @@ export default function Main() {
     {
       label: "Holistic Financial Health",
       svg: ActionableSVG,
-      desc: "Discover Your Net Worth Across Currencies & if Your Money is working hard enough.",
+      desc:
+        "Discover Your Net Worth Across Currencies & if Your Money is working hard enough.",
     },
     {
       label: "Goal-based Savings",
@@ -89,29 +90,57 @@ export default function Main() {
     {
       label: "Intelligent Investment Insights",
       svg: SVGPersonalized,
-      desc: "Personalized Insights based on Your Goals, Risk Threshold & Financial Health.",
+      desc:
+        "Personalized Insights based on Your Goals, Risk Threshold & Financial Health.",
     },
     {
       label: "Invest Globally",
       svg: GlobalSVG,
-      desc: "Maximize Your Earnings by Maximizing Opportunities & Diversifying across borders. ",
+      desc:
+        "Maximize Your Earnings by Maximizing Opportunities & Diversifying across borders. ",
     },
     {
       label: "Adaptable Financial Plan",
       svg: GlobalSVG,
-      desc: "Plan that Evolves with Your Goals. Understand long-term impact of Your decisions.",
+      desc:
+        "Plan that Evolves with Your Goals. Understand long-term impact of Your decisions.",
     },
     {
       label: "No Commissions. Ever.",
       svg: SVGPersonalized,
-      desc: "Analysis that's driven solely by Your Financial Well-being. No hidden agenda or fees.",
+      desc:
+        "Analysis that's driven solely by Your Financial Well-being. No hidden agenda or fees.",
     },
     {
       label: "Easy to Use",
       svg: FunSVG,
-      desc: "No complex jargons. Helps You to take simple clear steps towards Your Financial Independence.",
-    }
+      desc:
+        "No complex jargons. Helps You to take simple clear steps towards Your Financial Independence.",
+    },
   ];
+
+  useEffect(() => {
+    const opts = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0,
+    };
+
+    const callback = (list: Array<any>) => {
+      list.forEach((entry: any) => {
+        if (entry.isIntersecting) {
+          gtag.event({
+            category: "Scroll",
+            action: "Scrolled to features",
+            label: "Features Intersection Ratio",
+            value: entry.intersectionRatio,
+          });
+        }
+      });
+    };
+    const observerScroll = new IntersectionObserver(callback, opts);
+    observerScroll.observe(featuresRef.current);
+  }, []);
 
   return (
     <Fragment>
@@ -170,8 +199,12 @@ export default function Main() {
                 About
               </span>
               <div className="absolute bg-white hidden p-5 pl-0 shadow-lg">
-                <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
-                onClick={() => featuresRef.current.scrollIntoView({behavior: "smooth"})}>
+                <div
+                  className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2"
+                  onClick={() =>
+                    featuresRef.current.scrollIntoView({ behavior: "smooth" })
+                  }
+                >
                   Features
                 </div>
                 <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 font-semibold rounded sm:mt-0 sm:ml-2">
@@ -501,7 +534,8 @@ export default function Main() {
             </h2>
             <p className="text-xl mt-2">
               No More Boring Budgets or Confusing Investment Choices.
-              DollarDarwin helps You to Grow Your Money without taking any undue stress. 
+              DollarDarwin helps You to Grow Your Money without taking any undue
+              stress.
             </p>
             <div className="w-full">
               <div className="w-full md:flex md:flex-wrap md:justify-around">
