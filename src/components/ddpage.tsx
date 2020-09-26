@@ -43,15 +43,15 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta
           property="og:description"
           content="
-          Hi there! 🖐 
+          Hello! 🖐 
 
-          I just got DollarDarwin - My Financial Analyst for Stress-free Savings & Investments to Meet My Goals! 😄
+          I just got $30 offer! 😄
 
-          Get Yours at https://dollardarwin.com/ with SPECIAL OFFER of 60 days FREE Subscription - incredible $30 value! 😎"
+          Get Yours Soon! 😎"
         />
         <meta
           property="og:image"
-          content="https://dollardarwin.com/images/ddfirstpage.png"
+          content="https://dollardarwin.com/images/ddfrontpage.png"
         />
         <title>{props.title}</title>
       </Head>
