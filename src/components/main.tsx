@@ -130,17 +130,12 @@ export default function Main() {
     const callback = (list: Array<any>) => {
       list.forEach((entry: any) => {
         if (entry.isIntersecting) {
-          try {
-            gtag.event({
-              category: "Scroll",
-              action: "Scrolled to features",
-              label: "Features Intersection Ratio",
-              value: entry.intersectionRatio,
-            });
-          } catch (e) {
-            observerScroll.unobserve(featuresRef.current)
-            observerScroll.disconnect()
-          }
+          gtag.event({
+            category: "Scroll",
+            action: "Scrolled to features",
+            label: "Features Intersection Ratio",
+            value: entry.intersectionRatio,
+          });
         }
       });
     };
