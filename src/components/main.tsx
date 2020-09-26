@@ -76,35 +76,35 @@ export default function Main() {
       label: "Holistic Financial Health",
       svg: ActionableSVG,
       desc:
-        "Discover Your Net Worth Across Currencies & if Your Money is working hard enough.",
+        "Analyzes Your Net Worth Across Currencies & if Your Money is working hard enough.",
     },
     {
       label: "Goal-based Savings",
       svg: ActionableSVG,
-      desc: "See what You have to achieve today & how it will affect tomorrow.",
+      desc: "To Identify what has to be achieved today & how it will affect tomorrow.",
     },
     {
       label: "Uncover Money Leaks",
       svg: FunSVG,
-      desc: "Uncover hidden fees, unwanted subscriptions & other Money Leaks.",
+      desc: "Such as hidden fees, unwanted subscriptions, bank charges, etc.",
     },
     {
-      label: "Intelligent Investment Insights",
+      label: "Investment Insights",
       svg: SVGPersonalized,
       desc:
-        "Personalized Insights based on Your Goals, Risk Threshold & Financial Health.",
+        "Based on Your Goals, Risk Threshold & Financial Health.",
     },
     {
-      label: "Invest Globally",
+      label: "Diversify Globally",
       svg: GlobalSVG,
       desc:
-        "Maximize Your Earnings by Maximizing Opportunities & Diversifying across borders. ",
+        "To Maximize Earning Opportunities & Reduce Risk of over-reliance on 1 Country & Currency. ",
     },
     {
       label: "Adaptable Financial Plan",
       svg: GlobalSVG,
       desc:
-        "Plan that Evolves with Your Goals. Understand long-term impact of Your decisions.",
+        "That Evolves with Your Goals. Understand long-term impact of Your decisions.",
     },
     {
       label: "No Commissions. Ever.",
@@ -246,10 +246,11 @@ export default function Main() {
             >
               Avail Special offer
             </h2>
-            <p ref={joinRef} className="w-4/12">
-              Join Waitlist NOW to unlock FREE Premium Subscription For 60 days
-              - incredible $30 value! Coupon code will be delivered to Your
-              email address mentioned below.
+            <p ref={joinRef} className="w-4/12 font-bold">
+              FREE 60 days access - incredible $30 value! 
+            </p>
+            <p className="w-1/3">
+            Coupon code will be emailed to You.
             </p>
 
             <div className="w-4/12 bg-white border border-gray-500 rounded-md p-1 mt-5">
@@ -325,7 +326,7 @@ export default function Main() {
                   <Link key={"calc" + i} href={calc.link}>
                     <a>
                       <div
-                        className={`w-56 h-24 absolute cursor-pointer flex flex-col justify-center p-2 text-white rounded-lg transition-all transform duration-500 linear ${
+                        className={`w-56 h-24 absolute cursor-pointer flex flex-col justify-center p-1 text-white rounded-lg transition-all transform duration-500 linear ${
                           calcIndex >= 0 && calcIndex !== i
                             ? "scale-50 opacity-0"
                             : calcIndex === i &&

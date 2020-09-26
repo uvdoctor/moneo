@@ -30,10 +30,7 @@ class DDDocument extends NextDocument<DDDocumentProps> {
         <Head>
           <link rel="icon" href="images/icons/favicon.ico" />
           <link rel="apple-touch-icon" href="images/icons/logo57.png" />
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,500"
-          />
+          <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap" rel="stylesheet" />
           <link rel="manifest" href="manifest.json" />
         </Head>
         <body>

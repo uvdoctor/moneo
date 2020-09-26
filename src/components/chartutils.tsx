@@ -7,7 +7,7 @@ export const getCommonLayoutProps = (
 ) => {
   return {
     dragmode: "pan",
-    font: { family: "'Roboto', sans-serif", color: COLORS.DEFAULT, size: 15 },
+    font: { family: "'Jost', sans-serif", color: COLORS.DEFAULT, size: 15 },
     autosize: autosize,
     title: title ? { x: 0.05, text: title, font: { size: 20 } } : false,
     yaxis: { tickformat: tickFormat, fixedrange: true, showgrid: false },

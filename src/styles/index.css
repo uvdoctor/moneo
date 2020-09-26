@@ -1,11 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('<link href="https://fonts.googleapis.com/css?family=Roboto:300,500" rel="stylesheet">');
 
 :root {
-  --font-family: "Roboto", sans-serif;
-  --font-weight: 300;
+  --font-family: "Jost", sans-serif;
+  --font-weight: 400;
   --primary-green-color: #96d441;
   --secondary-green-color: #aae441;
   --primary-gray-color: #4a5568;

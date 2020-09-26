@@ -32,6 +32,27 @@ export default function DDPage(props: DDPageProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta name="description" content="Your Financial Analyst" />
+        <meta
+          name="Personal finance management app"
+          content="Automated Banking, Investing and Financial Planning, Stack,
+Personal finance for Millennial, personal finance advisor, personal finance, Digital Banking, Social Banking, money management apps,
+personal finance app, Budget goals, Budgeting,  Mutual Funds, Stock, Equity trading, personal money management, online money management, personal
+finance plan, personal finance management, Banking App, Mobile Banking, Budgeting, Financial planning, Investing, Neo Banking Canada, Neo Banking USA"
+        ></meta>
+        <meta property="og:title" content="DollarDarwin" />
+        <meta
+          property="og:description"
+          content="
+          Hi there! 🖐 
+
+          I just got DollarDarwin - My Financial Analyst for Stress-free Savings & Investments to Meet My Goals! 😄
+
+          Get Yours at https://dollardarwin.com/ with SPECIAL OFFER of 60 days FREE Subscription - incredible $30 value! 😎"
+        />
+        <meta
+          property="og:image"
+          content="https://dollardarwin.com/images/ddfirstpage.png"
+        />
         <title>{props.title}</title>
       </Head>
       <main>
