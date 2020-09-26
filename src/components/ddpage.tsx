@@ -50,9 +50,12 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
           Get Yours Soon! 😎"
         />
         <meta
-          property="og:image"
+          property="og:image" itemProp="image"
           content="https://dollardarwin.com/images/ddfrontpage.png"
         />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="en-US" />
+        <meta property="og:locale:alternate"  content="en-CA" />
         <title>{props.title}</title>
       </Head>
       <main>
