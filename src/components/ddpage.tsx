@@ -39,13 +39,13 @@ Personal finance for Millennial, personal finance advisor, personal finance, Dig
 personal finance app, Budget goals, Budgeting,  Mutual Funds, Stock, Equity trading, personal money management, online money management, personal
 finance plan, personal finance management, Banking App, Mobile Banking, Budgeting, Financial planning, Investing, Neo Banking Canada, Neo Banking USA"
         ></meta>
-        <meta property="og:title" content="DollarDarwin" />
+        <meta property="og:title" content="DollarDarwin - Your Financial Analyst" />
         <meta
           property="og:description"
           content="
           Hello! 🖐 
 
-          I just got $30 offer! 😄
+          I just got FREE 60 days offer for Stress-free Savings & Investments! 😄
 
           Get Yours Soon! 😎"
         />
@@ -56,6 +56,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en-US" />
         <meta property="og:locale:alternate"  content="en-CA" />
+        <meta property="og:url" content="https://dollardarwin.com" />
         <title>{props.title}</title>
       </Head>
       <main>
