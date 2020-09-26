@@ -37,7 +37,7 @@ export default function BRCompChart(props: BRCompChartProps) {
       else if (buyValues[i] > rentValues[i]) alternative += "Buying";
       else if (buyValues[i] === rentValues[i]) alternative += "Both";
       if (!answer.startsWith(alternative)) {
-        condition = ` till ${i} ${i === 1 ? "year" : "years"}`;
+        condition = ` till ${i} ${i === 1 ? "year" : "years"}.<br>${alternative} costs lesser after that.`;
         break;
       }
     }
