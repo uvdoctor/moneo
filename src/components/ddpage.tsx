@@ -51,7 +51,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         />
         <meta
           property="og:image" itemProp="image"
-          content="https://dollardarwin.com/images/ddfrontpage.png"
+          content="https://dollardarwin.com/images/icons/tlogo256.png"
         />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en-US" />
