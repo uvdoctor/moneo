@@ -6,7 +6,6 @@ import UserMenu from "./usermenu";
 import { isMobileDevice } from "./utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import Head from "next/head";
-import FullStory from "react-fullstory";
 
 interface DDPageProps {
   title: string;
@@ -20,7 +19,6 @@ export default function DDPage(props: DDPageProps) {
     <UserMenu />,
   ];
   const commonPublicComps: Array<React.ReactNode> = [];
-  const ORG_ID = "YD0SZ";
 
   const getCommonComps = () =>
     props.secure ? commonSecureComps : commonPublicComps;
@@ -87,7 +85,6 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
       </Head>
       <main>
         <div className="text-lg">
-          <FullStory org={ORG_ID} namespace="FS" />
           <ToastContainer />
           {!isMobileDevice(fsb) ? (
             <ParallaxProvider>
