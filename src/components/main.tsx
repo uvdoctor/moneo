@@ -1,6 +1,5 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useScroll } from "react-browser-hooks";
-import { ToastContainer } from "react-toastify";
 import LogoWithName from "./logowithname";
 import { CALC_NAMES, COLORS, ROUTES } from "../CONSTANTS";
 import GoalImages from "./goalimages";
@@ -18,13 +17,18 @@ import SVGAnalyze from "./svganalyze";
 import Link from "next/link";
 import PContainer from "./pcontainer";
 import * as gtag from "../lib/gtag";
+import SocialShare from "./socialshare";
+import ExpandCollapse from "./form/expandcollapse";
+import DDPage from "./ddpage";
 
 export default function Main() {
   const { top } = useScroll();
   const [calcIndex, setCalcIndex] = useState<number>(-1);
+  const [scrolledToSec, setScrolledToSec] = useState<boolean>(false);
   const joinRef: any = useRef();
   const calculateRef: any = useRef();
   const featuresRef: any = useRef();
+  const securityRef: any = useRef();
 
   const calcList: Array<any> = [
     {
@@ -81,7 +85,8 @@ export default function Main() {
     {
       label: "Goal-based Savings",
       svg: ActionableSVG,
-      desc: "To Identify what has to be achieved today & how it will affect tomorrow.",
+      desc:
+        "To Identify what has to be achieved today & how it will affect tomorrow.",
     },
     {
       label: "Uncover Money Leaks",
@@ -91,8 +96,7 @@ export default function Main() {
     {
       label: "Investment Insights",
       svg: SVGPersonalized,
-      desc:
-        "Based on Your Goals, Risk Threshold & Financial Health.",
+      desc: "Based on Your Goals, Risk Threshold & Financial Health.",
     },
     {
       label: "Diversify Globally",
@@ -127,7 +131,7 @@ export default function Main() {
       threshold: 0,
     };
 
-    const callback = (list: Array<any>) => {
+    const featuresCallback = (list: Array<any>) => {
       list.forEach((entry: any) => {
         if (entry.isIntersecting) {
           gtag.event({
@@ -139,14 +143,33 @@ export default function Main() {
         }
       });
     };
-    const observerScroll = new IntersectionObserver(callback, opts);
-    observerScroll.observe(featuresRef.current);
-    return () => observerScroll.disconnect();
+
+    const secCallback = (list: Array<any>) => {
+      list.forEach((entry: any) => {
+        if (entry.isIntersecting) {
+          setScrolledToSec(true)
+          gtag.event({
+            category: "Scroll",
+            action: "Scrolled to security",
+            label: "Security Intersection Ratio",
+            value: entry.intersectionRatio,
+          });
+        } else setScrolledToSec(false)
+      });
+    };
+
+    const featuresScrollObserver = new IntersectionObserver(featuresCallback, opts);
+    featuresScrollObserver.observe(featuresRef.current);
+    const secScrollObserver = new IntersectionObserver(secCallback, opts);
+    secScrollObserver.observe(securityRef.current);
+    return () => {
+      featuresScrollObserver.disconnect();
+      secScrollObserver.disconnect();
+    }
   }, []);
 
   return (
-    <Fragment>
-      <ToastContainer />
+    <DDPage title="DollarDarwin">
       <div className="max-w-screen-xl m-auto">
         <div
           className={`fixed w-full h-16 left-0 z-10 ${top > 10 && "shadow-lg"}`}
@@ -223,7 +246,7 @@ export default function Main() {
                 joinRef.current.scrollIntoView({ behavior: "smooth" })
               }
             >
-              Join Waitlist
+              Earn up to $200 credit*
             </a>
           </nav>
         </header>
@@ -241,17 +264,24 @@ export default function Main() {
               <GoalImages />
             </div>
             <h2
-              className="text-xl mt-20 font-bold"
+              ref={joinRef}
+              className="text-xl mt-20 w-4/12 font-bold"
               style={{ color: "#499824" }}
             >
-              Avail Special offer
+              <ExpandCollapse title="Join Waitlist & Earn up to $200 credit*">
+                <div className="w-full relative">
+                  <ul className="w-full absolute z-10 bg-white text-center">
+                    <li>First 100 get $200 credit</li>
+                    <li>Next 900 get $150 credit</li>
+                    <li>Next 2,000 get $100 credit</li>
+                    <li>Next 3,000 get $75 credit</li>
+                    <li>Next 4,000 get $50 credit</li>
+                    <li>Next 5,000 get $30 credit</li>
+                    <li>All others get $15 credit</li>
+                  </ul>
+                </div>
+              </ExpandCollapse>
             </h2>
-            <p ref={joinRef} className="w-4/12 font-bold">
-              FREE 60 days access - incredible $30 value! 
-            </p>
-            <p className="w-1/3">
-            Coupon code will be emailed to You.
-            </p>
 
             <div className="w-4/12 bg-white border border-gray-500 rounded-md p-1 mt-5">
               <input
@@ -265,6 +295,9 @@ export default function Main() {
               >
                 Join
               </button>
+            </div>
+            <div className="mt-4 w-4/12">
+              <SocialShare url={`https://dollardarwin.com`} />
             </div>
           </div>
           <img src="images/cover.jpg" />
@@ -500,7 +533,7 @@ export default function Main() {
             </div>
           </div>
 
-          <div className="flex justify-items-auto mt-16">
+          <div ref={securityRef} className={`bg-transparent ${scrolledToSec && 'bg-green-100'} flex justify-items-auto mt-16 transition-colors duration-1000 ease-in-out`}>
             <div className="flex-1 flex items-center">
               <div>
                 <h2 className="text-3xl">
@@ -634,6 +667,6 @@ export default function Main() {
           </div>
         </div>
       </div>
-    </Fragment>
+    </DDPage>
   );
 }

@@ -30,6 +30,7 @@
     "react-player": "^2.6.2",
     "react-plotly.js": "^2.5.0",
     "react-scroll-parallax": "^2.3.4",
+    "react-share": "^4.3.0",
     "react-toastify": "^6.0.8",
     "react-tooltip": "^4.2.10",
     "swr": "^0.2.3",

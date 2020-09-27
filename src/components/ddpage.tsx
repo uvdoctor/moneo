@@ -44,10 +44,8 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
           property="og:description"
           content="
           Hello! 🖐 
-
-          I just got FREE 60 days offer for Stress-free Savings & Investments! 😄
-
-          Get Yours Soon! 😎"
+          I just got up to $200 credit for Stress-free Savings & Investments to Meet My Goals! 😄
+          Did You? 😎"
         />
         <meta
           property="og:image" itemProp="image"
