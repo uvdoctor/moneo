@@ -10,7 +10,7 @@ import FFGoal from "../goals/ffgoal";
 import Goal from "../goals/goal";
 import { createNewGoalInput } from "../goals/goalutils";
 import Header from "../header";
-import {event} from "react-fullstory";
+import * as gtag from "../../lib/gtag";
 
 interface CalcLayoutProps {
   title: string;
@@ -62,8 +62,11 @@ export default function CalcLayout(props: CalcLayoutProps) {
   const createGoal = () => {
     let g: CreateGoalInput = createNewGoalInput(props.type, "USD");
     g.name = props.title;
-    event('START_CALC', {
-      type: props.type
+    gtag.event({
+      category: "Calculator",
+      action: "Start",
+      label: "type",
+      value: props.type,
     });
     setWIPGoal(g);
   };

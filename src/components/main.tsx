@@ -135,10 +135,10 @@ export default function Main() {
       list.forEach((entry: any) => {
         if (entry.isIntersecting) {
           gtag.event({
-            category: "Scroll",
-            action: "Scrolled to features",
-            label: "Features Intersection Ratio",
-            value: entry.intersectionRatio,
+            category: "Home",
+            action: "Scroll",
+            label: "Section",
+            value: "Features",
           });
         }
       });
@@ -149,10 +149,10 @@ export default function Main() {
         if (entry.isIntersecting) {
           setScrolledToSec(true)
           gtag.event({
-            category: "Scroll",
-            action: "Scrolled to security",
-            label: "Security Intersection Ratio",
-            value: entry.intersectionRatio,
+            category: "Home",
+            action: "Scroll",
+            label: "Section",
+            value: "Security"
           });
         } else setScrolledToSec(false)
       });
