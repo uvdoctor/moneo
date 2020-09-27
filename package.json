@@ -26,6 +26,7 @@
     "react-awesome-button": "^6.5.1",
     "react-browser-hooks": "^2.2.4",
     "react-dom": "^16.13.0",
+    "react-fullstory": "^1.4.0",
     "react-plaid-link": "^3.0.0",
     "react-player": "^2.6.2",
     "react-plotly.js": "^2.5.0",
