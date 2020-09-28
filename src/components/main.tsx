@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useScroll } from "react-browser-hooks";
-import Nav from "./Nav";
+import Nav from "./nav";
 import { CALC_NAMES, COLORS, ROUTES } from "../CONSTANTS";
 import GoalImages from "./goalimages";
 import FunSVG from "./features/svgfun";
