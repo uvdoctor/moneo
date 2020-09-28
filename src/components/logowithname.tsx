@@ -6,9 +6,8 @@ export default function LogoWithName() {
     <div className="flex items-end">
       <div className="w-full text-bold flex items-center text-default">
         <Logo />
-        <h1 className="mr-4 text-xl md:text-2xl lg:text-3xl">$Darwin</h1>
+        <h1 className="ml-2 mt-1 text-xl md:text-2xl lg:text-2xl">$Darwin</h1>
       </div>
-      {/*<h3 className="whitespace-no-wrap">Your Analyst</h3>*/}
     </div>
   );
 }
