@@ -31,7 +31,9 @@ export default function CFChart({
   const fsb = useFullScreenBrowser();
 
   useEffect(() => {
-    setYears([...buildYearsArray(from, to)]);
+    setYears([
+      ...buildYearsArray(from,to),
+    ]);
   }, [from, to]);
 
   useEffect(() => {
@@ -57,7 +59,11 @@ export default function CFChart({
         layout={{
           barmode: "stack",
           ...getCommonLayoutProps(),
-          xaxis: { title: "Year", showgrid: false, type: "category" },
+          xaxis: {
+            title: "Year",
+            showgrid: false,
+            type: "category",
+          },
           legend: {
             orientation: "h",
             x: 0.5,

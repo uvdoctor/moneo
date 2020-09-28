@@ -9,6 +9,7 @@ interface LineChartProps {
   cfs: Array<number>;
   startYear: number;
   fullScreen: boolean;
+  title?: string
 }
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
@@ -17,7 +18,7 @@ export default function LineChart(props: LineChartProps) {
   const [years, setYears] = useState<Array<number>>([]);
   const layout = {
     ...getCommonLayoutProps(),
-    xaxis: { title: "Year", type: "category", showgrid: false },
+    xaxis: { title: props.title ? props.title : "Year", type: "category", showgrid: false },
   };
   const track = {
     type: "scatter",

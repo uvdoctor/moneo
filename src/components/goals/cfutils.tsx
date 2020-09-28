@@ -891,7 +891,7 @@ export const checkForFF = (
       }
       oom.push(y);
     }
-    rate = getRR(aa, i, pp);
+    rate = typeof pp !== 'number' ? getRR(aa, i, pp) : pp
     rr.push(rate);
     if (v < 0) cs += v;
     if (cs > 0) cs *= 1 + rate / 100;

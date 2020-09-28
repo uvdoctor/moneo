@@ -44,10 +44,12 @@ export default function ResultSection(props: ResultSectionProps) {
               />
             ) : (
               <div className="w-full mt-2 flex justify-center items-center">
-                {props.resultTabOptions[0].svg}
-                <label className="ml-1">
-                  {props.resultTabOptions[0].label}
-                </label>
+                {props.resultTabOptions.map((tab) => (
+                  <Fragment>
+                    <tab.svg selected />
+                    <label className="ml-1">{tab.label}</label>
+                  </Fragment>
+                ))}
               </div>
             )}
           </div>

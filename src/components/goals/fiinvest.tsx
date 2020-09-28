@@ -18,8 +18,10 @@ interface FIInvestProps {
   avgMonthlySavingsHandler: Function;
   monthlySavingsRate: number;
   monthlySavingsRateHandler: Function;
-  riskProfile: LMH;
-  riskProfileHandler: Function;
+  riskProfile?: LMH | null;
+  riskProfileHandler?: Function | null;
+  rr?: number | null;
+  rrHandler?: Function | null;
 }
 
 export function FIInvest({
@@ -36,6 +38,8 @@ export function FIInvest({
   monthlySavingsRateHandler,
   riskProfile,
   riskProfileHandler,
+  rr,
+  rrHandler,
 }: FIInvestProps) {
   const rangeFactor = getRangeFactor(currency);
 
@@ -123,20 +127,40 @@ export function FIInvest({
             />
           </div>
           <div className="mt-2">
-            <SelectInput
-              name="riskProfile"
-              inputOrder={inputOrder + 3}
-              currentOrder={currentOrder}
-              options={getRAOptions()}
-              nextStepDisabled={false}
-              allInputDone={allInputDone}
-              nextStepHandler={nextStepHandler}
-              info="How much Risk are You willing to take in order to achieve higher Investment Return?"
-              pre="Can Tolerate"
-              post="Investment Loss"
-              value={riskProfile}
-              changeHandler={riskProfileHandler}
-            />
+            {riskProfileHandler && riskProfile ? (
+              <SelectInput
+                name="riskProfile"
+                inputOrder={inputOrder + 3}
+                currentOrder={currentOrder}
+                options={getRAOptions()}
+                nextStepDisabled={false}
+                allInputDone={allInputDone}
+                nextStepHandler={nextStepHandler}
+                info="How much Risk are You willing to take in order to achieve higher Investment Return?"
+                pre="Can Tolerate"
+                post="Investment Loss"
+                value={riskProfile}
+                changeHandler={riskProfileHandler}
+              />
+            ) : (
+              <NumberInput
+                name="dr"
+                inputOrder={inputOrder + 3}
+                currentOrder={currentOrder}
+                allInputDone={allInputDone}
+                nextStepHandler={nextStepHandler}
+                nextStepDisabled={false}
+                value={rr as number}
+                changeHandler={rrHandler}
+                min={0}
+                max={10}
+                step={0.1}
+                pre="Investment"
+                post="Earns At least"
+                unit="%"
+                note="Yearly after taxes & fees"
+              />
+            )}
           </div>
         </div>
       }

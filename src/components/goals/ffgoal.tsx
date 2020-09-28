@@ -13,7 +13,7 @@ import { findEarliestFFYear } from "./cfutils";
 import FFResult from "./ffresult";
 import SVGChart from "../svgchart";
 import LineChart from "./linechart";
-import { getOrderByTabLabel, getTabLabelByOrder } from "./goalutils";
+import { getAge, getOrderByTabLabel, getTabLabelByOrder } from "./goalutils";
 import SVGBarChart from "../svgbarchart";
 import StickyHeader from "./stickyheader";
 import ResultSection from "./resultsection";
@@ -41,7 +41,7 @@ interface FFGoalProps {
   mustCFs: Array<number>;
   tryCFs: Array<number>;
   mergedCfs: any;
-  pp: Object;
+  pp?: Object;
   ffResultHandler: Function;
   cancelCallback: Function;
   addCallback?: Function;
@@ -62,6 +62,7 @@ export default function FFGoal({
 }: FFGoalProps) {
   const nowYear = new Date().getFullYear();
   const [riskProfile, setRiskProfile] = useState<APIt.LMH>(goal.imp);
+  const [rr, setRR] = useState<number | null>(pp ? null : 5);
   const [expenseBY, setExpenseBY] = useState<number>(goal.sy);
   const [expenseAfterFF, setExpenseAfterFF] = useState<number>(
     goal?.tdli as number
@@ -125,7 +126,7 @@ export default function FFGoal({
   const careLabel = "Care";
   const expectLabel = "Expect";
   const giveLabel = "Give";
-  const cfChartLabel = "Savings";
+  const cfChartLabel = "Total Portfolio";
   const aaFutureLabel = "Allocation Plan";
   const aaNextYearLabel = "Asset Allocation";
   const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
@@ -144,28 +145,37 @@ export default function FFGoal({
     { label: giveLabel, order: 18, active: true, svg: SVGInheritance },
   ]);
 
-  const resultTabOptions = [
-    {
-      label: aaNextYearLabel,
-      order: 1,
-      active: true,
-      svg: SVGAAChart,
-      svglabel: nowYear + 1,
-    },
-    {
-      label: aaFutureLabel,
-      order: 2,
-      active: true,
-      svg: SVGBarChart,
-      svglabel: `${nowYear + 2} - ${endYear}`,
-    },
-    {
-      label: cfChartLabel,
-      order: 3,
-      active: true,
-      svg: SVGChart,
-    },
-  ];
+  const resultTabOptions = !pp
+    ? [
+        {
+          label: cfChartLabel,
+          order: 1,
+          active: true,
+          svg: SVGChart,
+        },
+      ]
+    : [
+        {
+          label: aaNextYearLabel,
+          order: 1,
+          active: true,
+          svg: SVGAAChart,
+          svglabel: nowYear + 1,
+        },
+        {
+          label: aaFutureLabel,
+          order: 2,
+          active: true,
+          svg: SVGBarChart,
+          svglabel: `${nowYear + 2} - ${endYear}`,
+        },
+        {
+          label: cfChartLabel,
+          order: 3,
+          active: true,
+          svg: SVGChart,
+        },
+      ];
 
   const [showTab, setShowTab] = useState(investLabel);
   const [showResultTab, setShowResultTab] = useState<string>(aaNextYearLabel);
@@ -241,7 +251,7 @@ export default function FFGoal({
       ffResult.ffYear ? ffResult.ffYear : null,
       mustCFs,
       tryCFs,
-      pp
+      pp ? pp : rr
     );
     ffResultHandler(result);
     console.log("FF Result is ", result);
@@ -268,6 +278,7 @@ export default function FFGoal({
     expenseChgRate,
     monthlySavingsRate,
     riskProfile,
+    rr,
     allInputDone,
   ]);
 
@@ -352,8 +363,10 @@ export default function FFGoal({
           {showTab === investLabel && (
             <FIInvest
               currency={currency}
-              riskProfile={riskProfile}
-              riskProfileHandler={setRiskProfile}
+              riskProfile={pp ? riskProfile : null}
+              riskProfileHandler={pp ? setRiskProfile : null}
+              rr={rr}
+              rrHandler={pp ? null : setRR}
               currentOrder={currentOrder}
               allInputDone={allInputDone}
               inputOrder={getOrderByTabLabel(tabOptions, investLabel)}
@@ -510,21 +523,26 @@ export default function FFGoal({
               />
             }
           >
-            <TreeMapChart
-              aa={ffResult.aa}
-              rr={ffResult.rr}
-              fullScreen={chartFullScreen}
-            />
-            <AAChart
-              aa={ffResult.aa}
-              years={buildYearsArray(nowYear + 2, endYear)}
-              rr={ffResult.rr}
-              fullScreen={chartFullScreen}
-            />
+            {pp && (
+              <Fragment>
+                <TreeMapChart
+                  aa={ffResult.aa}
+                  rr={ffResult.rr}
+                  fullScreen={chartFullScreen}
+                />
+                <AAChart
+                  aa={ffResult.aa}
+                  years={buildYearsArray(nowYear + 2, endYear)}
+                  rr={ffResult.rr}
+                  fullScreen={chartFullScreen}
+                />
+              </Fragment>
+            )}
             <LineChart
               cfs={buildChartCFs(ffResult.ffCfs)}
-              startYear={nowYear + 1}
+              startYear={getAge(nowYear + 1, endYear)}
               fullScreen={chartFullScreen}
+              title="Age"
             />
           </ResultSection>
         )}
