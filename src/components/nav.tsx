@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import LogoWithName from "./logowithname";
 
-const Nav = ({ joinRef, calculateRef, featuresRef }) => {
+const Nav = ({ joinRef, calculateRef, featuresRef }: any) => {
 	const [isOpen, setOpen] = useState(false);
 
 	return (
