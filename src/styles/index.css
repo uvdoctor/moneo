@@ -127,6 +127,17 @@ input[type="number"] {
   }
 }
 
+@screen lg {
+  .translate-neg-130 {
+    transform: translate3d(0, -35%, 0);
+  }
+}
+
+.tooltip-info {
+  opacity: 1 !important;
+  @apply bg-blue p-3 text-lg shadow-lg text-white
+}
+
 .site-nav > a:hover,
 .site-nav > .site-nav-dropdown > span:hover,
 .site-nav > .site-nav-dropdown > a:hover {
@@ -141,6 +152,27 @@ input[type="number"] {
 .site-nav-dropdown div a:hover {
   color: #499824;
 }
+
+.step-box {
+  @apply w-full
+}
+
+.step-box > div {
+  @apply rounded-lg p-12 pb-5
+}
+
+@screen md {
+  .step-box > div {
+    @apply p-5 py-8
+  }
+}
+
+@screen lg {
+  .step-box > div {
+    @apply p-16
+  }
+}
+
 
 #knob > div[style] {
   z-index: 0;
