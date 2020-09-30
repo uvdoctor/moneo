@@ -4,7 +4,7 @@ import NumberInput from "../form/numberinput";
 import SelectInput from "../form/selectinput";
 import { changeSelection, initYearOptions, toStringArr } from "../utils";
 import RadialInput from "../form/radialinput";
-import ResultItem from "../calc/resultitem";
+import ItemDisplay from "../calc/ItemDisplay";
 import { calculateTotalCP, calculateTotalCPTaxBenefit } from "../goals/cfutils";
 import { COLORS, PLAN_DURATION } from "../../CONSTANTS";
 import { getAge } from "./goalutils";
@@ -181,7 +181,7 @@ export default function CareInsurance({
             label="Yearly"
             labelBottom
             post={
-              <ResultItem
+              <ItemDisplay
                 label="Total Premium"
                 result={totalCP}
                 currency={currency}
@@ -228,7 +228,7 @@ export default function CareInsurance({
             step={500}
             rangeFactor={rangeFactor}
             note={
-              <ResultItem
+              <ItemDisplay
                 label="Total Tax Benefit"
                 currency={currency}
                 result={totalTaxBenefit}

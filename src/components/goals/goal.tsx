@@ -3,7 +3,7 @@ import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import * as APIt from "../../api/goals";
 import { initYearOptions, getRangeFactor} from "../utils";
-import EmiCost from "../calc/emicost";
+import LoanEmi from "../calc/LoanEmi";
 import TaxBenefit from "../calc/taxbenefit";
 import Sell from "./sell";
 import StickyHeader from "./stickyheader";
@@ -729,7 +729,7 @@ export default function Goal({
           )}
 
           {showTab === loanLabel && (
-            <EmiCost
+            <LoanEmi
               price={price}
               priceChgRate={priceChgRate}
               currency={currency}

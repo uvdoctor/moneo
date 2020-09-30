@@ -1,7 +1,7 @@
 import React from "react";
 import { GoalType } from "../api/goals";
-import CalcLayout from "../components/calc/calclayout";
-import ResultItem from "../components/calc/resultitem";
+import Layout from "../components/calc/Layout";
+import ItemDisplay from "../components/calc/ItemDisplay";
 import SVGAAChart from "../components/goals/svgaachart";
 import SVGBarChart from "../components/svgbarchart";
 import SVGChart from "../components/svgchart";
@@ -14,30 +14,30 @@ export default function FI() {
   const nowYear = new Date().getFullYear();
 
   return (
-    <CalcLayout
+    <Layout
       title={CALC_NAMES.FI}
       titleSVG={<SVGFreedom />}
       type={GoalType.FF}
       assumptions={["adfas", "asdfsad"]}
       features={["fsdgdf", "fgdssdf"]}
       results={[
-        <ResultItem
+        <ItemDisplay
           result="Earliest Possible Year for FI"
           svg={<SVGHourGlass />}
         />,
-        <ResultItem
+        <ItemDisplay
           result="Savings Needed for FI"
           svg={<SVGPiggy selected />}
         />,
-        <ResultItem
+        <ItemDisplay
           result={`${nowYear + 1} Asset Allocation`}
           svg={<SVGAAChart selected />}
         />,
-        <ResultItem
+        <ItemDisplay
           result={`Asset Allocation Plan from ${nowYear + 2} Onwards`}
           svg={<SVGBarChart selected />}
         />,
-        <ResultItem
+        <ItemDisplay
           result={`Yearly Savings from ${nowYear + 1} Onwards`}
           svg={<SVGChart selected />}
         />,

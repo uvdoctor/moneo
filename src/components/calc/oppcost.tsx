@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getCompoundedIncome } from "./finance";
 import SVGBalance from "./svgbalance";
-import ResultItem from "./resultitem";
+import ItemDisplay from "./ItemDisplay";
 import { toCurrency } from "../utils";
 import { getMinRetirementDuration } from "../goals/goalutils";
 import { PLAN_DURATION } from "../../CONSTANTS";
@@ -62,7 +62,7 @@ export default function OppCost(props: OppCostProps) {
   useEffect(() => calculateOppCost(), [props.cfs, props.discountRate]);
 
   return (
-    <ResultItem
+    <ItemDisplay
       svg={<SVGBalance />}
       result={oppCost}
       currency={props.currency}

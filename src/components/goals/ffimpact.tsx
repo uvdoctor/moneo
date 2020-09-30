@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import SVGHourGlass from "../svghourglass";
-import ResultItem from "../calc/resultitem";
+import ItemDisplay from "../calc/ItemDisplay";
 import { MAX_RETIREMENT_AGE } from "../../CONSTANTS";
 
 interface FFImpactProps {
@@ -20,13 +20,13 @@ export default function FFImpact(props: FFImpactProps) {
     <Fragment>
       {props.ffImpactYears !== null ? (
         props.ffImpactYears === 0 ? (
-          <ResultItem
+          <ItemDisplay
             label="Impact"
             result="No Delay"
             info="This Goal does not delay Your Financial Independence Year."
           />
         ) : (
-          <ResultItem
+          <ItemDisplay
             svg={<SVGHourGlass />}
             label="Impact"
             pl
@@ -39,7 +39,7 @@ export default function FFImpact(props: FFImpactProps) {
           />
         )
       ) : (
-        <ResultItem
+        <ItemDisplay
           label="Impact"
           result="Unable to Determine"
           info={`Financial Independence Impact can only be determined if Financial Independence is Possible by ${MAX_RETIREMENT_AGE} Years of Age. Please change Your Goals / Inputs and try again.`}

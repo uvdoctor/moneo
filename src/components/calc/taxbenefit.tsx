@@ -2,7 +2,7 @@ import React from "react";
 import NumberInput from "../form/numberinput";
 import Section from "../form/section";
 import { GoalType } from "../../api/goals";
-import ResultItem from "./resultitem";
+import ItemDisplay from "./ItemDisplay";
 import { isTaxCreditEligible } from "../goals/goalutils";
 interface TaxBenefitProps {
   inputOrder: number;
@@ -81,7 +81,7 @@ export default function TaxBenefit(props: TaxBenefitProps) {
                 max={30000}
                 step={1000}
                 note={
-                  <ResultItem
+                  <ItemDisplay
                     label="Total Tax Benefit"
                     result={props.pTaxBenefit}
                     currency={props.currency}

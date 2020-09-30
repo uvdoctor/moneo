@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ResultItem from "../calc/resultitem";
+import ItemDisplay from "../calc/ItemDisplay";
 import SVGBalance from "../calc/svgbalance";
 import NumberInput from "../form/numberinput";
 import Section from "../form/section";
@@ -129,7 +129,7 @@ export default function RentComparison({
                   unit="Years"
                 />
                 {rentDiff && (
-                  <ResultItem
+                  <ItemDisplay
                     svg={<SVGBalance />}
                     result={rentDiff}
                     label={`Rent is ${

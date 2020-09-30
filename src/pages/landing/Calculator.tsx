@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import ResultItem from "../../components/calc/resultitem";
+import ItemDisplay from "../../components/calc/ItemDisplay";
 import SVGScale from "../../components/svgscale";
 import SVGFreedom from "../../components/svgfreedom";
 import SVGEduLoan from "../../components/svgeduloan";
@@ -136,7 +136,7 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 									onMouseEnter={() => setCalcIndex(i)}
 									onMouseLeave={() => setCalcIndex(-1)}
 								>
-									<ResultItem
+									<ItemDisplay
 										svg={
 											<calc.svg
 												disabled={calcIndex !== i}

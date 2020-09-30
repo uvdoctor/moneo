@@ -1,7 +1,7 @@
 import React from "react";
 import { GoalType } from "../api/goals";
-import CalcLayout from "../components/calc/calclayout";
-import ResultItem from "../components/calc/resultitem";
+import Layout from "../components/calc/Layout";
+import ItemDisplay from "../components/calc/ItemDisplay";
 import SVGBarChart from "../components/svgbarchart";
 import SVGChart from "../components/svgchart";
 import SVGLoan from "../components/svgloan";
@@ -9,15 +9,15 @@ import { CALC_NAMES } from "../CONSTANTS";
 
 export default function Loan() {
   return (
-    <CalcLayout
+    <Layout
       title={CALC_NAMES.LOAN}
       type={GoalType.O}
       titleSVG={<SVGLoan selected />}
       assumptions={["adfas", "asdfsad"]}
       features={["fsdgdf", "fgdssdf"]}
       results={[
-        <ResultItem result={`Yearly Cash Flows`} svg={<SVGChart selected />} />,
-        <ResultItem
+        <ItemDisplay result={`Yearly Cash Flows`} svg={<SVGChart selected />} />,
+        <ItemDisplay
           result="Yearly Interest & Principal"
           svg={<SVGBarChart selected />}
         />,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import NumberInput from "../form/numberinput";
-import { getEmi, getTotalInt } from "../calc/finance";
+import { getEmi, getTotalInt } from "./finance";
 import { toCurrency, toStringArr, initYearOptions } from "../utils";
 import SelectInput from "../form/selectinput";
 import RadialInput from "../form/radialinput";
@@ -13,11 +13,11 @@ import {
 } from "../goals/cfutils";
 import HToggle from "../horizontaltoggle";
 import { GoalType } from "../../api/goals";
-import ResultItem from "./resultitem";
+import ItemDisplay from "./ItemDisplay";
 import { COLORS } from "../../CONSTANTS";
 import { isTaxCreditEligible } from "../goals/goalutils";
 import Tooltip from "../form/tooltip";
-interface EmiProps {
+interface LoanEmiProps {
   inputOrder: number;
   currentOrder: number;
   nextStepDisabled: boolean;
@@ -54,7 +54,7 @@ interface EmiProps {
   maxTaxDeductionIntHandler: Function;
 }
 
-export default function EmiCost(props: EmiProps) {
+export default function LoanEmi(props: LoanEmiProps) {
   const [totalIntAmt, setTotalIntAmt] = useState<number>(0);
   const [ryOptions, setRYOptions] = useState(
     initYearOptions(
@@ -291,7 +291,7 @@ export default function EmiCost(props: EmiProps) {
                       },
                     }}
                     note={
-                      <ResultItem
+                      <ItemDisplay
                         label="Total Interest"
                         result={totalIntAmt}
                         currency={props.currency}
@@ -387,7 +387,7 @@ export default function EmiCost(props: EmiProps) {
                       max={30000}
                       step={1000}
                       note={
-                        <ResultItem
+                        <ItemDisplay
                           label="Total Interest Tax Benefit"
                           result={props.iTaxBenefit}
                           currency={props.currency}

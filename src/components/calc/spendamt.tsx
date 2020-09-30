@@ -56,7 +56,8 @@ export default function SpendAmt(props: SpendAmtProps) {
               value={props.amt}
               changeHandler={props.amtHandler}
               min={0}
-              max={100000}
+              max={50000}
+              step={100}
               currency={props.currency}
               rangeFactor={props.rangeFactor}
             />
@@ -64,8 +65,8 @@ export default function SpendAmt(props: SpendAmtProps) {
           bottom={
             props.freq !== "one" && (
               <NumberInput
-                name="amt"
-                pre="Spend"
+                name="dur"
+                pre="Duration"
                 currentOrder={props.currentOrder}
                 inputOrder={props.inputOrder + 2}
                 allInputDone={props.allInputDone}
@@ -75,13 +76,12 @@ export default function SpendAmt(props: SpendAmtProps) {
                 changeHandler={props.durationHandler}
                 min={0}
                 max={props.freq === 'emi' ? 360 : 20}
-                currency={props.currency}
-                rangeFactor={props.rangeFactor}
+                step={1}
                 unit={props.freq === 'emi' ? 'Months' : 'Years'}
               />
             )
           }
-        />
+        insideForm />
       )}
     </div>
   );

@@ -3,7 +3,7 @@ import ActionableSVG from "../../components/features/svgactionable";
 import FunSVG from "../../components/features/svgfun";
 import GlobalSVG from "../../components/features/svgglobal";
 import SVGPersonalized from "../../components/features/svgpersonalized";
-import ResultItem from "../../components/calc/resultitem";
+import ItemDisplay from "../../components/calc/ItemDisplay";
 
 interface GetRichProps {
   featuresRef: string;
@@ -84,14 +84,14 @@ export default function GetRich({ featuresRef }: GetRichProps) {
                 >
                   <div className="flip-card-inner relative w-full h-full shadow-lg rounded-lg">
                     <div className="flip-card-front bg-gray-100 text-default w-full h-full absolute flex items-center justify-center rounded-lg cursor-pointer">
-                      <ResultItem
+                      <ItemDisplay
                         svg={<feature.svg />}
                         result={feature.label}
                         vertical
                       />
                     </div>
                     <div className="flip-card-back text-white absolute w-full h-full rounded-lg p-1 bg-green">
-                      <ResultItem
+                      <ItemDisplay
                         svg={<feature.svg />}
                         result={feature.label}
                         vertical

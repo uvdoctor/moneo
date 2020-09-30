@@ -1,7 +1,7 @@
 import React from "react";
 import { GoalType } from "../api/goals";
-import CalcLayout from "../components/calc/calclayout";
-import ResultItem from "../components/calc/resultitem";
+import Layout from "../components/calc/Layout";
+import ItemDisplay from "../components/calc/ItemDisplay";
 import SVGBalance from "../components/calc/svgbalance";
 import SVGBarChart from "../components/svgbarchart";
 import SVGChart from "../components/svgchart";
@@ -11,26 +11,26 @@ import { CALC_NAMES } from "../CONSTANTS";
 
 export default function BuyOrRent() {
   return (
-    <CalcLayout
+    <Layout
       title={CALC_NAMES.BR}
       type={GoalType.B}
       titleSVG={<SVGScale selected />}
       assumptions={["adfas", "asdfsad"]}
       features={["fsdgdf", "fgdssdf"]}
       results={[
-        <ResultItem
+        <ItemDisplay
           result="Option that costs lesser"
           svg={<SVGBalance />}
         />,
-        <ResultItem
+        <ItemDisplay
           result="Time till which the Option costs lesser"
           svg={<SVGHourGlass />}
         />,
-        <ResultItem
+        <ItemDisplay
           result={`Yearly Cash Flows for Buying`}
           svg={<SVGChart selected />}
         />,
-        <ResultItem
+        <ItemDisplay
           result="Yearly Interest & Principal if Bought via Loan"
           svg={<SVGBarChart selected />}
         />

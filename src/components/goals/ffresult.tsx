@@ -1,5 +1,5 @@
 import React from "react";
-import ResultItem from "../calc/resultitem";
+import ItemDisplay from "../calc/ItemDisplay";
 import SVGHourGlass from "../svghourglass";
 import SVGPiggy from "../svgpiggy";
 import { isFFPossible } from "./cfutils";
@@ -22,7 +22,7 @@ export default function FFResult({
     <div className="w-full">
       {isFFPossible(result, ffNomineeAmt) ? (
         <div className="py-2 flex justify-around w-full items-start bg-green-100">
-            <ResultItem
+            <ItemDisplay
               svg={<SVGHourGlass />}
               label="Earliest At"
               result={getAge(result.ffYear, endYear).toString()}
@@ -39,7 +39,7 @@ export default function FFResult({
                   : ""
               }
             />
-          <ResultItem
+          <ItemDisplay
             result={result.ffAmt}
             svg={<SVGPiggy disabled={false} selected />}
             label={`Potential Savings`}
