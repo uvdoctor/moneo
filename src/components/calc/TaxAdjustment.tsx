@@ -4,7 +4,7 @@ import Section from "../form/section";
 import { GoalType } from "../../api/goals";
 import ItemDisplay from "./ItemDisplay";
 import { isTaxCreditEligible } from "../goals/goalutils";
-interface TaxBenefitProps {
+interface TaxAdjustmentProps {
   inputOrder: number;
   currentOrder: number;
   nextStepDisabled: boolean;
@@ -22,7 +22,7 @@ interface TaxBenefitProps {
   pTaxBenefit: number
 }
 
-export default function TaxBenefit(props: TaxBenefitProps) {
+export default function TaxAdjustment(props: TaxAdjustmentProps) {
 
   return (
     <div className="flex w-full justify-around">

@@ -75,7 +75,7 @@ export default function Spend(props: SpendProps) {
                 value={props.duration}
                 changeHandler={props.durationHandler}
                 min={0}
-                max={props.freq === 'emi' ? 360 : 20}
+                max={props.freq === 'emi' ? 360 : 30}
                 step={1}
                 unit={props.freq === 'emi' ? 'Months' : 'Years'}
               />

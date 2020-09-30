@@ -4,7 +4,7 @@ import TextInput from "../form/textinput";
 import * as APIt from "../../api/goals";
 import { initYearOptions, getRangeFactor} from "../utils";
 import LoanEmi from "../calc/LoanEmi";
-import TaxBenefit from "../calc/taxbenefit";
+import TaxAdjustment from "../calc/TaxAdjustment";
 import Sell from "./sell";
 import StickyHeader from "./stickyheader";
 import SVGChart from "../svgchart";
@@ -710,7 +710,7 @@ export default function Goal({
           )}
 
           {showTab === taxLabel && (
-            <TaxBenefit
+            <TaxAdjustment
               goalType={goalType}
               taxRate={taxRate}
               taxRateHandler={setTaxRate}
