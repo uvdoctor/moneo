@@ -40,7 +40,7 @@ export default function DDPage(props: DDPageProps) {
           name="apple-mobile-web-app-title"
           content="DollarDarwin - Your Financial Analyst"
         />
-        <meta name='application-name' content='DollarDarwin' />
+        <meta name="application-name" content="DollarDarwin" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="description" content="Your Financial Analyst" />
         <meta
@@ -73,14 +73,17 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="twitter:card" content="Your Financial Analyst" />
         <meta name="twitter:url" content="https://dollardarwin.com" />
         <meta name="twitter:title" content="DollarDarwin" />
-        <meta name="twitter:description" content="Stress-free Savings & Investments to Meet Your Goals." />
+        <meta
+          name="twitter:description"
+          content="Stress-free Savings & Investments to Meet Your Goals."
+        />
         <meta
           name="twitter:image"
           content="https://dollardarwin.com/images/icons/tlogo192.png"
         />
         <meta name="twitter:creator" content="@dollardarwin" />
-        <meta name='msapplication-tap-highlight' content='no' />
-        <meta name='format-detection' content='telephone=no' />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="format-detection" content="telephone=no" />
         <title>{props.title}</title>
       </Head>
       <main>
