@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { SPEND } from "../../pages/truecost";
 import { getOrderByTabLabel } from "../goals/goalutils";
-import { CalcTypeProps } from "./calculator";
-import SpendAmt from "./spendamt";
+import { CalcTypeProps } from "./CalculatorTemplate";
+import Spend from "./Spend";
 
 export default function TrueCostCalc(props: CalcTypeProps) {
   const [amt, setAmt] = useState<number>(0);
@@ -16,7 +16,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
   return (
     <Fragment>
       {props.showTab === SPEND && (
-        <SpendAmt
+        <Spend
           currency={props.currency}
           rangeFactor={props.rangeFactor}
           allInputDone={props.allInputDone}

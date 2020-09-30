@@ -3,7 +3,7 @@ import NumberInput from "../form/numberinput";
 import Section from "../form/section";
 import SelectInput from "../form/selectinput";
 
-interface SpendAmtProps {
+interface SpendProps {
   inputOrder: number;
   currentOrder: number;
   nextStepHandler: Function;
@@ -18,7 +18,7 @@ interface SpendAmtProps {
   durationHandler: Function;
 }
 
-export default function SpendAmt(props: SpendAmtProps) {
+export default function Spend(props: SpendProps) {
   const freqOptions = {
     one: "One time",
     emi: "EMI",

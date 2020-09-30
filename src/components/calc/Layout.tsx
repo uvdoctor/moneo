@@ -11,7 +11,7 @@ import Goal from '../goals/goal';
 import { createNewGoalInput } from '../goals/goalutils';
 import Header from '../header';
 import * as gtag from '../../lib/gtag';
-import Calculator from './calculator';
+import CalculatorTemplate from './CalculatorTemplate';
 import ItemDisplay from './ItemDisplay';
 
 interface LayoutProps {
@@ -118,7 +118,7 @@ export default function Layout(props: LayoutProps) {
 								cancelCallback={() => setWIPGoal(null)}
 							/>
 						) : (
-							<Calculator
+							<CalculatorTemplate
 								calc={props.calc}
 								title={props.title}
 								titleSVG={props.titleSVG}

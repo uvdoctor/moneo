@@ -9,7 +9,7 @@ import StickyHeader from '../goals/stickyheader';
 import { getRangeFactor } from '../utils';
 import ItemDisplay from './ItemDisplay';
 
-interface CalculatorProps {
+interface CalculatorTemplateProps {
 	calc: any;
 	title: string;
 	titleSVG: any;
@@ -31,7 +31,7 @@ export interface CalcTypeProps {
 	nextStepHandler: Function;
 }
 
-export default function Calculator({ calc, title, titleSVG, cancelCallback }: CalculatorProps) {
+export default function CalculatorTemplate({ calc, title, titleSVG, cancelCallback }: CalculatorTemplateProps) {
 	const [ currency, setCurrency ] = useState<string>('USD');
 	const [ rangeFactor, setRangeFactor ] = useState<number>(getRangeFactor(currency));
 	const [ dr, setDR ] = useState<number>(5);
