@@ -674,12 +674,11 @@ export default function Goal({
           showTabHandler={setShowTab}
           tabOptions={tabOptions}
           cancelCallback={cancelCallback}
-          handleSubmit={handleSubmit}
+          handleSubmit={addCallback && cancelCallback ? handleSubmit : null}
           submitDisabled={
             !allInputDone || name.length < 3 || !price || btnClicked
           }
           cancelDisabled={btnClicked}
-          calc={!addCallback || !updateCallback}
         >
           {showTab === amtLabel && (
             <Amt

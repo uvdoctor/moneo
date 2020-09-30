@@ -355,10 +355,9 @@ export default function FFGoal({
           showTabHandler={setShowTab}
           tabOptions={tabOptions}
           cancelCallback={cancelCallback}
-          handleSubmit={handleSubmit}
+          handleSubmit={addCallback && cancelCallback ? handleSubmit : null}
           submitDisabled={!allInputDone || expenseAfterFF < 5000 || btnClicked}
           cancelDisabled={btnClicked}
-          calc={!addCallback && !updateCallback}
         >
           {showTab === investLabel && (
             <FIInvest

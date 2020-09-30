@@ -5,7 +5,7 @@ import FullScreen from "../fullscreen";
 
 interface StickyHeaderProps {
   children: ReactNode;
-  cancelDisabled: boolean;
+  cancelDisabled?: boolean;
   cancelCallback: Function;
 }
 

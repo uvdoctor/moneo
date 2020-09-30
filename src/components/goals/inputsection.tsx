@@ -14,8 +14,7 @@ interface InputSectionProps {
   children: ReactNode;
   showTabHandler: Function;
   cancelCallback: Function;
-  handleSubmit: Function;
-  calc?: boolean;
+  handleSubmit?: Function | null;
 }
 
 export default function InputSection({
@@ -29,7 +28,6 @@ export default function InputSection({
   showTabHandler,
   cancelCallback,
   handleSubmit,
-  calc,
 }: InputSectionProps) {
   return (
     <div
@@ -54,7 +52,7 @@ export default function InputSection({
             : null
         )}
       </div>
-      {calc ? (
+      {!handleSubmit ? (
         <div className="w-full text-center">
           <AwesomeButton
             ripple

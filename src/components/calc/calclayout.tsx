@@ -11,11 +11,12 @@ import Goal from "../goals/goal";
 import { createNewGoalInput } from "../goals/goalutils";
 import Header from "../header";
 import * as gtag from "../../lib/gtag";
+import Calculator from "./calculator";
 
 interface CalcLayoutProps {
   title: string;
   titleSVG: React.ReactNode;
-  type: GoalType;
+  type: GoalType | string;
   features: Array<any>;
   assumptions: Array<any>;
   results: Array<any>;
@@ -24,7 +25,7 @@ interface CalcLayoutProps {
 
 export default function CalcLayout(props: CalcLayoutProps) {
   const router = useRouter();
-  const [wipGoal, setWIPGoal] = useState<CreateGoalInput | null>(null);
+  const [wipGoal, setWIPGoal] = useState<any | null>(null);
   const [ffResult, setFFResult] = useState<any>({});
   const nowYear = new Date().getFullYear();
   const sections: any = {
@@ -42,7 +43,10 @@ export default function CalcLayout(props: CalcLayoutProps) {
   };
 
   const createGoal = () => {
-    let g: CreateGoalInput = createNewGoalInput(props.type, "USD");
+    let g: any = null;
+    if (typeof props.type === "string") {
+      g = {};
+    } else g = createNewGoalInput(props.type as GoalType, "USD");
     g.name = props.title;
     gtag.event({
       category: "Calculator",
@@ -117,10 +121,15 @@ export default function CalcLayout(props: CalcLayoutProps) {
                 ffResult={ffResult}
                 ffResultHandler={setFFResult}
               />
-            ) : (
+            ) : typeof props.type !== "string" ? (
               <Goal
                 goal={wipGoal as CreateGoalInput}
                 ffGoalEndYear={nowYear + 50}
+                cancelCallback={() => setWIPGoal(null)}
+              />
+            ) : (
+              <Calculator
+                calc={wipGoal}
                 cancelCallback={() => setWIPGoal(null)}
               />
             )}
