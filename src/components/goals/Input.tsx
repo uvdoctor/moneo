@@ -4,7 +4,7 @@ import { AwesomeButton } from "react-awesome-button";
 import ActionButtons from "../form/actionbuttons";
 import Tabs from "../tabs";
 
-interface InputSectionProps {
+interface InputProps {
   tabOptions: Array<any>;
   currentOrder: number;
   allInputDone: boolean;
@@ -17,7 +17,7 @@ interface InputSectionProps {
   handleSubmit?: Function | null;
 }
 
-export default function InputSection({
+export default function Input({
   tabOptions,
   currentOrder,
   allInputDone,
@@ -28,11 +28,11 @@ export default function InputSection({
   showTabHandler,
   cancelCallback,
   handleSubmit,
-}: InputSectionProps) {
+}: InputProps) {
   return (
     <div
       className={`w-full ${
-        allInputDone && "lg:w-1/3 xl:w-1/4"
+        allInputDone && "lg:max-w-xs"
       } items-start transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col`}
     >
       {(allInputDone || currentOrder >= tabOptions[0].order) && (

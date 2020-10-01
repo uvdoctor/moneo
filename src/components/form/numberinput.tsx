@@ -102,7 +102,7 @@ export default function NumberInput(props: NumberInputProps) {
 
   return (
     <Fragment>
-      <div className="w-full flex justify-center items-center">
+      <div className="w-full flex items-center">
         {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
           props.allInputDone) && (
           <form
@@ -239,7 +239,7 @@ export default function NumberInput(props: NumberInputProps) {
               props.nextStepHandler(props.actionCount ? props.actionCount : 1)
             }
             disabled={props.nextStepDisabled}
-          />
+            />
         )}
       </div>
     </Fragment>

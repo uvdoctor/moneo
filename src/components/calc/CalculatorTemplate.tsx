@@ -2,9 +2,9 @@ import React from 'react';
 import { useState } from 'react';
 import SelectInput from '../form/selectinput';
 import { getTabLabelByOrder } from '../goals/goalutils';
-import InputSection from '../goals/inputsection';
+import Input from '../goals/Input';
 import LineChart from '../goals/linechart';
-import ResultSection from '../goals/resultsection';
+import Result from '../goals/Result';
 import StickyHeader from '../goals/stickyheader';
 import { getRangeFactor } from '../utils';
 import ItemDisplay from './ItemDisplay';
@@ -79,7 +79,7 @@ export default function CalculatorTemplate({ calc, title, titleSVG, cancelCallba
 				className={`container mx-auto flex flex-1 lg:flex-row ${allInputDone &&
 					'flex-col-reverse'} items-start`}
 			>
-				<InputSection
+				<Input
 					currentOrder={currentOrder}
 					allInputDone={allInputDone}
 					showTab={showTab}
@@ -104,10 +104,10 @@ export default function CalculatorTemplate({ calc, title, titleSVG, cancelCallba
 						showTab={showTab}
 						tabOptions={calc.tabOptions}
 					/>
-				</InputSection>
+				</Input>
 			</div>
 			{allInputDone && (
-				<ResultSection
+				<Result
 					resultTabOptions={calc.resultTabOptions}
 					showResultTab={showResultTab}
 					showResultTabHandler={setShowResultTab}
@@ -115,7 +115,7 @@ export default function CalculatorTemplate({ calc, title, titleSVG, cancelCallba
 					result={<div />}
 				>
 					<LineChart cfs={cfs} fullScreen={chartFullScreen} startYear={1} />
-				</ResultSection>
+				</Result>
 			)}
 		</div>
 	);

@@ -22,10 +22,10 @@ import { AwesomeButton } from "react-awesome-button";
 import AnnualAmt from "./annualamt";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import SVGScale from "../svgscale";
-import ResultSection from "./resultsection";
+import Result from "./Result";
 import GoalResult from "./goalresult";
 import LineChart from "./linechart";
-import InputSection from "./inputsection";
+import Input from "./Input";
 import RentComparison from "./rentcomparison";
 import BRCompChart from "./brcompchart";
 import SVGPay from "../svgpay";
@@ -667,7 +667,7 @@ export default function Goal({
           showResultSection() && "flex-col-reverse"
         } items-start`}
       >
-        <InputSection
+        <Input
           currentOrder={currentOrder}
           allInputDone={allInputDone}
           showTab={showTab}
@@ -866,9 +866,9 @@ export default function Goal({
               analyzeForHandler={setAnalyzeFor}
             />
           )}
-        </InputSection>
+        </Input>
         {showResultSection() && (
-          <ResultSection
+          <Result
             resultTabOptions={resultTabOptions}
             showResultTab={showResultTab}
             showResultTabHandler={setShowResultTab}
@@ -907,7 +907,7 @@ export default function Goal({
                 fullScreen={chartFullScreen}
               />
             )}
-          </ResultSection>
+          </Result>
         )}
       </div>
     </div>

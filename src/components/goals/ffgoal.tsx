@@ -16,13 +16,13 @@ import LineChart from "./linechart";
 import { getAge, getOrderByTabLabel, getTabLabelByOrder } from "./goalutils";
 import SVGBarChart from "../svgbarchart";
 import StickyHeader from "./stickyheader";
-import ResultSection from "./resultsection";
+import Result from "./Result";
 import { FIInvest } from "./fiinvest";
 import { ExpenseAfterFF } from "./expenseafterff";
 import RetIncome from "./retincome";
 import CareInsurance from "./careinsurance";
 import Nominees from "./nominees";
-import InputSection from "./inputsection";
+import Input from "./Input";
 import DynamicTgtInput from "../form/dynamictgtinput";
 import Section from "../form/section";
 import TreeMapChart from "./treemapchart";
@@ -348,7 +348,7 @@ export default function FFGoal({
           showResultSection() && "flex-col-reverse"
         } items-start`}
       >
-        <InputSection
+        <Input
           currentOrder={currentOrder}
           allInputDone={allInputDone}
           showTab={showTab}
@@ -505,10 +505,10 @@ export default function FFGoal({
               endYear={endYear}
             />
           )}
-        </InputSection>
+        </Input>
 
         {showResultSection() && (
-          <ResultSection
+          <Result
             resultTabOptions={resultTabOptions}
             showResultTab={showResultTab}
             showResultTabHandler={setShowResultTab}
@@ -543,7 +543,7 @@ export default function FFGoal({
               fullScreen={chartFullScreen}
               title="Age"
             />
-          </ResultSection>
+          </Result>
         )}
       </div>
     </div>
