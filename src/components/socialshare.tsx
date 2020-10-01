@@ -30,7 +30,7 @@ interface SocialShareProps {
 export default function SocialShare({ url }: SocialShareProps) {
   return (
     <ExpandCollapse title="Earn 500 points for Every Referral who Joins">
-      <div className="mt-2 w-full flex justify-around">
+      <div className="mt-2 w-full flex flex-wrap justify-around">
         <EmailShareButton
           url={url}
           subject="DollarDarwin - Your Financial Analyst"

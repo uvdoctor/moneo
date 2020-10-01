@@ -1,9 +1,9 @@
 import React from "react";
-import ActionableSVG from "../../components/features/svgactionable";
-import FunSVG from "../../components/features/svgfun";
-import GlobalSVG from "../../components/features/svgglobal";
-import SVGPersonalized from "../../components/features/svgpersonalized";
-import ItemDisplay from "../../components/calc/ItemDisplay";
+import ActionableSVG from "../features/svgactionable";
+import FunSVG from "../features/svgfun";
+import GlobalSVG from "../features/svgglobal";
+import SVGPersonalized from "../features/svgpersonalized";
+import ItemDisplay from "../calc/ItemDisplay";
 
 interface GetRichProps {
   featuresRef: string;

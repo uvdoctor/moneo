@@ -1,5 +1,5 @@
 import React from "react";
-import Landing from "./landing/Landing";
+import Landing from "../components/landing/Landing";
 import DDPage from "../components/ddpage";
 
 export default function Home() {

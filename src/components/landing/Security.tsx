@@ -14,7 +14,7 @@ export default function Security({
       ref={securityRef}
       className={`bg-transparent ${
         scrolledToSec && "bg-green-100"
-      } flex flex-wrap justify-items-auto mt-16 transition-colors duration-1000 ease-in-out md:flex-no-wrap`}
+      } flex flex-wrap justify-items-auto mt-5 transition-colors duration-1000 ease-in-out md:flex-no-wrap`}
     >
       <div className="w-full flex items-center">
         <div>

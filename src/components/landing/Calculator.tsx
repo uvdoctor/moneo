@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import ItemDisplay from "../../components/calc/ItemDisplay";
-import SVGScale from "../../components/svgscale";
-import SVGFreedom from "../../components/svgfreedom";
-import SVGEduLoan from "../../components/svgeduloan";
-import SVGScissor from "../../components/svgscissor";
-import SVGAnalyze from "../../components/svganalyze";
-import SVGLoan from "../../components/svgloan";
+import ItemDisplay from "../calc/ItemDisplay";
+import SVGScale from "../svgscale";
+import SVGFreedom from "../svgfreedom";
+import SVGEduLoan from "../svgeduloan";
+import SVGScissor from "../svgscissor";
+import SVGAnalyze from "../svganalyze";
+import SVGLoan from "../svgloan";
 import { CALC_NAMES, ROUTES, COLORS } from "../../CONSTANTS";
 
 interface CalculatorProps {
