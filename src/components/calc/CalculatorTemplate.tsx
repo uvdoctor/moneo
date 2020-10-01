@@ -2,9 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import SelectInput from '../form/selectinput';
 import { getTabLabelByOrder } from '../goals/goalutils';
-import Input from '../goals/Input';
-import LineChart from '../goals/linechart';
-import Result from '../goals/Result';
 import StickyHeader from '../goals/stickyheader';
 import { getRangeFactor } from '../utils';
 import ItemDisplay from './ItemDisplay';
@@ -21,26 +18,19 @@ export interface CalcTypeProps {
 	rangeFactor: number;
 	tabOptions: Array<any>;
 	showTab: string;
-	dr: number;
-	drHandler: Function;
-	chartFullScreen: boolean;
-	cfs: Array<number>;
-	cfsHandler: Function;
+	showTabHandler: Function;
 	currentOrder: number;
 	allInputDone: boolean;
 	nextStepHandler: Function;
+	cancelCallback: Function;
 }
 
 export default function CalculatorTemplate({ calc, title, titleSVG, cancelCallback }: CalculatorTemplateProps) {
 	const [ currency, setCurrency ] = useState<string>('USD');
 	const [ rangeFactor, setRangeFactor ] = useState<number>(getRangeFactor(currency));
-	const [ dr, setDR ] = useState<number>(5);
 	const [ currentOrder, setCurrentOrder ] = useState<number>(0);
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
 	const [ showTab, setShowTab ] = useState<string>(calc.tabOptions[0].label);
-	const [ showResultTab, setShowResultTab ] = useState<string>(calc.resultTabOptions[0].label);
-	const [ chartFullScreen, setChartFullScreen ] = useState<boolean>(false);
-	const [ cfs, setCFs ] = useState<Array<number>>([]);
 
 	const changeCurrency = (curr: string) => {
 		setRangeFactor(Math.round(getRangeFactor(curr) / getRangeFactor(currency)));
@@ -50,10 +40,13 @@ export default function CalculatorTemplate({ calc, title, titleSVG, cancelCallba
 	const handleNextStep = (count: number = 1) => {
 		if (allInputDone) return;
 		let co = currentOrder + count;
+		if (co === calc.endOrder) {
+			setAllInputDone(true);
+			return;
+		}
 		let label = getTabLabelByOrder(calc.tabOptions, co);
 		if (label) setShowTab(label);
 		setCurrentOrder(co);
-		if (label === calc.tabOptions[calc.tabOptions.length - 1].order + 1) setAllInputDone(true);
 	};
 
 	return (
@@ -75,48 +68,17 @@ export default function CalculatorTemplate({ calc, title, titleSVG, cancelCallba
 					/>
 				</div>
 			</StickyHeader>
-			<div
-				className={`container mx-auto flex flex-1 lg:flex-row ${allInputDone &&
-					'flex-col-reverse'} items-start`}
-			>
-				<Input
-					currentOrder={currentOrder}
-					allInputDone={allInputDone}
-					showTab={showTab}
-					showTabHandler={setShowTab}
-					tabOptions={calc.tabOptions}
-					cancelCallback={cancelCallback}
-					handleSubmit={null}
-					submitDisabled={false}
-					cancelDisabled={false}
-				>
-					<calc.type
-						currency={currency}
-						rangeFactor={rangeFactor}
-						dr={dr}
-						drHandler={setDR}
-						chartFullScreen={chartFullScreen}
-						cfs={cfs}
-						cfsHandler={setCFs}
-						allInputDone={allInputDone}
-						currentOrder={currentOrder}
-						nextStepHandler={handleNextStep}
-						showTab={showTab}
-						tabOptions={calc.tabOptions}
-					/>
-				</Input>
-			</div>
-			{allInputDone && (
-				<Result
-					resultTabOptions={calc.resultTabOptions}
-					showResultTab={showResultTab}
-					showResultTabHandler={setShowResultTab}
-					chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
-					result={<div />}
-				>
-					<LineChart cfs={cfs} fullScreen={chartFullScreen} startYear={1} />
-				</Result>
-			)}
+			<calc.type
+				currency={currency}
+				rangeFactor={rangeFactor}
+				allInputDone={allInputDone}
+				currentOrder={currentOrder}
+				nextStepHandler={handleNextStep}
+				showTab={showTab}
+				showTabHandler={setShowTab}
+				tabOptions={calc.tabOptions}
+				cancelCallback={cancelCallback}
+			/>
 		</div>
 	);
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
@@ -18,12 +18,35 @@ interface SpendProps {
 	durationHandler: Function;
 }
 
+export const SPEND_ONCE = 'Once';
+export const SPEND_MONTHLY = 'Monthly';
+export const SPEND_YEARLY = 'Yearly';
+
 export default function Spend(props: SpendProps) {
+	const [ durUnit, setDurUnit ] = useState<string>('');
+	const [ durMaxRange, setDurMaxRange ] = useState<number>(0);
+
 	const freqOptions = {
-		one: 'One time',
-		monthly: 'Monthly',
-		yearly: 'Yearly'
+		SPEND_ONCE: SPEND_ONCE,
+		SPEND_MONTHLY: SPEND_MONTHLY,
+		SPEND_YEARLY: SPEND_YEARLY
 	};
+
+	useEffect(
+		() => {
+			if (props.freq === SPEND_ONCE) {
+				setDurUnit('');
+				setDurMaxRange(0);
+			} else if (props.freq === SPEND_MONTHLY) {
+				setDurUnit('Months');
+				setDurMaxRange(360);
+			} else {
+				setDurUnit('Years');
+				setDurMaxRange(30);
+			}
+		},
+		[ props.freq ]
+	);
 
 	return (
 		<div className="flex w-full justify-around">
@@ -33,7 +56,7 @@ export default function Spend(props: SpendProps) {
 					left={
 						<SelectInput
 							name="sf"
-							pre=""
+							pre="Spend"
 							currentOrder={props.currentOrder}
 							inputOrder={props.inputOrder}
 							allInputDone={props.allInputDone}
@@ -47,7 +70,7 @@ export default function Spend(props: SpendProps) {
 					right={
 						<NumberInput
 							name="amt"
-							pre="Spend"
+							pre="Amount"
 							currentOrder={props.currentOrder}
 							inputOrder={props.inputOrder + 1}
 							allInputDone={props.allInputDone}
@@ -63,22 +86,22 @@ export default function Spend(props: SpendProps) {
 						/>
 					}
 					bottom={
-						props.freq !== 'one' ? (
-							<NumberInput
-								name="dur"
-								pre="Duration"
-								currentOrder={props.currentOrder}
-								inputOrder={props.inputOrder + 2}
-								allInputDone={props.allInputDone}
-								nextStepDisabled={props.duration === 0}
-								nextStepHandler={props.nextStepHandler}
-								value={props.duration}
-								changeHandler={props.durationHandler}
-								min={0}
-								max={props.freq === 'emi' ? 360 : 30}
-								step={1}
-								unit={props.freq === 'emi' ? 'Months' : 'Years'}
-							/>
+						props.freq !== SPEND_ONCE ? (
+								<NumberInput
+									name="dur"
+									pre="For"
+									currentOrder={props.currentOrder}
+									inputOrder={props.inputOrder + 2}
+									allInputDone={props.allInputDone}
+									nextStepDisabled={props.duration === 0}
+									nextStepHandler={props.nextStepHandler}
+									value={props.duration}
+									changeHandler={props.durationHandler}
+									min={0}
+									max={durMaxRange}
+									step={1}
+									unit={durUnit}
+								/>
 						) : (
 							!props.allInputDone &&
 							props.currentOrder === props.inputOrder + 2 &&

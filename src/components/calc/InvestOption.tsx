@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NumberInput from '../form/numberinput';
+import RadialInput from '../form/radialinput';
 import Section from '../form/section';
+import { toStringArr } from '../utils';
 
-interface InvestProps {
+interface InvestOptionProps {
 	inputOrder: number;
 	currentOrder: number;
 	nextStepHandler: Function;
@@ -11,11 +13,29 @@ interface InvestProps {
 	drHandler: Function;
 	years: number;
 	yearsHandler: Function;
-	currency: string;
-	rangeFactor: number;
+	durationInYears: number;
 }
 
-export default function Invest(props: InvestProps) {
+export default function InvestOption(props: InvestOptionProps) {
+	const [ yearsRangeMin, setYearsRangeMin ] = useState<number>(10);
+
+	useEffect(
+		() => {
+			if (!props.durationInYears) {
+				setYearsRangeMin(10);
+				return;
+			}
+			for (let i = 10; i <= 50; i += 5) {
+				if (i < props.durationInYears) continue;
+				else {
+					setYearsRangeMin(i);
+					return;
+				}
+			}
+		},
+		[ props.durationInYears ]
+	);
+
 	return (
 		<div className="flex w-full justify-around">
 			{(props.allInputDone || props.inputOrder <= props.currentOrder) && (
@@ -25,8 +45,8 @@ export default function Invest(props: InvestProps) {
 						<NumberInput
 							name="dr"
 							pre="Investments"
-              post="Earn"
-              note="after taxes & fees"
+							post="Earn"
+							note="after taxes & fees"
 							currentOrder={props.currentOrder}
 							inputOrder={props.inputOrder}
 							allInputDone={props.allInputDone}
@@ -34,18 +54,17 @@ export default function Invest(props: InvestProps) {
 							nextStepHandler={props.nextStepHandler}
 							value={props.dr}
 							changeHandler={props.drHandler}
-							currency={props.currency}
-							rangeFactor={props.rangeFactor}
 							min={0}
 							max={15}
 							step={0.1}
+							unit="%"
 						/>
 					}
 					right={
-						<NumberInput
-							name="yrs"
-							pre="Compare"
-							post="From 1 to"
+						<RadialInput
+							pre="Compare Till"
+							data={toStringArr(yearsRangeMin, 50, 5)}
+							step={5}
 							currentOrder={props.currentOrder}
 							inputOrder={props.inputOrder + 1}
 							allInputDone={props.allInputDone}
@@ -53,10 +72,9 @@ export default function Invest(props: InvestProps) {
 							nextStepHandler={props.nextStepHandler}
 							value={props.years}
 							changeHandler={props.yearsHandler}
-							min={0}
-							max={50}
-							step={1}
-							unit="Years"
+							label="Years"
+							labelBottom
+							width={120}
 						/>
 					}
 					insideForm

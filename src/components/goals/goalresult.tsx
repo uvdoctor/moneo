@@ -18,7 +18,7 @@ interface GoalResultProps {
 
 export default function GoalResult(props: GoalResultProps) {
   return (
-    <div className="w-full py-1 flex justify-around w-full items-center bg-green-100 shadow-lg lg:shadow-xl">
+    <div className="w-full py-1 flex justify-around items-center bg-green-100 shadow-lg lg:shadow-xl">
       {props.dr === null || props.dr === undefined ? (
         <div className="w-full">
           <FFImpact

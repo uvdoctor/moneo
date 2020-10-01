@@ -4,7 +4,6 @@ import ItemDisplay from '../components/calc/ItemDisplay';
 import SVGBalance from '../components/calc/svgbalance';
 import SVGMoneyBag from '../components/calc/svgmoneybag';
 import TrueCostCalc from '../components/calc/TrueCostCalc';
-import SVGChart from '../components/svgchart';
 import SVGHourGlass from '../components/svghourglass';
 import SVGPay from '../components/svgpay';
 import SVGScale from '../components/svgscale';
@@ -25,14 +24,7 @@ export default function TrueCost() {
 					{ label: SAVE, order: 4, active: true, svg: SVGPiggy },
 					{ label: INVEST, order: 7, active: true, svg: SVGMoneyBag }
 				],
-				resultTabOptions: [
-					{
-						label: CHART,
-						order: 1,
-						active: true,
-						svg: SVGChart
-					}
-        ]
+				endOrder: 9
 			}}
 			title="True Cost"
 			titleSVG={<SVGScale selected />}
