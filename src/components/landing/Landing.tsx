@@ -1,16 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useScroll } from "react-browser-hooks";
 
-import Nav from "../../components/Nav";
+import Nav from "../Nav";
 import * as gtag from "../../lib/gtag";
-import DDPage from "../../components/ddpage";
+import DDPage from "../ddpage";
 import TakeQuickStep from "./TakeQuickStep";
 import Security from "./Security";
 import GetRich from "./GetRich";
 import HelloFinancialIndep from "./HelloFinancialIndep";
-import GetNetWorth from "./GetNetWorth";
-import SetGoals from "./SetGoals";
-import MakeMoneyWork from "./MakeMoneyWork";
+import Step from "./Step";
 import GettingStarted from "./GettingStarted";
 import Calculator from "./Calculator";
 import Banner from "./Banner";
@@ -73,7 +71,9 @@ export default function Landing() {
   return (
     <DDPage title="DollarDarwin">
       <div
-        className={`fixed w-full h-16 left-0 z-10 ${top > 10 && "shadow-lg"}`}
+        className={`fixed w-full h-12 left-0 z-10 md:h-16 ${
+          top > 10 && "shadow-lg"
+        }`}
         style={{
           backgroundImage:
             top > 10
@@ -102,9 +102,43 @@ export default function Landing() {
           <Calculator calculateRef={calculateRef} />
           <HelloFinancialIndep />
           <div className="w-full flex flex-wrap">
-            <GetNetWorth />
-            <SetGoals />
-            <MakeMoneyWork />
+            <Step
+              className="md:mr-3"
+              isPContainer={true}
+              y={[0, -10]}
+              count="01"
+              title="Get"
+              subTitle="Net Worth"
+              content="Link with various accounts to automatically calculate, what you own minus, what you owe."
+              bgColor="#dff1c7"
+              titleColor="#499824"
+              imgAttrs={{ className: "mt-5", src: "images/step1.jpg" }}
+            />
+            <Step
+              className="md:ml-5 translate-neg-30"
+              count="02"
+              title="Set"
+              subTitle="Goals"
+              content="Estimate money required across multiple currencies using in-built templates and calculators."
+              bgColor="#fcebcf"
+              titleColor="#e99507"
+              imgAttrs={{ className: "mt-20", src: "images/step2.jpg" }}
+            />
+            <Step
+              className="md:mr-3"
+              isPContainer={true}
+              y={[0, -25]}
+              count="03"
+              title="Go"
+              subTitle="Make Money work"
+              content="Helps you to not only align savings &amp; investements to goals, but also become more financially savvy via engaging games."
+              bgColor="#ffded8"
+              titleColor="#d5492e"
+              imgAttrs={{
+                className: "mt-16",
+                src: "images/step3.jpg",
+              }}
+            />
             <GettingStarted />
           </div>
 

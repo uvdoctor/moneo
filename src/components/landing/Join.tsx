@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import IconTooltip from "../../components/IconTooltip";
+import IconTooltip from "../IconTooltip";
 
 interface JoinProps {
 	joinRef?: any;
@@ -8,7 +8,7 @@ interface JoinProps {
 const Join = ({ joinRef }: JoinProps) => {
 	return (
 		<Fragment>
-			<h2 className="text-lg mt-8 font-bold text-green-primary md:text-base md:mt-12 lg:text-lg lg:mt-20">
+			<h2 className="text-sm mt-8 font-bold text-green-primary sm:text-lg md:text-base md:mt-12 lg:text-lg lg:mt-20">
 				Join Waitlist &amp; Earn up to $200 credit*{" "}
 				<IconTooltip id="earn-credit">
 					<ul className="p-3 text-lg font-normal">

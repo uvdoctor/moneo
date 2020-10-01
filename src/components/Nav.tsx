@@ -12,14 +12,14 @@ const Nav = ({ joinRef, calculateRef, featuresRef }: NavProps) => {
 
   return (
     <header
-      className="md:flex md:justify-between md:items-center md:px-4 md:py-3 fixed w-full md:pl-0 z-20"
+      className="md:flex md:justify-between md:items-center fixed w-full z-20 md:py-2"
       style={{
         maxWidth: "1280px",
         paddingRight: "1rem",
         paddingLeft: "1rem",
       }}
     >
-      <div className="flex items-center justify-between px-4 py-3 md:p-0">
+      <div className="flex items-center justify-between py-2 md:p-0">
         <LogoWithName />
         <div className="md:hidden">
           <button

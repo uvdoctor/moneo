@@ -2,9 +2,9 @@ import React from "react";
 
 export default function GettingStarted() {
   return (
-    <div className="step-box md:w-2/4 translate-neg-130 lg:mt-5">
+    <div className="step-box md:w-2/4 translate-neg-40 lg:mt-5">
       <div
-        className="mt-10 md:ml-3 md:mt-6 lg:ml-5 lg:mt-12"
+        className="mt-10 md:ml-3 md:mt-6 lg:ml-5"
         style={{ backgroundColor: "#dce7ef" }}
       >
         <h2 className="text-2xl">Kick-start Your Financial Independence</h2>

@@ -128,14 +128,18 @@ input[type="number"] {
 }
 
 @screen lg {
-  .translate-neg-130 {
-    transform: translate3d(0, -35%, 0);
+  .translate-neg-30 {
+    transform: translate3d(0, -30%, 0);
+  }
+
+  .translate-neg-40 {
+    transform: translate3d(0, -40%, 0);
   }
 }
 
 .tooltip-info {
   opacity: 1 !important;
-  @apply bg-blue p-3 text-lg shadow-lg text-white
+  @apply bg-blue p-3 text-lg shadow-lg text-white;
 }
 
 .site-nav > a:hover,
@@ -154,25 +158,24 @@ input[type="number"] {
 }
 
 .step-box {
-  @apply w-full
+  @apply w-full;
 }
 
 .step-box > div {
-  @apply rounded-lg p-12 pb-5
+  @apply rounded-lg p-12 pb-5;
 }
 
 @screen md {
   .step-box > div {
-    @apply p-5 py-8
+    @apply p-5 py-8;
   }
 }
 
 @screen lg {
   .step-box > div {
-    @apply p-16
+    @apply p-16;
   }
 }
-
 
 #knob > div[style] {
   z-index: 0;
@@ -221,7 +224,8 @@ input[type="number"] {
   transform: rotateY(180deg);
 }
 
-.flip-card-front, .flip-card-back {
+.flip-card-front,
+.flip-card-back {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
