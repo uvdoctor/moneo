@@ -37,6 +37,15 @@ button {
   @apply border rounded p-2 px-8 text-white;
 }
 
+button svg {
+  @apply inline;
+}
+
+button:disabled svg,
+button.loading svg {
+  filter: brightness(0.7) sepia(0) hue-rotate(0deg) saturate(0);
+}
+
 button.primary {
   @apply bg-green-900;
 }

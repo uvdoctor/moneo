@@ -2,6 +2,7 @@ import React from "react";
 
 interface ButtonProps {
 	className?: string;
+	children?: any;
 	isPrimary?: boolean;
 	disabled?: boolean;
 	label: string;
@@ -11,6 +12,7 @@ interface ButtonProps {
 
 export default function Button({
 	className = "",
+	children,
 	isPrimary = true,
 	label = "",
 	isLoading = false,
@@ -26,7 +28,7 @@ export default function Button({
 			disabled={disabled}
 			onClick={isLoading ? () => {} : onClick}
 		>
-			{label}
+			{children ? children : label}
 		</button>
 	);
 }
