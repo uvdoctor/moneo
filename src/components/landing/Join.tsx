@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import Button from "../Button";
 import IconTooltip from "../IconTooltip";
 
 interface JoinProps {
@@ -31,9 +32,7 @@ const Join = ({ joinRef }: JoinProps) => {
 					type="text"
 					placeholder="Enter email address"
 				/>
-				<button className="w-1/4 border rounded text-white p-2 bg-green">
-					Join
-				</button>
+				<Button className="w-1/4" label="Join" />
 			</div>
 		</Fragment>
 	);
