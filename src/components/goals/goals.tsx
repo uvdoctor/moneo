@@ -19,8 +19,6 @@ import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import Summary from "./summary";
 import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
-//@ts-ignore
-import { AwesomeButton } from "react-awesome-button";
 import SVGEdit from "../svgedit";
 import { toast } from "react-toastify";
 import { useFullScreen } from "react-browser-hooks";
@@ -30,6 +28,7 @@ import SVGBarChart from "../svgbarchart";
 import TreeMapChart from "./treemapchart";
 import SVGAAChart from "./svgaachart";
 import SVGList from "../svglist";
+import Button from "../Button";
 
 export default function Goals() {
   const { fullScreen } = useFullScreen();
@@ -490,19 +489,16 @@ export default function Goals() {
         {Object.keys(getGoalTypes()).map(
           (key) =>
             key !== APIt.GoalType.FF && (
-              <AwesomeButton
+              <Button
                 className={`mt-4 ${
                   !ffGoal ? "cursor-not-allowed" : "cursor-pointer"
                 }`}
-                type="primary"
-                ripple
-                size="medium"
+                isPrimary
                 key={key}
                 disabled={!ffGoal}
-                onPress={() => createGoal(key as APIt.GoalType)}
-              >
-                {getGoalTypes()[key as APIt.GoalType]}
-              </AwesomeButton>
+                onClick={() => createGoal(key as APIt.GoalType)}
+                label={getGoalTypes()[key as APIt.GoalType]}
+              />
             )
         )}
       </div>
@@ -599,13 +595,11 @@ export default function Goals() {
             <div className="text-center align-center">
               <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>
               <p className="mb-2">Set Up Financial Independence Target.</p>
-              <AwesomeButton
-                ripple
-                type="primary"
-                onPress={() => createGoal(APIt.GoalType.FF)}
-              >
-                GET STARTED
-              </AwesomeButton>
+              <Button
+                isPrimary
+                onClick={() => createGoal(APIt.GoalType.FF)}
+                label="Get Started"
+              />
             </div>
           )}
     </Fragment>

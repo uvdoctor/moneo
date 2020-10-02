@@ -1,6 +1,4 @@
 import React from 'react';
-//@ts-ignore
-import { AwesomeButton } from 'react-awesome-button';
 import SVGNext from '../svgnext';
 interface NextStepProps {
 	nextStepHandler: Function;

@@ -17,8 +17,6 @@ import {
   getOrderByTabLabel,
   isLoanEligible,
 } from "./goalutils";
-//@ts-ignore
-import { AwesomeButton } from "react-awesome-button";
 import AnnualAmt from "./annualamt";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import SVGScale from "../svgscale";

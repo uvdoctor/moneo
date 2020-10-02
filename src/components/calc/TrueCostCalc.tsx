@@ -45,9 +45,9 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 	];
 	const [ showResultTab, setShowResultTab ] = useState<string>(resultTabOptions[0].label);
 	const timeOptions = {
-		TIME_COST_HOURS: TIME_COST_HOURS,
-		TIME_COST_WEEKS: TIME_COST_WEEKS,
-		TIME_COST_YEARS: TIME_COST_YEARS
+		[TIME_COST_HOURS]: TIME_COST_HOURS,
+		[TIME_COST_WEEKS]: TIME_COST_WEEKS,
+		[TIME_COST_YEARS]: TIME_COST_YEARS
 	};
 
 	useEffect(
@@ -103,7 +103,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 
 	useEffect(
 		() => {
-			if (!amt || !freq || !duration) {
+			if (!amt || !freq) {
 				setTotalCost(0);
 				return;
 			}
@@ -204,8 +204,8 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 					chartFullScreenHandler={setChartFullScreen}
 					result={
 						<div className="w-full py-1 flex justify-around items-center bg-green-100 shadow-lg lg:shadow-xl">
-							<div className="flex items-center">
-								<ItemDisplay result={-timeCostDisplay} svg={<SVGHourGlass />} pl />
+							<div className="flex items-end">
+								<ItemDisplay label="Time Cost" result={-timeCostDisplay} svg={<SVGHourGlass />} unit="" pl />
 								<div className="ml-1">
 									<SelectInput
 										name="tcunit"

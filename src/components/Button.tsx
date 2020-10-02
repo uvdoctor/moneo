@@ -5,7 +5,7 @@ interface ButtonProps {
 	children?: any;
 	isPrimary?: boolean;
 	disabled?: boolean;
-	label: string;
+	label?: string;
 	isLoading?: boolean;
 	onClick?: any;
 }

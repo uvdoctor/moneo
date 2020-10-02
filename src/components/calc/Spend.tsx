@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
@@ -23,30 +23,11 @@ export const SPEND_MONTHLY = 'Monthly';
 export const SPEND_YEARLY = 'Yearly';
 
 export default function Spend(props: SpendProps) {
-	const [ durUnit, setDurUnit ] = useState<string>('');
-	const [ durMaxRange, setDurMaxRange ] = useState<number>(0);
-
 	const freqOptions = {
-		SPEND_ONCE: SPEND_ONCE,
-		SPEND_MONTHLY: SPEND_MONTHLY,
-		SPEND_YEARLY: SPEND_YEARLY
+		[SPEND_ONCE]: SPEND_ONCE,
+		[SPEND_MONTHLY]: SPEND_MONTHLY,
+		[SPEND_YEARLY]: SPEND_YEARLY
 	};
-
-	useEffect(
-		() => {
-			if (props.freq === SPEND_ONCE) {
-				setDurUnit('');
-				setDurMaxRange(0);
-			} else if (props.freq === SPEND_MONTHLY) {
-				setDurUnit('Months');
-				setDurMaxRange(360);
-			} else {
-				setDurUnit('Years');
-				setDurMaxRange(30);
-			}
-		},
-		[ props.freq ]
-	);
 
 	return (
 		<div className="flex w-full justify-around">
@@ -98,9 +79,9 @@ export default function Spend(props: SpendProps) {
 									value={props.duration}
 									changeHandler={props.durationHandler}
 									min={0}
-									max={durMaxRange}
+									max={props.freq === SPEND_MONTHLY ? 360 : 30}
 									step={1}
-									unit={durUnit}
+									unit={props.freq === SPEND_MONTHLY ? 'Months' : 'Years'}
 								/>
 						) : (
 							!props.allInputDone &&

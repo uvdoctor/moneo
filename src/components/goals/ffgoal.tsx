@@ -1,7 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
 import * as APIt from "../../api/goals";
-//@ts-ignore
-import { AwesomeButton } from "react-awesome-button";
 import {
   initYearOptions,
   getRangeFactor,
