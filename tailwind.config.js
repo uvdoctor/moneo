@@ -1,12 +1,12 @@
 module.exports = {
   purge: {
     future: {
-      purgeLayersByDefault: true
+      purgeLayersByDefault: true,
     },
     content: [
-    "./src/pages/**/*.{js,jsx,ts,tsx}",
-    "./src/components/**/*.{js,jsx,ts,tsx}",
-    ]
+      "./src/pages/**/*.{js,jsx,ts,tsx}",
+      "./src/components/**/*.{js,jsx,ts,tsx}",
+    ],
   },
   theme: {
     inset: {
@@ -25,11 +25,11 @@ module.exports = {
       24: "6rem",
       32: "8rem",
       40: "10rem",
-      48: "12rem"
+      48: "12rem",
     },
-    padding: theme => ({
-      ...theme('spacing'),
-      50: "50%"
+    padding: (theme) => ({
+      ...theme("spacing"),
+      50: "50%",
     }),
     extend: {
       textColor: {
@@ -38,12 +38,16 @@ module.exports = {
           secondary: "#AAE441",
         },
         silver: "#F1EDED",
-        default: "#4a5568"
+        default: "#4a5568",
       },
       backgroundColor: {
         silver: "#F1EDED",
         blue: "#3d86ce",
-        green: "#499824"
+        green: {
+          1000: "#4b911d",
+          900: "#499824",
+          800: "#63ac34",
+        },
       },
     },
   },
