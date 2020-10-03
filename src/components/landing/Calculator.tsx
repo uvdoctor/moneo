@@ -7,7 +7,7 @@ import SVGEduLoan from "../svgeduloan";
 import SVGScissor from "../svgscissor";
 import SVGAnalyze from "../svganalyze";
 import SVGLoan from "../svgloan";
-import { CALC_NAMES, ROUTES, COLORS } from "../../CONSTANTS";
+import { CALC_NAMES, ROUTES } from "../../CONSTANTS";
 
 interface CalculatorProps {
 	calculateRef: string;
