@@ -11,6 +11,7 @@ import HelloFinancialIndep from "./HelloFinancialIndep";
 import Step from "./Step";
 import GettingStarted from "./GettingStarted";
 import Calculator from "./Calculator";
+import CalculatorNew from "./CalculatorNew";
 import Banner from "./Banner";
 
 export default function Landing() {
@@ -92,7 +93,7 @@ export default function Landing() {
 
       <div className="max-w-screen-xl m-auto">
         <div
-          className="p-20 pl-0"
+          className="p-20 pl-0 pb-0"
           style={{
             maxWidth: "1280px",
             paddingRight: "1rem",
@@ -141,11 +142,10 @@ export default function Landing() {
             />
             <GettingStarted />
           </div>
-
-          <Security securityRef={securityRef} scrolledToSec={scrolledToSec} />
         </div>
       </div>
 
+      <Security securityRef={securityRef} scrolledToSec={scrolledToSec} />
       <GetRich featuresRef={featuresRef} />
       <TakeQuickStep />
 

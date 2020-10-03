@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Parallax } from "react-scroll-parallax";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { isMobileDevice } from "./utils";
@@ -13,9 +13,17 @@ interface PContainerProps {
 const PCache = dynamic(() => import("./pcache"), { ssr: false });
 
 export default function PContainer({ children, format, y }: PContainerProps) {
+  const [isMobile, setIsMobile] = useState(true);
   const fsb = useFullScreenBrowser();
-  
-  return !isMobileDevice(fsb) ? (
+
+  useEffect(
+    function () {
+      setIsMobile(isMobileDevice(fsb));
+    },
+    [null]
+  );
+
+  return !isMobile ? (
     <Parallax className={format} y={y} tagOuter="figure">
       <PCache />
       {children}
@@ -23,4 +31,4 @@ export default function PContainer({ children, format, y }: PContainerProps) {
   ) : (
     <div className={format}>{children}</div>
   );
-};
+}

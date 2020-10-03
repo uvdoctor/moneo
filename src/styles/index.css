@@ -229,6 +229,37 @@ input[type="number"] {
   }
 }
 
+.calc-btn {
+  width: 12.4rem;
+  background-color: #a0a0a0;
+  background-image: linear-gradient(to top, #4a4a4a, #b3b3b3);
+  @apply absolute cursor-pointer flex flex-col justify-center text-white rounded-lg transition-all transform duration-500 p-1 shadow-md;
+}
+
+.calc-btn > div {
+  background-color: #6f6f6f;
+  background-image: linear-gradient(to left, #6f6f6f, #4a4a4a);
+  @apply rounded-lg py-6;
+}
+
+.calc-btn svg {
+  filter: brightness(1) sepia(-1) hue-rotate(-70deg) saturate(3);
+}
+
+.calc-btn.selected {
+  background-image: unset;
+  @apply bg-green-1000 p-8 border border-white border-2 shadow-inner;
+}
+
+.calc-btn.selected .calc-btn-label {
+  @apply text-2xl;
+}
+
+.calc-btn.selected > div {
+  background-image: unset;
+  @apply bg-transparent;
+}
+
 @screen lg {
   .translate-neg-30 {
     transform: translate3d(0, -30%, 0);
