@@ -13,7 +13,7 @@ import InvestOption from './InvestOption';
 import ItemDisplay from './ItemDisplay';
 import Save from './Save';
 import Spend, { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
-import SVGMoneyBag from './svgmoneybag';
+import SVGBalance from './svgbalance';
 
 export const TIME_COST_HOURS = 'Hours';
 export const TIME_COST_WEEKS = 'Weeks';
@@ -257,7 +257,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 									Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
 									props.currency
 								)} More in ${years} Years if You Invest instead of Spending.`}
-								svg={<SVGMoneyBag selected />}
+								svg={<SVGBalance />}
 								result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
 								currency={props.currency}
 								pl

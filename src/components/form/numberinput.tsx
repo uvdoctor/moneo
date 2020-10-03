@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, Fragment } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { toCurrency, toReadableNumber } from "../utils";
 import Slider from "rc-slider";
 import NextStep from "./nextstep";
@@ -101,8 +101,7 @@ export default function NumberInput(props: NumberInputProps) {
   };
 
   return (
-    <Fragment>
-      <div className="flex items-center">
+      <div className="flex items-center justify-center">
         {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
           props.allInputDone) && (
           <form
@@ -242,6 +241,5 @@ export default function NumberInput(props: NumberInputProps) {
             />
         )}
       </div>
-    </Fragment>
   );
 }
