@@ -1,9 +1,10 @@
 import React from "react";
+import Button from "../Button";
 
 export default function TakeQuickStep() {
   return (
     <div
-      className="p-5 m-auto"
+      className="p-5 m-auto mt-10"
       style={{
         maxWidth: "1280px",
       }}
@@ -20,9 +21,7 @@ export default function TakeQuickStep() {
               type="text"
               placeholder="Enter email address"
             />
-            <button className="w-1/4 border rounded-md text-white p-2 bg-green">
-              Join
-            </button>
+            <Button className="w-1/4" label="Join" />
           </div>
         </div>
         <div className="w-full flex items-center">
