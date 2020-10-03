@@ -65,8 +65,8 @@ export default function Save(props: SaveProps) {
 						<NumberInput
 							name="hrs"
 							pre="Average"
-							post="Work-Week"
-							note="including commute, travel, etc."
+							post="Work-week"
+							note="including travel"
 							currentOrder={props.currentOrder}
 							inputOrder={props.inputOrder + 2}
 							allInputDone={props.allInputDone}

@@ -52,32 +52,32 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 
 	useEffect(
 		() => {
-			let cfs: Array<number> = []
-			if (!props.allInputDone || !amt || !freq) {
-				setCFs([...cfs])
-				return
+			let cfs: Array<number> = [];
+			if (!props.allInputDone || !amt || !freq || (freq !== SPEND_ONCE && !duration)) {
+				setCFs([ ...cfs ]);
+				return;
 			}
 			if (freq === SPEND_ONCE) {
-				cfs.push(-amt)
-				setCFs([...cfs])
-				return
+				cfs.push(-amt);
+				setCFs([ ...cfs ]);
+				return;
 			}
-			let dur = freq === SPEND_YEARLY ? duration : Math.round(duration / 12)
-			let totalMonths = freq === SPEND_MONTHLY ? duration : 0
+			let dur = freq === SPEND_YEARLY ? duration : Math.round(duration / 12);
+			let totalMonths = freq === SPEND_MONTHLY ? duration : 0;
 			for (let i = 0; i <= dur; i++) {
 				if (freq === SPEND_MONTHLY && totalMonths) {
 					if (totalMonths > 12) {
-						cfs.push(-amt * 12)
-						totalMonths -= 12
+						cfs.push(-amt * 12);
+						totalMonths -= 12;
 					} else {
-						cfs.push(-amt * totalMonths)
-						totalMonths = 0
+						cfs.push(-amt * totalMonths);
+						totalMonths = 0;
 					}
 				} else {
-					cfs.push(-amt)
+					cfs.push(-amt);
 				}
 			}
-			setCFs([...cfs]);
+			setCFs([ ...cfs ]);
 		},
 		[ amt, freq, duration, props.allInputDone ]
 	);
@@ -205,7 +205,13 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 					result={
 						<div className="w-full py-1 flex justify-around items-center bg-green-100 shadow-lg lg:shadow-xl">
 							<div className="flex items-end">
-								<ItemDisplay label="Time Cost" result={-timeCostDisplay} svg={<SVGHourGlass />} unit="" pl />
+								<ItemDisplay
+									label="Time Cost"
+									result={-timeCostDisplay}
+									svg={<SVGHourGlass />}
+									unit=""
+									pl
+								/>
 								<div className="ml-1">
 									<SelectInput
 										name="tcunit"
@@ -225,7 +231,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 						</div>
 					}
 				>
-					<LineChart cfs={cfs} fullScreen={chartFullScreen} startYear={1} />
+					<LineChart cfs={cfs} fullScreen={chartFullScreen} startYear={0} title="Number of Years" />
 				</Result>
 			)}
 		</div>

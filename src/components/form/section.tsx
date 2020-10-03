@@ -87,13 +87,9 @@ export default function Section(props: SectionProps) {
           )}
           {props.bottom && (
             <div className="w-full flex flex-wrap mt-2 items-center justify-around">
-              {props.bottomLeft && (
-                <label className="mr-4">{props.bottomLeft}</label>
-              )}
-              <div className="w-full">{props.bottom}</div>
-              {props.bottomRight && (
-                <label className="ml-4">{props.bottomRight}</label>
-              )}
+              {props.bottomLeft}
+              {props.bottom}
+              {props.bottomRight}
             </div>
           )}
           {props.footer && (

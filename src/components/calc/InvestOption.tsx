@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import NumberInput from '../form/numberinput';
 import RadialInput from '../form/radialinput';
 import Section from '../form/section';
@@ -17,24 +17,6 @@ interface InvestOptionProps {
 }
 
 export default function InvestOption(props: InvestOptionProps) {
-	const [ yearsRangeMin, setYearsRangeMin ] = useState<number>(10);
-
-	useEffect(
-		() => {
-			if (!props.durationInYears) {
-				setYearsRangeMin(10);
-				return;
-			}
-			for (let i = 10; i <= 50; i += 5) {
-				if (i < props.durationInYears) continue;
-				else {
-					setYearsRangeMin(i);
-					return;
-				}
-			}
-		},
-		[ props.durationInYears ]
-	);
 
 	return (
 		<div className="flex w-full justify-around">
@@ -63,7 +45,7 @@ export default function InvestOption(props: InvestOptionProps) {
 					right={
 						<RadialInput
 							pre="Compare Till"
-							data={toStringArr(yearsRangeMin, 50, 5)}
+							data={toStringArr(30, 50, 5)}
 							step={5}
 							currentOrder={props.currentOrder}
 							inputOrder={props.inputOrder + 1}
