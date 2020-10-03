@@ -7,7 +7,7 @@ import LineChart from '../goals/linechart';
 import Result from '../goals/Result';
 import SVGChart from '../svgchart';
 import SVGHourGlass from '../svghourglass';
-import { toCurrency } from '../utils';
+import { toCurrency, toReadableNumber } from '../utils';
 import { CalcTypeProps } from './CalculatorTemplate';
 import InvestOption from './InvestOption';
 import ItemDisplay from './ItemDisplay';
@@ -64,7 +64,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 			for (let i = 0; i < years; i++) {
 				let prevCF = i < cfs.length ? -cfs[i] : cfsWithOppCost[i - 1];
 				if (i > 0 && i < cfs.length && freq !== SPEND_ONCE) {
-					prevCF += cfsWithOppCost[i - 1]
+					prevCF += cfsWithOppCost[i - 1];
 				}
 				let compoundedVal = Math.round(prevCF * (1 + dr / 100));
 				cfsWithOppCost.push(compoundedVal);
@@ -186,6 +186,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 						amtHandler={setAmt}
 						duration={duration}
 						durationHandler={setDuration}
+						totalCost={totalCost}
 					/>
 				)}
 
@@ -235,6 +236,9 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 									svg={<SVGHourGlass />}
 									unit=""
 									pl
+									info={`Based on your savings details, You May have to Work ${toReadableNumber(
+										timeCost
+									)} ${timeCostUnit} to Save ${toCurrency(totalCost, props.currency)}`}
 								/>
 								<div className="ml-1">
 									<SelectInput
@@ -261,6 +265,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 								result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
 								currency={props.currency}
 								pl
+								calcFormat
 							/>
 						</div>
 					}

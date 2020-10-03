@@ -2,6 +2,7 @@ import React from 'react';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
+import { toCurrency } from '../utils';
 
 interface SpendProps {
 	inputOrder: number;
@@ -16,6 +17,7 @@ interface SpendProps {
 	rangeFactor: number;
 	duration: number;
 	durationHandler: Function;
+	totalCost: number;
 }
 
 export const SPEND_ONCE = 'Once';
@@ -81,7 +83,8 @@ export default function Spend(props: SpendProps) {
 									min={0}
 									max={props.freq === SPEND_MONTHLY ? 360 : 30}
 									step={1}
-									unit={props.freq === SPEND_MONTHLY ? 'Months' : 'Years'}
+								unit={props.freq === SPEND_MONTHLY ? 'Months' : 'Years'}
+								note={`Total ${toCurrency(props.totalCost, props.currency)}`}
 								/>
 						) : (
 							!props.allInputDone &&
