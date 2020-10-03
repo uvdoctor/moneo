@@ -11,7 +11,6 @@ import HelloFinancialIndep from "./HelloFinancialIndep";
 import Step from "./Step";
 import GettingStarted from "./GettingStarted";
 import Calculator from "./Calculator";
-import CalculatorNew from "./CalculatorNew";
 import Banner from "./Banner";
 
 export default function Landing() {
