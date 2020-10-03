@@ -62,21 +62,22 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 
 	return (
 		<div
-			className="w-3/4 border rounded-lg p-3 m-auto"
+			className="max-w-screen-md border rounded-lg p-3 m-auto"
 			style={{
 				backgroundColor: "#c3c3c3",
+				backgroundImage: "linear-gradient(to bottom, #c3c3c3, #959595)",
 				boxShadow: "0 0 10px #8b8b8b",
 			}}
 		>
 			<div
 				ref={calculateRef}
-				className="bg-white border rounded-lg p-10"
+				className="bg-white border rounded-lg p-10 pb-16"
 				style={{
 					backgroundImage: "linear-gradient(to bottom, #ebebeb, #d1d1d1)",
 				}}
 			>
 				<div
-					className="border rounded-lg p-3"
+					className="border rounded-lg p-3 shadow-inner"
 					style={{
 						backgroundColor: "#d0d0d0",
 						border: "1px solid #afafaf",
@@ -97,38 +98,36 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 				</div>
 
 				<div
-					className={`grid grid-cols-3 gap-10 justify-items-stretch mt-10 h-56`}
+					className={`grid grid-cols-3 gap-10 justify-items-stretch mt-10 h-64`}
 				>
 					{calcList.map((calc: any, i: number) => (
 						<Link key={"calc" + i} href={calc.link}>
 							<a>
 								<div
-									className={`w-56 h-24 absolute cursor-pointer flex flex-col justify-center p-1 text-white rounded-lg transition-all transform duration-500 linear ${
+									className={`calc-btn linear ${
+										calcIndex === i ? "selected" : ""
+									} ${
 										calcIndex >= 0 && calcIndex !== i
 											? "scale-50 opacity-0"
 											: calcIndex === i &&
 											  "text-green-primary md:text-xl lg:text-2xl"
 									}`}
 									style={{
-										backgroundImage: `linear-gradient(to left, ${
-											calcIndex === i ? "white" : "#6f6f6f"
-										}, ${calcIndex === i ? COLORS.LIGHT_GRAY : "#4a4a4a"})`,
-										border: calcIndex === i ? "" : "5px solid #8b8b8b",
-										width: calcIndex === i ? "820px" : "",
-										height: calcIndex === i ? "250px" : "",
+										width: calcIndex === i ? "660px" : "",
+										height: calcIndex === i ? "280px" : "",
 										transform:
 											calcIndex === i
 												? `translate(${
 														i === 5
-															? "-570px, -150px"
+															? "-465px, -150px"
 															: i === 2
-															? "-570px, 0px"
+															? "-465px, 0px"
 															: i === 3
 															? "0px, -150px"
 															: i === 4
-															? "-290px, -150px"
+															? "-235px, -150px"
 															: i === 1
-															? "-290px, 0px"
+															? "-235px, 0px"
 															: ""
 												  })`
 												: "",
@@ -136,24 +135,26 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 									onMouseEnter={() => setCalcIndex(i)}
 									onMouseLeave={() => setCalcIndex(-1)}
 								>
-									<ItemDisplay
-										svg={
-											<calc.svg
-												disabled={calcIndex !== i}
-												selected={calcIndex === i}
-											/>
-										}
-										result={calc.name}
-										vertical
-									/>
-									{calcIndex === i && (
-										<label
-											className="mt-4 text-default"
-											style={{ animation: "fadeIn 1s 1" }}
-										>
-											{calc.desc}
-										</label>
-									)}
+									<div>
+										<ItemDisplay
+											svg={
+												<calc.svg
+													disabled={calcIndex !== i}
+													selected={calcIndex === i}
+												/>
+											}
+											result={calc.name}
+											vertical
+										/>
+										{calcIndex === i && (
+											<div
+												className="mt-4 text-center text-lg text-white "
+												style={{ animation: "fadeIn 1s 1" }}
+											>
+												{calc.desc}
+											</div>
+										)}
+									</div>
 								</div>
 							</a>
 						</Link>

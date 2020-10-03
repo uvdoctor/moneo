@@ -24,7 +24,7 @@ const Nav = ({ joinRef, calculateRef, featuresRef }: NavProps) => {
         <div className="md:hidden">
           <button
             type="button"
-            className="block text-gray-500 hover:text-white focus:text-white focus:outline-none"
+            className="p-0 border-none block text-gray-500 hover:text-white focus:text-white focus:outline-none"
             onClick={() => setOpen(!isOpen)}
           >
             <svg className="h-6 w-6" viewBox="0 0 24 24">

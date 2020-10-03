@@ -60,7 +60,7 @@ export default function GetRich({ featuresRef }: GetRichProps) {
   ];
 
   return (
-    <div className="bg-white pb-10">
+    <div className="pb-10">
       <div
         className="pt-10 m-auto"
         style={{
@@ -75,22 +75,22 @@ export default function GetRich({ featuresRef }: GetRichProps) {
             No More Boring Budgets or Confusing Investment Choices. DollarDarwin
             helps You to Grow Your Money without taking any undue stress.
           </p>
-          <div className="w-full">
+          <div className="w-full mt-10">
             <div className="w-full md:flex md:flex-wrap md:justify-around">
               {featuresList.map((feature, i) => (
                 <div
                   key={"f" + i}
-                  className={`mt-4 flip-card bg-transparent w-full md:w-64 h-40`}
+                  className={`mt-4 flip-card bg-transparent w-full md:w-64 h-56 mb-10`}
                 >
-                  <div className="flip-card-inner relative w-full h-full shadow-lg rounded-lg">
-                    <div className="flip-card-front bg-gray-100 text-default w-full h-full absolute flex items-center justify-center rounded-lg cursor-pointer">
+                  <div className="flip-card-inner relative w-full h-full shadow-lg rounded-md">
+                    <div className="flip-card-front bg-white text-default w-full h-full absolute flex items-center justify-center rounded-md cursor-pointer">
                       <ItemDisplay
                         svg={<feature.svg />}
                         result={feature.label}
                         vertical
                       />
                     </div>
-                    <div className="flip-card-back text-white absolute w-full h-full rounded-lg p-1 bg-green">
+                    <div className="flip-card-back text-white absolute w-full h-full rounded-md p-5 bg-green-1000">
                       <ItemDisplay
                         svg={<feature.svg />}
                         result={feature.label}
