@@ -27,8 +27,7 @@ export default function Section(props: SectionProps) {
   return (
     <div
       className="m-1 w-full max-w-sm md:max-w-md xl:max-w-lg
-      rounded-lg overflow-x-hidden overflow-y-auto 
-                        shadow-lg md:shadow-xl"
+      rounded-lg shadow-lg md:shadow-xl"
       style={{ backgroundColor: props.color ? props.color : "transparent" }}
     >
       <div

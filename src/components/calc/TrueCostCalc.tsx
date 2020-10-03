@@ -7,12 +7,13 @@ import LineChart from '../goals/linechart';
 import Result from '../goals/Result';
 import SVGChart from '../svgchart';
 import SVGHourGlass from '../svghourglass';
+import { toCurrency } from '../utils';
 import { CalcTypeProps } from './CalculatorTemplate';
 import InvestOption from './InvestOption';
 import ItemDisplay from './ItemDisplay';
-import OppCost from './oppcost';
 import Save from './Save';
 import Spend, { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
+import SVGMoneyBag from './svgmoneybag';
 
 export const TIME_COST_HOURS = 'Hours';
 export const TIME_COST_WEEKS = 'Weeks';
@@ -35,6 +36,8 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 	const [ totalCost, setTotalCost ] = useState<number>(0);
 	const [ chartFullScreen, setChartFullScreen ] = useState<boolean>(false);
 	const [ cfs, setCFs ] = useState<Array<number>>([]);
+	const [ cfsWithOppCost, setCFsWithOppCost ] = useState<Array<number>>([]);
+
 	const resultTabOptions = [
 		{
 			label: CHART,
@@ -43,12 +46,33 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 			svg: SVGChart
 		}
 	];
+
 	const [ showResultTab, setShowResultTab ] = useState<string>(resultTabOptions[0].label);
 	const timeOptions = {
 		[TIME_COST_HOURS]: TIME_COST_HOURS,
 		[TIME_COST_WEEKS]: TIME_COST_WEEKS,
 		[TIME_COST_YEARS]: TIME_COST_YEARS
 	};
+
+	useEffect(
+		() => {
+			if (cfs.length === 0) {
+				setCFsWithOppCost([ ...cfs ]);
+				return;
+			}
+			let cfsWithOppCost: Array<number> = [];
+			for (let i = 0; i < years; i++) {
+				let prevCF = i < cfs.length ? -cfs[i] : cfsWithOppCost[i - 1];
+				if (i > 0 && i < cfs.length && freq !== SPEND_ONCE) {
+					prevCF += cfsWithOppCost[i - 1]
+				}
+				let compoundedVal = Math.round(prevCF * (1 + dr / 100));
+				cfsWithOppCost.push(compoundedVal);
+			}
+			setCFsWithOppCost([ ...cfsWithOppCost ]);
+		},
+		[ cfs, dr, years ]
+	);
 
 	useEffect(
 		() => {
@@ -227,11 +251,26 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 									/>
 								</div>
 							</div>
-							<OppCost discountRate={dr} cfs={cfs} currency={props.currency} minDuration={years} />
+							<ItemDisplay
+								label="Spend v/s Invest"
+								info={`You May have ${toCurrency(
+									Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
+									props.currency
+								)} More in ${years} Years if You Invest instead of Spending.`}
+								svg={<SVGMoneyBag selected />}
+								result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
+								currency={props.currency}
+								pl
+							/>
 						</div>
 					}
 				>
-					<LineChart cfs={cfs} fullScreen={chartFullScreen} startYear={0} title="Number of Years" />
+					<LineChart
+						cfs={cfsWithOppCost}
+						fullScreen={chartFullScreen}
+						startYear={1}
+						title="Number of Years"
+					/>
 				</Result>
 			)}
 		</div>

@@ -44,7 +44,7 @@ export default function InvestOption(props: InvestOptionProps) {
 					}
 					right={
 						<RadialInput
-							pre="Compare Till"
+							pre="Analyze From 1 to"
 							data={toStringArr(30, 50, 5)}
 							step={5}
 							currentOrder={props.currentOrder}
