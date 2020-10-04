@@ -3,6 +3,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import * as APIt from "../../api/goals";
 import * as queries from "../../graphql/queries";
 import { MAX_RETIREMENT_AGE, PLAN_DURATION } from "../../CONSTANTS";
+import { getRangeFactor } from "../utils";
 
 export const getGoalsList = async () => {
   try {
@@ -129,7 +130,7 @@ const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
     ey: startYear,
     by: nowYear,
     tdr: 0,
-    tdl: 0,
+    tdl: 20000 * getRangeFactor(currency),
     ccy: currency,
     cp: 0,
     chg: 3,
@@ -194,7 +195,7 @@ export const createNewGoalInput = (
   let bg: APIt.CreateGoalInput = createBaseGoalInput(goalType, currency);
   if (isLoanEligible(goalType)) {
     bg.tbi = 0;
-    bg.tdli = 0;
+    bg.tdli = 20000 * getRangeFactor(currency);
     bg.emi = {
       rate: 4,
       dur: 10,

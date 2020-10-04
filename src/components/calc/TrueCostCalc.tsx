@@ -20,7 +20,7 @@ export const TIME_COST_WEEKS = 'Weeks';
 export const TIME_COST_YEARS = 'Years';
 
 export default function TrueCostCalc(props: CalcTypeProps) {
-	const CHART = 'Yearly Cash Flows If Invested';
+	const CHART = 'Yearly Value If Invested';
 	const [ amt, setAmt ] = useState<number>(0);
 	const [ freq, setFreq ] = useState<string>(SPEND_ONCE);
 	const [ duration, setDuration ] = useState<number>(0);
@@ -64,15 +64,27 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 			for (let i = 0; i < years; i++) {
 				let prevCF = i < cfs.length ? -cfs[i] : cfsWithOppCost[i - 1];
 				if (i > 0 && i < cfs.length && freq !== SPEND_ONCE) {
-					prevCF += cfsWithOppCost[i - 1];
+					prevCF +=
+						freq === SPEND_YEARLY
+							? cfsWithOppCost[i - 1]
+							: cfsWithOppCost[i - 1] * (1 + dr / 100);
 				}
-				let compoundedVal = Math.round(prevCF * (1 + dr / 100));
-				cfsWithOppCost.push(compoundedVal);
+				let compoundedVal =
+					freq === SPEND_MONTHLY && i < cfs.length ? prevCF : Math.round(prevCF * (1 + dr / 100));
+				cfsWithOppCost.push(Math.round(compoundedVal));
 			}
 			setCFsWithOppCost([ ...cfsWithOppCost ]);
 		},
 		[ cfs, dr, years ]
 	);
+
+	const getYearEndFV = (numOfMonths: number = 12) => {
+		let fv = 0;
+		for (let i = 0; i < numOfMonths; i++) {
+			fv += amt * (1 + dr * (1 - i / 12) / 100);
+		}
+		return fv;
+	};
 
 	useEffect(
 		() => {
@@ -91,10 +103,10 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 			for (let i = 0; i <= dur; i++) {
 				if (freq === SPEND_MONTHLY && totalMonths) {
 					if (totalMonths > 12) {
-						cfs.push(-amt * 12);
+						cfs.push(-getYearEndFV());
 						totalMonths -= 12;
 					} else {
-						cfs.push(-amt * totalMonths);
+						cfs.push(-getYearEndFV(totalMonths));
 						totalMonths = 0;
 					}
 				} else {

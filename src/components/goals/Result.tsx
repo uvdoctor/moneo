@@ -44,8 +44,8 @@ export default function Result(props: ResultProps) {
               />
             ) : (
               <div className="w-full mt-2 flex justify-center items-center">
-                {props.resultTabOptions.map((tab) => (
-                  <Fragment>
+                {props.resultTabOptions.map((tab, i) => (
+                  <Fragment key={"t" + i}>
                     <tab.svg selected />
                     <label className="ml-1">{tab.label}</label>
                   </Fragment>

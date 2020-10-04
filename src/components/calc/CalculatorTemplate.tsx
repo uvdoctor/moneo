@@ -52,20 +52,22 @@ export default function CalculatorTemplate({ calc, title, titleSVG, cancelCallba
 	return (
 		<div className="w-full">
 			<StickyHeader cancelCallback={cancelCallback}>
-				<div className="w-full mt-4 mb-2">
+				<div className="mt-4 mb-2">
 					<ItemDisplay svg={titleSVG} result={title + ' Calculator'} calcFormat />
-					<SelectInput
-						name="ccy"
-						inputOrder={0}
-						currentOrder={currentOrder}
-						nextStepDisabled={false}
-						allInputDone={allInputDone}
-						nextStepHandler={handleNextStep}
-						pre="Currency"
-						value={currency}
-						changeHandler={changeCurrency}
-						currency
-					/>
+					<div className="w-full flex justify-center">
+						<SelectInput
+							name="ccy"
+							inputOrder={0}
+							currentOrder={currentOrder}
+							nextStepDisabled={false}
+							allInputDone={allInputDone}
+							nextStepHandler={handleNextStep}
+							pre="Currency"
+							value={currency}
+							changeHandler={changeCurrency}
+							currency
+						/>
+					</div>
 				</div>
 			</StickyHeader>
 			<calc.type
