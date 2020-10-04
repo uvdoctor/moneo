@@ -282,7 +282,7 @@ input[type="number"] {
   color: #fff;
 }
 
-.site-nav-dropdown:hover div {
+.site-nav-dropdown:hover > div {
   display: block !important;
 }
 
@@ -299,6 +299,10 @@ input[type="number"] {
 }
 
 @screen md {
+  .site-nav {
+    overflow: inherit;
+  }
+
   .step-box > div {
     @apply p-5 py-8;
   }

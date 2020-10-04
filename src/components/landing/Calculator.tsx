@@ -13,52 +13,52 @@ interface CalculatorProps {
 	calculateRef: string;
 }
 
+export const calcList: Array<any> = [
+	{
+		name: CALC_NAMES.FI,
+		link: ROUTES.FI,
+		svg: SVGFreedom,
+		desc: "Figure out Earliest Possible Year & Minimum Savings needed for FI.",
+	},
+	{
+		name: CALC_NAMES.BR,
+		link: ROUTES.BR,
+		svg: SVGScale,
+		desc:
+			"Find out whether its cheaper to Buy or Rent & Invest remaining amount, as well as duration for which the option is cheaper.",
+	},
+	{
+		name: CALC_NAMES.EDU_LOAN,
+		link: ROUTES.EDUCATION,
+		svg: SVGEduLoan,
+		desc:
+			"Analyze the simple interest to be paid while studying, and EMI payments to be made after study is over.",
+	},
+	{
+		name: CALC_NAMES.DR,
+		link: ROUTES.LOAN,
+		svg: SVGScissor,
+		desc:
+			"Identify the optimal sequence of paying various loans that makes sense for You.",
+	},
+	{
+		name: CALC_NAMES.CI,
+		link: ROUTES.LOAN,
+		svg: SVGAnalyze,
+		desc:
+			"Assess impact on Your credit score for various factors such as hard inquiry, delayed payment, etc.",
+	},
+	{
+		name: CALC_NAMES.LOAN,
+		link: ROUTES.LOAN,
+		svg: SVGLoan,
+		desc:
+			"Understand the amortization schedule and total interest to be paid for a simple loan.",
+	},
+];
+
 export default function Calculator({ calculateRef }: CalculatorProps) {
 	const [calcIndex, setCalcIndex] = useState<number>(-1);
-	const calcList: Array<any> = [
-		{
-			name: CALC_NAMES.FI,
-			link: ROUTES.FI,
-			svg: SVGFreedom,
-			desc:
-				"Figure out Earliest Possible Year & Minimum Savings needed for FI.",
-		},
-		{
-			name: CALC_NAMES.BR,
-			link: ROUTES.BR,
-			svg: SVGScale,
-			desc:
-				"Find out whether its cheaper to Buy or Rent & Invest remaining amount, as well as duration for which the option is cheaper.",
-		},
-		{
-			name: CALC_NAMES.EDU_LOAN,
-			link: ROUTES.EDUCATION,
-			svg: SVGEduLoan,
-			desc:
-				"Analyze the simple interest to be paid while studying, and EMI payments to be made after study is over.",
-		},
-		{
-			name: CALC_NAMES.DR,
-			link: ROUTES.LOAN,
-			svg: SVGScissor,
-			desc:
-				"Identify the optimal sequence of paying various loans that makes sense for You.",
-		},
-		{
-			name: CALC_NAMES.CI,
-			link: ROUTES.LOAN,
-			svg: SVGAnalyze,
-			desc:
-				"Assess impact on Your credit score for various factors such as hard inquiry, delayed payment, etc.",
-		},
-		{
-			name: CALC_NAMES.LOAN,
-			link: ROUTES.LOAN,
-			svg: SVGLoan,
-			desc:
-				"Understand the amortization schedule and total interest to be paid for a simple loan.",
-		},
-	];
 
 	return (
 		<div

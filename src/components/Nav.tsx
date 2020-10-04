@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { calcList } from "./landing/Calculator";
 import Logo from "./logo";
 
 interface NavProps {
@@ -45,35 +46,54 @@ const Nav = ({ joinRef, calculateRef, featuresRef }: NavProps) => {
         </div>
       </div>
       <nav
-        className={`site-nav px-2 pt-2 pb-4 md:flex md:p-0 md:text-base lg:text-lg ${
+        className={`site-nav px-2 pt-2 pb-4 h-screen overflow-y-scroll overscroll-contain pb-16 md:h-auto md:flex md:p-0 md:text-base lg:text-lg ${
           isOpen ? "block bg-white shadow-lg" : "hidden"
         }`}
       >
-        <a
-          className="cursor-pointer block px-2 py-1 font-semibold rounded"
-          onClick={() => {
-            calculateRef.current.scrollIntoView({ behavior: "smooth" });
-          }}
-        >
-          Calculate
-        </a>
+        <div className="site-nav-dropdown">
+          <a
+            className="cursor-pointer block px-2 py-1 font-semibold rounded"
+            onClick={() => {
+              calculateRef.current.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            Calculate
+          </a>
+          <div className="w-full pl-8 md:p-5 md:hidden md:absolute md:left-0 md:bg-white md:shadow-lg md:pl-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 md:px-5 md:gap-5 lg:grid-cols-3">
+              {calcList.map(({ name, link, svg: Svg, desc }) => (
+                <div key={name} className="flex w-4/5 lg:w-full">
+                  <div className="pr-2 mt-2">
+                    <Svg />
+                  </div>
+                  <div>
+                    <a href={link}>
+                      <h2 className="text-sm font-semibold">{name}</h2>
+                      <p className="text-gray-600 text-sm leading-4">{desc}</p>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         <div className="site-nav-dropdown relative">
           <span className="mt-1 cursor-pointer block px-2 py-1 font-semibold rounded md:mt-0 md:ml-2">
             About
           </span>
-          <div className="pl-8 md:p-5 md:hidden md:absolute md:bg-white md:shadow-lg md:pl-0">
+          <div className="pl-8 text-base md:p-5 md:hidden md:absolute md:bg-white md:shadow-lg md:pl-0">
             <div
-              className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 font-semibold rounded md:mt-0 md:ml-2"
+              className="cursor-pointer hover:text-green-primary mt-1 block px-2 rounded md:py-1 md:mt-0 md:ml-2"
               onClick={() =>
                 featuresRef.current.scrollIntoView({ behavior: "smooth" })
               }
             >
               Features
             </div>
-            <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 font-semibold rounded md:mt-0 md:ml-2">
+            <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 rounded md:py-1 md:mt-0 md:ml-2">
               Pricing
             </div>
-            <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 font-semibold rounded md:mt-0 md:ml-2">
+            <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 rounded md:py-1 md:mt-0 md:ml-2">
               Company
             </div>
           </div>
