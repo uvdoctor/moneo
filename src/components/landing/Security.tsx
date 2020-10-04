@@ -1,5 +1,4 @@
 import React from "react";
-import { COLORS } from "../../CONSTANTS";
 
 interface SecurityProps {
   securityRef: string;
@@ -18,8 +17,8 @@ export default function Security({
           maxWidth: "1280px",
           paddingRight: "1rem",
           paddingLeft: "1rem",
-          backgroundColor: scrolledToSec ? COLORS.SILVER : "white",
-          transition: 'background-color 1s ease-in-out 1s'
+          backgroundColor: scrolledToSec ? "#fcebcf" : "white",
+          transition: 'background-color 1s linear 1s'
         }}
       >
         <div
