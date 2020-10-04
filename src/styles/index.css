@@ -299,6 +299,10 @@ input[type="number"] {
 }
 
 @screen md {
+  .site-nav {
+    overflow: inherit;
+  }
+
   .step-box > div {
     @apply p-5 py-8;
   }

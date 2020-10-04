@@ -46,7 +46,7 @@ const Nav = ({ joinRef, calculateRef, featuresRef }: NavProps) => {
         </div>
       </div>
       <nav
-        className={`site-nav px-2 pt-2 pb-4 md:flex md:p-0 md:text-base lg:text-lg ${
+        className={`site-nav px-2 pt-2 pb-4 h-screen overflow-y-scroll overscroll-contain pb-16 md:h-auto md:flex md:p-0 md:text-base lg:text-lg ${
           isOpen ? "block bg-white shadow-lg" : "hidden"
         }`}
       >
@@ -81,19 +81,19 @@ const Nav = ({ joinRef, calculateRef, featuresRef }: NavProps) => {
           <span className="mt-1 cursor-pointer block px-2 py-1 font-semibold rounded md:mt-0 md:ml-2">
             About
           </span>
-          <div className="pl-8 md:p-5 md:hidden md:absolute md:bg-white md:shadow-lg md:pl-0">
+          <div className="pl-8 text-base md:p-5 md:hidden md:absolute md:bg-white md:shadow-lg md:pl-0">
             <div
-              className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 rounded md:mt-0 md:ml-2"
+              className="cursor-pointer hover:text-green-primary mt-1 block px-2 rounded md:py-1 md:mt-0 md:ml-2"
               onClick={() =>
                 featuresRef.current.scrollIntoView({ behavior: "smooth" })
               }
             >
               Features
             </div>
-            <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 rounded md:mt-0 md:ml-2">
+            <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 rounded md:py-1 md:mt-0 md:ml-2">
               Pricing
             </div>
-            <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 rounded md:mt-0 md:ml-2">
+            <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 rounded md:py-1 md:mt-0 md:ml-2">
               Company
             </div>
           </div>
