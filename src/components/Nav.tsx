@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import LogoWithName from "./logowithname";
+import { calcList } from "./landing/Calculator";
 
 interface NavProps {
   joinRef?: any;
@@ -49,31 +50,50 @@ const Nav = ({ joinRef, calculateRef, featuresRef }: NavProps) => {
           isOpen ? "block bg-white shadow-lg" : "hidden"
         }`}
       >
-        <a
-          className="cursor-pointer block px-2 py-1 font-semibold rounded"
-          onClick={() => {
-            calculateRef.current.scrollIntoView({ behavior: "smooth" });
-          }}
-        >
-          Calculate
-        </a>
+        <div className="site-nav-dropdown">
+          <a
+            className="cursor-pointer block px-2 py-1 font-semibold rounded"
+            onClick={() => {
+              calculateRef.current.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            Calculate
+          </a>
+          <div className="w-full pl-8 md:p-5 md:hidden md:absolute md:left-0 md:bg-white md:shadow-lg md:pl-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 md:px-5 md:gap-5">
+              {calcList.map(({ name, link, svg: Svg, desc }) => (
+                <div key={name} className="flex w-4/5">
+                  <div className="pr-2 mt-2">
+                    <Svg />
+                  </div>
+                  <div>
+                    <a href={link}>
+                      <h2 className="text-sm font-semibold">{name}</h2>
+                      <p className="text-gray-600 text-sm leading-4">{desc}</p>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         <div className="site-nav-dropdown relative">
           <span className="mt-1 cursor-pointer block px-2 py-1 font-semibold rounded md:mt-0 md:ml-2">
             About
           </span>
           <div className="pl-8 md:p-5 md:hidden md:absolute md:bg-white md:shadow-lg md:pl-0">
             <div
-              className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 font-semibold rounded md:mt-0 md:ml-2"
+              className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 rounded md:mt-0 md:ml-2"
               onClick={() =>
                 featuresRef.current.scrollIntoView({ behavior: "smooth" })
               }
             >
               Features
             </div>
-            <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 font-semibold rounded md:mt-0 md:ml-2">
+            <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 rounded md:mt-0 md:ml-2">
               Pricing
             </div>
-            <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 font-semibold rounded md:mt-0 md:ml-2">
+            <div className="cursor-pointer hover:text-green-primary mt-1 block px-2 py-1 rounded md:mt-0 md:ml-2">
               Company
             </div>
           </div>
