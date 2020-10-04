@@ -70,7 +70,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 							: cfsWithOppCost[i - 1] * (1 + dr / 100);
 				}
 				let compoundedVal =
-					freq === SPEND_MONTHLY && i < cfs.length ? prevCF : Math.round(prevCF * (1 + dr / 100));
+					freq === SPEND_MONTHLY && i < cfs.length ? prevCF : prevCF * (1 + dr / 100);
 				cfsWithOppCost.push(Math.round(compoundedVal));
 			}
 			setCFsWithOppCost([ ...cfsWithOppCost ]);
