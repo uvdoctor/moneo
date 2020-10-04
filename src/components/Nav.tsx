@@ -60,9 +60,9 @@ const Nav = ({ joinRef, calculateRef, featuresRef }: NavProps) => {
             Calculate
           </a>
           <div className="w-full pl-8 md:p-5 md:hidden md:absolute md:left-0 md:bg-white md:shadow-lg md:pl-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 md:px-5 md:gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 md:px-5 md:gap-5 lg:grid-cols-3">
               {calcList.map(({ name, link, svg: Svg, desc }) => (
-                <div key={name} className="flex w-4/5">
+                <div key={name} className="flex w-4/5 lg:w-full">
                   <div className="pr-2 mt-2">
                     <Svg />
                   </div>
