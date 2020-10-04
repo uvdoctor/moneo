@@ -1,4 +1,5 @@
 import React from "react";
+import { COLORS } from "../../CONSTANTS";
 
 interface SecurityProps {
   securityRef: string;
@@ -10,20 +11,19 @@ export default function Security({
   scrolledToSec,
 }: SecurityProps) {
   return (
-    <div className="bg-white">
+    <div ref={securityRef} className="bg-white">
       <div
         className="m-auto"
         style={{
           maxWidth: "1280px",
           paddingRight: "1rem",
           paddingLeft: "1rem",
+          backgroundColor: scrolledToSec ? COLORS.SILVER : "white",
+          transition: 'background-color 1s ease-in-out 1s'
         }}
       >
         <div
-          ref={securityRef}
-          className={`bg-transparent ${
-            scrolledToSec && "bg-green-100"
-          } flex flex-wrap justify-items-auto mt-5 transition-colors duration-1000 ease-in-out md:flex-no-wrap`}
+          className="flex flex-wrap justify-items-auto mt-5 md:flex-no-wrap"
         >
           <div className="w-full flex items-center">
             <div>
