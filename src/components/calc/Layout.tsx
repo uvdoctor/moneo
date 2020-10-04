@@ -1,7 +1,5 @@
 import { useRouter } from 'next/router';
 import React, { Fragment, useState } from 'react';
-//@ts-ignore
-import { AwesomeButton } from 'react-awesome-button';
 import { CreateGoalInput, GoalType } from '../../api/goals';
 import { ROUTES } from '../../CONSTANTS';
 import DDPage from '../ddpage';
@@ -13,6 +11,7 @@ import Header from '../header';
 import * as gtag from '../../lib/gtag';
 import CalculatorTemplate from './CalculatorTemplate';
 import ItemDisplay from './ItemDisplay';
+import Button from '../Button';
 
 interface LayoutProps {
 	title: string;
@@ -92,9 +91,7 @@ export default function Layout(props: LayoutProps) {
 							</div>
 						))}
 						<div className="mt-4">
-							<AwesomeButton ripple type="primary" size="medium" onPress={createGoal}>
-								START
-							</AwesomeButton>
+							<Button label="Start" isPrimary onClick={createGoal} />
 						</div>
 					</div>
 				</Fragment>

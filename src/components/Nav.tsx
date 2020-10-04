@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import LogoWithName from "./logowithname";
 import { calcList } from "./landing/Calculator";
+import Logo from "./logo";
 
 interface NavProps {
   joinRef?: any;
@@ -21,7 +21,7 @@ const Nav = ({ joinRef, calculateRef, featuresRef }: NavProps) => {
       }}
     >
       <div className="flex items-center justify-between py-2 md:p-0">
-        <LogoWithName />
+        <Logo />
         <div className="md:hidden">
           <button
             type="button"

@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-//@ts-ignore
-import { AwesomeButton } from "react-awesome-button";
 import Menu from "./menu";
 import LogoWithName from "./logowithname";
 import SVGMenu from "./svgmenu";

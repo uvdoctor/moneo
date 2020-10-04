@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { usePlaidLink } from "react-plaid-link";
-//@ts-ignore
-import { AwesomeButton } from "react-awesome-button";
+import Button from "../Button";
 //import { CreateItemInput } from '../../api/goals'
 
 export default function NW() {
@@ -38,14 +37,12 @@ export default function NW() {
   return (
     <div className="mt-8">
       <div className="flex justify-center">
-        <AwesomeButton
-          type="primary"
-          ripple
-          onPress={() => open()}
+        <Button
+          isPrimary
+          onClick={() => open()}
           disabled={ready}
-        >
-          LINK ACCOUNT
-        </AwesomeButton>
+          label="Link Account"
+        />
       </div>
       {error && <div className="text-red">{error}</div>}
     </div>

@@ -4,7 +4,7 @@ import SVGFullScreen from "../svgfullscreen";
 import SVGExitFullScreen from "../svgexitfullscreen";
 import DynamicSlider from "../dynamicslider";
 import Tabs from "../tabs";
-interface ResultSectionProps {
+interface ResultProps {
   result: ReactNode;
   resultTabOptions: Array<any>;
   showResultTab: string;
@@ -13,7 +13,7 @@ interface ResultSectionProps {
   chartFullScreenHandler: Function;
 }
 
-export default function ResultSection(props: ResultSectionProps) {
+export default function Result(props: ResultProps) {
   const chartDiv = useRef(null);
   const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 
@@ -24,7 +24,7 @@ export default function ResultSection(props: ResultSectionProps) {
   return (
     <div
       ref={chartDiv}
-      className={`w-full lg:w-2/3 xl:w-3/4 transition-width duration-1000 ease-in-out`}
+      className={`w-full transition-width duration-1000 ease-in-out`}
     >
       <Fragment>
         {props.result}

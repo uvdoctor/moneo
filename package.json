@@ -23,7 +23,6 @@
     "plotly.js": "^1.55.2",
     "rc-slider": "^9.4.1",
     "react": "^16.13.1",
-    "react-awesome-button": "^6.5.1",
     "react-browser-hooks": "^2.2.4",
     "react-dom": "^16.13.0",
     "react-plaid-link": "^3.0.0",

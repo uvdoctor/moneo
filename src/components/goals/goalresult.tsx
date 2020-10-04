@@ -1,65 +1,63 @@
-import React from "react";
-import OppCost from "../calc/oppcost";
-import FFImpact from "./ffimpact";
-import NumberInput from "../form/numberinput";
+import React from 'react';
+import OppCost from '../calc/oppcost';
+import FFImpact from './ffimpact';
+import NumberInput from '../form/numberinput';
 
 interface GoalResultProps {
-  cfs: Array<number>;
-  ffOOM: Array<number> | null;
-  ffImpactYears: number | null;
-  currency: string;
-  startYear: number;
-  ffGoalEndYear: number;
-  rr: Array<number>;
-  buyGoal: boolean;
-  dr?: number | null;
-  drHandler?: Function;
+	cfs: Array<number>;
+	ffOOM: Array<number> | null;
+	ffImpactYears: number | null;
+	currency: string;
+	startYear: number;
+	ffGoalEndYear: number;
+	rr: Array<number>;
+	buyGoal: boolean;
+	dr?: number | null;
+	drHandler?: Function;
 }
 
 export default function GoalResult(props: GoalResultProps) {
-  return (
-    <div className="w-full py-1 flex justify-around w-full items-center bg-green-100 shadow-lg lg:shadow-xl">
-      {props.dr === null || props.dr === undefined ? (
-        <div className="w-full">
-          <FFImpact
-            ffGoalEndYear={props.ffGoalEndYear}
-            ffOOM={props.ffOOM}
-            ffImpactYears={props.ffImpactYears}
-          />
-        </div>
-      ) : (
-        <div className="w-full">
-          <NumberInput
-            name="dr"
-            inputOrder={1}
-            currentOrder={0}
-            allInputDone
-            nextStepHandler={() => true}
-            nextStepDisabled={false}
-            value={props.dr as number}
-            changeHandler={props.drHandler}
-            min={0}
-            max={10}
-            step={0.1}
-            pre="Investment"
-            post="Earns Yearly"
-            unit="%"
-            note="After taxes & fees"
-          />
-        </div>
-      )}
-      <div className="w-full">
-        <OppCost
-          discountRate={
-            props.dr === null || props.dr === undefined ? props.rr : props.dr
-          }
-          cfs={props.cfs}
-          currency={props.currency}
-          startYear={props.startYear}
-          buyGoal={props.buyGoal}
-          ffGoalEndYear={props.ffGoalEndYear}
-        />
-      </div>
-    </div>
-  );
+	return (
+		<div className="w-full py-1 flex justify-around items-center bg-green-100 shadow-lg lg:shadow-xl">
+			{props.dr === null || props.dr === undefined ? (
+				<div className="w-full">
+					<FFImpact
+						ffGoalEndYear={props.ffGoalEndYear}
+						ffOOM={props.ffOOM}
+						ffImpactYears={props.ffImpactYears}
+					/>
+				</div>
+			) : (
+				<div className="w-full">
+					<NumberInput
+						name="dr"
+						inputOrder={1}
+						currentOrder={0}
+						allInputDone
+						nextStepHandler={() => true}
+						nextStepDisabled={false}
+						value={props.dr as number}
+						changeHandler={props.drHandler}
+						min={0}
+						max={15}
+						step={0.1}
+						pre="Investment"
+						post="Earns Yearly"
+						unit="%"
+						note="After taxes & fees"
+					/>
+				</div>
+			)}
+			<div className="w-full">
+				<OppCost
+					discountRate={props.dr === null || props.dr === undefined ? props.rr : props.dr}
+					cfs={props.cfs}
+					currency={props.currency}
+					startYear={props.startYear}
+					buyGoal={props.buyGoal}
+					ffGoalEndYear={props.ffGoalEndYear}
+				/>
+			</div>
+		</div>
+	);
 }
