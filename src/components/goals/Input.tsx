@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import Button from '../Button';
 import ActionButtons from '../form/actionbuttons';
 import Tabs from '../tabs';
 
@@ -49,11 +48,7 @@ export default function Input({
 					(child: any) => ((allInputDone || currentOrder >= tabOptions[0].order) && child ? child : null)
 				)}
 			</div>
-			{!handleSubmit ? (
-				<div className="w-full text-center">
-					<Button label="Close" onClick={cancelCallback} isPrimary />
-				</div>
-			) : (
+			{handleSubmit && (
 				<ActionButtons
 					submitDisabled={submitDisabled}
 					cancelDisabled={cancelDisabled}

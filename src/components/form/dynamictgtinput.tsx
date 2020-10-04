@@ -69,7 +69,7 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
   };
 
   return (
-    <div className="w-full flex justify-center items-center">
+    <div>
       {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
         props.allInputDone) && (
         <div

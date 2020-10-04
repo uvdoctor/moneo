@@ -32,7 +32,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 			)}
 			<div className="flex justify-between items-start">
 				<div
-					className={`flex ${
+					className={`w-full flex ${
 						props.vertical && "flex-col"
 					} justify-center items-center`}
 				>

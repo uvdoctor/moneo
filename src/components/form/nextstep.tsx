@@ -1,4 +1,6 @@
 import React from 'react';
+import Button from '../Button';
+import ItemDisplay from '../calc/ItemDisplay';
 import SVGNext from '../svgnext';
 interface NextStepProps {
 	nextStepHandler: Function;
@@ -8,13 +10,14 @@ interface NextStepProps {
 
 export default function NextStep({ nextStepHandler, disabled, actionCount }: NextStepProps) {
 	return (
-		<div className="relative">
-			<div
-				className={`absolute z-10 ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-				onClick={() => !disabled && nextStepHandler(actionCount ? actionCount : 1)}
+		<div className="w-full flex justify-center mt-2 relative">
+			<Button
+				className="absolute z-10"
+				onClick={() => nextStepHandler(actionCount ? actionCount : 1)}
+				disabled={disabled}
 			>
-				<SVGNext disabled={disabled} />
-			</div>
+				<ItemDisplay svg={<SVGNext />} result="Next" />
+			</Button>
 		</div>
 	);
 }

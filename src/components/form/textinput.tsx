@@ -33,7 +33,7 @@ export default function TextInput(props: TextInputProps) {
   };
 
   return (
-    <div className="flex items-center">
+    <div>
       {(props.currentOrder >= props.inputOrder || props.allInputDone) && (
         <form
           ref={formRef}

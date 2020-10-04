@@ -101,7 +101,7 @@ export default function NumberInput(props: NumberInputProps) {
   };
 
   return (
-      <div className="flex items-center justify-center">
+      <div>
         {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
           props.allInputDone) && (
           <form

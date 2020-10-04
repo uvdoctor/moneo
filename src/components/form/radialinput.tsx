@@ -30,7 +30,7 @@ export default function RadialInput(props: RadialInputProps) {
     const width: number = props.width ? props.width : 110
 
     return (
-        <div className="w-full flex justify-center items-center">
+        <div>
             {((!props.allInputDone && props.inputOrder <= props.currentOrder) || props.allInputDone) &&
                 <div className={`flex flex-col items-center justify-center
                                 ${!props.allInputDone && props.inputOrder === props.currentOrder && INPUT_HIGHLIGHT}`}>

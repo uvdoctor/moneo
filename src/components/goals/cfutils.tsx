@@ -424,7 +424,13 @@ const createLoanCFs = (
   let cfs: Array<number> = [];
   let totalPTaxBenefit = 0;
   let totalITaxBenefit = 0;
-  if (!goal.emi?.per || !goal.emi?.dur) return cfs;
+  if (!goal.emi?.per || !goal.emi?.dur) return {
+    cfs: cfs,
+    ptb: totalPTaxBenefit,
+    itb: totalITaxBenefit,
+    iSchedule: [],
+    pSchedule: []
+  };
   let loanBorrowAmt = 0;
   let loanDP = 0;
   let simpleInts: Array<number> = [];

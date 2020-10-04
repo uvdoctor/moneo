@@ -41,7 +41,7 @@ export default function SelectInput(props: SelectInputProps) {
   }, [props.allInputDone, props.currentOrder])
 
   return (
-    <div className="w-full flex items-center justify-center">
+    <div>
       {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
         props.allInputDone) && (
         <div

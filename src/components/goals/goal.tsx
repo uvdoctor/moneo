@@ -347,15 +347,18 @@ export default function Goal({
     cfs = result.cfs;
     console.log("New cfs created: ", cfs);
     if (changeState) {
-      if ((loanPer as number) && manualMode < 1 && goalType === APIt.GoalType.B)
+      if ((loanPer as number) && manualMode < 1 && goalType === APIt.GoalType.B && cfs.length > 0)
         setEndYear(g.sy + cfs.length - 1);
       setCFs([...cfs]);
       setDuration(duration);
-      if (result.hasOwnProperty("itb")) setTotalITaxBenefit(result.itb);
-      setTotalPTaxBenefit(result.ptb);
+      setTotalITaxBenefit(result.hasOwnProperty("itb") ? result.itb : 0);
+      setTotalPTaxBenefit(result.hasOwnProperty("ptb") ? result.ptb : 0);
       if(result.hasOwnProperty("iSchedule")) {
         setISchedule([...result.iSchedule])
         setPSchedule([...result.pSchedule])
+      } else {
+        setISchedule([...[]])
+        setPSchedule([...[]])
       }
     }
     return cfs;

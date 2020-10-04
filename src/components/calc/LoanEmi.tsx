@@ -16,7 +16,6 @@ import { GoalType } from "../../api/goals";
 import ItemDisplay from "./ItemDisplay";
 import { COLORS } from "../../CONSTANTS";
 import { isTaxCreditEligible } from "../goals/goalutils";
-import Tooltip from "../form/tooltip";
 interface LoanEmiProps {
   inputOrder: number;
   currentOrder: number;
@@ -211,7 +210,7 @@ export default function LoanEmi(props: LoanEmiProps) {
                     allInputDone={props.allInputDone}
                     pre="Term"
                     unit="years"
-                    note={`EMI ${toCurrency(emi, props.currency)}`}
+                    note={`Monthly ${toCurrency(emi, props.currency)}`}
                     value={props.loanYears}
                     changeHandler={props.loanMonthsHandler}
                     min={0.5}
@@ -240,7 +239,7 @@ export default function LoanEmi(props: LoanEmiProps) {
                     pre="Yearly"
                     post="Interest"
                     unit="%"
-                    feedback={{
+                    /*feedback={{
                       0: {
                         label: (
                           <Tooltip
@@ -289,7 +288,7 @@ export default function LoanEmi(props: LoanEmiProps) {
                         ),
                         color: COLORS.RED,
                       },
-                    }}
+                    }}*/
                     note={
                       <ItemDisplay
                         label="Total Interest"
