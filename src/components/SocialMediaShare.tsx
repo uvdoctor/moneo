@@ -23,11 +23,11 @@ import {
 } from "react-share";
 import ExpandCollapse from "./form/expandcollapse";
 
-interface SocialShareProps {
+interface SocialMediaShareProps {
   url: string;
 }
 
-export default function SocialShare({ url }: SocialShareProps) {
+export default function SocialMediaShare({ url }: SocialMediaShareProps) {
   return (
     <ExpandCollapse title="Earn 500 points for Every Referral who Joins">
       <div className="mt-2 w-full flex flex-wrap justify-around">
