@@ -37,7 +37,6 @@ export default function DDLineChart(props: DDLineChartProps) {
 				xAxis={getCommonXAxis("Year")}
 				meta={getCommonMeta(props.currency)}
 				point={{ visible: true }}
-				smooth
 			/>
 		</div>
 	);
