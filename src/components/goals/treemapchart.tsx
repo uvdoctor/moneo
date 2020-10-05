@@ -1,92 +1,67 @@
-import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-import {
-  getCommonConfig,
-  getCommonLayoutProps,
-  getCommonStyle,
-} from "../chartutils";
-import {
-  getAllAssetCategories,
-  getAllAssetTypesByCategory,
-  getAssetColour,
-} from "../utils";
-import { ASSET_CATEGORIES, ASSET_TYPES } from "../../CONSTANTS";
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { getAllAssetCategories, getAllAssetTypesByCategory } from '../utils';
 
 interface TreeMapChartProps {
-  aa: any;
-  rr: Array<number>;
+	aa: any;
+	rr: Array<number>;
 }
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+const TreemapChart = dynamic(() => import('bizcharts/lib/plots/TreemapChart'), { ssr: false });
 
-export default function TreeMapChart({
-  aa,
-  rr,
-}: TreeMapChartProps) {
-  const [labels, setLabels] = useState<Array<string>>([]);
-  const [values, setValues] = useState<Array<string>>([]);
-  const [colors, setColors] = useState<Array<string>>([]);
-  const [parents, setParents] = useState<Array<string>>([]);
+export default function TreeMapChart({ aa, rr }: TreeMapChartProps) {
+	const [ data, setData ] = useState<Array<any>>([]);
 
-  const initChartData = () => {
-    let labels: Array<string> = [];
-    let values: Array<string> = [];
-    let colors: Array<string> = [];
-    let parents: Array<string> = [];
-    getAllAssetCategories().forEach((cat) => {
-      labels.push(cat);
-      values.push("0");
-      colors.push(getAssetColour(cat));
-      parents.push("");
+	const initChartData = () => {
+		let data: Array<any> = [];
+		getAllAssetCategories().forEach((cat) => {
+			let children: Array<any> = [];
+			let total = 0;
       getAllAssetTypesByCategory(cat).forEach((at) => {
-        values.push(aa[at][0]);
-        colors.push(getAssetColour(at));
-        if (at.endsWith("nds") || at.endsWith("cks")) {
-          labels.push(at.split(" ")[0]);
-          parents.push(at.split(" ")[1]);
-        } else {
-          labels.push(at);
-          if (at === ASSET_TYPES.SAVINGS || at === ASSET_TYPES.DEPOSITS)
-            parents.push(ASSET_CATEGORIES.CASH);
-          else parents.push(ASSET_CATEGORIES.ALTERNATIVE);
+        if (aa[at][0]) {
+          total += aa[at][0];
+          children.push({
+            name: at,
+            value: aa[at][0],
+            children: []
+          });
         }
-      });
-    });
-    setLabels([...labels]);
-    setValues([...values]);
-    setColors([...colors]);
-    setParents([...parents]);
-  };
+			});
+			data.push({
+				name: cat,
+				value: total,
+				children: children
+			});
+		});
+		setData([ ...data ]);
+	};
 
-  useEffect(() => {
-    initChartData();
-  }, [rr]);
+	useEffect(
+		() => {
+			initChartData();
+		},
+		[ rr ]
+	);
 
-  return (
-    <Plot
-      //@ts-ignore
-      layout={{
-        ...getCommonLayoutProps(),
-        hoverlabel: { labelformat: "%" },
-        margin: { t: 0, l: 0, r: 0, b:0}
-      }}
-      useResizeHandler
-      style={getCommonStyle()}
-      data={[
-        {
-          type: "treemap",
-          labels: labels,
-          values: values,
-          parents: parents,
-          marker: {
-            colors: colors,
-          },
-          hovertext: "Portfolio",
-          textinfo: "label+percent entry",
-          hoverinfo: "label+percent entry+text",
-        },
-      ]}
-      config={getCommonConfig()}
-    />
-  );
+	return (
+		<TreemapChart
+			data={{
+				name: 'Portfolio',
+				value: 100,
+				children: data
+			}}
+			meta={{
+				value: {
+					formatter: (v) => {
+						return v + '%';
+					}
+				}
+			}}
+			colorField="value"
+			label={{
+        visible: true,
+        formatter: (v) => {return aa.hasOwnProperty(v) ? v + "\n" + aa[v][0]+"%" : v}
+			}}
+		/>
+	);
 }

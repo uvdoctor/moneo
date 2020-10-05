@@ -45,12 +45,12 @@ export default function BRCompChart(props: BRCompChartProps) {
 			for (let year = 1; year <= props.data[0].values.length; year++) {
 				chartData.push({
 					name: props.data[0].name,
-					years: '' + year,
+					years: year,
 					value: props.data[0].values[year - 1]
 				});
 				chartData.push({
 					name: props.data[1].name,
-					years: '' + year,
+					years: year,
 					value: props.data[1].values[year - 1]
 				});
 			}
