@@ -554,7 +554,6 @@ export default function Goals() {
                 <TreeMapChart
                   aa={ffResult.aa}
                   rr={rr}
-                  fullScreen={fullScreen}
                 />
               )}
               {viewMode === goalsLabel && (
