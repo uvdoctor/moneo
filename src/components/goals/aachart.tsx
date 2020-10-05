@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { convertPerToDec, getAssetColour, isMobileDevice } from "../utils";
+import { convertPerToDec, getAssetColour } from "../utils";
 import {
   getCommonConfig,
   getCommonLayoutProps,
   getCommonStyle,
 } from "../chartutils";
-import { useFullScreenBrowser } from "react-browser-hooks";
 import { ASSET_TYPES } from "../../CONSTANTS";
 
 interface AAChartProps {
   aa: any;
   rr: Array<number>;
   years: Array<number>;
-  fullScreen: boolean;
 }
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 export default function AAChart(props: AAChartProps) {
-  const fsb = useFullScreenBrowser();
   const hoverTemplate = "%{y} %{fullData.name}<extra></extra>"
   const filterAA = () => {
     let result: any = {};
@@ -81,13 +78,6 @@ export default function AAChart(props: AAChartProps) {
     });
     return arr;
   };
-
-  useEffect(() => {
-    if (!isMobileDevice(fsb))
-      setTimeout(() => {
-        window.dispatchEvent(new Event("resize"));
-      }, 300);
-  }, [props.fullScreen]);
 
   useEffect(() => {
     setFilteredAA(filterAA());

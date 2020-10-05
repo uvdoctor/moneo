@@ -11,12 +11,10 @@ import {
   getAssetColour,
 } from "../utils";
 import { ASSET_CATEGORIES, ASSET_TYPES } from "../../CONSTANTS";
-import { useFullScreenBrowser } from "react-browser-hooks";
 
 interface TreeMapChartProps {
   aa: any;
   rr: Array<number>;
-  fullScreen: boolean;
 }
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
@@ -24,20 +22,11 @@ const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 export default function TreeMapChart({
   aa,
   rr,
-  fullScreen,
 }: TreeMapChartProps) {
-  const fsb = useFullScreenBrowser();
   const [labels, setLabels] = useState<Array<string>>([]);
   const [values, setValues] = useState<Array<string>>([]);
   const [colors, setColors] = useState<Array<string>>([]);
   const [parents, setParents] = useState<Array<string>>([]);
-
-  useEffect(() => {
-    if (fsb.info.innerWidth > 800)
-      setTimeout(() => {
-        window.dispatchEvent(new Event("resize"));
-      }, 300);
-  }, [fullScreen]);
 
   const initChartData = () => {
     let labels: Array<string> = [];

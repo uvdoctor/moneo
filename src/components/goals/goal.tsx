@@ -151,7 +151,6 @@ export default function Goal({
   const cfChartLabel = "Cash Flows";
   const brChartLabel = "Buy v/s Rent & Invest";
   const loanChartLabel = "EMI Schedule";
-  const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [showBRChart, setShowBRChart] = useState<boolean>(
     sellAfter && rentAmt && rentAmt > 0 ? true : false
@@ -873,7 +872,6 @@ export default function Goal({
             resultTabOptions={resultTabOptions}
             showResultTab={showResultTab}
             showResultTabHandler={setShowResultTab}
-            chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
             result={
               nowYear < startYear && (
                 <GoalResult
@@ -894,10 +892,10 @@ export default function Goal({
             <DDLineChart
               cfs={cfs}
               startYear={startYear}
-              fullScreen={chartFullScreen}
+              currency={currency}
             />
             {showBRChart && (
-              <BRCompChart data={brChartData} fullScreen={chartFullScreen} />
+              <BRCompChart data={brChartData} currency={currency} />
             )}
             {manualMode < 1 && loanPer && loanRepaymentSY && loanYears && (
               <IntChart
@@ -905,7 +903,7 @@ export default function Goal({
                 loanYears={iSchedule.length}
                 interestSchedule={iSchedule}
                 principalSchedule={pSchedule}
-                fullScreen={chartFullScreen}
+                currency={currency}
               />
             )}
           </Result>

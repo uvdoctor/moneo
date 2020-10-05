@@ -1,83 +1,51 @@
-import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-import {
-  getCommonConfig,
-  getCommonLayoutProps,
-  getCommonStyle,
-} from "../chartutils";
-import { useFullScreenBrowser } from "react-browser-hooks";
-import { buildYearsArray, isMobileDevice } from "../utils";
-import { COLORS } from "../../CONSTANTS";
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
 
 interface IntChartProps {
-  principalSchedule: Array<number>;
-  interestSchedule: Array<number>;
-  repaymentSY: number;
-  loanYears: number;
-  fullScreen: boolean;
+	principalSchedule: Array<number>;
+	interestSchedule: Array<number>;
+	repaymentSY: number;
+	loanYears: number;
+	currency: string;
 }
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
 
 export default function IntChart(props: IntChartProps) {
-  const fsb = useFullScreenBrowser();
-  const [years, setYears] = useState<Array<number>>([]);
+	const [ data, setData ] = useState<Array<any>>([]);
 
-  useEffect(() => {
-    setYears([
-      ...buildYearsArray(
-        props.repaymentSY,
-        props.repaymentSY + props.loanYears - 1
-      ),
-    ]);
-  }, [props.repaymentSY, props.loanYears]);
+	useEffect(
+		() => {
+			let data: Array<any> = [];
+			for (let year = props.repaymentSY; year < props.repaymentSY + props.loanYears; year++) {
+				data.push({
+					name: 'Principal',
+					year: year,
+					value: props.principalSchedule[year - props.repaymentSY]
+				});
+				data.push({
+					name: 'Interest',
+					year: year,
+					value: props.interestSchedule[year - props.repaymentSY]
+				});
+			}
+			setData([ ...data ]);
+		},
+		[ props.repaymentSY, props.loanYears, props.principalSchedule, props.interestSchedule ]
+	);
 
-  useEffect(() => {
-    if (!isMobileDevice(fsb))
-      setTimeout(() => {
-        window.dispatchEvent(new Event("resize"));
-      }, 300);
-  }, [props.fullScreen]);
-
-  const createBarTrace = (
-    cfs: Array<number>,
-    name: string,
-    color: string,
-    mode: string = "line"
-  ) => {
-    console.log("CFs are: ", cfs)
-    return {
-      type: "bar",
-      x: years,
-      y: cfs,
-      name: name,
-      mode: mode,
-      marker: { color: color },
-    };
-  };
-
-  return (
-    <div className="w-full">
-      <Plot
-        //@ts-ignore
-        layout={{
-          barmode: "stack",
-          ...getCommonLayoutProps(""),
-          xaxis: { title: "Year", showgrid: false, type: "category" },
-          legend: {
-            orientation: "h",
-            x: 0.7,
-            y: 1.1,
-          },
-        }}
-        useResizeHandler
-        style={getCommonStyle()}
-        data={[
-          createBarTrace(props.principalSchedule, "Principal", COLORS.GREEN),
-          createBarTrace(props.interestSchedule, "Interest", COLORS.ORANGE),
-        ]}
-        config={getCommonConfig()}
-      />
-    </div>
-  );
+	return (
+		<div className="w-full">
+			<StackedColumnChart
+				meta={getCommonMeta(props.currency)}
+				xField="year"
+				yField="value"
+				stackField="name"
+				yAxis={getCommonYAxis()}
+        xAxis={getCommonXAxis('Year')}
+        data={data}
+			/>
+		</div>
+	);
 }

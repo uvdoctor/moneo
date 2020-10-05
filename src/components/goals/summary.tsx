@@ -75,7 +75,7 @@ export default function Summary(props: SummaryProps) {
       <DDLineChart
         cfs={props.cfs}
         startYear={props.startYear}
-        fullScreen={false}
+        currency={props.currency}
       />
     </div>
   );

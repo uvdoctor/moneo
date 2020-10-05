@@ -127,7 +127,6 @@ export default function FFGoal({
   const cfChartLabel = "Total Portfolio";
   const aaFutureLabel = "Allocation Plan";
   const aaNextYearLabel = "Asset Allocation";
-  const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const careOption = {
     label: careLabel,
     order: 11,
@@ -510,7 +509,6 @@ export default function FFGoal({
             resultTabOptions={resultTabOptions}
             showResultTab={showResultTab}
             showResultTabHandler={setShowResultTab}
-            chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
             result={
               <FFResult
                 endYear={endYear}
@@ -525,21 +523,19 @@ export default function FFGoal({
                 <TreeMapChart
                   aa={ffResult.aa}
                   rr={ffResult.rr}
-                  fullScreen={chartFullScreen}
                 />
                 <AAChart
                   aa={ffResult.aa}
                   years={buildYearsArray(nowYear + 2, endYear)}
                   rr={ffResult.rr}
-                  fullScreen={chartFullScreen}
                 />
               </Fragment>
             )}
             <DDLineChart
               cfs={buildChartCFs(ffResult.ffCfs)}
               startYear={getAge(nowYear + 1, endYear)}
-              fullScreen={chartFullScreen}
               title="Age"
+              currency={currency}
             />
           </Result>
         )}

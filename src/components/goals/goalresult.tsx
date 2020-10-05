@@ -28,7 +28,6 @@ export default function GoalResult(props: GoalResultProps) {
 					/>
 				</div>
 			) : (
-				<div className="w-full">
 					<NumberInput
 						name="dr"
 						inputOrder={1}
@@ -45,10 +44,8 @@ export default function GoalResult(props: GoalResultProps) {
 						post="Earns Yearly"
 						unit="%"
 						note="After taxes & fees"
-					/>
-				</div>
+						/>
 			)}
-			<div className="w-full">
 				<OppCost
 					discountRate={props.dr === null || props.dr === undefined ? props.rr : props.dr}
 					cfs={props.cfs}
@@ -57,7 +54,6 @@ export default function GoalResult(props: GoalResultProps) {
 					buyGoal={props.buyGoal}
 					ffGoalEndYear={props.ffGoalEndYear}
 				/>
-			</div>
 		</div>
 	);
 }
