@@ -3,7 +3,7 @@ import { INVEST, SAVE, SPEND } from '../../pages/truecost';
 import SelectInput from '../form/selectinput';
 import { getOrderByTabLabel } from '../goals/goalutils';
 import Input from '../goals/Input';
-import LineChart from '../goals/linechart';
+import DDLineChart from '../goals/DDLineChart';
 import Result from '../goals/Result';
 import SVGChart from '../svgchart';
 import SVGHourGlass from '../svghourglass';
@@ -282,7 +282,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 						</div>
 					}
 				>
-					<LineChart
+					<DDLineChart
 						cfs={cfsWithOppCost}
 						fullScreen={chartFullScreen}
 						startYear={1}

@@ -1,5 +1,5 @@
 import React from "react";
-import LineChart from "./linechart";
+import DDLineChart from "./DDLineChart";
 import SVGTrash from "../svgtrash";
 import SVGEdit from "../svgedit";
 import { getGoalTypes, getImpLevels } from "./goalutils";
@@ -72,7 +72,7 @@ export default function Summary(props: SummaryProps) {
       <p className="w-full text-center mt-4 mb-2">
         Yearly Cash Flows in {props.currency}
       </p>
-      <LineChart
+      <DDLineChart
         cfs={props.cfs}
         startYear={props.startYear}
         fullScreen={false}

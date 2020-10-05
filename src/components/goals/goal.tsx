@@ -22,7 +22,7 @@ import { getCompoundedIncome, getNPV } from "../calc/finance";
 import SVGScale from "../svgscale";
 import Result from "./Result";
 import GoalResult from "./goalresult";
-import LineChart from "./linechart";
+import DDLineChart from "./DDLineChart";
 import Input from "./Input";
 import RentComparison from "./rentcomparison";
 import BRCompChart from "./brcompchart";
@@ -891,7 +891,7 @@ export default function Goal({
               )
             }
           >
-            <LineChart
+            <DDLineChart
               cfs={cfs}
               startYear={startYear}
               fullScreen={chartFullScreen}

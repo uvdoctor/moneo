@@ -16,6 +16,7 @@
     "@aws-amplify/ui-react": "^0.2.21",
     "@fseehawer/react-circular-slider": "^2.3.4",
     "aws-amplify": "^3.3.1",
+    "bizcharts": "^4.0.14",
     "next": "^9.5.3",
     "next-pwa": "^3.1.4",
     "nextjs": "^0.0.3",

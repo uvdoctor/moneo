@@ -10,7 +10,7 @@ import SelectInput from "../form/selectinput";
 import { findEarliestFFYear } from "./cfutils";
 import FFResult from "./ffresult";
 import SVGChart from "../svgchart";
-import LineChart from "./linechart";
+import DDLineChart from "./DDLineChart";
 import { getAge, getOrderByTabLabel, getTabLabelByOrder } from "./goalutils";
 import SVGBarChart from "../svgbarchart";
 import StickyHeader from "./stickyheader";
@@ -535,7 +535,7 @@ export default function FFGoal({
                 />
               </Fragment>
             )}
-            <LineChart
+            <DDLineChart
               cfs={buildChartCFs(ffResult.ffCfs)}
               startYear={getAge(nowYear + 1, endYear)}
               fullScreen={chartFullScreen}
