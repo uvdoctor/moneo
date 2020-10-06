@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "./logo";
-import SVGOff from "./icons/SVGOff";
+import SVGOff from "./SVGOff";
 import { Auth, Hub } from "aws-amplify";
 import { useRouter } from "next/router";
 import FullScreen from "./fullscreen";

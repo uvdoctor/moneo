@@ -1,8 +1,7 @@
 import "@aws-amplify/ui/dist/style.css";
 import "rc-slider/assets/index.css";
-import "react-toastify/dist/ReactToastify.css";
 import { AppProps } from "next/app";
-//import "../styles/index.css";
+import "../styles/index.less";
 import * as gtag from "../lib/gtag";
 import { Router } from "next/router";
 import React from "react";

@@ -1,8 +1,8 @@
 import React from "react";
 import SVGPiggy from "./svgpiggy";
 import SVGMoneyBag from "./calc/svgmoneybag";
-import SVGPlan from "./icons/svgplan";
-import SVGInvest from "./icons/svginvest";
+import SVGPlan from "./svgplan";
+import SVGInvest from "./svginvest";
 import { ROUTES } from "../CONSTANTS";
 import Link from "next/link";
 import { useRouter } from "next/router";

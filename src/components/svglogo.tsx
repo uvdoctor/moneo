@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react'
 
 export default function SVGLogo() {
-	return (
-		<svg viewBox="0 0 192 192" enableBackground="new 0 0 192 192">
-			<image
-				x="0"
-				y="0"
-				href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+    return (
+    <svg className="w-6 md:w-10 cursor-pointer" viewBox="0 0 192 192" enableBackground="new 0 0 192 192">
+        <image
+            x="0"
+            y="0"
+            href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
 AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAA
 CXBIWXMAAA7DAAAOwwHHb6hkAABGVklEQVR42u19d3gcx5Xne9U9EYNBBgGQYCYVKIoKtnIwZcmy
 JVm2zha1Z2tly2dLd7Zs+RzWYb/bIW73vM4+Oa0oB+qkdRDks7S2T1bOWaJkBeYAkgCRgQEGk6e7
@@ -327,7 +327,7 @@ BZaCGmhG1Ozl5wDAMzeVVXI5kMEz7ecruRzInqP58p7C/3m5xJhXS0NmLCjjeDzFNACAJmgESSL1
 +ef3ZzZv3myoLQsdfXr4/6XYoi/4p3HSAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTA0LTI0VDEx
 OjUzOjA0KzAwOjAwy0+88QAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0wNC0yNFQxMTo1MzowNCsw
 MDowMLoSBE0AAAAASUVORK5CYII="
-			/>
-		</svg>
-	);
+        />
+    </svg>
+    )
 }

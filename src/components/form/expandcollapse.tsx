@@ -2,7 +2,6 @@ import React, { ReactNode, useState } from "react";
 import SVGExpand from "../svgexpand";
 import SVGCollapse from "../svgcollapse";
 import SVGInfo from "../svginfo";
-import { toast } from "react-toastify";
 import { COLORS } from "../../CONSTANTS";
 interface ExpandCollapseProps {
   title: string;
@@ -28,7 +27,7 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
       {props.titleInfo && (
         <div
           className="w-full flex justify-center cursor-pointer"
-          onClick={() => toast.info(props.titleInfo)}
+          onClick={() => {}}
         >
           <SVGInfo />
         </div>
