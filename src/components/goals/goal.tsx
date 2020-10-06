@@ -663,7 +663,7 @@ export default function Goal({
         )}
       </StickyHeader>
       <div
-        className={`container mx-auto w-full h-full flex flex-1 lg:flex-row ${
+        className={`w-full h-full flex flex-1 lg:flex-row ${
           showResultSection() && "flex-col-reverse"
         } items-start`}
       >

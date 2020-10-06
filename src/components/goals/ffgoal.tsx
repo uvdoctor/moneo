@@ -341,7 +341,7 @@ export default function FFGoal({
         />
       </StickyHeader>
       <div
-        className={`container mx-auto flex flex-1 lg:flex-row ${
+        className={`flex flex-1 lg:flex-row ${
           showResultSection() && "flex-col-reverse"
         } items-start`}
       >
