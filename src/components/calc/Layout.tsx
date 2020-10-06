@@ -1,17 +1,17 @@
-import { useRouter } from 'next/router';
-import React, { Fragment, useState } from 'react';
-import { CreateGoalInput, GoalType } from '../../api/goals';
-import { ROUTES } from '../../CONSTANTS';
-import DDPage from '../ddpage';
-import ExpandCollapse from '../form/expandcollapse';
-import FFGoal from '../goals/ffgoal';
-import Goal from '../goals/goal';
-import { createNewGoalInput } from '../goals/goalutils';
-import Header from '../header';
-import * as gtag from '../../lib/gtag';
-import CalculatorTemplate from './CalculatorTemplate';
-import ItemDisplay from './ItemDisplay';
-import Button from '../Button';
+import { useRouter } from "next/router";
+import React, { Fragment, useState } from "react";
+import { CreateGoalInput, GoalType } from "../../api/goals";
+import { ROUTES } from "../../CONSTANTS";
+import DDPage from "../DDPage";
+import ExpandCollapse from "../form/expandcollapse";
+import FFGoal from "../goals/ffgoal";
+import Goal from "../goals/goal";
+import { createNewGoalInput } from "../goals/goalutils";
+import Header from "../header";
+import * as gtag from "../../lib/gtag";
+import CalculatorTemplate from "./CalculatorTemplate";
+import ItemDisplay from "./ItemDisplay";
+import Button from "../Button";
 
 interface LayoutProps {
 	title: string;
@@ -26,13 +26,13 @@ interface LayoutProps {
 
 export default function Layout(props: LayoutProps) {
 	const router = useRouter();
-	const [ wipGoal, setWIPGoal ] = useState<any | null>(null);
-	const [ ffResult, setFFResult ] = useState<any>({});
+	const [wipGoal, setWIPGoal] = useState<any | null>(null);
+	const [ffResult, setFFResult] = useState<any>({});
 	const nowYear = new Date().getFullYear();
 	const sections: any = {
-		'Expected Results': props.results,
-		'Key Features': props.features,
-		'Major Assumptions': props.assumptions
+		"Expected Results": props.results,
+		"Key Features": props.features,
+		"Major Assumptions": props.assumptions,
 	};
 
 	const buildEmptyMergedCFs = () => {
@@ -45,14 +45,14 @@ export default function Layout(props: LayoutProps) {
 
 	const createGoal = () => {
 		let g: any = null;
-		if (props.type) g = createNewGoalInput(props.type, 'USD');
+		if (props.type) g = createNewGoalInput(props.type, "USD");
 		else g = {};
 		g.name = props.title;
 		gtag.event({
-			category: 'Calculator',
-			action: 'Start',
-			label: 'type',
-			value: props.type ? props.type : props.title
+			category: "Calculator",
+			action: "Start",
+			label: "type",
+			value: props.type ? props.type : props.title,
 		});
 		setWIPGoal(g);
 	};
@@ -62,19 +62,24 @@ export default function Layout(props: LayoutProps) {
 			{!wipGoal ? (
 				<Fragment>
 					<Header />
-          <div className="mt-16 w-full text-center">
-            <ItemDisplay svg={props.titleSVG} result={props.title + ' Calculator'} calcFormat />
+					<div className="mt-16 w-full text-center">
+						<ItemDisplay
+							svg={props.titleSVG}
+							result={props.title + " Calculator"}
+							calcFormat
+						/>
 						{Object.keys(sections).map((key, i) => (
-							<div key={'section' + i} className="mt-4">
+							<div key={"section" + i} className="mt-4">
 								<ExpandCollapse title={key} insideCalc>
 									<Fragment>
 										<div
-											className={`w-full flex flex-col justify-center items-center ${sections[
-												key
-											] === props.results && 'md:flex-row md:flex-wrap md:justify-around'}`}
+											className={`w-full flex flex-col justify-center items-center ${
+												sections[key] === props.results &&
+												"md:flex-row md:flex-wrap md:justify-around"
+											}`}
 										>
 											{sections[key].map((item: any, i: number) => (
-												<div className="md:mt-2 md:mr-2" key={'item' + i}>
+												<div className="md:mt-2 md:mr-2" key={"item" + i}>
 													{item}
 												</div>
 											))}
@@ -82,7 +87,7 @@ export default function Layout(props: LayoutProps) {
 										{sections[key] === props.results && (
 											<img
 												className="cursor-pointer object-fit"
-												src={'/images/' + props.resultImg}
+												src={"/images/" + props.resultImg}
 												onClick={createGoal}
 											/>
 										)}

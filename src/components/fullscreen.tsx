@@ -1,6 +1,6 @@
 import React from "react";
-import SVGFullScreen from "./SVGFullscreen";
-import SVGExitFullScreen from "./SVGExitfullscreen";
+import SVGFullScreen from "./svgfullscreen";
+import SVGExitFullScreen from "./svgexitfullscreen";
 import { useFullScreen } from "react-browser-hooks";
 
 export default function FullScreen() {

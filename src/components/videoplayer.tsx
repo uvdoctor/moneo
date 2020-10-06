@@ -1,6 +1,5 @@
 import React from "react";
 import ReactPlayer from "react-player/lazy";
-import { toast } from "react-toastify";
 
 interface VideoPlayerProps {
   url: string;
@@ -19,9 +18,11 @@ export default function VideoPlayer({ url, urlHandler }: VideoPlayerProps) {
         controls
         onEnded={() => urlHandler("")}
         onError={() => {
-          toast.error(
+          {
+            /*toast.error(
             "Sorry, an error occurred while trying to play the video!"
-          );
+          );*/
+          }
           urlHandler("");
         }}
       />

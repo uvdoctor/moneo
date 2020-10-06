@@ -2,11 +2,7 @@ import React, { Fragment } from "react";
 import { Input, Popover } from "antd";
 import SVGInfo from "../svginfo";
 
-interface JoinProps {
-	joinRef?: any;
-}
-
-const Join = ({ joinRef }: JoinProps) => {
+const Join = () => {
 	const { Search } = Input;
 
 	return (

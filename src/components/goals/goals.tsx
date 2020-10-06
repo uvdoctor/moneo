@@ -20,7 +20,6 @@ import Summary from "./summary";
 import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
 import SVGEdit from "../svgedit";
-import { toast } from "react-toastify";
 import { useFullScreen } from "react-browser-hooks";
 import Tabs from "../tabs";
 import { ASSET_TYPES } from "../../CONSTANTS";
@@ -205,9 +204,9 @@ export default function Goals() {
     try {
       g = await createNewGoal(goal);
     } catch (err) {
-      toast.error("Sorry! Unable to create this Goal: " + err, {
-        autoClose: 7000,
-      });
+      // toast.error("Sorry! Unable to create this Goal: " + err, {
+      //   autoClose: 7000,
+      // });
       return false;
     }
     if (!g) return false;
@@ -216,9 +215,9 @@ export default function Goals() {
       setFFGoal(g);
       return true;
     }
-    toast.success(`Success! New Goal ${g.name} has been Created.`, {
-      autoClose: 3000,
-    });
+    // toast.success(`Success! New Goal ${g.name} has been Created.`, {
+    //   autoClose: 3000,
+    // });
     allGoals?.push(g as APIt.CreateGoalInput);
     //@ts-ignore
     allCFs[g.id] = cfs;
@@ -234,22 +233,22 @@ export default function Goals() {
     try {
       g = await changeGoal(goal);
     } catch (err) {
-      toast.error("Sorry! Unable to update this Goal: " + err, {
-        autoClose: 7000,
-      });
+      // toast.error("Sorry! Unable to update this Goal: " + err, {
+      //   autoClose: 7000,
+      // });
       return false;
     }
     if (!g) return false;
     setWIPGoal(null);
     if (g.type === APIt.GoalType.FF) {
-      toast.success(
-        "Success! Your Financial Independence Target has been Updated.",
-        { autoClose: 3000 }
-      );
+      // toast.success(
+      //   "Success! Your Financial Independence Target has been Updated.",
+      //   { autoClose: 3000 }
+      // );
       setFFGoal(g as APIt.CreateGoalInput);
       return true;
     }
-    toast.success(`Success! Goal ${g.name} has been Updated.`);
+    //toast.success(`Success! Goal ${g.name} has been Updated.`);
     removeFromArray(allGoals as Array<APIt.CreateGoalInput>, "id", goal.id);
     allGoals?.unshift(g as APIt.CreateGoalInput);
     //@ts-ignore
@@ -263,12 +262,12 @@ export default function Goals() {
     try {
       await deleteGoal(id);
     } catch (err) {
-      toast.error("Sorry! Unable to delete this Goal: " + err, {
-        autoClose: 7000,
-      });
+      // toast.error("Sorry! Unable to delete this Goal: " + err, {
+      //   autoClose: 7000,
+      // });
       return false;
     }
-    toast.success(`Success! Goal has been Deleted.`, { autoClose: 3000 });
+    //toast.success(`Success! Goal has been Deleted.`, { autoClose: 3000 });
     removeFromArray(allGoals as Array<APIt.CreateGoalInput>, "id", id);
     //@ts-ignore
     delete allCFs[id];

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { calcList } from "./landing/Calculator";
-import Logo from "./logo";
+import Logo from "./Logo";
 
 interface NavProps {
   joinRef?: any;
