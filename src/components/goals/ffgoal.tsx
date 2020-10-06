@@ -519,18 +519,15 @@ export default function FFGoal({
             }
           >
             {pp && (
-              <Fragment>
-                <TreeMapChart
-                  aa={ffResult.aa}
-                  rr={ffResult.rr}
-                />
-                <AAChart
-                  aa={ffResult.aa}
-                  years={buildYearsArray(nowYear + 2, endYear)}
-                  rr={ffResult.rr}
-                />
-              </Fragment>
-            )}
+              <TreeMapChart
+                aa={ffResult.aa}
+                rr={ffResult.rr}
+              />)}
+            {pp && <AAChart
+              aa={ffResult.aa}
+              years={buildYearsArray(nowYear + 2, endYear)}
+              rr={ffResult.rr}
+            />}
             <DDLineChart
               cfs={buildChartCFs(ffResult.ffCfs)}
               startYear={getAge(nowYear + 1, endYear)}

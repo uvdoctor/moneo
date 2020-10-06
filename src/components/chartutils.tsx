@@ -1,5 +1,6 @@
 import { COLORS } from '../CONSTANTS';
-import { toCurrency } from './utils';
+import { isMobileDevice, toCurrency } from './utils';
+import { useFullScreenBrowser } from 'react-browser-hooks';
 
 export const getCommonLayoutProps = (title: string = '', tickFormat: string = ',', autosize: boolean = true) => {
 	return {
@@ -40,7 +41,8 @@ export const getCommonXAxis = (titleText: string) => {
 };
 
 export const getCommonYAxis = () => {
-	return { grid: { visible: false }, title: { visible: false } }
+	const fsb = useFullScreenBrowser();
+	return { label: { visible: !isMobileDevice(fsb) }, grid: { visible: false }, title: { visible: false } }
 }
 
 export const getCommonStyle = () => {

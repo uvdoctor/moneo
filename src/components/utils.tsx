@@ -448,13 +448,13 @@ export function compareValues(key: string, order: string = "asc") {
 export const getAssetColour = (type: string) => {
   switch (type) {
     case ASSET_CATEGORIES.CASH:
-      return "green";
+      return COLORS.LIGHT_GREEN;
     case ASSET_TYPES.SAVINGS:
       return "#68d391";
     case ASSET_TYPES.DEPOSITS:
       return "#38a169";
     case ASSET_CATEGORIES.BONDS:
-      return "blue";
+      return COLORS.LIGHT_GRAY;
     case ASSET_TYPES.SHORT_TERM_BONDS:
       return "#4299e1";
     case ASSET_TYPES.MED_TERM_BONDS:
@@ -462,7 +462,7 @@ export const getAssetColour = (type: string) => {
     case ASSET_TYPES.TAX_EXEMPT_BONDS:
       return "#2b6cb0";
     case ASSET_CATEGORIES.STOCKS:
-      return "orange";
+      return COLORS.SILVER;
     case ASSET_TYPES.LARGE_CAP_STOCKS:
       return "#dd6b20";
     case ASSET_TYPES.MID_CAP_STOCKS:
@@ -474,7 +474,7 @@ export const getAssetColour = (type: string) => {
     case ASSET_TYPES.DIVIDEND_GROWTH_STOCKS:
       return "#c05621";
     case ASSET_CATEGORIES.ALTERNATIVE:
-      return "#744210";
+      return COLORS.DISABLED;
     case ASSET_TYPES.GOLD:
       return "#f6e05e";
     case ASSET_TYPES.DOMESTIC_REIT:
