@@ -2,11 +2,7 @@ import React from "react";
 
 export default function SVGWarning() {
   return (
-    <svg
-      className="w-6 -m-6"
-      viewBox="0 0 480 480"
-      enableBackground="new 0 0 480 480"
-    >
+    <svg viewBox="0 0 480 480" enableBackground="new 0 0 480 480">
       <g>
         <circle fill="#FF7059" cx="240" cy="368" r="40" />
         <path fill="#FF7059" d="M208,72h64v224h-64V72z" />
