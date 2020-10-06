@@ -1,41 +1,39 @@
 import React, { Fragment } from "react";
-import { Input, Popover } from "antd";
-import SVGInfo from "../icons/SVGInfo";
+import Button from "../Button";
+import IconTooltip from "../IconTooltip";
 
 interface JoinProps {
 	joinRef?: any;
 }
 
 const Join = ({ joinRef }: JoinProps) => {
-	const { Search } = Input;
-
 	return (
 		<Fragment>
-			<h3>
-				Join Waitlist &amp; Earn up to $200 credit*
-				<Popover
-					content={
-						<div>
-							<p>First 100 get $200 credit</p>
-							<p>Next 900 get $150 credit</p>
-							<p>Next 2,000 get $100 credit</p>
-							<p>Next 3,000 get $75 credit</p>
-							<p>Next 4,000 get $50 credit</p>
-							<p>Next 5,000 get $30 credit</p>
-							<p>All others get $15 credit</p>
-						</div>
-					}
-				>
-					<span>
-						<SVGInfo />
-					</span>
-				</Popover>
-			</h3>
-			<Search
-				placeholder="Enter email address"
-				enterButton="Join"
-				size="large"
-			/>
+			<h2 className="text-sm mt-8 font-bold text-green-primary sm:text-lg md:text-base md:mt-12 lg:text-lg lg:mt-20">
+				Join Waitlist &amp; Earn up to $200 credit*{" "}
+				<IconTooltip id="earn-credit">
+					<ul className="p-3 text-lg font-normal">
+						<li>First 100 get $200 credit</li>
+						<li>Next 900 get $150 credit</li>
+						<li>Next 2,000 get $100 credit</li>
+						<li>Next 3,000 get $75 credit</li>
+						<li>Next 4,000 get $50 credit</li>
+						<li>Next 5,000 get $30 credit</li>
+						<li>All others get $15 credit</li>
+					</ul>
+				</IconTooltip>
+			</h2>
+			<div
+				ref={joinRef}
+				className="bg-white border border-gray-500 rounded p-1 mt-5 shadow md:w-2/4 md:text-base lg:w-4/12 lg:text-lg"
+			>
+				<input
+					className="w-3/4 p-2"
+					type="text"
+					placeholder="Enter email address"
+				/>
+				<Button className="w-1/4" label="Join" />
+			</div>
 		</Fragment>
 	);
 };

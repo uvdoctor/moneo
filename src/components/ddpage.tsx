@@ -1,8 +1,7 @@
 import React, { Fragment } from "react";
 import { ParallaxProvider } from "react-scroll-parallax";
-import { Layout, Menu } from "antd";
+import { ToastContainer } from "react-toastify";
 import UserHeader from "./userheader";
-import Logo from "../components/Logo";
 import UserMenu from "./usermenu";
 import { isMobileDevice } from "./utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
@@ -15,8 +14,6 @@ interface DDPageProps {
 }
 
 export default function DDPage(props: DDPageProps) {
-  const { Header, Footer, Content } = Layout;
-  const { SubMenu } = Menu;
   const commonSecureComps: Array<React.ReactNode> = [
     <UserHeader />,
     <UserMenu />,
@@ -89,28 +86,9 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="format-detection" content="telephone=no" />
         <title>{props.title}</title>
       </Head>
-      <Layout>
-        <Header className="dd-header">
-          <Logo />
-          <Menu mode="horizontal">
-            <Menu.Item key="mail">Calculate</Menu.Item>
-            <SubMenu key="SubMenu" title="About">
-              <Menu.Item key="setting:1">Features</Menu.Item>
-              <Menu.Item key="setting:2">Pricing</Menu.Item>
-              <Menu.Item key="setting:2">Company</Menu.Item>
-            </SubMenu>
-            <Menu.Item key="alipay">
-              <a
-                href="https://ant.design"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Earn up to $200 credit*
-              </a>
-            </Menu.Item>
-          </Menu>
-        </Header>
-        <Content className="dd-content">
+      <main>
+        <div className="text-lg">
+          <ToastContainer />
           {!isMobileDevice(fsb) ? (
             <ParallaxProvider>
               {getCommonComps().map((child) => child)}
@@ -122,9 +100,8 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
               {props.children}
             </Fragment>
           )}
-        </Content>
-        <Footer>Footer</Footer>
-      </Layout>
+        </div>
+      </main>
     </Fragment>
   );
 }

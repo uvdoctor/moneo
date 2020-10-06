@@ -4,7 +4,7 @@ import { isMobileDevice } from "./utils";
 
 interface ResImgProps {
 	name: string;
-	className?: string;
+	className: string;
 }
 
 export default function ResImg({ name, className }: ResImgProps) {

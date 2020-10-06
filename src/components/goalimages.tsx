@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 //@ts-ignore
 import { AwesomeButton } from "react-awesome-button";
 import CarSVG from "./goals/svgcar";
@@ -20,12 +20,14 @@ export default function GoalImages() {
   }, [svgCtr]);
 
   return (
-    <Fragment>
+    <div
+      className="ml-1 md:ml-2 w-6 md:w-8 lg:w-10"
+    >
       {svgCtr % 5 === 1 && <HomeSVG animationStyle={animationStyle} />}
       {svgCtr % 5 === 2 && <CarSVG animationStyle={animationStyle} />}
       {svgCtr % 5 === 3 && <DiamondSVG animationStyle={animationStyle} />}
       {svgCtr % 5 === 4 && <DegreeSVG animationStyle={animationStyle} />}
       {svgCtr % 5 === 0 && <TravelSVG animationStyle={animationStyle} />}
-    </Fragment>
+    </div>
   );
 }
