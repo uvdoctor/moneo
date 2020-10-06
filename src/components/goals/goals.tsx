@@ -21,7 +21,6 @@ import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
 import SVGEdit from "../svgedit";
 import { toast } from "react-toastify";
-import { useFullScreen } from "react-browser-hooks";
 import Tabs from "../tabs";
 import { ASSET_TYPES } from "../../CONSTANTS";
 import SVGBarChart from "../svgbarchart";
@@ -31,7 +30,6 @@ import SVGList from "../svglist";
 import Button from "../Button";
 
 export default function Goals() {
-  const { fullScreen } = useFullScreen();
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
     []
   );
@@ -70,7 +68,7 @@ export default function Goals() {
       order: 3,
       active: true,
       svg: SVGBarChart,
-      svglabel: "USD",
+      svglabel: 'Yearly',
     },
   ];
 
@@ -85,7 +83,6 @@ export default function Goals() {
     goals?.forEach((g) => {
       if (g.type === APIt.GoalType.FF) {
         setFFGoal(g);
-        tabOptions[2].svglabel = g.ccy;
         ffGoalId = g.id as string;
       } else {
         let result: any = calculateCFs(
@@ -547,7 +544,7 @@ export default function Goals() {
                   optCFs={optCFs}
                   from={nowYear + 1}
                   to={ffGoal.ey}
-                  fullScreen={fullScreen}
+                  currency={ffGoal.ccy}
                 />
               )}
               {viewMode === aaLabel && (
