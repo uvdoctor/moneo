@@ -7,12 +7,13 @@ import RadialInput from '../form/radialinput';
 import Section from '../form/section';
 import ExpandCollapse from '../form/expandcollapse';
 import { getLoanPaidForMonths, adjustAccruedInterest, createEduLoanDPWithSICFs } from '../goals/cfutils';
-import HToggle from '../horizontaltoggle';
 import { GoalType } from '../../api/goals';
 import ItemDisplay from './ItemDisplay';
 import { COLORS } from '../../CONSTANTS';
 import { isTaxCreditEligible } from '../goals/goalutils';
 import Tooltip from '../form/tooltip';
+import HSwitch from '../HSwitch';
+
 interface LoanEmiProps {
 	price: number;
 	priceChgRate: number;
@@ -120,7 +121,7 @@ export default function LoanEmi(props: LoanEmiProps) {
 			videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
 			toggle={
 				!isTaxCreditEligible(props.goalType) && props.taxRate ? (
-					<HToggle
+					<HSwitch
 						rightText="Claim Interest Tax Deduction"
 						value={props.taxBenefitInt}
 						setter={props.taxBenefitIntHandler}
@@ -283,7 +284,7 @@ export default function LoanEmi(props: LoanEmiProps) {
 								{!Number.isNaN(props.loanSIPayPer) && //@ts-ignore
 								props.loanSIPayPer < 100 && (
 									<div className="mt-2">
-										<HToggle
+										<HSwitch
 											rightText={`Pay ${toCurrency(
 												remIntAmt,
 												props.currency

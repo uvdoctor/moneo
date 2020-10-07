@@ -22,16 +22,16 @@ import { getCompoundedIncome, getNPV } from "../calc/finance";
 import SVGScale from "../svgscale";
 import Result from "./Result";
 import GoalResult from "./goalresult";
-import LineChart from "./linechart";
+import DDLineChart from "./DDLineChart";
 import Input from "./Input";
 import RentComparison from "./rentcomparison";
-import BRCompChart from "./brcompchart";
+import BuyRentChart from "./BuyRentChart";
 import SVGPay from "../svgpay";
 import SVGTaxBenefit from "../svgtaxbenefit";
 import SVGLoan from "../svgloan";
 import SVGSell from "../svgsell";
 import SVGCashFlow from "../svgcashflow";
-import IntChart from "./intchart";
+import LoanScheduleChart from "./LoanScheduleChart";
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -151,7 +151,6 @@ export default function Goal({
   const cfChartLabel = "Cash Flows";
   const brChartLabel = "Buy v/s Rent & Invest";
   const loanChartLabel = "EMI Schedule";
-  const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [showBRChart, setShowBRChart] = useState<boolean>(
     sellAfter && rentAmt && rentAmt > 0 ? true : false
@@ -792,7 +791,6 @@ export default function Goal({
             resultTabOptions={resultTabOptions}
             showResultTab={showResultTab}
             showResultTabHandler={setShowResultTab}
-            chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
             result={
               nowYear < startYear && (
                 <GoalResult
@@ -810,21 +808,21 @@ export default function Goal({
               )
             }
           >
-            <LineChart
+            <DDLineChart
               cfs={cfs}
               startYear={startYear}
-              fullScreen={chartFullScreen}
+              currency={currency}
             />
             {showBRChart && (
-              <BRCompChart data={brChartData} fullScreen={chartFullScreen} />
+              <BuyRentChart data={brChartData} currency={currency} />
             )}
             {manualMode < 1 && loanPer && loanRepaymentSY && loanYears && (
-              <IntChart
+              <LoanScheduleChart
                 repaymentSY={loanRepaymentSY}
                 loanYears={iSchedule.length}
                 interestSchedule={iSchedule}
                 principalSchedule={pSchedule}
-                fullScreen={chartFullScreen}
+                currency={currency}
               />
             )}
           </Result>

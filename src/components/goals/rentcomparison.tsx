@@ -3,7 +3,7 @@ import ItemDisplay from '../calc/ItemDisplay';
 import SVGBalance from '../calc/svgbalance';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
-import HToggle from '../horizontaltoggle';
+import HSwitch from '../HSwitch';
 
 interface RentComparisonProps {
 	currency: string;
@@ -113,7 +113,7 @@ export default function RentComparison({
 			}
 			toggle={
 				taxRate ? (
-					<HToggle rightText="Claim Tax Deduction" value={rentTaxBenefit} setter={rentTaxBenefitHandler} />
+					<HSwitch rightText="Claim Tax Deduction" value={rentTaxBenefit} setter={rentTaxBenefitHandler} />
 				) : (
 					<div />
 				)

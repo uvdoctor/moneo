@@ -1,4 +1,4 @@
-import React, { Fragment, ReactNode, useEffect, useRef } from 'react';
+import React, { Fragment, ReactNode, useRef } from 'react';
 import { useFullScreen } from 'react-browser-hooks';
 import SVGFullScreen from '../svgfullscreen';
 import SVGExitFullScreen from '../svgexitfullscreen';
@@ -11,19 +11,11 @@ interface ResultProps {
 	showResultTab: string;
 	children: ReactNode;
 	showResultTabHandler: Function;
-	chartFullScreenHandler: Function;
 }
 
 export default function Result(props: ResultProps) {
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
-
-	useEffect(
-		() => {
-			props.chartFullScreenHandler(fullScreen);
-		},
-		[ fullScreen ]
-	);
 
 	return (
 		<div ref={chartDiv} className={`w-full transition-width duration-1000 ease-in-out`}>

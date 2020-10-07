@@ -10,7 +10,7 @@ import SelectInput from "../form/selectinput";
 import { findEarliestFFYear } from "./cfutils";
 import FFResult from "./ffresult";
 import SVGChart from "../svgchart";
-import LineChart from "./linechart";
+import DDLineChart from "./DDLineChart";
 import { getAge } from "./goalutils";
 import SVGBarChart from "../svgbarchart";
 import StickyHeader from "./stickyheader";
@@ -23,9 +23,9 @@ import Nominees from "./nominees";
 import Input from "./Input";
 import DynamicTgtInput from "../form/dynamictgtinput";
 import Section from "../form/section";
-import TreeMapChart from "./treemapchart";
+import AAChart from "./AAChart";
 import SVGAAChart from "./svgaachart";
-import AAChart from "./aachart";
+import AAPlanChart from "./AAPlanChart";
 import SVGPiggy from "../svgpiggy";
 import SVGTaxBenefit from "../svgtaxbenefit";
 import SVGCashFlow from "../svgcashflow";
@@ -126,7 +126,6 @@ export default function FFGoal({
   const cfChartLabel = "Total Portfolio";
   const aaFutureLabel = "Allocation Plan";
   const aaNextYearLabel = "Asset Allocation";
-  const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
   const careOption = {
     label: careLabel,
     order: 11,
@@ -453,7 +452,6 @@ export default function FFGoal({
             resultTabOptions={resultTabOptions}
             showResultTab={showResultTab}
             showResultTabHandler={setShowResultTab}
-            chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
             result={
               <FFResult
                 endYear={endYear}
@@ -463,25 +461,20 @@ export default function FFGoal({
               />
             }
           >
-            {pp && (
-              <Fragment>
-                <TreeMapChart
-                  aa={ffResult.aa}
-                  rr={ffResult.rr}
-                  fullScreen={chartFullScreen}
-                />
-                <AAChart
+            {pp && 
+              <AAChart
+                aa={ffResult.aa}
+                rr={ffResult.rr}
+              />}
+                {pp && <AAPlanChart
                   aa={ffResult.aa}
                   years={buildYearsArray(nowYear + 2, endYear)}
                   rr={ffResult.rr}
-                  fullScreen={chartFullScreen}
-                />
-              </Fragment>
-            )}
-            <LineChart
+                />}
+            <DDLineChart
               cfs={buildChartCFs(ffResult.ffCfs)}
               startYear={getAge(nowYear + 1, endYear)}
-              fullScreen={chartFullScreen}
+              currency={currency}
               title="Age"
             />
           </Result>

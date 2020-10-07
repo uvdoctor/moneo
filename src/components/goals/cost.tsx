@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Section from '../form/section';
 import NumberInput from '../form/numberinput';
-import HToggle from '../horizontaltoggle';
+import HSwitch from '../HSwitch';
 import { TargetInput } from '../../api/goals';
 import { createNewTarget } from './goalutils';
 import { toCurrency } from '../utils';
@@ -98,7 +98,7 @@ export default function Cost(props: CostProps) {
 			}
 			toggle={
 				props.manualModeHandler && (
-					<HToggle
+					<HSwitch
 						rightText={`Custom Payment Plan`}
 						value={props.manualMode}
 						setter={props.manualModeHandler}

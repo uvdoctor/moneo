@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { INVEST, SAVE, SPEND } from '../../pages/truecost';
 import SelectInput from '../form/selectinput';
 import Input from '../goals/Input';
-import LineChart from '../goals/linechart';
+import DDLineChart from '../goals/DDLineChart';
 import Result from '../goals/Result';
 import SVGChart from '../svgchart';
 import SVGHourGlass from '../svghourglass';
@@ -33,7 +33,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 	const [ timeCostDisplay, setTimeCostDisplay ] = useState<number>(0);
 	const [ timeCostUnit, setTimeCostUnit ] = useState<string>(TIME_COST_HOURS);
 	const [ totalCost, setTotalCost ] = useState<number>(0);
-	const [ chartFullScreen, setChartFullScreen ] = useState<boolean>(false);
 	const [ cfs, setCFs ] = useState<Array<number>>([]);
 	const [ cfsWithOppCost, setCFsWithOppCost ] = useState<Array<number>>([]);
 
@@ -213,7 +212,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 					resultTabOptions={resultTabOptions}
 					showResultTab={showResultTab}
 					showResultTabHandler={setShowResultTab}
-					chartFullScreenHandler={setChartFullScreen}
 					result={
 						<div className="w-full py-1 flex justify-around items-center bg-green-100 shadow-lg lg:shadow-xl">
 							<div className="flex items-end">
@@ -252,9 +250,9 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 						</div>
 					}
 				>
-					<LineChart
+					<DDLineChart
 						cfs={cfsWithOppCost}
-						fullScreen={chartFullScreen}
+						currency={props.currency}
 						startYear={1}
 						title="Number of Years"
 					/>

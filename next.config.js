@@ -1,12 +1,11 @@
-const withPWA = require("next-pwa");
+//const withPWA = require("next-pwa");
 const withCSS = require("@zeit/next-css");
 const withLess = require("@zeit/next-less");
 const lessToJS = require("less-vars-to-js");
 const fs = require("fs");
 const path = require("path");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-const { default: Slider } = require("rc-slider");
-const isProd = process.env.NODE_ENV === "production";
+//const isProd = process.env.NODE_ENV === "production";
 
 const themeVariables = lessToJS(
 	fs.readFileSync(
@@ -60,4 +59,3 @@ module.exports = withCSS(
 		},
 	})
 );
-//...withCSS({}),

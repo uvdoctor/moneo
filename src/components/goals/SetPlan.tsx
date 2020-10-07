@@ -3,7 +3,7 @@ import Goal from "./goal";
 import FFGoal from "./ffgoal";
 import { Menu } from "antd";
 import { appendValue, removeFromArray } from "../utils";
-import CFChart from "./cfchart";
+import YearlyCFChart from "./YearlyCFChart";
 import * as APIt from "../../api/goals";
 import {
   createNewGoal,
@@ -21,17 +21,15 @@ import Summary from "./summary";
 import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
 import SVGEdit from "../svgedit";
-import { useFullScreen } from "react-browser-hooks";
 import { ASSET_TYPES } from "../../CONSTANTS";
 import SVGBarChart from "../svgbarchart";
-import TreeMapChart from "./treemapchart";
+import AAChart from "./AAChart";
 import SVGAAChart from "./svgaachart";
 import SVGList from "../svglist";
 import { Button } from "antd";
 import { Modal } from "antd";
 
-export default function Goals() {
-  const { fullScreen } = useFullScreen();
+export default function SetPlan() {
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
     []
   );
@@ -522,20 +520,19 @@ export default function Goals() {
                 </p>
               )}
               {viewMode === cfLabel && (
-                <CFChart
+                <YearlyCFChart
                   mustCFs={mustCFs}
                   tryCFs={tryCFs}
                   optCFs={optCFs}
                   from={nowYear + 1}
                   to={ffGoal.ey}
-                  fullScreen={fullScreen}
+                  currency={ffGoal.ccy}
                 />
               )}
               {viewMode === aaLabel && (
-                <TreeMapChart
+                <AAChart
                   aa={ffResult.aa}
                   rr={rr}
-                  fullScreen={fullScreen}
                 />
               )}
               {viewMode === goalsLabel && (
