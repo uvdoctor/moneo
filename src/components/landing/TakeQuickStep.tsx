@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../Button";
+import { Button } from "antd";
 
 export default function TakeQuickStep() {
   return (
@@ -22,7 +22,7 @@ export default function TakeQuickStep() {
                 type="text"
                 placeholder="Enter email address"
               />
-              <Button className="w-1/4" label="Join" />
+              <Button type="primary">Join</Button>
             </div>
           </div>
           <div className="w-full flex items-center">

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import Button from '../Button';
+import { Button } from 'antd';
 import ActionButtons from '../form/actionbuttons';
 import Tabs from '../tabs';
 
@@ -51,7 +51,7 @@ export default function Input({
 			</div>
 			{!handleSubmit ? (
 				<div className="w-full text-center">
-					<Button label="Close" onClick={cancelCallback} isPrimary />
+					<Button onClick={() => cancelCallback()} type="primary">Close</Button>
 				</div>
 			) : (
 				<ActionButtons

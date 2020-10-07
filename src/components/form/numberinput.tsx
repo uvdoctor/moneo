@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { toCurrency, toReadableNumber } from "../utils";
-import Slider from "rc-slider";
+import { Slider } from "antd";
 import NextStep from "./nextstep";
 import { COLORS, INPUT_HIGHLIGHT } from "../../CONSTANTS";
 import Tooltip from "./tooltip";
@@ -34,7 +34,7 @@ export default function NumberInput(props: NumberInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const readOnlyRef = useRef<HTMLInputElement>(null);
   const [editing, setEditing] = useState<boolean>(false);
-  const [sliderButtonColor, setSliderButtonColor] = useState<string>("white");
+  const [sliderBorderColor, setSliderBorderColor] = useState<string>(COLORS.GREEN);
   const [feedbackText, setFeedbackText] = useState<string>("");
   const width: string = props.width
     ? props.width
@@ -91,10 +91,10 @@ export default function NumberInput(props: NumberInputProps) {
         .sort((a, b) => a - b);
       let feedback: any = props.feedback[getClosestKey(val, allSortedKeys)];
       if (!feedback || !feedback.label) {
-        setSliderButtonColor("white");
+        setSliderBorderColor("white");
         setFeedbackText("");
       } else {
-        setSliderButtonColor(feedback.color);
+        setSliderBorderColor(feedback.color);
         setFeedbackText(feedback.label);
       }
     }
@@ -179,7 +179,6 @@ export default function NumberInput(props: NumberInputProps) {
               <div className="flex flex-col mt-1">
                 {/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
                 <Slider
-                  className="bg-gray-200 rounded-full shadow"
                   min={props.min * rangeFactor}
                   max={props.max * rangeFactor}
                   step={(props.step as number) * rangeFactor}
@@ -190,30 +189,7 @@ export default function NumberInput(props: NumberInputProps) {
                   }}
                   handleStyle={{
                     cursor: "grab",
-                    width: "1.2rem",
-                    height: "1.2rem",
-                    background: sliderButtonColor,
-                    borderRadius: "50%",
-                    borderColor: sliderButtonColor,
-                    left: 0,
-                    top: 2,
-                    boxShadow:
-                      "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
-                  }}
-                  trackStyle={{
-                    backgroundColor: COLORS.GREEN,
-                    top: 0,
-                    left: 0,
-                    height: "0.9rem",
-                  }}
-                  dotStyle={{
-                    width: "0rem",
-                    height: "0rem",
-                    border: "none",
-                    background: "none",
-                  }}
-                  railStyle={{
-                    background: "none",
+                    borderColor: sliderBorderColor,
                   }}
                 />
                 {props.max && (
