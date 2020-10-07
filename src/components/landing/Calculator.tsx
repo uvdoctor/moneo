@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import ItemDisplay from "../calc/ItemDisplay";
+import { Row, Col } from "antd";
 import SVGScale from "../svgscale";
 import SVGFreedom from "../svgfreedom";
 import SVGEduLoan from "../svgeduloan";
@@ -9,8 +9,10 @@ import SVGAnalyze from "../svganalyze";
 import SVGLoan from "../svgloan";
 import { CALC_NAMES, ROUTES } from "../../CONSTANTS";
 
+import "./Calculator.less";
+
 interface CalculatorProps {
-	calculateRef: string;
+	calculateRef?: string;
 }
 
 export const calcList: Array<any> = [
@@ -61,28 +63,9 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 	const [calcIndex, setCalcIndex] = useState<number>(-1);
 
 	return (
-		<div
-			className="max-w-screen-md border rounded-lg p-3 m-auto"
-			style={{
-				backgroundColor: "#c3c3c3",
-				backgroundImage: "linear-gradient(to bottom, #c3c3c3, #959595)",
-				boxShadow: "0 0 10px #8b8b8b",
-			}}
-		>
-			<div
-				ref={calculateRef}
-				className="bg-white border rounded-lg p-10 pb-16"
-				style={{
-					backgroundImage: "linear-gradient(to bottom, #ebebeb, #d1d1d1)",
-				}}
-			>
-				<div
-					className="border rounded-lg p-3 shadow-inner"
-					style={{
-						backgroundColor: "#d0d0d0",
-						border: "1px solid #afafaf",
-					}}
-				>
+		<div ref={calculateRef} className="calculator">
+			<div>
+				<div className="calculator-title">
 					<div
 						className="bg-white border rounded-lg p-4 text-center"
 						style={{
@@ -97,69 +80,45 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 					</div>
 				</div>
 
-				<div
-					className={`grid grid-cols-3 gap-10 justify-items-stretch mt-10 h-64`}
-				>
-					{calcList.map((calc: any, i: number) => (
-						<Link key={"calc" + i} href={calc.link}>
-							<a>
-								<div
-									className={`calc-btn linear ${
-										calcIndex === i ? "selected" : ""
-									} ${
-										calcIndex >= 0 && calcIndex !== i
-											? "scale-50 opacity-0"
-											: calcIndex === i &&
-											  "text-green-primary md:text-xl lg:text-2xl"
-									}`}
-									style={{
-										width: calcIndex === i ? "660px" : "",
-										height: calcIndex === i ? "280px" : "",
-										transform:
-											calcIndex === i
-												? `translate(${
-														i === 5
-															? "-465px, -150px"
-															: i === 2
-															? "-465px, 0px"
-															: i === 3
-															? "0px, -150px"
-															: i === 4
-															? "-235px, -150px"
-															: i === 1
-															? "-235px, 0px"
-															: ""
-												  })`
-												: "",
-									}}
-									onMouseEnter={() => setCalcIndex(i)}
-									onMouseLeave={() => setCalcIndex(-1)}
-								>
-									<div>
-										<ItemDisplay
-											svg={
-												<calc.svg
-													disabled={calcIndex !== i}
-													selected={calcIndex === i}
-												/>
-											}
-											result={calc.name}
-											vertical
-										/>
-										{calcIndex === i && (
-											<div
-												className="mt-4 text-center text-lg text-white "
-												style={{ animation: "fadeIn 1s 1" }}
-											>
-												{calc.desc}
-											</div>
-										)}
-									</div>
+				<Row className="calculator-btns" gutter={[30, 0]}>
+					{calcList.map(({ name, svg: Svg, desc, link }: any, i: number) => (
+						<Col key={"calc" + i} span={8}>
+							<div
+								className="calculator-btn"
+								style={{
+									transform:
+										calcIndex === i
+											? `translate(${
+													i === 5
+														? "-445px, -149px"
+														: i === 2
+														? "-445px, -2px"
+														: i === 3
+														? "-1px, -149px"
+														: i === 4
+														? "-223px, -149px"
+														: i === 1
+														? "-223px, -2px"
+														: ""
+											  })`
+											: "",
+								}}
+								onMouseEnter={() => setCalcIndex(i)}
+								onMouseLeave={() => setCalcIndex(-1)}
+							>
+								<div>
+									<Link href={link}>
+										<a>
+											<Svg />
+											<h3>{name}</h3>
+											<p>{desc}</p>
+										</a>
+									</Link>
 								</div>
-							</a>
-						</Link>
+							</div>
+						</Col>
 					))}
-				</div>
+				</Row>
 			</div>
 		</div>
 	);

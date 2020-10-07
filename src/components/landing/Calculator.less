@@ -1,0 +1,119 @@
+@import "../../../node_modules/antd/dist/antd.less";
+
+@calculator-radius: 20px;
+@calculator-radius-med: 10px;
+
+.calculator {
+	max-width: 718px;
+	margin: 0 auto;
+	backgrond: #a0a0a0;
+	background-image: linear-gradient(to bottom, #c3c3c3, #959595);
+	border-radius: @calculator-radius;
+	box-shadow: 0 0 10px #6c6c6c;
+	padding: 5px;
+	margin-top: 10px;
+
+	& > div {
+		background: #fff;
+		background-image: linear-gradient(to bottom, #ebebeb, #d1d1d1);
+		border-radius: @calculator-radius;
+		border: #fff solid 1px;
+		padding: 30px 35px;
+	}
+
+	& .calculator-title {
+		background-color: #d0d0d0;
+		border: 1px solid #afafaf;
+		border-radius: @calculator-radius;
+		padding: 10px;
+
+		> div {
+			background: #b5be93;
+			background-image: linear-gradient(to left, #b5be93, #d2d6bc);
+			border: 5px solid #989898;
+			border-radius: @calculator-radius-med;
+			padding: 5px;
+		}
+	}
+
+	& .calculator-btns {
+		position: relative;
+		margin-top: 20px;
+
+		& > div {
+			position: initial;
+		}
+	}
+
+	& .calculator-btn {
+		width: 192px;
+		background-color: #a0a0a0;
+		background-image: linear-gradient(0deg, #4a4a4a, #a1a1a1);
+		box-shadow: 0 0 3px #5b5b5b;
+		border: #939393 solid 1px;
+		cursor: pointer;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		border-radius: @calculator-radius-med;
+		transition-property: all;
+		transition-duration: 0.5s;
+		padding: 4px;
+		text-align: center;
+		margin: 15px 0;
+
+		& > div {
+			background-color: #6f6f6f;
+			background-image: linear-gradient(270deg, #6f6f6f, #4a4a4a);
+			border-radius: @calculator-radius-med;
+			border: #828282 solid 1px;
+			color: #fff;
+			padding: 20px 10px;
+		}
+
+		& svg {
+			width: 30px;
+			filter: invert(0%) sepia(51%) saturate(0%) hue-rotate(0deg)
+				brightness(100%) contrast(100%);
+		}
+
+		& h3 {
+			font-size: 14px;
+		}
+
+		& h3,
+		& p {
+			color: #fff;
+		}
+
+		& p {
+			display: none;
+		}
+
+		&:hover {
+			width: 640px;
+			height: 267px;
+			position: absolute;
+			background-color: @primary-color;
+			background-image: none;
+			border: #fff solid 1px;
+			box-shadow: none;
+			transform: translate(-2px, -2px);
+			z-index: 2;
+
+			& div {
+				background: none;
+				background-image: none;
+				border: 0;
+			}
+
+			& svg {
+				filter: none;
+			}
+
+			& p {
+				display: block;
+			}
+		}
+	}
+}
