@@ -1,10 +1,12 @@
 import React, { Fragment } from "react";
 import Banner from "./Banner";
+import Calculator from "./Calculator";
 
 export default function Landing() {
   return (
     <Fragment>
       <Banner />
+      <Calculator />
     </Fragment>
   );
 }
