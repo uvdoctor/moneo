@@ -23,7 +23,7 @@ import SVGTargetPath from "./svgtargetpath";
 import SVGEdit from "../svgedit";
 import { ASSET_TYPES } from "../../CONSTANTS";
 import SVGBarChart from "../svgbarchart";
-import AAChart from "./AAChart";
+import AssetAllocationChart from "./AssetAllocationChart";
 import SVGAAChart from "./svgaachart";
 import SVGList from "../svglist";
 import { Button } from "antd";
@@ -530,7 +530,7 @@ export default function SetPlan() {
                 />
               )}
               {viewMode === aaLabel && (
-                <AAChart
+                <AssetAllocationChart
                   aa={ffResult.aa}
                   rr={rr}
                 />

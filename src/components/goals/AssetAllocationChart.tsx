@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { getAllAssetCategories, getAllAssetTypesByCategory, getAssetColour } from '../utils';
 
-interface AAChartProps {
+interface AssetAllocationChartProps {
 	aa: any;
 	rr: Array<number>;
 }
 
 const TreemapChart = dynamic(() => import('bizcharts/lib/plots/TreemapChart'), { ssr: false });
 
-export default function AAChart({ aa, rr }: AAChartProps) {
+export default function AssetAllocationChart({ aa, rr }: AssetAllocationChartProps) {
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [ colors, setColors ] = useState<Array<string>>([]);
 

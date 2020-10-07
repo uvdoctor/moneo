@@ -23,7 +23,7 @@ import Nominees from "./nominees";
 import Input from "./Input";
 import DynamicTgtInput from "../form/dynamictgtinput";
 import Section from "../form/section";
-import AAChart from "./AAChart";
+import AssetAllocationChart from "./AssetAllocationChart";
 import SVGAAChart from "./svgaachart";
 import AAPlanChart from "./AAPlanChart";
 import SVGPiggy from "../svgpiggy";
@@ -462,7 +462,7 @@ export default function FFGoal({
             }
           >
             {pp && 
-              <AAChart
+              <AssetAllocationChart
                 aa={ffResult.aa}
                 rr={ffResult.rr}
               />}
