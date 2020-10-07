@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Goal from "./goal";
 import FFGoal from "./ffgoal";
+import { Menu } from "antd";
 import { appendValue, removeFromArray } from "../utils";
 import CFChart from "./cfchart";
 import * as APIt from "../../api/goals";
@@ -21,7 +22,6 @@ import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
 import SVGEdit from "../svgedit";
 import { useFullScreen } from "react-browser-hooks";
-import Tabs from "../tabs";
 import { ASSET_TYPES } from "../../CONSTANTS";
 import SVGBarChart from "../svgbarchart";
 import TreeMapChart from "./treemapchart";
@@ -54,23 +54,15 @@ export default function Goals() {
   const tabOptions = [
     {
       label: goalsLabel,
-      order: 1,
-      active: true,
       svg: SVGList,
     },
     {
       label: aaLabel,
-      order: 2,
-      active: true,
       svg: SVGAAChart,
-      svglabel: nowYear + 1,
     },
     {
       label: cfLabel,
-      order: 3,
-      active: true,
       svg: SVGBarChart,
-      svglabel: "USD",
     },
   ];
 
@@ -85,7 +77,6 @@ export default function Goals() {
     goals?.forEach((g) => {
       if (g.type === APIt.GoalType.FF) {
         setFFGoal(g);
-        tabOptions[2].svglabel = g.ccy;
         ffGoalId = g.id as string;
       } else {
         let result: any = calculateCFs(
@@ -507,11 +498,6 @@ export default function Goals() {
                   {viewMode === goalsLabel && (
                     <div className="mr-1 md:mr-2">
                       <SelectInput
-                        inputOrder={1}
-                        currentOrder={0}
-                        nextStepDisabled={true}
-                        allInputDone={true}
-                        nextStepHandler={() => true}
                         name="typeFilter"
                         pre=""
                         options={getImpOptions()}
@@ -520,14 +506,13 @@ export default function Goals() {
                       />
                     </div>
                   )}
-                  <Tabs
-                    tabs={tabOptions}
-                    selectedTab={viewMode}
-                    capacity={tabOptions.length}
-                    selectedTabHandler={setViewMode}
-                    allInputDone
-                    keepCentered
-                  />
+                  <Menu onClick={(e: any) => setViewMode(e.key)} selectedKeys={[viewMode]} mode="horizontal">
+                    {tabOptions.map(tab => 
+                      <Menu.Item key={tab.label} icon={<tab.svg disabled={false} selected={viewMode === tab.label} />}>
+                        {tab.label}
+                      </Menu.Item>
+                    )}  
+                  </Menu>
                 </div>
               </div>
               {viewMode !== aaLabel && (

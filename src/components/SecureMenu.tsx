@@ -7,7 +7,7 @@ import { ROUTES } from "../CONSTANTS";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-export default function UserMenu() {
+export default function SecureMenu() {
   const GET = "GET";
   const SET = "SET";
   const SAVE = "SAVE";

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { INVEST, SAVE, SPEND } from '../../pages/truecost';
 import SelectInput from '../form/selectinput';
-import { getOrderByTabLabel } from '../goals/goalutils';
 import Input from '../goals/Input';
 import LineChart from '../goals/linechart';
 import Result from '../goals/Result';
@@ -162,8 +161,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 	return (
 		<div className={`flex flex-1 lg:flex-row ${props.allInputDone && 'flex-col-reverse'} items-start`}>
 			<Input
-				currentOrder={props.currentOrder}
-				allInputDone={props.allInputDone}
 				showTab={props.showTab}
 				showTabHandler={props.showTabHandler}
 				tabOptions={props.tabOptions}
@@ -171,15 +168,13 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 				handleSubmit={null}
 				submitDisabled={false}
 				cancelDisabled={false}
+				allInputDone={props.allInputDone}
+				allInputDoneHandler={props.allInputDoneHandler}
 			>
 				{props.showTab === SPEND && (
 					<Spend
 						currency={props.currency}
 						rangeFactor={props.rangeFactor}
-						allInputDone={props.allInputDone}
-						currentOrder={props.currentOrder}
-						inputOrder={getOrderByTabLabel(props.tabOptions, SPEND)}
-						nextStepHandler={props.nextStepHandler}
 						freq={freq}
 						freqHandler={setFreq}
 						amt={amt}
@@ -194,10 +189,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 					<Save
 						currency={props.currency}
 						rangeFactor={props.rangeFactor}
-						allInputDone={props.allInputDone}
-						currentOrder={props.currentOrder}
-						inputOrder={getOrderByTabLabel(props.tabOptions, SAVE)}
-						nextStepHandler={props.nextStepHandler}
 						savings={savings}
 						savingsHandler={setSavings}
 						paidWeeks={paidWeeks}
@@ -209,10 +200,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 
 				{props.showTab === INVEST && (
 					<InvestOption
-						allInputDone={props.allInputDone}
-						currentOrder={props.currentOrder}
-						inputOrder={getOrderByTabLabel(props.tabOptions, INVEST)}
-						nextStepHandler={props.nextStepHandler}
 						dr={dr}
 						drHandler={setDR}
 						years={years}
@@ -244,11 +231,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 									<SelectInput
 										name="tcunit"
 										pre=""
-										inputOrder={0}
-										currentOrder={-1}
-										nextStepDisabled={false}
-										allInputDone
-										nextStepHandler={() => true}
 										options={timeOptions}
 										value={timeCostUnit}
 										changeHandler={setTimeCostUnit}

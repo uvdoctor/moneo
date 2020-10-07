@@ -8,10 +8,6 @@ interface AmtProps {
   goalType: GoalType;
   goalBY: number;
   ffGoalEndYear: number;
-  inputOrder: number;
-  currentOrder: number;
-  nextStepHandler: Function;
-  allInputDone: boolean;
   currency: string;
   currencyHandler: Function;
   rangeFactor: number;
@@ -35,10 +31,6 @@ export default function Amt({
   goalType,
   goalBY,
   ffGoalEndYear,
-  inputOrder,
-  currentOrder,
-  nextStepHandler,
-  allInputDone,
   currency,
   currencyHandler,
   rangeFactor,
@@ -67,11 +59,6 @@ export default function Amt({
         <div className="flex justify-around w-full max-w-sm md:max-w-md items-end">
           <SelectInput
             name="ccy"
-            inputOrder={inputOrder}
-            currentOrder={currentOrder}
-            nextStepDisabled={false}
-            allInputDone={allInputDone}
-            nextStepHandler={nextStepHandler}
             pre="Currency"
             value={currency}
             changeHandler={currencyHandler}
@@ -79,27 +66,16 @@ export default function Amt({
           />
           <SelectInput
             name="sy"
-            inputOrder={inputOrder + 1}
-            currentOrder={currentOrder}
-            nextStepDisabled={false}
-            allInputDone={allInputDone}
-            nextStepHandler={nextStepHandler}
             pre="When?"
             info="Year in which You Start Paying for the Goal"
             value={startYear}
             changeHandler={startYearHandler}
             options={syOptions}
-            actionCount={goalType === GoalType.B && manualMode < 1 ? 2 : 1}
           />
           <SelectInput
             name="ey"
             pre={`Pay Until`}
             value={endYear}
-            inputOrder={inputOrder + 2}
-            currentOrder={currentOrder}
-            nextStepDisabled={false}
-            allInputDone={allInputDone}
-            nextStepHandler={nextStepHandler}
             info="Year in which You End Paying for the Goal"
             disabled={goalType === GoalType.B && manualMode < 1}
             changeHandler={endYearHandler}
@@ -125,11 +101,6 @@ export default function Amt({
           baseYear={goalBY}
           leftMax={goalType === GoalType.B ? 1500000 : 50000}
           leftNote={goalType !== GoalType.D ? "including taxes & fees" : ""}
-          inputOrder={inputOrder + 3}
-          currentOrder={currentOrder}
-          nextStepDisabled={false}
-          nextStepHandler={nextStepHandler}
-          allInputDone={allInputDone}
         />
       </div>
     </div>

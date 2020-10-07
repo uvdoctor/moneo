@@ -1,18 +1,10 @@
 import React, { useRef, useEffect, useState } from "react";
 import { toCurrency, toReadableNumber } from "../utils";
 import { Slider } from "antd";
-import NextStep from "./nextstep";
-import { COLORS, INPUT_HIGHLIGHT } from "../../CONSTANTS";
+import { COLORS } from "../../CONSTANTS";
 import Tooltip from "./tooltip";
 interface NumberInputProps {
-  inputOrder: number;
-  currentOrder: number;
-  nextStepDisabled: boolean;
-  nextStepHandler: Function;
-  allInputDone: boolean;
-  actionCount?: number;
   info?: string;
-  infoDurationInMs?: number;
   pre: string;
   post?: string;
   min: number;
@@ -56,21 +48,10 @@ export default function NumberInput(props: NumberInputProps) {
     else setRangeFactor(1);
   }, [props.rangeFactor]);
 
-  useEffect(() => {
-    if(!props.allInputDone && props.currentOrder === props.inputOrder) {
-      props.currency ? readOnlyRef.current?.focus() : inputRef.current?.focus()
-    }
-  }, [props.allInputDone, props.currentOrder])
-
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if(!props.allInputDone && !props.nextStepDisabled) {
-        inputRef.current?.blur();
-        props.nextStepHandler()
-      } else if(props.allInputDone) {
         inputRef.current?.blur()
-      }
     }
   };
 
@@ -101,17 +82,7 @@ export default function NumberInput(props: NumberInputProps) {
   };
 
   return (
-      <div className="flex items-center justify-center">
-        {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
-          props.allInputDone) && (
-          <form
-            ref={formRef}
-            className={`${
-              !props.allInputDone &&
-              props.inputOrder === props.currentOrder &&
-              `${INPUT_HIGHLIGHT} px-4`
-            }`}
-          >
+          <form ref={formRef}>
             {props.info && <Tooltip info={props.info} />}
             <div
               className={`w-full flex justify-between ${
@@ -207,15 +178,5 @@ export default function NumberInput(props: NumberInputProps) {
             )}
             <label className="flex justify-center">{props.note}</label>
           </form>
-        )}
-        {!props.allInputDone && props.inputOrder === props.currentOrder && (
-          <NextStep
-            nextStepHandler={() =>
-              props.nextStepHandler(props.actionCount ? props.actionCount : 1)
-            }
-            disabled={props.nextStepDisabled}
-            />
-        )}
-      </div>
   );
 }

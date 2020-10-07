@@ -1,57 +1,92 @@
-import React, { ReactNode } from 'react';
-import { Button } from 'antd';
+import React, { ReactNode, useState } from 'react';
+import { Button, Steps, Menu } from 'antd';
 import ActionButtons from '../form/actionbuttons';
-import Tabs from '../tabs';
 
 interface InputProps {
 	tabOptions: Array<any>;
-	currentOrder: number;
-	allInputDone: boolean;
 	submitDisabled: boolean;
 	cancelDisabled: boolean;
 	showTab: string;
-	children: ReactNode;
 	showTabHandler: Function;
+	children: ReactNode;
 	cancelCallback: Function;
 	handleSubmit?: Function | null;
+	allInputDone: boolean;
+	allInputDoneHandler: Function;
 }
 
 export default function Input({
 	tabOptions,
-	currentOrder,
-	allInputDone,
 	submitDisabled,
 	cancelDisabled,
 	showTab,
-	children,
 	showTabHandler,
+	children,
 	cancelCallback,
-	handleSubmit
+	handleSubmit,
+	allInputDone,
+	allInputDoneHandler
 }: InputProps) {
+	const { Step } = Steps;
+	const [ currentStep, setCurrentStep ] = useState<number>(0);
+
+	const handleStepChange = (count: number = 1) => {
+		let co = currentStep + count;
+		if (co < 0 || !tabOptions[co]) return;
+		if (!tabOptions[co].active) handleStepChange(count);
+		else {
+			showTabHandler(tabOptions[co].label);
+			setCurrentStep(co);
+		}
+	};
+
 	return (
-		<div
-			className={`w-full ${allInputDone &&
-				'lg:max-w-xs'} items-start transition-width duration-500 ease-in-out flex flex-col-reverse lg:flex-col`}
-		>
-			{(allInputDone || currentOrder >= tabOptions[0].order) && (
-				<Tabs
-					tabs={tabOptions}
-					selectedTab={showTab}
-					selectedTabHandler={showTabHandler}
-					capacity={tabOptions.length}
-					currentOrder={currentOrder}
-					allInputDone={allInputDone}
-				/>
+		<div>
+			{!allInputDone ? (
+				<Steps current={currentStep}>
+					{tabOptions.map((tab, i) => {
+						<Step
+							key={'tab' + i}
+							title={tab.label}
+							icon={<tab.svg disabled={!tab.active} selected={showTab === tab.label} />}
+							disabled={!tab.active}
+						/>;
+					})}
+				</Steps>
+			) : (
+				<Menu onClick={(e: any) => showTabHandler(e.key)} selectedKeys={[ showTab ]} mode="horizontal">
+					{tabOptions.map((tab) => (
+						<Menu.Item key={tab.label} icon={<tab.svg disabled={false} selected={showTab === tab.label} />}>
+							{tab.label}
+						</Menu.Item>
+					))}
+				</Menu>
 			)}
-			<div className="w-full flex flex-wrap justify-center">
-				{React.Children.map(
-					children,
-					(child: any) => ((allInputDone || currentOrder >= tabOptions[0].order) && child ? child : null)
-				)}
-			</div>
-			{!handleSubmit ? (
+			<div className="steps-content">{React.Children.map(children, (child: any) => (child ? child : null))}</div>
+
+			{!allInputDone ? (
+				<div className="steps-action">
+					{currentStep < tabOptions.length - 1 && (
+						<Button type="primary" onClick={() => handleStepChange()}>
+							Next
+						</Button>
+					)}
+					{currentStep === tabOptions.length - 1 && (
+						<Button type="primary" onClick={() => allInputDoneHandler(true)}>
+							Done
+						</Button>
+					)}
+					{currentStep > 0 && (
+						<Button style={{ margin: '0 8px' }} onClick={() => handleStepChange(-1)}>
+							Previous
+						</Button>
+					)}
+				</div>
+			) : !handleSubmit ? (
 				<div className="w-full text-center">
-					<Button onClick={() => cancelCallback()} type="primary">Close</Button>
+					<Button onClick={() => cancelCallback()} type="primary">
+						Close
+					</Button>
 				</div>
 			) : (
 				<ActionButtons

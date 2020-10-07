@@ -11,7 +11,7 @@ import { findEarliestFFYear } from "./cfutils";
 import FFResult from "./ffresult";
 import SVGChart from "../svgchart";
 import LineChart from "./linechart";
-import { getAge, getOrderByTabLabel, getTabLabelByOrder } from "./goalutils";
+import { getAge } from "./goalutils";
 import SVGBarChart from "../svgbarchart";
 import StickyHeader from "./stickyheader";
 import Result from "./Result";
@@ -113,7 +113,6 @@ export default function FFGoal({
   const [losses, setLosses] = useState<Array<APIt.TargetInput>>(
     goal.pl as Array<APIt.TargetInput>
   );
-  const [currentOrder, setCurrentOrder] = useState<number>(-1);
   const [allInputDone, setAllInputDone] = useState<boolean>(
     goal.id ? true : false
   );
@@ -234,8 +233,6 @@ export default function FFGoal({
         if (showTab === careLabel) {
           setShowTab(expectLabel);
           setCarePremium(0);
-          if (!allInputDone)
-            setCurrentOrder(getOrderByTabLabel(tabOptions, expectLabel));
         }
       }
     }
@@ -295,16 +292,6 @@ export default function FFGoal({
     setCurrency(curr);
   };
 
-  const handleNextStep = (count: number = 1) => {
-    if (allInputDone) return;
-    let co = currentOrder + count;
-    if (co === 11 && !hasCareTab()) co += 5;
-    let label = getTabLabelByOrder(tabOptions, co);
-    if (label) setShowTab(label);
-    setCurrentOrder(co);
-    if (label === giveLabel) setAllInputDone(true);
-  };
-
   const buildChartCFs = (ffCfs: Object) => Object.values(ffCfs);
 
   const showResultSection = () =>
@@ -318,11 +305,6 @@ export default function FFGoal({
           //info="Financial Plan will be created assuming that You live till 100 Years, after which You leave behind inheritance.
           //DollarDarwin will try to find the earliest possible year for Your Financial Independence based on Your inputs and Other Goals that You Create.
           //Given that You May not be able to work beyond 70 years of age, DollarDarwin may request You to reconsider Your inputs and other Goals so that You Achieve Financial Independence before hitting 70."
-          inputOrder={-1}
-          currentOrder={currentOrder}
-          nextStepDisabled={false}
-          allInputDone={allInputDone}
-          nextStepHandler={handleNextStep}
           pre="Birth Year"
           value={endYear - PLAN_DURATION}
           changeHandler={(val: string) => changeSelection(val, setEndYear, 100)}
@@ -330,11 +312,6 @@ export default function FFGoal({
         />
         <SelectInput
           name="ccy"
-          inputOrder={0}
-          currentOrder={currentOrder}
-          nextStepDisabled={false}
-          allInputDone={allInputDone}
-          nextStepHandler={handleNextStep}
           pre="Currency"
           value={currency}
           changeHandler={changeCurrency}
@@ -347,15 +324,15 @@ export default function FFGoal({
         } items-start`}
       >
         <Input
-          currentOrder={currentOrder}
-          allInputDone={allInputDone}
           showTab={showTab}
-          showTabHandler={setShowTab}
           tabOptions={tabOptions}
+          showTabHandler={setShowTab}
           cancelCallback={cancelCallback}
           handleSubmit={addCallback && cancelCallback ? handleSubmit : null}
           submitDisabled={!allInputDone || expenseAfterFF < 5000 || btnClicked}
           cancelDisabled={btnClicked}
+          allInputDone={allInputDone}
+          allInputDoneHandler={setAllInputDone}
         >
           {showTab === investLabel && (
             <FIInvest
@@ -364,10 +341,6 @@ export default function FFGoal({
               riskProfileHandler={pp ? setRiskProfile : null}
               rr={rr}
               rrHandler={pp ? null : setRR}
-              currentOrder={currentOrder}
-              allInputDone={allInputDone}
-              inputOrder={getOrderByTabLabel(tabOptions, investLabel)}
-              nextStepHandler={handleNextStep}
               nw={nw}
               nwHandler={setNW}
               avgMonthlySavings={avgMonthlySavings}
@@ -381,10 +354,6 @@ export default function FFGoal({
             <ExpenseAfterFF
               currency={currency}
               rangeFactor={rangeFactor}
-              inputOrder={getOrderByTabLabel(tabOptions, spendLabel)}
-              currentOrder={currentOrder}
-              allInputDone={allInputDone}
-              nextStepHandler={handleNextStep}
               expenseAfterFF={expenseAfterFF}
               expenseAfterFFHandler={setExpenseAfterFF}
               expenseChgRate={expenseChgRate}
@@ -399,10 +368,6 @@ export default function FFGoal({
             <RetIncome
               currency={currency}
               rangeFactor={rangeFactor}
-              inputOrder={getOrderByTabLabel(tabOptions, benefitLabel)}
-              currentOrder={currentOrder}
-              allInputDone={allInputDone}
-              nextStepHandler={handleNextStep}
               retirementIncome={retirementIncome}
               retirementIncomeHandler={setRetirementIncome}
               retirementIncomePer={retirementIncomePer}
@@ -417,10 +382,6 @@ export default function FFGoal({
             <CareInsurance
               currency={currency}
               rangeFactor={rangeFactor}
-              inputOrder={getOrderByTabLabel(tabOptions, careLabel)}
-              currentOrder={currentOrder}
-              allInputDone={allInputDone}
-              nextStepHandler={handleNextStep}
               carePremium={carePremium}
               carePremiumHandler={setCarePremium}
               carePremiumSY={carePremiumSY}
@@ -444,10 +405,6 @@ export default function FFGoal({
                 title="Potential Gains (eg: Inheritance, Selling Investments, etc.)"
                 left={
                   <DynamicTgtInput
-                    inputOrder={getOrderByTabLabel(tabOptions, expectLabel)}
-                    currentOrder={currentOrder}
-                    allInputDone={allInputDone}
-                    nextStepHandler={handleNextStep}
                     startYear={goal.by}
                     endYear={endYear}
                     currency={currency}
@@ -460,21 +417,12 @@ export default function FFGoal({
                 footer="Exclude taxes & fees."
               />
 
-              {(allInputDone ||
-                currentOrder ===
-                  getOrderByTabLabel(tabOptions, expectLabel) + 1) && (
                 <Section
                   title="Potential Losses (eg: Inheritance, Selling Investments, etc.)"
                   footer="Include taxes & fees."
                   insideForm
                   left={
                     <DynamicTgtInput
-                      inputOrder={
-                        getOrderByTabLabel(tabOptions, expectLabel) + 1
-                      }
-                      currentOrder={currentOrder}
-                      allInputDone={allInputDone}
-                      nextStepHandler={handleNextStep}
                       startYear={goal.by}
                       endYear={endYear}
                       currency={currency}
@@ -484,7 +432,6 @@ export default function FFGoal({
                     />
                   }
                 />
-              )}
             </Fragment>
           )}
 
@@ -492,10 +439,6 @@ export default function FFGoal({
             <Nominees
               currency={currency}
               rangeFactor={rangeFactor}
-              inputOrder={getOrderByTabLabel(tabOptions, giveLabel)}
-              currentOrder={currentOrder}
-              allInputDone={allInputDone}
-              nextStepHandler={handleNextStep}
               leaveBehind={leaveBehind}
               leaveBehindHandler={setLeaveBehind}
               successionTaxRate={successionTaxRate}

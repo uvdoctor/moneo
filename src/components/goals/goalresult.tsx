@@ -31,11 +31,6 @@ export default function GoalResult(props: GoalResultProps) {
 				<div className="w-full">
 					<NumberInput
 						name="dr"
-						inputOrder={1}
-						currentOrder={0}
-						allInputDone
-						nextStepHandler={() => true}
-						nextStepDisabled={false}
 						value={props.dr as number}
 						changeHandler={props.drHandler}
 						min={0}

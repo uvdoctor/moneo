@@ -7,7 +7,6 @@ import ExpandCollapse from '../form/expandcollapse';
 import FFGoal from '../goals/ffgoal';
 import Goal from '../goals/goal';
 import { createNewGoalInput } from '../goals/goalutils';
-import Header from '../header';
 import * as gtag from '../../lib/gtag';
 import CalculatorTemplate from './CalculatorTemplate';
 import ItemDisplay from './ItemDisplay';
@@ -62,7 +61,6 @@ export default function Layout(props: LayoutProps) {
 		<DDPage title={props.title}>
 			{!wipGoal ? (
 				<Fragment>
-					<Header />
 					<div className="mt-16 w-full text-center">
 						<ItemDisplay svg={props.titleSVG} result={props.title + ' Calculator'} calcFormat />
 						{Object.keys(sections).map((key, i) => (

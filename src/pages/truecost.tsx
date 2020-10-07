@@ -20,9 +20,9 @@ export default function TrueCost() {
 			calc={{
 				type: TrueCostCalc,
 				tabOptions: [
-					{ label: SPEND, order: 1, active: true, svg: SVGPay },
-					{ label: SAVE, order: 4, active: true, svg: SVGPiggy },
-					{ label: INVEST, order: 7, active: true, svg: SVGMoneyBag }
+					{ label: SPEND, order: 0, active: true, svg: SVGPay },
+					{ label: SAVE, order: 3, active: true, svg: SVGPiggy },
+					{ label: INVEST, order: 6, active: true, svg: SVGMoneyBag }
 				],
 				endOrder: 9
 			}}
