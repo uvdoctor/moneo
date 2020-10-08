@@ -1,12 +1,6 @@
-import React, { useState } from "react";
-import Link from "next/link";
-import { Row, Col } from "antd";
-import SVGScale from "../svgscale";
-import SVGFreedom from "../svgfreedom";
-import SVGEduLoan from "../svgeduloan";
-import SVGScissor from "../svgscissor";
-import SVGAnalyze from "../svganalyze";
-import SVGLoan from "../svgloan";
+import React from "react";
+import { Row, Col, Button } from "antd";
+import { RightOutlined } from "@ant-design/icons";
 import { CALC_NAMES, ROUTES } from "../../CONSTANTS";
 
 import "./Calculator.less";
@@ -19,49 +13,41 @@ export const calcList: Array<any> = [
 	{
 		name: CALC_NAMES.FI,
 		link: ROUTES.FI,
-		svg: SVGFreedom,
 		desc: "Figure out Earliest Possible Year & Minimum Savings needed for FI.",
 	},
 	{
 		name: CALC_NAMES.BR,
 		link: ROUTES.BR,
-		svg: SVGScale,
 		desc:
 			"Find out whether its cheaper to Buy or Rent & Invest remaining amount, as well as duration for which the option is cheaper.",
 	},
 	{
 		name: CALC_NAMES.EDU_LOAN,
 		link: ROUTES.EDUCATION,
-		svg: SVGEduLoan,
 		desc:
 			"Analyze the simple interest to be paid while studying, and EMI payments to be made after study is over.",
 	},
 	{
 		name: CALC_NAMES.DR,
 		link: ROUTES.LOAN,
-		svg: SVGScissor,
 		desc:
 			"Identify the optimal sequence of paying various loans that makes sense for You.",
 	},
 	{
 		name: CALC_NAMES.CI,
 		link: ROUTES.LOAN,
-		svg: SVGAnalyze,
 		desc:
 			"Assess impact on Your credit score for various factors such as hard inquiry, delayed payment, etc.",
 	},
 	{
 		name: CALC_NAMES.LOAN,
 		link: ROUTES.LOAN,
-		svg: SVGLoan,
 		desc:
 			"Understand the amortization schedule and total interest to be paid for a simple loan.",
 	},
 ];
 
 export default function Calculator({ calculateRef }: CalculatorProps) {
-	const [calcIndex, setCalcIndex] = useState<number>(-1);
-
 	return (
 		<div ref={calculateRef} className="calculator">
 			<div>
@@ -80,40 +66,14 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 					</div>
 				</div>
 
-				<Row className="calculator-btns" gutter={[30, 0]}>
-					{calcList.map(({ name, svg: Svg, desc, link }: any, i: number) => (
+				<Row className="calculator-btns" gutter={[30, 30]}>
+					{calcList.map(({ name, desc, link }: any, i: number) => (
 						<Col key={"calc" + i} span={8}>
-							<div
-								className="calculator-btn"
-								style={{
-									transform:
-										calcIndex === i
-											? `translate(${
-													i === 5
-														? "-445px, -149px"
-														: i === 2
-														? "-445px, -2px"
-														: i === 3
-														? "-1px, -149px"
-														: i === 4
-														? "-223px, -149px"
-														: i === 1
-														? "-223px, -2px"
-														: ""
-											  })`
-											: "",
-								}}
-								onMouseEnter={() => setCalcIndex(i)}
-								onMouseLeave={() => setCalcIndex(-1)}
-							>
+							<div className="calculator-btn">
 								<div>
-									<Link href={link}>
-										<a>
-											<Svg />
-											<h3>{name}</h3>
-											<p>{desc}</p>
-										</a>
-									</Link>
+									<h3>{name}</h3>
+									<p>{desc}</p>
+									<Button shape="circle" icon={<RightOutlined />} href={link} />
 								</div>
 							</div>
 						</Col>

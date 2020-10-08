@@ -18,7 +18,7 @@
 		background-image: linear-gradient(to bottom, #ebebeb, #d1d1d1);
 		border-radius: @calculator-radius;
 		border: #fff solid 1px;
-		padding: 30px 35px;
+		padding: 30px 35px 10px;
 	}
 
 	& .calculator-title {
@@ -26,6 +26,7 @@
 		border: 1px solid #afafaf;
 		border-radius: @calculator-radius;
 		padding: 10px;
+		margin-bottom: 30px;
 
 		> div {
 			background: #b5be93;
@@ -38,7 +39,6 @@
 
 	& .calculator-btns {
 		position: relative;
-		margin-top: 20px;
 
 		& > div {
 			position: initial;
@@ -46,73 +46,78 @@
 	}
 
 	& .calculator-btn {
-		width: 192px;
+		width: 100%;
 		background-color: #a0a0a0;
 		background-image: linear-gradient(0deg, #4a4a4a, #a1a1a1);
 		box-shadow: 0 0 3px #5b5b5b;
 		border: #939393 solid 1px;
 		cursor: pointer;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
 		border-radius: @calculator-radius-med;
 		transition-property: all;
 		transition-duration: 0.5s;
-		padding: 4px;
+		padding: 2px;
 		text-align: center;
-		margin: 15px 0;
 
 		& > div {
+			min-height: 80px;
+			display: flex;
+			align-items: center;
 			background-color: #6f6f6f;
 			background-image: linear-gradient(270deg, #6f6f6f, #4a4a4a);
 			border-radius: @calculator-radius-med;
 			border: #828282 solid 1px;
 			color: #fff;
 			padding: 20px 10px;
-		}
 
-		& svg {
-			width: 30px;
-			filter: invert(0%) sepia(51%) saturate(0%) hue-rotate(0deg)
-				brightness(100%) contrast(100%);
+			& h3,
+			& p {
+				width: 100%;
+			}
 		}
 
 		& h3 {
+			color: #fff;
 			font-size: 14px;
 		}
 
-		& h3,
 		& p {
 			color: #fff;
+			display: none;
+			font-size: 8px;
 		}
 
-		& p {
+		& a {
 			display: none;
 		}
 
 		&:hover {
-			width: 640px;
-			height: 267px;
-			position: absolute;
-			background-color: @primary-color;
-			background-image: none;
-			border: #fff solid 1px;
-			box-shadow: none;
-			transform: translate(-2px, -2px);
-			z-index: 2;
+			border: 0;
+			-moz-transform: scale(2);
+			-webkit-transform: scale(2);
+			-o-transform: scale(2);
+			-ms-transform: scale(2);
+			transform: scale(2);
+			padding: 0;
 
-			& div {
-				background: none;
+			& > div {
 				background-image: none;
+				background-color: @primary-color;
 				border: 0;
+				padding-top: 10px;
+				padding-bottom: 10px;
 			}
 
-			& svg {
-				filter: none;
+			& h3 {
+				display: none;
 			}
 
-			& p {
+			& p,
+			& a {
 				display: block;
+			}
+
+			& a {
+				transform: scale(0.5);
 			}
 		}
 	}
