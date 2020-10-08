@@ -1,4 +1,6 @@
 import { COLORS } from "../CONSTANTS";
+import { useFullScreenBrowser } from "react-browser-hooks";
+import { isMobileDevice, toCurrency } from "./utils";
 
 export const getCommonLayoutProps = (
   title: string = "",
@@ -15,10 +17,37 @@ export const getCommonLayoutProps = (
   };
 };
 
-export const getCommonStyle = () => {
-    return {width: "100%", height: "100%", minHeight: "450px", minWidth: "320px"}
-};
-
 export const getCommonConfig = () => {
     return {responsive: true, editable: false, scrollZoom: true, displayModeBar: false}
 }
+
+export const getCommonFill = () => {
+	return { fill: COLORS.DEFAULT };
+};
+
+export const getCommonMeta = (currency: string) => {
+	return {
+		value: {
+			formatter: (v: number) => {
+				return toCurrency(v, currency);
+			}
+		}
+	};
+};
+
+export const getCommonXAxis = (titleText: string) => {
+	return {
+		title: { visible: true, text: titleText, style: { fontSize: 15, fill: COLORS.DEFAULT } }
+	};
+};
+
+export const getCommonYAxis = () => {
+	const fsb = useFullScreenBrowser();
+	return { label: { visible: !isMobileDevice(fsb) }, grid: { visible: false }, title: { visible: false } }
+}
+
+export const getCommonStyle = () => {
+	return { width: '100%', height: '100%', minHeight: '450px', minWidth: '320px' };
+};
+
+

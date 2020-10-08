@@ -5,10 +5,6 @@ import SelectInput from '../form/selectinput';
 import { toCurrency } from '../utils';
 
 interface SpendProps {
-	inputOrder: number;
-	currentOrder: number;
-	nextStepHandler: Function;
-	allInputDone: boolean;
 	freq: string;
 	freqHandler: Function;
 	amt: number;
@@ -33,68 +29,47 @@ export default function Spend(props: SpendProps) {
 
 	return (
 		<div className="flex w-full justify-around">
-			{(props.allInputDone || props.inputOrder <= props.currentOrder) && (
-				<Section
-					title="Enter Spend Details"
-					left={
-						<SelectInput
-							name="sf"
-							pre="Spend"
-							currentOrder={props.currentOrder}
-							inputOrder={props.inputOrder}
-							allInputDone={props.allInputDone}
-							nextStepDisabled={false}
-							nextStepHandler={props.nextStepHandler}
-							value={props.freq}
-							changeHandler={props.freqHandler}
-							options={freqOptions}
-						/>
-					}
-					right={
+			<Section
+				title="Enter Spend Details"
+				left={
+					<SelectInput
+						name="sf"
+						pre="Spend"
+						value={props.freq}
+						changeHandler={props.freqHandler}
+						options={freqOptions}
+					/>
+				}
+				right={
+					<NumberInput
+						name="amt"
+						pre="Amount"
+						value={props.amt}
+						changeHandler={props.amtHandler}
+						min={0}
+						max={50000}
+						step={100}
+						currency={props.currency}
+						rangeFactor={props.rangeFactor}
+					/>
+				}
+				bottom={
+					props.freq !== SPEND_ONCE && (
 						<NumberInput
-							name="amt"
-							pre="Amount"
-							currentOrder={props.currentOrder}
-							inputOrder={props.inputOrder + 1}
-							allInputDone={props.allInputDone}
-							nextStepDisabled={props.amt === 0}
-							nextStepHandler={props.nextStepHandler}
-							value={props.amt}
-							changeHandler={props.amtHandler}
+							name="dur"
+							pre="For"
+							value={props.duration}
+							changeHandler={props.durationHandler}
 							min={0}
-							max={50000}
-							step={100}
-							currency={props.currency}
-							rangeFactor={props.rangeFactor}
+							max={props.freq === SPEND_MONTHLY ? 360 : 30}
+							step={1}
+							unit={props.freq === SPEND_MONTHLY ? 'Months' : 'Years'}
+							note={`Total ${toCurrency(props.totalCost, props.currency)}`}
 						/>
-					}
-					bottom={
-						props.freq !== SPEND_ONCE ? (
-								<NumberInput
-									name="dur"
-									pre="For"
-									currentOrder={props.currentOrder}
-									inputOrder={props.inputOrder + 2}
-									allInputDone={props.allInputDone}
-									nextStepDisabled={props.duration === 0}
-									nextStepHandler={props.nextStepHandler}
-									value={props.duration}
-									changeHandler={props.durationHandler}
-									min={0}
-									max={props.freq === SPEND_MONTHLY ? 360 : 30}
-									step={1}
-								unit={props.freq === SPEND_MONTHLY ? 'Months' : 'Years'}
-								note={`Total ${toCurrency(props.totalCost, props.currency)}`}
-								/>
-						) : (
-							!props.allInputDone &&
-							props.currentOrder === props.inputOrder + 2 &&
-							props.nextStepHandler()
-						)
-					}
-					insideForm
-				/>
-			)}
+					)
+				}
+				insideForm
+			/>
 		</div>
 	);
 }

@@ -3,7 +3,7 @@ import { ParallaxProvider } from "react-scroll-parallax";
 import { Layout, Menu } from "antd";
 import UserHeader from "./userheader";
 import Logo from "../components/Logo";
-import UserMenu from "./usermenu";
+import SecureMenu from "./SecureMenu";
 import { isMobileDevice } from "./utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import Head from "next/head";
@@ -19,7 +19,7 @@ export default function DDPage(props: DDPageProps) {
   const { SubMenu } = Menu;
   const commonSecureComps: Array<React.ReactNode> = [
     <UserHeader />,
-    <UserMenu />,
+    <SecureMenu />,
   ];
   const commonPublicComps: Array<React.ReactNode> = [];
 

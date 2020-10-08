@@ -4,13 +4,8 @@ import NumberInput from "../form/numberinput";
 import SelectInput from "../form/selectinput";
 import { getRangeFactor, toCurrency } from "../utils";
 import { LMH } from "../../api/goals";
-import { getRAOptions } from "./goalutils";
 
 interface FIInvestProps {
-  inputOrder: number;
-  currentOrder: number;
-  allInputDone: boolean;
-  nextStepHandler: Function;
   currency: string;
   nw: number;
   nwHandler: Function;
@@ -25,10 +20,6 @@ interface FIInvestProps {
 }
 
 export function FIInvest({
-  inputOrder,
-  currentOrder,
-  allInputDone,
-  nextStepHandler,
   currency,
   nw,
   nwHandler,
@@ -50,11 +41,6 @@ export function FIInvest({
       left={
         <NumberInput
           name="nw"
-          inputOrder={inputOrder}
-          currentOrder={currentOrder}
-          nextStepDisabled={nw === 0}
-          allInputDone={allInputDone}
-          nextStepHandler={nextStepHandler}
           info={`Your Total Portfolio Value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc.`}
           value={nw}
           pre="Total"
@@ -70,12 +56,6 @@ export function FIInvest({
       right={
         <NumberInput
           name="ms"
-          inputOrder={inputOrder + 1}
-          currentOrder={currentOrder}
-          nextStepDisabled={avgMonthlySavings === 0}
-          allInputDone={allInputDone}
-          nextStepHandler={nextStepHandler}
-          infoDurationInMs={10000}
           info={`Average Monthly Savings after paying all taxes & expenses. 
                   Include Your Retirement Contributions as a part of Your Savings. 
                   You Can Put Negative Value if Your Expenses are More than Income. 
@@ -97,11 +77,6 @@ export function FIInvest({
           <div className="mt-2">
             <NumberInput
               name="savingsRate"
-              inputOrder={inputOrder + 2}
-              currentOrder={currentOrder}
-              nextStepDisabled={false}
-              allInputDone={allInputDone}
-              nextStepHandler={nextStepHandler}
               info={`Given Average Monthly Investment of ${toCurrency(
                 avgMonthlySavings,
                 currency
@@ -111,7 +86,6 @@ export function FIInvest({
             currency
           )} 
           for this month. Due to the power of compounding, even small regular increase in investment can make a significant impact in the long term.`}
-              infoDurationInMs={7000}
               pre="Increase Investment"
               post="Every Month by"
               unit="%"
@@ -130,12 +104,6 @@ export function FIInvest({
             {riskProfileHandler && riskProfile ? (
               <SelectInput
                 name="riskProfile"
-                inputOrder={inputOrder + 3}
-                currentOrder={currentOrder}
-                options={getRAOptions()}
-                nextStepDisabled={false}
-                allInputDone={allInputDone}
-                nextStepHandler={nextStepHandler}
                 info="How much Risk are You willing to take in order to achieve higher Investment Return?"
                 pre="Can Tolerate"
                 post="Investment Loss"
@@ -145,11 +113,6 @@ export function FIInvest({
             ) : (
               <NumberInput
                 name="dr"
-                inputOrder={inputOrder + 3}
-                currentOrder={currentOrder}
-                allInputDone={allInputDone}
-                nextStepHandler={nextStepHandler}
-                nextStepDisabled={false}
                 value={rr as number}
                 changeHandler={rrHandler}
                 min={0}

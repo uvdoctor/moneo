@@ -1,8 +1,9 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Goal from "./goal";
 import FFGoal from "./ffgoal";
+import { Menu } from "antd";
 import { appendValue, removeFromArray } from "../utils";
-import CFChart from "./cfchart";
+import YearlyCFChart from "./YearlyCFChart";
 import * as APIt from "../../api/goals";
 import {
   createNewGoal,
@@ -20,17 +21,15 @@ import Summary from "./summary";
 import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
 import SVGEdit from "../svgedit";
-import { useFullScreen } from "react-browser-hooks";
-import Tabs from "../tabs";
 import { ASSET_TYPES } from "../../CONSTANTS";
 import SVGBarChart from "../svgbarchart";
-import TreeMapChart from "./treemapchart";
+import AssetAllocationChart from "./AssetAllocationChart";
 import SVGAAChart from "./svgaachart";
 import SVGList from "../svglist";
-import Button from "../Button";
+import { Button } from "antd";
+import { Modal } from "antd";
 
-export default function Goals() {
-  const { fullScreen } = useFullScreen();
+export default function SetPlan() {
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
     []
   );
@@ -53,23 +52,15 @@ export default function Goals() {
   const tabOptions = [
     {
       label: goalsLabel,
-      order: 1,
-      active: true,
       svg: SVGList,
     },
     {
       label: aaLabel,
-      order: 2,
-      active: true,
       svg: SVGAAChart,
-      svglabel: nowYear + 1,
     },
     {
       label: cfLabel,
-      order: 3,
-      active: true,
       svg: SVGBarChart,
-      svglabel: "USD",
     },
   ];
 
@@ -84,7 +75,6 @@ export default function Goals() {
     goals?.forEach((g) => {
       if (g.type === APIt.GoalType.FF) {
         setFFGoal(g);
-        tabOptions[2].svglabel = g.ccy;
         ffGoalId = g.id as string;
       } else {
         let result: any = calculateCFs(
@@ -413,8 +403,7 @@ export default function Goals() {
   };
 
   return wipGoal ? (
-    <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
-      <div className="relative bg-white border-0">
+    <Modal visible={wipGoal !== null}>
         {wipGoal.type === APIt.GoalType.FF ? (
           <FFGoal
             goal={wipGoal as APIt.CreateGoalInput}
@@ -440,8 +429,7 @@ export default function Goals() {
             />
           )
         )}
-      </div>
-    </div>
+    </Modal>
   ) : (
     <Fragment>
       {ffGoal && rr && rr.length > 0 && (
@@ -489,17 +477,15 @@ export default function Goals() {
           (key) =>
             key !== APIt.GoalType.FF && (
               <Button
-                className={`mt-4 ${
-                  !ffGoal ? "cursor-not-allowed" : "cursor-pointer"
-                }`}
-                isPrimary
+                type="primary"
                 key={key}
-                disabled={!ffGoal}
+                disabled={ffGoal === null}
                 onClick={() => createGoal(key as APIt.GoalType)}
-                label={getGoalTypes()[key as APIt.GoalType]}
-              />
-            )
-        )}
+              >
+                {getGoalTypes()[key as APIt.GoalType]}
+                </Button>
+                )
+                )}
       </div>
       {ffGoal && rr && rr.length > 0
         ? allGoals &&
@@ -510,11 +496,6 @@ export default function Goals() {
                   {viewMode === goalsLabel && (
                     <div className="mr-1 md:mr-2">
                       <SelectInput
-                        inputOrder={1}
-                        currentOrder={0}
-                        nextStepDisabled={true}
-                        allInputDone={true}
-                        nextStepHandler={() => true}
                         name="typeFilter"
                         pre=""
                         options={getImpOptions()}
@@ -523,14 +504,13 @@ export default function Goals() {
                       />
                     </div>
                   )}
-                  <Tabs
-                    tabs={tabOptions}
-                    selectedTab={viewMode}
-                    capacity={tabOptions.length}
-                    selectedTabHandler={setViewMode}
-                    allInputDone
-                    keepCentered
-                  />
+                  <Menu onClick={(e: any) => setViewMode(e.key)} selectedKeys={[viewMode]} mode="horizontal">
+                    {tabOptions.map(tab => 
+                      <Menu.Item key={tab.label} icon={<tab.svg disabled={false} selected={viewMode === tab.label} />}>
+                        {tab.label}
+                      </Menu.Item>
+                    )}  
+                  </Menu>
                 </div>
               </div>
               {viewMode !== aaLabel && (
@@ -540,20 +520,19 @@ export default function Goals() {
                 </p>
               )}
               {viewMode === cfLabel && (
-                <CFChart
+                <YearlyCFChart
                   mustCFs={mustCFs}
                   tryCFs={tryCFs}
                   optCFs={optCFs}
                   from={nowYear + 1}
                   to={ffGoal.ey}
-                  fullScreen={fullScreen}
+                  currency={ffGoal.ccy}
                 />
               )}
               {viewMode === aaLabel && (
-                <TreeMapChart
+                <AssetAllocationChart
                   aa={ffResult.aa}
                   rr={rr}
-                  fullScreen={fullScreen}
                 />
               )}
               {viewMode === goalsLabel && (
@@ -595,10 +574,8 @@ export default function Goals() {
               <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>
               <p className="mb-2">Set Up Financial Independence Target.</p>
               <Button
-                isPrimary
-                onClick={() => createGoal(APIt.GoalType.FF)}
-                label="Get Started"
-              />
+                type="primary"
+                onClick={() => createGoal(APIt.GoalType.FF)}>Get Started</Button>
             </div>
           )}
     </Fragment>

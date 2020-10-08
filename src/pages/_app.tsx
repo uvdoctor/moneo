@@ -1,5 +1,4 @@
 import "@aws-amplify/ui/dist/style.css";
-import "rc-slider/assets/index.css";
 import { AppProps } from "next/app";
 import "../styles/index.less";
 import * as gtag from "../lib/gtag";

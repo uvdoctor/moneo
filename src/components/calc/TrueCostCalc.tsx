@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { INVEST, SAVE, SPEND } from '../../pages/truecost';
 import SelectInput from '../form/selectinput';
-import { getOrderByTabLabel } from '../goals/goalutils';
 import Input from '../goals/Input';
-import LineChart from '../goals/linechart';
+import DDLineChart from '../goals/DDLineChart';
 import Result from '../goals/Result';
 import SVGChart from '../svgchart';
 import SVGHourGlass from '../svghourglass';
@@ -34,7 +33,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 	const [ timeCostDisplay, setTimeCostDisplay ] = useState<number>(0);
 	const [ timeCostUnit, setTimeCostUnit ] = useState<string>(TIME_COST_HOURS);
 	const [ totalCost, setTotalCost ] = useState<number>(0);
-	const [ chartFullScreen, setChartFullScreen ] = useState<boolean>(false);
 	const [ cfs, setCFs ] = useState<Array<number>>([]);
 	const [ cfsWithOppCost, setCFsWithOppCost ] = useState<Array<number>>([]);
 
@@ -162,8 +160,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 	return (
 		<div className={`flex flex-1 lg:flex-row ${props.allInputDone && 'flex-col-reverse'} items-start`}>
 			<Input
-				currentOrder={props.currentOrder}
-				allInputDone={props.allInputDone}
 				showTab={props.showTab}
 				showTabHandler={props.showTabHandler}
 				tabOptions={props.tabOptions}
@@ -171,15 +167,13 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 				handleSubmit={null}
 				submitDisabled={false}
 				cancelDisabled={false}
+				allInputDone={props.allInputDone}
+				allInputDoneHandler={props.allInputDoneHandler}
 			>
 				{props.showTab === SPEND && (
 					<Spend
 						currency={props.currency}
 						rangeFactor={props.rangeFactor}
-						allInputDone={props.allInputDone}
-						currentOrder={props.currentOrder}
-						inputOrder={getOrderByTabLabel(props.tabOptions, SPEND)}
-						nextStepHandler={props.nextStepHandler}
 						freq={freq}
 						freqHandler={setFreq}
 						amt={amt}
@@ -194,10 +188,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 					<Save
 						currency={props.currency}
 						rangeFactor={props.rangeFactor}
-						allInputDone={props.allInputDone}
-						currentOrder={props.currentOrder}
-						inputOrder={getOrderByTabLabel(props.tabOptions, SAVE)}
-						nextStepHandler={props.nextStepHandler}
 						savings={savings}
 						savingsHandler={setSavings}
 						paidWeeks={paidWeeks}
@@ -209,10 +199,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 
 				{props.showTab === INVEST && (
 					<InvestOption
-						allInputDone={props.allInputDone}
-						currentOrder={props.currentOrder}
-						inputOrder={getOrderByTabLabel(props.tabOptions, INVEST)}
-						nextStepHandler={props.nextStepHandler}
 						dr={dr}
 						drHandler={setDR}
 						years={years}
@@ -226,7 +212,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 					resultTabOptions={resultTabOptions}
 					showResultTab={showResultTab}
 					showResultTabHandler={setShowResultTab}
-					chartFullScreenHandler={setChartFullScreen}
 					result={
 						<div className="w-full py-1 flex justify-around items-center bg-green-100 shadow-lg lg:shadow-xl">
 							<div className="flex items-end">
@@ -244,11 +229,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 									<SelectInput
 										name="tcunit"
 										pre=""
-										inputOrder={0}
-										currentOrder={-1}
-										nextStepDisabled={false}
-										allInputDone
-										nextStepHandler={() => true}
 										options={timeOptions}
 										value={timeCostUnit}
 										changeHandler={setTimeCostUnit}
@@ -270,9 +250,9 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 						</div>
 					}
 				>
-					<LineChart
+					<DDLineChart
 						cfs={cfsWithOppCost}
-						fullScreen={chartFullScreen}
+						currency={props.currency}
 						startYear={1}
 						title="Number of Years"
 					/>

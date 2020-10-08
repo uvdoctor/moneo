@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Button from '../Button';
-import ItemDisplay from '../calc/ItemDisplay';
+import { Button } from 'antd';
 import SVGClose from '../svgclose';
 import SVGSave from '../svgsave';
 
@@ -24,20 +23,19 @@ export default function ActionButtons(props: ActionButtonsProps) {
 
 	return (
 		<footer className="w-full py-2 flex justify-center">
-			<Button disabled={props.cancelDisabled} onClick={props.cancelHandler} isPrimary={false}>
-				<ItemDisplay svg={<SVGClose />} result="Cancel" />
+			<Button icon={<SVGClose />} onClick={() => props.cancelHandler()} disabled={props.cancelDisabled}>
+				Cancel
 			</Button>
-			<Button
-				className={`ml-8 ${props.submitDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+			<Button type="primary"
 				onClick={() => {
 					setActionInProgress(true);
 					props.submitHandler();
 				}}
-				isPrimary
+				icon={<SVGSave />}
 				disabled={props.submitDisabled}
-				isLoading={props.submitDisabled && actionInProgress}
+				loading={props.submitDisabled && actionInProgress}
 			>
-				<ItemDisplay svg={<SVGSave />} result={props.submitText} />
+				{props.submitText}
 			</Button>
 		</footer>
 	);
