@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { toCurrency, toReadableNumber } from "../utils";
 import { Slider } from "antd";
 import { COLORS } from "../../CONSTANTS";
-import Tooltip from "./tooltip";
+import { Tooltip } from "antd";
 interface NumberInputProps {
   info?: string;
   pre: string;
@@ -83,7 +83,7 @@ export default function NumberInput(props: NumberInputProps) {
 
   return (
           <form ref={formRef}>
-            {props.info && <Tooltip info={props.info} />}
+            {props.info && <Tooltip title={props.info} />}
             <div
               className={`w-full flex justify-between ${
                 props.max ? "items-center" : "flex-col"

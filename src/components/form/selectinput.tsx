@@ -1,6 +1,6 @@
 import React, { Fragment, useRef } from 'react';
 import { getCurrencyList } from '../utils';
-import Tooltip from './tooltip';
+import { Tooltip } from 'antd';
 interface SelectInputProps {
 	disabled?: boolean;
 	info?: string;
@@ -25,7 +25,7 @@ export default function SelectInput(props: SelectInputProps) {
 
 	return (
 		<div>
-			{props.info && <Tooltip info={props.info} />}
+			{props.info && <Tooltip title={props.info} />}
 			{props.pre && <label className="whitespace-no-wrap">{props.pre}</label>}
 			{!props.disabled ? (
 				<Fragment>

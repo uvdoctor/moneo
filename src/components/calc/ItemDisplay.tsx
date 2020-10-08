@@ -1,6 +1,6 @@
 import React from "react";
 import { toCurrency, toReadableNumber } from "../utils";
-import Tooltip from "../form/tooltip";
+import { Tooltip } from "antd";
 interface ItemDisplayProps {
 	label?: string;
 	svg?: any;
@@ -70,9 +70,9 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 				</div>
 				{(props.imp || props.info) && (
 					<div className="ml-1 flex justify-end items-start cursor-pointer">
-						{props.imp && <Tooltip info={props.imp} error />}
+						{props.imp && <Tooltip title={props.imp} color="red" />}
 						{props.info && (
-							<Tooltip info={props.info} error={props.pl && props.result < 0} />
+							<Tooltip title={props.info} color={`${props.pl && props.result < 0 ? "red" : "white"}`} />
 						)}
 					</div>
 				)}

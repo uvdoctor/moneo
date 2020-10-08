@@ -11,7 +11,6 @@ import { GoalType } from '../../api/goals';
 import ItemDisplay from './ItemDisplay';
 import { COLORS } from '../../CONSTANTS';
 import { isTaxCreditEligible } from '../goals/goalutils';
-import Tooltip from '../form/tooltip';
 import HSwitch from '../HSwitch';
 
 interface LoanEmiProps {
@@ -180,12 +179,11 @@ export default function LoanEmi(props: LoanEmiProps) {
 								pre="Yearly"
 								post="Interest"
 								unit="%"
-								feedback={{
+								/*feedback={{
 									0: {
 										label: (
 											<Tooltip
-												text="YAY!!!"
-												info={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
+												title={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
                             As it is Very Easy for Your Investment to recover this Yearly Interest with Minimal Risk, this is an Excellent Deal!`}
 												color={COLORS.GREEN}
 											/>
@@ -195,8 +193,7 @@ export default function LoanEmi(props: LoanEmiProps) {
 									1: {
 										label: (
 											<Tooltip
-												text="CHEAP"
-												info={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
+												title={`It is ideal to get a loan with interest rate lesser than what You can earn from Your Investment with Minimal Risk. 
                             As it is Easy for Your Investment to recover this Yearly Interest with Minimal Risk, this is a Good Deal!`}
 												color={COLORS.BLUE}
 											/>
@@ -229,7 +226,7 @@ export default function LoanEmi(props: LoanEmiProps) {
 										),
 										color: COLORS.RED
 									}
-								}}
+								}}*/
 								note={
 									<ItemDisplay
 										label="Total Interest"
