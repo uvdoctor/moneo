@@ -3,6 +3,7 @@ import VideoPlayer from "../videoplayer";
 import SVGPlay from "../svgplay";
 import SVGStop from "../svgstop";
 import Link from "next/link";
+import { Row, Col } from "antd";
 interface SectionProps {
   title: any;
   left?: any;
@@ -25,6 +26,7 @@ export default function Section(props: SectionProps) {
   const [videoUrl, setVideoUrl] = useState<string>("");
 
   return (
+    <Fragment>
     <div
       className="m-1 w-full max-w-sm md:max-w-md xl:max-w-lg
       rounded-lg shadow-lg md:shadow-xl"
@@ -35,7 +37,9 @@ export default function Section(props: SectionProps) {
           props.insideForm && "bg-gray-700 text-white"
         } flex justify-between relative"
         }`}
-      >
+        >
+          <Row>
+            <Col span={8}>
         <Link href={props.link ? props.link : ""}>
           <a>
             <div
@@ -46,15 +50,15 @@ export default function Section(props: SectionProps) {
               {props.title}
             </div>
           </a>
-        </Link>
-        {props.videoSrc && (
+              </Link>
+              </Col>
+            {props.videoSrc && (
+              <Col span={4} offset={12}>
           <div
             className="p-1 flex items-center justify-end"
             onClick={() =>
-              //@ts-ignore
-              setVideoUrl(!videoUrl ? props.videoSrc : "")
-            }
-          >
+              setVideoUrl(!videoUrl ? props.videoSrc as string : "")
+            }>
             {!videoUrl ? <SVGPlay /> : <SVGStop />}
             <label
               className={`ml-1 cursor-pointer ${
@@ -64,7 +68,9 @@ export default function Section(props: SectionProps) {
               Video
             </label>
           </div>
-        )}
+                </Col>
+            )}
+            </Row>
       </div>
       {videoUrl && <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />}
       {props.toggle && (
@@ -98,6 +104,7 @@ export default function Section(props: SectionProps) {
           )}
         </Fragment>
       )}
-    </div>
+      </div>
+      </Fragment>
   );
 }

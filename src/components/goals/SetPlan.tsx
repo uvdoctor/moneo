@@ -26,7 +26,7 @@ import SVGBarChart from "../svgbarchart";
 import AssetAllocationChart from "./AssetAllocationChart";
 import SVGAAChart from "./svgaachart";
 import SVGList from "../svglist";
-import { Button } from "antd";
+import { Button, notification } from "antd";
 import { Modal } from "antd";
 
 export default function SetPlan() {
@@ -194,9 +194,7 @@ export default function SetPlan() {
     try {
       g = await createNewGoal(goal);
     } catch (err) {
-      // toast.error("Sorry! Unable to create this Goal: " + err, {
-      //   autoClose: 7000,
-      // });
+      notification.error({ message: 'Goal Not Created', description: "Sorry! Unable to create this Goal: " + err });
       return false;
     }
     if (!g) return false;
@@ -205,9 +203,7 @@ export default function SetPlan() {
       setFFGoal(g);
       return true;
     }
-    // toast.success(`Success! New Goal ${g.name} has been Created.`, {
-    //   autoClose: 3000,
-    // });
+    notification.success({message: 'New Goal Created', description: `Success! New Goal ${g.name} has been Created.`});
     allGoals?.push(g as APIt.CreateGoalInput);
     //@ts-ignore
     allCFs[g.id] = cfs;
@@ -223,22 +219,17 @@ export default function SetPlan() {
     try {
       g = await changeGoal(goal);
     } catch (err) {
-      // toast.error("Sorry! Unable to update this Goal: " + err, {
-      //   autoClose: 7000,
-      // });
+      notification.error({message: "Goal not Updated", description: "Sorry! Unable to update this Goal: " + err });
       return false;
     }
     if (!g) return false;
     setWIPGoal(null);
     if (g.type === APIt.GoalType.FF) {
-      // toast.success(
-      //   "Success! Your Financial Independence Target has been Updated.",
-      //   { autoClose: 3000 }
-      // );
+      notification.success({ message: "Target Updated", description: "Success! Your Financial Independence Target has been Updated." });
       setFFGoal(g as APIt.CreateGoalInput);
       return true;
     }
-    //toast.success(`Success! Goal ${g.name} has been Updated.`);
+    notification.success({ message: "Goal Updated", description: `Success! Goal ${g.name} has been Updated.` });
     removeFromArray(allGoals as Array<APIt.CreateGoalInput>, "id", goal.id);
     allGoals?.unshift(g as APIt.CreateGoalInput);
     //@ts-ignore
@@ -252,12 +243,10 @@ export default function SetPlan() {
     try {
       await deleteGoal(id);
     } catch (err) {
-      // toast.error("Sorry! Unable to delete this Goal: " + err, {
-      //   autoClose: 7000,
-      // });
+      notification.error({ message: "Delete Error", description: "Sorry! Unable to delete this Goal: " + err });
       return false;
     }
-    //toast.success(`Success! Goal has been Deleted.`, { autoClose: 3000 });
+    notification.success({ message: "Goal Deleted", description: `Success! Goal has been Deleted.`});
     removeFromArray(allGoals as Array<APIt.CreateGoalInput>, "id", id);
     //@ts-ignore
     delete allCFs[id];
