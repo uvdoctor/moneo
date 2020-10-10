@@ -15,7 +15,7 @@ interface DDPageProps {
 }
 
 export default function DDPage(props: DDPageProps) {
-  const { Header, Footer, Content } = Layout;
+  const { Header, Footer } = Layout;
   const { SubMenu } = Menu;
   const commonSecureComps: Array<React.ReactNode> = [
     <UserHeader />,
@@ -89,7 +89,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="format-detection" content="telephone=no" />
         <title>{props.title}</title>
       </Head>
-      <Layout>
+      <Layout className="dd-site">
         <Header className="dd-header">
           <Logo />
           <Menu mode="horizontal">
@@ -110,19 +110,19 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
             </Menu.Item>
           </Menu>
         </Header>
-        <Content className="dd-content">
-          {!isMobileDevice(fsb) ? (
-            <ParallaxProvider>
-              {getCommonComps().map((child) => child)}
-              {props.children}
-            </ParallaxProvider>
-          ) : (
-            <Fragment>
-              {getCommonComps().map((child) => child)}
-              {props.children}
-            </Fragment>
-          )}
-        </Content>
+
+        {!isMobileDevice(fsb) ? (
+          <ParallaxProvider>
+            {getCommonComps().map((child) => child)}
+            {props.children}
+          </ParallaxProvider>
+        ) : (
+          <Fragment>
+            {getCommonComps().map((child) => child)}
+            {props.children}
+          </Fragment>
+        )}
+
         <Footer>Footer</Footer>
       </Layout>
     </Fragment>

@@ -29,6 +29,7 @@
     "nextjs": "^0.0.3",
     "null-loader": "^4.0.0",
     "plaid": "^7.1.0",
+    "rc-scroll-anim": "^2.7.5",
     "react": "^16.13.1",
     "react-browser-hooks": "^2.2.4",
     "react-dom": "^16.13.0",

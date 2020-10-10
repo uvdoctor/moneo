@@ -1,0 +1,20 @@
+.site-banner {
+	position: relative;
+	text-align: center;
+
+	& .site-banner-content {
+		position: absolute;
+		top: 50%;
+		-webkit-transform: translateY(-50%);
+		transform: translateY(-50%);
+		text-align: left;
+
+		& svg {
+			width: 30px;
+		}
+
+		& h2 {
+			color: @primary-color;
+		}
+	}
+}

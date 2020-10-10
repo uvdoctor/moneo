@@ -1,4 +1,8 @@
-@import "../../node_modules/antd/dist/antd.less";
+@import "~antd/dist/antd.less";
+
+.bg-white {
+	background-color: #fff;
+}
 
 img {
 	width: 100%;
@@ -6,6 +10,10 @@ img {
 
 svg {
 	width: 20px;
+}
+
+.text-green-primary {
+	color: @primary-color;
 }
 
 .dd-header.ant-layout-header {
@@ -33,27 +41,6 @@ svg {
 	max-width: 1280px;
 	margin: 0 auto;
 	padding: 24px 50px;
-}
-
-.site-banner {
-	position: relative;
-	text-align: center;
-
-	& .site-banner-content {
-		position: absolute;
-		top: 50%;
-		-webkit-transform: translateY(-50%);
-		transform: translateY(-50%);
-		text-align: left;
-
-		& svg {
-			width: 30px;
-		}
-
-		& h2 {
-			color: @primary-color;
-		}
-	}
 }
 
 @media all and (max-width: 992px) {

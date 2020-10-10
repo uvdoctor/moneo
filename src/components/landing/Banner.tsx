@@ -2,6 +2,7 @@ import React from "react";
 import ResImg from "../ResImg";
 import BannerContent from "./BannerContent";
 import Join from "./Join";
+import "./Banner.less";
 /*import SocialShare from "../socialshare";
 import BannerContent from "./BannerContent";
 import Join from "./Join";*/
