@@ -18,7 +18,7 @@ interface providerProps {
 function JoinContextProvider({ children }: providerProps) {
 	const [email, setEmail] = useState("");
 	const [country, setCountry] = useState();
-	const [status, setStatus] = useState("N");
+	const [status, setStatus] = useState(Status.N);
 	const [isLoading, setLoading] = useState(false);
 	const [showVerifyModal, setShowVerifyModal] = useState(false);
 	const [error, setError] = useState({});
@@ -128,7 +128,7 @@ function JoinContextProvider({ children }: providerProps) {
 
 		setTimeout(function () {
 			setLoading(false);
-			setStatus("Y");
+			setStatus(Status.Y);
 			localStorage.setItem(
 				JOIN_KEY,
 				JSON.stringify({ country, email, status: Status.Y })
