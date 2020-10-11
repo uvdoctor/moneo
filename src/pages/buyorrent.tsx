@@ -6,7 +6,6 @@ import SVGBalance from "../components/calc/svgbalance";
 import SVGBarChart from "../components/svgbarchart";
 import SVGChart from "../components/svgchart";
 import SVGHourGlass from "../components/svghourglass";
-import SVGScale from "../components/svgscale";
 import { CALC_NAMES } from "../CONSTANTS";
 
 export default function BuyOrRent() {
@@ -14,7 +13,6 @@ export default function BuyOrRent() {
     <Layout
       title={CALC_NAMES.BR}
       type={GoalType.B}
-      titleSVG={<SVGScale selected />}
       assumptions={["adfas", "asdfsad"]}
       features={["fsdgdf", "fgdssdf"]}
       results={[

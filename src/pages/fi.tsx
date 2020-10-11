@@ -5,7 +5,6 @@ import ItemDisplay from "../components/calc/ItemDisplay";
 import SVGAAChart from "../components/goals/svgaachart";
 import SVGBarChart from "../components/svgbarchart";
 import SVGChart from "../components/svgchart";
-import SVGFreedom from "../components/svgfreedom";
 import SVGHourGlass from "../components/svghourglass";
 import SVGPiggy from "../components/svgpiggy";
 import { CALC_NAMES } from "../CONSTANTS";
@@ -16,7 +15,6 @@ export default function FI() {
   return (
     <Layout
       title={CALC_NAMES.FI}
-      titleSVG={<SVGFreedom />}
       type={GoalType.FF}
       assumptions={["adfas", "asdfsad"]}
       features={["fsdgdf", "fgdssdf"]}

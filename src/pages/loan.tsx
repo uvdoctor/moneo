@@ -4,7 +4,6 @@ import Layout from "../components/calc/Layout";
 import ItemDisplay from "../components/calc/ItemDisplay";
 import SVGBarChart from "../components/svgbarchart";
 import SVGChart from "../components/svgchart";
-import SVGLoan from "../components/svgloan";
 import { CALC_NAMES } from "../CONSTANTS";
 
 export default function Loan() {
@@ -12,7 +11,6 @@ export default function Loan() {
     <Layout
       title={CALC_NAMES.LOAN}
       type={GoalType.O}
-      titleSVG={<SVGLoan selected />}
       assumptions={["adfas", "asdfsad"]}
       features={["fsdgdf", "fgdssdf"]}
       results={[
