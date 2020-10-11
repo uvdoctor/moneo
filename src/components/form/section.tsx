@@ -79,30 +79,36 @@ export default function Section(props: SectionProps) {
       {props.manualMode && props.manualMode > 0 ? (
         props.manualInput
       ) : (
-        <Fragment>
+        <Row>
           {(props.left || props.right) && (
-            <div className="flex flex-col md:flex-row md:flex-wrap justify-around items-center md:items-start w-full">
+            <Row>
               {props.left && (
-                <div className={`${props.hasResult && "w-full"}`}>
+                    <Col span={props.hasResult ? 20 : 10} offset={2}>
                   {props.left}
-                </div>
+                </Col>
               )}
-              {props.right && <div className="mt-2 md:mt-0">{props.right}</div>}
-            </div>
+              {props.right && <Col span={10} offset={2}>{props.right}</Col>}
+            </Row>
           )}
           {props.bottom && (
-            <div className="w-full flex flex-wrap mt-2 items-center justify-around">
-              {props.bottomLeft}
-              {props.bottom}
-              {props.bottomRight}
-            </div>
+                <Row>
+                  {props.bottomLeft && <Col span={4} offset={2}>
+                    {props.bottomLeft}
+                  </Col>}
+                  <Col span={12}>
+                    {props.bottom}
+                  </Col>
+                  {props.bottomRight && <Col span={4} offset={2}>
+                    {props.bottomRight}
+                  </Col>}
+            </Row>
           )}
           {props.footer && (
             <div className="mt-2 flex justify-center text-base">
               {props.footer}
             </div>
           )}
-        </Fragment>
+        </Row>
       )}
       </div>
       </Fragment>

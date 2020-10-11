@@ -3,7 +3,7 @@ import { useFullScreen } from 'react-browser-hooks';
 import SVGFullScreen from '../svgfullscreen';
 import SVGExitFullScreen from '../svgexitfullscreen';
 import DynamicSlider from '../dynamicslider';
-import { Menu } from 'antd';
+import { Tabs } from 'antd';
 
 interface ResultProps {
 	result: ReactNode;
@@ -16,7 +16,7 @@ interface ResultProps {
 export default function Result(props: ResultProps) {
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
-
+	const { TabPane } = Tabs;
 	return (
 		<div ref={chartDiv} className={`w-full transition-width duration-1000 ease-in-out`}>
 			<Fragment>
@@ -26,20 +26,23 @@ export default function Result(props: ResultProps) {
 						{!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
 					</div>
 					<div className="w-full">
-						<Menu
-							onClick={(e: any) => props.showResultTabHandler(e.key)}
-							selectedKeys={[ props.showResultTab ]}
-							mode="horizontal"
+						<Tabs
+							onTabClick={(e: any) => props.showResultTabHandler(e.key)}
+							defaultActiveKey={props.resultTabOptions[0].label}
 						>
 							{props.resultTabOptions.map((tab) => (
-								<Menu.Item
+								<TabPane
 									key={tab.label}
-									icon={<tab.svg disabled={false} selected={props.showResultTab === tab.label} />}
-								>
-									{tab.label}
-								</Menu.Item>
+									disabled={!tab.active}
+									tab={
+										<span>
+											<tab.svg disabled={!tab.active} selected={props.showResultTab === tab.label} />
+											{tab.label}
+										</span>
+									}
+								/>
 							))}
-						</Menu>
+						</Tabs>
 					</div>
 				</div>
 				<DynamicSlider

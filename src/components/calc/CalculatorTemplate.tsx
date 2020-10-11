@@ -1,14 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
 import SelectInput from '../form/selectinput';
-import StickyHeader from '../goals/stickyheader';
 import { getRangeFactor } from '../utils';
-import ItemDisplay from './ItemDisplay';
-
+import { Row, Col } from "antd";
 interface CalculatorTemplateProps {
 	calc: any;
 	title: string;
-	titleSVG: any;
 	cancelCallback: Function;
 }
 export interface CalcTypeProps {
@@ -22,7 +19,7 @@ export interface CalcTypeProps {
 	cancelCallback: Function;
 }
 
-export default function CalculatorTemplate({ calc, title, titleSVG, cancelCallback }: CalculatorTemplateProps) {
+export default function CalculatorTemplate({ calc, title, cancelCallback }: CalculatorTemplateProps) {
 	const [ currency, setCurrency ] = useState<string>('USD');
 	const [ rangeFactor, setRangeFactor ] = useState<number>(getRangeFactor(currency));
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
@@ -34,10 +31,10 @@ export default function CalculatorTemplate({ calc, title, titleSVG, cancelCallba
 	};
 
 	return (
-		<div className="w-full">
-			<StickyHeader cancelCallback={cancelCallback}>
+		<Row>
+			<Col span={24}>
 				<div className="w-full mt-4 mb-2">
-					<ItemDisplay svg={titleSVG} result={title + ' Calculator'} calcFormat />
+					{title + ' Calculator'}
 					<SelectInput
 						name="ccy"
 						pre="Currency"
@@ -46,7 +43,7 @@ export default function CalculatorTemplate({ calc, title, titleSVG, cancelCallba
 						currency
 					/>
 				</div>
-			</StickyHeader>
+			</Col>
 			<calc.type
 				currency={currency}
 				rangeFactor={rangeFactor}
@@ -57,6 +54,6 @@ export default function CalculatorTemplate({ calc, title, titleSVG, cancelCallba
 				tabOptions={calc.tabOptions}
 				cancelCallback={cancelCallback}
 			/>
-		</div>
+		</Row>
 	);
 }

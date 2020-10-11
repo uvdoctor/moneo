@@ -9,13 +9,9 @@ import Goal from '../goals/goal';
 import { createNewGoalInput } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
 import CalculatorTemplate from './CalculatorTemplate';
-import ItemDisplay from './ItemDisplay';
 import { Button } from 'antd';
-import { Modal } from 'antd';
-
 interface LayoutProps {
 	title: string;
-	titleSVG: React.ReactNode;
 	type?: GoalType;
 	features: Array<any>;
 	assumptions: Array<any>;
@@ -62,7 +58,7 @@ export default function Layout(props: LayoutProps) {
 			{!wipGoal ? (
 				<Fragment>
 					<div className="mt-16 w-full text-center">
-						<ItemDisplay svg={props.titleSVG} result={props.title + ' Calculator'} calcFormat />
+						{props.title + " Calculator"}
 						{Object.keys(sections).map((key, i) => (
 							<div key={'section' + i} className="mt-4">
 								<ExpandCollapse title={key} insideCalc>
@@ -95,14 +91,7 @@ export default function Layout(props: LayoutProps) {
 					</div>
 				</Fragment>
 			) : (
-				<Modal
-						title={<ItemDisplay svg={props.titleSVG} result={props.title} />}
-						visible={wipGoal !== null}
-						onOk={() => setWIPGoal(null)}
-						onCancel={() => setWIPGoal(null)}
-						cancelButtonProps={{ hidden: true }}
-						width={1000}
-				>
+				<Fragment>
 					{router.pathname === ROUTES.FI ? (
 						<FFGoal
 							goal={wipGoal as CreateGoalInput}
@@ -123,11 +112,10 @@ export default function Layout(props: LayoutProps) {
 						<CalculatorTemplate
 							calc={props.calc}
 							title={props.title}
-							titleSVG={props.titleSVG}
 							cancelCallback={() => setWIPGoal(null)}
 						/>
 					)}
-				</Modal>
+				</Fragment>
 			)}
 		</DDPage>
 	);

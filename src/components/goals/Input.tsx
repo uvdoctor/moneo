@@ -1,7 +1,7 @@
 import React, { ReactNode, useState } from 'react';
-import { Button, Steps, Menu } from 'antd';
+import { Button, Steps, Tabs } from 'antd';
 import ActionButtons from '../form/actionbuttons';
-
+import './Input.less';
 interface InputProps {
 	tabOptions: Array<any>;
 	submitDisabled: boolean;
@@ -28,6 +28,7 @@ export default function Input({
 	allInputDoneHandler
 }: InputProps) {
 	const { Step } = Steps;
+	const { TabPane } = Tabs;
 	const [ currentStep, setCurrentStep ] = useState<number>(0);
 
 	const handleStepChange = (count: number = 1) => {
@@ -50,17 +51,24 @@ export default function Input({
 							title={tab.label}
 							icon={<tab.svg disabled={!tab.active} selected={showTab === tab.label} />}
 							disabled={!tab.active}
-						/>;
+						/>
 					})}
 				</Steps>
 			) : (
-				<Menu onClick={(e: any) => showTabHandler(e.key)} selectedKeys={[ showTab ]} mode="horizontal">
+				<Tabs defaultActiveKey={tabOptions[0].label} onTabClick={(e: any) => showTabHandler(e.key)}>
 					{tabOptions.map((tab) => (
-						<Menu.Item key={tab.label} icon={<tab.svg disabled={false} selected={showTab === tab.label} />}>
-							{tab.label}
-						</Menu.Item>
+						<TabPane
+							key={tab.label}
+							disabled={!tab.active}
+							tab={
+								<span>
+									<tab.svg disabled={!tab.active} selected={showTab === tab.label} />
+									{tab.label}
+								</span>
+							}
+						/>
 					))}
-				</Menu>
+				</Tabs>
 			)}
 			<div className="steps-content">{React.Children.map(children, (child: any) => (child ? child : null))}</div>
 
@@ -82,13 +90,7 @@ export default function Input({
 						</Button>
 					)}
 				</div>
-			) : !handleSubmit ? (
-				<div className="w-full text-center">
-					<Button onClick={() => cancelCallback()} type="primary">
-						Close
-					</Button>
-				</div>
-			) : (
+			) : handleSubmit && (
 				<ActionButtons
 					submitDisabled={submitDisabled}
 					cancelDisabled={cancelDisabled}
