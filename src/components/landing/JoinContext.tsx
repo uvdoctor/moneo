@@ -33,14 +33,14 @@ function JoinContextProvider({ children }: providerProps) {
 		setStatus(status);
 		setEmail(email);
 		setCountry(country);
-		setShowVerifyModal(status === "P" ? true : false);
-		if (status === "Y")
+		setShowVerifyModal(status === Status.P);
+		if (status === Status.Y)
 			setError({
 				type: "warning",
 				title: "Already Registered",
 				message: `You are already registered with ${email}`,
 			});
-	}, [null]);
+	}, []);
 
 	const doesEntryExist = async (email: string) => {
 		try {
@@ -60,9 +60,9 @@ function JoinContextProvider({ children }: providerProps) {
 
 			setStatus(status);
 
-			if (status === "P") setShowVerifyModal(true);
+			if (status === Status.P) setShowVerifyModal(true);
 			if (email) {
-				status === "P"
+				status === Status.P
 					? setError({
 							title: "Email Already Registered",
 							message: `${email} has already been registered. Either verify this account or try again with another email address.`,
@@ -99,7 +99,7 @@ function JoinContextProvider({ children }: providerProps) {
 					input: {
 						email,
 						status,
-						//country,
+						country,
 						code: "a123",
 					},
 				},

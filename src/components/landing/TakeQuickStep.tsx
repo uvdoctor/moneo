@@ -3,11 +3,12 @@ import { Row, Col } from "antd";
 import DDContent from "../DDContent";
 import { JoinContext } from "./JoinContext";
 import Join from "./Join";
+import { Status } from "../../api/goals";
 
 export default function TakeQuickStep() {
   const { status }: any = useContext(JoinContext);
 
-  return status !== "Y" ? (
+  return status !== Status.Y ? (
     <DDContent whiteBg>
       <Row align="middle" gutter={[50, 0]}>
         <Col span={12}>

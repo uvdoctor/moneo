@@ -1,6 +1,6 @@
-import React, { Fragment, useRef } from 'react';
+import React, { Fragment } from 'react';
 import { getCurrencyList } from '../utils';
-import { Tooltip } from 'antd';
+import { Tooltip, Select } from 'antd';
 interface SelectInputProps {
 	disabled?: boolean;
 	info?: string;
@@ -15,13 +15,7 @@ interface SelectInputProps {
 }
 
 export default function SelectInput(props: SelectInputProps) {
-	const selectRef = useRef<HTMLSelectElement>(null);
-
-	const handleKeyDown = (e: any) => {
-		if (e.key === 'Enter') {
-			e.preventDefault();
-		}
-	};
+	const { Option } = Select;
 
 	return (
 		<div>
@@ -30,21 +24,17 @@ export default function SelectInput(props: SelectInputProps) {
 			{!props.disabled ? (
 				<Fragment>
 					<div className="flex items-center">
-						<select
-							ref={selectRef}
-							name={props.name}
-							className="input"
+						<Select
 							style={{ minWidth: '40px' }}
 							value={props.value}
-							onKeyDown={handleKeyDown}
-							onChange={(e) => props.changeHandler(e.currentTarget.value)}
+							onChange={(value) => props.changeHandler(value)}
 						>
 							{Object.keys(props.currency ? getCurrencyList() : props.options).map((key) => (
-								<option key={key} value={key}>
+								<Option key={key} value={key}>
 									{props.currency ? key : props.options[key]}
-								</option>
+								</Option>
 							))}
-						</select>
+						</Select>
 						{props.unit && <label className="ml-1">{props.unit}</label>}
 					</div>
 					{props.post && <label>{props.post}</label>}

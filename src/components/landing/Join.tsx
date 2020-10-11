@@ -5,6 +5,7 @@ import { JoinContext } from "./JoinContext";
 import countriesList from "../countriesList";
 
 import "./Join.less";
+import { Status } from "../../api/goals";
 
 export default function Join() {
 	const {
@@ -100,7 +101,7 @@ export default function Join() {
 						)}
 					</Form.Item>
 					<Form.Item>
-						{status !== "N" && (
+						{status !== Status.N && (
 							<Button onClick={() => setJoinForm(false)}>Cancel</Button>
 						)}
 					</Form.Item>
