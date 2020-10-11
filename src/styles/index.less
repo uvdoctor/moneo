@@ -1,5 +1,18 @@
 @import "~antd/dist/antd.less";
 
+.dd-site {
+	& .ant-alert-with-description {
+		& .ant-alert-message {
+			font-size: 16px;
+			font-weight: bold;
+		}
+
+		& .ant-alert-description {
+			font-size: 14px;
+		}
+	}
+}
+
 .bg-white {
 	background-color: #fff;
 }
@@ -14,6 +27,10 @@ svg {
 
 .text-green-primary {
 	color: @primary-color;
+}
+
+.error-text {
+	color: #ff0000;
 }
 
 .dd-header.ant-layout-header {

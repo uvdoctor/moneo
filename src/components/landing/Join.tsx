@@ -1,95 +1,115 @@
-import React, { Fragment } from "react";
-import { Input, Popover, notification } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
-import * as queries from "../../graphql/queries";
-import * as mutations from "../../graphql/mutations";
-import awsconfig from "../../aws-exports";
-import { GRAPHQL_AUTH_MODE } from "@aws-amplify/api-graphql";
-import Amplify, { API } from "aws-amplify";
-import { Status } from "../../api/goals";
+import React, { useContext, useState, useEffect, useRef } from "react";
+import { Input, Select, Button, Form, Alert, Space } from "antd";
+import { FormInstance } from "antd/lib/form";
+import { JoinContext } from "./JoinContext";
+import countriesList from "../countriesList";
 
-Amplify.configure(awsconfig);
+import "./Join.less";
 
-const Join = () => {
-	const { Search } = Input;
+export default function Join() {
+	const {
+		email,
+		error,
+		status,
+		country,
+		isLoading,
+		onFormSubmit,
+		setShowVerifyModal,
+	}: any = useContext(JoinContext);
+	const { Option } = Select;
+	const [form] = Form.useForm();
+	const formRef = useRef<FormInstance>(null);
+	const [showJoinForm, setJoinForm] = useState(true);
 
-	const doesEntryExist = async (email: string) => {
-		try {
-			const { data }: any = await API.graphql({
-				query: queries.listRegistrations,
-				variables: { email: email },
-				authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
-			});
-			if (data.listRegistrations.items.length > 0) {
-				notification.error({
-					message: "Email Already Registered",
-					description:
-						"This email has already been registered. Please try again with another email address.",
-				});
-				return true;
-			} else return false;
-		} catch (e) {
-			console.log("Error while checking for existing registration: ", e);
-			return true;
+	useEffect(() => {
+		if (formRef.current) {
+			formRef.current.setFieldsValue({ email, country });
 		}
-	};
+	}, [email, country]);
 
-	const handleEmail = async (email: string) => {
-		if (await doesEntryExist(email)) return;
-		try {
-			console.log("Going to register...");
-			const result = await API.graphql({
-				query: mutations.createRegistration,
-				variables: {
-					input: {
-						email: email,
-						status: Status.N,
-						code: "a123",
-					},
-				},
-				authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
-			});
-			if (result) {
-				notification.success({
-					message: "Verify Email",
-					description: "Almost there...please verify the code emailed to You.",
-				});
-			}
-		} catch (e) {
-			console.log("Error while registering: ", e);
-		}
-	};
+	useEffect(() => {
+		if (status === "Y" || status === "P") setJoinForm(false);
+	}, [status]);
 
 	return (
-		<Fragment>
-			<h3>
-				Join Waitlist &amp; Earn up to $200 credit*
-				<Popover
-					content={
-						<div>
-							<p>First 100 get $200 credit</p>
-							<p>Next 900 get $150 credit</p>
-							<p>Next 2,000 get $100 credit</p>
-							<p>Next 3,000 get $75 credit</p>
-							<p>Next 4,000 get $50 credit</p>
-							<p>Next 5,000 get $30 credit</p>
-							<p>All others get $15 credit</p>
-						</div>
-					}
+		<div className="dd-join">
+			{!showJoinForm && (
+				<Space>
+					<Button type="primary" onClick={() => setJoinForm(true)}>
+						Use another account
+					</Button>
+					{status === "P" && (
+						<Button onClick={() => setShowVerifyModal(true)}>
+							Verify security code
+						</Button>
+					)}
+				</Space>
+			)}
+			{showJoinForm && (
+				<Form
+					form={form}
+					ref={formRef}
+					name="join"
+					layout="inline"
+					onFinish={onFormSubmit}
 				>
-					<span>
-						<InfoCircleOutlined />
-					</span>
-				</Popover>
-			</h3>
-			<Search
-				placeholder="Enter email address"
-				enterButton="Join"
-				size="large"
-				onSearch={(value) => handleEmail(value)}
-			/>
-		</Fragment>
-	);
-};
+					<Form.Item
+						name="country"
+						rules={[
+							{
+								type: "string",
+								required: true,
+								message: "Please select your country",
+							},
+						]}
+					>
+						<Select placeholder="Country" showSearch>
+							{countriesList.map(({ name, code }) => (
+								<Option key={code} value={code}>
+									{name}
+								</Option>
+							))}
+						</Select>
+					</Form.Item>
+					<Form.Item
+						name="email"
+						rules={[
+							{
+								required: true,
+								type: "email",
+								message: "Please enter valid email address!",
+							},
+						]}
+					>
+						<Input placeholder="Enter email address" />
+					</Form.Item>
+					<Form.Item shouldUpdate={true}>
+						{() => (
+							<Button
+								type="primary"
+								htmlType="submit"
+								disabled={
+									!form.isFieldsTouched(true) ||
+									form.getFieldsError().filter(({ errors }) => errors.length)
+										.length > 0
+								}
+								loading={isLoading}
+							>
+								Join
+							</Button>
+						)}
+					</Form.Item>
+					<Form.Item>
+						{status !== "N" && (
+							<Button onClick={() => setJoinForm(false)}>Cancel</Button>
+						)}
+					</Form.Item>
+				</Form>
+			)}
 
-export default Join;
+			{error.message && (
+				<Alert message={error.message} type={error.type || "error"} showIcon />
+			)}
+		</div>
+	);
+}
