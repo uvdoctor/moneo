@@ -131,7 +131,7 @@ function JoinContextProvider({ children }: providerProps) {
 			setStatus("Y");
 			localStorage.setItem(
 				JOIN_KEY,
-				JSON.stringify({ country, email, status: "Y" })
+				JSON.stringify({ country, email, status: Status.Y })
 			);
 		}, 5000);
 	};

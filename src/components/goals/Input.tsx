@@ -1,5 +1,5 @@
-import React, { ReactNode, useState } from 'react';
-import { Button, Steps, Tabs } from 'antd';
+import React, { Fragment, ReactNode, useState } from 'react';
+import { Button, Steps, Tabs, Row, Col } from 'antd';
 import ActionButtons from '../form/actionbuttons';
 import './Input.less';
 interface InputProps {
@@ -42,7 +42,9 @@ export default function Input({
 	};
 
 	return (
-		<div>
+		<Fragment>
+			<Row>
+				<Col>
 			{!allInputDone ? (
 				<Steps current={currentStep}>
 					{tabOptions.map((tab, i) => {
@@ -69,7 +71,9 @@ export default function Input({
 						/>
 					))}
 				</Tabs>
-			)}
+						)}
+					</Col>
+				</Row>
 			<div className="steps-content">{React.Children.map(children, (child: any) => (child ? child : null))}</div>
 
 			{!allInputDone ? (
@@ -99,6 +103,6 @@ export default function Input({
 					submitText="Save"
 				/>
 			)}
-		</div>
+		</Fragment>
 	);
 }

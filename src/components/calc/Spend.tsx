@@ -28,7 +28,6 @@ export default function Spend(props: SpendProps) {
 	};
 
 	return (
-		<div className="flex w-full justify-around">
 			<Section
 				title="Enter Spend Details"
 				left={
@@ -70,6 +69,5 @@ export default function Spend(props: SpendProps) {
 				}
 				insideForm
 			/>
-		</div>
 	);
 }

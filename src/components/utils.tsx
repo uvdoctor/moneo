@@ -198,6 +198,28 @@ export const toReadableNumber = (num: number, decimalDigits: number = 0) => {
   return num ? formatter.format(num) : formatter.format(0);
 };
 
+export const parseNumber = (str: string, currency: string | null = null) => {
+  const formatter = currency ? new Intl.NumberFormat(navigator.language, {
+    style: "currency",
+    currency: currency
+  }) : new Intl.NumberFormat(navigator.language);
+  const parts = formatter.formatToParts(12345.6);
+  const numerals = [...new Intl.NumberFormat(navigator.language, {useGrouping: false}).format(9876543210)].reverse();
+  const index = new Map(numerals.map((d, i) => [d, i]));
+  let currencyRegex = null;
+  if(currency) currencyRegex = new RegExp(`[${parts.find(d => d.type === "currency")?.value}]`, "g");
+  const groupRegex = new RegExp(`[${parts.find(d => d.type === "group")?.value}]`, "g");
+  const decimalRegex = new RegExp(`[${parts.find(d => d.type === "decimal")?.value}]`);
+  const numeralRegex = new RegExp(`[${numerals.join("")}]`, "g");
+  let retVal = str.trim();
+  if (currencyRegex) retVal = retVal.replace(currencyRegex, "");
+  retVal = retVal.replace(groupRegex, "").replace(decimalRegex, ".")
+  retVal = retVal.replace(numeralRegex,
+    //@ts-ignore
+    (d: string) => index.get(d));
+  return retVal;
+}
+
 export function initYearOptions(
   startYear: number,
   duration: number,
