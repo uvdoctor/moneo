@@ -1,0 +1,98 @@
+@import "~antd/lib/style/themes/default.less";
+
+@border-radius: 5px;
+@padding-top-bottom: 10px;
+
+.dd-join {
+	display: inline-block;
+
+	& .ant-alert {
+		& .ant-alert-message {
+			padding-left: 8px;
+		}
+	}
+
+	& .ant-space {
+		margin-bottom: 10px;
+	}
+
+	& .ant-form-inline {
+		border-radius: @border-radius;
+		margin-bottom: 10px;
+
+		& .ant-form-item {
+			margin-right: 0;
+		}
+
+		& input {
+			border-radius: 0;
+			border-right: 0;
+			padding: @padding-top-bottom 10px (@padding-top-bottom + 1) 10px;
+		}
+
+		& .ant-form-item:first-child {
+			width: 120px;
+		}
+
+		& .ant-select {
+			background: #fff;
+			border: 1px solid #d9d9d9;
+			border-right: 0;
+			border-radius: @border-radius 0 0 @border-radius;
+			padding: 7px;
+		}
+
+		& .ant-select-arrow {
+			right: 15px;
+		}
+
+		& .ant-select-selector {
+			border: 0;
+			border-radius: 0;
+		}
+
+		& button {
+			height: auto;
+			padding: @padding-top-bottom 18px (@padding-top-bottom + 1) 18px;
+		}
+
+		& button[type="submit"] {
+			border-radius: 0 @border-radius @border-radius 0;
+			border: 1px solid @primary-color;
+			&.ant-btn-primary[disabled] {
+				background-color: @primary-color;
+				color: #fff;
+			}
+		}
+
+		& button[type="button"] {
+			margin-left: 6px;
+		}
+
+		& .ant-form-item-explain {
+			padding-top: 8px;
+		}
+
+		& .ant-form-item-with-help {
+			margin-bottom: 10px;
+		}
+	}
+}
+
+.security-code-modal {
+	& .security-code-container {
+		padding: 30px 0;
+	}
+
+	& .ant-input {
+		color: @primary-color;
+		display: inline;
+		font-weight: bold;
+		font-size: 40px;
+		padding: 10px 20px;
+	}
+
+	& .ant-btn-link {
+		padding-top: 10px;
+	}
+}

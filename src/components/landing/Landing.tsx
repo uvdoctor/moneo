@@ -1,8 +1,10 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Row } from "antd";
 import { Parallax } from "rc-scroll-anim";
 import DDContent from "../DDContent";
+import { JoinContextProvider } from "./JoinContext";
 import Banner from "./Banner";
+import VerifyCodeModal from "./VerifyCodeModal";
 import Calculator from "./Calculator";
 import HelloFinancialIndep from "./HelloFinancialIndep";
 import Step from "./Step";
@@ -15,15 +17,16 @@ import "./Landing.less";
 
 export default function Landing() {
   return (
-    <Fragment>
+    <JoinContextProvider>
       <DDContent>
         <Banner />
+        <VerifyCodeModal />
         <Calculator />
         <Parallax
           animation={[
             { x: 0, opacity: 1, playScale: [0, 0.6] },
             { y: 0, playScale: [0, 1] },
-            { blur: "10px", playScale: [0, 1] },
+            { blur: "10px", playScale: [0, 1.5] },
           ]}
           style={{
             transform: "translateX(-100px)",
@@ -76,18 +79,10 @@ export default function Landing() {
         </Parallax>
       </DDContent>
 
-      <DDContent className="security" whiteBg>
-        <Security />
-      </DDContent>
-
-      <DDContent>
-        <GetRich />
-      </DDContent>
-
-      <DDContent whiteBg>
-        <TakeQuickStep />
-      </DDContent>
-    </Fragment>
+      <Security />
+      <GetRich />
+      <TakeQuickStep />
+    </JoinContextProvider>
   );
 }
 
