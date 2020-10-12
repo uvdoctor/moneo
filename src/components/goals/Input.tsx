@@ -1,7 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import { Button, Steps, Tabs, Space } from 'antd';
 import ActionButtons from '../form/actionbuttons';
-import './Input.less';
 interface InputProps {
 	tabOptions: Array<any>;
 	submitDisabled: boolean;
