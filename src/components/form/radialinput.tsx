@@ -25,7 +25,7 @@ export default function RadialInput(props: RadialInputProps) {
 	return (
 		<Space align="center" direction="vertical">
 			{props.info && <Tooltip title={props.info} />}
-			<p>{props.pre}</p>
+			{props.pre}
 			<p className="radial-input">
 				<CircularSlider
 					onChange={(val: string) => props.changeHandler(props.step < 1 ? parseFloat(val) : parseInt(val))}
