@@ -53,7 +53,6 @@ function JoinContextProvider({ children }: providerProps) {
 				variables: { email },
 				authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
 			});
-
 			if (items.length === 0) return false;
 
 			const { status } = items[0];
