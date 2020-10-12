@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { parseNumber, toCurrency, toReadableNumber } from '../utils';
 import { Slider } from 'antd';
 import { COLORS } from '../../CONSTANTS';
@@ -22,14 +22,23 @@ interface NumberInputProps {
 }
 
 export default function NumberInput(props: NumberInputProps) {
+	const inputRef = useRef(null);
 	const [ sliderBorderColor, setSliderBorderColor ] = useState<string>(COLORS.GREEN);
-	const [ feedbackText, setFeedbackText ] = useState<string>('');
-	const [ rangeFactor, setRangeFactor ] = useState<number>(props.rangeFactor ? props.rangeFactor : 1);
+	const [feedbackText, setFeedbackText] = useState<string>('');
+	const [minNum, setMinNum] = useState<number>(props.min * (props.rangeFactor ? props.rangeFactor : 1));
+	const [maxNum, setMaxNum] = useState<number>(props.max * (props.rangeFactor ? props.rangeFactor : 1));
+	const [stepNum, setStepNum] = useState<number>(props.step ? props.step * (props.rangeFactor ? props.rangeFactor : 1) : 1);
+	const marks = {
+		[minNum]: toReadableNumber(minNum),
+		[maxNum]: toReadableNumber(maxNum)
+	};
 
 	useEffect(
 		() => {
-			if (props.rangeFactor) setRangeFactor(props.rangeFactor);
-			else setRangeFactor(1);
+			if (!props.rangeFactor) return;
+			setMinNum(props.min * props.rangeFactor);
+			setMaxNum(props.max * props.rangeFactor);
+			setStepNum(props.step as number * props.rangeFactor);
 		},
 		[ props.rangeFactor ]
 	);
@@ -81,10 +90,11 @@ export default function NumberInput(props: NumberInputProps) {
 				</Col>
 				<Col span={props.currency ? 12 : 6}>
 					<InputNumber
+						ref={inputRef}
 						value={props.value}
-						min={props.min * rangeFactor}
-						max={props.max * rangeFactor}
-						step={props.step ? props.currency ? props.step * rangeFactor : props.step : 1}
+						min={minNum}
+						max={maxNum}
+						step={stepNum}
 						onChange={(val) => {
 							provideFeedback(val as number);
 							props.changeHandler(val as number);
@@ -94,6 +104,11 @@ export default function NumberInput(props: NumberInputProps) {
 								? toCurrency(val as number, props.currency)
 								: toReadableNumber(val as number, props.step && props.step < 1 ? 2 : 0)}
 						parser={(val) => parseNumber(val as string, props.currency ? props.currency : null)}
+						onPressEnter={(e: any) => {
+							e.preventDefault();
+							//@ts-ignore
+							inputRef.current.blur();
+						}}
 					/>
 				</Col>
 				{props.unit && (
@@ -108,9 +123,10 @@ export default function NumberInput(props: NumberInputProps) {
 						<Col span={24}>
 							{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
 							<Slider
-								min={props.min * rangeFactor}
-								max={props.max * rangeFactor}
-								step={(props.step as number) * rangeFactor}
+								min={minNum}
+								max={maxNum}
+								marks={marks}
+								step={stepNum}
 								value={props.value}
 								onChange={(val: number) => {
 									provideFeedback(val);
@@ -124,9 +140,7 @@ export default function NumberInput(props: NumberInputProps) {
 						</Col>
 					</Row>
 					<Row>
-						<label className="mr-2">{toReadableNumber(props.min ? props.min * rangeFactor : 0)}</label>
 						{feedbackText}
-						<label>{toReadableNumber(props.max * rangeFactor)}</label>
 					</Row>
 				</Fragment>
 			)}

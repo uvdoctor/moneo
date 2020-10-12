@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import VideoPlayer from '../videoplayer';
 import SVGPlay from '../svgplay';
 import SVGStop from '../svgstop';
-import { Row, Col, Card } from 'antd';
+import { Card, Space } from 'antd';
 interface SectionProps {
 	title: any;
 	left?: any;
@@ -35,30 +35,42 @@ export default function Section(props: SectionProps) {
 					</div>
 				)
 			}
-			style={{ width: 800 }}
+			style={{ width: 1000 }}
 		>
 			{videoUrl && (
 				<p>
-					<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
+					<Space align="center">
+						<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
+					</Space>	
 				</p>
 			)}
-			{props.toggle && <p>{props.toggle}</p>}
+			{props.toggle && (
+				<p>
+					<Space align="end">{props.toggle}</Space>
+				</p>
+			)}
 			{props.manualMode && props.manualMode > 0 ? (
 				props.manualInput
 			) : (
 				<Fragment>
-					<Row>
-						<Col>{props.left}</Col>
-						{props.right && <Col>{props.right}</Col>}
-					</Row>
+					<Space align="center" size="large">
+						{props.left}
+						{props.right}
+					</Space>
 					{props.bottom && (
-						<Row>
-							{props.bottomLeft && <Col>{props.bottomLeft}</Col>}
-							<Col>{props.bottom}</Col>
-							{props.bottomRight && <Col>{props.bottomRight}</Col>}
-						</Row>
+						<p>
+							<Space align="center">
+								{props.bottomLeft}
+								{props.bottom}
+								{props.bottomRight}
+							</Space>
+						</p>
 					)}
-					{props.footer && <p>{props.footer}</p>}
+					{props.footer && (
+						<p>
+							<Space align="center">{props.footer}</Space>
+						</p>
+					)}
 				</Fragment>
 			)}
 		</Card>

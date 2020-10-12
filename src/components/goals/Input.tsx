@@ -57,7 +57,7 @@ export default function Input({
 					})}
 				</Steps>
 			) : (
-				<Tabs defaultActiveKey={tabOptions[0].label} onTabClick={(e: any) => showTabHandler(e.key)}>
+				<Tabs defaultActiveKey={showTab} onTabClick={(key: string) => showTabHandler(key)}>
 					{tabOptions.map((tab) => (
 						<TabPane
 							key={tab.label}
@@ -84,7 +84,10 @@ export default function Input({
 						</Button>
 					)}
 					{currentStep === tabOptions.length - 1 && (
-						<Button type="primary" onClick={() => allInputDoneHandler(true)}>
+						<Button type="primary" onClick={() => {
+							showTabHandler(tabOptions[tabOptions.length - 1].label)
+							allInputDoneHandler(true)
+						}}>
 							Done
 						</Button>
 					)}
