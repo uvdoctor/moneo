@@ -13,6 +13,7 @@ import ItemDisplay from './ItemDisplay';
 import Save from './Save';
 import Spend, { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
 import SVGBalance from './svgbalance';
+import { Space } from 'antd';
 
 export const TIME_COST_HOURS = 'Hours';
 export const TIME_COST_WEEKS = 'Weeks';
@@ -158,7 +159,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 	);
 
 	return (
-		<div className={`flex flex-1 lg:flex-row ${props.allInputDone && 'flex-col-reverse'} items-start`}>
+		<Space align="start" size="large" style={{width: '100%'}}>
 			<Input
 				showTab={props.showTab}
 				showTabHandler={props.showTabHandler}
@@ -258,6 +259,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 					/>
 				</Result>
 			)}
-		</div>
+		</Space>
 	);
 }

@@ -316,7 +316,6 @@ export default function LoanEmi(props: LoanEmiProps) {
 											footer={`Over ${props.duration} Years`}
 										/>
 									}
-									width="100px"
 								/>
 							</div>
 						)}

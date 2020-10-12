@@ -62,7 +62,6 @@ export default function TaxAdjustment(props: TaxAdjustmentProps) {
 							/>
 						}
 						rangeFactor={props.rangeFactor}
-						width="100px"
 					/>
 				))
 			}

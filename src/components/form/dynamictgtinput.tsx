@@ -82,7 +82,6 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
 									min={0}
 									max={900000}
 									step={500}
-									width="120px"
 								/>
 							</div>
 						</div>

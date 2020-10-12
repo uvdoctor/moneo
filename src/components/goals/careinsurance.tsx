@@ -166,7 +166,6 @@ export default function CareInsurance({
 						currency={currency}
 						value={maxTaxDed}
 						changeHandler={maxTaxDedHandler}
-						width="80px"
 						min={0}
 						max={5000}
 						step={500}

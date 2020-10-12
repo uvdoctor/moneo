@@ -1,5 +1,5 @@
-import React, { Fragment, ReactNode, useState } from 'react';
-import { Button, Steps, Tabs, Row, Col } from 'antd';
+import React, { ReactNode, useState } from 'react';
+import { Button, Steps, Tabs, Space } from 'antd';
 import ActionButtons from '../form/actionbuttons';
 import './Input.less';
 interface InputProps {
@@ -42,17 +42,17 @@ export default function Input({
 	};
 
 	return (
-		<Fragment>
-			<Row>
-				<Col>
+		<Space align="center" direction="vertical" size="large" style={{width: '100%'}}>
+			<Space align="center">
 			{!allInputDone ? (
 				<Steps current={currentStep}>
 					{tabOptions.map((tab, i) => {
 						<Step
 							key={'tab' + i}
 							title={tab.label}
-							icon={<tab.svg disabled={!tab.active} selected={showTab === tab.label} />}
+							//icon={<tab.svg disabled={!tab.active} selected={showTab === tab.label} />}
 							disabled={!tab.active}
+							//status="finish"
 						/>
 					})}
 				</Steps>
@@ -72,12 +72,12 @@ export default function Input({
 					))}
 				</Tabs>
 						)}
-					</Col>
-				</Row>
-			<div className="steps-content">{React.Children.map(children, (child: any) => (child ? child : null))}</div>
-
+			</Space>
+			<Space align="center">
+			{React.Children.map(children, (child: any) => (child ? child : null))}
+			</Space>
 			{!allInputDone ? (
-				<div className="steps-action">
+				<div>
 					{currentStep < tabOptions.length - 1 && (
 						<Button type="primary" onClick={() => handleStepChange()}>
 							Next
@@ -106,6 +106,6 @@ export default function Input({
 					submitText="Save"
 				/>
 			)}
-		</Fragment>
+		</Space>
 	);
 }

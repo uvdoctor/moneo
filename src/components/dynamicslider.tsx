@@ -43,32 +43,30 @@ export default function DynamicSlider({
 
   return (
     <div
-      className="relative overflow-hidden w-full h-full"
-      style={{ minHeight: fsb.info.innerHeight+"px" }}
+      style={{ minHeight: fsb.info.innerHeight+"px", position: 'relative', width: '100%' }}
     >
       {activeSlides.length > 1 && currentItemOrder !== 1 ? (
         <LeftArrow
           svgClasses="w-10"
-          style={{ top: "48%" }}
-          className="absolute left-0 z-10"
+          style={{ top: "48%", position: 'absolute', left: 0, zIndex: 10 }}
           clickHandler={() => {
             setSlide(getPrevItemLabel(currentItemOrder));
           }}
         />
       ) : null}
       <div
-        className="absolute transition-left duration-1000 ease-in-out"
         style={{
           width: `${activeSlides.length * 100}%`,
           left: `-${(currentItemOrder - 1) * 100}%`,
+          position: 'absolute'
         }}
       >
         {React.Children.map(children, (child: any) => (
           <div
             style={{
+              display: 'inline-block',
               width: `${100 / activeSlides.length}%`,
             }}
-            className="inline-block"
           >
             {child}
           </div>
@@ -77,8 +75,7 @@ export default function DynamicSlider({
       {activeSlides.length > 1 && currentItemOrder !== activeSlides.length ? (
         <RightArrow
           svgClasses="w-10"
-          style={{ top: "48%" }}
-          className="absolute right-0 z-10"
+          style={{ top: "48%", position: 'absolute', right: 0, zIndex: 10 }}
           clickHandler={() => {
             setSlide(getNextItemLabel(currentItemOrder));
           }}

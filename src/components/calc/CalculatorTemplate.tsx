@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import SelectInput from '../form/selectinput';
 import { getRangeFactor } from '../utils';
-import { Row, Col } from "antd";
+import { Space } from 'antd';
 interface CalculatorTemplateProps {
 	calc: any;
 	title: string;
@@ -31,19 +31,9 @@ export default function CalculatorTemplate({ calc, title, cancelCallback }: Calc
 	};
 
 	return (
-		<Row>
-			<Col span={24}>
-				<div className="w-full mt-4 mb-2">
-					{title + ' Calculator'}
-					<SelectInput
-						name="ccy"
-						pre="Currency"
-						value={currency}
-						changeHandler={changeCurrency}
-						currency
-					/>
-				</div>
-			</Col>
+		<Space align="center" direction="vertical" size="large" style={{width: '100%'}}>
+			{title + ' Calculator'}
+			<SelectInput name="ccy" pre="Currency" value={currency} changeHandler={changeCurrency} currency />
 			<calc.type
 				currency={currency}
 				rangeFactor={rangeFactor}
@@ -54,6 +44,6 @@ export default function CalculatorTemplate({ calc, title, cancelCallback }: Calc
 				tabOptions={calc.tabOptions}
 				cancelCallback={cancelCallback}
 			/>
-		</Row>
+		</Space>
 	);
 }

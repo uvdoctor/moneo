@@ -35,13 +35,13 @@ export default function Section(props: SectionProps) {
 					</div>
 				)
 			}
-			style={{ width: 1000 }}
+			style={{ width: '100%' }}
 		>
 			{videoUrl && (
 				<p>
 					<Space align="center">
 						<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
-					</Space>	
+					</Space>
 				</p>
 			)}
 			{props.toggle && (
@@ -56,16 +56,10 @@ export default function Section(props: SectionProps) {
 					<Space align="center" size="large">
 						{props.left}
 						{props.right}
+						{props.bottomLeft}
+						{props.bottom}
+						{props.bottomRight}
 					</Space>
-					{props.bottom && (
-						<p>
-							<Space align="center">
-								{props.bottomLeft}
-								{props.bottom}
-								{props.bottomRight}
-							</Space>
-						</p>
-					)}
 					{props.footer && (
 						<p>
 							<Space align="center">{props.footer}</Space>
