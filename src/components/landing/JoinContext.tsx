@@ -25,7 +25,7 @@ function JoinContextProvider({ children }: providerProps) {
 
 	useEffect(() => {
 		const { email, country, status } = JSON.parse(
-			localStorage.getItem(JOIN_KEY) || ""
+			localStorage.getItem(JOIN_KEY) || "{}"
 		);
 
 		if (!email) return;
