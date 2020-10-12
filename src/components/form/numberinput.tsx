@@ -100,7 +100,7 @@ export default function NumberInput(props: NumberInputProps) {
 						//@ts-ignore
 						inputRef.current.blur();
 					}}
-					style={{width: props.currency ? '130px' : '60px'}}
+					style={{ width: props.currency ? '130px' : '60px' }}
 				/>
 				{props.unit}
 			</Space>
@@ -124,8 +124,8 @@ export default function NumberInput(props: NumberInputProps) {
 					/>
 				</Col>
 			</Row>
-			{feedbackText}
-			{props.note}
+			{feedbackText && <p style={{ textAlign: 'center' }}>{feedbackText}</p>}
+			{props.note && <p style={{ textAlign: 'center' }}>{props.note}</p>}
 		</div>
 	);
 }

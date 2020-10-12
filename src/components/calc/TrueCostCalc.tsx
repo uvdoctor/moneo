@@ -220,7 +220,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 									label="Time Cost"
 									result={-timeCostDisplay}
 									svg={<SVGHourGlass />}
-									unit=""
 									pl
 									info={`Based on your savings details, You May have to Work ${toReadableNumber(
 										timeCost
