@@ -3394,6 +3394,43 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
+          "name" : "country",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "lat",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Float",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "long",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Float",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
           "name" : "createdAt",
           "description" : null,
           "args" : [ ],
@@ -3516,6 +3553,33 @@
           "type" : {
             "kind" : "INPUT_OBJECT",
             "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "country",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "lat",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelFloatInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "long",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelFloatInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -4104,6 +4168,39 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
+          "name" : "deleteRegistration",
+          "description" : null,
+          "args" : [ {
+            "name" : "input",
+            "description" : null,
+            "type" : {
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "INPUT_OBJECT",
+                "name" : "DeleteRegistrationInput",
+                "ofType" : null
+              }
+            },
+            "defaultValue" : null
+          }, {
+            "name" : "condition",
+            "description" : null,
+            "type" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelRegistrationConditionInput",
+              "ofType" : null
+            },
+            "defaultValue" : null
+          } ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "Registration",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
           "name" : "createRegistration",
           "description" : null,
           "args" : [ {
@@ -4148,39 +4245,6 @@
               "ofType" : {
                 "kind" : "INPUT_OBJECT",
                 "name" : "UpdateRegistrationInput",
-                "ofType" : null
-              }
-            },
-            "defaultValue" : null
-          }, {
-            "name" : "condition",
-            "description" : null,
-            "type" : {
-              "kind" : "INPUT_OBJECT",
-              "name" : "ModelRegistrationConditionInput",
-              "ofType" : null
-            },
-            "defaultValue" : null
-          } ],
-          "type" : {
-            "kind" : "OBJECT",
-            "name" : "Registration",
-            "ofType" : null
-          },
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
-          "name" : "deleteRegistration",
-          "description" : null,
-          "args" : [ {
-            "name" : "input",
-            "description" : null,
-            "type" : {
-              "kind" : "NON_NULL",
-              "name" : null,
-              "ofType" : {
-                "kind" : "INPUT_OBJECT",
-                "name" : "DeleteRegistrationInput",
                 "ofType" : null
               }
             },
@@ -6357,37 +6421,11 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
-        "name" : "CreateRegistrationInput",
+        "name" : "DeleteRegistrationInput",
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
           "name" : "email",
-          "description" : null,
-          "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "String",
-              "ofType" : null
-            }
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "status",
-          "description" : null,
-          "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "ENUM",
-              "name" : "Status",
-              "ofType" : null
-            }
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "code",
           "description" : null,
           "type" : {
             "kind" : "NON_NULL",
@@ -6423,6 +6461,33 @@
           "type" : {
             "kind" : "INPUT_OBJECT",
             "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "country",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "lat",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelFloatInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "long",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelFloatInput",
             "ofType" : null
           },
           "defaultValue" : null
@@ -6467,6 +6532,85 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
+        "name" : "CreateRegistrationInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "email",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "status",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "ENUM",
+              "name" : "Status",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "code",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "country",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "lat",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Float",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "long",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Float",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
         "name" : "UpdateRegistrationInput",
         "description" : null,
         "fields" : null,
@@ -6501,26 +6645,31 @@
             "ofType" : null
           },
           "defaultValue" : null
-        } ],
-        "interfaces" : null,
-        "enumValues" : null,
-        "possibleTypes" : null
-      }, {
-        "kind" : "INPUT_OBJECT",
-        "name" : "DeleteRegistrationInput",
-        "description" : null,
-        "fields" : null,
-        "inputFields" : [ {
-          "name" : "email",
+        }, {
+          "name" : "country",
           "description" : null,
           "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "String",
-              "ofType" : null
-            }
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "lat",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Float",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "long",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Float",
+            "ofType" : null
           },
           "defaultValue" : null
         } ],
@@ -7766,6 +7915,27 @@
         "onFragment" : false,
         "onField" : false
       }, {
+        "name" : "aws_publish",
+        "description" : "Tells the service which subscriptions will be published to when this mutation is called. This directive is deprecated use @aws_susbscribe directive instead.",
+        "locations" : [ "FIELD_DEFINITION" ],
+        "args" : [ {
+          "name" : "subscriptions",
+          "description" : "List of subscriptions which will be published to when this mutation is called.",
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
         "name" : "aws_subscribe",
         "description" : "Tells the service which mutation triggers this subscription.",
         "locations" : [ "FIELD_DEFINITION" ],
@@ -7787,8 +7957,29 @@
         "onFragment" : false,
         "onField" : false
       }, {
-        "name" : "aws_oidc",
-        "description" : "Tells the service this field/object has access authorized by an OIDC token.",
+        "name" : "aws_auth",
+        "description" : "Directs the schema to enforce authorization on a field",
+        "locations" : [ "FIELD_DEFINITION" ],
+        "args" : [ {
+          "name" : "cognito_groups",
+          "description" : "List of cognito user pool groups which have access on this field",
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
+        "name" : "aws_api_key",
+        "description" : "Tells the service this field/object has access authorized by an API key.",
         "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
         "args" : [ ],
         "onOperation" : false,
@@ -7833,50 +8024,8 @@
         "onFragment" : false,
         "onField" : false
       }, {
-        "name" : "aws_auth",
-        "description" : "Directs the schema to enforce authorization on a field",
-        "locations" : [ "FIELD_DEFINITION" ],
-        "args" : [ {
-          "name" : "cognito_groups",
-          "description" : "List of cognito user pool groups which have access on this field",
-          "type" : {
-            "kind" : "LIST",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "String",
-              "ofType" : null
-            }
-          },
-          "defaultValue" : null
-        } ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
-        "name" : "aws_publish",
-        "description" : "Tells the service which subscriptions will be published to when this mutation is called. This directive is deprecated use @aws_susbscribe directive instead.",
-        "locations" : [ "FIELD_DEFINITION" ],
-        "args" : [ {
-          "name" : "subscriptions",
-          "description" : "List of subscriptions which will be published to when this mutation is called.",
-          "type" : {
-            "kind" : "LIST",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "String",
-              "ofType" : null
-            }
-          },
-          "defaultValue" : null
-        } ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
-        "name" : "aws_api_key",
-        "description" : "Tells the service this field/object has access authorized by an API key.",
+        "name" : "aws_oidc",
+        "description" : "Tells the service this field/object has access authorized by an OIDC token.",
         "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
         "args" : [ ],
         "onOperation" : false,

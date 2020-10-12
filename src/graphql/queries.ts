@@ -389,6 +389,9 @@ export const getRegistration = /* GraphQL */ `
       email
       status
       code
+      country
+      lat
+      long
       createdAt
       updatedAt
     }
@@ -413,6 +416,9 @@ export const listRegistrations = /* GraphQL */ `
         email
         status
         code
+        country
+        lat
+        long
         createdAt
         updatedAt
       }

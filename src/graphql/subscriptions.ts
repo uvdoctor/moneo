@@ -554,6 +554,9 @@ export const onCreateRegistration = /* GraphQL */ `
       email
       status
       code
+      country
+      lat
+      long
       createdAt
       updatedAt
     }
@@ -565,6 +568,9 @@ export const onUpdateRegistration = /* GraphQL */ `
       email
       status
       code
+      country
+      lat
+      long
       createdAt
       updatedAt
     }
@@ -576,6 +582,9 @@ export const onDeleteRegistration = /* GraphQL */ `
       email
       status
       code
+      country
+      lat
+      long
       createdAt
       updatedAt
     }
