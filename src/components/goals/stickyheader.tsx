@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import SVGLogo from "../svglogo";
-import SVGClose from "../svgclose";
+import {CloseCircleOutlined} from "@ant-design/icons";
 import FullScreen from "../fullscreen";
 
 interface StickyHeaderProps {
@@ -43,7 +43,7 @@ export default function StickyHeader({
           } border-0 outline-none focus:outline-none`}
           onClick={() => !cancelDisabled && cancelCallback()}
         >
-          <SVGClose disable={cancelDisabled} />
+          <CloseCircleOutlined />
         </div>
         <FullScreen />
       </div>

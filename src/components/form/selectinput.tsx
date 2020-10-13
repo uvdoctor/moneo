@@ -20,7 +20,7 @@ export default function SelectInput(props: SelectInputProps) {
 	const { Option } = Select;
 
 	return (
-		<div>
+		<Space align="center" direction="vertical">
 			<Space align="start">
 				{props.pre}
 				{props.info && (
@@ -52,6 +52,6 @@ export default function SelectInput(props: SelectInputProps) {
 			) : (
 				<label>{props.value}</label>
 			)}
-		</div>
+		</Space>
 	);
 }

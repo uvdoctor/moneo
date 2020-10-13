@@ -5,14 +5,13 @@ import { toCurrency, toStringArr, initYearOptions } from '../utils';
 import SelectInput from '../form/selectinput';
 import RadialInput from '../form/radialinput';
 import Section from '../form/section';
-import ExpandCollapse from '../form/expandcollapse';
 import { getLoanPaidForMonths, adjustAccruedInterest, createEduLoanDPWithSICFs } from '../goals/cfutils';
 import { GoalType } from '../../api/goals';
 import ItemDisplay from './ItemDisplay';
 import { COLORS } from '../../CONSTANTS';
 import { isTaxCreditEligible } from '../goals/goalutils';
 import HSwitch from '../HSwitch';
-
+import { Collapse } from 'antd';
 interface LoanEmiProps {
 	price: number;
 	priceChgRate: number;
@@ -54,6 +53,7 @@ export default function LoanEmi(props: LoanEmiProps) {
 	const [ simpleInts, setSimpleInts ] = useState<Array<number>>([]);
 	const [ remIntAmt, setRemIntAmt ] = useState<number>(0);
 	const loanLimitPer = props.goalType === GoalType.E ? 100 : 80;
+	const { Panel } = Collapse;
 
 	const calculateEmi = () => {
 		let borrowAmt = props.loanBorrowAmt;
@@ -264,15 +264,17 @@ export default function LoanEmi(props: LoanEmiProps) {
 										post={
 											!!props.loanSIPayPer && (
 												<div className="flex flex-col justify-center w-full">
-													<ExpandCollapse title="Interest Schedule">
-														{simpleInts.map((int, i) => (
-															<p key={'si' + i} className="text-gray-800">
-																Monthly{' '}
-																{toCurrency(Math.round(int / 12), props.currency)} in{' '}
-																{props.startYear + i}
-															</p>
-														))}
-													</ExpandCollapse>
+													<Collapse defaultActiveKey={['0']} ghost>
+														<Panel key="1" header="Interest Schedule">
+															{simpleInts.map((int, i) => (
+																<p key={"int"+i}>
+																	Monthly{' '}
+																	{toCurrency(Math.round(int / 12), props.currency)}{' '}
+																	in {props.startYear + i}
+																</p>
+															))}
+														</Panel>
+													</Collapse>
 												</div>
 											)
 										}

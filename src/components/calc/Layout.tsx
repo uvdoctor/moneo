@@ -58,7 +58,7 @@ export default function Layout(props: LayoutProps) {
 			{!wipGoal ? (
 				<Space align="center" direction="vertical" size="large">
 					<h1>{props.title + ' Calculator'}</h1>
-					<Collapse defaultActiveKey={[ '1' ]} onChange={() => {}}>
+					<Collapse defaultActiveKey={[ '1' ]}>
 						{Object.keys(sections).map((key, i) => (
 							<Panel key={`${i + 1}`} header={key}>
 								<Space align="center" size="large">{sections[key]}</Space>
