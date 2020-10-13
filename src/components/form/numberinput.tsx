@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, Fragment } from 'react';
 import { parseNumber, toCurrency, toReadableNumber } from '../utils';
 import { Slider } from 'antd';
 import { COLORS } from '../../CONSTANTS';
 import { Tooltip, InputNumber, Space, Row, Col } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 interface NumberInputProps {
 	info?: string;
 	pre: string;
@@ -69,15 +70,19 @@ export default function NumberInput(props: NumberInputProps) {
 	};
 
 	return (
-		<div style={{ minWidth: '200px' }}>
-			{props.info && (
-				<Space align="end">
-					<Tooltip title={props.info} />
-				</Space>
-			)}
+		<Fragment>
 			<Space align="center">
 				<Space align="center" direction="vertical" size="small">
-					{props.pre}
+					<Space align="start">
+						{props.pre}
+						{props.info && (
+							<Tooltip title={props.info}>
+								<span>
+									<InfoCircleOutlined />
+								</span>
+							</Tooltip>
+						)}
+					</Space>
 					{props.post}
 				</Space>
 				<InputNumber
@@ -126,6 +131,6 @@ export default function NumberInput(props: NumberInputProps) {
 			</Row>
 			{feedbackText && <p style={{ textAlign: 'center' }}>{feedbackText}</p>}
 			{props.note && <p style={{ textAlign: 'center' }}>{props.note}</p>}
-		</div>
+		</Fragment>
 	);
 }

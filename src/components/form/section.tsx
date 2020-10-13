@@ -35,34 +35,37 @@ export default function Section(props: SectionProps) {
 					</div>
 				)
 			}
-			style={{ width: '100%' }}
 		>
 			{videoUrl && (
-				<p>
-					<Space align="center">
+				<p style={{textAlign: 'center'}}>
 						<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
-					</Space>
 				</p>
 			)}
 			{props.toggle && (
-				<p>
-					<Space align="end">{props.toggle}</Space>
+				<p style={{textAlign: 'end'}}>
+					{props.toggle}
 				</p>
 			)}
 			{props.manualMode && props.manualMode > 0 ? (
 				props.manualInput
 			) : (
 				<Fragment>
-					<Space align="center" size="large">
+					<Space align="start" size="large">
 						{props.left}
 						{props.right}
-						{props.bottomLeft}
-						{props.bottom}
-						{props.bottomRight}
 					</Space>
+					{props.bottom && (
+						<p style={{textAlign: 'center'}}>
+							<Space align="center" size="large">
+								{props.bottomLeft}
+								{props.bottom}
+								{props.bottomRight}
+							</Space>
+						</p>
+					)}
 					{props.footer && (
-						<p>
-							<Space align="center">{props.footer}</Space>
+						<p style={{textAlign: 'center'}}>
+							{props.footer}
 						</p>
 					)}
 				</Fragment>

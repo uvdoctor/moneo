@@ -49,13 +49,11 @@ export default function Input({
 							<Step
 								key={tab.label}
 								title={
-									<Statistic
-										title=""
-										value={tab.label}
-										prefix={<tab.svg disabled={!tab.active} selected={showTab === tab.label} />}
-									/>
+									<Space align="center" size="small">
+										<tab.svg disabled={!tab.active} selected={showTab === tab.label} />
+										{tab.label}
+									</Space>
 								}
-								//icon={<tab.svg disabled={!tab.active} selected={showTab === tab.label} />}
 								disabled={!tab.active}
 							/>
 						))}
@@ -81,6 +79,11 @@ export default function Input({
 			<Space align="center">{React.Children.map(children, (child: any) => (child ? child : null))}</Space>
 			{!allInputDone ? (
 				<div>
+					{currentStep > 0 && (
+						<Button style={{ margin: '0 8px' }} onClick={() => handleStepChange(-1)}>
+							Previous
+						</Button>
+					)}
 					{currentStep < tabOptions.length - 1 && (
 						<Button type="primary" onClick={() => handleStepChange()}>
 							Next
@@ -95,11 +98,6 @@ export default function Input({
 							}}
 						>
 							Done
-						</Button>
-					)}
-					{currentStep > 0 && (
-						<Button style={{ margin: '0 8px' }} onClick={() => handleStepChange(-1)}>
-							Previous
 						</Button>
 					)}
 				</div>
