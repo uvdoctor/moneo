@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
 import { getCurrencyList } from '../utils';
-import { Tooltip, Select } from 'antd';
+import { Tooltip, Select, Space } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
+
 interface SelectInputProps {
 	disabled?: boolean;
 	info?: string;
@@ -19,11 +21,19 @@ export default function SelectInput(props: SelectInputProps) {
 
 	return (
 		<div>
-			{props.info && <Tooltip title={props.info} />}
-			{props.pre && <label className="whitespace-no-wrap">{props.pre}</label>}
+			<Space align="start">
+				{props.pre}
+				{props.info && (
+					<Tooltip title={props.info}>
+						<span>
+							<InfoCircleOutlined />
+						</span>
+					</Tooltip>
+				)}
+			</Space>
 			{!props.disabled ? (
 				<Fragment>
-					<div className="flex items-center">
+					<Space align="center">
 						<Select
 							style={{ minWidth: '40px' }}
 							value={props.value}
@@ -35,8 +45,8 @@ export default function SelectInput(props: SelectInputProps) {
 								</Option>
 							))}
 						</Select>
-						{props.unit && <label className="ml-1">{props.unit}</label>}
-					</div>
+						{props.unit && <label>{props.unit}</label>}
+					</Space>
 					{props.post && <label>{props.post}</label>}
 				</Fragment>
 			) : (

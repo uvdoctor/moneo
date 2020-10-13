@@ -1,7 +1,8 @@
-import React from "react";
-import CircularSlider from "@fseehawer/react-circular-slider";
-import { COLORS } from "../../CONSTANTS";
-import { Tooltip, Space } from "antd";
+import React from 'react';
+import CircularSlider from '@fseehawer/react-circular-slider';
+import { COLORS } from '../../CONSTANTS';
+import { Tooltip, Space } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 interface RadialInputProps {
 	info?: string;
@@ -20,21 +21,24 @@ interface RadialInputProps {
 }
 
 export default function RadialInput(props: RadialInputProps) {
-	const getVal = (str: string) =>
-		props.step < 1 ? parseFloat(str) : parseInt(str);
+	const getVal = (str: string) => (props.step < 1 ? parseFloat(str) : parseInt(str));
 	const width: number = props.width ? props.width : 110;
 
 	return (
 		<Space align="center" direction="vertical">
-			{props.info && <Tooltip title={props.info} />}
-			{props.pre}
+			<Space align="start">
+				{props.pre}
+				{props.info && (
+					<Tooltip title={props.info}>
+						<span>
+							<InfoCircleOutlined />
+						</span>
+					</Tooltip>
+				)}
+			</Space>
 			<div className="radial-input">
 				<CircularSlider
-					onChange={(val: string) =>
-						props.changeHandler(
-							props.step < 1 ? parseFloat(val) : parseInt(val)
-						)
-					}
+					onChange={(val: string) => props.changeHandler(props.step < 1 ? parseFloat(val) : parseInt(val))}
 					label={props.label}
 					trackColor={COLORS.LIGHT_GRAY}
 					data={props.data}
