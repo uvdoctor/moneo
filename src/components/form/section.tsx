@@ -2,6 +2,8 @@ import React, { Fragment, useState } from 'react';
 import VideoPlayer from '../videoplayer';
 import { VideoCameraOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { Card, Space } from 'antd';
+import { useFullScreenBrowser } from 'react-browser-hooks';
+import { isMobileDevice } from '../utils';
 interface SectionProps {
 	title: any;
 	left?: any;
@@ -19,6 +21,7 @@ interface SectionProps {
 
 export default function Section(props: SectionProps) {
 	const [ videoUrl, setVideoUrl ] = useState<string>('');
+	const fsb = useFullScreenBrowser();
 
 	return (
 		<Card
@@ -37,6 +40,7 @@ export default function Section(props: SectionProps) {
 					</div>
 				)
 			}
+			style={{ maxWidth: isMobileDevice(fsb) ? `${fsb.info.screenWidth}px` : '600px' }}
 		>
 			{videoUrl && (
 				<div style={{ textAlign: 'center' }}>
@@ -48,20 +52,26 @@ export default function Section(props: SectionProps) {
 				props.manualInput
 			) : (
 				<Fragment>
-					<Space align="start" size="large">
-						{props.left}
-						{props.right}
-					</Space>
-					{props.bottom && (
-						<p style={{ textAlign: 'center' }}>
-							<Space align="center" size="large">
+					<Space align="center" direction="vertical" size="large">
+						<Space
+							//@ts-ignore
+							align={`${isMobileDevice(fsb) ? 'center' : 'start'}`}
+							size="large"
+							//@ts-ignore
+							direction={`${isMobileDevice(fsb) ? 'vertical' : 'horizontal'}`}
+						>
+							{props.left}
+							{props.right}
+						</Space>
+						{props.bottom && (
+							<div style={{ textAlign: 'center' }}>
 								{props.bottomLeft}
 								{props.bottom}
 								{props.bottomRight}
-							</Space>
-						</p>
-					)}
-					{props.footer && <p style={{ textAlign: 'center' }}>{props.footer}</p>}
+							</div>
+						)}
+					</Space>
+					{props.footer && <div style={{ textAlign: 'center' }}>{props.footer}</div>}
 				</Fragment>
 			)}
 		</Card>
