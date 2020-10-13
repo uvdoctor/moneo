@@ -68,7 +68,6 @@ export default function OppCost(props: OppCostProps) {
       currency={props.currency}
       label={`${props.buyGoal ? "Buy" : "Spend"} v/s Invest`}
       pl
-      calcFormat
       info={`You May Have ${toCurrency(
         Math.abs(oppCost),
         props.currency

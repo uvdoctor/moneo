@@ -16,11 +16,13 @@ export default function Result(props: ResultProps) {
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
 	return (
-		<div ref={chartDiv} className={`w-full transition-width duration-1000 ease-in-out`}>
+		<div ref={chartDiv} style={{ width: '100%' }}>
 			<Space align="center" direction="vertical" size="large">
 				{props.result}
 				<Space align="center" size="large">
-					<div onClick={toggle}>{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}</div>
+					<div style={{ cursor: 'pointer' }} onClick={toggle}>
+						{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
+					</div>
 					<Tabs
 						onTabClick={(e: any) => props.showResultTabHandler(e.key)}
 						defaultActiveKey={props.resultTabOptions[0].label}

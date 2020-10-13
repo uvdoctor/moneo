@@ -27,7 +27,6 @@ export default function FFImpact(props: FFImpactProps) {
 					svg={<SVGHourGlass />}
 					label="Impact"
 					pl
-					calcFormat
 					unit={`${getUnit()}`}
 					result={props.ffImpactYears}
 					info={`You May Achieve Financial Independence ${Math.abs(props.ffImpactYears)} ${getUnit()} 
