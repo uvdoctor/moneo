@@ -809,15 +809,16 @@ export default function Goal({
               )
             }
           >
-            <DDLineChart
-              cfs={cfs}
-              startYear={startYear}
-              currency={currency}
-            />
-            {showBRChart && (
+            {showResultTab === cfChartLabel &&
+              <DDLineChart
+                cfs={cfs}
+                startYear={startYear}
+                currency={currency}
+              />}
+            {showBRChart && showResultTab === brChartLabel && (
               <BuyRentChart data={brChartData} currency={currency} />
             )}
-            {manualMode < 1 && loanPer && loanRepaymentSY && loanYears && (
+            {manualMode < 1 && loanPer && loanRepaymentSY && loanYears && showResultTab === loanChartLabel &&  (
               <LoanScheduleChart
                 repaymentSY={loanRepaymentSY}
                 loanYears={iSchedule.length}

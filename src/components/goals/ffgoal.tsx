@@ -461,22 +461,22 @@ export default function FFGoal({
               />
             }
           >
-            {pp && 
+            {pp && showResultTab === aaNextYearLabel &&
               <AssetAllocationChart
                 aa={ffResult.aa}
                 rr={ffResult.rr}
               />}
-                {pp && <AAPlanChart
+                {pp && showResultTab === aaFutureLabel && <AAPlanChart
                   aa={ffResult.aa}
                   years={buildYearsArray(nowYear + 2, endYear)}
                   rr={ffResult.rr}
                 />}
-            <DDLineChart
+            {showResultTab === cfChartLabel && <DDLineChart
               cfs={buildChartCFs(ffResult.ffCfs)}
               startYear={getAge(nowYear + 1, endYear)}
               currency={currency}
               title="Age"
-            />
+            />}
           </Result>
         )}
       </div>

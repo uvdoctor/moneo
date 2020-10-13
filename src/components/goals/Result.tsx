@@ -1,6 +1,5 @@
 import React, { ReactNode, useRef } from 'react';
 import { useFullScreen } from 'react-browser-hooks';
-import DynamicSlider from '../dynamicslider';
 import { Tabs, Space } from 'antd';
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
 interface ResultProps {
@@ -24,7 +23,7 @@ export default function Result(props: ResultProps) {
 						{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
 					</div>
 					<Tabs
-						onTabClick={(e: any) => props.showResultTabHandler(e.key)}
+						onTabClick={(key: string) => props.showResultTabHandler(key)}
 						defaultActiveKey={props.resultTabOptions[0].label}
 					>
 						{props.resultTabOptions.map((tab) => (
@@ -41,13 +40,7 @@ export default function Result(props: ResultProps) {
 						))}
 					</Tabs>
 				</Space>
-				<DynamicSlider
-					setSlide={props.showResultTabHandler}
-					totalItems={props.resultTabOptions}
-					currentItem={props.showResultTab}
-				>
-					{React.Children.map(props.children, (child: any) => (child ? child : null))}
-				</DynamicSlider>
+				{React.Children.map(props.children, (child: any) => (child ? child : null))}
 			</Space>
 		</div>
 	);

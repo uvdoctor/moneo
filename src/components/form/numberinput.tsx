@@ -78,7 +78,7 @@ export default function NumberInput(props: NumberInputProps) {
 	return (
 		<Fragment>
 			<Space align="center">
-				<Space align="center" direction="vertical" size="small">
+				<Space align="start" direction="vertical" size="small">
 					<Space align="start">
 						{props.pre}
 						{props.info && (

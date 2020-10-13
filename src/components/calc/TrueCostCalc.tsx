@@ -214,44 +214,51 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 					showResultTab={showResultTab}
 					showResultTabHandler={setShowResultTab}
 					result={
-						<Space align="center" size="large" style={{width: '100%'}}>
+						<Space align="center" size="large" style={{ width: '100%' }}>
 							<Card>
-							<ItemDisplay
-								label="Time Cost"
-								result={-timeCostDisplay}
-								svg={<SVGHourGlass />}
-								pl
-								info={`Based on your savings details, You May have to Work ${toReadableNumber(
-									timeCost
-								)} ${timeCostUnit} to Save ${toCurrency(totalCost, props.currency)}`}
-								unit={
-									<SelectInput
-										name="tcunit"
-										pre=""
-										options={timeOptions}
-										value={timeCostUnit}
-										changeHandler={setTimeCostUnit}
-									/>
-								}
+								<ItemDisplay
+									label="Time Cost"
+									result={-timeCostDisplay}
+									svg={<SVGHourGlass />}
+									pl
+									info={`Based on your savings details, You May have to Work ${toReadableNumber(
+										timeCost
+									)} ${timeCostUnit} to Save ${toCurrency(totalCost, props.currency)}`}
+									unit={
+										<SelectInput
+											name="tcunit"
+											pre=""
+											options={timeOptions}
+											value={timeCostUnit}
+											changeHandler={setTimeCostUnit}
+										/>
+									}
 								/>
 							</Card>
 							<Card>
-							<ItemDisplay
-								label="Spend v/s Invest"
-								info={`You May have ${toCurrency(
-									Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
-									props.currency
-								)} More in ${years} Years if You Invest instead of Spending.`}
-								svg={<SVGBalance />}
-								result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
-								currency={props.currency}
-								pl
+								<ItemDisplay
+									label="Spend v/s Invest"
+									info={`You May have ${toCurrency(
+										Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
+										props.currency
+									)} More in ${years} Years if You Invest instead of Spending.`}
+									svg={<SVGBalance />}
+									result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
+									currency={props.currency}
+									pl
 								/>
-								</Card>
+							</Card>
 						</Space>
 					}
 				>
-					<DDLineChart cfs={cfsWithOppCost} currency={props.currency} startYear={1} title="Number of Years" />
+					{showResultTab === CHART && (
+						<DDLineChart
+							cfs={cfsWithOppCost}
+							currency={props.currency}
+							startYear={1}
+							title="Number of Years"
+						/>
+					)}
 				</Result>
 			)}
 		</Space>
