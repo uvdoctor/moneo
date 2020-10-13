@@ -56,6 +56,8 @@ function JoinContextProvider({ children }: providerProps) {
 
 			if (items.length === 0) return false;
 
+			console.log(items);
+
 			const { status } = items[0];
 
 			setStatus(status);

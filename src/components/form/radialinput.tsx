@@ -1,7 +1,7 @@
-import React from 'react';
-import CircularSlider from '@fseehawer/react-circular-slider';
-import { COLORS } from '../../CONSTANTS';
-import { Tooltip } from 'antd';
+import React from "react";
+import CircularSlider from "@fseehawer/react-circular-slider";
+import { COLORS } from "../../CONSTANTS";
+import { Tooltip } from "antd";
 interface RadialInputProps {
 	info?: string;
 	label: string;
@@ -19,15 +19,18 @@ interface RadialInputProps {
 }
 
 export default function RadialInput(props: RadialInputProps) {
-	const getVal = (str: string) => (props.step < 1 ? parseFloat(str) : parseInt(str));
+	const getVal = (str: string) =>
+		props.step < 1 ? parseFloat(str) : parseInt(str);
 	const width: number = props.width ? props.width : 110;
 
 	return (
-		<div className="flex flex-col items-center justify-center">
+		<div className="flex flex-col items-center justify-center radial-input">
 			{props.info && <Tooltip title={props.info} />}
 			<label className="mb-1">{props.pre}</label>
 			<CircularSlider
-				onChange={(val: string) => props.changeHandler(props.step < 1 ? parseFloat(val) : parseInt(val))}
+				onChange={(val: string) =>
+					props.changeHandler(props.step < 1 ? parseFloat(val) : parseInt(val))
+				}
 				label={props.label}
 				trackColor={COLORS.LIGHT_GRAY}
 				data={props.data}

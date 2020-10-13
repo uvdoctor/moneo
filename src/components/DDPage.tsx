@@ -1,8 +1,8 @@
 import React, { Fragment } from "react";
 import { ParallaxProvider } from "react-scroll-parallax";
-import { Layout, Menu } from "antd";
+import { Layout } from "antd";
+import Nav from "./Nav";
 import UserHeader from "./userheader";
-import Logo from "../components/Logo";
 import SecureMenu from "./SecureMenu";
 import { isMobileDevice } from "./utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
@@ -15,8 +15,7 @@ interface DDPageProps {
 }
 
 export default function DDPage(props: DDPageProps) {
-  const { Header, Footer } = Layout;
-  const { SubMenu } = Menu;
+  const { Footer } = Layout;
   const commonSecureComps: Array<React.ReactNode> = [
     <UserHeader />,
     <SecureMenu />,
@@ -90,26 +89,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <title>{props.title}</title>
       </Head>
       <Layout className="dd-site">
-        <Header className="dd-header">
-          <Logo />
-          <Menu mode="horizontal">
-            <Menu.Item key="mail">Calculate</Menu.Item>
-            <SubMenu key="SubMenu" title="About">
-              <Menu.Item key="setting:1">Features</Menu.Item>
-              <Menu.Item key="setting:2">Pricing</Menu.Item>
-              <Menu.Item key="setting:2">Company</Menu.Item>
-            </SubMenu>
-            <Menu.Item key="alipay">
-              <a
-                href="https://ant.design"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Earn up to $200 credit*
-              </a>
-            </Menu.Item>
-          </Menu>
-        </Header>
+        <Nav />
 
         {!isMobileDevice(fsb) ? (
           <ParallaxProvider>

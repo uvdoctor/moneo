@@ -18,7 +18,7 @@ import "./Landing.less";
 export default function Landing() {
   return (
     <JoinContextProvider>
-      <DDContent>
+      <DDContent className="with-banner">
         <Banner />
         <VerifyCodeModal />
         <Calculator />
