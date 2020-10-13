@@ -137,4 +137,6 @@ type Registration
   status: Status!
   code: String!
   country: String!
+  lat: Float
+  long: Float
 }

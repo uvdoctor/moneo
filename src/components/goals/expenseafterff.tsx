@@ -50,7 +50,6 @@ export function ExpenseAfterFF({
 					min={0}
 					max={50000}
 					step={100}
-					width="120px"
 				/>
 			}
 			right={

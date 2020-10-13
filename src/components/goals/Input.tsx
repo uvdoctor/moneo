@@ -1,7 +1,6 @@
-import React, { Fragment, ReactNode, useState } from 'react';
-import { Button, Steps, Tabs, Row, Col } from 'antd';
+import React, { ReactNode, useState } from 'react';
+import { Button, Steps, Tabs, Space, Statistic } from 'antd';
 import ActionButtons from '../form/actionbuttons';
-import './Input.less';
 interface InputProps {
 	tabOptions: Array<any>;
 	submitDisabled: boolean;
@@ -42,49 +41,59 @@ export default function Input({
 	};
 
 	return (
-		<Fragment>
-			<Row>
-				<Col>
+		<Space align="center" direction="vertical" size="large" style={{ width: '100%' }}>
+			<Space align="center">
+				{!allInputDone ? (
+					<Steps current={currentStep}>
+						{tabOptions.map((tab) => (
+							<Step
+								key={tab.label}
+								title={
+									<Statistic
+										title=""
+										value={tab.label}
+										prefix={<tab.svg disabled={!tab.active} selected={showTab === tab.label} />}
+									/>
+								}
+								//icon={<tab.svg disabled={!tab.active} selected={showTab === tab.label} />}
+								disabled={!tab.active}
+							/>
+						))}
+					</Steps>
+				) : (
+					<Tabs defaultActiveKey={showTab} onTabClick={(key: string) => showTabHandler(key)}>
+						{tabOptions.map((tab) => (
+							<TabPane
+								key={tab.label}
+								disabled={!tab.active}
+								tab={
+									<Statistic
+										title=""
+										value={tab.label}
+										prefix={<tab.svg disabled={!tab.active} selected={showTab === tab.label} />}
+									/>
+								}
+							/>
+						))}
+					</Tabs>
+				)}
+			</Space>
+			<Space align="center">{React.Children.map(children, (child: any) => (child ? child : null))}</Space>
 			{!allInputDone ? (
-				<Steps current={currentStep}>
-					{tabOptions.map((tab, i) => {
-						<Step
-							key={'tab' + i}
-							title={tab.label}
-							icon={<tab.svg disabled={!tab.active} selected={showTab === tab.label} />}
-							disabled={!tab.active}
-						/>
-					})}
-				</Steps>
-			) : (
-				<Tabs defaultActiveKey={tabOptions[0].label} onTabClick={(e: any) => showTabHandler(e.key)}>
-					{tabOptions.map((tab) => (
-						<TabPane
-							key={tab.label}
-							disabled={!tab.active}
-							tab={
-								<span>
-									<tab.svg disabled={!tab.active} selected={showTab === tab.label} />
-									{tab.label}
-								</span>
-							}
-						/>
-					))}
-				</Tabs>
-						)}
-					</Col>
-				</Row>
-			<div className="steps-content">{React.Children.map(children, (child: any) => (child ? child : null))}</div>
-
-			{!allInputDone ? (
-				<div className="steps-action">
+				<div>
 					{currentStep < tabOptions.length - 1 && (
 						<Button type="primary" onClick={() => handleStepChange()}>
 							Next
 						</Button>
 					)}
 					{currentStep === tabOptions.length - 1 && (
-						<Button type="primary" onClick={() => allInputDoneHandler(true)}>
+						<Button
+							type="primary"
+							onClick={() => {
+								showTabHandler(tabOptions[tabOptions.length - 1].label);
+								allInputDoneHandler(true);
+							}}
+						>
 							Done
 						</Button>
 					)}
@@ -94,15 +103,17 @@ export default function Input({
 						</Button>
 					)}
 				</div>
-			) : handleSubmit && (
-				<ActionButtons
-					submitDisabled={submitDisabled}
-					cancelDisabled={cancelDisabled}
-					cancelHandler={cancelCallback}
-					submitHandler={handleSubmit}
-					submitText="Save"
-				/>
+			) : (
+				handleSubmit && (
+					<ActionButtons
+						submitDisabled={submitDisabled}
+						cancelDisabled={cancelDisabled}
+						cancelHandler={cancelCallback}
+						submitHandler={handleSubmit}
+						submitText="Save"
+					/>
+				)
 			)}
-		</Fragment>
+		</Space>
 	);
 }

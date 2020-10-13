@@ -20,7 +20,7 @@ export default function InvestOption(props: InvestOptionProps) {
 				<NumberInput
 					name="dr"
 					pre="Investments"
-					post="Earn"
+					post="Earn Yearly"
 					note="after taxes & fees"
 					value={props.dr}
 					changeHandler={props.drHandler}
