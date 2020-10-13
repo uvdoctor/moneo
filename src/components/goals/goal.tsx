@@ -409,6 +409,7 @@ export default function Goal({
     aiPer,
     aiStartYear,
     cashFlows,
+    allInputDone
   ]);
 
   useEffect(() => {
@@ -498,7 +499,7 @@ export default function Goal({
   }, [resultTabOptions]);
 
   const showResultSection = () =>
-    nowYear < startYear && cfs.length > 0;
+    allInputDone && nowYear < startYear && cfs.length > 0;
 
   const getNextTaxAdjRentAmt = (val: number) => {
     return (

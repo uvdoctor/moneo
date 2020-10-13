@@ -33,11 +33,9 @@ export default function Input({
 	const handleStepChange = (count: number = 1) => {
 		let co = currentStep + count;
 		if (co < 0 || !tabOptions[co]) return;
-		if (!tabOptions[co].active) handleStepChange(count);
-		else {
-			showTabHandler(tabOptions[co].label);
-			setCurrentStep(co);
-		}
+		if (!tabOptions[co].active) co += count;
+		showTabHandler(tabOptions[co].label);
+		setCurrentStep(co);
 	};
 
 	return (

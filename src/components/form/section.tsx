@@ -47,7 +47,7 @@ export default function Section(props: SectionProps) {
 					<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
 				</div>
 			)}
-			{props.toggle && <p style={{ textAlign: 'end' }}>{props.toggle}</p>}
+			{props.toggle && <div style={{ textAlign: 'end' }}>{props.toggle}</div>}
 			{props.manualMode && props.manualMode > 0 ? (
 				props.manualInput
 			) : (
