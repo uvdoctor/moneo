@@ -1,13 +1,12 @@
 import React from "react";
-import SVGFullScreen from "./svgfullscreen";
-import SVGExitFullScreen from "./svgexitfullscreen";
 import { useFullScreen } from "react-browser-hooks";
+import { FullscreenOutlined, FullscreenExitOutlined } from "@ant-design/icons";
 
 export default function FullScreen() {
 	const { fullScreen, toggle } = useFullScreen();
 	return (
 		<div onClick={() => toggle()}>
-			{fullScreen ? <SVGExitFullScreen /> : <SVGFullScreen />}
+			{fullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
 		</div>
 	);
 }

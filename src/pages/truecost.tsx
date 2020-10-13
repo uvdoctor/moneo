@@ -22,15 +22,14 @@ export default function TrueCost() {
 					{ label: SPEND, active: true, svg: SVGPay },
 					{ label: SAVE, active: true, svg: SVGPiggy },
 					{ label: INVEST, active: true, svg: SVGMoneyBag }
-				],
-				endOrder: 9
+				]
 			}}
 			title="True Cost"
 			assumptions={[ 'adfas', 'asdfsad' ]}
 			features={[ 'fsdgdf', 'fgdssdf' ]}
 			results={[
-				<Statistic title="" value="Option that costs lesser" prefix={<SVGBalance />} />,
-				<Statistic title="" value="Time till which the Option costs lesser" prefix={<SVGHourGlass />} />
+				<Statistic key="s1" title="" value="Option that costs lesser" prefix={<SVGBalance />} />,
+				<Statistic key="s2" title="" value="Time till which the Option costs lesser" prefix={<SVGHourGlass />} />
 			]}
 			resultImg="kick-start.jpg"
 		/>

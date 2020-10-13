@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import VideoPlayer from '../videoplayer';
-import SVGPlay from '../svgplay';
-import SVGStop from '../svgstop';
+import { VideoCameraOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { Card, Space } from 'antd';
 interface SectionProps {
 	title: any;
@@ -27,9 +26,12 @@ export default function Section(props: SectionProps) {
 			bordered={false}
 			extra={
 				props.videoSrc && (
-					<div onClick={() => setVideoUrl(!videoUrl ? props.videoSrc as string : '')}>
-						<span>
-							{!videoUrl ? <SVGPlay /> : <SVGStop />}
+					<div
+						style={{ cursor: 'pointer' }}
+						onClick={() => setVideoUrl(!videoUrl ? props.videoSrc as string : '')}
+					>
+						<span style={{ textAlign: 'center' }}>
+							{!videoUrl ? <VideoCameraOutlined /> : <CloseCircleOutlined />}
 							Video
 						</span>
 					</div>
@@ -37,15 +39,11 @@ export default function Section(props: SectionProps) {
 			}
 		>
 			{videoUrl && (
-				<p style={{textAlign: 'center'}}>
-						<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
-				</p>
+				<div style={{ textAlign: 'center' }}>
+					<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
+				</div>
 			)}
-			{props.toggle && (
-				<p style={{textAlign: 'end'}}>
-					{props.toggle}
-				</p>
-			)}
+			{props.toggle && <p style={{ textAlign: 'end' }}>{props.toggle}</p>}
 			{props.manualMode && props.manualMode > 0 ? (
 				props.manualInput
 			) : (
@@ -55,7 +53,7 @@ export default function Section(props: SectionProps) {
 						{props.right}
 					</Space>
 					{props.bottom && (
-						<p style={{textAlign: 'center'}}>
+						<p style={{ textAlign: 'center' }}>
 							<Space align="center" size="large">
 								{props.bottomLeft}
 								{props.bottom}
@@ -63,11 +61,7 @@ export default function Section(props: SectionProps) {
 							</Space>
 						</p>
 					)}
-					{props.footer && (
-						<p style={{textAlign: 'center'}}>
-							{props.footer}
-						</p>
-					)}
+					{props.footer && <p style={{ textAlign: 'center' }}>{props.footer}</p>}
 				</Fragment>
 			)}
 		</Card>

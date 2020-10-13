@@ -1,10 +1,8 @@
 import React, { ReactNode, useRef } from 'react';
 import { useFullScreen } from 'react-browser-hooks';
-import SVGFullScreen from '../svgfullscreen';
-import SVGExitFullScreen from '../svgexitfullscreen';
 import DynamicSlider from '../dynamicslider';
 import { Tabs, Space } from 'antd';
-
+import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
 interface ResultProps {
 	result: ReactNode;
 	resultTabOptions: Array<any>;
@@ -22,7 +20,7 @@ export default function Result(props: ResultProps) {
 			<Space align="center" direction="vertical" size="large">
 				{props.result}
 				<Space align="center" size="large">
-					<div onClick={toggle}>{!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}</div>
+					<div onClick={toggle}>{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}</div>
 					<Tabs
 						onTabClick={(e: any) => props.showResultTabHandler(e.key)}
 						defaultActiveKey={props.resultTabOptions[0].label}
