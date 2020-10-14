@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Goal from "./goal";
 import FFGoal from "./ffgoal";
-import { Menu } from "antd";
+import { Card, Menu, Space } from "antd";
 import { appendValue, removeFromArray } from "../utils";
 import YearlyCFChart from "./YearlyCFChart";
 import * as APIt from "../../api/goals";
@@ -20,8 +20,8 @@ import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import Summary from "./summary";
 import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
-import SVGEdit from "../svgedit";
-import { ASSET_TYPES } from "../../CONSTANTS";
+import {EditOutlined} from "@ant-design/icons";
+import { ASSET_TYPES, COLORS } from "../../CONSTANTS";
 import SVGBarChart from "../svgbarchart";
 import AssetAllocationChart from "./AssetAllocationChart";
 import SVGAAChart from "./svgaachart";
@@ -421,44 +421,35 @@ export default function SetPlan() {
     </Modal>
   ) : (
     <Fragment>
-      {ffGoal && rr && rr.length > 0 && (
-        <div
-          className={`w-full ${
-            isFFPossible(ffResult, ffGoal.sa as number)
-              ? "bg-green-100"
-              : "bg-red-100"
-          } shadow-lg lg:shadow-xl`}
-        >
-          <div
-            className={`w-full flex justify-center items-center ${
-              isFFPossible(ffResult, ffGoal.sa as number)
-                ? "bg-green-100"
-                : "bg-red-100"
-            }`}
-          >
-            <label className="p-2 font-semibold text-lg md:text-xl">
-              {isFFPossible(ffResult, ffGoal.sa as number)
-                ? `Financial Independence Earliest at ${getAge(
-                    ffResult.ffYear as number,
-                    ffGoal.ey
-                  )}`
-                : `Financial Independence May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
-            </label>
-            <div
-              className="flex items-center cursor-pointer"
-              onClick={() => setWIPGoal(ffGoal)}
-            >
-              <SVGEdit />
-              <span className="text-blue-600 hover:text-blue-800">Edit</span>
+        {ffGoal && rr && rr.length > 0 && (
+          <Card title="Financial Independence" extra={
+            <Space align="center" direction="vertical">
+              <div
+                style={{ cursor: 'pointer' }}
+                onClick={() => setWIPGoal(ffGoal)}
+              >
+                <EditOutlined />
+              Edit
             </div>
-          </div>
-        </div>
+            </Space>
+          }
+            style={{
+              backgroundColor: isFFPossible(ffResult, ffGoal.sa as number)
+                ? COLORS.LIGHT_GREEN : COLORS.LIGHT_GRAY
+            }}>
+            {isFFPossible(ffResult, ffGoal.sa as number)
+              ? `Earliest at ${getAge(
+                ffResult.ffYear as number,
+                ffGoal.ey
+              )}`
+              : `May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
+          </Card>
       )}
       <div className="flex mt-4 items-center justify-center">
         <SVGTargetPath />
         <label className="ml-2 text-xl md:text-2xl">Define Your Dreams.</label>
       </div>
-      <p className="text-center text-lg mt-1">
+      <p>
         Make Money Work Hard to Meet Them.
       </p>
       <div className="flex flex-wrap justify-around mb-4">
@@ -479,19 +470,16 @@ export default function SetPlan() {
       {ffGoal && rr && rr.length > 0
         ? allGoals &&
           allGoals.length > 0 && (
-            <Fragment>
+            <Space align="center" direction="vertical" size="large">
               <div className="w-full flex justify-center bg-green-100 py-1 shadow-lg lg:shadow-xl text-sm md:text-base">
-                <div className="flex mt-2 items-end justify-center">
+                <Space align="end">
                   {viewMode === goalsLabel && (
-                    <div className="mr-1 md:mr-2">
                       <SelectInput
-                        name="typeFilter"
                         pre=""
                         options={getImpOptions()}
                         value={impFilter as string}
                         changeHandler={setImpFilter}
                       />
-                    </div>
                   )}
                   <Menu onClick={(e: any) => setViewMode(e.key)} selectedKeys={[viewMode]} mode="horizontal">
                     {tabOptions.map(tab => 
@@ -500,10 +488,10 @@ export default function SetPlan() {
                       </Menu.Item>
                     )}  
                   </Menu>
-                </div>
+                </Space>
               </div>
               {viewMode !== aaLabel && (
-                <p className="text-center text-base mt-4">
+                <p>
                   Negative values imply You Pay, while Positive values imply You
                   Receive
                 </p>
@@ -534,7 +522,6 @@ export default function SetPlan() {
                       g.id,
                       g.imp
                     );
-                    console.log("Result: ", result);
                     return (
                       <Summary
                         key={"g" + i}
@@ -556,7 +543,7 @@ export default function SetPlan() {
                   })}
                 </div>
               )}
-            </Fragment>
+            </Space>
           )
         : goalsLoaded && (
             <div className="text-center align-center">

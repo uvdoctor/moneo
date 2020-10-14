@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import SVGHourGlass from '../svghourglass';
 import ItemDisplay from '../calc/ItemDisplay';
 import { MAX_RETIREMENT_AGE } from '../../CONSTANTS';
-
+import { Card } from "antd";
 interface FFImpactProps {
 	ffImpactYears: number | null;
 	ffOOM: Array<number> | null;
@@ -15,7 +15,7 @@ export default function FFImpact(props: FFImpactProps) {
 	const getImpactText = () => ((props.ffImpactYears as number) > 0 ? 'Earlier' : 'Later');
 
 	return (
-		<Fragment>
+		<Card>
 			{props.ffImpactYears !== null ? props.ffImpactYears === 0 ? (
 				<ItemDisplay
 					label="Impact"
@@ -39,6 +39,6 @@ export default function FFImpact(props: FFImpactProps) {
 					info={`Financial Independence Impact can only be determined if Financial Independence is Possible by ${MAX_RETIREMENT_AGE} Years of Age. Please change Your Goals / Inputs and try again.`}
 				/>
 			)}
-		</Fragment>
+		</Card>
 	);
 }

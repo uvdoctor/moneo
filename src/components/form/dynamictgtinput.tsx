@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { TargetInput } from '../../api/goals';
 import NumberInput from './numberinput';
 import SelectInput from './selectinput';
-import SVGAdd from '../svgadd';
-import SVGRemove from '../svgremove';
+import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { initYearOptions } from '../utils';
 import { createNewTarget } from '../goals/goalutils';
+import { Space } from 'antd';
 interface DynamicTgtInputProps {
 	tgts: Array<TargetInput>;
 	currency: string;
@@ -59,47 +59,43 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
 	};
 
 	return (
-		<div>
+		<Fragment>
 			{props.tgts && props.tgts[0] ? (
 				props.tgts.map((t, i) => (
-					<div key={'ctr' + i} className="mt-2 flex items-center justify-start w-full">
-						<div className="flex justify-center mr-1 pl-2">
+					<Space key={'ctr' + i} align="center" size="large">
+						<Space align="center" size="small">
 							<SelectInput
-								name={'year' + i}
 								pre="Year"
 								options={yearOpts}
 								value={t.year}
 								changeHandler={(year: string) => changeTargetYear(i, year)}
 							/>
-							<div className="ml-4">
-								<NumberInput
-									name={'val' + i}
-									pre="Amount"
-									currency={props.currency}
-									rangeFactor={props.rangeFactor}
-									value={t.val}
-									changeHandler={(val: number) => changeTargetVal(i, val)}
-									min={0}
-									max={900000}
-									step={500}
-								/>
-							</div>
-						</div>
-						<div onClick={() => removeTgt(i)}>
-							<SVGRemove />
+							<NumberInput
+								pre="Amount"
+								currency={props.currency}
+								rangeFactor={props.rangeFactor}
+								value={t.val}
+								changeHandler={(val: number) => changeTargetVal(i, val)}
+								min={0}
+								max={900000}
+								step={500}
+							/>
+						</Space>
+						<div style={{ cursor: 'pointer' }} onClick={() => removeTgt(i)}>
+							<MinusCircleOutlined />
 						</div>
 						{i === props.tgts.length - 1 && (
-							<div onClick={() => addTgt()}>
-								<SVGAdd />
+							<div style={{ cursor: 'pointer' }} onClick={() => addTgt()}>
+								<PlusCircleOutlined />
 							</div>
 						)}
-					</div>
+					</Space>
 				))
 			) : (
-				<div className="flex justify-center" onClick={() => addTgt()}>
-					<SVGAdd />
+				<div style={{ cursor: 'pointer' }} onClick={() => addTgt()}>
+					<PlusCircleOutlined />
 				</div>
 			)}
-		</div>
+		</Fragment>
 	);
 }

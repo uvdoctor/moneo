@@ -40,7 +40,6 @@ export function FIInvest({
       videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}
       left={
         <NumberInput
-          name="nw"
           info={`Your Total Portfolio Value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc.`}
           value={nw}
           pre="Total"
@@ -55,7 +54,6 @@ export function FIInvest({
       }
       right={
         <NumberInput
-          name="ms"
           info={`Average Monthly Savings after paying all taxes & expenses. 
                   Include Your Retirement Contributions as a part of Your Savings. 
                   You Can Put Negative Value if Your Expenses are More than Income. 
@@ -76,7 +74,6 @@ export function FIInvest({
         <div className="w-full flex flex-wrap justify-around items-center">
           <div className="mt-2">
             <NumberInput
-              name="savingsRate"
               info={`Given Average Monthly Investment of ${toCurrency(
                 avgMonthlySavings,
                 currency
@@ -103,7 +100,6 @@ export function FIInvest({
           <div className="mt-2">
             {riskProfileHandler && riskProfile ? (
               <SelectInput
-                name="riskProfile"
                 info="How much Risk are You willing to take in order to achieve higher Investment Return?"
                 pre="Can Tolerate"
                 post="Investment Loss"
@@ -112,7 +108,6 @@ export function FIInvest({
               />
             ) : (
               <NumberInput
-                name="dr"
                 value={rr as number}
                 changeHandler={rrHandler}
                 min={0}

@@ -58,7 +58,6 @@ export default function RentComparison({
 			insideForm
 			left={
 				<NumberInput
-					name="rentAmt"
 					pre="Yearly"
 					post="Rent"
 					value={rentAmt as number}
@@ -73,7 +72,6 @@ export default function RentComparison({
 			right={
 				rentAmt > 0 && (
 					<NumberInput
-						name="rentChg"
 						pre="Yearly"
 						post="Change"
 						value={rentChgPer as number}
@@ -89,7 +87,6 @@ export default function RentComparison({
 				!!rentAmt && (
 					<div className="flex flex-col justify-center">
 						<NumberInput
-							name="af"
 							pre="Analyze from 1 to "
 							value={analyzeFor}
 							changeHandler={analyzeForHandler}

@@ -24,7 +24,6 @@ export default function TaxAdjustment(props: TaxAdjustmentProps) {
 			left={
 				!isTaxCreditEligible(props.goalType) && (
 					<NumberInput
-						name="tr"
 						info="Income Tax slab based on Your Income"
 						pre="Tax"
 						post="Rate"
@@ -44,7 +43,6 @@ export default function TaxAdjustment(props: TaxAdjustmentProps) {
 						info={`Maximum Yearly Income Tax ${isTaxCreditEligible(props.goalType)
 							? 'Credit'
 							: 'Deduction'} Allowed`}
-						name="tbLimit"
 						pre="Max Yearly"
 						post={`${isTaxCreditEligible(props.goalType) ? 'Credit' : 'Deduction'}`}
 						currency={props.currency}

@@ -10,7 +10,6 @@ interface SelectInputProps {
 	post?: string;
 	options?: any;
 	value: string | number;
-	name: string;
 	unit?: string;
 	changeHandler: any;
 	currency?: boolean;

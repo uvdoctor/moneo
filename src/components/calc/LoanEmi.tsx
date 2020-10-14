@@ -147,7 +147,6 @@ export default function LoanEmi(props: LoanEmiProps) {
 				props.loanBorrowAmt && (
 					<Space align="center" direction="vertical">
 						<SelectInput
-							name="repaymentSY"
 							options={ryOptions}
 							value={props.repaymentSY}
 							pre="Repay From"
@@ -156,7 +155,6 @@ export default function LoanEmi(props: LoanEmiProps) {
 						/>
 						<div className={`${props.goalType === GoalType.E ? 'mt-2' : 'mt-4'}`}>
 							<NumberInput
-								name="duration"
 								pre="Term"
 								unit="years"
 								note={`EMI ${toCurrency(emi, props.currency)}`}
@@ -174,7 +172,6 @@ export default function LoanEmi(props: LoanEmiProps) {
 				props.loanBorrowAmt && (
 					<Space align="start">
 						<NumberInput
-							name="intRate"
 							pre="Yearly"
 							post="Interest"
 							unit="%"
@@ -290,7 +287,6 @@ export default function LoanEmi(props: LoanEmiProps) {
 						props.taxBenefitInt &&
 						!isTaxCreditEligible(props.goalType) && (
 							<NumberInput
-								name="maxTaxDeductionInt"
 								pre="Max Interest"
 								post="Deduction"
 								rangeFactor={props.rangeFactor}

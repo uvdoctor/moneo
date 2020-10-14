@@ -100,7 +100,6 @@ export default function CareInsurance({
 			left={
 				<div className="flex flex-col items-center justify-center">
 					<NumberInput
-						name="cp"
 						info="How much does annual insurance premium cost today? Actual price will be derived based on this price."
 						value={carePremium}
 						changeHandler={carePremiumHandler}
@@ -116,7 +115,6 @@ export default function CareInsurance({
 					{carePremium && (
 						<div className="flex justify-between items-end w-full mb-2">
 							<SelectInput
-								name="cpsy"
 								info="It may be a good option to buy this insurance when You are healthier (between 60 to 65 years of age) to get lower premiums."
 								value={getAge(carePremiumSY, endYear)}
 								options={initYearOptions(55, 10)}
@@ -127,7 +125,6 @@ export default function CareInsurance({
 									changeSelection(val, carePremiumSYHandler, endYear - PLAN_DURATION)}
 							/>
 							<SelectInput
-								name="cpdur"
 								value={premiumDur}
 								options={initYearOptions(1, 15)}
 								pre="Pay For"
@@ -160,7 +157,6 @@ export default function CareInsurance({
 				carePremium &&
 				taxRate && (
 					<NumberInput
-						name="maxTDL"
 						pre="Tax"
 						post="Deduction"
 						currency={currency}

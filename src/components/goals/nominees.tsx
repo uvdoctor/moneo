@@ -30,7 +30,6 @@ export default function Nominees({
 			)}`}
 			left={
 				<NumberInput
-					name="lb"
 					value={leaveBehind}
 					changeHandler={leaveBehindHandler}
 					rangeFactor={rangeFactor}
@@ -45,7 +44,6 @@ export default function Nominees({
 			right={
 				leaveBehind > 0 && (
 					<NumberInput
-						name="str"
 						pre="Inheritance"
 						post="Tax Rate"
 						min={0}

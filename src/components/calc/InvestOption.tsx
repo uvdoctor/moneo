@@ -18,7 +18,6 @@ export default function InvestOption(props: InvestOptionProps) {
 			title="How much Do Your Investments Earn?"
 			left={
 				<NumberInput
-					name="dr"
 					pre="Investments"
 					post="Earn Yearly"
 					note="after taxes & fees"

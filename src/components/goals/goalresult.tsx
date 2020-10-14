@@ -2,7 +2,7 @@ import React from 'react';
 import OppCost from '../calc/oppcost';
 import FFImpact from './ffimpact';
 import NumberInput from '../form/numberinput';
-
+import { Space, Card } from 'antd';
 interface GoalResultProps {
 	cfs: Array<number>;
 	ffOOM: Array<number> | null;
@@ -18,19 +18,12 @@ interface GoalResultProps {
 
 export default function GoalResult(props: GoalResultProps) {
 	return (
-		<div className="w-full py-1 flex justify-around items-center bg-green-100 shadow-lg lg:shadow-xl">
+		<Space align="center" size="large">
 			{props.dr === null || props.dr === undefined ? (
-				<div className="w-full">
-					<FFImpact
-						ffGoalEndYear={props.ffGoalEndYear}
-						ffOOM={props.ffOOM}
-						ffImpactYears={props.ffImpactYears}
-					/>
-				</div>
+				<FFImpact ffGoalEndYear={props.ffGoalEndYear} ffOOM={props.ffOOM} ffImpactYears={props.ffImpactYears} />
 			) : (
-				<div className="w-full">
+				<Card>
 					<NumberInput
-						name="dr"
 						value={props.dr as number}
 						changeHandler={props.drHandler}
 						min={0}
@@ -41,18 +34,16 @@ export default function GoalResult(props: GoalResultProps) {
 						unit="%"
 						note="After taxes & fees"
 					/>
-				</div>
+				</Card>
 			)}
-			<div className="w-full">
-				<OppCost
-					discountRate={props.dr === null || props.dr === undefined ? props.rr : props.dr}
-					cfs={props.cfs}
-					currency={props.currency}
-					startYear={props.startYear}
-					buyGoal={props.buyGoal}
-					ffGoalEndYear={props.ffGoalEndYear}
-				/>
-			</div>
-		</div>
+			<OppCost
+				discountRate={props.dr === null || props.dr === undefined ? props.rr : props.dr}
+				cfs={props.cfs}
+				currency={props.currency}
+				startYear={props.startYear}
+				buyGoal={props.buyGoal}
+				ffGoalEndYear={props.ffGoalEndYear}
+			/>
+		</Space>
 	);
 }

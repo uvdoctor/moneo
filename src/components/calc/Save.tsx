@@ -19,7 +19,6 @@ export default function Save(props: SaveProps) {
 			title="How much Do You Save from Your Work Income?"
 			left={
 				<NumberInput
-					name="savings"
 					pre="Yearly"
 					post="Savings"
 					value={props.savings}
@@ -33,7 +32,6 @@ export default function Save(props: SaveProps) {
 			}
 			right={
 				<NumberInput
-					name="pw"
 					pre="Total Paid"
 					post="Work Weeks"
 					note="in a Year"
@@ -47,7 +45,6 @@ export default function Save(props: SaveProps) {
 			}
 			bottom={
 				<NumberInput
-					name="hrs"
 					pre="Average"
 					post="Work-week"
 					note="including travel"

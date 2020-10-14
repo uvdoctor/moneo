@@ -226,7 +226,6 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 									)} ${timeCostUnit} to Save ${toCurrency(totalCost, props.currency)}`}
 									unit={
 										<SelectInput
-											name="tcunit"
 											pre=""
 											options={timeOptions}
 											value={timeCostUnit}

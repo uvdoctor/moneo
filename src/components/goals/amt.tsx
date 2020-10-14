@@ -54,9 +54,8 @@ export default function Amt({
 	return (
 		<Space align="center" size="large" direction="vertical">
 			<Space align="center" size="large">
-				<SelectInput name="ccy" pre="Currency" value={currency} changeHandler={currencyHandler} currency />
+				<SelectInput pre="Currency" value={currency} changeHandler={currencyHandler} currency />
 				<SelectInput
-					name="sy"
 					pre="When?"
 					info="Year in which You Start Paying for the Goal"
 					value={startYear}
@@ -64,7 +63,6 @@ export default function Amt({
 					options={syOptions}
 				/>
 				<SelectInput
-					name="ey"
 					pre={`Pay Until`}
 					value={endYear}
 					info="Year in which You End Paying for the Goal"

@@ -62,7 +62,6 @@ export default function AnnualAmt(props: AnnualAmtProps) {
 			right={
 				props.percentage && (
 					<SelectInput
-						name="startFrom"
 						pre="From Year"
 						post="Onwards"
 						options={syOptions}

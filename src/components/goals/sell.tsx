@@ -53,7 +53,6 @@ export default function Sell(props: SellProps) {
 			}
 			right={
 				<NumberInput
-					name="assetChgRate"
 					info="Rate at which Price may change Yearly."
 					pre="Sell Price"
 					post="Changes"

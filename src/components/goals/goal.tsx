@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import * as APIt from "../../api/goals";
@@ -6,7 +6,7 @@ import { initYearOptions, getRangeFactor} from "../utils";
 import LoanEmi from "../calc/LoanEmi";
 import TaxAdjustment from "../calc/TaxAdjustment";
 import Sell from "./sell";
-import StickyHeader from "./stickyheader";
+import TitleSection from "./TitleSection";
 import SVGChart from "../svgchart";
 import Amt from "./amt";
 import { calculateCFs, getLoanBorrowAmt } from "./cfutils";
@@ -32,6 +32,7 @@ import SVGLoan from "../svgloan";
 import SVGSell from "../svgsell";
 import SVGCashFlow from "../svgcashflow";
 import LoanScheduleChart from "./LoanScheduleChart";
+import { Space } from "antd";
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -595,10 +596,10 @@ export default function Goal({
   }, [analyzeFor, cfs]);
 
   return (
-    <div className="w-full h-full">
-      <StickyHeader cancelCallback={cancelCallback} cancelDisabled={btnClicked}>
-        {addCallback && updateCallback ? (
-          <Fragment>
+    <Space align="center" direction="vertical">
+      <TitleSection title={name} cancelCallback={cancelCallback}>
+        {addCallback && updateCallback && (
+          <Space align="center" size="large">
             <TextInput
               name="name"
               pre={typesList[goalType]}
@@ -608,24 +609,15 @@ export default function Goal({
               width="150px"
             />
             <SelectInput
-              name="imp"
               pre="Importance"
               value={impLevel}
               changeHandler={setImpLevel}
               options={getImpLevels()}
             />
-          </Fragment>
-        ) : (
-          <h1 className="w-full text-center font-bold mt-4 mb-2 text-lg md:text-xl lg:text-2xl">
-            {name}
-          </h1>
+          </Space>
         )}
-      </StickyHeader>
-      <div
-        className={`container mx-auto w-full h-full flex flex-1 lg:flex-row ${
-          showResultSection() && "flex-col-reverse"
-        } items-start`}
-      >
+      </TitleSection>
+      <Space align="center">
         <Input
           tabOptions={tabOptions}
           showTab={showTab}
@@ -722,7 +714,7 @@ export default function Goal({
           )}
 
           {showTab === annualNetCostLabel && (
-            <Fragment>
+            <Space align="center" direction="vertical">
               <AnnualAmt
                 currency={currency}
                 startYear={startYear}
@@ -750,7 +742,7 @@ export default function Goal({
                   title="Yearly Income through Rent, Dividend, etc"
                   footer="Exclude taxes & fees"
                 />
-            </Fragment>
+            </Space>
           )}
 
           {showTab === sellLabel && (
@@ -829,7 +821,7 @@ export default function Goal({
             )}
           </Result>
         )}
-      </div>
-    </div>
+      </Space>
+    </Space>
   );
 }

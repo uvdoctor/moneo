@@ -32,7 +32,6 @@ export default function Spend(props: SpendProps) {
 				title="Enter Spend Details"
 				left={
 					<SelectInput
-						name="sf"
 						pre="Spend"
 						value={props.freq}
 						changeHandler={props.freqHandler}
@@ -41,7 +40,6 @@ export default function Spend(props: SpendProps) {
 				}
 				right={
 					<NumberInput
-						name="amt"
 						pre="Amount"
 						value={props.amt}
 						changeHandler={props.amtHandler}
@@ -55,7 +53,6 @@ export default function Spend(props: SpendProps) {
 				bottom={
 					props.freq !== SPEND_ONCE && (
 						<NumberInput
-							name="dur"
 							pre="For"
 							value={props.duration}
 							changeHandler={props.durationHandler}

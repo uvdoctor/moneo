@@ -11,7 +11,6 @@ interface NumberInputProps {
 	min: number;
 	max: number;
 	value: number;
-	name: string;
 	currency?: string;
 	rangeFactor?: number;
 	unit?: string;

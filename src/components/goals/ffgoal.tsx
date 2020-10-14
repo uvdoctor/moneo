@@ -13,7 +13,7 @@ import SVGChart from "../svgchart";
 import DDLineChart from "./DDLineChart";
 import { getAge } from "./goalutils";
 import SVGBarChart from "../svgbarchart";
-import StickyHeader from "./stickyheader";
+import TitleSection from "./TitleSection";
 import Result from "./Result";
 import { FIInvest } from "./fiinvest";
 import { ExpenseAfterFF } from "./expenseafterff";
@@ -298,9 +298,8 @@ export default function FFGoal({
 
   return (
     <div className="w-full h-full">
-      <StickyHeader cancelCallback={cancelCallback} cancelDisabled={btnClicked}>
+      <TitleSection title={name} cancelCallback={cancelCallback}>
         <SelectInput
-          name="ey"
           //info="Financial Plan will be created assuming that You live till 100 Years, after which You leave behind inheritance.
           //DollarDarwin will try to find the earliest possible year for Your Financial Independence based on Your inputs and Other Goals that You Create.
           //Given that You May not be able to work beyond 70 years of age, DollarDarwin may request You to reconsider Your inputs and other Goals so that You Achieve Financial Independence before hitting 70."
@@ -310,13 +309,12 @@ export default function FFGoal({
           options={eyOptions}
         />
         <SelectInput
-          name="ccy"
           pre="Currency"
           value={currency}
           changeHandler={changeCurrency}
           currency
         />
-      </StickyHeader>
+      </TitleSection>
       <div
         className={`container mx-auto flex flex-1 lg:flex-row ${
           showResultSection() && "flex-col-reverse"

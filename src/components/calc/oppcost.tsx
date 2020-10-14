@@ -5,6 +5,7 @@ import ItemDisplay from "./ItemDisplay";
 import { toCurrency } from "../utils";
 import { getMinRetirementDuration } from "../goals/goalutils";
 import { PLAN_DURATION } from "../../CONSTANTS";
+import { Card } from "antd";
 interface OppCostProps {
   cfs: Array<number>;
   currency: string;
@@ -62,6 +63,7 @@ export default function OppCost(props: OppCostProps) {
   useEffect(() => calculateOppCost(), [props.cfs, props.discountRate]);
 
   return (
+    <Card>
     <ItemDisplay
       svg={<SVGBalance />}
       result={oppCost}
@@ -85,6 +87,7 @@ export default function OppCost(props: OppCostProps) {
         ${oppCost < 0 ? "Invest" : "Buy"} instead of ${
         oppCost < 0 ? (props.buyGoal ? "Buying" : "Spending") : "Investing"
       }.`}
-    />
+      />
+      </Card>
   );
 }

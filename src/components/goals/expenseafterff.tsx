@@ -38,7 +38,6 @@ export function ExpenseAfterFF({
 			title="After Financial Independence"
 			left={
 				<NumberInput
-					name="currExpense"
 					info="If You had already achieved Financial Independence this year, How Much Money Would You Need for Your Living Expenses?"
 					pre="Yearly"
 					post="Expenses"
@@ -54,7 +53,6 @@ export function ExpenseAfterFF({
 			}
 			right={
 				<NumberInput
-					name="expChgRate"
 					info="Rate at which Your Living Expenses increase every Year."
 					pre="Expense"
 					post="Increases"
@@ -69,7 +67,6 @@ export function ExpenseAfterFF({
 			}
 			bottom={
 				<NumberInput
-					name="tr"
 					info="Tax Rate, in case You have to pay tax for Investment Gains and Withdrawing from Retirement Accounts beyond the allowed Yearly Limit."
 					pre="Tax"
 					post="Rate"

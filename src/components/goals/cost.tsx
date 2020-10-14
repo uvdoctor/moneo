@@ -67,7 +67,6 @@ export default function Cost(props: CostProps) {
 			}
 			left={
 				<NumberInput
-					name="startingCost"
 					pre={props.startYear > props.baseYear ? 'Amount' : ''}
 					post={props.startYear > props.baseYear ? `in ${props.baseYear}` : ''}
 					currency={props.currency}
@@ -83,7 +82,6 @@ export default function Cost(props: CostProps) {
 			right={
 				props.startYear > props.baseYear && (
 					<NumberInput
-						name="priceChgRate"
 						pre="Amount"
 						post="Changes"
 						note={`Yearly till ${props.startYear}`}
@@ -112,7 +110,6 @@ export default function Cost(props: CostProps) {
 							<div key={'t' + i} className="mr-4 md:mr-8 mt-8 flex flex-col justify-end items-end">
 								<label>{t.year}</label>
 								<NumberInput
-									name="year"
 									pre=""
 									currency={props.currency}
 									rangeFactor={props.rangeFactor}
