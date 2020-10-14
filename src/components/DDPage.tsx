@@ -4,6 +4,7 @@ import { Layout } from "antd";
 import Nav from "./Nav";
 import UserHeader from "./userheader";
 import SecureMenu from "./SecureMenu";
+import DDFooter from "./DDFooter";
 import { isMobileDevice } from "./utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import Head from "next/head";
@@ -15,7 +16,6 @@ interface DDPageProps {
 }
 
 export default function DDPage(props: DDPageProps) {
-  const { Footer } = Layout;
   const commonSecureComps: Array<React.ReactNode> = [
     <UserHeader />,
     <SecureMenu />,
@@ -103,7 +103,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
           </Fragment>
         )}
 
-        <Footer>Footer</Footer>
+        <DDFooter />
       </Layout>
     </Fragment>
   );

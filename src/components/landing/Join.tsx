@@ -37,12 +37,10 @@ export default function Join() {
 		<div className="dd-join">
 			{!showJoinForm && (
 				<Space>
-					<Button type="primary" onClick={() => setJoinForm(true)}>
-						Use another account
-					</Button>
+					<Button onClick={() => setJoinForm(true)}>Use another account</Button>
 					{status === "P" && (
-						<Button onClick={() => setShowVerifyModal(true)}>
-							Verify security code
+						<Button type="primary" onClick={() => setShowVerifyModal(true)}>
+							Verify email
 						</Button>
 					)}
 				</Space>

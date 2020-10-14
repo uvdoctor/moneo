@@ -70,12 +70,18 @@ export default function GetRich({ featuresRef }: GetRichProps) {
           No More Boring Budgets or Confusing Investment Choices. DollarDarwin
           helps You to Grow Your Money without taking any undue stress.
         </p>
-        <Row gutter={[50, 50]} align="middle">
+        <Row
+          gutter={[
+            { xs: 0, sm: 15, md: 30, lg: 50 },
+            { xs: 15, sm: 15, md: 30, lg: 50 },
+          ]}
+          align="middle"
+        >
           {featuresList.map(({ svg: Svg, label, desc }, i) => (
             <Col
               key={"f" + i}
               className="flip-card"
-              xs={12}
+              xs={24}
               sm={12}
               md={8}
               lg={6}

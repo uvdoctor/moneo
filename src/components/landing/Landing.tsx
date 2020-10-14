@@ -26,11 +26,9 @@ export default function Landing() {
           animation={[
             { x: 0, opacity: 1, playScale: [0, 0.6] },
             { y: 0, playScale: [0, 1] },
-            { blur: "10px", playScale: [0, 1.5] },
           ]}
           style={{
             transform: "translateX(-100px)",
-            filter: "blur(0px)",
             opacity: 0,
             position: "relative",
             top: "0",
@@ -46,8 +44,8 @@ export default function Landing() {
           <Row
             className="steps"
             gutter={[
-              { xs: 8, sm: 16, md: 24, lg: 32 },
-              { xs: 8, sm: 16, md: 24, lg: 32 },
+              { xs: 0, sm: 0, md: 24, lg: 32 },
+              { xs: 20, sm: 20, md: 24, lg: 32 },
             ]}
           >
             <Step
