@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import ItemDisplay from '../calc/ItemDisplay';
 import SVGMoneyBag from '../calc/svgmoneybag';
-import SVGMoneyBagPer from '../svgmoneybagper';
 import Section from '../form/section';
 import RadialInput from '../form/radialinput';
 import NumberInput from '../form/numberinput';
 import { toStringArr } from '../utils';
 import { calculateSellPrice, calculateXIRR } from './cfutils';
 import { getDuration } from './goalutils';
-
+import { Space } from 'antd';
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 interface SellProps {
 	price: number;
 	startYear: number;
@@ -65,7 +65,7 @@ export default function Sell(props: SellProps) {
 				/>
 			}
 			bottom={
-				<div className="flex justify-around w-full items-center">
+				<Space align="center" size="large">
 					<ItemDisplay
 						svg={<SVGMoneyBag disabled={false} selected />}
 						label="You May Get"
@@ -75,7 +75,7 @@ export default function Sell(props: SellProps) {
 					/>
 					{annualReturnPer && (
 						<ItemDisplay
-							svg={<SVGMoneyBagPer />}
+							svg={annualReturnPer > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
 							label={`You May ${annualReturnPer > 0 ? 'Gain' : 'Lose'}`}
 							result={annualReturnPer}
 							decimal={2}
@@ -84,7 +84,7 @@ export default function Sell(props: SellProps) {
 							pl
 						/>
 					)}
-				</div>
+				</Space>
 			}
 			footer="Sell Price above excludes taxes & fees."
 		/>
