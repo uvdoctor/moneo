@@ -33,7 +33,7 @@ export default function DDLineChart(props: DDLineChartProps) {
 			xField="year"
 			yField="value"
 			yAxis={getCommonYAxis()}
-			xAxis={getCommonXAxis('Year')}
+			xAxis={getCommonXAxis(props.title ? props.title : 'Year')}
 			meta={getCommonMeta(props.currency)}
 			point={{ visible: true }}
 		/>
