@@ -1,10 +1,7 @@
 import React, { ReactNode, useRef } from 'react';
 import { useFullScreen } from 'react-browser-hooks';
-import SVGFullScreen from '../svgfullscreen';
-import SVGExitFullScreen from '../svgexitfullscreen';
-import DynamicSlider from '../dynamicslider';
 import { Tabs, Space } from 'antd';
-
+import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
 interface ResultProps {
 	result: ReactNode;
 	resultTabOptions: Array<any>;
@@ -18,13 +15,15 @@ export default function Result(props: ResultProps) {
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
 	return (
-		<div ref={chartDiv} className={`w-full transition-width duration-1000 ease-in-out`}>
+		<div ref={chartDiv} style={{ width: '100%' }}>
 			<Space align="center" direction="vertical" size="large">
 				{props.result}
 				<Space align="center" size="large">
-					<div onClick={toggle}>{!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}</div>
+					<div style={{ cursor: 'pointer' }} onClick={toggle}>
+						{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
+					</div>
 					<Tabs
-						onTabClick={(e: any) => props.showResultTabHandler(e.key)}
+						onTabClick={(key: string) => props.showResultTabHandler(key)}
 						defaultActiveKey={props.resultTabOptions[0].label}
 					>
 						{props.resultTabOptions.map((tab) => (
@@ -41,13 +40,7 @@ export default function Result(props: ResultProps) {
 						))}
 					</Tabs>
 				</Space>
-				<DynamicSlider
-					setSlide={props.showResultTabHandler}
-					totalItems={props.resultTabOptions}
-					currentItem={props.showResultTab}
-				>
-					{React.Children.map(props.children, (child: any) => (child ? child : null))}
-				</DynamicSlider>
+				{React.Children.map(props.children, (child: any) => (child ? child : null))}
 			</Space>
 		</div>
 	);

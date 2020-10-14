@@ -1,12 +1,12 @@
 import React from 'react';
 import Layout from '../components/calc/Layout';
-import ItemDisplay from '../components/calc/ItemDisplay';
 import SVGBalance from '../components/calc/svgbalance';
 import SVGMoneyBag from '../components/calc/svgmoneybag';
 import TrueCostCalc from '../components/calc/TrueCostCalc';
 import SVGHourGlass from '../components/svghourglass';
 import SVGPay from '../components/svgpay';
 import SVGPiggy from '../components/svgpiggy';
+import { Statistic } from 'antd';
 
 export const SPEND = 'Spend';
 export const SAVE = 'Save';
@@ -22,17 +22,16 @@ export default function TrueCost() {
 					{ label: SPEND, active: true, svg: SVGPay },
 					{ label: SAVE, active: true, svg: SVGPiggy },
 					{ label: INVEST, active: true, svg: SVGMoneyBag }
-				],
-				endOrder: 9
+				]
 			}}
 			title="True Cost"
 			assumptions={[ 'adfas', 'asdfsad' ]}
 			features={[ 'fsdgdf', 'fgdssdf' ]}
 			results={[
-				<ItemDisplay result="Option that costs lesser" svg={<SVGBalance />} />,
-				<ItemDisplay result="Time till which the Option costs lesser" svg={<SVGHourGlass />} />
+				<Statistic key="s1" title="" value="Option that costs lesser" prefix={<SVGBalance />} />,
+				<Statistic key="s2" title="" value="Time till which the Option costs lesser" prefix={<SVGHourGlass />} />
 			]}
-			resultImg="step1.png"
+			resultImg="kick-start.jpg"
 		/>
 	);
 }

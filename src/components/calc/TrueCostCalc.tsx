@@ -13,7 +13,7 @@ import ItemDisplay from './ItemDisplay';
 import Save from './Save';
 import Spend, { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
 import SVGBalance from './svgbalance';
-import { Space } from 'antd';
+import { Space, Card } from 'antd';
 
 export const TIME_COST_HOURS = 'Hours';
 export const TIME_COST_WEEKS = 'Weeks';
@@ -159,7 +159,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 	);
 
 	return (
-		<Space align="start" size="large" style={{width: '100%'}}>
+		<Space align="start" size="large" style={{ width: '100%' }}>
 			<Input
 				showTab={props.showTab}
 				showTabHandler={props.showTabHandler}
@@ -214,8 +214,8 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 					showResultTab={showResultTab}
 					showResultTabHandler={setShowResultTab}
 					result={
-						<div className="w-full py-1 flex justify-around items-center bg-green-100 shadow-lg lg:shadow-xl">
-							<div className="flex items-end">
+						<Space align="center" size="large" style={{ width: '100%' }}>
+							<Card>
 								<ItemDisplay
 									label="Time Cost"
 									result={-timeCostDisplay}
@@ -224,38 +224,41 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 									info={`Based on your savings details, You May have to Work ${toReadableNumber(
 										timeCost
 									)} ${timeCostUnit} to Save ${toCurrency(totalCost, props.currency)}`}
+									unit={
+										<SelectInput
+											name="tcunit"
+											pre=""
+											options={timeOptions}
+											value={timeCostUnit}
+											changeHandler={setTimeCostUnit}
+										/>
+									}
 								/>
-								<div className="ml-1">
-									<SelectInput
-										name="tcunit"
-										pre=""
-										options={timeOptions}
-										value={timeCostUnit}
-										changeHandler={setTimeCostUnit}
-									/>
-								</div>
-							</div>
-							<ItemDisplay
-								label="Spend v/s Invest"
-								info={`You May have ${toCurrency(
-									Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
-									props.currency
-								)} More in ${years} Years if You Invest instead of Spending.`}
-								svg={<SVGBalance />}
-								result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
-								currency={props.currency}
-								pl
-								calcFormat
-							/>
-						</div>
+							</Card>
+							<Card>
+								<ItemDisplay
+									label="Spend v/s Invest"
+									info={`You May have ${toCurrency(
+										Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
+										props.currency
+									)} More in ${years} Years if You Invest instead of Spending.`}
+									svg={<SVGBalance />}
+									result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
+									currency={props.currency}
+									pl
+								/>
+							</Card>
+						</Space>
 					}
 				>
-					<DDLineChart
-						cfs={cfsWithOppCost}
-						currency={props.currency}
-						startYear={1}
-						title="Number of Years"
-					/>
+					{showResultTab === CHART && (
+						<DDLineChart
+							cfs={cfsWithOppCost}
+							currency={props.currency}
+							startYear={1}
+							title="Number of Years"
+						/>
+					)}
 				</Result>
 			)}
 		</Space>

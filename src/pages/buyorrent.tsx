@@ -17,10 +17,12 @@ export default function BuyOrRent() {
       features={["fsdgdf", "fgdssdf"]}
       results={[
         <ItemDisplay
+          key="1"
           result="Option that costs lesser"
           svg={<SVGBalance />}
         />,
         <ItemDisplay
+          key="2"
           result="Time till which the Option costs lesser"
           svg={<SVGHourGlass />}
         />,

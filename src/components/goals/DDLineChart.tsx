@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import dynamic from "next/dynamic";
+import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
 
 interface DDLineChartProps {
 	cfs: Array<number>;
 	startYear: number;
 	title?: string;
-	currency: string
+	currency: string;
 }
 
-const LineChart = dynamic(() => import("bizcharts/lib/plots/LineChart"), { ssr: false });
+const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
 
 export default function DDLineChart(props: DDLineChartProps) {
 	const [ data, setData ] = useState<Array<any>>([]);
@@ -28,16 +28,14 @@ export default function DDLineChart(props: DDLineChartProps) {
 	);
 
 	return (
-		<div className="w-full">
-			<LineChart
-				data={data}
-				xField="year"
-				yField="value"
-				yAxis={getCommonYAxis()}
-				xAxis={getCommonXAxis("Year")}
-				meta={getCommonMeta(props.currency)}
-				point={{ visible: true }}
-			/>
-		</div>
+		<LineChart
+			data={data}
+			xField="year"
+			yField="value"
+			yAxis={getCommonYAxis()}
+			xAxis={getCommonXAxis('Year')}
+			meta={getCommonMeta(props.currency)}
+			point={{ visible: true }}
+		/>
 	);
 }

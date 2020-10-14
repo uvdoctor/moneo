@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
-import SVGClose from '../svgclose';
-import SVGSave from '../svgsave';
-
+import { Space } from "antd";
+import { CloseCircleOutlined, SaveOutlined } from "@ant-design/icons";
 interface ActionButtonsProps {
 	submitDisabled: boolean;
 	cancelDisabled: boolean;
@@ -22,8 +21,8 @@ export default function ActionButtons(props: ActionButtonsProps) {
 	);
 
 	return (
-		<footer className="w-full py-2 flex justify-center">
-			<Button icon={<SVGClose />} onClick={() => props.cancelHandler()} disabled={props.cancelDisabled}>
+		<Space align="center">
+			<Button icon={<CloseCircleOutlined />} onClick={() => props.cancelHandler()} disabled={props.cancelDisabled}>
 				Cancel
 			</Button>
 			<Button type="primary"
@@ -31,12 +30,12 @@ export default function ActionButtons(props: ActionButtonsProps) {
 					setActionInProgress(true);
 					props.submitHandler();
 				}}
-				icon={<SVGSave />}
+				icon={<SaveOutlined />}
 				disabled={props.submitDisabled}
 				loading={props.submitDisabled && actionInProgress}
 			>
 				{props.submitText}
 			</Button>
-		</footer>
+		</Space>
 	);
 }

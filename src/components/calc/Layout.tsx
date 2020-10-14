@@ -3,13 +3,12 @@ import React, { Fragment, useState } from 'react';
 import { CreateGoalInput, GoalType } from '../../api/goals';
 import { ROUTES } from '../../CONSTANTS';
 import DDPage from '../DDPage';
-import ExpandCollapse from '../form/expandcollapse';
 import FFGoal from '../goals/ffgoal';
 import Goal from '../goals/goal';
 import { createNewGoalInput } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
 import CalculatorTemplate from './CalculatorTemplate';
-import { Button } from 'antd';
+import { Button, Collapse, Space } from 'antd';
 interface LayoutProps {
 	title: string;
 	type?: GoalType;
@@ -22,6 +21,7 @@ interface LayoutProps {
 
 export default function Layout(props: LayoutProps) {
 	const router = useRouter();
+	const { Panel } = Collapse;
 	const [ wipGoal, setWIPGoal ] = useState<any | null>(null);
 	const [ ffResult, setFFResult ] = useState<any>({});
 	const nowYear = new Date().getFullYear();
@@ -56,40 +56,24 @@ export default function Layout(props: LayoutProps) {
 	return (
 		<DDPage title={props.title}>
 			{!wipGoal ? (
-				<Fragment>
-					<div className="mt-16 w-full text-center">
-						{props.title + " Calculator"}
+				<Space align="center" direction="vertical" size="large">
+					<h1>{props.title + ' Calculator'}</h1>
+					<Collapse defaultActiveKey={[ '1' ]}>
 						{Object.keys(sections).map((key, i) => (
-							<div key={'section' + i} className="mt-4">
-								<ExpandCollapse title={key} insideCalc>
-									<Fragment>
-										<div
-											className={`w-full flex flex-col justify-center items-center ${sections[
-												key
-											] === props.results && 'md:flex-row md:flex-wrap md:justify-around'}`}
-										>
-											{sections[key].map((item: any, i: number) => (
-												<div className="md:mt-2 md:mr-2" key={'item' + i}>
-													{item}
-												</div>
-											))}
-										</div>
-										{sections[key] === props.results && (
-											<img
-												className="cursor-pointer object-fit"
-												src={'/images/' + props.resultImg}
-												onClick={createGoal}
-											/>
-										)}
-									</Fragment>
-								</ExpandCollapse>
-							</div>
+							<Panel key={`${i + 1}`} header={key}>
+								<Space align="center" size="large">{sections[key]}</Space>
+								{sections[key] === props.results && (
+									<p>
+										<img style={{cursor: 'pointer'}} src={'/images/' + props.resultImg} onClick={createGoal} />
+									</p>
+								)}
+							</Panel>
 						))}
-						<div className="mt-4">
-							<Button type="primary" onClick={() => createGoal()}>Start</Button>
-						</div>
-					</div>
-				</Fragment>
+					</Collapse>
+					<Button type="primary" onClick={() => createGoal()}>
+						Start
+					</Button>
+				</Space>
 			) : (
 				<Fragment>
 					{router.pathname === ROUTES.FI ? (

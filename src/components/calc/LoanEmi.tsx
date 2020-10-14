@@ -1,18 +1,17 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import NumberInput from '../form/numberinput';
 import { getEmi, getTotalInt } from './finance';
 import { toCurrency, toStringArr, initYearOptions } from '../utils';
 import SelectInput from '../form/selectinput';
 import RadialInput from '../form/radialinput';
 import Section from '../form/section';
-import ExpandCollapse from '../form/expandcollapse';
 import { getLoanPaidForMonths, adjustAccruedInterest, createEduLoanDPWithSICFs } from '../goals/cfutils';
 import { GoalType } from '../../api/goals';
 import ItemDisplay from './ItemDisplay';
 import { COLORS } from '../../CONSTANTS';
 import { isTaxCreditEligible } from '../goals/goalutils';
 import HSwitch from '../HSwitch';
-
+import { Collapse, Space } from 'antd';
 interface LoanEmiProps {
 	price: number;
 	priceChgRate: number;
@@ -54,6 +53,7 @@ export default function LoanEmi(props: LoanEmiProps) {
 	const [ simpleInts, setSimpleInts ] = useState<Array<number>>([]);
 	const [ remIntAmt, setRemIntAmt ] = useState<number>(0);
 	const loanLimitPer = props.goalType === GoalType.E ? 100 : 80;
+	const { Panel } = Collapse;
 
 	const calculateEmi = () => {
 		let borrowAmt = props.loanBorrowAmt;
@@ -145,7 +145,7 @@ export default function LoanEmi(props: LoanEmiProps) {
 			}
 			right={
 				props.loanBorrowAmt && (
-					<div className="flex flex-col">
+					<Space align="center" direction="vertical">
 						<SelectInput
 							name="repaymentSY"
 							options={ryOptions}
@@ -167,19 +167,18 @@ export default function LoanEmi(props: LoanEmiProps) {
 								step={0.5}
 							/>
 						</div>
-					</div>
+					</Space>
 				)
 			}
 			bottom={
 				props.loanBorrowAmt && (
-					<div className="flex flex-wrap justify-around items-center w-full">
-						<div className="mt-2">
-							<NumberInput
-								name="intRate"
-								pre="Yearly"
-								post="Interest"
-								unit="%"
-								/*feedback={{
+					<Space align="start">
+						<NumberInput
+							name="intRate"
+							pre="Yearly"
+							post="Interest"
+							unit="%"
+							/*feedback={{
 									0: {
 										label: (
 											<Tooltip
@@ -227,60 +226,55 @@ export default function LoanEmi(props: LoanEmiProps) {
 										color: COLORS.RED
 									}
 								}}*/
-								note={
-									<ItemDisplay
-										label="Total Interest"
-										result={totalIntAmt}
-										currency={props.currency}
-										footer={`Over ${getLoanPaidForMonths(
-											props.startYear + props.duration - 1,
-											props.repaymentSY,
-											props.loanYears
-										) / 12} Years`}
-									/>
-								}
-								value={props.loanAnnualInt}
-								changeHandler={props.loanAnnualIntHandler}
-								min={0.0}
-								max={25.0}
-								step={0.1}
-							/>
-						</div>
+							note={
+								<ItemDisplay
+									label="Total Interest"
+									result={totalIntAmt}
+									currency={props.currency}
+									footer={`Over ${getLoanPaidForMonths(
+										props.startYear + props.duration - 1,
+										props.repaymentSY,
+										props.loanYears
+									) / 12} Years`}
+								/>
+							}
+							value={props.loanAnnualInt}
+							changeHandler={props.loanAnnualIntHandler}
+							min={0.0}
+							max={25.0}
+							step={0.1}
+						/>
 						{props.goalType === GoalType.E && (
-							<Fragment>
-								<div className="mt-2">
-									<RadialInput
-										width={120}
-										unit="%"
-										data={toStringArr(0, 100, 5)}
-										value={props.loanSIPayPer as number}
-										changeHandler={props.loanSIPayPerHandler}
-										step={5}
-										labelBottom
-										colorFrom={COLORS.RED}
-										colorTo={COLORS.GREEN}
-										pre="Pay While Studying"
-										label="of Interest"
-										post={
-											!!props.loanSIPayPer && (
-												<div className="flex flex-col justify-center w-full">
-													<ExpandCollapse title="Interest Schedule">
-														{simpleInts.map((int, i) => (
-															<p key={'si' + i} className="text-gray-800">
-																Monthly{' '}
-																{toCurrency(Math.round(int / 12), props.currency)} in{' '}
-																{props.startYear + i}
-															</p>
-														))}
-													</ExpandCollapse>
-												</div>
-											)
-										}
-									/>
-								</div>
+							<Space align="center" direction="vertical">
+								<RadialInput
+									width={120}
+									unit="%"
+									data={toStringArr(0, 100, 5)}
+									value={props.loanSIPayPer as number}
+									changeHandler={props.loanSIPayPerHandler}
+									step={5}
+									labelBottom
+									colorFrom={COLORS.RED}
+									colorTo={COLORS.GREEN}
+									pre="Pay While Studying"
+									label="of Interest"
+									post={
+										!!props.loanSIPayPer && (
+											<Collapse defaultActiveKey={[ '0' ]} ghost>
+												<Panel key="1" header="Interest Schedule">
+													{simpleInts.map((int, i) => (
+														<p key={'int' + i}>
+															Monthly {toCurrency(Math.round(int / 12), props.currency)}{' '}
+															in {props.startYear + i}
+														</p>
+													))}
+												</Panel>
+											</Collapse>
+										)
+									}
+								/>
 								{!Number.isNaN(props.loanSIPayPer) && //@ts-ignore
 								props.loanSIPayPer < 100 && (
-									<div className="mt-2">
 										<HSwitch
 											rightText={`Pay ${toCurrency(
 												remIntAmt,
@@ -289,37 +283,34 @@ export default function LoanEmi(props: LoanEmiProps) {
 											value={props.loanSICapitalize as number}
 											setter={props.loanSICapitalizeHandler}
 										/>
-									</div>
 								)}
-							</Fragment>
+							</Space>
 						)}
 						{props.taxRate &&
 						props.taxBenefitInt &&
 						!isTaxCreditEligible(props.goalType) && (
-							<div className="mt-4">
-								<NumberInput
-									name="maxTaxDeductionInt"
-									pre="Max Interest"
-									post="Deduction"
-									rangeFactor={props.rangeFactor}
-									value={props.maxTaxDeductionInt}
-									changeHandler={props.maxTaxDeductionIntHandler}
-									currency={props.currency}
-									min={0}
-									max={30000}
-									step={1000}
-									note={
-										<ItemDisplay
-											label="Total Interest Tax Benefit"
-											result={props.iTaxBenefit}
-											currency={props.currency}
-											footer={`Over ${props.duration} Years`}
-										/>
-									}
-								/>
-							</div>
+							<NumberInput
+								name="maxTaxDeductionInt"
+								pre="Max Interest"
+								post="Deduction"
+								rangeFactor={props.rangeFactor}
+								value={props.maxTaxDeductionInt}
+								changeHandler={props.maxTaxDeductionIntHandler}
+								currency={props.currency}
+								min={0}
+								max={30000}
+								step={1000}
+								note={
+									<ItemDisplay
+										label="Total Interest Tax Benefit"
+										result={props.iTaxBenefit}
+										currency={props.currency}
+										footer={`Over ${props.duration} Years`}
+									/>
+								}
+							/>
 						)}
-					</div>
+					</Space>
 				)
 			}
 		/>

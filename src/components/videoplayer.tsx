@@ -8,9 +8,9 @@ interface VideoPlayerProps {
 
 export default function VideoPlayer({ url, urlHandler }: VideoPlayerProps) {
 	return (
-		<div className="relative" style={{ paddingTop: '56.25%' }}>
+		<div style={{ position: 'relative', paddingTop: '56.25%' }}>
 			<ReactPlayer
-				className="absolute top-0 left-0"
+				style={{ position: 'absolute', top: 0, left: 0}}
 				url={url}
 				width="100%"
 				height="100%"

@@ -409,6 +409,7 @@ export default function Goal({
     aiPer,
     aiStartYear,
     cashFlows,
+    allInputDone
   ]);
 
   useEffect(() => {
@@ -498,7 +499,7 @@ export default function Goal({
   }, [resultTabOptions]);
 
   const showResultSection = () =>
-    nowYear < startYear && cfs.length > 0;
+    allInputDone && nowYear < startYear && cfs.length > 0;
 
   const getNextTaxAdjRentAmt = (val: number) => {
     return (
@@ -808,15 +809,16 @@ export default function Goal({
               )
             }
           >
-            <DDLineChart
-              cfs={cfs}
-              startYear={startYear}
-              currency={currency}
-            />
-            {showBRChart && (
+            {showResultTab === cfChartLabel &&
+              <DDLineChart
+                cfs={cfs}
+                startYear={startYear}
+                currency={currency}
+              />}
+            {showBRChart && showResultTab === brChartLabel && (
               <BuyRentChart data={brChartData} currency={currency} />
             )}
-            {manualMode < 1 && loanPer && loanRepaymentSY && loanYears && (
+            {manualMode < 1 && loanPer && loanRepaymentSY && loanYears && showResultTab === loanChartLabel &&  (
               <LoanScheduleChart
                 repaymentSY={loanRepaymentSY}
                 loanYears={iSchedule.length}

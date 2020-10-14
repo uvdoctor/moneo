@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, Fragment } from 'react';
 import { parseNumber, toCurrency, toReadableNumber } from '../utils';
 import { Slider } from 'antd';
 import { COLORS } from '../../CONSTANTS';
-import { Tooltip, InputNumber, Space, Row, Col } from 'antd';
+import { Tooltip, InputNumber, Space } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 interface NumberInputProps {
 	info?: string;
 	pre: string;
@@ -29,19 +30,25 @@ export default function NumberInput(props: NumberInputProps) {
 	const [ stepNum, setStepNum ] = useState<number>(
 		props.step ? props.step * (props.rangeFactor ? props.rangeFactor : 1) : 1
 	);
-	const marks = {
+	const [ marks, setMarks ] = useState({
 		[minNum]: toReadableNumber(minNum),
 		[maxNum]: toReadableNumber(maxNum)
-	};
+	});
 
 	useEffect(
 		() => {
-			if (!props.rangeFactor) return;
-			setMinNum(props.min * props.rangeFactor);
-			setMaxNum(props.max * props.rangeFactor);
-			setStepNum((props.step as number) * props.rangeFactor);
+			let rf = props.rangeFactor ? props.rangeFactor : 1;
+			let minNum = props.min * rf;
+			let maxNum = props.max * rf;
+			setMinNum(minNum);
+			setMaxNum(maxNum);
+			setStepNum((props.step as number) * rf);
+			setMarks({
+				[minNum]: toReadableNumber(minNum),
+				[maxNum]: toReadableNumber(maxNum)
+			});
 		},
-		[ props.rangeFactor ]
+		[ props.rangeFactor, props.min, props.max ]
 	);
 
 	const getClosestKey = (value: number, keys: Array<number>) => {
@@ -69,15 +76,19 @@ export default function NumberInput(props: NumberInputProps) {
 	};
 
 	return (
-		<div style={{ minWidth: '200px' }}>
-			{props.info && (
-				<Space align="end">
-					<Tooltip title={props.info} />
-				</Space>
-			)}
+		<Fragment>
 			<Space align="center">
-				<Space align="center" direction="vertical" size="small">
-					{props.pre}
+				<Space align="start" direction="vertical" size="small">
+					<Space align="start">
+						{props.pre}
+						{props.info && (
+							<Tooltip title={props.info}>
+								<span>
+									<InfoCircleOutlined />
+								</span>
+							</Tooltip>
+						)}
+					</Space>
 					{props.post}
 				</Space>
 				<InputNumber
@@ -104,28 +115,25 @@ export default function NumberInput(props: NumberInputProps) {
 				/>
 				{props.unit}
 			</Space>
-			<Row>
-				<Col span={24}>
-					{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
-					<Slider
-						min={minNum}
-						max={maxNum}
-						marks={marks}
-						step={stepNum}
-						value={props.value}
-						onChange={(val: number) => {
-							provideFeedback(val);
-							props.changeHandler(val);
-						}}
-						handleStyle={{
-							cursor: 'grab',
-							borderColor: sliderBorderColor
-						}}
-					/>
-				</Col>
-			</Row>
-			{feedbackText && <p style={{ textAlign: 'center' }}>{feedbackText}</p>}
-			{props.note && <p style={{ textAlign: 'center' }}>{props.note}</p>}
-		</div>
+			{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
+			<Slider
+				min={minNum}
+				max={maxNum}
+				marks={marks}
+				step={stepNum}
+				value={props.value}
+				onChange={(val: number) => {
+					provideFeedback(val);
+					props.changeHandler(val);
+				}}
+				handleStyle={{
+					cursor: 'grab',
+					borderColor: sliderBorderColor
+				}}
+				style={{maxWidth: '250px'}}
+			/>
+			<div style={{ textAlign: 'center' }}>{feedbackText}</div>
+			<div style={{ textAlign: 'center' }}>{props.note}</div>
+		</Fragment>
 	);
 }
