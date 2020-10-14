@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { Input, Select, Button, Form, Alert, Space } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import { FormInstance } from "antd/lib/form";
 import { JoinContext } from "./JoinContext";
 import countriesList from "../countriesList";
@@ -102,7 +103,9 @@ export default function Join() {
 					</Form.Item>
 					<Form.Item>
 						{status !== Status.N && (
-							<Button onClick={() => setJoinForm(false)}>Cancel</Button>
+							<Button onClick={() => setJoinForm(false)}>
+								<CloseOutlined />
+							</Button>
 						)}
 					</Form.Item>
 				</Form>

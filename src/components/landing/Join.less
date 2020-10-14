@@ -6,7 +6,14 @@
 .dd-join {
 	display: inline-block;
 
+	& .ant-form-item-control-input-content {
+		max-width: auto;
+	}
+
 	& .ant-alert {
+		max-width: 375px;
+		margin-bottom: 10px;
+
 		& .ant-alert-message {
 			padding-left: 8px;
 		}
@@ -14,6 +21,10 @@
 
 	& .ant-space {
 		margin-bottom: 10px;
+	}
+
+	& .ant-form-item-control-input {
+		width: 191px;
 	}
 
 	& .ant-form-inline {

@@ -29,6 +29,10 @@
 		padding: 10px;
 		margin-bottom: 30px;
 
+		& > h2 {
+			display: none;
+		}
+
 		> div {
 			background: #b5be93;
 			background-image: linear-gradient(to left, #b5be93, #d2d6bc);
@@ -120,6 +124,97 @@
 
 			& a {
 				transform: scale(0.5);
+			}
+		}
+	}
+}
+
+@media all and (max-width: 767.98px) {
+	.calculator,
+	.calculator > div,
+	.calculator .calculator-title,
+	.calculator .calculator-btn,
+	.calculator .calculator-btn > div,
+	.calculator .calculator-btn:hover > div {
+		background: none;
+		background-image: none;
+		box-shadow: none;
+		border: 0;
+		padding: 0;
+	}
+
+	.calculator {
+		.calculator-title {
+			margin-bottom: 0;
+
+			& > h2 {
+				font-weight: bold;
+				display: block;
+				margin-bottom: 0;
+			}
+
+			& > div {
+				display: none;
+			}
+		}
+
+		.calculator-btn {
+			border-radius: 0;
+			border-bottom: 1px solid #d9d9d9;
+			padding: 10px 0;
+
+			& > div,
+			& h3,
+			& p,
+			& a {
+				color: initial;
+				display: block;
+			}
+
+			& > div {
+				text-align: left;
+			}
+
+			& h3 {
+				color: @primary-color;
+				font-weight: bold;
+				font-size: 17px;
+			}
+
+			& p {
+				font-size: 15px;
+				margin-bottom: 5px;
+			}
+
+			& a.ant-btn {
+				display: none;
+			}
+
+			& a.ant-btn.btn-calc {
+				display: inline;
+				padding: 5px 10px;
+			}
+
+			&:hover {
+				border-bottom: 1px solid #d9d9d9;
+				-moz-transform: unset;
+				-webkit-transform: unset;
+				-o-transform: unset;
+				-ms-transform: unset;
+				transform: unset;
+				padding: 10px 0;
+
+				& > a {
+					-moz-transform: unset;
+					-webkit-transform: unset;
+					-o-transform: unset;
+					-ms-transform: unset;
+					transform: unset;
+				}
+
+				& h3 {
+					display: block;
+				}
 			}
 		}
 	}
