@@ -69,7 +69,10 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 
 				<Row
 					className="calculator-btns"
-					gutter={{ xs: 0, sm: 0, md: 30, lg: 30 }}
+					gutter={[
+						{ xs: 0, sm: 0, md: 30, lg: 30 },
+						{ xs: 0, sm: 0, md: 30, lg: 30 },
+					]}
 				>
 					{calcList.map(({ name, desc, link }: any, i: number) => (
 						<Col key={"calc" + i} xs={24} sm={24} md={8} lg={8} xl={8}>
