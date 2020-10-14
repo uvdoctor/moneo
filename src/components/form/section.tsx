@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import VideoPlayer from '../videoplayer';
 import { VideoCameraOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { Card, Space } from 'antd';
+import { Button, Card, Space } from 'antd';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import { isMobileDevice } from '../utils';
 interface SectionProps {
@@ -29,25 +29,20 @@ export default function Section(props: SectionProps) {
 			bordered={false}
 			extra={
 				props.videoSrc && (
-					<div
-						style={{ cursor: 'pointer' }}
+					<Button
+						type="link"
+						icon={!videoUrl ? <VideoCameraOutlined /> : <CloseCircleOutlined />}
 						onClick={() => setVideoUrl(!videoUrl ? props.videoSrc as string : '')}
+						danger={videoUrl ? true : false}
 					>
-						<span style={{ textAlign: 'center' }}>
-							{!videoUrl ? <VideoCameraOutlined /> : <CloseCircleOutlined />}
-							Video
-						</span>
-					</div>
+						{videoUrl ? 'Stop' : 'Video'}
+					</Button>
 				)
 			}
-			style={{ maxWidth: isMobileDevice(fsb) ? `${fsb.info.screenWidth}px` : '600px' }}
+			style={{ maxWidth: '600px' }}
 		>
-			{videoUrl && (
-				<div style={{ textAlign: 'center' }}>
-					<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
-				</div>
-			)}
-			{props.toggle && <div style={{ textAlign: 'end' }}>{props.toggle}</div>}
+			{videoUrl && <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />}
+			{props.toggle && <div style={{ textAlign: 'end', marginBottom: '1rem' }}>{props.toggle}</div>}
 			{props.manualMode && props.manualMode > 0 ? (
 				props.manualInput
 			) : (

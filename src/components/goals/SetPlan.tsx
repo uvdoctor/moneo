@@ -423,15 +423,10 @@ export default function SetPlan() {
     <Fragment>
         {ffGoal && rr && rr.length > 0 && (
           <Card title="Financial Independence" extra={
-            <Space align="center" direction="vertical">
-              <div
-                style={{ cursor: 'pointer' }}
-                onClick={() => setWIPGoal(ffGoal)}
-              >
-                <EditOutlined />
+            <Button type="link" onClick={() => setWIPGoal(ffGoal)}
+              icon={<EditOutlined />}>
               Edit
-            </div>
-            </Space>
+            </Button>
           }
             style={{
               backgroundColor: isFFPossible(ffResult, ffGoal.sa as number)

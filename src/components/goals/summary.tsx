@@ -4,7 +4,7 @@ import { getGoalTypes, getImpLevels } from './goalutils';
 import GoalResult from './goalresult';
 import { LMH, GoalType } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
-import { Card, Space } from 'antd';
+import { Button, Card, Space } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 interface SummaryProps {
 	id: string;
@@ -34,18 +34,12 @@ export default function Summary(props: SummaryProps) {
 						<label>{getGoalTypes()[props.type]}</label>
 						<h2>{props.name}</h2>
 					</Space>
-					<div onClick={() => props.editCallback(props.id)}>
-						<Space align="center" direction="vertical">
-							<EditOutlined />
-							Edit
-						</Space>
-					</div>
-					<div onClick={() => props.deleteCallback(props.id)}>
-						<Space align="center" direction="vertical">
-							<DeleteOutlined />
-							Delete
-						</Space>
-					</div>
+					<Button type="link" onClick={() => props.editCallback(props.id)} icon={<EditOutlined />}>
+						Edit
+					</Button>
+					<Button type="link" onClick={() => props.deleteCallback(props.id)} icon={<DeleteOutlined />}>
+						Delete
+					</Button>
 				</Space>
 			}
 			extra={

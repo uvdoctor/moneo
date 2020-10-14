@@ -27,10 +27,12 @@ export default function BuyOrRent() {
           svg={<SVGHourGlass />}
         />,
         <ItemDisplay
+          key="3"
           result={`Yearly Cash Flows for Buying`}
           svg={<SVGChart selected />}
         />,
         <ItemDisplay
+          key="4"
           result="Yearly Interest & Principal if Bought via Loan"
           svg={<SVGBarChart selected />}
         />
