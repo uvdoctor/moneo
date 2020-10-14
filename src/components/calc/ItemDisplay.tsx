@@ -48,7 +48,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 							props.result
 						)
 				)}
-				valueStyle={{ color: props.pl ? (props.result < 0 ? COLORS.RED : COLORS.GREEN) : COLORS.DEFAULT }}
+				valueStyle={{ color: props.pl ? (props.result <= 0 ? COLORS.RED : COLORS.GREEN) : COLORS.DEFAULT }}
 			/>
 			{props.footer && <p style={{ textAlign: 'center' }}>{props.footer}</p>}
 		</Fragment>

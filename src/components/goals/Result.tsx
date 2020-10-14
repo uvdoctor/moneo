@@ -16,44 +16,37 @@ export default function Result(props: ResultProps) {
 	const { TabPane } = Tabs;
 	return (
 		<div ref={chartDiv} style={{ width: '100%' }}>
-			<Space align="center" direction="vertical" size="large">
-				{props.result}
-				<Space align="center" size="large">
-					<div style={{ cursor: 'pointer' }} onClick={toggle}>
-						{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
-					</div>
-					<Tabs
-						onTabClick={(key: string) => props.showResultTabHandler(key)}
-						defaultActiveKey={props.resultTabOptions[0].label}
-					>
-						{props.resultTabOptions.map((tab) => (
-							<TabPane
-								key={tab.label}
-								disabled={!tab.active}
-								tab={
-									<Statistic
-										title=""
-										value={tab.label}
-										prefix={
-											<tab.svg
-												disabled={!tab.active}
-												selected={props.showResultTab === tab.label}
-											/>
-										}
-									/>
-								}
-							/>
-						))}
-					</Tabs>
-				</Space>
-				<Row>
-					<Col span={24}>
-						<div style={{ minHeight: '450px', width: '100%' }}>
-							{React.Children.map(props.children, (child: any) => (child ? child : null))}
-						</div>
-					</Col>
-				</Row>
+			{props.result}
+			<Space align="center" size="large">
+				<div style={{ cursor: 'pointer' }} onClick={toggle}>
+					{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
+				</div>
+				<Tabs
+					onTabClick={(key: string) => props.showResultTabHandler(key)}
+					defaultActiveKey={props.resultTabOptions[0].label}
+				>
+					{props.resultTabOptions.map((tab) => (
+						<TabPane
+							key={tab.label}
+							disabled={!tab.active}
+							tab={
+								<Statistic
+									title=""
+									value={tab.label}
+									prefix={
+										<tab.svg disabled={!tab.active} selected={props.showResultTab === tab.label} />
+									}
+								/>
+							}
+						/>
+					))}
+				</Tabs>
 			</Space>
+			<Row>
+				<Col span={24} style={{ minHeight: '400px' }}>
+					{React.Children.map(props.children, (child: any) => (child ? child : null))}
+				</Col>
+			</Row>
 		</div>
 	);
 }

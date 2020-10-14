@@ -6,7 +6,7 @@ import DDLineChart from '../goals/DDLineChart';
 import Result from '../goals/Result';
 import SVGChart from '../svgchart';
 import SVGHourGlass from '../svghourglass';
-import { toCurrency, toReadableNumber } from '../utils';
+import { isTopBottomLayout, toCurrency, toReadableNumber } from '../utils';
 import { CalcTypeProps } from './CalculatorTemplate';
 import InvestOption from './InvestOption';
 import ItemDisplay from './ItemDisplay';
@@ -15,12 +15,14 @@ import Spend, { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
 import SVGBalance from './svgbalance';
 import { Space, Card } from 'antd';
 import { COLORS } from '../../CONSTANTS';
+import { useFullScreenBrowser } from 'react-browser-hooks';
 
 export const TIME_COST_HOURS = 'Hours';
 export const TIME_COST_WEEKS = 'Weeks';
 export const TIME_COST_YEARS = 'Years';
 
 export default function TrueCostCalc(props: CalcTypeProps) {
+	const fsb = useFullScreenBrowser();
 	const CHART = 'Yearly Cash Flows If Invested';
 	const [ amt, setAmt ] = useState<number>(0);
 	const [ freq, setFreq ] = useState<string>(SPEND_ONCE);
@@ -160,7 +162,13 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 	);
 
 	return (
-		<Space align="start" size="large" style={{ width: '100%' }}>
+		<Space
+			align="start"
+			size="large"
+			style={{ width: '100%' }}
+			//@ts-ignore
+			direction={`${isTopBottomLayout(fsb) ? 'vertical' : 'horizontal'}`}
+		>
 			<Input
 				showTab={props.showTab}
 				showTabHandler={props.showTabHandler}
@@ -216,13 +224,13 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 					showResultTabHandler={setShowResultTab}
 					result={
 						<Space align="center" size="large" style={{ width: '100%' }}>
-							<Card style={{backgroundColor: COLORS.LIGHT_GREEN}}>
+							<Card style={{ backgroundColor: COLORS.LIGHT_GREEN }}>
 								<ItemDisplay
 									label="Time Cost"
 									result={-timeCostDisplay}
 									svg={<SVGHourGlass />}
 									pl
-									info={`Based on your savings details, You May have to Work ${toReadableNumber(
+									info={`Based on your Savings from Work Income, You May have to Work ${toReadableNumber(
 										timeCost
 									)} ${timeCostUnit} to Save ${toCurrency(totalCost, props.currency)}`}
 									unit={
@@ -235,7 +243,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 									}
 								/>
 							</Card>
-							<Card style={{backgroundColor: COLORS.LIGHT_GREEN}}>
+							<Card style={{ backgroundColor: COLORS.LIGHT_GREEN }}>
 								<ItemDisplay
 									label="Spend v/s Invest"
 									info={`You May have ${toCurrency(
