@@ -78,7 +78,6 @@ export function ExpenseAfterFF({
 					unit="%"
 				/>
 			}
-			insideForm
 		/>
 	);
 }

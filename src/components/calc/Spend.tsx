@@ -64,7 +64,6 @@ export default function Spend(props: SpendProps) {
 						/>
 					)
 				}
-				insideForm
 			/>
 	);
 }

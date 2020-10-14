@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import * as APIt from "../../api/goals";
-import { initYearOptions, getRangeFactor} from "../utils";
+import { initYearOptions, getRangeFactor, isMobileDevice} from "../utils";
 import LoanEmi from "../calc/LoanEmi";
 import TaxAdjustment from "../calc/TaxAdjustment";
 import Sell from "./sell";
@@ -33,6 +33,7 @@ import SVGSell from "../svgsell";
 import SVGCashFlow from "../svgcashflow";
 import LoanScheduleChart from "./LoanScheduleChart";
 import { Space } from "antd";
+import { useFullScreenBrowser } from "react-browser-hooks";
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
@@ -52,6 +53,7 @@ export default function Goal({
   addCallback,
   updateCallback,
 }: GoalProps) {
+  const fsb = useFullScreenBrowser();
   const [allInputDone, setAllInputDone] = useState<boolean>(
     goal.id ? true : false
   );
@@ -708,7 +710,9 @@ export default function Goal({
           )}
 
           {showTab === annualNetCostLabel && (
-            <Space align="center" direction="vertical">
+            <Space align="center" size="large"
+              //@ts-ignore
+              direction={`${isMobileDevice(fsb) ? "vertical" : "horizontal"}`}>
               <AnnualAmt
                 currency={currency}
                 startYear={startYear}

@@ -15,7 +15,6 @@ interface SectionProps {
 	toggle?: any;
 	manualInput?: any;
 	manualMode?: number;
-	insideForm?: boolean;
 	videoSrc?: string;
 }
 
@@ -47,7 +46,6 @@ export default function Section(props: SectionProps) {
 				props.manualInput
 			) : (
 				<Fragment>
-					<Space align="center" direction="vertical" size="large">
 						<Space
 							//@ts-ignore
 							align={`${isMobileDevice(fsb) ? 'center' : 'start'}`}
@@ -59,14 +57,13 @@ export default function Section(props: SectionProps) {
 							{props.right}
 						</Space>
 						{props.bottom && (
-							<div style={{ textAlign: 'center' }}>
+							<div style={{ textAlign: 'center', marginTop: '1rem' }}>
 								{props.bottomLeft}
 								{props.bottom}
 								{props.bottomRight}
 							</div>
 						)}
-					</Space>
-					{props.footer && <div style={{ textAlign: 'center' }}>{props.footer}</div>}
+					{props.footer && <div style={{ textAlign: 'center', marginTop: '1rem' }}>{props.footer}</div>}
 				</Fragment>
 			)}
 		</Card>

@@ -39,7 +39,6 @@ export default function Sell(props: SellProps) {
 	return (
 		<Section
 			title="Sell After"
-			insideForm
 			left={
 				<RadialInput
 					info="Years after which You Plan to Sell this Purchase."

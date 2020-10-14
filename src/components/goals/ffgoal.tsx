@@ -400,14 +400,12 @@ export default function FFGoal({
                     tgtsHandler={setGains}
                   />
                 }
-                insideForm
                 footer="Exclude taxes & fees."
               />
 
                 <Section
                   title="Potential Losses (eg: Inheritance, Selling Investments, etc.)"
                   footer="Include taxes & fees."
-                  insideForm
                   left={
                     <DynamicTgtInput
                       startYear={goal.by}

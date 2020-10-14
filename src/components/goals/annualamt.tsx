@@ -44,10 +44,9 @@ export default function AnnualAmt(props: AnnualAmtProps) {
 	return (
 		<Section
 			title={props.title}
-			insideForm
 			left={
 				<RadialInput
-					colorTo={props.colorTo ? COLORS.RED : null}
+					colorTo={props.colorTo ? COLORS.RED : COLORS.GREEN}
 					data={toStringArr(0, 10, 0.2)}
 					changeHandler={props.percentageHandler}
 					width={120}

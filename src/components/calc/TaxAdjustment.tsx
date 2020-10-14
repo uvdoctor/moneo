@@ -20,7 +20,6 @@ export default function TaxAdjustment(props: TaxAdjustmentProps) {
 	return (
 		<Section
 			title={`Claim Tax ${isTaxCreditEligible(props.goalType) ? 'Credit' : 'Deduction'}`}
-			insideForm
 			left={
 				!isTaxCreditEligible(props.goalType) && (
 					<NumberInput

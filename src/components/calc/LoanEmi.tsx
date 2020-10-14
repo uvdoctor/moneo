@@ -116,7 +116,6 @@ export default function LoanEmi(props: LoanEmiProps) {
 	return (
 		<Section
 			title="Loan Details"
-			insideForm
 			videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
 			toggle={
 				!isTaxCreditEligible(props.goalType) && props.taxRate ? (

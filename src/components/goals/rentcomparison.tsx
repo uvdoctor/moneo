@@ -55,7 +55,6 @@ export default function RentComparison({
 	return (
 		<Section
 			title="If You Rent Instead of Buying"
-			insideForm
 			left={
 				<NumberInput
 					pre="Yearly"

@@ -126,7 +126,6 @@ export default function Cost(props: CostProps) {
 			}
 			manualMode={props.manualMode}
 			footer={props.footer}
-			insideForm
 			videoSrc={`https://www.youtube.com/watch?v=uYMTsmeZyfU`}
 		/>
 	);

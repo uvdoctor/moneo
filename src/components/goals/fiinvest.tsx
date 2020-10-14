@@ -122,7 +122,6 @@ export function FIInvest({
           </div>
         </div>
       }
-      insideForm
     />
   );
 }

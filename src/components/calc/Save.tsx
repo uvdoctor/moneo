@@ -56,7 +56,6 @@ export default function Save(props: SaveProps) {
 					unit={'Hours'}
 				/>
 			}
-			insideForm
 		/>
 	);
 }

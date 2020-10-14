@@ -41,7 +41,6 @@ export default function InvestOption(props: InvestOptionProps) {
 					width={120}
 				/>
 			}
-			insideForm
 		/>
 	);
 }

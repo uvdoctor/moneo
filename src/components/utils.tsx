@@ -232,7 +232,7 @@ export function initYearOptions(
     duration > 0 ? i <= startYear + duration : i >= startYear + duration;
     duration > 0 ? i++ : i--
   ) {
-    if (!exclusions.includes(i)) years[i] = defaultValue !== null ? defaultValue : i;
+    if (!exclusions.includes(i)) years[""+i] = defaultValue !== null ? defaultValue : i;
   }
   return years;
 }
