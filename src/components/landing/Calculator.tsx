@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col, Button } from "antd";
-import { RightOutlined } from "@ant-design/icons";
+import { RightOutlined, CalculatorOutlined } from "@ant-design/icons";
 import { CALC_NAMES, ROUTES } from "../../CONSTANTS";
 
 import "./Calculator.less";
@@ -52,6 +52,7 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 		<div ref={calculateRef} className="calculator">
 			<div>
 				<div className="calculator-title">
+					<h2>Calculator's</h2>
 					<div
 						className="bg-white border rounded-lg p-4 text-center"
 						style={{
@@ -66,13 +67,26 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 					</div>
 				</div>
 
-				<Row className="calculator-btns" gutter={[30, 30]}>
+				<Row
+					className="calculator-btns"
+					gutter={[
+						{ xs: 0, sm: 0, md: 30, lg: 30 },
+						{ xs: 0, sm: 0, md: 30, lg: 30 },
+					]}
+				>
 					{calcList.map(({ name, desc, link }: any, i: number) => (
-						<Col key={"calc" + i} span={8}>
+						<Col key={"calc" + i} xs={24} sm={24} md={8} lg={8} xl={8}>
 							<div className="calculator-btn">
 								<div>
 									<h3>{name}</h3>
 									<p>{desc}</p>
+									<Button
+										className="btn-calc"
+										icon={<CalculatorOutlined />}
+										href={link}
+									>
+										Launch
+									</Button>
 									<Button shape="circle" icon={<RightOutlined />} href={link} />
 								</div>
 							</div>

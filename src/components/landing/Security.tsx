@@ -6,7 +6,7 @@ export default function Security() {
   return (
     <DDContent className="security" whiteBg>
       <Row align="middle" gutter={[50, 0]}>
-        <Col span={12}>
+        <Col xs={24} sm={24} md={12}>
           <h2>
             We give <span className="text-green-primary">security</span> &amp;{" "}
             <span className="text-green-primary">control on the go!</span>
@@ -17,7 +17,7 @@ export default function Security() {
             owe.
           </p>
         </Col>
-        <Col span={12}>
+        <Col xs={24} sm={24} md={12}>
           <img src="images/security.jpg" />
         </Col>
       </Row>

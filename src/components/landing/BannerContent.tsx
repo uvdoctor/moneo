@@ -8,10 +8,10 @@ const BannerContent = () => {
 		<Fragment>
 			<h3>Your Financial Analyst</h3>
 			<h2>Stress-free Savings &amp; Investments</h2>
-			<h3>
+			<h3 className="with-icon-anim">
 				Meet Your Goals <GoalImages />
 			</h3>
-			<h3>
+			<h4>
 				Join Waitlist &amp; Earn up to $200 credit*
 				<Popover
 					content={
@@ -30,7 +30,7 @@ const BannerContent = () => {
 						<InfoCircleOutlined />
 					</span>
 				</Popover>
-			</h3>
+			</h4>
 		</Fragment>
 	);
 };

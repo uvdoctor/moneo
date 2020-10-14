@@ -1,0 +1,50 @@
+.social-share {
+	position: relative;
+	max-width: 375px;
+	background: #fff;
+	border: 1px solid #d9d9d9;
+	border-radius: 5px;
+	padding: 10px;
+
+	& div {
+		display: none;
+		text-align: center;
+		padding-top: 15px;
+	}
+
+	& p {
+		margin-bottom: 0;
+	}
+
+	& button {
+		margin-right: 5px;
+	}
+
+	& .anticon-caret-up {
+		display: none;
+	}
+
+	& .expand-collapse-icon {
+		position: absolute;
+		top: 12px;
+		right: 5px;
+	}
+
+	&:hover {
+		& div {
+			display: block;
+		}
+
+		& .anticon-caret-up {
+			display: block;
+		}
+
+		& .anticon-caret-down {
+			display: none;
+		}
+
+		& .expand-collapse-icon {
+			top: 15px;
+		}
+	}
+}

@@ -5,18 +5,20 @@ import { JoinContext } from "./JoinContext";
 import Join from "./Join";
 import { Status } from "../../api/goals";
 
+import "./TakeQuickStep.less";
+
 export default function TakeQuickStep() {
   const { status }: any = useContext(JoinContext);
 
   return status !== Status.Y ? (
-    <DDContent whiteBg>
+    <DDContent className="take-quick-step" whiteBg>
       <Row align="middle" gutter={[50, 0]}>
-        <Col span={12}>
+        <Col xs={24} sm={24} md={12}>
           <h2 className="text-green-primary">Take quick step</h2>
           <p>Unlock money and make your future safe and secure.</p>
           <Join />
         </Col>
-        <Col span={12}>
+        <Col xs={24} sm={24} md={12}>
           <img src="images/quick-step.jpg" />
         </Col>
       </Row>

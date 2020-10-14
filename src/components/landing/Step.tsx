@@ -23,10 +23,10 @@ export default function Step({
     <Col xs={24} sm={24} md={12}>
       <div className={`step ${className}`}>
         <Row justify="space-around" align="middle">
-          <Col span={4} className="count">
+          <Col flex="90px" className="count">
             {count}
           </Col>
-          <Col span={20}>
+          <Col flex="auto">
             <hgroup>
               <h2>{title}</h2>
               <h3>{subTitle}</h3>

@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { Input, Select, Button, Form, Alert, Space } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import { FormInstance } from "antd/lib/form";
 import { JoinContext } from "./JoinContext";
 import countriesList from "../countriesList";
@@ -36,12 +37,10 @@ export default function Join() {
 		<div className="dd-join">
 			{!showJoinForm && (
 				<Space>
-					<Button type="primary" onClick={() => setJoinForm(true)}>
-						Use another account
-					</Button>
+					<Button onClick={() => setJoinForm(true)}>Use another account</Button>
 					{status === "P" && (
-						<Button onClick={() => setShowVerifyModal(true)}>
-							Verify security code
+						<Button type="primary" onClick={() => setShowVerifyModal(true)}>
+							Verify email
 						</Button>
 					)}
 				</Space>
@@ -102,7 +101,9 @@ export default function Join() {
 					</Form.Item>
 					<Form.Item>
 						{status !== Status.N && (
-							<Button onClick={() => setJoinForm(false)}>Cancel</Button>
+							<Button onClick={() => setJoinForm(false)}>
+								<CloseOutlined />
+							</Button>
 						)}
 					</Form.Item>
 				</Form>
