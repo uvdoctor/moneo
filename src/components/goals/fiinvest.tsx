@@ -4,6 +4,7 @@ import NumberInput from "../form/numberinput";
 import SelectInput from "../form/selectinput";
 import { getRangeFactor, toCurrency } from "../utils";
 import { LMH } from "../../api/goals";
+import { getRAOptions } from "./goalutils";
 
 interface FIInvestProps {
   currency: string;
@@ -105,6 +106,7 @@ export function FIInvest({
                 post="Investment Loss"
                 value={riskProfile}
                 changeHandler={riskProfileHandler}
+                options={getRAOptions()}
               />
             ) : (
               <NumberInput

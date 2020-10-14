@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Logo() {
 	return (
-		<div className="logo">
+		<div style={{cursor: 'pointer'}} className="logo">
 			<Link href={ROUTES.HOME}>
 				<img
 					alt="Dollar Darwin"

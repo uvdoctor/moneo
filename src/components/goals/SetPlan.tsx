@@ -27,7 +27,6 @@ import AssetAllocationChart from "./AssetAllocationChart";
 import SVGAAChart from "./svgaachart";
 import SVGList from "../svglist";
 import { Button, notification } from "antd";
-import { Modal } from "antd";
 
 export default function SetPlan() {
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
@@ -392,8 +391,7 @@ export default function SetPlan() {
   };
 
   return wipGoal ? (
-    <Modal visible={wipGoal !== null}>
-        {wipGoal.type === APIt.GoalType.FF ? (
+        wipGoal.type === APIt.GoalType.FF ? (
           <FFGoal
             goal={wipGoal as APIt.CreateGoalInput}
             addCallback={addGoal}
@@ -417,8 +415,7 @@ export default function SetPlan() {
               ffGoalEndYear={ffGoal.ey}
             />
           )
-        )}
-    </Modal>
+        )
   ) : (
     <Fragment>
         {ffGoal && rr && rr.length > 0 && (

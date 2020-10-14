@@ -16,15 +16,6 @@ interface DDPageProps {
 }
 
 export default function DDPage(props: DDPageProps) {
-  const commonSecureComps: Array<React.ReactNode> = [
-    <UserHeader />,
-    <SecureMenu />,
-  ];
-  const commonPublicComps: Array<React.ReactNode> = [];
-
-  const getCommonComps = () =>
-    props.secure ? commonSecureComps : commonPublicComps;
-
   const fsb = useFullScreenBrowser();
 
   return (
@@ -89,18 +80,19 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <title>{props.title}</title>
       </Head>
       <Layout className="dd-site">
-        <Nav />
+        {props.secure ?
+          <Fragment>
+            <UserHeader />
+            <SecureMenu />
+          </Fragment>
+        : <Nav />}
 
         {!isMobileDevice(fsb) ? (
           <ParallaxProvider>
-            {getCommonComps().map((child) => child)}
             {props.children}
           </ParallaxProvider>
         ) : (
-          <Fragment>
-            {getCommonComps().map((child) => child)}
-            {props.children}
-          </Fragment>
+            props.children
         )}
 
         <DDFooter />

@@ -5,6 +5,7 @@ import {
   getRangeFactor,
   changeSelection,
   buildYearsArray,
+  isTopBottomLayout,
 } from "../utils";
 import SelectInput from "../form/selectinput";
 import { findEarliestFFYear } from "./cfutils";
@@ -34,6 +35,7 @@ import SVGCare from "./svgcare";
 import SVGPay from "../svgpay";
 import { PLAN_DURATION } from "../../CONSTANTS";
 import { Space } from "antd";
+import { useFullScreenBrowser } from "react-browser-hooks";
 interface FFGoalProps {
   goal: APIt.CreateGoalInput;
   ffResult: any | null;
@@ -60,6 +62,7 @@ export default function FFGoal({
   updateCallback,
 }: FFGoalProps) {
   const nowYear = new Date().getFullYear();
+  const fsb = useFullScreenBrowser();
   const [riskProfile, setRiskProfile] = useState<APIt.LMH>(goal.imp);
   const [rr, setRR] = useState<number | null>(pp ? null : 5);
   const [expenseBY, setExpenseBY] = useState<number>(goal.sy);
@@ -308,8 +311,8 @@ export default function FFGoal({
       <Space
 			align="start"
 			size="large"
-			style={{ width: '100%' }}
-			//@ts-ignore
+        style={{ width: '100%' }}
+        //@ts-ignore
 			direction={`${isTopBottomLayout(fsb) ? 'vertical' : 'horizontal'}`}
 		>  <Input
           showTab={showTab}
