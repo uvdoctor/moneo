@@ -39,7 +39,7 @@ export default function Input({
 	};
 
 	return (
-		<Space align="center" direction="vertical" size="large" style={{ width: '100%' }}>
+		<Space align="center" direction="vertical" style={{ width: '100%' }}>
 			<Space align="center">
 				{!allInputDone ? (
 					<Steps current={currentStep}>

@@ -1,26 +1,31 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { Space } from 'antd';
 import { CaretLeftOutlined } from '@ant-design/icons';
+import SelectInput from '../form/selectinput';
+import { getRangeFactor } from '../utils';
 
 interface StickyHeaderProps {
 	title: string;
-  cancelCallback: Function;
-  children?: ReactNode;
+	cancelCallback: Function;
+	currency: string;
+	currencyHandler: Function;
+	rangeFactorHandler: Function;
 }
 
-export default function TitleSection({ title, cancelCallback, children }: StickyHeaderProps) {
+export default function TitleSection({ title, cancelCallback, currency, currencyHandler, rangeFactorHandler }: StickyHeaderProps) {
+	const changeCurrency = (curr: string) => {
+    rangeFactorHandler(Math.round(getRangeFactor(curr) / getRangeFactor(currency)));
+    currencyHandler(curr);
+  };
+
 	return (
-		<Space align="center" direction="vertical">
+		<Space align="center" size="large">
+			<span style={{ cursor: 'pointer' }} onClick={() => cancelCallback()}>
+				<CaretLeftOutlined />
+				Back
+			</span>
 			<h1>{title}</h1>
-			<Space align="end">
-				<div style={{ cursor: 'pointer' }} onClick={() => cancelCallback()}>
-					<span>
-						<CaretLeftOutlined />
-						Back
-					</span>
-				</div>
-				{children}
-			</Space>
+			<SelectInput pre="" value={currency} changeHandler={changeCurrency} currency />
 		</Space>
 	);
 }

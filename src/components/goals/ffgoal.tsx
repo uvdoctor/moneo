@@ -33,6 +33,7 @@ import SVGInheritance from "./svginheritance";
 import SVGCare from "./svgcare";
 import SVGPay from "../svgpay";
 import { PLAN_DURATION } from "../../CONSTANTS";
+import { Space } from "antd";
 interface FFGoalProps {
   goal: APIt.CreateGoalInput;
   ffResult: any | null;
@@ -286,19 +287,15 @@ export default function FFGoal({
     setBtnClicked(false);
   };
 
-  const changeCurrency = (curr: string) => {
-    setRangeFactor(Math.round(getRangeFactor(curr) / getRangeFactor(currency)));
-    setCurrency(curr);
-  };
-
   const buildChartCFs = (ffCfs: Object) => Object.values(ffCfs);
 
   const showResultSection = () =>
     allInputDone && ffResult.rr && ffResult.rr.length > 0;
 
   return (
-    <div className="w-full h-full">
-      <TitleSection title={name} cancelCallback={cancelCallback}>
+    <Space align="center" direction="vertical">
+      <TitleSection title="Financial Independence Goal" cancelCallback={cancelCallback} currency={currency}
+      currencyHandler={setCurrency} rangeFactorHandler={setRangeFactor} />
         <SelectInput
           //info="Financial Plan will be created assuming that You live till 100 Years, after which You leave behind inheritance.
           //DollarDarwin will try to find the earliest possible year for Your Financial Independence based on Your inputs and Other Goals that You Create.
@@ -308,13 +305,6 @@ export default function FFGoal({
           changeHandler={(val: string) => changeSelection(val, setEndYear, 100)}
           options={eyOptions}
         />
-        <SelectInput
-          pre="Currency"
-          value={currency}
-          changeHandler={changeCurrency}
-          currency
-        />
-      </TitleSection>
       <div
         className={`container mx-auto flex flex-1 lg:flex-row ${
           showResultSection() && "flex-col-reverse"
@@ -478,6 +468,6 @@ export default function FFGoal({
           </Result>
         )}
       </div>
-    </div>
+    </Space>
   );
 }

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useState } from 'react';
-import SelectInput from '../form/selectinput';
 import { getRangeFactor } from '../utils';
 import { Space } from 'antd';
 import TitleSection from '../goals/TitleSection';
@@ -26,16 +25,10 @@ export default function CalculatorTemplate({ calc, title, cancelCallback }: Calc
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
 	const [ showTab, setShowTab ] = useState<string>(calc.tabOptions[0].label);
 
-	const changeCurrency = (curr: string) => {
-		setRangeFactor(Math.round(getRangeFactor(curr) / getRangeFactor(currency)));
-		setCurrency(curr);
-	};
-
 	return (
-		<Space align="center" direction="vertical" size="large" style={{ width: '100%' }}>
-			<TitleSection title={title + ' Calculator'} cancelCallback={cancelCallback}>
-				<SelectInput pre="Currency" value={currency} changeHandler={changeCurrency} currency />
-			</TitleSection>
+		<Space align="center" direction="vertical" size="small" style={{ width: '100%' }}>
+			<TitleSection title={title + ' Calculator'} cancelCallback={cancelCallback}
+			currency={currency} currencyHandler={setCurrency} rangeFactorHandler={setRangeFactor} />
 			<calc.type
 				currency={currency}
 				rangeFactor={rangeFactor}

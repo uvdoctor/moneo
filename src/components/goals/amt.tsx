@@ -9,7 +9,6 @@ interface AmtProps {
 	goalBY: number;
 	ffGoalEndYear: number;
 	currency: string;
-	currencyHandler: Function;
 	rangeFactor: number;
 	startYear: number;
 	startYearHandler: Function;
@@ -32,7 +31,6 @@ export default function Amt({
 	goalBY,
 	ffGoalEndYear,
 	currency,
-	currencyHandler,
 	rangeFactor,
 	startYear,
 	startYearHandler,
@@ -54,7 +52,6 @@ export default function Amt({
 	return (
 		<Space align="center" size="large" direction="vertical">
 			<Space align="center" size="large">
-				<SelectInput pre="Currency" value={currency} changeHandler={currencyHandler} currency />
 				<SelectInput
 					pre="When?"
 					info="Year in which You Start Paying for the Goal"

@@ -468,11 +468,6 @@ export default function Goal({
     setBtnClicked(false);
   };
 
-  const changeCurrency = (curr: string) => {
-    setRangeFactor(Math.round(getRangeFactor(curr) / getRangeFactor(currency)));
-    setCurrency(curr);
-  };
-
   useEffect(() => {
     if (!sellAfter) return;
     resultTabOptions[1].active = showBRChart;
@@ -597,7 +592,8 @@ export default function Goal({
 
   return (
     <Space align="center" direction="vertical">
-      <TitleSection title={name} cancelCallback={cancelCallback}>
+      <TitleSection title={name} cancelCallback={cancelCallback}
+      currency={currency} currencyHandler={setCurrency} rangeFactorHandler={setRangeFactor} />
         {addCallback && updateCallback && (
           <Space align="center" size="large">
             <TextInput
@@ -616,7 +612,6 @@ export default function Goal({
             />
           </Space>
         )}
-      </TitleSection>
       <Space align="center">
         <Input
           tabOptions={tabOptions}
@@ -638,7 +633,6 @@ export default function Goal({
               startYearHandler={changeStartYear}
               endYearHandler={changeEndYear}
               currency={currency}
-              currencyHandler={changeCurrency}
               goalType={goalType}
               goalBY={goal.by}
               ffGoalEndYear={ffGoalEndYear}

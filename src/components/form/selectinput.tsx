@@ -19,7 +19,7 @@ export default function SelectInput(props: SelectInputProps) {
 	const { Option } = Select;
 
 	return (
-		<Space align="center" direction="vertical">
+		<Space align="center" direction="vertical" size="small">
 			{props.pre && <Space align="start">
 				{props.pre}
 				{props.info && (
@@ -34,9 +34,14 @@ export default function SelectInput(props: SelectInputProps) {
 				<Fragment>
 					<Space align="center">
 						<Select
-							style={{ minWidth: '40px' }}
+							showSearch
+							optionFilterProp="children"
+							style={{ minWidth: '100px' }}
 							value={props.value}
 							onChange={(value) => props.changeHandler(value)}
+							filterOption={(input, option) =>
+								option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+							}
 						>
 							{Object.keys(props.currency ? getCurrencyList() : props.options).map((key) => (
 								<Option key={key} value={key}>
