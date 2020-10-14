@@ -105,9 +105,9 @@ export default function Cost(props: CostProps) {
 			}
 			manualInput={
 				props.manualTargets && (
-					<div className="flex flex-wrap justify-around">
+					<div>
 						{props.manualTargets.map((t, i) => (
-							<div key={'t' + i} className="mr-4 md:mr-8 mt-8 flex flex-col justify-end items-end">
+							<div key={'t' + i} style={{ marginRight: '1rem', marginBottom: '1rem' }}>
 								<label>{t.year}</label>
 								<NumberInput
 									pre=""

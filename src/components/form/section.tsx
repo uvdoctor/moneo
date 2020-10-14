@@ -38,7 +38,7 @@ export default function Section(props: SectionProps) {
 					</Button>
 				)
 			}
-			style={{ maxWidth: '600px' }}
+			style={{ maxWidth: '500px' }}
 		>
 			{videoUrl && <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />}
 			{props.toggle && <div style={{ textAlign: 'end', marginBottom: '1rem' }}>{props.toggle}</div>}
@@ -57,11 +57,11 @@ export default function Section(props: SectionProps) {
 							{props.right}
 						</Space>
 						{props.bottom && (
-							<div style={{ textAlign: 'center', marginTop: '1rem' }}>
+							<Space align="center" size="large" style={{ marginTop: '1rem' }}>
 								{props.bottomLeft}
 								{props.bottom}
 								{props.bottomRight}
-							</div>
+							</Space>
 						)}
 					{props.footer && <div style={{ textAlign: 'center', marginTop: '1rem' }}>{props.footer}</div>}
 				</Fragment>

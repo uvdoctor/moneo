@@ -305,12 +305,13 @@ export default function FFGoal({
           changeHandler={(val: string) => changeSelection(val, setEndYear, 100)}
           options={eyOptions}
         />
-      <div
-        className={`container mx-auto flex flex-1 lg:flex-row ${
-          showResultSection() && "flex-col-reverse"
-        } items-start`}
-      >
-        <Input
+      <Space
+			align="start"
+			size="large"
+			style={{ width: '100%' }}
+			//@ts-ignore
+			direction={`${isTopBottomLayout(fsb) ? 'vertical' : 'horizontal'}`}
+		>  <Input
           showTab={showTab}
           tabOptions={tabOptions}
           showTabHandler={setShowTab}
@@ -465,7 +466,7 @@ export default function FFGoal({
             />}
           </Result>
         )}
-      </div>
+      </Space>
     </Space>
   );
 }

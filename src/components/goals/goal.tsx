@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import * as APIt from "../../api/goals";
-import { initYearOptions, getRangeFactor, isMobileDevice} from "../utils";
+import { initYearOptions, getRangeFactor, isMobileDevice, isTopBottomLayout} from "../utils";
 import LoanEmi from "../calc/LoanEmi";
 import TaxAdjustment from "../calc/TaxAdjustment";
 import Sell from "./sell";
@@ -614,8 +614,13 @@ export default function Goal({
             />
           </Space>
         )}
-      <Space align="center">
-        <Input
+      <Space
+			align="start"
+			size="large"
+      style={{ width: '100%' }}
+      //@ts-ignore
+			direction={`${isTopBottomLayout(fsb) ? 'vertical' : 'horizontal'}`}
+		>  <Input
           tabOptions={tabOptions}
           showTab={showTab}
           showTabHandler={setShowTab}

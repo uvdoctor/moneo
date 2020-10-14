@@ -82,37 +82,36 @@ export default function RentComparison({
 					/>
 				)
 			}
+			bottomLeft={!!rentAmt && 'Analyze from '}
 			bottom={
 				!!rentAmt && (
-					<div className="flex flex-col justify-center">
-						<NumberInput
-							pre="Analyze from 1 to "
-							value={analyzeFor}
-							changeHandler={analyzeForHandler}
-							min={10}
-							max={50}
-							step={5}
-							unit="Years"
-						/>
-						{rentDiff && (
-							<ItemDisplay
-								svg={<SVGBalance />}
-								result={rentDiff}
-								label={`Rent is ${rentDiff < 0 ? 'Costlier' : 'Cheaper'} by`}
-								footer={`Over ${sellAfter} Years`}
-								currency={currency}
-								pl
-							/>
-						)}
-					</div>
+					<NumberInput
+						pre="1 to "
+						value={analyzeFor}
+						changeHandler={analyzeForHandler}
+						min={10}
+						max={50}
+						step={5}
+						unit="Years"
+					/>
+				)
+			}
+			bottomRight={
+				rentDiff && (
+					<ItemDisplay
+						svg={<SVGBalance />}
+						result={rentDiff}
+						label={`Rent is ${rentDiff < 0 ? 'Costlier' : 'Cheaper'} by`}
+						footer={`Over ${sellAfter} Years`}
+						currency={currency}
+						pl
+					/>
 				)
 			}
 			toggle={
 				taxRate ? (
 					<HSwitch rightText="Claim Tax Deduction" value={rentTaxBenefit} setter={rentTaxBenefitHandler} />
-				) : (
-					<div />
-				)
+				) : null
 			}
 		/>
 	);
