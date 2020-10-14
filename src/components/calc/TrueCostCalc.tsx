@@ -14,6 +14,7 @@ import Save from './Save';
 import Spend, { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
 import SVGBalance from './svgbalance';
 import { Space, Card } from 'antd';
+import { COLORS } from '../../CONSTANTS';
 
 export const TIME_COST_HOURS = 'Hours';
 export const TIME_COST_WEEKS = 'Weeks';
@@ -215,7 +216,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 					showResultTabHandler={setShowResultTab}
 					result={
 						<Space align="center" size="large" style={{ width: '100%' }}>
-							<Card>
+							<Card style={{backgroundColor: COLORS.LIGHT_GREEN}}>
 								<ItemDisplay
 									label="Time Cost"
 									result={-timeCostDisplay}
@@ -234,7 +235,7 @@ export default function TrueCostCalc(props: CalcTypeProps) {
 									}
 								/>
 							</Card>
-							<Card>
+							<Card style={{backgroundColor: COLORS.LIGHT_GREEN}}>
 								<ItemDisplay
 									label="Spend v/s Invest"
 									info={`You May have ${toCurrency(

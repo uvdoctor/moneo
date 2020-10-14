@@ -20,7 +20,7 @@ export default function SelectInput(props: SelectInputProps) {
 
 	return (
 		<Space align="center" direction="vertical">
-			<Space align="start">
+			{props.pre && <Space align="start">
 				{props.pre}
 				{props.info && (
 					<Tooltip title={props.info}>
@@ -29,7 +29,7 @@ export default function SelectInput(props: SelectInputProps) {
 						</span>
 					</Tooltip>
 				)}
-			</Space>
+			</Space>}
 			{!props.disabled ? (
 				<Fragment>
 					<Space align="center">

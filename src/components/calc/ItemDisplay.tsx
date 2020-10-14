@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { toCurrency, toReadableNumber } from '../utils';
-import { Tooltip, Statistic } from 'antd';
+import { Tooltip, Statistic, Space } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import { COLORS } from '../../CONSTANTS';
 interface ItemDisplayProps {
 	label?: string;
@@ -19,29 +20,33 @@ interface ItemDisplayProps {
 export default function ItemDisplay(props: ItemDisplayProps) {
 	return (
 		<Fragment>
-			{(props.imp || props.info) && (
-				<p style={{ cursor: 'pointer', textAlign: 'end' }}>
-					{props.imp && <Tooltip title={props.imp} color="red" />}
-					{props.info && (
-						<Tooltip title={props.info} color={`${props.pl && props.result < 0 ? 'red' : 'white'}`} />
-					)}
-				</p>
-			)}
 			<Statistic
-				title={props.label}
+				title={
+					<Space align="start">
+						{props.label}
+						{props.imp && (
+							<Tooltip title={props.imp} color="red">
+								<InfoCircleOutlined />
+							</Tooltip>
+						)}
+						{props.info && (
+							<Tooltip title={props.info} color={`${props.pl && props.result < 0 ? 'red' : 'white'}`}>
+								<InfoCircleOutlined />
+							</Tooltip>
+						)}
+					</Space>
+				}
 				value={props.result}
 				prefix={props.svg}
 				suffix={props.unit ? props.unit : ''}
 				formatter={() => (
-					<label>
-						{typeof props.result === 'number' && !props.noResultFormat ? props.currency ? (
+						typeof props.result === 'number' && !props.noResultFormat ? props.currency ? (
 							toCurrency(Math.abs(props.result), props.currency)
 						) : (
 							toReadableNumber(Math.abs(props.result), props.decimal ? props.decimal : 0)
 						) : (
 							props.result
-						)}
-					</label>
+						)
 				)}
 				valueStyle={{ color: props.pl ? (props.result < 0 ? COLORS.RED : COLORS.GREEN) : COLORS.DEFAULT }}
 			/>

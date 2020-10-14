@@ -3,6 +3,7 @@ import OppCost from '../calc/oppcost';
 import FFImpact from './ffimpact';
 import NumberInput from '../form/numberinput';
 import { Space, Card } from 'antd';
+import { COLORS } from '../../CONSTANTS';
 interface GoalResultProps {
 	cfs: Array<number>;
 	ffOOM: Array<number> | null;
@@ -22,7 +23,7 @@ export default function GoalResult(props: GoalResultProps) {
 			{props.dr === null || props.dr === undefined ? (
 				<FFImpact ffGoalEndYear={props.ffGoalEndYear} ffOOM={props.ffOOM} ffImpactYears={props.ffImpactYears} />
 			) : (
-				<Card>
+				<Card style={{ backgroundColor: COLORS.LIGHT_GREEN }}>
 					<NumberInput
 						value={props.dr as number}
 						changeHandler={props.drHandler}

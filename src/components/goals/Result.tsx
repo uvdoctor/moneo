@@ -1,6 +1,6 @@
 import React, { ReactNode, useRef } from 'react';
 import { useFullScreen } from 'react-browser-hooks';
-import { Tabs, Space } from 'antd';
+import { Tabs, Space, Statistic, Row, Col } from 'antd';
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
 interface ResultProps {
 	result: ReactNode;
@@ -31,16 +31,28 @@ export default function Result(props: ResultProps) {
 								key={tab.label}
 								disabled={!tab.active}
 								tab={
-									<span>
-										<tab.svg disabled={!tab.active} selected={props.showResultTab === tab.label} />
-										{tab.label}
-									</span>
+									<Statistic
+										title=""
+										value={tab.label}
+										prefix={
+											<tab.svg
+												disabled={!tab.active}
+												selected={props.showResultTab === tab.label}
+											/>
+										}
+									/>
 								}
 							/>
 						))}
 					</Tabs>
 				</Space>
-				{React.Children.map(props.children, (child: any) => (child ? child : null))}
+				<Row>
+					<Col span={24}>
+						<div style={{ minHeight: '450px', width: '100%' }}>
+							{React.Children.map(props.children, (child: any) => (child ? child : null))}
+						</div>
+					</Col>
+				</Row>
 			</Space>
 		</div>
 	);

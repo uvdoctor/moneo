@@ -1,8 +1,8 @@
 import React from 'react';
 import SVGHourGlass from '../svghourglass';
 import ItemDisplay from '../calc/ItemDisplay';
-import { MAX_RETIREMENT_AGE } from '../../CONSTANTS';
-import { Card } from "antd";
+import { COLORS, MAX_RETIREMENT_AGE } from '../../CONSTANTS';
+import { Card } from 'antd';
 interface FFImpactProps {
 	ffImpactYears: number | null;
 	ffOOM: Array<number> | null;
@@ -15,11 +15,11 @@ export default function FFImpact(props: FFImpactProps) {
 	const getImpactText = () => ((props.ffImpactYears as number) > 0 ? 'Earlier' : 'Later');
 
 	return (
-		<Card>
+		<Card style={{ backgroundColor: COLORS.LIGHT_GREEN }}>
 			{props.ffImpactYears !== null ? props.ffImpactYears === 0 ? (
 				<ItemDisplay
 					label="Impact"
-          result="No Delay"
+					result="No Delay"
 					info="This Goal does not delay Your Financial Independence Year."
 				/>
 			) : (
