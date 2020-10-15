@@ -13,11 +13,7 @@ import "./Nav.less";
   featuresRef?: any;
 }*/
 
-interface NavProps {
-  isFixed: boolean;
-}
-
-const Nav = ({ isFixed = false }: NavProps) => {
+const Nav = () => {
   const { top } = useScroll();
   const { Header } = Layout;
   const [showDrawer, setShowDrawer] = useState(false);
@@ -26,7 +22,7 @@ const Nav = ({ isFixed = false }: NavProps) => {
 
   return (
     <Affix offsetTop={0}>
-      <Header className={`dd-header ${top > 10 || isFixed ? "fixed-nav" : ""}`}>
+      <Header className={`dd-header ${top > 10 ? "fixed-nav" : ""}`}>
         <Logo />
         <DDMenu />
         <Button type="text" onClick={onShowDrawer}>
