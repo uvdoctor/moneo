@@ -13,15 +13,9 @@ interface DDPageProps {
   title: string;
   children: React.ReactNode;
   secure?: boolean;
-  fixedNav?: boolean;
 }
 
-export default function DDPage({
-  title,
-  children,
-  secure,
-  fixedNav = false,
-}: DDPageProps) {
+export default function DDPage(props: DDPageProps) {
   const fsb = useFullScreenBrowser();
 
   return (
@@ -83,24 +77,24 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="twitter:creator" content="@dollardarwin" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="format-detection" content="telephone=no" />
-        <title>{title}</title>
+        <title>{props.title}</title>
       </Head>
       <Layout className="dd-site">
-        {secure ? (
+        {props.secure ?
           <Fragment>
             <UserHeader />
             <SecureMenu />
           </Fragment>
+        : <Nav />}
+
+        {!isMobileDevice(fsb) ? (
+          <ParallaxProvider>
+            {props.children}
+          </ParallaxProvider>
         ) : (
-          <Nav isFixed={fixedNav} />
+            props.children
         )}
-        <div className="dd-layout">
-          {!isMobileDevice(fsb) ? (
-            <ParallaxProvider>{children}</ParallaxProvider>
-          ) : (
-            children
-          )}
-        </div>
+
         <DDFooter />
       </Layout>
     </Fragment>
