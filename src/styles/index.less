@@ -1,5 +1,13 @@
 @import "~antd/dist/antd.less";
 
+#__next {
+	height: 100%;
+}
+
+.dd-layout {
+	min-height: 82vh;
+}
+
 .dd-site {
 	& .ant-alert-with-description {
 		& .ant-alert-message {
@@ -97,4 +105,19 @@ svg {
 	--amplify-primary-tint: @link-color;
 	--amplify-primary-shade: @link-color;
 	--amplify-font-family: @font-family;
+}
+
+.ant-page-header.steps-page-header {
+	box-shadow: @box-shadow-base;
+	margin-bottom: 20px;
+
+	& .ant-page-header-heading-title {
+		color: @primary-color;
+		font-size: 20px;
+	}
+}
+
+.steps-card.ant-card {
+	box-shadow: @box-shadow-base;
+	margin-bottom: 40px;
 }

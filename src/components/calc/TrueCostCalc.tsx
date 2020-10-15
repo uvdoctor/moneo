@@ -1,274 +1,393 @@
-import React, { useEffect, useState } from 'react';
-import { INVEST, SAVE, SPEND } from '../../pages/truecost';
-import SelectInput from '../form/selectinput';
-import Input from '../goals/Input';
-import DDLineChart from '../goals/DDLineChart';
-import Result from '../goals/Result';
-import SVGChart from '../svgchart';
-import SVGHourGlass from '../svghourglass';
-import { isTopBottomLayout, toCurrency, toReadableNumber } from '../utils';
-import { CalcTypeProps } from './CalculatorTemplate';
-import InvestOption from './InvestOption';
-import ItemDisplay from './ItemDisplay';
-import Save from './Save';
-import Spend, { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
-import SVGBalance from './svgbalance';
-import { Space, Card } from 'antd';
-import { COLORS } from '../../CONSTANTS';
-import { useFullScreenBrowser } from 'react-browser-hooks';
+import React, { Fragment, useEffect, useState } from "react";
+import { INVEST, SAVE, SPEND } from "../../pages/truecost";
+import SelectInput from "../form/selectinput";
+import Input from "../goals/Input";
+import DDLineChart from "../goals/DDLineChart";
+import Result from "../goals/Result";
+import SVGChart from "../svgchart";
+import SVGHourGlass from "../svghourglass";
+import { isTopBottomLayout, toCurrency, toReadableNumber } from "../utils";
+import { CalcTypeProps } from "./CalculatorTemplate";
+import InvestOption from "./InvestOption";
+import ItemDisplay from "./ItemDisplay";
+import Save from "./Save";
+import Spend, { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from "./Spend";
+import SVGBalance from "./svgbalance";
+import {
+	PageHeader,
+	Steps,
+	Divider,
+	Button,
+	Row,
+	Col,
+	Select,
+	Card,
+	Tabs,
+	Statistic,
+	Space,
+	Slider,
+	InputNumber,
+} from "antd";
+import { FullscreenOutlined } from "@ant-design/icons";
+import { COLORS } from "../../CONSTANTS";
+import { useFullScreenBrowser } from "react-browser-hooks";
 
-export const TIME_COST_HOURS = 'Hours';
-export const TIME_COST_WEEKS = 'Weeks';
-export const TIME_COST_YEARS = 'Years';
+export const TIME_COST_HOURS = "Hours";
+export const TIME_COST_WEEKS = "Weeks";
+export const TIME_COST_YEARS = "Years";
 
 export default function TrueCostCalc(props: CalcTypeProps) {
+	const { Option } = Select;
+	const { TabPane } = Tabs;
+	const { Step } = Steps;
+
 	const fsb = useFullScreenBrowser();
-	const CHART = 'Yearly Cash Flows If Invested';
-	const [ amt, setAmt ] = useState<number>(0);
-	const [ freq, setFreq ] = useState<string>(SPEND_ONCE);
-	const [ duration, setDuration ] = useState<number>(0);
-	const [ paidWeeks, setPaidWeeks ] = useState<number>(52);
-	const [ hoursPerWeek, setHoursPerWeek ] = useState<number>(60);
-	const [ savings, setSavings ] = useState<number>(0);
-	const [ dr, setDR ] = useState<number>(5);
-	const [ years, setYears ] = useState<number>(50);
-	const [ savingsPerHr, setSavingsPerHr ] = useState<number>(0);
-	const [ timeCost, setTimeCost ] = useState<number>(0);
-	const [ timeCostDisplay, setTimeCostDisplay ] = useState<number>(0);
-	const [ timeCostUnit, setTimeCostUnit ] = useState<string>(TIME_COST_HOURS);
-	const [ totalCost, setTotalCost ] = useState<number>(0);
-	const [ cfs, setCFs ] = useState<Array<number>>([]);
-	const [ cfsWithOppCost, setCFsWithOppCost ] = useState<Array<number>>([]);
+	const CHART = "Yearly Cash Flows If Invested";
+	const [amt, setAmt] = useState<number>(0);
+	const [freq, setFreq] = useState<string>(SPEND_ONCE);
+	const [duration, setDuration] = useState<number>(0);
+	const [paidWeeks, setPaidWeeks] = useState<number>(52);
+	const [hoursPerWeek, setHoursPerWeek] = useState<number>(60);
+	const [savings, setSavings] = useState<number>(0);
+	const [dr, setDR] = useState<number>(5);
+	const [years, setYears] = useState<number>(50);
+	const [savingsPerHr, setSavingsPerHr] = useState<number>(0);
+	const [timeCost, setTimeCost] = useState<number>(0);
+	const [timeCostDisplay, setTimeCostDisplay] = useState<number>(0);
+	const [timeCostUnit, setTimeCostUnit] = useState<string>(TIME_COST_HOURS);
+	const [totalCost, setTotalCost] = useState<number>(0);
+	const [cfs, setCFs] = useState<Array<number>>([]);
+	const [cfsWithOppCost, setCFsWithOppCost] = useState<Array<number>>([]);
 
 	const resultTabOptions = [
 		{
 			label: CHART,
 			order: 1,
 			active: true,
-			svg: SVGChart
-		}
+			svg: SVGChart,
+		},
 	];
 
-	const [ showResultTab, setShowResultTab ] = useState<string>(resultTabOptions[0].label);
+	const [showResultTab, setShowResultTab] = useState<string>(
+		resultTabOptions[0].label
+	);
 	const timeOptions = {
 		[TIME_COST_HOURS]: TIME_COST_HOURS,
 		[TIME_COST_WEEKS]: TIME_COST_WEEKS,
-		[TIME_COST_YEARS]: TIME_COST_YEARS
+		[TIME_COST_YEARS]: TIME_COST_YEARS,
 	};
 
-	useEffect(
-		() => {
-			if (cfs.length === 0) {
-				setCFsWithOppCost([ ...cfs ]);
-				return;
+	useEffect(() => {
+		if (cfs.length === 0) {
+			setCFsWithOppCost([...cfs]);
+			return;
+		}
+		let cfsWithOppCost: Array<number> = [];
+		for (let i = 0; i < years; i++) {
+			let prevCF = i < cfs.length ? -cfs[i] : cfsWithOppCost[i - 1];
+			if (i > 0 && i < cfs.length && freq !== SPEND_ONCE) {
+				prevCF += cfsWithOppCost[i - 1];
 			}
-			let cfsWithOppCost: Array<number> = [];
-			for (let i = 0; i < years; i++) {
-				let prevCF = i < cfs.length ? -cfs[i] : cfsWithOppCost[i - 1];
-				if (i > 0 && i < cfs.length && freq !== SPEND_ONCE) {
-					prevCF += cfsWithOppCost[i - 1];
-				}
-				let compoundedVal = Math.round(prevCF * (1 + dr / 100));
-				cfsWithOppCost.push(compoundedVal);
-			}
-			setCFsWithOppCost([ ...cfsWithOppCost ]);
-		},
-		[ cfs, dr, years ]
-	);
+			let compoundedVal = Math.round(prevCF * (1 + dr / 100));
+			cfsWithOppCost.push(compoundedVal);
+		}
+		setCFsWithOppCost([...cfsWithOppCost]);
+	}, [cfs, dr, years]);
 
-	useEffect(
-		() => {
-			let cfs: Array<number> = [];
-			if (!props.allInputDone || !amt || !freq || (freq !== SPEND_ONCE && !duration)) {
-				setCFs([ ...cfs ]);
-				return;
-			}
-			if (freq === SPEND_ONCE) {
-				cfs.push(-amt);
-				setCFs([ ...cfs ]);
-				return;
-			}
-			let dur = freq === SPEND_YEARLY ? duration : Math.round(duration / 12);
-			let totalMonths = freq === SPEND_MONTHLY ? duration : 0;
-			for (let i = 0; i <= dur; i++) {
-				if (freq === SPEND_MONTHLY && totalMonths) {
-					if (totalMonths > 12) {
-						cfs.push(-amt * 12);
-						totalMonths -= 12;
-					} else {
-						cfs.push(-amt * totalMonths);
-						totalMonths = 0;
-					}
+	useEffect(() => {
+		let cfs: Array<number> = [];
+		if (
+			!props.allInputDone ||
+			!amt ||
+			!freq ||
+			(freq !== SPEND_ONCE && !duration)
+		) {
+			setCFs([...cfs]);
+			return;
+		}
+		if (freq === SPEND_ONCE) {
+			cfs.push(-amt);
+			setCFs([...cfs]);
+			return;
+		}
+		let dur = freq === SPEND_YEARLY ? duration : Math.round(duration / 12);
+		let totalMonths = freq === SPEND_MONTHLY ? duration : 0;
+		for (let i = 0; i <= dur; i++) {
+			if (freq === SPEND_MONTHLY && totalMonths) {
+				if (totalMonths > 12) {
+					cfs.push(-amt * 12);
+					totalMonths -= 12;
 				} else {
-					cfs.push(-amt);
+					cfs.push(-amt * totalMonths);
+					totalMonths = 0;
 				}
+			} else {
+				cfs.push(-amt);
 			}
-			setCFs([ ...cfs ]);
-		},
-		[ amt, freq, duration, props.allInputDone ]
-	);
+		}
+		setCFs([...cfs]);
+	}, [amt, freq, duration, props.allInputDone]);
 
-	useEffect(
-		() => {
-			if (!timeCost) {
-				setTimeCostDisplay(0);
-				return;
-			}
-			setTimeCostDisplay(
-				Math.round(
-					timeCostUnit === TIME_COST_HOURS
-						? timeCost
-						: timeCostUnit === TIME_COST_WEEKS
-							? timeCost / hoursPerWeek
-							: timeCost / (hoursPerWeek * paidWeeks)
-				)
-			);
-		},
-		[ timeCost, timeCostUnit, hoursPerWeek, paidWeeks ]
-	);
+	useEffect(() => {
+		if (!timeCost) {
+			setTimeCostDisplay(0);
+			return;
+		}
+		setTimeCostDisplay(
+			Math.round(
+				timeCostUnit === TIME_COST_HOURS
+					? timeCost
+					: timeCostUnit === TIME_COST_WEEKS
+					? timeCost / hoursPerWeek
+					: timeCost / (hoursPerWeek * paidWeeks)
+			)
+		);
+	}, [timeCost, timeCostUnit, hoursPerWeek, paidWeeks]);
 
-	useEffect(
-		() => {
-			if (!amt || !freq) {
-				setTotalCost(0);
-				return;
-			}
-			if (freq === SPEND_ONCE) setTotalCost(amt);
-			else setTotalCost(amt * duration);
-		},
-		[ amt, freq, duration ]
-	);
+	useEffect(() => {
+		if (!amt || !freq) {
+			setTotalCost(0);
+			return;
+		}
+		if (freq === SPEND_ONCE) setTotalCost(amt);
+		else setTotalCost(amt * duration);
+	}, [amt, freq, duration]);
 
-	useEffect(
-		() => {
-			if (!savingsPerHr || !totalCost) {
-				setTimeCost(0);
-				return;
-			}
-			setTimeCost(totalCost / savingsPerHr);
-		},
-		[ savingsPerHr, totalCost ]
-	);
+	useEffect(() => {
+		if (!savingsPerHr || !totalCost) {
+			setTimeCost(0);
+			return;
+		}
+		setTimeCost(totalCost / savingsPerHr);
+	}, [savingsPerHr, totalCost]);
 
-	useEffect(
-		() => {
-			if (!savings || !hoursPerWeek || !paidWeeks) {
-				setSavingsPerHr(0);
-				return;
-			}
-			setSavingsPerHr(savings / (paidWeeks * hoursPerWeek));
-		},
-		[ savings, hoursPerWeek, paidWeeks ]
-	);
+	useEffect(() => {
+		if (!savings || !hoursPerWeek || !paidWeeks) {
+			setSavingsPerHr(0);
+			return;
+		}
+		setSavingsPerHr(savings / (paidWeeks * hoursPerWeek));
+	}, [savings, hoursPerWeek, paidWeeks]);
 
 	return (
-		<Space
-			align="start"
-			size="large"
-			style={{ width: '100%' }}
-			//@ts-ignore
-			direction={`${isTopBottomLayout(fsb) ? 'vertical' : 'horizontal'}`}
-		>
-			<Input
-				showTab={props.showTab}
-				showTabHandler={props.showTabHandler}
-				tabOptions={props.tabOptions}
-				cancelCallback={props.cancelCallback}
-				handleSubmit={null}
-				submitDisabled={false}
-				cancelDisabled={false}
-				allInputDone={props.allInputDone}
-				allInputDoneHandler={props.allInputDoneHandler}
+		<Fragment>
+			<PageHeader
+				className="steps-page-header"
+				title={"True Cost Calculator"}
+				onBack={() => {}}
+				ghost={false}
+				extra={[
+					<Select defaultValue="lucy">
+						<Option value="jack">USD</Option>
+						<Option value="lucy">Lucy</Option>
+						<Option value="disabled" disabled>
+							Disabled
+						</Option>
+						<Option value="Yiminghe">yiminghe</Option>
+					</Select>,
+				]}
+			/>
+			<Card
+				className="steps-card"
+				title="How much Do Your Investments Earn?"
+				style={{ marginBottom: "200px" }}
 			>
-				{props.showTab === SPEND && (
-					<Spend
-						currency={props.currency}
-						rangeFactor={props.rangeFactor}
-						freq={freq}
-						freqHandler={setFreq}
-						amt={amt}
-						amtHandler={setAmt}
-						duration={duration}
-						durationHandler={setDuration}
-						totalCost={totalCost}
-					/>
-				)}
-
-				{props.showTab === SAVE && (
-					<Save
-						currency={props.currency}
-						rangeFactor={props.rangeFactor}
-						savings={savings}
-						savingsHandler={setSavings}
-						paidWeeks={paidWeeks}
-						paidWeeksHandler={setPaidWeeks}
-						hoursPerWeek={hoursPerWeek}
-						hoursPerWeekHandler={setHoursPerWeek}
-					/>
-				)}
-
-				{props.showTab === INVEST && (
-					<InvestOption
-						dr={dr}
-						drHandler={setDR}
-						years={years}
-						yearsHandler={setYears}
-						durationInYears={freq === SPEND_ONCE ? 1 : freq === SPEND_MONTHLY ? duration / 12 : duration}
-					/>
-				)}
-			</Input>
-			{props.allInputDone && (
-				<Result
-					resultTabOptions={resultTabOptions}
-					showResultTab={showResultTab}
-					showResultTabHandler={setShowResultTab}
-					result={
-						<Space align="center" size="large" style={{ width: '100%' }}>
-							<Card style={{ backgroundColor: COLORS.LIGHT_GREEN }}>
-								<ItemDisplay
-									label="Time Cost"
-									result={-timeCostDisplay}
-									svg={<SVGHourGlass />}
-									pl
-									info={`Based on your Savings from Work Income, You May have to Work ${toReadableNumber(
-										timeCost
-									)} ${timeCostUnit} to Save ${toCurrency(totalCost, props.currency)}`}
-									unit={
-										<SelectInput
-											pre=""
-											options={timeOptions}
-											value={timeCostUnit}
-											changeHandler={setTimeCostUnit}
-										/>
-									}
+				<Row>
+					<Col span={7}>
+						<Tabs
+							defaultActiveKey="1"
+							type="card"
+							centered
+							style={{ marginRight: "50px" }}
+						>
+							<TabPane tab="Spend" key="1">
+								<div>
+									<div>Spend</div>
+									<Select defaultValue="lucy">
+										<Option value="jack">Jack</Option>
+										<Option value="lucy">Lucy</Option>
+										<Option value="disabled" disabled>
+											Disabled
+										</Option>
+										<Option value="Yiminghe">yiminghe</Option>
+									</Select>
+								</div>
+								<Divider />
+								<div>
+									<div>Amount</div>
+									<Row>
+										<Col span={12}>
+											<Slider min={1} max={20} value={0} />
+										</Col>
+										<Col span={4}>
+											<InputNumber
+												min={1}
+												max={20}
+												style={{ margin: "0 16px" }}
+												value={0}
+											/>
+										</Col>
+									</Row>
+								</div>
+								<Divider />
+							</TabPane>
+							<TabPane tab="Save" key="2">
+								Content of Tab Pane 2
+							</TabPane>
+							<TabPane tab="Invest" key="3">
+								Content of Tab Pane 3
+							</TabPane>
+						</Tabs>
+					</Col>
+					<Col span={17}>
+						<Row gutter={[20, 10]}>
+							<Col span={12}>
+								<Statistic title="Active Users" value={112893} />
+							</Col>
+							<Col span={12}>
+								<Statistic
+									title="Account Balance (CNY)"
+									value={112893}
+									precision={2}
 								/>
-							</Card>
-							<Card style={{ backgroundColor: COLORS.LIGHT_GREEN }}>
-								<ItemDisplay
-									label="Spend v/s Invest"
-									info={`You May have ${toCurrency(
-										Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
-										props.currency
-									)} More in ${years} Years if You Invest instead of Spending.`}
-									svg={<SVGBalance />}
-									result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
+							</Col>
+						</Row>
+						<Card
+							type="inner"
+							title="Yearly Cash Flows If Invested"
+							style={{ marginTop: "20px" }}
+							extra={<FullscreenOutlined />}
+						>
+							{showResultTab === CHART && (
+								<DDLineChart
+									cfs={cfsWithOppCost}
 									currency={props.currency}
-									pl
+									startYear={1}
+									title="Number of Years"
 								/>
-							</Card>
-						</Space>
-					}
+							)}
+						</Card>
+					</Col>
+				</Row>
+			</Card>
+
+			<Space
+				align="start"
+				size="large"
+				style={{ width: "100%" }}
+				//@ts-ignore
+				direction={`${isTopBottomLayout(fsb) ? "vertical" : "horizontal"}`}
+			>
+				<Input
+					showTab={props.showTab}
+					showTabHandler={props.showTabHandler}
+					tabOptions={props.tabOptions}
+					cancelCallback={props.cancelCallback}
+					handleSubmit={null}
+					submitDisabled={false}
+					cancelDisabled={false}
+					allInputDone={props.allInputDone}
+					allInputDoneHandler={props.allInputDoneHandler}
 				>
-					{showResultTab === CHART && (
-						<DDLineChart
-							cfs={cfsWithOppCost}
+					{props.showTab === SPEND && (
+						<Spend
 							currency={props.currency}
-							startYear={1}
-							title="Number of Years"
+							rangeFactor={props.rangeFactor}
+							freq={freq}
+							freqHandler={setFreq}
+							amt={amt}
+							amtHandler={setAmt}
+							duration={duration}
+							durationHandler={setDuration}
+							totalCost={totalCost}
 						/>
 					)}
-				</Result>
-			)}
-		</Space>
+
+					{props.showTab === SAVE && (
+						<Save
+							currency={props.currency}
+							rangeFactor={props.rangeFactor}
+							savings={savings}
+							savingsHandler={setSavings}
+							paidWeeks={paidWeeks}
+							paidWeeksHandler={setPaidWeeks}
+							hoursPerWeek={hoursPerWeek}
+							hoursPerWeekHandler={setHoursPerWeek}
+						/>
+					)}
+
+					{props.showTab === INVEST && (
+						<InvestOption
+							dr={dr}
+							drHandler={setDR}
+							years={years}
+							yearsHandler={setYears}
+							durationInYears={
+								freq === SPEND_ONCE
+									? 1
+									: freq === SPEND_MONTHLY
+									? duration / 12
+									: duration
+							}
+						/>
+					)}
+				</Input>
+				{props.allInputDone && (
+					<Result
+						resultTabOptions={resultTabOptions}
+						showResultTab={showResultTab}
+						showResultTabHandler={setShowResultTab}
+						result={
+							<Space align="center" size="large" style={{ width: "100%" }}>
+								<Card style={{ backgroundColor: COLORS.LIGHT_GREEN }}>
+									<ItemDisplay
+										label="Time Cost"
+										result={-timeCostDisplay}
+										svg={<SVGHourGlass />}
+										pl
+										info={`Based on your Savings from Work Income, You May have to Work ${toReadableNumber(
+											timeCost
+										)} ${timeCostUnit} to Save ${toCurrency(
+											totalCost,
+											props.currency
+										)}`}
+										unit={
+											<SelectInput
+												pre=""
+												options={timeOptions}
+												value={timeCostUnit}
+												changeHandler={setTimeCostUnit}
+											/>
+										}
+									/>
+								</Card>
+								<Card style={{ backgroundColor: COLORS.LIGHT_GREEN }}>
+									<ItemDisplay
+										label="Spend v/s Invest"
+										info={`You May have ${toCurrency(
+											Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
+											props.currency
+										)} More in ${years} Years if You Invest instead of Spending.`}
+										svg={<SVGBalance />}
+										result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
+										currency={props.currency}
+										pl
+									/>
+								</Card>
+							</Space>
+						}
+					>
+						{showResultTab === CHART && (
+							<DDLineChart
+								cfs={cfsWithOppCost}
+								currency={props.currency}
+								startYear={1}
+								title="Number of Years"
+							/>
+						)}
+					</Result>
+				)}
+			</Space>
+		</Fragment>
 	);
 }
