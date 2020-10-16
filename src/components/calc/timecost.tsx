@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import SVGTimeCost from './svgtimecost'
-import ResultItem from './resultitem'
+import ItemDisplay from './ItemDisplay'
 import {toCurrency} from '../utils'
 interface TimeCostProps {
     cfs: Array<number>
@@ -18,7 +18,7 @@ export default function TimeCost(props: TimeCostProps) {
     }, [props.cfs, props.annualSavings])
 
     return (
-        <ResultItem label='' result={timeCost} 
+        <ItemDisplay label='' result={timeCost} 
         unit={` Year${timeCost > 1 ? 's' : ''}`} svg={<SVGTimeCost />} decimal={2} 
         info={`Number of Years it takes to save the Net Amount for this Goal considering Annual Savings of ${toCurrency(props.annualSavings, props.currency)} in ${new Date().getFullYear()}.`} />
     );

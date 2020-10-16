@@ -300,6 +300,43 @@ describe('calculateCFs Test with createLoanCF suite',()=>{
     
 })
 
+describe('calculateCFs Test with custom payment plan suite',()=>{
+    
+    const goal: goals.CreateGoalInput = {
+        achg: 3,
+        aiper: 0,
+        aisy: 2021,
+        amper: 0, //maintenance and income are zero
+        amsy: 2021,
+        by: 2020,
+        ccy: "INR",
+        chg: 2.5,
+        cp: 6550000,
+        emi: {rate: 9, dur: 12, per: 40, ry: 2023},
+        ey: 2023,
+        imp: goals.LMH.M,
+        manual: 1,
+        name: "House",
+        ra: 0,
+        rachg: 5,
+        sa: 5,
+        sy: 2023,
+        tbi: 0,
+        tbr: 0,
+        tdl: 800000,
+        tdli: 0,
+        tdr: 10,
+        tgts: [],
+        type: goals.GoalType.B
+    };
+
+    test('loan years = zero', () => {
+        let cfsObject = cfutils.calculateCFs(null,goal,5);
+        console.log(cfsObject);
+    })
+});
+
+
 describe('adjustAccruedInterest test suite',()=>{
     test('Excel test case', () => {
         let loanAmount = 618000, 

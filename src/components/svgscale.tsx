@@ -3,7 +3,7 @@ import { COLORS } from "../CONSTANTS";
 
 interface SVGScaleProps {
   disabled?: boolean;
-  selected: boolean;
+  selected?: boolean;
 }
 
 export default function SVGScale({ disabled, selected }: SVGScaleProps) {

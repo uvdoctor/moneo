@@ -593,3 +593,45 @@ export const deleteAccount = /* GraphQL */ `
     }
   }
 `;
+export const createRegistration = /* GraphQL */ `
+  mutation CreateRegistration(
+    $input: CreateRegistrationInput!
+    $condition: ModelRegistrationConditionInput
+  ) {
+    createRegistration(input: $input, condition: $condition) {
+      email
+      status
+      code
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateRegistration = /* GraphQL */ `
+  mutation UpdateRegistration(
+    $input: UpdateRegistrationInput!
+    $condition: ModelRegistrationConditionInput
+  ) {
+    updateRegistration(input: $input, condition: $condition) {
+      email
+      status
+      code
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteRegistration = /* GraphQL */ `
+  mutation DeleteRegistration(
+    $input: DeleteRegistrationInput!
+    $condition: ModelRegistrationConditionInput
+  ) {
+    deleteRegistration(input: $input, condition: $condition) {
+      email
+      status
+      code
+      createdAt
+      updatedAt
+    }
+  }
+`;

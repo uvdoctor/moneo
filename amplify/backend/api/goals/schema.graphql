@@ -100,3 +100,13 @@ type Account @model @auth(rules: [{allow: owner}]) {
   type: String!
   subtype: String!
 }
+
+enum Status {
+  Y,N,P
+}
+
+type Registration @model @aws_iam @aws_cognito_user_pools @key(fields: ["email"]) @auth(rules: [{allow: public, provider: iam, operations: [create, read, update]}]) {
+  email: String!
+  status: Status!
+  code: String!
+}

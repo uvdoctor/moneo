@@ -2,9 +2,9 @@ import React, { useState, useEffect, Fragment } from "react";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import * as APIt from "../../api/goals";
-import { initYearOptions, getRangeFactor } from "../utils";
-import EmiCost from "../calc/emicost";
-import TaxBenefit from "../calc/taxbenefit";
+import { initYearOptions, getRangeFactor} from "../utils";
+import LoanEmi from "../calc/LoanEmi";
+import TaxAdjustment from "../calc/TaxAdjustment";
 import Sell from "./sell";
 import StickyHeader from "./stickyheader";
 import SVGChart from "../svgchart";
@@ -17,15 +17,13 @@ import {
   getOrderByTabLabel,
   isLoanEligible,
 } from "./goalutils";
-//@ts-ignore
-import { AwesomeButton } from "react-awesome-button";
 import AnnualAmt from "./annualamt";
-import { getCompoundedIncome } from "../calc/finance";
+import { getCompoundedIncome, getNPV } from "../calc/finance";
 import SVGScale from "../svgscale";
-import ResultSection from "./resultsection";
+import Result from "./Result";
 import GoalResult from "./goalresult";
-import LineChart from "./linechart";
-import InputSection from "./inputsection";
+import DDLineChart from "./DDLineChart";
+import Input from "./Input";
 import RentComparison from "./rentcomparison";
 import BRCompChart from "./brcompchart";
 import SVGPay from "../svgpay";
@@ -33,14 +31,15 @@ import SVGTaxBenefit from "../svgtaxbenefit";
 import SVGLoan from "../svgloan";
 import SVGSell from "../svgsell";
 import SVGCashFlow from "../svgcashflow";
+import IntChart from "./intchart";
 interface GoalProps {
   goal: APIt.CreateGoalInput;
   cashFlows?: Array<number>;
   ffGoalEndYear: number;
-  ffImpactYearsHandler: Function;
+  ffImpactYearsHandler?: Function;
   cancelCallback: Function;
-  addCallback: Function;
-  updateCallback: Function;
+  addCallback?: Function;
+  updateCallback?: Function;
 }
 
 export default function Goal({
@@ -98,6 +97,8 @@ export default function Goal({
   const [loanIntRate, setLoanIntRate] = useState<number | null | undefined>(
     goal?.emi?.rate
   );
+  const [iSchedule, setISchedule] = useState<Array<number>>([])
+  const [pSchedule, setPSchedule] = useState<Array<number>>([])
   const [priceChgRate, setPriceChgRate] = useState<number>(goal?.chg as number);
   const [sellPrice, setSellPrice] = useState<number>(0);
   const [assetChgRate, setAssetChgRate] = useState<number | null | undefined>(
@@ -127,7 +128,9 @@ export default function Goal({
   const [rangeFactor, setRangeFactor] = useState<number>(
     getRangeFactor(currency)
   );
-  const [currentOrder, setCurrentOrder] = useState<number>(1);
+  const [currentOrder, setCurrentOrder] = useState<number>(
+    addCallback && updateCallback ? 1 : 3
+  );
   const [allInputDone, setAllInputDone] = useState<boolean>(
     goal.id ? true : false
   );
@@ -142,14 +145,17 @@ export default function Goal({
   const loanLabel = "Loan";
   const annualNetCostLabel = "Yearly";
   const rentLabel = "Rent?";
+  const [dr, setDR] = useState<number | null>(
+    addCallback && updateCallback ? null : 6
+  );
   const cfChartLabel = "Cash Flows";
-  const brChartLabel = "Buy v/s Rent";
-  const [chartFullScreen, setChartFullScreen] = useState<boolean>(false);
+  const brChartLabel = "Buy v/s Rent & Invest";
+  const loanChartLabel = "EMI Schedule";
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [showBRChart, setShowBRChart] = useState<boolean>(
     sellAfter && rentAmt && rentAmt > 0 ? true : false
   );
-  const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 20));
+  const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 30));
   const [tabOptions, setTabOptions] = useState<Array<any>>(
     goalType === APIt.GoalType.B
       ? [
@@ -191,8 +197,27 @@ export default function Goal({
           { label: loanLabel, order: 10, active: true, svg: SVGLoan },
         ]
   );
+  const [duration, setDuration] = useState<number>(
+    getDuration(
+      sellAfter,
+      startYear,
+      endYear,
+      manualMode,
+      loanPer,
+      loanRepaymentSY,
+      loanYears
+    )
+  );
+  const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
+  const [analyzeFor, setAnalyzeFor] = useState<number>(20);
   const [showTab, setShowTab] = useState(amtLabel);
   const [showResultTab, setShowResultTab] = useState<string>(cfChartLabel);
+
+  const hasTab = (option: string, options: Array<any> = tabOptions) => {
+    let opts = options.filter((tab) => tab.label === option);
+    return opts && opts.length === 1;
+  };
+
   const [resultTabOptions, setResultTabOptions] = useState<Array<any>>(
     sellAfter
       ? [
@@ -208,6 +233,12 @@ export default function Goal({
             active: showBRChart,
             svg: SVGScale,
           },
+          {
+            label: loanChartLabel,
+            order: 3,
+            active: manualMode < 1 && loanPer,
+            svg: SVGLoan,
+          },
         ]
       : [
           {
@@ -216,8 +247,28 @@ export default function Goal({
             active: true,
             svg: SVGChart,
           },
+          isLoanEligible(goalType) && {
+            label: loanChartLabel,
+            order: 2,
+            active: manualMode < 1 && loanPer,
+            svg: SVGLoan,
+          },
         ]
   );
+
+  useEffect(() => {
+    const loanOrderNum = getOrderByTabLabel(resultTabOptions, loanChartLabel);
+    if (manualMode < 1 && loanPer) {
+      if (!loanOrderNum) {
+        resultTabOptions[resultTabOptions.length - 1].active = true;
+        setResultTabOptions([...resultTabOptions]);
+      }
+    } else if (loanOrderNum) {
+      resultTabOptions[resultTabOptions.length - 1].active = false;
+      setResultTabOptions([...resultTabOptions]);
+      setShowResultTab(resultTabOptions[0].label)
+    }
+  }, [manualMode, loanPer]);
 
   const createNewBaseGoal = () => {
     return {
@@ -274,7 +325,15 @@ export default function Goal({
   };
 
   const calculateYearlyCFs = (
-    duration: number = getDur(),
+    duration: number = getDuration(
+      sellAfter,
+      startYear,
+      endYear,
+      manualMode,
+      loanPer,
+      loanRepaymentSY,
+      loanYears
+    ),
     changeState: boolean = true
   ) => {
     let cfs: Array<number> = [];
@@ -287,11 +346,19 @@ export default function Goal({
     cfs = result.cfs;
     console.log("New cfs created: ", cfs);
     if (changeState) {
-      if ((loanPer as number) && manualMode < 1 && goalType === APIt.GoalType.B)
+      if ((loanPer as number) && manualMode < 1 && goalType === APIt.GoalType.B && cfs.length > 0)
         setEndYear(g.sy + cfs.length - 1);
       setCFs([...cfs]);
-      if (result.hasOwnProperty("itb")) setTotalITaxBenefit(result.itb);
-      setTotalPTaxBenefit(result.ptb);
+      setDuration(duration);
+      setTotalITaxBenefit(result.hasOwnProperty("itb") ? result.itb : 0);
+      setTotalPTaxBenefit(result.hasOwnProperty("ptb") ? result.ptb : 0);
+      if(result.hasOwnProperty("iSchedule")) {
+        setISchedule([...result.iSchedule])
+        setPSchedule([...result.pSchedule])
+      } else {
+        setISchedule([...[]])
+        setPSchedule([...[]])
+      }
     }
     return cfs;
   };
@@ -301,10 +368,10 @@ export default function Goal({
   };
 
   useEffect(() => {
-    if (!loanPer) setEYOptions(initYearOptions(startYear, 20));
+    if (!loanPer) setEYOptions(initYearOptions(startYear, 30));
     else if (goalType !== APIt.GoalType.E) setLoanRepaymentSY(startYear);
     if (goalType === APIt.GoalType.B && loanPer) return;
-    if (startYear > endYear || endYear - startYear > 20) setEndYear(startYear);
+    if (startYear > endYear || endYear - startYear > 30) setEndYear(startYear);
   }, [startYear]);
 
   const changeEndYear = (str: string) => {
@@ -328,8 +395,7 @@ export default function Goal({
   }, [wipTargets, manualMode]);
 
   useEffect(() => {
-    if (cashFlows || (!allInputDone && currentOrder < 7))
-      return;
+    if (cashFlows || (!allInputDone && currentOrder < 7)) return;
     if (!cashFlows) calculateYearlyCFs();
   }, [
     price,
@@ -368,6 +434,7 @@ export default function Goal({
   }, [endYear]);
 
   useEffect(() => {
+    if (!ffImpactYearsHandler) return;
     let result = ffImpactYearsHandler(startYear, cfs, goal.id, impLevel);
     setFFImpactYears(result.ffImpactYears);
     setRR([...result.rr]);
@@ -381,22 +448,17 @@ export default function Goal({
       if (currentOrder >= tabOptions[2].order) {
         if (tabOptions[3]) {
           if (currentOrder < tabOptions[3].order) {
-            setShowTab(tabOptions[3].label)
+            setShowTab(tabOptions[3].label);
             setCurrentOrder(tabOptions[3].order);
           }
         } else {
           setCurrentOrder(tabOptions[1].order);
-          setShowTab(tabOptions[1].label)
+          setShowTab(tabOptions[1].label);
         }
       }
     } else tabOptions[2].active = true;
     setTabOptions([...tabOptions]);
   }, [manualMode, allInputDone, currentOrder]);
-
-  const hasTab = (option: string) => {
-    let options = tabOptions.filter((tab) => tab.label === option);
-    return options && options.length === 1;
-  };
 
   useEffect(() => {
     if (manualMode > 0 && endYear === startYear) setEndYear(startYear + 2);
@@ -406,9 +468,11 @@ export default function Goal({
 
   const handleSubmit = async () => {
     setBtnClicked(true);
-    goal.id
-      ? await updateCallback(createUpdateGoalInput(), cfs)
-      : await addCallback(createNewGoalInput(), cfs);
+    if (addCallback && updateCallback) {
+      goal.id
+        ? await updateCallback(createUpdateGoalInput(), cfs)
+        : await addCallback(createNewGoalInput(), cfs);
+    } else cancelCallback();
     setBtnClicked(false);
   };
 
@@ -455,69 +519,162 @@ export default function Goal({
       let label = getTabLabelByOrder(co);
       if (label) setShowTab(label);
       setCurrentOrder(co);
-      if (sellAfter) setAllInputDone(co === getOrderByTabLabel(tabOptions, rentLabel) + 1);
+      if (sellAfter)
+        setAllInputDone(co === getOrderByTabLabel(tabOptions, rentLabel) + 1);
       else if (hasTab(loanLabel)) {
-        if (co === getOrderByTabLabel(tabOptions, loanLabel) + 3) setAllInputDone(true);
-      } else if (co === getOrderByTabLabel(tabOptions, taxLabel) + 1) setAllInputDone(true);
+        if (co === getOrderByTabLabel(tabOptions, loanLabel) + 3)
+          setAllInputDone(true);
+      } else if (co === getOrderByTabLabel(tabOptions, taxLabel) + 1)
+        setAllInputDone(true);
     }
   };
 
-  const getDur = () =>
-    getDuration(
-      sellAfter,
-      startYear,
-      endYear,
-      manualMode,
-      loanPer,
-      loanRepaymentSY,
-      loanYears
-    );
-
-  const showResultSection = () => 
+  const showResultSection = () =>
     nowYear < startYear && allInputDone && cfs.length > 0;
+
+  const getNextTaxAdjRentAmt = (val: number) => {
+    return (
+      val *
+      (1 + (rentChgPer as number) / 100) *
+      ((rentTaxBenefit as number) > 0 ? 1 - taxRate / 100 : 1)
+    );
+  };
+
+  const initAllRentCFs = (buyCFs: Array<number>) => {
+    const firstRRIndex = startYear - (nowYear + 1);
+    if (!rentAmt) return [];
+    let taxAdjustedRentAmt = rentAmt * (1 - taxRate / 100);
+    if (!buyCFs || buyCFs.length === 0) return [];
+    let npv: Array<number> = [];
+    for (let i = 0; i < analyzeFor; i++) {
+      let cfs = [];
+      let inv = 0;
+      for (
+        let j = 0, value = taxAdjustedRentAmt;
+        j <= i;
+        j++, value = getNextTaxAdjRentAmt(value)
+      ) {
+        if (buyCFs[j]) inv += buyCFs[j];
+        inv -= value;
+        if (inv > 0) {
+          let rate = dr === null ? rr[firstRRIndex + j] : dr;
+          rate = rate >= 0 ? rate : 3;
+          inv += inv * (rate / 100);
+        }
+        cfs.push(-value);
+      }
+      cfs.push(inv);
+      if (cfs.length > 0) {
+        npv.push(getNPV(dr === null ? rr : dr, cfs, firstRRIndex));
+      }
+    }
+    return npv;
+  };
+
+  const buildComparisonData = () => {
+    let results: Array<any> = [];
+    if (allBuyCFs && allBuyCFs.length > 0) {
+      results.push({
+        name: "Buy",
+        values: initAllBuyCFs(allBuyCFs),
+      });
+      results.push({
+        name: "Rent",
+        values: initAllRentCFs(getBuyCFForRentAnalysis()),
+      });
+    }
+    return results;
+  };
+
+  const getBuyCFForRentAnalysis = () => {
+    let arr: Array<number> = [];
+    if (!allBuyCFs || allBuyCFs.length === 0) return arr;
+    if (manualMode < 1) arr.push(-allBuyCFs[0][0]);
+    else wipTargets.forEach((t) => arr.push(t.val));
+    return arr;
+  };
+
+  const initAllBuyCFs = (allBuyCFs: Array<Array<number>>) => {
+    let npv: Array<number> = [];
+    for (let i = 0; i < analyzeFor; i++) {
+      let buyCFs = allBuyCFs[i];
+      if (buyCFs && buyCFs.length > 0) {
+        npv.push(
+          getNPV(dr === null ? rr : dr, buyCFs, startYear - (nowYear + 1))
+        );
+      }
+    }
+    return npv;
+  };
+
+  useEffect(() => {
+    if (!sellAfter) return;
+    if (!!rentAmt) {
+      let data = buildComparisonData();
+      if (data && data.length == 2) setBRChartData([...data]);
+    } else {
+      setBRChartData([...[]]);
+    }
+  }, [taxRate, rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs, dr]);
+
+  useEffect(() => {
+    if (!sellAfter || cfs.length === 0 || !rentAmt) return;
+    let allBuyCFs: Array<Array<number>> = [];
+    for (let i = 1; i <= analyzeFor; i++)
+      allBuyCFs.push(calculateYearlyCFs(i, false));
+    setAllBuyCFs([...allBuyCFs]);
+  }, [analyzeFor, cfs]);
 
   return (
     <div className="w-full h-full">
       <StickyHeader cancelCallback={cancelCallback} cancelDisabled={btnClicked}>
-        <TextInput
-          name="name"
-          inputOrder={1}
-          currentOrder={currentOrder}
-          nextStepDisabled={name.length < 3}
-          allInputDone={allInputDone}
-          nextStepHandler={handleNextStep}
-          pre={typesList[goalType]}
-          placeholder="Goal Name"
-          value={name}
-          changeHandler={setName}
-          width="150px"
-        />
-        <SelectInput
-          name="imp"
-          inputOrder={2}
-          currentOrder={currentOrder}
-          nextStepDisabled={false}
-          nextStepHandler={handleNextStep}
-          allInputDone={allInputDone}
-          pre="Importance"
-          value={impLevel}
-          changeHandler={setImpLevel}
-          options={getImpLevels()}
-        />
+        {addCallback && updateCallback ? (
+          <Fragment>
+            <TextInput
+              name="name"
+              inputOrder={1}
+              currentOrder={currentOrder}
+              nextStepDisabled={name.length < 3}
+              allInputDone={allInputDone}
+              nextStepHandler={handleNextStep}
+              pre={typesList[goalType]}
+              placeholder="Goal Name"
+              value={name}
+              changeHandler={setName}
+              width="150px"
+            />
+            <SelectInput
+              name="imp"
+              inputOrder={2}
+              currentOrder={currentOrder}
+              nextStepDisabled={false}
+              nextStepHandler={handleNextStep}
+              allInputDone={allInputDone}
+              pre="Importance"
+              value={impLevel}
+              changeHandler={setImpLevel}
+              options={getImpLevels()}
+            />
+          </Fragment>
+        ) : (
+          <h1 className="w-full text-center font-bold mt-4 mb-2 text-lg md:text-xl lg:text-2xl">
+            {name}
+          </h1>
+        )}
       </StickyHeader>
       <div
-        className={`container mx-auto w-full h-full flex flex-1 lg:flex-row ${
+        className={`w-full h-full flex flex-1 lg:flex-row ${
           showResultSection() && "flex-col-reverse"
         } items-start`}
       >
-        <InputSection
+        <Input
           currentOrder={currentOrder}
           allInputDone={allInputDone}
           showTab={showTab}
           showTabHandler={setShowTab}
           tabOptions={tabOptions}
           cancelCallback={cancelCallback}
-          handleSubmit={handleSubmit}
+          handleSubmit={addCallback && cancelCallback ? handleSubmit : null}
           submitDisabled={
             !allInputDone || name.length < 3 || !price || btnClicked
           }
@@ -553,14 +710,14 @@ export default function Goal({
           )}
 
           {showTab === taxLabel && (
-            <TaxBenefit
+            <TaxAdjustment
               goalType={goalType}
               taxRate={taxRate}
               taxRateHandler={setTaxRate}
               currency={currency}
               maxTaxDeduction={maxTaxDeduction}
               maxTaxDeductionHandler={setMaxTaxDeduction}
-              duration={getDur()}
+              duration={duration}
               rangeFactor={rangeFactor}
               inputOrder={getOrderByTabLabel(tabOptions, taxLabel)}
               currentOrder={currentOrder}
@@ -572,12 +729,12 @@ export default function Goal({
           )}
 
           {showTab === loanLabel && (
-            <EmiCost
+            <LoanEmi
               price={price}
               priceChgRate={priceChgRate}
               currency={currency}
               startYear={startYear}
-              duration={getDur()}
+              duration={duration}
               repaymentSY={loanRepaymentSY as number}
               endYear={endYear}
               rangeFactor={rangeFactor}
@@ -630,7 +787,7 @@ export default function Goal({
                 annualSY={amStartYear as number}
                 annualSYHandler={setAMStartYear}
                 price={price}
-                duration={getDur()}
+                duration={duration}
                 title="Yearly Fixes, Insurance, etc costs"
                 footer="Include taxes & fees"
                 inputOrder={getOrderByTabLabel(tabOptions, annualNetCostLabel)}
@@ -652,7 +809,7 @@ export default function Goal({
                   annualSY={aiStartYear as number}
                   annualSYHandler={setAIStartYear}
                   price={price}
-                  duration={getDur()}
+                  duration={duration}
                   title="Yearly Income through Rent, Dividend, etc"
                   footer="Exclude taxes & fees"
                   inputOrder={
@@ -700,26 +857,21 @@ export default function Goal({
               rentTaxBenefitHandler={setRentTaxBenefit}
               taxRate={taxRate}
               sellAfter={sellAfter as number}
-              manualMode={manualMode}
-              manualTgts={wipTargets}
-              startYear={startYear}
-              buyCFsHandler={calculateYearlyCFs}
-              rr={rr}
               brChartData={brChartData}
-              brChartDataHandler={setBRChartData}
               allInputDone={allInputDone}
               currentOrder={currentOrder}
               inputOrder={getOrderByTabLabel(tabOptions, rentLabel)}
               nextStepHandler={handleNextStep}
+              analyzeFor={analyzeFor}
+              analyzeForHandler={setAnalyzeFor}
             />
           )}
-        </InputSection>
+        </Input>
         {showResultSection() && (
-          <ResultSection
+          <Result
             resultTabOptions={resultTabOptions}
             showResultTab={showResultTab}
             showResultTabHandler={setShowResultTab}
-            chartFullScreenHandler={(fs: boolean) => setChartFullScreen(!fs)}
             result={
               nowYear < startYear && (
                 <GoalResult
@@ -731,19 +883,30 @@ export default function Goal({
                   ffOOM={ffOOM}
                   ffImpactYears={ffImpactYears}
                   buyGoal={goalType === APIt.GoalType.B}
+                  dr={dr}
+                  drHandler={setDR}
                 />
               )
             }
           >
-            <LineChart
+            <DDLineChart
               cfs={cfs}
               startYear={startYear}
-              fullScreen={chartFullScreen}
+              currency={currency}
             />
             {showBRChart && (
-              <BRCompChart data={brChartData} fullScreen={chartFullScreen} />
+              <BRCompChart data={brChartData} currency={currency} />
             )}
-          </ResultSection>
+            {manualMode < 1 && loanPer && loanRepaymentSY && loanYears && (
+              <IntChart
+                repaymentSY={loanRepaymentSY}
+                loanYears={iSchedule.length}
+                interestSchedule={iSchedule}
+                principalSchedule={pSchedule}
+                currency={currency}
+              />
+            )}
+          </Result>
         )}
       </div>
     </div>

@@ -1,10 +1,9 @@
-import React, { useRef, useEffect, useState, Fragment } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { toCurrency, toReadableNumber } from "../utils";
 import Slider from "rc-slider";
 import NextStep from "./nextstep";
-import SVGInfo from "../svginfo";
-import { toast } from "react-toastify";
 import { COLORS, INPUT_HIGHLIGHT } from "../../CONSTANTS";
+import Tooltip from "./tooltip";
 interface NumberInputProps {
   inputOrder: number;
   currentOrder: number;
@@ -102,24 +101,7 @@ export default function NumberInput(props: NumberInputProps) {
   };
 
   return (
-    <Fragment>
-      <div className="w-full flex justify-end cursor-pointer">
-        {props.info && (
-          <div
-            className="mr-1"
-            onClick={() =>
-              toast.info(props.info, {
-                autoClose: props.infoDurationInMs
-                  ? props.infoDurationInMs
-                  : 5000,
-              })
-            }
-          >
-            <SVGInfo />
-          </div>
-        )}
-      </div>
-      <div className="w-full flex justify-center items-center">
+      <div>
         {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
           props.allInputDone) && (
           <form
@@ -130,6 +112,7 @@ export default function NumberInput(props: NumberInputProps) {
               `${INPUT_HIGHLIGHT} px-4`
             }`}
           >
+            {props.info && <Tooltip info={props.info} />}
             <div
               className={`w-full flex justify-between ${
                 props.max ? "items-center" : "flex-col"
@@ -255,9 +238,8 @@ export default function NumberInput(props: NumberInputProps) {
               props.nextStepHandler(props.actionCount ? props.actionCount : 1)
             }
             disabled={props.nextStepDisabled}
-          />
+            />
         )}
       </div>
-    </Fragment>
   );
 }

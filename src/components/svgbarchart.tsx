@@ -2,7 +2,7 @@ import React from "react";
 import { COLORS } from "../CONSTANTS";
 
 interface SVGBarChartProps {
-  disabled: boolean;
+  disabled?: boolean;
   selected: boolean;
 }
 export default function SVGBarChart({ disabled, selected }: SVGBarChartProps) {

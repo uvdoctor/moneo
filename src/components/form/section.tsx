@@ -27,8 +27,7 @@ export default function Section(props: SectionProps) {
   return (
     <div
       className="m-1 w-full max-w-sm md:max-w-md xl:max-w-lg
-      rounded-lg overflow-x-hidden overflow-y-auto 
-                        shadow-lg md:shadow-xl"
+      rounded-lg shadow-lg md:shadow-xl"
       style={{ backgroundColor: props.color ? props.color : "transparent" }}
     >
       <div
@@ -86,14 +85,10 @@ export default function Section(props: SectionProps) {
             </div>
           )}
           {props.bottom && (
-            <div className="flex flex-wrap mt-2 items-center justify-center">
-              {props.bottomLeft && (
-                <label className="mr-4">{props.bottomLeft}</label>
-              )}
-              <div>{props.bottom}</div>
-              {props.bottomRight && (
-                <label className="ml-4">{props.bottomRight}</label>
-              )}
+            <div className="w-full flex flex-wrap mt-2 items-center justify-around">
+              {props.bottomLeft}
+              {props.bottom}
+              {props.bottomRight}
             </div>
           )}
           {props.footer && (

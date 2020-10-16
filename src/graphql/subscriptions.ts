@@ -548,3 +548,36 @@ export const onDeleteAccount = /* GraphQL */ `
     }
   }
 `;
+export const onCreateRegistration = /* GraphQL */ `
+  subscription OnCreateRegistration {
+    onCreateRegistration {
+      email
+      status
+      code
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateRegistration = /* GraphQL */ `
+  subscription OnUpdateRegistration {
+    onUpdateRegistration {
+      email
+      status
+      code
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteRegistration = /* GraphQL */ `
+  subscription OnDeleteRegistration {
+    onDeleteRegistration {
+      email
+      status
+      code
+      createdAt
+      updatedAt
+    }
+  }
+`;

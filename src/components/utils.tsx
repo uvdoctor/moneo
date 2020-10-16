@@ -201,7 +201,8 @@ export const toReadableNumber = (num: number, decimalDigits: number = 0) => {
 export function initYearOptions(
   startYear: number,
   duration: number,
-  exclusions: Array<number> = []
+  exclusions: Array<number> = [],
+  defaultValue: number | null = null
 ) {
   let years: any = {};
   for (
@@ -209,7 +210,7 @@ export function initYearOptions(
     duration > 0 ? i <= startYear + duration : i >= startYear + duration;
     duration > 0 ? i++ : i--
   ) {
-    if (!exclusions.includes(i)) years[i] = i;
+    if (!exclusions.includes(i)) years[i] = defaultValue !== null ? defaultValue : i;
   }
   return years;
 }
@@ -447,13 +448,13 @@ export function compareValues(key: string, order: string = "asc") {
 export const getAssetColour = (type: string) => {
   switch (type) {
     case ASSET_CATEGORIES.CASH:
-      return "green";
+      return COLORS.LIGHT_GREEN;
     case ASSET_TYPES.SAVINGS:
       return "#68d391";
     case ASSET_TYPES.DEPOSITS:
       return "#38a169";
     case ASSET_CATEGORIES.BONDS:
-      return "blue";
+      return COLORS.LIGHT_GRAY;
     case ASSET_TYPES.SHORT_TERM_BONDS:
       return "#4299e1";
     case ASSET_TYPES.MED_TERM_BONDS:
@@ -461,7 +462,7 @@ export const getAssetColour = (type: string) => {
     case ASSET_TYPES.TAX_EXEMPT_BONDS:
       return "#2b6cb0";
     case ASSET_CATEGORIES.STOCKS:
-      return "orange";
+      return COLORS.SILVER;
     case ASSET_TYPES.LARGE_CAP_STOCKS:
       return "#dd6b20";
     case ASSET_TYPES.MID_CAP_STOCKS:
@@ -473,15 +474,13 @@ export const getAssetColour = (type: string) => {
     case ASSET_TYPES.DIVIDEND_GROWTH_STOCKS:
       return "#c05621";
     case ASSET_CATEGORIES.ALTERNATIVE:
-      return "#744210";
+      return COLORS.DISABLED;
     case ASSET_TYPES.GOLD:
       return "#f6e05e";
     case ASSET_TYPES.DOMESTIC_REIT:
       return "#b7791f";
     case ASSET_TYPES.INTERNATIONAL_REIT:
       return "#d69e2e";
-    case ASSET_TYPES.DIGITAL_CURRENCIES:
-      return "#faf089";
     default:
       return "";
   }
@@ -516,8 +515,7 @@ export const getAllAssetTypesByCategory = (category: string) => {
       return [
         ASSET_TYPES.DOMESTIC_REIT,
         ASSET_TYPES.INTERNATIONAL_REIT,
-        ASSET_TYPES.GOLD,
-        ASSET_TYPES.DIGITAL_CURRENCIES,
+        ASSET_TYPES.GOLD
       ];
     default:
       return [];
@@ -537,8 +535,7 @@ export const getAllAssetTypes = () => [
   ASSET_TYPES.DIVIDEND_GROWTH_STOCKS,
   ASSET_TYPES.DOMESTIC_REIT,
   ASSET_TYPES.INTERNATIONAL_REIT,
-  ASSET_TYPES.GOLD,
-  ASSET_TYPES.DIGITAL_CURRENCIES,
+  ASSET_TYPES.GOLD
 ];
 
 export const buildTabsArray = (items: any) => {
@@ -552,4 +549,4 @@ export const buildTabsArray = (items: any) => {
 
 export const isTopBottomLayout = (fsb: any) => fsb.info.innerWidth < 1024;
 
-export const isMobileDevice = (fsb: any) => fsb.info.innerWidth < 500;
+export const isMobileDevice = (fsb: any) => fsb.info.innerWidth < 768;

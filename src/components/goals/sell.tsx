@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ResultItem from "../calc/resultitem";
+import ItemDisplay from "../calc/ItemDisplay";
 import SVGMoneyBag from "../calc/svgmoneybag";
 import SVGMoneyBagPer from "../svgmoneybagper";
 import Section from "../form/section";
@@ -75,7 +75,7 @@ export default function Sell(props: SellProps) {
               info="Years after which You Plan to Sell this Purchase."
               label="Years"
               labelBottom={true}
-              data={toStringArr(1, 20)}
+              data={toStringArr(3, 30)}
               value={props.sellAfter}
               step={1}
               changeHandler={props.sellAfterHandler}
@@ -103,7 +103,7 @@ export default function Sell(props: SellProps) {
           }
           bottom={
             <div className="flex justify-around w-full items-center">
-              <ResultItem
+              <ItemDisplay
                 svg={<SVGMoneyBag disabled={false} selected />}
                 label="You May Get"
                 footer={`In ${props.startYear + props.sellAfter}`}
@@ -111,13 +111,14 @@ export default function Sell(props: SellProps) {
                 currency={props.currency}
               />
               {annualReturnPer && (
-                <ResultItem
+                <ItemDisplay
                   svg={<SVGMoneyBagPer />}
                   label={`You May ${annualReturnPer > 0 ? "Gain" : "Lose"}`}
                   result={annualReturnPer}
                   decimal={2}
                   unit="%"
                   footer="Yearly"
+                  pl
                 />
               )}
             </div>

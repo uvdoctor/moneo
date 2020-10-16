@@ -378,6 +378,42 @@ export type DeleteAccountInput = {
   id?: string | null,
 };
 
+export type CreateRegistrationInput = {
+  email: string,
+  status: Status,
+  code: string,
+};
+
+export enum Status {
+  Y = "Y",
+  N = "N",
+  P = "P",
+}
+
+
+export type ModelRegistrationConditionInput = {
+  status?: ModelStatusInput | null,
+  code?: ModelStringInput | null,
+  and?: Array< ModelRegistrationConditionInput | null > | null,
+  or?: Array< ModelRegistrationConditionInput | null > | null,
+  not?: ModelRegistrationConditionInput | null,
+};
+
+export type ModelStatusInput = {
+  eq?: Status | null,
+  ne?: Status | null,
+};
+
+export type UpdateRegistrationInput = {
+  email: string,
+  status?: Status | null,
+  code?: string | null,
+};
+
+export type DeleteRegistrationInput = {
+  email: string,
+};
+
 export type ModelGoalFilterInput = {
   id?: ModelIDInput | null,
   sy?: ModelIntInput | null,
@@ -476,6 +512,21 @@ export type ModelAccountFilterInput = {
   or?: Array< ModelAccountFilterInput | null > | null,
   not?: ModelAccountFilterInput | null,
 };
+
+export type ModelRegistrationFilterInput = {
+  email?: ModelStringInput | null,
+  status?: ModelStatusInput | null,
+  code?: ModelStringInput | null,
+  and?: Array< ModelRegistrationFilterInput | null > | null,
+  or?: Array< ModelRegistrationFilterInput | null > | null,
+  not?: ModelRegistrationFilterInput | null,
+};
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
 
 export type CreateGoalMutationVariables = {
   input: CreateGoalInput,
@@ -1131,6 +1182,54 @@ export type DeleteAccountMutation = {
   } | null,
 };
 
+export type CreateRegistrationMutationVariables = {
+  input: CreateRegistrationInput,
+  condition?: ModelRegistrationConditionInput | null,
+};
+
+export type CreateRegistrationMutation = {
+  createRegistration:  {
+    __typename: "Registration",
+    email: string,
+    status: Status,
+    code: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateRegistrationMutationVariables = {
+  input: UpdateRegistrationInput,
+  condition?: ModelRegistrationConditionInput | null,
+};
+
+export type UpdateRegistrationMutation = {
+  updateRegistration:  {
+    __typename: "Registration",
+    email: string,
+    status: Status,
+    code: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteRegistrationMutationVariables = {
+  input: DeleteRegistrationInput,
+  condition?: ModelRegistrationConditionInput | null,
+};
+
+export type DeleteRegistrationMutation = {
+  deleteRegistration:  {
+    __typename: "Registration",
+    email: string,
+    status: Status,
+    code: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type GetGoalQueryVariables = {
   id: string,
 };
@@ -1560,6 +1659,44 @@ export type ListAccountsQuery = {
       createdAt: string,
       updatedAt: string,
       owner: string | null,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetRegistrationQueryVariables = {
+  email: string,
+};
+
+export type GetRegistrationQuery = {
+  getRegistration:  {
+    __typename: "Registration",
+    email: string,
+    status: Status,
+    code: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListRegistrationsQueryVariables = {
+  email?: string | null,
+  filter?: ModelRegistrationFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListRegistrationsQuery = {
+  listRegistrations:  {
+    __typename: "ModelRegistrationConnection",
+    items:  Array< {
+      __typename: "Registration",
+      email: string,
+      status: Status,
+      code: string,
+      createdAt: string,
+      updatedAt: string,
     } | null > | null,
     nextToken: string | null,
   } | null,
@@ -2201,5 +2338,38 @@ export type OnDeleteAccountSubscription = {
     createdAt: string,
     updatedAt: string,
     owner: string | null,
+  } | null,
+};
+
+export type OnCreateRegistrationSubscription = {
+  onCreateRegistration:  {
+    __typename: "Registration",
+    email: string,
+    status: Status,
+    code: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateRegistrationSubscription = {
+  onUpdateRegistration:  {
+    __typename: "Registration",
+    email: string,
+    status: Status,
+    code: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteRegistrationSubscription = {
+  onDeleteRegistration:  {
+    __typename: "Registration",
+    email: string,
+    status: Status,
+    code: string,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };

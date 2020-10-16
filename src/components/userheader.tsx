@@ -54,23 +54,13 @@ const UserHeader = () => {
     }
   };
 
-  //const handleHelp = () => { }
-
   return (
     <nav className="text-lg lg:text-xl fixed flex w-full bg-white items-center justify-between flex-wrap py-1 top-0 animated items-center cursor font-bold">
       <Logo />
       <label>Estimates. No Advice.</label>
       {username ? (
         <div className="flex items-center">
-          {/*<div className="ml-8 md:ml-12 hoverable relative inline-block hover:text-green-primary"><label>{username}</label>
-                        <ul className="px-2 md:px-4 py-1 dropdown-menu absolute shadow-xl bg-green-600 text-white font-normal text-base md:text-lg">
-                            <li className="py-1 hover:text-black">Profile</li>
-                            <li className="py-1 hover:text-black">Settings</li>
-                            <li className="py-1 hover:text-black" onClick={handleLogout}>Logout</li>
-                        </ul>
-            </div>*/}
           <FullScreen />
-          {/*<div onClick={handleHelp}><a>Help</a></div>*/}
           <div className="ml-2 mr-2" onClick={handleLogout}>
             <a>
               <SVGOff />
@@ -78,7 +68,7 @@ const UserHeader = () => {
           </div>
         </div>
       ) : (
-        <div className="mr-2 md:mr-4 text-xl md:text-2xl font-black text-green-primary">
+        <div className="mr-2 md:mr-4 text-xl md:text-2xl text-green-primary">
           DollarDarwin
         </div>
       )}

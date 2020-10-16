@@ -1,14 +1,13 @@
 import { COLORS } from "../CONSTANTS";
 import React from 'react'
 interface SVGCashFlowProps {
-  disabled: boolean;
+  disabled?: boolean;
   selected: boolean;
 }
 
 export default function SVGCashFlow({ disabled, selected }: SVGCashFlowProps) {
   return (
     <svg
-      id="Capa_1"
       enableBackground="new 0 0 509.971 509.971"
       className="w-8"
       viewBox="0 0 509.971 509.971"

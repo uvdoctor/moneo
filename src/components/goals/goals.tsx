@@ -11,56 +11,31 @@ import {
   createNewGoalInput,
   getGoalTypes,
   getImpOptions,
-  getLastPossibleFFYear,
   getAge,
+  getDuration,
+  getGoalsList,
 } from "./goalutils";
-import { findEarliestFFYear, isFFPossible } from "./cfutils";
+import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import Summary from "./summary";
 import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
-//@ts-ignore
-import { AwesomeButton } from "react-awesome-button";
 import SVGEdit from "../svgedit";
 import { toast } from "react-toastify";
-import { useFullScreen } from "react-browser-hooks";
 import Tabs from "../tabs";
 import { ASSET_TYPES } from "../../CONSTANTS";
 import SVGBarChart from "../svgbarchart";
 import TreeMapChart from "./treemapchart";
 import SVGAAChart from "./svgaachart";
 import SVGList from "../svglist";
-interface GoalsProps {
-  showModalHandler: Function;
-  savings: number;
-  annualSavings: number;
-  avgAnnualExpense: number;
-  expChgRate: number;
-  currency: string;
-  allGoals: Array<APIt.CreateGoalInput> | null;
-  allCFs: any;
-  goalsLoaded: boolean;
-  ffGoal: APIt.CreateGoalInput | null;
-  allGoalsHandler: Function;
-  allCFsHandler: Function;
-  ffGoalHandler: Function;
-}
+import Button from "../Button";
 
-export default function Goals({
-  showModalHandler,
-  savings,
-  annualSavings,
-  avgAnnualExpense,
-  expChgRate,
-  currency,
-  allGoals,
-  allCFs,
-  goalsLoaded,
-  ffGoal,
-  allGoalsHandler,
-  allCFsHandler,
-  ffGoalHandler,
-}: GoalsProps) {
-  const { fullScreen } = useFullScreen();
+export default function Goals() {
+  const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
+    []
+  );
+  const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
+  const [ffGoal, setFFGoal] = useState<APIt.CreateGoalInput | null>(null);
+  const [allCFs, setAllCFs] = useState<any>({});
   const [wipGoal, setWIPGoal] = useState<APIt.CreateGoalInput | null>(null);
   const [mustCFs, setMustCFs] = useState<Array<number>>([]);
   const [tryCFs, setTryCFs] = useState<Array<number>>([]);
@@ -68,7 +43,6 @@ export default function Goals({
   const [mergedCFs, setMergedCFs] = useState<any>({});
   const [impFilter, setImpFilter] = useState<string>("");
   const [ffResult, setFFResult] = useState<any>({});
-  const [ffYear, setFFYear] = useState<number | null>(0);
   const [rr, setRR] = useState<Array<number>>([]);
   const goalsLabel = "Goals";
   const cfLabel = "Cash Flows";
@@ -94,17 +68,53 @@ export default function Goals({
       order: 3,
       active: true,
       svg: SVGBarChart,
-      svglabel: currency,
+      svglabel: 'Yearly',
     },
   ];
-  const irDiffByCurrency: any = {
-    INR: 3,
+
+  const loadAllGoals = async () => {
+    let goals: Array<APIt.CreateGoalInput> | null = await getGoalsList();
+    if (!goals || goals.length === 0) {
+      setGoalsLoaded(true);
+      return;
+    }
+    let allCFs: any = {};
+    let ffGoalId = "";
+    goals?.forEach((g) => {
+      if (g.type === APIt.GoalType.FF) {
+        setFFGoal(g);
+        ffGoalId = g.id as string;
+      } else {
+        let result: any = calculateCFs(
+          null,
+          g,
+          getDuration(
+            g.sa as number,
+            g.sy,
+            g.ey,
+            g.manual,
+            g.emi?.per,
+            g.emi?.ry,
+            g.emi?.dur
+          )
+        );
+        allCFs[g.id as string] = result.cfs;
+      }
+    });
+    removeFromArray(goals, "id", ffGoalId);
+    setAllCFs(allCFs);
+    setAllGoals([...goals]);
   };
 
   // potential performance
   const getPP = () => {
-    let irDiff = irDiffByCurrency[currency];
-    if (!irDiff) irDiff = 0;
+    const irDiffByCurrency: any = {
+      INR: 3,
+    };
+    let irDiff =
+      ffGoal && irDiffByCurrency.hasOwnProperty(ffGoal.ccy)
+        ? irDiffByCurrency[ffGoal.ccy]
+        : 0;
     return {
       [ASSET_TYPES.SAVINGS]: 0.5 + irDiff,
       [ASSET_TYPES.DEPOSITS]: 1.5 + irDiff,
@@ -119,51 +129,43 @@ export default function Goals({
       [ASSET_TYPES.DIVIDEND_GROWTH_STOCKS]: 5 + irDiff,
       [ASSET_TYPES.INTERNATIONAL_STOCKS]: 9,
       [ASSET_TYPES.SMALL_CAP_STOCKS]: 9,
-      [ASSET_TYPES.DIGITAL_CURRENCIES]: 10,
     };
   };
 
   const buildEmptyMergedCFs = (fromYear: number, toYear: number) => {
     if (!ffGoal) return {};
-    let mCFs = {};
+    let mCFs: any = {};
     let ffToYear = ffGoal.ey;
     if (toYear < ffToYear) toYear = ffToYear;
-    for (let year = fromYear; year <= toYear; year++)
-      //@ts-ignore
-      mCFs[year] = 0;
+    for (let year = fromYear; year <= toYear; year++) mCFs[year] = 0;
     return mCFs;
   };
 
-  const calculateFFYear = () => {
+  const calculateFFYear = (
+    mergedCFs: any,
+    mustCFs: Array<number>,
+    tryCFs: Array<number>
+  ) => {
     if (!ffGoal) return;
     let result = findEarliestFFYear(
       ffGoal,
-      savings,
       mergedCFs,
-      annualSavings,
-      ffYear,
+      ffResult.ffYear ? ffResult.ffYear : null,
       mustCFs,
       tryCFs,
-      avgAnnualExpense,
-      expChgRate,
       getPP()
     );
     if (!isFFPossible(result, ffGoal.sa as number)) {
-      setFFYear(null);
-      setFFResult(result);
-      setRR([...result.rr]);
-    } else {
-      if (!ffYear || ffYear < result.ffYear || ffYear > getLastPossibleFFYear(ffGoal.ey)) {
-        setFFYear(result.ffYear);
-        setFFResult(result);
-        setRR([...result.rr]);
-      }
+      result.ffYear = 0;
     }
+    setFFResult(result);
+    setRR([...result.rr]);
+    console.log("FF result: ", result);
   };
 
   useEffect(() => {
-    calculateFFYear();
-  }, [savings, annualSavings, mustCFs]);
+    loadAllGoals().then(() => {});
+  }, []);
 
   useEffect(() => {
     if (!ffGoal) return;
@@ -173,24 +175,24 @@ export default function Goals({
     let optCFs = populateWithZeros(yearRange.from, yearRange.to);
     let mCFs = buildEmptyMergedCFs(yearRange.from, ffGoal.ey);
     allGoals?.forEach((g) => {
-      //@ts-ignore
-      let cfs: Array<number> = allCFs[g.id];
+      let cfs: Array<number> = allCFs[g.id as string];
       if (!cfs) return;
       if (g.imp === APIt.LMH.H)
         populateData(mustCFs, cfs, g.sy, yearRange.from);
       else if (g.imp === APIt.LMH.M)
         populateData(tryCFs, cfs, g.sy, yearRange.from);
       else populateData(optCFs, cfs, g.sy, yearRange.from);
-      //@ts-ignore
-      mergeCFs(mCFs, allCFs[g.id], g.sy);
+      mergeCFs(mCFs, allCFs[g.id as string], g.sy);
     });
     setMustCFs([...mustCFs]);
     setOptCFs([...optCFs]);
     setTryCFs([...tryCFs]);
     setMergedCFs(mCFs);
+    calculateFFYear(mCFs, mustCFs, tryCFs);
+    setGoalsLoaded(true);
   }, [allGoals]);
 
-  useEffect(() => showModalHandler(wipGoal), [wipGoal]);
+  useEffect(() => setWIPGoal(wipGoal), [wipGoal]);
 
   const addGoal = async (
     goal: APIt.CreateGoalInput,
@@ -208,7 +210,7 @@ export default function Goals({
     if (!g) return false;
     setWIPGoal(null);
     if (g.type === APIt.GoalType.FF) {
-      ffGoalHandler(g);
+      setFFGoal(g);
       return true;
     }
     toast.success(`Success! New Goal ${g.name} has been Created.`, {
@@ -217,8 +219,8 @@ export default function Goals({
     allGoals?.push(g as APIt.CreateGoalInput);
     //@ts-ignore
     allCFs[g.id] = cfs;
-    allCFsHandler(allCFs);
-    allGoalsHandler([...(allGoals as Array<APIt.CreateGoalInput>)]);
+    setAllCFs(allCFs);
+    setAllGoals([...(allGoals as Array<APIt.CreateGoalInput>)]);
   };
 
   const updateGoal = async (
@@ -238,10 +240,10 @@ export default function Goals({
     setWIPGoal(null);
     if (g.type === APIt.GoalType.FF) {
       toast.success(
-        "Success! Your Financial Freedom Target has been Updated.",
+        "Success! Your Financial Independence Target has been Updated.",
         { autoClose: 3000 }
       );
-      ffGoalHandler(g as APIt.CreateGoalInput);
+      setFFGoal(g as APIt.CreateGoalInput);
       return true;
     }
     toast.success(`Success! Goal ${g.name} has been Updated.`);
@@ -249,8 +251,8 @@ export default function Goals({
     allGoals?.unshift(g as APIt.CreateGoalInput);
     //@ts-ignore
     allCFs[g.id] = cfs;
-    allCFsHandler(allCFs);
-    allGoalsHandler([...(allGoals as Array<APIt.CreateGoalInput>)]);
+    setAllCFs(allCFs);
+    setAllGoals([...(allGoals as Array<APIt.CreateGoalInput>)]);
     return true;
   };
 
@@ -267,9 +269,9 @@ export default function Goals({
     removeFromArray(allGoals as Array<APIt.CreateGoalInput>, "id", id);
     //@ts-ignore
     delete allCFs[id];
-    allCFsHandler(allCFs);
+    setAllCFs(allCFs);
     setWIPGoal(null);
-    allGoalsHandler([...(allGoals as Array<APIt.CreateGoalInput>)]);
+    setAllGoals([...(allGoals as Array<APIt.CreateGoalInput>)]);
   };
 
   const cancelGoal = () => setWIPGoal(null);
@@ -286,7 +288,7 @@ export default function Goals({
     setWIPGoal(
       createNewGoalInput(
         type,
-        type === APIt.GoalType.FF ? currency : (ffGoal?.ccy as string)
+        type === APIt.GoalType.FF ? "USD" : (ffGoal?.ccy as string)
       )
     );
 
@@ -337,14 +339,17 @@ export default function Goals({
     goalId: string,
     goalImp: APIt.LMH
   ) => {
-    if (!ffGoal || !ffYear) return null;
+    console.log("FFGoal: ", ffGoal);
+    console.log("ff result...:", ffResult);
+    if (!ffGoal || !ffResult.ffYear) return null;
     let mCFs: any = Object.assign({}, mergedCFs);
     let highImpCFs: any = Object.assign([], mustCFs);
     let medImpCFs: any = Object.assign([], tryCFs);
     let nowYear = new Date().getFullYear();
     if (goalId) {
-      //@ts-ignore
-      let existingGoal = (allGoals?.filter((g) => g.id === goalId))[0];
+      let existingGoal = (allGoals?.filter((g) => g.id === goalId) as Array<
+        APIt.CreateGoalInput
+      >)[0];
       let existingSY = existingGoal.sy;
       let existingImp = existingGoal.imp;
       let existingCFs = allCFs[goalId];
@@ -362,16 +367,13 @@ export default function Goals({
     let nomineeAmt = ffGoal?.sa as number;
     let resultWithoutGoal = findEarliestFFYear(
       ffGoal,
-      savings,
       mCFs,
-      annualSavings,
-      ffYear,
+      ffResult ? ffResult.ffYear : null,
       highImpCFs,
       medImpCFs,
-      avgAnnualExpense,
-      expChgRate,
       getPP()
     );
+    console.log("Result without goal: ", resultWithoutGoal.rr);
     if (!isFFPossible(resultWithoutGoal, nomineeAmt))
       return {
         ffImpactYears: null,
@@ -389,14 +391,10 @@ export default function Goals({
     });
     let resultWithGoal = findEarliestFFYear(
       ffGoal,
-      savings,
       mCFs,
-      annualSavings,
       resultWithoutGoal.ffYear,
       highImpCFs,
       medImpCFs,
-      avgAnnualExpense,
-      expChgRate,
       getPP()
     );
     if (!isFFPossible(resultWithGoal, nomineeAmt))
@@ -415,24 +413,16 @@ export default function Goals({
   return wipGoal ? (
     <div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
       <div className="relative bg-white border-0">
-        {console.log("Loading...")}
         {wipGoal.type === APIt.GoalType.FF ? (
           <FFGoal
             goal={wipGoal as APIt.CreateGoalInput}
             addCallback={addGoal}
             cancelCallback={cancelGoal}
             updateCallback={updateGoal}
-            annualSavings={annualSavings}
-            totalSavings={savings}
-            ffYear={ffYear}
             ffResult={ffResult}
             mergedCfs={mergedCFs}
-            ffYearHandler={setFFYear}
             ffResultHandler={setFFResult}
-            rrHandler={setRR}
             pp={getPP()}
-            avgAnnualExp={avgAnnualExpense}
-            expChgRate={expChgRate}
             mustCFs={mustCFs}
             tryCFs={tryCFs}
           />
@@ -452,7 +442,7 @@ export default function Goals({
     </div>
   ) : (
     <Fragment>
-      {ffGoal && (
+      {ffGoal && rr && rr.length > 0 && (
         <div
           className={`w-full ${
             isFFPossible(ffResult, ffGoal.sa as number)
@@ -469,10 +459,11 @@ export default function Goals({
           >
             <label className="p-2 font-semibold text-lg md:text-xl">
               {isFFPossible(ffResult, ffGoal.sa as number)
-                ? `Financial Freedom at ${
-                    getAge(ffYear as number, ffGoal.ey)
-                  }`
-                : `Financial Freedom May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
+                ? `Financial Independence Earliest at ${getAge(
+                    ffResult.ffYear as number,
+                    ffGoal.ey
+                  )}`
+                : `Financial Independence May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
             </label>
             <div
               className="flex items-center cursor-pointer"
@@ -495,23 +486,20 @@ export default function Goals({
         {Object.keys(getGoalTypes()).map(
           (key) =>
             key !== APIt.GoalType.FF && (
-              <AwesomeButton
+              <Button
                 className={`mt-4 ${
                   !ffGoal ? "cursor-not-allowed" : "cursor-pointer"
                 }`}
-                type="primary"
-                ripple
-                size="medium"
+                isPrimary
                 key={key}
                 disabled={!ffGoal}
-                onPress={() => createGoal(key as APIt.GoalType)}
-              >
-                {getGoalTypes()[key as APIt.GoalType]}
-              </AwesomeButton>
+                onClick={() => createGoal(key as APIt.GoalType)}
+                label={getGoalTypes()[key as APIt.GoalType]}
+              />
             )
         )}
       </div>
-      {ffGoal
+      {ffGoal && rr && rr.length > 0
         ? allGoals &&
           allGoals.length > 0 && (
             <Fragment>
@@ -556,19 +544,15 @@ export default function Goals({
                   optCFs={optCFs}
                   from={nowYear + 1}
                   to={ffGoal.ey}
-                  fullScreen={fullScreen}
+                  currency={ffGoal.ccy}
                 />
               )}
-              {viewMode === aaLabel &&
-                ffResult &&
-                ffResult.aa &&
-                ffResult.rr && (
-                  <TreeMapChart
-                    aa={ffResult.aa}
-                    rr={ffResult.rr}
-                    fullScreen={fullScreen}
-                  />
-                )}
+              {viewMode === aaLabel && (
+                <TreeMapChart
+                  aa={ffResult.aa}
+                  rr={rr}
+                />
+              )}
               {viewMode === goalsLabel && (
                 <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
                   {allGoals.map((g: APIt.CreateGoalInput, i: number) => {
@@ -579,6 +563,7 @@ export default function Goals({
                       g.id,
                       g.imp
                     );
+                    console.log("Result: ", result);
                     return (
                       <Summary
                         key={"g" + i}
@@ -586,8 +571,7 @@ export default function Goals({
                         name={g.name}
                         type={g.type}
                         imp={g.imp}
-                        rr={rr}
-                        //@ts-ignore
+                        rr={result?.rr as Array<number>}
                         startYear={g.sy}
                         currency={g.ccy}
                         cfs={allCFs[g.id]}
@@ -606,14 +590,12 @@ export default function Goals({
         : goalsLoaded && (
             <div className="text-center align-center">
               <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>
-              <p className="mb-2">Set Up Financial Freedom Target.</p>
-              <AwesomeButton
-                ripple
-                type="primary"
-                onPress={() => createGoal(APIt.GoalType.FF)}
-              >
-                GET STARTED
-              </AwesomeButton>
+              <p className="mb-2">Set Up Financial Independence Target.</p>
+              <Button
+                isPrimary
+                onClick={() => createGoal(APIt.GoalType.FF)}
+                label="Get Started"
+              />
             </div>
           )}
     </Fragment>

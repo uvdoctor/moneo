@@ -1,9 +1,8 @@
 import React, { Fragment, useEffect, useRef } from "react";
 import NextStep from "./nextstep";
 import { getCurrencyList } from "../utils";
-import SVGInfo from "../svginfo";
-import { toast } from "react-toastify";
 import { INPUT_HIGHLIGHT } from "../../CONSTANTS";
+import Tooltip from "./tooltip";
 interface SelectInputProps {
   inputOrder: number;
   currentOrder: number;
@@ -42,7 +41,7 @@ export default function SelectInput(props: SelectInputProps) {
   }, [props.allInputDone, props.currentOrder])
 
   return (
-    <div className="w-full flex items-center justify-center">
+    <div>
       {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
         props.allInputDone) && (
         <div
@@ -53,14 +52,7 @@ export default function SelectInput(props: SelectInputProps) {
                   INPUT_HIGHLIGHT
                 }`}
         >
-          {props.info && (
-            <div
-              className="w-full flex justify-end cursor-pointer"
-              onClick={() => toast.info(props.info)}
-            >
-              <SVGInfo />
-            </div>
-          )}
+          {props.info && <Tooltip info={props.info} />}
           {props.pre && (
             <label className="whitespace-no-wrap">{props.pre}</label>
           )}

@@ -13,21 +13,8 @@ interface TabsProps {
   keepCentered?: boolean;
 }
 
-export const DASHBOARD_STYLE = "dashboard";
-
 export default function Tabs(props: TabsProps) {
   const styleMap: any = {
-    [DASHBOARD_STYLE]: {
-      parent: "mt-12 py-1 bg-gray-600 justify-center text-base",
-      current: "pt-2 px-4 md:px-8",
-      selected: {
-        text: "text-green-primary",
-      },
-      unselected: {
-        text: "text-white",
-        hover: "text-green-primary",
-      },
-    },
     standard: {
       parent: `w-full text-sm md:text-base ${!props.allInputDone || props.keepCentered ? 'justify-center' : 'mr-0 justify-around'}`,
       current: `${(!props.allInputDone || props.keepCentered) && 'mr-2 md:mr-4'}`,

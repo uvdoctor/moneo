@@ -6,7 +6,12 @@ import {
   getEmi,
 } from "../calc/finance";
 import xirr from "xirr";
-import { buildArray, getAllAssetTypes } from "../utils";
+import {
+  appendValue,
+  buildArray,
+  getAllAssetTypes,
+  getRangeFactor,
+} from "../utils";
 import { ASSET_TYPES } from "../../CONSTANTS";
 import { getLastPossibleFFYear, isTaxCreditEligible } from "./goalutils";
 //Tested
@@ -132,16 +137,32 @@ export const calculateTotalCP = (
   return total;
 };
 
-export const calculateFFCFs = (
-  g: APIt.CreateGoalInput,
-  annualSavings: number,
-  ffYear: number
+const getAnnualPorfolioValue = (
+  amt: number,
+  avgSavings: number,
+  monthlyIncrease: number
 ) => {
+  let total = amt;
+  let startingNum = avgSavings;
+  for (let m = new Date().getMonth(); m <= 11; m++) {
+    let compoundedNum = startingNum * (1 + monthlyIncrease / 100);
+    total += compoundedNum;
+    startingNum = compoundedNum;
+  }
+  return total;
+};
+
+export const calculateFFCFs = (g: APIt.CreateGoalInput, ffYear: number) => {
   let cfs: Array<number> = [];
   let nowYear = new Date().getFullYear();
   let duration = ffYear - (nowYear + 1);
   for (let i = 1; i <= duration; i++) {
-    let val = getCompoundedIncome((g.tbr as number) * 12, annualSavings, i, 12);
+    let val = getCompoundedIncome(
+      (g.tbr as number) * 12,
+      (g.rachg as number) * 12,
+      i,
+      12
+    );
     cfs.push(Math.round(val));
   }
   for (let year = ffYear; year <= g.ey; year++) {
@@ -340,11 +361,12 @@ export const getLoanBorrowAmt = (
 export const getLoanPaidForMonths = (
   endYear: number,
   loanRepaymentYear: number,
-  loanYears: number,
+  loanYears: number
 ) => {
-  if(!endYear || !loanRepaymentYear || loanRepaymentYear >= endYear) return loanYears * 12
-  let loanPaidYears = endYear + 1 - loanRepaymentYear 
-  if(loanPaidYears > loanYears) loanPaidYears = loanYears;
+  if (!endYear || !loanRepaymentYear || loanRepaymentYear > endYear)
+    return loanYears * 12;
+  let loanPaidYears = endYear + 1 - loanRepaymentYear;
+  if (loanPaidYears > loanYears) loanPaidYears = loanYears;
   return loanPaidYears * 12;
 };
 
@@ -398,11 +420,6 @@ export const createEduLoanDPWithSICFs = (
   };
 };
 
-//Tested
-export const calculateEduLoanGracePeriodInt = (loanPrincipal: number, rate: number) => {
-  loanPrincipal * (rate / 200)
-}
-//Tested
 const createLoanCFs = (
   p: number,
   goal: APIt.CreateGoalInput,
@@ -411,7 +428,13 @@ const createLoanCFs = (
   let cfs: Array<number> = [];
   let totalPTaxBenefit = 0;
   let totalITaxBenefit = 0;
-  if (!goal.emi?.per || !goal.emi?.dur) return cfs; //tested
+  if (!goal.emi?.per || !goal.emi?.dur) return {
+    cfs: cfs,
+    ptb: totalPTaxBenefit,
+    itb: totalITaxBenefit,
+    iSchedule: [],
+    pSchedule: []
+  };
   let loanBorrowAmt = 0;
   let loanDP = 0;
   let simpleInts: Array<number> = [];
@@ -436,7 +459,7 @@ const createLoanCFs = (
       goal.ey,
       goal.emi?.rate,
       goal.btr as number,
-      goal.tbr as number < 1
+      (goal.tbr as number) < 1
     );
     cfs = result.cfs;
     loanBorrowAmt = result.borrowAmt;
@@ -461,6 +484,8 @@ const createLoanCFs = (
   let ey = goal.sy + duration - 1;
   let sp = 0;
   let taxBenefit = 0;
+  let iSchedule: Array<number> = [];
+  let pSchedule: Array<number> = [];
   for (let year = goal.sy, ly = goal.emi?.dur as number; year <= ey; year++) {
     let index = year - goal.sy;
     let cf = cfs[index] ? cfs[index] : 0;
@@ -470,6 +495,9 @@ const createLoanCFs = (
       let annualEmiAmt = emi * (ly === 0.5 ? 6 : 12);
       cf += annualEmiAmt;
       let i = year - goal.emi.ry;
+      let annualInt = Math.round(annualInts[i]);
+      iSchedule.push(annualInt);
+      pSchedule.push(annualEmiAmt - annualInt);
       if (!isTaxCreditEligible(goal.type)) {
         if (goal.type !== APIt.GoalType.E)
           taxBenefit = getTaxBenefit(
@@ -498,8 +526,8 @@ const createLoanCFs = (
       );
       totalITaxBenefit += taxBenefit;
     }
-    if(goal.type === APIt.GoalType.E && year === goal.ey + 1) {
-      cf += remSimpleIntAmt
+    if (goal.type === APIt.GoalType.E && year === goal.ey + 1) {
+      cf += remSimpleIntAmt;
     }
     if (goal.type === APIt.GoalType.B) {
       cf -= calculateBuyAnnualNetCF(
@@ -529,15 +557,25 @@ const createLoanCFs = (
       goal?.emi?.rate as number,
       goal?.emi?.ry as number,
       goal?.emi?.dur as number,
-      duration,
+      duration
     );
+    if (remPayment) {
+      iSchedule.push(0);
+      pSchedule.push(Math.round(remPayment));
+    }
     sp = calculateSellPrice(p, goal?.achg as number, duration);
     cfs.push(Math.round(sp + taxBenefit - remPayment));
     taxBenefit = getTaxBenefit(remPayment, goal.tdr, goal.tdl);
     totalPTaxBenefit += taxBenefit;
   }
   if (taxBenefit > 0) cfs.push(Math.round(taxBenefit));
-  return { cfs: cfs, ptb: totalPTaxBenefit, itb: totalITaxBenefit };
+  return {
+    cfs: cfs,
+    ptb: totalPTaxBenefit,
+    itb: totalITaxBenefit,
+    iSchedule: iSchedule,
+    pSchedule: pSchedule,
+  };
 };
 
 //Tested through createLoanCFs
@@ -548,7 +586,7 @@ const getRemPrincipal = (
   loanIntRate: number,
   loanRepaymentSY: number,
   loanYears: number,
-  duration: number,
+  duration: number
 ) => {
   let ey = startYear + duration - 1;
   if (loanRepaymentSY + loanYears - 1 <= ey) return 0;
@@ -557,7 +595,7 @@ const getRemPrincipal = (
     let loanPaidForMonths = getLoanPaidForMonths(
       ey,
       loanRepaymentSY,
-      loanYears,
+      loanYears
     );
     remPrincipal = getRemainingPrincipal(
       loanBorrowAmt,
@@ -628,20 +666,20 @@ const createManualCFs = (
 const calculateMustAllocation = (
   ffGoal: APIt.CreateGoalInput,
   mustCFs: Array<number>,
-  avgAnnualExpense: number,
-  expChgRate: number,
   ffYear: number | null
 ) => {
   let nowYear = new Date().getFullYear();
   let savingsAA: any = {};
   let depositsAA: any = {};
   let bondsAA: any = {};
+  let avgAnnualExpense = 24000;
+  if (ffGoal.ccy !== "USD")
+    avgAnnualExpense = 12000 * getRangeFactor(ffGoal.ccy);
   for (let year = nowYear + 1; year <= ffGoal.ey; year++) {
     let livingExp: number =
       !ffYear || year < ffYear
         ? Math.round(
-            getCompoundedIncome(expChgRate, avgAnnualExpense, year - nowYear) /
-              2
+            getCompoundedIncome(3, avgAnnualExpense, year - nowYear) / 2
           )
         : getCompoundedIncome(
             ffGoal.btr as number,
@@ -650,8 +688,11 @@ const calculateMustAllocation = (
           );
     savingsAA[year] = livingExp / 2;
     depositsAA[year] = livingExp / 2;
-    let mustCF = mustCFs[year - (nowYear + 1)];
-    if (mustCF && mustCF < 0) depositsAA[year] -= mustCF;
+    if (
+      mustCFs.hasOwnProperty(year - (nowYear + 1)) &&
+      mustCFs[year - (nowYear + 1)] < 0
+    )
+      depositsAA[year] -= mustCFs[year - (nowYear + 1)];
     let depCF = 0;
     let bondsCF = 0;
     for (let futureYear = year + 1; futureYear < year + 5; futureYear++) {
@@ -700,7 +741,6 @@ const buildEmptyAA = (fromYear: number, toYear: number) => {
 const getRR = (aa: any, index: number, pp: any) => {
   let perf = 0;
   for (const prop in aa) {
-    //@ts-ignore
     perf += (pp[prop] * aa[prop][index]) / 100;
   }
   return perf;
@@ -779,10 +819,7 @@ const calculateAllocation = (
               aa[ASSET_TYPES.INTERNATIONAL_STOCKS][i] +=
                 stocksPer - aa[ASSET_TYPES.LARGE_CAP_STOCKS][i];
             } else {
-              aa[ASSET_TYPES.DIGITAL_CURRENCIES][i] += 1;
-              aa[ASSET_TYPES.MID_CAP_STOCKS][i] += Math.round(
-                (stocksPer - 1) * 0.7
-              );
+              aa[ASSET_TYPES.MID_CAP_STOCKS][i] += Math.round(stocksPer * 0.7);
               aa[ASSET_TYPES.INTERNATIONAL_STOCKS][i] +=
                 stocksPer - 1 - aa[ASSET_TYPES.MID_CAP_STOCKS][i];
             }
@@ -809,36 +846,28 @@ const calculateAllocation = (
 };
 
 export const checkForFF = (
-  savings: number,
   ffGoal: APIt.CreateGoalInput,
   ffYear: number,
   mergedCFs: Object,
-  annualSavings: number,
   mustCFs: Array<number>,
   tryCFs: Array<number>,
-  avgAnnualExpense: number,
-  expChgRate: number,
   pp: any
 ) => {
-  let goal = Object.assign({}, ffGoal);
-  let mCFs = Object.assign({}, mergedCFs);
-  let cs = savings;
-  let cfs: Array<number> = calculateFFCFs(goal, annualSavings, ffYear);
+  let mCFs: any = Object.assign({}, mergedCFs);
+  let cs = getAnnualPorfolioValue(
+    ffGoal.ra as number,
+    ffGoal.rachg as number,
+    ffGoal.tbr as number
+  );
+  let cfs: Array<number> = calculateFFCFs(ffGoal, ffYear);
   let nowYear = new Date().getFullYear();
   cfs.forEach((cf, i) => {
     let index = nowYear + 1 + i;
-    //@ts-ignore
-    mCFs[index] ? (mCFs[index] += cf) : (mCFs[index] = cf);
+    appendValue(mCFs, index, cf);
   });
   let ffAmt = 0;
   let ffCfs = {};
-  let mustAllocation = calculateMustAllocation(
-    ffGoal,
-    mustCFs,
-    avgAnnualExpense,
-    expChgRate,
-    ffYear
-  );
+  let mustAllocation = calculateMustAllocation(ffGoal, mustCFs, ffYear);
   let tryAllocation = calculateTryAllocation(ffGoal, tryCFs);
   let aa: any = buildEmptyAA(nowYear + 1, ffGoal.ey);
   let rr: Array<number> = [];
@@ -847,7 +876,7 @@ export const checkForFF = (
   for (let [year, value] of Object.entries(mCFs)) {
     let y = parseInt(year);
     if (y > ffGoal.ey) break;
-    let v = parseInt(value);
+    let v = parseInt(value as string);
     let sa = mustAllocation.savings[y];
     let da = mustAllocation.deposits[y];
     let mustBA = mustAllocation.bonds[y];
@@ -859,26 +888,26 @@ export const checkForFF = (
     if (cs >= minReq) {
       calculateAllocation(ffGoal, y, cs, aa, sa, da, mustBA, tryBA, ffYear);
     } else {
-      if (cs <= sa) aa[ASSET_TYPES.SAVINGS][i] = 100;
+      if (cs <= sa) aa[ASSET_TYPES.SAVINGS][i] += 100;
       else {
-        aa[ASSET_TYPES.SAVINGS][i] = Math.round((sa / cs) * 100);
+        aa[ASSET_TYPES.SAVINGS][i] += Math.round((sa / cs) * 100);
         let depPer = Math.round((da / cs) * 100);
         let remPer = 100 - aa[ASSET_TYPES.SAVINGS][i];
-        aa[ASSET_TYPES.DEPOSITS][i] = depPer < remPer ? depPer : remPer;
+        aa[ASSET_TYPES.DEPOSITS][i] += depPer < remPer ? depPer : remPer;
         remPer -= aa[ASSET_TYPES.DEPOSITS][i];
         if (remPer > 0) {
-          if (y >= ffYear) aa[ASSET_TYPES.MED_TERM_BONDS][i] = remPer;
-          else aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = remPer;
+          if (y >= ffYear) aa[ASSET_TYPES.MED_TERM_BONDS][i] += remPer;
+          else aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] += remPer;
         }
       }
       oom.push(y);
     }
-    rate = getRR(aa, i, pp);
+    rate = typeof pp !== 'number' ? getRR(aa, i, pp) : pp
     rr.push(rate);
     if (v < 0) cs += v;
     if (cs > 0) cs *= 1 + rate / 100;
     if (v > 0) cs += v;
-    if (ffYear === y && i === 0) ffAmt = savings;
+    if (ffYear === y && i === 0) ffAmt = ffGoal.ra as number;
     else if (y === ffYear - 1) ffAmt = cs;
     //@ts-ignore
     ffCfs[y] = Math.round(cs);
@@ -911,18 +940,14 @@ export const isFFPossible = (result: any, nomineeAmt: number) => {
 
 export const findEarliestFFYear = (
   ffGoal: APIt.CreateGoalInput,
-  savings: number,
   mergedCFs: Object,
-  annualSavings: number,
   yearToTry: number | undefined | null,
   mustCFs: Array<number>,
   tryCFs: Array<number>,
-  avgAnnualExpense: number,
-  expChgRate: number,
   pp: any
 ) => {
   let nowYear = new Date().getFullYear();
-  let lastPossibleFFYear = getLastPossibleFFYear(ffGoal.ey)
+  let lastPossibleFFYear = getLastPossibleFFYear(ffGoal.ey);
   if (nowYear > lastPossibleFFYear)
     return {
       ffYear: -1,
@@ -938,15 +963,11 @@ export const findEarliestFFYear = (
     yearToTry = nowYear + Math.round((lastPossibleFFYear - nowYear) / 2);
   let nomineeAmt = ffGoal?.sa as number;
   let prevResult = checkForFF(
-    savings,
     ffGoal,
     yearToTry,
     mergedCFs,
-    annualSavings,
     mustCFs,
     tryCFs,
-    avgAnnualExpense,
-    expChgRate,
     pp
   );
   let increment = isFFPossible(prevResult, nomineeAmt) ? -1 : 1;
@@ -955,18 +976,7 @@ export const findEarliestFFYear = (
     currYear <= lastPossibleFFYear && currYear > nowYear;
     currYear += increment
   ) {
-    let result = checkForFF(
-      savings,
-      ffGoal,
-      currYear,
-      mergedCFs,
-      annualSavings,
-      mustCFs,
-      tryCFs,
-      avgAnnualExpense,
-      expChgRate,
-      pp
-    );
+    let result = checkForFF(ffGoal, currYear, mergedCFs, mustCFs, tryCFs, pp);
     if (
       !isFFPossible(result, nomineeAmt) &&
       isFFPossible(prevResult, nomineeAmt)

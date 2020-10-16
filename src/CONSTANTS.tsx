@@ -1,47 +1,23 @@
 export const ROUTES = {
     HOME: '/',
-    DASHBOARD: '/dashboard',
-    PLAN: '/goals',
+    GET: '/get',
+    SET: '/set',
+    SAVE: '/save',
+    INVEST: '/invest',
     CALCULATE: '/calculate',
+    FI: '/fi',
+    BR: '/buyorrent',
+    EDUCATION: '/eduloan',
+    LOAN: '/loan'
 }
 
-export const SVGS = {
-    TIME_COST: 'TimeCostSvg',
-    OPP_COST: 'OppCostSvg',
-    TIME: 'TimeSvg',
-    FI_MONEY: 'FIMoneySvg',
-    LOAN: 'LoanSvg',
-    BALANCE: 'BalanceSvg',
-    PORTFOLIORRR: 'PortfolioRRRSvg',
-    CHEAPER: 'CheaperSvg',
-    INCREASE_RATE: 'IncreaseRateSvg',
-    PERCENTAGE: 'PercentSvg',
-    TARGET: 'TargetSvg',
-    PIGGYBANK: 'PiggybankSvg'
-}
-
-export const CALCS = {
-    FI: 'FI',
-    SI: 'SI',
-    BR: 'BR',
-    DB: 'DB',
-    NW: 'NW',
-    RISK: 'RISK',
-    LOAN: 'LOAN',
-    ED: 'ED',
-    DEP: 'DEP'
-}
-
-export const FIXED = {
-    DEP: 'Deposit',
-    BOND: 'Bond',
-    DEB: 'Debenture'
-}
-
-export const DIRECTION = {
-    STEADY: 'steady',
-    DECREASING: 'decreasing',
-    INCREASING: 'increasing'
+export const CALC_NAMES = {
+    BR: 'Buy v/s Rent & Invest',
+    FI: 'Financial Independence',
+    LOAN: 'Simple Loan',
+    EDU_LOAN: 'Education Loan',
+    DR: 'Debt Repayment',
+    CI: 'Credit Score Impact'
 }
 
 export const ASSET_CATEGORIES = {
@@ -60,7 +36,6 @@ export const ASSET_TYPES = {
     DOMESTIC_REIT: 'Domestic REIT',
     INTERNATIONAL_REIT: 'International REIT',
     GOLD: 'Gold',
-    DIGITAL_CURRENCIES: 'Digital Currencies',
     LARGE_CAP_STOCKS: 'Large-cap Stocks',
     MID_CAP_STOCKS: 'Mid-cap Stocks',
     SMALL_CAP_STOCKS: 'Small-cap Stocks',
@@ -72,7 +47,7 @@ export const ASSET_TYPES = {
 export const COLORS = {
     GREEN: "#96D441",
     RED: "#FF0000",
-    BLUE: "#3182ce",
+    BLUE: "#3d86ce",
     DARK_BLUE: "#2c5282",
     DISABLED: "#cbd5e0",
     DEFAULT: "#4a5568",

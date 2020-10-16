@@ -59,10 +59,10 @@ export function getRemainingPrincipal(borrowAmt: number, emi: number, intRate: n
 }
 //Tested
 
-export function getNPV(rr: Array<number>, cashFlows: Array<number>, startIndex: number) {
+export function getNPV(rr: number | Array<number>, cashFlows: Array<number>, startIndex: number) {
     let npv = 0
     for(let i = cashFlows.length - 1; i > 0; i--) {
-        let dr = rr[startIndex + i]
+        let dr = typeof rr === 'number' ? rr : rr[startIndex + i]
         dr = dr >= 0 ? dr : 3
         npv = (cashFlows[i] + npv) / (1 + (dr/100))
     }

@@ -1,66 +1,63 @@
-import React, { useState, useEffect } from 'react'
-import dynamic from 'next/dynamic'
-import { getCommonConfig, getCommonLayoutProps, getCommonStyle } from '../chartutils'
-import {useFullScreenBrowser} from "react-browser-hooks"
+import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
 
 interface CFChartProps {
-    mustCFs: Array<number>
-    tryCFs: Array<number>
-    optCFs: Array<number>
-    from: number
-    to: number
-    fullScreen: boolean
+	mustCFs: Array<number>;
+	tryCFs: Array<number>;
+	optCFs: Array<number>;
+	from: number;
+  to: number;
+  currency: string
 }
 
-const Plot = dynamic(
-    () => import('react-plotly.js'), { ssr: false }
-)
+const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
 
-export default function CFChart({ mustCFs, tryCFs, optCFs, from, to, fullScreen }: CFChartProps) {
-    const [years, setYears] = useState<Array<number>>([])
-    const fsb = useFullScreenBrowser()
+export default function CFChart({ mustCFs, tryCFs, optCFs, from, to, currency }: CFChartProps) {
+	const [ data, setData ] = useState<Array<any>>([]);
 
-    useEffect(() => {
-        for(let year = from; year <= to; year++)
-            years.push(year)
-        setYears([...years])
-    }, [from, to])
+	useEffect(
+		() => {
+			let data: Array<any> = [];
+			for (let year = from; year <= to; year++) {
+				if (mustCFs[year - from]) {
+					data.push({
+						year: year,
+						value: mustCFs[year - from],
+						name: 'Must Meet'
+					});
+				}
+				if (tryCFs[year - from]) {
+					data.push({
+						year: year,
+						value: tryCFs[year - from],
+						name: 'Try Best'
+					});
+				}
+				if (optCFs[year - from]) {
+					data.push({
+						year: year,
+						value: optCFs[year - from],
+						name: 'Optional'
+					});
+				}
+			}
+			setData([ ...data ]);
+		},
+		[ from, to, mustCFs, tryCFs, optCFs ]
+	);
 
-    useEffect(() => {
-        if (fsb.info.screenWidth > 800)
-          setTimeout(() => {
-            window.dispatchEvent(new Event("resize"));
-          }, 300);
-      }, [fullScreen]);
-    
-    const createBarTrace = (cfs: Array<number>, name: string) => {
-        return {
-            type: 'bar', x: years, y: cfs, name: name
-        }
-    }
-
-    return (
-        <div className="w-full">
-            {/*@ts-ignore*/}
-            <Plot layout={{
-                barmode: 'stack',
-                ...getCommonLayoutProps(),
-                xaxis: { title: 'Year', showgrid: false, type: 'category' },
-                legend: {
-                    orientation: 'h',
-                    x: 0.5,
-                    y: 1
-                },
-            }}
-                useResizeHandler
-                style={getCommonStyle()}
-                data={[
-                    createBarTrace(mustCFs, 'Must Meet'),
-                    createBarTrace(tryCFs, 'Try Best'),
-                    createBarTrace(optCFs, 'Optional'),
-                ]}
-                config={getCommonConfig()}
-            />
-        </div>
-    )
+	return (
+		<div className="w-full">
+			<StackedColumnChart
+				data={data}
+				xField="year"
+				yField="value"
+				stackField="name"
+				yAxis={getCommonYAxis()}
+        xAxis={getCommonXAxis('Year')}
+        meta={getCommonMeta(currency)}
+			/>
+		</div>
+	);
 }

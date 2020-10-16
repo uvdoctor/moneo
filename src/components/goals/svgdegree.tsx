@@ -6,7 +6,7 @@ interface DegreeSVGProps {
 
 export default function DegreeSVG({animationStyle} : DegreeSVGProps) {
     return(
-        <svg fill="white" viewBox="0 0 398.97 398.97" style={{animation: animationStyle}}>
+        <svg viewBox="0 0 398.97 398.97" style={{animation: animationStyle}}>
 							<g>
 								<g>
 									<path d="M225.092,276.586c-7.101,4.355-16.195,6.754-25.607,6.754c-9.412,0-18.506-2.398-25.607-6.754L57.946,205.484

@@ -1,103 +1,75 @@
-import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-import {
-  getCommonConfig,
-  getCommonLayoutProps,
-  getCommonStyle,
-} from "../chartutils";
-import {
-  getAllAssetCategories,
-  getAllAssetTypesByCategory,
-  getAssetColour,
-} from "../utils";
-import { ASSET_CATEGORIES, ASSET_TYPES } from "../../CONSTANTS";
-import { useFullScreenBrowser } from "react-browser-hooks";
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { getAllAssetCategories, getAllAssetTypesByCategory, getAssetColour } from '../utils';
 
 interface TreeMapChartProps {
-  aa: any;
-  rr: Array<number>;
-  fullScreen: boolean;
+	aa: any;
+	rr: Array<number>;
 }
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+const TreemapChart = dynamic(() => import('bizcharts/lib/plots/TreemapChart'), { ssr: false });
 
-export default function TreeMapChart({
-  aa,
-  rr,
-  fullScreen,
-}: TreeMapChartProps) {
-  const fsb = useFullScreenBrowser();
-  const [labels, setLabels] = useState<Array<string>>([]);
-  const [values, setValues] = useState<Array<string>>([]);
-  const [colors, setColors] = useState<Array<string>>([]);
-  const [parents, setParents] = useState<Array<string>>([]);
+export default function TreeMapChart({ aa, rr }: TreeMapChartProps) {
+	const [ data, setData ] = useState<Array<any>>([]);
+	const [ colors, setColors ] = useState<Array<string>>([]);
 
-  useEffect(() => {
-    if (fsb.info.innerWidth > 800)
-      setTimeout(() => {
-        window.dispatchEvent(new Event("resize"));
-      }, 300);
-  }, [fullScreen]);
-
-  const initChartData = () => {
-    let labels: Array<string> = [];
-    let values: Array<string> = [];
-    let colors: Array<string> = [];
-    let parents: Array<string> = [];
-    getAllAssetCategories().forEach((cat) => {
-      labels.push(cat);
-      values.push("0");
-      colors.push(getAssetColour(cat));
-      parents.push("");
-      getAllAssetTypesByCategory(cat).forEach((at) => {
-        values.push(aa[at][0]);
-        colors.push(getAssetColour(at));
-        if (at.endsWith("nds") || at.endsWith("cks")) {
-          labels.push(at.split(" ")[0]);
-          parents.push(at.split(" ")[1]);
-        } else {
-          labels.push(at);
-          if (at === ASSET_TYPES.SAVINGS || at === ASSET_TYPES.DEPOSITS)
-            parents.push(ASSET_CATEGORIES.CASH);
-          else parents.push(ASSET_CATEGORIES.ALTERNATIVE);
-        }
+	const initChartData = () => {
+		let data: Array<any> = [];
+		let colors: Array<string> = [];
+		getAllAssetCategories().forEach((cat) => {
+			let children: Array<any> = [];
+			let total = 0;
+			getAllAssetTypesByCategory(cat).forEach((at) => {
+				if (aa[at][0]) {
+					total += aa[at][0];
+					children.push({
+						name: at,
+						value: aa[at][0],
+						children: []
+					});
+					colors.push(getAssetColour(at));
+				}
+			});
+			data.push({
+				name: cat,
+				value: total,
+				children: children
       });
-    });
-    setLabels([...labels]);
-    setValues([...values]);
+      colors.push(getAssetColour(cat))
+		});
+    setData([...data]);
     setColors([...colors]);
-    setParents([...parents]);
-  };
+	};
 
-  useEffect(() => {
-    initChartData();
-  }, [rr]);
+	useEffect(
+		() => {
+			initChartData();
+		},
+		[ rr ]
+	);
 
-  return (
-    <Plot
-      //@ts-ignore
-      layout={{
-        ...getCommonLayoutProps(),
-        hoverlabel: { labelformat: "%" },
-        margin: { t: 0, l: 0, r: 0, b:0}
+	return (
+		<TreemapChart
+			data={{
+				name: 'Portfolio',
+				value: 100,
+				children: data
+			}}
+			meta={{
+				value: {
+					formatter: (v) => {
+						return v + '%';
+					}
+				}
+			}}
+			colorField="value"
+			label={{
+				visible: true,
+				formatter: (v) => {
+					return aa.hasOwnProperty(v) ? v + '\n' + aa[v][0] + '%' : v;
+				}
       }}
-      useResizeHandler
-      style={getCommonStyle()}
-      data={[
-        {
-          type: "treemap",
-          labels: labels,
-          values: values,
-          parents: parents,
-          marker: {
-            colors: colors,
-          },
-          hovertext: "Portfolio",
-          textinfo: "label+percent entry",
-          hoverinfo: "label+percent entry+text",
-        },
-      ]}
-      config={getCommonConfig()}
-    />
-  );
+      color={colors}
+		/>
+	);
 }

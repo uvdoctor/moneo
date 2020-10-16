@@ -5,7 +5,7 @@ import FullScreen from "../fullscreen";
 
 interface StickyHeaderProps {
   children: ReactNode;
-  cancelDisabled: boolean;
+  cancelDisabled?: boolean;
   cancelCallback: Function;
 }
 
@@ -15,7 +15,7 @@ export default function StickyHeader({
   cancelCallback,
 }: StickyHeaderProps) {
   return (
-    <div className="container mx-auto flex mb-2 w-full justify-between">
+    <div className="flex mb-2 w-full justify-between">
       <div
         className="ml-1 flex flex-col items-center"
         onClick={() => !cancelDisabled && cancelCallback()}

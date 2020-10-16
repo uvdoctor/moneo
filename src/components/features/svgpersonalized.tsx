@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function PersonalizedSVG() {
+export default function SVGPersonalized() {
     return (
         <svg className="w-12" viewBox="0 0 299.997 299.997">
             <g>

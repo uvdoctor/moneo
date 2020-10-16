@@ -10,9 +10,9 @@ interface ExpandCollapseProps {
   svg?: any;
   insideForm?: boolean;
   children: ReactNode;
-  coverPage?: boolean;
   animate?: boolean;
   parentStyleDiffHandler?: Function | null;
+  insideCalc?: boolean;
 }
 
 export default function ExpandCollapse(props: ExpandCollapseProps) {
@@ -34,7 +34,7 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
         </div>
       )}
       <div
-        className="cursor-pointer flex flex-col justify-center items-center w-full"
+        className="flex flex-col justify-center items-center w-full"
         onMouseEnter={() => {
           setShow(true);
           if (props.parentStyleDiffHandler) props.parentStyleDiffHandler(false);
@@ -44,18 +44,22 @@ export default function ExpandCollapse(props: ExpandCollapseProps) {
           if (props.parentStyleDiffHandler) props.parentStyleDiffHandler(true);
         }}
       >
-        <div className="flex items-center" onClick={toggle}>
-          {props.svg}
+        <div className="cursor-pointer flex items-center" onClick={toggle}>
+          {props.svg && <div className="mr-1">{props.svg}</div>}
           <div className="flex items-end">
             <label
-              className={`${props.coverPage && 'text-white'} cursor-pointer hover:text-green-primary`}
+              className={`${
+                show && "cursor-pointer text-green-primary"
+              } hover:text-green-primary ${
+                props.insideCalc && "font-bold lg:text-xl"
+              }`}
             >
               {props.title}
             </label>
             {show ? (
               <SVGCollapse />
             ) : (
-              <SVGExpand color={props.coverPage ? COLORS.SILVER : COLORS.DEFAULT} animate={props.animate} />
+              <SVGExpand color={COLORS.DEFAULT} animate={props.animate} />
             )}
           </div>
         </div>

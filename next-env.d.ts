@@ -1,3 +1,4 @@
 /// <reference types="next" />
 /// <reference types="next/types/global" />
 /// <reference path="./circularslider.d.ts" />
+/// <reference path="./bizcharts.d.ts" />
