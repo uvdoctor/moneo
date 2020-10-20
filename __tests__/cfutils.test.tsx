@@ -238,8 +238,7 @@ describe('calculateCFs Test with createLoanCF suite',()=>{
         let duration = 5;
         let price = 7053634;
         let loanCF = cfutils.calculateCFs(price, goal, duration);
-        expect(loanCF).toHaveLength(0);
-        expect(loanCF).toEqual([]);
+        expect(loanCF).toEqual({"cfs": [], "iSchedule": [], "itb": 0, "pSchedule": [], "ptb": 0});
         goal.emi = {rate: 9, dur: 12, per: 40, ry: 2023}; // reset loan years to 12
     });
 
@@ -262,7 +261,23 @@ describe('calculateCFs Test with createLoanCF suite',()=>{
                  80000
             ],
             ptb: 162575,
-            itb: 0
+            itb: 0,
+            "pSchedule":  [
+                136934,
+                149780,
+                163830,
+                179198,
+                196008,
+                1995703
+            ],
+            "iSchedule": [
+                248374,
+                235528,
+                221478,
+                206110,
+                189300,
+                0
+            ]
           };
         expect(loanCF).toEqual(loanCFExpected);
 
@@ -276,7 +291,22 @@ describe('calculateCFs Test with createLoanCF suite',()=>{
         let loanCFExpected = {
             "cfs": [-4617488,-371615,-370330, -368925,-367388,-365707,-363868,-361857,-359657,-357251,-354619,-351741, 36716, 10358499],
             "ptb": 282146, //tb on principal only 
-            "itb": 0 //tb on interest is zero since goal.tbi = 0
+            "itb": 0, //tb on interest is zero since goal.tbi = 0
+            "iSchedule": [248374, 235528, 221478, 206110, 189300, 170913, 150801, 128802, 104740, 78421, 49633, 18145],
+            "pSchedule": [
+                136934,
+                149780,
+                163830,
+                179198,
+                196008,
+                214395,
+                234507,
+                256506,
+                280568,
+                306887,
+                335675,
+                367163,
+            ]
         };
         expect(loanCF).not.toBe(null);
         expect(loanCF).toEqual(loanCFExpected);
@@ -293,7 +323,22 @@ describe('calculateCFs Test with createLoanCF suite',()=>{
               -4617488, -346778, -346777, -346777, -346777, -346777, -346777, -346777, -346777,  -346777, -346777,  -346778, 38530, 10358499
             ],
             ptb: 282146,
-            itb: 180223
+            itb: 180223,
+            "iSchedule": [248374, 235528, 221478, 206110, 189300, 170913, 150801, 128802, 104740, 78421, 49633, 18145],
+            "pSchedule": [
+                136934,
+                149780,
+                163830,
+                179198,
+                196008,
+                214395,
+                234507,
+                256506,
+                280568,
+                306887,
+                335675,
+                367163,
+            ]
         };
         expect(loanCF).toEqual(loanCFExpected);
     })
@@ -332,7 +377,7 @@ describe('calculateCFs Test with custom payment plan suite',()=>{
 
     test('loan years = zero', () => {
         let cfsObject = cfutils.calculateCFs(null,goal,5);
-        console.log(cfsObject);
+        expect(cfsObject).toEqual({ cfs: [ 0, 0, 0, 0, 0, 0 ], ptb: 0 });
     })
 });
 
