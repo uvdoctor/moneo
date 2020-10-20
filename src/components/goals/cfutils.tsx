@@ -64,6 +64,7 @@ export const calculateSellPrice = (
   return Math.round(getCompoundedIncome(chgRate, price, duration));
 };
 
+//Tested internally
 const calculatePrice = (goal: APIt.CreateGoalInput) => {
   let price = 0;
   if (goal.manual && goal.tgts) {
@@ -333,6 +334,7 @@ export const calculateXIRR = (
   }
 };
 
+//Tested
 export const getLoanBorrowAmt = (
   price: number,
   goalType: APIt.GoalType,
@@ -355,6 +357,7 @@ export const getLoanBorrowAmt = (
   return result;
 };
 
+//Tested
 export const getLoanPaidForMonths = (
   endYear: number,
   loanRepaymentYear: number,
@@ -367,6 +370,7 @@ export const getLoanPaidForMonths = (
   return loanPaidYears * 12;
 };
 
+//Tested
 export const adjustAccruedInterest = (
   loanBorrowAmt: number,
   startYear: number,
@@ -574,6 +578,7 @@ const createLoanCFs = (
   };
 };
 
+//Tested through createLoanCFs
 const getRemPrincipal = (
   startYear: number,
   loanBorrowAmt: number,

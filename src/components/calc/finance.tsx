@@ -49,7 +49,7 @@ export function getIntAmtByYear(borrowAmt: number, emi: number, intRate: number,
     }
     return annualInts
 }
-
+//Tested
 export function getRemainingPrincipal(borrowAmt: number, emi: number, intRate: number, loanPaidForMonths: number) {
     let principal = borrowAmt
     let monthlyRate = intRate / 1200
@@ -68,3 +68,4 @@ export function getNPV(rr: number | Array<number>, cashFlows: Array<number>, sta
     }
     return Math.round(npv + cashFlows[0])
 }
+//Tested
