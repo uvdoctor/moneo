@@ -1,40 +1,30 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 import { Button, Steps, Tabs, Space, Statistic } from 'antd';
 import ActionButtons from '../form/actionbuttons';
+import { CalcContext } from '../calc/CalcContext';
 interface InputProps {
-	tabOptions: Array<any>;
-	submitDisabled: boolean;
-	cancelDisabled: boolean;
-	showTab: string;
-	showTabHandler: Function;
+	submitDisabled?: boolean;
+	cancelDisabled?: boolean;
 	children: ReactNode;
-	cancelCallback: Function;
 	handleSubmit?: Function | null;
-	allInputDone: boolean;
-	allInputDoneHandler: Function;
 }
 
 export default function Input({
-	tabOptions,
 	submitDisabled,
 	cancelDisabled,
-	showTab,
-	showTabHandler,
 	children,
-	cancelCallback,
 	handleSubmit,
-	allInputDone,
-	allInputDoneHandler
 }: InputProps) {
+	const { inputTabs, showTab, setShowTab, allInputDone, setAllInputDone, cancelCalc }: any = useContext(CalcContext);
 	const { Step } = Steps;
 	const { TabPane } = Tabs;
 	const [ currentStep, setCurrentStep ] = useState<number>(0);
 
 	const handleStepChange = (count: number = 1) => {
 		let co = currentStep + count;
-		if (co < 0 || !tabOptions[co]) return;
-		if (!tabOptions[co].active) co += count;
-		showTabHandler(tabOptions[co].label);
+		if (co < 0 || !inputTabs[co]) return;
+		if (!inputTabs[co].active) co += count;
+		setShowTab(inputTabs[co].label);
 		setCurrentStep(co);
 	};
 
@@ -43,7 +33,7 @@ export default function Input({
 			<Space align="center">
 				{!allInputDone ? (
 					<Steps current={currentStep}>
-						{tabOptions.map((tab) => (
+						{inputTabs.map((tab: any) => (
 							<Step
 								key={tab.label}
 								title={
@@ -57,8 +47,8 @@ export default function Input({
 						))}
 					</Steps>
 				) : (
-					<Tabs defaultActiveKey={showTab} onTabClick={(key: string) => showTabHandler(key)}>
-						{tabOptions.map((tab) => (
+					<Tabs defaultActiveKey={showTab} onTabClick={(key: string) => setShowTab(key)}>
+						{inputTabs.map((tab: any) => (
 							<TabPane
 								key={tab.label}
 								disabled={!tab.active}
@@ -82,17 +72,17 @@ export default function Input({
 							Previous
 						</Button>
 					)}
-					{currentStep < tabOptions.length - 1 && (
+					{currentStep < inputTabs.length - 1 && (
 						<Button type="primary" onClick={() => handleStepChange()}>
 							Next
 						</Button>
 					)}
-					{currentStep === tabOptions.length - 1 && (
+					{currentStep === inputTabs.length - 1 && (
 						<Button
 							type="primary"
 							onClick={() => {
-								showTabHandler(tabOptions[tabOptions.length - 1].label);
-								allInputDoneHandler(true);
+								setShowTab(inputTabs[inputTabs.length - 1].label);
+								setAllInputDone(true);
 							}}
 						>
 							Done
@@ -102,9 +92,9 @@ export default function Input({
 			) : (
 				handleSubmit && (
 					<ActionButtons
-						submitDisabled={submitDisabled}
-						cancelDisabled={cancelDisabled}
-						cancelHandler={cancelCallback}
+						submitDisabled={submitDisabled ? submitDisabled : false}
+						cancelDisabled={cancelDisabled ? cancelDisabled : false}
+						cancelHandler={cancelCalc}
 						submitHandler={handleSubmit}
 						submitText="Save"
 					/>

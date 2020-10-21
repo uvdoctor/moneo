@@ -7,12 +7,12 @@ import SVGBarChart from "../components/svgbarchart";
 import SVGChart from "../components/svgchart";
 import SVGHourGlass from "../components/svghourglass";
 import { CALC_NAMES } from "../CONSTANTS";
+import { CalcContextProvider } from "../components/calc/CalcContext";
 
 export default function BuyOrRent() {
   return (
+    <CalcContextProvider title={CALC_NAMES.BR} type={GoalType.B}>
     <Layout
-      title={CALC_NAMES.BR}
-      type={GoalType.B}
       assumptions={["adfas", "asdfsad"]}
       features={["fsdgdf", "fgdssdf"]}
       results={[
@@ -38,6 +38,7 @@ export default function BuyOrRent() {
         />
       ]}
       resultImg="step1.png"
-    />
+      />
+      </CalcContextProvider>
   );
 }

@@ -1,28 +1,27 @@
 import { useRouter } from 'next/router';
-import React, { Fragment, useState } from 'react';
-import { CreateGoalInput, GoalType } from '../../api/goals';
+import React, { Fragment, useContext, useState } from 'react';
+import { GoalType } from '../../api/goals';
 import { ROUTES } from '../../CONSTANTS';
 import DDPage from '../DDPage';
 import FFGoal from '../goals/ffgoal';
 import Goal from '../goals/goal';
 import { createNewGoalInput } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
-import CalculatorTemplate from './CalculatorTemplate';
 import { Button, Collapse, Space } from 'antd';
+import { CalcContext } from './CalcContext';
+import TrueCostCalc from './TrueCostCalc';
 interface LayoutProps {
-	title: string;
 	type?: GoalType;
 	features: Array<any>;
 	assumptions: Array<any>;
 	results: Array<any>;
 	resultImg: string;
-	calc?: any;
 }
 
 export default function Layout(props: LayoutProps) {
 	const router = useRouter();
+	const {title, isCalcInProgress, setWIP}: any = useContext(CalcContext);
 	const { Panel } = Collapse;
-	const [ wipGoal, setWIPGoal ] = useState<any | null>(null);
 	const [ ffResult, setFFResult ] = useState<any>({});
 	const nowYear = new Date().getFullYear();
 	const sections: any = {
@@ -43,21 +42,21 @@ export default function Layout(props: LayoutProps) {
 		let g: any = null;
 		if (props.type) g = createNewGoalInput(props.type, 'USD');
 		else g = {};
-		g.name = props.title;
+		g.name = title;
 		gtag.event({
 			category: 'Calculator',
 			action: 'Start',
 			label: 'type',
-			value: props.type ? props.type : props.title
+			value: props.type ? props.type : title
 		});
-		setWIPGoal(g);
+		setWIP(g);
 	};
 
 	return (
-		<DDPage title={props.title}>
-			{!wipGoal ? (
+		<DDPage title={title}>
+			{!isCalcInProgress ? (
 				<Space align="center" direction="vertical" size="large">
-					<h1>{props.title + ' Calculator'}</h1>
+					<h1>{title + ' Calculator'}</h1>
 					<Collapse defaultActiveKey={[ '1' ]}>
 						{Object.keys(sections).map((key, i) => (
 							<Panel key={`${i + 1}`} header={key}>
@@ -78,26 +77,18 @@ export default function Layout(props: LayoutProps) {
 				<Fragment>
 					{router.pathname === ROUTES.FI ? (
 						<FFGoal
-							goal={wipGoal as CreateGoalInput}
 							mustCFs={[]}
 							tryCFs={[]}
 							mergedCfs={buildEmptyMergedCFs()}
-							cancelCallback={() => setWIPGoal(null)}
 							ffResult={ffResult}
 							ffResultHandler={setFFResult}
 						/>
 					) : props.type ? (
 						<Goal
-							goal={wipGoal as CreateGoalInput}
 							ffGoalEndYear={nowYear + 50}
-							cancelCallback={() => setWIPGoal(null)}
 						/>
 					) : (
-						<CalculatorTemplate
-							calc={props.calc}
-							title={props.title}
-							cancelCallback={() => setWIPGoal(null)}
-						/>
+						<TrueCostCalc />
 					)}
 				</Fragment>
 			)}

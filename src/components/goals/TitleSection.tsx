@@ -1,32 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Space } from 'antd';
 import { CaretLeftOutlined } from '@ant-design/icons';
 import SelectInput from '../form/selectinput';
 import { getRangeFactor } from '../utils';
+import { CalcContext } from '../calc/CalcContext';
 
-interface StickyHeaderProps {
-	title: string;
-	cancelCallback: Function;
-	currency: string;
-	currencyHandler: Function;
-	rangeFactorHandler: Function;
-}
+export default function TitleSection() {
+	const { title, currency, setCurrency, rangeFactor, setRangeFactor, cancelCalc }: any = useContext(CalcContext);
 
-export default function TitleSection({
-	title,
-	cancelCallback,
-	currency,
-	currencyHandler,
-	rangeFactorHandler
-}: StickyHeaderProps) {
 	const changeCurrency = (curr: string) => {
-		rangeFactorHandler(Math.round(getRangeFactor(curr) / getRangeFactor(currency)));
-		currencyHandler(curr);
+		setRangeFactor(Math.round(getRangeFactor(curr) / rangeFactor));
+		setCurrency(curr);
 	};
 
 	return (
 		<Space align="center" size="large">
-			<Button type="link" onClick={() => cancelCallback()} icon={<CaretLeftOutlined />}>
+			<Button type="link" onClick={cancelCalc} icon={<CaretLeftOutlined />}>
 				Back
 			</Button>
 			<h1>{title}</h1>

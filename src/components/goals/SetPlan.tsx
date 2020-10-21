@@ -27,6 +27,7 @@ import AssetAllocationChart from "./AssetAllocationChart";
 import SVGAAChart from "./svgaachart";
 import SVGList from "../svglist";
 import { Button, notification } from "antd";
+import { CalcContextProvider } from "../calc/CalcContext";
 
 export default function SetPlan() {
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
@@ -254,8 +255,6 @@ export default function SetPlan() {
     setAllGoals([...(allGoals as Array<APIt.CreateGoalInput>)]);
   };
 
-  const cancelGoal = () => setWIPGoal(null);
-
   const editGoal = (id: string) => {
     if (!allGoals) return;
     let g: Array<APIt.CreateGoalInput> = allGoals.filter((g) => g.id === id);
@@ -391,31 +390,28 @@ export default function SetPlan() {
   };
 
   return wipGoal ? (
-        wipGoal.type === APIt.GoalType.FF ? (
-          <FFGoal
-            goal={wipGoal as APIt.CreateGoalInput}
-            addCallback={addGoal}
-            cancelCallback={cancelGoal}
-            updateCallback={updateGoal}
-            ffResult={ffResult}
-            mergedCfs={mergedCFs}
-            ffResultHandler={setFFResult}
-            pp={getPP()}
-            mustCFs={mustCFs}
-            tryCFs={tryCFs}
-          />
-        ) : (
+    <CalcContextProvider goal={wipGoal as APIt.CreateGoalInput}
+      addCallback={addGoal}
+      updateCallback={updateGoal}
+    title=""> 
+      {wipGoal.type === APIt.GoalType.FF ? (
+        <FFGoal
+          ffResult={ffResult}
+          mergedCfs={mergedCFs}
+          ffResultHandler={setFFResult}
+          pp={getPP()}
+          mustCFs={mustCFs}
+          tryCFs={tryCFs}
+        />
+      ) : (
           ffGoal && (
             <Goal
-              goal={wipGoal as APIt.CreateGoalInput}
-              addCallback={addGoal}
-              cancelCallback={cancelGoal}
-              updateCallback={updateGoal}
               ffImpactYearsHandler={calculateFFImpactYear}
-              ffGoalEndYear={ffGoal.ey}
+              ffGoalEndYear={ffGoal?.ey as number}
             />
           )
-        )
+        )}
+    </CalcContextProvider>
   ) : (
     <Fragment>
         {ffGoal && rr && rr.length > 0 && (

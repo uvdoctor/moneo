@@ -1,8 +1,7 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useContext } from "react";
 import * as APIt from "../../api/goals";
 import {
   initYearOptions,
-  getRangeFactor,
   changeSelection,
   buildYearsArray,
   isTopBottomLayout,
@@ -10,10 +9,8 @@ import {
 import SelectInput from "../form/selectinput";
 import { findEarliestFFYear } from "./cfutils";
 import FFResult from "./ffresult";
-import SVGChart from "../svgchart";
 import DDLineChart from "./DDLineChart";
 import { getAge } from "./goalutils";
-import SVGBarChart from "../svgbarchart";
 import TitleSection from "./TitleSection";
 import Result from "./Result";
 import { FIInvest } from "./fiinvest";
@@ -25,173 +22,112 @@ import Input from "./Input";
 import DynamicTgtInput from "../form/dynamictgtinput";
 import Section from "../form/section";
 import AssetAllocationChart from "./AssetAllocationChart";
-import SVGAAChart from "./svgaachart";
 import AAPlanChart from "./AAPlanChart";
-import SVGPiggy from "../svgpiggy";
-import SVGTaxBenefit from "../svgtaxbenefit";
-import SVGCashFlow from "../svgcashflow";
-import SVGInheritance from "./svginheritance";
-import SVGCare from "./svgcare";
-import SVGPay from "../svgpay";
 import { PLAN_DURATION } from "../../CONSTANTS";
 import { Space } from "antd";
-import { useFullScreenBrowser } from "react-browser-hooks";
+import { CalcContext } from "../calc/CalcContext";
+import SVGCare from "./svgcare";
 interface FFGoalProps {
-  goal: APIt.CreateGoalInput;
   ffResult: any | null;
   mustCFs: Array<number>;
   tryCFs: Array<number>;
   mergedCfs: any;
   pp?: Object;
   ffResultHandler: Function;
-  cancelCallback: Function;
-  addCallback?: Function;
-  updateCallback?: Function;
+}
+
+export const INVEST_LABEL = "Invest";
+export const SPEND_LABEL = "Spend";
+export const BENEFIT_LABEL = "Benefit";
+export const CARE_LABEL = "Care";
+export const EXPECT_LABEL = "Expect";
+export const GIVE_LABEL = "Give";
+export const CF_CHART_LABEL = "Total Portfolio";
+export const AA_FUTURE_CHART_LABEL = "Allocation Plan";
+export const AA_NEXT_YEAR_CHART_LABEL = "Asset Allocation";
+
+export const getCareTabOption = () => {
+  return {
+      label: CARE_LABEL,
+      active: true,
+      svg: SVGCare,
+  }
 }
 
 export default function FFGoal({
-  goal,
   ffResult,
   mustCFs,
   tryCFs,
   mergedCfs,
   pp,
   ffResultHandler,
-  cancelCallback,
-  addCallback,
-  updateCallback,
 }: FFGoalProps) {
+  const { wip, fsb, allInputDone, inputTabs, setInputTabs, showTab, setShowTab, showResultTab, currency, rangeFactor, cancelCalc, addCallback, updateCallback }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
-  const fsb = useFullScreenBrowser();
-  const [riskProfile, setRiskProfile] = useState<APIt.LMH>(goal.imp);
+  const [riskProfile, setRiskProfile] = useState<APIt.LMH>(wip.imp);
   const [rr, setRR] = useState<number | null>(pp ? null : 5);
-  const [expenseBY, setExpenseBY] = useState<number>(goal.sy);
+  const [expenseBY, setExpenseBY] = useState<number>(wip.sy);
   const [expenseAfterFF, setExpenseAfterFF] = useState<number>(
-    goal?.tdli as number
+    wip?.tdli as number
   );
   const [expenseChgRate, setExpenseChgRate] = useState<number>(
-    goal?.btr as number
+    wip?.btr as number
   );
-  const [nw, setNW] = useState<number>(goal?.ra as number);
+  const [nw, setNW] = useState<number>(wip?.ra as number);
   const [avgMonthlySavings, setAvgMonthlySavings] = useState<number>(
-    goal?.rachg as number
+    wip?.rachg as number
   );
   const [monthlySavingsRate, setMonthlySavingsRate] = useState<number>(
-    goal?.tbr as number
+    wip?.tbr as number
   );
-  const [endYear, setEndYear] = useState<number>(goal.ey);
+  const [endYear, setEndYear] = useState<number>(wip.ey);
   const eyOptions = initYearOptions(1960, nowYear - 15 - 1960);
-  const [currency, setCurrency] = useState<string>(goal.ccy);
-  const [taxRate, setTaxRate] = useState<number>(goal.tdr);
-  const [leaveBehind, setLeaveBehind] = useState<number>(goal?.sa as number);
-  const [carePremium, setCarePremium] = useState<number>(goal?.cp as number);
+  const [taxRate, setTaxRate] = useState<number>(wip.tdr);
+  const [leaveBehind, setLeaveBehind] = useState<number>(wip?.sa as number);
+  const [carePremium, setCarePremium] = useState<number>(wip?.cp as number);
   const [carePremiumChgPer, setCarePremiumChgPer] = useState<number>(
-    goal?.amper as number
+    wip?.amper as number
   );
   const [carePremiumSY, setCarePremiumSY] = useState<number>(
-    goal?.amsy as number
+    wip?.amsy as number
   );
   const [carePremiumDur, setCarePremiumDur] = useState<number>(
-    goal?.achg as number
+    wip?.achg as number
   );
-  const [careTaxDedLimit, setCareTaxDedLimit] = useState<number>(goal.tdl);
-  const [cpBY, setCPBY] = useState<number>(goal?.chg as number);
+  const [careTaxDedLimit, setCareTaxDedLimit] = useState<number>(wip.tdl);
+  const [cpBY, setCPBY] = useState<number>(wip?.chg as number);
   const [retirementIncomePer, setRetirementIncomePer] = useState<number>(
-    goal?.aiper as number
+    wip?.aiper as number
   );
   const [retirementIncomeSY, setRetirementIncomeSY] = useState<number>(
-    goal?.aisy as number
+    wip?.aisy as number
   );
   const [retirementIncome, setRetirementIncome] = useState<number>(
-    goal?.tbi as number
+    wip?.tbi as number
   );
   const [successionTaxRate, setSuccessionTaxRate] = useState<number>(
-    goal?.dr as number
-  );
-  const [rangeFactor, setRangeFactor] = useState<number>(
-    getRangeFactor(currency)
+    wip?.dr as number
   );
   const [gains, setGains] = useState<Array<APIt.TargetInput>>(
-    goal.pg as Array<APIt.TargetInput>
+    wip.pg as Array<APIt.TargetInput>
   );
   const [losses, setLosses] = useState<Array<APIt.TargetInput>>(
-    goal.pl as Array<APIt.TargetInput>
-  );
-  const [allInputDone, setAllInputDone] = useState<boolean>(
-    goal.id ? true : false
+    wip.pl as Array<APIt.TargetInput>
   );
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
-  const investLabel = "Invest";
-  const spendLabel = "Spend";
-  const benefitLabel = "Benefit";
-  const careLabel = "Care";
-  const expectLabel = "Expect";
-  const giveLabel = "Give";
-  const cfChartLabel = "Total Portfolio";
-  const aaFutureLabel = "Allocation Plan";
-  const aaNextYearLabel = "Asset Allocation";
-  const careOption = {
-    label: careLabel,
-    order: 11,
-    active: true,
-    svg: SVGCare,
-  };
-  const [tabOptions, setTabOptions] = useState<Array<any>>([
-    { label: investLabel, order: 1, active: true, svg: SVGPiggy },
-    { label: spendLabel, order: 5, active: true, svg: SVGPay },
-    { label: benefitLabel, order: 8, active: true, svg: SVGTaxBenefit },
-    careOption,
-    { label: expectLabel, order: 16, active: true, svg: SVGCashFlow },
-    { label: giveLabel, order: 18, active: true, svg: SVGInheritance },
-  ]);
-
-  const resultTabOptions = !pp
-    ? [
-        {
-          label: cfChartLabel,
-          order: 1,
-          active: true,
-          svg: SVGChart,
-        },
-      ]
-    : [
-        {
-          label: aaNextYearLabel,
-          order: 1,
-          active: true,
-          svg: SVGAAChart,
-          svglabel: nowYear + 1,
-        },
-        {
-          label: aaFutureLabel,
-          order: 2,
-          active: true,
-          svg: SVGBarChart,
-          svglabel: `${nowYear + 2} - ${endYear}`,
-        },
-        {
-          label: cfChartLabel,
-          order: 3,
-          active: true,
-          svg: SVGChart,
-        },
-      ];
-
-  const [showTab, setShowTab] = useState(investLabel);
-  const [showResultTab, setShowResultTab] = useState<string>(aaNextYearLabel);
 
   const createGoal = () => {
     return {
-      name: goal.name,
+      name: wip.name,
       sy: expenseBY,
       ey: endYear,
-      by: goal.by,
+      by: wip.by,
       ra: nw,
       rachg: avgMonthlySavings,
       tdr: taxRate,
       tdl: careTaxDedLimit,
       ccy: currency,
-      type: goal.type,
+      type: wip.type,
       imp: riskProfile,
       manual: 0,
       amsy: carePremiumSY,
@@ -214,27 +150,27 @@ export default function FFGoal({
 
   const updateGoal = () => {
     let g: APIt.CreateGoalInput = createGoal();
-    g.id = goal.id;
+    g.id = wip.id;
     return g as APIt.UpdateGoalInput;
   };
 
   const hasCareTab = () => {
-    let careTab = tabOptions.filter((tab) => tab.label === careLabel);
+    let careTab = inputTabs.filter((tab: any) => tab.label === CARE_LABEL);
     return careTab && careTab.length === 1;
   };
 
   useEffect(() => {
     if (currency === "USD" || currency === "CAD" || currency === "GBP") {
       if (!hasCareTab()) {
-        tabOptions.splice(3, 0, careOption);
-        setTabOptions([...tabOptions]);
+        inputTabs.splice(3, 0, getCareTabOption());
+        setInputTabs([...inputTabs]);
       }
     } else {
       if (hasCareTab()) {
-        tabOptions.splice(3, 1);
-        setTabOptions([...tabOptions]);
-        if (showTab === careLabel) {
-          setShowTab(expectLabel);
+        inputTabs.splice(3, 1);
+        setInputTabs([...inputTabs]);
+        if (showTab === CARE_LABEL) {
+          setShowTab(EXPECT_LABEL);
           setCarePremium(0);
         }
       }
@@ -283,10 +219,10 @@ export default function FFGoal({
   const handleSubmit = async () => {
     setBtnClicked(true);
     if (addCallback && updateCallback) {
-      goal.id
+      wip.id
         ? await updateCallback(updateGoal())
         : await addCallback(createGoal());
-    } else cancelCallback();
+    } else cancelCalc();
     setBtnClicked(false);
   };
 
@@ -297,8 +233,7 @@ export default function FFGoal({
 
   return (
     <Space align="center" direction="vertical">
-      <TitleSection title="Financial Independence Goal" cancelCallback={cancelCallback} currency={currency}
-      currencyHandler={setCurrency} rangeFactorHandler={setRangeFactor} />
+      <TitleSection />
         <SelectInput
           //info="Financial Plan will be created assuming that You live till 100 Years, after which You leave behind inheritance.
           //DollarDarwin will try to find the earliest possible year for Your Financial Independence based on Your inputs and Other Goals that You Create.
@@ -315,17 +250,10 @@ export default function FFGoal({
         //@ts-ignore
 			direction={`${isTopBottomLayout(fsb) ? 'vertical' : 'horizontal'}`}
 		>  <Input
-          showTab={showTab}
-          tabOptions={tabOptions}
-          showTabHandler={setShowTab}
-          cancelCallback={cancelCallback}
-          handleSubmit={addCallback && cancelCallback ? handleSubmit : null}
+          handleSubmit={addCallback && updateCallback ? handleSubmit : null}
           submitDisabled={!allInputDone || expenseAfterFF < 5000 || btnClicked}
-          cancelDisabled={btnClicked}
-          allInputDone={allInputDone}
-          allInputDoneHandler={setAllInputDone}
         >
-          {showTab === investLabel && (
+          {showTab === INVEST_LABEL && (
             <FIInvest
               currency={currency}
               riskProfile={pp ? riskProfile : null}
@@ -341,7 +269,7 @@ export default function FFGoal({
             />
           )}
 
-          {showTab === spendLabel && (
+          {showTab === SPEND_LABEL && (
             <ExpenseAfterFF
               currency={currency}
               rangeFactor={rangeFactor}
@@ -355,7 +283,7 @@ export default function FFGoal({
             />
           )}
 
-          {showTab === benefitLabel && (
+          {showTab === BENEFIT_LABEL && (
             <RetIncome
               currency={currency}
               rangeFactor={rangeFactor}
@@ -369,7 +297,7 @@ export default function FFGoal({
             />
           )}
 
-          {showTab === careLabel && (
+          {showTab === CARE_LABEL && (
             <CareInsurance
               currency={currency}
               rangeFactor={rangeFactor}
@@ -390,13 +318,13 @@ export default function FFGoal({
             />
           )}
 
-          {showTab === expectLabel && (
+          {showTab === EXPECT_LABEL && (
             <Fragment>
               <Section
                 title="Potential Gains (eg: Inheritance, Selling Investments, etc.)"
                 left={
                   <DynamicTgtInput
-                    startYear={goal.by}
+                    startYear={wip.by}
                     endYear={endYear}
                     currency={currency}
                     rangeFactor={rangeFactor}
@@ -412,7 +340,7 @@ export default function FFGoal({
                   footer="Include taxes & fees."
                   left={
                     <DynamicTgtInput
-                      startYear={goal.by}
+                      startYear={wip.by}
                       endYear={endYear}
                       currency={currency}
                       rangeFactor={rangeFactor}
@@ -424,7 +352,7 @@ export default function FFGoal({
             </Fragment>
           )}
 
-          {showTab === giveLabel && (
+          {showTab === GIVE_LABEL && (
             <Nominees
               currency={currency}
               rangeFactor={rangeFactor}
@@ -439,9 +367,6 @@ export default function FFGoal({
 
         {showResultSection() && (
           <Result
-            resultTabOptions={resultTabOptions}
-            showResultTab={showResultTab}
-            showResultTabHandler={setShowResultTab}
             result={
               <FFResult
                 endYear={endYear}
@@ -451,17 +376,17 @@ export default function FFGoal({
               />
             }
           >
-            {pp && showResultTab === aaNextYearLabel &&
+            {pp && showResultTab === AA_NEXT_YEAR_CHART_LABEL &&
               <AssetAllocationChart
                 aa={ffResult.aa}
                 rr={ffResult.rr}
               />}
-                {pp && showResultTab === aaFutureLabel && <AAPlanChart
+                {pp && showResultTab === AA_FUTURE_CHART_LABEL && <AAPlanChart
                   aa={ffResult.aa}
                   years={buildYearsArray(nowYear + 2, endYear)}
                   rr={ffResult.rr}
                 />}
-            {showResultTab === cfChartLabel && <DDLineChart
+            {showResultTab === CF_CHART_LABEL && <DDLineChart
               cfs={buildChartCFs(ffResult.ffCfs)}
               startYear={getAge(nowYear + 1, endYear)}
               currency={currency}

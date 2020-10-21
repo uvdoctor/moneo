@@ -8,7 +8,8 @@ export const ROUTES = {
     FI: '/fi',
     BR: '/buyorrent',
     EDUCATION: '/eduloan',
-    LOAN: '/loan'
+    LOAN: '/loan',
+    TRUE_COST: '/truecost'
 }
 
 export const CALC_NAMES = {
@@ -17,7 +18,7 @@ export const CALC_NAMES = {
     LOAN: 'Simple Loan',
     EDU_LOAN: 'Education Loan',
     DR: 'Debt Repayment',
-    CI: 'Credit Score Impact'
+    TC: 'True Cost'
 }
 
 export const ASSET_CATEGORIES = {

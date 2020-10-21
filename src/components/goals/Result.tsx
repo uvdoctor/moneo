@@ -1,16 +1,15 @@
-import React, { ReactNode, useRef } from 'react';
+import React, { ReactNode, useContext, useRef } from 'react';
 import { useFullScreen } from 'react-browser-hooks';
 import { Tabs, Space, Statistic, Row, Col } from 'antd';
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
+import { CalcContext } from '../calc/CalcContext';
 interface ResultProps {
 	result: ReactNode;
-	resultTabOptions: Array<any>;
-	showResultTab: string;
 	children: ReactNode;
-	showResultTabHandler: Function;
 }
 
 export default function Result(props: ResultProps) {
+	const { resultTabs, setResultTabs, showResultTab }: any = useContext(CalcContext);
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
@@ -22,10 +21,10 @@ export default function Result(props: ResultProps) {
 					{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
 				</div>
 				<Tabs
-					onTabClick={(key: string) => props.showResultTabHandler(key)}
-					defaultActiveKey={props.resultTabOptions[0].label}
+					onTabClick={(key: string) => setResultTabs(key)}
+					defaultActiveKey={resultTabs[0].label}
 				>
-					{props.resultTabOptions.map((tab) => (
+					{resultTabs.map((tab: any) => (
 						<TabPane
 							key={tab.label}
 							disabled={!tab.active}
@@ -34,7 +33,7 @@ export default function Result(props: ResultProps) {
 									title=""
 									value={tab.label}
 									prefix={
-										<tab.svg disabled={!tab.active} selected={props.showResultTab === tab.label} />
+										<tab.svg disabled={!tab.active} selected={showResultTab === tab.label} />
 									}
 								/>
 							}

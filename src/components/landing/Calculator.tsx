@@ -34,10 +34,10 @@ export const calcList: Array<any> = [
 			"Identify the optimal sequence of paying various loans that makes sense for You.",
 	},
 	{
-		name: CALC_NAMES.CI,
-		link: ROUTES.LOAN,
+		name: CALC_NAMES.TC,
+		link: ROUTES.TRUE_COST,
 		desc:
-			"Assess impact on Your credit score for various factors such as hard inquiry, delayed payment, etc.",
+			"Understand true cost over long term as well as time cost for One-time, Monthly & Yearly spends.",
 	},
 	{
 		name: CALC_NAMES.LOAN,
