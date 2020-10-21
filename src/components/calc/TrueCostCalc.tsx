@@ -21,6 +21,7 @@ export const TIME_COST_YEARS = 'Years';
 
 export default function TrueCostCalc() {
 	const {
+		fsb,
 		currency,
 		rangeFactor,
 		allInputDone,
