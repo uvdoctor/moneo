@@ -7,8 +7,8 @@ import SVGHourGlass from '../components/svghourglass';
 import SVGPay from '../components/svgpay';
 import SVGPiggy from '../components/svgpiggy';
 import { Statistic } from 'antd';
-import { CalcContextProvider } from '../components/calc/CalcContext';
 import SVGChart from '../components/svgchart';
+import { CALC_NAMES } from '../CONSTANTS';
 
 export const SPEND = 'Spend';
 export const SAVE = 'Save';
@@ -17,7 +17,7 @@ export const CHART = 'Yearly Cash Flows If Invested';
 
 export default function TrueCost() {
 	return (
-		<CalcContextProvider
+		<Layout
 			tabOptions={[
 				{ label: SPEND, active: true, svg: SVGPay },
 				{ label: SAVE, active: true, svg: SVGPiggy },
@@ -31,23 +31,20 @@ export default function TrueCost() {
 					svg: SVGChart
 				}
 			]}
-			title="True Cost"
+			title={CALC_NAMES.TC}
 			calc={TrueCostCalc}
-		>
-			<Layout
-				assumptions={[ 'adfas', 'asdfsad' ]}
-				features={[ 'fsdgdf', 'fgdssdf' ]}
-				results={[
-					<Statistic key="s1" title="" value="Option that costs lesser" prefix={<SVGBalance />} />,
-					<Statistic
-						key="s2"
-						title=""
-						value="Time till which the Option costs lesser"
-						prefix={<SVGHourGlass />}
-					/>
-				]}
-				resultImg="kick-start.jpg"
-			/>
-		</CalcContextProvider>
+			assumptions={[ 'adfas', 'asdfsad' ]}
+			features={[ 'fsdgdf', 'fgdssdf' ]}
+			results={[
+				<Statistic key="s1" title="" value="Option that costs lesser" prefix={<SVGBalance />} />,
+				<Statistic
+					key="s2"
+					title=""
+					value="Time till which the Option costs lesser"
+					prefix={<SVGHourGlass />}
+				/>
+			]}
+			resultImg="kick-start.jpg"
+		/>
 	);
 }

@@ -1,5 +1,5 @@
 import React, { createContext, useState } from "react";
-import { CreateGoalInput, GoalType } from "../../api/goals";
+import { GoalType } from "../../api/goals";
 import { getRangeFactor } from "../utils";
 import { AMT_LABEL, ANNUAL_NET_COST_LABEL, BR_CHART_LABEL, LOAN_CHART_LABEL, LOAN_LABEL, RENT_LABEL, SELL_LABEL, TAX_LABEL } from "../goals/goal";
 import SVGTaxBenefit from "../svgtaxbenefit";
@@ -21,16 +21,15 @@ import { useFullScreenBrowser } from "react-browser-hooks";
 const CalcContext = createContext({});
 
 interface CalcContextProviderProps {
+  goal: any | null;
   children: any;
   title: string;
   defaultCurrency?: string;
   tabOptions?: Array<any>;
   resultTabOptions?: Array<any>;
-  calc?: any;
   type?: GoalType;
   addCallback?: Function;
   updateCallback?: Function;
-  goal?: CreateGoalInput;
   cashFlows?: Array<number>;
 }
 
@@ -147,23 +146,18 @@ const getGoalTabOptions = (type: GoalType) => {
         ]
 }
 
-function CalcContextProvider({ children, title, defaultCurrency, tabOptions, resultTabOptions, calc, type, addCallback, updateCallback, goal, cashFlows }: CalcContextProviderProps) {
+function CalcContextProvider({ goal, children, title, defaultCurrency, tabOptions, resultTabOptions, type, addCallback, updateCallback, cashFlows }: CalcContextProviderProps) {
   const fsb = useFullScreenBrowser();
-  const [wip, setWIP] = useState<any | null>(goal ? goal : null);
   const [inputTabs, setInputTabs] = useState<Array<any>>(tabOptions ? tabOptions : type ? getGoalTabOptions(type) : [{}])
   const [resultTabs, setResultTabs] = useState<Array<any>>(resultTabOptions ? resultTabOptions : type ? getGoalResultTabOptions(type, addCallback && updateCallback ? true : false) : [{}])
-  const [currency, setCurrency] = useState<string>(wip?.ccy ? wip.ccy : defaultCurrency ? defaultCurrency : "USD");
+  const [currency, setCurrency] = useState<string>(goal?.ccy ? goal.ccy : defaultCurrency ? defaultCurrency : "USD");
   const [rangeFactor, setRangeFactor] = useState<number>(getRangeFactor(currency));
-	const [ allInputDone, setAllInputDone ] = useState<boolean>(wip?.id ? true : false);
+	const [ allInputDone, setAllInputDone ] = useState<boolean>(goal?.id ? true : false);
 	const [ showTab, setShowTab ] = useState<string>(inputTabs[0].label);
   const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
   const [ cfs, setCFs ] = useState<Array<number>>(cashFlows ? cashFlows : []);
   const [ showResultTab, setShowResultTab ] = useState<string>(resultTabs[0].label);
   
-  const isCalcInProgress = () => wip !== null
-
-  const cancelCalc = () => setWIP(null)
-
   return (
     <CalcContext.Provider
       value={{
@@ -176,11 +170,6 @@ function CalcContextProvider({ children, title, defaultCurrency, tabOptions, res
         showTab,
         setShowTab,
         title,
-        calc,
-        isCalcInProgress,
-        cancelCalc,
-        wip,
-        setWIP,
         inputTabs,
         setInputTabs,
         resultTabs,
