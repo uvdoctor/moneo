@@ -62,72 +62,72 @@ export default function FFGoal({
   pp,
   ffResultHandler,
 }: FFGoalProps) {
-  const { wip, fsb, allInputDone, inputTabs, setInputTabs, showTab, setShowTab, showResultTab, currency, rangeFactor, cancelCalc, addCallback, updateCallback }: any = useContext(CalcContext);
+  const { goal, fsb, allInputDone, inputTabs, setInputTabs, showTab, setShowTab, showResultTab, currency, rangeFactor, cancelCalc, addCallback, updateCallback }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
-  const [riskProfile, setRiskProfile] = useState<APIt.LMH>(wip.imp);
+  const [riskProfile, setRiskProfile] = useState<APIt.LMH>(goal.imp);
   const [rr, setRR] = useState<number | null>(pp ? null : 5);
-  const [expenseBY, setExpenseBY] = useState<number>(wip.sy);
+  const [expenseBY, setExpenseBY] = useState<number>(goal.sy);
   const [expenseAfterFF, setExpenseAfterFF] = useState<number>(
-    wip?.tdli as number
+    goal?.tdli as number
   );
   const [expenseChgRate, setExpenseChgRate] = useState<number>(
-    wip?.btr as number
+    goal?.btr as number
   );
-  const [nw, setNW] = useState<number>(wip?.ra as number);
+  const [nw, setNW] = useState<number>(goal?.ra as number);
   const [avgMonthlySavings, setAvgMonthlySavings] = useState<number>(
-    wip?.rachg as number
+    goal?.rachg as number
   );
   const [monthlySavingsRate, setMonthlySavingsRate] = useState<number>(
-    wip?.tbr as number
+    goal?.tbr as number
   );
-  const [endYear, setEndYear] = useState<number>(wip.ey);
+  const [endYear, setEndYear] = useState<number>(goal.ey);
   const eyOptions = initYearOptions(1960, nowYear - 15 - 1960);
-  const [taxRate, setTaxRate] = useState<number>(wip.tdr);
-  const [leaveBehind, setLeaveBehind] = useState<number>(wip?.sa as number);
-  const [carePremium, setCarePremium] = useState<number>(wip?.cp as number);
+  const [taxRate, setTaxRate] = useState<number>(goal.tdr);
+  const [leaveBehind, setLeaveBehind] = useState<number>(goal?.sa as number);
+  const [carePremium, setCarePremium] = useState<number>(goal?.cp as number);
   const [carePremiumChgPer, setCarePremiumChgPer] = useState<number>(
-    wip?.amper as number
+    goal?.amper as number
   );
   const [carePremiumSY, setCarePremiumSY] = useState<number>(
-    wip?.amsy as number
+    goal?.amsy as number
   );
   const [carePremiumDur, setCarePremiumDur] = useState<number>(
-    wip?.achg as number
+    goal?.achg as number
   );
-  const [careTaxDedLimit, setCareTaxDedLimit] = useState<number>(wip.tdl);
-  const [cpBY, setCPBY] = useState<number>(wip?.chg as number);
+  const [careTaxDedLimit, setCareTaxDedLimit] = useState<number>(goal.tdl);
+  const [cpBY, setCPBY] = useState<number>(goal?.chg as number);
   const [retirementIncomePer, setRetirementIncomePer] = useState<number>(
-    wip?.aiper as number
+    goal?.aiper as number
   );
   const [retirementIncomeSY, setRetirementIncomeSY] = useState<number>(
-    wip?.aisy as number
+    goal?.aisy as number
   );
   const [retirementIncome, setRetirementIncome] = useState<number>(
-    wip?.tbi as number
+    goal?.tbi as number
   );
   const [successionTaxRate, setSuccessionTaxRate] = useState<number>(
-    wip?.dr as number
+    goal?.dr as number
   );
   const [gains, setGains] = useState<Array<APIt.TargetInput>>(
-    wip.pg as Array<APIt.TargetInput>
+    goal.pg as Array<APIt.TargetInput>
   );
   const [losses, setLosses] = useState<Array<APIt.TargetInput>>(
-    wip.pl as Array<APIt.TargetInput>
+    goal.pl as Array<APIt.TargetInput>
   );
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
 
   const createGoal = () => {
     return {
-      name: wip.name,
+      name: goal.name,
       sy: expenseBY,
       ey: endYear,
-      by: wip.by,
+      by: goal.by,
       ra: nw,
       rachg: avgMonthlySavings,
       tdr: taxRate,
       tdl: careTaxDedLimit,
       ccy: currency,
-      type: wip.type,
+      type: goal.type,
       imp: riskProfile,
       manual: 0,
       amsy: carePremiumSY,
@@ -150,7 +150,7 @@ export default function FFGoal({
 
   const updateGoal = () => {
     let g: APIt.CreateGoalInput = createGoal();
-    g.id = wip.id;
+    g.id = goal.id;
     return g as APIt.UpdateGoalInput;
   };
 
@@ -219,7 +219,7 @@ export default function FFGoal({
   const handleSubmit = async () => {
     setBtnClicked(true);
     if (addCallback && updateCallback) {
-      wip.id
+      goal.id
         ? await updateCallback(updateGoal())
         : await addCallback(createGoal());
     } else cancelCalc();
@@ -324,7 +324,7 @@ export default function FFGoal({
                 title="Potential Gains (eg: Inheritance, Selling Investments, etc.)"
                 left={
                   <DynamicTgtInput
-                    startYear={wip.by}
+                    startYear={goal.by}
                     endYear={endYear}
                     currency={currency}
                     rangeFactor={rangeFactor}
@@ -340,7 +340,7 @@ export default function FFGoal({
                   footer="Include taxes & fees."
                   left={
                     <DynamicTgtInput
-                      startYear={wip.by}
+                      startYear={goal.by}
                       endYear={endYear}
                       currency={currency}
                       rangeFactor={rangeFactor}

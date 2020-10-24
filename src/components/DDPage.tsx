@@ -1,22 +1,19 @@
 import React, { Fragment } from "react";
-import { ParallaxProvider } from "react-scroll-parallax";
 import { Layout } from "antd";
 import Nav from "./Nav";
 import UserHeader from "./userheader";
 import SecureMenu from "./SecureMenu";
 import DDFooter from "./DDFooter";
-import { isMobileDevice } from "./utils";
-import { useFullScreenBrowser } from "react-browser-hooks";
 import Head from "next/head";
 
 interface DDPageProps {
   title: string;
   children: React.ReactNode;
   secure?: boolean;
+  onBack?: Function;
 }
 
 export default function DDPage(props: DDPageProps) {
-  const fsb = useFullScreenBrowser();
 
   return (
     <Fragment>
@@ -85,15 +82,9 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
             <UserHeader />
             <SecureMenu />
           </Fragment>
-        : <Nav />}
+          : <Nav onBack={props.onBack} />}
 
-        {!isMobileDevice(fsb) ? (
-          <ParallaxProvider>
-            {props.children}
-          </ParallaxProvider>
-        ) : (
-            props.children
-        )}
+        {props.children}
 
         <DDFooter />
       </Layout>

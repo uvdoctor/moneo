@@ -1,12 +1,15 @@
-import React from "react";
-import { Menu } from "antd";
+import React, { Fragment } from "react";
+import { Menu, Button } from "antd";
 import { calcList } from "./landing/Calculator";
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import FSToggle from "./FSToggle";
 
 interface DDMenuProps {
 	mode?: any;
+	onBack?: Function;
 }
 
-export default function DDMenu({ mode = "horizontal" }: DDMenuProps) {
+export default function DDMenu({ mode = "horizontal", onBack }: DDMenuProps) {
 	const { SubMenu } = Menu;
 
 	return (
@@ -28,6 +31,12 @@ export default function DDMenu({ mode = "horizontal" }: DDMenuProps) {
 					Earn up to $200 credit*
 				</a>
 			</Menu.Item>
+			<Menu.Item>
+				<FSToggle />
+			</Menu.Item>
+			{onBack ? <Menu.Item>
+				<Button type="text" icon={<ArrowLeftOutlined />} onClick={() => onBack()} />
+			</Menu.Item> : <Fragment/>}
 		</Menu>
 	);
 }

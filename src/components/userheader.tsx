@@ -3,7 +3,7 @@ import Logo from './Logo';
 import SVGOff from './svgoff';
 import { Auth, Hub } from 'aws-amplify';
 import { useRouter } from 'next/router';
-import FullScreen from './fullscreen';
+import FSToggle from './FSToggle';
 import { Layout, Affix, Menu, Button } from 'antd';
 import { useScroll } from 'react-browser-hooks';
 
@@ -66,7 +66,7 @@ const UserHeader = () => {
 					<label>Estimates. No Advice.</label>
 					{username ? (
 						<Fragment>
-                <Button type="link" icon={<FullScreen />}>
+                <Button type="link" icon={<FSToggle />}>
                 </Button>
 								<Button type="link" danger icon={<SVGOff />} onClick={(e) => handleLogout(e)}>
 								</Button>

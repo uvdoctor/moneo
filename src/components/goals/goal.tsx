@@ -48,79 +48,79 @@ export default function Goal({
   ffGoalEndYear,
   ffImpactYearsHandler,
 }: GoalProps) {
-  const { wip, cashFlows, addCallback, updateCallback, cancelCalc, currency, rangeFactor, allInputDone, inputTabs, setInputTabs, resultTabs, setResultTabs,
+  const { goal, cashFlows, addCallback, updateCallback, cancelCalc, currency, rangeFactor, allInputDone, inputTabs, setInputTabs, resultTabs, setResultTabs,
   showTab, setShowTab, showResultTab, setShowResultTab, fsb, dr, setDR, cfs, setCFs}: any = useContext(CalcContext);
   const typesList = getGoalTypes();
-  const goalType = wip?.type as APIt.GoalType;
-  const [startYear, setStartYear] = useState<number>(wip.sy);
-  const [endYear, setEndYear] = useState<number>(wip.ey);
+  const goalType = goal?.type as APIt.GoalType;
+  const [startYear, setStartYear] = useState<number>(goal.sy);
+  const [endYear, setEndYear] = useState<number>(goal.ey);
   const [loanRepaymentSY, setLoanRepaymentSY] = useState<
     number | null | undefined
-  >(wip?.emi?.ry);
+  >(goal?.emi?.ry);
   const [price, setPrice] = useState<number>(0);
-  const [taxRate, setTaxRate] = useState<number>(wip?.tdr);
-  const [maxTaxDeduction, setMaxTaxDeduction] = useState<number>(wip?.tdl);
+  const [taxRate, setTaxRate] = useState<number>(goal?.tdr);
+  const [maxTaxDeduction, setMaxTaxDeduction] = useState<number>(goal?.tdl);
   const [taxBenefitInt, setTaxBenefitInt] = useState<number | null | undefined>(
-    wip?.tbi
+    goal?.tbi
   );
   const [maxTaxDeductionInt, setMaxTaxDeductionInt] = useState<
     number | null | undefined
-  >(wip?.tdli);
+  >(goal?.tdli);
   const [totalPTaxBenefit, setTotalPTaxBenefit] = useState<number>(0);
   const [totalITaxBenefit, setTotalITaxBenefit] = useState<number>(0);
   const [sellAfter, setSellAfter] = useState<number | undefined | null>(
-    wip?.sa
+    goal?.sa
   );
   const [loanPer, setLoanPer] = useState<number | undefined | null>(
-    wip?.emi?.per
+    goal?.emi?.per
   );
   const [loanSIPayPer, setLoanSIPayPer] = useState<number | undefined | null>(
-    wip.btr
+    goal.btr
   );
   const [loanSICapitalize, setLoanSICapitalize] = useState<
     number | undefined | null
-  >(wip.tbr);
+  >(goal.tbr);
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
-  >(wip.achg);
+  >(goal.achg);
   const [startingPrice, setStartingPrice] = useState<number>(
-    wip?.cp as number
+    goal?.cp as number
   );
-  const [impLevel, setImpLevel] = useState<APIt.LMH>(wip?.imp);
-  const [manualMode, setManualMode] = useState<number>(wip?.manual);
-  const [name, setName] = useState<string>(wip?.name);
+  const [impLevel, setImpLevel] = useState<APIt.LMH>(goal?.imp);
+  const [manualMode, setManualMode] = useState<number>(goal?.manual);
+  const [name, setName] = useState<string>(goal?.name);
   const [loanYears, setLoanYears] = useState<number | null | undefined>(
-    wip?.emi?.dur
+    goal?.emi?.dur
   );
   const [loanIntRate, setLoanIntRate] = useState<number | null | undefined>(
-    wip?.emi?.rate
+    goal?.emi?.rate
   );
   const [iSchedule, setISchedule] = useState<Array<number>>([])
   const [pSchedule, setPSchedule] = useState<Array<number>>([])
-  const [priceChgRate, setPriceChgRate] = useState<number>(wip?.chg as number);
+  const [priceChgRate, setPriceChgRate] = useState<number>(goal?.chg as number);
   const [sellPrice, setSellPrice] = useState<number>(0);
   const [assetChgRate, setAssetChgRate] = useState<number | null | undefined>(
-    wip?.achg
+    goal?.achg
   );
   const [amCostPer, setAMCostPer] = useState<number | null | undefined>(
-    wip?.amper
+    goal?.amper
   );
   const [amStartYear, setAMStartYear] = useState<number | null | undefined>(
-    wip?.amsy
+    goal?.amsy
   );
-  const [aiPer, setAIPer] = useState<number | null | undefined>(wip?.aiper);
+  const [aiPer, setAIPer] = useState<number | null | undefined>(goal?.aiper);
   const [aiStartYear, setAIStartYear] = useState<number | null | undefined>(
-    wip?.aisy
+    goal?.aisy
   );
   const [rentTaxBenefit, setRentTaxBenefit] = useState<
     number | null | undefined
-  >(wip?.tbr);
-  const [rentAmt, setRentAmt] = useState<number | null | undefined>(wip?.ra);
+  >(goal?.tbr);
+  const [rentAmt, setRentAmt] = useState<number | null | undefined>(goal?.ra);
   const [rentChgPer, setRentChgPer] = useState<number | null | undefined>(
-    wip?.rachg
+    goal?.rachg
   );
   const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(
-    wip?.tgts as Array<APIt.TargetInput>
+    goal?.tgts as Array<APIt.TargetInput>
   );
   const [currentOrder, setCurrentOrder] = useState<number>(
     addCallback && updateCallback ? 1 : 3
@@ -173,7 +173,7 @@ export default function Goal({
       name: name,
       sy: startYear,
       ey: endYear,
-      by: wip.by,
+      by: goal.by,
       tdr: taxRate,
       tdl: maxTaxDeduction,
       ccy: currency,
@@ -218,7 +218,7 @@ export default function Goal({
 
   const createUpdateGoalInput = () => {
     let g: APIt.CreateGoalInput = createNewGoalInput();
-    g.id = wip.id;
+    g.id = goal.id;
     return g as APIt.UpdateGoalInput;
   };
 
@@ -278,7 +278,7 @@ export default function Goal({
     if (manualMode > 0) return;
     let p = 0;
     if (startingPrice)
-      p = getCompoundedIncome(priceChgRate, startingPrice, startYear - wip.by);
+      p = getCompoundedIncome(priceChgRate, startingPrice, startYear - goal.by);
     setPrice(Math.round(p));
   }, [startingPrice, priceChgRate, startYear, manualMode]);
 
@@ -328,7 +328,7 @@ export default function Goal({
 
   useEffect(() => {
     if (!ffImpactYearsHandler) return;
-    let result = ffImpactYearsHandler(startYear, cfs, wip.id, impLevel);
+    let result = ffImpactYearsHandler(startYear, cfs, goal.id, impLevel);
     setFFImpactYears(result.ffImpactYears);
     setRR([...result.rr]);
     setFFOOM(result.ffOOM);
@@ -362,7 +362,7 @@ export default function Goal({
   const handleSubmit = async () => {
     setBtnClicked(true);
     if (addCallback && updateCallback) {
-      wip.id
+      goal.id
         ? await updateCallback(createUpdateGoalInput(), cfs)
         : await addCallback(createNewGoalInput(), cfs);
     } else cancelCalc();
@@ -534,7 +534,7 @@ export default function Goal({
               endYearHandler={changeEndYear}
               currency={currency}
               goalType={goalType}
-              goalBY={wip.by}
+              goalBY={goal.by}
               ffGoalEndYear={ffGoalEndYear}
               rangeFactor={rangeFactor}
               manualMode={manualMode}

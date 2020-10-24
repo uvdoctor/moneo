@@ -161,6 +161,7 @@ function CalcContextProvider({ goal, children, title, defaultCurrency, tabOption
   return (
     <CalcContext.Provider
       value={{
+        goal,
         currency,
         setCurrency,
         rangeFactor,

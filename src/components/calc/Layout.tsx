@@ -56,7 +56,7 @@ export default function Layout(props: LayoutProps) {
 	};
 
 	return (
-		<DDPage title={props.title}>
+		<DDPage title={props.title} onBack={() => setWIP(null)}> 
 			{!wip ? (
 				<Space align="center" direction="vertical" size="large">
 					<h1>{props.title + ' Calculator'}</h1>
