@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { Fragment } from "react";
+import React from "react";
 import { ROUTES } from "../CONSTANTS";
 import Link from "next/link";
 import { useRouter } from "next/router";
