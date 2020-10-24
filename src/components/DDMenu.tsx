@@ -1,15 +1,13 @@
-import React, { Fragment } from "react";
-import { Menu, Button } from "antd";
+import React from "react";
+import { Menu } from "antd";
 import { calcList } from "./landing/Calculator";
-import { ArrowLeftOutlined } from '@ant-design/icons';
 import FSToggle from "./FSToggle";
 
 interface DDMenuProps {
 	mode?: any;
-	onBack?: Function;
 }
 
-export default function DDMenu({ mode = "horizontal", onBack }: DDMenuProps) {
+export default function DDMenu({ mode = "horizontal" }: DDMenuProps) {
 	const { SubMenu } = Menu;
 
 	return (
@@ -34,9 +32,6 @@ export default function DDMenu({ mode = "horizontal", onBack }: DDMenuProps) {
 			<Menu.Item>
 				<FSToggle />
 			</Menu.Item>
-			{onBack ? <Menu.Item>
-				<Button type="text" icon={<ArrowLeftOutlined />} onClick={() => onBack()} />
-			</Menu.Item> : <Fragment/>}
 		</Menu>
 	);
 }

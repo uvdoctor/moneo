@@ -21,8 +21,8 @@ const Nav = ({ onBack }: NavProps) => {
 	return (
 		<Affix offsetTop={0}>
 			<Header className={`dd-header ${top > 10 ? 'fixed-nav' : ''}`}>
-				<Logo />
-				<DDMenu onBack={onBack} />
+				<Logo onBack={onBack} />
+				<DDMenu />
 				<Button type="text" onClick={onShowDrawer}>
 					<MenuOutlined />
 				</Button>

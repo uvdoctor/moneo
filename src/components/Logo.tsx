@@ -1,11 +1,18 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React from "react";
+import React, { Fragment } from "react";
 import { ROUTES } from "../CONSTANTS";
 import Link from "next/link";
-
-export default function Logo() {
+import { useRouter } from "next/router";
+import { Button } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+interface LogoProps {
+	onBack?: Function
+}
+export default function Logo({ onBack }: LogoProps) {
+	const router = useRouter();
 	return (
-		<div style={{cursor: 'pointer'}} className="logo">
+			<div style={{cursor: 'pointer'}} className="logo">
+			<Button type="text" icon={<ArrowLeftOutlined />} onClick={() => onBack ? onBack() : router.back()} />
 			<Link href={ROUTES.HOME}>
 				<img
 					alt="Dollar Darwin"
