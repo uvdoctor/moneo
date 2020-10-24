@@ -687,7 +687,7 @@ export default function Goal({
             cfs={cfs}
             currency={currency}
             startYear={startYear}
-            buyGoal={goal}
+            buyGoal={goalType === APIt.GoalType.B}
             ffGoalEndYear={ffGoalEndYear}
           />
             ] : []}

@@ -1,11 +1,12 @@
 import React from 'react';
 import DDLineChart from './DDLineChart';
 import { getGoalTypes, getImpLevels } from './goalutils';
-import GoalResult from './goalresult';
 import { LMH, GoalType } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
-import { Button, Card, Space } from 'antd';
+import { Button, Card, Row, Col } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import OppCost from '../calc/oppcost';
+import FFImpact from './ffimpact';
 interface SummaryProps {
 	id: string;
 	name: string;
@@ -29,18 +30,20 @@ export default function Summary(props: SummaryProps) {
 	return (
 		<Card
 			title={
-				<Space align="center" size="large">
-					<Space align="center">
+				<Row align="middle" justify="space-between">
+					<Col>
 						<label>{getGoalTypes()[props.type]}</label>
 						<h2>{props.name}</h2>
-					</Space>
-					<Button type="link" onClick={() => props.editCallback(props.id)} icon={<EditOutlined />}>
-						Edit
-					</Button>
-					<Button type="link" onClick={() => props.deleteCallback(props.id)} icon={<DeleteOutlined />}>
-						Delete
-					</Button>
-				</Space>
+					</Col>
+					<Col>
+						<Button type="link" onClick={() => props.editCallback(props.id)} icon={<EditOutlined />}>
+							Edit
+						</Button>
+						<Button type="link" onClick={() => props.deleteCallback(props.id)} icon={<DeleteOutlined />}>
+							Delete
+						</Button>
+					</Col>
+				</Row>
 			}
 			extra={
 				<label
@@ -57,22 +60,27 @@ export default function Summary(props: SummaryProps) {
 				</label>
 			}
 		>
-			<Space align="center" direction="vertical" size="large">
-				{props.startYear > nowYear && (
-					<GoalResult
-						rr={props.rr}
-						currency={props.currency}
-						ffGoalEndYear={props.ffGoalEndYear}
-						cfs={props.cfs}
-						startYear={props.startYear}
-						ffImpactYears={props.ffImpactYears}
-						ffOOM={props.ffOOM}
-						buyGoal={props.type === GoalType.B}
-					/>
-				)}
-				<p>Cash Flows in {props.currency}</p>
+			{props.startYear > nowYear && (
+				<Row>
+					<Col span={8}>
+						<FFImpact ffGoalEndYear={props.ffGoalEndYear} ffOOM={props.ffOOM} ffImpactYears={props.ffImpactYears} />
+					</Col>
+					<Col span={8}>
+						<OppCost
+							discountRate={props.rr}
+							cfs={props.cfs}
+							currency={props.currency}
+							startYear={props.startYear}
+							buyGoal={props.type === GoalType.B}
+							ffGoalEndYear={props.ffGoalEndYear}
+						/>
+					</Col>
+				</Row>
+			)}
+			<Row>Cash Flows in {props.currency}</Row>
+			<Row>
 				<DDLineChart cfs={props.cfs} startYear={props.startYear} currency={props.currency} />
-			</Space>
+			</Row>
 		</Card>
 	);
 }
