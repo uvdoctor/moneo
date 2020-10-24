@@ -26,7 +26,7 @@ const Nav = ({ onBack }: NavProps) => {
 				<Button type="text" onClick={onShowDrawer}>
 					<MenuOutlined />
 				</Button>
-				<Drawer placement="right" closable={true} onClose={onCloseDrawer} visible={showDrawer}>
+				<Drawer placement="right" closable onClose={onCloseDrawer} visible={showDrawer}>
 					<DDMenu mode="inline" />
 				</Drawer>
 			</Header>
