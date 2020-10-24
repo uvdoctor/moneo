@@ -7,7 +7,7 @@ import FFGoal from '../goals/ffgoal';
 import Goal from '../goals/goal';
 import { createNewGoalInput } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
-import { Button, Collapse, Space } from 'antd';
+import { Button, Collapse, Row, Col } from 'antd';
 import { CalcContextProvider } from './CalcContext';
 
 import './Layout.less';
@@ -58,32 +58,34 @@ export default function Layout(props: LayoutProps) {
 	};
 
 	return (
-		<DDPage className="calculator-container" title={props.title} onBack={() => setWIP(null)} > 
+		<DDPage className="calculator-container" title={props.title} onBack={() => setWIP(null)}>
 			{!wip ? (
-				<Space align="center" direction="vertical" size="large">
-					<h1>{props.title + ' Calculator'}</h1>
+				<Row align="middle" justify="center">
+					<Col><h2>{props.title + ' Calculator'}</h2></Col>
+					<Col span={24}>
 					<Collapse defaultActiveKey={[ '1' ]}>
 						{Object.keys(sections).map((key, i) => (
 							<Panel key={`${i + 1}`} header={key}>
-								<Space align="center" size="large">
-									{sections[key]}
-								</Space>
+								<Col span={24}>{sections[key]}</Col>
 								{sections[key] === props.results && (
-									<p>
+									<Col span={24}>
 										<img
 											style={{ cursor: 'pointer' }}
 											src={'/images/' + props.resultImg}
 											onClick={createGoal}
 										/>
-									</p>
+									</Col>
 								)}
 							</Panel>
 						))}
-					</Collapse>
-					<Button type="primary" onClick={() => createGoal()}>
-						Start
-					</Button>
-				</Space>
+						</Collapse>
+					</Col>
+					<Col>
+						<Button type="primary" onClick={() => createGoal()}>
+							Start
+						</Button>
+					</Col>
+				</Row>
 			) : (
 				<CalcContextProvider
 					goal={wip}
@@ -91,7 +93,7 @@ export default function Layout(props: LayoutProps) {
 					tabOptions={props.tabOptions}
 					resultTabOptions={props.resultTabOptions}
 					type={props.type}
-					>
+				>
 					{router.pathname === ROUTES.FI ? (
 						<FFGoal
 							mustCFs={[]}

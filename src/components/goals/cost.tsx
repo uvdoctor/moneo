@@ -5,6 +5,7 @@ import HSwitch from '../HSwitch';
 import { TargetInput } from '../../api/goals';
 import { createNewTarget } from './goalutils';
 import { toCurrency } from '../utils';
+import { Row, Col } from 'antd';
 interface CostProps {
 	leftNote?: string;
 	footer?: string;
@@ -105,10 +106,10 @@ export default function Cost(props: CostProps) {
 			}
 			manualInput={
 				props.manualTargets && (
-					<div>
+					<Row align="middle" justify="space-between">
 						{props.manualTargets.map((t, i) => (
-							<div key={'t' + i} style={{ marginRight: '1rem', marginBottom: '1rem' }}>
-								<label>{t.year}</label>
+							<Col span={24} key={'t' + i} style={{ marginRight: '1rem', marginBottom: '1rem' }}>
+								<label>{`${t.year} `}</label>
 								<NumberInput
 									pre=""
 									currency={props.currency}
@@ -119,9 +120,9 @@ export default function Cost(props: CostProps) {
 									max={900000}
 									step={500}
 								/>
-							</div>
+							</Col>
 						))}
-					</div>
+					</Row>
 				)
 			}
 			manualMode={props.manualMode}

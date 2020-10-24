@@ -5,12 +5,13 @@ import { buildYearsArray } from '../utils';
 interface BuyRentChartProps {
 	data: Array<any>;
 	currency: string;
+	answer: string;
+	answerHandler: Function;
 }
 
 const GroupedColumnChart = dynamic(() => import('bizcharts/lib/plots/GroupedColumnChart'), { ssr: false });
 
 export default function BuyRentChart(props: BuyRentChartProps) {
-	const [ answer, setAnswer ] = useState<string>('');
 	const [ stackedData, setStackedData ] = useState<Array<any>>(buildYearsArray(1, props.data[0].values.length));
 
 	const findAnswer = (data: Array<any>) => {
@@ -19,20 +20,20 @@ export default function BuyRentChart(props: BuyRentChartProps) {
 		let buyValues = data[0].values;
 		let rentValues = data[1].values;
 		if (buyValues[0] < rentValues[0]) {
-			answer += 'Renting is more profitable than Buying';
-		} else if (buyValues[0] > rentValues[0]) answer += 'Buying is more profitable than Renting';
-		else if (buyValues[0] === rentValues[0]) answer += 'Both options cost similar.';
+			answer += 'Rent';
+		} else if (buyValues[0] > rentValues[0]) answer += 'Buy';
+		else if (buyValues[0] === rentValues[0]) answer += 'Both cost similar.';
 		for (let i = 1; i < buyValues.length; i++) {
 			let alternative = '';
-			if (buyValues[i] < rentValues[i]) alternative += 'Renting';
-			else if (buyValues[i] > rentValues[i]) alternative += 'Buying';
+			if (buyValues[i] < rentValues[i]) alternative += 'Rent';
+			else if (buyValues[i] > rentValues[i]) alternative += 'Buy';
 			else if (buyValues[i] === rentValues[i]) alternative += 'Both';
 			if (!answer.startsWith(alternative)) {
-				condition = ` till ${i} ${i === 1 ? 'year' : 'years'}. ${alternative} is more profitable after that.`;
+				condition = ` till ${i} ${i === 1 ? 'Year' : 'Years'}. ${alternative} after that.`;
 				break;
 			}
 		}
-		setAnswer(answer + condition);
+		props.answerHandler(answer + condition);
 	};
 
 	useEffect(
@@ -61,10 +62,9 @@ export default function BuyRentChart(props: BuyRentChartProps) {
 	);
 
 	return (
-		<div className="w-full">
 			<GroupedColumnChart
 				meta={getCommonMeta(props.currency)}
-				title={{ visible: true, text: answer, style: getCommonFill() }}
+				title={{ visible: true, text: props.answer, style: getCommonFill() }}
 				xField="years"
 				yField="value"
 				groupField="name"
@@ -72,6 +72,5 @@ export default function BuyRentChart(props: BuyRentChartProps) {
 				yAxis={getCommonYAxis()}
 				xAxis={getCommonXAxis('Number of Years')}
 			/>
-		</div>
 	);
 }

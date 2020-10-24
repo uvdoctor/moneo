@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getCompoundedIncome } from './finance';
-import SVGBalance from './svgbalance';
 import ItemDisplay from './ItemDisplay';
 import { toCurrency } from '../utils';
 import { getMinRetirementDuration } from '../goals/goalutils';
-import { COLORS, PLAN_DURATION } from '../../CONSTANTS';
-import { Card } from 'antd';
+import { PLAN_DURATION } from '../../CONSTANTS';
 interface OppCostProps {
 	cfs: Array<number>;
 	currency: string;
@@ -59,9 +57,7 @@ export default function OppCost(props: OppCostProps) {
 	useEffect(() => calculateOppCost(), [ props.cfs, props.discountRate ]);
 
 	return (
-		<Card style={{ backgroundColor: COLORS.LIGHT_GREEN }}>
 			<ItemDisplay
-				svg={<SVGBalance />}
 				result={oppCost}
 				currency={props.currency}
 				label={`${props.buyGoal ? 'Buy' : 'Spend'} v/s Invest`}
@@ -75,6 +71,5 @@ export default function OppCost(props: OppCostProps) {
 					? props.buyGoal ? 'Buying' : 'Spending'
 					: 'Investing'}.`}
 			/>
-		</Card>
 	);
 }

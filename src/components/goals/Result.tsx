@@ -1,8 +1,9 @@
-import React, { ReactNode, useContext, useRef } from 'react';
+import React, { Fragment, ReactNode, useContext, useRef } from 'react';
 import { useFullScreen } from 'react-browser-hooks';
-import { Tabs, Statistic, Row, Col } from 'antd';
+import { Tabs, Row, Col } from 'antd';
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
 import { CalcContext } from '../calc/CalcContext';
+import CalcHeader from '../calc/CalcHeader';
 
 interface ResultProps {
 	results: Array<ReactNode>;
@@ -10,33 +11,34 @@ interface ResultProps {
 }
 
 export default function Result(props: ResultProps) {
-	const { resultTabs, setResultTabs, showResultTab }: any = useContext(CalcContext);
+	const { resultTabs, showResultTab, setShowResultTab }: any = useContext(CalcContext);
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
 	return (
 		<div ref={chartDiv} className="calculator-content">
+			<CalcHeader />
 			<div style={{ cursor: 'pointer' }} onClick={toggle}>
 				{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
 			</div>
-			<Row className="dd-stats" gutter={[ { xs: 10, sm: 10, md: 35, lg: 40 }, 0 ]}>
-				{props.results.map((result) => <Col span={12}>{result}</Col>)}
-			</Row>
+			{props.results && props.results.length > 0 && <Row className="dd-stats" gutter={[{ xs: 10, sm: 10, md: 35, lg: 40 }, 0]}>
+				{props.results.map((result) => result && <Col span={Math.round(24 / props.results.length)}>{result}</Col>)}
+			</Row>}
 			<Tabs
 				className="dd-chart"
-				onTabClick={(key: string) => setResultTabs(key)}
-				defaultActiveKey={resultTabs[0].label}
+				onTabClick={(key: string) => setShowResultTab(key)}
+				defaultActiveKey={showResultTab}
+				type="card"
 			>
 				{resultTabs.map((tab: any) => (
 					<TabPane
 						key={tab.label}
 						disabled={!tab.active}
 						tab={
-							<Statistic
-								title=""
-								value={tab.label}
-								prefix={<tab.svg disabled={!tab.active} selected={showResultTab === tab.label} />}
-							/>
+							<Fragment>
+								<tab.svg disabled={!tab.active} selected={showResultTab === tab.label} />
+								{tab.label}
+							</Fragment>
 						}
 					>
 						<Row>

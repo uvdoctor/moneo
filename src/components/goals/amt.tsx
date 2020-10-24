@@ -3,7 +3,7 @@ import { GoalType, TargetInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
 import { initYearOptions } from '../utils';
 import Cost from './cost';
-import { Space } from 'antd';
+import { Row, Col } from 'antd';
 interface AmtProps {
 	goalType: GoalType;
 	goalBY: number;
@@ -50,42 +50,50 @@ export default function Amt({
 	const [ syOptions ] = useState(initYearOptions(goalBY + 1, ffGoalEndYear - 20 - (goalBY + 1)));
 
 	return (
-		<Space align="center" size="large" direction="vertical">
-			<Space align="center" size="large">
-				<SelectInput
-					pre="When?"
-					info="Year in which You Start Paying for the Goal"
-					value={startYear}
-					changeHandler={startYearHandler}
-					options={syOptions}
+		<Row align="middle">
+			<Col span={24}>
+				<Row align="middle" justify="space-between" style={{margin: '1rem'}}>
+					<Col span={10}>
+						<SelectInput
+							pre="When?"
+							info="Year in which You Start Paying for the Goal"
+							value={startYear}
+							changeHandler={startYearHandler}
+							options={syOptions}
+						/>
+					</Col>
+					<Col span={10}>
+						<SelectInput
+							pre={`Pay Until`}
+							value={endYear}
+							info="Year in which You End Paying for the Goal"
+							disabled={goalType === GoalType.B && manualMode < 1}
+							changeHandler={endYearHandler}
+							options={eyOptions}
+						/>
+					</Col>
+				</Row>
+			</Col>
+			<Col span={24}>
+				<Cost
+					startingCost={startingPrice}
+					startingCostHandler={startingPriceHandler}
+					rangeFactor={rangeFactor}
+					manualTargets={manualTgts}
+					manualTargetsHandler={manualTgtsHandler}
+					currency={currency}
+					cost={price}
+					costChgRate={priceChgRate}
+					costChgRateHandler={priceChgRateHandler}
+					endYear={endYear}
+					manualMode={manualMode}
+					manualModeHandler={manualModeHandler}
+					startYear={startYear}
+					baseYear={goalBY}
+					leftMax={goalType === GoalType.B ? 1500000 : 50000}
+					leftNote={goalType !== GoalType.D ? 'including taxes & fees' : ''}
 				/>
-				<SelectInput
-					pre={`Pay Until`}
-					value={endYear}
-					info="Year in which You End Paying for the Goal"
-					disabled={goalType === GoalType.B && manualMode < 1}
-					changeHandler={endYearHandler}
-					options={eyOptions}
-				/>
-			</Space>
-			<Cost
-				startingCost={startingPrice}
-				startingCostHandler={startingPriceHandler}
-				rangeFactor={rangeFactor}
-				manualTargets={manualTgts}
-				manualTargetsHandler={manualTgtsHandler}
-				currency={currency}
-				cost={price}
-				costChgRate={priceChgRate}
-				costChgRateHandler={priceChgRateHandler}
-				endYear={endYear}
-				manualMode={manualMode}
-				manualModeHandler={manualModeHandler}
-				startYear={startYear}
-				baseYear={goalBY}
-				leftMax={goalType === GoalType.B ? 1500000 : 50000}
-				leftNote={goalType !== GoalType.D ? 'including taxes & fees' : ''}
-			/>
-		</Space>
+			</Col>
+		</Row>
 	);
 }

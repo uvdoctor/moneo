@@ -1,9 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import VideoPlayer from '../videoplayer';
-import { VideoCameraOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { Button, Card, Space } from 'antd';
-import { useFullScreenBrowser } from 'react-browser-hooks';
-import { isMobileDevice } from '../utils';
+import { YoutubeFilled, CloseOutlined } from '@ant-design/icons';
+import { Row, Col } from 'antd';
 interface SectionProps {
 	title: any;
 	left?: any;
@@ -20,52 +18,59 @@ interface SectionProps {
 
 export default function Section(props: SectionProps) {
 	const [ videoUrl, setVideoUrl ] = useState<string>('');
-	const fsb = useFullScreenBrowser();
 
 	return (
-		<Card
-			title={props.title}
-			bordered={false}
-			extra={
-				props.videoSrc && (
-					<Button
-						type="link"
-						icon={!videoUrl ? <VideoCameraOutlined /> : <CloseCircleOutlined />}
-						onClick={() => setVideoUrl(!videoUrl ? props.videoSrc as string : '')}
-						danger={videoUrl ? true : false}
-					>
-						{videoUrl ? 'Stop' : 'Video'}
-					</Button>
-				)
-			}
-			style={{ maxWidth: '500px' }}
-		>
-			{videoUrl && <VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />}
-			{props.toggle && <div style={{ textAlign: 'end', marginBottom: '1rem' }}>{props.toggle}</div>}
+		<Row justify="center" align="middle" style={{ maxWidth: '500px', margin: '1rem' }}>
+			<Col span={24}>
+				<h3
+					style={{ cursor: props.videoSrc ? 'pointer' : 'auto' }}
+					onClick={() => (props.videoSrc ? setVideoUrl(!videoUrl ? props.videoSrc as string : '') : true)}
+				>
+					{props.title}
+					{` `}
+					{props.videoSrc && (!videoUrl ? <YoutubeFilled /> : <CloseOutlined />)}
+				</h3>
+			</Col>
+			{videoUrl && (
+				<Col span={24}>
+					<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
+				</Col>
+			)}
+			{props.toggle && (
+				<Fragment>
+					<Col span={24} style={{ textAlign: 'end' }}>
+						{props.toggle}
+					</Col>
+					<Col className="fields-divider" span={24} />
+				</Fragment>
+			)}
 			{props.manualMode && props.manualMode > 0 ? (
-				props.manualInput
+				<Col span={24}>{props.manualInput}</Col>
 			) : (
 				<Fragment>
-						<Space
-							//@ts-ignore
-							align={`${isMobileDevice(fsb) ? 'center' : 'start'}`}
-							size="large"
-							//@ts-ignore
-							direction={`${isMobileDevice(fsb) ? 'vertical' : 'horizontal'}`}
-						>
-							{props.left}
-							{props.right}
-						</Space>
-						{props.bottom && (
-							<Space align="center" size="large" style={{ marginTop: '1rem' }}>
+					<Col span={24}>{props.left}</Col>
+					<Col className="fields-divider" span={24} />
+					<Col span={24}>{props.right}</Col>
+					{props.bottom && (
+						<Fragment>
+							<Col className="fields-divider" span={24} />
+							<Col span={24}>
 								{props.bottomLeft}
 								{props.bottom}
 								{props.bottomRight}
-							</Space>
-						)}
-					{props.footer && <div style={{ textAlign: 'center', marginTop: '1rem' }}>{props.footer}</div>}
+							</Col>
+						</Fragment>
+					)}
+					{props.footer && (
+						<Fragment>
+							<Col className="fields-divider" span={24} />
+							<Col span={24} style={{ textAlign: 'center' }}>
+								{props.footer}
+							</Col>
+						</Fragment>
+					)}
 				</Fragment>
 			)}
-		</Card>
+		</Row>
 	);
 }

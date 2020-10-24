@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
+import { CalcContext } from '../calc/CalcContext';
 import ItemDisplay from '../calc/ItemDisplay';
 import SVGBalance from '../calc/svgbalance';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import HSwitch from '../HSwitch';
-
+import { Row } from 'antd';
 interface RentComparisonProps {
 	currency: string;
 	rangeFactor: number;
@@ -35,6 +36,7 @@ export default function RentComparison({
 	analyzeFor,
 	analyzeForHandler
 }: RentComparisonProps) {
+	const { dr, setDR }: any = useContext(CalcContext);
 	const [ rentDiff, setRentDiff ] = useState<number | null>(null);
 
 	const provideRentAns = () => {
@@ -82,23 +84,36 @@ export default function RentComparison({
 					/>
 				)
 			}
-			bottomLeft={!!rentAmt && 'Analyze from '}
 			bottom={
 				!!rentAmt && (
-					<NumberInput
-						pre="1 to "
-						value={analyzeFor}
-						changeHandler={analyzeForHandler}
-						min={10}
-						max={50}
-						step={5}
-						unit="Years"
-					/>
-				)
-			}
-			bottomRight={
-				rentDiff && (
-					<ItemDisplay
+					<Fragment>
+						{dr !== null && (
+							<Row>
+								<NumberInput
+									pre="Analyze from 1 to "
+									value={analyzeFor}
+									changeHandler={analyzeForHandler}
+									min={10}
+									max={50}
+									step={5}
+									unit="Years"
+								/>
+							</Row>
+						)}
+						<Row>
+							<NumberInput
+								value={dr as number}
+								changeHandler={setDR}
+								min={0}
+								max={15}
+								step={0.1}
+								pre="Assume Investment Earns Yearly"
+								unit="%"
+								note="After taxes & fees"
+							/>
+						</Row>
+						{rentDiff && 
+							<ItemDisplay
 						svg={<SVGBalance />}
 						result={rentDiff}
 						label={`Rent is ${rentDiff < 0 ? 'Costlier' : 'Cheaper'} by`}
@@ -106,6 +121,8 @@ export default function RentComparison({
 						currency={currency}
 						pl
 					/>
+						}
+					</Fragment>
 				)
 			}
 			toggle={

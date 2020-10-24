@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, Fragment } from "react";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import * as APIt from "../../api/goals";
-import { initYearOptions, isMobileDevice, isTopBottomLayout} from "../utils";
+import { initYearOptions, isMobileDevice } from "../utils";
 import LoanEmi from "../calc/LoanEmi";
 import TaxAdjustment from "../calc/TaxAdjustment";
 import Sell from "./sell";
@@ -18,14 +18,16 @@ import {
 import AnnualAmt from "./annualamt";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import Result from "./Result";
-import GoalResult from "./goalresult";
 import DDLineChart from "./DDLineChart";
 import Input from "./Input";
 import RentComparison from "./rentcomparison";
 import BuyRentChart from "./BuyRentChart";
 import LoanScheduleChart from "./LoanScheduleChart";
-import { Space } from "antd";
+import { Row, Col } from "antd";
 import { CalcContext } from "../calc/CalcContext";
+import OppCost from "../calc/oppcost";
+import FFImpact from "./ffimpact";
+import ItemDisplay from "../calc/ItemDisplay";
 interface GoalProps {
   ffGoalEndYear: number;
   ffImpactYearsHandler?: Function;
@@ -48,7 +50,7 @@ export default function Goal({
   ffImpactYearsHandler,
 }: GoalProps) {
   const { goal, cashFlows, addCallback, updateCallback, cancelCalc, currency, rangeFactor, allInputDone, inputTabs, setInputTabs, resultTabs, setResultTabs,
-  showTab, setShowTab, showResultTab, setShowResultTab, fsb, dr, setDR, cfs, setCFs}: any = useContext(CalcContext);
+  showTab, setShowTab, showResultTab, setShowResultTab, fsb, dr, cfs, setCFs}: any = useContext(CalcContext);
   const typesList = getGoalTypes();
   const goalType = goal?.type as APIt.GoalType;
   const [startYear, setStartYear] = useState<number>(goal.sy);
@@ -118,6 +120,7 @@ export default function Goal({
   const [rentChgPer, setRentChgPer] = useState<number | null | undefined>(
     goal?.rachg
   );
+  const [ brAns, setBRAns ] = useState<string>('');
   const [wipTargets, setWIPTargets] = useState<Array<APIt.TargetInput>>(
     goal?.tgts as Array<APIt.TargetInput>
   );
@@ -492,9 +495,10 @@ export default function Goal({
   }, [analyzeFor, cfs]);
 
   return (
-    <Space align="center" direction="vertical">
+    <Fragment>
         {addCallback && updateCallback && (
-          <Space align="center" size="large">
+        <Row align="middle" justify="space-between" style={{marginTop: '1rem', marginBottom: '1rem'}}>
+          <Col span={11}>
             <TextInput
               name="name"
               pre={typesList[goalType]}
@@ -503,21 +507,18 @@ export default function Goal({
               changeHandler={setName}
               width="150px"
             />
+          </Col>
+          <Col span={11}>
             <SelectInput
               pre="Importance"
               value={impLevel}
               changeHandler={setImpLevel}
               options={getImpLevels()}
             />
-          </Space>
+          </Col>
+          </Row>
         )}
-      <Space
-			align="start"
-			size="large"
-      style={{ width: '100%' }}
-      //@ts-ignore
-			direction={`${isTopBottomLayout(fsb) ? 'vertical' : 'horizontal'}`}
-		>  <Input
+		  <Input
           handleSubmit={addCallback && updateCallback ? handleSubmit : null}
           submitDisabled={
             name.length < 3 || !price || btnClicked
@@ -605,10 +606,9 @@ export default function Goal({
             />
           )}
 
-          {showTab === ANNUAL_NET_COST_LABEL && (
-            <Space align="center" size="large"
-              //@ts-ignore
-              direction={`${isMobileDevice(fsb) ? "vertical" : "horizontal"}`}>
+        {showTab === ANNUAL_NET_COST_LABEL && (
+          <Fragment>
+            <Col span={isMobileDevice(fsb) ? 24 : 12}>
               <AnnualAmt
                 currency={currency}
                 startYear={startYear}
@@ -622,7 +622,9 @@ export default function Goal({
                 title="Yearly Fixes, Insurance, etc costs"
                 footer="Include taxes & fees"
                 colorTo
-              />
+            />
+            </Col>
+            <Col span={isMobileDevice(fsb) ? 24 : 12}>
                 <AnnualAmt
                   currency={currency}
                   startYear={startYear}
@@ -636,7 +638,8 @@ export default function Goal({
                   title="Yearly Income through Rent, Dividend, etc"
                   footer="Exclude taxes & fees"
                 />
-            </Space>
+            </Col>
+            </Fragment>
           )}
 
           {showTab === SELL_LABEL && (
@@ -675,22 +678,19 @@ export default function Goal({
         </Input>
         {showResultSection() && (
           <Result
-            results={[
-              nowYear < startYear && (
-                <GoalResult
-                  rr={rr}
-                  startYear={startYear}
-                  currency={currency}
-                  ffGoalEndYear={ffGoalEndYear}
-                  cfs={cfs}
-                  ffOOM={ffOOM}
-                  ffImpactYears={ffImpactYears}
-                  buyGoal={goalType === APIt.GoalType.B}
-                  dr={dr}
-                  drHandler={setDR}
-                />
-              )
-            ]}
+          results={nowYear < startYear ? [
+            (dr === null || dr === undefined) ? 
+              <FFImpact ffGoalEndYear={ffGoalEndYear} ffOOM={ffOOM} ffImpactYears={ffImpactYears} />
+              : <ItemDisplay label="Buy v/s Rent" result={brAns} info={brAns} />,
+            <OppCost
+            discountRate={dr === null || dr === undefined ? rr : dr}
+            cfs={cfs}
+            currency={currency}
+            startYear={startYear}
+            buyGoal={goal}
+            ffGoalEndYear={ffGoalEndYear}
+          />
+            ] : []}
           >
             {showResultTab === CF_CHART_LABEL &&
               <DDLineChart
@@ -699,7 +699,7 @@ export default function Goal({
                 currency={currency}
               />}
             {showBRChart && showResultTab === BR_CHART_LABEL && (
-              <BuyRentChart data={brChartData} currency={currency} />
+            <BuyRentChart data={brChartData} currency={currency} answer={brAns} answerHandler={setBRAns} />
             )}
             {manualMode < 1 && loanPer && loanRepaymentSY && loanYears && showResultTab === LOAN_CHART_LABEL &&  (
               <LoanScheduleChart
@@ -712,7 +712,6 @@ export default function Goal({
             )}
           </Result>
         )}
-      </Space>
-    </Space>
+    </Fragment>
   );
 }

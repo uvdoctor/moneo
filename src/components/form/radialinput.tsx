@@ -1,7 +1,7 @@
 import React from 'react';
 import CircularSlider from '@fseehawer/react-circular-slider';
 import { COLORS } from '../../CONSTANTS';
-import { Tooltip, Space } from 'antd';
+import { Tooltip, Row, Col } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
 interface RadialInputProps {
@@ -25,8 +25,8 @@ export default function RadialInput(props: RadialInputProps) {
 	const width: number = props.width ? props.width : 110;
 
 	return (
-		<Space align="center" direction="vertical">
-			<Space align="start">
+		<Row align="middle" justify="space-between">
+			<Col span={12}>
 				{props.pre}
 				{props.info && (
 					<Tooltip title={props.info}>
@@ -35,8 +35,8 @@ export default function RadialInput(props: RadialInputProps) {
 						</span>
 					</Tooltip>
 				)}
-			</Space>
-			<div className="radial-input">
+			</Col>
+			<Col span={12} className="radial-input">
 				<CircularSlider
 					onChange={(val: string) => props.changeHandler(props.step < 1 ? parseFloat(val) : parseInt(val))}
 					label={props.label}
@@ -53,8 +53,10 @@ export default function RadialInput(props: RadialInputProps) {
 					progressColorTo={props.colorTo ? props.colorTo : COLORS.GREEN}
 					knobColor="#cbd5e0"
 				/>
-			</div>
-			{props.post}
-		</Space>
+			</Col>
+			{props.post && <Col style={{textAlign: 'center'}}>
+				{props.post}
+			</Col>}
+		</Row>
 	);
 }

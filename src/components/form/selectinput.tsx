@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { getCurrencyList } from '../utils';
-import { Tooltip, Select, Space } from 'antd';
+import { Tooltip, Select, Row, Col } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
 interface SelectInputProps {
@@ -19,9 +19,10 @@ export default function SelectInput(props: SelectInputProps) {
 	const { Option } = Select;
 
 	return (
-		<Space align="center" direction="vertical" size="small">
-			{props.pre && <Space align="start">
+		<Row align="middle" justify="space-between">
+			{props.pre && <Col span={12}>
 				{props.pre}
+				{props.post}
 				{props.info && (
 					<Tooltip title={props.info}>
 						<span>
@@ -29,10 +30,10 @@ export default function SelectInput(props: SelectInputProps) {
 						</span>
 					</Tooltip>
 				)}
-			</Space>}
-			{!props.disabled ? (
-				<Fragment>
-					<Space align="center">
+			</Col>}
+			<Col span={12}>
+				{!props.disabled ? (
+					<Fragment>
 						<Select
 							showSearch
 							optionFilterProp="children"
@@ -50,12 +51,11 @@ export default function SelectInput(props: SelectInputProps) {
 							))}
 						</Select>
 						{props.unit && <label>{props.unit}</label>}
-					</Space>
-					{props.post && <label>{props.post}</label>}
-				</Fragment>
-			) : (
-				<label>{props.value}</label>
-			)}
-		</Space>
+						</Fragment>
+						) : (
+							<label>{props.value}</label>
+							)}
+							</Col>
+		</Row>
 	);
 }
