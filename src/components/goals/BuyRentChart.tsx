@@ -1,40 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { getCommonFill, getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
+import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
 import { buildYearsArray } from '../utils';
 interface BuyRentChartProps {
 	data: Array<any>;
 	currency: string;
-	answer: string;
-	answerHandler: Function;
 }
 
 const GroupedColumnChart = dynamic(() => import('bizcharts/lib/plots/GroupedColumnChart'), { ssr: false });
 
 export default function BuyRentChart(props: BuyRentChartProps) {
 	const [ stackedData, setStackedData ] = useState<Array<any>>(buildYearsArray(1, props.data[0].values.length));
-
-	const findAnswer = (data: Array<any>) => {
-		let answer = '';
-		let condition = '';
-		let buyValues = data[0].values;
-		let rentValues = data[1].values;
-		if (buyValues[0] < rentValues[0]) {
-			answer += 'Rent';
-		} else if (buyValues[0] > rentValues[0]) answer += 'Buy';
-		else if (buyValues[0] === rentValues[0]) answer += 'Both cost similar.';
-		for (let i = 1; i < buyValues.length; i++) {
-			let alternative = '';
-			if (buyValues[i] < rentValues[i]) alternative += 'Rent';
-			else if (buyValues[i] > rentValues[i]) alternative += 'Buy';
-			else if (buyValues[i] === rentValues[i]) alternative += 'Both';
-			if (!answer.startsWith(alternative)) {
-				condition = ` till ${i} ${i === 1 ? 'Year' : 'Years'}. ${alternative} after that.`;
-				break;
-			}
-		}
-		props.answerHandler(answer + condition);
-	};
 
 	useEffect(
 		() => {
@@ -56,7 +32,6 @@ export default function BuyRentChart(props: BuyRentChartProps) {
 				});
 			}
 			setStackedData([ ...chartData ]);
-			findAnswer(props.data);
 		},
 		[ props.data ]
 	);
@@ -64,7 +39,6 @@ export default function BuyRentChart(props: BuyRentChartProps) {
 	return (
 			<GroupedColumnChart
 				meta={getCommonMeta(props.currency)}
-				title={{ visible: true, text: props.answer, style: getCommonFill() }}
 				xField="years"
 				yField="value"
 				groupField="name"

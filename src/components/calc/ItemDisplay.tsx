@@ -35,7 +35,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 									{props.info && (
 										<Tooltip
 											title={props.info}
-											color={`${props.pl && props.result < 0 ? 'red' : 'white'}`}
+											color={`${props.pl && props.result < 0 ? 'red' : COLORS.DEFAULT}`}
 										>
 											<InfoCircleOutlined />
 										</Tooltip>

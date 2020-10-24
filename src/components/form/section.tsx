@@ -41,9 +41,9 @@ export default function Section(props: SectionProps) {
 			) : (
 				React.Children.map(
 					props.children,
-					(child: any) =>
+					(child: any, i: number) =>
 						child ? (
-							<Fragment>
+							<Fragment key={"section"+i}>
 								<Col span={24}>{child}</Col>
 								<Col className="fields-divider" span={24} />
 							</Fragment>

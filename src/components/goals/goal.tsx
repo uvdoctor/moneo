@@ -134,7 +134,7 @@ export default function Goal({
   const nowYear = new Date().getFullYear();
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [showBRChart, setShowBRChart] = useState<boolean>(
-    sellAfter && rentAmt && rentAmt > 0 ? true : false
+    sellAfter && !!rentAmt ? true : false
   );
   const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 30));
   const [duration, setDuration] = useState<number>(
@@ -476,13 +476,39 @@ export default function Goal({
     return npv;
   };
 
+  const findAnswer = (data: Array<any>) => {
+		let answer = '';
+		let condition = '';
+		let buyValues = data[0].values;
+		let rentValues = data[1].values;
+		if (buyValues[0] < rentValues[0]) {
+			answer += 'Rent';
+		} else if (buyValues[0] > rentValues[0]) answer += 'Buy';
+		else if (buyValues[0] === rentValues[0]) answer += 'Both cost similar.';
+		for (let i = 1; i < buyValues.length; i++) {
+			let alternative = '';
+			if (buyValues[i] < rentValues[i]) alternative += 'Rent';
+			else if (buyValues[i] > rentValues[i]) alternative += 'Buy';
+			else if (buyValues[i] === rentValues[i]) alternative += 'Both';
+			if (!answer.startsWith(alternative)) {
+				condition = ` till ${i} ${i === 1 ? 'Year' : 'Years'}. ${alternative} after that.`;
+				break;
+			}
+		}
+		setBRAns(answer + condition);
+	};
+
   useEffect(() => {
     if (!sellAfter) return;
     if (!!rentAmt) {
       let data = buildComparisonData();
-      if (data && data.length == 2) setBRChartData([...data]);
+      if (data && data.length == 2) {
+        setBRChartData([...data]);
+        findAnswer(data);
+      }
     } else {
-      setBRChartData([...[]]);
+        setBRChartData([...[]]);
+        setBRAns("")
     }
   }, [taxRate, rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs, dr]);
 
@@ -698,8 +724,8 @@ export default function Goal({
                 startYear={startYear}
                 currency={currency}
               />}
-            {showBRChart && showResultTab === BR_CHART_LABEL && (
-            <BuyRentChart data={brChartData} currency={currency} answer={brAns} answerHandler={setBRAns} />
+            {brAns && showResultTab === BR_CHART_LABEL && (
+            <BuyRentChart data={brChartData} currency={currency} />
             )}
             {manualMode < 1 && loanPer && loanRepaymentSY && loanYears && showResultTab === LOAN_CHART_LABEL &&  (
               <LoanScheduleChart

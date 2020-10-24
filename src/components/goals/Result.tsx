@@ -16,48 +16,55 @@ export default function Result(props: ResultProps) {
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
 	return (
-		<div ref={chartDiv} className="calculator-content">
+		<div className="calculator-content">
 			<CalcHeader />
-			<div style={{ cursor: 'pointer' }} onClick={toggle}>
-				{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
-			</div>
-			{props.results &&
-			props.results.length > 0 && (
-				<Row className="dd-stats" gutter={[ { xs: 10, sm: 10, md: 35, lg: 40 }, 0 ]}>
-					{props.results.map(
-						(result) => result && <Col span={Math.round(24 / props.results.length)}>{result}</Col>
-					)}
+			<div ref={chartDiv}>
+				<Row justify="end" style={{ cursor: 'pointer' }} onClick={toggle}>
+					{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
 				</Row>
-			)}
-			<Tabs
-				className="dd-chart"
-				onTabClick={(key: string) => setShowResultTab(key)}
-				defaultActiveKey={showResultTab}
-				type="card"
-			>
-				{resultTabs.map((tab: any) => (
-					<TabPane
-						key={tab.label}
-						disabled={!tab.active}
-						tab={
-							<Fragment>
-								<tab.svg disabled={!tab.active} selected={showResultTab === tab.label} />
-								{tab.label}
-							</Fragment>
-						}
-					>
-						{React.Children.map(
-							props.children,
-							(child: any, i: number) =>
-								child ? (
-									<Col key={"child"+i} span={24} style={{ minHeight: '400px' }}>
-										{child}
+				{props.results &&
+				props.results.length > 0 && (
+					<Row className="dd-stats" gutter={[ { xs: 10, sm: 10, md: 35, lg: 40 }, 0 ]}>
+						{props.results.map(
+							(result, i: number) =>
+								result ? (
+									<Col key={'result' + i} span={12}>
+										{result}
 									</Col>
 								) : null
 						)}
-					</TabPane>
-				))}
-			</Tabs>
+					</Row>
+				)}
+				<Tabs
+					className="dd-chart"
+					onTabClick={(key: string) => setShowResultTab(key)}
+					defaultActiveKey={showResultTab}
+					type="card"
+				>
+					{resultTabs.map((tab: any) => (
+						<TabPane
+							key={tab.label}
+							disabled={!tab.active}
+							tab={
+								<Fragment>
+									<tab.svg disabled={!tab.active} selected={showResultTab === tab.label} />
+									{tab.label}
+								</Fragment>
+							}
+						>
+							{React.Children.map(
+								props.children,
+								(child: any, i: number) =>
+									child ? (
+										<Col key={'child' + i} span={24} style={{ minHeight: '400px' }}>
+											{child}
+										</Col>
+									) : null
+							)}
+						</TabPane>
+					))}
+				</Tabs>
+			</div>
 		</div>
 	);
 }
