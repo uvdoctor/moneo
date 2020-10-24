@@ -6,7 +6,6 @@ import { initYearOptions, isMobileDevice, isTopBottomLayout} from "../utils";
 import LoanEmi from "../calc/LoanEmi";
 import TaxAdjustment from "../calc/TaxAdjustment";
 import Sell from "./sell";
-import TitleSection from "./TitleSection";
 import Amt from "./amt";
 import { calculateCFs, getLoanBorrowAmt } from "./cfutils";
 import {
@@ -494,7 +493,6 @@ export default function Goal({
 
   return (
     <Space align="center" direction="vertical">
-      <TitleSection />
         {addCallback && updateCallback && (
           <Space align="center" size="large">
             <TextInput
@@ -677,7 +675,7 @@ export default function Goal({
         </Input>
         {showResultSection() && (
           <Result
-            result={
+            results={[
               nowYear < startYear && (
                 <GoalResult
                   rr={rr}
@@ -692,7 +690,7 @@ export default function Goal({
                   drHandler={setDR}
                 />
               )
-            }
+            ]}
           >
             {showResultTab === CF_CHART_LABEL &&
               <DDLineChart

@@ -7,10 +7,14 @@ import DDFooter from "./DDFooter";
 import Head from "next/head";
 
 interface DDPageProps {
+  className?: string;
   title: string;
   children: React.ReactNode;
   secure?: boolean;
   onBack?: Function;
+  fixedNav?: boolean;
+  navScrollable?: boolean;
+  noFooter?: boolean;
 }
 
 export default function DDPage(props: DDPageProps) {
@@ -76,16 +80,14 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="format-detection" content="telephone=no" />
         <title>{props.title}</title>
       </Head>
-      <Layout className="dd-site">
+      <Layout className={`dd-site ${props.className}`}>
         {props.secure ?
           <Fragment>
             <UserHeader />
             <SecureMenu />
           </Fragment>
-          : <Nav onBack={props.onBack} />}
-
+          : <Nav scrollable={props.navScrollable} isFixed={props.fixedNav} onBack={props.onBack} />}
         {props.children}
-
         <DDFooter />
       </Layout>
     </Fragment>

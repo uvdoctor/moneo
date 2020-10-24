@@ -1,18 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { INVEST, SAVE, SPEND } from '../../pages/truecost';
 import SelectInput from '../form/selectinput';
 import Input from '../goals/Input';
 import DDLineChart from '../goals/DDLineChart';
 import Result from '../goals/Result';
-import SVGHourGlass from '../svghourglass';
-import { isTopBottomLayout, toCurrency, toReadableNumber } from '../utils';
+import { toCurrency, toReadableNumber } from '../utils';
 import InvestOption from './InvestOption';
 import ItemDisplay from './ItemDisplay';
 import Save from './Save';
 import Spend, { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
-import SVGBalance from './svgbalance';
-import { Space, Card } from 'antd';
-import { COLORS } from '../../CONSTANTS';
 import { CalcContext } from './CalcContext';
 
 export const TIME_COST_HOURS = 'Hours';
@@ -21,7 +17,6 @@ export const TIME_COST_YEARS = 'Years';
 
 export default function TrueCostCalc() {
 	const {
-		fsb,
 		currency,
 		rangeFactor,
 		allInputDone,
@@ -159,13 +154,7 @@ export default function TrueCostCalc() {
 	);
 
 	return (
-		<Space
-			align="start"
-			size="large"
-			style={{ width: '100%' }}
-			//@ts-ignore
-			direction={`${isTopBottomLayout(fsb) ? 'vertical' : 'horizontal'}`}
-		>
+		<Fragment>
 			<Input>
 				{showTab === SPEND && (
 					<Spend
@@ -206,13 +195,10 @@ export default function TrueCostCalc() {
 			</Input>
 			{allInputDone && (
 				<Result
-					result={
-						<Space align="center" size="large" style={{ width: '100%' }}>
-							<Card style={{ backgroundColor: COLORS.LIGHT_GREEN }}>
+					results={[
 								<ItemDisplay
 									label="Time Cost"
 									result={-timeCostDisplay}
-									svg={<SVGHourGlass />}
 									pl
 									info={`Based on your Savings from Work Income, You May have to Work ${toReadableNumber(
 										timeCost
@@ -225,29 +211,23 @@ export default function TrueCostCalc() {
 											changeHandler={setTimeCostUnit}
 										/>
 									}
-								/>
-							</Card>
-							<Card style={{ backgroundColor: COLORS.LIGHT_GREEN }}>
+								/>,
 								<ItemDisplay
 									label="Spend v/s Invest"
 									info={`You May have ${toCurrency(
 										Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
 										currency
 									)} More in ${years} Years if You Invest instead of Spending.`}
-									svg={<SVGBalance />}
 									result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
 									currency={currency}
 									pl
-								/>
-							</Card>
-						</Space>
-					}
+								/>]}
 				>
 					{showResultTab === CHART && (
 						<DDLineChart cfs={cfsWithOppCost} currency={currency} startYear={1} title="Number of Years" />
 					)}
 				</Result>
 			)}
-		</Space>
+		</Fragment>
 	);
 }

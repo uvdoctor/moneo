@@ -9,6 +9,8 @@ import { createNewGoalInput } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
 import { Button, Collapse, Space } from 'antd';
 import { CalcContextProvider } from './CalcContext';
+
+import './Layout.less';
 interface LayoutProps {
 	tabOptions?: Array<any>;
 	resultTabOptions?: Array<any>;
@@ -56,7 +58,7 @@ export default function Layout(props: LayoutProps) {
 	};
 
 	return (
-		<DDPage title={props.title} onBack={() => setWIP(null)}> 
+		<DDPage className="calculator-container" title={props.title} onBack={() => setWIP(null)} > 
 			{!wip ? (
 				<Space align="center" direction="vertical" size="large">
 					<h1>{props.title + ' Calculator'}</h1>
@@ -89,7 +91,7 @@ export default function Layout(props: LayoutProps) {
 					tabOptions={props.tabOptions}
 					resultTabOptions={props.resultTabOptions}
 					type={props.type}
-				>
+					>
 					{router.pathname === ROUTES.FI ? (
 						<FFGoal
 							mustCFs={[]}

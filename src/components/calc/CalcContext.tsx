@@ -17,6 +17,8 @@ import { AA_FUTURE_CHART_LABEL, AA_NEXT_YEAR_CHART_LABEL } from "../goals/ffgoal
 import SVGBarChart from "../svgbarchart";
 import SVGInheritance from "../goals/svginheritance";
 import { useFullScreenBrowser } from "react-browser-hooks";
+import { PageHeader } from "antd";
+import SelectInput from "../form/selectinput";
 
 const CalcContext = createContext({});
 
@@ -157,7 +159,13 @@ function CalcContextProvider({ goal, children, title, defaultCurrency, tabOption
   const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
   const [ cfs, setCFs ] = useState<Array<number>>(cashFlows ? cashFlows : []);
   const [ showResultTab, setShowResultTab ] = useState<string>(resultTabs[0].label);
-  
+  const [showOptionsForm, setOptionsVisibility] = useState<boolean>(true);
+
+  const changeCurrency = (curr: string) => {
+		setRangeFactor(Math.round(getRangeFactor(curr) / rangeFactor));
+		setCurrency(curr);
+	};
+
   return (
     <CalcContext.Provider
       value={{
@@ -184,9 +192,20 @@ function CalcContextProvider({ goal, children, title, defaultCurrency, tabOption
         fsb,
         addCallback,
         updateCallback,
-        cashFlows
+        cashFlows,
+        showOptionsForm,
+        setOptionsVisibility
       }}>
+      <PageHeader
+						className="calculator-header"
+						title={title + " Calculator"}
+						extra={[
+              <SelectInput pre="" value={currency} changeHandler={changeCurrency} currency />
+						]}
+      />
+      <div className={allInputDone ? "calculator-page" : ""}>
         {children}
+      </div>
     </CalcContext.Provider>
   );
 }

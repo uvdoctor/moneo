@@ -11,7 +11,6 @@ import { findEarliestFFYear } from "./cfutils";
 import FFResult from "./ffresult";
 import DDLineChart from "./DDLineChart";
 import { getAge } from "./goalutils";
-import TitleSection from "./TitleSection";
 import Result from "./Result";
 import { FIInvest } from "./fiinvest";
 import { ExpenseAfterFF } from "./expenseafterff";
@@ -233,7 +232,6 @@ export default function FFGoal({
 
   return (
     <Space align="center" direction="vertical">
-      <TitleSection />
         <SelectInput
           //info="Financial Plan will be created assuming that You live till 100 Years, after which You leave behind inheritance.
           //DollarDarwin will try to find the earliest possible year for Your Financial Independence based on Your inputs and Other Goals that You Create.
@@ -367,14 +365,14 @@ export default function FFGoal({
 
         {showResultSection() && (
           <Result
-            result={
+            results={[
               <FFResult
                 endYear={endYear}
                 result={ffResult}
                 ffNomineeAmt={leaveBehind}
                 currency={currency}
               />
-            }
+            ]}
           >
             {pp && showResultTab === AA_NEXT_YEAR_CHART_LABEL &&
               <AssetAllocationChart
