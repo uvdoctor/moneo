@@ -1,7 +1,7 @@
 import React, { createContext, useState } from "react";
 import { GoalType } from "../../api/goals";
 import { getRangeFactor } from "../utils";
-import { AMT_LABEL, ANNUAL_NET_COST_LABEL, BR_CHART_LABEL, LOAN_CHART_LABEL, LOAN_LABEL, RENT_LABEL, SELL_LABEL, TAX_LABEL } from "../goals/goal";
+import { AMT_LABEL, ANNUAL_NET_COST_LABEL, BR_CHART_LABEL, GOAL_CF_CHART_LABEL, LOAN_CHART_LABEL, LOAN_LABEL, RENT_LABEL, SELL_LABEL, TAX_LABEL } from "../goals/goal";
 import SVGTaxBenefit from "../svgtaxbenefit";
 import SVGPay from "../svgpay";
 import SVGLoan from "../svgloan";
@@ -78,7 +78,7 @@ const getGoalResultTabOptions = (type: GoalType, isGoal: boolean, showBRChart: b
   else return type === GoalType.B
     ? [
         {
-          label: CF_CHART_LABEL,
+          label: GOAL_CF_CHART_LABEL,
           active: true,
           svg: SVGChart,
         },
@@ -95,7 +95,7 @@ const getGoalResultTabOptions = (type: GoalType, isGoal: boolean, showBRChart: b
       ]
     : [
         {
-          label: CF_CHART_LABEL,
+          label: GOAL_CF_CHART_LABEL,
           active: true,
           svg: SVGChart,
         },

@@ -28,42 +28,30 @@ export default function Spend(props: SpendProps) {
 	};
 
 	return (
-			<Section
-				title="Enter Spend Details"
-				left={
-					<SelectInput
-						pre="Spend"
-						value={props.freq}
-						changeHandler={props.freqHandler}
-						options={freqOptions}
-					/>
-				}
-				right={
-					<NumberInput
-						pre="Amount"
-						value={props.amt}
-						changeHandler={props.amtHandler}
-						min={0}
-						max={50000}
-						step={100}
-						currency={props.currency}
-						rangeFactor={props.rangeFactor}
-					/>
-				}
-				bottom={
-					props.freq !== SPEND_ONCE && (
-						<NumberInput
-							pre="For"
-							value={props.duration}
-							changeHandler={props.durationHandler}
-							min={0}
-							max={props.freq === SPEND_MONTHLY ? 360 : 30}
-							step={1}
-							unit={props.freq === SPEND_MONTHLY ? 'Months' : 'Years'}
-							note={`Total ${toCurrency(props.totalCost, props.currency)}`}
-						/>
-					)
-				}
+		<Section title="Enter Spend Details">
+			<SelectInput pre="Spend" value={props.freq} changeHandler={props.freqHandler} options={freqOptions} />
+			<NumberInput
+				pre="Amount"
+				value={props.amt}
+				changeHandler={props.amtHandler}
+				min={0}
+				max={50000}
+				step={100}
+				currency={props.currency}
+				rangeFactor={props.rangeFactor}
 			/>
+			{props.freq !== SPEND_ONCE && (
+				<NumberInput
+					pre="For"
+					value={props.duration}
+					changeHandler={props.durationHandler}
+					min={0}
+					max={props.freq === SPEND_MONTHLY ? 360 : 30}
+					step={1}
+					unit={props.freq === SPEND_MONTHLY ? 'Months' : 'Years'}
+					note={`Total ${toCurrency(props.totalCost, props.currency)}`}
+				/>
+			)}
+		</Section>
 	);
 }

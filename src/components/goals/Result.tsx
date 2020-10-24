@@ -21,9 +21,14 @@ export default function Result(props: ResultProps) {
 			<div style={{ cursor: 'pointer' }} onClick={toggle}>
 				{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
 			</div>
-			{props.results && props.results.length > 0 && <Row className="dd-stats" gutter={[{ xs: 10, sm: 10, md: 35, lg: 40 }, 0]}>
-				{props.results.map((result) => result && <Col span={Math.round(24 / props.results.length)}>{result}</Col>)}
-			</Row>}
+			{props.results &&
+			props.results.length > 0 && (
+				<Row className="dd-stats" gutter={[ { xs: 10, sm: 10, md: 35, lg: 40 }, 0 ]}>
+					{props.results.map(
+						(result) => result && <Col span={Math.round(24 / props.results.length)}>{result}</Col>
+					)}
+				</Row>
+			)}
 			<Tabs
 				className="dd-chart"
 				onTabClick={(key: string) => setShowResultTab(key)}
@@ -41,11 +46,15 @@ export default function Result(props: ResultProps) {
 							</Fragment>
 						}
 					>
-						<Row>
-							<Col span={24} style={{ minHeight: '400px' }}>
-								{React.Children.map(props.children, (child: any) => (child ? child : null))}
-							</Col>
-						</Row>
+						{React.Children.map(
+							props.children,
+							(child: any, i: number) =>
+								child ? (
+									<Col key={"child"+i} span={24} style={{ minHeight: '400px' }}>
+										{child}
+									</Col>
+								) : null
+						)}
 					</TabPane>
 				))}
 			</Tabs>

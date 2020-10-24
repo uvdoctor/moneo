@@ -66,35 +66,6 @@ export default function Cost(props: CostProps) {
 						: ''}`
 				)
 			}
-			left={
-				<NumberInput
-					pre={props.startYear > props.baseYear ? 'Amount' : ''}
-					post={props.startYear > props.baseYear ? `in ${props.baseYear}` : ''}
-					currency={props.currency}
-					rangeFactor={props.rangeFactor}
-					value={props.startingCost}
-					changeHandler={props.startingCostHandler}
-					min={0}
-					max={props.leftMax}
-					step={500}
-					note={props.leftNote}
-				/>
-			}
-			right={
-				props.startYear > props.baseYear && (
-					<NumberInput
-						pre="Amount"
-						post="Changes"
-						note={`Yearly till ${props.startYear}`}
-						unit="%"
-						min={-10}
-						max={10}
-						step={0.5}
-						value={props.costChgRate}
-						changeHandler={props.costChgRateHandler}
-					/>
-				)
-			}
 			toggle={
 				props.manualModeHandler && (
 					<HSwitch
@@ -128,6 +99,32 @@ export default function Cost(props: CostProps) {
 			manualMode={props.manualMode}
 			footer={props.footer}
 			videoSrc={`https://www.youtube.com/watch?v=uYMTsmeZyfU`}
-		/>
+		>
+			<NumberInput
+				pre={props.startYear > props.baseYear ? 'Amount' : ''}
+				post={props.startYear > props.baseYear ? `in ${props.baseYear}` : ''}
+				currency={props.currency}
+				rangeFactor={props.rangeFactor}
+				value={props.startingCost}
+				changeHandler={props.startingCostHandler}
+				min={0}
+				max={props.leftMax}
+				step={500}
+				note={props.leftNote}
+			/>
+			{props.startYear > props.baseYear && (
+				<NumberInput
+					pre="Amount"
+					post="Changes"
+					note={`Yearly till ${props.startYear}`}
+					unit="%"
+					min={-10}
+					max={10}
+					step={0.5}
+					value={props.costChgRate}
+					changeHandler={props.costChgRateHandler}
+				/>
+			)}
+		</Section>
 	);
 }

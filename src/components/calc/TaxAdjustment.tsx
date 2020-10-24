@@ -18,50 +18,44 @@ interface TaxAdjustmentProps {
 
 export default function TaxAdjustment(props: TaxAdjustmentProps) {
 	return (
-		<Section
-			title={`Claim Tax ${isTaxCreditEligible(props.goalType) ? 'Credit' : 'Deduction'}`}
-			left={
-				!isTaxCreditEligible(props.goalType) && (
-					<NumberInput
-						info="Income Tax slab based on Your Income"
-						pre="Tax"
-						post="Rate"
-						min={0}
-						max={50}
-						step={0.1}
-						unit="%"
-						value={props.taxRate}
-						changeHandler={props.taxRateHandler}
-					/>
-				)
-			}
-			right={
-				isTaxCreditEligible(props.goalType) ||
-				(props.taxRate && (
-					<NumberInput
-						info={`Maximum Yearly Income Tax ${isTaxCreditEligible(props.goalType)
-							? 'Credit'
-							: 'Deduction'} Allowed`}
-						pre="Max Yearly"
-						post={`${isTaxCreditEligible(props.goalType) ? 'Credit' : 'Deduction'}`}
-						currency={props.currency}
-						value={props.maxTaxDeduction}
-						changeHandler={props.maxTaxDeductionHandler}
-						min={0}
-						max={30000}
-						step={1000}
-						note={
-							<ItemDisplay
-								label="Total Tax Benefit"
-								result={props.pTaxBenefit}
-								currency={props.currency}
-								footer={`For this Goal`}
-							/>
-						}
-						rangeFactor={props.rangeFactor}
-					/>
-				))
-			}
-		/>
+		<Section title={`Claim Tax ${isTaxCreditEligible(props.goalType) ? 'Credit' : 'Deduction'}`}>
+			{!isTaxCreditEligible(props.goalType) && (
+				<NumberInput
+					info="Income Tax slab based on Your Income"
+					pre="Tax"
+					post="Rate"
+					min={0}
+					max={50}
+					step={0.1}
+					unit="%"
+					value={props.taxRate}
+					changeHandler={props.taxRateHandler}
+				/>
+			)}
+			{(isTaxCreditEligible(props.goalType) || props.taxRate) && (
+				<NumberInput
+					info={`Maximum Yearly Income Tax ${isTaxCreditEligible(props.goalType)
+						? 'Credit'
+						: 'Deduction'} Allowed`}
+					pre="Max Yearly"
+					post={`${isTaxCreditEligible(props.goalType) ? 'Credit' : 'Deduction'}`}
+					currency={props.currency}
+					value={props.maxTaxDeduction}
+					changeHandler={props.maxTaxDeductionHandler}
+					min={0}
+					max={30000}
+					step={1000}
+					note={
+						<ItemDisplay
+							label="Total Tax Benefit"
+							result={props.pTaxBenefit}
+							currency={props.currency}
+							footer={`For this Goal`}
+						/>
+					}
+					rangeFactor={props.rangeFactor}
+				/>
+			)}
+		</Section>
 	);
 }

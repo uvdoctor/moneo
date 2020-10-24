@@ -42,34 +42,28 @@ export default function AnnualAmt(props: AnnualAmtProps) {
 	);
 
 	return (
-		<Section
-			title={props.title}
-			left={
-				<RadialInput
-					colorTo={props.colorTo ? COLORS.RED : COLORS.GREEN}
-					data={toStringArr(0, 10, 0.2)}
-					changeHandler={props.percentageHandler}
-					width={120}
-					unit="%"
-					labelBottom={true}
-					label="of Amount"
-					post={`Total ${toCurrency(totalAmt, props.currency)}`}
-					value={props.percentage}
-					step={0.2}
+		<Section title={props.title} footer={props.footer}>
+			<RadialInput
+				colorTo={props.colorTo ? COLORS.RED : COLORS.GREEN}
+				data={toStringArr(0, 10, 0.2)}
+				changeHandler={props.percentageHandler}
+				width={120}
+				unit="%"
+				labelBottom={true}
+				label="of Amount"
+				post={`Total ${toCurrency(totalAmt, props.currency)}`}
+				value={props.percentage}
+				step={0.2}
+			/>
+			{props.percentage && (
+				<SelectInput
+					pre="From Year"
+					post="Onwards"
+					options={syOptions}
+					value={props.annualSY}
+					changeHandler={props.annualSYHandler}
 				/>
-			}
-			right={
-				props.percentage && (
-					<SelectInput
-						pre="From Year"
-						post="Onwards"
-						options={syOptions}
-						value={props.annualSY}
-						changeHandler={props.annualSYHandler}
-					/>
-				)
-			}
-			footer={props.footer}
-		/>
+			)}
+		</Section>
 	);
 }

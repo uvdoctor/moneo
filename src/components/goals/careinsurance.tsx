@@ -93,83 +93,71 @@ export default function CareInsurance({
 	);
 
 	return (
-		<Section
-			title="Long-term Care Insurance"
-			//titleInfo="About 70% individuals over age 65 need some form of living assistance for activities such as bathing, dressing, eating, toileting, walking, etc.
-			//It isn't covered by traditional health insurance or government-sponsored old-age care programs."
-			left={
-				<div className="flex flex-col items-center justify-center">
-					<NumberInput
-						info="How much does annual insurance premium cost today? Actual price will be derived based on this price."
-						value={carePremium}
-						changeHandler={carePremiumHandler}
-						rangeFactor={rangeFactor}
-						pre="Yearly"
-						post="Premium"
-						note="In Today's Money"
-						min={0}
-						max={7000}
-						step={100}
-						currency={currency}
-					/>
-					{carePremium && (
-						<div className="flex justify-between items-end w-full mb-2">
-							<SelectInput
-								info="It may be a good option to buy this insurance when You are healthier (between 60 to 65 years of age) to get lower premiums."
-								value={getAge(carePremiumSY, endYear)}
-								options={initYearOptions(55, 10)}
-								pre="Buy Policy At"
-								unit="Years"
-								post="Age"
-								changeHandler={(val: string) =>
-									changeSelection(val, carePremiumSYHandler, endYear - PLAN_DURATION)}
-							/>
-							<SelectInput
-								value={premiumDur}
-								options={initYearOptions(1, 15)}
-								pre="Pay For"
-								unit="Years"
-								changeHandler={(val: string) => changeSelection(val, premiumDurHandler)}
-							/>
-						</div>
-					)}
-				</div>
-			}
-			right={
-				carePremium && (
-					<RadialInput
-						value={chgPer}
-						changeHandler={chgPerHandler}
-						pre="Premium Changes"
-						label="Yearly"
-						labelBottom
-						post={<ItemDisplay label="Total Premium" result={totalCP} currency={currency} />}
-						data={toStringArr(0, 10, 0.5)}
-						step={0.5}
-						unit="%"
-						colorTo={COLORS.RED}
-					/>
-				)
-			}
-			bottomLeft={carePremium && taxRate && 'Max Yearly'}
-			bottomRight={carePremium && taxRate && 'Allowed'}
-			bottom={
-				carePremium &&
-				taxRate && (
-					<NumberInput
-						pre="Tax"
-						post="Deduction"
-						currency={currency}
-						value={maxTaxDed}
-						changeHandler={maxTaxDedHandler}
-						min={0}
-						max={5000}
-						step={500}
-						rangeFactor={rangeFactor}
-						note={<ItemDisplay label="Total Tax Benefit" currency={currency} result={totalTaxBenefit} />}
-					/>
-				)
-			}
-		/>
+		<Section title="Long-term Care Insurance">
+			{/*titleInfo="About 70% individuals over age 65 need some form of living assistance for activities such as
+			bathing, dressing, eating, toileting, walking, etc. //It isn't covered by traditional health insurance or
+	government-sponsored old-age care programs."*/}
+			<NumberInput
+				info="How much does annual insurance premium cost today? Actual price will be derived based on this price."
+				value={carePremium}
+				changeHandler={carePremiumHandler}
+				rangeFactor={rangeFactor}
+				pre="Yearly"
+				post="Premium"
+				note="In Today's Money"
+				min={0}
+				max={7000}
+				step={100}
+				currency={currency}
+			/>
+			{carePremium && (
+				<SelectInput
+					info="It may be a good option to buy this insurance when You are healthier (between 60 to 65 years of age) to get lower premiums."
+					value={getAge(carePremiumSY, endYear)}
+					options={initYearOptions(55, 10)}
+					pre="Buy Policy At"
+					unit="Years"
+					post="Age"
+					changeHandler={(val: string) => changeSelection(val, carePremiumSYHandler, endYear - PLAN_DURATION)}
+				/>
+			)}
+			{carePremium && (
+				<SelectInput
+					value={premiumDur}
+					options={initYearOptions(1, 15)}
+					pre="Pay For"
+					unit="Years"
+					changeHandler={(val: string) => changeSelection(val, premiumDurHandler)}
+				/>
+			)}
+			{carePremium && (
+				<RadialInput
+					value={chgPer}
+					changeHandler={chgPerHandler}
+					pre="Premium Changes"
+					label="Yearly"
+					labelBottom
+					post={<ItemDisplay label="Total Premium" result={totalCP} currency={currency} />}
+					data={toStringArr(0, 10, 0.5)}
+					step={0.5}
+					unit="%"
+					colorTo={COLORS.RED}
+				/>
+			)}
+			{carePremium &&
+			taxRate && (
+				<NumberInput
+					pre="Max Yearly Tax Deduction Allowed"
+					currency={currency}
+					value={maxTaxDed}
+					changeHandler={maxTaxDedHandler}
+					min={0}
+					max={5000}
+					step={500}
+					rangeFactor={rangeFactor}
+					note={<ItemDisplay label="Total Tax Benefit" currency={currency} result={totalTaxBenefit} />}
+				/>
+			)}
+		</Section>
 	);
 }

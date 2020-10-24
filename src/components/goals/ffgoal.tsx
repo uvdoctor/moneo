@@ -320,7 +320,7 @@ export default function FFGoal({
             <Fragment>
               <Section
                 title="Potential Gains (eg: Inheritance, Selling Investments, etc.)"
-                left={
+                footer="Exclude taxes & fees.">
                   <DynamicTgtInput
                     startYear={goal.by}
                     endYear={endYear}
@@ -329,14 +329,11 @@ export default function FFGoal({
                     tgts={gains}
                     tgtsHandler={setGains}
                   />
-                }
-                footer="Exclude taxes & fees."
-              />
+              </Section>
 
                 <Section
                   title="Potential Losses (eg: Inheritance, Selling Investments, etc.)"
-                  footer="Include taxes & fees."
-                  left={
+                  footer="Include taxes & fees.">
                     <DynamicTgtInput
                       startYear={goal.by}
                       endYear={endYear}
@@ -345,8 +342,7 @@ export default function FFGoal({
                       tgts={losses}
                       tgtsHandler={setLosses}
                     />
-                  }
-                />
+                </Section>
             </Fragment>
           )}
 

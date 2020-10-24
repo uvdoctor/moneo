@@ -29,9 +29,9 @@ export default function NumberInput(props: NumberInputProps) {
 	const [ stepNum, setStepNum ] = useState<number>(
 		props.step ? props.step * (props.rangeFactor ? props.rangeFactor : 1) : 1
 	);
-	const [ marks, setMarks ] = useState({
+	const [marks, setMarks] = useState<any>({
 		[minNum]: toReadableNumber(minNum),
-		[maxNum]: toReadableNumber(maxNum)
+		[maxNum]: { label: toReadableNumber(maxNum), style: {paddingRight: props.currency ? '3rem' : '0rem'} }
 	});
 
 	useEffect(
@@ -44,7 +44,7 @@ export default function NumberInput(props: NumberInputProps) {
 			setStepNum((props.step as number) * rf);
 			setMarks({
 				[minNum]: toReadableNumber(minNum),
-				[maxNum]: toReadableNumber(maxNum)
+				[maxNum]: { label: toReadableNumber(maxNum), style: {paddingRight: props.currency ? '3rem' : '0rem'} }
 			});
 		},
 		[ props.rangeFactor, props.min, props.max ]

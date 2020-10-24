@@ -35,7 +35,7 @@ interface GoalProps {
   updateCallback?: Function;
 }
 
-export const CF_CHART_LABEL = "Cash Flows";
+export const GOAL_CF_CHART_LABEL = "Cash Flows";
 export const BR_CHART_LABEL = "Buy v/s Rent & Invest";
 export const LOAN_CHART_LABEL = "EMI Schedule";
 export const AMT_LABEL = "Cost";
@@ -395,7 +395,7 @@ export default function Goal({
     if (!sellAfter) return;
     if (resultTabs[1].active) {
       if (showTab === RENT_LABEL) setShowResultTab(BR_CHART_LABEL);
-    } else setShowResultTab(CF_CHART_LABEL);
+    } else setShowResultTab(GOAL_CF_CHART_LABEL);
   }, [resultTabs]);
 
   const showResultSection = () =>
@@ -692,7 +692,7 @@ export default function Goal({
           />
             ] : []}
           >
-            {showResultTab === CF_CHART_LABEL &&
+            {showResultTab === GOAL_CF_CHART_LABEL &&
               <DDLineChart
                 cfs={cfs}
                 startYear={startYear}

@@ -7,7 +7,6 @@ import NumberInput from '../form/numberinput';
 import { toStringArr } from '../utils';
 import { calculateSellPrice, calculateXIRR } from './cfutils';
 import { getDuration } from './goalutils';
-import { Space } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 interface SellProps {
 	price: number;
@@ -38,8 +37,7 @@ export default function Sell(props: SellProps) {
 
 	return (
 		<Section
-			title="Sell After"
-			left={
+			title="Sell After" footer="Sell Price above excludes taxes & fees.">
 				<RadialInput
 					info="Years after which You Plan to Sell this Purchase."
 					label="Years"
@@ -49,8 +47,6 @@ export default function Sell(props: SellProps) {
 					step={1}
 					changeHandler={props.sellAfterHandler}
 				/>
-			}
-			right={
 				<NumberInput
 					info="Rate at which Price may change Yearly."
 					pre="Sell Price"
@@ -63,9 +59,6 @@ export default function Sell(props: SellProps) {
 					value={props.assetChgRate}
 					changeHandler={props.assetChgRateHandler}
 				/>
-			}
-			bottom={
-				<Space align="center" size="large">
 					<ItemDisplay
 						svg={<SVGMoneyBag disabled={false} selected />}
 						label="You May Get"
@@ -84,9 +77,6 @@ export default function Sell(props: SellProps) {
 							pl
 						/>
 					)}
-				</Space>
-			}
-			footer="Sell Price above excludes taxes & fees."
-		/>
+		</Section>
 	);
 }

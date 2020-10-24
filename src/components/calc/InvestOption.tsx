@@ -14,33 +14,28 @@ interface InvestOptionProps {
 
 export default function InvestOption(props: InvestOptionProps) {
 	return (
-		<Section
-			title="How much Do Your Investments Earn?"
-			left={
-				<NumberInput
-					pre="Investments"
-					post="Earn Yearly"
-					note="after taxes & fees"
-					value={props.dr}
-					changeHandler={props.drHandler}
-					min={0}
-					max={15}
-					step={0.1}
-					unit="%"
-				/>
-			}
-			right={
-				<RadialInput
-					pre="Analyze From 1 to"
-					data={toStringArr(30, 50, 5)}
-					step={5}
-					value={props.years}
-					changeHandler={props.yearsHandler}
-					label="Years"
-					labelBottom
-					width={120}
-				/>
-			}
-		/>
+		<Section title="How much Do Your Investments Earn?">
+			<NumberInput
+				pre="Investments"
+				post="Earn Yearly"
+				note="after taxes & fees"
+				value={props.dr}
+				changeHandler={props.drHandler}
+				min={0}
+				max={15}
+				step={0.1}
+				unit="%"
+			/>
+			<RadialInput
+				pre="Analyze From 1 to"
+				data={toStringArr(30, 50, 5)}
+				step={5}
+				value={props.years}
+				changeHandler={props.yearsHandler}
+				label="Years"
+				labelBottom
+				width={120}
+			/>
+		</Section>
 	);
 }

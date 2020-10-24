@@ -39,8 +39,7 @@ export default function RetIncome({
 
 	return (
 		<Section
-			title="Retirement Income Benefit (eg: Pension, Social Security, etc.)"
-			left={
+			title="Retirement Income Benefit (eg: Pension, Social Security, etc.)">
 				<NumberInput
 					value={retirementIncome}
 					changeHandler={retirementIncomeHandler}
@@ -52,9 +51,7 @@ export default function RetIncome({
 					step={500}
 					currency={currency}
 				/>
-			}
-			right={
-				retirementIncome && (
+				{retirementIncome && (
 					<NumberInput
 						value={retirementIncomePer}
 						changeHandler={retirementIncomePerHandler}
@@ -68,8 +65,7 @@ export default function RetIncome({
 					/>
 				)
 			}
-			bottom={
-				retirementIncome && (
+			{retirementIncome && (
 					<SelectInput
 						info="When do You Plan to Receive the Benefit? Around 70 years of age is preferable for optimal benefit."
 						value={retirementIncomeSY - (endYear - PLAN_DURATION)}
@@ -82,6 +78,6 @@ export default function RetIncome({
 					/>
 				)
 			}
-		/>
+		</Section>
 	);
 }

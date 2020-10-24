@@ -15,47 +15,40 @@ interface SaveProps {
 
 export default function Save(props: SaveProps) {
 	return (
-		<Section
-			title="How much Do You Save from Your Work Income?"
-			left={
-				<NumberInput
-					pre="Yearly"
-					post="Savings"
-					value={props.savings}
-					changeHandler={props.savingsHandler}
-					currency={props.currency}
-					rangeFactor={props.rangeFactor}
-					min={0}
-					max={200000}
-					step={1000}
-				/>
-			}
-			right={
-				<NumberInput
-					pre="Total Paid"
-					post="Work Weeks"
-					note="in a Year"
-					value={props.paidWeeks}
-					changeHandler={props.paidWeeksHandler}
-					min={0}
-					max={52}
-					step={1}
-					unit="Weeks"
-				/>
-			}
-			bottom={
-				<NumberInput
-					pre="Average"
-					post="Work-week"
-					note="including travel"
-					value={props.hoursPerWeek}
-					changeHandler={props.hoursPerWeekHandler}
-					min={0}
-					max={80}
-					step={1}
-					unit={'Hours'}
-				/>
-			}
-		/>
+		<Section title="How much Do You Save from Your Work Income?">
+			<NumberInput
+				pre="Yearly"
+				post="Savings"
+				value={props.savings}
+				changeHandler={props.savingsHandler}
+				currency={props.currency}
+				rangeFactor={props.rangeFactor}
+				min={0}
+				max={200000}
+				step={1000}
+			/>
+			<NumberInput
+				pre="Total Paid"
+				post="Work Weeks"
+				note="in a Year"
+				value={props.paidWeeks}
+				changeHandler={props.paidWeeksHandler}
+				min={0}
+				max={52}
+				step={1}
+				unit="Weeks"
+			/>
+			<NumberInput
+				pre="Average"
+				post="Work-week"
+				note="including travel"
+				value={props.hoursPerWeek}
+				changeHandler={props.hoursPerWeekHandler}
+				min={0}
+				max={80}
+				step={1}
+				unit={'Hours'}
+			/>
+		</Section>
 	);
 }

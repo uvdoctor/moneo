@@ -50,10 +50,13 @@ export default function Input({ submitDisabled, cancelDisabled, children, handle
 							/>
 						))}
 					</Steps>
-					<Row justify="center">
-						<div style={{ background: 'white', margin: '1rem', maxWidth: '600px' }}>
-							{React.Children.map(children, (child: any) => (child ? child : null))}
-						</div>
+					<Row justify="center" style={{ margin: '1rem' }}>
+						<Col span={24} style={{ background: 'white', maxWidth: '550px' }}>
+							{React.Children.map(
+								children,
+								(child: any) => (child ? <div style={{ margin: '1rem' }}>{child}</div> : null)
+							)}
+						</Col>
 					</Row>
 					<Row justify="center" style={{ marginBottom: '1rem' }}>
 						{currentStep > 0 && (
