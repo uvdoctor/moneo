@@ -19,6 +19,7 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
   const {
     goal,
     currency,
+    rangeFactor,
     inputTabs,
     resultTabs,
     setResultTabs,
@@ -29,6 +30,7 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     cfs,
     setCFs,
     dr,
+    setDR,
     rr,
     setRR,
     ffOOM,
@@ -467,6 +469,10 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
       <GoalContext.Provider
         value={{
           goal,
+          currency,
+          rangeFactor,
+          dr,
+          setDR,
           cashFlows,
           startYear,
           endYear,

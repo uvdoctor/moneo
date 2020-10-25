@@ -16,9 +16,11 @@ export const TIME_COST_YEARS = 'Years';
 function TrueCostContextProvider() {
 	const {
 		currency,
+		rangeFactor,
 		cfs,
 		setCFs,
 		dr,
+		setDR,
 		allInputDone,
 		cfsWithOppCost,
 		setCFsWithOppCost
@@ -150,6 +152,10 @@ function TrueCostContextProvider() {
 	return (
 		<TrueCostContext.Provider
 			value={{
+				currency,
+				rangeFactor,
+				dr,
+				setDR,
 				freq,
 				setFreq,
 				duration,

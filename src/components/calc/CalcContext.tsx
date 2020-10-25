@@ -174,7 +174,7 @@ function CalcContextProvider({
 	const fsb = useFullScreenBrowser();
 	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions ? tabOptions : goal ? getGoalTabOptions(goal.type) : []);
 	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions ? resultTabOptions : goal ? getGoalResultTabOptions(goal.type, addCallback && updateCallback ? true : false) : []);
-	const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal && goal?.ccy ? goal.ccy : 'USD');
+	const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal?.ccy ? goal.ccy : 'USD');
 	const [ rangeFactor, setRangeFactor ] = useState<number>(getRangeFactor(currency));
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
 	const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
@@ -209,7 +209,8 @@ function CalcContextProvider({
 
 	return (
 		<CalcContext.Provider
-			value={{
+      value={{
+        goal,
 				currency,
 				changeCurrency,
 				rangeFactor,

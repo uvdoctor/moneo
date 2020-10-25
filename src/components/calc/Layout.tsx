@@ -43,9 +43,9 @@ export default function Layout(props: LayoutProps) {
 
 	const createGoal = () => {
 		let g: any = null;
-		let defaultCurrency = 'USD';
+		const defaultCurrency = 'USD';
 		if (props.type) g = createNewGoalInput(props.type, defaultCurrency);
-		else g = { ccy: defaultCurrency };
+		else g = {ccy: defaultCurrency};
 		g.name = props.title + ' Calculator';
 		gtag.event({
 			category: 'Calculator',
