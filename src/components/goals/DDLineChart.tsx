@@ -5,11 +5,13 @@ import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
 interface DDLineChartProps {
 	contextType: any;
 	numberOfYears?: boolean;
+	title?: string;
+	firstYear?: number;
 }
 
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
 
-export default function DDLineChart({ contextType, numberOfYears }: DDLineChartProps) {
+export default function DDLineChart({ contextType, numberOfYears, title, firstYear }: DDLineChartProps) {
 	const {
 		startYear,
 		currency,
@@ -21,7 +23,7 @@ export default function DDLineChart({ contextType, numberOfYears }: DDLineChartP
 	useEffect(
 		() => {
 			let data: Array<any> = [];
-			let startVal = numberOfYears || !startYear ? 1 : startYear;
+			let startVal = firstYear ? firstYear : numberOfYears || !startYear ? 1 : startYear;
 			let cashFlows = cfsWithOppCost && cfsWithOppCost.length > 0 ? cfsWithOppCost : cfs; 
 			for (let i = 0; i < cashFlows.length; i++)
 				data.push({
@@ -39,7 +41,7 @@ export default function DDLineChart({ contextType, numberOfYears }: DDLineChartP
 			xField="year"
 			yField="value"
 			yAxis={getCommonYAxis()}
-			xAxis={getCommonXAxis(numberOfYears ? 'Number of Years' : 'Year')}
+			xAxis={getCommonXAxis(title ? title : numberOfYears ? 'Number of Years' : 'Year')}
 			meta={getCommonMeta(currency)}
 			point={{ visible: true }}
 		/>

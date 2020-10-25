@@ -3,7 +3,6 @@ import { getRangeFactor, toCurrency, toReadableNumber } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import CalcHeader from './CalcHeader';
 import { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
-import { CalcContextProviderProps } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
 import SelectInput from '../form/selectinput';
 import CalcTemplate from './CalcTemplate';
@@ -14,12 +13,19 @@ export const TIME_COST_HOURS = 'Hours';
 export const TIME_COST_WEEKS = 'Weeks';
 export const TIME_COST_YEARS = 'Years';
 
+interface TrueContextProviderProps {
+	title: string;
+	tabOptions: any;
+	resultTabOptions: any;
+	defaultCurrency?: string;
+}
+
 function TrueCostContextProvider({
 	title,
 	tabOptions,
 	resultTabOptions,
 	defaultCurrency = 'USD'
-}: CalcContextProviderProps) {
+}: TrueContextProviderProps) {
 	const fsb = useFullScreenBrowser();
 	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions);
 	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions);

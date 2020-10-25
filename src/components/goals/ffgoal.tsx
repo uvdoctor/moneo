@@ -24,8 +24,8 @@ import AssetAllocationChart from "./AssetAllocationChart";
 import AAPlanChart from "./AAPlanChart";
 import { PLAN_DURATION } from "../../CONSTANTS";
 import { Space } from "antd";
-import { CalcContext } from "../calc/CalcContext";
 import SVGCare from "./svgcare";
+import { GoalContext } from "./GoalContext";
 interface FFGoalProps {
   ffResult: any | null;
   mustCFs: Array<number>;
@@ -381,10 +381,10 @@ export default function FFGoal({
                   rr={ffResult.rr}
                 />}
             {showResultTab === CF_CHART_LABEL && <DDLineChart
-              cfs={buildChartCFs(ffResult.ffCfs)}
-              startYear={getAge(nowYear + 1, endYear)}
-              currency={currency}
+              //cfs={buildChartCFs(ffResult.ffCfs)}
+              firstYear={getAge(nowYear + 1, endYear)}
               title="Age"
+              contextType={GoalContext}
             />}
           </Result>
         )}
