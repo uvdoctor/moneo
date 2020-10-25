@@ -178,7 +178,7 @@ function CalcContextProvider({
 	const [ rangeFactor, setRangeFactor ] = useState<number>(getRangeFactor(currency));
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
 	const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
-	const [ dr, setDR ] = useState<number>(5);
+	const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
 	const [ cfs, setCFs ] = useState<Array<number>>([]);
 	const [ resultTabIndex, setResultTabIndex ] = useState<number>(0);
 	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(true);

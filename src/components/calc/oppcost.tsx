@@ -22,10 +22,11 @@ export default function OppCost({ contextType, minDuration }: OppCostProps) {
 	}: any = useContext(contextType);
 	const [ oppCost, setOppCost ] = useState<number>(0);
 	const [lastYear, setLastYear] = useState<number>(0);
-	const discountRate = dr ? dr : rr;
-	const minYears = minDuration ? minDuration : 20;
+	const isDRNumber = dr !== null;
+	const minYears = minDuration ? minDuration : cfs.length < 20 ? 20 : 30;
 
 	const calculateOppCost = () => {
+		const discountRate = dr !== null ? dr : rr;
 		if (!cfs || cfs.length === 0) {
 			setOppCost(0);
 			return;
@@ -38,14 +39,14 @@ export default function OppCost({ contextType, minDuration }: OppCostProps) {
 			if (index < cfs.length - 1 && oppCost < 0) {
 				oppCost *=
 					1 +
-					(typeof discountRate === 'number'
+					(isDRNumber
 						? discountRate
 						: discountRate[startIndex + index]) /
 						100;
 			}
 		});
 		if (goal.type !== GoalType.B) {
-			if (typeof discountRate !== 'number') {
+			if (!isDRNumber) {
 				let year = (startYear as number) + cfs.length - 1;
 				for (
 					let i = startIndex + cfs.length - 1;
@@ -60,7 +61,7 @@ export default function OppCost({ contextType, minDuration }: OppCostProps) {
 		setOppCost(oppCost);
 	};
 
-	useEffect(() => calculateOppCost(), [ cfs, discountRate ]);
+	useEffect(() => calculateOppCost(), [ cfs, dr, rr ]);
 
 	return (
 			<ItemDisplay
@@ -70,7 +71,7 @@ export default function OppCost({ contextType, minDuration }: OppCostProps) {
 				pl
 				info={`You May Have ${toCurrency(Math.abs(oppCost), currency)} More ${goal.type === GoalType.B
 					? `in ${cfs.length - 1} Years`
-					: typeof discountRate === 'number'
+					: isDRNumber
 						? `in ${cfs.length - 1 > minYears ? cfs.length : minDuration} Years`
 						: `when You turn ${lastYear - ((ffGoalEndYear as number) - PLAN_DURATION)}`} if You 
         ${oppCost < 0 ? 'Invest' : 'Buy'} instead of ${oppCost < 0

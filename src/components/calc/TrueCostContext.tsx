@@ -152,6 +152,7 @@ function TrueCostContextProvider() {
 	return (
 		<TrueCostContext.Provider
 			value={{
+				cfs,
 				currency,
 				rangeFactor,
 				dr,

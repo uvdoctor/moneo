@@ -472,6 +472,7 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
           goal,
           currency,
           rangeFactor,
+          cfs,
           dr,
           setDR,
           cashFlows,
