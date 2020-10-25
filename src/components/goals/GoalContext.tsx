@@ -37,7 +37,6 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     setFFOOM,
     btnClicked,
     setBtnClicked,
-    createNewGoalInput,
     setCreateNewGoalInput
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
@@ -249,7 +248,7 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
       setCFs([...cfs]);
       return cfs;
     }
-    let g: CreateGoalInput = createNewGoalInput();
+    let g: CreateGoalInput = createNewGoal();
     let result: any = calculateCFs(price, g, duration);
     cfs = result.cfs;
     console.log("New cfs created: ", cfs);
@@ -269,6 +268,7 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
   };
 
   useEffect(() => {
+    if (!allInputDone && inputTabIndex === 0) return;
     if (!cashFlows) calculateYearlyCFs();
   }, [
     price,
@@ -289,7 +289,8 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     aiPer,
     aiStartYear,
     cashFlows,
-    allInputDone
+    allInputDone,
+    inputTabIndex
   ]);
 
   useEffect(() => {

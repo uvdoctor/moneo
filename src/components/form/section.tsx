@@ -24,15 +24,20 @@ export default function Section(props: SectionProps) {
 					onClick={() => (props.videoSrc ? setVideoUrl(!videoUrl ? props.videoSrc as string : '') : true)}
 				>
 					{`${props.title} `}
-					{props.videoSrc ?
-						!videoUrl && <YoutubeFilled />
-					: null}
+					{props.videoSrc ? !videoUrl && <YoutubeFilled /> : null}
 				</h3>
 			</Col>
 			{videoUrl && (
-				<Modal>
-				<Col span={24}>
-					<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
+				<Modal
+					centered
+					visible={videoUrl ? true : false}
+					title=""
+					okText="Done"
+					onOk={() => setVideoUrl('')}
+					onCancel={() => setVideoUrl('')}
+				>
+					<Col span={24}>
+						<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
 					</Col>
 				</Modal>
 			)}
@@ -48,7 +53,7 @@ export default function Section(props: SectionProps) {
 					props.children,
 					(child: any, i: number) =>
 						child ? (
-							<Fragment key={"section"+i}>
+							<Fragment key={'section' + i}>
 								<Col span={24}>{child}</Col>
 								<Col className="fields-divider" span={24} />
 							</Fragment>
