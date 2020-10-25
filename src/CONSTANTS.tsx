@@ -12,10 +12,6 @@ export const ROUTES = {
     TRUE_COST: '/truecost'
 }
 
-export const CONTEXT_TC = "TC";
-export const CONTEXT_GOAL = "GC";
-export const CONTEXT_FF_GOAL = "FFC";
-
 export const CALC_NAMES = {
     BR: 'Buy v/s Rent & Invest',
     FI: 'Financial Independence',

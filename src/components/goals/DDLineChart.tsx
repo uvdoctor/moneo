@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
-import { CONTEXT_TC } from '../../CONSTANTS';
 
 interface DDLineChartProps {
 	contextType: any;
@@ -23,7 +22,7 @@ export default function DDLineChart({ contextType, numberOfYears }: DDLineChartP
 		() => {
 			let data: Array<any> = [];
 			let startVal = numberOfYears || !startYear ? 1 : startYear;
-			let cashFlows = contextType === CONTEXT_TC && cfsWithOppCost && cfsWithOppCost.length > 0 ? cfsWithOppCost : cfs; 
+			let cashFlows = cfsWithOppCost && cfsWithOppCost.length > 0 ? cfsWithOppCost : cfs; 
 			for (let i = 0; i < cashFlows.length; i++)
 				data.push({
 					year: startVal + i,

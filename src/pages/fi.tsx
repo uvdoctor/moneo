@@ -1,5 +1,4 @@
 import React from 'react';
-import { GoalType } from '../api/goals';
 import Layout from '../components/calc/Layout';
 import ItemDisplay from '../components/calc/ItemDisplay';
 import SVGAAChart from '../components/goals/svgaachart';
@@ -8,6 +7,7 @@ import SVGChart from '../components/svgchart';
 import SVGHourGlass from '../components/svghourglass';
 import SVGPiggy from '../components/svgpiggy';
 import { CALC_NAMES } from '../CONSTANTS';
+import { GoalContextProvider } from '../components/goals/GoalContext';
 
 export default function FI() {
 	const nowYear = new Date().getFullYear();
@@ -15,7 +15,7 @@ export default function FI() {
 	return (
 		<Layout
 			title={CALC_NAMES.FI}
-			type={GoalType.FF}
+			calc={GoalContextProvider}
 			assumptions={[ 'adfas', 'asdfsad' ]}
 			features={[ 'fsdgdf', 'fgdssdf' ]}
 			results={[

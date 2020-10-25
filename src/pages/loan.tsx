@@ -5,11 +5,13 @@ import ItemDisplay from '../components/calc/ItemDisplay';
 import SVGBarChart from '../components/svgbarchart';
 import SVGChart from '../components/svgchart';
 import { CALC_NAMES } from '../CONSTANTS';
+import { GoalContextProvider } from '../components/goals/GoalContext';
 
 export default function Loan() {
 	return (
 		<Layout
 			title={CALC_NAMES.LOAN}
+			calc={GoalContextProvider}
 			type={GoalType.O}
 			assumptions={[ 'adfas', 'asdfsad' ]}
 			features={[ 'fsdgdf', 'fgdssdf' ]}

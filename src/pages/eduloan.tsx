@@ -6,10 +6,12 @@ import SVGMoneyBag from '../components/calc/svgmoneybag';
 import SVGBarChart from '../components/svgbarchart';
 import SVGChart from '../components/svgchart';
 import { CALC_NAMES } from '../CONSTANTS';
+import { GoalContextProvider } from '../components/goals/GoalContext';
 
 export default function EduLoan() {
 	return (
 		<Layout
+			calc={GoalContextProvider}
 			title={CALC_NAMES.EDU_LOAN}
 			type={GoalType.E}
 			assumptions={[ 'adfas', 'asdfsad' ]}

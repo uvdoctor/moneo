@@ -1,5 +1,4 @@
 import React, { useEffect, useState, Fragment } from "react";
-import Goal from "./goal";
 import FFGoal from "./ffgoal";
 import { Card, Menu, Space } from "antd";
 import { appendValue, removeFromArray } from "../utils";
@@ -27,7 +26,7 @@ import AssetAllocationChart from "./AssetAllocationChart";
 import SVGAAChart from "./svgaachart";
 import SVGList from "../svglist";
 import { Button, notification } from "antd";
-import { CalcContextProvider } from "../calc/CalcContext";
+import { GoalContextProvider } from "./GoalContext";
 
 export default function SetPlan() {
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
@@ -390,11 +389,7 @@ export default function SetPlan() {
   };
 
   return wipGoal ? (
-    <CalcContextProvider goal={wipGoal as APIt.CreateGoalInput}
-      addCallback={addGoal}
-      updateCallback={updateGoal}
-    title=""> 
-      {wipGoal.type === APIt.GoalType.FF ? (
+      (wipGoal as APIt.CreateGoalInput).type === APIt.GoalType.FF ? (
         <FFGoal
           ffResult={ffResult}
           mergedCfs={mergedCFs}
@@ -405,13 +400,13 @@ export default function SetPlan() {
         />
       ) : (
           ffGoal && (
-            <Goal
-              ffImpactYearsHandler={calculateFFImpactYear}
-              ffGoalEndYear={ffGoal?.ey as number}
-            />
+            <GoalContextProvider goal={wipGoal as APIt.CreateGoalInput}
+      addCallback={addGoal}
+      updateCallback={updateGoal}
+      ffImpactYearsHandler={calculateFFImpactYear}
+      ffGoalEndYear={ffGoal?.ey}/> 
           )
-        )}
-    </CalcContextProvider>
+        )
   ) : (
     <Fragment>
         {ffGoal && rr && rr.length > 0 && (
