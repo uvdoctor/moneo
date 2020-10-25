@@ -61,7 +61,7 @@ export default function FFGoal({
   pp,
   ffResultHandler,
 }: FFGoalProps) {
-  const { goal, fsb, allInputDone, inputTabs, setInputTabs, showTab, setShowTab, showResultTab, currency, rangeFactor, cancelCalc, addCallback, updateCallback }: any = useContext(CalcContext);
+  const { goal, fsb, allInputDone, inputTabs, setInputTabs, showTab, setShowTab, showResultTab, currency, rangeFactor, cancelCalc, addCallback, updateCallback }: any = useContext(GoalContext);
   const nowYear = new Date().getFullYear();
   const [riskProfile, setRiskProfile] = useState<APIt.LMH>(goal.imp);
   const [rr, setRR] = useState<number | null>(pp ? null : 5);
