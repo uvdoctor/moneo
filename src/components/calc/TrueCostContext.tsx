@@ -32,10 +32,10 @@ function TrueCostContextProvider({
 	const [ currency, setCurrency ] = useState<string>(defaultCurrency);
 	const [ rangeFactor, setRangeFactor ] = useState<number>(getRangeFactor(currency));
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
-	const [ inputTabIndex, setInputTabIndex ] = useState<string>(inputTabs[0].label);
+	const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
 	const [ dr, setDR ] = useState<number>(5);
 	const [ cfs, setCFs ] = useState<Array<number>>([]);
-	const [ resultTabIndex, setResultTabIndex ] = useState<number>(resultTabs[0].label);
+	const [ resultTabIndex, setResultTabIndex ] = useState<number>(0);
 	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(true);
 	const [ amt, setAmt ] = useState<number>(0);
 	const [ freq, setFreq ] = useState<string>(SPEND_ONCE);
@@ -50,6 +50,7 @@ function TrueCostContextProvider({
 	const [ timeCostUnit, setTimeCostUnit ] = useState<string>(TIME_COST_HOURS);
 	const [ totalCost, setTotalCost ] = useState<number>(0);
 	const [ cfsWithOppCost, setCFsWithOppCost ] = useState<Array<number>>([]);
+	const isPubliCalc = true;
 
 	const changeCurrency = (curr: string) => {
 		setRangeFactor(Math.round(getRangeFactor(curr) / rangeFactor));
@@ -215,10 +216,11 @@ function TrueCostContextProvider({
 				setSavingsPerHr,
 				totalCost,
 				setTotalCost,
-				cfsWithOppCost
+				cfsWithOppCost,
+				isPubliCalc
 			}}
 		>
-			{!allInputDone && <CalcHeader />}
+			{!allInputDone && <CalcHeader contextType={TrueCostContext} />}
 			<CalcTemplate
 				contextType={TrueCostContext}
 				results={[

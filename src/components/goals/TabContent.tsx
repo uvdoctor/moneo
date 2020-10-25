@@ -10,18 +10,18 @@ export default function TabContent({ contextType, result }: TabContentProps) {
 	const { inputTabIndex, resultTabIndex, inputTabs, resultTabs }: any = useContext(contextType);
 	const tabs = result ? resultTabs : inputTabs;
 	const currentIndex = result ? resultTabIndex : inputTabIndex;
-
+	
 	return tabs[currentIndex].content instanceof Array ? (
 		tabs[currentIndex].content.map(
 			(tabContent: ReactNode, i: number) =>
 				tabContent ? (
-					<Col key={'tc' + i} span={24} style={{ background: 'white', maxWidth: '550px' }}>
+					<Col key={'tc' + i} style={{ maxWidth: !result ? '550px' : '' }}>
 						{tabContent}
 					</Col>
 				) : null
 		)
 	) : tabs[currentIndex].content ? (
-		<Col span={24} style={{ background: 'white', maxWidth: '550px' }}>
+		<Col style={{ maxWidth: !result ? '550px' : ''}}>
 			{tabs[currentIndex].content}
 		</Col>
 	) : null;

@@ -11,13 +11,13 @@ interface ResultProps {
 }
 
 export default function Result({ results, contextType }: ResultProps) {
-	const { resultTabs, showResultTab, setShowResultTab }: any = useContext(contextType);
+	const { resultTabs, resultTabIndex, setResultTabIndex }: any = useContext(contextType);
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
 	return (
 		<div className="calculator-content">
-			<CalcHeader />
+			<CalcHeader contextType={contextType} />
 			<div ref={chartDiv}>
 				<Row justify="end" style={{ cursor: 'pointer' }} onClick={toggle}>
 					{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
@@ -37,17 +37,17 @@ export default function Result({ results, contextType }: ResultProps) {
 				)}
 				<Tabs
 					className="dd-chart"
-					onTabClick={(key: string) => setShowResultTab(key)}
-					defaultActiveKey={showResultTab}
+					onTabClick={(key: string) => setResultTabIndex(key)}
+					defaultActiveKey={resultTabIndex}
 					type="card"
 				>
-					{resultTabs.map((tab: any) => (
+					{resultTabs.map((tab: any, i: number) => (
 						<TabPane
 							key={tab.label}
 							disabled={!tab.active}
 							tab={
 								<Fragment>
-									<tab.svg disabled={!tab.active} selected={showResultTab === tab.label} />
+									<tab.svg disabled={!tab.active} selected={resultTabIndex === i} />
 									{tab.label}
 								</Fragment>
 							}

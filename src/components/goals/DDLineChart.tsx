@@ -23,7 +23,7 @@ export default function DDLineChart({ contextType, numberOfYears, title, firstYe
 	useEffect(
 		() => {
 			let data: Array<any> = [];
-			let startVal = firstYear ? firstYear : numberOfYears || !startYear ? 1 : startYear;
+			let startVal = firstYear ? firstYear : (numberOfYears || !startYear) ? 1 : startYear;
 			let cashFlows = cfsWithOppCost && cfsWithOppCost.length > 0 ? cfsWithOppCost : cfs; 
 			for (let i = 0; i < cashFlows.length; i++)
 				data.push({

@@ -15,8 +15,7 @@ export default function Input({ contextType }: InputProps) {
 		allInputDone,
 		setAllInputDone,
 		showOptionsForm,
-		setOptionsVisibility,
-		isPublicCalc
+		setOptionsVisibility
 	}: any = useContext(contextType);
 	const { Step } = Steps;
 
@@ -48,8 +47,10 @@ export default function Input({ contextType }: InputProps) {
 						</Steps>
 					</Col>
 					<Col>
-						<Row style={{ margin: '1rem' }}>
-							<TabContent contextType={contextType} />
+						<Row justify="center" style={{ background: 'white', margin: '1rem', maxWidth: '600px' }}>
+							<Col style={{margin: '1rem'}}>
+								<TabContent contextType={contextType} />
+							</Col>
 						</Row>
 						<Row justify="center" style={{ marginBottom: '1rem' }}>
 							{inputTabIndex > 0 && (
@@ -103,7 +104,7 @@ export default function Input({ contextType }: InputProps) {
 							<CloseOutlined />
 						</Button>
 						<TabContent contextType={contextType} />
-						{!isPublicCalc && <SubmitButton />}
+						<SubmitButton />
 					</section>
 				</div>
 			)}

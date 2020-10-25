@@ -4,10 +4,10 @@ import { SaveOutlined } from "@ant-design/icons";
 import { GoalContext } from '../goals/GoalContext';
 
 export default function SubmitButton() {
-	const { handleSubmit, disableSubmit }: any = useContext(GoalContext);
+	const { isPublicCalc, handleSubmit, disableSubmit }: any = useContext(GoalContext);
 
 	return (
-		<Row justify="center">
+		!isPublicCalc ? <Row justify="center">
 			<Button type="primary"
 				onClick={() => handleSubmit()}
 				icon={<SaveOutlined />}
@@ -16,6 +16,6 @@ export default function SubmitButton() {
 			>
 				Save
 			</Button>
-		</Row>
+		</Row> : null
 	);
 }

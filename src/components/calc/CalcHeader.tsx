@@ -1,10 +1,13 @@
 import { PageHeader } from 'antd';
 import React, { useContext } from 'react';
 import SelectInput from '../form/selectinput';
-import { CalcContext } from './CalcContext';
 
-export default function CalcHeader() {
-	const { title, currency, changeCurrency }: any = useContext(CalcContext);
+interface CalcHeaderProps {
+	contextType: any;
+}
+
+export default function CalcHeader({contextType}: CalcHeaderProps) {
+	const { title, currency, changeCurrency }: any = useContext(contextType);
 	return (
 		<PageHeader
 			className="calculator-header"
