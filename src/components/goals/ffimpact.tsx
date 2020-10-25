@@ -4,12 +4,17 @@ import ItemDisplay from '../calc/ItemDisplay';
 import { MAX_RETIREMENT_AGE } from '../../CONSTANTS';
 import { GoalContext } from './GoalContext';
 
-export default function FFImpact() {
+interface FFImpactProps {
+	impactYears?: number | null
+}
+
+export default function FFImpact({impactYears}: FFImpactProps) {
 	const { ffImpactYears }: any = useContext(GoalContext);
 	const getUnit = () => (Math.abs(ffImpactYears as number) > 1 ? ' Years ' : ' Year ');
 	const getImpactText = () => ((ffImpactYears as number) > 0 ? 'Earlier' : 'Later');
+	const totalImpactYears = impactYears !== undefined ? impactYears : ffImpactYears;
 
-	return ffImpactYears !== null ? ffImpactYears === 0 ? (
+	return totalImpactYears !== null ? totalImpactYears === 0 ? (
 		<ItemDisplay
 			label="Impact"
 			result="No Delay"

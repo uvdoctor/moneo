@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { CalcContext } from '../calc/CalcContext';
 import ItemDisplay from '../calc/ItemDisplay';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
@@ -20,9 +19,10 @@ export default function RentComparison() {
 		sellAfter,
 		brChartData,
 		analyzeFor,
-		setAnalyzeFor
+		setAnalyzeFor,
+		dr,
+		setDR
 	}: any = useContext(GoalContext);
-	const { dr, setDR }: any = useContext(CalcContext);
 	const [ rentDiff, setRentDiff ] = useState<number | null>(null);
 
 	const provideRentAns = () => {

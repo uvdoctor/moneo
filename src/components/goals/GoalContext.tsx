@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState, ReactNode } from "react";
 import { CreateGoalInput, GoalType, LMH, TargetInput, UpdateGoalInput } from "../../api/goals";
 import { getRangeFactor, initYearOptions } from "../utils";
 import SVGTaxBenefit from "../svgtaxbenefit";
@@ -18,17 +18,12 @@ import SVGInheritance from "../goals/svginheritance";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { calculateCFs } from "./cfutils";
-import GoalHeader from "./GoalHeader";
 import TaxAdjustment from "../calc/TaxAdjustment";
 import Amt from "./amt";
 import LoanEmi from "../calc/LoanEmi";
 import AnnualAmt from "./annualamt";
 import Sell from "./sell";
 import RentComparison from "./rentcomparison";
-import CalcTemplate from "../calc/CalcTemplate";
-import FFImpact from "./ffimpact";
-import ItemDisplay from "../calc/ItemDisplay";
-import OppCost from "../calc/oppcost";
 import DDLineChart from "./DDLineChart";
 import BuyRentChart from "./BuyRentChart";
 import LoanScheduleChart from "./LoanScheduleChart";
@@ -36,6 +31,7 @@ import LoanScheduleChart from "./LoanScheduleChart";
 const GoalContext = createContext({});
 
 interface GoalContextProviderProps {
+  children: ReactNode;
   goal: CreateGoalInput;
   addCallback?: Function;
   updateCallback?: Function;
@@ -177,7 +173,7 @@ const getGoalTabOptions = (type: GoalType) => {
         ]
 }
 
-function GoalContextProvider({ goal, addCallback, updateCallback, cashFlows, ffGoalEndYear, ffImpactYearsHandler }: GoalContextProviderProps) {
+function GoalContextProvider({ children, goal, addCallback, updateCallback, cashFlows, ffGoalEndYear, ffImpactYearsHandler }: GoalContextProviderProps) {
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
   const [inputTabs, setInputTabs] = useState<Array<any>>(getGoalTabOptions(goal.type))
@@ -761,15 +757,7 @@ function GoalContextProvider({ goal, addCallback, updateCallback, cashFlows, ffG
           isPublicCalc,
           disableSubmit
         }}>
-        {!allInputDone && <GoalHeader />}
-        <CalcTemplate contextType={GoalContext} results={
-          nowYear < startYear ? [
-            (dr === null || dr === undefined) ? 
-              <FFImpact />
-              : <ItemDisplay label="Buy v/s Rent" result={brAns} info={brAns} />,
-            <OppCost contextType={GoalContext} />
-            ] : []}
-        />
+        {children}
       </GoalContext.Provider>
     );
 }

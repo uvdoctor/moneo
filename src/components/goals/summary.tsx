@@ -1,45 +1,43 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import DDLineChart from './DDLineChart';
 import { getGoalTypes, getImpLevels } from './goalutils';
-import { LMH, GoalType } from '../../api/goals';
+import { LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
 import { Button, Card, Row, Col } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import OppCost from '../calc/oppcost';
 import FFImpact from './ffimpact';
+import { GoalContext } from './GoalContext';
 interface SummaryProps {
-	id: string;
-	name: string;
-	type: GoalType;
-	imp: LMH;
-	startYear: number;
-	currency: string;
-	cfs: Array<number>;
-	ffOOM: Array<number> | null;
-	ffGoalEndYear: number;
-	ffImpactYears: number | null;
-	rr: Array<number>;
 	deleteCallback: Function;
 	editCallback: Function;
+	ffImpactYears: number | null;
 }
 
-export default function Summary(props: SummaryProps) {
-	const bgColor = props.imp === LMH.H ? COLORS.BLUE : props.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
+export default function Summary({ deleteCallback, editCallback, ffImpactYears }: SummaryProps) {
+	const {
+		goal,
+		startYear,
+		currency,
+	}: any = useContext(GoalContext);
+	const bgColor = goal.imp === LMH.H ? COLORS.BLUE : goal.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
 	const nowYear = new Date().getFullYear();
+	const goalTypes: any = getGoalTypes();
+	const impLevels: any = getImpLevels();
 
 	return (
 		<Card
 			title={
 				<Row align="middle" justify="space-between">
 					<Col>
-						<label>{getGoalTypes()[props.type]}</label>
-						<h2>{props.name}</h2>
+						<label>{goalTypes[goal.type]}</label>
+						<h2>{goal.name}</h2>
 					</Col>
 					<Col>
-						<Button type="link" onClick={() => props.editCallback(props.id)} icon={<EditOutlined />}>
+						<Button type="link" onClick={() => editCallback(goal.id)} icon={<EditOutlined />}>
 							Edit
 						</Button>
-						<Button type="link" onClick={() => props.deleteCallback(props.id)} icon={<DeleteOutlined />}>
+						<Button type="link" onClick={() => deleteCallback(goal.id)} icon={<DeleteOutlined />}>
 							Delete
 						</Button>
 					</Col>
@@ -56,30 +54,23 @@ export default function Summary(props: SummaryProps) {
 						paddingRight: '2px'
 					}}
 				>
-					{getImpLevels()[props.imp]}
+					{impLevels[goal.imp]}
 				</label>
 			}
 		>
-			{props.startYear > nowYear && (
+			{startYear > nowYear && (
 				<Row>
 					<Col span={8}>
-						<FFImpact ffGoalEndYear={props.ffGoalEndYear} ffOOM={props.ffOOM} ffImpactYears={props.ffImpactYears} />
+						<FFImpact impactYears={ffImpactYears} />
 					</Col>
 					<Col span={8}>
-						<OppCost
-							discountRate={props.rr}
-							cfs={props.cfs}
-							currency={props.currency}
-							startYear={props.startYear}
-							buyGoal={props.type === GoalType.B}
-							ffGoalEndYear={props.ffGoalEndYear}
-						/>
+						<OppCost contextType={GoalContext} />
 					</Col>
 				</Row>
 			)}
-			<Row>Cash Flows in {props.currency}</Row>
+			<Row>Cash Flows in {currency}</Row>
 			<Row>
-				<DDLineChart cfs={props.cfs} startYear={props.startYear} currency={props.currency} />
+				<DDLineChart contextType={GoalContext} />
 			</Row>
 		</Card>
 	);

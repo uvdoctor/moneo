@@ -27,6 +27,7 @@ import SVGAAChart from "./svgaachart";
 import SVGList from "../svglist";
 import { Button, notification } from "antd";
 import { GoalContextProvider } from "./GoalContext";
+import GoalContent from "./GoalContent";
 
 export default function SetPlan() {
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
@@ -404,7 +405,9 @@ export default function SetPlan() {
       addCallback={addGoal}
       updateCallback={updateGoal}
       ffImpactYearsHandler={calculateFFImpactYear}
-      ffGoalEndYear={ffGoal?.ey}/> 
+            ffGoalEndYear={ffGoal?.ey}>
+            <GoalContent />
+            </GoalContextProvider>
           )
         )
   ) : (
@@ -506,22 +509,13 @@ export default function SetPlan() {
                       g.imp
                     );
                     return (
+                      <GoalContextProvider key={"g"+i} goal={g} addCallback={addGoal} updateCallback={updateGoal}>
                       <Summary
-                        key={"g" + i}
-                        id={g.id as string}
-                        name={g.name}
-                        type={g.type}
-                        imp={g.imp}
-                        rr={result?.rr as Array<number>}
-                        startYear={g.sy}
-                        currency={g.ccy}
-                        cfs={allCFs[g.id]}
                         deleteCallback={removeGoal}
                         editCallback={editGoal}
-                        ffGoalEndYear={ffGoal.ey}
-                        ffOOM={result ? result.ffOOM : null}
-                        ffImpactYears={result ? result.ffImpactYears : null}
+                        ffImpactYears={result?.ffImpactYears as number}
                       />
+                      </GoalContextProvider>
                     );
                   })}
                 </div>

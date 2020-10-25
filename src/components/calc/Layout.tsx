@@ -9,6 +9,7 @@ import * as gtag from '../../lib/gtag';
 import { Button, Collapse, Row, Col } from 'antd';
 
 import './Layout.less';
+import GoalContent from '../goals/GoalContent';
 interface LayoutProps {
 	tabOptions?: Array<any>;
 	resultTabOptions?: Array<any>;
@@ -94,7 +95,9 @@ export default function Layout(props: LayoutProps) {
 							ffResultHandler={setFFResult}
 						/>
 						) : props.type ? (
-								<props.calc goal={wip} />
+							<props.calc goal={wip}>
+								<GoalContent />
+							</props.calc>
 					) : (
 								<props.calc title={props.title} tabOptions={props.tabOptions}
 									resultTabOptions={props.resultTabOptions} />
