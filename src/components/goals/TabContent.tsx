@@ -1,13 +1,13 @@
 import { Col } from 'antd';
 import React, { ReactNode, useContext } from 'react';
+import { CalcContext } from '../calc/CalcContext';
 
 interface TabContentProps {
-	contextType: any;
 	result?: boolean;
 }
 
-export default function TabContent({ contextType, result }: TabContentProps) {
-	const { inputTabIndex, resultTabIndex, inputTabs, resultTabs }: any = useContext(contextType);
+export default function TabContent({ result }: TabContentProps) {
+	const { inputTabIndex, resultTabIndex, inputTabs, resultTabs }: any = useContext(CalcContext);
 	const tabs = result ? resultTabs : inputTabs;
 	const currentIndex = result ? resultTabIndex : inputTabIndex;
 	

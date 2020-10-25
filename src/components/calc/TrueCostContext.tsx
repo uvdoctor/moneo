@@ -1,11 +1,11 @@
-import React, { createContext, useEffect, useState } from 'react';
-import { getRangeFactor, toCurrency, toReadableNumber } from '../utils';
-import { useFullScreenBrowser } from 'react-browser-hooks';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { toCurrency, toReadableNumber } from '../utils';
 import CalcHeader from './CalcHeader';
 import { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
 import ItemDisplay from './ItemDisplay';
 import SelectInput from '../form/selectinput';
 import CalcTemplate from './CalcTemplate';
+import { CalcContext } from './CalcContext';
 
 const TrueCostContext = createContext({});
 
@@ -13,30 +13,16 @@ export const TIME_COST_HOURS = 'Hours';
 export const TIME_COST_WEEKS = 'Weeks';
 export const TIME_COST_YEARS = 'Years';
 
-interface TrueContextProviderProps {
-	title: string;
-	tabOptions: any;
-	resultTabOptions: any;
-	defaultCurrency?: string;
-}
-
-function TrueCostContextProvider({
-	title,
-	tabOptions,
-	resultTabOptions,
-	defaultCurrency = 'USD'
-}: TrueContextProviderProps) {
-	const fsb = useFullScreenBrowser();
-	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions);
-	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions);
-	const [ currency, setCurrency ] = useState<string>(defaultCurrency);
-	const [ rangeFactor, setRangeFactor ] = useState<number>(getRangeFactor(currency));
-	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
-	const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
-	const [ dr, setDR ] = useState<number>(5);
-	const [ cfs, setCFs ] = useState<Array<number>>([]);
-	const [ resultTabIndex, setResultTabIndex ] = useState<number>(0);
-	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(true);
+function TrueCostContextProvider() {
+	const {
+		currency,
+		cfs,
+		setCFs,
+		dr,
+		allInputDone,
+		cfsWithOppCost,
+		setCFsWithOppCost
+	}: any = useContext(CalcContext);
 	const [ amt, setAmt ] = useState<number>(0);
 	const [ freq, setFreq ] = useState<string>(SPEND_ONCE);
 	const [ duration, setDuration ] = useState<number>(0);
@@ -49,13 +35,6 @@ function TrueCostContextProvider({
 	const [ timeCostDisplay, setTimeCostDisplay ] = useState<number>(0);
 	const [ timeCostUnit, setTimeCostUnit ] = useState<string>(TIME_COST_HOURS);
 	const [ totalCost, setTotalCost ] = useState<number>(0);
-	const [ cfsWithOppCost, setCFsWithOppCost ] = useState<Array<number>>([]);
-	const isPubliCalc = true;
-
-	const changeCurrency = (curr: string) => {
-		setRangeFactor(Math.round(getRangeFactor(curr) / rangeFactor));
-		setCurrency(curr);
-	};
 
 	const timeOptions = {
 		[TIME_COST_HOURS]: TIME_COST_HOURS,
@@ -171,27 +150,6 @@ function TrueCostContextProvider({
 	return (
 		<TrueCostContext.Provider
 			value={{
-				currency,
-				changeCurrency,
-				rangeFactor,
-				setRangeFactor,
-				allInputDone,
-				setAllInputDone,
-				inputTabIndex,
-				setInputTabIndex,
-				title,
-				inputTabs,
-				setInputTabs,
-				resultTabs,
-				setResultTabs,
-				dr,
-				setDR,
-				cfs,
-				resultTabIndex,
-				setResultTabIndex,
-				fsb,
-				showOptionsForm,
-				setOptionsVisibility,
 				freq,
 				setFreq,
 				duration,
@@ -216,13 +174,10 @@ function TrueCostContextProvider({
 				setSavingsPerHr,
 				totalCost,
 				setTotalCost,
-				cfsWithOppCost,
-				isPubliCalc
 			}}
 		>
-			{!allInputDone && <CalcHeader contextType={TrueCostContext} />}
+			{!allInputDone && <CalcHeader />}
 			<CalcTemplate
-				contextType={TrueCostContext}
 				results={[
 					<ItemDisplay
 						label="Time Cost"

@@ -1,191 +1,44 @@
-import React, { createContext, useEffect, useState, ReactNode } from "react";
-import { CreateGoalInput, GoalType, LMH, TargetInput, UpdateGoalInput } from "../../api/goals";
-import { getRangeFactor, initYearOptions } from "../utils";
-import SVGTaxBenefit from "../svgtaxbenefit";
-import SVGPay from "../svgpay";
-import SVGLoan from "../svgloan";
-import SVGCashFlow from "../svgcashflow";
-import SVGSell from "../svgsell";
-import SVGScale from "../svgscale";
-import { BENEFIT_LABEL, EXPECT_LABEL, GIVE_LABEL, INVEST_LABEL, SPEND_LABEL, CF_CHART_LABEL, getCareTabOption } from "../goals/ffgoal";
-import SVGPiggy from "../svgpiggy";
-import { getDuration, getOrderByTabLabel, isLoanEligible } from "../goals/goalutils";
-import SVGChart from "../svgchart";
-import SVGAAChart from "../goals/svgaachart";
-import { AA_FUTURE_CHART_LABEL, AA_NEXT_YEAR_CHART_LABEL } from "../goals/ffgoal";
-import SVGBarChart from "../svgbarchart";
-import SVGInheritance from "../goals/svginheritance";
-import { useFullScreenBrowser } from "react-browser-hooks";
+import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
+import { CreateGoalInput, GoalType, LMH, TargetInput } from "../../api/goals";
+import { initYearOptions } from "../utils";
+import { getDuration, isLoanEligible } from "../goals/goalutils";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { calculateCFs } from "./cfutils";
-import TaxAdjustment from "../calc/TaxAdjustment";
-import Amt from "./amt";
-import LoanEmi from "../calc/LoanEmi";
-import AnnualAmt from "./annualamt";
-import Sell from "./sell";
-import RentComparison from "./rentcomparison";
-import DDLineChart from "./DDLineChart";
-import BuyRentChart from "./BuyRentChart";
-import LoanScheduleChart from "./LoanScheduleChart";
+import { CalcContext } from "../calc/CalcContext";
 
 const GoalContext = createContext({});
 
 interface GoalContextProviderProps {
   children: ReactNode;
-  goal: CreateGoalInput;
-  addCallback?: Function;
-  updateCallback?: Function;
   cashFlows?: Array<number>;
   ffGoalEndYear?: number;
   ffImpactYearsHandler?: Function;
 }
 
-const GOAL_CF_CHART_LABEL = "Cash Flows";
-const BR_CHART_LABEL = "Buy v/s Rent & Invest";
-const LOAN_CHART_LABEL = "EMI Schedule";
-const AMT_LABEL = "Cost";
-const TAX_LABEL = "Tax";
-const SELL_LABEL = "Sell";
-const LOAN_LABEL = "Loan";
-const ANNUAL_NET_COST_LABEL = "Yearly";
-const RENT_LABEL = "Rent?";
-
-const getFFGoalTabOptions = () => {
-  return [
-    { label: INVEST_LABEL, active: true, svg: SVGPiggy },
-    { label: SPEND_LABEL, active: true, svg: SVGPay },
-    { label: BENEFIT_LABEL, active: true, svg: SVGTaxBenefit },
-    getCareTabOption(),
-    { label: EXPECT_LABEL, active: true, svg: SVGCashFlow },
-    { label: GIVE_LABEL, active: true, svg: SVGInheritance },
-  ]
-}
-
-const getFFGoalResultTabOptions = (isGoal: boolean) => {
-  return !isGoal
-  ? [
-      {
-        label: CF_CHART_LABEL,
-        active: true,
-      svg: SVGChart,
-        content: <DDLineChart contextType={GoalContext} />
-      },
-    ]
-  : [
-      {
-        label: AA_NEXT_YEAR_CHART_LABEL,
-        active: true,
-        svg: SVGAAChart,
-      },
-      {
-        label: AA_FUTURE_CHART_LABEL,
-        active: true,
-        svg: SVGBarChart,
-      },
-      {
-        label: CF_CHART_LABEL,
-        active: true,
-        svg: SVGChart,
-      },
-    ];
-}
-
-const getGoalResultTabOptions = (type: GoalType, isGoal: boolean, showBRChart: boolean = false, showLoanChart: boolean = false) => {
-  if (type === GoalType.FF) return getFFGoalResultTabOptions(isGoal);
-  else return type === GoalType.B
-    ? [
-        {
-          label: GOAL_CF_CHART_LABEL,
-          active: true,
-        svg: SVGChart,
-          content: <DDLineChart contextType={GoalContext} />
-        },
-        {
-          label: BR_CHART_LABEL,
-          active: showBRChart,
-          svg: SVGScale,
-          content: <BuyRentChart />
-        },
-        {
-          label: LOAN_CHART_LABEL,
-          active: showLoanChart,//manualMode < 1 && loanPer,
-          svg: SVGLoan,
-          content: <LoanScheduleChart />
-        },
-      ]
-    : [
-        {
-          label: GOAL_CF_CHART_LABEL,
-          active: true,
-        svg: SVGChart,
-          content: <DDLineChart contextType={GoalContext} />
-        },
-        isLoanEligible(type) && {
-          label: LOAN_CHART_LABEL,
-          active: showLoanChart,
-          svg: SVGLoan,
-          content: <LoanScheduleChart />
-        },
-      ]
-  
-}
-
-const getGoalTabOptions = (type: GoalType) => {
-  if (type === GoalType.FF) return getFFGoalTabOptions();
-  return type === GoalType.B
-      ? [
-          { label: AMT_LABEL, active: true, svg: SVGPay, content: <Amt /> },
-          {
-            label: TAX_LABEL,
-            active: true,
-            svg: SVGTaxBenefit,
-            content: <TaxAdjustment />
-          },
-          { label: LOAN_LABEL, active: true, svg: SVGLoan, content: <LoanEmi /> },
-          {
-            label: ANNUAL_NET_COST_LABEL,
-            active: true,
-            svg: SVGCashFlow,
-            content: [<AnnualAmt />, <AnnualAmt income />]
-          },
-          { label: SELL_LABEL, active: true, svg: SVGSell, content: <Sell /> },
-          { label: RENT_LABEL, active: true, svg: SVGScale, content: <RentComparison /> },
-        ]
-      : !isLoanEligible(type)
-      ? [
-          { label: AMT_LABEL, active: true, svg: SVGPay, content: <Amt /> },
-          {
-            label: TAX_LABEL,
-            active: true,
-            svg: SVGTaxBenefit,
-            content: <TaxAdjustment />
-          },
-        ]
-      : [
-          { label: AMT_LABEL, active: true, svg: SVGPay, content: <Amt /> },
-          {
-            label: TAX_LABEL,
-            active: true,
-            svg: SVGTaxBenefit,
-            content: <TaxAdjustment />
-          },
-          { label: LOAN_LABEL, active: true, svg: SVGLoan, content: <LoanEmi /> },
-        ]
-}
-
-function GoalContextProvider({ children, goal, addCallback, updateCallback, cashFlows, ffGoalEndYear, ffImpactYearsHandler }: GoalContextProviderProps) {
-  const fsb = useFullScreenBrowser();
+function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYearsHandler }: GoalContextProviderProps) {
+  const {
+    goal,
+    currency,
+    inputTabs,
+    resultTabs,
+    setResultTabs,
+    allInputDone,
+    inputTabIndex,
+    setResultTabIndex,
+    setDisableSubmit,
+    cfs,
+    setCFs,
+    dr,
+    rr,
+    setRR,
+    ffOOM,
+    setFFOOM,
+    btnClicked,
+    setBtnClicked,
+    createNewGoalInput,
+    setCreateNewGoalInput
+  }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
-  const [inputTabs, setInputTabs] = useState<Array<any>>(getGoalTabOptions(goal.type))
-  const [resultTabs, setResultTabs] = useState<Array<any>>(getGoalResultTabOptions(goal.type, addCallback && updateCallback ? true : false))
-  const [currency, setCurrency] = useState<string>(goal.ccy);
-  const [rangeFactor, setRangeFactor] = useState<number>(getRangeFactor(currency));
-	const [ allInputDone, setAllInputDone ] = useState<boolean>(goal?.id ? true : false);
-	const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
-  const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
-  const [ cfs, setCFs ] = useState<Array<number>>(cashFlows ? cashFlows : []);
-  const [ resultTabIndex, setResultTabIndex ] = useState<number>(0);
-  const [showOptionsForm, setOptionsVisibility] = useState<boolean>(true);
   const [startYear, setStartYear] = useState<number>(goal.sy);
   const [endYear, setEndYear] = useState<number>(goal.ey);
   const [loanRepaymentSY, setLoanRepaymentSY] = useState<
@@ -257,10 +110,6 @@ function GoalContextProvider({ children, goal, addCallback, updateCallback, cash
   const [wipTargets, setWIPTargets] = useState<Array<TargetInput>>(
     goal?.tgts as Array<TargetInput>
   );
-  const [btnClicked, setBtnClicked] = useState<boolean>(false);
-  const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
-  const [rr, setRR] = useState<Array<number>>([]);
-  const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [showBRChart, setShowBRChart] = useState<boolean>(
     sellAfter && !!rentAmt ? true : false
@@ -274,24 +123,18 @@ function GoalContextProvider({ children, goal, addCallback, updateCallback, cash
       manualMode,
       loanPer,
       loanRepaymentSY,
-      loanYears
+      loanYears,
     )
   );
   const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
   const [analyzeFor, setAnalyzeFor] = useState<number>(20);
   const goalType = goal.type as GoalType;
-  const isPublicCalc = addCallback && updateCallback ? false : true;
-  const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
+  const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
 
   useEffect(() =>
     setDisableSubmit(name.length < 3 || !price || btnClicked),
     [name, price, btnClicked]);
     
-  const changeCurrency = (curr: string) => {
-		setRangeFactor(Math.round(getRangeFactor(curr) / rangeFactor));
-		setCurrency(curr);
-  };
-  
   const createNewBaseGoal = () => {
     return {
       name: name,
@@ -310,7 +153,7 @@ function GoalContextProvider({ children, goal, addCallback, updateCallback, cash
     } as CreateGoalInput;
   };
 
-  const createNewGoalInput = () => {
+  const createNewGoal = () => {
     let bg: CreateGoalInput = createNewBaseGoal();
     if (isLoanEligible(goalType)) {
       bg.tbi = taxBenefitInt;
@@ -340,14 +183,10 @@ function GoalContextProvider({ children, goal, addCallback, updateCallback, cash
     return bg;
   };
 
-  const createUpdateGoalInput = () => {
-    let g: CreateGoalInput = createNewGoalInput();
-    g.id = goal.id;
-    return g as UpdateGoalInput;
-  };
-
+  useEffect(() => setCreateNewGoalInput(createNewGoal), []);
+  
   useEffect(() => {
-    const loanOrderNum = getOrderByTabLabel(resultTabs, LOAN_CHART_LABEL);
+    const loanOrderNum = 2;
     if (manualMode < 1 && loanPer) {
       if (!loanOrderNum) {
         resultTabs[resultTabs.length - 1].active = true;
@@ -476,16 +315,6 @@ function GoalContextProvider({ children, goal, addCallback, updateCallback, cash
     else if (manualMode < 1 && loanPer === 0 && goalType === GoalType.B)
       setEndYear(startYear);
   }, [manualMode, loanPer]);
-
-  const handleSubmit = async () => {
-    setBtnClicked(true);
-    if (addCallback && updateCallback) {
-      goal.id
-        ? await updateCallback(createUpdateGoalInput(), cfs)
-        : await addCallback(createNewGoalInput(), cfs);
-    } 
-    setBtnClicked(false);
-  };
 
   useEffect(() => {
     if (!sellAfter) return;
@@ -638,30 +467,7 @@ function GoalContextProvider({ children, goal, addCallback, updateCallback, cash
       <GoalContext.Provider
         value={{
           goal,
-          currency,
-          changeCurrency,
-          rangeFactor,
-          setRangeFactor,
-          allInputDone,
-          setAllInputDone,
-          showTab: inputTabIndex,
-          setShowTab: setInputTabIndex,
-          inputTabs,
-          setInputTabs,
-          resultTabs,
-          setResultTabs,
-          dr,
-          setDR,
-          cfs,
-          setCFs,
-          showResultTab: resultTabIndex,
-          setShowResultTab: setResultTabIndex,
-          fsb,
-          addCallback,
-          updateCallback,
           cashFlows,
-          showOptionsForm,
-          setOptionsVisibility,
           startYear,
           endYear,
           loanRepaymentSY,
@@ -752,10 +558,7 @@ function GoalContextProvider({ children, goal, addCallback, updateCallback, cash
           setDuration,
           changeStartYear,
           changeEndYear,
-          handleSubmit,
           ffGoalEndYear,
-          isPublicCalc,
-          disableSubmit
         }}>
         {children}
       </GoalContext.Provider>

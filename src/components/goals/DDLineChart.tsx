@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
+import { CalcContext } from '../calc/CalcContext';
 
 interface DDLineChartProps {
-	contextType: any;
 	numberOfYears?: boolean;
 	title?: string;
 	firstYear?: number;
@@ -11,13 +11,13 @@ interface DDLineChartProps {
 
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
 
-export default function DDLineChart({ contextType, numberOfYears, title, firstYear }: DDLineChartProps) {
+export default function DDLineChart({ numberOfYears, title, firstYear }: DDLineChartProps) {
 	const {
 		startYear,
 		currency,
 		cfs,
 		cfsWithOppCost
-	}: any = useContext(contextType);
+	}: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	useEffect(

@@ -10,10 +10,12 @@ import { Button, Collapse, Row, Col } from 'antd';
 
 import './Layout.less';
 import GoalContent from '../goals/GoalContent';
+import { CalcContextProvider } from './CalcContext';
+import { GoalContextProvider } from '../goals/GoalContext';
 interface LayoutProps {
 	tabOptions?: Array<any>;
 	resultTabOptions?: Array<any>;
-	calc: any;
+	calc?: any;
 	type?: GoalType;
 	title: string;
 	features: Array<any>;
@@ -44,9 +46,10 @@ export default function Layout(props: LayoutProps) {
 
 	const createGoal = () => {
 		let g: any = null;
-		if (props.type) g = createNewGoalInput(props.type, 'USD');
-		else g = {};
-		g.name = props.title;
+		let defaultCurrency = 'USD';
+		if (props.type) g = createNewGoalInput(props.type, defaultCurrency);
+		else g = {ccy: defaultCurrency};
+		g.name = props.title + ' Calculator';
 		gtag.event({
 			category: 'Calculator',
 			action: 'Start',
@@ -60,23 +63,25 @@ export default function Layout(props: LayoutProps) {
 		<DDPage className="calculator-container" title={props.title} onBack={() => setWIP(null)}>
 			{!wip ? (
 				<Row align="middle" justify="center">
-					<Col><h2>{props.title + ' Calculator'}</h2></Col>
+					<Col>
+						<h2>{props.title + ' Calculator'}</h2>
+					</Col>
 					<Col span={24}>
-					<Collapse defaultActiveKey={[ '1' ]}>
-						{Object.keys(sections).map((key, i) => (
-							<Panel key={`${i + 1}`} header={key}>
-								<Col span={24}>{sections[key]}</Col>
-								{sections[key] === props.results && (
-									<Col span={24}>
-										<img
-											style={{ cursor: 'pointer' }}
-											src={'/images/' + props.resultImg}
-											onClick={createGoal}
-										/>
-									</Col>
-								)}
-							</Panel>
-						))}
+						<Collapse defaultActiveKey={[ '1' ]}>
+							{Object.keys(sections).map((key, i) => (
+								<Panel key={`${i + 1}`} header={key}>
+									<Col span={24}>{sections[key]}</Col>
+									{sections[key] === props.results && (
+										<Col span={24}>
+											<img
+												style={{ cursor: 'pointer' }}
+												src={'/images/' + props.resultImg}
+												onClick={createGoal}
+											/>
+										</Col>
+									)}
+								</Panel>
+							))}
 						</Collapse>
 					</Col>
 					<Col>
@@ -86,7 +91,12 @@ export default function Layout(props: LayoutProps) {
 					</Col>
 				</Row>
 			) : (
-					router.pathname === ROUTES.FI ? (
+				<CalcContextProvider
+					goal={wip}
+					tabOptions={props.tabOptions}
+					resultTabOptions={props.resultTabOptions}
+				>
+					{router.pathname === ROUTES.FI ? (
 						<FFGoal
 							mustCFs={[]}
 							tryCFs={[]}
@@ -94,14 +104,14 @@ export default function Layout(props: LayoutProps) {
 							ffResult={ffResult}
 							ffResultHandler={setFFResult}
 						/>
-						) : props.type ? (
-							<props.calc goal={wip}>
-								<GoalContent />
-							</props.calc>
+					) : props.type ? (
+						<GoalContextProvider>
+							<GoalContent />
+						</GoalContextProvider>
 					) : (
-								<props.calc title={props.title} tabOptions={props.tabOptions}
-									resultTabOptions={props.resultTabOptions} />
-					)
+						<props.calc />
+					)}
+				</CalcContextProvider>
 			)}
 		</DDPage>
 	);

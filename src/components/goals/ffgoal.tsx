@@ -384,7 +384,6 @@ export default function FFGoal({
               //cfs={buildChartCFs(ffResult.ffCfs)}
               firstYear={getAge(nowYear + 1, endYear)}
               title="Age"
-              contextType={GoalContext}
             />}
           </Result>
         )}

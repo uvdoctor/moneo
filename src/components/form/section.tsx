@@ -1,7 +1,8 @@
 import React, { Fragment, useState, ReactNode } from 'react';
 import VideoPlayer from '../videoplayer';
-import { YoutubeFilled, CloseOutlined } from '@ant-design/icons';
-import { Row, Col } from 'antd';
+import { YoutubeFilled } from '@ant-design/icons';
+import { Row, Col, Modal } from 'antd';
+
 interface SectionProps {
 	title: any;
 	footer?: any;
@@ -23,13 +24,17 @@ export default function Section(props: SectionProps) {
 					onClick={() => (props.videoSrc ? setVideoUrl(!videoUrl ? props.videoSrc as string : '') : true)}
 				>
 					{`${props.title} `}
-					{props.videoSrc && !videoUrl ? <YoutubeFilled /> : <CloseOutlined />}
+					{props.videoSrc ?
+						!videoUrl && <YoutubeFilled />
+					: null}
 				</h3>
 			</Col>
 			{videoUrl && (
+				<Modal>
 				<Col span={24}>
 					<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
-				</Col>
+					</Col>
+				</Modal>
 			)}
 			{props.toggle && (
 				<Col span={24} style={{ marginBottom: '0.5rem' }}>

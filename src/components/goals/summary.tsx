@@ -70,7 +70,7 @@ export default function Summary({ deleteCallback, editCallback, ffImpactYears }:
 			)}
 			<Row>Cash Flows in {currency}</Row>
 			<Row>
-				<DDLineChart contextType={GoalContext} />
+				<DDLineChart />
 			</Row>
 		</Card>
 	);

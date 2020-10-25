@@ -4,20 +4,20 @@ import { Tabs, Row, Col } from 'antd';
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
 import CalcHeader from '../calc/CalcHeader';
 import TabContent from './TabContent';
+import { CalcContext } from '../calc/CalcContext';
 
 interface ResultProps {
 	results: Array<ReactNode>;
-	contextType: any;
 }
 
-export default function Result({ results, contextType }: ResultProps) {
-	const { resultTabs, resultTabIndex, setResultTabIndex }: any = useContext(contextType);
+export default function Result({ results }: ResultProps) {
+	const { resultTabs, resultTabIndex, setResultTabIndex }: any = useContext(CalcContext);
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
 	return (
 		<div className="calculator-content">
-			<CalcHeader contextType={contextType} />
+			<CalcHeader />
 			<div ref={chartDiv}>
 				<Row justify="end" style={{ cursor: 'pointer' }} onClick={toggle}>
 					{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
@@ -52,7 +52,7 @@ export default function Result({ results, contextType }: ResultProps) {
 								</Fragment>
 							}
 						>
-							<TabContent contextType={contextType} result />
+							<TabContent result />
 						</TabPane>
 					))}
 				</Tabs>

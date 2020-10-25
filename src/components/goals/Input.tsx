@@ -3,12 +3,9 @@ import { Button, Steps, Space, Row, Col } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import TabContent from './TabContent';
 import { SaveOutlined } from '@ant-design/icons';
+import { CalcContext } from '../calc/CalcContext';
 
-interface InputProps {
-	contextType: any;
-}
-
-export default function Input({ contextType }: InputProps) {
+export default function Input() {
 	const {
 		inputTabs,
 		inputTabIndex,
@@ -20,7 +17,7 @@ export default function Input({ contextType }: InputProps) {
 		isPublicCalc,
 		handleSubmit,
 		disableSubmit
-	}: any = useContext(contextType);
+	}: any = useContext(CalcContext);
 	const { Step } = Steps;
 
 	const handleStepChange = (count: number = 1) => {
@@ -53,7 +50,7 @@ export default function Input({ contextType }: InputProps) {
 					<Col>
 						<Row justify="center" style={{ background: 'white', margin: '1rem', maxWidth: '600px' }}>
 							<Col style={{ margin: '1rem' }}>
-								<TabContent contextType={contextType} />
+								<TabContent />
 							</Col>
 						</Row>
 						<Row justify="center" style={{ marginBottom: '1rem' }}>
@@ -105,7 +102,7 @@ export default function Input({ contextType }: InputProps) {
 						>
 							<CloseOutlined />
 						</Button>
-						<TabContent contextType={contextType} />
+						<TabContent />
 						{!isPublicCalc && handleSubmit ? (
 							<Row justify="center">
 								<Button

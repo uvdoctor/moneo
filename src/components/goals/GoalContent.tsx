@@ -20,7 +20,7 @@ export default function GoalContent() {
   return (
   <Fragment>
     {!allInputDone && <GoalHeader />}
-    <CalcTemplate contextType={GoalContext} results={
+    <CalcTemplate results={
       nowYear < startYear ? [
         (dr === null || dr === undefined) ? 
           <FFImpact />
