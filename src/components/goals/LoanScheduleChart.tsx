@@ -1,51 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
-
-interface LoanScheduleChartProps {
-	principalSchedule: Array<number>;
-	interestSchedule: Array<number>;
-	repaymentSY: number;
-	loanYears: number;
-	currency: string;
-}
+import { GoalContext } from './GoalContext';
 
 const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
 
-export default function LoanScheduleChart(props: LoanScheduleChartProps) {
+export default function LoanScheduleChart() {
+	const { pSchedule, iSchedule, currency, loanYears, loanRepaymentSY, loanPer, manualMode }: any = useContext(
+		GoalContext
+	);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	useEffect(
 		() => {
 			let data: Array<any> = [];
-			for (let year = props.repaymentSY; year < props.repaymentSY + props.loanYears; year++) {
+			for (let year = loanRepaymentSY; year < loanRepaymentSY + loanYears; year++) {
 				data.push({
 					name: 'Principal',
 					year: year,
-					value: props.principalSchedule[year - props.repaymentSY]
+					value: pSchedule[year - loanRepaymentSY]
 				});
 				data.push({
 					name: 'Interest',
 					year: year,
-					value: props.interestSchedule[year - props.repaymentSY]
+					value: iSchedule[year - loanRepaymentSY]
 				});
 			}
 			setData([ ...data ]);
 		},
-		[ props.repaymentSY, props.loanYears, props.principalSchedule, props.interestSchedule ]
+		[ loanRepaymentSY, loanYears, pSchedule, iSchedule ]
 	);
 
-	return (
-		<div className="w-full">
-			<StackedColumnChart
-				meta={getCommonMeta(props.currency)}
-				xField="year"
-				yField="value"
-				stackField="name"
-				yAxis={getCommonYAxis()}
-        xAxis={getCommonXAxis('Year')}
-        data={data}
-			/>
-		</div>
-	);
+	return manualMode < 1 && loanPer && loanRepaymentSY && loanYears ? (
+		<StackedColumnChart
+			meta={getCommonMeta(currency)}
+			xField="year"
+			yField="value"
+			stackField="name"
+			yAxis={getCommonYAxis()}
+			xAxis={getCommonXAxis('Year')}
+			data={data}
+		/>
+	) : null;
 }

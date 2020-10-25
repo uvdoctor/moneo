@@ -1,103 +1,93 @@
-import React, { Fragment, ReactNode, useContext, useState } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { Button, Steps, Space, Row, Col } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import ActionButtons from '../form/actionbuttons';
-import { CalcContext } from '../calc/CalcContext';
+import SubmitButton from '../form/SubmitButton';
+import TabContent from './TabContent';
 interface InputProps {
-	submitDisabled?: boolean;
-	cancelDisabled?: boolean;
-	children: ReactNode;
-	handleSubmit?: Function | null;
+	contextType: any;
 }
 
-export default function Input({ submitDisabled, cancelDisabled, children, handleSubmit }: InputProps) {
+export default function Input({ contextType }: InputProps) {
 	const {
 		inputTabs,
-		showTab,
-		setShowTab,
+		inputTabIndex,
+		setInputTabIndex,
 		allInputDone,
 		setAllInputDone,
-		cancelCalc,
 		showOptionsForm,
-		setOptionsVisibility
-	}: any = useContext(CalcContext);
+		setOptionsVisibility,
+		isPublicCalc
+	}: any = useContext(contextType);
 	const { Step } = Steps;
-	const [ currentStep, setCurrentStep ] = useState<number>(0);
 
 	const handleStepChange = (count: number = 1) => {
-		let co = currentStep + count;
+		let co = inputTabIndex + count;
 		if (co < 0 || !inputTabs[co]) return;
 		if (!inputTabs[co].active) co += count;
-		setShowTab(inputTabs[co].label);
-		setCurrentStep(co);
+		setInputTabIndex(co);
 	};
 
 	return (
 		<Fragment>
 			{!allInputDone ? (
-				<Fragment>
-					<Steps current={currentStep}>
-						{inputTabs.map((tab: any) => (
-							<Step
-								key={tab.label}
-								title={
-									<Space align="center" size="small">
-										<tab.svg disabled={!tab.active} selected={showTab === tab.label} />
-										{tab.label}
-									</Space>
-								}
-								disabled={!tab.active}
-							/>
-						))}
-					</Steps>
-					<Row justify="center" style={{ margin: '1rem' }}>
-						<Col span={24} style={{ background: 'white', maxWidth: '550px' }}>
-							{React.Children.map(
-								children,
-								(child: any) => (child ? <div style={{ margin: '1rem' }}>{child}</div> : null)
+				<Row align="middle" justify="space-around">
+					<Col>
+						<Steps direction="vertical" current={inputTabIndex}>
+							{inputTabs.map((tab: any, i: number) => (
+								<Step
+									key={tab.label}
+									title={
+										<Space align="center" size="small">
+											<tab.svg disabled={!tab.active} selected={i === inputTabIndex} />
+											{tab.label}
+										</Space>
+									}
+									disabled={!tab.active}
+								/>
+							))}
+						</Steps>
+					</Col>
+					<Col>
+						<Row style={{ margin: '1rem' }}>
+							<TabContent contextType={contextType} />
+						</Row>
+						<Row justify="center" style={{ marginBottom: '1rem' }}>
+							{inputTabIndex > 0 && (
+								<Button style={{ margin: '0 8px' }} onClick={() => handleStepChange(-1)}>
+									Previous
+								</Button>
 							)}
-						</Col>
-					</Row>
-					<Row justify="center" style={{ marginBottom: '1rem' }}>
-						{currentStep > 0 && (
-							<Button style={{ margin: '0 8px' }} onClick={() => handleStepChange(-1)}>
-								Previous
-							</Button>
-						)}
-						{currentStep < inputTabs.length - 1 && (
-							<Button type="primary" onClick={() => handleStepChange()}>
-								Next
-							</Button>
-						)}
-						{currentStep === inputTabs.length - 1 && (
-							<Button
-								type="primary"
-								onClick={() => {
-									setShowTab(inputTabs[inputTabs.length - 1].label);
-									setAllInputDone(true);
-								}}
-							>
-								Done
-							</Button>
-						)}
-					</Row>
-				</Fragment>
+							{inputTabIndex < inputTabs.length - 1 && (
+								<Button type="primary" onClick={() => handleStepChange()}>
+									Next
+								</Button>
+							)}
+							{inputTabIndex === inputTabs.length - 1 && (
+								<Button
+									type="primary"
+									onClick={() => setAllInputDone(true)}>
+									Done
+								</Button>
+							)}
+						</Row>
+					</Col>
+				</Row>
 			) : (
 				<div className={`calculator-options ${showOptionsForm ? 'show-form' : 'hide-form'}`}>
 					<div className="overlay" />
 					<div>
 						<Row justify="space-between">
-							{inputTabs.map((tab: any) => (
+							{inputTabs.map((tab: any, i: number) => (
 								<Col
 									key={tab.label}
 									style={{ cursor: tab.active ? 'pointer' : 'cursor-not-allowed' }}
-									className={showTab === tab.label ? 'active' : ''}
+									className={inputTabIndex === i ? 'active' : ''}
 									onClick={() => {
 										setOptionsVisibility(true);
-										setShowTab(tab.label);
+										setInputTabIndex(i);
 									}}
 								>
-									<tab.svg disabled={!tab.active} selected={showTab === tab.label} />
+									<tab.svg disabled={!tab.active} selected={inputTabIndex === i} />
 									<label>{tab.label}</label>
 								</Col>
 							))}
@@ -112,16 +102,8 @@ export default function Input({ submitDisabled, cancelDisabled, children, handle
 						>
 							<CloseOutlined />
 						</Button>
-						{React.Children.map(children, (child: any) => (child ? child : null))}
-						{handleSubmit && (
-							<ActionButtons
-								submitDisabled={submitDisabled ? submitDisabled : false}
-								cancelDisabled={cancelDisabled ? cancelDisabled : false}
-								cancelHandler={cancelCalc}
-								submitHandler={handleSubmit}
-								submitText="Save"
-							/>
-						)}
+						<TabContent contextType={contextType} />
+						{!isPublicCalc && <SubmitButton />}
 					</section>
 				</div>
 			)}

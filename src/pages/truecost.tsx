@@ -2,13 +2,17 @@ import React from 'react';
 import Layout from '../components/calc/Layout';
 import SVGBalance from '../components/calc/svgbalance';
 import SVGMoneyBag from '../components/calc/svgmoneybag';
-import TrueCostCalc from '../components/calc/TrueCostCalc';
 import SVGHourGlass from '../components/svghourglass';
 import SVGPay from '../components/svgpay';
 import SVGPiggy from '../components/svgpiggy';
 import { Statistic } from 'antd';
 import SVGChart from '../components/svgchart';
 import { CALC_NAMES } from '../CONSTANTS';
+import Spend from '../components/calc/Spend';
+import Save from '../components/calc/Save';
+import InvestOption from '../components/calc/InvestOption';
+import DDLineChart from '../components/goals/DDLineChart';
+import { TrueCostContext, TrueCostContextProvider } from '../components/calc/TrueCostContext';
 
 export const SPEND = 'Spend';
 export const SAVE = 'Save';
@@ -19,20 +23,20 @@ export default function TrueCost() {
 	return (
 		<Layout
 			tabOptions={[
-				{ label: SPEND, active: true, svg: SVGPay },
-				{ label: SAVE, active: true, svg: SVGPiggy },
-				{ label: INVEST, active: true, svg: SVGMoneyBag }
+				{ label: SPEND, active: true, svg: SVGPay, content: <Spend /> },
+				{ label: SAVE, active: true, svg: SVGPiggy, content: <Save /> },
+				{ label: INVEST, active: true, svg: SVGMoneyBag, content: <InvestOption /> }
 			]}
 			resultTabOptions={[
 				{
 					label: CHART,
-					order: 1,
 					active: true,
-					svg: SVGChart
+					svg: SVGChart,
+					content: <DDLineChart contextType={TrueCostContext} numberOfYears />
 				}
 			]}
 			title={CALC_NAMES.TC}
-			calc={TrueCostCalc}
+			calc={TrueCostContextProvider}
 			assumptions={[ 'adfas', 'asdfsad' ]}
 			features={[ 'fsdgdf', 'fgdssdf' ]}
 			results={[

@@ -1,26 +1,26 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
 import { toCurrency } from '../utils';
-
-interface SpendProps {
-	freq: string;
-	freqHandler: Function;
-	amt: number;
-	amtHandler: Function;
-	currency: string;
-	rangeFactor: number;
-	duration: number;
-	durationHandler: Function;
-	totalCost: number;
-}
+import { TrueCostContext } from './TrueCostContext';
 
 export const SPEND_ONCE = 'Once';
 export const SPEND_MONTHLY = 'Monthly';
 export const SPEND_YEARLY = 'Yearly';
 
-export default function Spend(props: SpendProps) {
+export default function Spend() {
+	const { 
+		currency,
+		rangeFactor,
+		freq,
+		setFreq,
+		amt,
+		setAmt,
+		duration,
+		setDuration,
+		totalCost
+	}: any = useContext(TrueCostContext);
 	const freqOptions = {
 		[SPEND_ONCE]: SPEND_ONCE,
 		[SPEND_MONTHLY]: SPEND_MONTHLY,
@@ -29,27 +29,27 @@ export default function Spend(props: SpendProps) {
 
 	return (
 		<Section title="Enter Spend Details">
-			<SelectInput pre="Spend" value={props.freq} changeHandler={props.freqHandler} options={freqOptions} />
+			<SelectInput pre="Spend" value={freq} changeHandler={setFreq} options={freqOptions} />
 			<NumberInput
 				pre="Amount"
-				value={props.amt}
-				changeHandler={props.amtHandler}
+				value={amt}
+				changeHandler={setAmt}
 				min={0}
 				max={50000}
 				step={100}
-				currency={props.currency}
-				rangeFactor={props.rangeFactor}
+				currency={currency}
+				rangeFactor={rangeFactor}
 			/>
-			{props.freq !== SPEND_ONCE && (
+			{freq !== SPEND_ONCE && (
 				<NumberInput
 					pre="For"
-					value={props.duration}
-					changeHandler={props.durationHandler}
+					value={duration}
+					changeHandler={setDuration}
 					min={0}
-					max={props.freq === SPEND_MONTHLY ? 360 : 30}
+					max={freq === SPEND_MONTHLY ? 360 : 30}
 					step={1}
-					unit={props.freq === SPEND_MONTHLY ? 'Months' : 'Years'}
-					note={`Total ${toCurrency(props.totalCost, props.currency)}`}
+					unit={freq === SPEND_MONTHLY ? 'Months' : 'Years'}
+					note={`Total ${toCurrency(totalCost, currency)}`}
 				/>
 			)}
 		</Section>

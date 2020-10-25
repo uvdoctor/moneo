@@ -1,74 +1,80 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { getCompoundedIncome } from './finance';
 import ItemDisplay from './ItemDisplay';
 import { toCurrency } from '../utils';
 import { getMinRetirementDuration } from '../goals/goalutils';
 import { PLAN_DURATION } from '../../CONSTANTS';
+import { GoalType } from '../../api/goals';
 interface OppCostProps {
-	cfs: Array<number>;
-	currency: string;
-	discountRate: number | Array<number>;
-	startYear?: number;
-	ffGoalEndYear?: number;
-	buyGoal?: boolean;
+	contextType: any;
 	minDuration?: number;
 }
 
-export default function OppCost(props: OppCostProps) {
+export default function OppCost({ contextType, minDuration }: OppCostProps) {
+	const {
+		cfs,
+		currency,
+		dr,
+		rr,
+		startYear,
+		ffGoalEndYear,
+		goal
+	}: any = useContext(contextType);
 	const [ oppCost, setOppCost ] = useState<number>(0);
-	const [ lastYear, setLastYear ] = useState<number>(0);
-	const minDuration = props.minDuration ? props.minDuration : 20;
+	const [lastYear, setLastYear] = useState<number>(0);
+	const discountRate = dr ? dr : rr;
+	const minYears = minDuration ? minDuration : 20;
 
 	const calculateOppCost = () => {
-		if (!props.cfs || props.cfs.length === 0) {
+		if (!cfs || cfs.length === 0) {
 			setOppCost(0);
 			return;
 		}
 		let oppCost = 0;
 		let startIndex = 0;
-		if (props.startYear) startIndex = props.startYear - (new Date().getFullYear() + 1);
-		props.cfs.forEach((cf, index) => {
+		if (startYear) startIndex = startYear - (new Date().getFullYear() + 1);
+		cfs.forEach((cf: number, index: number) => {
 			oppCost += cf;
-			if (index < props.cfs.length - 1 && oppCost < 0) {
+			if (index < cfs.length - 1 && oppCost < 0) {
 				oppCost *=
 					1 +
-					(typeof props.discountRate === 'number'
-						? props.discountRate
-						: props.discountRate[startIndex + index]) /
+					(typeof discountRate === 'number'
+						? discountRate
+						: discountRate[startIndex + index]) /
 						100;
 			}
 		});
-		if (!props.buyGoal) {
-			if (typeof props.discountRate !== 'number') {
-				let year = (props.startYear as number) + props.cfs.length - 1;
+		if (goal.type !== GoalType.B) {
+			if (typeof discountRate !== 'number') {
+				let year = (startYear as number) + cfs.length - 1;
 				for (
-					let i = startIndex + props.cfs.length - 1;
-					i < props.discountRate.length - (getMinRetirementDuration() + 1);
+					let i = startIndex + cfs.length - 1;
+					i < discountRate.length - (getMinRetirementDuration() + 1);
 					i++, year++
 				)
-					if (oppCost < 0) oppCost *= 1 + props.discountRate[i] / 100;
+					if (oppCost < 0) oppCost *= 1 + discountRate[i] / 100;
 				setLastYear(year);
-			} else if (props.cfs.length - 1 < minDuration && oppCost < 0)
-				oppCost = getCompoundedIncome(props.discountRate, oppCost, minDuration - (props.cfs.length - 1));
+			} else if (cfs.length - 1 < minYears && oppCost < 0)
+				oppCost = getCompoundedIncome(discountRate, oppCost, minYears - (cfs.length - 1));
 		}
 		setOppCost(oppCost);
 	};
 
-	useEffect(() => calculateOppCost(), [ props.cfs, props.discountRate ]);
+	useEffect(() => calculateOppCost(), [ cfs, discountRate ]);
 
 	return (
 			<ItemDisplay
 				result={oppCost}
-				currency={props.currency}
-				label={`${props.buyGoal ? 'Buy' : 'Spend'} v/s Invest`}
+				currency={currency}
+				label={`${goal.type === GoalType.B ? 'Buy' : 'Spend'} v/s Invest`}
 				pl
-				info={`You May Have ${toCurrency(Math.abs(oppCost), props.currency)} More ${props.buyGoal
-					? `in ${props.cfs.length - 1} Years`
-					: typeof props.discountRate === 'number'
-						? `in ${props.cfs.length - 1 > minDuration ? props.cfs.length : minDuration} Years`
-						: `when You turn ${lastYear - ((props.ffGoalEndYear as number) - PLAN_DURATION)}`} if You 
+				info={`You May Have ${toCurrency(Math.abs(oppCost), currency)} More ${goal.type === GoalType.B
+					? `in ${cfs.length - 1} Years`
+					: typeof discountRate === 'number'
+						? `in ${cfs.length - 1 > minYears ? cfs.length : minDuration} Years`
+						: `when You turn ${lastYear - ((ffGoalEndYear as number) - PLAN_DURATION)}`} if You 
         ${oppCost < 0 ? 'Invest' : 'Buy'} instead of ${oppCost < 0
-					? props.buyGoal ? 'Buying' : 'Spending'
+					? goal.type === GoalType.B ? 'Buying' : 'Spending'
 					: 'Investing'}.`}
 			/>
 	);

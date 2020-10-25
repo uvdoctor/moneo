@@ -4,36 +4,24 @@ import ItemDisplay from '../calc/ItemDisplay';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import HSwitch from '../HSwitch';
-interface RentComparisonProps {
-	currency: string;
-	rangeFactor: number;
-	rentAmt: number;
-	rentAmtHandler: Function;
-	rentChgPer: number;
-	rentChgPerHandler: Function;
-	taxRate: number;
-	rentTaxBenefit: number;
-	rentTaxBenefitHandler: Function;
-	sellAfter: number;
-	brChartData: Array<any>;
-	analyzeFor: number;
-	analyzeForHandler: Function;
-}
-export default function RentComparison({
-	currency,
-	rangeFactor,
-	rentAmt,
-	rentAmtHandler,
-	rentChgPer,
-	rentChgPerHandler,
-	taxRate,
-	rentTaxBenefit,
-	rentTaxBenefitHandler,
-	sellAfter,
-	brChartData,
-	analyzeFor,
-	analyzeForHandler
-}: RentComparisonProps) {
+import { GoalContext } from './GoalContext';
+
+export default function RentComparison() {
+	const {
+		currency,
+		rangeFactor,
+		rentAmt,
+		setRentAmt,
+		rentChgPer,
+		setRentChgPer,
+		taxRate,
+		rentTaxBenefit,
+		setRentTaxBenefit,
+		sellAfter,
+		brChartData,
+		analyzeFor,
+		setAnalyzeFor
+	}: any = useContext(GoalContext);
 	const { dr, setDR }: any = useContext(CalcContext);
 	const [ rentDiff, setRentDiff ] = useState<number | null>(null);
 
@@ -57,7 +45,7 @@ export default function RentComparison({
 			title="If You Rent Instead of Buying"
 			toggle={
 				taxRate ? (
-					<HSwitch rightText="Claim Tax Deduction" value={rentTaxBenefit} setter={rentTaxBenefitHandler} />
+					<HSwitch rightText="Claim Tax Deduction" value={rentTaxBenefit} setter={setRentTaxBenefit} />
 				) : null
 			}
 		>
@@ -65,7 +53,7 @@ export default function RentComparison({
 				pre="Yearly"
 				post="Rent"
 				value={rentAmt as number}
-				changeHandler={rentAmtHandler}
+				changeHandler={setRentAmt}
 				min={0}
 				max={100000}
 				step={1000}
@@ -77,7 +65,7 @@ export default function RentComparison({
 					pre="Yearly"
 					post="Change"
 					value={rentChgPer as number}
-					changeHandler={rentChgPerHandler}
+					changeHandler={setRentChgPer}
 					min={-10}
 					max={10}
 					step={0.5}
@@ -102,7 +90,7 @@ export default function RentComparison({
 				<NumberInput
 					pre="Analyze from 1 to "
 					value={analyzeFor}
-					changeHandler={analyzeForHandler}
+					changeHandler={setAnalyzeFor}
 					min={10}
 					max={50}
 					step={5}

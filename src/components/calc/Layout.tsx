@@ -4,17 +4,15 @@ import { GoalType } from '../../api/goals';
 import { ROUTES } from '../../CONSTANTS';
 import DDPage from '../DDPage';
 import FFGoal from '../goals/ffgoal';
-import Goal from '../goals/goal';
 import { createNewGoalInput } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
 import { Button, Collapse, Row, Col } from 'antd';
-import { CalcContextProvider } from './CalcContext';
 
 import './Layout.less';
 interface LayoutProps {
 	tabOptions?: Array<any>;
 	resultTabOptions?: Array<any>;
-	calc?: any;
+	calc: any;
 	type?: GoalType;
 	title: string;
 	features: Array<any>;
@@ -87,14 +85,7 @@ export default function Layout(props: LayoutProps) {
 					</Col>
 				</Row>
 			) : (
-				<CalcContextProvider
-					goal={wip}
-					title={props.title}
-					tabOptions={props.tabOptions}
-					resultTabOptions={props.resultTabOptions}
-					type={props.type}
-				>
-					{router.pathname === ROUTES.FI ? (
+					router.pathname === ROUTES.FI ? (
 						<FFGoal
 							mustCFs={[]}
 							tryCFs={[]}
@@ -102,12 +93,12 @@ export default function Layout(props: LayoutProps) {
 							ffResult={ffResult}
 							ffResultHandler={setFFResult}
 						/>
-					) : props.type ? (
-						<Goal ffGoalEndYear={nowYear + 50} />
+						) : props.type ? (
+								<props.calc goal={wip} />
 					) : (
-						<props.calc />
-					)}
-				</CalcContextProvider>
+								<props.calc title={props.title} tabOptions={props.tabOptions}
+									resultTabOptions={props.resultTabOptions} />
+					)
 			)}
 		</DDPage>
 	);

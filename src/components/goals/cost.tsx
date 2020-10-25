@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Section from '../form/section';
 import NumberInput from '../form/numberinput';
 import HSwitch from '../HSwitch';
@@ -6,88 +6,78 @@ import { TargetInput } from '../../api/goals';
 import { createNewTarget } from './goalutils';
 import { toCurrency } from '../utils';
 import { Row, Col } from 'antd';
-interface CostProps {
-	leftNote?: string;
-	footer?: string;
-	leftMax: number;
-	startingCost: number;
-	costChgRate: number;
-	cost: number;
-	manualMode: number;
-	manualTargets?: Array<TargetInput>;
-	currency: string;
-	rangeFactor: number;
-	startYear: number;
-	endYear?: number;
-	baseYear: number;
-	manualTgtMin?: number;
-	manualModeHandler?: Function;
-	manualTargetsHandler?: Function;
-	startingCostHandler: Function;
-	costChgRateHandler: Function;
-}
+import { GoalContext } from './GoalContext';
 
-export default function Cost(props: CostProps) {
+export default function Cost() {
+	const {
+		startingPrice,
+		setStartingPrice,
+		rangeFactor,
+		wipTargets,
+		setWIPTargets,
+		currency,
+		price,
+		priceChgRate,
+		setPriceChgRate,
+		endYear,
+		manualMode,
+		setManualMode,
+		startYear,
+		goal
+	}: any = useContext(GoalContext);
+
 	const changeTargetVal = (val: number, i: number) => {
-		if (!props.manualTargets || !props.manualTargetsHandler) return;
-		props.manualTargets[i].val = val;
-		props.manualTargetsHandler([ ...props.manualTargets ]);
+		if (!wipTargets || !setWIPTargets) return;
+		wipTargets[i].val = val;
+		setWIPTargets([ ...wipTargets ]);
 	};
 
-	const initManualTargets = () => {
-		if (!props.manualTargets || !props.manualTargetsHandler || !props.startYear || !props.endYear) return;
+	const initwipTargets = () => {
+		if (!wipTargets || !setWIPTargets || !startYear || !endYear) return;
 		let targets: Array<TargetInput> = [];
-		for (let year = props.startYear; year <= props.endYear; year++) {
+		for (let year = startYear; year <= endYear; year++) {
 			let existingT = null;
-			if (props.manualTargets.length > 0) {
-				existingT = props.manualTargets.filter((target) => target.year === year)[0] as TargetInput;
+			if (wipTargets.length > 0) {
+				existingT = wipTargets.filter((target: TargetInput) => target.year === year)[0] as TargetInput;
 			}
 			let t = createNewTarget(year, existingT ? existingT.val : 0);
 			targets.push(t);
 		}
-		props.manualTargetsHandler([ ...targets ]);
+		setWIPTargets([ ...targets ]);
 	};
 
 	useEffect(
 		() => {
-			if (props.manualMode > 0) initManualTargets();
+			if (manualMode > 0) initwipTargets();
 		},
-		[ props.manualMode, props.startYear, props.endYear ]
+		[ manualMode, startYear, endYear ]
 	);
 
 	return (
 		<Section
 			title={
-				props.manualMode > 0 ? (
-					`Total Amount is ${toCurrency(props.cost, props.currency)}`
+				manualMode > 0 ? (
+					`Total Amount is ${toCurrency(price, currency)}`
 				) : (
-					`Amount${props.startYear > props.baseYear
-						? ` in ${props.startYear} ~ ${toCurrency(props.cost, props.currency)}`
-						: ''}`
+					`Amount${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`
 				)
 			}
 			toggle={
-				props.manualModeHandler && (
-					<HSwitch
-						rightText={`Custom Payment Plan`}
-						value={props.manualMode}
-						setter={props.manualModeHandler}
-					/>
-				)
+				setManualMode && <HSwitch rightText={`Custom Payment Plan`} value={manualMode} setter={setManualMode} />
 			}
 			manualInput={
-				props.manualTargets && (
+				wipTargets && (
 					<Row align="middle" justify="space-between">
-						{props.manualTargets.map((t, i) => (
+						{wipTargets.map((t: TargetInput, i: number) => (
 							<Col span={24} key={'t' + i} style={{ marginRight: '1rem', marginBottom: '1rem' }}>
 								<label>{`${t.year} `}</label>
 								<NumberInput
 									pre=""
-									currency={props.currency}
-									rangeFactor={props.rangeFactor}
+									currency={currency}
+									rangeFactor={rangeFactor}
 									value={t.val}
 									changeHandler={(val: number) => changeTargetVal(val, i)}
-									min={props.manualTgtMin ? props.manualTgtMin : 0}
+									min={0}
 									max={900000}
 									step={500}
 								/>
@@ -96,33 +86,32 @@ export default function Cost(props: CostProps) {
 					</Row>
 				)
 			}
-			manualMode={props.manualMode}
-			footer={props.footer}
+			manualMode={manualMode}
 			videoSrc={`https://www.youtube.com/watch?v=uYMTsmeZyfU`}
 		>
 			<NumberInput
-				pre={props.startYear > props.baseYear ? 'Amount' : ''}
-				post={props.startYear > props.baseYear ? `in ${props.baseYear}` : ''}
-				currency={props.currency}
-				rangeFactor={props.rangeFactor}
-				value={props.startingCost}
-				changeHandler={props.startingCostHandler}
+				pre={startYear > goal.by ? 'Amount' : ''}
+				post={startYear > goal.by ? `in ${goal.by}` : ''}
+				currency={currency}
+				rangeFactor={rangeFactor}
+				value={startingPrice}
+				changeHandler={setStartingPrice}
 				min={0}
-				max={props.leftMax}
+				max={goal.type === goal.type.B ? 1500000 : 50000}
 				step={500}
-				note={props.leftNote}
+				note={goal.type !== goal.type.D ? 'including taxes & fees' : ''}
 			/>
-			{props.startYear > props.baseYear && (
+			{startYear > goal.by && (
 				<NumberInput
 					pre="Amount"
 					post="Changes"
-					note={`Yearly till ${props.startYear}`}
+					note={`Yearly till ${startYear}`}
 					unit="%"
 					min={-10}
 					max={10}
 					step={0.5}
-					value={props.costChgRate}
-					changeHandler={props.costChgRateHandler}
+					value={priceChgRate}
+					changeHandler={setPriceChgRate}
 				/>
 			)}
 		</Section>

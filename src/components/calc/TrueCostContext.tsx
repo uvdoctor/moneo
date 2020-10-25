@@ -1,33 +1,36 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { INVEST, SAVE, SPEND } from '../../pages/truecost';
-import SelectInput from '../form/selectinput';
-import Input from '../goals/Input';
-import DDLineChart from '../goals/DDLineChart';
-import Result from '../goals/Result';
-import { toCurrency, toReadableNumber } from '../utils';
-import InvestOption from './InvestOption';
+import React, { createContext, useEffect, useState } from 'react';
+import { getRangeFactor, toCurrency, toReadableNumber } from '../utils';
+import { useFullScreenBrowser } from 'react-browser-hooks';
+import CalcHeader from './CalcHeader';
+import { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
+import { CalcContextProviderProps } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
-import Save from './Save';
-import Spend, { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
-import { CalcContext } from './CalcContext';
+import SelectInput from '../form/selectinput';
+import CalcTemplate from './CalcTemplate';
+
+const TrueCostContext = createContext({});
 
 export const TIME_COST_HOURS = 'Hours';
 export const TIME_COST_WEEKS = 'Weeks';
 export const TIME_COST_YEARS = 'Years';
 
-export default function TrueCostCalc() {
-	const {
-		currency,
-		rangeFactor,
-		allInputDone,
-		showTab,
-		showResultTab,
-		cfs,
-		setCFs,
-		dr,
-		setDR
-	}: any = useContext(CalcContext);
-	const CHART = 'Yearly Cash Flows If Invested';
+function TrueCostContextProvider({
+	title,
+	tabOptions,
+	resultTabOptions,
+	defaultCurrency = 'USD'
+}: CalcContextProviderProps) {
+	const fsb = useFullScreenBrowser();
+	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions);
+	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions);
+	const [ currency, setCurrency ] = useState<string>(defaultCurrency);
+	const [ rangeFactor, setRangeFactor ] = useState<number>(getRangeFactor(currency));
+	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
+	const [ inputTabIndex, setInputTabIndex ] = useState<string>(inputTabs[0].label);
+	const [ dr, setDR ] = useState<number>(5);
+	const [ cfs, setCFs ] = useState<Array<number>>([]);
+	const [ resultTabIndex, setResultTabIndex ] = useState<number>(resultTabs[0].label);
+	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(true);
 	const [ amt, setAmt ] = useState<number>(0);
 	const [ freq, setFreq ] = useState<string>(SPEND_ONCE);
 	const [ duration, setDuration ] = useState<number>(0);
@@ -41,6 +44,11 @@ export default function TrueCostCalc() {
 	const [ timeCostUnit, setTimeCostUnit ] = useState<string>(TIME_COST_HOURS);
 	const [ totalCost, setTotalCost ] = useState<number>(0);
 	const [ cfsWithOppCost, setCFsWithOppCost ] = useState<Array<number>>([]);
+
+	const changeCurrency = (curr: string) => {
+		setRangeFactor(Math.round(getRangeFactor(curr) / rangeFactor));
+		setCurrency(curr);
+	};
 
 	const timeOptions = {
 		[TIME_COST_HOURS]: TIME_COST_HOURS,
@@ -154,80 +162,90 @@ export default function TrueCostCalc() {
 	);
 
 	return (
-		<Fragment>
-			<Input>
-				{showTab === SPEND && (
-					<Spend
+		<TrueCostContext.Provider
+			value={{
+				currency,
+				changeCurrency,
+				rangeFactor,
+				setRangeFactor,
+				allInputDone,
+				setAllInputDone,
+				inputTabIndex,
+				setInputTabIndex,
+				title,
+				inputTabs,
+				setInputTabs,
+				resultTabs,
+				setResultTabs,
+				dr,
+				setDR,
+				cfs,
+				resultTabIndex,
+				setResultTabIndex,
+				fsb,
+				showOptionsForm,
+				setOptionsVisibility,
+				freq,
+				setFreq,
+				duration,
+				setDuration,
+				amt,
+				paidWeeks,
+				setAmt,
+				setPaidWeeks,
+				hoursPerWeek,
+				setHoursPerWeek,
+				savings,
+				setSavings,
+				years,
+				setYears,
+				timeCost,
+				setTimeCost,
+				timeCostDisplay,
+				setTimeCostDisplay,
+				timeCostUnit,
+				setTimeCostUnit,
+				savingsPerHr,
+				setSavingsPerHr,
+				totalCost,
+				setTotalCost,
+				cfsWithOppCost
+			}}
+		>
+			{!allInputDone && <CalcHeader />}
+			<CalcTemplate
+				contextType={TrueCostContext}
+				results={[
+					<ItemDisplay
+						label="Time Cost"
+						result={-timeCostDisplay}
+						pl
+						info={`Based on your Savings from Work Income, You May have to Work ${toReadableNumber(
+							timeCost
+						)} ${timeCostUnit} to Save ${toCurrency(totalCost, currency)}`}
+						unit={
+							<SelectInput
+								pre=""
+								options={timeOptions}
+								value={timeCostUnit}
+								changeHandler={setTimeCostUnit}
+							/>
+						}
+					/>,
+					<ItemDisplay
+						label="Spend v/s Invest"
+						info={`You May have ${toCurrency(
+							Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
+							currency
+						)} More in ${years} Years if You Invest instead of Spending.`}
+						result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
 						currency={currency}
-						rangeFactor={rangeFactor}
-						freq={freq}
-						freqHandler={setFreq}
-						amt={amt}
-						amtHandler={setAmt}
-						duration={duration}
-						durationHandler={setDuration}
-						totalCost={totalCost}
+						pl
 					/>
-				)}
-
-				{showTab === SAVE && (
-					<Save
-						currency={currency}
-						rangeFactor={rangeFactor}
-						savings={savings}
-						savingsHandler={setSavings}
-						paidWeeks={paidWeeks}
-						paidWeeksHandler={setPaidWeeks}
-						hoursPerWeek={hoursPerWeek}
-						hoursPerWeekHandler={setHoursPerWeek}
-					/>
-				)}
-
-				{showTab === INVEST && (
-					<InvestOption
-						dr={dr}
-						drHandler={setDR}
-						years={years}
-						yearsHandler={setYears}
-						durationInYears={freq === SPEND_ONCE ? 1 : freq === SPEND_MONTHLY ? duration / 12 : duration}
-					/>
-				)}
-			</Input>
-			{allInputDone && (
-				<Result
-					results={[
-								<ItemDisplay
-									label="Time Cost"
-									result={-timeCostDisplay}
-									pl
-									info={`Based on your Savings from Work Income, You May have to Work ${toReadableNumber(
-										timeCost
-									)} ${timeCostUnit} to Save ${toCurrency(totalCost, currency)}`}
-									unit={
-										<SelectInput
-											pre=""
-											options={timeOptions}
-											value={timeCostUnit}
-											changeHandler={setTimeCostUnit}
-										/>
-									}
-								/>,
-								<ItemDisplay
-									label="Spend v/s Invest"
-									info={`You May have ${toCurrency(
-										Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
-										currency
-									)} More in ${years} Years if You Invest instead of Spending.`}
-									result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
-									currency={currency}
-									pl
-								/>]}
-				>
-					{showResultTab === CHART && (
-						<DDLineChart cfs={cfsWithOppCost} currency={currency} startYear={1} title="Number of Years" />
-					)}
-				</Result>
-			)}
-		</Fragment>
+				]}
+			/>
+		</TrueCostContext.Provider>
 	);
 }
+
+export { TrueCostContext, TrueCostContextProvider };

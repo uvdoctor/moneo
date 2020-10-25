@@ -1,68 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Section from '../form/section';
 import RadialInput from '../form/radialinput';
 import SelectInput from '../form/selectinput';
 import { toStringArr, toCurrency, initYearOptions } from '../utils';
 import { calculateTotalAmt } from './cfutils';
 import { COLORS } from '../../CONSTANTS';
+import { GoalContext } from './GoalContext';
 interface AnnualAmtProps {
-	startYear: number;
-	percentage: number;
-	percentageHandler: Function;
-	annualSY: number;
-	annualSYHandler: Function;
-	currency: string;
-	title: string;
-	price: number;
-	duration: number;
-	chgRate: number;
-	footer?: string;
-	colorTo?: boolean;
+	income?: boolean;
 }
 
-export default function AnnualAmt(props: AnnualAmtProps) {
-	const [ syOptions, setSYOptions ] = useState<object>(initYearOptions(props.startYear, 10));
+export default function AnnualAmt({ income }: AnnualAmtProps) {
+	const {
+		currency,
+		startYear,
+		price,
+		duration,
+		assetChgRate,
+		amCostPer,
+		aiPer,
+		setAMCostPer,
+		setAIPer,
+		amStartYear,
+		aiStartYear,
+		setAMStartYear,
+		setAIStartYear
+	}: any = useContext(GoalContext);
+	const [ syOptions, setSYOptions ] = useState<object>(initYearOptions(startYear, 10));
 	const [ totalAmt, setTotalAmt ] = useState<number>(0);
-
-	useEffect(() => setSYOptions(initYearOptions(props.startYear, 10)), [ props.startYear ]);
+	const title = income ? 'Yearly Income through Rent, Dividend, etc' : 'Yearly Fixes, Insurance, etc costs';
+	const footer = `${income ? 'Exclude' : 'Include'} taxes & fees`;
+	useEffect(() => setSYOptions(initYearOptions(startYear, 10)), [ startYear ]);
 
 	useEffect(
 		() =>
 			setTotalAmt(
 				calculateTotalAmt(
-					props.startYear,
-					props.percentage,
-					props.annualSY,
-					props.price,
-					props.chgRate,
-					props.duration
+					startYear,
+					income ? aiPer : amCostPer,
+					income ? aiStartYear : amStartYear,
+					price,
+					assetChgRate,
+					duration
 				)
 			),
-		[ props.startYear, props.percentage, props.annualSY, props.price, props.chgRate, props.duration ]
+		[ startYear, aiPer, amCostPer, aiStartYear, amStartYear, price, assetChgRate, duration ]
 	);
 
 	return (
-		<Section title={props.title} footer={props.footer}>
+		<Section title={title} footer={footer}>
 			<RadialInput
-				colorTo={props.colorTo ? COLORS.RED : COLORS.GREEN}
+				colorTo={!income ? COLORS.RED : COLORS.GREEN}
 				data={toStringArr(0, 10, 0.2)}
-				changeHandler={props.percentageHandler}
+				changeHandler={income ? setAIPer : setAMCostPer}
 				width={120}
 				unit="%"
 				labelBottom={true}
 				label="of Amount"
-				post={`Total ${toCurrency(totalAmt, props.currency)}`}
-				value={props.percentage}
+				post={`Total ${toCurrency(totalAmt, currency)}`}
+				value={income ? aiPer : amCostPer}
 				step={0.2}
 			/>
-			{props.percentage && (
-				<SelectInput
-					pre="From Year"
-					post="Onwards"
-					options={syOptions}
-					value={props.annualSY}
-					changeHandler={props.annualSYHandler}
-				/>
+			{income ? (
+				aiPer
+			) : (
+				amCostPer && (
+					<SelectInput
+						pre="From Year"
+						post="Onwards"
+						options={syOptions}
+						value={income ? aiStartYear : amStartYear}
+						changeHandler={income ? setAIStartYear : setAMStartYear}
+					/>
+				)
 			)}
 		</Section>
 	);

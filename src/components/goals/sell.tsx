@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ItemDisplay from '../calc/ItemDisplay';
 import SVGMoneyBag from '../calc/svgmoneybag';
 import Section from '../form/section';
@@ -8,75 +8,75 @@ import { toStringArr } from '../utils';
 import { calculateSellPrice, calculateXIRR } from './cfutils';
 import { getDuration } from './goalutils';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-interface SellProps {
-	price: number;
-	startYear: number;
-	endYear: number;
-	sellAfter: number;
-	sellPrice: number;
-	sellPriceHandler: Function;
-	sellAfterHandler: Function;
-	currency: string;
-	assetChgRate: number;
-	assetChgRateHandler: Function;
-	cfs: Array<number>;
-}
+import { GoalContext } from './GoalContext';
 
-export default function Sell(props: SellProps) {
+export default function Sell() {
+	const {
+		price,
+		sellPrice,
+		setSellPrice,
+		assetChgRate,
+		setAssetChgRate,
+		startYear,
+		endYear,
+		sellAfter,
+		setSellAfter,
+		currency,
+		cfs
+	}: any = useContext(GoalContext);
 	const [ annualReturnPer, setAnnualReturnPer ] = useState<number | null>(0);
 
 	useEffect(
 		() => {
-			let duration = getDuration(props.sellAfter, props.startYear, props.endYear, 0, null, null, null);
-			let sellPrice = calculateSellPrice(props.price, props.assetChgRate, duration);
-			props.sellPriceHandler(sellPrice);
-			setAnnualReturnPer(calculateXIRR(props.cfs, props.startYear, props.price, props.sellAfter, sellPrice));
+			let duration = getDuration(sellAfter, startYear, endYear, 0, null, null, null);
+			let sellPrice = calculateSellPrice(price, assetChgRate, duration);
+			setSellPrice(sellPrice);
+			setAnnualReturnPer(calculateXIRR(cfs, startYear, price, sellAfter, sellPrice));
 		},
-		[ props.cfs ]
+		[ cfs ]
 	);
 
 	return (
-		<Section
-			title="Sell After" footer="Sell Price above excludes taxes & fees.">
-				<RadialInput
-					info="Years after which You Plan to Sell this Purchase."
-					label="Years"
-					labelBottom={true}
-					data={toStringArr(3, 30)}
-					value={props.sellAfter}
-					step={1}
-					changeHandler={props.sellAfterHandler}
-				/>
-				<NumberInput
-					info="Rate at which Price may change Yearly."
-					pre="Sell Price"
-					post="Changes"
+		<Section title="Sell After" footer="Sell Price above excludes taxes & fees.">
+			<RadialInput
+				info="Years after which You Plan to Sell this Purchase."
+				label="Years"
+				labelBottom={true}
+				data={toStringArr(3, 30)}
+				value={sellAfter}
+				step={1}
+				changeHandler={setSellAfter}
+			/>
+			<NumberInput
+				info="Rate at which Price may change Yearly."
+				pre="Sell Price"
+				post="Changes"
+				unit="%"
+				note="Yearly"
+				min={-20}
+				max={20}
+				step={0.5}
+				value={assetChgRate}
+				changeHandler={setAssetChgRate}
+			/>
+			<ItemDisplay
+				svg={<SVGMoneyBag disabled={false} selected />}
+				label="You May Get"
+				footer={`In ${startYear + sellAfter}`}
+				result={Math.round(sellPrice)}
+				currency={currency}
+			/>
+			{annualReturnPer && (
+				<ItemDisplay
+					svg={annualReturnPer > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+					label={`You May ${annualReturnPer > 0 ? 'Gain' : 'Lose'}`}
+					result={annualReturnPer}
+					decimal={2}
 					unit="%"
-					note="Yearly"
-					min={-20}
-					max={20}
-					step={0.5}
-					value={props.assetChgRate}
-					changeHandler={props.assetChgRateHandler}
+					footer="Yearly"
+					pl
 				/>
-					<ItemDisplay
-						svg={<SVGMoneyBag disabled={false} selected />}
-						label="You May Get"
-						footer={`In ${props.startYear + props.sellAfter}`}
-						result={Math.round(props.sellPrice)}
-						currency={props.currency}
-					/>
-					{annualReturnPer && (
-						<ItemDisplay
-							svg={annualReturnPer > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-							label={`You May ${annualReturnPer > 0 ? 'Gain' : 'Lose'}`}
-							result={annualReturnPer}
-							decimal={2}
-							unit="%"
-							footer="Yearly"
-							pl
-						/>
-					)}
+			)}
 		</Section>
 	);
 }

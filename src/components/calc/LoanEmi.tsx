@@ -1,73 +1,85 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import NumberInput from '../form/numberinput';
 import { getEmi, getTotalInt } from './finance';
 import { toCurrency, toStringArr, initYearOptions } from '../utils';
 import SelectInput from '../form/selectinput';
 import RadialInput from '../form/radialinput';
 import Section from '../form/section';
-import { getLoanPaidForMonths, adjustAccruedInterest, createEduLoanDPWithSICFs } from '../goals/cfutils';
-import { GoalType } from '../../api/goals';
+import {
+	getLoanPaidForMonths,
+	adjustAccruedInterest,
+	createEduLoanDPWithSICFs,
+	getLoanBorrowAmt
+} from '../goals/cfutils';
 import ItemDisplay from './ItemDisplay';
 import { COLORS } from '../../CONSTANTS';
 import { isTaxCreditEligible } from '../goals/goalutils';
 import HSwitch from '../HSwitch';
 import { Collapse } from 'antd';
-interface LoanEmiProps {
-	price: number;
-	priceChgRate: number;
-	currency: string;
-	rangeFactor: number;
-	startYear: number;
-	endYear: number;
-	duration: number;
-	repaymentSY: number;
-	loanYears: number;
-	loanAnnualInt: number;
-	loanPer: number;
-	loanSIPayPer: number | undefined | null;
-	loanSICapitalize: number | undefined | null;
-	loanGracePeriod: number | undefined | null;
-	loanBorrowAmt: number;
-	taxBenefitInt: number;
-	maxTaxDeductionInt: number;
-	taxRate: number;
-	iTaxBenefit: number;
-	goalType: GoalType;
-	repaymentSYHandler: Function;
-	loanMonthsHandler: Function;
-	loanPerHandler: Function;
-	loanSIPayPerHandler: Function;
-	loanSICapitalizeHandler: Function;
-	loanGracePeriodHandler: Function;
-	loanAnnualIntHandler: Function;
-	taxBenefitIntHandler: Function;
-	maxTaxDeductionIntHandler: Function;
-}
+import { GoalContext } from '../goals/GoalContext';
 
-export default function LoanEmi(props: LoanEmiProps) {
+export default function LoanEmi() {
+	const {
+		price,
+		priceChgRate,
+		currency,
+		startYear,
+		duration,
+		loanRepaymentSY,
+		endYear,
+		rangeFactor,
+		loanYears,
+		loanIntRate,
+		loanPer,
+		goal,
+		loanSIPayPer,
+		loanSICapitalize,
+		loanGracePeriod,
+		manualMode,
+		setLoanIntRate,
+		setLoanPer,
+		setLoanSIPayPer,
+		setLoanSICapitalize,
+		setLoanYears,
+		setLoanloanRepaymentSY,
+		taxBenefitInt,
+		setTaxBenefitInt,
+		taxRate,
+		maxTaxDeductionInt,
+		setMaxTaxDeductionInt,
+		totalITaxBenefit
+	}: any = useContext(GoalContext);
+	const loanBorrowAmt = getLoanBorrowAmt(
+		price,
+		goal.type,
+		manualMode,
+		priceChgRate,
+		endYear - startYear,
+		loanPer as number
+	);
 	const [ totalIntAmt, setTotalIntAmt ] = useState<number>(0);
 	const [ ryOptions, setRYOptions ] = useState(
-		initYearOptions(props.goalType === GoalType.E ? props.endYear + 1 : props.startYear, 10)
+		initYearOptions(goal.type === goal.type.E ? endYear + 1 : startYear, 10)
 	);
 	const [ emi, setEMI ] = useState<number>(0);
 	const [ simpleInts, setSimpleInts ] = useState<Array<number>>([]);
 	const [ remIntAmt, setRemIntAmt ] = useState<number>(0);
-	const loanLimitPer = props.goalType === GoalType.E ? 100 : 80;
+	const loanLimitPer = goal.type === goal.type.E ? 100 : 80;
 	const { Panel } = Collapse;
 
 	const calculateEmi = () => {
-		let borrowAmt = props.loanBorrowAmt;
+		let borrowAmt = loanBorrowAmt;
 		let simpleInts: Array<number> = [];
-		if (props.goalType === GoalType.E) {
+		if (goal.type === goal.type.E) {
 			let result = createEduLoanDPWithSICFs(
-				props.price,
-				props.priceChgRate,
-				props.loanPer,
-				props.startYear,
-				props.endYear,
-				props.loanAnnualInt,
-				props.loanSIPayPer as number,
-				(props.loanSICapitalize as number) < 1
+				price,
+				priceChgRate,
+				loanPer,
+				startYear,
+				endYear,
+				loanIntRate,
+				loanSIPayPer as number,
+				(loanSICapitalize as number) < 1
 			);
 			borrowAmt = result.borrowAmt;
 			simpleInts = result.ints;
@@ -76,41 +88,57 @@ export default function LoanEmi(props: LoanEmiProps) {
 		}
 		borrowAmt = adjustAccruedInterest(
 			borrowAmt,
-			props.goalType === GoalType.E ? props.endYear + 1 : props.startYear,
-			props.repaymentSY,
-			props.loanAnnualInt
+			goal.type === goal.type.E ? endYear + 1 : startYear,
+			loanRepaymentSY,
+			loanIntRate
 		);
-		let loanPaidForMonths = getLoanPaidForMonths(
-			props.startYear + props.duration - 1,
-			props.repaymentSY,
-			props.loanYears
-		);
-		let emi = getEmi(borrowAmt, props.loanAnnualInt, props.loanYears * 12) as number;
+		let loanPaidForMonths = getLoanPaidForMonths(startYear + duration - 1, loanRepaymentSY, loanYears);
+		let emi = getEmi(borrowAmt, loanIntRate, loanYears * 12) as number;
 		setEMI(Math.round(emi));
 		let totalSimpleIntAmt = 0;
 		simpleInts.forEach((int) => (totalSimpleIntAmt += int));
 		let totalIntAmt = 0;
-		if (props.goalType !== GoalType.B) {
-			totalIntAmt = emi * loanPaidForMonths + totalSimpleIntAmt + remIntAmt - props.loanBorrowAmt;
-		} else totalIntAmt = getTotalInt(borrowAmt, emi, props.loanAnnualInt, loanPaidForMonths);
+		if (goal.type !== goal.type.B) {
+			totalIntAmt = emi * loanPaidForMonths + totalSimpleIntAmt + remIntAmt - loanBorrowAmt;
+		} else totalIntAmt = getTotalInt(borrowAmt, emi, loanIntRate, loanPaidForMonths);
 		setTotalIntAmt(Math.round(totalIntAmt));
 	};
 
-	useEffect(() => calculateEmi(), [ props ]);
+	useEffect(() => calculateEmi(), [
+		price,
+		priceChgRate,
+		currency,
+		startYear,
+		duration,
+		loanRepaymentSY,
+		endYear,
+		rangeFactor,
+		loanYears,
+		loanIntRate,
+		loanPer,
+		goal,
+		loanSIPayPer,
+		loanSICapitalize,
+		loanGracePeriod,
+		manualMode,
+		taxBenefitInt,
+		taxRate,
+		maxTaxDeductionInt,
+		totalITaxBenefit
+	]);
 
 	useEffect(
 		() => {
-			setRYOptions(initYearOptions(props.goalType === GoalType.E ? props.endYear + 1 : props.startYear, 10));
+			setRYOptions(initYearOptions(goal.type === goal.type.E ? endYear + 1 : startYear, 10));
 		},
-		[ props.startYear, props.endYear ]
+		[ startYear, endYear ]
 	);
 
 	useEffect(
 		() => {
-			if (props.goalType === GoalType.E && props.taxRate && props.taxBenefitInt < 1)
-				props.taxBenefitIntHandler(1);
+			if (goal.type === goal.type.E && taxRate && taxBenefitInt < 1) setTaxBenefitInt(1);
 		},
-		[ props.taxRate ]
+		[ taxRate ]
 	);
 
 	return (
@@ -118,50 +146,47 @@ export default function LoanEmi(props: LoanEmiProps) {
 			title="Loan Details"
 			videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
 			toggle={
-				!isTaxCreditEligible(props.goalType) && props.taxRate ? (
-					<HSwitch
-						rightText="Claim Interest Tax Deduction"
-						value={props.taxBenefitInt}
-						setter={props.taxBenefitIntHandler}
-					/>
+				!isTaxCreditEligible(goal.type) && taxRate ? (
+					<HSwitch rightText="Claim Interest Tax Deduction" value={taxBenefitInt} setter={setTaxBenefitInt} />
 				) : (
 					<div />
 				)
-			}>
-				<RadialInput
-					width={120}
-					unit="%"
-					data={toStringArr(0, loanLimitPer, 5)}
-					value={props.loanPer}
-					changeHandler={props.loanPerHandler}
-					step={5}
-					labelBottom={true}
-					label="of Amount"
-					pre="Principal"
-					post={`${toCurrency(props.loanBorrowAmt, props.currency)}`}
+			}
+		>
+			<RadialInput
+				width={120}
+				unit="%"
+				data={toStringArr(0, loanLimitPer, 5)}
+				value={loanPer}
+				changeHandler={setLoanPer}
+				step={5}
+				labelBottom={true}
+				label="of Amount"
+				pre="Principal"
+				post={`${toCurrency(loanBorrowAmt, currency)}`}
+			/>
+			{loanBorrowAmt && (
+				<SelectInput
+					options={ryOptions}
+					value={loanRepaymentSY}
+					pre="Repay From"
+					post="Onwards"
+					changeHandler={(year: string) => setLoanloanRepaymentSY(parseInt(year))}
 				/>
-			{
-				props.loanBorrowAmt && (
-					<SelectInput
-						options={ryOptions}
-						value={props.repaymentSY}
-						pre="Repay From"
-						post="Onwards"
-						changeHandler={(year: string) => props.repaymentSYHandler(parseInt(year))}
-					/>)}
-			{props.loanBorrowAmt &&
+			)}
+			{loanBorrowAmt && (
 				<NumberInput
 					pre="Term"
 					unit="years"
-					note={`EMI ${toCurrency(emi, props.currency)}`}
-					value={props.loanYears}
-					changeHandler={props.loanMonthsHandler}
+					note={`EMI ${toCurrency(emi, currency)}`}
+					value={loanYears}
+					changeHandler={setLoanYears}
 					min={0.5}
 					max={30}
 					step={0.5}
 				/>
-			}
-			{props.loanBorrowAmt && (
+			)}
+			{loanBorrowAmt && (
 				<NumberInput
 					pre="Yearly"
 					post="Interest"
@@ -218,27 +243,26 @@ export default function LoanEmi(props: LoanEmiProps) {
 						<ItemDisplay
 							label="Total Interest"
 							result={totalIntAmt}
-							currency={props.currency}
-							footer={`Over ${getLoanPaidForMonths(
-								props.startYear + props.duration - 1,
-								props.repaymentSY,
-								props.loanYears
-							) / 12} Years`}
+							currency={currency}
+							footer={`Over ${getLoanPaidForMonths(startYear + duration - 1, loanRepaymentSY, loanYears) /
+								12} Years`}
 						/>
 					}
-					value={props.loanAnnualInt}
-					changeHandler={props.loanAnnualIntHandler}
+					value={loanIntRate}
+					changeHandler={setLoanIntRate}
 					min={0.0}
 					max={25.0}
 					step={0.1}
-				/>)}
-			{props.loanBorrowAmt && props.goalType === GoalType.E && (
+				/>
+			)}
+			{loanBorrowAmt &&
+			goal.type === goal.type.E && (
 				<RadialInput
 					width={120}
 					unit="%"
 					data={toStringArr(0, 100, 5)}
-					value={props.loanSIPayPer as number}
-					changeHandler={props.loanSIPayPerHandler}
+					value={loanSIPayPer as number}
+					changeHandler={setLoanSIPayPer}
 					step={5}
 					labelBottom
 					colorFrom={COLORS.RED}
@@ -246,54 +270,54 @@ export default function LoanEmi(props: LoanEmiProps) {
 					pre="Pay While Studying"
 					label="of Interest"
 					post={
-						!!props.loanSIPayPer && (
-							<Collapse defaultActiveKey={['0']} ghost>
+						!!loanSIPayPer && (
+							<Collapse defaultActiveKey={[ '0' ]} ghost>
 								<Panel key="1" header="Interest Schedule">
 									{simpleInts.map((int, i) => (
 										<p key={'int' + i}>
-											Monthly {toCurrency(Math.round(int / 12), props.currency)}{' '}
-															in {props.startYear + i}
+											Monthly {toCurrency(Math.round(int / 12), currency)} in {startYear + i}
 										</p>
 									))}
 								</Panel>
 							</Collapse>
 						)
 					}
-				/>)}
-								{props.loanBorrowAmt && props.goalType === GoalType.E && !Number.isNaN(props.loanSIPayPer) && //@ts-ignore
-								props.loanSIPayPer < 100 && (
-										<HSwitch
-											rightText={`Pay ${toCurrency(
-												remIntAmt,
-												props.currency
-											)} in ${props.endYear + 1}`}
-											value={props.loanSICapitalize as number}
-											setter={props.loanSICapitalizeHandler}
-										/>
-								)}
-						{props.loanBorrowAmt && props.taxRate &&
-						props.taxBenefitInt &&
-						!isTaxCreditEligible(props.goalType) && (
-							<NumberInput
-								pre="Max Interest"
-								post="Deduction"
-								rangeFactor={props.rangeFactor}
-								value={props.maxTaxDeductionInt}
-								changeHandler={props.maxTaxDeductionIntHandler}
-								currency={props.currency}
-								min={0}
-								max={30000}
-								step={1000}
-								note={
-									<ItemDisplay
-										label="Total Interest Tax Benefit"
-										result={props.iTaxBenefit}
-										currency={props.currency}
-										footer={`Over ${props.duration} Years`}
-									/>
-								}
-							/>
-						)}
+				/>
+			)}
+			{loanBorrowAmt &&
+			goal.type === goal.type.E &&
+			!Number.isNaN(loanSIPayPer) && //@ts-ignore
+			loanSIPayPer < 100 && (
+				<HSwitch
+					rightText={`Pay ${toCurrency(remIntAmt, currency)} in ${endYear + 1}`}
+					value={loanSICapitalize as number}
+					setter={setLoanSICapitalize}
+				/>
+			)}
+			{loanBorrowAmt &&
+			taxRate &&
+			taxBenefitInt &&
+			!isTaxCreditEligible(goal.type) && (
+				<NumberInput
+					pre="Max Interest"
+					post="Deduction"
+					rangeFactor={rangeFactor}
+					value={maxTaxDeductionInt}
+					changeHandler={setMaxTaxDeductionInt}
+					currency={currency}
+					min={0}
+					max={30000}
+					step={1000}
+					note={
+						<ItemDisplay
+							label="Total Interest Tax Benefit"
+							result={totalITaxBenefit}
+							currency={currency}
+							footer={`Over ${duration} Years`}
+						/>
+					}
+				/>
+			)}
 		</Section>
 	);
 }

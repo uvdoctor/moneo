@@ -1,30 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
+import { CONTEXT_TC } from '../../CONSTANTS';
 
 interface DDLineChartProps {
-	cfs: Array<number>;
-	startYear: number;
-	title?: string;
-	currency: string;
+	contextType: any;
+	numberOfYears?: boolean;
 }
 
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
 
-export default function DDLineChart(props: DDLineChartProps) {
+export default function DDLineChart({ contextType, numberOfYears }: DDLineChartProps) {
+	const {
+		startYear,
+		currency,
+		cfs,
+		cfsWithOppCost
+	}: any = useContext(contextType);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	useEffect(
 		() => {
 			let data: Array<any> = [];
-			for (let i = 0; i < props.cfs.length; i++)
+			let startVal = numberOfYears || !startYear ? 1 : startYear;
+			let cashFlows = contextType === CONTEXT_TC && cfsWithOppCost && cfsWithOppCost.length > 0 ? cfsWithOppCost : cfs; 
+			for (let i = 0; i < cashFlows.length; i++)
 				data.push({
-					year: props.startYear + i,
-					value: props.cfs[i]
+					year: startVal + i,
+					value: cashFlows[i]
 				});
 			setData([ ...data ]);
 		},
-		[ props.cfs, props.startYear ]
+		[ cfs ]
 	);
 
 	return (
@@ -33,8 +40,8 @@ export default function DDLineChart(props: DDLineChartProps) {
 			xField="year"
 			yField="value"
 			yAxis={getCommonYAxis()}
-			xAxis={getCommonXAxis(props.title ? props.title : 'Year')}
-			meta={getCommonMeta(props.currency)}
+			xAxis={getCommonXAxis(numberOfYears ? 'Number of Years' : 'Year')}
+			meta={getCommonMeta(currency)}
 			point={{ visible: true }}
 		/>
 	);
