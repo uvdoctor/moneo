@@ -1,8 +1,9 @@
 import React, { Fragment, useContext } from 'react';
 import { Button, Steps, Space, Row, Col } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import SubmitButton from '../form/SubmitButton';
 import TabContent from './TabContent';
+import { SaveOutlined } from '@ant-design/icons';
+
 interface InputProps {
 	contextType: any;
 }
@@ -15,7 +16,10 @@ export default function Input({ contextType }: InputProps) {
 		allInputDone,
 		setAllInputDone,
 		showOptionsForm,
-		setOptionsVisibility
+		setOptionsVisibility,
+		isPublicCalc,
+		handleSubmit,
+		disableSubmit
 	}: any = useContext(contextType);
 	const { Step } = Steps;
 
@@ -48,7 +52,7 @@ export default function Input({ contextType }: InputProps) {
 					</Col>
 					<Col>
 						<Row justify="center" style={{ background: 'white', margin: '1rem', maxWidth: '600px' }}>
-							<Col style={{margin: '1rem'}}>
+							<Col style={{ margin: '1rem' }}>
 								<TabContent contextType={contextType} />
 							</Col>
 						</Row>
@@ -64,9 +68,7 @@ export default function Input({ contextType }: InputProps) {
 								</Button>
 							)}
 							{inputTabIndex === inputTabs.length - 1 && (
-								<Button
-									type="primary"
-									onClick={() => setAllInputDone(true)}>
+								<Button type="primary" onClick={() => setAllInputDone(true)}>
 									Done
 								</Button>
 							)}
@@ -104,7 +106,19 @@ export default function Input({ contextType }: InputProps) {
 							<CloseOutlined />
 						</Button>
 						<TabContent contextType={contextType} />
-						<SubmitButton />
+						{!isPublicCalc && handleSubmit ? (
+							<Row justify="center">
+								<Button
+									type="primary"
+									onClick={() => handleSubmit()}
+									icon={<SaveOutlined />}
+									disabled={disableSubmit}
+									loading={disableSubmit}
+								>
+									Save
+								</Button>
+							</Row>
+						) : null}
 					</section>
 				</div>
 			)}
