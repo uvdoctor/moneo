@@ -1,7 +1,5 @@
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { GoalType } from '../../api/goals';
-import { ROUTES } from '../../CONSTANTS';
 import DDPage from '../DDPage';
 import FFGoal from '../goals/ffgoal';
 import { createNewGoalInput } from '../goals/goalutils';
@@ -25,7 +23,6 @@ interface LayoutProps {
 }
 
 export default function Layout(props: LayoutProps) {
-	const router = useRouter();
 	const { Panel } = Collapse;
 	const [ ffResult, setFFResult ] = useState<any>({});
 	const [ wip, setWIP ] = useState<any | null>(null);
@@ -48,7 +45,7 @@ export default function Layout(props: LayoutProps) {
 		let g: any = null;
 		let defaultCurrency = 'USD';
 		if (props.type) g = createNewGoalInput(props.type, defaultCurrency);
-		else g = {ccy: defaultCurrency};
+		else g = { ccy: defaultCurrency };
 		g.name = props.title + ' Calculator';
 		gtag.event({
 			category: 'Calculator',
@@ -91,12 +88,8 @@ export default function Layout(props: LayoutProps) {
 					</Col>
 				</Row>
 			) : (
-				<CalcContextProvider
-					goal={wip}
-					tabOptions={props.tabOptions}
-					resultTabOptions={props.resultTabOptions}
-				>
-					{router.pathname === ROUTES.FI ? (
+				<CalcContextProvider goal={wip} tabOptions={props.tabOptions} resultTabOptions={props.resultTabOptions}>
+					{props.type ? props.type === GoalType.FF ? (
 						<FFGoal
 							mustCFs={[]}
 							tryCFs={[]}
@@ -104,7 +97,7 @@ export default function Layout(props: LayoutProps) {
 							ffResult={ffResult}
 							ffResultHandler={setFFResult}
 						/>
-					) : props.type ? (
+					) : (
 						<GoalContextProvider>
 							<GoalContent />
 						</GoalContextProvider>

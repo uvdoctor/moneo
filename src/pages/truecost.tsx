@@ -12,7 +12,7 @@ import Spend from '../components/calc/Spend';
 import Save from '../components/calc/Save';
 import InvestOption from '../components/calc/InvestOption';
 import DDLineChart from '../components/goals/DDLineChart';
-import { TrueCostContext, TrueCostContextProvider } from '../components/calc/TrueCostContext';
+import { TrueCostContextProvider } from '../components/calc/TrueCostContext';
 
 export const SPEND = 'Spend';
 export const SAVE = 'Save';
@@ -32,7 +32,7 @@ export default function TrueCost() {
 					label: CHART,
 					active: true,
 					svg: SVGChart,
-					content: <DDLineChart contextType={TrueCostContext} numberOfYears />
+					content: <DDLineChart numberOfYears />
 				}
 			]}
 			title={CALC_NAMES.TC}

@@ -7,14 +7,12 @@ import SVGBarChart from '../components/svgbarchart';
 import SVGChart from '../components/svgchart';
 import SVGHourGlass from '../components/svghourglass';
 import { CALC_NAMES } from '../CONSTANTS';
-import { GoalContextProvider } from '../components/goals/GoalContext';
 
 export default function BuyOrRent() {
 	return (
 		<Layout
 			title={CALC_NAMES.BR}
 			type={GoalType.B}
-			calc={GoalContextProvider}
 			assumptions={[ 'adfas', 'asdfsad' ]}
 			features={[ 'fsdgdf', 'fgdssdf' ]}
 			results={[
