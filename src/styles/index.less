@@ -98,3 +98,24 @@ svg {
 	--amplify-primary-shade: @link-color;
 	--amplify-font-family: @font-family;
 }
+
+.scrollbar {
+	margin-left: 30px;
+	float: left;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	margin-bottom: 25px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+	border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar {
+	width: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-image: linear-gradient(to top, @layout-body-background, @primary-color);
+}

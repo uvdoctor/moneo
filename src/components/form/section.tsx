@@ -2,6 +2,8 @@ import React, { Fragment, useState, ReactNode } from 'react';
 import VideoPlayer from '../videoplayer';
 import { YoutubeFilled } from '@ant-design/icons';
 import { Row, Col, Modal } from 'antd';
+import LogoImg from '../LogoImg';
+import Draggable from 'react-draggable';
 
 interface SectionProps {
 	title: any;
@@ -14,31 +16,45 @@ interface SectionProps {
 }
 
 export default function Section(props: SectionProps) {
-	const [ videoUrl, setVideoUrl ] = useState<string>('');
+	const [ modalVisible, setModalVisible ] = useState<boolean>(false);
+	const [ modalMoveDisabled, setModalMoveDisabled ] = useState<boolean>(true);
+
+	const toggleModalVisibility = () => setModalVisible(!modalVisible);
 
 	return (
 		<Row justify="center" align="middle" style={{ maxWidth: '500px', maxHeight: '500px' }}>
 			<Col span={24}>
 				<h3
-					style={{ cursor: props.videoSrc ? 'pointer' : 'auto', marginRight: '0.5rem' }}
-					onClick={() => (props.videoSrc ? setVideoUrl(!videoUrl ? props.videoSrc as string : '') : true)}
+					style={{ cursor: props.videoSrc && !modalVisible ? 'pointer' : 'auto', marginRight: '0.5rem' }}
+					onClick={() => (props.videoSrc && !modalVisible ? toggleModalVisibility() : true)}
 				>
 					{`${props.title} `}
-					{props.videoSrc ? !videoUrl && <YoutubeFilled /> : null}
+					{props.videoSrc && !modalVisible ? <YoutubeFilled /> : null}
 				</h3>
 			</Col>
-			{videoUrl && (
+			{modalVisible && (
 				<Modal
 					centered
-					visible={videoUrl ? true : false}
-					title=""
+					visible={modalVisible}
+					title={
+						<div
+							style={{
+								width: '100%',
+								cursor: 'move'
+							}}
+							onMouseOver={() => setModalMoveDisabled(false)}
+							onMouseOut={() => setModalMoveDisabled(true)}
+						>
+							<LogoImg />
+						</div>
+					}
 					okText="Done"
-					onOk={() => setVideoUrl('')}
-					onCancel={() => setVideoUrl('')}
+					onOk={toggleModalVisibility}
+					onCancel={toggleModalVisibility}
+					destroyOnClose
+					modalRender={(modal: any) => <Draggable disabled={modalMoveDisabled}>{modal}</Draggable>}
 				>
-					<Col span={24}>
-						<VideoPlayer url={videoUrl} urlHandler={setVideoUrl} />
-					</Col>
+					<VideoPlayer url={props.videoSrc as string} urlHandler={toggleModalVisibility} />
 				</Modal>
 			)}
 			{props.toggle && (

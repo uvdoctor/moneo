@@ -1,5 +1,7 @@
-import { Col, PageHeader, Row } from 'antd';
+import { Col, Row } from 'antd';
 import React, { useContext } from 'react';
+import { CalcContext } from '../calc/CalcContext';
+import CalcHeader from '../calc/CalcHeader';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
 import { GoalContext } from './GoalContext';
@@ -7,7 +9,8 @@ import { getGoalTypes, getImpLevels } from './goalutils';
 
 export default function GoalHeader() {
   const typesList: any = getGoalTypes();
-  const { goal, name, setName, impLevel, setImpLevel, addCallback, updateCallback, currency, changeCurrency }: any = useContext(GoalContext);
+  const { goal, addCallback, updateCallback }: any = useContext(CalcContext);
+  const { name, setName, impLevel, setImpLevel }: any = useContext(GoalContext);
   return (
     addCallback && updateCallback ?
       <Row align="middle" justify="space-between" style={{marginTop: '1rem', marginBottom: '1rem'}}>
@@ -30,10 +33,6 @@ export default function GoalHeader() {
             />
           </Col>
           </Row>
-    : <PageHeader
-        className="calculator-header"
-        title={goal.name + ' Calculator'}
-        extra={[<SelectInput pre="" value={currency} changeHandler={changeCurrency} currency />]}
-      />
+    : <CalcHeader />
 	);
 }

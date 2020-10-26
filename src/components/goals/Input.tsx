@@ -87,8 +87,10 @@ export default function Input() {
 										setInputTabIndex(i);
 									}}
 								>
-									<tab.svg disabled={!tab.active} selected={inputTabIndex === i} />
-									<label>{tab.label}</label>
+									<Row justify="center">
+										<tab.svg disabled={!tab.active} selected={inputTabIndex === i} />
+									</Row>
+									<Row justify="center">{tab.label}</Row>
 								</Col>
 							))}
 						</Row>

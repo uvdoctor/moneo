@@ -1,4 +1,4 @@
-import { Col } from 'antd';
+import { Col, Row } from 'antd';
 import React, { ReactNode, useContext } from 'react';
 import { CalcContext } from '../calc/CalcContext';
 
@@ -10,19 +10,19 @@ export default function TabContent({ result }: TabContentProps) {
 	const { inputTabIndex, resultTabIndex, inputTabs, resultTabs }: any = useContext(CalcContext);
 	const tabs = result ? resultTabs : inputTabs;
 	const currentIndex = result ? resultTabIndex : inputTabIndex;
-	
-	return tabs[currentIndex].content instanceof Array ? (
-		tabs[currentIndex].content.map(
-			(tabContent: ReactNode, i: number) =>
-				tabContent ? (
-					<Col key={'tc' + i} style={{ maxWidth: !result ? '550px' : '' }}>
-						{tabContent}
-					</Col>
-				) : null
-		)
-	) : tabs[currentIndex].content ? (
-		<Col style={{ maxWidth: !result ? '550px' : ''}}>
-			{tabs[currentIndex].content}
+
+	return (
+		<Col className="scrollbar" style={{ maxWidth: !result ? '550px' : '' }}>
+			{tabs[currentIndex].content instanceof Array ? (
+				<Row>
+					{tabs[currentIndex].content.map(
+						(tabContent: ReactNode, i: number) =>
+							tabContent ? <Col key={'tc' + i} offset={2}>{tabContent}</Col> : null
+					)}
+				</Row>
+			) : tabs[currentIndex].content ? (
+				tabs[currentIndex].content
+			) : null}
 		</Col>
-	) : null;
+	);
 }

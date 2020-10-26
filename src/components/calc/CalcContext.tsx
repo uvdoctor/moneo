@@ -245,7 +245,9 @@ function CalcContextProvider({
         setFFOOM,
         handleSubmit,
         createNewGoalInput,
-        setCreateNewGoalInput
+        setCreateNewGoalInput,
+        addCallback,
+        updateCallback
 			}}
     >
       {children}
