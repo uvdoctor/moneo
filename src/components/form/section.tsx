@@ -1,9 +1,6 @@
-import React, { Fragment, useState, ReactNode } from 'react';
+import React, { Fragment, ReactNode } from 'react';
 import VideoPlayer from '../videoplayer';
-import { YoutubeFilled } from '@ant-design/icons';
-import { Row, Col, Modal } from 'antd';
-import LogoImg from '../LogoImg';
-import Draggable from 'react-draggable';
+import { Row, Col } from 'antd';
 
 interface SectionProps {
 	title: any;
@@ -16,47 +13,15 @@ interface SectionProps {
 }
 
 export default function Section(props: SectionProps) {
-	const [ modalVisible, setModalVisible ] = useState<boolean>(false);
-	const [ modalMoveDisabled, setModalMoveDisabled ] = useState<boolean>(true);
-
-	const toggleModalVisibility = () => setModalVisible(!modalVisible);
 
 	return (
 		<Row justify="center" align="middle" style={{ maxWidth: '500px', maxHeight: '500px' }}>
-			<Col span={24}>
-				<h3
-					style={{ cursor: props.videoSrc && !modalVisible ? 'pointer' : 'auto', marginRight: '0.5rem' }}
-					onClick={() => (props.videoSrc && !modalVisible ? toggleModalVisibility() : true)}
-				>
+			<Row justify="center" align="middle">
+				<h3>
 					{`${props.title} `}
-					{props.videoSrc && !modalVisible ? <YoutubeFilled /> : null}
+					{props.videoSrc && <VideoPlayer url={props.videoSrc} />}
 				</h3>
-			</Col>
-			{modalVisible && (
-				<Modal
-					centered
-					visible={modalVisible}
-					title={
-						<div
-							style={{
-								width: '100%',
-								cursor: 'move'
-							}}
-							onMouseOver={() => setModalMoveDisabled(false)}
-							onMouseOut={() => setModalMoveDisabled(true)}
-						>
-							<LogoImg />
-						</div>
-					}
-					okText="Done"
-					onOk={toggleModalVisibility}
-					onCancel={toggleModalVisibility}
-					destroyOnClose
-					modalRender={(modal: any) => <Draggable disabled={modalMoveDisabled}>{modal}</Draggable>}
-				>
-					<VideoPlayer url={props.videoSrc as string} urlHandler={toggleModalVisibility} />
-				</Modal>
-			)}
+			</Row>
 			{props.toggle && (
 				<Col span={24} style={{ marginBottom: '0.5rem' }}>
 					{props.toggle}
