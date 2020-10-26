@@ -1,7 +1,6 @@
 import React, { Fragment, ReactNode } from 'react';
-import VideoPlayer from '../videoplayer';
+import DDVideoPlayer from '../DDVideoPlayer';
 import { Row, Col } from 'antd';
-
 interface SectionProps {
 	title: any;
 	footer?: any;
@@ -19,7 +18,7 @@ export default function Section(props: SectionProps) {
 			<Row justify="center" align="middle">
 				<h3>
 					{`${props.title} `}
-					{props.videoSrc && <VideoPlayer url={props.videoSrc} />}
+					{props.videoSrc && <DDVideoPlayer url={props.videoSrc} />}
 				</h3>
 			</Row>
 			{props.toggle && (

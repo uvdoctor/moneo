@@ -1,22 +1,33 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import ReactPlayer from 'react-player/lazy';
-import { Modal, notification } from 'antd';
+import { Modal, notification, Row } from 'antd';
 import Draggable from 'react-draggable';
 import { YoutubeFilled } from '@ant-design/icons';
+import LogoImg from './LogoImg';
+import * as gtag from '../lib/gtag';
 
-interface VideoPlayerProps {
+interface DDVideoPlayerProps {
 	url: string;
 	callback?: Function;
 }
 
-export default function VideoPlayer({ url, callback }: VideoPlayerProps) {
+export default function DDVideoPlayer({ url, callback }: DDVideoPlayerProps) {
 	const [ modalVisible, setModalVisible ] = useState<boolean>(false);
+	const videoRef = useRef(null);
 
 	const openModal = () => {
 		setModalVisible(true);
 	};
 
 	const closeModal = () => {
+		gtag.event({
+			category: 'Video',
+			action: 'Play',
+			label: url,
+			value: Math.round(
+				//@ts-ignore
+				videoRef.current?.getCurrentTime()) + " seconds"
+		});
 		setModalVisible(false);
 		if (callback) callback();
 	};
@@ -29,16 +40,18 @@ export default function VideoPlayer({ url, callback }: VideoPlayerProps) {
 			{modalVisible && (
 				<Modal
 					centered
-					title={null}
+					title={<LogoImg />}
 					footer={null}
 					onCancel={closeModal}
 					destroyOnClose
 					visible={modalVisible}
+					//@ts-ignore
 					modalRender={(modal: any) => <Draggable>{modal}</Draggable>}
 				>
-					<div style={{ paddingTop: '56.25%' }}>
+					<Row style={{ paddingTop: '56.25%' }}>
 						<ReactPlayer
-							style={{ position: 'absolute', top: 0, left: 0 }}
+							ref={videoRef}
+							style={{ position: 'absolute', top: 60, left: 0 }}
 							url={url}
 							width="100%"
 							height="100%"
@@ -53,7 +66,7 @@ export default function VideoPlayer({ url, callback }: VideoPlayerProps) {
 								closeModal();
 							}}
 						/>
-					</div>
+					</Row>
 				</Modal>
 			)}
 		</Fragment>
