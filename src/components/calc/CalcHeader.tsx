@@ -9,7 +9,7 @@ export default function CalcHeader() {
 		<PageHeader
 			className="calculator-header"
 			title={goal.name}
-			extra={[ <SelectInput pre="" value={currency} changeHandler={changeCurrency} currency /> ]}
+			extra={[ <SelectInput key="currselect" pre="" value={currency} changeHandler={changeCurrency} currency /> ]}
 		/>
 	);
 }
