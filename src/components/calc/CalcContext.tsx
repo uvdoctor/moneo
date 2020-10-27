@@ -68,44 +68,31 @@ const getFFGoalResultTabOptions = (isGoal: boolean) => {
     ];
 }
 
-const getGoalResultTabOptions = (type: GoalType, isGoal: boolean, showBRChart: boolean = false, showLoanChart: boolean = false) => {
+const getGoalResultTabOptions = (type: GoalType, isGoal: boolean) => {
   if (type === GoalType.FF) return getFFGoalResultTabOptions(isGoal);
-  else return type === GoalType.B
-    ? [
-        {
-          label: "Cash Flows",
-          active: true,
+  let rTabs: Array<any> = [
+      {
+        label: "Cash Flows",
+        active: true,
         svg: SVGChart,
-          content: <DDLineChart />
-        },
-        {
-          label: "Buy v/s Rent",
-          active: showBRChart,
-          svg: SVGScale,
-          content: <BuyRentChart />
-        },
-        {
-          label: "Loan Schedule",
-          active: showLoanChart,//manualMode < 1 && loanPer,
-          svg: SVGLoan,
-          content: <LoanScheduleChart />
-        },
-      ]
-    : [
-        {
-          label: "Cash Flows",
-          active: true,
-        svg: SVGChart,
-          content: <DDLineChart />
-        },
-        isLoanEligible(type) && {
-          label: "Loan Schedule",
-          active: showLoanChart,
-          svg: SVGLoan,
-          content: <LoanScheduleChart />
-        },
-      ]
-  
+        content: <DDLineChart />
+      },
+      {
+        label: "Loan Schedule",
+        active: false,
+        svg: SVGLoan,
+        content: <LoanScheduleChart />
+      }
+    ];
+    if (type === GoalType.B) {
+      rTabs.push({
+        label: "Buy v/s Rent",
+        active: false,
+        svg: SVGScale,
+        content: <BuyRentChart />
+      });
+  }
+  return rTabs;
 }
 
 const getGoalTabOptions = (type: GoalType) => {

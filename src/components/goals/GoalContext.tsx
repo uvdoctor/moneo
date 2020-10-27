@@ -20,11 +20,11 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     goal,
     currency,
     rangeFactor,
-    inputTabs,
     resultTabs,
     setResultTabs,
     allInputDone,
     inputTabIndex,
+    resultTabIndex,
     setResultTabIndex,
     setDisableSubmit,
     cfs,
@@ -112,9 +112,6 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     goal?.tgts as Array<TargetInput>
   );
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
-  const [showBRChart, setShowBRChart] = useState<boolean>(
-    sellAfter && !!rentAmt ? true : false
-  );
   const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 30));
   const [duration, setDuration] = useState<number>(
     getDuration(
@@ -187,18 +184,15 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
   useEffect(() => setCreateNewGoalInput(createNewGoal), []);
   
   useEffect(() => {
-    const loanOrderNum = 2;
-    if (manualMode < 1 && loanPer) {
-      if (!loanOrderNum) {
-        resultTabs[resultTabs.length - 1].active = true;
+    if (iSchedule && iSchedule.length > 0 && !resultTabs[1].active) {
+        resultTabs[1].active = true;
         setResultTabs([...resultTabs]);
-      }
-    } else if (loanOrderNum) {
-      resultTabs[resultTabs.length - 1].active = false;
+    } else if ((!iSchedule || iSchedule.length === 0) && resultTabs[1].active) {
+      resultTabs[1].active = false;
       setResultTabs([...resultTabs]);
-      setResultTabIndex(resultTabs[0].label)
+      if(resultTabIndex === 1) setResultTabIndex(0);
     }
-  }, [manualMode, loanPer]);
+  }, [iSchedule]);
 
   const changeStartYear = (str: string) => {
     setStartYear(parseInt(str));
@@ -319,33 +313,6 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
       setEndYear(startYear);
   }, [manualMode, loanPer]);
 
-  useEffect(() => {
-    if (!sellAfter) return;
-    resultTabs[1].active = showBRChart;
-    setResultTabs([...resultTabs]);
-  }, [showBRChart]);
-
-  useEffect(() => {
-    if (
-      sellAfter &&
-      !!rentAmt &&
-      price > 0 &&
-      allInputDone &&
-      brChartData &&
-      brChartData.length === 2 &&
-      nowYear < startYear
-    )
-      setShowBRChart(true);
-    else setShowBRChart(false);
-  }, [sellAfter, price, rentAmt, brChartData, allInputDone]);
-
-  useEffect(() => {
-    if (!sellAfter) return;
-    if (resultTabs[1].active) {
-      if (inputTabIndex === inputTabs.length - 1) setResultTabIndex(1);
-    } else setResultTabIndex(0);
-  }, [resultTabs]);
-
   const getNextTaxAdjRentAmt = (val: number) => {
     return (
       val *
@@ -442,6 +409,19 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
 		}
 		setBRAns(answer + condition);
 	};
+
+  useEffect(() => {
+    if (goal.type !== GoalType.B) return;
+    let index = resultTabs.length - 1;
+    if (brAns && !resultTabs[index].active) {
+      resultTabs[index].active = true;
+      setResultTabs([...resultTabs]);
+    } else if (!brAns && resultTabs[index].active) {
+      resultTabs[index].active = false;
+      setResultTabs([...resultTabs]);
+      if (resultTabIndex === index) setResultTabIndex(0);
+    }
+  }, [brAns]);
 
   useEffect(() => {
     if (!sellAfter) return;
@@ -560,8 +540,6 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
           setBRChartData,
           eyOptions,
           setEYOptions,
-          showBRChart,
-          setShowBRChart,
           duration,
           setDuration,
           changeStartYear,

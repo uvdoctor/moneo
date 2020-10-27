@@ -12,7 +12,7 @@ export default function TabContent({ result }: TabContentProps) {
 	const currentIndex = result ? resultTabIndex : inputTabIndex;
 
 	return (
-		<Col className="scrollbar" style={{ maxWidth: !result ? '550px' : '' }}>
+		<Col className={!result ? "scrollbar" : ""} style={{ maxWidth: !result ? '550px' : '' }}>
 			{tabs[currentIndex].content instanceof Array ? (
 				<Row>
 					{tabs[currentIndex].content.map(

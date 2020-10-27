@@ -37,13 +37,13 @@ export default function Result({ results }: ResultProps) {
 				)}
 				<Tabs
 					className="dd-chart"
-					onTabClick={(key: string) => setResultTabIndex(key)}
+					onTabClick={(key: string) => setResultTabIndex(parseInt(key))}
 					defaultActiveKey={resultTabIndex}
 					type="card"
 				>
 					{resultTabs.map((tab: any, i: number) => (
 						<TabPane
-							key={tab.label}
+							key={i}
 							disabled={!tab.active}
 							tab={
 								<Fragment>
