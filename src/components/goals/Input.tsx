@@ -4,9 +4,11 @@ import { CloseOutlined } from '@ant-design/icons';
 import TabContent from './TabContent';
 import { SaveOutlined } from '@ant-design/icons';
 import { CalcContext } from '../calc/CalcContext';
+import { isMobileDevice } from '../utils';
 
 export default function Input() {
 	const {
+		fsb,
 		inputTabs,
 		inputTabIndex,
 		setInputTabIndex,
@@ -32,7 +34,14 @@ export default function Input() {
 			{!allInputDone ? (
 				<Row align="middle" justify="space-around">
 					<Col>
-						<Steps direction="vertical" current={inputTabIndex}>
+						<Steps
+							current={inputTabIndex}
+							onChange={(index: number) => {
+								if (index < inputTabIndex) setInputTabIndex(index);
+							}}
+							progressDot
+							size="small"
+						>
 							{inputTabs.map((tab: any, i: number) => (
 								<Step
 									key={tab.label}
@@ -42,7 +51,7 @@ export default function Input() {
 											{tab.label}
 										</Space>
 									}
-									disabled={!tab.active}
+									disabled={!tab.active || i > inputTabIndex}
 								/>
 							))}
 						</Steps>
