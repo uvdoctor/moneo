@@ -5,6 +5,7 @@ import { CalcContext } from './CalcContext';
 
 export default function CalcHeader() {
 	const { goal, currency, changeCurrency }: any = useContext(CalcContext);
+
 	return (
 		<PageHeader
 			className="calculator-header"
