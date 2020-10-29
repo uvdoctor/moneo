@@ -41,6 +41,7 @@ export default function Sell() {
 			<RadialInput
 				info="Years after which You Plan to Sell this Purchase."
 				label="Years"
+				pre="Sell After"
 				labelBottom={true}
 				data={toStringArr(3, 30)}
 				value={sellAfter}

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import CircularSlider from '@fseehawer/react-circular-slider';
 import { COLORS } from '../../CONSTANTS';
-import { Tooltip, Row } from 'antd';
+import { Tooltip, Row, Col } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
 interface RadialInputProps {
@@ -26,14 +26,14 @@ export default function RadialInput(props: RadialInputProps) {
 
 	return (
 		<Fragment>
-			<Row justify="center">
+			<Row justify="center" align="middle">
 				{props.pre}
 				{props.info && (
-					<Tooltip title={props.info}>
-						<span>
-							<InfoCircleOutlined />
-						</span>
-					</Tooltip>
+						<Tooltip title={props.info}>
+							<span>
+								<InfoCircleOutlined />
+							</span>
+						</Tooltip>
 				)}
 			</Row>
 			<Row justify="center" className="radial-input">
