@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import Section from '../form/section';
 import NumberInput from '../form/numberinput';
 import HSwitch from '../HSwitch';
-import { TargetInput } from '../../api/goals';
+import { GoalType, TargetInput } from '../../api/goals';
 import { createNewTarget } from './goalutils';
 import { toCurrency } from '../utils';
 import { Row, Col } from 'antd';
@@ -92,22 +92,18 @@ export default function Cost() {
 			videoSrc={`https://www.youtube.com/watch?v=uYMTsmeZyfU`}
 		>
 			<NumberInput
-				pre={startYear > goal.by ? 'Amount' : ''}
-				post={startYear > goal.by ? `in ${goal.by}` : ''}
+				pre={startYear > goal.by ? `Cost ${goal.type !== GoalType.D && 'including taxes & fees'}` : ''}
 				currency={currency}
 				rangeFactor={rangeFactor}
 				value={startingPrice}
 				changeHandler={setStartingPrice}
 				min={0}
-				max={goal.type === goal.type.B ? 1500000 : 50000}
+				max={goal.type === GoalType.B ? 1500000 : 50000}
 				step={500}
-				note={goal.type !== goal.type.D ? 'including taxes & fees' : ''}
 			/>
 			{startYear > goal.by && (
 				<NumberInput
-					pre="Amount"
-					post="Changes"
-					note={`Yearly till ${startYear}`}
+					pre="Assume Cost Changes Yearly by"
 					unit="%"
 					min={-10}
 					max={10}

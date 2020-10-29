@@ -115,7 +115,7 @@ export default function Layout(props: LayoutProps) {
 								ffResultHandler={setFFResult}
 							/>
 						) : (
-							<GoalContextProvider>
+							<GoalContextProvider ffGoalEndYear={nowYear + 50}>
 								<GoalContent />
 							</GoalContextProvider>
 						)

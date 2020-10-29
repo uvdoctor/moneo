@@ -14,13 +14,13 @@ export default function Amt() {
 		endYear,
 		changeEndYear,
 		manualMode,
-		eyOptions
+		eyOptions,
 	}: any = useContext(GoalContext);
 	const [ syOptions ] = useState(initYearOptions(goal.by + 1, ffGoalEndYear - 20 - (goal.by + 1)));
 
 	return (
 		<Col span={24}>
-			<Row align="middle" justify="space-around" style={{marginBottom: '1rem'}}>
+			<Row align="middle" justify="space-around" style={{ marginBottom: '1rem' }}>
 				<Col>
 					<SelectInput
 						pre="When?"

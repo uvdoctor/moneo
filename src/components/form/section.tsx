@@ -16,8 +16,9 @@ export default function Section(props: SectionProps) {
 	const { fsb, allInputDone, setStepVideoUrl }: any = useContext(CalcContext);
 
 	useEffect(() => {
-		setStepVideoUrl(props.videoSrc)
-	}, []);
+		if (fsb.info.screenWidth >= 1024) setStepVideoUrl(props.videoSrc)
+		else setStepVideoUrl("");
+	}, [fsb.info.screenWidth]);
 	
 	return (
 		<Row style={{maxWidth: '500px'}}>
