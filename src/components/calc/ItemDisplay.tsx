@@ -19,14 +19,14 @@ interface ItemDisplayProps {
 
 export default function ItemDisplay(props: ItemDisplayProps) {
 	return (
-		<Fragment>
-			<Row>
+		<Col span={24}>
+			<Row justify="center">
 				<Statistic
 					title={
-						<Row align="middle" justify="center">
-							<Col>{props.label}</Col>
+						<Row justify="center">
+							{props.label}
 							{(props.imp || props.info) && (
-								<Col>
+								<Fragment>
 									{props.imp && (
 										<Tooltip title={props.imp} color="red">
 											<InfoCircleOutlined />
@@ -40,7 +40,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 											<InfoCircleOutlined />
 										</Tooltip>
 									)}
-								</Col>
+								</Fragment>
 							)}
 						</Row>
 					}
@@ -56,7 +56,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 					valueStyle={{ color: props.pl ? (props.result <= 0 ? COLORS.RED : COLORS.GREEN) : COLORS.DEFAULT }}
 				/>
 			</Row>
-			{props.footer && <Row justify="start">{props.footer}</Row>}
-		</Fragment>
+			{props.footer && <Row justify="center">{props.footer}</Row>}
+		</Col>
 	);
 }

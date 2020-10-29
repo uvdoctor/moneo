@@ -24,7 +24,8 @@ export default function Result({ results }: ResultProps) {
 				</Row>
 				{results &&
 				results.length > 0 && (
-					<Row className="dd-stats" gutter={[ { xs: 10, sm: 10, md: 35, lg: 40 }, 0 ]}>
+					<Col span={24}>
+						<Row className="dd-stats" justify="space-around">
 						{results.map(
 							(result, i: number) =>
 								result ? (
@@ -32,8 +33,9 @@ export default function Result({ results }: ResultProps) {
 										{result}
 									</Col>
 								) : null
-						)}
-					</Row>
+							)}
+							</Row>
+					</Col>
 				)}
 				<Tabs
 					className="dd-chart"

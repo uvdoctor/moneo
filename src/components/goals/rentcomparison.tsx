@@ -50,8 +50,7 @@ export default function RentComparison() {
 			}
 		>
 			<NumberInput
-				pre="Yearly"
-				post="Rent"
+				pre="Yearly Rent"
 				value={rentAmt as number}
 				changeHandler={setRentAmt}
 				min={0}
@@ -62,8 +61,7 @@ export default function RentComparison() {
 			/>
 			{rentAmt > 0 && (
 				<NumberInput
-					pre="Yearly"
-					post="Change"
+					pre="Assume Rent Changes Yearly by"
 					value={rentChgPer as number}
 					changeHandler={setRentChgPer}
 					min={-10}
@@ -82,7 +80,7 @@ export default function RentComparison() {
 					step={0.1}
 					pre="Assume Remaining Money Earns Yearly"
 					unit="%"
-					note="After taxes & fees"
+					note="After paying taxes & fees"
 				/>
 			)}
 			{rentAmt > 0 &&
