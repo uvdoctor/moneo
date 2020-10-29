@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import CircularSlider from '@fseehawer/react-circular-slider';
 import { COLORS } from '../../CONSTANTS';
-import { Tooltip, Row, Col } from 'antd';
+import { Tooltip, Row } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
 interface RadialInputProps {
