@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { getRangeFactor } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import SVGTaxBenefit from "../svgtaxbenefit";
@@ -25,6 +25,7 @@ import BuyRentChart from "../goals/BuyRentChart";
 import LoanScheduleChart from "../goals/LoanScheduleChart";
 import { GoalType } from '../../api/goals';
 import { isLoanEligible } from '../goals/goalutils';
+import * as gtag from '../../lib/gtag';
 
 const CalcContext = createContext({});
 
@@ -176,7 +177,10 @@ function CalcContextProvider({
   const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const [createNewGoalInput, setCreateNewGoalInput] = useState<Function>(() => true)
-  
+  const [ rating, setRating ] = useState<number>(0);
+  const [feedbackText, setFeedbackText] = useState<string>("");
+  const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
+
 	const changeCurrency = (curr: string) => {
 		setRangeFactor(Math.round(getRangeFactor(curr) / rangeFactor));
 		setCurrency(curr);
@@ -194,6 +198,17 @@ function CalcContextProvider({
     setBtnClicked(false);
   };
 
+  useEffect(() => {
+    if (!rating) return;
+    gtag.event({
+			category: goal.name,
+			action: 'Rating',
+			label: 'Score',
+			value: rating
+    });
+    setShowFeedbackModal(rating && rating < 4 ? true : false);
+    }, [rating]);
+  
 	return (
 		<CalcContext.Provider
       value={{
@@ -234,7 +249,13 @@ function CalcContextProvider({
         createNewGoalInput,
         setCreateNewGoalInput,
         addCallback,
-        updateCallback
+        updateCallback,
+        rating,
+        setRating,
+        showFeedbackModal,
+        setShowFeedbackModal,
+        feedbackText,
+        setFeedbackText
 			}}
     >
       {children}

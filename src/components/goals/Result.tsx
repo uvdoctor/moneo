@@ -1,45 +1,23 @@
 import React, { Fragment, ReactNode, useContext, useRef } from 'react';
 import { useFullScreen } from 'react-browser-hooks';
-import { Tabs, Row, Col, Rate } from 'antd';
+import { Tabs, Row, Col } from 'antd';
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
 import CalcHeader from '../calc/CalcHeader';
 import TabContent from './TabContent';
 import { CalcContext } from '../calc/CalcContext';
-import { COLORS } from '../../CONSTANTS';
-import * as gtag from '../../lib/gtag';
-
 interface ResultProps {
 	results: Array<ReactNode>;
 }
 
 export default function Result({ results }: ResultProps) {
-	const { goal, resultTabs, resultTabIndex, setResultTabIndex }: any = useContext(CalcContext);
+	const { resultTabs, resultTabIndex, setResultTabIndex }: any = useContext(CalcContext);
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
 
-	const reportFeedback = (val: number) => {
-		gtag.event({
-			category: goal.name,
-			action: 'Feedback',
-			label: 'Rating',
-			value: val
-		});
-	};
-
 	return (
 		<div className="calculator-content">
 			<CalcHeader />
-			<Row align="middle" justify="center" style={{ backgroundColor: COLORS.DEFAULT, color: 'white' }}>
-				Your Feedback
-				<Rate
-					allowHalf
-					allowClear
-					defaultValue={0}
-					style={{ marginLeft: '0.5rem' }}
-					onChange={(rating: number) => reportFeedback(rating)}
-				/>
-			</Row>
 			<div ref={chartDiv}>
 				<Row justify="end" style={{ cursor: 'pointer' }} onClick={toggle}>
 					{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
