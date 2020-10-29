@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import { GoalType } from '../../api/goals';
-import DDPage from '../DDPage';
-import FFGoal from '../goals/ffgoal';
-import { createNewGoalInput } from '../goals/goalutils';
-import * as gtag from '../../lib/gtag';
-import { Button, Collapse, Row, Col } from 'antd';
+import React, { useState } from "react";
+import { GoalType } from "../../api/goals";
+import DDPage from "../DDPage";
+import FFGoal from "../goals/ffgoal";
+import { createNewGoalInput } from "../goals/goalutils";
+import * as gtag from "../../lib/gtag";
+import { Button, Collapse, Row, Col, PageHeader } from "antd";
+import { RocketOutlined } from "@ant-design/icons";
 
-import './Layout.less';
-import GoalContent from '../goals/GoalContent';
-import { CalcContextProvider } from './CalcContext';
-import { GoalContextProvider } from '../goals/GoalContext';
+import "./Layout.less";
+import GoalContent from "../goals/GoalContent";
+import { CalcContextProvider } from "./CalcContext";
+import { GoalContextProvider } from "../goals/GoalContext";
 interface LayoutProps {
 	tabOptions?: Array<any>;
 	resultTabOptions?: Array<any>;
@@ -24,13 +25,13 @@ interface LayoutProps {
 
 export default function Layout(props: LayoutProps) {
 	const { Panel } = Collapse;
-	const [ ffResult, setFFResult ] = useState<any>({});
-	const [ wip, setWIP ] = useState<any | null>(null);
+	const [ffResult, setFFResult] = useState<any>({});
+	const [wip, setWIP] = useState<any | null>(null);
 	const nowYear = new Date().getFullYear();
 	const sections: any = {
-		'Expected Results': props.results,
-		'Key Features': props.features,
-		'Major Assumptions': props.assumptions
+		"Expected Results": props.results,
+		"Key Features": props.features,
+		"Major Assumptions": props.assumptions,
 	};
 
 	const buildEmptyMergedCFs = () => {
@@ -43,36 +44,43 @@ export default function Layout(props: LayoutProps) {
 
 	const createGoal = () => {
 		let g: any = null;
-		const defaultCurrency = 'USD';
+		const defaultCurrency = "USD";
 		if (props.type) g = createNewGoalInput(props.type, defaultCurrency);
-		else g = {ccy: defaultCurrency};
-		g.name = props.title + ' Calculator';
+		else g = { ccy: defaultCurrency };
+		g.name = props.title + " Calculator";
 		gtag.event({
-			category: 'Calculator',
-			action: 'Start',
-			label: 'type',
-			value: props.type ? props.type : props.title
+			category: "Calculator",
+			action: "Start",
+			label: "type",
+			value: props.type ? props.type : props.title,
 		});
 		setWIP(g);
 	};
 
 	return (
-		<DDPage className="calculator-container" title={props.title} onBack={() => setWIP(null)}>
+		<DDPage
+			className="calculator-container"
+			title={props.title}
+			onBack={() => setWIP(null)}
+		>
 			{!wip ? (
 				<Row align="middle" justify="center">
-					<Col>
-						<h2>{props.title + ' Calculator'}</h2>
-					</Col>
 					<Col span={24}>
-						<Collapse defaultActiveKey={[ '1' ]}>
+						<PageHeader
+							className="calculator-header"
+							title={props.title + " Calculator"}
+						/>
+					</Col>
+					<Col className="steps-landing" span={24}>
+						<Collapse defaultActiveKey={["1"]}>
 							{Object.keys(sections).map((key, i) => (
 								<Panel key={`${i + 1}`} header={key}>
 									<Col span={24}>{sections[key]}</Col>
 									{sections[key] === props.results && (
 										<Col span={24}>
 											<img
-												style={{ cursor: 'pointer' }}
-												src={'/images/' + props.resultImg}
+												style={{ cursor: "pointer" }}
+												src={"/images/" + props.resultImg}
 												onClick={createGoal}
 											/>
 										</Col>
@@ -82,25 +90,35 @@ export default function Layout(props: LayoutProps) {
 						</Collapse>
 					</Col>
 					<Col>
-						<Button type="primary" onClick={() => createGoal()}>
-							Start
+						<Button
+							className="steps-start-btn"
+							type="primary"
+							onClick={() => createGoal()}
+						>
+							<RocketOutlined /> Start
 						</Button>
 					</Col>
 				</Row>
 			) : (
-				<CalcContextProvider goal={wip} tabOptions={props.tabOptions} resultTabOptions={props.resultTabOptions}>
-					{props.type ? props.type === GoalType.FF ? (
-						<FFGoal
-							mustCFs={[]}
-							tryCFs={[]}
-							mergedCfs={buildEmptyMergedCFs()}
-							ffResult={ffResult}
-							ffResultHandler={setFFResult}
-						/>
-					) : (
-						<GoalContextProvider>
-							<GoalContent />
-						</GoalContextProvider>
+				<CalcContextProvider
+					goal={wip}
+					tabOptions={props.tabOptions}
+					resultTabOptions={props.resultTabOptions}
+				>
+					{props.type ? (
+						props.type === GoalType.FF ? (
+							<FFGoal
+								mustCFs={[]}
+								tryCFs={[]}
+								mergedCfs={buildEmptyMergedCFs()}
+								ffResult={ffResult}
+								ffResultHandler={setFFResult}
+							/>
+						) : (
+							<GoalContextProvider>
+								<GoalContent />
+							</GoalContextProvider>
+						)
 					) : (
 						<props.calc />
 					)}

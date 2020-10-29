@@ -1,0 +1,120 @@
+@import "~antd/lib/style/themes/default.less";
+
+.goals-container {
+	padding: 0 35px;
+
+	& > header {
+		margin-bottom: 30px;
+	}
+
+	& > section {
+		background-color: #fff;
+		margin-bottom: 50px;
+	}
+
+	& .video-container {
+		background-color: #000;
+		display: flex;
+		align-items: center;
+		padding: 15px;
+	}
+
+	& iframe {
+		min-height: 400px;
+		width: 100%;
+	}
+}
+
+@media all and (max-width: 991.98px) {
+	.goals-container {
+		& .video-container {
+			display: none;
+		}
+	}
+}
+
+@media all and (max-width: 767.98px) {
+	.goals-container {
+		& > header {
+			position: fixed;
+			width: 100%;
+			background-color: #3d4a53;
+			margin: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 2;
+		}
+
+		& .ant-steps-item {
+			position: relative;
+			overflow: inherit;
+			padding: 10px 0 !important;
+
+			&:first-child {
+				padding-left: 15px !important;
+			}
+
+			&:last-child {
+				padding-right: 15px !important;
+			}
+
+			& .ant-steps-item-icon {
+				position: absolute !important;
+				width: 28px;
+				height: 28px;
+				font-size: 16px;
+				z-index: 2;
+				top: -18px;
+				left: 50%;
+				margin-left: -35px;
+			}
+
+			& .ant-steps-item-content {
+				width: 100%;
+				overflow: hidden;
+				padding: 0 5px;
+
+				& svg {
+					width: 35px;
+					margin-bottom: 8px;
+				}
+
+				& .ant-steps-item-title {
+					color: #fff;
+					line-height: 10px;
+
+					&:after {
+						width: 100%;
+						background-color: #7a7f84;
+						top: 35px;
+					}
+				}
+
+				& .ant-space {
+					display: block;
+					text-align: center;
+				}
+
+				& .ant-space-item {
+					display: block;
+				}
+			}
+		}
+
+		& .ant-steps-item-active {
+			background-color: @primary-color;
+
+			& .ant-steps-item-icon {
+				background: #3f4a53;
+			}
+
+			& .ant-steps-item-content {
+				& .ant-steps-item-title {
+					&:after {
+						background-color: rgba(255, 255, 255, 0.3);
+					}
+				}
+			}
+		}
+	}
+}

@@ -5,6 +5,34 @@ body,
 	background-color: @background-color-light;
 }
 
+.steps-landing {
+	padding: 0 30px 30px 30px;
+}
+
+.fields-divider {
+	border-bottom: #e7e7e7 1px solid;
+	margin: 8px 0;
+}
+
+.steps-start-btn {
+	height: auto;
+	font-size: 30px;
+	margin-bottom: 40px;
+	padding: 10px 60px;
+
+	& .anticon {
+		transform: scale(1.5);
+	}
+
+	&:hover {
+		transform: scale(1.2);
+
+		& .anticon {
+			transform: scale(1.7) rotate(20deg);
+		}
+	}
+}
+
 .calculator-page {
 	min-height: calc(100vh - 65px);
 	display: flex;
@@ -190,11 +218,6 @@ body,
 
 		& strong {
 			font-size: 14px;
-		}
-
-		& .fields-divider {
-			border-bottom: #e7e7e7 1px solid;
-			margin: 8px 0;
 		}
 	}
 

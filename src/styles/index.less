@@ -37,6 +37,12 @@ svg {
 	color: #ff0000;
 }
 
+.ant-collapse-item-active {
+	& .ant-collapse-header {
+		background-image: linear-gradient(to top, #fff, #dbedca);
+	}
+}
+
 .dd-content.ant-layout-content {
 	min-height: 300px;
 	max-width: 1280px;
@@ -117,5 +123,9 @@ svg {
 
 .scrollbar::-webkit-scrollbar-thumb {
 	border-radius: 10px;
-	background-image: linear-gradient(to top, @layout-body-background, @primary-color);
+	background-image: linear-gradient(
+		to top,
+		@layout-body-background,
+		@primary-color
+	);
 }
