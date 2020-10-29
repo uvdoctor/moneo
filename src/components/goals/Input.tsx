@@ -1,11 +1,12 @@
-import React, { Fragment, useContext } from "react";
-import { Button, Steps, Space, Row, Col } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
-import TabContent from "./TabContent";
-import { SaveOutlined } from "@ant-design/icons";
-import { CalcContext } from "../calc/CalcContext";
+import React, { Fragment, useContext } from 'react';
+import { Button, Steps, Space, Row, Col } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
+import TabContent from './TabContent';
+import { SaveOutlined } from '@ant-design/icons';
+import { CalcContext } from '../calc/CalcContext';
 
-import "./Input.less";
+import './Input.less';
+import VideoPlayer from '../VideoPlayer';
 
 export default function Input() {
 	const {
@@ -19,6 +20,7 @@ export default function Input() {
 		isPublicCalc,
 		handleSubmit,
 		disableSubmit,
+		stepVideoUrl
 	}: any = useContext(CalcContext);
 	const { Step } = Steps;
 
@@ -36,7 +38,6 @@ export default function Input() {
 					<header>
 						<Steps
 							current={inputTabIndex}
-							current={inputTabIndex}
 							onChange={(index: number) => {
 								if (index < inputTabIndex) setInputTabIndex(index);
 							}}
@@ -46,10 +47,7 @@ export default function Input() {
 									key={tab.label}
 									title={
 										<Space align="center" size="small">
-											<tab.svg
-												disabled={!tab.active}
-												selected={i === inputTabIndex}
-											/>
+											<tab.svg disabled={!tab.active} selected={i === inputTabIndex} />
 											{tab.label}
 										</Space>
 									}
@@ -59,15 +57,14 @@ export default function Input() {
 						</Steps>
 					</header>
 					<section>
-						<Row>
-							<Col md={24} lg={10}>
-								<TabContent />
-								<div>
+						<Row justify={stepVideoUrl ? 'space-between' : 'center'}>
+							<Col span={stepVideoUrl ? 11 : 24}>
+								<Row justify="center" style={{ margin: '1rem' }}>
+									<TabContent />
+								</Row>
+								<Row justify="center">
 									{inputTabIndex > 0 && (
-										<Button
-											style={{ margin: "0 8px" }}
-											onClick={() => handleStepChange(-1)}
-										>
+										<Button style={{ margin: '0 8px' }} onClick={() => handleStepChange(-1)}>
 											Previous
 										</Button>
 									)}
@@ -77,32 +74,22 @@ export default function Input() {
 										</Button>
 									)}
 									{inputTabIndex === inputTabs.length - 1 && (
-										<Button
-											type="primary"
-											onClick={() => setAllInputDone(true)}
-										>
+										<Button type="primary" onClick={() => setAllInputDone(true)}>
 											Done
 										</Button>
 									)}
-								</div>
+								</Row>
 							</Col>
-							<Col className="video-container" md={24} lg={14}>
-								<iframe
-									src="https://www.youtube.com/embed/uYMTsmeZyfU"
-									frameborder="0"
-									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-									allowfullscreen
-								></iframe>
-							</Col>
+							{stepVideoUrl && (
+								<Col span={12}>
+									<VideoPlayer url={stepVideoUrl} />
+								</Col>
+							)}
 						</Row>
 					</section>
 				</div>
 			) : (
-				<div
-					className={`calculator-options ${
-						showOptionsForm ? "show-form" : "hide-form"
-					}`}
-				>
+				<div className={`calculator-options ${showOptionsForm ? 'show-form' : 'hide-form'}`}>
 					<div className="overlay" />
 					<div>
 						<Row justify="space-between">
@@ -110,19 +97,16 @@ export default function Input() {
 								<Col
 									key={tab.label}
 									style={{
-										cursor: tab.active ? "pointer" : "cursor-not-allowed",
+										cursor: tab.active ? 'pointer' : 'cursor-not-allowed'
 									}}
-									className={inputTabIndex === i ? "active" : ""}
+									className={inputTabIndex === i ? 'active' : ''}
 									onClick={() => {
 										setOptionsVisibility(true);
 										setInputTabIndex(i);
 									}}
 								>
 									<Row justify="center">
-										<tab.svg
-											disabled={!tab.active}
-											selected={inputTabIndex === i}
-										/>
+										<tab.svg disabled={!tab.active} selected={inputTabIndex === i} />
 									</Row>
 									<Row justify="center">{tab.label}</Row>
 								</Col>

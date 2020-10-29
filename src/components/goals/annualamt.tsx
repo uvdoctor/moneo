@@ -61,18 +61,14 @@ export default function AnnualAmt({ income }: AnnualAmtProps) {
 				value={income ? aiPer : amCostPer}
 				step={0.2}
 			/>
-			{income ? (
-				aiPer
-			) : (
-				amCostPer && (
-					<SelectInput
-						pre="From Year"
-						post="Onwards"
-						options={syOptions}
-						value={income ? aiStartYear : amStartYear}
-						changeHandler={income ? setAIStartYear : setAMStartYear}
-					/>
-				)
+			{(income ? aiPer : amCostPer) && (
+				<SelectInput
+					pre="From Year"
+					post="Onwards"
+					options={syOptions}
+					value={income ? aiStartYear : amStartYear}
+					changeHandler={income ? setAIStartYear : setAMStartYear}
+				/>
 			)}
 		</Section>
 	);

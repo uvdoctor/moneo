@@ -1,4 +1,4 @@
-import { Modal, PageHeader, Rate, Input } from 'antd';
+import { Modal, PageHeader, Rate, Input, Row, Col } from 'antd';
 import React, { Fragment, useContext, useState } from 'react';
 import SelectInput from '../form/selectinput';
 import { CalcContext } from './CalcContext';
@@ -18,44 +18,55 @@ export default function CalcHeader() {
 		feedbackText,
 		setFeedbackText
 	}: any = useContext(CalcContext);
-	const ratingLabels = [ 'Rate Us', 'Very Poor', 'Poor', 'Average', 'Good', 'Delighted!' ];
+	const ratingLabels = [ '', 'Very Poor', 'Poor', 'Average', 'Good', 'Delighted!' ];
 	const [ ratingLabel, setRatingLabel ] = useState<string>('');
 
 	const saveFeedback = () => {
-    if (!feedbackText) return;
-    gtag.event({
+		if (!feedbackText) return;
+		gtag.event({
 			category: goal.name,
 			action: 'Rating',
 			label: 'Feedback',
 			value: feedbackText
-    });
-		setFeedbackText("");
+		});
+		setFeedbackText('');
 		setShowFeedbackModal(false);
-  }
-
+	};
 
 	return (
 		<Fragment>
-			<PageHeader
-				className="calculator-header"
-				title={
-					<Fragment>
-						{goal.name}
-						<SelectInput key="currselect" pre="" value={currency} changeHandler={changeCurrency} currency />
-					</Fragment>
-				}
-				extra={[
-					<div style={{ color: 'white', textAlign: 'center' }}>
-						{ratingLabel ? ratingLabel : ratingLabels[rating]}
-					</div>,
-					<Rate
-						allowClear
-						value={rating}
-						onChange={(rating: number) => setRating(rating)}
-						onHoverChange={(rating: number) => setRatingLabel(ratingLabels[rating])}
+			<Row className="calculator-header">
+				<Col span={24}>
+					<PageHeader
+						title={goal.name}
+						extra={[
+							<SelectInput
+								key="currselect"
+								pre=""
+								value={currency}
+								changeHandler={changeCurrency}
+								currency
+							/>
+						]}
 					/>
-				]}
-			/>
+				</Col>
+				<Col span={24} style={{ color: 'white' }}>
+					<Row justify="center">
+						<div style={{ width: '270px' }}>
+							<span style={{ marginRight: '0.5rem' }}>Rate Us</span>
+							<Rate
+								allowClear
+								value={rating}
+								onChange={(rating: number) => setRating(rating)}
+								onHoverChange={(rating: number) => setRatingLabel(ratingLabels[rating])}
+							/>
+							<span style={{ marginLeft: '0.5rem' }}>
+								{ratingLabel ? ratingLabel : ratingLabels[rating]}
+							</span>
+						</div>
+					</Row>
+				</Col>
+			</Row>
 			{showFeedbackModal && (
 				<Modal
 					visible={showFeedbackModal}

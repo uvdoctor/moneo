@@ -180,6 +180,7 @@ function CalcContextProvider({
   const [ rating, setRating ] = useState<number>(0);
   const [feedbackText, setFeedbackText] = useState<string>("");
   const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
+  const [stepVideoUrl, setStepVideoUrl] = useState<string>("");
 
 	const changeCurrency = (curr: string) => {
 		setRangeFactor(Math.round(getRangeFactor(curr) / rangeFactor));
@@ -255,7 +256,9 @@ function CalcContextProvider({
         showFeedbackModal,
         setShowFeedbackModal,
         feedbackText,
-        setFeedbackText
+        setFeedbackText,
+        stepVideoUrl,
+        setStepVideoUrl
 			}}
     >
       {children}

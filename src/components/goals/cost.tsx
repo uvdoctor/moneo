@@ -67,9 +67,10 @@ export default function Cost() {
 			}
 			manualInput={
 				wipTargets && (
+					<Col span={24}>
 					<Row align="middle" justify="space-between">
 						{wipTargets.map((t: TargetInput, i: number) => (
-							<Col span={24} key={'t' + i} style={{ marginRight: '1rem', marginBottom: '1rem' }}>
+							<Col span={24} key={'t' + i} style={{ marginBottom: '1rem' }}>
 								<label>{`${t.year} `}</label>
 								<NumberInput
 									pre=""
@@ -83,7 +84,8 @@ export default function Cost() {
 								/>
 							</Col>
 						))}
-					</Row>
+						</Row>
+					</Col>
 				)
 			}
 			manualMode={manualMode}

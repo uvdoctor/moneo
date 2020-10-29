@@ -22,7 +22,6 @@ export default function SelectInput(props: SelectInputProps) {
 		<Row align="middle" justify="space-between">
 			{props.pre && <Col span={12}>
 				{props.pre}
-				{props.post}
 				{props.info && (
 					<Tooltip title={props.info}>
 						<span>
@@ -54,7 +53,8 @@ export default function SelectInput(props: SelectInputProps) {
 						</Fragment>
 						) : (
 							<label>{props.value}</label>
-							)}
+					)}
+				{<label style={{marginLeft: '0.5rem'}}>{props.post}</label>}
 							</Col>
 		</Row>
 	);

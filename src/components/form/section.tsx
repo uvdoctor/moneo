@@ -1,6 +1,7 @@
-import React, { Fragment, ReactNode } from 'react';
-import DDVideoPlayer from '../DDVideoPlayer';
+import React, { Fragment, ReactNode, useContext, useEffect } from 'react';
+import ModalVideoPlayer from '../ModalVideoPlayer';
 import { Row, Col } from 'antd';
+import { CalcContext } from '../calc/CalcContext';
 interface SectionProps {
 	title: any;
 	footer?: any;
@@ -12,22 +13,30 @@ interface SectionProps {
 }
 
 export default function Section(props: SectionProps) {
+	const { fsb, allInputDone, setStepVideoUrl }: any = useContext(CalcContext);
 
+	useEffect(() => {
+		setStepVideoUrl(props.videoSrc)
+	}, []);
+	
 	return (
-		<Row justify="center" align="middle" style={{ maxWidth: '500px', maxHeight: '500px' }}>
-			<Row justify="center" align="middle">
-				<h3>
+		<Row style={{maxWidth: '500px'}}>
+			<Col span={24}>
+				<h3 style={{textAlign: 'center'}}>
 					{`${props.title} `}
-					{props.videoSrc && <DDVideoPlayer title={props.title} url={props.videoSrc} />}
+					{props.videoSrc &&
+					(allInputDone || fsb.info.screenWidth < 1024) && (
+						<ModalVideoPlayer title={props.title} url={props.videoSrc} />
+					)}
 				</h3>
-			</Row>
+			</Col>
 			{props.toggle && (
 				<Col span={24} style={{ marginBottom: '0.5rem' }}>
 					{props.toggle}
 				</Col>
 			)}
 			{props.manualMode && props.manualMode > 0 ? (
-				<Col span={24}>{props.manualInput}</Col>
+				<Col span={24} className="scrollbar" style={{marginRight: '1rem', maxHeight: '200px'}}>{props.manualInput}</Col>
 			) : (
 				React.Children.map(
 					props.children,
