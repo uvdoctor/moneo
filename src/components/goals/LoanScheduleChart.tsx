@@ -6,15 +6,13 @@ import { GoalContext } from './GoalContext';
 const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
 
 export default function LoanScheduleChart() {
-	const { pSchedule, iSchedule, currency, loanYears, loanRepaymentSY, loanPer, manualMode }: any = useContext(
-		GoalContext
-	);
+	const { pSchedule, iSchedule, currency, loanRepaymentSY }: any = useContext(GoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	useEffect(
 		() => {
 			let data: Array<any> = [];
-			for (let year = loanRepaymentSY; year < loanRepaymentSY + loanYears; year++) {
+			for (let year = loanRepaymentSY; year < loanRepaymentSY + pSchedule.length; year++) {
 				data.push({
 					name: 'Principal',
 					year: year,
@@ -28,10 +26,10 @@ export default function LoanScheduleChart() {
 			}
 			setData([ ...data ]);
 		},
-		[ loanRepaymentSY, loanYears, pSchedule, iSchedule ]
+		[ loanRepaymentSY, pSchedule, iSchedule ]
 	);
 
-	return manualMode < 1 && loanPer && loanRepaymentSY && loanYears ? (
+	return (
 		<StackedColumnChart
 			meta={getCommonMeta(currency)}
 			xField="year"
@@ -41,5 +39,5 @@ export default function LoanScheduleChart() {
 			xAxis={getCommonXAxis('Year')}
 			data={data}
 		/>
-	) : null;
+	);
 }

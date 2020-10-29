@@ -34,7 +34,13 @@ export default function Input() {
 			{!allInputDone ? (
 				<div className="goals-container">
 					<header>
-						<Steps current={inputTabIndex}>
+						<Steps
+							current={inputTabIndex}
+							current={inputTabIndex}
+							onChange={(index: number) => {
+								if (index < inputTabIndex) setInputTabIndex(index);
+							}}
+						>
 							{inputTabs.map((tab: any, i: number) => (
 								<Step
 									key={tab.label}
@@ -47,7 +53,7 @@ export default function Input() {
 											{tab.label}
 										</Space>
 									}
-									disabled={!tab.active}
+									disabled={!tab.active || i > inputTabIndex}
 								/>
 							))}
 						</Steps>

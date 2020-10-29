@@ -18,7 +18,7 @@ export default function Section(props: SectionProps) {
 			<Row justify="center" align="middle">
 				<h3>
 					{`${props.title} `}
-					{props.videoSrc && <DDVideoPlayer url={props.videoSrc} />}
+					{props.videoSrc && <DDVideoPlayer title={props.title} url={props.videoSrc} />}
 				</h3>
 			</Row>
 			{props.toggle && (

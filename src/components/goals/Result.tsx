@@ -5,7 +5,6 @@ import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
 import CalcHeader from '../calc/CalcHeader';
 import TabContent from './TabContent';
 import { CalcContext } from '../calc/CalcContext';
-
 interface ResultProps {
 	results: Array<ReactNode>;
 }
@@ -15,6 +14,7 @@ export default function Result({ results }: ResultProps) {
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
+
 	return (
 		<div className="calculator-content">
 			<CalcHeader />
@@ -37,13 +37,13 @@ export default function Result({ results }: ResultProps) {
 				)}
 				<Tabs
 					className="dd-chart"
-					onTabClick={(key: string) => setResultTabIndex(key)}
+					onTabClick={(key: string) => setResultTabIndex(parseInt(key))}
 					defaultActiveKey={resultTabIndex}
 					type="card"
 				>
 					{resultTabs.map((tab: any, i: number) => (
 						<TabPane
-							key={tab.label}
+							key={i}
 							disabled={!tab.active}
 							tab={
 								<Fragment>

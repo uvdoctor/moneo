@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { getRangeFactor } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import SVGTaxBenefit from "../svgtaxbenefit";
@@ -25,6 +25,7 @@ import BuyRentChart from "../goals/BuyRentChart";
 import LoanScheduleChart from "../goals/LoanScheduleChart";
 import { GoalType } from '../../api/goals';
 import { isLoanEligible } from '../goals/goalutils';
+import * as gtag from '../../lib/gtag';
 
 const CalcContext = createContext({});
 
@@ -68,44 +69,31 @@ const getFFGoalResultTabOptions = (isGoal: boolean) => {
     ];
 }
 
-const getGoalResultTabOptions = (type: GoalType, isGoal: boolean, showBRChart: boolean = false, showLoanChart: boolean = false) => {
+const getGoalResultTabOptions = (type: GoalType, isGoal: boolean) => {
   if (type === GoalType.FF) return getFFGoalResultTabOptions(isGoal);
-  else return type === GoalType.B
-    ? [
-        {
-          label: "Cash Flows",
-          active: true,
+  let rTabs: Array<any> = [
+      {
+        label: "Cash Flows",
+        active: true,
         svg: SVGChart,
-          content: <DDLineChart />
-        },
-        {
-          label: "Buy v/s Rent",
-          active: showBRChart,
-          svg: SVGScale,
-          content: <BuyRentChart />
-        },
-        {
-          label: "Loan Schedule",
-          active: showLoanChart,//manualMode < 1 && loanPer,
-          svg: SVGLoan,
-          content: <LoanScheduleChart />
-        },
-      ]
-    : [
-        {
-          label: "Cash Flows",
-          active: true,
-        svg: SVGChart,
-          content: <DDLineChart />
-        },
-        isLoanEligible(type) && {
-          label: "Loan Schedule",
-          active: showLoanChart,
-          svg: SVGLoan,
-          content: <LoanScheduleChart />
-        },
-      ]
-  
+        content: <DDLineChart />
+      },
+      {
+        label: "Loan Schedule",
+        active: false,
+        svg: SVGLoan,
+        content: <LoanScheduleChart />
+      }
+    ];
+    if (type === GoalType.B) {
+      rTabs.push({
+        label: "Buy v/s Rent",
+        active: false,
+        svg: SVGScale,
+        content: <BuyRentChart />
+      });
+  }
+  return rTabs;
 }
 
 const getGoalTabOptions = (type: GoalType) => {
@@ -189,7 +177,10 @@ function CalcContextProvider({
   const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const [createNewGoalInput, setCreateNewGoalInput] = useState<Function>(() => true)
-  
+  const [ rating, setRating ] = useState<number>(0);
+  const [feedbackText, setFeedbackText] = useState<string>("");
+  const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
+
 	const changeCurrency = (curr: string) => {
 		setRangeFactor(Math.round(getRangeFactor(curr) / rangeFactor));
 		setCurrency(curr);
@@ -207,6 +198,17 @@ function CalcContextProvider({
     setBtnClicked(false);
   };
 
+  useEffect(() => {
+    if (!rating) return;
+    gtag.event({
+			category: goal.name,
+			action: 'Rating',
+			label: 'Score',
+			value: rating
+    });
+    setShowFeedbackModal(rating && rating < 4 ? true : false);
+    }, [rating]);
+  
 	return (
 		<CalcContext.Provider
       value={{
@@ -247,7 +249,13 @@ function CalcContextProvider({
         createNewGoalInput,
         setCreateNewGoalInput,
         addCallback,
-        updateCallback
+        updateCallback,
+        rating,
+        setRating,
+        showFeedbackModal,
+        setShowFeedbackModal,
+        feedbackText,
+        setFeedbackText
 			}}
     >
       {children}

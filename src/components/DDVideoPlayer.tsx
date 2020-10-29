@@ -3,15 +3,15 @@ import ReactPlayer from 'react-player/lazy';
 import { Modal, notification, Row } from 'antd';
 import Draggable from 'react-draggable';
 import { YoutubeFilled } from '@ant-design/icons';
-import LogoImg from './LogoImg';
 import * as gtag from '../lib/gtag';
 
 interface DDVideoPlayerProps {
+	title: string;
 	url: string;
 	callback?: Function;
 }
 
-export default function DDVideoPlayer({ url, callback }: DDVideoPlayerProps) {
+export default function DDVideoPlayer({ title, url, callback }: DDVideoPlayerProps) {
 	const [ modalVisible, setModalVisible ] = useState<boolean>(false);
 	const videoRef = useRef(null);
 
@@ -40,7 +40,7 @@ export default function DDVideoPlayer({ url, callback }: DDVideoPlayerProps) {
 			{modalVisible && (
 				<Modal
 					centered
-					title={<LogoImg />}
+					title={<div style={{cursor: 'move'}}>{title}</div>}
 					footer={null}
 					onCancel={closeModal}
 					destroyOnClose
@@ -51,7 +51,7 @@ export default function DDVideoPlayer({ url, callback }: DDVideoPlayerProps) {
 					<Row style={{ paddingTop: '56.25%' }}>
 						<ReactPlayer
 							ref={videoRef}
-							style={{ position: 'absolute', top: 60, left: 0 }}
+							style={{ position: 'absolute', top: 50, left: 0 }}
 							url={url}
 							width="100%"
 							height="100%"

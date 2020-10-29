@@ -44,6 +44,8 @@ export default function DDLineChart({ numberOfYears, title, firstYear }: DDLineC
 			xAxis={getCommonXAxis(title ? title : numberOfYears ? 'Number of Years' : 'Year')}
 			meta={getCommonMeta(currency)}
 			point={{ visible: true }}
+			interactions={[{ type: 'drag-move' }, {type: 'view-zoom'}]}
+			forceFit
 		/>
 	);
 }

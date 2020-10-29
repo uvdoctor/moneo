@@ -7,7 +7,7 @@ import { GoalContext } from './GoalContext';
 const GroupedColumnChart = dynamic(() => import('bizcharts/lib/plots/GroupedColumnChart'), { ssr: false });
 
 export default function BuyRentChart() {
-	const { brChartData, currency, brAns }: any = useContext(GoalContext);
+	const { brChartData, currency }: any = useContext(GoalContext);
 	const [ stackedData, setStackedData ] = useState<Array<any>>(buildYearsArray(1, brChartData[0].values.length));
 
 	useEffect(
@@ -35,7 +35,7 @@ export default function BuyRentChart() {
 	);
 
 	return (
-		brAns ? <GroupedColumnChart
+		<GroupedColumnChart
 			meta={getCommonMeta(currency)}
 			xField="years"
 			yField="value"
@@ -43,6 +43,6 @@ export default function BuyRentChart() {
 			data={stackedData}
 			yAxis={getCommonYAxis()}
 			xAxis={getCommonXAxis('Number of Years')}
-		/> : null
+		/>
 	);
 }
