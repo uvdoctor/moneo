@@ -242,6 +242,9 @@ export default function LoanEmi() {
 					step={0.1}
 				/>
 			)}
+			{loanBorrowAmt && 
+				<ItemDisplay label="Pay" result={emi} currency={currency} footer="Monthly" />
+			}
 			{loanBorrowAmt &&
 			goal.type === goal.type.E && (
 				<RadialInput

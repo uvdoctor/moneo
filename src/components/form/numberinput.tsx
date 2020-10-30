@@ -78,7 +78,7 @@ export default function NumberInput(props: NumberInputProps) {
 		<Col span={24} style={{ minWidth: '250px' }}>
 			<Col span={24}>
 				<Row justify="space-between">
-					<Col span={props.currency ? 24 : 18}>
+					<Col>
 						{props.pre}
 						{props.post && ` ${props.post}`}
 						{props.info && (
@@ -90,7 +90,7 @@ export default function NumberInput(props: NumberInputProps) {
 						)}
 					</Col>
 						{!props.currency && (
-					<Col span={6}>
+					<Col>
 							<b>{`${toReadableNumber(
 								props.value,
 								props.step && props.step < 1 ? 2 : 0
