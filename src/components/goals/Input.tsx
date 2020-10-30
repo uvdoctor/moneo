@@ -122,7 +122,7 @@ export default function Input() {
 						>
 							<CloseOutlined />
 						</Button>
-						<TabContent />
+							<Col span={24}><TabContent /></Col>
 						{!isPublicCalc && handleSubmit ? (
 							<Row justify="center">
 								<Button

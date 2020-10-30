@@ -19,8 +19,9 @@ export default function SelectInput(props: SelectInputProps) {
 	const { Option } = Select;
 
 	return (
+		<Col span={24}>
 		<Row align="middle" justify="space-between">
-			{props.pre && <Col span={12}>
+			{props.pre && <Col>
 				{props.pre}
 				{props.info && (
 					<Tooltip title={props.info}>
@@ -30,7 +31,7 @@ export default function SelectInput(props: SelectInputProps) {
 					</Tooltip>
 				)}
 			</Col>}
-			<Col span={12}>
+			<Col>
 				{!props.disabled ? (
 					<Fragment>
 						<Select
@@ -56,6 +57,7 @@ export default function SelectInput(props: SelectInputProps) {
 					)}
 				{<label style={{marginLeft: '0.5rem'}}>{props.post}</label>}
 							</Col>
-		</Row>
+			</Row>
+			</Col>
 	);
 }

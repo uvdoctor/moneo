@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import ItemDisplay from '../calc/ItemDisplay';
-import SVGMoneyBag from '../calc/svgmoneybag';
 import Section from '../form/section';
 import RadialInput from '../form/radialinput';
 import NumberInput from '../form/numberinput';
@@ -41,49 +40,48 @@ export default function Sell() {
 		<Section title="Sell Details" footer="Sell Price above excludes taxes & fees.">
 			<NumberInput
 				info="Rate at which Price may change Yearly."
-				pre="Asset Value Changes Yearly by"
+				pre="Yearly Price Changes"
 				unit="%"
 				min={-20}
 				max={20}
 				step={0.5}
 				value={assetChgRate}
 				changeHandler={setAssetChgRate}
-				note={
-					annualReturnPer && (
-						<ItemDisplay
-							svg={annualReturnPer > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-							label={`Annualized ${annualReturnPer > 0 ? 'Gain' : 'Lose'}`}
-							result={annualReturnPer}
-							decimal={2}
-							unit="%"
-							pl
-						/>
-					)
-				}
 			/>
-						<Row align="middle" justify="space-between">
-				<Col>
-					<RadialInput
-						info="Years after which You Plan to Sell this Purchase."
-						label="Years"
-						pre="Sell After"
-						labelBottom={true}
-						data={toStringArr(3, 30)}
-						value={sellAfter}
-						step={1}
-						changeHandler={setSellAfter}
-					/>
-				</Col>
-				<Col>
-					<ItemDisplay
-						svg={<SVGMoneyBag disabled={false} selected />}
-						label="You May Get"
-						footer={`In ${startYear + sellAfter}`}
-						result={Math.round(sellPrice)}
-						currency={currency}
-					/>
-				</Col>
-			</Row>
+			<RadialInput
+				info="Years after which You Plan to Sell this Purchase."
+				label="Years"
+				pre="Sell After"
+				labelBottom={true}
+				data={toStringArr(3, 30)}
+				value={sellAfter}
+				step={1}
+				changeHandler={setSellAfter}
+			/>
+			<Col span={24}>
+				<Row justify="space-between" align="middle">
+					<Col>
+						<ItemDisplay
+							label="You May Get"
+							footer={`In ${startYear + sellAfter}`}
+							result={Math.round(sellPrice)}
+							currency={currency}
+						/>
+					</Col>
+					{annualReturnPer && (
+						<Col>
+							<ItemDisplay
+								svg={annualReturnPer > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+								label={`Annualized ${annualReturnPer > 0 ? 'Gain' : 'Loss'}`}
+								result={annualReturnPer}
+								decimal={2}
+								unit="%"
+								pl
+							/>
+						</Col>
+					)}
+				</Row>
+			</Col>
 		</Section>
 	);
 }

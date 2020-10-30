@@ -14,7 +14,7 @@ interface SectionProps {
 
 export default function Section(props: SectionProps) {
 	const { fsb, allInputDone, setStepVideoUrl }: any = useContext(CalcContext);
-	const [form] = Form.useForm();
+	const [ form ] = Form.useForm();
 
 	useEffect(
 		() => {
@@ -42,22 +42,25 @@ export default function Section(props: SectionProps) {
 			)}
 			<Form form={form}>
 				{props.manualMode && props.manualMode > 0 ? (
-					<Col span={24}>
-						{props.manualInput}
-					</Col>
+					<Col span={24}>{props.manualInput}</Col>
 				) : (
-						<Col span={24}>
-							{React.Children.map(
-								props.children,
-								(child: any, i: number) =>
-										<Fragment key={'section' + i}>
-											<Row align="middle" justify="space-between">{child}</Row>
-											<Col className="fields-divider" span={24} />
-										</Fragment>
-							)}
-						</Col>
-				)
-				}
+					<Col span={24}>
+						{React.Children.map(
+							props.children,
+							(child: any, i: number) =>
+								child ? (
+									<Fragment key={'section' + i}>
+										<Col span={24}>
+											<Row align="middle" justify="space-between">
+												{child}
+											</Row>
+										</Col>
+										<Col className="fields-divider" span={24} />
+									</Fragment>
+								) : null
+						)}
+					</Col>
+				)}
 			</Form>
 			{props.footer && (
 				<Col span={24} style={{ textAlign: 'center' }}>

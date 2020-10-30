@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { parseNumber, toCurrency, toReadableNumber } from '../utils';
 import { Form, Slider } from 'antd';
 import { COLORS } from '../../CONSTANTS';
@@ -6,7 +6,7 @@ import { Tooltip, InputNumber, Row, Col } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 interface NumberInputProps {
 	info?: string;
-	pre: string;
+	pre: any;
 	post?: string;
 	min: number;
 	max: number;
@@ -31,7 +31,7 @@ export default function NumberInput(props: NumberInputProps) {
 	);
 	const [ marks, setMarks ] = useState<any>({
 		[minNum]: toReadableNumber(minNum),
-		[maxNum]: { label: toReadableNumber(maxNum), style: { paddingRight: props.currency ? '3rem' : '0rem' } }
+		[maxNum]: { label: toReadableNumber(maxNum) }
 	});
 
 	useEffect(
@@ -75,24 +75,34 @@ export default function NumberInput(props: NumberInputProps) {
 	};
 
 	return (
-		<Fragment>
+		<Col span={24} style={{ minWidth: '250px' }}>
 			<Col span={24}>
-				{props.pre}
-				{` `}
-				{props.post}
-				{!props.currency &&
-					toReadableNumber(props.value, props.step && props.step < 1 ? 2 : 0) + ` ${props.unit}`}
-				{props.info && (
-					<Tooltip title={props.info}>
-						<span>
-							<InfoCircleOutlined />
-						</span>
-					</Tooltip>
-				)}
+				<Row justify="space-between">
+					<Col span={props.currency ? 24 : 18}>
+						{props.pre}
+						{props.post && ` ${props.post}`}
+						{props.info && (
+							<Tooltip title={props.info}>
+								<span>
+									<InfoCircleOutlined />
+								</span>
+							</Tooltip>
+						)}
+					</Col>
+						{!props.currency && (
+					<Col span={6}>
+							<b>{`${toReadableNumber(
+								props.value,
+								props.step && props.step < 1 ? 2 : 0
+							)} ${props.unit}`}</b>
+					</Col>
+						)}
+				</Row>
 			</Col>
+			{props.note && <Col span={24}>{props.note}</Col>}
 			<Col span={24}>
 				<Form.Item hasFeedback>
-					<Row justify="space-between" align="middle">
+					<Row justify="space-between" align="top">
 						{props.currency && (
 							<Col span={10}>
 								<InputNumber
@@ -116,7 +126,7 @@ export default function NumberInput(props: NumberInputProps) {
 										//@ts-ignore
 										inputRef.current.blur();
 									}}
-									style={{ width: '100%' }}
+									style={{ width: '100%', marginBottom: '0px' }}
 								/>
 							</Col>
 						)}
@@ -136,7 +146,7 @@ export default function NumberInput(props: NumberInputProps) {
 									cursor: 'grab',
 									borderColor: sliderBorderColor
 								}}
-								style={{ width: '100%' }}
+								style={{ width: '100%', marginTop: '0px', marginBottom: '0px' }}
 							/>
 							{feedbackText && (
 								<Col span={24} style={{ textAlign: 'center' }}>
@@ -146,12 +156,7 @@ export default function NumberInput(props: NumberInputProps) {
 						</Col>
 					</Row>
 				</Form.Item>
-				{props.note && (
-					<Col span={24} style={{ textAlign: 'center', marginTop: '0.5rem' }}>
-						{props.note}
-					</Col>
-				)}
 			</Col>
-		</Fragment>
+		</Col>
 	);
 }

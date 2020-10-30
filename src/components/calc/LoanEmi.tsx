@@ -47,7 +47,8 @@ export default function LoanEmi() {
 		taxRate,
 		maxTaxDeductionInt,
 		setMaxTaxDeductionInt,
-		totalITaxBenefit
+		totalITaxBenefit,
+		setTotalIntAmt
 	}: any = useContext(GoalContext);
 	const loanBorrowAmt = getLoanBorrowAmt(
 		price,
@@ -57,7 +58,6 @@ export default function LoanEmi() {
 		endYear - startYear,
 		loanPer as number
 	);
-	const [ totalIntAmt, setTotalIntAmt ] = useState<number>(0);
 	const [ ryOptions, setRYOptions ] = useState(
 		initYearOptions(goal.type === goal.type.E ? endYear + 1 : startYear, 10)
 	);
@@ -161,35 +161,31 @@ export default function LoanEmi() {
 				changeHandler={setLoanPer}
 				step={5}
 				labelBottom={true}
-				label="of Amount"
-				pre="Principal"
+				label="of Cost"
+				pre="Loan Amount"
 				post={`${toCurrency(loanBorrowAmt, currency)}`}
 			/>
 			{loanBorrowAmt && (
 				<SelectInput
+					pre="Repay from"
 					options={ryOptions}
 					value={loanRepaymentSY}
-					pre="Repay From"
-					post="Onwards"
 					changeHandler={(year: string) => setLoanloanRepaymentSY(parseInt(year))}
-				/>
-			)}
-			{loanBorrowAmt && (
+				/>)}
+			{loanBorrowAmt && (	
 				<NumberInput
-					pre="Term"
-					unit="years"
-					note={`EMI ${toCurrency(emi, currency)}`}
+					pre="For"
+					unit="Years"
 					value={loanYears}
 					changeHandler={setLoanYears}
 					min={0.5}
 					max={30}
 					step={0.5}
-				/>
+					/>
 			)}
 			{loanBorrowAmt && (
 				<NumberInput
-					pre="Yearly"
-					post="Interest"
+					pre="Yearly Interest"
 					unit="%"
 					/*feedback={{
 							0: {
@@ -239,15 +235,6 @@ export default function LoanEmi() {
 								color: COLORS.RED
 							}
 						}}*/
-					note={
-						<ItemDisplay
-							label="Total Interest"
-							result={totalIntAmt}
-							currency={currency}
-							footer={`Over ${getLoanPaidForMonths(startYear + duration - 1, loanRepaymentSY, loanYears) /
-								12} Years`}
-						/>
-					}
 					value={loanIntRate}
 					changeHandler={setLoanIntRate}
 					min={0.0}

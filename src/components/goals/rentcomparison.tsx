@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
-import ItemDisplay from '../calc/ItemDisplay';
+import React, { useContext } from 'react';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import HSwitch from '../HSwitch';
@@ -16,29 +15,11 @@ export default function RentComparison() {
 		taxRate,
 		rentTaxBenefit,
 		setRentTaxBenefit,
-		sellAfter,
-		brChartData,
 		analyzeFor,
 		setAnalyzeFor,
 		dr,
 		setDR
 	}: any = useContext(GoalContext);
-	const [ rentDiff, setRentDiff ] = useState<number | null>(null);
-
-	const provideRentAns = () => {
-		if (!sellAfter || !brChartData || brChartData.length === 0 || brChartData[0].values.length < sellAfter) {
-			setRentDiff(null);
-			return;
-		}
-		setRentDiff(brChartData[1].values[sellAfter - 1] - brChartData[0].values[sellAfter - 1]);
-	};
-
-	useEffect(
-		() => {
-			provideRentAns();
-		},
-		[ brChartData, sellAfter ]
-	);
 
 	return (
 		<Section
@@ -78,9 +59,9 @@ export default function RentComparison() {
 					min={0}
 					max={15}
 					step={0.1}
-					pre="Remaining Money Earns Yearly"
+					pre="Remaining Money Earns"
 					unit="%"
-					note="After paying taxes & fees"
+					note="Yearly After paying taxes & fees"
 				/>
 			)}
 			{rentAmt > 0 &&
@@ -93,15 +74,6 @@ export default function RentComparison() {
 					max={50}
 					step={5}
 					unit="Years"
-				/>
-			)}
-			{rentDiff && (
-				<ItemDisplay
-					result={rentDiff}
-					label={`Rent is ${rentDiff < 0 ? 'Costlier' : 'Cheaper'} by`}
-					footer={`Over ${sellAfter} Years`}
-					currency={currency}
-					pl
 				/>
 			)}
 		</Section>

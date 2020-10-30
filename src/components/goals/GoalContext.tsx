@@ -70,7 +70,8 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
   >(goal.tbr);
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
-  >(goal.achg);
+    >(goal.achg);
+  const [ totalIntAmt, setTotalIntAmt ] = useState<number>(0);
   const [startingPrice, setStartingPrice] = useState<number>(
     goal?.cp as number
   );
@@ -545,6 +546,8 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
           changeStartYear,
           changeEndYear,
           ffGoalEndYear,
+          totalIntAmt,
+          setTotalIntAmt
         }}>
         {children}
       </GoalContext.Provider>

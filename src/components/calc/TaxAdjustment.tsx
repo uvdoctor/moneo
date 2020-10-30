@@ -12,8 +12,7 @@ export default function TaxAdjustment() {
 			{!isTaxCreditEligible(goal.type) && (
 				<NumberInput
 					info="Income Tax slab based on Your Income"
-					pre="Tax"
-					post="Rate"
+					pre="Tax Rate is "
 					min={0}
 					max={50}
 					step={0.1}
@@ -27,7 +26,7 @@ export default function TaxAdjustment() {
 					info={`Maximum Yearly Income Tax ${isTaxCreditEligible(goal.type)
 						? 'Credit'
 						: 'Deduction'} Allowed`}
-					pre="Max Yearly"
+					pre="Max Yearly "
 					post={`${isTaxCreditEligible(goal.type) ? 'Credit' : 'Deduction'}`}
 					currency={currency}
 					value={maxTaxDeduction}
