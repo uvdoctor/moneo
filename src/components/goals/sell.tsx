@@ -41,7 +41,7 @@ export default function Sell() {
 		<Section title="Sell Details" footer="Sell Price above excludes taxes & fees.">
 			<NumberInput
 				info="Rate at which Price may change Yearly."
-				pre="Assume Asset Value Changes Yearly by"
+				pre="Asset Value Changes Yearly by"
 				unit="%"
 				min={-20}
 				max={20}

@@ -57,9 +57,9 @@ export default function Cost() {
 		<Section
 			title={
 				manualMode > 0 ? (
-					`Total Amount is ${toCurrency(price, currency)}`
+					`Total Cost is ${toCurrency(price, currency)}`
 				) : (
-					`Amount${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`
+					`Cost${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`
 				)
 			}
 			toggle={
@@ -103,7 +103,7 @@ export default function Cost() {
 			/>
 			{startYear > goal.by && (
 				<NumberInput
-					pre="Assume Cost Changes Yearly by"
+					pre="Cost Changes Yearly by"
 					unit="%"
 					min={-10}
 					max={10}

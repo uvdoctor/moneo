@@ -36,7 +36,7 @@ export default function SelectInput(props: SelectInputProps) {
 						<Select
 							showSearch
 							optionFilterProp="children"
-							style={{ minWidth: '80px' }}
+							style={{ minWidth: '60px' }}
 							value={props.value}
 							onChange={(value) => props.changeHandler(value)}
 							filterOption={(input, option) =>

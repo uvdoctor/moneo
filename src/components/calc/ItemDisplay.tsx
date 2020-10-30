@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { toCurrency, toReadableNumber } from '../utils';
-import { Tooltip, Statistic, Row, Col } from 'antd';
+import { Tooltip, Statistic, Col } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { COLORS } from '../../CONSTANTS';
 interface ItemDisplayProps {
@@ -20,10 +20,10 @@ interface ItemDisplayProps {
 export default function ItemDisplay(props: ItemDisplayProps) {
 	return (
 		<Col span={24}>
-			<Row justify="center">
+			<Col span={24} style={{ textAlign: 'center' }}>
 				<Statistic
 					title={
-						<Row justify="center">
+						<Col span={24} style={{ textAlign: "center" }}>
 							{props.label}
 							{(props.imp || props.info) && (
 								<Fragment>
@@ -42,7 +42,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 									)}
 								</Fragment>
 							)}
-						</Row>
+						</Col>
 					}
 					value={props.result}
 					prefix={props.svg}
@@ -55,8 +55,12 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 							: props.result}
 					valueStyle={{ color: props.pl ? (props.result <= 0 ? COLORS.RED : COLORS.GREEN) : COLORS.DEFAULT }}
 				/>
-			</Row>
-			{props.footer && <Row justify="center">{props.footer}</Row>}
+			</Col>
+			{props.footer && (
+				<Col span={24} style={{ textAlign: 'center' }}>
+					{props.footer}
+				</Col>
+			)}
 		</Col>
 	);
 }

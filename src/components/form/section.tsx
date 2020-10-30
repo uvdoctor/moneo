@@ -42,21 +42,22 @@ export default function Section(props: SectionProps) {
 			)}
 			<Form form={form}>
 				{props.manualMode && props.manualMode > 0 ? (
-					<Col span={24} className="scrollbar" style={{ marginRight: '1rem', maxHeight: '200px' }}>
+					<Col span={24}>
 						{props.manualInput}
 					</Col>
 				) : (
-					React.Children.map(
-						props.children,
-						(child: any, i: number) =>
-							child ? (
-								<Fragment key={'section' + i}>
-									<Col span={24}>{child}</Col>
-									<Col className="fields-divider" span={24} />
-								</Fragment>
-							) : null
-					)
-				)}
+						<Col span={24}>
+							{React.Children.map(
+								props.children,
+								(child: any, i: number) =>
+										<Fragment key={'section' + i}>
+											<Row align="middle" justify="space-between">{child}</Row>
+											<Col className="fields-divider" span={24} />
+										</Fragment>
+							)}
+						</Col>
+				)
+				}
 			</Form>
 			{props.footer && (
 				<Col span={24} style={{ textAlign: 'center' }}>

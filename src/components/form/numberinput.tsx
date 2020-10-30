@@ -92,9 +92,9 @@ export default function NumberInput(props: NumberInputProps) {
 			</Col>
 			<Col span={24}>
 				<Form.Item hasFeedback>
-					<Row align="middle">
+					<Row justify="space-between" align="middle">
 						{props.currency && (
-							<Col span={10} style={{ marginRight: '1rem' }}>
+							<Col span={10}>
 								<InputNumber
 									ref={inputRef}
 									value={props.value}
@@ -102,16 +102,15 @@ export default function NumberInput(props: NumberInputProps) {
 									max={maxNum}
 									step={stepNum}
 									onChange={(val) => {
-										if (Number.isNaN(val)) return;
+										if (Number.isNaN(val)) {
+											props.changeHandler(0);
+											return;
+										}
 										provideFeedback(val as number);
 										props.changeHandler(val as number);
 									}}
-									formatter={(val) =>
-										props.currency
-											? toCurrency(val as number, props.currency)
-											: toReadableNumber(val as number, props.step && props.step < 1 ? 2 : 0) +
-												` ${props.unit}`}
-									parser={(val) => parseNumber(val as string, props.currency ? props.currency : null)}
+									formatter={(val) => toCurrency(val as number, props.currency as string)}
+									parser={(val) => parseNumber(val as string, props.currency)}
 									onPressEnter={(e: any) => {
 										e.preventDefault();
 										//@ts-ignore
@@ -137,20 +136,21 @@ export default function NumberInput(props: NumberInputProps) {
 									cursor: 'grab',
 									borderColor: sliderBorderColor
 								}}
+								style={{ width: '100%' }}
 							/>
 							{feedbackText && (
 								<Col span={24} style={{ textAlign: 'center' }}>
 									{feedbackText}
 								</Col>
 							)}
-							{props.note && (
-								<Col span={24} style={{ textAlign: 'center', marginTop: '0.5rem' }}>
-									{props.note}
-								</Col>
-							)}
 						</Col>
 					</Row>
 				</Form.Item>
+				{props.note && (
+					<Col span={24} style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+						{props.note}
+					</Col>
+				)}
 			</Col>
 		</Fragment>
 	);

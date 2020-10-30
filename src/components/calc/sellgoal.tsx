@@ -176,7 +176,7 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
                             <NumberInput name="sp" pre="Current" post="Price"
                                 value={currentMarketPrice} changeHandler={setCurrentMarketPrice} currency={currency}
                                 rangeFactor={rangeFactor} min={0} max={900000} step={500} />
-                        } bottomLeft="Assume" bottomRight="Yearly" bottom={
+                        } bottomLeft="" bottomRight="Yearly" bottom={
                             <NumberInput name="assetChgRate" pre="Sell Price" post="Changes" unit="%"
                                 min={-20} max={20} step={0.5} value={assetChgRate as number} changeHandler={setAssetChgRate} />
                         } />

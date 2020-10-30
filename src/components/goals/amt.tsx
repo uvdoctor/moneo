@@ -20,10 +20,11 @@ export default function Amt() {
 
 	return (
 		<Col span={24}>
+			<Col span={24}><h3>Payment Schedule</h3></Col>
 			<Row align="middle" justify="space-around" style={{ marginBottom: '1rem' }}>
 				<Col>
 					<SelectInput
-						pre="When?"
+						pre="From"
 						info="Year in which You Start Paying for the Goal"
 						value={startYear}
 						changeHandler={changeStartYear}
@@ -32,7 +33,7 @@ export default function Amt() {
 				</Col>
 				<Col>
 					<SelectInput
-						pre={`Pay Until`}
+						pre="To"
 						value={endYear}
 						info="Year in which You End Paying for the Goal"
 						disabled={goal.type === goal.type.B && manualMode < 1}
