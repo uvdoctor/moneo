@@ -24,7 +24,7 @@ export default function GoalContent() {
       nowYear < startYear ? [
         (dr === null || dr === undefined) ? 
           <FFImpact />
-          : goal.type === GoalType.B && <ItemDisplay label="Buy v/s Rent" result={brAns} info={brAns} />,
+          : goal.type === GoalType.B && <ItemDisplay label="Buy or Rent?" result={brAns} />,
         <OppCost contextType={GoalContext} />
         ] : []}
       />

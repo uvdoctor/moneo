@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { parseNumber, toCurrency, toReadableNumber } from '../utils';
-import { Slider } from 'antd';
+import { Form, Slider } from 'antd';
 import { COLORS } from '../../CONSTANTS';
 import { Tooltip, InputNumber, Row, Col } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
@@ -29,9 +29,9 @@ export default function NumberInput(props: NumberInputProps) {
 	const [ stepNum, setStepNum ] = useState<number>(
 		props.step ? props.step * (props.rangeFactor ? props.rangeFactor : 1) : 1
 	);
-	const [marks, setMarks] = useState<any>({
+	const [ marks, setMarks ] = useState<any>({
 		[minNum]: toReadableNumber(minNum),
-		[maxNum]: { label: toReadableNumber(maxNum), style: {paddingRight: props.currency ? '3rem' : '0rem'} }
+		[maxNum]: { label: toReadableNumber(maxNum), style: { paddingRight: props.currency ? '3rem' : '0rem' } }
 	});
 
 	useEffect(
@@ -44,7 +44,7 @@ export default function NumberInput(props: NumberInputProps) {
 			setStepNum((props.step as number) * rf);
 			setMarks({
 				[minNum]: toReadableNumber(minNum),
-				[maxNum]: { label: toReadableNumber(maxNum), style: {paddingRight: props.currency ? '3rem' : '0rem'} }
+				[maxNum]: { label: toReadableNumber(maxNum), style: { paddingRight: props.currency ? '3rem' : '0rem' } }
 			});
 		},
 		[ props.rangeFactor, props.min, props.max ]
@@ -75,11 +75,13 @@ export default function NumberInput(props: NumberInputProps) {
 	};
 
 	return (
-		<Row align="middle" justify="space-between">
+		<Fragment>
 			<Col span={24}>
 				{props.pre}
 				{` `}
 				{props.post}
+				{!props.currency &&
+					toReadableNumber(props.value, props.step && props.step < 1 ? 2 : 0) + ` ${props.unit}`}
 				{props.info && (
 					<Tooltip title={props.info}>
 						<span>
@@ -88,52 +90,68 @@ export default function NumberInput(props: NumberInputProps) {
 					</Tooltip>
 				)}
 			</Col>
-			<Col span={11}>
-				<InputNumber
-					ref={inputRef}
-					value={props.value}
-					min={minNum}
-					max={maxNum}
-					step={stepNum}
-					onChange={(val) => {
-						provideFeedback(val as number);
-						props.changeHandler(val as number);
-					}}
-					formatter={(val) =>
-						props.currency
-							? toCurrency(val as number, props.currency)
-							: toReadableNumber(val as number, props.step && props.step < 1 ? 2 : 0) + ` ${props.unit}`}
-					parser={(val) => parseNumber(val as string, props.currency ? props.currency : null)}
-					onPressEnter={(e: any) => {
-						e.preventDefault();
-						//@ts-ignore
-						inputRef.current.blur();
-					}}
-					style={{width: '100%'}}
-				/>
-				{/*props.unit*/}
+			<Col span={24}>
+				<Form.Item hasFeedback>
+					<Row align="middle">
+						{props.currency && (
+							<Col span={10} style={{ marginRight: '1rem' }}>
+								<InputNumber
+									ref={inputRef}
+									value={props.value}
+									min={minNum}
+									max={maxNum}
+									step={stepNum}
+									onChange={(val) => {
+										if (Number.isNaN(val)) return;
+										provideFeedback(val as number);
+										props.changeHandler(val as number);
+									}}
+									formatter={(val) =>
+										props.currency
+											? toCurrency(val as number, props.currency)
+											: toReadableNumber(val as number, props.step && props.step < 1 ? 2 : 0) +
+												` ${props.unit}`}
+									parser={(val) => parseNumber(val as string, props.currency ? props.currency : null)}
+									onPressEnter={(e: any) => {
+										e.preventDefault();
+										//@ts-ignore
+										inputRef.current.blur();
+									}}
+									style={{ width: '100%' }}
+								/>
+							</Col>
+						)}
+						<Col span={props.currency ? 12 : 24}>
+							{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
+							<Slider
+								min={minNum}
+								max={maxNum}
+								marks={marks}
+								step={stepNum}
+								value={props.value}
+								onChange={(val: number) => {
+									provideFeedback(val);
+									props.changeHandler(val);
+								}}
+								handleStyle={{
+									cursor: 'grab',
+									borderColor: sliderBorderColor
+								}}
+							/>
+							{feedbackText && (
+								<Col span={24} style={{ textAlign: 'center' }}>
+									{feedbackText}
+								</Col>
+							)}
+							{props.note && (
+								<Col span={24} style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+									{props.note}
+								</Col>
+							)}
+						</Col>
+					</Row>
+				</Form.Item>
 			</Col>
-			<Col span={12}>
-				{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
-				<Slider
-					min={minNum}
-					max={maxNum}
-					marks={marks}
-					step={stepNum}
-					value={props.value}
-					onChange={(val: number) => {
-						provideFeedback(val);
-						props.changeHandler(val);
-					}}
-					handleStyle={{
-						cursor: 'grab',
-						borderColor: sliderBorderColor
-					}}
-					style={{ width: '100%' }}
-				/>
-				<div style={{ textAlign: 'center' }}>{feedbackText}</div>
-			</Col>
-			{props.note && <Col span={24} style={{ textAlign: 'center', marginTop: '0.5rem' }}>{props.note}</Col>}
-		</Row>
+		</Fragment>
 	);
 }

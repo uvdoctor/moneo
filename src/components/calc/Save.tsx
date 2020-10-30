@@ -17,8 +17,7 @@ export default function Save() {
 	return (
 		<Section title="How much Do You Save from Your Work Income?">
 			<NumberInput
-				pre="Yearly"
-				post="Savings"
+				pre="Yearly Savings"
 				value={savings}
 				changeHandler={setSavings}
 				currency={currency}
@@ -28,9 +27,7 @@ export default function Save() {
 				step={1000}
 			/>
 			<NumberInput
-				pre="Total Paid"
-				post="Work Weeks"
-				note="in a Year"
+				pre="Total Paid Work Weeks in a Year"
 				value={paidWeeks}
 				changeHandler={setPaidWeeks}
 				min={0}
@@ -39,9 +36,7 @@ export default function Save() {
 				unit="Weeks"
 			/>
 			<NumberInput
-				pre="Average"
-				post="Work-week"
-				note="including travel"
+				pre="Average Work-week including travel"
 				value={hoursPerWeek}
 				changeHandler={setHoursPerWeek}
 				min={0}

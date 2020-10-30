@@ -26,15 +26,8 @@ export default function Result({ results }: ResultProps) {
 				results.length > 0 && (
 					<Col span={24}>
 						<Row className="dd-stats" justify="space-around">
-						{results.map(
-							(result, i: number) =>
-								result ? (
-									<Col key={'result' + i} span={12}>
-										{result}
-									</Col>
-								) : null
-							)}
-							</Row>
+							{results.map((result, i) => <Col key={'result' + i}>{result}</Col>)}
+						</Row>
 					</Col>
 				)}
 				<Tabs

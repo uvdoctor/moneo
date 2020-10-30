@@ -1,6 +1,6 @@
 import React, { Fragment, ReactNode, useContext, useEffect } from 'react';
 import ModalVideoPlayer from '../ModalVideoPlayer';
-import { Row, Col } from 'antd';
+import { Row, Col, Form } from 'antd';
 import { CalcContext } from '../calc/CalcContext';
 interface SectionProps {
 	title: any;
@@ -14,16 +14,20 @@ interface SectionProps {
 
 export default function Section(props: SectionProps) {
 	const { fsb, allInputDone, setStepVideoUrl }: any = useContext(CalcContext);
+	const [form] = Form.useForm();
 
-	useEffect(() => {
-		if (fsb.info.screenWidth >= 1024) setStepVideoUrl(props.videoSrc)
-		else setStepVideoUrl("");
-	}, [fsb.info.screenWidth]);
-	
+	useEffect(
+		() => {
+			if (fsb.info.screenWidth >= 1024) setStepVideoUrl(props.videoSrc);
+			else setStepVideoUrl('');
+		},
+		[ fsb.info.screenWidth ]
+	);
+
 	return (
-		<Row style={{maxWidth: '500px'}}>
+		<Row style={{ maxWidth: '500px' }}>
 			<Col span={24}>
-				<h3 style={{textAlign: 'center'}}>
+				<h3>
 					{`${props.title} `}
 					{props.videoSrc &&
 					(allInputDone || fsb.info.screenWidth < 1024) && (
@@ -36,20 +40,24 @@ export default function Section(props: SectionProps) {
 					{props.toggle}
 				</Col>
 			)}
-			{props.manualMode && props.manualMode > 0 ? (
-				<Col span={24} className="scrollbar" style={{marginRight: '1rem', maxHeight: '200px'}}>{props.manualInput}</Col>
-			) : (
-				React.Children.map(
-					props.children,
-					(child: any, i: number) =>
-						child ? (
-							<Fragment key={'section' + i}>
-								<Col span={24}>{child}</Col>
-								<Col className="fields-divider" span={24} />
-							</Fragment>
-						) : null
-				)
-			)}
+			<Form form={form}>
+				{props.manualMode && props.manualMode > 0 ? (
+					<Col span={24} className="scrollbar" style={{ marginRight: '1rem', maxHeight: '200px' }}>
+						{props.manualInput}
+					</Col>
+				) : (
+					React.Children.map(
+						props.children,
+						(child: any, i: number) =>
+							child ? (
+								<Fragment key={'section' + i}>
+									<Col span={24}>{child}</Col>
+									<Col className="fields-divider" span={24} />
+								</Fragment>
+							) : null
+					)
+				)}
+			</Form>
 			{props.footer && (
 				<Col span={24} style={{ textAlign: 'center' }}>
 					{props.footer}
