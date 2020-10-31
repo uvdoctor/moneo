@@ -16,7 +16,7 @@ export default function CareInsurance() {
 		rangeFactor,
 		endYear,
 		carePremium,
-		carePremiumHandler,
+		setCarePremium,
 		carePremiumSY,
 		setCarePremiumSY,
 		chgPer,
@@ -83,7 +83,7 @@ export default function CareInsurance() {
 			<NumberInput
 				info="How much does annual insurance premium cost today? Actual price will be derived based on this price."
 				value={carePremium}
-				changeHandler={carePremiumHandler}
+				changeHandler={setCarePremium}
 				rangeFactor={rangeFactor}
 				pre="Yearly"
 				post="Premium"
