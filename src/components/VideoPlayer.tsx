@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import ReactPlayer from 'react-player/lazy';
-import { Col, notification } from 'antd';
+import { notification } from 'antd';
 import * as gtag from '../lib/gtag';
 
 interface VideoPlayerProps {
