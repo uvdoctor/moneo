@@ -41,7 +41,7 @@ export default function LoanEmi() {
 		setLoanSIPayPer,
 		setLoanSICapitalize,
 		setLoanYears,
-		setLoanloanRepaymentSY,
+		setLoanRepaymentSY,
 		taxBenefitInt,
 		setTaxBenefitInt,
 		taxRate,
@@ -170,7 +170,7 @@ export default function LoanEmi() {
 					pre="Repay from"
 					options={ryOptions}
 					value={loanRepaymentSY}
-					changeHandler={(year: string) => setLoanloanRepaymentSY(parseInt(year))}
+					changeHandler={(year: string) => setLoanRepaymentSY(parseInt(year))}
 				/>)}
 			{loanBorrowAmt && (	
 				<NumberInput

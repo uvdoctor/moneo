@@ -59,10 +59,8 @@ export default function Input() {
 					<section>
 						<Row justify={stepVideoUrl ? 'space-between' : 'center'}>
 							<Col span={stepVideoUrl ? 11 : 24}>
-								<Row justify="center" style={{ margin: '1rem' }}>
-									<TabContent />
-								</Row>
-								<Row justify="center">
+								<TabContent />
+								<Row style={{ marginLeft: '1rem' }}>
 									{inputTabIndex > 0 && (
 										<Button style={{ margin: '0 8px' }} onClick={() => handleStepChange(-1)}>
 											Previous
@@ -122,7 +120,9 @@ export default function Input() {
 						>
 							<CloseOutlined />
 						</Button>
-							<Col span={24}><TabContent /></Col>
+						<Col span={24}>
+							<TabContent />
+						</Col>
 						{!isPublicCalc && handleSubmit ? (
 							<Row justify="center">
 								<Button

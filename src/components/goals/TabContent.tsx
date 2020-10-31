@@ -11,18 +11,24 @@ export default function TabContent({ result }: TabContentProps) {
 	const tabs = result ? resultTabs : inputTabs;
 	const currentIndex = result ? resultTabIndex : inputTabIndex;
 
-	return tabs[currentIndex].content instanceof Array ? (
-		<Row>
-			{tabs[currentIndex].content.map(
-				(tabContent: ReactNode, i: number) =>
-					tabContent ? (
-						<Col key={'tc' + i} offset={2}>
-							{tabContent}
-						</Col>
-					) : null
-			)}
-		</Row>
-	) : tabs[currentIndex].content ? (
-		tabs[currentIndex].content
-	) : null;
+	return (
+		<Col span={24}
+			style={{ margin: !result ? '1rem' : ''}}
+		>
+			{tabs[currentIndex].content instanceof Array ? (
+				<Row>
+					{tabs[currentIndex].content.map(
+						(tabContent: ReactNode, i: number) =>
+							tabContent ? (
+								<Col key={'tc' + i} offset={2}>
+									{tabContent}
+								</Col>
+							) : null
+					)}
+				</Row>
+			) : tabs[currentIndex].content ? (
+				tabs[currentIndex].content
+			) : null}
+		</Col>
+	);
 }
