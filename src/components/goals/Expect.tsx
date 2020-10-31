@@ -1,22 +1,20 @@
 import React, { Fragment } from 'react';
-import DynamicTgtInput from '../form/dynamictgtinput';
+import DynamicTargetInput from '../form/DynamicTargetInput';
 import Section from '../form/section';
 
 export default function Expect() {
 	return (
 		<Fragment>
 			<Section
-				title="Potential Gains (eg: Inheritance, Selling Investments, etc.)"
-				footer="Exclude taxes & fees."
+				title="Potential Gains (eg: Inheritance, Selling Investments, etc.) excluding taxes & fees"
 			>
-				<DynamicTgtInput />
+				<DynamicTargetInput />
 			</Section>
 
 			<Section
-				title="Potential Losses (eg: Inheritance, Selling Investments, etc.)"
-				footer="Include taxes & fees."
+				title="Potential Losses (eg: Inheritance, Selling Investments, etc.) including taxes & fees"
 			>
-				<DynamicTgtInput lossInput />
+				<DynamicTargetInput lossInput />
 			</Section>
 		</Fragment>
 	);

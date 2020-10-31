@@ -4,13 +4,6 @@ import { CalcContext, getCareTabOption } from "../calc/CalcContext";
 import { findEarliestFFYear } from "./cfutils";
 
 const FIGoalContext = createContext({});
-
-export const EXPECT_LABEL = "Expect";
-export const GIVE_LABEL = "Give";
-export const CF_CHART_LABEL = "Total Portfolio";
-export const AA_FUTURE_CHART_LABEL = "Allocation Plan";
-export const AA_NEXT_YEAR_CHART_LABEL = "Asset Allocation";
-
 interface FIGoalContextProviderProps {
   children: ReactNode;
   mustCFs: Array<number>;
@@ -154,7 +147,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
       ffResult.ffYear ? ffResult.ffYear : null,
       mustCFs,
       tryCFs,
-      pp ? pp : rr
+      pp ? pp : dr
     );
     setFFResult(result);
     console.log("FF Result is ", result);

@@ -1,23 +1,23 @@
-import React, { useState, useEffect, Fragment, useContext } from 'react';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
 import { TargetInput } from '../../api/goals';
 import NumberInput from './numberinput';
 import SelectInput from './selectinput';
 import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { initYearOptions } from '../utils';
 import { createNewTarget } from '../goals/goalutils';
-import { Space } from 'antd';
+import { Col, Row } from 'antd';
 import { FIGoalContext } from '../goals/FIGoalContext';
-interface DynamicTgtInputProps {
+interface DynamicTargetInputProps {
 	lossInput?: boolean;
 }
 
-export default function DynamicTgtInput({ lossInput }: DynamicTgtInputProps) {
-	const { currency, rangeFactor, startYear, endYear, goals, losses, setGoals, setLosses }: any = useContext(
+export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProps) {
+	const { currency, rangeFactor, startYear, endYear, gains, setGains, losses, setLosses }: any = useContext(
 		FIGoalContext
 	);
 	const [ yearOpts, setYearOpts ] = useState(initYearOptions(startYear, endYear - startYear));
-	const tgts = lossInput ? losses : goals;
-	const setTgts = lossInput ? setLosses : setGoals;
+	const tgts = lossInput ? losses : gains;
+	const setTgts = lossInput ? setLosses : setGains;
 
 	const getDefaultYear = () => {
 		if (!tgts || tgts.length === 0) return startYear;
@@ -60,43 +60,47 @@ export default function DynamicTgtInput({ lossInput }: DynamicTgtInputProps) {
 	};
 
 	return (
-		<Fragment>
+		<Col span={24}>
 			{tgts && tgts[0] ? (
 				tgts.map((t: TargetInput, i: number) => (
-					<Space key={'ctr' + i} align="center" size="large">
-						<Space align="center" size="small">
-							<SelectInput
-								pre="Year"
-								options={yearOpts}
-								value={t.year}
-								changeHandler={(year: string) => changeTargetYear(i, year)}
-							/>
-							<NumberInput
-								pre="Amount"
-								currency={currency}
-								rangeFactor={rangeFactor}
-								value={t.val}
-								changeHandler={(val: number) => changeTargetVal(i, val)}
-								min={0}
-								max={900000}
-								step={500}
-							/>
-						</Space>
-						<div style={{ cursor: 'pointer' }} onClick={() => removeTgt(i)}>
-							<MinusCircleOutlined />
-						</div>
-						{i === tgts.length - 1 && (
-							<div style={{ cursor: 'pointer' }} onClick={() => addTgt()}>
-								<PlusCircleOutlined />
-							</div>
-						)}
-					</Space>
+					<Fragment>
+						<SelectInput
+							pre="Year"
+							post={
+								<Row justify="end" style={{minWidth: '50px'}}>
+									<Col style={{ cursor: 'pointer' }} onClick={() => removeTgt(i)}>
+										<MinusCircleOutlined />
+									</Col>
+									{i === tgts.length - 1 && (
+										<Col style={{ cursor: 'pointer' }} onClick={() => addTgt()}>
+											<PlusCircleOutlined />
+										</Col>
+									)}
+								</Row>
+							}
+							options={yearOpts}
+							value={t.year}
+							changeHandler={(year: string) => changeTargetYear(i, year)}
+						/>
+						<Col span={24} style={{marginBottom: '0.5rem'}} />
+						<NumberInput
+							pre=""
+							currency={currency}
+							rangeFactor={rangeFactor}
+							value={t.val}
+							changeHandler={(val: number) => changeTargetVal(i, val)}
+							min={0}
+							max={900000}
+							step={500}
+						/>
+						{i < tgts.length - 1 && <Col span={24} className="fields-divider" />}
+					</Fragment>
 				))
 			) : (
-				<div style={{ cursor: 'pointer' }} onClick={() => addTgt()}>
+				<Row justify="center" style={{ cursor: 'pointer' }} onClick={() => addTgt()}>
 					<PlusCircleOutlined />
-				</div>
+				</Row>
 			)}
-		</Fragment>
+		</Col>
 	);
 }

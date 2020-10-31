@@ -8,12 +8,12 @@ interface CalcTemplateProps {
 }
 
 export default function CalcTemplate({ results }: CalcTemplateProps) {
-	const { allInputDone, cfs }: any = useContext(CalcContext);
+	const { allInputDone }: any = useContext(CalcContext);
 
 	return (
 		<div className={allInputDone ? 'calculator-page' : ''}>
 		<Input />
-			{allInputDone && cfs && cfs.length > 0 && <Result results={results} />}
+			{allInputDone && <Result results={results} />}
 		</div>
 	);
 }

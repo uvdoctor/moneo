@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { ReactNode } from 'react';
 import { getCurrencyList } from '../utils';
 import { Tooltip, Select, Row, Col } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
@@ -7,7 +7,7 @@ interface SelectInputProps {
 	disabled?: boolean;
 	info?: string;
 	pre: string;
-	post?: string;
+	post?: ReactNode;
 	options?: any;
 	value: string | number;
 	unit?: string;
@@ -30,7 +30,7 @@ export default function SelectInput(props: SelectInputProps) {
 			</Col>}
 			<Col>
 				{!props.disabled ? (
-					<Fragment>
+					<Row align="middle">
 						<Select
 							showSearch
 							optionFilterProp="children"
@@ -47,12 +47,13 @@ export default function SelectInput(props: SelectInputProps) {
 								</Option>
 							))}
 						</Select>
-						{props.unit && <label>{props.unit}</label>}
-					</Fragment>
+						{props.unit}
+						{<Row style={{marginLeft: '0.5rem'}}>{props.post}</Row>}
+					</Row>
 				) : (
 						<label>{props.value}</label>
 				)}
-				{<label style={{marginLeft: '0.5rem'}}>{props.post}</label>}
+				
 			</Col>
 			</Row>
 	);

@@ -66,7 +66,7 @@ const getFICFChart = () => {
 };
 
 const getFFGoalResultTabOptions = (isGoal: boolean) => {
-  if(!isGoal) return getFICFChart();
+  if(!isGoal) return [getFICFChart()];
   let options = [{
     label: "Allocation Plan",
     active: true,
