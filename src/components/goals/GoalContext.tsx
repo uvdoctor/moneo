@@ -37,11 +37,14 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     setFFOOM,
     btnClicked,
     setBtnClicked,
-    setCreateNewGoalInput
+    setCreateNewGoalInput,
+    startYear,
+    endYear,
+    setEndYear,
+    changeEndYear,
+    setEYOptions
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
-  const [startYear, setStartYear] = useState<number>(goal.sy);
-  const [endYear, setEndYear] = useState<number>(goal.ey);
   const [loanRepaymentSY, setLoanRepaymentSY] = useState<
     number | null | undefined
   >(goal?.emi?.ry);
@@ -113,7 +116,6 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     goal?.tgts as Array<TargetInput>
   );
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
-  const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 30));
   const [duration, setDuration] = useState<number>(
     getDuration(
       sellAfter,
@@ -195,21 +197,12 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     }
   }, [iSchedule]);
 
-  const changeStartYear = (str: string) => {
-    setStartYear(parseInt(str));
-  };
-
   useEffect(() => {
     if (!loanPer) setEYOptions(initYearOptions(startYear, 30));
     else if (goalType !== GoalType.E) setLoanRepaymentSY(startYear);
     if (goalType === GoalType.B && loanPer) return;
     if (startYear > endYear || endYear - startYear > 30) setEndYear(startYear);
   }, [startYear]);
-
-  const changeEndYear = (str: string) => {
-    let ey = parseInt(str);
-    setEndYear(ey);
-  };
 
   useEffect(() => {
     if (manualMode > 0) return;
@@ -539,11 +532,8 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
           setAnalyzeFor,
           brChartData,
           setBRChartData,
-          eyOptions,
-          setEYOptions,
           duration,
           setDuration,
-          changeStartYear,
           changeEndYear,
           ffGoalEndYear,
           totalIntAmt,

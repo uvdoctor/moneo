@@ -1,51 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Section from '../form/section';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import { changeSelection, initYearOptions, toStringArr } from '../utils';
 import RadialInput from '../form/radialinput';
 import ItemDisplay from '../calc/ItemDisplay';
-import { calculateTotalCP, calculateTotalCPTaxBenefit } from '../goals/cfutils';
+import { calculateTotalCP, calculateTotalCPTaxBenefit } from './cfutils';
 import { COLORS, PLAN_DURATION } from '../../CONSTANTS';
 import { getAge } from './goalutils';
+import { FIGoalContext } from './FIGoalContext';
 
-interface CareInsuranceProps {
-	currency: string;
-	rangeFactor: number;
-	endYear: number;
-	carePremium: number;
-	carePremiumHandler: Function;
-	carePremiumSY: number;
-	carePremiumSYHandler: Function;
-	chgPer: number;
-	chgPerHandler: Function;
-	maxTaxDed: number;
-	maxTaxDedHandler: Function;
-	taxRate: number;
-	premiumDur: number;
-	premiumDurHandler: Function;
-	cpBY: number;
-	cpBYHandler: Function;
-}
-
-export default function CareInsurance({
-	currency,
-	rangeFactor,
-	endYear,
-	carePremium,
-	carePremiumHandler,
-	carePremiumSY,
-	carePremiumSYHandler,
-	chgPer,
-	chgPerHandler,
-	maxTaxDed,
-	maxTaxDedHandler,
-	taxRate,
-	premiumDur,
-	premiumDurHandler,
-	cpBY,
-	cpBYHandler
-}: CareInsuranceProps) {
+export default function CareInsurance() {
+	const {
+		currency,
+		rangeFactor,
+		endYear,
+		carePremium,
+		carePremiumHandler,
+		carePremiumSY,
+		setCarePremiumSY,
+		chgPer,
+		setChgPer,
+		maxTaxDed,
+		setMaxTaxDed,
+		taxRate,
+		premiumDur,
+		setPremiumDur,
+		cpBY,
+		setCPBY
+	}: any = useContext(FIGoalContext);
 	const [ totalCP, setTotalCP ] = useState<number>(0);
 	const [ totalTaxBenefit, setTotalTaxBenfit ] = useState<number>(0);
 	const nowYear = new Date().getFullYear();
@@ -80,14 +63,14 @@ export default function CareInsurance({
 
 	useEffect(
 		() => {
-			if (carePremiumSY > endYear - 35 || carePremiumSY < endYear - 45) carePremiumSYHandler(endYear - 40);
+			if (carePremiumSY > endYear - 35 || carePremiumSY < endYear - 45) setCarePremiumSY(endYear - 40);
 		},
 		[ endYear ]
 	);
 
 	useEffect(
 		() => {
-			cpBYHandler(nowYear);
+			setCPBY(nowYear);
 		},
 		[ carePremium ]
 	);
@@ -118,7 +101,7 @@ export default function CareInsurance({
 					pre="Buy Policy At"
 					unit="Years"
 					post="Age"
-					changeHandler={(val: string) => changeSelection(val, carePremiumSYHandler, endYear - PLAN_DURATION)}
+					changeHandler={(val: string) => changeSelection(val, setCarePremiumSY, endYear - PLAN_DURATION)}
 				/>
 			)}
 			{carePremium && (
@@ -127,13 +110,13 @@ export default function CareInsurance({
 					options={initYearOptions(1, 15)}
 					pre="Pay For"
 					unit="Years"
-					changeHandler={(val: string) => changeSelection(val, premiumDurHandler)}
+					changeHandler={(val: string) => changeSelection(val, setPremiumDur)}
 				/>
 			)}
 			{carePremium && (
 				<RadialInput
 					value={chgPer}
-					changeHandler={chgPerHandler}
+					changeHandler={setChgPer}
 					pre="Premium Changes"
 					label="Yearly"
 					labelBottom
@@ -150,7 +133,7 @@ export default function CareInsurance({
 					pre="Max Yearly Tax Deduction Allowed"
 					currency={currency}
 					value={maxTaxDed}
-					changeHandler={maxTaxDedHandler}
+					changeHandler={setMaxTaxDed}
 					min={0}
 					max={5000}
 					step={500}

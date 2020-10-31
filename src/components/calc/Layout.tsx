@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { GoalType } from "../../api/goals";
 import DDPage from "../DDPage";
-import FFGoal from "../goals/ffgoal";
 import { createNewGoalInput } from "../goals/goalutils";
 import * as gtag from "../../lib/gtag";
 import { Button, Collapse, Row, Col, PageHeader } from "antd";
@@ -11,6 +10,7 @@ import "./Layout.less";
 import GoalContent from "../goals/GoalContent";
 import { CalcContextProvider } from "./CalcContext";
 import { GoalContextProvider } from "../goals/GoalContext";
+import { FIGoalContextProvider } from "../goals/FIGoalContext";
 interface LayoutProps {
 	tabOptions?: Array<any>;
 	resultTabOptions?: Array<any>;
@@ -25,7 +25,6 @@ interface LayoutProps {
 
 export default function Layout(props: LayoutProps) {
 	const { Panel } = Collapse;
-	const [ffResult, setFFResult] = useState<any>({});
 	const [wip, setWIP] = useState<any | null>(null);
 	const nowYear = new Date().getFullYear();
 	const sections: any = {
@@ -106,14 +105,11 @@ export default function Layout(props: LayoutProps) {
 					resultTabOptions={props.resultTabOptions}
 				>
 					{props.type ? (
-						props.type === GoalType.FF ? (
-							<FFGoal
-								mustCFs={[]}
+							props.type === GoalType.FF ? (
+								<FIGoalContextProvider mustCFs={[]}
 								tryCFs={[]}
-								mergedCfs={buildEmptyMergedCFs()}
-								ffResult={ffResult}
-								ffResultHandler={setFFResult}
-							/>
+								mergedCFs={buildEmptyMergedCFs()}>
+									</FIGoalContextProvider>
 						) : (
 							<GoalContextProvider ffGoalEndYear={nowYear + 50}>
 								<GoalContent />

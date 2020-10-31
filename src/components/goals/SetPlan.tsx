@@ -1,5 +1,4 @@
 import React, { useEffect, useState, Fragment } from "react";
-import FFGoal from "./ffgoal";
 import { Card, Menu, Space } from "antd";
 import { appendValue, removeFromArray } from "../utils";
 import YearlyCFChart from "./YearlyCFChart";
@@ -29,6 +28,8 @@ import { Button, notification } from "antd";
 import { GoalContextProvider } from "./GoalContext";
 import GoalContent from "./GoalContent";
 import { CalcContextProvider } from "../calc/CalcContext";
+import { FIGoalContextProvider } from "./FIGoalContext";
+import FIGoalContent from "./FIGoalContent";
 
 export default function SetPlan() {
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
@@ -319,8 +320,6 @@ export default function SetPlan() {
     goalId: string,
     goalImp: APIt.LMH
   ) => {
-    console.log("FFGoal: ", ffGoal);
-    console.log("ff result...:", ffResult);
     if (!ffGoal || !ffResult.ffYear) return null;
     let mCFs: any = Object.assign({}, mergedCFs);
     let highImpCFs: any = Object.assign([], mustCFs);
@@ -392,14 +391,18 @@ export default function SetPlan() {
 
   return wipGoal ? (
       (wipGoal as APIt.CreateGoalInput).type === APIt.GoalType.FF ? (
-        <FFGoal
-          ffResult={ffResult}
-          mergedCfs={mergedCFs}
-          ffResultHandler={setFFResult}
+        <CalcContextProvider goal={wipGoal} addCallback={addGoal}
+        updateCallback={updateGoal}>
+         
+      <FIGoalContextProvider
+          mergedCFs={mergedCFs}
           pp={getPP()}
           mustCFs={mustCFs}
           tryCFs={tryCFs}
-        />
+        >
+          <FIGoalContent />
+        </FIGoalContextProvider>
+        </CalcContextProvider>
       ) : (
         ffGoal && (
           <CalcContextProvider goal={wipGoal} addCallback={addGoal}
@@ -495,10 +498,16 @@ export default function SetPlan() {
                 />
               )}
               {viewMode === aaLabel && (
-                <AssetAllocationChart
-                  aa={ffResult.aa}
-                  rr={rr}
-                />
+                <CalcContextProvider goal={ffGoal} addCallback={addGoal} updateCallback={updateGoal}>
+                  <FIGoalContextProvider
+                            mergedCFs={mergedCFs}
+                            pp={getPP()}
+                            mustCFs={mustCFs}
+                            tryCFs={tryCFs}
+                  >
+                    <AssetAllocationChart />
+                  </FIGoalContextProvider>
+                </CalcContextProvider>
               )}
               {viewMode === goalsLabel && (
                 <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">

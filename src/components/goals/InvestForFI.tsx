@@ -1,38 +1,25 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Section from '../form/section';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import { getRangeFactor, toCurrency } from '../utils';
-import { LMH } from '../../api/goals';
 import { getRAOptions } from './goalutils';
+import { FIGoalContext } from './FIGoalContext';
 
-interface FIInvestProps {
-	currency: string;
-	nw: number;
-	nwHandler: Function;
-	avgMonthlySavings: number;
-	avgMonthlySavingsHandler: Function;
-	monthlySavingsRate: number;
-	monthlySavingsRateHandler: Function;
-	riskProfile?: LMH | null;
-	riskProfileHandler?: Function | null;
-	rr?: number | null;
-	rrHandler?: Function | null;
-}
-
-export function FIInvest({
-	currency,
-	nw,
-	nwHandler,
-	avgMonthlySavings,
-	avgMonthlySavingsHandler,
-	monthlySavingsRate,
-	monthlySavingsRateHandler,
-	riskProfile,
-	riskProfileHandler,
-	rr,
-	rrHandler
-}: FIInvestProps) {
+export function InvestForFI() {
+	const {
+		currency,
+		nw,
+		setNW,
+		avgMonthlySavings,
+		setAvgMonthlySavings,
+		monthlySavingsRate,
+		setMonthlySavingsRate,
+		riskProfile,
+		setRiskProfile,
+		rr,
+		setRR
+	}: any = useContext(FIGoalContext);
 	const rangeFactor = getRangeFactor(currency);
 
 	return (
@@ -44,7 +31,7 @@ export function FIInvest({
 				min={-100000}
 				max={900000}
 				post="Portfolio"
-				changeHandler={nwHandler}
+				changeHandler={setNW}
 				step={1000}
 				currency={currency}
 				rangeFactor={rangeFactor}
@@ -59,7 +46,7 @@ export function FIInvest({
 				min={-5000}
 				max={10000}
 				post="Investment"
-				changeHandler={avgMonthlySavingsHandler}
+				changeHandler={setAvgMonthlySavings}
 				step={100}
 				currency={currency}
 				rangeFactor={rangeFactor}
@@ -76,7 +63,7 @@ export function FIInvest({
 				post="Every Month by"
 				unit="%"
 				value={monthlySavingsRate}
-				changeHandler={monthlySavingsRateHandler}
+				changeHandler={setMonthlySavingsRate}
 				min={0}
 				max={3}
 				step={0.1}
@@ -85,19 +72,19 @@ export function FIInvest({
 					currency
 				)} this month`}
 			/>
-			{riskProfileHandler && riskProfile ? (
+			{setRiskProfile && riskProfile ? (
 				<SelectInput
 					info="How much Risk are You willing to take in order to achieve higher Investment Return?"
 					pre="Can Tolerate"
 					post="Investment Loss"
 					value={riskProfile}
-					changeHandler={riskProfileHandler}
+					changeHandler={setRiskProfile}
 					options={getRAOptions()}
 				/>
 			) : (
 				<NumberInput
 					value={rr as number}
-					changeHandler={rrHandler}
+					changeHandler={setRR}
 					min={0}
 					max={10}
 					step={0.1}

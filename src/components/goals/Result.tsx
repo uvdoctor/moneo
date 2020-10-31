@@ -5,28 +5,40 @@ import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
 import CalcHeader from '../calc/CalcHeader';
 import TabContent from './TabContent';
 import { CalcContext } from '../calc/CalcContext';
+import { GoalType } from '../../api/goals';
+import GoalHeader from './GoalHeader';
+import FIGoalHeader from './FIGoalHeader';
 interface ResultProps {
-	results: Array<ReactNode>;
+	results: Array<ReactNode> | ReactNode;
 }
 
 export default function Result({ results }: ResultProps) {
-	const { resultTabs, resultTabIndex, setResultTabIndex }: any = useContext(CalcContext);
+	const { goal, resultTabs, resultTabIndex, setResultTabIndex }: any = useContext(CalcContext);
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
 
 	return (
 		<div className="calculator-content">
-			<CalcHeader />
+			{goal.type ? goal.type === GoalType.FF ? <FIGoalHeader /> : <GoalHeader /> : <CalcHeader />}
 			<div ref={chartDiv}>
 				<Row justify="end" style={{ cursor: 'pointer' }} onClick={toggle}>
 					{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
 				</Row>
-				{results &&
-				results.length > 0 && (
-					<Row className="dd-stats" justify="space-around">
-							{results.map((result, i) => <Col key={'result' + i} span={11}>{result}</Col>)}
-					</Row>
+				{results && results instanceof Array ? (
+					results.length > 0 && (
+						<Row className="dd-stats" justify="space-around">
+							{results.map((result, i) => (
+								<Col key={'result' + i} span={11}>
+									{result}
+								</Col>
+							))}
+						</Row>
+					)
+				) : (
+					<Col className="dd-stats" span={24}>
+						{results}
+					</Col>
 				)}
 				<Tabs
 					className="dd-chart"

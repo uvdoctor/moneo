@@ -1,5 +1,5 @@
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
-import { getRangeFactor } from '../utils';
+import { getRangeFactor, initYearOptions } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import SVGTaxBenefit from "../svgtaxbenefit";
 import SVGPay from "../svgpay";
@@ -7,11 +7,9 @@ import SVGLoan from "../svgloan";
 import SVGCashFlow from "../svgcashflow";
 import SVGSell from "../svgsell";
 import SVGScale from "../svgscale";
-import { BENEFIT_LABEL, EXPECT_LABEL, GIVE_LABEL, INVEST_LABEL, SPEND_LABEL, CF_CHART_LABEL, getCareTabOption } from "../goals/ffgoal";
 import SVGPiggy from "../svgpiggy";
 import SVGChart from "../svgchart";
 import SVGAAChart from "../goals/svgaachart";
-import { AA_FUTURE_CHART_LABEL, AA_NEXT_YEAR_CHART_LABEL } from "../goals/ffgoal";
 import SVGBarChart from "../svgbarchart";
 import SVGInheritance from "../goals/svginheritance";
 import TaxAdjustment from "../calc/TaxAdjustment";
@@ -26,47 +24,61 @@ import LoanScheduleChart from "../goals/LoanScheduleChart";
 import { GoalType } from '../../api/goals';
 import { isLoanEligible } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
+import Expect from '../goals/Expect';
+import Nominees from '../goals/nominees';
+import SVGCare from '../goals/svgcare';
+import RetIncome from '../goals/retincome';
+import { ExpenseAfterFF } from '../goals/expenseafterff';
+import Care from '../goals/Care';
+import { InvestForFI } from '../goals/InvestForFI';
+import AssetAllocationChart from '../goals/AssetAllocationChart';
+import AAPlanChart from '../goals/AAPlanChart';
 
 const CalcContext = createContext({});
 
+export const getCareTabOption = () => {
+  return {
+      label: "Care",
+      active: true,
+      svg: SVGCare,
+      content: <Care />
+  }
+}
+
 const getFFGoalTabOptions = () => {
   return [
-    { label: INVEST_LABEL, active: true, svg: SVGPiggy },
-    { label: SPEND_LABEL, active: true, svg: SVGPay },
-    { label: BENEFIT_LABEL, active: true, svg: SVGTaxBenefit },
+    { label: "Invest", active: true, svg: SVGPiggy, content: <InvestForFI /> },
+    { label: "Spend", active: true, svg: SVGPay, content: <ExpenseAfterFF /> },
+    { label: "Benefit", active: true, svg: SVGTaxBenefit, content: <RetIncome /> },
     getCareTabOption(),
-    { label: EXPECT_LABEL, active: true, svg: SVGCashFlow },
-    { label: GIVE_LABEL, active: true, svg: SVGInheritance },
+    { label: "Expect", active: true, svg: SVGCashFlow, content: <Expect /> },
+    { label: "Give", active: true, svg: SVGInheritance, content: <Nominees /> },
   ]
 }
 
+const getFICFChart = () => {
+  return {
+    label: "Total Portfolio",
+    active: true,
+    svg: SVGChart,
+    content: <DDLineChart />
+  }
+};
+
 const getFFGoalResultTabOptions = (isGoal: boolean) => {
-  return !isGoal
-  ? [
-      {
-        label: CF_CHART_LABEL,
-        active: true,
-      svg: SVGChart,
-        content: <DDLineChart />
-      },
-    ]
-  : [
-      {
-        label: AA_NEXT_YEAR_CHART_LABEL,
-        active: true,
-        svg: SVGAAChart,
-      },
-      {
-        label: AA_FUTURE_CHART_LABEL,
-        active: true,
-        svg: SVGBarChart,
-      },
-      {
-        label: CF_CHART_LABEL,
-        active: true,
-        svg: SVGChart,
-      },
-    ];
+  if(!isGoal) return getFICFChart();
+  let options = [{
+    label: "Allocation Plan",
+    active: true,
+    svg: SVGAAChart,
+    content: <AAPlanChart />
+  }, {
+    label: "Asset Allocation",
+    active: true,
+    svg: SVGBarChart,
+    content: <AssetAllocationChart />
+  }, getFICFChart()];  
+  return options;
 }
 
 const getGoalResultTabOptions = (type: GoalType, isGoal: boolean) => {
@@ -177,10 +189,23 @@ function CalcContextProvider({
   const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const [createNewGoalInput, setCreateNewGoalInput] = useState<Function>(() => true)
-  const [ rating, setRating ] = useState<number>(0);
+  const [rating, setRating ] = useState<number>(0);
   const [feedbackText, setFeedbackText] = useState<string>("");
   const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
   const [stepVideoUrl, setStepVideoUrl] = useState<string>("");
+  const [startYear, setStartYear] = useState<number>(goal.sy);
+  const [endYear, setEndYear] = useState<number>(goal.ey);
+  const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 30));
+	const [ffResult, setFFResult] = useState<any>({});
+
+  const changeStartYear = (str: string) => {
+    setStartYear(parseInt(str));
+  };
+
+  const changeEndYear = (str: string) => {
+    let ey = parseInt(str);
+    setEndYear(ey);
+  };
 
 	const changeCurrency = (curr: string) => {
 		setRangeFactor(Math.round(getRangeFactor(curr) / rangeFactor));
@@ -258,7 +283,16 @@ function CalcContextProvider({
         feedbackText,
         setFeedbackText,
         stepVideoUrl,
-        setStepVideoUrl
+        setStepVideoUrl,
+        startYear,
+        changeStartYear,
+        endYear,
+        changeEndYear,
+        setEndYear,
+        eyOptions,
+        setEYOptions,
+        ffResult,
+        setFFResult
 			}}
     >
       {children}

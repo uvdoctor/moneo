@@ -1,38 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { MAX_RETIREMENT_AGE, PLAN_DURATION } from '../../CONSTANTS';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
 import { changeSelection, initYearOptions } from '../utils';
+import { FIGoalContext } from './FIGoalContext';
 import { getLastPossibleFFYear } from './goalutils';
-interface RetIncomeProps {
-	currency: string;
-	rangeFactor: number;
-	endYear: number;
-	retirementIncome: number;
-	retirementIncomeHandler: Function;
-	retirementIncomePer: number;
-	retirementIncomePerHandler: Function;
-	retirementIncomeSY: number;
-	retirementIncomeSYHandler: Function;
-}
 
-export default function RetIncome({
-	currency,
-	rangeFactor,
-	endYear,
-	retirementIncome,
-	retirementIncomeHandler,
-	retirementIncomePer,
-	retirementIncomePerHandler,
-	retirementIncomeSY,
-	retirementIncomeSYHandler
-}: RetIncomeProps) {
+export default function RetIncome() {
+	const {
+		currency,
+		rangeFactor,
+		endYear,
+		retirementIncome,
+		setRetirementIncome,
+		retirementIncomePer,
+		setRetirementIncomePer,
+		retirementIncomeSY,
+		setRetirementIncomeSY
+	}: any = useContext(FIGoalContext);
 	useEffect(
 		() => {
 			let lastPossibleFFYear = getLastPossibleFFYear(endYear);
 			if (retirementIncomeSY > lastPossibleFFYear - 2 || retirementIncomeSY < lastPossibleFFYear + 5)
-				retirementIncomeSYHandler(lastPossibleFFYear);
+				setRetirementIncomeSY(lastPossibleFFYear);
 		},
 		[ endYear ]
 	);
@@ -42,7 +33,7 @@ export default function RetIncome({
 			title="Retirement Income Benefit (eg: Pension, Social Security, etc.)">
 				<NumberInput
 					value={retirementIncome}
-					changeHandler={retirementIncomeHandler}
+					changeHandler={setRetirementIncome}
 					rangeFactor={rangeFactor}
 					pre="Yearly"
 					post="Benefit"
@@ -54,7 +45,7 @@ export default function RetIncome({
 				{retirementIncome && (
 					<NumberInput
 						value={retirementIncomePer}
-						changeHandler={retirementIncomePerHandler}
+						changeHandler={setRetirementIncomePer}
 						pre="Benefit"
 						post="Increases"
 						note="Yearly"
@@ -73,7 +64,7 @@ export default function RetIncome({
 						pre="Withdrawal Age"
 						unit="Onwards"
 						changeHandler={(val: string) => {
-							changeSelection(val, retirementIncomeSYHandler, endYear - PLAN_DURATION);
+							changeSelection(val, setRetirementIncomeSY, endYear - PLAN_DURATION);
 						}}
 					/>
 				)

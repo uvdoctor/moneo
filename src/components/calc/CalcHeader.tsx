@@ -1,11 +1,15 @@
 import { Modal, PageHeader, Rate, Input, Row, Col } from 'antd';
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, ReactNode, useContext, useState } from 'react';
 import SelectInput from '../form/selectinput';
 import { CalcContext } from './CalcContext';
 import Draggable from 'react-draggable';
 import * as gtag from '../../lib/gtag';
+interface CalcHeaderProps {
+	children?: any;
+	title?: ReactNode;
+}
 
-export default function CalcHeader() {
+export default function CalcHeader({ title, children }: CalcHeaderProps) {
 	const { TextArea } = Input;
 	const {
 		goal,
@@ -38,7 +42,7 @@ export default function CalcHeader() {
 			<Row className="calculator-header">
 				<Col span={24}>
 					<PageHeader
-						title={goal.name}
+						title={title ? title : goal.name}
 						extra={[
 							<SelectInput
 								key="currselect"
@@ -51,7 +55,8 @@ export default function CalcHeader() {
 					/>
 				</Col>
 				<Col span={24} style={{ color: 'white' }}>
-					<Row justify="center">
+					<Row align="middle" justify="space-between">
+						{children ? children : null}
 						<div style={{ width: '270px' }}>
 							<span style={{ marginRight: '0.5rem' }}>Rate Us</span>
 							<Rate

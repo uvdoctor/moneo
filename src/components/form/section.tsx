@@ -1,4 +1,4 @@
-import React, { Fragment, ReactNode, useContext, useEffect } from 'react';
+import React, { ReactNode, useContext, useEffect } from 'react';
 import ModalVideoPlayer from '../ModalVideoPlayer';
 import { Row, Col, Form } from 'antd';
 import { CalcContext } from '../calc/CalcContext';
@@ -44,22 +44,16 @@ export default function Section(props: SectionProps) {
 				{props.manualMode && props.manualMode > 0 ? (
 					<Col span={24}>{props.manualInput}</Col>
 				) : (
-					<Col span={24}>
-						{React.Children.map(
-							props.children,
-							(child: any, i: number) =>
-								child ? (
-									<Fragment key={'section' + i}>
-										<Col span={24}>
-											<Row align="middle" justify="space-between">
-												{child}
-											</Row>
-										</Col>
-										<Col className="fields-divider" span={24} />
-									</Fragment>
-								) : null
-						)}
-					</Col>
+					React.Children.map(
+						props.children,
+						(child: any, i: number) =>
+							child ? (
+								<Col span={24} key={'section' + i} style={{minWidth: '280px'}}>
+									<Col span={24}>{child}</Col>
+									<Col className="fields-divider" span={24} />
+								</Col>
+							) : null
+					)
 				)}
 			</Form>
 			{props.footer && (

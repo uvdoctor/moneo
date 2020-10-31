@@ -25,6 +25,7 @@ export default function Cost() {
 		startYear,
 		goal
 	}: any = useContext(GoalContext);
+	const nowYear = new Date().getFullYear();
 
 	const changeTargetVal = (val: number, i: number) => {
 		if (!wipTargets || !setWIPTargets) return;
@@ -55,22 +56,15 @@ export default function Cost() {
 
 	return (
 		<Section
-			title={
-				manualMode > 0 ? (
-					`Total Cost is ${toCurrency(price, currency)}`
-				) : (
-					`Cost${startYear > goal.by ? ` in ${startYear} ~ ${toCurrency(price, currency)}` : ''}`
-				)
-			}
+			title={`Total Cost is ${toCurrency(price, currency)}`}
 			toggle={
 				setManualMode && <HSwitch rightText={`Custom Payment Plan`} value={manualMode} setter={setManualMode} />
 			}
 			manualInput={
 				wipTargets && (
-					<Col span={24}>
 					<Row align="middle" justify="space-between">
 						{wipTargets.map((t: TargetInput, i: number) => (
-							<Col span={24} key={'t' + i} style={{ marginBottom: '1rem' }}>
+							<Col span={24} key={'t' + i}>
 								<label>{`${t.year} `}</label>
 								<NumberInput
 									pre=""
@@ -84,8 +78,7 @@ export default function Cost() {
 								/>
 							</Col>
 						))}
-						</Row>
-					</Col>
+					</Row>
 				)
 			}
 			manualMode={manualMode}
@@ -103,7 +96,8 @@ export default function Cost() {
 			/>
 			{startYear > goal.by && (
 				<NumberInput
-					pre="Cost Changes Yearly by"
+					pre="Cost Changes Yearly"
+					note={startYear > nowYear && `From ${new Date().getFullYear()} to ${startYear}`}
 					unit="%"
 					min={-10}
 					max={10}

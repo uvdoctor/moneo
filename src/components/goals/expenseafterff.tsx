@@ -1,34 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
-interface ExpenseAfterFFProps {
-	currency: string;
-	rangeFactor: number;
-	expenseAfterFF: number;
-	expenseAfterFFHandler: Function;
-	expenseChgRate: number;
-	expenseChgRateHandler: Function;
-	taxRate: number;
-	taxRateHandler: Function;
-	expenseBYHandler: Function;
-}
+import { FIGoalContext } from './FIGoalContext';
 
-export function ExpenseAfterFF({
-	currency,
-	rangeFactor,
-	expenseAfterFF,
-	expenseAfterFFHandler,
-	expenseChgRate,
-	expenseChgRateHandler,
-	taxRate,
-	taxRateHandler,
-	expenseBYHandler
-}: ExpenseAfterFFProps) {
+export function ExpenseAfterFF() {
+	const {
+		currency,
+		rangeFactor,
+		expenseAfterFF,
+		setExpenseAfterFF,
+		expenseChgRate,
+		setExpenseChgRate,
+		taxRate,
+		setTaxRate,
+		setExpenseBY
+	}: any = useContext(FIGoalContext);
 	const nowYear = new Date().getFullYear();
 
 	useEffect(
 		() => {
-			expenseBYHandler(nowYear);
+			setExpenseBY(nowYear);
 		},
 		[ expenseAfterFF ]
 	);
@@ -43,7 +34,7 @@ export function ExpenseAfterFF({
 				currency={currency}
 				rangeFactor={rangeFactor}
 				value={expenseAfterFF}
-				changeHandler={expenseAfterFFHandler}
+				changeHandler={setExpenseAfterFF}
 				min={0}
 				max={50000}
 				step={100}
@@ -58,7 +49,7 @@ export function ExpenseAfterFF({
 				max={10}
 				step={0.1}
 				value={expenseChgRate}
-				changeHandler={expenseChgRateHandler}
+				changeHandler={setExpenseChgRate}
 			/>
 			<NumberInput
 				info="Tax Rate, in case You have to pay tax for Investment Gains and Withdrawing from Retirement Accounts beyond the allowed Yearly Limit."
@@ -68,7 +59,7 @@ export function ExpenseAfterFF({
 				max={20}
 				step={0.1}
 				value={taxRate}
-				changeHandler={taxRateHandler}
+				changeHandler={setTaxRate}
 				unit="%"
 			/>
 		</Section>

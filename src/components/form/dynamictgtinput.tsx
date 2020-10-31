@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { TargetInput } from '../../api/goals';
 import NumberInput from './numberinput';
 import SelectInput from './selectinput';
@@ -6,62 +6,63 @@ import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { initYearOptions } from '../utils';
 import { createNewTarget } from '../goals/goalutils';
 import { Space } from 'antd';
+import { FIGoalContext } from '../goals/FIGoalContext';
 interface DynamicTgtInputProps {
-	tgts: Array<TargetInput>;
-	currency: string;
-	rangeFactor: number;
-	startYear: number;
-	endYear: number;
-	tgtsHandler: Function;
+	lossInput?: boolean;
 }
 
-export default function DynamicTgtInput(props: DynamicTgtInputProps) {
-	const [ yearOpts, setYearOpts ] = useState(initYearOptions(props.startYear, props.endYear - props.startYear));
+export default function DynamicTgtInput({ lossInput }: DynamicTgtInputProps) {
+	const { currency, rangeFactor, startYear, endYear, goals, losses, setGoals, setLosses }: any = useContext(
+		FIGoalContext
+	);
+	const [ yearOpts, setYearOpts ] = useState(initYearOptions(startYear, endYear - startYear));
+	const tgts = lossInput ? losses : goals;
+	const setTgts = lossInput ? setLosses : setGoals;
 
 	const getDefaultYear = () => {
-		if (!props.tgts || props.tgts.length === 0) return props.startYear;
-		return props.tgts[props.tgts.length - 1].year + 1;
+		if (!tgts || tgts.length === 0) return startYear;
+		return tgts[tgts.length - 1].year + 1;
 	};
 
 	const newRec = () => createNewTarget(getDefaultYear(), 0);
 
 	const filterTgts = () => {
-		let ft = props.tgts.filter((t) => t.year >= props.startYear && t.year <= props.endYear);
-		props.tgtsHandler([ ...ft ]);
+		let ft = tgts.filter((t: TargetInput) => t.year >= startYear && t.year <= endYear);
+		setTgts([ ...ft ]);
 	};
 
 	useEffect(
 		() => {
 			filterTgts();
-			setYearOpts(initYearOptions(props.startYear, props.endYear - props.startYear));
+			setYearOpts(initYearOptions(startYear, endYear - startYear));
 		},
-		[ props.startYear, props.endYear ]
+		[ startYear, endYear ]
 	);
 
 	const addTgt = () => {
-		props.tgts.push(newRec());
-		props.tgtsHandler([ ...props.tgts ]);
+		tgts.push(newRec());
+		setTgts([ ...tgts ]);
 	};
 
 	const removeTgt = (index: number) => {
-		props.tgts.splice(index, 1);
-		props.tgtsHandler([ ...props.tgts ]);
+		tgts.splice(index, 1);
+		setTgts([ ...tgts ]);
 	};
 
 	const changeTargetYear = (index: number, year: string) => {
-		props.tgts[index].year = parseInt(year);
-		props.tgtsHandler([ ...props.tgts ]);
+		tgts[index].year = parseInt(year);
+		setTgts([ ...tgts ]);
 	};
 
 	const changeTargetVal = (index: number, val: number) => {
-		props.tgts[index].val = val;
-		props.tgtsHandler([ ...props.tgts ]);
+		tgts[index].val = val;
+		setTgts([ ...tgts ]);
 	};
 
 	return (
 		<Fragment>
-			{props.tgts && props.tgts[0] ? (
-				props.tgts.map((t, i) => (
+			{tgts && tgts[0] ? (
+				tgts.map((t: TargetInput, i: number) => (
 					<Space key={'ctr' + i} align="center" size="large">
 						<Space align="center" size="small">
 							<SelectInput
@@ -72,8 +73,8 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
 							/>
 							<NumberInput
 								pre="Amount"
-								currency={props.currency}
-								rangeFactor={props.rangeFactor}
+								currency={currency}
+								rangeFactor={rangeFactor}
 								value={t.val}
 								changeHandler={(val: number) => changeTargetVal(i, val)}
 								min={0}
@@ -84,7 +85,7 @@ export default function DynamicTgtInput(props: DynamicTgtInputProps) {
 						<div style={{ cursor: 'pointer' }} onClick={() => removeTgt(i)}>
 							<MinusCircleOutlined />
 						</div>
-						{i === props.tgts.length - 1 && (
+						{i === tgts.length - 1 && (
 							<div style={{ cursor: 'pointer' }} onClick={() => addTgt()}>
 								<PlusCircleOutlined />
 							</div>

@@ -4,7 +4,7 @@ import Result from '../goals/Result';
 import { CalcContext } from './CalcContext';
 
 interface CalcTemplateProps {
-	results: Array<ReactNode>;
+	results: Array<ReactNode> | ReactNode;
 }
 
 export default function CalcTemplate({ results }: CalcTemplateProps) {

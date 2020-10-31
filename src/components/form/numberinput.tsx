@@ -112,10 +112,6 @@ export default function NumberInput(props: NumberInputProps) {
 									max={maxNum}
 									step={stepNum}
 									onChange={(val) => {
-										if (Number.isNaN(val)) {
-											props.changeHandler(0);
-											return;
-										}
 										provideFeedback(val as number);
 										props.changeHandler(val as number);
 									}}

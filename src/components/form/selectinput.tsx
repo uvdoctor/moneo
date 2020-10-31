@@ -19,15 +19,12 @@ export default function SelectInput(props: SelectInputProps) {
 	const { Option } = Select;
 
 	return (
-		<Col span={24}>
 		<Row align="middle" justify="space-between">
 			{props.pre && <Col>
 				{props.pre}
 				{props.info && (
 					<Tooltip title={props.info}>
-						<span>
 							<InfoCircleOutlined />
-						</span>
 					</Tooltip>
 				)}
 			</Col>}
@@ -51,13 +48,12 @@ export default function SelectInput(props: SelectInputProps) {
 							))}
 						</Select>
 						{props.unit && <label>{props.unit}</label>}
-						</Fragment>
-						) : (
-							<label>{props.value}</label>
-					)}
+					</Fragment>
+				) : (
+						<label>{props.value}</label>
+				)}
 				{<label style={{marginLeft: '0.5rem'}}>{props.post}</label>}
-							</Col>
-			</Row>
 			</Col>
+			</Row>
 	);
 }
