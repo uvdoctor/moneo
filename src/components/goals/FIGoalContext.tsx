@@ -15,15 +15,18 @@ interface FIGoalContextProviderProps {
 function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIGoalContextProviderProps) {
   const {
     goal,
+    addCallback,
+    updateCallback,
     currency,
     rangeFactor,
     allInputDone,
     inputTabIndex,
     setInputTabIndex,
     cfs,
+    setCFs,
     dr,
     setDR,
-    rr,
+    setRR,
     btnClicked,
     setBtnClicked,
     setCreateNewGoalInput,
@@ -150,6 +153,8 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
       pp ? pp : dr
     );
     setFFResult(result);
+    if (addCallback && updateCallback) setRR([...result.rr]);
+    setCFs([...Object.values(result.ffCfs)]);
     console.log("FF Result is ", result);
   }, [
     expenseBY,
@@ -174,7 +179,6 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     expenseChgRate,
     monthlySavingsRate,
     riskProfile,
-    rr,
     allInputDone,
   ]);
 

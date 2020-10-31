@@ -171,7 +171,8 @@ function CalcContextProvider({
   addCallback,
   updateCallback
 }: CalcContextProviderProps) {
-	const fsb = useFullScreenBrowser();
+  const fsb = useFullScreenBrowser();
+  const nowYear = new Date().getFullYear();
 	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions ? tabOptions : goal ? getGoalTabOptions(goal.type) : []);
 	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions ? resultTabOptions : goal ? getGoalResultTabOptions(goal.type, addCallback && updateCallback ? true : false) : []);
 	const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal?.ccy ? goal.ccy : 'USD');
@@ -195,7 +196,7 @@ function CalcContextProvider({
   const [stepVideoUrl, setStepVideoUrl] = useState<string>("");
   const [startYear, setStartYear] = useState<number>(goal.sy);
   const [endYear, setEndYear] = useState<number>(goal.ey);
-  const [eyOptions, setEYOptions] = useState(initYearOptions(startYear, 30));
+  const [eyOptions, setEYOptions] = useState(goal.type && goal.type === GoalType.FF ? initYearOptions(1960, nowYear - 15 - 1960) : initYearOptions(startYear, 30));
 	const [ffResult, setFFResult] = useState<any>({});
 
   const changeStartYear = (str: string) => {

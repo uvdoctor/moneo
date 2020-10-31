@@ -55,7 +55,7 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 					/>
 				</Col>
 				<Col span={24} style={{ color: 'white' }}>
-					<Row align="middle" justify="space-between">
+					<Row align="middle" justify="space-around">
 						{children ? children : null}
 						<div style={{ width: '270px' }}>
 							<span style={{ marginRight: '0.5rem' }}>Rate Us</span>
