@@ -1,24 +1,20 @@
 import React, { useContext } from 'react';
+import { CalcContext } from '../calc/CalcContext';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import HSwitch from '../HSwitch';
 import { GoalContext } from './GoalContext';
 
 export default function RentComparison() {
+	const { currency, rangeFactor, dr, setDR }: any = useContext(CalcContext);
 	const {
-		currency,
-		rangeFactor,
 		rentAmt,
 		setRentAmt,
 		rentChgPer,
 		setRentChgPer,
 		taxRate,
 		rentTaxBenefit,
-		setRentTaxBenefit,
-		analyzeFor,
-		setAnalyzeFor,
-		dr,
-		setDR
+		setRentTaxBenefit
 	}: any = useContext(GoalContext);
 
 	return (
@@ -51,29 +47,16 @@ export default function RentComparison() {
 					unit="%"
 				/>
 			)}
-			{rentAmt > 0 &&
-			dr !== null && (
+			{dr !== null && (
 				<NumberInput
-					value={dr as number}
+					value={dr}
 					changeHandler={setDR}
 					min={0}
 					max={15}
 					step={0.1}
-					pre="Remaining Money Earns"
+					pre="Invest Remaining Money At"
 					unit="%"
 					note="Yearly After paying taxes & fees"
-				/>
-			)}
-			{rentAmt > 0 &&
-			dr !== null && (
-				<NumberInput
-					pre="Analyze from 1 to "
-					value={analyzeFor}
-					changeHandler={setAnalyzeFor}
-					min={10}
-					max={50}
-					step={5}
-					unit="Years"
 				/>
 			)}
 		</Section>

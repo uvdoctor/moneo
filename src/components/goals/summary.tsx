@@ -64,7 +64,7 @@ export default function Summary({ deleteCallback, editCallback, ffImpactYears }:
 						<FFImpact impactYears={ffImpactYears} />
 					</Col>
 					<Col span={8}>
-						<OppCost contextType={GoalContext} />
+						<OppCost />
 					</Col>
 				</Row>
 			)}

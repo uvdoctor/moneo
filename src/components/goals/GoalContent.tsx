@@ -1,5 +1,6 @@
 import React, { Fragment, useContext } from 'react'
 import { GoalType } from '../../api/goals';
+import { CalcContext } from '../calc/CalcContext';
 import CalcTemplate from '../calc/CalcTemplate';
 import ItemDisplay from '../calc/ItemDisplay';
 import OppCost from '../calc/oppcost';
@@ -10,11 +11,11 @@ import GoalHeader from './GoalHeader';
 export default function GoalContent() {
   const {
     allInputDone,
-    brAns,
     startYear,
     dr,
     goal
-  }: any = useContext(GoalContext);
+  }: any = useContext(CalcContext);
+  const { brAns }: any = useContext(GoalContext)
   const nowYear = new Date().getFullYear();
 
   return (
@@ -25,7 +26,7 @@ export default function GoalContent() {
         (dr === null || dr === undefined) ? 
           <FFImpact />
           : goal.type === GoalType.B && <ItemDisplay label="Buy or Rent?" result={brAns} />,
-        <OppCost contextType={GoalContext} />
+        <OppCost />
         ] : []}
       />
       </Fragment>

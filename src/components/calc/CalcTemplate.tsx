@@ -12,7 +12,7 @@ export default function CalcTemplate({ results }: CalcTemplateProps) {
 
 	return (
 		<div className={allInputDone ? 'calculator-page' : ''}>
-		<Input />
+			<Input />
 			{allInputDone && <Result results={results} />}
 		</div>
 	);

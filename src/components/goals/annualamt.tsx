@@ -24,7 +24,7 @@ export default function AnnualAmt({ income }: AnnualAmtProps) {
 		amStartYear,
 		aiStartYear,
 		setAMStartYear,
-		setAIStartYear
+		setAIStartYear,
 	}: any = useContext(GoalContext);
 	const [ syOptions, setSYOptions ] = useState<object>(initYearOptions(startYear, 10));
 	const [ totalAmt, setTotalAmt ] = useState<number>(0);
@@ -64,7 +64,7 @@ export default function AnnualAmt({ income }: AnnualAmtProps) {
 			{(income ? aiPer : amCostPer) && (
 				<SelectInput
 					pre="From Year"
-					post="Onwards"
+					post={`to ${startYear + duration - 1}`}
 					options={syOptions}
 					value={income ? aiStartYear : amStartYear}
 					changeHandler={income ? setAIStartYear : setAMStartYear}

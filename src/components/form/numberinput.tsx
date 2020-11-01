@@ -75,7 +75,7 @@ export default function NumberInput(props: NumberInputProps) {
 	};
 
 	return (
-		<Col span={24} style={{ minWidth: '250px' }}>
+		<div style={{ minWidth: '250px' }}>
 			<Col span={24}>
 				<Row justify="space-between">
 					<Col>
@@ -153,6 +153,6 @@ export default function NumberInput(props: NumberInputProps) {
 					</Row>
 				</Form.Item>
 			</Col>
-		</Col>
+		</div>
 	);
 }

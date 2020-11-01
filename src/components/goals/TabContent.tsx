@@ -12,10 +12,7 @@ export default function TabContent({ result }: TabContentProps) {
 	const currentIndex = result ? resultTabIndex : inputTabIndex;
 
 	return (
-		<Col span={24}
-			style={{ margin: !result ? '1rem' : ''}}
-		>
-			{tabs[currentIndex].content instanceof Array ? (
+			tabs[currentIndex].content instanceof Array ? (
 				<Row>
 					{tabs[currentIndex].content.map(
 						(tabContent: ReactNode, i: number) =>
@@ -28,7 +25,6 @@ export default function TabContent({ result }: TabContentProps) {
 				</Row>
 			) : tabs[currentIndex].content ? (
 				tabs[currentIndex].content
-			) : null}
-		</Col>
+			) : null
 	);
 }
