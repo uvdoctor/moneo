@@ -1,6 +1,6 @@
-import React, { ReactNode, useContext, useEffect } from 'react';
+import React, { Fragment, ReactNode, useContext, useEffect } from 'react';
 import ModalVideoPlayer from '../ModalVideoPlayer';
-import { Row, Col, Form } from 'antd';
+import { Row, Col } from 'antd';
 import { CalcContext } from '../calc/CalcContext';
 interface SectionProps {
 	title: any;
@@ -14,7 +14,6 @@ interface SectionProps {
 
 export default function Section(props: SectionProps) {
 	const { fsb, allInputDone, setStepVideoUrl }: any = useContext(CalcContext);
-	const [ form ] = Form.useForm();
 
 	useEffect(
 		() => {
@@ -40,7 +39,6 @@ export default function Section(props: SectionProps) {
 					{props.toggle}
 				</Col>
 			)}
-			<Form form={form}>
 				{props.manualMode && props.manualMode > 0 ? (
 					<Col span={24}>{props.manualInput}</Col>
 				) : (
@@ -48,18 +46,18 @@ export default function Section(props: SectionProps) {
 						props.children,
 						(child: any, i: number) =>
 							child ? (
-								<Col span={24} key={'section' + i} style={{minWidth: '280px'}}>
+								<Col span={24} key={'section' + i} style={{ minWidth: '280px' }}>
 									<Col span={24}>{child}</Col>
 									<Col className="fields-divider" span={24} />
 								</Col>
 							) : null
 					)
 				)}
-			</Form>
 			{props.footer && (
-				<Col span={24} style={{ textAlign: 'center' }}>
-					{props.footer}
-				</Col>
+				<Fragment>
+					<Col span={24}>{props.footer}</Col>
+					<Col className="fields-divider" span={24} />
+				</Fragment>
 			)}
 		</Row>
 	);

@@ -303,7 +303,7 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
 
   useEffect(() => {
     if (manualMode > 0 && endYear === startYear) setEndYear(startYear + 2);
-    else if (manualMode < 1 && loanPer === 0 && goalType === GoalType.B)
+    else if (manualMode < 1 && !loanPer && goalType === GoalType.B)
       setEndYear(startYear);
   }, [manualMode, loanPer]);
 

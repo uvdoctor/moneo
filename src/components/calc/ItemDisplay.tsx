@@ -52,7 +52,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 							? toCurrency(Math.abs(props.result), props.currency)
 							: toReadableNumber(Math.abs(props.result), props.decimal ? props.decimal : 0)
 						: props.result}
-				valueStyle={{ color: props.pl ? (props.result <= 0 ? COLORS.RED : COLORS.GREEN) : COLORS.DEFAULT }}
+				valueStyle={{ color: props.pl ? props.result < 0 ? COLORS.RED : props.result > 0 ? COLORS.GREEN : COLORS.DEFAULT : COLORS.DEFAULT, textAlign: 'center' }}
 			/>
 			<Row justify="center">{props.footer}</Row>
 		</Fragment>

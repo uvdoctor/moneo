@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { parseNumber, toCurrency, toReadableNumber } from '../utils';
-import { Form, Slider } from 'antd';
+import { Slider } from 'antd';
 import { COLORS } from '../../CONSTANTS';
 import { Tooltip, InputNumber, Row, Col } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
@@ -99,10 +99,8 @@ export default function NumberInput(props: NumberInputProps) {
 						)}
 				</Row>
 			</Col>
-			{props.note && <Col span={24}>{props.note}</Col>}
 			<Col span={24}>
-				<Form.Item hasFeedback>
-					<Row justify="space-between" align="top">
+					<Row justify="space-between" align="top" style={{marginBottom: '1.5rem'}}>
 						{props.currency && (
 							<Col span={10}>
 								<InputNumber
@@ -151,8 +149,8 @@ export default function NumberInput(props: NumberInputProps) {
 							)}
 						</Col>
 					</Row>
-				</Form.Item>
 			</Col>
+			{props.note && <Col span={24}>{props.note}</Col>}
 		</div>
 	);
 }

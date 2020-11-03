@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import ItemDisplay from '../calc/ItemDisplay';
 import Section from '../form/section';
 import RadialInput from '../form/radialinput';
@@ -8,7 +8,7 @@ import { calculateSellPrice, calculateXIRR } from './cfutils';
 import { getDuration } from './goalutils';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { GoalContext } from './GoalContext';
-import { Col, Row } from 'antd';
+import AnnualAmt from './annualamt';
 
 export default function Sell() {
 	const {
@@ -37,51 +37,49 @@ export default function Sell() {
 	);
 
 	return (
-		<Section title="Sell Details" footer="Sell Price above excludes taxes & fees.">
-			<NumberInput
-				info="Rate at which Price may change Yearly."
-				pre="Yearly Price Changes"
-				unit="%"
-				min={-20}
-				max={20}
-				step={0.5}
-				value={assetChgRate}
-				changeHandler={setAssetChgRate}
-			/>
-			<RadialInput
-				info="Years after which You Plan to Sell this Purchase."
-				label="Years"
-				pre="Sell After"
-				labelBottom={true}
-				data={toStringArr(3, 30)}
-				value={sellAfter}
-				step={1}
-				changeHandler={setSellAfter}
-			/>
-			<Col span={24}>
-				<Row justify="space-between" align="middle">
-					<Col>
+		<Fragment>
+			<Section title="Sell Details">
+				<NumberInput
+					info="Rate at which Price may change Yearly."
+					pre="Yearly Price Changes"
+					unit="%"
+					min={-20}
+					max={20}
+					step={0.5}
+					value={assetChgRate}
+					changeHandler={setAssetChgRate}
+				/>
+				<RadialInput
+					info="Years after which You Plan to Sell this Purchase."
+					label="Years"
+					pre="Sell After"
+					post={
 						<ItemDisplay
-							label="You May Get"
-							footer={`In ${startYear + sellAfter}`}
+							label="Sell Price after taxes & fees"
 							result={Math.round(sellPrice)}
 							currency={currency}
+							footer={
+								annualReturnPer && (
+									<ItemDisplay
+										svg={annualReturnPer > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+										label={""}
+										result={annualReturnPer}
+										decimal={2}
+										unit="% Yearly"
+										pl
+									/>
+								)
+							}
 						/>
-					</Col>
-					{annualReturnPer && (
-						<Col>
-							<ItemDisplay
-								svg={annualReturnPer > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-								label={`Annualized ${annualReturnPer > 0 ? 'Gain' : 'Loss'}`}
-								result={annualReturnPer}
-								decimal={2}
-								unit="%"
-								pl
-							/>
-						</Col>
-					)}
-				</Row>
-			</Col>
-		</Section>
+					}
+					labelBottom={true}
+					data={toStringArr(3, 30)}
+					value={sellAfter}
+					step={1}
+					changeHandler={setSellAfter}
+				/>
+			</Section>
+			<AnnualAmt />
+		</Fragment>
 	);
 }
