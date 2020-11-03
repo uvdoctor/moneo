@@ -8,8 +8,14 @@
 	}
 
 	& > section {
+		width: 100%;
 		background-color: #fff;
 		margin-bottom: 50px;
+		padding: 25px;
+
+		& > .ant-row {
+			width: 100%;
+		}
 	}
 
 	& .video-container {
@@ -23,6 +29,24 @@
 		min-height: 400px;
 		width: 100%;
 	}
+
+	& .ant-steps-item-process,
+	& .ant-steps-item-wait {
+		& .ant-steps-item-container {
+			& .ant-steps-item-title {
+				&:after {
+					background-color: #cecfd1;
+					height: 2px;
+				}
+			}
+		}
+	}
+}
+
+.steps-heading {
+	border-bottom: #3d4a53 1px solid;
+	color: #499824;
+	padding-bottom: 3px;
 }
 
 @media all and (max-width: 991.98px) {
