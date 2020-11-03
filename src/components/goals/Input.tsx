@@ -1,12 +1,12 @@
-import React, { Fragment, useContext } from 'react';
-import { Button, Steps, Space, Row, Col } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
-import TabContent from './TabContent';
-import { SaveOutlined } from '@ant-design/icons';
-import { CalcContext } from '../calc/CalcContext';
+import React, { Fragment, useContext } from "react";
+import { Button, Steps, Space, Row, Col } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
+import TabContent from "./TabContent";
+import { SaveOutlined } from "@ant-design/icons";
+import { CalcContext } from "../calc/CalcContext";
 
-import './Input.less';
-import VideoPlayer from '../VideoPlayer';
+import "./Input.less";
+import VideoPlayer from "../VideoPlayer";
 
 export default function Input() {
 	const {
@@ -49,7 +49,10 @@ export default function Input() {
 									key={tab.label}
 									title={
 										<Space align="center" size="small">
-											<tab.svg disabled={!tab.active} selected={i === inputTabIndex} />
+											<tab.svg
+												disabled={!tab.active}
+												selected={i === inputTabIndex}
+											/>
 											{tab.label}
 										</Space>
 									}
@@ -58,13 +61,16 @@ export default function Input() {
 							))}
 						</Steps>
 					</header>
-					<section style={{ maxWidth: '1200px' }}>
-						<Row justify={stepVideoUrl ? 'space-between' : 'center'}>
-							<Col span={stepVideoUrl ? 11 : 24} style={{ marginLeft: '1rem', maxWidth: '500px' }}>
+					<section>
+						<Row justify={stepVideoUrl ? "space-between" : "center"}>
+							<Col span={stepVideoUrl ? 11 : 24}>
 								<TabContent />
 								<Row>
 									{inputTabIndex > 0 && (
-										<Button style={{ margin: '0 8px' }} onClick={() => handleStepChange(-1)}>
+										<Button
+											style={{ margin: "0 8px" }}
+											onClick={() => handleStepChange(-1)}
+										>
 											Previous
 										</Button>
 									)}
@@ -74,7 +80,10 @@ export default function Input() {
 										</Button>
 									)}
 									{inputTabIndex === inputTabs.length - 1 && (
-										<Button type="primary" onClick={() => setAllInputDone(true)}>
+										<Button
+											type="primary"
+											onClick={() => setAllInputDone(true)}
+										>
 											Done
 										</Button>
 									)}
@@ -89,7 +98,11 @@ export default function Input() {
 					</section>
 				</div>
 			) : (
-				<div className={`calculator-options ${showOptionsForm ? 'show-form' : 'hide-form'}`}>
+				<div
+					className={`calculator-options ${
+						showOptionsForm ? "show-form" : "hide-form"
+					}`}
+				>
 					<div className="overlay" />
 					<div>
 						<Row justify="space-between">
@@ -97,16 +110,19 @@ export default function Input() {
 								<Col
 									key={tab.label}
 									style={{
-										cursor: tab.active ? 'pointer' : 'cursor-not-allowed'
+										cursor: tab.active ? "pointer" : "cursor-not-allowed",
 									}}
-									className={inputTabIndex === i ? 'active' : ''}
+									className={inputTabIndex === i ? "active" : ""}
 									onClick={() => {
 										setOptionsVisibility(true);
 										setInputTabIndex(i);
 									}}
 								>
 									<Row justify="center">
-										<tab.svg disabled={!tab.active} selected={inputTabIndex === i} />
+										<tab.svg
+											disabled={!tab.active}
+											selected={inputTabIndex === i}
+										/>
 									</Row>
 									<Row justify="center">{tab.label}</Row>
 								</Col>
