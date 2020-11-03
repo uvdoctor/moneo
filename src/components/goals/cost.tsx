@@ -90,9 +90,9 @@ export default function Cost() {
 				rangeFactor={rangeFactor}
 				value={startingPrice}
 				changeHandler={setStartingPrice}
-				min={0}
+				min={goal.type === GoalType.B ? 1000 : 100}
 				max={goal.type === GoalType.B ? 1500000 : 50000}
-				step={500}
+				step={goal.type === GoalType.B ? 500 : 100}
 			/>
 			{startYear > goal.by && (
 				<NumberInput

@@ -6,6 +6,7 @@ import { Col } from 'antd';
 import { GoalContext } from './GoalContext';
 import Section from '../form/section';
 import { CalcContext } from '../calc/CalcContext';
+import { GoalType } from '../../api/goals';
 
 export default function Amt() {
 	const { goal, startYear, changeStartYear, endYear, changeEndYear, eyOptions }: any = useContext(CalcContext);
@@ -26,7 +27,7 @@ export default function Amt() {
 					pre="To Year"
 					value={endYear}
 					info="Year in which You End Paying"
-					disabled={goal.type === goal.type.B && manualMode < 1}
+					disabled={goal.type === GoalType.B && manualMode < 1}
 					changeHandler={changeEndYear}
 					options={eyOptions}
 				/>

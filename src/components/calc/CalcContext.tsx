@@ -110,45 +110,29 @@ const getGoalResultTabOptions = (type: GoalType, isGoal: boolean) => {
 
 const getGoalTabOptions = (type: GoalType) => {
   if (type === GoalType.FF) return getFFGoalTabOptions();
-  return type === GoalType.B
-      ? [
-          { label: "Cost", active: true, svg: SVGPay, content: <Amt /> },
-          {
-            label: "Tax",
-            active: true,
-            svg: SVGTaxBenefit,
-            content: <TaxAdjustment />
-          },
-          { label: "Loan", active: true, svg: SVGLoan, content: <LoanEmi /> },
-          {
-            label: "Yearly",
-            active: true,
-            svg: SVGCashFlow,
-            content: [<AnnualAmt />, <AnnualAmt income />]
-          },
-          { label: "Sell", active: true, svg: SVGSell, content: <Sell /> },
-          { label: "Rent?", active: true, svg: SVGScale, content: <RentComparison /> },
-        ]
-      : !isLoanEligible(type)
-      ? [
-          { label: "Cost", active: true, svg: SVGPay, content: <Amt /> },
-          {
-            label: "Tax",
-            active: true,
-            svg: SVGTaxBenefit,
-            content: <TaxAdjustment />
-          },
-        ]
-      : [
-          { label: "Cost", active: true, svg: SVGPay, content: <Amt /> },
-          {
-            label: "Tax",
-            active: true,
-            svg: SVGTaxBenefit,
-            content: <TaxAdjustment />
-          },
-          { label: "Loan", active: true, svg: SVGLoan, content: <LoanEmi /> },
-        ]
+  let options = [
+    { label: "Cost", active: true, svg: SVGPay, content: <Amt /> },
+    {
+      label: "Tax",
+      active: true,
+      svg: SVGTaxBenefit,
+      content: <TaxAdjustment />
+    }
+  ];
+  if (isLoanEligible(type)) options.push(
+    { label: "Loan", active: true, svg: SVGLoan, content: <LoanEmi /> }
+  );
+  if (type === GoalType.B) {
+    options.push({ label: "Sell", active: true, svg: SVGSell, content: <Sell /> });
+    options.push({
+      label: "Yearly",
+      active: true,
+      svg: SVGCashFlow,
+      content: <AnnualAmt income />
+    });
+    options.push({ label: "Rent?", active: true, svg: SVGScale, content: <RentComparison /> });
+  }
+  return options;
 }
 
 

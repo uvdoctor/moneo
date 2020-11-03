@@ -29,8 +29,7 @@ export default function SelectInput(props: SelectInputProps) {
 				)}
 			</Col>}
 			<Col>
-				{!props.disabled ? (
-					<Row align="middle">
+				<Row align="middle">
 						<Select
 							showSearch
 							optionFilterProp="children"
@@ -40,6 +39,7 @@ export default function SelectInput(props: SelectInputProps) {
 							filterOption={(input, option) =>
 								option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
 							}
+							disabled={props.disabled}
 						>
 							{Object.keys(props.currency ? getCurrencyList() : props.options).map((key) => (
 								<Option key={key} value={key}>
@@ -50,10 +50,6 @@ export default function SelectInput(props: SelectInputProps) {
 						{props.unit}
 						{<Row style={{marginLeft: '0.5rem'}}>{props.post}</Row>}
 					</Row>
-				) : (
-						<label>{props.value}</label>
-				)}
-				
 			</Col>
 			</Row>
 	);
