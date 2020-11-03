@@ -131,11 +131,11 @@ const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
     tdr: 0,
     tdl: 0,
     ccy: currency,
-    cp: 0,
+    cp: 500000,
     chg: 3,
     type: goalType,
     tgts: [],
-    dr: 6,
+    dr: 5,
     imp: APIt.LMH.M,
     manual: 0,
   } as APIt.CreateGoalInput;

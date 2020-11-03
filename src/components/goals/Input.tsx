@@ -20,7 +20,8 @@ export default function Input() {
 		isPublicCalc,
 		handleSubmit,
 		disableSubmit,
-		stepVideoUrl
+		stepVideoUrl,
+		errors
 	}: any = useContext(CalcContext);
 	const { Step } = Steps;
 
@@ -41,6 +42,7 @@ export default function Input() {
 							onChange={(index: number) => {
 								if (index < inputTabIndex) setInputTabIndex(index);
 							}}
+							status={errors.hasOwnProperty(inputTabIndex) && "error"}
 						>
 							{inputTabs.map((tab: any, i: number) => (
 								<Step

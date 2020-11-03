@@ -182,6 +182,7 @@ function CalcContextProvider({
   const [endYear, setEndYear] = useState<number>(goal.ey);
   const [eyOptions, setEYOptions] = useState(goal.type && goal.type === GoalType.FF ? initYearOptions(1960, nowYear - 15 - 1960) : initYearOptions(startYear, 30));
 	const [ffResult, setFFResult] = useState<any>({});
+  const [errors, setErrors] = useState<any>({});
 
   const changeStartYear = (str: string) => {
     setStartYear(parseInt(str));
@@ -277,7 +278,9 @@ function CalcContextProvider({
         eyOptions,
         setEYOptions,
         ffResult,
-        setFFResult
+        setFFResult,
+        errors,
+        setErrors
 			}}
     >
       {children}
