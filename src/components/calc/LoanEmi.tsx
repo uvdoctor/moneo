@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
 import NumberInput from '../form/numberinput';
 import { getEmi, getTotalInt } from './finance';
 import { toCurrency, toStringArr, initYearOptions } from '../utils';
@@ -15,7 +15,7 @@ import ItemDisplay from './ItemDisplay';
 import { COLORS } from '../../CONSTANTS';
 import { isTaxCreditEligible } from '../goals/goalutils';
 import HSwitch from '../HSwitch';
-import { Collapse } from 'antd';
+import { Collapse, Row } from 'antd';
 import { GoalContext } from '../goals/GoalContext';
 
 export default function LoanEmi() {
@@ -162,26 +162,33 @@ export default function LoanEmi() {
 				step={5}
 				labelBottom={true}
 				label="of Cost"
-				pre="Loan Amount"
-				post={`${toCurrency(loanBorrowAmt, currency)}`}
+				post={
+					<Fragment>
+						<ItemDisplay label="Loan Amount" result={loanBorrowAmt} currency={currency} />
+						<ItemDisplay label="Monthly" result={emi} currency={currency} />
+					</Fragment>
+				}
 			/>
 			{loanBorrowAmt && (
-				<SelectInput
-					pre="Repay from"
-					options={ryOptions}
-					value={loanRepaymentSY}
-					changeHandler={(year: string) => setLoanRepaymentSY(parseInt(year))}
-				/>)}
-			{loanBorrowAmt && (	
 				<NumberInput
-					pre="For"
+					pre={
+						<Row align="middle">
+							<SelectInput
+								pre="Repay from"
+								options={ryOptions}
+								value={loanRepaymentSY}
+								changeHandler={(year: string) => setLoanRepaymentSY(parseInt(year))}
+							/>
+							for
+						</Row>
+					}
 					unit="Years"
 					value={loanYears}
 					changeHandler={setLoanYears}
 					min={0.5}
 					max={30}
 					step={0.5}
-					/>
+				/>
 			)}
 			{loanBorrowAmt && (
 				<NumberInput
@@ -242,9 +249,6 @@ export default function LoanEmi() {
 					step={0.1}
 				/>
 			)}
-			{loanBorrowAmt && 
-				<ItemDisplay label="Pay" result={emi} currency={currency} footer="Monthly" />
-			}
 			{loanBorrowAmt &&
 			goal.type === goal.type.E && (
 				<RadialInput
