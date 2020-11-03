@@ -62,9 +62,9 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 					/>
 				</Col>
 				<Col span={24} className="secondary-header">
-					<Row>
-						{children && <Col span={12}>{children}</Col>}
-						<Col span={12}>
+					<Row justify={children ? "space-around" : "start"}>
+						{children && <Col>{children}</Col>}
+						<Col>
 							<span style={{ marginRight: "0.5rem" }}>Rate Us</span>
 							<Rate
 								allowClear

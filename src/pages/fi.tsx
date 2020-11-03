@@ -19,14 +19,14 @@ export default function FI() {
 			assumptions={[ 'adfas', 'asdfsad' ]}
 			features={[ 'fsdgdf', 'fgdssdf' ]}
 			results={[
-				<ItemDisplay result="Earliest Possible Year for FI" svg={<SVGHourGlass />} />,
-				<ItemDisplay result="Savings Needed for FI" svg={<SVGPiggy selected />} />,
-				<ItemDisplay result={`${nowYear + 1} Asset Allocation`} svg={<SVGAAChart selected />} />,
-				<ItemDisplay
+				<ItemDisplay key="r1" result="Earliest Possible Year for FI" svg={<SVGHourGlass />} />,
+				<ItemDisplay key="r2" result="Savings Needed for FI" svg={<SVGPiggy selected />} />,
+				<ItemDisplay key="r3" result={`${nowYear + 1} Asset Allocation`} svg={<SVGAAChart selected />} />,
+				<ItemDisplay key="r4"
 					result={`Asset Allocation Plan from ${nowYear + 2} Onwards`}
 					svg={<SVGBarChart selected />}
 				/>,
-				<ItemDisplay result={`Yearly Savings from ${nowYear + 1} Onwards`} svg={<SVGChart selected />} />
+				<ItemDisplay key="r5" result={`Yearly Savings from ${nowYear + 1} Onwards`} svg={<SVGChart selected />} />
 			]}
 			resultImg="step1.png"
 		/>
