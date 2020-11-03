@@ -7,6 +7,7 @@ import { CalcContext } from "../calc/CalcContext";
 
 import "./Input.less";
 import VideoPlayer from "../VideoPlayer";
+import { COLORS } from "../../CONSTANTS";
 
 export default function Input() {
 	const {
@@ -21,7 +22,7 @@ export default function Input() {
 		handleSubmit,
 		disableSubmit,
 		stepVideoUrl,
-		errors
+		error
 	}: any = useContext(CalcContext);
 	const { Step } = Steps;
 
@@ -42,7 +43,7 @@ export default function Input() {
 							onChange={(index: number) => {
 								if (index < inputTabIndex) setInputTabIndex(index);
 							}}
-							status={errors.hasOwnProperty(inputTabIndex) && "error"}
+							status={error ? "error" : "process"}
 						>
 							{inputTabs.map((tab: any, i: number) => (
 								<Step
@@ -65,7 +66,7 @@ export default function Input() {
 						<Row justify={stepVideoUrl ? "space-between" : "center"}>
 							<Col span={stepVideoUrl ? 11 : 24}>
 								<TabContent />
-								<Row>
+								<Row align="middle">
 									{inputTabIndex > 0 && (
 										<Button
 											style={{ margin: "0 8px" }}
@@ -75,10 +76,11 @@ export default function Input() {
 										</Button>
 									)}
 									{inputTabIndex < inputTabs.length - 1 && (
-										<Button type="primary" onClick={() => handleStepChange()}>
+										<Button type="primary" disabled={error} onClick={() => handleStepChange()}>
 											Next
 										</Button>
 									)}
+									{error && <div style={{color: COLORS.RED, marginLeft: '0.5rem'}}>{error}</div>}
 									{inputTabIndex === inputTabs.length - 1 && (
 										<Button
 											type="primary"

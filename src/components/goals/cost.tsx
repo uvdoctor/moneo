@@ -7,23 +7,28 @@ import { createNewTarget } from './goalutils';
 import { toCurrency } from '../utils';
 import { Row, Col } from 'antd';
 import { GoalContext } from './GoalContext';
+import { CalcContext } from '../calc/CalcContext';
 
 export default function Cost() {
 	const {
+		currency,
+		rangeFactor,
+		startYear,
+		endYear,
+		goal,
+		inputTabs,
+		setInputTabs
+	}: any = useContext(CalcContext);
+	const {
 		startingPrice,
 		setStartingPrice,
-		rangeFactor,
 		wipTargets,
 		setWIPTargets,
-		currency,
 		price,
 		priceChgRate,
 		setPriceChgRate,
-		endYear,
 		manualMode,
 		setManualMode,
-		startYear,
-		goal
 	}: any = useContext(GoalContext);
 	const nowYear = new Date().getFullYear();
 
@@ -33,7 +38,7 @@ export default function Cost() {
 		setWIPTargets([ ...wipTargets ]);
 	};
 
-	const initwipTargets = () => {
+	const initTargets = () => {
 		if (!wipTargets || !setWIPTargets || !startYear || !endYear) return;
 		let targets: Array<TargetInput> = [];
 		for (let year = startYear; year <= endYear; year++) {
@@ -49,16 +54,31 @@ export default function Cost() {
 
 	useEffect(
 		() => {
-			if (manualMode > 0) initwipTargets();
+			if (manualMode > 0) initTargets();
 		},
 		[ manualMode, startYear, endYear ]
 	);
+
+	const changeManualMode = (checked: boolean) => {
+		if (checked) {
+			if (inputTabs[2].active) {
+				inputTabs[2].active = false;
+				setInputTabs([...inputTabs]);
+			}
+		} else {
+			if (!inputTabs[2].active) {
+				inputTabs[2].active = true;
+				setInputTabs([...inputTabs]);
+			}
+		}
+		setManualMode(checked);
+	}
 
 	return (
 		<Section
 			title={`Total Cost is ${toCurrency(price, currency)}`}
 			toggle={
-				setManualMode && <HSwitch rightText={`Custom Payment Plan`} value={manualMode} setter={setManualMode} />
+				setManualMode && <HSwitch rightText={`Custom Payment Plan`} value={manualMode} setter={changeManualMode} />
 			}
 			manualInput={
 				wipTargets && (

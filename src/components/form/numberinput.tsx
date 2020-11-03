@@ -89,66 +89,70 @@ export default function NumberInput(props: NumberInputProps) {
 							</Tooltip>
 						)}
 					</Col>
-						{!props.currency && (
-					<Col>
+					{!props.currency && (
+						<Col>
 							<b>{`${toReadableNumber(
 								props.value,
 								props.step && props.step < 1 ? 2 : 0
 							)} ${props.unit}`}</b>
-					</Col>
-						)}
+						</Col>
+					)}
 				</Row>
 			</Col>
 			<Col span={24}>
-					<Row justify="space-between" align="top" style={{marginBottom: '1.5rem'}}>
-						{props.currency && (
-							<Col span={10}>
-								<InputNumber
-									ref={inputRef}
-									value={props.value}
-									min={minNum}
-									max={maxNum}
-									step={stepNum}
-									onChange={(val) => {
-										provideFeedback(val as number);
-										props.changeHandler(val as number);
-									}}
-									formatter={(val) => toCurrency(val as number, props.currency as string)}
-									parser={(val) => parseNumber(val as string, props.currency)}
-									onPressEnter={(e: any) => {
-										e.preventDefault();
-										//@ts-ignore
-										inputRef.current.blur();
-									}}
-									style={{ width: '100%', marginBottom: '0px' }}
-								/>
-							</Col>
-						)}
-						<Col span={props.currency ? 12 : 24}>
-							{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
-							<Slider
+				<Row justify="space-between" align="top" style={{ marginBottom: '1.5rem' }}>
+					{props.currency && (
+						<Col span={10}>
+							<InputNumber
+								ref={inputRef}
+								value={props.value}
 								min={minNum}
 								max={maxNum}
-								marks={marks}
 								step={stepNum}
-								value={props.value}
-								onChange={(val: number) => {
-									provideFeedback(val);
-									props.changeHandler(val);
+								onChange={(val) => {
+									provideFeedback(val as number);
+									props.changeHandler(val as number);
 								}}
-								handleStyle={{
-									cursor: 'grab',
-									borderColor: sliderBorderColor
+								formatter={(val) => toCurrency(val as number, props.currency as string)}
+								parser={(val) => parseNumber(val as string, props.currency)}
+								onPressEnter={(e: any) => {
+									e.preventDefault();
+									//@ts-ignore
+									inputRef.current.blur();
 								}}
-								style={{ width: '100%', marginTop: '0px', marginBottom: '0px' }}
+								onBlur={(e: any) => {
+									let num = parseInt(parseNumber(e.currentTarget.value, props.currency));
+									if (!num || num < props.min) props.changeHandler(props.min);
+								}}
+								style={{ width: '100%', marginBottom: '0px' }}
 							/>
-							{feedbackText && (
-								<Col span={24} style={{ textAlign: 'center' }}>
-									{feedbackText}
-								</Col>
-							)}
 						</Col>
-					</Row>
+					)}
+					<Col span={props.currency ? 12 : 24}>
+						{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
+						<Slider
+							min={minNum}
+							max={maxNum}
+							marks={marks}
+							step={stepNum}
+							value={props.value}
+							onChange={(val: number) => {
+								provideFeedback(val);
+								props.changeHandler(val);
+							}}
+							handleStyle={{
+								cursor: 'grab',
+								borderColor: sliderBorderColor
+							}}
+							style={{ width: '100%', marginTop: '0px', marginBottom: '0px' }}
+						/>
+						{feedbackText && (
+							<Col span={24} style={{ textAlign: 'center' }}>
+								{feedbackText}
+							</Col>
+						)}
+					</Col>
+				</Row>
 			</Col>
 			{props.note && <Col span={24}>{props.note}</Col>}
 		</div>

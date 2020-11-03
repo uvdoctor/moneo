@@ -42,7 +42,9 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     endYear,
     setEndYear,
     changeEndYear,
-    setEYOptions
+    setEYOptions,
+    error,
+    setError
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const [loanRepaymentSY, setLoanRepaymentSY] = useState<
@@ -216,6 +218,8 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     if (manualMode < 1) return;
     let p = 0;
     wipTargets.forEach((t) => (p += t.val));
+    if (!p) setError('Please enter a valid custom payment plan');
+    else setError('');
     setPrice(Math.round(p));
   }, [wipTargets, manualMode]);
 
@@ -305,6 +309,7 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     if (manualMode > 0 && endYear === startYear) setEndYear(startYear + 2);
     else if (manualMode < 1 && !loanPer && goalType === GoalType.B)
       setEndYear(startYear);
+    if (manualMode < 1 && error) setError("");
   }, [manualMode, loanPer]);
 
   const getNextTaxAdjRentAmt = (val: number) => {

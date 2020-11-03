@@ -181,7 +181,6 @@ export const toCurrency = (
   currency: string,
   decimal: boolean = false
 ) => {
-  if (Number.isNaN(num)) return "";
   const formatter = new Intl.NumberFormat(navigator.language, {
     style: "currency",
     currency: currency,
@@ -192,7 +191,6 @@ export const toCurrency = (
 };
 
 export const toReadableNumber = (num: number, decimalDigits: number = 0) => {
-  if (Number.isNaN(num)) return "";
   const formatter = new Intl.NumberFormat(navigator.language, {
     minimumFractionDigits: decimalDigits,
     maximumFractionDigits: decimalDigits,
