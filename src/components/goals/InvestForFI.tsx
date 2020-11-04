@@ -40,15 +40,13 @@ export function InvestForFI() {
                   You Can Put Negative Value if Your Expenses are More than Income. 
                   This will be used to forecast Your Future Savings.`}
 				value={avgMonthlySavings}
-				pre="Monthly"
+				pre="Average Monthly Investment"
 				min={500}
 				max={10000}
-				post="Investment"
 				changeHandler={setAvgMonthlySavings}
 				step={100}
 				currency={currency}
 				rangeFactor={rangeFactor}
-				note="on average"
 			/>
 			<NumberInput
 				info={`Given Average Monthly Investment of ${toCurrency(
@@ -57,8 +55,7 @@ export function InvestForFI() {
 				)}, ${monthlySavingsRate}% monthly increase in investment comes to about 
           ${toCurrency(Math.round(avgMonthlySavings * (1 + monthlySavingsRate / 100)), currency)} 
           for this month. Due to the power of compounding, even small regular increase in investment can make a significant impact in the long term.`}
-				pre="Increase Investment"
-				post="Every Month by"
+				pre="Increase Investment Monthly"
 				unit="%"
 				value={monthlySavingsRate}
 				changeHandler={setMonthlySavingsRate}
@@ -85,8 +82,7 @@ export function InvestForFI() {
 					min={0}
 					max={10}
 					step={0.1}
-					pre="Investment"
-					post="Earns At least"
+					pre="Investment Earns About"
 					unit="%"
 					note="Yearly after taxes & fees"
 				/>

@@ -35,8 +35,7 @@ export default function RetIncome() {
 					value={retirementIncome}
 					changeHandler={setRetirementIncome}
 					rangeFactor={rangeFactor}
-					pre="Yearly"
-					post="Benefit"
+					pre="Yearly Benefit"
 					min={0}
 					max={50000}
 					step={500}
@@ -46,9 +45,7 @@ export default function RetIncome() {
 					<NumberInput
 						value={retirementIncomePer}
 						changeHandler={setRetirementIncomePer}
-						pre="Benefit"
-						post="Increases"
-						note="Yearly"
+						pre="Yearly Benefit Increases by"
 						min={0}
 						max={3}
 						step={0.1}

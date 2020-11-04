@@ -3,7 +3,6 @@ import { useFullScreen } from 'react-browser-hooks';
 import { Tabs, Row, Col } from 'antd';
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
 import CalcHeader from '../calc/CalcHeader';
-import TabContent from './TabContent';
 import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
 import GoalHeader from './GoalHeader';
@@ -53,7 +52,7 @@ export default function Result() {
 								</Fragment>
 							}
 						>
-							<TabContent result />
+							{resultTabs[resultTabIndex].content}
 						</TabPane>
 					))}
 				</Tabs>

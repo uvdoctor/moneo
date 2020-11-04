@@ -1,7 +1,6 @@
 import React, { Fragment, useContext } from "react";
 import { Button, Steps, Space, Row, Col } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import TabContent from "./TabContent";
 import { SaveOutlined } from "@ant-design/icons";
 import { CalcContext } from "../calc/CalcContext";
 
@@ -65,7 +64,7 @@ export default function Input() {
 					<section>
 						<Row justify={stepVideoUrl ? "space-between" : "center"}>
 							<Col span={stepVideoUrl ? 11 : 24}>
-								<TabContent />
+								{inputTabs[inputTabIndex].content}
 								<Row align="middle">
 									{inputTabIndex > 0 && (
 										<Button
@@ -141,7 +140,7 @@ export default function Input() {
 							<CloseOutlined />
 						</Button>
 						<Col span={24}>
-							<TabContent />
+								{inputTabs[inputTabIndex].content}
 						</Col>
 						{!isPublicCalc && handleSubmit ? (
 							<Row justify="center">

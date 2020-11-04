@@ -136,7 +136,7 @@ export default function CareInsurance() {
 					max={5000}
 					step={500}
 					rangeFactor={rangeFactor}
-					note={<ItemDisplay label="Total Tax Benefit" currency={currency} result={totalTaxBenefit} />}
+					note={<ItemDisplay label="Total Tax Benefit" currency={currency} result={totalTaxBenefit} pl />}
 				/>
 			)}
 		</Section>

@@ -7,7 +7,7 @@ export default function FIYearResult() {
 
 	return (
 		<ItemDisplay
-			label="Earliest In"
+			label="Earliest In Year"
 			result={""+ffResult.ffYear}
 			info={`You May achieve Financial Independence earliest in ${ffResult.ffYear}.`}
 			unit=""
