@@ -1,21 +1,22 @@
-import React, { Fragment } from 'react';
+import { Tabs } from 'antd';
+import React, { useState } from 'react';
 import DynamicTargetInput from '../form/DynamicTargetInput';
 import Section from '../form/section';
 
 export default function Expect() {
-	return (
-		<Fragment>
-			<Section
-				title="Potential Gains (eg: Inheritance, Selling Investments, etc.) excluding taxes & fees"
-			>
-				<DynamicTargetInput />
-			</Section>
+	const [ tabIndex, setTabIndex ] = useState<number>(0);
+	const { TabPane } = Tabs;
 
-			<Section
-				title="Potential Losses (eg: Inheritance, Selling Investments, etc.) including taxes & fees"
-			>
-				<DynamicTargetInput lossInput />
-			</Section>
-		</Fragment>
+	return (
+		<Section title="Money Expected in Future (eg: due to Inheritance, Selling Investments, etc.)" footer={`${tabIndex === 1 ? "Include" : "Exclude"} Taxes & Fees.`}>
+			<Tabs onTabClick={(key: string) => setTabIndex(parseInt(key))} defaultActiveKey={'' + tabIndex} type="card">
+				<TabPane key={0} tab="Gains">
+					{tabIndex === 0 && <DynamicTargetInput />}
+				</TabPane>
+				<TabPane key={1} tab="Losses">
+					{tabIndex === 1 && <DynamicTargetInput lossInput />}
+				</TabPane>
+			</Tabs>
+		</Section>
 	);
 }

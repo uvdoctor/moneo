@@ -11,12 +11,7 @@ import { FIGoalContext } from './FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
 
 export default function CareInsurance() {
-	const {
-		currency,
-		rangeFactor,
-		startYear,
-		endYear
-	}: any = useContext(CalcContext);
+	const { currency, rangeFactor, startYear, endYear }: any = useContext(CalcContext);
 	const {
 		carePremium,
 		setCarePremium,
@@ -38,7 +33,7 @@ export default function CareInsurance() {
 
 	useEffect(
 		() => {
-			carePremium > 0
+			carePremium
 				? setTotalCP(Math.round(calculateTotalCP(carePremiumSY, carePremium, chgPer, premiumDur, cpBY)))
 				: setTotalCP(0);
 		},
@@ -47,9 +42,9 @@ export default function CareInsurance() {
 
 	useEffect(
 		() => {
-			taxRate > 0
-				? setTotalTaxBenfit(
-						calculateTotalCPTaxBenefit(
+			setTotalTaxBenfit(
+				taxRate
+					? calculateTotalCPTaxBenefit(
 							taxRate,
 							maxTaxDed,
 							carePremiumSY,
@@ -58,8 +53,8 @@ export default function CareInsurance() {
 							premiumDur,
 							cpBY
 						)
-					)
-				: setTotalTaxBenfit(0);
+					: 0
+			);
 		},
 		[ taxRate, maxTaxDed, carePremiumSY, carePremium, chgPer, premiumDur ]
 	);

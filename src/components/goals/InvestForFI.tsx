@@ -8,13 +8,7 @@ import { FIGoalContext } from './FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
 
 export function InvestForFI() {
-	const {
-		currency,
-		rangeFactor,
-		dr,
-		setDR,
-		addCallback,
-	}: any = useContext(CalcContext);
+	const { currency, rangeFactor, dr, setDR, addCallback }: any = useContext(CalcContext);
 	const {
 		nw,
 		setNW,
@@ -23,7 +17,7 @@ export function InvestForFI() {
 		monthlySavingsRate,
 		setMonthlySavingsRate,
 		riskProfile,
-		setRiskProfile,
+		setRiskProfile
 	}: any = useContext(FIGoalContext);
 
 	return (
@@ -76,16 +70,15 @@ export function InvestForFI() {
 					currency
 				)} this month`}
 			/>
-			{addCallback ? (
-				<SelectInput
-					info="How much Risk are You willing to take in order to achieve higher Investment Return?"
-					pre="Can Tolerate"
-					post="Investment Loss"
-					value={riskProfile}
-					changeHandler={setRiskProfile}
-					options={getRAOptions()}
-				/>
-			) : (
+			<SelectInput
+				info="How much Risk are You willing to take in order to achieve higher Investment Return?"
+				pre="Can Tolerate"
+				post="Loss"
+				value={riskProfile}
+				changeHandler={setRiskProfile}
+				options={getRAOptions()}
+			/>
+			{!addCallback && (
 				<NumberInput
 					value={dr as number}
 					changeHandler={setDR}

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { getAllAssetCategories, getAllAssetTypesByCategory, getAssetColour } from '../utils';
-import { FIGoalContext } from './FIGoalContext';
+import { CalcContext } from '../calc/CalcContext';
 
 const TreemapChart = dynamic(() => import('bizcharts/lib/plots/TreemapChart'), { ssr: false });
 
 export default function AssetAllocationChart() {
-	const { rr, ffResult }: any = useContext(FIGoalContext);
+	const { cfs, ffResult }: any = useContext(CalcContext);
 	const [data, setData] = useState<Array<any>>([]);
 	const [ colors, setColors ] = useState<Array<string>>([]);
 
@@ -43,7 +43,7 @@ export default function AssetAllocationChart() {
 		() => {
 			initChartData();
 		},
-		[ rr ]
+		[ cfs ]
 	);
 
 	return (

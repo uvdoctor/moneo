@@ -85,28 +85,24 @@ function CalcContextProvider({
     ]
   }
   
-  const getFICFChart = () => {
-    return {
+  const getFFGoalResultTabOptions = () => {
+    let options = [{
+      label: "Asset Allocation",
+      active: true,
+      svg: SVGAAChart,
+      content: <AssetAllocationChart />
+    }, {
       label: "Portfolio Value",
       active: true,
       svg: SVGChart,
       content: <DDLineChart />
-    }
-  };
-  
-  const getFFGoalResultTabOptions = () => {
-    if(isPublicCalc) return [getFICFChart()];
-    let options = [{
+    }];
+    if (!isPublicCalc) options.push({
       label: "Allocation Plan",
       active: true,
-      svg: SVGAAChart,
-      content: <AAPlanChart />
-    }, {
-      label: "Asset Allocation",
-      active: true,
       svg: SVGBarChart,
-      content: <AssetAllocationChart />
-    }, getFICFChart()];  
+      content: <AAPlanChart />
+    });  
     return options;
   }
   

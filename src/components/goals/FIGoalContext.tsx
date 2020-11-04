@@ -6,6 +6,7 @@ import FIAgeResult from "../calc/FIYearResult";
 import FISavingsResult from "../calc/FISavingsResult";
 import { findEarliestFFYear, isFFPossible } from "./cfutils";
 import FIGoalHeader from "./FIGoalHeader";
+import { COLORS } from "../../CONSTANTS";
 
 const FIGoalContext = createContext({});
 interface FIGoalContextProviderProps {
@@ -155,9 +156,8 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
         <FISavingsResult />
       ]
       : [
-        <label>
-          Financial Independence May not be possible till You turn 70. Please try again with different Goals /
-          Inputs.
+        <label style={{ color: COLORS.RED }}>
+          Financial Independence May not be possible till You turn 70. Please try again with different Inputs.
           </label>
       ]]);
   }, [cfs]);

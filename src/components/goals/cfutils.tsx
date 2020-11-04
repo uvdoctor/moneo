@@ -788,20 +788,18 @@ const calculateAllocation = (
             aa[ASSET_TYPES.LARGE_CAP_STOCKS][i] +=
               stocksPer - aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i];
           } else {
-            if (ffGoal.imp === APIt.LMH.M || y >= ffYear) {
-              aa[ASSET_TYPES.LARGE_CAP_STOCKS][i] += Math.round(
-                stocksPer * 0.7
-              );
-              aa[ASSET_TYPES.INTERNATIONAL_STOCKS][i] +=
-                stocksPer - aa[ASSET_TYPES.LARGE_CAP_STOCKS][i];
-            } else {
-              aa[ASSET_TYPES.MID_CAP_STOCKS][i] += Math.round(stocksPer * 0.7);
-              aa[ASSET_TYPES.INTERNATIONAL_STOCKS][i] +=
-                stocksPer - 1 - aa[ASSET_TYPES.MID_CAP_STOCKS][i];
-            }
+            let internationalStocksPer = Math.round(stocksPer * 0.3);
+            aa[ASSET_TYPES.INTERNATIONAL_STOCKS][i] += internationalStocksPer;
+            let remStocksPer = stocksPer - internationalStocksPer;
+            if (y < ffYear && ffGoal.imp === APIt.LMH.H) {
+              let midCapStocksPer = Math.round(remStocksPer * 0.5);
+              aa[ASSET_TYPES.MID_CAP_STOCKS][i] += midCapStocksPer;
+              remStocksPer -= midCapStocksPer;
+            } 
+            aa[ASSET_TYPES.LARGE_CAP_STOCKS][i] += remStocksPer;
           }
           remPer -= stocksPer;
-          if (remPer > 0) {
+          if (remPer) {
             let goldPer = Math.round(stocksPer * 0.1);
             if (goldPer > remPer) goldPer = remPer;
             aa[ASSET_TYPES.GOLD][i] += goldPer;
