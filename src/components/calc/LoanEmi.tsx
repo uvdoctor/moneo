@@ -15,7 +15,7 @@ import ItemDisplay from './ItemDisplay';
 import { COLORS } from '../../CONSTANTS';
 import { isTaxCreditEligible } from '../goals/goalutils';
 import HSwitch from '../HSwitch';
-import { Collapse, Row } from 'antd';
+import { Col, Collapse, Row } from 'antd';
 import { GoalContext } from '../goals/GoalContext';
 
 export default function LoanEmi() {
@@ -48,6 +48,7 @@ export default function LoanEmi() {
 		maxTaxDeductionInt,
 		setMaxTaxDeductionInt,
 		totalITaxBenefit,
+		totalIntAmt,
 		setTotalIntAmt
 	}: any = useContext(GoalContext);
 	const loanBorrowAmt = getLoanBorrowAmt(
@@ -165,7 +166,6 @@ export default function LoanEmi() {
 				post={
 					<Fragment>
 						<ItemDisplay label="Loan Amount" result={loanBorrowAmt} currency={currency} />
-						<ItemDisplay label="Monthly" result={emi} currency={currency} />
 					</Fragment>
 				}
 			/>
@@ -191,10 +191,12 @@ export default function LoanEmi() {
 				/>
 			)}
 			{loanBorrowAmt && (
-				<NumberInput
-					pre="Yearly Interest"
-					unit="%"
-					/*feedback={{
+				<Fragment>
+					<Col span={24}>
+						<NumberInput
+							pre="Yearly Interest"
+							unit="%"
+							/*feedback={{
 							0: {
 								label: (
 									<Tooltip
@@ -242,12 +244,31 @@ export default function LoanEmi() {
 								color: COLORS.RED
 							}
 						}}*/
-					value={loanIntRate}
-					changeHandler={setLoanIntRate}
-					min={0.0}
-					max={25.0}
-					step={0.1}
-				/>
+							value={loanIntRate}
+							changeHandler={setLoanIntRate}
+							min={0.0}
+							max={25.0}
+							step={0.1}
+						/>
+					</Col>
+					<Row align="middle" justify="space-between">
+						<Col>
+							<ItemDisplay label="Pay" result={emi} currency={currency} footer="Monthly" />
+						</Col>
+						<Col>
+							<ItemDisplay
+								label="Total Interest"
+								result={totalIntAmt}
+								currency={currency}
+								footer={`Over ${getLoanPaidForMonths(
+									startYear + duration - 1,
+									loanRepaymentSY,
+									loanYears
+								) / 12} Years`}
+							/>
+						</Col>
+					</Row>
+				</Fragment>
 			)}
 			{loanBorrowAmt &&
 			goal.type === goal.type.E && (

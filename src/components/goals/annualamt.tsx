@@ -30,8 +30,8 @@ export default function AnnualAmt({ income }: AnnualAmtProps) {
 	}: any = useContext(GoalContext);
 	const [ syOptions, setSYOptions ] = useState<object>(initYearOptions(startYear, duration - 1));
 	const [ totalAmt, setTotalAmt ] = useState<number>(0);
-	const title = income ? 'Income through Rent, Dividend, etc after paying taxes'
-		: 'Cost of Fixes, Insurance, etc including taxes';
+	const title = income ? 'Rent, Dividend, etc after paying taxes'
+		: 'Fixes, Insurance, etc including taxes';
 	useEffect(() => setSYOptions(initYearOptions(startYear, duration - 1)), [ startYear ]);
 
 	useEffect(

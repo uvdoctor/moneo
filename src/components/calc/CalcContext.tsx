@@ -15,7 +15,6 @@ import SVGInheritance from "../goals/svginheritance";
 import TaxAdjustment from "../calc/TaxAdjustment";
 import Amt from "../goals/amt";
 import LoanEmi from "../calc/LoanEmi";
-import AnnualAmt from "../goals/annualamt";
 import Sell from "../goals/sell";
 import RentComparison from "../goals/rentcomparison";
 import DDLineChart from "../goals/DDLineChart";
@@ -111,25 +110,20 @@ const getGoalResultTabOptions = (type: GoalType, isGoal: boolean) => {
 const getGoalTabOptions = (type: GoalType) => {
   if (type === GoalType.FF) return getFFGoalTabOptions();
   let options = [
-    { label: "Cost", active: true, svg: SVGPay, content: <Amt /> },
-    {
-      label: "Tax",
-      active: true,
-      svg: SVGTaxBenefit,
-      content: <TaxAdjustment />
-    }
-  ];
+    { label: "Cost", active: true, svg: SVGPay, content: <Amt /> }];
+  if (type === GoalType.B) {
+    options.push({ label: "Sell", active: true, svg: SVGSell, content: <Sell /> });
+  }
+  options.push({
+    label: "Tax",
+    active: true,
+    svg: SVGTaxBenefit,
+    content: <TaxAdjustment />
+  });
   if (isLoanEligible(type)) options.push(
     { label: "Loan", active: true, svg: SVGLoan, content: <LoanEmi /> }
   );
   if (type === GoalType.B) {
-    options.push({ label: "Sell", active: true, svg: SVGSell, content: <Sell /> });
-    options.push({
-      label: "Yearly",
-      active: true,
-      svg: SVGCashFlow,
-      content: <AnnualAmt income />
-    });
     options.push({ label: "Rent?", active: true, svg: SVGScale, content: <RentComparison /> });
   }
   return options;

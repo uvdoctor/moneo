@@ -9,6 +9,7 @@ import { getDuration } from './goalutils';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { GoalContext } from './GoalContext';
 import AnnualAmt from './annualamt';
+import { Tabs } from 'antd';
 
 export default function Sell() {
 	const {
@@ -25,6 +26,8 @@ export default function Sell() {
 		cfs
 	}: any = useContext(GoalContext);
 	const [ annualReturnPer, setAnnualReturnPer ] = useState<number | null>(0);
+	const [ tabIndex, setTabIndex ] = useState<number>(0);
+	const { TabPane } = Tabs;
 
 	useEffect(
 		() => {
@@ -62,7 +65,7 @@ export default function Sell() {
 								annualReturnPer && (
 									<ItemDisplay
 										svg={annualReturnPer > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-										label={""}
+										label={''}
 										result={annualReturnPer}
 										decimal={2}
 										unit="% Yearly"
@@ -79,7 +82,18 @@ export default function Sell() {
 					changeHandler={setSellAfter}
 				/>
 			</Section>
-			<AnnualAmt />
+			<Tabs
+				onTabClick={(key: string) => setTabIndex(parseInt(key))}
+				defaultActiveKey={'' + tabIndex}
+				type="card"
+			>
+				<TabPane key={0} tab="Yearly Cost">
+					{tabIndex === 0 && <AnnualAmt />}
+				</TabPane>
+				<TabPane key={1} tab="Yearly Income">
+					{tabIndex === 1 && <AnnualAmt income />}
+				</TabPane>
+			</Tabs>
 		</Fragment>
 	);
 }

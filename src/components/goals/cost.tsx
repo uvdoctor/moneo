@@ -60,14 +60,15 @@ export default function Cost() {
 	);
 
 	const changeManualMode = (checked: boolean) => {
+		let loanTabIndex = goal.type === GoalType.B ? 3 : 2;
 		if (checked) {
-			if (inputTabs[2].active) {
-				inputTabs[2].active = false;
+			if (inputTabs[loanTabIndex].active) {
+				inputTabs[loanTabIndex].active = false;
 				setInputTabs([...inputTabs]);
 			}
 		} else {
-			if (!inputTabs[2].active) {
-				inputTabs[2].active = true;
+			if (!inputTabs[loanTabIndex].active) {
+				inputTabs[loanTabIndex].active = true;
 				setInputTabs([...inputTabs]);
 			}
 		}
