@@ -1,19 +1,23 @@
-import React, { useContext, ReactNode } from 'react';
+import React, { Fragment, ReactNode, useContext } from 'react';
 import Input from '../goals/Input';
 import Result from '../goals/Result';
 import { CalcContext } from './CalcContext';
+import CalcHeader from './CalcHeader';
 
 interface CalcTemplateProps {
-	results: Array<ReactNode> | ReactNode;
+	header?: ReactNode;
 }
 
-export default function CalcTemplate({ results }: CalcTemplateProps) {
+export default function CalcTemplate({ header }: CalcTemplateProps) {
 	const { allInputDone }: any = useContext(CalcContext);
 
 	return (
-		<div className={allInputDone ? 'calculator-page' : ''}>
-			<Input />
-			{allInputDone && <Result results={results} />}
-		</div>
+		<Fragment>
+			{!allInputDone ? header ? header : <CalcHeader /> : null}
+			<div className={allInputDone ? 'calculator-page' : ''}>
+				<Input />
+				{allInputDone && <Result />}
+			</div>
+		</Fragment>
 	);
 }

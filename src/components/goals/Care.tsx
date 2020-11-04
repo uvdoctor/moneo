@@ -7,14 +7,17 @@ import RadialInput from '../form/radialinput';
 import ItemDisplay from '../calc/ItemDisplay';
 import { calculateTotalCP, calculateTotalCPTaxBenefit } from './cfutils';
 import { COLORS, PLAN_DURATION } from '../../CONSTANTS';
-import { getAge } from './goalutils';
 import { FIGoalContext } from './FIGoalContext';
+import { CalcContext } from '../calc/CalcContext';
 
 export default function CareInsurance() {
 	const {
 		currency,
 		rangeFactor,
-		endYear,
+		startYear,
+		endYear
+	}: any = useContext(CalcContext);
+	const {
 		carePremium,
 		setCarePremium,
 		carePremiumSY,
@@ -96,7 +99,7 @@ export default function CareInsurance() {
 			{carePremium && (
 				<SelectInput
 					info="It may be a good option to buy this insurance when You are healthier (between 60 to 65 years of age) to get lower premiums."
-					value={getAge(carePremiumSY, endYear)}
+					value={carePremiumSY - startYear}
 					options={initYearOptions(55, 10)}
 					pre="Buy Policy At"
 					unit="Years"

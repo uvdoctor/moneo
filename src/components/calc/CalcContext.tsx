@@ -44,92 +44,6 @@ export const getCareTabOption = () => {
   }
 }
 
-const getFFGoalTabOptions = () => {
-  return [
-    { label: "Invest", active: true, svg: SVGPiggy, content: <InvestForFI /> },
-    { label: "Spend", active: true, svg: SVGPay, content: <ExpenseAfterFF /> },
-    { label: "Benefit", active: true, svg: SVGTaxBenefit, content: <RetIncome /> },
-    getCareTabOption(),
-    { label: "Expect", active: true, svg: SVGCashFlow, content: <Expect /> },
-    { label: "Give", active: true, svg: SVGInheritance, content: <Nominees /> },
-  ]
-}
-
-const getFICFChart = () => {
-  return {
-    label: "Total Portfolio",
-    active: true,
-    svg: SVGChart,
-    content: <DDLineChart />
-  }
-};
-
-const getFFGoalResultTabOptions = (isGoal: boolean) => {
-  if(!isGoal) return [getFICFChart()];
-  let options = [{
-    label: "Allocation Plan",
-    active: true,
-    svg: SVGAAChart,
-    content: <AAPlanChart />
-  }, {
-    label: "Asset Allocation",
-    active: true,
-    svg: SVGBarChart,
-    content: <AssetAllocationChart />
-  }, getFICFChart()];  
-  return options;
-}
-
-const getGoalResultTabOptions = (type: GoalType, isGoal: boolean) => {
-  if (type === GoalType.FF) return getFFGoalResultTabOptions(isGoal);
-  let rTabs: Array<any> = [
-      {
-        label: "Cash Flows",
-        active: true,
-        svg: SVGChart,
-        content: <DDLineChart />
-      },
-      {
-        label: "Loan Schedule",
-        active: false,
-        svg: SVGLoan,
-        content: <LoanScheduleChart />
-      }
-    ];
-    if (type === GoalType.B) {
-      rTabs.push({
-        label: "Buy v/s Rent",
-        active: false,
-        svg: SVGScale,
-        content: <BuyRentChart />
-      });
-  }
-  return rTabs;
-}
-
-const getGoalTabOptions = (type: GoalType) => {
-  if (type === GoalType.FF) return getFFGoalTabOptions();
-  let options = [
-    { label: "Cost", active: true, svg: SVGPay, content: <Amt /> }];
-  if (type === GoalType.B) {
-    options.push({ label: "Sell", active: true, svg: SVGSell, content: <Sell /> });
-  }
-  options.push({
-    label: "Tax",
-    active: true,
-    svg: SVGTaxBenefit,
-    content: <TaxAdjustment />
-  });
-  if (isLoanEligible(type)) options.push(
-    { label: "Loan", active: true, svg: SVGLoan, content: <LoanEmi /> }
-  );
-  if (type === GoalType.B) {
-    options.push({ label: "Rent?", active: true, svg: SVGScale, content: <RentComparison /> });
-  }
-  return options;
-}
-
-
 interface CalcContextProviderProps {
   goal?: any
   children: ReactNode;
@@ -151,17 +65,104 @@ function CalcContextProvider({
 }: CalcContextProviderProps) {
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
-	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions ? tabOptions : goal ? getGoalTabOptions(goal.type) : []);
-	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions ? resultTabOptions : goal ? getGoalResultTabOptions(goal.type, addCallback && updateCallback ? true : false) : []);
-	const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal?.ccy ? goal.ccy : 'USD');
+  const [startYear, setStartYear] = useState<number>(goal.sy);
+  const [endYear, setEndYear] = useState<number>(goal.ey);
+  const isPublicCalc = addCallback && updateCallback ? false : true;
+  const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal?.ccy ? goal.ccy : 'USD');
 	const [ rangeFactor, setRangeFactor ] = useState<number>(getRangeFactor(currency));
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
-	const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
 	const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
 	const [ cfs, setCFs ] = useState<Array<number>>([]);
+	
+  const getFFGoalTabOptions = () => {
+    return [
+      { label: "Invest", active: true, svg: SVGPiggy, content: <InvestForFI /> },
+      { label: "Spend", active: true, svg: SVGPay, content: <ExpenseAfterFF /> },
+      { label: "Benefit", active: true, svg: SVGTaxBenefit, content: <RetIncome /> },
+      getCareTabOption(),
+      { label: "Expect", active: true, svg: SVGCashFlow, content: <Expect /> },
+      { label: "Give", active: true, svg: SVGInheritance, content: <Nominees /> },
+    ]
+  }
+  
+  const getFICFChart = () => {
+    return {
+      label: "Total Portfolio",
+      active: true,
+      svg: SVGChart,
+      content: <DDLineChart />
+    }
+  };
+  
+  const getFFGoalResultTabOptions = () => {
+    if(isPublicCalc) return [getFICFChart()];
+    let options = [{
+      label: "Allocation Plan",
+      active: true,
+      svg: SVGAAChart,
+      content: <AAPlanChart />
+    }, {
+      label: "Asset Allocation",
+      active: true,
+      svg: SVGBarChart,
+      content: <AssetAllocationChart />
+    }, getFICFChart()];  
+    return options;
+  }
+  
+  const getGoalResultTabOptions = () => {
+    if (goal.type === GoalType.FF) return getFFGoalResultTabOptions();
+    let rTabs: Array<any> = [
+        {
+          label: "Cash Flows",
+          active: true,
+          svg: SVGChart,
+          content: <DDLineChart />
+        },
+        {
+          label: "Loan Schedule",
+          active: false,
+          svg: SVGLoan,
+          content: <LoanScheduleChart />
+        }
+      ];
+      if (goal.type === GoalType.B) {
+        rTabs.push({
+          label: "Buy v/s Rent",
+          active: false,
+          svg: SVGScale,
+          content: <BuyRentChart />
+        });
+    }
+    return rTabs;
+  }
+  
+  const getGoalTabOptions = (type: GoalType) => {
+    if (type === GoalType.FF) return getFFGoalTabOptions();
+    let options = [
+      { label: "Cost", active: true, svg: SVGPay, content: <Amt /> }];
+    if (type === GoalType.B) {
+      options.push({ label: "Sell", active: true, svg: SVGSell, content: <Sell /> });
+    }
+    options.push({
+      label: "Tax",
+      active: true,
+      svg: SVGTaxBenefit,
+      content: <TaxAdjustment />
+    });
+    if (isLoanEligible(type)) options.push(
+      { label: "Loan", active: true, svg: SVGLoan, content: <LoanEmi /> }
+    );
+    if (type === GoalType.B) {
+      options.push({ label: "Rent?", active: true, svg: SVGScale, content: <RentComparison /> });
+    }
+    return options;
+  }
+	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions ? tabOptions : goal ? getGoalTabOptions(goal.type) : []);
+	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions ? resultTabOptions : goal ? getGoalResultTabOptions() : []);
+	const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
 	const [ resultTabIndex, setResultTabIndex ] = useState<number>(0);
 	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(true);
-  const isPublicCalc = addCallback && updateCallback ? false : true;
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
 	const [ cfsWithOppCost, setCFsWithOppCost ] = useState<Array<number>>([]);
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
@@ -172,11 +173,10 @@ function CalcContextProvider({
   const [feedbackText, setFeedbackText] = useState<string>("");
   const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
   const [stepVideoUrl, setStepVideoUrl] = useState<string>("");
-  const [startYear, setStartYear] = useState<number>(goal.sy);
-  const [endYear, setEndYear] = useState<number>(goal.ey);
   const [eyOptions, setEYOptions] = useState(goal.type && goal.type === GoalType.FF ? initYearOptions(1960, nowYear - 15 - 1960) : initYearOptions(startYear, 30));
 	const [ffResult, setFFResult] = useState<any>({});
   const [error, setError] = useState<string>("");
+  const [results, setResults] = useState<Array<any>>([]);
 
   const changeStartYear = (str: string) => {
     setStartYear(parseInt(str));
@@ -274,7 +274,9 @@ function CalcContextProvider({
         ffResult,
         setFFResult,
         error,
-        setError
+        setError,
+        results,
+        setResults
 			}}
     >
       {children}

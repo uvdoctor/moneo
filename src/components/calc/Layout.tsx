@@ -7,11 +7,9 @@ import { Button, Collapse, Row, Col, PageHeader } from 'antd';
 import { RocketOutlined } from '@ant-design/icons';
 
 import './Layout.less';
-import GoalContent from '../goals/GoalContent';
 import { CalcContextProvider } from './CalcContext';
 import { GoalContextProvider } from '../goals/GoalContext';
 import { FIGoalContextProvider } from '../goals/FIGoalContext';
-import FIGoalContent from '../goals/FIGoalContent';
 interface LayoutProps {
 	tabOptions?: Array<any>;
 	resultTabOptions?: Array<any>;
@@ -91,13 +89,9 @@ export default function Layout(props: LayoutProps) {
 			) : (
 				<CalcContextProvider goal={wip} tabOptions={props.tabOptions} resultTabOptions={props.resultTabOptions}>
 					{props.type ? props.type === GoalType.FF ? (
-						<FIGoalContextProvider mustCFs={[]} tryCFs={[]} mergedCFs={buildEmptyMergedCFs()}>
-							<FIGoalContent />
-						</FIGoalContextProvider>
+						<FIGoalContextProvider mustCFs={[]} tryCFs={[]} mergedCFs={buildEmptyMergedCFs()} />
 					) : (
-						<GoalContextProvider ffGoalEndYear={nowYear + 50}>
-							<GoalContent />
-						</GoalContextProvider>
+						<GoalContextProvider ffGoalEndYear={nowYear + 50} />
 					) : (
 						<props.calc />
 					)}

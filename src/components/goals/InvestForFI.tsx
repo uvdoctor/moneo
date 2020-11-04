@@ -2,13 +2,20 @@ import React, { useContext } from 'react';
 import Section from '../form/section';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
-import { getRangeFactor, toCurrency } from '../utils';
+import { toCurrency } from '../utils';
 import { getRAOptions } from './goalutils';
 import { FIGoalContext } from './FIGoalContext';
+import { CalcContext } from '../calc/CalcContext';
 
 export function InvestForFI() {
 	const {
 		currency,
+		rangeFactor,
+		dr,
+		setDR,
+		addCallback,
+	}: any = useContext(CalcContext);
+	const {
 		nw,
 		setNW,
 		avgMonthlySavings,
@@ -17,10 +24,7 @@ export function InvestForFI() {
 		setMonthlySavingsRate,
 		riskProfile,
 		setRiskProfile,
-		rr,
-		setRR
 	}: any = useContext(FIGoalContext);
-	const rangeFactor = getRangeFactor(currency);
 
 	return (
 		<Section title="Before Financial Independence" videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}>
@@ -28,7 +32,7 @@ export function InvestForFI() {
 				info={`Your Total Portfolio Value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc.`}
 				value={nw}
 				pre="Total"
-				min={-100000}
+				min={1000}
 				max={900000}
 				post="Portfolio"
 				changeHandler={setNW}
@@ -43,7 +47,7 @@ export function InvestForFI() {
                   This will be used to forecast Your Future Savings.`}
 				value={avgMonthlySavings}
 				pre="Monthly"
-				min={-5000}
+				min={500}
 				max={10000}
 				post="Investment"
 				changeHandler={setAvgMonthlySavings}
@@ -72,7 +76,7 @@ export function InvestForFI() {
 					currency
 				)} this month`}
 			/>
-			{setRiskProfile && riskProfile ? (
+			{addCallback ? (
 				<SelectInput
 					info="How much Risk are You willing to take in order to achieve higher Investment Return?"
 					pre="Can Tolerate"
@@ -83,8 +87,8 @@ export function InvestForFI() {
 				/>
 			) : (
 				<NumberInput
-					value={rr as number}
-					changeHandler={setRR}
+					value={dr as number}
+					changeHandler={setDR}
 					min={0}
 					max={10}
 					step={0.1}

@@ -1,4 +1,4 @@
-import React, { Fragment, ReactNode, useContext, useRef } from 'react';
+import React, { Fragment, useContext, useRef } from 'react';
 import { useFullScreen } from 'react-browser-hooks';
 import { Tabs, Row, Col } from 'antd';
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
@@ -8,12 +8,8 @@ import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
 import GoalHeader from './GoalHeader';
 import FIGoalHeader from './FIGoalHeader';
-interface ResultProps {
-	results: Array<ReactNode> | ReactNode;
-}
-
-export default function Result({ results }: ResultProps) {
-	const { goal, resultTabs, resultTabIndex, setResultTabIndex }: any = useContext(CalcContext);
+export default function Result() {
+	const { goal, resultTabs, resultTabIndex, setResultTabIndex, results }: any = useContext(CalcContext);
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;

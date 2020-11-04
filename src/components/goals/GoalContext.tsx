@@ -5,11 +5,16 @@ import { getDuration, isLoanEligible } from "../goals/goalutils";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { calculateCFs } from "./cfutils";
 import { CalcContext } from "../calc/CalcContext";
+import OppCost from "../calc/oppcost";
+import FFImpact from "./ffimpact";
+import BuyRentResult from "../calc/BuyRentResult";
+import GoalHeader from "./GoalHeader";
+import CalcTemplate from "../calc/CalcTemplate";
 
 const GoalContext = createContext({});
 
 interface GoalContextProviderProps {
-  children: ReactNode;
+  children?: ReactNode;
   cashFlows?: Array<number>;
   ffGoalEndYear?: number;
   ffImpactYearsHandler?: Function;
@@ -44,7 +49,8 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     changeEndYear,
     setEYOptions,
     error,
-    setError
+    setError,
+    setResults
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const [loanRepaymentSY, setLoanRepaymentSY] = useState<
@@ -133,7 +139,7 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
   const [analyzeFor, setAnalyzeFor] = useState<number>(20);
   const goalType = goal.type as GoalType;
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
-
+    
   useEffect(() =>
     setDisableSubmit(name.length < 3 || !price || btnClicked),
     [name, price, btnClicked]);
@@ -186,7 +192,15 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     return bg;
   };
 
-  useEffect(() => setCreateNewGoalInput(createNewGoal), []);
+  useEffect(() => {
+    setCreateNewGoalInput(createNewGoal);
+    setResults([...nowYear < startYear ? [
+      (dr === null || dr === undefined) ?
+        <FFImpact />
+        : goalType === GoalType.B && <BuyRentResult />,
+      <OppCost />
+    ] : []])
+  }, []);
   
   useEffect(() => {
     if (iSchedule && iSchedule.length > 0 && !resultTabs[1].active) {
@@ -544,7 +558,7 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
           totalIntAmt,
           setTotalIntAmt
         }}>
-        {children}
+        {children ? children : <CalcTemplate header={<GoalHeader />} />}
       </GoalContext.Provider>
     );
 }

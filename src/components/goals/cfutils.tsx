@@ -154,8 +154,7 @@ const getAnnualPorfolioValue = (
 export const calculateFFCFs = (g: APIt.CreateGoalInput, ffYear: number) => {
   let cfs: Array<number> = [];
   let nowYear = new Date().getFullYear();
-  let duration = ffYear - (nowYear + 1);
-  for (let i = 1; i <= duration; i++) {
+  for (let i = 1; i <= ffYear - (nowYear + 1); i++) {
     let val = getCompoundedIncome(
       (g.tbr as number) * 12,
       (g.rachg as number) * 12,
@@ -174,40 +173,28 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, ffYear: number) => {
       (1 + g.tdr / 100);
     cfs.push(Math.round(-cf));
   }
-  //@ts-ignore
-  if ((g?.cp as number) > 0 && nowYear < g.amsy + g.achg) {
-    //@ts-ignore
+  if (g?.cp as number && g.amsy && g.achg && nowYear < g.amsy + g.achg) {
     let premiumYear = nowYear >= g.amsy ? nowYear + 1 : g.amsy;
-    //@ts-ignore
     for (let year = premiumYear; year < g.amsy + g.achg; year++) {
-      //@ts-ignore
-      let premium = getCompoundedIncome(g.amper, g.cp, year - (g.chg + 1));
-      //@ts-ignore
+      let premium = getCompoundedIncome(g.amper as number, g.cp as number, year as number - (g.chg as number + 1));
       let index = cfs.length - 1 - (g.ey - year);
       cfs[index] -= premium;
       cfs[index + 1] += getTaxBenefit(premium, g.tdr, g.tdl);
     }
   }
-  //@ts-ignore
-  if (g?.tbi > 0) {
-    //@ts-ignore
+  if (g?.tbi && g.aisy) {
     let incomeYear = nowYear >= g.aisy ? nowYear + 1 : g.aisy;
-    //@ts-ignore
     for (let year = incomeYear; year <= g.ey; year++) {
-      //@ts-ignore
-      let income = getCompoundedIncome(g.aiper, g.tbi, year - incomeYear);
-      //@ts-ignore
-      let index = cfs.length - 1 - (g.ey - year);
+      let income = getCompoundedIncome(g.aiper as number, g.tbi as number, year - incomeYear);
+      let index = cfs.length - 1 - (g.ey - year as number);
       cfs[index] += income;
     }
   }
-  g.pg?.forEach((t) => {
-    //@ts-ignore
+  g.pg?.forEach((t: any) => {
     let index = cfs.length - 1 - (g.ey - t?.year);
     cfs[index] += t?.val as number;
   });
-  g.pl?.forEach((t) => {
-    //@ts-ignore
+  g.pl?.forEach((t: any) => {
     let index = cfs.length - 1 - (g.ey - t?.year);
     cfs[index] -= t?.val as number;
   });
@@ -855,7 +842,7 @@ export const checkForFF = (
     appendValue(mCFs, index, cf);
   });
   let ffAmt = 0;
-  let ffCfs = {};
+  let ffCfs:any = {};
   let mustAllocation = calculateMustAllocation(ffGoal, mustCFs, ffYear);
   let tryAllocation = calculateTryAllocation(ffGoal, tryCFs);
   let aa: any = buildEmptyAA(nowYear + 1, ffGoal.ey);
@@ -898,7 +885,6 @@ export const checkForFF = (
     if (v > 0) cs += v;
     if (ffYear === y && i === 0) ffAmt = ffGoal.ra as number;
     else if (y === ffYear - 1) ffAmt = cs;
-    //@ts-ignore
     ffCfs[y] = Math.round(cs);
   }
   return {

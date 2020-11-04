@@ -1,11 +1,15 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
 import { CreateGoalInput, LMH, TargetInput } from "../../api/goals";
 import { CalcContext, getCareTabOption } from "../calc/CalcContext";
-import { findEarliestFFYear } from "./cfutils";
+import CalcTemplate from "../calc/CalcTemplate";
+import FIAgeResult from "../calc/FIYearResult";
+import FISavingsResult from "../calc/FISavingsResult";
+import { findEarliestFFYear, isFFPossible } from "./cfutils";
+import FIGoalHeader from "./FIGoalHeader";
 
 const FIGoalContext = createContext({});
 interface FIGoalContextProviderProps {
-  children: ReactNode;
+  children?: ReactNode;
   mustCFs: Array<number>;
   tryCFs: Array<number>;
   mergedCFs: any;
@@ -35,7 +39,8 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     inputTabs,
     setInputTabs,
     ffResult,
-    setFFResult
+    setFFResult,
+    setResults
   }: any = useContext(CalcContext);
   const [riskProfile, setRiskProfile] = useState<LMH>(goal.imp);
   const [expenseBY, setExpenseBY] = useState<number>(goal.sy);
@@ -84,7 +89,6 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
   const [losses, setLosses] = useState<Array<TargetInput>>(
     goal.pl as Array<TargetInput>
   );
-
   const createGoal = () => {
     return {
       name: goal.name,
@@ -117,7 +121,9 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     } as CreateGoalInput;
   };
   
-  useEffect(() => setCreateNewGoalInput(createGoal), []);
+  useEffect(() => {
+    setCreateNewGoalInput(createGoal);
+  }, []);
   
   const hasCareTab = () => {
     let careTab = inputTabs.filter((tab: any) => tab.label === "Care");
@@ -141,6 +147,20 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
       }
     }
   }, [currency]);
+
+  useEffect(() => {
+    setResults([...isFFPossible(ffResult, leaveBehind)
+      ? [
+        <FIAgeResult />,
+        <FISavingsResult />
+      ]
+      : [
+        <label>
+          Financial Independence May not be possible till You turn 70. Please try again with different Goals /
+          Inputs.
+          </label>
+      ]]);
+  }, [cfs]);
 
   useEffect(() => {
     if (!allInputDone) return;
@@ -180,6 +200,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     monthlySavingsRate,
     riskProfile,
     allInputDone,
+    dr
   ]);
 
     return (
@@ -238,7 +259,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
           riskProfile,
           setRiskProfile
         }}>
-        {children}
+        {children ? children : <CalcTemplate header={<FIGoalHeader />} />}
       </FIGoalContext.Provider>
     );
 }

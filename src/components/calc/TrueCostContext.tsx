@@ -1,11 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { toCurrency, toReadableNumber } from '../utils';
-import CalcHeader from './CalcHeader';
 import { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
 import ItemDisplay from './ItemDisplay';
 import SelectInput from '../form/selectinput';
-import CalcTemplate from './CalcTemplate';
 import { CalcContext } from './CalcContext';
+import CalcTemplate from './CalcTemplate';
 
 const TrueCostContext = createContext({});
 
@@ -23,7 +22,8 @@ function TrueCostContextProvider() {
 		setDR,
 		allInputDone,
 		cfsWithOppCost,
-		setCFsWithOppCost
+		setCFsWithOppCost,
+		setResults
 	}: any = useContext(CalcContext);
 	const [ amt, setAmt ] = useState<number>(0);
 	const [ freq, setFreq ] = useState<string>(SPEND_ONCE);
@@ -37,12 +37,36 @@ function TrueCostContextProvider() {
 	const [ timeCostDisplay, setTimeCostDisplay ] = useState<number>(0);
 	const [ timeCostUnit, setTimeCostUnit ] = useState<string>(TIME_COST_HOURS);
 	const [ totalCost, setTotalCost ] = useState<number>(0);
-
 	const timeOptions = {
 		[TIME_COST_HOURS]: TIME_COST_HOURS,
 		[TIME_COST_WEEKS]: TIME_COST_WEEKS,
 		[TIME_COST_YEARS]: TIME_COST_YEARS
 	};
+
+	useEffect(() => {
+		setResults([...[
+			<ItemDisplay
+				label="Time Cost"
+				result={-timeCostDisplay}
+				pl
+				info={`Based on your Savings from Work Income, You May have to Work ${toReadableNumber(
+					timeCost
+				)} ${timeCostUnit} to Save ${toCurrency(totalCost, currency)}`}
+				unit={<SelectInput pre="" options={timeOptions} value={timeCostUnit} changeHandler={setTimeCostUnit} />}
+			/>,
+			<ItemDisplay
+				label={`Spend v/s Invest @ ${dr}%`}
+				info={`You May have ${toCurrency(
+					Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
+					currency
+				)} More in ${years} Years if You Invest instead of Spending.`}
+				result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
+				currency={currency}
+				pl
+			/>
+		]
+		])
+	}, []);
 
 	useEffect(
 		() => {
@@ -183,37 +207,7 @@ function TrueCostContextProvider() {
 				setTotalCost,
 			}}
 		>
-			{!allInputDone && <CalcHeader />}
-			<CalcTemplate
-				results={[
-					<ItemDisplay
-						label="Time Cost"
-						result={-timeCostDisplay}
-						pl
-						info={`Based on your Savings from Work Income, You May have to Work ${toReadableNumber(
-							timeCost
-						)} ${timeCostUnit} to Save ${toCurrency(totalCost, currency)}`}
-						unit={
-							<SelectInput
-								pre=""
-								options={timeOptions}
-								value={timeCostUnit}
-								changeHandler={setTimeCostUnit}
-							/>
-						}
-					/>,
-					<ItemDisplay
-						label="Spend v/s Invest"
-						info={`You May have ${toCurrency(
-							Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
-							currency
-						)} More in ${years} Years if You Invest instead of Spending.`}
-						result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
-						currency={currency}
-						pl
-					/>
-				]}
-			/>
+			<CalcTemplate />
 		</TrueCostContext.Provider>
 	);
 }

@@ -6,24 +6,23 @@ import { CalcContext } from '../calc/CalcContext';
 interface DDLineChartProps {
 	numberOfYears?: boolean;
 	title?: string;
-	firstYear?: number;
 }
 
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
 
-export default function DDLineChart({ numberOfYears, title, firstYear }: DDLineChartProps) {
+export default function DDLineChart({ numberOfYears, title }: DDLineChartProps) {
 	const {
 		startYear,
 		currency,
 		cfs,
-		cfsWithOppCost
+		cfsWithOppCost,
 	}: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	useEffect(
 		() => {
 			let data: Array<any> = [];
-			let startVal = firstYear ? firstYear : (numberOfYears || !startYear) ? 1 : startYear;
+			let startVal = numberOfYears ? 1 : startYear;
 			let cashFlows = cfsWithOppCost && cfsWithOppCost.length > 0 ? cfsWithOppCost : cfs; 
 			for (let i = 0; i < cashFlows.length; i++)
 				data.push({

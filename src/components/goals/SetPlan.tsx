@@ -10,7 +10,6 @@ import {
   createNewGoalInput,
   getGoalTypes,
   getImpOptions,
-  getAge,
   getDuration,
   getGoalsList,
 } from "./goalutils";
@@ -26,10 +25,8 @@ import SVGAAChart from "./svgaachart";
 import SVGList from "../svglist";
 import { Button, notification } from "antd";
 import { GoalContextProvider } from "./GoalContext";
-import GoalContent from "./GoalContent";
 import { CalcContextProvider } from "../calc/CalcContext";
 import { FIGoalContextProvider } from "./FIGoalContext";
-import FIGoalContent from "./FIGoalContent";
 
 export default function SetPlan() {
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
@@ -399,9 +396,7 @@ export default function SetPlan() {
           pp={getPP()}
           mustCFs={mustCFs}
           tryCFs={tryCFs}
-        >
-          <FIGoalContent />
-        </FIGoalContextProvider>
+        />
         </CalcContextProvider>
       ) : (
         ffGoal && (
@@ -409,9 +404,7 @@ export default function SetPlan() {
           updateCallback={updateGoal}>
             <GoalContextProvider
       ffImpactYearsHandler={calculateFFImpactYear}
-            ffGoalEndYear={ffGoal?.ey}>
-            <GoalContent />
-            </GoalContextProvider>
+            ffGoalEndYear={ffGoal?.ey} />
           </CalcContextProvider>
           )
         )
@@ -429,10 +422,7 @@ export default function SetPlan() {
                 ? COLORS.LIGHT_GREEN : COLORS.LIGHT_GRAY
             }}>
             {isFFPossible(ffResult, ffGoal.sa as number)
-              ? `Earliest at ${getAge(
-                ffResult.ffYear as number,
-                ffGoal.ey
-              )}`
+              ? `Earliest in ${ffResult.ffYear as number}`
               : `May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
           </Card>
       )}

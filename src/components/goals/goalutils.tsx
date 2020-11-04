@@ -262,6 +262,4 @@ export function getRAOptions() {
 
 export const getMinRetirementDuration = () => PLAN_DURATION - MAX_RETIREMENT_AGE
 
-export const getAge = (year: number, endYear: number) => year - (endYear - PLAN_DURATION) 
-
 export const getLastPossibleFFYear = (endYear: number) => endYear - getMinRetirementDuration()
