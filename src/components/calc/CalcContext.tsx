@@ -87,7 +87,7 @@ function CalcContextProvider({
   
   const getFICFChart = () => {
     return {
-      label: "Total Portfolio",
+      label: "Portfolio Value",
       active: true,
       svg: SVGChart,
       content: <DDLineChart />

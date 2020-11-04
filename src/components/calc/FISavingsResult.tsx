@@ -8,7 +8,7 @@ export default function FIResult() {
 	return (
 		<ItemDisplay
 			result={ffResult.ffAmt}
-			label={`Potential Savings`}
+			label={`By ${ffResult.ffYear - 1}, You may have`}
 			currency={currency}
 			info="You can Withdraw from this Savings for Your expenses after gaining Financial Independence."
 		/>
