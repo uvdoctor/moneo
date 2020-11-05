@@ -1,17 +1,6 @@
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { getRangeFactor, initYearOptions } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
-import SVGTaxBenefit from "../svgtaxbenefit";
-import SVGPay from "../svgpay";
-import SVGLoan from "../svgloan";
-import SVGCashFlow from "../svgcashflow";
-import SVGSell from "../svgsell";
-import SVGScale from "../svgscale";
-import SVGPiggy from "../svgpiggy";
-import SVGChart from "../svgchart";
-import SVGAAChart from "../goals/svgaachart";
-import SVGBarChart from "../svgbarchart";
-import SVGInheritance from "../goals/svginheritance";
 import TaxAdjustment from "../calc/TaxAdjustment";
 import Amt from "../goals/amt";
 import LoanEmi from "../calc/LoanEmi";
@@ -25,13 +14,13 @@ import { isLoanEligible } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
 import Expect from '../goals/Expect';
 import Nominees from '../goals/nominees';
-import SVGCare from '../goals/svgcare';
 import RetIncome from '../goals/retincome';
 import { ExpenseAfterFF } from '../goals/expenseafterff';
 import Care from '../goals/Care';
 import { InvestForFI } from '../goals/InvestForFI';
 import AssetAllocationChart from '../goals/AssetAllocationChart';
 import AAPlanChart from '../goals/AAPlanChart';
+import { faChartLine, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faCoins, faHandHoldingMedical, faHandshake, faFileInvoiceDollar } from '@fortawesome/free-solid-svg-icons';
 
 const CalcContext = createContext({});
 
@@ -39,7 +28,7 @@ export const getCareTabOption = () => {
   return {
       label: "Care",
       active: true,
-      svg: SVGCare,
+      svg: faHandHoldingMedical,
       content: <Care />
   }
 }
@@ -76,12 +65,12 @@ function CalcContextProvider({
 	
   const getFFGoalTabOptions = () => {
     return [
-      { label: "Invest", active: true, svg: SVGPiggy, content: <InvestForFI /> },
-      { label: "Spend", active: true, svg: SVGPay, content: <ExpenseAfterFF /> },
-      { label: "Benefit", active: true, svg: SVGTaxBenefit, content: <RetIncome /> },
+      { label: "Invest", active: true, svg: faPiggyBank, content: <InvestForFI /> },
+      { label: "Spend", active: true, svg: faMoneyBillWave, content: <ExpenseAfterFF /> },
+      { label: "Benefit", active: true, svg: faHandHoldingUsd, content: <RetIncome /> },
       getCareTabOption(),
-      { label: "Expect", active: true, svg: SVGCashFlow, content: <Expect /> },
-      { label: "Give", active: true, svg: SVGInheritance, content: <Nominees /> },
+      { label: "Expect", active: true, svg: faCoins, content: <Expect /> },
+      { label: "Give", active: true, svg: faDonate, content: <Nominees /> },
     ]
   }
   
@@ -89,18 +78,18 @@ function CalcContextProvider({
     let options = [{
       label: "Asset Allocation",
       active: true,
-      svg: SVGAAChart,
+      svg: faChartPie,
       content: <AssetAllocationChart />
     }, {
       label: "Portfolio Value",
       active: true,
-      svg: SVGChart,
+      svg: faChartLine,
       content: <DDLineChart />
     }];
     if (!isPublicCalc) options.push({
       label: "Allocation Plan",
       active: true,
-      svg: SVGBarChart,
+      svg: faChartBar,
       content: <AAPlanChart />
     });  
     return options;
@@ -112,13 +101,13 @@ function CalcContextProvider({
         {
           label: "Cash Flows",
           active: true,
-          svg: SVGChart,
+          svg: faChartLine,
           content: <DDLineChart />
         },
         {
           label: "Loan Schedule",
           active: false,
-          svg: SVGLoan,
+          svg: faChartBar,
           content: <LoanScheduleChart />
         }
       ];
@@ -126,7 +115,7 @@ function CalcContextProvider({
         rTabs.push({
           label: "Buy v/s Rent",
           active: false,
-          svg: SVGScale,
+          svg: faBalanceScale,
           content: <BuyRentChart />
         });
     }
@@ -136,21 +125,21 @@ function CalcContextProvider({
   const getGoalTabOptions = (type: GoalType) => {
     if (type === GoalType.FF) return getFFGoalTabOptions();
     let options = [
-      { label: "Cost", active: true, svg: SVGPay, content: <Amt /> }];
+      { label: "Cost", active: true, svg: faMoneyBillWave, content: <Amt /> }];
     if (type === GoalType.B) {
-      options.push({ label: "Sell", active: true, svg: SVGSell, content: <Sell /> });
+      options.push({ label: "Sell", active: true, svg: faHandshake, content: <Sell /> });
     }
     options.push({
       label: "Tax",
       active: true,
-      svg: SVGTaxBenefit,
+      svg: faFileInvoiceDollar,
       content: <TaxAdjustment />
     });
     if (isLoanEligible(type)) options.push(
-      { label: "Loan", active: true, svg: SVGLoan, content: <LoanEmi /> }
+      { label: "Loan", active: true, svg: faHandHoldingUsd, content: <LoanEmi /> }
     );
     if (type === GoalType.B) {
-      options.push({ label: "Rent?", active: true, svg: SVGScale, content: <RentComparison /> });
+      options.push({ label: "Rent?", active: true, svg: faBalanceScale, content: <RentComparison /> });
     }
     return options;
   }

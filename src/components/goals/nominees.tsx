@@ -17,7 +17,7 @@ export default function Nominees() {
 	
 	return (
 		<Section
-			title={`Nominees Inherit At least ~ ${toCurrency(
+			title={`Nominees Inherit ~ ${toCurrency(
 				Math.round(leaveBehind * (1 - successionTaxRate / 100)),
 				currency
 			)}`}

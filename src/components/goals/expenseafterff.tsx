@@ -35,7 +35,7 @@ export function ExpenseAfterFF() {
 				rangeFactor={rangeFactor}
 				value={expenseAfterFF}
 				changeHandler={setExpenseAfterFF}
-				min={0}
+				min={5000}
 				max={50000}
 				step={100}
 			/>

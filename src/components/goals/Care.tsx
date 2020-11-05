@@ -17,13 +17,13 @@ export default function CareInsurance() {
 		setCarePremium,
 		carePremiumSY,
 		setCarePremiumSY,
-		chgPer,
-		setChgPer,
+		carePremiumChgPer,
+		setCarePremiumChgPer,
 		maxTaxDed,
 		setMaxTaxDed,
 		taxRate,
-		premiumDur,
-		setPremiumDur,
+		carePremiumDur,
+		setCarePremiumDur,
 		cpBY,
 		setCPBY
 	}: any = useContext(FIGoalContext);
@@ -34,10 +34,10 @@ export default function CareInsurance() {
 	useEffect(
 		() => {
 			carePremium
-				? setTotalCP(Math.round(calculateTotalCP(carePremiumSY, carePremium, chgPer, premiumDur, cpBY)))
+				? setTotalCP(Math.round(calculateTotalCP(carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur, cpBY)))
 				: setTotalCP(0);
 		},
-		[ carePremiumSY, carePremium, chgPer, premiumDur ]
+		[ carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur ]
 	);
 
 	useEffect(
@@ -49,14 +49,14 @@ export default function CareInsurance() {
 							maxTaxDed,
 							carePremiumSY,
 							carePremium,
-							chgPer,
-							premiumDur,
+							carePremiumChgPer,
+							carePremiumDur,
 							cpBY
 						)
 					: 0
 			);
 		},
-		[ taxRate, maxTaxDed, carePremiumSY, carePremium, chgPer, premiumDur ]
+		[ taxRate, maxTaxDed, carePremiumSY, carePremium, carePremiumChgPer, carePremiumDur ]
 	);
 
 	useEffect(
@@ -104,17 +104,17 @@ export default function CareInsurance() {
 			)}
 			{carePremium && (
 				<SelectInput
-					value={premiumDur}
+					value={carePremiumDur}
 					options={initYearOptions(1, 15)}
 					pre="Pay For"
 					unit="Years"
-					changeHandler={(val: string) => changeSelection(val, setPremiumDur)}
+					changeHandler={(val: string) => changeSelection(val, setCarePremiumDur)}
 				/>
 			)}
 			{carePremium && (
 				<RadialInput
-					value={chgPer}
-					changeHandler={setChgPer}
+					value={carePremiumChgPer}
+					changeHandler={setCarePremiumChgPer}
 					pre="Premium Changes"
 					label="Yearly"
 					labelBottom

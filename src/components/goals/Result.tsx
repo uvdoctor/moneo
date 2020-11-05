@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { useFullScreen } from 'react-browser-hooks';
 import { Tabs, Row, Col } from 'antd';
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
@@ -7,6 +7,8 @@ import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
 import GoalHeader from './GoalHeader';
 import FIGoalHeader from './FIGoalHeader';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 export default function Result() {
 	const { goal, resultTabs, resultTabIndex, setResultTabIndex, results }: any = useContext(CalcContext);
 	const chartDiv = useRef(null);
@@ -46,10 +48,10 @@ export default function Result() {
 							key={i}
 							disabled={!tab.active}
 							tab={
-								<Fragment>
-									<tab.svg disabled={!tab.active} selected={resultTabIndex === i} />
-									{tab.label}
-								</Fragment>
+								<Row align="middle">
+									<FontAwesomeIcon icon={tab.svg} />
+									<label>{tab.label}</label>
+								</Row>
 							}
 						>
 							{resultTabs[resultTabIndex].content}

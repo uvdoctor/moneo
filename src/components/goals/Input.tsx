@@ -1,12 +1,13 @@
 import React, { Fragment, useContext } from "react";
-import { Button, Steps, Space, Row, Col } from "antd";
+import { Button, Steps, Row, Col } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { SaveOutlined } from "@ant-design/icons";
 import { CalcContext } from "../calc/CalcContext";
-
-import "./Input.less";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import VideoPlayer from "../VideoPlayer";
 import { COLORS } from "../../CONSTANTS";
+
+import "./Input.less";
 
 export default function Input() {
 	const {
@@ -48,13 +49,10 @@ export default function Input() {
 								<Step
 									key={tab.label}
 									title={
-										<Space align="center" size="small">
-											<tab.svg
-												disabled={!tab.active}
-												selected={i === inputTabIndex}
-											/>
-											{tab.label}
-										</Space>
+										<Fragment>
+											<FontAwesomeIcon icon={tab.svg} />
+											<label>{tab.label}</label>
+										</Fragment>
 									}
 									disabled={!tab.active || i > inputTabIndex}
 								/>
@@ -120,10 +118,7 @@ export default function Input() {
 									}}
 								>
 									<Row justify="center">
-										<tab.svg
-											disabled={!tab.active}
-											selected={inputTabIndex === i}
-										/>
+										<FontAwesomeIcon icon={tab.svg} />
 									</Row>
 									<Row justify="center">{tab.label}</Row>
 								</Col>
