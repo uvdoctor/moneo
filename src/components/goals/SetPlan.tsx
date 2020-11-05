@@ -19,14 +19,13 @@ import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
 import {EditOutlined} from "@ant-design/icons";
 import { ASSET_TYPES, COLORS } from "../../CONSTANTS";
-import SVGBarChart from "../svgbarchart";
 import AssetAllocationChart from "./AssetAllocationChart";
-import SVGAAChart from "./svgaachart";
-import SVGList from "../svglist";
 import { Button, notification } from "antd";
 import { GoalContextProvider } from "./GoalContext";
 import { CalcContextProvider } from "../calc/CalcContext";
 import { FIGoalContextProvider } from "./FIGoalContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChartLine, faChartPie, faBullseye } from "@fortawesome/free-solid-svg-icons";
 
 export default function SetPlan() {
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
@@ -51,15 +50,15 @@ export default function SetPlan() {
   const tabOptions = [
     {
       label: goalsLabel,
-      svg: SVGList,
+      svg: faBullseye,
     },
     {
       label: aaLabel,
-      svg: SVGAAChart,
+      svg: faChartPie,
     },
     {
       label: cfLabel,
-      svg: SVGBarChart,
+      svg: faChartLine,
     },
   ];
 
@@ -464,7 +463,7 @@ export default function SetPlan() {
                   )}
                   <Menu onClick={(e: any) => setViewMode(e.key)} selectedKeys={[viewMode]} mode="horizontal">
                     {tabOptions.map(tab => 
-                      <Menu.Item key={tab.label} icon={<tab.svg disabled={false} selected={viewMode === tab.label} />}>
+                      <Menu.Item key={tab.label} icon={<FontAwesomeIcon icon={tab.svg} />}>
                         {tab.label}
                       </Menu.Item>
                     )}  
