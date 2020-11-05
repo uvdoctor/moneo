@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import SVGHourGlass from '../svghourglass';
 import ItemDisplay from '../calc/ItemDisplay';
 import { MAX_RETIREMENT_AGE } from '../../CONSTANTS';
 import { GoalContext } from './GoalContext';
@@ -22,7 +21,6 @@ export default function FFImpact({impactYears}: FFImpactProps) {
 		/>
 	) : (
 		<ItemDisplay
-			svg={<SVGHourGlass />}
 			label="Impact"
 			pl
 			unit={`${getUnit()}`}
