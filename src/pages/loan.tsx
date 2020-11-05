@@ -2,8 +2,6 @@ import React from 'react';
 import { GoalType } from '../api/goals';
 import Layout from '../components/calc/Layout';
 import ItemDisplay from '../components/calc/ItemDisplay';
-import SVGBarChart from '../components/svgbarchart';
-import SVGChart from '../components/svgchart';
 import { CALC_NAMES } from '../CONSTANTS';
 
 export default function Loan() {
@@ -14,8 +12,8 @@ export default function Loan() {
 			assumptions={[ 'adfas', 'asdfsad' ]}
 			features={[ 'fsdgdf', 'fgdssdf' ]}
 			results={[
-				<ItemDisplay result={`Yearly Cash Flows`} svg={<SVGChart selected />} />,
-				<ItemDisplay result="Yearly Interest & Principal" svg={<SVGBarChart selected />} />
+				<ItemDisplay result={`Yearly Cash Flows`} />,
+				<ItemDisplay result="Yearly Interest & Principal" />
 			]}
 			resultImg="step1.png"
 		/>
