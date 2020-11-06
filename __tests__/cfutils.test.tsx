@@ -238,7 +238,7 @@ describe('calculateCFs Test with createLoanCF suite',()=>{
         let duration = 5;
         let price = 7053634;
         let loanCF = cfutils.calculateCFs(price, goal, duration);
-        expect(loanCF).toEqual({"cfs": [], "iSchedule": [], "itb": 0, "pSchedule": [], "ptb": 0});
+        expect(loanCF).toEqual([]);
         goal.emi = {rate: 9, dur: 12, per: 40, ry: 2023}; // reset loan years to 12
     });
 
