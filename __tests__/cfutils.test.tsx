@@ -73,7 +73,7 @@ describe('getLoanBorrowAmt test suite', ()=>{
 
 describe('getLoanPaidForMonths test suite', ()=>{
     
-    test('getLoanPaidForMonths test not null and duration < loan years',()=>{
+    test('getLoanPaidForMonths test not null and duration < loan years', () => {
         let loanPaidForMonths = cfutils.getLoanPaidForMonths(2030, 2025, 20);
         expect(loanPaidForMonths).not.toBe(null);
         expect(loanPaidForMonths).toBe(72);     
