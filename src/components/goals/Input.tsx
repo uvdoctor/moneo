@@ -5,7 +5,6 @@ import { SaveOutlined } from "@ant-design/icons";
 import { CalcContext } from "../calc/CalcContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import VideoPlayer from "../VideoPlayer";
-import { COLORS } from "../../CONSTANTS";
 
 import "./Input.less";
 
@@ -88,7 +87,7 @@ export default function Input() {
 											</Button>
 										)}
 									</Space>
-									{error && <div class="error-txt">{error}</div>}
+									{error && <div className="error-txt">{error}</div>}
 								</Row>
 							</Col>
 							{stepVideoUrl && (
