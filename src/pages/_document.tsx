@@ -56,6 +56,7 @@ class DDDocument extends NextDocument<DDDocumentProps> {
 					<NextScript />
 				</body>
 				<footer>
+					<script src="https://www.google.com/recaptcha/api.js"></script>
 					{isProduction && (
 						<Fragment>
 							<script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
