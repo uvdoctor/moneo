@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react';
-import { getCurrencyList } from '../utils';
-import { Tooltip, Select, Row, Col } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import React, { ReactNode } from "react";
+import { getCurrencyList } from "../utils";
+import { Tooltip, Select, Row, Col } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 
 interface SelectInputProps {
 	disabled?: boolean;
@@ -20,37 +20,40 @@ export default function SelectInput(props: SelectInputProps) {
 
 	return (
 		<Row align="middle" justify="space-between">
-			{props.pre && <Col>
-				{props.pre}
-				{props.info && (
-					<Tooltip title={props.info}>
+			{props.pre && (
+				<Col>
+					{props.pre}
+					{props.info && (
+						<Tooltip title={props.info}>
 							<InfoCircleOutlined />
-					</Tooltip>
-				)}
-			</Col>}
+						</Tooltip>
+					)}
+				</Col>
+			)}
 			<Col>
 				<Row align="middle">
-						<Select
-							showSearch
-							optionFilterProp="children"
-							style={{ minWidth: '80px' }}
-							value={props.value}
-							onChange={(value) => props.changeHandler(value)}
-							filterOption={(input, option) =>
-								option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-							}
-							disabled={props.disabled}
-						>
-							{Object.keys(props.currency ? getCurrencyList() : props.options).map((key) => (
-								<Option key={key} value={key}>
-									{props.currency ? key : props.options[key]}
-								</Option>
-							))}
-						</Select>
-						{props.unit}
-						{<Row style={{marginLeft: '0.5rem'}}>{props.post}</Row>}
-					</Row>
+					<Select
+						showSearch
+						optionFilterProp="children"
+						value={props.value}
+						onChange={(value) => props.changeHandler(value)}
+						filterOption={(input, option) =>
+							option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+						}
+						disabled={props.disabled}
+					>
+						{Object.keys(
+							props.currency ? getCurrencyList() : props.options
+						).map((key) => (
+							<Option key={key} value={key}>
+								{props.currency ? key : props.options[key]}
+							</Option>
+						))}
+					</Select>
+					{props.unit}
+					{<Row>{props.post}</Row>}
+				</Row>
 			</Col>
-			</Row>
+		</Row>
 	);
 }

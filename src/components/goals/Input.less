@@ -66,13 +66,17 @@
 			margin: 0;
 			bottom: 0;
 			left: 0;
-			z-index: 2;
+			z-index: 5;
+		}
+
+		& .ant-steps {
+			flex-direction: row;
 		}
 
 		& .ant-steps-item {
 			position: relative;
 			overflow: inherit;
-			padding: 10px 0 !important;
+			padding: 0 !important;
 
 			&:first-child {
 				padding-left: 15px !important;
@@ -100,17 +104,17 @@
 
 				& svg {
 					width: 35px;
-					margin-bottom: 8px;
 				}
 
 				& .ant-steps-item-title {
 					color: #fff;
 					line-height: 10px;
+					padding: 20px 8px 15px;
 
 					&:after {
 						width: 100%;
 						background-color: #7a7f84;
-						top: 35px;
+						top: 30px;
 					}
 				}
 
@@ -125,18 +129,83 @@
 			}
 		}
 
-		& .ant-steps-item-active {
-			background-color: @primary-color;
+		& .ant-steps-item-finish {
+			& .ant-steps-item-content {
+				& .ant-steps-item-title {
+					&:after {
+						height: 2px;
+						background-color: @primary-color;
+					}
+				}
+			}
+		}
 
+		& .ant-steps-item-active {
 			& .ant-steps-item-icon {
 				background: #3f4a53;
 			}
 
 			& .ant-steps-item-content {
 				& .ant-steps-item-title {
-					&:after {
-						background-color: rgba(255, 255, 255, 0.3);
+					background-color: @primary-color;
+				}
+			}
+		}
+	}
+}
+
+@media all and (max-width: 576px) {
+	.ant-steps-item-tail {
+		display: none !important;
+	}
+
+	.calculator-header {
+		margin-bottom: 10px;
+	}
+
+	.goals-container {
+		padding: 0 10px;
+		margin-bottom: 60px;
+
+		& .ant-steps-item {
+			&:first-child {
+				padding: 0 !important;
+			}
+
+			& .ant-steps-item-icon {
+				width: 20px;
+				height: 20px;
+				font-size: 14px;
+				margin-left: -10px;
+
+				& .ant-steps-icon {
+					top: -7px;
+				}
+			}
+
+			& .ant-steps-item-content {
+				min-height: auto;
+				padding: 0;
+
+				& .ant-steps-item-title {
+					display: flex;
+					flex-direction: column;
+					font-size: 16px;
+					align-items: center;
+					padding: 10px 10px 8px;
+
+					& label {
+						font-size: 14px;
+						margin-top: 8px;
 					}
+				}
+			}
+		}
+
+		& .ant-steps-item-finish {
+			& .ant-steps-item-icon {
+				& .ant-steps-icon {
+					top: -5px;
 				}
 			}
 		}

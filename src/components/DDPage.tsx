@@ -18,7 +18,6 @@ interface DDPageProps {
 }
 
 export default function DDPage(props: DDPageProps) {
-
   return (
     <Fragment>
       <Head>
@@ -81,12 +80,18 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <title>{props.title}</title>
       </Head>
       <Layout className={`dd-site ${props.className}`}>
-        {props.secure ?
+        {props.secure ? (
           <Fragment>
             <UserHeader />
             <SecureMenu />
           </Fragment>
-          : <Nav scrollable={props.navScrollable} isFixed={props.fixedNav} onBack={props.onBack} />}
+        ) : (
+          <Nav
+            scrollable={props.navScrollable}
+            isFixed={props.fixedNav}
+            onBack={props.onBack}
+          />
+        )}
         {props.children}
         <DDFooter />
       </Layout>

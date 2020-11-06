@@ -253,6 +253,7 @@ body,
 		& .close-btn {
 			display: block;
 		}
+
 		& section {
 			display: none;
 
@@ -307,6 +308,18 @@ body,
 }
 
 @media all and (max-width: 767.98px) {
+	.calculator-container.dd-site {
+		& .dd-header {
+			height: 63px;
+		}
+	}
+
+	.dd-header.ant-layout-header {
+		& > .ant-btn {
+			margin-top: 15px;
+		}
+	}
+
 	.calculator-options {
 		position: relative;
 		z-index: 2;
@@ -337,6 +350,7 @@ body,
 			height: 100%;
 			background: #fff;
 			border: 0;
+			display: none;
 			top: 0;
 			right: 0;
 			z-index: 3;
@@ -349,21 +363,12 @@ body,
 		}
 	}
 
-	.calculator-header {
-		padding: 7px 20px;
-	}
-
 	.calculator-content {
 		padding-bottom: 90px;
 	}
 }
 
 @media all and (max-width: 576px) {
-	.calculator-header {
-		margin-bottom: 20px;
-		padding: 3px 8px;
-	}
-
 	.dd-stats {
 		padding: 0 5px;
 		margin-bottom: 20px;
@@ -377,11 +382,21 @@ body,
 		}
 	}
 
+	.calculator-content {
+		padding-bottom: 10px;
+		margin-bottom: 50px;
+	}
+
+	.dd-chart.ant-tabs {
+		padding: 0 10px;
+	}
+
 	.calculator-options {
 		position: fixed;
 		top: 0;
 
 		& section {
+			display: none;
 			padding: 15px;
 		}
 	}

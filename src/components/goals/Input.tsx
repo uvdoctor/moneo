@@ -1,5 +1,5 @@
 import React, { Fragment, useContext } from "react";
-import { Button, Steps, Row, Col } from "antd";
+import { Button, Steps, Row, Col, Space } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { SaveOutlined } from "@ant-design/icons";
 import { CalcContext } from "../calc/CalcContext";
@@ -22,7 +22,7 @@ export default function Input() {
 		handleSubmit,
 		disableSubmit,
 		stepVideoUrl,
-		error
+		error,
 	}: any = useContext(CalcContext);
 	const { Step } = Steps;
 
@@ -64,28 +64,31 @@ export default function Input() {
 							<Col span={stepVideoUrl ? 11 : 24}>
 								{inputTabs[inputTabIndex].content}
 								<Row align="middle">
-									{inputTabIndex > 0 && (
-										<Button
-											style={{ margin: "0 8px" }}
-											onClick={() => handleStepChange(-1)}
-										>
-											Previous
-										</Button>
-									)}
-									{inputTabIndex < inputTabs.length - 1 && (
-										<Button type="primary" disabled={error} onClick={() => handleStepChange()}>
-											Next
-										</Button>
-									)}
-									{error && <div style={{color: COLORS.RED, marginLeft: '0.5rem'}}>{error}</div>}
-									{inputTabIndex === inputTabs.length - 1 && (
-										<Button
-											type="primary"
-											onClick={() => setAllInputDone(true)}
-										>
-											Done
-										</Button>
-									)}
+									<Space>
+										{inputTabIndex > 0 && (
+											<Button onClick={() => handleStepChange(-1)}>
+												Previous
+											</Button>
+										)}
+										{inputTabIndex < inputTabs.length - 1 && (
+											<Button
+												type="primary"
+												disabled={error}
+												onClick={() => handleStepChange()}
+											>
+												Next
+											</Button>
+										)}
+										{inputTabIndex === inputTabs.length - 1 && (
+											<Button
+												type="primary"
+												onClick={() => setAllInputDone(true)}
+											>
+												Done
+											</Button>
+										)}
+									</Space>
+									{error && <div class="error-txt">{error}</div>}
 								</Row>
 							</Col>
 							{stepVideoUrl && (
@@ -134,9 +137,7 @@ export default function Input() {
 						>
 							<CloseOutlined />
 						</Button>
-						<Col span={24}>
-								{inputTabs[inputTabIndex].content}
-						</Col>
+						<Col span={24}>{inputTabs[inputTabIndex].content}</Col>
 						{!isPublicCalc && handleSubmit ? (
 							<Row justify="center">
 								<Button

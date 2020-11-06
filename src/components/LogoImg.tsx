@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
 
 export default function LogoImg() {
-  return (
-    <img height="40px" style={{maxWidth: '45px'}}
-					alt="Dollar Darwin"
-					title="Dollar Darwin"
-					src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+	return (
+		<img
+			alt="Dollar Darwin"
+			title="Dollar Darwin"
+			src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
 AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAA
 CXBIWXMAAA7DAAAOwwHHb6hkAABGVklEQVR42u19d3gcx5Xne9U9EYNBBgGQYCYVKIoKtnIwZcmy
 JVm2zha1Z2tly2dLd7Zs+RzWYb/bIW73vM4+Oa0oB+qkdRDks7S2T1bOWaJkBeYAkgCRgQEGk6e7
@@ -326,6 +326,6 @@ BZaCGmhG1Ozl5wDAMzeVVXI5kMEz7ecruRzInqP58p7C/3m5xJhXS0NmLCjjeDzFNACAJmgESSL1
 +ef3ZzZv3myoLQsdfXr4/6XYoi/4p3HSAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTA0LTI0VDEx
 OjUzOjA0KzAwOjAwy0+88QAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0wNC0yNFQxMTo1MzowNCsw
 MDowMLoSBE0AAAAASUVORK5CYII="
-				/>
-  )
+		/>
+	);
 }
