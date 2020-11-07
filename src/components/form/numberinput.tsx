@@ -1,245 +1,160 @@
-import React, { useRef, useEffect, useState } from "react";
-import { toCurrency, toReadableNumber } from "../utils";
-import Slider from "rc-slider";
-import NextStep from "./nextstep";
-import { COLORS, INPUT_HIGHLIGHT } from "../../CONSTANTS";
-import Tooltip from "./tooltip";
+import React, { useEffect, useRef, useState } from 'react';
+import { parseNumber, toCurrency, toReadableNumber } from '../utils';
+import { Slider } from 'antd';
+import { COLORS } from '../../CONSTANTS';
+import { Tooltip, InputNumber, Row, Col } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 interface NumberInputProps {
-  inputOrder: number;
-  currentOrder: number;
-  nextStepDisabled: boolean;
-  nextStepHandler: Function;
-  allInputDone: boolean;
-  actionCount?: number;
-  info?: string;
-  infoDurationInMs?: number;
-  pre: string;
-  post?: string;
-  min: number;
-  max: number;
-  value: number;
-  width?: string;
-  name: string;
-  currency?: string;
-  rangeFactor?: number;
-  unit?: string;
-  changeHandler: any;
-  note?: any;
-  step?: number;
-  feedback?: any;
+	info?: string;
+	pre: any;
+	post?: string;
+	min: number;
+	max: number;
+	value: number;
+	currency?: string;
+	rangeFactor?: number;
+	unit?: string;
+	changeHandler: any;
+	note?: any;
+	step?: number;
+	feedback?: any;
 }
 
 export default function NumberInput(props: NumberInputProps) {
-  const formRef = useRef<HTMLFormElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const readOnlyRef = useRef<HTMLInputElement>(null);
-  const [editing, setEditing] = useState<boolean>(false);
-  const [sliderButtonColor, setSliderButtonColor] = useState<string>("white");
-  const [feedbackText, setFeedbackText] = useState<string>("");
-  const width: string = props.width
-    ? props.width
-    : props.currency
-    ? "140px"
-    : props.unit
-    ? "40px"
-    : "70px";
-  const [rangeFactor, setRangeFactor] = useState<number>(
-    props.rangeFactor ? props.rangeFactor : 1
-  );
+	const inputRef = useRef(null);
+	const [ sliderBorderColor, setSliderBorderColor ] = useState<string>(COLORS.GREEN);
+	const [ feedbackText, setFeedbackText ] = useState<string>('');
+	const [ minNum, setMinNum ] = useState<number>(props.min * (props.rangeFactor ? props.rangeFactor : 1));
+	const [ maxNum, setMaxNum ] = useState<number>(props.max * (props.rangeFactor ? props.rangeFactor : 1));
+	const [ stepNum, setStepNum ] = useState<number>(
+		props.step ? props.step * (props.rangeFactor ? props.rangeFactor : 1) : 1
+	);
+	const [ marks, setMarks ] = useState<any>({
+		[minNum]: toReadableNumber(minNum),
+		[maxNum]: { label: toReadableNumber(maxNum) }
+	});
 
-  useEffect(() => {
-    formRef.current?.reportValidity();
-  }, [formRef]);
+	useEffect(
+		() => {
+			let rf = props.rangeFactor ? props.rangeFactor : 1;
+			let minNum = props.min * rf;
+			let maxNum = props.max * rf;
+			setMinNum(minNum);
+			setMaxNum(maxNum);
+			setStepNum((props.step as number) * rf);
+			setMarks({
+				[minNum]: toReadableNumber(minNum),
+				[maxNum]: { label: toReadableNumber(maxNum), style: { paddingRight: props.currency ? '3rem' : '0rem' } }
+			});
+		},
+		[ props.rangeFactor, props.min, props.max ]
+	);
 
-  useEffect(() => {
-    if (props.rangeFactor) setRangeFactor(props.rangeFactor);
-    else setRangeFactor(1);
-  }, [props.rangeFactor]);
+	const getClosestKey = (value: number, keys: Array<number>) => {
+		let result: number = keys[0];
+		keys.forEach((k) => {
+			if (value >= k) result = k;
+			else return result;
+		});
+		return result;
+	};
 
-  useEffect(() => {
-    if(!props.allInputDone && props.currentOrder === props.inputOrder) {
-      props.currency ? readOnlyRef.current?.focus() : inputRef.current?.focus()
-    }
-  }, [props.allInputDone, props.currentOrder])
+	const provideFeedback = (val: number) => {
+		if (props.feedback) {
+			let allKeys = Object.keys(props.feedback);
+			let allSortedKeys = allKeys.map((k) => parseFloat(k)).sort((a, b) => a - b);
+			let feedback: any = props.feedback[getClosestKey(val, allSortedKeys)];
+			if (!feedback || !feedback.label) {
+				setSliderBorderColor('white');
+				setFeedbackText('');
+			} else {
+				setSliderBorderColor(feedback.color);
+				setFeedbackText(feedback.label);
+			}
+		}
+	};
 
-  const handleKeyDown = (e: any) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if(!props.allInputDone && !props.nextStepDisabled) {
-        inputRef.current?.blur();
-        props.nextStepHandler()
-      } else if(props.allInputDone) {
-        inputRef.current?.blur()
-      }
-    }
-  };
-
-  const getClosestKey = (value: number, keys: Array<number>) => {
-    let result: number = keys[0];
-    keys.forEach((k) => {
-      if (value >= k) result = k;
-      else return result;
-    });
-    return result;
-  };
-
-  const provideFeedback = (val: number) => {
-    if (props.feedback) {
-      let allKeys = Object.keys(props.feedback);
-      let allSortedKeys = allKeys
-        .map((k) => parseFloat(k))
-        .sort((a, b) => a - b);
-      let feedback: any = props.feedback[getClosestKey(val, allSortedKeys)];
-      if (!feedback || !feedback.label) {
-        setSliderButtonColor("white");
-        setFeedbackText("");
-      } else {
-        setSliderButtonColor(feedback.color);
-        setFeedbackText(feedback.label);
-      }
-    }
-  };
-
-  return (
-      <div>
-        {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
-          props.allInputDone) && (
-          <form
-            ref={formRef}
-            className={`${
-              !props.allInputDone &&
-              props.inputOrder === props.currentOrder &&
-              `${INPUT_HIGHLIGHT} px-4`
-            }`}
-          >
-            {props.info && <Tooltip info={props.info} />}
-            <div
-              className={`w-full flex justify-between ${
-                props.max ? "items-center" : "flex-col"
-              }`}
-            >
-              <div
-                className={`w-full flex flex-col mr-1 ${
-                  props.max ? "text-left" : "text-right"
-                }`}
-              >
-                {props.pre && <label>{props.pre}</label>}
-                {props.post && <label>{props.post}</label>}
-              </div>
-              <div className="flex justify-end">
-                {!props.currency || (props.currency && editing) ? (
-                  <input
-                    ref={inputRef}
-                    className="input"
-                    type="number"
-                    name={props.name}
-                    value={props.value || props.currency ? props.value : 0}
-                    min={props.min * rangeFactor}
-                    max={props.max * rangeFactor}
-                    step={props.step ? props.step * rangeFactor : 1}
-                    onChange={(e) => {
-                      let val = e.currentTarget.valueAsNumber;
-                      provideFeedback(val);
-                      props.changeHandler(val);
-                    }}
-                    onFocus={(e) => {
-                      if (!props.value && e.currentTarget.value === "0")
-                        e.currentTarget.value = "";
-                    }}
-                    onKeyDown={handleKeyDown}
-                    onBlur={(e) => {
-                      setEditing(false);
-                      if (!props.currency && !props.value)
-                        e.currentTarget.valueAsNumber = 0;
-                    }}
-                    required
-                    style={{ textAlign: "right", width: width }}
-                  />
-                ) : (
-                  <input
-                    ref={readOnlyRef}
-                    className="input"
-                    type="text"
-                    name={props.name}
-                    value={toCurrency(
-                      !props.value ? 0 : props.value,
-                      props.currency
-                    )}
-                    onFocus={() => {
-                      setEditing(true)}
-                    }
-                    style={{ textAlign: "right", width: width }}
-                    readOnly
-                  />
-                )}
-              </div>
-              {props.unit && <label className="ml-1">{props.unit}</label>}
-            </div>
-            {props.max && (
-              <div className="flex flex-col mt-1">
-                {/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
-                <Slider
-                  className="bg-gray-200 rounded-full shadow"
-                  min={props.min * rangeFactor}
-                  max={props.max * rangeFactor}
-                  step={(props.step as number) * rangeFactor}
-                  value={props.value}
-                  onChange={(val: number) => {
-                    provideFeedback(val);
-                    props.changeHandler(val);
-                  }}
-                  handleStyle={{
-                    cursor: "grab",
-                    width: "1.2rem",
-                    height: "1.2rem",
-                    background: sliderButtonColor,
-                    borderRadius: "50%",
-                    borderColor: sliderButtonColor,
-                    left: 0,
-                    top: 2,
-                    boxShadow:
-                      "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
-                  }}
-                  trackStyle={{
-                    backgroundColor: COLORS.GREEN,
-                    top: 0,
-                    left: 0,
-                    height: "0.9rem",
-                  }}
-                  dotStyle={{
-                    width: "0rem",
-                    height: "0rem",
-                    border: "none",
-                    background: "none",
-                  }}
-                  railStyle={{
-                    background: "none",
-                  }}
-                />
-                {props.max && (
-                  <div className="flex justify-between w-full text-gray-400">
-                    <label className="mr-2">
-                      {toReadableNumber(
-                        props.min ? props.min * rangeFactor : 0
-                      )}
-                    </label>
-                    {feedbackText}
-                    <label>{toReadableNumber(props.max * rangeFactor)}</label>
-                  </div>
-                )}
-              </div>
-            )}
-            <label className="flex justify-center">{props.note}</label>
-          </form>
-        )}
-        {!props.allInputDone && props.inputOrder === props.currentOrder && (
-          <NextStep
-            nextStepHandler={() =>
-              props.nextStepHandler(props.actionCount ? props.actionCount : 1)
-            }
-            disabled={props.nextStepDisabled}
-            />
-        )}
-      </div>
-  );
+	return (
+		<div style={{ minWidth: '250px' }}>
+			<Col span={24}>
+				<Row justify="space-between">
+					<Col>
+						{props.pre}
+						{props.post && ` ${props.post}`}
+						{props.info && (
+							<Tooltip title={props.info}>
+								<span>
+									<InfoCircleOutlined />
+								</span>
+							</Tooltip>
+						)}
+					</Col>
+					{!props.currency && (
+						<Col>
+							<b>{`${toReadableNumber(
+								props.value,
+								props.step && props.step < 1 ? 2 : 0
+							)} ${props.unit}`}</b>
+						</Col>
+					)}
+				</Row>
+			</Col>
+			<Col span={24}>
+				<Row justify="space-between" align="top" style={{ marginBottom: '1.5rem' }}>
+					{props.currency && (
+						<Col span={10}>
+							<InputNumber
+								ref={inputRef}
+								value={props.value}
+								min={minNum}
+								max={maxNum}
+								step={stepNum}
+								onChange={(val) => {
+									provideFeedback(val as number);
+									props.changeHandler(val as number);
+								}}
+								formatter={(val) => toCurrency(val as number, props.currency as string)}
+								parser={(val) => parseNumber(val as string, props.currency)}
+								onPressEnter={(e: any) => {
+									e.preventDefault();
+									//@ts-ignore
+									inputRef.current.blur();
+								}}
+								onBlur={(e: any) => {
+									let num = parseInt(parseNumber(e.currentTarget.value, props.currency));
+									if (!num || num < props.min) props.changeHandler(props.min);
+								}}
+								style={{ width: '100%', marginBottom: '0px' }}
+							/>
+						</Col>
+					)}
+					<Col span={props.currency ? 12 : 24}>
+						{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
+						<Slider
+							min={minNum}
+							max={maxNum}
+							marks={marks}
+							step={stepNum}
+							value={props.value}
+							onChange={(val: number) => {
+								provideFeedback(val);
+								props.changeHandler(val);
+							}}
+							handleStyle={{
+								cursor: 'grab',
+								borderColor: sliderBorderColor
+							}}
+							style={{ width: '100%', marginTop: '0px', marginBottom: '0px' }}
+						/>
+						{feedbackText && (
+							<Col span={24} style={{ textAlign: 'center' }}>
+								{feedbackText}
+							</Col>
+						)}
+					</Col>
+				</Row>
+			</Col>
+			{props.note && <Col span={24}>{props.note}</Col>}
+		</div>
+	);
 }

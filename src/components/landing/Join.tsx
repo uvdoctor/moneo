@@ -1,40 +1,117 @@
-import React, { Fragment } from 'react';
-import Button from '../Button';
-import IconTooltip from '../IconTooltip';
-import SocialMediaShare from '../SocialMediaShare';
+import React, { useContext, useState, useEffect, useRef } from "react";
+import { Input, Select, Button, Form, Alert, Space } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
+import { FormInstance } from "antd/lib/form";
+import { JoinContext } from "./JoinContext";
+import countriesList from "../countriesList";
 
-interface JoinProps {
-	joinRef?: any;
-}
+import "./Join.less";
+import { Status } from "../../api/goals";
 
-const Join = ({ joinRef }: JoinProps) => {
+export default function Join() {
+	const {
+		email,
+		error,
+		status,
+		country,
+		isLoading,
+		onFormSubmit,
+		setShowVerifyModal,
+	}: any = useContext(JoinContext);
+	const { Option } = Select;
+	const [form] = Form.useForm();
+	const formRef = useRef<FormInstance>(null);
+	const [showJoinForm, setJoinForm] = useState(true);
+
+	useEffect(() => {
+		if (formRef.current) {
+			formRef.current.setFieldsValue({ email, country });
+		}
+	}, [email, country]);
+
+	useEffect(() => {
+		if (status === "Y" || status === "P") setJoinForm(false);
+	}, [status]);
+
 	return (
-		<Fragment>
-			<h2 ref={joinRef} className="text-sm mt-8 font-bold text-green-primary sm:text-lg md:text-base md:mt-12 lg:text-lg lg:mt-20">
-				Join Waitlist &amp; Earn up to $200 credit*{' '}
-				<IconTooltip id="earn-credit">
-					<ul className="p-3 text-lg font-normal">
-						<li>First 100 get $200 credit</li>
-						<li>Next 900 get $150 credit</li>
-						<li>Next 2,000 get $100 credit</li>
-						<li>Next 3,000 get $75 credit</li>
-						<li>Next 4,000 get $50 credit</li>
-						<li>Next 5,000 get $30 credit</li>
-						<li>All others get $15 credit</li>
-					</ul>
-				</IconTooltip>
-			</h2>
-			<div
-				className="bg-white border border-gray-500 rounded p-1 mt-5 shadow md:w-2/4 md:text-base lg:w-4/12 lg:text-lg"
-			>
-				<input className="w-3/4 p-2" type="text" placeholder="Enter email address" />
-				<Button className="w-1/4" label="Join" />
-			</div>
-			<div className="text-sm bg-white border border-gray-400 p-5 rounded mt-4 shadow sm:text-base md:w-2/4 md:text-sm md:p-3 lg:text-base lg:w-4/12">
-				<SocialMediaShare url={`https://dollardarwin.com`} />
-			</div>
-		</Fragment>
-	);
-};
+		<div className="dd-join">
+			{!showJoinForm && (
+				<Space>
+					<Button onClick={() => setJoinForm(true)}>Use another account</Button>
+					{status === "P" && (
+						<Button type="primary" onClick={() => setShowVerifyModal(true)}>
+							Verify email
+						</Button>
+					)}
+				</Space>
+			)}
+			{showJoinForm && (
+				<Form
+					form={form}
+					ref={formRef}
+					name="join"
+					layout="inline"
+					onFinish={onFormSubmit}
+				>
+					<Form.Item
+						name="country"
+						rules={[
+							{
+								type: "string",
+								required: true,
+								message: "Please select your country",
+							},
+						]}
+					>
+						<Select placeholder="Country" showSearch>
+							{countriesList.map(({ name, code }) => (
+								<Option key={code} value={code}>
+									{name}
+								</Option>
+							))}
+						</Select>
+					</Form.Item>
+					<Form.Item
+						name="email"
+						rules={[
+							{
+								required: true,
+								type: "email",
+								message: "Please enter valid email address!",
+							},
+						]}
+					>
+						<Input placeholder="Enter email address" />
+					</Form.Item>
+					<Form.Item shouldUpdate={true}>
+						{() => (
+							<Button
+								type="primary"
+								htmlType="submit"
+								disabled={
+									!form.isFieldsTouched(true) ||
+									form.getFieldsError().filter(({ errors }) => errors.length)
+										.length > 0
+								}
+								loading={isLoading}
+							>
+								Join
+							</Button>
+						)}
+					</Form.Item>
+					<Form.Item>
+						{status !== Status.N && (
+							<Button onClick={() => setJoinForm(false)}>
+								<CloseOutlined />
+							</Button>
+						)}
+					</Form.Item>
+				</Form>
+			)}
 
-export default Join;
+			{error.message && (
+				<Alert message={error.message} type={error.type || "error"} showIcon />
+			)}
+		</div>
+	);
+}

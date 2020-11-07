@@ -593,6 +593,23 @@ export const deleteAccount = /* GraphQL */ `
     }
   }
 `;
+export const deleteRegistration = /* GraphQL */ `
+  mutation DeleteRegistration(
+    $input: DeleteRegistrationInput!
+    $condition: ModelRegistrationConditionInput
+  ) {
+    deleteRegistration(input: $input, condition: $condition) {
+      email
+      status
+      code
+      country
+      lat
+      long
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createRegistration = /* GraphQL */ `
   mutation CreateRegistration(
     $input: CreateRegistrationInput!
@@ -602,6 +619,9 @@ export const createRegistration = /* GraphQL */ `
       email
       status
       code
+      country
+      lat
+      long
       createdAt
       updatedAt
     }
@@ -616,20 +636,9 @@ export const updateRegistration = /* GraphQL */ `
       email
       status
       code
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteRegistration = /* GraphQL */ `
-  mutation DeleteRegistration(
-    $input: DeleteRegistrationInput!
-    $condition: ModelRegistrationConditionInput
-  ) {
-    deleteRegistration(input: $input, condition: $condition) {
-      email
-      status
-      code
+      country
+      lat
+      long
       createdAt
       updatedAt
     }

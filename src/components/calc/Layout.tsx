@@ -1,38 +1,35 @@
-import { useRouter } from 'next/router';
-import React, { Fragment, useState } from 'react';
-import { CreateGoalInput, GoalType } from '../../api/goals';
-import { ROUTES } from '../../CONSTANTS';
-import DDPage from '../ddpage';
-import ExpandCollapse from '../form/expandcollapse';
-import FFGoal from '../goals/ffgoal';
-import Goal from '../goals/goal';
-import { createNewGoalInput } from '../goals/goalutils';
-import * as gtag from '../../lib/gtag';
-import CalculatorTemplate from './CalculatorTemplate';
-import ItemDisplay from './ItemDisplay';
-import Button from '../Button';
-import Nav from '../Nav';
+import React, { useState } from "react";
+import { GoalType } from "../../api/goals";
+import DDPage from "../DDPage";
+import { createNewGoalInput } from "../goals/goalutils";
+import * as gtag from "../../lib/gtag";
+import { Button, Collapse, Row, Col, PageHeader } from "antd";
+import { RocketOutlined } from "@ant-design/icons";
 
+import "./Layout.less";
+import { CalcContextProvider } from "./CalcContext";
+import { GoalContextProvider } from "../goals/GoalContext";
+import { FIGoalContextProvider } from "../goals/FIGoalContext";
 interface LayoutProps {
-	title: string;
-	titleSVG: React.ReactNode;
+	tabOptions?: Array<any>;
+	resultTabOptions?: Array<any>;
+	calc?: any;
 	type?: GoalType;
+	title: string;
 	features: Array<any>;
 	assumptions: Array<any>;
 	results: Array<any>;
 	resultImg: string;
-	calc?: any;
 }
 
 export default function Layout(props: LayoutProps) {
-	const router = useRouter();
-	const [ wipGoal, setWIPGoal ] = useState<any | null>(null);
-	const [ ffResult, setFFResult ] = useState<any>({});
+	const { Panel } = Collapse;
+	const [wip, setWIP] = useState<any | null>(null);
 	const nowYear = new Date().getFullYear();
 	const sections: any = {
-		'Expected Results': props.results,
-		'Key Features': props.features,
-		'Major Assumptions': props.assumptions
+		"Expected Results": props.results,
+		"Key Features": props.features,
+		"Major Assumptions": props.assumptions,
 	};
 
 	const buildEmptyMergedCFs = () => {
@@ -45,85 +42,82 @@ export default function Layout(props: LayoutProps) {
 
 	const createGoal = () => {
 		let g: any = null;
-		if (props.type) g = createNewGoalInput(props.type, 'USD');
-		else g = {};
-		g.name = props.title;
+		const defaultCurrency = "USD";
+		if (props.type) g = createNewGoalInput(props.type, defaultCurrency);
+		else g = { ccy: defaultCurrency };
+		g.name = props.title + " Calculator";
 		gtag.event({
-			category: 'Calculator',
-			action: 'Start',
-			label: 'type',
-			value: props.type ? props.type : props.title
+			category: "Calculator",
+			action: "Start",
+			label: "type",
+			value: props.type ? props.type : props.title,
 		});
-		setWIPGoal(g);
+		setWIP(g);
 	};
 
 	return (
-		<DDPage title={props.title}>
-			{!wipGoal ? (
-				<Fragment>
-					<Nav />
-          <div className="w-full text-center">
-            <ItemDisplay svg={props.titleSVG} result={props.title + ' Calculator'} calcFormat />
-						{Object.keys(sections).map((key, i) => (
-							<div key={'section' + i} className="mt-4">
-								<ExpandCollapse title={key} insideCalc>
-									<Fragment>
-										<div
-											className={`w-full flex flex-col justify-center items-center ${sections[
-												key
-											] === props.results && 'md:flex-row md:flex-wrap md:justify-around'}`}
-										>
-											{sections[key].map((item: any, i: number) => (
-												<div className="md:mt-2 md:mr-2" key={'item' + i}>
-													{item}
-												</div>
-											))}
-										</div>
-										{sections[key] === props.results && (
+		<DDPage
+			className="calculator-container"
+			title={props.title}
+			onBack={() => setWIP(null)}
+			navScrollable
+		>
+			{!wip ? (
+				<Row align="middle" justify="center">
+					<Col span={24}>
+						<PageHeader
+							className="calculator-header"
+							title={props.title + " Calculator"}
+						/>
+					</Col>
+					<Col className="steps-landing" span={24}>
+						<Collapse defaultActiveKey={["1"]}>
+							{Object.keys(sections).map((key, i) => (
+								<Panel key={`${i + 1}`} header={key}>
+									<Col span={24}>{sections[key]}</Col>
+									{sections[key] === props.results && (
+										<Col span={24}>
 											<img
-												className="cursor-pointer object-fit"
-												src={'/images/' + props.resultImg}
+												style={{ cursor: "pointer" }}
+												src={"/images/" + props.resultImg}
 												onClick={createGoal}
 											/>
-										)}
-									</Fragment>
-								</ExpandCollapse>
-							</div>
-						))}
-						<div className="mt-4">
-							<Button label="Start" isPrimary onClick={createGoal} />
-						</div>
-					</div>
-				</Fragment>
+										</Col>
+									)}
+								</Panel>
+							))}
+						</Collapse>
+					</Col>
+					<Col>
+						<Button
+							className="steps-start-btn"
+							type="primary"
+							onClick={() => createGoal()}
+						>
+							<RocketOutlined /> Start
+						</Button>
+					</Col>
+				</Row>
 			) : (
-				<div className="overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
-					<div className="relative bg-white border-0">
-						{router.pathname === ROUTES.FI ? (
-							<FFGoal
-								goal={wipGoal as CreateGoalInput}
+				<CalcContextProvider
+					goal={wip}
+					tabOptions={props.tabOptions}
+					resultTabOptions={props.resultTabOptions}
+				>
+					{props.type ? (
+						props.type === GoalType.FF ? (
+							<FIGoalContextProvider
 								mustCFs={[]}
 								tryCFs={[]}
-								mergedCfs={buildEmptyMergedCFs()}
-								cancelCallback={() => setWIPGoal(null)}
-								ffResult={ffResult}
-								ffResultHandler={setFFResult}
-							/>
-						) : props.type ? (
-							<Goal
-								goal={wipGoal as CreateGoalInput}
-								ffGoalEndYear={nowYear + 50}
-								cancelCallback={() => setWIPGoal(null)}
+								mergedCFs={buildEmptyMergedCFs()}
 							/>
 						) : (
-							<CalculatorTemplate
-								calc={props.calc}
-								title={props.title}
-								titleSVG={props.titleSVG}
-								cancelCallback={() => setWIPGoal(null)}
-							/>
-						)}
-					</div>
-				</div>
+							<GoalContextProvider ffGoalEndYear={nowYear + 50} />
+						)
+					) : (
+						<props.calc />
+					)}
+				</CalcContextProvider>
 			)}
 		</DDPage>
 	);

@@ -1,83 +1,60 @@
-import React from "react";
-import { toCurrency, toReadableNumber } from "../utils";
-import Tooltip from "../form/tooltip";
+import React, { Fragment, ReactNode } from 'react';
+import { toCurrency, toReadableNumber } from '../utils';
+import { Tooltip, Statistic, Col, Row } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import { COLORS } from '../../CONSTANTS';
 interface ItemDisplayProps {
 	label?: string;
 	svg?: any;
 	result: number | string;
 	noResultFormat?: boolean;
 	currency?: string;
-	unit?: string;
-	footer?: string;
+	unit?: any;
+	footer?: ReactNode;
 	decimal?: number;
-	titleFormat?: boolean;
 	info?: string;
 	imp?: string;
 	pl?: boolean;
-	vertical?: boolean;
-	calcFormat?: boolean;
 }
 
 export default function ItemDisplay(props: ItemDisplayProps) {
 	return (
-		<div className="flex flex-col items-center justify-center">
-			{props.label && (
-				<label
-					className={
-						props.titleFormat ? "text-xl md:text-2xl font-semibold" : ""
-					}
-				>
-					{props.label}
-				</label>
-			)}
-			<div className="flex justify-between items-start">
-				<div
-					className={`w-full flex ${
-						props.vertical && "flex-col"
-					} justify-center items-center`}
-				>
-					{props.svg}
-					<div
-						className={`ml-1 mt-2 text-base ${
-							props.pl
-								? props.result > 0
-									? "text-green-primary"
-									: "text-red-600"
-								: ""
-						}`}
-					>
-						{typeof props.result === "string" ? (
-							props.calcFormat ? (
-								<h1 className="md:text-xl lg:text-2xl font-bold">
-									{props.result}
-								</h1>
-							) : (
-								<span className="calc-btn-label">
-									{props.result} {props.unit ? props.unit : ""}
-								</span>
-							)
-						) : props.currency ? (
-							toCurrency(Math.abs(props.result), props.currency)
-						) : props.noResultFormat ? (
-							props.result
-						) : (
-							toReadableNumber(
-								Math.abs(props.result),
-								props.decimal ? props.decimal : 0
-							) + props.unit
+		<Fragment>
+			<Statistic
+				title={
+					<Col span={24} style={{ textAlign: 'center' }}>
+						{props.label}
+						{(props.imp || props.info) && (
+							<Fragment>
+								{props.imp && (
+									<Tooltip title={props.imp} color="red">
+										<InfoCircleOutlined />
+									</Tooltip>
+								)}
+								{props.info && (
+									<Tooltip
+										title={props.info}
+										color={`${props.pl && props.result < 0 ? 'red' : COLORS.DEFAULT}`}
+									>
+										<InfoCircleOutlined />
+									</Tooltip>
+								)}
+							</Fragment>
 						)}
-					</div>
-				</div>
-				{(props.imp || props.info) && (
-					<div className="ml-1 flex justify-end items-start cursor-pointer">
-						{props.imp && <Tooltip info={props.imp} error />}
-						{props.info && (
-							<Tooltip info={props.info} error={props.pl && props.result < 0} />
-						)}
-					</div>
-				)}
-			</div>
-			{props.footer && <label>{props.footer}</label>}
-		</div>
+					</Col>
+				}
+				value={props.result}
+				prefix={props.svg}
+				suffix={props.unit ? props.unit : ''}
+				formatter={() =>
+					typeof props.result === 'number' && !props.noResultFormat
+						? props.currency
+							? toCurrency(Math.abs(props.result), props.currency)
+							: toReadableNumber(Math.abs(props.result), props.decimal ? props.decimal : 0)
+						: props.result}
+				valueStyle={{ color: props.pl ? props.result < 0 ? COLORS.RED : props.result > 0 ? COLORS.GREEN : COLORS.DEFAULT : COLORS.DEFAULT, textAlign: 'center' }}
+			/>
+			<Row justify="center">{props.footer}</Row>
+		</Fragment>
 	);
 }

@@ -1,64 +1,64 @@
-import React, { Fragment, ReactNode, useRef } from "react";
-import { useFullScreen } from "react-browser-hooks";
-import SVGFullScreen from "../svgfullscreen";
-import SVGExitFullScreen from "../svgexitfullscreen";
-import DynamicSlider from "../dynamicslider";
-import Tabs from "../tabs";
-interface ResultProps {
-  result: ReactNode;
-  resultTabOptions: Array<any>;
-  showResultTab: string;
-  children: ReactNode;
-  showResultTabHandler: Function;
-}
+import React, { useContext, useRef } from 'react';
+import { useFullScreen } from 'react-browser-hooks';
+import { Tabs, Row, Col } from 'antd';
+import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
+import CalcHeader from '../calc/CalcHeader';
+import { CalcContext } from '../calc/CalcContext';
+import { GoalType } from '../../api/goals';
+import GoalHeader from './GoalHeader';
+import FIGoalHeader from './FIGoalHeader';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function Result(props: ResultProps) {
-  const chartDiv = useRef(null);
-  const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
+export default function Result() {
+	const { goal, resultTabs, resultTabIndex, setResultTabIndex, results }: any = useContext(CalcContext);
+	const chartDiv = useRef(null);
+	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
+	const { TabPane } = Tabs;
 
-  return (
-    <div
-      ref={chartDiv}
-      className={`w-full transition-width duration-1000 ease-in-out`}
-    >
-      <Fragment>
-        {props.result}
-        <div className="flex w-full items-center mt-2 mb-2">
-          <div className="ml-1 mr-4 cursor-pointer" onClick={toggle}>
-            {!fullScreen ? <SVGFullScreen /> : <SVGExitFullScreen />}
-          </div>
-          <div className="w-full">
-            {props.resultTabOptions.length > 1 ? (
-              <Tabs
-                tabs={props.resultTabOptions}
-                selectedTab={props.showResultTab}
-                selectedTabHandler={props.showResultTabHandler}
-                capacity={props.resultTabOptions.length}
-                allInputDone
-                keepCentered
-              />
-            ) : (
-              <div className="w-full mt-2 flex justify-center items-center">
-                {props.resultTabOptions.map((tab, i) => (
-                  <Fragment key={"t" + i}>
-                    <tab.svg selected />
-                    <label className="ml-1">{tab.label}</label>
-                  </Fragment>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-        <DynamicSlider
-          setSlide={props.showResultTabHandler}
-          totalItems={props.resultTabOptions}
-          currentItem={props.showResultTab}
-        >
-          {React.Children.map(props.children, (child: any) =>
-            child ? child : null
-          )}
-        </DynamicSlider>
-      </Fragment>
-    </div>
-  );
+	return (
+		<div className="calculator-content">
+			{goal.type ? goal.type === GoalType.FF ? <FIGoalHeader /> : <GoalHeader /> : <CalcHeader />}
+			<div ref={chartDiv}>
+				<Row justify="end" style={{ cursor: 'pointer' }} onClick={toggle}>
+					{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
+				</Row>
+				{results && results instanceof Array ? (
+					results.length > 0 && (
+						<Row className="dd-stats" justify="space-around">
+							{results.map((result, i) => (
+								<Col key={'result' + i} span={11}>
+									{result}
+								</Col>
+							))}
+						</Row>
+					)
+				) : (
+					<Col className="dd-stats" span={24}>
+						{results}
+					</Col>
+				)}
+				<Tabs
+					className="dd-chart"
+					onTabClick={(key: string) => setResultTabIndex(parseInt(key))}
+					defaultActiveKey={resultTabIndex}
+					type="card"
+				>
+					{resultTabs.map((tab: any, i: number) => (
+						<TabPane
+							key={i}
+							disabled={!tab.active}
+							tab={
+								<Row align="middle">
+									<FontAwesomeIcon icon={tab.svg} />
+									<label>{tab.label}</label>
+								</Row>
+							}
+						>
+							{resultTabs[resultTabIndex].content}
+						</TabPane>
+					))}
+				</Tabs>
+			</div>
+		</div>
+	);
 }

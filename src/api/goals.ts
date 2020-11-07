@@ -378,22 +378,16 @@ export type DeleteAccountInput = {
   id?: string | null,
 };
 
-export type CreateRegistrationInput = {
+export type DeleteRegistrationInput = {
   email: string,
-  status: Status,
-  code: string,
 };
-
-export enum Status {
-  Y = "Y",
-  N = "N",
-  P = "P",
-}
-
 
 export type ModelRegistrationConditionInput = {
   status?: ModelStatusInput | null,
   code?: ModelStringInput | null,
+  country?: ModelStringInput | null,
+  lat?: ModelFloatInput | null,
+  long?: ModelFloatInput | null,
   and?: Array< ModelRegistrationConditionInput | null > | null,
   or?: Array< ModelRegistrationConditionInput | null > | null,
   not?: ModelRegistrationConditionInput | null,
@@ -404,14 +398,29 @@ export type ModelStatusInput = {
   ne?: Status | null,
 };
 
+export enum Status {
+  Y = "Y",
+  N = "N",
+  P = "P",
+}
+
+
+export type CreateRegistrationInput = {
+  email: string,
+  status: Status,
+  code: string,
+  country: string,
+  lat?: number | null,
+  long?: number | null,
+};
+
 export type UpdateRegistrationInput = {
   email: string,
   status?: Status | null,
   code?: string | null,
-};
-
-export type DeleteRegistrationInput = {
-  email: string,
+  country?: string | null,
+  lat?: number | null,
+  long?: number | null,
 };
 
 export type ModelGoalFilterInput = {
@@ -517,6 +526,9 @@ export type ModelRegistrationFilterInput = {
   email?: ModelStringInput | null,
   status?: ModelStatusInput | null,
   code?: ModelStringInput | null,
+  country?: ModelStringInput | null,
+  lat?: ModelFloatInput | null,
+  long?: ModelFloatInput | null,
   and?: Array< ModelRegistrationFilterInput | null > | null,
   or?: Array< ModelRegistrationFilterInput | null > | null,
   not?: ModelRegistrationFilterInput | null,
@@ -1182,6 +1194,25 @@ export type DeleteAccountMutation = {
   } | null,
 };
 
+export type DeleteRegistrationMutationVariables = {
+  input: DeleteRegistrationInput,
+  condition?: ModelRegistrationConditionInput | null,
+};
+
+export type DeleteRegistrationMutation = {
+  deleteRegistration:  {
+    __typename: "Registration",
+    email: string,
+    status: Status,
+    code: string,
+    country: string,
+    lat: number | null,
+    long: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateRegistrationMutationVariables = {
   input: CreateRegistrationInput,
   condition?: ModelRegistrationConditionInput | null,
@@ -1193,6 +1224,9 @@ export type CreateRegistrationMutation = {
     email: string,
     status: Status,
     code: string,
+    country: string,
+    lat: number | null,
+    long: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1209,22 +1243,9 @@ export type UpdateRegistrationMutation = {
     email: string,
     status: Status,
     code: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteRegistrationMutationVariables = {
-  input: DeleteRegistrationInput,
-  condition?: ModelRegistrationConditionInput | null,
-};
-
-export type DeleteRegistrationMutation = {
-  deleteRegistration:  {
-    __typename: "Registration",
-    email: string,
-    status: Status,
-    code: string,
+    country: string,
+    lat: number | null,
+    long: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1674,6 +1695,9 @@ export type GetRegistrationQuery = {
     email: string,
     status: Status,
     code: string,
+    country: string,
+    lat: number | null,
+    long: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1695,6 +1719,9 @@ export type ListRegistrationsQuery = {
       email: string,
       status: Status,
       code: string,
+      country: string,
+      lat: number | null,
+      long: number | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -2347,6 +2374,9 @@ export type OnCreateRegistrationSubscription = {
     email: string,
     status: Status,
     code: string,
+    country: string,
+    lat: number | null,
+    long: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2358,6 +2388,9 @@ export type OnUpdateRegistrationSubscription = {
     email: string,
     status: Status,
     code: string,
+    country: string,
+    lat: number | null,
+    long: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2369,6 +2402,9 @@ export type OnDeleteRegistrationSubscription = {
     email: string,
     status: Status,
     code: string,
+    country: string,
+    lat: number | null,
+    long: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,

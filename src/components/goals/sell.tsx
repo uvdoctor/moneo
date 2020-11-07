@@ -1,131 +1,99 @@
-import React, { useEffect, useState } from "react";
-import ItemDisplay from "../calc/ItemDisplay";
-import SVGMoneyBag from "../calc/svgmoneybag";
-import SVGMoneyBagPer from "../svgmoneybagper";
-import Section from "../form/section";
-import RadialInput from "../form/radialinput";
-import NumberInput from "../form/numberinput";
-import { toStringArr } from "../utils";
-import { calculateSellPrice, calculateXIRR } from "./cfutils";
-import { getDuration } from "./goalutils";
+import React, { Fragment, useContext, useEffect, useState } from 'react';
+import ItemDisplay from '../calc/ItemDisplay';
+import Section from '../form/section';
+import RadialInput from '../form/radialinput';
+import NumberInput from '../form/numberinput';
+import { toStringArr } from '../utils';
+import { calculateSellPrice, calculateXIRR } from './cfutils';
+import { getDuration } from './goalutils';
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { GoalContext } from './GoalContext';
+import AnnualAmt from './annualamt';
+import { Tabs } from 'antd';
 
-interface SellProps {
-  inputOrder: number;
-  currentOrder: number;
-  nextStepDisabled: boolean;
-  nextStepHandler: Function;
-  allInputDone: boolean;
-  price: number;
-  startYear: number;
-  endYear: number;
-  sellAfter: number;
-  sellPrice: number;
-  sellPriceHandler: Function;
-  sellAfterHandler: Function;
-  currency: string;
-  assetChgRate: number;
-  assetChgRateHandler: Function;
-  cfs: Array<number>;
-}
+export default function Sell() {
+	const {
+		price,
+		sellPrice,
+		setSellPrice,
+		assetChgRate,
+		setAssetChgRate,
+		startYear,
+		endYear,
+		sellAfter,
+		setSellAfter,
+		currency,
+		cfs
+	}: any = useContext(GoalContext);
+	const [ annualReturnPer, setAnnualReturnPer ] = useState<number | null>(0);
+	const [ tabIndex, setTabIndex ] = useState<number>(0);
+	const { TabPane } = Tabs;
 
-export default function Sell(props: SellProps) {
-  const [annualReturnPer, setAnnualReturnPer] = useState<number | null>(0);
+	useEffect(
+		() => {
+			let duration = getDuration(sellAfter, startYear, endYear, 0, null, null, null);
+			let sellPrice = calculateSellPrice(price, assetChgRate, duration);
+			setSellPrice(sellPrice);
+			setAnnualReturnPer(calculateXIRR(cfs, startYear, price, sellAfter, sellPrice));
+		},
+		[ cfs ]
+	);
 
-  useEffect(() => {
-    let duration = getDuration(
-      props.sellAfter,
-      props.startYear,
-      props.endYear,
-      0,
-      null,
-      null,
-      null
-    );
-    let sellPrice = calculateSellPrice(
-      props.price,
-      props.assetChgRate,
-      duration
-    );
-    props.sellPriceHandler(sellPrice);
-    setAnnualReturnPer(
-      calculateXIRR(
-        props.cfs,
-        props.startYear,
-        props.price,
-        props.sellAfter,
-        sellPrice
-      )
-    );
-  }, [props.cfs]);
-
-  return (
-    <div className="flex justify-around w-full">
-      {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
-        props.allInputDone) && (
-        <Section
-          title="Sell After"
-          insideForm
-          left={
-            <RadialInput
-              inputOrder={props.inputOrder}
-              currentOrder={props.currentOrder}
-              nextStepDisabled={false}
-              allInputDone={props.allInputDone}
-              nextStepHandler={props.nextStepHandler}
-              info="Years after which You Plan to Sell this Purchase."
-              label="Years"
-              labelBottom={true}
-              data={toStringArr(3, 30)}
-              value={props.sellAfter}
-              step={1}
-              changeHandler={props.sellAfterHandler}
-            />
-          }
-          right={
-            <NumberInput
-              name="assetChgRate"
-              inputOrder={props.inputOrder + 1}
-              currentOrder={props.currentOrder}
-              nextStepDisabled={false}
-              nextStepHandler={props.nextStepHandler}
-              allInputDone={props.allInputDone}
-              info="Rate at which Price may change Yearly."
-              pre="Sell Price"
-              post="Changes"
-              unit="%"
-              note="Yearly"
-              min={-20}
-              max={20}
-              step={0.5}
-              value={props.assetChgRate}
-              changeHandler={props.assetChgRateHandler}
-            />
-          }
-          bottom={
-            <div className="flex justify-around w-full items-center">
-              <ItemDisplay
-                svg={<SVGMoneyBag disabled={false} selected />}
-                label="You May Get"
-                footer={`In ${props.startYear + props.sellAfter}`}
-                result={Math.round(props.sellPrice)}
-                currency={props.currency}
-              />
-              {annualReturnPer && (
-                <ItemDisplay
-                  svg={<SVGMoneyBagPer />}
-                  label={`You May ${annualReturnPer > 0 ? "Gain" : "Lose"}`}
-                  result={annualReturnPer}
-                  decimal={2}
-                  unit="%"
-                  footer="Yearly"
-                  pl
-                />
-              )}
-            </div>
-          }
-          footer="Sell Price above excludes taxes & fees."
-        />
-      )}
-    </div>
-  );
+	return (
+		<Fragment>
+			<Section title="Sell Details">
+				<NumberInput
+					info="Rate at which Price may change Yearly."
+					pre="Yearly Price Changes"
+					unit="%"
+					min={-20}
+					max={20}
+					step={0.5}
+					value={assetChgRate}
+					changeHandler={setAssetChgRate}
+				/>
+				<RadialInput
+					info="Years after which You Plan to Sell this Purchase."
+					label="Years"
+					pre="Sell After"
+					post={
+						<ItemDisplay
+							label="Sell Price after taxes & fees"
+							result={Math.round(sellPrice)}
+							currency={currency}
+							footer={
+								annualReturnPer && (
+									<ItemDisplay
+										svg={annualReturnPer > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+										label={''}
+										result={annualReturnPer}
+										decimal={2}
+										unit="% Yearly"
+										pl
+									/>
+								)
+							}
+						/>
+					}
+					labelBottom={true}
+					data={toStringArr(3, 30)}
+					value={sellAfter}
+					step={1}
+					changeHandler={setSellAfter}
+				/>
+			</Section>
+			<Tabs
+				onTabClick={(key: string) => setTabIndex(parseInt(key))}
+				defaultActiveKey={'' + tabIndex}
+				type="card"
+			>
+				<TabPane key={0} tab="Yearly Cost">
+					{tabIndex === 0 && <AnnualAmt />}
+				</TabPane>
+				<TabPane key={1} tab="Yearly Income">
+					{tabIndex === 1 && <AnnualAmt income />}
+				</TabPane>
+			</Tabs>
+		</Fragment>
+	);
 }

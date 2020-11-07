@@ -1,12 +1,15 @@
 import React from "react";
+import { Row, Col } from "antd";
+import DDContent from "../DDContent";
 import ActionableSVG from "../features/svgactionable";
 import FunSVG from "../features/svgfun";
 import GlobalSVG from "../features/svgglobal";
 import SVGPersonalized from "../features/svgpersonalized";
-import ItemDisplay from "../calc/ItemDisplay";
+
+import "./GetRich.less";
 
 interface GetRichProps {
-  featuresRef: string;
+  featuresRef?: string;
 }
 
 export default function GetRich({ featuresRef }: GetRichProps) {
@@ -60,51 +63,50 @@ export default function GetRich({ featuresRef }: GetRichProps) {
   ];
 
   return (
-    <div className="pb-10">
-      <div
-        className="pt-10 m-auto"
-        style={{
-          maxWidth: "1280px",
-          paddingRight: "1rem",
-          paddingLeft: "1rem",
-        }}
-      >
-        <div ref={featuresRef} className="flex-1">
-          <h2 className="text-3xl text-green-primary">Get Rich Slowly</h2>
-          <p className="text-xl mt-2">
-            No More Boring Budgets or Confusing Investment Choices. DollarDarwin
-            helps You to Grow Your Money without taking any undue stress.
-          </p>
-          <div className="w-full mt-10">
-            <div className="w-full md:flex md:flex-wrap md:justify-around">
-              {featuresList.map((feature, i) => (
-                <div
-                  key={"f" + i}
-                  className={`mt-4 flip-card bg-transparent w-full md:w-64 h-56 mb-10`}
-                >
-                  <div className="flip-card-inner relative w-full h-full shadow-lg rounded-md">
-                    <div className="flip-card-front bg-white text-default w-full h-full absolute flex items-center justify-center rounded-md cursor-pointer">
-                      <ItemDisplay
-                        svg={<feature.svg />}
-                        result={feature.label}
-                        vertical
-                      />
-                    </div>
-                    <div className="flip-card-back text-white absolute w-full h-full rounded-md p-5 bg-green-1000">
-                      <ItemDisplay
-                        svg={<feature.svg />}
-                        result={feature.label}
-                        vertical
-                      />
-                      <p className="mt-2 text-base">{feature.desc}</p>
-                    </div>
-                  </div>
+    <DDContent>
+      <div className="get-rich" ref={featuresRef}>
+        <h2>Get Rich Slowly</h2>
+        <p>
+          No More Boring Budgets or Confusing Investment Choices. DollarDarwin
+          helps You to Grow Your Money without taking any undue stress.
+        </p>
+        <Row
+          gutter={[
+            { xs: 0, sm: 15, md: 30, lg: 50 },
+            { xs: 15, sm: 15, md: 30, lg: 50 },
+          ]}
+          align="middle"
+        >
+          {featuresList.map(({ svg: Svg, label, desc }, i) => (
+            <Col
+              key={"f" + i}
+              className="flip-card"
+              xs={24}
+              sm={12}
+              md={8}
+              lg={6}
+            >
+              <div className="flip-card-inner">
+                <div className="flip-card-front">
+                  <Row justify="center" align="middle">
+                    <Col span={24}>
+                      <Svg />
+                      <h3>{label}</h3>
+                    </Col>
+                  </Row>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
+                <div className="flip-card-back">
+                  <Row justify="center" align="middle">
+                    <Col span={24}>
+                      <p>{desc}</p>
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+            </Col>
+          ))}
+        </Row>
       </div>
-    </div>
+    </DDContent>
   );
 }

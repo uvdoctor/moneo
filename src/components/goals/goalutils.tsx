@@ -132,11 +132,11 @@ const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
     tdr: 0,
     tdl: 20000 * getRangeFactor(currency),
     ccy: currency,
-    cp: 0,
+    cp: 500000,
     chg: 3,
     type: goalType,
     tgts: [],
-    dr: 6,
+    dr: 5,
     imp: APIt.LMH.M,
     manual: 0,
   } as APIt.CreateGoalInput;
@@ -262,7 +262,5 @@ export function getRAOptions() {
 }
 
 export const getMinRetirementDuration = () => PLAN_DURATION - MAX_RETIREMENT_AGE
-
-export const getAge = (year: number, endYear: number) => year - (endYear - PLAN_DURATION) 
 
 export const getLastPossibleFFYear = (endYear: number) => endYear - getMinRetirementDuration()

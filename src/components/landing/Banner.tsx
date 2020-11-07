@@ -1,19 +1,18 @@
 import React from "react";
 import ResImg from "../ResImg";
 import BannerContent from "./BannerContent";
+import SocialShare from "../SocialShare";
 import Join from "./Join";
+import "./Banner.less";
 
-interface BannerProps {
-	joinRef?: any;
-}
-
-export default function Banner({ joinRef }: BannerProps) {
+export default function Banner() {
 	return (
-		<div className="relative text-center">
-			<ResImg className="inline" name="cover" />
-			<div className="w-full p-5 -mt-24 text-left md:mt-0 md:absolute md:top-20 lg:top-32 xl:top-48">
+		<div className="site-banner">
+			<ResImg name="cover" />
+			<div className="site-banner-content">
 				<BannerContent />
-				<Join joinRef={joinRef} />
+				<Join />
+				<SocialShare url={`https://dollardarwin.com`} />
 			</div>
 		</div>
 	);

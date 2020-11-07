@@ -1,82 +1,77 @@
-import React from "react";
-import DDLineChart from "./DDLineChart";
-import SVGTrash from "../svgtrash";
-import SVGEdit from "../svgedit";
-import { getGoalTypes, getImpLevels } from "./goalutils";
-import GoalResult from "./goalresult";
-import { LMH, GoalType } from "../../api/goals";
+import React, { useContext } from 'react';
+import DDLineChart from './DDLineChart';
+import { getGoalTypes, getImpLevels } from './goalutils';
+import { LMH } from '../../api/goals';
+import { COLORS } from '../../CONSTANTS';
+import { Button, Card, Row, Col } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import OppCost from '../calc/oppcost';
+import FFImpact from './ffimpact';
+import { GoalContext } from './GoalContext';
 interface SummaryProps {
-  id: string;
-  name: string;
-  type: GoalType;
-  imp: LMH;
-  startYear: number;
-  currency: string;
-  cfs: Array<number>;
-  ffOOM: Array<number> | null;
-  ffGoalEndYear: number;
-  ffImpactYears: number | null;
-  rr: Array<number>;
-  deleteCallback: Function;
-  editCallback: Function;
+	deleteCallback: Function;
+	editCallback: Function;
+	ffImpactYears: number | null;
 }
 
-export default function Summary(props: SummaryProps) {
-  const bgColor =
-    props.imp === LMH.H
-      ? "bg-blue-600"
-      : props.imp === LMH.M
-      ? "bg-orange-600"
-      : "bg-green-600";
-  const nowYear = new Date().getFullYear();
+export default function Summary({ deleteCallback, editCallback, ffImpactYears }: SummaryProps) {
+	const {
+		goal,
+		startYear,
+		currency,
+	}: any = useContext(GoalContext);
+	const bgColor = goal.imp === LMH.H ? COLORS.BLUE : goal.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
+	const nowYear = new Date().getFullYear();
+	const goalTypes: any = getGoalTypes();
+	const impLevels: any = getImpLevels();
 
-  return (
-    <div className="mt-2 mb-2 py-2 border border-red-100 max-w-sm md:max-w-md rounded-lg shadow-xl text-lg md:text-xl w-full">
-      <div className="flex justify-between items-center w-full">
-        <label className={`${bgColor} text-white py-1 px-2`}>
-          {getImpLevels()[props.imp]}
-        </label>
-        <div className="flex flex-col justify-center items-center font-semibold">
-          <label>{getGoalTypes()[props.type]}</label>
-          <label>{props.name}</label>
-        </div>
-        <div className="flex text-base text-blue-600">
-          <div
-            className="hover:text-blue-800 cursor-pointer"
-            onClick={() => props.editCallback(props.id)}
-          >
-            <SVGEdit />
-            Edit
-          </div>
-          <div
-            className="flex flex-col items-center ml-2 cursor-pointer hover:text-blue-800"
-            onClick={() => props.deleteCallback(props.id)}
-          >
-            <SVGTrash />
-            Delete
-          </div>
-        </div>
-      </div>
-      {props.startYear > nowYear && (
-        <GoalResult
-          rr={props.rr}
-          currency={props.currency}
-          ffGoalEndYear={props.ffGoalEndYear}
-          cfs={props.cfs}
-          startYear={props.startYear}
-          ffImpactYears={props.ffImpactYears}
-          ffOOM={props.ffOOM}
-          buyGoal={props.type === GoalType.B}
-        />
-      )}
-      <p className="w-full text-center mt-4 mb-2">
-        Yearly Cash Flows in {props.currency}
-      </p>
-      <DDLineChart
-        cfs={props.cfs}
-        startYear={props.startYear}
-        currency={props.currency}
-      />
-    </div>
-  );
+	return (
+		<Card
+			title={
+				<Row align="middle" justify="space-between">
+					<Col>
+						<label>{goalTypes[goal.type]}</label>
+						<h2>{goal.name}</h2>
+					</Col>
+					<Col>
+						<Button type="link" onClick={() => editCallback(goal.id)} icon={<EditOutlined />}>
+							Edit
+						</Button>
+						<Button type="link" onClick={() => deleteCallback(goal.id)} icon={<DeleteOutlined />}>
+							Delete
+						</Button>
+					</Col>
+				</Row>
+			}
+			extra={
+				<label
+					style={{
+						color: 'white',
+						backgroundColor: bgColor,
+						paddingTop: '1px',
+						paddingBottom: '1px',
+						paddingLeft: '2px',
+						paddingRight: '2px'
+					}}
+				>
+					{impLevels[goal.imp]}
+				</label>
+			}
+		>
+			{startYear > nowYear && (
+				<Row>
+					<Col span={8}>
+						<FFImpact impactYears={ffImpactYears} />
+					</Col>
+					<Col span={8}>
+						<OppCost />
+					</Col>
+				</Row>
+			)}
+			<Row>Cash Flows in {currency}</Row>
+			<Row>
+				<DDLineChart />
+			</Row>
+		</Card>
+	);
 }

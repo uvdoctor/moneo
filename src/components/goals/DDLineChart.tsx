@@ -1,43 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import dynamic from "next/dynamic";
+import React, { useState, useEffect, useContext } from 'react';
+import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
+import { CalcContext } from '../calc/CalcContext';
+import { GoalType } from '../../api/goals';
 
 interface DDLineChartProps {
-	cfs: Array<number>;
-	startYear: number;
+	numberOfYears?: boolean;
 	title?: string;
-	currency: string
 }
 
-const LineChart = dynamic(() => import("bizcharts/lib/plots/LineChart"), { ssr: false });
+const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
 
-export default function DDLineChart(props: DDLineChartProps) {
+export default function DDLineChart({ numberOfYears, title }: DDLineChartProps) {
+	const {
+		startYear,
+		currency,
+		cfs,
+		cfsWithOppCost,
+		goal
+	}: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	useEffect(
 		() => {
 			let data: Array<any> = [];
-			for (let i = 0; i < props.cfs.length; i++)
+			let startVal = numberOfYears ? 1 : goal.type === GoalType.FF ? new Date().getFullYear() + 1 : startYear;
+			let cashFlows = cfsWithOppCost && cfsWithOppCost.length > 0 ? cfsWithOppCost : cfs; 
+			for (let i = 0; i < cashFlows.length; i++)
 				data.push({
-					year: props.startYear + i,
-					value: props.cfs[i]
+					year: startVal + i,
+					value: cashFlows[i]
 				});
 			setData([ ...data ]);
 		},
-		[ props.cfs, props.startYear ]
+		[ cfs ]
 	);
 
 	return (
-		<div className="w-full">
-			<LineChart
-				data={data}
-				xField="year"
-				yField="value"
-				yAxis={getCommonYAxis()}
-				xAxis={getCommonXAxis("Year")}
-				meta={getCommonMeta(props.currency)}
-				point={{ visible: true }}
-			/>
-		</div>
+		<LineChart
+			data={data}
+			xField="year"
+			yField="value"
+			yAxis={getCommonYAxis()}
+			xAxis={getCommonXAxis(title ? title : numberOfYears ? 'Number of Years' : 'Year')}
+			meta={getCommonMeta(currency)}
+			point={{ visible: true }}
+			interactions={[{ type: 'drag-move' }, {type: 'view-zoom'}]}
+			forceFit
+		/>
 	);
 }

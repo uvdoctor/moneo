@@ -1,9 +1,12 @@
 enum LMH {
-  L, M, H
+  L
+  M
+  H
 }
 
 enum YN {
-  Y, N
+  Y
+  N
 }
 
 type Target {
@@ -12,7 +15,16 @@ type Target {
 }
 
 enum GoalType {
-B, S, R, E, X, C, FF, D, O, T
+  B
+  S
+  R
+  E
+  X
+  C
+  FF
+  D
+  O
+  T
 }
 
 type Emi {
@@ -22,7 +34,7 @@ type Emi {
   ry: Int!
 }
 
-type Goal @model @auth(rules: [{allow: owner}]) {
+type Goal @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   sy: Int!
   ey: Int!
@@ -58,17 +70,21 @@ type Goal @model @auth(rules: [{allow: owner}]) {
 }
 
 enum MilestoneAttr {
-  NW,D,AS,C,R
+  NW
+  D
+  AS
+  C
+  R
 }
 
-type Milestone @model @auth(rules: [{allow: owner}]) {
+type Milestone @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   tgt: Target!
   attr: MilestoneAttr!
   goals: [Goal]
 }
 
-type Profile @model @auth(rules: [{allow: owner}]) {
+type Profile @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   citizen: String!
   tr: String!
@@ -77,7 +93,7 @@ type Profile @model @auth(rules: [{allow: owner}]) {
   curr: String!
 }
 
-type Item @model @auth(rules: [{allow: owner}]) {
+type Item @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   p_at: String!
   p_id: String!
@@ -86,7 +102,7 @@ type Item @model @auth(rules: [{allow: owner}]) {
   status: String!
 }
 
-type Account @model @auth(rules: [{allow: owner}]) {
+type Account @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   item: Item
   p_id: String!
@@ -102,11 +118,25 @@ type Account @model @auth(rules: [{allow: owner}]) {
 }
 
 enum Status {
-  Y,N,P
+  Y
+  N
+  P
 }
 
-type Registration @model @aws_iam @aws_cognito_user_pools @key(fields: ["email"]) @auth(rules: [{allow: public, provider: iam, operations: [create, read, update]}]) {
+type Registration
+  @model
+  @aws_iam
+  @aws_cognito_user_pools
+  @key(fields: ["email"])
+  @auth(
+    rules: [
+      { allow: public, provider: iam, operations: [create, read, update] }
+    ]
+  ) {
   email: String!
   status: Status!
   code: String!
+  country: String!
+  lat: Float
+  long: Float
 }

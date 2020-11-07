@@ -1,24 +1,27 @@
-import React from 'react';
-import Join from './Join';
+import React, { useContext } from "react";
+import { Row, Col } from "antd";
+import DDContent from "../DDContent";
+import { JoinContext } from "./JoinContext";
+import Join from "./Join";
+import { Status } from "../../api/goals";
+
+import "./TakeQuickStep.less";
 
 export default function TakeQuickStep() {
-	return (
-		<div className="bg-white">
-			<div
-				className="p-5 m-auto mt-10"
-				style={{
-					maxWidth: '1280px'
-				}}
-			>
-				<div className="flex flex-wrap justify-items-auto md:flex-no-wrap">
-					<div className="w-full flex items-center">
-						<img src="images/quick-step.jpg" />
-          </div>
-          <div className="w-full">
-            <Join />
-          </div>
-				</div>
-			</div>
-		</div>
-	);
+  const { status }: any = useContext(JoinContext);
+
+  return status !== Status.Y ? (
+    <DDContent className="take-quick-step" whiteBg>
+      <Row align="middle" gutter={[50, 0]}>
+        <Col xs={24} sm={24} md={12}>
+          <h2 className="text-green-primary">Take quick step</h2>
+          <p>Unlock money and make your future safe and secure.</p>
+          <Join />
+        </Col>
+        <Col xs={24} sm={24} md={12}>
+          <img src="images/quick-step.jpg" />
+        </Col>
+      </Row>
+    </DDContent>
+  ) : null;
 }

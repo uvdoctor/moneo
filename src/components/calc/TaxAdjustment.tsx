@@ -1,104 +1,50 @@
-import React from "react";
-import NumberInput from "../form/numberinput";
-import Section from "../form/section";
-import { GoalType } from "../../api/goals";
-import ItemDisplay from "./ItemDisplay";
-import { isTaxCreditEligible } from "../goals/goalutils";
-interface TaxAdjustmentProps {
-  inputOrder: number;
-  currentOrder: number;
-  nextStepDisabled: boolean;
-  nextStepHandler: Function;
-  allInputDone: boolean;
-  actionCount?: number;
-  goalType: GoalType;
-  taxRate: number;
-  maxTaxDeduction: number;
-  duration: number
-  taxRateHandler: Function;
-  maxTaxDeductionHandler: Function;
-  currency: string;
-  rangeFactor: number;
-  pTaxBenefit: number
-}
+import React, { useContext } from 'react';
+import NumberInput from '../form/numberinput';
+import Section from '../form/section';
+import ItemDisplay from './ItemDisplay';
+import { isTaxCreditEligible } from '../goals/goalutils';
+import { GoalContext } from '../goals/GoalContext';
 
-export default function TaxAdjustment(props: TaxAdjustmentProps) {
-
-  return (
-    <div className="flex w-full justify-around">
-      {((!props.allInputDone && props.inputOrder <= props.currentOrder) ||
-        props.allInputDone) && (
-        <Section
-          title={`Claim Tax ${
-            isTaxCreditEligible(props.goalType) ? "Credit" : "Deduction"
-          }`}
-          insideForm
-          left={
-            !isTaxCreditEligible(props.goalType) ? (
-              <NumberInput
-                name="tr"
-                inputOrder={props.inputOrder}
-                currentOrder={props.currentOrder}
-                nextStepDisabled={false}
-                nextStepHandler={props.nextStepHandler}
-                allInputDone={props.allInputDone}
-                info="Income Tax slab based on Your Income"
-                pre="Tax"
-                post="Rate"
-                min={0}
-                max={50}
-                step={0.1}
-                unit="%"
-                value={props.taxRate}
-                changeHandler={props.taxRateHandler}
-              />
-            ) : (
-              !props.allInputDone &&
-              props.currentOrder === props.inputOrder &&
-              props.nextStepHandler()
-            )
-          }
-          right={
-            isTaxCreditEligible(props.goalType) || props.taxRate ? (
-              <NumberInput
-                inputOrder={props.inputOrder + 1}
-                currentOrder={props.currentOrder}
-                nextStepDisabled={false}
-                nextStepHandler={props.nextStepHandler}
-                allInputDone={props.allInputDone}
-                info={`Maximum Yearly Income Tax ${
-                  isTaxCreditEligible(props.goalType) ? "Credit" : "Deduction"
-                } Allowed`}
-                name="tbLimit"
-                pre="Max Yearly"
-                post={`${
-                  isTaxCreditEligible(props.goalType) ? "Credit" : "Deduction"
-                }`}
-                currency={props.currency}
-                value={props.maxTaxDeduction}
-                changeHandler={props.maxTaxDeductionHandler}
-                min={0}
-                max={30000}
-                step={1000}
-                note={
-                  <ItemDisplay
-                    label="Total Tax Benefit"
-                    result={props.pTaxBenefit}
-                    currency={props.currency}
-                    footer={`For this Goal`}
-                  />
-                }
-                rangeFactor={props.rangeFactor}
-                width="100px"
-              />
-            ) : (
-              !props.allInputDone &&
-              props.currentOrder === props.inputOrder + 1 &&
-              props.nextStepHandler()
-            )
-          }
-        />
-      )}
-    </div>
-  );
+export default function TaxAdjustment() {
+	const { goal, taxRate, maxTaxDeduction, setTaxRate, setMaxTaxDeduction, currency, rangeFactor, pTaxBenefit }: any = useContext(GoalContext);
+	return (
+		<Section title={`Claim Tax ${isTaxCreditEligible(goal.type) ? 'Credit' : 'Deduction'}`}>
+			{!isTaxCreditEligible(goal.type) && (
+				<NumberInput
+					info="Income Tax slab based on Your Income"
+					pre="Tax Rate is "
+					min={0}
+					max={50}
+					step={0.1}
+					unit="%"
+					value={taxRate}
+					changeHandler={setTaxRate}
+				/>
+			)}
+			{(isTaxCreditEligible(goal.type) || taxRate) && (
+				<NumberInput
+					info={`Maximum Yearly Income Tax ${isTaxCreditEligible(goal.type)
+						? 'Credit'
+						: 'Deduction'} Allowed`}
+					pre="Max Yearly "
+					post={`${isTaxCreditEligible(goal.type) ? 'Credit' : 'Deduction'}`}
+					currency={currency}
+					value={maxTaxDeduction}
+					changeHandler={setMaxTaxDeduction}
+					min={0}
+					max={30000}
+					step={1000}
+					note={
+						<ItemDisplay
+							label="Total Tax Benefit"
+							result={pTaxBenefit}
+							currency={currency}
+							footer={`For this Goal`}
+						/>
+					}
+					rangeFactor={rangeFactor}
+				/>
+			)}
+		</Section>
+	);
 }

@@ -1,0 +1,224 @@
+@import "~antd/lib/style/themes/default.less";
+
+@calculator-radius: 20px;
+@calculator-radius-med: 10px;
+
+.calculator {
+	max-width: 718px;
+	margin: 0 auto;
+	background: #a0a0a0;
+	background-image: linear-gradient(to bottom, #c3c3c3, #959595);
+	border-radius: @calculator-radius;
+	box-shadow: 0 0 10px #6c6c6c;
+	padding: 5px;
+	margin-top: 25px;
+	margin-bottom: 100px;
+
+	& > div {
+		background: #fff;
+		background-image: linear-gradient(to bottom, #ebebeb, #d1d1d1);
+		border-radius: @calculator-radius;
+		border: #fff solid 1px;
+		padding: 30px 35px 10px;
+	}
+
+	& .calculator-title {
+		background-color: #d0d0d0;
+		border: 1px solid #afafaf;
+		border-radius: @calculator-radius;
+		padding: 10px;
+		margin-bottom: 30px;
+
+		& > h2 {
+			display: none;
+		}
+
+		> div {
+			background: #b5be93;
+			background-image: linear-gradient(to left, #b5be93, #d2d6bc);
+			border: 5px solid #989898;
+			border-radius: @calculator-radius-med;
+			padding: 5px;
+		}
+	}
+
+	& .calculator-btns {
+		position: relative;
+
+		& > div {
+			position: initial;
+		}
+	}
+
+	& .calculator-btn {
+		width: 100%;
+		background-color: #a0a0a0;
+		background-image: linear-gradient(0deg, #4a4a4a, #a1a1a1);
+		box-shadow: 0 0 3px #5b5b5b;
+		border: #939393 solid 1px;
+		cursor: pointer;
+		border-radius: @calculator-radius-med;
+		transition-property: all;
+		transition-duration: 0.5s;
+		padding: 2px;
+		text-align: center;
+
+		& > div {
+			min-height: 80px;
+			display: flex;
+			align-items: center;
+			background-color: #6f6f6f;
+			background-image: linear-gradient(270deg, #6f6f6f, #4a4a4a);
+			border-radius: @calculator-radius-med;
+			border: #828282 solid 1px;
+			color: #fff;
+			padding: 20px 10px;
+
+			& h3,
+			& p {
+				width: 100%;
+			}
+		}
+
+		& h3 {
+			color: #fff;
+			font-size: 14px;
+			margin-bottom: 0;
+		}
+
+		& p {
+			color: #fff;
+			display: none;
+			font-size: 8px;
+		}
+
+		& a,
+		& a.ant-btn.btn-calc {
+			display: none;
+		}
+
+		&:hover {
+			border: 0;
+			-moz-transform: scale(2);
+			-webkit-transform: scale(2);
+			-o-transform: scale(2);
+			-ms-transform: scale(2);
+			transform: scale(2);
+			padding: 0;
+
+			& > div {
+				background-color: @primary-color;
+				background-image: linear-gradient(270deg, #6cb43d, @primary-color);
+				border: 1px solid #6cb43d;
+				padding-top: 10px;
+				padding-bottom: 10px;
+			}
+
+			& h3 {
+				display: none;
+			}
+
+			& p,
+			& a {
+				display: block;
+			}
+
+			& a {
+				transform: scale(0.5);
+			}
+		}
+	}
+}
+
+@media all and (max-width: 767.98px) {
+	.calculator,
+	.calculator > div,
+	.calculator .calculator-title,
+	.calculator .calculator-btn,
+	.calculator .calculator-btn > div,
+	.calculator .calculator-btn:hover > div {
+		background: none;
+		background-image: none;
+		box-shadow: none;
+		border: 0;
+		padding: 0;
+	}
+
+	.calculator {
+		margin-bottom: 40px;
+
+		.calculator-title {
+			margin-bottom: 0;
+
+			& > h2 {
+				font-weight: bold;
+				display: block;
+				margin-bottom: 0;
+			}
+
+			& > div {
+				display: none;
+			}
+		}
+
+		.calculator-btn {
+			border-radius: 0;
+			border-bottom: 1px solid #d9d9d9;
+			padding: 10px 0;
+
+			& > div,
+			& h3,
+			& p,
+			& a {
+				color: initial;
+				display: block;
+			}
+
+			& > div {
+				text-align: left;
+			}
+
+			& h3 {
+				color: @primary-color;
+				font-weight: bold;
+				font-size: 17px;
+			}
+
+			& p {
+				font-size: 15px;
+				margin-bottom: 5px;
+			}
+
+			& a.ant-btn {
+				display: none;
+			}
+
+			& a.ant-btn.btn-calc {
+				display: inline;
+				padding: 5px 10px;
+			}
+
+			&:hover {
+				border-bottom: 1px solid #d9d9d9;
+				-moz-transform: unset;
+				-webkit-transform: unset;
+				-o-transform: unset;
+				-ms-transform: unset;
+				transform: unset;
+				padding: 10px 0;
+
+				& > a {
+					-moz-transform: unset;
+					-webkit-transform: unset;
+					-o-transform: unset;
+					-ms-transform: unset;
+					transform: unset;
+				}
+
+				& h3 {
+					display: block;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,57 @@
+@import "~antd/lib/style/themes/default.less";
+
+.dd-header.ant-layout-header {
+	background: none;
+	background-image: linear-gradient(to top, @layout-body-background, #dbedca);
+
+	&.fixed-nav {
+		background-color: #fff;
+		background-image: none;
+		box-shadow: @box-shadow-base;
+	}
+
+	& .logo {
+		float: left;
+	}
+
+	& img {
+		max-width: 40px;
+		margin-top: -6px;
+	}
+
+	& ul {
+		background: none;
+		border-bottom: 0;
+		display: none;
+		font-weight: bold;
+		text-align: right;
+	}
+
+	& > .ant-btn {
+		float: right;
+		margin-top: 10px;
+		padding: 0;
+
+		& svg {
+			transform: scale(1.4);
+		}
+	}
+}
+
+@media all and (min-width: 768px) {
+	.dd-header.ant-layout-header {
+		& ul {
+			display: block;
+		}
+
+		& > .ant-btn {
+			display: none;
+		}
+	}
+}
+
+@media all and (max-width: 767.98px) {
+	.dd-header.ant-layout-header {
+		height: 50px;
+	}
+}

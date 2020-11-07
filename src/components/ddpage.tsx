@@ -1,30 +1,23 @@
 import React, { Fragment } from "react";
-import { ParallaxProvider } from "react-scroll-parallax";
-import { ToastContainer } from "react-toastify";
+import { Layout } from "antd";
+import Nav from "./Nav";
 import UserHeader from "./userheader";
-import UserMenu from "./usermenu";
-import { isMobileDevice } from "./utils";
-import { useFullScreenBrowser } from "react-browser-hooks";
+import SecureMenu from "./SecureMenu";
+import DDFooter from "./DDFooter";
 import Head from "next/head";
 
 interface DDPageProps {
+  className?: string;
   title: string;
   children: React.ReactNode;
   secure?: boolean;
+  onBack?: Function;
+  fixedNav?: boolean;
+  navScrollable?: boolean;
+  noFooter?: boolean;
 }
 
 export default function DDPage(props: DDPageProps) {
-  const commonSecureComps: Array<React.ReactNode> = [
-    <UserHeader />,
-    <UserMenu />,
-  ];
-  const commonPublicComps: Array<React.ReactNode> = [];
-
-  const getCommonComps = () =>
-    props.secure ? commonSecureComps : commonPublicComps;
-
-  const fsb = useFullScreenBrowser();
-
   return (
     <Fragment>
       <Head>
@@ -86,22 +79,22 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="format-detection" content="telephone=no" />
         <title>{props.title}</title>
       </Head>
-      <main>
-        <div className="text-lg">
-          <ToastContainer />
-          {!isMobileDevice(fsb) ? (
-            <ParallaxProvider>
-              {getCommonComps().map((child) => child)}
-              {props.children}
-            </ParallaxProvider>
-          ) : (
-            <Fragment>
-              {getCommonComps().map((child) => child)}
-              {props.children}
-            </Fragment>
-          )}
-        </div>
-      </main>
+      <Layout className={`dd-site ${props.className}`}>
+        {props.secure ? (
+          <Fragment>
+            <UserHeader />
+            <SecureMenu />
+          </Fragment>
+        ) : (
+          <Nav
+            scrollable={props.navScrollable}
+            isFixed={props.fixedNav}
+            onBack={props.onBack}
+          />
+        )}
+        {props.children}
+        <DDFooter />
+      </Layout>
     </Fragment>
   );
 }
