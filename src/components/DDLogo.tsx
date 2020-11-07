@@ -6,10 +6,10 @@ import { useRouter } from "next/router";
 import { Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import LogoImg from "./LogoImg";
-interface LogoProps {
+interface DDLogoProps {
 	onBack?: Function
 }
-export default function Logo({ onBack }: LogoProps) {
+export default function DDLogo({ onBack }: DDLogoProps) {
 	const router = useRouter();
 	return (
 			<div style={{cursor: 'pointer'}} className="logo">

@@ -3,7 +3,7 @@ import { Layout, Drawer, Button, Affix } from 'antd';
 import { useScroll } from 'react-browser-hooks';
 import { MenuOutlined } from '@ant-design/icons';
 import DDMenu from './DDMenu';
-import Logo from './Logo';
+import DDLogo from './DDLogo';
 
 import './Nav.less';
 interface NavProps {
@@ -24,7 +24,7 @@ const Nav = ({ onBack, isFixed, scrollable }: NavProps) => {
 		//@ts-ignore
 		scrollable ? {} : { offsetTop: scrollable ? '' : 0 },
 		<Header className={`dd-header ${top > 10 || isFixed ? 'fixed-nav' : ''}`}>
-			<Logo onBack={onBack} />
+			<DDLogo onBack={onBack} />
 			<DDMenu />
 			<Button type="text" onClick={onShowDrawer}>
 				<MenuOutlined />
