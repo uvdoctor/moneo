@@ -1,13 +1,11 @@
 import React, { Fragment, useEffect, useState } from "react";
-//@ts-ignore
-import { AwesomeButton } from "react-awesome-button";
 import CarSVG from "./goals/svgcar";
 import DegreeSVG from "./goals/svgdegree";
 import DiamondSVG from "./goals/svgdiamond";
 import HomeSVG from "./goals/svghome";
 import TravelSVG from "./goals/svgtravel";
 
-export default function GoalImages() {
+export default function RollingImages() {
   const animationStyle = "transient 2s linear";
   const [svgCtr, setSvgCtr] = useState(-1);
 
