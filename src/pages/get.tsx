@@ -3,15 +3,15 @@ import React from "react";
 import NW from "../components/nw/nw";
 import Amplify from "aws-amplify";
 import awsmobile from "../aws-exports";
-import DDPage from "../components/DDPage";
+import DDBasicPage from "../components/DDBasicPage";
 
 Amplify.configure(awsmobile);
 
 const Get = () => {
 	return (
-		<DDPage title="Get Net Worth" secure>
+		<DDBasicPage title="Get Net Worth" secure>
 			<NW />
-		</DDPage>
+		</DDBasicPage>
 	);
 };
 

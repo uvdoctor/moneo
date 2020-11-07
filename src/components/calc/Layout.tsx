@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GoalType } from "../../api/goals";
-import DDPage from "../DDPage";
+import DDBasicPage from "../DDBasicPage";
 import { createNewGoalInput } from "../goals/goalutils";
 import * as gtag from "../../lib/gtag";
 import { Button, Collapse, Row, Col, PageHeader } from "antd";
@@ -56,7 +56,7 @@ export default function Layout(props: LayoutProps) {
 	};
 
 	return (
-		<DDPage
+		<DDBasicPage
 			className="calculator-container"
 			title={props.title}
 			onBack={() => setWIP(null)}
@@ -119,6 +119,6 @@ export default function Layout(props: LayoutProps) {
 					)}
 				</CalcContextProvider>
 			)}
-		</DDPage>
+		</DDBasicPage>
 	);
 }

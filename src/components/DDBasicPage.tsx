@@ -6,7 +6,7 @@ import SecureMenu from "./SecureMenu";
 import DDFooter from "./DDFooter";
 import Head from "next/head";
 
-interface DDPageProps {
+interface DDBasicPageProps {
   className?: string;
   title: string;
   children: React.ReactNode;
@@ -17,7 +17,7 @@ interface DDPageProps {
   noFooter?: boolean;
 }
 
-export default function DDPage(props: DDPageProps) {
+export default function DDBasicPage(props: DDBasicPageProps) {
   return (
     <Fragment>
       <Head>

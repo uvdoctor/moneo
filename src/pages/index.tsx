@@ -1,11 +1,11 @@
 import React from "react";
 import Landing from "../components/landing/Landing";
-import DDPage from "../components/DDPage";
+import DDBasicPage from "../components/DDBasicPage";
 
 export default function Home() {
   return (
-    <DDPage title="DollarDarwin">
+    <DDBasicPage title="DollarDarwin">
       <Landing />
-    </DDPage>
+    </DDBasicPage>
   );
 }
