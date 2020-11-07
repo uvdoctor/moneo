@@ -88,6 +88,7 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 					title="Please help Us to Improve"
 					onCancel={() => setShowFeedbackModal(false)}
 					onOk={() => saveFeedback()}
+					maskClosable
 					//@ts-ignore
 					modalRender={(modal: any) => <Draggable>{modal}</Draggable>}
 				>

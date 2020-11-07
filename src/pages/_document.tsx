@@ -56,7 +56,21 @@ class DDDocument extends NextDocument<DDDocumentProps> {
 					<NextScript />
 				</body>
 				<footer>
-					<script src="https://www.google.com/recaptcha/api.js"></script>
+					<script async src="https://www.google.com/recaptcha/api.js" />
+					<script dangerouslySetInnerHTML={{
+						__html: `
+					function onSubmit(token) {
+     				fetch('/api/verifycaptcha', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json;charset=utf-8'
+							},
+							body: JSON.stringify({
+								token: token
+							});
+						}).then(res => console.log("Response is ", res.success));
+					}`
+					}} />
 					{isProduction && (
 						<Fragment>
 							<script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
