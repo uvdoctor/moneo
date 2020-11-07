@@ -60,15 +60,6 @@ class DDDocument extends NextDocument<DDDocumentProps> {
 					<script dangerouslySetInnerHTML={{
 						__html: `
 					function onSubmit(token) {
-     				fetch('/api/verifycaptcha', {
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/json;charset=utf-8'
-							},
-							body: JSON.stringify({
-								token: token
-							});
-						}).then(res => console.log("Response is ", res.success));
 					}`
 					}} />
 					{isProduction && (
