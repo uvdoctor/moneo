@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { GoalType } from "../../api/goals";
 import DDBasicPage from "../DDBasicPage";
 import { createNewGoalInput } from "../goals/goalutils";
@@ -63,7 +63,7 @@ export default function Layout(props: LayoutProps) {
 			navScrollable
 		>
 			{!wip ? (
-				<Row align="middle" justify="center">
+				<Fragment>
 					<Col span={24}>
 						<PageHeader
 							className="calculator-header"
@@ -88,7 +88,7 @@ export default function Layout(props: LayoutProps) {
 							))}
 						</Collapse>
 					</Col>
-					<Col>
+					<Row justify="center">
 						<Button
 							className="steps-start-btn"
 							type="primary"
@@ -96,8 +96,8 @@ export default function Layout(props: LayoutProps) {
 						>
 							<RocketOutlined /> Start
 						</Button>
-					</Col>
-				</Row>
+					</Row>
+				</Fragment>
 			) : (
 				<CalcContextProvider
 					goal={wip}

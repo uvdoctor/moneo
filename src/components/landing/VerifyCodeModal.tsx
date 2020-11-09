@@ -26,14 +26,6 @@ export default function VerifyCodeModal() {
 				<Button type="link" shape="round" icon={<RedoOutlined />} size="small">
 					Resend security code
 				</Button>
-				<Button
-					className="g-recaptcha"
-					data-sitekey="6LdTyd8ZAAAAAHZqurv84AUu_qsMvb_j9V3W_8WP"
-					data-callback="onSubmit"
-					data-action="SecurityCodeSubmit"
-				>
-					Submit
-				</Button>
 			</div>
 		</Modal>
 	);

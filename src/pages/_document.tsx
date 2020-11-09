@@ -19,6 +19,7 @@ class DDDocument extends NextDocument<DDDocumentProps> {
 	render() {
 		const { isProduction } = this.props;
 		const ROLLBAR_CLIENT_TOKEN = 'f64f595e24bc43e1abf60ec1fa5c0604';
+		const RECAPTCHA_CLIENT_TOKEN = '6LdTyd8ZAAAAAHZqurv84AUu_qsMvb_j9V3W_8WP';
 
 		return (
 			<Html>
@@ -56,12 +57,7 @@ class DDDocument extends NextDocument<DDDocumentProps> {
 					<NextScript />
 				</body>
 				<footer>
-					<script async src="https://www.google.com/recaptcha/api.js" />
-					<script dangerouslySetInnerHTML={{
-						__html: `
-					function onSubmit(token) {
-					}`
-					}} />
+					<script async src={`https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_CLIENT_TOKEN}`} />
 					{isProduction && (
 						<Fragment>
 							<script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />

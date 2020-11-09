@@ -65,7 +65,7 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 					<Row justify={children ? "space-around" : "start"}>
 						{children && <Col>{children}</Col>}
 						<Col>
-							<span style={{ marginRight: "0.5rem" }}>Rate Us</span>
+							<span style={{ marginRight: "0.5rem" }}>Rate Calculator</span>
 							<Rate
 								allowClear
 								value={rating}

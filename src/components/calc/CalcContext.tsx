@@ -147,7 +147,7 @@ function CalcContextProvider({
 	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions ? resultTabOptions : goal ? getGoalResultTabOptions() : []);
 	const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
 	const [ resultTabIndex, setResultTabIndex ] = useState<number>(0);
-	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(true);
+	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(false);
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
 	const [ cfsWithOppCost, setCFsWithOppCost ] = useState<Array<number>>([]);
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
