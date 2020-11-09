@@ -5,7 +5,6 @@ import CalcTemplate from "../calc/CalcTemplate";
 import FIAgeResult from "../calc/FIYearResult";
 import FISavingsResult from "../calc/FISavingsResult";
 import { findEarliestFFYear, isFFPossible } from "./cfutils";
-import FIGoalHeader from "./FIGoalHeader";
 import { COLORS } from "../../CONSTANTS";
 
 const FIGoalContext = createContext({});
@@ -259,7 +258,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
           riskProfile,
           setRiskProfile
         }}>
-        {children ? children : <CalcTemplate header={<FIGoalHeader />} />}
+        {children ? children : <CalcTemplate />}
       </FIGoalContext.Provider>
     );
 }

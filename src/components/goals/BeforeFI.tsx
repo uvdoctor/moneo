@@ -2,13 +2,16 @@ import React, { useContext } from 'react';
 import Section from '../form/section';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
-import { toCurrency } from '../utils';
+import { changeSelection, toCurrency } from '../utils';
 import { getRAOptions } from './goalutils';
 import { FIGoalContext } from './FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
+import { PLAN_DURATION } from '../../CONSTANTS';
 
-export function InvestForFI() {
-	const { currency, rangeFactor, dr, setDR, addCallback }: any = useContext(CalcContext);
+export function BeforeFI() {
+	const { currency, rangeFactor, dr, setDR, addCallback, endYear, setEndYear, eyOptions }: any = useContext(
+		CalcContext
+	);
 	const {
 		nw,
 		setNW,
@@ -22,6 +25,13 @@ export function InvestForFI() {
 
 	return (
 		<Section title="Before Financial Independence" videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}>
+			<SelectInput
+				info="This is needed to find the earliest possible year for Your Financial Independence (FI) before You turn 70. In case it's not possible to achieve FI by 70 years of age, then You will be requested to reconsider Your inputs."
+				pre="Birth Year"
+				value={endYear - PLAN_DURATION}
+				changeHandler={(val: string) => changeSelection(val, setEndYear, 100)}
+				options={eyOptions}
+			/>
 			<NumberInput
 				info={`Your Total Portfolio Value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc.`}
 				value={nw}

@@ -15,9 +15,9 @@ import * as gtag from '../../lib/gtag';
 import Expect from '../goals/Expect';
 import Nominees from '../goals/nominees';
 import RetIncome from '../goals/retincome';
-import { ExpenseAfterFF } from '../goals/expenseafterff';
+import { AfterFI } from '../goals/AfterFI';
 import Care from '../goals/Care';
-import { InvestForFI } from '../goals/InvestForFI';
+import { BeforeFI } from '../goals/BeforeFI';
 import AssetAllocationChart from '../goals/AssetAllocationChart';
 import AAPlanChart from '../goals/AAPlanChart';
 import { faChartLine, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faCoins, faHandHoldingMedical, faHandshake, faFileInvoiceDollar } from '@fortawesome/free-solid-svg-icons';
@@ -65,8 +65,8 @@ function CalcContextProvider({
 	
   const getFFGoalTabOptions = () => {
     return [
-      { label: "Invest", active: true, svg: faPiggyBank, content: <InvestForFI /> },
-      { label: "Spend", active: true, svg: faMoneyBillWave, content: <ExpenseAfterFF /> },
+      { label: "Before", active: true, svg: faPiggyBank, content: <BeforeFI /> },
+      { label: "After", active: true, svg: faMoneyBillWave, content: <AfterFI /> },
       { label: "Benefit", active: true, svg: faHandHoldingUsd, content: <RetIncome /> },
       getCareTabOption(),
       { label: "Expect", active: true, svg: faCoins, content: <Expect /> },

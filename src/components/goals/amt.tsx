@@ -7,15 +7,34 @@ import { GoalContext } from './GoalContext';
 import Section from '../form/section';
 import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
+import { getImpLevels } from './goalutils';
 
 export default function Amt() {
-	const { goal, startYear, changeStartYear, endYear, changeEndYear, eyOptions }: any = useContext(CalcContext);
+	const {
+		goal,
+		startYear,
+		changeStartYear,
+		endYear,
+		changeEndYear,
+		eyOptions,
+		addCallback,
+		impLevel,
+		setImpLevel
+	}: any = useContext(CalcContext);
 	const { ffGoalEndYear, manualMode }: any = useContext(GoalContext);
 	const [ syOptions ] = useState(initYearOptions(goal.by + 1, ffGoalEndYear - 20 - (goal.by + 1)));
 
 	return (
 		<Col span={24}>
-			<Section title="Payment Schedule">
+			<Section title="Schedule">
+				{addCallback && (
+					<SelectInput
+						pre="Importance"
+						value={impLevel}
+						changeHandler={setImpLevel}
+						options={getImpLevels()}
+					/>
+				)}
 				<SelectInput
 					pre="From Year"
 					info="Year in which You Start Paying"

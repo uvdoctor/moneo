@@ -3,7 +3,7 @@ import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import { FIGoalContext } from './FIGoalContext';
 
-export function ExpenseAfterFF() {
+export function AfterFI() {
 	const {
 		currency,
 		rangeFactor,
