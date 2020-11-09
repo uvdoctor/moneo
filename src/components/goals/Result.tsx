@@ -1,57 +1,64 @@
-import React, { useContext, useRef } from 'react';
-import { useFullScreen } from 'react-browser-hooks';
-import { Tabs, Row, Col } from 'antd';
-import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
-import CalcHeader from '../calc/CalcHeader';
-import { CalcContext } from '../calc/CalcContext';
-import { GoalType } from '../../api/goals';
-import GoalHeader from './GoalHeader';
-import FIGoalHeader from './FIGoalHeader';
+import React, { Fragment, useContext, useRef } from "react";
+import { useFullScreen } from "react-browser-hooks";
+import { Tabs } from "antd";
+import { FullscreenExitOutlined, FullscreenOutlined } from "@ant-design/icons";
+import CalcHeader from "../calc/CalcHeader";
+import { CalcContext } from "../calc/CalcContext";
+import { GoalType } from "../../api/goals";
+import GoalHeader from "./GoalHeader";
+import FIGoalHeader from "./FIGoalHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ResultCarousel from "../ResultCarousel";
 
 export default function Result() {
-	const { goal, resultTabs, resultTabIndex, setResultTabIndex, results }: any = useContext(CalcContext);
+	const {
+		goal,
+		resultTabs,
+		resultTabIndex,
+		setResultTabIndex,
+		results,
+	}: any = useContext(CalcContext);
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
 
 	return (
 		<div className="calculator-content">
-			{goal.type ? goal.type === GoalType.FF ? <FIGoalHeader /> : <GoalHeader /> : <CalcHeader />}
-			<div ref={chartDiv}>
-				<Row justify="end" style={{ cursor: 'pointer' }} onClick={toggle}>
-					{!fullScreen ? <FullscreenOutlined /> : <FullscreenExitOutlined />}
-				</Row>
-				{results && results instanceof Array ? (
-					results.length > 0 && (
-						<Row className="dd-stats" justify="space-around">
-							{results.map((result, i) => (
-								<Col key={'result' + i} span={11}>
-									{result}
-								</Col>
-							))}
-						</Row>
-					)
+			{goal.type ? (
+				goal.type === GoalType.FF ? (
+					<FIGoalHeader />
 				) : (
-					<Col className="dd-stats" span={24}>
-						{results}
-					</Col>
-				)}
+					<GoalHeader />
+				)
+			) : (
+				<CalcHeader />
+			)}
+			<div className="results-content" ref={chartDiv}>
+				<ResultCarousel results={results} />
 				<Tabs
 					className="dd-chart"
 					onTabClick={(key: string) => setResultTabIndex(parseInt(key))}
 					defaultActiveKey={resultTabIndex}
 					type="card"
+					tabBarExtraContent={
+						<div className="fullScreen-icon" onClick={toggle}>
+							{!fullScreen ? (
+								<FullscreenOutlined />
+							) : (
+								<FullscreenExitOutlined />
+							)}
+						</div>
+					}
 				>
 					{resultTabs.map((tab: any, i: number) => (
 						<TabPane
 							key={i}
 							disabled={!tab.active}
 							tab={
-								<Row align="middle">
+								<Fragment>
 									<FontAwesomeIcon icon={tab.svg} />
 									<label>{tab.label}</label>
-								</Row>
+								</Fragment>
 							}
 						>
 							{resultTabs[resultTabIndex].content}

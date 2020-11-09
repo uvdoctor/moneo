@@ -4,6 +4,7 @@
 	padding: 0 35px;
 
 	& > header {
+		margin-top: 10px;
 		margin-bottom: 30px;
 	}
 
@@ -30,13 +31,28 @@
 		width: 100%;
 	}
 
+	& .ant-steps-item-finish,
 	& .ant-steps-item-process,
 	& .ant-steps-item-wait {
 		& .ant-steps-item-container {
 			& .ant-steps-item-title {
+				& svg {
+					margin-right: 5px;
+				}
+
 				&:after {
 					background-color: #cecfd1;
 					height: 2px;
+				}
+			}
+		}
+	}
+
+	& .ant-steps-item-finish {
+		& .ant-steps-item-container {
+			& .ant-steps-item-title {
+				&:after {
+					background-color: @primary-color;
 				}
 			}
 		}

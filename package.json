@@ -37,9 +37,11 @@
     "react-browser-hooks": "^2.2.4",
     "react-dom": "^16.14.0",
     "react-draggable": "^4.4.3",
+    "react-elastic-carousel": "^0.9.4",
     "react-plaid-link": "^3.0.0",
     "react-player": "^2.6.2",
     "react-share": "^4.3.1",
+    "styled-components": "^5.2.1",
     "swr": "^0.2.3",
     "xirr": "^1.0.3"
   },
