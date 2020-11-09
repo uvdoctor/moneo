@@ -12,15 +12,15 @@ import LoanScheduleChart from "../goals/LoanScheduleChart";
 import { GoalType } from '../../api/goals';
 import { isLoanEligible } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
-import Expect from '../goals/Expect';
-import Nominees from '../goals/nominees';
-import RetIncome from '../goals/retincome';
+import FIMoneyOutflow from '../goals/FIMoneyOutflow';
+import FIBenefit from '../goals/FIBenefit';
 import { AfterFI } from '../goals/AfterFI';
 import Care from '../goals/Care';
 import { BeforeFI } from '../goals/BeforeFI';
 import AssetAllocationChart from '../goals/AssetAllocationChart';
 import AAPlanChart from '../goals/AAPlanChart';
-import { faChartLine, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faCoins, faHandHoldingMedical, faHandshake, faFileInvoiceDollar } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faFileInvoiceDollar, faUserCog } from '@fortawesome/free-solid-svg-icons';
+import FIUserDetails from '../goals/FIUserDetails';
 
 const CalcContext = createContext({});
 
@@ -65,12 +65,12 @@ function CalcContextProvider({
 	
   const getFFGoalTabOptions = () => {
     return [
+      { label: "About", active: true, svg: faUserCog, content: <FIUserDetails /> },
       { label: "Before", active: true, svg: faPiggyBank, content: <BeforeFI /> },
       { label: "After", active: true, svg: faMoneyBillWave, content: <AfterFI /> },
-      { label: "Benefit", active: true, svg: faHandHoldingUsd, content: <RetIncome /> },
+      { label: "Benefit", active: true, svg: faHandHoldingUsd, content: <FIBenefit /> },
       getCareTabOption(),
-      { label: "Expect", active: true, svg: faCoins, content: <Expect /> },
-      { label: "Give", active: true, svg: faDonate, content: <Nominees /> },
+      { label: "Give", active: true, svg: faDonate, content: <FIMoneyOutflow /> },
     ]
   }
   
@@ -189,6 +189,18 @@ function CalcContextProvider({
     setBtnClicked(false);
   };
 
+  const handleStepChange = (count: number = 1) => {
+		let co = inputTabIndex + count;
+		if (co < 0 || !inputTabs[co]) return;
+		if (!inputTabs[co].active) co += count;
+		setInputTabIndex(co);
+	};
+
+  const hasTab = (tabLabel: string) => {
+    let tabs = inputTabs.filter((tab: any) => tab.label === tabLabel);
+    return tabs && tabs.length === 1;
+  };
+
   useEffect(() => {
     if (!rating) return;
     gtag.event({
@@ -261,7 +273,9 @@ function CalcContextProvider({
         error,
         setError,
         results,
-        setResults
+        setResults,
+        handleStepChange,
+        hasTab
 			}}
     >
       {children}

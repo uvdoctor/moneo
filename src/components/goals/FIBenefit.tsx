@@ -1,5 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, { Fragment, useContext, useEffect } from 'react';
 import { MAX_RETIREMENT_AGE, PLAN_DURATION } from '../../CONSTANTS';
+import DynamicTargetInput from '../form/DynamicTargetInput';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
@@ -7,7 +8,7 @@ import { changeSelection, initYearOptions } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 import { getLastPossibleFFYear } from './goalutils';
 
-export default function RetIncome() {
+export default function FIBenefit() {
 	const {
 		currency,
 		rangeFactor,
@@ -29,6 +30,7 @@ export default function RetIncome() {
 	);
 
 	return (
+		<Fragment>
 		<Section
 			title="Retirement Income Benefit (eg: Pension, Social Security, etc.)">
 				<NumberInput
@@ -66,6 +68,10 @@ export default function RetIncome() {
 					/>
 				)
 			}
-		</Section>
+			</Section>
+			<Section title="Gains Expected due to Inheritance, Selling Investments, etc. after paying taxes & fees">
+				<DynamicTargetInput />
+			</Section>
+		</Fragment>
 	);
 }

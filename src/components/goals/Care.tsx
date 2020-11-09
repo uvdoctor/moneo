@@ -6,12 +6,12 @@ import { changeSelection, initYearOptions, toStringArr } from '../utils';
 import RadialInput from '../form/radialinput';
 import ItemDisplay from '../calc/ItemDisplay';
 import { calculateTotalCP, calculateTotalCPTaxBenefit } from './cfutils';
-import { COLORS, PLAN_DURATION } from '../../CONSTANTS';
+import { COLORS, MAX_RETIREMENT_AGE, PLAN_DURATION } from '../../CONSTANTS';
 import { FIGoalContext } from './FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
 
 export default function CareInsurance() {
-	const { currency, rangeFactor, startYear, endYear }: any = useContext(CalcContext);
+	const { currency, rangeFactor, endYear }: any = useContext(CalcContext);
 	const {
 		carePremium,
 		setCarePremium,
@@ -83,9 +83,7 @@ export default function CareInsurance() {
 				value={carePremium}
 				changeHandler={setCarePremium}
 				rangeFactor={rangeFactor}
-				pre="Yearly"
-				post="Premium"
-				note="In Today's Money"
+				pre="Yearly Premium in Today's Money"
 				min={0}
 				max={7000}
 				step={100}
@@ -94,18 +92,17 @@ export default function CareInsurance() {
 			{carePremium && (
 				<SelectInput
 					info="It may be a good option to buy this insurance when You are healthier (between 60 to 65 years of age) to get lower premiums."
-					value={carePremiumSY - startYear}
-					options={initYearOptions(55, 10)}
-					pre="Buy Policy At"
+					value={carePremiumSY - (endYear - PLAN_DURATION)}
+					options={initYearOptions(MAX_RETIREMENT_AGE - 15, 10)}
+					pre="Buy Policy At Age"
 					unit="Years"
-					post="Age"
 					changeHandler={(val: string) => changeSelection(val, setCarePremiumSY, endYear - PLAN_DURATION)}
 				/>
 			)}
 			{carePremium && (
 				<SelectInput
 					value={carePremiumDur}
-					options={initYearOptions(1, 15)}
+					options={initYearOptions(1, 14)}
 					pre="Pay For"
 					unit="Years"
 					changeHandler={(val: string) => changeSelection(val, setCarePremiumDur)}

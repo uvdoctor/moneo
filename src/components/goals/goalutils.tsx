@@ -115,8 +115,8 @@ const createFFGoalInput = (currency: string) => {
     tbr: 1,
     tdli: 0,
     btr: 3,
-    ra: 0,
-    rachg: 0
+    ra: 50000,
+    rachg: 1000
   } as APIt.CreateGoalInput;
 };
 

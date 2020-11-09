@@ -40,7 +40,8 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     setInputTabs,
     ffResult,
     setFFResult,
-    setResults
+    setResults,
+    hasTab
   }: any = useContext(CalcContext);
   const [riskProfile, setRiskProfile] = useState<LMH>(goal.imp);
   const [expenseBY, setExpenseBY] = useState<number>(goal.sy);
@@ -89,6 +90,9 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
   const [losses, setLosses] = useState<Array<TargetInput>>(
     goal.pl as Array<TargetInput>
   );
+  const careTabIndex = 4;
+  const careTabLabel = "Care";
+
   const createGoal = () => {
     return {
       name: goal.name,
@@ -125,25 +129,18 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     setCreateNewGoalInput(createGoal);
   }, []);
   
-  const hasCareTab = () => {
-    let careTab = inputTabs.filter((tab: any) => tab.label === "Care");
-    return careTab && careTab.length === 1;
-  };
-
   useEffect(() => {
     if (currency === "USD" || currency === "CAD" || currency === "GBP") {
-      if (!hasCareTab()) {
-        inputTabs.splice(3, 0, getCareTabOption());
+      if (!hasTab(careTabLabel)) {
+        inputTabs.splice(careTabIndex, 0, getCareTabOption());
         setInputTabs([...inputTabs]);
       }
     } else {
-      if (hasCareTab()) {
-        inputTabs.splice(3, 1);
+      if (hasTab(careTabLabel)) {
+        inputTabs.splice(careTabIndex, 1);
         setInputTabs([...inputTabs]);
-        if (inputTabIndex === 3) {
-          setInputTabIndex(4);
-          setCarePremium(0);
-        }
+        setCarePremium(0);
+        if (inputTabIndex === inputTabs.length) setInputTabIndex(careTabIndex);
       }
     }
   }, [currency]);

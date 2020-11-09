@@ -22,15 +22,9 @@ export default function Input() {
 		disableSubmit,
 		stepVideoUrl,
 		error,
+		handleStepChange
 	}: any = useContext(CalcContext);
 	const { Step } = Steps;
-
-	const handleStepChange = (count: number = 1) => {
-		let co = inputTabIndex + count;
-		if (co < 0 || !inputTabs[co]) return;
-		if (!inputTabs[co].active) co += count;
-		setInputTabIndex(co);
-	};
 
 	return (
 		<Fragment>
