@@ -35,7 +35,7 @@ export default function Result() {
 						<TabPane
 							key={i}
 							disabled={!tab.active}
-							className={!tab.active ? "diasbled" : ""}
+							className={!tab.active ? "disabled" : ""}
 							tab={
 								<Fragment>
 									<FontAwesomeIcon icon={tab.svg} />
