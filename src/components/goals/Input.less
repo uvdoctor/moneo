@@ -132,17 +132,6 @@
 						background-color: #7a7f84;
 						top: 30px;
 					}
-
-					&.error {
-						background-color: #f00;
-						color: #fff;
-					}
-
-					&.disabled {
-						background-color: #dcdcdc;
-						color: #a5a5a5;
-						cursor: default;
-					}
 				}
 
 				& .ant-space {
@@ -152,6 +141,13 @@
 
 				& .ant-space-item {
 					display: block;
+				}
+			}
+
+			&.ant-steps-item-error {
+				& .ant-steps-item-title {
+					background-color: #f00;
+					color: #fff;
 				}
 			}
 		}
