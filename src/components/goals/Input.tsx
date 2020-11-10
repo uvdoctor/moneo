@@ -37,11 +37,11 @@ export default function Input() {
 							onChange={(index: number) => {
 								if (index < inputTabIndex) setInputTabIndex(index);
 							}}
+							status={error ? "error" : "process"}
 						>
 							{inputTabs.map((tab: any, i: number) => (
 								<Step
 									key={tab.label}
-									status={error ? "error" : "process"}
 									title={
 										<Fragment>
 											<FontAwesomeIcon icon={tab.svg} />
