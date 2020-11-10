@@ -133,9 +133,9 @@ export default function Input() {
 						</Button>
 						{inputTabs[inputTabIndex].active && (
 							<Fragment>
-								<Col span={24}>
-									<ResultCarousel />
-								</Col>
+									{!error && <Col span={24}>
+										<ResultCarousel />
+									</Col>}
 								<Col span={24}>{inputTabs[inputTabIndex].content}</Col>
 							</Fragment>
 						)}

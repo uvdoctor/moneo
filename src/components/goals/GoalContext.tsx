@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
 import { CreateGoalInput, GoalType, LMH, TargetInput } from "../../api/goals";
 import { initYearOptions } from "../utils";
-import { getDuration, isLoanEligible } from "../goals/goalutils";
+import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { calculateCFs, calculateSellPrice } from "./cfutils";
 import { CalcContext } from "../calc/CalcContext";
@@ -240,6 +240,28 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       if (resultTabIndex === 1) setResultTabIndex(0);
     }
   }, [wipTargets, manualMode]);
+
+	const initTargets = () => {
+		if (!wipTargets || !setWIPTargets || !startYear || !endYear) return;
+		let targets: Array<TargetInput> = [];
+		for (let year = startYear; year <= endYear; year++) {
+			let existingT = null;
+			if (wipTargets.length > 0) {
+				existingT = wipTargets.filter((target: TargetInput) => target.year === year)[0] as TargetInput;
+			}
+			let t = createNewTarget(year, existingT ? existingT.val : 0);
+			targets.push(t);
+		}
+		setWIPTargets([ ...targets ]);
+	};
+
+	useEffect(
+		() => {
+			if (manualMode > 0) initTargets();
+		},
+		[ manualMode, startYear, endYear ]
+	);
+
 
   const calculateYearlyCFs = (
     duration: number = getDuration(
