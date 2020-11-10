@@ -3,7 +3,7 @@ import { CreateGoalInput, GoalType, LMH, TargetInput } from "../../api/goals";
 import { initYearOptions } from "../utils";
 import { getDuration, isLoanEligible } from "../goals/goalutils";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
-import { calculateCFs } from "./cfutils";
+import { calculateCFs, calculateSellPrice } from "./cfutils";
 import { CalcContext } from "../calc/CalcContext";
 import OppCost from "../calc/oppcost";
 import FFImpact from "./ffimpact";
@@ -202,6 +202,12 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     ] : []])
   }, []);
   
+  useEffect(() => {
+    if (!sellAfter) return;
+    if (!price) setSellPrice(0);
+    else setSellPrice(calculateSellPrice(price, assetChgRate as number, duration));
+  }, [price, assetChgRate, sellAfter]);
+
   useEffect(() => {
     if (!loanPer) setEYOptions(initYearOptions(startYear, 30));
     else if (goalType !== GoalType.E) setLoanRepaymentSY(startYear);

@@ -1,11 +1,9 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import ItemDisplay from '../calc/ItemDisplay';
 import Section from '../form/section';
 import RadialInput from '../form/radialinput';
 import NumberInput from '../form/numberinput';
 import { toStringArr } from '../utils';
-import { calculateSellPrice } from './cfutils';
-import { getDuration } from './goalutils';
 import { GoalContext } from './GoalContext';
 import AnnualCF from './AnnualCF';
 import { Tabs } from 'antd';
@@ -14,14 +12,9 @@ import { CalcContext } from '../calc/CalcContext';
 export default function Sell() {
 	const {
 		currency,
-		startYear,
-		endYear,
-		cfs
 	}: any = useContext(CalcContext);
 	const {
-		price,
 		sellPrice,
-		setSellPrice,
 		assetChgRate,
 		setAssetChgRate,
 		sellAfter,
@@ -29,15 +22,6 @@ export default function Sell() {
 	}: any = useContext(GoalContext);
 	const [ tabIndex, setTabIndex ] = useState<number>(0);
 	const { TabPane } = Tabs;
-
-	useEffect(
-		() => {
-			let duration = getDuration(sellAfter, startYear, endYear, 0, null, null, null);
-			let sellPrice = calculateSellPrice(price, assetChgRate, duration);
-			setSellPrice(sellPrice);
-		},
-		[ cfs ]
-	);
 
 	return (
 		<Fragment>
