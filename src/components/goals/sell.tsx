@@ -4,28 +4,29 @@ import Section from '../form/section';
 import RadialInput from '../form/radialinput';
 import NumberInput from '../form/numberinput';
 import { toStringArr } from '../utils';
-import { calculateSellPrice, calculateXIRR } from './cfutils';
+import { calculateSellPrice } from './cfutils';
 import { getDuration } from './goalutils';
-import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { GoalContext } from './GoalContext';
-import AnnualAmt from './annualamt';
+import AnnualCF from './AnnualCF';
 import { Tabs } from 'antd';
+import { CalcContext } from '../calc/CalcContext';
 
 export default function Sell() {
+	const {
+		currency,
+		startYear,
+		endYear,
+		cfs
+	}: any = useContext(CalcContext);
 	const {
 		price,
 		sellPrice,
 		setSellPrice,
 		assetChgRate,
 		setAssetChgRate,
-		startYear,
-		endYear,
 		sellAfter,
 		setSellAfter,
-		currency,
-		cfs
 	}: any = useContext(GoalContext);
-	const [ annualReturnPer, setAnnualReturnPer ] = useState<number | null>(0);
 	const [ tabIndex, setTabIndex ] = useState<number>(0);
 	const { TabPane } = Tabs;
 
@@ -34,7 +35,6 @@ export default function Sell() {
 			let duration = getDuration(sellAfter, startYear, endYear, 0, null, null, null);
 			let sellPrice = calculateSellPrice(price, assetChgRate, duration);
 			setSellPrice(sellPrice);
-			setAnnualReturnPer(calculateXIRR(cfs, startYear, price, sellAfter, sellPrice));
 		},
 		[ cfs ]
 	);
@@ -58,21 +58,10 @@ export default function Sell() {
 					pre="Sell After"
 					post={
 						<ItemDisplay
-							label="Sell Price after taxes & fees"
+							label="Sell Price"
 							result={Math.round(sellPrice)}
 							currency={currency}
-							footer={
-								annualReturnPer && (
-									<ItemDisplay
-										svg={annualReturnPer > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-										label={''}
-										result={annualReturnPer}
-										decimal={2}
-										unit="% Yearly"
-										pl
-									/>
-								)
-							}
+							footer="after taxes & fees"
 						/>
 					}
 					labelBottom={true}
@@ -88,10 +77,10 @@ export default function Sell() {
 				type="card"
 			>
 				<TabPane key={0} tab="Yearly Cost">
-					{tabIndex === 0 && <AnnualAmt />}
+					{tabIndex === 0 && <AnnualCF />}
 				</TabPane>
 				<TabPane key={1} tab="Yearly Income">
-					{tabIndex === 1 && <AnnualAmt income />}
+					{tabIndex === 1 && <AnnualCF income />}
 				</TabPane>
 			</Tabs>
 		</Fragment>

@@ -1,12 +1,12 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { getCommonMeta, getCommonXAxis, getCommonYAxis } from "../chartutils";
-import { buildYearsArray } from "../utils";
+import { buildYearsArray, toCurrency } from "../utils";
 import { GoalContext } from "./GoalContext";
 import { Col, Row } from "antd";
-import ItemDisplay from "../calc/ItemDisplay";
 import { CalcContext } from "../calc/CalcContext";
 import NumberInput from "../form/numberinput";
+import { COLORS } from "../../CONSTANTS";
 
 const GroupedColumnChart = dynamic(
 	() => import("bizcharts/lib/plots/GroupedColumnChart"),
@@ -66,16 +66,14 @@ export default function BuyRentChart() {
 
 	return (
 		<Fragment>
-			<Row className="chart-options-row" justify="space-around">
+			<Row align="middle" className="chart-options-row" justify="space-around">
 				<Col className="chart-stats" xs={24} sm={24} md={24} lg={12}>
 					{rentDiff && (
-						<ItemDisplay
-							result={rentDiff}
-							label={`Rent is ${rentDiff < 0 ? "Costlier" : "Cheaper"} by`}
-							footer={`Over ${sellAfter} Years`}
-							currency={currency}
-							pl
-						/>
+						<Fragment>
+							{`Rent is ${rentDiff < 0 ? "Costlier" : "Cheaper"} by `}
+							<label style={{color: rentDiff < 0 ? COLORS.RED : COLORS.GREEN}}>{toCurrency(Math.abs(rentDiff), currency)}</label>
+							{` Over ${sellAfter} Years`}
+						</Fragment>
 					)}
 				</Col>
 				<Col xs={24} sm={24} md={24} lg={12}>

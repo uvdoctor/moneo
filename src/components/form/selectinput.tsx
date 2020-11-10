@@ -51,7 +51,7 @@ export default function SelectInput(props: SelectInputProps) {
 						))}
 					</Select>
 					{props.unit}
-					<Col span={24}>{props.post}</Col>
+					<Row>{props.post}</Row>
 				</Row>
 			</Col>
 		</Row>

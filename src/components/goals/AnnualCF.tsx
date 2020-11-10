@@ -8,14 +8,14 @@ import { COLORS } from '../../CONSTANTS';
 import { GoalContext } from './GoalContext';
 import { Row } from 'antd';
 import ItemDisplay from '../calc/ItemDisplay';
+import { CalcContext } from '../calc/CalcContext';
 interface AnnualAmtProps {
 	income?: boolean;
 }
 
-export default function AnnualAmt({ income }: AnnualAmtProps) {
+export default function AnnualCF({ income }: AnnualAmtProps) {
+	const { currency, startYear }: any = useContext(CalcContext);
 	const {
-		currency,
-		startYear,
 		price,
 		duration,
 		assetChgRate,
@@ -30,9 +30,17 @@ export default function AnnualAmt({ income }: AnnualAmtProps) {
 	}: any = useContext(GoalContext);
 	const [ syOptions, setSYOptions ] = useState<object>(initYearOptions(startYear, duration - 1));
 	const [ totalAmt, setTotalAmt ] = useState<number>(0);
-	const title = income ? 'Rent, Dividend, etc after paying taxes'
-		: 'Fixes, Insurance, etc including taxes';
-	useEffect(() => setSYOptions(initYearOptions(startYear, duration - 1)), [ startYear ]);
+	const title = income ? 'Rent, Dividend, etc after paying taxes' : 'Fixes, Insurance, etc including taxes';
+	useEffect(
+		() => {
+			setSYOptions(initYearOptions(startYear, duration - 1));
+			let currStartYear = income ? aiStartYear : amStartYear;
+			if (startYear > currStartYear) {
+				income ? setAIStartYear(startYear) : setAMStartYear(startYear);
+			}
+		},
+		[ startYear ]
+	);
 
 	useEffect(
 		() =>

@@ -36,15 +36,13 @@ export default function ResultCarousel({ results }: ResultCarouselProps) {
 			{results && results instanceof Array ? (
 				results.length > 0 &&
 				results.map((result, i) => (
-					<div className="dd-stat" key={"result" + i}>
+					result && <div className="dd-stat" key={"result" + i}>
 						{result}
 					</div>
 				))
 			) : (
 				<div className="dd-stat">{results}</div>
 			)}
-			<div className="dd-stat">RSR</div>
-			<div className="dd-stat">RSR</div>
 		</Carousel>
 	);
 }

@@ -10,6 +10,7 @@ import FFImpact from "./ffimpact";
 import BuyRentResult from "../calc/BuyRentResult";
 import GoalHeader from "./GoalHeader";
 import CalcTemplate from "../calc/CalcTemplate";
+import BuyReturn from "../calc/BuyReturn";
 
 const GoalContext = createContext({});
 
@@ -24,7 +25,6 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
   const {
     goal,
     currency,
-    rangeFactor,
     resultTabs,
     setResultTabs,
     allInputDone,
@@ -35,13 +35,11 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     cfs,
     setCFs,
     dr,
-    setDR,
     rr,
     setRR,
     ffOOM,
     setFFOOM,
     btnClicked,
-    setBtnClicked,
     setCreateNewGoalInput,
     startYear,
     endYear,
@@ -50,7 +48,8 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     setEYOptions,
     error,
     setError,
-    setResults
+    setResults,
+    addCallback
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const [loanRepaymentSY, setLoanRepaymentSY] = useState<
@@ -195,9 +194,9 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
   useEffect(() => {
     setCreateNewGoalInput(createNewGoal);
     setResults([...nowYear < startYear ? [
-      (dr === null || dr === undefined) ?
-        <FFImpact />
-        : goalType === GoalType.B && <BuyRentResult />,
+      goalType === GoalType.B && <BuyRentResult />,
+      goalType === GoalType.B && <BuyReturn />,
+      addCallback && <FFImpact />,
       <OppCost />
     ] : []])
   }, []);
@@ -216,7 +215,7 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
   useEffect(() => {
     if (!loanPer) setEYOptions(initYearOptions(startYear, 30));
     else if (goalType !== GoalType.E) setLoanRepaymentSY(startYear);
-    if (goalType === GoalType.B && loanPer) return;
+    if (goalType === GoalType.B) return;
     if (startYear > endYear || endYear - startYear > 30) setEndYear(startYear);
   }, [startYear]);
 
@@ -462,15 +461,6 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     return (
       <GoalContext.Provider
         value={{
-          goal,
-          currency,
-          rangeFactor,
-          cfs,
-          dr,
-          setDR,
-          cashFlows,
-          startYear,
-          endYear,
           loanRepaymentSY,
           setLoanRepaymentSY,
           price,
@@ -537,10 +527,6 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
           setBRAns,
           wipTargets,
           setWIPTargets,
-          btnClicked,
-          setBtnClicked,
-          rr,
-          setRR,
           ffOOM,
           setFFOOM,
           ffImpactYears,

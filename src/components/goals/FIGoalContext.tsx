@@ -22,26 +22,21 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     addCallback,
     updateCallback,
     currency,
-    rangeFactor,
-    allInputDone,
     inputTabIndex,
     setInputTabIndex,
     cfs,
     setCFs,
     dr,
-    setDR,
     setRR,
-    btnClicked,
-    setBtnClicked,
     setCreateNewGoalInput,
-    startYear,
     endYear,
     inputTabs,
     setInputTabs,
     ffResult,
     setFFResult,
     setResults,
-    hasTab
+    hasTab,
+    allInputDone
   }: any = useContext(CalcContext);
   const [riskProfile, setRiskProfile] = useState<LMH>(goal.imp);
   const [expenseBY, setExpenseBY] = useState<number>(goal.sy);
@@ -202,18 +197,8 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     return (
       <FIGoalContext.Provider
         value={{
-          goal,
-          currency,
-          rangeFactor,
-          cfs,
-          dr,
-          setDR,
-          startYear,
-          endYear,
           taxRate,
           setTaxRate,
-          btnClicked,
-          setBtnClicked,
           expenseBY,
           setExpenseBY,
           careTaxDedLimit,

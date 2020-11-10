@@ -2,16 +2,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
 import { GoalContext } from './GoalContext';
+import { CalcContext } from '../calc/CalcContext';
 
 const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
 
 export default function LoanScheduleChart() {
-	const {
-		pSchedule,
-		iSchedule,
-		currency,
-		loanRepaymentSY,
-	}: any = useContext(GoalContext);
+	const { currency }: any = useContext(CalcContext);
+	const { pSchedule, iSchedule, loanRepaymentSY }: any = useContext(GoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	useEffect(

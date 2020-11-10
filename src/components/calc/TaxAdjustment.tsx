@@ -4,9 +4,14 @@ import Section from '../form/section';
 import ItemDisplay from './ItemDisplay';
 import { isTaxCreditEligible } from '../goals/goalutils';
 import { GoalContext } from '../goals/GoalContext';
+import { CalcContext } from './CalcContext';
 
 export default function TaxAdjustment() {
-	const { goal, taxRate, maxTaxDeduction, setTaxRate, setMaxTaxDeduction, currency, rangeFactor, pTaxBenefit }: any = useContext(GoalContext);
+	const { goal, currency, rangeFactor, startYear }: any = useContext(CalcContext);
+	const { duration, taxRate, maxTaxDeduction, setTaxRate, setMaxTaxDeduction, totalPTaxBenefit }: any = useContext(
+		GoalContext
+	);
+
 	return (
 		<Section title={`Claim Tax ${isTaxCreditEligible(goal.type) ? 'Credit' : 'Deduction'}`}>
 			{!isTaxCreditEligible(goal.type) && (
@@ -37,9 +42,9 @@ export default function TaxAdjustment() {
 					note={
 						<ItemDisplay
 							label="Total Tax Benefit"
-							result={pTaxBenefit}
+							result={totalPTaxBenefit}
 							currency={currency}
-							footer={`For this Goal`}
+							footer={`${startYear} to ${startYear + duration - 1}`}
 						/>
 					}
 					rangeFactor={rangeFactor}

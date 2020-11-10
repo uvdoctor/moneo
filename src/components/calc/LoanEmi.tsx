@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext, Fragment } from 'react';
 import NumberInput from '../form/numberinput';
-import { getEmi, getTotalInt } from './finance';
+import { getEmi } from './finance';
 import { toCurrency, toStringArr, initYearOptions } from '../utils';
 import SelectInput from '../form/selectinput';
 import RadialInput from '../form/radialinput';
 import Section from '../form/section';
 import {
-	getLoanPaidForMonths,
 	adjustAccruedInterest,
 	createEduLoanDPWithSICFs,
 	getLoanBorrowAmt
@@ -17,21 +16,25 @@ import { isTaxCreditEligible } from '../goals/goalutils';
 import HSwitch from '../HSwitch';
 import { Col, Collapse, Row } from 'antd';
 import { GoalContext } from '../goals/GoalContext';
+import { CalcContext } from './CalcContext';
+import { GoalType } from '../../api/goals';
 
 export default function LoanEmi() {
 	const {
-		price,
-		priceChgRate,
+		goal,
 		currency,
 		startYear,
+		rangeFactor,
+		endYear
+	}: any = useContext(CalcContext);
+	const {
+		price,
+		priceChgRate,
 		duration,
 		loanRepaymentSY,
-		endYear,
-		rangeFactor,
 		loanYears,
 		loanIntRate,
 		loanPer,
-		goal,
 		loanSIPayPer,
 		loanSICapitalize,
 		loanGracePeriod,
@@ -49,7 +52,8 @@ export default function LoanEmi() {
 		setMaxTaxDeductionInt,
 		totalITaxBenefit,
 		totalIntAmt,
-		setTotalIntAmt
+		setTotalIntAmt,
+		iSchedule
 	}: any = useContext(GoalContext);
 	const loanBorrowAmt = getLoanBorrowAmt(
 		price,
@@ -60,18 +64,18 @@ export default function LoanEmi() {
 		loanPer as number
 	);
 	const [ ryOptions, setRYOptions ] = useState(
-		initYearOptions(goal.type === goal.type.E ? endYear + 1 : startYear, 10)
+		initYearOptions(goal.type === GoalType.E ? endYear + 1 : startYear, goal.type === GoalType.B ? duration - 1 : 10)
 	);
 	const [ emi, setEMI ] = useState<number>(0);
 	const [ simpleInts, setSimpleInts ] = useState<Array<number>>([]);
 	const [ remIntAmt, setRemIntAmt ] = useState<number>(0);
-	const loanLimitPer = goal.type === goal.type.E ? 100 : 80;
+	const loanLimitPer = goal.type === GoalType.E ? 100 : 80;
 	const { Panel } = Collapse;
 
 	const calculateEmi = () => {
 		let borrowAmt = loanBorrowAmt;
 		let simpleInts: Array<number> = [];
-		if (goal.type === goal.type.E) {
+		if (goal.type === GoalType.E) {
 			let result = createEduLoanDPWithSICFs(
 				price,
 				priceChgRate,
@@ -89,19 +93,16 @@ export default function LoanEmi() {
 		}
 		borrowAmt = adjustAccruedInterest(
 			borrowAmt,
-			goal.type === goal.type.E ? endYear + 1 : startYear,
+			goal.type === GoalType.E ? endYear + 1 : startYear,
 			loanRepaymentSY,
 			loanIntRate
 		);
-		let loanPaidForMonths = getLoanPaidForMonths(startYear + duration - 1, loanRepaymentSY, loanYears);
 		let emi = getEmi(borrowAmt, loanIntRate, loanYears * 12) as number;
 		setEMI(Math.round(emi));
 		let totalSimpleIntAmt = 0;
 		simpleInts.forEach((int) => (totalSimpleIntAmt += int));
-		let totalIntAmt = 0;
-		if (goal.type !== goal.type.B) {
-			totalIntAmt = emi * loanPaidForMonths + totalSimpleIntAmt + remIntAmt - loanBorrowAmt;
-		} else totalIntAmt = getTotalInt(borrowAmt, emi, loanIntRate, loanPaidForMonths);
+		let totalIntAmt = totalSimpleIntAmt;
+		iSchedule.forEach((int: number) => totalIntAmt += int);
 		setTotalIntAmt(Math.round(totalIntAmt));
 	};
 
@@ -125,19 +126,20 @@ export default function LoanEmi() {
 		taxBenefitInt,
 		taxRate,
 		maxTaxDeductionInt,
-		totalITaxBenefit
+		totalITaxBenefit,
+		iSchedule
 	]);
 
 	useEffect(
 		() => {
-			setRYOptions(initYearOptions(goal.type === goal.type.E ? endYear + 1 : startYear, 10));
+			setRYOptions(initYearOptions(goal.type === GoalType.E ? endYear + 1 : startYear, goal.type === GoalType.B ? duration - 1 : 10));
 		},
 		[ startYear, endYear ]
 	);
 
 	useEffect(
 		() => {
-			if (goal.type === goal.type.E && taxRate && taxBenefitInt < 1) setTaxBenefitInt(1);
+			if (goal.type === GoalType.E && taxRate && taxBenefitInt < 1) setTaxBenefitInt(1);
 		},
 		[ taxRate ]
 	);
@@ -260,18 +262,14 @@ export default function LoanEmi() {
 								label="Total Interest"
 								result={totalIntAmt}
 								currency={currency}
-								footer={`Over ${getLoanPaidForMonths(
-									startYear + duration - 1,
-									loanRepaymentSY,
-									loanYears
-								) / 12} Years`}
+								footer={`${loanRepaymentSY} to ${startYear + duration - 1}`}
 							/>
 						</Col>
 					</Row>
 				</Fragment>
 			)}
 			{loanBorrowAmt &&
-			goal.type === goal.type.E && (
+			goal.type === GoalType.E && (
 				<RadialInput
 					width={120}
 					unit="%"
@@ -300,7 +298,7 @@ export default function LoanEmi() {
 				/>
 			)}
 			{loanBorrowAmt &&
-			goal.type === goal.type.E &&
+			goal.type === GoalType.E &&
 			!Number.isNaN(loanSIPayPer) && //@ts-ignore
 			loanSIPayPer < 100 && (
 				<HSwitch
@@ -328,7 +326,7 @@ export default function LoanEmi() {
 							label="Total Interest Tax Benefit"
 							result={totalITaxBenefit}
 							currency={currency}
-							footer={`Over ${duration} Years`}
+							footer={`${loanRepaymentSY} to ${startYear + duration - 1}`}
 						/>
 					}
 				/>
