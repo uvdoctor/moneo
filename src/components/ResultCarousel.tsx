@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import Carousel from "react-elastic-carousel";
+import { CalcContext } from "./calc/CalcContext";
 
-interface ResultCarouselProps {
-	results?: any;
-}
-
-export default function ResultCarousel({ results }: ResultCarouselProps) {
+export default function ResultCarousel() {
+	const {
+		results
+	}: any = useContext(CalcContext);
 	const resultsLength = results.length || 0;
 	const mobileSlideCount = 1;
 	const tabletSlideCount = 2;

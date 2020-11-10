@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ResultCarousel from '../ResultCarousel';
 
 export default function Result() {
-	const { goal, resultTabs, resultTabIndex, setResultTabIndex, results }: any = useContext(CalcContext);
+	const { goal, resultTabs, resultTabIndex, setResultTabIndex }: any = useContext(CalcContext);
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
@@ -19,7 +19,7 @@ export default function Result() {
 		<div className="calculator-content">
 			{goal.type && goal.type !== GoalType.FF ? <GoalHeader /> : <CalcHeader />}
 			<div className="results-content" ref={chartDiv}>
-				<ResultCarousel results={results} />
+				<ResultCarousel />
 				<Tabs
 					className="dd-chart"
 					onTabClick={(key: string) => setResultTabIndex(parseInt(key))}

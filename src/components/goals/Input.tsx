@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DDVideoPlayer from '../DDVideoPlayer';
 
 import './Input.less';
+import ResultCarousel from '../ResultCarousel';
 
 export default function Input() {
 	const {
@@ -117,7 +118,14 @@ export default function Input() {
 						>
 							<CloseOutlined />
 						</Button>
-						{inputTabs[inputTabIndex].active && <Col span={24}>{inputTabs[inputTabIndex].content}</Col>}
+						{inputTabs[inputTabIndex].active && (
+							<Fragment>
+								<Col span={24}>
+									<ResultCarousel />
+								</Col>
+								<Col span={24}>{inputTabs[inputTabIndex].content}</Col>
+							</Fragment>
+						)}
 						{!isPublicCalc && handleSubmit ? (
 							<Row justify="center">
 								<Button
