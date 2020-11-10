@@ -9,14 +9,14 @@ interface CalcTemplateProps {
 }
 
 export default function CalcTemplate({ header }: CalcTemplateProps) {
-	const { allInputDone }: any = useContext(CalcContext);
+	const { allInputDone, error }: any = useContext(CalcContext);
 
 	return (
 		<Fragment>
 			{!allInputDone ? header ? header : <CalcHeader /> : null}
 			<div className={allInputDone ? 'calculator-page' : ''}>
 				<Input />
-				{allInputDone && <Result />}
+				{allInputDone && !error && <Result />}
 			</div>
 		</Fragment>
 	);

@@ -17,7 +17,8 @@ export default function Cost() {
 		endYear,
 		goal,
 		inputTabs,
-		setInputTabs
+		setInputTabs,
+		error
 	}: any = useContext(CalcContext);
 	const {
 		startingPrice,
@@ -104,6 +105,7 @@ export default function Cost() {
 			}
 			manualMode={manualMode}
 			videoSrc={`https://www.youtube.com/watch?v=uYMTsmeZyfU`}
+			error={error}
 		>
 			<NumberInput
 				pre={startYear > goal.by ? `Cost ${goal.type !== GoalType.D && 'including taxes & fees'}` : ''}

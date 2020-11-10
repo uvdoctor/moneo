@@ -16,12 +16,11 @@ const GoalContext = createContext({});
 
 interface GoalContextProviderProps {
   children?: ReactNode;
-  cashFlows?: Array<number>;
   ffGoalEndYear?: number;
   ffImpactYearsHandler?: Function;
 }
 
-function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYearsHandler }: GoalContextProviderProps) {
+function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: GoalContextProviderProps) {
   const {
     goal,
     currency,
@@ -49,7 +48,9 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     error,
     setError,
     setResults,
-    addCallback
+    addCallback,
+    inputTabs,
+    setInputTabs
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const [loanRepaymentSY, setLoanRepaymentSY] = useState<
@@ -202,17 +203,6 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
   }, []);
   
   useEffect(() => {
-    if (iSchedule && iSchedule.length > 0 && !resultTabs[1].active) {
-        resultTabs[1].active = true;
-        setResultTabs([...resultTabs]);
-    } else if ((!iSchedule || iSchedule.length === 0) && resultTabs[1].active) {
-      resultTabs[1].active = false;
-      setResultTabs([...resultTabs]);
-      if(resultTabIndex === 1) setResultTabIndex(0);
-    }
-  }, [iSchedule]);
-
-  useEffect(() => {
     if (!loanPer) setEYOptions(initYearOptions(startYear, 30));
     else if (goalType !== GoalType.E) setLoanRepaymentSY(startYear);
     if (goalType === GoalType.B) return;
@@ -225,7 +215,11 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     if (startingPrice)
       p = getCompoundedIncome(priceChgRate, startingPrice, startYear - goal.by);
     setPrice(Math.round(p));
-  }, [startingPrice, priceChgRate, startYear, manualMode]);
+    if (loanPer && !resultTabs[1].active) {
+      resultTabs[1].active = true;
+      setResultTabs([...resultTabs]);
+    }
+  }, [startingPrice, priceChgRate, startYear, manualMode, loanPer]);
 
   useEffect(() => {
     if (manualMode < 1) return;
@@ -234,6 +228,11 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     if (!p) setError('Please enter a valid custom payment plan');
     else setError('');
     setPrice(Math.round(p));
+    if (resultTabs[1].active) {
+      resultTabs[1].active = false;
+      setResultTabs([...resultTabs]);
+      if (resultTabIndex === 1) setResultTabIndex(0);
+    }
   }, [wipTargets, manualMode]);
 
   const calculateYearlyCFs = (
@@ -267,6 +266,9 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
       if(result.hasOwnProperty("iSchedule")) {
         setISchedule([...result.iSchedule])
         setPSchedule([...result.pSchedule])
+      } else {
+        setISchedule([...[]]);
+        setPSchedule([...[]]);
       }
     }
     return cfs;
@@ -274,7 +276,7 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
 
   useEffect(() => {
     if (!allInputDone && inputTabIndex === 0) return;
-    if (!cashFlows) calculateYearlyCFs();
+    calculateYearlyCFs();
   }, [
     price,
     assetChgRate,
@@ -293,7 +295,6 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
     amStartYear,
     aiPer,
     aiStartYear,
-    cashFlows,
     allInputDone,
     inputTabIndex
   ]);
@@ -324,6 +325,20 @@ function GoalContextProvider({ children, cashFlows, ffGoalEndYear, ffImpactYears
       setEndYear(startYear);
     if (manualMode < 1 && error) setError("");
   }, [manualMode, loanPer]);
+
+  useEffect(() => {
+    if (error) {
+      for (let i = 1; i < inputTabs.length; i++) {
+        inputTabs[i].active = false;
+      }
+    } else {
+      for (let i = 1; i < inputTabs.length; i++) {
+        if(i !== 3) inputTabs[i].active = true;
+      }
+      if (manualMode < 1) inputTabs[3].active = true;
+    }
+    setInputTabs([...inputTabs]);
+  }, [error]);
 
   const getNextTaxAdjRentAmt = (val: number) => {
     return (
