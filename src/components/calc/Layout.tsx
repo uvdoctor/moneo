@@ -59,7 +59,7 @@ export default function Layout(props: LayoutProps) {
 		<DDBasicPage title={props.title} onBack={() => setWIP(null)} navScrollable>
 			{!wip ? (
 				<Fragment>
-					<Col span={24} className="calculator-header">
+					<Col span={24} className="primary-header">
 						<PageHeader title={props.title + ' Calculator'} />
 					</Col>
 					<Col className="steps-landing" span={24}>
