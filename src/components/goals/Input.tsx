@@ -1,14 +1,14 @@
-import React, { Fragment, useContext } from "react";
-import { Button, Steps, Row, Col, Space } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
-import { SaveOutlined } from "@ant-design/icons";
-import { CalcContext } from "../calc/CalcContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DDVideoPlayer from "../DDVideoPlayer";
+import React, { Fragment, useContext } from 'react';
+import { Button, Steps, Row, Col, Space } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
+import { SaveOutlined } from '@ant-design/icons';
+import { CalcContext } from '../calc/CalcContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import DDVideoPlayer from '../DDVideoPlayer';
 
-import "./Input.less";
-import ResultCarousel from "../ResultCarousel";
-import { isMobileDevice } from "../utils";
+import './Input.less';
+import ResultCarousel from '../ResultCarousel';
+import { isMobileDevice } from '../utils';
 
 export default function Input() {
 	const {
@@ -39,7 +39,7 @@ export default function Input() {
 							onChange={(index: number) => {
 								if (index < inputTabIndex) setInputTabIndex(index);
 							}}
-							status={error ? "error" : "process"}
+							status={error ? 'error' : 'process'}
 						>
 							{inputTabs.map((tab: any) => (
 								<Step
@@ -56,30 +56,21 @@ export default function Input() {
 						</Steps>
 					</header>
 					<section>
-						<Row justify={stepVideoUrl ? "space-between" : "center"}>
+						<Row justify={stepVideoUrl ? 'space-between' : 'center'}>
 							<Col span={stepVideoUrl ? 11 : 24}>
 								{inputTabs[inputTabIndex].content}
 								<Row align="middle">
 									<Space>
 										{inputTabIndex > 0 && (
-											<Button onClick={() => handleStepChange(-1)}>
-												Previous
-											</Button>
+											<Button onClick={() => handleStepChange(-1)}>Previous</Button>
 										)}
 										{inputTabIndex < inputTabs.length - 1 && (
-											<Button
-												type="primary"
-												disabled={error}
-												onClick={() => handleStepChange()}
-											>
+											<Button type="primary" disabled={error} onClick={() => handleStepChange()}>
 												Next
 											</Button>
 										)}
 										{inputTabIndex === inputTabs.length - 1 && (
-											<Button
-												type="primary"
-												onClick={() => setAllInputDone(true)}
-											>
+											<Button type="primary" onClick={() => setAllInputDone(true)}>
 												Done
 											</Button>
 										)}
@@ -95,20 +86,16 @@ export default function Input() {
 					</section>
 				</div>
 			) : (
-				<div
-					className={`calculator-options ${
-						showOptionsForm ? "show-form" : "hide-form"
-					}`}
-				>
+				<div className={`calculator-options ${showOptionsForm ? 'show-form' : 'hide-form'}`}>
 					<div className="overlay" />
 					<div>
 						<Row justify="space-between">
 							{inputTabs.map((tab: any, i: number) => (
 								<Col
 									key={i}
-									className={`${
-										inputTabIndex === i ? (error ? "error" : !isMobileDevice(fsb) || showOptionsForm ? "active" : "") : ""
-									} ${!tab.active ? "disabled" : ""}`}
+									className={`${inputTabIndex === i
+										? error ? 'error' : !isMobileDevice(fsb) || showOptionsForm ? 'active' : ''
+										: ''} ${!tab.active ? 'disabled' : ''}`}
 									onClick={() => {
 										if (tab.active) {
 											setOptionsVisibility(isMobileDevice(fsb) ? !showOptionsForm : true);
@@ -135,9 +122,11 @@ export default function Input() {
 						</Button>
 						{inputTabs[inputTabIndex].active && (
 							<Fragment>
-									{!error && <Col span={24}>
+								{!error && (
+									<Col span={24}>
 										<ResultCarousel />
-									</Col>}
+									</Col>
+								)}
 								<Col span={24}>{inputTabs[inputTabIndex].content}</Col>
 							</Fragment>
 						)}

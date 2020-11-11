@@ -5,11 +5,11 @@ import { createNewGoalInput } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
 import { Button, Collapse, Row, Col, PageHeader } from 'antd';
 import { RocketOutlined } from '@ant-design/icons';
-
-import './Layout.less';
 import { CalcContextProvider } from './CalcContext';
 import { GoalContextProvider } from '../goals/GoalContext';
 import { FIGoalContextProvider } from '../goals/FIGoalContext';
+
+import './Layout.less';
 interface LayoutProps {
 	tabOptions?: Array<any>;
 	resultTabOptions?: Array<any>;
@@ -56,7 +56,7 @@ export default function Layout(props: LayoutProps) {
 	};
 
 	return (
-		<DDBasicPage className="calculator-container" title={props.title} onBack={() => setWIP(null)} navScrollable>
+		<DDBasicPage title={props.title} onBack={() => setWIP(null)} navScrollable>
 			{!wip ? (
 				<Fragment>
 					<Col span={24} className="calculator-header">

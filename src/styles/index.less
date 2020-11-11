@@ -55,21 +55,35 @@ svg {
 	padding: 24px 50px;
 }
 
-@media all and (max-width: 992px) {
+@media all and (max-width: 576px) {
+	.rec-carousel-wrapper {
+		padding: 0 5px;
+	}
+}
+
+@media all and (max-width: 991.98px) {
 	.dd-header.ant-layout-header,
 	.dd-content.ant-layout-content {
 		padding-left: 20px;
 		padding-right: 20px;
 	}
-}
-
-/*@media all and (max-width: 767.98px) {
-	.dd-site {
-		& > div  {
-			height: 50px;
+	.calculator-header {
+		& .ant-page-header-heading-title {
+			font-size: 18px;
 		}
 	}
-}*/
+}
+
+@media all and (max-width: 767.98px) {
+	.calculator-header {
+		& .ant-page-header {
+			padding: 8px 15px;
+		}
+		& .ant-page-header-heading-title {
+			font-size: 16px;
+		}
+	}
+}
 
 /* Chrome, Safari and Opera syntax */
 :-webkit-full-screen {
@@ -129,6 +143,80 @@ svg {
 	border-radius: 10px;
 	background-image: linear-gradient(to top, @layout-body-background, @primary-color);
 }
+
+//Make captcha badge invisible
 .grecaptcha-badge {
 	visibility: hidden;
 }
+
+.steps-start-btn {
+	height: auto;
+	font-size: 30px;
+	margin-bottom: 40px;
+	padding: 10px 60px;
+
+	& .anticon {
+		transform: scale(1.5);
+	}
+
+	&:hover {
+		transform: scale(1.2);
+
+		& .anticon {
+			transform: scale(1.7) rotate(20deg);
+		}
+	}
+}
+
+.primary-header {
+	background-color: @primary-color;
+	border-bottom: @primary-color 2px solid;
+
+	& .ant-page-header-heading-title {
+		color: #fff;
+	}
+
+	& .ant-page-header-heading-left {
+		max-width: 75%;
+	}
+
+	& .secondary-header {
+		background-color: #3d4a53;
+		color: #fff;
+		text-align: left;
+		padding: 1px 22px;
+	}
+}
+
+//Carousel custom style start
+.rec-carousel-wrapper {
+	padding: 0 15px;
+	margin-bottom: 10px;
+}
+
+.rec-pagination {
+	margin: 0;
+
+	& button {
+		height: 12px;
+		background-color: #dcdcdc;
+		box-shadow: none;
+		transform: scale(0.6);
+
+		&.rec-dot_active {
+			background-color: @primary-color;
+		}
+	}
+}
+
+.rec-slider-container {
+	margin: 0;
+}
+
+.rec-arrow {
+	min-width: auto;
+	width: auto;
+	background: none;
+	box-shadow: none;
+}
+//Carousel custom style end

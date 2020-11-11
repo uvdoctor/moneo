@@ -39,29 +39,39 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 
 	return (
 		<Fragment>
-			<Col span={24} className="calculator-header">
-				<PageHeader
-					title={title ? title : goal.name}
-					extra={[
-						<SelectInput key="currselect" pre="" value={currency} changeHandler={changeCurrency} currency />
-					]}
-				/>
-			</Col>
-			<Col span={24} className="secondary-header">
-				<Row justify={children ? 'space-around' : 'start'}>
-					{children && <Col>{children}</Col>}
-					<Col>
-						<span style={{ marginRight: '0.5rem' }}>Rate Calculator</span>
-						<Rate
-							allowClear
-							value={rating}
-							onChange={(rating: number) => setRating(rating)}
-							onHoverChange={(rating: number) => setRatingLabel(ratingLabels[rating])}
-						/>
-						<span style={{ marginLeft: '0.5rem' }}>{ratingLabel ? ratingLabel : ratingLabels[rating]}</span>
-					</Col>
-				</Row>
-			</Col>
+			<div className="primary-header">
+				<Col span={24}>
+					<PageHeader
+						title={title ? title : goal.name}
+						extra={[
+							<SelectInput
+								key="currselect"
+								pre=""
+								value={currency}
+								changeHandler={changeCurrency}
+								currency
+							/>
+						]}
+					/>
+				</Col>
+				<Col span={24} className="secondary-header">
+					<Row justify={children ? 'space-around' : 'start'}>
+						{children && <Col>{children}</Col>}
+						<Col>
+							<span style={{ marginRight: '0.5rem' }}>Rate Calculator</span>
+							<Rate
+								allowClear
+								value={rating}
+								onChange={(rating: number) => setRating(rating)}
+								onHoverChange={(rating: number) => setRatingLabel(ratingLabels[rating])}
+							/>
+							<span style={{ marginLeft: '0.5rem' }}>
+								{ratingLabel ? ratingLabel : ratingLabels[rating]}
+							</span>
+						</Col>
+					</Row>
+				</Col>
+			</div>
 			{showFeedbackModal && (
 				<Modal
 					visible={showFeedbackModal}
