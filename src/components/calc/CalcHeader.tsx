@@ -28,7 +28,7 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 		"Poor",
 		"Average",
 		"Good",
-		"Delighted!",
+		"Awesome!",
 	];
 	const [ratingLabel, setRatingLabel] = useState<string>("");
 

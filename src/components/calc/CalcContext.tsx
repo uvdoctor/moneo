@@ -62,7 +62,24 @@ function CalcContextProvider({
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
 	const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
 	const [ cfs, setCFs ] = useState<Array<number>>([]);
-	
+  const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
+	const [ resultTabIndex, setResultTabIndex ] = useState<number>(0);
+	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(false);
+  const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
+	const [ cfsWithOppCost, setCFsWithOppCost ] = useState<Array<number>>([]);
+  const [btnClicked, setBtnClicked] = useState<boolean>(false);
+  const [rr, setRR] = useState<Array<number>>([]);
+  const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
+  const [createNewGoalInput, setCreateNewGoalInput] = useState<Function>(() => true)
+  const [rating, setRating ] = useState<number>(0);
+  const [feedbackText, setFeedbackText] = useState<string>("");
+  const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
+  const [stepVideoUrl, setStepVideoUrl] = useState<string>("");
+  const [eyOptions, setEYOptions] = useState(goal.type && goal.type === GoalType.FF ? initYearOptions(1960, nowYear - 15 - 1960) : initYearOptions(startYear, 30));
+	const [ffResult, setFFResult] = useState<any>({});
+  const [error, setError] = useState<string>("");
+  const [results, setResults] = useState<Array<any>>([]);
+
   const getFFGoalTabOptions = () => {
     return [
       { label: "About", active: true, svg: faUserCog, content: <FIUserDetails /> },
@@ -145,23 +162,6 @@ function CalcContextProvider({
   }
 	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions ? tabOptions : goal ? getGoalTabOptions(goal.type) : []);
 	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions ? resultTabOptions : goal ? getGoalResultTabOptions() : []);
-	const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
-	const [ resultTabIndex, setResultTabIndex ] = useState<number>(0);
-	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(false);
-  const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
-	const [ cfsWithOppCost, setCFsWithOppCost ] = useState<Array<number>>([]);
-  const [btnClicked, setBtnClicked] = useState<boolean>(false);
-  const [rr, setRR] = useState<Array<number>>([]);
-  const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
-  const [createNewGoalInput, setCreateNewGoalInput] = useState<Function>(() => true)
-  const [rating, setRating ] = useState<number>(0);
-  const [feedbackText, setFeedbackText] = useState<string>("");
-  const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
-  const [stepVideoUrl, setStepVideoUrl] = useState<string>("");
-  const [eyOptions, setEYOptions] = useState(goal.type && goal.type === GoalType.FF ? initYearOptions(1960, nowYear - 15 - 1960) : initYearOptions(startYear, 30));
-	const [ffResult, setFFResult] = useState<any>({});
-  const [error, setError] = useState<string>("");
-  const [results, setResults] = useState<Array<any>>([]);
 
   const changeStartYear = (str: string) => {
     setStartYear(parseInt(str));

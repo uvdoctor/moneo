@@ -105,11 +105,11 @@ export default function Input() {
 								<Col
 									key={i}
 									className={`${
-										inputTabIndex === i ? (error ? "error" : "active") : ""
+										inputTabIndex === i ? (error ? "error" : showOptionsForm ? "active" : "") : ""
 									} ${!tab.active ? "disabled" : ""}`}
 									onClick={() => {
 										if (tab.active) {
-											setOptionsVisibility(true);
+											setOptionsVisibility(!showOptionsForm);
 											setInputTabIndex(i);
 										}
 									}}
