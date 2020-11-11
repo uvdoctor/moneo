@@ -5,7 +5,7 @@ import Section from '../form/section';
 import HSwitch from '../HSwitch';
 import { GoalContext } from './GoalContext';
 
-export default function RentComparison() {
+export default function BRComp() {
 	const { currency, rangeFactor, dr, setDR }: any = useContext(CalcContext);
 	const {
 		rentAmt,

@@ -123,7 +123,7 @@ export default function Input() {
 						{inputTabs[inputTabIndex].active && (
 							<Fragment>
 								{!error && (
-									<Col span={24}>
+									<Col span={24} className="mobile-only-carousel">
 										<ResultCarousel />
 									</Col>
 								)}

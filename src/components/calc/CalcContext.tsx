@@ -5,7 +5,7 @@ import TaxAdjustment from "../calc/TaxAdjustment";
 import Amt from "../goals/amt";
 import LoanEmi from "../calc/LoanEmi";
 import Sell from "../goals/sell";
-import RentComparison from "../goals/rentcomparison";
+import BRComp from "../goals/BRComp";
 import DDLineChart from "../goals/DDLineChart";
 import BuyRentChart from "../goals/BuyRentChart";
 import LoanScheduleChart from "../goals/LoanScheduleChart";
@@ -156,7 +156,7 @@ function CalcContextProvider({
       { label: "Loan", active: true, svg: faHandHoldingUsd, content: <LoanEmi /> }
     );
     if (type === GoalType.B) {
-      options.push({ label: "Rent?", active: true, svg: faBalanceScale, content: <RentComparison /> });
+      options.push({ label: "Rent?", active: true, svg: faBalanceScale, content: <BRComp /> });
     }
     return options;
   }
