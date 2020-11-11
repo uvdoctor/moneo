@@ -45,7 +45,7 @@ export default function Layout(props: LayoutProps) {
 		const defaultCurrency = 'USD';
 		if (props.type) g = createNewGoalInput(props.type, defaultCurrency);
 		else g = { ccy: defaultCurrency };
-		g.name = props.title + ' Calculator';
+		g.name = props.title;
 		gtag.event({
 			category: 'Calculator',
 			action: 'Start',
@@ -60,7 +60,7 @@ export default function Layout(props: LayoutProps) {
 			{!wip ? (
 				<Fragment>
 					<Col span={24} className="primary-header">
-						<PageHeader title={props.title + ' Calculator'} />
+						<PageHeader title={props.title} />
 					</Col>
 					<Col className="steps-landing" span={24}>
 						<Collapse defaultActiveKey={[ '1' ]}>
