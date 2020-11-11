@@ -1,9 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import Section from '../form/section';
 import NumberInput from '../form/numberinput';
 import HSwitch from '../HSwitch';
 import { GoalType, TargetInput } from '../../api/goals';
-import { createNewTarget } from './goalutils';
 import { toCurrency } from '../utils';
 import { Row, Col } from 'antd';
 import { GoalContext } from './GoalContext';
@@ -14,7 +13,6 @@ export default function Cost() {
 		currency,
 		rangeFactor,
 		startYear,
-		endYear,
 		goal,
 		inputTabs,
 		setInputTabs,
@@ -38,27 +36,6 @@ export default function Cost() {
 		wipTargets[i].val = val;
 		setWIPTargets([ ...wipTargets ]);
 	};
-
-	const initTargets = () => {
-		if (!wipTargets || !setWIPTargets || !startYear || !endYear) return;
-		let targets: Array<TargetInput> = [];
-		for (let year = startYear; year <= endYear; year++) {
-			let existingT = null;
-			if (wipTargets.length > 0) {
-				existingT = wipTargets.filter((target: TargetInput) => target.year === year)[0] as TargetInput;
-			}
-			let t = createNewTarget(year, existingT ? existingT.val : 0);
-			targets.push(t);
-		}
-		setWIPTargets([ ...targets ]);
-	};
-
-	useEffect(
-		() => {
-			if (manualMode > 0) initTargets();
-		},
-		[ manualMode, startYear, endYear ]
-	);
 
 	const changeManualMode = (checked: boolean) => {
 		let loanTabIndex = goal.type === GoalType.B ? 3 : 2;
