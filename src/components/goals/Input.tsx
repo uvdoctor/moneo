@@ -8,6 +8,7 @@ import DDVideoPlayer from "../DDVideoPlayer";
 
 import "./Input.less";
 import ResultCarousel from "../ResultCarousel";
+import { isMobileDevice } from "../utils";
 
 export default function Input() {
 	const {
@@ -24,6 +25,7 @@ export default function Input() {
 		stepVideoUrl,
 		error,
 		handleStepChange,
+		fsb
 	}: any = useContext(CalcContext);
 	const { Step } = Steps;
 
@@ -39,7 +41,7 @@ export default function Input() {
 							}}
 							status={error ? "error" : "process"}
 						>
-							{inputTabs.map((tab: any, i: number) => (
+							{inputTabs.map((tab: any) => (
 								<Step
 									key={tab.label}
 									title={
@@ -48,7 +50,7 @@ export default function Input() {
 											<label>{tab.label}</label>
 										</Fragment>
 									}
-									disabled={!tab.active || i > inputTabIndex}
+									disabled={!tab.active}
 								/>
 							))}
 						</Steps>
@@ -85,7 +87,7 @@ export default function Input() {
 								</Row>
 							</Col>
 							{stepVideoUrl && (
-								<Col span={12}>
+								<Col span={12} className="video-container">
 									<DDVideoPlayer url={stepVideoUrl} />
 								</Col>
 							)}
@@ -105,11 +107,11 @@ export default function Input() {
 								<Col
 									key={i}
 									className={`${
-										inputTabIndex === i ? (error ? "error" : showOptionsForm ? "active" : "") : ""
+										inputTabIndex === i ? (error ? "error" : !isMobileDevice(fsb) || showOptionsForm ? "active" : "") : ""
 									} ${!tab.active ? "disabled" : ""}`}
 									onClick={() => {
 										if (tab.active) {
-											setOptionsVisibility(!showOptionsForm);
+											setOptionsVisibility(isMobileDevice(fsb) ? !showOptionsForm : true);
 											setInputTabIndex(i);
 										}
 									}}

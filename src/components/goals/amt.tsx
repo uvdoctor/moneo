@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import SelectInput from '../form/selectinput';
 import { initYearOptions } from '../utils';
 import Cost from './cost';
@@ -22,7 +22,7 @@ export default function Amt() {
 		setImpLevel
 	}: any = useContext(CalcContext);
 	const { ffGoalEndYear, manualMode }: any = useContext(GoalContext);
-	const [ syOptions ] = useState(initYearOptions(goal.by + 1, ffGoalEndYear - 20 - (goal.by + 1)));
+	const syOptions = initYearOptions(goal.by + 1, ffGoalEndYear - 20 - (goal.by + 1));
 
 	return (
 		<Col span={24}>
