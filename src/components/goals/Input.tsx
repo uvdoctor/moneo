@@ -87,7 +87,7 @@ export default function Input() {
 								</Row>
 							</Col>
 							{stepVideoUrl && (
-								<Col span={12} className="video-container">
+								<Col span={12}>
 									<DDVideoPlayer url={stepVideoUrl} />
 								</Col>
 							)}
