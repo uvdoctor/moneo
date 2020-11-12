@@ -1,5 +1,9 @@
 @import "~antd/dist/antd.less";
 
+body.no-scrollbar {
+	overflow: hidden;
+}
+
 .error-txt {
 	color: #f00;
 	margin-left: 5px;
@@ -144,7 +148,11 @@ svg {
 
 .scrollbar::-webkit-scrollbar-thumb {
 	border-radius: 10px;
-	background-image: linear-gradient(to top, @layout-body-background, @primary-color);
+	background-image: linear-gradient(
+		to top,
+		@layout-body-background,
+		@primary-color
+	);
 }
 
 //Make captcha badge invisible
@@ -155,7 +163,7 @@ svg {
 .primary-header {
 	background-color: @primary-color;
 	border-bottom: @primary-color 2px solid;
-	
+
 	& .ant-page-header-heading-title {
 		color: #fff;
 	}

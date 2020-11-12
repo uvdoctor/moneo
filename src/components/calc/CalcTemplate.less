@@ -58,7 +58,6 @@ body,
 	&& .dd-footer {
 		display: none;
 	}
-
 }
 
 .results-content {
@@ -262,12 +261,17 @@ body,
 		& section {
 			display: none;
 		}
+
+		&.hide-form {
+			& section {
+				display: none;
+			}
+		}
 	}
 
 	.dd-chart {
 		padding: 0 30px;
-    }
-    
+	}
 }
 
 @media all and (max-width: 991.98px) {
@@ -282,12 +286,11 @@ body,
 	.chart-stats {
 		text-align: center;
 		margin-bottom: 5px;
-    }
-    
+	}
+
 	.dd-chart {
 		padding: 0 20px;
-    }
-
+	}
 }
 
 @media all and (max-width: 767.98px) {
@@ -307,6 +310,10 @@ body,
 	.calculator-options {
 		position: relative;
 		z-index: 2;
+
+		& .close-btn {
+			position: fixed;
+		}
 
 		& > div {
 			position: fixed;
@@ -337,7 +344,25 @@ body,
 			display: none;
 			top: 0;
 			right: 0;
+			padding-top: 165px;
+			padding-bottom: 60px;
+			overflow-y: scroll;
+			overflow-x: hidden;
 			z-index: 3;
+
+			& .rec-carousel-wrapper {
+				position: fixed;
+				max-width: 340px;
+				background-color: #fff;
+				top: 0;
+				right: 0;
+				padding-top: 10px;
+				z-index: 4;
+
+				& .rec-pagination {
+					margin-top: 2px;
+				}
+			}
 		}
 
 		&.show-form {
@@ -368,7 +393,6 @@ body,
 
 		& section {
 			display: none;
-			padding: 15px;
 		}
 	}
 
