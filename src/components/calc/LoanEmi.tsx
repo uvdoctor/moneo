@@ -1,15 +1,9 @@
 import React, { useState, useEffect, useContext, Fragment } from 'react';
 import NumberInput from '../form/numberinput';
-import { getEmi } from './finance';
 import { toCurrency, toStringArr, initYearOptions } from '../utils';
 import SelectInput from '../form/selectinput';
 import RadialInput from '../form/radialinput';
 import Section from '../form/section';
-import {
-	adjustAccruedInterest,
-	createEduLoanDPWithSICFs,
-	getLoanBorrowAmt
-} from '../goals/cfutils';
 import ItemDisplay from './ItemDisplay';
 import { COLORS } from '../../CONSTANTS';
 import { isTaxCreditEligible } from '../goals/goalutils';
@@ -20,16 +14,8 @@ import { CalcContext } from './CalcContext';
 import { GoalType } from '../../api/goals';
 
 export default function LoanEmi() {
+	const { goal, currency, startYear, rangeFactor, endYear }: any = useContext(CalcContext);
 	const {
-		goal,
-		currency,
-		startYear,
-		rangeFactor,
-		endYear
-	}: any = useContext(CalcContext);
-	const {
-		price,
-		priceChgRate,
 		duration,
 		loanRepaymentSY,
 		loanYears,
@@ -37,8 +23,6 @@ export default function LoanEmi() {
 		loanPer,
 		loanSIPayPer,
 		loanSICapitalize,
-		loanGracePeriod,
-		manualMode,
 		setLoanIntRate,
 		setLoanPer,
 		setLoanSIPayPer,
@@ -52,87 +36,29 @@ export default function LoanEmi() {
 		setMaxTaxDeductionInt,
 		totalITaxBenefit,
 		totalIntAmt,
-		setTotalIntAmt,
-		iSchedule
+		isLoanMandatory,
+		emi,
+		simpleInts,
+		remSI,
+		loanBorrowAmt
 	}: any = useContext(GoalContext);
-	const loanBorrowAmt = getLoanBorrowAmt(
-		price,
-		goal.type,
-		manualMode,
-		priceChgRate,
-		endYear - startYear,
-		loanPer as number
-	);
 	const [ ryOptions, setRYOptions ] = useState(
-		initYearOptions(goal.type === GoalType.E ? endYear + 1 : startYear, goal.type === GoalType.B ? duration - 1 : 10)
+		initYearOptions(
+			goal.type === GoalType.E ? endYear + 1 : startYear,
+			goal.type === GoalType.B ? duration - 1 : 10
+		)
 	);
-	const [ emi, setEMI ] = useState<number>(0);
-	const [ simpleInts, setSimpleInts ] = useState<Array<number>>([]);
-	const [ remIntAmt, setRemIntAmt ] = useState<number>(0);
 	const loanLimitPer = goal.type === GoalType.E ? 100 : 80;
 	const { Panel } = Collapse;
 
-	const calculateEmi = () => {
-		let borrowAmt = loanBorrowAmt;
-		let simpleInts: Array<number> = [];
-		if (goal.type === GoalType.E) {
-			let result = createEduLoanDPWithSICFs(
-				price,
-				priceChgRate,
-				loanPer,
-				startYear,
-				endYear,
-				loanIntRate,
-				loanSIPayPer as number,
-				(loanSICapitalize as number) < 1
-			);
-			borrowAmt = result.borrowAmt;
-			simpleInts = result.ints;
-			setRemIntAmt(Math.round(result.remIntAmt));
-			setSimpleInts([ ...simpleInts ]);
-		}
-		borrowAmt = adjustAccruedInterest(
-			borrowAmt,
-			goal.type === GoalType.E ? endYear + 1 : startYear,
-			loanRepaymentSY,
-			loanIntRate
-		);
-		let emi = getEmi(borrowAmt, loanIntRate, loanYears * 12) as number;
-		setEMI(Math.round(emi));
-		let totalSimpleIntAmt = 0;
-		simpleInts.forEach((int) => (totalSimpleIntAmt += int));
-		let totalIntAmt = totalSimpleIntAmt;
-		iSchedule.forEach((int: number) => totalIntAmt += int);
-		setTotalIntAmt(Math.round(totalIntAmt));
-	};
-
-	useEffect(() => calculateEmi(), [
-		price,
-		priceChgRate,
-		currency,
-		startYear,
-		duration,
-		loanRepaymentSY,
-		endYear,
-		rangeFactor,
-		loanYears,
-		loanIntRate,
-		loanPer,
-		goal,
-		loanSIPayPer,
-		loanSICapitalize,
-		loanGracePeriod,
-		manualMode,
-		taxBenefitInt,
-		taxRate,
-		maxTaxDeductionInt,
-		totalITaxBenefit,
-		iSchedule
-	]);
-
 	useEffect(
 		() => {
-			setRYOptions(initYearOptions(goal.type === GoalType.E ? endYear + 1 : startYear, goal.type === GoalType.B ? duration - 1 : 10));
+			setRYOptions(
+				initYearOptions(
+					goal.type === GoalType.E ? endYear + 1 : startYear,
+					goal.type === GoalType.B ? duration - 1 : 10
+				)
+			);
 		},
 		[ startYear, endYear ]
 	);
@@ -159,7 +85,7 @@ export default function LoanEmi() {
 			<RadialInput
 				width={120}
 				unit="%"
-				data={toStringArr(0, loanLimitPer, 5)}
+				data={toStringArr(isLoanMandatory ? 10 : 0, loanLimitPer, 5)}
 				value={loanPer}
 				changeHandler={setLoanPer}
 				step={5}
@@ -286,7 +212,7 @@ export default function LoanEmi() {
 						!!loanSIPayPer && (
 							<Collapse defaultActiveKey={[ '0' ]} ghost>
 								<Panel key="1" header="Interest Schedule">
-									{simpleInts.map((int, i) => (
+									{simpleInts.map((int: number, i: number) => (
 										<p key={'int' + i}>
 											Monthly {toCurrency(Math.round(int / 12), currency)} in {startYear + i}
 										</p>
@@ -302,7 +228,7 @@ export default function LoanEmi() {
 			!Number.isNaN(loanSIPayPer) && //@ts-ignore
 			loanSIPayPer < 100 && (
 				<HSwitch
-					rightText={`Pay ${toCurrency(remIntAmt, currency)} in ${endYear + 1}`}
+					rightText={`Pay ${toCurrency(remSI, currency)} in ${endYear + 1} Grace Period`}
 					value={loanSICapitalize as number}
 					setter={setLoanSICapitalize}
 				/>

@@ -21,7 +21,7 @@ export default function Amt() {
 		impLevel,
 		setImpLevel
 	}: any = useContext(CalcContext);
-	const { ffGoalEndYear, manualMode }: any = useContext(GoalContext);
+	const { ffGoalEndYear, manualMode, isLoanMandatory }: any = useContext(GoalContext);
 	const syOptions = initYearOptions(goal.by + 1, ffGoalEndYear - 20 - (goal.by + 1));
 
 	return (
@@ -42,14 +42,16 @@ export default function Amt() {
 					changeHandler={changeStartYear}
 					options={syOptions}
 				/>
-				<SelectInput
-					pre="To Year"
-					value={endYear}
-					info="Year in which You End Paying"
-					disabled={goal.type === GoalType.B && manualMode < 1}
-					changeHandler={changeEndYear}
-					options={eyOptions}
-				/>
+				{!(isLoanMandatory && goal.type === GoalType.O) && (
+					<SelectInput
+						pre="To Year"
+						value={endYear}
+						info="Year in which You End Paying"
+						disabled={goal.type === GoalType.B && manualMode < 1}
+						changeHandler={changeEndYear}
+						options={eyOptions}
+					/>
+				)}
 			</Section>
 			<Cost />
 		</Col>

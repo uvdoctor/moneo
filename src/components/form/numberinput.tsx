@@ -77,7 +77,7 @@ export default function NumberInput(props: NumberInputProps) {
 	return (
 		<div style={{ minWidth: '250px' }}>
 			<Col span={24}>
-				<Row justify="space-between">
+				<Row justify="space-between" align="middle">
 					<Col>
 						{props.pre}
 						{props.post && ` ${props.post}`}

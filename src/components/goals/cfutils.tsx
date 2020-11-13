@@ -381,6 +381,7 @@ export const createEduLoanDPWithSICFs = (
   let totalLoanPrincipal = 0;
   let ints: Array<number> = [];
   let remIntAmt = 0;
+  let capIntAmt = 0;
   for (let y = startYear; y <= endYear; y++) {
     let p = getCompoundedIncome(chgRate, price, y - startYear);
     totalLoanPrincipal += p * (loanPer / 100);
@@ -392,6 +393,7 @@ export const createEduLoanDPWithSICFs = (
     remIntAmt += totalIntDue - interestPaid;
     if (y === endYear && capitalizeRem) {
       totalLoanPrincipal += remIntAmt;
+      capIntAmt = remIntAmt;
       remIntAmt = 0;
     }
   }
@@ -400,6 +402,7 @@ export const createEduLoanDPWithSICFs = (
     cfs: result,
     ints: ints,
     remIntAmt: remIntAmt,
+    capIntAmt: capIntAmt
   };
 };
 
@@ -408,20 +411,15 @@ const createLoanCFs = (
   goal: APIt.CreateGoalInput,
   duration: number
 ) => {
+  if (!goal.emi?.per || !goal.emi?.dur) return [];
   let cfs: Array<number> = [];
   let totalPTaxBenefit = 0;
   let totalITaxBenefit = 0;
-  if (!goal.emi?.per || !goal.emi?.dur) return {
-    cfs: cfs,
-    ptb: totalPTaxBenefit,
-    itb: totalITaxBenefit,
-    iSchedule: [],
-    pSchedule: []
-  };
   let loanBorrowAmt = 0;
   let loanDP = 0;
   let simpleInts: Array<number> = [];
   let remSimpleIntAmt = 0;
+  let capSimpleIntAmt = 0;
   if (goal.type !== APIt.GoalType.E) {
     loanBorrowAmt = getLoanBorrowAmt(
       p,
@@ -448,6 +446,7 @@ const createLoanCFs = (
     loanBorrowAmt = result.borrowAmt;
     simpleInts = result.ints;
     remSimpleIntAmt = result.remIntAmt;
+    capSimpleIntAmt = result.capIntAmt;
   }
   loanBorrowAmt = adjustAccruedInterest(
     loanBorrowAmt,
@@ -558,6 +557,11 @@ const createLoanCFs = (
     itb: totalITaxBenefit,
     iSchedule: iSchedule,
     pSchedule: pSchedule,
+    loanBorrowAmt: loanBorrowAmt,
+    emi: emi,
+    simpleInts: simpleInts,
+    remSI: remSimpleIntAmt,
+    capSI: capSimpleIntAmt
   };
 };
 
