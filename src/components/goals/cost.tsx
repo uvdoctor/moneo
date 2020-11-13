@@ -55,7 +55,7 @@ export default function Cost() {
 
 	return (
 		<Section
-			title={`Cost in Year ${startYear} is ${toCurrency(price, currency)}`}
+			title={`${startYear} Cost ~ ${toCurrency(price, currency)}`}
 			toggle={
 				setManualMode && <HSwitch rightText={`Custom Payment Plan`} value={manualMode} setter={changeManualMode} />
 			}
