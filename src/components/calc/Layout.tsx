@@ -1,13 +1,15 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
+import { useFullScreenBrowser } from "react-browser-hooks";
 import { GoalType } from "../../api/goals";
 import DDBasicPage from "../DDBasicPage";
 import { createNewGoalInput } from "../goals/goalutils";
 import * as gtag from "../../lib/gtag";
-import { Button, Collapse, Row, Col, PageHeader } from "antd";
+import { Button, Row, Col, PageHeader, Tabs } from "antd";
 import { RocketOutlined } from "@ant-design/icons";
 import { CalcContextProvider } from "./CalcContext";
 import { GoalContextProvider } from "../goals/GoalContext";
 import { FIGoalContextProvider } from "../goals/FIGoalContext";
+import { isMobileDevice } from "../utils";
 
 import "./Layout.less";
 interface LayoutProps {
@@ -23,7 +25,8 @@ interface LayoutProps {
 }
 
 export default function Layout(props: LayoutProps) {
-	const { Panel } = Collapse;
+	const fsb = useFullScreenBrowser();
+	const { TabPane } = Tabs;
 	const [wip, setWIP] = useState<any | null>(null);
 	const nowYear = new Date().getFullYear();
 	const sections: any = {
@@ -57,45 +60,37 @@ export default function Layout(props: LayoutProps) {
 
 	return (
 		<DDBasicPage
-			className="calculator-container"
+			className="calculator-container steps-landing"
 			title={props.title}
 			onBack={() => setWIP(null)}
 			navScrollable
 			fixedNav
 		>
 			{!wip ? (
-				<Fragment>
+				<Row>
 					<Col span={24} className="primary-header">
-						<PageHeader title={props.title} />
+						<PageHeader
+							title={props.title}
+							extra={[
+								<Button
+									className="steps-start-btn"
+									onClick={() => createGoal()}
+								>
+									<RocketOutlined /> Start
+								</Button>,
+							]}
+						/>
 					</Col>
-					<Col className="steps-landing" span={24}>
-						<Collapse defaultActiveKey={["1"]}>
+					<Col className="steps-content" span={24}>
+						<Tabs tabPosition={isMobileDevice(fsb) ? "top" : "left"}>
 							{Object.keys(sections).map((key, i) => (
-								<Panel key={`${i + 1}`} header={key}>
-									<Col span={24}>{sections[key]}</Col>
-									{sections[key] === props.results && (
-										<Col span={24}>
-											<img
-												style={{ cursor: "pointer" }}
-												src={"/images/" + props.resultImg}
-												onClick={createGoal}
-											/>
-										</Col>
-									)}
-								</Panel>
+								<TabPane key={`${i + 1}`} tab={key}>
+									{sections[key]}
+								</TabPane>
 							))}
-						</Collapse>
+						</Tabs>
 					</Col>
-					<Row justify="center">
-						<Button
-							className="steps-start-btn"
-							type="primary"
-							onClick={() => createGoal()}
-						>
-							<RocketOutlined /> Start
-						</Button>
-					</Row>
-				</Fragment>
+				</Row>
 			) : (
 				<CalcContextProvider
 					goal={wip}

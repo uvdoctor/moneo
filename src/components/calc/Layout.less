@@ -6,14 +6,25 @@ body,
 }
 
 .steps-landing {
-	padding: 30px 30px 30px;
+	& .ant-tabs-left {
+		& .ant-tabs-content-holder {
+			border-left: #dddee1 2px solid;
+		}
+
+		& .ant-tabs-tab-btn {
+			font-weight: bold;
+		}
+	}
+}
+
+.steps-content {
+	padding: 30px 20px 30px;
 }
 
 .steps-start-btn {
 	height: auto;
-	font-size: 30px;
-	margin-bottom: 40px;
-	padding: 10px 60px;
+	font-size: 16px;
+	padding: 5px 30px;
 
 	& .anticon {
 		transform: scale(1.5);
@@ -24,6 +35,32 @@ body,
 
 		& .anticon {
 			transform: scale(1.7) rotate(20deg);
+		}
+	}
+}
+
+@media all and (max-width: 576px) {
+	.steps-content {
+		padding: 0 15px;
+	}
+
+	.steps-landing {
+		& .ant-page-header-heading-extra {
+			position: fixed;
+			width: 100%;
+			bottom: 0;
+			left: 0;
+			margin: 0;
+			z-index: 2;
+
+			& button {
+				width: 100%;
+				background-color: @primary-color;
+				border-radius: 0;
+				color: #fff;
+				font-size: 18px;
+				padding: 10px 0;
+			}
 		}
 	}
 }
