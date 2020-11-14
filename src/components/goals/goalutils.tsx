@@ -132,7 +132,7 @@ const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
     tdr: 0,
     tdl: 20000 * getRangeFactor(currency),
     ccy: currency,
-    cp: 500000,
+    cp: goalType === APIt.GoalType.B ? 500000 : 20000,
     chg: 3,
     type: goalType,
     tgts: [],

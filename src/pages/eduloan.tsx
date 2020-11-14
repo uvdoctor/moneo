@@ -12,9 +12,9 @@ export default function EduLoan() {
 			assumptions={[ 'adfas', 'asdfsad' ]}
 			features={[ 'fsdgdf', 'fgdssdf' ]}
 			results={[
-				<ItemDisplay result={`Yearly Cash Flows`} />,
-				<ItemDisplay result="Simple Interest Payment Schedule While Studying" />,
-				<ItemDisplay result="Yearly Interest & Principal for EMI Payments" />
+				<ItemDisplay key="r1" result={`Yearly Cash Flows`} />,
+				<ItemDisplay key="r2" result="Simple Interest Payment Schedule While Studying" />,
+				<ItemDisplay key="r3" result="Yearly Interest & Principal for EMI Payments" />
 			]}
 			resultImg="step1.png"
 		/>

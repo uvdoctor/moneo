@@ -146,15 +146,15 @@ function CalcContextProvider({
     if (type === GoalType.B) {
       options.push({ label: "Sell", active: true, svg: faHandshake, content: <Sell /> });
     }
+    if (isLoanEligible(type)) options.push(
+      { label: "Loan", active: true, svg: faHandHoldingUsd, content: <LoanEmi /> }
+    );
     options.push({
       label: "Tax",
       active: true,
       svg: faFileInvoiceDollar,
       content: <TaxAdjustment />
     });
-    if (isLoanEligible(type)) options.push(
-      { label: "Loan", active: true, svg: faHandHoldingUsd, content: <LoanEmi /> }
-    );
     if (type === GoalType.B) {
       options.push({ label: "Rent?", active: true, svg: faBalanceScale, content: <BRComp /> });
     }

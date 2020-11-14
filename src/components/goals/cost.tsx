@@ -7,6 +7,7 @@ import { toCurrency } from '../utils';
 import { Row, Col } from 'antd';
 import { GoalContext } from './GoalContext';
 import { CalcContext } from '../calc/CalcContext';
+import { isLoanEligible } from './goalutils';
 
 export default function Cost() {
 	const {
@@ -28,6 +29,7 @@ export default function Cost() {
 		setPriceChgRate,
 		manualMode,
 		setManualMode,
+		isLoanMandatory
 	}: any = useContext(GoalContext);
 	const nowYear = new Date().getFullYear();
 
@@ -38,16 +40,18 @@ export default function Cost() {
 	};
 
 	const changeManualMode = (checked: boolean) => {
-		let loanTabIndex = goal.type === GoalType.B ? 3 : 2;
-		if (checked) {
-			if (inputTabs[loanTabIndex].active) {
-				inputTabs[loanTabIndex].active = false;
-				setInputTabs([...inputTabs]);
-			}
-		} else {
-			if (!inputTabs[loanTabIndex].active) {
-				inputTabs[loanTabIndex].active = true;
-				setInputTabs([...inputTabs]);
+		if (isLoanEligible(goal.type)) {
+			let loanTabIndex = goal.type === GoalType.B ? 2 : 1;
+			if (checked) {
+				if (inputTabs[loanTabIndex].active) {
+					inputTabs[loanTabIndex].active = false;
+					setInputTabs([...inputTabs]);
+				}
+			} else {
+				if (!inputTabs[loanTabIndex].active) {
+					inputTabs[loanTabIndex].active = true;
+					setInputTabs([...inputTabs]);
+				}
 			}
 		}
 		setManualMode(checked);
@@ -57,7 +61,7 @@ export default function Cost() {
 		<Section
 			title={`${startYear} Cost ~ ${toCurrency(price, currency)}`}
 			toggle={
-				setManualMode && <HSwitch rightText={`Custom Payment Plan`} value={manualMode} setter={changeManualMode} />
+				setManualMode && !isLoanMandatory && <HSwitch rightText={`Custom Payment Plan`} value={manualMode} setter={changeManualMode} />
 			}
 			manualInput={
 				wipTargets && (
