@@ -10,8 +10,12 @@ import { CalcContextProvider } from "./CalcContext";
 import { GoalContextProvider } from "../goals/GoalContext";
 import { FIGoalContextProvider } from "../goals/FIGoalContext";
 import { isMobileDevice } from "../utils";
+import DDVideoPlayer from "../DDVideoPlayer";
+import ExpectedResults from "./blog/ExpectedResults";
 
 import "./Layout.less";
+import KeyFeatures from "./blog/KeyFeatures";
+import MajorAssumptions from "./blog/MajorAssumptions";
 interface LayoutProps {
 	tabOptions?: Array<any>;
 	resultTabOptions?: Array<any>;
@@ -21,7 +25,7 @@ interface LayoutProps {
 	features: Array<any>;
 	assumptions: Array<any>;
 	results: Array<any>;
-	resultImg: string;
+	demoUrl: string;
 }
 
 export default function Layout(props: LayoutProps) {
@@ -29,10 +33,12 @@ export default function Layout(props: LayoutProps) {
 	const { TabPane } = Tabs;
 	const [wip, setWIP] = useState<any | null>(null);
 	const nowYear = new Date().getFullYear();
+
 	const sections: any = {
-		"Expected Results": props.results,
-		"Key Features": props.features,
-		"Major Assumptions": props.assumptions,
+		"Demo": <DDVideoPlayer url={props.demoUrl} />,
+		"Expected Results": <ExpectedResults results={props.results} />,
+		"Key Features": <KeyFeatures features={props.features} />,
+		"Major Assumptions": <MajorAssumptions assumptions={props.assumptions} />,
 	};
 
 	const buildEmptyMergedCFs = () => {
@@ -73,6 +79,7 @@ export default function Layout(props: LayoutProps) {
 							title={props.title}
 							extra={[
 								<Button
+									key="startbtn"
 									className="steps-start-btn"
 									onClick={() => createGoal()}
 								>
