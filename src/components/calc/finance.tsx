@@ -6,6 +6,13 @@ export function getEmi(loanAmt: number, annualRate: number, months: number) {
     Math.pow(1 + monthlyRate, months) /
     (Math.pow(1 + monthlyRate, months) - 1);
 }
+
+export function getIR(loanAmt: number, emi: number, months: number) {
+    if (!loanAmt || !emi || !months) return 0;
+    let monthlyRate = 1 - Math.pow(emi / (loanAmt - emi), 1 / months);
+    return monthlyRate * 1200;
+}
+
 //Tested
 export function getCompoundedRate(rate: number, years: number, frequency: number = 1) {
     let r = rate ? rate : 0

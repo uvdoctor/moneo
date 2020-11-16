@@ -10,9 +10,10 @@ import FFImpact from "./ffimpact";
 import BuyRentResult from "../calc/BuyRentResult";
 import GoalHeader from "./GoalHeader";
 import CalcTemplate from "../calc/CalcTemplate";
-import BuyReturn from "../calc/BuyReturn";
+import BuyReturnResult from "../calc/BuyReturnResult";
 import { useRouter } from "next/router";
 import { ROUTES } from "../../CONSTANTS";
+import LoanIntResult from "../calc/LoanIntResult";
 
 const GoalContext = createContext({});
 
@@ -80,7 +81,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   );
   const [loanSICapitalize, setLoanSICapitalize] = useState<
     number | undefined | null
-  >(goal.tbr);
+    >(goal.tbr);
+ 	const [ noIR, setNoIR ] = useState<number>(0);
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
     >(goal.achg);
@@ -203,12 +205,13 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 
   useEffect(() => {
     setCreateNewGoalInput(createNewGoal);
-    setResults([...nowYear < startYear ? [
+    setResults([...[
       goalType === GoalType.B && <BuyRentResult />,
-      goalType === GoalType.B && <BuyReturn />,
+      goalType === GoalType.B && <BuyReturnResult />,
+      <LoanIntResult />,
       addCallback && <FFImpact />,
       <OppCost />
-    ] : []])
+    ]]);
   }, []);
   
   useEffect(() => {
@@ -307,7 +310,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         setISchedule([...[]]);
         setPSchedule([...[]]);
       }
-      setEMI(result.hasOwnProperty("emi") ? result.emi : 0);
+      if(noIR < 1) setEMI(result.hasOwnProperty("emi") ? result.emi : 0);
       setRemSI(result.hasOwnProperty("remSI") ? result.remSI : 0);
       setCapSI(result.hasOwnProperty("capSI") ? result.capSI : 0);
       setSimpleInts([...result.hasOwnProperty("simpleInts") ? result.simpleInts : []]);
@@ -609,10 +612,13 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           setTotalIntAmt,
           isLoanMandatory,
           emi,
+          setEMI,
           simpleInts,
           remSI,
           capSI,
-          loanBorrowAmt
+          loanBorrowAmt,
+          noIR,
+          setNoIR
         }}>
         {children ? children : <CalcTemplate header={<GoalHeader />} />}
       </GoalContext.Provider>

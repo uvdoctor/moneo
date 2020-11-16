@@ -5,7 +5,7 @@ import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
-export default function BuyReturn() {
+export default function BuyReturnResult() {
 	const { startYear, cfs }: any = useContext(CalcContext);
 	const { price, sellAfter, sellPrice }: any = useContext(GoalContext);
 	const [ annualReturnPer, setAnnualReturnPer ] = useState<number | null>(0);
