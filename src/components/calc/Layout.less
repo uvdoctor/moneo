@@ -18,7 +18,40 @@ body,
 }
 
 .steps-content {
-	padding: 30px 20px 30px;
+	padding: 25px 20px 30px;
+
+	& h3,
+	h4 {
+		font-weight: bold;
+	}
+
+	& .ant-collapse-header {
+		font-weight: bold;
+	}
+}
+
+.key-features {
+	& .ant-col {
+		background: #fff;
+		border-bottom: 1px solid #d9d9d9;
+		border-left: #d9d9d9 4px solid;
+		padding: 10px;
+		margin-bottom: 10px;
+		transition: all 0.2s;
+
+		&:hover {
+			position: relative;
+			border-left: @primary-color 4px solid;
+			box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+			cursor: pointer;
+			transform: scale(1.1);
+			z-index: 1;
+
+			& h4 {
+				color: @primary-color;
+			}
+		}
+	}
 }
 
 .steps-start-btn {
@@ -41,10 +74,10 @@ body,
 
 @media all and (max-width: 576px) {
 	.steps-content {
-		padding: 0 15px;
+		padding: 0 10px;
 	}
 
-	.steps-landing {
+	/*.steps-landing {
 		& .ant-page-header-heading-extra {
 			position: fixed;
 			width: 100%;
@@ -62,5 +95,5 @@ body,
 				padding: 10px 0;
 			}
 		}
-	}
+	}*/
 }

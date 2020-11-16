@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import { useFullScreenBrowser } from "react-browser-hooks";
 import { GoalType } from "../../api/goals";
 import DDBasicPage from "../DDBasicPage";
 import { createNewGoalInput } from "../goals/goalutils";
 import * as gtag from "../../lib/gtag";
-import { Button, Row, Col, PageHeader, Tabs } from "antd";
+import { Button, Row, Col, PageHeader, Collapse } from "antd";
 import { RocketOutlined } from "@ant-design/icons";
 import { CalcContextProvider } from "./CalcContext";
 import { GoalContextProvider } from "../goals/GoalContext";
 import { FIGoalContextProvider } from "../goals/FIGoalContext";
-import { isMobileDevice } from "../utils";
 
 import "./Layout.less";
 interface LayoutProps {
@@ -25,8 +23,7 @@ interface LayoutProps {
 }
 
 export default function Layout(props: LayoutProps) {
-	const fsb = useFullScreenBrowser();
-	const { TabPane } = Tabs;
+	const { Panel } = Collapse;
 	const [wip, setWIP] = useState<any | null>(null);
 	const nowYear = new Date().getFullYear();
 	const sections: any = {
@@ -82,13 +79,13 @@ export default function Layout(props: LayoutProps) {
 						/>
 					</Col>
 					<Col className="steps-content" span={24}>
-						<Tabs tabPosition={isMobileDevice(fsb) ? "top" : "left"}>
+						<Collapse defaultActiveKey={["1"]}>
 							{Object.keys(sections).map((key, i) => (
-								<TabPane key={`${i + 1}`} tab={key}>
+								<Panel key={`${i + 1}`} header={key}>
 									{sections[key]}
-								</TabPane>
+								</Panel>
 							))}
-						</Tabs>
+						</Collapse>
 					</Col>
 				</Row>
 			) : (
