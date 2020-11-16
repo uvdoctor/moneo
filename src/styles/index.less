@@ -26,6 +26,41 @@ body.no-scrollbar {
 	}
 }
 
+.ant-tabs.ant-tabs-top {
+	& .ant-tabs-nav {
+		margin-bottom: 0;
+
+		& .ant-tabs-tab {
+			background: #dcdcdc;
+
+			&:hover {
+				background: @primary-color;
+				color: #fff;
+			}
+		}
+
+		& .ant-tabs-tab-active,
+		& .ant-tabs-tab-active:hover {
+			background-image: linear-gradient(to top, #fff, #dbedca);
+			border: #fff 1px solid;
+		}
+
+		& .ant-tabs-tab-disabled,
+		& .ant-tabs-tab-disabled:hover {
+			background: #dcdcdc;
+			color: #a5a5a5;
+		}
+	}
+
+	& .ant-tabs-content-holder {
+		min-height: 250px;
+		background-color: #fff;
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+		padding: 10px;
+		margin-bottom: 6px;
+	}
+}
+
 .bg-white {
 	background-color: #fff;
 }

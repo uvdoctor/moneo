@@ -3,11 +3,13 @@ import { GoalType } from "../../api/goals";
 import DDBasicPage from "../DDBasicPage";
 import { createNewGoalInput } from "../goals/goalutils";
 import * as gtag from "../../lib/gtag";
-import { Button, Row, Col, PageHeader, Collapse } from "antd";
+import { Button, Row, Col, PageHeader, Tabs } from "antd";
+import { useFullScreenBrowser } from "react-browser-hooks";
 import { RocketOutlined } from "@ant-design/icons";
 import { CalcContextProvider } from "./CalcContext";
 import { GoalContextProvider } from "../goals/GoalContext";
 import { FIGoalContextProvider } from "../goals/FIGoalContext";
+import { isMobileDevice } from "../utils";
 
 import "./Layout.less";
 interface LayoutProps {
@@ -23,7 +25,8 @@ interface LayoutProps {
 }
 
 export default function Layout(props: LayoutProps) {
-	const { Panel } = Collapse;
+	const fsb = useFullScreenBrowser();
+	const { TabPane } = Tabs;
 	const [wip, setWIP] = useState<any | null>(null);
 	const nowYear = new Date().getFullYear();
 	const sections: any = {
@@ -79,13 +82,16 @@ export default function Layout(props: LayoutProps) {
 						/>
 					</Col>
 					<Col className="steps-content" span={24}>
-						<Collapse defaultActiveKey={["1"]}>
+						<Tabs
+							tabPosition={isMobileDevice(fsb) ? "top" : "left"}
+							type={isMobileDevice(fsb) ? "card" : "line"}
+						>
 							{Object.keys(sections).map((key, i) => (
-								<Panel key={`${i + 1}`} header={key}>
+								<TabPane key={`${i + 1}`} tab={key}>
 									{sections[key]}
-								</Panel>
+								</TabPane>
 							))}
-						</Collapse>
+						</Tabs>
 					</Col>
 				</Row>
 			) : (

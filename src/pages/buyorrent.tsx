@@ -1,41 +1,48 @@
 import React, { Fragment } from "react";
-import { Image, Row, Col } from "antd";
+import { Image, Row, Col, Collapse } from "antd";
 import { GoalType } from "../api/goals";
 import Layout from "../components/calc/Layout";
 import { CALC_NAMES } from "../CONSTANTS";
 
 export default function BuyOrRent() {
+	const { Panel } = Collapse;
+
 	return (
 		<Layout
 			title={CALC_NAMES.BR}
 			type={GoalType.B}
 			assumptions={[
-				<Fragment>
-					<h3>All your money in one place</h3>
-					<p>
-						We bring together all of your accounts, bills and more, so you can
-						conveniently manage your finances from one dashboard.
-					</p>
-					<ul>
-						<li>See all of your bills and money at a glance</li>
-						<li>Create budgets easily with tips tailored to you</li>
-						<li>
-							Enjoy access to unlimited free credit scores, without harming your
-							credit
-						</li>
-					</ul>
-
-					<h3>Effortlessly stay on top of bills</h3>
-					<p>
-						Bills are now easier than ever to track. Simply add them to your
-						dashboard to see and monitor them all at once.
-					</p>
-					<ul>
-						<li>Never miss a payment with alerts when bills are due</li>
-						<li>Receive reminders for upcoming bills so you can plan ahead</li>
-						<li>Get warned when funds are low so you know what you can pay</li>
-					</ul>
-				</Fragment>,
+				<Collapse defaultActiveKey={["1"]}>
+					<Panel header="All your money in one place" key="1">
+						<p>
+							We bring together all of your accounts, bills and more, so you can
+							conveniently manage your finances from one dashboard.
+						</p>
+						<ul>
+							<li>See all of your bills and money at a glance</li>
+							<li>Create budgets easily with tips tailored to you</li>
+							<li>
+								Enjoy access to unlimited free credit scores, without harming
+								your credit
+							</li>
+						</ul>
+					</Panel>
+					<Panel header="Effortlessly stay on top of bills" key="2">
+						<p>
+							Bills are now easier than ever to track. Simply add them to your
+							dashboard to see and monitor them all at once.
+						</p>
+						<ul>
+							<li>Never miss a payment with alerts when bills are due</li>
+							<li>
+								Receive reminders for upcoming bills so you can plan ahead
+							</li>
+							<li>
+								Get warned when funds are low so you know what you can pay
+							</li>
+						</ul>
+					</Panel>
+				</Collapse>,
 			]}
 			features={[
 				<Row className="key-features">
