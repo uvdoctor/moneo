@@ -9,7 +9,7 @@ export default function ExpectedResults({ elements }: BlogInputProps) {
 	return (
 		<Fragment>
 			{elements.map((result: any, i: number) => (
-				result ? <Collapse defaultActiveKey={[ '' + i ]}>
+				result ? <Collapse defaultActiveKey={[ '0' ]}>
 					<Panel header={result.title} key={'' + i}>
 						<Row gutter={[ 20, 20 ]}>
 							<Col md={4}>

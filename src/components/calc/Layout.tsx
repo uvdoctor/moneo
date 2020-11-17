@@ -72,9 +72,8 @@ export default function Layout(props: LayoutProps) {
 	};
 
 	const buildEmptyMergedCFs = () => {
-		let mCFs = {};
+		let mCFs: any = {};
 		for (let year = nowYear + 1; year <= nowYear + 80; year++)
-			//@ts-ignore
 			mCFs[year] = 0;
 		return mCFs;
 	};

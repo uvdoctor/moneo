@@ -8,7 +8,7 @@ export default function CommonTerms({ elements }: BlogInputProps) {
 	return (
 		<Fragment>
 			{elements.map((result: any, i: number) => (
-				result ? <Collapse>
+				result ? <Collapse defaultActiveKey={['0']}>
 					<Panel header={result.title} key={'' + i}>
 						{result.content}
 					</Panel>
