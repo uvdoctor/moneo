@@ -31,7 +31,6 @@ export default function Cost() {
 		setManualMode,
 		isLoanMandatory
 	}: any = useContext(GoalContext);
-	const nowYear = new Date().getFullYear();
 
 	const changeTargetVal = (val: number, i: number) => {
 		if (!wipTargets || !setWIPTargets) return;
@@ -100,8 +99,7 @@ export default function Cost() {
 			/>
 			{startYear > goal.by && (
 				<NumberInput
-					pre="Cost Changes Yearly"
-					note={startYear > nowYear && `From ${new Date().getFullYear()} to ${startYear}`}
+					pre={`Yearly Cost Change from ${new Date().getFullYear()} to ${startYear}`}
 					unit="%"
 					min={-10}
 					max={10}

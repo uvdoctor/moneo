@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { GoalType } from "../../api/goals";
 import DDBasicPage from "../DDBasicPage";
-import { createNewGoalInput } from "../goals/goalutils";
+import { createNewGoalInput, isLoanEligible } from "../goals/goalutils";
 import * as gtag from "../../lib/gtag";
 import { Button, Row, Col, PageHeader, Tabs } from "antd";
 import { useFullScreenBrowser } from "react-browser-hooks";
@@ -46,9 +46,17 @@ export default function Layout(props: LayoutProps) {
 		}
 	];
 	const endingAssumptions = [
+		isLoanEligible(props.type as GoalType) && {
+			title: "Loan has fixed interest rate.",
+			content: "For the purpose of estimates, it is assumed that interest rate remains fixed throughout the loan duration. In reality, loan interest rate may adjust based on market rate. However, this shouldn't make a significant impact to Your decision."
+		},
+		isLoanEligible(props.type as GoalType) && {
+			title: "No loan prepayment penalty.",
+			content: "When a loan is prepaid, calculation assumes that there is no prepayment penalty."
+		},
 		{
-			title: 'Yearly tax benefit quantified as positive cash flow for next year.',
-			content: `As you pay lesser tax next year due to eligible tax benefit, cash flow analysis quantifies this as positive cash flow in next year.`
+			title: 'Yearly tax benefit considered as positive cash flow for next year.',
+			content: `As you pay lesser tax next year due to eligible tax benefit, cash flow analysis considers tax benefit as positive cash flow in next year.`
 		},
 		{
 			title: 'Cash Flows happen on the 1st day of the specified year or month.',
@@ -81,11 +89,11 @@ export default function Layout(props: LayoutProps) {
 			title: "Tax Benefit",
 			content: "This is actual reduction in tax bill due to an eligible expense. In case of Tax Credit, this equals Tax Benefit. In case of Tax Deduction, as explained above, actual tax benefit depends on the Income Tax Rate."
 		},
-		{
+		isLoanEligible(props.type as GoalType) && {
 			title: "Loan Principal",
 			content: "Outstanding Loan Amount. For instance, if You borrow $10,000, then $10,000 is the Loan Principal on which interest is calculated. If you then make $1,000 payment towards the Principal, then updated Loan Principal balance will be $9,000."
 		},
-		{
+		isLoanEligible(props.type as GoalType) && {
 			title: "Amortized Loan",
 			content: "Borrower makes scheduled (eg: monthly) payments, consisting of both Interest & Principal. Interest component is paid first, and remaining payment is then applied to reduce the Principal amount."
 		}
@@ -96,7 +104,7 @@ export default function Layout(props: LayoutProps) {
 		"Expected Results": <ExpectedResults elements={props.results} />,
 		"Key Features": <KeyFeatures elements={props.features} />,
 		"Major Assumptions": <MajorAssumptions elements={[...startingAssumptions, ...props.assumptions, ...endingAssumptions]} />,
-		"Common Terms": <CommonTerms elements={[...props.terms, ...genericTerms]} />
+		"Definitions": <CommonTerms elements={[...props.terms, ...genericTerms]} />
 	};
 
 	const buildEmptyMergedCFs = () => {

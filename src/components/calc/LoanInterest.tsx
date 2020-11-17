@@ -22,7 +22,7 @@ export default function LoanInterest() {
 
 	return (
 		<Fragment>
-      {goal.type !== GoalType.E && <HSwitch rightText="Input Monthly Installment" value={noIR} setter={setNoIR} />}
+      {goal.type !== GoalType.E && <HSwitch leftText="Amortizing Loan" rightText="Balloon Loan" value={noIR} setter={setNoIR} />}
 			<Col span={24}>
 				{noIR < 1 ? (
 					<NumberInput

@@ -180,7 +180,7 @@ export const getOrderByTabLabel = (tabOptions: Array<any>, label: string) => {
 }*/
 
 export const isLoanEligible = (goalType: APIt.GoalType) =>
-  goalType !== APIt.GoalType.D && goalType !== APIt.GoalType.R;
+  goalType !== APIt.GoalType.D && goalType !== APIt.GoalType.R && goalType !== APIt.GoalType.FF;
 
 export const isTaxCreditEligible = (goalType: APIt.GoalType) =>
   goalType === APIt.GoalType.T ||

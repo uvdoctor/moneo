@@ -482,7 +482,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 			else if (buyValues[i] > rentValues[i]) alternative += 'Buy';
 			else if (buyValues[i] === rentValues[i]) alternative += 'Both';
 			if (!answer.startsWith(alternative)) {
-				condition = ` till ${i} ${i === 1 ? 'Year' : 'Years'}. ${alternative} after that.`;
+				condition = ` until ${i} ${i === 1 ? 'Year' : 'Years'}, else ${alternative}.`;
 				break;
 			}
 		}

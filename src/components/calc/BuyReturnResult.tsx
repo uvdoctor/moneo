@@ -23,7 +23,7 @@ export default function BuyReturnResult() {
 			label="Buy Yields"
 			result={annualReturnPer}
 			decimal={2}
-			unit="% Yearly Return"
+			unit={`% Yearly ${annualReturnPer > 0 ? 'Gain' : 'Loss'}`}
 			pl
 		/>
 	) : null;
