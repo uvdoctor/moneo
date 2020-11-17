@@ -6,8 +6,8 @@ import { CALC_NAMES } from '../CONSTANTS';
 export default function BuyOrRent() {
 	const assumptions = [
 		{
-			title: 'Tax benefit numbers considered as positive cash flow for next year.',
-			content: ``
+			title: 'Money saved from not Buying is immediately Invested.',
+			content: `For Buy v/s Rent comparison, Calculation assumes that Money saved due to Renting instead of Buying is immediately Invested. For instance, consider furniture worth $9,000 with Yearly Rent of $1,000. This means that if You Pay $1,000 for Yearly Rent, then remaining $8,000 will be immediately Invested.`
 		},
 	];
 
@@ -53,8 +53,8 @@ export default function BuyOrRent() {
 
 	const terms = [
 		{
-			title: 'Term 1',
-			content: 'Definition...'
+			title: 'Custom Payment Plan',
+			content: 'Default payment option allows for a single payment for buying an asset, or down-payment followed by monthly payments in case of Loan. However, it is possible that You want to input a multi-year payment plan where payment amount and schedule vary. For instance, in case of buying an off-plan property, there may be a payment plan spread over multiple years and linked to percentage completion of the property. In such a case, You can use Custom Payment Plan option to input specific payments for specific years.'
 		}
 	];
 

@@ -47,8 +47,12 @@ export default function Layout(props: LayoutProps) {
 	];
 	const endingAssumptions = [
 		{
-			title: 'Tax benefit quantified as positive cash flow for next year.',
+			title: 'Yearly tax benefit quantified as positive cash flow for next year.',
 			content: `As you pay lesser tax next year due to eligible tax benefit, cash flow analysis quantifies this as positive cash flow in next year.`
+		},
+		{
+			title: 'Cash Flows happen on the 1st day of the specified year or month.',
+			content: `This is to simplify certain calculations. Actual timelines may vary, but it won't have any significant impact on what-if analysis estimates as time difference between cash flows remains similar.`
 		},
 		{
 			title: 'Non-financial aspects are out of scope.',
@@ -60,6 +64,30 @@ export default function Layout(props: LayoutProps) {
 		{
 			title: "Cash Flow",
 			content: "Cash flow indicates flow of money. Positive cash flow indicates You Receive money, while Negative cash flow indicates You Pay money."
+		},
+		{
+			title: "Tax Rate",
+			content: "Your Income Tax Percentage. You can input Tax Rate for a year based on Income Tax Percentage You expect to pay in that year."
+		},
+		{
+			title: "Tax Deduction",
+			content: "This is an expense that You can subtract from Your Gross Income to arrive at the Taxable Income. For instance, if You make $5,000 interest payment for a mortgage loan in a year, You may be eligible to deduct this expense from Your Gross Income thereby lowering Your Taxable Income by $5,000. Typically, there is an upper limit up to which deduction is allowed as per the tax law. Calculator refers to this limit as Maximum Allowable Tax Deduction."
+		},
+		{
+			title: "Tax Credit",
+			content: "This is an expense that You can directly subtract from Your tax bill. Hence, Tax Credit is more beneficial than Tax Deduction as Tax Deduction only reduces Taxable Income, while Tax Credit directly reduces the Tax Owed. For instance, consider a $1,000 expense and Tax Rate of 10%. If the expense is eligible for Tax Deduction, then Your tax bill will reduce by $1,000 * 10% = $100. On the other hand, if the expense is eligible for Tax Credit, then Your tax bill will reduce by $1,000. Hence, higher the Income Tax You pay, higher is the benefit from Tax Credit compared to Tax Deduction."
+		},
+		{
+			title: "Tax Benefit",
+			content: "This is actual reduction in tax bill due to an eligible expense. In case of Tax Credit, this equals Tax Benefit. In case of Tax Deduction, as explained above, actual tax benefit depends on the Income Tax Rate."
+		},
+		{
+			title: "Loan Principal",
+			content: "Outstanding Loan Amount. For instance, if You borrow $10,000, then $10,000 is the Loan Principal on which interest is calculated. If you then make $1,000 payment towards the Principal, then updated Loan Principal balance will be $9,000."
+		},
+		{
+			title: "Amortized Loan",
+			content: "Borrower makes scheduled (eg: monthly) payments, consisting of both Interest & Principal. Interest component is paid first, and remaining payment is then applied to reduce the Principal amount."
 		}
 	];
 
