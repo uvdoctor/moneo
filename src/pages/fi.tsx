@@ -57,6 +57,13 @@ export default function FI() {
 		},
 	];
 
+	const terms = [
+		{
+			title: 'Term 1',
+			content: 'Definition...'
+		}
+	];
+
 	return (
 		<Layout
 			title={CALC_NAMES.FI}
@@ -65,6 +72,7 @@ export default function FI() {
 			features={features}
 			demoUrl="https://www.youtube.com/watch?v=M_4cdKdKYiw"
 			results={results}
+			terms={terms}
 		/>
 	);
 }

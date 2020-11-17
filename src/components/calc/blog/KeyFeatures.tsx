@@ -1,18 +1,15 @@
 import { Col, Row } from 'antd';
 import React from 'react';
+import { BlogInputProps } from '../Layout';
 
-interface KeyFeaturesProps {
-	features: Array<any>;
-}
-
-export default function KeyFeatures({ features }: KeyFeaturesProps) {
+export default function KeyFeatures({ elements }: BlogInputProps) {
 	return (
 		<Row className="key-features">
-			{features.map((result: any, i: number) => (
-				<Col key={'feature' + i} xs={24} sm={12} md={8} lg={6} xl={4}>
+			{elements.map((result: any, i: number) => (
+				result ? <Col key={'feature' + i} xs={24} sm={12} md={8} lg={6} xl={4}>
 					<h4>{result.title}</h4>
 					<p>{result.content}</p>
-				</Col>
+				</Col> : null
 			))}
 		</Row>
 	);

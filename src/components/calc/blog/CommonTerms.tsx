@@ -2,7 +2,7 @@ import { Collapse } from 'antd';
 import React, { Fragment } from 'react';
 import { BlogInputProps } from '../Layout';
 
-export default function MajorAssumptions({ elements }: BlogInputProps) {
+export default function CommonTerms({ elements }: BlogInputProps) {
 	const { Panel } = Collapse;
 
 	return (

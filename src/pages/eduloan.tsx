@@ -57,6 +57,13 @@ export default function EduLoan() {
 		},
 	];
 
+	const terms = [
+		{
+			title: 'Term 1',
+			content: 'Definition...'
+		}
+	];
+
 	return (
 		<Layout
 			title={CALC_NAMES.EDU_LOAN}
@@ -64,6 +71,7 @@ export default function EduLoan() {
 			assumptions={assumptions}
 			features={features}
 			results={results}
+			terms={terms}
 			demoUrl="https://www.youtube.com/watch?v=M_4cdKdKYiw"
 		/>
 	);

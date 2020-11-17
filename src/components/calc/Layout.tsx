@@ -16,6 +16,11 @@ import ExpectedResults from "./blog/ExpectedResults";
 import "./Layout.less";
 import KeyFeatures from "./blog/KeyFeatures";
 import MajorAssumptions from "./blog/MajorAssumptions";
+import CommonTerms from "./blog/CommonTerms";
+
+export interface BlogInputProps {
+	elements: Array<any>;
+}
 interface LayoutProps {
 	tabOptions?: Array<any>;
 	resultTabOptions?: Array<any>;
@@ -25,6 +30,7 @@ interface LayoutProps {
 	features: Array<any>;
 	assumptions: Array<any>;
 	results: Array<any>;
+	terms: Array<any>;
 	demoUrl: string;
 }
 
@@ -33,12 +39,36 @@ export default function Layout(props: LayoutProps) {
 	const { TabPane } = Tabs;
 	const [wip, setWIP] = useState<any | null>(null);
 	const nowYear = new Date().getFullYear();
+	const startingAssumptions = [
+		{
+			title: 'Estimates Only. No Advice.',
+			content: `Financial estimates, though not 100% accurate, are useful for what-if analysis. Please consult a registered financial / tax advisor for specific advice.`
+		}
+	];
+	const endingAssumptions = [
+		{
+			title: 'Tax benefit quantified as positive cash flow for next year.',
+			content: `As you pay lesser tax next year due to eligible tax benefit, cash flow analysis quantifies this as positive cash flow in next year.`
+		},
+		{
+			title: 'Non-financial aspects are out of scope.',
+			content: `Please consider other factors such as emotions, convenience, etc so that it is the right decision for You.`
+		}
+	];
+
+	const genericTerms = [
+		{
+			title: "Cash Flow",
+			content: "Cash flow indicates flow of money. Positive cash flow indicates You Receive money, while Negative cash flow indicates You Pay money."
+		}
+	];
 
 	const sections: any = {
 		"Demo": <DDVideoPlayer url={props.demoUrl} />,
-		"Expected Results": <ExpectedResults results={props.results} />,
-		"Key Features": <KeyFeatures features={props.features} />,
-		"Major Assumptions": <MajorAssumptions assumptions={props.assumptions} />,
+		"Expected Results": <ExpectedResults elements={props.results} />,
+		"Key Features": <KeyFeatures elements={props.features} />,
+		"Major Assumptions": <MajorAssumptions elements={[...startingAssumptions, ...props.assumptions, ...endingAssumptions]} />,
+		"Common Terms": <CommonTerms elements={[...props.terms, ...genericTerms]} />
 	};
 
 	const buildEmptyMergedCFs = () => {

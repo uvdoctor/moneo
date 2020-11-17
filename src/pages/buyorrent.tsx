@@ -6,15 +6,9 @@ import { CALC_NAMES } from '../CONSTANTS';
 export default function BuyOrRent() {
 	const assumptions = [
 		{
-			title: 'All your money in one place',
-			content: `We bring together all of your accounts, bills and more, so you can
-		conveniently manage your finances from one dashboard.`
+			title: 'Tax benefit numbers considered as positive cash flow for next year.',
+			content: ``
 		},
-		{
-			title: 'Effortlessly stay on top of bills',
-			content: `Bills are now easier than ever to track. Simply add them to your
-		dashboard to see and monitor them all at once.`
-		}
 	];
 
 	const features = [
@@ -57,6 +51,13 @@ export default function BuyOrRent() {
 		},
 	];
 
+	const terms = [
+		{
+			title: 'Term 1',
+			content: 'Definition...'
+		}
+	];
+
 	return (
 		<Layout
 			title={CALC_NAMES.BR}
@@ -65,6 +66,7 @@ export default function BuyOrRent() {
 			features={features}
 			demoUrl="https://www.youtube.com/watch?v=M_4cdKdKYiw"
 			results={results}
+			terms={terms}
 		/>
 	);
 }

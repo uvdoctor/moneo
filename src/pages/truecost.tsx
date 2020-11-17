@@ -67,6 +67,13 @@ export default function TrueCost() {
 		},
 	];
 
+	const terms = [
+		{
+			title: 'Term 1',
+			content: 'Definition...'
+		}
+	];
+
 	return (
 		<Layout
 			tabOptions={[
@@ -88,6 +95,7 @@ export default function TrueCost() {
 			features={features}
 			demoUrl="https://www.youtube.com/watch?v=M_4cdKdKYiw"
 			results={results}
+			terms={terms}
 		/>
 	);
 }

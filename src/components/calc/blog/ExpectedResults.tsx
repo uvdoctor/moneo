@@ -1,18 +1,15 @@
 import { Col, Collapse, Row } from 'antd';
 import React, { Fragment } from 'react';
 import Image from 'next/image';
+import { BlogInputProps } from '../Layout';
 
-interface ExpectedResultsProps {
-	results: Array<any>;
-}
-
-export default function ExpectedResults({ results }: ExpectedResultsProps) {
+export default function ExpectedResults({ elements }: BlogInputProps) {
 	const { Panel } = Collapse;
 
 	return (
 		<Fragment>
-			{results.map((result: any, i: number) => (
-				<Collapse defaultActiveKey={[ '' + i ]}>
+			{elements.map((result: any, i: number) => (
+				result ? <Collapse defaultActiveKey={[ '' + i ]}>
 					<Panel header={result.title} key={'' + i}>
 						<Row gutter={[ 20, 20 ]}>
 							<Col md={4}>
@@ -25,7 +22,7 @@ export default function ExpectedResults({ results }: ExpectedResultsProps) {
 							</Col>
 						</Row>
 					</Panel>
-				</Collapse>
+				</Collapse> : null
 			))}
 		</Fragment>
 	);
