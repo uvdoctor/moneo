@@ -99,9 +99,17 @@ export default function Layout(props: LayoutProps) {
 		}
 	];
 
+	const endingResults = [
+		isLoanEligible(props.type as GoalType) && "Total interest to be paid if Loan is availed.",
+		isLoanEligible(props.type as GoalType) && "Yearly Principal & Interest Schedule if Loan is availed.",
+		"Total tax benefit.",
+		"Impact of Spending Money rather than Investing.",
+		"Yearly cash flows."
+	];
+
 	const sections: any = {
 		"Demo": <DDVideoPlayer url={props.demoUrl} />,
-		"Expected Results": <ExpectedResults elements={props.results} />,
+		"Expected Results": <ExpectedResults elements={[...props.results, ...endingResults]} />,
 		"Key Features": <KeyFeatures elements={props.features} />,
 		"Major Assumptions": <MajorAssumptions elements={[...startingAssumptions, ...props.assumptions, ...endingAssumptions]} />,
 		"Definitions": <CommonTerms elements={[...props.terms, ...genericTerms]} />
