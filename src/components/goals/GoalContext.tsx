@@ -208,7 +208,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     setResults([...[
       goalType === GoalType.B && <BuyRentResult />,
       goalType === GoalType.B && <BuyReturnResult />,
-      <LoanIntResult />,
+      isLoanEligible(goal.type) && <LoanIntResult />,
       addCallback && <FFImpact />,
       <OppCost />
     ]]);

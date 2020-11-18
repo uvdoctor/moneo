@@ -36,9 +36,9 @@ export default function ResultCarousel() {
 			{results && results instanceof Array ? (
 				results.length > 0 &&
 				results.map((result, i) => (
-					result && <div className="dd-stat" key={"result" + i}>
+					result ? <div className="dd-stat" key={"result" + i}>
 						{result}
-					</div>
+					</div> : null
 				))
 			) : (
 				<div className="dd-stat">{results}</div>

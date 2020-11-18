@@ -100,9 +100,9 @@ export default function Layout(props: LayoutProps) {
 	];
 
 	const endingResults = [
-		isLoanEligible(props.type as GoalType) && "Total interest to be paid if Loan is availed.",
-		isLoanEligible(props.type as GoalType) && "Yearly Principal & Interest Schedule if Loan is availed.",
-		"Total tax benefit.",
+		isLoanEligible(props.type as GoalType) && "Total interest to be paid if Loan option is selected.",
+		isLoanEligible(props.type as GoalType) && "Yearly Principal & Interest Schedule if Loan option is selected.",
+		"Total tax benefit that can be availed.",
 		"Impact of Spending Money rather than Investing.",
 		"Yearly cash flows."
 	];

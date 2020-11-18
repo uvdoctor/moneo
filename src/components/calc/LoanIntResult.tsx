@@ -7,11 +7,11 @@ export default function LoanIntResult() {
 	const { currency }: any = useContext(CalcContext);
 	const { totalIntAmt }: any = useContext(GoalContext);
 
-	return totalIntAmt ? (
+	return (
 		<ItemDisplay
-      label={`Total Interest`}
+      label={`Total Loan Interest`}
 			result={totalIntAmt}
 			currency={currency}
 		/>
-	) : null;
+	);
 }
