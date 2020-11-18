@@ -54,6 +54,10 @@ export default function Layout(props: LayoutProps) {
 			title: "No loan prepayment penalty.",
 			content: "When a loan is prepaid, calculation assumes that there is no prepayment penalty."
 		},
+		isLoanEligible(props.type as GoalType) && {
+			title: "Additional cost not considered in case loan repayment starts late.",
+			content: "When a loan repayment starts later than scheduled, calculation adds due interest to the borrowed amount. However, there may be additional cost due to penalties and credit score impact."
+		},
 		{
 			title: 'Yearly tax benefit considered as positive cash flow for next year.',
 			content: `As you pay lesser tax next year due to eligible tax benefit, cash flow analysis considers tax benefit as positive cash flow in next year.`
@@ -100,11 +104,11 @@ export default function Layout(props: LayoutProps) {
 	];
 
 	const endingResults = [
-		isLoanEligible(props.type as GoalType) && "Total interest to be paid if Loan option is selected.",
-		isLoanEligible(props.type as GoalType) && "Yearly Principal & Interest Schedule if Loan option is selected.",
-		"Total tax benefit that can be availed.",
+		isLoanEligible(props.type as GoalType) && "Total Interest to be paid for a Loan.",
+		isLoanEligible(props.type as GoalType) && "Yearly Principal & Interest Schedule for a Loan.",
+		"Total Tax Benefit that can be availed.",
 		"Impact of Spending Money rather than Investing.",
-		"Yearly cash flows."
+		"Yearly Cash Flows."
 	];
 
 	const sections: any = {

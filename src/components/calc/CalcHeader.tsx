@@ -4,6 +4,7 @@ import SelectInput from '../form/selectinput';
 import { CalcContext } from './CalcContext';
 import Draggable from 'react-draggable';
 import * as gtag from '../../lib/gtag';
+import { useFullScreenBrowser } from 'react-browser-hooks';
 interface CalcHeaderProps {
 	children?: any;
 	title?: ReactNode;
@@ -24,6 +25,7 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 	}: any = useContext(CalcContext);
 	const ratingLabels = [ '', 'Very Poor', 'Poor', 'Average', 'Good', 'Awesome!' ];
 	const [ ratingLabel, setRatingLabel ] = useState<string>('');
+	const fsb = useFullScreenBrowser();
 
 	const saveFeedback = () => {
 		if (!feedbackText) return;
@@ -81,7 +83,7 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 					onOk={() => saveFeedback()}
 					maskClosable
 					//@ts-ignore
-					modalRender={(modal: any) => <Draggable>{modal}</Draggable>}
+					modalRender={(modal: any) => <Draggable disabled={fsb.info.innerWidth < 1200}>{modal}</Draggable>}
 				>
 					<TextArea
 						rows={4}

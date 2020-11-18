@@ -26,5 +26,7 @@ export default function BuyReturnResult() {
 			unit={`% Yearly ${annualReturnPer > 0 ? 'Gain' : 'Loss'}`}
 			pl
 		/>
-	) : null;
+	) : (
+		<ItemDisplay label="Buy Yields" result="Unable to Calculate." />
+	);
 }

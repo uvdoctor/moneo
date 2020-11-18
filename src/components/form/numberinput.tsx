@@ -16,7 +16,7 @@ interface NumberInputProps {
 	unit?: string;
 	changeHandler: any;
 	note?: any;
-	step?: number;
+	step: number;
 	feedback?: any;
 }
 
@@ -43,7 +43,7 @@ export default function NumberInput(props: NumberInputProps) {
 			setMaxNum(maxNum);
 			setStepNum((props.step as number) * rf);
 			setMarks({
-				[minNum]: toReadableNumber(minNum),
+				[minNum]: toReadableNumber(minNum, props.step < 1 ? 2 : 0),
 				[maxNum]: { label: toReadableNumber(maxNum), style: { paddingRight: props.currency ? '3rem' : '0rem' } }
 			});
 		},

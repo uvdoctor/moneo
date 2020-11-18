@@ -31,7 +31,7 @@ export default function ModalVideoPlayer({ title, url }: ModalVideoPlayerProps) 
 					destroyOnClose
 					visible={modalVisible}
 					//@ts-ignore
-					modalRender={(modal: any) => <Draggable disabled={fsb.info.screenWidth < 1200}>{modal}</Draggable>}
+					modalRender={(modal: any) => <Draggable disabled={fsb.info.innerWidth < 1200}>{modal}</Draggable>}
 				>
 					<DDVideoPlayer url={url} callback={closeModal} />
 				</Modal>

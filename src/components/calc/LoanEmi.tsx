@@ -8,7 +8,6 @@ import ItemDisplay from './ItemDisplay';
 import { COLORS } from '../../CONSTANTS';
 import { isTaxCreditEligible } from '../goals/goalutils';
 import HSwitch from '../HSwitch';
-import { Row } from 'antd';
 import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
 import { GoalType } from '../../api/goals';
@@ -39,23 +38,20 @@ export default function LoanEmi() {
 		remSI,
 		loanBorrowAmt
 	}: any = useContext(GoalContext);
-	const [ ryOptions, setRYOptions ] = useState(
-		initYearOptions(
-			goal.type === GoalType.E ? endYear + 1 : startYear,
-			goal.type === GoalType.B ? duration - 1 : 10
-		)
-	);
+
+	const getRYFirstYear = () => (goal.type === GoalType.E ? endYear + 1 : startYear);
+
+	const getRYDuration = () => (goal.type === GoalType.B && duration <= 3 ? duration - 1 : 3);
+
+	const getRYRange = () => initYearOptions(getRYFirstYear(), getRYDuration());
+
+	const [ ryOptions, setRYOptions ] = useState(getRYRange());
 	const loanLimitPer = goal.type === GoalType.E ? 100 : 80;
-	const [totalSI, setTotalSI] = useState<number>(0);
+	const [ totalSI, setTotalSI ] = useState<number>(0);
 
 	useEffect(
 		() => {
-			setRYOptions(
-				initYearOptions(
-					goal.type === GoalType.E ? endYear + 1 : startYear,
-					goal.type === GoalType.B ? duration - 1 : 10
-				)
-			);
+			setRYOptions(getRYRange());
 		},
 		[ startYear, endYear ]
 	);
@@ -67,11 +63,14 @@ export default function LoanEmi() {
 		[ taxRate ]
 	);
 
-	useEffect(() => {
-		let totalSI = 0;
-		simpleInts.forEach((int: number) => totalSI += int);
-		setTotalSI(totalSI);
-	}, [simpleInts]);
+	useEffect(
+		() => {
+			let totalSI = 0;
+			simpleInts.forEach((int: number) => (totalSI += int));
+			setTotalSI(totalSI);
+		},
+		[ simpleInts ]
+	);
 
 	return (
 		<Section
@@ -94,21 +93,25 @@ export default function LoanEmi() {
 				step={5}
 				labelBottom={true}
 				label="of Cost"
-				post={<ItemDisplay label="Loan Amount" result={loanBorrowAmt} currency={currency} />}
-			/>
-			{loanBorrowAmt && (
-				<NumberInput
-					pre={
-						<Row align="middle">
+				post={
+					<ItemDisplay
+						label="Loan Amount"
+						result={loanBorrowAmt}
+						currency={currency}
+						footer={
 							<SelectInput
 								pre="Repay from"
 								options={ryOptions}
 								value={loanRepaymentSY}
 								changeHandler={(year: string) => setLoanRepaymentSY(parseInt(year))}
 							/>
-							for
-						</Row>
-					}
+						}
+					/>
+				}
+			/>
+			{loanBorrowAmt && (
+				<NumberInput
+					pre="Loan Duration"
 					unit="Years"
 					value={loanYears}
 					changeHandler={setLoanYears}
@@ -133,15 +136,17 @@ export default function LoanEmi() {
 					pre="Pay While Studying"
 					label="of Interest"
 					post={
-						<ItemDisplay label="Total Simple Interest" result={totalSI} currency={currency}
-							info={
-								simpleInts.map((int: number, i: number) => (
-									<p key={'int' + i}>
-										Monthly {toCurrency(Math.round(int / 12), currency)} in {startYear + i}
-									</p>
-								))
-							}
-							footer={`${startYear} to ${endYear}`} />
+						<ItemDisplay
+							label="Total Simple Interest"
+							result={totalSI}
+							currency={currency}
+							info={simpleInts.map((int: number, i: number) => (
+								<p key={'int' + i}>
+									Monthly {toCurrency(Math.round(int / 12), currency)} in {startYear + i}
+								</p>
+							))}
+							footer={`${startYear} to ${endYear}`}
+						/>
 						/*!!loanSIPayPer && (
 							<Collapse defaultActiveKey={[ '0' ]} ghost>
 								<Panel key="1" header="Monthly Simple Interest">

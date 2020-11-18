@@ -106,6 +106,7 @@ export default function Cost() {
 					step={0.1}
 					value={priceChgRate}
 					changeHandler={setPriceChgRate}
+					info="Rate at which cost is expected to change on Yearly basis considering inflation and other factors."
 				/>
 			)}
 		</Section>
