@@ -6,6 +6,6 @@ export default function BuyRentResult() {
   const { brAns }: any = useContext(GoalContext);
   
   return (
-    <ItemDisplay label="Buy or Rent?" result={brAns ? brAns : "Input Yearly Rent to compare."} />
+    <ItemDisplay label="Buy or Rent?" result={brAns ? brAns : "Input Yearly Rent."} />
   )
 }

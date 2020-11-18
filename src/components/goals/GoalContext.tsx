@@ -347,9 +347,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     amCostPer,
     amStartYear,
     aiPer,
-    aiStartYear,
-    allInputDone,
-    inputTabIndex
+    aiStartYear
   ]);
 
   useEffect(() => {
