@@ -3,12 +3,12 @@ import dynamic from 'next/dynamic';
 import { getCommonXAxis, getCommonYAxis } from '../chartutils';
 import { ASSET_TYPES } from '../../CONSTANTS';
 import { getAssetColour } from '../utils';
-import { FIGoalContext } from './FIGoalContext';
+import { CalcContext } from '../calc/CalcContext';
 
 const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
 
 export default function AAPlanChart() {
-	const { endYear, rr, ffResult }: any = useContext(FIGoalContext);
+	const { endYear, rr, ffResult }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [colors, setColors] = useState<Array<string>>([]);
 	
@@ -38,7 +38,7 @@ export default function AAPlanChart() {
 			let filteredAA = filterAA();
 			let arr: Array<any> = [];
 			const startYear = new Date().getFullYear() + 2;
-			for (let i = 0; i < endYear - startYear; i++) {
+			for (let i = 0; i <= endYear - startYear; i++) {
 				Object.keys(filteredAA).forEach((key) => {
 					if (filteredAA[key][i]) {
 						let desc = key;

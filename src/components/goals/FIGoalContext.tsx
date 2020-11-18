@@ -19,8 +19,6 @@ interface FIGoalContextProviderProps {
 function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIGoalContextProviderProps) {
   const {
     goal,
-    addCallback,
-    updateCallback,
     currency,
     inputTabIndex,
     setInputTabIndex,
@@ -164,7 +162,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
       pp ? pp : dr
     );
     setFFResult(result);
-    if (addCallback && updateCallback) setRR([...result.rr]);
+    setRR([...result.rr]);
     setCFs([...Object.values(result.ffCfs)]);
     console.log("FF Result is ", result);
   }, [
@@ -190,8 +188,8 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     expenseChgRate,
     monthlySavingsRate,
     riskProfile,
-    allInputDone,
-    dr
+    dr,
+    allInputDone
   ]);
 
     return (

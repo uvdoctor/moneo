@@ -93,22 +93,23 @@ function CalcContextProvider({
   
   const getFFGoalResultTabOptions = () => {
     let options = [{
-      label: "Asset Allocation",
+      label: `${nowYear + 1} Asset Allocation`,
       active: true,
       svg: faChartPie,
       content: <AssetAllocationChart />
-    }, {
+    },
+    {
+      label: `${nowYear + 2} - ${endYear} Allocation Plan`,
+      active: true,
+      svg: faChartBar,
+      content: <AAPlanChart />
+    },
+    {
       label: "Portfolio Value",
       active: true,
       svg: faChartLine,
       content: <DDLineChart />
-    }];
-    if (!isPublicCalc) options.push({
-      label: "Allocation Plan",
-      active: true,
-      svg: faChartBar,
-      content: <AAPlanChart />
-    });  
+    }];  
     return options;
   }
   

@@ -13,10 +13,10 @@ export default function AssetAllocationChart() {
 	const initChartData = () => {
 		let data: Array<any> = [];
 		let colors: Array<string> = [];
+		const aa = ffResult.aa;
 		getAllAssetCategories().forEach((cat) => {
 			let children: Array<any> = [];
 			let total = 0;
-			const aa = ffResult.aa;
 			getAllAssetTypesByCategory(cat).forEach((at) => {
 				if (aa[at][0]) {
 					total += aa[at][0];
