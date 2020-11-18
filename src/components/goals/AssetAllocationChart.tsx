@@ -7,7 +7,7 @@ const TreemapChart = dynamic(() => import('bizcharts/lib/plots/TreemapChart'), {
 
 export default function AssetAllocationChart() {
 	const { cfs, ffResult }: any = useContext(CalcContext);
-	const [data, setData] = useState<Array<any>>([]);
+	const [ data, setData ] = useState<Array<any>>([]);
 	const [ colors, setColors ] = useState<Array<string>>([]);
 
 	const initChartData = () => {
@@ -15,6 +15,7 @@ export default function AssetAllocationChart() {
 		let colors: Array<string> = [];
 		const aa = ffResult.aa;
 		getAllAssetCategories().forEach((cat) => {
+			colors.push(getAssetColour(cat));
 			let children: Array<any> = [];
 			let total = 0;
 			getAllAssetTypesByCategory(cat).forEach((at) => {
@@ -32,11 +33,10 @@ export default function AssetAllocationChart() {
 				name: cat,
 				value: total,
 				children: children
-      });
-      colors.push(getAssetColour(cat))
+			});
 		});
-    setData([...data]);
-    setColors([...colors]);
+		setData([ ...data ]);
+		setColors([ ...colors ]);
 	};
 
 	useEffect(
@@ -60,14 +60,15 @@ export default function AssetAllocationChart() {
 					}
 				}
 			}}
-			colorField="value"
+			colorField="name"
 			label={{
 				visible: true,
 				formatter: (v) => {
 					return ffResult.aa.hasOwnProperty(v) ? v + '\n' + ffResult.aa[v][0] + '%' : v;
 				}
-      }}
-      color={colors}
+			}}
+			color={colors}
+			rectStyle={{ lineWidth: 0 }}
 		/>
 	);
 }

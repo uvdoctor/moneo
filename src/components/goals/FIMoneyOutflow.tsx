@@ -52,7 +52,7 @@ export default function FIMoneyOutflow() {
 					/>
 				)}
 			</Section>
-			<Section title="Losses Expected due to Selling Investments, Outstanding Debts, etc.)">
+			<Section title="Losses Expected due to Selling Investments, Outstanding Debts, etc.">
 				<DynamicTargetInput lossInput />
 			</Section>
 		</Fragment>

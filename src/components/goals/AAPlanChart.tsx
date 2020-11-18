@@ -10,8 +10,7 @@ const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColu
 export default function AAPlanChart() {
 	const { endYear, rr, ffResult }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
-	const [colors, setColors] = useState<Array<string>>([]);
-	
+
 	const hasAllZeros = (arr: Array<number>) => {
 		for (let num of arr) {
 			if (num) return false;
@@ -21,16 +20,23 @@ export default function AAPlanChart() {
 
 	const filterAA = () => {
 		let result: any = {};
-		let colors: Array<string> = []
 		let aa = ffResult.aa;
 		for (let key in aa) {
 			if (!hasAllZeros(aa[key])) {
 				result[key] = aa[key].slice(1);
-				colors.push(getAssetColour(key))
 			}
 		}
-		setColors([...colors])
 		return result;
+	};
+
+	const getKey = (desc: string) => {
+		let key = desc;
+		if (key.endsWith("Fund")) {
+			key = key.replace(" Fund", "");
+		} else if (key.endsWith(" ETF")) {
+			key = key.replace(" ETF", "");
+		}
+		return key;
 	};
 
 	useEffect(
@@ -58,16 +64,14 @@ export default function AAPlanChart() {
 	);
 
 	return (
-		<div className="w-full">
-			<StackedColumnChart
-				data={data}
-				xField="year"
-				yField="value"
-				stackField="asset"
-				yAxis={getCommonYAxis()}
-				xAxis={getCommonXAxis('Year')}
-				color={colors}
-			/>
-		</div>
+		<StackedColumnChart
+			data={data}
+			xField="year"
+			yField="value"
+			stackField="asset"
+			yAxis={getCommonYAxis()}
+			xAxis={getCommonXAxis('Year')}
+			color={(d: string) => getAssetColour(getKey(d))}
+		/>
 	);
 }

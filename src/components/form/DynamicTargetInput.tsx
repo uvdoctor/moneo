@@ -7,34 +7,39 @@ import { initYearOptions } from '../utils';
 import { createNewTarget } from '../goals/goalutils';
 import { Col, Row } from 'antd';
 import { FIGoalContext } from '../goals/FIGoalContext';
+import { CalcContext } from '../calc/CalcContext';
 interface DynamicTargetInputProps {
 	lossInput?: boolean;
 }
 
 export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProps) {
-	const { currency, rangeFactor, startYear, endYear, gains, setGains, losses, setLosses }: any = useContext(
-		FIGoalContext
-	);
-	const [ yearOpts, setYearOpts ] = useState(initYearOptions(startYear, endYear - startYear));
+	const {
+		currency,
+		rangeFactor,
+		startYear,
+		endYear
+	}: any = useContext(CalcContext)
+	const { gains, setGains, losses, setLosses }: any = useContext(FIGoalContext);
+	const [ yearOpts, setYearOpts ] = useState(initYearOptions(startYear + 1, endYear - startYear - 1));
 	const tgts = lossInput ? losses : gains;
 	const setTgts = lossInput ? setLosses : setGains;
 
 	const getDefaultYear = () => {
-		if (!tgts || tgts.length === 0) return startYear;
+		if (!tgts || tgts.length === 0) return startYear + 1;
 		return tgts[tgts.length - 1].year + 1;
 	};
 
 	const newRec = () => createNewTarget(getDefaultYear(), 0);
 
 	const filterTgts = () => {
-		let ft = tgts.filter((t: TargetInput) => t.year >= startYear && t.year <= endYear);
+		let ft = tgts.filter((t: TargetInput) => t.year > startYear && t.year <= endYear);
 		setTgts([ ...ft ]);
 	};
 
 	useEffect(
 		() => {
 			filterTgts();
-			setYearOpts(initYearOptions(startYear, endYear - startYear));
+			setYearOpts(initYearOptions(startYear + 1, endYear - startYear - 1));
 		},
 		[ startYear, endYear ]
 	);
