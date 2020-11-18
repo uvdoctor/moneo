@@ -15,9 +15,9 @@ export default function AssetAllocationChart() {
 		let colors: Array<string> = [];
 		const aa = ffResult.aa;
 		getAllAssetCategories().forEach((cat) => {
-			colors.push(getAssetColour(cat));
 			let children: Array<any> = [];
 			let total = 0;
+			colors.push(getAssetColour(cat));
 			getAllAssetTypesByCategory(cat).forEach((at) => {
 				if (aa[at][0]) {
 					total += aa[at][0];
@@ -26,7 +26,6 @@ export default function AssetAllocationChart() {
 						value: aa[at][0],
 						children: []
 					});
-					colors.push(getAssetColour(at));
 				}
 			});
 			data.push({
@@ -35,8 +34,13 @@ export default function AssetAllocationChart() {
 				children: children
 			});
 		});
-		setData([ ...data ]);
-		setColors([ ...colors ]);
+		setData([...data]);
+		getAllAssetCategories().forEach((cat) => {
+			getAllAssetTypesByCategory(cat).forEach((at) => {
+				colors.push(getAssetColour(at));
+			});
+		});
+		setColors([...colors]);
 	};
 
 	useEffect(
