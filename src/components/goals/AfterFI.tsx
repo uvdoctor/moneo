@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import { CalcContext } from '../calc/CalcContext';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import { FIGoalContext } from './FIGoalContext';
@@ -6,7 +7,9 @@ import { FIGoalContext } from './FIGoalContext';
 export function AfterFI() {
 	const {
 		currency,
-		rangeFactor,
+		rangeFactor
+	}: any = useContext(CalcContext);
+	const {
 		expenseAfterFF,
 		setExpenseAfterFF,
 		expenseChgRate,
@@ -28,9 +31,7 @@ export function AfterFI() {
 		<Section title="After Financial Independence">
 			<NumberInput
 				info="If You had already achieved Financial Independence this year, How Much Money Would You Need for Your Living Expenses?"
-				pre="Yearly"
-				post="Expenses"
-				note="In Today's Money"
+				pre="Yearly Expenses in today's money"
 				currency={currency}
 				rangeFactor={rangeFactor}
 				value={expenseAfterFF}
@@ -41,9 +42,7 @@ export function AfterFI() {
 			/>
 			<NumberInput
 				info="Rate at which Your Living Expenses increase every Year."
-				pre="Expense"
-				post="Increases"
-				note="Yearly"
+				pre="Yearly Expense Increases"
 				unit="%"
 				min={0}
 				max={10}

@@ -4,16 +4,19 @@ import NumberInput from '../form/numberinput';
 import { toCurrency } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 import DynamicTargetInput from '../form/DynamicTargetInput';
+import { CalcContext } from '../calc/CalcContext';
 
 export default function FIMoneyOutflow() {
 	const {
 		currency,
 		rangeFactor,
+		endYear
+	}: any = useContext(CalcContext);
+	const {
 		leaveBehind,
 		setLeaveBehind,
 		successionTaxRate,
 		setSuccessionTaxRate,
-		endYear
 	}: any = useContext(FIGoalContext);
 
 	return (

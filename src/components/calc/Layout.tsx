@@ -111,10 +111,36 @@ export default function Layout(props: LayoutProps) {
 		"Yearly Cash Flows."
 	];
 
+	const startingFeatures = [
+		{
+			title: "Ease of use",
+			content: "Avoids jargons and complex charts so that it is as easy to understand and use as possible."
+		}
+	];
+
+	const endingFeatures = [
+		{
+			title: "Instant results",
+			content: "Results change dynamically with every input change so that impact of every input is readily visible."
+		},
+		{
+			title: "Highly configurable",
+			content: "Allows custom configuration of payment plans, loans, tax benefit, etc so that estimates are as accurate as possible."
+		},
+		{
+			title: "Supports different currencies",
+			content: "Calculation works seamlessly for different currencies."
+		},
+		{
+			title: "Works offline",
+			content: "Calculation keeps working even when connection is not available."
+		}
+	];
+
 	const sections: any = {
 		"Demo": <DDVideoPlayer url={props.demoUrl} />,
 		"Expected Results": <ExpectedResults elements={[...props.results, ...endingResults]} />,
-		"Key Features": <KeyFeatures elements={props.features} />,
+		"Key Features": <KeyFeatures elements={[...startingFeatures, ...props.features, ...endingFeatures]} />,
 		"Major Assumptions": <MajorAssumptions elements={[...startingAssumptions, ...props.assumptions, ...endingAssumptions]} />,
 		"Definitions": <CommonTerms elements={[...props.terms, ...genericTerms]} />
 	};

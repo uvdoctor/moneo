@@ -1,5 +1,6 @@
 import React, { Fragment, useContext, useEffect } from 'react';
 import { MAX_RETIREMENT_AGE, PLAN_DURATION } from '../../CONSTANTS';
+import { CalcContext } from '../calc/CalcContext';
 import DynamicTargetInput from '../form/DynamicTargetInput';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
@@ -12,7 +13,9 @@ export default function FIBenefit() {
 	const {
 		currency,
 		rangeFactor,
-		endYear,
+		endYear
+	}: any = useContext(CalcContext);
+	const {
 		retirementIncome,
 		setRetirementIncome,
 		retirementIncomePer,
