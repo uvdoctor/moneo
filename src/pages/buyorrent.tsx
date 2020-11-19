@@ -29,8 +29,8 @@ export default function BuyOrRent() {
 	const results = [
 		"Which option is cheaper - buy or rent? Up to how many years? Analysis available for up to 50 years.",
 		"Yearly Gain or Loss for Buy option.",
-		"Total Cost of Maintaining the Asset.",
-		"Total Income that can be expected from the Asset."
+		"Total Maintenance Cost.",
+		"Total Income that can be expected."
 	];
 
 	const terms = [
