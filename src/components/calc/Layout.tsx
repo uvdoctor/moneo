@@ -113,6 +113,10 @@ export default function Layout(props: LayoutProps) {
 
 	const startingFeatures = [
 		{
+			title: "Financial Analysis Made Simpler",
+			content: "Implements time-tested financial principles and industry-standard best practices for money management with extensive configuration."
+		},
+		{
 			title: "Ease of use",
 			content: "Avoids jargons and complex charts so that it is as easy to understand and use as possible."
 		}

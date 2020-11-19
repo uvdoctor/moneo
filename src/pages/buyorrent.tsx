@@ -13,6 +13,10 @@ export default function BuyOrRent() {
 
 	const features = [
 		{
+			title: "Works for any Asset",
+			content: "Calculation uses time-tested financial principles, hence can work for any asset such as property, car, furniture, gadgets, etc."
+		},
+		{
 			title: "XIRR for loss / gain calculation",
 			content: "Uses industry standard Extended Internal Rate of Return (XIRR) methodology to calculate Yearly loss / gain for Buy option as multiple cash flows happen at different times."
 		},
