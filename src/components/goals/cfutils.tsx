@@ -747,6 +747,7 @@ const calculateAllocation = (
   let i = y - (nowYear + 1);
   let savingsPer = Math.round((sa / cs) * 100);
   let depPer = Math.round((da / cs) * 100);
+  if (depPer < 1) depPer = 1;
   let cashPer = savingsPer + depPer;
   if (y >= ffGoal.ey - 10) {
     let maxCashPer = 30 - 2 * (ffGoal.ey - y);
@@ -876,6 +877,7 @@ export const checkForFF = (
       else {
         aa[ASSET_TYPES.SAVINGS][i] += Math.round((sa / cs) * 100);
         let depPer = Math.round((da / cs) * 100);
+        if (depPer < 1) depPer = 1;
         let remPer = 100 - aa[ASSET_TYPES.SAVINGS][i];
         aa[ASSET_TYPES.DEPOSITS][i] += depPer < remPer ? depPer : remPer;
         remPer -= aa[ASSET_TYPES.DEPOSITS][i];

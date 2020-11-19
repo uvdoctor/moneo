@@ -13,24 +13,8 @@ export default function BuyOrRent() {
 
 	const features = [
 		{
-			title: "Amortization",
-			content: "We bring all of your money to one place, from balances and bills to credit score and more."
-		},
-		{
-			title: "Simple Savings",
-			content: "Easily create budgets, and see our suggestions based on your spending."
-		},
-		{
-			title: "Cost-of-living",
-			content: "We bring all of your money to one place, from balances and bills to credit score and more."
-		},
-		{
-			title: "CD calculator",
-			content: "Easily create budgets, and see our suggestions based on your spending."
-		},
-		{
-			title: "Home affordability",
-			content: "Check your free credit score as many times as you like, and get tips to help improve it."
+			title: "XIRR for loss / gain calculation",
+			content: "Uses industry standard Extended Internal Rate of Return (XIRR) methodology to calculate Yearly loss / gain for Buy option as multiple cash flows happen at different times."
 		},
 	];
 
