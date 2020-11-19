@@ -14,7 +14,15 @@ export default function BuyOrRent() {
 	const features = [
 		{
 			title: "Works for any Asset",
-			content: "Calculation uses time-tested financial principles, hence can work for any asset such as property, car, furniture, gadgets, etc."
+			content: "As calculation uses time-tested financial principles, it works for any asset such as property, car, furniture, gadget, etc."
+		},
+		{
+			title: "Comparison works from 1 to 50 Years",
+			content: "Easily configure the duration up to which Buy v/s Rent comparison is required."
+		},
+		{
+			title: "Supports custom payment plans for Buy option",
+			content: "Works even for payment plan that requires multiple payments across different timelines (eg: progress-linked payments for off-plan properties)."
 		},
 		{
 			title: "XIRR for loss / gain calculation",
