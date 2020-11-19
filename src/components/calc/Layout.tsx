@@ -132,11 +132,11 @@ export default function Layout(props: LayoutProps) {
 			content: "Allows custom configuration of payment, loan, tax, etc so that estimates are as accurate as possible."
 		},
 		{
-			title: "Supports different currencies",
+			title: "Works Globally",
 			content: "Calculation works seamlessly for different currencies."
 		},
 		{
-			title: "Works offline",
+			title: "Keeps working offline",
 			content: "Calculation keeps working even when connection is not available."
 		}
 	];
