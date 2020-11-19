@@ -129,7 +129,7 @@ export default function Layout(props: LayoutProps) {
 		},
 		{
 			title: "Highly configurable",
-			content: "Allows custom configuration of payment plans, loans, tax benefit, etc so that estimates are as accurate as possible."
+			content: "Allows custom configuration of payment, loan, tax, etc so that estimates are as accurate as possible."
 		},
 		{
 			title: "Supports different currencies",
