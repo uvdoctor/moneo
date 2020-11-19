@@ -10,6 +10,8 @@ export default function AssetAllocationChart() {
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [ colors, setColors ] = useState<Array<string>>([]);
 
+	const sortDesc = (data: Array<any>) => data.sort((a, b) => b.value - a.value);
+
 	const initChartData = () => {
 		let data: Array<any> = [];
 		let colors: Array<string> = [];
@@ -17,7 +19,6 @@ export default function AssetAllocationChart() {
 		getAllAssetCategories().forEach((cat) => {
 			let children: Array<any> = [];
 			let total = 0;
-			colors.push(getAssetColour(cat));
 			getAllAssetTypesByCategory(cat).forEach((at) => {
 				if (aa[at][0]) {
 					total += aa[at][0];
@@ -34,13 +35,10 @@ export default function AssetAllocationChart() {
 				children: children
 			});
 		});
-		setData([...data]);
-		getAllAssetCategories().forEach((cat) => {
-			getAllAssetTypesByCategory(cat).forEach((at) => {
-				colors.push(getAssetColour(at));
-			});
-		});
-		setColors([...colors]);
+		setData([ ...data ]);
+		sortDesc(data).forEach((cat) => colors.push(getAssetColour(cat.name)));
+		data.forEach((cat) => sortDesc(cat.children).forEach((at) => colors.push(getAssetColour(at.name))));
+		setColors([ ...colors ]);
 	};
 
 	useEffect(
@@ -73,6 +71,7 @@ export default function AssetAllocationChart() {
 			}}
 			color={colors}
 			rectStyle={{ lineWidth: 0 }}
+			forceFit
 		/>
 	);
 }
