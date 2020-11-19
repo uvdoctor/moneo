@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { getAllAssetCategories, getAllAssetTypesByCategory, getAssetColour } from '../utils';
+import { getAllAssetCategories, getAllAssetTypesByCategory, getAssetColour, toCurrency } from '../utils';
 import { CalcContext } from '../calc/CalcContext';
 
 const TreemapChart = dynamic(() => import('bizcharts/lib/plots/TreemapChart'), { ssr: false });
 
 export default function AssetAllocationChart() {
-	const { cfs, ffResult }: any = useContext(CalcContext);
+	const { cfs, ffResult, currency }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [ colors, setColors ] = useState<Array<string>>([]);
 
@@ -35,10 +35,13 @@ export default function AssetAllocationChart() {
 				children: children
 			});
 		});
-		setData([ ...data ]);
 		sortDesc(data).forEach((cat) => colors.push(getAssetColour(cat.name)));
-		data.forEach((cat) => sortDesc(cat.children).forEach((at) => colors.push(getAssetColour(at.name))));
-		setColors([ ...colors ]);
+		data.forEach((cat) => {
+			sortDesc(cat.children).forEach((at) => colors.push(getAssetColour(at.name)));
+			cat.name += ` ${cat.value}%`
+		});
+		setData([ ...data ]);
+		setColors([...colors]);
 	};
 
 	useEffect(
@@ -66,7 +69,9 @@ export default function AssetAllocationChart() {
 			label={{
 				visible: true,
 				formatter: (v) => {
-					return ffResult.aa.hasOwnProperty(v) ? v + '\n' + ffResult.aa[v][0] + '%' : v;
+					return ffResult.aa.hasOwnProperty(v) ? v + '\n'
+						+ toCurrency(Math.round(cfs[0] * ffResult.aa[v][0] / 100), currency) +
+						'\n' + ffResult.aa[v][0] + '%' : v;
 				}
 			}}
 			color={colors}
