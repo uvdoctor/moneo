@@ -8,6 +8,8 @@ import { Row, Col } from 'antd';
 import { GoalContext } from './GoalContext';
 import { CalcContext } from '../calc/CalcContext';
 import { isLoanEligible } from './goalutils';
+import { useRouter } from 'next/router';
+import { ROUTES } from '../../CONSTANTS';
 
 export default function Cost() {
 	const {
@@ -31,6 +33,8 @@ export default function Cost() {
 		setManualMode,
 		isLoanMandatory
 	}: any = useContext(GoalContext);
+	const router = useRouter();
+	const isLoanPublicCalc = router.pathname === ROUTES.LOAN;
 
 	const changeTargetVal = (val: number, i: number) => {
 		if (!wipTargets || !setWIPTargets) return;
@@ -93,9 +97,9 @@ export default function Cost() {
 				rangeFactor={rangeFactor}
 				value={startingPrice}
 				changeHandler={setStartingPrice}
-				min={goal.type === GoalType.B ? 1000 : 100}
-				max={goal.type === GoalType.B ? 1500000 : 50000}
-				step={goal.type === GoalType.B ? 500 : 100}
+				min={goal.type === GoalType.B || isLoanPublicCalc ? 1000 : 100}
+				max={goal.type === GoalType.B || isLoanPublicCalc ? 1500000 : 50000}
+				step={goal.type === GoalType.B || isLoanPublicCalc ? 500 : 100}
 			/>
 			{startYear > goal.by && (
 				<NumberInput

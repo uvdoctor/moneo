@@ -1,13 +1,16 @@
 import { Table } from 'antd';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GoalContext } from '../goals/GoalContext';
 import { toCurrency } from '../utils';
 import { CalcContext } from './CalcContext';
 
 export default function MonthlyLoanSchedule() {
 	const { currency }: any = useContext(CalcContext);
-	const { loanBorrowAmount, emi, loanRepaymentSY }: any = useContext(GoalContext);
+	const { loanBorrowAmt, emi, loanIntRate, loanRepaymentSY, duration }: any = useContext(GoalContext);
   const [filteredInfo, setFilteredInfo] = useState<any | null>({});
+  const [data, setData] = useState<Array<any>>([]);
+  const [numFilterValues, setNumFilterValues] = useState<Array<any>>([{}]);
+  const [yearFilterValues, setYearFilterValues] = useState<Array<any>>([{}]);
   
   const columns = [
 		{
@@ -15,7 +18,7 @@ export default function MonthlyLoanSchedule() {
 			dataIndex: 'num',
       key: 'num',
       filteredValue: filteredInfo.num || null,
-      filters: [{ text: '0', value: '0' }, { text: '1', value: '1' }],
+      filters: numFilterValues,
 			onFilter: (value: Array<any>, record: any) => record.num.includes(value)
 		},
 		{
@@ -23,10 +26,7 @@ export default function MonthlyLoanSchedule() {
 			dataIndex: 'year',
       key: 'year',
       filteredValue: filteredInfo.year || null,
-			filters: [
-				{ text: '' + loanRepaymentSY, value: '' + loanRepaymentSY },
-				{ text: '' + (loanRepaymentSY + 1), value: '' + (loanRepaymentSY + 1) }
-			],
+			filters: yearFilterValues,
       onFilter: (value: Array<any>, record: any) => record.year.includes(value)
 		},
 		{
@@ -43,6 +43,16 @@ export default function MonthlyLoanSchedule() {
 			title: 'Principal Paid',
 			dataIndex: 'pp',
 			key: 'pp'
+    },
+    {
+			title: 'Total Interest Paid',
+			dataIndex: 'tip',
+			key: 'tip'
+		},
+		{
+			title: 'Total Principal Paid',
+			dataIndex: 'tpp',
+			key: 'tpp'
 		},
 		{
 			title: 'Principal Due',
@@ -51,26 +61,58 @@ export default function MonthlyLoanSchedule() {
 		}
 	];
 
-	const dataSource = [
-		{
-			key: '0',
-			num: '0',
-			year: '' + loanRepaymentSY,
-			mp: toCurrency(0, currency),
-			ip: toCurrency(0, currency),
-			pp: toCurrency(0, currency),
-			pd: toCurrency(loanBorrowAmount, currency)
-		},
-		{
-			key: '1',
-			num: '1',
-			year: '' + loanRepaymentSY,
-			mp: toCurrency(emi, currency),
-			ip: toCurrency(0, currency),
-			pp: toCurrency(0, currency),
-			pd: toCurrency(loanBorrowAmount - emi, currency)
-		}
-	];
+  const getDataItem = (index: number, payment: number, year: number,
+    intAmt: number, pAmt: number, tiAmt: number, tpAmt: number, pDue: number) => {
+    return {
+			key: '' + index,
+			num: '' + index,
+			year: '' + year,
+			mp: toCurrency(payment, currency),
+			ip: toCurrency(intAmt, currency),
+      pp: toCurrency(pAmt, currency),
+      tip: toCurrency(tiAmt, currency),
+      tpp: toCurrency(tpAmt, currency),
+			pd: toCurrency(pDue, currency)
+    }
+  };
+
+  const getFilterItem = (val: number) => {
+    return {
+      text: "" + val,
+      value: "" + val
+    }
+  };
+
+  useEffect(() => {
+    let principal = loanBorrowAmt;
+    let monthlyRate = loanIntRate / 1200;
+    let result = [getDataItem(0, 0, loanRepaymentSY, 0, 0, 0, 0, principal)];
+    let yearFilterValues = [getFilterItem(loanRepaymentSY)];
+    let numFilterValues = [getFilterItem(0)];
+    let monthsPaid = duration * 12;
+    let year = loanRepaymentSY;
+    let totalInterestPaid = 0;
+    let totalPrincipalPaid = 0;
+    let yearToBeIncremented = false;
+    for (let i = 1; i <= monthsPaid; i++) {
+      if (yearToBeIncremented) {
+        year++;
+        yearFilterValues.push(getFilterItem(year));
+        yearToBeIncremented = false;
+      }
+      numFilterValues.push(getFilterItem(i));
+      let monthlyInt = i === monthsPaid ? emi - principal : principal * monthlyRate;
+      totalInterestPaid += monthlyInt;
+      if (i % 12 === 0) yearToBeIncremented = true;
+      let principalPaid = emi - monthlyInt;
+      totalPrincipalPaid += principalPaid;
+      principal -= principalPaid;
+      result.push(getDataItem(i, emi, year, monthlyInt, principalPaid, totalInterestPaid, totalPrincipalPaid, principal));
+    }
+    setYearFilterValues([...yearFilterValues]);
+    setNumFilterValues([...numFilterValues]);
+    setData([...result]);
+  }, [loanRepaymentSY, emi, duration]);
 
   //@ts-ignore
   const handleChange = (pagination: any, filters: any, sorters: any) => {
@@ -79,6 +121,6 @@ export default function MonthlyLoanSchedule() {
 
   return (
     //@ts-ignore
-		<Table dataSource={dataSource} columns={columns} onChange={handleChange} />
+		<Table dataSource={data} columns={columns} onChange={handleChange} />
 	);
 }
