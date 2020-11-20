@@ -6,9 +6,10 @@ import * as gtag from '../lib/gtag';
 interface VideoPlayerProps {
 	url: string;
 	callback?: Function;
+	play?: boolean;
 }
 
-export default function DDVideoPlayer({ url, callback }: VideoPlayerProps) {
+export default function DDVideoPlayer({ url, callback, play = true }: VideoPlayerProps) {
 	const videoRef = useRef(null);
 
 	const endVideo = () => {
@@ -33,7 +34,7 @@ export default function DDVideoPlayer({ url, callback }: VideoPlayerProps) {
 							url={url}
 							width="100%"
 							height="100%"
-							playing={url ? true : false}
+							playing={url && play ? true : false}
               controls
 							onEnded={endVideo}
 							onError={() => {

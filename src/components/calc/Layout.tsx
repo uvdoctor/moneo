@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GoalType } from '../../api/goals';
 import DDBasicPage from '../DDBasicPage';
 import { createNewGoalInput, isLoanEligible } from '../goals/goalutils';
@@ -38,6 +38,7 @@ export default function Layout(props: LayoutProps) {
 	const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
 	const [ wip, setWIP ] = useState<any | null>(null);
+	const [ demoVideoPlay, setDemoVideoPlay ] = useState<boolean>(true);
 	const nowYear = new Date().getFullYear();
 	const startingAssumptions = [
 		{
@@ -114,7 +115,7 @@ export default function Layout(props: LayoutProps) {
 
 	const endingResults = [
 		isLoanEligible(props.type as GoalType) && 'Total Interest to be paid for a Loan.',
-		isLoanEligible(props.type as GoalType) && 'Yearly Principal & Interest Schedule for a Loan.',
+		isLoanEligible(props.type as GoalType) && 'Principal & Interest Schedule for a Loan.',
 		'Total Tax Benefit that can be availed.',
 		'Impact of Spending Money rather than Investing.',
 		'Yearly Cash Flows.'
@@ -154,7 +155,7 @@ export default function Layout(props: LayoutProps) {
 	];
 
 	const sections: any = {
-		Demo: <DDVideoPlayer url={props.demoUrl} />,
+		Demo: <DDVideoPlayer url={props.demoUrl} play={demoVideoPlay} />,
 		'Expected Results': <ExpectedResults elements={[ ...props.results, ...endingResults ]} />,
 		'Key Features': <KeyFeatures elements={[ ...startingFeatures, ...props.features, ...endingFeatures ]} />,
 		'Major Assumptions': (
@@ -162,6 +163,7 @@ export default function Layout(props: LayoutProps) {
 		),
 		Definitions: <CommonTerms elements={[ ...props.terms, ...genericTerms ]} />
 	};
+	const [activeTab, setActiveTab] = useState<string>('1');
 
 	const buildEmptyMergedCFs = () => {
 		let mCFs: any = {};
@@ -184,6 +186,10 @@ export default function Layout(props: LayoutProps) {
 		setWIP(g);
 	};
 
+	useEffect(() => {
+		setDemoVideoPlay(activeTab === '1');
+	}, [activeTab]);
+
 	return (
 		<DDBasicPage
 			className="calculator-container steps-landing"
@@ -204,13 +210,17 @@ export default function Layout(props: LayoutProps) {
 							]}
 						/>
 						<Col span={24} className="secondary-header">
-							<Row justify="center">Details below for the Nerdy. Click Start for Action.</Row>
+							<Row justify="center">Hit Start for Action. Details below for the Nerdy.</Row>
 						</Col>
 					</Col>
 					<Col className="steps-content" span={24}>
 						<Tabs
 							tabPosition={isMobileDevice(fsb) ? 'top' : 'left'}
 							type={isMobileDevice(fsb) ? 'card' : 'line'}
+							animated
+							onChange={(key: string) => {
+								setActiveTab(key);
+							}}
 						>
 							{Object.keys(sections).map((key, i) => (
 								<TabPane key={`${i + 1}`} tab={key}>
