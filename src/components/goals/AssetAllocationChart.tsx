@@ -90,7 +90,6 @@ export default function AssetAllocationChart() {
 			}}
 			color={colors}
 			rectStyle={{ stroke: "#fff", lineWidth: 2 }}
-			forceFit
 		/>
 	);
 }
