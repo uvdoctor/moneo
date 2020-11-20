@@ -72,6 +72,7 @@ export default function AAPlanChart() {
 			yAxis={getCommonYAxis()}
 			xAxis={getCommonXAxis('Year')}
 			color={(d: string) => getAssetColour(getKey(d))}
+			legend={{ position: 'top-left' }}
 		/>
 	);
 }

@@ -13,32 +13,24 @@ export default function BuyOrRent() {
 
 	const features = [
 		{
-			title: "Amortization",
-			content: "We bring all of your money to one place, from balances and bills to credit score and more."
+			title: "Works for any Asset",
+			content: "As calculation uses time-tested financial principles, it works for any asset such as property, car, furniture, gadget, etc."
 		},
 		{
-			title: "Simple Savings",
-			content: "Easily create budgets, and see our suggestions based on your spending."
+			title: "Supports custom payment plan",
+			content: "Works even for multiple payments across different timelines (eg: progress-linked payments for off-plan properties)."
 		},
 		{
-			title: "Cost-of-living",
-			content: "We bring all of your money to one place, from balances and bills to credit score and more."
-		},
-		{
-			title: "CD calculator",
-			content: "Easily create budgets, and see our suggestions based on your spending."
-		},
-		{
-			title: "Home affordability",
-			content: "Check your free credit score as many times as you like, and get tips to help improve it."
+			title: "XIRR for loss / gain calculation",
+			content: "Uses industry standard Extended Internal Rate of Return (XIRR) methodology to calculate Yearly loss / gain for Buy option as multiple cash flows happen at different times."
 		},
 	];
 
 	const results = [
 		"Which option is cheaper - buy or rent? Up to how many years? Analysis available for up to 50 years.",
 		"Yearly Gain or Loss for Buy option.",
-		"Total Cost of Maintaining the Asset.",
-		"Total Income that can be expected from the Asset."
+		"Total Maintenance Cost.",
+		"Total Income that can be expected."
 	];
 
 	const terms = [
