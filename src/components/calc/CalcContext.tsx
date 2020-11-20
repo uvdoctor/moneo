@@ -8,7 +8,6 @@ import Sell from "../goals/sell";
 import BRComp from "../goals/BRComp";
 import DDLineChart from "../goals/DDLineChart";
 import BuyRentChart from "../goals/BuyRentChart";
-import LoanScheduleChart from "../goals/LoanScheduleChart";
 import { GoalType } from '../../api/goals';
 import { isLoanEligible } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
@@ -21,6 +20,7 @@ import AssetAllocationChart from '../goals/AssetAllocationChart';
 import AAPlanChart from '../goals/AAPlanChart';
 import { faChartLine, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faFileInvoiceDollar, faUserCog } from '@fortawesome/free-solid-svg-icons';
 import FIUserDetails from '../goals/FIUserDetails';
+import LoanSchedule from './LoanSchedule';
 
 const CalcContext = createContext({});
 
@@ -126,7 +126,7 @@ function CalcContextProvider({
           label: "Loan Schedule",
           active: false,
           svg: faChartBar,
-          content: <LoanScheduleChart />
+          content: <LoanSchedule />
         }
       ];
       if (goal.type === GoalType.B) {

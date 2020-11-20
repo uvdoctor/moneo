@@ -210,7 +210,7 @@ export default function Layout(props: LayoutProps) {
 							]}
 						/>
 						<Col span={24} className="secondary-header">
-							<Row justify="center">Hit Start for Action. Details below for the Nerdy.</Row>
+							<Row justify="center">Hit Start for Action. Details below for Geeks.</Row>
 						</Col>
 					</Col>
 					<Col className="steps-content" span={24}>

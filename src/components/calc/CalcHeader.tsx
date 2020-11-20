@@ -4,7 +4,6 @@ import SelectInput from '../form/selectinput';
 import { CalcContext } from './CalcContext';
 import Draggable from 'react-draggable';
 import * as gtag from '../../lib/gtag';
-import { useFullScreenBrowser } from 'react-browser-hooks';
 interface CalcHeaderProps {
 	children?: any;
 	title?: ReactNode;
@@ -21,11 +20,11 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 		showFeedbackModal,
 		setShowFeedbackModal,
 		feedbackText,
-		setFeedbackText
+		setFeedbackText,
+		fsb
 	}: any = useContext(CalcContext);
 	const ratingLabels = [ '', 'Very Poor', 'Poor', 'Average', 'Good', 'Awesome!' ];
 	const [ ratingLabel, setRatingLabel ] = useState<string>('');
-	const fsb = useFullScreenBrowser();
 
 	const saveFeedback = () => {
 		if (!feedbackText) return;
