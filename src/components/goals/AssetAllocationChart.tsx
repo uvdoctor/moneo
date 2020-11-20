@@ -1,14 +1,21 @@
-import React, { useContext, useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import { getAllAssetCategories, getAllAssetTypesByCategory, getAssetColour, toCurrency } from '../utils';
-import { CalcContext } from '../calc/CalcContext';
+import React, { useContext, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import {
+	getAllAssetCategories,
+	getAllAssetTypesByCategory,
+	getAssetColour,
+	toCurrency,
+} from "../utils";
+import { CalcContext } from "../calc/CalcContext";
 
-const TreemapChart = dynamic(() => import('bizcharts/lib/plots/TreemapChart'), { ssr: false });
+const TreemapChart = dynamic(() => import("bizcharts/lib/plots/TreemapChart"), {
+	ssr: false,
+});
 
 export default function AssetAllocationChart() {
 	const { cfs, ffResult, currency }: any = useContext(CalcContext);
-	const [ data, setData ] = useState<Array<any>>([]);
-	const [ colors, setColors ] = useState<Array<string>>([]);
+	const [data, setData] = useState<Array<any>>([]);
+	const [colors, setColors] = useState<Array<string>>([]);
 
 	const sortDesc = (data: Array<any>) => data.sort((a, b) => b.value - a.value);
 
@@ -25,57 +32,64 @@ export default function AssetAllocationChart() {
 					children.push({
 						name: at,
 						value: aa[at][0],
-						children: []
+						children: [],
 					});
 				}
 			});
 			data.push({
 				name: cat,
 				value: total,
-				children: children
+				children: children,
 			});
 		});
 		sortDesc(data).forEach((cat) => colors.push(getAssetColour(cat.name)));
 		data.forEach((cat) => {
-			sortDesc(cat.children).forEach((at) => colors.push(getAssetColour(at.name)));
-			cat.name += ` ${cat.value}%`
+			sortDesc(cat.children).forEach((at) =>
+				colors.push(getAssetColour(at.name))
+			);
+			cat.name += ` ${cat.value}%`;
 		});
-		setData([ ...data ]);
+		setData([...data]);
 		setColors([...colors]);
 	};
 
-	useEffect(
-		() => {
-			initChartData();
-		},
-		[ cfs ]
-	);
+	useEffect(() => {
+		initChartData();
+	}, [cfs]);
 
 	return (
 		<TreemapChart
 			data={{
-				name: 'Portfolio',
+				name: "Portfolio",
 				value: 100,
-				children: data
+				children: data,
 			}}
 			meta={{
 				value: {
 					formatter: (v) => {
-						return v + '%';
-					}
-				}
+						return v + "%";
+					},
+				},
 			}}
 			colorField="name"
 			label={{
 				visible: true,
 				formatter: (v) => {
-					return ffResult.aa.hasOwnProperty(v) ? v + '\n'
-						+ toCurrency(Math.round(cfs[0] * ffResult.aa[v][0] / 100), currency) +
-						'\n' + ffResult.aa[v][0] + '%' : v;
-				}
+					return ffResult.aa.hasOwnProperty(v)
+						? v +
+								"\n" +
+								toCurrency(
+									Math.round((cfs[0] * ffResult.aa[v][0]) / 100),
+									currency
+								) +
+								"\n" +
+								ffResult.aa[v][0] +
+								"%"
+						: v;
+				},
 			}}
 			color={colors}
-			rectStyle={{ lineWidth: 0 }}
+			rectStyle={{ stroke: "#fff", lineWidth: 2 }}
 			forceFit
 		/>
 	);

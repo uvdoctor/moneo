@@ -199,31 +199,48 @@ export const toReadableNumber = (num: number, decimalDigits: number = 0) => {
 };
 
 export const parseNumber = (str: string, currency: string | null = null) => {
-  const formatter = currency ? new Intl.NumberFormat(navigator.language, {
-    style: "currency",
-    currency: currency
-  }) : new Intl.NumberFormat(navigator.language);
+  const formatter = currency
+    ? new Intl.NumberFormat(navigator.language, {
+        style: "currency",
+        currency: currency,
+      })
+    : new Intl.NumberFormat(navigator.language);
   const parts = formatter.formatToParts(12345.6);
-  const numerals = [...new Intl.NumberFormat(navigator.language, {useGrouping: false}).format(9876543210)].reverse();
+  const numerals = [
+    ...new Intl.NumberFormat(navigator.language, { useGrouping: false }).format(
+      9876543210
+    ),
+  ].reverse();
   const index = new Map(numerals.map((d, i) => [d, i]));
   let currencyRegex = null;
-  if(currency) currencyRegex = new RegExp(`[${parts.find(d => d.type === "currency")?.value}]`, "g");
-  const groupRegex = new RegExp(`[${parts.find(d => d.type === "group")?.value}]`, "g");
-  const decimalRegex = new RegExp(`[${parts.find(d => d.type === "decimal")?.value}]`);
+  if (currency)
+    currencyRegex = new RegExp(
+      `[${parts.find((d) => d.type === "currency")?.value}]`,
+      "g"
+    );
+  const groupRegex = new RegExp(
+    `[${parts.find((d) => d.type === "group")?.value}]`,
+    "g"
+  );
+  const decimalRegex = new RegExp(
+    `[${parts.find((d) => d.type === "decimal")?.value}]`
+  );
   const numeralRegex = new RegExp(`[${numerals.join("")}]`, "g");
   let retVal = str.trim();
   if (currencyRegex) retVal = retVal.replace(currencyRegex, "");
-  retVal = retVal.replace(groupRegex, "").replace(decimalRegex, ".")
-  retVal = retVal.replace(numeralRegex,
+  retVal = retVal.replace(groupRegex, "").replace(decimalRegex, ".");
+  retVal = retVal.replace(
+    numeralRegex,
     //@ts-ignore
-    (d: string) => index.get(d));
+    (d: string) => index.get(d)
+  );
   return retVal;
-}
+};
 
 export function initYearOptions(
   startYear: number,
   duration: number,
-  exclusions: Array<number> = [],
+  exclusions: Array<number> = []
 ) {
   let years: any = {};
   for (
@@ -231,7 +248,7 @@ export function initYearOptions(
     duration > 0 ? i <= startYear + duration : i >= startYear + duration;
     duration > 0 ? i++ : i--
   ) {
-    if (!exclusions.includes(i)) years[""+i] = "" + i;
+    if (!exclusions.includes(i)) years["" + i] = "" + i;
   }
   return years;
 }
@@ -469,39 +486,39 @@ export function compareValues(key: string, order: string = "asc") {
 export const getAssetColour = (type: string) => {
   switch (type) {
     case ASSET_CATEGORIES.CASH:
-      return COLORS.LIGHT_GREEN;
+      return COLORS.WHITE;
     case ASSET_TYPES.SAVINGS:
       return "#68d391";
     case ASSET_TYPES.DEPOSITS:
-      return "#38a169";
+      return "#64d9ff";
     case ASSET_CATEGORIES.BONDS:
-      return COLORS.LIGHT_GRAY;
+      return COLORS.WHITE;
     case ASSET_TYPES.SHORT_TERM_BONDS:
-      return "#4299e1";
+      return "#855cf8";
     case ASSET_TYPES.MED_TERM_BONDS:
-      return COLORS.BLUE;
+      return "#aa8dfa";
     case ASSET_TYPES.TAX_EXEMPT_BONDS:
-      return "#2b6cb0";
+      return "#e7defe";
     case ASSET_CATEGORIES.STOCKS:
-      return COLORS.SILVER;
+      return COLORS.WHITE;
     case ASSET_TYPES.LARGE_CAP_STOCKS:
-      return "#dd6b20";
+      return "#ff9797";
     case ASSET_TYPES.MID_CAP_STOCKS:
-      return "#ed8936";
+      return "#fdd0cb";
     case ASSET_TYPES.SMALL_CAP_STOCKS:
-      return "#f6ad55";
+      return "#fee0dd";
     case ASSET_TYPES.INTERNATIONAL_STOCKS:
-      return "#9c4221";
+      return "#e75c53";
     case ASSET_TYPES.DIVIDEND_GROWTH_STOCKS:
-      return "#c05621";
+      return "#ffa75c";
     case ASSET_CATEGORIES.ALTERNATIVE:
-      return COLORS.DISABLED;
+      return COLORS.WHITE;
     case ASSET_TYPES.GOLD:
       return "#f6e05e";
     case ASSET_TYPES.DOMESTIC_REIT:
-      return "#b7791f";
+      return "#a5edd9";
     case ASSET_TYPES.INTERNATIONAL_REIT:
-      return "#d69e2e";
+      return "#4adab4";
     default:
       return "";
   }
@@ -536,7 +553,7 @@ export const getAllAssetTypesByCategory = (category: string) => {
       return [
         ASSET_TYPES.DOMESTIC_REIT,
         ASSET_TYPES.INTERNATIONAL_REIT,
-        ASSET_TYPES.GOLD
+        ASSET_TYPES.GOLD,
       ];
     default:
       return [];
@@ -556,7 +573,7 @@ export const getAllAssetTypes = () => [
   ASSET_TYPES.DIVIDEND_GROWTH_STOCKS,
   ASSET_TYPES.DOMESTIC_REIT,
   ASSET_TYPES.INTERNATIONAL_REIT,
-  ASSET_TYPES.GOLD
+  ASSET_TYPES.GOLD,
 ];
 
 export const buildTabsArray = (items: any) => {
