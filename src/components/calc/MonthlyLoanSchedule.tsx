@@ -4,7 +4,11 @@ import { GoalContext } from '../goals/GoalContext';
 import { toCurrency } from '../utils';
 import { CalcContext } from './CalcContext';
 
-export default function MonthlyLoanSchedule() {
+interface MonthlyLoanScheduleProps {
+  editable?: boolean;
+}
+
+export default function MonthlyLoanSchedule({editable}: MonthlyLoanScheduleProps) {
 	const { currency }: any = useContext(CalcContext);
 	const { loanBorrowAmt, emi, loanIntRate, loanRepaymentSY, duration }: any = useContext(GoalContext);
   const [filteredInfo, setFilteredInfo] = useState<any | null>({});
@@ -94,14 +98,14 @@ export default function MonthlyLoanSchedule() {
     let totalInterestPaid = 0;
     let totalPrincipalPaid = 0;
     let yearToBeIncremented = false;
-    for (let i = 1; i <= monthsPaid; i++) {
+    for (let i = 1; i <= monthsPaid && principal > 0; i++) {
       if (yearToBeIncremented) {
         year++;
         yearFilterValues.push(getFilterItem(year));
         yearToBeIncremented = false;
       }
       numFilterValues.push(getFilterItem(i));
-      let monthlyInt = i === monthsPaid ? emi - principal : principal * monthlyRate;
+      let monthlyInt = principal * monthlyRate;
       totalInterestPaid += monthlyInt;
       if (i % 12 === 0) yearToBeIncremented = true;
       let principalPaid = emi - monthlyInt;
@@ -121,6 +125,10 @@ export default function MonthlyLoanSchedule() {
 
   return (
     //@ts-ignore
-		<Table dataSource={data} columns={columns} onChange={handleChange} />
+    <Table dataSource={data} columns={columns} onChange={handleChange} bordered
+    expandable={{
+      expandedRowRender: record => <p style={{ margin: 0 }}>{record.mp}</p>,
+      rowExpandable: record => editable && record.num !== '0' && record.num !== '' + (data.length - 1) ? true : false,
+    }} />
 	);
 }

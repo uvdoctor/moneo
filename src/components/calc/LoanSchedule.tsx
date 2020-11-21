@@ -13,7 +13,7 @@ export default function LoanSchedule() {
 					{`View ${monthlySchedule ? 'Yearly Chart' : 'Monthly Schedule'}`}
 				</Button>
 			</Row>
-			<Col span={24}>{monthlySchedule ? <MonthlyLoanSchedule /> : <LoanScheduleChart />}</Col>
+			<Col span={24}>{monthlySchedule ? <MonthlyLoanSchedule editable /> : <LoanScheduleChart />}</Col>
 		</Fragment>
 	);
 }

@@ -43,7 +43,7 @@ export default function Layout(props: LayoutProps) {
 	const startingAssumptions = [
 		{
 			title: 'Estimates Only. No Advice.',
-			content: `Financial estimates, though not 100% accurate, are useful for what-if analysis. Please consult a registered financial / tax advisor for specific advice.`
+			content: `Financial estimates are useful for what-if analysis. Please consult a registered financial / tax advisor for specific advice.`
 		}
 	];
 	const endingAssumptions = [
@@ -125,7 +125,7 @@ export default function Layout(props: LayoutProps) {
 		{
 			title: 'Financial Analysis Made Simpler',
 			content:
-				'Implements time-tested financial principles and industry-standard best practices for money management with extensive configuration.'
+				'Implements time-tested principles and best practices for money management with extensive configuration.'
 		},
 		{
 			title: 'Ease of use',
@@ -134,23 +134,33 @@ export default function Layout(props: LayoutProps) {
 	];
 
 	const endingFeatures = [
-		{
-			title: 'Instant results',
+		isLoanEligible(props.type as GoalType) && props.type !== GoalType.E && {
+			title: 'Supports Amortizing and Balloon Loans',
 			content:
-				'Results change dynamically with every input change so that impact of every input is readily visible.'
+				'Calculation will automatically calculate monthly installment, payment schedule and total interest for both these loan types.'
+		},
+		{
+			title: 'Tax benefit adjustment',
+			content:
+				'Easily configure tax information to analyze potential tax benefit. Tax benefit can be computed for both Principal and Interest in case of a loan.'
+		},
+		{
+			title: 'Understand impact of every input factor',
+			content:
+				'Results change dynamically with every input change so that impact can be understood for what-if analysis.'
 		},
 		{
 			title: 'Highly configurable',
 			content:
-				'Allows custom configuration of payment, loan, tax, etc so that estimates are as accurate as possible.'
+				'Allows custom configuration of payment schedule, loan details, tax benefit, etc so that estimates are as accurate and personalized as possible.'
 		},
 		{
-			title: 'Works Globally',
+			title: 'Works Anywhere',
 			content: 'Calculation works seamlessly for different currencies.'
 		},
 		{
 			title: 'Keeps working offline',
-			content: 'Calculation keeps working even when connection is not available.'
+			content: 'Calculator keeps working even when connection is not available.'
 		}
 	];
 
