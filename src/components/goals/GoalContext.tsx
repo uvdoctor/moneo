@@ -1,9 +1,9 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
-import { CreateGoalInput, GoalType, LMH, TargetInput } from "../../api/goals";
+import { CreateGoalInput, GoalType, LMH, LoanType, TargetInput } from "../../api/goals";
 import { initYearOptions } from "../utils";
 import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils";
-import { getCompoundedIncome, getNPV } from "../calc/finance";
-import { calculateCFs, calculateSellPrice, createAmortizingLoanCFs } from "./cfutils";
+import { createAmortizingLoanCFs, getCompoundedIncome, getNPV } from "../calc/finance";
+import { calculateCFs, calculateSellPrice } from "./cfutils";
 import { CalcContext } from "../calc/CalcContext";
 import OppCost from "../calc/oppcost";
 import FFImpact from "./ffimpact";
@@ -82,11 +82,11 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [loanSICapitalize, setLoanSICapitalize] = useState<
     number | undefined | null
     >(goal.tbr);
- 	const [ noIR, setNoIR ] = useState<number>(0);
+ 	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal.lt);
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
     >(goal.achg);
-  const [loanPrepayments, setLoanPrepayments] = useState<Array<TargetInput>>([]);
+  const [loanPrepayments, setLoanPrepayments] = useState<Array<TargetInput>>(goal?.lpp as Array<TargetInput>);
   const [ totalIntAmt, setTotalIntAmt ] = useState<number>(0);
   const [startingPrice, setStartingPrice] = useState<number>(
     goal?.cp as number
@@ -187,6 +187,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         per: loanPer as number,
         ry: loanRepaymentSY as number,
       };
+      bg.lpp = loanPrepayments ? loanPrepayments : [];
+      bg.lt = loanType ? loanType : LoanType.A;
     }
     if (sellAfter) {
       bg.sa = sellAfter;
@@ -312,7 +314,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         setISchedule([...[]]);
         setPSchedule([...[]]);
       }
-      if(noIR < 1) setEMI(result.hasOwnProperty("emi") ? result.emi : 0);
+      if(loanType === LoanType.A) setEMI(result.hasOwnProperty("emi") ? result.emi : 0);
       setRemSI(result.hasOwnProperty("remSI") ? result.remSI : 0);
       setCapSI(result.hasOwnProperty("capSI") ? result.capSI : 0);
       setSimpleInts([...result.hasOwnProperty("simpleInts") ? result.simpleInts : []]);
@@ -349,6 +351,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     loanRepaymentSY,
     loanIntRate,
     loanYears,
+    loanPrepayments,
     startYear,
     sellAfter,
     taxRate,
@@ -626,8 +629,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           remSI,
           capSI,
           loanBorrowAmt,
-          noIR,
-          setNoIR,
+          loanType,
+          setLoanType,
           loanPrepayments,
           setLoanPrepayments,
           loanMIPayments,

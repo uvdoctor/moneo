@@ -202,6 +202,8 @@ export const createNewGoalInput = (
       per: 0,
       ry: goalType === APIt.GoalType.E ? bg.ey + 1 : bg.sy,
     };
+    bg.lt = APIt.LoanType.A;
+    bg.lpp = [];
   }
   if (goalType === APIt.GoalType.B) {
     bg.sa = 5;

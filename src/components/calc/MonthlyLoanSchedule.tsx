@@ -1,11 +1,12 @@
 import { Col, Row, Table } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
+import { TargetInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
-import { findAdditionalPrincipalPayment } from '../goals/cfutils';
 import { GoalContext } from '../goals/GoalContext';
 import { createNewTarget } from '../goals/goalutils';
 import { removeFromArray, toCurrency } from '../utils';
 import { CalcContext } from './CalcContext';
+import { findAdditionalPrincipalPayment } from './finance';
 import ItemDisplay from './ItemDisplay';
 interface MonthlyLoanScheduleProps {
 	editable?: boolean;
@@ -14,7 +15,6 @@ interface MonthlyLoanScheduleProps {
 export default function MonthlyLoanSchedule({ editable }: MonthlyLoanScheduleProps) {
 	const { currency }: any = useContext(CalcContext);
 	const {
-		emi,
 		loanRepaymentSY,
 		loanPrepayments,
 		setLoanPrepayments,
@@ -79,10 +79,9 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		};
 	};
 
-	const changeLoanPrepayments = (index: number, value: number) => {
-		let additionalPayment = value - emi;
-		if (additionalPayment < 0) return;
-		let existingPrepayment: any = findAdditionalPrincipalPayment(loanPrepayments, index);
+	const changeLoanPrepayments = (index: number, additionalPayment: number) => {
+		if (!additionalPayment) return;
+		let existingPrepayment: TargetInput | null | undefined = findAdditionalPrincipalPayment(loanPrepayments, index);
 		if (existingPrepayment)
 			additionalPayment
 				? (existingPrepayment.val = additionalPayment)
@@ -181,10 +180,10 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 						record.num !== '' + loanMIPayments.length && (
 							<div style={{ marginTop: '1rem' }}>
 								<NumberInput
-									pre="Increase Monthly Installment to Prepay Loan"
+									pre="Make Additional Payment"
 									value={getMonthlyPayment(record.num)}
 									changeHandler={(val: number) => changeLoanPrepayments(parseInt(record.num), val)}
-									min={emi}
+									min={0}
 									max={getMonthlyPayment(record.num) + getPrincipalDue(record.num)}
 									step={10}
 									currency={currency}

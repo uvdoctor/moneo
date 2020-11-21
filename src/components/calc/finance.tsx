@@ -1,3 +1,5 @@
+import { TargetInput } from "../../api/goals";
+
 export function getEmi(loanAmt: number, annualRate: number, months: number) {
     if(loanAmt <= 0 || annualRate < 0 || months <= 0) return 0
     if(!annualRate) return loanAmt / months
@@ -5,12 +7,6 @@ export function getEmi(loanAmt: number, annualRate: number, months: number) {
     return loanAmt * monthlyRate *
     Math.pow(1 + monthlyRate, months) /
     (Math.pow(1 + monthlyRate, months) - 1);
-}
-
-export function getIR(loanAmt: number, emi: number, months: number) {
-    if (!loanAmt || !emi || !months) return 0;
-    let monthlyRate = 1 - Math.pow(emi / (loanAmt - emi), 1 / months);
-    return monthlyRate * 1200;
 }
 
 //Tested
@@ -58,15 +54,6 @@ export function getIntAmtByYear(borrowAmt: number, emi: number, intRate: number,
     return annualInts
 }
 
-export function getRemainingPrincipal(borrowAmt: number, emi: number, intRate: number, loanPaidForMonths: number) {
-    let principal = borrowAmt
-    let monthlyRate = intRate / 1200
-    for(let i = 0; i < loanPaidForMonths; i++) 
-        principal -= (emi - (principal * monthlyRate))
-    return principal <= 0 ? 0 : principal
-}
-//Tested
-
 export function getNPV(rr: number | Array<number>, cashFlows: Array<number>, startIndex: number) {
     let npv = 0
     for(let i = cashFlows.length - 1; i > 0; i--) {
@@ -76,3 +63,75 @@ export function getNPV(rr: number | Array<number>, cashFlows: Array<number>, sta
     }
     return Math.round(npv + cashFlows[0])
 }
+
+export const findAdditionalPrincipalPayment = (loanPrepayments: Array<TargetInput>, installmentNum: number) =>
+loanPrepayments && loanPrepayments.length > 0 ? loanPrepayments.find((elem: TargetInput) => elem.num === installmentNum) : null;
+
+export const createAmortizingLoanCFs = (loanBorrowAmt: number, loanIntRate: number, emi: number, loanPrepayments: Array<TargetInput>, loanYears: number, duration: number) => {
+  let loanDuration = loanYears < duration ? loanYears : duration;
+  if (!loanBorrowAmt || !loanDuration || !emi) return {
+    interest: [],
+    principal: []
+  };
+  let principal = loanBorrowAmt;
+  let monthlyRate = loanIntRate as number / 1200;
+  let miPayments: Array<number> = [];
+  let mpPayments: Array<number> = [];
+  for (let i = 0; i < loanDuration * 12 && principal > 0; i++) {
+    let monthlyInt = principal * monthlyRate;
+    miPayments.push(monthlyInt);
+    let monthlyPayment = principal + monthlyInt < emi ? principal + monthlyInt : emi;
+    let additionalPrincipalPaid: TargetInput | undefined | null = findAdditionalPrincipalPayment(loanPrepayments, i + 1);
+    if (additionalPrincipalPaid) monthlyPayment += additionalPrincipalPaid.val;
+    let principalPaid = monthlyPayment - monthlyInt;
+    principal -= principalPaid;
+    if (i === (loanDuration * 12) - 1 && principal > 0) {
+      principalPaid += principal;
+      principal = 0;
+    }
+    mpPayments.push(principalPaid);
+  }
+  return {
+    interest: miPayments,
+    principal: mpPayments
+  }
+};
+
+export const createYearlyFromMonthlyLoanCFs = (iPayments: Array<number>, pPayments: Array<number>, startMonthNum: number = 1) => {
+  if (!iPayments || !iPayments.length || !pPayments || !pPayments.length) return {
+    interest: [],
+    principal: []
+  };
+  let yearlyIPayments: Array<number> = [];
+  let yearlyPPayments: Array<number> = [];
+  let result = {
+    interest: yearlyIPayments,
+    principal: yearlyPPayments
+  }
+  let firstYearNum = 12 - (startMonthNum - 1);
+  if (firstYearNum >= iPayments.length) firstYearNum = iPayments.length;
+  let yearlyICF = 0;
+  let yearlyPCF = 0;
+  for (let i = 0; i < firstYearNum; i++) {
+    yearlyICF += iPayments[i];
+    yearlyPCF += pPayments[i];
+  }
+  result.interest.push(yearlyICF);
+  result.principal.push(yearlyPCF);
+  if (firstYearNum === iPayments.length) return result;
+  yearlyICF = 0;
+  yearlyPCF = 0;
+  for (let i = 0; i + firstYearNum < iPayments.length; i++) {
+    let index = i + firstYearNum;
+    yearlyICF += iPayments[index];
+    yearlyPCF += pPayments[index];
+    if ((i + 1) % 12 === 0 || index === iPayments.length - 1) {
+      result.interest.push(yearlyICF);
+      result.principal.push(yearlyPCF);
+      yearlyICF = 0;
+      yearlyPCF = 0;
+    }
+  }
+  return result;
+};
+

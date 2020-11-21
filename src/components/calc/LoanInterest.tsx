@@ -1,30 +1,22 @@
-import React, { Fragment, useContext, useEffect } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { Col, Row } from 'antd';
 import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
 import NumberInput from '../form/numberinput';
 import HSwitch from '../HSwitch';
-import { getIR } from './finance';
-import { GoalType } from '../../api/goals';
+import { GoalType, LoanType } from '../../api/goals';
 
 export default function LoanInterest() {
 	const { goal, currency }: any = useContext(CalcContext);
-	const { price, loanBorrowAmt, loanYears, loanIntRate, setLoanIntRate, emi, setEMI, noIR, setNoIR }: any = useContext(GoalContext);
+	const { loanIntRate, setLoanIntRate, emi, loanType, setLoanType }: any = useContext(GoalContext);
 
-	useEffect(
-		() => {
-			if (goal.type === GoalType.E || noIR < 1) return;
-			setLoanIntRate(getIR(loanBorrowAmt, emi, loanYears * 12));
-		},
-		[ noIR, loanBorrowAmt, emi, loanYears ]
-	);
+  const changeLoanType = (val: number) => setLoanType(val < 1 ? LoanType.A : LoanType.B);
 
 	return (
 		<Fragment>
-      {goal.type !== GoalType.E && <HSwitch leftText="Amortizing Loan" rightText="Balloon Loan" value={noIR} setter={setNoIR} />}
+      {goal.type !== GoalType.E && <HSwitch leftText="Amortizing Loan" rightText="Balloon Loan" value={loanType === LoanType.A ? 0 : 1} setter={changeLoanType} />}
 			<Col span={24}>
-				{noIR < 1 ? (
 					<NumberInput
 						pre="Yearly Interest"
 						unit="%"
@@ -82,24 +74,9 @@ export default function LoanInterest() {
 						max={25.0}
 						step={0.1}
 					/>
-				) : (
-					<NumberInput
-						pre="Monthly Installment"
-						value={emi}
-						changeHandler={setEMI}
-						min={100}
-						step={100}
-						max={price}
-						currency={currency}
-					/>
-				)}
 			</Col>
 			<Row align="middle" justify="center">
-				{noIR < 1 ? (
           <ItemDisplay label="Monthly Installment" result={emi} currency={currency} decimal={2} />
-				) : (
-					<ItemDisplay label="Interest Rate" result={loanIntRate} unit="%" />
-				)}
 			</Row>
 		</Fragment>
 	);
