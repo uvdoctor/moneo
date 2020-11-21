@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState, ReactNode, useContext } from
 import { CreateGoalInput, GoalType, LMH, LoanType, TargetInput } from "../../api/goals";
 import { initYearOptions } from "../utils";
 import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils";
-import { createAmortizingLoanCFs, getCompoundedIncome, getNPV } from "../calc/finance";
+import { getCompoundedIncome, getNPV } from "../calc/finance";
 import { calculateCFs, calculateSellPrice } from "./cfutils";
 import { CalcContext } from "../calc/CalcContext";
 import OppCost from "../calc/oppcost";
@@ -102,8 +102,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   );
   const [iSchedule, setISchedule] = useState<Array<number>>([]);
   const [pSchedule, setPSchedule] = useState<Array<number>>([]);
-  const [loanMIPayments, setLoanMIPayments] = useState<Array<number>>([]);
-  const [loanMPPayments, setLoanMPPayments] = useState<Array<number>>([]);
   const [loanBorrowAmt, setLoanBorrowAmt] = useState<number>(0);
   const [emi, setEMI] = useState<number>(0);
 	const [ simpleInts, setSimpleInts ] = useState<Array<number>>([]);
@@ -322,15 +320,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     }
     return cfs;
   };
-
-  useEffect(
-    () => {
-      let result: any = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments, loanYears as number, duration);
-      setLoanMIPayments([...result.interest]);
-      setLoanMPPayments([...result.principal]);
-		},
-		[ emi, loanPrepayments, duration ]
-	);
 
   useEffect(() => {
     let totalIntAmt = remSI + capSI;
@@ -633,8 +622,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           setLoanType,
           loanPrepayments,
           setLoanPrepayments,
-          loanMIPayments,
-          loanMPPayments
         }}>
         {children ? children : <CalcTemplate header={<GoalHeader />} />}
       </GoalContext.Provider>

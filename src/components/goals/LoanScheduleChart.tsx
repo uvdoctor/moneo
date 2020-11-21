@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
 import { GoalContext } from './GoalContext';
 import { CalcContext } from '../calc/CalcContext';
+import { createYearlyFromMonthlyLoanCFs } from '../calc/finance';
 
 const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
 
@@ -14,16 +15,17 @@ export default function LoanScheduleChart() {
 	useEffect(
 		() => {
 			let data: Array<any> = [];
-			for (let year = loanRepaymentSY; year < loanRepaymentSY + pSchedule.length; year++) {
+			let yearlyLoanCFs: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule);
+			for (let year = loanRepaymentSY; year < loanRepaymentSY + yearlyLoanCFs.principal.length; year++) {
 				data.push({
 					name: 'Principal',
 					year: year,
-					value: pSchedule[year - loanRepaymentSY]
+					value: yearlyLoanCFs.principal[year - loanRepaymentSY]
 				});
 				data.push({
 					name: 'Interest',
 					year: year,
-					value: iSchedule[year - loanRepaymentSY]
+					value: yearlyLoanCFs.interest[year - loanRepaymentSY]
 				});
 			}
 			setData([ ...data ]);

@@ -18,8 +18,8 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		loanRepaymentSY,
 		loanPrepayments,
 		setLoanPrepayments,
-		loanMIPayments,
-		loanMPPayments,
+		iSchedule,
+		pSchedule,
 		loanBorrowAmt
 	}: any = useContext(GoalContext);
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
@@ -92,24 +92,24 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 
 	const getPrincipalDue = (installmentNum: number) => {
 		let principal = loanBorrowAmt;
-		for (let i = 0; i < installmentNum; i++) principal -= loanMPPayments[i];
+		for (let i = 0; i < installmentNum; i++) principal -= pSchedule[i];
 		return principal;
 	};
 
 	const getTotalInterestPaid = (installmentNum: number) => {
 		let totalInt = 0;
-		for (let i = 0; i < installmentNum; i++) totalInt += loanMIPayments[i];
+		for (let i = 0; i < installmentNum; i++) totalInt += iSchedule[i];
 		return totalInt;
 	};
 
 	const getTotalPrincipalPaid = (installmentNum: number) => {
 		let totalPrincipalPaid = 0;
-		for (let i = 0; i < installmentNum; i++) totalPrincipalPaid += loanMPPayments[i];
+		for (let i = 0; i < installmentNum; i++) totalPrincipalPaid += pSchedule[i];
 		return totalPrincipalPaid;
 	};
 
 	const getMonthlyPayment = (installmentNum: number) =>
-		loanMIPayments[installmentNum - 1] + loanMPPayments[installmentNum - 1];
+		iSchedule[installmentNum - 1] + pSchedule[installmentNum - 1];
 
 	useEffect(
 		() => {
@@ -117,14 +117,14 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 			let numFilterValues = [];
 			let year = loanRepaymentSY;
 			let yearFilterValues = [ getFilterItem(year) ];
-			for (let i = 0; i < loanMPPayments.length; i++) {
+			for (let i = 0; i < pSchedule.length; i++) {
 				numFilterValues.push(getFilterItem(i + 1));
 				if (i && i % 12 === 0) {
 					year++;
 					yearFilterValues.push(getFilterItem(year));
 				}
-				let monthlyInt = loanMIPayments[i];
-				let monthlyPrincipal = loanMPPayments[i];
+				let monthlyInt = iSchedule[i];
+				let monthlyPrincipal = pSchedule[i];
 				let monthlyPayment = monthlyInt + monthlyPrincipal;
 				result.push(getDataItem(i + 1, monthlyPayment, year, monthlyInt, monthlyPrincipal));
 			}
@@ -132,7 +132,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 			setNumFilterValues([ ...numFilterValues ]);
 			setData([ ...result ]);
 		},
-		[ loanMPPayments ]
+		[ pSchedule ]
 	);
 
 	//@ts-ignore
@@ -177,7 +177,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 							</Col>
 						</Row>
 						{editable &&
-						record.num !== '' + loanMIPayments.length && (
+						record.num !== '' + iSchedule.length && (
 							<div style={{ marginTop: '1rem' }}>
 								<NumberInput
 									pre="Make Additional Payment"
