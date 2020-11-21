@@ -1,40 +1,50 @@
-import { Table } from 'antd';
-import React, { useContext, useEffect, useState } from 'react';
+import { Col, Row, Table } from 'antd';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
+import NumberInput from '../form/numberinput';
 import { GoalContext } from '../goals/GoalContext';
-import { toCurrency } from '../utils';
+import { removeFromArray, toCurrency } from '../utils';
 import { CalcContext } from './CalcContext';
+import ItemDisplay from './ItemDisplay';
 
 interface MonthlyLoanScheduleProps {
-  editable?: boolean;
+	editable?: boolean;
 }
 
-export default function MonthlyLoanSchedule({editable}: MonthlyLoanScheduleProps) {
+export default function MonthlyLoanSchedule({ editable }: MonthlyLoanScheduleProps) {
 	const { currency }: any = useContext(CalcContext);
-	const { loanBorrowAmt, emi, loanIntRate, loanRepaymentSY, duration }: any = useContext(GoalContext);
-  const [filteredInfo, setFilteredInfo] = useState<any | null>({});
-  const [data, setData] = useState<Array<any>>([]);
-  const [numFilterValues, setNumFilterValues] = useState<Array<any>>([{}]);
-  const [yearFilterValues, setYearFilterValues] = useState<Array<any>>([{}]);
-  
-  const columns = [
+	const {
+		emi,
+		loanRepaymentSY,
+		loanPrepayments,
+		setLoanPrepayments,
+		loanMIPayments,
+		loanMPPayments,
+		loanBorrowAmt
+	}: any = useContext(GoalContext);
+	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
+	const [ data, setData ] = useState<Array<any>>([]);
+	const [ numFilterValues, setNumFilterValues ] = useState<Array<any>>([ {} ]);
+	const [ yearFilterValues, setYearFilterValues ] = useState<Array<any>>([ {} ]);
+
+	const columns = [
 		{
-			title: 'Number',
+			title: 'Installment #',
 			dataIndex: 'num',
-      key: 'num',
-      filteredValue: filteredInfo.num || null,
-      filters: numFilterValues,
+			key: 'num',
+			filteredValue: filteredInfo.num || null,
+			filters: numFilterValues,
 			onFilter: (value: Array<any>, record: any) => record.num.includes(value)
 		},
 		{
 			title: 'Year',
 			dataIndex: 'year',
-      key: 'year',
-      filteredValue: filteredInfo.year || null,
+			key: 'year',
+			filteredValue: filteredInfo.year || null,
 			filters: yearFilterValues,
-      onFilter: (value: Array<any>, record: any) => record.year.includes(value)
+			onFilter: (value: Array<any>, record: any) => record.year.includes(value)
 		},
 		{
-			title: 'Monthly Payment',
+			title: 'Payment',
 			dataIndex: 'mp',
 			key: 'mp'
 		},
@@ -47,88 +57,146 @@ export default function MonthlyLoanSchedule({editable}: MonthlyLoanScheduleProps
 			title: 'Principal Paid',
 			dataIndex: 'pp',
 			key: 'pp'
-    },
-    {
-			title: 'Total Interest Paid',
-			dataIndex: 'tip',
-			key: 'tip'
-		},
-		{
-			title: 'Total Principal Paid',
-			dataIndex: 'tpp',
-			key: 'tpp'
-		},
-		{
-			title: 'Principal Due',
-			dataIndex: 'pd',
-			key: 'pd'
 		}
 	];
 
-  const getDataItem = (index: number, payment: number, year: number,
-    intAmt: number, pAmt: number, tiAmt: number, tpAmt: number, pDue: number) => {
-    return {
+	const getDataItem = (index: number, payment: number, year: number, intAmt: number, pAmt: number) => {
+		return {
 			key: '' + index,
 			num: '' + index,
 			year: '' + year,
 			mp: toCurrency(payment, currency),
 			ip: toCurrency(intAmt, currency),
-      pp: toCurrency(pAmt, currency),
-      tip: toCurrency(tiAmt, currency),
-      tpp: toCurrency(tpAmt, currency),
-			pd: toCurrency(pDue, currency)
-    }
-  };
+			pp: toCurrency(pAmt, currency)
+		};
+	};
 
-  const getFilterItem = (val: number) => {
-    return {
-      text: "" + val,
-      value: "" + val
-    }
-  };
+	const getFilterItem = (val: number) => {
+		return {
+			text: '' + val,
+			value: '' + val
+		};
+	};
 
-  useEffect(() => {
-    let principal = loanBorrowAmt;
-    let monthlyRate = loanIntRate / 1200;
-    let result = [getDataItem(0, 0, loanRepaymentSY, 0, 0, 0, 0, principal)];
-    let yearFilterValues = [getFilterItem(loanRepaymentSY)];
-    let numFilterValues = [getFilterItem(0)];
-    let monthsPaid = duration * 12;
-    let year = loanRepaymentSY;
-    let totalInterestPaid = 0;
-    let totalPrincipalPaid = 0;
-    let yearToBeIncremented = false;
-    for (let i = 1; i <= monthsPaid && principal > 0; i++) {
-      if (yearToBeIncremented) {
-        year++;
-        yearFilterValues.push(getFilterItem(year));
-        yearToBeIncremented = false;
-      }
-      numFilterValues.push(getFilterItem(i));
-      let monthlyInt = principal * monthlyRate;
-      totalInterestPaid += monthlyInt;
-      if (i % 12 === 0) yearToBeIncremented = true;
-      let principalPaid = emi - monthlyInt;
-      totalPrincipalPaid += principalPaid;
-      principal -= principalPaid;
-      result.push(getDataItem(i, emi, year, monthlyInt, principalPaid, totalInterestPaid, totalPrincipalPaid, principal));
-    }
-    setYearFilterValues([...yearFilterValues]);
-    setNumFilterValues([...numFilterValues]);
-    setData([...result]);
-  }, [loanRepaymentSY, emi, duration]);
+	const findAdditionalPrincipalPayment = (installmentNum: number) =>
+		loanPrepayments.find((elem: any) => elem.num === installmentNum);
 
-  //@ts-ignore
-  const handleChange = (pagination: any, filters: any, sorters: any) => {
+	const changeLoanPrepayments = (index: number, value: number) => {
+		let additionalPayment = value - emi;
+		if (additionalPayment < 0) return;
+		let existingPrepayment: any = findAdditionalPrincipalPayment(index);
+		if (existingPrepayment)
+			additionalPayment
+				? (existingPrepayment.val = additionalPayment)
+				: removeFromArray(loanPrepayments, 'num', index);
+		else
+			loanPrepayments.push({
+				num: index,
+				val: additionalPayment
+			});
+		setLoanPrepayments([ ...loanPrepayments ]);
+	};
+
+	const getPrincipalDue = (installmentNum: number) => {
+		let principal = loanBorrowAmt;
+		for (let i = 0; i < installmentNum; i++) principal -= loanMPPayments[i];
+		return principal;
+	};
+
+	const getTotalInterestPaid = (installmentNum: number) => {
+		let totalInt = 0;
+		for (let i = 0; i < installmentNum; i++) totalInt += loanMIPayments[i];
+		return totalInt;
+	};
+
+	const getTotalPrincipalPaid = (installmentNum: number) => {
+		let totalPrincipalPaid = 0;
+		for (let i = 0; i < installmentNum; i++) totalPrincipalPaid += loanMPPayments[i];
+		return totalPrincipalPaid;
+	};
+
+	const getMonthlyPayment = (installmentNum: number) =>
+		loanMIPayments[installmentNum - 1] + loanMPPayments[installmentNum - 1];
+
+	useEffect(
+		() => {
+			let result = [];
+			let numFilterValues = [];
+			let year = loanRepaymentSY;
+			let yearFilterValues = [ getFilterItem(year) ];
+			for (let i = 0; i < loanMPPayments.length; i++) {
+				numFilterValues.push(getFilterItem(i + 1));
+				if (i && i % 12 === 0) {
+					year++;
+					yearFilterValues.push(getFilterItem(year));
+				}
+				let monthlyInt = loanMIPayments[i];
+				let monthlyPrincipal = loanMPPayments[i];
+				let monthlyPayment = monthlyInt + monthlyPrincipal;
+				result.push(getDataItem(i + 1, monthlyPayment, year, monthlyInt, monthlyPrincipal));
+			}
+			setYearFilterValues([ ...yearFilterValues ]);
+			setNumFilterValues([ ...numFilterValues ]);
+			setData([ ...result ]);
+		},
+		[ loanMPPayments ]
+	);
+
+	//@ts-ignore
+	const handleChange = (pagination: any, filters: any, sorters: any) => {
 		setFilteredInfo(filters);
 	};
 
-  return (
-    //@ts-ignore
-    <Table dataSource={data} columns={columns} onChange={handleChange} bordered
-    expandable={{
-      expandedRowRender: record => <p style={{ margin: 0 }}>{record.mp}</p>,
-      rowExpandable: record => editable && record.num !== '0' && record.num !== '' + (data.length - 1) ? true : false,
-    }} />
+	return (
+		<Table
+			dataSource={data}
+			//@ts-ignore
+			columns={columns}
+			onChange={handleChange}
+			bordered
+			expandable={{
+				expandedRowRender: (record) => (
+					<Fragment>
+						<Row justify="space-around">
+							<Col>
+								<ItemDisplay
+									label="Total Interest Paid"
+									result={getTotalInterestPaid(record.num)}
+									currency={currency}
+								/>
+							</Col>
+							<Col>
+								<ItemDisplay
+									label="Total Principal Paid"
+									result={getTotalPrincipalPaid(record.num)}
+									currency={currency}
+								/>
+							</Col>
+							<Col>
+								<ItemDisplay
+									label="Principal Due"
+									result={getPrincipalDue(record.num)}
+									currency={currency}
+								/>
+							</Col>
+						</Row>
+						{editable &&
+						record.num !== '' + loanMIPayments.length && (
+							<div style={{ marginTop: '1rem' }}>
+								<NumberInput
+									pre="Prepay Loan"
+									value={getMonthlyPayment(record.num)}
+									changeHandler={(val: number) => changeLoanPrepayments(record.num, val)}
+									min={emi}
+									max={getMonthlyPayment(record.num) + getPrincipalDue(record.num)}
+									step={10}
+									currency={currency}
+								/>
+							</div>
+						)}
+					</Fragment>
+				)
+			}}
+		/>
 	);
 }

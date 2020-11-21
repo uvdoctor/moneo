@@ -86,6 +86,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
     >(goal.achg);
+  const [loanPrepayments, setLoanPrepayments] = useState<Array<any>>([{}]);
   const [ totalIntAmt, setTotalIntAmt ] = useState<number>(0);
   const [startingPrice, setStartingPrice] = useState<number>(
     goal?.cp as number
@@ -101,6 +102,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   );
   const [iSchedule, setISchedule] = useState<Array<number>>([]);
   const [pSchedule, setPSchedule] = useState<Array<number>>([]);
+  const [loanMIPayments, setLoanMIPayments] = useState<Array<number>>([]);
+  const [loanMPPayments, setLoanMPPayments] = useState<Array<number>>([]);
   const [loanBorrowAmt, setLoanBorrowAmt] = useState<number>(0);
   const [emi, setEMI] = useState<number>(0);
 	const [ simpleInts, setSimpleInts ] = useState<Array<number>>([]);
@@ -274,7 +277,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 		[ manualMode, startYear, endYear ]
 	);
 
-
   const calculateYearlyCFs = (
     duration: number = getDuration(
       sellAfter,
@@ -318,6 +320,31 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     }
     return cfs;
   };
+
+  const findAdditionalPrincipalPayment = (installmentNum: number) =>
+  loanPrepayments.find((elem: any) => elem.num === '' + installmentNum);
+
+  useEffect(
+    () => {
+			let principal = loanBorrowAmt;
+			let monthlyRate = loanIntRate as number / 1200;
+      let miPayments: Array<number> = [];
+      let mpPayments: Array<number> = [];
+			for (let i = 0; principal > 0; i++) {
+        let monthlyInt = principal * monthlyRate;
+        miPayments.push(monthlyInt);
+				let monthlyPayment = principal + monthlyInt < emi ? principal + monthlyInt : emi;
+				let additionalPrincipalPaid: any = findAdditionalPrincipalPayment(i + 1);
+				if (additionalPrincipalPaid) monthlyPayment += additionalPrincipalPaid.val;
+        let principalPaid = monthlyPayment - monthlyInt;
+        mpPayments.push(principalPaid);
+				principal -= principalPaid;
+			}
+      setLoanMIPayments([...miPayments]);
+      setLoanMPPayments([...mpPayments]);
+		},
+		[ emi, loanPrepayments ]
+	);
 
   useEffect(() => {
     let totalIntAmt = remSI + capSI;
@@ -616,7 +643,11 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           capSI,
           loanBorrowAmt,
           noIR,
-          setNoIR
+          setNoIR,
+          loanPrepayments,
+          setLoanPrepayments,
+          loanMIPayments,
+          loanMPPayments
         }}>
         {children ? children : <CalcTemplate header={<GoalHeader />} />}
       </GoalContext.Provider>
