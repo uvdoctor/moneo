@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { List, Badge } from "antd";
 import {
 	getAllAssetCategories,
 	getAllAssetTypesByCategory,
@@ -7,12 +8,19 @@ import {
 	toCurrency,
 } from "../utils";
 import { CalcContext } from "../calc/CalcContext";
+import DataSwitcher from "../DataSwitcher";
 
 const TreemapChart = dynamic(() => import("bizcharts/lib/plots/TreemapChart"), {
 	ssr: false,
 });
 
+interface RenderItemProp {
+	name?: any;
+	value?: any;
+}
+
 export default function AssetAllocationChart() {
+	const { Chart, List: DataSwitcherList } = DataSwitcher;
 	const { cfs, ffResult, currency }: any = useContext(CalcContext);
 	const [data, setData] = useState<Array<any>>([]);
 	const [colors, setColors] = useState<Array<string>>([]);
@@ -58,38 +66,85 @@ export default function AssetAllocationChart() {
 	}, [cfs]);
 
 	return (
-		<TreemapChart
-			data={{
-				name: "Portfolio",
-				value: 100,
-				children: data,
-			}}
-			meta={{
-				value: {
-					formatter: (v) => {
-						return v + "%";
-					},
-				},
-			}}
-			colorField="name"
-			label={{
-				visible: true,
-				formatter: (v) => {
-					return ffResult.aa.hasOwnProperty(v)
-						? v +
-								"\n" +
-								toCurrency(
-									Math.round((cfs[0] * ffResult.aa[v][0]) / 100),
-									currency
-								) +
-								"\n" +
-								ffResult.aa[v][0] +
-								"%"
-						: v;
-				},
-			}}
-			color={colors}
-			rectStyle={{ stroke: "#fff", lineWidth: 2 }}
-		/>
+		<Fragment>
+			<DataSwitcher>
+				<Chart>
+					<TreemapChart
+						data={{
+							name: "Portfolio",
+							value: 100,
+							children: data,
+						}}
+						meta={{
+							value: {
+								formatter: (v) => {
+									return v + "%";
+								},
+							},
+						}}
+						colorField="name"
+						label={{
+							visible: true,
+							formatter: (v) => {
+								return ffResult.aa.hasOwnProperty(v)
+									? v +
+											"\n" +
+											toCurrency(
+												Math.round((cfs[0] * ffResult.aa[v][0]) / 100),
+												currency
+											) +
+											"\n" +
+											ffResult.aa[v][0] +
+											"%"
+									: v;
+							},
+						}}
+						color={colors}
+						rectStyle={{ stroke: "#fff", lineWidth: 2 }}
+					/>
+				</Chart>
+				<DataSwitcherList>
+					{(() => {
+						let count = 0;
+
+						return (
+							<List
+								dataSource={data}
+								renderItem={({ name, children }) => {
+									const [title, percentage] = name.split(" ");
+
+									count++;
+
+									return (
+										<Fragment>
+											<List.Item className="heading">
+												{title} <Badge count={percentage} />
+											</List.Item>
+											<List.Item>
+												<List
+													dataSource={children}
+													renderItem={({ name, value }: RenderItemProp) => {
+														count++;
+
+														return (
+															<List.Item actions={[<span>{value} %</span>]}>
+																<span
+																	style={{ background: colors[count - 1] }}
+																></span>
+																{name}
+															</List.Item>
+														);
+													}}
+												/>
+											</List.Item>
+										</Fragment>
+									);
+								}}
+							/>
+						);
+					})()}
+				</DataSwitcherList>
+			</DataSwitcher>
+		</Fragment>
 	);
 }

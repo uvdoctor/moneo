@@ -4,6 +4,10 @@
 	height: 100%;
 }
 
+.text-right {
+	text-align: right;
+}
+
 .ant-list {
 	background: #fff;
 }
@@ -15,6 +19,19 @@ body.no-scrollbar {
 .error-txt {
 	color: #f00;
 	margin-left: 5px;
+}
+
+.ant-radio-group {
+	& label.ant-radio-button-wrapper {
+		border-radius: 0;
+	}
+
+	& .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled),
+	&
+		.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
+		background: @primary-color;
+		color: #fff;
+	}
 }
 
 .dd-site {
