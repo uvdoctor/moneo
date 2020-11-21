@@ -1,19 +1,19 @@
-import React, { Fragment, useState } from 'react';
-import { Button, Col, Row } from 'antd';
+import React from 'react';
 import MonthlyLoanSchedule from '../calc/MonthlyLoanSchedule';
 import LoanScheduleChart from '../goals/LoanScheduleChart';
+import DataSwitcher from '../DataSwitcher';
 
 export default function LoanSchedule() {
-	const [ monthlySchedule, setMonthlySchedule ] = useState<boolean>(false);
+	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
 	return (
-		<Fragment>
-			<Row justify="end">
-				<Button type="link" onClick={() => setMonthlySchedule(!monthlySchedule)}>
-					{`View ${monthlySchedule ? 'Yearly Chart' : 'Monthly Schedule'}`}
-				</Button>
-			</Row>
-			<Col span={24}>{monthlySchedule ? <MonthlyLoanSchedule editable /> : <LoanScheduleChart />}</Col>
-		</Fragment>
+		<DataSwitcher>
+			<Chart>
+				<LoanScheduleChart />
+			</Chart>
+			<DataSwitcherList>
+				<MonthlyLoanSchedule editable />
+			</DataSwitcherList>
+		</DataSwitcher>
 	);
 }
