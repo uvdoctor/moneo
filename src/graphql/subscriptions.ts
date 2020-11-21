@@ -22,7 +22,7 @@ export const onCreateGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
       emi {
@@ -30,6 +30,11 @@ export const onCreateGoal = /* GraphQL */ `
         rate
         dur
         ry
+      }
+      lt
+      lpp {
+        num
+        val
       }
       imp
       met
@@ -42,11 +47,11 @@ export const onCreateGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -77,7 +82,7 @@ export const onUpdateGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
       emi {
@@ -85,6 +90,11 @@ export const onUpdateGoal = /* GraphQL */ `
         rate
         dur
         ry
+      }
+      lt
+      lpp {
+        num
+        val
       }
       imp
       met
@@ -97,11 +107,11 @@ export const onUpdateGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -132,7 +142,7 @@ export const onDeleteGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
       emi {
@@ -140,6 +150,11 @@ export const onDeleteGoal = /* GraphQL */ `
         rate
         dur
         ry
+      }
+      lt
+      lpp {
+        num
+        val
       }
       imp
       met
@@ -152,11 +167,11 @@ export const onDeleteGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -172,7 +187,7 @@ export const onCreateMilestone = /* GraphQL */ `
     onCreateMilestone(owner: $owner) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -194,7 +209,7 @@ export const onCreateMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
         emi {
@@ -202,6 +217,11 @@ export const onCreateMilestone = /* GraphQL */ `
           rate
           dur
           ry
+        }
+        lt
+        lpp {
+          num
+          val
         }
         imp
         met
@@ -214,11 +234,11 @@ export const onCreateMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra
@@ -238,7 +258,7 @@ export const onUpdateMilestone = /* GraphQL */ `
     onUpdateMilestone(owner: $owner) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -260,7 +280,7 @@ export const onUpdateMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
         emi {
@@ -268,6 +288,11 @@ export const onUpdateMilestone = /* GraphQL */ `
           rate
           dur
           ry
+        }
+        lt
+        lpp {
+          num
+          val
         }
         imp
         met
@@ -280,11 +305,11 @@ export const onUpdateMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra
@@ -304,7 +329,7 @@ export const onDeleteMilestone = /* GraphQL */ `
     onDeleteMilestone(owner: $owner) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -326,7 +351,7 @@ export const onDeleteMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
         emi {
@@ -334,6 +359,11 @@ export const onDeleteMilestone = /* GraphQL */ `
           rate
           dur
           ry
+        }
+        lt
+        lpp {
+          num
+          val
         }
         imp
         met
@@ -346,11 +376,11 @@ export const onDeleteMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra

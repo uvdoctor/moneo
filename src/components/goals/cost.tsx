@@ -71,7 +71,7 @@ export default function Cost() {
 					<Row align="middle" justify="space-between">
 						{wipTargets.map((t: TargetInput, i: number) => (
 							<Col span={24} key={'t' + i}>
-								<label>{`${t.year} `}</label>
+								<label>{`${t.num} `}</label>
 								<NumberInput
 									pre=""
 									currency={currency}

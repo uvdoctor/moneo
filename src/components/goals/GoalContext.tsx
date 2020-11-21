@@ -3,7 +3,7 @@ import { CreateGoalInput, GoalType, LMH, TargetInput } from "../../api/goals";
 import { initYearOptions } from "../utils";
 import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
-import { calculateCFs, calculateSellPrice } from "./cfutils";
+import { calculateCFs, calculateSellPrice, createAmortizingLoanCFs } from "./cfutils";
 import { CalcContext } from "../calc/CalcContext";
 import OppCost from "../calc/oppcost";
 import FFImpact from "./ffimpact";
@@ -86,7 +86,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
     >(goal.achg);
-  const [loanPrepayments, setLoanPrepayments] = useState<Array<any>>([{}]);
+  const [loanPrepayments, setLoanPrepayments] = useState<Array<TargetInput>>([]);
   const [ totalIntAmt, setTotalIntAmt ] = useState<number>(0);
   const [startingPrice, setStartingPrice] = useState<number>(
     goal?.cp as number
@@ -262,7 +262,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 		for (let year = startYear; year <= endYear; year++) {
 			let existingT = null;
 			if (wipTargets.length > 0) {
-				existingT = wipTargets.filter((target: TargetInput) => target.year === year)[0] as TargetInput;
+				existingT = wipTargets.filter((target: TargetInput) => target.num === year)[0] as TargetInput;
 			}
 			let t = createNewTarget(year, existingT ? existingT.val : 0);
 			targets.push(t);
@@ -321,29 +321,13 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     return cfs;
   };
 
-  const findAdditionalPrincipalPayment = (installmentNum: number) =>
-  loanPrepayments.find((elem: any) => elem.num === '' + installmentNum);
-
   useEffect(
     () => {
-			let principal = loanBorrowAmt;
-			let monthlyRate = loanIntRate as number / 1200;
-      let miPayments: Array<number> = [];
-      let mpPayments: Array<number> = [];
-			for (let i = 0; principal > 0; i++) {
-        let monthlyInt = principal * monthlyRate;
-        miPayments.push(monthlyInt);
-				let monthlyPayment = principal + monthlyInt < emi ? principal + monthlyInt : emi;
-				let additionalPrincipalPaid: any = findAdditionalPrincipalPayment(i + 1);
-				if (additionalPrincipalPaid) monthlyPayment += additionalPrincipalPaid.val;
-        let principalPaid = monthlyPayment - monthlyInt;
-        mpPayments.push(principalPaid);
-				principal -= principalPaid;
-			}
-      setLoanMIPayments([...miPayments]);
-      setLoanMPPayments([...mpPayments]);
+      let result: any = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments, loanYears as number, duration);
+      setLoanMIPayments([...result.interest]);
+      setLoanMPPayments([...result.principal]);
 		},
-		[ emi, loanPrepayments ]
+		[ emi, loanPrepayments, duration ]
 	);
 
   useEffect(() => {

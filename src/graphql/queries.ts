@@ -22,7 +22,7 @@ export const getGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
       emi {
@@ -30,6 +30,11 @@ export const getGoal = /* GraphQL */ `
         rate
         dur
         ry
+      }
+      lt
+      lpp {
+        num
+        val
       }
       imp
       met
@@ -42,11 +47,11 @@ export const getGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -82,7 +87,7 @@ export const listGoals = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
         emi {
@@ -90,6 +95,11 @@ export const listGoals = /* GraphQL */ `
           rate
           dur
           ry
+        }
+        lt
+        lpp {
+          num
+          val
         }
         imp
         met
@@ -102,11 +112,11 @@ export const listGoals = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra
@@ -124,7 +134,7 @@ export const getMilestone = /* GraphQL */ `
     getMilestone(id: $id) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -146,7 +156,7 @@ export const getMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
         emi {
@@ -154,6 +164,11 @@ export const getMilestone = /* GraphQL */ `
           rate
           dur
           ry
+        }
+        lt
+        lpp {
+          num
+          val
         }
         imp
         met
@@ -166,11 +181,11 @@ export const getMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra
@@ -195,7 +210,7 @@ export const listMilestones = /* GraphQL */ `
       items {
         id
         tgt {
-          year
+          num
           val
         }
         attr
@@ -216,6 +231,7 @@ export const listMilestones = /* GraphQL */ `
           cp
           chg
           achg
+          lt
           imp
           met
           prob

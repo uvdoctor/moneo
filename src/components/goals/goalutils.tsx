@@ -79,9 +79,9 @@ export const getDuration = (
   return endYear - startYear + 1;
 };
 
-export const createNewTarget = (year: number, val: number) => {
+export const createNewTarget = (num: number, val: number) => {
   return {
-    year: year,
+    num: num,
     val: val,
   };
 };

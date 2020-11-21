@@ -1,11 +1,12 @@
 import { Col, Row, Table } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import NumberInput from '../form/numberinput';
+import { findAdditionalPrincipalPayment } from '../goals/cfutils';
 import { GoalContext } from '../goals/GoalContext';
+import { createNewTarget } from '../goals/goalutils';
 import { removeFromArray, toCurrency } from '../utils';
 import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
-
 interface MonthlyLoanScheduleProps {
 	editable?: boolean;
 }
@@ -65,9 +66,9 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 			key: '' + index,
 			num: '' + index,
 			year: '' + year,
-			mp: toCurrency(payment, currency),
-			ip: toCurrency(intAmt, currency),
-			pp: toCurrency(pAmt, currency)
+			mp: toCurrency(payment, currency, true),
+			ip: toCurrency(intAmt, currency, true),
+			pp: toCurrency(pAmt, currency, true)
 		};
 	};
 
@@ -78,22 +79,15 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		};
 	};
 
-	const findAdditionalPrincipalPayment = (installmentNum: number) =>
-		loanPrepayments.find((elem: any) => elem.num === installmentNum);
-
 	const changeLoanPrepayments = (index: number, value: number) => {
 		let additionalPayment = value - emi;
 		if (additionalPayment < 0) return;
-		let existingPrepayment: any = findAdditionalPrincipalPayment(index);
+		let existingPrepayment: any = findAdditionalPrincipalPayment(loanPrepayments, index);
 		if (existingPrepayment)
 			additionalPayment
 				? (existingPrepayment.val = additionalPayment)
 				: removeFromArray(loanPrepayments, 'num', index);
-		else
-			loanPrepayments.push({
-				num: index,
-				val: additionalPayment
-			});
+		else loanPrepayments.push(createNewTarget(index, additionalPayment));
 		setLoanPrepayments([ ...loanPrepayments ]);
 	};
 
@@ -163,6 +157,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 									label="Total Interest Paid"
 									result={getTotalInterestPaid(record.num)}
 									currency={currency}
+									decimal={2}
 								/>
 							</Col>
 							<Col>
@@ -170,6 +165,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 									label="Total Principal Paid"
 									result={getTotalPrincipalPaid(record.num)}
 									currency={currency}
+									decimal={2}
 								/>
 							</Col>
 							<Col>
@@ -177,6 +173,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 									label="Principal Due"
 									result={getPrincipalDue(record.num)}
 									currency={currency}
+									decimal={2}
 								/>
 							</Col>
 						</Row>
@@ -184,9 +181,9 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 						record.num !== '' + loanMIPayments.length && (
 							<div style={{ marginTop: '1rem' }}>
 								<NumberInput
-									pre="Prepay Loan"
+									pre="Increase Monthly Installment to Prepay Loan"
 									value={getMonthlyPayment(record.num)}
-									changeHandler={(val: number) => changeLoanPrepayments(record.num, val)}
+									changeHandler={(val: number) => changeLoanPrepayments(parseInt(record.num), val)}
 									min={emi}
 									max={getMonthlyPayment(record.num) + getPrincipalDue(record.num)}
 									step={10}

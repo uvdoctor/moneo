@@ -191,11 +191,11 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, ffYear: number) => {
     }
   }
   g.pg?.forEach((t: any) => {
-    let index = cfs.length - 1 - (g.ey - t?.year);
+    let index = cfs.length - 1 - (g.ey - t?.num);
     cfs[index] += t?.val as number;
   });
   g.pl?.forEach((t: any) => {
-    let index = cfs.length - 1 - (g.ey - t?.year);
+    let index = cfs.length - 1 - (g.ey - t?.num);
     cfs[index] -= t?.val as number;
   });
   return cfs;
@@ -406,6 +406,35 @@ export const createEduLoanDPWithSICFs = (
   };
 };
 
+export const findAdditionalPrincipalPayment = (loanPrepayments: Array<APIt.TargetInput>, installmentNum: number) =>
+loanPrepayments.find((elem: APIt.TargetInput) => elem.num === installmentNum);
+
+export const createAmortizingLoanCFs = (loanBorrowAmt: number, loanIntRate: number, emi: number, loanPrepayments: Array<APIt.TargetInput>, loanYears: number, duration: number) => {
+  let principal = loanBorrowAmt;
+  let monthlyRate = loanIntRate as number / 1200;
+  let miPayments: Array<number> = [];
+  let mpPayments: Array<number> = [];
+  let loanDuration = loanYears < duration ? loanYears : duration;
+  for (let i = 0; i < loanDuration * 12; i++) {
+    let monthlyInt = principal * monthlyRate;
+    miPayments.push(monthlyInt);
+    let monthlyPayment = principal + monthlyInt < emi ? principal + monthlyInt : emi;
+    let additionalPrincipalPaid: any = findAdditionalPrincipalPayment(loanPrepayments, i + 1);
+    if (additionalPrincipalPaid) monthlyPayment += additionalPrincipalPaid.val;
+    let principalPaid = monthlyPayment - monthlyInt;
+    principal -= principalPaid;
+    if (i === (loanDuration * 12) - 1 && principal > 0) {
+      principalPaid += principal;
+      principal = 0;
+    }
+    mpPayments.push(principalPaid);
+  }
+  return {
+    interest: miPayments,
+    principal: mpPayments
+  }
+};
+
 const createLoanCFs = (
   p: number,
   goal: APIt.CreateGoalInput,
@@ -454,9 +483,7 @@ const createLoanCFs = (
     goal.emi.ry,
     goal.emi.rate
   );
-  let emi = Math.round(
-    getEmi(loanBorrowAmt, goal.emi?.rate, goal.emi?.dur * 12)
-  );
+  let emi = getEmi(loanBorrowAmt, goal.emi?.rate, goal.emi?.dur * 12);
   let annualInts = getIntAmtByYear(
     loanBorrowAmt,
     emi,

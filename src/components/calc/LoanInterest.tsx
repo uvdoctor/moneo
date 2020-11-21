@@ -96,7 +96,7 @@ export default function LoanInterest() {
 			</Col>
 			<Row align="middle" justify="center">
 				{noIR < 1 ? (
-					<ItemDisplay label="Monthly Installment" result={emi} currency={currency} />
+          <ItemDisplay label="Monthly Installment" result={emi} currency={currency} decimal={2} />
 				) : (
 					<ItemDisplay label="Interest Rate" result={loanIntRate} unit="%" />
 				)}

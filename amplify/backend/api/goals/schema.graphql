@@ -10,8 +10,13 @@ enum YN {
 }
 
 type Target {
-  year: Int!
+  num: Int!
   val: Int!
+}
+
+enum LoanType {
+  A
+  B
 }
 
 enum GoalType {
@@ -53,6 +58,8 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
   achg: Float
   tgts: [Target!]
   emi: Emi
+  lt: LoanType
+  lpp: [Target!]
   imp: LMH!
   met: YN
   prob: LMH

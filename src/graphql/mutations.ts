@@ -25,7 +25,7 @@ export const createGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
       emi {
@@ -33,6 +33,11 @@ export const createGoal = /* GraphQL */ `
         rate
         dur
         ry
+      }
+      lt
+      lpp {
+        num
+        val
       }
       imp
       met
@@ -45,11 +50,11 @@ export const createGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -83,7 +88,7 @@ export const updateGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
       emi {
@@ -91,6 +96,11 @@ export const updateGoal = /* GraphQL */ `
         rate
         dur
         ry
+      }
+      lt
+      lpp {
+        num
+        val
       }
       imp
       met
@@ -103,11 +113,11 @@ export const updateGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -141,7 +151,7 @@ export const deleteGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
       emi {
@@ -149,6 +159,11 @@ export const deleteGoal = /* GraphQL */ `
         rate
         dur
         ry
+      }
+      lt
+      lpp {
+        num
+        val
       }
       imp
       met
@@ -161,11 +176,11 @@ export const deleteGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -184,7 +199,7 @@ export const createMilestone = /* GraphQL */ `
     createMilestone(input: $input, condition: $condition) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -206,7 +221,7 @@ export const createMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
         emi {
@@ -214,6 +229,11 @@ export const createMilestone = /* GraphQL */ `
           rate
           dur
           ry
+        }
+        lt
+        lpp {
+          num
+          val
         }
         imp
         met
@@ -226,11 +246,11 @@ export const createMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra
@@ -253,7 +273,7 @@ export const updateMilestone = /* GraphQL */ `
     updateMilestone(input: $input, condition: $condition) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -275,7 +295,7 @@ export const updateMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
         emi {
@@ -283,6 +303,11 @@ export const updateMilestone = /* GraphQL */ `
           rate
           dur
           ry
+        }
+        lt
+        lpp {
+          num
+          val
         }
         imp
         met
@@ -295,11 +320,11 @@ export const updateMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra
@@ -322,7 +347,7 @@ export const deleteMilestone = /* GraphQL */ `
     deleteMilestone(input: $input, condition: $condition) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -344,7 +369,7 @@ export const deleteMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
         emi {
@@ -352,6 +377,11 @@ export const deleteMilestone = /* GraphQL */ `
           rate
           dur
           ry
+        }
+        lt
+        lpp {
+          num
+          val
         }
         imp
         met
@@ -364,11 +394,11 @@ export const deleteMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra

@@ -29,10 +29,17 @@ export default function NumberInput(props: NumberInputProps) {
 	const [ stepNum, setStepNum ] = useState<number>(
 		props.step ? props.step * (props.rangeFactor ? props.rangeFactor : 1) : 1
 	);
-	const [ marks, setMarks ] = useState<any>({
-		[minNum]: toReadableNumber(minNum),
-		[maxNum]: { label: toReadableNumber(maxNum) }
-	});
+
+	const getSliderMarks = (min: number, max: number) => {
+		let marks: any = {
+			[min]: toReadableNumber(minNum, props.step < 1 ? 2 : 0)
+		};
+		if (min < 0) marks[0] = '0';
+		marks[max] = { label: toReadableNumber(max), style: { paddingRight: props.currency ? '3rem' : '0rem' } };
+		return marks;
+	}
+
+	const [ marks, setMarks ] = useState<any>(getSliderMarks(props.min, props.max));
 
 	useEffect(
 		() => {
@@ -42,10 +49,7 @@ export default function NumberInput(props: NumberInputProps) {
 			setMinNum(minNum);
 			setMaxNum(maxNum);
 			setStepNum((props.step as number) * rf);
-			setMarks({
-				[minNum]: toReadableNumber(minNum, props.step < 1 ? 2 : 0),
-				[maxNum]: { label: toReadableNumber(maxNum), style: { paddingRight: props.currency ? '3rem' : '0rem' } }
-			});
+			setMarks(getSliderMarks(minNum, maxNum));
 		},
 		[ props.rangeFactor, props.min, props.max ]
 	);
