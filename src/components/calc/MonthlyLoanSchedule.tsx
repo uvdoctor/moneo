@@ -29,7 +29,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 
 	const columns = [
 		{
-			title: 'Installment #',
+			title: 'Number',
 			dataIndex: 'num',
 			key: 'num',
 			filteredValue: filteredInfo.num || null,
@@ -49,26 +49,14 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 			dataIndex: 'mp',
 			key: 'mp'
 		},
-		{
-			title: 'Interest Paid',
-			dataIndex: 'ip',
-			key: 'ip'
-		},
-		{
-			title: 'Principal Paid',
-			dataIndex: 'pp',
-			key: 'pp'
-		}
 	];
 
-	const getDataItem = (index: number, payment: number, year: number, intAmt: number, pAmt: number) => {
+	const getDataItem = (index: number, payment: number, year: number) => {
 		return {
 			key: '' + index,
 			num: '' + index,
 			year: '' + year,
 			mp: toCurrency(payment, currency, true),
-			ip: toCurrency(intAmt, currency, true),
-			pp: toCurrency(pAmt, currency, true)
 		};
 	};
 
@@ -79,15 +67,16 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		};
 	};
 
-	const changeLoanPrepayments = (index: number, additionalPayment: number) => {
-		if (!additionalPayment) return;
-		let existingPrepayment: TargetInput | null | undefined = findAdditionalPrincipalPayment(loanPrepayments, index);
+	const changeLoanPrepayments = (installmentNum: number, additionalPayment: number) => {
+		let principalDue = getPrincipalDue(installmentNum);
+		if (additionalPayment > principalDue) additionalPayment = principalDue;
+		let existingPrepayment: TargetInput | null | undefined = findAdditionalPrincipalPayment(loanPrepayments, installmentNum);
 		if (existingPrepayment)
 			additionalPayment
 				? (existingPrepayment.val = additionalPayment)
-				: removeFromArray(loanPrepayments, 'num', index);
-		else loanPrepayments.push(createNewTarget(index, additionalPayment));
-		setLoanPrepayments([ ...loanPrepayments ]);
+				: removeFromArray(loanPrepayments, 'num', installmentNum);
+		else loanPrepayments.push(createNewTarget(installmentNum, additionalPayment));
+		setLoanPrepayments([...loanPrepayments]);
 	};
 
 	const getPrincipalDue = (installmentNum: number) => {
@@ -108,9 +97,6 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		return totalPrincipalPaid;
 	};
 
-	const getMonthlyPayment = (installmentNum: number) =>
-		iSchedule[installmentNum - 1] + pSchedule[installmentNum - 1];
-
 	useEffect(
 		() => {
 			let result = [];
@@ -123,10 +109,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 					year++;
 					yearFilterValues.push(getFilterItem(year));
 				}
-				let monthlyInt = iSchedule[i];
-				let monthlyPrincipal = pSchedule[i];
-				let monthlyPayment = monthlyInt + monthlyPrincipal;
-				result.push(getDataItem(i + 1, monthlyPayment, year, monthlyInt, monthlyPrincipal));
+				result.push(getDataItem(i + 1, iSchedule[i] + pSchedule[i], year));
 			}
 			setYearFilterValues([ ...yearFilterValues ]);
 			setNumFilterValues([ ...numFilterValues ]);
@@ -140,17 +123,31 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		setFilteredInfo(filters);
 	};
 
+	const getPrepayment = (installmentNum: number) => {
+		let result = findAdditionalPrincipalPayment(loanPrepayments, installmentNum);
+		return result ? result.val : 0;
+	};
+
 	return (
 		<Table
 			dataSource={data}
 			//@ts-ignore
 			columns={columns}
 			onChange={handleChange}
+			size="small"
 			bordered
 			expandable={{
 				expandedRowRender: (record) => (
 					<Fragment>
 						<Row justify="space-around">
+							<Col>
+								<ItemDisplay
+									label="Interest Paid"
+									result={iSchedule[parseInt(record.num) - 1]}
+									currency={currency}
+									decimal={2}
+								/>
+							</Col>
 							<Col>
 								<ItemDisplay
 									label="Total Interest Paid"
@@ -159,18 +156,30 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 									decimal={2}
 								/>
 							</Col>
+						</Row>
+						<Row justify="space-around" style={{marginTop: '1rem'}}>
 							<Col>
 								<ItemDisplay
-									label="Total Principal Paid"
-									result={getTotalPrincipalPaid(record.num)}
+									label="Principal Paid"
+									result={pSchedule[parseInt(record.num) - 1]}
 									currency={currency}
 									decimal={2}
 								/>
 							</Col>
 							<Col>
 								<ItemDisplay
+									label="Total Principal Paid"
+									result={getTotalPrincipalPaid(parseInt(record.num))}
+									currency={currency}
+									decimal={2}
+								/>
+							</Col>
+						</Row>
+						<Row justify="center">
+							<Col>
+								<ItemDisplay
 									label="Principal Due"
-									result={getPrincipalDue(record.num)}
+									result={getPrincipalDue(parseInt(record.num))}
 									currency={currency}
 									decimal={2}
 								/>
@@ -180,11 +189,11 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 						record.num !== '' + iSchedule.length && (
 							<div style={{ marginTop: '1rem' }}>
 								<NumberInput
-									pre="Make Additional Payment"
-									value={getMonthlyPayment(record.num)}
+									pre="Additional Principal Payment"
+									value={getPrepayment(parseInt(record.num))}
 									changeHandler={(val: number) => changeLoanPrepayments(parseInt(record.num), val)}
 									min={0}
-									max={getMonthlyPayment(record.num) + getPrincipalDue(record.num)}
+									max={getPrepayment(parseInt(record.num)) + getPrincipalDue(parseInt(record.num))}
 									step={10}
 									currency={currency}
 								/>

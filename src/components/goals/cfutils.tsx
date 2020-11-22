@@ -5,7 +5,6 @@ import {
   createAmortizingLoanCFs,
   createYearlyFromMonthlyLoanCFs,
 } from "../calc/finance";
-import xirr from "xirr";
 import {
   appendValue,
   buildArray,
@@ -21,7 +20,7 @@ export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
   return Math.round(val * (tr / 100));
 };
 
-const calculateBuyAnnualNetCF = (
+export const calculateBuyAnnualNetCF = (
   startYear: number,
   amCostPer: number,
   amStartYear: number,
@@ -286,40 +285,6 @@ const createAutoCFs = (
   return { cfs: cfs, ptb: totalTaxBenefit };
 };
 
-export const calculateXIRR = (
-  cfs: Array<number>,
-  startYear: number,
-  price: number,
-  sellAfter: number,
-  sellPrice: number
-) => {
-  if (!price || !sellPrice || !cfs) return null;
-  let xirrCFs: Array<any> = [];
-  let addSellCF = false;
-  cfs.forEach((cf, i) => {
-    if (i === sellAfter && cf < 0) {
-      cf -= sellPrice;
-      addSellCF = true;
-    }
-    xirrCFs.push({
-      amount: cf,
-      when: new Date(startYear + i, 0, 1),
-    });
-  });
-  if (addSellCF) {
-    xirrCFs.push({
-      amount: Math.round(sellPrice),
-      when: new Date(startYear + sellAfter, 1, 1),
-    });
-  }
-  try {
-    return xirr(xirrCFs) * 100;
-  } catch (e) {
-    console.log("Error while calculating xirr: ", e);
-    return null;
-  }
-};
-
 export const getLoanBorrowAmt = (
   price: number,
   goalType: APIt.GoalType,
@@ -522,7 +487,8 @@ const createLoanCFs = (
   }
   if (goal.type === APIt.GoalType.B) {
     sp = calculateSellPrice(p, goal?.achg as number, duration);
-    cfs.push(Math.round(sp + taxBenefit));
+    cfs[cfs.length - 1] += Math.round(sp);
+    if(taxBenefit) cfs.push(Math.round(taxBenefit));
   }
   return {
     cfs: cfs,

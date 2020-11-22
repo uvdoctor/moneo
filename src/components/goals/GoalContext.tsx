@@ -133,6 +133,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [wipTargets, setWIPTargets] = useState<Array<TargetInput>>(
     goal?.tgts as Array<TargetInput>
   );
+  const [ annualReturnPer, setAnnualReturnPer ] = useState<number | null>(0);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [duration, setDuration] = useState<number>(
     getDuration(
@@ -622,6 +623,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           setLoanType,
           loanPrepayments,
           setLoanPrepayments,
+          annualReturnPer,
+          setAnnualReturnPer
         }}>
         {children ? children : <CalcTemplate header={<GoalHeader />} />}
       </GoalContext.Provider>

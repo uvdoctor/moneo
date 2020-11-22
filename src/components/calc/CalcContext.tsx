@@ -55,6 +55,7 @@ function CalcContextProvider({
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
   const [startYear, setStartYear] = useState<number>(goal.sy);
+  const [startMonth, setStartMonth] = useState<number>(1);
   const [endYear, setEndYear] = useState<number>(goal.ey);
   const isPublicCalc = addCallback && updateCallback ? false : true;
   const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal?.ccy ? goal.ccy : 'USD');
@@ -164,14 +165,11 @@ function CalcContextProvider({
 	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions ? tabOptions : goal ? getGoalTabOptions(goal.type) : []);
 	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions ? resultTabOptions : goal ? getGoalResultTabOptions() : []);
 
-  const changeStartYear = (str: string) => {
-    setStartYear(parseInt(str));
-  };
+  const changeStartYear = (str: string) => setStartYear(parseInt(str));
 
-  const changeEndYear = (str: string) => {
-    let ey = parseInt(str);
-    setEndYear(ey);
-  };
+  const changeStartMonth = (str: string) => setStartMonth(parseInt(str));
+
+  const changeEndYear = (str: string) => setEndYear(parseInt(str));
 
 	const changeCurrency = (curr: string) => {
 		setRangeFactor(Math.round(getRangeFactor(curr) / rangeFactor));
@@ -264,6 +262,8 @@ function CalcContextProvider({
         setStepVideoUrl,
         startYear,
         changeStartYear,
+        startMonth,
+        changeStartMonth,
         endYear,
         changeEndYear,
         setEndYear,
