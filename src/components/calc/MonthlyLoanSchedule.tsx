@@ -206,10 +206,16 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 								/>
 							</Col>
 						</Row>
-						<Row justify="center">
+						<Row justify="space-around" style={{ marginTop: '1rem' }}>
 							<Col>
 								<ItemDisplay
-									label="Principal Due"
+									label="Remaining Months"
+									result={getRemMonths(parseInt(record.num))}
+								/>
+							</Col>
+							<Col>
+								<ItemDisplay
+									label="Remaining Principal"
 									result={getPrincipalDue(parseInt(record.num))}
 									currency={currency}
 									decimal={2}
@@ -219,7 +225,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 						{editable &&
 						record.num !== '' + iSchedule.length && (
 							<Fragment>
-								<Row style={{ marginTop: '1rem' }}>
+								<div style={{ marginTop: '1rem' }}>
 									<NumberInput
 										pre="Additional Principal Payment"
 										value={getPrepayment(parseInt(record.num))}
@@ -232,8 +238,8 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 										step={10}
 										currency={currency}
 									/>
-								</Row>
-								<Row style={{ marginTop: '1rem' }}>
+								</div>
+								<div style={{ marginTop: '1rem' }}>
 									<NumberInput
 										pre="Adjust Interest Rate"
 										value={getIRAdjustment(parseInt(record.num))}
@@ -244,8 +250,8 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 										step={0.1}
 										unit="%"
 									/>
-								</Row>
-								<Row style={{ marginTop: '1rem' }}>
+								</div>
+								<div style={{ marginTop: '2rem' }}>
 									<NumberInput
 										pre="Adjust Remaining Loan Duration"
 										value={getMonthsAdjustment(parseInt(record.num))}
@@ -256,7 +262,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 										step={1}
 										unit="Months"
 									/>
-								</Row>
+								</div>
 							</Fragment>
 						)}
 					</Fragment>
