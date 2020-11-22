@@ -63,13 +63,12 @@ export default function AnnualCF({ income }: AnnualAmtProps) {
 				colorTo={!income ? COLORS.RED : COLORS.GREEN}
 				data={toStringArr(0, 10, 0.1)}
 				changeHandler={income ? setAIPer : setAMCostPer}
-				width={120}
 				unit="%"
 				labelBottom={true}
 				label="of Price"
 				pre={
 					<Row justify="center" align="middle">
-						{`From Year `}
+						{`From `}
 						<SelectInput
 							pre=""
 							options={syOptions}

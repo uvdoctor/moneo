@@ -85,7 +85,6 @@ export default function LoanEmi() {
 			}
 		>
 			<RadialInput
-				width={120}
 				unit="%"
 				data={toStringArr(isLoanMandatory ? 10 : 0, loanLimitPer, 5)}
 				value={loanPer}
@@ -124,7 +123,6 @@ export default function LoanEmi() {
 			{loanBorrowAmt &&
 			goal.type === GoalType.E && (
 				<RadialInput
-					width={120}
 					unit="%"
 					data={toStringArr(0, 100, 5)}
 					value={loanSIPayPer as number}
