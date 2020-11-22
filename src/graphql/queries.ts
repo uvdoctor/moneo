@@ -25,16 +25,24 @@ export const getGoal = /* GraphQL */ `
         num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
-      }
-      lt
-      lpp {
-        num
-        val
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -90,16 +98,12 @@ export const listGoals = /* GraphQL */ `
           num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
           ry
-        }
-        lt
-        lpp {
-          num
-          val
         }
         imp
         met
@@ -159,16 +163,12 @@ export const getMilestone = /* GraphQL */ `
           num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
           ry
-        }
-        lt
-        lpp {
-          num
-          val
         }
         imp
         met
@@ -231,7 +231,6 @@ export const listMilestones = /* GraphQL */ `
           cp
           chg
           achg
-          lt
           imp
           met
           prob

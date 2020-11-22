@@ -85,7 +85,7 @@ export const calculateCFs = (
   if (price === null) price = calculatePrice(goal); //tested
   if ((goal?.manual as number) > 0)
     return createManualCFs(price, goal, duration);
-  else if ((goal?.emi?.per as number) > 0)
+  else if ((goal?.loan?.per as number) > 0)
     return createLoanCFs(price, goal, duration);
   else return createAutoCFs(price, goal, duration);
 };
@@ -307,18 +307,6 @@ export const getLoanBorrowAmt = (
   return result;
 };
 
-export const getLoanPaidForMonths = (
-  endYear: number,
-  loanRepaymentYear: number,
-  loanYears: number
-) => {
-  if (!endYear || !loanRepaymentYear || loanRepaymentYear > endYear)
-    return loanYears * 12;
-  let loanPaidYears = endYear + 1 - loanRepaymentYear;
-  if (loanPaidYears > loanYears) loanPaidYears = loanYears;
-  return loanPaidYears * 12;
-};
-
 export const adjustAccruedInterest = (
   loanBorrowAmt: number,
   startYear: number,
@@ -376,7 +364,7 @@ const createLoanCFs = (
   goal: APIt.CreateGoalInput,
   duration: number
 ) => {
-  if (!goal.emi?.per || !goal.emi?.dur) return [];
+  if (!goal.loan?.per || !goal.loan?.dur) return [];
   let cfs: Array<number> = [];
   let totalPTaxBenefit = 0;
   let totalITaxBenefit = 0;
@@ -392,18 +380,18 @@ const createLoanCFs = (
       goal.manual,
       goal?.chg as number,
       goal.ey - goal.sy,
-      goal.emi?.per
+      goal.loan?.per
     );
-    loanDP = Math.round(loanBorrowAmt / (goal.emi.per / 100)) - loanBorrowAmt;
+    loanDP = Math.round(loanBorrowAmt / (goal.loan.per / 100)) - loanBorrowAmt;
     cfs.push(loanDP);
   } else {
     let result = createEduLoanDPWithSICFs(
       p,
       goal.chg as number,
-      goal.emi?.per,
+      goal.loan?.per,
       goal.sy,
       goal.ey,
-      goal.emi?.rate,
+      goal.loan?.rate,
       goal.btr as number,
       (goal.tbr as number) < 1
     );
@@ -416,11 +404,12 @@ const createLoanCFs = (
   loanBorrowAmt = adjustAccruedInterest(
     loanBorrowAmt,
     goal.type === APIt.GoalType.E ? goal.ey + 1 : goal.sy,
-    goal.emi.ry,
-    goal.emi.rate
+    goal.loan.ry,
+    goal.loan.rate
   );
-  let emi = getEmi(loanBorrowAmt, goal.emi?.rate, goal.emi?.dur * 12);
-  let monthlyLoanCFs = createAmortizingLoanCFs(loanBorrowAmt, goal.emi?.rate, emi, goal?.lpp as Array<APIt.TargetInput>, goal.emi?.dur * 12, duration)
+  let emi = getEmi(loanBorrowAmt, goal.loan?.rate, goal.loan?.dur);
+  let monthlyLoanCFs = createAmortizingLoanCFs(loanBorrowAmt, goal.loan?.rate, emi, goal.loan?.pp as Array<APIt.TargetInput>,
+    goal.loan?.ira as Array<APIt.TargetInput>, goal.loan?.dura as Array<APIt.TargetInput>, goal.loan?.dur, duration)
   let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(monthlyLoanCFs.interest, monthlyLoanCFs.principal);
   let sp = 0;
   let taxBenefit = 0;
@@ -429,7 +418,7 @@ const createLoanCFs = (
     let cf = cfs[index] ? cfs[index] : 0;
     cf -= taxBenefit;
     taxBenefit = 0;
-    let i = year - goal.emi.ry;
+    let i = year - goal.loan.ry;
     if (i >= 0 && i < annualLoanPayments.interest.length) {
       let annualIPayment = annualLoanPayments.interest[i];
       let annualPPayment = annualLoanPayments.principal[i];
@@ -451,7 +440,7 @@ const createLoanCFs = (
         totalITaxBenefit += itb;
       }
     } else if (
-      year < goal.emi.ry &&
+      year < goal.loan.ry &&
       (goal.tbi as number) > 0 &&
       simpleInts[index]
     ) {

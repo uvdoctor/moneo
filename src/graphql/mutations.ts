@@ -28,16 +28,24 @@ export const createGoal = /* GraphQL */ `
         num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
-      }
-      lt
-      lpp {
-        num
-        val
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -91,16 +99,24 @@ export const updateGoal = /* GraphQL */ `
         num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
-      }
-      lt
-      lpp {
-        num
-        val
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -154,16 +170,24 @@ export const deleteGoal = /* GraphQL */ `
         num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
-      }
-      lt
-      lpp {
-        num
-        val
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -224,16 +248,12 @@ export const createMilestone = /* GraphQL */ `
           num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
           ry
-        }
-        lt
-        lpp {
-          num
-          val
         }
         imp
         met
@@ -298,16 +318,12 @@ export const updateMilestone = /* GraphQL */ `
           num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
           ry
-        }
-        lt
-        lpp {
-          num
-          val
         }
         imp
         met
@@ -372,16 +388,12 @@ export const deleteMilestone = /* GraphQL */ `
           num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
           ry
-        }
-        lt
-        lpp {
-          num
-          val
         }
         imp
         met

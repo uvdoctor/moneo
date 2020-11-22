@@ -70,11 +70,11 @@ export const getDuration = (
   manualMode: number,
   loanPer: number | null | undefined,
   loanRY: number | null | undefined,
-  loanYears: number | null | undefined
+  loanMonths: number | null | undefined
 ) => {
   if (sellAfter) return sellAfter;
-  if (manualMode < 1 && loanPer && loanRY && loanYears) {
-    return Math.round(loanRY + loanYears) - startYear;
+  if (manualMode < 1 && loanPer && loanRY && loanMonths) {
+    return Math.round(loanRY + loanMonths / 12) - startYear;
   }
   return endYear - startYear + 1;
 };
@@ -196,14 +196,16 @@ export const createNewGoalInput = (
   if (isLoanEligible(goalType)) {
     bg.tbi = 0;
     bg.tdli = 20000 * getRangeFactor(currency);
-    bg.emi = {
+    bg.loan = {
       rate: 4,
       dur: 10,
       per: 0,
       ry: goalType === APIt.GoalType.E ? bg.ey + 1 : bg.sy,
+      type: APIt.LoanType.A,
+      pp: [],
+      ira: [],
+      dura: []
     };
-    bg.lt = APIt.LoanType.A;
-    bg.lpp = [];
   }
   if (goalType === APIt.GoalType.B) {
     bg.sa = 5;

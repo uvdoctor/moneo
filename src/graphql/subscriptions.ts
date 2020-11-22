@@ -25,16 +25,24 @@ export const onCreateGoal = /* GraphQL */ `
         num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
-      }
-      lt
-      lpp {
-        num
-        val
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -85,16 +93,24 @@ export const onUpdateGoal = /* GraphQL */ `
         num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
-      }
-      lt
-      lpp {
-        num
-        val
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -145,16 +161,24 @@ export const onDeleteGoal = /* GraphQL */ `
         num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
-      }
-      lt
-      lpp {
-        num
-        val
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -212,16 +236,12 @@ export const onCreateMilestone = /* GraphQL */ `
           num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
           ry
-        }
-        lt
-        lpp {
-          num
-          val
         }
         imp
         met
@@ -283,16 +303,12 @@ export const onUpdateMilestone = /* GraphQL */ `
           num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
           ry
-        }
-        lt
-        lpp {
-          num
-          val
         }
         imp
         met
@@ -354,16 +370,12 @@ export const onDeleteMilestone = /* GraphQL */ `
           num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
           ry
-        }
-        lt
-        lpp {
-          num
-          val
         }
         imp
         met

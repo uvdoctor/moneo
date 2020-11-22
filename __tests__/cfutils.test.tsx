@@ -1,4 +1,5 @@
 import * as goals from '../src/api/goals';
+import { LoanType } from '../src/api/goals';
 import * as cfutils from '../src/components/goals/cfutils';
 
 describe('getTaxBenefit test suite', () => {
@@ -71,25 +72,6 @@ describe('getLoanBorrowAmt test suite', ()=>{
    
 })
 
-describe('getLoanPaidForMonths test suite', ()=>{
-    
-    test('getLoanPaidForMonths test not null and duration < loan years', () => {
-        let loanPaidForMonths = cfutils.getLoanPaidForMonths(2030, 2025, 20);
-        expect(loanPaidForMonths).not.toBe(null);
-        expect(loanPaidForMonths).toBe(72);     
-    })
-    test('getLoanPaidForMonths test end year is 0',()=>{
-        let loanPaidForMonths = cfutils.getLoanPaidForMonths(0, 2025, 20);
-        expect(loanPaidForMonths).not.toBe(null);
-        expect(loanPaidForMonths).toBe(240);
-    })
-    test('getLoanPaidForMonths test duration > loan years',()=>{
-        let loanPaidForMonths = cfutils.getLoanPaidForMonths(2040, 2025, 10);
-        expect(loanPaidForMonths).toBe(120);
-    })
-    
-})
-
 describe('calculateCFs Test suite via autoCFs',()=>{
     
     // We pass emi.per = 0 to invoke autoCFs
@@ -103,7 +85,7 @@ describe('calculateCFs Test suite via autoCFs',()=>{
         ccy: "INR",
         chg: 3,
         cp: 5800000,
-        emi: {rate: 4, dur: 10, per: 0, ry: 2021},
+        loan: {type: LoanType.A, rate: 4, dur: 10, per: 0, ry: 2021, pp:[], ira:[], dura:[]},
         ey: 2021,
         imp: goals.LMH.M,
         manual: 0,
@@ -163,7 +145,7 @@ describe('calculateCFs Test with createAutoCF suite',()=>{
         ccy: "INR",
         chg: 2.5,
         cp: 6550000,
-        emi: {rate: 4, dur: 10, per: 0, ry: 2021},
+        loan: {type: LoanType.A, rate: 4, dur: 10, per: 0, ry: 2021},
         ey: 2023,
         imp: goals.LMH.M,
         manual: 0,
@@ -215,7 +197,7 @@ describe('calculateCFs Test with createLoanCF suite',()=>{
         ccy: "INR",
         chg: 2.5,
         cp: 6550000,
-        emi: {rate: 9, dur: 12, per: 40, ry: 2023},
+        loan: {type: LoanType.A, rate: 9, dur: 12, per: 40, ry: 2023},
         ey: 2023,
         imp: goals.LMH.M,
         manual: 0,
@@ -234,12 +216,12 @@ describe('calculateCFs Test with createLoanCF suite',()=>{
     };
 
     test('loan years = zero', () => {
-        goal.emi = {rate: 9, dur: 0, per: 40, ry: 2024};
+        goal.loan = {type: LoanType.A, rate: 9, dur: 0, per: 40, ry: 2024};
         let duration = 5;
         let price = 7053634;
         let loanCF = cfutils.calculateCFs(price, goal, duration);
         expect(loanCF).toEqual([]);
-        goal.emi = {rate: 9, dur: 12, per: 40, ry: 2023}; // reset loan years to 12
+        goal.loan = {type: LoanType.A, rate: 9, dur: 12, per: 40, ry: 2023}; // reset loan years to 12
     });
 
     test('duration < loan years', () => {
@@ -284,7 +266,7 @@ describe('calculateCFs Test with createLoanCF suite',()=>{
     });
 
     test('duration >= loan years, itb flag 0', () => {
-        goal.emi = {rate: 9, dur: 12, per: 40, ry: 2023};
+        goal.loan = {type: LoanType.A, rate: 9, dur: 12, per: 40, ry: 2023};
         let duration = 13;
         let price = 7053634;
         let loanCF = cfutils.calculateCFs(price, goal, duration);
@@ -313,7 +295,7 @@ describe('calculateCFs Test with createLoanCF suite',()=>{
     });
 
     test('duration >= loan years, itb flag 0', () => {
-        goal.emi = {rate: 9, dur: 12, per: 40, ry: 2023};
+        goal.loan = {type: LoanType.A, rate: 9, dur: 12, per: 40, ry: 2023};
         goal.tbi = 1;
         let duration = 13;
         let price = 7053634;
@@ -357,7 +339,7 @@ describe('calculateCFs Test with custom payment plan suite',()=>{
         ccy: "INR",
         chg: 2.5,
         cp: 6550000,
-        emi: {rate: 9, dur: 12, per: 40, ry: 2023},
+        loan: {type: LoanType.A, rate: 9, dur: 12, per: 40, ry: 2023},
         ey: 2023,
         imp: goals.LMH.M,
         manual: 1,

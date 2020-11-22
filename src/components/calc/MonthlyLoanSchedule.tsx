@@ -6,7 +6,7 @@ import { GoalContext } from '../goals/GoalContext';
 import { createNewTarget } from '../goals/goalutils';
 import { removeFromArray, toCurrency } from '../utils';
 import { CalcContext } from './CalcContext';
-import { findAdditionalPrincipalPayment } from './finance';
+import { findTarget } from './finance';
 import ItemDisplay from './ItemDisplay';
 interface MonthlyLoanScheduleProps {
 	editable?: boolean;
@@ -18,6 +18,11 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		loanRepaymentSY,
 		loanPrepayments,
 		setLoanPrepayments,
+		loanIntRate,
+		loanIRAdjustments,
+		setLoanIRAdjustments,
+		loanMonthsAdjustments,
+		setLoanMonthsAdjustments,
 		iSchedule,
 		pSchedule,
 		loanBorrowAmt
@@ -48,7 +53,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 			title: 'Payment',
 			dataIndex: 'mp',
 			key: 'mp'
-		},
+		}
 	];
 
 	const getDataItem = (index: number, payment: number, year: number) => {
@@ -56,7 +61,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 			key: '' + index,
 			num: '' + index,
 			year: '' + year,
-			mp: toCurrency(payment, currency, true),
+			mp: toCurrency(payment, currency, true)
 		};
 	};
 
@@ -70,13 +75,27 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 	const changeLoanPrepayments = (installmentNum: number, additionalPayment: number) => {
 		let principalDue = getPrincipalDue(installmentNum);
 		if (additionalPayment > principalDue) additionalPayment = principalDue;
-		let existingPrepayment: TargetInput | null | undefined = findAdditionalPrincipalPayment(loanPrepayments, installmentNum);
+		let existingPrepayment: TargetInput | null | undefined = findTarget(loanPrepayments, installmentNum);
 		if (existingPrepayment)
 			additionalPayment
 				? (existingPrepayment.val = additionalPayment)
 				: removeFromArray(loanPrepayments, 'num', installmentNum);
 		else loanPrepayments.push(createNewTarget(installmentNum, additionalPayment));
-		setLoanPrepayments([...loanPrepayments]);
+		setLoanPrepayments([ ...loanPrepayments ]);
+	};
+
+	const changeLoanIRAdjustments = (installmentNum: number, newIR: number) => {
+		let existingIRAdjustment: TargetInput | null | undefined = findTarget(loanIRAdjustments, installmentNum);
+		if (existingIRAdjustment) existingIRAdjustment.val = newIR;
+		else loanIRAdjustments.push(createNewTarget(installmentNum, newIR));
+		setLoanIRAdjustments([ ...loanIRAdjustments ]);
+	};
+
+	const changeLoanMonthsAdjustments = (installmentNum: number, newDur: number) => {
+		let existingYearAdjustment: TargetInput | null | undefined = findTarget(loanMonthsAdjustments, installmentNum);
+		if (existingYearAdjustment) existingYearAdjustment.val = newDur;
+		else loanIRAdjustments.push(createNewTarget(installmentNum, newDur));
+		setLoanMonthsAdjustments([ ...loanMonthsAdjustments ]);
 	};
 
 	const getPrincipalDue = (installmentNum: number) => {
@@ -96,6 +115,8 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		for (let i = 0; i < installmentNum; i++) totalPrincipalPaid += pSchedule[i];
 		return totalPrincipalPaid;
 	};
+
+	const getRemMonths = (installmentNum: number) => iSchedule.length - installmentNum;
 
 	useEffect(
 		() => {
@@ -124,8 +145,18 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 	};
 
 	const getPrepayment = (installmentNum: number) => {
-		let result = findAdditionalPrincipalPayment(loanPrepayments, installmentNum);
+		let result = findTarget(loanPrepayments, installmentNum);
 		return result ? result.val : 0;
+	};
+
+	const getIRAdjustment = (installmentNum: number) => {
+		let result = findTarget(loanIRAdjustments, installmentNum);
+		return result ? result.val : loanIntRate;
+	};
+
+	const getMonthsAdjustment = (installmentNum: number) => {
+		let result = findTarget(loanMonthsAdjustments, installmentNum);
+		return result ? result.val : getRemMonths(installmentNum);
 	};
 
 	return (
@@ -157,7 +188,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 								/>
 							</Col>
 						</Row>
-						<Row justify="space-around" style={{marginTop: '1rem'}}>
+						<Row justify="space-around" style={{ marginTop: '1rem' }}>
 							<Col>
 								<ItemDisplay
 									label="Principal Paid"
@@ -187,17 +218,46 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 						</Row>
 						{editable &&
 						record.num !== '' + iSchedule.length && (
-							<div style={{ marginTop: '1rem' }}>
-								<NumberInput
-									pre="Additional Principal Payment"
-									value={getPrepayment(parseInt(record.num))}
-									changeHandler={(val: number) => changeLoanPrepayments(parseInt(record.num), val)}
-									min={0}
-									max={getPrepayment(parseInt(record.num)) + getPrincipalDue(parseInt(record.num))}
-									step={10}
-									currency={currency}
-								/>
-							</div>
+							<Fragment>
+								<Row style={{ marginTop: '1rem' }}>
+									<NumberInput
+										pre="Additional Principal Payment"
+										value={getPrepayment(parseInt(record.num))}
+										changeHandler={(val: number) =>
+											changeLoanPrepayments(parseInt(record.num), val)}
+										min={0}
+										max={
+											getPrepayment(parseInt(record.num)) + getPrincipalDue(parseInt(record.num))
+										}
+										step={10}
+										currency={currency}
+									/>
+								</Row>
+								<Row style={{ marginTop: '1rem' }}>
+									<NumberInput
+										pre="Adjust Interest Rate"
+										value={getIRAdjustment(parseInt(record.num))}
+										changeHandler={(val: number) =>
+											changeLoanIRAdjustments(parseInt(record.num), val)}
+										min={0}
+										max={loanIntRate + 5}
+										step={0.1}
+										unit="%"
+									/>
+								</Row>
+								<Row style={{ marginTop: '1rem' }}>
+									<NumberInput
+										pre="Adjust Remaining Loan Duration"
+										value={getMonthsAdjustment(parseInt(record.num))}
+										changeHandler={(val: number) =>
+											changeLoanMonthsAdjustments(parseInt(record.num), val)}
+										min={3}
+										max={getRemMonths(parseInt(record.num)) + 24}
+										step={1}
+										unit="Months"
+									/>
+								</Row>
+							</Fragment>
 						)}
 					</Fragment>
 				)
