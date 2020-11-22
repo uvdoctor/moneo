@@ -1,6 +1,8 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { List, Badge } from "antd";
+import { List, Badge, Progress, Row, Col } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMoneyBillWave } from "@fortawesome/free-solid-svg-icons";
 import {
 	getAllAssetCategories,
 	getAllAssetTypesByCategory,
@@ -24,6 +26,7 @@ export default function AssetAllocationChart() {
 	const { cfs, ffResult, currency }: any = useContext(CalcContext);
 	const [data, setData] = useState<Array<any>>([]);
 	const [colors, setColors] = useState<Array<string>>([]);
+	const [cashData, setCashData] = useState({});
 
 	const sortDesc = (data: Array<any>) => data.sort((a, b) => b.value - a.value);
 
@@ -31,6 +34,7 @@ export default function AssetAllocationChart() {
 		let data: Array<any> = [];
 		let colors: Array<string> = [];
 		const aa = ffResult.aa;
+
 		getAllAssetCategories().forEach((cat) => {
 			let children: Array<any> = [];
 			let total = 0;
@@ -44,11 +48,18 @@ export default function AssetAllocationChart() {
 					});
 				}
 			});
-			data.push({
-				name: cat,
-				value: total,
-				children: children,
-			});
+
+			cat === "Cash"
+				? setCashData({
+						name: cat,
+						value: total,
+						children: children,
+				  })
+				: data.push({
+						name: cat,
+						value: total,
+						children: children,
+				  });
 		});
 		sortDesc(data).forEach((cat) => colors.push(getAssetColour(cat.name)));
 		data.forEach((cat) => {
@@ -67,12 +78,38 @@ export default function AssetAllocationChart() {
 
 	return (
 		<Fragment>
-			<DataSwitcher>
+			<DataSwitcher
+				label={
+					<Fragment>
+						<Row>
+							<Col xs={24} lg={8}>
+								<div className="cash active">
+									<span className="arrow-right"></span>
+									Cash <Badge count="1 %" />
+									<strong>$ 1500.00</strong>
+								</div>
+							</Col>
+							<Col xs={24} sm={12} lg={8}>
+								<div className="cash">
+									Deposits <Badge count="1 %" />
+									<strong>$ 1500.00</strong>
+								</div>
+							</Col>
+							<Col xs={24} sm={12} lg={8}>
+								<div className="cash">
+									Savings <Badge count="1 %" />
+									<strong>$ 1500.00</strong>
+								</div>
+							</Col>
+						</Row>
+					</Fragment>
+				}
+			>
 				<Chart>
 					<TreemapChart
 						data={{
 							name: "Portfolio",
-							value: 100,
+							value: 100 - (cashData.value || 0),
 							children: data,
 						}}
 						meta={{
