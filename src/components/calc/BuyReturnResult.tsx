@@ -35,7 +35,7 @@ export default function BuyReturnResult() {
 		let monthlyCF = annualNetCF / (12 - month);
 		for (let i = month; i < endMonth; i++) {
 			netExpenseXIRRCFs.push({
-				amount: -monthlyCF,
+				amount: monthlyCF,
 				when: new Date(year, i, 7)
 			});
 		}
@@ -53,7 +53,7 @@ export default function BuyReturnResult() {
 				cf -= sellPrice;
 			}
 			let netCF = calculateBuyAnnualNetCF(startYear, amCostPer, amStartYear, assetChgRate, i, price, aiPer, aiStartYear);
-			cf += netCF;
+			cf -= netCF;
 			if(netCF) xirrCFs.push(...getXIRRMonthlyNetExpenseEntries(netCF, startYear + i, startYear ? startMonth : 1, i === sellAfter - 1 ? endMonth + 1 : 12));
 			if (loanRepaymentSY && iSchedule && pSchedule) {
 				let index = startYear + i - loanRepaymentSY;
