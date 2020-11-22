@@ -92,9 +92,9 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 	};
 
 	const changeLoanMonthsAdjustments = (installmentNum: number, newDur: number) => {
-		let existingYearAdjustment: TargetInput | null | undefined = findTarget(loanMonthsAdjustments, installmentNum);
-		if (existingYearAdjustment) existingYearAdjustment.val = newDur;
-		else loanIRAdjustments.push(createNewTarget(installmentNum, newDur));
+		let existingMonthsAdj: TargetInput | null | undefined = findTarget(loanMonthsAdjustments, installmentNum);
+		if (existingMonthsAdj) existingMonthsAdj.val = newDur;
+		else loanMonthsAdjustments.push(createNewTarget(installmentNum, newDur));
 		setLoanMonthsAdjustments([ ...loanMonthsAdjustments ]);
 	};
 
