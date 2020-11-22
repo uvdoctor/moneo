@@ -22,14 +22,27 @@ export const onCreateGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -42,11 +55,11 @@ export const onCreateGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -77,14 +90,27 @@ export const onUpdateGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -97,11 +123,11 @@ export const onUpdateGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -132,14 +158,27 @@ export const onDeleteGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -152,11 +191,11 @@ export const onDeleteGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -172,7 +211,7 @@ export const onCreateMilestone = /* GraphQL */ `
     onCreateMilestone(owner: $owner) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -194,10 +233,11 @@ export const onCreateMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
@@ -214,11 +254,11 @@ export const onCreateMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra
@@ -238,7 +278,7 @@ export const onUpdateMilestone = /* GraphQL */ `
     onUpdateMilestone(owner: $owner) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -260,10 +300,11 @@ export const onUpdateMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
@@ -280,11 +321,11 @@ export const onUpdateMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra
@@ -304,7 +345,7 @@ export const onDeleteMilestone = /* GraphQL */ `
     onDeleteMilestone(owner: $owner) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -326,10 +367,11 @@ export const onDeleteMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
@@ -346,11 +388,11 @@ export const onDeleteMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra

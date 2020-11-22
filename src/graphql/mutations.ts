@@ -25,14 +25,27 @@ export const createGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -45,11 +58,11 @@ export const createGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -83,14 +96,27 @@ export const updateGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -103,11 +129,11 @@ export const updateGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -141,14 +167,27 @@ export const deleteGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -161,11 +200,11 @@ export const deleteGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -184,7 +223,7 @@ export const createMilestone = /* GraphQL */ `
     createMilestone(input: $input, condition: $condition) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -206,10 +245,11 @@ export const createMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
@@ -226,11 +266,11 @@ export const createMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra
@@ -253,7 +293,7 @@ export const updateMilestone = /* GraphQL */ `
     updateMilestone(input: $input, condition: $condition) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -275,10 +315,11 @@ export const updateMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
@@ -295,11 +336,11 @@ export const updateMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra
@@ -322,7 +363,7 @@ export const deleteMilestone = /* GraphQL */ `
     deleteMilestone(input: $input, condition: $condition) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -344,10 +385,11 @@ export const deleteMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
@@ -364,11 +406,11 @@ export const deleteMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra

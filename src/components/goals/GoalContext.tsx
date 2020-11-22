@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
-import { CreateGoalInput, GoalType, LMH, TargetInput } from "../../api/goals";
+import { CreateGoalInput, GoalType, LMH, LoanType, TargetInput } from "../../api/goals";
 import { initYearOptions } from "../utils";
 import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils";
 import { getCompoundedIncome, getNPV } from "../calc/finance";
@@ -58,7 +58,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const nowYear = new Date().getFullYear();
   const [loanRepaymentSY, setLoanRepaymentSY] = useState<
     number | null | undefined
-  >(goal?.emi?.ry);
+  >(goal?.loan?.ry);
   const [price, setPrice] = useState<number>(0);
   const [taxRate, setTaxRate] = useState<number>(goal?.tdr);
   const [maxTaxDeduction, setMaxTaxDeduction] = useState<number>(goal?.tdl);
@@ -74,7 +74,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     goal?.sa
   );
   const [loanPer, setLoanPer] = useState<number | undefined | null>(
-    goal?.emi?.per
+    goal?.loan?.per
   );
   const [loanSIPayPer, setLoanSIPayPer] = useState<number | undefined | null>(
     goal.btr
@@ -82,10 +82,13 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [loanSICapitalize, setLoanSICapitalize] = useState<
     number | undefined | null
     >(goal.tbr);
- 	const [ noIR, setNoIR ] = useState<number>(0);
+ 	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal.lt);
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
     >(goal.achg);
+  const [loanPrepayments, setLoanPrepayments] = useState<Array<TargetInput>>(goal?.loan?.pp as Array<TargetInput>);
+  const [loanIRAdjustments, setLoanIRAdjustments] = useState<Array<TargetInput>>(goal?.loan?.ira as Array<TargetInput>);
+  const [loanMonthsAdjustments, setLoanMonthsAdjustments] = useState<Array<TargetInput>>(goal?.loan?.dura as Array<TargetInput>);
   const [ totalIntAmt, setTotalIntAmt ] = useState<number>(0);
   const [startingPrice, setStartingPrice] = useState<number>(
     goal?.cp as number
@@ -93,11 +96,11 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [impLevel, setImpLevel] = useState<LMH>(goal?.imp);
   const [manualMode, setManualMode] = useState<number>(goal?.manual);
   const [name, setName] = useState<string>(goal.name);
-  const [loanYears, setLoanYears] = useState<number | null | undefined>(
-    goal?.emi?.dur
+  const [loanMonths, setLoanMonths] = useState<number | null | undefined>(
+    goal?.loan?.dur
   );
   const [loanIntRate, setLoanIntRate] = useState<number | null | undefined>(
-    goal?.emi?.rate
+    goal?.loan?.rate
   );
   const [iSchedule, setISchedule] = useState<Array<number>>([]);
   const [pSchedule, setPSchedule] = useState<Array<number>>([]);
@@ -132,6 +135,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [wipTargets, setWIPTargets] = useState<Array<TargetInput>>(
     goal?.tgts as Array<TargetInput>
   );
+  const [ annualReturnPer, setAnnualReturnPer ] = useState<number | null>(0);
   const [brChartData, setBRChartData] = useState<Array<any>>([]);
   const [duration, setDuration] = useState<number>(
     getDuration(
@@ -141,7 +145,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       manualMode,
       loanPer,
       loanRepaymentSY,
-      loanYears,
+      loanMonths,
     )
   );
   const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
@@ -178,11 +182,15 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     if (isLoanEligible(goalType)) {
       bg.tbi = taxBenefitInt;
       bg.tdli = maxTaxDeductionInt;
-      bg.emi = {
+      bg.loan = {
+        type: loanType ? loanType : LoanType.A,
         rate: loanIntRate as number,
-        dur: loanYears as number,
+        dur: loanMonths as number,
         per: loanPer as number,
         ry: loanRepaymentSY as number,
+        pp: loanPrepayments ? loanPrepayments : [],
+        ira: loanIRAdjustments ? loanIRAdjustments : [],
+        dura: loanMonthsAdjustments ? loanMonthsAdjustments : []
       };
     }
     if (sellAfter) {
@@ -259,7 +267,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 		for (let year = startYear; year <= endYear; year++) {
 			let existingT = null;
 			if (wipTargets.length > 0) {
-				existingT = wipTargets.filter((target: TargetInput) => target.year === year)[0] as TargetInput;
+				existingT = wipTargets.filter((target: TargetInput) => target.num === year)[0] as TargetInput;
 			}
 			let t = createNewTarget(year, existingT ? existingT.val : 0);
 			targets.push(t);
@@ -274,7 +282,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 		[ manualMode, startYear, endYear ]
 	);
 
-
   const calculateYearlyCFs = (
     duration: number = getDuration(
       sellAfter,
@@ -283,7 +290,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       manualMode,
       loanPer,
       loanRepaymentSY,
-      loanYears
+      loanMonths
     ),
     changeState: boolean = true
   ) => {
@@ -310,7 +317,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         setISchedule([...[]]);
         setPSchedule([...[]]);
       }
-      if(noIR < 1) setEMI(result.hasOwnProperty("emi") ? result.emi : 0);
+      setEMI(result.hasOwnProperty("emi") ? result.emi : 0);
       setRemSI(result.hasOwnProperty("remSI") ? result.remSI : 0);
       setCapSI(result.hasOwnProperty("capSI") ? result.capSI : 0);
       setSimpleInts([...result.hasOwnProperty("simpleInts") ? result.simpleInts : []]);
@@ -337,7 +344,10 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     loanSICapitalize,
     loanRepaymentSY,
     loanIntRate,
-    loanYears,
+    loanMonths,
+    loanPrepayments,
+    loanIRAdjustments,
+    loanMonthsAdjustments,
     startYear,
     sellAfter,
     taxRate,
@@ -542,8 +552,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           setImpLevel,
           manualMode,
           setManualMode,
-          loanYears,
-          setLoanYears,
+          loanMonths,
+          setLoanMonths,
           loanIntRate,
           setLoanIntRate,
           loanPer,
@@ -615,8 +625,16 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           remSI,
           capSI,
           loanBorrowAmt,
-          noIR,
-          setNoIR
+          loanType,
+          setLoanType,
+          loanPrepayments,
+          setLoanPrepayments,
+          annualReturnPer,
+          setAnnualReturnPer,
+          loanIRAdjustments,
+          setLoanIRAdjustments,
+          loanMonthsAdjustments,
+          setLoanMonthsAdjustments
         }}>
         {children ? children : <CalcTemplate header={<GoalHeader />} />}
       </GoalContext.Provider>

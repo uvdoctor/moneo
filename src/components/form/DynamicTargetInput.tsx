@@ -26,13 +26,13 @@ export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProp
 
 	const getDefaultYear = () => {
 		if (!tgts || tgts.length === 0) return startYear + 1;
-		return tgts[tgts.length - 1].year + 1;
+		return tgts[tgts.length - 1].num + 1;
 	};
 
 	const newRec = () => createNewTarget(getDefaultYear(), 0);
 
 	const filterTgts = () => {
-		let ft = tgts.filter((t: TargetInput) => t.year > startYear && t.year <= endYear);
+		let ft = tgts.filter((t: TargetInput) => t.num > startYear && t.num <= endYear);
 		setTgts([ ...ft ]);
 	};
 
@@ -55,7 +55,7 @@ export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProp
 	};
 
 	const changeTargetYear = (index: number, year: string) => {
-		tgts[index].year = parseInt(year);
+		tgts[index].num = parseInt(year);
 		setTgts([ ...tgts ]);
 	};
 
@@ -84,7 +84,7 @@ export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProp
 								</Row>
 							}
 							options={yearOpts}
-							value={t.year}
+							value={t.num}
 							changeHandler={(year: string) => changeTargetYear(i, year)}
 						/>
 						<Col span={24} style={{marginBottom: '0.5rem'}} />

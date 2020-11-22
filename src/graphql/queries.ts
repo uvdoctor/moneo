@@ -22,14 +22,27 @@ export const getGoal = /* GraphQL */ `
       chg
       achg
       tgts {
-        year
+        num
         val
       }
-      emi {
+      loan {
+        type
         per
         rate
         dur
         ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        dura {
+          num
+          val
+        }
       }
       imp
       met
@@ -42,11 +55,11 @@ export const getGoal = /* GraphQL */ `
       dr
       sa
       pg {
-        year
+        num
         val
       }
       pl {
-        year
+        num
         val
       }
       ra
@@ -82,10 +95,11 @@ export const listGoals = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
@@ -102,11 +116,11 @@ export const listGoals = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra
@@ -124,7 +138,7 @@ export const getMilestone = /* GraphQL */ `
     getMilestone(id: $id) {
       id
       tgt {
-        year
+        num
         val
       }
       attr
@@ -146,10 +160,11 @@ export const getMilestone = /* GraphQL */ `
         chg
         achg
         tgts {
-          year
+          num
           val
         }
-        emi {
+        loan {
+          type
           per
           rate
           dur
@@ -166,11 +181,11 @@ export const getMilestone = /* GraphQL */ `
         dr
         sa
         pg {
-          year
+          num
           val
         }
         pl {
-          year
+          num
           val
         }
         ra
@@ -195,7 +210,7 @@ export const listMilestones = /* GraphQL */ `
       items {
         id
         tgt {
-          year
+          num
           val
         }
         attr

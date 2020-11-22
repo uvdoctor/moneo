@@ -148,9 +148,7 @@ describe('getTotalInt functionality check 3 with different loan paid for months'
   test('Return Value check for all periods', () => {
     let loanPaidForMonths = 1; 
     let totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    let remainingPrinciple = finance.getRemainingPrincipal(borrowAmt, emi, intRate, loanPaidForMonths);
     expect(totalInt).not.toBe(null);
-    expect(remainingPrinciple).not.toBe(null);
     expect(totalInt).toBe(333.33333333333337);
     loanPaidForMonths++;
     totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
@@ -200,71 +198,8 @@ describe('getTotalInt functionality check 3 with different loan paid for months'
     loanPaidForMonths=24;
     totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
     expect(totalInt).toBe(4272.749747420946);
-    remainingPrinciple = finance.getRemainingPrincipal(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(remainingPrinciple).toBe(0);    
   })
 }) 
-
-describe('getTotalInt functionality check 3 with different loan paid for months', ()=>{
-  let borrowAmt = 50000;
-  let intRate = 8;
-  let years = 2;
-  let months = years*12;
-  let emi = finance.getEmi(borrowAmt,intRate,months);
-
-  test('Return Value check for period 1', () => {
-    let loanPaidForMonths = 1; 
-    let remainingPrinciple = finance.getRemainingPrincipal(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(remainingPrinciple).not.toBe(null);
-    expect(remainingPrinciple).toBe(48071.968760524105);
-  })
-
-  test('Return Value check for whole period', () => {
-    let loanPaidForMonths = months; 
-    let remainingPrinciple = finance.getRemainingPrincipal(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(remainingPrinciple).not.toBe(null);
-    expect(remainingPrinciple).toBe(0);
-  })
-
-  test('Return Value check for whole period', () => {
-    let loanPaidForMonths = 2; 
-    let remainingPrinciple = finance.getRemainingPrincipal(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(remainingPrinciple).not.toBe(null);
-    expect(remainingPrinciple).toBe(46131.0839794517);
-  })
-
-  test('Return Value check for whole period', () => {
-    let loanPaidForMonths = 7; 
-    let remainingPrinciple = finance.getRemainingPrincipal(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(remainingPrinciple).not.toBe(null);
-    expect(remainingPrinciple).toBe(36230.83771588272);
-  })
-
-  test('Return Value check for whole period', () => {
-    let loanPaidForMonths = 12; 
-    let remainingPrinciple = finance.getRemainingPrincipal(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(remainingPrinciple).not.toBe(null);
-    expect(remainingPrinciple).toBe(25996.153702104042);
-  })
-
-  test('Return Value check for various periods', () => {
-    let loanPaidForMonths = 15; 
-    let remainingPrinciple = finance.getRemainingPrincipal(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(remainingPrinciple).toBe(19690.129117561133);
-    loanPaidForMonths = 18; 
-    remainingPrinciple = finance.getRemainingPrincipal(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(remainingPrinciple).toBe(13257.141369597697);
-    loanPaidForMonths = 20; 
-    remainingPrinciple = finance.getRemainingPrincipal(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(remainingPrinciple).toBe(8896.687551371573);
-    loanPaidForMonths = 22; 
-    remainingPrinciple = finance.getRemainingPrincipal(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(remainingPrinciple).toBe(4477.900550954957);
-    loanPaidForMonths = 24; 
-    remainingPrinciple = finance.getRemainingPrincipal(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(remainingPrinciple).toBe(0);
-  })
-})
 
 describe('Get NPV Suite', ()=>{
   const rr = 

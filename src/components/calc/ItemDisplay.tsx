@@ -49,7 +49,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 				formatter={() =>
 					typeof props.result === 'number' && !props.noResultFormat
 						? props.currency
-							? toCurrency(Math.abs(props.result), props.currency)
+							? toCurrency(Math.abs(props.result), props.currency, props.decimal ? true : false)
 							: toReadableNumber(Math.abs(props.result), props.decimal ? props.decimal : 0)
 						: props.result}
 				valueStyle={{ color: props.pl ? props.result < 0 ? COLORS.RED : props.result > 0 ? COLORS.GREEN : COLORS.DEFAULT : COLORS.DEFAULT, textAlign: 'center' }}

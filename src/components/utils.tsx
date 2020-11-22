@@ -295,7 +295,6 @@ export const removeFromArray = (arr: Array<any>, attr: string, value: any) => {
       arr.splice(i, 1);
     }
   }
-  return arr;
 };
 
 export const getRangeFactor = (currency: string) => {

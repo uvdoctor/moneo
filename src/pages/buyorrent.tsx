@@ -14,7 +14,7 @@ export default function BuyOrRent() {
 	const features = [
 		{
 			title: "Works for any Asset",
-			content: "As calculation uses time-tested financial principles, it works for any asset such as property, car, furniture, gadget, etc."
+			content: "Calculation will work for any Asset that can be bought / rented (eg: property, car, furniture, gadget, etc.)"
 		},
 		{
 			title: "Supports custom payment plan",
@@ -22,8 +22,12 @@ export default function BuyOrRent() {
 		},
 		{
 			title: "XIRR for loss / gain calculation",
-			content: "Uses industry standard Extended Internal Rate of Return (XIRR) methodology to calculate Yearly loss / gain for Buy option as multiple cash flows happen at different times."
+			content: "Uses industry standard Extended Internal Rate of Return (XIRR) method to calculate loss / gain as multiple cash flows happen at different times."
 		},
+		{
+			title: "NPV for buy vs rent comparison",
+			content: "Compares Net Present Value (NPV) of both options from 1 to upto 50 years to identify the cheaper option."
+		}
 	];
 
 	const results = [

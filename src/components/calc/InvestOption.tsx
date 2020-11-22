@@ -34,7 +34,6 @@ export default function InvestOption() {
 				changeHandler={setYears}
 				label="Years"
 				labelBottom
-				width={120}
 			/>
 		</Section>
 	);

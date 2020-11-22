@@ -18,14 +18,14 @@ export default function LoanEmi() {
 	const {
 		duration,
 		loanRepaymentSY,
-		loanYears,
+		loanMonths,
 		loanPer,
 		loanSIPayPer,
 		loanSICapitalize,
 		setLoanPer,
 		setLoanSIPayPer,
 		setLoanSICapitalize,
-		setLoanYears,
+		setLoanMonths,
 		setLoanRepaymentSY,
 		taxBenefitInt,
 		setTaxBenefitInt,
@@ -46,7 +46,7 @@ export default function LoanEmi() {
 	const getRYRange = () => initYearOptions(getRYFirstYear(), getRYDuration());
 
 	const [ ryOptions, setRYOptions ] = useState(getRYRange());
-	const loanLimitPer = goal.type === GoalType.E ? 100 : 80;
+	const loanLimitPer = goal.type === GoalType.E ? 100 : 90;
 	const [ totalSI, setTotalSI ] = useState<number>(0);
 
 	useEffect(
@@ -85,7 +85,6 @@ export default function LoanEmi() {
 			}
 		>
 			<RadialInput
-				width={120}
 				unit="%"
 				data={toStringArr(isLoanMandatory ? 10 : 0, loanLimitPer, 5)}
 				value={loanPer}
@@ -112,19 +111,18 @@ export default function LoanEmi() {
 			{loanBorrowAmt && (
 				<NumberInput
 					pre="Loan Duration"
-					unit="Years"
-					value={loanYears}
-					changeHandler={setLoanYears}
-					min={0.5}
-					max={30}
-					step={0.5}
+					unit="Months"
+					value={loanMonths}
+					changeHandler={setLoanMonths}
+					min={6}
+					max={360}
+					step={1}
 				/>
 			)}
 			{loanBorrowAmt && <LoanInterest />}
 			{loanBorrowAmt &&
 			goal.type === GoalType.E && (
 				<RadialInput
-					width={120}
 					unit="%"
 					data={toStringArr(0, 100, 5)}
 					value={loanSIPayPer as number}
