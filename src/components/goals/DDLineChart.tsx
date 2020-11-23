@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import dynamic from 'next/dynamic';
-import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
+import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDarkTheme } from '../chartutils';
 import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
-import { getTheme } from "bizcharts";
 
 interface DDLineChartProps {
 	numberOfYears?: boolean;
@@ -14,6 +13,9 @@ const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: 
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function DDLineChart({ numberOfYears, title }: DDLineChartProps) {
+	let darkTheme: any;
+	if (typeof window !== 'undefined') darkTheme = getDarkTheme();
+
 	const {
 		startYear,
 		currency,
@@ -22,8 +24,6 @@ export default function DDLineChart({ numberOfYears, title }: DDLineChartProps) 
 		goal
 	}: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
-	const darkTheme = getTheme('dark');
-	darkTheme.background = 'transparent';
 
 	useEffect(
 		() => {
@@ -49,8 +49,8 @@ export default function DDLineChart({ numberOfYears, title }: DDLineChartProps) 
 			xAxis={getCommonXAxis(title ? title : numberOfYears ? 'Number of Years' : 'Year')}
 			meta={getCommonMeta(currency)}
 			point={{ visible: true }}
-			forceFit
 			theme={darkTheme}
+			forceFit
 		>
 			<Slider />
 		</LineChart>
