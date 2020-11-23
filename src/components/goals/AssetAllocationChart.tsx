@@ -96,11 +96,8 @@ export default function AssetAllocationChart() {
 				title={
 					<Fragment>
 						Target Asset Allocation of{" "}
-						<strong>
-							{currency}
-							{cfs[0]}
-						</strong>{" "}
-						for Year <strong>{startYear + 1}</strong>
+						<strong>{toCurrency(cfs[0], currency)}</strong> for Year{" "}
+						<strong>{startYear + 1}</strong>
 					</Fragment>
 				}
 				header={
