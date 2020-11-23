@@ -582,7 +582,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   }, [taxRate, rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs, dr]);
 
   useEffect(() => {
-    if (!sellAfter || cfs.length === 0 || (!brAns && !rentAmt)) return;
+    if (!sellAfter || !cfs.length || (!brAns && !rentAmt)) return;
     let allBuyCFs: Array<Array<number>> = [];
     for (let i = 1; i <= analyzeFor; i++)
       allBuyCFs.push(calculateYearlyCFs(i, false));

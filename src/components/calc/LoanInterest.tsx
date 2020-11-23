@@ -1,26 +1,32 @@
 import React, { Fragment, useContext } from 'react';
-import { Col, Row } from 'antd';
+import { Col } from 'antd';
 import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
-import ItemDisplay from './ItemDisplay';
 import NumberInput from '../form/numberinput';
 import HSwitch from '../HSwitch';
 import { GoalType, LoanType } from '../../api/goals';
 
 export default function LoanInterest() {
-	const { goal, currency }: any = useContext(CalcContext);
-	const { loanIntRate, setLoanIntRate, emi, loanType, setLoanType }: any = useContext(GoalContext);
+	const { goal }: any = useContext(CalcContext);
+	const { loanIntRate, setLoanIntRate, loanType, setLoanType }: any = useContext(GoalContext);
 
-  const changeLoanType = (val: number) => setLoanType(val < 1 ? LoanType.A : LoanType.B);
+	const changeLoanType = (val: number) => setLoanType(val < 1 ? LoanType.A : LoanType.B);
 
 	return (
 		<Fragment>
-      {goal.type !== GoalType.E && <HSwitch leftText="Amortizing Loan" rightText="Balloon Loan" value={loanType === LoanType.A ? 0 : 1} setter={changeLoanType} />}
+			{goal.type !== GoalType.E && (
+				<HSwitch
+					leftText="Amortizing Loan"
+					rightText="Balloon Loan"
+					value={loanType === LoanType.A ? 0 : 1}
+					setter={changeLoanType}
+				/>
+			)}
 			<Col span={24}>
-					<NumberInput
-						pre="Yearly Interest"
-						unit="%"
-						/*feedback={{
+				<NumberInput
+					pre="Yearly Interest"
+					unit="%"
+					/*feedback={{
         0: {
           label: (
             <Tooltip
@@ -68,16 +74,14 @@ export default function LoanInterest() {
           color: COLORS.RED
         }
       }}*/
-						value={loanIntRate}
-						changeHandler={setLoanIntRate}
-						min={0.0}
-						max={25.0}
-						step={0.1}
-					/>
+					value={loanIntRate}
+					changeHandler={setLoanIntRate}
+					min={0}
+					max={25}
+					step={0.1}
+					additionalMarks={[ 5, 10, 15, 20 ]}
+				/>
 			</Col>
-			<Row align="middle" justify="center">
-          <ItemDisplay label="Monthly Installment" result={emi} currency={currency} decimal={2} />
-			</Row>
 		</Fragment>
 	);
 }
