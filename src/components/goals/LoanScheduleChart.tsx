@@ -1,16 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
+import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDarkTheme, getDefaultSliderProps } from '../chartutils';
 import { GoalContext } from './GoalContext';
 import { CalcContext } from '../calc/CalcContext';
 import { createYearlyFromMonthlyLoanCFs } from '../calc/finance';
 
 const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
+const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function LoanScheduleChart() {
 	const { currency }: any = useContext(CalcContext);
 	const { pSchedule, iSchedule, loanRepaymentSY }: any = useContext(GoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
+	let darkTheme: any;
+	if (typeof window !== 'undefined') darkTheme = getDarkTheme();
 
 	useEffect(
 		() => {
@@ -43,6 +46,9 @@ export default function LoanScheduleChart() {
 			xAxis={getCommonXAxis('Year')}
 			data={data}
 			legend={{ position: 'top-center' }}
-		/>
+			theme={darkTheme}
+		>
+			<Slider {...getDefaultSliderProps()} />
+		</StackedColumnChart>
 	);
 }
