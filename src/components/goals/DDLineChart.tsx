@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
 import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
+import { getTheme } from "bizcharts";
 
 interface DDLineChartProps {
 	numberOfYears?: boolean;
@@ -21,6 +22,8 @@ export default function DDLineChart({ numberOfYears, title }: DDLineChartProps) 
 		goal
 	}: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
+	const darkTheme = getTheme('dark');
+	darkTheme.background = 'transparent';
 
 	useEffect(
 		() => {
@@ -47,6 +50,7 @@ export default function DDLineChart({ numberOfYears, title }: DDLineChartProps) 
 			meta={getCommonMeta(currency)}
 			point={{ visible: true }}
 			forceFit
+			theme={darkTheme}
 		>
 			<Slider />
 		</LineChart>
