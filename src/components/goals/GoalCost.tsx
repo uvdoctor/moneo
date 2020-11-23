@@ -9,7 +9,7 @@ import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
 import { getImpLevels } from './goalutils';
 
-export default function Amt() {
+export default function GoalCost() {
 	const {
 		goal,
 		startYear,
@@ -19,10 +19,12 @@ export default function Amt() {
 		eyOptions,
 		addCallback,
 		impLevel,
-		setImpLevel
+		setImpLevel,
+		isPublicCalc
 	}: any = useContext(CalcContext);
-	const { ffGoalEndYear, manualMode, isLoanMandatory }: any = useContext(GoalContext);
-	const syOptions = initYearOptions(goal.by + 1, ffGoalEndYear - 20 - (goal.by + 1));
+	const { ffGoalEndYear, manualMode, isEndYearHidden }: any = useContext(GoalContext);
+	const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
+	const syOptions = initYearOptions(firstStartYear, ffGoalEndYear - 20 - firstStartYear);
 
 	return (
 		<Col span={24}>
@@ -42,7 +44,7 @@ export default function Amt() {
 					changeHandler={changeStartYear}
 					options={syOptions}
 				/>
-				{!(isLoanMandatory && goal.type === GoalType.O) && (
+				{!isEndYearHidden && (
 					<SelectInput
 						pre="To Year"
 						value={endYear}

@@ -18,6 +18,7 @@ interface NumberInputProps {
 	note?: any;
 	step: number;
 	feedback?: any;
+	additionalMarks?: Array<number>;
 }
 
 export default function NumberInput(props: NumberInputProps) {
@@ -35,9 +36,13 @@ export default function NumberInput(props: NumberInputProps) {
 			[min]: toReadableNumber(minNum, props.step < 1 ? 2 : 0)
 		};
 		if (min < 0) marks[0] = '0';
+		if (props.additionalMarks) 
+			props.additionalMarks.forEach((val: number) => {
+				marks[val] = toReadableNumber(val, props.step < 1 ? 2 : 0);
+			});
 		marks[max] = { label: toReadableNumber(max), style: { paddingRight: props.currency ? '3rem' : '0rem' } };
 		return marks;
-	}
+	};
 
 	const [ marks, setMarks ] = useState<any>(getSliderMarks(props.min, props.max));
 

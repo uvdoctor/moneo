@@ -83,9 +83,9 @@ export default function SetPlan() {
             g.sy,
             g.ey,
             g.manual,
-            g.emi?.per,
-            g.emi?.ry,
-            g.emi?.dur
+            g.loan?.per,
+            g.loan?.ry,
+            g.loan?.dur
           )
         );
         allCFs[g.id as string] = result.cfs;

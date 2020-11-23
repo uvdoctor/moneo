@@ -132,8 +132,8 @@ const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
     tdr: 0,
     tdl: 20000 * getRangeFactor(currency),
     ccy: currency,
-    cp: goalType === APIt.GoalType.B ? 500000 : 20000,
-    chg: 3,
+    cp: goalType === APIt.GoalType.B ? 500000 * getRangeFactor(currency): 20000 * getRangeFactor(currency),
+    chg: 0,
     type: goalType,
     tgts: [],
     dr: 5,
@@ -198,13 +198,13 @@ export const createNewGoalInput = (
     bg.tdli = 20000 * getRangeFactor(currency);
     bg.loan = {
       rate: 4,
-      dur: 10,
+      dur: 120,
       per: 0,
       ry: goalType === APIt.GoalType.E ? bg.ey + 1 : bg.sy,
       type: APIt.LoanType.A,
       pp: [],
       ira: [],
-      dura: []
+      emi: 0
     };
   }
   if (goalType === APIt.GoalType.B) {

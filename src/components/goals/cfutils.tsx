@@ -1,8 +1,6 @@
 import * as APIt from "../../api/goals";
 import {
   getCompoundedIncome,
-  getEmi,
-  createAmortizingLoanCFs,
   createYearlyFromMonthlyLoanCFs,
 } from "../calc/finance";
 import {
@@ -85,8 +83,6 @@ export const calculateCFs = (
   if (price === null) price = calculatePrice(goal); //tested
   if ((goal?.manual as number) > 0)
     return createManualCFs(price, goal, duration);
-  else if ((goal?.loan?.per as number) > 0)
-    return createLoanCFs(price, goal, duration);
   else return createAutoCFs(price, goal, duration);
 };
 
@@ -294,7 +290,7 @@ export const getLoanBorrowAmt = (
   loanPer: number
 ) => {
   let p = price;
-  if (goalType !== APIt.GoalType.B && !manualMode) {
+  if (goalType !== APIt.GoalType.B && !manualMode && numOfYears > 0) {
     for (
       let i = 0, v = 0;
       i <= numOfYears;
@@ -359,58 +355,29 @@ export const createEduLoanDPWithSICFs = (
   };
 };
 
-const createLoanCFs = (
-  p: number,
+export const createEduLoanCFs = () => {
+
+};
+
+export const createLoanCFs = (
+  price: number,
+  loanStartingCFs: Array<number>,
+  iSchedule: Array<number>,
+  pSchedule: Array<number>,
+  simpleInts: Array<number>,
+  remSimpleIntAmt: number,
   goal: APIt.CreateGoalInput,
   duration: number
 ) => {
-  if (!goal.loan?.per || !goal.loan?.dur) return [];
-  let cfs: Array<number> = [];
+  if (!price || !duration || !iSchedule || !iSchedule.length || !pSchedule || !pSchedule.length) return [{
+    cfs: [],
+    ptb: 0,
+    itb: 0
+  }];
+  let cfs: Array<number> = loanStartingCFs;
   let totalPTaxBenefit = 0;
   let totalITaxBenefit = 0;
-  let loanBorrowAmt = 0;
-  let loanDP = 0;
-  let simpleInts: Array<number> = [];
-  let remSimpleIntAmt = 0;
-  let capSimpleIntAmt = 0;
-  if (goal.type !== APIt.GoalType.E) {
-    loanBorrowAmt = getLoanBorrowAmt(
-      p,
-      goal.type,
-      goal.manual,
-      goal?.chg as number,
-      goal.ey - goal.sy,
-      goal.loan?.per
-    );
-    loanDP = Math.round(loanBorrowAmt / (goal.loan.per / 100)) - loanBorrowAmt;
-    cfs.push(loanDP);
-  } else {
-    let result = createEduLoanDPWithSICFs(
-      p,
-      goal.chg as number,
-      goal.loan?.per,
-      goal.sy,
-      goal.ey,
-      goal.loan?.rate,
-      goal.btr as number,
-      (goal.tbr as number) < 1
-    );
-    cfs = result.cfs;
-    loanBorrowAmt = result.borrowAmt;
-    simpleInts = result.ints;
-    remSimpleIntAmt = result.remIntAmt;
-    capSimpleIntAmt = result.capIntAmt;
-  }
-  loanBorrowAmt = adjustAccruedInterest(
-    loanBorrowAmt,
-    goal.type === APIt.GoalType.E ? goal.ey + 1 : goal.sy,
-    goal.loan.ry,
-    goal.loan.rate
-  );
-  let emi = getEmi(loanBorrowAmt, goal.loan?.rate, goal.loan?.dur);
-  let monthlyLoanCFs = createAmortizingLoanCFs(loanBorrowAmt, goal.loan?.rate, emi, goal.loan?.pp as Array<APIt.TargetInput>,
-    goal.loan?.ira as Array<APIt.TargetInput>, goal.loan?.dura as Array<APIt.TargetInput>, goal.loan?.dur, duration)
-  let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(monthlyLoanCFs.interest, monthlyLoanCFs.principal);
+  let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule);
   let sp = 0;
   let taxBenefit = 0;
   for (let year = goal.sy; year <= goal.sy + duration - 1; year++) {
@@ -418,7 +385,7 @@ const createLoanCFs = (
     let cf = cfs[index] ? cfs[index] : 0;
     cf -= taxBenefit;
     taxBenefit = 0;
-    let i = year - goal.loan.ry;
+    let i = year - (goal.loan?.ry as number);
     if (i >= 0 && i < annualLoanPayments.interest.length) {
       let annualIPayment = annualLoanPayments.interest[i];
       let annualPPayment = annualLoanPayments.principal[i];
@@ -440,7 +407,7 @@ const createLoanCFs = (
         totalITaxBenefit += itb;
       }
     } else if (
-      year < goal.loan.ry &&
+      year < (goal.loan?.ry as number) &&
       (goal.tbi as number) > 0 &&
       simpleInts[index]
     ) {
@@ -461,7 +428,7 @@ const createLoanCFs = (
         goal.amsy as number,
         goal.achg as number,
         year - goal.sy,
-        p,
+        price,
         goal.aiper as number,
         goal.aisy as number
       );
@@ -475,7 +442,7 @@ const createLoanCFs = (
     else cfs.push(cf ? Math.round(-cf) : 0);
   }
   if (goal.type === APIt.GoalType.B) {
-    sp = calculateSellPrice(p, goal?.achg as number, duration);
+    sp = calculateSellPrice(price, goal?.achg as number, duration);
     cfs[cfs.length - 1] += Math.round(sp);
     if(taxBenefit) cfs.push(Math.round(taxBenefit));
   }
@@ -483,13 +450,6 @@ const createLoanCFs = (
     cfs: cfs,
     ptb: totalPTaxBenefit,
     itb: totalITaxBenefit,
-    iSchedule: monthlyLoanCFs.interest,
-    pSchedule: monthlyLoanCFs.principal,
-    loanBorrowAmt: loanBorrowAmt,
-    emi: emi,
-    simpleInts: simpleInts,
-    remSI: remSimpleIntAmt,
-    capSI: capSimpleIntAmt
   };
 };
 

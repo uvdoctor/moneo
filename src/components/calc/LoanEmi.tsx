@@ -12,6 +12,7 @@ import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
 import { GoalType } from '../../api/goals';
 import LoanInterest from './LoanInterest';
+import { Row } from 'antd';
 
 export default function LoanEmi() {
 	const { goal, currency, startYear, rangeFactor, endYear }: any = useContext(CalcContext);
@@ -36,7 +37,8 @@ export default function LoanEmi() {
 		isLoanMandatory,
 		simpleInts,
 		remSI,
-		loanBorrowAmt
+		loanBorrowAmt,
+		emi
 	}: any = useContext(GoalContext);
 
 	const getRYFirstYear = () => (goal.type === GoalType.E ? endYear + 1 : startYear);
@@ -117,6 +119,7 @@ export default function LoanEmi() {
 					min={6}
 					max={360}
 					step={1}
+					additionalMarks={[ 60, 120, 180, 240 ]}
 				/>
 			)}
 			{loanBorrowAmt && <LoanInterest />}
@@ -192,6 +195,11 @@ export default function LoanEmi() {
 						/>
 					}
 				/>
+			)}
+			{loanBorrowAmt && (
+				<Row align="middle" justify="center">
+					<ItemDisplay label="Monthly Installment" result={emi} currency={currency} decimal={2} />
+				</Row>
 			)}
 		</Section>
 	);

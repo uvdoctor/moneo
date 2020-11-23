@@ -2,6 +2,7 @@ import { Col, Row, Table } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { TargetInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
+import Section from '../form/section';
 import { GoalContext } from '../goals/GoalContext';
 import { createNewTarget } from '../goals/goalutils';
 import { removeFromArray, toCurrency } from '../utils';
@@ -21,8 +22,6 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		loanIntRate,
 		loanIRAdjustments,
 		setLoanIRAdjustments,
-		loanMonthsAdjustments,
-		setLoanMonthsAdjustments,
 		iSchedule,
 		pSchedule,
 		loanBorrowAmt
@@ -91,13 +90,6 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		setLoanIRAdjustments([ ...loanIRAdjustments ]);
 	};
 
-	const changeLoanMonthsAdjustments = (installmentNum: number, newDur: number) => {
-		let existingMonthsAdj: TargetInput | null | undefined = findTarget(loanMonthsAdjustments, installmentNum);
-		if (existingMonthsAdj) existingMonthsAdj.val = newDur;
-		else loanMonthsAdjustments.push(createNewTarget(installmentNum, newDur));
-		setLoanMonthsAdjustments([ ...loanMonthsAdjustments ]);
-	};
-
 	const getPrincipalDue = (installmentNum: number) => {
 		let principal = loanBorrowAmt;
 		for (let i = 0; i < installmentNum; i++) principal -= pSchedule[i];
@@ -154,11 +146,6 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		return result ? result.val : loanIntRate;
 	};
 
-	const getMonthsAdjustment = (installmentNum: number) => {
-		let result = findTarget(loanMonthsAdjustments, installmentNum);
-		return result ? result.val : getRemMonths(installmentNum);
-	};
-
 	return (
 		<Table
 			dataSource={data}
@@ -206,12 +193,9 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 								/>
 							</Col>
 						</Row>
-						<Row justify="space-around" style={{ marginTop: '1rem' }}>
+						<Row justify="space-around" style={{ marginTop: '1rem', marginBottom: '1rem' }}>
 							<Col>
-								<ItemDisplay
-									label="Remaining Months"
-									result={getRemMonths(parseInt(record.num))}
-								/>
+								<ItemDisplay label="Remaining Months" result={getRemMonths(parseInt(record.num))} />
 							</Col>
 							<Col>
 								<ItemDisplay
@@ -223,9 +207,9 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 							</Col>
 						</Row>
 						{editable &&
-						record.num !== '' + iSchedule.length && (
-							<Fragment>
-								<div style={{ marginTop: '1rem' }}>
+						parseInt(record.num) < iSchedule.length - 3 && (
+							<Row justify="center">
+								<Section title="Adjust Loan Details">
 									<NumberInput
 										pre="Additional Principal Payment"
 										value={getPrepayment(parseInt(record.num))}
@@ -235,35 +219,22 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 										max={
 											getPrepayment(parseInt(record.num)) + getPrincipalDue(parseInt(record.num))
 										}
-										step={10}
+										step={100}
 										currency={currency}
 									/>
-								</div>
-								<div style={{ marginTop: '1rem' }}>
 									<NumberInput
 										pre="Adjust Interest Rate"
 										value={getIRAdjustment(parseInt(record.num))}
 										changeHandler={(val: number) =>
 											changeLoanIRAdjustments(parseInt(record.num), val)}
-										min={0}
-										max={loanIntRate + 5}
+										min={loanIntRate - 3}
+										max={loanIntRate + 3}
 										step={0.1}
 										unit="%"
+										additionalMarks={[loanIntRate]}
 									/>
-								</div>
-								<div style={{ marginTop: '2rem' }}>
-									<NumberInput
-										pre="Adjust Remaining Loan Duration"
-										value={getMonthsAdjustment(parseInt(record.num))}
-										changeHandler={(val: number) =>
-											changeLoanMonthsAdjustments(parseInt(record.num), val)}
-										min={3}
-										max={getRemMonths(parseInt(record.num)) + 24}
-										step={1}
-										unit="Months"
-									/>
-								</div>
-							</Fragment>
+								</Section>
+							</Row>
 						)}
 					</Fragment>
 				)

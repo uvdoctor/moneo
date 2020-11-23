@@ -73,7 +73,6 @@ export const createAmortizingLoanCFs = (
 	emi: number,
 	loanPrepayments: Array<TargetInput>,
   loanIRAdjustments: Array<TargetInput>,
-  loanMonthsAdjustments: Array<TargetInput>,
 	loanMonths: number,
 	duration: number
 ) => {
@@ -87,17 +86,14 @@ export const createAmortizingLoanCFs = (
 	let principal = loanBorrowAmt;
 	let monthlyRate = (loanIntRate as number) / 1200;
 	let miPayments: Array<number> = [];
-  let mpPayments: Array<number> = [];
-  let loanEmi = emi;
+	let mpPayments: Array<number> = [];
+	let loanEmi = emi;
   for (let i = 0; i < loanDuration && principal > 0; i++) {
     let irAdj: TargetInput | undefined | null = findTarget(loanIRAdjustments, i + 1);
-    if(irAdj) monthlyRate = irAdj.val / 1200;
-    let monthsAdj: TargetInput | undefined | null = findTarget(loanMonthsAdjustments, i + 1);
-    if (monthsAdj) {
-			let monthsVal = monthsAdj.val;
-			loanDuration = i + (monthsVal < durationMonths ? monthsVal : durationMonths);
-    }
-		if (irAdj || monthsAdj) loanEmi = getEmi(principal, irAdj ? irAdj.val : loanIntRate, monthsAdj ? monthsAdj.val : loanMonths);
+		if (irAdj) {
+			monthlyRate = irAdj.val / 1200;
+			loanEmi = getEmi(loanBorrowAmt, irAdj.val, loanMonths);
+		}
 		let monthlyInt = principal * monthlyRate;
 		miPayments.push(monthlyInt);
 		let monthlyPayment = principal + monthlyInt < loanEmi ? principal + monthlyInt : loanEmi;

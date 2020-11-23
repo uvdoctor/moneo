@@ -35,12 +35,12 @@ enum GoalType {
 type Loan {
   type: LoanType!
   per: Int!
-  rate: Float!
+  rate: Float
   dur: Int!
   ry: Int!
   pp: [Target!]
   ira: [Target!]
-  dura: [Target!]
+  emi: Float
 }
 
 type Goal @model @auth(rules: [{ allow: owner }]) {
