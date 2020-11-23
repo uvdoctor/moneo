@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Radio, Row, Col, Badge } from "antd";
+import { Radio, Row, Col } from "antd";
 import { AreaChartOutlined, MenuOutlined } from "@ant-design/icons";
 
 import "./DataSwitcher.less";
@@ -10,14 +10,14 @@ const DataContext = createContext({
 
 interface DataSwitcherProp {
 	children?: ReactNode;
-	label?: ReactNode;
+	header?: ReactNode;
 }
 
 interface ChildrenProp {
 	children?: ReactNode;
 }
 
-function DataSwitcher({ children, label }: DataSwitcherProp) {
+function DataSwitcher({ children, header }: DataSwitcherProp) {
 	const [active, setActive] = useState<string>("chart");
 
 	function onChange(e: any) {
@@ -38,7 +38,7 @@ function DataSwitcher({ children, label }: DataSwitcherProp) {
 							</Radio.Button>
 						</Radio.Group>
 					</Col>
-					<Col span={24}>{label}</Col>
+					<Col span={24}>{header}</Col>
 					<Col xs={{ order: 3 }} span={24}>
 						{children}
 					</Col>
