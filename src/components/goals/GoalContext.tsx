@@ -190,6 +190,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         ry: loanRepaymentSY as number,
         pp: loanPrepayments ? loanPrepayments : [],
         ira: loanIRAdjustments ? loanIRAdjustments : [],
+        emi: emi ? emi : 0
       };
     }
     if (sellAfter) {
