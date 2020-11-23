@@ -634,15 +634,15 @@ const calculateAllocation = (
       else reitPer += 5;
     }
     if (reitPer > remPer) reitPer = remPer;
-    aa[ASSET_TYPES.DOMESTIC_REIT][i] += Math.round(reitPer * 0.8);
+    aa[ASSET_TYPES.DOMESTIC_REIT][i] += Math.round(reitPer * 0.7);
     aa[ASSET_TYPES.INTERNATIONAL_REIT][i] +=
       reitPer - aa[ASSET_TYPES.DOMESTIC_REIT][i];
     remPer -= reitPer;
-    if (remPer > 0) {
+    if (remPer) {
       if (y <= ffGoal.ey - 5) {
         if (ffGoal.imp === APIt.LMH.L) {
           let mteBondsPer = 0;
-          if (y < ffYear) mteBondsPer = Math.round(remPer * 0.5);
+          if (y < ffYear) mteBondsPer = Math.round(remPer * 0.6);
           aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] += mteBondsPer;
           aa[ASSET_TYPES.MED_TERM_BONDS][i] += remPer - mteBondsPer;
         } else {

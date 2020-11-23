@@ -179,6 +179,10 @@ export default function AssetAllocationChart() {
 						}}
 						color={colors}
 						rectStyle={{ stroke: "#fff", lineWidth: 2 }}
+						forceFit
+						interactions={[{
+							type: 'continuous-visible-filter'
+						}]}
 					/>
 				</Chart>
 				<DataSwitcherList>

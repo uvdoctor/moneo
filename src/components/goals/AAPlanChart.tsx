@@ -5,6 +5,7 @@ import { getAssetColour } from '../utils';
 import { CalcContext } from '../calc/CalcContext';
 
 const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
+const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function AAPlanChart() {
 	const { endYear, rr, ffResult }: any = useContext(CalcContext);
@@ -59,6 +60,8 @@ export default function AAPlanChart() {
 			xAxis={getCommonXAxis('Year')}
 			color={(d: string) => getAssetColour(d)}
 			legend={{ position: 'top-left' }}
-		/>
+		>
+			<Slider />
+		</StackedColumnChart>
 	);
 }
