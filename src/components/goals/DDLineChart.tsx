@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import dynamic from 'next/dynamic';
-import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDarkTheme } from '../chartutils';
+import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDarkTheme, getDefaultSliderProps } from '../chartutils';
 import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
 
@@ -52,7 +52,7 @@ export default function DDLineChart({ numberOfYears, title }: DDLineChartProps) 
 			theme={darkTheme}
 			forceFit
 		>
-			<Slider />
+			<Slider {...getDefaultSliderProps()} />
 		</LineChart>
 	);
 }

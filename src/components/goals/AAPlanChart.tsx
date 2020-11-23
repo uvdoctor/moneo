@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { getCommonXAxis, getCommonYAxis, getDarkTheme } from '../chartutils';
+import { getCommonXAxis, getCommonYAxis, getDarkTheme, getDefaultSliderProps } from '../chartutils';
 import { getAssetColour } from '../utils';
 import { CalcContext } from '../calc/CalcContext';
 
@@ -11,7 +11,7 @@ interface AAPlanChartProps {
 	changeToSingleYear: Function;
 }
 
-export default function AAPlanChart({changeToSingleYear}: AAPlanChartProps) {
+export default function AAPlanChart({ changeToSingleYear }: AAPlanChartProps) {
 	let darkTheme: any;
 	if (typeof window !== 'undefined') darkTheme = getDarkTheme();
 
@@ -69,9 +69,9 @@ export default function AAPlanChart({changeToSingleYear}: AAPlanChartProps) {
 			legend={{ position: 'top-center' }}
 			theme={darkTheme}
 			events={{ onColumnClick: (event: any) => changeToSingleYear(parseInt(event.data.year)) }}
-			columnStyle={{cursor: 'pointer'}}
+			columnStyle={{ cursor: 'pointer' }}
 		>
-			<Slider trendCfg={{ data: [] }} handlerStyle={{ width: 20, height: 20 }} />
+			<Slider {...getDefaultSliderProps()} />
 		</StackedColumnChart>
 	);
 }

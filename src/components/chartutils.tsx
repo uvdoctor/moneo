@@ -52,3 +52,18 @@ export const getDarkTheme = () => {
 	darkTheme.background = 'transparent';
 	return darkTheme;
 };
+
+export const getDefaultSliderProps = () => {
+	return {
+		trendCfg: { data: [] },
+		handlerStyle: {
+			width: 20,
+			height: 20,
+			style: {
+				fill: COLORS.DEFAULT,
+				stroke: COLORS.WHITE
+			}
+		},
+		foregroundStyle: { fill: COLORS.GREEN }
+	};
+};
