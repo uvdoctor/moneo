@@ -10,6 +10,7 @@ interface DDLineChartProps {
 }
 
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
+const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function DDLineChart({ numberOfYears, title }: DDLineChartProps) {
 	const {
@@ -45,8 +46,9 @@ export default function DDLineChart({ numberOfYears, title }: DDLineChartProps) 
 			xAxis={getCommonXAxis(title ? title : numberOfYears ? 'Number of Years' : 'Year')}
 			meta={getCommonMeta(currency)}
 			point={{ visible: true }}
-			interactions={[{ type: 'drag-move' }, {type: 'view-zoom'}]}
 			forceFit
-		/>
+		>
+			<Slider />
+		</LineChart>
 	);
 }
