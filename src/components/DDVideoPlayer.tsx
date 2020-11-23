@@ -9,7 +9,7 @@ interface VideoPlayerProps {
 	play?: boolean;
 }
 
-export default function DDVideoPlayer({ url, callback, play = true }: VideoPlayerProps) {
+export default function DDVideoPlayer({ url, callback, play = false }: VideoPlayerProps) {
 	const videoRef = useRef(null);
 
 	const endVideo = () => {

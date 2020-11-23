@@ -94,10 +94,10 @@ export const createAmortizingLoanCFs = (
     if(irAdj) monthlyRate = irAdj.val / 1200;
     let monthsAdj: TargetInput | undefined | null = findTarget(loanMonthsAdjustments, i + 1);
     if (monthsAdj) {
-      let monthsVal = monthsAdj.val;
-      loanDuration = monthsVal < durationMonths ? monthsVal : durationMonths;
+			let monthsVal = monthsAdj.val;
+			loanDuration = i + (monthsVal < durationMonths ? monthsVal : durationMonths);
     }
-    if (irAdj || monthsAdj) loanEmi = getEmi(principal, irAdj ? irAdj.val : loanIntRate, monthsAdj ? monthsAdj.val : loanMonths - i);
+		if (irAdj || monthsAdj) loanEmi = getEmi(principal, irAdj ? irAdj.val : loanIntRate, monthsAdj ? monthsAdj.val : loanMonths);
 		let monthlyInt = principal * monthlyRate;
 		miPayments.push(monthlyInt);
 		let monthlyPayment = principal + monthlyInt < loanEmi ? principal + monthlyInt : loanEmi;

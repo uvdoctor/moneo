@@ -82,7 +82,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [loanSICapitalize, setLoanSICapitalize] = useState<
     number | undefined | null
     >(goal.tbr);
- 	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal.lt);
+ 	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal.loan.type);
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
     >(goal.achg);
