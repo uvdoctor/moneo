@@ -28,7 +28,7 @@ function DataSwitcher({ children, header, title }: DataSwitcherProp) {
 	return (
 		<div className="data-switcher">
 			<DataContext.Provider value={{ active }}>
-				<Row>
+				<Row className="header">
 					<Col span={16}>
 						<h4>{title}</h4>
 					</Col>
@@ -42,6 +42,8 @@ function DataSwitcher({ children, header, title }: DataSwitcherProp) {
 							</Radio.Button>
 						</Radio.Group>
 					</Col>
+				</Row>
+				<Row>
 					<Col span={24}>{header}</Col>
 					<Col xs={{ order: 3 }} span={24}>
 						{children}
