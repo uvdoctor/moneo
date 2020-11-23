@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic';
 import { getCommonXAxis, getCommonYAxis } from '../chartutils';
 import { getAssetColour } from '../utils';
 import { CalcContext } from '../calc/CalcContext';
-import { getTheme } from "bizcharts";
 
 const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
@@ -11,8 +10,6 @@ const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: f
 export default function AAPlanChart() {
 	const { endYear, rr, ffResult }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
-	const darkTheme = getTheme('dark');
-	darkTheme.background = 'transparent';
 
 	const hasAllZeros = (arr: Array<number>) => {
 		for (let num of arr) {
@@ -63,10 +60,10 @@ export default function AAPlanChart() {
 			xAxis={getCommonXAxis('Year')}
 			color={(d: string) => getAssetColour(d)}
 			legend={{ position: 'top-left' }}
-			theme={darkTheme}
 		>
 			<Slider trendCfg={{data: [], isArea: false}}
 				handlerStyle={{ width: 20, height: 20 }}
+				end={0.2}
 			/>
 		</StackedColumnChart>
 	);
