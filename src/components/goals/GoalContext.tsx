@@ -309,6 +309,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 
   useEffect(() => {
     if (sellAfter && manualMode < 1 && loanPer && loanMonths && sellAfter * 12 < loanMonths) {
+      let duration = getDuration(sellAfter, startYear, endYear, manualMode, loanPer, loanRepaymentSY, loanMonths);
       let result = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments,
         loanIRAdjustments, loanMonths as number, duration);
       setPSchedule([...result.principal]);
