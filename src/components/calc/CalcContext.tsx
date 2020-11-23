@@ -17,10 +17,10 @@ import { AfterFI } from '../goals/AfterFI';
 import Care from '../goals/Care';
 import { BeforeFI } from '../goals/BeforeFI';
 import AssetAllocationChart from '../goals/AssetAllocationChart';
-import AAPlanChart from '../goals/AAPlanChart';
 import { faChartLine, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faFileInvoiceDollar, faUserCog } from '@fortawesome/free-solid-svg-icons';
 import FIUserDetails from '../goals/FIUserDetails';
 import LoanSchedule from './LoanSchedule';
+import DynamicAAChart from '../goals/DynamicAAChart';
 
 const CalcContext = createContext({});
 
@@ -103,7 +103,7 @@ function CalcContextProvider({
       label: `${nowYear + 2} - ${endYear} Allocation Plan`,
       active: true,
       svg: faChartBar,
-      content: <AAPlanChart />
+      content: <DynamicAAChart />
     },
     {
       label: "Portfolio Value",

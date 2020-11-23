@@ -7,7 +7,11 @@ import { CalcContext } from '../calc/CalcContext';
 const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
-export default function AAPlanChart() {
+interface AAPlanChartProps {
+	changeToSingleYear: Function;
+}
+
+export default function AAPlanChart({changeToSingleYear}: AAPlanChartProps) {
 	let darkTheme: any;
 	if (typeof window !== 'undefined') darkTheme = getDarkTheme();
 
@@ -62,8 +66,10 @@ export default function AAPlanChart() {
 			yAxis={getCommonYAxis()}
 			xAxis={getCommonXAxis('Year')}
 			color={(d: string) => getAssetColour(d)}
-			legend={{position: 'top-center'}}
+			legend={{ position: 'top-center' }}
 			theme={darkTheme}
+			events={{ onColumnClick: (event: any) => changeToSingleYear(parseInt(event.data.year)) }}
+			columnStyle={{cursor: 'pointer'}}
 		>
 			<Slider trendCfg={{ data: [] }} handlerStyle={{ width: 20, height: 20 }} />
 		</StackedColumnChart>

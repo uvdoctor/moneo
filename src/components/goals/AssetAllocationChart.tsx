@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { List, Badge, Row, Col } from "antd";
+import { List, Badge, Row, Col, Button } from "antd";
 import {
 	getAllAssetCategories,
 	getAllAssetTypesByCategory,
@@ -9,6 +9,7 @@ import {
 } from "../utils";
 import { CalcContext } from "../calc/CalcContext";
 import DataSwitcher from "../DataSwitcher";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const TreemapChart = dynamic(() => import("bizcharts/lib/plots/TreemapChart"), {
 	ssr: false,
@@ -29,7 +30,12 @@ interface CashData extends CashDataKeys {
 	savings: number;
 }
 
-export default function AssetAllocationChart() {
+interface AssetAllocationChartProps {
+	year?: number;
+	backFunction?: Function;
+}
+
+export default function AssetAllocationChart({year = new Date().getFullYear() + 1, backFunction}: AssetAllocationChartProps) {
 	const cashDataDefault = {
 		value: 0,
 		deposits: 0,
@@ -37,6 +43,7 @@ export default function AssetAllocationChart() {
 	};
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 	const { cfs, ffResult, currency, startYear }: any = useContext(CalcContext);
+	const index = year - startYear - 1;
 	const [data, setData] = useState<Array<any>>([]);
 	const [colors, setColors] = useState<Array<string>>([]);
 	const [cashData, setCashData] = useState<CashData>(cashDataDefault);
@@ -53,14 +60,14 @@ export default function AssetAllocationChart() {
 			let children: Array<any> = [];
 			let total = 0;
 			getAllAssetTypesByCategory(cat).forEach((at) => {
-				if (aa[at][0]) {
-					total += aa[at][0];
+				if (aa[at][index]) {
+					total += aa[at][index];
 
 					cat === "Cash"
-						? (cash[at.toLowerCase()] = aa[at][0])
+						? (cash[at.toLowerCase()] = aa[at][index])
 						: children.push({
 								name: at,
-								value: aa[at][0],
+								value: aa[at][index],
 								children: [],
 						  });
 				}
@@ -95,9 +102,10 @@ export default function AssetAllocationChart() {
 			<DataSwitcher
 				title={
 					<Fragment>
+						{backFunction && <Button type="text" icon={<ArrowLeftOutlined />} onClick={() => backFunction() } />}
 						Target Asset Allocation of{" "}
-						<strong>{toCurrency(cfs[0], currency)}</strong> for Year{" "}
-						<strong>{startYear + 1}</strong>
+						<strong>{toCurrency(cfs[index], currency)}</strong> for Year{" "}
+						<strong>{year}</strong>
 					</Fragment>
 				}
 				header={
@@ -110,7 +118,7 @@ export default function AssetAllocationChart() {
 										Cash <Badge count={`${cashData.value} %`} />
 										<strong>
 											{toCurrency(
-												Math.round((cfs[0] * cashData.value) / 100),
+												Math.round((cfs[index] * cashData.value) / 100),
 												currency
 											)}
 										</strong>
@@ -121,7 +129,7 @@ export default function AssetAllocationChart() {
 										Deposits <Badge count={`${cashData.deposits} %`} />
 										<strong>
 											{toCurrency(
-												Math.round((cfs[0] * cashData.deposits) / 100),
+												Math.round((cfs[index] * cashData.deposits) / 100),
 												currency
 											)}
 										</strong>
@@ -132,7 +140,7 @@ export default function AssetAllocationChart() {
 										Savings <Badge count={`${cashData.savings} %`} />
 										<strong>
 											{toCurrency(
-												Math.round((cfs[0] * cashData.savings) / 100),
+												Math.round((cfs[index] * cashData.savings) / 100),
 												currency
 											)}
 										</strong>
@@ -165,11 +173,11 @@ export default function AssetAllocationChart() {
 									? v +
 											"\n" +
 											toCurrency(
-												Math.round((cfs[0] * ffResult.aa[v][0]) / 100),
+												Math.round((cfs[index] * ffResult.aa[v][index]) / 100),
 												currency
 											) +
 											"\n" +
-											ffResult.aa[v][0] +
+											ffResult.aa[v][index] +
 											"%"
 									: v;
 							},
@@ -177,9 +185,6 @@ export default function AssetAllocationChart() {
 						color={colors}
 						rectStyle={{ stroke: "#fff", lineWidth: 2 }}
 						forceFit
-						interactions={[{
-							type: 'continuous-visible-filter'
-						}]}
 					/>
 				</Chart>
 				<DataSwitcherList>
