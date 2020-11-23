@@ -1,9 +1,9 @@
-import { Modal, PageHeader, Rate, Input, Row, Col } from 'antd';
-import React, { Fragment, ReactNode, useContext, useState } from 'react';
-import SelectInput from '../form/selectinput';
-import { CalcContext } from './CalcContext';
-import Draggable from 'react-draggable';
-import * as gtag from '../../lib/gtag';
+import { Modal, PageHeader, Rate, Input, Row, Col } from "antd";
+import React, { Fragment, ReactNode, useContext, useState } from "react";
+import SelectInput from "../form/selectinput";
+import { CalcContext } from "./CalcContext";
+import Draggable from "react-draggable";
+import * as gtag from "../../lib/gtag";
 interface CalcHeaderProps {
 	children?: any;
 	title?: ReactNode;
@@ -21,57 +21,61 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 		setShowFeedbackModal,
 		feedbackText,
 		setFeedbackText,
-		fsb
+		fsb,
 	}: any = useContext(CalcContext);
-	const ratingLabels = [ '', 'Very Poor', 'Poor', 'Average', 'Good', 'Awesome!' ];
-	const [ ratingLabel, setRatingLabel ] = useState<string>('');
+	const ratingLabels = ["", "Very Poor", "Poor", "Average", "Good", "Awesome!"];
+	const [ratingLabel, setRatingLabel] = useState<string>("");
 
 	const saveFeedback = () => {
 		if (!feedbackText) return;
 		gtag.event({
 			category: goal.name,
-			action: 'Rating',
-			label: 'Feedback',
-			value: feedbackText
+			action: "Rating",
+			label: "Feedback",
+			value: feedbackText,
 		});
-		setFeedbackText('');
+		setFeedbackText("");
 		setShowFeedbackModal(false);
 	};
 
 	return (
 		<Fragment>
 			<div className="primary-header">
-				<Col span={24}>
-					<PageHeader
-						title={title ? title : goal.name}
-						extra={[
-							<SelectInput
-								key="currselect"
-								pre=""
-								value={currency}
-								changeHandler={changeCurrency}
-								currency
-							/>
-						]}
-					/>
-				</Col>
-				<Col span={24} className="secondary-header">
-					<Row justify={children ? 'space-around' : 'start'}>
-						{children && <Col>{children}</Col>}
-						<Col>
-							<span style={{ marginRight: '0.5rem' }}>Rate Calculator</span>
-							<Rate
-								allowClear
-								value={rating}
-								onChange={(rating: number) => setRating(rating)}
-								onHoverChange={(rating: number) => setRatingLabel(ratingLabels[rating])}
-							/>
-							<span style={{ marginLeft: '0.5rem' }}>
-								{ratingLabel ? ratingLabel : ratingLabels[rating]}
-							</span>
-						</Col>
-					</Row>
-				</Col>
+				<Row>
+					<Col span={24}>
+						<PageHeader
+							title={title ? title : goal.name}
+							extra={[
+								<SelectInput
+									key="currselect"
+									pre=""
+									value={currency}
+									changeHandler={changeCurrency}
+									currency
+								/>,
+							]}
+						/>
+					</Col>
+					<Col span={24} className="secondary-header">
+						<Row justify={children ? "space-around" : "start"}>
+							{children && <Col>{children}</Col>}
+							<Col>
+								<span style={{ marginRight: "0.5rem" }}>Rate Calculator</span>
+								<Rate
+									allowClear
+									value={rating}
+									onChange={(rating: number) => setRating(rating)}
+									onHoverChange={(rating: number) =>
+										setRatingLabel(ratingLabels[rating])
+									}
+								/>
+								<span style={{ marginLeft: "0.5rem" }}>
+									{ratingLabel ? ratingLabel : ratingLabels[rating]}
+								</span>
+							</Col>
+						</Row>
+					</Col>
+				</Row>
 			</div>
 			{showFeedbackModal && (
 				<Modal
@@ -82,7 +86,9 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 					onOk={() => saveFeedback()}
 					maskClosable
 					//@ts-ignore
-					modalRender={(modal: any) => <Draggable disabled={fsb.info.innerWidth < 1200}>{modal}</Draggable>}
+					modalRender={(modal: any) => (
+						<Draggable disabled={fsb.info.innerWidth < 1200}>{modal}</Draggable>
+					)}
 				>
 					<TextArea
 						rows={4}

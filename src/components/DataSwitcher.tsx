@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Radio } from "antd";
-import { BarChartOutlined, MenuOutlined } from "@ant-design/icons";
+import { Radio, Row, Col } from "antd";
+import { AreaChartOutlined, MenuOutlined } from "@ant-design/icons";
 
 import "./DataSwitcher.less";
 
@@ -8,11 +8,16 @@ const DataContext = createContext({
 	active: "chart",
 });
 
+interface DataSwitcherProp {
+	children?: ReactNode;
+	header?: ReactNode;
+}
+
 interface ChildrenProp {
 	children?: ReactNode;
 }
 
-function DataSwitcher({ children }: ChildrenProp) {
+function DataSwitcher({ children, header }: DataSwitcherProp) {
 	const [active, setActive] = useState<string>("chart");
 
 	function onChange(e: any) {
@@ -22,17 +27,22 @@ function DataSwitcher({ children }: ChildrenProp) {
 	return (
 		<div className="data-switcher">
 			<DataContext.Provider value={{ active }}>
-				<div className="text-right">
-					<Radio.Group value={active} onChange={onChange}>
-						<Radio.Button value="chart">
-							<BarChartOutlined />
-						</Radio.Button>
-						<Radio.Button value="list">
-							<MenuOutlined />
-						</Radio.Button>
-					</Radio.Group>
-				</div>
-				{children}
+				<Row>
+					<Col span={24} className="switcher">
+						<Radio.Group value={active} onChange={onChange}>
+							<Radio.Button value="chart">
+								<AreaChartOutlined />
+							</Radio.Button>
+							<Radio.Button value="list">
+								<MenuOutlined />
+							</Radio.Button>
+						</Radio.Group>
+					</Col>
+					<Col span={24}>{header}</Col>
+					<Col xs={{ order: 3 }} span={24}>
+						{children}
+					</Col>
+				</Row>
 			</DataContext.Provider>
 		</div>
 	);
