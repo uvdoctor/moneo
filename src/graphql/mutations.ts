@@ -42,10 +42,7 @@ export const createGoal = /* GraphQL */ `
           num
           val
         }
-        dura {
-          num
-          val
-        }
+        emi
       }
       imp
       met
@@ -113,10 +110,7 @@ export const updateGoal = /* GraphQL */ `
           num
           val
         }
-        dura {
-          num
-          val
-        }
+        emi
       }
       imp
       met
@@ -184,10 +178,7 @@ export const deleteGoal = /* GraphQL */ `
           num
           val
         }
-        dura {
-          num
-          val
-        }
+        emi
       }
       imp
       met
@@ -254,6 +245,7 @@ export const createMilestone = /* GraphQL */ `
           rate
           dur
           ry
+          emi
         }
         imp
         met
@@ -324,6 +316,7 @@ export const updateMilestone = /* GraphQL */ `
           rate
           dur
           ry
+          emi
         }
         imp
         met
@@ -394,6 +387,7 @@ export const deleteMilestone = /* GraphQL */ `
           rate
           dur
           ry
+          emi
         }
         imp
         met

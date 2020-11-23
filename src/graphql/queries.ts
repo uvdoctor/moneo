@@ -39,10 +39,7 @@ export const getGoal = /* GraphQL */ `
           num
           val
         }
-        dura {
-          num
-          val
-        }
+        emi
       }
       imp
       met
@@ -104,6 +101,7 @@ export const listGoals = /* GraphQL */ `
           rate
           dur
           ry
+          emi
         }
         imp
         met
@@ -169,6 +167,7 @@ export const getMilestone = /* GraphQL */ `
           rate
           dur
           ry
+          emi
         }
         imp
         met

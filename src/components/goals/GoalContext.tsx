@@ -105,7 +105,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [pSchedule, setPSchedule] = useState<Array<number>>([]);
   const [loanBorrowAmt, setLoanBorrowAmt] = useState<number>(0);
   const [loanStartingCFs, setLoanStartingCFs] = useState<Array<number>>([]);
-  const [emi, setEMI] = useState<number>(0);
+  const [emi, setEMI] = useState<number>(goal?.loan?.emi as number);
 	const [ simpleInts, setSimpleInts ] = useState<Array<number>>([]);
   const [remSI, setRemSI] = useState<number>(0);
   const [ capSI, setCapSI ] = useState<number>(0);

@@ -198,13 +198,13 @@ export const createNewGoalInput = (
     bg.tdli = 20000 * getRangeFactor(currency);
     bg.loan = {
       rate: 4,
-      dur: 10,
+      dur: 120,
       per: 0,
       ry: goalType === APIt.GoalType.E ? bg.ey + 1 : bg.sy,
       type: APIt.LoanType.A,
       pp: [],
       ira: [],
-      dura: []
+      emi: 0
     };
   }
   if (goalType === APIt.GoalType.B) {
