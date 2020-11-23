@@ -231,7 +231,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 										max={loanIntRate + 3}
 										step={0.1}
 										unit="%"
-										additionalMarks={[getIRAdjustment(parseInt(record.num))]}
+										additionalMarks={[loanIntRate]}
 									/>
 								</Section>
 							</Row>
