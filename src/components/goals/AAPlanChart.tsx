@@ -62,10 +62,10 @@ export default function AAPlanChart() {
 			yAxis={getCommonYAxis()}
 			xAxis={getCommonXAxis('Year')}
 			color={(d: string) => getAssetColour(d)}
-			legend={{ position: 'top-left' }}
+			legend={{position: 'top-center'}}
 			theme={darkTheme}
 		>
-			<Slider trendCfg={{ data: [], isArea: false }} handlerStyle={{ width: 20, height: 20 }} />
+			<Slider trendCfg={{ data: [] }} handlerStyle={{ width: 20, height: 20 }} />
 		</StackedColumnChart>
 	);
 }
