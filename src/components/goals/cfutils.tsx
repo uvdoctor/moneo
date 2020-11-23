@@ -290,7 +290,7 @@ export const getLoanBorrowAmt = (
   loanPer: number
 ) => {
   let p = price;
-  if (goalType !== APIt.GoalType.B && !manualMode) {
+  if (goalType !== APIt.GoalType.B && !manualMode && numOfYears > 0) {
     for (
       let i = 0, v = 0;
       i <= numOfYears;

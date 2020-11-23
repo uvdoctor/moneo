@@ -154,7 +154,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
   const router = useRouter();
 	const isLoanMandatory = router.pathname === ROUTES.LOAN || router.pathname === ROUTES.EDUCATION;
-  
+  const isEndYearHidden = isLoanMandatory && goalType === GoalType.O;
+
   useEffect(() =>
     setDisableSubmit(name.length < 3 || !price || btnClicked),
     [name, price, btnClicked]);
@@ -229,16 +230,17 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   }, [price, assetChgRate, sellAfter]);
 
   useEffect(() => {
+    if (startYear <= nowYear) setPriceChgRate(0);
     if (!loanPer) setEYOptions(initYearOptions(startYear, 30));
     else if (goalType !== GoalType.E) setLoanRepaymentSY(startYear);
-    if (goalType === GoalType.B) return;
-    if (startYear > endYear || endYear - startYear > 30) setEndYear(startYear);
-  }, [startYear]);
+    if ((goalType !== GoalType.B) && (isEndYearHidden || startYear > endYear || endYear - startYear > 30))
+      setEndYear(startYear);
+  }, [startYear, loanPer]);
 
   useEffect(() => {
     if (manualMode) return;
-    let p = 0;
-    if (startingPrice)
+    let p = startingPrice;
+    if (startingPrice && priceChgRate && startYear > nowYear)
       p = getCompoundedIncome(priceChgRate, startingPrice, startYear - goal.by);
     setPrice(Math.round(p));
     if (isLoanEligible(goal.type) && loanPer && !resultTabs[1].active) {
@@ -688,6 +690,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           setAnnualReturnPer,
           loanIRAdjustments,
           setLoanIRAdjustments,
+          isEndYearHidden
         }}>
         {children ? children : <CalcTemplate header={<GoalHeader />} />}
       </GoalContext.Provider>

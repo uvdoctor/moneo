@@ -2,7 +2,7 @@ import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { getRangeFactor, initYearOptions } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import TaxAdjustment from "../calc/TaxAdjustment";
-import Amt from "../goals/amt";
+import GoalCost from "../goals/GoalCost";
 import LoanEmi from "../calc/LoanEmi";
 import Sell from "../goals/sell";
 import BRComp from "../goals/BRComp";
@@ -54,10 +54,10 @@ function CalcContextProvider({
 }: CalcContextProviderProps) {
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
+  const isPublicCalc = addCallback && updateCallback ? false : true;
   const [startYear, setStartYear] = useState<number>(goal.sy);
   const [startMonth, setStartMonth] = useState<number>(1);
   const [endYear, setEndYear] = useState<number>(goal.ey);
-  const isPublicCalc = addCallback && updateCallback ? false : true;
   const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal?.ccy ? goal.ccy : 'USD');
 	const [ rangeFactor, setRangeFactor ] = useState<number>(getRangeFactor(currency));
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
@@ -144,7 +144,7 @@ function CalcContextProvider({
   const getGoalTabOptions = (type: GoalType) => {
     if (type === GoalType.FF) return getFFGoalTabOptions();
     let options = [
-      { label: "Cost", active: true, svg: faMoneyBillWave, content: <Amt /> }];
+      { label: "Cost", active: true, svg: faMoneyBillWave, content: <GoalCost /> }];
     if (type === GoalType.B) {
       options.push({ label: "Sell", active: true, svg: faHandshake, content: <Sell /> });
     }
