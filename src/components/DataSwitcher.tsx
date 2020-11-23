@@ -11,13 +11,14 @@ const DataContext = createContext({
 interface DataSwitcherProp {
 	children?: ReactNode;
 	header?: ReactNode;
+	title?: string | ReactNode;
 }
 
 interface ChildrenProp {
 	children?: ReactNode;
 }
 
-function DataSwitcher({ children, header }: DataSwitcherProp) {
+function DataSwitcher({ children, header, title }: DataSwitcherProp) {
 	const [active, setActive] = useState<string>("chart");
 
 	function onChange(e: any) {
@@ -28,7 +29,10 @@ function DataSwitcher({ children, header }: DataSwitcherProp) {
 		<div className="data-switcher">
 			<DataContext.Provider value={{ active }}>
 				<Row>
-					<Col span={24} className="switcher">
+					<Col span={16}>
+						<h4>{title}</h4>
+					</Col>
+					<Col span={8} className="switcher">
 						<Radio.Group value={active} onChange={onChange}>
 							<Radio.Button value="chart">
 								<AreaChartOutlined />
