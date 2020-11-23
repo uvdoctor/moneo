@@ -54,6 +54,6 @@ export const getDarkTheme = () => {
 	let { getTheme } = require('bizcharts');
 	let darkTheme = getTheme('dark');
 	darkTheme.background = 'transparent';
-	return getDarkTheme;
+	return darkTheme;
 }
 
