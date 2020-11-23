@@ -41,6 +41,8 @@ export default function SelectInput(props: SelectInputProps) {
 							option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
 						}
 						disabled={props.disabled}
+						defaultValue={props.value}
+						style={{minWidth: '80px'}}
 					>
 						{Object.keys(
 							props.currency ? getCurrencyList() : props.options
