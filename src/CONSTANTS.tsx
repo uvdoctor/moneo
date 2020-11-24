@@ -31,18 +31,18 @@ export const ASSET_CATEGORIES = {
 export const ASSET_TYPES = {
     SAVINGS: "Savings",
     DEPOSITS: "Deposits",
-    SHORT_TERM_BONDS: "Short-term Bonds",
-    MED_TERM_BONDS: "Intermediate-term Bonds",
-    TAX_EXEMPT_BONDS: "Tax-exempt Bonds",
+    SHORT_TERM_BONDS: "Short-term",
+    MED_TERM_BONDS: "Intermediate-term",
+    TAX_EXEMPT_BONDS: "Tax-exempt",
     DOMESTIC_REIT: "Domestic REIT",
     INTERNATIONAL_REIT: "International REIT",
     GOLD: "Gold",
-    LARGE_CAP_STOCKS: "Large-cap Stocks",
-    MID_CAP_STOCKS: "Mid-cap Stocks",
-    SMALL_CAP_STOCKS: "Small-cap Stocks",
-    INTERNATIONAL_STOCKS: "International Stocks",
-    DIVIDEND_GROWTH_STOCKS: "Dividend-Growth Stocks",
-    HIGH_YIELD_STOCKS: "High-Yield Stocks",
+    LARGE_CAP_STOCKS: "Large-cap",
+    MID_CAP_STOCKS: "Mid-cap",
+    SMALL_CAP_STOCKS: "Small-cap",
+    INTERNATIONAL_STOCKS: "International",
+    DIVIDEND_GROWTH_STOCKS: "Dividend-Growth",
+    HIGH_YIELD_STOCKS: "High-Yield",
 };
 
 export const COLORS = {
