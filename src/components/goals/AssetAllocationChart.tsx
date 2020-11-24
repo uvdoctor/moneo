@@ -1,6 +1,7 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { List, Badge, Row, Col, Button } from "antd";
+import { getDarkTheme } from "../chartutils";
 import {
 	getAllAssetCategories,
 	getAllAssetTypesByCategory,
@@ -39,6 +40,9 @@ export default function AssetAllocationChart({
 	year = new Date().getFullYear() + 1,
 	backFunction,
 }: AssetAllocationChartProps) {
+	let darkTheme: any;
+	if (typeof window !== "undefined") darkTheme = getDarkTheme();
+
 	const cashDataDefault = {
 		value: 0,
 		deposits: 0,
@@ -162,6 +166,7 @@ export default function AssetAllocationChart({
 			>
 				<Chart>
 					<TreemapChart
+						theme={darkTheme}
 						data={{
 							name: "Portfolio",
 							value: 100 - (cashData.value || 0),
@@ -190,6 +195,10 @@ export default function AssetAllocationChart({
 											"%"
 									: v;
 							},
+							style: {
+								fontSize: 14,
+								fill: "grey",
+							},
 						}}
 						color={colors}
 						rectStyle={{ stroke: "#fff", lineWidth: 2 }}
@@ -210,15 +219,24 @@ export default function AssetAllocationChart({
 						return (
 							<List
 								dataSource={data}
-								renderItem={({ name, children }) => {
-									const [title, percentage] = name.split(" ");
+								renderItem={({ name, value, children }) => {
+									const [title] = name.split(" ");
 
 									count++;
 
 									return (
 										<Fragment>
-											<List.Item className="heading">
-												{title} <Badge count={percentage} />
+											<List.Item
+												className="heading"
+												actions={[
+													toCurrency(
+														Math.round((cfs[index] * value) / 100),
+														currency
+													),
+													<Badge count={`${value}%`} />,
+												]}
+											>
+												{title}
 											</List.Item>
 											<List.Item>
 												<List
@@ -227,7 +245,15 @@ export default function AssetAllocationChart({
 														count++;
 
 														return (
-															<List.Item actions={[<span>{value} %</span>]}>
+															<List.Item
+																actions={[
+																	toCurrency(
+																		Math.round((cfs[index] * value) / 100),
+																		currency
+																	),
+																	<Badge count={`${value}%`} />,
+																]}
+															>
 																<span
 																	style={{ background: colors[count - 1] }}
 																></span>
