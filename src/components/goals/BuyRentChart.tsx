@@ -74,6 +74,7 @@ export default function BuyRentChart() {
 				</Col>
 			</Row>
 			<Col span={24} style={{ minHeight: '400px' }}>
+				{/*@ts-ignore*/}
 				<GroupedColumnChart
 					meta={getCommonMeta(currency)}
 					xField="years"
