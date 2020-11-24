@@ -14,7 +14,7 @@ export default function BuyRentChart() {
 	const { currency }: any = useContext(CalcContext);
 	const { brChartData, analyzeFor, setAnalyzeFor }: any = useContext(GoalContext);
 	const [ stackedData, setStackedData ] = useState<Array<any>>(buildYearsArray(1, brChartData[0].values.length));
-	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+	const [ selectedIndex, setSelectedIndex ] = useState<number | null>(null);
 
 	const calculateRentDiff = (numOfYears: number) =>
 		numOfYears && brChartData && brChartData.length && brChartData[0].values.length >= numOfYears
@@ -23,11 +23,13 @@ export default function BuyRentChart() {
 
 	const getDiffAns = (numOfYears: number) => {
 		const diff = calculateRentDiff(numOfYears);
-		if (!diff) return "";
+		if (!diff) return '';
 		return `Rent ${diff < 0 ? 'Costlier' : 'Cheaper'} by ${toCurrency(
-			Math.abs(diff), currency)} over ${numOfYears} Years`;
+			Math.abs(diff),
+			currency
+		)} over ${numOfYears} Years`;
 	};
-	
+
 	useEffect(
 		() => {
 			let chartData: Array<any> = [];
@@ -83,8 +85,11 @@ export default function BuyRentChart() {
 					xAxis={getCommonXAxis('Number of Years')}
 					legend={{ position: 'top-center' }}
 					events={{
-						onColumnClick: (event: any) => setSelectedIndex(parseInt(event.data.years)),
+						onColumnClick: (event: any) => {
+							setSelectedIndex(parseInt(event.data.years));
+						}
 					}}
+					animation={false}
 				>
 					<Slider {...getDefaultSliderProps()} />
 				</GroupedColumnChart>
