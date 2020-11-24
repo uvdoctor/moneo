@@ -19,15 +19,16 @@ export const getCommonLayoutProps = (
 	};
 };
 
-export const getCommonConfig = () => {
+export const getCommonTitleFormat = (titleText: string) => {
 	return {
-		responsive: true,
-		editable: false,
-		scrollZoom: true,
-		displayModeBar: false,
+		title: {
+			visible: true,
+			text: titleText,
+			alignTo: "middle",
+			style: { fill: COLORS.DEFAULT, fontFamily: "'Jost', sans-serif" },
+		},
 	};
 };
-
 export const getCommonFill = () => {
 	return { fill: COLORS.DEFAULT };
 };
@@ -47,7 +48,11 @@ export const getCommonXAxis = (titleText: string) => {
 		title: {
 			visible: true,
 			text: titleText,
-			style: { fontSize: 15, fill: COLORS.DEFAULT },
+			style: {
+				fontSize: 15,
+				fill: COLORS.DEFAULT,
+				fontFamily: "'Jost', sans-serif",
+			},
 		},
 	};
 };

@@ -3,27 +3,24 @@ import { getCompoundedIncome } from './finance';
 import ItemDisplay from './ItemDisplay';
 import { toCurrency } from '../utils';
 import { getMinRetirementDuration } from '../goals/goalutils';
-import { PLAN_DURATION } from '../../CONSTANTS';
 import { GoalType } from '../../api/goals';
-import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
 interface OppCostProps {
-	minDuration?: number;
+	calculateFor?: number;
 }
 
-export default function OppCost({ minDuration }: OppCostProps) {
+export default function OppCost({ calculateFor }: OppCostProps) {
 	const { cfs, currency, dr, rr, startYear, goal }: any = useContext(CalcContext);
-	const { ffGoalEndYear }: any = useContext(GoalContext);
 	const [ oppCost, setOppCost ] = useState<number>(0);
-	const [ lastYear, setLastYear ] = useState<number>(0);
 	const isDRNumber = dr !== null;
-	const minYears = minDuration ? minDuration : cfs.length < 20 ? 20 : 30;
+	const numOfYears =
+		goal.type === GoalType.B ? cfs.length : calculateFor ? calculateFor : cfs.length < 20 ? 20 : cfs.length;
 
 	const calculateOppCost = () => {
-		const discountRate = dr !== null ? dr : rr;
-		if (!cfs || cfs.length === 0) {
+		const discountRate = dr ? dr : rr;
+		if (!cfs || !cfs.length) {
 			setOppCost(0);
 			return;
 		}
@@ -45,9 +42,8 @@ export default function OppCost({ minDuration }: OppCostProps) {
 					i++, year++
 				)
 					if (oppCost < 0) oppCost *= 1 + discountRate[i] / 100;
-				setLastYear(year);
-			} else if (cfs.length - 1 < minYears && oppCost < 0)
-				oppCost = getCompoundedIncome(discountRate, oppCost, minYears - (cfs.length - 1));
+			} else if (cfs.length - 1 < numOfYears && oppCost < 0)
+				oppCost = getCompoundedIncome(discountRate, oppCost, numOfYears - (cfs.length - 1));
 		}
 		setOppCost(oppCost);
 	};
@@ -61,12 +57,8 @@ export default function OppCost({ minDuration }: OppCostProps) {
 			label={`${goal.type === GoalType.B ? 'Buy' : 'Spend'} v/s Invest${dr ? ` @ ${dr}%` : ''}`}
 			svg={oppCost < 0 ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
 			pl
-			info={`You May Have ${toCurrency(Math.abs(oppCost), currency)} More ${goal.type === GoalType.B
-				? `in ${cfs.length - 1} Years`
-				: isDRNumber
-					? `in ${cfs.length - 1 > minYears ? cfs.length : minDuration} Years`
-					: `when You turn ${lastYear - ((ffGoalEndYear as number) - PLAN_DURATION)}`} if You 
-        ${oppCost < 0 ? 'Invest' : 'Buy'} instead of ${oppCost < 0
+			info={`You May Have ${toCurrency(Math.abs(oppCost), currency)} More in ${numOfYears} Years
+      if You ${oppCost < 0 ? 'Invest' : 'Buy'} instead of ${oppCost < 0
 				? goal.type === GoalType.B ? 'Buying' : 'Spending'
 				: 'Investing'}.`}
 		/>
