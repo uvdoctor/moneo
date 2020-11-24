@@ -146,6 +146,17 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		return result ? result.val : loanIntRate;
 	};
 
+	const hasAdjustmentsInLastInstallments = () => {
+		if ((!loanPrepayments || !loanPrepayments.length) && (!loanIRAdjustments || !loanIRAdjustments.length))
+			return false;
+		let numToCompare = iSchedule.length - 6;
+		if(loanPrepayments.length > 1) loanPrepayments.sort((a: any, b: any) => b.value - a.value);
+		if (loanPrepayments[0].num >= numToCompare) return true;
+		if(loanIRAdjustments.length > 1) loanIRAdjustments.sort((a: any, b: any) => b.value - a.value);
+		if (loanIRAdjustments[0].num >= numToCompare) return true;
+		return false;
+	};
+
 	return (
 		<Table
 			dataSource={data}
@@ -207,7 +218,8 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 							</Col>
 						</Row>
 						{editable &&
-						parseInt(record.num) < iSchedule.length - 3 && (
+						iSchedule.length > 12 &&
+						(hasAdjustmentsInLastInstallments() || parseInt(record.num) <= iSchedule.length - 6) && (
 							<Row justify="center">
 								<Section title="Adjust Loan Details">
 									<NumberInput
@@ -227,11 +239,11 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 										value={getIRAdjustment(parseInt(record.num))}
 										changeHandler={(val: number) =>
 											changeLoanIRAdjustments(parseInt(record.num), val)}
-										min={loanIntRate - 3}
+										min={loanIntRate - 3 < 0 ? 0 : loanIntRate - 3}
 										max={loanIntRate + 3}
 										step={0.1}
 										unit="%"
-										additionalMarks={[loanIntRate]}
+										additionalMarks={[ loanIntRate ]}
 									/>
 								</Section>
 							</Row>

@@ -73,6 +73,7 @@ export default function BuyReturnResult() {
 			return xirr(xirrCFs) * 100;
 		} catch (e) {
 			console.log("Error while calculating xirr: ", e);
+			console.log("XIRR CFs were: ", xirrCFs);
 			return null;
 		}
 	};

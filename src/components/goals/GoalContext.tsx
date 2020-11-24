@@ -53,7 +53,9 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     setResults,
     addCallback,
     inputTabs,
-    setInputTabs
+    setInputTabs,
+    timer,
+    setTimer
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const [loanRepaymentSY, setLoanRepaymentSY] = useState<
@@ -269,7 +271,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         endYear - startYear,
         loanPer as number
       );
-      let loanDP = [Math.round(loanBorrowAmt / (loanPer as number / 100)) - loanBorrowAmt];
+      let loanDP: Array<number> = [];
+      loanDP.push(Math.round(loanBorrowAmt / (loanPer as number / 100)) - loanBorrowAmt);
       setLoanStartingCFs([...loanDP]);
     } else {
       let result = createEduLoanDPWithSICFs(
@@ -379,13 +382,13 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         interestSchedule = loanSchedule.interest;
         principalSchedule = loanSchedule.principal;
       }
-      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, simpleInts, remSI, goal, duration);
+      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, simpleInts, remSI, g, duration);
     } else result = calculateCFs(price, g, duration);
     cfs = result.cfs;
-    console.log("New cfs created: ", cfs);
     if (changeState) {
+      console.log("New cf result: ", result);
       if ((loanPer as number) && manualMode < 1 && goalType === GoalType.B)
-        setEndYear(g.sy + cfs.length - 1);
+        setEndYear(startYear + cfs.length - 1);
       setCFs([...cfs]);
       setDuration(duration);
       setTotalITaxBenefit(result.hasOwnProperty("itb") ? result.itb : 0);
@@ -402,9 +405,11 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 	}, [iSchedule, simpleInts, remSI, capSI]);
 
   useEffect(() => {
-    if (!allInputDone && inputTabIndex === 0) return;
-    calculateYearlyCFs();
+    if (!allInputDone && inputTabIndex < 2) return;
+    clearTimeout(timer);
+    setTimer(setTimeout(() => calculateYearlyCFs(), 1000));
   }, [
+    allInputDone,
     price,
     assetChgRate,
     startYear,
@@ -590,7 +595,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   };
 
   useEffect(() => {
-    if (allInputDone && sellAfter && cfs.length)
+    if (allInputDone && sellAfter && cfs.length && analyzeFor && rentAmt)
       setAllBuyCFsForComparison();
   }, [analyzeFor, cfs, allInputDone]);
 

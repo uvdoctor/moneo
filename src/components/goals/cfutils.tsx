@@ -374,7 +374,7 @@ export const createLoanCFs = (
     ptb: 0,
     itb: 0
   }];
-  let cfs: Array<number> = loanStartingCFs;
+  let cfs: Array<number> = [...loanStartingCFs];
   let totalPTaxBenefit = 0;
   let totalITaxBenefit = 0;
   let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule);

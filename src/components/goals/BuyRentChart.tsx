@@ -32,6 +32,7 @@ export default function BuyRentChart() {
 
 	useEffect(
 		() => {
+			if (!brChartData || !brChartData.length) return;
 			let chartData: Array<any> = [];
 			if (brChartData[0].values.length === 0) {
 				setStackedData([ ...chartData ]);
@@ -89,7 +90,6 @@ export default function BuyRentChart() {
 							setSelectedIndex(parseInt(event.data.years));
 						}
 					}}
-					animation={false}
 				>
 					<Slider {...getDefaultSliderProps()} />
 				</GroupedColumnChart>

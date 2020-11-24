@@ -80,6 +80,7 @@ function CalcContextProvider({
 	const [ffResult, setFFResult] = useState<any>({});
   const [error, setError] = useState<string>("");
   const [results, setResults] = useState<Array<any>>([]);
+  const [timer, setTimer] = useState<any>(null);
 
   const getFFGoalTabOptions = () => {
     return [
@@ -276,7 +277,9 @@ function CalcContextProvider({
         results,
         setResults,
         handleStepChange,
-        hasTab
+        hasTab,
+        timer,
+        setTimer
 			}}
     >
       {children}
