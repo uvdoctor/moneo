@@ -62,7 +62,7 @@ export default function Cost() {
 
 	return (
 		<Section
-			title={`${startYear} Cost ~ ${toCurrency(price, currency)}`}
+			title={`In ${startYear}, ${isLoanPublicCalc ? 'Borrow' : 'Cost'} ~ ${toCurrency(price, currency)}`}
 			toggle={
 				setManualMode && !isLoanMandatory && <HSwitch rightText={`Custom Payment Plan`} value={manualMode} setter={changeManualMode} />
 			}
