@@ -33,7 +33,7 @@ export default function NumberInput(props: NumberInputProps) {
 
 	const getSliderMarks = (min: number, max: number) => {
 		let marks: any = {
-			[min]: toReadableNumber(minNum, props.step < 1 ? 2 : 0)
+			[min]: toReadableNumber(min, props.step < 1 ? 2 : 0)
 		};
 		if (min < 0) marks[0] = '0';
 		if (props.additionalMarks) 
@@ -49,12 +49,16 @@ export default function NumberInput(props: NumberInputProps) {
 	useEffect(
 		() => {
 			let rf = props.rangeFactor ? props.rangeFactor : 1;
-			let minNum = props.min * rf;
-			let maxNum = props.max * rf;
-			setMinNum(minNum);
-			setMaxNum(maxNum);
-			setStepNum((props.step as number) * rf);
-			setMarks(getSliderMarks(minNum, maxNum));
+			let newMin = minNum * rf;
+			let newMax = maxNum * rf;
+			let newStep = stepNum * rf;
+			setMinNum(newMin );
+			setMaxNum(newMax);
+			setStepNum(newStep);
+			let newMarks: any = getSliderMarks(newMin, newMax);
+			console.log("New step is ", newStep);
+			console.log("New marks are: ", newMarks);
+			setMarks(newMarks);
 		},
 		[ props.rangeFactor, props.min, props.max ]
 	);

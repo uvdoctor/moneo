@@ -58,6 +58,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     setTimer
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
+  const goalType = goal.type as GoalType;
   const [loanRepaymentSY, setLoanRepaymentSY] = useState<
     number | null | undefined
   >(goal?.loan?.ry);
@@ -97,6 +98,9 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [impLevel, setImpLevel] = useState<LMH>(goal?.imp);
   const [manualMode, setManualMode] = useState<number>(goal?.manual);
   const [name, setName] = useState<string>(goal.name);
+  const router = useRouter();
+	const isLoanMandatory = router.pathname === ROUTES.LOAN || router.pathname === ROUTES.EDUCATION;
+  const isEndYearHidden = isLoanMandatory && goalType === GoalType.O;
   const [loanMonths, setLoanMonths] = useState<number | null | undefined>(
     goal?.loan?.dur
   );
@@ -152,11 +156,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   );
   const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
   const [analyzeFor, setAnalyzeFor] = useState<number>(20);
-  const goalType = goal.type as GoalType;
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
-  const router = useRouter();
-	const isLoanMandatory = router.pathname === ROUTES.LOAN || router.pathname === ROUTES.EDUCATION;
-  const isEndYearHidden = isLoanMandatory && goalType === GoalType.O;
 
   useEffect(() =>
     setDisableSubmit(name.length < 3 || !price || btnClicked),

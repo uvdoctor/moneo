@@ -184,7 +184,7 @@ export default function Layout(props: LayoutProps) {
 	const createGoal = () => {
 		let g: any = null;
 		const defaultCurrency = 'USD';
-		if (props.type) g = createNewGoalInput(props.type, defaultCurrency);
+		if (props.type) g = createNewGoalInput(props.type, defaultCurrency, props.title.endsWith("Loan"));
 		else g = { ccy: defaultCurrency };
 		g.name = props.title;
 		gtag.event({
