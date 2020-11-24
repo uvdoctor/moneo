@@ -1,15 +1,21 @@
-import { COLORS } from '../CONSTANTS';
-import { useFullScreenBrowser } from 'react-browser-hooks';
-import { isMobileDevice, toCurrency } from './utils';
+import { COLORS } from "../CONSTANTS";
+import { useFullScreenBrowser } from "react-browser-hooks";
+import { isMobileDevice, toCurrency } from "./utils";
 
-export const getCommonLayoutProps = (title: string = '', tickFormat: string = ',', autosize: boolean = true) => {
+export const getCommonLayoutProps = (
+	title: string = "",
+	tickFormat: string = ",",
+	autosize: boolean = true
+) => {
 	return {
-		dragmode: 'pan',
+		dragmode: "pan",
 		font: { family: "'Jost', sans-serif", color: COLORS.DEFAULT, size: 15 },
 		autosize: autosize,
-		title: title ? { x: 0.05, text: title, font: { size: 20 }, align: 'left' } : false,
+		title: title
+			? { x: 0.05, text: title, font: { size: 20 }, align: "left" }
+			: false,
 		yaxis: { tickformat: tickFormat, fixedrange: true, showgrid: false },
-		margin: { t: title ? 40 : 0, r: title ? 10 : 0 }
+		margin: { t: title ? 40 : 0, r: title ? 10 : 0 },
 	};
 };
 
@@ -19,8 +25,8 @@ export const getCommonTitleFormat = (titleText: string) => {
 			visible: true,
 			text: titleText,
 			alignTo: "middle",
-			style: { fill: COLORS.DEFAULT, fontFamily: "'Jost', sans-serif" }
-		}
+			style: { fill: COLORS.DEFAULT, fontFamily: "'Jost', sans-serif" },
+		},
 	};
 };
 export const getCommonFill = () => {
@@ -32,8 +38,8 @@ export const getCommonMeta = (currency: string) => {
 		value: {
 			formatter: (v: number) => {
 				return toCurrency(v, currency);
-			}
-		}
+			},
+		},
 	};
 };
 
@@ -42,24 +48,37 @@ export const getCommonXAxis = (titleText: string) => {
 		title: {
 			visible: true,
 			text: titleText,
-			style: { fontSize: 15, fill: COLORS.DEFAULT, fontFamily: "'Jost', sans-serif" }
-		}
+			style: {
+				fontSize: 15,
+				fill: COLORS.DEFAULT,
+				fontFamily: "'Jost', sans-serif",
+			},
+		},
 	};
 };
 
 export const getCommonYAxis = () => {
 	const fsb = useFullScreenBrowser();
-	return { label: { visible: !isMobileDevice(fsb) }, grid: { visible: false }, title: { visible: false } };
+	return {
+		label: { visible: !isMobileDevice(fsb) },
+		grid: { visible: false },
+		title: { visible: false },
+	};
 };
 
 export const getCommonStyle = () => {
-	return { width: '100%', height: '100%', minHeight: '450px', minWidth: '320px' };
+	return {
+		width: "100%",
+		height: "100%",
+		minHeight: "450px",
+		minWidth: "320px",
+	};
 };
 
 export const getDarkTheme = () => {
-	let { getTheme } = require('bizcharts');
-	let darkTheme = getTheme('dark');
-	darkTheme.background = 'transparent';
+	let { getTheme } = require("bizcharts");
+	let darkTheme = getTheme("dark");
+	darkTheme.background = "transparent";
 	return darkTheme;
 };
 
@@ -71,9 +90,9 @@ export const getDefaultSliderProps = () => {
 			height: 20,
 			style: {
 				fill: COLORS.DEFAULT,
-				stroke: COLORS.WHITE
-			}
+				stroke: COLORS.WHITE,
+			},
 		},
-		foregroundStyle: { fill: COLORS.GREEN }
+		foregroundStyle: { fill: COLORS.GREEN },
 	};
 };
