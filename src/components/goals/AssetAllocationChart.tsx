@@ -1,7 +1,6 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { List, Badge, Row, Col, Button } from "antd";
-import { getDarkTheme } from "../chartutils";
 import {
 	getAllAssetCategories,
 	getAllAssetTypesByCategory,
@@ -40,9 +39,6 @@ export default function AssetAllocationChart({
 	year = new Date().getFullYear() + 1,
 	backFunction,
 }: AssetAllocationChartProps) {
-	let darkTheme: any;
-	if (typeof window !== "undefined") darkTheme = getDarkTheme();
-
 	const cashDataDefault = {
 		value: 0,
 		deposits: 0,
@@ -166,7 +162,6 @@ export default function AssetAllocationChart({
 			>
 				<Chart>
 					<TreemapChart
-						theme={darkTheme}
 						data={{
 							name: "Portfolio",
 							value: 100 - (cashData.value || 0),
@@ -184,15 +179,10 @@ export default function AssetAllocationChart({
 							visible: true,
 							formatter: (v) => {
 								return ffResult.aa.hasOwnProperty(v)
-									? v +
-											"\n" +
-											toCurrency(
-												Math.round((cfs[index] * ffResult.aa[v][index]) / 100),
-												currency
-											) +
-											"\n" +
-											ffResult.aa[v][index] +
-											"%"
+									? `${v}\n${toCurrency(
+											Math.round((cfs[index] * ffResult.aa[v][index]) / 100),
+											currency
+									  )} (${ffResult.aa[v][index]}%)`
 									: v;
 							},
 							style: {

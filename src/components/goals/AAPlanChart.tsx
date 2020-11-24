@@ -1,22 +1,28 @@
-import React, { useContext, useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import { getCommonXAxis, getCommonYAxis, getDarkTheme, getDefaultSliderProps } from '../chartutils';
-import { getAssetColour } from '../utils';
-import { CalcContext } from '../calc/CalcContext';
+import React, { useContext, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import {
+	getCommonXAxis,
+	getCommonYAxis,
+	getDefaultSliderProps,
+} from "../chartutils";
+import { getAssetColour } from "../utils";
+import { CalcContext } from "../calc/CalcContext";
 
-const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
-const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
+const StackedColumnChart = dynamic(
+	() => import("bizcharts/lib/plots/StackedColumnChart"),
+	{ ssr: false }
+);
+const Slider = dynamic(() => import("bizcharts/lib/components/Slider"), {
+	ssr: false,
+});
 
 interface AAPlanChartProps {
 	changeToSingleYear: Function;
 }
 
 export default function AAPlanChart({ changeToSingleYear }: AAPlanChartProps) {
-	let darkTheme: any;
-	if (typeof window !== 'undefined') darkTheme = getDarkTheme();
-
 	const { endYear, rr, ffResult }: any = useContext(CalcContext);
-	const [ data, setData ] = useState<Array<any>>([]);
+	const [data, setData] = useState<Array<any>>([]);
 
 	const hasAllZeros = (arr: Array<number>) => {
 		for (let num of arr) {
@@ -36,26 +42,23 @@ export default function AAPlanChart({ changeToSingleYear }: AAPlanChartProps) {
 		return result;
 	};
 
-	useEffect(
-		() => {
-			let filteredAA = filterAA();
-			let arr: Array<any> = [];
-			const startYear = new Date().getFullYear() + 2;
-			for (let i = 0; i <= endYear - startYear; i++) {
-				Object.keys(filteredAA).forEach((key) => {
-					if (filteredAA[key][i]) {
-						arr.push({
-							year: startYear + i,
-							value: filteredAA[key][i],
-							asset: key
-						});
-					}
-				});
-			}
-			setData([ ...arr ]);
-		},
-		[ rr, endYear ]
-	);
+	useEffect(() => {
+		let filteredAA = filterAA();
+		let arr: Array<any> = [];
+		const startYear = new Date().getFullYear() + 2;
+		for (let i = 0; i <= endYear - startYear; i++) {
+			Object.keys(filteredAA).forEach((key) => {
+				if (filteredAA[key][i]) {
+					arr.push({
+						year: startYear + i,
+						value: filteredAA[key][i],
+						asset: key,
+					});
+				}
+			});
+		}
+		setData([...arr]);
+	}, [rr, endYear]);
 
 	return (
 		<StackedColumnChart
@@ -64,12 +67,14 @@ export default function AAPlanChart({ changeToSingleYear }: AAPlanChartProps) {
 			yField="value"
 			stackField="asset"
 			yAxis={getCommonYAxis()}
-			xAxis={getCommonXAxis('Year')}
+			xAxis={getCommonXAxis("Year")}
 			color={(d: string) => getAssetColour(d)}
-			legend={{ position: 'top-center' }}
-			theme={darkTheme}
-			events={{ onColumnClick: (event: any) => changeToSingleYear(parseInt(event.data.year)) }}
-			columnStyle={{ cursor: 'pointer' }}
+			legend={{ position: "top-center" }}
+			events={{
+				onColumnClick: (event: any) =>
+					changeToSingleYear(parseInt(event.data.year)),
+			}}
+			columnStyle={{ cursor: "pointer" }}
 		>
 			<Slider {...getDefaultSliderProps()} />
 		</StackedColumnChart>
