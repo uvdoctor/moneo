@@ -35,7 +35,10 @@ interface AssetAllocationChartProps {
 	backFunction?: Function;
 }
 
-export default function AssetAllocationChart({year = new Date().getFullYear() + 1, backFunction}: AssetAllocationChartProps) {
+export default function AssetAllocationChart({
+	year = new Date().getFullYear() + 1,
+	backFunction,
+}: AssetAllocationChartProps) {
 	const cashDataDefault = {
 		value: 0,
 		deposits: 0,
@@ -102,7 +105,13 @@ export default function AssetAllocationChart({year = new Date().getFullYear() + 
 			<DataSwitcher
 				title={
 					<Fragment>
-						{backFunction && <Button type="text" icon={<ArrowLeftOutlined />} onClick={() => backFunction() } />}
+						{backFunction && (
+							<Button
+								type="text"
+								icon={<ArrowLeftOutlined />}
+								onClick={() => backFunction()}
+							/>
+						)}
 						Target Asset Allocation of{" "}
 						<strong>{toCurrency(cfs[index], currency)}</strong> for Year{" "}
 						<strong>{year}</strong>
@@ -170,21 +179,27 @@ export default function AssetAllocationChart({year = new Date().getFullYear() + 
 							visible: true,
 							formatter: (v) => {
 								return ffResult.aa.hasOwnProperty(v)
-									? v +
-											"\n" +
-											toCurrency(
-												Math.round((cfs[index] * ffResult.aa[v][index]) / 100),
-												currency
-											) +
-											"\n" +
-											ffResult.aa[v][index] +
-											"%"
+									? `${v}\n${toCurrency(
+											Math.round((cfs[index] * ffResult.aa[v][index]) / 100),
+											currency
+									  )} (${ffResult.aa[v][index]}%)`
 									: v;
+							},
+							style: {
+								fontSize: 14,
+								fill: "grey",
 							},
 						}}
 						color={colors}
 						rectStyle={{ stroke: "#fff", lineWidth: 2 }}
 						forceFit
+						tooltip={{
+							visible: true,
+							formatter: (name, value) => ({
+								name,
+								value,
+							}),
+						}}
 					/>
 				</Chart>
 				<DataSwitcherList>
@@ -194,15 +209,24 @@ export default function AssetAllocationChart({year = new Date().getFullYear() + 
 						return (
 							<List
 								dataSource={data}
-								renderItem={({ name, children }) => {
-									const [title, percentage] = name.split(" ");
+								renderItem={({ name, value, children }) => {
+									const [title] = name.split(" ");
 
 									count++;
 
 									return (
 										<Fragment>
-											<List.Item className="heading">
-												{title} <Badge count={percentage} />
+											<List.Item
+												className="heading"
+												actions={[
+													toCurrency(
+														Math.round((cfs[index] * value) / 100),
+														currency
+													),
+													<Badge count={`${value}%`} />,
+												]}
+											>
+												{title}
 											</List.Item>
 											<List.Item>
 												<List
@@ -211,7 +235,15 @@ export default function AssetAllocationChart({year = new Date().getFullYear() + 
 														count++;
 
 														return (
-															<List.Item actions={[<span>{value} %</span>]}>
+															<List.Item
+																actions={[
+																	toCurrency(
+																		Math.round((cfs[index] * value) / 100),
+																		currency
+																	),
+																	<Badge count={`${value}%`} />,
+																]}
+															>
 																<span
 																	style={{ background: colors[count - 1] }}
 																></span>
