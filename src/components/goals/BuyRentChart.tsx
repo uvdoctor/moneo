@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { getCommonMeta, getCommonXAxis, getCommonYAxis } from "../chartutils";
+import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDarkTheme, getDefaultSliderProps } from "../chartutils";
 import { buildYearsArray, toCurrency } from "../utils";
 import { GoalContext } from "./GoalContext";
 import { Col, Row } from "antd";
@@ -12,6 +12,7 @@ const GroupedColumnChart = dynamic(
 	() => import("bizcharts/lib/plots/GroupedColumnChart"),
 	{ ssr: false }
 );
+const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function BuyRentChart() {
 	const { currency }: any = useContext(CalcContext);
@@ -22,6 +23,9 @@ export default function BuyRentChart() {
 		buildYearsArray(1, brChartData[0].values.length)
 	);
 	const [rentDiff, setRentDiff] = useState<number | null>(null);
+
+	let darkTheme: any;
+	if (typeof window !== 'undefined') darkTheme = getDarkTheme();
 
 	const provideRentAns = () => {
 		if (
@@ -85,6 +89,7 @@ export default function BuyRentChart() {
 						max={50}
 						step={5}
 						unit="Years"
+						additionalMarks={[20, 30, 40]}
 					/>
 				</Col>
 			</Row>
@@ -97,7 +102,11 @@ export default function BuyRentChart() {
 					data={stackedData}
 					yAxis={getCommonYAxis()}
 					xAxis={getCommonXAxis("Number of Years")}
-				/>
+					theme={darkTheme}
+					legend={{position: 'top-center'}}
+				>
+					<Slider {...getDefaultSliderProps()} />
+				</GroupedColumnChart>
 			</Col>
 		</Fragment>
 	);
