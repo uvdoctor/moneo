@@ -582,14 +582,21 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     }
   }, [taxRate, rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs, dr]);
 
-  useEffect(() => {
-    if (!sellAfter || !cfs.length || (!brAns && !rentAmt)) return;
+  const setAllBuyCFsForComparison = () => {
     let allBuyCFs: Array<Array<number>> = [];
     for (let i = 1; i <= analyzeFor; i++)
       allBuyCFs.push(calculateYearlyCFs(i, false));
     setAllBuyCFs([...allBuyCFs]);
-  }, [analyzeFor, cfs]);
+  };
 
+  useEffect(() => {
+    if (allInputDone && sellAfter && cfs.length)
+      setAllBuyCFsForComparison();
+  }, [analyzeFor, cfs, allInputDone]);
+
+  useEffect(() => {
+    if (!brAns && rentAmt) setAllBuyCFsForComparison();
+  }, [rentAmt]);
 
     return (
       <GoalContext.Provider

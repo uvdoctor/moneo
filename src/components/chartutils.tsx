@@ -13,10 +13,16 @@ export const getCommonLayoutProps = (title: string = '', tickFormat: string = ',
 	};
 };
 
-export const getCommonConfig = () => {
-	return { responsive: true, editable: false, scrollZoom: true, displayModeBar: false };
+export const getCommonTitleFormat = (titleText: string) => {
+	return {
+		title: {
+			visible: true,
+			text: titleText,
+			alignTo: "middle",
+			style: { fill: COLORS.DEFAULT, fontFamily: "'Jost', sans-serif" }
+		}
+	};
 };
-
 export const getCommonFill = () => {
 	return { fill: COLORS.DEFAULT };
 };
@@ -33,7 +39,11 @@ export const getCommonMeta = (currency: string) => {
 
 export const getCommonXAxis = (titleText: string) => {
 	return {
-		title: { visible: true, text: titleText, style: { fontSize: 15, fill: COLORS.DEFAULT } }
+		title: {
+			visible: true,
+			text: titleText,
+			style: { fontSize: 15, fill: COLORS.DEFAULT, fontFamily: "'Jost', sans-serif" }
+		}
 	};
 };
 
