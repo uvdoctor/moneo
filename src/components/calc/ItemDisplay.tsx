@@ -1,8 +1,8 @@
-import React, { Fragment, ReactNode } from 'react';
-import { toCurrency, toReadableNumber } from '../utils';
-import { Tooltip, Statistic, Col, Row } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
-import { COLORS } from '../../CONSTANTS';
+import React, { Fragment, ReactNode } from "react";
+import { toCurrency, toReadableNumber } from "../utils";
+import { Tooltip, Statistic } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { COLORS } from "../../CONSTANTS";
 interface ItemDisplayProps {
 	label?: string;
 	svg?: any;
@@ -22,7 +22,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 		<Fragment>
 			<Statistic
 				title={
-					<Col span={24} style={{ textAlign: 'center' }}>
+					<Fragment>
 						{props.label}
 						{(props.imp || props.info) && (
 							<Fragment>
@@ -34,27 +34,46 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 								{props.info && (
 									<Tooltip
 										title={props.info}
-										color={`${props.pl && props.result < 0 ? 'red' : COLORS.DEFAULT}`}
+										color={`${
+											props.pl && props.result < 0 ? "red" : COLORS.DEFAULT
+										}`}
 									>
 										<InfoCircleOutlined />
 									</Tooltip>
 								)}
 							</Fragment>
 						)}
-					</Col>
+					</Fragment>
 				}
 				value={props.result}
 				prefix={props.svg}
-				suffix={props.unit ? props.unit : ''}
+				suffix={props.unit ? props.unit : ""}
 				formatter={() =>
-					typeof props.result === 'number' && !props.noResultFormat
+					typeof props.result === "number" && !props.noResultFormat
 						? props.currency
-							? toCurrency(Math.abs(props.result), props.currency, props.decimal ? true : false)
-							: toReadableNumber(Math.abs(props.result), props.decimal ? props.decimal : 0)
-						: props.result}
-				valueStyle={{ color: props.pl ? props.result < 0 ? COLORS.RED : props.result > 0 ? COLORS.GREEN : COLORS.DEFAULT : COLORS.DEFAULT, textAlign: 'center' }}
+							? toCurrency(
+									Math.abs(props.result),
+									props.currency,
+									props.decimal ? true : false
+							  )
+							: toReadableNumber(
+									Math.abs(props.result),
+									props.decimal ? props.decimal : 0
+							  )
+						: props.result
+				}
+				valueStyle={{
+					color: props.pl
+						? props.result < 0
+							? COLORS.RED
+							: props.result > 0
+							? COLORS.GREEN
+							: COLORS.DEFAULT
+						: COLORS.DEFAULT,
+					textAlign: "center",
+				}}
 			/>
-			<Row justify="center">{props.footer}</Row>
+			<div className="text-center">{props.footer}</div>
 		</Fragment>
 	);
 }

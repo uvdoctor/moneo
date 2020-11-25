@@ -1,0 +1,77 @@
+.loan-schedule-table {
+	& .configurations {
+		border-left: #dcdcdc 1px solid;
+		padding: 8px 15px 0 20px;
+
+		& .ant-row {
+			margin: 0 auto;
+		}
+	}
+
+	& .ant-statistic {
+		border-bottom: #dcdcdc 1px solid;
+		padding: 10px 0;
+		margin: 0 20px;
+	}
+
+	& .ant-statistic-title,
+	& .ant-statistic-content {
+		display: inline;
+	}
+
+	& .ant-statistic-content {
+		font-size: 16px;
+		float: right;
+	}
+
+	& .ant-statistic-content-value {
+		color: @primary-color;
+	}
+}
+
+@media all and (max-width: 991.98px) {
+	.loan-schedule-table {
+		& .configurations {
+			border-left: 0;
+		}
+	}
+}
+
+@media all and (max-width: 576px) {
+	.loan-schedule-table {
+		& .configurations {
+			padding: 10px 0;
+		}
+
+		& .ant-statistic {
+			padding: 8px 0;
+			margin: 0;
+		}
+
+		& .ant-statistic-title,
+		& .ant-statistic-content {
+			font-size: 14px;
+		}
+
+		& .ant-table {
+			& .ant-table-cell {
+				font-size: 14px;
+			}
+
+			& .ant-table-row-expand-icon-cell {
+				padding: 4px !important;
+			}
+
+			& .ant-table-thead {
+				& .ant-table-filter-column-title {
+					font-size: 13px;
+					padding: 0 15px 0 4px;
+				}
+
+				& .ant-table-cell {
+					font-size: 13px;
+				}
+			}
+		}
+	}
+}
