@@ -36,7 +36,7 @@ export default function BRComp() {
 				currency={currency}
 				rangeFactor={rangeFactor}
 			/>
-			{rentAmt > 0 && (
+			{rentAmt && (
 				<NumberInput
 					pre="Rent Changes Yearly by"
 					value={rentChgPer as number}
@@ -47,11 +47,11 @@ export default function BRComp() {
 					unit="%"
 				/>
 			)}
-			{dr !== null && (
+			{dr && (
 				<NumberInput
 					value={dr}
 					changeHandler={setDR}
-					min={0}
+					min={1}
 					max={15}
 					step={0.1}
 					pre="Invest Remaining Money At"

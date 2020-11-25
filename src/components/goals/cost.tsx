@@ -62,7 +62,7 @@ export default function Cost() {
 
 	return (
 		<Section
-			title={`${startYear} Cost ~ ${toCurrency(price, currency)}`}
+			title={`In ${startYear}, ${isLoanPublicCalc ? 'Borrow' : 'Cost'} ~ ${toCurrency(price, currency)}`}
 			toggle={
 				setManualMode && !isLoanMandatory && <HSwitch rightText={`Custom Payment Plan`} value={manualMode} setter={changeManualMode} />
 			}
@@ -92,16 +92,16 @@ export default function Cost() {
 			error={error}
 		>
 			<NumberInput
-				pre={startYear > goal.by ? `Cost ${goal.type !== GoalType.D && 'including taxes & fees'}` : ''}
+				pre={isLoanPublicCalc ? 'Borrow Amount' : startYear > goal.by ? `Cost ${goal.type !== GoalType.D && 'including taxes & fees'}` : ''}
 				currency={currency}
 				rangeFactor={rangeFactor}
 				value={startingPrice}
 				changeHandler={setStartingPrice}
-				min={goal.type === GoalType.B || isLoanPublicCalc ? 1000 : 100}
+				min={100}
 				max={goal.type === GoalType.B || isLoanPublicCalc ? 1500000 : 50000}
-				step={goal.type === GoalType.B || isLoanPublicCalc ? 500 : 100}
+				step={100}
 			/>
-			{startYear > goal.by && (
+			{startYear > goal.by && !isLoanPublicCalc && (
 				<NumberInput
 					pre={`Yearly Cost Change from ${new Date().getFullYear()} to ${startYear}`}
 					unit="%"

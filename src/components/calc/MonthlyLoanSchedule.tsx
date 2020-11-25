@@ -156,6 +156,22 @@ export default function MonthlyLoanSchedule({
 		return result ? result.val : loanIntRate;
 	};
 
+	const hasAdjustmentsInLastInstallments = () => {
+		if (
+			(!loanPrepayments || !loanPrepayments.length) &&
+			(!loanIRAdjustments || !loanIRAdjustments.length)
+		)
+			return false;
+		let numToCompare = iSchedule.length - 6;
+		if (loanPrepayments.length > 1)
+			loanPrepayments.sort((a: any, b: any) => b.value - a.value);
+		if (loanPrepayments[0].num >= numToCompare) return true;
+		if (loanIRAdjustments.length > 1)
+			loanIRAdjustments.sort((a: any, b: any) => b.value - a.value);
+		if (loanIRAdjustments[0].num >= numToCompare) return true;
+		return false;
+	};
+
 	return (
 		<Table
 			className="loan-schedule-table"
@@ -219,38 +235,41 @@ export default function MonthlyLoanSchedule({
 									</Col>
 								</Row>
 							</Col>
-							{editable && parseInt(record.num) < iSchedule.length - 3 && (
-								<Col className="configurations" lg={12}>
-									<Section title="Adjust Loan Details">
-										<NumberInput
-											pre="Additional Principal Payment"
-											value={getPrepayment(parseInt(record.num))}
-											changeHandler={(val: number) =>
-												changeLoanPrepayments(parseInt(record.num), val)
-											}
-											min={0}
-											max={
-												getPrepayment(parseInt(record.num)) +
-												getPrincipalDue(parseInt(record.num))
-											}
-											step={100}
-											currency={currency}
-										/>
-										<NumberInput
-											pre="Adjust Interest Rate"
-											value={getIRAdjustment(parseInt(record.num))}
-											changeHandler={(val: number) =>
-												changeLoanIRAdjustments(parseInt(record.num), val)
-											}
-											min={loanIntRate - 3}
-											max={loanIntRate + 3}
-											step={0.1}
-											unit="%"
-											additionalMarks={[loanIntRate]}
-										/>
-									</Section>
-								</Col>
-							)}
+							{editable &&
+								iSchedule.length > 12 &&
+								(hasAdjustmentsInLastInstallments() ||
+									parseInt(record.num) <= iSchedule.length - 6) && (
+									<Col className="configurations" lg={12}>
+										<Section title="Adjust Loan Details">
+											<NumberInput
+												pre="Additional Principal Payment"
+												value={getPrepayment(parseInt(record.num))}
+												changeHandler={(val: number) =>
+													changeLoanPrepayments(parseInt(record.num), val)
+												}
+												min={0}
+												max={
+													getPrepayment(parseInt(record.num)) +
+													getPrincipalDue(parseInt(record.num))
+												}
+												step={100}
+												currency={currency}
+											/>
+											<NumberInput
+												pre="Adjust Interest Rate"
+												value={getIRAdjustment(parseInt(record.num))}
+												changeHandler={(val: number) =>
+													changeLoanIRAdjustments(parseInt(record.num), val)
+												}
+												min={loanIntRate - 3 < 0 ? 0 : loanIntRate - 3}
+												max={loanIntRate + 3}
+												step={0.1}
+												unit="%"
+												additionalMarks={[loanIntRate]}
+											/>
+										</Section>
+									</Col>
+								)}
 						</Row>
 					</Fragment>
 				),

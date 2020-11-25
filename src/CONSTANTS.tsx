@@ -15,7 +15,7 @@ export const ROUTES = {
 export const CALC_NAMES = {
     BR: "Buy v/s Rent & Invest",
     FI: "Financial Independence",
-    LOAN: "Simple Loan",
+    LOAN: "Flexible Loan",
     EDU_LOAN: "Education Loan",
     DR: "Debt Repayment",
     TC: "True Cost",

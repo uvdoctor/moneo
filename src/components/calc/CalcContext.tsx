@@ -3,7 +3,7 @@ import { getRangeFactor, initYearOptions } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import TaxAdjustment from "../calc/TaxAdjustment";
 import GoalCost from "../goals/GoalCost";
-import LoanEmi from "../calc/LoanEmi";
+import LoanDetails from "./LoanDetails";
 import Sell from "../goals/sell";
 import BRComp from "../goals/BRComp";
 import DDLineChart from "../goals/DDLineChart";
@@ -80,6 +80,7 @@ function CalcContextProvider({
 	const [ffResult, setFFResult] = useState<any>({});
   const [error, setError] = useState<string>("");
   const [results, setResults] = useState<Array<any>>([]);
+  const [timer, setTimer] = useState<any>(null);
 
   const getFFGoalTabOptions = () => {
     return [
@@ -149,7 +150,7 @@ function CalcContextProvider({
       options.push({ label: "Sell", active: true, svg: faHandshake, content: <Sell /> });
     }
     if (isLoanEligible(type)) options.push(
-      { label: "Loan", active: true, svg: faHandHoldingUsd, content: <LoanEmi /> }
+      { label: "Loan", active: true, svg: faHandHoldingUsd, content: <LoanDetails /> }
     );
     options.push({
       label: "Tax",
@@ -171,8 +172,11 @@ function CalcContextProvider({
 
   const changeEndYear = (str: string) => setEndYear(parseInt(str));
 
-	const changeCurrency = (curr: string) => {
-		setRangeFactor(Math.round(getRangeFactor(curr) / rangeFactor));
+  const changeCurrency = (curr: string) => {
+    console.log("Existing range factor: ", rangeFactor);
+    console.log("New curr range factor: ", getRangeFactor(curr));
+    console.log("Result is ", getRangeFactor(curr) / getRangeFactor(currency));
+		setRangeFactor(getRangeFactor(curr) / getRangeFactor(currency));
 		setCurrency(curr);
 	};
 
@@ -276,7 +280,9 @@ function CalcContextProvider({
         results,
         setResults,
         handleStepChange,
-        hasTab
+        hasTab,
+        timer,
+        setTimer
 			}}
     >
       {children}

@@ -16,8 +16,7 @@ export default function LoanInterest() {
 		<Fragment>
 			{goal.type !== GoalType.E && (
 				<HSwitch
-					leftText="Amortizing Loan"
-					rightText="Balloon Loan"
+					rightText="Balloon Payment"
 					value={loanType === LoanType.A ? 0 : 1}
 					setter={changeLoanType}
 				/>

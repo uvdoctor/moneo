@@ -189,7 +189,8 @@ export const isTaxCreditEligible = (goalType: APIt.GoalType) =>
 
 export const createNewGoalInput = (
   goalType: APIt.GoalType,
-  currency: string
+  currency: string,
+  isPublicLoanCalc?: boolean
 ) => {
   if (goalType === APIt.GoalType.FF) return createFFGoalInput(currency);
   let bg: APIt.CreateGoalInput = createBaseGoalInput(goalType, currency);
@@ -199,7 +200,7 @@ export const createNewGoalInput = (
     bg.loan = {
       rate: 4,
       dur: 120,
-      per: 0,
+      per: isPublicLoanCalc ? 100 : 0,
       ry: goalType === APIt.GoalType.E ? bg.ey + 1 : bg.sy,
       type: APIt.LoanType.A,
       pp: [],

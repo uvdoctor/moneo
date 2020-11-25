@@ -14,7 +14,7 @@ import { GoalType } from '../../api/goals';
 import LoanInterest from './LoanInterest';
 import { Row } from 'antd';
 
-export default function LoanEmi() {
+export default function LoanDetails() {
 	const { goal, currency, startYear, rangeFactor, endYear }: any = useContext(CalcContext);
 	const {
 		duration,
@@ -34,7 +34,7 @@ export default function LoanEmi() {
 		maxTaxDeductionInt,
 		setMaxTaxDeductionInt,
 		totalITaxBenefit,
-		isLoanMandatory,
+		isEndYearHidden,
 		simpleInts,
 		remSI,
 		loanBorrowAmt,
@@ -86,27 +86,27 @@ export default function LoanEmi() {
 				)
 			}
 		>
-			<RadialInput
-				unit="%"
-				data={toStringArr(isLoanMandatory ? 10 : 0, loanLimitPer, 5)}
-				value={loanPer}
-				changeHandler={setLoanPer}
-				step={5}
-				labelBottom={true}
-				label="of Cost"
-				post={
-					<ItemDisplay
-						label="Loan Amount"
-						result={loanBorrowAmt}
-						currency={currency}
-						footer={
-							<SelectInput
-								pre="Repay from"
-								options={ryOptions}
-								value={loanRepaymentSY}
-								changeHandler={(year: string) => setLoanRepaymentSY(parseInt(year))}
-							/>
-						}
+			{!isEndYearHidden && (
+				<NumberInput
+					unit="%"
+					pre="Cost % to be Borrowed"
+					value={loanPer}
+					changeHandler={setLoanPer}
+					step={1}
+					min={0}
+					max={loanLimitPer}
+				/>
+			)}
+			<ItemDisplay
+				label="Loan Amount"
+				result={loanBorrowAmt}
+				currency={currency}
+				footer={
+					<SelectInput
+						pre="Repay from"
+						options={ryOptions}
+						value={loanRepaymentSY}
+						changeHandler={(year: string) => setLoanRepaymentSY(parseInt(year))}
 					/>
 				}
 			/>

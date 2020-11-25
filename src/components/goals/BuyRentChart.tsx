@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { getCommonMeta, getCommonTitleFormat, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
+import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
 import { buildYearsArray, toCurrency } from '../utils';
 import { GoalContext } from './GoalContext';
 import { Col, Row } from 'antd';
@@ -12,9 +12,9 @@ const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: f
 
 export default function BuyRentChart() {
 	const { currency }: any = useContext(CalcContext);
-	const { brChartData, analyzeFor, sellAfter, setAnalyzeFor }: any = useContext(GoalContext);
+	const { brChartData, analyzeFor, setAnalyzeFor }: any = useContext(GoalContext);
 	const [ stackedData, setStackedData ] = useState<Array<any>>(buildYearsArray(1, brChartData[0].values.length));
-	const [ rentDiff, setRentDiff ] = useState<number | null>(null);
+	const [ selectedIndex, setSelectedIndex ] = useState<number | null>(null);
 
 	const calculateRentDiff = (numOfYears: number) =>
 		numOfYears && brChartData && brChartData.length && brChartData[0].values.length >= numOfYears
@@ -23,15 +23,16 @@ export default function BuyRentChart() {
 
 	const getDiffAns = (numOfYears: number) => {
 		const diff = calculateRentDiff(numOfYears);
-		if (!diff) return "";
+		if (!diff) return '';
 		return `Rent ${diff < 0 ? 'Costlier' : 'Cheaper'} by ${toCurrency(
-			Math.abs(diff), currency)} over ${numOfYears} Years`;
+			Math.abs(diff),
+			currency
+		)} over ${numOfYears} Years`;
 	};
-	
-	useEffect(() => setRentDiff(calculateRentDiff(sellAfter)), [ brChartData, sellAfter ]);
 
 	useEffect(
 		() => {
+			if (!brChartData || !brChartData.length) return;
 			let chartData: Array<any> = [];
 			if (brChartData[0].values.length === 0) {
 				setStackedData([ ...chartData ]);
@@ -56,10 +57,7 @@ export default function BuyRentChart() {
 
 	return (
 		<Fragment>
-			<Row align="middle" className="chart-options-row" justify="space-around">
-				<Col className="chart-stats" xs={24} sm={24} md={24} lg={12}>
-					{rentDiff && getDiffAns(sellAfter)}
-				</Col>
+			<Row align="middle" className="chart-options-row" justify="center">
 				<Col xs={24} sm={24} md={24} lg={12}>
 					<NumberInput
 						pre="Compare from 1 to "
@@ -73,6 +71,9 @@ export default function BuyRentChart() {
 					/>
 				</Col>
 			</Row>
+			<Row justify="center">
+				{selectedIndex ? getDiffAns(selectedIndex) : `Buy v/s Rent Comparison for ${analyzeFor} Years`}
+			</Row>
 			<Col span={24} style={{ minHeight: '400px' }}>
 				{/*@ts-ignore*/}
 				<GroupedColumnChart
@@ -84,7 +85,11 @@ export default function BuyRentChart() {
 					yAxis={getCommonYAxis()}
 					xAxis={getCommonXAxis('Number of Years')}
 					legend={{ position: 'top-center' }}
-					{...getCommonTitleFormat(`Buy v/s Rent Comparison for ${analyzeFor} Years`)}
+					events={{
+						onColumnClick: (event: any) => {
+							setSelectedIndex(parseInt(event.data.years));
+						}
+					}}
 				>
 					<Slider {...getDefaultSliderProps()} />
 				</GroupedColumnChart>
