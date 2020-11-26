@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import NumberInput from '../form/numberinput';
-import { toCurrency, toStringArr, initYearOptions } from '../utils';
+import { toCurrency, toStringArr, initYearOptions, toReadableNumber } from '../utils';
 import SelectInput from '../form/selectinput';
 import RadialInput from '../form/radialinput';
 import Section from '../form/section';
@@ -113,7 +113,7 @@ export default function LoanDetails() {
 			{loanBorrowAmt && (
 				<NumberInput
 					pre="Loan Duration"
-					unit="Months"
+					unit={`Months, i.e. ${toReadableNumber(loanMonths / 12, 2)} Years`}
 					value={loanMonths}
 					changeHandler={setLoanMonths}
 					min={6}

@@ -22,7 +22,7 @@ interface NumberInputProps {
 
 export default function NumberInput(props: NumberInputProps) {
 	const inputRef = useRef(null);
-	const [rangeFactor, setRangeFactor] = useState<number>(props.currency ? getRangeFactor(props.currency) : 1);
+	const [ rangeFactor, setRangeFactor ] = useState<number>(props.currency ? getRangeFactor(props.currency) : 1);
 	const [ sliderBorderColor, setSliderBorderColor ] = useState<string>(COLORS.GREEN);
 	const [ feedbackText, setFeedbackText ] = useState<string>('');
 	const [ minNum, setMinNum ] = useState<number>(props.min * rangeFactor);
@@ -44,7 +44,12 @@ export default function NumberInput(props: NumberInputProps) {
 
 	const [ marks, setMarks ] = useState<any>(getSliderMarks(props.min, props.max));
 
-	useEffect(() => setRangeFactor(getRangeFactor(props.currency as string)), [props.currency]);
+	useEffect(
+		() => {
+			if (props.currency) setRangeFactor(getRangeFactor(props.currency as string));
+		},
+		[ props.currency ]
+	);
 
 	useEffect(
 		() => {
@@ -58,6 +63,13 @@ export default function NumberInput(props: NumberInputProps) {
 			setMarks(newMarks);
 		},
 		[ rangeFactor, props.min, props.max ]
+	);
+
+	useEffect(
+		() => {
+			setMarks(getSliderMarks(props.min, props.max));
+		},
+		[ props.additionalMarks ]
 	);
 
 	const getClosestKey = (value: number, keys: Array<number>) => {
@@ -100,12 +112,7 @@ export default function NumberInput(props: NumberInputProps) {
 						)}
 					</Col>
 					{!props.currency && (
-						<Col>
-							<b>{`${toReadableNumber(
-								props.value,
-								props.step && props.step < 1 ? 2 : 0
-							)} ${props.unit}`}</b>
-						</Col>
+						<b>{`${toReadableNumber(props.value, props.step && props.step < 1 ? 2 : 0)} ${props.unit}`}</b>
 					)}
 				</Row>
 			</Col>
