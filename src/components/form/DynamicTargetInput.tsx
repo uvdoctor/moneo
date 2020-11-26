@@ -15,7 +15,6 @@ interface DynamicTargetInputProps {
 export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProps) {
 	const {
 		currency,
-		rangeFactor,
 		startYear,
 		endYear
 	}: any = useContext(CalcContext)
@@ -91,7 +90,6 @@ export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProp
 						<NumberInput
 							pre=""
 							currency={currency}
-							rangeFactor={rangeFactor}
 							value={t.val}
 							changeHandler={(val: number) => changeTargetVal(i, val)}
 							min={0}

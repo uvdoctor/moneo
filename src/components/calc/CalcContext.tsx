@@ -1,5 +1,5 @@
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
-import { getRangeFactor, initYearOptions } from '../utils';
+import { initYearOptions } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import TaxAdjustment from "../calc/TaxAdjustment";
 import GoalCost from "../goals/GoalCost";
@@ -59,7 +59,6 @@ function CalcContextProvider({
   const [startMonth, setStartMonth] = useState<number>(1);
   const [endYear, setEndYear] = useState<number>(goal.ey);
   const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal?.ccy ? goal.ccy : 'USD');
-	const [ rangeFactor, setRangeFactor ] = useState<number>(getRangeFactor(currency));
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
 	const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
 	const [ cfs, setCFs ] = useState<Array<number>>([]);
@@ -172,14 +171,6 @@ function CalcContextProvider({
 
   const changeEndYear = (str: string) => setEndYear(parseInt(str));
 
-  const changeCurrency = (curr: string) => {
-    console.log("Existing range factor: ", rangeFactor);
-    console.log("New curr range factor: ", getRangeFactor(curr));
-    console.log("Result is ", getRangeFactor(curr) / getRangeFactor(currency));
-		setRangeFactor(getRangeFactor(curr) / getRangeFactor(currency));
-		setCurrency(curr);
-	};
-
   const handleSubmit = async () => {
     setBtnClicked(true);
     if (addCallback && updateCallback) {
@@ -220,9 +211,7 @@ function CalcContextProvider({
       value={{
         goal,
 				currency,
-				changeCurrency,
-				rangeFactor,
-				setRangeFactor,
+				setCurrency,
 				allInputDone,
 				setAllInputDone,
 				inputTabIndex,

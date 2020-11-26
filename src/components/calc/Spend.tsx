@@ -12,7 +12,6 @@ export const SPEND_YEARLY = 'Yearly';
 export default function Spend() {
 	const { 
 		currency,
-		rangeFactor,
 		freq,
 		setFreq,
 		amt,
@@ -38,7 +37,6 @@ export default function Spend() {
 				max={50000}
 				step={100}
 				currency={currency}
-				rangeFactor={rangeFactor}
 			/>
 			{freq !== SPEND_ONCE && (
 				<NumberInput

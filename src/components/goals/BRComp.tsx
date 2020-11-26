@@ -6,7 +6,7 @@ import HSwitch from '../HSwitch';
 import { GoalContext } from './GoalContext';
 
 export default function BRComp() {
-	const { currency, rangeFactor, dr, setDR }: any = useContext(CalcContext);
+	const { currency, dr, setDR }: any = useContext(CalcContext);
 	const {
 		rentAmt,
 		setRentAmt,
@@ -34,7 +34,6 @@ export default function BRComp() {
 				max={100000}
 				step={1000}
 				currency={currency}
-				rangeFactor={rangeFactor}
 			/>
 			{rentAmt && (
 				<NumberInput

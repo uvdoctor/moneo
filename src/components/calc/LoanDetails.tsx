@@ -15,7 +15,7 @@ import LoanInterest from './LoanInterest';
 import { Row } from 'antd';
 
 export default function LoanDetails() {
-	const { goal, currency, startYear, rangeFactor, endYear }: any = useContext(CalcContext);
+	const { goal, currency, startYear, endYear }: any = useContext(CalcContext);
 	const {
 		duration,
 		loanRepaymentSY,
@@ -179,7 +179,6 @@ export default function LoanDetails() {
 				<NumberInput
 					pre="Max Interest"
 					post="Deduction"
-					rangeFactor={rangeFactor}
 					value={maxTaxDeductionInt}
 					changeHandler={setMaxTaxDeductionInt}
 					currency={currency}

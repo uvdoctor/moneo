@@ -14,21 +14,6 @@ export default function BuyRentChart() {
 	const { currency }: any = useContext(CalcContext);
 	const { brChartData, analyzeFor, setAnalyzeFor }: any = useContext(GoalContext);
 	const [ stackedData, setStackedData ] = useState<Array<any>>(buildYearsArray(1, brChartData[0].values.length));
-	const [ selectedIndex, setSelectedIndex ] = useState<number | null>(null);
-
-	const calculateRentDiff = (numOfYears: number) =>
-		numOfYears && brChartData && brChartData.length && brChartData[0].values.length >= numOfYears
-			? brChartData[1].values[numOfYears - 1] - brChartData[0].values[numOfYears - 1]
-			: null;
-
-	const getDiffAns = (numOfYears: number) => {
-		const diff = calculateRentDiff(numOfYears);
-		if (!diff) return '';
-		return `Rent ${diff < 0 ? 'Costlier' : 'Cheaper'} by ${toCurrency(
-			Math.abs(diff),
-			currency
-		)} over ${numOfYears} Years`;
-	};
 
 	useEffect(
 		() => {
@@ -71,9 +56,6 @@ export default function BuyRentChart() {
 					/>
 				</Col>
 			</Row>
-			<Row justify="center">
-				{selectedIndex ? getDiffAns(selectedIndex) : `Buy v/s Rent Comparison for ${analyzeFor} Years`}
-			</Row>
 			<Col span={24} style={{ minHeight: '400px' }}>
 				{/*@ts-ignore*/}
 				<GroupedColumnChart
@@ -85,9 +67,15 @@ export default function BuyRentChart() {
 					yAxis={getCommonYAxis()}
 					xAxis={getCommonXAxis('Number of Years')}
 					legend={{ position: 'top-center' }}
-					events={{
-						onColumnClick: (event: any) => {
-							setSelectedIndex(parseInt(event.data.years));
+					tooltip={{
+						fields: ['years', 'name', 'value'],
+						showTitle: false,
+						//@ts-ignore
+						formatter: (years: number, name: string, value: number) => {
+							return {
+								name: name,
+								value: `${value > 0 ? 'Gain' : 'Loss'} of ${toCurrency(Math.abs(value), currency)} over ${years} Year${years > 1 ? 's':''}`
+							}
 						}
 					}}
 				>

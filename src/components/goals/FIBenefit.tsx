@@ -12,7 +12,6 @@ import { getLastPossibleFFYear } from './goalutils';
 export default function FIBenefit() {
 	const {
 		currency,
-		rangeFactor,
 		endYear
 	}: any = useContext(CalcContext);
 	const {
@@ -39,7 +38,6 @@ export default function FIBenefit() {
 				<NumberInput
 					value={retirementIncome}
 					changeHandler={setRetirementIncome}
-					rangeFactor={rangeFactor}
 					pre="Yearly Benefit"
 					min={0}
 					max={50000}

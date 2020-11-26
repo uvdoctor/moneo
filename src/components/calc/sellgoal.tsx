@@ -73,11 +73,6 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
         nameValid && currentMarketPrice > 0 && cfs.length > 0 ? setSubmitDisabled(false) : setSubmitDisabled(true)
         , [nameValid, currentMarketPrice, cfs])
 
-    const changeCurrency = (curr: string) => {
-        setRangeFactor(Math.round(getRangeFactor(curr) / getRangeFactor(currency)))
-        setCurrency(curr)
-    }
-
     const handleSubmit = () =>
         goal.id ? updateCallback(createUpdateGoalInput(), cfs)
             : addCallback(createNewGoalInput(), cfs)
@@ -146,7 +141,7 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
                 />
                 <div className="flex flex-col">
                     <label>In</label>
-                    <CurrencyInput name="mainCurr" value={currency} changeHandler={changeCurrency} />
+                    <CurrencyInput name="mainCurr" value={currency} changeHandler={setCurrency} />
                 </div>
                 <div className="mr-1 cursor-pointer border-0 outline-none focus:outline-none"
                     onClick={() => cancelCallback()}>
@@ -164,7 +159,7 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
                         />} right={
                             <NumberInput name="cost" pre="Cost" post={`in ${boughtYear}`}
                                 value={cost} changeHandler={setCost} currency={currency}
-                                rangeFactor={rangeFactor} min={0} max={900000} step={500} />
+                                min={0} max={900000} step={500} />
                         } />
                     <Section title="Sell Details" right={
                         <SelectInput name="by"
@@ -175,7 +170,7 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
                         />} left={
                             <NumberInput name="sp" pre="Current" post="Price"
                                 value={currentMarketPrice} changeHandler={setCurrentMarketPrice} currency={currency}
-                                rangeFactor={rangeFactor} min={0} max={900000} step={500} />
+                                min={0} max={900000} step={500} />
                         } bottomLeft="" bottomRight="Yearly" bottom={
                             <NumberInput name="assetChgRate" pre="Sell Price" post="Changes" unit="%"
                                 min={-20} max={20} step={0.5} value={assetChgRate as number} changeHandler={setAssetChgRate} />
@@ -192,7 +187,7 @@ export default function SellGoal({ goal, cashFlows, cancelCallback, addCallback,
                         duration={sellYear - goal.by} discountRate={oppDR} discountRateHandler={setOppDR} />
                     <Section title="Instead, If You Rent" left={
                         <NumberInput name="rentAmt" pre="Yearly" post="Rent" value={rentAmt} changeHandler={setRentAmt}
-                            min={1000} max={200000} step={500} currency={currency} rangeFactor={rangeFactor} />
+                            min={1000} max={200000} step={500} currency={currency} />
                     }
                         right={
                             <NumberInput name="rentChg" pre="Changes" value={rentChgPer} changeHandler={setRentChgPer}

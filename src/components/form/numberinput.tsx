@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { parseNumber, toCurrency, toReadableNumber } from '../utils';
+import { getRangeFactor, parseNumber, toCurrency, toReadableNumber } from '../utils';
 import { Slider } from 'antd';
 import { COLORS } from '../../CONSTANTS';
 import { Tooltip, InputNumber, Row, Col } from 'antd';
@@ -12,7 +12,6 @@ interface NumberInputProps {
 	max: number;
 	value: number;
 	currency?: string;
-	rangeFactor?: number;
 	unit?: string;
 	changeHandler: any;
 	note?: any;
@@ -23,20 +22,19 @@ interface NumberInputProps {
 
 export default function NumberInput(props: NumberInputProps) {
 	const inputRef = useRef(null);
+	const [rangeFactor, setRangeFactor] = useState<number>(props.currency ? getRangeFactor(props.currency) : 1);
 	const [ sliderBorderColor, setSliderBorderColor ] = useState<string>(COLORS.GREEN);
 	const [ feedbackText, setFeedbackText ] = useState<string>('');
-	const [ minNum, setMinNum ] = useState<number>(props.min * (props.rangeFactor ? props.rangeFactor : 1));
-	const [ maxNum, setMaxNum ] = useState<number>(props.max * (props.rangeFactor ? props.rangeFactor : 1));
-	const [ stepNum, setStepNum ] = useState<number>(
-		props.step ? props.step * (props.rangeFactor ? props.rangeFactor : 1) : 1
-	);
+	const [ minNum, setMinNum ] = useState<number>(props.min * rangeFactor);
+	const [ maxNum, setMaxNum ] = useState<number>(props.max * rangeFactor);
+	const [ stepNum, setStepNum ] = useState<number>(props.step ? props.step * rangeFactor : 1);
 
 	const getSliderMarks = (min: number, max: number) => {
 		let marks: any = {
 			[min]: toReadableNumber(min, props.step < 1 ? 2 : 0)
 		};
 		if (min < 0) marks[0] = '0';
-		if (props.additionalMarks) 
+		if (props.additionalMarks)
 			props.additionalMarks.forEach((val: number) => {
 				marks[val] = toReadableNumber(val, props.step < 1 ? 2 : 0);
 			});
@@ -46,21 +44,20 @@ export default function NumberInput(props: NumberInputProps) {
 
 	const [ marks, setMarks ] = useState<any>(getSliderMarks(props.min, props.max));
 
+	useEffect(() => setRangeFactor(getRangeFactor(props.currency as string)), [props.currency]);
+
 	useEffect(
 		() => {
-			let rf = props.rangeFactor ? props.rangeFactor : 1;
-			let newMin = minNum * rf;
-			let newMax = maxNum * rf;
-			let newStep = stepNum * rf;
-			setMinNum(newMin );
+			let newMin = props.min * rangeFactor;
+			let newMax = props.max * rangeFactor;
+			let newStep = props.step * rangeFactor;
+			setMinNum(newMin);
 			setMaxNum(newMax);
 			setStepNum(newStep);
 			let newMarks: any = getSliderMarks(newMin, newMax);
-			console.log("New step is ", newStep);
-			console.log("New marks are: ", newMarks);
 			setMarks(newMarks);
 		},
-		[ props.rangeFactor, props.min, props.max ]
+		[ rangeFactor, props.min, props.max ]
 	);
 
 	const getClosestKey = (value: number, keys: Array<number>) => {

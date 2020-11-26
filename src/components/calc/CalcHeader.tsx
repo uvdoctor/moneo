@@ -14,7 +14,7 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 	const {
 		goal,
 		currency,
-		changeCurrency,
+		setCurrency,
 		rating,
 		setRating,
 		showFeedbackModal,
@@ -50,7 +50,7 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 									key="currselect"
 									pre=""
 									value={currency}
-									changeHandler={changeCurrency}
+									changeHandler={setCurrency}
 									currency
 								/>,
 							]}

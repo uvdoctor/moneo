@@ -6,7 +6,7 @@ import { FIGoalContext } from './FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
 
 export function BeforeFI() {
-	const { currency, rangeFactor, dr, setDR, addCallback }: any = useContext(CalcContext);
+	const { currency, dr, setDR, addCallback }: any = useContext(CalcContext);
 	const { avgMonthlySavings, setAvgMonthlySavings, monthlySavingsRate, setMonthlySavingsRate }: any = useContext(
 		FIGoalContext
 	);
@@ -25,7 +25,6 @@ export function BeforeFI() {
 				changeHandler={setAvgMonthlySavings}
 				step={100}
 				currency={currency}
-				rangeFactor={rangeFactor}
 			/>
 			<NumberInput
 				info={`Given Average Monthly Investment of ${toCurrency(
