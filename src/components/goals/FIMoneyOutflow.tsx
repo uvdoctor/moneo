@@ -9,7 +9,6 @@ import { CalcContext } from '../calc/CalcContext';
 export default function FIMoneyOutflow() {
 	const {
 		currency,
-		rangeFactor,
 		endYear
 	}: any = useContext(CalcContext);
 	const {
@@ -30,7 +29,6 @@ export default function FIMoneyOutflow() {
 				<NumberInput
 					value={leaveBehind}
 					changeHandler={setLeaveBehind}
-					rangeFactor={rangeFactor}
 					min={0}
 					max={500000}
 					pre="Amount"

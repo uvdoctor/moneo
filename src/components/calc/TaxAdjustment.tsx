@@ -7,7 +7,7 @@ import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
 
 export default function TaxAdjustment() {
-	const { goal, currency, rangeFactor, startYear }: any = useContext(CalcContext);
+	const { goal, currency, startYear }: any = useContext(CalcContext);
 	const { duration, taxRate, maxTaxDeduction, setTaxRate, setMaxTaxDeduction, totalPTaxBenefit }: any = useContext(
 		GoalContext
 	);
@@ -47,7 +47,6 @@ export default function TaxAdjustment() {
 							footer={`${startYear} to ${startYear + duration - 1}`}
 						/>
 					}
-					rangeFactor={rangeFactor}
 				/>
 			)}
 		</Section>

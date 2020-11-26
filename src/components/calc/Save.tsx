@@ -6,7 +6,6 @@ import { TrueCostContext } from './TrueCostContext';
 export default function Save() {
 	const {
 		currency,
-		rangeFactor,
 		hoursPerWeek,
 		setHoursPerWeek,
 		savings,
@@ -21,7 +20,6 @@ export default function Save() {
 				value={savings}
 				changeHandler={setSavings}
 				currency={currency}
-				rangeFactor={rangeFactor}
 				min={0}
 				max={200000}
 				step={1000}

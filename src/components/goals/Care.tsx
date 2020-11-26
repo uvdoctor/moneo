@@ -11,7 +11,7 @@ import { FIGoalContext } from './FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
 
 export default function CareInsurance() {
-	const { currency, rangeFactor, endYear }: any = useContext(CalcContext);
+	const { currency, endYear }: any = useContext(CalcContext);
 	const {
 		carePremium,
 		setCarePremium,
@@ -82,7 +82,6 @@ export default function CareInsurance() {
 				info="How much does annual insurance premium cost today? Actual price will be derived based on this price."
 				value={carePremium}
 				changeHandler={setCarePremium}
-				rangeFactor={rangeFactor}
 				pre="Yearly Premium in Today's Money"
 				min={0}
 				max={7000}
@@ -132,7 +131,6 @@ export default function CareInsurance() {
 					min={0}
 					max={5000}
 					step={500}
-					rangeFactor={rangeFactor}
 					note={<ItemDisplay label="Total Tax Benefit" currency={currency} result={totalTaxBenefit} pl />}
 				/>
 			)}

@@ -7,7 +7,6 @@ import { FIGoalContext } from './FIGoalContext';
 export function AfterFI() {
 	const {
 		currency,
-		rangeFactor
 	}: any = useContext(CalcContext);
 	const {
 		expenseAfterFF,
@@ -33,7 +32,6 @@ export function AfterFI() {
 				info="If You had already achieved Financial Independence this year, How Much Money Would You Need for Your Living Expenses?"
 				pre="Yearly Expenses in today's money"
 				currency={currency}
-				rangeFactor={rangeFactor}
 				value={expenseAfterFF}
 				changeHandler={setExpenseAfterFF}
 				min={5000}

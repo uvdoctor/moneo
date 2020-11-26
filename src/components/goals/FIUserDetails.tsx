@@ -9,7 +9,7 @@ import { FIGoalContext } from './FIGoalContext';
 import { getRAOptions } from './goalutils';
 
 export default function FIUserDetails() {
-	const { currency, rangeFactor, endYear, setEndYear, eyOptions }: any = useContext(CalcContext);
+	const { currency, endYear, setEndYear, eyOptions }: any = useContext(CalcContext);
 	const { nw, setNW, riskProfile, setRiskProfile }: any = useContext(FIGoalContext);
 
 	return (
@@ -31,7 +31,6 @@ export default function FIUserDetails() {
 				changeHandler={setNW}
 				step={1000}
 				currency={currency}
-				rangeFactor={rangeFactor}
 			/>
 			<SelectInput
 				info="How much Risk are You willing to take in order to achieve higher Investment Return?"

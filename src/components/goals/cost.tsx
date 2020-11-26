@@ -14,7 +14,6 @@ import { ROUTES } from '../../CONSTANTS';
 export default function Cost() {
 	const {
 		currency,
-		rangeFactor,
 		startYear,
 		goal,
 		inputTabs,
@@ -75,7 +74,6 @@ export default function Cost() {
 								<NumberInput
 									pre=""
 									currency={currency}
-									rangeFactor={rangeFactor}
 									value={t.val}
 									changeHandler={(val: number) => changeTargetVal(val, i)}
 									min={0}
@@ -94,7 +92,6 @@ export default function Cost() {
 			<NumberInput
 				pre={isLoanPublicCalc ? 'Borrow Amount' : startYear > goal.by ? `Cost ${goal.type !== GoalType.D && 'including taxes & fees'}` : ''}
 				currency={currency}
-				rangeFactor={rangeFactor}
 				value={startingPrice}
 				changeHandler={setStartingPrice}
 				min={100}
