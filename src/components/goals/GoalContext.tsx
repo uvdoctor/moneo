@@ -158,7 +158,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
   const [analyzeFor, setAnalyzeFor] = useState<number>(20);
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
-  const [loanTimer, setLoanTimer] = useState<any>(null);
 
   useEffect(() =>
     setDisableSubmit(name.length < 3 || !price || btnClicked),
@@ -311,10 +310,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     setPSchedule([...result.principal]);
     setISchedule([...result.interest]);
   }
-  useEffect(() => {
-    clearTimeout(loanTimer);
-    setLoanTimer(setTimeout(() => createLoanSchedule(), 500));
-  }, [emi, loanPrepayments, loanIRAdjustments]);
+  useEffect(() => createLoanSchedule(), [emi, loanPrepayments, loanIRAdjustments]);
 
   useEffect(() => {
     if (sellAfter && manualMode < 1 && loanPer && loanMonths && sellAfter * 12 < loanMonths) {
@@ -413,7 +409,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   useEffect(() => {
     if (!allInputDone && inputTabIndex < 2) return;
     clearTimeout(timer);
-    setTimer(setTimeout(() => calculateYearlyCFs(), 500));
+    setTimer(setTimeout(() => calculateYearlyCFs(), 300));
   }, [
     allInputDone,
     price,

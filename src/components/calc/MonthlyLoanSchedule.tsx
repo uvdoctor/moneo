@@ -204,7 +204,6 @@ export default function MonthlyLoanSchedule({
 						editable &&
 						(hasAdjustmentsInLastInstallments() ||
 							parseInt(record.num) <= iSchedule.length - 6);
-
 					return (
 						<Fragment>
 							<Row align="middle">
