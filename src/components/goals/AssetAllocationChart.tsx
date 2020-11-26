@@ -10,6 +10,7 @@ import {
 import { CalcContext } from "../calc/CalcContext";
 import DataSwitcher from "../DataSwitcher";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { ASSET_CATEGORIES } from "../../CONSTANTS";
 
 const TreemapChart = dynamic(() => import("bizcharts/lib/plots/TreemapChart"), {
 	ssr: false,
@@ -53,6 +54,12 @@ export default function AssetAllocationChart({
 
 	const sortDesc = (data: Array<any>) => data.sort((a, b) => b.value - a.value);
 
+	const getAssetShortName = (assetName: string) => {
+		if (assetName.endsWith("ds") || assetName.endsWith("ks"))
+			return assetName.split(" ")[0];
+		else return assetName;
+	}
+
 	const initChartData = () => {
 		let data: Array<any> = [];
 		let colors: Array<string> = [];
@@ -65,8 +72,7 @@ export default function AssetAllocationChart({
 			getAllAssetTypesByCategory(cat).forEach((at) => {
 				if (aa[at][index]) {
 					total += aa[at][index];
-
-					cat === "Cash"
+					cat === ASSET_CATEGORIES.CASH
 						? (cash[at.toLowerCase()] = aa[at][index])
 						: children.push({
 								name: at,
@@ -76,7 +82,7 @@ export default function AssetAllocationChart({
 				}
 			});
 
-			cat === "Cash"
+			cat === ASSET_CATEGORIES.CASH
 				? (cash.value = total)
 				: data.push({
 						name: cat,
@@ -179,7 +185,7 @@ export default function AssetAllocationChart({
 							visible: true,
 							formatter: (v) => {
 								return ffResult.aa.hasOwnProperty(v)
-									? `${v}\n${toCurrency(
+									? `${getAssetShortName(v)}\n${toCurrency(
 											Math.round((cfs[index] * ffResult.aa[v][index]) / 100),
 											currency
 									  )} (${ffResult.aa[v][index]}%)`
