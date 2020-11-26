@@ -55,9 +55,10 @@ export default function NumberInput(props: NumberInputProps) {
 
 	const [marks, setMarks] = useState<any>(getSliderMarks(props.min, props.max));
 
-	useEffect(() => setRangeFactor(getRangeFactor(props.currency as string)), [
-		props.currency,
-	]);
+	useEffect(() => {
+		if (props.currency)
+			setRangeFactor(getRangeFactor(props.currency as string));
+	}, [props.currency]);
 
 	useEffect(() => {
 		let newMin = props.min * rangeFactor;
@@ -69,6 +70,10 @@ export default function NumberInput(props: NumberInputProps) {
 		let newMarks: any = getSliderMarks(newMin, newMax);
 		setMarks(newMarks);
 	}, [rangeFactor, props.min, props.max]);
+
+	useEffect(() => {
+		setMarks(getSliderMarks(props.min, props.max));
+	}, [props.additionalMarks]);
 
 	const getClosestKey = (value: number, keys: Array<number>) => {
 		let result: number = keys[0];
@@ -112,12 +117,10 @@ export default function NumberInput(props: NumberInputProps) {
 						)}
 					</Col>
 					{!props.currency && (
-						<Col>
-							<b>{`${toReadableNumber(
-								props.value,
-								props.step && props.step < 1 ? 2 : 0
-							)} ${props.unit}`}</b>
-						</Col>
+						<b>{`${toReadableNumber(
+							props.value,
+							props.step && props.step < 1 ? 2 : 0
+						)} ${props.unit}`}</b>
 					)}
 				</Row>
 			</Col>
