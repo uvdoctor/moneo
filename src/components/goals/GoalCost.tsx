@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import SelectInput from '../form/selectinput';
-import { initYearOptions } from '../utils';
+import { initYearOptions, MONTHS } from '../utils';
 import Cost from './cost';
 import { Col } from 'antd';
 import { GoalContext } from './GoalContext';
@@ -20,7 +20,9 @@ export default function GoalCost() {
 		addCallback,
 		impLevel,
 		setImpLevel,
-		isPublicCalc
+		isPublicCalc,
+		startMonth,
+		changeStartMonth
 	}: any = useContext(CalcContext);
 	const { ffGoalEndYear, manualMode, isEndYearHidden }: any = useContext(GoalContext);
 	const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
@@ -43,6 +45,13 @@ export default function GoalCost() {
 					value={startYear}
 					changeHandler={changeStartYear}
 					options={syOptions}
+				/>
+				<SelectInput
+					pre="Starting Month"
+					info="Month of Year from where You Start Paying"
+					value={startMonth}
+					changeHandler={changeStartMonth}
+					options={MONTHS}
 				/>
 				{!isEndYearHidden && (
 					<SelectInput

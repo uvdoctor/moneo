@@ -17,6 +17,7 @@ interface SelectInputProps {
 
 export default function SelectInput(props: SelectInputProps) {
 	const { Option } = Select;
+	const selectOptions = props.currency ? getCurrencyList() : props.options;
 
 	return (
 		<Row align="middle" justify="space-between">
@@ -35,20 +36,18 @@ export default function SelectInput(props: SelectInputProps) {
 					<Select
 						showSearch
 						optionFilterProp="children"
-						value={props.value}
-						onChange={(value) => props.changeHandler(value)}
+						value={props.currency ? props.value : selectOptions[props.value]}
+						onChange={(value: string) => props.changeHandler(value)}
 						filterOption={(input, option) =>
 							option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
 						}
 						disabled={props.disabled}
-						defaultValue={props.value}
+						defaultValue={selectOptions[props.value]}
 						style={{minWidth: '80px'}}
 					>
-						{Object.keys(
-							props.currency ? getCurrencyList() : props.options
-						).map((key) => (
+						{Object.keys(selectOptions).map((key) => (
 							<Option key={key} value={key}>
-								{props.currency ? key : props.options[key]}
+								{props.currency ? key : selectOptions[key]}
 							</Option>
 						))}
 					</Select>

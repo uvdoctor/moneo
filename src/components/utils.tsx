@@ -588,22 +588,23 @@ export const isTopBottomLayout = (fsb: any) => fsb.info.innerWidth < 1024;
 
 export const isMobileDevice = (fsb: any) => fsb.info.innerWidth < 768;
 
+export const MONTHS: any = {
+  1: 'January',
+  2: 'February',
+  3: 'March',
+  4: 'April',
+  5: 'May',
+  6: 'June',
+  7: 'July',
+  8: 'August',
+  9: 'September',
+  10: 'October',
+  11: 'November',
+  12: 'December'
+};
+
 export const getMonthName = (monthNum: number, shortForm: boolean = false) => {
   if (monthNum < 1 || monthNum > 12) return "";
-  const monthsMap: any = {
-    1: 'January',
-    2: 'February',
-    3: 'March',
-    4: 'April',
-    5: 'May',
-    6: 'June',
-    7: 'July',
-    8: 'August',
-    9: 'September',
-    10: 'October',
-    11: 'November',
-    12: 'December'
-  }
-  let monthName: string = monthsMap[monthNum];
+  let monthName: string = MONTHS[monthNum];
   return shortForm ? monthName.substring(0, 3) : monthName;
 }
