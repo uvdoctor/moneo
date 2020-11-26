@@ -5,7 +5,7 @@ import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import { GoalContext } from '../goals/GoalContext';
 import { createNewTarget } from '../goals/goalutils';
-import { removeFromArray, toCurrency } from '../utils';
+import { getMonthName, removeFromArray, toCurrency } from '../utils';
 import { CalcContext } from './CalcContext';
 import { findTarget } from './finance';
 import ItemDisplay from './ItemDisplay';
@@ -14,7 +14,7 @@ interface MonthlyLoanScheduleProps {
 }
 
 export default function MonthlyLoanSchedule({ editable }: MonthlyLoanScheduleProps) {
-	const { currency }: any = useContext(CalcContext);
+	const { currency, startMonth }: any = useContext(CalcContext);
 	const {
 		loanRepaymentSY,
 		loanPrepayments,
@@ -33,7 +33,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 
 	const columns = [
 		{
-			title: 'Number',
+			title: 'Num',
 			dataIndex: 'num',
 			key: 'num',
 			filteredValue: filteredInfo.num || null,
@@ -49,17 +49,25 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 			onFilter: (value: Array<any>, record: any) => record.year.includes(value)
 		},
 		{
+			title: 'Month',
+			dataIndex: 'month',
+			key: 'month',
+		},
+		{
 			title: 'Payment',
 			dataIndex: 'mp',
 			key: 'mp'
 		}
 	];
 
-	const getDataItem = (index: number, payment: number, year: number) => {
+	const getDataItem = (index: number, payment: number, year: number, startingMonth: number) => {
+		let monthIndex = index + startingMonth - 1;
+		let monthNum = monthIndex % 12 === 0 ? 12 : monthIndex % 12;
 		return {
 			key: '' + index,
 			num: '' + index,
 			year: '' + year,
+			month: getMonthName(monthNum, true),
 			mp: toCurrency(payment, currency, true)
 		};
 	};
@@ -122,7 +130,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 					year++;
 					yearFilterValues.push(getFilterItem(year));
 				}
-				result.push(getDataItem(i + 1, iSchedule[i] + pSchedule[i], year));
+				result.push(getDataItem(i + 1, iSchedule[i] + pSchedule[i], year, startMonth));
 			}
 			setYearFilterValues([ ...yearFilterValues ]);
 			setNumFilterValues([ ...numFilterValues ]);
