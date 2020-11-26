@@ -4,6 +4,18 @@
 	height: 100%;
 }
 
+.ant-slider-mark {
+	& .ant-slider-mark-text {
+		transform: translateX(-6px) !important;
+	}
+
+	& .ant-slider-mark-text:nth-child(2) {
+		left: auto !important;
+		right: 0%;
+		transform: translateX(6px) !important;
+	}
+}
+
 .text-center,
 .ant-statistic-title {
 	text-align: center;

@@ -22,7 +22,7 @@ export default function Section(props: SectionProps) {
 	}, [fsb.info.screenWidth]);
 
 	return (
-		<Row style={{ maxWidth: "500px" }}>
+		<Row>
 			<Col span={24}>
 				<h3 className="steps-heading">
 					{`${props.title} `}

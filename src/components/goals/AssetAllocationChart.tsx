@@ -134,7 +134,7 @@ export default function AssetAllocationChart({
 									</div>
 								</Col>
 								<Col xs={24} sm={12} lg={8}>
-									<div className="cash">
+									<div className="cash deposits">
 										Deposits <Badge count={`${cashData.deposits} %`} />
 										<strong>
 											{toCurrency(
