@@ -195,10 +195,16 @@ export default function AssetAllocationChart({
 						forceFit
 						tooltip={{
 							visible: true,
-							formatter: (name, value) => ({
-								name,
-								value,
-							}),
+							//@ts-ignore
+							formatter: (name, value) => {
+								return {
+									name,
+									value: `<strong>${toCurrency(
+										Math.round((cfs[index] * value) / 100),
+										currency
+									)}</strong> (${value}%)`,
+								};
+							},
 						}}
 					/>
 				</Chart>
