@@ -167,6 +167,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     return {
       name: name,
       sy: startYear,
+      sm: startMonth,
       ey: endYear,
       by: goal.by,
       tdr: taxRate,

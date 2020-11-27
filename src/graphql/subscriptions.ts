@@ -7,6 +7,7 @@ export const onCreateGoal = /* GraphQL */ `
     onCreateGoal(owner: $owner) {
       id
       sy
+      sm
       ey
       by
       btr
@@ -72,6 +73,7 @@ export const onUpdateGoal = /* GraphQL */ `
     onUpdateGoal(owner: $owner) {
       id
       sy
+      sm
       ey
       by
       btr
@@ -137,6 +139,7 @@ export const onDeleteGoal = /* GraphQL */ `
     onDeleteGoal(owner: $owner) {
       id
       sy
+      sm
       ey
       by
       btr
@@ -209,6 +212,7 @@ export const onCreateMilestone = /* GraphQL */ `
       goals {
         id
         sy
+        sm
         ey
         by
         btr
@@ -277,6 +281,7 @@ export const onUpdateMilestone = /* GraphQL */ `
       goals {
         id
         sy
+        sm
         ey
         by
         btr
@@ -345,6 +350,7 @@ export const onDeleteMilestone = /* GraphQL */ `
       goals {
         id
         sy
+        sm
         ey
         by
         btr

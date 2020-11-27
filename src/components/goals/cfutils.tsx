@@ -377,7 +377,7 @@ export const createLoanCFs = (
   let cfs: Array<number> = [...loanStartingCFs];
   let totalPTaxBenefit = 0;
   let totalITaxBenefit = 0;
-  let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule);
+  let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, goal.sm as number);
   let sp = 0;
   let taxBenefit = 0;
   for (let year = goal.sy; year <= goal.sy + duration - 1; year++) {

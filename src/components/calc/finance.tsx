@@ -116,7 +116,7 @@ export const createAmortizingLoanCFs = (
 export const createYearlyFromMonthlyLoanCFs = (
 	iPayments: Array<number>,
 	pPayments: Array<number>,
-	startMonthNum: number = 1
+	startMonthNum: number
 ) => {
 	if (!iPayments || !iPayments.length || !pPayments || !pPayments.length)
 		return {

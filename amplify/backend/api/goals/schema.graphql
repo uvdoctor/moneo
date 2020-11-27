@@ -46,6 +46,7 @@ type Loan {
 type Goal @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   sy: Int!
+  sm: Int
   ey: Int!
   by: Int!
   btr: Float

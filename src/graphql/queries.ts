@@ -7,6 +7,7 @@ export const getGoal = /* GraphQL */ `
     getGoal(id: $id) {
       id
       sy
+      sm
       ey
       by
       btr
@@ -77,6 +78,7 @@ export const listGoals = /* GraphQL */ `
       items {
         id
         sy
+        sm
         ey
         by
         btr
@@ -143,6 +145,7 @@ export const getMilestone = /* GraphQL */ `
       goals {
         id
         sy
+        sm
         ey
         by
         btr
@@ -216,6 +219,7 @@ export const listMilestones = /* GraphQL */ `
         goals {
           id
           sy
+          sm
           ey
           by
           btr

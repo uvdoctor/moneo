@@ -9,7 +9,7 @@ const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColu
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function LoanScheduleChart() {
-	const { currency }: any = useContext(CalcContext);
+	const { currency, startMonth }: any = useContext(CalcContext);
 	const { pSchedule, iSchedule, loanRepaymentSY }: any = useContext(GoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 	let darkTheme: any;
@@ -18,7 +18,7 @@ export default function LoanScheduleChart() {
 	useEffect(
 		() => {
 			let data: Array<any> = [];
-			let yearlyLoanCFs: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule);
+			let yearlyLoanCFs: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, startMonth);
 			for (let year = loanRepaymentSY; year < loanRepaymentSY + yearlyLoanCFs.principal.length; year++) {
 				data.push({
 					name: 'Principal',

@@ -56,7 +56,7 @@ function CalcContextProvider({
   const nowYear = new Date().getFullYear();
   const isPublicCalc = addCallback && updateCallback ? false : true;
   const [startYear, setStartYear] = useState<number>(goal.sy);
-  const [startMonth, setStartMonth] = useState<number>(1);
+  const [startMonth, setStartMonth] = useState<number>(goal.sm);
   const [endYear, setEndYear] = useState<number>(goal.ey);
   const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal?.ccy ? goal.ccy : 'USD');
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
