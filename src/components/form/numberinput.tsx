@@ -43,6 +43,7 @@ export default function NumberInput(props: NumberInputProps) {
 
 	useEffect(
 		() => {
+			if (!props.currency) return;
 			let rf = getRangeFactor(props.currency as string);
 			if (rf !== rangeFactor) setRangeFactor(rf);
 		},
@@ -132,7 +133,6 @@ export default function NumberInput(props: NumberInputProps) {
 							value={props.value}
 							onChange={(val: number) => {
 								provideFeedback(val);
-								alert(val);
 								props.changeHandler(val);
 							}}
 							handleStyle={{
