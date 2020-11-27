@@ -32,31 +32,11 @@ export function getTotalInt(borrowAmt: number, emi: number, intRate: number, loa
 	}
 	return totalInt;
 }
-//Tested
-
-export function getIntAmtByYear(borrowAmt: number, emi: number, intRate: number, months: number) {
-	let principal = borrowAmt;
-	let annualInts = [];
-	let monthlyRate = intRate / 1200;
-	let annualInt = 0;
-	let monthlyInt = 0;
-	for (let i = 1; i <= months; i++) {
-		monthlyInt = i === months ? emi - principal : principal * monthlyRate;
-		annualInt += monthlyInt;
-		if (i % 12 === 0 || i === months) {
-			annualInts.push(annualInt);
-			annualInt = 0;
-		}
-		principal -= emi - monthlyInt;
-	}
-	return annualInts;
-}
 
 export function getNPV(rr: number | Array<number>, cashFlows: Array<number>, startIndex: number) {
 	let npv = 0;
 	for (let i = cashFlows.length - 1; i > 0; i--) {
 		let dr = typeof rr === 'number' ? rr : rr[startIndex + i];
-		dr = dr >= 0 ? dr : 3;
 		npv = (cashFlows[i] + npv) / (1 + dr / 100);
 	}
 	return Math.round(npv + cashFlows[0]);

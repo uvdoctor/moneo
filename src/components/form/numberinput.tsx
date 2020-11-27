@@ -25,9 +25,6 @@ export default function NumberInput(props: NumberInputProps) {
 	const [ rangeFactor, setRangeFactor ] = useState<number>(props.currency ? getRangeFactor(props.currency) : 1);
 	const [ sliderBorderColor, setSliderBorderColor ] = useState<string>(COLORS.GREEN);
 	const [ feedbackText, setFeedbackText ] = useState<string>('');
-	const [ minNum, setMinNum ] = useState<number>(props.min * rangeFactor);
-	const [ maxNum, setMaxNum ] = useState<number>(props.max * rangeFactor);
-	const [ stepNum, setStepNum ] = useState<number>(props.step ? props.step * rangeFactor : 1);
 
 	const getSliderMarks = (min: number, max: number) => {
 		let marks: any = {
@@ -50,18 +47,6 @@ export default function NumberInput(props: NumberInputProps) {
 			if (rf !== rangeFactor) setRangeFactor(rf);
 		},
 		[ props.currency ]
-	);
-
-	useEffect(
-		() => {
-			let newMin = props.min * rangeFactor;
-			let newMax = props.max * rangeFactor;
-			let newStep = props.step * rangeFactor;
-			setMinNum(newMin);
-			setMaxNum(newMax);
-			setStepNum(newStep);
-		},
-		[ rangeFactor, props.min, props.max ]
 	);
 
 	const getClosestKey = (value: number, keys: Array<number>) => {
@@ -115,9 +100,9 @@ export default function NumberInput(props: NumberInputProps) {
 							<InputNumber
 								ref={inputRef}
 								value={props.value}
-								min={minNum}
-								max={maxNum}
-								step={stepNum}
+								min={props.min * rangeFactor}
+								max={props.max * rangeFactor}
+								step={props.step * rangeFactor}
 								onChange={(val) => {
 									provideFeedback(val as number);
 									props.changeHandler(val as number);
@@ -140,13 +125,14 @@ export default function NumberInput(props: NumberInputProps) {
 					<Col span={props.currency ? 12 : 24}>
 						{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
 						<Slider
-							min={minNum}
-							max={maxNum}
+							min={props.min * rangeFactor}
+							max={props.max * rangeFactor}
 							marks={marks}
-							step={stepNum}
+							step={props.step * rangeFactor}
 							value={props.value}
 							onChange={(val: number) => {
 								provideFeedback(val);
+								alert(val);
 								props.changeHandler(val);
 							}}
 							handleStyle={{

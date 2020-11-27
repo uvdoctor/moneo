@@ -94,6 +94,7 @@ describe('calculateCFs Test suite via autoCFs',()=>{
         rachg: 5,
         sa: 5,
         sy: 2021,
+        sm: 1,
         tbi: 0,
         tbr: 0,
         tdl: 0,

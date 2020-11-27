@@ -9,7 +9,7 @@ import { calculateBuyAnnualNetCF } from '../goals/cfutils';
 
 export default function BuyReturnResult() {
 	const { startYear, startMonth, cfs }: any = useContext(CalcContext);
-	const { price, sellAfter, sellPrice, loanRepaymentSY, iSchedule, pSchedule, assetChgRate, amStartYear, amCostPer, aiStartYear, aiPer, annualReturnPer, setAnnualReturnPer }: any = useContext(GoalContext);
+	const { price, sellAfter, sellPrice, loanRepaymentSY, iSchedule, pSchedule, assetChgRate, amStartYear, amCostPer, aiStartYear, aiPer, annualReturnPer, setAnnualReturnPer, duration }: any = useContext(GoalContext);
 
 	const getXIRRLoanEntries = () => {
 		let loanXIRRCFs: Array<any> = [];
@@ -52,7 +52,7 @@ export default function BuyReturnResult() {
 			if (i === sellAfter - 1) {
 				cf -= sellPrice;
 			}
-			let netCF = calculateBuyAnnualNetCF(startYear, amCostPer, amStartYear, assetChgRate, i, price, aiPer, aiStartYear);
+			let netCF = calculateBuyAnnualNetCF(startYear, startMonth, duration, amCostPer, amStartYear, assetChgRate, i, price, aiPer, aiStartYear);
 			cf -= netCF;
 			if(netCF) xirrCFs.push(...getXIRRMonthlyNetExpenseEntries(netCF, startYear + i, startYear ? startMonth : 1, i === sellAfter - 1 ? endMonth + 1 : 12));
 			if (loanRepaymentSY && iSchedule && pSchedule) {

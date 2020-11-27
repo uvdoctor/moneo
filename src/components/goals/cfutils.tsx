@@ -20,6 +20,8 @@ export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
 
 export const calculateBuyAnnualNetCF = (
   startYear: number,
+  startMonth: number,
+  duration: number,
   amCostPer: number,
   amStartYear: number,
   chgRate: number,
@@ -29,10 +31,13 @@ export const calculateBuyAnnualNetCF = (
   aiSY: number
 ) => {
   let annualNetCF = 0;
-  let yearlyPrice = index === 0 ? p : getCompoundedIncome(chgRate, p, index);
+  let yearlyPrice = !index ? p : getCompoundedIncome(chgRate, p, index);
+  let yearFactor = 1;
+  if (!index) yearFactor = (12 - startMonth - 1) / 12;
+  else if (index === duration - 1) yearFactor = (startMonth - 1) / 12;
   if (startYear + index >= amStartYear)
-    annualNetCF -= yearlyPrice * (amCostPer / 100);
-  if (startYear + index >= aiSY) annualNetCF += yearlyPrice * (aiPer / 100);
+    annualNetCF -= yearlyPrice * (amCostPer / 100) * yearFactor;
+  if (startYear + index >= aiSY) annualNetCF += yearlyPrice * (aiPer / 100) * yearFactor;
   return Math.round(annualNetCF);
 };
 //Tested
@@ -206,6 +211,8 @@ export const calculateSellCFs = (
   for (let i = 0; i < duration; i++) {
     let netAnnualAmt = calculateBuyAnnualNetCF(
       goal.sy,
+      goal.sm as number,
+      duration,
       goal.amper as number,
       goal.amsy as number,
       goal.achg as number,
@@ -230,6 +237,8 @@ const createAutoCFs = (
   if (goal.type === APIt.GoalType.B && duration) {
     let netAnnualAmt = calculateBuyAnnualNetCF(
       goal.sy,
+      goal.sm as number,
+      duration,
       goal.amper as number,
       goal.amsy as number,
       goal.achg as number,
@@ -244,6 +253,8 @@ const createAutoCFs = (
       cfs.push(
         calculateBuyAnnualNetCF(
           goal.sy,
+          goal.sm as number,
+          duration,
           goal.amper as number,
           goal.amsy as number,
           goal.achg as number,
@@ -424,6 +435,8 @@ export const createLoanCFs = (
     if (goal.type === APIt.GoalType.B) {
       cf -= calculateBuyAnnualNetCF(
         goal.sy,
+        goal.sm as number,
+        duration,
         goal.amper as number,
         goal.amsy as number,
         goal.achg as number,
@@ -478,6 +491,8 @@ const createManualCFs = (
       v -= Math.round(
         calculateBuyAnnualNetCF(
           goal.sy,
+          goal.sm as number,
+          duration,
           goal?.amper as number,
           goal?.amsy as number,
           goal?.achg as number,
