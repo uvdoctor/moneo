@@ -143,7 +143,7 @@ export default function MonthlyLoanSchedule({
 		let yearFilterValues = [getFilterItem(year)];
 		for (let i = 0; i < pSchedule.length; i++) {
 			numFilterValues.push(getFilterItem(i + 1));
-			if (i && (i + (year === startYear ? startMonth - 1 : 0)) % 12 === 0) {
+			if (i && (i + startMonth - 1) % 12 === 0) {
 				year++;
 				yearFilterValues.push(getFilterItem(year));
 			}

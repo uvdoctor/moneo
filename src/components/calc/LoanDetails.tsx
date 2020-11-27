@@ -113,7 +113,7 @@ export default function LoanDetails() {
 			{loanBorrowAmt && (
 				<NumberInput
 					pre="Loan Duration"
-					unit={`Months, i.e. ${toReadableNumber(loanMonths / 12, 2)} Years`}
+					unit={`Months (${toReadableNumber(loanMonths / 12, 2)} Years)`}
 					value={loanMonths}
 					changeHandler={setLoanMonths}
 					min={6}
