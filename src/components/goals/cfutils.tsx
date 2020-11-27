@@ -429,9 +429,7 @@ export const createLoanCFs = (
       );
       totalITaxBenefit += taxBenefit;
     }
-    if (goal.type === APIt.GoalType.E && year === goal.ey + 1) {
-      cf += remSimpleIntAmt;
-    }
+    if (goal.type === APIt.GoalType.E && year === goal.ey + 1) cf += remSimpleIntAmt;
     if (goal.type === APIt.GoalType.B) {
       cf -= calculateBuyAnnualNetCF(
         goal.sy,
@@ -451,7 +449,7 @@ export const createLoanCFs = (
       taxBenefit += ptb;
       totalPTaxBenefit += ptb;
     }
-    if (cfs[index]) cfs[index] = Math.round(-cf);
+    if (!Number.isNaN(cfs[index])) cfs[index] = Math.round(-cf);
     else cfs.push(cf ? Math.round(-cf) : 0);
   }
   if (goal.type === APIt.GoalType.B) {

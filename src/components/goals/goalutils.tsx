@@ -66,17 +66,20 @@ export const deleteGoal = async (id: string) => {
 export const getDuration = (
   sellAfter: number | null | undefined,
   startYear: number,
+  startMonth: number,
   endYear: number,
   manualMode: number,
   loanPer: number | null | undefined,
   loanRY: number | null | undefined,
   loanMonths: number | null | undefined
 ) => {
-  if (sellAfter) return sellAfter;
-  if (manualMode < 1 && loanPer && loanRY && loanMonths) {
-    return Math.round(loanRY + loanMonths / 12) - startYear;
-  }
-  return endYear - startYear + 1;
+  let dur = endYear - startYear + 1;
+  if (sellAfter) dur = sellAfter;
+  else if (manualMode < 1 && loanPer && loanRY && loanMonths) {
+    dur = Math.round(loanRY + loanMonths / 12) - startYear;
+  } else dur = endYear - startYear + 1;
+  if (startMonth > 1) dur++;
+  return dur;
 };
 
 export const createNewTarget = (num: number, val: number) => {
