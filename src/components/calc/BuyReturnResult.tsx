@@ -9,12 +9,20 @@ import { calculateBuyAnnualNetCF } from '../goals/cfutils';
 
 export default function BuyReturnResult() {
 	const { startYear, startMonth, cfs }: any = useContext(CalcContext);
-	const { price, sellAfter, sellPrice, loanRepaymentSY, iSchedule, pSchedule, assetChgRate, amStartYear, amCostPer, aiStartYear, aiPer, annualReturnPer, setAnnualReturnPer, duration }: any = useContext(GoalContext);
+	const { price, sellAfter, sellPrice, loanRepaymentMonths, iSchedule, pSchedule, assetChgRate, amStartYear, amCostPer, aiStartYear, aiPer, annualReturnPer, setAnnualReturnPer, duration }: any = useContext(GoalContext);
 
 	const getXIRRLoanEntries = () => {
 		let loanXIRRCFs: Array<any> = [];
 		let month = startMonth <= 1 ? 0 : startMonth - 1;
-		let year = loanRepaymentSY;
+		let year = startYear;
+		if (loanRepaymentMonths) {
+			month += loanRepaymentMonths;
+			if (month > 11) {
+				year++;
+				month -= 12;
+			}
+			month += loanRepaymentMonths;
+		};
 		for (let i = 0; i < iSchedule.length; i++, month++) {
 			let monthlyPayment = iSchedule[i] + pSchedule[i];
 			loanXIRRCFs.push({
@@ -47,7 +55,7 @@ export default function BuyReturnResult() {
 		let xirrCFs: Array<any> = [];
 		let yearlyLoanPayments: any = {};
 		let endMonth = startMonth <= 1 ? 11 : startMonth - 1;
-		if (iSchedule && pSchedule) yearlyLoanPayments = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, startMonth);
+		if (iSchedule && pSchedule) yearlyLoanPayments = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, startMonth, loanRepaymentMonths);
 		cfs.forEach((cf: number, i: number) => {
 			if (i === sellAfter - 1) {
 				cf -= sellPrice;
@@ -55,8 +63,10 @@ export default function BuyReturnResult() {
 			let netCF = calculateBuyAnnualNetCF(startYear, startMonth, duration, amCostPer, amStartYear, assetChgRate, i, price, aiPer, aiStartYear);
 			cf -= netCF;
 			if(netCF) xirrCFs.push(...getXIRRMonthlyNetExpenseEntries(netCF, startYear + i, startYear ? startMonth : 1, i === sellAfter - 1 ? endMonth + 1 : 12));
-			if (loanRepaymentSY && iSchedule && pSchedule) {
-				let index = startYear + i - loanRepaymentSY;
+			let startingYear = startYear;
+			if (startMonth + loanRepaymentMonths > 12) startingYear++;
+			if (iSchedule && iSchedule.length) {
+				let index = startYear + i - startingYear;
 				if (index >= 0 && yearlyLoanPayments.interest[index]) cf += yearlyLoanPayments.interest[index] + yearlyLoanPayments.principal[index];
 			}
 			xirrCFs.push({
@@ -64,7 +74,7 @@ export default function BuyReturnResult() {
 				when: new Date(startYear + i, startMonth <= 1 ? 0 : startMonth - 1, 1),
 			});
 		});
-		if (loanRepaymentSY && iSchedule && pSchedule) xirrCFs.push(...getXIRRLoanEntries());
+		if (iSchedule && iSchedule.length) xirrCFs.push(...getXIRRLoanEntries());
 		xirrCFs.push({
 				amount: Math.round(sellPrice),
 				when: new Date(startYear + sellAfter - 1, endMonth, 15),
@@ -73,7 +83,6 @@ export default function BuyReturnResult() {
 			return xirr(xirrCFs) * 100;
 		} catch (e) {
 			console.log("Error while calculating xirr: ", e);
-			console.log("XIRR CFs were: ", xirrCFs);
 			return null;
 		}
 	};

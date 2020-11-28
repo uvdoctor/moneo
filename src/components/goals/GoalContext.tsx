@@ -60,7 +60,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const goalType = goal.type as GoalType;
-  const [loanRepaymentSY, setLoanRepaymentSY] = useState<
+  const [loanRepaymentMonths, setLoanRepaymentMonths] = useState<
     number | null | undefined
   >(goal?.loan?.ry);
   const [price, setPrice] = useState<number>(0);
@@ -152,7 +152,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       endYear,
       manualMode,
       loanPer,
-      loanRepaymentSY,
+      loanRepaymentMonths,
       loanMonths,
     )
   );
@@ -193,7 +193,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         rate: loanIntRate as number,
         dur: loanMonths as number,
         per: loanPer as number,
-        ry: loanRepaymentSY as number,
+        ry: loanRepaymentMonths as number,
         pp: loanPrepayments ? loanPrepayments : [],
         ira: loanIRAdjustments ? loanIRAdjustments : [],
         emi: emi ? emi : 0
@@ -237,7 +237,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   useEffect(() => {
     if (startYear <= nowYear) setPriceChgRate(0);
     if (!loanPer) setEYOptions(initYearOptions(startYear, 30));
-    else if (goalType !== GoalType.E) setLoanRepaymentSY(startYear);
     if ((goalType !== GoalType.B) && (isEndYearHidden || startYear > endYear || endYear - startYear > 30))
       setEndYear(startYear);
   }, [startYear, loanPer]);
@@ -295,12 +294,11 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     }
     loanBorrowAmt = adjustAccruedInterest(
       loanBorrowAmt,
-      goalType === GoalType.E ? endYear + 1 : startYear,
-      loanRepaymentSY as number,
+      loanRepaymentMonths as number,
       loanIntRate as number
     );
     setLoanBorrowAmt(loanBorrowAmt);
-  }, [price, manualMode, loanPer, loanIntRate, loanSIPayPer, loanSICapitalize, loanRepaymentSY, startYear, endYear]);
+  }, [price, manualMode, loanPer, loanIntRate, loanSIPayPer, loanSICapitalize, loanRepaymentMonths, startYear, endYear]);
 
   useEffect(() => setEMI(getEmi(loanBorrowAmt, loanIntRate as number, loanMonths as number))
   , [loanBorrowAmt, loanIntRate, loanMonths]);
@@ -311,11 +309,12 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     setPSchedule([...result.principal]);
     setISchedule([...result.interest]);
   }
+
   useEffect(() => createLoanSchedule(), [emi, loanPrepayments, loanIRAdjustments]);
 
   useEffect(() => {
     if (sellAfter && manualMode < 1 && loanPer && loanMonths && sellAfter * 12 < loanMonths) {
-      let duration = getDuration(sellAfter, startYear, startMonth, endYear, manualMode, loanPer, loanRepaymentSY, loanMonths);
+      let duration = getDuration(sellAfter, startYear, startMonth, endYear, manualMode, loanPer, loanRepaymentMonths, loanMonths);
       let result = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments,
         loanIRAdjustments, loanMonths as number, duration);
       setPSchedule([...result.principal]);
@@ -366,7 +365,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       endYear,
       manualMode,
       loanPer,
-      loanRepaymentSY,
+      loanRepaymentMonths,
       loanMonths
     ),
     changeState: boolean = true
@@ -432,15 +431,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   ]);
 
   useEffect(() => {
-    if (goalType !== GoalType.B && manualMode < 1) {
-      if (
-        goalType === GoalType.E &&
-        loanRepaymentSY &&
-        loanRepaymentSY <= endYear
-      )
-        setLoanRepaymentSY(endYear + 1);
-      calculateYearlyCFs();
-    }
+    if (goalType !== GoalType.B && manualMode < 1) calculateYearlyCFs();
   }, [endYear]);
 
   useEffect(() => {
@@ -611,8 +602,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     return (
       <GoalContext.Provider
         value={{
-          loanRepaymentSY,
-          setLoanRepaymentSY,
+          loanRepaymentMonths,
+          setLoanRepaymentMonths,
           price,
           setPrice,
           taxRate,

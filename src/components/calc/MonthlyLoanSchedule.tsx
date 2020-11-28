@@ -18,7 +18,7 @@ export default function MonthlyLoanSchedule({
 }: MonthlyLoanScheduleProps) {
 	const { currency, startYear, startMonth }: any = useContext(CalcContext);
 	const {
-		loanRepaymentSY,
+		loanRepaymentMonths,
 		loanPrepayments,
 		setLoanPrepayments,
 		loanIntRate,
@@ -139,16 +139,21 @@ export default function MonthlyLoanSchedule({
 	useEffect(() => {
 		let result = [];
 		let numFilterValues = [];
-		let year = loanRepaymentSY;
+		let year = startYear;
+		let startingMonth = startMonth + loanRepaymentMonths;
+		if (startingMonth > 12) {
+			year++;
+			startingMonth = startingMonth % 12;
+		}
 		let yearFilterValues = [getFilterItem(year)];
 		for (let i = 0; i < pSchedule.length; i++) {
 			numFilterValues.push(getFilterItem(i + 1));
-			if (i && (i + startMonth - 1) % 12 === 0) {
+			if (i && (i + startingMonth - 1) % 12 === 0) {
 				year++;
 				yearFilterValues.push(getFilterItem(year));
 			}
 			result.push(
-				getDataItem(i + 1, iSchedule[i] + pSchedule[i], year, startMonth)
+				getDataItem(i + 1, iSchedule[i] + pSchedule[i], year, startingMonth)
 			);
 		}
 		setYearFilterValues([...yearFilterValues]);

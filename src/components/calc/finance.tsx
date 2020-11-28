@@ -96,7 +96,8 @@ export const createAmortizingLoanCFs = (
 export const createYearlyFromMonthlyLoanCFs = (
 	iPayments: Array<number>,
 	pPayments: Array<number>,
-	startMonthNum: number
+	startMonthNum: number,
+	loanRepaymentMonths: number
 ) => {
 	if (!iPayments || !iPayments.length || !pPayments || !pPayments.length)
 		return {
@@ -109,21 +110,23 @@ export const createYearlyFromMonthlyLoanCFs = (
 		interest: yearlyIPayments,
 		principal: yearlyPPayments
 	};
-	let firstYearNum = 12 - (startMonthNum - 1);
-	if (firstYearNum >= iPayments.length) firstYearNum = iPayments.length;
+	let startingMonth = startMonthNum + loanRepaymentMonths;
+	if (startingMonth > 12) startingMonth = startingMonth % 12;
+	let numOfMonthsInFirstYear = 12 - (startingMonth - 1);
+	if (numOfMonthsInFirstYear >= iPayments.length) numOfMonthsInFirstYear = iPayments.length;
 	let yearlyICF = 0;
 	let yearlyPCF = 0;
-	for (let i = 0; i < firstYearNum; i++) {
+	for (let i = 0; i < numOfMonthsInFirstYear; i++) {
 		yearlyICF += iPayments[i];
 		yearlyPCF += pPayments[i];
 	}
 	result.interest.push(yearlyICF);
 	result.principal.push(yearlyPCF);
-	if (firstYearNum === iPayments.length) return result;
+	if (numOfMonthsInFirstYear === iPayments.length) return result;
 	yearlyICF = 0;
 	yearlyPCF = 0;
-	for (let i = 0; i + firstYearNum < iPayments.length; i++) {
-		let index = i + firstYearNum;
+	for (let i = 0; i + numOfMonthsInFirstYear < iPayments.length; i++) {
+		let index = i + numOfMonthsInFirstYear;
 		yearlyICF += iPayments[index];
 		yearlyPCF += pPayments[index];
 		if ((i + 1) % 12 === 0 || index === iPayments.length - 1) {

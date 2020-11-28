@@ -316,16 +316,9 @@ export const getLoanBorrowAmt = (
 
 export const adjustAccruedInterest = (
   loanBorrowAmt: number,
-  startYear: number,
-  repaymentSY: number,
+  repaymentMonths: number,
   loanRate: number
-) => {
-  for (let y = startYear; y < repaymentSY; y++) {
-    let intAmt = loanBorrowAmt * (loanRate / 100);
-    loanBorrowAmt += intAmt;
-  }
-  return loanBorrowAmt;
-};
+) => loanBorrowAmt *= 1 + (loanRate * repaymentMonths / 1200);
 
 export const createEduLoanDPWithSICFs = (
   price: number,
@@ -381,22 +374,24 @@ export const createLoanCFs = (
   duration: number
 ) => {
   if (!price || !duration || !iSchedule || !iSchedule.length || !pSchedule || !pSchedule.length) return [{
-    cfs: [],
+    cfs: [0],
     ptb: 0,
     itb: 0
   }];
   let cfs: Array<number> = [...loanStartingCFs];
   let totalPTaxBenefit = 0;
   let totalITaxBenefit = 0;
-  let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, goal.sm as number);
+  let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, goal.sm as number, goal.loan?.ry as number);
   let sp = 0;
   let taxBenefit = 0;
+  let loanStartingYear = goal.sy;
+  if ((goal.sm as number) + (goal.loan?.ry as number) > 12) loanStartingYear++;
   for (let year = goal.sy; year <= goal.sy + duration - 1; year++) {
     let index = year - goal.sy;
     let cf = cfs[index] ? cfs[index] : 0;
     cf -= taxBenefit;
     taxBenefit = 0;
-    let i = year - (goal.loan?.ry as number);
+    let i = year - loanStartingYear;
     if (i >= 0 && i < annualLoanPayments.interest.length) {
       let annualIPayment = annualLoanPayments.interest[i];
       let annualPPayment = annualLoanPayments.principal[i];

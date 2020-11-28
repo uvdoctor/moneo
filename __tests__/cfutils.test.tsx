@@ -85,7 +85,7 @@ describe('calculateCFs Test suite via autoCFs',()=>{
         ccy: "INR",
         chg: 3,
         cp: 5800000,
-        loan: {type: LoanType.A, rate: 4, dur: 10, per: 0, ry: 2021, pp:[], ira:[], dura:[]},
+        loan: {type: LoanType.A, rate: 4, dur: 10, per: 0, ry: 0, pp:[], ira:[]},
         ey: 2021,
         imp: goals.LMH.M,
         manual: 0,
@@ -368,10 +368,9 @@ describe('calculateCFs Test with custom payment plan suite',()=>{
 describe('adjustAccruedInterest test suite',()=>{
     test('Excel test case', () => {
         let loanAmount = 618000, 
-            startYear = 2021, 
             repayYear = 2023, 
             loanRate = 10,
-            totalAmount = cfutils.adjustAccruedInterest(loanAmount, startYear, repayYear, loanRate);
+            totalAmount = cfutils.adjustAccruedInterest(loanAmount, repayYear, loanRate);
         expect(totalAmount).toBe(747780);
     })
 })

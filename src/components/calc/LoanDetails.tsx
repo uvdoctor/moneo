@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import NumberInput from '../form/numberinput';
-import { toCurrency, toStringArr, initYearOptions, toReadableNumber } from '../utils';
+import { toCurrency, toStringArr, toReadableNumber } from '../utils';
 import SelectInput from '../form/selectinput';
 import RadialInput from '../form/radialinput';
 import Section from '../form/section';
@@ -18,7 +18,7 @@ export default function LoanDetails() {
 	const { goal, currency, startYear, endYear }: any = useContext(CalcContext);
 	const {
 		duration,
-		loanRepaymentSY,
+		loanRepaymentMonths,
 		loanMonths,
 		loanPer,
 		loanSIPayPer,
@@ -27,7 +27,7 @@ export default function LoanDetails() {
 		setLoanSIPayPer,
 		setLoanSICapitalize,
 		setLoanMonths,
-		setLoanRepaymentSY,
+		setLoanRepaymentMonths,
 		taxBenefitInt,
 		setTaxBenefitInt,
 		taxRate,
@@ -41,22 +41,8 @@ export default function LoanDetails() {
 		emi
 	}: any = useContext(GoalContext);
 
-	const getRYFirstYear = () => (goal.type === GoalType.E ? endYear + 1 : startYear);
-
-	const getRYDuration = () => (goal.type === GoalType.B && duration <= 3 ? duration - 1 : 3);
-
-	const getRYRange = () => initYearOptions(getRYFirstYear(), getRYDuration());
-
-	const [ ryOptions, setRYOptions ] = useState(getRYRange());
 	const loanLimitPer = goal.type === GoalType.E ? 100 : 90;
 	const [ totalSI, setTotalSI ] = useState<number>(0);
-
-	useEffect(
-		() => {
-			setRYOptions(getRYRange());
-		},
-		[ startYear, endYear ]
-	);
 
 	useEffect(
 		() => {
@@ -103,10 +89,15 @@ export default function LoanDetails() {
 				currency={currency}
 				footer={
 					<SelectInput
-						pre="Repay from"
-						options={ryOptions}
-						value={loanRepaymentSY}
-						changeHandler={(year: string) => setLoanRepaymentSY(parseInt(year))}
+						pre="Repayment Delay"
+						options={{
+							0: "No Delay",
+							1: "1 Month",
+							2: "2 Months",
+							3: "3 Months"
+						}}
+						value={loanRepaymentMonths}
+						changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
 					/>
 				}
 			/>
@@ -190,7 +181,7 @@ export default function LoanDetails() {
 							label="Total Interest Tax Benefit"
 							result={totalITaxBenefit}
 							currency={currency}
-							footer={`${loanRepaymentSY} to ${startYear + duration - 1}`}
+							footer={`${startYear} to ${startYear + duration - 1}`}
 						/>
 					}
 				/>

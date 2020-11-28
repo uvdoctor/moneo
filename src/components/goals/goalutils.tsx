@@ -70,15 +70,16 @@ export const getDuration = (
   endYear: number,
   manualMode: number,
   loanPer: number | null | undefined,
-  loanRY: number | null | undefined,
+  loanRM: number | null | undefined,
   loanMonths: number | null | undefined
 ) => {
   let dur = endYear - startYear + 1;
   if (sellAfter) dur = sellAfter;
-  else if (manualMode < 1 && loanPer && loanRY && loanMonths) {
-    dur = Math.round(loanRY + loanMonths / 12) - startYear;
+  else if (manualMode < 1 && loanPer && loanMonths) {
+    dur = Math.round(loanMonths / 12);
   } else dur = endYear - startYear + 1;
-  if (startMonth > 1) dur++;
+  if (startMonth > 1 || loanRM) dur++;
+  if (loanRM && startMonth + loanRM > 12) dur++;
   return dur;
 };
 
@@ -205,7 +206,7 @@ export const createNewGoalInput = (
       rate: 4,
       dur: 120,
       per: isPublicLoanCalc ? 100 : 0,
-      ry: goalType === APIt.GoalType.E ? bg.ey + 1 : bg.sy,
+      ry: 0,
       type: APIt.LoanType.A,
       pp: [],
       ira: [],

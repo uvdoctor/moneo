@@ -29,7 +29,7 @@ export default function DDLineChart({ numberOfYears, title }: DDLineChartProps) 
 			let cashFlows = cfsWithOppCost && cfsWithOppCost.length > 0 ? cfsWithOppCost : cfs; 
 			for (let i = 0; i < cashFlows.length; i++)
 				data.push({
-					year: startVal + i,
+					year: "" + (startVal + i),
 					value: cashFlows[i]
 				});
 			setData([ ...data ]);
