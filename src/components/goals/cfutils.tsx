@@ -499,9 +499,9 @@ const createManualCFs = (
   }
   if (goal.type === APIt.GoalType.B) {
     let remPayment = 0;
-    if (duration <= goal.ey - goal.sy) {
-      for (let i = duration; i < goal.ey; i++) {
-        if (targets[i]) remPayment += targets[i].val;
+    if (duration < targets.length) {
+      for (let i = duration; i < targets.length; i++) {
+        if (targets[i] && targets[i].val) remPayment += targets[i].val;
       }
     }
     let sp = calculateSellPrice(p, goal?.achg as number, duration);
