@@ -58,7 +58,7 @@ export default function AssetAllocationChart({
 		if (assetName.endsWith("ds") || assetName.endsWith("ks"))
 			return assetName.split(" ")[0];
 		else return assetName;
-	}
+	};
 
 	const initChartData = () => {
 		let data: Array<any> = [];
@@ -215,62 +215,52 @@ export default function AssetAllocationChart({
 					/>
 				</Chart>
 				<DataSwitcherList>
-					{(() => {
-						let count = 0;
+					<List
+						dataSource={data}
+						renderItem={({ name, value, children }) => {
+							const [title] = name.split(" ");
 
-						return (
-							<List
-								dataSource={data}
-								renderItem={({ name, value, children }) => {
-									const [title] = name.split(" ");
+							return (
+								<Fragment>
+									<List.Item
+										className="heading"
+										actions={[
+											toCurrency(
+												Math.round((cfs[index] * value) / 100),
+												currency
+											),
+											<Badge count={`${value}%`} />,
+										]}
+									>
+										{title}
+									</List.Item>
+									<List.Item>
+										<List
+											dataSource={children}
+											renderItem={({ name, value }: RenderItemProp) => {
+												const assetColor = getAssetColour(name);
 
-									count++;
-
-									return (
-										<Fragment>
-											<List.Item
-												className="heading"
-												actions={[
-													toCurrency(
-														Math.round((cfs[index] * value) / 100),
-														currency
-													),
-													<Badge count={`${value}%`} />,
-												]}
-											>
-												{title}
-											</List.Item>
-											<List.Item>
-												<List
-													dataSource={children}
-													renderItem={({ name, value }: RenderItemProp) => {
-														count++;
-
-														return (
-															<List.Item
-																actions={[
-																	toCurrency(
-																		Math.round((cfs[index] * value) / 100),
-																		currency
-																	),
-																	<Badge count={`${value}%`} />,
-																]}
-															>
-																<span
-																	style={{ background: colors[count - 1] }}
-																></span>
-																{name}
-															</List.Item>
-														);
-													}}
-												/>
-											</List.Item>
-										</Fragment>
-									);
-								}}
-							/>
-						);
-					})()}
+												return (
+													<List.Item
+														actions={[
+															toCurrency(
+																Math.round((cfs[index] * value) / 100),
+																currency
+															),
+															<Badge count={`${value}%`} />,
+														]}
+													>
+														<span style={{ background: assetColor }}></span>
+														{name}
+													</List.Item>
+												);
+											}}
+										/>
+									</List.Item>
+								</Fragment>
+							);
+						}}
+					/>
 				</DataSwitcherList>
 			</DataSwitcher>
 		</Fragment>
