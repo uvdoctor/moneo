@@ -25,6 +25,9 @@ export default function NumberInput(props: NumberInputProps) {
 	const [ rangeFactor, setRangeFactor ] = useState<number>(props.currency ? getRangeFactor(props.currency) : 1);
 	const [ sliderBorderColor, setSliderBorderColor ] = useState<string>(COLORS.GREEN);
 	const [ feedbackText, setFeedbackText ] = useState<string>('');
+	const [ minNum, setMinNum ] = useState<number>(props.min * rangeFactor);
+	const [ maxNum, setMaxNum ] = useState<number>(props.max * rangeFactor);
+	const [ stepNum, setStepNum ] = useState<number>(props.step * rangeFactor);
 
 	const getSliderMarks = (min: number, max: number) => {
 		let marks: any = {
@@ -39,7 +42,20 @@ export default function NumberInput(props: NumberInputProps) {
 		return marks;
 	};
 
-	const marks = getSliderMarks(props.min, props.max);
+	const [ marks, setMarks ] = useState<any>(getSliderMarks(props.min, props.max));
+
+	useEffect(
+		() => {
+			let minNum = props.min * rangeFactor;
+			let maxNum = props.max * rangeFactor;
+			let stepNum = props.step * rangeFactor;
+			setMinNum(minNum);
+			setMaxNum(maxNum);
+			setStepNum(stepNum);
+			setMarks(getSliderMarks(minNum, maxNum));
+		},
+		[ rangeFactor ]
+	);
 
 	useEffect(
 		() => {
@@ -101,9 +117,9 @@ export default function NumberInput(props: NumberInputProps) {
 							<InputNumber
 								ref={inputRef}
 								value={props.value}
-								min={props.min * rangeFactor}
-								max={props.max * rangeFactor}
-								step={props.step * rangeFactor}
+								min={minNum}
+								max={maxNum}
+								step={stepNum}
 								onChange={(val) => {
 									provideFeedback(val as number);
 									props.changeHandler(val as number);

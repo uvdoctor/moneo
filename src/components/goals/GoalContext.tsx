@@ -148,6 +148,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     getDuration(
       sellAfter,
       startYear,
+      startMonth,
       endYear,
       manualMode,
       loanPer,
@@ -273,8 +274,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         endYear - startYear,
         loanPer as number
       );
-      let loanDP: Array<number> = [];
-      loanDP.push(Math.round(loanBorrowAmt / (loanPer as number / 100)) - loanBorrowAmt);
+      let loanDP: Array<number> = [Math.round(loanBorrowAmt / (loanPer as number / 100)) - loanBorrowAmt];
       setLoanStartingCFs([...loanDP]);
     } else {
       let result = createEduLoanDPWithSICFs(
@@ -315,7 +315,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 
   useEffect(() => {
     if (sellAfter && manualMode < 1 && loanPer && loanMonths && sellAfter * 12 < loanMonths) {
-      let duration = getDuration(sellAfter, startYear, endYear, manualMode, loanPer, loanRepaymentSY, loanMonths);
+      let duration = getDuration(sellAfter, startYear, startMonth, endYear, manualMode, loanPer, loanRepaymentSY, loanMonths);
       let result = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments,
         loanIRAdjustments, loanMonths as number, duration);
       setPSchedule([...result.principal]);
@@ -362,6 +362,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     duration: number = getDuration(
       sellAfter,
       startYear,
+      startMonth,
       endYear,
       manualMode,
       loanPer,

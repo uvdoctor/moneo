@@ -81,6 +81,7 @@ export default function SetPlan() {
           getDuration(
             g.sa as number,
             g.sy,
+            g.sm as number,
             g.ey,
             g.manual,
             g.loan?.per,
