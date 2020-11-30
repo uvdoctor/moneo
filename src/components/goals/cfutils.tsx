@@ -81,12 +81,13 @@ const calculatePrice = (goal: APIt.CreateGoalInput) => {
 export const calculateCFs = (
   price: number | null,
   goal: APIt.CreateGoalInput,
-  duration: number
+  duration: number,
+  considerStartMonth: boolean = true
 ) => {
   if (price === null) price = calculatePrice(goal); //tested
   if ((goal?.manual as number) > 0)
     return createManualCFs(price, goal, duration);
-  else return createAutoCFs(price, goal, duration);
+  else return createAutoCFs(price, goal, duration, considerStartMonth);
 };
 
 export const calculateTotalCPTaxBenefit = (
@@ -228,16 +229,18 @@ export const calculateSellCFs = (
 const createAutoCFs = (
   p: number,
   goal: APIt.CreateGoalInput,
-  duration: number
+  duration: number,
+  considerStartMonth: boolean = true
 ) => {
   let cfs: Array<number> = [];
   let totalTaxBenefit = 0;
+  let startingMonth = considerStartMonth ? goal.sm as number : 1;
   if (goal.type === APIt.GoalType.B && duration) {
     cfs.push(Math.round(-p));
     for (let i = 0; i < duration; i++) {
       let netCF = calculateBuyAnnualNetCF(
         goal.sy,
-        goal.sm as number,
+        startingMonth,
         duration,
         goal.amper as number,
         goal.amsy as number,
@@ -360,7 +363,8 @@ export const createLoanCFs = (
   simpleInts: Array<number>,
   remSimpleIntAmt: number,
   goal: APIt.CreateGoalInput,
-  duration: number
+  duration: number,
+  considerStartMonth: boolean = true
 ) => {
   if (!price || !duration || !iSchedule || !iSchedule.length || !pSchedule || !pSchedule.length) return [{
     cfs: [0],
@@ -370,13 +374,13 @@ export const createLoanCFs = (
   let cfs: Array<number> = [...loanStartingCFs];
   let totalPTaxBenefit = 0;
   let totalITaxBenefit = 0;
-  let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, goal.sm as number, goal.loan?.ry as number);
-  console.log("Annual loan interest payments: ", annualLoanPayments.interest);
+  let startingMonth = considerStartMonth ? goal.sm as number : 1;
+  let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, startingMonth, goal.loan?.ry as number);
   let sp = 0;
   let taxBenefit = 0;
   let loanStartingYear = goal.sy;
   let endingYear = goal.sy + duration - 1;
-  if ((goal.sm as number) + (goal.loan?.ry as number) > 12) loanStartingYear++;
+  if (startingMonth + (goal.loan?.ry as number) > 12) loanStartingYear++;
   for (let year = goal.sy; year <= endingYear; year++) {
     let index = year - goal.sy;
     let cf = cfs[index] ? cfs[index] : 0;
@@ -419,7 +423,7 @@ export const createLoanCFs = (
     if (goal.type === APIt.GoalType.B) {
       cf -= calculateBuyAnnualNetCF(
         goal.sy,
-        goal.sm as number,
+        startingMonth,
         duration,
         goal.amper as number,
         goal.amsy as number,

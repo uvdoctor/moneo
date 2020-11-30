@@ -31,7 +31,6 @@ export default function BuyReturnResult() {
 			}
 			month += loanRepaymentMonths;
 		}
-		console.log("ISchedule length is ", iSchedule.length);
 		for (let i = 0; i < iSchedule.length; i++, month++) {
 			let monthlyPayment = iSchedule[i] + pSchedule[i];
 			loanXIRRCFs.push({
@@ -76,8 +75,6 @@ export default function BuyReturnResult() {
 			amount: Math.round(sellPrice),
 			when: new Date(startYear + sellCFIndex, endMonth, 21)
 		});
-		xirrCFs.sort((a, b) => a.when - b.when);
-		console.log('XIRR cfs are: ', xirrCFs);
 		try {
 			return xirr(xirrCFs) * 100;
 		} catch (e) {

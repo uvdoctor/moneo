@@ -246,8 +246,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   }, [startYear]);
 
   useEffect(() => {
-    if (!loanPer) setEYOptions(initYearOptions(startYear, 30));
-  }, [startYear, loanPer]);
+    if (manualMode || !loanPer) setEYOptions(initYearOptions(startYear, 30));
+  }, [startYear, manualMode, loanPer]);
 
   useEffect(() => {
     if (manualMode) return;
@@ -375,7 +375,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     let cfs: Array<number> = [];
     let g: CreateGoalInput = createNewGoal();
     let result: any = {};
-    if (!changeState && g.sm as number > 1) duration++;
     if (manualMode < 1 && loanPer) {
       let interestSchedule = iSchedule;
       let principalSchedule = pSchedule;
@@ -384,10 +383,9 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         interestSchedule = loanSchedule.interest;
         principalSchedule = loanSchedule.principal;
       }
-      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, simpleInts, remSI, g, duration);
-    } else result = calculateCFs(price, g, duration);
+      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, simpleInts, remSI, g, duration, changeState ? true : false);
+    } else result = calculateCFs(price, g, duration, changeState ? true : false);
     cfs = result.cfs;
-    console.log(cfs);
     if (changeState) {
       console.log("New cf result: ", result);
       if ((loanPer as number) && manualMode < 1 && goalType === GoalType.B)
@@ -470,12 +468,15 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     (1 + (rentChgPer as number) / 100) *
     ((rentTaxBenefit as number) > 0 ? 1 - taxRate / 100 : 1);
 
-  const initAllRentCFs = (buyCFs: Array<number>) => {
-    const firstRRIndex = startYear - (nowYear + 1);
+  const initAllRentCFs = () => {
     if (!rentAmt) return [];
-    let taxAdjustedRentAmt = rentAmt * (1 - taxRate / 100);
-    if (!buyCFs || buyCFs.length === 0) return [];
+    const firstRRIndex = startYear - (nowYear + 1);
+    let taxAdjustedRentAmt = rentTaxBenefit ? rentAmt * (1 - taxRate / 100) : rentAmt;
     let npv: Array<number> = [];
+    let buyCFsForComparison: Array<number> = [];
+    if (manualMode) wipTargets.forEach(t => buyCFsForComparison.push(t.val));
+    else if (loanPer) buyCFsForComparison = loanStartingCFs;
+    else buyCFsForComparison.push(price);
     for (let i = 0; i < analyzeFor; i++) {
       let cfs = [];
       let inv = 0;
@@ -484,17 +485,16 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         j <= i;
         j++, value = getNextTaxAdjRentAmt(value)
       ) {
-        if (buyCFs[j]) inv += buyCFs[j];
+        if (buyCFsForComparison[j]) inv += buyCFsForComparison[j];
         inv -= value;
         if (inv > 0) {
           let rate = dr === null ? rr[firstRRIndex + j] : dr;
-          rate = rate >= 0 ? rate : 3;
-          inv += inv * (rate / 100);
+          inv *= 1 + (rate / 100);
         }
-        cfs.push(-value);
+        cfs.push(-Math.round(value));
       }
-      cfs.push(inv);
-      if (cfs.length > 0) {
+      if(inv > 0) cfs.push(Math.round(inv));
+      if (cfs.length) {
         npv.push(getNPV(dr === null ? rr : dr, cfs, firstRRIndex));
       }
     }
@@ -510,24 +510,18 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       });
       results.push({
         name: "Rent",
-        values: initAllRentCFs(getBuyCFForRentAnalysis()),
+        values: initAllRentCFs(),
       });
     }
     return results;
-  };
-
-  const getBuyCFForRentAnalysis = () => {
-    let arr: Array<number> = [];
-    if (!allBuyCFs || allBuyCFs.length === 0) return arr;
-    if (manualMode < 1) arr.push(-allBuyCFs[0][0]);
-    else wipTargets.forEach((t) => arr.push(t.val));
-    return arr;
   };
 
   const initAllBuyCFs = (allBuyCFs: Array<Array<number>>) => {
     let npv: Array<number> = [];
     for (let i = 0; i < analyzeFor; i++) {
       let buyCFs = allBuyCFs[i];
+      console.log("Buy CFs for ", i);
+      console.log(buyCFs);
       if (buyCFs && buyCFs.length > 0) {
         npv.push(
           getNPV(dr === null ? rr : dr, buyCFs, startYear - (nowYear + 1))
