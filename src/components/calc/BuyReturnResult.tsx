@@ -1,15 +1,23 @@
 import React, { useContext, useEffect } from 'react';
-import xirr from "xirr";
+import xirr from 'xirr';
 import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { createYearlyFromMonthlyLoanCFs } from './finance';
-import { calculateBuyAnnualNetCF } from '../goals/cfutils';
 
 export default function BuyReturnResult() {
 	const { startYear, startMonth, cfs }: any = useContext(CalcContext);
-	const { price, sellAfter, sellPrice, loanRepaymentMonths, iSchedule, pSchedule, assetChgRate, amStartYear, amCostPer, aiStartYear, aiPer, annualReturnPer, setAnnualReturnPer, duration }: any = useContext(GoalContext);
+	const {
+		price,
+		sellAfter,
+		sellPrice,
+		loanRepaymentMonths,
+		iSchedule,
+		pSchedule,
+		annualReturnPer,
+		setAnnualReturnPer,
+	}: any = useContext(GoalContext);
 
 	const getXIRRLoanEntries = () => {
 		let loanXIRRCFs: Array<any> = [];
@@ -22,7 +30,8 @@ export default function BuyReturnResult() {
 				month -= 12;
 			}
 			month += loanRepaymentMonths;
-		};
+		}
+		console.log("ISchedule length is ", iSchedule.length);
 		for (let i = 0; i < iSchedule.length; i++, month++) {
 			let monthlyPayment = iSchedule[i] + pSchedule[i];
 			loanXIRRCFs.push({
@@ -35,58 +44,48 @@ export default function BuyReturnResult() {
 			}
 		}
 		return loanXIRRCFs;
-	}
-	
-	const getXIRRMonthlyNetExpenseEntries = (annualNetCF: number, year: number, startMonth: number, endMonth: number) => {
-		let netExpenseXIRRCFs: Array<any> = [];
-		let month = startMonth <= 1 ? 0 : startMonth - 1;
-		let monthlyCF = annualNetCF / (12 - month);
-		for (let i = month; i < endMonth; i++) {
-			netExpenseXIRRCFs.push({
-				amount: monthlyCF,
-				when: new Date(year, i, 7)
-			});
-		}
-		return netExpenseXIRRCFs;
 	};
-	
+
 	const calculateXIRR = () => {
 		if (!price || !sellPrice || !cfs) return null;
 		let xirrCFs: Array<any> = [];
 		let yearlyLoanPayments: any = {};
-		let endMonth = startMonth <= 1 ? 11 : startMonth - 1;
-		if (iSchedule && pSchedule) yearlyLoanPayments = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, startMonth, loanRepaymentMonths);
+		let endMonth = startMonth <= 1 ? 11 : startMonth - 2;
+		let sellCFIndex = sellAfter - 1;
+		if (startMonth > 1) sellCFIndex++;
+		if (iSchedule && iSchedule.length)
+			yearlyLoanPayments = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, startMonth, loanRepaymentMonths);
 		cfs.forEach((cf: number, i: number) => {
-			if (i === sellAfter - 1) {
+			if (i === sellCFIndex) {
 				cf -= sellPrice;
 			}
-			let netCF = calculateBuyAnnualNetCF(startYear, startMonth, duration, amCostPer, amStartYear, assetChgRate, i, price, aiPer, aiStartYear);
-			cf -= netCF;
-			if(netCF) xirrCFs.push(...getXIRRMonthlyNetExpenseEntries(netCF, startYear + i, startYear ? startMonth : 1, i === sellAfter - 1 ? endMonth + 1 : 12));
 			let startingYear = startYear;
-			if (startMonth + loanRepaymentMonths > 12) startingYear++;
 			if (iSchedule && iSchedule.length) {
+				if (startMonth + loanRepaymentMonths > 12) startingYear++;
 				let index = startYear + i - startingYear;
-				if (index >= 0 && yearlyLoanPayments.interest[index]) cf += yearlyLoanPayments.interest[index] + yearlyLoanPayments.principal[index];
+				if (index >= 0 && yearlyLoanPayments.interest[index])
+					cf += yearlyLoanPayments.interest[index] + yearlyLoanPayments.principal[index];
 			}
 			xirrCFs.push({
 				amount: cf,
-				when: new Date(startYear + i, startMonth <= 1 ? 0 : startMonth - 1, 1),
+				when: new Date(startYear + i, i > 0 || startMonth <= 1 ? 0 : startMonth - 1, 1)
 			});
 		});
 		if (iSchedule && iSchedule.length) xirrCFs.push(...getXIRRLoanEntries());
 		xirrCFs.push({
-				amount: Math.round(sellPrice),
-				when: new Date(startYear + sellAfter - 1, endMonth, 15),
+			amount: Math.round(sellPrice),
+			when: new Date(startYear + sellCFIndex, endMonth, 21)
 		});
+		xirrCFs.sort((a, b) => a.when - b.when);
+		console.log('XIRR cfs are: ', xirrCFs);
 		try {
 			return xirr(xirrCFs) * 100;
 		} catch (e) {
-			console.log("Error while calculating xirr: ", e);
+			console.log('Error while calculating xirr: ', e);
 			return null;
 		}
 	};
-	
+
 	useEffect(
 		() => {
 			setAnnualReturnPer(calculateXIRR());

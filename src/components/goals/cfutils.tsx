@@ -33,11 +33,11 @@ export const calculateBuyAnnualNetCF = (
   let annualNetCF = 0;
   let yearlyPrice = !index ? p : getCompoundedIncome(chgRate, p, index);
   let yearFactor = 1;
-  if (!index) yearFactor = (12 - startMonth - 1) / 12;
-  else if (index === duration - 1) yearFactor = (startMonth - 1) / 12;
-  if (startYear + index >= amStartYear)
+  if (!index) yearFactor = (12 - (startMonth - 1)) / 12;
+  else if (index === duration - 1 && startMonth > 1) yearFactor = (startMonth - 1) / 12;
+  if (amCostPer && startYear + index >= amStartYear)
     annualNetCF -= yearlyPrice * (amCostPer / 100) * yearFactor;
-  if (startYear + index >= aiSY) annualNetCF += yearlyPrice * (aiPer / 100) * yearFactor;
+  if (aiPer && startYear + index >= aiSY) annualNetCF += yearlyPrice * (aiPer / 100) * yearFactor;
   return Math.round(annualNetCF);
 };
 //Tested
@@ -47,10 +47,10 @@ export const calculateTotalAmt = (
   annualSY: number,
   price: number,
   chgRate: number,
-  duration: number
+  sellAfter: number
 ) => {
   let ta = 0;
-  for (let i = 0; i < duration; i++) {
+  for (let i = 0; i < sellAfter; i++) {
     if (startYear + i < annualSY) continue;
     let yearlyPrice = i === 0 ? price : getCompoundedIncome(chgRate, price, i);
     ta += yearlyPrice * (annualPer / 100);
@@ -61,10 +61,8 @@ export const calculateTotalAmt = (
 export const calculateSellPrice = (
   price: number,
   chgRate: number,
-  duration: number
-) => {
-  return Math.round(getCompoundedIncome(chgRate, price, duration));
-};
+  numOfYears: number
+) => Math.round(getCompoundedIncome(chgRate, price, numOfYears));
 
 const calculatePrice = (goal: APIt.CreateGoalInput) => {
   let price = 0;
@@ -223,7 +221,7 @@ export const calculateSellCFs = (
     );
     cfs.push(Math.round(netAnnualAmt));
   }
-  cfs.push(calculateSellPrice(p, goal?.achg as number, duration));
+  cfs[cfs.length - 1] = calculateSellPrice(p, goal?.achg as number, goal.sa as number);
   return cfs;
 };
 
@@ -235,43 +233,34 @@ const createAutoCFs = (
   let cfs: Array<number> = [];
   let totalTaxBenefit = 0;
   if (goal.type === APIt.GoalType.B && duration) {
-    let netAnnualAmt = calculateBuyAnnualNetCF(
-      goal.sy,
-      goal.sm as number,
-      duration,
-      goal.amper as number,
-      goal.amsy as number,
-      goal.achg as number,
-      0,
-      p,
-      goal.aiper as number,
-      goal.aisy as number
-    );
-    let v = Math.round(p - netAnnualAmt);
-    cfs.push(v ? -v : 0);
-    for (let i = 1; i < duration; i++)
-      cfs.push(
-        calculateBuyAnnualNetCF(
-          goal.sy,
-          goal.sm as number,
-          duration,
-          goal.amper as number,
-          goal.amsy as number,
-          goal.achg as number,
-          i,
-          p,
-          goal.aiper as number,
-          goal.aisy as number
-        )
+    cfs.push(Math.round(-p));
+    for (let i = 0; i < duration; i++) {
+      let netCF = calculateBuyAnnualNetCF(
+        goal.sy,
+        goal.sm as number,
+        duration,
+        goal.amper as number,
+        goal.amsy as number,
+        goal.achg as number,
+        i,
+        p,
+        goal.aiper as number,
+        goal.aisy as number
       );
-    cfs.push(calculateSellPrice(p, goal?.achg as number, duration));
+      if (cfs[i]) cfs[i] += Math.round(netCF);
+      else cfs.push(Math.round(netCF));
+    }
+    cfs[cfs.length - 1] += calculateSellPrice(p, goal?.achg as number, goal.sa as number);
     let tb = getTaxBenefit(
       p,
       isTaxCreditEligible(goal.type) ? 100 : goal.tdr,
       goal.tdl
     );
-    cfs[1] += tb;
-    totalTaxBenefit += tb;
+    if (tb) {
+      if (cfs[1]) cfs[1] += tb;
+      else cfs.push(tb);
+      totalTaxBenefit += tb;
+    }
   } else {
     let taxBenefit = 0;
     for (
@@ -382,11 +371,13 @@ export const createLoanCFs = (
   let totalPTaxBenefit = 0;
   let totalITaxBenefit = 0;
   let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, goal.sm as number, goal.loan?.ry as number);
+  console.log("Annual loan interest payments: ", annualLoanPayments.interest);
   let sp = 0;
   let taxBenefit = 0;
   let loanStartingYear = goal.sy;
+  let endingYear = goal.sy + duration - 1;
   if ((goal.sm as number) + (goal.loan?.ry as number) > 12) loanStartingYear++;
-  for (let year = goal.sy; year <= goal.sy + duration - 1; year++) {
+  for (let year = goal.sy; year <= endingYear; year++) {
     let index = year - goal.sy;
     let cf = cfs[index] ? cfs[index] : 0;
     cf -= taxBenefit;
@@ -448,7 +439,7 @@ export const createLoanCFs = (
     else cfs.push(cf ? Math.round(-cf) : 0);
   }
   if (goal.type === APIt.GoalType.B) {
-    sp = calculateSellPrice(price, goal?.achg as number, duration);
+    sp = calculateSellPrice(price, goal?.achg as number, goal.sa as number);
     cfs[cfs.length - 1] += Math.round(sp);
     if(taxBenefit) cfs.push(Math.round(taxBenefit));
   }
@@ -504,7 +495,7 @@ const createManualCFs = (
         if (targets[i] && targets[i].val) remPayment += targets[i].val;
       }
     }
-    let sp = calculateSellPrice(p, goal?.achg as number, duration);
+    let sp = calculateSellPrice(p, goal?.achg as number, goal.sa as number);
     cfs.push(Math.round(sp + taxBenefitPrev - remPayment));
     taxBenefitPrev = getTaxBenefit(
       remPayment,

@@ -16,9 +16,8 @@ export function getCompoundedRate(rate: number, years: number, frequency: number
 }
 //Tested
 
-export function getCompoundedIncome(rate: number, value: number, years: number, frequency: number = 1) {
-	return value * getCompoundedRate(rate, years, frequency);
-}
+export const getCompoundedIncome = (rate: number, value: number, years: number, frequency: number = 1) =>
+	value * getCompoundedRate(rate, years, frequency);
 //Tested
 
 export function getTotalInt(borrowAmt: number, emi: number, intRate: number, loanPaidForMonths: number) {
@@ -54,15 +53,15 @@ export const createAmortizingLoanCFs = (
 	loanPrepayments: Array<TargetInput>,
   loanIRAdjustments: Array<TargetInput>,
 	loanMonths: number,
-	duration: number
+	numOfYears: number | null
 ) => {
-	let durationMonths = duration * 12;
-	let loanDuration = loanMonths < durationMonths ? loanMonths : durationMonths;
-	if (!loanBorrowAmt || !loanDuration || !emi)
-		return {
-			interest: [],
-			principal: []
-		};
+	if (!loanBorrowAmt || !loanMonths || !emi)
+	return {
+		interest: [],
+		principal: []
+	};
+	let loanDuration = loanMonths;
+	if (numOfYears && numOfYears * 12 < loanMonths) loanDuration = numOfYears * 12;
 	let principal = loanBorrowAmt;
 	let monthlyRate = (loanIntRate as number) / 1200;
 	let miPayments: Array<number> = [];

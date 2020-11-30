@@ -52,6 +52,7 @@ export default function GoalCost() {
 					value={startMonth}
 					changeHandler={changeStartMonth}
 					options={MONTHS}
+					disabled={manualMode > 0}
 				/>
 				{!isEndYearHidden && (
 					<SelectInput

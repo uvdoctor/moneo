@@ -45,6 +45,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     setCreateNewGoalInput,
     startYear,
     startMonth,
+    changeStartMonth,
     endYear,
     setEndYear,
     changeEndYear,
@@ -231,14 +232,21 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   useEffect(() => {
     if (!sellAfter) return;
     if (!price) setSellPrice(0);
-    else setSellPrice(calculateSellPrice(price, assetChgRate as number, duration));
+    else setSellPrice(calculateSellPrice(price, assetChgRate as number, sellAfter));
   }, [price, assetChgRate, sellAfter]);
 
   useEffect(() => {
     if (startYear <= nowYear) setPriceChgRate(0);
-    if (!loanPer) setEYOptions(initYearOptions(startYear, 30));
     if ((goalType !== GoalType.B) && (isEndYearHidden || startYear > endYear || endYear - startYear > 30))
       setEndYear(startYear);
+    if (goal.type === GoalType.B) {
+      setAIStartYear(startYear);
+      setAMStartYear(startYear);
+    } 
+  }, [startYear]);
+
+  useEffect(() => {
+    if (!loanPer) setEYOptions(initYearOptions(startYear, 30));
   }, [startYear, loanPer]);
 
   useEffect(() => {
@@ -305,22 +313,12 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 
   const createLoanSchedule = () => {
     let result = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments,
-      loanIRAdjustments, loanMonths as number, duration);
+      loanIRAdjustments, loanMonths as number, sellAfter ? sellAfter : null);
     setPSchedule([...result.principal]);
     setISchedule([...result.interest]);
   }
 
-  useEffect(() => createLoanSchedule(), [emi, loanPrepayments, loanIRAdjustments]);
-
-  useEffect(() => {
-    if (sellAfter && manualMode < 1 && loanPer && loanMonths && sellAfter * 12 < loanMonths) {
-      let duration = getDuration(sellAfter, startYear, startMonth, endYear, manualMode, loanPer, loanRepaymentMonths, loanMonths);
-      let result = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments,
-        loanIRAdjustments, loanMonths as number, duration);
-      setPSchedule([...result.principal]);
-      setISchedule([...result.interest]);
-    }
-  }, [sellAfter]);
+  useEffect(() => createLoanSchedule(), [emi, loanPrepayments, loanIRAdjustments, sellAfter]);
 
   useEffect(() => {
     if (manualMode < 1) return;
@@ -377,10 +375,11 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     let cfs: Array<number> = [];
     let g: CreateGoalInput = createNewGoal();
     let result: any = {};
+    if (!changeState && g.sm as number > 1) duration++;
     if (manualMode < 1 && loanPer) {
       let interestSchedule = iSchedule;
       let principalSchedule = pSchedule;
-      if (sellAfter && duration * 12 < (loanMonths as number) && !changeState) {
+      if (sellAfter && !changeState) {
         let loanSchedule = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments, loanIRAdjustments, loanMonths as number, duration);
         interestSchedule = loanSchedule.interest;
         principalSchedule = loanSchedule.principal;
@@ -388,6 +387,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, simpleInts, remSI, g, duration);
     } else result = calculateCFs(price, g, duration);
     cfs = result.cfs;
+    console.log(cfs);
     if (changeState) {
       console.log("New cf result: ", result);
       if ((loanPer as number) && manualMode < 1 && goalType === GoalType.B)
@@ -443,7 +443,10 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   }, [cfs, impLevel]);
 
   useEffect(() => {
-    if (manualMode > 0 && endYear === startYear) setEndYear(startYear + 2);
+    if (manualMode > 0) {
+      changeStartMonth(1);
+      if (endYear === startYear) setEndYear(startYear + 2);
+    }
     else if (manualMode < 1 && !loanPer && goalType === GoalType.B)
       setEndYear(startYear);
     if (manualMode < 1 && error) setError("");
@@ -552,7 +555,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 				condition = ` until ${i} ${i === 1 ? 'Year' : 'Years'}, else ${alternative}.`;
 				break;
 			}
-		}
+    }
 		setBRAns(answer + condition);
 	};
 

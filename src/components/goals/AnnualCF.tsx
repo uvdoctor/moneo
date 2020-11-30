@@ -17,7 +17,7 @@ export default function AnnualCF({ income }: AnnualAmtProps) {
 	const { currency, startYear }: any = useContext(CalcContext);
 	const {
 		price,
-		duration,
+		sellAfter,
 		assetChgRate,
 		amCostPer,
 		aiPer,
@@ -28,16 +28,13 @@ export default function AnnualCF({ income }: AnnualAmtProps) {
 		setAMStartYear,
 		setAIStartYear
 	}: any = useContext(GoalContext);
-	const [ syOptions, setSYOptions ] = useState<object>(initYearOptions(startYear, duration - 1));
+	const [ syOptions, setSYOptions ] = useState<object>(initYearOptions(startYear, sellAfter - 1));
 	const [ totalAmt, setTotalAmt ] = useState<number>(0);
 	const title = income ? 'Rent, Dividend, etc after paying tax' : 'Fixes, Insurance, etc including tax';
+	
 	useEffect(
 		() => {
-			setSYOptions(initYearOptions(startYear, duration - 1));
-			let currStartYear = income ? aiStartYear : amStartYear;
-			if (startYear > currStartYear) {
-				income ? setAIStartYear(startYear) : setAMStartYear(startYear);
-			}
+			setSYOptions(initYearOptions(startYear, sellAfter - 1));
 		},
 		[ startYear ]
 	);
@@ -51,10 +48,10 @@ export default function AnnualCF({ income }: AnnualAmtProps) {
 					income ? aiStartYear : amStartYear,
 					price,
 					assetChgRate,
-					duration
+					sellAfter
 				)
 			),
-		[ startYear, aiPer, amCostPer, aiStartYear, amStartYear, price, assetChgRate, duration ]
+		[ startYear, aiPer, amCostPer, aiStartYear, amStartYear, price, assetChgRate, sellAfter ]
 	);
 
 	return (
@@ -83,7 +80,7 @@ export default function AnnualCF({ income }: AnnualAmtProps) {
 						result={income ? totalAmt : -totalAmt}
 						currency={currency}
 						pl
-						footer={`${income ? aiStartYear : amStartYear} to ${startYear + duration - 1}`}
+						footer={`${income ? aiStartYear : amStartYear} to ${startYear + sellAfter}`}
 					/>
 				}
 				value={income ? aiPer : amCostPer}
