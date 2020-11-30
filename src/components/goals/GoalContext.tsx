@@ -520,8 +520,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     let npv: Array<number> = [];
     for (let i = 0; i < analyzeFor; i++) {
       let buyCFs = allBuyCFs[i];
-      console.log("Buy CFs for ", i);
-      console.log(buyCFs);
       if (buyCFs && buyCFs.length > 0) {
         npv.push(
           getNPV(dr === null ? rr : dr, buyCFs, startYear - (nowYear + 1))

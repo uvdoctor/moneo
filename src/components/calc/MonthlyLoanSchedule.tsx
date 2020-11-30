@@ -159,7 +159,7 @@ export default function MonthlyLoanSchedule({
 		setYearFilterValues([...yearFilterValues]);
 		setNumFilterValues([...numFilterValues]);
 		setData([...result]);
-	}, [pSchedule]);
+	}, [pSchedule, startYear, startMonth]);
 
 	//@ts-ignore
 	const handleChange = (pagination: any, filters: any, sorters: any) => {

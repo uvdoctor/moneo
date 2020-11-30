@@ -33,7 +33,7 @@ export default function LoanScheduleChart() {
 			}
 			setData([ ...data ]);
 		},
-		[ loanRepaymentMonths, pSchedule, iSchedule ]
+		[ loanRepaymentMonths, pSchedule, iSchedule, startYear, startMonth ]
 	);
 
 	return (
