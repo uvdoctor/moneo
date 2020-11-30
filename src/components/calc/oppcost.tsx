@@ -18,8 +18,12 @@ export default function OppCost({ calculateFor }: OppCostProps) {
 	const [ oppCost, setOppCost ] = useState<number>(0);
 	const isDRNumber = dr !== null;
 	const drOptions = initOptions(1, 9);
-	const [numOfYears, setNumOfYears] = useState<number>(calculateFor && calculateFor > cfs.length ? calculateFor : cfs.length);
-	const [numOfYearsOptions, setNumOfYearsOptions] = useState<any>(initOptions(startMonth > 1 ? cfs.length - 1 : cfs.length, 20));
+	const [ numOfYears, setNumOfYears ] = useState<number>(
+		calculateFor && calculateFor > cfs.length ? calculateFor : cfs.length
+	);
+	const [ numOfYearsOptions, setNumOfYearsOptions ] = useState<any>(
+		initOptions(startMonth > 1 ? cfs.length - 1 : cfs.length, 20)
+	);
 
 	const calculateOppCost = (yearsNum: number) => {
 		let yearsForCalculation = yearsNum;
@@ -47,29 +51,30 @@ export default function OppCost({ calculateFor }: OppCostProps) {
 				oppCost *= 1 + (isDRNumber ? discountRate : discountRate[startIndex + index]) * yearFactor / 100;
 			}
 		});
-		if (goal.type !== GoalType.B) {
-			if (!isDRNumber) {
-				let year = (startYear as number) + cfs.length - 1;
-				for (
-					let i = startIndex + cfs.length - 1;
-					i < discountRate.length - (getMinRetirementDuration() + 1);
-					i++, year++
-				)
-					if (oppCost < 0) oppCost *= 1 + discountRate[i] / 100;
-			} else if (cfs.length - 1 < yearsForCalculation && oppCost < 0)
-				oppCost = getCompoundedIncome(discountRate, oppCost, yearsForCalculation - (cfs.length - 1));
-		}
+		if (!isDRNumber) {
+			let year = (startYear as number) + cfs.length - 1;
+			for (
+				let i = startIndex + cfs.length - 1;
+				i < discountRate.length - (getMinRetirementDuration() + 1);
+				i++, year++
+			)
+				if (oppCost < 0) oppCost *= 1 + discountRate[i] / 100;
+		} else if (cfs.length - 1 < yearsForCalculation && oppCost < 0)
+			oppCost = getCompoundedIncome(discountRate, oppCost, yearsForCalculation - (cfs.length - 1));
 		setOppCost(oppCost);
 	};
 
-	useEffect(() => {
-		calculateOppCost(cfs.length);
-		setNumOfYearsOptions(initOptions(startMonth > 1 ? cfs.length - 1 : cfs.length, cfs.length + 20, 1));
-	}, [cfs]);
+	useEffect(
+		() => {
+			calculateOppCost(cfs.length);
+			setNumOfYearsOptions(initOptions(startMonth > 1 ? cfs.length - 1 : cfs.length, cfs.length + 20, 1));
+		},
+		[ cfs ]
+	);
 
 	useEffect(() => calculateOppCost(numOfYears), [ dr, rr ]);
 
-	useEffect(() => calculateOppCost(calculateFor as number), [calculateFor]);
+	useEffect(() => calculateOppCost(calculateFor as number), [ calculateFor ]);
 
 	return (
 		<ItemDisplay
@@ -81,7 +86,13 @@ export default function OppCost({ calculateFor }: OppCostProps) {
 					{dr && (
 						<Fragment>
 							{` @ `}
-							<SelectInput pre="" value={dr} changeHandler={(val: string) => setDR(parseInt(val))} post="%" options={drOptions} />
+							<SelectInput
+								pre=""
+								value={dr}
+								changeHandler={(val: string) => setDR(parseInt(val))}
+								post="%"
+								options={drOptions}
+							/>
 						</Fragment>
 					)}
 				</Fragment>
@@ -91,11 +102,18 @@ export default function OppCost({ calculateFor }: OppCostProps) {
 			unit={
 				<Row align="middle">
 					{`in `}
-					{goal.type !== GoalType.FF && <SelectInput pre="" value={numOfYears} unit="Years"
-						options={numOfYearsOptions} changeHandler={(val: string) => {
-							let years = parseInt(val);
-							calculateOppCost(years);
-						}} />}
+					{goal.type !== GoalType.FF && (
+						<SelectInput
+							pre=""
+							value={numOfYears}
+							unit="Years"
+							options={numOfYearsOptions}
+							changeHandler={(val: string) => {
+								let years = parseInt(val);
+								calculateOppCost(years);
+							}}
+						/>
+					)}
 				</Row>
 			}
 			info={`You May Have ${toCurrency(Math.abs(oppCost), currency)} More in ${numOfYears} Years
