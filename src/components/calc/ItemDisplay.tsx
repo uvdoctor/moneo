@@ -1,10 +1,10 @@
 import React, { Fragment, ReactNode } from "react";
 import { toCurrency, toReadableNumber } from "../utils";
-import { Tooltip, Statistic } from "antd";
+import { Tooltip, Statistic, Row } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { COLORS } from "../../CONSTANTS";
 interface ItemDisplayProps {
-	label?: string;
+	label?: any;
 	svg?: any;
 	result: number | string;
 	noResultFormat?: boolean;
@@ -22,7 +22,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 		<Fragment>
 			<Statistic
 				title={
-					<Fragment>
+					<Row align="middle" justify="center">
 						{props.label}
 						{(props.imp || props.info) && (
 							<Fragment>
@@ -43,7 +43,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 								)}
 							</Fragment>
 						)}
-					</Fragment>
+					</Row>
 				}
 				value={props.result}
 				prefix={props.svg}

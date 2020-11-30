@@ -237,16 +237,17 @@ export const parseNumber = (str: string, currency: string | null = null) => {
   return retVal;
 };
 
-export function initYearOptions(
+export function initOptions(
   startYear: number,
   duration: number,
+  step: number = 1,
   exclusions: Array<number> = []
 ) {
   let years: any = {};
   for (
     let i = startYear;
     duration > 0 ? i <= startYear + duration : i >= startYear + duration;
-    duration > 0 ? i++ : i--
+    duration > 0 ? i+= step : i-= step
   ) {
     if (!exclusions.includes(i)) years["" + i] = "" + i;
   }

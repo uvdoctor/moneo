@@ -43,7 +43,7 @@ export default function SelectInput(props: SelectInputProps) {
 						}
 						disabled={props.disabled}
 						defaultValue={selectOptions[props.value]}
-						style={{minWidth: '80px'}}
+						style={{minWidth: '60px'}}
 					>
 						{Object.keys(selectOptions).map((key) => (
 							<Option key={key} value={key}>

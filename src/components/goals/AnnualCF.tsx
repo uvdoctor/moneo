@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import Section from '../form/section';
 import RadialInput from '../form/radialinput';
 import SelectInput from '../form/selectinput';
-import { toStringArr, initYearOptions } from '../utils';
+import { toStringArr, initOptions } from '../utils';
 import { calculateTotalAmt } from './cfutils';
 import { COLORS } from '../../CONSTANTS';
 import { GoalContext } from './GoalContext';
@@ -28,13 +28,13 @@ export default function AnnualCF({ income }: AnnualAmtProps) {
 		setAMStartYear,
 		setAIStartYear
 	}: any = useContext(GoalContext);
-	const [ syOptions, setSYOptions ] = useState<object>(initYearOptions(startYear, sellAfter - 1));
+	const [ syOptions, setSYOptions ] = useState<object>(initOptions(startYear, sellAfter - 1));
 	const [ totalAmt, setTotalAmt ] = useState<number>(0);
 	const title = income ? 'Rent, Dividend, etc after paying tax' : 'Fixes, Insurance, etc including tax';
 	
 	useEffect(
 		() => {
-			setSYOptions(initYearOptions(startYear, sellAfter - 1));
+			setSYOptions(initOptions(startYear, sellAfter - 1));
 		},
 		[ startYear ]
 	);

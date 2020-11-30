@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import Section from '../form/section';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
-import { changeSelection, initYearOptions, toStringArr } from '../utils';
+import { changeSelection, initOptions, toStringArr } from '../utils';
 import RadialInput from '../form/radialinput';
 import ItemDisplay from '../calc/ItemDisplay';
 import { calculateTotalCP, calculateTotalCPTaxBenefit } from './cfutils';
@@ -92,7 +92,7 @@ export default function CareInsurance() {
 				<SelectInput
 					info="It may be a good option to buy this insurance when You are healthier (between 60 to 65 years of age) to get lower premiums."
 					value={carePremiumSY - (endYear - PLAN_DURATION)}
-					options={initYearOptions(MAX_RETIREMENT_AGE - 15, 10)}
+					options={initOptions(MAX_RETIREMENT_AGE - 15, 10)}
 					pre="Buy Policy At Age"
 					unit="Years"
 					changeHandler={(val: string) => changeSelection(val, setCarePremiumSY, endYear - PLAN_DURATION)}
@@ -101,7 +101,7 @@ export default function CareInsurance() {
 			{carePremium && (
 				<SelectInput
 					value={carePremiumDur}
-					options={initYearOptions(1, 14)}
+					options={initOptions(1, 14)}
 					pre="Pay For"
 					unit="Years"
 					changeHandler={(val: string) => changeSelection(val, setCarePremiumDur)}

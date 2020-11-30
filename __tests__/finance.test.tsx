@@ -279,7 +279,7 @@ describe('Get NPV Suite 2 excel data', ()=>{
     
 })
 
-describe('get interest by year test suite', ()=>{
+/*describe('get interest by year test suite', ()=>{
   test('getIntAmtByYear is a number and not null', ()=> {
     let interest = finance.getIntAmtByYear(0,21,1,144);
     expect(interest).not.toBe(null);
@@ -308,4 +308,4 @@ describe('get interest by year test suite', ()=>{
     expect(interest[10]).toBe(50394.487617382976);
     expect(interest[11]).toBe(18432.46494254415);
   });
-});
+});*/

@@ -5,7 +5,7 @@ import DynamicTargetInput from '../form/DynamicTargetInput';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
-import { changeSelection, initYearOptions } from '../utils';
+import { changeSelection, initOptions } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 import { getLastPossibleFFYear } from './goalutils';
 
@@ -60,7 +60,7 @@ export default function FIBenefit() {
 					<SelectInput
 						info="When do You Plan to Receive the Benefit? Around 70 years of age is preferable for optimal benefit."
 						value={retirementIncomeSY - (endYear - PLAN_DURATION)}
-						options={initYearOptions(MAX_RETIREMENT_AGE - 5, 7)}
+						options={initOptions(MAX_RETIREMENT_AGE - 5, 7)}
 						pre="Withdrawal Age"
 						unit="Onwards"
 						changeHandler={(val: string) => {

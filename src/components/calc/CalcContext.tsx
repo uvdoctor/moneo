@@ -1,5 +1,5 @@
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
-import { initYearOptions } from '../utils';
+import { initOptions } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import TaxAdjustment from "../calc/TaxAdjustment";
 import GoalCost from "../goals/GoalCost";
@@ -75,7 +75,7 @@ function CalcContextProvider({
   const [feedbackText, setFeedbackText] = useState<string>("");
   const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
   const [stepVideoUrl, setStepVideoUrl] = useState<string>("");
-  const [eyOptions, setEYOptions] = useState(goal.type && goal.type === GoalType.FF ? initYearOptions(1960, nowYear - 15 - 1960) : initYearOptions(startYear, 30));
+  const [eyOptions, setEYOptions] = useState(goal.type && goal.type === GoalType.FF ? initOptions(1960, nowYear - 15 - 1960) : initOptions(startYear, 30));
 	const [ffResult, setFFResult] = useState<any>({});
   const [error, setError] = useState<string>("");
   const [results, setResults] = useState<Array<any>>([]);

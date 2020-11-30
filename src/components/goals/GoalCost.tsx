@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import SelectInput from '../form/selectinput';
-import { initYearOptions, MONTHS } from '../utils';
+import { initOptions, MONTHS } from '../utils';
 import Cost from './cost';
 import { Col } from 'antd';
 import { GoalContext } from './GoalContext';
@@ -26,7 +26,7 @@ export default function GoalCost() {
 	}: any = useContext(CalcContext);
 	const { ffGoalEndYear, manualMode, isEndYearHidden }: any = useContext(GoalContext);
 	const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
-	const syOptions = initYearOptions(firstStartYear, ffGoalEndYear - 20 - firstStartYear);
+	const syOptions = initOptions(firstStartYear, ffGoalEndYear - 20 - firstStartYear);
 
 	return (
 		<Col span={24}>

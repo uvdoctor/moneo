@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
 import { CreateGoalInput, GoalType, LMH, LoanType, TargetInput } from "../../api/goals";
-import { initYearOptions } from "../utils";
+import { initOptions } from "../utils";
 import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils";
 import { createAmortizingLoanCFs, getCompoundedIncome, getEmi, getNPV } from "../calc/finance";
 import { adjustAccruedInterest, calculateCFs, calculateSellPrice, createEduLoanDPWithSICFs, createLoanCFs, getLoanBorrowAmt } from "./cfutils";
@@ -246,7 +246,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   }, [startYear]);
 
   useEffect(() => {
-    if (manualMode || !loanPer) setEYOptions(initYearOptions(startYear, 30));
+    if (manualMode || !loanPer) setEYOptions(initOptions(startYear, 30));
   }, [startYear, manualMode, loanPer]);
 
   useEffect(() => {

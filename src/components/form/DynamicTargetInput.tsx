@@ -3,7 +3,7 @@ import { TargetInput } from '../../api/goals';
 import NumberInput from './numberinput';
 import SelectInput from './selectinput';
 import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { initYearOptions } from '../utils';
+import { initOptions } from '../utils';
 import { createNewTarget } from '../goals/goalutils';
 import { Col, Row } from 'antd';
 import { FIGoalContext } from '../goals/FIGoalContext';
@@ -19,7 +19,7 @@ export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProp
 		endYear
 	}: any = useContext(CalcContext)
 	const { gains, setGains, losses, setLosses }: any = useContext(FIGoalContext);
-	const [ yearOpts, setYearOpts ] = useState(initYearOptions(startYear + 1, endYear - startYear - 1));
+	const [ yearOpts, setYearOpts ] = useState(initOptions(startYear + 1, endYear - startYear - 1));
 	const tgts = lossInput ? losses : gains;
 	const setTgts = lossInput ? setLosses : setGains;
 
@@ -38,7 +38,7 @@ export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProp
 	useEffect(
 		() => {
 			filterTgts();
-			setYearOpts(initYearOptions(startYear + 1, endYear - startYear - 1));
+			setYearOpts(initOptions(startYear + 1, endYear - startYear - 1));
 		},
 		[ startYear, endYear ]
 	);
