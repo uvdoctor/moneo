@@ -41,6 +41,8 @@ type Loan {
   pp: [Target!]
   ira: [Target!]
   emi: Float
+  pmi: Float
+  peper: Int
 }
 
 type Goal @model @auth(rules: [{ allow: owner }]) {

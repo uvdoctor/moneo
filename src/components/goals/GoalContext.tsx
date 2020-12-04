@@ -113,6 +113,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [pSchedule, setPSchedule] = useState<Array<number>>([]);
   const [loanBorrowAmt, setLoanBorrowAmt] = useState<number>(0);
   const [loanStartingCFs, setLoanStartingCFs] = useState<Array<number>>([]);
+  const [loanPMI, setLoanPMI] = useState<number>(goal.loan?.pmi);
+  const [loanPMIEndPer, setLoanPMIEndPer] = useState<number>(goal.loan?.peper);
   const [emi, setEMI] = useState<number>(goal?.loan?.emi as number);
 	const [ simpleInts, setSimpleInts ] = useState<Array<number>>([]);
   const [remSI, setRemSI] = useState<number>(0);
@@ -160,7 +162,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
   const [analyzeFor, setAnalyzeFor] = useState<number>(20);
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
-
+  
   useEffect(() =>
     setDisableSubmit(name.length < 3 || !price || btnClicked),
     [name, price, btnClicked]);
@@ -694,7 +696,11 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           setAnnualReturnPer,
           loanIRAdjustments,
           setLoanIRAdjustments,
-          isEndYearHidden
+          isEndYearHidden,
+          loanPMI,
+          setLoanPMI,
+          loanPMIEndPer,
+          setLoanPMIEndPer
         }}>
         {children ? children : <CalcTemplate header={<GoalHeader />} />}
       </GoalContext.Provider>

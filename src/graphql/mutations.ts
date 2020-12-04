@@ -44,6 +44,8 @@ export const createGoal = /* GraphQL */ `
           val
         }
         emi
+        pmi
+        peper
       }
       imp
       met
@@ -113,6 +115,8 @@ export const updateGoal = /* GraphQL */ `
           val
         }
         emi
+        pmi
+        peper
       }
       imp
       met
@@ -182,6 +186,8 @@ export const deleteGoal = /* GraphQL */ `
           val
         }
         emi
+        pmi
+        peper
       }
       imp
       met
@@ -250,6 +256,8 @@ export const createMilestone = /* GraphQL */ `
           dur
           ry
           emi
+          pmi
+          peper
         }
         imp
         met
@@ -322,6 +330,8 @@ export const updateMilestone = /* GraphQL */ `
           dur
           ry
           emi
+          pmi
+          peper
         }
         imp
         met
@@ -394,6 +404,8 @@ export const deleteMilestone = /* GraphQL */ `
           dur
           ry
           emi
+          pmi
+          peper
         }
         imp
         met
