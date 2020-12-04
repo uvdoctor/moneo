@@ -22,7 +22,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 		<Fragment>
 			<Statistic
 				title={
-					<Row align="middle" justify="center">
+					<Fragment>
 						{props.label}
 						{(props.imp || props.info) && (
 							<Fragment>
@@ -43,7 +43,7 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 								)}
 							</Fragment>
 						)}
-					</Row>
+					</Fragment>
 				}
 				value={props.result}
 				prefix={props.svg}
