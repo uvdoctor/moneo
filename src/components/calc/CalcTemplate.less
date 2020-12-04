@@ -70,6 +70,20 @@ body,
 	}
 }
 
+.rec-carousel-item {
+	& .ant-select {
+		min-width: 50px;
+		font-size: 14px;
+		margin: 0 3px;
+	}
+
+	& .ant-select-selector {
+		height: 28px !important;
+		background: none !important;
+		padding: 0 4px 0 8px !important;
+	}
+}
+
 .dd-stat {
 	width: 95%;
 	min-height: 108px;
@@ -391,5 +405,11 @@ body,
 
 	.results-content {
 		padding-top: 2px;
+	}
+
+	.dd-stat {
+		& .ant-statistic-content-value {
+			font-size: 20px;
+		}
 	}
 }
