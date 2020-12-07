@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect } from "react";
-import { Button, Steps, Row, Col, Space } from "antd";
+import { Button, Steps, Row, Col, Space, Affix } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { SaveOutlined } from "@ant-design/icons";
 import { CalcContext } from "../calc/CalcContext";
@@ -110,87 +110,89 @@ export default function Input() {
 					</section>
 				</div>
 			) : (
-				<div
-					className={`calculator-options ${
-						showOptionsForm ? "show-form" : "hide-form"
-					}`}
-				>
-					<div className="overlay" />
-					<div>
-						<Row justify="space-between">
-							{inputTabs.map((tab: any, i: number) => (
-								<Col
-									key={i}
-									className={`${
-										inputTabIndex === i
-											? error
-												? "error"
-												: !isMobileDevice() || showOptionsForm
-												? "active"
+				<Affix offsetTop={0}>
+					<div
+						className={`calculator-options ${
+							showOptionsForm ? "show-form" : "hide-form"
+						}`}
+					>
+						<div className="overlay" />
+						<div>
+							<Row justify="space-between">
+								{inputTabs.map((tab: any, i: number) => (
+									<Col
+										key={i}
+										className={`${
+											inputTabIndex === i
+												? error
+													? "error"
+													: !isMobileDevice() || showOptionsForm
+													? "active"
+													: ""
 												: ""
-											: ""
-									} ${!tab.active ? "disabled" : ""}`}
-									onClick={() => {
-										if (tab.active) {
-											setOptionsVisibility(
-												isMobileDevice() && i === inputTabIndex
-													? !showOptionsForm
-													: true
-											);
-											setInputTabIndex(i);
-											if (isMobileDevice()) {
-												!showOptionsForm
-													? document.body.classList.add("no-scrollbar")
-													: document.body.classList.remove("no-scrollbar");
+										} ${!tab.active ? "disabled" : ""}`}
+										onClick={() => {
+											if (tab.active) {
+												setOptionsVisibility(
+													isMobileDevice() && i === inputTabIndex
+														? !showOptionsForm
+														: true
+												);
+												setInputTabIndex(i);
+												if (isMobileDevice()) {
+													!showOptionsForm
+														? document.body.classList.add("no-scrollbar")
+														: document.body.classList.remove("no-scrollbar");
+												}
 											}
-										}
-									}}
-								>
-									<Row justify="center">
-										<FontAwesomeIcon icon={tab.svg} />
-									</Row>
-									<Row justify="center">{tab.label}</Row>
-								</Col>
-							))}
-						</Row>
-					</div>
-					<section>
-						<Button
-							size="small"
-							type="primary"
-							className="close-btn"
-							onClick={() => {
-								setInputTabIndex(-1);
-								setOptionsVisibility(false);
-							}}
-						>
-							<CloseOutlined />
-						</Button>
-						{inputTabIndex >= 0 && inputTabs[inputTabIndex].active && (
-							<Fragment>
-								{!error && (
-									<div className="mobile-only-carousel">
-										<ResultCarousel />
-									</div>
-								)}
-								{inputTabs[inputTabIndex].content}
-							</Fragment>
-						)}
-						{!isPublicCalc && handleSubmit ? (
-							<Row justify="center">
-								<Button
-									type="primary"
-									onClick={() => handleSubmit()}
-									icon={<SaveOutlined />}
-									disabled={disableSubmit}
-									loading={disableSubmit}
-								>
-									Save
-								</Button>
+										}}
+									>
+										<Row justify="center">
+											<FontAwesomeIcon icon={tab.svg} />
+										</Row>
+										<Row justify="center">{tab.label}</Row>
+									</Col>
+								))}
 							</Row>
-						) : null}
-					</section>
-				</div>
+						</div>
+						<section>
+							<Button
+								size="small"
+								type="primary"
+								className="close-btn"
+								onClick={() => {
+									setInputTabIndex(-1);
+									setOptionsVisibility(false);
+								}}
+							>
+								<CloseOutlined />
+							</Button>
+							{inputTabIndex >= 0 && inputTabs[inputTabIndex].active && (
+								<Fragment>
+									{!error && (
+										<div className="mobile-only-carousel">
+											<ResultCarousel />
+										</div>
+									)}
+									{inputTabs[inputTabIndex].content}
+								</Fragment>
+							)}
+							{!isPublicCalc && handleSubmit ? (
+								<Row justify="center">
+									<Button
+										type="primary"
+										onClick={() => handleSubmit()}
+										icon={<SaveOutlined />}
+										disabled={disableSubmit}
+										loading={disableSubmit}
+									>
+										Save
+									</Button>
+								</Row>
+							) : null}
+						</section>
+					</div>
+				</Affix>
 			)}
 		</Fragment>
 	);
