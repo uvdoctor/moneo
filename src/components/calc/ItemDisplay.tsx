@@ -1,6 +1,6 @@
 import React, { Fragment, ReactNode } from "react";
 import { toCurrency, toReadableNumber } from "../utils";
-import { Tooltip, Statistic, Row } from "antd";
+import { Tooltip, Statistic } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { COLORS } from "../../CONSTANTS";
 interface ItemDisplayProps {

@@ -475,10 +475,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     const firstRRIndex = startYear - (nowYear + 1);
     let taxAdjustedRentAmt = rentTaxBenefit ? rentAmt * (1 - taxRate / 100) : rentAmt;
     let npv: Array<number> = [];
-    let buyCFsForComparison: Array<number> = [];
-    if (manualMode) wipTargets.forEach(t => buyCFsForComparison.push(t.val));
-    else if (loanPer) buyCFsForComparison = loanStartingCFs;
-    else buyCFsForComparison.push(price);
     for (let i = 0; i < analyzeFor; i++) {
       let cfs = [];
       let inv = 0;
@@ -487,15 +483,21 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         j <= i;
         j++, value = getNextTaxAdjRentAmt(value)
       ) {
-        if (buyCFsForComparison[j]) inv += buyCFsForComparison[j];
+        let buyCF: number = allBuyCFs[i][j];
+        if (!i) {
+          if (manualMode) buyCF = wipTargets[0] ? -wipTargets[0].val : 0;
+          else if (loanPer) buyCF = -loanStartingCFs[0];
+          else buyCF = -price;
+        }
+        if (buyCF && buyCF < 0) inv -= buyCF;
         inv -= value;
         if (inv > 0) {
           let rate = dr === null ? rr[firstRRIndex + j] : dr;
           inv *= 1 + (rate / 100);
+          if (j === i) cfs.push(Math.round(inv));
         }
-        cfs.push(-Math.round(value));
+        if(j < i || inv <= 0) cfs.push(-Math.round(value));
       }
-      if(inv > 0) cfs.push(Math.round(inv));
       if (cfs.length) {
         npv.push(getNPV(dr === null ? rr : dr, cfs, firstRRIndex));
       }
@@ -508,7 +510,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     if (allBuyCFs && allBuyCFs.length) {
       results.push({
         name: "Buy",
-        values: initAllBuyCFs(allBuyCFs),
+        values: initAllBuyCFs(),
       });
       results.push({
         name: "Rent",
@@ -518,7 +520,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     return results;
   };
 
-  const initAllBuyCFs = (allBuyCFs: Array<Array<number>>) => {
+  const initAllBuyCFs = () => {
     let npv: Array<number> = [];
     for (let i = 0; i < analyzeFor; i++) {
       let buyCFs = allBuyCFs[i];
