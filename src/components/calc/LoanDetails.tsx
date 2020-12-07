@@ -81,6 +81,7 @@ export default function LoanDetails() {
 					step={1}
 					min={0}
 					max={loanLimitPer}
+					additionalMarks={[20, 50, 70]}
 				/>
 			)}
 			<ItemDisplay

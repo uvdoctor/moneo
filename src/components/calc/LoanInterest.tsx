@@ -77,7 +77,7 @@ export default function LoanInterest() {
 					changeHandler={setLoanIntRate}
 					min={0}
 					max={25}
-					step={0.1}
+					step={0.01}
 					additionalMarks={[ 5, 10, 15, 20 ]}
 				/>
 			</Col>

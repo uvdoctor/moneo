@@ -112,6 +112,7 @@ export default function MonthlyLoanSchedule({
 		);
 		if (existingIRAdjustment) existingIRAdjustment.val = newIR;
 		else loanIRAdjustments.push(createNewTarget(installmentNum, newIR));
+		loanIRAdjustments.sort((a: TargetInput, b: TargetInput) => a.num - b.num);
 		setLoanIRAdjustments([...loanIRAdjustments]);
 	};
 
@@ -119,6 +120,11 @@ export default function MonthlyLoanSchedule({
 		let principal = loanBorrowAmt;
 		for (let i = 0; i < installmentNum; i++) principal -= pSchedule[i];
 		return principal;
+	};
+
+	const getPrevPrincipalDue = (installmentNum: number) => {
+		if (installmentNum <= 1) return loanBorrowAmt;
+		return Math.floor(getPrincipalDue(installmentNum - 1));
 	};
 
 	const getTotalInterestPaid = (installmentNum: number) => {
@@ -171,9 +177,13 @@ export default function MonthlyLoanSchedule({
 		return result ? result.val : 0;
 	};
 
-	const getIRAdjustment = (installmentNum: number) => {
-		let result = findTarget(loanIRAdjustments, installmentNum);
-		return result ? result.val : loanIntRate;
+	const getIRAdjustment = (installmentNum: number, includeSelf: boolean = true) => {
+		let result = loanIntRate;
+		loanIRAdjustments.forEach((adj: TargetInput) => {
+			if (adj.num < installmentNum || (includeSelf && adj.num === installmentNum)) result = adj.val;
+			else return result;
+		});
+		return result;
 	};
 
 	const hasAdjustmentsInLastInstallments = () => {
@@ -308,10 +318,7 @@ export default function MonthlyLoanSchedule({
 													changeLoanPrepayments(parseInt(record.num), val)
 												}
 												min={0}
-												max={
-													getPrepayment(parseInt(record.num)) +
-													getPrincipalDue(parseInt(record.num))
-												}
+												max={getPrevPrincipalDue(parseInt(record.num))}
 												step={100}
 												currency={currency}
 											/>
@@ -321,11 +328,11 @@ export default function MonthlyLoanSchedule({
 												changeHandler={(val: number) =>
 													changeLoanIRAdjustments(parseInt(record.num), val)
 												}
-												min={loanIntRate - 3 < 0 ? 0 : loanIntRate - 3}
-												max={loanIntRate + 3}
-												step={0.1}
+												min={getIRAdjustment(parseInt(record.num), false) - 3 < 0 ? 0 : getIRAdjustment(parseInt(record.num), false) - 3}
+												max={getIRAdjustment(parseInt(record.num), false) + 3}
+												step={0.01}
 												unit="%"
-												additionalMarks={[loanIntRate]}
+												additionalMarks={[getIRAdjustment(parseInt(record.num))]}
 											/>
 										</Section>
 									</Col>
