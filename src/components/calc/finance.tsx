@@ -67,7 +67,7 @@ export const createAmortizingLoanCFs = (
 	let miPayments: Array<number> = [];
 	let mpPayments: Array<number> = [];
 	let loanEmi = emi;
-  for (let i = 0; i < loanDuration && principal > 0; i++) {
+	for (let i = 0; i < loanDuration && principal > 0; i++) {
     let irAdj: TargetInput | undefined | null = findTarget(loanIRAdjustments, i + 1);
 		if (irAdj) {
 			monthlyRate = irAdj.val / 1200;
@@ -80,7 +80,7 @@ export const createAmortizingLoanCFs = (
 		if (additionalPrincipalPaid) monthlyPayment += additionalPrincipalPaid.val;
 		let principalPaid = monthlyPayment - monthlyInt;
 		principal -= principalPaid;
-		if (i === loanDuration - 1 && principal > 0) {
+		if (principal < 1 || (i === loanDuration - 1 && principal > 0)) {
 			principalPaid += principal;
 			principal = 0;
 		}
