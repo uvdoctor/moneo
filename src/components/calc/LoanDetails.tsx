@@ -183,7 +183,6 @@ export default function LoanDetails() {
 					setter={setLoanSICapitalize}
 				/>
 			)}
-			{loanBorrowAmt && <ItemDisplay label="Monthly Installment" result={emi} currency={currency} decimal={2} />}
 
 			<Collapse defaultActiveKey={[ '1' ]}>
 				<Panel header="Loan Duration" key="1">
