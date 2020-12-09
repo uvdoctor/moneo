@@ -11,9 +11,10 @@ import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
 import { GoalType } from '../../api/goals';
 import LoanInterest from './LoanInterest';
-import { Row } from 'antd';
+import { Collapse, Row } from 'antd';
 
 export default function LoanDetails() {
+	const { Panel } = Collapse;
 	const { goal, currency, startYear, endYear }: any = useContext(CalcContext);
 	const {
 		loanRepaymentMonths,
@@ -173,6 +174,38 @@ export default function LoanDetails() {
 					<ItemDisplay label="Monthly Installment" result={emi} currency={currency} decimal={2} />
 				</Row>
 			)}
+			{goal.type === GoalType.E &&
+			!Number.isNaN(loanSIPayPer) && //@ts-ignore
+			loanSIPayPer < 100 && (
+				<HSwitch
+					rightText={`Pay ${toCurrency(remSI, currency)} in ${endYear + 1} Grace Period`}
+					value={loanSICapitalize as number}
+					setter={setLoanSICapitalize}
+				/>
+			)}
+			{loanBorrowAmt && <ItemDisplay label="Monthly Installment" result={emi} currency={currency} decimal={2} />}
+
+			<Collapse defaultActiveKey={[ '1' ]}>
+				<Panel header="Loan Duration" key="1">
+					{loanBorrowAmt && (
+						<NumberInput
+							pre="Loan Duration"
+							unit={`Months (${toReadableNumber(loanMonths / 12, 2)} Years)`}
+							value={loanMonths}
+							changeHandler={setLoanMonths}
+							min={6}
+							max={360}
+							step={1}
+							additionalMarks={[ 60, 120, 180, 240 ]}
+						/>
+					)}
+				</Panel>
+				<Panel header="Monthly Installment" key="2">
+					{loanBorrowAmt && (
+						<ItemDisplay label="Monthly Installment" result={emi} currency={currency} decimal={2} />
+					)}
+				</Panel>
+			</Collapse>
 		</Section>
 	);
 }
