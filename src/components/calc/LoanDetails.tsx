@@ -1,20 +1,21 @@
-import React, { useState, useEffect, useContext } from 'react';
-import NumberInput from '../form/numberinput';
-import { toCurrency, toStringArr, toReadableNumber } from '../utils';
-import SelectInput from '../form/selectinput';
-import RadialInput from '../form/radialinput';
-import Section from '../form/section';
-import ItemDisplay from './ItemDisplay';
-import { COLORS } from '../../CONSTANTS';
-import { isTaxCreditEligible } from '../goals/goalutils';
-import HSwitch from '../HSwitch';
-import { GoalContext } from '../goals/GoalContext';
-import { CalcContext } from './CalcContext';
-import { GoalType } from '../../api/goals';
-import LoanInterest from './LoanInterest';
-import { Row } from 'antd';
+import React, { useState, useEffect, useContext } from "react";
+import NumberInput from "../form/numberinput";
+import { toCurrency, toStringArr, toReadableNumber } from "../utils";
+import SelectInput from "../form/selectinput";
+import RadialInput from "../form/radialinput";
+import Section from "../form/section";
+import ItemDisplay from "./ItemDisplay";
+import { COLORS } from "../../CONSTANTS";
+import { isTaxCreditEligible } from "../goals/goalutils";
+import HSwitch from "../HSwitch";
+import { GoalContext } from "../goals/GoalContext";
+import { CalcContext } from "./CalcContext";
+import { GoalType } from "../../api/goals";
+import LoanInterest from "./LoanInterest";
+import { Row, Collapse } from "antd";
 
 export default function LoanDetails() {
+	const { Panel } = Collapse;
 	const { goal, currency, startYear, endYear }: any = useContext(CalcContext);
 	const {
 		duration,
@@ -38,27 +39,22 @@ export default function LoanDetails() {
 		simpleInts,
 		remSI,
 		loanBorrowAmt,
-		emi
+		emi,
 	}: any = useContext(GoalContext);
 
 	const loanLimitPer = goal.type === GoalType.E ? 100 : 90;
-	const [ totalSI, setTotalSI ] = useState<number>(0);
+	const [totalSI, setTotalSI] = useState<number>(0);
 
-	useEffect(
-		() => {
-			if (goal.type === GoalType.E && taxRate && taxBenefitInt < 1) setTaxBenefitInt(1);
-		},
-		[ taxRate ]
-	);
+	useEffect(() => {
+		if (goal.type === GoalType.E && taxRate && taxBenefitInt < 1)
+			setTaxBenefitInt(1);
+	}, [taxRate]);
 
-	useEffect(
-		() => {
-			let totalSI = 0;
-			simpleInts.forEach((int: number) => (totalSI += int));
-			setTotalSI(totalSI);
-		},
-		[ simpleInts ]
-	);
+	useEffect(() => {
+		let totalSI = 0;
+		simpleInts.forEach((int: number) => (totalSI += int));
+		setTotalSI(totalSI);
+	}, [simpleInts]);
 
 	return (
 		<Section
@@ -66,7 +62,11 @@ export default function LoanDetails() {
 			videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
 			toggle={
 				!isTaxCreditEligible(goal.type) && taxRate ? (
-					<HSwitch rightText="Claim Interest Tax Deduction" value={taxBenefitInt} setter={setTaxBenefitInt} />
+					<HSwitch
+						rightText="Claim Interest Tax Deduction"
+						value={taxBenefitInt}
+						setter={setTaxBenefitInt}
+					/>
 				) : (
 					<div />
 				)
@@ -95,10 +95,12 @@ export default function LoanDetails() {
 							0: "No Delay",
 							1: "1 Month",
 							2: "2 Months",
-							3: "3 Months"
+							3: "3 Months",
 						}}
 						value={loanRepaymentMonths}
-						changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
+						changeHandler={(months: string) =>
+							setLoanRepaymentMonths(parseInt(months))
+						}
 					/>
 				}
 			/>
@@ -111,12 +113,11 @@ export default function LoanDetails() {
 					min={6}
 					max={360}
 					step={1}
-					additionalMarks={[ 60, 120, 180, 240 ]}
+					additionalMarks={[60, 120, 180, 240]}
 				/>
 			)}
 			{loanBorrowAmt && <LoanInterest />}
-			{loanBorrowAmt &&
-			goal.type === GoalType.E && (
+			{loanBorrowAmt && goal.type === GoalType.E && (
 				<RadialInput
 					unit="%"
 					data={toStringArr(0, 100, 5)}
@@ -134,8 +135,9 @@ export default function LoanDetails() {
 							result={totalSI}
 							currency={currency}
 							info={simpleInts.map((int: number, i: number) => (
-								<p key={'int' + i}>
-									Monthly {toCurrency(Math.round(int / 12), currency)} in {startYear + i}
+								<p key={"int" + i}>
+									Monthly {toCurrency(Math.round(int / 12), currency)} in{" "}
+									{startYear + i}
 								</p>
 							))}
 							footer={`${startYear} to ${endYear}`}
@@ -155,43 +157,75 @@ export default function LoanDetails() {
 				/>
 			)}
 			{loanBorrowAmt &&
-			goal.type === GoalType.E &&
-			!Number.isNaN(loanSIPayPer) && //@ts-ignore
-			loanSIPayPer < 100 && (
-				<HSwitch
-					rightText={`Pay ${toCurrency(remSI, currency)} in ${endYear + 1} Grace Period`}
-					value={loanSICapitalize as number}
-					setter={setLoanSICapitalize}
-				/>
-			)}
+				goal.type === GoalType.E &&
+				!Number.isNaN(loanSIPayPer) && //@ts-ignore
+				loanSIPayPer < 100 && (
+					<HSwitch
+						rightText={`Pay ${toCurrency(remSI, currency)} in ${
+							endYear + 1
+						} Grace Period`}
+						value={loanSICapitalize as number}
+						setter={setLoanSICapitalize}
+					/>
+				)}
 			{loanBorrowAmt &&
-			taxRate &&
-			taxBenefitInt &&
-			!isTaxCreditEligible(goal.type) && (
-				<NumberInput
-					pre="Max Interest"
-					post="Deduction"
-					value={maxTaxDeductionInt}
-					changeHandler={setMaxTaxDeductionInt}
+				taxRate &&
+				taxBenefitInt &&
+				!isTaxCreditEligible(goal.type) && (
+					<NumberInput
+						pre="Max Interest"
+						post="Deduction"
+						value={maxTaxDeductionInt}
+						changeHandler={setMaxTaxDeductionInt}
+						currency={currency}
+						min={0}
+						max={30000}
+						step={1000}
+						note={
+							<ItemDisplay
+								label="Total Interest Tax Benefit"
+								result={totalITaxBenefit}
+								currency={currency}
+								footer={`${startYear} to ${startYear + duration - 1}`}
+							/>
+						}
+					/>
+				)}
+			{loanBorrowAmt && (
+				<ItemDisplay
+					label="Monthly Installment"
+					result={emi}
 					currency={currency}
-					min={0}
-					max={30000}
-					step={1000}
-					note={
-						<ItemDisplay
-							label="Total Interest Tax Benefit"
-							result={totalITaxBenefit}
-							currency={currency}
-							footer={`${startYear} to ${startYear + duration - 1}`}
-						/>
-					}
+					decimal={2}
 				/>
 			)}
-			{loanBorrowAmt && (
-				<Row align="middle" justify="center">
-					<ItemDisplay label="Monthly Installment" result={emi} currency={currency} decimal={2} />
-				</Row>
-			)}
+
+			<Collapse defaultActiveKey={["1"]}>
+				<Panel header="Loan Duration" key="1">
+					{loanBorrowAmt && (
+						<NumberInput
+							pre="Loan Duration"
+							unit={`Months (${toReadableNumber(loanMonths / 12, 2)} Years)`}
+							value={loanMonths}
+							changeHandler={setLoanMonths}
+							min={6}
+							max={360}
+							step={1}
+							additionalMarks={[60, 120, 180, 240]}
+						/>
+					)}
+				</Panel>
+				<Panel header="Monthly Installment" key="2">
+					{loanBorrowAmt && (
+						<ItemDisplay
+							label="Monthly Installment"
+							result={emi}
+							currency={currency}
+							decimal={2}
+						/>
+					)}
+				</Panel>
+			</Collapse>
 		</Section>
 	);
 }
