@@ -1,6 +1,6 @@
 import React, { ReactNode, Fragment } from "react";
 import { getCurrencyList } from "../utils";
-import { Tooltip, Select, Row, Col } from "antd";
+import { Tooltip, Select } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 
 interface SelectInputProps {
