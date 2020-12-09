@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import NumberInput from '../form/numberinput';
-import { toCurrency, toStringArr, toReadableNumber } from '../utils';
+import { toCurrency, toStringArr, toReadableNumber, initOptions } from '../utils';
 import SelectInput from '../form/selectinput';
 import RadialInput from '../form/radialinput';
 import Section from '../form/section';
 import ItemDisplay from './ItemDisplay';
 import { COLORS } from '../../CONSTANTS';
-import { isTaxCreditEligible } from '../goals/goalutils';
 import HSwitch from '../HSwitch';
 import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
@@ -17,7 +16,6 @@ import { Row } from 'antd';
 export default function LoanDetails() {
 	const { goal, currency, startYear, endYear }: any = useContext(CalcContext);
 	const {
-		duration,
 		loanRepaymentMonths,
 		loanMonths,
 		loanPer,
@@ -28,28 +26,19 @@ export default function LoanDetails() {
 		setLoanSICapitalize,
 		setLoanMonths,
 		setLoanRepaymentMonths,
-		taxBenefitInt,
-		setTaxBenefitInt,
-		taxRate,
-		maxTaxDeductionInt,
-		setMaxTaxDeductionInt,
-		totalITaxBenefit,
 		isEndYearHidden,
 		simpleInts,
 		remSI,
 		loanBorrowAmt,
-		emi
+		emi,
+		loanPMI,
+		setLoanPMI,
+		loanPMIEndPer,
+		setLoanPMIEndPer
 	}: any = useContext(GoalContext);
 
 	const loanLimitPer = goal.type === GoalType.E ? 100 : 90;
 	const [ totalSI, setTotalSI ] = useState<number>(0);
-
-	useEffect(
-		() => {
-			if (goal.type === GoalType.E && taxRate && taxBenefitInt < 1) setTaxBenefitInt(1);
-		},
-		[ taxRate ]
-	);
 
 	useEffect(
 		() => {
@@ -61,17 +50,7 @@ export default function LoanDetails() {
 	);
 
 	return (
-		<Section
-			title="Loan Details"
-			videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}
-			toggle={
-				!isTaxCreditEligible(goal.type) && taxRate ? (
-					<HSwitch rightText="Claim Interest Tax Deduction" value={taxBenefitInt} setter={setTaxBenefitInt} />
-				) : (
-					<div />
-				)
-			}
-		>
+		<Section title="Loan Details" videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}>
 			{!isEndYearHidden && (
 				<NumberInput
 					unit="%"
@@ -81,7 +60,7 @@ export default function LoanDetails() {
 					step={1}
 					min={0}
 					max={loanLimitPer}
-					additionalMarks={[20, 50, 70]}
+					additionalMarks={[ 20, 50, 70 ]}
 				/>
 			)}
 			<ItemDisplay
@@ -92,16 +71,41 @@ export default function LoanDetails() {
 					<SelectInput
 						pre="Repayment Delay"
 						options={{
-							0: "No Delay",
-							1: "1 Month",
-							2: "2 Months",
-							3: "3 Months"
+							0: 'No Delay',
+							1: '1 Month',
+							2: '2 Months',
+							3: '3 Months'
 						}}
 						value={loanRepaymentMonths}
 						changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
 					/>
 				}
 			/>
+			{loanBorrowAmt &&
+			loanPer > 80 && (
+				<NumberInput
+					currency={currency}
+					pre="Monthly Insurance for Repayment Protection"
+					value={loanPMI}
+					changeHandler={setLoanPMI}
+					min={0}
+					max={Math.round(emi * 0.1)}
+					step={1}
+					note={
+						loanPMI ? (
+							<SelectInput
+								pre="Ends when Outstanding Principal is"
+								value={loanPMIEndPer}
+								changeHandler={setLoanPMIEndPer}
+								options={initOptions(75, 10)}
+								unit="%"
+							/>
+						) : (
+							<div />
+						)
+					}
+				/>
+			)}
 			{loanBorrowAmt && (
 				<NumberInput
 					pre="Loan Duration"
@@ -162,29 +166,6 @@ export default function LoanDetails() {
 					rightText={`Pay ${toCurrency(remSI, currency)} in ${endYear + 1} Grace Period`}
 					value={loanSICapitalize as number}
 					setter={setLoanSICapitalize}
-				/>
-			)}
-			{loanBorrowAmt &&
-			taxRate &&
-			taxBenefitInt &&
-			!isTaxCreditEligible(goal.type) && (
-				<NumberInput
-					pre="Max Interest"
-					post="Deduction"
-					value={maxTaxDeductionInt}
-					changeHandler={setMaxTaxDeductionInt}
-					currency={currency}
-					min={0}
-					max={30000}
-					step={1000}
-					note={
-						<ItemDisplay
-							label="Total Interest Tax Benefit"
-							result={totalITaxBenefit}
-							currency={currency}
-							footer={`${startYear} to ${startYear + duration - 1}`}
-						/>
-					}
 				/>
 			)}
 			{loanBorrowAmt && (

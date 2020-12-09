@@ -443,7 +443,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   }, [cfs, impLevel]);
 
   useEffect(() => {
-    if (manualMode > 0) {
+    if (manualMode) {
       changeStartMonth(1);
       if (endYear === startYear) setEndYear(startYear + 2);
     }
@@ -459,7 +459,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       }
     } else {
       for (let i = 1; i < inputTabs.length; i++) {
-        if(manualMode < 1 || !(goal.type === GoalType.B && i === 3)) inputTabs[i].active = true;
+        if(manualMode < 1 || !(goal.type === GoalType.B && i === 2)) inputTabs[i].active = true;
       }
     }
     setInputTabs([...inputTabs]);

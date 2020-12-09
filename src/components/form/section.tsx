@@ -46,7 +46,7 @@ export default function Section(props: SectionProps) {
 							<Col span={24}>{child}</Col>
 							<Col className="fields-divider" span={24} />
 						</Col>
-					) : null
+					) : <div />
 				)
 			)}
 			{props.footer && (

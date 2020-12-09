@@ -210,7 +210,8 @@ export const createNewGoalInput = (
       type: APIt.LoanType.A,
       pp: [],
       ira: [],
-      emi: 0
+      pmi: 0,
+      peper: 80
     };
   }
   if (goalType === APIt.GoalType.B) {
