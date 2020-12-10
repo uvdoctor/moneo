@@ -84,28 +84,32 @@ export default function LoanDetails() {
 			/>
 			{loanBorrowAmt &&
 			loanPer > 80 && (
-				<NumberInput
-					currency={currency}
-					pre="Monthly Insurance for Repayment Protection"
-					value={loanPMI}
-					changeHandler={setLoanPMI}
-					min={0}
-					max={Math.round(emi * 0.1)}
-					step={1}
-					note={
-						loanPMI ? (
-							<SelectInput
-								pre="Ends when Outstanding Principal is"
-								value={loanPMIEndPer}
-								changeHandler={setLoanPMIEndPer}
-								options={initOptions(75, 10)}
-								unit="%"
-							/>
-						) : (
-							<div />
-						)
-					}
-				/>
+				<Collapse defaultActiveKey={[ '1' ]}>
+					<Panel header="Insurance for Repayment Protection" key="1">
+						<NumberInput
+							currency={currency}
+							pre="Monthly Payment"
+							value={loanPMI}
+							changeHandler={setLoanPMI}
+							min={0}
+							max={Math.round(emi * 0.1)}
+							step={1}
+							note={
+								loanPMI ? (
+									<SelectInput
+										pre="Ends when Outstanding Principal is"
+										value={loanPMIEndPer}
+										changeHandler={setLoanPMIEndPer}
+										options={initOptions(75, 10)}
+										unit="%"
+									/>
+								) : (
+									<div />
+								)
+							}
+						/>
+					</Panel>
+				</Collapse>
 			)}
 			{loanBorrowAmt && (
 				<NumberInput
@@ -122,42 +126,35 @@ export default function LoanDetails() {
 			{loanBorrowAmt && <LoanInterest />}
 			{loanBorrowAmt &&
 			goal.type === GoalType.E && (
-				<RadialInput
-					unit="%"
-					data={toStringArr(0, 100, 5)}
-					value={loanSIPayPer as number}
-					changeHandler={setLoanSIPayPer}
-					step={5}
-					labelBottom
-					colorFrom={COLORS.RED}
-					colorTo={COLORS.GREEN}
-					pre="Pay While Studying"
-					label="of Interest"
-					post={
-						<ItemDisplay
-							label="Total Simple Interest"
-							result={totalSI}
-							currency={currency}
-							info={simpleInts.map((int: number, i: number) => (
-								<p key={'int' + i}>
-									Monthly {toCurrency(Math.round(int / 12), currency)} in {startYear + i}
-								</p>
-							))}
-							footer={`${startYear} to ${endYear}`}
-						/>
-						/*!!loanSIPayPer && (
-							<Collapse defaultActiveKey={[ '0' ]} ghost>
-								<Panel key="1" header="Monthly Simple Interest">
-									{simpleInts.map((int: number, i: number) => (
+				<Collapse defaultActiveKey={[ '1' ]}>
+					<Panel header="Pay While Studying" key="1">
+						<RadialInput
+							unit="%"
+							data={toStringArr(0, 100, 5)}
+							value={loanSIPayPer as number}
+							changeHandler={setLoanSIPayPer}
+							step={5}
+							labelBottom
+							colorFrom={COLORS.RED}
+							colorTo={COLORS.GREEN}
+							pre=""
+							label="of Interest"
+							post={
+								<ItemDisplay
+									label="Total Simple Interest"
+									result={totalSI}
+									currency={currency}
+									info={simpleInts.map((int: number, i: number) => (
 										<p key={'int' + i}>
 											Monthly {toCurrency(Math.round(int / 12), currency)} in {startYear + i}
 										</p>
 									))}
-								</Panel>
-							</Collapse>
-						)*/
-					}
-				/>
+									footer={`${startYear} to ${endYear}`}
+								/>
+							}
+						/>
+					</Panel>
+				</Collapse>
 			)}
 			{loanBorrowAmt &&
 			goal.type === GoalType.E &&
@@ -183,28 +180,6 @@ export default function LoanDetails() {
 					setter={setLoanSICapitalize}
 				/>
 			)}
-
-			<Collapse defaultActiveKey={[ '1' ]}>
-				<Panel header="Loan Duration" key="1">
-					{loanBorrowAmt && (
-						<NumberInput
-							pre="Loan Duration"
-							unit={`Months (${toReadableNumber(loanMonths / 12, 2)} Years)`}
-							value={loanMonths}
-							changeHandler={setLoanMonths}
-							min={6}
-							max={360}
-							step={1}
-							additionalMarks={[ 60, 120, 180, 240 ]}
-						/>
-					)}
-				</Panel>
-				<Panel header="Monthly Installment" key="2">
-					{loanBorrowAmt && (
-						<ItemDisplay label="Monthly Installment" result={emi} currency={currency} decimal={2} />
-					)}
-				</Panel>
-			</Collapse>
 		</Section>
 	);
 }
