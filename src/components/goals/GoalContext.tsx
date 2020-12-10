@@ -143,7 +143,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [rentChgPer, setRentChgPer] = useState<number | null | undefined>(
     goal?.rachg
   );
-  const [ brAns, setBRAns ] = useState<string>('');
+  const [ brAns, setBRAns ] = useState<any>('');
   const [wipTargets, setWIPTargets] = useState<Array<TargetInput>>(
     goal?.tgts as Array<TargetInput>
   );
@@ -543,26 +543,33 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     return npv;
   };
 
-  const findAnswer = (data: Array<any>) => {
-		let answer = '';
-		let condition = '';
-		let buyValues = data[0].values;
-		let rentValues = data[1].values;
-		if (buyValues[0] < rentValues[0]) {
-			answer += 'Rent';
-		} else if (buyValues[0] > rentValues[0]) answer += 'Buy';
-		else if (buyValues[0] === rentValues[0]) answer += 'Both cost similar.';
-		for (let i = 1; i < buyValues.length; i++) {
-			let alternative = '';
-			if (buyValues[i] < rentValues[i]) alternative += 'Rent';
-			else if (buyValues[i] > rentValues[i]) alternative += 'Buy';
-			else if (buyValues[i] === rentValues[i]) alternative += 'Both';
-			if (!answer.startsWith(alternative)) {
-				condition = ` until ${i} ${i === 1 ? 'Year' : 'Years'}, else ${alternative}.`;
-				break;
-			}
+  const getAns = (buyNPV: number, rentNPV: number) => buyNPV > rentNPV ? 'Buy' : 'Rent';
+
+  const identifyCrossOvers = (buyValues: Array<number>, rentValues: Array<number>, initialAns: string) => {
+    let crossOvers: Array<number> = [];
+    let ans = initialAns;
+    for (let i = 0; i < rentValues.length; i++) {
+      let result = getAns(buyValues[i], rentValues[i]);
+      if (ans !== result) {
+        crossOvers.push(i);
+        ans = result;
+      }
     }
-		setBRAns(answer + condition);
+    return crossOvers;
+  };
+
+  const getAlternativeAns = (ans: string) => ans === 'Rent' ? 'Buy' : 'Rent';
+
+  const findAnswer = (data: Array<any>) => {
+    let ans = getAns(data[0].values[0], data[1].values[0]);
+    let co: Array<number> = identifyCrossOvers(data[0].values, data[1].values, ans);
+    if (co.length) {
+      const altAns = getAlternativeAns(ans);
+      ans = co.length === 1 ?
+        `1 to ${co[0]} Years: ${ans}, else ${altAns}.`
+        : `${co[0] + 1} to ${co[1]} Years: ${altAns}, else ${ans}.`;
+    }
+    setBRAns(ans);
 	};
 
   useEffect(() => {

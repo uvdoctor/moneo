@@ -40,6 +40,8 @@ export default function BuyRentChart() {
 		[ brChartData ]
 	);
 
+	const getAns = (buyVal: number, rentVal: number) => (buyVal > rentVal ? 'Buy' : 'Rent');
+
 	return (
 		<Fragment>
 			<Row align="middle" className="chart-options-row" justify="center">
@@ -68,14 +70,20 @@ export default function BuyRentChart() {
 					xAxis={getCommonXAxis('Number of Years')}
 					legend={{ position: 'top-center' }}
 					tooltip={{
-						fields: ['years', 'name', 'value'],
+						fields: [ 'years', 'name', 'value' ],
 						showTitle: false,
 						//@ts-ignore
 						formatter: (years: number, name: string, value: number) => {
+							const isAns =
+								name === getAns(brChartData[0].values[years - 1], brChartData[1].values[years - 1]);
+							const valueStr = `${value > 0 ? 'Gain' : 'Loss'} of ${toCurrency(
+								Math.abs(value),
+								currency
+							)} over ${years} Year${years > 1 ? 's' : ''}`;
 							return {
-								name: name,
-								value: `${value > 0 ? 'Gain' : 'Loss'} of ${toCurrency(Math.abs(value), currency)} over ${years} Year${years > 1 ? 's':''}`
-							}
+								name: isAns ? `<b>${name}</b>` : name,
+								value: isAns ? `<b>${valueStr}</b>` : valueStr
+							};
 						}
 					}}
 				>

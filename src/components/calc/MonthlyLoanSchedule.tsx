@@ -320,7 +320,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 								</Col>
 								{isEditable && (
 									<Col className="configurations" lg={12}>
-										<Section title="Adjust Loan Details">
+										<Section title="Adjust Loan Schedule">
 											<NumberInput
 												pre="Additional Principal Payment"
 												value={getPrepayment(parseInt(record.num))}
