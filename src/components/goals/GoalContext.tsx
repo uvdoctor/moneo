@@ -319,6 +319,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       loanIRAdjustments, loanMonths as number, sellAfter ? sellAfter : null, loanPMI as number, loanPMIEndPer as number);
     setPSchedule([...result.principal]);
     setISchedule([...result.interest]);
+    setInsSchedule([...result.insurance]);
   }
 
   useEffect(() => createLoanSchedule(), [emi, loanPrepayments, loanIRAdjustments, sellAfter]);
