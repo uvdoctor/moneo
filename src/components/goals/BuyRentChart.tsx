@@ -1,7 +1,7 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
-import { buildYearsArray, toCurrency } from '../utils';
+import { toCurrency } from '../utils';
 import { GoalContext } from './GoalContext';
 import { Col, Row } from 'antd';
 import { CalcContext } from '../calc/CalcContext';
@@ -13,13 +13,13 @@ const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: f
 export default function BuyRentChart() {
 	const { currency }: any = useContext(CalcContext);
 	const { brChartData, analyzeFor, setAnalyzeFor }: any = useContext(GoalContext);
-	const [ stackedData, setStackedData ] = useState<Array<any>>(buildYearsArray(1, brChartData[0].values.length));
+	const [ stackedData, setStackedData ] = useState<Array<any>>([]);
 
 	useEffect(
 		() => {
 			if (!brChartData || !brChartData.length) return;
 			let chartData: Array<any> = [];
-			if (brChartData[0].values.length === 0) {
+			if (!brChartData[0].values.length) {
 				setStackedData([ ...chartData ]);
 				return;
 			}
