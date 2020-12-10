@@ -315,7 +315,22 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   useEffect(() => setEMI(getEmi(loanBorrowAmt, loanIntRate as number, loanMonths as number))
   , [loanBorrowAmt, loanIntRate, loanMonths]);
 
+  const disableLoanChart = () => {
+    if(resultTabs[1].active) {
+      resultTabs[1].active = false;
+      setResultTabs([...resultTabs]);
+      if (resultTabIndex === 1) setResultTabIndex(0);
+    }
+  }
+
   const createLoanSchedule = () => {
+    if (!emi) {
+      setPSchedule([...[]]);
+      setInsSchedule([...[]]);
+      setISchedule([...[]]);
+      disableLoanChart();
+      return;
+    }
     let result = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments,
       loanIRAdjustments, loanMonths as number, sellAfter ? sellAfter : null, loanPMI as number, loanPMIEndPer as number);
     setPSchedule([...result.principal]);
@@ -332,11 +347,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     if (!p) setError('Please enter a valid custom payment plan');
     else setError('');
     setPrice(Math.round(p));
-    if (isLoanEligible(goal.type) && resultTabs[1].active) {
-      resultTabs[1].active = false;
-      setResultTabs([...resultTabs]);
-      if (resultTabIndex === 1) setResultTabIndex(0);
-    }
+    if (isLoanEligible(goal.type)) disableLoanChart();
   }, [wipTargets, manualMode]);
 
 	const initTargets = () => {
