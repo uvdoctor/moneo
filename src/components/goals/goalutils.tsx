@@ -71,13 +71,16 @@ export const getDuration = (
   manualMode: number,
   loanPer: number | null | undefined,
   loanRM: number | null | undefined,
-  loanMonths: number | null | undefined
+  loanMonths: number | null | undefined,
+  isEduLoan: boolean = false
 ) => {
   let dur = endYear - startYear + 1;
   if (sellAfter) dur = sellAfter;
   else if (manualMode < 1 && loanPer && loanMonths) {
-    dur = Math.round(loanMonths / 12);
-  } else dur = endYear - startYear + 1;
+    let loanYears = Math.round(loanMonths / 12);
+    if (isEduLoan) dur += loanYears;
+    else dur = loanYears;
+  };
   if (startMonth > 1 || loanRM) dur++;
   if (loanRM && startMonth + loanRM > 12) dur++;
   return dur;
@@ -226,7 +229,7 @@ export const createNewGoalInput = (
     bg.rachg = 5;
   } else if (goalType === APIt.GoalType.E) {
     bg.btr = 100;
-    bg.tbr = 1;
+    bg.tbr = 0;
     bg.achg = 0;
   }
   return bg;

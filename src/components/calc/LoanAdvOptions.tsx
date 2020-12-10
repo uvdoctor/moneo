@@ -1,12 +1,11 @@
-import { Collapse } from 'antd';
-import React, { useContext, useEffect, useState } from 'react';
+import { Col, Collapse, Row } from 'antd';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { GoalType } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
 import NumberInput from '../form/numberinput';
 import RadialInput from '../form/radialinput';
 import SelectInput from '../form/selectinput';
 import { GoalContext } from '../goals/GoalContext';
-import HSwitch from '../HSwitch';
 import { initOptions, toCurrency, toStringArr } from '../utils';
 import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
@@ -17,16 +16,18 @@ export default function LoanAdvOptions() {
 	const {
 		loanPer,
 		loanSIPayPer,
-		loanSICapitalize,
+		loanSIGPP,
 		setLoanSIPayPer,
-		setLoanSICapitalize,
+		setLoanSIGPP,
 		simpleInts,
-		remSI,
+		capSI,
 		emi,
 		loanPMI,
 		setLoanPMI,
 		loanPMIEndPer,
-		setLoanPMIEndPer
+		setLoanPMIEndPer,
+		loanGracePeriod,
+		setLoanGracePeriod
 	}: any = useContext(GoalContext);
 	const [ totalSI, setTotalSI ] = useState<number>(0);
 	const [ pmiMax, setPMIMax ] = useState<number>(Math.round(emi * 0.05));
@@ -77,41 +78,66 @@ export default function LoanAdvOptions() {
 					</Panel>
 				)
 			) : (
-				<Panel header="Pay While Studying" key="1">
-					<RadialInput
-						unit="%"
-						data={toStringArr(0, 100, 5)}
-						value={loanSIPayPer as number}
-						changeHandler={setLoanSIPayPer}
-						step={5}
-						labelBottom
-						colorFrom={COLORS.RED}
-						colorTo={COLORS.GREEN}
-						pre=""
-						label="of Interest"
-						post={
-							<ItemDisplay
-								label="Total Simple Interest"
-								result={totalSI}
-								currency={currency}
-								info={simpleInts.map((int: number, i: number) => (
-									<p key={'int' + i}>
-										Monthly {toCurrency(Math.round(int / 12), currency)} in {startYear + i}
-									</p>
-								))}
-								footer={`${startYear} to ${endYear}`}
-							/>
-						}
-					/>
-					{!Number.isNaN(loanSIPayPer) && //@ts-ignore
-					loanSIPayPer < 100 && (
-						<HSwitch
-							rightText={`Pay ${toCurrency(remSI, currency)} in ${endYear + 1} Grace Period`}
-							value={loanSICapitalize as number}
-							setter={setLoanSICapitalize}
+				<Fragment>
+					<Panel header="Pay While Studying" key="1">
+						<RadialInput
+							unit="%"
+							data={toStringArr(0, 100, 5)}
+							value={loanSIPayPer as number}
+							changeHandler={setLoanSIPayPer}
+							step={5}
+							labelBottom
+							colorFrom={COLORS.RED}
+							colorTo={COLORS.GREEN}
+							pre=""
+							label="Interest"
+							post={
+								<ItemDisplay
+									label="Total Simple Interest"
+									result={totalSI}
+									currency={currency}
+									info={simpleInts.map((int: number, i: number) => (
+										<p key={'int' + i}>
+											Monthly {toCurrency(Math.round(int / 12), currency)} in {startYear + i}
+										</p>
+									))}
+									footer={`${startYear} to ${endYear}`}
+								/>
+							}
 						/>
-					)}
-				</Panel>
+					</Panel>
+					<Panel header="Grace Period" key="2">
+						<Row>
+							<Col span={24}>
+								<SelectInput
+									pre="Duration"
+									value={loanGracePeriod}
+									changeHandler={(val: string) => setLoanGracePeriod(parseInt(val))}
+									unit="Months"
+									options={initOptions(0, 6)}
+								/>
+							</Col>
+						</Row>
+						{!Number.isNaN(loanSIPayPer) && //@ts-ignore
+						loanSIPayPer < 100 &&
+						loanGracePeriod ? (
+							<Row>
+								<Col className="fields-divider" span={24} />
+								<Col span={24}>
+									<NumberInput
+										pre="Pay Remaining Simple Interest"
+										value={loanSIGPP as number}
+										changeHandler={setLoanSIGPP}
+										min={0}
+										max={loanSIGPP + capSI}
+										step={1}
+										currency={currency}
+									/>
+								</Col>
+							</Row>
+						) : null}
+					</Panel>
+				</Fragment>
 			)}
 		</Collapse>
 	);

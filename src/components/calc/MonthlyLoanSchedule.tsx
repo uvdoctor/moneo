@@ -1,6 +1,6 @@
 import { Col, Row, Table } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { TargetInput } from '../../api/goals';
+import { GoalType, TargetInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import { GoalContext } from '../goals/GoalContext';
@@ -14,7 +14,7 @@ interface MonthlyLoanScheduleProps {
 }
 
 export default function MonthlyLoanSchedule({ editable }: MonthlyLoanScheduleProps) {
-	const { currency, startYear, startMonth }: any = useContext(CalcContext);
+	const { goal, currency, startYear, endYear, startMonth }: any = useContext(CalcContext);
 	const {
 		loanRepaymentMonths,
 		loanPrepayments,
@@ -146,7 +146,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		() => {
 			let result = [];
 			let numFilterValues = [];
-			let year = startYear;
+			let year = goal.type === GoalType.E ? endYear + 1 : startYear;
 			let startingMonth = startMonth + loanRepaymentMonths;
 			if (startingMonth > 12) {
 				year++;

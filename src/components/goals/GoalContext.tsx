@@ -84,7 +84,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [loanSIPayPer, setLoanSIPayPer] = useState<number | undefined | null>(
     goal.btr
   );
-  const [loanSICapitalize, setLoanSICapitalize] = useState<
+  const [loanSIGPP, setLoanSIGPP] = useState<
     number | undefined | null
     >(goal.tbr);
  	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal.loan.type);
@@ -159,6 +159,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       loanPer,
       loanRepaymentMonths,
       loanMonths,
+      goal.type === GoalType.E
     )
   );
   const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
@@ -216,7 +217,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       bg.rachg = rentChgPer;
     } else if (goalType === GoalType.E) {
       bg.btr = loanSIPayPer;
-      bg.tbr = loanSICapitalize;
+      bg.tbr = loanSIGPP;
       bg.achg = loanGracePeriod;
     }
     return bg;
@@ -296,7 +297,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         endYear,
         loanIntRate as number,
         loanSIPayPer as number,
-        loanSICapitalize as number < 1
+        loanSIGPP as number
       );
       setLoanStartingCFs([...result.cfs]);
       loanBorrowAmt = result.borrowAmt;
@@ -310,7 +311,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       loanIntRate as number
     );
     setLoanBorrowAmt(loanBorrowAmt);
-  }, [price, manualMode, loanPer, loanIntRate, loanSIPayPer, loanSICapitalize, loanRepaymentMonths, startYear, endYear]);
+  }, [price, manualMode, loanPer, loanIntRate, loanSIPayPer, loanSIGPP, loanRepaymentMonths, startYear, endYear]);
 
   useEffect(() => setEMI(getEmi(loanBorrowAmt, loanIntRate as number, loanMonths as number))
   , [loanBorrowAmt, loanIntRate, loanMonths]);
@@ -380,7 +381,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       manualMode,
       loanPer,
       loanRepaymentMonths,
-      loanMonths
+      loanMonths,
+      goal.type === GoalType.E
     ),
     changeState: boolean = true
   ) => {
@@ -657,8 +659,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           setTotalITaxBenefit,
           loanSIPayPer,
           setLoanSIPayPer,
-          loanSICapitalize,
-          setLoanSICapitalize,
+          loanSIGPP,
+          setLoanSIGPP,
           taxBenefitInt,
           setTaxBenefitInt,
           sellAfter,
@@ -734,7 +736,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           loanPMI,
           setLoanPMI,
           loanPMIEndPer,
-          setLoanPMIEndPer
+          setLoanPMIEndPer,
         }}>
         {children ? children : <CalcTemplate header={<GoalHeader />} />}
       </GoalContext.Provider>

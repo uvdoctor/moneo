@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useState } from 'react';
 import NumberInput from '../form/numberinput';
-import { toReadableNumber } from '../utils';
+import { toCurrency, toReadableNumber } from '../utils';
 import SelectInput from '../form/selectinput';
 import Section from '../form/section';
 import ItemDisplay from './ItemDisplay';
@@ -9,16 +9,17 @@ import { CalcContext } from './CalcContext';
 import { GoalType } from '../../api/goals';
 import LoanInterest from './LoanInterest';
 import LoanAdvOptions from './LoanAdvOptions';
-import { Button, Modal } from 'antd';
+import { Button, Col, Modal, Row } from 'antd';
 import MonthlyLoanSchedule from './MonthlyLoanSchedule';
 import Draggable from 'react-draggable';
 
 export default function LoanDetails() {
-	const { fsb, goal, currency }: any = useContext(CalcContext);
+	const { fsb, goal, currency, isPublicCalc }: any = useContext(CalcContext);
 	const {
 		loanRepaymentMonths,
 		loanMonths,
 		loanPer,
+		price,
 		setLoanPer,
 		setLoanMonths,
 		setLoanRepaymentMonths,
@@ -27,7 +28,10 @@ export default function LoanDetails() {
 		emi
 	}: any = useContext(GoalContext);
 
-	const loanLimitPer = goal.type === GoalType.E ? 100 : 90;
+	const loanMinLimitPer = goal.type === GoalType.E && isPublicCalc ? 10 : 0;
+
+	const loanMaxLimitPer = goal.type === GoalType.E ? 100 : 90;
+
 	const [ loanScheduleModal, setLoanScheduleModal ] = useState<boolean>(false);
 
 	const showLoanSchedule = () => setLoanScheduleModal(true);
@@ -39,34 +43,16 @@ export default function LoanDetails() {
 			<Section title="Loan Details" videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}>
 				{!isEndYearHidden && (
 					<NumberInput
-						unit="%"
-						pre="Cost % to be Borrowed"
+						unit={`% (${toCurrency(Math.round(loanPer * price / 100), currency)})`}
+						pre="Loan Amount"
 						value={loanPer}
 						changeHandler={setLoanPer}
 						step={1}
-						min={0}
-						max={loanLimitPer}
+						min={loanMinLimitPer}
+						max={loanMaxLimitPer}
 						additionalMarks={[ 20, 50, 70 ]}
 					/>
 				)}
-				<ItemDisplay
-					label="Loan Amount"
-					result={loanBorrowAmt}
-					currency={currency}
-					footer={
-						<SelectInput
-							pre="Repayment Delay"
-							options={{
-								0: 'No Delay',
-								1: '1 Month',
-								2: '2 Months',
-								3: '3 Months'
-							}}
-							value={loanRepaymentMonths}
-							changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
-						/>
-					}
-				/>
 				{loanBorrowAmt && (
 					<NumberInput
 						pre="Loan Duration"
@@ -80,19 +66,43 @@ export default function LoanDetails() {
 					/>
 				)}
 				{loanBorrowAmt && <LoanInterest />}
-				{loanBorrowAmt && (
-					<ItemDisplay
-						label="Monthly Installment"
-						result={emi}
-						currency={currency}
-						decimal={2}
-						footer={
-							<Button type="link" onClick={showLoanSchedule}>
-								Adjust Loan Schedule
-							</Button>
-						}
-					/>
-				)}
+				<Row justify="space-between">
+					<Col>
+						<ItemDisplay
+							label="Loan Principal"
+							result={loanBorrowAmt}
+							currency={currency}
+							footer={
+								<SelectInput
+									pre="Delay"
+									options={{
+										0: 'None',
+										1: '1 Month',
+										2: '2 Months',
+										3: '3 Months'
+									}}
+									value={loanRepaymentMonths}
+									changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
+								/>
+							}
+						/>
+					</Col>
+					{loanBorrowAmt && (
+						<Col>
+							<ItemDisplay
+								label="Monthly Installment"
+								result={emi}
+								currency={currency}
+								decimal={2}
+								footer={
+									<Button type="link" onClick={showLoanSchedule}>
+										Adjust Schedule
+									</Button>
+								}
+							/>
+						</Col>
+					)}
+				</Row>
 				{emi && <LoanAdvOptions />}
 			</Section>
 			{loanScheduleModal && (

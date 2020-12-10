@@ -320,7 +320,7 @@ export const createEduLoanDPWithSICFs = (
   endYear: number,
   intRate: number,
   intPer: number,
-  capitalizeRem: boolean = false
+  siGPP: number
 ) => {
   let result: Array<number> = [];
   let totalLoanPrincipal = 0;
@@ -336,10 +336,13 @@ export const createEduLoanDPWithSICFs = (
     result.push(Math.round(dp + interestPaid));
     ints.push(interestPaid);
     remIntAmt += totalIntDue - interestPaid;
-    if (y === endYear && capitalizeRem) {
-      totalLoanPrincipal += remIntAmt;
-      capIntAmt = remIntAmt;
-      remIntAmt = 0;
+    if (remIntAmt && y === endYear && siGPP) {
+      remIntAmt -= siGPP;
+      if (remIntAmt > 0) {
+        totalLoanPrincipal += remIntAmt;
+        capIntAmt = remIntAmt;
+        remIntAmt = 0;
+      }
     }
   }
   return {
@@ -379,7 +382,7 @@ export const createLoanCFs = (
   let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, insSchedule, startingMonth, goal.loan?.ry as number);
   let sp = 0;
   let taxBenefit = 0;
-  let loanStartingYear = goal.sy;
+  let loanStartingYear = goal.type === APIt.GoalType.E ? goal.ey + 1 : goal.sy;
   let endingYear = goal.sy + duration - 1;
   if (startingMonth + (goal.loan?.ry as number) > 12) loanStartingYear++;
   for (let year = goal.sy; year <= endingYear; year++) {

@@ -47,7 +47,7 @@ export default function TaxAdjustment() {
 					changeHandler={setTaxRate}
 				/>
 			)}
-			{(isTaxCreditEligible(goal.type) || taxRate) && (
+			{(isTaxCreditEligible(goal.type) || taxRate) && goal.type !== GoalType.E && (
 				<NumberInput
 					info={`Maximum Yearly Income Tax ${isTaxCreditEligible(goal.type)
 						? 'Credit'
@@ -73,7 +73,7 @@ export default function TaxAdjustment() {
 					}
 				/>
 			)}
-			{!isTaxCreditEligible(goal.type) &&
+			{!isTaxCreditEligible(goal.type) && goal.type !== GoalType.E &&
 			taxRate &&
 			loanBorrowAmt && (
 				<HSwitch rightText="Claim Loan Interest Tax Deduction" value={taxBenefitInt} setter={setTaxBenefitInt} />
