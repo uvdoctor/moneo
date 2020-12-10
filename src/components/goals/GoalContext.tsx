@@ -580,8 +580,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       setResultTabs([...resultTabs]);
     } else if (!brAns && resultTabs[index].active) {
       resultTabs[index].active = false;
-      setResultTabs([...resultTabs]);
       if (resultTabIndex === index) setResultTabIndex(0);
+      setResultTabs([...resultTabs]);
     }
   }, [brAns]);
 
