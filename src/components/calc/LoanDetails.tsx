@@ -1,54 +1,30 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import NumberInput from '../form/numberinput';
-import { toCurrency, toStringArr, toReadableNumber, initOptions } from '../utils';
+import { toReadableNumber } from '../utils';
 import SelectInput from '../form/selectinput';
-import RadialInput from '../form/radialinput';
 import Section from '../form/section';
 import ItemDisplay from './ItemDisplay';
-import { COLORS } from '../../CONSTANTS';
-import HSwitch from '../HSwitch';
 import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
 import { GoalType } from '../../api/goals';
 import LoanInterest from './LoanInterest';
-import { Collapse } from 'antd';
+import LoanAdvOptions from './LoanAdvOptions';
 
 export default function LoanDetails() {
-	const { Panel } = Collapse;
-	const { goal, currency, startYear, endYear }: any = useContext(CalcContext);
+	const { goal, currency }: any = useContext(CalcContext);
 	const {
 		loanRepaymentMonths,
 		loanMonths,
 		loanPer,
-		loanSIPayPer,
-		loanSICapitalize,
 		setLoanPer,
-		setLoanSIPayPer,
-		setLoanSICapitalize,
 		setLoanMonths,
 		setLoanRepaymentMonths,
 		isEndYearHidden,
-		simpleInts,
-		remSI,
 		loanBorrowAmt,
 		emi,
-		loanPMI,
-		setLoanPMI,
-		loanPMIEndPer,
-		setLoanPMIEndPer
 	}: any = useContext(GoalContext);
 
 	const loanLimitPer = goal.type === GoalType.E ? 100 : 90;
-	const [ totalSI, setTotalSI ] = useState<number>(0);
-
-	useEffect(
-		() => {
-			let totalSI = 0;
-			simpleInts.forEach((int: number) => (totalSI += int));
-			setTotalSI(totalSI);
-		},
-		[ simpleInts ]
-	);
 
 	return (
 		<Section title="Loan Details" videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}>
@@ -96,74 +72,7 @@ export default function LoanDetails() {
 			)}
 			{loanBorrowAmt && <LoanInterest />}
 			{loanBorrowAmt && <ItemDisplay label="Monthly Installment" result={emi} currency={currency} decimal={2} />}
-			{emi && (
-				<Collapse defaultActiveKey={[ '1' ]}>
-					{goal.type !== GoalType.E ? (
-						loanPer > 80 && (
-							<Panel header="Insurance for Repayment Protection" key="1">
-								<NumberInput
-									currency={currency}
-									pre="Monthly Payment"
-									value={loanPMI}
-									changeHandler={setLoanPMI}
-									min={0}
-									max={Math.round(emi * 0.1)}
-									step={1}
-									note={
-										loanPMI ? (
-											<SelectInput
-												pre="Ends when Principal Due is"
-												value={loanPMIEndPer}
-												changeHandler={setLoanPMIEndPer}
-												options={initOptions(75, 10)}
-												unit="%"
-											/>
-										) : (
-											<div />
-										)
-									}
-								/>
-							</Panel>
-						)
-					) : (
-						<Panel header="Pay While Studying" key="1">
-							<RadialInput
-								unit="%"
-								data={toStringArr(0, 100, 5)}
-								value={loanSIPayPer as number}
-								changeHandler={setLoanSIPayPer}
-								step={5}
-								labelBottom
-								colorFrom={COLORS.RED}
-								colorTo={COLORS.GREEN}
-								pre=""
-								label="of Interest"
-								post={
-									<ItemDisplay
-										label="Total Simple Interest"
-										result={totalSI}
-										currency={currency}
-										info={simpleInts.map((int: number, i: number) => (
-											<p key={'int' + i}>
-												Monthly {toCurrency(Math.round(int / 12), currency)} in {startYear + i}
-											</p>
-										))}
-										footer={`${startYear} to ${endYear}`}
-									/>
-								}
-							/>
-							{!Number.isNaN(loanSIPayPer) && //@ts-ignore
-							loanSIPayPer < 100 && (
-								<HSwitch
-									rightText={`Pay ${toCurrency(remSI, currency)} in ${endYear + 1} Grace Period`}
-									value={loanSICapitalize as number}
-									setter={setLoanSICapitalize}
-								/>
-							)}
-						</Panel>
-					)}
-				</Collapse>
-			)}
+			{emi && <LoanAdvOptions />}
 		</Section>
 	);
 }

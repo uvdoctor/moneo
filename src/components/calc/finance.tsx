@@ -62,7 +62,7 @@ export const createAmortizingLoanCFs = (
 		interest: [],
 		principal: [],
 		insurance: []
-	};
+		};
 	let loanDuration = loanMonths;
 	if (numOfYears && numOfYears * 12 < loanMonths) loanDuration = numOfYears * 12;
 	let principal = loanBorrowAmt;
@@ -71,7 +71,7 @@ export const createAmortizingLoanCFs = (
 	let mpPayments: Array<number> = [];
 	let insPayments: Array<number> = [];
 	let loanEmi = emi;
-	let loanPMIEndAmt = loanBorrowAmt * loanPMIEndPer;
+	let loanPMIEndAmt = loanBorrowAmt * (loanPMIEndPer / 100);
 	for (let i = 0; i < loanDuration && principal > 0; i++) {
 		if (loanPMI && loanPMIEndAmt < principal) insPayments.push(loanPMI);
     let irAdj: TargetInput | undefined | null = findTarget(loanIRAdjustments, i + 1);
@@ -106,7 +106,7 @@ export const createYearlyFromMonthlyLoanCFs = (
 	startMonthNum: number,
 	loanRepaymentMonths: number
 ) => {
-	if (!iPayments || !iPayments.length || !pPayments || !pPayments.length)
+	if (!iPayments || !iPayments.length)
 		return {
 			interest: [],
 			principal: [],

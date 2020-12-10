@@ -318,11 +318,11 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     let result = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments,
       loanIRAdjustments, loanMonths as number, sellAfter ? sellAfter : null, loanPMI as number, loanPMIEndPer as number);
     setPSchedule([...result.principal]);
-    setISchedule([...result.interest]);
     setInsSchedule([...result.insurance]);
+    setISchedule([...result.interest]);
   }
 
-  useEffect(() => createLoanSchedule(), [emi, loanPrepayments, loanIRAdjustments, sellAfter]);
+  useEffect(() => createLoanSchedule(), [emi, loanPrepayments, loanIRAdjustments, sellAfter, loanPMI, loanPMIEndPer]);
 
   useEffect(() => {
     if (manualMode < 1) return;
@@ -431,7 +431,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     aiPer,
     aiStartYear,
     iSchedule,
-    pSchedule
   ]);
 
   useEffect(() => {

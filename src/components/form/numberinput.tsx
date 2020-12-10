@@ -54,7 +54,7 @@ export default function NumberInput(props: NumberInputProps) {
 			setStepNum(stepNum);
 			setMarks(getSliderMarks(minNum, maxNum));
 		},
-		[ rangeFactor ]
+		[ rangeFactor, props.min, props.max ]
 	);
 
 	useEffect(
