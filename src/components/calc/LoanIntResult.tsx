@@ -5,11 +5,12 @@ import ItemDisplay from './ItemDisplay';
 
 export default function LoanIntResult() {
 	const { currency }: any = useContext(CalcContext);
-	const { totalIntAmt }: any = useContext(GoalContext);
+	const { totalIntAmt, totalInsAmt }: any = useContext(GoalContext);
 
 	return totalIntAmt ? (
-		<ItemDisplay label={`Total Loan Interest`} result={totalIntAmt} currency={currency} />
+		<ItemDisplay label={`Total Loan Cost`} result={totalIntAmt + totalInsAmt} currency={currency}
+		info="Includes loan interest and any insurance paid to protect repayment." />
 	) : (
-		<ItemDisplay label={`Total Loan Interest`} result="No Loan." />
+		<ItemDisplay label={`Total Loan Cost`} result="No Loan." />
 	);
 }

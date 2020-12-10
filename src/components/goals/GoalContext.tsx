@@ -93,7 +93,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     >(goal.achg);
   const [loanPrepayments, setLoanPrepayments] = useState<Array<TargetInput>>(goal?.loan?.pp as Array<TargetInput>);
   const [loanIRAdjustments, setLoanIRAdjustments] = useState<Array<TargetInput>>(goal?.loan?.ira as Array<TargetInput>);
-  const [ totalIntAmt, setTotalIntAmt ] = useState<number>(0);
+  const [totalIntAmt, setTotalIntAmt] = useState<number>(0);
+  const [ totalInsAmt, setTotalInsAmt ] = useState<number>(0);
   const [startingPrice, setStartingPrice] = useState<number>(
     goal?.cp as number
   );
@@ -412,6 +413,12 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 	}, [iSchedule, simpleInts, remSI, capSI]);
 
   useEffect(() => {
+    let totalInsAmt = 0;
+    insSchedule.forEach((ins: number) => totalInsAmt += ins);
+    setTotalInsAmt(Math.round(totalInsAmt));
+  }, [insSchedule]);
+
+  useEffect(() => {
     if (!allInputDone && inputTabIndex < 2) return;
     clearTimeout(timer);
     setTimer(setTimeout(() => calculateYearlyCFs(), 300));
@@ -688,6 +695,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           ffGoalEndYear,
           totalIntAmt,
           setTotalIntAmt,
+          totalInsAmt,
+          setTotalInsAmt,
           isLoanMandatory,
           emi,
           setEMI,

@@ -12,13 +12,20 @@ export default function LoanScheduleChart() {
 	const { currency, startYear, startMonth }: any = useContext(CalcContext);
 	const { pSchedule, iSchedule, insSchedule, loanRepaymentMonths }: any = useContext(GoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
+	const [ hasMonthlyInsurance, setHasMonthlyInsurance ] = useState<boolean>(false);
 
-	const hasNonZeroValue = (insPayments: Array<number>) => {
-		for (let p of insPayments) {
-			if (p) return true;
-		}
-		return false;
-	};
+	useEffect(
+		() => {
+			for (let p of insSchedule) {
+				if (p) {
+					setHasMonthlyInsurance(true);
+					return;
+				}
+			}
+			setHasMonthlyInsurance(false);
+		},
+		[ insSchedule ]
+	);
 
 	useEffect(
 		() => {
@@ -31,7 +38,6 @@ export default function LoanScheduleChart() {
 				loanRepaymentMonths
 			);
 			let startingYear = startYear;
-			let includeInsurance = hasNonZeroValue(yearlyLoanCFs.insurance);
 			if (loanRepaymentMonths && startMonth + loanRepaymentMonths > 12) startingYear++;
 			for (let year = startingYear; year < startingYear + yearlyLoanCFs.principal.length; year++) {
 				let index = year - startingYear;
@@ -45,11 +51,11 @@ export default function LoanScheduleChart() {
 					year: year,
 					value: yearlyLoanCFs.interest[index]
 				});
-				if (includeInsurance) {
+				if (hasMonthlyInsurance) {
 					data.push({
 						name: 'Insurance',
 						year: year,
-						value: yearlyLoanCFs.insurance[index] ? yearlyLoanCFs[index] : 0
+						value: yearlyLoanCFs.insurance[index] ? yearlyLoanCFs.insurance[index] : 0
 					});
 				}
 			}
