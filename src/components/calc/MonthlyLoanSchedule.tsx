@@ -139,6 +139,9 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 
 	const getRemMonths = (installmentNum: number) => iSchedule.length - installmentNum;
 
+	const getMonthlyInsAmt = (installmentNum: number) =>
+		insSchedule[installmentNum - 1] ? insSchedule[installmentNum - 1] : 0;
+
 	useEffect(
 		() => {
 			let result = [];
@@ -272,7 +275,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 												decimal={2}
 											/>
 										</Col>
-										{hasMonthlyInsurance && (
+										{hasMonthlyInsurance && getMonthlyInsAmt(parseInt(record.num)) ? (
 											<Col
 												xs={24}
 												sm={12}
@@ -282,11 +285,11 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 											>
 												<ItemDisplay
 													label="Repayment Insurance"
-													result={getTotalPrincipalPaid(parseInt(record.num))}
+													result={getMonthlyInsAmt(parseInt(record.num))}
 													currency={currency}
 												/>
 											</Col>
-										)}
+										) : null}
 										<Col
 											xs={24}
 											sm={12}

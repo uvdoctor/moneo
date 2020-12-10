@@ -50,7 +50,9 @@ export default function Section(props: SectionProps) {
 						child ? (
 							<Col span={24} key={'section' + i}>
 								<Col span={24}>{child}</Col>
-								{!child.type.name.endsWith('Options') && <Col className="fields-divider" span={24} />}
+								{(!child.type.name || !child.type.name.endsWith('Options')) && (
+									<Col className="fields-divider" span={24} />
+								)}
 							</Col>
 						) : (
 							<div />
