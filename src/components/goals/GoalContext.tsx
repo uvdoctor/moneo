@@ -566,7 +566,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     if (co.length) {
       const altAns = getAlternativeAns(ans);
       ans = co.length === 1 ?
-        `1 to ${co[0]} Years: ${ans}, else ${altAns}.`
+        `Up to ${co[0]} Year${co[0] > 1 ? 's' : ''}: ${ans}, else ${altAns}.`
         : `${co[0] + 1} to ${co[1]} Years: ${altAns}, else ${ans}.`;
     }
     setBRAns(ans);
@@ -594,8 +594,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         findAnswer(data);
       }
     } else {
-        setBRChartData([...[]]);
-        setBRAns("")
+      setBRChartData([...[]]);
+      setBRAns("");
     }
   }, [taxRate, rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs, dr]);
 

@@ -33,7 +33,7 @@ export default function Result() {
 				<Tabs
 					className="dd-chart"
 					onTabClick={(key: string) => setResultTabIndex(parseInt(key))}
-					defaultActiveKey={resultTabIndex}
+					activeKey={"" + resultTabIndex}
 					type="card"
 					tabBarExtraContent={
 						<div className="fullScreen-icon" onClick={toggle}>
@@ -47,7 +47,7 @@ export default function Result() {
 				>
 					{resultTabs.map((tab: any, i: number) => (
 						<TabPane
-							key={i}
+							key={"" + i}
 							disabled={!tab.active}
 							className={!tab.active ? "disabled" : ""}
 							tab={
