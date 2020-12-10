@@ -15,6 +15,7 @@ export default function BuyReturnResult() {
 		loanRepaymentMonths,
 		iSchedule,
 		pSchedule,
+		insSchedule,
 		annualReturnPer,
 		setAnnualReturnPer,
 	}: any = useContext(GoalContext);
@@ -53,7 +54,7 @@ export default function BuyReturnResult() {
 		let sellCFIndex = sellAfter - 1;
 		if (startMonth > 1) sellCFIndex++;
 		if (iSchedule && iSchedule.length)
-			yearlyLoanPayments = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, startMonth, loanRepaymentMonths);
+			yearlyLoanPayments = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, insSchedule, startMonth, loanRepaymentMonths);
 		cfs.forEach((cf: number, i: number) => {
 			if (i === sellCFIndex) {
 				cf -= sellPrice;

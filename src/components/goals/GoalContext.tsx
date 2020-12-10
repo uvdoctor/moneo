@@ -111,6 +111,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   );
   const [iSchedule, setISchedule] = useState<Array<number>>([]);
   const [pSchedule, setPSchedule] = useState<Array<number>>([]);
+  const [insSchedule, setInsSchedule] = useState<Array<number>>([]);
   const [loanBorrowAmt, setLoanBorrowAmt] = useState<number>(0);
   const [loanStartingCFs, setLoanStartingCFs] = useState<Array<number>>([]);
   const [loanPMI, setLoanPMI] = useState<number>(goal.loan?.pmi);
@@ -315,7 +316,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 
   const createLoanSchedule = () => {
     let result = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments,
-      loanIRAdjustments, loanMonths as number, sellAfter ? sellAfter : null);
+      loanIRAdjustments, loanMonths as number, sellAfter ? sellAfter : null, loanPMI as number, loanPMIEndPer as number);
     setPSchedule([...result.principal]);
     setISchedule([...result.interest]);
   }
@@ -380,12 +381,14 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     if (manualMode < 1 && loanPer) {
       let interestSchedule = iSchedule;
       let principalSchedule = pSchedule;
+      let insuranceSchedule = insSchedule;
       if (sellAfter && !changeState) {
-        let loanSchedule = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments, loanIRAdjustments, loanMonths as number, duration);
+        let loanSchedule = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments, loanIRAdjustments, loanMonths as number, duration, loanPMI, loanPMIEndPer);
         interestSchedule = loanSchedule.interest;
         principalSchedule = loanSchedule.principal;
+        insuranceSchedule = loanSchedule.insurance;
       }
-      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, simpleInts, remSI, g, duration, changeState ? true : false);
+      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, insuranceSchedule, simpleInts, remSI, g, duration, changeState ? true : false);
     } else result = calculateCFs(price, g, duration, changeState ? true : false);
     cfs = result.cfs;
     if (changeState) {
@@ -643,6 +646,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           setISchedule,
           pSchedule,
           setPSchedule,
+          insSchedule,
+          setInsSchedule,
           priceChgRate,
           setPriceChgRate,
           sellPrice,

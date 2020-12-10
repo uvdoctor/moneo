@@ -10,13 +10,13 @@ const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: f
 
 export default function LoanScheduleChart() {
 	const { currency, startYear, startMonth }: any = useContext(CalcContext);
-	const { pSchedule, iSchedule, loanRepaymentMonths }: any = useContext(GoalContext);
+	const { pSchedule, iSchedule, insSchedule, loanRepaymentMonths }: any = useContext(GoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	useEffect(
 		() => {
 			let data: Array<any> = [];
-			let yearlyLoanCFs: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, startMonth, loanRepaymentMonths);
+			let yearlyLoanCFs: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, insSchedule, startMonth, loanRepaymentMonths);
 			let startingYear = startYear;
 			if (loanRepaymentMonths && startMonth + loanRepaymentMonths > 12) startingYear++;
 			for (let year = startingYear; year < startingYear + yearlyLoanCFs.principal.length; year++) {

@@ -53,12 +53,15 @@ export const createAmortizingLoanCFs = (
 	loanPrepayments: Array<TargetInput>,
   loanIRAdjustments: Array<TargetInput>,
 	loanMonths: number,
-	numOfYears: number | null
+	numOfYears: number | null,
+	loanPMI: number,
+	loanPMIEndPer: number
 ) => {
 	if (!loanBorrowAmt || !loanMonths || !emi)
 	return {
 		interest: [],
-		principal: []
+		principal: [],
+		insurance: []
 	};
 	let loanDuration = loanMonths;
 	if (numOfYears && numOfYears * 12 < loanMonths) loanDuration = numOfYears * 12;
@@ -66,8 +69,11 @@ export const createAmortizingLoanCFs = (
 	let monthlyRate = (loanIntRate as number) / 1200;
 	let miPayments: Array<number> = [];
 	let mpPayments: Array<number> = [];
+	let insPayments: Array<number> = [];
 	let loanEmi = emi;
+	let loanPMIEndAmt = loanBorrowAmt * loanPMIEndPer;
 	for (let i = 0; i < loanDuration && principal > 0; i++) {
+		if (loanPMI && loanPMIEndAmt < principal) insPayments.push(loanPMI);
     let irAdj: TargetInput | undefined | null = findTarget(loanIRAdjustments, i + 1);
 		if (irAdj) {
 			monthlyRate = irAdj.val / 1200;
@@ -88,26 +94,31 @@ export const createAmortizingLoanCFs = (
 	}
 	return {
 		interest: miPayments,
-		principal: mpPayments
+		principal: mpPayments,
+		insurance: insPayments
 	};
 };
 
 export const createYearlyFromMonthlyLoanCFs = (
 	iPayments: Array<number>,
 	pPayments: Array<number>,
+	insPayments: Array<number>,
 	startMonthNum: number,
 	loanRepaymentMonths: number
 ) => {
 	if (!iPayments || !iPayments.length || !pPayments || !pPayments.length)
 		return {
 			interest: [],
-			principal: []
+			principal: [],
+			insurance: []
 		};
 	let yearlyIPayments: Array<number> = [];
 	let yearlyPPayments: Array<number> = [];
+	let yearlyInsPayments: Array<number> = [];
 	let result = {
 		interest: yearlyIPayments,
-		principal: yearlyPPayments
+		principal: yearlyPPayments,
+		insurance: yearlyInsPayments
 	};
 	let startingMonth = startMonthNum + loanRepaymentMonths;
 	if (startingMonth > 12) startingMonth = startingMonth % 12;
@@ -115,24 +126,31 @@ export const createYearlyFromMonthlyLoanCFs = (
 	if (numOfMonthsInFirstYear >= iPayments.length) numOfMonthsInFirstYear = iPayments.length;
 	let yearlyICF = 0;
 	let yearlyPCF = 0;
+	let yearlyInsCF = 0;
 	for (let i = 0; i < numOfMonthsInFirstYear; i++) {
 		yearlyICF += iPayments[i];
 		yearlyPCF += pPayments[i];
+		if (insPayments[i]) yearlyInsCF += insPayments[i];
 	}
 	result.interest.push(yearlyICF);
 	result.principal.push(yearlyPCF);
+	result.insurance.push(yearlyInsCF);
 	if (numOfMonthsInFirstYear === iPayments.length) return result;
 	yearlyICF = 0;
 	yearlyPCF = 0;
+	yearlyInsCF = 0;
 	for (let i = 0; i + numOfMonthsInFirstYear < iPayments.length; i++) {
 		let index = i + numOfMonthsInFirstYear;
 		yearlyICF += iPayments[index];
 		yearlyPCF += pPayments[index];
+		if (insPayments[index]) yearlyInsCF += insPayments[index];
 		if ((i + 1) % 12 === 0 || index === iPayments.length - 1) {
 			result.interest.push(yearlyICF);
 			result.principal.push(yearlyPCF);
+			result.insurance.push(yearlyInsCF);
 			yearlyICF = 0;
 			yearlyPCF = 0;
+			yearlyInsCF = 0;
 		}
 	}
 	return result;

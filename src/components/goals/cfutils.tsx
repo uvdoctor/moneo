@@ -360,6 +360,7 @@ export const createLoanCFs = (
   loanStartingCFs: Array<number>,
   iSchedule: Array<number>,
   pSchedule: Array<number>,
+  insSchedule: Array<number>,
   simpleInts: Array<number>,
   remSimpleIntAmt: number,
   goal: APIt.CreateGoalInput,
@@ -375,7 +376,7 @@ export const createLoanCFs = (
   let totalPTaxBenefit = 0;
   let totalITaxBenefit = 0;
   let startingMonth = considerStartMonth ? goal.sm as number : 1;
-  let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, startingMonth, goal.loan?.ry as number);
+  let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, insSchedule, startingMonth, goal.loan?.ry as number);
   let sp = 0;
   let taxBenefit = 0;
   let loanStartingYear = goal.sy;
@@ -390,8 +391,9 @@ export const createLoanCFs = (
     if (i >= 0 && i < annualLoanPayments.interest.length) {
       let annualIPayment = annualLoanPayments.interest[i];
       let annualPPayment = annualLoanPayments.principal[i];
-      let annualEmiAmt = annualIPayment + annualPPayment;
-      cf += annualEmiAmt;
+      cf += annualIPayment + annualPPayment;
+      let annualInsPayment = annualLoanPayments.insurance[i];
+      if (annualInsPayment) cf += annualInsPayment;
       if (!isTaxCreditEligible(goal.type)) {
         if (goal.type !== APIt.GoalType.E)
           taxBenefit = getTaxBenefit(
