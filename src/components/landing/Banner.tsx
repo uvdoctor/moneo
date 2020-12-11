@@ -12,7 +12,7 @@ export default function Banner() {
 			<div className="site-banner-content">
 				<BannerContent />
 				<Join />
-				<SocialShare url={`https://dollardarwin.com`} />
+				<SocialShare />
 			</div>
 		</div>
 	);
