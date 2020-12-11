@@ -73,17 +73,19 @@ export default function LoanDetails() {
 							result={loanBorrowAmt}
 							currency={currency}
 							footer={
-								<SelectInput
-									pre="Delay"
-									options={{
-										0: 'None',
-										1: '1 Month',
-										2: '2 Months',
-										3: '3 Months'
-									}}
-									value={loanRepaymentMonths}
-									changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
-								/>
+								goal.type !== GoalType.E ? (
+									<SelectInput
+										pre="Delay"
+										options={{
+											0: 'None',
+											1: '1 Month',
+											2: '2 Months',
+											3: '3 Months'
+										}}
+										value={loanRepaymentMonths}
+										changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
+									/>
+								) : null
 							}
 						/>
 					</Col>

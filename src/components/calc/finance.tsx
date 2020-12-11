@@ -46,22 +46,121 @@ export const findTarget = (loanPrepayments: Array<TargetInput>, installmentNum: 
 		? loanPrepayments.find((elem: TargetInput) => elem.num === installmentNum)
 		: null;
 
+const handleCustomPayment = (
+	monthlyPrincipals: Array<number>,
+	monthlyInterests: Array<number>,
+	loanCustomPayments: Array<TargetInput>,
+	installmentNum: number,
+	principal: number,
+	monthlyRate: number,
+	totalSIDue: number
+) => {
+	let customPayment: TargetInput | undefined | null = findTarget(loanCustomPayments, installmentNum);
+	if (customPayment) {
+		let intDue = principal * monthlyRate;
+		if (customPayment.val > (intDue + totalSIDue)) {
+			monthlyInterests[installmentNum - 1] = intDue + totalSIDue;
+			let principalPaid = customPayment.val - (intDue + totalSIDue);
+			if (principalPaid > principal) principalPaid = principal;
+			monthlyPrincipals[installmentNum - 1] = principalPaid;
+			totalSIDue = 0;
+		} else {
+			monthlyInterests[installmentNum - 1] = customPayment.val;
+			totalSIDue -= customPayment.val - intDue;
+		}
+	}
+	return totalSIDue;
+};
+
+export const createEduLoanMonthlyCFs = (
+	startYear: number,
+	endYear: number,
+	price: number,
+	priceChgRate: number,
+	loanPer: number,
+	loanIntRate: number,
+	loanCustomPayments: Array<TargetInput>,
+	loanIRAdjustments: Array<TargetInput>,
+	graceMonths: number = 0,
+	semester: boolean = false
+) => {
+	let months = (endYear - startYear + 1) * 12;
+	let eduCost = price;
+	let principal = eduCost * loanPer / 100;
+	let monthlyRate = loanIntRate / 1200;
+	let totalSIDue = 0;
+	let monthlyPrincipals: Array<number> = [0];
+	let monthlyPrincipalDue: Array<number> = [ principal ];
+	let monthlyInterests: Array<number> = [ principal * monthlyRate ];
+	let downPayments: Array<number> = [ eduCost * (1 - loanPer / 100) ];
+	for (let i = 1; i < months; i++) {
+		totalSIDue = handleCustomPayment(
+			monthlyPrincipals,
+			monthlyInterests,
+			loanCustomPayments,
+			i,
+			principal,
+			monthlyRate,
+			totalSIDue
+		);
+		principal -= monthlyPrincipals[i - 1];
+		if (i % 12 === 0) {
+			eduCost *= 1 + priceChgRate / 100;
+			principal += eduCost * loanPer / 100;
+			downPayments.push(eduCost * (1 - loanPer / 100));
+		} else if (semester && i % 6 === 0) {
+			principal += eduCost * loanPer / 100;
+			downPayments.push(eduCost * (1 - loanPer / 100));
+		} else downPayments.push(0);
+		monthlyPrincipals.push(0);
+		let irAdj: TargetInput | undefined | null = findTarget(loanIRAdjustments, i + 1);
+		if (irAdj) monthlyRate = irAdj.val / 1200;
+		monthlyInterests.push(principal * monthlyRate);
+		monthlyPrincipalDue.push(principal);
+	}
+	for (let i = 0; i < graceMonths && principal > 0; i++) {
+		totalSIDue = handleCustomPayment(
+			monthlyPrincipals,
+			monthlyInterests,
+			loanCustomPayments,
+			months + i,
+			principal,
+			monthlyRate,
+			totalSIDue
+		);
+		principal -= monthlyPrincipals[months + i - 1];
+		monthlyPrincipals.push(0);
+		let irAdj: TargetInput | undefined | null = findTarget(loanIRAdjustments, months + i + 1);
+		if (irAdj) monthlyRate = irAdj.val / 1200;
+		monthlyInterests.push(principal * monthlyRate);
+		monthlyPrincipalDue.push(principal);
+	}
+	if (totalSIDue > 0) principal += totalSIDue;
+	return {
+		principal: monthlyPrincipals,
+		principalDue: monthlyPrincipalDue,
+		interest: monthlyInterests,
+		dp: downPayments,
+		borrowAmt: principal
+	};
+};
+
 export const createAmortizingLoanCFs = (
 	loanBorrowAmt: number,
 	loanIntRate: number,
 	emi: number,
 	loanPrepayments: Array<TargetInput>,
-  loanIRAdjustments: Array<TargetInput>,
+	loanIRAdjustments: Array<TargetInput>,
 	loanMonths: number,
 	numOfYears: number | null,
 	loanPMI: number,
 	loanPMIEndPer: number
 ) => {
 	if (!loanBorrowAmt || !loanMonths || !emi)
-	return {
-		interest: [],
-		principal: [],
-		insurance: []
+		return {
+			interest: [],
+			principal: [],
+			insurance: []
 		};
 	let loanDuration = loanMonths;
 	if (numOfYears && numOfYears * 12 < loanMonths) loanDuration = numOfYears * 12;
@@ -74,7 +173,7 @@ export const createAmortizingLoanCFs = (
 	let loanPMIEndAmt = loanBorrowAmt * (loanPMIEndPer / 100);
 	for (let i = 0; i < loanDuration && principal > 0; i++) {
 		if (loanPMI && loanPMIEndAmt < principal) insPayments.push(loanPMI);
-    let irAdj: TargetInput | undefined | null = findTarget(loanIRAdjustments, i + 1);
+		let irAdj: TargetInput | undefined | null = findTarget(loanIRAdjustments, i + 1);
 		if (irAdj) {
 			monthlyRate = irAdj.val / 1200;
 			loanEmi = getEmi(loanBorrowAmt, irAdj.val, loanMonths);
@@ -110,7 +209,7 @@ export const createYearlyFromMonthlyLoanCFs = (
 		return {
 			interest: [],
 			principal: [],
-			insurance: []
+			insurance: [],
 		};
 	let yearlyIPayments: Array<number> = [];
 	let yearlyPPayments: Array<number> = [];
@@ -118,7 +217,7 @@ export const createYearlyFromMonthlyLoanCFs = (
 	let result = {
 		interest: yearlyIPayments,
 		principal: yearlyPPayments,
-		insurance: yearlyInsPayments
+		insurance: yearlyInsPayments,
 	};
 	let startingMonth = startMonthNum + loanRepaymentMonths;
 	if (startingMonth > 12) startingMonth = startingMonth % 12;

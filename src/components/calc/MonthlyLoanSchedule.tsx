@@ -1,6 +1,6 @@
 import { Col, Row, Table } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { GoalType, TargetInput } from '../../api/goals';
+import { TargetInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import { GoalContext } from '../goals/GoalContext';
@@ -14,7 +14,7 @@ interface MonthlyLoanScheduleProps {
 }
 
 export default function MonthlyLoanSchedule({ editable }: MonthlyLoanScheduleProps) {
-	const { goal, currency, startYear, endYear, startMonth }: any = useContext(CalcContext);
+	const { currency, startYear, startMonth }: any = useContext(CalcContext);
 	const {
 		loanRepaymentMonths,
 		loanPrepayments,
@@ -24,6 +24,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		setLoanIRAdjustments,
 		iSchedule,
 		pSchedule,
+		eduLoanPDueSchedule,
 		insSchedule,
 		loanBorrowAmt
 	}: any = useContext(GoalContext);
@@ -115,15 +116,15 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 	};
 
 	const getPrincipalDue = (installmentNum: number) => {
+		if (eduLoanPDueSchedule && installmentNum <= eduLoanPDueSchedule.length) {
+			return eduLoanPDueSchedule[installmentNum];
+		}
 		let principal = loanBorrowAmt;
 		for (let i = 0; i < installmentNum; i++) principal -= pSchedule[i];
 		return principal;
 	};
 
-	const getPrevPrincipalDue = (installmentNum: number) => {
-		if (installmentNum <= 1) return loanBorrowAmt;
-		return Math.floor(getPrincipalDue(installmentNum - 1));
-	};
+	const getPrevPrincipalDue = (installmentNum: number) => Math.floor(getPrincipalDue(installmentNum - 1));
 
 	const getTotalInterestPaid = (installmentNum: number) => {
 		let totalInt = 0;
@@ -146,7 +147,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		() => {
 			let result = [];
 			let numFilterValues = [];
-			let year = goal.type === GoalType.E ? endYear + 1 : startYear;
+			let year = startYear;
 			let startingMonth = startMonth + loanRepaymentMonths;
 			if (startingMonth > 12) {
 				year++;
@@ -331,7 +332,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 												step={100}
 												currency={currency}
 											/>
-											<NumberInput
+											{record.num !== '1' ? <NumberInput
 												pre="Adjust Interest Rate"
 												value={getIRAdjustment(parseInt(record.num))}
 												changeHandler={(val: number) =>
@@ -340,14 +341,14 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 													getIRAdjustment(parseInt(record.num), false) - 3 < 0 ? (
 														0
 													) : (
-														getIRAdjustment(parseInt(record.num), false) - 3
-													)
+															getIRAdjustment(parseInt(record.num), false) - 3
+														)
 												}
 												max={getIRAdjustment(parseInt(record.num), false) + 3}
 												step={0.01}
 												unit="%"
-												additionalMarks={[ getIRAdjustment(parseInt(record.num)) ]}
-											/>
+												additionalMarks={[getIRAdjustment(parseInt(record.num))]}
+											/> : null}
 										</Section>
 									</Col>
 								)}
