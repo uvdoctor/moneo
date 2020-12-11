@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import {
   EmailShareButton,
@@ -25,11 +25,12 @@ import {
 
 import "./SocialShare.less";
 
-interface SocialMediaShareProps {
-  url: string;
-}
+export default function SocialMediaShare() {
+  const websiteUrl = "https://dollardarwin.com";
+  const [url, setUrl] = useState(websiteUrl);
 
-export default function SocialMediaShare({ url }: SocialMediaShareProps) {
+  useEffect(() => setUrl(`${websiteUrl}${window.location.pathname}`), [null]);
+
   return (
     <div className="social-share">
       <span className="expand-collapse-icon">

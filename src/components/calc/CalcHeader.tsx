@@ -1,8 +1,10 @@
-import { Modal, PageHeader, Rate, Input, Row, Col } from "antd";
+import { Modal, PageHeader, Rate, Input, Row, Col, Tooltip } from "antd";
 import React, { Fragment, ReactNode, useContext, useState } from "react";
+import { ShareAltOutlined } from "@ant-design/icons";
 import SelectInput from "../form/selectinput";
 import { CalcContext } from "./CalcContext";
 import Draggable from "react-draggable";
+import SocialShare from "../SocialShare";
 import * as gtag from "../../lib/gtag";
 interface CalcHeaderProps {
 	children?: any;
@@ -57,9 +59,9 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 						/>
 					</Col>
 					<Col span={24} className="secondary-header">
-						<Row justify={children ? "space-around" : "start"}>
+						<Row justify={children ? "space-around" : "start"} align="middle">
 							{children && <Col>{children}</Col>}
-							<Col>
+							<Col flex="auto">
 								<span style={{ marginRight: "0.5rem" }}>Rate Calculator</span>
 								<Rate
 									allowClear
@@ -72,6 +74,17 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 								<span style={{ marginLeft: "0.5rem" }}>
 									{ratingLabel ? ratingLabel : ratingLabels[rating]}
 								</span>
+							</Col>
+							<Col flex="20px">
+								<Tooltip
+									title={
+										<div className="tooltip-share">
+											<SocialShare />
+										</div>
+									}
+								>
+									<ShareAltOutlined />
+								</Tooltip>
 							</Col>
 						</Row>
 					</Col>
