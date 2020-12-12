@@ -3,7 +3,7 @@ import { CreateGoalInput, GoalType, LMH, LoanType, TargetInput } from "../../api
 import { initOptions } from "../utils";
 import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils";
 import { createAmortizingLoanCFs, createEduLoanMonthlyCFs, getCompoundedIncome, getEmi, getNPV } from "../calc/finance";
-import { adjustAccruedInterest, calculateCFs, calculateSellPrice, createLoanCFs, getLoanBorrowAmt } from "./cfutils";
+import { adjustAccruedInterest, calculateCFs, calculateSellPrice, createLoanCFs, getClosestTargetVal, getLoanBorrowAmt } from "./cfutils";
 import { CalcContext } from "../calc/CalcContext";
 import OppCost from "../calc/oppcost";
 import FFImpact from "./ffimpact";
@@ -316,8 +316,13 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     setLoanBorrowAmt(loanBorrowAmt);
   }, [price, manualMode, loanPer, loanIntRate, loanRepaymentMonths, startYear, endYear]);
 
-  useEffect(() => setEMI(getEmi(loanBorrowAmt, loanIntRate as number, loanMonths as number))
-  , [loanBorrowAmt, loanIntRate, loanMonths]);
+  useEffect(() => {
+    let intRate = loanIntRate as number;
+    if (goal.type === GoalType.E && eduLoanSISchedule && eduLoanSISchedule.length && loanIRAdjustments && loanIRAdjustments.length) {
+      intRate = getClosestTargetVal(loanIRAdjustments, eduLoanSISchedule.length + 1, intRate);
+    }
+    setEMI(getEmi(loanBorrowAmt, intRate, loanMonths as number))
+  }, [loanBorrowAmt, loanIntRate, loanMonths, eduLoanSISchedule, loanIRAdjustments]);
 
   const disableLoanChart = () => {
     if(resultTabs[1].active) {
@@ -341,19 +346,13 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     setPSchedule([...result.principal]);
     setInsSchedule([...result.insurance]);
     setISchedule([...result.interest]);
+    if (!resultTabs[1].active) {
+      resultTabs[1].active = true;
+      setResultTabs([...resultTabs]);
+    }
   }
 
   useEffect(() => createNonEduLoanSchedule(), [emi, loanPrepayments, loanIRAdjustments, sellAfter, loanPMI, loanPMIEndPer]);
-
-  const getEduLoanAmortizationRate = () => {
-    if (!loanIRAdjustments || !loanIRAdjustments.length) return loanIntRate;
-    for (let i = 0; i < loanIRAdjustments.length; i++) {
-      if (loanIRAdjustments[i].num > eduLoanSISchedule.length) {
-        return loanIRAdjustments[i - 1].val;
-      }
-    }
-    return loanIRAdjustments[loanIRAdjustments.length - 1].val;
-  };
 
   useEffect(() => {
     if (goal.type !== GoalType.E) return;
@@ -366,17 +365,22 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     }
     let result = createAmortizingLoanCFs(
         loanBorrowAmt,
-        getEduLoanAmortizationRate() as number,
+        getClosestTargetVal(loanIRAdjustments, eduLoanSISchedule.length, loanIntRate as number),
         emi,
         loanPrepayments,
         loanIRAdjustments,
         loanMonths as number,
         null,
         0,
-        0
+        0,
+        eduLoanSISchedule.length
     );
     setPSchedule([...eduLoanPSchedule, ...result.principal]);
     setISchedule([...eduLoanSISchedule, ...result.interest]);
+    if (!resultTabs[1].active) {
+      resultTabs[1].active = true;
+      setResultTabs([...resultTabs]);
+    }
   }, [emi, eduLoanSISchedule]);
 
   useEffect(() => {

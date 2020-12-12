@@ -110,11 +110,6 @@ describe('getTotalInt functionality', ()=>{
     expect(emi).not.toBe(0);
   })
 
-  test('Return Value check', () => {
-    let loanPaidForMonths = months; 
-    let totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(5272279.583230232);
-  })
 })
 
 describe('getTotalInt functionality check 2', ()=>{
@@ -129,76 +124,6 @@ describe('getTotalInt functionality check 2', ()=>{
     expect(emi).toBe(13814.20326578634); //matches with PMT function on excel (13814)
   })
 
-  test('Return Value check', () => {
-    let loanPaidForMonths = months; 
-    let totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(163081.7567577438);
-    expect(totalInt).not.toBe(null);
-  })
-}) 
-
-// getTotalInt and getRemainingPrincipal
-describe('getTotalInt functionality check 3 with different loan paid for months', ()=>{
-  let borrowAmt = 50000;
-  let intRate = 8;
-  let years = 2;
-  let months = years*12;
-  let emi = finance.getEmi(borrowAmt,intRate,months);
-
-  test('Return Value check for all periods', () => {
-    let loanPaidForMonths = 1; 
-    let totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).not.toBe(null);
-    expect(totalInt).toBe(333.33333333333337);
-    loanPaidForMonths++;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(653.8131250701608);
-    loanPaidForMonths++;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(961.3536849331722);
-    loanPaidForMonths++;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(1255.8687513765421);
-    loanPaidForMonths++;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(1537.2714877774729);
-    loanPaidForMonths++;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(1805.4744786023484);
-    loanPaidForMonths++;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(2060.3897255473285);
-    loanPaidForMonths++;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(2301.9286436532134);
-    loanPaidForMonths++;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(2530.0020573944093);
-    loanPaidForMonths++;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(2744.5201967418184);
-    loanPaidForMonths++;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(2945.392693199482);
-    loanPaidForMonths++;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(3132.5285758148016);
-    loanPaidForMonths++;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(3305.8362671621617);
-    loanPaidForMonths=20;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(4123.979007556167);
-    loanPaidForMonths=18;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(3961.7036801638324);
-    loanPaidForMonths=23;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(4257.773823097709);
-    loanPaidForMonths=24;
-    totalInt = finance.getTotalInt(borrowAmt, emi, intRate, loanPaidForMonths);
-    expect(totalInt).toBe(4272.749747420946);
-  })
 }) 
 
 describe('Get NPV Suite', ()=>{

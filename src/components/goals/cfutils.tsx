@@ -784,3 +784,11 @@ export const findEarliestFFYear = (
   }
   return prevResult;
 };
+
+export const getClosestTargetVal = (arr: Array<APIt.TargetInput>, num: number, defaultVal: number) => {
+	if(!arr || !arr.length) return defaultVal;
+	for (let i = 0; i < arr.length; i++) {
+		if (arr[i].num > num) return i ? arr[i - 1].val : defaultVal;
+	};
+	return arr[arr.length - 1].val;
+};

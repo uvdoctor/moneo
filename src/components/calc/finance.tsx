@@ -20,18 +20,6 @@ export const getCompoundedIncome = (rate: number, value: number, years: number, 
 	value * getCompoundedRate(rate, years, frequency);
 //Tested
 
-export function getTotalInt(borrowAmt: number, emi: number, intRate: number, loanPaidForMonths: number) {
-	let principal = borrowAmt;
-	let monthlyRate = intRate / 1200;
-	let totalInt = 0;
-	for (let i = 0; i < loanPaidForMonths; i++) {
-		let monthlyInt = principal * monthlyRate;
-		totalInt += monthlyInt;
-		principal -= emi - monthlyInt;
-	}
-	return totalInt;
-}
-
 export function getNPV(rr: number | Array<number>, cashFlows: Array<number>, startIndex: number) {
 	let npv = 0;
 	for (let i = cashFlows.length - 1; i > 0; i--) {
@@ -154,7 +142,8 @@ export const createAmortizingLoanCFs = (
 	loanMonths: number,
 	numOfYears: number | null,
 	loanPMI: number,
-	loanPMIEndPer: number
+	loanPMIEndPer: number,
+	startingIndex: number = 0
 ) => {
 	if (!loanBorrowAmt || !loanMonths || !emi)
 		return {
@@ -173,7 +162,7 @@ export const createAmortizingLoanCFs = (
 	let loanPMIEndAmt = loanBorrowAmt * (loanPMIEndPer / 100);
 	for (let i = 0; i < loanDuration && principal > 0; i++) {
 		if (loanPMI && loanPMIEndAmt < principal) insPayments.push(loanPMI);
-		let irAdj: TargetInput | undefined | null = findTarget(loanIRAdjustments, i + 1);
+		let irAdj: TargetInput | undefined | null = findTarget(loanIRAdjustments, startingIndex + i + 1);
 		if (irAdj) {
 			monthlyRate = irAdj.val / 1200;
 			loanEmi = getEmi(loanBorrowAmt, irAdj.val, loanMonths);
@@ -181,7 +170,7 @@ export const createAmortizingLoanCFs = (
 		let monthlyInt = principal * monthlyRate;
 		miPayments.push(monthlyInt);
 		let monthlyPayment = principal + monthlyInt < loanEmi ? principal + monthlyInt : loanEmi;
-		let additionalPrincipalPaid: TargetInput | undefined | null = findTarget(loanPrepayments, i + 1);
+		let additionalPrincipalPaid: TargetInput | undefined | null = findTarget(loanPrepayments, startingIndex + i + 1);
 		if (additionalPrincipalPaid) monthlyPayment += additionalPrincipalPaid.val;
 		let principalPaid = monthlyPayment - monthlyInt;
 		principal -= principalPaid;

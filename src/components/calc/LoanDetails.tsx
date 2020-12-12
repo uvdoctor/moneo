@@ -14,7 +14,7 @@ import MonthlyLoanSchedule from './MonthlyLoanSchedule';
 import Draggable from 'react-draggable';
 
 export default function LoanDetails() {
-	const { fsb, goal, currency, isPublicCalc }: any = useContext(CalcContext);
+	const { fsb, goal, currency, isPublicCalc, startYear, endYear }: any = useContext(CalcContext);
 	const {
 		loanRepaymentMonths,
 		loanMonths,
@@ -69,7 +69,7 @@ export default function LoanDetails() {
 				<Row justify="space-between">
 					<Col>
 						<ItemDisplay
-							label="Loan Principal"
+							label={`Loan Principal${goal.type === GoalType.E ? ' Due' : ''}`}
 							result={loanBorrowAmt}
 							currency={currency}
 							footer={
@@ -85,7 +85,9 @@ export default function LoanDetails() {
 										value={loanRepaymentMonths}
 										changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
 									/>
-								) : null
+								) : (
+									`${startYear} to ${endYear}`
+								)
 							}
 						/>
 					</Col>
