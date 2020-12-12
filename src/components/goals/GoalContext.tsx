@@ -84,6 +84,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [eduLoanSISchedule, setEduLoanSISchedule] = useState<Array<number>>([]);
   const [eduLoanPSchedule, setEduLoanPSchedule] = useState<Array<number>>([]);
   const [eduLoanPDueSchedule, setEduLoanPDueSchedule] = useState<Array<number>>([]);
+  const [eduCostSemester, setEduCostSemester] = useState<number>(0);
  	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal.loan.type);
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
@@ -283,13 +284,13 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       setEduLoanSISchedule([...[]]);
       return;
     }
-    let result = createEduLoanMonthlyCFs(startYear, endYear, price, priceChgRate, loanPer, loanIntRate as number, loanPrepayments, loanIRAdjustments, loanGracePeriod as number, true);
+    let result = createEduLoanMonthlyCFs(startYear, endYear, price, priceChgRate, loanPer, loanIntRate as number, loanPrepayments, loanIRAdjustments, loanGracePeriod as number, eduCostSemester ? true : false);
     setLoanBorrowAmt(result.borrowAmt);
     setEduLoanPSchedule([...result.principal]);
     setEduLoanPDueSchedule([...result.principalDue]);
     setLoanStartingCFs([...getEduLoanAnnualDPs(result.dp)]);
     setEduLoanSISchedule([...result.interest]);
-  }, [manualMode, price, priceChgRate, loanPer, loanIntRate, loanGracePeriod, startYear, endYear, loanPrepayments, loanIRAdjustments]);
+  }, [manualMode, price, priceChgRate, loanPer, loanIntRate, loanGracePeriod, startYear, endYear, loanPrepayments, loanIRAdjustments, eduCostSemester]);
 
   useEffect(() => {
     if (manualMode || goal.type === GoalType.E) return;
@@ -701,6 +702,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           eduLoanSISchedule,
           eduLoanPSchedule,
           eduLoanPDueSchedule,
+          eduCostSemester,
+          setEduCostSemester,
           taxBenefitInt,
           setTaxBenefitInt,
           sellAfter,

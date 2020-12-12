@@ -44,7 +44,7 @@ export default function LoanDetails() {
 				{!isEndYearHidden && (
 					<NumberInput
 						unit={`% (${toCurrency(Math.round(loanPer * price / 100), currency)})`}
-						pre="Loan Amount"
+						pre="Borrow"
 						value={loanPer}
 						changeHandler={setLoanPer}
 						step={1}
@@ -55,7 +55,7 @@ export default function LoanDetails() {
 				)}
 				{loanBorrowAmt && (
 					<NumberInput
-						pre="Loan Duration"
+						pre="Duration"
 						unit={`Months (${toReadableNumber(loanMonths / 12, 2)} Years)`}
 						value={loanMonths}
 						changeHandler={setLoanMonths}

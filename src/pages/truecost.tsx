@@ -3,10 +3,9 @@ import Layout from '../components/calc/Layout';
 import { CALC_NAMES } from '../CONSTANTS';
 import Spend from '../components/calc/Spend';
 import Save from '../components/calc/Save';
-import InvestOption from '../components/calc/InvestOption';
 import DDLineChart from '../components/goals/DDLineChart';
 import { TrueCostContextProvider } from '../components/calc/TrueCostContext';
-import { faChartLine, faPiggyBank, faMoneyBillWave, faSearchDollar } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faPiggyBank, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons';
 
 export const SPEND = 'Spend';
 export const SAVE = 'Save';
@@ -64,7 +63,6 @@ export default function TrueCost() {
 			tabOptions={[
 				{ label: SPEND, active: true, svg: faMoneyBillWave, content: <Spend /> },
 				{ label: SAVE, active: true, svg: faPiggyBank, content: <Save /> },
-				{ label: INVEST, active: true, svg: faSearchDollar, content: <InvestOption /> }
 			]}
 			resultTabOptions={[
 				{

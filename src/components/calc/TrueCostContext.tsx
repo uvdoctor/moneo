@@ -1,10 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { toCurrency, toReadableNumber } from '../utils';
 import { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
-import ItemDisplay from './ItemDisplay';
-import SelectInput from '../form/selectinput';
 import { CalcContext } from './CalcContext';
 import CalcTemplate from './CalcTemplate';
+import TimeCostResult from './TimeCostResult';
+import OppCost from './oppcost';
 
 const TrueCostContext = createContext({});
 
@@ -14,16 +13,13 @@ export const TIME_COST_YEARS = 'Years';
 
 function TrueCostContextProvider() {
 	const {
-		currency,
-		rangeFactor,
 		cfs,
 		setCFs,
 		dr,
-		setDR,
 		allInputDone,
-		cfsWithOppCost,
 		setCFsWithOppCost,
-		setResults
+		setResults,
+		analyzeFor
 	}: any = useContext(CalcContext);
 	const [ amt, setAmt ] = useState<number>(0);
 	const [ freq, setFreq ] = useState<string>(SPEND_ONCE);
@@ -31,30 +27,17 @@ function TrueCostContextProvider() {
 	const [ paidWeeks, setPaidWeeks ] = useState<number>(52);
 	const [ hoursPerWeek, setHoursPerWeek ] = useState<number>(60);
 	const [ savings, setSavings ] = useState<number>(0);
-	const [ years, setYears ] = useState<number>(50);
 	const [ savingsPerHr, setSavingsPerHr ] = useState<number>(0);
 	const [ timeCost, setTimeCost ] = useState<number>(0);
 	const [ timeCostDisplay, setTimeCostDisplay ] = useState<number>(0);
 	const [ timeCostUnit, setTimeCostUnit ] = useState<string>(TIME_COST_HOURS);
 	const [ totalCost, setTotalCost ] = useState<number>(0);
-	const timeOptions = {
-		[TIME_COST_HOURS]: TIME_COST_HOURS,
-		[TIME_COST_WEEKS]: TIME_COST_WEEKS,
-		[TIME_COST_YEARS]: TIME_COST_YEARS
-	};
 
 	useEffect(() => {
 		setResults([...[
-			<ItemDisplay
-				label="Time Cost"
-				result={-timeCostDisplay}
-				pl
-				info={`Based on your Savings from Work Income, You May have to Work ${toReadableNumber(
-					timeCost
-				)} ${timeCostUnit} to Save ${toCurrency(totalCost, currency)}`}
-				unit={<SelectInput pre="" options={timeOptions} value={timeCostUnit} changeHandler={setTimeCostUnit} />}
-			/>,
-			<ItemDisplay
+			<TimeCostResult />
+,
+			/*<ItemDisplay
 				label={`Spend v/s Invest @ ${dr}%`}
 				info={`You May have ${toCurrency(
 					Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
@@ -63,19 +46,20 @@ function TrueCostContextProvider() {
 				result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
 				currency={currency}
 				pl
-			/>
+			/>*/
+			<OppCost />
 		]
 		])
 	}, []);
 
 	useEffect(
 		() => {
-			if (cfs.length === 0) {
+			if (!cfs.length) {
 				setCFsWithOppCost([ ...cfs ]);
 				return;
 			}
 			let cfsWithOppCost: Array<number> = [];
-			for (let i = 0; i < years; i++) {
+			for (let i = 0; i < analyzeFor; i++) {
 				let prevCF = i < cfs.length ? -cfs[i] : cfsWithOppCost[i - 1];
 				if (i > 0 && i < cfs.length && freq !== SPEND_ONCE) {
 					prevCF += cfsWithOppCost[i - 1];
@@ -85,7 +69,7 @@ function TrueCostContextProvider() {
 			}
 			setCFsWithOppCost([ ...cfsWithOppCost ]);
 		},
-		[ cfs, dr, years ]
+		[ cfs, dr, analyzeFor ]
 	);
 
 	useEffect(
@@ -176,11 +160,6 @@ function TrueCostContextProvider() {
 	return (
 		<TrueCostContext.Provider
 			value={{
-				cfs,
-				currency,
-				rangeFactor,
-				dr,
-				setDR,
 				freq,
 				setFreq,
 				duration,
@@ -193,8 +172,6 @@ function TrueCostContextProvider() {
 				setHoursPerWeek,
 				savings,
 				setSavings,
-				years,
-				setYears,
 				timeCost,
 				setTimeCost,
 				timeCostDisplay,
