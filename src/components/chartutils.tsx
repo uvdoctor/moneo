@@ -93,6 +93,6 @@ export const getDefaultSliderProps = () => {
 				stroke: COLORS.WHITE,
 			},
 		},
-		foregroundStyle: { fill: COLORS.GREEN },
+		foregroundStyle: { fill: "#79d9ac" },
 	};
 };
