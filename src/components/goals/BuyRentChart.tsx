@@ -11,8 +11,8 @@ const GroupedColumnChart = dynamic(() => import('bizcharts/lib/plots/GroupedColu
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function BuyRentChart() {
-	const { currency }: any = useContext(CalcContext);
-	const { brChartData, analyzeFor, setAnalyzeFor }: any = useContext(GoalContext);
+	const { currency, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
+	const { brChartData }: any = useContext(GoalContext);
 	const [ stackedData, setStackedData ] = useState<Array<any>>([]);
 
 	useEffect(

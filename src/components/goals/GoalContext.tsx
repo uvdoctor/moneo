@@ -57,7 +57,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     inputTabs,
     setInputTabs,
     timer,
-    setTimer
+    setTimer,
+    analyzeFor
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const goalType = goal.type as GoalType;
@@ -158,7 +159,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     )
   );
   const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
-  const [analyzeFor, setAnalyzeFor] = useState<number>(20);
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
   
   useEffect(() =>
@@ -748,8 +748,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           setFFImpactYears,
           allBuyCFs,
           setAllBuyCFs,
-          analyzeFor,
-          setAnalyzeFor,
           brChartData,
           setBRChartData,
           duration,

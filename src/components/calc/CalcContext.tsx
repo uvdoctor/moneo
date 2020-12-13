@@ -80,7 +80,7 @@ function CalcContextProvider({
   const [error, setError] = useState<string>("");
   const [results, setResults] = useState<Array<any>>([]);
   const [timer, setTimer] = useState<any>(null);
-  const [analyzeFor, setAnalyzeFor] = useState<number>(50);
+  const [analyzeFor, setAnalyzeFor] = useState<number>(30);
 
   const getFFGoalTabOptions = () => {
     return [
