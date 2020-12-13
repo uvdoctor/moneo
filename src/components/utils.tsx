@@ -609,3 +609,15 @@ export const getMonthName = (monthNum: number, shortForm: boolean = false) => {
   let monthName: string = MONTHS[monthNum];
   return shortForm ? monthName.substring(0, 3) : monthName;
 }
+
+export const toHumanFriendlyNumber = (val: number, lakhs: boolean = false) => {
+  if (val < 100000) return ""
+  let divider = lakhs ? 100000 : 1000000;
+  let unit = lakhs ? "lakhs" : "million";
+  if (lakhs && val >= divider * 100) {
+    divider *= 100;
+    unit = "crores";
+  }
+  const decimals = val % divider === 0 ? 0 : 2;
+  return `${(val / divider).toFixed(decimals)} ${unit}`;
+}
