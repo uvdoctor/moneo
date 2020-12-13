@@ -1,8 +1,9 @@
 import { Col, Row, Table } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { GoalType, TargetInput } from '../../api/goals';
+import { TargetInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
+import { getClosestTargetVal } from '../goals/cfutils';
 import { GoalContext } from '../goals/GoalContext';
 import { createNewTarget } from '../goals/goalutils';
 import { getMonthName, removeFromArray, toCurrency } from '../utils';
@@ -14,7 +15,7 @@ interface MonthlyLoanScheduleProps {
 }
 
 export default function MonthlyLoanSchedule({ editable }: MonthlyLoanScheduleProps) {
-	const { goal, currency, startYear, endYear, startMonth }: any = useContext(CalcContext);
+	const { currency, startYear, startMonth }: any = useContext(CalcContext);
 	const {
 		loanRepaymentMonths,
 		loanPrepayments,
@@ -24,6 +25,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		setLoanIRAdjustments,
 		iSchedule,
 		pSchedule,
+		eduLoanPDueSchedule,
 		insSchedule,
 		loanBorrowAmt
 	}: any = useContext(GoalContext);
@@ -32,6 +34,9 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 	const [ numFilterValues, setNumFilterValues ] = useState<Array<any>>([ {} ]);
 	const [ yearFilterValues, setYearFilterValues ] = useState<Array<any>>([ {} ]);
 	const [ hasMonthlyInsurance, setHasMonthlyInsurance ] = useState<boolean>(false);
+
+	const isEduLoanSIPayment = (installmentNum: number) =>
+		eduLoanPDueSchedule && installmentNum <= eduLoanPDueSchedule.length;
 
 	useEffect(
 		() => {
@@ -115,15 +120,13 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 	};
 
 	const getPrincipalDue = (installmentNum: number) => {
+		if (isEduLoanSIPayment(installmentNum)) return eduLoanPDueSchedule[installmentNum];
 		let principal = loanBorrowAmt;
 		for (let i = 0; i < installmentNum; i++) principal -= pSchedule[i];
 		return principal;
 	};
 
-	const getPrevPrincipalDue = (installmentNum: number) => {
-		if (installmentNum <= 1) return loanBorrowAmt;
-		return Math.floor(getPrincipalDue(installmentNum - 1));
-	};
+	const getPrevPrincipalDue = (installmentNum: number) => Math.floor(getPrincipalDue(installmentNum === 1 ? installmentNum : installmentNum - 1));
 
 	const getTotalInterestPaid = (installmentNum: number) => {
 		let totalInt = 0;
@@ -146,7 +149,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		() => {
 			let result = [];
 			let numFilterValues = [];
-			let year = goal.type === GoalType.E ? endYear + 1 : startYear;
+			let year = startYear;
 			let startingMonth = startMonth + loanRepaymentMonths;
 			if (startingMonth > 12) {
 				year++;
@@ -178,15 +181,6 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 	const getPrepayment = (installmentNum: number) => {
 		let result = findTarget(loanPrepayments, installmentNum);
 		return result ? result.val : 0;
-	};
-
-	const getIRAdjustment = (installmentNum: number, includeSelf: boolean = true) => {
-		let result = loanIntRate;
-		loanIRAdjustments.forEach((adj: TargetInput) => {
-			if (adj.num < installmentNum || (includeSelf && adj.num === installmentNum)) result = adj.val;
-			else return result;
-		});
-		return result;
 	};
 
 	const hasAdjustmentsInLastInstallments = () => {
@@ -322,32 +316,59 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 									<Col className="configurations" lg={12}>
 										<Section title="Adjust Loan Schedule">
 											<NumberInput
-												pre="Additional Principal Payment"
+												pre={`${isEduLoanSIPayment(parseInt(record.num))
+													? 'Custom Payment'
+													: 'Additional Principal Payment'}`}
 												value={getPrepayment(parseInt(record.num))}
 												changeHandler={(val: number) =>
 													changeLoanPrepayments(parseInt(record.num), val)}
 												min={0}
 												max={getPrevPrincipalDue(parseInt(record.num))}
-												step={100}
+												step={isEduLoanSIPayment(parseInt(record.num)) ? 1 : 100}
 												currency={currency}
 											/>
-											<NumberInput
-												pre="Adjust Interest Rate"
-												value={getIRAdjustment(parseInt(record.num))}
-												changeHandler={(val: number) =>
-													changeLoanIRAdjustments(parseInt(record.num), val)}
-												min={
-													getIRAdjustment(parseInt(record.num), false) - 3 < 0 ? (
-														0
-													) : (
-														getIRAdjustment(parseInt(record.num), false) - 3
-													)
-												}
-												max={getIRAdjustment(parseInt(record.num), false) + 3}
-												step={0.01}
-												unit="%"
-												additionalMarks={[ getIRAdjustment(parseInt(record.num)) ]}
-											/>
+											{record.num !== '1' ? (
+												<NumberInput
+													pre="Adjust Interest Rate"
+													value={getClosestTargetVal(
+														loanIRAdjustments,
+														parseInt(record.num),
+														loanIntRate
+													)}
+													changeHandler={(val: number) =>
+														changeLoanIRAdjustments(parseInt(record.num), val)}
+													min={
+														getClosestTargetVal(
+															loanIRAdjustments,
+															parseInt(record.num) - 1,
+															loanIntRate
+														) - 3 < 0 ? 0
+															: (
+															getClosestTargetVal(
+																loanIRAdjustments,
+																parseInt(record.num) - 1,
+																loanIntRate
+															) - 3
+														)
+													}
+													max={
+														getClosestTargetVal(
+															loanIRAdjustments,
+															parseInt(record.num) - 1,
+															loanIntRate
+														) + 3
+													}
+													step={0.01}
+													unit="%"
+													additionalMarks={[
+														getClosestTargetVal(
+															loanIRAdjustments,
+															parseInt(record.num),
+															loanIntRate
+														)
+													]}
+												/>
+											) : null}
 										</Section>
 									</Col>
 								)}

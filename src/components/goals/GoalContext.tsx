@@ -2,8 +2,8 @@ import React, { createContext, useEffect, useState, ReactNode, useContext } from
 import { CreateGoalInput, GoalType, LMH, LoanType, TargetInput } from "../../api/goals";
 import { initOptions } from "../utils";
 import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils";
-import { createAmortizingLoanCFs, getCompoundedIncome, getEmi, getNPV } from "../calc/finance";
-import { adjustAccruedInterest, calculateCFs, calculateSellPrice, createEduLoanDPWithSICFs, createLoanCFs, getLoanBorrowAmt } from "./cfutils";
+import { createAmortizingLoanCFs, createEduLoanMonthlyCFs, getCompoundedIncome, getEmi, getNPV } from "../calc/finance";
+import { adjustAccruedInterest, calculateCFs, calculateSellPrice, createLoanCFs, getClosestTargetVal, getLoanBorrowAmt } from "./cfutils";
 import { CalcContext } from "../calc/CalcContext";
 import OppCost from "../calc/oppcost";
 import FFImpact from "./ffimpact";
@@ -57,7 +57,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     inputTabs,
     setInputTabs,
     timer,
-    setTimer
+    setTimer,
+    analyzeFor
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const goalType = goal.type as GoalType;
@@ -81,12 +82,10 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [loanPer, setLoanPer] = useState<number | undefined | null>(
     goal?.loan?.per
   );
-  const [loanSIPayPer, setLoanSIPayPer] = useState<number | undefined | null>(
-    goal.btr
-  );
-  const [loanSIGPP, setLoanSIGPP] = useState<
-    number | undefined | null
-    >(goal.tbr);
+  const [eduLoanSISchedule, setEduLoanSISchedule] = useState<Array<number>>([]);
+  const [eduLoanPSchedule, setEduLoanPSchedule] = useState<Array<number>>([]);
+  const [eduLoanPDueSchedule, setEduLoanPDueSchedule] = useState<Array<number>>([]);
+  const [eduCostSemester, setEduCostSemester] = useState<number>(0);
  	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal.loan.type);
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
@@ -118,9 +117,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   const [loanPMI, setLoanPMI] = useState<number>(goal.loan?.pmi);
   const [loanPMIEndPer, setLoanPMIEndPer] = useState<number>(goal.loan?.peper);
   const [emi, setEMI] = useState<number>(goal?.loan?.emi as number);
-	const [ simpleInts, setSimpleInts ] = useState<Array<number>>([]);
-  const [remSI, setRemSI] = useState<number>(0);
-  const [ capSI, setCapSI ] = useState<number>(0);
   const [priceChgRate, setPriceChgRate] = useState<number>(goal?.chg as number);
   const [sellPrice, setSellPrice] = useState<number>(0);
   const [assetChgRate, setAssetChgRate] = useState<number | null | undefined>(
@@ -163,7 +159,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     )
   );
   const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
-  const [analyzeFor, setAnalyzeFor] = useState<number>(20);
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
   
   useEffect(() =>
@@ -216,8 +211,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       bg.ra = rentAmt;
       bg.rachg = rentChgPer;
     } else if (goalType === GoalType.E) {
-      bg.btr = loanSIPayPer;
-      bg.tbr = loanSIGPP;
       bg.achg = loanGracePeriod;
     }
     return bg;
@@ -266,19 +259,47 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     }
   }, [startingPrice, priceChgRate, startYear, manualMode, loanPer]);
 
+  const getEduLoanAnnualDPs = (monthlyDPs: Array<number>) => {
+    let cfs: Array<number> = [];
+    let month = startMonth;
+    let yearlyDP = 0;
+    monthlyDPs.forEach((dp: number) => {
+      yearlyDP += dp;
+      if (month === 12) {
+        month = 1;
+        cfs.push(yearlyDP);
+        yearlyDP = 0;
+      } else month++;
+    });
+    return cfs;
+  };
+
   useEffect(() => {
-    if (manualMode) return;
+    if (manualMode || goal.type !== GoalType.E) return;
     if (!price || !loanPer || !loanMonths) {
       setLoanBorrowAmt(0);
       setLoanStartingCFs([]);
-      setSimpleInts([]);
-      setRemSI(0);
-      setCapSI(0);
+      setEduLoanPSchedule([...[]]);
+      setEduLoanPDueSchedule([...[]]);
+      setEduLoanSISchedule([...[]]);
       return;
     }
-    let loanBorrowAmt = 0;
-    if (goalType !== GoalType.E) {
-      loanBorrowAmt = getLoanBorrowAmt(
+    let result = createEduLoanMonthlyCFs(startYear, endYear, price, priceChgRate, loanPer, loanIntRate as number, loanPrepayments, loanIRAdjustments, loanGracePeriod as number, eduCostSemester ? true : false);
+    setLoanBorrowAmt(result.borrowAmt);
+    setEduLoanPSchedule([...result.principal]);
+    setEduLoanPDueSchedule([...result.principalDue]);
+    setLoanStartingCFs([...getEduLoanAnnualDPs(result.dp)]);
+    setEduLoanSISchedule([...result.interest]);
+  }, [manualMode, price, priceChgRate, loanPer, loanIntRate, loanGracePeriod, startYear, endYear, loanPrepayments, loanIRAdjustments, eduCostSemester]);
+
+  useEffect(() => {
+    if (manualMode || goal.type === GoalType.E) return;
+    if (!price || !loanPer || !loanMonths) {
+      setLoanBorrowAmt(0);
+      setLoanStartingCFs([]);
+      return;
+    }
+    let loanBorrowAmt = getLoanBorrowAmt(
         price,
         goalType,
         manualMode,
@@ -286,35 +307,23 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         endYear - startYear,
         loanPer as number
       );
-      let loanDP: Array<number> = [Math.round(loanBorrowAmt / (loanPer as number / 100)) - loanBorrowAmt];
-      setLoanStartingCFs([...loanDP]);
-    } else {
-      let result = createEduLoanDPWithSICFs(
-        price,
-        priceChgRate,
-        loanPer as number,
-        startYear,
-        endYear,
-        loanIntRate as number,
-        loanSIPayPer as number,
-        loanSIGPP as number
-      );
-      setLoanStartingCFs([...result.cfs]);
-      loanBorrowAmt = result.borrowAmt;
-      setSimpleInts([...result.ints]);
-      setRemSI(result.remIntAmt);
-      setCapSI(result.capIntAmt);
-    }
+    let loanDP: Array<number> = [Math.round(loanBorrowAmt / (loanPer as number / 100)) - loanBorrowAmt];
+    setLoanStartingCFs([...loanDP]);
     loanBorrowAmt = adjustAccruedInterest(
-      loanBorrowAmt,
-      loanRepaymentMonths as number,
-      loanIntRate as number
+        loanBorrowAmt,
+        loanRepaymentMonths as number,
+        loanIntRate as number
     );
     setLoanBorrowAmt(loanBorrowAmt);
-  }, [price, manualMode, loanPer, loanIntRate, loanSIPayPer, loanSIGPP, loanRepaymentMonths, startYear, endYear]);
+  }, [price, manualMode, loanPer, loanIntRate, loanRepaymentMonths, startYear, endYear]);
 
-  useEffect(() => setEMI(getEmi(loanBorrowAmt, loanIntRate as number, loanMonths as number))
-  , [loanBorrowAmt, loanIntRate, loanMonths]);
+  useEffect(() => {
+    let intRate = loanIntRate as number;
+    if (goal.type === GoalType.E && eduLoanSISchedule && eduLoanSISchedule.length && loanIRAdjustments && loanIRAdjustments.length) {
+      intRate = getClosestTargetVal(loanIRAdjustments, eduLoanSISchedule.length + 1, intRate);
+    }
+    setEMI(getEmi(loanBorrowAmt, intRate, loanMonths as number))
+  }, [loanBorrowAmt, loanIntRate, loanMonths, eduLoanSISchedule, loanIRAdjustments]);
 
   const disableLoanChart = () => {
     if(resultTabs[1].active) {
@@ -324,7 +333,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     }
   }
 
-  const createLoanSchedule = () => {
+  const createNonEduLoanSchedule = () => {
+    if (goal.type === GoalType.E) return;
     if (!emi) {
       setPSchedule([...[]]);
       setInsSchedule([...[]]);
@@ -337,9 +347,42 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     setPSchedule([...result.principal]);
     setInsSchedule([...result.insurance]);
     setISchedule([...result.interest]);
+    if (!resultTabs[1].active) {
+      resultTabs[1].active = true;
+      setResultTabs([...resultTabs]);
+    }
   }
 
-  useEffect(() => createLoanSchedule(), [emi, loanPrepayments, loanIRAdjustments, sellAfter, loanPMI, loanPMIEndPer]);
+  useEffect(() => createNonEduLoanSchedule(), [emi, loanPrepayments, loanIRAdjustments, sellAfter, loanPMI, loanPMIEndPer]);
+
+  useEffect(() => {
+    if (goal.type !== GoalType.E) return;
+    if (!emi) {
+      setPSchedule([...[]]);
+      setInsSchedule([...[]]);
+      setISchedule([...[]]);
+      disableLoanChart();
+      return;
+    }
+    let result = createAmortizingLoanCFs(
+        loanBorrowAmt,
+        getClosestTargetVal(loanIRAdjustments, eduLoanSISchedule.length, loanIntRate as number),
+        emi,
+        loanPrepayments,
+        loanIRAdjustments,
+        loanMonths as number,
+        null,
+        0,
+        0,
+        eduLoanSISchedule.length
+    );
+    setPSchedule([...eduLoanPSchedule, ...result.principal]);
+    setISchedule([...eduLoanSISchedule, ...result.interest]);
+    if (!resultTabs[1].active) {
+      resultTabs[1].active = true;
+      setResultTabs([...resultTabs]);
+    }
+  }, [emi, eduLoanSISchedule]);
 
   useEffect(() => {
     if (manualMode < 1) return;
@@ -403,7 +446,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         principalSchedule = loanSchedule.principal;
         insuranceSchedule = loanSchedule.insurance;
       }
-      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, insuranceSchedule, simpleInts, remSI, g, duration, changeState ? true : false);
+      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, insuranceSchedule, g, duration, changeState ? true : false);
     } else result = calculateCFs(price, g, duration, changeState ? true : false);
     cfs = result.cfs;
     if (changeState) {
@@ -419,11 +462,10 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   };
 
   useEffect(() => {
-    let totalIntAmt = remSI + capSI;
-    simpleInts.forEach((int: number) => totalIntAmt += int);
+    let totalIntAmt = 0;
     iSchedule.forEach((int: number) => totalIntAmt += int);
 		setTotalIntAmt(Math.round(totalIntAmt));
-	}, [iSchedule, simpleInts, remSI, capSI]);
+	}, [iSchedule]);
 
   useEffect(() => {
     let totalInsAmt = 0;
@@ -657,10 +699,11 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           setTotalPTaxBenefit,
           totalITaxBenefit,
           setTotalITaxBenefit,
-          loanSIPayPer,
-          setLoanSIPayPer,
-          loanSIGPP,
-          setLoanSIGPP,
+          eduLoanSISchedule,
+          eduLoanPSchedule,
+          eduLoanPDueSchedule,
+          eduCostSemester,
+          setEduCostSemester,
           taxBenefitInt,
           setTaxBenefitInt,
           sellAfter,
@@ -705,8 +748,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           setFFImpactYears,
           allBuyCFs,
           setAllBuyCFs,
-          analyzeFor,
-          setAnalyzeFor,
           brChartData,
           setBRChartData,
           duration,
@@ -720,9 +761,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           isLoanMandatory,
           emi,
           setEMI,
-          simpleInts,
-          remSI,
-          capSI,
           loanBorrowAmt,
           loanType,
           setLoanType,

@@ -14,7 +14,7 @@ import MonthlyLoanSchedule from './MonthlyLoanSchedule';
 import Draggable from 'react-draggable';
 
 export default function LoanDetails() {
-	const { fsb, goal, currency, isPublicCalc }: any = useContext(CalcContext);
+	const { fsb, goal, currency, isPublicCalc, startYear, endYear }: any = useContext(CalcContext);
 	const {
 		loanRepaymentMonths,
 		loanMonths,
@@ -44,7 +44,7 @@ export default function LoanDetails() {
 				{!isEndYearHidden && (
 					<NumberInput
 						unit={`% (${toCurrency(Math.round(loanPer * price / 100), currency)})`}
-						pre="Loan Amount"
+						pre="Borrow"
 						value={loanPer}
 						changeHandler={setLoanPer}
 						step={1}
@@ -55,7 +55,7 @@ export default function LoanDetails() {
 				)}
 				{loanBorrowAmt && (
 					<NumberInput
-						pre="Loan Duration"
+						pre="Duration"
 						unit={`Months (${toReadableNumber(loanMonths / 12, 2)} Years)`}
 						value={loanMonths}
 						changeHandler={setLoanMonths}
@@ -69,21 +69,25 @@ export default function LoanDetails() {
 				<Row justify="space-between">
 					<Col>
 						<ItemDisplay
-							label="Loan Principal"
+							label={`Loan Principal${goal.type === GoalType.E ? ' Due' : ''}`}
 							result={loanBorrowAmt}
 							currency={currency}
 							footer={
-								<SelectInput
-									pre="Delay"
-									options={{
-										0: 'None',
-										1: '1 Month',
-										2: '2 Months',
-										3: '3 Months'
-									}}
-									value={loanRepaymentMonths}
-									changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
-								/>
+								goal.type !== GoalType.E ? (
+									<SelectInput
+										pre="Delay"
+										options={{
+											0: 'None',
+											1: '1 Month',
+											2: '2 Months',
+											3: '3 Months'
+										}}
+										value={loanRepaymentMonths}
+										changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
+									/>
+								) : (
+									`${startYear} to ${endYear}`
+								)
 							}
 						/>
 					</Col>

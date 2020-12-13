@@ -30,7 +30,9 @@ export default function Cost() {
 		setPriceChgRate,
 		manualMode,
 		setManualMode,
-		isLoanMandatory
+		isLoanMandatory,
+		eduCostSemester,
+		setEduCostSemester
 	}: any = useContext(GoalContext);
 	const router = useRouter();
 	const isLoanPublicCalc = router.pathname === ROUTES.LOAN;
@@ -90,13 +92,16 @@ export default function Cost() {
 			error={error}
 		>
 			<NumberInput
-				pre={isLoanPublicCalc ? 'Borrow Amount' : startYear > goal.by ? `Cost ${goal.type !== GoalType.D && 'including taxes & fees'}` : ''}
+				pre={isLoanPublicCalc ? 'Borrow Amount' : `Cost ${goal.type !== GoalType.D && 'including taxes & fees'}`}
 				currency={currency}
 				value={startingPrice}
 				changeHandler={setStartingPrice}
 				min={100}
 				max={goal.type === GoalType.B || isLoanPublicCalc ? 1500000 : 50000}
 				step={100}
+				note={goal.type === GoalType.E ?
+					<HSwitch value={eduCostSemester} setter={setEduCostSemester} rightText="Every 6 Months" /> : null
+				}
 			/>
 			{startYear > goal.by && !isLoanPublicCalc && (
 				<NumberInput

@@ -4,13 +4,12 @@ import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } 
 import { GoalContext } from './GoalContext';
 import { CalcContext } from '../calc/CalcContext';
 import { createYearlyFromMonthlyLoanCFs } from '../calc/finance';
-import { GoalType } from '../../api/goals';
 
 const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function LoanScheduleChart() {
-	const { goal, currency, startYear, endYear, startMonth }: any = useContext(CalcContext);
+	const { currency, startYear, startMonth }: any = useContext(CalcContext);
 	const { pSchedule, iSchedule, insSchedule, loanRepaymentMonths }: any = useContext(GoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [ hasMonthlyInsurance, setHasMonthlyInsurance ] = useState<boolean>(false);
@@ -38,7 +37,7 @@ export default function LoanScheduleChart() {
 				startMonth,
 				loanRepaymentMonths
 			);
-			let startingYear = goal.type === GoalType.E ? endYear + 1 : startYear;
+			let startingYear = startYear;
 			if (loanRepaymentMonths && startMonth + loanRepaymentMonths > 12) startingYear++;
 			for (let year = startingYear; year < startingYear + yearlyLoanCFs.principal.length; year++) {
 				let index = year - startingYear;

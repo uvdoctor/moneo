@@ -312,60 +312,12 @@ export const adjustAccruedInterest = (
   loanRate: number
 ) => loanBorrowAmt *= 1 + (loanRate * repaymentMonths / 1200);
 
-export const createEduLoanDPWithSICFs = (
-  price: number,
-  chgRate: number,
-  loanPer: number,
-  startYear: number,
-  endYear: number,
-  intRate: number,
-  intPer: number,
-  siGPP: number
-) => {
-  let result: Array<number> = [];
-  let totalLoanPrincipal = 0;
-  let ints: Array<number> = [];
-  let remIntAmt = 0;
-  let capIntAmt = 0;
-  for (let y = startYear; y <= endYear; y++) {
-    let p = getCompoundedIncome(chgRate, price, y - startYear);
-    totalLoanPrincipal += p * (loanPer / 100);
-    let dp = p * (1 - loanPer / 100);
-    let totalIntDue = totalLoanPrincipal * (intRate / 100);
-    let interestPaid = totalIntDue * (intPer / 100);
-    result.push(Math.round(dp + interestPaid));
-    ints.push(interestPaid);
-    remIntAmt += totalIntDue - interestPaid;
-    if (remIntAmt && y === endYear && siGPP) {
-      remIntAmt -= siGPP;
-      if (remIntAmt > 0) {
-        totalLoanPrincipal += remIntAmt;
-        capIntAmt = remIntAmt;
-        remIntAmt = 0;
-      }
-    }
-  }
-  return {
-    borrowAmt: totalLoanPrincipal,
-    cfs: result,
-    ints: ints,
-    remIntAmt: remIntAmt,
-    capIntAmt: capIntAmt
-  };
-};
-
-export const createEduLoanCFs = () => {
-
-};
-
 export const createLoanCFs = (
   price: number,
   loanStartingCFs: Array<number>,
   iSchedule: Array<number>,
   pSchedule: Array<number>,
   insSchedule: Array<number>,
-  simpleInts: Array<number>,
-  remSimpleIntAmt: number,
   goal: APIt.CreateGoalInput,
   duration: number,
   considerStartMonth: boolean = true
@@ -382,7 +334,7 @@ export const createLoanCFs = (
   let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, insSchedule, startingMonth, goal.loan?.ry as number);
   let sp = 0;
   let taxBenefit = 0;
-  let loanStartingYear = goal.type === APIt.GoalType.E ? goal.ey + 1 : goal.sy;
+  let loanStartingYear = goal.sy;
   let endingYear = goal.sy + duration - 1;
   if (startingMonth + (goal.loan?.ry as number) > 12) loanStartingYear++;
   for (let year = goal.sy; year <= endingYear; year++) {
@@ -412,19 +364,7 @@ export const createLoanCFs = (
         taxBenefit += itb;
         totalITaxBenefit += itb;
       }
-    } else if (
-      year < (goal.loan?.ry as number) &&
-      (goal.tbi as number) > 0 &&
-      simpleInts[index]
-    ) {
-      taxBenefit = getTaxBenefit(
-        simpleInts[index],
-        goal.tdr,
-        goal.tdli as number
-      );
-      totalITaxBenefit += taxBenefit;
-    }
-    if (goal.type === APIt.GoalType.E && year === goal.ey + 1) cf += remSimpleIntAmt;
+    } 
     if (goal.type === APIt.GoalType.B) {
       cf -= calculateBuyAnnualNetCF(
         goal.sy,
@@ -843,4 +783,12 @@ export const findEarliestFFYear = (
     prevResult = result;
   }
   return prevResult;
+};
+
+export const getClosestTargetVal = (arr: Array<APIt.TargetInput>, num: number, defaultVal: number) => {
+	if(!arr || !arr.length) return defaultVal;
+	for (let i = 0; i < arr.length; i++) {
+		if (arr[i].num > num) return i ? arr[i - 1].val : defaultVal;
+	};
+	return arr[arr.length - 1].val;
 };
