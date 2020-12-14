@@ -12,9 +12,7 @@ export default function DefaultOppCostResult() {
 	const [ oppCost, setOppCost ] = useState<number>(0);
 	const isDRNumber = dr !== null;
 	const [ numOfYears, setNumOfYears ] = useState<number>(cfs.length);
-	const [ numOfYearsOptions, setNumOfYearsOptions ] = useState<any>(
-		initOptions(startMonth > 1 ? cfs.length - 1 : cfs.length, 20)
-	);
+	const [ numOfYearsOptions, setNumOfYearsOptions ] = useState<any>(initOptions(cfs.length, 20));
 
 	const calculateOppCost = (yearsNum: number) => {
 		if (!cfs || !cfs.length) {
@@ -29,32 +27,37 @@ export default function DefaultOppCostResult() {
 		if (startYear) startIndex = startYear - (new Date().getFullYear() + 1);
 		cfs.forEach((cf: number, index: number) => {
 			if (sellAfter) {
-				if (index === sellAfter) return;
-				else if (index === sellAfter - 1) cf -= sellPrice;
-			} 
+				if (index > sellAfter) return;
+				if (index === (startMonth > 1 ? sellAfter : sellAfter - 1)) cf -= sellPrice;
+			}
 			oppCost += cf;
-			if (index < cfs.length - 1 && oppCost < 0) oppCost *= 1 + (isDRNumber ? discountRate : discountRate[startIndex + index]) / 100;
-			if(sellAfter && index === sellAfter - 1) oppCost += sellPrice;
+			if (oppCost < 0) {
+				let yearlyFactor = 1;
+				if (index === 0 && startMonth > 1) yearlyFactor = (12 - (startMonth - 1)) / 12;
+				if (index === cfs.length - 1 && startMonth > 1) yearlyFactor = (startMonth - 1) / 12;
+				oppCost *= 1 + (isDRNumber ? discountRate : discountRate[startIndex + index]) * yearlyFactor / 100;
+			}
+			if (sellAfter && index === (startMonth > 1 ? sellAfter : sellAfter - 1)) oppCost += sellPrice;
 		});
 		if (!sellAfter) {
 			if (!isDRNumber) {
-				let year = (startYear as number) + cfs.length - 1;
+				let year = (startYear as number) + cfs.length;
 				for (
-					let i = startIndex + cfs.length - 1;
+					let i = startIndex + cfs.length;
 					i < discountRate.length - (getMinRetirementDuration() + 1);
 					i++, year++
 				)
 					if (oppCost < 0) oppCost *= 1 + discountRate[i] / 100;
-			} else if (cfs.length - 1 < yearsForCalculation && oppCost < 0)
-				oppCost = getCompoundedIncome(discountRate, oppCost, yearsForCalculation - (cfs.length - 1));
+			} else if (cfs.length < yearsForCalculation && oppCost < 0)
+				oppCost = getCompoundedIncome(discountRate, oppCost, yearsForCalculation - cfs.length);
 		}
 		setOppCost(oppCost);
 	};
 
 	useEffect(
 		() => {
-			calculateOppCost(sellAfter ? sellAfter : cfs.length);
-			setNumOfYearsOptions(initOptions(startMonth > 1 ? cfs.length - 1 : cfs.length, cfs.length + 20, 1));
+			calculateOppCost(numOfYears);
+			setNumOfYearsOptions(initOptions(cfs.length, 20));
 		},
 		[ cfs ]
 	);

@@ -1,8 +1,8 @@
-import React, { Fragment, ReactNode } from "react";
-import { toCurrency, toHumanFriendlyCurrency, toReadableNumber } from "../utils";
-import { Tooltip, Statistic } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { COLORS } from "../../CONSTANTS";
+import React, { Fragment, ReactNode } from 'react';
+import { toCurrency, toHumanFriendlyCurrency, toReadableNumber } from '../utils';
+import { Tooltip, Statistic } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import { COLORS } from '../../CONSTANTS';
 interface ItemDisplayProps {
 	label?: any;
 	svg?: any;
@@ -15,7 +15,7 @@ interface ItemDisplayProps {
 	info?: string;
 	imp?: string;
 	pl?: boolean;
-	precise?: boolean
+	precise?: boolean;
 }
 
 export default function ItemDisplay(props: ItemDisplayProps) {
@@ -35,9 +35,11 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 								{props.info && (
 									<Tooltip
 										title={props.info}
-										color={`${
-											props.pl && props.result < 0 ? "red" : COLORS.DEFAULT
-										}`}
+										color={`${props.pl
+											? props.result < 0
+												? COLORS.RED
+												: props.result > 0 ? COLORS.GREEN : COLORS.DEFAULT
+											: COLORS.DEFAULT}`}
 									>
 										<InfoCircleOutlined />
 									</Tooltip>
@@ -48,31 +50,20 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 				}
 				value={props.result}
 				prefix={props.svg}
-				suffix={props.unit ? props.unit : ""}
+				suffix={props.unit ? props.unit : ''}
 				formatter={() =>
-					typeof props.result === "number" && !props.noResultFormat
+					typeof props.result === 'number' && !props.noResultFormat
 						? props.currency
-							? props.precise ?
-								toCurrency(
-									Math.abs(props.result),
-									props.currency,
-									props.decimal ? true : false
-							  ) : toHumanFriendlyCurrency(Math.abs(props.result), props.currency)
-							: toReadableNumber(
-									Math.abs(props.result),
-									props.decimal ? props.decimal : 0
-							  )
-						: props.result
-				}
+							? props.precise
+								? toCurrency(Math.abs(props.result), props.currency, props.decimal ? true : false)
+								: toHumanFriendlyCurrency(Math.abs(props.result), props.currency)
+							: toReadableNumber(Math.abs(props.result), props.decimal ? props.decimal : 0)
+						: props.result}
 				valueStyle={{
 					color: props.pl
-						? props.result < 0
-							? COLORS.RED
-							: props.result > 0
-							? COLORS.GREEN
-							: COLORS.DEFAULT
+						? props.result < 0 ? COLORS.RED : props.result > 0 ? COLORS.GREEN : COLORS.DEFAULT
 						: COLORS.DEFAULT,
-					textAlign: "center",
+					textAlign: 'center'
 				}}
 			/>
 			<div className="text-center">{props.footer}</div>

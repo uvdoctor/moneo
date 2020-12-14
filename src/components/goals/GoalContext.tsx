@@ -14,6 +14,7 @@ import BuyReturnResult from "../calc/BuyReturnResult";
 import { useRouter } from "next/router";
 import { ROUTES } from "../../CONSTANTS";
 import LoanIntResult from "../calc/LoanIntResult";
+import TaxBenefitResult from "../calc/TaxBenefitResult";
 
 const GoalContext = createContext({});
 
@@ -224,6 +225,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       goalType === GoalType.B && <BuyReturnResult />,
       isLoanEligible(goal.type) && <LoanIntResult />,
       addCallback && <FFImpact />,
+      <TaxBenefitResult />,
       <DefaultOppCostResult />
     ]]);
   }, []);
