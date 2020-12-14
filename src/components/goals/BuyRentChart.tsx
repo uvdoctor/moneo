@@ -17,22 +17,21 @@ export default function BuyRentChart() {
 
 	useEffect(
 		() => {
-			if (!brChartData || !brChartData.length) return;
-			let chartData: Array<any> = [];
-			if (!brChartData[0].values.length) {
-				setStackedData([ ...chartData ]);
+			if (!brChartData || !brChartData.length || !brChartData[0].values.length) {
+				setStackedData([ ...[] ]);
 				return;
 			}
-			for (let year = 1; year <= brChartData[0].values.length; year++) {
+			let chartData: Array<any> = [];
+			for (let year = 3; year <= analyzeFor; year++) {
 				chartData.push({
 					name: brChartData[0].name,
 					years: year,
-					value: brChartData[0].values[year - 1]
+					value: brChartData[0].values[year - 3]
 				});
 				chartData.push({
 					name: brChartData[1].name,
 					years: year,
-					value: brChartData[1].values[year - 1]
+					value: brChartData[1].values[year - 3]
 				});
 			}
 			setStackedData([ ...chartData ]);
@@ -47,14 +46,14 @@ export default function BuyRentChart() {
 			<Row align="middle" className="chart-options-row" justify="center">
 				<Col xs={24} sm={24} md={24} lg={12}>
 					<NumberInput
-						pre="Compare from 1 to "
+						pre="Compare from 3 to "
 						value={analyzeFor}
 						changeHandler={setAnalyzeFor}
-						min={10}
+						min={5}
 						max={50}
-						step={5}
+						step={1}
 						unit="Years"
-						additionalMarks={[ 20, 30, 40 ]}
+						additionalMarks={[ 10, 15, 20, 25, 30, 35, 40, 45 ]}
 					/>
 				</Col>
 			</Row>
@@ -75,11 +74,11 @@ export default function BuyRentChart() {
 						//@ts-ignore
 						formatter: (years: number, name: string, value: number) => {
 							const isAns =
-								name === getAns(brChartData[0].values[years - 1], brChartData[1].values[years - 1]);
+								name === getAns(brChartData[0].values[years - 3], brChartData[1].values[years - 3]);
 							const valueStr = `${value > 0 ? 'Gain' : 'Loss'} of ${toCurrency(
 								Math.abs(value),
 								currency
-							)} over ${years} Year${years > 1 ? 's' : ''}`;
+							)} over ${years} Years`;
 							return {
 								name: isAns ? `<b>${name}</b>` : name,
 								value: isAns ? `<b>${valueStr}</b>` : valueStr

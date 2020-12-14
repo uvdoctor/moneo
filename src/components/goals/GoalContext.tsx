@@ -535,30 +535,30 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     if (!rentAmt) return [];
     const firstRRIndex = startYear - (nowYear + 1);
     let npv: Array<number> = [];
-    for (let i = 0; i < analyzeFor; i++) {
+    for (let i = 3; i <= analyzeFor; i++) {
       let cfs = [];
       let inv = 0;
-      for (let j = 0; j <= i; j++) {
+      console.log(`Input buy cfs for ${i}: `, allBuyCFs[i - 3]);
+      for (let j = 0; j < i; j++) {
         let value = getCompoundedIncome(rentChgPer as number, rentAmt, j);
         if (rentTaxBenefit) value *= (1 - taxRate / 100);
-        let buyCF: number = allBuyCFs[i][j];
-        if (!i) {
-          if (manualMode) buyCF = wipTargets[0] ? -wipTargets[0].val : 0;
-          else if (loanPer) buyCF = -loanStartingCFs[0];
-          else buyCF = -price;
-        } else if (j === i && buyCF > 0) {
-          if (loanPer && loanMonths && manualMode < 1 && (i + 1) * 12 < loanMonths) buyCF = - allBuyCFs[i][j-1];
-          else buyCF -= calculateSellPrice(price, assetChgRate as number, i + 1);
+        let buyCFs = allBuyCFs[i - 3];
+        let buyCF = buyCFs[j];
+        if (j === i - 1 && buyCF > 0) {
+          if (loanPer && loanMonths && manualMode < 1 && i * 12 < loanMonths) buyCF = allBuyCFs[i - 2] ? allBuyCFs[i - 2][j] : buyCFs[j - 1];
+          else buyCF -= calculateSellPrice(price, assetChgRate as number, i);
+          console.log("Buy CF for last year: ", buyCF);
         }
         if (buyCF && buyCF < 0) inv -= buyCF;
         inv -= value;
         if (inv > 0) {
           let rate = dr === null ? rr[firstRRIndex + j] : dr;
           inv *= 1 + (rate / 100);
-          if (j === i) cfs.push(Math.round(inv));
+          if (j === i - 1) cfs.push(Math.round(inv));
         }
-        if(j < i || inv <= 0) cfs.push(-Math.round(value));
+        if(j < i - 1 || inv <= 0) cfs.push(-Math.round(value));
       }
+      console.log("Rent cfs: ", cfs);
       if (cfs.length) npv.push(getNPV(dr === null ? rr : dr, cfs, firstRRIndex));
     }
     return npv;
@@ -581,9 +581,9 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 
   const initAllBuyCFs = () => {
     let npv: Array<number> = [];
-    for (let i = 0; i < analyzeFor; i++) {
+    for (let i = 0; i < allBuyCFs.length; i++) {
       let buyCFs = allBuyCFs[i];
-      if (buyCFs && buyCFs.length > 0) {
+      if (buyCFs && buyCFs.length) {
         npv.push(
           getNPV(dr === null ? rr : dr, buyCFs, startYear - (nowYear + 1))
         );
@@ -600,7 +600,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     for (let i = 0; i < rentValues.length; i++) {
       let result = getAns(buyValues[i], rentValues[i]);
       if (ans !== result) {
-        crossOvers.push(i);
+        crossOvers.push(i + 2);
         ans = result;
       }
     }
@@ -613,11 +613,11 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     if (co.length) {
       const altAns = ans === 'Rent' ? 'Buy' : 'Rent';
       if (co.length === 1)
-        ans = `Till ${co[0]} Year${co[0] > 1 ? 's' : ''}: ${ans}, else ${altAns}.`;
+        ans = `Upto ${co[0]} Years: ${ans}, else ${altAns}.`;
       else if (co.length === 2)
         ans = `If ${co[0] + 1 < co[1] ? `${co[0] + 1} to ` : ''}${co[1]} Years: ${altAns}, else ${ans}.`;
       else if (co.length === 3)
-        ans = `Till ${co[0]}, or ${co[1] + 1} to ${co[2]} Years: ${ans}. ${altAns} otherwise.`
+        ans = `Upto ${co[0]}, or ${co[1] + 1} to ${co[2]} Years: ${ans}. ${altAns} otherwise.`
     }
     setBRAns(ans);
 	};
@@ -651,7 +651,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 
   const setAllBuyCFsForComparison = () => {
     let allBuyCFs: Array<Array<number>> = [];
-    for (let i = 1; i <= analyzeFor; i++)
+    for (let i = 3; i <= analyzeFor; i++)
       allBuyCFs.push(calculateYearlyCFs(i, false));
     setAllBuyCFs([...allBuyCFs]);
   };
