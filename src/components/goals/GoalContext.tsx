@@ -538,7 +538,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     for (let i = 3; i <= analyzeFor; i++) {
       let cfs = [];
       let inv = 0;
-      console.log(`Input buy cfs for ${i}: `, allBuyCFs[i - 3]);
       for (let j = 0; j < i; j++) {
         let value = getCompoundedIncome(rentChgPer as number, rentAmt, j);
         if (rentTaxBenefit) value *= (1 - taxRate / 100);
@@ -547,7 +546,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         if (j === i - 1 && buyCF > 0) {
           if (loanPer && loanMonths && manualMode < 1 && i * 12 < loanMonths) buyCF = allBuyCFs[i - 2] ? allBuyCFs[i - 2][j] : buyCFs[j - 1];
           else buyCF -= calculateSellPrice(price, assetChgRate as number, i);
-          console.log("Buy CF for last year: ", buyCF);
         }
         if (buyCF && buyCF < 0) inv -= buyCF;
         inv -= value;
@@ -558,7 +556,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         }
         if(j < i - 1 || inv <= 0) cfs.push(-Math.round(value));
       }
-      console.log("Rent cfs: ", cfs);
       if (cfs.length) npv.push(getNPV(dr === null ? rr : dr, cfs, firstRRIndex));
     }
     return npv;
