@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useState } from 'react';
 import NumberInput from '../form/numberinput';
-import { toCurrency, toReadableNumber } from '../utils';
+import { toHumanFriendlyCurrency, toReadableNumber } from '../utils';
 import SelectInput from '../form/selectinput';
 import Section from '../form/section';
 import ItemDisplay from './ItemDisplay';
@@ -43,7 +43,7 @@ export default function LoanDetails() {
 			<Section title="Loan Details" videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}>
 				{!isEndYearHidden && (
 					<NumberInput
-						unit={`% (${toCurrency(Math.round(loanPer * price / 100), currency)})`}
+						unit={`% (${toHumanFriendlyCurrency(Math.round(loanPer * price / 100), currency)})`}
 						pre="Borrow"
 						value={loanPer}
 						changeHandler={setLoanPer}
@@ -66,37 +66,39 @@ export default function LoanDetails() {
 					/>
 				)}
 				{loanBorrowAmt && <LoanInterest />}
-				<Row justify="space-between">
-					<Col>
-						<ItemDisplay
-							label={`Loan Principal${goal.type === GoalType.E ? ' Due' : ''}`}
-							result={loanBorrowAmt}
-							currency={currency}
-							footer={
-								goal.type !== GoalType.E ? (
-									<SelectInput
-										pre="Delay"
-										options={{
-											0: 'None',
-											1: '1 Month',
-											2: '2 Months',
-											3: '3 Months'
-										}}
-										value={loanRepaymentMonths}
-										changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
-									/>
-								) : (
-									`${startYear} to ${endYear}`
-								)
-							}
-						/>
-					</Col>
-					{loanBorrowAmt && (
+				{loanBorrowAmt && (
+					<Row justify="space-between">
+						<Col>
+							<ItemDisplay
+								label={`Loan Principal${goal.type === GoalType.E ? ' Due' : ''}`}
+								result={loanBorrowAmt}
+								currency={currency}
+								precise
+								footer={
+									goal.type !== GoalType.E ? (
+										<SelectInput
+											pre="Delay"
+											options={{
+												0: 'None',
+												1: '1 Month',
+												2: '2 Months',
+												3: '3 Months'
+											}}
+											value={loanRepaymentMonths}
+											changeHandler={(months: string) => setLoanRepaymentMonths(parseInt(months))}
+										/>
+									) : (
+										`${startYear} to ${endYear}`
+									)
+								}
+							/>
+						</Col>
 						<Col>
 							<ItemDisplay
 								label="Monthly Installment"
 								result={emi}
 								currency={currency}
+								precise
 								decimal={2}
 								footer={
 									<Button type="link" onClick={showLoanSchedule}>
@@ -105,8 +107,8 @@ export default function LoanDetails() {
 								}
 							/>
 						</Col>
-					)}
-				</Row>
+					</Row>
+				)}
 				{emi && <LoanAdvOptions />}
 			</Section>
 			{loanScheduleModal && (

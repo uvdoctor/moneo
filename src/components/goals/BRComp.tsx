@@ -56,6 +56,7 @@ export default function BRComp() {
 					pre="Invest Remaining Money At"
 					unit="%"
 					note="Yearly After paying taxes & fees"
+					additionalMarks={[4, 7, 10]}
 				/>
 			)}
 		</Section>

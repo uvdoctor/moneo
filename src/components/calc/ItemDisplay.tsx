@@ -1,5 +1,5 @@
 import React, { Fragment, ReactNode } from "react";
-import { toCurrency, toReadableNumber } from "../utils";
+import { toCurrency, toHumanFriendlyCurrency, toReadableNumber } from "../utils";
 import { Tooltip, Statistic } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { COLORS } from "../../CONSTANTS";
@@ -15,6 +15,7 @@ interface ItemDisplayProps {
 	info?: string;
 	imp?: string;
 	pl?: boolean;
+	precise?: boolean
 }
 
 export default function ItemDisplay(props: ItemDisplayProps) {
@@ -51,11 +52,12 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 				formatter={() =>
 					typeof props.result === "number" && !props.noResultFormat
 						? props.currency
-							? toCurrency(
+							? props.precise ?
+								toCurrency(
 									Math.abs(props.result),
 									props.currency,
 									props.decimal ? true : false
-							  )
+							  ) : toHumanFriendlyCurrency(Math.abs(props.result), props.currency)
 							: toReadableNumber(
 									Math.abs(props.result),
 									props.decimal ? props.decimal : 0

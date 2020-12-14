@@ -553,6 +553,9 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           if (manualMode) buyCF = wipTargets[0] ? -wipTargets[0].val : 0;
           else if (loanPer) buyCF = -loanStartingCFs[0];
           else buyCF = -price;
+        } else if (j === i && buyCF > 0) {
+          if (loanPer && loanMonths && manualMode < 1 && (i + 1) * 12 <= loanMonths) buyCF = - (emi * 12);
+          else buyCF -= calculateSellPrice(price, assetChgRate as number, i + 1);
         }
         if (buyCF && buyCF < 0) inv -= buyCF;
         inv -= value;
@@ -563,9 +566,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         }
         if(j < i || inv <= 0) cfs.push(-Math.round(value));
       }
-      if (cfs.length) {
-        npv.push(getNPV(dr === null ? rr : dr, cfs, firstRRIndex));
-      }
+      if (cfs.length) npv.push(getNPV(dr === null ? rr : dr, cfs, firstRRIndex));
     }
     return npv;
   };
@@ -613,16 +614,14 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     return crossOvers;
   };
 
-  const getAlternativeAns = (ans: string) => ans === 'Rent' ? 'Buy' : 'Rent';
-
   const findAnswer = (data: Array<any>) => {
     let ans = getAns(data[0].values[0], data[1].values[0]);
     let co: Array<number> = identifyCrossOvers(data[0].values, data[1].values, ans);
     if (co.length) {
-      const altAns = getAlternativeAns(ans);
+      const altAns = ans === 'Rent' ? 'Buy' : 'Rent';
       ans = co.length === 1 ?
         `Up to ${co[0]} Year${co[0] > 1 ? 's' : ''}: ${ans}, else ${altAns}.`
-        : `${co[0] + 1} to ${co[1]} Years: ${altAns}, else ${ans}.`;
+        : `If ${co[0] + 1 < co[1] ? `${co[0] + 1} to ` : ''}${co[1]} Years: ${altAns}, else ${ans}.`;
     }
     setBRAns(ans);
 	};

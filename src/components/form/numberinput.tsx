@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { getRangeFactor, parseNumber, toCurrency, toHumanFriendlyNumber, toReadableNumber } from '../utils';
+import { getRangeFactor, parseNumber, toCurrency, toHumanFriendlyCurrency, toReadableNumber } from '../utils';
 import { Slider } from 'antd';
 import { COLORS } from '../../CONSTANTS';
 import { Tooltip, InputNumber, Row, Col } from 'antd';
@@ -141,9 +141,9 @@ export default function NumberInput(props: NumberInputProps) {
 									/>
 								</Col>
 							</Row>
-							{toHumanFriendlyNumber(props.value) ? (
+							{props.value >= 100000 ? (
 								<Row>
-									<Col>{`~   ${toHumanFriendlyNumber(props.value, props.currency === 'INR')}`}</Col>
+									<Col>{`~ ${toHumanFriendlyCurrency(props.value, props.currency)}`}</Col>
 								</Row>
 							) : null}
 						</Col>
