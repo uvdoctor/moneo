@@ -37,14 +37,15 @@ export default function TaxAdjustment() {
 		<Section title={`Claim Tax ${isTaxCreditEligible(goal.type) ? 'Credit' : 'Deduction'}`}>
 			{!isTaxCreditEligible(goal.type) && (
 				<NumberInput
-					info="Income Tax slab based on Your Income"
-					pre="Tax Rate is "
+					info="Marginal Income Tax slab based on Your Income"
+					pre="Marginal Tax Rate"
 					min={0}
 					max={50}
 					step={0.1}
 					unit="%"
 					value={taxRate}
 					changeHandler={setTaxRate}
+					additionalMarks={[10, 20, 30]}
 				/>
 			)}
 			{(isTaxCreditEligible(goal.type) || taxRate) && goal.type !== GoalType.E && (

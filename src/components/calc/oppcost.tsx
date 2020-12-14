@@ -88,7 +88,7 @@ export default function OppCost({ calculateFor }: OppCostProps) {
 							{` @ `}
 							<SelectInput
 								pre=""
-								value={dr}
+								value={Math.round(dr)}
 								changeHandler={(val: string) => setDR(parseInt(val))}
 								post="%"
 								options={drOptions}
