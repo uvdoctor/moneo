@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { getRangeFactor, parseNumber, toCurrency, toReadableNumber } from '../utils';
+import { getRangeFactor, parseNumber, toCurrency, toHumanFriendlyCurrency, toReadableNumber } from '../utils';
 import { Slider } from 'antd';
 import { COLORS } from '../../CONSTANTS';
 import { Tooltip, InputNumber, Row, Col } from 'antd';
@@ -114,29 +114,38 @@ export default function NumberInput(props: NumberInputProps) {
 				<Row justify="space-between" align="top" style={{ marginBottom: '1.5rem' }}>
 					{props.currency && (
 						<Col span={10}>
-							<InputNumber
-								ref={inputRef}
-								value={props.value}
-								min={minNum}
-								max={maxNum}
-								step={stepNum}
-								onChange={(val) => {
-									provideFeedback(val as number);
-									props.changeHandler(val as number);
-								}}
-								formatter={(val) => toCurrency(val as number, props.currency as string)}
-								parser={(val) => parseNumber(val as string, props.currency)}
-								onPressEnter={(e: any) => {
-									e.preventDefault();
-									//@ts-ignore
-									inputRef.current.blur();
-								}}
-								onBlur={(e: any) => {
-									let num = parseInt(parseNumber(e.currentTarget.value, props.currency));
-									if (!num || num < props.min) props.changeHandler(props.min);
-								}}
-								style={{ width: '100%', marginBottom: '0px' }}
-							/>
+							<Row>
+								<Col>
+									<InputNumber
+										ref={inputRef}
+										value={props.value}
+										min={minNum}
+										max={maxNum}
+										step={stepNum}
+										onChange={(val) => {
+											provideFeedback(val as number);
+											props.changeHandler(val as number);
+										}}
+										formatter={(val) => toCurrency(val as number, props.currency as string)}
+										parser={(val) => parseNumber(val as string, props.currency)}
+										onPressEnter={(e: any) => {
+											e.preventDefault();
+											//@ts-ignore
+											inputRef.current.blur();
+										}}
+										onBlur={(e: any) => {
+											let num = parseInt(parseNumber(e.currentTarget.value, props.currency));
+											if (!num || num < props.min) props.changeHandler(props.min);
+										}}
+										style={{ width: '100%', marginBottom: '0px' }}
+									/>
+								</Col>
+							</Row>
+							{props.value >= 100000 ? (
+								<Row>
+									<Col>{`~ ${toHumanFriendlyCurrency(props.value, props.currency)}`}</Col>
+								</Row>
+							) : null}
 						</Col>
 					)}
 					<Col span={props.currency ? 12 : 24}>

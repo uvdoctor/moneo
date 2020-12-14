@@ -212,7 +212,7 @@ function CalcContextProvider({
       value={{
         goal,
 				currency,
-				setCurrency,
+        setCurrency,
 				allInputDone,
 				setAllInputDone,
 				inputTabIndex,

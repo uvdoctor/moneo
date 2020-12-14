@@ -5,9 +5,10 @@ import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { createYearlyFromMonthlyLoanCFs } from './finance';
+import { toHumanFriendlyCurrency, toReadableNumber } from '../utils';
 
 export default function BuyReturnResult() {
-	const { startYear, startMonth, cfs }: any = useContext(CalcContext);
+	const { startYear, startMonth, cfs, currency }: any = useContext(CalcContext);
 	const {
 		price,
 		sellAfter,
@@ -17,7 +18,7 @@ export default function BuyReturnResult() {
 		pSchedule,
 		insSchedule,
 		annualReturnPer,
-		setAnnualReturnPer,
+		setAnnualReturnPer
 	}: any = useContext(GoalContext);
 
 	const getXIRRLoanEntries = () => {
@@ -54,7 +55,13 @@ export default function BuyReturnResult() {
 		let sellCFIndex = sellAfter - 1;
 		if (startMonth > 1) sellCFIndex++;
 		if (iSchedule && iSchedule.length)
-			yearlyLoanPayments = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, insSchedule, startMonth, loanRepaymentMonths);
+			yearlyLoanPayments = createYearlyFromMonthlyLoanCFs(
+				iSchedule,
+				pSchedule,
+				insSchedule,
+				startMonth,
+				loanRepaymentMonths
+			);
 		cfs.forEach((cf: number, i: number) => {
 			if (i === sellCFIndex) {
 				cf -= sellPrice;
@@ -94,13 +101,19 @@ export default function BuyReturnResult() {
 	return annualReturnPer !== null ? (
 		<ItemDisplay
 			svg={annualReturnPer > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-			label="Buy Yields"
+			label={`Yearly ${annualReturnPer > 0 ? 'Gain' : 'Loss'} due to Buying`}
 			result={annualReturnPer}
 			decimal={2}
-			unit={`% Yearly ${annualReturnPer > 0 ? 'Gain' : 'Loss'}`}
+			unit="%"
 			pl
+			info={`Buying leads to ${toReadableNumber(Math.abs(annualReturnPer), 2)}% Yearly ${annualReturnPer > 0
+				? 'Gain'
+				: 'Loss'} considering various cash flows & assuming You get about ${toHumanFriendlyCurrency(
+				sellPrice,
+				currency
+			)} after paying taxes & fees in ${startYear + sellAfter - 1}.`}
 		/>
 	) : (
-		<ItemDisplay label="Buy Yields" result="Unable to Calculate." />
+		<ItemDisplay label={`Yearly Performance of Buying`} result="Unable to Calculate." />
 	);
 }

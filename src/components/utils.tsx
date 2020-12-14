@@ -190,6 +190,8 @@ export const toCurrency = (
   return num ? formatter.format(num) : formatter.format(0);
 };
 
+export const getCurrencySymbol = (currency: string) => toCurrency(0, currency).replace("0", "");
+
 export const toReadableNumber = (num: number, decimalDigits: number = 0) => {
   const formatter = new Intl.NumberFormat(navigator.language, {
     minimumFractionDigits: decimalDigits,
@@ -608,4 +610,18 @@ export const getMonthName = (monthNum: number, shortForm: boolean = false) => {
   if (monthNum < 1 || monthNum > 12) return "";
   let monthName: string = MONTHS[monthNum];
   return shortForm ? monthName.substring(0, 3) : monthName;
+}
+
+export const toHumanFriendlyCurrency = (val: number, currency: string) => {
+  if (val < 100000) return toCurrency(val, currency);
+  const lakhs = currency === 'INR';
+  let divider = lakhs ? 100000 : 1000000;
+  let unit = lakhs ? "lakhs" : "million";
+  const largeMultiplier = lakhs ? 100 : 1000;
+  if(val >= divider * largeMultiplier) {
+    divider *= largeMultiplier;
+    unit = lakhs ? "crores" : "billion";
+  }
+  const decimals = val % divider === 0 ? 0 : 2;
+  return `${getCurrencySymbol(currency)}${(val / divider).toFixed(decimals)} ${unit}`;
 }
