@@ -3,7 +3,7 @@ import { SPEND_MONTHLY, SPEND_ONCE, SPEND_YEARLY } from './Spend';
 import { CalcContext } from './CalcContext';
 import CalcTemplate from './CalcTemplate';
 import TimeCostResult from './TimeCostResult';
-import OppCost from './oppcost';
+import TrueOppCostResult from './TrueOppCostResult';
 
 const TrueCostContext = createContext({});
 
@@ -13,13 +13,9 @@ export const TIME_COST_YEARS = 'Years';
 
 function TrueCostContextProvider() {
 	const {
-		cfs,
 		setCFs,
-		dr,
 		allInputDone,
-		setCFsWithOppCost,
 		setResults,
-		analyzeFor
 	}: any = useContext(CalcContext);
 	const [ amt, setAmt ] = useState<number>(0);
 	const [ freq, setFreq ] = useState<string>(SPEND_ONCE);
@@ -32,56 +28,26 @@ function TrueCostContextProvider() {
 	const [ timeCostDisplay, setTimeCostDisplay ] = useState<number>(0);
 	const [ timeCostUnit, setTimeCostUnit ] = useState<string>(TIME_COST_HOURS);
 	const [ totalCost, setTotalCost ] = useState<number>(0);
+	const [cfsWithoutOppCost, setCFsWithoutOppCost] = useState<Array<number>>([]);
 
 	useEffect(() => {
 		setResults([...[
-			<TimeCostResult />
-,
-			/*<ItemDisplay
-				label={`Spend v/s Invest @ ${dr}%`}
-				info={`You May have ${toCurrency(
-					Math.abs(cfsWithOppCost[cfsWithOppCost.length - 1]),
-					currency
-				)} More in ${years} Years if You Invest instead of Spending.`}
-				result={-cfsWithOppCost[cfsWithOppCost.length - 1]}
-				currency={currency}
-				pl
-			/>*/
-			<OppCost />
+			<TimeCostResult />,
+			<TrueOppCostResult />
 		]
 		])
 	}, []);
 
 	useEffect(
 		() => {
-			if (!cfs.length) {
-				setCFsWithOppCost([ ...cfs ]);
-				return;
-			}
-			let cfsWithOppCost: Array<number> = [];
-			for (let i = 0; i < analyzeFor; i++) {
-				let prevCF = i < cfs.length ? -cfs[i] : cfsWithOppCost[i - 1];
-				if (i > 0 && i < cfs.length && freq !== SPEND_ONCE) {
-					prevCF += cfsWithOppCost[i - 1];
-				}
-				let compoundedVal = Math.round(prevCF * (1 + dr / 100));
-				cfsWithOppCost.push(compoundedVal);
-			}
-			setCFsWithOppCost([ ...cfsWithOppCost ]);
-		},
-		[ cfs, dr, analyzeFor ]
-	);
-
-	useEffect(
-		() => {
-			let cfs: Array<number> = [];
 			if (!allInputDone || !amt || !freq || (freq !== SPEND_ONCE && !duration)) {
-				setCFs([ ...cfs ]);
+				setCFs([ ...[] ]);
 				return;
 			}
+			let cfs: Array<number> = [];
 			if (freq === SPEND_ONCE) {
 				cfs.push(-amt);
-				setCFs([ ...cfs ]);
+				setCFsWithoutOppCost([ ...cfs ]);
 				return;
 			}
 			let dur = freq === SPEND_YEARLY ? duration : Math.round(duration / 12);
@@ -99,7 +65,7 @@ function TrueCostContextProvider() {
 					cfs.push(-amt);
 				}
 			}
-			setCFs([ ...cfs ]);
+			setCFsWithoutOppCost([ ...cfs ]);
 		},
 		[ amt, freq, duration, allInputDone ]
 	);
@@ -182,6 +148,8 @@ function TrueCostContextProvider() {
 				setSavingsPerHr,
 				totalCost,
 				setTotalCost,
+				cfsWithoutOppCost,
+				setCFsWithoutOppCost
 			}}
 		>
 			<CalcTemplate />

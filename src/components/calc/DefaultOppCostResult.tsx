@@ -1,26 +1,16 @@
-import React, { useState, useEffect, useContext, Fragment } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { getCompoundedIncome } from './finance';
-import ItemDisplay from './ItemDisplay';
-import { initOptions, toCurrency } from '../utils';
+import { initOptions } from '../utils';
 import { getMinRetirementDuration } from '../goals/goalutils';
 import { GoalType } from '../../api/goals';
 import { CalcContext } from './CalcContext';
-import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-import SelectInput from '../form/selectinput';
-import { Row } from 'antd';
+import OppCostResult from './OppCostResult';
 
-interface OppCostProps {
-	calculateFor?: number;
-}
-
-export default function OppCost({ calculateFor }: OppCostProps) {
-	const { cfs, currency, dr, setDR, rr, startYear, startMonth, goal }: any = useContext(CalcContext);
+export default function DefaultOppCostResult() {
+	const { cfs, dr, rr, startYear, startMonth, goal }: any = useContext(CalcContext);
 	const [ oppCost, setOppCost ] = useState<number>(0);
 	const isDRNumber = dr !== null;
-	const drOptions = initOptions(1, 9);
-	const [ numOfYears, setNumOfYears ] = useState<number>(
-		calculateFor && calculateFor > cfs.length ? calculateFor : cfs.length
-	);
+	const [ numOfYears, setNumOfYears ] = useState<number>(cfs.length);
 	const [ numOfYearsOptions, setNumOfYearsOptions ] = useState<any>(
 		initOptions(startMonth > 1 ? cfs.length - 1 : cfs.length, 20)
 	);
@@ -74,52 +64,12 @@ export default function OppCost({ calculateFor }: OppCostProps) {
 
 	useEffect(() => calculateOppCost(numOfYears), [ dr, rr ]);
 
-	useEffect(() => calculateOppCost(calculateFor as number), [ calculateFor ]);
-
 	return (
-		<ItemDisplay
-			result={oppCost}
-			currency={currency}
-			label={
-				<Fragment>
-					{`${goal.type === GoalType.B ? 'Buy' : 'Spend'} v/s Invest`}
-					{dr && (
-						<Fragment>
-							{` @ `}
-							<SelectInput
-								pre=""
-								value={Math.round(dr)}
-								changeHandler={(val: string) => setDR(parseInt(val))}
-								post="%"
-								options={drOptions}
-							/>
-						</Fragment>
-					)}
-				</Fragment>
-			}
-			svg={oppCost < 0 ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
-			pl
-			unit={
-				<Row align="middle">
-					{`in `}
-					{goal.type !== GoalType.FF && (
-						<SelectInput
-							pre=""
-							value={numOfYears}
-							unit="Years"
-							options={numOfYearsOptions}
-							changeHandler={(val: string) => {
-								let years = parseInt(val);
-								calculateOppCost(years);
-							}}
-						/>
-					)}
-				</Row>
-			}
-			info={`You May Have ${toCurrency(Math.abs(oppCost), currency)} More in ${numOfYears} Years
-      if You ${oppCost < 0 ? 'Invest' : 'Buy'} instead of ${oppCost < 0
-				? goal.type === GoalType.B ? 'Buying' : 'Spending'
-				: 'Investing'}.`}
+		<OppCostResult
+			oppCost={oppCost}
+			numOfYears={numOfYears}
+			numOfYearsOptions={numOfYearsOptions}
+			oppCostHandler={calculateOppCost}
 		/>
 	);
 }

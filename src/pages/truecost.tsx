@@ -69,7 +69,7 @@ export default function TrueCost() {
 					label: CHART,
 					active: true,
 					svg: faChartLine,
-					content: <DDLineChart numberOfYears />
+					content: <DDLineChart numberOfYears showRange />
 				}
 			]}
 			title={CALC_NAMES.TC}
