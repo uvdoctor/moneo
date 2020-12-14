@@ -9,44 +9,44 @@ import NumberInput from '../form/numberinput';
 interface DDLineChartProps {
 	numberOfYears?: boolean;
 	title?: string;
+	showRange?: boolean;
 }
 
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
-export default function DDLineChart({ numberOfYears, title }: DDLineChartProps) {
-	const { startYear, currency, cfs, cfsWithOppCost, goal, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
+export default function DDLineChart({ numberOfYears, title, showRange }: DDLineChartProps) {
+	const { startYear, currency, cfs, goal, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	useEffect(
 		() => {
 			let data: Array<any> = [];
 			let startVal = numberOfYears ? 1 : goal.type === GoalType.FF ? new Date().getFullYear() + 1 : startYear;
-			let cashFlows = cfsWithOppCost && cfsWithOppCost.length ? cfsWithOppCost : cfs;
-			for (let i = 0; i < cashFlows.length; i++)
+			for (let i = 0; i < cfs.length; i++)
 				data.push({
 					year: '' + (startVal + i),
-					value: cashFlows[i]
+					value: cfs[i]
 				});
 			setData([ ...data ]);
 		},
-		[ cfs, cfsWithOppCost ]
+		[ cfs ]
 	);
 
 	return (
 		<Fragment>
-			{cfsWithOppCost && cfsWithOppCost.length ? (
+			{showRange ? (
 				<Row align="middle" className="chart-options-row" justify="center">
 					<Col xs={24} sm={24} md={24} lg={12}>
 						<NumberInput
 							pre="Compare from 1 to "
 							value={analyzeFor}
 							changeHandler={setAnalyzeFor}
-							min={1}
+							min={5}
 							max={50}
 							step={1}
 							unit="Years"
-							additionalMarks={[ 20, 30, 40 ]}
+							additionalMarks={[ 10, 15, 20, 25, 30, 35, 40, 45 ]}
 						/>
 					</Col>
 				</Row>

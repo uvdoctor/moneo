@@ -66,7 +66,6 @@ function CalcContextProvider({
 	const [ resultTabIndex, setResultTabIndex ] = useState<number>(0);
 	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(false);
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
-	const [ cfsWithOppCost, setCFsWithOppCost ] = useState<Array<number>>([]);
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
   const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
@@ -233,8 +232,6 @@ function CalcContextProvider({
         isPublicCalc,
         disableSubmit,
         setDisableSubmit,
-        cfsWithOppCost,
-        setCFsWithOppCost,
         btnClicked,
         setBtnClicked,
         rr,

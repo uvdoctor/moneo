@@ -5,7 +5,7 @@ import { LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
 import { Button, Card, Row, Col } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import OppCost from '../calc/oppcost';
+import DefaultOppCostResult from '../calc/DefaultOppCostResult';
 import FFImpact from './ffimpact';
 import { GoalContext } from './GoalContext';
 interface SummaryProps {
@@ -64,7 +64,7 @@ export default function Summary({ deleteCallback, editCallback, ffImpactYears }:
 						<FFImpact impactYears={ffImpactYears} />
 					</Col>
 					<Col span={8}>
-						<OppCost />
+						<DefaultOppCostResult />
 					</Col>
 				</Row>
 			)}

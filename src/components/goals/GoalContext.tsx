@@ -5,7 +5,7 @@ import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils
 import { createAmortizingLoanCFs, createEduLoanMonthlyCFs, getCompoundedIncome, getEmi, getNPV } from "../calc/finance";
 import { adjustAccruedInterest, calculateCFs, calculateSellPrice, createLoanCFs, getClosestTargetVal, getLoanBorrowAmt } from "./cfutils";
 import { CalcContext } from "../calc/CalcContext";
-import OppCost from "../calc/oppcost";
+import DefaultOppCostResult from "../calc/DefaultOppCostResult";
 import FFImpact from "./ffimpact";
 import BuyRentResult from "../calc/BuyRentResult";
 import GoalHeader from "./GoalHeader";
@@ -224,7 +224,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       goalType === GoalType.B && <BuyReturnResult />,
       isLoanEligible(goal.type) && <LoanIntResult />,
       addCallback && <FFImpact />,
-      <OppCost />
+      <DefaultOppCostResult />
     ]]);
   }, []);
   
