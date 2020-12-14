@@ -55,7 +55,7 @@ export default function OppCostResult({oppCost, numOfYears, numOfYearsOptions, o
       </Row>
     }
     info={`You ${oppCost < 0 ? 'Lose' : 'Gain'} about ${toHumanFriendlyCurrency(Math.abs(oppCost), currency)} in ${numOfYears} Years
-    by ${goal.type === GoalType.B ? 'Buying' : 'Spending'} instead of Investing.`}
+    by ${goal.type === GoalType.B ? 'Buying' : 'Spending'} instead of Investing${dr ? `, given that Investment earns ${dr}% Yearly` : ''}.`}
   />
   )
 }
