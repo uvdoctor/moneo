@@ -61,7 +61,8 @@ function CalcContextProvider({
   const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal?.ccy ? goal.ccy : 'USD');
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
 	const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
-	const [ cfs, setCFs ] = useState<Array<number>>([]);
+  const [cfs, setCFs] = useState<Array<number>>([]);
+  const [ cfsWithoutSM, setCFsWithoutSM ] = useState<Array<number>>([]);
   const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
 	const [ resultTabIndex, setResultTabIndex ] = useState<number>(0);
 	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(false);
@@ -224,6 +225,8 @@ function CalcContextProvider({
 				setDR,
         cfs,
         setCFs,
+        cfsWithoutSM,
+        setCFsWithoutSM,
 				resultTabIndex,
 				setResultTabIndex,
 				fsb,

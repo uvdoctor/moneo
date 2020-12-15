@@ -37,6 +37,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     setDisableSubmit,
     cfs,
     setCFs,
+    setCFsWithoutSM,
     dr,
     rr,
     setRR,
@@ -434,6 +435,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   ) => {
     if (!price) {
       setCFs([...[]]);
+      setCFsWithoutSM([...[]]);
       return [];
     }
     let cfs: Array<number> = [];
@@ -457,6 +459,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       if ((loanPer as number) && manualMode < 1 && goalType === GoalType.B)
         setEndYear(startYear + cfs.length - 1);
       setCFs([...cfs]);
+      setCFsWithoutSM([...cfs]);
       setDuration(duration);
       setTotalITaxBenefit(result.hasOwnProperty("itb") ? result.itb : 0);
       setTotalPTaxBenefit(result.hasOwnProperty("ptb") ? result.ptb : 0);
