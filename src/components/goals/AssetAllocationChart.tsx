@@ -103,7 +103,7 @@ export default function AssetAllocationChart({
 	};
 
 	useEffect(() => {
-		initChartData();
+		if(rr.length) initChartData();
 	}, [rr]);
 
 	return (

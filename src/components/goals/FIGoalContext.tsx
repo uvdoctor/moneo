@@ -22,7 +22,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     currency,
     inputTabIndex,
     setInputTabIndex,
-    cfs,
+    rr,
     setCFs,
     dr,
     setRR,
@@ -149,7 +149,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
           Financial Independence May not be possible till You turn 70. Please try again with different Inputs.
           </label>
       ]]);
-  }, [cfs]);
+  }, [rr]);
 
   useEffect(() => {
     if (!allInputDone) return;
@@ -162,8 +162,8 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
       pp ? pp : dr
     );
     setFFResult(result);
-    setRR([...result.rr]);
     setCFs([...Object.values(result.ffCfs)]);
+    setRR([...result.rr]);
     console.log("FF Result is ", result);
   }, [
     expenseBY,

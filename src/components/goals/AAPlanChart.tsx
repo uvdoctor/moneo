@@ -43,6 +43,7 @@ export default function AAPlanChart({ changeToSingleYear }: AAPlanChartProps) {
 	};
 
 	useEffect(() => {
+		if (!rr.length) return;
 		let filteredAA = filterAA();
 		let arr: Array<any> = [];
 		const startYear = new Date().getFullYear() + 2;
