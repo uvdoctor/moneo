@@ -8,10 +8,8 @@ import OppCostResult from './OppCostResult';
 export default function TrueOppCostResult() {
 	const { dr, cfs, setCFs, analyzeFor }: any = useContext(CalcContext);
 	const { cfsWithoutOppCost, freq }: any = useContext(TrueCostContext);
-	const [ numOfYears, setNumOfYears ] = useState<number>(cfs.length);
-	const [ numOfYearsOptions, setNumOfYearsOptions ] = useState<any>(
-		cfs && cfs.length ? initOptions(1, cfs.length - 1) : initOptions(0, 0)
-	);
+	const [ numOfYears, setNumOfYears ] = useState<number>(cfs.length ? cfs.length : 5);
+	const [ numOfYearsOptions, setNumOfYearsOptions ] = useState<any>(initOptions(1, cfs.length ? cfs.length - 1 : 4));
 	const [ oppCost, setOppCost ] = useState<number>(0);
 
 	const calculateOppCost = (years: number) => {
@@ -22,8 +20,7 @@ export default function TrueOppCostResult() {
 	useEffect(
 		() => {
 			if (!cfs || !cfs.length) {
-				setNumOfYearsOptions(initOptions(0, 0));
-				setNumOfYears(0);
+				setOppCost(0);
 				return;
 			}
 			setNumOfYearsOptions(initOptions(1, cfs.length - 1));

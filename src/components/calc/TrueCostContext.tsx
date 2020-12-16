@@ -4,6 +4,7 @@ import { CalcContext } from './CalcContext';
 import CalcTemplate from './CalcTemplate';
 import TimeCostResult from './TimeCostResult';
 import TrueOppCostResult from './TrueOppCostResult';
+import { getRangeFactor } from '../utils';
 
 const TrueCostContext = createContext({});
 
@@ -16,13 +17,14 @@ function TrueCostContextProvider() {
 		setCFs,
 		allInputDone,
 		setResults,
+		currency
 	}: any = useContext(CalcContext);
-	const [ amt, setAmt ] = useState<number>(0);
+	const [ amt, setAmt ] = useState<number>(1000 * getRangeFactor(currency));
 	const [ freq, setFreq ] = useState<string>(SPEND_ONCE);
-	const [ duration, setDuration ] = useState<number>(0);
+	const [ duration, setDuration ] = useState<number>(6);
 	const [ paidWeeks, setPaidWeeks ] = useState<number>(52);
 	const [ hoursPerWeek, setHoursPerWeek ] = useState<number>(60);
-	const [ savings, setSavings ] = useState<number>(0);
+	const [ savings, setSavings ] = useState<number>(20000 * getRangeFactor(currency));
 	const [ savingsPerHr, setSavingsPerHr ] = useState<number>(0);
 	const [ timeCost, setTimeCost ] = useState<number>(0);
 	const [ timeCostDisplay, setTimeCostDisplay ] = useState<number>(0);
@@ -44,6 +46,7 @@ function TrueCostContextProvider() {
 				setCFs([ ...[] ]);
 				return;
 			}
+			debugger;
 			let cfs: Array<number> = [];
 			if (freq === SPEND_ONCE) {
 				cfs.push(-amt);
