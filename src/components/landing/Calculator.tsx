@@ -52,7 +52,7 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 		<div ref={calculateRef} className="calculator">
 			<div>
 				<div className="calculator-title">
-					<h2>Calculator's</h2>
+					<h2>Calculators</h2>
 					<div
 						className="bg-white border rounded-lg p-4 text-center"
 						style={{

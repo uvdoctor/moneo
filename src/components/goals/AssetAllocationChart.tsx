@@ -46,7 +46,7 @@ export default function AssetAllocationChart({
 		savings: 0,
 	};
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
-	const { cfs, ffResult, currency, startYear }: any = useContext(CalcContext);
+	const { cfs, ffResult, currency, rr, startYear }: any = useContext(CalcContext);
 	const index = year - startYear - 1;
 	const [data, setData] = useState<Array<any>>([]);
 	const [colors, setColors] = useState<Array<string>>([]);
@@ -104,7 +104,7 @@ export default function AssetAllocationChart({
 
 	useEffect(() => {
 		initChartData();
-	}, [cfs]);
+	}, [rr]);
 
 	return (
 		<Fragment>

@@ -43,7 +43,7 @@ export default function Spend() {
 			/>
 			{freq !== SPEND_ONCE && (
 				<NumberInput
-					pre="For"
+					pre="Duration"
 					value={duration}
 					changeHandler={setDuration}
 					min={2}
@@ -51,19 +51,19 @@ export default function Spend() {
 					step={1}
 					unit={freq === SPEND_MONTHLY ? 'Months' : 'Years'}
 					info={`Number of ${freq === SPEND_MONTHLY ? 'Months' : 'Years'} You wish to Spend for.`}
-					note={
-						<ItemDisplay
-							label="Total Spend"
-							result={totalCost}
-							currency={currency}
-							footer={`Over ${duration} ${freq === SPEND_MONTHLY ? 'Months' : 'Years'}`}
-							info={`Total Amount You Spend over ${duration} ${freq === SPEND_MONTHLY
-								? 'Months'
-								: 'Years'} given You Spend ${toCurrency(amt, currency)} every ${freq === SPEND_MONTHLY
-								? 'Month'
-								: 'Year'}.`}
-						/>
-					}
+				/>
+			)}
+			{freq !== SPEND_ONCE && (
+				<ItemDisplay
+					label="Total Spend"
+					result={totalCost}
+					currency={currency}
+					footer={`Over ${duration} ${freq === SPEND_MONTHLY ? 'Months' : 'Years'}`}
+					info={`Total Amount You Spend over ${duration} ${freq === SPEND_MONTHLY
+						? 'Months'
+						: 'Years'} given You Spend ${toCurrency(amt, currency)} every ${freq === SPEND_MONTHLY
+						? 'Month'
+						: 'Year'}.`}
 				/>
 			)}
 		</Section>

@@ -13,12 +13,7 @@ export const TIME_COST_WEEKS = 'Weeks';
 export const TIME_COST_YEARS = 'Years';
 
 function TrueCostContextProvider() {
-	const {
-		setCFs,
-		allInputDone,
-		setResults,
-		currency
-	}: any = useContext(CalcContext);
+	const { setCFs, allInputDone, setResults, currency }: any = useContext(CalcContext);
 	const [ amt, setAmt ] = useState<number>(1000 * getRangeFactor(currency));
 	const [ freq, setFreq ] = useState<string>(SPEND_ONCE);
 	const [ duration, setDuration ] = useState<number>(6);
@@ -30,14 +25,10 @@ function TrueCostContextProvider() {
 	const [ timeCostDisplay, setTimeCostDisplay ] = useState<number>(0);
 	const [ timeCostUnit, setTimeCostUnit ] = useState<string>(TIME_COST_HOURS);
 	const [ totalCost, setTotalCost ] = useState<number>(0);
-	const [cfsWithoutOppCost, setCFsWithoutOppCost] = useState<Array<number>>([]);
+	const [ cfsWithoutOppCost, setCFsWithoutOppCost ] = useState<Array<number>>([]);
 
 	useEffect(() => {
-		setResults([...[
-			<TimeCostResult />,
-			<TrueOppCostResult />
-		]
-		])
+		setResults([ ...[ <TimeCostResult />, <TrueOppCostResult /> ] ]);
 	}, []);
 
 	useEffect(
@@ -80,13 +71,9 @@ function TrueCostContextProvider() {
 				return;
 			}
 			setTimeCostDisplay(
-				Math.round(
-					timeCostUnit === TIME_COST_HOURS
-						? timeCost
-						: timeCostUnit === TIME_COST_WEEKS
-							? timeCost / hoursPerWeek
-							: timeCost / (hoursPerWeek * paidWeeks)
-				)
+				timeCostUnit === TIME_COST_HOURS
+					? timeCost
+					: timeCostUnit === TIME_COST_WEEKS ? timeCost / hoursPerWeek : timeCost / (hoursPerWeek * paidWeeks)
 			);
 		},
 		[ timeCost, timeCostUnit, hoursPerWeek, paidWeeks ]
