@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
+import { toCurrency } from '../utils';
 import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
 import { TrueCostContext } from './TrueCostContext';
@@ -21,7 +22,13 @@ export default function Spend() {
 
 	return (
 		<Section title="Enter Spend Details">
-			<SelectInput pre="Spend" value={freq} changeHandler={setFreq} options={freqOptions} />
+			<SelectInput
+				pre="Spend"
+				value={freq}
+				changeHandler={setFreq}
+				options={freqOptions}
+				info="Frequency at which You wish to Spend - One time, Monthly or Yearly."
+			/>
 			<NumberInput
 				pre="Amount"
 				value={amt}
@@ -30,17 +37,33 @@ export default function Spend() {
 				max={50000}
 				step={100}
 				currency={currency}
+				info={`Amount that You wish to Spend${freq === SPEND_MONTHLY
+					? ' on Monthly basis '
+					: freq === SPEND_YEARLY ? ' on Yearly basis ' : ''}.`}
 			/>
 			{freq !== SPEND_ONCE && (
 				<NumberInput
 					pre="For"
 					value={duration}
 					changeHandler={setDuration}
-					min={1}
+					min={2}
 					max={freq === SPEND_MONTHLY ? 360 : 30}
 					step={1}
 					unit={freq === SPEND_MONTHLY ? 'Months' : 'Years'}
-					note={<ItemDisplay label="Total Spend" result={totalCost} currency={currency} />}
+					info={`Number of ${freq === SPEND_MONTHLY ? 'Months' : 'Years'} You wish to Spend for.`}
+					note={
+						<ItemDisplay
+							label="Total Spend"
+							result={totalCost}
+							currency={currency}
+							footer={`Over ${duration} ${freq === SPEND_MONTHLY ? 'Months' : 'Years'}`}
+							info={`Total Amount You Spend over ${duration} ${freq === SPEND_MONTHLY
+								? 'Months'
+								: 'Years'} given You Spend ${toCurrency(amt, currency)} every ${freq === SPEND_MONTHLY
+								? 'Month'
+								: 'Year'}.`}
+						/>
+					}
 				/>
 			)}
 		</Section>
