@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
-import { toCurrency } from '../utils';
+import { toCurrency, toHumanFriendlyCurrency } from '../utils';
 import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
 import { TrueCostContext } from './TrueCostContext';
@@ -21,7 +21,7 @@ export default function Spend() {
 	};
 
 	return (
-		<Section title="Enter Spend Details">
+		<Section title="Enter Spend Details" videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}>
 			<SelectInput
 				pre="Spend"
 				value={freq}
@@ -59,9 +59,9 @@ export default function Spend() {
 					result={totalCost}
 					currency={currency}
 					footer={`Over ${duration} ${freq === SPEND_MONTHLY ? 'Months' : 'Years'}`}
-					info={`Total Amount You Spend over ${duration} ${freq === SPEND_MONTHLY
+					info={`You Spend total of ${toHumanFriendlyCurrency(totalCost, currency)} over ${duration} ${freq === SPEND_MONTHLY
 						? 'Months'
-						: 'Years'} given You Spend ${toCurrency(amt, currency)} every ${freq === SPEND_MONTHLY
+						: 'Years'} given spending of ${toCurrency(amt, currency)} every ${freq === SPEND_MONTHLY
 						? 'Month'
 						: 'Year'}.`}
 				/>

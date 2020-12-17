@@ -15,7 +15,7 @@ export default function Save() {
 		setPaidWeeks
 	}: any = useContext(TrueCostContext);
 	return (
-		<Section title="Savings from Work Income">
+		<Section title="Savings from Work Income" videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}>
 			<NumberInput
 				pre="Yearly Savings"
 				value={savings}
