@@ -190,7 +190,8 @@ export const toCurrency = (
   return num ? formatter.format(num) : formatter.format(0);
 };
 
-export const getCurrencySymbol = (currency: string) => toCurrency(0, currency).replace("0", "");
+export const getCurrencySymbol = (currency: string) =>
+  toCurrency(0, currency).replace("0", "");
 
 export const toReadableNumber = (num: number, decimalDigits: number = 0) => {
   const formatter = new Intl.NumberFormat(navigator.language, {
@@ -249,7 +250,7 @@ export function initOptions(
   for (
     let i = startYear;
     duration > 0 ? i <= startYear + duration : i >= startYear + duration;
-    duration > 0 ? i+= step : i-= step
+    duration > 0 ? (i += step) : (i -= step)
   ) {
     if (!exclusions.includes(i)) years["" + i] = "" + i;
   }
@@ -518,9 +519,9 @@ export const getAssetColour = (type: string) => {
     case ASSET_TYPES.GOLD:
       return "#f6e05e";
     case ASSET_TYPES.DOMESTIC_REIT:
-      return "#a5edd9";
+      return "#b5f2ff";
     case ASSET_TYPES.INTERNATIONAL_REIT:
-      return "#4adab4";
+      return "#7cd9fd";
     default:
       return "";
   }
@@ -592,36 +593,38 @@ export const isTopBottomLayout = (fsb: any) => fsb.info.innerWidth < 1024;
 export const isMobileDevice = (fsb: any) => fsb.info.innerWidth < 768;
 
 export const MONTHS: any = {
-  1: 'January',
-  2: 'February',
-  3: 'March',
-  4: 'April',
-  5: 'May',
-  6: 'June',
-  7: 'July',
-  8: 'August',
-  9: 'September',
-  10: 'October',
-  11: 'November',
-  12: 'December'
+  1: "January",
+  2: "February",
+  3: "March",
+  4: "April",
+  5: "May",
+  6: "June",
+  7: "July",
+  8: "August",
+  9: "September",
+  10: "October",
+  11: "November",
+  12: "December",
 };
 
 export const getMonthName = (monthNum: number, shortForm: boolean = false) => {
   if (monthNum < 1 || monthNum > 12) return "";
   let monthName: string = MONTHS[monthNum];
   return shortForm ? monthName.substring(0, 3) : monthName;
-}
+};
 
 export const toHumanFriendlyCurrency = (val: number, currency: string) => {
   if (val < 100000) return toCurrency(val, currency);
-  const lakhs = currency === 'INR';
+  const lakhs = currency === "INR";
   let divider = lakhs ? 100000 : 1000000;
   let unit = lakhs ? "lakhs" : "million";
   const largeMultiplier = lakhs ? 100 : 1000;
-  if(val >= divider * largeMultiplier) {
+  if (val >= divider * largeMultiplier) {
     divider *= largeMultiplier;
     unit = lakhs ? "crores" : "billion";
   }
   const decimals = val % divider === 0 ? 0 : 2;
-  return `${getCurrencySymbol(currency)}${(val / divider).toFixed(decimals)} ${unit}`;
-}
+  return `${getCurrencySymbol(currency)}${(val / divider).toFixed(
+    decimals
+  )} ${unit}`;
+};
