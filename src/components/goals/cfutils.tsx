@@ -579,6 +579,7 @@ const allocateStocks = (aa: any, year: number, ffYear: number, ffGoal: APIt.Crea
   const age = year - (ffGoal.ey - PLAN_DURATION);
   let maxStocksPer = 120 - age;
   if (year >= ffYear && maxStocksPer > 60) maxStocksPer = 60;
+  if (maxStocksPer > remPer) maxStocksPer = remPer;
   remPer = allocate(aa[ASSET_TYPES.GOLD], i, Math.round(maxStocksPer * 0.1), remPer);
   maxStocksPer -= aa[ASSET_TYPES.GOLD][i];
   if (year >= ffGoal.ey - 10)
