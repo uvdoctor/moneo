@@ -496,9 +496,11 @@ export const getAssetColour = (type: string) => {
       return "#64d9ff";
     case ASSET_CATEGORIES.BONDS:
       return COLORS.WHITE;
-    case ASSET_TYPES.TIPS:
+    case ASSET_TYPES.SHORT_TERM_BONDS:
       return "#aa8dfa";
     case ASSET_TYPES.MED_TERM_BONDS:
+      return "#855cc8";
+    case ASSET_TYPES.EMERGING_BONDS:
       return "#855cf8";
     case ASSET_TYPES.TAX_EXEMPT_BONDS:
       return "#e7defe";
@@ -514,6 +516,8 @@ export const getAssetColour = (type: string) => {
       return "#e75c53";
     case ASSET_TYPES.DIVIDEND_GROWTH_STOCKS:
       return "#ffa75c";
+    case ASSET_TYPES.HIGH_YIELD_STOCKS:
+      return "#fdd0af";
     case ASSET_CATEGORIES.ALTERNATIVE:
       return COLORS.WHITE;
     case ASSET_TYPES.GOLD:
@@ -538,8 +542,9 @@ export const getAllAssetTypesByCategory = (category: string) => {
       return [ASSET_TYPES.SAVINGS, ASSET_TYPES.DEPOSITS];
     case ASSET_CATEGORIES.BONDS:
       return [
-        ASSET_TYPES.TIPS,
+        ASSET_TYPES.SHORT_TERM_BONDS,
         ASSET_TYPES.MED_TERM_BONDS,
+        ASSET_TYPES.EMERGING_BONDS,
         ASSET_TYPES.TAX_EXEMPT_BONDS,
       ];
     case ASSET_CATEGORIES.STOCKS:
@@ -549,6 +554,7 @@ export const getAllAssetTypesByCategory = (category: string) => {
         ASSET_TYPES.SMALL_CAP_STOCKS,
         ASSET_TYPES.INTERNATIONAL_STOCKS,
         ASSET_TYPES.DIVIDEND_GROWTH_STOCKS,
+        ASSET_TYPES.HIGH_YIELD_STOCKS
       ];
     case ASSET_CATEGORIES.ALTERNATIVE:
       return [
@@ -560,20 +566,7 @@ export const getAllAssetTypesByCategory = (category: string) => {
   }
 };
 
-export const getAllAssetTypes = () => [
-  ASSET_TYPES.SAVINGS,
-  ASSET_TYPES.DEPOSITS,
-  ASSET_TYPES.TIPS,
-  ASSET_TYPES.MED_TERM_BONDS,
-  ASSET_TYPES.TAX_EXEMPT_BONDS,
-  ASSET_TYPES.LARGE_CAP_STOCKS,
-  ASSET_TYPES.MID_CAP_STOCKS,
-  ASSET_TYPES.SMALL_CAP_STOCKS,
-  ASSET_TYPES.INTERNATIONAL_STOCKS,
-  ASSET_TYPES.DIVIDEND_GROWTH_STOCKS,
-  ASSET_TYPES.REIT,
-  ASSET_TYPES.GOLD,
-];
+export const getAllAssetTypes = () => Object.values(ASSET_TYPES);
 
 export const buildTabsArray = (items: any) => {
   let result: Array<any> = [];

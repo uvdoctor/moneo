@@ -31,8 +31,9 @@ export const ASSET_CATEGORIES = {
 export const ASSET_TYPES = {
     SAVINGS: "Savings",
     DEPOSITS: "Deposits",
-    TIPS: "Short-term Bonds",
+    SHORT_TERM_BONDS: "Short-term Bonds",
     MED_TERM_BONDS: "Intermediate-term Bonds",
+    EMERGING_BONDS: "Emerging Market Bonds",
     TAX_EXEMPT_BONDS: "Tax-exempt Bonds",
     REIT: "REIT",
     GOLD: "Gold",
