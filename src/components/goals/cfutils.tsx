@@ -9,7 +9,7 @@ import {
   getAllAssetTypes,
   getRangeFactor,
 } from "../utils";
-import { ASSET_TYPES } from "../../CONSTANTS";
+import { ASSET_TYPES, PLAN_DURATION } from "../../CONSTANTS";
 import { getLastPossibleFFYear, isTaxCreditEligible } from "./goalutils";
 //Tested
 export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
@@ -576,26 +576,23 @@ const allocateStocks = (aa: any, year: number, ffYear: number, ffGoal: APIt.Crea
   if (!remPer) return remPer;
   let nowYear = new Date().getFullYear();
   let i = year - (nowYear + 1);
-  let stocksPer = Math.round(remPer * 0.9);
-  let maxStocksPer =
-    year >= ffGoal.ey - 20 ? 2 * (ffGoal.ey - year) : 120 - (ffGoal.ey - year);
+  const age = year - (ffGoal.ey - PLAN_DURATION);
+  let maxStocksPer = 120 - age;
   if (year >= ffYear && maxStocksPer > 60) maxStocksPer = 60;
-  if (stocksPer > maxStocksPer) stocksPer = maxStocksPer;
-  if (stocksPer > remPer) stocksPer = remPer;
-  remPer = allocate(aa[ASSET_TYPES.GOLD], i, Math.round(stocksPer * 0.1), remPer);
-  stocksPer -= aa[ASSET_TYPES.GOLD][i];
+  remPer = allocate(aa[ASSET_TYPES.GOLD], i, Math.round(maxStocksPer * 0.1), remPer);
+  maxStocksPer -= aa[ASSET_TYPES.GOLD][i];
   if (year >= ffGoal.ey - 10)
-    remPer = allocate(aa[ASSET_TYPES.HIGH_YIELD_STOCKS], i, stocksPer, remPer);
+    remPer = allocate(aa[ASSET_TYPES.HIGH_YIELD_STOCKS], i, maxStocksPer, remPer);
   else if (year >= ffGoal.ey - 20) {
-    remPer = allocate(aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS], i, Math.round(((100 - 2 * (ffGoal.ey - year)) / 100) * stocksPer), remPer);
-    remPer = allocate(aa[ASSET_TYPES.HIGH_YIELD_STOCKS], i, stocksPer - aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i], remPer);
+    remPer = allocate(aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS], i, Math.round(((100 - 2 * (ffGoal.ey - year)) / 100) * maxStocksPer), remPer);
+    remPer = allocate(aa[ASSET_TYPES.HIGH_YIELD_STOCKS], i, maxStocksPer - aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i], remPer);
   } else {
     if (ffGoal.imp === APIt.LMH.H) {
-      remPer = allocate(aa[ASSET_TYPES.MID_CAP_STOCKS], i, Math.round(stocksPer * (year < ffYear ? 0.2 : 0.3)), remPer);
-      if(year < ffYear) remPer = allocate(aa[ASSET_TYPES.SMALL_CAP_STOCKS], i, Math.round(stocksPer * 0.1), remPer);
+      remPer = allocate(aa[ASSET_TYPES.MID_CAP_STOCKS], i, Math.round(maxStocksPer * (year < ffYear ? 0.2 : 0.3)), remPer);
+      if(year < ffYear) remPer = allocate(aa[ASSET_TYPES.SMALL_CAP_STOCKS], i, Math.round(maxStocksPer * 0.1), remPer);
     } 
-    remPer = allocate(aa[ASSET_TYPES.INTERNATIONAL_STOCKS], i, Math.round(stocksPer * 0.3), remPer);
-    remPer = allocate(aa[ASSET_TYPES.LARGE_CAP_STOCKS], i, Math.round(stocksPer * (ffGoal.imp === APIt.LMH.H ? 0.4 : 0.7)), remPer);
+    remPer = allocate(aa[ASSET_TYPES.INTERNATIONAL_STOCKS], i, Math.round(maxStocksPer * 0.3), remPer);
+    remPer = allocate(aa[ASSET_TYPES.LARGE_CAP_STOCKS], i, Math.round(maxStocksPer * (ffGoal.imp === APIt.LMH.H ? 0.4 : 0.7)), remPer);
   }
   return remPer;
 };

@@ -5,7 +5,7 @@ import {
 	getAllAssetCategories,
 	getAllAssetTypesByCategory,
 	getAssetColour,
-	toCurrency,
+	toHumanFriendlyCurrency,
 } from "../utils";
 import { CalcContext } from "../calc/CalcContext";
 import DataSwitcher from "../DataSwitcher";
@@ -55,13 +55,12 @@ export default function AssetAllocationChart({
 	const sortDesc = (data: Array<any>) => data.sort((a, b) => b.value - a.value);
 
 	const getAssetShortName = (assetName: string) => {
-		if (assetName.endsWith("nds")) {
+		if (assetName.endsWith("nds") || assetName.endsWith("cks")) {
 			let result = '';
-			let strings = assetName.substr(0, assetName.length - 6).split(" ");
+			let strings = assetName.substr(0, assetName.length - (assetName.endsWith("cks") ? 7 : 6)).split(" ");
 			strings.forEach((str) => result += str + '\n');
 			return result;
-		} else if (assetName.endsWith("cks")) return assetName.substr(0, assetName.length - 7) + '\n';
-		else return assetName + '\n';
+		} else return assetName + '\n';
 	};
 
 	const initChartData = () => {
@@ -123,7 +122,7 @@ export default function AssetAllocationChart({
 							/>
 						)}
 						Target Asset Allocation of{" "}
-						<strong>{toCurrency(cfs[index], currency)}</strong> for Year{" "}
+						<strong>{toHumanFriendlyCurrency(cfs[index], currency)}</strong> for Year{" "}
 						<strong>{year}</strong>
 					</Fragment>
 				}
@@ -136,7 +135,7 @@ export default function AssetAllocationChart({
 										<span className="arrow-right"></span>
 										Cash <Badge count={`${cashData.value} %`} />
 										<strong>
-											{toCurrency(
+											{toHumanFriendlyCurrency(
 												Math.round((cfs[index] * cashData.value) / 100),
 												currency
 											)}
@@ -147,7 +146,7 @@ export default function AssetAllocationChart({
 									<div className="cash deposits">
 										Deposits <Badge count={`${cashData.deposits} %`} />
 										<strong>
-											{toCurrency(
+											{toHumanFriendlyCurrency(
 												Math.round((cfs[index] * cashData.deposits) / 100),
 												currency
 											)}
@@ -158,7 +157,7 @@ export default function AssetAllocationChart({
 									<div className="cash">
 										Savings <Badge count={`${cashData.savings} %`} />
 										<strong>
-											{toCurrency(
+											{toHumanFriendlyCurrency(
 												Math.round((cfs[index] * cashData.savings) / 100),
 												currency
 											)}
@@ -206,7 +205,7 @@ export default function AssetAllocationChart({
 							formatter: (name, value) => {
 								return {
 									name,
-									value: `<strong>${toCurrency(
+									value: `<strong>${toHumanFriendlyCurrency(
 										Math.round((cfs[index] * value) / 100),
 										currency
 									)}</strong> (${value}%)`,
@@ -226,7 +225,7 @@ export default function AssetAllocationChart({
 									<List.Item
 										className="heading"
 										actions={[
-											toCurrency(
+											toHumanFriendlyCurrency(
 												Math.round((cfs[index] * value) / 100),
 												currency
 											),
@@ -244,7 +243,7 @@ export default function AssetAllocationChart({
 												return (
 													<List.Item
 														actions={[
-															toCurrency(
+															toHumanFriendlyCurrency(
 																Math.round((cfs[index] * value) / 100),
 																currency
 															),

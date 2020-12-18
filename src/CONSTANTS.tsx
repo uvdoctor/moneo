@@ -41,8 +41,8 @@ export const ASSET_TYPES = {
     MID_CAP_STOCKS: "Mid-cap Stocks",
     SMALL_CAP_STOCKS: "Small-cap Stocks",
     INTERNATIONAL_STOCKS: "International Large-cap Stocks",
-    DIVIDEND_GROWTH_STOCKS: "Dividend-Growth Stocks",
-    HIGH_YIELD_STOCKS: "High-Yield Stocks",
+    DIVIDEND_GROWTH_STOCKS: "Dividend-Growth Large-cap Stocks",
+    HIGH_YIELD_STOCKS: "High-Yield Large-cap Stocks",
 };
 
 export const COLORS = {
