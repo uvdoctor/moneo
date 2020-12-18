@@ -568,8 +568,7 @@ const allocateREIT = (aa: any, year: number, ffYear: number, ffGoal: APIt.Create
     else if (year >= ffGoal.ey - 20) reitPer = 20;
     else reitPer += 5;
   }
-  remPer = allocate(aa[ASSET_TYPES.DOMESTIC_REIT], i, Math.round(reitPer * 0.7), remPer);
-  remPer = allocate(aa[ASSET_TYPES.INTERNATIONAL_REIT], i, Math.round(reitPer * 0.3), remPer);
+  remPer = allocate(aa[ASSET_TYPES.REIT], i, reitPer, remPer);
   return remPer;
 };
 
@@ -586,17 +585,17 @@ const allocateStocks = (aa: any, year: number, ffYear: number, ffGoal: APIt.Crea
   remPer = allocate(aa[ASSET_TYPES.GOLD], i, Math.round(stocksPer * 0.1), remPer);
   stocksPer -= aa[ASSET_TYPES.GOLD][i];
   if (year >= ffGoal.ey - 10)
-    remPer = allocate(aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS], i, stocksPer, remPer);
+    remPer = allocate(aa[ASSET_TYPES.HIGH_YIELD_STOCKS], i, stocksPer, remPer);
   else if (year >= ffGoal.ey - 20) {
     remPer = allocate(aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS], i, Math.round(((100 - 2 * (ffGoal.ey - year)) / 100) * stocksPer), remPer);
-    remPer = allocate(aa[ASSET_TYPES.LARGE_CAP_STOCKS], i, stocksPer - aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i], remPer);
+    remPer = allocate(aa[ASSET_TYPES.HIGH_YIELD_STOCKS], i, stocksPer - aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i], remPer);
   } else {
+    if (ffGoal.imp === APIt.LMH.H) {
+      remPer = allocate(aa[ASSET_TYPES.MID_CAP_STOCKS], i, Math.round(stocksPer * year < ffYear ? 0.2 : 0.3), remPer);
+      if(year < ffYear) remPer = allocate(aa[ASSET_TYPES.SMALL_CAP_STOCKS], i, Math.round(stocksPer * 0.1), remPer);
+    } 
     remPer = allocate(aa[ASSET_TYPES.INTERNATIONAL_STOCKS], i, Math.round(stocksPer * 0.3), remPer);
-    remPer = allocate(aa[ASSET_TYPES.LARGE_CAP_STOCKS], i, Math.round(stocksPer * 0.5), remPer);
-    if (year < ffYear && ffGoal.imp === APIt.LMH.H) {
-      remPer = allocate(aa[ASSET_TYPES.MID_CAP_STOCKS], i, Math.round(stocksPer * 0.1), remPer);
-      remPer = allocate(aa[ASSET_TYPES.SMALL_CAP_STOCKS], i, Math.round(stocksPer * 0.1), remPer);
-    } else remPer = allocate(aa[ASSET_TYPES.LARGE_CAP_STOCKS], i, Math.round(stocksPer * 0.2), remPer);
+    remPer = allocate(aa[ASSET_TYPES.LARGE_CAP_STOCKS], i, Math.round(stocksPer * (ffGoal.imp === APIt.LMH.H ? 0.4 : 0.7)), remPer);
   }
   return remPer;
 };
@@ -626,7 +625,7 @@ const calculateAllocation = (
       if (y < ffYear) remPer = allocate(aa[ASSET_TYPES.TAX_EXEMPT_BONDS], i, Math.round(remPer / 2), remPer);
       aa[ASSET_TYPES.MED_TERM_BONDS][i] += remPer;
     }
-  } else allocate(aa[ASSET_TYPES.SHORT_TERM_BONDS], i, remPer, remPer);
+  } else allocate(aa[ASSET_TYPES.TIPS], i, remPer, remPer);
 };
 
 export const checkForFF = (

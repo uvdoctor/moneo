@@ -496,7 +496,7 @@ export const getAssetColour = (type: string) => {
       return "#64d9ff";
     case ASSET_CATEGORIES.BONDS:
       return COLORS.WHITE;
-    case ASSET_TYPES.SHORT_TERM_BONDS:
+    case ASSET_TYPES.TIPS:
       return "#aa8dfa";
     case ASSET_TYPES.MED_TERM_BONDS:
       return "#855cf8";
@@ -518,9 +518,7 @@ export const getAssetColour = (type: string) => {
       return COLORS.WHITE;
     case ASSET_TYPES.GOLD:
       return "#f6e05e";
-    case ASSET_TYPES.DOMESTIC_REIT:
-      return "#b5f2ff";
-    case ASSET_TYPES.INTERNATIONAL_REIT:
+    case ASSET_TYPES.REIT:
       return "#7cd9fd";
     default:
       return "";
@@ -540,7 +538,7 @@ export const getAllAssetTypesByCategory = (category: string) => {
       return [ASSET_TYPES.SAVINGS, ASSET_TYPES.DEPOSITS];
     case ASSET_CATEGORIES.BONDS:
       return [
-        ASSET_TYPES.SHORT_TERM_BONDS,
+        ASSET_TYPES.TIPS,
         ASSET_TYPES.MED_TERM_BONDS,
         ASSET_TYPES.TAX_EXEMPT_BONDS,
       ];
@@ -554,8 +552,7 @@ export const getAllAssetTypesByCategory = (category: string) => {
       ];
     case ASSET_CATEGORIES.ALTERNATIVE:
       return [
-        ASSET_TYPES.DOMESTIC_REIT,
-        ASSET_TYPES.INTERNATIONAL_REIT,
+        ASSET_TYPES.REIT,
         ASSET_TYPES.GOLD,
       ];
     default:
@@ -566,7 +563,7 @@ export const getAllAssetTypesByCategory = (category: string) => {
 export const getAllAssetTypes = () => [
   ASSET_TYPES.SAVINGS,
   ASSET_TYPES.DEPOSITS,
-  ASSET_TYPES.SHORT_TERM_BONDS,
+  ASSET_TYPES.TIPS,
   ASSET_TYPES.MED_TERM_BONDS,
   ASSET_TYPES.TAX_EXEMPT_BONDS,
   ASSET_TYPES.LARGE_CAP_STOCKS,
@@ -574,8 +571,7 @@ export const getAllAssetTypes = () => [
   ASSET_TYPES.SMALL_CAP_STOCKS,
   ASSET_TYPES.INTERNATIONAL_STOCKS,
   ASSET_TYPES.DIVIDEND_GROWTH_STOCKS,
-  ASSET_TYPES.DOMESTIC_REIT,
-  ASSET_TYPES.INTERNATIONAL_REIT,
+  ASSET_TYPES.REIT,
   ASSET_TYPES.GOLD,
 ];
 

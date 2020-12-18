@@ -218,7 +218,7 @@ export default function AssetAllocationChart({
 					<List
 						dataSource={data}
 						renderItem={({ name, value, children }) => {
-							const [title] = name.split(" ");
+							const [title] = name.split(name.endsWith("Stocks" ? " S" : " B"));
 
 							return (
 								<Fragment>
