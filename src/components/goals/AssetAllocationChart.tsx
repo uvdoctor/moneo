@@ -1,19 +1,19 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-import { List, Badge, Row, Col, Button } from "antd";
+import React, { Fragment, useContext, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { List, Badge, Row, Col, Button } from 'antd';
 import {
 	getAllAssetCategories,
 	getAllAssetTypesByCategory,
 	getAssetColour,
-	toHumanFriendlyCurrency,
-} from "../utils";
-import { CalcContext } from "../calc/CalcContext";
-import DataSwitcher from "../DataSwitcher";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import { ASSET_CATEGORIES } from "../../CONSTANTS";
+	toHumanFriendlyCurrency
+} from '../utils';
+import { CalcContext } from '../calc/CalcContext';
+import DataSwitcher from '../DataSwitcher';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ASSET_CATEGORIES } from '../../CONSTANTS';
 
-const TreemapChart = dynamic(() => import("bizcharts/lib/plots/TreemapChart"), {
-	ssr: false,
+const TreemapChart = dynamic(() => import('bizcharts/lib/plots/TreemapChart'), {
+	ssr: false
 });
 
 interface RenderItemProp {
@@ -38,27 +38,27 @@ interface AssetAllocationChartProps {
 
 export default function AssetAllocationChart({
 	year = new Date().getFullYear() + 1,
-	backFunction,
+	backFunction
 }: AssetAllocationChartProps) {
 	const cashDataDefault = {
 		value: 0,
 		deposits: 0,
-		savings: 0,
+		savings: 0
 	};
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 	const { cfs, ffResult, currency, rr, startYear }: any = useContext(CalcContext);
 	const index = year - startYear - 1;
-	const [data, setData] = useState<Array<any>>([]);
-	const [colors, setColors] = useState<Array<string>>([]);
-	const [cashData, setCashData] = useState<CashData>(cashDataDefault);
+	const [ data, setData ] = useState<Array<any>>([]);
+	const [ colors, setColors ] = useState<Array<string>>([]);
+	const [ cashData, setCashData ] = useState<CashData>(cashDataDefault);
 
 	const sortDesc = (data: Array<any>) => data.sort((a, b) => b.value - a.value);
 
 	const getAssetShortName = (assetName: string) => {
-		if (assetName.endsWith("nds") || assetName.endsWith("cks")) {
+		if (assetName.endsWith('nds') || assetName.endsWith('cks')) {
 			let result = '';
-			let strings = assetName.substr(0, assetName.length - (assetName.endsWith("cks") ? 7 : 6)).split(" ");
-			strings.forEach((str) => result += str + '\n');
+			let strings = assetName.substr(0, assetName.length - (assetName.endsWith('cks') ? 7 : 6)).split(' ');
+			strings.forEach((str) => (result += str + '\n'));
 			return result;
 		} else return assetName + '\n';
 	};
@@ -80,8 +80,8 @@ export default function AssetAllocationChart({
 						: children.push({
 								name: at,
 								value: aa[at][index],
-								children: [],
-						  });
+								children: []
+							});
 				}
 			});
 
@@ -90,24 +90,25 @@ export default function AssetAllocationChart({
 				: data.push({
 						name: cat,
 						value: total,
-						children: children,
-				  });
+						children: children
+					});
 		});
 		setCashData(cash);
 		sortDesc(data).forEach((cat) => colors.push(getAssetColour(cat.name)));
 		data.forEach((cat) => {
-			sortDesc(cat.children).forEach((at) =>
-				colors.push(getAssetColour(at.name))
-			);
+			sortDesc(cat.children).forEach((at) => colors.push(getAssetColour(at.name)));
 			cat.name += ` ${cat.value}%`;
 		});
-		setData([...data]);
-		setColors([...colors]);
+		setData([ ...data ]);
+		setColors([ ...colors ]);
 	};
 
-	useEffect(() => {
-		if(rr.length) initChartData();
-	}, [rr]);
+	useEffect(
+		() => {
+			if (rr.length) initChartData();
+		},
+		[ rr ]
+	);
 
 	return (
 		<Fragment>
@@ -115,15 +116,10 @@ export default function AssetAllocationChart({
 				title={
 					<Fragment>
 						{backFunction && (
-							<Button
-								type="text"
-								icon={<ArrowLeftOutlined />}
-								onClick={() => backFunction()}
-							/>
+							<Button type="text" icon={<ArrowLeftOutlined />} onClick={() => backFunction()} />
 						)}
-						Target Asset Allocation of{" "}
-						<strong>{toHumanFriendlyCurrency(cfs[index], currency)}</strong> for Year{" "}
-						<strong>{year}</strong>
+						Target Asset Allocation of <strong>{toHumanFriendlyCurrency(cfs[index], currency)}</strong> for
+						Year{' '}<strong>{year}</strong>
 					</Fragment>
 				}
 				header={
@@ -132,11 +128,11 @@ export default function AssetAllocationChart({
 							<Row>
 								<Col xs={24} lg={8}>
 									<div className="cash active">
-										<span className="arrow-right"></span>
+										<span className="arrow-right" />
 										Cash <Badge count={`${cashData.value} %`} />
 										<strong>
 											{toHumanFriendlyCurrency(
-												Math.round((cfs[index] * cashData.value) / 100),
+												Math.round(cfs[index] * cashData.value / 100),
 												currency
 											)}
 										</strong>
@@ -147,7 +143,7 @@ export default function AssetAllocationChart({
 										Deposits <Badge count={`${cashData.deposits} %`} />
 										<strong>
 											{toHumanFriendlyCurrency(
-												Math.round((cfs[index] * cashData.deposits) / 100),
+												Math.round(cfs[index] * cashData.deposits / 100),
 												currency
 											)}
 										</strong>
@@ -158,7 +154,7 @@ export default function AssetAllocationChart({
 										Savings <Badge count={`${cashData.savings} %`} />
 										<strong>
 											{toHumanFriendlyCurrency(
-												Math.round((cfs[index] * cashData.savings) / 100),
+												Math.round(cfs[index] * cashData.savings / 100),
 												currency
 											)}
 										</strong>
@@ -172,16 +168,16 @@ export default function AssetAllocationChart({
 				<Chart>
 					<TreemapChart
 						data={{
-							name: "Portfolio",
+							name: 'Portfolio',
 							value: 100 - (cashData.value || 0),
-							children: data,
+							children: data
 						}}
 						meta={{
 							value: {
 								formatter: (v) => {
-									return v + "%";
-								},
-							},
+									return v + '%';
+								}
+							}
 						}}
 						colorField="name"
 						label={{
@@ -193,11 +189,11 @@ export default function AssetAllocationChart({
 							},
 							style: {
 								fontSize: 14,
-								fill: "grey",
-							},
+								fill: 'grey'
+							}
 						}}
 						color={colors}
-						rectStyle={{ stroke: "#fff", lineWidth: 2 }}
+						rectStyle={{ stroke: '#fff', lineWidth: 2 }}
 						forceFit
 						tooltip={{
 							visible: true,
@@ -206,11 +202,11 @@ export default function AssetAllocationChart({
 								return {
 									name,
 									value: `<strong>${toHumanFriendlyCurrency(
-										Math.round((cfs[index] * value) / 100),
+										Math.round(cfs[index] * value / 100),
 										currency
-									)}</strong> (${value}%)`,
+									)}</strong> (${value}%)`
 								};
-							},
+							}
 						}}
 					/>
 				</Chart>
@@ -218,18 +214,15 @@ export default function AssetAllocationChart({
 					<List
 						dataSource={data}
 						renderItem={({ name, value, children }) => {
-							const [title] = name.split(" ");
+							const [ title ] = name.split(' ');
 
 							return (
 								<Fragment>
 									<List.Item
 										className="heading"
 										actions={[
-											toHumanFriendlyCurrency(
-												Math.round((cfs[index] * value) / 100),
-												currency
-											),
-											<Badge count={`${value}%`} />,
+											toHumanFriendlyCurrency(Math.round(cfs[index] * value / 100), currency),
+											<Badge count={`${value}%`} />
 										]}
 									>
 										{title}
@@ -244,13 +237,13 @@ export default function AssetAllocationChart({
 													<List.Item
 														actions={[
 															toHumanFriendlyCurrency(
-																Math.round((cfs[index] * value) / 100),
+																Math.round(cfs[index] * value / 100),
 																currency
 															),
-															<Badge count={`${value}%`} />,
+															<Badge count={`${value}%`} />
 														]}
 													>
-														<span style={{ background: assetColor }}></span>
+														<span style={{ background: assetColor }} />
 														{name}
 													</List.Item>
 												);
