@@ -34,7 +34,7 @@ export function AfterFI() {
 				currency={currency}
 				value={expenseAfterFF}
 				changeHandler={setExpenseAfterFF}
-				min={10000}
+				min={1000}
 				max={50000}
 				step={100}
 			/>

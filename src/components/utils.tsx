@@ -497,9 +497,9 @@ export const getAssetColour = (type: string) => {
     case ASSET_CATEGORIES.BONDS:
       return COLORS.WHITE;
     case ASSET_TYPES.SHORT_TERM_BONDS:
-      return "#855cf8";
-    case ASSET_TYPES.MED_TERM_BONDS:
       return "#aa8dfa";
+    case ASSET_TYPES.MED_TERM_BONDS:
+      return "#855cf8";
     case ASSET_TYPES.TAX_EXEMPT_BONDS:
       return "#e7defe";
     case ASSET_CATEGORIES.STOCKS:

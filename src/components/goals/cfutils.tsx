@@ -540,102 +540,93 @@ const getRR = (aa: any, index: number, pp: any) => {
   return perf;
 };
 
+const allocate = (arr: Array<number>, index: number, val: number, remVal: number, maxLimit: number = 100, minLimit: number = 0) => {
+  if (!remVal) return remVal;
+  if (val < minLimit) val = minLimit;
+  if (val > maxLimit) val = maxLimit;
+  if (val > remVal) val = remVal;
+  arr[index] += val;
+  return remVal - val;
+};
+
+const allocateCash = (aa: any, ffGoalEndYear: number, year: number, mustAllocation: any, cs: number) => {
+  let nowYear = new Date().getFullYear();
+  let i = year - (nowYear + 1);
+  let remPer = allocate(aa[ASSET_TYPES.SAVINGS], i, Math.round((mustAllocation.savings[year] / cs) * 100), 100);
+  remPer = allocate(aa[ASSET_TYPES.DEPOSITS], i, Math.round((mustAllocation.deposits[year] / cs) * 100), remPer,
+    year < ffGoalEndYear - 10 ? remPer : (30 - 2 * (ffGoalEndYear - year)) - aa[ASSET_TYPES.SAVINGS][i], 1);
+  return remPer;
+};
+
+const allocateREIT = (aa: any, year: number, ffYear: number, ffGoal: APIt.CreateGoalInput, remPer: number) => {
+  if (!remPer) return remPer;
+  let nowYear = new Date().getFullYear();
+  let i = year - (nowYear + 1);
+  let reitPer = ffGoal.imp === APIt.LMH.L ? 10 : 5;
+  if (year >= ffYear) {
+    if (year > ffGoal.ey - 5) reitPer = 25;
+    else if (year >= ffGoal.ey - 20) reitPer = 20;
+    else reitPer += 5;
+  }
+  remPer = allocate(aa[ASSET_TYPES.DOMESTIC_REIT], i, Math.round(reitPer * 0.7), remPer);
+  remPer = allocate(aa[ASSET_TYPES.INTERNATIONAL_REIT], i, Math.round(reitPer * 0.3), remPer);
+  return remPer;
+};
+
+const allocateStocks = (aa: any, year: number, ffYear: number, ffGoal: APIt.CreateGoalInput, remPer: number) => {
+  if (!remPer) return remPer;
+  let nowYear = new Date().getFullYear();
+  let i = year - (nowYear + 1);
+  let stocksPer = Math.round(remPer * 0.9);
+  let maxStocksPer =
+    year >= ffGoal.ey - 20 ? 2 * (ffGoal.ey - year) : 120 - (ffGoal.ey - year);
+  if (year >= ffYear && maxStocksPer > 60) maxStocksPer = 60;
+  if (stocksPer > maxStocksPer) stocksPer = maxStocksPer;
+  if (stocksPer > remPer) stocksPer = remPer;
+  remPer = allocate(aa[ASSET_TYPES.GOLD], i, Math.round(stocksPer * 0.1), remPer);
+  stocksPer -= aa[ASSET_TYPES.GOLD][i];
+  if (year >= ffGoal.ey - 10)
+    remPer = allocate(aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS], i, stocksPer, remPer);
+  else if (year >= ffGoal.ey - 20) {
+    remPer = allocate(aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS], i, Math.round(((100 - 2 * (ffGoal.ey - year)) / 100) * stocksPer), remPer);
+    remPer = allocate(aa[ASSET_TYPES.LARGE_CAP_STOCKS], i, stocksPer - aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i], remPer);
+  } else {
+    remPer = allocate(aa[ASSET_TYPES.INTERNATIONAL_STOCKS], i, Math.round(stocksPer * 0.3), remPer);
+    remPer = allocate(aa[ASSET_TYPES.LARGE_CAP_STOCKS], i, Math.round(stocksPer * 0.5), remPer);
+    if (year < ffYear && ffGoal.imp === APIt.LMH.H) {
+      remPer = allocate(aa[ASSET_TYPES.MID_CAP_STOCKS], i, Math.round(stocksPer * 0.1), remPer);
+      remPer = allocate(aa[ASSET_TYPES.SMALL_CAP_STOCKS], i, Math.round(stocksPer * 0.1), remPer);
+    } else remPer = allocate(aa[ASSET_TYPES.LARGE_CAP_STOCKS], i, Math.round(stocksPer * 0.2), remPer);
+  }
+  return remPer;
+};
+
 const calculateAllocation = (
   ffGoal: APIt.CreateGoalInput,
   y: number,
   cs: number,
   aa: any,
-  sa: number,
-  da: number,
-  mustBA: number,
+  mustAllocation: any,
   tryBA: number,
   ffYear: number
 ) => {
   let nowYear = new Date().getFullYear();
   let i = y - (nowYear + 1);
-  let savingsPer = Math.round((sa / cs) * 100);
-  let depPer = Math.round((da / cs) * 100);
-  if (depPer < 1) depPer = 1;
-  let cashPer = savingsPer + depPer;
-  if (y >= ffGoal.ey - 10) {
-    let maxCashPer = 30 - 2 * (ffGoal.ey - y);
-    if (cashPer < maxCashPer) cashPer = maxCashPer;
-    depPer = cashPer - savingsPer;
-  }
-  aa[ASSET_TYPES.SAVINGS][i] += savingsPer;
-  aa[ASSET_TYPES.DEPOSITS][i] += depPer;
-  let remPer = 100 - cashPer;
-  let mustBondsPer = remPer > 0 ? Math.round((mustBA / cs) * 100) : 0;
-  if (mustBondsPer > remPer) mustBondsPer = remPer;
-  if (y < ffYear) aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] += mustBondsPer;
-  else aa[ASSET_TYPES.MED_TERM_BONDS][i] += mustBondsPer;
-  remPer -= mustBondsPer;
-  let tryBondsPer = remPer > 0 ? Math.round((tryBA / cs) * 100) : 0;
-  if (tryBondsPer > remPer) tryBondsPer = remPer;
-  aa[ASSET_TYPES.MED_TERM_BONDS][i] += tryBondsPer;
-  remPer -= tryBondsPer;
-  if (remPer > 0) {
-    let reitPer = ffGoal.imp === APIt.LMH.L ? 10 : 5;
-    if (y >= ffYear) {
-      if (y > ffGoal.ey - 5) reitPer = 25;
-      else if (y >= ffGoal.ey - 20) reitPer = 20;
-      else reitPer += 5;
+  let remPer = allocateCash(aa, ffGoal.ey, y, mustAllocation, cs);
+  remPer = allocate(y < ffYear ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS],
+    i, Math.round((mustAllocation.bonds[y] / cs) * 100), remPer);
+  remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round((tryBA / cs) * 100), remPer);
+  if (y <= ffGoal.ey - 5) {
+    if (ffGoal.imp === APIt.LMH.L) {
+      remPer = allocate(y < ffYear ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round(remPer * 0.6), remPer);
+      remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, remPer, remPer);
+    } else {
+      remPer = allocateREIT(aa, y, ffYear, ffGoal, remPer);
+      remPer = allocateStocks(aa, y, ffYear, ffGoal, remPer);
+      if (y < ffYear) remPer = allocate(aa[ASSET_TYPES.TAX_EXEMPT_BONDS], i, Math.round(remPer / 2), remPer);
+      aa[ASSET_TYPES.MED_TERM_BONDS][i] += remPer;
     }
-    if (reitPer > remPer) reitPer = remPer;
-    aa[ASSET_TYPES.DOMESTIC_REIT][i] += Math.round(reitPer * 0.7);
-    aa[ASSET_TYPES.INTERNATIONAL_REIT][i] +=
-      reitPer - aa[ASSET_TYPES.DOMESTIC_REIT][i];
-    remPer -= reitPer;
-    if (remPer) {
-      if (y <= ffGoal.ey - 5) {
-        if (ffGoal.imp === APIt.LMH.L) {
-          let mteBondsPer = 0;
-          if (y < ffYear) mteBondsPer = Math.round(remPer * 0.6);
-          aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] += mteBondsPer;
-          aa[ASSET_TYPES.MED_TERM_BONDS][i] += remPer - mteBondsPer;
-        } else {
-          let stocksPer = Math.round(remPer * 0.9);
-          let maxStocksPer =
-            y >= ffGoal.ey - 20 ? 2 * (ffGoal.ey - y) : 120 - (ffGoal.ey - y);
-          if (y >= ffYear && maxStocksPer > 60) maxStocksPer = 60;
-          if (stocksPer > maxStocksPer) stocksPer = maxStocksPer;
-          if (y >= ffGoal.ey - 10)
-            aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i] += stocksPer;
-          else if (y >= ffGoal.ey - 20) {
-            aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i] +=
-              ((100 - 2 * (ffGoal.ey - y)) / 100) * stocksPer;
-            aa[ASSET_TYPES.LARGE_CAP_STOCKS][i] +=
-              stocksPer - aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS][i];
-          } else {
-            let internationalStocksPer = Math.round(stocksPer * 0.3);
-            aa[ASSET_TYPES.INTERNATIONAL_STOCKS][i] += internationalStocksPer;
-            let remStocksPer = stocksPer - internationalStocksPer;
-            if (y < ffYear && ffGoal.imp === APIt.LMH.H) {
-              let midCapStocksPer = Math.round(remStocksPer * 0.5);
-              aa[ASSET_TYPES.MID_CAP_STOCKS][i] += midCapStocksPer;
-              remStocksPer -= midCapStocksPer;
-            } 
-            aa[ASSET_TYPES.LARGE_CAP_STOCKS][i] += remStocksPer;
-          }
-          remPer -= stocksPer;
-          if (remPer) {
-            let goldPer = Math.round(stocksPer * 0.1);
-            if (goldPer > remPer) goldPer = remPer;
-            aa[ASSET_TYPES.GOLD][i] += goldPer;
-            remPer -= goldPer;
-          }
-          if (remPer > 0) {
-            let mteBondsPer = 0;
-            if (y < ffYear) mteBondsPer = Math.round(remPer / 2);
-            aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] += mteBondsPer;
-            aa[ASSET_TYPES.MED_TERM_BONDS][i] += remPer - mteBondsPer;
-          }
-        }
-      } else {
-        aa[ASSET_TYPES.SHORT_TERM_BONDS][i] += remPer;
-      }
-    }
-  }
+  } else allocate(aa[ASSET_TYPES.SHORT_TERM_BONDS], i, remPer, remPer);
 };
 
 export const checkForFF = (
@@ -678,18 +669,12 @@ export const checkForFF = (
     if (y >= ffYear) minReq += tryBA;
     let i = y - (nowYear + 1);
     let rate = 0;
-    if (cs >= minReq) {
-      calculateAllocation(ffGoal, y, cs, aa, sa, da, mustBA, tryBA, ffYear);
-    } else {
-      if (cs <= sa) aa[ASSET_TYPES.SAVINGS][i] += 100;
+    if (cs >= minReq) calculateAllocation(ffGoal, y, cs, aa, mustAllocation, tryBA, ffYear);
+    else {
+      if (cs <= sa) aa[ASSET_TYPES.SAVINGS][i] = 100;
       else {
-        aa[ASSET_TYPES.SAVINGS][i] += Math.round((sa / cs) * 100);
-        let depPer = Math.round((da / cs) * 100);
-        if (depPer < 1) depPer = 1;
-        let remPer = 100 - aa[ASSET_TYPES.SAVINGS][i];
-        aa[ASSET_TYPES.DEPOSITS][i] += depPer < remPer ? depPer : remPer;
-        remPer -= aa[ASSET_TYPES.DEPOSITS][i];
-        if (remPer > 0) {
+        let remPer = allocateCash(aa, ffGoal.ey, y, mustAllocation, cs);
+        if (remPer) {
           if (y >= ffYear) aa[ASSET_TYPES.MED_TERM_BONDS][i] += remPer;
           else aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] += remPer;
         }

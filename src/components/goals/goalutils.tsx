@@ -120,7 +120,7 @@ const createFFGoalInput = (currency: string) => {
     pg: [],
     pl: [],
     tbr: 1,
-    tdli: 0,
+    tdli: 20000,
     btr: 3,
     ra: 50000,
     rachg: 1000
