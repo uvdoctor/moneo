@@ -55,9 +55,13 @@ export default function AssetAllocationChart({
 	const sortDesc = (data: Array<any>) => data.sort((a, b) => b.value - a.value);
 
 	const getAssetShortName = (assetName: string) => {
-		if (assetName.endsWith("ds") || assetName.endsWith("ks"))
-			return assetName.split(" ")[0];
-		else return assetName;
+		if (assetName.endsWith("nds")) {
+			let result = '';
+			let strings = assetName.substr(0, assetName.length - 6).split(" ");
+			strings.forEach((str) => result += str + '\n');
+			return result;
+		} else if (assetName.endsWith("cks")) return assetName.substr(0, assetName.length - 7) + '\n';
+		else return assetName + '\n';
 	};
 
 	const initChartData = () => {
@@ -185,10 +189,7 @@ export default function AssetAllocationChart({
 							visible: true,
 							formatter: (v) => {
 								return ffResult.aa.hasOwnProperty(v)
-									? `${getAssetShortName(v)}\n${toCurrency(
-											Math.round((cfs[index] * ffResult.aa[v][index]) / 100),
-											currency
-									  )} (${ffResult.aa[v][index]}%)`
+									? `${getAssetShortName(v)}${ffResult.aa[v][index]}%`
 									: v;
 							},
 							style: {
@@ -218,7 +219,7 @@ export default function AssetAllocationChart({
 					<List
 						dataSource={data}
 						renderItem={({ name, value, children }) => {
-							const [title] = name.split(name.endsWith("Stocks" ? " S" : " B"));
+							const [title] = name.split(" ");
 
 							return (
 								<Fragment>

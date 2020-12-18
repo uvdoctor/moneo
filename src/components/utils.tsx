@@ -509,11 +509,11 @@ export const getAssetColour = (type: string) => {
     case ASSET_TYPES.LARGE_CAP_STOCKS:
       return "#fdd0cb";
     case ASSET_TYPES.MID_CAP_STOCKS:
-      return "#ff9797";
+      return "#e75c53";
     case ASSET_TYPES.SMALL_CAP_STOCKS:
       return "#fee0dd";
     case ASSET_TYPES.INTERNATIONAL_STOCKS:
-      return "#e75c53";
+      return "#ff9797";
     case ASSET_TYPES.DIVIDEND_GROWTH_STOCKS:
       return "#ffa75c";
     case ASSET_TYPES.HIGH_YIELD_STOCKS:
