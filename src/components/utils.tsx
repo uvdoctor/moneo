@@ -491,9 +491,9 @@ export const getAssetColour = (type: string) => {
     case ASSET_CATEGORIES.CASH:
       return COLORS.WHITE;
     case ASSET_TYPES.SAVINGS:
-      return "#68d391";
+      return "#befe95";
     case ASSET_TYPES.DEPOSITS:
-      return "#64d9ff";
+      return "#82d949";
     case ASSET_CATEGORIES.BONDS:
       return COLORS.WHITE;
     case ASSET_TYPES.SHORT_TERM_BONDS:
