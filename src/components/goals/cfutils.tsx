@@ -611,8 +611,8 @@ const calculateAllocation = (
   let i = y - (nowYear + 1);
   let remPer = allocateCash(aa, ffGoal.ey, y, mustAllocation, cs);
   remPer = allocate(y < ffYear ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS],
-    i, Math.round((mustAllocation.bonds[y] / cs) * 100), remPer);
-  remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, tryBA, remPer);
+    i, Math.round((mustAllocation.bonds[y] / cs) * 100), remPer, remPer, 7);
+  remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, tryBA, remPer, remPer, 8);
   if (y <= ffGoal.ey - 5) {
     if (ffGoal.imp === APIt.LMH.L) {
       remPer = allocate(y < ffYear ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round(remPer * 0.5), remPer);
