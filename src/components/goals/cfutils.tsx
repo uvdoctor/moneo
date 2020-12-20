@@ -222,7 +222,7 @@ export const calculateSellCFs = (
     );
     cfs.push(Math.round(netAnnualAmt));
   }
-  cfs[cfs.length - 1] = calculateSellPrice(p, goal?.achg as number, goal.sa as number);
+  cfs[cfs.length - 1] = calculateSellPrice(p, goal?.achg as number, duration);
   return cfs;
 };
 
@@ -253,7 +253,7 @@ const createAutoCFs = (
       if (cfs[i]) cfs[i] += Math.round(netCF);
       else cfs.push(Math.round(netCF));
     }
-    cfs[cfs.length - 1] += calculateSellPrice(p, goal?.achg as number, goal.sa as number);
+    cfs[cfs.length - 1] += calculateSellPrice(p, goal?.achg as number, duration);
     let tb = getTaxBenefit(
       p,
       isTaxCreditEligible(goal.type) ? 100 : goal.tdr,
@@ -388,7 +388,7 @@ export const createLoanCFs = (
     else cfs.push(cf ? Math.round(-cf) : 0);
   }
   if (goal.type === APIt.GoalType.B) {
-    sp = calculateSellPrice(price, goal?.achg as number, goal.sa as number);
+    sp = calculateSellPrice(price, goal?.achg as number, duration);
     cfs[cfs.length - 1] += Math.round(sp);
     if(taxBenefit) cfs.push(Math.round(taxBenefit));
   }
@@ -444,7 +444,7 @@ const createManualCFs = (
         if (targets[i] && targets[i].val) remPayment += targets[i].val;
       }
     }
-    let sp = calculateSellPrice(p, goal?.achg as number, goal.sa as number);
+    let sp = calculateSellPrice(p, goal?.achg as number, duration);
     cfs.push(Math.round(sp + taxBenefitPrev - remPayment));
     taxBenefitPrev = getTaxBenefit(
       remPayment,
@@ -610,20 +610,22 @@ const calculateAllocation = (
   let nowYear = new Date().getFullYear();
   let i = y - (nowYear + 1);
   let remPer = allocateCash(aa, ffGoal.ey, y, mustAllocation, cs);
-  remPer = allocate(y < ffYear ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS],
+  const allocateTEBonds = y < ffYear && ffGoal.manual > 0;
+  remPer = allocate(allocateTEBonds ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS],
     i, Math.round((mustAllocation.bonds[y] / cs) * 100), remPer);
   remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, tryBA, remPer);
   if (y <= ffGoal.ey - 5) {
     if (ffGoal.imp === APIt.LMH.L) {
-      remPer = allocate(y < ffYear ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round(remPer * 0.5), remPer);
+      remPer = allocate(allocateTEBonds ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round(remPer * 0.5), remPer);
       remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, remPer, remPer);
     } else {
       remPer = allocateREIT(aa, y, ffYear, ffGoal, remPer);
       let teBondsPer = aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i];
       let meBondsPer = aa[ASSET_TYPES.MED_TERM_BONDS][i];
       if (teBondsPer + meBondsPer < 15) {
-        if (teBondsPer < 6) aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = 6;
-        if (meBondsPer < 6) aa[ASSET_TYPES.MED_TERM_BONDS][i] = 6;
+        if (teBondsPer < 5 && allocateTEBonds) aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = 5;
+        let minMEBondsPer = !allocateTEBonds ? 10 : 5;
+        if (meBondsPer < minMEBondsPer) aa[ASSET_TYPES.MED_TERM_BONDS][i] = minMEBondsPer;
         let totalBondsPer = aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] + aa[ASSET_TYPES.MED_TERM_BONDS][i];
         if(totalBondsPer < 15) aa[ASSET_TYPES.EMERGING_BONDS][i] = 15 - totalBondsPer;
         remPer -= aa[ASSET_TYPES.EMERGING_BONDS][i] +
@@ -634,8 +636,8 @@ const calculateAllocation = (
       }
       remPer = allocateStocks(aa, y, ffYear, ffGoal, remPer);
       if (remPer) {
-        if (y < ffYear) remPer = allocate(aa[ASSET_TYPES.TAX_EXEMPT_BONDS], i, Math.round(remPer * 0.4), remPer);
-        remPer = allocate(aa[ASSET_TYPES.TAX_EXEMPT_BONDS], i, Math.round(remPer * 0.7), remPer);
+        if (allocateTEBonds) remPer = allocate(aa[ASSET_TYPES.TAX_EXEMPT_BONDS], i, Math.round(remPer * 0.4), remPer);
+        remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round(remPer * 0.7), remPer);
         allocate(aa[ASSET_TYPES.EMERGING_BONDS], i, remPer, remPer);
       }
     }

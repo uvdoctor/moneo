@@ -433,7 +433,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     ),
     changeState: boolean = true
   ) => {
-    if (!price) {
+    if (!price && changeState) {
       setCFs([...[]]);
       setCFsWithoutSM([...[]]);
       return [];
@@ -653,8 +653,11 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
 
   const setAllBuyCFsForComparison = () => {
     let allBuyCFs: Array<Array<number>> = [];
-    for (let i = 3; i <= analyzeFor; i++)
+    for (let i = 3; i <= analyzeFor; i++) {
+      console.log("Buy CFs for ", i);
       allBuyCFs.push(calculateYearlyCFs(i, false));
+      console.log(allBuyCFs[i - 3]);
+    }
     setAllBuyCFs([...allBuyCFs]);
   };
 

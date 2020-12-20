@@ -48,9 +48,19 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
   const [avgMonthlySavings, setAvgMonthlySavings] = useState<number>(
     goal?.rachg as number
   );
+  const [avgLivingExp, setAvgLivingExp] = useState<number>(
+    goal?.rachg as number
+  );
+  const [livingExpBY, setLivingExpBY] = useState<number>(
+    goal?.rachg as number
+  );
+  const [livingExpChgRate, setLivingExpChgRate] = useState<number>(
+    goal?.rachg as number
+  );
   const [monthlySavingsRate, setMonthlySavingsRate] = useState<number>(
     goal?.tbr as number
   );
+  const [needTEBonds, setNeedTEBonds] = useState<number>(goal.tdr);
   const [taxRate, setTaxRate] = useState<number>(goal.tdr);
   const [leaveBehind, setLeaveBehind] = useState<number>(goal?.sa as number);
   const [carePremium, setCarePremium] = useState<number>(goal?.cp as number);
@@ -95,11 +105,11 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
       ra: nw,
       rachg: avgMonthlySavings,
       tdr: taxRate,
+      manual: needTEBonds,
       tdl: careTaxDedLimit,
       ccy: currency,
       type: goal.type,
       imp: riskProfile,
-      manual: 0,
       amsy: carePremiumSY,
       amper: carePremiumChgPer,
       achg: carePremiumDur,
@@ -169,6 +179,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     expenseBY,
     endYear,
     taxRate,
+    needTEBonds,
     careTaxDedLimit,
     carePremiumSY,
     carePremiumChgPer,
@@ -184,6 +195,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     losses,
     nw,
     avgMonthlySavings,
+    avgLivingExp,
     expenseAfterFF,
     expenseChgRate,
     monthlySavingsRate,
@@ -195,6 +207,8 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     return (
       <FIGoalContext.Provider
         value={{
+          needTEBonds,
+          setNeedTEBonds,
           taxRate,
           setTaxRate,
           expenseBY,
@@ -236,7 +250,13 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
           monthlySavingsRate,
           setMonthlySavingsRate,
           riskProfile,
-          setRiskProfile
+          setRiskProfile,
+          avgLivingExp,
+          setAvgLivingExp,
+          livingExpChgRate,
+          setLivingExpChgRate,
+          livingExpBY,
+          setLivingExpBY
         }}>
         {children ? children : <CalcTemplate />}
       </FIGoalContext.Provider>

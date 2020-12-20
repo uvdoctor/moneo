@@ -61,7 +61,7 @@ export default function Landing() {
               count="02"
               title="Set"
               subTitle="Goals"
-              content="Estimate money required across multiple currencies using in-built templates and calculators."
+              content="Estimate money required for Your Goals across multiple currencies, and create a personalized Financial Plan to fulfill them."
               imgSrc="images/step2.jpg"
             />
             <Step
@@ -69,7 +69,7 @@ export default function Landing() {
               count="03"
               title="Go"
               subTitle="Make Money Work"
-              content="Helps you to not only align savings &amp; investements to goals, but also become more financially savvy via engaging games."
+              content="Helps You to not only align Savings &amp; Investements to Your Goals, but also become more financially savvy via engaging games."
               imgSrc="images/step3.jpg"
             />
             <GettingStarted />

@@ -5,15 +5,25 @@ import { toCurrency } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
 import ItemDisplay from '../calc/ItemDisplay';
+import HSwitch from '../HSwitch';
 
 export function BeforeFI() {
 	const { currency, dr, setDR, addCallback }: any = useContext(CalcContext);
-	const { avgMonthlySavings, setAvgMonthlySavings, monthlySavingsRate, setMonthlySavingsRate }: any = useContext(
-		FIGoalContext
-	);
+	const {
+		avgMonthlySavings,
+		setAvgMonthlySavings,
+		monthlySavingsRate,
+		setMonthlySavingsRate,
+		needTEBonds,
+		setNeedTEBonds
+	}: any = useContext(FIGoalContext);
 
 	return (
-		<Section title="Before Financial Independence" videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}>
+		<Section
+			title="Before Financial Independence"
+			videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}
+			toggle={<HSwitch value={needTEBonds} setter={setNeedTEBonds} rightText="Income Tax more than 12%" />}
+		>
 			<NumberInput
 				info={`Average Monthly Savings after paying all taxes & expenses. 
                   Include Your Retirement Contributions as a part of Your Savings. 
@@ -40,8 +50,13 @@ export function BeforeFI() {
 				min={0}
 				max={3}
 				step={0.1}
-				note={<ItemDisplay label="Target Investment" result={avgMonthlySavings * (1 + monthlySavingsRate / 100)} pl footer="for this Month" />}
 			/>
+			{avgMonthlySavings && <ItemDisplay
+				label="Target Investment"
+				result={avgMonthlySavings * (1 + monthlySavingsRate / 100)}
+				pl
+				footer="for this Month"
+			/>}
 			{!addCallback && (
 				<NumberInput
 					value={dr as number}
@@ -49,9 +64,9 @@ export function BeforeFI() {
 					min={0}
 					max={10}
 					step={0.1}
-					pre="Investment Earns About"
+					pre="Investment Earns Yearly"
 					unit="%"
-					note="Yearly after taxes & fees"
+					note="after taxes & fees"
 				/>
 			)}
 		</Section>
