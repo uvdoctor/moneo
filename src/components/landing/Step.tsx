@@ -34,7 +34,7 @@ export default function Step({
           </Col>
         </Row>
         <p>{content}</p>
-        <Image src={imgSrc} />
+        <Image preview={false} src={imgSrc} />
       </div>
     </Col>
   );
