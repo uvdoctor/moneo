@@ -4,6 +4,7 @@ import NumberInput from '../form/numberinput';
 import { toCurrency } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
+import ItemDisplay from '../calc/ItemDisplay';
 
 export function BeforeFI() {
 	const { currency, dr, setDR, addCallback }: any = useContext(CalcContext);
@@ -16,7 +17,6 @@ export function BeforeFI() {
 			<NumberInput
 				info={`Average Monthly Savings after paying all taxes & expenses. 
                   Include Your Retirement Contributions as a part of Your Savings. 
-                  You Can Put Negative Value if Your Expenses are More than Income. 
                   This will be used to forecast Your Future Savings.`}
 				value={avgMonthlySavings}
 				pre="Average Monthly Investment"
@@ -40,10 +40,7 @@ export function BeforeFI() {
 				min={0}
 				max={3}
 				step={0.1}
-				note={`Total ${toCurrency(
-					Math.round(avgMonthlySavings * (1 + monthlySavingsRate / 100)),
-					currency
-				)} this month`}
+				note={<ItemDisplay label="Target Investment" result={avgMonthlySavings * (1 + monthlySavingsRate / 100)} pl footer="for this Month" />}
 			/>
 			{!addCallback && (
 				<NumberInput

@@ -611,26 +611,32 @@ const calculateAllocation = (
   let i = y - (nowYear + 1);
   let remPer = allocateCash(aa, ffGoal.ey, y, mustAllocation, cs);
   remPer = allocate(y < ffYear ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS],
-    i, Math.round((mustAllocation.bonds[y] / cs) * 100), remPer, remPer, 7);
-  remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, tryBA, remPer, remPer, 8);
+    i, Math.round((mustAllocation.bonds[y] / cs) * 100), remPer);
+  remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, tryBA, remPer);
   if (y <= ffGoal.ey - 5) {
     if (ffGoal.imp === APIt.LMH.L) {
       remPer = allocate(y < ffYear ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round(remPer * 0.5), remPer);
       remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, remPer, remPer);
     } else {
       remPer = allocateREIT(aa, y, ffYear, ffGoal, remPer);
-      remPer = allocateStocks(aa, y, ffYear, ffGoal, remPer);
-      if (y < ffYear) remPer = allocate(aa[ASSET_TYPES.TAX_EXEMPT_BONDS], i, Math.round(remPer / 2), remPer);
-      aa[ASSET_TYPES.MED_TERM_BONDS][i] += remPer;
-      if (aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i]) {
-        let emPer = Math.round(aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] * 0.3);
-        aa[ASSET_TYPES.EMERGING_BONDS][i] += emPer;
-        aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] -= emPer;
+      let teBondsPer = aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i];
+      let meBondsPer = aa[ASSET_TYPES.MED_TERM_BONDS][i];
+      if (teBondsPer + meBondsPer < 15) {
+        if (teBondsPer < 6) aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = 6;
+        if (meBondsPer < 6) aa[ASSET_TYPES.MED_TERM_BONDS][i] = 6;
+        let totalBondsPer = aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] + aa[ASSET_TYPES.MED_TERM_BONDS][i];
+        if(totalBondsPer < 15) aa[ASSET_TYPES.EMERGING_BONDS][i] = 15 - totalBondsPer;
+        remPer -= aa[ASSET_TYPES.EMERGING_BONDS][i] +
+          (aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] - teBondsPer) + (aa[ASSET_TYPES.MED_TERM_BONDS][i] - meBondsPer);
+      } else {
+        aa[ASSET_TYPES.EMERGING_BONDS][i] = 5;
+        remPer -= 5;
       }
-      if (aa[ASSET_TYPES.MED_TERM_BONDS][i]) {
-        let emPer = Math.round(aa[ASSET_TYPES.MED_TERM_BONDS][i] * 0.3);
-        aa[ASSET_TYPES.EMERGING_BONDS][i] += emPer;
-        aa[ASSET_TYPES.MED_TERM_BONDS][i] -= emPer;
+      remPer = allocateStocks(aa, y, ffYear, ffGoal, remPer);
+      if (remPer) {
+        if (y < ffYear) remPer = allocate(aa[ASSET_TYPES.TAX_EXEMPT_BONDS], i, Math.round(remPer * 0.4), remPer);
+        remPer = allocate(aa[ASSET_TYPES.TAX_EXEMPT_BONDS], i, Math.round(remPer * 0.7), remPer);
+        allocate(aa[ASSET_TYPES.EMERGING_BONDS], i, remPer, remPer);
       }
     }
   } else allocate(aa[ASSET_TYPES.SHORT_TERM_BONDS], i, remPer, remPer);
