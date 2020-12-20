@@ -536,17 +536,21 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     setInputTabs([...inputTabs]);
   }, [error]);
 
-  const initAllRentCFs = () => {
-    if (!rentAmt) return [];
+  const initBRCompNPVs = () => {
     const firstRRIndex = startYear - (nowYear + 1);
-    let npv: Array<number> = [];
+    let buyNPVs: Array<number> = [];
+    let rentNPVs: Array<number> = [];
+    let results: Array<any> = [];
     for (let i = 3; i <= analyzeFor; i++) {
       let cfs = [];
       let inv = 0;
+      let buyCFs = allBuyCFs[i - 3];
+      buyNPVs.push(
+        getNPV(dr === null ? rr : dr, buyCFs, startYear - (nowYear + 1))
+      );
       for (let j = 0; j < i; j++) {
-        let value = getCompoundedIncome(rentChgPer as number, rentAmt, j);
+        let value = getCompoundedIncome(rentChgPer as number, rentAmt as number, j);
         if (rentTaxBenefit) value *= (1 - taxRate / 100);
-        let buyCFs = allBuyCFs[i - 3];
         let buyCF = buyCFs[j];
         if (j === i - 1 && buyCF > 0) {
           if (loanPer && loanMonths && manualMode < 1 && i * 12 < loanMonths) buyCF = allBuyCFs[i - 2] ? allBuyCFs[i - 2][j] : buyCFs[j - 1];
@@ -561,37 +565,19 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
         }
         if(j < i - 1 || inv <= 0) cfs.push(-Math.round(value));
       }
-      if (cfs.length) npv.push(getNPV(dr === null ? rr : dr, cfs, firstRRIndex));
+      if (cfs.length) rentNPVs.push(getNPV(dr === null ? rr : dr, cfs, firstRRIndex));
     }
-    return npv;
-  };
-
-  const buildBuyRentComparisonData = () => {
-    let results: Array<any> = [];
-    if (allBuyCFs && allBuyCFs.length) {
+    if (rentNPVs.length) {
       results.push({
         name: "Buy",
-        values: initAllBuyCFs(),
+        values: buyNPVs,
       });
       results.push({
         name: "Rent",
-        values: initAllRentCFs(),
+        values: rentNPVs,
       });
     }
     return results;
-  };
-
-  const initAllBuyCFs = () => {
-    let npv: Array<number> = [];
-    for (let i = 0; i < allBuyCFs.length; i++) {
-      let buyCFs = allBuyCFs[i];
-      if (buyCFs && buyCFs.length) {
-        npv.push(
-          getNPV(dr === null ? rr : dr, buyCFs, startYear - (nowYear + 1))
-        );
-      }
-    }
-    return npv;
   };
 
   const getAns = (buyNPV: number, rentNPV: number) => buyNPV > rentNPV ? 'Buy' : 'Rent';
@@ -638,10 +624,10 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   }, [brAns]);
 
   useEffect(() => {
-    if (!sellAfter) return;
+    if (!sellAfter || !allBuyCFs.length) return;
     if (!!rentAmt) {
-      let data = buildBuyRentComparisonData();
-      if (data && data.length == 2) {
+      let data = initBRCompNPVs();
+      if (data && data.length === 2 && data[0].values.length && data[1].values.length) {
         setBRChartData([...data]);
         findAnswer(data);
       }
@@ -649,15 +635,11 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       setBRChartData([...[]]);
       setBRAns("");
     }
-  }, [taxRate, rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs, dr]);
+  }, [rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs, dr]);
 
   const setAllBuyCFsForComparison = () => {
     let allBuyCFs: Array<Array<number>> = [];
-    for (let i = 3; i <= analyzeFor; i++) {
-      console.log("Buy CFs for ", i);
-      allBuyCFs.push(calculateYearlyCFs(i, false));
-      console.log(allBuyCFs[i - 3]);
-    }
+    for (let i = 3; i <= analyzeFor; i++) allBuyCFs.push(calculateYearlyCFs(i, false));
     setAllBuyCFs([...allBuyCFs]);
   };
 
