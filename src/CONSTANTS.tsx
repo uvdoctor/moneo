@@ -31,7 +31,6 @@ export const ASSET_CATEGORIES = {
 export const ASSET_TYPES = {
     SAVINGS: "Savings",
     DEPOSITS: "Deposits",
-    SHORT_TERM_BONDS: "Short-term Bonds",
     MED_TERM_BONDS: "Intermediate-term Bonds",
     EMERGING_BONDS: "Emerging Market Bonds",
     TAX_EXEMPT_BONDS: "Tax-exempt Bonds",
@@ -41,8 +40,7 @@ export const ASSET_TYPES = {
     MID_CAP_STOCKS: "Mid-cap Stocks",
     SMALL_CAP_STOCKS: "Small-cap Stocks",
     INTERNATIONAL_STOCKS: "International Large-cap Stocks",
-    DIVIDEND_GROWTH_STOCKS: "Dividend-Growth Large-cap Stocks",
-    HIGH_YIELD_STOCKS: "High-Yield Large-cap Stocks",
+    DIVIDEND_GROWTH_STOCKS: "Dividend-Growth Stocks",
 };
 
 export const COLORS = {
@@ -58,7 +56,3 @@ export const COLORS = {
     SILVER: "#F1EDED",
     WHITE: "#ffffff",
 };
-
-export const PLAN_DURATION = 100;
-
-export const MAX_RETIREMENT_AGE = 70;

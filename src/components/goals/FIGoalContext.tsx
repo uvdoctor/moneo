@@ -1,11 +1,10 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
-import { CreateGoalInput, LMH, TargetInput } from "../../api/goals";
+import { CreateGoalInput, LMH, LoanType, TargetInput } from "../../api/goals";
 import { CalcContext, getCareTabOption } from "../calc/CalcContext";
 import CalcTemplate from "../calc/CalcTemplate";
-import FIAgeResult from "../calc/FIYearResult";
+import FIYearResult from "../calc/FIYearResult";
 import FISavingsResult from "../calc/FISavingsResult";
-import { findEarliestFFYear, isFFPossible } from "./cfutils";
-import { COLORS } from "../../CONSTANTS";
+import { findEarliestFFYear } from "./cfutils";
 
 const FIGoalContext = createContext({});
 interface FIGoalContextProviderProps {
@@ -27,6 +26,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     dr,
     setRR,
     setCreateNewGoalInput,
+    startYear,
     endYear,
     inputTabs,
     setInputTabs,
@@ -37,7 +37,6 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     allInputDone
   }: any = useContext(CalcContext);
   const [riskProfile, setRiskProfile] = useState<LMH>(goal.imp);
-  const [expenseBY, setExpenseBY] = useState<number>(goal.sy);
   const [expenseAfterFF, setExpenseAfterFF] = useState<number>(
     goal?.tdli as number
   );
@@ -48,14 +47,14 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
   const [avgMonthlySavings, setAvgMonthlySavings] = useState<number>(
     goal?.rachg as number
   );
-  const [avgLivingExp, setAvgLivingExp] = useState<number>(
-    goal?.rachg as number
+  const [emergencyFund, setEmergencyFund] = useState<number>(
+    goal.loan.emi as number
   );
-  const [livingExpBY, setLivingExpBY] = useState<number>(
-    goal?.rachg as number
+  const [emergencyFundBY, setEmergencyFundBY] = useState<number>(
+    goal.loan.ry as number
   );
-  const [livingExpChgRate, setLivingExpChgRate] = useState<number>(
-    goal?.rachg as number
+  const [emergencyFundChgRate, setEmergencyFundChgRate] = useState<number>(
+    goal.loan.per as number
   );
   const [monthlySavingsRate, setMonthlySavingsRate] = useState<number>(
     goal?.tbr as number
@@ -95,11 +94,13 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
   );
   const careTabIndex = 4;
   const careTabLabel = "Care";
+  const [retirementAge, setRetirementAge] = useState<number>(goal.loan?.rate);
+  const [planDuration, setPlanDuration] = useState<number>(goal.loan?.dur);
 
   const createGoal = () => {
     return {
       name: goal.name,
-      sy: expenseBY,
+      sy: startYear,
       ey: endYear,
       by: goal.by,
       ra: nw,
@@ -125,6 +126,14 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
       tdli: expenseAfterFF,
       btr: expenseChgRate,
       tbr: monthlySavingsRate,
+      loan: {
+        emi: emergencyFund,
+        ry: emergencyFundBY,
+        per: emergencyFundChgRate,
+        dur: planDuration,
+        rate: retirementAge,
+        type: LoanType.A
+      }
     } as CreateGoalInput;
   };
   
@@ -149,15 +158,9 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
   }, [currency]);
 
   useEffect(() => {
-    setResults([...isFFPossible(ffResult, leaveBehind)
-      ? [
-        <FIAgeResult />,
+    setResults([...[
+        <FIYearResult />,
         <FISavingsResult />
-      ]
-      : [
-        <label style={{ color: COLORS.RED }}>
-          Financial Independence May not be possible till You turn 70. Please try again with different Inputs.
-          </label>
       ]]);
   }, [rr]);
 
@@ -176,7 +179,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     setRR([...result.rr]);
     console.log("FF Result is ", result);
   }, [
-    expenseBY,
+    startYear,
     endYear,
     taxRate,
     needTEBonds,
@@ -195,11 +198,15 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     losses,
     nw,
     avgMonthlySavings,
-    avgLivingExp,
+    emergencyFund,
+    emergencyFundBY,
+    emergencyFundChgRate,
     expenseAfterFF,
     expenseChgRate,
     monthlySavingsRate,
     riskProfile,
+    retirementAge,
+    planDuration,
     dr,
     allInputDone
   ]);
@@ -211,8 +218,6 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
           setNeedTEBonds,
           taxRate,
           setTaxRate,
-          expenseBY,
-          setExpenseBY,
           careTaxDedLimit,
           setCareTaxDedLimit,
           carePremiumSY,
@@ -251,12 +256,16 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
           setMonthlySavingsRate,
           riskProfile,
           setRiskProfile,
-          avgLivingExp,
-          setAvgLivingExp,
-          livingExpChgRate,
-          setLivingExpChgRate,
-          livingExpBY,
-          setLivingExpBY
+          emergencyFund,
+          setEmergencyFund,
+          emergencyFundChgRate,
+          setEmergencyFundChgRate,
+          emergencyFundBY,
+          setEmergencyFundBY,
+          retirementAge,
+          setRetirementAge,
+          planDuration,
+          setPlanDuration
         }}>
         {children ? children : <CalcTemplate />}
       </FIGoalContext.Provider>

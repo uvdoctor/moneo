@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { getCompoundedIncome } from './finance';
 import { initOptions } from '../utils';
-import { getMinRetirementDuration } from '../goals/goalutils';
 import { CalcContext } from './CalcContext';
 import OppCostResult from './OppCostResult';
 import { GoalContext } from '../goals/GoalContext';
@@ -44,7 +43,7 @@ export default function DefaultOppCostResult() {
 				let year = (startYear as number) + cfs.length;
 				for (
 					let i = startIndex + cfs.length;
-					i < discountRate.length - (getMinRetirementDuration() + 1);
+					i < discountRate.length - (yearsForCalculation + 1);
 					i++, year++
 				)
 					if (oppCost < 0) oppCost *= 1 + discountRate[i] / 100;

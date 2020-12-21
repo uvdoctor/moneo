@@ -109,7 +109,6 @@ export default function SetPlan() {
     return {
       [ASSET_TYPES.SAVINGS]: 0.5 + irDiff,
       [ASSET_TYPES.DEPOSITS]: 1.5 + irDiff,
-      [ASSET_TYPES.SHORT_TERM_BONDS]: 2 + irDiff, //short term bond <1
       [ASSET_TYPES.MED_TERM_BONDS]: 3 + irDiff, // 1-5 medium term
       [ASSET_TYPES.TAX_EXEMPT_BONDS]: 3.5 + irDiff, //medium term tax efficient bonds
       [ASSET_TYPES.REIT]: 5 + irDiff,

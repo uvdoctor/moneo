@@ -7,6 +7,7 @@ import {
 } from "../chartutils";
 import { getAssetColour } from "../utils";
 import { CalcContext } from "../calc/CalcContext";
+import { FIGoalContext } from "./FIGoalContext";
 
 const StackedColumnChart = dynamic(
 	() => import("bizcharts/lib/plots/StackedColumnChart"),
@@ -21,7 +22,8 @@ interface AAPlanChartProps {
 }
 
 export default function AAPlanChart({ changeToSingleYear }: AAPlanChartProps) {
-	const { endYear, rr, ffResult }: any = useContext(CalcContext);
+	const { startYear, rr, ffResult }: any = useContext(CalcContext);
+	const { planDuration }: any = useContext(FIGoalContext);
 	const [data, setData] = useState<Array<any>>([]);
 
 	const hasAllZeros = (arr: Array<number>) => {
@@ -46,12 +48,13 @@ export default function AAPlanChart({ changeToSingleYear }: AAPlanChartProps) {
 		if (!rr.length) return;
 		let filteredAA = filterAA();
 		let arr: Array<any> = [];
-		const startYear = new Date().getFullYear() + 2;
-		for (let i = 0; i <= endYear - startYear; i++) {
+		const sy = new Date().getFullYear() + 2;
+		let ffGoalEndYear = startYear + planDuration;
+		for (let i = 0; i <= ffGoalEndYear - sy; i++) {
 			Object.keys(filteredAA).forEach((key) => {
 				if (filteredAA[key][i]) {
 					arr.push({
-						year: startYear + i,
+						year: sy + i,
 						value: filteredAA[key][i],
 						asset: key,
 					});
@@ -59,7 +62,7 @@ export default function AAPlanChart({ changeToSingleYear }: AAPlanChartProps) {
 			});
 		}
 		setData([...arr]);
-	}, [rr, endYear]);
+	}, [rr, startYear, planDuration]);
 
 	return (
 		<StackedColumnChart

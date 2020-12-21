@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import ItemDisplay from '../calc/ItemDisplay';
-import { MAX_RETIREMENT_AGE } from '../../CONSTANTS';
 import { GoalContext } from './GoalContext';
 
 interface FFImpactProps {
@@ -32,7 +31,7 @@ export default function FFImpact({impactYears}: FFImpactProps) {
 		<ItemDisplay
 			label="Impact"
 			result="Unable to Determine"
-			info={`Financial Independence Impact can only be determined if Financial Independence is Possible by ${MAX_RETIREMENT_AGE} Years of Age. Please change Your Goals / Inputs and try again.`}
+			info={`Financial Independence Impact can only be determined once Financial Independence Age is determined. Please change Your Goals / Inputs and try again.`}
 		/>
 	);
 }

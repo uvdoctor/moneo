@@ -6,12 +6,12 @@ import { changeSelection, initOptions, toStringArr } from '../utils';
 import RadialInput from '../form/radialinput';
 import ItemDisplay from '../calc/ItemDisplay';
 import { calculateTotalCP, calculateTotalCPTaxBenefit } from './cfutils';
-import { COLORS, MAX_RETIREMENT_AGE, PLAN_DURATION } from '../../CONSTANTS';
+import { COLORS } from '../../CONSTANTS';
 import { FIGoalContext } from './FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
 
 export default function CareInsurance() {
-	const { currency, endYear }: any = useContext(CalcContext);
+	const { currency, startYear }: any = useContext(CalcContext);
 	const {
 		carePremium,
 		setCarePremium,
@@ -25,7 +25,9 @@ export default function CareInsurance() {
 		carePremiumDur,
 		setCarePremiumDur,
 		cpBY,
-		setCPBY
+		setCPBY,
+		retirementAge,
+		planDuration
 	}: any = useContext(FIGoalContext);
 	const [ totalCP, setTotalCP ] = useState<number>(0);
 	const [ totalTaxBenefit, setTotalTaxBenfit ] = useState<number>(0);
@@ -61,9 +63,9 @@ export default function CareInsurance() {
 
 	useEffect(
 		() => {
-			if (carePremiumSY > endYear - 35 || carePremiumSY < endYear - 45) setCarePremiumSY(endYear - 40);
+			if (carePremiumSY > (startYear + planDuration) - 35 || carePremiumSY < (startYear + planDuration) - 45) setCarePremiumSY((startYear + planDuration) - 40);
 		},
-		[ endYear ]
+		[ startYear, planDuration ]
 	);
 
 	useEffect(
@@ -91,11 +93,11 @@ export default function CareInsurance() {
 			{carePremium && (
 				<SelectInput
 					info="It may be a good option to buy this insurance when You are healthier (between 60 to 65 years of age) to get lower premiums."
-					value={carePremiumSY - (endYear - PLAN_DURATION)}
-					options={initOptions(MAX_RETIREMENT_AGE - 15, 10)}
+					value={carePremiumSY - startYear}
+					options={initOptions(retirementAge - 15, 10)}
 					pre="Buy Policy At Age"
 					unit="Years"
-					changeHandler={(val: string) => changeSelection(val, setCarePremiumSY, endYear - PLAN_DURATION)}
+					changeHandler={(val: string) => changeSelection(val, setCarePremiumSY, startYear)}
 				/>
 			)}
 			{carePremium && (

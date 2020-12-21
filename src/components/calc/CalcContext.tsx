@@ -101,7 +101,7 @@ function CalcContextProvider({
       content: <AssetAllocationChart />
     },
     {
-      label: `${nowYear + 2} - ${endYear} Allocation Plan`,
+      label: `Allocation Plan starting ${nowYear + 2}`,
       active: true,
       svg: faChartBar,
       content: <DynamicAAChart />

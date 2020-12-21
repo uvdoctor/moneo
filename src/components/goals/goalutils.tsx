@@ -2,7 +2,6 @@ import * as mutations from "../../graphql/mutations";
 import { API, graphqlOperation } from "aws-amplify";
 import * as APIt from "../../api/goals";
 import * as queries from "../../graphql/queries";
-import { MAX_RETIREMENT_AGE, PLAN_DURATION } from "../../CONSTANTS";
 import { getRangeFactor } from "../utils";
 
 export const getGoalsList = async () => {
@@ -98,8 +97,16 @@ const createFFGoalInput = (currency: string) => {
   return {
     id: "",
     name: "Financial Independence",
-    sy: nowYear,
-    ey: nowYear + 70,
+    loan: {
+      emi: 12000 * getRangeFactor(currency),
+      ry: nowYear,
+      per: 3,
+      dur: 100,
+      rate: 70,
+      type: APIt.LoanType.A,
+    },
+    sy: nowYear - 30,
+    ey: nowYear,
     by: nowYear + 1,
     tdr: 0,
     tdl: 0,
@@ -123,7 +130,7 @@ const createFFGoalInput = (currency: string) => {
     tdli: 20000,
     btr: 3,
     ra: 50000,
-    rachg: 1000
+    rachg: 1000,
   } as APIt.CreateGoalInput;
 };
 
@@ -273,7 +280,3 @@ export function getRAOptions() {
     H: "Up to 50%",
   };
 }
-
-export const getMinRetirementDuration = () => PLAN_DURATION - MAX_RETIREMENT_AGE
-
-export const getLastPossibleFFYear = (endYear: number) => endYear - getMinRetirementDuration()
