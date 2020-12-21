@@ -86,7 +86,7 @@ export function BeforeFI() {
 				value={emergencyFund}
 				changeHandler={setEmergencyFund}
 				min={0}
-				max={50000}
+				max={25000}
 				step={500}
 				info="Amount needed for Emergency Fund needs to be set aside in High Yield Savings Account & Deposits, so that it is readily available when needed. Ideally, it should be about 6 months of Expenses for You and Your family."
 			/>
