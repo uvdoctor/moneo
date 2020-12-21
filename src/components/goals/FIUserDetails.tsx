@@ -25,7 +25,7 @@ export default function FIUserDetails() {
 	return (
 		<Section title="Your Details" videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}>
 			<SelectInput
-				info="This is needed to find the earliest possible year for Your Financial Independence (FI) before You turn 70. In case it's not possible to achieve FI by 70 years of age, then You will be requested to reconsider Your inputs."
+				info="Your birth year is used to calculate the duration for which Financial Planning is needed."
 				pre="Birth Year"
 				value={startYear}
 				changeHandler={(val: string) => setStartYear(parseInt(val))}
@@ -60,6 +60,7 @@ export default function FIUserDetails() {
 						step={1}
 						data={toStringArr(70, 100, 1)}
 						labelBottom
+						info="This will be used to define the duration for which Financial Planning is Needed."
 					/>
 				</Col>
 				<Col>
@@ -69,8 +70,9 @@ export default function FIUserDetails() {
 						value={retirementAge}
 						changeHandler={setRetirementAge}
 						step={1}
-						data={toStringArr(40, 70, 1)}
+						data={toStringArr(40, 67, 1)}
 						labelBottom
+						info="This is the age by which You wish to achieve Financial Independence (FI)."
 					/>
 				</Col>
 			</Row>

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Section from '../form/section';
 import NumberInput from '../form/numberinput';
 import { toCurrency } from '../utils';
@@ -15,8 +15,17 @@ export function BeforeFI() {
 		monthlySavingsRate,
 		setMonthlySavingsRate,
 		needTEBonds,
-		setNeedTEBonds
+		setNeedTEBonds,
+		emergencyFund,
+		setEmergencyFund,
+		emergencyFundChgRate,
+		setEmergencyFundChgRate,
+		setEmergencyFundBY
 	}: any = useContext(FIGoalContext);
+
+	useEffect(() => {
+		setEmergencyFundBY(new Date().getFullYear());
+	}, [emergencyFund]);
 
 	return (
 		<Section
@@ -51,12 +60,14 @@ export function BeforeFI() {
 				max={3}
 				step={0.1}
 			/>
-			{avgMonthlySavings && <ItemDisplay
-				label="Target Investment"
-				result={avgMonthlySavings * (1 + monthlySavingsRate / 100)}
-				pl
-				footer="for this Month"
-			/>}
+			{avgMonthlySavings && (
+				<ItemDisplay
+					label="Target Investment"
+					result={avgMonthlySavings * (1 + monthlySavingsRate / 100)}
+					pl
+					footer="for this Month"
+				/>
+			)}
 			{!addCallback && (
 				<NumberInput
 					value={dr as number}
@@ -69,6 +80,26 @@ export function BeforeFI() {
 					note="after taxes & fees"
 				/>
 			)}
+			<NumberInput
+				pre="Emergency Fund"
+				currency={currency}
+				value={emergencyFund}
+				changeHandler={setEmergencyFund}
+				min={0}
+				max={50000}
+				step={500}
+				info="Amount needed for Emergency Fund needs to be set aside in High Yield Savings Account & Deposits, so that it is readily available when needed. Ideally, it should be about 6 months of Expenses for You and Your family."
+			/>
+			<NumberInput
+				pre="Increase Emergency Fund by"
+				value={emergencyFundChgRate}
+				changeHandler={setEmergencyFundChgRate}
+				min={0}
+				max={10}
+				step={0.1}
+				unit="%"
+				info="Emergency Fund should be increased every year based on inflation."
+			/>
 		</Section>
 	);
 }
