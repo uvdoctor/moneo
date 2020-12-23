@@ -531,7 +531,8 @@ const getRR = (aa: any, index: number, pp: any) => {
 };
 
 const allocate = (arr: Array<number>, index: number, val: number, remVal: number, maxLimit: number = 100, minLimit: number = 0) => {
-  if (!remVal) return remVal;
+  if (remVal <= 0) return 0;
+  if (val <= 0) return remVal;
   if (val < minLimit) val = minLimit;
   if (val > maxLimit) val = maxLimit;
   if (val > remVal) val = remVal;
@@ -542,10 +543,9 @@ const allocate = (arr: Array<number>, index: number, val: number, remVal: number
 const allocateCash = (aa: any, ffGoalEndYear: number, year: number, mustAllocation: any, cs: number) => {
   let nowYear = new Date().getFullYear();
   let i = year - (nowYear + 1);
-  let remPer = allocate(aa[ASSET_TYPES.SAVINGS], i, Math.round((mustAllocation.savings[year] / cs) * 100), 100);
-  remPer = allocate(aa[ASSET_TYPES.DEPOSITS], i, Math.round((mustAllocation.deposits[year] / cs) * 100), remPer,
+  let remPer = allocate(aa[ASSET_TYPES.SAVINGS], i, Math.round((mustAllocation.savings[year] / cs) * 100), 100, 100);
+  return allocate(aa[ASSET_TYPES.DEPOSITS], i, Math.round((mustAllocation.deposits[year] / cs) * 100), remPer,
     year < ffGoalEndYear - 10 ? remPer : (30 - 2 * (ffGoalEndYear - year)) - aa[ASSET_TYPES.SAVINGS][i], 1);
-  return remPer;
 };
 
 const allocateREIT = (aa: any, year: number, ffYear: number, ffGoal: APIt.CreateGoalInput, remPer: number) => {
@@ -559,8 +559,7 @@ const allocateREIT = (aa: any, year: number, ffYear: number, ffGoal: APIt.Create
     else if (year >= ffGoalEndYear - 20) reitPer = 20;
     else reitPer += 5;
   }
-  remPer = allocate(aa[ASSET_TYPES.REIT], i, reitPer, remPer);
-  return remPer;
+  return allocate(aa[ASSET_TYPES.REIT], i, reitPer, remPer);
 };
 
 const allocateStocks = (aa: any, year: number, ffYear: number, ffGoal: APIt.CreateGoalInput, remPer: number) => {
@@ -599,6 +598,8 @@ const calculateAllocation = (
   let nowYear = new Date().getFullYear();
   let i = y - (nowYear + 1);
   let ffGoalEndYear = ffGoal.sy + (ffGoal.loan?.dur as number);
+  if (cs < 0)
+    return allocate(aa[ASSET_TYPES.SAVINGS], i, 100, 100);
   let remPer = allocateCash(aa, ffGoalEndYear, y, mustAllocation, cs);
   if (!remPer) return;
   const allocateTEBonds = y < ffYear && ffGoal.manual > 0;
@@ -610,21 +611,17 @@ const calculateAllocation = (
       remPer = allocate(allocateTEBonds ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round(remPer * 0.5), remPer);
       remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, remPer, remPer);
   } else {
-      remPer = allocateREIT(aa, y, ffYear, ffGoal, remPer);
-      let teBondsPer = aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i];
-      let meBondsPer = aa[ASSET_TYPES.MED_TERM_BONDS][i];
-      if (teBondsPer + meBondsPer < 15) {
-        if (teBondsPer < 5 && allocateTEBonds) aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] = 5;
+    remPer = allocateREIT(aa, y, ffYear, ffGoal, remPer);
+    if (!remPer) return;
+    let teBondsPer = aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i];
+    let meBondsPer = aa[ASSET_TYPES.MED_TERM_BONDS][i];
+    if(teBondsPer + meBondsPer < 15) {
+        if (allocateTEBonds) remPer = allocate(aa[ASSET_TYPES.TAX_EXEMPT_BONDS], i, 5 - teBondsPer, remPer);
         let minMEBondsPer = !allocateTEBonds ? 10 : 5;
-        if (meBondsPer < minMEBondsPer) aa[ASSET_TYPES.MED_TERM_BONDS][i] = minMEBondsPer;
+        remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, minMEBondsPer - meBondsPer, remPer);
         let totalBondsPer = aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] + aa[ASSET_TYPES.MED_TERM_BONDS][i];
-        if(totalBondsPer < 15) aa[ASSET_TYPES.EMERGING_BONDS][i] = 15 - totalBondsPer;
-        remPer -= aa[ASSET_TYPES.EMERGING_BONDS][i] +
-          (aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] - teBondsPer) + (aa[ASSET_TYPES.MED_TERM_BONDS][i] - meBondsPer);
-      } else {
-        aa[ASSET_TYPES.EMERGING_BONDS][i] = 5;
-        remPer -= 5;
-    }
+        remPer = allocate(aa[ASSET_TYPES.EMERGING_BONDS], i, 15 - totalBondsPer, remPer);
+    } else remPer = allocate(aa[ASSET_TYPES.EMERGING_BONDS], i, 5, remPer);
     if (!remPer) return;
     remPer = allocateStocks(aa, y, ffYear, ffGoal, remPer);
     if (remPer) {
@@ -674,17 +671,15 @@ export const checkForFF = (
     let tryBA = tryAllocation[y];
     minReq = sa + da + mustBA;
     if (y >= ffYear) minReq += tryBA;
+    if (minReq < 0) minReq = 0;
     let i = y - (nowYear + 1);
     let rate = 0;
-    if (cs >= minReq) calculateAllocation(ffGoal, y, cs, aa, mustAllocation, tryBA, ffYear);
+    if (cs > minReq) calculateAllocation(ffGoal, y, cs, aa, mustAllocation, tryBA, ffYear);
     else {
-      if (cs <= sa) aa[ASSET_TYPES.SAVINGS][i] = 100;
+      if (cs <= 0 || sa <= 0 || cs <= sa) aa[ASSET_TYPES.SAVINGS][i] = 100;
       else {
         let remPer = allocateCash(aa, ffGoalEndYear, y, mustAllocation, cs);
-        if (remPer) {
-          if (y >= ffYear) aa[ASSET_TYPES.MED_TERM_BONDS][i] += remPer;
-          else aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] += remPer;
-        }
+        if (remPer) aa[ASSET_TYPES.MED_TERM_BONDS][i] += remPer;
       }
       oom.push(y);
     }
