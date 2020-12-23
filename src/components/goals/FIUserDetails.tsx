@@ -1,24 +1,34 @@
+import { Row, Col } from 'antd';
 import React, { useContext } from 'react';
-import { PLAN_DURATION } from '../../CONSTANTS';
 import { CalcContext } from '../calc/CalcContext';
 import NumberInput from '../form/numberinput';
+import RadialInput from '../form/radialinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
-import { changeSelection } from '../utils';
+import { toStringArr } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 import { getRAOptions } from './goalutils';
 
 export default function FIUserDetails() {
-	const { currency, endYear, setEndYear, eyOptions }: any = useContext(CalcContext);
-	const { nw, setNW, riskProfile, setRiskProfile }: any = useContext(FIGoalContext);
+	const { currency, startYear, setStartYear, eyOptions }: any = useContext(CalcContext);
+	const {
+		nw,
+		setNW,
+		riskProfile,
+		setRiskProfile,
+		planDuration,
+		setPlanDuration,
+		retirementAge,
+		setRetirementAge
+	}: any = useContext(FIGoalContext);
 
 	return (
 		<Section title="Your Details" videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}>
 			<SelectInput
-				info="This is needed to find the earliest possible year for Your Financial Independence (FI) before You turn 70. In case it's not possible to achieve FI by 70 years of age, then You will be requested to reconsider Your inputs."
+				info="Your birth year is used to calculate the duration for which Financial Planning is needed."
 				pre="Birth Year"
-				value={endYear - PLAN_DURATION}
-				changeHandler={(val: string) => changeSelection(val, setEndYear, 100)}
+				value={startYear}
+				changeHandler={(val: string) => setStartYear(parseInt(val))}
 				options={eyOptions}
 			/>
 			<NumberInput
@@ -40,6 +50,32 @@ export default function FIUserDetails() {
 				changeHandler={setRiskProfile}
 				options={getRAOptions()}
 			/>
+			<Row justify="space-between">
+				<Col>
+					<RadialInput
+						pre="Assume Lifespan of"
+						label="Years"
+						value={planDuration}
+						changeHandler={setPlanDuration}
+						step={1}
+						data={toStringArr(70, 100, 1)}
+						labelBottom
+						info="This will be used to define the duration for which Financial Planning is Needed."
+					/>
+				</Col>
+				<Col>
+					<RadialInput
+						pre="FI Target Age"
+						label="Years"
+						value={retirementAge}
+						changeHandler={setRetirementAge}
+						step={1}
+						data={toStringArr(40, 67, 1)}
+						labelBottom
+						info="This is the age by which You wish to achieve Financial Independence (FI)."
+					/>
+				</Col>
+			</Row>
 		</Section>
 	);
 }

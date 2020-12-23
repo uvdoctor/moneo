@@ -7,6 +7,7 @@ import { FIGoalContext } from './FIGoalContext';
 export function AfterFI() {
 	const {
 		currency,
+		setEndYear
 	}: any = useContext(CalcContext);
 	const {
 		expenseAfterFF,
@@ -14,14 +15,13 @@ export function AfterFI() {
 		expenseChgRate,
 		setExpenseChgRate,
 		taxRate,
-		setTaxRate,
-		setExpenseBY
+		setTaxRate
 	}: any = useContext(FIGoalContext);
 	const nowYear = new Date().getFullYear();
 
 	useEffect(
 		() => {
-			setExpenseBY(nowYear);
+			setEndYear(nowYear);
 		},
 		[ expenseAfterFF ]
 	);

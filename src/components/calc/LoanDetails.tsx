@@ -43,7 +43,7 @@ export default function LoanDetails() {
 			<Section title="Loan Details" videoSrc={`https://www.youtube.com/watch?v=NuJdxuIsYl4&t=320s`}>
 				{!isEndYearHidden && (
 					<NumberInput
-						unit={`% (${toHumanFriendlyCurrency(Math.round(loanPer * price / 100), currency)})`}
+						unit={!loanPer ? '%' : `% (${toHumanFriendlyCurrency(Math.round(loanPer * price / 100), currency)})`}
 						pre="Borrow"
 						value={loanPer}
 						changeHandler={setLoanPer}
