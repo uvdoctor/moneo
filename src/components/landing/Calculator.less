@@ -33,7 +33,7 @@
 			display: none;
 		}
 
-		> div {
+		& > div {
 			background: #b5be93;
 			background-image: linear-gradient(to left, #b5be93, #d2d6bc);
 			border: 5px solid #989898;
@@ -64,19 +64,26 @@
 		text-align: center;
 
 		& > div {
-			min-height: 80px;
-			display: flex;
-			align-items: center;
 			background-color: #6f6f6f;
 			background-image: linear-gradient(270deg, #6f6f6f, #4a4a4a);
 			border-radius: @calculator-radius-med;
 			border: #828282 solid 1px;
 			color: #fff;
-			padding: 20px 10px;
+			display: flex;
+			align-items: center;
 
 			& h3,
 			& p {
 				width: 100%;
+			}
+
+			& a {
+				width: 100%;
+				min-height: 80px;
+				display: flex;
+				align-items: center;
+				text-align: center;
+				padding: 10px;
 			}
 		}
 
@@ -92,8 +99,8 @@
 			font-size: 8px;
 		}
 
-		& a,
-		& a.ant-btn.btn-calc {
+		& .ant-btn,
+		& .ant-btn.btn-calc {
 			display: none;
 		}
 
@@ -110,8 +117,6 @@
 				background-color: @primary-color;
 				background-image: linear-gradient(270deg, #6cb43d, @primary-color);
 				border: 1px solid #6cb43d;
-				padding-top: 10px;
-				padding-bottom: 10px;
 			}
 
 			& h3 {
@@ -119,11 +124,11 @@
 			}
 
 			& p,
-			& a {
+			& .ant-btn:not(.btn-calc) {
 				display: block;
 			}
 
-			& a {
+			& .ant-btn {
 				transform: scale(0.5);
 			}
 		}
@@ -169,13 +174,19 @@
 			& > div,
 			& h3,
 			& p,
-			& a {
+			& .ant-btn {
 				color: initial;
 				display: block;
 			}
 
 			& > div {
 				text-align: left;
+
+				& a {
+					display: inline-block;
+					text-align: left;
+					padding: 10px 0;
+				}
 			}
 
 			& h3 {
@@ -189,11 +200,11 @@
 				margin-bottom: 5px;
 			}
 
-			& a.ant-btn {
+			& .ant-btn {
 				display: none;
 			}
 
-			& a.ant-btn.btn-calc {
+			& .ant-btn.btn-calc {
 				display: inline;
 				padding: 5px 10px;
 			}
@@ -207,7 +218,7 @@
 				transform: unset;
 				padding: 10px 0;
 
-				& > a {
+				& .ant-btn {
 					-moz-transform: unset;
 					-webkit-transform: unset;
 					-o-transform: unset;
@@ -217,6 +228,10 @@
 
 				& h3 {
 					display: block;
+				}
+
+				& .ant-btn:not(.btn-calc) {
+					display: none;
 				}
 			}
 		}

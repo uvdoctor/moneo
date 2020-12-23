@@ -78,16 +78,14 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 						<Col key={"calc" + i} xs={24} sm={24} md={8} lg={8} xl={8}>
 							<div className="calculator-btn">
 								<div>
-									<h3>{name}</h3>
-									<p>{desc}</p>
-									<Button
-										className="btn-calc"
-										icon={<CalculatorOutlined />}
-										href={link}
-									>
-										Launch
-									</Button>
-									<Button shape="circle" icon={<RightOutlined />} href={link} />
+									<a href={link}>
+										<h3>{name}</h3>
+										<p>{desc}</p>
+										<Button className="btn-calc" icon={<CalculatorOutlined />}>
+											Launch
+										</Button>
+										<Button shape="circle" icon={<RightOutlined />} />
+									</a>
 								</div>
 							</div>
 						</Col>
