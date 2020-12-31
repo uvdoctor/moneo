@@ -171,8 +171,6 @@ export const calculateFFCFs = (g: APIt.CreateGoalInput, ffYear: number) => {
       totalAnnualInv += nextYearSavings;
       month++;
     } 
-    console.log("Compounded val for: ", i);
-    console.log(Math.round(totalAnnualInv));
     cfs.push(Math.round(totalAnnualInv));
   }
   let ffGoalEndYear = g.sy + (g.loan?.dur as number);
