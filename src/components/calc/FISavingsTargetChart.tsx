@@ -5,7 +5,7 @@ import { CalcContext } from '../calc/CalcContext';
 import { FIGoalContext } from '../goals/FIGoalContext';
 import { getMonthName } from '../utils';
 
-const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
+const AreaChart = dynamic(() => import('bizcharts/lib/plots/AreaChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function FISavingsTargetChart() {
@@ -22,16 +22,16 @@ export default function FISavingsTargetChart() {
 			let savingsAmt = avgMonthlySavings;
 			while (year < ffResult.ffYear) {
 				savingsAmt *= 1 + monthlySavingsRate / 100;
-				month++;
-				if (month > 12) {
-					month = 1;
+				if (month > 11) {
+					month = 0;
 					year++;
 					if (year === ffResult.ffYear) break;
 				}
 				data.push({
-					month: getMonthName(month, true) + '-' + year,
+					month: getMonthName(month + 1, true) + '-' + year.toString().substring(2),
 					value: savingsAmt
 				});
+				month++;
 			}
 			setData([ ...data ]);
 		},
@@ -39,17 +39,15 @@ export default function FISavingsTargetChart() {
 	);
 
 	return (
-		<LineChart
+		<AreaChart
 			data={data}
 			xField="month"
 			yField="value"
 			yAxis={getCommonYAxis()}
 			xAxis={getCommonXAxis('Month')}
 			meta={getCommonMeta(currency)}
-			point={{ visible: true }}
-			forceFit
 		>
 			<Slider {...getDefaultSliderProps()} />
-		</LineChart>
+		</AreaChart>
 	);
 }

@@ -149,17 +149,31 @@ const getAnnualPorfolioValue = (
   return total;
 };
 
+const getYearEndSavingsVal = (monthlySavings: number, rate: number, startingMonth: number = 0) => {
+  let month = startingMonth;
+  let savings = Math.round(monthlySavings);
+  while (month <= 11) {
+    savings *= 1 + rate / 100;
+    month++;
+  } 
+  return savings;
+};
+
 export const calculateFFCFs = (g: APIt.CreateGoalInput, ffYear: number) => {
   let cfs: Array<number> = [];
   let nowYear = new Date().getFullYear();
+  let nextYearSavings = getYearEndSavingsVal(g.rachg as number, g.tbr as number, new Date().getMonth());
   for (let i = 1; i <= ffYear - (nowYear + 1); i++) {
-    let val = getCompoundedIncome(
-      (g.tbr as number) * 12,
-      (g.rachg as number) * 12,
-      i,
-      12
-    );
-    cfs.push(Math.round(val));
+    let month = 0;
+    let totalAnnualInv = 0;
+    while (month <= 11) {
+      nextYearSavings *= 1 + (g.tbr as number) / 100;
+      totalAnnualInv += nextYearSavings;
+      month++;
+    } 
+    console.log("Compounded val for: ", i);
+    console.log(Math.round(totalAnnualInv));
+    cfs.push(Math.round(totalAnnualInv));
   }
   let ffGoalEndYear = g.sy + (g.loan?.dur as number);
   for (let year = ffYear; year <= ffGoalEndYear; year++) {
