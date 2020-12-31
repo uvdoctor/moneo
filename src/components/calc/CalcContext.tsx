@@ -21,6 +21,7 @@ import { faChartLine, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyB
 import FIUserDetails from '../goals/FIUserDetails';
 import LoanSchedule from './LoanSchedule';
 import DynamicAAChart from '../goals/DynamicAAChart';
+import FISavingsTargetChart from './FISavingsTargetChart';
 
 const CalcContext = createContext({});
 
@@ -111,6 +112,12 @@ function CalcContextProvider({
       active: true,
       svg: faChartLine,
       content: <DDLineChart />
+    },
+    {
+      label: "Saving Targets",
+      active: true,
+      svg: faChartLine,
+      content: <FISavingsTargetChart />
     }];  
     return options;
   }

@@ -598,8 +598,6 @@ const calculateAllocation = (
   let nowYear = new Date().getFullYear();
   let i = y - (nowYear + 1);
   let ffGoalEndYear = ffGoal.sy + (ffGoal.loan?.dur as number);
-  if (cs < 0)
-    return allocate(aa[ASSET_TYPES.SAVINGS], i, 100, 100);
   let remPer = allocateCash(aa, ffGoalEndYear, y, mustAllocation, cs);
   if (!remPer) return;
   const allocateTEBonds = y < ffYear && ffGoal.manual > 0;

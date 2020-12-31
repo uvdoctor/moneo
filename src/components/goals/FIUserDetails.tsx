@@ -5,12 +5,12 @@ import NumberInput from '../form/numberinput';
 import RadialInput from '../form/radialinput';
 import Section from '../form/section';
 import SelectInput from '../form/selectinput';
-import { toStringArr } from '../utils';
+import { initOptions, toStringArr } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 import { getRAOptions } from './goalutils';
 
 export default function FIUserDetails() {
-	const { currency, startYear, setStartYear, eyOptions }: any = useContext(CalcContext);
+	const { currency, startYear, changeStartYear }: any = useContext(CalcContext);
 	const {
 		nw,
 		setNW,
@@ -21,6 +21,7 @@ export default function FIUserDetails() {
 		retirementAge,
 		setRetirementAge
 	}: any = useContext(FIGoalContext);
+	const nowYear = new Date().getFullYear();
 
 	return (
 		<Section title="Your Details" videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}>
@@ -28,8 +29,8 @@ export default function FIUserDetails() {
 				info="Your birth year is used to calculate the duration for which Financial Planning is needed."
 				pre="Birth Year"
 				value={startYear}
-				changeHandler={(val: string) => setStartYear(parseInt(val))}
-				options={eyOptions}
+				changeHandler={changeStartYear}
+				options={initOptions(nowYear - 60, 45)}
 			/>
 			<NumberInput
 				info={`Your Total Portfolio Value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc.`}
