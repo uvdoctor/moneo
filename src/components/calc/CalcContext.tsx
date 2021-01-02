@@ -17,10 +17,11 @@ import { AfterFI } from '../goals/AfterFI';
 import Care from '../goals/Care';
 import { BeforeFI } from '../goals/BeforeFI';
 import AssetAllocationChart from '../goals/AssetAllocationChart';
-import { faChartLine, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faFileInvoiceDollar, faUserCog } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faFileInvoiceDollar, faUserCog } from '@fortawesome/free-solid-svg-icons';
 import FIUserDetails from '../goals/FIUserDetails';
 import LoanSchedule from './LoanSchedule';
 import DynamicAAChart from '../goals/DynamicAAChart';
+import FISavingsTargetChart from './FISavingsTargetChart';
 
 const CalcContext = createContext({});
 
@@ -101,7 +102,7 @@ function CalcContextProvider({
       content: <AssetAllocationChart />
     },
     {
-      label: `Allocation Plan starting ${nowYear + 2}`,
+      label: `Allocation from ${nowYear + 2}`,
       active: true,
       svg: faChartBar,
       content: <DynamicAAChart />
@@ -111,6 +112,12 @@ function CalcContextProvider({
       active: true,
       svg: faChartLine,
       content: <DDLineChart />
+    },
+    {
+      label: "Investment Targets",
+      active: true,
+      svg: faChartArea,
+      content: <FISavingsTargetChart />
     }];  
     return options;
   }

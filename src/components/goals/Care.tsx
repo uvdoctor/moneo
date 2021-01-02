@@ -26,8 +26,6 @@ export default function CareInsurance() {
 		setCarePremiumDur,
 		cpBY,
 		setCPBY,
-		retirementAge,
-		planDuration
 	}: any = useContext(FIGoalContext);
 	const [ totalCP, setTotalCP ] = useState<number>(0);
 	const [ totalTaxBenefit, setTotalTaxBenfit ] = useState<number>(0);
@@ -63,13 +61,6 @@ export default function CareInsurance() {
 
 	useEffect(
 		() => {
-			if (carePremiumSY > (startYear + planDuration) - 35 || carePremiumSY < (startYear + planDuration) - 45) setCarePremiumSY((startYear + planDuration) - 40);
-		},
-		[ startYear, planDuration ]
-	);
-
-	useEffect(
-		() => {
 			setCPBY(nowYear);
 		},
 		[ carePremium ]
@@ -94,7 +85,7 @@ export default function CareInsurance() {
 				<SelectInput
 					info="It may be a good option to buy this insurance when You are healthier (between 60 to 65 years of age) to get lower premiums."
 					value={carePremiumSY - startYear}
-					options={initOptions(retirementAge - 15, 10)}
+					options={initOptions(55, 10)}
 					pre="Buy Policy At Age"
 					unit="Years"
 					changeHandler={(val: string) => changeSelection(val, setCarePremiumSY, startYear)}
@@ -103,7 +94,7 @@ export default function CareInsurance() {
 			{carePremium && (
 				<SelectInput
 					value={carePremiumDur}
-					options={initOptions(1, 14)}
+					options={initOptions(1, 9)}
 					pre="Pay For"
 					unit="Years"
 					changeHandler={(val: string) => changeSelection(val, setCarePremiumDur)}

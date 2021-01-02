@@ -149,17 +149,29 @@ const getAnnualPorfolioValue = (
   return total;
 };
 
+const getYearEndSavingsVal = (monthlySavings: number, rate: number, startingMonth: number = 0) => {
+  let month = startingMonth;
+  let savings = Math.round(monthlySavings);
+  while (month <= 11) {
+    savings *= 1 + rate / 100;
+    month++;
+  } 
+  return savings;
+};
+
 export const calculateFFCFs = (g: APIt.CreateGoalInput, ffYear: number) => {
   let cfs: Array<number> = [];
   let nowYear = new Date().getFullYear();
+  let nextYearSavings = getYearEndSavingsVal(g.rachg as number, g.tbr as number, new Date().getMonth());
   for (let i = 1; i <= ffYear - (nowYear + 1); i++) {
-    let val = getCompoundedIncome(
-      (g.tbr as number) * 12,
-      (g.rachg as number) * 12,
-      i,
-      12
-    );
-    cfs.push(Math.round(val));
+    let month = 0;
+    let totalAnnualInv = 0;
+    while (month <= 11) {
+      nextYearSavings *= 1 + (g.tbr as number) / 100;
+      totalAnnualInv += nextYearSavings;
+      month++;
+    } 
+    cfs.push(Math.round(totalAnnualInv));
   }
   let ffGoalEndYear = g.sy + (g.loan?.dur as number);
   for (let year = ffYear; year <= ffGoalEndYear; year++) {
@@ -598,8 +610,6 @@ const calculateAllocation = (
   let nowYear = new Date().getFullYear();
   let i = y - (nowYear + 1);
   let ffGoalEndYear = ffGoal.sy + (ffGoal.loan?.dur as number);
-  if (cs < 0)
-    return allocate(aa[ASSET_TYPES.SAVINGS], i, 100, 100);
   let remPer = allocateCash(aa, ffGoalEndYear, y, mustAllocation, cs);
   if (!remPer) return;
   const allocateTEBonds = y < ffYear && ffGoal.manual > 0;
