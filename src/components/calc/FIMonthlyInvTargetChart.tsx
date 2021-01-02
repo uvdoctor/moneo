@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
-import { CalcContext } from '../calc/CalcContext';
+import { CalcContext } from './CalcContext';
 import { FIGoalContext } from '../goals/FIGoalContext';
 import { getMonthName } from '../utils';
 
 const AreaChart = dynamic(() => import('bizcharts/lib/plots/AreaChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
-export default function FISavingsTargetChart() {
+export default function FIMonthlyInvTargetChart() {
 	const { currency, ffResult, cfs }: any = useContext(CalcContext);
-	const { avgMonthlySavings, monthlySavingsRate }: any = useContext(FIGoalContext);
+	const { avgMonthlySavings, monthlySavingsRate, monthlyMaxSavings }: any = useContext(FIGoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	useEffect(
@@ -20,8 +20,10 @@ export default function FISavingsTargetChart() {
 			let month = today.getMonth();
 			let year = today.getFullYear();
 			let savingsAmt = avgMonthlySavings;
+			const highestPossibleSavings = avgMonthlySavings + monthlyMaxSavings;
 			while (year < ffResult.ffYear) {
 				savingsAmt *= 1 + monthlySavingsRate / 100;
+				if (monthlyMaxSavings && savingsAmt > highestPossibleSavings) savingsAmt = highestPossibleSavings;
 				if (month > 11) {
 					month = 0;
 					year++;

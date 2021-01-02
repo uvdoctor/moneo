@@ -104,6 +104,7 @@ const createFFGoalInput = (currency: string) => {
       dur: 100,
       rate: 70,
       type: APIt.LoanType.A,
+      pmi: 0
     },
     sy: nowYear - 30,
     ey: nowYear,

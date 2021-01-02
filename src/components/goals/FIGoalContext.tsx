@@ -30,6 +30,10 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     endYear,
     inputTabs,
     setInputTabs,
+    resultTabs,
+    setResultTabs,
+    resultTabIndex,
+    setResultTabIndex,
     ffResult,
     setFFResult,
     setResults,
@@ -58,6 +62,9 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
   );
   const [monthlySavingsRate, setMonthlySavingsRate] = useState<number>(
     goal?.tbr as number
+  );
+  const [monthlyMaxSavings, setMonthlyMaxSavings] = useState<number>(
+    goal.loan?.pmi as number
   );
   const [needTEBonds, setNeedTEBonds] = useState<number>(goal.tdr);
   const [taxRate, setTaxRate] = useState<number>(goal.tdr);
@@ -132,7 +139,8 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
         per: emergencyFundChgRate,
         dur: planDuration,
         rate: retirementAge,
-        type: LoanType.A
+        type: LoanType.A,
+        pmi: monthlyMaxSavings
       }
     } as CreateGoalInput;
   };
@@ -163,6 +171,19 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
         <FISavingsResult />
       ]]);
   }, [rr]);
+
+  useEffect(() => {
+    let invTargetChartTab = resultTabs[resultTabs.length - 1];
+    if (!avgMonthlySavings && invTargetChartTab.active) {
+      invTargetChartTab.active = false;
+      setResultTabs([...resultTabs]);
+      if (resultTabIndex === resultTabs.length - 1)
+        setResultTabIndex(resultTabs.length - 2);
+    } else if (avgMonthlySavings && !invTargetChartTab.active) {
+      invTargetChartTab.active = true;
+      setResultTabs([...resultTabs]);
+    }
+  }, [avgMonthlySavings]);
 
   useEffect(() => {
     if (!allInputDone) return;
@@ -198,6 +219,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     losses,
     nw,
     avgMonthlySavings,
+    monthlyMaxSavings,
     emergencyFund,
     emergencyFundBY,
     emergencyFundChgRate,
@@ -248,6 +270,8 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
           setNW,
           avgMonthlySavings,
           setAvgMonthlySavings,
+          monthlyMaxSavings,
+          setMonthlyMaxSavings,
           expenseAfterFF,
           setExpenseAfterFF,
           expenseChgRate,

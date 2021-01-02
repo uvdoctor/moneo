@@ -12,6 +12,8 @@ export function BeforeFI() {
 	const {
 		avgMonthlySavings,
 		setAvgMonthlySavings,
+		monthlyMaxSavings,
+		setMonthlyMaxSavings,
 		monthlySavingsRate,
 		setMonthlySavingsRate,
 		needTEBonds,
@@ -45,21 +47,33 @@ export function BeforeFI() {
 				step={100}
 				currency={currency}
 			/>
-			<NumberInput
+			{avgMonthlySavings && <NumberInput
 				info={`Given Average Monthly Investment of ${toCurrency(
 					avgMonthlySavings,
 					currency
 				)}, ${monthlySavingsRate}% monthly increase in investment comes to about 
           ${toCurrency(Math.round(avgMonthlySavings * (1 + monthlySavingsRate / 100)), currency)} 
           for this month. Due to the power of compounding, even small regular increase in investment can make a significant impact in the long term.`}
-				pre="Increase Investment Monthly"
+				pre="Increase Investment Monthly by"
 				unit="%"
 				value={monthlySavingsRate}
 				changeHandler={setMonthlySavingsRate}
 				min={0}
 				max={3}
 				step={0.1}
-			/>
+				note={monthlySavingsRate && (
+					<NumberInput
+						pre="Up to Maximum Monthly Increase of"
+						value={monthlyMaxSavings}
+						changeHandler={setMonthlyMaxSavings}
+						currency={currency}
+						min={0}
+						max={10000}
+						step={100}
+						info={`This is the maximum possible increase in Monthly Investment amount You can achieve. If this value is kept Zero, then it is assumed that You can achieve the monthly increase in Investment of ${monthlySavingsRate}% every month.`}
+					/>
+				)}
+			/>}
 			{avgMonthlySavings && (
 				<ItemDisplay
 					label="Target Investment"
