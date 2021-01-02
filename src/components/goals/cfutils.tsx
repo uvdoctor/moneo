@@ -162,14 +162,15 @@ const getYearEndSavingsVal = (monthlySavings: number, rate: number, startingMont
 export const calculateFFCFs = (g: APIt.CreateGoalInput, ffYear: number) => {
   let cfs: Array<number> = [];
   let nowYear = new Date().getFullYear();
-  let nextYearSavings = getYearEndSavingsVal(g.rachg as number, g.tbr as number, new Date().getMonth());
   const highestPossibleSavings = (g.rachg as number) + (g.loan?.pmi as number);
+  let nextYearSavings = getYearEndSavingsVal(g.rachg as number, g.tbr as number, new Date().getMonth());
+  if (nextYearSavings > highestPossibleSavings) nextYearSavings = highestPossibleSavings;
   for (let i = 1; i <= ffYear - (nowYear + 1); i++) {
     let month = 0;
     let totalAnnualInv = 0;
     while (month <= 11) {
       nextYearSavings *= 1 + (g.tbr as number) / 100;
-      if (g.loan?.pmi && nextYearSavings > highestPossibleSavings) nextYearSavings = highestPossibleSavings;
+      if (nextYearSavings > highestPossibleSavings) nextYearSavings = highestPossibleSavings;
       totalAnnualInv += nextYearSavings;
       month++;
     } 
