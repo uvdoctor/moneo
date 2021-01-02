@@ -95,7 +95,7 @@ export default function Home() {
 		},
 	];
 
-	function onBuyClick(title, price) {
+	function onBuyClick(title: any, price: any) {
 		console.log(title, price);
 	}
 
