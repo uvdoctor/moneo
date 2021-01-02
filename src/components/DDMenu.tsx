@@ -1,13 +1,13 @@
-import React, { Fragment } from 'react';
-import { Menu } from 'antd';
-import { calcList } from './landing/Calculator';
-import FSToggle from './FSToggle';
+import React, { Fragment } from "react";
+import { Menu } from "antd";
+import { calcList } from "./landing/Calculator";
+import FSToggle from "./FSToggle";
 
 interface DDMenuProps {
 	mode?: any;
 }
 
-export default function DDMenu({ mode = 'horizontal' }: DDMenuProps) {
+export default function DDMenu({ mode = "horizontal" }: DDMenuProps) {
 	const { SubMenu } = Menu;
 
 	return (
@@ -21,13 +21,18 @@ export default function DDMenu({ mode = 'horizontal' }: DDMenuProps) {
 						</Menu.Item>
 					))}
 				</SubMenu>
-				<SubMenu title="About">
-					<Menu.Item>Features</Menu.Item>
-					<Menu.Item>Pricing</Menu.Item>
-					<Menu.Item>Company</Menu.Item>
-				</SubMenu>
 				<Menu.Item>
-					<a href="https://ant.design" target="_blank" rel="noopener noreferrer">
+					<a href="/about">About</a>
+				</Menu.Item>
+				<Menu.Item>
+					<a href="/pricing">Pricing</a>
+				</Menu.Item>
+				<Menu.Item>
+					<a
+						href="https://ant.design"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
 						Earn up to $200 credit*
 					</a>
 				</Menu.Item>

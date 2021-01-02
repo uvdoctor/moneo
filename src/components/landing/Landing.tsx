@@ -12,6 +12,7 @@ import GettingStarted from "./GettingStarted";
 import Security from "./Security";
 import GetRich from "./GetRich";
 import TakeQuickStep from "./TakeQuickStep";
+import Testimonials from "./Testimonials";
 
 import "./Landing.less";
 
@@ -80,6 +81,7 @@ export default function Landing() {
       <Security />
       <GetRich />
       <TakeQuickStep />
+      <Testimonials />
     </JoinContextProvider>
   );
 }
