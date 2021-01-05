@@ -5,7 +5,6 @@ import TorchSVG from "../svgs/3d/TorchSVG";
 import BarChartSVG from "../svgs/3d/BarChartSVG";
 import DartSVG from "../svgs/3d/DartSVG";
 import MoneyLeaksSVG from "../svgs/3d/MoneyLeaksSVG";
-import BarChart2SVG from "../svgs/3d/BarChart2SVG";
 import AbacusSVG from "../svgs/3d/AbacusSVG";
 import AdaptablePlanSVG from "../svgs/3d/AdaptablePlanSVG";
 import CashBunchSVG from "../svgs/3d/CashBunchSVG";
