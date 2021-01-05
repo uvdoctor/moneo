@@ -38,10 +38,10 @@ export default function DDBasicPage(props: DDBasicPageProps) {
         <meta name="description" content="Your Money Analyst" />
         <meta
           name="Personal finance management app"
-          content="Automated Banking, Investing and Financial Planning, Stack,
+          content="Automated Banking, Investing and Financial Planning, Moneo,
 Personal finance for Millennial, personal finance advisor, personal finance, Digital Banking, Social Banking, money management apps,
 personal finance app, Budget goals, Budgeting,  Mutual Funds, Stock, Equity trading, personal money management, online money management, personal
-finance plan, personal finance management, Banking App, Mobile Banking, Budgeting, Financial planning, Investing, Neo Banking Canada, Neo Banking USA"
+finance plan, personal finance management, Banking App, Mobile Banking, Budgeting, Financial planning, Investing, Neo Banking Canada, Neo Banking USA, Neo Banking India"
         />
         <meta
           property="og:title"
