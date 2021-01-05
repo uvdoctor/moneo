@@ -1,0 +1,40 @@
+.about {
+	& .banner {
+		background-color: #fff;
+		box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+		border-radius: 10px;
+		margin: 40px 0;
+
+		& img {
+			border-top-right-radius: 10px;
+			border-bottom-right-radius: 10px;
+		}
+
+		& h2 {
+			color: @primary-color;
+			font-size: 30px;
+			font-weight: bold;
+			padding-left: 30px;
+		}
+	}
+}
+
+@media all and (max-width: 767.98px) {
+	.about {
+		.banner {
+			margin: 30px 0;
+
+			& img {
+				border-top-right-radius: 0;
+				border-bottom-right-radius: 10px;
+				border-bottom-left-radius: 10px;
+			}
+
+			& h2 {
+				font-size: 25px;
+				padding: 20px;
+				text-align: center;
+			}
+		}
+	}
+}

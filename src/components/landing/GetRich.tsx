@@ -1,14 +1,15 @@
 import React from "react";
 import { Row, Col } from "antd";
 import DDContent from "../DDContent";
+import TorchSVG from "../svgs/3d/TorchSVG";
 import BarChartSVG from "../svgs/3d/BarChartSVG";
-import WalletSVG from "../svgs/3d/WalletSVG";
-import SecuritySVG from "../svgs/3d/SecuritySVG";
+import DartSVG from "../svgs/3d/DartSVG";
+import MoneyLeaksSVG from "../svgs/3d/MoneyLeaksSVG";
 import BarChart2SVG from "../svgs/3d/BarChart2SVG";
 import AbacusSVG from "../svgs/3d/AbacusSVG";
-import CashWalletSVG from "../svgs/3d/CashWalletSVG";
-import ReloadSVG from "../svgs/3d/ReloadSVG";
-import PenSVG from "../svgs/3d/PenSVG";
+import AdaptablePlanSVG from "../svgs/3d/AdaptablePlanSVG";
+import CashBunchSVG from "../svgs/3d/CashBunchSVG";
+import SwimRingSVG from "../svgs/3d/SwimRingSVG";
 
 import "./GetRich.less";
 
@@ -20,24 +21,24 @@ export default function GetRich({ featuresRef }: GetRichProps) {
   const featuresList = [
     {
       label: "Holistic Financial Health",
-      svg: BarChartSVG,
+      svg: TorchSVG,
       desc:
         "Analyzes Your Net Worth Across Currencies & if Your Money is working hard enough.",
     },
     {
       label: "Goal-based Savings",
-      svg: WalletSVG,
+      svg: DartSVG,
       desc:
         "To Identify what has to be achieved today & how it will affect tomorrow.",
     },
     {
       label: "Uncover Money Leaks",
-      svg: SecuritySVG,
+      svg: MoneyLeaksSVG,
       desc: "Such as hidden fees, unwanted subscriptions, bank charges, etc.",
     },
     {
       label: "Investment Insights",
-      svg: BarChart2SVG,
+      svg: BarChartSVG,
       desc: "Based on Your Goals, Risk Threshold & Financial Health.",
     },
     {
@@ -48,19 +49,19 @@ export default function GetRich({ featuresRef }: GetRichProps) {
     },
     {
       label: "Adaptable Financial Plan",
-      svg: CashWalletSVG,
+      svg: AdaptablePlanSVG,
       desc:
         "That Evolves with Your Goals. Understand long-term impact of Your decisions.",
     },
     {
       label: "No Commissions. Ever.",
-      svg: ReloadSVG,
+      svg: CashBunchSVG,
       desc:
         "Analysis that's driven solely by Your Financial Well-being. No hidden agenda or fees.",
     },
     {
       label: "Easy to Use",
-      svg: PenSVG,
+      svg: SwimRingSVG,
       desc:
         "No complex jargons. Helps You to take simple clear steps towards Your Financial Independence.",
     },

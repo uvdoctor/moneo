@@ -24,9 +24,9 @@ export default function DDMenu({ mode = "horizontal" }: DDMenuProps) {
 				<Menu.Item>
 					<a href="/about">About</a>
 				</Menu.Item>
-				<Menu.Item>
+				{/*<Menu.Item>
 					<a href="/pricing">Pricing</a>
-				</Menu.Item>
+				</Menu.Item>*/}
 				<Menu.Item>
 					<a
 						href="https://ant.design"
