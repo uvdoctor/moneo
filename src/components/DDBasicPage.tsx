@@ -57,24 +57,24 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta
           property="og:image"
           itemProp="image"
-          content="https://dollardarwin.com/images/icons/tlogo256.png"
+          content="https://wealthneo.com/images/icons/tlogo256.png"
         />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en-US" />
         <meta property="og:locale:alternate" content="en-CA" />
-        <meta property="og:url" content="https://dollardarwin.com" />
+        <meta property="og:url" content="https://wealthneo.com" />
         <meta name="twitter:card" content="Your Financial Analyst" />
-        <meta name="twitter:url" content="https://dollardarwin.com" />
-        <meta name="twitter:title" content="DollarDarwin" />
+        <meta name="twitter:url" content="https://wealthneo.com" />
+        <meta name="twitter:title" content="WealthNeo" />
         <meta
           name="twitter:description"
           content="Stress-free Savings & Investments to Meet Your Goals."
         />
         <meta
           name="twitter:image"
-          content="https://dollardarwin.com/images/icons/tlogo192.png"
+          content="https://wealthneo.com/images/icons/tlogo192.png"
         />
-        <meta name="twitter:creator" content="@dollardarwin" />
+        <meta name="twitter:creator" content="@wealthneo" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="format-detection" content="telephone=no" />
         <title>{props.title}</title>
