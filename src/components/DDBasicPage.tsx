@@ -31,11 +31,11 @@ export default function DDBasicPage(props: DDBasicPageProps) {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta
           name="apple-mobile-web-app-title"
-          content="DollarDarwin - Your Financial Analyst"
+          content="Moneo - Your Money Analyst"
         />
-        <meta name="application-name" content="DollarDarwin" />
+        <meta name="application-name" content="Moneo" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="description" content="Your Financial Analyst" />
+        <meta name="description" content="Your Money Analyst" />
         <meta
           name="Personal finance management app"
           content="Automated Banking, Investing and Financial Planning, Stack,
@@ -45,7 +45,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         />
         <meta
           property="og:title"
-          content="DollarDarwin - Your Financial Analyst"
+          content="Moneo - Your Money Analyst"
         />
         <meta
           property="og:description"
@@ -57,24 +57,24 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta
           property="og:image"
           itemProp="image"
-          content="https://wealthneo.com/images/icons/tlogo256.png"
+          content="https://gomoneo.com/images/icons/tlogo256.png"
         />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en-US" />
         <meta property="og:locale:alternate" content="en-CA" />
-        <meta property="og:url" content="https://wealthneo.com" />
-        <meta name="twitter:card" content="Your Financial Analyst" />
-        <meta name="twitter:url" content="https://wealthneo.com" />
-        <meta name="twitter:title" content="WealthNeo" />
+        <meta property="og:url" content="https://gomoneo.com" />
+        <meta name="twitter:card" content="Your Money Analyst" />
+        <meta name="twitter:url" content="https://gomoneo.com" />
+        <meta name="twitter:title" content="Moneo" />
         <meta
           name="twitter:description"
           content="Stress-free Savings & Investments to Meet Your Goals."
         />
         <meta
           name="twitter:image"
-          content="https://wealthneo.com/images/icons/tlogo192.png"
+          content="https://gomoneo.com/images/icons/tlogo192.png"
         />
-        <meta name="twitter:creator" content="@wealthneo" />
+        <meta name="twitter:creator" content="@getmoneo" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="format-detection" content="telephone=no" />
         <title>{props.title}</title>

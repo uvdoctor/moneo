@@ -26,7 +26,7 @@ import {
 import "./SocialShare.less";
 
 export default function SocialMediaShare() {
-  const websiteUrl = "https://wealthneo.com";
+  const websiteUrl = "https://gomoneo.com";
   const [url, setUrl] = useState(websiteUrl);
 
   useEffect(() => setUrl(`${websiteUrl}${window.location.pathname}`), [null]);
@@ -58,7 +58,7 @@ export default function SocialMediaShare() {
           <LinkedinIcon size={32} round />
         </LinkedinShareButton>
         <PinterestShareButton
-          media={`https://wealthneo.com/images/icons/tlogo256.png`}
+          media={`https://gomoneo.com/images/icons/tlogo256.png`}
           url={url}
         >
           <PinterestIcon size={32} round />
