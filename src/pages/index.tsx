@@ -4,7 +4,7 @@ import DDBasicPage from "../components/DDBasicPage";
 
 export default function Home() {
   return (
-    <DDBasicPage title="DollarDarwin">
+    <DDBasicPage title="Moneo">
       <Landing />
     </DDBasicPage>
   );
