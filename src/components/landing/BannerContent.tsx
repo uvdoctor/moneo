@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
-import { Popover } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
-import RollingImages from "../RollingImages";
+import React, { Fragment } from 'react';
+import { Popover } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import RollingImages from '../RollingImages';
 
 const BannerContent = () => {
 	return (
