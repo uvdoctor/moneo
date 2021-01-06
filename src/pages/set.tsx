@@ -3,15 +3,15 @@ import React from "react";
 import SetPlan from "../components/goals/SetPlan";
 import Amplify from "aws-amplify";
 import awsmobile from "../aws-exports";
-import DDBasicPage from "../components/DDBasicPage";
+import BasicPage from "../components/BasicPage";
 
 Amplify.configure(awsmobile);
 
 const Set = () => {
 	return (
-		<DDBasicPage title="Set Plan" secure>
+		<BasicPage title="Set Plan" secure>
 			<SetPlan />
-		</DDBasicPage>
+		</BasicPage>
 	);
 };
 

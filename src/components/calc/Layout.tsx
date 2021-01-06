@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { GoalType } from '../../api/goals';
-import DDBasicPage from '../DDBasicPage';
+import BasicPage from '../BasicPage';
 import { createNewGoalInput, isLoanEligible } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
 import { Button, Row, Col, PageHeader, Tabs } from 'antd';
@@ -10,7 +10,7 @@ import { CalcContextProvider } from './CalcContext';
 import { GoalContextProvider } from '../goals/GoalContext';
 import { FIGoalContextProvider } from '../goals/FIGoalContext';
 import { isMobileDevice } from '../utils';
-import DDVideoPlayer from '../DDVideoPlayer';
+import VideoPlayer from '../VideoPlayer';
 import ExpectedResults from './blog/ExpectedResults';
 
 import './Layout.less';
@@ -165,7 +165,7 @@ export default function Layout(props: LayoutProps) {
 	];
 
 	const sections: any = {
-		Demo: <DDVideoPlayer url={props.demoUrl} play={demoVideoPlay} />,
+		Demo: <VideoPlayer url={props.demoUrl} play={demoVideoPlay} />,
 		'Expected Results': <ExpectedResults elements={[ ...props.results, ...endingResults ]} />,
 		'Key Features': <KeyFeatures elements={[ ...startingFeatures, ...props.features, ...endingFeatures ]} />,
 		'Major Assumptions': (
@@ -201,7 +201,7 @@ export default function Layout(props: LayoutProps) {
 	}, [activeTab]);
 
 	return (
-		<DDBasicPage
+		<BasicPage
 			className="calculator-container steps-landing"
 			title={props.title}
 			onBack={() => setWIP(null)}
@@ -251,6 +251,6 @@ export default function Layout(props: LayoutProps) {
 					)}
 				</CalcContextProvider>
 			)}
-		</DDBasicPage>
+		</BasicPage>
 	);
 }

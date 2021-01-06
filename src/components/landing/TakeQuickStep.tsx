@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Row, Col } from "antd";
-import DDContent from "../DDContent";
+import Content from "../Content";
 import { JoinContext } from "./JoinContext";
 import Join from "./Join";
 import { Status } from "../../api/goals";
@@ -11,7 +11,7 @@ export default function TakeQuickStep() {
   const { status }: any = useContext(JoinContext);
 
   return status !== Status.Y ? (
-    <DDContent className="take-quick-step" whiteBg>
+    <Content className="take-quick-step" whiteBg>
       <Row align="middle" gutter={[50, 0]}>
         <Col xs={24} sm={24} md={12}>
           <h2 className="text-green-primary">Take quick step</h2>
@@ -22,6 +22,6 @@ export default function TakeQuickStep() {
           <img src="images/quick-step.jpg" />
         </Col>
       </Row>
-    </DDContent>
+    </Content>
   ) : null;
 }

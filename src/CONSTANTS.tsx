@@ -6,10 +6,10 @@ export const ROUTES = {
     INVEST: "/invest",
     CALCULATE: "/calculate",
     FI: "/fi",
-    BR: "/buyorrent",
-    EDUCATION: "/eduloan",
+    BR: "/buy-or-rent",
+    EDUCATION: "/education-loan",
     LOAN: "/loan",
-    TRUE_COST: "/truecost",
+    TRUE_COST: "/true-cost",
 };
 
 export const CALC_NAMES = {

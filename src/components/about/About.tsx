@@ -1,12 +1,12 @@
 import React from "react";
 import { Row, Col, Image } from "antd";
-import DDContent from "../DDContent";
+import Content from "../Content";
 
 import "./about.less";
 
 export default function Home() {
 	return (
-		<DDContent className="about">
+		<Content className="about">
 			<h2>About US</h2>
 			<p>
 				Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -88,6 +88,6 @@ export default function Home() {
 					sometimes on purpose (injected humour and the like).
 				</li>
 			</ul>
-		</DDContent>
+		</Content>
 	);
 }

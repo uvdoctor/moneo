@@ -6,7 +6,7 @@ import GoalCost from "../goals/GoalCost";
 import LoanDetails from "./LoanDetails";
 import Sell from "../goals/sell";
 import BRComp from "../goals/BRComp";
-import DDLineChart from "../goals/DDLineChart";
+import DDLineChart from "../goals/BasicLineChart";
 import BuyRentChart from "../goals/BuyRentChart";
 import { GoalType } from '../../api/goals';
 import { isLoanEligible } from '../goals/goalutils';

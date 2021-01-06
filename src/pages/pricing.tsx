@@ -1,6 +1,6 @@
 import React from "react";
-import DDBasicPage from "../components/DDBasicPage";
-import DDContent from "../components/DDContent";
+import BasicPage from "../components/BasicPage";
+import Content from "../components/Content";
 import { Row, Col, Statistic, Button } from "antd";
 //@ts-ignore
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -100,8 +100,8 @@ export default function Home() {
 	}
 
 	return (
-		<DDBasicPage title="DollarDarwin">
-			<DDContent>
+		<BasicPage title="DollarDarwin">
+			<Content>
 				<Row
 					className="price-table"
 					justify="center"
@@ -136,7 +136,7 @@ export default function Home() {
 						)
 					)}
 				</Row>
-			</DDContent>
-		</DDBasicPage>
+			</Content>
+		</BasicPage>
 	);
 }

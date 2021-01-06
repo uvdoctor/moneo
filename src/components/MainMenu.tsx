@@ -3,11 +3,11 @@ import { Menu } from "antd";
 import { calcList } from "./landing/Calculator";
 import FSToggle from "./FSToggle";
 
-interface DDMenuProps {
+interface MainMenuProps {
 	mode?: any;
 }
 
-export default function DDMenu({ mode = "horizontal" }: DDMenuProps) {
+export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
 	const { SubMenu } = Menu;
 
 	return (

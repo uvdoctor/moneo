@@ -1,17 +1,17 @@
 import React from "react";
 import { Layout } from "antd";
 
-interface DDContentProps {
+interface ContentProps {
 	className?: string;
 	whiteBg?: boolean;
 	children: any;
 }
 
-export default function DDContent({
+export default function Content({
 	className = "",
 	whiteBg = false,
 	children,
-}: DDContentProps) {
+}: ContentProps) {
 	const { Content } = Layout;
 
 	return (

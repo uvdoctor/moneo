@@ -1,11 +1,11 @@
 import React from "react";
 import Landing from "../components/landing/Landing";
-import DDBasicPage from "../components/DDBasicPage";
+import BasicPage from "../components/BasicPage";
 
 export default function Home() {
   return (
-    <DDBasicPage title="Moneo">
+    <BasicPage title="Moneo">
       <Landing />
-    </DDBasicPage>
+    </BasicPage>
   );
 }

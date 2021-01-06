@@ -6,7 +6,7 @@ import { GoalType } from '../../api/goals';
 import { Col, Row } from 'antd';
 import NumberInput from '../form/numberinput';
 
-interface DDLineChartProps {
+interface BasicLineChartProps {
 	numberOfYears?: boolean;
 	title?: string;
 	showRange?: boolean;
@@ -15,7 +15,7 @@ interface DDLineChartProps {
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
-export default function DDLineChart({ numberOfYears, title, showRange }: DDLineChartProps) {
+export default function DDLineChart({ numberOfYears, title, showRange }: BasicLineChartProps) {
 	const { startYear, currency, cfs, goal, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 

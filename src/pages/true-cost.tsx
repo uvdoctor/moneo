@@ -3,7 +3,7 @@ import Layout from '../components/calc/Layout';
 import { CALC_NAMES } from '../CONSTANTS';
 import Spend from '../components/calc/Spend';
 import Save from '../components/calc/Save';
-import DDLineChart from '../components/goals/DDLineChart';
+import DDLineChart from '../components/goals/BasicLineChart';
 import { TrueCostContextProvider } from '../components/calc/TrueCostContext';
 import { faChartLine, faPiggyBank, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons';
 

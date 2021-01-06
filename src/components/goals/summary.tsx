@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import DDLineChart from './DDLineChart';
+import DDLineChart from './BasicLineChart';
 import { getGoalTypes, getImpLevels } from './goalutils';
 import { LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';

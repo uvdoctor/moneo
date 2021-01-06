@@ -3,10 +3,10 @@ import { Layout } from "antd";
 import Nav from "./Nav";
 import UserHeader from "./userheader";
 import SecureMenu from "./SecureMenu";
-import DDFooter from "./DDFooter";
+import DDFooter from "./Footer";
 import Head from "next/head";
 
-interface DDBasicPageProps {
+interface BasicPageProps {
   className?: string;
   title: string;
   children: React.ReactNode;
@@ -17,7 +17,7 @@ interface DDBasicPageProps {
   noFooter?: boolean;
 }
 
-export default function DDBasicPage(props: DDBasicPageProps) {
+export default function BasicPage(props: BasicPageProps) {
   return (
     <Fragment>
       <Head>

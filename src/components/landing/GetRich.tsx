@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col } from "antd";
-import DDContent from "../DDContent";
+import Content from "../Content";
 import TorchSVG from "../svgs/3d/TorchSVG";
 import BarChartSVG from "../svgs/3d/BarChartSVG";
 import DartSVG from "../svgs/3d/DartSVG";
@@ -67,7 +67,7 @@ export default function GetRich({ featuresRef }: GetRichProps) {
   ];
 
   return (
-    <DDContent>
+    <Content>
       <div className="get-rich" ref={featuresRef}>
         <h2>Get Rich Slowly</h2>
         <p>
@@ -111,6 +111,6 @@ export default function GetRich({ featuresRef }: GetRichProps) {
           ))}
         </Row>
       </div>
-    </DDContent>
+    </Content>
   );
 }

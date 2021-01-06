@@ -4,7 +4,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { SaveOutlined } from "@ant-design/icons";
 import { CalcContext } from "../calc/CalcContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DDVideoPlayer from "../DDVideoPlayer";
+import VideoPlayer from "../VideoPlayer";
 
 import "./Input.less";
 import ResultCarousel from "../ResultCarousel";
@@ -103,7 +103,7 @@ export default function Input() {
 							</Col>
 							{stepVideoUrl && (
 								<Col className="video-container" span={12}>
-									<DDVideoPlayer url={stepVideoUrl} />
+									<VideoPlayer url={stepVideoUrl} />
 								</Col>
 							)}
 						</Row>

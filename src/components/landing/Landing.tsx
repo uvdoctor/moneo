@@ -1,7 +1,7 @@
 import React from "react";
 import { Row } from "antd";
 import { Parallax } from "rc-scroll-anim";
-import DDContent from "../DDContent";
+import Content from "../Content";
 import { JoinContextProvider } from "./JoinContext";
 import Banner from "./Banner";
 import VerifyCodeModal from "./VerifyCodeModal";
@@ -19,7 +19,7 @@ import "./Landing.less";
 export default function Landing() {
   return (
     <JoinContextProvider>
-      <DDContent className="with-banner">
+      <Content className="with-banner">
         <Banner />
         <VerifyCodeModal />
         <Calculator />
@@ -76,7 +76,7 @@ export default function Landing() {
             <GettingStarted />
           </Row>
         </Parallax>
-      </DDContent>
+      </Content>
 
       <Security />
       <GetRich />

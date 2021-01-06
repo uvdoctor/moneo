@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import DDLogo from './DDLogo';
+import Logo from './Logo';
 import SVGOff from './svgoff';
 import { Auth, Hub } from 'aws-amplify';
 import { useRouter } from 'next/router';
@@ -61,7 +61,7 @@ const UserHeader = () => {
 	return (
 		<Affix offsetTop={0}>
 			<Header className={`dd-header ${top > 10 ? 'fixed-nav' : ''}`}>
-				<DDLogo />
+				<Logo />
 				<Menu mode="horizontal">
 					<label>Estimates. No Advice.</label>
 					{username ? (
