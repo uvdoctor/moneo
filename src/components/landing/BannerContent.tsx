@@ -6,10 +6,10 @@ import RollingImages from "../RollingImages";
 const BannerContent = () => {
 	return (
 		<Fragment>
-			<h3>Your Financial Analyst for</h3>
-			<h2>Stress-free Savings &amp; Investments</h2>
+			<h3>Your Money Coach for</h3>
+			<h2>Stress-free Financial Independence</h2>
 			<h3 className="with-icon-anim">
-				to Meet Your Goals <RollingImages />
+				& Meeting Your Goals <RollingImages />
 			</h3>
 			<h4>
 				Join Waitlist &amp; Earn up to $200 credit*
