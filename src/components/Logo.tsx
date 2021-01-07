@@ -18,7 +18,7 @@ export default function Logo({ onBack }: LogoProps) {
 			)}
 			<Link href={ROUTES.HOME}>
 				<a>
-					<LogoImg />
+					<LogoImg />ONEO
 				</a>
 			</Link>
 		</div>
