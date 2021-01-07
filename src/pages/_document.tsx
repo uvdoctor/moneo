@@ -24,8 +24,8 @@ class DDDocument extends NextDocument<DDDocumentProps> {
 		return (
 			<Html>
 				<Head>
-					<link rel="icon" href="images/icons/favicon.ico" />
-					<link rel="shortcut icon" href="images/icons/favicon.ico" />
+					<link rel="icon" href="images/icons/new/favicon.ico" />
+					<link rel="shortcut icon" href="images/icons/new/favicon.ico" />
 					<link rel="apple-touch-icon" href="images/icons/logo57.png" />
 					<link
 						href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
