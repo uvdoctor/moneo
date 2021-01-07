@@ -8,7 +8,7 @@ import Logo from "./Logo";
 import "./Nav.less";
 
 interface NavProps {
-  onBack?: Function;
+  onBack?: Function | undefined | null;
   isFixed?: boolean;
   scrollable?: boolean;
 }

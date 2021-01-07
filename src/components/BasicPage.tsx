@@ -11,7 +11,7 @@ interface BasicPageProps {
   title: string;
   children: React.ReactNode;
   secure?: boolean;
-  onBack?: Function;
+  onBack?: Function | undefined | null;
   fixedNav?: boolean;
   navScrollable?: boolean;
   noFooter?: boolean;
@@ -68,7 +68,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="twitter:title" content="Moneo" />
         <meta
           name="twitter:description"
-          content="Your Money Coach for Stress-free Financial Independence & Meeting Your Goals."
+          content="Your Money Coach for Stress-free Financial Independence & Achieving Goals."
         />
         <meta
           name="twitter:image"

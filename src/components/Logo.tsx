@@ -7,7 +7,7 @@ import { Button } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import LogoImg from './LogoImg';
 interface LogoProps {
-	onBack?: Function;
+	onBack?: Function | undefined | null;
 }
 export default function Logo({ onBack }: LogoProps) {
 	const router = useRouter();

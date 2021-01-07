@@ -204,7 +204,7 @@ export default function Layout(props: LayoutProps) {
 		<BasicPage
 			className="calculator-container steps-landing"
 			title={props.title}
-			onBack={() => setWIP(null)}
+			onBack={wip ? () => setWIP(null) : null}
 			navScrollable
 			fixedNav
 		>
