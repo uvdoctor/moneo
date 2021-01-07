@@ -1,6 +1,6 @@
 {
-  "short_name": "DollarDarwin",
-  "name": "DollarDarwin",
+  "short_name": "Moneo",
+  "name": "Moneo",
   "icons": [
     {
       "src": "images/icons/favicon.ico",
@@ -8,12 +8,12 @@
       "type": "image/x-icon"
     },
     {
-      "src": "images/icons/logo192.png",
+      "src": "images/icons/new/tlogo192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "images/icons/tlogo512.png",
+      "src": "images/icons/new/tlogo512.png",
       "type": "image/png",
       "sizes": "512x512"
     }

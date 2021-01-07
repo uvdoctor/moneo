@@ -51,13 +51,13 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
           property="og:description"
           content="
           Hello! 🖐 
-          I just got up to $200 credit for Stress-free Financial Independence and Meeting My Goals! 😄
+          I just got up to $200 credit for Stress-free Financial Independence and Achieving My Goals! 😄
           Did You? 😎"
         />
         <meta
           property="og:image"
           itemProp="image"
-          content="https://moneo.money/images/icons/tlogo256.png"
+          content="https://moneo.money/images/icons/new/tlogo256.png"
         />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en-US" />
@@ -72,7 +72,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         />
         <meta
           name="twitter:image"
-          content="https://moneo.money/images/icons/tlogo192.png"
+          content="https://moneo.money/images/icons/new/tlogo192.png"
         />
         <meta name="twitter:creator" content="@moneocoach" />
         <meta name="msapplication-tap-highlight" content="no" />

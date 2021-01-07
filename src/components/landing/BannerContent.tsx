@@ -9,7 +9,7 @@ const BannerContent = () => {
 			<h3>Your Money Coach for</h3>
 			<h2>Stress-free Financial Independence</h2>
 			<h3 className="with-icon-anim">
-				& Fulfilling Goals <RollingImages />
+				& Achieving Goals <RollingImages />
 			</h3>
 			<h4>
 				Join Waitlist &amp; Earn up to $200 credit*
