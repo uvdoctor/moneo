@@ -33,7 +33,7 @@ export function BeforeFI() {
 		<Section
 			title="Before Financial Independence"
 			videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}
-			toggle={<HSwitch value={needTEBonds} setter={setNeedTEBonds} rightText="Income Tax more than 12%" />}
+			toggle={<HSwitch value={needTEBonds} setter={setNeedTEBonds} rightText="I Pay more than 12% Income Tax" />}
 		>
 			<NumberInput
 				info={`Average Monthly Savings after paying all taxes & expenses. 

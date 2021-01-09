@@ -25,27 +25,19 @@ export default function ItemDisplay(props: ItemDisplayProps) {
 				title={
 					<Fragment>
 						{props.label}
-						{(props.imp || props.info) && (
-							<Fragment>
-								{props.imp && (
-									<Tooltip title={props.imp} color="red">
-										<InfoCircleOutlined />
-									</Tooltip>
-								)}
-								{props.info && (
-									<Tooltip
-										title={props.info}
-										color={`${props.pl
-											? props.result < 0
-												? COLORS.RED
-												: props.result > 0 ? COLORS.GREEN : COLORS.DEFAULT
-											: COLORS.DEFAULT}`}
-									>
-										<InfoCircleOutlined />
-									</Tooltip>
-								)}
-							</Fragment>
-						)}
+						{(props.imp || props.info) &&
+							(props.info && (
+								<Tooltip
+									title={`${props.info}${props.imp ? ` However, ${props.imp}.` : ''}`}
+									color={`${props.pl || props.imp
+										? props.result < 0 || props.imp
+											? COLORS.RED
+											: props.result > 0 ? COLORS.GREEN : COLORS.DEFAULT
+										: COLORS.DEFAULT}`}
+								>
+									<InfoCircleOutlined />
+								</Tooltip>
+							))}
 					</Fragment>
 				}
 				value={props.result}
