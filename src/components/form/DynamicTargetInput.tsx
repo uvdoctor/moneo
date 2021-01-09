@@ -16,26 +16,28 @@ export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProp
 	const { currency, startYear }: any = useContext(CalcContext);
 	const { gains, setGains, losses, setLosses, planDuration }: any = useContext(FIGoalContext);
 	const nowYear = new Date().getFullYear();
-	const [ yearOpts, setYearOpts ] = useState(initOptions(nowYear + 1, startYear + planDuration - 2 - (nowYear + 1)));
+	const [ yearOpts, setYearOpts ] = useState(initOptions(nowYear, startYear + planDuration - 1 - nowYear));
 	const tgts = lossInput ? losses : gains;
 	const setTgts = lossInput ? setLosses : setGains;
 
 	const getDefaultYear = () => {
-		if (!tgts || tgts.length === 0) return nowYear + 1;
+		if (!tgts || tgts.length === 0) return nowYear;
 		return tgts[tgts.length - 1].num + 1;
 	};
 
 	const newRec = () => createNewTarget(getDefaultYear(), 0);
 
 	const filterTgts = () => {
-		let ft = tgts.filter((t: TargetInput) => t.num > nowYear && t.num <= startYear + planDuration - 2);
+		let ft = tgts.filter((t: TargetInput) => t.num >= nowYear && t.num <= startYear + planDuration - 1);
 		setTgts([ ...ft ]);
 	};
+
+	useEffect(() => filterTgts(), []);
 
 	useEffect(
 		() => {
 			filterTgts();
-			setYearOpts(initOptions(nowYear + 1, startYear + planDuration - 2 - (nowYear + 1)));
+			setYearOpts(initOptions(nowYear, startYear + planDuration - 1 - nowYear));
 		},
 		[ planDuration, startYear ]
 	);
