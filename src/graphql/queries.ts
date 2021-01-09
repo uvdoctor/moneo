@@ -407,6 +407,37 @@ export const listAccounts = /* GraphQL */ `
     }
   }
 `;
+export const getFeedback = /* GraphQL */ `
+  query GetFeedback($id: ID!) {
+    getFeedback(id: $id) {
+      id
+      type
+      email
+      feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFeedbacks = /* GraphQL */ `
+  query ListFeedbacks(
+    $filter: ModelFeedbackFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        email
+        feedback
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getRegistration = /* GraphQL */ `
   query GetRegistration($email: String!) {
     getRegistration(email: $email) {

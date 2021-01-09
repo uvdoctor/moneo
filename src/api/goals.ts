@@ -2,6 +2,71 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
+export type DeleteFeedbackInput = {
+  id?: string | null,
+};
+
+export type ModelFeedbackConditionInput = {
+  type?: ModelFeedbackTypeInput | null,
+  email?: ModelStringInput | null,
+  feedback?: ModelStringInput | null,
+  and?: Array< ModelFeedbackConditionInput | null > | null,
+  or?: Array< ModelFeedbackConditionInput | null > | null,
+  not?: ModelFeedbackConditionInput | null,
+};
+
+export type ModelFeedbackTypeInput = {
+  eq?: FeedbackType | null,
+  ne?: FeedbackType | null,
+};
+
+export enum FeedbackType {
+  C = "C",
+  S = "S",
+  Q = "Q",
+}
+
+
+export type ModelStringInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export enum ModelAttributeTypes {
+  binary = "binary",
+  binarySet = "binarySet",
+  bool = "bool",
+  list = "list",
+  map = "map",
+  number = "number",
+  numberSet = "numberSet",
+  string = "string",
+  stringSet = "stringSet",
+  _null = "_null",
+}
+
+
+export type ModelSizeInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+};
+
 export type CreateGoalInput = {
   id?: string | null,
   sy: number,
@@ -135,20 +200,6 @@ export type ModelIntInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
-export enum ModelAttributeTypes {
-  binary = "binary",
-  binarySet = "binarySet",
-  bool = "bool",
-  list = "list",
-  map = "map",
-  number = "number",
-  numberSet = "numberSet",
-  string = "string",
-  stringSet = "stringSet",
-  _null = "_null",
-}
-
-
 export type ModelFloatInput = {
   ne?: number | null,
   eq?: number | null,
@@ -159,32 +210,6 @@ export type ModelFloatInput = {
   between?: Array< number | null > | null,
   attributeExists?: boolean | null,
   attributeType?: ModelAttributeTypes | null,
-};
-
-export type ModelStringInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
-};
-
-export type ModelSizeInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
 };
 
 export type ModelGoalTypeInput = {
@@ -420,6 +445,19 @@ export enum Status {
 }
 
 
+export type CreateFeedbackInput = {
+  id?: string | null,
+  type: FeedbackType,
+  email?: string | null,
+  feedback: string,
+};
+
+export type UpdateFeedbackInput = {
+  type?: FeedbackType | null,
+  email?: string | null,
+  feedback?: string | null,
+};
+
 export type CreateRegistrationInput = {
   email: string,
   status: Status,
@@ -538,6 +576,15 @@ export type ModelAccountFilterInput = {
   not?: ModelAccountFilterInput | null,
 };
 
+export type ModelFeedbackFilterInput = {
+  type?: ModelFeedbackTypeInput | null,
+  email?: ModelStringInput | null,
+  feedback?: ModelStringInput | null,
+  and?: Array< ModelFeedbackFilterInput | null > | null,
+  or?: Array< ModelFeedbackFilterInput | null > | null,
+  not?: ModelFeedbackFilterInput | null,
+};
+
 export type ModelRegistrationFilterInput = {
   email?: ModelStringInput | null,
   status?: ModelStatusInput | null,
@@ -555,6 +602,23 @@ export enum ModelSortDirection {
   DESC = "DESC",
 }
 
+
+export type DeleteFeedbackMutationVariables = {
+  input: DeleteFeedbackInput,
+  condition?: ModelFeedbackConditionInput | null,
+};
+
+export type DeleteFeedbackMutation = {
+  deleteFeedback:  {
+    __typename: "Feedback",
+    id: string,
+    type: FeedbackType,
+    email: string | null,
+    feedback: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
 
 export type CreateGoalMutationVariables = {
   input: CreateGoalInput,
@@ -1289,6 +1353,40 @@ export type DeleteRegistrationMutation = {
   } | null,
 };
 
+export type CreateFeedbackMutationVariables = {
+  input: CreateFeedbackInput,
+  condition?: ModelFeedbackConditionInput | null,
+};
+
+export type CreateFeedbackMutation = {
+  createFeedback:  {
+    __typename: "Feedback",
+    id: string,
+    type: FeedbackType,
+    email: string | null,
+    feedback: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateFeedbackMutationVariables = {
+  input: UpdateFeedbackInput,
+  condition?: ModelFeedbackConditionInput | null,
+};
+
+export type UpdateFeedbackMutation = {
+  updateFeedback:  {
+    __typename: "Feedback",
+    id: string,
+    type: FeedbackType,
+    email: string | null,
+    feedback: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateRegistrationMutationVariables = {
   input: CreateRegistrationInput,
   condition?: ModelRegistrationConditionInput | null,
@@ -1782,6 +1880,44 @@ export type ListAccountsQuery = {
       createdAt: string,
       updatedAt: string,
       owner: string | null,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetFeedbackQueryVariables = {
+  id: string,
+};
+
+export type GetFeedbackQuery = {
+  getFeedback:  {
+    __typename: "Feedback",
+    id: string,
+    type: FeedbackType,
+    email: string | null,
+    feedback: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListFeedbacksQueryVariables = {
+  filter?: ModelFeedbackFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListFeedbacksQuery = {
+  listFeedbacks:  {
+    __typename: "ModelFeedbackConnection",
+    items:  Array< {
+      __typename: "Feedback",
+      id: string,
+      type: FeedbackType,
+      email: string | null,
+      feedback: string,
+      createdAt: string,
+      updatedAt: string,
     } | null > | null,
     nextToken: string | null,
   } | null,
@@ -2527,6 +2663,42 @@ export type OnDeleteAccountSubscription = {
     createdAt: string,
     updatedAt: string,
     owner: string | null,
+  } | null,
+};
+
+export type OnCreateFeedbackSubscription = {
+  onCreateFeedback:  {
+    __typename: "Feedback",
+    id: string,
+    type: FeedbackType,
+    email: string | null,
+    feedback: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateFeedbackSubscription = {
+  onUpdateFeedback:  {
+    __typename: "Feedback",
+    id: string,
+    type: FeedbackType,
+    email: string | null,
+    feedback: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteFeedbackSubscription = {
+  onDeleteFeedback:  {
+    __typename: "Feedback",
+    id: string,
+    type: FeedbackType,
+    email: string | null,
+    feedback: string,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 

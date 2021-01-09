@@ -602,6 +602,42 @@ export const onDeleteAccount = /* GraphQL */ `
     }
   }
 `;
+export const onCreateFeedback = /* GraphQL */ `
+  subscription OnCreateFeedback {
+    onCreateFeedback {
+      id
+      type
+      email
+      feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFeedback = /* GraphQL */ `
+  subscription OnUpdateFeedback {
+    onUpdateFeedback {
+      id
+      type
+      email
+      feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFeedback = /* GraphQL */ `
+  subscription OnDeleteFeedback {
+    onDeleteFeedback {
+      id
+      type
+      email
+      feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateRegistration = /* GraphQL */ `
   subscription OnCreateRegistration {
     onCreateRegistration {
