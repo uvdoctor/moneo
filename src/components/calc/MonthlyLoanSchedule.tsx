@@ -100,15 +100,13 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 	};
 
 	const changeLoanPrepayments = (installmentNum: number, additionalPayment: number) => {
-		let principalDue = getPrincipalDue(installmentNum);
-		if (additionalPayment > principalDue) additionalPayment = principalDue;
 		let existingPrepayment: TargetInput | null | undefined = findTarget(loanPrepayments, installmentNum);
 		if (existingPrepayment)
-			additionalPayment
+			additionalPayment || isEduLoanSIPayment(installmentNum)
 				? (existingPrepayment.val = additionalPayment)
 				: removeFromArray(loanPrepayments, 'num', installmentNum);
 		else loanPrepayments.push(createNewTarget(installmentNum, additionalPayment));
-		setLoanPrepayments([ ...loanPrepayments ]);
+		setLoanPrepayments([...loanPrepayments]);
 	};
 
 	const changeLoanIRAdjustments = (installmentNum: number, newIR: number) => {
@@ -125,8 +123,6 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 		for (let i = 0; i < installmentNum; i++) principal -= pSchedule[i];
 		return principal;
 	};
-
-	const getPrevPrincipalDue = (installmentNum: number) => Math.floor(getPrincipalDue(installmentNum === 1 ? installmentNum : installmentNum - 1));
 
 	const getTotalInterestPaid = (installmentNum: number) => {
 		let totalInt = 0;
@@ -180,7 +176,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 
 	const getPrepayment = (installmentNum: number) => {
 		let result = findTarget(loanPrepayments, installmentNum);
-		return result ? result.val : 0;
+		return result ? result.val : isEduLoanSIPayment(installmentNum) ? iSchedule[installmentNum - 1] : 0;
 	};
 
 	const hasAdjustmentsInLastInstallments = () => {
@@ -323,8 +319,8 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 												changeHandler={(val: number) =>
 													changeLoanPrepayments(parseInt(record.num), val)}
 												min={0}
-												max={getPrevPrincipalDue(parseInt(record.num))}
-												step={isEduLoanSIPayment(parseInt(record.num)) ? 1 : 100}
+												max={getPrepayment(parseInt(record.num)) + getPrincipalDue(parseInt(record.num))}
+												step={1}
 												currency={currency}
 											/>
 											{record.num !== '1' ? (
@@ -342,8 +338,11 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 															loanIRAdjustments,
 															parseInt(record.num) - 1,
 															loanIntRate
-														) - 3 < 0 ? 0
-															: (
+														) -
+															3 <
+														0 ? (
+															0
+														) : (
 															getClosestTargetVal(
 																loanIRAdjustments,
 																parseInt(record.num) - 1,
