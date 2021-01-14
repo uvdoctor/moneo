@@ -1,4 +1,4 @@
-export const GA_TRACKING_ID = "UA-176180938-1";
+export const GA_TRACKING_ID = "G-ZRDKC5RK9C";
 
 export const pageview = (url) => {
   try {
