@@ -20,10 +20,9 @@ export default function FIMonthlyInvTargetChart() {
 			let month = today.getMonth();
 			let year = today.getFullYear();
 			let savingsAmt = avgMonthlySavings;
-			const highestPossibleSavings = avgMonthlySavings + monthlyMaxSavings;
 			while (year < ffResult.ffYear) {
 				savingsAmt *= 1 + monthlySavingsRate / 100;
-				if (savingsAmt > highestPossibleSavings) savingsAmt = highestPossibleSavings;
+				if (savingsAmt > monthlyMaxSavings) savingsAmt = monthlyMaxSavings;
 				if (month > 11) {
 					month = 0;
 					year++;

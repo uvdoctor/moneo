@@ -33,7 +33,7 @@ export default function FIUserDetails() {
 				options={initOptions(nowYear - 60, 45)}
 			/>
 			<NumberInput
-				info={`Your Total Portfolio Value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc.`}
+				info={`Your Total Portfolio Value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc. Please do NOT include Your Home in the Investment Portfolio.`}
 				value={nw}
 				pre="Total"
 				min={5000}

@@ -94,11 +94,12 @@ export const createNewTarget = (num: number, val: number) => {
 
 const createFFGoalInput = (currency: string) => {
   let nowYear = new Date().getFullYear();
+  const rf = getRangeFactor(currency);
   return {
     id: "",
     name: "Financial Independence",
     loan: {
-      emi: 12000 * getRangeFactor(currency),
+      emi: 12000 * rf,
       ry: nowYear,
       per: 3,
       dur: 100,
@@ -128,10 +129,10 @@ const createFFGoalInput = (currency: string) => {
     pg: [],
     pl: [],
     tbr: 1,
-    tdli: 20000,
+    tdli: 20000 * rf,
     btr: 3,
-    ra: 50000,
-    rachg: 1000,
+    ra: 50000 * rf,
+    rachg: 1000 * rf,
   } as APIt.CreateGoalInput;
 };
 
