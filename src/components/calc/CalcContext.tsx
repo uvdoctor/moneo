@@ -6,7 +6,7 @@ import GoalCost from "../goals/GoalCost";
 import LoanDetails from "./LoanDetails";
 import Sell from "../goals/sell";
 import BRComp from "../goals/BRComp";
-import DDLineChart from "../goals/BasicLineChart";
+import BasicLineChart from "../goals/BasicLineChart";
 import BuyRentChart from "../goals/BuyRentChart";
 import { GoalType } from '../../api/goals';
 import { isLoanEligible } from '../goals/goalutils';
@@ -96,13 +96,13 @@ function CalcContextProvider({
   
   const getFFGoalResultTabOptions = () => {
     let options = [{
-      label: `${nowYear + 1} Asset Allocation`,
+      label: `${nowYear} Asset Allocation`,
       active: true,
       svg: faChartPie,
       content: <AssetAllocationChart />
     },
     {
-      label: `Allocation from ${nowYear + 2}`,
+      label: `Allocation from ${nowYear + 1}`,
       active: true,
       svg: faChartBar,
       content: <DynamicAAChart />
@@ -111,7 +111,7 @@ function CalcContextProvider({
       label: "Portfolio Value",
       active: true,
       svg: faChartLine,
-      content: <DDLineChart />
+      content: <BasicLineChart />
     },
     {
       label: "Investment Targets",
@@ -129,7 +129,7 @@ function CalcContextProvider({
           label: "Cash Flows",
           active: true,
           svg: faChartLine,
-          content: <DDLineChart />
+          content: <BasicLineChart />
         },
         {
           label: "Loan Schedule",

@@ -15,14 +15,14 @@ interface BasicLineChartProps {
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
-export default function DDLineChart({ numberOfYears, title, showRange }: BasicLineChartProps) {
+export default function BasicLineChart({ numberOfYears, title, showRange }: BasicLineChartProps) {
 	const { startYear, currency, cfs, goal, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	useEffect(
 		() => {
 			let data: Array<any> = [];
-			let startVal = numberOfYears ? 1 : goal.type === GoalType.FF ? new Date().getFullYear() + 1 : startYear;
+			let startVal = numberOfYears ? 1 : goal.type === GoalType.FF ? new Date().getFullYear() : startYear;
 			for (let i = 0; i < cfs.length; i++)
 				data.push({
 					year: '' + (startVal + i),

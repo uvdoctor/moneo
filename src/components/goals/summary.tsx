@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import DDLineChart from './BasicLineChart';
+import BasicLineChart from './BasicLineChart';
 import { getGoalTypes, getImpLevels } from './goalutils';
 import { LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
@@ -70,7 +70,7 @@ export default function Summary({ deleteCallback, editCallback, ffImpactYears }:
 			)}
 			<Row>Cash Flows in {currency}</Row>
 			<Row>
-				<DDLineChart />
+				<BasicLineChart />
 			</Row>
 		</Card>
 	);

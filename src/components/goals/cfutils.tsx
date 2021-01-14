@@ -670,6 +670,7 @@ export const checkForFF = (
   });
   let ffAmt = 0;
   let ffCfs: any = {};
+  ffCfs[nowYear] = Math.round(cs);
   let ffGoalEndYear = ffGoal.sy + (ffGoal.loan?.dur as number);
   let mustAllocation = calculateMustAllocation(ffGoal, mustCFs, ffYear);
   let tryAllocation = calculateTryAllocation(ffGoal, tryCFs);
