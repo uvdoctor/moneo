@@ -15,7 +15,7 @@ interface NavProps {
 }
 
 const Nav = ({ onBack, isFixed, scrollable }: NavProps) => {
-	const { setDefaultCountry, setDefaultCurrency }: any = useContext(AppContext);
+	const { defaultCurrency, setDefaultCurrency }: any = useContext(AppContext);
 	const { top } = useScroll();
 	const { Header } = Layout;
 	const [ showDrawer, setShowDrawer ] = useState(false);
@@ -23,12 +23,11 @@ const Nav = ({ onBack, isFixed, scrollable }: NavProps) => {
 	const onCloseDrawer = () => setShowDrawer(false);
 
 	useEffect(() => {
+		if (defaultCurrency !== 'USD') return;
     const host = window.location.hostname;
-    if (host.endsWith('.in')) {
-			setDefaultCountry('IN');
+    if (host.endsWith('.in') || host.endsWith('host')) {
 			setDefaultCurrency('INR');
 		} else if (host.endsWith('.uk')) {
-			setDefaultCountry('UK');
 			setDefaultCurrency('GBP');
 		}
 	}, []);

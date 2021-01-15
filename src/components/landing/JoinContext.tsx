@@ -12,29 +12,37 @@ Amplify.configure(awsconfig);
 const JoinContext = createContext({});
 const JOIN_KEY = "joinData";
 
-interface providerProps {
+interface JoinContextProviderProps {
 	children: any;
 }
 
-function JoinContextProvider({ children }: providerProps) {
-	const { defaultCountry }: any = useContext(AppContext);
+function JoinContextProvider({ children }: JoinContextProviderProps) {
+	const { setDefaultCountry }: any = useContext(AppContext);
 	const [email, setEmail] = useState<string>("");
-	const [country, setCountry] = useState<string>(defaultCountry);
+	const [country, setCountry] = useState<string>();
 	const [status, setStatus] = useState<Status>(Status.N);
 	const [isLoading, setLoading] = useState<boolean>(false);
 	const [showVerifyModal, setShowVerifyModal] = useState<boolean>(false);
 	const [error, setError] = useState({});
 
 	useEffect(() => {
+		const host = window.location.hostname;
+		let defaultCountry = 'US'
+    if (host.endsWith('.in') || host.endsWith('host')) {
+			defaultCountry = 'IN';
+		} else if (host.endsWith('.uk')) {
+			defaultCountry = 'UK';
+		}
 		const { email, country, status } = JSON.parse(
 			localStorage.getItem(JOIN_KEY) || "{}"
 		);
-
+		if (country) defaultCountry = country;
+		setDefaultCountry(defaultCountry);
+		setCountry(defaultCountry);
 		if (!email) return;
 
 		setStatus(status);
 		setEmail(email);
-		setCountry(country);
 		setShowVerifyModal(status === Status.P);
 		if (status === Status.Y)
 			setError({

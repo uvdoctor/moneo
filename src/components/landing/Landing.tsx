@@ -17,6 +17,7 @@ import Testimonials from "./Testimonials";
 import "./Landing.less";
 
 export default function Landing() {
+
   return (
     <JoinContextProvider>
       <Content className="with-banner">
