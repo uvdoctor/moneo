@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, ReactNode, useEffect, useContext } from 'react';
 import { initOptions } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import TaxAdjustment from "../calc/TaxAdjustment";
@@ -22,6 +22,7 @@ import FIUserDetails from '../goals/FIUserDetails';
 import LoanSchedule from './LoanSchedule';
 import DynamicAAChart from '../goals/DynamicAAChart';
 import FIMonthlyInvTargetChart from './FIMonthlyInvTargetChart';
+import { AppContext } from '../AppContext';
 
 const CalcContext = createContext({});
 
@@ -51,13 +52,14 @@ function CalcContextProvider({
   addCallback,
   updateCallback
 }: CalcContextProviderProps) {
+  const { defaultCurrency }: any = useContext(AppContext);
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
   const isPublicCalc = addCallback && updateCallback ? false : true;
   const [startYear, setStartYear] = useState<number>(goal.sy);
   const [startMonth, setStartMonth] = useState<number>(goal.sm);
   const [endYear, setEndYear] = useState<number>(goal.ey);
-  const [ currency, setCurrency ] = useState<string>(goal.ccy);
+  const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal.ccy);
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
 	const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
   const [cfs, setCFs] = useState<Array<number>>([]);
