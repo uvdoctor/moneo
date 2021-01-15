@@ -24,8 +24,8 @@ const Nav = ({ onBack, isFixed, scrollable }: NavProps) => {
 
 	useEffect(() => {
     const host = window.location.hostname;
-    alert(host);
-		if (host.endsWith('.in')) {
+    if (host.endsWith('.in')) {
+      alert('Going to set INR');
 			setDefaultCountry('IN');
 			setDefaultCurrency('INR');
 		} else if (host.endsWith('.uk')) {
