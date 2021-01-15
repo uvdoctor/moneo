@@ -2,11 +2,11 @@ import NextDocument, { DocumentContext, Head, Html, Main, NextScript } from 'nex
 import React, { Fragment } from 'react';
 import { GA_TRACKING_ID } from '../lib/gtag';
 
-export interface DDDocumentProps {
+export interface CustomDocProps {
 	readonly isProduction: boolean;
 }
 
-class DDDocument extends NextDocument<DDDocumentProps> {
+class CustomDoc extends NextDocument<CustomDocProps> {
 	static async getInitialProps(ctx: DocumentContext) {
 		const initialProps = await NextDocument.getInitialProps(ctx);
 		const isProduction = process.env.NODE_ENV === 'production';
@@ -20,7 +20,6 @@ class DDDocument extends NextDocument<DDDocumentProps> {
 		const { isProduction } = this.props;
 		const ROLLBAR_CLIENT_TOKEN = 'f64f595e24bc43e1abf60ec1fa5c0604';
 		const RECAPTCHA_CLIENT_TOKEN = '6LdTyd8ZAAAAAHZqurv84AUu_qsMvb_j9V3W_8WP';
-
 		return (
 			<Html>
 				<Head>
@@ -81,4 +80,4 @@ class DDDocument extends NextDocument<DDDocumentProps> {
 	}
 }
 
-export default DDDocument;
+export default CustomDoc;

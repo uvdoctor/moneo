@@ -5,6 +5,7 @@ import UserHeader from "./userheader";
 import SecureMenu from "./SecureMenu";
 import Footer from "./Footer";
 import Head from "next/head";
+import { AppContextProvider } from "./AppContext";
 
 interface BasicPageProps {
   className?: string;
@@ -79,6 +80,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="format-detection" content="telephone=no" />
         <title>{props.title}</title>
       </Head>
+      <AppContextProvider>
       <Layout className={`dd-site ${props.className}`}>
         {props.secure ? (
           <Fragment>
@@ -94,7 +96,8 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         )}
         {props.children}
         <Footer />
-      </Layout>
+        </Layout>
+        </AppContextProvider>
     </Fragment>
   );
 }
