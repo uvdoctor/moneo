@@ -116,7 +116,7 @@ export default function NumberInput(props: NumberInputProps) {
 					{(props.currency || props.step < 1) && (
 						<Col span={10}>
 							<Row align="middle">
-								<Col span={props.currency ? 24 : 10}>
+								<Col span={props.currency ? 24 : 12}>
 									<InputNumber
 										ref={inputRef}
 										value={props.value}
@@ -149,7 +149,7 @@ export default function NumberInput(props: NumberInputProps) {
 										style={{ width: '100%', marginBottom: '0px' }}
 									/>
 								</Col>
-								{!props.currency ? <Col span={14}>{' '}{props.unit}</Col> : null}
+								{!props.currency ? <Col span={12}><span>&nbsp;</span>{props.unit}</Col> : null}
 							</Row>
 							{props.currency && props.value >= 100000 ? (
 								<Row>
