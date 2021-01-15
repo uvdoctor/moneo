@@ -3,7 +3,7 @@ import { Layout } from "antd";
 import Nav from "./Nav";
 import UserHeader from "./userheader";
 import SecureMenu from "./SecureMenu";
-import DDFooter from "./Footer";
+import Footer from "./Footer";
 import Head from "next/head";
 
 interface BasicPageProps {
@@ -93,7 +93,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
           />
         )}
         {props.children}
-        <DDFooter />
+        <Footer />
       </Layout>
     </Fragment>
   );
