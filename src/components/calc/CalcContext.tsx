@@ -39,7 +39,6 @@ interface CalcContextProviderProps {
   children: ReactNode;
 	tabOptions?: any;
 	resultTabOptions?: any;
-  defaultCurrency?: string;
   addCallback?: Function;
   updateCallback?: Function;
 }
@@ -49,7 +48,6 @@ function CalcContextProvider({
   children,
 	tabOptions,
 	resultTabOptions,
-  defaultCurrency,
   addCallback,
   updateCallback
 }: CalcContextProviderProps) {
@@ -59,7 +57,7 @@ function CalcContextProvider({
   const [startYear, setStartYear] = useState<number>(goal.sy);
   const [startMonth, setStartMonth] = useState<number>(goal.sm);
   const [endYear, setEndYear] = useState<number>(goal.ey);
-  const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal?.ccy ? goal.ccy : 'USD');
+  const [ currency, setCurrency ] = useState<string>(goal.ccy);
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
 	const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
   const [cfs, setCFs] = useState<Array<number>>([]);
