@@ -1,10 +1,11 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import * as queries from "../../graphql/queries";
 import * as mutations from "../../graphql/mutations";
 import awsconfig from "../../aws-exports";
 import { GRAPHQL_AUTH_MODE } from "@aws-amplify/api-graphql";
 import Amplify, { API } from "aws-amplify";
 import { Status } from "../../api/goals";
+import { AppContext } from "../AppContext";
 
 Amplify.configure(awsconfig);
 
@@ -16,11 +17,12 @@ interface providerProps {
 }
 
 function JoinContextProvider({ children }: providerProps) {
-	const [email, setEmail] = useState("");
-	const [country, setCountry] = useState();
-	const [status, setStatus] = useState(Status.N);
-	const [isLoading, setLoading] = useState(false);
-	const [showVerifyModal, setShowVerifyModal] = useState(false);
+	const { defaultCountry }: any = useContext(AppContext);
+	const [email, setEmail] = useState<string>("");
+	const [country, setCountry] = useState<string>(defaultCountry);
+	const [status, setStatus] = useState<Status>(Status.N);
+	const [isLoading, setLoading] = useState<boolean>(false);
+	const [showVerifyModal, setShowVerifyModal] = useState<boolean>(false);
 	const [error, setError] = useState({});
 
 	useEffect(() => {
