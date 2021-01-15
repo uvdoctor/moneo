@@ -23,6 +23,7 @@ export default function Landing() {
         <Banner />
         <VerifyCodeModal />
         <Calculator />
+        <Testimonials />
         <Parallax
           animation={[
             { x: 0, opacity: 1, playScale: [0, 0.6] },
@@ -81,7 +82,6 @@ export default function Landing() {
       <Security />
       <GetRich />
       <TakeQuickStep />
-      <Testimonials />
     </JoinContextProvider>
   );
 }

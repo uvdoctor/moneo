@@ -13,7 +13,7 @@ export default function Testimonials() {
 
 	return (
 		<Content className="client-testimonials">
-			<h2>Client Testimonials</h2>
+			<h2>What Users Are Saying about the Calculators</h2>
 			<Carousel
 				itemsToShow={2}
 				breakPoints={[
