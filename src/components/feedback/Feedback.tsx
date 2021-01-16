@@ -72,12 +72,13 @@ export default function Feedback() {
           <Form
             form={form}
             ref={formRef}
-            name="join"
-            layout="inline"
+            name="Submit"
+            layout="vertical"
             onFinish={onFormSubmit}
           >
             <Form.Item
               name="feedbackType"
+              label="Feedback Type"
               rules={[
                 {
                   required: true,
@@ -93,6 +94,7 @@ export default function Feedback() {
             </Form.Item>
             <Form.Item
               name="feedback"
+              label="Describe Your Feedback"
               rules={[
                 {
                   required: true,
@@ -107,6 +109,12 @@ export default function Feedback() {
             </Form.Item>
             <Form.Item
               name="firstName"
+              label="Name"
+              style={{
+                display: "inline-block",
+                width: "calc(50% - 12px)",
+                marginRight: 10,
+              }}
               rules={[
                 {
                   required: true,
@@ -120,6 +128,11 @@ export default function Feedback() {
 
             <Form.Item
               name="lastName"
+              label=" "
+              style={{
+                display: "inline-block",
+                width: "calc(50% - 12px)",
+              }}
               rules={[
                 {
                   required: false,
@@ -133,6 +146,7 @@ export default function Feedback() {
 
             <Form.Item
               name="email"
+              label="Email"
               rules={[
                 {
                   required: true,
@@ -155,7 +169,7 @@ export default function Feedback() {
                   }
                   loading={isLoading}
                 >
-                  Join
+                  Submit
                 </Button>
               )}
             </Form.Item>
