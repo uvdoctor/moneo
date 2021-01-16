@@ -31,7 +31,6 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
     lastName,
     email,
   }: any) => {
-    console.log("feedbackType", feedbackType);
     setLoading(true);
     setFeedbackType(feedbackType);
     setFeedback(feedback);

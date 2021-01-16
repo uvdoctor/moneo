@@ -35,9 +35,7 @@ export default function Feedback() {
 
   const [form] = Form.useForm();
   const formRef = useRef<FormInstance>(null);
-
-  const fsb = useFullScreenBrowser();
-
+  
   const openModal = () => setModalVisible(true);
 
   const closeModal = () => {
