@@ -83,15 +83,7 @@ export default function Feedback() {
             }}
             onFinish={onFormSubmit}
           >
-            <Form.Item
-              name="feedbackType"
-              label="Feedback Type"
-              rules={[
-                {
-                  required: true
-                },
-              ]}
-            >
+            <Form.Item name="feedbackType">
               <Radio.Group value={feedbackType}>
                 <Radio value={FeedbackType.C}>Comment</Radio>
                 <Radio value={FeedbackType.S}>Suggestion</Radio>
@@ -114,7 +106,7 @@ export default function Feedback() {
             </Form.Item>
             <Form.Item
               name="firstName"
-              label="Name"
+              label="First Name"
               style={{
                 display: "inline-block",
                 width: "calc(50% - 12px)",
@@ -133,7 +125,7 @@ export default function Feedback() {
 
             <Form.Item
               name="lastName"
-              label=" "
+              label="Last Name"
               style={{
                 display: "inline-block",
                 width: "calc(50% - 12px)",
@@ -168,9 +160,11 @@ export default function Feedback() {
                   type="primary"
                   htmlType="submit"
                   disabled={
-                    !form.isFieldsTouched(true) ||
                     form.getFieldsError().filter(({ errors }) => errors.length)
-                      .length > 0
+                      .length > 0 ||
+                    !formRef.current?.getFieldValue("feedback") ||
+                    !formRef.current?.getFieldValue("firstName") ||
+                    !formRef.current?.getFieldValue("email")
                   }
                   loading={isLoading}
                 >
