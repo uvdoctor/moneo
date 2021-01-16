@@ -9,6 +9,11 @@ enum YN {
 	N
 }
 
+type Name {
+	fn: String!
+	ln: String
+}
+
 enum FeedbackType {
 	C
 	S
@@ -21,7 +26,8 @@ type Feedback
 	@aws_cognito_user_pools
 	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
 	type: FeedbackType!
-	email: String
+	email: String!
+	name: Name!
 	feedback: String!
 }
 
