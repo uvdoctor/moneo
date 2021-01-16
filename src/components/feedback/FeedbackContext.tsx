@@ -38,7 +38,7 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
     setLastName(lastName);
     setEmail(email);
     try {
-      await API.graphql({
+      const result: any = await API.graphql({
         query: mutations.createFeedback,
         variables: {
           input: {
@@ -51,13 +51,15 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
         },
         authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
       });
+      console.log("Result is ", result);
     } catch (e) {
       setError({
         title: "Error while creating feedback",
         message: e.errors ? e.errors[0].message : e.toString(),
       });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

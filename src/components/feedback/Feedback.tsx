@@ -6,8 +6,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useFullScreenBrowser } from "react-browser-hooks";
-import Draggable from "react-draggable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenSquare } from "@fortawesome/free-solid-svg-icons";
 import { FeedbackType } from "../../api/goals";
@@ -39,14 +37,12 @@ export default function Feedback() {
   const openModal = () => setModalVisible(true);
 
   const closeModal = () => {
-      /*
+    setModalVisible(false);
     setFeedbackType(FeedbackType.C);
     setFeedback("");
     setFirstName("");
     setLastName("");
     setEmail("");
-    */
-    setModalVisible(false);
   };
 
   useEffect(() => {
