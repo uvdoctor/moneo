@@ -608,6 +608,10 @@ export const onCreateFeedback = /* GraphQL */ `
       id
       type
       email
+      name {
+        fn
+        ln
+      }
       feedback
       createdAt
       updatedAt
@@ -620,6 +624,10 @@ export const onUpdateFeedback = /* GraphQL */ `
       id
       type
       email
+      name {
+        fn
+        ln
+      }
       feedback
       createdAt
       updatedAt
@@ -632,6 +640,10 @@ export const onDeleteFeedback = /* GraphQL */ `
       id
       type
       email
+      name {
+        fn
+        ln
+      }
       feedback
       createdAt
       updatedAt

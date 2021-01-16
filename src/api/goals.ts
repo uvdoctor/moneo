@@ -448,13 +448,20 @@ export enum Status {
 export type CreateFeedbackInput = {
   id?: string | null,
   type: FeedbackType,
-  email?: string | null,
+  email: string,
+  name: NameInput,
   feedback: string,
+};
+
+export type NameInput = {
+  fn: string,
+  ln?: string | null,
 };
 
 export type UpdateFeedbackInput = {
   type?: FeedbackType | null,
   email?: string | null,
+  name?: NameInput | null,
   feedback?: string | null,
 };
 
@@ -613,7 +620,12 @@ export type DeleteFeedbackMutation = {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
-    email: string | null,
+    email: string,
+    name:  {
+      __typename: "Name",
+      fn: string,
+      ln: string | null,
+    },
     feedback: string,
     createdAt: string,
     updatedAt: string,
@@ -1363,7 +1375,12 @@ export type CreateFeedbackMutation = {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
-    email: string | null,
+    email: string,
+    name:  {
+      __typename: "Name",
+      fn: string,
+      ln: string | null,
+    },
     feedback: string,
     createdAt: string,
     updatedAt: string,
@@ -1380,7 +1397,12 @@ export type UpdateFeedbackMutation = {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
-    email: string | null,
+    email: string,
+    name:  {
+      __typename: "Name",
+      fn: string,
+      ln: string | null,
+    },
     feedback: string,
     createdAt: string,
     updatedAt: string,
@@ -1894,7 +1916,12 @@ export type GetFeedbackQuery = {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
-    email: string | null,
+    email: string,
+    name:  {
+      __typename: "Name",
+      fn: string,
+      ln: string | null,
+    },
     feedback: string,
     createdAt: string,
     updatedAt: string,
@@ -1914,7 +1941,12 @@ export type ListFeedbacksQuery = {
       __typename: "Feedback",
       id: string,
       type: FeedbackType,
-      email: string | null,
+      email: string,
+      name:  {
+        __typename: "Name",
+        fn: string,
+        ln: string | null,
+      },
       feedback: string,
       createdAt: string,
       updatedAt: string,
@@ -2671,7 +2703,12 @@ export type OnCreateFeedbackSubscription = {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
-    email: string | null,
+    email: string,
+    name:  {
+      __typename: "Name",
+      fn: string,
+      ln: string | null,
+    },
     feedback: string,
     createdAt: string,
     updatedAt: string,
@@ -2683,7 +2720,12 @@ export type OnUpdateFeedbackSubscription = {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
-    email: string | null,
+    email: string,
+    name:  {
+      __typename: "Name",
+      fn: string,
+      ln: string | null,
+    },
     feedback: string,
     createdAt: string,
     updatedAt: string,
@@ -2695,7 +2737,12 @@ export type OnDeleteFeedbackSubscription = {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
-    email: string | null,
+    email: string,
+    name:  {
+      __typename: "Name",
+      fn: string,
+      ln: string | null,
+    },
     feedback: string,
     createdAt: string,
     updatedAt: string,

@@ -413,6 +413,10 @@ export const getFeedback = /* GraphQL */ `
       id
       type
       email
+      name {
+        fn
+        ln
+      }
       feedback
       createdAt
       updatedAt
@@ -430,6 +434,10 @@ export const listFeedbacks = /* GraphQL */ `
         id
         type
         email
+        name {
+          fn
+          ln
+        }
         feedback
         createdAt
         updatedAt
