@@ -26,6 +26,11 @@ export default function Feedback() {
     email,
     isLoading,
     onFormSubmit,
+    setFeedbackType,
+    setFeedback,
+    setFirstName,
+    setLastName,
+    setEmail
   }: any = useContext(FeedbackContext);
 
   const [form] = Form.useForm();
@@ -35,7 +40,16 @@ export default function Feedback() {
 
   const openModal = () => setModalVisible(true);
 
-  const closeModal = () => setModalVisible(false);
+  const closeModal = () => {
+      /*
+    setFeedbackType(FeedbackType.C);
+    setFeedback("");
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    */
+    setModalVisible(false);
+  };
 
   useEffect(() => {
     if (formRef.current) {
@@ -64,10 +78,6 @@ export default function Feedback() {
           onCancel={closeModal}
           destroyOnClose
           visible={modalVisible}
-          //@ts-ignore
-          modalRender={(modal: any) => (
-            <Draggable disabled={fsb.info.innerWidth < 1200}>{modal}</Draggable>
-          )}
         >
           <Form
             form={form}
@@ -84,7 +94,7 @@ export default function Feedback() {
               label="Feedback Type"
               rules={[
                 {
-                  required: true
+                  required: true,
                 },
               ]}
             >
