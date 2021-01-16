@@ -82,7 +82,7 @@ export default function Feedback() {
           <Form
             form={form}
             ref={formRef}
-            name="Submit"
+            name="submit"
             layout="vertical"
             initialValues={{
               ["feedbackType"]: FeedbackType.C,
@@ -94,7 +94,7 @@ export default function Feedback() {
               label="Feedback Type"
               rules={[
                 {
-                  required: true,
+                  required: true
                 },
               ]}
             >

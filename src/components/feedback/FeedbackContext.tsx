@@ -31,13 +31,13 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
     lastName,
     email,
   }: any) => {
+    console.log("feedbackType", feedbackType);
     setLoading(true);
     setFeedbackType(feedbackType);
     setFeedback(feedback);
     setFirstName(firstName);
     setLastName(lastName);
     setEmail(email);
-   console.log("feedbackType", feedbackType);
     try {
       await API.graphql({
         query: mutations.createFeedback,
