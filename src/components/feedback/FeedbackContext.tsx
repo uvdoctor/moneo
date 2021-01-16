@@ -37,7 +37,6 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
     setFirstName(firstName);
     setLastName(lastName);
     setEmail(email);
-
     try {
       await API.graphql({
         query: mutations.createFeedback,

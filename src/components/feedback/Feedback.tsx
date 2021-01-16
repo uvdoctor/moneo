@@ -74,6 +74,9 @@ export default function Feedback() {
             ref={formRef}
             name="Submit"
             layout="vertical"
+            initialValues={{
+              ["feedbackType"]: FeedbackType.C,
+            }}
             onFinish={onFormSubmit}
           >
             <Form.Item
@@ -81,8 +84,7 @@ export default function Feedback() {
               label="Feedback Type"
               rules={[
                 {
-                  required: true,
-                  type: "enum",
+                  required: true
                 },
               ]}
             >
@@ -98,7 +100,7 @@ export default function Feedback() {
               rules={[
                 {
                   required: true,
-                  min:10,
+                  min: 10,
                   type: "string",
                   message: "Please enter valid feedback (min 10 characters)",
                 },
