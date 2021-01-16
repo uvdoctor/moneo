@@ -69,6 +69,7 @@ export default function Feedback() {
           }
           onCancel={closeModal}
           destroyOnClose
+          footer={null}
           visible={modalVisible}
           okText="Submit"
           okButtonProps={{
