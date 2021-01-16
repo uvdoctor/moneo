@@ -38,11 +38,7 @@ export default function Feedback() {
 
   const closeModal = () => {
     setModalVisible(false);
-    setFeedbackType(FeedbackType.C);
-    setFeedback("");
-    setFirstName("");
-    setLastName("");
-    setEmail("");
+    form.resetFields();
   };
 
   useEffect(() => {
