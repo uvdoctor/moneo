@@ -98,10 +98,9 @@ export default function Feedback() {
               rules={[
                 {
                   required: true,
-                  min: 10,
-                  len: 20,
+                  min:10,
                   type: "string",
-                  message: "Please enter valid feedback (min. 10 characters)!",
+                  message: "Please enter valid feedback (min 10 characters)",
                 },
               ]}
             >
