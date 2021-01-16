@@ -15,6 +15,7 @@ import TextArea from "antd/lib/input/TextArea";
 
 export default function Feedback() {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [submitEnabled, setSubmitEnabled] = useState<boolean>(false);
 
   const {
     feedbackType,
@@ -23,12 +24,7 @@ export default function Feedback() {
     lastName,
     email,
     isLoading,
-    onFormSubmit,
-    setFeedbackType,
-    setFeedback,
-    setFirstName,
-    setLastName,
-    setEmail
+    onFormSubmit
   }: any = useContext(FeedbackContext);
 
   const [form] = Form.useForm();
@@ -50,6 +46,13 @@ export default function Feedback() {
         lastName,
         email,
       });
+      setSubmitEnabled(
+        form.getFieldsError().filter(({ errors }) => errors.length).length ===
+          0 &&
+          formRef.current?.getFieldValue("feedback") &&
+          formRef.current?.getFieldValue("firstName") &&
+          formRef.current?.getFieldValue("email")
+      );  
     }
   }, [feedbackType, feedback, firstName, lastName, email]);
 
@@ -64,10 +67,13 @@ export default function Feedback() {
           title={
             <div style={{ cursor: "move" }}>Please provide your feedback</div>
           }
-          footer={null}
           onCancel={closeModal}
           destroyOnClose
           visible={modalVisible}
+          okText="Submit"
+          okButtonProps={{
+            disabled: !submitEnabled 
+          }}
         >
           <Form
             form={form}

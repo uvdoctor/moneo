@@ -73,12 +73,7 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
         isLoading,
         onFormSubmit,
         email,
-        error,
-        setFeedbackType,
-        setFeedback,
-        setFirstName,
-        setLastName,
-        setEmail
+        error
       }}
     >
       {children}
