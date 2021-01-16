@@ -17,7 +17,7 @@ interface JoinContextProviderProps {
 }
 
 function JoinContextProvider({ children }: JoinContextProviderProps) {
-	const { setDefaultCountry }: any = useContext(AppContext);
+	const { setDefaultCountry, setDefaultCurrency }: any = useContext(AppContext);
 	const [email, setEmail] = useState<string>("");
 	const [country, setCountry] = useState<string>();
 	const [status, setStatus] = useState<Status>(Status.N);
@@ -30,8 +30,10 @@ function JoinContextProvider({ children }: JoinContextProviderProps) {
 		let defaultCountry = 'US'
     if (host.endsWith('.in') || host.endsWith('host')) {
 			defaultCountry = 'IN';
+			setDefaultCurrency("INR");
 		} else if (host.endsWith('.uk')) {
 			defaultCountry = 'UK';
+			setDefaultCurrency("UK")
 		}
 		const { email, country, status } = JSON.parse(
 			localStorage.getItem(JOIN_KEY) || "{}"
