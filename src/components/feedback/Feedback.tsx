@@ -1,37 +1,167 @@
-import { Modal } from "antd";
-import React, { Fragment, useState } from "react";
-import { useFullScreenBrowser } from 'react-browser-hooks';
-import Draggable from 'react-draggable';
+import { Button, Form, Input, Modal, Radio } from "antd";
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { useFullScreenBrowser } from "react-browser-hooks";
+import Draggable from "react-draggable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenSquare } from '@fortawesome/free-solid-svg-icons';
+import { faPenSquare } from "@fortawesome/free-solid-svg-icons";
+import { FeedbackType } from "../../api/goals";
+import { FormInstance } from "antd/lib/form";
+import { FeedbackContext } from "./FeedbackContext";
+import TextArea from "antd/lib/input/TextArea";
 
 export default function Feedback() {
-    const [ modalVisible, setModalVisible ] = useState<boolean>(false);
-    const fsb = useFullScreenBrowser();
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
-    const openModal = () => setModalVisible(true);
+  const {
+    feedbackType,
+    feedback,
+    firstName,
+    lastName,
+    email,
+    isLoading,
+    onFormSubmit,
+  }: any = useContext(FeedbackContext);
 
-    const closeModal = () => setModalVisible(false);
+  const [form] = Form.useForm();
+  const formRef = useRef<FormInstance>(null);
 
-    return (
-        <Fragment>
-			<span style={{ cursor: 'pointer' }} onClick={openModal}>
-                <FontAwesomeIcon icon={faPenSquare} />
-			</span>
-            {modalVisible && (
-                <Modal
-                    centered
-                    title={<div style={{ cursor: 'move' }}>Please provide your feedback</div>}
-                    footer={null}
-                    onCancel={closeModal}
-                    destroyOnClose
-                    visible={modalVisible}
-                    //@ts-ignore
-                    modalRender={(modal: any) => <Draggable disabled={fsb.info.innerWidth < 1200}>{modal}</Draggable>}
+  const fsb = useFullScreenBrowser();
+
+  const openModal = () => setModalVisible(true);
+
+  const closeModal = () => setModalVisible(false);
+
+  useEffect(() => {
+    if (formRef.current) {
+      formRef.current.setFieldsValue({
+        feedbackType,
+        feedback,
+        firstName,
+        lastName,
+        email,
+      });
+    }
+  }, [feedbackType, feedback, firstName, lastName, email]);
+
+  return (
+    <Fragment>
+      <span style={{ cursor: "pointer" }} onClick={openModal}>
+        <FontAwesomeIcon icon={faPenSquare} />
+      </span>
+      {modalVisible && (
+        <Modal
+          centered
+          title={
+            <div style={{ cursor: "move" }}>Please provide your feedback</div>
+          }
+          footer={null}
+          onCancel={closeModal}
+          destroyOnClose
+          visible={modalVisible}
+          //@ts-ignore
+          modalRender={(modal: any) => (
+            <Draggable disabled={fsb.info.innerWidth < 1200}>{modal}</Draggable>
+          )}
+        >
+          <Form
+            form={form}
+            ref={formRef}
+            name="join"
+            layout="inline"
+            onFinish={onFormSubmit}
+          >
+            <Form.Item
+              name="feedbackType"
+              rules={[
+                {
+                  required: true,
+                  type: "enum",
+                },
+              ]}
+            >
+              <Radio.Group value={feedbackType}>
+                <Radio value={FeedbackType.C}>Comment</Radio>
+                <Radio value={FeedbackType.S}>Suggestion</Radio>
+                <Radio value={FeedbackType.Q}>Question</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item
+              name="feedback"
+              rules={[
+                {
+                  required: true,
+                  min: 10,
+                  len: 20,
+                  type: "string",
+                  message: "Please enter valid feedback (min. 10 characters)!",
+                },
+              ]}
+            >
+              <TextArea placeholder="Enter feedback" />
+            </Form.Item>
+            <Form.Item
+              name="firstName"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  message: "Please enter valid first name!",
+                },
+              ]}
+            >
+              <Input placeholder="Enter first name" />
+            </Form.Item>
+
+            <Form.Item
+              name="lastName"
+              rules={[
+                {
+                  required: false,
+                  type: "string",
+                  message: "Please enter valid last name!",
+                },
+              ]}
+            >
+              <Input placeholder="Enter last name" />
+            </Form.Item>
+
+            <Form.Item
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  type: "email",
+                  message: "Please enter valid email address!",
+                },
+              ]}
+            >
+              <Input placeholder="Enter email address" />
+            </Form.Item>
+            <Form.Item shouldUpdate={true}>
+              {() => (
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  disabled={
+                    !form.isFieldsTouched(true) ||
+                    form.getFieldsError().filter(({ errors }) => errors.length)
+                      .length > 0
+                  }
+                  loading={isLoading}
                 >
-                    Hello
-                </Modal>
-            )}
-        </Fragment>    
-    );
+                  Join
+                </Button>
+              )}
+            </Form.Item>
+          </Form>
+        </Modal>
+      )}
+    </Fragment>
+  );
 }
