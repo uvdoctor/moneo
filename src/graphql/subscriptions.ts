@@ -656,6 +656,7 @@ export const onCreateRating = /* GraphQL */ `
       id
       type
       rating
+      feedbackId
       createdAt
       updatedAt
     }
@@ -667,6 +668,7 @@ export const onUpdateRating = /* GraphQL */ `
       id
       type
       rating
+      feedbackId
       createdAt
       updatedAt
     }
@@ -678,6 +680,7 @@ export const onDeleteRating = /* GraphQL */ `
       id
       type
       rating
+      feedbackId
       createdAt
       updatedAt
     }

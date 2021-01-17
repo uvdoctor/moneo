@@ -452,6 +452,7 @@ export const getRating = /* GraphQL */ `
       id
       type
       rating
+      feedbackId
       createdAt
       updatedAt
     }
@@ -468,6 +469,7 @@ export const listRatings = /* GraphQL */ `
         id
         type
         rating
+        feedbackId
         createdAt
         updatedAt
       }

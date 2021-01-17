@@ -74,6 +74,7 @@ export type DeleteRatingInput = {
 export type ModelRatingConditionInput = {
   type?: ModelCalcTypeInput | null,
   rating?: ModelIntInput | null,
+  feedbackId?: ModelStringInput | null,
   and?: Array< ModelRatingConditionInput | null > | null,
   or?: Array< ModelRatingConditionInput | null > | null,
   not?: ModelRatingConditionInput | null,
@@ -496,11 +497,13 @@ export type CreateRatingInput = {
   id?: string | null,
   type: CalcType,
   rating: number,
+  feedbackId?: string | null,
 };
 
 export type UpdateRatingInput = {
   type?: CalcType | null,
   rating?: number | null,
+  feedbackId?: string | null,
 };
 
 export type CreateRegistrationInput = {
@@ -633,6 +636,7 @@ export type ModelFeedbackFilterInput = {
 export type ModelRatingFilterInput = {
   type?: ModelCalcTypeInput | null,
   rating?: ModelIntInput | null,
+  feedbackId?: ModelStringInput | null,
   and?: Array< ModelRatingFilterInput | null > | null,
   or?: Array< ModelRatingFilterInput | null > | null,
   not?: ModelRatingFilterInput | null,
@@ -689,6 +693,7 @@ export type DeleteRatingMutation = {
     id: string,
     type: CalcType,
     rating: number,
+    feedbackId: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1482,6 +1487,7 @@ export type CreateRatingMutation = {
     id: string,
     type: CalcType,
     rating: number,
+    feedbackId: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1498,6 +1504,7 @@ export type UpdateRatingMutation = {
     id: string,
     type: CalcType,
     rating: number,
+    feedbackId: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2059,6 +2066,7 @@ export type GetRatingQuery = {
     id: string,
     type: CalcType,
     rating: number,
+    feedbackId: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2078,6 +2086,7 @@ export type ListRatingsQuery = {
       id: string,
       type: CalcType,
       rating: number,
+      feedbackId: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -2885,6 +2894,7 @@ export type OnCreateRatingSubscription = {
     id: string,
     type: CalcType,
     rating: number,
+    feedbackId: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2896,6 +2906,7 @@ export type OnUpdateRatingSubscription = {
     id: string,
     type: CalcType,
     rating: number,
+    feedbackId: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2907,6 +2918,7 @@ export type OnDeleteRatingSubscription = {
     id: string,
     type: CalcType,
     rating: number,
+    feedbackId: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
