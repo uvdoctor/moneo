@@ -5,7 +5,7 @@ import SelectInput from "../form/selectinput";
 import { CalcContext } from "./CalcContext";
 import Draggable from "react-draggable";
 import SocialShare from "../SocialShare";
-import * as gtag from "../../lib/gtag";
+//import * as gtag from "../../lib/gtag";
 interface CalcHeaderProps {
 	children?: any;
 	title?: ReactNode;
@@ -23,19 +23,20 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 		setShowFeedbackModal,
 		feedbackText,
 		setFeedbackText,
-		fsb,
+		fsb
 	}: any = useContext(CalcContext);
 	const ratingLabels = ["", "Very Poor", "Poor", "Average", "Good", "Awesome!"];
 	const [ratingLabel, setRatingLabel] = useState<string>("");
 
 	const saveFeedback = () => {
 		if (!feedbackText) return;
+		/*
 		gtag.event({
 			category: goal.name,
 			action: "Rating",
 			label: "Feedback",
 			value: feedbackText,
-		});
+		});*/
 		setFeedbackText("");
 		setShowFeedbackModal(false);
 	};

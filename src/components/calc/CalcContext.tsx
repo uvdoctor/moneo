@@ -8,9 +8,8 @@ import Sell from "../goals/sell";
 import BRComp from "../goals/BRComp";
 import BasicLineChart from "../goals/BasicLineChart";
 import BuyRentChart from "../goals/BuyRentChart";
-import { GoalType } from '../../api/goals';
+import { CalcType, GoalType } from '../../api/goals';
 import { isLoanEligible } from '../goals/goalutils';
-import * as gtag from '../../lib/gtag';
 import FIMoneyOutflow from '../goals/FIMoneyOutflow';
 import FIBenefit from '../goals/FIBenefit';
 import { AfterFI } from '../goals/AfterFI';
@@ -23,6 +22,13 @@ import LoanSchedule from './LoanSchedule';
 import DynamicAAChart from '../goals/DynamicAAChart';
 import FIMonthlyInvTargetChart from './FIMonthlyInvTargetChart';
 import { AppContext } from '../AppContext';
+import * as mutations from '../../graphql/mutations';
+import awsconfig from '../../aws-exports';
+import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
+import Amplify, { API } from 'aws-amplify';
+import { CALC_NAMES } from '../../CONSTANTS';
+
+Amplify.configure(awsconfig);
 
 const CalcContext = createContext({});
 
@@ -82,6 +88,17 @@ function CalcContextProvider({
   const [results, setResults] = useState<Array<any>>([]);
   const [timer, setTimer] = useState<any>(null);
   const [analyzeFor, setAnalyzeFor] = useState<number>(30);
+
+ const getCalcType = () => {
+  switch(goal.name) {
+    case CALC_NAMES.BR: return CalcType.BR;
+    case CALC_NAMES.DR: return CalcType.DR;
+    case CALC_NAMES.EDU_LOAN: return CalcType.EDU_LOAN;
+    case CALC_NAMES.FI: return CalcType.FI;
+    case CALC_NAMES.LOAN: return CalcType.LOAN;
+    case CALC_NAMES.TC: return CalcType.TC;
+  }
+ }
 
   const getFFGoalTabOptions = () => {
     return [
@@ -202,15 +219,34 @@ function CalcContextProvider({
     let tabs = inputTabs.filter((tab: any) => tab.label === tabLabel);
     return tabs && tabs.length === 1;
   };
-
+  
+  const submitRating = async (rating : number) => {
+		try {
+			await API.graphql({
+				query: mutations.createRating,
+				variables: {
+					input: {
+						type: getCalcType(),
+						rating: rating
+					}
+				},
+				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
+			});
+		} catch (e) {
+      console.log('Error')
+		} 
+  };
+  
   useEffect(() => {
     if (!rating) return;
+    submitRating(rating);
+    /*
     gtag.event({
 			category: goal.name,
 			action: 'Rating',
 			label: 'Score',
 			value: rating
-    });
+    });*/
     setShowFeedbackModal(rating && rating < 4 ? true : false);
     }, [rating]);
   

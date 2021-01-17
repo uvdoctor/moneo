@@ -25,7 +25,8 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 	const [ form ] = Form.useForm();
 
 	const openNotificationWithIcon = (type: any, message: string, description: string) => {
-		notification[type]({
+    //@ts-ignore
+    notification[type]({
 			message: message,
 			description: description
 		});
