@@ -2,6 +2,8 @@ import React, { Fragment } from "react";
 import { Menu } from "antd";
 import { calcList } from "./landing/Calculator";
 import FSToggle from "./FSToggle";
+import Link from "next/link";
+import { ROUTES } from "../CONSTANTS";
 
 interface MainMenuProps {
 	mode?: any;
@@ -22,7 +24,18 @@ export default function MainMenu({ mode = "horizontal" }: MainMenuProps) {
 					))}
 				</SubMenu>
 				<Menu.Item>
-					<a href="/about">About</a>
+					<Link href={ROUTES.ABOUT}>
+						<a>
+							About
+						</a>
+					</Link>
+				</Menu.Item>
+				<Menu.Item>
+					<Link href={ROUTES.CONTACT_US}>
+						<a>
+							Contact Us
+						</a>
+					</Link>
 				</Menu.Item>
 				{/*<Menu.Item>
 					<a href="/pricing">Pricing</a>

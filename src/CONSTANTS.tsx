@@ -10,6 +10,8 @@ export const ROUTES = {
     EDUCATION: "/education-loan",
     LOAN: "/loan",
     TRUE_COST: "/true-cost",
+    ABOUT: "/about",
+    CONTACT_US: "/contact-us"
 };
 
 export const CALC_NAMES = {
