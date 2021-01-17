@@ -487,6 +487,7 @@ export type NameInput = {
 };
 
 export type UpdateFeedbackInput = {
+  id: string,
   type?: FeedbackType | null,
   email?: string | null,
   name?: NameInput | null,
@@ -501,6 +502,7 @@ export type CreateRatingInput = {
 };
 
 export type UpdateRatingInput = {
+  id: string,
   type?: CalcType | null,
   rating?: number | null,
   feedbackId?: string | null,
@@ -625,6 +627,7 @@ export type ModelAccountFilterInput = {
 };
 
 export type ModelFeedbackFilterInput = {
+  id?: ModelIDInput | null,
   type?: ModelFeedbackTypeInput | null,
   email?: ModelStringInput | null,
   feedback?: ModelStringInput | null,
@@ -634,6 +637,7 @@ export type ModelFeedbackFilterInput = {
 };
 
 export type ModelRatingFilterInput = {
+  id?: ModelIDInput | null,
   type?: ModelCalcTypeInput | null,
   rating?: ModelIntInput | null,
   feedbackId?: ModelStringInput | null,
