@@ -20,6 +20,15 @@ enum FeedbackType {
 	Q
 }
 
+enum CalcType {
+	BR
+	FI
+	LOAN
+	EDU_LOAN
+	DR
+	TC
+}
+
 type Feedback
 	@model
 	@aws_iam
@@ -29,6 +38,15 @@ type Feedback
 	email: String!
 	name: Name!
 	feedback: String!
+}
+
+type Rating
+	@model
+	@aws_iam
+	@aws_cognito_user_pools
+	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
+	type: CalcType!
+	rating: Int!
 }
 
 type Target {
