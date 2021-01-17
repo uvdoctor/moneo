@@ -11,7 +11,8 @@ export const ROUTES = {
     LOAN: "/loan",
     TRUE_COST: "/true-cost",
     ABOUT: "/about",
-    CONTACT_US: "/contact-us"
+    CONTACT_US: "/contact-us",
+    IA: "/ia"
 };
 
 export const CALC_NAMES = {
@@ -21,6 +22,7 @@ export const CALC_NAMES = {
     EDU_LOAN: "Education Loan",
     DR: "Debt Repayment",
     TC: "True Cost",
+    IA: "Investment Analyzer"
 };
 
 export const ASSET_CATEGORIES = {
