@@ -67,6 +67,45 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export type DeleteRatingInput = {
+  id?: string | null,
+};
+
+export type ModelRatingConditionInput = {
+  type?: ModelCalcTypeInput | null,
+  rating?: ModelIntInput | null,
+  and?: Array< ModelRatingConditionInput | null > | null,
+  or?: Array< ModelRatingConditionInput | null > | null,
+  not?: ModelRatingConditionInput | null,
+};
+
+export type ModelCalcTypeInput = {
+  eq?: CalcType | null,
+  ne?: CalcType | null,
+};
+
+export enum CalcType {
+  BR = "BR",
+  FI = "FI",
+  LOAN = "LOAN",
+  EDU_LOAN = "EDU_LOAN",
+  DR = "DR",
+  TC = "TC",
+}
+
+
+export type ModelIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
 export type CreateGoalInput = {
   id?: string | null,
   sy: number,
@@ -186,18 +225,6 @@ export type ModelGoalConditionInput = {
   and?: Array< ModelGoalConditionInput | null > | null,
   or?: Array< ModelGoalConditionInput | null > | null,
   not?: ModelGoalConditionInput | null,
-};
-
-export type ModelIntInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
 };
 
 export type ModelFloatInput = {
@@ -465,6 +492,17 @@ export type UpdateFeedbackInput = {
   feedback?: string | null,
 };
 
+export type CreateRatingInput = {
+  id?: string | null,
+  type: CalcType,
+  rating: number,
+};
+
+export type UpdateRatingInput = {
+  type?: CalcType | null,
+  rating?: number | null,
+};
+
 export type CreateRegistrationInput = {
   email: string,
   status: Status,
@@ -592,6 +630,14 @@ export type ModelFeedbackFilterInput = {
   not?: ModelFeedbackFilterInput | null,
 };
 
+export type ModelRatingFilterInput = {
+  type?: ModelCalcTypeInput | null,
+  rating?: ModelIntInput | null,
+  and?: Array< ModelRatingFilterInput | null > | null,
+  or?: Array< ModelRatingFilterInput | null > | null,
+  not?: ModelRatingFilterInput | null,
+};
+
 export type ModelRegistrationFilterInput = {
   email?: ModelStringInput | null,
   status?: ModelStatusInput | null,
@@ -627,6 +673,22 @@ export type DeleteFeedbackMutation = {
       ln: string | null,
     },
     feedback: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteRatingMutationVariables = {
+  input: DeleteRatingInput,
+  condition?: ModelRatingConditionInput | null,
+};
+
+export type DeleteRatingMutation = {
+  deleteRating:  {
+    __typename: "Rating",
+    id: string,
+    type: CalcType,
+    rating: number,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1409,6 +1471,38 @@ export type UpdateFeedbackMutation = {
   } | null,
 };
 
+export type CreateRatingMutationVariables = {
+  input: CreateRatingInput,
+  condition?: ModelRatingConditionInput | null,
+};
+
+export type CreateRatingMutation = {
+  createRating:  {
+    __typename: "Rating",
+    id: string,
+    type: CalcType,
+    rating: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateRatingMutationVariables = {
+  input: UpdateRatingInput,
+  condition?: ModelRatingConditionInput | null,
+};
+
+export type UpdateRatingMutation = {
+  updateRating:  {
+    __typename: "Rating",
+    id: string,
+    type: CalcType,
+    rating: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateRegistrationMutationVariables = {
   input: CreateRegistrationInput,
   condition?: ModelRegistrationConditionInput | null,
@@ -1948,6 +2042,42 @@ export type ListFeedbacksQuery = {
         ln: string | null,
       },
       feedback: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetRatingQueryVariables = {
+  id: string,
+};
+
+export type GetRatingQuery = {
+  getRating:  {
+    __typename: "Rating",
+    id: string,
+    type: CalcType,
+    rating: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListRatingsQueryVariables = {
+  filter?: ModelRatingFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListRatingsQuery = {
+  listRatings:  {
+    __typename: "ModelRatingConnection",
+    items:  Array< {
+      __typename: "Rating",
+      id: string,
+      type: CalcType,
+      rating: number,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -2744,6 +2874,39 @@ export type OnDeleteFeedbackSubscription = {
       ln: string | null,
     },
     feedback: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateRatingSubscription = {
+  onCreateRating:  {
+    __typename: "Rating",
+    id: string,
+    type: CalcType,
+    rating: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateRatingSubscription = {
+  onUpdateRating:  {
+    __typename: "Rating",
+    id: string,
+    type: CalcType,
+    rating: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteRatingSubscription = {
+  onDeleteRating:  {
+    __typename: "Rating",
+    id: string,
+    type: CalcType,
+    rating: number,
     createdAt: string,
     updatedAt: string,
   } | null,

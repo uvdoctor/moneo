@@ -446,6 +446,35 @@ export const listFeedbacks = /* GraphQL */ `
     }
   }
 `;
+export const getRating = /* GraphQL */ `
+  query GetRating($id: ID!) {
+    getRating(id: $id) {
+      id
+      type
+      rating
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRatings = /* GraphQL */ `
+  query ListRatings(
+    $filter: ModelRatingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRatings(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        rating
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getRegistration = /* GraphQL */ `
   query GetRegistration($email: String!) {
     getRegistration(email: $email) {

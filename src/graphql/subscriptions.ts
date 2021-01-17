@@ -650,6 +650,39 @@ export const onDeleteFeedback = /* GraphQL */ `
     }
   }
 `;
+export const onCreateRating = /* GraphQL */ `
+  subscription OnCreateRating {
+    onCreateRating {
+      id
+      type
+      rating
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateRating = /* GraphQL */ `
+  subscription OnUpdateRating {
+    onUpdateRating {
+      id
+      type
+      rating
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteRating = /* GraphQL */ `
+  subscription OnDeleteRating {
+    onDeleteRating {
+      id
+      type
+      rating
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateRegistration = /* GraphQL */ `
   subscription OnCreateRegistration {
     onCreateRegistration {

@@ -21,6 +21,20 @@ export const deleteFeedback = /* GraphQL */ `
     }
   }
 `;
+export const deleteRating = /* GraphQL */ `
+  mutation DeleteRating(
+    $input: DeleteRatingInput!
+    $condition: ModelRatingConditionInput
+  ) {
+    deleteRating(input: $input, condition: $condition) {
+      id
+      type
+      rating
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createGoal = /* GraphQL */ `
   mutation CreateGoal(
     $input: CreateGoalInput!
@@ -716,6 +730,34 @@ export const updateFeedback = /* GraphQL */ `
         ln
       }
       feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createRating = /* GraphQL */ `
+  mutation CreateRating(
+    $input: CreateRatingInput!
+    $condition: ModelRatingConditionInput
+  ) {
+    createRating(input: $input, condition: $condition) {
+      id
+      type
+      rating
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateRating = /* GraphQL */ `
+  mutation UpdateRating(
+    $input: UpdateRatingInput!
+    $condition: ModelRatingConditionInput
+  ) {
+    updateRating(input: $input, condition: $condition) {
+      id
+      type
+      rating
       createdAt
       updatedAt
     }
