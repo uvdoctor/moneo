@@ -4,7 +4,7 @@ import awsconfig from '../../aws-exports';
 import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import Amplify, { API } from 'aws-amplify';
 import { FeedbackType } from '../../api/goals';
-import { Form } from 'antd';
+import { Form, notification } from 'antd';
 
 Amplify.configure(awsconfig);
 
@@ -23,6 +23,13 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 	const [ isLoading, setLoading ] = useState<boolean>(false);
 	const [ error, setError ] = useState({});
 	const [ form ] = Form.useForm();
+
+	const openNotificationWithIcon = (type: any, message: string, description: string) => {
+		notification[type]({
+			message: message,
+			description: description
+		});
+	};
 
 	const onFormSubmit = async ({ feedbackType, feedback, firstName, lastName, email }: any) => {
 		setLoading(true);
@@ -47,12 +54,14 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 				},
 				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
 			});
-			form.resetFields();
+      form.resetFields();
+      openNotificationWithIcon('success', 'Success', 'Feedback saved successfully.');
 		} catch (e) {
 			setError({
 				title: 'Error while creating feedback',
 				message: e.errors ? e.errors[0].message : e.toString()
-			});
+      });
+      openNotificationWithIcon('error', 'Error', 'Error while saving feedback.');
 		} finally {
 			setLoading(false);
 		}
