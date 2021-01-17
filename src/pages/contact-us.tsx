@@ -3,9 +3,9 @@ import BasicPage from "../components/BasicPage";
 import Feedback from "../components/feedback/Feedback";
 import { FeedbackContextProvider } from "../components/feedback/FeedbackContext";
 
-export default function FeedbackPage() {
+export default function ContactUs() {
 	return (
-    <BasicPage title="Feedback">
+    <BasicPage title="Contact Us">
       <FeedbackContextProvider>
         <Feedback />
       </FeedbackContextProvider>

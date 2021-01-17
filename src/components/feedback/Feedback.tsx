@@ -1,21 +1,15 @@
-import { Button, Form, Input, Modal, Radio } from "antd";
+import { Button, Col, Form, Input, Radio, Row } from "antd";
 import React, {
-  Fragment,
   useContext,
   useEffect,
   useRef,
-  useState,
 } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenSquare } from "@fortawesome/free-solid-svg-icons";
 import { FeedbackType } from "../../api/goals";
 import { FormInstance } from "antd/lib/form";
 import { FeedbackContext } from "./FeedbackContext";
 import TextArea from "antd/lib/input/TextArea";
 
 export default function Feedback() {
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [submitEnabled, setSubmitEnabled] = useState<boolean>(false);
 
   const {
     feedbackType,
@@ -24,19 +18,12 @@ export default function Feedback() {
     lastName,
     email,
     isLoading,
-    onFormSubmit
+    onFormSubmit,
+    form
   }: any = useContext(FeedbackContext);
 
-  const [form] = Form.useForm();
   const formRef = useRef<FormInstance>(null);
   
-  const openModal = () => setModalVisible(true);
-
-  const closeModal = () => {
-    setModalVisible(false);
-    form.resetFields();
-  };
-
   useEffect(() => {
     if (formRef.current) {
       formRef.current.setFieldsValue({
@@ -46,37 +33,12 @@ export default function Feedback() {
         lastName,
         email,
       });
-      setSubmitEnabled(
-        form.getFieldsError().filter(({ errors }) => errors.length).length ===
-          0 &&
-          formRef.current?.getFieldValue("feedback") &&
-          formRef.current?.getFieldValue("firstName") &&
-          formRef.current?.getFieldValue("email")
-      );  
     }
   }, [feedbackType, feedback, firstName, lastName, email]);
 
   return (
-    <Fragment>
-      <span style={{ cursor: "pointer" }} onClick={openModal}>
-        <FontAwesomeIcon icon={faPenSquare} />
-      </span>
-      {modalVisible && (
-        <Modal
-          centered
-          title={
-            <div style={{ cursor: "move" }}>Please provide your feedback</div>
-          }
-          onCancel={closeModal}
-          destroyOnClose
-          footer={null}
-          visible={modalVisible}
-          okText="Submit"
-          okButtonProps={{
-            disabled: !submitEnabled 
-          }}
-        >
-          <Form
+    <Row justify="center"> 
+          <Form 
             form={form}
             ref={formRef}
             name="submit"
@@ -84,14 +46,13 @@ export default function Feedback() {
             initialValues={{
               ["feedbackType"]: FeedbackType.C,
             }}
-            onFinish={onFormSubmit}
-          >
+            onFinish={onFormSubmit}>
             <Form.Item name="feedbackType">
-              <Radio.Group value={feedbackType}>
-                <Radio value={FeedbackType.C}>Comment</Radio>
-                <Radio value={FeedbackType.S}>Suggestion</Radio>
-                <Radio value={FeedbackType.Q}>Question</Radio>
-              </Radio.Group>
+                <Radio.Group value={feedbackType}>
+                  <Radio value={FeedbackType.C}>Comment</Radio>
+                  <Radio value={FeedbackType.S}>Suggestion</Radio>
+                  <Radio value={FeedbackType.Q}>Question</Radio>
+                </Radio.Group>
             </Form.Item>
             <Form.Item
               name="feedback"
@@ -163,7 +124,7 @@ export default function Feedback() {
                   type="primary"
                   htmlType="submit"
                   disabled={
-                    form.getFieldsError().filter(({ errors }) => errors.length)
+                    form.getFieldsError().filter(({ errors } : any) => errors.length)
                       .length > 0 ||
                     !formRef.current?.getFieldValue("feedback") ||
                     !formRef.current?.getFieldValue("firstName") ||
@@ -176,8 +137,6 @@ export default function Feedback() {
               )}
             </Form.Item>
           </Form>
-        </Modal>
-      )}
-    </Fragment>
+          </Row>
   );
 }
