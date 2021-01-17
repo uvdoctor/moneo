@@ -47,6 +47,7 @@ type Rating
 	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
 	type: CalcType!
 	rating: Int!
+	feedbackId: String
 }
 
 type Target {
