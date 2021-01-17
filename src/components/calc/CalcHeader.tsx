@@ -1,18 +1,17 @@
-import { Modal, PageHeader, Rate, Input, Row, Col, Tooltip } from "antd";
+import { Modal, PageHeader, Rate, Row, Col, Tooltip } from "antd";
 import React, { Fragment, ReactNode, useContext, useState } from "react";
 import { ShareAltOutlined } from "@ant-design/icons";
 import SelectInput from "../form/selectinput";
 import { CalcContext } from "./CalcContext";
-import Draggable from "react-draggable";
 import SocialShare from "../SocialShare";
-//import * as gtag from "../../lib/gtag";
+import Feedback from "../feedback/Feedback";
+
 interface CalcHeaderProps {
 	children?: any;
 	title?: ReactNode;
 }
 
 export default function CalcHeader({ title, children }: CalcHeaderProps) {
-	const { TextArea } = Input;
 	const {
 		goal,
 		currency,
@@ -20,26 +19,12 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 		rating,
 		setRating,
 		showFeedbackModal,
-		setShowFeedbackModal,
-		feedbackText,
-		setFeedbackText,
-		fsb
+		setShowFeedbackModal
 	}: any = useContext(CalcContext);
 	const ratingLabels = ["", "Very Poor", "Poor", "Average", "Good", "Awesome!"];
 	const [ratingLabel, setRatingLabel] = useState<string>("");
 
-	const saveFeedback = () => {
-		if (!feedbackText) return;
-		/*
-		gtag.event({
-			category: goal.name,
-			action: "Rating",
-			label: "Feedback",
-			value: feedbackText,
-		});*/
-		setFeedbackText("");
-		setShowFeedbackModal(false);
-	};
+	const closeModal = () => setShowFeedbackModal(false);
 
 	return (
 		<Fragment>
@@ -96,20 +81,11 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 					visible={showFeedbackModal}
 					centered
 					title="Please help Us to Improve"
-					onCancel={() => setShowFeedbackModal(false)}
-					onOk={() => saveFeedback()}
+					footer= {null}
 					maskClosable
-					//@ts-ignore
-					modalRender={(modal: any) => (
-						<Draggable disabled={fsb.info.innerWidth < 1200}>{modal}</Draggable>
-					)}
+					onCancel = { closeModal }
 				>
-					<TextArea
-						rows={4}
-						value={feedbackText}
-						placeholder="Your feedback"
-						onChange={(e: any) => setFeedbackText(e.currentTarget.value)}
-					/>
+					<Feedback />
 				</Modal>
 			)}
 		</Fragment>

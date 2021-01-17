@@ -3,7 +3,7 @@ import * as mutations from '../../graphql/mutations';
 import awsconfig from '../../aws-exports';
 import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import Amplify, { API } from 'aws-amplify';
-import { FeedbackType } from '../../api/goals';
+import { CreateFeedbackMutation, FeedbackType } from '../../api/goals';
 import { Form, notification } from 'antd';
 
 Amplify.configure(awsconfig);
@@ -20,7 +20,8 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 	const [ firstName, setFirstName ] = useState<String>('');
 	const [ lastName, setLastName ] = useState<String>('');
 	const [ email, setEmail ] = useState<String>('');
-	const [ isLoading, setLoading ] = useState<boolean>(false);
+  const [ isLoading, setLoading ] = useState<boolean>(false);
+  const [ feedbackId, setFeedbackId ] = useState<String | undefined>('');
 	const [ error, setError ] = useState({});
 	const [ form ] = Form.useForm();
 
@@ -40,7 +41,7 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 		setLastName(lastName);
 		setEmail(email);
 		try {
-			await API.graphql({
+			const { data }  = (await API.graphql({
 				query: mutations.createFeedback,
 				variables: {
 					input: {
@@ -54,7 +55,10 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 					}
 				},
 				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
-			});
+      })) as {
+      data: CreateFeedbackMutation;
+    };
+      setFeedbackId(data.createFeedback?.id);
       form.resetFields();
       openNotificationWithIcon('success', 'Success', 'Feedback saved successfully.');
 		} catch (e) {
@@ -78,7 +82,8 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 				isLoading,
 				onFormSubmit,
 				email,
-				form,
+        form,
+        feedbackId,
 				error
 			}}
 		>

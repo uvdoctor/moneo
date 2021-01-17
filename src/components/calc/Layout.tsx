@@ -17,6 +17,7 @@ import './Layout.less';
 import KeyFeatures from './blog/KeyFeatures';
 import MajorAssumptions from './blog/MajorAssumptions';
 import CommonTerms from './blog/CommonTerms';
+import { FeedbackContextProvider } from '../feedback/FeedbackContext';
 
 export interface BlogInputProps {
 	elements: Array<any>;
@@ -134,7 +135,8 @@ export default function Layout(props: LayoutProps) {
 	];
 
 	const endingFeatures = [
-		isLoanEligible(props.type as GoalType) && props.type !== GoalType.E && {
+		isLoanEligible(props.type as GoalType) &&
+		props.type !== GoalType.E && {
 			title: 'Supports Amortizing and Balloon Loans',
 			content:
 				'Calculation will automatically calculate monthly installment, payment schedule and total interest for both these loan types.'
@@ -173,7 +175,7 @@ export default function Layout(props: LayoutProps) {
 		),
 		Definitions: <CommonTerms elements={[ ...props.terms, ...genericTerms ]} />
 	};
-	const [activeTab, setActiveTab] = useState<string>('1');
+	const [ activeTab, setActiveTab ] = useState<string>('1');
 
 	const buildEmptyMergedCFs = () => {
 		let mCFs: any = {};
@@ -184,7 +186,7 @@ export default function Layout(props: LayoutProps) {
 	const createGoal = () => {
 		let g: any = null;
 		const defaultCurrency = 'USD';
-		if (props.type) g = createNewGoalInput(props.type, defaultCurrency, props.title.endsWith("Loan"));
+		if (props.type) g = createNewGoalInput(props.type, defaultCurrency, props.title.endsWith('Loan'));
 		else g = { ccy: defaultCurrency };
 		g.name = props.title;
 		gtag.event({
@@ -196,9 +198,12 @@ export default function Layout(props: LayoutProps) {
 		setWIP(g);
 	};
 
-	useEffect(() => {
-		setDemoVideoPlay(activeTab === '1');
-	}, [activeTab]);
+	useEffect(
+		() => {
+			setDemoVideoPlay(activeTab === '1');
+		},
+		[ activeTab ]
+	);
 
 	return (
 		<BasicPage
@@ -241,15 +246,21 @@ export default function Layout(props: LayoutProps) {
 					</Col>
 				</Row>
 			) : (
-				<CalcContextProvider goal={wip} tabOptions={props.tabOptions} resultTabOptions={props.resultTabOptions}>
-					{props.type ? props.type === GoalType.FF ? (
-						<FIGoalContextProvider mustCFs={[]} tryCFs={[]} mergedCFs={buildEmptyMergedCFs()} />
-					) : (
-						<GoalContextProvider ffGoalEndYear={nowYear + 50} />
-					) : (
-						<props.calc />
-					)}
-				</CalcContextProvider>
+				<FeedbackContextProvider>
+					<CalcContextProvider
+						goal={wip}
+						tabOptions={props.tabOptions}
+						resultTabOptions={props.resultTabOptions}
+					>
+						{props.type ? props.type === GoalType.FF ? (
+							<FIGoalContextProvider mustCFs={[]} tryCFs={[]} mergedCFs={buildEmptyMergedCFs()} />
+						) : (
+							<GoalContextProvider ffGoalEndYear={nowYear + 50} />
+						) : (
+							<props.calc />
+						)}
+					</CalcContextProvider>
+				</FeedbackContextProvider>
 			)}
 		</BasicPage>
 	);
