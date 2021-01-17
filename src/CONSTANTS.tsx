@@ -11,7 +11,8 @@ export const ROUTES = {
     LOAN: "/loan",
     TRUE_COST: "/true-cost",
     ABOUT: "/about",
-    CONTACT_US: "/contact-us"
+    CONTACT_US: "/contact-us",
+    FEATURES: "/features"
 };
 
 export const CALC_NAMES = {

@@ -2,9 +2,7 @@ import React from "react";
 import BasicPage from "../components/BasicPage";
 import Content from "../components/Content";
 import { Row, Col, Statistic, Button } from "antd";
-//@ts-ignore
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
-//@ts-ignore
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "./pricing-table.less";
@@ -40,7 +38,7 @@ const Feature = ({ offerings }: FeatureProps) =>
 		</Col>
 	));
 
-export default function Home() {
+export default function FeaturesPage() {
 	const basicCalculators = {
 		title: "Basic Calculators",
 		features: ["Education Loan", "Asset Allocation"],
@@ -100,7 +98,7 @@ export default function Home() {
 	}
 
 	return (
-		<BasicPage title="DollarDarwin">
+		<BasicPage title="Features">
 			<Content>
 				<Row
 					className="price-table"

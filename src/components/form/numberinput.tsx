@@ -31,14 +31,11 @@ export default function NumberInput(props: NumberInputProps) {
 
 	const getSliderMarks = (min: number, max: number) => {
 		let marks: any = {
-			[min]: toReadableNumber(min, props.step < 1 ? 2 : 0)
+			[min]: toReadableNumber(min)
 		};
-		if (min < 0) marks[0] = toReadableNumber(0, props.step < 1 ? 2 : 0);
-		if (props.additionalMarks)
-			props.additionalMarks.forEach(
-				(val: number) => (marks[val] = toReadableNumber(val, props.step < 1 ? 2 : 0))
-			);
-		marks[max] = toReadableNumber(max, props.step < 1 ? 2 : 0);
+		if (min < 0) marks[0] = toReadableNumber(0);
+		if (props.additionalMarks) props.additionalMarks.forEach((val: number) => (marks[val] = toReadableNumber(val)));
+		marks[max] = toReadableNumber(max);
 		return marks;
 	};
 
@@ -149,7 +146,12 @@ export default function NumberInput(props: NumberInputProps) {
 										style={{ width: '100%', marginBottom: '0px' }}
 									/>
 								</Col>
-								{!props.currency ? <Col span={12}><span>&nbsp;</span>{props.unit}</Col> : null}
+								{!props.currency ? (
+									<Col span={12}>
+										<span>&nbsp;</span>
+										{props.unit}
+									</Col>
+								) : null}
 							</Row>
 							{props.currency && props.value >= 100000 ? (
 								<Row>
