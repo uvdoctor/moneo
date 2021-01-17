@@ -8,7 +8,7 @@ import Sell from "../goals/sell";
 import BRComp from "../goals/BRComp";
 import BasicLineChart from "../goals/BasicLineChart";
 import BuyRentChart from "../goals/BuyRentChart";
-import { CalcType, GoalType } from '../../api/goals';
+import { CalcType, CreateRatingMutation, GoalType } from '../../api/goals';
 import { isLoanEligible } from '../goals/goalutils';
 import FIMoneyOutflow from '../goals/FIMoneyOutflow';
 import FIBenefit from '../goals/FIBenefit';
@@ -27,6 +27,7 @@ import awsconfig from '../../aws-exports';
 import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import Amplify, { API } from 'aws-amplify';
 import { CALC_NAMES } from '../../CONSTANTS';
+import { FeedbackContext } from '../feedback/FeedbackContext';
 
 Amplify.configure(awsconfig);
 
@@ -59,6 +60,7 @@ function CalcContextProvider({
   updateCallback
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
+  const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
   const isPublicCalc = addCallback && updateCallback ? false : true;
@@ -88,6 +90,7 @@ function CalcContextProvider({
   const [results, setResults] = useState<Array<any>>([]);
   const [timer, setTimer] = useState<any>(null);
   const [analyzeFor, setAnalyzeFor] = useState<number>(30);
+  const [ratingId, setRatingId] = useState<String | undefined>('');
 
  const getCalcType = () => {
   switch(goal.name) {
@@ -222,7 +225,7 @@ function CalcContextProvider({
   
   const submitRating = async (rating : number) => {
 		try {
-			await API.graphql({
+			const { data }  = (await API.graphql({
 				query: mutations.createRating,
 				variables: {
 					input: {
@@ -231,25 +234,44 @@ function CalcContextProvider({
 					}
 				},
 				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
-			});
-		} catch (e) {
+			})) as {
+      data: CreateRatingMutation;
+    }
+    setRatingId(data.createRating?.id);
+  }
+  catch (e) {
       console.log('Error')
 		} 
   };
+
+  const updateRating = async () => {
+    try {
+			await API.graphql({
+				query: mutations.updateRating,
+				variables: {
+					input: {
+            id: ratingId,
+            feedbackId: feedbackId
+					}
+				},
+				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
+      });
+      
+		} catch (e) {
+      console.log('Error while updating rating', e)
+		} 
+  }
   
   useEffect(() => {
     if (!rating) return;
     submitRating(rating);
-    /*
-    gtag.event({
-			category: goal.name,
-			action: 'Rating',
-			label: 'Score',
-			value: rating
-    });*/
     setShowFeedbackModal(rating && rating < 4 ? true : false);
     }, [rating]);
   
+  useEffect(() => {
+    updateRating();
+  }, [feedbackId]);
+    
 	return (
 		<CalcContext.Provider
       value={{

@@ -34,6 +34,7 @@ type Feedback
 	@aws_iam
 	@aws_cognito_user_pools
 	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
+	id: ID!
 	type: FeedbackType!
 	email: String!
 	name: Name!
@@ -45,6 +46,7 @@ type Rating
 	@aws_iam
 	@aws_cognito_user_pools
 	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
+	id: ID!
 	type: CalcType!
 	rating: Int!
 	feedbackId: String
