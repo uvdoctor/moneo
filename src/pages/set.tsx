@@ -9,7 +9,7 @@ Amplify.configure(awsmobile);
 
 const Set = () => {
 	return (
-		<BasicPage title="Set Plan" secure>
+		<BasicPage title="Set Plan">
 			<SetPlan />
 		</BasicPage>
 	);

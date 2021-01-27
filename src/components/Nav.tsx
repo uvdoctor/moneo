@@ -14,7 +14,7 @@ interface NavProps {
 	scrollable?: boolean;
 }
 
-const Nav = ({ onBack, isFixed, scrollable }: NavProps) => {
+export default function Nav({ onBack, isFixed, scrollable }: NavProps) {
 	const { defaultCurrency, setDefaultCurrency }: any = useContext(AppContext);
 	const { top } = useScroll();
 	const { Header } = Layout;
@@ -24,8 +24,8 @@ const Nav = ({ onBack, isFixed, scrollable }: NavProps) => {
 
 	useEffect(() => {
 		if (defaultCurrency !== 'USD') return;
-    const host = window.location.hostname;
-    if (host.endsWith('.in') || host.endsWith('host')) {
+		const host = window.location.hostname;
+		if (host.endsWith('.in') || host.endsWith('host')) {
 			setDefaultCurrency('INR');
 		} else if (host.endsWith('.uk')) {
 			setDefaultCurrency('GBP');
@@ -48,5 +48,3 @@ const Nav = ({ onBack, isFixed, scrollable }: NavProps) => {
 		</Header>
 	);
 };
-
-export default Nav;

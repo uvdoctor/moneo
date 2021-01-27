@@ -9,7 +9,7 @@ Amplify.configure(awsmobile);
 
 const Get = () => {
 	return (
-		<BasicPage title="Get Net Worth" secure>
+		<BasicPage title="Get Net Worth">
 			<NW />
 		</BasicPage>
 	);

@@ -8,7 +8,7 @@ Amplify.configure(awsmobile);
 
 const Save = () => {
 	return (
-		<BasicPage title="Save" secure>
+		<BasicPage title="Save">
 			<div />
 		</BasicPage>
 	);

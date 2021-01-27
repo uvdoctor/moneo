@@ -9,6 +9,7 @@ export default function Footer() {
 	return (
 		<Content className="footer">
 			<Footer>
+			<Row justify="center"><Col>Estimates Only. No Advice.</Col></Row>
 				<Row justify="center"><Col>&copy; 2021 Moneo. All rights reserved.</Col></Row>
 				<Row justify="center">
 					<Col>This site is protected by reCAPTCHA and the Google<span>&nbsp;</span></Col>

@@ -1,8 +1,6 @@
 import React, { Fragment } from "react";
 import { Layout } from "antd";
 import Nav from "./Nav";
-import UserHeader from "./userheader";
-import SecureMenu from "./SecureMenu";
 import Footer from "./Footer";
 import Head from "next/head";
 import { AppContextProvider } from "./AppContext";
@@ -11,7 +9,6 @@ interface BasicPageProps {
   className?: string;
   title: string;
   children: React.ReactNode;
-  secure?: boolean;
   onBack?: Function | undefined | null;
   fixedNav?: boolean;
   navScrollable?: boolean;
@@ -82,18 +79,10 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
       </Head>
       <AppContextProvider>
       <Layout className={`dd-site ${props.className}`}>
-        {props.secure ? (
-          <Fragment>
-            <UserHeader />
-            <SecureMenu />
-          </Fragment>
-        ) : (
           <Nav
             scrollable={props.navScrollable}
             isFixed={props.fixedNav}
-            onBack={props.onBack}
-          />
-        )}
+            onBack={props.onBack} />
         {props.children}
         <Footer />
         </Layout>
