@@ -118,11 +118,11 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 								<a>Contact Us</a>
 							</Link>
 						</Menu.Item>
-						<Menu.Item>
+							{/**<Menu.Item>
 							<Link href={ROUTES.FEATURES}>
 								<a>Features</a>
 							</Link>
-						</Menu.Item>
+						</Menu.Item>*/}
 						<Menu.Item>
 							<a href="https://ant.design" target="_blank" rel="noopener noreferrer">
 								Earn up to $200 credit*

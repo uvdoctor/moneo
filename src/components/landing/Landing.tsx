@@ -23,8 +23,6 @@ export default function Landing() {
       <Content className="with-banner">
         <Banner />
         <VerifyCodeModal />
-        <Calculator />
-        <Testimonials />
         <Parallax
           animation={[
             { x: 0, opacity: 1, playScale: [0, 0.6] },
@@ -78,8 +76,9 @@ export default function Landing() {
             <GettingStarted />
           </Row>
         </Parallax>
+        <Calculator />
+        <Testimonials />
       </Content>
-
       <Security />
       <GetRich />
       <TakeQuickStep />
