@@ -9,6 +9,7 @@ interface AppContextProviderProps {
 function AppContextProvider({ children }: AppContextProviderProps) {
 	const [ defaultCountry, setDefaultCountry ] = useState<string>('US');
 	const [ defaultCurrency, setDefaultCurrency ] = useState<string>('USD');
+	const [ username, setUsername ] = useState<string | null>(null);
 
 	return (
 		<AppContext.Provider
@@ -16,7 +17,9 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 				defaultCountry,
 				setDefaultCountry,
 				defaultCurrency,
-				setDefaultCurrency
+				setDefaultCurrency,
+				username,
+				setUsername
 			}}
 		>
 			{children}

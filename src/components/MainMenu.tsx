@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, Fragment, useContext } from 'react';
 import { Button, Menu } from 'antd';
 import FSToggle from './FSToggle';
 import { calcList } from './landing/Calculator';
@@ -7,14 +7,15 @@ import { ROUTES } from '../CONSTANTS';
 import { Auth, Hub } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import SVGOff from './svgoff';
+import { AppContext } from './AppContext';
 
 interface MainMenuProps {
 	mode?: any;
 }
 
 export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
+	const { username, setUsername }: any = useContext(AppContext);
 	const { SubMenu } = Menu;
-	const [ username, setUsername ] = useState<string | null>(null);
 	const router = useRouter();
 	const secureRoutes: Array<string> = [
 		ROUTES.GET,
