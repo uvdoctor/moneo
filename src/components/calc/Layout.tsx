@@ -220,12 +220,12 @@ export default function Layout(props: LayoutProps) {
 							title={props.title}
 							extra={[
 								<Button key="startbtn" className="steps-start-btn" onClick={() => createGoal()}>
-									<RocketOutlined /> Calculate
+									<RocketOutlined /> Analyze
 								</Button>
 							]}
 						/>
 						<Col span={24} className="secondary-header">
-							<Row justify="center">Hit Calculate for Action. Details below for Geeks.</Row>
+							<Row justify="center">Hit Analyze for Action. Details below for Geeks.</Row>
 						</Col>
 					</Col>
 					<Col className="steps-content" span={24}>

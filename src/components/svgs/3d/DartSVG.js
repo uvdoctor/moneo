@@ -5,36 +5,36 @@ export default function DartSVG() {
 		<svg version="1.1" viewBox="0 0 150 150">
 			<g>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#F5F5F5"
 					d="M116.323,91.596c23.044,13.281,23.044,34.854,0,48.159
 		c-23.02,13.306-60.369,13.306-83.388,0c-23.031-13.305-23.031-34.878,0-48.159C55.955,78.29,93.304,78.29,116.323,91.596z"
 				/>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#E9E9EA"
 					d="M109.044,95.789c19.042,10.968,19.042,28.78,0,39.772
 		c-19.006,10.967-49.835,10.967-68.854,0c-19.018-10.992-19.018-28.805,0-39.772C59.208,84.798,90.038,84.798,109.044,95.789z"
 				/>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#DDDEDF"
 					d="M101.801,99.983c15.005,8.653,15.005,22.73,0,31.384
 		s-39.338,8.653-54.343,0c-15.005-8.653-15.005-22.73,0-31.384C62.462,91.318,86.796,91.318,101.801,99.983z"
 				/>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#D1D2D4"
 					d="M94.533,104.178c10.991,6.339,10.991,16.656,0,22.995
 		c-10.991,6.34-28.816,6.34-39.808,0c-11.003-6.339-11.003-16.656,0-22.995C65.717,97.838,83.542,97.838,94.533,104.178z"
 				/>
 				<polygon
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#A6392D"
 					points="95.774,8.906 83.807,2 82.36,1.53 80.854,1.157 
 		79.287,0.903 77.685,0.759 76.021,0.735 74.322,0.831 72.574,1.036 70.791,1.374 68.958,1.832 67.103,2.41 65.21,3.109 
@@ -53,43 +53,43 @@ export default function DartSVG() {
 		92.81,8.063 94.316,8.424 	"
 				/>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#E64B3C"
 					d="M71.321,101.671c21.236-12.257,38.446-42.062,38.446-66.576
 		c0-24.526-17.21-34.469-38.446-22.212c-21.224,12.257-38.446,42.074-38.446,66.6C32.875,104.009,50.097,113.939,71.321,101.671z"
 				/>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#E6E9E9"
 					d="M71.321,92.029c16.981-9.811,30.769-33.674,30.769-53.294
 		S88.302,11.16,71.321,20.97c-16.993,9.811-30.769,33.661-30.769,53.294C40.552,93.885,54.328,101.84,71.321,92.029z"
 				/>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#E64B3C"
 					d="M71.309,83.159c12.764-7.364,23.104-25.262,23.104-39.989
 		s-10.34-20.693-23.104-13.33c-12.739,7.364-23.08,25.261-23.08,39.989S58.57,90.522,71.309,83.159z"
 				/>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#E6E9E9"
 					d="M71.309,39.482c8.521-4.905,15.415-0.928,15.415,8.907
 		s-6.894,21.79-15.415,26.708c-8.509,4.905-15.415,0.928-15.415-8.907C55.894,56.355,62.8,44.412,71.309,39.482z"
 				/>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#E64B3C"
 					d="M71.309,65.418c-4.266,2.471-7.725,0.47-7.725-4.447
 		c0-4.941,3.459-10.932,7.725-13.402c4.279-2.458,7.737-0.47,7.737,4.472C79.046,56.97,75.587,62.959,71.309,65.418z"
 				/>
 				<polygon
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#BF392A"
 					points="95.774,8.906 83.807,2 82.36,1.53 80.854,1.157 
 		79.287,0.903 77.685,0.759 76.021,0.735 74.322,0.831 72.574,1.036 70.791,1.374 68.958,1.832 67.103,2.41 65.21,3.109 
@@ -103,8 +103,8 @@ export default function DartSVG() {
 		89.64,7.665 91.255,7.81 92.81,8.063 94.316,8.424 	"
 				/>
 				<polygon
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#BF4A3D"
 					points="31.983,35.011 43.951,41.917 44.144,41.591 45.469,39.35 
 		46.867,37.144 48.313,34.987 49.832,32.877 51.387,30.829 53.002,28.828 54.653,26.888 56.352,25.02 58.1,23.212 59.883,21.488 
@@ -115,8 +115,8 @@ export default function DartSVG() {
 			"
 				/>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#BF4A3D"
 					d="M71.321,101.671c21.236-12.257,38.446-42.062,38.446-66.576
 		c0-24.526-17.21-34.469-38.446-22.212c-21.224,12.257-38.458,42.074-38.458,66.6C32.863,104.009,50.097,113.939,71.321,101.671
@@ -124,22 +124,22 @@ export default function DartSVG() {
 		c20.742-11.968,37.53-2.266,37.53,21.706C108.851,59.549,92.063,88.667,71.321,100.634z"
 				/>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#E64B3C"
 					d="M100.475,71.95l6.544-2.82c0.29-0.133,0.507,0.06,0.748,0.205
 		l17.571,10.111c0.555,0.313,0.844,0.916,0.724,1.471c-0.121,0.579-2.121,1.482-2.845,1.868l-2.073,1.108L100.475,71.95z"
 				/>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#E64B3C"
 					d="M100.005,72.987l0.819,6.845c0.048,0.326,0.313,0.41,0.555,0.555
 		l17.548,10.184c0.53,0.326,1.205,0.266,1.639-0.12s0.193-2.374,0.169-3.182l-0.072-2.338L100.005,72.987z"
 				/>
 				<path
-					fill-rule="evenodd"
-					clip-rule="evenodd"
+					fillRule="evenodd"
+					clipeRule="evenodd"
 					fill="#2A3E50"
 					d="M121.289,86.208L70.983,57.163
 		c-0.518-0.29-0.699-0.964-0.398-1.47l0.362-0.615c0.289-0.506,0.952-0.699,1.47-0.398l50.293,29.069

@@ -4,44 +4,44 @@ export default function CashBunchSVG() {
 	return (
 		<svg version="1.1" viewBox="0 0 150 150">
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#F5F5F5"
 				d="M116.165,92.155c22.782,13.168,22.782,34.52,0,47.664
 	c-22.794,13.168-59.759,13.168-82.542,0c-22.794-13.145-22.794-34.496,0-47.664C56.406,78.998,93.371,78.998,116.165,92.155z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#E9E9EA"
 				d="M108.961,96.306c18.822,10.879,18.822,28.484,0,39.362
 	c-18.811,10.879-49.334,10.879-68.157,0c-18.822-10.878-18.822-28.483,0-39.362C59.626,85.451,90.15,85.451,108.961,96.306z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#DDDEDF"
 				d="M101.78,100.457c14.862,8.588,14.862,22.496,0,31.061
 	c-14.851,8.588-38.933,8.588-53.784,0c-14.85-8.564-14.85-22.473,0-31.061C62.847,91.893,86.93,91.893,101.78,100.457z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#D1D2D4"
 				d="M94.588,104.607c10.89,6.298,10.89,16.484,0,22.759
 	c-10.879,6.298-28.52,6.298-39.398,0c-10.89-6.274-10.89-16.461,0-22.759C66.068,98.334,83.709,98.334,94.588,104.607z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#B19377"
 				d="M75.157,106.396c-9.59,0-19.18-2.123-26.516-6.346
 	C42.868,96.735,37.273,91.2,37.679,84.02c0.656-11.438,9.757-41.795,20.886-48.225c32.993-19.037,0.191-19.037,33.184,0
 	c11.129,6.429,20.218,36.786,20.886,48.225c0.405,7.181-5.201,12.716-10.962,16.031C94.349,104.273,84.747,106.396,75.157,106.396z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#C7A585"
 				d="M76.313,21.625c-3.256,4.02,4.008,7.574,15.436,14.17
 	c0.167,0.096,0.346,0.215,0.513,0.322c0.179,0.107,0.346,0.227,0.524,0.346c0.167,0.12,0.334,0.25,0.513,0.382
@@ -57,8 +57,8 @@ export default function CashBunchSVG() {
 	c6.19-3.292,12.179-8.73,11.749-15.816c-0.716-11.271-2.434-40.96-14.504-46.996c-11.904-5.94-18.572-10.043-15.173-14.612H76.313z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#967B62"
 				d="M77.125,105.467c-9.459,0-18.918-2.1-26.134-6.251
 	c-5.702-3.292-11.212-8.73-10.807-15.816c0.644-11.284,9.614-41.199,20.6-47.544c11.2-6.465,16.246-10.103,13.061-14.23h1.336
@@ -66,8 +66,8 @@ export default function CashBunchSVG() {
 	c5.713,3.293,12.846,5.297,20.265,5.965C81.049,105.371,79.093,105.467,77.125,105.467z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#B19377"
 				d="M74.465,1.311c-3.101,0-6.214,0.68-8.588,2.052
 	c-1.873,1.074-3.686,2.863-3.555,5.189c0.215,3.709,3.161,13.55,6.775,15.637c3.698,2.135,2.839,3.603,1.79,4.915h7.181
@@ -75,8 +75,8 @@ export default function CashBunchSVG() {
 	C80.691,1.991,77.578,1.311,74.465,1.311z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#C7A585"
 				d="M78.067,29.104c-1.062-1.312-1.921-2.779,1.777-4.915
 	c0.06-0.036,0.119-0.071,0.167-0.107c0.06-0.036,0.119-0.072,0.167-0.107c0.06-0.048,0.119-0.096,0.167-0.131
@@ -97,8 +97,8 @@ export default function CashBunchSVG() {
 	c2.004,1.073,3.948,2.827,3.805,5.129c-0.227,3.65-0.787,13.276-4.699,15.22c-3.853,1.932-2.804,3.578-1.706,5.069H78.067z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#967B62"
 				d="M75.109,1.598c-3.065,0-6.131,0.68-8.469,2.04
 	c-1.849,1.062-3.626,2.827-3.507,5.117c0.215,3.662,3.125,13.347,6.68,15.411c3.626,2.099,2.803,3.602,1.777,4.938h0.429
@@ -106,22 +106,22 @@ export default function CashBunchSVG() {
 	c1.861-1.074,4.175-1.718,6.573-1.944C76.373,1.633,75.741,1.598,75.109,1.598z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#C7A585"
 				d="M82.981,3.22c-4.759-2.744-12.465-2.755-17.224,0
 	c-4.748,2.744-4.759,7.192,0,9.936c4.759,2.744,12.465,2.744,17.224,0C87.741,10.412,87.729,5.963,82.981,3.22z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#967B62"
 				d="M80.787,4.472c-3.543-2.04-9.292-2.04-12.847,0
 	c-3.542,2.052-3.542,5.379,0,7.419c3.555,2.051,9.304,2.051,12.847,0C84.342,9.852,84.329,6.524,80.787,4.472z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#2A3E50"
 				d="M78.15,25.179v0.561v-0.024v-0.024v-0.023l-0.012-0.036v-0.024
 	v-0.012l-0.012-0.036v-0.024v-0.024l-0.012-0.024v-0.036l-0.012-0.012l-0.013-0.036v-0.024l-0.012-0.024v-0.023l-0.012-0.024
@@ -130,22 +130,22 @@ export default function CashBunchSVG() {
 	"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#2A3E50"
 				points="78.15,25.179 78.15,25.788 78.15,25.764 78.15,25.74 
 	78.15,25.179 "
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#2A3E50"
 				points="70.887,25.239 70.887,25.74 70.887,25.764 70.887,25.788 
 	70.887,25.239 "
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#2A3E50"
 				points="69.706,32.026 69.586,31.954 69.467,31.883 69.348,31.799 
 	69.241,31.728 69.133,31.644 69.026,31.561 68.93,31.477 68.835,31.406 68.74,31.322 68.656,31.239 68.573,31.155 68.489,31.072 
@@ -178,8 +178,8 @@ export default function CashBunchSVG() {
 	69.837,32.098 "
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#405A73"
 				d="M74.548,26.372c-1.753,0-3.495-0.394-4.843-1.157
 	c-1.038-0.596-1.67-1.336-1.896-2.123c0.453,0.513,1.229,0.918,2.183,1.205c0.179,0.143,0.381,0.287,0.596,0.417
@@ -188,8 +188,8 @@ export default function CashBunchSVG() {
 	c-0.155,0.871-0.799,1.717-1.956,2.385C78.067,25.979,76.302,26.372,74.548,26.372z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipeRule="evenodd"
 				fill="#75624F"
 				d="M75.86,60.474v7.467c2.267,0.072,4.115,0.287,5.547,0.621
 	c1.419,0.334,2.576,1.049,3.447,2.123c0.883,1.073,1.312,2.66,1.312,4.759c0,2.147-0.31,3.84-0.942,5.057
