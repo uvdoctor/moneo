@@ -49,6 +49,7 @@ interface CalcContextProviderProps {
 	resultTabOptions?: any;
   addCallback?: Function;
   updateCallback?: Function;
+  cancelCallback?: Function;
 }
 
 function CalcContextProvider({
@@ -57,7 +58,8 @@ function CalcContextProvider({
 	tabOptions,
 	resultTabOptions,
   addCallback,
-  updateCallback
+  updateCallback,
+  cancelCallback
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
   const { feedbackId }: any = useContext(FeedbackContext);
@@ -339,7 +341,8 @@ function CalcContextProvider({
         timer,
         setTimer,
         analyzeFor,
-        setAnalyzeFor
+        setAnalyzeFor,
+        cancelCallback
 			}}
     >
       {children}

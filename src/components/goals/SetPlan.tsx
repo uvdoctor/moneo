@@ -113,6 +113,7 @@ export default function SetPlan() {
       [ASSET_TYPES.DEPOSITS]: 1.5 + irDiff,
       [ASSET_TYPES.MED_TERM_BONDS]: 3 + irDiff, // 1-5 medium term
       [ASSET_TYPES.TAX_EXEMPT_BONDS]: 3.5 + irDiff, //medium term tax efficient bonds
+      [ASSET_TYPES.EMERGING_BONDS]: 7,
       [ASSET_TYPES.REIT]: 5 + irDiff,
       [ASSET_TYPES.GOLD]: 3,
       [ASSET_TYPES.LARGE_CAP_STOCKS]: 5 + irDiff,
@@ -404,7 +405,7 @@ export default function SetPlan() {
       fixedNav>
       {wipGoal ? (
           <CalcContextProvider goal={wipGoal} addCallback={addGoal}
-            updateCallback={updateGoal}>
+            updateCallback={updateGoal} cancelCallback={() => setWIPGoal(null)}>
             {(wipGoal as APIt.CreateGoalInput).type === APIt.GoalType.FF ? <FIGoalContextProvider
               mergedCFs={mergedCFs}
               pp={getPP()}
@@ -422,7 +423,7 @@ export default function SetPlan() {
                 <Button type="link" onClick={() => setWIPGoal(ffGoal)}
                   icon={<EditOutlined />}>
                   Edit
-            </Button>
+                </Button>
               }
                 style={{
                   backgroundColor: isFFPossible(ffResult, ffGoal.sa as number)
@@ -518,13 +519,16 @@ export default function SetPlan() {
                 </Space>
               )
               : goalsLoaded && (
-                <p>
-                  <h4>First Things First.</h4>
-                  <h3>Set Up Financial Independence Target.</h3>
-                  <Button
-                    type="primary"
-                    onClick={() => createGoal(APIt.GoalType.FF)}>Get Started</Button>
-                </p>
+                <div style={{textAlign: 'center'}}>
+                  <p><h3>First Things First.</h3></p>
+                  <p><h3>Set Up Financial Independence Target.</h3></p>
+                  <p>
+                    <Button
+                      type="primary"
+                      onClick={() => createGoal(APIt.GoalType.FF)}>Get Started
+                    </Button>
+                  </p>
+                </div>
               )}
           </Fragment>)}
     </BasicPage>
