@@ -70,7 +70,7 @@ function CalcContextProvider({
   const [startMonth, setStartMonth] = useState<number>(goal.sm);
   const [endYear, setEndYear] = useState<number>(goal.ey);
   const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal.ccy);
-	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
+	const [ allInputDone, setAllInputDone ] = useState<boolean>(goal?.id ? true : false);
 	const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
   const [cfs, setCFs] = useState<Array<number>>([]);
   const [ cfsWithoutSM, setCFsWithoutSM ] = useState<Array<number>>([]);

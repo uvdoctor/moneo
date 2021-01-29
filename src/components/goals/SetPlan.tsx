@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { Card, Menu, Row, Space, Dropdown } from "antd";
+import { Menu, Row, Space, Dropdown } from "antd";
 import { appendValue, removeFromArray } from "../utils";
 import YearlyCFChart from "./YearlyCFChart";
 import * as APIt from "../../api/goals";
@@ -17,8 +17,7 @@ import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import Summary from "./summary";
 import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
-import {EditOutlined} from "@ant-design/icons";
-import { ASSET_TYPES, COLORS } from "../../CONSTANTS";
+import { ASSET_TYPES } from "../../CONSTANTS";
 import AssetAllocationChart from "./AssetAllocationChart";
 import { Button, notification } from "antd";
 import { GoalContextProvider } from "./GoalContext";
@@ -29,6 +28,7 @@ import { faChartLine, faChartPie, faBullseye } from "@fortawesome/free-solid-svg
 import { DownOutlined } from "@ant-design/icons";
 import BasicPage from "../BasicPage";
 import SetPlanIndex from "./SetPlanIndex";
+import FISummaryHeader from "./FISummaryHeader";
 
 export default function SetPlan() {
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
@@ -227,7 +227,7 @@ export default function SetPlan() {
       notification.success({ message: "Target Updated", description: "Success! Your Financial Independence Target has been Updated." });
       setFFGoal(g as APIt.CreateGoalInput);
       return true;
-    }
+    } 
     notification.success({ message: "Goal Updated", description: `Success! Goal ${g.name} has been Updated.` });
     removeFromArray(allGoals as Array<APIt.CreateGoalInput>, "id", wipGoal?.id);
     allGoals?.unshift(g as APIt.CreateGoalInput);
@@ -256,10 +256,8 @@ export default function SetPlan() {
 
   const editGoal = (id: string) => {
     if (!allGoals) return;
-    let g: Array<APIt.CreateGoalInput> = allGoals.filter((g) => g.id === id);
-    if (g && g.length === 1) {
-      setWIPGoal(Object.assign({}, g[0]));
-    }
+    let g: APIt.CreateGoalInput = (allGoals.filter((g) => g.id === id))[0];
+    setWIPGoal(Object.assign({}, g));
   };
 
   const createGoal = (type: APIt.GoalType) =>
@@ -405,7 +403,8 @@ export default function SetPlan() {
       {wipGoal ? (
           <CalcContextProvider goal={wipGoal} addCallback={addGoal}
             updateCallback={updateGoal} cancelCallback={() => setWIPGoal(null)}>
-            {(wipGoal as APIt.CreateGoalInput).type === APIt.GoalType.FF ? <FIGoalContextProvider
+          {(wipGoal as APIt.CreateGoalInput).type === APIt.GoalType.FF ?
+            <FIGoalContextProvider
               mergedCFs={mergedCFs}
               pp={getPP()}
               mustCFs={mustCFs}
@@ -417,21 +416,8 @@ export default function SetPlan() {
           </CalcContextProvider>
       ) : (
           <Fragment>
-            {ffGoal && rr && rr.length > 0 && (
-              <Card title="Financial Independence" extra={
-                <Button type="link" onClick={() => setWIPGoal(Object.assign({}, ffGoal))}
-                  icon={<EditOutlined />}>
-                  Edit
-                </Button>
-              }
-                style={{
-                  backgroundColor: isFFPossible(ffResult, ffGoal.sa as number)
-                    ? COLORS.LIGHT_GREEN : COLORS.LIGHT_GRAY
-                }}>
-                {isFFPossible(ffResult, ffGoal.sa as number)
-                  ? `Earliest in ${ffResult.ffYear as number}`
-                  : `May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
-              </Card>
+            {ffGoal && rr && rr.length && (
+              <FISummaryHeader ffGoal={ffGoal} ffResult={ffResult} setWIPGoal={setWIPGoal} ffYear={ffResult.ffYear} />
             )}
             <Row justify="center">
               <Dropdown overlay={goalMenuItems} disabled={ffGoal === null}>

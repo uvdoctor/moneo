@@ -26,7 +26,7 @@ export default function FIYearResult() {
 		<ItemDisplay
 			label="Earliest Year"
 				result={`Difficult by ${startYear + retirementAge}`}
-			info={`It may be difficult to achieve Financial Independence by ${startYear + retirementAge} based on current inputs. Please try again with different inputs.`}
+			info={`It may be difficult to achieve Financial Independence by ${startYear + retirementAge}. Please try again with different inputs.`}
 		/>
 	);
 }

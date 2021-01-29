@@ -37,6 +37,12 @@ export const createNewGoal = async (goal: APIt.CreateGoalInput) => {
 };
 
 export const changeGoal = async (goal: APIt.UpdateGoalInput) => {
+  //@ts-ignore
+  if (goal.hasOwnProperty("createdAt")) delete goal.createdAt;
+  //@ts-ignore
+  if (goal.hasOwnProperty("updatedAt")) delete goal.updatedAt;
+  //@ts-ignore
+  if (goal.hasOwnProperty("owner")) delete goal.owner;
   try {
     const { data } = (await API.graphql(
       graphqlOperation(mutations.updateGoal, { input: goal })
