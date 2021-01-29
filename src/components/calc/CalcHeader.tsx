@@ -1,17 +1,16 @@
-import { Modal, PageHeader, Rate, Row, Col, Tooltip } from "antd";
+import { Modal, PageHeader, Rate, Row, Col, Tooltip, Descriptions } from "antd";
 import React, { Fragment, ReactNode, useContext, useState } from "react";
 import { ShareAltOutlined } from "@ant-design/icons";
 import SelectInput from "../form/selectinput";
 import { CalcContext } from "./CalcContext";
 import SocialShare from "../SocialShare";
 import Feedback from "../feedback/Feedback";
-
+import { getGoalTypes } from "../goals/goalutils";
 interface CalcHeaderProps {
-	children?: any;
-	title?: ReactNode;
+	children?: ReactNode;
 }
 
-export default function CalcHeader({ title, children }: CalcHeaderProps) {
+export default function CalcHeader({ children }: CalcHeaderProps) {
 	const {
 		goal,
 		currency,
@@ -19,7 +18,8 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 		rating,
 		setRating,
 		showFeedbackModal,
-		setShowFeedbackModal
+		setShowFeedbackModal,
+		addCallback
 	}: any = useContext(CalcContext);
 	const ratingLabels = ["", "Very Poor", "Poor", "Average", "Good", "Awesome!"];
 	const [ratingLabel, setRatingLabel] = useState<string>("");
@@ -32,7 +32,7 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 				<Row>
 					<Col span={24}>
 						<PageHeader
-							title={title ? title : goal.name}
+							title={!addCallback ? goal.name : (getGoalTypes() as any)[goal.type]}
 							extra={[
 								<SelectInput
 									key="currselect"
@@ -42,11 +42,18 @@ export default function CalcHeader({ title, children }: CalcHeaderProps) {
 									currency
 								/>,
 							]}
-						/>
+						>
+							{children ? 
+								<Descriptions column={1}>
+									<Descriptions.Item label="">
+										{children}
+									</Descriptions.Item>
+								</Descriptions>
+							: null}
+						</PageHeader>
 					</Col>
 					<Col span={24} className="secondary-header">
 						<Row justify={children ? "space-around" : "start"} align="middle">
-							{children && <Col>{children}</Col>}
 							<Col flex="auto">
 								<span style={{ marginRight: "0.5rem" }}>Rate Calculator</span>
 								<Rate

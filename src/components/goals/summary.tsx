@@ -7,7 +7,7 @@ import { Button, Card, Row, Col } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import DefaultOppCostResult from '../calc/DefaultOppCostResult';
 import FFImpact from './ffimpact';
-import { GoalContext } from './GoalContext';
+import { CalcContext } from '../calc/CalcContext';
 interface SummaryProps {
 	deleteCallback: Function;
 	editCallback: Function;
@@ -19,7 +19,7 @@ export default function Summary({ deleteCallback, editCallback, ffImpactYears }:
 		goal,
 		startYear,
 		currency,
-	}: any = useContext(GoalContext);
+	}: any = useContext(CalcContext);
 	const bgColor = goal.imp === LMH.H ? COLORS.BLUE : goal.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
 	const nowYear = new Date().getFullYear();
 	const goalTypes: any = getGoalTypes();
