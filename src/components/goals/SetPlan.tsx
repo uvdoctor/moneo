@@ -28,6 +28,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartLine, faChartPie, faBullseye } from "@fortawesome/free-solid-svg-icons";
 import { DownOutlined } from "@ant-design/icons";
 import BasicPage from "../BasicPage";
+import SetPlanIndex from "./SetPlanIndex";
 
 export default function SetPlan() {
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
@@ -187,12 +188,11 @@ export default function SetPlan() {
   useEffect(() => setWIPGoal(wipGoal), [wipGoal]);
 
   const addGoal = async (
-    goal: APIt.CreateGoalInput,
     cfs: Array<number> = []
   ) => {
     let g = null;
     try {
-      g = await createNewGoal(goal);
+      g = await createNewGoal(wipGoal as APIt.CreateGoalInput);
     } catch (err) {
       notification.error({ message: 'Goal Not Created', description: "Sorry! Unable to create this Goal: " + err });
       return false;
@@ -212,12 +212,11 @@ export default function SetPlan() {
   };
 
   const updateGoal = async (
-    goal: APIt.UpdateGoalInput,
     cfs: Array<number> = []
   ) => {
     let g: APIt.UpdateGoalInput | null = null;
     try {
-      g = await changeGoal(goal);
+      g = await changeGoal(wipGoal as APIt.UpdateGoalInput);
     } catch (err) {
       notification.error({message: "Goal not Updated", description: "Sorry! Unable to update this Goal: " + err });
       return false;
@@ -230,7 +229,7 @@ export default function SetPlan() {
       return true;
     }
     notification.success({ message: "Goal Updated", description: `Success! Goal ${g.name} has been Updated.` });
-    removeFromArray(allGoals as Array<APIt.CreateGoalInput>, "id", goal.id);
+    removeFromArray(allGoals as Array<APIt.CreateGoalInput>, "id", wipGoal?.id);
     allGoals?.unshift(g as APIt.CreateGoalInput);
     //@ts-ignore
     allCFs[g.id] = cfs;
@@ -259,7 +258,7 @@ export default function SetPlan() {
     if (!allGoals) return;
     let g: Array<APIt.CreateGoalInput> = allGoals.filter((g) => g.id === id);
     if (g && g.length === 1) {
-      setWIPGoal(g[0]);
+      setWIPGoal(Object.assign({}, g[0]));
     }
   };
 
@@ -267,7 +266,7 @@ export default function SetPlan() {
     setWIPGoal(
       createNewGoalInput(
         type,
-        type === APIt.GoalType.FF ? "USD" : (ffGoal?.ccy as string)
+        ffGoal?.ccy as string
       )
     );
 
@@ -420,7 +419,7 @@ export default function SetPlan() {
           <Fragment>
             {ffGoal && rr && rr.length > 0 && (
               <Card title="Financial Independence" extra={
-                <Button type="link" onClick={() => setWIPGoal(ffGoal)}
+                <Button type="link" onClick={() => setWIPGoal(Object.assign({}, ffGoal))}
                   icon={<EditOutlined />}>
                   Edit
                 </Button>
@@ -518,18 +517,7 @@ export default function SetPlan() {
                   )}
                 </Space>
               )
-              : goalsLoaded && (
-                <div style={{textAlign: 'center'}}>
-                  <p><h3>First Things First.</h3></p>
-                  <p><h3>Set Up Financial Independence Target.</h3></p>
-                  <p>
-                    <Button
-                      type="primary"
-                      onClick={() => createGoal(APIt.GoalType.FF)}>Get Started
-                    </Button>
-                  </p>
-                </div>
-              )}
+              : goalsLoaded && <SetPlanIndex setWIPGoal={setWIPGoal} />}
           </Fragment>)}
     </BasicPage>
   );

@@ -5,42 +5,42 @@ export default function MoneyLeaksSVG() {
 		<svg version="1.1" viewBox="0 0 150 150">
 			<path
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5F5F5"
 				d="M122.219,84.415c25.941,14.966,25.941,39.238,0,54.217
 	c-25.914,14.979-67.947,14.979-93.862,0c-25.942-14.979-25.942-39.251,0-54.217C54.271,69.436,96.305,69.436,122.219,84.415z"
 			/>
 			<path
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#E9E9EA"
 				d="M114.051,89.137c21.41,12.36,21.41,32.399,0,44.773
 	c-21.409,12.374-56.116,12.374-77.526,0c-21.41-12.374-21.41-32.413,0-44.773C57.935,76.763,92.642,76.763,114.051,89.137z"
 			/>
 			<path
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#DDDEDF"
 				d="M105.884,93.858c16.878,9.769,16.878,25.562,0,35.33
 	c-16.906,9.77-44.286,9.77-61.178,0c-16.892-9.769-16.892-25.562,0-35.33C61.598,84.103,88.978,84.103,105.884,93.858z"
 			/>
 			<path
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#D1D2D4"
 				d="M97.688,98.58c12.374,7.137,12.374,18.724,0,25.887
 	c-12.36,7.164-32.427,7.164-44.801,0c-12.388-7.163-12.388-18.75,0-25.887C65.261,91.43,85.328,91.43,97.688,98.58z"
 			/>
 			<path
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#72BBD4"
 				d="M27.122,24.866c0-9.47,13.405-17.123,29.944-17.123
 	s29.944,7.652,29.944,17.123c0,9.471-13.405,17.136-29.944,17.136S27.122,34.336,27.122,24.866z"
 			/>
 			<path
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#40A8C0"
 				d="M57.84,20.646l0.773,0.014l0.76,0.027l0.76,0.041l0.76,0.055
 	c3.867,0.298,7.381,0.936,11.085,2.13l0.624,0.204l0.61,0.217c5.034,1.899,10.108,4.83,12.673,9.742l0.189,0.407l0.177,0.407
@@ -55,7 +55,7 @@ export default function MoneyLeaksSVG() {
 			/>
 			<path
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#2A3E50"
 				d="M13.839,25.503v12.903l0.054,0.638l0.068,0.624l0.095,0.638
 	l0.123,0.61l0.149,0.625c2.985,10.271,14.518,15.82,24.001,18.52l0.95,0.258l0.95,0.244c11.451,2.659,23.581,2.632,34.964-0.339
@@ -64,7 +64,7 @@ export default function MoneyLeaksSVG() {
 			/>
 			<polygon
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#2A3E50"
 				points="95.789,35.883 95.789,48.786 96.061,48.474 96.332,48.148 
 	96.576,47.836 96.82,47.511 97.037,47.199 97.281,46.873 97.498,46.547 97.716,46.222 97.905,45.882 98.122,45.557 98.313,45.218 
@@ -77,7 +77,7 @@ export default function MoneyLeaksSVG() {
 			/>
 			<polygon
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#3C566E"
 				points="76.292,47.022 76.292,59.925 76.495,60.115 76.713,60.305 
 	76.943,60.481 77.188,60.658 77.445,60.848 77.703,61.011 77.975,61.187 78.26,61.35 110.063,79.544 110.604,79.829 111.147,80.101 
@@ -97,7 +97,7 @@ export default function MoneyLeaksSVG() {
 			/>
 			<path
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#33485C"
 				d="M13.839,24.866c0,6.838,4.844,13.012,12.645,17.489
 	C34.327,46.832,45.14,49.6,57.066,49.6c6.906,0,13.432-0.923,19.226-2.578c0.543,0.516,1.194,0.991,1.968,1.425l31.803,18.208
@@ -110,14 +110,14 @@ export default function MoneyLeaksSVG() {
 			/>
 			<path
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#9ED2E5"
 				d="M50.947,24.866c1.37-5.875,6.703-10.515,13.73-12.767
 	c-1.275-0.488-2.713-0.882-4.464-1.14c-13.445-1.927-26.145,4.342-28.37,13.907H50.947z"
 			/>
 			<path
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#72BBD4"
 				d="M52.616,20.836c2.388-3.962,6.729-7.028,12.062-8.738
 	c-1.275-0.488-2.713-0.882-4.464-1.14c-13.445-1.927-26.145,4.342-28.37,13.907h5.522l0.095-0.054l0.556-0.258l0.556-0.271
@@ -127,7 +127,7 @@ export default function MoneyLeaksSVG() {
 			/>
 			<polygon
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#2A3E50"
 				points="116.629,81.675 116.711,81.675 117.389,81.756 
 	118.04,81.823 118.746,81.878 119.396,81.892 120.075,81.919 120.754,81.892 121.432,81.878 122.11,81.823 122.789,81.756 
@@ -143,7 +143,7 @@ export default function MoneyLeaksSVG() {
 			/>
 			<polygon
 				fillRule="evenodd"
-				clipeRule="evenodd"
+				clipRule="evenodd"
 				fill="#3C566E"
 				points="13.839,25.503 13.839,38.407 13.894,39.044 13.961,39.668 
 	14.056,40.306 14.179,40.917 14.328,41.541 14.504,42.138 14.708,42.749 14.938,43.359 15.196,43.942 15.467,44.539 15.766,45.123 

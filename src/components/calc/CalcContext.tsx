@@ -81,7 +81,6 @@ function CalcContextProvider({
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
   const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
-  const [createNewGoalInput, setCreateNewGoalInput] = useState<Function>(() => true)
   const [rating, setRating ] = useState<number>(0);
   const [feedbackText, setFeedbackText] = useState<string>("");
   const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
@@ -204,11 +203,9 @@ function CalcContextProvider({
   const handleSubmit = async () => {
     setBtnClicked(true);
     if (addCallback && updateCallback) {
-      let g = createNewGoalInput();
       if (goal?.id) {
-        g.id = goal.id
-        await updateCallback(g, cfs);
-      } else await addCallback(g, cfs);
+        await updateCallback(cfs);
+      } else await addCallback(cfs);
     } 
     setBtnClicked(false);
   };
@@ -271,7 +268,7 @@ function CalcContextProvider({
     }, [rating]);
   
   useEffect(() => {
-    updateRating();
+    if(feedbackId) updateRating();
   }, [feedbackId]);
     
 	return (
@@ -309,8 +306,6 @@ function CalcContextProvider({
         ffOOM,
         setFFOOM,
         handleSubmit,
-        createNewGoalInput,
-        setCreateNewGoalInput,
         addCallback,
         updateCallback,
         rating,

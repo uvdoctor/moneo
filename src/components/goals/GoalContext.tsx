@@ -44,7 +44,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     ffOOM,
     setFFOOM,
     btnClicked,
-    setCreateNewGoalInput,
     startYear,
     startMonth,
     changeStartMonth,
@@ -220,7 +219,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   };
 
   useEffect(() => {
-    setCreateNewGoalInput(createNewGoal);
     setResults([...[
       goalType === GoalType.B && <BuyRentResult />,
       goalType === GoalType.B && <BuyReturnResult />,

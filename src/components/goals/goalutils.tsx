@@ -96,7 +96,6 @@ const createFFGoalInput = (currency: string) => {
   let nowYear = new Date().getFullYear();
   const rf = getRangeFactor(currency);
   return {
-    id: "",
     name: "Financial Independence",
     loan: {
       emi: 12000 * rf,
@@ -140,7 +139,6 @@ const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
   let nowYear = new Date().getFullYear();
   let startYear = nowYear + 1;
   return {
-    id: "",
     name: "",
     sy: startYear,
     sm: 1,

@@ -6,35 +6,35 @@ export default function AdaptablePlan() {
 			<g>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#F5F5F5"
 					d="M115.964,92.092c22.484,12.982,22.484,34.031,0,46.99
 		c-22.46,12.982-58.891,12.982-81.352,0c-22.484-12.959-22.484-34.008,0-46.99C57.073,79.121,93.504,79.121,115.964,92.092z"
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#E9E9EA"
 					d="M108.885,96.184c18.557,10.725,18.557,28.082,0,38.807
 		s-48.637,10.725-67.193,0c-18.557-10.725-18.557-28.082,0-38.807C60.248,85.482,90.328,85.482,108.885,96.184z"
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#DDDEDF"
 					d="M101.806,100.276c14.629,8.467,14.629,22.178,0,30.621
 		c-14.652,8.467-38.383,8.467-53.023,0c-14.641-8.443-14.641-22.154,0-30.621C63.423,91.833,87.153,91.833,101.806,100.276z"
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#D1D2D4"
 					d="M94.703,104.368c10.725,6.209,10.725,16.252,0,22.438
 		c-10.713,6.209-28.105,6.209-38.83,0c-10.736-6.186-10.736-16.229,0-22.438C66.598,98.183,83.99,98.183,94.703,104.368z"
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#33485C"
 					points="50.111,111.189 45.937,108.743 45.701,108.602 
 		45.49,108.414 45.313,108.179 45.16,107.896 45.043,107.567 44.96,107.238 44.902,106.861 44.878,106.438 44.878,33.906 
@@ -49,7 +49,7 @@ export default function AdaptablePlan() {
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#3C566E"
 					d="M99.924,83.625l-47.285,27.306
 		c-1.964,1.129-3.575,0.211-3.575-2.07V36.316c0-2.27,1.611-5.057,3.575-6.186l7.656-4.421l4.551-2.634L87.718,9.881l3.963-2.293
@@ -57,14 +57,14 @@ export default function AdaptablePlan() {
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#9C9C9C"
 					points="55.603,35.246 54.768,34.764 54.768,103.852 
 		55.603,104.321 	"
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#BDBDBD"
 					points="98.631,10.398 97.808,9.917 96.443,10.692 95.103,11.469 
 		93.763,12.245 92.422,13.021 91.069,13.797 89.729,14.585 88.376,15.349 87.036,16.125 85.695,16.913 84.343,17.678 83.002,18.454 
@@ -77,14 +77,14 @@ export default function AdaptablePlan() {
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#E6E9E9"
 					d="M55.603,35.246v69.075l43.028-24.848V10.398
 		C84.296,18.689,69.949,26.968,55.603,35.246z"
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#5C6869"
 					points="84.778,19.583 86.46,20.547 86.46,20.077 86.46,19.618 
 		86.46,19.171 86.46,18.724 86.46,18.301 86.46,17.866 86.46,17.431 86.46,17.007 86.46,16.584 86.46,16.161 86.46,15.726 
@@ -94,7 +94,7 @@ export default function AdaptablePlan() {
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#728082"
 					points="68.973,28.708 70.655,29.672 71.149,29.39 71.643,29.108 
 		72.137,28.826 72.63,28.532 73.125,28.25 73.618,27.967 74.112,27.685 74.606,27.391 75.1,27.109 75.594,26.827 76.088,26.544 
@@ -107,7 +107,7 @@ export default function AdaptablePlan() {
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#889596"
 					d="M88.8,21.5V9.822L68.315,21.641V33.33L88.8,21.5L88.8,21.5z
 		 M70.655,29.672c0-2.54,0-4.527,0-7.079c5.269-3.034,10.537-6.08,15.805-9.125c0,2.552,0,4.539,0,7.079
@@ -115,42 +115,42 @@ export default function AdaptablePlan() {
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#2A3E50"
 					points="68.256,67.714 92.057,53.967 92.057,52.192 
 		68.256,65.938 	"
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#2A3E50"
 					points="68.256,58.189 93.997,43.325 93.997,41.549 
 		68.256,56.414 	"
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#2A3E50"
 					points="68.256,48.076 88.529,36.363 88.529,34.6 68.256,46.3 	
 		"
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#728082"
 					points="64.963,22.005 66.645,22.981 66.645,32.354 68.315,33.33 
 		68.315,21.641 88.8,9.822 87.118,8.858 85.437,7.882 64.963,19.712 	"
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#E02928"
 					d="M62.271,48.37L62.271,48.37c-0.847,0.482-1.541,1.681-1.541,2.657
 		l0,0c0,0.976,0.694,1.364,1.541,0.882l0,0c0.847-0.494,1.529-1.682,1.529-2.658l0,0C63.799,48.276,63.117,47.888,62.271,48.37z"
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#FCCB12"
 					d="M62.271,57.895L62.271,57.895
 		c-0.847,0.482-1.541,1.682-1.541,2.658l0,0c0,0.976,0.694,1.364,1.541,0.882l0,0c0.847-0.482,1.529-1.682,1.529-2.658l0,0
@@ -158,7 +158,7 @@ export default function AdaptablePlan() {
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#6595C5"
 					d="M62.271,68.008L62.271,68.008
 		c-0.847,0.494-1.541,1.682-1.541,2.658l0,0c0,0.976,0.694,1.364,1.541,0.882l0,0c0.847-0.482,1.529-1.682,1.529-2.658l0,0
@@ -166,7 +166,7 @@ export default function AdaptablePlan() {
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#2A3E50"
 					points="50.111,111.189 45.937,108.743 45.701,108.602 
 		45.49,108.391 45.313,108.179 45.16,107.896 45.043,107.567 44.96,107.238 44.902,106.861 44.878,106.438 44.878,33.906 
@@ -177,7 +177,7 @@ export default function AdaptablePlan() {
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#5C6869"
 					points="64.963,22.005 66.645,22.981 66.645,32.354 68.315,33.33 
 		68.315,21.641 64.963,19.712 	"
@@ -186,21 +186,21 @@ export default function AdaptablePlan() {
 			<g>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#2A3E50"
 					d="M89.318,96.444l-5.352-4.182
 		c14.659,8.253,39.197-30.054,22.912-39.678l6.028,2.59C129.455,66.292,103.922,105.796,89.318,96.444z"
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#E6E9E9"
 					d="M99.191,56.132C90.355,61.228,83.19,73.638,83.19,83.841
 		s7.165,14.347,16.001,9.24c8.838-5.108,16-17.511,16-27.715C115.191,55.163,108.029,51.03,99.191,56.132z"
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#30485E"
 					d="M102.684,46.958l0.446-0.042c2.207-0.165,3.968,0.085,5.954,1.079
 		l5.499,3.17c-1.848-0.92-3.457-1.189-5.511-1.109l-0.444,0.03c-4.236,0.452-7.893,2.488-11.21,5.035l-0.487,0.39
@@ -211,21 +211,21 @@ export default function AdaptablePlan() {
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#2A3E50"
 					points="89.185,95.286 83.687,92.105 83.825,92.191 
 		83.967,92.263 89.464,95.457 89.324,95.359 	"
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#2A3E50"
 					points="112.382,55.76 106.879,52.584 106.737,52.505 
 		106.599,52.426 112.095,55.602 112.242,55.681 	"
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#3C566E"
 					d="M86.922,67.524c3.585-6.212,8.534-11.625,14.001-14.782
 		c5.461-3.157,10.416-3.456,14-1.39c3.584,2.073,5.803,6.504,5.803,12.818s-2.219,13.312-5.803,19.511
@@ -240,14 +240,14 @@ export default function AdaptablePlan() {
 				<g>
 					<polygon
 						fillRule="evenodd"
-						clipeRule="evenodd"
+						clipRule="evenodd"
 						fill="#2A3E50"
 						points="91.677,74.685 91.123,74.362 92.555,71.327 
 			93.102,71.644 		"
 					/>
 					<polygon
 						fillRule="evenodd"
-						clipeRule="evenodd"
+						clipRule="evenodd"
 						fill="#2A3E50"
 						points="93.102,71.644 92.555,71.327 102.751,74.235 
 			103.301,74.551 		"
@@ -255,21 +255,21 @@ export default function AdaptablePlan() {
 				</g>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#405A73"
 					points="103.301,74.551 101.874,77.592 91.677,74.685 
 		93.102,71.644 	"
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#2A3E50"
 					points="98.473,79.908 98.053,79.666 109.882,59.173 
 		110.31,59.417 	"
 				/>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#405A73"
 					points="99.326,80.396 98.473,79.902 110.31,59.417 
 		111.157,59.904 109.03,63.586 	"
@@ -277,14 +277,14 @@ export default function AdaptablePlan() {
 				<g>
 					<polygon
 						fillRule="evenodd"
-						clipeRule="evenodd"
+						clipRule="evenodd"
 						fill="#C43E3F"
 						points="102.532,72.356 102.252,72.185 101.569,72.309 
 			101.85,72.468 		"
 					/>
 					<polygon
 						fillRule="evenodd"
-						clipeRule="evenodd"
+						clipRule="evenodd"
 						fill="#943B3B"
 						points="101.85,72.468 101.569,72.309 96.139,93.167 
 			96.425,93.324 		"
@@ -292,21 +292,21 @@ export default function AdaptablePlan() {
 				</g>
 				<polygon
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#E64B3C"
 					points="96.425,93.324 97.107,93.215 102.532,72.356 
 		101.85,72.468 	"
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#446785"
 					d="M97.217,55.278l-5.496-3.175l0.198-0.158
 		c3.269-2.512,6.944-4.584,11.107-5.023l5.504,3.176c-4.163,0.438-7.851,2.51-11.112,5.022L97.217,55.278z"
 				/>
 				<path
 					fillRule="evenodd"
-					clipeRule="evenodd"
+					clipRule="evenodd"
 					fill="#2A3E50"
 					d="M85.507,70.157l-0.163,0.322l-0.292,0.603
 		c-2.836,6.125-4.683,13.063-3.62,19.816l0.06,0.342l-5.497-3.17l-0.062-0.341l-0.085-0.514c-0.89-6.85,1.09-14.056,4.163-20.235

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GoalType } from '../../api/goals';
 import BasicPage from '../BasicPage';
 import { createNewGoalInput, isLoanEligible } from '../goals/goalutils';
@@ -18,6 +18,7 @@ import KeyFeatures from './blog/KeyFeatures';
 import MajorAssumptions from './blog/MajorAssumptions';
 import CommonTerms from './blog/CommonTerms';
 import { FeedbackContextProvider } from '../feedback/FeedbackContext';
+import { AppContext } from '../AppContext';
 
 export interface BlogInputProps {
 	elements: Array<any>;
@@ -36,6 +37,7 @@ interface LayoutProps {
 }
 
 export default function Layout(props: LayoutProps) {
+	const { defaultCurrency }: any = useContext(AppContext);
 	const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
 	const [ wip, setWIP ] = useState<any | null>(null);
@@ -185,7 +187,6 @@ export default function Layout(props: LayoutProps) {
 
 	const createGoal = () => {
 		let g: any = null;
-		const defaultCurrency = 'USD';
 		if (props.type) g = createNewGoalInput(props.type, defaultCurrency, props.title.endsWith('Loan'));
 		else g = { ccy: defaultCurrency };
 		g.name = props.title;

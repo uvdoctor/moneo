@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
-import { CreateGoalInput, LMH, LoanType, TargetInput } from "../../api/goals";
+import { LMH, LoanType, TargetInput } from "../../api/goals";
 import { CalcContext, getCareTabOption } from "../calc/CalcContext";
 import CalcTemplate from "../calc/CalcTemplate";
 import FIYearResult from "../calc/FIYearResult";
@@ -25,7 +25,6 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     setCFs,
     dr,
     setRR,
-    setCreateNewGoalInput,
     startYear,
     endYear,
     inputTabs,
@@ -94,46 +93,44 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     goal?.dr as number
   );
   const [gains, setGains] = useState<Array<TargetInput>>(
-    goal.pg as Array<TargetInput>
+    goal.pg
   );
   const [losses, setLosses] = useState<Array<TargetInput>>(
-    goal.pl as Array<TargetInput>
+    goal.pl
   );
   const careTabIndex = 4;
   const careTabLabel = "Care";
   const [retirementAge, setRetirementAge] = useState<number>(goal.loan?.rate);
   const [planDuration, setPlanDuration] = useState<number>(goal.loan?.dur);
 
-  const createGoal = () => {
-    return {
-      name: goal.name,
-      sy: startYear,
-      ey: endYear,
-      by: goal.by,
-      ra: nw,
-      rachg: avgMonthlySavings,
-      tdr: taxRate,
-      manual: needTEBonds,
-      tdl: careTaxDedLimit,
-      ccy: currency,
-      type: goal.type,
-      imp: riskProfile,
-      amsy: carePremiumSY,
-      amper: carePremiumChgPer,
-      achg: carePremiumDur,
-      cp: carePremium,
-      chg: cpBY,
-      aisy: retirementIncomeSY,
-      aiper: retirementIncomePer,
-      tbi: retirementIncome,
-      sa: leaveBehind,
-      dr: successionTaxRate,
-      pg: gains,
-      pl: losses,
-      tdli: expenseAfterFF,
-      btr: expenseChgRate,
-      tbr: monthlySavingsRate,
-      loan: {
+  const updateGoal = () => {
+    goal.name = goal.name;
+    goal.sy = startYear;
+    goal.ey = endYear;
+    goal.ra = nw;
+    goal.rachg = avgMonthlySavings;
+    goal.tdr = taxRate;
+    goal.manual = needTEBonds;
+    goal.tdl = careTaxDedLimit;
+    goal.ccy = currency;
+    goal.type = goal.type;
+    goal.imp = riskProfile;
+    goal.amsy = carePremiumSY;
+    goal.amper = carePremiumChgPer;
+    goal.achg = carePremiumDur;
+    goal.cp = carePremium;
+    goal.chg = cpBY;
+    goal.aisy = retirementIncomeSY;
+    goal.aiper = retirementIncomePer;
+    goal.tbi = retirementIncome;
+    goal.sa = leaveBehind;
+    goal.dr = successionTaxRate;
+    goal.pg = gains && gains.length ? gains : [];
+    goal.pl = losses && losses.length ? losses : [];
+    goal.tdli = expenseAfterFF;
+    goal.btr = expenseChgRate;
+    goal.tbr = monthlySavingsRate;
+    goal.loan = {
         emi: emergencyFund,
         ry: emergencyFundBY,
         per: emergencyFundChgRate,
@@ -141,13 +138,9 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
         rate: retirementAge,
         type: LoanType.A,
         pmi: monthlyMaxSavings
-      }
-    } as CreateGoalInput;
+    }
+    return goal;
   };
-  
-  useEffect(() => {
-    setCreateNewGoalInput(createGoal);
-  }, []);
   
   useEffect(() => {
     if (currency === "USD" || currency === "CAD" || currency === "GBP") {
@@ -188,7 +181,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
   useEffect(() => {
     if (!allInputDone) return;
     let result = findEarliestFFYear(
-      createGoal(),
+      updateGoal(),
       mergedCFs,
       ffResult.ffYear ? ffResult.ffYear : null,
       mustCFs,

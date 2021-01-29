@@ -171,7 +171,7 @@ export default function Input() {
 							{!isPublicCalc && handleSubmit ? (
 								<Row justify="center">
 									<Space>
-										<Button onClick={cancelCallback}>
+										<Button onClick={cancelCallback} disabled={disableSubmit}>
 											Cancel
 										</Button>
 										<Button
