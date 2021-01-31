@@ -13,7 +13,9 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 		}).then((captchRes: any) => 
 			captchRes.json()
 		).then((data: any) => {
-			console.log('Server response: ', data.score);
+			if(!data || !data.score || !data.success){
+				res.status(500).end('Google captcha failed');
+			}
 			let isBot = (data.score < 0.5);
 			if(isBot){
 				res.status(403).json({ success: false });
@@ -24,6 +26,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 		})
 		.catch((e: any) => {
 			console.log("ERROR", e);
+			res.status(500).end('Google captcha Exception');
 		});
 	} else {
 		res.status(405).end(`Method ${method} Not Allowed`);
