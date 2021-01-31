@@ -35,8 +35,8 @@ export default function Testimonials() {
 				]}
 				showArrows={false}
 			>
-				{[...Array(5).keys()].map(() => (
-					<div className="client-testimonial">
+				{[...Array(5).keys()].map((index: number) => (
+					<div key={"" + index} className="client-testimonial">
 						<Row align="middle">
 							<Col span={5}>
 								<Avatar size={80} icon={<UserOutlined />} />
