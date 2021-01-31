@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function AbacusSVG() {
+export default function MainLogo() {
 	return (
 		<svg version="1.1" viewBox="0 0 150 150">
 			<g id="svgg">
