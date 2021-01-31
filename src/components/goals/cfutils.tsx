@@ -134,17 +134,19 @@ export const calculateTotalCP = (
   return total;
 };
 
-const getAnnualPorfolioValue = (
+const getYearEndPortfolioValue = (
   amt: number,
   avgSavings: number,
-  monthlyIncrease: number
+  monthlyIncrease: number,
+  maxMonthlySavings: number
 ) => {
   let total = amt;
-  let startingNum = avgSavings;
+  let num = avgSavings;
   for (let m = new Date().getMonth(); m <= 11; m++) {
-    let compoundedNum = startingNum * (1 + monthlyIncrease / 100);
-    total += compoundedNum;
-    startingNum = compoundedNum;
+    let monthlySavings = num * (1 + monthlyIncrease / 100);
+    if (monthlySavings > maxMonthlySavings) monthlySavings = maxMonthlySavings;
+    num = monthlySavings;
+    total += num;
   }
   return total;
 };
@@ -162,7 +164,7 @@ const getYearEndSavingsVal = (monthlySavings: number, rate: number, startingMont
 export const calculateFFCFs = (g: APIt.CreateGoalInput, ffYear: number) => {
   let cfs: Array<number> = [];
   let nowYear = new Date().getFullYear();
-  const highestPossibleSavings = (g.rachg as number) + (g.loan?.pmi as number);
+  const highestPossibleSavings = g.loan?.pmi as number;
   let nextYearSavings = getYearEndSavingsVal(g.rachg as number, g.tbr as number, new Date().getMonth());
   if (nextYearSavings > highestPossibleSavings) nextYearSavings = highestPossibleSavings;
   for (let i = 1; i <= ffYear - (nowYear + 1); i++) {
@@ -654,10 +656,11 @@ export const checkForFF = (
   pp: any
 ) => {
   let mCFs: any = Object.assign({}, mergedCFs);
-  let cs = getAnnualPorfolioValue(
+  let cs = getYearEndPortfolioValue(
     ffGoal.ra as number,
     ffGoal.rachg as number,
-    ffGoal.tbr as number
+    ffGoal.tbr as number,
+    ffGoal.loan?.pmi as number
   );
   let cfs: Array<number> = calculateFFCFs(ffGoal, ffYear);
   let nowYear = new Date().getFullYear();
@@ -667,6 +670,7 @@ export const checkForFF = (
   });
   let ffAmt = 0;
   let ffCfs: any = {};
+  ffCfs[nowYear] = Math.round(cs);
   let ffGoalEndYear = ffGoal.sy + (ffGoal.loan?.dur as number);
   let mustAllocation = calculateMustAllocation(ffGoal, mustCFs, ffYear);
   let tryAllocation = calculateTryAllocation(ffGoal, tryCFs);

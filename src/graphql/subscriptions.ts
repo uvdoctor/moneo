@@ -602,6 +602,90 @@ export const onDeleteAccount = /* GraphQL */ `
     }
   }
 `;
+export const onCreateFeedback = /* GraphQL */ `
+  subscription OnCreateFeedback {
+    onCreateFeedback {
+      id
+      type
+      email
+      name {
+        fn
+        ln
+      }
+      feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFeedback = /* GraphQL */ `
+  subscription OnUpdateFeedback {
+    onUpdateFeedback {
+      id
+      type
+      email
+      name {
+        fn
+        ln
+      }
+      feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFeedback = /* GraphQL */ `
+  subscription OnDeleteFeedback {
+    onDeleteFeedback {
+      id
+      type
+      email
+      name {
+        fn
+        ln
+      }
+      feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateRating = /* GraphQL */ `
+  subscription OnCreateRating {
+    onCreateRating {
+      id
+      type
+      rating
+      feedbackId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateRating = /* GraphQL */ `
+  subscription OnUpdateRating {
+    onUpdateRating {
+      id
+      type
+      rating
+      feedbackId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteRating = /* GraphQL */ `
+  subscription OnDeleteRating {
+    onDeleteRating {
+      id
+      type
+      rating
+      feedbackId
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateRegistration = /* GraphQL */ `
   subscription OnCreateRegistration {
     onCreateRegistration {

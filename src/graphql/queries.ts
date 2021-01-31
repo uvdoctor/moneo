@@ -407,6 +407,76 @@ export const listAccounts = /* GraphQL */ `
     }
   }
 `;
+export const getFeedback = /* GraphQL */ `
+  query GetFeedback($id: ID!) {
+    getFeedback(id: $id) {
+      id
+      type
+      email
+      name {
+        fn
+        ln
+      }
+      feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFeedbacks = /* GraphQL */ `
+  query ListFeedbacks(
+    $filter: ModelFeedbackFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        email
+        name {
+          fn
+          ln
+        }
+        feedback
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getRating = /* GraphQL */ `
+  query GetRating($id: ID!) {
+    getRating(id: $id) {
+      id
+      type
+      rating
+      feedbackId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRatings = /* GraphQL */ `
+  query ListRatings(
+    $filter: ModelRatingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRatings(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        rating
+        feedbackId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getRegistration = /* GraphQL */ `
   query GetRegistration($email: String!) {
     getRegistration(email: $email) {

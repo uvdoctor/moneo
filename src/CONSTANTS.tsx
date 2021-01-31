@@ -6,19 +6,24 @@ export const ROUTES = {
     INVEST: "/invest",
     CALCULATE: "/calculate",
     FI: "/fi",
-    BR: "/buyorrent",
-    EDUCATION: "/eduloan",
+    BR: "/buy-or-rent",
+    EDUCATION: "/education-loan",
     LOAN: "/loan",
-    TRUE_COST: "/truecost",
+    TRUE_COST: "/true-cost",
+    ABOUT: "/about",
+    CONTACT_US: "/contact-us",
+    FEATURES: "/features",
+    IA: "/ia"
 };
 
 export const CALC_NAMES = {
     BR: "Buy v/s Rent & Invest",
     FI: "Financial Independence",
-    LOAN: "Flexible Loan",
+    LOAN: "Mortgage / Auto Loan",
     EDU_LOAN: "Education Loan",
     DR: "Debt Repayment",
     TC: "True Cost",
+    IA: "Investment Analyzer"
 };
 
 export const ASSET_CATEGORIES = {

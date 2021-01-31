@@ -37,6 +37,12 @@ export const createNewGoal = async (goal: APIt.CreateGoalInput) => {
 };
 
 export const changeGoal = async (goal: APIt.UpdateGoalInput) => {
+  //@ts-ignore
+  if (goal.hasOwnProperty("createdAt")) delete goal.createdAt;
+  //@ts-ignore
+  if (goal.hasOwnProperty("updatedAt")) delete goal.updatedAt;
+  //@ts-ignore
+  if (goal.hasOwnProperty("owner")) delete goal.owner;
   try {
     const { data } = (await API.graphql(
       graphqlOperation(mutations.updateGoal, { input: goal })
@@ -94,17 +100,17 @@ export const createNewTarget = (num: number, val: number) => {
 
 const createFFGoalInput = (currency: string) => {
   let nowYear = new Date().getFullYear();
+  const rf = getRangeFactor(currency);
   return {
-    id: "",
     name: "Financial Independence",
     loan: {
-      emi: 12000 * getRangeFactor(currency),
+      emi: 12000 * rf,
       ry: nowYear,
       per: 3,
       dur: 100,
       rate: 70,
       type: APIt.LoanType.A,
-      pmi: 0
+      pmi: 6000 * rf
     },
     sy: nowYear - 30,
     ey: nowYear,
@@ -128,10 +134,10 @@ const createFFGoalInput = (currency: string) => {
     pg: [],
     pl: [],
     tbr: 1,
-    tdli: 20000,
+    tdli: 20000 * rf,
     btr: 3,
-    ra: 50000,
-    rachg: 1000,
+    ra: 50000 * rf,
+    rachg: 1000 * rf,
   } as APIt.CreateGoalInput;
 };
 
@@ -139,7 +145,6 @@ const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
   let nowYear = new Date().getFullYear();
   let startYear = nowYear + 1;
   return {
-    id: "",
     name: "",
     sy: startYear,
     sm: 1,

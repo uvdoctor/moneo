@@ -1,10 +1,10 @@
 import React from "react";
 import { Row, Col } from "antd";
-import DDContent from "../DDContent";
+import Content from "../Content";
 
 export default function Security() {
   return (
-    <DDContent className="security" whiteBg>
+    <Content className="security" whiteBg>
       <Row align="middle" gutter={[50, 0]}>
         <Col xs={24} sm={24} md={12}>
           <h2>
@@ -21,6 +21,6 @@ export default function Security() {
           <img src="images/security.jpg" />
         </Col>
       </Row>
-    </DDContent>
+    </Content>
   );
 }

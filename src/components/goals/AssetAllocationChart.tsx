@@ -37,7 +37,7 @@ interface AssetAllocationChartProps {
 }
 
 export default function AssetAllocationChart({
-	year = new Date().getFullYear() + 1,
+	year = new Date().getFullYear(),
 	backFunction
 }: AssetAllocationChartProps) {
 	const cashDataDefault = {
@@ -47,7 +47,7 @@ export default function AssetAllocationChart({
 	};
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 	const { cfs, ffResult, currency, rr }: any = useContext(CalcContext);
-	const index = year - new Date().getFullYear() - 1;
+	const index = year - new Date().getFullYear();
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [ colors, setColors ] = useState<Array<string>>([]);
 	const [ cashData, setCashData ] = useState<CashData>(cashDataDefault);
@@ -119,7 +119,7 @@ export default function AssetAllocationChart({
 							<Button type="text" icon={<ArrowLeftOutlined />} onClick={() => backFunction()} />
 						)}
 						Target Asset Allocation of <strong>{toHumanFriendlyCurrency(cfs[index], currency)}</strong> for
-						Year{' '}<strong>{year}</strong>
+						end of Year {' '}<strong>{year}</strong>
 					</Fragment>
 				}
 				header={

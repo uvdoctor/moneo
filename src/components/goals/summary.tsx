@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import DDLineChart from './DDLineChart';
+import BasicLineChart from './BasicLineChart';
 import { getGoalTypes, getImpLevels } from './goalutils';
 import { LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
@@ -7,7 +7,7 @@ import { Button, Card, Row, Col } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import DefaultOppCostResult from '../calc/DefaultOppCostResult';
 import FFImpact from './ffimpact';
-import { GoalContext } from './GoalContext';
+import { CalcContext } from '../calc/CalcContext';
 interface SummaryProps {
 	deleteCallback: Function;
 	editCallback: Function;
@@ -19,7 +19,7 @@ export default function Summary({ deleteCallback, editCallback, ffImpactYears }:
 		goal,
 		startYear,
 		currency,
-	}: any = useContext(GoalContext);
+	}: any = useContext(CalcContext);
 	const bgColor = goal.imp === LMH.H ? COLORS.BLUE : goal.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
 	const nowYear = new Date().getFullYear();
 	const goalTypes: any = getGoalTypes();
@@ -70,7 +70,7 @@ export default function Summary({ deleteCallback, editCallback, ffImpactYears }:
 			)}
 			<Row>Cash Flows in {currency}</Row>
 			<Row>
-				<DDLineChart />
+				<BasicLineChart />
 			</Row>
 		</Card>
 	);

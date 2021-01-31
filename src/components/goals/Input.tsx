@@ -1,13 +1,13 @@
-import React, { Fragment, useContext, useEffect } from "react";
-import { Button, Steps, Row, Col, Space, Affix } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
-import { SaveOutlined } from "@ant-design/icons";
-import { CalcContext } from "../calc/CalcContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DDVideoPlayer from "../DDVideoPlayer";
+import React, { Fragment, useContext, useEffect } from 'react';
+import { Button, Steps, Row, Col, Space, Affix } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
+import { SaveOutlined } from '@ant-design/icons';
+import { CalcContext } from '../calc/CalcContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import VideoPlayer from '../VideoPlayer';
 
-import "./Input.less";
-import ResultCarousel from "../ResultCarousel";
+import './Input.less';
+import ResultCarousel from '../ResultCarousel';
 
 export default function Input() {
 	const {
@@ -25,19 +25,23 @@ export default function Input() {
 		error,
 		handleStepChange,
 		fsb,
+		cancelCallback
 	}: any = useContext(CalcContext);
 	const { Step } = Steps;
 
 	const isMobileDevice = () => fsb.info.innerWidth < 1200;
 
-	useEffect(() => {
-		if (fsb.info.innerWidth > 767) {
-			document.body.classList.remove("no-scrollbar");
-		} else {
-			if (showOptionsForm) document.body.classList.add("no-scrollbar");
-			else document.body.classList.remove("no-scrollbar");
-		}
-	}, [fsb.info.innerWidth, showOptionsForm]);
+	useEffect(
+		() => {
+			if (fsb.info.innerWidth > 767) {
+				document.body.classList.remove('no-scrollbar');
+			} else {
+				if (showOptionsForm) document.body.classList.add('no-scrollbar');
+				else document.body.classList.remove('no-scrollbar');
+			}
+		},
+		[ fsb.info.innerWidth, showOptionsForm ]
+	);
 
 	return (
 		<Fragment>
@@ -49,7 +53,7 @@ export default function Input() {
 							onChange={(index: number) => {
 								if (index < inputTabIndex) setInputTabIndex(index);
 							}}
-							status={error ? "error" : "process"}
+							status={error ? 'error' : 'process'}
 						>
 							{inputTabs.map((tab: any) => (
 								<Step
@@ -66,16 +70,14 @@ export default function Input() {
 						</Steps>
 					</header>
 					<section>
-						<Row justify={stepVideoUrl ? "space-between" : "center"}>
+						<Row justify={stepVideoUrl ? 'space-between' : 'center'}>
 							<Col span={stepVideoUrl ? 11 : 24}>
 								{inputTabs[inputTabIndex].content}
 								<Row align="middle">
 									<Col span={24}>
 										<Space>
 											{inputTabIndex > 0 && (
-												<Button onClick={() => handleStepChange(-1)}>
-													Previous
-												</Button>
+												<Button onClick={() => handleStepChange(-1)}>Previous</Button>
 											)}
 											{inputTabIndex < inputTabs.length - 1 && (
 												<Button
@@ -103,7 +105,7 @@ export default function Input() {
 							</Col>
 							{stepVideoUrl && (
 								<Col className="video-container" span={12}>
-									<DDVideoPlayer url={stepVideoUrl} />
+									<VideoPlayer url={stepVideoUrl} />
 								</Col>
 							)}
 						</Row>
@@ -111,38 +113,26 @@ export default function Input() {
 				</div>
 			) : (
 				<Affix offsetTop={0}>
-					<div
-						className={`calculator-options ${
-							showOptionsForm ? "show-form" : "hide-form"
-						}`}
-					>
+					<div className={`calculator-options ${showOptionsForm ? 'show-form' : 'hide-form'}`}>
 						<div className="overlay" />
 						<div>
 							<Row justify="space-between">
 								{inputTabs.map((tab: any, i: number) => (
 									<Col
 										key={i}
-										className={`${
-											inputTabIndex === i
-												? error
-													? "error"
-													: !isMobileDevice() || showOptionsForm
-													? "active"
-													: ""
-												: ""
-										} ${!tab.active ? "disabled" : ""}`}
+										className={`${inputTabIndex === i
+											? error ? 'error' : !isMobileDevice() || showOptionsForm ? 'active' : ''
+											: ''} ${!tab.active ? 'disabled' : ''}`}
 										onClick={() => {
 											if (tab.active) {
 												setOptionsVisibility(
-													isMobileDevice() && i === inputTabIndex
-														? !showOptionsForm
-														: true
+													isMobileDevice() && i === inputTabIndex ? !showOptionsForm : true
 												);
 												setInputTabIndex(i);
 												if (isMobileDevice()) {
 													!showOptionsForm
-														? document.body.classList.add("no-scrollbar")
-														: document.body.classList.remove("no-scrollbar");
+														? document.body.classList.add('no-scrollbar')
+														: document.body.classList.remove('no-scrollbar');
 												}
 											}
 										}}
@@ -167,7 +157,8 @@ export default function Input() {
 							>
 								<CloseOutlined />
 							</Button>
-							{inputTabIndex >= 0 && inputTabs[inputTabIndex].active && (
+							{inputTabIndex >= 0 &&
+							inputTabs[inputTabIndex].active && (
 								<Fragment>
 									{!error && (
 										<div className="mobile-only-carousel">
@@ -179,15 +170,20 @@ export default function Input() {
 							)}
 							{!isPublicCalc && handleSubmit ? (
 								<Row justify="center">
-									<Button
-										type="primary"
-										onClick={() => handleSubmit()}
-										icon={<SaveOutlined />}
-										disabled={disableSubmit}
-										loading={disableSubmit}
-									>
-										Save
-									</Button>
+									<Space>
+										<Button onClick={cancelCallback} disabled={disableSubmit}>
+											Cancel
+										</Button>
+										<Button
+											type="primary"
+											onClick={() => handleSubmit()}
+											icon={<SaveOutlined />}
+											disabled={disableSubmit}
+											loading={disableSubmit}
+										>
+											Save
+										</Button>
+									</Space>
 								</Row>
 							) : null}
 						</section>

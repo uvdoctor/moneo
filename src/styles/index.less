@@ -236,6 +236,24 @@ svg {
 	visibility: hidden;
 }
 
+.steps-start-btn {
+	height: auto;
+	font-size: 16px;
+	padding: 5px 30px;
+
+	& .anticon {
+		transform: scale(1.5);
+	}
+
+	&:hover {
+		transform: scale(1.2);
+
+		& .anticon {
+			transform: scale(1.7) rotate(20deg);
+		}
+	}
+}
+
 .primary-header {
 	background-color: @primary-color;
 	border-bottom: @primary-color 2px solid;
@@ -305,6 +323,10 @@ svg {
 			padding: 1px 16px;
 		}
 	}
+	.steps-start-btn {
+		padding: 5px 15px;
+	}
+
 }
 
 @media all and (max-width: 991.98px) {

@@ -48,7 +48,7 @@ export default function AAPlanChart({ changeToSingleYear }: AAPlanChartProps) {
 		if (!rr.length) return;
 		let filteredAA = filterAA();
 		let arr: Array<any> = [];
-		const sy = new Date().getFullYear() + 2;
+		const sy = new Date().getFullYear() + 1;
 		let ffGoalEndYear = startYear + planDuration;
 		for (let i = 0; i <= ffGoalEndYear - sy; i++) {
 			Object.keys(filteredAA).forEach((key) => {

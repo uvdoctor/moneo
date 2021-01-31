@@ -1,44 +1,42 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
-import { Input, Select, Button, Form, Alert, Space } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
-import { FormInstance } from "antd/lib/form";
-import { JoinContext } from "./JoinContext";
-import countriesList from "../countriesList";
+import React, { useContext, useState, useEffect, useRef } from 'react';
+import { Input, Select, Button, Form, Alert, Space } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
+import { FormInstance } from 'antd/lib/form';
+import { JoinContext } from './JoinContext';
+import countriesList from '../countriesList';
 
-import "./Join.less";
-import { Status } from "../../api/goals";
+import './Join.less';
+import { Status } from '../../api/goals';
 
 export default function Join() {
-	const {
-		email,
-		error,
-		status,
-		country,
-		isLoading,
-		onFormSubmit,
-		setShowVerifyModal,
-	}: any = useContext(JoinContext);
+	const { email, error, status, country, isLoading, onFormSubmit, setShowVerifyModal }: any = useContext(JoinContext);
 	const { Option } = Select;
-	const [form] = Form.useForm();
+	const [ form ] = Form.useForm();
 	const formRef = useRef<FormInstance>(null);
-	const [showJoinForm, setJoinForm] = useState(true);
+	const [ showJoinForm, setJoinForm ] = useState(true);
 
-	useEffect(() => {
-		if (formRef.current) {
-			formRef.current.setFieldsValue({ email, country });
-		}
-	}, [email, country]);
+	useEffect(
+		() => {
+			if (formRef.current) {
+				formRef.current.setFieldsValue({ email, country });
+			}
+		},
+		[ email, country ]
+	);
 
-	useEffect(() => {
-		if (status === "Y" || status === "P") setJoinForm(false);
-	}, [status]);
+	useEffect(
+		() => {
+			if (status === 'Y' || status === 'P') setJoinForm(false);
+		},
+		[ status ]
+	);
 
 	return (
 		<div className="dd-join">
 			{!showJoinForm && (
 				<Space>
 					<Button onClick={() => setJoinForm(true)}>Use another account</Button>
-					{status === "P" && (
+					{status === 'P' && (
 						<Button type="primary" onClick={() => setShowVerifyModal(true)}>
 							Verify email
 						</Button>
@@ -46,21 +44,15 @@ export default function Join() {
 				</Space>
 			)}
 			{showJoinForm && (
-				<Form
-					form={form}
-					ref={formRef}
-					name="join"
-					layout="inline"
-					onFinish={onFormSubmit}
-				>
+				<Form form={form} ref={formRef} name="join" layout="inline" onFinish={onFormSubmit}>
 					<Form.Item
 						name="country"
 						rules={[
 							{
-								type: "string",
+								type: 'string',
 								required: true,
-								message: "Please select your country",
-							},
+								message: 'Please select your country'
+							}
 						]}
 					>
 						<Select placeholder="Country" showSearch>
@@ -76,9 +68,9 @@ export default function Join() {
 						rules={[
 							{
 								required: true,
-								type: "email",
-								message: "Please enter valid email address!",
-							},
+								type: 'email',
+								message: 'Please enter valid email address!'
+							}
 						]}
 					>
 						<Input placeholder="Enter email address" />
@@ -90,8 +82,7 @@ export default function Join() {
 								htmlType="submit"
 								disabled={
 									!form.isFieldsTouched(true) ||
-									form.getFieldsError().filter(({ errors }) => errors.length)
-										.length > 0
+									form.getFieldsError().filter(({ errors }) => errors.length).length > 0
 								}
 								loading={isLoading}
 							>
@@ -109,9 +100,7 @@ export default function Join() {
 				</Form>
 			)}
 
-			{error.message && (
-				<Alert message={error.message} type={error.type || "error"} showIcon />
-			)}
+			{error.message && <Alert message={error.message} type={error.type || 'error'} showIcon />}
 		</div>
 	);
 }

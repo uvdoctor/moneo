@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { Modal } from 'antd';
 import Draggable from 'react-draggable';
 import { YoutubeFilled } from '@ant-design/icons';
-import DDVideoPlayer from './DDVideoPlayer';
+import VideoPlayer from './VideoPlayer';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 interface ModalVideoPlayerProps {
 	title: string;
@@ -33,7 +33,7 @@ export default function ModalVideoPlayer({ title, url }: ModalVideoPlayerProps) 
 					//@ts-ignore
 					modalRender={(modal: any) => <Draggable disabled={fsb.info.innerWidth < 1200}>{modal}</Draggable>}
 				>
-					<DDVideoPlayer url={url} callback={closeModal} />
+					<VideoPlayer url={url} callback={closeModal} />
 				</Modal>
 			)}
 		</Fragment>

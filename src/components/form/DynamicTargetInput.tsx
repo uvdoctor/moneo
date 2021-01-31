@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext, Fragment } from 'react';
 import { TargetInput } from '../../api/goals';
 import NumberInput from './numberinput';
 import SelectInput from './selectinput';
-import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { initOptions } from '../utils';
 import { createNewTarget } from '../goals/goalutils';
-import { Col, Row } from 'antd';
+import { Button, Col, Row } from 'antd';
 import { FIGoalContext } from '../goals/FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
 interface DynamicTargetInputProps {
@@ -13,34 +13,33 @@ interface DynamicTargetInputProps {
 }
 
 export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProps) {
-	const {
-		currency,
-		startYear,
-		endYear
-	}: any = useContext(CalcContext)
-	const { gains, setGains, losses, setLosses }: any = useContext(FIGoalContext);
-	const [ yearOpts, setYearOpts ] = useState(initOptions(startYear + 1, endYear - startYear - 1));
+	const { currency, startYear }: any = useContext(CalcContext);
+	const { gains, setGains, losses, setLosses, planDuration }: any = useContext(FIGoalContext);
+	const nowYear = new Date().getFullYear();
+	const [ yearOpts, setYearOpts ] = useState(initOptions(nowYear, startYear + planDuration - 1 - nowYear));
 	const tgts = lossInput ? losses : gains;
 	const setTgts = lossInput ? setLosses : setGains;
 
 	const getDefaultYear = () => {
-		if (!tgts || tgts.length === 0) return startYear + 1;
+		if (!tgts || tgts.length === 0) return nowYear;
 		return tgts[tgts.length - 1].num + 1;
 	};
 
 	const newRec = () => createNewTarget(getDefaultYear(), 0);
 
 	const filterTgts = () => {
-		let ft = tgts.filter((t: TargetInput) => t.num > startYear && t.num <= endYear);
+		let ft = tgts.filter((t: TargetInput) => t.num >= nowYear && t.num <= startYear + planDuration - 1);
 		setTgts([ ...ft ]);
 	};
+
+	useEffect(() => filterTgts(), []);
 
 	useEffect(
 		() => {
 			filterTgts();
-			setYearOpts(initOptions(startYear + 1, endYear - startYear - 1));
+			setYearOpts(initOptions(nowYear, startYear + planDuration - 1 - nowYear));
 		},
-		[ startYear, endYear ]
+		[ planDuration, startYear ]
 	);
 
 	const addTgt = () => {
@@ -65,28 +64,22 @@ export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProp
 
 	return (
 		<Col span={24}>
-			{tgts && tgts[0] ? (
+			{tgts &&
+				tgts[0] &&
 				tgts.map((t: TargetInput, i: number) => (
 					<Fragment>
 						<SelectInput
 							pre="Year"
 							post={
-								<Row justify="end" style={{minWidth: '50px'}}>
-									<Col style={{ cursor: 'pointer' }} onClick={() => removeTgt(i)}>
-										<MinusCircleOutlined />
-									</Col>
-									{i === tgts.length - 1 && (
-										<Col style={{ cursor: 'pointer' }} onClick={() => addTgt()}>
-											<PlusCircleOutlined />
-										</Col>
-									)}
-								</Row>
+								<Button type="link" onClick={() => removeTgt(i)} danger>
+									<DeleteOutlined />
+								</Button>
 							}
 							options={yearOpts}
 							value={t.num}
 							changeHandler={(year: string) => changeTargetYear(i, year)}
 						/>
-						<Col span={24} style={{marginBottom: '0.5rem'}} />
+						<Col span={24} style={{ marginBottom: '0.5rem' }} />
 						<NumberInput
 							pre=""
 							currency={currency}
@@ -98,12 +91,12 @@ export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProp
 						/>
 						{i < tgts.length - 1 && <Col span={24} className="fields-divider" />}
 					</Fragment>
-				))
-			) : (
-				<Row justify="center" style={{ cursor: 'pointer' }} onClick={() => addTgt()}>
-					<PlusCircleOutlined />
-				</Row>
-			)}
+				))}
+			<Row justify="center">
+				<Col>
+					<Button shape="circle" type="primary" onClick={() => addTgt()} icon={<PlusOutlined />} />
+				</Col>
+			</Row>
 		</Col>
 	);
 }

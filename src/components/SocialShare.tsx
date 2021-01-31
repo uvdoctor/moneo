@@ -26,7 +26,7 @@ import {
 import "./SocialShare.less";
 
 export default function SocialMediaShare() {
-  const websiteUrl = "https://dollardarwin.com";
+  const websiteUrl = "https://gomoneo.com";
   const [url, setUrl] = useState(websiteUrl);
 
   useEffect(() => setUrl(`${websiteUrl}${window.location.pathname}`), [null]);
@@ -41,7 +41,7 @@ export default function SocialMediaShare() {
       <div>
         <EmailShareButton
           url={url}
-          subject="DollarDarwin - Your Financial Analyst"
+          subject="WealthNeo - Your Financial Analyst"
         >
           <EmailIcon size={32} round />
         </EmailShareButton>
@@ -58,7 +58,7 @@ export default function SocialMediaShare() {
           <LinkedinIcon size={32} round />
         </LinkedinShareButton>
         <PinterestShareButton
-          media={`https://dollardarwin.com/images/icons/tlogo256.png`}
+          media={`https://gomoneo.com/images/icons/tlogo256.png`}
           url={url}
         >
           <PinterestIcon size={32} round />

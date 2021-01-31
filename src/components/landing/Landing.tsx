@@ -1,7 +1,7 @@
 import React from "react";
 import { Row } from "antd";
 import { Parallax } from "rc-scroll-anim";
-import DDContent from "../DDContent";
+import Content from "../Content";
 import { JoinContextProvider } from "./JoinContext";
 import Banner from "./Banner";
 import VerifyCodeModal from "./VerifyCodeModal";
@@ -17,12 +17,12 @@ import Testimonials from "./Testimonials";
 import "./Landing.less";
 
 export default function Landing() {
+
   return (
     <JoinContextProvider>
-      <DDContent className="with-banner">
+      <Content className="with-banner">
         <Banner />
         <VerifyCodeModal />
-        <Calculator />
         <Parallax
           animation={[
             { x: 0, opacity: 1, playScale: [0, 0.6] },
@@ -76,12 +76,12 @@ export default function Landing() {
             <GettingStarted />
           </Row>
         </Parallax>
-      </DDContent>
-
+        <Calculator />
+        <Testimonials />
+      </Content>
       <Security />
       <GetRich />
       <TakeQuickStep />
-      <Testimonials />
     </JoinContextProvider>
   );
 }

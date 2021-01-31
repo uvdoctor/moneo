@@ -4,36 +4,36 @@ export default function AbacusSVG() {
 	return (
 		<svg version="1.1" viewBox="0 0 150 150">
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5F5F5"
 				d="M115.102,94.064c22.015,12.701,22.015,33.333,0,46.058
 	s-57.733,12.725-79.748,0c-22.026-12.725-22.026-33.356,0-46.058C57.368,81.34,93.087,81.34,115.102,94.064z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E9E9EA"
 				d="M108.163,98.075c18.188,10.489,18.188,27.524,0,38.036
 	c-18.188,10.488-47.683,10.488-65.871,0c-18.188-10.512-18.188-27.547,0-38.036C60.48,87.563,89.976,87.563,108.163,98.075z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#DDDEDF"
 				d="M101.201,102.087c14.362,8.275,14.362,21.715,0,30.014
 	c-14.338,8.275-37.609,8.275-51.959,0c-14.35-8.299-14.35-21.738,0-30.014C63.592,93.788,86.863,93.788,101.201,102.087z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#D1D2D4"
 				d="M94.263,106.098c10.512,6.039,10.512,15.905,0,21.991
 	c-10.512,6.063-27.559,6.063-38.07,0c-10.512-6.086-10.512-15.952,0-21.991C66.704,100.012,83.751,100.012,94.263,106.098z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#C4A78B"
 				d="M66.024,77.328l3.377-1.947l0.161-0.081l0.173-0.069l0.173-0.069
 	l0.184-0.035l0.185-0.034l0.196-0.023h0.208l0.208,0.012l0.196,0.035l0.219,0.035l0.219,0.058l0.231,0.069l0.23,0.081l0.23,0.104
@@ -45,8 +45,8 @@ export default function AbacusSVG() {
 	c-0.841,0.53-2.017,0.461-3.331-0.3c-2.559-1.476-4.645-5.071-4.645-8.045C64.641,78.85,65.171,77.813,66.024,77.328z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				d="M58.717,81.524l3.377-1.948l0.162-0.081l0.173-0.068l0.173-0.069
 	l0.173-0.035l0.196-0.034l0.196-0.012l0.196-0.012l0.208,0.012l0.219,0.035l0.208,0.034l0.219,0.058l0.219,0.069l0.23,0.08
@@ -58,8 +58,8 @@ export default function AbacusSVG() {
 	c-0.841,0.53-2.017,0.461-3.331-0.3c-2.57-1.476-4.645-5.071-4.645-8.045C57.333,83.046,57.864,82.008,58.717,81.524z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				d="M87.301,65.077l3.378-1.959l0.161-0.081l0.173-0.069l0.173-0.058
 	l0.185-0.046l0.185-0.034l0.195-0.012h0.208l0.207,0.012l0.208,0.023l0.207,0.046l0.219,0.046l0.23,0.081l0.23,0.069l0.242,0.104
@@ -71,8 +71,8 @@ export default function AbacusSVG() {
 	c-0.864,0.507-2.04,0.449-3.354-0.312c-2.56-1.475-4.634-5.071-4.634-8.034C85.93,66.598,86.448,65.561,87.301,65.077z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				d="M79.867,69.364l3.377-1.948l0.161-0.092l0.161-0.058l0.185-0.069
 	l0.185-0.046l0.185-0.023l0.196-0.023h0.195l0.208,0.012l0.207,0.023l0.219,0.046l0.22,0.058l0.219,0.069l0.23,0.081l0.242,0.092
@@ -84,8 +84,8 @@ export default function AbacusSVG() {
 	l-3.354,1.937c-0.842,0.519-2.028,0.45-3.331-0.3c-2.57-1.486-4.646-5.083-4.646-8.045C78.483,70.886,79.014,69.848,79.867,69.364z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#C4A78B"
 				d="M72.26,53.228l3.377-1.948l0.162-0.092l0.173-0.069l0.173-0.058
 	l0.184-0.046l0.185-0.023l0.196-0.023h0.207l0.208,0.011l0.195,0.023l0.23,0.034l0.208,0.069l0.23,0.058l0.23,0.081l0.23,0.104
@@ -97,8 +97,8 @@ export default function AbacusSVG() {
 	c-0.853,0.519-2.028,0.461-3.343-0.289c-2.559-1.487-4.633-5.083-4.633-8.045C70.888,54.749,71.407,53.712,72.26,53.228z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				d="M64.952,57.423l3.377-1.948l0.161-0.092l0.173-0.069l0.173-0.058
 	l0.185-0.046l0.185-0.023l0.196-0.023h0.196l0.208,0.012l0.219,0.023l0.208,0.035l0.219,0.069l0.23,0.069l0.219,0.081l0.242,0.104
@@ -111,8 +111,8 @@ export default function AbacusSVG() {
 	C63.569,58.945,64.1,57.896,64.952,57.423z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				d="M87.301,44.549l3.378-1.959l0.161-0.081l0.173-0.069l0.173-0.058
 	l0.185-0.046l0.185-0.034l0.195-0.012h0.208l0.207,0.012l0.208,0.011l0.207,0.058l0.219,0.046l0.23,0.069l0.23,0.092l0.242,0.092
@@ -124,8 +124,8 @@ export default function AbacusSVG() {
 	c-0.864,0.519-2.04,0.461-3.354-0.3c-2.56-1.475-4.634-5.083-4.634-8.045C85.93,46.059,86.448,45.021,87.301,44.549z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				d="M79.867,48.836l3.377-1.959l0.161-0.081l0.161-0.069l0.185-0.058
 	l0.185-0.046L84.12,46.6l0.196-0.023h0.195l0.208,0.012l0.207,0.023l0.219,0.046l0.22,0.046l0.219,0.081l0.23,0.081l0.242,0.092
@@ -137,8 +137,8 @@ export default function AbacusSVG() {
 	l-3.354,1.937c-0.842,0.507-2.028,0.449-3.331-0.3c-2.57-1.487-4.646-5.083-4.646-8.045C78.483,50.358,79.014,49.32,79.867,48.836z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				d="M87.29,24.056l3.377-1.959l0.161-0.081l0.161-0.069l0.185-0.058
 	l0.173-0.046l0.196-0.034l0.185-0.023h0.207l0.208,0.012l0.207,0.035l0.219,0.035l0.22,0.058l0.219,0.069l0.23,0.081l0.219,0.104
@@ -150,8 +150,8 @@ export default function AbacusSVG() {
 	c-0.83,0.519-2.017,0.461-3.319-0.3c-2.57-1.475-4.646-5.083-4.646-8.045C85.906,25.565,86.437,24.528,87.29,24.056z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				d="M79.844,28.343l3.377-1.948l0.162-0.092l0.173-0.069l0.173-0.058
 	l0.185-0.046l0.184-0.023l0.196-0.023h0.196l0.207,0.012l0.219,0.023l0.22,0.035l0.219,0.058l0.219,0.069l0.23,0.081l0.23,0.104
@@ -164,8 +164,8 @@ export default function AbacusSVG() {
 	z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#C4A78B"
 				d="M72.249,32.734l3.377-1.948l0.161-0.092l0.173-0.069l0.173-0.058
 	l0.173-0.046l0.195-0.023l0.185-0.023h0.208l0.207,0.011l0.208,0.023l0.219,0.034l0.219,0.058l0.219,0.069l0.23,0.092l0.23,0.104
@@ -178,8 +178,8 @@ export default function AbacusSVG() {
 	C70.865,34.256,71.396,33.207,72.249,32.734z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				d="M64.929,36.918l3.389-1.937l0.15-0.092l0.173-0.069l0.185-0.058
 	l0.173-0.035l0.196-0.035l0.196-0.023h0.196l0.208,0.012l0.208,0.023l0.207,0.035l0.23,0.069l0.219,0.058l0.23,0.092l0.23,0.092
@@ -192,8 +192,8 @@ export default function AbacusSVG() {
 	C63.558,38.452,64.088,37.402,64.929,36.918z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#2A3E50"
 				points="101.109,13.06 94.032,8.979 94.102,9.037 94.193,9.129 
 	94.217,9.245 94.24,9.383 94.24,11.48 94.24,13.567 94.24,15.665 94.24,17.762 94.24,19.86 94.24,21.958 94.24,24.056 94.24,26.142 
@@ -210,8 +210,8 @@ export default function AbacusSVG() {
 	101.294,13.325 101.248,13.209 101.201,13.117 "
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#33485C"
 				points="94.102,76.902 94.032,77.063 93.917,77.225 93.825,77.352 
 	93.687,77.467 93.549,77.57 50.372,102.501 50.222,102.548 50.095,102.594 49.98,102.594 49.876,102.548 56.953,106.65 
@@ -219,8 +219,8 @@ export default function AbacusSVG() {
 	101.109,81.155 101.201,80.971 "
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#33485C"
 				points="52.838,113.428 45.773,109.325 45.231,108.887 
 	44.816,108.241 44.551,107.435 44.459,106.443 44.459,36.849 44.551,35.743 44.816,34.625 45.231,33.518 45.773,32.435 
@@ -230,58 +230,58 @@ export default function AbacusSVG() {
 	52.297,112.967 "
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#2A3E50"
 				points="52.838,113.428 45.773,109.325 45.231,108.887 
 	44.816,108.241 44.551,107.435 44.459,106.443 44.459,36.849 44.551,35.743 44.816,34.625 45.231,33.518 52.297,37.599 
 	51.882,38.716 51.628,39.834 51.536,40.93 51.536,110.523 51.628,111.491 51.882,112.321 52.297,112.967 "
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#3C566E"
 				points="54.51,50.335 52.274,49.032 96.821,23.318 99.058,24.609 
 	"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#2A3E50"
 				points="54.51,53.608 52.274,52.317 52.274,49.032 54.51,50.335 
 	"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#2A3E50"
 				points="54.51,74.113 52.274,72.822 52.274,69.537 54.51,70.839 
 	"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#3C566E"
 				points="54.51,70.839 52.274,69.537 96.821,43.811 99.058,45.113 
 	"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#2A3E50"
 				points="54.51,94.617 52.274,93.327 52.274,90.054 54.51,91.344 
 	"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#3C566E"
 				points="54.51,91.344 52.274,90.054 96.821,64.327 99.058,65.618 
 	"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#33485C"
 				d="M54.51,50.335l44.548-25.726v3.285
 	C79.544,39.154,77.031,40.607,54.51,53.608V50.335L54.51,50.335z M99.058,48.398v-3.285L54.51,70.839v3.273
@@ -289,8 +289,8 @@ export default function AbacusSVG() {
 	l44.548-25.726V68.892z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#3C566E"
 				d="M56.008,33.172l46.046-26.579c2.467-1.429,4.449-0.265,4.449,2.582
 	V78.77c0,2.847-1.982,6.327-4.449,7.757l-46.046,26.579c-2.467,1.429-4.472,0.254-4.472-2.582V40.93
@@ -299,8 +299,8 @@ export default function AbacusSVG() {
 	c0,0.415,0.312,0.554,0.692,0.347l43.165-24.92C100.994,81.432,101.294,80.925,101.294,80.51z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				points="87.267,24.056 90.667,22.096 90.828,22.015 90.989,21.946 
 	91.174,21.889 91.347,21.842 91.543,21.808 91.728,21.785 91.935,21.785 92.143,21.796 92.35,21.831 92.568,21.866 92.788,21.923 
@@ -320,8 +320,8 @@ export default function AbacusSVG() {
 	"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#EEB11C"
 				d="M90.552,24.39c2.559,1.476,4.656,5.083,4.656,8.034
 	c0,2.974-2.098,4.172-4.656,2.686c-0.588-0.334-1.152-0.784-1.672-1.314l2.985-1.764c0.346-0.196,0.554-0.611,0.554-1.199
@@ -329,8 +329,8 @@ export default function AbacusSVG() {
 	c-0.242-0.784-0.369-1.59-0.369-2.339C85.906,24.102,87.981,22.903,90.552,24.39z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				points="79.821,28.354 83.221,26.395 83.383,26.303 83.556,26.234 
 	83.729,26.176 83.913,26.13 84.097,26.096 84.293,26.084 84.489,26.084 84.696,26.096 84.904,26.119 85.135,26.153 85.354,26.211 
@@ -350,8 +350,8 @@ export default function AbacusSVG() {
 	"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#EEB11C"
 				d="M83.105,28.677c2.57,1.487,4.646,5.083,4.646,8.045
 	c0,2.962-2.075,4.161-4.646,2.686c-0.588-0.346-1.152-0.795-1.659-1.326l2.974-1.763c0.346-0.196,0.553-0.611,0.553-1.199
@@ -359,8 +359,8 @@ export default function AbacusSVG() {
 	c-0.241-0.784-0.38-1.579-0.38-2.329C78.461,28.401,80.547,27.19,83.105,28.677z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#C4A78B"
 				points="72.225,32.746 75.625,30.787 75.787,30.694 75.959,30.625 
 	76.133,30.568 76.306,30.521 76.501,30.499 76.686,30.476 76.894,30.476 77.101,30.487 77.309,30.51 77.527,30.544 77.746,30.602 
@@ -380,8 +380,8 @@ export default function AbacusSVG() {
 	"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#B19377"
 				d="M75.51,33.069c2.57,1.475,4.645,5.083,4.645,8.045
 	c0,2.962-2.075,4.161-4.645,2.686c-0.588-0.346-1.153-0.795-1.671-1.325l2.985-1.752c0.346-0.208,0.553-0.623,0.553-1.21
@@ -389,8 +389,8 @@ export default function AbacusSVG() {
 	C70.865,32.792,72.94,31.582,75.51,33.069z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				points="64.918,36.941 68.318,34.982 68.468,34.89 68.641,34.821 
 	68.813,34.763 68.998,34.717 69.194,34.694 69.39,34.671 69.586,34.671 69.793,34.683 70.001,34.706 70.208,34.74 70.438,34.809 
@@ -409,8 +409,8 @@ export default function AbacusSVG() {
 	66.601,36.676 66.393,36.642 66.186,36.63 65.99,36.642 65.794,36.653 65.598,36.688 65.425,36.723 65.241,36.78 65.079,36.861 "
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#EEB11C"
 				d="M68.203,37.264c2.559,1.476,4.645,5.083,4.645,8.045
 	c0,2.962-2.086,4.161-4.645,2.686c-0.588-0.346-1.152-0.795-1.671-1.326l2.985-1.752c0.334-0.196,0.553-0.623,0.553-1.21
@@ -418,8 +418,8 @@ export default function AbacusSVG() {
 	C63.558,36.988,65.632,35.777,68.203,37.264z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				points="87.278,44.549 90.679,42.589 90.84,42.509 91.013,42.439 
 	91.186,42.382 91.37,42.335 91.555,42.301 91.75,42.29 91.958,42.29 92.153,42.301 92.373,42.313 92.58,42.37 92.799,42.417 
@@ -439,8 +439,8 @@ export default function AbacusSVG() {
 	"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#EEB11C"
 				d="M90.563,44.883c2.57,1.476,4.645,5.083,4.645,8.045
 	c0,2.962-2.074,4.161-4.645,2.674c-0.588-0.334-1.142-0.784-1.672-1.314l2.997-1.763c0.334-0.185,0.542-0.611,0.542-1.21
@@ -448,8 +448,8 @@ export default function AbacusSVG() {
 	c-0.242-0.795-0.369-1.579-0.369-2.34C85.93,44.595,88.004,43.396,90.563,44.883z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				points="79.844,48.848 83.244,46.877 83.405,46.796 83.566,46.727 
 	83.739,46.669 83.936,46.624 84.12,46.589 84.316,46.577 84.512,46.577 84.72,46.589 84.927,46.612 85.146,46.658 85.365,46.704 
@@ -468,8 +468,8 @@ export default function AbacusSVG() {
 	81.526,48.571 81.319,48.548 81.111,48.537 80.916,48.537 80.72,48.56 80.535,48.583 80.352,48.629 80.167,48.698 80.005,48.767 "
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#EEB11C"
 				d="M83.129,49.17c2.559,1.487,4.645,5.083,4.645,8.045
 	c0,2.962-2.086,4.161-4.645,2.686c-0.588-0.346-1.152-0.795-1.671-1.326l2.984-1.763c0.347-0.185,0.554-0.6,0.554-1.199
@@ -477,8 +477,8 @@ export default function AbacusSVG() {
 	c-0.254-0.784-0.381-1.579-0.381-2.329C78.483,48.894,80.559,47.695,83.129,49.17z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#C4A78B"
 				points="72.237,53.239 75.637,51.28 75.798,51.188 75.971,51.119 
 	76.145,51.061 76.328,51.015 76.513,50.992 76.709,50.969 76.916,50.969 77.124,50.98 77.319,51.003 77.55,51.038 77.758,51.095 
@@ -498,8 +498,8 @@ export default function AbacusSVG() {
 	"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#B19377"
 				d="M75.521,53.562c2.57,1.487,4.646,5.083,4.646,8.045
 	c0,2.962-2.075,4.161-4.646,2.686c-0.587-0.346-1.152-0.795-1.66-1.325l2.986-1.752c0.334-0.208,0.541-0.623,0.541-1.21
@@ -507,8 +507,8 @@ export default function AbacusSVG() {
 	C70.888,53.285,72.963,52.087,75.521,53.562z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				points="64.929,57.435 68.33,55.475 68.491,55.383 68.664,55.314 
 	68.836,55.256 69.021,55.21 69.206,55.187 69.401,55.164 69.609,55.164 69.805,55.176 70.024,55.199 70.231,55.233 70.45,55.302 
@@ -528,8 +528,8 @@ export default function AbacusSVG() {
 	"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#EEB11C"
 				d="M68.214,57.757c2.57,1.487,4.645,5.083,4.645,8.045
 	c0,2.962-2.075,4.161-4.645,2.686c-0.588-0.346-1.141-0.795-1.671-1.326l2.997-1.752c0.334-0.196,0.542-0.611,0.542-1.21
@@ -537,8 +537,8 @@ export default function AbacusSVG() {
 	C63.569,57.481,65.655,56.271,68.214,57.757z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				points="87.278,65.088 90.679,63.117 90.84,63.037 91.013,62.967 
 	91.186,62.91 91.37,62.863 91.555,62.829 91.75,62.817 91.958,62.817 92.153,62.829 92.373,62.852 92.58,62.898 92.799,62.944 
@@ -557,8 +557,8 @@ export default function AbacusSVG() {
 	88.973,64.812 88.765,64.788 88.558,64.777 88.351,64.777 88.154,64.8 87.97,64.823 87.785,64.88 87.612,64.927 87.439,65.007 "
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#EEB11C"
 				d="M90.563,65.411c2.57,1.476,4.645,5.083,4.645,8.045
 	c0,2.962-2.074,4.161-4.645,2.674c-0.588-0.334-1.142-0.784-1.672-1.314l2.997-1.764c0.334-0.184,0.542-0.611,0.542-1.198
@@ -566,8 +566,8 @@ export default function AbacusSVG() {
 	c-0.242-0.784-0.369-1.579-0.369-2.328C85.93,65.123,88.004,63.936,90.563,65.411z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				points="79.844,69.375 83.244,67.416 83.405,67.324 83.566,67.267 
 	83.739,67.197 83.936,67.151 84.12,67.128 84.316,67.105 84.512,67.105 84.72,67.117 84.927,67.14 85.146,67.186 85.365,67.243 
@@ -586,8 +586,8 @@ export default function AbacusSVG() {
 	81.526,69.11 81.319,69.087 81.111,69.064 80.916,69.064 80.72,69.087 80.535,69.122 80.352,69.168 80.167,69.226 80.005,69.295 "
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#EEB11C"
 				d="M83.129,69.698c2.559,1.487,4.645,5.083,4.645,8.045
 	c0,2.974-2.086,4.173-4.645,2.686c-0.588-0.334-1.152-0.783-1.671-1.325l2.984-1.752c0.347-0.196,0.554-0.61,0.554-1.21
@@ -595,8 +595,8 @@ export default function AbacusSVG() {
 	c-0.254-0.795-0.381-1.59-0.381-2.34C78.483,69.422,80.559,68.223,83.129,69.698z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#C4A78B"
 				points="66.001,77.34 69.401,75.381 69.563,75.3 69.736,75.231 
 	69.909,75.162 70.093,75.127 70.277,75.093 70.473,75.081 70.681,75.069 70.888,75.081 71.084,75.116 71.314,75.15 71.522,75.208 
@@ -615,8 +615,8 @@ export default function AbacusSVG() {
 	67.684,77.075 67.488,77.04 67.281,77.029 67.073,77.04 66.877,77.052 66.693,77.087 66.508,77.133 66.335,77.19 66.163,77.26 "
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#B19377"
 				d="M69.286,77.663c2.57,1.486,4.645,5.105,4.645,8.057
 	c0,2.95-2.075,4.149-4.645,2.674c-0.588-0.346-1.153-0.784-1.66-1.313l2.985-1.775c0.334-0.185,0.542-0.6,0.542-1.199
@@ -624,8 +624,8 @@ export default function AbacusSVG() {
 	C64.641,77.387,66.728,76.188,69.286,77.663z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5C13C"
 				points="58.694,81.547 62.094,79.576 62.255,79.495 62.428,79.427 
 	62.601,79.357 62.774,79.322 62.97,79.288 63.166,79.276 63.362,79.265 63.569,79.276 63.788,79.312 63.996,79.346 64.215,79.403 
@@ -644,8 +644,8 @@ export default function AbacusSVG() {
 	60.388,81.271 60.169,81.247 59.973,81.247 59.766,81.247 59.57,81.247 59.385,81.294 59.201,81.34 59.028,81.386 58.855,81.455 "
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#EEB11C"
 				d="M61.979,81.847c2.57,1.498,4.645,5.117,4.645,8.068
 	c0,2.95-2.075,4.149-4.645,2.674c-0.588-0.322-1.152-0.783-1.671-1.313l2.997-1.775c0.334-0.185,0.542-0.6,0.542-1.198

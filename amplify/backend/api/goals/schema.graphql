@@ -1,154 +1,193 @@
 enum LMH {
-  L
-  M
-  H
+	L
+	M
+	H
 }
 
 enum YN {
-  Y
-  N
+	Y
+	N
+}
+
+type Name {
+	fn: String!
+	ln: String
+}
+
+enum FeedbackType {
+	C
+	S
+	Q
+}
+
+enum CalcType {
+	BR
+	FI
+	LOAN
+	EDU_LOAN
+	DR
+	TC
+}
+
+type Feedback
+	@model
+	@aws_iam
+	@aws_cognito_user_pools
+	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
+	id: ID!
+	type: FeedbackType!
+	email: String!
+	name: Name!
+	feedback: String!
+}
+
+type Rating
+	@model
+	@aws_iam
+	@aws_cognito_user_pools
+	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
+	id: ID!
+	type: CalcType!
+	rating: Int!
+	feedbackId: String
 }
 
 type Target {
-  num: Int!
-  val: Float!
+	num: Int!
+	val: Float!
 }
 
 enum LoanType {
-  A
-  B
+	A
+	B
 }
 
 enum GoalType {
-  B
-  S
-  R
-  E
-  X
-  C
-  FF
-  D
-  O
-  T
+	B
+	S
+	R
+	E
+	X
+	C
+	FF
+	D
+	O
+	T
 }
 
 type Loan {
-  type: LoanType!
-  per: Int!
-  rate: Float
-  dur: Int!
-  ry: Int!
-  pp: [Target!]
-  ira: [Target!]
-  emi: Float
-  pmi: Float
-  peper: Int
+	type: LoanType!
+	per: Int!
+	rate: Float
+	dur: Int!
+	ry: Int!
+	pp: [Target!]
+	ira: [Target!]
+	emi: Float
+	pmi: Float
+	peper: Int
 }
 
 type Goal @model @auth(rules: [{ allow: owner }]) {
-  id: ID!
-  sy: Int!
-  sm: Int
-  ey: Int!
-  by: Int!
-  btr: Float
-  tdr: Float!
-  tdl: Int!
-  tbi: Int
-  tdli: Int
-  tbr: Float
-  name: String!
-  type: GoalType!
-  ccy: String!
-  cp: Int
-  chg: Float
-  achg: Float
-  tgts: [Target!]
-  loan: Loan
-  imp: LMH!
-  met: YN
-  prob: LMH
-  manual: Int!
-  amper: Float
-  amsy: Int
-  aiper: Float
-  aisy: Int
-  dr: Float
-  sa: Int
-  pg: [Target]
-  pl: [Target]
-  ra: Int
-  rachg: Float
+	id: ID!
+	sy: Int!
+	sm: Int
+	ey: Int!
+	by: Int!
+	btr: Float
+	tdr: Float!
+	tdl: Int!
+	tbi: Int
+	tdli: Int
+	tbr: Float
+	name: String!
+	type: GoalType!
+	ccy: String!
+	cp: Int
+	chg: Float
+	achg: Float
+	tgts: [Target!]
+	loan: Loan
+	imp: LMH!
+	met: YN
+	prob: LMH
+	manual: Int!
+	amper: Float
+	amsy: Int
+	aiper: Float
+	aisy: Int
+	dr: Float
+	sa: Int
+	pg: [Target]
+	pl: [Target]
+	ra: Int
+	rachg: Float
 }
 
 enum MilestoneAttr {
-  NW
-  D
-  AS
-  C
-  R
+	NW
+	D
+	AS
+	C
+	R
 }
 
 type Milestone @model @auth(rules: [{ allow: owner }]) {
-  id: ID!
-  tgt: Target!
-  attr: MilestoneAttr!
-  goals: [Goal]
+	id: ID!
+	tgt: Target!
+	attr: MilestoneAttr!
+	goals: [Goal]
 }
 
 type Profile @model @auth(rules: [{ allow: owner }]) {
-  id: ID!
-  citizen: String!
-  tr: String!
-  itr: Int!
-  cgtr: Int!
-  curr: String!
+	id: ID!
+	citizen: String!
+	tr: String!
+	itr: Int!
+	cgtr: Int!
+	curr: String!
 }
 
 type Item @model @auth(rules: [{ allow: owner }]) {
-  id: ID!
-  p_at: String!
-  p_id: String!
-  p_instid: String!
-  instname: String!
-  status: String!
+	id: ID!
+	p_at: String!
+	p_id: String!
+	p_instid: String!
+	instname: String!
+	status: String!
 }
 
 type Account @model @auth(rules: [{ allow: owner }]) {
-  id: ID!
-  item: Item
-  p_id: String!
-  name: String!
-  mask: String!
-  offname: String!
-  currbal: Int!
-  availbal: Int!
-  curr: String!
-  uncurr: String
-  type: String!
-  subtype: String!
+	id: ID!
+	item: Item
+	p_id: String!
+	name: String!
+	mask: String!
+	offname: String!
+	currbal: Int!
+	availbal: Int!
+	curr: String!
+	uncurr: String
+	type: String!
+	subtype: String!
 }
 
 enum Status {
-  Y
-  N
-  P
+	Y
+	N
+	P
 }
 
 type Registration
-  @model
-  @aws_iam
-  @aws_cognito_user_pools
-  @key(fields: ["email"])
-  @auth(
-    rules: [
-      { allow: public, provider: iam, operations: [create, read, update] }
-    ]
-  ) {
-  email: String!
-  status: Status!
-  code: String!
-  country: String!
-  lat: Float
-  long: Float
+	@model
+	@aws_iam
+	@aws_cognito_user_pools
+	@key(fields: ["email"])
+	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
+	email: String!
+	status: Status!
+	code: String!
+	country: String!
+	lat: Float
+	long: Float
 }

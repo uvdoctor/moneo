@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import Section from '../form/section';
 import NumberInput from '../form/numberinput';
-import { toCurrency } from '../utils';
+import { getMonthName, toCurrency } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
 import ItemDisplay from '../calc/ItemDisplay';
@@ -25,20 +25,27 @@ export function BeforeFI() {
 		setEmergencyFundBY
 	}: any = useContext(FIGoalContext);
 
-	useEffect(() => {
-		setEmergencyFundBY(new Date().getFullYear());
-	}, [emergencyFund]);
+	useEffect(
+		() => {
+			setEmergencyFundBY(new Date().getFullYear());
+		},
+		[ emergencyFund ]
+	);
+
+	const getThisMonthTarget = () => {
+		let target = avgMonthlySavings * (1 + monthlySavingsRate / 100);
+		if (target > monthlyMaxSavings) target = monthlyMaxSavings;
+		return target;
+	};
 
 	return (
 		<Section
 			title="Before Financial Independence"
 			videoSrc={`https://www.youtube.com/watch?v=9I8bMqMPfrc`}
-			toggle={<HSwitch value={needTEBonds} setter={setNeedTEBonds} rightText="Income Tax more than 12%" />}
+			toggle={<HSwitch value={needTEBonds} setter={setNeedTEBonds} rightText="I Pay more than 12% Income Tax" />}
 		>
 			<NumberInput
-				info={`Average Monthly Savings after paying all taxes & expenses. 
-                  Include Your Retirement Contributions as a part of Your Savings. 
-                  This will be used to forecast Your Future Savings.`}
+				info={`Average Monthly Investment including retirement Contribution. This will be used to forecast Your Future Savings.`}
 				value={avgMonthlySavings}
 				pre="Average Monthly Investment"
 				min={0}
@@ -47,39 +54,43 @@ export function BeforeFI() {
 				step={100}
 				currency={currency}
 			/>
-			{avgMonthlySavings && <NumberInput
-				info={`Given Average Monthly Investment of ${toCurrency(
-					avgMonthlySavings,
-					currency
-				)}, ${monthlySavingsRate}% monthly increase in investment comes to about 
+			{avgMonthlySavings && (
+				<NumberInput
+					info={`Given Average Monthly Investment of ${toCurrency(
+						avgMonthlySavings,
+						currency
+					)}, ${monthlySavingsRate}% monthly increase in investment comes to about 
           ${toCurrency(Math.round(avgMonthlySavings * (1 + monthlySavingsRate / 100)), currency)} 
           for this month. Due to the power of compounding, even small regular increase in investment can make a significant impact in the long term.`}
-				pre="Increase Investment Monthly by"
-				unit="%"
-				value={monthlySavingsRate}
-				changeHandler={setMonthlySavingsRate}
-				min={0}
-				max={3}
-				step={0.1}
-				note={monthlySavingsRate && (
-					<NumberInput
-						pre="Up to Maximum Monthly Increase of"
-						value={monthlyMaxSavings}
-						changeHandler={setMonthlyMaxSavings}
-						currency={currency}
-						min={0}
-						max={10000}
-						step={100}
-						info={`This is the maximum possible increase in Monthly Investment amount You can achieve. If this value is kept Zero, then it is assumed that You can achieve the monthly increase in Investment of ${monthlySavingsRate}% every month.`}
-					/>
-				)}
-			/>}
+					pre="Increase Investment Monthly by"
+					unit="%"
+					value={monthlySavingsRate}
+					changeHandler={setMonthlySavingsRate}
+					min={0}
+					max={3}
+					step={0.1}
+					note={
+						monthlySavingsRate ? (
+							<NumberInput
+								pre="Up to Maximum Monthly Investment of"
+								value={monthlyMaxSavings}
+								changeHandler={setMonthlyMaxSavings}
+								currency={currency}
+								min={avgMonthlySavings}
+								max={avgMonthlySavings + 5000}
+								step={100}
+								info={`This is the maximum possible Monthly Investment amount You can achieve.`}
+							/>
+						) : null
+					}
+				/>
+			)}
 			{avgMonthlySavings && (
 				<ItemDisplay
 					label="Target Investment"
-					result={avgMonthlySavings * (1 + monthlySavingsRate / 100)}
+					result={getThisMonthTarget()}
 					pl
-					footer="for this Month"
+					footer={`for ${getMonthName(new Date().getMonth() + 1)} ${new Date().getFullYear()}`}
 				/>
 			)}
 			{!addCallback && (

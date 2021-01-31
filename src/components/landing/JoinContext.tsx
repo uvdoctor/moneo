@@ -1,38 +1,50 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import * as queries from "../../graphql/queries";
 import * as mutations from "../../graphql/mutations";
 import awsconfig from "../../aws-exports";
 import { GRAPHQL_AUTH_MODE } from "@aws-amplify/api-graphql";
 import Amplify, { API } from "aws-amplify";
 import { Status } from "../../api/goals";
+import { AppContext } from "../AppContext";
 
 Amplify.configure(awsconfig);
 
 const JoinContext = createContext({});
 const JOIN_KEY = "joinData";
 
-interface providerProps {
+interface JoinContextProviderProps {
 	children: any;
 }
 
-function JoinContextProvider({ children }: providerProps) {
-	const [email, setEmail] = useState("");
-	const [country, setCountry] = useState();
-	const [status, setStatus] = useState(Status.N);
-	const [isLoading, setLoading] = useState(false);
-	const [showVerifyModal, setShowVerifyModal] = useState(false);
+function JoinContextProvider({ children }: JoinContextProviderProps) {
+	const { setDefaultCountry, setDefaultCurrency }: any = useContext(AppContext);
+	const [email, setEmail] = useState<string>("");
+	const [country, setCountry] = useState<string>();
+	const [status, setStatus] = useState<Status>(Status.N);
+	const [isLoading, setLoading] = useState<boolean>(false);
+	const [showVerifyModal, setShowVerifyModal] = useState<boolean>(false);
 	const [error, setError] = useState({});
 
 	useEffect(() => {
+		const host = window.location.hostname;
+		let defaultCountry = 'US'
+    if (host.endsWith('.in') || host.endsWith('host')) {
+			defaultCountry = 'IN';
+			setDefaultCurrency("INR");
+		} else if (host.endsWith('.uk')) {
+			defaultCountry = 'UK';
+			setDefaultCurrency("UK")
+		}
 		const { email, country, status } = JSON.parse(
 			localStorage.getItem(JOIN_KEY) || "{}"
 		);
-
+		if (country) defaultCountry = country;
+		setDefaultCountry(defaultCountry);
+		setCountry(defaultCountry);
 		if (!email) return;
 
 		setStatus(status);
 		setEmail(email);
-		setCountry(country);
 		setShowVerifyModal(status === Status.P);
 		if (status === Status.Y)
 			setError({

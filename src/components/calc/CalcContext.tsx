@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, ReactNode, useEffect, useContext } from 'react';
 import { initOptions } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import TaxAdjustment from "../calc/TaxAdjustment";
@@ -6,11 +6,10 @@ import GoalCost from "../goals/GoalCost";
 import LoanDetails from "./LoanDetails";
 import Sell from "../goals/sell";
 import BRComp from "../goals/BRComp";
-import DDLineChart from "../goals/DDLineChart";
+import BasicLineChart from "../goals/BasicLineChart";
 import BuyRentChart from "../goals/BuyRentChart";
-import { GoalType } from '../../api/goals';
+import { CalcType, CreateRatingMutation, GoalType } from '../../api/goals';
 import { isLoanEligible } from '../goals/goalutils';
-import * as gtag from '../../lib/gtag';
 import FIMoneyOutflow from '../goals/FIMoneyOutflow';
 import FIBenefit from '../goals/FIBenefit';
 import { AfterFI } from '../goals/AfterFI';
@@ -22,6 +21,15 @@ import FIUserDetails from '../goals/FIUserDetails';
 import LoanSchedule from './LoanSchedule';
 import DynamicAAChart from '../goals/DynamicAAChart';
 import FIMonthlyInvTargetChart from './FIMonthlyInvTargetChart';
+import { AppContext } from '../AppContext';
+import * as mutations from '../../graphql/mutations';
+import awsconfig from '../../aws-exports';
+import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
+import Amplify, { API } from 'aws-amplify';
+import { CALC_NAMES } from '../../CONSTANTS';
+import { FeedbackContext } from '../feedback/FeedbackContext';
+
+Amplify.configure(awsconfig);
 
 const CalcContext = createContext({});
 
@@ -39,9 +47,9 @@ interface CalcContextProviderProps {
   children: ReactNode;
 	tabOptions?: any;
 	resultTabOptions?: any;
-  defaultCurrency?: string;
   addCallback?: Function;
   updateCallback?: Function;
+  cancelCallback?: Function;
 }
 
 function CalcContextProvider({
@@ -49,18 +57,20 @@ function CalcContextProvider({
   children,
 	tabOptions,
 	resultTabOptions,
-  defaultCurrency,
   addCallback,
-  updateCallback
+  updateCallback,
+  cancelCallback
 }: CalcContextProviderProps) {
+  const { defaultCurrency }: any = useContext(AppContext);
+  const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
   const isPublicCalc = addCallback && updateCallback ? false : true;
   const [startYear, setStartYear] = useState<number>(goal.sy);
   const [startMonth, setStartMonth] = useState<number>(goal.sm);
   const [endYear, setEndYear] = useState<number>(goal.ey);
-  const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal?.ccy ? goal.ccy : 'USD');
-	const [ allInputDone, setAllInputDone ] = useState<boolean>(false);
+  const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal.ccy);
+	const [ allInputDone, setAllInputDone ] = useState<boolean>(goal?.id ? true : false);
 	const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
   const [cfs, setCFs] = useState<Array<number>>([]);
   const [ cfsWithoutSM, setCFsWithoutSM ] = useState<Array<number>>([]);
@@ -71,7 +81,6 @@ function CalcContextProvider({
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
   const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
-  const [createNewGoalInput, setCreateNewGoalInput] = useState<Function>(() => true)
   const [rating, setRating ] = useState<number>(0);
   const [feedbackText, setFeedbackText] = useState<string>("");
   const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
@@ -82,6 +91,18 @@ function CalcContextProvider({
   const [results, setResults] = useState<Array<any>>([]);
   const [timer, setTimer] = useState<any>(null);
   const [analyzeFor, setAnalyzeFor] = useState<number>(30);
+  const [ratingId, setRatingId] = useState<String | undefined>('');
+
+ const getCalcType = () => {
+  switch(goal.name) {
+    case CALC_NAMES.BR: return CalcType.BR;
+    case CALC_NAMES.DR: return CalcType.DR;
+    case CALC_NAMES.EDU_LOAN: return CalcType.EDU_LOAN;
+    case CALC_NAMES.FI: return CalcType.FI;
+    case CALC_NAMES.LOAN: return CalcType.LOAN;
+    case CALC_NAMES.TC: return CalcType.TC;
+  }
+ }
 
   const getFFGoalTabOptions = () => {
     return [
@@ -96,13 +117,13 @@ function CalcContextProvider({
   
   const getFFGoalResultTabOptions = () => {
     let options = [{
-      label: `${nowYear + 1} Asset Allocation`,
+      label: `${nowYear} Asset Allocation`,
       active: true,
       svg: faChartPie,
       content: <AssetAllocationChart />
     },
     {
-      label: `Allocation from ${nowYear + 2}`,
+      label: `Allocation from ${nowYear + 1}`,
       active: true,
       svg: faChartBar,
       content: <DynamicAAChart />
@@ -111,7 +132,7 @@ function CalcContextProvider({
       label: "Portfolio Value",
       active: true,
       svg: faChartLine,
-      content: <DDLineChart />
+      content: <BasicLineChart />
     },
     {
       label: "Investment Targets",
@@ -129,7 +150,7 @@ function CalcContextProvider({
           label: "Cash Flows",
           active: true,
           svg: faChartLine,
-          content: <DDLineChart />
+          content: <BasicLineChart />
         },
         {
           label: "Loan Schedule",
@@ -182,11 +203,9 @@ function CalcContextProvider({
   const handleSubmit = async () => {
     setBtnClicked(true);
     if (addCallback && updateCallback) {
-      let g = createNewGoalInput();
       if (goal?.id) {
-        g.id = goal.id
-        await updateCallback(g, cfs);
-      } else await addCallback(g, cfs);
+        await updateCallback(cfs);
+      } else await addCallback(cfs);
     } 
     setBtnClicked(false);
   };
@@ -202,18 +221,56 @@ function CalcContextProvider({
     let tabs = inputTabs.filter((tab: any) => tab.label === tabLabel);
     return tabs && tabs.length === 1;
   };
+  
+  const submitRating = async (rating : number) => {
+		try {
+			const { data }  = (await API.graphql({
+				query: mutations.createRating,
+				variables: {
+					input: {
+						type: getCalcType(),
+						rating: rating
+					}
+				},
+				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
+			})) as {
+      data: CreateRatingMutation;
+    }
+    setRatingId(data.createRating?.id);
+  }
+  catch (e) {
+      console.log('Error')
+		} 
+  };
 
+  const updateRating = async () => {
+    try {
+			await API.graphql({
+				query: mutations.updateRating,
+				variables: {
+					input: {
+            id: ratingId,
+            feedbackId: feedbackId
+					}
+				},
+				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
+      });
+      
+		} catch (e) {
+      console.log('Error while updating rating', e)
+		} 
+  }
+  
   useEffect(() => {
     if (!rating) return;
-    gtag.event({
-			category: goal.name,
-			action: 'Rating',
-			label: 'Score',
-			value: rating
-    });
+    submitRating(rating);
     setShowFeedbackModal(rating && rating < 4 ? true : false);
     }, [rating]);
   
+  useEffect(() => {
+    if(feedbackId) updateRating();
+  }, [feedbackId]);
+    
 	return (
 		<CalcContext.Provider
       value={{
@@ -249,8 +306,6 @@ function CalcContextProvider({
         ffOOM,
         setFFOOM,
         handleSubmit,
-        createNewGoalInput,
-        setCreateNewGoalInput,
         addCallback,
         updateCallback,
         rating,
@@ -281,7 +336,8 @@ function CalcContextProvider({
         timer,
         setTimer,
         analyzeFor,
-        setAnalyzeFor
+        setAnalyzeFor,
+        cancelCallback
 			}}
     >
       {children}

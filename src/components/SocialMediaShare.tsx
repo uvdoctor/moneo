@@ -57,7 +57,7 @@ export default function SocialMediaShare({ url }: SocialMediaShareProps) {
           <LinkedinIcon size={32} round />
         </LinkedinShareButton>
         <PinterestShareButton
-          media={`https://dollardarwin.com/images/icons/tlogo256.png`}
+          media={`https://gomoneo.com/images/icons/tlogo256.png`}
           url={url}
         >
           <PinterestIcon size={32} round />

@@ -9,13 +9,14 @@ import { CalcContext } from '../calc/CalcContext';
 export default function FIMoneyOutflow() {
 	const {
 		currency,
-		endYear
+		startYear
 	}: any = useContext(CalcContext);
 	const {
 		leaveBehind,
 		setLeaveBehind,
 		successionTaxRate,
 		setSuccessionTaxRate,
+		planDuration
 	}: any = useContext(FIGoalContext);
 
 	return (
@@ -34,7 +35,7 @@ export default function FIMoneyOutflow() {
 					pre="Amount"
 					currency={currency}
 					step={1000}
-					post={`in ${endYear + 1}`}
+					post={`in ${startYear + planDuration}`}
 				/>
 				{leaveBehind > 0 && (
 					<NumberInput

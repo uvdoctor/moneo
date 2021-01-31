@@ -2,7 +2,7 @@ import React from "react";
 import Carousel from "react-elastic-carousel";
 import { Avatar, Row, Col } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import DDContent from "../DDContent";
+import Content from "../Content";
 
 import "./testimonials.less";
 
@@ -12,8 +12,8 @@ export default function Testimonials() {
 	const desktopSlideCount = 2;
 
 	return (
-		<DDContent className="client-testimonials">
-			<h2>Client Testimonials</h2>
+		<Content className="client-testimonials">
+			<h2>What Users Are Saying about the Calculators</h2>
 			<Carousel
 				itemsToShow={2}
 				breakPoints={[
@@ -59,6 +59,6 @@ export default function Testimonials() {
 					</div>
 				))}
 			</Carousel>
-		</DDContent>
+		</Content>
 	);
 }

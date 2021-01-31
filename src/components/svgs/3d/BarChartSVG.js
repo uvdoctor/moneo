@@ -4,36 +4,36 @@ export default function BarChartSVG() {
 	return (
 		<svg version="1.1" viewBox="0 0 150 150">
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5F5F5"
 				d="M114.985,92.633c22.411,12.939,22.411,33.896,0,46.836
 	c-22.376,12.941-58.699,12.941-81.086,0c-22.399-12.939-22.399-33.896,0-46.836C56.286,79.691,92.609,79.691,114.985,92.633z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E9E9EA"
 				d="M107.941,96.711c18.483,10.689,18.483,27.99,0,38.68
 	c-18.496,10.689-48.491,10.689-66.986,0c-18.496-10.689-18.496-27.99,0-38.68C59.451,86.021,89.445,86.021,107.941,96.711z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#DDDEDF"
 				d="M100.873,100.789c14.581,8.439,14.581,22.084,0,30.521
 	c-14.593,8.439-38.257,8.439-52.85,0c-14.593-8.438-14.593-22.082,0-30.521C62.616,92.373,86.28,92.373,100.873,100.789z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#D1D2D4"
 				d="M93.806,104.869c10.689,6.188,10.689,16.174,0,22.363
 	s-28.025,6.189-38.715,0c-10.69-6.189-10.69-16.176,0-22.363C65.78,98.703,83.116,98.703,93.806,104.869z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#2A3E50"
 				points="44.424,103.838 35.165,98.492 35,98.375 34.86,98.211 
 	34.731,98.07 34.625,97.859 34.532,97.648 34.473,97.391 34.438,97.133 34.426,96.828 34.426,21.543 34.438,21.344 34.485,21.122 
@@ -48,8 +48,8 @@ export default function BarChartSVG() {
 	43.721,102.736 43.78,102.994 43.874,103.205 43.979,103.393 44.108,103.557 44.249,103.697 "
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#405A73"
 				d="M46.229,103.65c-0.703,0.398-1.348,0.445-1.805,0.188
 	c-0.469-0.281-0.75-0.844-0.75-1.689v-75.26c0-0.539,0.387-1.219,0.855-1.489c1.137-0.656,2.262-1.301,3.388-1.957
@@ -57,22 +57,22 @@ export default function BarChartSVG() {
 	c0,0.551-0.398,1.219-0.867,1.5L46.229,103.65z"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#CCCCCC"
 				points="48.785,36.628 48.785,34.929 90.336,10.936 91.402,12.014 
 	"
 			/>
 			<polygon
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E6E9E9"
 				points="91.402,66.869 48.785,91.482 48.785,36.628 91.402,12.014 
 	"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#C43E3F"
 				d="M54.223,81.473l-3.375-1.945l-0.164-0.105l-0.141-0.129
 	l-0.129-0.152l-0.094-0.188l-0.094-0.199l-0.059-0.211l-0.036-0.234l-0.023-0.258v-0.258l0.035-0.281l0.047-0.293l0.07-0.293
@@ -97,8 +97,8 @@ export default function BarChartSVG() {
 	L82.33,30.346z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M53.977,77.957l12.717-26.349c0.352-0.703,0.774-1.336,1.243-1.875
 	c0.48-0.539,1.008-0.984,1.535-1.289l13.479-7.83l5.99-15.671l-3.833,4.384c-1.172,1.336-2.614,1.594-3.177,0.574l-0.984-1.734

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { Card, Menu, Space } from "antd";
+import { Menu, Row, Space, Dropdown } from "antd";
 import { appendValue, removeFromArray } from "../utils";
 import YearlyCFChart from "./YearlyCFChart";
 import * as APIt from "../../api/goals";
@@ -17,8 +17,7 @@ import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import Summary from "./summary";
 import SelectInput from "../form/selectinput";
 import SVGTargetPath from "./svgtargetpath";
-import {EditOutlined} from "@ant-design/icons";
-import { ASSET_TYPES, COLORS } from "../../CONSTANTS";
+import { ASSET_TYPES } from "../../CONSTANTS";
 import AssetAllocationChart from "./AssetAllocationChart";
 import { Button, notification } from "antd";
 import { GoalContextProvider } from "./GoalContext";
@@ -26,6 +25,10 @@ import { CalcContextProvider } from "../calc/CalcContext";
 import { FIGoalContextProvider } from "./FIGoalContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartLine, faChartPie, faBullseye } from "@fortawesome/free-solid-svg-icons";
+import { DownOutlined } from "@ant-design/icons";
+import BasicPage from "../BasicPage";
+import SetPlanIndex from "./SetPlanIndex";
+import FISummaryHeader from "./FISummaryHeader";
 
 export default function SetPlan() {
   const [allGoals, setAllGoals] = useState<Array<APIt.CreateGoalInput> | null>(
@@ -111,6 +114,7 @@ export default function SetPlan() {
       [ASSET_TYPES.DEPOSITS]: 1.5 + irDiff,
       [ASSET_TYPES.MED_TERM_BONDS]: 3 + irDiff, // 1-5 medium term
       [ASSET_TYPES.TAX_EXEMPT_BONDS]: 3.5 + irDiff, //medium term tax efficient bonds
+      [ASSET_TYPES.EMERGING_BONDS]: 7,
       [ASSET_TYPES.REIT]: 5 + irDiff,
       [ASSET_TYPES.GOLD]: 3,
       [ASSET_TYPES.LARGE_CAP_STOCKS]: 5 + irDiff,
@@ -184,12 +188,11 @@ export default function SetPlan() {
   useEffect(() => setWIPGoal(wipGoal), [wipGoal]);
 
   const addGoal = async (
-    goal: APIt.CreateGoalInput,
     cfs: Array<number> = []
   ) => {
     let g = null;
     try {
-      g = await createNewGoal(goal);
+      g = await createNewGoal(wipGoal as APIt.CreateGoalInput);
     } catch (err) {
       notification.error({ message: 'Goal Not Created', description: "Sorry! Unable to create this Goal: " + err });
       return false;
@@ -209,12 +212,11 @@ export default function SetPlan() {
   };
 
   const updateGoal = async (
-    goal: APIt.UpdateGoalInput,
     cfs: Array<number> = []
   ) => {
     let g: APIt.UpdateGoalInput | null = null;
     try {
-      g = await changeGoal(goal);
+      g = await changeGoal(wipGoal as APIt.UpdateGoalInput);
     } catch (err) {
       notification.error({message: "Goal not Updated", description: "Sorry! Unable to update this Goal: " + err });
       return false;
@@ -225,9 +227,9 @@ export default function SetPlan() {
       notification.success({ message: "Target Updated", description: "Success! Your Financial Independence Target has been Updated." });
       setFFGoal(g as APIt.CreateGoalInput);
       return true;
-    }
+    } 
     notification.success({ message: "Goal Updated", description: `Success! Goal ${g.name} has been Updated.` });
-    removeFromArray(allGoals as Array<APIt.CreateGoalInput>, "id", goal.id);
+    removeFromArray(allGoals as Array<APIt.CreateGoalInput>, "id", wipGoal?.id);
     allGoals?.unshift(g as APIt.CreateGoalInput);
     //@ts-ignore
     allCFs[g.id] = cfs;
@@ -254,17 +256,15 @@ export default function SetPlan() {
 
   const editGoal = (id: string) => {
     if (!allGoals) return;
-    let g: Array<APIt.CreateGoalInput> = allGoals.filter((g) => g.id === id);
-    if (g && g.length === 1) {
-      setWIPGoal(g[0]);
-    }
+    let g: APIt.CreateGoalInput = (allGoals.filter((g) => g.id === id))[0];
+    setWIPGoal(Object.assign({}, g));
   };
 
   const createGoal = (type: APIt.GoalType) =>
     setWIPGoal(
       createNewGoalInput(
         type,
-        type === APIt.GoalType.FF ? "USD" : (ffGoal?.ccy as string)
+        ffGoal?.ccy as string
       )
     );
 
@@ -384,154 +384,127 @@ export default function SetPlan() {
     };
   };
 
-  return wipGoal ? (
-      (wipGoal as APIt.CreateGoalInput).type === APIt.GoalType.FF ? (
-        <CalcContextProvider goal={wipGoal} addCallback={addGoal}
-        updateCallback={updateGoal}>
-         
-      <FIGoalContextProvider
-          mergedCFs={mergedCFs}
-          pp={getPP()}
-          mustCFs={mustCFs}
-          tryCFs={tryCFs}
-        />
-        </CalcContextProvider>
-      ) : (
-        ffGoal && (
-          <CalcContextProvider goal={wipGoal} addCallback={addGoal}
-          updateCallback={updateGoal}>
-            <GoalContextProvider
-      ffImpactYearsHandler={calculateFFImpactYear}
-            ffGoalEndYear={ffGoal?.ey} />
-          </CalcContextProvider>
-          )
-        )
-  ) : (
-    <Fragment>
-        {ffGoal && rr && rr.length > 0 && (
-          <Card title="Financial Independence" extra={
-            <Button type="link" onClick={() => setWIPGoal(ffGoal)}
-              icon={<EditOutlined />}>
-              Edit
-            </Button>
-          }
-            style={{
-              backgroundColor: isFFPossible(ffResult, ffGoal.sa as number)
-                ? COLORS.LIGHT_GREEN : COLORS.LIGHT_GRAY
-            }}>
-            {isFFPossible(ffResult, ffGoal.sa as number)
-              ? `Earliest in ${ffResult.ffYear as number}`
-              : `May Not be Possible till You turn 70. Please try again with different Goals / Inputs.`}
-          </Card>
+  const goalMenuItems = (
+    <Menu onClick={(e) => createGoal(e.key as APIt.GoalType)}>
+      {Object.keys(getGoalTypes()).map((key) => 
+        key !== APIt.GoalType.FF && <Menu.Item key={key}>
+          {getGoalTypes()[key as APIt.GoalType]}
+        </Menu.Item>
       )}
-      <div className="flex mt-4 items-center justify-center">
-        <SVGTargetPath />
-        <label className="ml-2 text-xl md:text-2xl">Define Your Dreams.</label>
-      </div>
-      <p>
-        Make Money Work Hard to Meet Them.
-      </p>
-      <div className="flex flex-wrap justify-around mb-4">
-        {Object.keys(getGoalTypes()).map(
-          (key) =>
-            key !== APIt.GoalType.FF && (
-              <Button
-                type="primary"
-                key={key}
-                disabled={ffGoal === null}
-                onClick={() => createGoal(key as APIt.GoalType)}
-              >
-                {getGoalTypes()[key as APIt.GoalType]}
+    </Menu>
+  );
+
+  return (
+    <BasicPage title="Set Plan"
+      className="calculator-container steps-landing"
+      onBack={wipGoal ? () => setWIPGoal(null) : null}
+      navScrollable
+      fixedNav>
+      {wipGoal ? (
+          <CalcContextProvider goal={wipGoal} addCallback={addGoal}
+            updateCallback={updateGoal} cancelCallback={() => setWIPGoal(null)}>
+          {(wipGoal as APIt.CreateGoalInput).type === APIt.GoalType.FF ?
+            <FIGoalContextProvider
+              mergedCFs={mergedCFs}
+              pp={getPP()}
+              mustCFs={mustCFs}
+              tryCFs={tryCFs}
+            /> :
+              ffGoal && <GoalContextProvider
+                ffImpactYearsHandler={calculateFFImpactYear}
+                ffGoalEndYear={ffGoal?.ey} />}
+          </CalcContextProvider>
+      ) : (
+          <Fragment>
+            {ffGoal && rr && rr.length && (
+              <FISummaryHeader ffGoal={ffGoal} ffResult={ffResult} setWIPGoal={setWIPGoal} ffYear={ffResult.ffYear} />
+            )}
+            <Row justify="center">
+              <Dropdown overlay={goalMenuItems} disabled={ffGoal === null}>
+                <Button icon={<SVGTargetPath />}>
+                  &nbsp; Define Your Dreams <DownOutlined />
                 </Button>
-                )
-                )}
-      </div>
-      {ffGoal && rr && rr.length > 0
-        ? allGoals &&
-          allGoals.length > 0 && (
-            <Space align="center" direction="vertical" size="large">
-              <div className="w-full flex justify-center bg-green-100 py-1 shadow-lg lg:shadow-xl text-sm md:text-base">
-                <Space align="end">
-                  {viewMode === goalsLabel && (
-                      <SelectInput
-                        pre=""
-                        options={getImpOptions()}
-                        value={impFilter as string}
-                        changeHandler={setImpFilter}
-                      />
+              </Dropdown>
+            </Row>
+            {ffGoal && rr && rr.length > 0
+              ? allGoals &&
+              allGoals.length > 0 && (
+                <Space align="center" direction="vertical" size="large">
+                  <div className="w-full flex justify-center bg-green-100 py-1 shadow-lg lg:shadow-xl text-sm md:text-base">
+                    <Space align="end">
+                      {viewMode === goalsLabel && (
+                        <SelectInput
+                          pre=""
+                          options={getImpOptions()}
+                          value={impFilter as string}
+                          changeHandler={setImpFilter}
+                        />
+                      )}
+                      <Menu onClick={(e: any) => setViewMode(e.key)} selectedKeys={[viewMode]} mode="horizontal">
+                        {tabOptions.map(tab =>
+                          <Menu.Item key={tab.label} icon={<FontAwesomeIcon icon={tab.svg} />}>
+                            {tab.label}
+                          </Menu.Item>
+                        )}
+                      </Menu>
+                    </Space>
+                  </div>
+                  {viewMode !== aaLabel && (
+                    <p>
+                      Negative values imply You Pay, while Positive values imply You
+                      Receive
+                    </p>
                   )}
-                  <Menu onClick={(e: any) => setViewMode(e.key)} selectedKeys={[viewMode]} mode="horizontal">
-                    {tabOptions.map(tab => 
-                      <Menu.Item key={tab.label} icon={<FontAwesomeIcon icon={tab.svg} />}>
-                        {tab.label}
-                      </Menu.Item>
-                    )}  
-                  </Menu>
+                  {viewMode === cfLabel && (
+                    <YearlyCFChart
+                      mustCFs={mustCFs}
+                      tryCFs={tryCFs}
+                      optCFs={optCFs}
+                      from={nowYear + 1}
+                      to={ffGoal.ey}
+                      currency={ffGoal.ccy}
+                    />
+                  )}
+                  {viewMode === aaLabel && (
+                    <CalcContextProvider goal={ffGoal} addCallback={addGoal} updateCallback={updateGoal}>
+                      <FIGoalContextProvider
+                        mergedCFs={mergedCFs}
+                        pp={getPP()}
+                        mustCFs={mustCFs}
+                        tryCFs={tryCFs}
+                      >
+                        <AssetAllocationChart />
+                      </FIGoalContextProvider>
+                    </CalcContextProvider>
+                  )}
+                  {viewMode === goalsLabel && (
+                    <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
+                      {allGoals.map((g: APIt.CreateGoalInput, i: number) => {
+                        if (!g.id || (impFilter && impFilter !== g.imp)) return;
+                        let result = calculateFFImpactYear(
+                          g.sy,
+                          allCFs[g.id],
+                          g.id,
+                          g.imp
+                        );
+                        return (
+                          <CalcContextProvider key={"g" + i} goal={g} addCallback={addGoal} updateCallback={updateGoal}>
+                            <GoalContextProvider>
+                              <Summary
+                                deleteCallback={removeGoal}
+                                editCallback={editGoal}
+                                ffImpactYears={result?.ffImpactYears as number}
+                              />
+                            </GoalContextProvider>
+                          </CalcContextProvider>
+                        );
+                      })}
+                    </div>
+                  )}
                 </Space>
-              </div>
-              {viewMode !== aaLabel && (
-                <p>
-                  Negative values imply You Pay, while Positive values imply You
-                  Receive
-                </p>
-              )}
-              {viewMode === cfLabel && (
-                <YearlyCFChart
-                  mustCFs={mustCFs}
-                  tryCFs={tryCFs}
-                  optCFs={optCFs}
-                  from={nowYear + 1}
-                  to={ffGoal.ey}
-                  currency={ffGoal.ccy}
-                />
-              )}
-              {viewMode === aaLabel && (
-                <CalcContextProvider goal={ffGoal} addCallback={addGoal} updateCallback={updateGoal}>
-                  <FIGoalContextProvider
-                            mergedCFs={mergedCFs}
-                            pp={getPP()}
-                            mustCFs={mustCFs}
-                            tryCFs={tryCFs}
-                  >
-                    <AssetAllocationChart />
-                  </FIGoalContextProvider>
-                </CalcContextProvider>
-              )}
-              {viewMode === goalsLabel && (
-                <div className="w-full flex flex-wrap justify-around shadow-xl rounded overflow-hidden">
-                  {allGoals.map((g: APIt.CreateGoalInput, i: number) => {
-                    if (!g.id || (impFilter && impFilter !== g.imp)) return;
-                    let result = calculateFFImpactYear(
-                      g.sy,
-                      allCFs[g.id],
-                      g.id,
-                      g.imp
-                    );
-                    return (
-                      <CalcContextProvider key={"g"+i} goal={g} addCallback={addGoal} updateCallback={updateGoal}>
-                      <GoalContextProvider>
-                      <Summary
-                        deleteCallback={removeGoal}
-                        editCallback={editGoal}
-                        ffImpactYears={result?.ffImpactYears as number}
-                      />
-                        </GoalContextProvider>
-                        </CalcContextProvider>
-                    );
-                  })}
-                </div>
-              )}
-            </Space>
-          )
-        : goalsLoaded && (
-            <div className="text-center align-center">
-              <p className="mt-8 md:mt-12 lg:mt-16">First Things First.</p>
-              <p className="mb-2">Set Up Financial Independence Target.</p>
-              <Button
-                type="primary"
-                onClick={() => createGoal(APIt.GoalType.FF)}>Get Started</Button>
-            </div>
-          )}
-    </Fragment>
+              )
+              : goalsLoaded && <SetPlanIndex setWIPGoal={setWIPGoal} />}
+          </Fragment>)}
+    </BasicPage>
   );
 }

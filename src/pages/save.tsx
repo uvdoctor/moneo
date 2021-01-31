@@ -2,15 +2,15 @@ import { withAuthenticator } from "@aws-amplify/ui-react";
 import Amplify from "aws-amplify";
 import React from "react";
 import awsmobile from "../aws-exports";
-import DDBasicPage from "../components/DDBasicPage";
+import BasicPage from "../components/BasicPage";
 
 Amplify.configure(awsmobile);
 
 const Save = () => {
 	return (
-		<DDBasicPage title="Save" secure>
+		<BasicPage title="Save">
 			<div />
-		</DDBasicPage>
+		</BasicPage>
 	);
 };
 

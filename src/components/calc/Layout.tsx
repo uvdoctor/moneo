@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GoalType } from '../../api/goals';
-import DDBasicPage from '../DDBasicPage';
+import BasicPage from '../BasicPage';
 import { createNewGoalInput, isLoanEligible } from '../goals/goalutils';
 import * as gtag from '../../lib/gtag';
 import { Button, Row, Col, PageHeader, Tabs } from 'antd';
@@ -10,13 +10,15 @@ import { CalcContextProvider } from './CalcContext';
 import { GoalContextProvider } from '../goals/GoalContext';
 import { FIGoalContextProvider } from '../goals/FIGoalContext';
 import { isMobileDevice } from '../utils';
-import DDVideoPlayer from '../DDVideoPlayer';
+import VideoPlayer from '../VideoPlayer';
 import ExpectedResults from './blog/ExpectedResults';
 
 import './Layout.less';
 import KeyFeatures from './blog/KeyFeatures';
 import MajorAssumptions from './blog/MajorAssumptions';
 import CommonTerms from './blog/CommonTerms';
+import { FeedbackContextProvider } from '../feedback/FeedbackContext';
+import { AppContext } from '../AppContext';
 
 export interface BlogInputProps {
 	elements: Array<any>;
@@ -35,6 +37,7 @@ interface LayoutProps {
 }
 
 export default function Layout(props: LayoutProps) {
+	const { defaultCurrency }: any = useContext(AppContext);
 	const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
 	const [ wip, setWIP ] = useState<any | null>(null);
@@ -134,7 +137,8 @@ export default function Layout(props: LayoutProps) {
 	];
 
 	const endingFeatures = [
-		isLoanEligible(props.type as GoalType) && props.type !== GoalType.E && {
+		isLoanEligible(props.type as GoalType) &&
+		props.type !== GoalType.E && {
 			title: 'Supports Amortizing and Balloon Loans',
 			content:
 				'Calculation will automatically calculate monthly installment, payment schedule and total interest for both these loan types.'
@@ -165,7 +169,7 @@ export default function Layout(props: LayoutProps) {
 	];
 
 	const sections: any = {
-		Demo: <DDVideoPlayer url={props.demoUrl} play={demoVideoPlay} />,
+		Demo: <VideoPlayer url={props.demoUrl} play={demoVideoPlay} />,
 		'Expected Results': <ExpectedResults elements={[ ...props.results, ...endingResults ]} />,
 		'Key Features': <KeyFeatures elements={[ ...startingFeatures, ...props.features, ...endingFeatures ]} />,
 		'Major Assumptions': (
@@ -173,7 +177,7 @@ export default function Layout(props: LayoutProps) {
 		),
 		Definitions: <CommonTerms elements={[ ...props.terms, ...genericTerms ]} />
 	};
-	const [activeTab, setActiveTab] = useState<string>('1');
+	const [ activeTab, setActiveTab ] = useState<string>('1');
 
 	const buildEmptyMergedCFs = () => {
 		let mCFs: any = {};
@@ -183,8 +187,7 @@ export default function Layout(props: LayoutProps) {
 
 	const createGoal = () => {
 		let g: any = null;
-		const defaultCurrency = 'USD';
-		if (props.type) g = createNewGoalInput(props.type, defaultCurrency, props.title.endsWith("Loan"));
+		if (props.type) g = createNewGoalInput(props.type, defaultCurrency, props.title.endsWith('Loan'));
 		else g = { ccy: defaultCurrency };
 		g.name = props.title;
 		gtag.event({
@@ -196,15 +199,18 @@ export default function Layout(props: LayoutProps) {
 		setWIP(g);
 	};
 
-	useEffect(() => {
-		setDemoVideoPlay(activeTab === '1');
-	}, [activeTab]);
+	useEffect(
+		() => {
+			setDemoVideoPlay(activeTab === '1');
+		},
+		[ activeTab ]
+	);
 
 	return (
-		<DDBasicPage
+		<BasicPage
 			className="calculator-container steps-landing"
 			title={props.title}
-			onBack={() => setWIP(null)}
+			onBack={wip ? () => setWIP(null) : null}
 			navScrollable
 			fixedNav
 		>
@@ -215,12 +221,12 @@ export default function Layout(props: LayoutProps) {
 							title={props.title}
 							extra={[
 								<Button key="startbtn" className="steps-start-btn" onClick={() => createGoal()}>
-									<RocketOutlined /> Calculate
+									<RocketOutlined /> Analyze
 								</Button>
 							]}
 						/>
 						<Col span={24} className="secondary-header">
-							<Row justify="center">Hit Calculate for Action. Details below for Geeks.</Row>
+							<Row justify="center">Hit Analyze for Action. Details below for Geeks.</Row>
 						</Col>
 					</Col>
 					<Col className="steps-content" span={24}>
@@ -241,16 +247,22 @@ export default function Layout(props: LayoutProps) {
 					</Col>
 				</Row>
 			) : (
-				<CalcContextProvider goal={wip} tabOptions={props.tabOptions} resultTabOptions={props.resultTabOptions}>
-					{props.type ? props.type === GoalType.FF ? (
-						<FIGoalContextProvider mustCFs={[]} tryCFs={[]} mergedCFs={buildEmptyMergedCFs()} />
-					) : (
-						<GoalContextProvider ffGoalEndYear={nowYear + 50} />
-					) : (
-						<props.calc />
-					)}
-				</CalcContextProvider>
+				<FeedbackContextProvider>
+					<CalcContextProvider
+						goal={wip}
+						tabOptions={props.tabOptions}
+						resultTabOptions={props.resultTabOptions}
+					>
+						{props.type ? props.type === GoalType.FF ? (
+							<FIGoalContextProvider mustCFs={[]} tryCFs={[]} mergedCFs={buildEmptyMergedCFs()} />
+						) : (
+							<GoalContextProvider ffGoalEndYear={nowYear + 50} />
+						) : (
+							<props.calc />
+						)}
+					</CalcContextProvider>
+				</FeedbackContextProvider>
 			)}
-		</DDBasicPage>
+		</BasicPage>
 	);
 }

@@ -4,36 +4,36 @@ export default function SwimRingSVG() {
 	return (
 		<svg version="1.1" viewBox="0 0 150 150">
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#F5F5F5"
 				d="M115.083,93.242c22.205,12.846,22.205,33.632,0,46.467
 	c-22.228,12.834-58.243,12.834-80.447,0c-22.228-12.835-22.228-33.621,0-46.467C56.84,80.419,92.855,80.419,115.083,93.242z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E9E9EA"
 				d="M108.062,97.299c18.345,10.579,18.345,27.762,0,38.364
 	s-48.083,10.603-66.428,0c-18.345-10.603-18.345-27.785,0-38.364C59.979,86.697,89.717,86.697,108.062,97.299z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#DDDEDF"
 				d="M101.063,101.345c14.462,8.37,14.462,21.902,0,30.272
 	c-14.474,8.348-37.946,8.348-52.419,0c-14.474-8.37-14.474-21.902,0-30.272S86.59,92.975,101.063,101.345z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#D1D2D4"
 				d="M94.053,105.391c10.614,6.115,10.614,16.043,0,22.181
 	c-10.603,6.115-27.796,6.115-38.398,0c-10.614-6.138-10.614-16.065,0-22.181C66.256,99.252,83.45,99.252,94.053,105.391z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#BDBDBD"
 				d="M86.659,0.623l0.837-0.012c3.43,0.082,6.011,0.628,9.103,2.151
 	l0.663,0.372l8.847,5.115l-0.651-0.372l-0.674-0.325c-5.371-2.395-11.079-2.291-16.74-0.523l-0.779,0.244l-0.791,0.279l-0.79,0.279
@@ -51,8 +51,8 @@ export default function SwimRingSVG() {
 	L87.52,22.722z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#EBEBEB"
 				d="M52.446,39.242c3.487-6.045,7.672-11.73,12.323-16.636
 	c0.756-0.791,1.511-1.558,2.29-2.313c6.522-6.545,14.776-11.381,20.984-13.265l0.093-0.035h0.012l0.081-0.023l0.093-0.035
@@ -77,56 +77,56 @@ export default function SwimRingSVG() {
 	C104.295,35.115,98.772,24.583,87.915,25.652z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M101.563,46.124"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M101.354,47.496"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M101.052,49.158"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M78.219,81.396"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M78.579,29.093"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M78.929,28.884"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M79.638,28.465"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M80.347,28.093"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M44.122,91.591L44.122,91.591l-0.012-0.022v-0.012l-0.012-0.023
 	l0,0l-0.012-0.035h-0.012v-0.023l-0.012-0.012V91.44l-0.011-0.012l-0.012-0.012v-0.023l-0.012-0.012v-0.023h-0.012l-0.012-0.034l0,0
@@ -143,8 +143,8 @@ export default function SwimRingSVG() {
 	c-2.221,6.696-3.453,15.613-0.14,22.077l-1.127,1.093L45.994,89.777L44.122,91.591z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M93.623,87.058L93.623,87.058l-0.035,0.034l0,0l-0.035,0.035l0,0
 	l-0.034,0.035v0.012l-0.035,0.012v0.022L93.46,87.22l-0.023,0.023l-0.012,0.012l-0.022,0.023l-0.012,0.023l-0.012,0.011
@@ -154,53 +154,53 @@ export default function SwimRingSVG() {
 	l0.14,0.36l4.174,11.857L93.623,87.058z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M114.339,17.63l0.023,0.104c4.464,9.812,3.139,23.065,0.116,33.121
 	v0.011v0.035l0,0l-0.046,0.046v0.012v0.035v0.012l-1.86,0.349l-11.416,2.116l-1.325,0.255c2.127-6.673,3.185-15.508-0.128-21.937
 	l1.511-1.477L114.339,17.63z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#BF4A3D"
 				d="M55.875,17.526c7.161-7.789,18.02-15.532,28.773-16.764l8.87,5.115
 	l-0.291,0.035c-10.882,1.5-20.635,8.777-28.168,16.403l-0.291,0.291L55.875,17.526z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#C0392B"
 				d="M79.603,68.154l9.138,5.057
 	C84.125,78.35,78.219,83.732,70.14,83.872l-0.477,0.012l0,0l-8.87-5.115l0.477-0.012c7.196-0.593,13.567-5.487,18.298-10.567
 	L79.603,68.154z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#C0392B"
 				d="M90.786,26.594l8.917,5.196v0.012l0.232,0.453
 	c3.08,6.487,2.034,14.474,0,21.124l-0.104,0.349l-9.196-4.15c2.406-7.057,3.732-15.485,0.442-22.437l-0.232-0.454L90.786,26.594z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#9C9C9C"
 				d="M42.308,86.046c1.384,6.149,4.313,11.358,9.486,14.787l0.651,0.396
 	l-8.871-5.115l-0.639-0.396L42.297,95.3c-4.929-3.581-7.417-8.417-8.824-14.229l-0.035-0.14L42.308,86.046z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#943B3B"
 				d="M44.238,58.098l-0.035,0.14c-2.93,9.905-4.336,21.728-0.767,31.632
 	l0.093,0.279l0.116,0.268l0.105,0.279l0.104,0.267l0.116,0.268l0.035,0.094l0,0l-8.87-5.15l-0.035-0.059l-0.104-0.267
 	c-4.127-10.08-2.663-22.542,0.349-32.726l0.035-0.151l8.859,5.115V58.098z"
 			/>
 			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				fill="#E64B3C"
 				d="M64.769,22.606C72.058,14.91,82.579,7.109,93.425,5.889h0.012l0,0
 	h0.023l0.023-0.012l0,0h0.035l0,0l0,0h0.034l0,0l0,0h0.035l0,0l0.023-0.012l-4.964,19.729c-7.243,0.372-14.393,5.94-19.02,11.16
