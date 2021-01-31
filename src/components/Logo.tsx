@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Button } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import LogoImg from './LogoImg';
+import MainLogo from './svgs/MainLogo';
 interface LogoProps {
 	onBack?: Function | undefined | null;
 }
@@ -18,7 +18,7 @@ export default function Logo({ onBack }: LogoProps) {
 			)}
 			<Link href={ROUTES.HOME}>
 				<a>
-					<LogoImg />
+					<MainLogo />
 				</a>
 			</Link>
 		</div>
