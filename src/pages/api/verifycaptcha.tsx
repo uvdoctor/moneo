@@ -1,10 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-type Data = {
-	success: boolean;
-};
-
-export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
+export default (req: NextApiRequest, res: NextApiResponse) => {
 	const { method } = req;
 	const { token } = req.body;
 	const secret = '6LdTyd8ZAAAAAEB3B2-P2swyDqrqpBQEcY4m0sOf';
@@ -19,9 +15,15 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 				secret: secret,
 				response: token
 			})
-		}).then((captchRes: any) => {
+		}).then((captchRes: any) => 
+			captchRes.json()
+		).then((data: any) => {
+			console.log('Server response: ', data);
 			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({ success: captchRes.success });
+			res.status(200).json({ success: data.success });
+		})
+		.catch((e: any) => {
+			console.log("ERROR", e);
 		});
 	} else {
 		res.status(405).end(`Method ${method} Not Allowed`);
