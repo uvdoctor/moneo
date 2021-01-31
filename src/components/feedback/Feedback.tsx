@@ -8,8 +8,28 @@ import { FeedbackType } from "../../api/goals";
 import { FormInstance } from "antd/lib/form";
 import { FeedbackContext } from "./FeedbackContext";
 import TextArea from "antd/lib/input/TextArea";
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export default function Feedback() {
+
+  const { executeRecaptcha } = useGoogleReCaptcha();
+   
+  const executeCaptcha = async () => {
+    const token = await executeRecaptcha("feedback");
+
+    console.log("Captcha token = ", token);
+    fetch('/api/verifycaptcha', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify({
+				token: token
+			})
+		}).then((captchRes: any) => {
+			console.log("Captcha Response: ", captchRes);
+		});
+  }
 
   const {
     feedbackType,
@@ -25,6 +45,7 @@ export default function Feedback() {
   const formRef = useRef<FormInstance>(null);
   
   useEffect(() => {
+    executeCaptcha();
     if (formRef.current) {
       formRef.current.setFieldsValue({
         feedbackType,

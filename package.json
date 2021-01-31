@@ -39,6 +39,7 @@
     "react-dom": "^16.14.0",
     "react-draggable": "^4.4.3",
     "react-elastic-carousel": "^0.9.4",
+    "react-google-recaptcha-v3": "^1.7.1",
     "react-plaid-link": "^3.0.0",
     "react-player": "^2.6.2",
     "react-share": "^4.3.1",
