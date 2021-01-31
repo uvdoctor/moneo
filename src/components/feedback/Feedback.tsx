@@ -26,8 +26,10 @@ export default function Feedback() {
 			body: JSON.stringify({
 				token: token
 			})
-		}).then((captchRes: any) => {
-			console.log("Captcha Response: ", captchRes);
+		}).then((captchRes: any) => 
+      captchRes.json()
+    ).then((data: any) => {
+			console.log("Captcha Response: ", data);
 		});
   }
 

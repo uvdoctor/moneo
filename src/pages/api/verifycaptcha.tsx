@@ -14,8 +14,13 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 			captchRes.json()
 		).then((data: any) => {
 			console.log('Server response: ', data.score);
+			let isBot = (data.score < 0.5);
+			if(isBot){
+				res.status(403).json({ success: false });
+			}else{
+				res.status(200).json({ success: true });
+			}
 			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({ success: data.success });
 		})
 		.catch((e: any) => {
 			console.log("ERROR", e);
