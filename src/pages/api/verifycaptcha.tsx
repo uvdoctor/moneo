@@ -5,9 +5,9 @@ type Data = {
 };
 
 export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
-	const { query: { token }, method } = req;
+	const { method } = req;
+	const { token } = req.body;
 	const secret = '6LdTyd8ZAAAAAEB3B2-P2swyDqrqpBQEcY4m0sOf';
-	console.log('Going to recaptcha with token: ', token);
 	if (method === 'POST') {
 		fetch('https://www.google.com/recaptcha/api/siteverify', {
 			method: 'POST',
