@@ -1,26 +1,32 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-type Data = {
-	success: boolean;
-};
-
-export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
-	const { query: { token }, method } = req;
+export default (req: NextApiRequest, res: NextApiResponse) => {
+	const { method, body: {token} } = req;
 	const secret = '6LdTyd8ZAAAAAEB3B2-P2swyDqrqpBQEcY4m0sOf';
-	console.log('Going to recaptcha with token: ', token);
 	if (method === 'POST') {
 		fetch('https://www.google.com/recaptcha/api/siteverify', {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json;charset=utf-8'
+				'Content-Type': 'application/x-www-form-urlencoded'
 			},
-			body: JSON.stringify({
-				secret: secret,
-				response: token
-			})
-		}).then((captchRes: any) => {
+			body: `secret=${secret}&response=${token}`
+		}).then((captchRes: any) => 
+			captchRes.json()
+		).then((data: any) => {
+			if(!data || !data.score || !data.success){
+				res.status(500).end('Google captcha failed');
+			}
+			let isBot = (data.score < 0.5);
+			if(isBot){
+				res.status(403).json({ success: false });
+			}else{
+				res.status(200).json({ success: true });
+			}
 			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({ success: captchRes.success });
+		})
+		.catch((e: any) => {
+			console.log("ERROR", e);
+			res.status(500).end('Google captcha Exception');
 		});
 	} else {
 		res.status(405).end(`Method ${method} Not Allowed`);

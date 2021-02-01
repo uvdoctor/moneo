@@ -8,8 +8,12 @@ import { FeedbackType } from "../../api/goals";
 import { FormInstance } from "antd/lib/form";
 import { FeedbackContext } from "./FeedbackContext";
 import TextArea from "antd/lib/input/TextArea";
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { validateCaptcha } from "../utils";
 
 export default function Feedback() {
+
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const {
     feedbackType,
@@ -25,6 +29,8 @@ export default function Feedback() {
   const formRef = useRef<FormInstance>(null);
   
   useEffect(() => {
+    let isBot = checkIfBot();
+    console.log("isBot", isBot);
     if (formRef.current) {
       formRef.current.setFieldsValue({
         feedbackType,
@@ -35,6 +41,10 @@ export default function Feedback() {
       });
     }
   }, [feedbackType, feedback, firstName, lastName, email]);
+
+  const checkIfBot = async () => {
+    return await validateCaptcha("feedback", executeRecaptcha);
+  }
 
   return (
     <Row justify="center"> 

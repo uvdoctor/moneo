@@ -4,6 +4,7 @@ import Nav from "./Nav";
 import Footer from "./Footer";
 import Head from "next/head";
 import { AppContextProvider } from "./AppContext";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 interface BasicPageProps {
   className?: string;
@@ -16,6 +17,7 @@ interface BasicPageProps {
 }
 
 export default function BasicPage(props: BasicPageProps) {
+  const RECAPTCHA_CLIENT_TOKEN = '6LdTyd8ZAAAAAHZqurv84AUu_qsMvb_j9V3W_8WP';
   return (
     <Fragment>
       <Head>
@@ -77,16 +79,20 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="format-detection" content="telephone=no" />
         <title>{props.title}</title>
       </Head>
-      <AppContextProvider>
-        <Layout className={`dd-site ${props.className}`}>
-          <Nav
-            scrollable={props.navScrollable}
-            isFixed={props.fixedNav}
-            onBack={props.onBack} />
-          {props.children}
-          <Footer />
-        </Layout>
-      </AppContextProvider>
+      <GoogleReCaptchaProvider
+        reCaptchaKey= { RECAPTCHA_CLIENT_TOKEN }>
+          <AppContextProvider>
+            <Layout className={`dd-site ${props.className}`}>
+              <Nav
+                scrollable={props.navScrollable}
+                isFixed={props.fixedNav}
+                onBack={props.onBack} />
+              {props.children}
+              <Footer />
+            </Layout>
+          </AppContextProvider>
+      </GoogleReCaptchaProvider>
+      
     </Fragment>
   );
 }
