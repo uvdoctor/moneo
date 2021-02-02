@@ -11,7 +11,7 @@ import { getImpLevels } from './goalutils';
 import { PlanContext } from './PlanContext';
 
 export default function GoalCost() {
-	const { isPublicCalc }: any = useContext(PlanContext);
+	const { isPublicCalc, ffGoal }: any = useContext(PlanContext);
 	const {
 		goal,
 		startYear,
@@ -24,7 +24,8 @@ export default function GoalCost() {
 		startMonth,
 		changeStartMonth
 	}: any = useContext(CalcContext);
-	const { ffGoalEndYear, manualMode, isEndYearHidden }: any = useContext(GoalContext);
+	const ffGoalEndYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) : goal.by + 50;
+	const { manualMode, isEndYearHidden }: any = useContext(GoalContext);
 	const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
 	const syOptions = initOptions(firstStartYear, ffGoalEndYear - 20 - firstStartYear);
 

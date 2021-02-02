@@ -1,5 +1,5 @@
 import { Button, Col, PageHeader, Row, Tabs } from 'antd';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { isMobileDevice } from '../utils';
 import { RocketOutlined } from '@ant-design/icons';
 import { useFullScreenBrowser } from 'react-browser-hooks';
@@ -28,8 +28,6 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
   const { defaultCurrency }: any = useContext(AppContext);
   const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
-	const [ activeTab, setActiveTab ] = useState<string>('1');
-	const [ demoVideoPlay, setDemoVideoPlay ] = useState<boolean>(true);
 
   const startingAssumptions = [
 		{
@@ -157,7 +155,7 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 	];
 
   const sections: any = {
-		Demo: <VideoPlayer url={props.demoUrl} play={demoVideoPlay} />,
+		Demo: <VideoPlayer url={props.demoUrl} />,
 		'Expected Results': <ExpectedResults elements={[ ...props.results, ...endingResults ]} />,
 		'Key Features': <KeyFeatures elements={[ ...startingFeatures, ...props.features, ...endingFeatures ]} />,
 		'Major Assumptions': (
@@ -165,14 +163,6 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 		),
 		Definitions: <CommonTerms elements={[ ...props.terms, ...genericTerms ]} />
 	};
-
-
-  useEffect(
-		() => {
-			setDemoVideoPlay(activeTab === '1');
-		},
-		[ activeTab ]
-	);
 
   const createGoal = () => {
     let g: any = null;
@@ -208,9 +198,6 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
         tabPosition={isMobileDevice(fsb) ? 'top' : 'left'}
         type={isMobileDevice(fsb) ? 'card' : 'line'}
         animated
-        onChange={(key: string) => {
-          setActiveTab(key);
-        }}
       >
         {Object.keys(sections).map((key, i) => (
           <TabPane key={`${i + 1}`} tab={key}>
