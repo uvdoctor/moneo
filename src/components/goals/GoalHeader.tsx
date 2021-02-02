@@ -5,11 +5,11 @@ import TextInput from '../form/textinput';
 import { GoalContext } from './GoalContext';
 
 export default function GoalHeader() {
-	const { addCallback, updateCallback }: any = useContext(CalcContext);
+	const { isPublicCalc }: any = useContext(CalcContext);
 	const { name, setName }: any = useContext(GoalContext);
 	return (
 		<CalcHeader>
-			{addCallback && updateCallback ? (
+			{!isPublicCalc ? (
 				<TextInput
 					name="name"
 					pre=""

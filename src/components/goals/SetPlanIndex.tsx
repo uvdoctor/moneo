@@ -3,14 +3,12 @@ import React, { useContext } from 'react';
 import { GoalType } from '../../api/goals';
 import { AppContext } from '../AppContext';
 import { createNewGoalInput } from './goalutils';
+import { PlanContext } from './PlanContext';
 
-interface SetPlanIndexProps {
-	setWIPGoal: Function;
-}
-
-export default function SetPlanIndex({ setWIPGoal }: SetPlanIndexProps) {
+export default function SetPlanIndex() {
 	const { defaultCurrency }: any = useContext(AppContext);
-
+	const { setWIPGoal }: any = useContext(PlanContext);
+	
 	return (
 		<div style={{ textAlign: 'center' }}>
 			<h3>First Things First.</h3>

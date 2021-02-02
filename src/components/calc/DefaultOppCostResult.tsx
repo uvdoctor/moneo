@@ -4,9 +4,11 @@ import { initOptions } from '../utils';
 import { CalcContext } from './CalcContext';
 import OppCostResult from './OppCostResult';
 import { GoalContext } from '../goals/GoalContext';
+import { PlanContext } from '../goals/PlanContext';
 
 export default function DefaultOppCostResult() {
-	const { cfs, dr, rr, startYear, startMonth }: any = useContext(CalcContext);
+	const { rr }: any = useContext(PlanContext);
+	const { cfs, dr, startYear, startMonth }: any = useContext(CalcContext);
 	const { sellAfter, sellPrice }: any = useContext(GoalContext);
 	const [ oppCost, setOppCost ] = useState<number>(0);
 	const isDRNumber = dr !== null;

@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import { isFFPossible } from '../goals/cfutils';
 import { FIGoalContext } from '../goals/FIGoalContext';
+import { PlanContext } from '../goals/PlanContext';
 import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
 
 export default function FIYearResult() {
-	const { ffResult, startYear }: any = useContext(CalcContext);
+	const { ffResult }: any = useContext(PlanContext);
+	const { startYear }: any = useContext(CalcContext);
 	const { retirementAge, leaveBehind }: any = useContext(FIGoalContext);
 	
 	return isFFPossible(ffResult, leaveBehind) ? (

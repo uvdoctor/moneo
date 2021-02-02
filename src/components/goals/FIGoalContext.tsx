@@ -5,26 +5,21 @@ import CalcTemplate from "../calc/CalcTemplate";
 import FIYearResult from "../calc/FIYearResult";
 import FISavingsResult from "../calc/FISavingsResult";
 import { findEarliestFFYear } from "./cfutils";
+import { PlanContext } from "./PlanContext";
 
 const FIGoalContext = createContext({});
 interface FIGoalContextProviderProps {
   children?: ReactNode;
-  mustCFs: Array<number>;
-  tryCFs: Array<number>;
-  mergedCFs: any;
-  pp?: Object;
 }
 
-function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIGoalContextProviderProps) {
+function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
+  const { mustCFs, tryCFs, mergedCFs, pp, rr, dr, setRR, ffResult, setFFResult }: any = useContext(PlanContext);
   const {
     goal,
     currency,
     inputTabIndex,
     setInputTabIndex,
-    rr,
     setCFs,
-    dr,
-    setRR,
     startYear,
     endYear,
     inputTabs,
@@ -33,8 +28,6 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
     setResultTabs,
     resultTabIndex,
     setResultTabIndex,
-    ffResult,
-    setFFResult,
     setResults,
     hasTab,
     allInputDone
@@ -186,7 +179,7 @@ function FIGoalContextProvider({ children, mustCFs, tryCFs, mergedCFs, pp }: FIG
       ffResult.ffYear ? ffResult.ffYear : null,
       mustCFs,
       tryCFs,
-      pp ? pp : dr
+      dr ? dr : pp
     );
     setFFResult(result);
     setCFs([...Object.values(result.ffCfs)]);

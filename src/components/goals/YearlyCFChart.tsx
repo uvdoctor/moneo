@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis } from '../chartutils';
-
-interface YearlyCFChartProps {
-	mustCFs: Array<number>;
-	tryCFs: Array<number>;
-	optCFs: Array<number>;
-	from: number;
-  to: number;
-  currency: string
-}
+import { PlanContext } from './PlanContext';
 
 const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
 
-export default function YearlyCFChart({ mustCFs, tryCFs, optCFs, from, to, currency }: YearlyCFChartProps) {
-	const [ data, setData ] = useState<Array<any>>([]);
+export default function YearlyCFChart() {
+	const { mustCFs, tryCFs, optCFs, ffGoal }: any = useContext(PlanContext);
+	const [data, setData] = useState<Array<any>>([]);
+	const from = new Date().getFullYear() + 1;
+	const to = ffGoal.ey;
+	const currency = ffGoal.ccy;
 
 	useEffect(
 		() => {

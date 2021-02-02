@@ -8,8 +8,10 @@ import Section from '../form/section';
 import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
 import { getImpLevels } from './goalutils';
+import { PlanContext } from './PlanContext';
 
 export default function GoalCost() {
+	const { isPublicCalc }: any = useContext(PlanContext);
 	const {
 		goal,
 		startYear,
@@ -17,10 +19,8 @@ export default function GoalCost() {
 		endYear,
 		changeEndYear,
 		eyOptions,
-		addCallback,
 		impLevel,
 		setImpLevel,
-		isPublicCalc,
 		startMonth,
 		changeStartMonth
 	}: any = useContext(CalcContext);
@@ -31,7 +31,7 @@ export default function GoalCost() {
 	return (
 		<Col span={24}>
 			<Section title="Schedule">
-				{addCallback && (
+				{!isPublicCalc && (
 					<SelectInput
 						pre="Importance"
 						value={impLevel}

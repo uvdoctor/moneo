@@ -28,6 +28,7 @@ import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import Amplify, { API } from 'aws-amplify';
 import { CALC_NAMES } from '../../CONSTANTS';
 import { FeedbackContext } from '../feedback/FeedbackContext';
+import { PlanContext } from '../goals/PlanContext';
 
 Amplify.configure(awsconfig);
 
@@ -47,9 +48,6 @@ interface CalcContextProviderProps {
   children: ReactNode;
 	tabOptions?: any;
 	resultTabOptions?: any;
-  addCallback?: Function;
-  updateCallback?: Function;
-  cancelCallback?: Function;
 }
 
 function CalcContextProvider({
@@ -57,21 +55,17 @@ function CalcContextProvider({
   children,
 	tabOptions,
 	resultTabOptions,
-  addCallback,
-  updateCallback,
-  cancelCallback
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
+  const { addCallback, updateCallback, isPublicCalc, dr, setDR }: any = useContext(PlanContext);
   const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
-  const isPublicCalc = addCallback && updateCallback ? false : true;
   const [startYear, setStartYear] = useState<number>(goal.sy);
   const [startMonth, setStartMonth] = useState<number>(goal.sm);
   const [endYear, setEndYear] = useState<number>(goal.ey);
   const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal.ccy);
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(goal?.id ? true : false);
-	const [ dr, setDR ] = useState<number | null>(addCallback && updateCallback ? null : 5);
   const [cfs, setCFs] = useState<Array<number>>([]);
   const [ cfsWithoutSM, setCFsWithoutSM ] = useState<Array<number>>([]);
   const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
@@ -79,14 +73,12 @@ function CalcContextProvider({
 	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(false);
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
   const [btnClicked, setBtnClicked] = useState<boolean>(false);
-  const [rr, setRR] = useState<Array<number>>([]);
   const [ffOOM, setFFOOM] = useState<Array<number> | null>(null);
   const [rating, setRating ] = useState<number>(0);
   const [feedbackText, setFeedbackText] = useState<string>("");
   const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
   const [stepVideoUrl, setStepVideoUrl] = useState<string>("");
   const [eyOptions, setEYOptions] = useState(goal.type && goal.type === GoalType.FF ? initOptions(1960, nowYear - 15 - 1960) : initOptions(startYear, 30));
-	const [ffResult, setFFResult] = useState<any>({});
   const [error, setError] = useState<string>("");
   const [results, setResults] = useState<Array<any>>([]);
   const [timer, setTimer] = useState<any>(null);
@@ -202,7 +194,7 @@ function CalcContextProvider({
 
   const handleSubmit = async () => {
     setBtnClicked(true);
-    if (addCallback && updateCallback) {
+    if (!isPublicCalc) {
       if (goal?.id) {
         await updateCallback(cfs);
       } else await addCallback(cfs);
@@ -296,13 +288,10 @@ function CalcContextProvider({
 				fsb,
 				showOptionsForm,
         setOptionsVisibility,
-        isPublicCalc,
         disableSubmit,
         setDisableSubmit,
         btnClicked,
         setBtnClicked,
-        rr,
-        setRR,
         ffOOM,
         setFFOOM,
         handleSubmit,
@@ -325,8 +314,6 @@ function CalcContextProvider({
         setEndYear,
         eyOptions,
         setEYOptions,
-        ffResult,
-        setFFResult,
         error,
         setError,
         results,
@@ -337,7 +324,6 @@ function CalcContextProvider({
         setTimer,
         analyzeFor,
         setAnalyzeFor,
-        cancelCallback
 			}}
     >
       {children}

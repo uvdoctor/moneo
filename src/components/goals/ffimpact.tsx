@@ -24,7 +24,7 @@ export default function FFImpact({impactYears}: FFImpactProps) {
 			pl
 			unit={`${getUnit()}`}
 			result={ffImpactYears}
-			info={`You May Achieve Financial Independence ${Math.abs(ffImpactYears)} ${getUnit()} 
+			info={`You May Achieve Financial Independence ${Math.abs(totalImpactYears)} ${getUnit()} 
                         ${getImpactText()} due to this Goal.`}
 		/>
 	) : (

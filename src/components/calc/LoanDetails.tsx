@@ -12,9 +12,11 @@ import LoanAdvOptions from './LoanAdvOptions';
 import { Button, Col, Modal, Row } from 'antd';
 import MonthlyLoanSchedule from './MonthlyLoanSchedule';
 import Draggable from 'react-draggable';
+import { PlanContext } from '../goals/PlanContext';
 
 export default function LoanDetails() {
-	const { fsb, goal, currency, isPublicCalc, startYear, endYear }: any = useContext(CalcContext);
+	const { isPublicCalc }: any = useContext(PlanContext);
+	const { fsb, goal, currency, startYear, endYear }: any = useContext(CalcContext);
 	const {
 		loanRepaymentMonths,
 		loanMonths,

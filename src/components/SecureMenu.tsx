@@ -7,10 +7,12 @@ import Link from 'next/link';
 import { ROUTES } from '../CONSTANTS';
 import { useRouter } from 'next/router';
 import SVGOff from './svgoff';
+import { calcList } from './landing/Calculator';
 
 export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 	const { username, setUsername }: any = useContext(AppContext);
 	const router = useRouter();
+	const { SubMenu } = Menu;
 
 	const updateUser = (username: string | null) => {
 		if (username) {
@@ -59,24 +61,43 @@ export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 
 	return (
 		<Menu mode={mode}>
+			<SubMenu title="Calculate">
+				{calcList.map(({ name, link }) => (
+					<Menu.Item key={name} className="multi-col-submenu">
+						<Link href={link}>
+							<a>{name}</a>
+						</Link>
+					</Menu.Item>
+				))}
+			</SubMenu>
+			<Menu.Item>
+				<Link href={ROUTES.ABOUT}>
+					<a>About</a>
+				</Link>
+			</Menu.Item>
+			<Menu.Item>
+				<Link href={ROUTES.CONTACT_US}>
+					<a>Contact Us</a>
+				</Link>
+			</Menu.Item>
 			<Menu.Item>
 				<Link href={ROUTES.GET}>
-					<a>GET</a>
+					<a>Get</a>
 				</Link>
 			</Menu.Item>
 			<Menu.Item>
 				<Link href={ROUTES.SET}>
-					<a>SET</a>
+					<a>Set</a>
 				</Link>
 			</Menu.Item>
 			<Menu.Item>
 				<Link href={ROUTES.SAVE}>
-					<a>SAVE</a>
+					<a>Save</a>
 				</Link>
 			</Menu.Item>
 			<Menu.Item>
 				<Link href={ROUTES.INVEST}>
-					<a>INVEST</a>
+					<a>Invest</a>
 				</Link>
 			</Menu.Item>
 			{username && <Button type="link" danger icon={<SVGOff />} onClick={(e) => handleLogout(e)} />}

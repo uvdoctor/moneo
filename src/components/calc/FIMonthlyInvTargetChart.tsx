@@ -4,12 +4,14 @@ import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } 
 import { CalcContext } from './CalcContext';
 import { FIGoalContext } from '../goals/FIGoalContext';
 import { getMonthName } from '../utils';
+import { PlanContext } from '../goals/PlanContext';
 
 const AreaChart = dynamic(() => import('bizcharts/lib/plots/AreaChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function FIMonthlyInvTargetChart() {
-	const { currency, ffResult, cfs }: any = useContext(CalcContext);
+	const { ffResult }: any = useContext(PlanContext);
+	const { currency, cfs }: any = useContext(CalcContext);
 	const { avgMonthlySavings, monthlySavingsRate, monthlyMaxSavings }: any = useContext(FIGoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 

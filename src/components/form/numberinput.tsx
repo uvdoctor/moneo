@@ -18,11 +18,12 @@ interface NumberInputProps {
 	step: number;
 	feedback?: any;
 	additionalMarks?: Array<number>;
+	noRangeFactor?: boolean
 }
 
 export default function NumberInput(props: NumberInputProps) {
 	const inputRef = useRef(null);
-	const [ rangeFactor, setRangeFactor ] = useState<number>(props.currency ? getRangeFactor(props.currency) : 1);
+	const [ rangeFactor, setRangeFactor ] = useState<number>(props.currency && !props.noRangeFactor ? getRangeFactor(props.currency) : 1);
 	const [ sliderBorderColor, setSliderBorderColor ] = useState<string>(COLORS.GREEN);
 	const [ feedbackText, setFeedbackText ] = useState<string>('');
 	const [ minNum, setMinNum ] = useState<number>(props.min * rangeFactor);
@@ -56,7 +57,7 @@ export default function NumberInput(props: NumberInputProps) {
 
 	useEffect(
 		() => {
-			if (!props.currency) return;
+			if (!props.currency || props.noRangeFactor) return;
 			let rf = getRangeFactor(props.currency as string);
 			if (rf !== rangeFactor) setRangeFactor(rf);
 		},
