@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { CalcContext } from '../calc/CalcContext';
 import CalcHeader from '../calc/CalcHeader';
 import TextInput from '../form/textinput';
 import { GoalContext } from './GoalContext';
+import { PlanContext } from './PlanContext';
 
 export default function GoalHeader() {
-	const { isPublicCalc }: any = useContext(CalcContext);
+	const { isPublicCalc }: any = useContext(PlanContext);
 	const { name, setName }: any = useContext(GoalContext);
 	return (
 		<CalcHeader>
