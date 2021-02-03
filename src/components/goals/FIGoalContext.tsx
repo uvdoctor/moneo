@@ -179,7 +179,7 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
       ffResult.ffYear ? ffResult.ffYear : null,
       mustCFs,
       tryCFs,
-      dr ? dr : pp
+      dr ? dr : pp()
     );
     setFFResult(result);
     setCFs([...Object.values(result.ffCfs)]);

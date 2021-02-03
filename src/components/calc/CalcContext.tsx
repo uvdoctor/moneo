@@ -57,7 +57,7 @@ function CalcContextProvider({
 	resultTabOptions,
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { addCallback, updateCallback, isPublicCalc, dr, setDR }: any = useContext(PlanContext);
+  const { addGoal, updateGoal, isPublicCalc, dr, setDR }: any = useContext(PlanContext);
   const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
@@ -196,8 +196,8 @@ function CalcContextProvider({
     setBtnClicked(true);
     if (!isPublicCalc) {
       if (goal?.id) {
-        await updateCallback(cfs);
-      } else await addCallback(cfs);
+        await updateGoal(cfs);
+      } else await addGoal(cfs);
     } 
     setBtnClicked(false);
   };
@@ -295,8 +295,6 @@ function CalcContextProvider({
         ffOOM,
         setFFOOM,
         handleSubmit,
-        addCallback,
-        updateCallback,
         rating,
         setRating,
         showFeedbackModal,
