@@ -9,7 +9,7 @@ export default function YearlyCFChart() {
 	const { mustCFs, tryCFs, optCFs, ffGoal }: any = useContext(PlanContext);
 	const [data, setData] = useState<Array<any>>([]);
 	const from = new Date().getFullYear() + 1;
-	const to = ffGoal.ey;
+	const to = ffGoal.sy + (ffGoal.loan.dur as number);
 	const currency = ffGoal.ccy;
 
 	useEffect(

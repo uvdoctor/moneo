@@ -30,35 +30,31 @@ export default function Summary() {
 	return (
 		<Card
 			title={
-				<Row align="middle" justify="space-between">
-					<Col>
-						<label>{goalTypes[goal.type as GoalType]}</label>
-						<h2>{goal.name}</h2>
-					</Col>
-					<Col>
-						<Button type="link" onClick={() => editGoal(goal.id)} icon={<EditOutlined />}>
-							Edit
-						</Button>
-						<Button type="link" onClick={() => removeGoal(goal.id)} icon={<DeleteOutlined />}>
-							Delete
-						</Button>
-					</Col>
+				<Row justify="space-around">
+					<label
+						style={{
+							color: 'white',
+							backgroundColor: bgColor,
+							paddingTop: '2px',
+							paddingBottom: '2px',
+							paddingLeft: '4px',
+							paddingRight: '4px'
+						}}
+					>
+						{impLevels[goal.imp as LMH]}
+					</label>
+					<label>{goalTypes[goal.type as GoalType]}</label>
+					<h2>{goal.name}</h2>
 				</Row>
 			}
-			extra={
-				<label
-					style={{
-						color: 'white',
-						backgroundColor: bgColor,
-						paddingTop: '1px',
-						paddingBottom: '1px',
-						paddingLeft: '2px',
-						paddingRight: '2px'
-					}}
-				>
-					{impLevels[goal.imp as LMH]}
-				</label>
-			}
+			extra={[
+				<Button type="link" onClick={() => editGoal(goal.id)} icon={<EditOutlined />}>
+					Edit
+				</Button>,
+				<Button type="link" onClick={() => removeGoal(goal.id)} icon={<DeleteOutlined />}>
+					Delete
+				</Button>
+			]}
 		>
 			{(goal.sy as number) > nowYear && (
 				<Row justify="space-around">
@@ -70,10 +66,12 @@ export default function Summary() {
 					</Col>
 				</Row>
 			)}
-			<Row>Cash Flows in {goal.ccy}</Row>
-			<Row>
-				<BasicLineChart />
-			</Row>
+			<div style={{ marginTop: '20px' }}>
+				<Row justify="center">Cash Flows in {goal.ccy}</Row>
+				<Row justify="center">
+					<BasicLineChart />
+				</Row>
+			</div>
 		</Card>
 	);
 }

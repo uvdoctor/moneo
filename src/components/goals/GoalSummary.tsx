@@ -7,22 +7,25 @@ import { CalcContextProvider } from '../calc/CalcContext';
 import { GoalContextProvider } from './GoalContext';
 
 interface GoalSummaryProps {
-  impFilter: string;
+	impFilter: string;
 }
 
-export default function GoalSummary({impFilter}: GoalSummaryProps) {
+export default function GoalSummary({ impFilter }: GoalSummaryProps) {
 	const { allGoals }: any = useContext(PlanContext);
 	return (
 		<Row justify="space-around">
-			{allGoals.map((g: UpdateGoalInput, i: number) => (
-				(!impFilter || impFilter === g.imp) && <Col flex="auto">
-					<CalcContextProvider key={'g' + i} goal={g}>
-						<GoalContextProvider>
-							<Summary />
-						</GoalContextProvider>
-					</CalcContextProvider>
-				</Col>
-			))}
+			{allGoals.map(
+				(g: UpdateGoalInput, i: number) =>
+					(!impFilter || impFilter === g.imp) && (
+						<Col xs={24} sm={24} md={24} lg={10}>
+							<CalcContextProvider key={'g' + i} goal={g}>
+								<GoalContextProvider>
+									<Summary />
+								</GoalContextProvider>
+							</CalcContextProvider>
+						</Col>
+					)
+			)}
 		</Row>
 	);
 }

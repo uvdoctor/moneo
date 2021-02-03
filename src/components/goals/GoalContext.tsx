@@ -84,7 +84,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   const [eduLoanPSchedule, setEduLoanPSchedule] = useState<Array<number>>([]);
   const [eduLoanPDueSchedule, setEduLoanPDueSchedule] = useState<Array<number>>([]);
   const [eduCostSemester, setEduCostSemester] = useState<number>(goal.tbr);
- 	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal.loan.type);
+ 	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal.loan.type ? goal.loan.type : null);
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
     >(goal.achg);

@@ -75,7 +75,7 @@ export default function SetPlanView() {
 			{allGoals && allGoals.length ? (
 				<Row>
 					<Col className="steps-content" span={24}>
-						<Tabs>
+						<Tabs type="card">
 							{tabOptions.map((t: any) => (
 								<TabPane
 									key={t.label}

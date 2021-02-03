@@ -19,13 +19,11 @@ export default function GoalCost() {
 		endYear,
 		changeEndYear,
 		eyOptions,
-		impLevel,
-		setImpLevel,
 		startMonth,
 		changeStartMonth
 	}: any = useContext(CalcContext);
 	const ffGoalEndYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) : goal.by + 50;
-	const { manualMode, isEndYearHidden }: any = useContext(GoalContext);
+	const { manualMode, isEndYearHidden, impLevel, setImpLevel }: any = useContext(GoalContext);
 	const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
 	const syOptions = initOptions(firstStartYear, ffGoalEndYear - 20 - firstStartYear);
 
