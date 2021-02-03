@@ -536,16 +536,12 @@ const calculateTryAllocation = (
 const buildEmptyAA = (fromYear: number, toYear: number) => {
   let aa: any = {};
   getAllAssetTypes().forEach((key) => (aa[key] = buildArray(fromYear, toYear)));
-  console.log("Empty AA is ", aa);
   return aa;
 };
 
 const getRR = (aa: any, index: number, pp: any) => {
   let perf = 0;
   for (const prop in aa) {
-    console.log("Prop is ", prop);
-    console.log("PP is ", pp[prop]);
-    console.log("AA is ", aa[prop][index]);
     perf += (pp[prop] * aa[prop][index]) / 100;
   }
   return perf;
