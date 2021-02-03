@@ -1,14 +1,16 @@
 import React, { useContext, useEffect } from 'react';
 import Section from '../form/section';
 import NumberInput from '../form/numberinput';
-import { getMonthName, toCurrency } from '../utils';
+import { getMonthName, getRangeFactor, toCurrency } from '../utils';
 import { FIGoalContext } from './FIGoalContext';
 import { CalcContext } from '../calc/CalcContext';
 import ItemDisplay from '../calc/ItemDisplay';
 import HSwitch from '../HSwitch';
+import { PlanContext } from './PlanContext';
 
 export function BeforeFI() {
-	const { currency, dr, setDR, addCallback }: any = useContext(CalcContext);
+	const { isPublicCalc }: any = useContext(PlanContext);
+	const { currency, dr, setDR }: any = useContext(CalcContext);
 	const {
 		avgMonthlySavings,
 		setAvgMonthlySavings,
@@ -77,8 +79,9 @@ export function BeforeFI() {
 								changeHandler={setMonthlyMaxSavings}
 								currency={currency}
 								min={avgMonthlySavings}
-								max={avgMonthlySavings + 5000}
+								max={avgMonthlySavings + 5000 * getRangeFactor(currency)}
 								step={100}
+								noRangeFactor
 								info={`This is the maximum possible Monthly Investment amount You can achieve.`}
 							/>
 						) : null
@@ -93,7 +96,7 @@ export function BeforeFI() {
 					footer={`for ${getMonthName(new Date().getMonth() + 1)} ${new Date().getFullYear()}`}
 				/>
 			)}
-			{!addCallback && (
+			{isPublicCalc && (
 				<NumberInput
 					value={dr as number}
 					changeHandler={setDR}

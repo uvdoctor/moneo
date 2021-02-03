@@ -11,6 +11,7 @@ import { CalcContext } from '../calc/CalcContext';
 import DataSwitcher from '../DataSwitcher';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { ASSET_CATEGORIES } from '../../CONSTANTS';
+import { PlanContext } from './PlanContext';
 
 const TreemapChart = dynamic(() => import('bizcharts/lib/plots/TreemapChart'), {
 	ssr: false
@@ -46,7 +47,8 @@ export default function AssetAllocationChart({
 		savings: 0
 	};
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
-	const { cfs, ffResult, currency, rr }: any = useContext(CalcContext);
+	const { ffResult, rr }: any = useContext(PlanContext);
+	const { cfs, currency }: any = useContext(CalcContext);
 	const index = year - new Date().getFullYear();
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [ colors, setColors ] = useState<Array<string>>([]);

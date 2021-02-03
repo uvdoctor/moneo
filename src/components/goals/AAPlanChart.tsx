@@ -8,6 +8,7 @@ import {
 import { getAssetColour } from "../utils";
 import { CalcContext } from "../calc/CalcContext";
 import { FIGoalContext } from "./FIGoalContext";
+import { PlanContext } from "./PlanContext";
 
 const StackedColumnChart = dynamic(
 	() => import("bizcharts/lib/plots/StackedColumnChart"),
@@ -22,7 +23,8 @@ interface AAPlanChartProps {
 }
 
 export default function AAPlanChart({ changeToSingleYear }: AAPlanChartProps) {
-	const { startYear, rr, ffResult }: any = useContext(CalcContext);
+	const { rr, ffResult }: any = useContext(PlanContext);
+	const { startYear }: any = useContext(CalcContext);
 	const { planDuration }: any = useContext(FIGoalContext);
 	const [data, setData] = useState<Array<any>>([]);
 

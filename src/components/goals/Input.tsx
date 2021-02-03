@@ -8,8 +8,10 @@ import VideoPlayer from '../VideoPlayer';
 
 import './Input.less';
 import ResultCarousel from '../ResultCarousel';
+import { PlanContext } from './PlanContext';
 
 export default function Input() {
+	const { cancelGoal, isPublicCalc }: any = useContext(PlanContext);
 	const {
 		inputTabs,
 		inputTabIndex,
@@ -18,14 +20,12 @@ export default function Input() {
 		setAllInputDone,
 		showOptionsForm,
 		setOptionsVisibility,
-		isPublicCalc,
 		handleSubmit,
 		disableSubmit,
 		stepVideoUrl,
 		error,
 		handleStepChange,
-		fsb,
-		cancelCallback
+		fsb
 	}: any = useContext(CalcContext);
 	const { Step } = Steps;
 
@@ -171,7 +171,7 @@ export default function Input() {
 							{!isPublicCalc && handleSubmit ? (
 								<Row justify="center">
 									<Space>
-										<Button onClick={cancelCallback} disabled={disableSubmit}>
+										<Button onClick={cancelGoal} disabled={disableSubmit}>
 											Cancel
 										</Button>
 										<Button

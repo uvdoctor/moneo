@@ -15,16 +15,16 @@ import { useRouter } from "next/router";
 import { ROUTES } from "../../CONSTANTS";
 import LoanIntResult from "../calc/LoanIntResult";
 import TaxBenefitResult from "../calc/TaxBenefitResult";
+import { PlanContext } from "./PlanContext";
 
 const GoalContext = createContext({});
 
 interface GoalContextProviderProps {
   children?: ReactNode;
-  ffGoalEndYear?: number;
-  ffImpactYearsHandler?: Function;
 }
 
-function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: GoalContextProviderProps) {
+function GoalContextProvider({ children }: GoalContextProviderProps) {
+  const { rr, setRR, calculateFFImpactYear, isPublicCalc }: any = useContext(PlanContext);
   const {
     goal,
     currency,
@@ -39,8 +39,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     setCFs,
     setCFsWithoutSM,
     dr,
-    rr,
-    setRR,
     ffOOM,
     setFFOOM,
     btnClicked,
@@ -54,7 +52,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
     error,
     setError,
     setResults,
-    addCallback,
     inputTabs,
     setInputTabs,
     timer,
@@ -223,7 +220,7 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
       goalType === GoalType.B && <BuyRentResult />,
       goalType === GoalType.B && <BuyReturnResult />,
       isLoanEligible(goal.type) && <LoanIntResult />,
-      addCallback && <FFImpact />,
+      !isPublicCalc && <FFImpact />,
       <TaxBenefitResult />,
       <DefaultOppCostResult />
     ]]);
@@ -504,8 +501,8 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
   }, [endYear]);
 
   useEffect(() => {
-    if (!ffImpactYearsHandler) return;
-    let result = ffImpactYearsHandler(startYear, cfs, goal.id, impLevel);
+    if (isPublicCalc) return;
+    let result = calculateFFImpactYear(startYear, cfs, goal.id, impLevel);
     setFFImpactYears(result.ffImpactYears);
     setRR([...result.rr]);
     setFFOOM(result.ffOOM);
@@ -733,7 +730,6 @@ function GoalContextProvider({ children, ffGoalEndYear, ffImpactYearsHandler }: 
           duration,
           setDuration,
           changeEndYear,
-          ffGoalEndYear,
           totalIntAmt,
           setTotalIntAmt,
           totalInsAmt,

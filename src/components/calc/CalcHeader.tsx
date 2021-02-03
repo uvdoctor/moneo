@@ -6,11 +6,13 @@ import { CalcContext } from "./CalcContext";
 import SocialShare from "../SocialShare";
 import Feedback from "../feedback/Feedback";
 import { getGoalTypes } from "../goals/goalutils";
+import { PlanContext } from "../goals/PlanContext";
 interface CalcHeaderProps {
 	children?: ReactNode;
 }
 
 export default function CalcHeader({ children }: CalcHeaderProps) {
+	const { isPublicCalc }: any = useContext(PlanContext);
 	const {
 		goal,
 		currency,
@@ -19,7 +21,6 @@ export default function CalcHeader({ children }: CalcHeaderProps) {
 		setRating,
 		showFeedbackModal,
 		setShowFeedbackModal,
-		addCallback
 	}: any = useContext(CalcContext);
 	const ratingLabels = ["", "Very Poor", "Poor", "Average", "Good", "Awesome!"];
 	const [ratingLabel, setRatingLabel] = useState<string>("");
@@ -32,7 +33,7 @@ export default function CalcHeader({ children }: CalcHeaderProps) {
 				<Row>
 					<Col span={24}>
 						<PageHeader
-							title={!addCallback ? goal.name : (getGoalTypes() as any)[goal.type]}
+							title={isPublicCalc ? goal.name : (getGoalTypes() as any)[goal.type]}
 							extra={[
 								<SelectInput
 									key="currselect"
