@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import BasicLineChart from './BasicLineChart';
 import { getGoalTypes, getImpLevels } from './goalutils';
 import { GoalType, LMH } from '../../api/goals';
@@ -11,21 +11,12 @@ import { PlanContext } from './PlanContext';
 import { CalcContext } from '../calc/CalcContext';
 
 export default function Summary() {
-	const { removeGoal, editGoal, rr, calculateFFImpactYear, allCFs }: any = useContext(PlanContext);
+	const { removeGoal, editGoal }: any = useContext(PlanContext);
 	const { goal }: any = useContext(CalcContext);
 	const bgColor = goal.imp === LMH.H ? COLORS.BLUE : goal.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
 	const nowYear = new Date().getFullYear();
 	const goalTypes: any = getGoalTypes();
 	const impLevels: any = getImpLevels();
-	const [ ffImpactYears, setFFImpactYears ] = useState<number>(0);
-
-	useEffect(
-		() => {
-			let result = calculateFFImpactYear(goal.sy, allCFs[goal.id], goal.id, goal.imp);
-			setFFImpactYears(result.ffImpactYears);
-		},
-		[ rr ]
-	);
 
 	return (
 		<Card
@@ -59,7 +50,7 @@ export default function Summary() {
 			{(goal.sy as number) > nowYear && (
 				<Row justify="space-around">
 					<Col>
-						<FFImpact impactYears={ffImpactYears} />
+						<FFImpact />
 					</Col>
 					<Col>
 						<DefaultOppCostResult />

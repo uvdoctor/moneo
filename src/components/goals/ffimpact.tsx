@@ -2,17 +2,12 @@ import React, { useContext } from 'react';
 import ItemDisplay from '../calc/ItemDisplay';
 import { GoalContext } from './GoalContext';
 
-interface FFImpactProps {
-	impactYears?: number | null
-}
-
-export default function FFImpact({impactYears}: FFImpactProps) {
+export default function FFImpact() {
 	const { ffImpactYears }: any = useContext(GoalContext);
 	const getUnit = () => (Math.abs(ffImpactYears as number) > 1 ? ' Years ' : ' Year ');
 	const getImpactText = () => ((ffImpactYears as number) > 0 ? 'Earlier' : 'Later');
-	const totalImpactYears = impactYears !== undefined ? impactYears : ffImpactYears;
 
-	return totalImpactYears !== null ? totalImpactYears === 0 ? (
+	return ffImpactYears !== null ? ffImpactYears === 0 ? (
 		<ItemDisplay
 			label="Impact"
 			result="No Delay"
@@ -24,7 +19,7 @@ export default function FFImpact({impactYears}: FFImpactProps) {
 			pl
 			unit={`${getUnit()}`}
 			result={ffImpactYears}
-			info={`You May Achieve Financial Independence ${Math.abs(totalImpactYears)} ${getUnit()} 
+			info={`You May Achieve Financial Independence ${Math.abs(ffImpactYears)} ${getUnit()} 
                         ${getImpactText()} due to this Goal.`}
 		/>
 	) : (

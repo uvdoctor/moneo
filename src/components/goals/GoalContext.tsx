@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
-import { CreateGoalInput, GoalType, LMH, LoanType, TargetInput } from "../../api/goals";
+import { GoalType, LMH, LoanType, TargetInput } from "../../api/goals";
 import { initOptions } from "../utils";
 import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils";
 import { createAmortizingLoanCFs, createEduLoanMonthlyCFs, getCompoundedIncome, getEmi, getNPV } from "../calc/finance";
@@ -163,31 +163,27 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     setDisableSubmit(name.length < 3 || !price || btnClicked),
     [name, price, btnClicked]);
     
-  const createNewBaseGoal = () => {
-    return {
-      name: name,
-      sy: startYear,
-      sm: startMonth,
-      ey: endYear,
-      by: goal.by,
-      tdr: taxRate,
-      tdl: maxTaxDeduction,
-      ccy: currency,
-      cp: startingPrice,
-      chg: priceChgRate,
-      type: goalType,
-      tgts: manualMode ? wipTargets : [],
-      imp: impLevel,
-      manual: manualMode,
-    } as CreateGoalInput;
+  const updateBaseGoal = () => {
+    goal.name = name;
+    goal.sy = startYear;
+    goal.sm = startMonth;
+    goal.ey = endYear;
+    goal.tdr = taxRate;
+    goal.tdl = maxTaxDeduction;
+    goal.ccy = currency;
+    goal.cp = startingPrice;
+    goal.chg = priceChgRate;
+    goal.tgts = manualMode ? wipTargets : [];
+    goal.imp = impLevel;
+    goal.manual = manualMode;
   };
 
-  const createNewGoal = () => {
-    let bg: CreateGoalInput = createNewBaseGoal();
+  const updateGoal = () => {
+    updateBaseGoal();
     if (isLoanEligible(goalType)) {
-      bg.tbi = taxBenefitInt;
-      bg.tdli = maxTaxDeductionInt;
-      bg.loan = {
+      goal.tbi = taxBenefitInt;
+      goal.tdli = maxTaxDeductionInt;
+      goal.loan = {
         type: loanType ? loanType : LoanType.A,
         rate: loanIntRate as number,
         dur: loanMonths as number,
@@ -199,20 +195,19 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       };
     }
     if (sellAfter) {
-      bg.sa = sellAfter;
-      bg.achg = assetChgRate;
-      bg.amper = amCostPer;
-      bg.amsy = amStartYear;
-      bg.aiper = aiPer;
-      bg.aisy = aiStartYear;
-      bg.tbr = rentTaxBenefit;
-      bg.ra = rentAmt;
-      bg.rachg = rentChgPer;
+      goal.sa = sellAfter;
+      goal.achg = assetChgRate;
+      goal.amper = amCostPer;
+      goal.amsy = amStartYear;
+      goal.aiper = aiPer;
+      goal.aisy = aiStartYear;
+      goal.tbr = rentTaxBenefit;
+      goal.ra = rentAmt;
+      goal.rachg = rentChgPer;
     } else if (goalType === GoalType.E) {
-      bg.achg = loanGracePeriod;
-      bg.tbr = eduCostSemester;
+      goal.achg = loanGracePeriod;
+      goal.tbr = eduCostSemester;
     }
-    return bg;
   };
 
   useEffect(() => {
@@ -434,7 +429,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       return [];
     }
     let cfs: Array<number> = [];
-    let g: CreateGoalInput = createNewGoal();
+    updateGoal();
     let result: any = {};
     if (manualMode < 1 && loanPer) {
       let interestSchedule = iSchedule;
@@ -446,8 +441,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
         principalSchedule = loanSchedule.principal;
         insuranceSchedule = loanSchedule.insurance;
       }
-      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, insuranceSchedule, g, duration, changeState ? true : false);
-    } else result = calculateCFs(price, g, duration, changeState ? true : false);
+      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, insuranceSchedule, goal, duration, changeState ? true : false);
+    } else result = calculateCFs(price, goal, duration, changeState ? true : false);
     cfs = result.cfs;
     if (changeState) {
       console.log("New cf result: ", result);
