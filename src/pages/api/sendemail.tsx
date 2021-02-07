@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import AWS from 'aws-sdk';
 
-AWS.config.loadFromPath('emailconfig.json');
+AWS.config.update({ region: 'us-east-1' });
 
 type Data = {
     status: string
