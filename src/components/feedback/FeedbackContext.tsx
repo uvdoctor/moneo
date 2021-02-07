@@ -61,12 +61,7 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 			};
 			setFeedbackId(data.createFeedback?.id);
 			form.resetFields();
-			
-			const emailData = {
-				"name": data
-			}
-			sendMail('21.ramit@gmail.com', 'FeedbackTemplate', emailData);
-
+			sendMail('21.ramit@gmail.com', 'FeedbackTemplate', data);
 			openNotificationWithIcon('success', 'Success', 'Feedback saved successfully.');
 		} catch (e) {
 			setError({

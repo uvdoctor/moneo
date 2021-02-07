@@ -641,5 +641,12 @@ export const sendMail = async (to: String, template: String, templateData: any) 
       template: template,
       templateData: templateData
     })
-  })
+  }).then((res: any) => 
+    res.json()
+  ).then((data: any) => {
+    return data.success;
+  }).catch((e : any) => {
+    console.error("Error while sending mail ", e);
+    return false;
+  });
 }

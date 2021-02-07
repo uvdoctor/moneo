@@ -25,8 +25,8 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
         res.status(200).json({status: 'Mail sent with id = '+data.MessageId})
       })
       .catch(function(err) {
-        console.error(err, err.stack);
-        res.status(500).json({status: 'Error when sending mail'})
+        console.error('Mail send error', err, err.stack);
+        res.status(200).json({status: 'Error when sending mail'})
       });
     } else {
       res.status(405).end(`Method ${method} Not Allowed`);
