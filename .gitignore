@@ -47,3 +47,6 @@ amplifyxc.config
 .vercel
 
 amplify/README.md
+
+# configs
+src/pages/api/emailconfig.json
