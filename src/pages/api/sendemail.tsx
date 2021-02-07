@@ -7,7 +7,7 @@ type Data = {
     status: string
 }
 export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { method, body: {to}, body: {template}, body: {templateData} } = req;
+  const { method, body: {to}, body: {from}, body: {template}, body: {templateData} } = req;
   console.log('Sending mail template =',template,', with templateData =',templateData);
   if (method === 'POST') {
     const params = {
@@ -17,7 +17,7 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
       Template: template, //name of SES template
       TemplateData: JSON.stringify(templateData),
       Source: '21.ramit@gmail.com',
-      ReplyToAddresses: [ '21.ramit@gmail.com' ]
+      ReplyToAddresses: [ from ]
     };
     const sendPromise = new AWS.SES({ apiVersion: '2010-12-01' }).sendTemplatedEmail(params).promise();
     sendPromise

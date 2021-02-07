@@ -630,7 +630,7 @@ export const validateCaptcha = async (action: String, executeRecaptcha: Function
   });
 }
 
-export const sendMail = async (to: String, template: String, templateData: any) => {
+export const sendMail = async (to: String, from: String, template: String, templateData: any) => {
   await fetch('/api/sendemail', {
     method: 'POST',
     headers: {
@@ -638,6 +638,7 @@ export const sendMail = async (to: String, template: String, templateData: any) 
     },
     body: JSON.stringify({
       to: to,
+      from: from,
       template: template,
       templateData: templateData
     })

@@ -61,7 +61,14 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 			};
 			setFeedbackId(data.createFeedback?.id);
 			form.resetFields();
-			sendMail('21.ramit@gmail.com', 'FeedbackTemplate', data);
+			const mailTemplate = {
+				firstName : data.createFeedback?.name.fn,
+				lastName : data.createFeedback?.name.ln,
+				email: data.createFeedback?.email,
+				content: data.createFeedback?.feedback,
+				type: (data.createFeedback?.type==='C'?'comment':(data.createFeedback?.type==='S'?'suggestion':'question'))
+			}
+			sendMail('21.ramit@gmail.com', mailTemplate.email , 'FeedbackTemplate', mailTemplate);
 			openNotificationWithIcon('success', 'Success', 'Feedback saved successfully.');
 		} catch (e) {
 			setError({
