@@ -628,5 +628,26 @@ export const validateCaptcha = async (action: String, executeRecaptcha: Function
     console.log("error while validating captcha ", e);
     return false;
   });
-  
+}
+
+export const sendMail = async (to: String, from: String, template: String, templateData: any) => {
+  await fetch('/api/sendemail', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify({
+      to: to,
+      from: from,
+      template: template,
+      templateData: templateData
+    })
+  }).then((res: any) => 
+    res.json()
+  ).then((data: any) => {
+    return data.success;
+  }).catch((e : any) => {
+    console.error("Error while sending mail ", e);
+    return false;
+  });
 }

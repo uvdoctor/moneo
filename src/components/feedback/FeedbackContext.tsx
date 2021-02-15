@@ -5,6 +5,7 @@ import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import Amplify, { API } from 'aws-amplify';
 import { CreateFeedbackMutation, FeedbackType } from '../../api/goals';
 import { Form, notification } from 'antd';
+import { sendMail } from '../utils';
 
 Amplify.configure(awsconfig);
 
@@ -20,8 +21,8 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 	const [ firstName, setFirstName ] = useState<String>('');
 	const [ lastName, setLastName ] = useState<String>('');
 	const [ email, setEmail ] = useState<String>('');
-  const [ isLoading, setLoading ] = useState<boolean>(false);
-  const [ feedbackId, setFeedbackId ] = useState<String | undefined>('');
+	const [ isLoading, setLoading ] = useState<boolean>(false);
+	const [ feedbackId, setFeedbackId ] = useState<String | undefined>('');
 	const [ error, setError ] = useState({});
 	const [ form ] = Form.useForm();
 
@@ -55,18 +56,26 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 					}
 				},
 				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
-      })) as {
-      data: CreateFeedbackMutation;
-    };
-      setFeedbackId(data.createFeedback?.id);
-      form.resetFields();
-      openNotificationWithIcon('success', 'Success', 'Feedback saved successfully.');
+			})) as {
+			data: CreateFeedbackMutation;
+			};
+			setFeedbackId(data.createFeedback?.id);
+			form.resetFields();
+			const mailTemplate = {
+				firstName : data.createFeedback?.name.fn,
+				lastName : data.createFeedback?.name.ln,
+				email: data.createFeedback?.email,
+				content: data.createFeedback?.feedback,
+				type: (data.createFeedback?.type==='C'?'comment':(data.createFeedback?.type==='S'?'suggestion':'question'))
+			}
+			sendMail('21.ramit@gmail.com', mailTemplate.email , 'FeedbackTemplate', mailTemplate);
+			openNotificationWithIcon('success', 'Success', 'Feedback saved successfully.');
 		} catch (e) {
 			setError({
 				title: 'Error while creating feedback',
 				message: e.errors ? e.errors[0].message : e.toString()
-      });
-      openNotificationWithIcon('error', 'Error', 'Error while saving feedback.');
+			});
+			openNotificationWithIcon('error', 'Error', 'Error while saving feedback.');
 		} finally {
 			setLoading(false);
 		}
