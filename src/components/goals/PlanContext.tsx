@@ -278,7 +278,11 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     goalId: string,
     goalImp: LMH
   ) => {
-    if (!ffGoal || !ffResult.ffYear) return null;
+    if (!ffGoal || !ffResult.ffYear) return {
+      ffImpactYears: null,
+      rr: null,
+      ffOOM: null,
+    };
     let mCFs: any = Object.assign({}, mergedCFs);
     let highImpCFs: any = Object.assign([], mustCFs);
     let medImpCFs: any = Object.assign([], tryCFs);

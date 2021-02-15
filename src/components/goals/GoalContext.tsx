@@ -6,7 +6,7 @@ import { createAmortizingLoanCFs, createEduLoanMonthlyCFs, getCompoundedIncome, 
 import { adjustAccruedInterest, calculateCFs, calculateSellPrice, createLoanCFs, getClosestTargetVal, getLoanBorrowAmt } from "./cfutils";
 import { CalcContext } from "../calc/CalcContext";
 import DefaultOppCostResult from "../calc/DefaultOppCostResult";
-import FFImpact from "./ffimpact";
+import FIImpact from "./FIImpact";
 import BuyRentResult from "../calc/BuyRentResult";
 import GoalHeader from "./GoalHeader";
 import CalcTemplate from "../calc/CalcTemplate";
@@ -216,7 +216,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       goalType === GoalType.B && <BuyRentResult />,
       goalType === GoalType.B && <BuyReturnResult />,
       isLoanEligible(goal.type) && <LoanIntResult />,
-      !isPublicCalc && <FFImpact />,
+      !isPublicCalc && <FIImpact />,
       <TaxBenefitResult />,
       <DefaultOppCostResult />
     ]]);
@@ -500,8 +500,10 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     if (isPublicCalc) return;
     let result = calculateFFImpactYear(startYear, cfs, goal.id, impLevel);
     setFFImpactYears(result.ffImpactYears);
-    setRR([...result.rr]);
-    setFFOOM(result.ffOOM);
+    if (result.rr) {
+      setRR([...result.rr]);
+      setFFOOM(result.ffOOM);
+    }
   }, [cfs, impLevel]);
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { PlanContext } from './PlanContext';
 import { Row, Col } from 'antd';
 import { UpdateGoalInput } from '../../api/goals';
-import Summary from './summary';
+import Summary from './SummaryView';
 import { CalcContextProvider } from '../calc/CalcContext';
 import { GoalContextProvider } from './GoalContext';
 

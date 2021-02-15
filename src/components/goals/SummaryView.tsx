@@ -6,11 +6,11 @@ import { COLORS } from '../../CONSTANTS';
 import { Button, Card, Row, Col } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import DefaultOppCostResult from '../calc/DefaultOppCostResult';
-import FFImpact from './ffimpact';
+import FIImpact from './FIImpact';
 import { PlanContext } from './PlanContext';
 import { CalcContext } from '../calc/CalcContext';
 
-export default function Summary() {
+export default function SummaryView() {
 	const { removeGoal, editGoal }: any = useContext(PlanContext);
 	const { goal }: any = useContext(CalcContext);
 	const bgColor = goal.imp === LMH.H ? COLORS.BLUE : goal.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
@@ -50,7 +50,7 @@ export default function Summary() {
 			{(goal.sy as number) > nowYear && (
 				<Row justify="space-around">
 					<Col>
-						<FFImpact />
+						<FIImpact />
 					</Col>
 					<Col>
 						<DefaultOppCostResult />

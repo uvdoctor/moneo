@@ -5,7 +5,7 @@ import { EditOutlined } from '@ant-design/icons';
 import { PlanContext } from './PlanContext';
 
 export default function FISummaryHeader() {
-	const { ffGoal, ffResult, setWIPGoal }: any = useContext(PlanContext);
+	const { ffGoal, ffResult, setGoal }: any = useContext(PlanContext);
 	return (
 		ffGoal ? <Row>
 			<Col span={24} className="primary-header">
@@ -14,7 +14,7 @@ export default function FISummaryHeader() {
 						? `by ${ffResult.ffYear}`
 						: `Not Possible by ${ffGoal.sy + (ffGoal.loan?.rate as number)}. Please try again with different Goals / Inputs.`}`}
 					extra={[
-						<Button className="steps-start-btn" onClick={() => setWIPGoal(Object.assign({}, ffGoal))}>
+						<Button className="steps-start-btn" onClick={() => setGoal(Object.assign({}, ffGoal))}>
 							<EditOutlined /> Edit
 						</Button>
 					]}

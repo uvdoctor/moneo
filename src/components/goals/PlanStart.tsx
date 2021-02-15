@@ -7,13 +7,13 @@ import { PlanContext } from './PlanContext';
 
 export default function PlanStart() {
 	const { defaultCurrency }: any = useContext(AppContext);
-	const { setWIPGoal }: any = useContext(PlanContext);
+	const { setGoal }: any = useContext(PlanContext);
 	
 	return (
 		<div style={{ textAlign: 'center' }}>
 			<h3>First Things First.</h3>
 			<h3>Set Financial Independence Target.</h3>
-			<Button type="primary" onClick={() => setWIPGoal(createNewGoalInput(GoalType.FF, defaultCurrency))}>
+			<Button type="primary" onClick={() => setGoal(createNewGoalInput(GoalType.FF, defaultCurrency))}>
 				Get Started
 			</Button>
 		</div>
