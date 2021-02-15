@@ -4,14 +4,11 @@ import { Tabs } from "antd";
 import { FullscreenExitOutlined, FullscreenOutlined } from "@ant-design/icons";
 import CalcHeader from "../calc/CalcHeader";
 import { CalcContext } from "../calc/CalcContext";
-import { GoalType } from "../../api/goals";
-import GoalHeader from "./GoalHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ResultCarousel from "../ResultCarousel";
 
 export default function Result() {
 	const {
-		goal,
 		resultTabs,
 		resultTabIndex,
 		setResultTabIndex,
@@ -22,7 +19,7 @@ export default function Result() {
 
 	return (
 		<div className="calculator-content">
-			{goal.type && goal.type !== GoalType.FF ? <GoalHeader /> : <CalcHeader />}
+			<CalcHeader />
 			<div
 				className={`results-content ${
 					fullScreen ? "fullScreen-mode-enabled" : ""

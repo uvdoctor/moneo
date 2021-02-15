@@ -1,31 +1,36 @@
-import { Modal, PageHeader, Rate, Row, Col, Tooltip, Descriptions } from "antd";
-import React, { Fragment, ReactNode, useContext, useState } from "react";
-import { ShareAltOutlined } from "@ant-design/icons";
-import SelectInput from "../form/selectinput";
-import { CalcContext } from "./CalcContext";
-import SocialShare from "../SocialShare";
-import Feedback from "../feedback/Feedback";
-import { getGoalTypes } from "../goals/goalutils";
-import { PlanContext } from "../goals/PlanContext";
-interface CalcHeaderProps {
-	children?: ReactNode;
-}
+import { Modal, PageHeader, Rate, Row, Col, Tooltip } from 'antd';
+import React, { Fragment, useContext, useState } from 'react';
+import { ShareAltOutlined } from '@ant-design/icons';
+import SelectInput from '../form/selectinput';
+import { CalcContext } from './CalcContext';
+import SocialShare from '../SocialShare';
+import Feedback from '../feedback/Feedback';
+import { getGoalTypes } from '../goals/goalutils';
+import { PlanContext } from '../goals/PlanContext';
+import TextInput from '../form/textinput';
+import { GoalContext } from '../goals/GoalContext';
+import { GoalType } from '../../api/goals';
 
-export default function CalcHeader({ children }: CalcHeaderProps) {
+export default function CalcHeader() {
 	const { isPublicCalc }: any = useContext(PlanContext);
-	const {
-		goal,
-		currency,
-		setCurrency,
-		rating,
-		setRating,
-		showFeedbackModal,
-		setShowFeedbackModal,
-	}: any = useContext(CalcContext);
-	const ratingLabels = ["", "Very Poor", "Poor", "Average", "Good", "Awesome!"];
-	const [ratingLabel, setRatingLabel] = useState<string>("");
+	const { goal, currency, setCurrency, rating, setRating, showFeedbackModal, setShowFeedbackModal }: any = useContext(
+		CalcContext
+	);
+	const { name, setName }: any = useContext(GoalContext);
+	const ratingLabels = [ '', 'Very Poor', 'Poor', 'Average', 'Good', 'Awesome!' ];
+	const [ ratingLabel, setRatingLabel ] = useState<string>('');
 
 	const closeModal = () => setShowFeedbackModal(false);
+
+	const goalTitle = () => (
+		<TextInput
+			name="name"
+			pre={(getGoalTypes() as any)[goal.type]}
+			placeholder="Goal Name"
+			value={name}
+			changeHandler={setName}
+		/>
+	);
 
 	return (
 		<Fragment>
@@ -33,7 +38,7 @@ export default function CalcHeader({ children }: CalcHeaderProps) {
 				<Row>
 					<Col span={24}>
 						<PageHeader
-							title={isPublicCalc ? goal.name : (getGoalTypes() as any)[goal.type]}
+							title={isPublicCalc || goal.type === GoalType.FF ? goal.name : goalTitle()}
 							extra={[
 								<SelectInput
 									key="currselect"
@@ -41,31 +46,21 @@ export default function CalcHeader({ children }: CalcHeaderProps) {
 									value={currency}
 									changeHandler={setCurrency}
 									currency
-								/>,
+								/>
 							]}
-						>
-							{children ? 
-								<Descriptions column={1}>
-									<Descriptions.Item label="">
-										{children}
-									</Descriptions.Item>
-								</Descriptions>
-							: null}
-						</PageHeader>
+						/>
 					</Col>
 					<Col span={24} className="secondary-header">
-						<Row justify={children ? "space-around" : "start"} align="middle">
+						<Row justify='start' align="middle">
 							<Col flex="auto">
-								<span style={{ marginRight: "0.5rem" }}>Rate Calculator</span>
+								<span style={{ marginRight: '0.5rem' }}>Rate Calculator</span>
 								<Rate
 									allowClear
 									value={rating}
 									onChange={(rating: number) => setRating(rating)}
-									onHoverChange={(rating: number) =>
-										setRatingLabel(ratingLabels[rating])
-									}
+									onHoverChange={(rating: number) => setRatingLabel(ratingLabels[rating])}
 								/>
-								<span style={{ marginLeft: "0.5rem" }}>
+								<span style={{ marginLeft: '0.5rem' }}>
 									{ratingLabel ? ratingLabel : ratingLabels[rating]}
 								</span>
 							</Col>
@@ -89,9 +84,9 @@ export default function CalcHeader({ children }: CalcHeaderProps) {
 					visible={showFeedbackModal}
 					centered
 					title="Please help Us to Improve"
-					footer= {null}
+					footer={null}
 					maskClosable
-					onCancel = { closeModal }
+					onCancel={closeModal}
 				>
 					<Feedback />
 				</Modal>

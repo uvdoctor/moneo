@@ -8,7 +8,6 @@ import { CalcContext } from "../calc/CalcContext";
 import DefaultOppCostResult from "../calc/DefaultOppCostResult";
 import FIImpact from "./FIImpact";
 import BuyRentResult from "../calc/BuyRentResult";
-import GoalHeader from "./GoalHeader";
 import CalcTemplate from "../calc/CalcTemplate";
 import BuyReturnResult from "../calc/BuyReturnResult";
 import { useRouter } from "next/router";
@@ -750,7 +749,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
           loanPMIEndPer,
           setLoanPMIEndPer,
         }}>
-        {children ? children : <CalcTemplate header={<GoalHeader />} />}
+        {children ? children : <CalcTemplate />}
       </GoalContext.Provider>
     );
 }
