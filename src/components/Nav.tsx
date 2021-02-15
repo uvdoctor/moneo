@@ -25,7 +25,7 @@ export default function Nav({ onBack, isFixed, scrollable }: NavProps) {
 	useEffect(() => {
 		if (defaultCurrency !== 'USD') return;
 		const host = window.location.hostname;
-		if (host.endsWith('.in') || host.endsWith('host')) {
+		if (host.endsWith('.in')) {
 			setDefaultCurrency('INR');
 		} else if (host.endsWith('.uk')) {
 			setDefaultCurrency('GBP');

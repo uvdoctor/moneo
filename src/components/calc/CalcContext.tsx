@@ -143,14 +143,17 @@ function CalcContextProvider({
           active: true,
           svg: faChartLine,
           content: <BasicLineChart />
-        },
+        }
+    ];
+    if (isLoanEligible(goal.type)) {
+      rTabs.push(
         {
           label: "Loan Schedule",
           active: false,
           svg: faChartBar,
           content: <LoanSchedule />
-        }
-      ];
+        });
+    }
       if (goal.type === GoalType.B) {
         rTabs.push({
           label: "Buy v/s Rent",

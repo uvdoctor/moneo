@@ -84,10 +84,10 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   const [eduLoanPSchedule, setEduLoanPSchedule] = useState<Array<number>>([]);
   const [eduLoanPDueSchedule, setEduLoanPDueSchedule] = useState<Array<number>>([]);
   const [eduCostSemester, setEduCostSemester] = useState<number>(goal.tbr);
- 	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal.loan.type ? goal.loan.type : null);
+ 	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal?.loan?.type);
   const [loanGracePeriod, setLoanGracePeriod] = useState<
     number | undefined | null
-    >(goal.achg);
+    >(goal?.achg);
   const [loanPrepayments, setLoanPrepayments] = useState<Array<TargetInput>>(goal?.loan?.pp as Array<TargetInput>);
   const [loanIRAdjustments, setLoanIRAdjustments] = useState<Array<TargetInput>>(goal?.loan?.ira as Array<TargetInput>);
   const [totalIntAmt, setTotalIntAmt] = useState<number>(0);
@@ -153,7 +153,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       loanPer,
       loanRepaymentMonths,
       loanMonths,
-      goal.type === GoalType.E
+      goalType === GoalType.E
     )
   );
   const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
@@ -216,7 +216,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       !isPublicCalc && <FIImpact />,
       goalType === GoalType.B && <BuyRentResult />,
       goalType === GoalType.B && <BuyReturnResult />,
-      isLoanEligible(goal.type) && <LoanIntResult />,
+      isLoanEligible(goalType) && <LoanIntResult />,
       <TaxBenefitResult />,
       <DefaultOppCostResult />
     ]]);
@@ -248,7 +248,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     if (startingPrice && priceChgRate && startYear > nowYear)
       p = getCompoundedIncome(priceChgRate, startingPrice, startYear - goal.by);
     setPrice(Math.round(p));
-    if (isLoanEligible(goal.type) && loanPer && !resultTabs[1].active) {
+    if (resultTabs[1] && isLoanEligible(goal.type) && loanPer && !resultTabs[1].active) {
       resultTabs[1].active = true;
       setResultTabs([...resultTabs]);
     }
@@ -321,7 +321,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   }, [loanBorrowAmt, loanIntRate, loanMonths, eduLoanSISchedule, loanIRAdjustments]);
 
   const disableLoanChart = () => {
-    if(resultTabs[1].active) {
+    if(resultTabs[1] && resultTabs[1].active) {
       resultTabs[1].active = false;
       setResultTabs([...resultTabs]);
       if (resultTabIndex === 1) setResultTabIndex(0);
@@ -342,7 +342,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     setPSchedule([...result.principal]);
     setInsSchedule([...result.insurance]);
     setISchedule([...result.interest]);
-    if (!resultTabs[1].active) {
+    if (resultTabs[1] && !resultTabs[1].active) {
       resultTabs[1].active = true;
       setResultTabs([...resultTabs]);
     }
@@ -373,7 +373,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     );
     setPSchedule([...eduLoanPSchedule, ...result.principal]);
     setISchedule([...eduLoanSISchedule, ...result.interest]);
-    if (!resultTabs[1].active) {
+    if (resultTabs[1] && !resultTabs[1].active) {
       resultTabs[1].active = true;
       setResultTabs([...resultTabs]);
     }

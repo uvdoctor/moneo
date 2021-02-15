@@ -7,13 +7,13 @@ export default function FIImpact() {
 
 	return ffImpactYears !== null ? ffImpactYears === 0 ? (
 		<ItemDisplay
-			label="Impact"
+			label="FI Impact"
 			result="No Delay"
 			info="This Goal does not delay Your Financial Independence Year."
 		/>
 	) : (
 		<ItemDisplay
-			label="Impact"
+			label="FI Impact"
 			pl
 			unit={Math.abs(ffImpactYears as number) > 1 ? ' Years ' : ' Year '}
 			result={ffImpactYears}
@@ -22,7 +22,7 @@ export default function FIImpact() {
 		/>
 	) : (
 		<ItemDisplay
-			label="Impact"
+			label="FI Impact"
 			result="Unable to Determine"
 			info={`Financial Independence Impact can only be determined once Financial Independence Age is determined. Please change Your Goals / Inputs and try again.`}
 		/>
