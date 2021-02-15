@@ -5,7 +5,7 @@ import { AppContext } from '../AppContext';
 import { createNewGoalInput } from './goalutils';
 import { PlanContext } from './PlanContext';
 
-export default function SetPlanIndex() {
+export default function PlanStart() {
 	const { defaultCurrency }: any = useContext(AppContext);
 	const { setWIPGoal }: any = useContext(PlanContext);
 	

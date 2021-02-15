@@ -6,13 +6,13 @@ import { FIGoalContextProvider } from './FIGoalContext';
 import BasicPage from '../BasicPage';
 import { PlanContextProvider } from './PlanContext';
 import { FeedbackContextProvider } from '../feedback/FeedbackContext';
-import SetPlanView from './SetPlanView';
+import PlanView from './PlanView';
 
 export default function SetPlan() {
 	const [ wipGoal, setWIPGoal ] = useState<APIt.CreateGoalInput | null>(null);
 
 	return (
-		<PlanContextProvider wipGoal={wipGoal} setWIPGoal={setWIPGoal}>
+		<PlanContextProvider goal={wipGoal} setGoal={setWIPGoal}>
 			<BasicPage
 				title="Set Plan"
 				className="calculator-container steps-landing"
@@ -31,7 +31,7 @@ export default function SetPlan() {
 						</CalcContextProvider>
 					</FeedbackContextProvider>
 				) : (
-					<SetPlanView />
+					<PlanView />
 				)}
 			</BasicPage>
 		</PlanContextProvider>

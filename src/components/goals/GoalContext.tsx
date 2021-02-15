@@ -208,6 +208,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       goal.achg = loanGracePeriod;
       goal.tbr = eduCostSemester;
     }
+    console.log("Updated goal: ", goal);
   };
 
   useEffect(() => {

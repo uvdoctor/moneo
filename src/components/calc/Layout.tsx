@@ -37,15 +37,23 @@ export default function Layout(props: LayoutProps) {
 			fixedNav
 		>
 			{!wip ? (
-				<PublicCalcView type={props.type} title={props.title} features={props.features} setWIP={setWIP}
-					assumptions={props.assumptions} results={props.results} terms={props.terms} demoUrl={props.demoUrl} />
+				<PublicCalcView
+					type={props.type}
+					title={props.title}
+					features={props.features}
+					setWIP={setWIP}
+					assumptions={props.assumptions}
+					results={props.results}
+					terms={props.terms}
+					demoUrl={props.demoUrl}
+				/>
 			) : (
-				<PlanContextProvider wipGoal={wip} setWIPGoal={setWIP}>
+				<PlanContextProvider goal={wip} setGoal={setWIP}>
 					<FeedbackContextProvider>
 						<CalcContextProvider
-							goal={wip}
 							tabOptions={props.tabOptions}
 							resultTabOptions={props.resultTabOptions}
+							goal={wip}
 						>
 							{props.type ? props.type === GoalType.FF ? (
 								<FIGoalContextProvider />

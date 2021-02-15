@@ -2,7 +2,7 @@ import React, { useContext, useState, Fragment } from 'react';
 import { getImpOptions, getGoalTypes, createNewGoalInput } from './goalutils';
 import SelectInput from '../form/selectinput';
 import AssetAllocationChart from './AssetAllocationChart';
-import SetPlanIndex from './SetPlanIndex';
+import PlanStart from './PlanStart';
 import FISummaryHeader from './FISummaryHeader';
 import { Button, Col, Dropdown, Menu, Row, Tabs } from 'antd';
 import { faChartLine, faChartPie, faBullseye } from '@fortawesome/free-solid-svg-icons';
@@ -15,8 +15,8 @@ import { GoalType } from '../../api/goals';
 import { DownOutlined } from '@ant-design/icons';
 import { FIGoalContextProvider } from './FIGoalContext';
 
-export default function SetPlanView() {
-	const { allGoals, ffGoal, goalsLoaded, setWIPGoal }: any = useContext(PlanContext);
+export default function PlanView() {
+	const { allGoals, ffGoal, goalsLoaded, setGoal }: any = useContext(PlanContext);
 	const { TabPane } = Tabs;
 	const goalsLabel = 'Goals';
 	const cfLabel = 'Cash Flows';
@@ -52,7 +52,7 @@ export default function SetPlanView() {
 			{Object.keys(getGoalTypes()).map(
 				(key: string) =>
 					key !== GoalType.FF && (
-						<MenuItem onClick={() => setWIPGoal(createNewGoalInput(key as GoalType, ffGoal.ccy))}>
+						<MenuItem onClick={() => setGoal(createNewGoalInput(key as GoalType, ffGoal.ccy))}>
 							{getGoalTypes()[key as GoalType]}
 						</MenuItem>
 					)
@@ -107,6 +107,6 @@ export default function SetPlanView() {
 			) : null}
 		</Fragment>
 	) : (
-		<SetPlanIndex />
+		<PlanStart />
 	) : null;
 }

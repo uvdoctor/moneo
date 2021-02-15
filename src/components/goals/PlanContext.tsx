@@ -10,17 +10,17 @@ import { useRouter } from 'next/router';
 const PlanContext = createContext({});
 
 interface PlanContextProviderProps {
-  wipGoal: CreateGoalInput | null
-  setWIPGoal: Function
+  goal: CreateGoalInput | null
+  setGoal: Function
   children: ReactNode
 }
 
-function PlanContextProvider({ children, wipGoal, setWIPGoal }: PlanContextProviderProps) {
+function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderProps) {
   const router = useRouter();
   const isPublicCalc = router.pathname === ROUTES.SET ? false : true;
   const [allGoals, setAllGoals] = useState<Array<CreateGoalInput> | null>([]);
   const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
-  const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(isPublicCalc && wipGoal && wipGoal.type === GoalType.FF ? wipGoal : null);
+  const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(isPublicCalc && goal && goal.type === GoalType.FF ? goal : null);
   const [allCFs, setAllCFs] = useState<any>({});
   const [mustCFs, setMustCFs] = useState<Array<number>>([]);
   const [tryCFs, setTryCFs] = useState<Array<number>>([]);
@@ -159,13 +159,13 @@ function PlanContextProvider({ children, wipGoal, setWIPGoal }: PlanContextProvi
   ) => {
     let g = null;
     try {
-      g = await createNewGoal(wipGoal as CreateGoalInput);
+      g = await createNewGoal(goal as CreateGoalInput);
     } catch (err) {
       notification.error({ message: 'Goal Not Created', description: "Sorry! Unable to create this Goal: " + err });
       return false;
     }
     if (!g) return false;
-    setWIPGoal(null);
+    setGoal(null);
     if (g.type === GoalType.FF) {
       setFFGoal(g);
       return true;
@@ -183,25 +183,26 @@ function PlanContextProvider({ children, wipGoal, setWIPGoal }: PlanContextProvi
   ) => {
     let g: UpdateGoalInput | null = null;
     try {
-      g = await changeGoal(wipGoal as UpdateGoalInput);
+      g = await changeGoal(goal as UpdateGoalInput);
     } catch (err) {
       notification.error({message: "Goal not Updated", description: "Sorry! Unable to update this Goal: " + err });
       return false;
     }
     if (!g) return false;
-    setWIPGoal(null);
+    setGoal(null);
     if (g.type === GoalType.FF) {
       notification.success({ message: "Target Updated", description: "Success! Your Financial Independence Target has been Updated." });
       setFFGoal(g as CreateGoalInput);
       return true;
     } 
     notification.success({ message: "Goal Updated", description: `Success! Goal ${g.name} has been Updated.` });
-    removeFromArray(allGoals as Array<CreateGoalInput>, "id", wipGoal?.id);
+    removeFromArray(allGoals as Array<CreateGoalInput>, "id", g.id);
     allGoals?.unshift(g as CreateGoalInput);
     //@ts-ignore
     allCFs[g.id] = cfs;
     setAllCFs(allCFs);
     setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
+    console.log("Updated goal is: ", g);
     return true;
   };
 
@@ -217,17 +218,17 @@ function PlanContextProvider({ children, wipGoal, setWIPGoal }: PlanContextProvi
     //@ts-ignore
     delete allCFs[id];
     setAllCFs(allCFs);
-    setWIPGoal(null);
+    setGoal(null);
     setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
   };
 
   const editGoal = (id: string) => {
     if (!allGoals) return;
     let g: CreateGoalInput = (allGoals.filter((g) => g.id === id))[0];
-    setWIPGoal(Object.assign({}, g));
+    setGoal(Object.assign({}, g));
   };
 
-  const cancelGoal = () => setWIPGoal(null);
+  const cancelGoal = () => setGoal(null);
 
   const getYearRange = () => {
     let fromYear = nowYear + 1;
@@ -377,8 +378,8 @@ function PlanContextProvider({ children, wipGoal, setWIPGoal }: PlanContextProvi
         cancelGoal,
         calculateFFImpactYear,
         pp,
-        wipGoal,
-        setWIPGoal,
+        goal,
+        setGoal,
         isPublicCalc,
         dr,
         setDR

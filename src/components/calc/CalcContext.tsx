@@ -44,17 +44,17 @@ export const getCareTabOption = () => {
 }
 
 interface CalcContextProviderProps {
-  goal?: any
   children: ReactNode;
 	tabOptions?: any;
-	resultTabOptions?: any;
+  resultTabOptions?: any;
+  goal?: any;
 }
 
 function CalcContextProvider({
-  goal,
   children,
 	tabOptions,
-	resultTabOptions,
+  resultTabOptions,
+  goal
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
   const { addGoal, updateGoal, isPublicCalc, dr, setDR }: any = useContext(PlanContext);
