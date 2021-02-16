@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { Fragment, useContext } from 'react';
 import BasicLineChart from './BasicLineChart';
 import { getGoalTypes, getImpLevels } from './goalutils';
 import { GoalType, LMH } from '../../api/goals';
@@ -20,25 +20,14 @@ export default function SummaryView() {
 
 	return (
 		<Card
+			headStyle={{ backgroundColor: bgColor, color: COLORS.WHITE }}
 			title={
-				<Row justify="space-around">
-					<label
-						style={{
-							color: 'white',
-							backgroundColor: bgColor,
-							paddingTop: '2px',
-							paddingBottom: '2px',
-							paddingLeft: '4px',
-							paddingRight: '4px'
-						}}
-					>
-						{impLevels[goal.imp as LMH]}
-					</label>
-					<label>{goalTypes[goal.type as GoalType]}</label>
-					<h2>{goal.name}</h2>
+				<Row justify="space-between">
+					<Col>{`${goalTypes[goal.type as GoalType]} ${goal.name}`}</Col>
+					<Col>{impLevels[goal.imp]}</Col>
 				</Row>
 			}
-			extra={[
+			actions={[
 				<Button type="link" onClick={() => editGoal(goal.id)} icon={<EditOutlined />}>
 					Edit
 				</Button>,
@@ -47,22 +36,23 @@ export default function SummaryView() {
 				</Button>
 			]}
 		>
-			{(goal.sy as number) > nowYear && (
-				<Row justify="space-around">
-					<Col>
-						<FIImpact />
-					</Col>
-					<Col>
-						<DefaultOppCostResult />
+			<Fragment>
+				{(goal.sy as number) > nowYear && (
+					<Row justify="space-around">
+						<Col>
+							<FIImpact />
+						</Col>
+						<Col>
+							<DefaultOppCostResult />
+						</Col>
+					</Row>
+				)}
+				<Row justify="center" style={{ marginTop: '20px' }}>
+					<Col span={24}>
+						<BasicLineChart chartTitle={`Cash Flows in ${goal.ccy}`} />
 					</Col>
 				</Row>
-			)}
-			<div style={{ marginTop: '20px' }}>
-				<Row justify="center">Cash Flows in {goal.ccy}</Row>
-				<Row justify="center">
-					<BasicLineChart />
-				</Row>
-			</div>
+			</Fragment>
 		</Card>
 	);
 }

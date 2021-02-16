@@ -8,6 +8,7 @@ import NumberInput from '../form/numberinput';
 
 interface BasicLineChartProps {
 	numberOfYears?: boolean;
+	chartTitle?: string;
 	title?: string;
 	showRange?: boolean;
 }
@@ -15,7 +16,7 @@ interface BasicLineChartProps {
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
-export default function BasicLineChart({ numberOfYears, title, showRange }: BasicLineChartProps) {
+export default function BasicLineChart({ numberOfYears, chartTitle, title, showRange }: BasicLineChartProps) {
 	const { startYear, currency, cfs, goal, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
@@ -51,20 +52,29 @@ export default function BasicLineChart({ numberOfYears, title, showRange }: Basi
 					</Col>
 				</Row>
 			) : null}
-			<Col span={24} style={{ minHeight: '400px' }}>
-				<LineChart
-					data={data}
-					xField="year"
-					yField="value"
-					yAxis={getCommonYAxis()}
-					xAxis={getCommonXAxis(title ? title : numberOfYears ? 'Number of Years' : 'Year')}
-					meta={getCommonMeta(currency)}
-					point={{ visible: true }}
-					forceFit
-				>
-					<Slider {...getDefaultSliderProps()} />
-				</LineChart>
-			</Col>
+			{chartTitle && (
+				<Row justify="center">
+					<Col>
+						<strong>{chartTitle}</strong>
+					</Col>
+				</Row>
+			)}
+			<Row style={{ minHeight: '400px' }}>
+				<Col span={24}>
+					<LineChart
+						data={data}
+						xField="year"
+						yField="value"
+						yAxis={getCommonYAxis()}
+						xAxis={getCommonXAxis(title ? title : numberOfYears ? 'Number of Years' : 'Year')}
+						meta={getCommonMeta(currency)}
+						point={{ visible: true }}
+						forceFit
+					>
+						<Slider {...getDefaultSliderProps()} />
+					</LineChart>
+				</Col>
+			</Row>
 		</Fragment>
 	);
 }
