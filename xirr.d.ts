@@ -1,1 +1,1 @@
-declare module 'xirr'
+declare module 'xirr';
