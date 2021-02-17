@@ -22,7 +22,8 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "types": []
   },
   "exclude": [
     "node_modules",
@@ -30,7 +31,7 @@
   ],
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx" 
+    "src/**.ts",
+    "src/**.tsx" 
   ]
 }
