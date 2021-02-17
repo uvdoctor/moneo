@@ -349,7 +349,6 @@ export const createLoanCFs = (
   let totalITaxBenefit = 0;
   let startingMonth = considerStartMonth ? goal.sm as number : 1;
   let annualLoanPayments: any = createYearlyFromMonthlyLoanCFs(iSchedule, pSchedule, insSchedule, startingMonth, goal.loan?.ry as number);
-  console.log("Annual loan payments: ", annualLoanPayments);
   let sp = 0;
   let taxBenefit = 0;
   let loanStartingYear = goal.sy;

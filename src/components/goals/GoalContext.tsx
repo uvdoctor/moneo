@@ -328,7 +328,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
 
   const createNonEduLoanSchedule = () => {
     if (goal.type === GoalType.E) return;
-    console.log("Emi is ", emi);
     if (!emi) {
       setPSchedule([...[]]);
       setInsSchedule([...[]]);
@@ -338,7 +337,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     }
     let result = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments,
       loanIRAdjustments, loanMonths as number, sellAfter ? sellAfter : null, loanPMI as number, loanPMIEndPer as number);
-    console.log("Result is ", result);
     setPSchedule([...result.principal]);
     setInsSchedule([...result.insurance]);
     setISchedule([...result.interest]);
@@ -433,6 +431,11 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     updateGoal();
     let result: any = {};
     if (manualMode < 1 && loanPer) {
+      if (!iSchedule || !iSchedule.length) {
+        setCFs([...[]]);
+        setCFsWithoutSM([...[]]);
+        return [];
+      }
       let interestSchedule = iSchedule;
       let principalSchedule = pSchedule;
       let insuranceSchedule = insSchedule;
@@ -633,7 +636,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   const setAllBuyCFsForComparison = () => {
     let allBuyCFs: Array<Array<number>> = [];
     for (let i = 3; i <= analyzeFor; i++) allBuyCFs.push(calculateYearlyCFs(i, false));
-    console.log("All buy CFs: ", allBuyCFs);
     setAllBuyCFs([...allBuyCFs]);
   };
 

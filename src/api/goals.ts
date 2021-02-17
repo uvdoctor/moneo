@@ -1673,6 +1673,16 @@ export type ListGoalsQuery = {
         emi: number | null,
         pmi: number | null,
         peper: number | null,
+        pp:  Array< {
+          __typename: "Target",
+          num: number,
+          val: number,
+        } > | null,
+        ira:  Array< {
+          __typename: "Target",
+          num: number,
+          val: number,
+        } > | null
       } | null,
       imp: LMH,
       met: YN | null,

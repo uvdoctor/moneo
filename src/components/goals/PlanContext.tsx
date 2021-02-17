@@ -62,6 +62,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       }
     });
     removeFromArray(goals, "id", ffGoalId);
+    console.log("Goals loaded from db: ", goals);
     setAllCFs(allCFs);
     setAllGoals([...goals]);
   };
