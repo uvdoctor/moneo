@@ -67,7 +67,7 @@ export default function BuyRentChart() {
 					data={stackedData}
 					yAxis={getCommonYAxis()}
 					xAxis={getCommonXAxis('Number of Years')}
-					legend={{ position: 'top-center' }}
+					legend={{ position: 'top' }}
 					tooltip={{
 						fields: [ 'years', 'name', 'value' ],
 						showTitle: false,

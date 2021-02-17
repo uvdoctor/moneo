@@ -74,8 +74,8 @@ export default function AAPlanChart({ changeToSingleYear }: AAPlanChartProps) {
 			stackField="asset"
 			yAxis={getCommonYAxis()}
 			xAxis={getCommonXAxis("Year")}
-			color={(d: string) => getAssetColour(d)}
-			legend={{ position: "top-center" }}
+			color={(d: any) => getAssetColour(d)}
+			legend={{ position: "top" }}
 			events={{
 				onColumnClick: (event: any) =>
 					changeToSingleYear(parseInt(event.data.year)),

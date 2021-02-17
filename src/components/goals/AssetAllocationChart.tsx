@@ -185,7 +185,7 @@ export default function AssetAllocationChart({
 						colorField="name"
 						label={{
 							visible: true,
-							formatter: (v) => {
+							formatter: (v: any) => {
 								return ffResult.aa.hasOwnProperty(v)
 									? `${getAssetShortName(v)}${ffResult.aa[v][index]}%`
 									: v;

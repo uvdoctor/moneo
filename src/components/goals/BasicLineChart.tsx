@@ -68,7 +68,7 @@ export default function BasicLineChart({ numberOfYears, chartTitle, title, showR
 						yAxis={getCommonYAxis()}
 						xAxis={getCommonXAxis(title ? title : numberOfYears ? 'Number of Years' : 'Year')}
 						meta={getCommonMeta(currency)}
-						point={{ visible: true }}
+						point={true}
 						forceFit
 					>
 						<Slider {...getDefaultSliderProps()} />

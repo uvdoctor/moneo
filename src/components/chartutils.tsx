@@ -60,9 +60,9 @@ export const getCommonXAxis = (titleText: string) => {
 export const getCommonYAxis = () => {
 	const fsb = useFullScreenBrowser();
 	return {
-		label: { visible: !isMobileDevice(fsb) },
-		grid: { visible: false },
-		title: { visible: false },
+		visible: !isMobileDevice(fsb),
+		label: { autoHide: true },
+		grid: { closed: true },
 	};
 };
 

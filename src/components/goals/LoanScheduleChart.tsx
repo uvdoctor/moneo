@@ -73,7 +73,7 @@ export default function LoanScheduleChart() {
 			yAxis={getCommonYAxis()}
 			xAxis={getCommonXAxis('Year')}
 			data={data}
-			legend={{ position: 'top-center' }}
+			legend={{ position: 'top' }}
 		>
 			<Slider {...getDefaultSliderProps()} />
 		</StackedColumnChart>
