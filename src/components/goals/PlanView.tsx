@@ -52,7 +52,7 @@ export default function PlanView() {
 			{Object.keys(getGoalTypes()).map(
 				(key: string) =>
 					key !== GoalType.FF && (
-						<MenuItem onClick={() => setGoal(createNewGoalInput(key as GoalType, ffGoal.ccy))}>
+						<MenuItem key={key} onClick={() => setGoal(createNewGoalInput(key as GoalType, ffGoal.ccy))}>
 							{getGoalTypes()[key as GoalType]}
 						</MenuItem>
 					)

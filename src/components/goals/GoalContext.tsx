@@ -207,7 +207,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       goal.achg = loanGracePeriod;
       goal.tbr = eduCostSemester;
     }
-    console.log("Updated goal: ", goal);
   };
 
   useEffect(() => {
@@ -329,6 +328,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
 
   const createNonEduLoanSchedule = () => {
     if (goal.type === GoalType.E) return;
+    console.log("Emi is ", emi);
     if (!emi) {
       setPSchedule([...[]]);
       setInsSchedule([...[]]);
@@ -338,6 +338,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     }
     let result = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments,
       loanIRAdjustments, loanMonths as number, sellAfter ? sellAfter : null, loanPMI as number, loanPMIEndPer as number);
+    console.log("Result is ", result);
     setPSchedule([...result.principal]);
     setInsSchedule([...result.insurance]);
     setISchedule([...result.interest]);
@@ -442,7 +443,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
         insuranceSchedule = loanSchedule.insurance;
       }
       result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, insuranceSchedule, goal, duration, changeState ? true : false);
-    } else result = calculateCFs(price, goal, duration, changeState ? true : false);
+    } else result = calculateCFs(price, goal, duration, changeState);
     cfs = result.cfs;
     if (changeState) {
       console.log("New cf result: ", result);
@@ -632,6 +633,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   const setAllBuyCFsForComparison = () => {
     let allBuyCFs: Array<Array<number>> = [];
     for (let i = 3; i <= analyzeFor; i++) allBuyCFs.push(calculateYearlyCFs(i, false));
+    console.log("All buy CFs: ", allBuyCFs);
     setAllBuyCFs([...allBuyCFs]);
   };
 
