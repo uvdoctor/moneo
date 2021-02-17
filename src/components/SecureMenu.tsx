@@ -71,16 +71,6 @@ export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 				))}
 			</SubMenu>
 			<Menu.Item>
-				<Link href={ROUTES.ABOUT}>
-					<a>About</a>
-				</Link>
-			</Menu.Item>
-			<Menu.Item>
-				<Link href={ROUTES.CONTACT_US}>
-					<a>Contact Us</a>
-				</Link>
-			</Menu.Item>
-			<Menu.Item>
 				<Link href={ROUTES.GET}>
 					<a>Get</a>
 				</Link>
@@ -100,7 +90,21 @@ export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 					<a>Invest</a>
 				</Link>
 			</Menu.Item>
-			{username && <Button type="link" danger icon={<SVGOff />} onClick={(e) => handleLogout(e)} />}
+			<Menu.Item>
+				<Link href={ROUTES.ABOUT}>
+					<a>About</a>
+				</Link>
+			</Menu.Item>
+			<Menu.Item>
+				<Link href={ROUTES.CONTACT_US}>
+					<a>Contact Us</a>
+				</Link>
+			</Menu.Item>
+			{username && (
+				<Menu.Item>
+					<Button type="link" danger icon={<SVGOff />} onClick={(e) => handleLogout(e)} />
+				</Menu.Item>
+			)}
 		</Menu>
 	);
 }

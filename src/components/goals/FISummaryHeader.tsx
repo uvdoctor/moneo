@@ -14,7 +14,7 @@ export default function FISummaryHeader() {
 						? `by ${ffResult.ffYear}`
 						: `Not Possible by ${ffGoal.sy + (ffGoal.loan?.rate as number)}. Please try again with different Goals / Inputs.`}`}
 					extra={[
-						<Button className="steps-start-btn" onClick={() => setGoal(Object.assign({}, ffGoal))}>
+						<Button key="Edit" className="steps-start-btn" onClick={() => setGoal(Object.assign({}, ffGoal))}>
 							<EditOutlined /> Edit
 						</Button>
 					]}

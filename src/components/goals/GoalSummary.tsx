@@ -17,8 +17,8 @@ export default function GoalSummary({ impFilter }: GoalSummaryProps) {
 			{allGoals.map(
 				(g: UpdateGoalInput, i: number) =>
 					(!impFilter || impFilter === g.imp) && (
-						<Col xs={24} sm={24} md={24} lg={10}>
-							<CalcContextProvider key={'g' + i} goal={g}>
+						<Col key={ "g" + i } xs={24} sm={24} md={24} lg={10}>
+							<CalcContextProvider goal={g}>
 								<GoalContextProvider>
 									<Summary />
 								</GoalContextProvider>
