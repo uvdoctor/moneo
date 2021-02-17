@@ -20,7 +20,7 @@ export default function PlanView() {
 	const { TabPane } = Tabs;
 	const goalsLabel = 'Goals';
 	const cfLabel = 'Cash Flows';
-	const aaLabel = 'Allocation';
+	const aaLabel = `${new Date().getFullYear()} Target Allocation`;
 	const [ impFilter, setImpFilter ] = useState<string>('');
 
 	const tabOptions = [
@@ -77,22 +77,18 @@ export default function PlanView() {
 					<Col className="steps-content" span={24}>
 						<Tabs type="card">
 							{tabOptions.map((t: any) => (
-								<TabPane
-									key={t.label}
-									tab={
-										t.label === goalsLabel ? (
+								<TabPane key={t.label} tab={t.label}>
+									{t.label === goalsLabel && (
+										<Row justify="center">
 											<SelectInput
 												pre=""
-												post="Goals"
+												post=""
 												options={getImpOptions()}
 												value={impFilter as string}
 												changeHandler={setImpFilter}
 											/>
-										) : (
-											t.label
-										)
-									}
-								>
+										</Row>
+									)}
 									{t.label !== aaLabel && (
 										<Row justify="center">
 											Negative values imply You Pay, while Positive values imply You Receive

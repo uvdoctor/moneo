@@ -21,10 +21,10 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
     };
     const sendPromise = new AWS.SES({ apiVersion: '2010-12-01' }).sendTemplatedEmail(params).promise();
     sendPromise
-      .then(function(data) {
+      .then(function(data: any) {
         res.status(200).json({status: 'Mail sent with id = '+data.MessageId})
       })
-      .catch(function(err) {
+      .catch(function(err: any) {
         console.error('Mail send error', err, err.stack);
         res.status(200).json({status: 'Error when sending mail'})
       });

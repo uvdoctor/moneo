@@ -3,7 +3,7 @@ import BasicLineChart from './BasicLineChart';
 import { getGoalTypes, getImpLevels } from './goalutils';
 import { GoalType, LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
-import { Button, Card, Row, Col } from 'antd';
+import { Card, Row, Col } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import DefaultOppCostResult from '../calc/DefaultOppCostResult';
 import FIImpact from './FIImpact';
@@ -24,17 +24,21 @@ export default function SummaryView() {
 			title={
 				<Row justify="space-between">
 					<Col>{`${goalTypes[goal.type as GoalType]} ${goal.name}`}</Col>
-					<Col>{impLevels[goal.imp]}</Col>
+					<Col>
+						<Row justify="space-around">
+							<Col>{impLevels[goal.imp]}</Col>
+							<Col>&nbsp;&nbsp;</Col>
+							<Col style={{ cursor: 'pointer' }} onClick={() => editGoal(goal.id)}>
+								<EditOutlined />
+							</Col>
+							<Col>&nbsp;&nbsp;</Col>
+							<Col style={{ cursor: 'pointer' }} onClick={() => removeGoal(goal.id)}>
+								<DeleteOutlined />
+							</Col>
+						</Row>
+					</Col>
 				</Row>
 			}
-			actions={[
-				<Button type="link" onClick={() => editGoal(goal.id)} icon={<EditOutlined />}>
-					Edit
-				</Button>,
-				<Button type="link" onClick={() => removeGoal(goal.id)} icon={<DeleteOutlined />}>
-					Delete
-				</Button>
-			]}
 		>
 			<Fragment>
 				{(goal.sy as number) > nowYear && (

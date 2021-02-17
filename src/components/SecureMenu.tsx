@@ -6,7 +6,6 @@ import { MainMenuProps } from './MainMenu';
 import Link from 'next/link';
 import { ROUTES } from '../CONSTANTS';
 import { useRouter } from 'next/router';
-import SVGOff from './svgoff';
 import { calcList } from './landing/Calculator';
 
 export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
@@ -102,7 +101,7 @@ export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 			</Menu.Item>
 			{username && (
 				<Menu.Item>
-					<Button type="link" danger icon={<SVGOff />} onClick={(e) => handleLogout(e)} />
+					<Button type="text" onClick={(e) => handleLogout(e)}>Logout</Button>
 				</Menu.Item>
 			)}
 		</Menu>

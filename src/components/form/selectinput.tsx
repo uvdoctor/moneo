@@ -23,7 +23,7 @@ export default function SelectInput(props: SelectInputProps) {
 		<Fragment>
 			{props.pre && (
 				<Fragment>
-					{props.pre}
+					{props.pre}&nbsp;
 					{props.info && (
 						<Tooltip title={props.info}>
 							<InfoCircleOutlined />
@@ -47,7 +47,7 @@ export default function SelectInput(props: SelectInputProps) {
 						{props.currency ? key : selectOptions[key]}
 					</Option>
 				))}
-			</Select>{" "}
+			</Select>&nbsp;
 			{props.unit}
 			{props.post}
 		</Fragment>

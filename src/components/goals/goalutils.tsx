@@ -272,10 +272,10 @@ export function getImpLevels() {
 
 export function getImpOptions() {
   return {
-    "": "All",
-    H: "Must Meet",
-    M: "Try Best",
-    L: "Optional",
+    "": "All Goals",
+    H: "Must Meet Goals only",
+    M: "Try Best Goals only",
+    L: "Optional Goals only",
   };
 }
 

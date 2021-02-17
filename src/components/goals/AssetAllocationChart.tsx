@@ -87,7 +87,8 @@ export default function AssetAllocationChart({
 				}
 			});
 
-			cat === ASSET_CATEGORIES.CASH
+			if (total)
+				cat === ASSET_CATEGORIES.CASH
 				? (cash.value = total)
 				: data.push({
 						name: cat,
