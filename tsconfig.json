@@ -27,7 +27,8 @@
   },
   "exclude": [
     "node_modules",
-    "**/lib/**"
+    "**/lib/**",
+    "src/**/*.less"
   ],
   "include": [
     "next-env.d.ts",
