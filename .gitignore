@@ -47,3 +47,5 @@ amplifyxc.config
 .vercel
 
 amplify/README.md
+
+./package-lock.json
