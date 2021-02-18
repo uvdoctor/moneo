@@ -5,3 +5,4 @@
 /// <reference path="./xirr.d.ts" />
 /// <reference path="./reactbrowserhooks.d.ts" />
 /// <reference path="./finnhub.d.ts" />
+/// <reference path="./awssdk.d.ts" />
