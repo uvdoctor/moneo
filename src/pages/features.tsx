@@ -5,6 +5,7 @@ import { Row, Col, Statistic, Button } from "antd";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+//@ts-ignore
 import "./pricing-table.less";
 
 interface FeatureProps {
