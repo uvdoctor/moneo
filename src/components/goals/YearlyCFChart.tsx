@@ -5,7 +5,7 @@ import { PlanContext } from './PlanContext';
 import { Row, Col } from 'antd';
 import { COLORS } from '../../CONSTANTS';
 
-const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
+const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function YearlyCFChart() {
@@ -14,7 +14,7 @@ export default function YearlyCFChart() {
 	const from = new Date().getFullYear() + 1;
 	const to = ffGoal.sy + (ffGoal.loan.dur as number);
 	const currency = ffGoal.ccy;
-	
+
 	useEffect(
 		() => {
 			let data: Array<any> = [];
@@ -60,19 +60,20 @@ export default function YearlyCFChart() {
 	return (
 		<Row>
 			<Col span={24} style={{ minHeight: '400px' }}>
-				<StackedColumnChart
+				<ColumnChart
 					data={data}
 					xField="year"
 					yField="value"
-					stackField="name"
+					seriesField="name"
 					yAxis={getCommonYAxis()}
 					xAxis={getCommonXAxis('Year')}
 					meta={getCommonMeta(currency)}
 					legend={{ position: 'top' }}
 					color={(column: any) => getColumnColor(column.name)}
+					isStack={true}
 				>
 					<Slider {...getDefaultSliderProps()} />
-				</StackedColumnChart>
+				</ColumnChart>
 			</Col>
 		</Row>
 	);

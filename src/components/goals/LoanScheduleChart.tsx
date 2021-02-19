@@ -5,7 +5,7 @@ import { GoalContext } from './GoalContext';
 import { CalcContext } from '../calc/CalcContext';
 import { createYearlyFromMonthlyLoanCFs } from '../calc/finance';
 
-const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
+const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function LoanScheduleChart() {
@@ -65,17 +65,18 @@ export default function LoanScheduleChart() {
 	);
 
 	return (
-		<StackedColumnChart
+		<ColumnChart
 			meta={getCommonMeta(currency)}
 			xField="year"
 			yField="value"
-			stackField="name"
+			seriesField="name"
 			yAxis={getCommonYAxis()}
 			xAxis={getCommonXAxis('Year')}
 			data={data}
 			legend={{ position: 'top' }}
+			isStack={true}
 		>
 			<Slider {...getDefaultSliderProps()} />
-		</StackedColumnChart>
+		</ColumnChart>
 	);
 }

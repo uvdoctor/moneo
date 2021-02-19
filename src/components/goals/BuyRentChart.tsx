@@ -7,7 +7,7 @@ import { Col, Row } from 'antd';
 import { CalcContext } from '../calc/CalcContext';
 import NumberInput from '../form/numberinput';
 
-const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
+const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function BuyRentChart() {
@@ -17,25 +17,24 @@ export default function BuyRentChart() {
 
 	useEffect(
 		() => {
-			if (!brChartData || brChartData.length !== 2 || !brChartData[0].values.length) {
+			if (!brChartData || brChartData.length !== 2) {
 				setStackedData([ ...[] ]);
 				return;
 			}
 			let chartData: Array<any> = [];
-			for (let year = 3; year <= analyzeFor; year++) {
+			for (let i = 0; i < brChartData[0].values.length; i++) {
 				chartData.push({
 					name: brChartData[0].name,
-					years: year,
-					value: brChartData[0].values[year - 3]
+					years: i + 3,
+					value: brChartData[0].values[i]
 				});
 				chartData.push({
 					name: brChartData[1].name,
-					years: year,
-					value: brChartData[1].values[year - 3]
+					years: i + 3,
+					value: brChartData[1].values[i]
 				});
 			}
 			setStackedData([...chartData]);
-			console.log('Chart data: ', brChartData);
 		},
 		[ brChartData ]
 	);
@@ -59,15 +58,17 @@ export default function BuyRentChart() {
 				</Col>
 			</Row>
 			<Col span={24} style={{ minHeight: '400px' }}>
-				<StackedColumnChart
+				<ColumnChart
 					meta={getCommonMeta(currency)}
 					xField="years"
 					yField="value"
-					groupField="name"
+					seriesField="name"
 					data={stackedData}
 					yAxis={getCommonYAxis()}
 					xAxis={getCommonXAxis('Number of Years')}
-					legend={{ position: 'top' }}
+					legend={{
+						position: 'top',
+					}}
 					tooltip={{
 						fields: [ 'years', 'name', 'value' ],
 						showTitle: false,
@@ -87,7 +88,7 @@ export default function BuyRentChart() {
 					isGroup
 				>
 					<Slider {...getDefaultSliderProps()} />
-				</StackedColumnChart>
+				</ColumnChart>
 			</Col>
 		</Fragment>
 	);

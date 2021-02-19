@@ -7,7 +7,7 @@ import { FIGoalContext } from './FIGoalContext';
 import { PlanContext } from './PlanContext';
 import { Row, Col } from 'antd';
 
-const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
+const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), {
 	ssr: false
 });
@@ -62,19 +62,19 @@ export default function AAPlanChart() {
 	return (
 		<Row>
 			<Col span={24} style={{ minHeight: '400px' }}>
-				<StackedColumnChart
+				<ColumnChart
 					data={data}
 					xField="year"
 					yField="value"
-					stackField="asset"
+					seriesField="asset"
 					xAxis={getCommonXAxis('Year')}
 					yAxis={{ line: null, grid: null, label: null }}
 					color={({ asset }: any) => getAssetColour(asset)}
-					seriesField="asset"
 					legend={{ position: 'top' }}
+					isStack={true}
 				>
 					<Slider {...getDefaultSliderProps()} />
-				</StackedColumnChart>
+				</ColumnChart>
 			</Col>
 		</Row>
 	);

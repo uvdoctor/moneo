@@ -624,7 +624,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     if (!sellAfter || !allBuyCFs.length) return;
     if (!!rentAmt) {
       let data = initBRCompNPVs();
-      if (data && data.length === 2 && data[0].values.length && data[1].values.length) {
+      if (data && data.length === 2 && data[0].values && data[0].values.length === data[1].values.length) {
         setBRChartData([...data]);
         findAnswer(data);
       }
