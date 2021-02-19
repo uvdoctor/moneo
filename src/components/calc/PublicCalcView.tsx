@@ -1,5 +1,5 @@
 import { Button, Col, PageHeader, Row, Tabs } from 'antd';
-import React, { useContext } from 'react';
+import React, { useContext, Fragment } from 'react';
 import { isMobileDevice } from '../utils';
 import { RocketOutlined } from '@ant-design/icons';
 import { useFullScreenBrowser } from 'react-browser-hooks';
@@ -20,16 +20,16 @@ interface PublicCalcViewProps {
 	assumptions: Array<any>;
 	results: Array<any>;
 	terms: Array<any>;
-  demoUrl: string;
-  setWIP: Function;
+	demoUrl: string;
+	setWIP: Function;
 }
 
 export default function PublicCalcView(props: PublicCalcViewProps) {
-  const { defaultCurrency }: any = useContext(AppContext);
-  const fsb = useFullScreenBrowser();
+	const { defaultCurrency }: any = useContext(AppContext);
+	const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
 
-  const startingAssumptions = [
+	const startingAssumptions = [
 		{
 			title: 'Estimates Only. No Advice.',
 			content: `Financial estimates are useful for what-if analysis. Please consult a registered financial / tax advisor for specific advice.`
@@ -154,7 +154,7 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 		}
 	];
 
-  const sections: any = {
+	const sections: any = {
 		Demo: <VideoPlayer url={props.demoUrl} />,
 		'Expected Results': <ExpectedResults elements={[ ...props.results, ...endingResults ]} />,
 		'Key Features': <KeyFeatures elements={[ ...startingFeatures, ...props.features, ...endingFeatures ]} />,
@@ -164,8 +164,8 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 		Definitions: <CommonTerms elements={[ ...props.terms, ...genericTerms ]} />
 	};
 
-  const createGoal = () => {
-    let g: any = null;
+	const createGoal = () => {
+		let g: any = null;
 		if (props.type) g = createNewGoalInput(props.type, defaultCurrency, props.title.endsWith('Loan'));
 		else g = { ccy: defaultCurrency };
 		g.name = props.title;
@@ -178,35 +178,35 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 		props.setWIP(g);
 	};
 
-  return (
-    <Row>
-    <Col span={24} className="primary-header">
-      <PageHeader
-        title={props.title}
-        extra={[
-          <Button key="startbtn" className="steps-start-btn" onClick={() => createGoal()}>
-            <RocketOutlined /> Analyze
-          </Button>
-        ]}
-      />
-      <Col span={24} className="secondary-header">
-        <Row justify="center">Hit Analyze for Action. Details below for Geeks.</Row>
-      </Col>
-    </Col>
-    <Col className="steps-content" span={24}>
-      <Tabs
-        tabPosition={isMobileDevice(fsb) ? 'top' : 'left'}
-        type={isMobileDevice(fsb) ? 'card' : 'line'}
-        animated
-      >
-        {Object.keys(sections).map((key, i) => (
-          <TabPane key={`${i + 1}`} tab={key}>
-            {sections[key]}
-          </TabPane>
-        ))}
-      </Tabs>
-    </Col>
-  </Row>
-
-  )
+	return (
+		<Fragment>
+			<Row className="primary-header">
+				<Col>
+					<PageHeader title={props.title} />
+				</Col>
+			</Row>
+			<Row justify="center" style={{ marginTop: '10px' }}>
+				<Col>
+					<Button size="large" key="startbtn" className="steps-start-btn" onClick={() => createGoal()}>
+						<RocketOutlined /> Start Analysis
+					</Button>
+				</Col>
+			</Row>
+			<Row className="steps-content">
+				<Col span={24}>
+				<Tabs
+					tabPosition={isMobileDevice(fsb) ? 'top' : 'left'}
+					type={isMobileDevice(fsb) ? 'card' : 'line'}
+					animated
+				>
+					{Object.keys(sections).map((key, i) => (
+						<TabPane key={`${i + 1}`} tab={key}>
+							{sections[key]}
+						</TabPane>
+					))}
+					</Tabs>
+				</Col>
+			</Row>
+		</Fragment>
+	);
 }
