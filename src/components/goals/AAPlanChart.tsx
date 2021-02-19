@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import {
 	getCommonXAxis,
-	getCommonYAxis,
 	getDefaultSliderProps,
 } from "../chartutils";
 import { getAssetColour } from "../utils";
@@ -10,8 +9,8 @@ import { CalcContext } from "../calc/CalcContext";
 import { FIGoalContext } from "./FIGoalContext";
 import { PlanContext } from "./PlanContext";
 
-const StackedColumnChart = dynamic(
-	() => import("bizcharts/lib/plots/StackedColumnChart"),
+const ColumnChart = dynamic(
+	() => import("bizcharts/lib/plots/ColumnChart"),
 	{ ssr: false }
 );
 const Slider = dynamic(() => import("bizcharts/lib/components/Slider"), {
@@ -67,22 +66,23 @@ export default function AAPlanChart({ changeToSingleYear }: AAPlanChartProps) {
 	}, [rr, startYear, planDuration]);
 
 	return (
-		<StackedColumnChart
+		<ColumnChart
 			data={data}
 			xField="year"
 			yField="value"
 			stackField="asset"
-			yAxis={getCommonYAxis()}
 			xAxis={getCommonXAxis("Year")}
-			color={(d: any) => getAssetColour(d)}
+			yAxis={{line: null, grid: null, label: null}}
+			color={({ asset }: any) => getAssetColour(asset)}
+			seriesField="asset"
 			legend={{ position: "top" }}
 			events={{
-				onColumnClick: (event: any) =>
-					changeToSingleYear(parseInt(event.data.year)),
+				onColumnClick: (event: any) => console.log(event),
+					//changeToSingleYear(parseInt(event.data.year)),
 			}}
 			columnStyle={{ cursor: "pointer" }}
 		>
 			<Slider {...getDefaultSliderProps()} />
-		</StackedColumnChart>
+		</ColumnChart>
 	);
 }

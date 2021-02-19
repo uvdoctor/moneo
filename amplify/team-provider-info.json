@@ -15,6 +15,25 @@
       "auth": {
         "ddpwa0063633b": {},
         "userPoolGroups": {}
+      },
+      "function": {
+        "ddpwa0063633bDefineAuthChallenge": {
+          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
+          "s3Key": "amplify-builds/ddpwa0063633bDefineAuthChallenge-70445a6a384f59745550-build.zip"
+        },
+        "ddpwa0063633bCreateAuthChallenge": {
+          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
+          "s3Key": "amplify-builds/ddpwa0063633bCreateAuthChallenge-5a716938742f4a724f74-build.zip"
+        },
+        "ddpwa0063633bVerifyAuthChallengeResponse": {
+          "RECAPTCHASECRET": "6LdTyd8ZAAAAAEB3B2-P2swyDqrqpBQEcY4m0sOf",
+          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
+          "s3Key": "amplify-builds/ddpwa0063633bVerifyAuthChallengeResponse-354e6c5256365072436b-build.zip"
+        },
+        "AdminQueries9798a8c9": {
+          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
+          "s3Key": "amplify-builds/AdminQueries9798a8c9-645232687a63376a6836-build.zip"
+        }
       }
     }
   }

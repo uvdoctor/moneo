@@ -1,7 +1,6 @@
 import React, { useContext, useState, Fragment } from 'react';
 import { getImpOptions, getGoalTypes, createNewGoalInput } from './goalutils';
 import SelectInput from '../form/selectinput';
-import AssetAllocationChart from './AssetAllocationChart';
 import PlanStart from './PlanStart';
 import FISummaryHeader from './FISummaryHeader';
 import { Button, Col, Dropdown, Menu, Row, Tabs } from 'antd';
@@ -14,13 +13,14 @@ import MenuItem from 'antd/lib/menu/MenuItem';
 import { GoalType } from '../../api/goals';
 import { DownOutlined } from '@ant-design/icons';
 import { FIGoalContextProvider } from './FIGoalContext';
+import DynamicAAChart from './DynamicAAChart';
 
 export default function PlanView() {
 	const { allGoals, ffGoal, goalsLoaded, setGoal }: any = useContext(PlanContext);
 	const { TabPane } = Tabs;
 	const goalsLabel = 'Goals';
 	const cfLabel = 'Cash Flows';
-	const aaLabel = `${new Date().getFullYear()} Target Allocation`;
+	const aaLabel = 'Target Asset Allocation';
 	const [ impFilter, setImpFilter ] = useState<string>('');
 
 	const tabOptions = [
@@ -35,7 +35,7 @@ export default function PlanView() {
 			content: (
 				<CalcContextProvider goal={ffGoal}>
 					<FIGoalContextProvider>
-						<AssetAllocationChart />
+						<DynamicAAChart />
 					</FIGoalContextProvider>
 				</CalcContextProvider>
 			)

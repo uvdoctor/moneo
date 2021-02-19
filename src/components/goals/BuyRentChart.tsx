@@ -7,7 +7,7 @@ import { Col, Row } from 'antd';
 import { CalcContext } from '../calc/CalcContext';
 import NumberInput from '../form/numberinput';
 
-const GroupedColumnChart = dynamic(() => import('bizcharts/lib/plots/GroupedColumnChart'), { ssr: false });
+const StackedColumnChart = dynamic(() => import('bizcharts/lib/plots/StackedColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function BuyRentChart() {
@@ -17,7 +17,7 @@ export default function BuyRentChart() {
 
 	useEffect(
 		() => {
-			if (!brChartData || !brChartData.length || !brChartData[0].values.length) {
+			if (!brChartData || brChartData.length !== 2 || !brChartData[0].values.length) {
 				setStackedData([ ...[] ]);
 				return;
 			}
@@ -34,7 +34,8 @@ export default function BuyRentChart() {
 					value: brChartData[1].values[year - 3]
 				});
 			}
-			setStackedData([ ...chartData ]);
+			setStackedData([...chartData]);
+			console.log('Chart data: ', brChartData);
 		},
 		[ brChartData ]
 	);
@@ -58,8 +59,7 @@ export default function BuyRentChart() {
 				</Col>
 			</Row>
 			<Col span={24} style={{ minHeight: '400px' }}>
-				{/*@ts-ignore*/}
-				<GroupedColumnChart
+				<StackedColumnChart
 					meta={getCommonMeta(currency)}
 					xField="years"
 					yField="value"
@@ -71,8 +71,7 @@ export default function BuyRentChart() {
 					tooltip={{
 						fields: [ 'years', 'name', 'value' ],
 						showTitle: false,
-						//@ts-ignore
-						formatter: (years: number, name: string, value: number) => {
+						formatter: ({ years, name, value }: any) => {
 							const isAns =
 								name === getAns(brChartData[0].values[years - 3], brChartData[1].values[years - 3]);
 							const valueStr = `${value > 0 ? 'Gain' : 'Loss'} of ${toCurrency(
@@ -85,9 +84,10 @@ export default function BuyRentChart() {
 							};
 						}
 					}}
+					isGroup
 				>
 					<Slider {...getDefaultSliderProps()} />
-				</GroupedColumnChart>
+				</StackedColumnChart>
 			</Col>
 		</Fragment>
 	);

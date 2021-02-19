@@ -537,7 +537,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     let buyNPVs: Array<number> = [];
     let rentNPVs: Array<number> = [];
     let results: Array<any> = [];
-    for (let i = 3; i <= analyzeFor; i++) {
+    for (let i = 3; i < allBuyCFs.length + 3; i++) {
       let cfs = [];
       let inv = 0;
       let buyCFs = allBuyCFs[i - 3];
@@ -573,6 +573,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
         values: rentNPVs,
       });
     }
+    console.log("Results are: ", results);
     return results;
   };
 

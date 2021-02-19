@@ -173,23 +173,21 @@ export default function AssetAllocationChart({
 						data={{
 							name: 'Portfolio',
 							value: 100 - (cashData.value || 0),
-							children: data
+							children: data,
+							seriesField: "name",
+							colors: colors
 						}}
 						meta={{
 							value: {
-								formatter: (v) => {
-									return v + '%';
-								}
+								formatter: ({ v }: any) => v + '%'
 							}
 						}}
-						colorField="name"
 						label={{
 							visible: true,
-							formatter: (v: any) => {
-								return ffResult.aa.hasOwnProperty(v)
+							formatter: ({ v }: any) => ffResult.aa.hasOwnProperty(v)
 									? `${getAssetShortName(v)}${ffResult.aa[v][index]}%`
-									: v;
-							},
+									: v
+							,
 							style: {
 								fontSize: 14,
 								fill: 'grey'
@@ -197,11 +195,10 @@ export default function AssetAllocationChart({
 						}}
 						color={colors}
 						rectStyle={{ stroke: '#fff', lineWidth: 2 }}
-						forceFit
+						autoFit
 						tooltip={{
 							visible: true,
-							//@ts-ignore
-							formatter: (name, value) => {
+							formatter: ({ name, value }: any) => {
 								return {
 									name,
 									value: `<strong>${toHumanFriendlyCurrency(

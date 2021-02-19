@@ -15,7 +15,6 @@ import FIBenefit from '../goals/FIBenefit';
 import { AfterFI } from '../goals/AfterFI';
 import Care from '../goals/Care';
 import { BeforeFI } from '../goals/BeforeFI';
-import AssetAllocationChart from '../goals/AssetAllocationChart';
 import { faChartLine, faChartArea, faChartPie, faChartBar, faBalanceScale, faDonate, faMoneyBillWave, faPiggyBank, faHandHoldingUsd, faHandHoldingMedical, faHandshake, faFileInvoiceDollar, faUserCog } from '@fortawesome/free-solid-svg-icons';
 import FIUserDetails from '../goals/FIUserDetails';
 import LoanSchedule from './LoanSchedule';
@@ -108,16 +107,11 @@ function CalcContextProvider({
   }
   
   const getFFGoalResultTabOptions = () => {
-    let options = [{
-      label: `${nowYear} Asset Allocation`,
+    let options = [
+    {
+      label: 'Target Asset Allocation',
       active: true,
       svg: faChartPie,
-      content: <AssetAllocationChart />
-    },
-    {
-      label: `Allocation from ${nowYear + 1}`,
-      active: true,
-      svg: faChartBar,
       content: <DynamicAAChart />
     },
     {
