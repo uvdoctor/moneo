@@ -10,6 +10,7 @@ import { PlanContext } from '../goals/PlanContext';
 import TextInput from '../form/textinput';
 import { GoalContext } from '../goals/GoalContext';
 import { GoalType } from '../../api/goals';
+import { COLORS } from '../../CONSTANTS';
 
 export default function CalcHeader() {
 	const { isPublicCalc }: any = useContext(PlanContext);
@@ -17,7 +18,7 @@ export default function CalcHeader() {
 		CalcContext
 	);
 	const { name, setName }: any = useContext(GoalContext);
-	const ratingLabels = [ '', 'Very Poor', 'Poor', 'Average', 'Good', 'Awesome!' ];
+	const ratingLabels = [ 'Rate Calculator', 'Very Poor', 'Poor', 'Average', 'Good', 'Awesome!' ];
 	const [ ratingLabel, setRatingLabel ] = useState<string>('');
 
 	const closeModal = () => setShowFeedbackModal(false);
@@ -40,29 +41,30 @@ export default function CalcHeader() {
 						<PageHeader
 							title={isPublicCalc || goal.type === GoalType.FF ? goal.name : goalTitle()}
 							extra={[
-								<SelectInput
-									key="currselect"
-									pre=""
-									value={currency}
-									changeHandler={setCurrency}
-									currency
-								/>
+								<Fragment>
+									<Row justify="center" style={{ color: COLORS.WHITE }}>{ratingLabel ? ratingLabel : ratingLabels[rating]}</Row>
+									<Row justify="center">
+										<Rate
+											allowClear
+											value={rating}
+											onChange={(rating: number) => setRating(rating)}
+											onHoverChange={(rating: number) => setRatingLabel(ratingLabels[rating])}
+										/>
+									</Row>
+								</Fragment>
 							]}
 						/>
 					</Col>
 					<Col span={24} className="secondary-header">
-						<Row justify='start' align="middle">
+						<Row justify="start" align="middle">
 							<Col flex="auto">
-								<span style={{ marginRight: '0.5rem' }}>Rate Calculator</span>
-								<Rate
-									allowClear
-									value={rating}
-									onChange={(rating: number) => setRating(rating)}
-									onHoverChange={(rating: number) => setRatingLabel(ratingLabels[rating])}
+								<SelectInput
+									key="currselect"
+									pre="Currency"
+									value={currency}
+									changeHandler={setCurrency}
+									currency
 								/>
-								<span style={{ marginLeft: '0.5rem' }}>
-									{ratingLabel ? ratingLabel : ratingLabels[rating]}
-								</span>
 							</Col>
 							<Col flex="20px">
 								<Tooltip
