@@ -98,9 +98,7 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 						});
 		});
 		setCashData(cash);
-		//data.forEach((cat) => (cat.name += ` ${cat.value}%`));
 		setData([ ...data ]);
-		console.log('Data: ', data);
 	};
 
 	useEffect(
@@ -212,10 +210,7 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 								}
 							}}
 							rectStyle={{ stroke: '#fff', lineWidth: 2 }}
-							color={(asset: any) => {
-								console.log('Asset name: ', asset.name);
-								return getAssetColour(asset.name);
-							}}
+							color={(asset: any) => getAssetColour(asset.name)}
 							autoFit
 							tooltip={{
 								visible: true,
