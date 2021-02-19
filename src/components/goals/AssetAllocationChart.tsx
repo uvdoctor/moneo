@@ -37,10 +37,10 @@ interface CashData extends CashDataKeys {
 }
 
 interface AssetAllocationChartProps {
-	yearChangeable?: boolean
+	yearChangeable?: boolean;
 }
 
-export default function AssetAllocationChart({yearChangeable}: AssetAllocationChartProps) {
+export default function AssetAllocationChart({ yearChangeable }: AssetAllocationChartProps) {
 	const cashDataDefault = {
 		value: 0,
 		deposits: 0,
@@ -53,7 +53,7 @@ export default function AssetAllocationChart({yearChangeable}: AssetAllocationCh
 	const { planDuration }: any = useContext(FIGoalContext);
 	const [ index, setIndex ] = useState<number>(yearChangeable ? 1 : 0);
 	const [ data, setData ] = useState<Array<any>>([]);
-	const [cashData, setCashData] = useState<CashData>(cashDataDefault);
+	const [ cashData, setCashData ] = useState<CashData>(cashDataDefault);
 	const ffGoalEndYear = startYear + planDuration;
 	const [ aaYearOptions, setAAYearOptions ] = useState<any>(initOptions(nowYear + 1, ffGoalEndYear - nowYear - 2));
 	const fsb = useFullScreenBrowser();
@@ -98,8 +98,9 @@ export default function AssetAllocationChart({yearChangeable}: AssetAllocationCh
 						});
 		});
 		setCashData(cash);
-		data.forEach((cat) => (cat.name += ` ${cat.value}%`));
+		//data.forEach((cat) => (cat.name += ` ${cat.value}%`));
 		setData([ ...data ]);
+		console.log('Data: ', data);
 	};
 
 	useEffect(
@@ -189,10 +190,9 @@ export default function AssetAllocationChart({yearChangeable}: AssetAllocationCh
 					) : (
 						<TreemapChart
 							data={{
-								name: 'Portfolio',
+								name: 'root',
 								value: 100 - (cashData.value || 0),
-								children: data,
-								seriesField: 'name'
+								children: data
 							}}
 							meta={{
 								value: {
@@ -204,24 +204,18 @@ export default function AssetAllocationChart({yearChangeable}: AssetAllocationCh
 								formatter: (v: any) =>
 									ffResult.aa.hasOwnProperty(v.name)
 										? `${getFormattedAssetName(v.name)}${ffResult.aa[v.name][index]}%`
-										: v,
+										: v.name,
 								style: {
 									fontFamily: "'Jost', sans-serif",
 									fontSize: 14,
 									fill: COLORS.DEFAULT
 								}
 							}}
-							legend={{
-								label: {
-									style: {
-										fontFamily: "'Jost', sans-serif",
-										fontSize: 14,
-										fill: COLORS.DEFAULT
-									}
-								}
-							}}
 							rectStyle={{ stroke: '#fff', lineWidth: 2 }}
-							color={(asset: any) => getAssetColour(asset.name)}
+							color={(asset: any) => {
+								console.log('Asset name: ', asset.name);
+								return getAssetColour(asset.name);
+							}}
 							autoFit
 							tooltip={{
 								visible: true,
@@ -235,6 +229,12 @@ export default function AssetAllocationChart({yearChangeable}: AssetAllocationCh
 									};
 								}
 							}}
+							interactions={[
+								{
+									type: 'zoom',
+									enable: false
+								}
+							]}
 						/>
 					)}
 				</Chart>

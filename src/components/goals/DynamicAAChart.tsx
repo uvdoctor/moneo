@@ -16,7 +16,7 @@ export default function DynamicAAChart() {
 			onChange={(key: string) => setActiveTab(key)}
 			tabBarExtraContent={
 				<HSwitch
-					rightText="Show Single Year"
+					rightText="Yearly"
 					value={showSingleYear}
 					setter={setShowSingleYear}
 					disabled={activeTab === '1'}
