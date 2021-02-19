@@ -37,6 +37,13 @@ export const getCommonMeta = (currency: string) => {
 	};
 };
 
+export const getCommonTheme = () => {
+	return {
+		fontFamily: "'Jost', sans-serif",
+		defaultColor: COLORS.DEFAULT
+	};
+};
+
 export const getCommonXAxis = (titleText: string) => {
 	return {
 		title: {

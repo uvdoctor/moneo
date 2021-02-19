@@ -1,17 +1,21 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { List, Badge, Row, Col, Button } from 'antd';
+import { List, Badge, Row, Col } from 'antd';
 import {
 	getAllAssetCategories,
 	getAllAssetTypesByCategory,
 	getAssetColour,
+	initOptions,
+	isMobileDevice,
 	toHumanFriendlyCurrency
 } from '../utils';
 import { CalcContext } from '../calc/CalcContext';
 import DataSwitcher from '../DataSwitcher';
-import { ArrowLeftOutlined } from '@ant-design/icons';
-import { ASSET_CATEGORIES } from '../../CONSTANTS';
+import { ASSET_CATEGORIES, COLORS } from '../../CONSTANTS';
 import { PlanContext } from './PlanContext';
+import { useFullScreenBrowser } from 'react-browser-hooks';
+import SelectInput from '../form/selectinput';
+import { FIGoalContext } from './FIGoalContext';
 
 const TreemapChart = dynamic(() => import('bizcharts/lib/plots/TreemapChart'), {
 	ssr: false
@@ -33,33 +37,31 @@ interface CashData extends CashDataKeys {
 }
 
 interface AssetAllocationChartProps {
-	year?: number;
-	backFunction?: Function;
+	yearChangeable?: boolean
 }
 
-export default function AssetAllocationChart({
-	year = new Date().getFullYear(),
-	backFunction
-}: AssetAllocationChartProps) {
+export default function AssetAllocationChart({yearChangeable}: AssetAllocationChartProps) {
 	const cashDataDefault = {
 		value: 0,
 		deposits: 0,
 		savings: 0
 	};
+	const nowYear = new Date().getFullYear();
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 	const { ffResult, rr }: any = useContext(PlanContext);
-	const { cfs, currency }: any = useContext(CalcContext);
-	const index = year - new Date().getFullYear();
+	const { cfs, currency, startYear }: any = useContext(CalcContext);
+	const { planDuration }: any = useContext(FIGoalContext);
+	const [ index, setIndex ] = useState<number>(yearChangeable ? 1 : 0);
 	const [ data, setData ] = useState<Array<any>>([]);
-	const [ colors, setColors ] = useState<Array<string>>([]);
-	const [ cashData, setCashData ] = useState<CashData>(cashDataDefault);
+	const [cashData, setCashData] = useState<CashData>(cashDataDefault);
+	const ffGoalEndYear = startYear + planDuration;
+	const [ aaYearOptions, setAAYearOptions ] = useState<any>(initOptions(nowYear + 1, ffGoalEndYear - nowYear - 2));
+	const fsb = useFullScreenBrowser();
 
-	const sortDesc = (data: Array<any>) => data.sort((a, b) => b.value - a.value);
-
-	const getAssetShortName = (assetName: string) => {
-		if (assetName.endsWith('nds') || assetName.endsWith('cks')) {
+	const getFormattedAssetName = (assetName: string) => {
+		if (isMobileDevice(fsb) && (assetName.endsWith('nds') || assetName.endsWith('cks'))) {
 			let result = '';
-			let strings = assetName.substr(0, assetName.length - (assetName.endsWith('cks') ? 7 : 6)).split(' ');
+			let strings = assetName.split(' ');
 			strings.forEach((str) => (result += str + '\n'));
 			return result;
 		} else return assetName + '\n';
@@ -67,7 +69,6 @@ export default function AssetAllocationChart({
 
 	const initChartData = () => {
 		let data: Array<any> = [];
-		let colors: Array<string> = [];
 		const aa = ffResult.aa;
 		const cash: CashData = cashDataDefault;
 
@@ -89,28 +90,31 @@ export default function AssetAllocationChart({
 
 			if (total)
 				cat === ASSET_CATEGORIES.CASH
-				? (cash.value = total)
-				: data.push({
-						name: cat,
-						value: total,
-						children: children
-					});
+					? (cash.value = total)
+					: data.push({
+							name: cat,
+							value: total,
+							children: children
+						});
 		});
 		setCashData(cash);
-		sortDesc(data).forEach((cat) => colors.push(getAssetColour(cat.name)));
-		data.forEach((cat) => {
-			sortDesc(cat.children).forEach((at) => colors.push(getAssetColour(at.name)));
-			cat.name += ` ${cat.value}%`;
-		});
+		data.forEach((cat) => (cat.name += ` ${cat.value}%`));
 		setData([ ...data ]);
-		setColors([ ...colors ]);
 	};
+
+	useEffect(
+		() => {
+			const ffGoalEndYear = startYear + planDuration;
+			setAAYearOptions(initOptions(nowYear + 1, ffGoalEndYear - nowYear - 2));
+		},
+		[ startYear, planDuration ]
+	);
 
 	useEffect(
 		() => {
 			if (rr.length) initChartData();
 		},
-		[ rr ]
+		[ rr, index ]
 	);
 
 	return (
@@ -118,11 +122,18 @@ export default function AssetAllocationChart({
 			<DataSwitcher
 				title={
 					<Fragment>
-						{backFunction && (
-							<Button type="text" icon={<ArrowLeftOutlined />} onClick={() => backFunction()} />
-						)}
 						Target Asset Allocation of <strong>{toHumanFriendlyCurrency(cfs[index], currency)}</strong> for
-						end of Year {' '}<strong>{year}</strong>
+						end of Year&nbsp;
+						{yearChangeable ? (
+							<SelectInput
+								pre=""
+								value={nowYear + index}
+								changeHandler={(val: string) => setIndex(parseInt(val) - nowYear)}
+								options={aaYearOptions}
+							/>
+						) : (
+							<strong>{nowYear + index}</strong>
+						)}
 					</Fragment>
 				}
 				header={
@@ -169,46 +180,63 @@ export default function AssetAllocationChart({
 				}
 			>
 				<Chart>
-					<TreemapChart
-						data={{
-							name: 'Portfolio',
-							value: 100 - (cashData.value || 0),
-							children: data,
-							seriesField: "name",
-							colors: colors
-						}}
-						meta={{
-							value: {
-								formatter: ({ v }: any) => v + '%'
-							}
-						}}
-						label={{
-							visible: true,
-							formatter: ({ v }: any) => ffResult.aa.hasOwnProperty(v)
-									? `${getAssetShortName(v)}${ffResult.aa[v][index]}%`
-									: v
-							,
-							style: {
-								fontSize: 14,
-								fill: 'grey'
-							}
-						}}
-						color={colors}
-						rectStyle={{ stroke: '#fff', lineWidth: 2 }}
-						autoFit
-						tooltip={{
-							visible: true,
-							formatter: ({ name, value }: any) => {
-								return {
-									name,
-									value: `<strong>${toHumanFriendlyCurrency(
-										Math.round(cfs[index] * value / 100),
-										currency
-									)}</strong> (${value}%)`
-								};
-							}
-						}}
-					/>
+					{cashData.value === 100 ? (
+						<Row justify="center">
+							<Col>
+								<strong>No further allocation possible as Cash Allocation is 100%</strong>
+							</Col>
+						</Row>
+					) : (
+						<TreemapChart
+							data={{
+								name: 'Portfolio',
+								value: 100 - (cashData.value || 0),
+								children: data,
+								seriesField: 'name'
+							}}
+							meta={{
+								value: {
+									formatter: ({ v }: any) => v + '%'
+								}
+							}}
+							label={{
+								visible: true,
+								formatter: (v: any) =>
+									ffResult.aa.hasOwnProperty(v.name)
+										? `${getFormattedAssetName(v.name)}${ffResult.aa[v.name][index]}%`
+										: v,
+								style: {
+									fontFamily: "'Jost', sans-serif",
+									fontSize: 14,
+									fill: COLORS.DEFAULT
+								}
+							}}
+							legend={{
+								label: {
+									style: {
+										fontFamily: "'Jost', sans-serif",
+										fontSize: 14,
+										fill: COLORS.DEFAULT
+									}
+								}
+							}}
+							rectStyle={{ stroke: '#fff', lineWidth: 2 }}
+							color={(asset: any) => getAssetColour(asset.name)}
+							autoFit
+							tooltip={{
+								visible: true,
+								formatter: ({ name, value }: any) => {
+									return {
+										name,
+										value: `<strong>${toHumanFriendlyCurrency(
+											Math.round(cfs[index] * value / 100),
+											currency
+										)}</strong> (${value}%)`
+									};
+								}
+							}}
+						/>
+					)}
 				</Chart>
 				<DataSwitcherList>
 					<List
