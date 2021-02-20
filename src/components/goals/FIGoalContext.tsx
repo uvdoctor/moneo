@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
-import { LMH, LoanType, TargetInput } from "../../api/goals";
+import { CreateGoalInput, LMH, LoanType, TargetInput } from "../../api/goals";
 import { CalcContext, getCareTabOption } from "../calc/CalcContext";
 import CalcTemplate from "../calc/CalcTemplate";
 import FIYearResult from "../calc/FIYearResult";
@@ -96,34 +96,36 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   const [retirementAge, setRetirementAge] = useState<number>(goal.loan?.rate);
   const [planDuration, setPlanDuration] = useState<number>(goal.loan?.dur);
 
-  const updateGoal = () => {
-    goal.name = goal.name;
-    goal.sy = startYear;
-    goal.ey = endYear;
-    goal.ra = nw;
-    goal.rachg = avgMonthlySavings;
-    goal.tdr = taxRate;
-    goal.manual = needTEBonds;
-    goal.tdl = careTaxDedLimit;
-    goal.ccy = currency;
-    goal.type = goal.type;
-    goal.imp = riskProfile;
-    goal.amsy = carePremiumSY;
-    goal.amper = carePremiumChgPer;
-    goal.achg = carePremiumDur;
-    goal.cp = carePremium;
-    goal.chg = cpBY;
-    goal.aisy = retirementIncomeSY;
-    goal.aiper = retirementIncomePer;
-    goal.tbi = retirementIncome;
-    goal.sa = leaveBehind;
-    goal.dr = successionTaxRate;
-    goal.pg = gains && gains.length ? gains : [];
-    goal.pl = losses && losses.length ? losses : [];
-    goal.tdli = expenseAfterFF;
-    goal.btr = expenseChgRate;
-    goal.tbr = monthlySavingsRate;
-    goal.loan = {
+  const getLatestGoalState = () => {
+    let g: CreateGoalInput =  {
+      name: goal.name,
+      by: goal.by,
+      sy: startYear,
+      ey: endYear,
+      ra: nw,
+      rachg: avgMonthlySavings,
+      tdr: taxRate,
+      manual: needTEBonds,
+      tdl: careTaxDedLimit,
+      ccy: currency,
+      type: goal.type,
+      imp: riskProfile,
+      amsy: carePremiumSY,
+      amper: carePremiumChgPer,
+      achg: carePremiumDur,
+      cp: carePremium,
+      chg: cpBY,
+      aisy: retirementIncomeSY,
+      aiper: retirementIncomePer,
+      tbi: retirementIncome,
+      sa: leaveBehind,
+      dr: successionTaxRate,
+      pg: gains && gains.length ? gains : [],
+      pl: losses && losses.length ? losses : [],
+      tdli: expenseAfterFF,
+      btr: expenseChgRate,
+      tbr: monthlySavingsRate,
+      loan: {
         emi: emergencyFund,
         ry: emergencyFundBY,
         per: emergencyFundChgRate,
@@ -131,8 +133,10 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
         rate: retirementAge,
         type: LoanType.A,
         pmi: monthlyMaxSavings
+      }
     }
-    return goal;
+    if (goal.id) g.id = goal.id;
+    return g;
   };
   
   useEffect(() => {
@@ -174,7 +178,7 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   useEffect(() => {
     if (!allInputDone) return;
     let result = findEarliestFFYear(
-      updateGoal(),
+      getLatestGoalState() as CreateGoalInput,
       mergedCFs,
       ffResult.ffYear ? ffResult.ffYear : null,
       mustCFs,
@@ -277,7 +281,7 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
           planDuration,
           setPlanDuration
         }}>
-        {children ? children : <CalcTemplate />}
+        {children ? children : <CalcTemplate latestState={getLatestGoalState} />}
       </FIGoalContext.Provider>
     );
 }

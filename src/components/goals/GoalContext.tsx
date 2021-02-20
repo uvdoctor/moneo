@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
-import { GoalType, LMH, LoanType, TargetInput } from "../../api/goals";
+import { CreateGoalInput, GoalType, LMH, LoanType, TargetInput } from "../../api/goals";
 import { initOptions } from "../utils";
 import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils";
 import { createAmortizingLoanCFs, createEduLoanMonthlyCFs, getCompoundedIncome, getEmi, getNPV } from "../calc/finance";
@@ -163,26 +163,31 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     [name, price, btnClicked]);
     
   const updateBaseGoal = () => {
-    goal.name = name;
-    goal.sy = startYear;
-    goal.sm = startMonth;
-    goal.ey = endYear;
-    goal.tdr = taxRate;
-    goal.tdl = maxTaxDeduction;
-    goal.ccy = currency;
-    goal.cp = startingPrice;
-    goal.chg = priceChgRate;
-    goal.tgts = manualMode ? wipTargets : [];
-    goal.imp = impLevel;
-    goal.manual = manualMode;
+    return {
+      name: name,
+      type: goalType,
+      by: goal.by,
+      sy: startYear,
+      sm: startMonth,
+      ey: endYear,
+      tdr: taxRate,
+      tdl: maxTaxDeduction,
+      ccy: currency,
+      cp: startingPrice,
+      chg: priceChgRate,
+      tgts: manualMode ? wipTargets : [],
+      imp: impLevel,
+      manual: manualMode
+    }
   };
 
-  const updateGoal = () => {
-    updateBaseGoal();
+  const getLatestGoalState = () => {
+    let g: any = updateBaseGoal();
+    if (goal.id) g.id = goal.id;
     if (isLoanEligible(goalType)) {
-      goal.tbi = taxBenefitInt;
-      goal.tdli = maxTaxDeductionInt;
-      goal.loan = {
+      g.tbi = taxBenefitInt;
+      g.tdli = maxTaxDeductionInt;
+      g.loan = {
         type: loanType ? loanType : LoanType.A,
         rate: loanIntRate as number,
         dur: loanMonths as number,
@@ -194,19 +199,20 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       };
     }
     if (sellAfter) {
-      goal.sa = sellAfter;
-      goal.achg = assetChgRate;
-      goal.amper = amCostPer;
-      goal.amsy = amStartYear;
-      goal.aiper = aiPer;
-      goal.aisy = aiStartYear;
-      goal.tbr = rentTaxBenefit;
-      goal.ra = rentAmt;
-      goal.rachg = rentChgPer;
+      g.sa = sellAfter;
+      g.achg = assetChgRate;
+      g.amper = amCostPer;
+      g.amsy = amStartYear;
+      g.aiper = aiPer;
+      g.aisy = aiStartYear;
+      g.tbr = rentTaxBenefit;
+      g.ra = rentAmt;
+      g.rachg = rentChgPer;
     } else if (goalType === GoalType.E) {
-      goal.achg = loanGracePeriod;
-      goal.tbr = eduCostSemester;
+      g.achg = loanGracePeriod;
+      g.tbr = eduCostSemester;
     }
+    return g as CreateGoalInput;
   };
 
   useEffect(() => {
@@ -418,7 +424,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       loanPer,
       loanRepaymentMonths,
       loanMonths,
-      goal.type === GoalType.E
+      goalType === GoalType.E
     ),
     changeState: boolean = true
   ) => {
@@ -428,7 +434,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       return [];
     }
     let cfs: Array<number> = [];
-    updateGoal();
+    let g: CreateGoalInput = getLatestGoalState();
     let result: any = {};
     if (manualMode < 1 && loanPer) {
       if (!iSchedule || !iSchedule.length) {
@@ -445,8 +451,10 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
         principalSchedule = loanSchedule.principal;
         insuranceSchedule = loanSchedule.insurance;
       }
-      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, insuranceSchedule, goal, duration, changeState ? true : false);
-    } else result = calculateCFs(price, goal, duration, changeState);
+      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, insuranceSchedule, g, duration, changeState);
+    } else {
+      result = calculateCFs(price, g, duration, changeState);
+    }
     cfs = result.cfs;
     if (changeState) {
       console.log("New cf result: ", result);
@@ -573,7 +581,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
         values: rentNPVs,
       });
     }
-    console.log("Results are: ", results);
     return results;
   };
 
@@ -754,7 +761,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
           loanPMIEndPer,
           setLoanPMIEndPer,
         }}>
-        {children ? children : <CalcTemplate />}
+        {children ? children : <CalcTemplate latestState={getLatestGoalState} />}
       </GoalContext.Provider>
     );
 }

@@ -5,9 +5,9 @@ import { EditOutlined } from '@ant-design/icons';
 import { PlanContext } from './PlanContext';
 
 export default function FISummaryHeader() {
-	const { ffGoal, ffResult, setGoal }: any = useContext(PlanContext);
+	const { ffGoal, ffResult, setGoal, allGoals }: any = useContext(PlanContext);
 	return (
-		ffGoal ? <Row>
+		ffGoal && allGoals ? <Row>
 			<Col span={24} className="primary-header">
 				<PageHeader
 					title={`Financial Independence ${isFFPossible(ffResult, ffGoal.sa as number)

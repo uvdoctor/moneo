@@ -155,11 +155,11 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   }, [allGoals]);
 
   const addGoal = async (
-    cfs: Array<number> = []
+    newGoal: CreateGoalInput, cfs: Array<number> = []
   ) => {
     let g = null;
     try {
-      g = await createNewGoal(goal as CreateGoalInput);
+      g = await createNewGoal(newGoal as CreateGoalInput);
     } catch (err) {
       notification.error({ message: 'Goal Not Created', description: "Sorry! Unable to create this Goal: " + err });
       return false;
@@ -172,37 +172,35 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     }
     notification.success({message: 'New Goal Created', description: `Success! New Goal ${g.name} has been Created.`});
     allGoals?.push(g as CreateGoalInput);
-    //@ts-ignore
-    allCFs[g.id] = cfs;
+    allCFs[g.id as string] = cfs;
     setAllCFs(allCFs);
     setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
   };
 
   const updateGoal = async (
-    cfs: Array<number> = []
+    g: UpdateGoalInput, cfs: Array<number> = []
   ) => {
-    let g: UpdateGoalInput | null = null;
+    let savedGoal: UpdateGoalInput | null = null;
     try {
-      g = await changeGoal(goal as UpdateGoalInput);
+      savedGoal = await changeGoal(g as UpdateGoalInput);
     } catch (err) {
       notification.error({message: "Goal not Updated", description: "Sorry! Unable to update this Goal: " + err });
       return false;
     }
-    if (!g) return false;
+    if (!savedGoal) return false;
     setGoal(null);
-    if (g.type === GoalType.FF) {
+    if (savedGoal.type === GoalType.FF) {
       notification.success({ message: "Target Updated", description: "Success! Your Financial Independence Target has been Updated." });
-      setFFGoal(g as CreateGoalInput);
+      setFFGoal(savedGoal as CreateGoalInput);
       return true;
     } 
-    notification.success({ message: "Goal Updated", description: `Success! Goal ${g.name} has been Updated.` });
+    notification.success({ message: "Goal Updated", description: `Success! Goal ${savedGoal.name} has been Updated.` });
     removeFromArray(allGoals as Array<CreateGoalInput>, "id", g.id);
-    allGoals?.unshift(g as CreateGoalInput);
-    //@ts-ignore
-    allCFs[g.id] = cfs;
+    allGoals?.unshift(savedGoal as CreateGoalInput);
+    allCFs[savedGoal.id] = cfs;
     setAllCFs(allCFs);
     setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
-    console.log("Updated goal is: ", g);
+    console.log("Updated goal is: ", savedGoal);
     return true;
   };
 
@@ -225,7 +223,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   const editGoal = (id: string) => {
     if (!allGoals) return;
     let g: CreateGoalInput = (allGoals.filter((g) => g.id === id))[0];
-    setGoal(Object.assign({}, g));
+    setGoal(g);
   };
 
   const cancelGoal = () => setGoal(null);
@@ -304,7 +302,6 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         }
       });
     }
-    //@ts-ignore
     let nomineeAmt = ffGoal?.sa as number;
     let resultWithoutGoal = findEarliestFFYear(
       ffGoal,

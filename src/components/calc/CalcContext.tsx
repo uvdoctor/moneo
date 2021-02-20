@@ -8,7 +8,7 @@ import Sell from "../goals/sell";
 import BRComp from "../goals/BRComp";
 import BasicLineChart from "../goals/BasicLineChart";
 import BuyRentChart from "../goals/BuyRentChart";
-import { CalcType, CreateRatingMutation, GoalType } from '../../api/goals';
+import { CalcType, CreateGoalInput, CreateRatingMutation, GoalType, UpdateGoalInput } from '../../api/goals';
 import { isLoanEligible } from '../goals/goalutils';
 import FIMoneyOutflow from '../goals/FIMoneyOutflow';
 import FIBenefit from '../goals/FIBenefit';
@@ -189,12 +189,12 @@ function CalcContextProvider({
 
   const changeEndYear = (str: string) => setEndYear(parseInt(str));
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (g: CreateGoalInput) => {
     setBtnClicked(true);
     if (!isPublicCalc) {
       if (goal?.id) {
-        await updateGoal(cfs);
-      } else await addGoal(cfs);
+        await updateGoal(g as UpdateGoalInput, cfs);
+      } else await addGoal(g, cfs);
     } 
     setBtnClicked(false);
   };
