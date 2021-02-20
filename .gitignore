@@ -48,4 +48,9 @@ amplifyxc.config
 
 amplify/README.md
 
+# Terraform
+**/.terraform
+**/*.tfstate
+**/*.tfstate.backup
+
 ./package-lock.json
