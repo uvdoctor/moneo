@@ -185,7 +185,7 @@ export default function PublicCalcView(props: PublicCalcViewProps) {
 					<PageHeader title={props.title} />
 				</Col>
 			</Row>
-			<Row justify="center" style={{ marginTop: '10px' }}>
+			<Row justify="center" style={{ marginTop: '10px', marginBottom: '10px' }}>
 				<Col>
 					<Button size="large" key="startbtn" className="steps-start-btn" onClick={() => createGoal()}>
 						<RocketOutlined /> Start Analysis
