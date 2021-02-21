@@ -29,8 +29,14 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
       Source: '21.ramit@gmail.com',
       ReplyToAddresses: from
     };
-    rollbar.log('Sending 1 '+ params);
-    const sendPromise = new AWS.SES({ apiVersion: '2010-12-01' }).sendTemplatedEmail(params).promise();
+    rollbar.log('Sending 1 '+ JSON.stringify(params));
+
+    let sendPromise;
+   try{ 
+    sendPromise= new AWS.SES({ apiVersion: '2010-12-01' }).sendTemplatedEmail(params).promise();
+   }catch(ex){
+    rollbar.log('Sending exception= '+ex)
+   }
     rollbar.log('Sending 2');
     sendPromise
       .then(function(data: any) {
