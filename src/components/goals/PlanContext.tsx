@@ -218,7 +218,6 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     };
     setAllCFs(allCFs);
     setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
-    console.log("Updated goal is: ", savedGoal);
     return true;
   };
 
@@ -252,8 +251,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       return { from: fromYear, to: fromYear };
     let toYear = nowYear + 1;
     allGoals.forEach((g) => {
-      //@ts-ignore
-      let endYear = g.sy + allCFs[g.id].length;
+      let endYear = g.sy + allCFs[g.id as string].cfs.length;
       if (endYear > toYear) toYear = endYear;
     });
     let ffGoalEndYear = ffGoal.sy + (ffGoal.loan?.dur as number);
@@ -330,7 +328,6 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       medImpCFs,
       pp()
     );
-    console.log("Result without goal: ", resultWithoutGoal.rr);
     if (!isFFPossible(resultWithoutGoal, nomineeAmt))
       return {
         ffImpactYears: null,
@@ -354,7 +351,6 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       medImpCFs,
       pp()
     );
-    console.log("Result with goal is: ", resultWithGoal);
     if (!isFFPossible(resultWithGoal, nomineeAmt))
       return {
         ffImpactYears: null,
