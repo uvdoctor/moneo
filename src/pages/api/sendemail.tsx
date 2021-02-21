@@ -3,7 +3,7 @@ import AWS from 'aws-sdk';
 import Rollbar from 'rollbar';
 
 const rollbar = new Rollbar({
-  accessToken: 'f64f595e24bc43e1abf60ec1fa5c0604',
+  accessToken: '47ae7a3be02a49689265afcb4f720a75',
   captureUncaught: true,
   captureUnhandledRejections: true
 });
