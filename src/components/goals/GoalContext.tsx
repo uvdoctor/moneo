@@ -23,7 +23,7 @@ interface GoalContextProviderProps {
 }
 
 function GoalContextProvider({ children }: GoalContextProviderProps) {
-  const { rr, setRR, calculateFFImpactYear, isPublicCalc }: any = useContext(PlanContext);
+  const { rr, setRR, calculateFFImpactYear, isPublicCalc, allGoals }: any = useContext(PlanContext);
   const {
     goal,
     currency,
@@ -515,7 +515,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       setRR([...result.rr]);
       setFFOOM(result.ffOOM);
     }
-  }, [cfs, impLevel]);
+  }, [cfs, impLevel, allGoals]);
 
   useEffect(() => {
     if (manualMode) {
