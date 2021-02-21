@@ -1,5 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import AWS from 'aws-sdk';
+import Rollbar from 'rollbar';
+
+const rollbar = new Rollbar({
+  accessToken: 'f64f595e24bc43e1abf60ec1fa5c0604',
+  captureUncaught: true,
+  captureUnhandledRejections: true
+});
 
 AWS.config.update({ region: 'us-east-1' });
 
@@ -9,6 +16,7 @@ type Data = {
 export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { method, body: {to}, body: {from}, body: {template}, body: {templateData} } = req;
   console.log('Sending mail template =',template,', with templateData =',templateData);
+  rollbar.log('Sending mail template =',template,', with templateData =',templateData);
   if (method === 'POST') {
     const params = {
       Destination: {
@@ -26,6 +34,7 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
         res.status(200).json({status: 'Mail sent with id = '+data.MessageId})
       })
       .catch(function(err: any) {
+        rollbar.error('Mail send error', err, err.stack);
         console.error('Mail send error', err, err.stack);
         res.status(200).json({status: 'Error when sending mail'})
       });
