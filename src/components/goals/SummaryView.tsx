@@ -20,15 +20,15 @@ const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: 
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function SummaryView({ goal }: SummaryViewProps) {
-	const { removeGoal, editGoal, allGoals, allCFs }: any = useContext(PlanContext);
+	const { removeGoal, editGoal, allCFs }: any = useContext(PlanContext);
 	const bgColor = goal.imp === LMH.H ? COLORS.BLUE : goal.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
 	const nowYear = new Date().getFullYear();
 	const goalTypes: any = getGoalTypes();
 	const impLevels: any = getImpLevels();
 	const currency = goal.ccy as string;
-	const [ ffImpactYears, setFFImpactYears ] = useState<number | null>(allCFs[goal.id as string].ffImpactYears);
-	const [ oppCost, setOppCost ] = useState<number>(allCFs[goal.id as string].oppCost);
-	const [ cfs, setCFs ] = useState<Array<number>>(allCFs[goal.id as string].cfs);
+	const ffImpactYears = allCFs[goal.id as string].ffImpactYears;
+	const oppCost = allCFs[goal.id as string].oppCost;
+	const cfs = allCFs[goal.id as string].cfs;
 	const [ chartData, setChartData ] = useState<Array<any>>([]);
 
 	useEffect(
@@ -42,16 +42,6 @@ export default function SummaryView({ goal }: SummaryViewProps) {
 			setChartData([ ...data ]);
 		},
 		[ cfs ]
-	);
-
-	useEffect(
-		() => {
-			let goalMetrics: any = allCFs[goal.id as string];
-			setFFImpactYears(goalMetrics.ffImpactYears);
-			setOppCost(goalMetrics.oppCost);
-			setCFs([ ...goalMetrics.cfs ]);
-		},
-		[ allGoals ]
 	);
 
 	return (
