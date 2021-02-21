@@ -18,6 +18,7 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
   console.log('Sending mail template =',template,', with templateData =',templateData);
   rollbar.log('Sending mail template =' + template +', with templateData = '+JSON.stringify(templateData));
   if (method === 'POST') {
+    rollbar.log('Sending mail 0');
     const params = {
       Destination: {
         ToAddresses: to
