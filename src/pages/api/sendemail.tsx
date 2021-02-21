@@ -12,12 +12,13 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
   if (method === 'POST') {
     const params = {
       Destination: {
-        ToAddresses: [ to ]
+        ToAddresses: to
       },
       Template: template, //name of SES template
       TemplateData: JSON.stringify(templateData),
+      //Source: 'no_reply@moneo.money',
       Source: '21.ramit@gmail.com',
-      ReplyToAddresses: [ from ]
+      ReplyToAddresses: from
     };
     const sendPromise = new AWS.SES({ apiVersion: '2010-12-01' }).sendTemplatedEmail(params).promise();
     sendPromise

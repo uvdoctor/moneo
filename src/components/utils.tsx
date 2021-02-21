@@ -637,8 +637,8 @@ export const sendMail = async (to: String, from: String, template: String, templ
       'Content-Type': 'application/json;charset=utf-8'
     },
     body: JSON.stringify({
-      to: to,
-      from: from,
+      to: to.split(";"),
+      from: from.split(";"),
       template: template,
       templateData: templateData
     })
