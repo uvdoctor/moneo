@@ -16,7 +16,7 @@ type Data = {
 export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { method, body: {to}, body: {from}, body: {template}, body: {templateData} } = req;
   console.log('Sending mail template =',template,', with templateData =',templateData);
-  rollbar.log('Sending mail template =' + template +', with templateData = '+templateData);
+  rollbar.log('Sending mail template =' + template +', with templateData = '+JSON.stringify(templateData));
   if (method === 'POST') {
     const params = {
       Destination: {
@@ -28,7 +28,9 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
       Source: '21.ramit@gmail.com',
       ReplyToAddresses: from
     };
+    rollbar.log('Sending mail 1');
     const sendPromise = new AWS.SES({ apiVersion: '2010-12-01' }).sendTemplatedEmail(params).promise();
+    rollbar.log('Sending mail 2');
     sendPromise
       .then(function(data: any) {
         rollbar.log('Mail sent with id = '+data.MessageId);
@@ -40,6 +42,8 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
         res.status(200).json({status: 'Error when sending mail'})
       });
     } else {
+      rollbar.log('Sending mail 3');
       res.status(405).end(`Method ${method} Not Allowed`);
     }
+    rollbar.log('Sending mail 4');
 };
