@@ -1,22 +1,58 @@
-import React, { Fragment, useContext } from 'react';
-import BasicLineChart from './BasicLineChart';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { getGoalTypes, getImpLevels } from './goalutils';
-import { GoalType, LMH } from '../../api/goals';
+import { GoalType, LMH, UpdateGoalInput } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
 import { Card, Row, Col } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import DefaultOppCostResult from '../calc/DefaultOppCostResult';
-import FIImpact from './FIImpact';
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { PlanContext } from './PlanContext';
-import { CalcContext } from '../calc/CalcContext';
+import FIImpactView from './FIImpactView';
+import ItemDisplay from '../calc/ItemDisplay';
+import { toHumanFriendlyCurrency } from '../utils';
+import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
+import dynamic from 'next/dynamic';
 
-export default function SummaryView() {
-	const { removeGoal, editGoal }: any = useContext(PlanContext);
-	const { goal }: any = useContext(CalcContext);
+interface SummaryViewProps {
+	goal: UpdateGoalInput;
+}
+
+const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
+const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
+
+export default function SummaryView({ goal }: SummaryViewProps) {
+	const { removeGoal, editGoal, allGoals, allCFs }: any = useContext(PlanContext);
 	const bgColor = goal.imp === LMH.H ? COLORS.BLUE : goal.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
 	const nowYear = new Date().getFullYear();
 	const goalTypes: any = getGoalTypes();
 	const impLevels: any = getImpLevels();
+	const currency = goal.ccy as string;
+	const [ ffImpactYears, setFFImpactYears ] = useState<number | null>(allCFs[goal.id as string].ffImpactYears);
+	const [ oppCost, setOppCost ] = useState<number>(allCFs[goal.id as string].oppCost);
+	const [ cfs, setCFs ] = useState<Array<number>>(allCFs[goal.id as string].cfs);
+	const [ chartData, setChartData ] = useState<Array<any>>([]);
+
+	useEffect(
+		() => {
+			let data: Array<any> = [];
+			for (let i = 0; i < cfs.length; i++)
+				data.push({
+					year: '' + ((goal.sy as number) + i),
+					value: cfs[i]
+				});
+			setChartData([ ...data ]);
+		},
+		[ cfs ]
+	);
+
+	useEffect(
+		() => {
+			let goalMetrics: any = allCFs[goal.id as string];
+			setFFImpactYears(goalMetrics.ffImpactYears);
+			setOppCost(goalMetrics.oppCost);
+			setCFs([ ...goalMetrics.cfs ]);
+		},
+		[ allGoals ]
+	);
 
 	return (
 		<Card
@@ -26,7 +62,7 @@ export default function SummaryView() {
 					<Col>{`${goalTypes[goal.type as GoalType]} ${goal.name}`}</Col>
 					<Col>
 						<Row justify="space-around">
-							<Col>{impLevels[goal.imp]}</Col>
+							<Col>{impLevels[goal.imp as LMH]}</Col>
 							<Col>&nbsp;&nbsp;</Col>
 							<Col style={{ cursor: 'pointer' }} onClick={() => editGoal(goal.id)}>
 								<EditOutlined />
@@ -44,16 +80,42 @@ export default function SummaryView() {
 				{(goal.sy as number) > nowYear && (
 					<Row justify="space-around">
 						<Col>
-							<FIImpact />
+							<FIImpactView impactYears={ffImpactYears} />
 						</Col>
 						<Col>
-							<DefaultOppCostResult />
+							<ItemDisplay
+								result={oppCost}
+								currency={currency}
+								label={`${goal.type === GoalType.B ? 'Buy' : 'Spend'} v/s Invest`}
+								svg={oppCost < 0 ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
+								pl
+								info={`You ${oppCost < 0 ? 'Lose' : 'Gain'} about ${toHumanFriendlyCurrency(
+									Math.abs(oppCost),
+									currency
+								)} because of this Goal.`}
+							/>
 						</Col>
 					</Row>
 				)}
-				<Row justify="center" style={{ marginTop: '20px' }}>
+				<Row justify="center" style={{ marginTop: '10px', marginBottom: '10px'}}>
+					<Col>
+						<strong>Cash Flows in {currency}</strong>
+					</Col>
+				</Row>
+				<Row justify="center" style={{ minHeight: '400px' }}>
 					<Col span={24}>
-						<BasicLineChart chartTitle={`Cash Flows in ${goal.ccy}`} />
+						<LineChart
+							data={chartData}
+							xField="year"
+							yField="value"
+							yAxis={getCommonYAxis()}
+							xAxis={getCommonXAxis('Year')}
+							meta={getCommonMeta(currency)}
+							point={true}
+							autoFit
+						>
+							<Slider {...getDefaultSliderProps()} />
+						</LineChart>
 					</Col>
 				</Row>
 			</Fragment>
