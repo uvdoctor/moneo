@@ -42,7 +42,7 @@ export default function OppCostResult({ oppCost, numOfYears, numOfYearsOptions, 
 			pl
 			unit={
 				goal.type !== GoalType.FF &&
-				goal.type !== GoalType.B && (
+				goal.type !== GoalType.B && dr && (
 					<Row align="middle">
 						{`in `}
 						<SelectInput

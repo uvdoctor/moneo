@@ -151,7 +151,7 @@ const createBaseGoalInput = (goalType: APIt.GoalType, currency: string) => {
     ey: startYear,
     by: nowYear,
     tdr: 0,
-    tdl: 20000 * getRangeFactor(currency),
+    tdl: isTaxCreditEligible(goalType) ? 0 : 20000 * getRangeFactor(currency),
     ccy: currency,
     cp: goalType === APIt.GoalType.B ? 500000 * getRangeFactor(currency): 20000 * getRangeFactor(currency),
     chg: 0,

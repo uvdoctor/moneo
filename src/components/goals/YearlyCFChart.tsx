@@ -11,14 +11,14 @@ const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: f
 export default function YearlyCFChart() {
 	const { mustCFs, tryCFs, optCFs, ffGoal }: any = useContext(PlanContext);
 	const [ data, setData ] = useState<Array<any>>([]);
-	const from = new Date().getFullYear() + 1;
-	const to = ffGoal.sy + (ffGoal.loan.dur as number);
 	const currency = ffGoal.ccy;
 
 	useEffect(
 		() => {
 			let data: Array<any> = [];
-			for (let year = from; year <= to; year++) {
+			const from = new Date().getFullYear() + 1;
+			console.log("Must CFs: ", mustCFs);
+			for (let year = from; year <= ffGoal.sy + (ffGoal.loan.dur as number); year++) {
 				if (mustCFs[year - from]) {
 					data.push({
 						year: year,
@@ -41,9 +41,10 @@ export default function YearlyCFChart() {
 					});
 				}
 			}
-			setData([ ...data ]);
+			setData([...data]);
+			console.log("Data is: ", data);
 		},
-		[ from, to, mustCFs, tryCFs, optCFs ]
+		[ mustCFs, tryCFs, optCFs ]
 	);
 
 	const getColumnColor = (name: string) => {
