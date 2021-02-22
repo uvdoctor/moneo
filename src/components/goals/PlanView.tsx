@@ -62,7 +62,7 @@ export default function PlanView() {
 
 	return goalsLoaded ? ffGoal ? (
 		<Fragment>
-			<div className="primary-header">
+			<div className="primary-header" style={{marginBottom: '10px'}}>
 				<FISummaryHeader />
 				<Row className="secondary-header" justify="center">
 				<Col>
@@ -81,7 +81,7 @@ export default function PlanView() {
 							{tabOptions.map((t: any) => (
 								<TabPane key={t.label} tab={t.label}>
 									{t.label !== aaLabel && (
-										<Row justify={t.label === goalsLabel ? 'space-between' : 'center'}>
+										<Row justify={t.label === goalsLabel ? 'space-between' : 'center'} style={{marginBottom: '10px'}}>
 											<Col>
 												<Alert
 													message="Negative values imply You Pay, while Positive values imply You Receive"
