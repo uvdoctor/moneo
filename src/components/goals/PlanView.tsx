@@ -101,7 +101,7 @@ export default function PlanView() {
 									)}
 									<Row
 										align="middle"
-										className="steps-content"
+										className={t.label !== aaLabel ? "steps-content" : ""}
 										gutter={[
 											{ xs: 0, sm: 15, md: 30, lg: 50 },
 											{ xs: 15, sm: 15, md: 30, lg: 50 }
