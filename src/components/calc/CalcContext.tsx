@@ -63,7 +63,7 @@ function CalcContextProvider({
   const [startYear, setStartYear] = useState<number>(goal.sy);
   const [startMonth, setStartMonth] = useState<number>(goal.sm);
   const [endYear, setEndYear] = useState<number>(goal.ey);
-  const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal.ccy);
+  const [ currency, setCurrency ] = useState<string>(goal.ccy ? goal.ccy : defaultCurrency);
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(goal?.id ? true : false);
   const [cfs, setCFs] = useState<Array<number>>([]);
   const [ cfsWithoutSM, setCFsWithoutSM ] = useState<Array<number>>([]);
