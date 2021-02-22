@@ -10,6 +10,7 @@ import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } 
 import dynamic from 'next/dynamic';
 
 import './SummaryView.less';
+import ItemDisplay from '../calc/ItemDisplay';
 
 interface SummaryViewProps {
 	goal: UpdateGoalInput;
@@ -71,10 +72,19 @@ export default function SummaryView({ goal }: SummaryViewProps) {
 				/>
 			]}
 		>
-			{(goal.sy as number) > nowYear && <FIImpactView impactYears={ffImpactYears} />}
-			<Row justify="center" style={{ marginTop: '10px', marginBottom: '10px' }}>
+			<Row justify="space-around">
 				<Col>
-					<strong>Cash Flows in {currency}</strong>
+					<ItemDisplay label="Currency" result={goal.ccy as string} />
+				</Col>
+				{(goal.sy as number) > nowYear && (
+					<Col>
+						<FIImpactView impactYears={ffImpactYears} />
+					</Col>
+				)}
+			</Row>
+			<Row justify="center" style={{ marginTop: '20px', marginBottom: '10px' }}>
+				<Col>
+					<strong>Yearly Cash Flows</strong>
 				</Col>
 			</Row>
 			<Row justify="center" style={{ minHeight: '300px' }}>
