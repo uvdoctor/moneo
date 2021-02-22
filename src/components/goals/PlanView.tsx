@@ -62,8 +62,9 @@ export default function PlanView() {
 
 	return goalsLoaded ? ffGoal ? (
 		<Fragment>
-			<FISummaryHeader />
-			<Row justify="center" style={{ marginTop: '20px', marginBottom: '20px' }}>
+			<div className="primary-header">
+				<FISummaryHeader />
+				<Row className="secondary-header" justify="center">
 				<Col>
 					<Dropdown overlay={goalTypesMenuItems}>
 						<Button>
@@ -71,7 +72,8 @@ export default function PlanView() {
 						</Button>
 					</Dropdown>
 				</Col>
-			</Row>
+				</Row>
+			</div>
 			{allGoals && allGoals.length ? (
 				<Row>
 					<Col span={24}>
@@ -101,7 +103,6 @@ export default function PlanView() {
 									)}
 									<Row
 										align="middle"
-										className={t.label !== aaLabel ? "steps-content" : ""}
 										gutter={[
 											{ xs: 0, sm: 15, md: 30, lg: 50 },
 											{ xs: 15, sm: 15, md: 30, lg: 50 }
