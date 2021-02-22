@@ -41,7 +41,7 @@ export default function CalcHeader() {
 						<PageHeader
 							title={isPublicCalc || goal.type === GoalType.FF ? goal.name : goalTitle()}
 							extra={[
-								<Fragment>
+								<Fragment key="rating">
 									<Row justify="center" style={{ color: COLORS.WHITE }}>{ratingLabel ? ratingLabel : ratingLabels[rating]}</Row>
 									<Row justify="center">
 										<Rate

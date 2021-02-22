@@ -192,7 +192,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   };
 
   const updateGoal = async (
-    g: UpdateGoalInput, cfs: Array<number> = [], ffImpactYears: number | null = null, oppCost: number = 0
+    g: UpdateGoalInput, cfs: Array<number> = [], oppCost: number = 0
   ) => {
     let savedGoal: UpdateGoalInput | null = null;
     try {
@@ -213,7 +213,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     allGoals?.unshift(savedGoal as CreateGoalInput);
     allCFs[savedGoal.id] = {
       cfs: cfs,
-      ffImpactYears: ffImpactYears,
+      ffImpactYears: calculateFFImpactYear(savedGoal.sy as number, cfs, savedGoal.id, savedGoal.imp as LMH).ffImpactYears,
       oppCost: oppCost
     };
     setAllCFs(allCFs);
@@ -293,7 +293,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     goalImp: LMH,
     result: any = null
   ) => {
-    if (!ffGoal || ((!result && !result.ffYear) || !ffResult.ffYear)) return {
+    if (!ffGoal || (result && !result.ffYear) || (!result && !ffResult.ffYear)) return {
       ffImpactYears: null,
       rr: null,
       ffOOM: null,
@@ -343,7 +343,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         appendValue(medImpCFs, index, cf);
       }
     });
-    let resultWithGoal = result ? result : findEarliestFFYear(
+    let resultWithGoal = findEarliestFFYear(
       ffGoal,
       mCFs,
       resultWithoutGoal.ffYear,
@@ -351,6 +351,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       medImpCFs,
       pp()
     );
+    console.log("Result with goal: ", resultWithGoal);
     if (!isFFPossible(resultWithGoal, nomineeAmt))
       return {
         ffImpactYears: null,

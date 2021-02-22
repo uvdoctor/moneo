@@ -1,43 +1,33 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
-import { getGoalTypes, getImpLevels } from "./goalutils";
-import { GoalType, LMH, UpdateGoalInput } from "../../api/goals";
-import { COLORS } from "../../CONSTANTS";
-import { Card, Row, Col, Badge } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
-import { PlanContext } from "./PlanContext";
-import FIImpactView from "./FIImpactView";
-import ItemDisplay from "../calc/ItemDisplay";
-import { toHumanFriendlyCurrency } from "../utils";
-import {
-	getCommonMeta,
-	getCommonXAxis,
-	getCommonYAxis,
-	getDefaultSliderProps,
-} from "../chartutils";
-import dynamic from "next/dynamic";
+import React, { Fragment, useContext, useEffect, useState } from 'react';
+import { getGoalTypes, getImpLevels } from './goalutils';
+import { GoalType, LMH, UpdateGoalInput } from '../../api/goals';
+import { COLORS } from '../../CONSTANTS';
+import { Card, Row, Col, Badge, Button } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { PlanContext } from './PlanContext';
+import FIImpactView from './FIImpactView';
+import ItemDisplay from '../calc/ItemDisplay';
+import { toHumanFriendlyCurrency } from '../utils';
+import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
+import dynamic from 'next/dynamic';
 
-import "./SummaryView.less";
+import './SummaryView.less';
 
 interface SummaryViewProps {
 	goal: UpdateGoalInput;
 }
 
-const LineChart = dynamic(() => import("bizcharts/lib/plots/LineChart"), {
-	ssr: false,
+const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), {
+	ssr: false
 });
-const Slider = dynamic(() => import("bizcharts/lib/components/Slider"), {
-	ssr: false,
+const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), {
+	ssr: false
 });
 
 export default function SummaryView({ goal }: SummaryViewProps) {
 	const { removeGoal, editGoal, allCFs }: any = useContext(PlanContext);
-	const bgColor =
-		goal.imp === LMH.H
-			? COLORS.BLUE
-			: goal.imp === LMH.M
-			? COLORS.ORANGE
-			: COLORS.GREEN;
+	const bgColor = goal.imp === LMH.H ? COLORS.BLUE : goal.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
 	const nowYear = new Date().getFullYear();
 	const goalTypes: any = getGoalTypes();
 	const impLevels: any = getImpLevels();
@@ -45,52 +35,37 @@ export default function SummaryView({ goal }: SummaryViewProps) {
 	const ffImpactYears = allCFs[goal.id as string].ffImpactYears;
 	const oppCost = allCFs[goal.id as string].oppCost;
 	const cfs = allCFs[goal.id as string].cfs;
-	const [chartData, setChartData] = useState<Array<any>>([]);
+	const [ chartData, setChartData ] = useState<Array<any>>([]);
 
-	useEffect(() => {
-		let data: Array<any> = [];
-		for (let i = 0; i < cfs.length; i++)
-			data.push({
-				year: "" + ((goal.sy as number) + i),
-				value: cfs[i],
-			});
-		setChartData([...data]);
-	}, [cfs]);
+	useEffect(
+		() => {
+			let data: Array<any> = [];
+			for (let i = 0; i < cfs.length; i++)
+				data.push({
+					year: '' + ((goal.sy as number) + i),
+					value: cfs[i]
+				});
+			setChartData([ ...data ]);
+		},
+		[ cfs ]
+	);
 
 	return (
 		<Card
 			className="goals-card"
-			//headStyle={{ backgroundColor: bgColor, color: COLORS.WHITE }}
 			title={
-				<Row justify="space-between">
-					<Col>
-						{`${goalTypes[goal.type as GoalType]} ${goal.name}`}{" "}
-						<Badge
-							count={impLevels[goal.imp]}
-							style={{ backgroundColor: bgColor, color: COLORS.WHITE }}
-						/>
-					</Col>
-					<Col>
-						<Row justify="space-around">
-							<Col>{impLevels[goal.imp as LMH]}</Col>
-							<Col>&nbsp;&nbsp;</Col>
-							<Col
-								style={{ cursor: "pointer" }}
-								onClick={() => editGoal(goal.id)}
-							>
-								<EditOutlined />
-							</Col>
-							<Col>&nbsp;&nbsp;</Col>
-							<Col
-								style={{ cursor: "pointer" }}
-								onClick={() => removeGoal(goal.id)}
-							>
-								<DeleteOutlined />
-							</Col>
-						</Row>
-					</Col>
-				</Row>
+				<Fragment>
+					<strong>{`${goalTypes[goal.type as GoalType]} ${goal.name}`}&nbsp;</strong>
+					<Badge
+						count={impLevels[goal.imp as LMH]}
+						style={{ backgroundColor: bgColor, color: COLORS.WHITE }}
+					/>
+				</Fragment>
 			}
+			extra={[
+				<Button type="link" icon={<EditOutlined />} onClick={() => editGoal(goal.id)} />,
+				<Button type="link" icon={<DeleteOutlined />} danger onClick={() => removeGoal(goal.id)} />
+			]}
 		>
 			<Fragment>
 				{(goal.sy as number) > nowYear && (
@@ -102,14 +77,10 @@ export default function SummaryView({ goal }: SummaryViewProps) {
 							<ItemDisplay
 								result={oppCost}
 								currency={currency}
-								label={`${
-									goal.type === GoalType.B ? "Buy" : "Spend"
-								} v/s Invest`}
+								label={`${goal.type === GoalType.B ? 'Buy' : 'Spend'} v/s Invest`}
 								svg={oppCost < 0 ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
 								pl
-								info={`You ${
-									oppCost < 0 ? "Lose" : "Gain"
-								} about ${toHumanFriendlyCurrency(
+								info={`You ${oppCost < 0 ? 'Lose' : 'Gain'} about ${toHumanFriendlyCurrency(
 									Math.abs(oppCost),
 									currency
 								)} because of this Goal.`}
@@ -117,22 +88,19 @@ export default function SummaryView({ goal }: SummaryViewProps) {
 						</Col>
 					</Row>
 				)}
-				<Row
-					justify="center"
-					style={{ marginTop: "10px", marginBottom: "10px" }}
-				>
+				<Row justify="center" style={{ marginTop: '10px', marginBottom: '10px' }}>
 					<Col>
 						<strong>Cash Flows in {currency}</strong>
 					</Col>
 				</Row>
-				<Row justify="center" style={{ minHeight: "400px" }}>
+				<Row justify="center" style={{ minHeight: '400px' }}>
 					<Col span={24}>
 						<LineChart
 							data={chartData}
 							xField="year"
 							yField="value"
 							yAxis={getCommonYAxis()}
-							xAxis={getCommonXAxis("Year")}
+							xAxis={getCommonXAxis('Year')}
 							meta={getCommonMeta(currency)}
 							point={true}
 							autoFit
