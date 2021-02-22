@@ -1,14 +1,11 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { getGoalTypes, getImpLevels } from './goalutils';
 import { GoalType, LMH, UpdateGoalInput } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
 import { Card, Row, Col, Badge, Button } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { PlanContext } from './PlanContext';
 import FIImpactView from './FIImpactView';
-import ItemDisplay from '../calc/ItemDisplay';
-import { toHumanFriendlyCurrency } from '../utils';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
 import dynamic from 'next/dynamic';
 
@@ -33,7 +30,6 @@ export default function SummaryView({ goal }: SummaryViewProps) {
 	const impLevels: any = getImpLevels();
 	const currency = goal.ccy as string;
 	const ffImpactYears = allCFs[goal.id as string].ffImpactYears;
-	const oppCost = allCFs[goal.id as string].oppCost;
 	const cfs = allCFs[goal.id as string].cfs;
 	const [ chartData, setChartData ] = useState<Array<any>>([]);
 
@@ -54,62 +50,49 @@ export default function SummaryView({ goal }: SummaryViewProps) {
 		<Card
 			className="goals-card"
 			title={
-				<Fragment>
-					<strong>{`${goalTypes[goal.type as GoalType]} ${goal.name}`}&nbsp;</strong>
-					<Badge
-						count={impLevels[goal.imp as LMH]}
-						style={{ backgroundColor: bgColor, color: COLORS.WHITE }}
-					/>
-				</Fragment>
+				<Row>
+					<Col flex="auto">
+						<strong>{`${goalTypes[goal.type as GoalType]} ${goal.name}`}&nbsp;</strong>
+						<Badge
+							count={impLevels[goal.imp as LMH]}
+							style={{ backgroundColor: bgColor, color: COLORS.WHITE }}
+						/>
+					</Col>
+				</Row>
 			}
 			extra={[
-				<Button type="link" icon={<EditOutlined />} onClick={() => editGoal(goal.id)} />,
-				<Button type="link" icon={<DeleteOutlined />} danger onClick={() => removeGoal(goal.id)} />
+				<Button key="editbtn" type="link" icon={<EditOutlined />} onClick={() => editGoal(goal.id)} />,
+				<Button
+					key="linkbtn"
+					type="link"
+					icon={<DeleteOutlined />}
+					danger
+					onClick={() => removeGoal(goal.id)}
+				/>
 			]}
 		>
-			<Fragment>
-				{(goal.sy as number) > nowYear && (
-					<Row justify="space-around">
-						<Col>
-							<FIImpactView impactYears={ffImpactYears} />
-						</Col>
-						<Col>
-							<ItemDisplay
-								result={oppCost}
-								currency={currency}
-								label={`${goal.type === GoalType.B ? 'Buy' : 'Spend'} v/s Invest`}
-								svg={oppCost < 0 ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
-								pl
-								info={`You ${oppCost < 0 ? 'Lose' : 'Gain'} about ${toHumanFriendlyCurrency(
-									Math.abs(oppCost),
-									currency
-								)} because of this Goal.`}
-							/>
-						</Col>
-					</Row>
-				)}
-				<Row justify="center" style={{ marginTop: '10px', marginBottom: '10px' }}>
-					<Col>
-						<strong>Cash Flows in {currency}</strong>
-					</Col>
-				</Row>
-				<Row justify="center" style={{ minHeight: '400px' }}>
-					<Col span={24}>
-						<LineChart
-							data={chartData}
-							xField="year"
-							yField="value"
-							yAxis={getCommonYAxis()}
-							xAxis={getCommonXAxis('Year')}
-							meta={getCommonMeta(currency)}
-							point={true}
-							autoFit
-						>
-							<Slider {...getDefaultSliderProps()} />
-						</LineChart>
-					</Col>
-				</Row>
-			</Fragment>
+			{(goal.sy as number) > nowYear && <FIImpactView impactYears={ffImpactYears} />}
+			<Row justify="center" style={{ marginTop: '10px', marginBottom: '10px' }}>
+				<Col>
+					<strong>Cash Flows in {currency}</strong>
+				</Col>
+			</Row>
+			<Row justify="center" style={{ minHeight: '300px' }}>
+				<Col span={24}>
+					<LineChart
+						data={chartData}
+						xField="year"
+						yField="value"
+						yAxis={getCommonYAxis()}
+						xAxis={getCommonXAxis('Year')}
+						meta={getCommonMeta(currency)}
+						point={true}
+						autoFit
+					>
+						<Slider {...getDefaultSliderProps()} />
+					</LineChart>
+				</Col>
+			</Row>
 		</Card>
 	);
 }

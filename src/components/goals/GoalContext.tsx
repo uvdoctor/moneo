@@ -55,7 +55,9 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     setInputTabs,
     timer,
     setTimer,
-    analyzeFor
+    analyzeFor,
+    ffImpactYears,
+    setFFImpactYears
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const goalType = goal.type as GoalType;
@@ -156,7 +158,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     )
   );
   const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
-  const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
   
   useEffect(() =>
     setDisableSubmit(name.length < 3 || !price || btnClicked),

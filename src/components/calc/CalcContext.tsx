@@ -83,6 +83,8 @@ function CalcContextProvider({
   const [timer, setTimer] = useState<any>(null);
   const [analyzeFor, setAnalyzeFor] = useState<number>(30);
   const [ratingId, setRatingId] = useState<String | undefined>('');
+  const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
+  const [oppCost, setOppCost] = useState<number>(0);
 
  const getCalcType = () => {
   switch(goal.name) {
@@ -190,12 +192,11 @@ function CalcContextProvider({
   const changeEndYear = (str: string) => setEndYear(parseInt(str));
 
   const handleSubmit = async (g: CreateGoalInput) => {
+    if (isPublicCalc) return;
     setBtnClicked(true);
-    if (!isPublicCalc) {
-      if (goal?.id) {
-        await updateGoal(g as UpdateGoalInput, cfs);
-      } else await addGoal(g, cfs);
-    } 
+    if (goal?.id) {
+      await updateGoal(g as UpdateGoalInput, cfs, ffImpactYears);
+    } else await addGoal(g, cfs, ffImpactYears);
     setBtnClicked(false);
   };
 
@@ -319,6 +320,10 @@ function CalcContextProvider({
         setTimer,
         analyzeFor,
         setAnalyzeFor,
+        ffImpactYears,
+        setFFImpactYears,
+        oppCost,
+        setOppCost
 			}}
     >
       {children}

@@ -1,11 +1,11 @@
 import React from 'react';
 import ItemDisplay from '../calc/ItemDisplay';
 
-interface FFImpactViewProps {
+interface FIImpactViewProps {
 	impactYears: number | null;
 }
 
-export default function FIImpactView({ impactYears }: FFImpactViewProps) {
+export default function FIImpactView({ impactYears }: FIImpactViewProps) {
 	return impactYears !== null ? impactYears === 0 ? (
 		<ItemDisplay
 			label="FI Impact"
