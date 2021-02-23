@@ -28,7 +28,9 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   const [mergedCFs, setMergedCFs] = useState<any>({});
   const [ffResult, setFFResult] = useState<any>({});
   const [rr, setRR] = useState<Array<number>>([]);
-  const [ dr, setDR ] = useState<number | null>(!isPublicCalc ? null : 5);
+  const [dr, setDR] = useState<number | null>(!isPublicCalc ? null : 5);
+  const [planError, setPlanError] = useState<string>('');
+
   const nowYear = new Date().getFullYear();
 
   const loadAllGoals = async () => {
@@ -403,7 +405,9 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         setGoal,
         isPublicCalc,
         dr,
-        setDR
+        setDR,
+        planError,
+        setPlanError
       }}
     >
       {children}

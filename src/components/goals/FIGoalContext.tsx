@@ -4,7 +4,7 @@ import { CalcContext, getCareTabOption } from "../calc/CalcContext";
 import CalcTemplate from "../calc/CalcTemplate";
 import FIYearResult from "../calc/FIYearResult";
 import FISavingsResult from "../calc/FISavingsResult";
-import { findEarliestFFYear } from "./cfutils";
+import { findEarliestFFYear, isFFPossible } from "./cfutils";
 import { PlanContext } from "./PlanContext";
 
 const FIGoalContext = createContext({});
@@ -13,7 +13,7 @@ interface FIGoalContextProviderProps {
 }
 
 function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
-  const { mustCFs, tryCFs, mergedCFs, pp, rr, dr, setRR, ffResult, setFFResult }: any = useContext(PlanContext);
+  const { mustCFs, tryCFs, mergedCFs, pp, rr, dr, setRR, ffResult, setFFResult, setPlanError }: any = useContext(PlanContext);
   const {
     goal,
     currency,
@@ -186,6 +186,11 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
       dr ? dr : pp()
     );
     setFFResult(result);
+    if (!isFFPossible(result, leaveBehind)) {
+      setPlanError(`Please try again with different inputs / goals so that Financial Independence is Achievable by Age of ${retirementAge}.`);
+    } else {
+      setPlanError("");
+    }
     setCFs([...Object.values(result.ffCfs)]);
     setRR([...result.rr]);
     console.log("FF Result is ", result);

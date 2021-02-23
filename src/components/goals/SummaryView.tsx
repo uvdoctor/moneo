@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { getGoalTypes, getImpLevels } from './goalutils';
 import { GoalType, LMH, UpdateGoalInput } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
@@ -33,6 +33,7 @@ export default function SummaryView({ goal }: SummaryViewProps) {
 	const ffImpactYears = allCFs[goal.id as string].ffImpactYears;
 	const cfs = allCFs[goal.id as string].cfs;
 	const [ chartData, setChartData ] = useState<Array<any>>([]);
+	const { Meta } = Card;
 
 	useEffect(
 		() => {
@@ -51,37 +52,42 @@ export default function SummaryView({ goal }: SummaryViewProps) {
 		<Card
 			className="goals-card"
 			title={
-				<Row>
-					<Col flex="auto">
-						<strong>{`${goalTypes[goal.type as GoalType]} ${goal.name}`}&nbsp;</strong>
-						<Badge
-							count={impLevels[goal.imp as LMH]}
-							style={{ backgroundColor: bgColor, color: COLORS.WHITE }}
-						/>
-					</Col>
-				</Row>
+				<Fragment>
+					<Row justify="space-between">
+						<Col>
+							<Badge
+								count={impLevels[goal.imp as LMH]}
+								style={{ backgroundColor: bgColor, color: COLORS.WHITE }}
+							/>
+							<strong>&nbsp;{goalTypes[goal.type as GoalType]}</strong>
+						</Col>
+						<Col>
+							<Button type="link" icon={<EditOutlined />} onClick={() => editGoal(goal.id)} />&nbsp;
+							<Button type="link" icon={<DeleteOutlined />} danger onClick={() => removeGoal(goal.id)} />
+						</Col>
+					</Row>
+					<Row justify="center">
+						<Col>
+							<strong>{goal.name}</strong>
+						</Col>
+					</Row>
+				</Fragment>
 			}
-			extra={[
-				<Button key="editbtn" type="link" icon={<EditOutlined />} onClick={() => editGoal(goal.id)} />,
-				<Button
-					key="linkbtn"
-					type="link"
-					icon={<DeleteOutlined />}
-					danger
-					onClick={() => removeGoal(goal.id)}
-				/>
-			]}
 		>
-			<Row justify="space-around">
-				<Col>
-					<ItemDisplay label="Currency" result={goal.ccy as string} />
-				</Col>
-				{(goal.sy as number) > nowYear && (
-					<Col>
-						<FIImpactView impactYears={ffImpactYears} />
-					</Col>
-				)}
-			</Row>
+			<Meta
+				description={
+					<Row justify="space-around">
+						<Col>
+							<ItemDisplay label="Currency" result={goal.ccy as string} />
+						</Col>
+						{(goal.sy as number) > nowYear && (
+							<Col>
+								<FIImpactView impactYears={ffImpactYears} />
+							</Col>
+						)}
+					</Row>
+				}
+			/>
 			<Row justify="center" style={{ marginTop: '20px', marginBottom: '10px' }}>
 				<Col>
 					<strong>Yearly Cash Flows</strong>

@@ -27,7 +27,7 @@ export default function FIImpactView({ impactYears }: FIImpactViewProps) {
 		<ItemDisplay
 			label="FI Impact"
 			result="Unable to Determine"
-			info={`Financial Independence Impact can only be determined once Financial Independence Age is determined. Please change Your Goals / Inputs and try again.`}
+			info={`Financial Independence Impact can only be determined once Financial Independence Age is determined.`}
 		/>
 	);
 }

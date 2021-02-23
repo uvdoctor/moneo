@@ -12,10 +12,10 @@ export default function FIYearResult() {
 	
 	return isFFPossible(ffResult, leaveBehind) ? (
 		<ItemDisplay
-			label="Earliest Year"
-			result={'' + ffResult.ffYear}
-			info={`You May achieve Financial Independence earliest in ${ffResult.ffYear}.`}
-			unit=""
+			label="Earliest Age"
+			result={'' + (ffResult.ffYear - startYear)}
+			info={`You May achieve Financial Independence earliest by age of ${ffResult.ffYear - startYear}.`}
+			unit="Years"
 			imp={
 				ffResult.oom ? (
 					`You May Not Have Enough Savings in ${ffResult.oom.map((year: number) => ` ${year}`)}`
@@ -26,9 +26,9 @@ export default function FIYearResult() {
 		/>
 	) : (
 		<ItemDisplay
-			label="Earliest Year"
-				result={`Difficult by ${startYear + retirementAge}`}
-			info={`It may be difficult to achieve Financial Independence by ${startYear + retirementAge}. Please try again with different inputs.`}
+			label="Earliest Age"
+				result={`Difficult by Age of ${retirementAge}`}
+			info={`It may be difficult to achieve Financial Independence by ${retirementAge}.`}
 		/>
 	);
 }
