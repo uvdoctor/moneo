@@ -27,6 +27,17 @@ export default function PlanView() {
 
 	const tabOptions = [
 		{
+			label: portfolioLabel,
+			svg: faChartLine,
+			content: (
+				<CalcContextProvider calculateFor={ffGoal}>
+					<FIGoalContextProvider>
+						<BasicLineChart showAnnotation chartTitle='Yearly Portfolio Forecast with Milestones' />
+					</FIGoalContextProvider>
+				</CalcContextProvider>
+			)
+		},
+		{
 			label: goalsLabel,
 			svg: faBullseye,
 			content: <GoalSummary impFilter={impFilter} />
@@ -38,17 +49,6 @@ export default function PlanView() {
 				<CalcContextProvider calculateFor={ffGoal}>
 					<FIGoalContextProvider>
 						<DynamicAAChart />
-					</FIGoalContextProvider>
-				</CalcContextProvider>
-			)
-		},
-		{
-			label: portfolioLabel,
-			svg: faChartLine,
-			content: (
-				<CalcContextProvider calculateFor={ffGoal}>
-					<FIGoalContextProvider>
-						<BasicLineChart showAnnotation chartTitle='Yearly Portfolio Forecast with Milestones' />
 					</FIGoalContextProvider>
 				</CalcContextProvider>
 			)

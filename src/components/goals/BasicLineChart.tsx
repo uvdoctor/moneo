@@ -125,7 +125,7 @@ export default function BasicLineChart({
 							formatter: ({ year, value }: any) => {
 								let content = `<strong>${toHumanFriendlyCurrency(value, currency)}`;
 								if (annotationContent[year])
-									content += `<br/><br/><u>Key Milestones</u>:<br/><br/>${annotationContent[year]}`;
+									content += `<br/><br/><u>Key Milestones</u>:<br/><br/>${annotationContent[year]}<br/><br/>`;
 								content += '</strong>';
 								return {
 									name: 'Year ' + year,
@@ -140,7 +140,7 @@ export default function BasicLineChart({
 									position={[ year, getCF(parseInt(year)) ]}
 									text={{ content: '\u2691' }}
 									point={{
-										style: { stroke: COLORS.ORANGE }
+										style: { stroke: COLORS.GREEN }
 									}}
 									line={{ length: 0 }}
 								/>
@@ -151,8 +151,8 @@ export default function BasicLineChart({
 								start={['' + ffResult.ffYear, 'min']}
 								end={['' + ffResult.ffYear, 'max']}
 								text={{
-									content: 'Financial Independence',
-									position: '30%'
+									content: `Financial Independence at Age of ${ffResult.ffYear - startYear}`,
+									position: '10%'
 								}}
 							/>
 							<AnnotationLine

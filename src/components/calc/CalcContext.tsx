@@ -113,19 +113,19 @@ function CalcContextProvider({
   const getFFGoalResultTabOptions = () => {
     let options = [
     {
-      label: 'Target Asset Allocation',
-      active: true,
-      svg: faChartPie,
-      content: <DynamicAAChart />
-    },
-    {
-      label: "Portfolio Milestones",
+      label: "Milestones",
       active: true,
       svg: faChartLine,
-      content: <BasicLineChart showAnnotation />
-    },
+      content: <BasicLineChart showAnnotation chartTitle="Yearly Portfolio Forecast with Milestones" />
+      },
+      {
+        label: 'Target Allocation',
+        active: true,
+        svg: faChartPie,
+        content: <DynamicAAChart />
+      },
     {
-      label: "Investment Targets",
+      label: "Monthly Investment Targets",
       active: true,
       svg: faChartArea,
       content: <FIMonthlyInvTargetChart />
