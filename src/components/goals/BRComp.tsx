@@ -4,9 +4,11 @@ import NumberInput from '../form/numberinput';
 import Section from '../form/section';
 import HSwitch from '../HSwitch';
 import { GoalContext } from './GoalContext';
+import { PlanContext } from './PlanContext';
 
 export default function BRComp() {
-	const { currency, dr, setDR }: any = useContext(CalcContext);
+	const { dr, setDR }: any = useContext(PlanContext);
+	const { currency }: any = useContext(CalcContext);
 	const {
 		rentAmt,
 		setRentAmt,

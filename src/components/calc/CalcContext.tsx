@@ -46,24 +46,26 @@ interface CalcContextProviderProps {
   children: ReactNode;
 	tabOptions?: any;
   resultTabOptions?: any;
-  goal?: any;
+  calculateFor?: CreateGoalInput;
 }
 
 function CalcContextProvider({
   children,
 	tabOptions,
   resultTabOptions,
-  goal
+  calculateFor
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { addGoal, updateGoal, isPublicCalc, dr, setDR }: any = useContext(PlanContext);
+  const { addGoal, updateGoal, isPublicCalc }: any = useContext(PlanContext);
+  let { goal }: any = useContext(PlanContext);
+  if (calculateFor && !goal) goal = calculateFor;
   const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
   const [startYear, setStartYear] = useState<number>(goal.sy);
   const [startMonth, setStartMonth] = useState<number>(goal.sm);
   const [endYear, setEndYear] = useState<number>(goal.ey);
-  const [ currency, setCurrency ] = useState<string>(defaultCurrency ? defaultCurrency : goal.ccy);
+  const [ currency, setCurrency ] = useState<string>(goal.ccy ? goal.ccy : defaultCurrency);
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(goal?.id ? true : false);
   const [cfs, setCFs] = useState<Array<number>>([]);
   const [ cfsWithoutSM, setCFsWithoutSM ] = useState<Array<number>>([]);
@@ -83,6 +85,8 @@ function CalcContextProvider({
   const [timer, setTimer] = useState<any>(null);
   const [analyzeFor, setAnalyzeFor] = useState<number>(30);
   const [ratingId, setRatingId] = useState<String | undefined>('');
+  const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
+  const [oppCost, setOppCost] = useState<number>(0);
 
  const getCalcType = () => {
   switch(goal.name) {
@@ -109,19 +113,19 @@ function CalcContextProvider({
   const getFFGoalResultTabOptions = () => {
     let options = [
     {
-      label: 'Target Asset Allocation',
-      active: true,
-      svg: faChartPie,
-      content: <DynamicAAChart />
-    },
-    {
-      label: "Portfolio Value",
+      label: "Milestones",
       active: true,
       svg: faChartLine,
-      content: <BasicLineChart />
-    },
+      content: <BasicLineChart showAnnotation chartTitle="Yearly Portfolio Forecast with Milestones" />
+      },
+      {
+        label: 'Target Allocation',
+        active: true,
+        svg: faChartPie,
+        content: <DynamicAAChart />
+      },
     {
-      label: "Investment Targets",
+      label: "Monthly Investment Targets",
       active: true,
       svg: faChartArea,
       content: <FIMonthlyInvTargetChart />
@@ -190,12 +194,11 @@ function CalcContextProvider({
   const changeEndYear = (str: string) => setEndYear(parseInt(str));
 
   const handleSubmit = async (g: CreateGoalInput) => {
+    if (isPublicCalc) return;
     setBtnClicked(true);
-    if (!isPublicCalc) {
-      if (goal?.id) {
-        await updateGoal(g as UpdateGoalInput, cfs);
-      } else await addGoal(g, cfs);
-    } 
+    if (goal?.id) {
+      await updateGoal(g as UpdateGoalInput, cfs, ffImpactYears);
+    } else await addGoal(g, cfs, ffImpactYears);
     setBtnClicked(false);
   };
 
@@ -259,11 +262,10 @@ function CalcContextProvider({
   useEffect(() => {
     if(feedbackId) updateRating();
   }, [feedbackId]);
-    
+  
 	return (
 		<CalcContext.Provider
       value={{
-        goal,
 				currency,
         setCurrency,
 				allInputDone,
@@ -274,8 +276,6 @@ function CalcContextProvider({
 				setInputTabs,
 				resultTabs,
 				setResultTabs,
-				dr,
-				setDR,
         cfs,
         setCFs,
         cfsWithoutSM,
@@ -319,6 +319,11 @@ function CalcContextProvider({
         setTimer,
         analyzeFor,
         setAnalyzeFor,
+        ffImpactYears,
+        setFFImpactYears,
+        oppCost,
+        setOppCost,
+        goal
 			}}
     >
       {children}

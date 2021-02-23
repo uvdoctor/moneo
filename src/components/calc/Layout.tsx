@@ -53,7 +53,6 @@ export default function Layout(props: LayoutProps) {
 						<CalcContextProvider
 							tabOptions={props.tabOptions}
 							resultTabOptions={props.resultTabOptions}
-							goal={wip}
 						>
 							{props.type ? props.type === GoalType.FF ? (
 								<FIGoalContextProvider />

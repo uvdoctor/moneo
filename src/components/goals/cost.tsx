@@ -13,12 +13,11 @@ import { ROUTES } from '../../CONSTANTS';
 
 export default function Cost() {
 	const {
+		goal,
 		currency,
 		startYear,
-		goal,
 		inputTabs,
 		setInputTabs,
-		error
 	}: any = useContext(CalcContext);
 	const {
 		startingPrice,
@@ -89,7 +88,6 @@ export default function Cost() {
 			}
 			manualMode={manualMode}
 			videoSrc={`https://www.youtube.com/watch?v=uYMTsmeZyfU`}
-			error={error}
 		>
 			<NumberInput
 				pre={isLoanPublicCalc ? 'Borrow Amount' : `Cost ${goal.type !== GoalType.D && 'including taxes & fees'}`}

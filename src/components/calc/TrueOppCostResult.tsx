@@ -4,9 +4,11 @@ import { CalcContext } from './CalcContext';
 import { TrueCostContext } from './TrueCostContext';
 import { SPEND_ONCE } from './Spend';
 import OppCostResult from './OppCostResult';
+import { PlanContext } from '../goals/PlanContext';
 
 export default function TrueOppCostResult() {
-	const { dr, cfs, setCFs, analyzeFor }: any = useContext(CalcContext);
+	const { dr }: any = useContext(PlanContext);
+	const { cfs, setCFs, analyzeFor }: any = useContext(CalcContext);
 	const { cfsWithoutOppCost, freq }: any = useContext(TrueCostContext);
 	const [ numOfYears, setNumOfYears ] = useState<number>(cfs.length ? cfs.length : 5);
 	const [ numOfYearsOptions, setNumOfYearsOptions ] = useState<any>(initOptions(1, cfs.length ? cfs.length - 1 : 4));

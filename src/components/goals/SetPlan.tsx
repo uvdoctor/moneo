@@ -22,7 +22,7 @@ export default function SetPlan() {
 			>
 				{wipGoal ? (
 					<FeedbackContextProvider>
-						<CalcContextProvider goal={wipGoal}>
+						<CalcContextProvider>
 							{(wipGoal as APIt.CreateGoalInput).type === APIt.GoalType.FF ? (
 								<FIGoalContextProvider />
 							) : (

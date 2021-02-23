@@ -1,13 +1,13 @@
 import React, { Fragment, useContext } from 'react';
 import { Col } from 'antd';
 import { GoalContext } from '../goals/GoalContext';
-import { CalcContext } from './CalcContext';
 import NumberInput from '../form/numberinput';
 import HSwitch from '../HSwitch';
 import { GoalType, LoanType } from '../../api/goals';
+import { PlanContext } from '../goals/PlanContext';
 
 export default function LoanInterest() {
-	const { goal }: any = useContext(CalcContext);
+	const { goal }: any = useContext(PlanContext);
 	const { loanIntRate, setLoanIntRate, loanType, setLoanType }: any = useContext(GoalContext);
 
 	const changeLoanType = (val: number) => setLoanType(val < 1 ? LoanType.A : LoanType.B);

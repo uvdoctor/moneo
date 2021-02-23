@@ -1,23 +1,34 @@
-import { Modal, PageHeader, Rate, Row, Col, Tooltip } from 'antd';
+import { Modal, PageHeader, Rate, Row, Col, Tooltip, Button } from 'antd';
 import React, { Fragment, useContext, useState } from 'react';
-import { ShareAltOutlined } from '@ant-design/icons';
+import { ShareAltOutlined, SaveOutlined } from '@ant-design/icons';
 import SelectInput from '../form/selectinput';
 import { CalcContext } from './CalcContext';
 import SocialShare from '../SocialShare';
 import Feedback from '../feedback/Feedback';
-import { getGoalTypes } from '../goals/goalutils';
+import { getGoalTypes, getImpLevels } from '../goals/goalutils';
 import { PlanContext } from '../goals/PlanContext';
 import TextInput from '../form/textinput';
 import { GoalContext } from '../goals/GoalContext';
 import { GoalType } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
+import { CalcTemplateProps } from './CalcTemplate';
 
-export default function CalcHeader() {
+export default function CalcHeader({ latestState }: CalcTemplateProps) {
 	const { isPublicCalc }: any = useContext(PlanContext);
-	const { goal, currency, setCurrency, rating, setRating, showFeedbackModal, setShowFeedbackModal }: any = useContext(
-		CalcContext
-	);
-	const { name, setName }: any = useContext(GoalContext);
+	const {
+		goal,
+		currency,
+		setCurrency,
+		rating,
+		setRating,
+		showFeedbackModal,
+		setShowFeedbackModal,
+		disableSubmit,
+		handleSubmit,
+		btnClicked,
+		setError
+	}: any = useContext(CalcContext);
+	const { name, setName, impLevel, setImpLevel }: any = useContext(GoalContext);
 	const ratingLabels = [ 'Rate Calculator', 'Very Poor', 'Poor', 'Average', 'Good', 'Awesome!' ];
 	const [ ratingLabel, setRatingLabel ] = useState<string>('');
 
@@ -27,9 +38,13 @@ export default function CalcHeader() {
 		<TextInput
 			name="name"
 			pre={(getGoalTypes() as any)[goal.type]}
+			post={<SelectInput pre="" value={impLevel} changeHandler={setImpLevel} options={getImpLevels()} />}
 			placeholder="Goal Name"
 			value={name}
 			changeHandler={setName}
+			fieldName="Goal Name"
+			minLength={3}
+			setError={setError}
 		/>
 	);
 
@@ -39,10 +54,12 @@ export default function CalcHeader() {
 				<Row>
 					<Col span={24}>
 						<PageHeader
-							title={isPublicCalc || goal.type === GoalType.FF ? goal.name : goalTitle()}
+							title={isPublicCalc ? goal.name : goal.type === GoalType.FF ? goal.name : goalTitle()}
 							extra={[
-								<Fragment>
-									<Row justify="center" style={{ color: COLORS.WHITE }}>{ratingLabel ? ratingLabel : ratingLabels[rating]}</Row>
+								<Fragment key="rating">
+									<Row justify="center" style={{ color: COLORS.WHITE }}>
+										{ratingLabel ? ratingLabel : ratingLabels[rating]}
+									</Row>
 									<Row justify="center">
 										<Rate
 											allowClear
@@ -66,6 +83,19 @@ export default function CalcHeader() {
 									currency
 								/>
 							</Col>
+							{latestState && (
+								<Col flex="auto">
+									<Button
+										type="primary"
+										icon={<SaveOutlined />}
+										loading={btnClicked}
+										disabled={disableSubmit}
+										onClick={() => handleSubmit(latestState())}
+									>
+										Save
+									</Button>
+								</Col>
+							)}
 							<Col flex="20px">
 								<Tooltip
 									title={

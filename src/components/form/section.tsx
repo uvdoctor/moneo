@@ -10,7 +10,6 @@ interface SectionProps {
 	manualMode?: number;
 	videoSrc?: string;
 	children?: ReactNode;
-	error?: string;
 }
 
 export default function Section(props: SectionProps) {
@@ -40,7 +39,6 @@ export default function Section(props: SectionProps) {
 					{props.toggle}
 				</Col>
 			)}
-			{props.error && <div className="error-txt">{props.error}</div>}
 			{props.manualMode && props.manualMode > 0 ? (
 				<Col span={24}>{props.manualInput}</Col>
 			) : (

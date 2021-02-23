@@ -9,8 +9,8 @@ import HSwitch from '../HSwitch';
 import { PlanContext } from './PlanContext';
 
 export function BeforeFI() {
-	const { isPublicCalc }: any = useContext(PlanContext);
-	const { currency, dr, setDR }: any = useContext(CalcContext);
+	const { isPublicCalc, dr, setDR }: any = useContext(PlanContext);
+	const { currency }: any = useContext(CalcContext);
 	const {
 		avgMonthlySavings,
 		setAvgMonthlySavings,

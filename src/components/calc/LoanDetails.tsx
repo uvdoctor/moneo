@@ -16,7 +16,7 @@ import { PlanContext } from '../goals/PlanContext';
 
 export default function LoanDetails() {
 	const { isPublicCalc }: any = useContext(PlanContext);
-	const { fsb, goal, currency, startYear, endYear }: any = useContext(CalcContext);
+	const { goal, fsb, currency, startYear, endYear }: any = useContext(CalcContext);
 	const {
 		loanRepaymentMonths,
 		loanMonths,

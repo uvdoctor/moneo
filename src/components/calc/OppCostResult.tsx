@@ -6,6 +6,7 @@ import ItemDisplay from './ItemDisplay';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { initOptions, toHumanFriendlyCurrency } from '../utils';
 import { Row } from 'antd';
+import { PlanContext } from '../goals/PlanContext';
 
 interface OppCostResultProps {
 	oppCost: number;
@@ -16,7 +17,8 @@ interface OppCostResultProps {
 
 export default function OppCostResult({ oppCost, numOfYears, numOfYearsOptions, oppCostHandler }: OppCostResultProps) {
 	const drOptions = initOptions(1, 9);
-	const { currency, goal, dr, setDR }: any = useContext(CalcContext);
+	const { dr, setDR }: any = useContext(PlanContext);
+	const { goal, currency }: any = useContext(CalcContext);
 	return (
 		<ItemDisplay
 			result={oppCost}
