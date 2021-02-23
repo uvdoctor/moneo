@@ -28,7 +28,7 @@ export default function CalcHeader() {
 			name="name"
 			pre={(getGoalTypes() as any)[goal.type]}
 			post={<SelectInput
-				pre="Importance"
+				pre=""
 				value={impLevel}
 				changeHandler={setImpLevel}
 				options={getImpLevels()}

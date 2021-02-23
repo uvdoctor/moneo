@@ -2,7 +2,7 @@ import React from 'react';
 import { Input } from 'antd';
 interface TextInputProps {
 	pre: string;
-	post?: string;
+	post?: any;
 	value: string;
 	name: string;
 	placeholder?: string;

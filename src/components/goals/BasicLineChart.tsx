@@ -136,7 +136,6 @@ export default function BasicLineChart({
 						xAxis={getCommonXAxis(title ? title : numberOfYears ? 'Number of Years' : 'Year')}
 						meta={getCommonMeta(currency)}
 						point={!showAnnotation}
-						autoFit
 						tooltip={{
 							visible: true,
 							title: (title: string) => {
@@ -163,7 +162,6 @@ export default function BasicLineChart({
 									value: toHumanFriendlyCurrency(value, currency)
 								};
 							},
-							showCrosshairs: false
 						}}
 					>
 						{showAnnotation &&
