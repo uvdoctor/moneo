@@ -23,7 +23,7 @@ interface GoalContextProviderProps {
 }
 
 function GoalContextProvider({ children }: GoalContextProviderProps) {
-  const { rr, setRR, calculateFFImpactYear, isPublicCalc, allGoals }: any = useContext(PlanContext);
+  const { rr, setRR, dr, calculateFFImpactYear, isPublicCalc, allGoals }: any = useContext(PlanContext);
   const {
     goal,
     currency,
@@ -37,7 +37,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     cfs,
     setCFs,
     setCFsWithoutSM,
-    dr,
     ffOOM,
     setFFOOM,
     btnClicked,
@@ -551,7 +550,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       let inv = 0;
       let buyCFs = allBuyCFs[i - 3];
       buyNPVs.push(
-        getNPV(dr === null ? rr : dr, buyCFs, startYear - (nowYear + 1))
+        getNPV(isPublicCalc ? dr : rr, buyCFs, startYear - (nowYear + 1))
       );
       for (let j = 0; j < i; j++) {
         let value = getCompoundedIncome(rentChgPer as number, rentAmt as number, j);
@@ -564,7 +563,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
         if (buyCF && buyCF < 0) inv -= buyCF;
         inv -= value;
         if (inv > 0) {
-          let rate = dr === null ? rr[firstRRIndex + j] : dr;
+          let rate = isPublicCalc ? dr : rr[firstRRIndex + j];
           inv *= 1 + (rate / 100);
           if (j === i - 1) cfs.push(Math.round(inv));
         }
