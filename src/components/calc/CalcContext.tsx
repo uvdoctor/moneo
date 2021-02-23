@@ -262,7 +262,7 @@ function CalcContextProvider({
   useEffect(() => {
     if(feedbackId) updateRating();
   }, [feedbackId]);
-    
+  
 	return (
 		<CalcContext.Provider
       value={{

@@ -160,8 +160,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
   
   useEffect(() =>
-    setDisableSubmit(name.length < 3 || !price || btnClicked),
-    [name, price, btnClicked]);
+    setDisableSubmit(name.length < 3 || !price || btnClicked || !allInputDone || !cfs.length),
+    [name, price, btnClicked, allInputDone]);
     
   const updateBaseGoal = () => {
     return {
@@ -762,7 +762,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
           loanPMIEndPer,
           setLoanPMIEndPer,
         }}>
-        {children ? children : <CalcTemplate latestState={getLatestGoalState} />}
+        {children ? children : <CalcTemplate latestState={isPublicCalc ? null : getLatestGoalState} />}
       </GoalContext.Provider>
     );
 }
