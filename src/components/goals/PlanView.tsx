@@ -11,7 +11,7 @@ import YearlyCFChart from './YearlyCFChart';
 import { CalcContextProvider } from '../calc/CalcContext';
 import MenuItem from 'antd/lib/menu/MenuItem';
 import { GoalType } from '../../api/goals';
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, AimOutlined } from '@ant-design/icons';
 import { FIGoalContextProvider } from './FIGoalContext';
 import DynamicAAChart from './DynamicAAChart';
 import BasicLineChart from './BasicLineChart';
@@ -81,7 +81,7 @@ export default function PlanView() {
 				<Col>
 					<Dropdown overlay={goalTypesMenuItems}>
 						<Button>
-							Define Your Dreams <DownOutlined />
+							<AimOutlined /> New Life Goal <DownOutlined />
 						</Button>
 					</Dropdown>
 				</Col>
