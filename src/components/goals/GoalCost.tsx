@@ -36,14 +36,14 @@ export default function GoalCost() {
 					changeHandler={changeStartYear}
 					options={syOptions}
 				/>
-				<SelectInput
+				{(isPublicCalc || goal.type === GoalType.B || goal.type === GoalType.E) && <SelectInput
 					pre="Starting Month"
-					info="Month of Year from where You Start Paying"
+					info="Month of Year when You Start Paying"
 					value={startMonth}
 					changeHandler={changeStartMonth}
 					options={MONTHS}
 					disabled={manualMode > 0}
-				/>
+				/>}
 				{!isEndYearHidden && (
 					<SelectInput
 						pre="To Year"

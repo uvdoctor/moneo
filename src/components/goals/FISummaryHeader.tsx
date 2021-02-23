@@ -26,7 +26,7 @@ export default function FISummaryHeader() {
 				<Col span={24} className="primary-header">
 					<PageHeader
 						title={`Financial Independence ${isFFPossible(ffResult, ffGoal.sa as number)
-							? `by Age of ${ffResult.ffYear - ffGoal.sy}`
+							? `at ${ffResult.ffYear - ffGoal.sy}`
 							: `Not Achievable`}`}
 						extra={[
 							<Button key="Edit" className="steps-start-btn" onClick={() => setGoal(Object.assign({}, ffGoal))}>

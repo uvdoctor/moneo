@@ -76,6 +76,7 @@ export default function BasicLineChart({
 				setEndingGoalsContent({});
 				setRunningGoalsContent({});
 				setAnnotations([...[]]);
+				return;
 			}
 			let startingGoalsContent: any = {};
 			let endingGoalsContent: any = {};
@@ -139,6 +140,7 @@ export default function BasicLineChart({
 						tooltip={{
 							visible: true,
 							title: (title: string) => {
+								if (!annotations.length) return title;
 								let content = '';
 								if (startingGoalsContent[title]) {
 									content += `\n\n\u27A3 Goals Starting:\n${startingGoalsContent[title]}`;
@@ -158,7 +160,7 @@ export default function BasicLineChart({
 							},
 							formatter: ({ value }: any) => {
 								return {
-									name: `Portfolio Value`,
+									name: 'Value',
 									value: toHumanFriendlyCurrency(value, currency)
 								};
 							},
@@ -166,7 +168,7 @@ export default function BasicLineChart({
 					>
 						{showAnnotation &&
 							annotations.map((year: string) => (
-								<Annotation
+								<Annotation key={year}
 									position={[ year, getCF(parseInt(year)) ]}
 									text={{
 										content: '\u2691',

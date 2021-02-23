@@ -2,6 +2,8 @@ import * as APIt from "../../api/goals";
 import {
   getCompoundedIncome,
   createYearlyFromMonthlyLoanCFs,
+  createAmortizingLoanCFs,
+  createEduLoanMonthlyCFs,
 } from "../calc/finance";
 import {
   appendValue,
@@ -10,6 +12,7 @@ import {
 } from "../utils";
 import { ASSET_TYPES } from "../../CONSTANTS";
 import { isTaxCreditEligible } from "./goalutils";
+import { GoalType, TargetInput } from "../../api/goals";
 //Tested
 export const getTaxBenefit = (val: number, tr: number, maxTaxDL: number) => {
   if (!val || val < 0 || !tr || (tr === 100 && maxTaxDL === 0)) return 0;
@@ -84,9 +87,11 @@ export const calculateCFs = (
   considerStartMonth: boolean = true
 ) => {
   if (price === null) price = calculatePrice(goal); //tested
-  if ((goal?.manual as number) > 0)
+  if (goal?.manual)
     return createManualCFs(price, goal, duration);
-  else return createAutoCFs(price, goal, duration, considerStartMonth);
+  if (goal?.loan?.per)
+    return createAutoLoanCFs(price, goal, duration, considerStartMonth);
+  return createAutoCFs(price, goal, duration, considerStartMonth);
 };
 
 export const calculateTotalCPTaxBenefit = (
@@ -328,6 +333,65 @@ export const adjustAccruedInterest = (
   repaymentMonths: number,
   loanRate: number
 ) => loanBorrowAmt *= 1 + (loanRate * repaymentMonths / 1200);
+
+export const getEduLoanAnnualDPs = (startMonth: number, monthlyDPs: Array<number>) => {
+  let cfs: Array<number> = [];
+  let month = startMonth;
+  let yearlyDP = 0;
+  monthlyDPs.forEach((dp: number) => {
+    yearlyDP += dp;
+    if (month === 12) {
+      month = 1;
+      cfs.push(yearlyDP);
+      yearlyDP = 0;
+    } else month++;
+  });
+  return cfs;
+};
+
+const createAutoLoanCFs = (price: number,
+  goal: APIt.CreateGoalInput,
+  duration: number,
+  considerStartMonth: boolean = true
+) => {
+  let loanStartingCFs: Array<number> = [];
+  let loanSchedule: any = {};
+  if (goal.type === GoalType.E) {
+    let result = createEduLoanMonthlyCFs(goal.sy, goal.ey, price, goal.chg as number, goal?.loan?.per as number, goal?.loan?.dur as number, goal?.loan?.pp as Array<TargetInput>, goal?.loan?.ira as Array<TargetInput>, goal.achg as number, goal.tbr ? true : false);
+    loanStartingCFs = getEduLoanAnnualDPs(goal.sm as number, result.dp);
+    loanSchedule = createAmortizingLoanCFs(
+      result.borrowAmt,
+      getClosestTargetVal(goal?.loan?.ira as Array<TargetInput>, result.interest.length, goal?.loan?.rate as number),
+      goal?.loan?.emi as number,
+      goal?.loan?.pp as Array<TargetInput>,
+      goal?.loan?.ira as Array<TargetInput>,
+      goal?.loan?.rate as number,
+      null,
+      0,
+      0,
+      result.interest.length
+    );
+  } else {
+    let loanBorrowAmt = getLoanBorrowAmt(
+      price,
+      goal.type,
+      goal.manual,
+      goal.chg as number,
+      goal.ey - goal.sy,
+      goal?.loan?.per as number
+    );
+    loanStartingCFs = [Math.round(loanBorrowAmt / (goal?.loan?.per as number / 100)) - loanBorrowAmt];
+    loanBorrowAmt = adjustAccruedInterest(
+      loanBorrowAmt,
+      goal?.loan?.ry as number,
+      goal?.loan?.per as number
+    );
+    loanSchedule = createAmortizingLoanCFs(loanBorrowAmt, goal?.loan?.rate as number, goal?.loan?.emi as number,
+      goal?.loan?.pp as Array<TargetInput>, goal?.loan?.ira as Array<TargetInput>, goal?.loan?.dur as number,
+      goal?.sa ? goal.sa : null, goal?.loan?.pmi as number, goal?.loan?.peper as number);
+  }
+  return createLoanCFs(price, loanStartingCFs, loanSchedule.interest, loanSchedule.principal, loanSchedule.insurance, goal, duration, considerStartMonth);
+  }
 
 export const createLoanCFs = (
   price: number,
