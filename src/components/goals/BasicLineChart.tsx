@@ -60,7 +60,7 @@ export default function BasicLineChart({
 	const getAnnotationContent = (g: UpdateGoalInput) => `${getGoalTypes()[g.type as GoalType]} ${g.name}`;
 
 	const getAnnotationEndYearContent = (g: UpdateGoalInput) => {
-		if (g.type === GoalType.B) return 'SELL' + g.name;
+		if (g.type === GoalType.B) return 'SELL ' + g.name;
 		return getAnnotationContent(g);
 	};
 
