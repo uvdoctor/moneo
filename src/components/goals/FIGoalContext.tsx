@@ -13,8 +13,9 @@ interface FIGoalContextProviderProps {
 }
 
 function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
-  const { goal, mustCFs, tryCFs, mergedCFs, pp, rr, dr, setRR, ffResult, setFFResult }: any = useContext(PlanContext);
+  const { mustCFs, tryCFs, mergedCFs, pp, rr, dr, setRR, ffResult, setFFResult }: any = useContext(PlanContext);
   const {
+    goal,
     currency,
     inputTabIndex,
     setInputTabIndex,

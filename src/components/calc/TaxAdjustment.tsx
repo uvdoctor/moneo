@@ -7,11 +7,9 @@ import { GoalContext } from '../goals/GoalContext';
 import { CalcContext } from './CalcContext';
 import HSwitch from '../HSwitch';
 import { GoalType } from '../../api/goals';
-import { PlanContext } from '../goals/PlanContext';
 
 export default function TaxAdjustment() {
-	const { goal }: any = useContext(PlanContext);
-	const { currency, startYear }: any = useContext(CalcContext);
+	const { goal, currency, startYear }: any = useContext(CalcContext);
 	const {
 		duration,
 		taxRate,

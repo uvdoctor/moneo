@@ -4,7 +4,7 @@ import SelectInput from '../form/selectinput';
 import PlanStart from './PlanStart';
 import FISummaryHeader from './FISummaryHeader';
 import { Button, Col, Dropdown, Menu, Row, Tabs, Alert } from 'antd';
-import { faChartLine, faChartPie, faBullseye } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartPie, faBullseye, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import GoalSummary from './GoalSummary';
 import { PlanContext } from './PlanContext';
 import YearlyCFChart from './YearlyCFChart';
@@ -14,13 +14,15 @@ import { GoalType } from '../../api/goals';
 import { DownOutlined } from '@ant-design/icons';
 import { FIGoalContextProvider } from './FIGoalContext';
 import DynamicAAChart from './DynamicAAChart';
+import BasicLineChart from './BasicLineChart';
 
 export default function PlanView() {
 	const { allGoals, ffGoal, goalsLoaded, setGoal }: any = useContext(PlanContext);
 	const { TabPane } = Tabs;
+	const portfolioLabel = 'Milestones';
 	const goalsLabel = 'Goals';
 	const cfLabel = 'Cash Flows';
-	const aaLabel = 'Target Asset Allocation';
+	const aaLabel = 'Target Allocation';
 	const [ impFilter, setImpFilter ] = useState<string>('');
 
 	const tabOptions = [
@@ -33,7 +35,7 @@ export default function PlanView() {
 			label: aaLabel,
 			svg: faChartPie,
 			content: (
-				<CalcContextProvider goal={ffGoal}>
+				<CalcContextProvider calculateFor={ffGoal}>
 					<FIGoalContextProvider>
 						<DynamicAAChart />
 					</FIGoalContextProvider>
@@ -41,8 +43,19 @@ export default function PlanView() {
 			)
 		},
 		{
-			label: cfLabel,
+			label: portfolioLabel,
 			svg: faChartLine,
+			content: (
+				<CalcContextProvider calculateFor={ffGoal}>
+					<FIGoalContextProvider>
+						<BasicLineChart showAnnotation chartTitle='Yearly Portfolio Forecast with Milestones' />
+					</FIGoalContextProvider>
+				</CalcContextProvider>
+			)
+		},
+		{
+			label: cfLabel,
+			svg: faChartBar,
 			content: <YearlyCFChart />
 		}
 	];
@@ -80,7 +93,7 @@ export default function PlanView() {
 						<Tabs type="card">
 							{tabOptions.map((t: any) => (
 								<TabPane key={t.label} tab={t.label}>
-									{t.label !== aaLabel && (
+									{(t.label === goalsLabel || t.label === cfLabel) && (
 										<Row justify={t.label === goalsLabel ? 'space-between' : 'center'} style={{marginBottom: '10px'}}>
 											<Col>
 												<Alert

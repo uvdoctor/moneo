@@ -17,8 +17,8 @@ interface OppCostResultProps {
 
 export default function OppCostResult({ oppCost, numOfYears, numOfYearsOptions, oppCostHandler }: OppCostResultProps) {
 	const drOptions = initOptions(1, 9);
-	const { goal, dr, setDR }: any = useContext(PlanContext);
-	const { currency }: any = useContext(CalcContext);
+	const { dr, setDR }: any = useContext(PlanContext);
+	const { goal, currency }: any = useContext(CalcContext);
 	return (
 		<ItemDisplay
 			result={oppCost}

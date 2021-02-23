@@ -9,6 +9,8 @@ import { COLORS } from '../../CONSTANTS';
 import { PlanContext } from './PlanContext';
 import { getGoalTypes } from './goalutils';
 import { appendValue, toHumanFriendlyCurrency } from '../utils';
+import { isFFPossible } from './cfutils';
+import { FIGoalContext } from './FIGoalContext';
 
 interface BasicLineChartProps {
 	numberOfYears?: boolean;
@@ -21,6 +23,8 @@ interface BasicLineChartProps {
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 const Annotation = dynamic(() => import('bizcharts/lib/components/Annotation/dataMarker'), { ssr: false });
+const AnnotationRegion = dynamic(() => import('bizcharts/lib/components/Annotation/region'), { ssr: false });
+const AnnotationLine = dynamic(() => import('bizcharts/lib/components/Annotation/line'), { ssr: false });
 
 export default function BasicLineChart({
 	numberOfYears,
@@ -29,8 +33,9 @@ export default function BasicLineChart({
 	showRange,
 	showAnnotation
 }: BasicLineChartProps) {
-	const { goal, allGoals }: any = useContext(PlanContext);
-	const { startYear, currency, cfs, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
+	const { allGoals, ffResult }: any = useContext(PlanContext);
+	const { goal, startYear, currency, cfs, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
+	const { leaveBehind, planDuration }: any = useContext(FIGoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [ annotations, setAnnotations ] = useState<Array<string>>([]);
 	const [ annotationContent, setAnnotationContent ] = useState<any>({});
@@ -60,15 +65,18 @@ export default function BasicLineChart({
 
 	useEffect(
 		() => {
-			if (!showAnnotation || !allGoals.length) setAnnotations([ ...[] ]);
+			if (!showAnnotation || !allGoals.length) {
+				setAnnotationContent({});
+				setAnnotations([ ...[] ]);
+			}
 			let goalEventsMap: any = {};
+			let allAnnotations: Array<string> = [];
 			allGoals.map((g: UpdateGoalInput) => {
 				let startYear = g.sy as number;
 				let endYear = g.ey as number;
 				appendValue(goalEventsMap, startYear, getAnnotationContent(g), '<br/>', 2);
 				appendValue(goalEventsMap, endYear, getAnnotationEndYearContent(g), '<br/>', 2);
 			});
-			let allAnnotations: Array<string> = [];
 			Object.keys(goalEventsMap).map((key: string) => allAnnotations.push(key));
 			setAnnotationContent(goalEventsMap);
 			setAnnotations([ ...allAnnotations ]);
@@ -78,8 +86,7 @@ export default function BasicLineChart({
 
 	return (
 		<Fragment>
-			{showRange ? (
-				<Row align="middle" className="chart-options-row" justify="center">
+			{showRange ? <Row align="middle" className="chart-options-row" justify="center">
 					<Col xs={24} sm={24} md={24} lg={12}>
 						<NumberInput
 							pre="Compare from 1 to "
@@ -93,7 +100,7 @@ export default function BasicLineChart({
 						/>
 					</Col>
 				</Row>
-			) : null}
+			: null}
 			{chartTitle && (
 				<Row justify="center">
 					<Col>
@@ -135,12 +142,33 @@ export default function BasicLineChart({
 									point={{
 										style: { stroke: COLORS.ORANGE }
 									}}
-									top
-									animate
-									autoAdjust
-									line={{length: 0}}
+									line={{ length: 0 }}
 								/>
 							))}
+						{showAnnotation && isFFPossible(ffResult, leaveBehind) &&
+							<Fragment>
+							<AnnotationLine
+								start={['' + ffResult.ffYear, 'min']}
+								end={['' + ffResult.ffYear, 'max']}
+								text={{
+									content: 'Financial Independence',
+									position: '30%'
+								}}
+							/>
+							<AnnotationLine
+								start={['' + (startYear + planDuration) , 'min']}
+								end={['' + (startYear + planDuration), 'max']}
+								text={{
+									content: `Plan ends at Age of ${planDuration}`,
+									position: '30%'
+								}}
+							/>
+							<AnnotationRegion
+							start={['' + ffResult.ffYear, 'min']}
+							end={['max', 'max']}
+							apply={['area']}
+							color={COLORS.LIGHT_GRAY} />
+						</Fragment>}
 						<Slider {...getDefaultSliderProps()} />
 					</LineChart>
 				</Col>

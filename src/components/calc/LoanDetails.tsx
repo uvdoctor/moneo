@@ -15,8 +15,8 @@ import Draggable from 'react-draggable';
 import { PlanContext } from '../goals/PlanContext';
 
 export default function LoanDetails() {
-	const { isPublicCalc, goal }: any = useContext(PlanContext);
-	const { fsb, currency, startYear, endYear }: any = useContext(CalcContext);
+	const { isPublicCalc }: any = useContext(PlanContext);
+	const { goal, fsb, currency, startYear, endYear }: any = useContext(CalcContext);
 	const {
 		loanRepaymentMonths,
 		loanMonths,

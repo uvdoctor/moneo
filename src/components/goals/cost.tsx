@@ -10,11 +10,10 @@ import { CalcContext } from '../calc/CalcContext';
 import { isLoanEligible } from './goalutils';
 import { useRouter } from 'next/router';
 import { ROUTES } from '../../CONSTANTS';
-import { PlanContext } from './PlanContext';
 
 export default function Cost() {
-	const { goal }: any = useContext(PlanContext);
 	const {
+		goal,
 		currency,
 		startYear,
 		inputTabs,

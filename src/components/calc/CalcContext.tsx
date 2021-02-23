@@ -46,15 +46,19 @@ interface CalcContextProviderProps {
   children: ReactNode;
 	tabOptions?: any;
   resultTabOptions?: any;
+  calculateFor?: CreateGoalInput;
 }
 
 function CalcContextProvider({
   children,
 	tabOptions,
   resultTabOptions,
+  calculateFor
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { addGoal, updateGoal, isPublicCalc, goal }: any = useContext(PlanContext);
+  const { addGoal, updateGoal, isPublicCalc }: any = useContext(PlanContext);
+  let { goal }: any = useContext(PlanContext);
+  if (calculateFor && !goal) goal = calculateFor;
   const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
@@ -115,7 +119,7 @@ function CalcContextProvider({
       content: <DynamicAAChart />
     },
     {
-      label: "Portfolio Value",
+      label: "Portfolio Milestones",
       active: true,
       svg: faChartLine,
       content: <BasicLineChart showAnnotation />
@@ -318,7 +322,8 @@ function CalcContextProvider({
         ffImpactYears,
         setFFImpactYears,
         oppCost,
-        setOppCost
+        setOppCost,
+        goal
 			}}
     >
       {children}
