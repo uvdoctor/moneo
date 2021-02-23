@@ -60,7 +60,7 @@ export default function BasicLineChart({
 	const getAnnotationContent = (g: UpdateGoalInput) => `${getGoalTypes()[g.type as GoalType]} ${g.name}`;
 
 	const getAnnotationEndYearContent = (g: UpdateGoalInput) => {
-		if (g.type === GoalType.B) return 'SELL ' + g.name;
+		if (g.type === GoalType.B) return 'SELL' + g.name;
 		return getAnnotationContent(g);
 	};
 
@@ -150,6 +150,11 @@ export default function BasicLineChart({
 								if (endingGoalsContent[title]) {
 									content += `\n\n\u27A4 Goals Ending:\n${endingGoalsContent[title]}`;
 								}
+								if (!startingGoalsContent.hasOwnProperty(title)
+									&& !runningGoalsContent.hasOwnProperty(title)
+									&& !endingGoalsContent.hasOwnProperty(title)) {
+									content += '\n\nNo Goal defined.\n'
+									}
 								return `Key Milestones in Year ${title}${content}`;
 							},
 							formatter: ({ value }: any) => {
