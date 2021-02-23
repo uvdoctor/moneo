@@ -160,7 +160,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   
   useEffect(() =>
     setDisableSubmit(name.length < 3 || !price || btnClicked || !allInputDone || !cfs.length),
-    [name, price, btnClicked, allInputDone]);
+    [name, price, btnClicked, allInputDone, cfs]);
     
   const updateBaseGoal = () => {
     return {
