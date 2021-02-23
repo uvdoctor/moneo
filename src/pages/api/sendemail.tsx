@@ -25,8 +25,7 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
       },
       Template: template, //name of SES template
       TemplateData: JSON.stringify(templateData),
-      //Source: 'no_reply@moneo.money',
-      Source: '21.ramit@gmail.com',
+      Source: 'no_reply@moneo.money',
       ReplyToAddresses: from
     };
     const sendPromise= new AWS.SES({ apiVersion: '2010-12-01' }).sendTemplatedEmail(params).promise();
