@@ -23,9 +23,8 @@ interface GoalContextProviderProps {
 }
 
 function GoalContextProvider({ children }: GoalContextProviderProps) {
-  const { rr, setRR, calculateFFImpactYear, isPublicCalc, allGoals }: any = useContext(PlanContext);
+  const { goal, rr, setRR, calculateFFImpactYear, isPublicCalc, allGoals }: any = useContext(PlanContext);
   const {
-    goal,
     currency,
     resultTabs,
     setResultTabs,

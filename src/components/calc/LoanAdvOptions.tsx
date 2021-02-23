@@ -3,12 +3,14 @@ import { GoalType } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import { GoalContext } from '../goals/GoalContext';
+import { PlanContext } from '../goals/PlanContext';
 import { initOptions } from '../utils';
 import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
 
 export default function LoanAdvOptions() {
-	const { goal, currency, startYear, endYear }: any = useContext(CalcContext);
+	const { goal }: any = useContext(PlanContext);
+	const { currency, startYear, endYear }: any = useContext(CalcContext);
 	const {
 		loanPer,
 		emi,

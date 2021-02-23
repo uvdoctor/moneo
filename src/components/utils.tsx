@@ -166,8 +166,14 @@ export function getCurrencyList() {
   };
 }
 
-export const appendValue = (obj: any, prop: string | number, val: number) => {
-  obj.hasOwnProperty(prop) ? (obj[prop] += val) : (obj[prop] = val);
+const getNewLineBreaks = (newLineSeparator: string, newLineBreakCount: number) => {
+  let str = newLineSeparator;
+  for (let i = 2; i <= newLineBreakCount; i++) str += newLineSeparator;
+  return str;
+};
+
+export const appendValue = (obj: any, prop: string | number, val: number | string, newLineSeparator: string = '\n', newLineBreakCount: number = 1) => {
+  obj.hasOwnProperty(prop) ? (obj[prop] += typeof val === 'string' ? getNewLineBreaks(newLineSeparator, newLineBreakCount) + val : val) : (obj[prop] = val);
 };
 
 export const changeSelection = (

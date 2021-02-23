@@ -11,9 +11,8 @@ import { getImpLevels } from './goalutils';
 import { PlanContext } from './PlanContext';
 
 export default function GoalCost() {
-	const { isPublicCalc, ffGoal }: any = useContext(PlanContext);
+	const { isPublicCalc, ffGoal, goal }: any = useContext(PlanContext);
 	const {
-		goal,
 		startYear,
 		changeStartYear,
 		endYear,

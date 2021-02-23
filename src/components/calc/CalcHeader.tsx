@@ -13,8 +13,8 @@ import { GoalType } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
 
 export default function CalcHeader() {
-	const { isPublicCalc }: any = useContext(PlanContext);
-	const { goal, currency, setCurrency, rating, setRating, showFeedbackModal, setShowFeedbackModal }: any = useContext(
+	const { isPublicCalc, goal }: any = useContext(PlanContext);
+	const { currency, setCurrency, rating, setRating, showFeedbackModal, setShowFeedbackModal }: any = useContext(
 		CalcContext
 	);
 	const { name, setName }: any = useContext(GoalContext);

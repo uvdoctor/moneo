@@ -46,17 +46,15 @@ interface CalcContextProviderProps {
   children: ReactNode;
 	tabOptions?: any;
   resultTabOptions?: any;
-  goal?: any;
 }
 
 function CalcContextProvider({
   children,
 	tabOptions,
   resultTabOptions,
-  goal
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { addGoal, updateGoal, isPublicCalc, dr, setDR }: any = useContext(PlanContext);
+  const { addGoal, updateGoal, isPublicCalc, goal }: any = useContext(PlanContext);
   const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
@@ -120,7 +118,7 @@ function CalcContextProvider({
       label: "Portfolio Value",
       active: true,
       svg: faChartLine,
-      content: <BasicLineChart />
+      content: <BasicLineChart showAnnotation />
     },
     {
       label: "Investment Targets",
@@ -264,7 +262,6 @@ function CalcContextProvider({
 	return (
 		<CalcContext.Provider
       value={{
-        goal,
 				currency,
         setCurrency,
 				allInputDone,
@@ -275,8 +272,6 @@ function CalcContextProvider({
 				setInputTabs,
 				resultTabs,
 				setResultTabs,
-				dr,
-				setDR,
         cfs,
         setCFs,
         cfsWithoutSM,
