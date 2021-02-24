@@ -68,7 +68,7 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 				content: data.createFeedback?.feedback,
 				type: (data.createFeedback?.type==='C'?'comment':(data.createFeedback?.type==='S'?'suggestion':'question'))
 			}
-			sendMail('21.ramit@gmail.com;emailumangdoctor@gmail.com', mailTemplate.email as string , 'FeedbackTemplate', mailTemplate);
+			sendMail('21.ramit@gmail.com', mailTemplate.email as string , 'FeedbackTemplate', mailTemplate);
 			openNotificationWithIcon('success', 'Success', 'Feedback saved successfully.');
 		} catch (e) {
 			setError({
