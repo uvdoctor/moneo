@@ -13,7 +13,7 @@ interface FIGoalContextProviderProps {
 }
 
 function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
-  const { mustCFs, tryCFs, mergedCFs, pp, rr, dr, setRR, ffResult, setFFResult, setPlanError }: any = useContext(PlanContext);
+  const { mustCFs, tryCFs, mergedCFs, pp, rr, dr, setRR, ffResult, setFFResult, setPlanError, isPublicCalc }: any = useContext(PlanContext);
   const {
     goal,
     currency,
@@ -183,7 +183,7 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
       ffResult.ffYear ? ffResult.ffYear : null,
       mustCFs,
       tryCFs,
-      dr ? dr : pp()
+      isPublicCalc ? dr : pp()
     );
     setFFResult(result);
     if (!isFFPossible(result, leaveBehind)) {

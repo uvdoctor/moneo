@@ -3,7 +3,7 @@ import { CreateGoalInput, GoalType, LMH, LoanType, TargetInput } from "../../api
 import { initOptions } from "../utils";
 import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils";
 import { createAmortizingLoanCFs, createEduLoanMonthlyCFs, getCompoundedIncome, getEmi, getNPV } from "../calc/finance";
-import { adjustAccruedInterest, calculateCFs, calculateSellPrice, createLoanCFs, getClosestTargetVal, getLoanBorrowAmt } from "./cfutils";
+import { adjustAccruedInterest, calculateCFs, calculateSellPrice, createLoanCFs, getClosestTargetVal, getEduLoanAnnualDPs, getLoanBorrowAmt } from "./cfutils";
 import { CalcContext } from "../calc/CalcContext";
 import DefaultOppCostResult from "../calc/DefaultOppCostResult";
 import FIImpact from "./FIImpact";
@@ -23,7 +23,7 @@ interface GoalContextProviderProps {
 }
 
 function GoalContextProvider({ children }: GoalContextProviderProps) {
-  const { rr, setRR, dr, calculateFFImpactYear, isPublicCalc, allGoals }: any = useContext(PlanContext);
+  const { rr, dr, calculateFFImpactYear, isPublicCalc }: any = useContext(PlanContext);
   const {
     goal,
     currency,
@@ -160,7 +160,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   
   useEffect(() =>
     setDisableSubmit(name.length < 3 || !price || btnClicked || !allInputDone || !cfs.length),
-    [name, price, btnClicked, allInputDone]);
+    [name, price, btnClicked, allInputDone, cfs]);
     
   const updateBaseGoal = () => {
     return {
@@ -258,20 +258,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     }
   }, [startingPrice, priceChgRate, startYear, manualMode, loanPer]);
 
-  const getEduLoanAnnualDPs = (monthlyDPs: Array<number>) => {
-    let cfs: Array<number> = [];
-    let month = startMonth;
-    let yearlyDP = 0;
-    monthlyDPs.forEach((dp: number) => {
-      yearlyDP += dp;
-      if (month === 12) {
-        month = 1;
-        cfs.push(yearlyDP);
-        yearlyDP = 0;
-      } else month++;
-    });
-    return cfs;
-  };
 
   useEffect(() => {
     if (manualMode || goal.type !== GoalType.E) return;
@@ -287,7 +273,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     setLoanBorrowAmt(result.borrowAmt);
     setEduLoanPSchedule([...result.principal]);
     setEduLoanPDueSchedule([...result.principalDue]);
-    setLoanStartingCFs([...getEduLoanAnnualDPs(result.dp)]);
+    setLoanStartingCFs([...getEduLoanAnnualDPs(startMonth, result.dp)]);
     setEduLoanSISchedule([...result.interest]);
   }, [manualMode, price, priceChgRate, loanPer, loanIntRate, loanGracePeriod, startYear, endYear, loanPrepayments, loanIRAdjustments, eduCostSemester]);
 
@@ -509,13 +495,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
 
   useEffect(() => {
     if (isPublicCalc) return;
-    let result = calculateFFImpactYear(startYear, cfs, goal.id, impLevel);
-    setFFImpactYears(result.ffImpactYears);
-    if (result.rr) {
-      setRR([...result.rr]);
-      setFFOOM(result.ffOOM);
-    }
-  }, [cfs, impLevel, allGoals]);
+    setFFImpactYears(calculateFFImpactYear(startYear, cfs, goal.id, impLevel));
+  }, [cfs, impLevel]);
 
   useEffect(() => {
     if (manualMode) {
