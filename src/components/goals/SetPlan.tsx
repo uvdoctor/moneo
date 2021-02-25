@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import * as APIt from '../../api/goals';
 import { GoalContextProvider } from './GoalContext';
 import { CalcContextProvider } from '../calc/CalcContext';
@@ -11,6 +11,7 @@ import CalcTemplate from '../calc/CalcTemplate';
 
 export default function SetPlan() {
 	const { goal }: any = useContext(PlanContext);
+	const [activeTab, setActiveTab] = useState<string>('');
 
 	return goal ? (
 		<FeedbackContextProvider>
@@ -42,7 +43,7 @@ export default function SetPlan() {
 		</FeedbackContextProvider>
 	) : (
 		<BasicPage title="My Financial Plan" navScrollable fixedNav>
-			<PlanView />
+				<PlanView activeTab={activeTab} setActiveTab={setActiveTab} />
 		</BasicPage>
 	);
 }

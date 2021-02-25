@@ -17,6 +17,7 @@ interface BasicLineChartProps {
 	title?: string;
 	showRange?: boolean;
 	showAnnotation?: boolean;
+	summaryView?: boolean;
 }
 
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
@@ -29,7 +30,8 @@ export default function BasicLineChart({
 	chartTitle,
 	title,
 	showRange,
-	showAnnotation
+	showAnnotation,
+	summaryView
 }: BasicLineChartProps) {
 	const { allGoals }: any = useContext(PlanContext);
 	const { goal, startYear, currency, cfs, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
@@ -126,7 +128,7 @@ export default function BasicLineChart({
 					</Col>
 				</Row>
 			)}
-			<Row style={{ minHeight: '400px' }}>
+			<Row style={{ minHeight: summaryView ? '250px' : '400px' }}>
 				<Col span={24}>
 					<LineChart
 						data={data}
@@ -189,7 +191,7 @@ export default function BasicLineChart({
 								end={['' + wipResult.ffYear, 'max']}
 								text={{
 									content: `Financial Independence at Age of ${wipResult.ffYear - startYear}`,
-									position: '5%',
+									position: '10%',
 									style: {
 										fontSize: 13,
 										fontFamily: "'Jost', sans-serif"

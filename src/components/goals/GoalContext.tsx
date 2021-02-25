@@ -218,11 +218,11 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   useEffect(() => {
     setResults([...[
       !isPublicCalc && <FIImpact />,
-      goalType === GoalType.B && <BuyRentResult />,
+      <DefaultOppCostResult />,
       goalType === GoalType.B && <BuyReturnResult />,
+      goalType === GoalType.B && <BuyRentResult />,
       isLoanEligible(goalType) && <LoanIntResult />,
-      <TaxBenefitResult />,
-      <DefaultOppCostResult />
+      <TaxBenefitResult />
     ]]);
   }, []);
   

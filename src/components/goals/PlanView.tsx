@@ -16,7 +16,12 @@ import { FIGoalContextProvider } from './FIGoalContext';
 import DynamicAAChart from './DynamicAAChart';
 import BasicLineChart from './BasicLineChart';
 
-export default function PlanView() {
+interface PlanViewProps {
+	activeTab: string;
+	setActiveTab: Function;
+}
+
+export default function PlanView({activeTab, setActiveTab}: PlanViewProps) {
 	const { allGoals, ffGoal, goalsLoaded, setGoal }: any = useContext(PlanContext);
 	const { TabPane } = Tabs;
 	const portfolioLabel = 'Milestones';
@@ -90,7 +95,7 @@ export default function PlanView() {
 			{allGoals && allGoals.length ? (
 				<Row>
 					<Col span={24}>
-						<Tabs type="card">
+						<Tabs type="card" defaultActiveKey={activeTab} onTabClick={(key: string) => setActiveTab(key)}>
 							{tabOptions.map((t: any) => (
 								<TabPane key={t.label} tab={t.label}>
 									{(t.label === goalsLabel || t.label === cfLabel) && (

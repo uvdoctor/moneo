@@ -207,6 +207,7 @@ function CalcContextProvider({
   const handleSubmit = async (cancelAction: boolean = false) => {
     if (isPublicCalc || !wipGoal) return;
     setBtnClicked(true);
+    alert(haveCFsChanged());
     if (cancelAction) await cancelGoal(wipGoal, cfs, ffImpactYears, haveCFsChanged());
     else if (goal?.id) {
       await updateGoal(wipGoal as UpdateGoalInput, cfs, ffImpactYears);
