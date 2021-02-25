@@ -127,11 +127,9 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     console.log("FF result: ", result);
     const isFI = isFFPossible(result, ffGoal.sa as number);
     allGoals?.forEach((g) => {
-      alert(isFI);
       let goalMetrics: any = allCFs[g.id as string];
       goalMetrics.ffImpactYears = isFI ? calculateFFImpactYear(g.sy, goalMetrics.cfs, g.id as string, g.imp,
         result, mergedCFs, mustCFs, tryCFs) : null;
-      alert(goalMetrics.ffImpactYears);
     });
     setFFResult(result);
     setRR([...result.rr]);
