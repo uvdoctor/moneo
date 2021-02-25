@@ -2,12 +2,13 @@ import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { getGoalTypes, getImpLevels } from './goalutils';
 import { GoalType, LMH, UpdateGoalInput } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
-import { Card, Row, Col, Badge, Button } from 'antd';
+import { Card, Row, Col, Badge, Button, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { PlanContext } from './PlanContext';
 import FIImpactView from './FIImpactView';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
 import dynamic from 'next/dynamic';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import './SummaryView.less';
 import ItemDisplay from '../calc/ItemDisplay';
@@ -24,16 +25,17 @@ const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), {
 });
 
 export default function SummaryView({ goal }: SummaryViewProps) {
-	const { removeGoal, editGoal, allCFs }: any = useContext(PlanContext);
+	const { removeGoal, editGoal, allCFs, ffYear }: any = useContext(PlanContext);
 	const bgColor = goal.imp === LMH.H ? COLORS.BLUE : goal.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
 	const nowYear = new Date().getFullYear();
 	const goalTypes: any = getGoalTypes();
 	const impLevels: any = getImpLevels();
 	const currency = goal.ccy as string;
-	const ffImpactYears = allCFs[goal.id as string].ffImpactYears;
+	const [ impactYears, setImpactYears ] = useState<number | null>(allCFs[goal.id as string].ffImpactYears);
 	const cfs = allCFs[goal.id as string].cfs;
 	const [ chartData, setChartData ] = useState<Array<any>>([]);
 	const { Meta } = Card;
+	const { confirm } = Modal;
 
 	useEffect(
 		() => {
@@ -47,6 +49,10 @@ export default function SummaryView({ goal }: SummaryViewProps) {
 		},
 		[ cfs ]
 	);
+
+	useEffect(() => {
+		setImpactYears(allCFs[goal.id as string].ffImpactYears);
+	}, [ffYear]);
 
 	return (
 		<Card
@@ -63,7 +69,20 @@ export default function SummaryView({ goal }: SummaryViewProps) {
 						</Col>
 						<Col>
 							<Button type="link" icon={<EditOutlined />} onClick={() => editGoal(goal.id)} />&nbsp;
-							<Button type="link" icon={<DeleteOutlined />} danger onClick={() => removeGoal(goal.id)} />
+							<Button
+								type="link"
+								icon={<DeleteOutlined />}
+								danger
+								onClick={() => {
+									confirm({
+										icon: <ExclamationCircleOutlined />,
+										content: 'Are You Sure about Deleting this Goal?',
+										onOk() {
+											removeGoal(goal.id);
+										}
+									});
+								}}
+							/>
 						</Col>
 					</Row>
 					<Row justify="center">
@@ -82,7 +101,7 @@ export default function SummaryView({ goal }: SummaryViewProps) {
 						</Col>
 						{(goal.sy as number) > nowYear && (
 							<Col>
-								<FIImpactView impactYears={ffImpactYears} />
+								<FIImpactView impactYears={impactYears} />
 							</Col>
 						)}
 					</Row>

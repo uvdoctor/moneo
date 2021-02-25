@@ -23,7 +23,7 @@ interface GoalContextProviderProps {
 }
 
 function GoalContextProvider({ children }: GoalContextProviderProps) {
-  const { rr, dr, calculateFFImpactYear, isPublicCalc }: any = useContext(PlanContext);
+  const { rr, dr, calculateFFImpactYear, isPublicCalc, setWipGoal }: any = useContext(PlanContext);
   const {
     goal,
     currency,
@@ -181,7 +181,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     }
   };
 
-  const getLatestGoalState = () => {
+  let getLatestState = () => {
     let g: any = updateBaseGoal();
     if (goal.id) g.id = goal.id;
     if (isLoanEligible(goalType)) {
@@ -420,7 +420,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       return [];
     }
     let cfs: Array<number> = [];
-    let g: CreateGoalInput = getLatestGoalState();
+    let g: CreateGoalInput = getLatestState();
     let result: any = {};
     if (manualMode < 1 && loanPer) {
       if (!iSchedule || !iSchedule.length) {
@@ -443,6 +443,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     }
     cfs = result.cfs;
     if (changeState) {
+      setWipGoal(g);
       console.log("New cf result: ", result);
       if ((loanPer as number) && manualMode < 1 && goalType === GoalType.B)
         setEndYear(startYear + cfs.length - 1);
@@ -742,7 +743,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
           loanPMIEndPer,
           setLoanPMIEndPer,
         }}>
-        {children ? children : <CalcTemplate latestState={isPublicCalc ? null : getLatestGoalState} />}
+        {children ? children : <CalcTemplate />}
       </GoalContext.Provider>
     );
 }

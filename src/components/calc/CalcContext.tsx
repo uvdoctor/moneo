@@ -53,10 +53,10 @@ function CalcContextProvider({
   children,
 	tabOptions,
   resultTabOptions,
-  calculateFor
+  calculateFor,
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { addGoal, updateGoal, isPublicCalc }: any = useContext(PlanContext);
+  const { addGoal, updateGoal, cancelGoal, isPublicCalc, wipGoal, allCFs }: any = useContext(PlanContext);
   let { goal }: any = useContext(PlanContext);
   if (calculateFor && !goal) goal = calculateFor;
   const { feedbackId }: any = useContext(FeedbackContext);
@@ -193,12 +193,24 @@ function CalcContextProvider({
 
   const changeEndYear = (str: string) => setEndYear(parseInt(str));
 
-  const handleSubmit = async (g: CreateGoalInput) => {
-    if (isPublicCalc) return;
+  const haveCFsChanged = () => {
+    if (!wipGoal.id) return false;
+    if (wipGoal.type === GoalType.FF) return wipGoal !== goal;
+    let existingCFs: Array<number> = allCFs[wipGoal.id].cfs;
+    if (cfs.length !== existingCFs.length) return true;
+    existingCFs.forEach((cf, i) => {
+      if (cf !== cfs[i]) return true;
+    })
+    return false;
+  };
+
+  const handleSubmit = async (cancelAction: boolean = false) => {
+    if (isPublicCalc || !wipGoal) return;
     setBtnClicked(true);
-    if (goal?.id) {
-      await updateGoal(g as UpdateGoalInput, cfs, ffImpactYears);
-    } else await addGoal(g, cfs, ffImpactYears);
+    if (cancelAction) await cancelGoal(wipGoal, cfs, ffImpactYears, haveCFsChanged());
+    else if (goal?.id) {
+      await updateGoal(wipGoal as UpdateGoalInput, cfs, ffImpactYears);
+    } else await addGoal(wipGoal, cfs, ffImpactYears);
     setBtnClicked(false);
   };
 
@@ -323,7 +335,7 @@ function CalcContextProvider({
         setFFImpactYears,
         oppCost,
         setOppCost,
-        goal
+        goal,
 			}}
     >
       {children}

@@ -12,7 +12,6 @@ import {
 import { CalcContext } from '../calc/CalcContext';
 import DataSwitcher from '../DataSwitcher';
 import { ASSET_CATEGORIES, COLORS } from '../../CONSTANTS';
-import { PlanContext } from './PlanContext';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import SelectInput from '../form/selectinput';
 import { FIGoalContext } from './FIGoalContext';
@@ -48,9 +47,8 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 	};
 	const nowYear = new Date().getFullYear();
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
-	const { ffResult, rr }: any = useContext(PlanContext);
 	const { cfs, currency, startYear }: any = useContext(CalcContext);
-	const { planDuration }: any = useContext(FIGoalContext);
+	const { planDuration, wipResult }: any = useContext(FIGoalContext);
 	const [ index, setIndex ] = useState<number>(yearChangeable ? 1 : 0);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [ cashData, setCashData ] = useState<CashData>(cashDataDefault);
@@ -69,7 +67,7 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 
 	const initChartData = () => {
 		let data: Array<any> = [];
-		const aa = ffResult.aa;
+		const aa = wipResult.aa;
 		const cash: CashData = cashDataDefault;
 
 		getAllAssetCategories().forEach((cat) => {
@@ -111,9 +109,9 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 
 	useEffect(
 		() => {
-			if (rr.length) initChartData();
+			if (cfs.length) initChartData();
 		},
-		[ rr, index ]
+		[ cfs, index ]
 	);
 
 	return (
@@ -200,8 +198,8 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 							label={{
 								visible: true,
 								formatter: (v: any) =>
-									ffResult.aa.hasOwnProperty(v.name)
-										? `${getFormattedAssetName(v.name)}${ffResult.aa[v.name][index]}%`
+									wipResult.aa.hasOwnProperty(v.name)
+										? `${getFormattedAssetName(v.name)}${wipResult.aa[v.name][index]}%`
 										: v.name,
 								style: {
 									fontFamily: "'Jost', sans-serif",
