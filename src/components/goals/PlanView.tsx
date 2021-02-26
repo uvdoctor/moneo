@@ -98,7 +98,7 @@ export default function PlanView({activeTab, setActiveTab}: PlanViewProps) {
 						<Tabs type="card" defaultActiveKey={activeTab} onTabClick={(key: string) => setActiveTab(key)}>
 							{tabOptions.map((t: any) => (
 								<TabPane key={t.label} tab={t.label}>
-									{t.label === goalsLabel && (
+									{t.label === goalsLabel && allGoals.length > 2 && (
 										<Row justify='center' style={{marginBottom: '10px'}}>
 												<Col className="text-right">
 													<SelectInput

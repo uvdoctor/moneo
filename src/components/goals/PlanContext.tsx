@@ -123,6 +123,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     );
     console.log("FF result: ", result);
     setFFResult(result);
+    setOppCostCache({});
     setRR([...result.rr]);
     setFFYear(isFFPossible(result, ffGoal.sa as number) ? result.ffYear : null);
   };
