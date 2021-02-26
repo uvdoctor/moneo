@@ -11,9 +11,8 @@ import TextInput from '../form/textinput';
 import { GoalContext } from '../goals/GoalContext';
 import { GoalType } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
-import { CalcTemplateProps } from './CalcTemplate';
 
-export default function CalcHeader({ latestState }: CalcTemplateProps) {
+export default function CalcHeader() {
 	const { isPublicCalc }: any = useContext(PlanContext);
 	const {
 		goal,
@@ -34,46 +33,55 @@ export default function CalcHeader({ latestState }: CalcTemplateProps) {
 
 	const closeModal = () => setShowFeedbackModal(false);
 
-	const goalTitle = () => (
-		<TextInput
-			name="name"
-			pre={(getGoalTypes() as any)[goal.type]}
-			post={<SelectInput pre="" value={impLevel} changeHandler={setImpLevel} options={getImpLevels()} />}
-			placeholder="Goal Name"
-			value={name}
-			changeHandler={setName}
-			fieldName="Goal Name"
-			minLength={3}
-			setError={setError}
-		/>
-	);
-
 	return (
 		<Fragment>
 			<div className="primary-header">
 				<Row>
 					<Col span={24}>
 						<PageHeader
-							title={isPublicCalc ? goal.name : goal.type === GoalType.FF ? goal.name : goalTitle()}
+							title={
+								isPublicCalc ? (
+									goal.name
+								) : goal.type === GoalType.FF ? (
+									goal.name
+								) : (
+									<TextInput
+										name="name"
+										pre={(getGoalTypes() as any)[goal.type]}
+										post={
+											<SelectInput
+												pre=""
+												value={impLevel}
+												changeHandler={setImpLevel}
+												options={getImpLevels()}
+											/>
+										}
+										placeholder="Goal Name"
+										value={name}
+										changeHandler={setName}
+										fieldName="Goal Name"
+										minLength={3}
+										setError={setError}
+									/>
+								)
+							}
 							extra={[
 								<Fragment key="rating">
-									<Row justify="center" style={{ color: COLORS.WHITE }}>
+									<Row style={{ color: COLORS.WHITE }}>
 										{ratingLabel ? ratingLabel : ratingLabels[rating]}
 									</Row>
-									<Row justify="center">
-										<Rate
-											allowClear
-											value={rating}
-											onChange={(rating: number) => setRating(rating)}
-											onHoverChange={(rating: number) => setRatingLabel(ratingLabels[rating])}
-										/>
-									</Row>
+									<Rate
+										allowClear
+										value={rating}
+										onChange={(rating: number) => setRating(rating)}
+										onHoverChange={(rating: number) => setRatingLabel(ratingLabels[rating])}
+									/>
 								</Fragment>
 							]}
 						/>
 					</Col>
 					<Col span={24} className="secondary-header">
-						<Row justify="start" align="middle">
+						<Row justify="space-between" align="middle">
 							<Col flex="auto">
 								<SelectInput
 									key="currselect"
@@ -83,30 +91,32 @@ export default function CalcHeader({ latestState }: CalcTemplateProps) {
 									currency
 								/>
 							</Col>
-							{latestState && (
-								<Col flex="auto">
-									<Button
-										type="primary"
-										icon={<SaveOutlined />}
-										loading={btnClicked}
-										disabled={disableSubmit}
-										onClick={() => handleSubmit(latestState())}
+							<Row align="middle">
+								<Col flex="20px">
+									<Tooltip
+										title={
+											<div className="tooltip-share">
+												<SocialShare />
+											</div>
+										}
 									>
-										Save
-									</Button>
+										<ShareAltOutlined />
+									</Tooltip>
 								</Col>
-							)}
-							<Col flex="20px">
-								<Tooltip
-									title={
-										<div className="tooltip-share">
-											<SocialShare />
-										</div>
-									}
-								>
-									<ShareAltOutlined />
-								</Tooltip>
-							</Col>
+								{!isPublicCalc && (
+									<Col>
+										&nbsp;&nbsp;
+										<Tooltip title="Save">
+											<Button
+												icon={<SaveOutlined />}
+												loading={btnClicked}
+												disabled={disableSubmit}
+												onClick={() => handleSubmit()}
+											/>
+										</Tooltip>
+									</Col>
+								)}
+							</Row>
 						</Row>
 					</Col>
 				</Row>

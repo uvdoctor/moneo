@@ -6,9 +6,8 @@ import CalcHeader from '../calc/CalcHeader';
 import { CalcContext } from '../calc/CalcContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ResultCarousel from '../ResultCarousel';
-import { CalcTemplateProps } from '../calc/CalcTemplate';
 
-export default function Result({ latestState }: CalcTemplateProps) {
+export default function Result() {
 	const { resultTabs, resultTabIndex, setResultTabIndex, error }: any = useContext(CalcContext);
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
@@ -16,7 +15,7 @@ export default function Result({ latestState }: CalcTemplateProps) {
 
 	return (
 		<div className="calculator-content">
-			<CalcHeader latestState={latestState} />
+			<CalcHeader />
 			{!error && (
 				<div className={`results-content ${fullScreen ? 'fullScreen-mode-enabled' : ''}`} ref={chartDiv}>
 					<ResultCarousel />

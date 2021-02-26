@@ -47,18 +47,20 @@ interface CalcContextProviderProps {
 	tabOptions?: any;
   resultTabOptions?: any;
   calculateFor?: CreateGoalInput;
+  summary?: boolean;
 }
 
 function CalcContextProvider({
   children,
 	tabOptions,
   resultTabOptions,
-  calculateFor
+  calculateFor,
+  summary
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { addGoal, updateGoal, isPublicCalc }: any = useContext(PlanContext);
+  const { addGoal, updateGoal, cancelGoal, isPublicCalc, allCFs, ffResult, oppCostCache, setOppCostCache }: any = useContext(PlanContext);
   let { goal }: any = useContext(PlanContext);
-  if (calculateFor && !goal) goal = calculateFor;
+  if (calculateFor) goal = calculateFor;
   const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
@@ -68,7 +70,6 @@ function CalcContextProvider({
   const [ currency, setCurrency ] = useState<string>(goal.ccy ? goal.ccy : defaultCurrency);
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(goal?.id ? true : false);
   const [cfs, setCFs] = useState<Array<number>>([]);
-  const [ cfsWithoutSM, setCFsWithoutSM ] = useState<Array<number>>([]);
   const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
 	const [ resultTabIndex, setResultTabIndex ] = useState<number>(0);
 	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(false);
@@ -87,6 +88,7 @@ function CalcContextProvider({
   const [ratingId, setRatingId] = useState<String | undefined>('');
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
   const [oppCost, setOppCost] = useState<number>(0);
+  const [ wipGoal, setWipGoal ] = useState<CreateGoalInput | null>(goal);
 
  const getCalcType = () => {
   switch(goal.name) {
@@ -186,6 +188,7 @@ function CalcContextProvider({
   }
 	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions ? tabOptions : goal ? getGoalTabOptions(goal.type) : []);
 	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions ? resultTabOptions : goal ? getGoalResultTabOptions() : []);
+  const [discountRates, setDiscountRates] = useState<Array<number>>([]);
 
   const changeStartYear = (str: string) => setStartYear(parseInt(str));
 
@@ -193,13 +196,31 @@ function CalcContextProvider({
 
   const changeEndYear = (str: string) => setEndYear(parseInt(str));
 
-  const handleSubmit = async (g: CreateGoalInput) => {
-    if (isPublicCalc) return;
+  const hasGoalChanged = () => {
+    if (!wipGoal || !wipGoal.id) return false;
+    let existingCFs: Array<number> = [];
+    if (wipGoal.type === GoalType.FF) existingCFs = ffResult.ffCfs;
+    else existingCFs = allCFs[wipGoal.id];
+    if (cfs.length !== existingCFs.length) return true;
+    existingCFs.forEach((cf, i) => {
+      if (cf !== cfs[i]) return true;
+    })
+    return false;
+  };
+
+  const handleSubmit = async (cancelAction: boolean = false) => {
+    if (isPublicCalc || !wipGoal) return;
     setBtnClicked(true);
-    if (goal?.id) {
-      await updateGoal(g as UpdateGoalInput, cfs, ffImpactYears);
-    } else await addGoal(g, cfs, ffImpactYears);
+    if (cancelAction) await cancelGoal(wipGoal, cfs, hasGoalChanged());
+    else if (goal?.id) {
+      await updateGoal(wipGoal as UpdateGoalInput, cfs);
+      if (goal.type !== GoalType.FF) {
+        oppCostCache[goal.id] = oppCost;
+        setOppCostCache(oppCostCache);
+      }
+    } else await addGoal(wipGoal, cfs);
     setBtnClicked(false);
+    setWipGoal(null);
   };
 
   const handleStepChange = (count: number = 1) => {
@@ -278,8 +299,6 @@ function CalcContextProvider({
 				setResultTabs,
         cfs,
         setCFs,
-        cfsWithoutSM,
-        setCFsWithoutSM,
 				resultTabIndex,
 				setResultTabIndex,
 				fsb,
@@ -323,7 +342,12 @@ function CalcContextProvider({
         setFFImpactYears,
         oppCost,
         setOppCost,
-        goal
+        goal,
+        wipGoal,
+        setWipGoal,
+        summary,
+        discountRates,
+        setDiscountRates
 			}}
     >
       {children}

@@ -1,4 +1,4 @@
-import { notification } from "antd";
+import { Modal, notification } from "antd";
 import React, { createContext, useEffect, useState, ReactNode } from "react";
 import { CreateGoalInput, GoalType, LMH, UpdateGoalInput } from "../../api/goals";
 import { ASSET_TYPES, ROUTES } from "../../CONSTANTS";
@@ -6,6 +6,7 @@ import { appendValue, removeFromArray } from "../utils";
 import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import { changeGoal, createNewGoal, deleteGoal, getDuration, getGoalsList } from "./goalutils";
 import { useRouter } from 'next/router';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 const PlanContext = createContext({});
 
@@ -22,17 +23,20 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
   const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(isPublicCalc && goal && goal.type === GoalType.FF ? goal : null);
   const [allCFs, setAllCFs] = useState<any>({});
+  const [oppCostCache, setOppCostCache] = useState<any>({});
   const [mustCFs, setMustCFs] = useState<Array<number>>([]);
   const [tryCFs, setTryCFs] = useState<Array<number>>([]);
   const [optCFs, setOptCFs] = useState<Array<number>>([]);
   const [mergedCFs, setMergedCFs] = useState<any>({});
   const [ffResult, setFFResult] = useState<any>({});
+  const [ffYear, setFFYear] = useState<number | null>(null);
   const [rr, setRR] = useState<Array<number>>([]);
   const [dr, setDR] = useState<number | null>(!isPublicCalc ? null : 5);
   const [planError, setPlanError] = useState<string>('');
 
   const nowYear = new Date().getFullYear();
-
+  const { confirm } = Modal;
+  
   const loadAllGoals = async () => {
     let goals: Array<CreateGoalInput> | null = await getGoalsList();
     if (!goals || goals.length === 0) {
@@ -61,10 +65,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
             (g.type === GoalType.E && (g?.loan?.per as number > 0))
           )
         );
-        allCFs[g.id as string] = {
-          cfs: result.cfs,
-          ffImpactYears: null
-        }
+        allCFs[g.id as string] = result.cfs;
       }
     });
     removeFromArray(goals, "id", ffGoalId);
@@ -115,22 +116,16 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     let result = findEarliestFFYear(
       ffGoal,
       mergedCFs,
-      ffResult.ffYear ? ffResult.ffYear : null,
+      ffYear,
       mustCFs,
       tryCFs,
       pp()
     );
-    if (!isFFPossible(result, ffGoal.sa as number)) {
-      result.ffYear = 0;
-    }
     console.log("FF result: ", result);
-    allGoals?.forEach((g) => {
-      let goalMetrics: any = allCFs[g.id as string];
-      goalMetrics.ffImpactYears = calculateFFImpactYear(g.sy, goalMetrics.cfs, g.id as string, g.imp,
-        result, mergedCFs, mustCFs, tryCFs);
-    });
     setFFResult(result);
+    setOppCostCache({});
     setRR([...result.rr]);
+    setFFYear(isFFPossible(result, ffGoal.sa as number) ? result.ffYear : null);
   };
 
   useEffect(() => {
@@ -154,7 +149,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       return;
     }
     allGoals?.forEach((g) => {
-      let cfs: Array<number> = allCFs[g.id as string].cfs;
+      let cfs: Array<number> = allCFs[g.id as string];
       if (!cfs) return;
       if (g.imp === LMH.H)
         populateData(mustCFs, cfs, g.sy, yearRange.from);
@@ -172,8 +167,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   }, [allGoals]);
 
   const addGoal = async (
-    newGoal: CreateGoalInput, cfs: Array<number> = [],
-    ffImpactYears: number | null
+    newGoal: CreateGoalInput, cfs: Array<number> = []
   ) => {
     let g = null;
     try {
@@ -190,17 +184,13 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     }
     notification.success({message: 'New Goal Created', description: `Success! New Goal ${g.name} has been Created.`});
     allGoals?.push(g as CreateGoalInput);
-    allCFs[g.id as string] = {
-      cfs: cfs,
-      ffImpactYears: ffImpactYears
-    };
+    allCFs[g.id as string] = cfs;
     setAllCFs(allCFs);
     setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
   };
 
   const updateGoal = async (
-    g: UpdateGoalInput, cfs: Array<number> = [],
-    ffImpactYears: number | null
+    g: UpdateGoalInput, cfs: Array<number> = []
   ) => {
     let savedGoal: UpdateGoalInput | null = null;
     try {
@@ -214,15 +204,13 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     if (savedGoal.type === GoalType.FF) {
       notification.success({ message: "Target Updated", description: "Success! Your Financial Independence Target has been Updated." });
       setFFGoal(savedGoal as CreateGoalInput);
+      setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
       return true;
     } 
     notification.success({ message: "Goal Updated", description: `Success! Goal ${savedGoal.name} has been Updated.` });
     removeFromArray(allGoals as Array<CreateGoalInput>, "id", g.id);
     allGoals?.unshift(savedGoal as CreateGoalInput);
-    allCFs[savedGoal.id] = {
-      cfs: cfs,
-      ffImpactYears: ffImpactYears
-    };
+    allCFs[savedGoal.id] = cfs;
     setAllCFs(allCFs);
     setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
     return true;
@@ -237,7 +225,6 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     }
     notification.success({ message: "Goal Deleted", description: `Success! Goal has been Deleted.`});
     removeFromArray(allGoals as Array<CreateGoalInput>, "id", id);
-    //@ts-ignore
     delete allCFs[id];
     setAllCFs(allCFs);
     setGoal(null);
@@ -245,12 +232,35 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   };
 
   const editGoal = (id: string) => {
-    if (!allGoals) return;
-    let g: CreateGoalInput = (allGoals.filter((g) => g.id === id))[0];
-    setGoal(g);
+    if (id === ffGoal?.id) {
+      setGoal(ffGoal);
+      return;
+    }
+    if (!allGoals || !allGoals.length) return;
+    setGoal((allGoals.filter((g) => g.id === id))[0]);
   };
 
-  const cancelGoal = () => setGoal(null);
+  const cancelGoal = async (
+    g: CreateGoalInput, cfs: Array<number> = [],
+    haveCFsChanged?: boolean
+  ) => {
+    if (haveCFsChanged) confirm({
+      icon: <ExclamationCircleOutlined />,
+      content: 'Do You want to Save this Goal?',
+      onOk() {
+        if (g.id) updateGoal(g as UpdateGoalInput, cfs);
+        else addGoal(g, cfs);
+      },
+      onCancel() {
+        setGoal(null);
+      },
+      okText: 'Save & Go Back',
+      cancelText: 'Go Back without Saving'
+    });
+    else {
+      setGoal(null);
+    }
+  };
 
   const getYearRange = () => {
     let fromYear = nowYear + 1;
@@ -258,7 +268,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       return { from: fromYear, to: fromYear };
     let toYear = nowYear + 1;
     allGoals.forEach((g) => {
-      let endYear = g.sy + allCFs[g.id as string].cfs.length;
+      let endYear = g.sy + allCFs[g.id as string].length;
       if (endYear > toYear) toYear = endYear;
     });
     let ffGoalEndYear = ffGoal.sy + (ffGoal.loan?.dur as number);
@@ -303,12 +313,10 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     mustCashflows?: any,
     tryCashflows?: any
   ) => {
-    if (!ffGoal || (result && !result.ffYear) || (!result && !ffResult.ffYear))
-      return null;
+    if (!ffGoal) return null;
     let mCFs: any = Object.assign({}, mergedCashflows ? mergedCashflows : mergedCFs);
     let highImpCFs: any = Object.assign([], mustCashflows ? mustCashflows : mustCFs);
     let medImpCFs: any = Object.assign([], tryCashflows ? tryCashflows : tryCFs);
-    if (goalImp === LMH.M) console.log("Input mCFs: ", mCFs);
     let nowYear = new Date().getFullYear();
     if (goalId) {
       let existingGoal = (allGoals?.filter((g) => g.id === goalId) as Array<
@@ -316,8 +324,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       >)[0];
       let existingSY = existingGoal.sy;
       let existingImp = existingGoal.imp;
-      let existingCFs = allCFs[goalId].cfs;
-      if (goalImp === LMH.M) console.log("Existing CFs: ", existingCFs);
+      let existingCFs = allCFs[goalId];
       existingCFs.forEach((cf: number, i: number) => {
         appendValue(mCFs, existingSY + i, -cf);
         let index = existingSY + i - (nowYear + 1);
@@ -327,21 +334,20 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
           appendValue(medImpCFs, index, -cf);
         }
       });
-      if (goalImp === LMH.M) console.log("After cf deduction: ", mCFs);
     }
     let nomineeAmt = ffGoal?.sa as number;
     let resultWithoutGoal = findEarliestFFYear(
       ffGoal,
       mCFs,
-      result ? result.ffYear : ffResult ? ffResult.ffYear : null,
+      result ? result.ffYear : ffYear,
       highImpCFs,
       medImpCFs,
       pp()
     );
-    if(goalImp === LMH.M) console.log("Result without goal: ", resultWithoutGoal);
-    if (!isFFPossible(resultWithoutGoal, nomineeAmt))
-      return null;
-      if (goalImp === LMH.M) console.log("CFs calculated: ", cfs);
+    if (!isFFPossible(resultWithoutGoal, nomineeAmt)) return {
+      impactYears: null,
+      rr: resultWithoutGoal.rr
+    };
     cfs.forEach((cf, i) => {
       appendValue(mCFs, startYear + i, cf);
       let index = startYear + i - (nowYear + 1);
@@ -351,19 +357,23 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         appendValue(medImpCFs, index, cf);
       }
     });
-    if (goalImp === LMH.M) console.log("After cf addition: ", mCFs);
     let resultWithGoal = result ? result : findEarliestFFYear(
       ffGoal,
       mCFs,
-      resultWithoutGoal.ffYear,
+      result ? result.ffYear : ffYear,
       highImpCFs,
       medImpCFs,
       pp()
     );
-    if(goalImp === LMH.M) console.log("Result with goal: ", resultWithGoal);
     if (!isFFPossible(resultWithGoal, nomineeAmt))
-      return null;
-    return resultWithoutGoal.ffYear - resultWithGoal.ffYear;
+      return {
+        impactYears: null,
+        rr: resultWithoutGoal.rr
+      };
+    return {
+      impactYears: resultWithoutGoal.ffYear - resultWithGoal.ffYear,
+      rr: resultWithoutGoal.rr
+    }
   };
 
 
@@ -373,23 +383,14 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         allGoals,
         setAllGoals,
         allCFs,
-        setAllCFs,
         mustCFs,
-        setMustCFs,
         tryCFs,
-        setTryCFs,
         optCFs,
-        setOptCFs,
         mergedCFs,
-        setMergedCFs,
         goalsLoaded,
-        setGoalsLoaded,
         ffResult,
-        setFFResult,
         ffGoal,
-        setFFGoal,
         rr,
-        setRR,
         addGoal,
         updateGoal,
         editGoal,
@@ -403,7 +404,10 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         dr,
         setDR,
         planError,
-        setPlanError
+        setPlanError,
+        ffYear,
+        oppCostCache,
+        setOppCostCache
       }}
     >
       {children}

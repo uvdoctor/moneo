@@ -658,3 +658,23 @@ export const sendMail = async (to: String, from: String, template: String, templ
     return false;
   });
 }
+
+const dateToUTC = (date: string) => {
+  let constituents = date.split("/");
+  return Date.UTC(parseInt(constituents[2]), parseInt(constituents[0]), parseInt(constituents[1]));
+};
+
+export const getDaysDiff = (dateTime: string) => {
+  const dateFormat = Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York'
+  });
+  const formattedDate = dateFormat.format(new Date(dateTime));
+  const formattedNow = dateFormat.format(new Date());
+  const nowUTC = dateToUTC(formattedNow);
+  const dateUTC = dateToUTC(formattedDate);
+  const diff = nowUTC - dateUTC;
+  if (!diff) return 'Today';
+  const dayInMs = 24 * 3600000;
+  if (diff <= dayInMs) return 'Yesterday';
+  return Math.round(diff / dayInMs) + ' days ago';
+}

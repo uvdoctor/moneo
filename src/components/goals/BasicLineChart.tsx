@@ -9,7 +9,6 @@ import { COLORS } from '../../CONSTANTS';
 import { PlanContext } from './PlanContext';
 import { getGoalTypes } from './goalutils';
 import { appendValue, toHumanFriendlyCurrency } from '../utils';
-import { isFFPossible } from './cfutils';
 import { FIGoalContext } from './FIGoalContext';
 
 interface BasicLineChartProps {
@@ -18,6 +17,7 @@ interface BasicLineChartProps {
 	title?: string;
 	showRange?: boolean;
 	showAnnotation?: boolean;
+	summaryView?: boolean;
 }
 
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
@@ -30,11 +30,12 @@ export default function BasicLineChart({
 	chartTitle,
 	title,
 	showRange,
-	showAnnotation
+	showAnnotation,
+	summaryView
 }: BasicLineChartProps) {
-	const { allGoals, ffResult }: any = useContext(PlanContext);
+	const { allGoals }: any = useContext(PlanContext);
 	const { goal, startYear, currency, cfs, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
-	const { leaveBehind, planDuration }: any = useContext(FIGoalContext);
+	const { planDuration, wipResult }: any = useContext(FIGoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [ annotations, setAnnotations ] = useState<Array<string>>([]);
 	const [ startingGoalsContent, setStartingGoalsContent ] = useState<any>({});
@@ -71,7 +72,7 @@ export default function BasicLineChart({
 
 	useEffect(
 		() => {
-			if (!showAnnotation || !allGoals.length) {
+			if (!showAnnotation || !allGoals.length || !cfs.length) {
 				setStartingGoalsContent({});
 				setEndingGoalsContent({});
 				setRunningGoalsContent({});
@@ -100,7 +101,7 @@ export default function BasicLineChart({
 			setRunningGoalsContent(runningGoalsContent);
 			setAnnotations([ ...allAnnotations ]);
 		},
-		[ showAnnotation, allGoals ]
+		[ showAnnotation, allGoals, cfs ]
 	);
 
 	return (
@@ -127,7 +128,7 @@ export default function BasicLineChart({
 					</Col>
 				</Row>
 			)}
-			<Row style={{ minHeight: showAnnotation ? '500px' : '400px' }}>
+			<Row style={{ minHeight: summaryView ? '250px' : '400px' }}>
 				<Col span={24}>
 					<LineChart
 						data={data}
@@ -160,8 +161,8 @@ export default function BasicLineChart({
 							},
 							formatter: ({ value }: any) => {
 								return {
-									name: 'Value',
-									value: toHumanFriendlyCurrency(value, currency)
+									name: value < 0 ? 'Pay' : 'Receive',
+									value: toHumanFriendlyCurrency(Math.abs(value), currency)
 								};
 							},
 						}}
@@ -183,14 +184,14 @@ export default function BasicLineChart({
 									line={{ length: 0 }}
 								/>
 							))}
-						{showAnnotation && isFFPossible(ffResult, leaveBehind) &&
+						{showAnnotation && wipResult.ffYear &&
 							<Fragment>
 							<AnnotationLine
-								start={['' + ffResult.ffYear, 'min']}
-								end={['' + ffResult.ffYear, 'max']}
+								start={['' + wipResult.ffYear, 'min']}
+								end={['' + wipResult.ffYear, 'max']}
 								text={{
-									content: `Financial Independence at Age of ${ffResult.ffYear - startYear}`,
-									position: '5%',
+									content: `Financial Independence at Age of ${wipResult.ffYear - startYear}`,
+									position: '10%',
 									style: {
 										fontSize: 13,
 										fontFamily: "'Jost', sans-serif"

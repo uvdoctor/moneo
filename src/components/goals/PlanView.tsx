@@ -3,7 +3,7 @@ import { getImpOptions, getGoalTypes, createNewGoalInput } from './goalutils';
 import SelectInput from '../form/selectinput';
 import PlanStart from './PlanStart';
 import FISummaryHeader from './FISummaryHeader';
-import { Button, Col, Dropdown, Menu, Row, Tabs, Alert } from 'antd';
+import { Button, Col, Dropdown, Menu, Row, Tabs } from 'antd';
 import { faChartLine, faChartPie, faBullseye, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import GoalSummary from './GoalSummary';
 import { PlanContext } from './PlanContext';
@@ -16,7 +16,12 @@ import { FIGoalContextProvider } from './FIGoalContext';
 import DynamicAAChart from './DynamicAAChart';
 import BasicLineChart from './BasicLineChart';
 
-export default function PlanView() {
+interface PlanViewProps {
+	activeTab: string;
+	setActiveTab: Function;
+}
+
+export default function PlanView({activeTab, setActiveTab}: PlanViewProps) {
 	const { allGoals, ffGoal, goalsLoaded, setGoal }: any = useContext(PlanContext);
 	const { TabPane } = Tabs;
 	const portfolioLabel = 'Milestones';
@@ -90,18 +95,11 @@ export default function PlanView() {
 			{allGoals && allGoals.length ? (
 				<Row>
 					<Col span={24}>
-						<Tabs type="card">
+						<Tabs type="card" defaultActiveKey={activeTab} onTabClick={(key: string) => setActiveTab(key)}>
 							{tabOptions.map((t: any) => (
 								<TabPane key={t.label} tab={t.label}>
-									{(t.label === goalsLabel || t.label === cfLabel) && (
-										<Row justify={t.label === goalsLabel ? 'space-between' : 'center'} style={{marginBottom: '10px'}}>
-											<Col>
-												<Alert
-													message="Negative values imply You Pay, while Positive values imply You Receive"
-													type="info"
-												/>
-											</Col>
-											{t.label === goalsLabel && (
+									{t.label === goalsLabel && allGoals.length > 2 && (
+										<Row justify='center' style={{marginBottom: '10px'}}>
 												<Col className="text-right">
 													<SelectInput
 														pre=""
@@ -111,7 +109,6 @@ export default function PlanView() {
 														changeHandler={setImpFilter}
 													/>
 												</Col>
-											)}
 										</Row>
 									)}
 									<Row

@@ -1,114 +1,111 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { getGoalTypes, getImpLevels } from './goalutils';
-import { GoalType, LMH, UpdateGoalInput } from '../../api/goals';
+import { CreateGoalInput, GoalType, LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
-import { Card, Row, Col, Badge, Button } from 'antd';
+import { Card, Row, Col, Badge, Button, Modal, Tooltip } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { PlanContext } from './PlanContext';
-import FIImpactView from './FIImpactView';
-import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
-import dynamic from 'next/dynamic';
-
+import { ExclamationCircleOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import './SummaryView.less';
-import ItemDisplay from '../calc/ItemDisplay';
+import DefaultOppCostResult from '../calc/DefaultOppCostResult';
+import FIImpact from './FIImpact';
+import BasicLineChart from './BasicLineChart';
+import { CalcContext } from '../calc/CalcContext';
+import { GoalContext } from './GoalContext';
+import { getDaysDiff } from '../utils';
 
-interface SummaryViewProps {
-	goal: UpdateGoalInput;
-}
-
-const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), {
-	ssr: false
-});
-const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), {
-	ssr: false
-});
-
-export default function SummaryView({ goal }: SummaryViewProps) {
-	const { removeGoal, editGoal, allCFs }: any = useContext(PlanContext);
-	const bgColor = goal.imp === LMH.H ? COLORS.BLUE : goal.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
-	const nowYear = new Date().getFullYear();
+export default function SummaryView() {
+	const { removeGoal, editGoal, allGoals }: any = useContext(PlanContext);
+	const { goal, currency }: any = useContext(CalcContext);
+	const { impLevel, name }: any = useContext(GoalContext);
+	const [ goalImp, setGoalImp ] = useState<LMH>(impLevel);
+	const [ goalName, setGoalName ] = useState<string>(name);
+	const [ goalCurrency, setGoalCurrency ] = useState<string>(currency);
+	const getImpColor = (imp: LMH) => (imp === LMH.H ? COLORS.BLUE : imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN);
+	const [ impColor, setImpColor ] = useState<string>(getImpColor(impLevel as LMH));
 	const goalTypes: any = getGoalTypes();
 	const impLevels: any = getImpLevels();
-	const currency = goal.ccy as string;
-	const ffImpactYears = allCFs[goal.id as string].ffImpactYears;
-	const cfs = allCFs[goal.id as string].cfs;
-	const [ chartData, setChartData ] = useState<Array<any>>([]);
-	const { Meta } = Card;
+	const { confirm } = Modal;
+	const [ lastUpdated, setLastUpdated ] = useState<string>(getDaysDiff(goal.updatedAt));
 
 	useEffect(
 		() => {
-			let data: Array<any> = [];
-			for (let i = 0; i < cfs.length; i++)
-				data.push({
-					year: '' + ((goal.sy as number) + i),
-					value: cfs[i]
-				});
-			setChartData([ ...data ]);
+			let g: CreateGoalInput = allGoals.filter((g: CreateGoalInput) => g.id === goal.id)[0];
+			setGoalImp(g.imp);
+			setImpColor(getImpColor(g.imp as LMH));
+			setGoalName(g.name);
+			setGoalCurrency(g.ccy);
+			//@ts-ignore
+			setLastUpdated(getDaysDiff(g.updatedAt));
 		},
-		[ cfs ]
+		[ allGoals ]
 	);
 
 	return (
 		<Card
 			className="goals-card"
+			size="small"
 			title={
 				<Fragment>
 					<Row justify="space-between">
 						<Col>
 							<Badge
-								count={impLevels[goal.imp as LMH]}
-								style={{ backgroundColor: bgColor, color: COLORS.WHITE }}
+								count={impLevels[goalImp]}
+								style={{ backgroundColor: impColor, color: COLORS.WHITE }}
 							/>
-							<strong>&nbsp;{goalTypes[goal.type as GoalType]}</strong>
 						</Col>
 						<Col>
-							<Button type="link" icon={<EditOutlined />} onClick={() => editGoal(goal.id)} />&nbsp;
-							<Button type="link" icon={<DeleteOutlined />} danger onClick={() => removeGoal(goal.id)} />
+							<strong>{goalTypes[goal.type as GoalType]}</strong>
+						</Col>
+						<Col>
+							<Tooltip title={`You Updated this Goal ${lastUpdated}`}>
+								<FieldTimeOutlined />
+								{lastUpdated}
+							</Tooltip>
 						</Col>
 					</Row>
-					<Row justify="center">
+					<Row justify="space-between">
+						<Col>{goalCurrency}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Col>
 						<Col>
-							<strong>{goal.name}</strong>
+							<strong>{goalName}</strong>
+						</Col>
+						<Col>
+							<Tooltip title="Edit">
+								<Button type="link" icon={<EditOutlined />} onClick={() => editGoal(goal.id)} />
+							</Tooltip>
+							<Tooltip title="Delete">
+								<Button
+									type="link"
+									icon={<DeleteOutlined />}
+									danger
+									onClick={() => {
+										confirm({
+											icon: <ExclamationCircleOutlined />,
+											content: 'Are You Sure about Deleting this Goal?',
+											onOk() {
+												removeGoal(goal.id);
+											}
+										});
+									}}
+								/>
+							</Tooltip>
 						</Col>
 					</Row>
 				</Fragment>
 			}
-		>
-			<Meta
-				description={
-					<Row justify="space-around">
-						<Col>
-							<ItemDisplay label="Currency" result={goal.ccy as string} />
-						</Col>
-						{(goal.sy as number) > nowYear && (
-							<Col>
-								<FIImpactView impactYears={ffImpactYears} />
-							</Col>
-						)}
-					</Row>
-				}
-			/>
-			<Row justify="center" style={{ marginTop: '20px', marginBottom: '10px' }}>
-				<Col>
-					<strong>Yearly Cash Flows</strong>
-				</Col>
-			</Row>
-			<Row justify="center" style={{ minHeight: '300px' }}>
-				<Col span={24}>
-					<LineChart
-						data={chartData}
-						xField="year"
-						yField="value"
-						yAxis={getCommonYAxis()}
-						xAxis={getCommonXAxis('Year')}
-						meta={getCommonMeta(currency)}
-						point={true}
-						autoFit
-					>
-						<Slider {...getDefaultSliderProps()} />
-					</LineChart>
-				</Col>
-			</Row>
-		</Card>
+			cover={
+				<div style={{ cursor: 'pointer' }} onClick={() => editGoal(goal.id)}>
+					<BasicLineChart summaryView />
+				</div>
+			}
+			actions={[
+				<div key="fii" onClick={() => editGoal(goal.id)}>
+					<FIImpact />
+				</div>,
+				<div key="oppcost" onClick={() => editGoal(goal.id)}>
+					<DefaultOppCostResult />
+				</div>
+			]}
+		/>
 	);
 }

@@ -7,8 +7,8 @@ import { GoalContext } from '../goals/GoalContext';
 import { PlanContext } from '../goals/PlanContext';
 
 export default function DefaultOppCostResult() {
-	const { rr, dr, isPublicCalc }: any = useContext(PlanContext);
-	const { cfs, startYear, startMonth, oppCost, setOppCost }: any = useContext(CalcContext);
+	const { dr, isPublicCalc, oppCostCache }: any = useContext(PlanContext);
+	const { goal, cfs, startYear, startMonth, oppCost, setOppCost, discountRates, summary }: any = useContext(CalcContext);
 	const { sellAfter, sellPrice }: any = useContext(GoalContext);
 	const [ numOfYears, setNumOfYears ] = useState<number>(cfs.length);
 	const [ numOfYearsOptions, setNumOfYearsOptions ] = useState<any>(initOptions(cfs.length, 20));
@@ -16,6 +16,10 @@ export default function DefaultOppCostResult() {
 	const calculateOppCost = (yearsNum: number) => {
 		if (!cfs || !cfs.length) {
 			setOppCost(0);
+			return;
+		}
+		if (summary && oppCostCache[goal.id]) {
+			setOppCost(oppCostCache[goal.id]);
 			return;
 		}
 		let yearsForCalculation = sellAfter ? sellAfter : yearsNum < cfs.length ? cfs.length : yearsNum;
@@ -33,7 +37,7 @@ export default function DefaultOppCostResult() {
 				let yearlyFactor = 1;
 				if (index === 0 && startMonth > 1) yearlyFactor = (12 - (startMonth - 1)) / 12;
 				if (index === cfs.length - 1 && startMonth > 1) yearlyFactor = (startMonth - 1) / 12;
-				oppCost *= 1 + (isPublicCalc ? dr : rr[startIndex + index]) * yearlyFactor / 100;
+				oppCost *= 1 + (isPublicCalc ? dr : discountRates[startIndex + index]) * yearlyFactor / 100;
 			}
 			if (sellAfter && index === (startMonth > 1 ? sellAfter : sellAfter - 1)) oppCost += sellPrice;
 		});
@@ -42,10 +46,10 @@ export default function DefaultOppCostResult() {
 				let year = (startYear as number) + cfs.length;
 				for (
 					let i = startIndex + cfs.length;
-					i < rr.length - (yearsForCalculation + 1);
+					i < discountRates.length - (yearsForCalculation + 1);
 					i++, year++
 				)
-					if (oppCost < 0) oppCost *= 1 + rr[i] / 100;
+					if (oppCost < 0) oppCost *= 1 + discountRates[i] / 100;
 			} else if (cfs.length < yearsForCalculation && oppCost < 0)
 				oppCost = getCompoundedIncome(dr, oppCost, yearsForCalculation - cfs.length);
 		}
@@ -55,12 +59,12 @@ export default function DefaultOppCostResult() {
 	useEffect(
 		() => {
 			calculateOppCost(numOfYears);
-			setNumOfYearsOptions(initOptions(cfs.length, 20));
+			if(isPublicCalc) setNumOfYearsOptions(initOptions(cfs.length, 20));
 		},
 		[ cfs ]
 	);
 
-	useEffect(() => calculateOppCost(numOfYears), [ dr, rr ]);
+	useEffect(() => calculateOppCost(numOfYears), [ dr, discountRates ]);
 
 	return (
 		<OppCostResult

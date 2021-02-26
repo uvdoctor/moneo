@@ -4,7 +4,6 @@ import { getCommonXAxis, getDefaultSliderProps } from '../chartutils';
 import { getAssetColour } from '../utils';
 import { CalcContext } from '../calc/CalcContext';
 import { FIGoalContext } from './FIGoalContext';
-import { PlanContext } from './PlanContext';
 import { Row, Col } from 'antd';
 
 const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
@@ -13,9 +12,8 @@ const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), {
 });
 
 export default function AAPlanChart() {
-	const { rr, ffResult }: any = useContext(PlanContext);
-	const { startYear }: any = useContext(CalcContext);
-	const { planDuration }: any = useContext(FIGoalContext);
+	const { startYear, cfs }: any = useContext(CalcContext);
+	const { planDuration, wipResult }: any = useContext(FIGoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	const hasAllZeros = (arr: Array<number>) => {
@@ -27,7 +25,7 @@ export default function AAPlanChart() {
 
 	const filterAA = () => {
 		let result: any = {};
-		let aa = ffResult.aa;
+		let aa = wipResult.aa;
 		for (let key in aa) {
 			if (!hasAllZeros(aa[key])) {
 				result[key] = aa[key].slice(1);
@@ -38,7 +36,7 @@ export default function AAPlanChart() {
 
 	useEffect(
 		() => {
-			if (!rr.length) return;
+			if (!cfs.length) return;
 			let filteredAA = filterAA();
 			let arr: Array<any> = [];
 			const sy = new Date().getFullYear() + 1;
@@ -56,7 +54,7 @@ export default function AAPlanChart() {
 			}
 			setData([ ...arr ]);
 		},
-		[ rr, startYear, planDuration ]
+		[ cfs, startYear, planDuration ]
 	);
 
 	return (
