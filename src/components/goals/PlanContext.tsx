@@ -23,6 +23,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   const [goalsLoaded, setGoalsLoaded] = useState<boolean>(false);
   const [ffGoal, setFFGoal] = useState<CreateGoalInput | null>(isPublicCalc && goal && goal.type === GoalType.FF ? goal : null);
   const [allCFs, setAllCFs] = useState<any>({});
+  const [oppCostCache, setOppCostCache] = useState<any>({});
   const [mustCFs, setMustCFs] = useState<Array<number>>([]);
   const [tryCFs, setTryCFs] = useState<Array<number>>([]);
   const [optCFs, setOptCFs] = useState<Array<number>>([]);
@@ -342,7 +343,10 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       medImpCFs,
       pp()
     );
-    if (!isFFPossible(resultWithoutGoal, nomineeAmt)) return null;
+    if (!isFFPossible(resultWithoutGoal, nomineeAmt)) return {
+      impactYears: null,
+      rr: resultWithoutGoal.rr
+    };
     cfs.forEach((cf, i) => {
       appendValue(mCFs, startYear + i, cf);
       let index = startYear + i - (nowYear + 1);
@@ -361,8 +365,14 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       pp()
     );
     if (!isFFPossible(resultWithGoal, nomineeAmt))
-      return null;
-    return resultWithoutGoal.ffYear - resultWithGoal.ffYear;
+      return {
+        impactYears: null,
+        rr: resultWithoutGoal.rr
+      };
+    return {
+      impactYears: resultWithoutGoal.ffYear - resultWithGoal.ffYear,
+      rr: resultWithoutGoal.rr
+    }
   };
 
 
@@ -395,6 +405,8 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         planError,
         setPlanError,
         ffYear,
+        oppCostCache,
+        setOppCostCache
       }}
     >
       {children}

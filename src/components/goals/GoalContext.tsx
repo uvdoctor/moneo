@@ -58,7 +58,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     setFFImpactYears,
     wipGoal,
     setWipGoal,
-    summary
+    summary,
+    setDiscountRates
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const goalType = goal.type as GoalType;
@@ -501,7 +502,9 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     if (isPublicCalc) return;
     wipGoal.imp = impLevel;
     setWipGoal(wipGoal);
-    setFFImpactYears(calculateFFImpactYear(startYear, cfs, goal.id, impLevel));
+    let result = calculateFFImpactYear(startYear, cfs, goal.id, impLevel);
+    setFFImpactYears(result.impactYears);
+    setDiscountRates([...result.rr]);
   }, [cfs, impLevel]);
 
   useEffect(() => {

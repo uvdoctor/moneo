@@ -58,7 +58,7 @@ function CalcContextProvider({
   summary
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { addGoal, updateGoal, cancelGoal, isPublicCalc, allCFs, ffResult }: any = useContext(PlanContext);
+  const { addGoal, updateGoal, cancelGoal, isPublicCalc, allCFs, ffResult, oppCostCache, setOppCostCache }: any = useContext(PlanContext);
   let { goal }: any = useContext(PlanContext);
   if (calculateFor) goal = calculateFor;
   const { feedbackId }: any = useContext(FeedbackContext);
@@ -188,6 +188,7 @@ function CalcContextProvider({
   }
 	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions ? tabOptions : goal ? getGoalTabOptions(goal.type) : []);
 	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions ? resultTabOptions : goal ? getGoalResultTabOptions() : []);
+  const [discountRates, setDiscountRates] = useState<Array<number>>([]);
 
   const changeStartYear = (str: string) => setStartYear(parseInt(str));
 
@@ -213,6 +214,10 @@ function CalcContextProvider({
     if (cancelAction) await cancelGoal(wipGoal, cfs, hasGoalChanged());
     else if (goal?.id) {
       await updateGoal(wipGoal as UpdateGoalInput, cfs);
+      if (goal.type !== GoalType.FF) {
+        oppCostCache[goal.id] = oppCost;
+        setOppCostCache(oppCostCache);
+      }
     } else await addGoal(wipGoal, cfs);
     setBtnClicked(false);
     setWipGoal(null);
@@ -340,7 +345,9 @@ function CalcContextProvider({
         goal,
         wipGoal,
         setWipGoal,
-        summary
+        summary,
+        discountRates,
+        setDiscountRates
 			}}
     >
       {children}
