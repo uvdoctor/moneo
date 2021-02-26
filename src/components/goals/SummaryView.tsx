@@ -2,17 +2,17 @@ import React, { Fragment, useContext } from 'react';
 import { getGoalTypes, getImpLevels } from './goalutils';
 import { GoalType, LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
-import { Card, Row, Col, Badge, Button, Modal } from 'antd';
+import { Card, Row, Col, Badge, Button, Modal, Tooltip } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { PlanContext } from './PlanContext';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-
+import { ExclamationCircleOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import './SummaryView.less';
 import DefaultOppCostResult from '../calc/DefaultOppCostResult';
 import FIImpact from './FIImpact';
 import BasicLineChart from './BasicLineChart';
 import { CalcContext } from '../calc/CalcContext';
 import { GoalContext } from './GoalContext';
+import { getDaysDiff } from '../utils';
 
 export default function SummaryView() {
 	const { removeGoal, editGoal }: any = useContext(PlanContext);
@@ -22,6 +22,7 @@ export default function SummaryView() {
 	const goalTypes: any = getGoalTypes();
 	const impLevels: any = getImpLevels();
 	const { confirm } = Modal;
+	const lastUpdated = getDaysDiff(goal.updatedAt);
 
 	return (
 		<Card
@@ -35,13 +36,12 @@ export default function SummaryView() {
 								count={impLevels[impLevel as LMH]}
 								style={{ backgroundColor: bgColor, color: COLORS.WHITE }}
 							/>
-							<strong>&nbsp;{goalTypes[goal.type as GoalType]}</strong>
 						</Col>
 						<Col>
-							<strong>{currency}</strong>
+							<strong>{goalTypes[goal.type as GoalType]}</strong>
 						</Col>
 						<Col>
-							<Button type="link" icon={<EditOutlined />} onClick={() => editGoal(goal.id)} />&nbsp;
+							<Button type="link" icon={<EditOutlined />} onClick={() => editGoal(goal.id)} />
 							<Button
 								type="link"
 								icon={<DeleteOutlined />}
@@ -58,13 +58,24 @@ export default function SummaryView() {
 							/>
 						</Col>
 					</Row>
-					<Row justify="center">
-						<Col>{name}</Col>
+					<Row justify="space-between">
+						<Col>
+							{currency}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</Col>
+						<Col>
+							<strong>{name}</strong>
+						</Col>
+						<Col>
+							<Tooltip title={`You Updated this Goal ${lastUpdated}`}>
+								<FieldTimeOutlined />
+								{lastUpdated}
+							</Tooltip>
+						</Col>
 					</Row>
 				</Fragment>
 			}
 			cover={
-				<div style={{cursor: 'pointer'}} onClick={() => editGoal(goal.id)}>
+				<div style={{ cursor: 'pointer' }} onClick={() => editGoal(goal.id)}>
 					<BasicLineChart summaryView />
 				</div>
 			}

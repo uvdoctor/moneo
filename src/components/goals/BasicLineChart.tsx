@@ -161,8 +161,8 @@ export default function BasicLineChart({
 							},
 							formatter: ({ value }: any) => {
 								return {
-									name: 'Value',
-									value: toHumanFriendlyCurrency(value, currency)
+									name: value < 0 ? 'Pay' : 'Receive',
+									value: toHumanFriendlyCurrency(Math.abs(value), currency)
 								};
 							},
 						}}
