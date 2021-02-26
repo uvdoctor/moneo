@@ -661,7 +661,7 @@ export const sendMail = async (to: String, from: String, template: String, templ
 
 const dateToUTC = (date: string) => {
   let constituents = date.split("/");
-  return Date.UTC(constituents[2], constituents[0], constituents[1]);
+  return Date.UTC(parseInt(constituents[2]), parseInt(constituents[0]), parseInt(constituents[1]));
 };
 
 export const getDaysDiff = (dateTime: string) => {
