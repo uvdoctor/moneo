@@ -13,7 +13,7 @@ interface FIGoalContextProviderProps {
 }
 
 function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
-  const { mustCFs, tryCFs, mergedCFs, pp, dr, ffYear, isPublicCalc, setWipGoal }: any = useContext(PlanContext);
+  const { mustCFs, tryCFs, mergedCFs, pp, dr, ffYear, isPublicCalc }: any = useContext(PlanContext);
   const {
     goal,
     currency,
@@ -32,7 +32,8 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
     hasTab,
     allInputDone,
     setError,
-    cfs
+    cfs,
+    setWipGoal
   }: any = useContext(CalcContext);
   const [riskProfile, setRiskProfile] = useState<LMH>(goal.imp);
   const [expenseAfterFF, setExpenseAfterFF] = useState<number>(

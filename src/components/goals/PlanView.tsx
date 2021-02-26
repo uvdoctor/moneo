@@ -21,7 +21,7 @@ interface PlanViewProps {
 	setActiveTab: Function;
 }
 
-export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
+export default function PlanView({activeTab, setActiveTab}: PlanViewProps) {
 	const { allGoals, ffGoal, goalsLoaded, setGoal }: any = useContext(PlanContext);
 	const { TabPane } = Tabs;
 	const portfolioLabel = 'Milestones';
@@ -37,7 +37,7 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
 			content: (
 				<CalcContextProvider calculateFor={ffGoal}>
 					<FIGoalContextProvider>
-						<BasicLineChart showAnnotation chartTitle="Yearly Portfolio Forecast with Milestones" />
+						<BasicLineChart showAnnotation chartTitle='Yearly Portfolio Forecast with Milestones' />
 					</FIGoalContextProvider>
 				</CalcContextProvider>
 			)
@@ -80,16 +80,16 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
 
 	return goalsLoaded ? ffGoal ? (
 		<Fragment>
-			<div className="primary-header" style={{ marginBottom: '10px' }}>
+			<div className="primary-header" style={{marginBottom: '10px'}}>
 				<FISummaryHeader />
 				<Row className="secondary-header" justify="center">
-					<Col>
-						<Dropdown overlay={goalTypesMenuItems}>
-							<Button>
-								<AimOutlined /> New Life Goal <DownOutlined />
-							</Button>
-						</Dropdown>
-					</Col>
+				<Col>
+					<Dropdown overlay={goalTypesMenuItems}>
+						<Button>
+							<AimOutlined /> New Life Goal <DownOutlined />
+						</Button>
+					</Dropdown>
+				</Col>
 				</Row>
 			</div>
 			{allGoals && allGoals.length ? (
@@ -99,16 +99,16 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
 							{tabOptions.map((t: any) => (
 								<TabPane key={t.label} tab={t.label}>
 									{t.label === goalsLabel && (
-										<Row justify="center" style={{ marginBottom: '10px' }}>
-											<Col className="text-right">
-												<SelectInput
-													pre=""
-													post=""
-													options={getImpOptions()}
-													value={impFilter as string}
-													changeHandler={setImpFilter}
-												/>
-											</Col>
+										<Row justify='center' style={{marginBottom: '10px'}}>
+												<Col className="text-right">
+													<SelectInput
+														pre=""
+														post=""
+														options={getImpOptions()}
+														value={impFilter as string}
+														changeHandler={setImpFilter}
+													/>
+												</Col>
 										</Row>
 									)}
 									<Row

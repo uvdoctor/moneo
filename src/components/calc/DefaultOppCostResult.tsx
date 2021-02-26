@@ -55,7 +55,7 @@ export default function DefaultOppCostResult() {
 	useEffect(
 		() => {
 			calculateOppCost(numOfYears);
-			setNumOfYearsOptions(initOptions(cfs.length, 20));
+			if(isPublicCalc) setNumOfYearsOptions(initOptions(cfs.length, 20));
 		},
 		[ cfs ]
 	);

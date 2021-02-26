@@ -1,6 +1,6 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { getGoalTypes, getImpLevels } from './goalutils';
-import { GoalType, LMH } from '../../api/goals';
+import { CreateGoalInput, GoalType, LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
 import { Card, Row, Col, Badge, Button, Modal, Tooltip } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -15,15 +15,29 @@ import { GoalContext } from './GoalContext';
 import { getDaysDiff } from '../utils';
 
 export default function SummaryView() {
-	const { removeGoal, editGoal }: any = useContext(PlanContext);
+	const { removeGoal, editGoal, allGoals }: any = useContext(PlanContext);
 	const { goal, currency }: any = useContext(CalcContext);
 	const { impLevel, name }: any = useContext(GoalContext);
-	const bgColor = goal.imp === LMH.H ? COLORS.BLUE : goal.imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
+	const [goalImp, setGoalImp] = useState<LMH>(impLevel);
+	const [goalName, setGoalName] = useState<string>(name);
+	const [goalCurrency, setGoalCurrency] = useState<string>(currency);
+	const getImpColor = (imp: LMH) => imp === LMH.H ? COLORS.BLUE : imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN;
+	const [ impColor, setImpColor ] = useState<string>(getImpColor(goal.imp as LMH));
 	const goalTypes: any = getGoalTypes();
 	const impLevels: any = getImpLevels();
 	const { confirm } = Modal;
-	const lastUpdated = getDaysDiff(goal.updatedAt);
-
+	const [ lastUpdated, setLastUpdated ] = useState<string>(getDaysDiff(goal.updatedAt));
+	
+	useEffect(() => {
+		let g: CreateGoalInput = allGoals.filter((g: CreateGoalInput) => g.id === goal.id)[0];
+		setGoalImp(g.imp);
+		setImpColor(getImpColor(g.imp as LMH));
+		setGoalName(g.name);
+		setGoalCurrency(g.ccy);
+		//@ts-ignore
+		setLastUpdated(getDaysDiff(g.updatedAt));
+	}, [allGoals]);
+	
 	return (
 		<Card
 			className="goals-card"
@@ -33,8 +47,8 @@ export default function SummaryView() {
 					<Row justify="space-between">
 						<Col>
 							<Badge
-								count={impLevels[impLevel as LMH]}
-								style={{ backgroundColor: bgColor, color: COLORS.WHITE }}
+								count={impLevels[goalImp]}
+								style={{ backgroundColor: impColor, color: COLORS.WHITE }}
 							/>
 						</Col>
 						<Col>
@@ -60,10 +74,10 @@ export default function SummaryView() {
 					</Row>
 					<Row justify="space-between">
 						<Col>
-							{currency}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							{goalCurrency}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						</Col>
 						<Col>
-							<strong>{name}</strong>
+							<strong>{goalName}</strong>
 						</Col>
 						<Col>
 							<Tooltip title={`You Updated this Goal ${lastUpdated}`}>

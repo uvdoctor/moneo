@@ -47,6 +47,7 @@ interface CalcContextProviderProps {
 	tabOptions?: any;
   resultTabOptions?: any;
   calculateFor?: CreateGoalInput;
+  summary?: boolean;
 }
 
 function CalcContextProvider({
@@ -54,11 +55,13 @@ function CalcContextProvider({
 	tabOptions,
   resultTabOptions,
   calculateFor,
+  summary
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { addGoal, updateGoal, cancelGoal, isPublicCalc, wipGoal, allCFs }: any = useContext(PlanContext);
+  const { addGoal, updateGoal, cancelGoal, isPublicCalc, allCFs, ffResult, allGoals }: any = useContext(PlanContext);
   let { goal }: any = useContext(PlanContext);
   if (calculateFor && !goal) goal = calculateFor;
+  else if (goal.id && goal.type != GoalType.FF) goal = allGoals.filter((g: CreateGoalInput) => g.id === goal.id)[0];
   const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
@@ -68,7 +71,6 @@ function CalcContextProvider({
   const [ currency, setCurrency ] = useState<string>(goal.ccy ? goal.ccy : defaultCurrency);
 	const [ allInputDone, setAllInputDone ] = useState<boolean>(goal?.id ? true : false);
   const [cfs, setCFs] = useState<Array<number>>([]);
-  const [ cfsWithoutSM, setCFsWithoutSM ] = useState<Array<number>>([]);
   const [ inputTabIndex, setInputTabIndex ] = useState<number>(0);
 	const [ resultTabIndex, setResultTabIndex ] = useState<number>(0);
 	const [ showOptionsForm, setOptionsVisibility ] = useState<boolean>(false);
@@ -87,6 +89,7 @@ function CalcContextProvider({
   const [ratingId, setRatingId] = useState<String | undefined>('');
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
   const [oppCost, setOppCost] = useState<number>(0);
+  const [ wipGoal, setWipGoal ] = useState<CreateGoalInput | null>(goal);
 
  const getCalcType = () => {
   switch(goal.name) {
@@ -193,10 +196,11 @@ function CalcContextProvider({
 
   const changeEndYear = (str: string) => setEndYear(parseInt(str));
 
-  const haveCFsChanged = () => {
-    if (!wipGoal.id) return false;
-    if (wipGoal.type === GoalType.FF) return wipGoal !== goal;
-    let existingCFs: Array<number> = allCFs[wipGoal.id].cfs;
+  const hasGoalChanged = () => {
+    if (!wipGoal || !wipGoal.id) return false;
+    let existingCFs: Array<number> = [];
+    if (wipGoal.type === GoalType.FF) existingCFs = ffResult.ffCfs;
+    else existingCFs = allCFs[wipGoal.id];
     if (cfs.length !== existingCFs.length) return true;
     existingCFs.forEach((cf, i) => {
       if (cf !== cfs[i]) return true;
@@ -207,12 +211,12 @@ function CalcContextProvider({
   const handleSubmit = async (cancelAction: boolean = false) => {
     if (isPublicCalc || !wipGoal) return;
     setBtnClicked(true);
-    alert(haveCFsChanged());
-    if (cancelAction) await cancelGoal(wipGoal, cfs, ffImpactYears, haveCFsChanged());
+    if (cancelAction) await cancelGoal(wipGoal, cfs, hasGoalChanged());
     else if (goal?.id) {
-      await updateGoal(wipGoal as UpdateGoalInput, cfs, ffImpactYears);
-    } else await addGoal(wipGoal, cfs, ffImpactYears);
+      await updateGoal(wipGoal as UpdateGoalInput, cfs);
+    } else await addGoal(wipGoal, cfs);
     setBtnClicked(false);
+    setWipGoal(null);
   };
 
   const handleStepChange = (count: number = 1) => {
@@ -291,8 +295,6 @@ function CalcContextProvider({
 				setResultTabs,
         cfs,
         setCFs,
-        cfsWithoutSM,
-        setCFsWithoutSM,
 				resultTabIndex,
 				setResultTabIndex,
 				fsb,
@@ -337,6 +339,9 @@ function CalcContextProvider({
         oppCost,
         setOppCost,
         goal,
+        wipGoal,
+        setWipGoal,
+        summary
 			}}
     >
       {children}

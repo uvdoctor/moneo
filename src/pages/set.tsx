@@ -9,10 +9,10 @@ import { PlanContextProvider } from '../components/goals/PlanContext';
 Amplify.configure(awsmobile);
 
 const Set = () => {
-  const [wipGoal, setWIPGoal] = useState<CreateGoalInput | null>(null);
+  const [goal, setGoal] = useState<CreateGoalInput | null>(null);
   
 	return (
-		<PlanContextProvider goal={wipGoal} setGoal={setWIPGoal}>
+		<PlanContextProvider goal={goal} setGoal={setGoal}>
 			<SetPlan />
 		</PlanContextProvider>
 	);
