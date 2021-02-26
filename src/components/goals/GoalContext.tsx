@@ -421,7 +421,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       return [];
     }
     let cfs: Array<number> = [];
-    let g: CreateGoalInput = summary ? goal : getLatestState();
+    let g: CreateGoalInput = summary ? wipGoal : getLatestState();
     let result: any = {};
     if (!summary)
       if (manualMode < 1 && loanPer) {

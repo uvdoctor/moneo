@@ -235,8 +235,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       return;
     }
     if (!allGoals || !allGoals.length) return;
-    let g: CreateGoalInput = (allGoals.filter((g) => g.id === id))[0];
-    setGoal(g);
+    setGoal((allGoals.filter((g) => g.id === id))[0]);
   };
 
   const cancelGoal = async (

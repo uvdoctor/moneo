@@ -33,27 +33,38 @@ export default function CalcHeader() {
 
 	const closeModal = () => setShowFeedbackModal(false);
 
-	const goalTitle = () => (
-		<TextInput
-			name="name"
-			pre={(getGoalTypes() as any)[goal.type]}
-			post={<SelectInput pre="" value={impLevel} changeHandler={setImpLevel} options={getImpLevels()} />}
-			placeholder="Goal Name"
-			value={name}
-			changeHandler={setName}
-			fieldName="Goal Name"
-			minLength={3}
-			setError={setError}
-		/>
-	);
-
 	return (
 		<Fragment>
 			<div className="primary-header">
 				<Row>
 					<Col span={24}>
 						<PageHeader
-							title={isPublicCalc ? goal.name : goal.type === GoalType.FF ? goal.name : goalTitle()}
+							title={
+								isPublicCalc ? (
+									goal.name
+								) : goal.type === GoalType.FF ? (
+									goal.name
+								) : (
+									<TextInput
+										name="name"
+										pre={(getGoalTypes() as any)[goal.type]}
+										post={
+											<SelectInput
+												pre=""
+												value={impLevel}
+												changeHandler={setImpLevel}
+												options={getImpLevels()}
+											/>
+										}
+										placeholder="Goal Name"
+										value={name}
+										changeHandler={setName}
+										fieldName="Goal Name"
+										minLength={3}
+										setError={setError}
+									/>
+								)
+							}
 							extra={[
 								<Fragment key="rating">
 									<Row style={{ color: COLORS.WHITE }}>

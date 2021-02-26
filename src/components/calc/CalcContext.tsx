@@ -58,10 +58,9 @@ function CalcContextProvider({
   summary
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { addGoal, updateGoal, cancelGoal, isPublicCalc, allCFs, ffResult, allGoals }: any = useContext(PlanContext);
+  const { addGoal, updateGoal, cancelGoal, isPublicCalc, allCFs, ffResult }: any = useContext(PlanContext);
   let { goal }: any = useContext(PlanContext);
-  if (calculateFor && !goal) goal = calculateFor;
-  else if (goal.id && goal.type != GoalType.FF) goal = allGoals.filter((g: CreateGoalInput) => g.id === goal.id)[0];
+  if (calculateFor) goal = calculateFor;
   const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
