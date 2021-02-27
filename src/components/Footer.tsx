@@ -1,17 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-	faTwitter,
-	faFacebook,
-	faInstagramSquare,
-} from "@fortawesome/free-brands-svg-icons";
+	EmailShareButton,
+	EmailIcon,
+	FacebookShareButton,
+	FacebookIcon,
+	InstapaperShareButton,
+	InstapaperIcon,
+	LinkedinShareButton,
+	LinkedinIcon,
+	PinterestShareButton,
+	PinterestIcon,
+	RedditShareButton,
+	RedditIcon,
+	TwitterShareButton,
+	TwitterIcon,
+	TelegramShareButton,
+	TelegramIcon,
+	WhatsappShareButton,
+	WhatsappIcon,
+	ViberShareButton,
+	ViberIcon,
+} from "react-share";
 import Content from "./Content";
 import { calcList } from "./landing/Calculator";
 
 import "./Footer.less";
 
 export default function Footer() {
+	const websiteUrl = "https://gomoneo.com";
+	const [url, setUrl] = useState(websiteUrl);
+
+	useEffect(() => setUrl(`${websiteUrl}${window.location.pathname}`), [null]);
+
 	return (
 		<Content className="footer">
 			<Row
@@ -31,15 +52,15 @@ export default function Footer() {
 						remaining essentially unchanged.
 					</p>
 					<div className="social-icons">
-						<a href="#" title="twitter">
-							<FontAwesomeIcon icon={faTwitter} size="2x" />
-						</a>
-						<a href="#" title="facebook">
-							<FontAwesomeIcon icon={faFacebook} size="2x" />
-						</a>
-						<a href="#" title="instagram">
-							<FontAwesomeIcon icon={faInstagramSquare} size="2x" />
-						</a>
+						<FacebookShareButton url={url}>
+							<FacebookIcon round />
+						</FacebookShareButton>
+						<InstapaperShareButton url={url}>
+							<InstapaperIcon round />
+						</InstapaperShareButton>
+						<TwitterShareButton url={url}>
+							<TwitterIcon round />
+						</TwitterShareButton>
 					</div>
 				</Col>
 				<Col xs={24} sm={24} md={12}>
