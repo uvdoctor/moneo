@@ -13,7 +13,7 @@ interface FIGoalContextProviderProps {
 }
 
 function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
-  const { mustCFs, tryCFs, mergedCFs, pp, rr, dr, setRR, ffResult, setFFResult, setPlanError, isPublicCalc }: any = useContext(PlanContext);
+  const { mustCFs, tryCFs, mergedCFs, pp, dr, ffYear, isPublicCalc }: any = useContext(PlanContext);
   const {
     goal,
     currency,
@@ -30,7 +30,10 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
     setResultTabIndex,
     setResults,
     hasTab,
-    allInputDone
+    allInputDone,
+    setError,
+    cfs,
+    setWipGoal
   }: any = useContext(CalcContext);
   const [riskProfile, setRiskProfile] = useState<LMH>(goal.imp);
   const [expenseAfterFF, setExpenseAfterFF] = useState<number>(
@@ -95,6 +98,7 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   const careTabLabel = "Care";
   const [retirementAge, setRetirementAge] = useState<number>(goal.loan?.rate);
   const [planDuration, setPlanDuration] = useState<number>(goal.loan?.dur);
+  const [wipResult, setWipResult] = useState<any>({});
 
   const getLatestGoalState = () => {
     let g: CreateGoalInput =  {
@@ -160,7 +164,7 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
         <FIYearResult />,
         <FISavingsResult />
       ]]);
-  }, [rr]);
+  }, [cfs]);
 
   useEffect(() => {
     let invTargetChartTab = resultTabs[resultTabs.length - 1];
@@ -177,22 +181,23 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
 
   useEffect(() => {
     if (!allInputDone) return;
-    let result = findEarliestFFYear(
-      getLatestGoalState() as CreateGoalInput,
+    let g: CreateGoalInput = getLatestGoalState();
+    setWipGoal(g);
+    let result: any = findEarliestFFYear(
+      g,
       mergedCFs,
-      ffResult.ffYear ? ffResult.ffYear : null,
+      ffYear,
       mustCFs,
       tryCFs,
       isPublicCalc ? dr : pp()
     );
-    setFFResult(result);
     if (!isFFPossible(result, leaveBehind)) {
-      setPlanError(`Please try again with different inputs / goals so that Financial Independence is Achievable by Age of ${retirementAge}.`);
+      setError(`Please try again with different inputs / goals so that Financial Independence is Achievable by Age of ${retirementAge}.`);
     } else {
-      setPlanError("");
+      setError("");
     }
+    setWipResult(result);
     setCFs([...Object.values(result.ffCfs)]);
-    setRR([...result.rr]);
     console.log("FF Result is ", result);
   }, [
     startYear,
@@ -284,9 +289,10 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
           retirementAge,
           setRetirementAge,
           planDuration,
-          setPlanDuration
+          setPlanDuration,
+          wipResult
         }}>
-        {children ? children : <CalcTemplate latestState={getLatestGoalState} />}
+        {children ? children : <CalcTemplate />}
       </FIGoalContext.Provider>
     );
 }

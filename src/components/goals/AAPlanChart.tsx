@@ -4,8 +4,8 @@ import { getCommonXAxis, getDefaultSliderProps } from '../chartutils';
 import { getAssetColour } from '../utils';
 import { CalcContext } from '../calc/CalcContext';
 import { FIGoalContext } from './FIGoalContext';
-import { PlanContext } from './PlanContext';
 import { Row, Col } from 'antd';
+import { PlanContext } from './PlanContext';
 
 const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), {
@@ -13,9 +13,9 @@ const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), {
 });
 
 export default function AAPlanChart() {
-	const { rr, ffResult }: any = useContext(PlanContext);
-	const { startYear }: any = useContext(CalcContext);
-	const { planDuration }: any = useContext(FIGoalContext);
+	const { rr, goal, ffResult, ffGoal }: any = useContext(PlanContext);
+	const { wipGoal, cfs }: any = useContext(CalcContext);
+	const { wipResult }: any = useContext(FIGoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	const hasAllZeros = (arr: Array<number>) => {
@@ -27,7 +27,7 @@ export default function AAPlanChart() {
 
 	const filterAA = () => {
 		let result: any = {};
-		let aa = ffResult.aa;
+		let aa = goal ? wipResult.aa : ffResult.aa;
 		for (let key in aa) {
 			if (!hasAllZeros(aa[key])) {
 				result[key] = aa[key].slice(1);
@@ -38,11 +38,11 @@ export default function AAPlanChart() {
 
 	useEffect(
 		() => {
-			if (!rr.length) return;
+			if (!cfs.length) return;
 			let filteredAA = filterAA();
 			let arr: Array<any> = [];
 			const sy = new Date().getFullYear() + 1;
-			let ffGoalEndYear = startYear + planDuration;
+			let ffGoalEndYear = goal ? (wipGoal.sy + wipGoal.loan?.dur) : (ffGoal.sy + ffGoal.loan?.dur);
 			for (let i = 0; i <= ffGoalEndYear - sy; i++) {
 				Object.keys(filteredAA).forEach((key) => {
 					if (filteredAA[key][i]) {
@@ -56,7 +56,7 @@ export default function AAPlanChart() {
 			}
 			setData([ ...arr ]);
 		},
-		[ rr, startYear, planDuration ]
+		[ cfs, rr ]
 	);
 
 	return (

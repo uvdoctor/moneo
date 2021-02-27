@@ -25,12 +25,12 @@ export default function BuyRentChart() {
 			for (let i = 0; i < brChartData[0].values.length; i++) {
 				chartData.push({
 					name: brChartData[0].name,
-					years: i + 3,
+					years: '' + (i + 3),
 					value: brChartData[0].values[i]
 				});
 				chartData.push({
 					name: brChartData[1].name,
-					years: i + 3,
+					years: '' + (i + 3),
 					value: brChartData[1].values[i]
 				});
 			}
@@ -73,9 +73,10 @@ export default function BuyRentChart() {
 						fields: [ 'years', 'name', 'value' ],
 						showTitle: false,
 						formatter: ({ years, name, value }: any) => {
+							const y = parseInt(years);
 							const isAns =
-								name === getAns(brChartData[0].values[years - 3], brChartData[1].values[years - 3]);
-							const valueStr = `${value > 0 ? 'Gain' : 'Loss'} of ${toCurrency(
+								name === getAns(brChartData[0].values[y - 3], brChartData[1].values[y - 3]);
+							const valueStr = `${value ? 'Gain' : 'Loss'} of ${toCurrency(
 								Math.abs(value),
 								currency
 							)} over ${years} Years`;

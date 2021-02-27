@@ -1,39 +1,49 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import * as APIt from '../../api/goals';
 import { GoalContextProvider } from './GoalContext';
 import { CalcContextProvider } from '../calc/CalcContext';
 import { FIGoalContextProvider } from './FIGoalContext';
 import BasicPage from '../BasicPage';
-import { PlanContextProvider } from './PlanContext';
 import { FeedbackContextProvider } from '../feedback/FeedbackContext';
 import PlanView from './PlanView';
+import { PlanContext } from './PlanContext';
+import CalcTemplate from '../calc/CalcTemplate';
 
 export default function SetPlan() {
-	const [ wipGoal, setWIPGoal ] = useState<APIt.CreateGoalInput | null>(null);
+	const { goal }: any = useContext(PlanContext);
+	const [activeTab, setActiveTab] = useState<string>('1');
 
-	return (
-		<PlanContextProvider goal={wipGoal} setGoal={setWIPGoal}>
-			<BasicPage
-				title="Set Plan"
-				className="calculator-container steps-landing"
-				onBack={wipGoal ? () => setWIPGoal(null) : null}
-				navScrollable
-				fixedNav
-			>
-				{wipGoal ? (
-					<FeedbackContextProvider>
-						<CalcContextProvider>
-							{(wipGoal as APIt.CreateGoalInput).type === APIt.GoalType.FF ? (
-								<FIGoalContextProvider />
-							) : (
-								<GoalContextProvider />
-							)}
-						</CalcContextProvider>
-					</FeedbackContextProvider>
+	return goal ? (
+		<FeedbackContextProvider>
+			<CalcContextProvider>
+				{(goal as APIt.CreateGoalInput).type === APIt.GoalType.FF ? (
+					<FIGoalContextProvider>
+						<BasicPage
+							title={goal.id ? 'Edit FI Target' : 'Set FI Target'}
+							className="calculator-container steps-landing"
+							navScrollable
+							fixedNav
+						>
+							<CalcTemplate />
+						</BasicPage>
+					</FIGoalContextProvider>
 				) : (
-					<PlanView />
+					<GoalContextProvider>
+						<BasicPage
+							title={goal.id ? 'Edit Goal' : 'New Life Goal'}
+							className="calculator-container steps-landing"
+							navScrollable
+							fixedNav
+						>
+							<CalcTemplate />
+						</BasicPage>
+					</GoalContextProvider>
 				)}
-			</BasicPage>
-		</PlanContextProvider>
+			</CalcContextProvider>
+		</FeedbackContextProvider>
+	) : (
+		<BasicPage title="My Financial Plan" navScrollable fixedNav>
+				<PlanView activeTab={activeTab} setActiveTab={setActiveTab} />
+		</BasicPage>
 	);
 }

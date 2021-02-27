@@ -12,10 +12,10 @@ import {
 import { CalcContext } from '../calc/CalcContext';
 import DataSwitcher from '../DataSwitcher';
 import { ASSET_CATEGORIES, COLORS } from '../../CONSTANTS';
-import { PlanContext } from './PlanContext';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import SelectInput from '../form/selectinput';
 import { FIGoalContext } from './FIGoalContext';
+import { PlanContext } from './PlanContext';
 
 const TreemapChart = dynamic(() => import('bizcharts/lib/plots/TreemapChart'), {
 	ssr: false
@@ -48,14 +48,16 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 	};
 	const nowYear = new Date().getFullYear();
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
-	const { ffResult, rr }: any = useContext(PlanContext);
-	const { cfs, currency, startYear }: any = useContext(CalcContext);
-	const { planDuration }: any = useContext(FIGoalContext);
+	const { goal, rr, ffGoal, ffResult }: any = useContext(PlanContext);
+	const { cfs, startYear, currency }: any = useContext(CalcContext);
+	const { wipResult, planDuration }: any = useContext(FIGoalContext);
 	const [ index, setIndex ] = useState<number>(yearChangeable ? 1 : 0);
-	const [ data, setData ] = useState<Array<any>>([]);
+	const [data, setData] = useState<Array<any>>([]);
+	const getFFGoalEndYear = () => goal ? (startYear + planDuration) : (ffGoal.sy + ffGoal.loan?.dur);
+	const getCurrency = () => goal ? currency : ffGoal.ccy;
+	const getCF = (index: number) => goal ? cfs[index] : ffResult.ffCfs[new Date().getFullYear() + index];
 	const [ cashData, setCashData ] = useState<CashData>(cashDataDefault);
-	const ffGoalEndYear = startYear + planDuration;
-	const [ aaYearOptions, setAAYearOptions ] = useState<any>(initOptions(nowYear + 1, ffGoalEndYear - nowYear - 2));
+	const [ aaYearOptions, setAAYearOptions ] = useState<any>(initOptions(nowYear + 1, getFFGoalEndYear() - nowYear - 2));
 	const fsb = useFullScreenBrowser();
 
 	const getFormattedAssetName = (assetName: string) => {
@@ -69,7 +71,7 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 
 	const initChartData = () => {
 		let data: Array<any> = [];
-		const aa = ffResult.aa;
+		const aa = goal ? wipResult.aa : ffResult.aa;
 		const cash: CashData = cashDataDefault;
 
 		getAllAssetCategories().forEach((cat) => {
@@ -103,17 +105,18 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 
 	useEffect(
 		() => {
-			const ffGoalEndYear = startYear + planDuration;
+			const ffGoalEndYear = goal ? (startYear + planDuration) : (ffGoal.sy + ffGoal.loan?.dur);
 			setAAYearOptions(initOptions(nowYear + 1, ffGoalEndYear - nowYear - 2));
+			if (!goal) initChartData();
 		},
-		[ startYear, planDuration ]
+		[ startYear, planDuration, rr ]
 	);
 
 	useEffect(
 		() => {
-			if (rr.length) initChartData();
+			if (cfs.length) initChartData();
 		},
-		[ rr, index ]
+		[ cfs, index ]
 	);
 
 	return (
@@ -121,7 +124,7 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 			<DataSwitcher
 				title={
 					<Fragment>
-						Target Asset Allocation of <strong>{toHumanFriendlyCurrency(cfs[index], currency)}</strong> for
+						Target Asset Allocation of <strong>{toHumanFriendlyCurrency(getCF(index), getCurrency())}</strong> for
 						end of Year&nbsp;
 						{yearChangeable ? (
 							<SelectInput
@@ -145,8 +148,8 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 										Cash <Badge count={`${cashData.value} %`} />
 										<strong>
 											{toHumanFriendlyCurrency(
-												Math.round(cfs[index] * cashData.value / 100),
-												currency
+												Math.round(getCF(index) * cashData.value / 100),
+												getCurrency()
 											)}
 										</strong>
 									</div>
@@ -156,8 +159,8 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 										Deposits <Badge count={`${cashData.deposits} %`} />
 										<strong>
 											{toHumanFriendlyCurrency(
-												Math.round(cfs[index] * cashData.deposits / 100),
-												currency
+												Math.round(getCF(index) * cashData.deposits / 100),
+												getCurrency()
 											)}
 										</strong>
 									</div>
@@ -167,8 +170,8 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 										Savings <Badge count={`${cashData.savings} %`} />
 										<strong>
 											{toHumanFriendlyCurrency(
-												Math.round(cfs[index] * cashData.savings / 100),
-												currency
+												Math.round(getCF(index) * cashData.savings / 100),
+												getCurrency()
 											)}
 										</strong>
 									</div>
@@ -199,10 +202,12 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 							}}
 							label={{
 								visible: true,
-								formatter: (v: any) =>
-									ffResult.aa.hasOwnProperty(v.name)
-										? `${getFormattedAssetName(v.name)}${ffResult.aa[v.name][index]}%`
-										: v.name,
+								formatter: (v: any) => {
+									let aa = goal ? wipResult.aa : ffResult.aa;
+									return aa.hasOwnProperty(v.name)
+									? `${getFormattedAssetName(v.name)}${aa[v.name][index]}%`
+									: v.name
+								},
 								style: {
 									fontFamily: "'Jost', sans-serif",
 									fontSize: 14,
@@ -218,8 +223,8 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 									return {
 										name,
 										value: `<strong>${toHumanFriendlyCurrency(
-											Math.round(cfs[index] * value / 100),
-											currency
+											Math.round(getCF(index) * value / 100),
+											getCurrency()
 										)}</strong> (${value}%)`
 									};
 								}
@@ -238,13 +243,12 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 						dataSource={data}
 						renderItem={({ name, value, children }) => {
 							const [ title ] = name.split(' ');
-
 							return (
 								<Fragment>
 									<List.Item
 										className="heading"
 										actions={[
-											toHumanFriendlyCurrency(Math.round(cfs[index] * value / 100), currency),
+											toHumanFriendlyCurrency(Math.round(getCF(index) * value / 100), getCurrency()),
 											<Badge count={`${value}%`} />
 										]}
 									>
@@ -255,13 +259,12 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 											dataSource={children}
 											renderItem={({ name, value }: RenderItemProp) => {
 												const assetColor = getAssetColour(name);
-
 												return (
 													<List.Item
 														actions={[
 															toHumanFriendlyCurrency(
-																Math.round(cfs[index] * value / 100),
-																currency
+																Math.round(getCF(index) * value / 100),
+																getCurrency()
 															),
 															<Badge count={`${value}%`} />
 														]}

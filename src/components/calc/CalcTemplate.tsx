@@ -8,11 +8,7 @@ import CalcHeader from './CalcHeader';
 
 import './CalcTemplate.less';
 
-export interface CalcTemplateProps {
-	latestState?: Function | null;
-}
-
-export default function CalcTemplate({ latestState }: CalcTemplateProps) {
+export default function CalcTemplate() {
 	const { allInputDone, error }: any = useContext(CalcContext);
 	const { planError }: any = useContext(PlanContext);
 
@@ -20,10 +16,10 @@ export default function CalcTemplate({ latestState }: CalcTemplateProps) {
 		<Fragment>
 			{planError && <Alert type="error" message={planError} />}
 			{error && <Alert type="error" message={error} />}
-			{!allInputDone ? <CalcHeader latestState={latestState} /> : null}
+			{!allInputDone && <CalcHeader />}
 			<div className={allInputDone ? 'calculator-page' : ''}>
-				<Input latestState={latestState} />
-				{allInputDone && <Result latestState={latestState} />}
+				<Input />
+				{allInputDone && <Result />}
 			</div>
 		</Fragment>
 	);

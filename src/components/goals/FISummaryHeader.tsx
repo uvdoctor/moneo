@@ -1,41 +1,38 @@
 import { Alert, Button, Col, PageHeader, Row } from 'antd';
-import React, { Fragment, useContext, useEffect } from 'react';
-import { isFFPossible } from './cfutils';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { EditOutlined } from '@ant-design/icons';
 import { PlanContext } from './PlanContext';
 
 export default function FISummaryHeader() {
-	const { ffGoal, ffResult, setGoal, allGoals, planError, setPlanError, rr }: any = useContext(PlanContext);
-	
-	const checkFIError = () => {
-		if (!isFFPossible(ffResult, ffGoal?.sa as number)) {
-      setPlanError(`Please try again with different inputs / goals so that Financial Independence is Achievable by Age of ${ffGoal.loan?.rate}.`);
-    } else {
-      setPlanError("");
-    }
+	const { ffGoal, planError, ffYear, editGoal }: any = useContext(PlanContext);
+
+	const getSummary = () => {
+		let result = 'Financial Independence ';
+		result += ffYear ? `at ${ffYear - ffGoal.sy}` : 'Not Achievable';
+		return result;
 	};
 
-	useEffect(() => checkFIError(), []);
+	const [ summary, setSummary ] = useState(getSummary());
 
-	useEffect(() => checkFIError(), [rr]);
+	useEffect(() => setSummary(getSummary()), [ ffYear ]);
 
 	return (
 		<Fragment>
 			{planError && <Alert type="error" message={planError} />}
-			{ffGoal && allGoals ? <Row>
-				<Col span={24} className="primary-header">
-					<PageHeader
-						title={`Financial Independence ${isFFPossible(ffResult, ffGoal.sa as number)
-							? `at ${ffResult.ffYear - ffGoal.sy}`
-							: `Not Achievable`}`}
-						extra={[
-							<Button key="Edit" className="steps-start-btn" onClick={() => setGoal(Object.assign({}, ffGoal))}>
-								<EditOutlined /> Edit
-						</Button>
-						]}
-					/>
-				</Col>
-			</Row> : null}
+			{summary ? (
+				<Row>
+					<Col span={24} className="primary-header">
+						<PageHeader
+							title={summary}
+							extra={[
+								<Button key="Edit" className="steps-start-btn" onClick={() => editGoal(ffGoal.id)}>
+									<EditOutlined /> Edit
+								</Button>
+							]}
+						/>
+					</Col>
+				</Row>
+			) : null}
 		</Fragment>
 	);
 }

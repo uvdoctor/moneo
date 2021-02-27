@@ -4,6 +4,7 @@ import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } 
 import { PlanContext } from './PlanContext';
 import { Row, Col } from 'antd';
 import { COLORS } from '../../CONSTANTS';
+import { toHumanFriendlyCurrency } from '../utils';
 
 const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
@@ -17,7 +18,6 @@ export default function YearlyCFChart() {
 		() => {
 			let data: Array<any> = [];
 			const from = new Date().getFullYear() + 1;
-			console.log("Must CFs: ", mustCFs);
 			for (let year = from; year <= ffGoal.sy + (ffGoal.loan.dur as number); year++) {
 				if (mustCFs[year - from]) {
 					data.push({
@@ -42,7 +42,6 @@ export default function YearlyCFChart() {
 				}
 			}
 			setData([...data]);
-			console.log("Data is: ", data);
 		},
 		[ mustCFs, tryCFs, optCFs ]
 	);
@@ -72,6 +71,15 @@ export default function YearlyCFChart() {
 					legend={{ position: 'top' }}
 					color={(column: any) => getColumnColor(column.name)}
 					isStack={true}
+					tooltip={{
+						visible: true,
+						formatter: ({value}: any) => {
+							return {
+								name: value < 0 ? 'Pay' : 'Receive',
+								value: toHumanFriendlyCurrency(Math.abs(value), currency)
+							};
+						}
+					}}
 				>
 					<Slider {...getDefaultSliderProps()} />
 				</ColumnChart>

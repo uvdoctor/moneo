@@ -23,7 +23,7 @@ export const getCompoundedIncome = (rate: number, value: number, years: number, 
 export function getNPV(rr: number | Array<number>, cashFlows: Array<number>, startIndex: number) {
 	let npv = 0;
 	for (let i = cashFlows.length - 1; i > 0; i--) {
-		let dr = typeof rr === 'number' ? rr : rr[startIndex + i];
+		let dr = typeof rr === 'number' ? rr : rr[startIndex + i] ? rr[startIndex + i] : rr[rr.length - 1];
 		npv = (cashFlows[i] + npv) / (1 + dr / 100);
 	}
 	return Math.round(npv + cashFlows[0]);

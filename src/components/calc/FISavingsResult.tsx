@@ -1,19 +1,16 @@
 import React, { useContext } from 'react';
-import { isFFPossible } from '../goals/cfutils';
 import { FIGoalContext } from '../goals/FIGoalContext';
-import { PlanContext } from '../goals/PlanContext';
 import { CalcContext } from './CalcContext';
 import ItemDisplay from './ItemDisplay';
 
 export default function FIResult() {
-	const { ffResult }: any = useContext(PlanContext);
 	const { startYear, currency }: any = useContext(CalcContext);
-	const { retirementAge, leaveBehind }: any = useContext(FIGoalContext);
+	const { retirementAge, wipResult }: any = useContext(FIGoalContext);
 
-	return isFFPossible(ffResult, leaveBehind) ? (
+	return wipResult.ffYear ? (
 		<ItemDisplay
-			result={ffResult.ffAmt}
-			label={`By end of ${ffResult.ffYear - 1}, You may have`}
+			result={wipResult.ffAmt}
+			label={`By end of ${wipResult.ffYear - 1}, You may have`}
 			currency={currency}
 			info="You can Withdraw from this Savings for Your expenses after gaining Financial Independence."
 		/>

@@ -23,7 +23,7 @@ interface GoalContextProviderProps {
 }
 
 function GoalContextProvider({ children }: GoalContextProviderProps) {
-  const { rr, dr, calculateFFImpactYear, isPublicCalc }: any = useContext(PlanContext);
+  const { rr, dr, discountRates, calculateFFImpactYear, isPublicCalc, allCFs }: any = useContext(PlanContext);
   const {
     goal,
     currency,
@@ -36,7 +36,6 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     setDisableSubmit,
     cfs,
     setCFs,
-    setCFsWithoutSM,
     ffOOM,
     setFFOOM,
     btnClicked,
@@ -56,7 +55,11 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     setTimer,
     analyzeFor,
     ffImpactYears,
-    setFFImpactYears
+    setFFImpactYears,
+    wipGoal,
+    setWipGoal,
+    summary,
+    setDiscountRates
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const goalType = goal.type as GoalType;
@@ -181,7 +184,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     }
   };
 
-  const getLatestGoalState = () => {
+  const getLatestState = () => {
     let g: any = updateBaseGoal();
     if (goal.id) g.id = goal.id;
     if (isLoanEligible(goalType)) {
@@ -218,11 +221,11 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   useEffect(() => {
     setResults([...[
       !isPublicCalc && <FIImpact />,
-      goalType === GoalType.B && <BuyRentResult />,
+      <DefaultOppCostResult />,
       goalType === GoalType.B && <BuyReturnResult />,
+      goalType === GoalType.B && <BuyRentResult />,
       isLoanEligible(goalType) && <LoanIntResult />,
-      <TaxBenefitResult />,
-      <DefaultOppCostResult />
+      <TaxBenefitResult />
     ]]);
   }, []);
   
@@ -233,6 +236,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   }, [price, assetChgRate, sellAfter]);
 
   useEffect(() => {
+    wipGoal.sy = startYear;
+    setWipGoal(wipGoal);
     if (startYear <= nowYear) setPriceChgRate(0);
     if ((goalType !== GoalType.B) && (isEndYearHidden || startYear > endYear || endYear - startYear > 30))
       setEndYear(startYear);
@@ -416,41 +421,42 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   ) => {
     if (!price && changeState) {
       setCFs([...[]]);
-      setCFsWithoutSM([...[]]);
       return [];
     }
     let cfs: Array<number> = [];
-    let g: CreateGoalInput = getLatestGoalState();
+    let g: CreateGoalInput = summary ? wipGoal : getLatestState();
     let result: any = {};
-    if (manualMode < 1 && loanPer) {
-      if (!iSchedule || !iSchedule.length) {
-        setCFs([...[]]);
-        setCFsWithoutSM([...[]]);
-        return [];
+    if (!summary)
+      if (manualMode < 1 && loanPer) {
+        if (!iSchedule || !iSchedule.length) {
+          setCFs([...[]]);
+          return [];
+        }
+        let interestSchedule = iSchedule;
+        let principalSchedule = pSchedule;
+        let insuranceSchedule = insSchedule;
+        if (sellAfter && !changeState) {
+          let loanSchedule = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments, loanIRAdjustments, loanMonths as number, duration, loanPMI, loanPMIEndPer);
+          interestSchedule = loanSchedule.interest;
+          principalSchedule = loanSchedule.principal;
+          insuranceSchedule = loanSchedule.insurance;
+        }
+        result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, insuranceSchedule, g, duration, changeState);
+      } else {
+        result = calculateCFs(price, g, duration, changeState);
       }
-      let interestSchedule = iSchedule;
-      let principalSchedule = pSchedule;
-      let insuranceSchedule = insSchedule;
-      if (sellAfter && !changeState) {
-        let loanSchedule = createAmortizingLoanCFs(loanBorrowAmt, loanIntRate as number, emi, loanPrepayments, loanIRAdjustments, loanMonths as number, duration, loanPMI, loanPMIEndPer);
-        interestSchedule = loanSchedule.interest;
-        principalSchedule = loanSchedule.principal;
-        insuranceSchedule = loanSchedule.insurance;
-      }
-      result = createLoanCFs(price, loanStartingCFs, interestSchedule, principalSchedule, insuranceSchedule, g, duration, changeState);
-    } else {
-      result = calculateCFs(price, g, duration, changeState);
-    }
-    cfs = result.cfs;
+    cfs = summary ? allCFs[goal.id] : result.cfs;
     if (changeState) {
+      setWipGoal(g);
       console.log("New cf result: ", result);
       if ((loanPer as number) && manualMode < 1 && goalType === GoalType.B)
         setEndYear(startYear + cfs.length - 1);
       setCFs([...cfs]);
-      setCFsWithoutSM([...cfs]);
       setDuration(duration);
-      setTotalITaxBenefit(result.hasOwnProperty("itb") ? result.itb : 0);
-      setTotalPTaxBenefit(result.hasOwnProperty("ptb") ? result.ptb : 0);
+      if (!summary) {
+        setTotalITaxBenefit(result.hasOwnProperty("itb") ? result.itb : 0);
+        setTotalPTaxBenefit(result.hasOwnProperty("ptb") ? result.ptb : 0);
+      }
     }
     return cfs;
   };
@@ -487,16 +493,28 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     aiPer,
     aiStartYear,
     iSchedule,
+    rr
   ]);
 
   useEffect(() => {
+    wipGoal.ey = endYear;
+    setWipGoal(wipGoal);
     if (goalType !== GoalType.B && manualMode < 1) calculateYearlyCFs();
   }, [endYear]);
 
   useEffect(() => {
     if (isPublicCalc) return;
-    setFFImpactYears(calculateFFImpactYear(startYear, cfs, goal.id, impLevel));
+    wipGoal.imp = impLevel;
+    setWipGoal(wipGoal);
+    let result = calculateFFImpactYear(startYear, cfs, goal.id, impLevel);
+    setFFImpactYears(result.impactYears);
+    if(wipGoal.id) setDiscountRates([...result.rr]);
   }, [cfs, impLevel]);
+
+  useEffect(() => {
+    wipGoal.name = name;
+    setWipGoal(wipGoal);
+  }, [name]);
 
   useEffect(() => {
     if (manualMode) {
@@ -521,17 +539,26 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     setInputTabs([...inputTabs]);
   }, [error]);
 
+  const getDiscountRate = (index: number) => {
+    if (isPublicCalc) return dr;
+    let rates = discountRates ? discountRates : rr;
+    if (!rates[index]) return rates[rates.length - 1];
+    return rates[index];
+  };
+
   const initBRCompNPVs = () => {
+    if (summary) return;
     const firstRRIndex = startYear - (nowYear + 1);
     let buyNPVs: Array<number> = [];
     let rentNPVs: Array<number> = [];
     let results: Array<any> = [];
+    let rates = isPublicCalc ? dr : discountRates ? discountRates : rr;
     for (let i = 3; i < allBuyCFs.length + 3; i++) {
       let cfs = [];
       let inv = 0;
       let buyCFs = allBuyCFs[i - 3];
       buyNPVs.push(
-        getNPV(isPublicCalc ? dr : rr, buyCFs, startYear - (nowYear + 1))
+        getNPV(rates, buyCFs, startYear - (nowYear + 1))
       );
       for (let j = 0; j < i; j++) {
         let value = getCompoundedIncome(rentChgPer as number, rentAmt as number, j);
@@ -544,13 +571,12 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
         if (buyCF && buyCF < 0) inv -= buyCF;
         inv -= value;
         if (inv > 0) {
-          let rate = isPublicCalc ? dr : rr[firstRRIndex + j];
-          inv *= 1 + (rate / 100);
+          inv *= 1 + (getDiscountRate(firstRRIndex + j) / 100);
           if (j === i - 1) cfs.push(Math.round(inv));
         }
         if(j < i - 1 || inv <= 0) cfs.push(-Math.round(value));
       }
-      if (cfs.length) rentNPVs.push(getNPV(dr === null ? rr : dr, cfs, firstRRIndex));
+      if (cfs.length) rentNPVs.push(getNPV(rates, cfs, firstRRIndex));
     }
     if (rentNPVs.length) {
       results.push({
@@ -620,9 +646,10 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       setBRChartData([...[]]);
       setBRAns("");
     }
-  }, [rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs, dr]);
+  }, [discountRates, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs, dr]);
 
   const setAllBuyCFsForComparison = () => {
+    if (summary) return;
     let allBuyCFs: Array<Array<number>> = [];
     for (let i = 3; i <= analyzeFor; i++) allBuyCFs.push(calculateYearlyCFs(i, false));
     setAllBuyCFs([...allBuyCFs]);
@@ -742,7 +769,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
           loanPMIEndPer,
           setLoanPMIEndPer,
         }}>
-        {children ? children : <CalcTemplate latestState={isPublicCalc ? null : getLatestGoalState} />}
+        {children ? children : <CalcTemplate />}
       </GoalContext.Provider>
     );
 }

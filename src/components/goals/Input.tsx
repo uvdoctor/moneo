@@ -9,10 +9,9 @@ import VideoPlayer from '../VideoPlayer';
 import './Input.less';
 import ResultCarousel from '../ResultCarousel';
 import { PlanContext } from './PlanContext';
-import { CalcTemplateProps } from '../calc/CalcTemplate';
 
-export default function Input({latestState}: CalcTemplateProps) {
-	const { cancelGoal, isPublicCalc }: any = useContext(PlanContext);
+export default function Input() {
+	const { isPublicCalc }: any = useContext(PlanContext);
 	const {
 		inputTabs,
 		inputTabIndex,
@@ -27,7 +26,7 @@ export default function Input({latestState}: CalcTemplateProps) {
 		stepVideoUrl,
 		error,
 		handleStepChange,
-		fsb
+		fsb,
 	}: any = useContext(CalcContext);
 	const { Step } = Steps;
 
@@ -170,15 +169,15 @@ export default function Input({latestState}: CalcTemplateProps) {
 									{inputTabs[inputTabIndex].content}
 								</Fragment>
 							)}
-							{!isPublicCalc && handleSubmit && latestState ? (
+							{!isPublicCalc ? (
 								<Row justify="center">
 									<Space>
-										<Button onClick={cancelGoal} disabled={disableSubmit}>
+										<Button onClick={() => handleSubmit(true)} disabled={disableSubmit}>
 											Cancel
 										</Button>
 										<Button
 											type="primary"
-											onClick={() => handleSubmit(latestState())}
+											onClick={() => handleSubmit()}
 											icon={<SaveOutlined />}
 											disabled={disableSubmit}
 											loading={btnClicked}
