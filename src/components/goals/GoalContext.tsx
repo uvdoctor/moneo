@@ -23,7 +23,7 @@ interface GoalContextProviderProps {
 }
 
 function GoalContextProvider({ children }: GoalContextProviderProps) {
-  const { rr, dr, calculateFFImpactYear, isPublicCalc, allCFs }: any = useContext(PlanContext);
+  const { rr, dr, discountRates, calculateFFImpactYear, isPublicCalc, allCFs }: any = useContext(PlanContext);
   const {
     goal,
     currency,
@@ -504,7 +504,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     setWipGoal(wipGoal);
     let result = calculateFFImpactYear(startYear, cfs, goal.id, impLevel);
     setFFImpactYears(result.impactYears);
-    setDiscountRates([...result.rr]);
+    if(wipGoal.id) setDiscountRates([...result.rr]);
   }, [cfs, impLevel]);
 
   useEffect(() => {
@@ -535,18 +535,26 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     setInputTabs([...inputTabs]);
   }, [error]);
 
+  const getDiscountRate = (index: number) => {
+    if (isPublicCalc) return dr;
+    let rates = discountRates ? discountRates : rr;
+    if (!rates[index]) return rates[rates.length - 1];
+    return rates[index];
+  };
+
   const initBRCompNPVs = () => {
     if (summary) return;
     const firstRRIndex = startYear - (nowYear + 1);
     let buyNPVs: Array<number> = [];
     let rentNPVs: Array<number> = [];
     let results: Array<any> = [];
+    let rates = isPublicCalc ? dr : discountRates ? discountRates : rr;
     for (let i = 3; i < allBuyCFs.length + 3; i++) {
       let cfs = [];
       let inv = 0;
       let buyCFs = allBuyCFs[i - 3];
       buyNPVs.push(
-        getNPV(isPublicCalc ? dr : rr, buyCFs, startYear - (nowYear + 1))
+        getNPV(rates, buyCFs, startYear - (nowYear + 1))
       );
       for (let j = 0; j < i; j++) {
         let value = getCompoundedIncome(rentChgPer as number, rentAmt as number, j);
@@ -559,13 +567,12 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
         if (buyCF && buyCF < 0) inv -= buyCF;
         inv -= value;
         if (inv > 0) {
-          let rate = isPublicCalc ? dr : rr[firstRRIndex + j];
-          inv *= 1 + (rate / 100);
+          inv *= 1 + (getDiscountRate(firstRRIndex + j) / 100);
           if (j === i - 1) cfs.push(Math.round(inv));
         }
         if(j < i - 1 || inv <= 0) cfs.push(-Math.round(value));
       }
-      if (cfs.length) rentNPVs.push(getNPV(dr === null ? rr : dr, cfs, firstRRIndex));
+      if (cfs.length) rentNPVs.push(getNPV(rates, cfs, firstRRIndex));
     }
     if (rentNPVs.length) {
       results.push({
@@ -635,7 +642,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       setBRChartData([...[]]);
       setBRAns("");
     }
-  }, [rr, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs, dr]);
+  }, [discountRates, rentAmt, rentChgPer, rentTaxBenefit, allBuyCFs, dr]);
 
   const setAllBuyCFsForComparison = () => {
     if (summary) return;

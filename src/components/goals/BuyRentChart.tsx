@@ -34,6 +34,7 @@ export default function BuyRentChart() {
 					value: brChartData[1].values[i]
 				});
 			}
+			console.log("Stacked data: ", chartData);
 			setStackedData([...chartData]);
 		},
 		[ brChartData ]
@@ -70,12 +71,13 @@ export default function BuyRentChart() {
 						position: 'top',
 					}}
 					tooltip={{
-						fields: [ 'years', 'name', 'value' ],
+						//fields: [ 'years', 'name', 'value' ],
 						showTitle: false,
 						formatter: ({ years, name, value }: any) => {
+							console.log("Years is ", years);
 							const isAns =
 								name === getAns(brChartData[0].values[years - 3], brChartData[1].values[years - 3]);
-							const valueStr = `${value > 0 ? 'Gain' : 'Loss'} of ${toCurrency(
+							const valueStr = `${value ? 'Gain' : 'Loss'} of ${toCurrency(
 								Math.abs(value),
 								currency
 							)} over ${years} Years`;

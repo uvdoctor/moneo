@@ -112,17 +112,17 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
 					</FIGoalContextProvider>
 				</CalcContextProvider>
 				</TabPane>
-				<TabPane
-									key={'4'}
-									tab={
-										<Fragment>
-											<FontAwesomeIcon icon={faChartBar} />
+				{allGoals?.length && <TabPane
+					key={'4'}
+					tab={
+						<Fragment>
+							<FontAwesomeIcon icon={faChartBar} />
 											&nbsp;&nbsp;Cash Flows
 										</Fragment>
-									}
-								>
-				<YearlyCFChart />
-				</TabPane>
+					}
+				>
+					<YearlyCFChart />
+				</TabPane>}
 						</Tabs>
 		</Fragment>
 	) : (

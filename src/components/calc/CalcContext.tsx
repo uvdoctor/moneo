@@ -59,7 +59,7 @@ function CalcContextProvider({
   summary
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { addGoal, updateGoal, cancelGoal, isPublicCalc, allCFs, ffResult, oppCostCache, setOppCostCache }: any = useContext(PlanContext);
+  const { rr, addGoal, updateGoal, cancelGoal, isPublicCalc, allCFs, ffResult, oppCostCache, setOppCostCache }: any = useContext(PlanContext);
   let { goal }: any = useContext(PlanContext);
   if (calculateFor && !goal) goal = calculateFor;
   const { feedbackId }: any = useContext(FeedbackContext);
@@ -189,8 +189,8 @@ function CalcContextProvider({
   }
 	const [ inputTabs, setInputTabs ] = useState<Array<any>>(tabOptions ? tabOptions : goal ? getGoalTabOptions(goal.type) : []);
 	const [ resultTabs, setResultTabs ] = useState<Array<any>>(resultTabOptions ? resultTabOptions : goal ? getGoalResultTabOptions() : []);
-  const [discountRates, setDiscountRates] = useState<Array<number>>([]);
-
+  const [discountRates, setDiscountRates] = useState<Array<number>>([...rr]);
+  
   const changeStartYear = (str: string) => setStartYear(parseInt(str));
 
   const changeStartMonth = (str: string) => setStartMonth(parseInt(str));

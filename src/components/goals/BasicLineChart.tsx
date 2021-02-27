@@ -39,21 +39,24 @@ export default function BasicLineChart({
 	const { wipGoal, startYear, currency, cfs, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
-	const getCF = (year: number) => !goal && wipGoal.type === GoalType.FF ? ffResult.ffCfs[year] : cfs[year - new Date().getFullYear()];
+	const getCF = (year: number) => {
+		if (!goal && wipGoal.type === GoalType.FF)
+			return ffResult.ffCfs[year];
+		let startYear = wipGoal.type === GoalType.FF ? new Date().getFullYear() : wipGoal.sy;
+		return cfs[year - startYear];
+	};
 
 	useEffect(() => {
-			let data: Array<any> = [];
+		let data: Array<any> = [];
 		let startVal = numberOfYears ? 1 : wipGoal.type === GoalType.FF ? new Date().getFullYear() : startYear;
 		let endLength = !goal && wipGoal.type === GoalType.FF ? Object.keys(ffResult.ffCfs).length : cfs.length;
-			for (let i = 0; i < endLength; i++)
+		for (let i = 0; i < endLength; i++)
 				data.push({
 					year: '' + (startVal + i),
 					value: getCF(startVal + i)
-				});
-			setData([...data]);
-		},
-		[ cfs, rr ]
-	);
+			});
+		setData([...data]);
+	}, [ cfs, rr ]);
 
 
 	return (
