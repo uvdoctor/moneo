@@ -9,7 +9,7 @@ import { COLORS } from '../../CONSTANTS';
 import { FIGoalContext } from './FIGoalContext';
 
 export default function FIPortfolioChart() {
-	const { goal, allGoals, rr, ffYear, ffGoal }: any = useContext(PlanContext);
+	const { goal, allGoals, allCFs, rr, ffYear, ffGoal }: any = useContext(PlanContext);
   const { wipGoal, cfs }: any = useContext(CalcContext);
   const { wipResult }: any = useContext(FIGoalContext);
   const [tooltips, setTooltips] = useState<any>({});
@@ -87,8 +87,9 @@ export default function FIPortfolioChart() {
 			let runningGoalsContent: any = {};
 			let dataMarkers: Array<string> = [];
 			allGoals.map((g: UpdateGoalInput) => {
-				let startYear = g.sy as number;
-				let endYear = g.ey as number;
+        let startYear = g.sy as number;
+        let cfs = allCFs[g.id];
+        let endYear = startYear + (g.type === GoalType.B ? (g.sm as number > 1 ? g?.sa as number : (g?.sa as number - 1)) : cfs.length - 1);
 				for (let y = startYear + 1; y < endYear; y++) {
 					appendValue(runningGoalsContent, y, getAnnotationRunningYearContent(g));
 				}

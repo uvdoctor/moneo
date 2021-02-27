@@ -178,6 +178,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     setGoal(null);
     if (g.type === GoalType.FF) {
       setFFGoal(g);
+      setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
       return true;
     }
     notification.success({message: 'New Goal Created', description: `Success! New Goal ${g.name} has been Created.`});
@@ -237,8 +238,6 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     if (!allGoals || !allGoals.length) return;
     setGoal((allGoals.filter((g) => g.id === id))[0]);
   };
-
-  const cancelGoal = () => setGoal(null);
 
   const getYearRange = () => {
     let fromYear = nowYear + 1;
@@ -373,7 +372,6 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         updateGoal,
         editGoal,
         removeGoal,
-        cancelGoal,
         calculateFFImpactYear,
         pp,
         goal,

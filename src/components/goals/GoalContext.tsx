@@ -449,8 +449,11 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     if (changeState) {
       setWipGoal(g);
       console.log("New cf result: ", result);
-      if ((loanPer as number) && manualMode < 1 && goalType === GoalType.B)
-        setEndYear(startYear + cfs.length - 1);
+      if ((loanPer as number) && manualMode < 1 && goalType === GoalType.B) {
+        let loanYears = Math.round(loanMonths as number / 12);
+        if (loanYears < cfs.length) setEndYear(startYear + ((startMonth > 1 || loanRepaymentMonths) ? loanYears : loanYears - 1));
+        else setEndYear(startYear + cfs.length - 1);
+      }
       setCFs([...cfs]);
       setDuration(duration);
       if (!summary) {

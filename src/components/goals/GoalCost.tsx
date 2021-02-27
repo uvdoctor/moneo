@@ -28,7 +28,7 @@ export default function GoalCost() {
 
 	return (
 		<Col span={24}>
-			<Section title="Schedule">
+			<Section title="Payment Schedule">
 				<SelectInput
 					pre="From Year"
 					info="Year in which You Start Paying"

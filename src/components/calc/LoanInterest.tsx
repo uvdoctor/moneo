@@ -2,25 +2,21 @@ import React, { Fragment, useContext } from 'react';
 import { Col } from 'antd';
 import { GoalContext } from '../goals/GoalContext';
 import NumberInput from '../form/numberinput';
-import HSwitch from '../HSwitch';
-import { GoalType, LoanType } from '../../api/goals';
-import { PlanContext } from '../goals/PlanContext';
 
 export default function LoanInterest() {
-	const { goal }: any = useContext(PlanContext);
-	const { loanIntRate, setLoanIntRate, loanType, setLoanType }: any = useContext(GoalContext);
+	const { loanIntRate, setLoanIntRate }: any = useContext(GoalContext);
 
-	const changeLoanType = (val: number) => setLoanType(val < 1 ? LoanType.A : LoanType.B);
+	//const changeLoanType = (val: number) => setLoanType(val < 1 ? LoanType.A : LoanType.B);
 
 	return (
 		<Fragment>
-			{goal.type !== GoalType.E && (
+			{/**goal.type !== GoalType.E && (
 				<HSwitch
 					rightText="Balloon Payment"
 					value={loanType === LoanType.A ? 0 : 1}
 					setter={changeLoanType}
 				/>
-			)}
+      )**/}
 			<Col span={24}>
 				<NumberInput
 					pre="Yearly Interest"

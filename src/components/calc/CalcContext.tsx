@@ -61,7 +61,7 @@ function CalcContextProvider({
   summary
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
-  const { rr, addGoal, updateGoal, cancelGoal, isPublicCalc, allCFs, ffResult, oppCostCache, setOppCostCache }: any = useContext(PlanContext);
+  const { rr, addGoal, updateGoal, setGoal, isPublicCalc, allCFs, ffResult, oppCostCache, setOppCostCache }: any = useContext(PlanContext);
   let { goal }: any = useContext(PlanContext);
   if (calculateFor && !goal) goal = calculateFor;
   const { feedbackId }: any = useContext(FeedbackContext);
@@ -201,10 +201,13 @@ function CalcContextProvider({
   const changeEndYear = (str: string) => setEndYear(parseInt(str));
 
   const hasGoalChanged = () => {
-    if (!wipGoal || !wipGoal.id) return false;
+    if (!wipGoal || !wipGoal.id || !cfs?.length) return false;
     let existingCFs: Array<number> = [];
-    if (wipGoal.type === GoalType.FF) existingCFs = Object.values(ffResult.ffCfs);
-    else existingCFs = allCFs[wipGoal.id];
+    if (wipGoal.type === GoalType.FF) {
+      if (ffResult.ffCfs) existingCFs = Object.values(ffResult.ffCfs);
+      else existingCFs = cfs;
+    } else existingCFs = allCFs[wipGoal.id];
+    if (!existingCFs?.length) return false;
     if (cfs.length !== existingCFs.length) return true;
     if (wipGoal.name !== goal.name || wipGoal.imp !== goal.imp
     || wipGoal.sy !== goal.sy || wipGoal.ey !== goal.ey) return true;
@@ -213,20 +216,18 @@ function CalcContextProvider({
     return false;
   };
 
-  const handleCancel = () => {
+  const handleViewReset = () => {
     setShowConfirmationModal(false);
-    cancelGoal();
     setWipGoal(null);
     setBtnClicked(false);
-    setShowConfirmationModal(false);
+    setGoal(null);
   };
 
   const handleSubmit = async (cancelAction?: boolean) => {
     if (isPublicCalc || !wipGoal) return;
     setBtnClicked(true);
-    if (cancelAction)
-      hasGoalChanged() ? setShowConfirmationModal(true) : handleCancel();
-    else {
+    if (cancelAction && hasGoalChanged()) setShowConfirmationModal(true);
+    else if(!cancelAction) {
       if (goal?.id) {
         await updateGoal(wipGoal as UpdateGoalInput, cfs);
         if (goal.type !== GoalType.FF) {
@@ -234,10 +235,8 @@ function CalcContextProvider({
           setOppCostCache(oppCostCache);
         }
       } else await addGoal(wipGoal, cfs);
-      setBtnClicked(false);
-      setWipGoal(null);
-      setShowConfirmationModal(false);
     }
+    handleViewReset();
   };
 
   const handleStepChange = (count: number = 1) => {
@@ -373,7 +372,7 @@ function CalcContextProvider({
           centered
         title={<Fragment><WarningOutlined /> Detected Changes</Fragment>}
           onOk={() => handleSubmit()}
-        onCancel={handleCancel}
+        onCancel={() => handleViewReset()}
         okText="Yes"
         cancelText="No"
                 destroyOnClose
