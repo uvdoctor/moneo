@@ -184,7 +184,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     }
   };
 
-  let getLatestState = () => {
+  const getLatestState = () => {
     let g: any = updateBaseGoal();
     if (goal.id) g.id = goal.id;
     if (isLoanEligible(goalType)) {
@@ -236,6 +236,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   }, [price, assetChgRate, sellAfter]);
 
   useEffect(() => {
+    wipGoal.sy = startYear;
+    setWipGoal(wipGoal);
     if (startYear <= nowYear) setPriceChgRate(0);
     if ((goalType !== GoalType.B) && (isEndYearHidden || startYear > endYear || endYear - startYear > 30))
       setEndYear(startYear);
@@ -495,6 +497,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   ]);
 
   useEffect(() => {
+    wipGoal.ey = endYear;
+    setWipGoal(wipGoal);
     if (goalType !== GoalType.B && manualMode < 1) calculateYearlyCFs();
   }, [endYear]);
 

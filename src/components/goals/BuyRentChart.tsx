@@ -34,7 +34,6 @@ export default function BuyRentChart() {
 					value: brChartData[1].values[i]
 				});
 			}
-			console.log("Stacked data: ", chartData);
 			setStackedData([...chartData]);
 		},
 		[ brChartData ]

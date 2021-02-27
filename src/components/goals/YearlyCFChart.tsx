@@ -18,7 +18,6 @@ export default function YearlyCFChart() {
 		() => {
 			let data: Array<any> = [];
 			const from = new Date().getFullYear() + 1;
-			console.log("Must CFs: ", mustCFs);
 			for (let year = from; year <= ffGoal.sy + (ffGoal.loan.dur as number); year++) {
 				if (mustCFs[year - from]) {
 					data.push({
@@ -43,7 +42,6 @@ export default function YearlyCFChart() {
 				}
 			}
 			setData([...data]);
-			console.log("Data is: ", data);
 		},
 		[ mustCFs, tryCFs, optCFs ]
 	);

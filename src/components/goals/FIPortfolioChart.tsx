@@ -15,7 +15,7 @@ export default function FIPortfolioChart() {
   const [tooltips, setTooltips] = useState<any>({});
   const [dataMarkers, setDataMarkers] = useState<Array<string>>([]);
   const [lineAnnotations, setLineAnnotations] = useState<Array<any>>([]);
-
+  
   useEffect(() => {
     let startYear = goal ? wipGoal.sy : ffGoal.sy;
     let planDuration = goal ? wipGoal.loan?.dur : ffGoal.loan?.dur;
