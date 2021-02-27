@@ -3,8 +3,29 @@
 .footer {
 	background-color: @layout-footer-background;
 
+	& ul {
+		list-style: none;
+		padding: 0;
+	}
+
 	& .dd-content.ant-layout-content {
 		min-height: auto;
-		text-align: center;
+	}
+
+	& .disclaimer {
+		font-size: 12px;
+	}
+
+	& .social-icons {
+		width: 100%;
+
+		& a {
+			color: rgba(0, 0, 0, 0.2);
+			margin-right: 25px;
+
+			&:hover {
+				color: #3d4a53;
+			}
+		}
 	}
 }
