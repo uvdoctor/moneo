@@ -651,10 +651,8 @@ export const sendMail = async (to: String, from: String, template: String, templ
   }).then((res: any) => 
     res.json()
   ).then((data: any) => {
-    console.log("Send email response: ", data);
     return data.success;
-  }).catch((e : any) => {
-    console.error("Error while sending mail ", e);
+  }).catch(() => {
     return false;
   });
 }
