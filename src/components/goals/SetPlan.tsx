@@ -11,7 +11,7 @@ import CalcTemplate from '../calc/CalcTemplate';
 
 export default function SetPlan() {
 	const { goal }: any = useContext(PlanContext);
-	const [activeTab, setActiveTab] = useState<string>('');
+	const [activeTab, setActiveTab] = useState<string>('1');
 
 	return goal ? (
 		<FeedbackContextProvider>

@@ -2,22 +2,22 @@ import React, { useState, useEffect, useContext, Fragment } from 'react';
 import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
 import { CalcContext } from '../calc/CalcContext';
-import { GoalType, UpdateGoalInput } from '../../api/goals';
+import { GoalType } from '../../api/goals';
 import { Col, Row } from 'antd';
 import NumberInput from '../form/numberinput';
 import { COLORS } from '../../CONSTANTS';
+import { toHumanFriendlyCurrency } from '../utils';
 import { PlanContext } from './PlanContext';
-import { getGoalTypes } from './goalutils';
-import { appendValue, toHumanFriendlyCurrency } from '../utils';
-import { FIGoalContext } from './FIGoalContext';
 
 interface BasicLineChartProps {
 	numberOfYears?: boolean;
 	chartTitle?: string;
 	title?: string;
 	showRange?: boolean;
-	showAnnotation?: boolean;
 	summaryView?: boolean;
+	dataMarkers?: Array<string>;
+	lineAnnotations?: Array<any>;
+	tooltips?: any;
 }
 
 const LineChart = dynamic(() => import('bizcharts/lib/plots/LineChart'), { ssr: false });
@@ -30,79 +30,31 @@ export default function BasicLineChart({
 	chartTitle,
 	title,
 	showRange,
-	showAnnotation,
-	summaryView
+	summaryView,
+	dataMarkers,
+	lineAnnotations,
+	tooltips
 }: BasicLineChartProps) {
-	const { allGoals }: any = useContext(PlanContext);
-	const { goal, startYear, currency, cfs, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
-	const { planDuration, wipResult }: any = useContext(FIGoalContext);
+	const { goal, rr, ffResult }: any = useContext(PlanContext);
+	const { wipGoal, startYear, currency, cfs, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
-	const [ annotations, setAnnotations ] = useState<Array<string>>([]);
-	const [ startingGoalsContent, setStartingGoalsContent ] = useState<any>({});
-	const [ runningGoalsContent, setRunningGoalsContent ] = useState<any>({});
-	const [ endingGoalsContent, setEndingGoalsContent ] = useState<any>({});
 
-	useEffect(
-		() => {
+	const getCF = (year: number) => !goal && wipGoal.type === GoalType.FF ? ffResult.ffCfs[year] : cfs[year - new Date().getFullYear()];
+
+	useEffect(() => {
 			let data: Array<any> = [];
-			let startVal = numberOfYears ? 1 : goal.type === GoalType.FF ? new Date().getFullYear() : startYear;
-			for (let i = 0; i < cfs.length; i++)
+		let startVal = numberOfYears ? 1 : wipGoal.type === GoalType.FF ? new Date().getFullYear() : startYear;
+		let endLength = !goal && wipGoal.type === GoalType.FF ? Object.keys(ffResult.ffCfs).length : cfs.length;
+			for (let i = 0; i < endLength; i++)
 				data.push({
 					year: '' + (startVal + i),
-					value: cfs[i]
+					value: getCF(startVal + i)
 				});
-			setData([ ...data ]);
+			setData([...data]);
 		},
-		[ cfs ]
+		[ cfs, rr ]
 	);
 
-	const getCF = (year: number) => cfs[year - new Date().getFullYear()];
-
-	const getAnnotationContent = (g: UpdateGoalInput) => `${getGoalTypes()[g.type as GoalType]} ${g.name}`;
-
-	const getAnnotationEndYearContent = (g: UpdateGoalInput) => {
-		if (g.type === GoalType.B) return 'SELL ' + g.name;
-		return getAnnotationContent(g);
-	};
-
-	const getAnnotationRunningYearContent = (g: UpdateGoalInput) => {
-		if (g.type === GoalType.B) return 'MAINTAIN ' + g.name;
-		return getAnnotationContent(g);
-	};
-
-	useEffect(
-		() => {
-			if (!showAnnotation || !allGoals.length || !cfs.length) {
-				setStartingGoalsContent({});
-				setEndingGoalsContent({});
-				setRunningGoalsContent({});
-				setAnnotations([...[]]);
-				return;
-			}
-			let startingGoalsContent: any = {};
-			let endingGoalsContent: any = {};
-			let runningGoalsContent: any = {};
-			let allAnnotations: Array<string> = [];
-			allGoals.map((g: UpdateGoalInput) => {
-				let startYear = g.sy as number;
-				let endYear = g.ey as number;
-				for (let y = startYear + 1; y < endYear; y++) {
-					appendValue(runningGoalsContent, y, getAnnotationRunningYearContent(g));
-				}
-				appendValue(startingGoalsContent, startYear, getAnnotationContent(g));
-				appendValue(endingGoalsContent, endYear, getAnnotationEndYearContent(g));
-			});
-			Object.keys(startingGoalsContent).map((key: string) => allAnnotations.push(key));
-			Object.keys(endingGoalsContent).map((key: string) => {
-				if (!startingGoalsContent.hasOwnProperty(key)) allAnnotations.push(key);
-			});
-			setStartingGoalsContent(startingGoalsContent);
-			setEndingGoalsContent(endingGoalsContent);
-			setRunningGoalsContent(runningGoalsContent);
-			setAnnotations([ ...allAnnotations ]);
-		},
-		[ showAnnotation, allGoals, cfs ]
-	);
 
 	return (
 		<Fragment>
@@ -137,38 +89,22 @@ export default function BasicLineChart({
 						yAxis={getCommonYAxis()}
 						xAxis={getCommonXAxis(title ? title : numberOfYears ? 'Number of Years' : 'Year')}
 						meta={getCommonMeta(currency)}
-						point={!showAnnotation}
+						point={!dataMarkers}
 						tooltip={{
 							visible: true,
 							title: (title: string) => {
-								if (!annotations.length) return title;
-								let content = '';
-								if (startingGoalsContent[title]) {
-									content += `\n\n\u27A3 Goals Starting:\n${startingGoalsContent[title]}`;
-								}
-								if (runningGoalsContent[title]) {
-									content += `\n\n\u27A2 Goals On-going:\n${runningGoalsContent[title]}`;
-								}
-								if (endingGoalsContent[title]) {
-									content += `\n\n\u27A4 Goals Ending:\n${endingGoalsContent[title]}`;
-								}
-								if (!startingGoalsContent.hasOwnProperty(title)
-									&& !runningGoalsContent.hasOwnProperty(title)
-									&& !endingGoalsContent.hasOwnProperty(title)) {
-									content += '\n\nNo Goal defined.\n'
-									}
-								return `Key Milestones in Year ${title}${content}`;
+								if (!tooltips || !tooltips[title]) return title;
+								return tooltips[title];
 							},
 							formatter: ({ value }: any) => {
 								return {
-									name: value < 0 ? 'Pay' : 'Receive',
+									name: wipGoal.type === GoalType.FF ? 'Portfolio' : value < 0 ? 'Pay' : 'Receive',
 									value: toHumanFriendlyCurrency(Math.abs(value), currency)
 								};
 							},
 						}}
 					>
-						{showAnnotation &&
-							annotations.map((year: string) => (
+						{dataMarkers?.map((year: string) => (
 								<Annotation key={year}
 									position={[ year, getCF(parseInt(year)) ]}
 									text={{
@@ -184,14 +120,13 @@ export default function BasicLineChart({
 									line={{ length: 0 }}
 								/>
 							))}
-						{showAnnotation && wipResult.ffYear &&
-							<Fragment>
-							<AnnotationLine
-								start={['' + wipResult.ffYear, 'min']}
-								end={['' + wipResult.ffYear, 'max']}
+						{lineAnnotations?.map((la: any) =>
+							<AnnotationLine key={la.year}
+								start={['' + la.year, 'min']}
+								end={['' + la.year, 'max']}
 								text={{
-									content: `Financial Independence at Age of ${wipResult.ffYear - startYear}`,
-									position: '10%',
+									content: la.content,
+									position: la.position,
 									style: {
 										fontSize: 13,
 										fontFamily: "'Jost', sans-serif"
@@ -200,27 +135,9 @@ export default function BasicLineChart({
 								style={{
 									lineWidth: 3,
 									lineCap: "round",
-									stroke: COLORS.GREEN
+									stroke: la.color
 								}}
-							/>
-							<AnnotationLine
-								start={['' + (startYear + planDuration) , 'min']}
-								end={['' + (startYear + planDuration), 'max']}
-								text={{
-									content: `Plan ends at Age of ${planDuration}`,
-									position: '20%',
-									style: {
-										fontSize: 13,
-										fontFamily: "'Jost', sans-serif"
-									}
-								}}
-								style={{
-									lineWidth: 3,
-									lineCap: "round",
-									stroke: COLORS.ORANGE
-								}}
-							/>
-						</Fragment>}
+							/>)}
 						<Slider {...getDefaultSliderProps()} />
 					</LineChart>
 				</Col>

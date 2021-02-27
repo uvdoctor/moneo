@@ -28,6 +28,7 @@ import Amplify, { API } from 'aws-amplify';
 import { CALC_NAMES } from '../../CONSTANTS';
 import { FeedbackContext } from '../feedback/FeedbackContext';
 import { PlanContext } from '../goals/PlanContext';
+import FIPortfolioChart from '../goals/FIPortfolioChart';
 
 Amplify.configure(awsconfig);
 
@@ -60,7 +61,7 @@ function CalcContextProvider({
   const { defaultCurrency }: any = useContext(AppContext);
   const { addGoal, updateGoal, cancelGoal, isPublicCalc, allCFs, ffResult, oppCostCache, setOppCostCache }: any = useContext(PlanContext);
   let { goal }: any = useContext(PlanContext);
-  if (calculateFor) goal = calculateFor;
+  if (calculateFor && !goal) goal = calculateFor;
   const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
   const nowYear = new Date().getFullYear();
@@ -118,7 +119,7 @@ function CalcContextProvider({
       label: "Milestones",
       active: true,
       svg: faChartLine,
-      content: <BasicLineChart showAnnotation chartTitle="Yearly Portfolio Forecast with Milestones" />
+      content: <FIPortfolioChart />
       },
       {
         label: 'Target Allocation',

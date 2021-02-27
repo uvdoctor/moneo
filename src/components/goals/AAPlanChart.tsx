@@ -5,6 +5,7 @@ import { getAssetColour } from '../utils';
 import { CalcContext } from '../calc/CalcContext';
 import { FIGoalContext } from './FIGoalContext';
 import { Row, Col } from 'antd';
+import { PlanContext } from './PlanContext';
 
 const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), {
@@ -12,8 +13,9 @@ const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), {
 });
 
 export default function AAPlanChart() {
-	const { startYear, cfs }: any = useContext(CalcContext);
-	const { planDuration, wipResult }: any = useContext(FIGoalContext);
+	const { rr, goal, ffResult, ffGoal }: any = useContext(PlanContext);
+	const { wipGoal, cfs }: any = useContext(CalcContext);
+	const { wipResult }: any = useContext(FIGoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 
 	const hasAllZeros = (arr: Array<number>) => {
@@ -25,7 +27,7 @@ export default function AAPlanChart() {
 
 	const filterAA = () => {
 		let result: any = {};
-		let aa = wipResult.aa;
+		let aa = goal ? wipResult.aa : ffResult.aa;
 		for (let key in aa) {
 			if (!hasAllZeros(aa[key])) {
 				result[key] = aa[key].slice(1);
@@ -40,7 +42,7 @@ export default function AAPlanChart() {
 			let filteredAA = filterAA();
 			let arr: Array<any> = [];
 			const sy = new Date().getFullYear() + 1;
-			let ffGoalEndYear = startYear + planDuration;
+			let ffGoalEndYear = goal ? (wipGoal.sy + wipGoal.loan?.dur) : (ffGoal.sy + ffGoal.loan?.dur);
 			for (let i = 0; i <= ffGoalEndYear - sy; i++) {
 				Object.keys(filteredAA).forEach((key) => {
 					if (filteredAA[key][i]) {
@@ -54,7 +56,7 @@ export default function AAPlanChart() {
 			}
 			setData([ ...arr ]);
 		},
-		[ cfs, startYear, planDuration ]
+		[ cfs, rr ]
 	);
 
 	return (
