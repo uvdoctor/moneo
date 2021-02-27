@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Col, Row } from "antd";
 import {
 	FacebookShareButton,
@@ -12,15 +12,17 @@ import Content from "./Content";
 import { calcList } from "./landing/Calculator";
 
 import "./Footer.less";
+import { PlanContext } from "./goals/PlanContext";
 
 export default function Footer() {
 	const websiteUrl = "https://gomoneo.com";
 	const [url, setUrl] = useState(websiteUrl);
-
+	const { goal }: any = useContext(PlanContext);
+	
 	useEffect(() => setUrl(`${websiteUrl}${window.location.pathname}`), [null]);
 
 	return (
-		<Content className="footer">
+		!goal ? <Content className="footer">
 			<Row
 				gutter={[
 					{ xs: 20, sm: 20, md: 25 },
@@ -93,6 +95,6 @@ export default function Footer() {
 					apply.
 				</Col>
 			</Row>
-		</Content>
+		</Content> : null
 	);
 }
