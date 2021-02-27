@@ -227,7 +227,7 @@ function CalcContextProvider({
     if (isPublicCalc || !wipGoal) return;
     setBtnClicked(true);
     if (cancelAction && hasGoalChanged()) setShowConfirmationModal(true);
-    else if(!cancelAction) {
+    else if (!cancelAction) {
       if (goal?.id) {
         await updateGoal(wipGoal as UpdateGoalInput, cfs);
         if (goal.type !== GoalType.FF) {
@@ -235,8 +235,8 @@ function CalcContextProvider({
           setOppCostCache(oppCostCache);
         }
       } else await addGoal(wipGoal, cfs);
-    }
-    handleViewReset();
+      handleViewReset();
+    } else handleViewReset();
   };
 
   const handleStepChange = (count: number = 1) => {
