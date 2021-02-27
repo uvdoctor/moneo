@@ -99,7 +99,7 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
   const [retirementAge, setRetirementAge] = useState<number>(goal.loan?.rate);
   const [planDuration, setPlanDuration] = useState<number>(goal.loan?.dur);
   const [wipResult, setWipResult] = useState<any>({});
-
+  
   const getLatestGoalState = () => {
     let g: CreateGoalInput =  {
       name: goal.name,

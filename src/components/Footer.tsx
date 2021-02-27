@@ -1,26 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "antd";
 import {
-	EmailShareButton,
-	EmailIcon,
 	FacebookShareButton,
 	FacebookIcon,
 	InstapaperShareButton,
 	InstapaperIcon,
-	LinkedinShareButton,
-	LinkedinIcon,
-	PinterestShareButton,
-	PinterestIcon,
-	RedditShareButton,
-	RedditIcon,
 	TwitterShareButton,
 	TwitterIcon,
-	TelegramShareButton,
-	TelegramIcon,
-	WhatsappShareButton,
-	WhatsappIcon,
-	ViberShareButton,
-	ViberIcon,
 } from "react-share";
 import Content from "./Content";
 import { calcList } from "./landing/Calculator";

@@ -1,4 +1,4 @@
-import { Modal, notification } from "antd";
+import { notification } from "antd";
 import React, { createContext, useEffect, useState, ReactNode } from "react";
 import { CreateGoalInput, GoalType, LMH, UpdateGoalInput } from "../../api/goals";
 import { ASSET_TYPES, ROUTES } from "../../CONSTANTS";
@@ -6,7 +6,6 @@ import { appendValue, removeFromArray } from "../utils";
 import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import { changeGoal, createNewGoal, deleteGoal, getDuration, getGoalsList } from "./goalutils";
 import { useRouter } from 'next/router';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 const PlanContext = createContext({});
 
@@ -35,7 +34,6 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   const [planError, setPlanError] = useState<string>('');
 
   const nowYear = new Date().getFullYear();
-  const { confirm } = Modal;
   
   const loadAllGoals = async () => {
     let goals: Array<CreateGoalInput> | null = await getGoalsList();
@@ -240,27 +238,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     setGoal((allGoals.filter((g) => g.id === id))[0]);
   };
 
-  const cancelGoal = async (
-    g: CreateGoalInput, cfs: Array<number> = [],
-    haveCFsChanged?: boolean
-  ) => {
-    if (haveCFsChanged) confirm({
-      icon: <ExclamationCircleOutlined />,
-      content: 'Do You want to Save this Goal?',
-      onOk() {
-        if (g.id) updateGoal(g as UpdateGoalInput, cfs);
-        else addGoal(g, cfs);
-      },
-      onCancel() {
-        setGoal(null);
-      },
-      okText: 'Save & Go Back',
-      cancelText: 'Go Back without Saving'
-    });
-    else {
-      setGoal(null);
-    }
-  };
+  const cancelGoal = () => setGoal(null);
 
   const getYearRange = () => {
     let fromYear = nowYear + 1;
@@ -407,7 +385,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
         setPlanError,
         ffYear,
         oppCostCache,
-        setOppCostCache
+        setOppCostCache,
       }}
     >
       {children}

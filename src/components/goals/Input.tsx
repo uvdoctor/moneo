@@ -177,7 +177,7 @@ export default function Input() {
 										</Button>
 										<Button
 											type="primary"
-											onClick={() => handleSubmit()}
+											onClick={handleSubmit}
 											icon={<SaveOutlined />}
 											disabled={disableSubmit}
 											loading={btnClicked}

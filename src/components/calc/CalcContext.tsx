@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode, useEffect, useContext } from 'react';
+import React, { createContext, useState, ReactNode, useEffect, useContext, Fragment } from 'react';
 import { initOptions } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import TaxAdjustment from "../calc/TaxAdjustment";
@@ -29,6 +29,8 @@ import { CALC_NAMES } from '../../CONSTANTS';
 import { FeedbackContext } from '../feedback/FeedbackContext';
 import { PlanContext } from '../goals/PlanContext';
 import FIPortfolioChart from '../goals/FIPortfolioChart';
+import { Modal } from 'antd';
+import { WarningOutlined } from '@ant-design/icons';
 
 Amplify.configure(awsconfig);
 
@@ -90,6 +92,7 @@ function CalcContextProvider({
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
   const [oppCost, setOppCost] = useState<number>(0);
   const [ wipGoal, setWipGoal ] = useState<CreateGoalInput | null>(goal);
+  const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
 
  const getCalcType = () => {
   switch(goal.name) {
@@ -200,28 +203,41 @@ function CalcContextProvider({
   const hasGoalChanged = () => {
     if (!wipGoal || !wipGoal.id) return false;
     let existingCFs: Array<number> = [];
-    if (wipGoal.type === GoalType.FF) existingCFs = ffResult.ffCfs;
+    if (wipGoal.type === GoalType.FF) existingCFs = Object.values(ffResult.ffCfs);
     else existingCFs = allCFs[wipGoal.id];
     if (cfs.length !== existingCFs.length) return true;
-    existingCFs.forEach((cf, i) => {
-      if (cf !== cfs[i]) return true;
-    })
+    if (wipGoal.name !== goal.name || wipGoal.imp !== goal.imp
+    || wipGoal.sy !== goal.sy || wipGoal.ey !== goal.ey) return true;
+    for (let i in cfs) 
+      if (cfs[i] !== existingCFs[i]) return true;
     return false;
   };
 
-  const handleSubmit = async (cancelAction: boolean = false) => {
+  const handleCancel = () => {
+    setShowConfirmationModal(false);
+    cancelGoal();
+    setWipGoal(null);
+    setBtnClicked(false);
+    setShowConfirmationModal(false);
+  };
+
+  const handleSubmit = async (cancelAction?: boolean) => {
     if (isPublicCalc || !wipGoal) return;
     setBtnClicked(true);
-    if (cancelAction) await cancelGoal(wipGoal, cfs, hasGoalChanged());
-    else if (goal?.id) {
-      await updateGoal(wipGoal as UpdateGoalInput, cfs);
-      if (goal.type !== GoalType.FF) {
-        oppCostCache[goal.id] = oppCost;
-        setOppCostCache(oppCostCache);
-      }
-    } else await addGoal(wipGoal, cfs);
-    setBtnClicked(false);
-    setWipGoal(null);
+    if (cancelAction)
+      hasGoalChanged() ? setShowConfirmationModal(true) : handleCancel();
+    else {
+      if (goal?.id) {
+        await updateGoal(wipGoal as UpdateGoalInput, cfs);
+        if (goal.type !== GoalType.FF) {
+          oppCostCache[goal.id] = oppCost;
+          setOppCostCache(oppCostCache);
+        }
+      } else await addGoal(wipGoal, cfs);
+      setBtnClicked(false);
+      setWipGoal(null);
+      setShowConfirmationModal(false);
+    }
   };
 
   const handleStepChange = (count: number = 1) => {
@@ -352,6 +368,20 @@ function CalcContextProvider({
 			}}
     >
       {children}
+      {showConfirmationModal &&
+        <Modal
+          centered
+        title={<Fragment><WarningOutlined /> Detected Changes</Fragment>}
+          onOk={() => handleSubmit()}
+        onCancel={handleCancel}
+        okText="Yes"
+        cancelText="No"
+                destroyOnClose
+        visible={showConfirmationModal}
+      >
+        <p>Do You Wish to Save them?</p>
+      </Modal>
+      }
 		</CalcContext.Provider>
 	);
 }
