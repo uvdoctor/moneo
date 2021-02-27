@@ -1,12 +1,13 @@
-import React, { useEffect, useContext } from 'react';
-import { Button, Menu } from 'antd';
+import React, { useEffect, useContext, Fragment } from 'react';
+import { Avatar, Menu } from 'antd';
 import { AppContext } from './AppContext';
 import { Auth, Hub } from 'aws-amplify';
 import { MainMenuProps } from './MainMenu';
 import Link from 'next/link';
-import { ROUTES } from '../CONSTANTS';
+import { COLORS, ROUTES } from '../CONSTANTS';
 import { useRouter } from 'next/router';
 import { calcList } from './landing/Calculator';
+import { UserOutlined } from '@ant-design/icons';
 
 export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 	const { username, setUsername }: any = useContext(AppContext);
@@ -46,8 +47,7 @@ export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 		return () => Hub.remove('auth', listener);
 	}, []);
 
-	const handleLogout = async (e: any) => {
-		e.preventDefault();
+	const handleLogout = async () => {
 		try {
 			await Auth.signOut();
 			Hub.dispatch('auth', { event: 'signOut' });
@@ -89,20 +89,29 @@ export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 					<a>Invest</a>
 				</Link>
 			</Menu.Item>
-			<Menu.Item>
-				<Link href={ROUTES.ABOUT}>
-					<a>About</a>
-				</Link>
-			</Menu.Item>
-			<Menu.Item>
-				<Link href={ROUTES.CONTACT_US}>
-					<a>Contact Us</a>
-				</Link>
-			</Menu.Item>
 			{username && (
-				<Menu.Item>
-					<Button type="text" onClick={(e) => handleLogout(e)}>Logout</Button>
-				</Menu.Item>
+				<SubMenu
+					title={
+						<Fragment>
+							<Avatar size="small" icon={<UserOutlined />} style={{backgroundColor: COLORS.GREEN}} />
+							&nbsp;{username}
+						</Fragment>
+					}
+				>
+					<Menu.Item>
+						<Link href="#">
+							<a>Settings</a>
+						</Link>
+					</Menu.Item>
+					<Menu.Item>
+						<Link href={ROUTES.CONTACT_US}>
+							<a>Support</a>
+						</Link>
+					</Menu.Item>
+					<Menu.Item onClick={handleLogout}>
+							Logout
+					</Menu.Item>
+				</SubMenu>
 			)}
 		</Menu>
 	);
