@@ -1,47 +1,40 @@
-import React, { useCallback, useEffect } from 'react';
-import { usePlaidLink } from 'react-plaid-link';
-import { Button } from 'antd';
-//import { CreateItemInput } from '../../api/goals'
+import { Col, Row, Upload } from 'antd';
+import React from 'react';
+import { PlusOutlined } from '@ant-design/icons';
+import * as pdfjsLib from 'pdfjs-dist';
+//@ts-ignore
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 
 export default function NW() {
-	const onSuccess = useCallback((token, metadata) => {
-		// send token to server
-		/*let item: CreateItemInput = {
-            pt: token,
-            pid: '',
-            pinstid: metadata.institution.institution_id,
-            status: 'success',
-        }*/
-		console.log('Token is ', token);
-		console.log('Metadata is ', metadata);
-		//console.log("Item is ", item)
-	}, []);
-
-	const config = {
-		clientName: 'DollarDarwin',
-		env: 'sandbox',
-		product: [ 'auth', 'transactions' ],
-		publicKey: '7596dc790fd92c79e1d6176b755148',
-		onSuccess
-		// ...
+	const processPDF = async ({ file }: any) => {
+		const reader = new FileReader();
+		await reader.readAsArrayBuffer(file.originFileObj);
+		reader.onload = async () => {
+			let uintFile = new Uint8Array(reader.result as ArrayBuffer);
+			pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+			const pdfLoadingTask = pdfjsLib.getDocument({ data: uintFile });
+			pdfLoadingTask.onPassword = (pwdHandler: Function, response: any) => {
+				pwdHandler(
+					prompt(
+						response === pdfjsLib.PasswordResponses.INCORRECT_PASSWORD
+							? 'Invalid Password. Please try again.'
+							: 'Password'
+					)
+				);
+			};
+			pdfLoadingTask.promise.then((pdf) => console.log(pdf));
+		};
+		reader.onerror = (error: any) => console.log(error);
 	};
 
-	const { open, ready, error, exit } = usePlaidLink(config);
-
-	useEffect(() => {
-		return function cleanup() {
-			exit();
-		};
-	});
-
 	return (
-		<div className="mt-8">
-			<div className="flex justify-center">
-				<Button type="primary" onClick={() => open()} disabled={ready}>
-					Link Account
-				</Button>
-			</div>
-			{error && <div className="text-red">{error}</div>}
-		</div>
+		<Row justify="center">
+			<Col>
+				<Upload action="" listType="text" accept=".pdf" onChange={processPDF}>
+					<PlusOutlined />
+					<div style={{ marginTop: 8 }}>Upload</div>
+				</Upload>
+			</Col>
+		</Row>
 	);
 }
