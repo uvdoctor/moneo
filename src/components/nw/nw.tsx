@@ -1,4 +1,4 @@
-import { Col, Row, Tabs } from 'antd';
+import { Row, Tabs } from 'antd';
 import React, { Fragment, useState } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 //@ts-ignore
@@ -113,10 +113,14 @@ export default function NW() {
 		reader.onerror = (error: any) => console.log(error);
 	};
 
+	const hasNoHoldings = () => !Object.keys(allBonds).length
+		&& !Object.keys(allEquities).length
+		&& !Object.keys(allMFs).length;
+
 	return (
 		<Fragment>
-			<input id="fu" type="file" onChange={(event: any) => processPDF(event?.currentTarget.files[0])} accept=".pdf" />
-			{!fileParsing &&
+			<input id="fu" type="file" onChange={(event: any) => processPDF(event?.currentTarget?.files[0])} accept=".pdf" />
+			{!fileParsing && !hasNoHoldings() ?
 			<Tabs defaultActiveKey="E" type="card">
 				<TabPane key="E" tab="Equities">
 					{Object.keys(allEquities)?.map((key: string, i: number) =>
@@ -139,7 +143,8 @@ export default function NW() {
 						</Row>
 					)}
 				</TabPane>
-			</Tabs>}
+				</Tabs>
+			: !fileParsing && <p>Could not find any investment.</p>}
 		</Fragment>
 	);
 }
