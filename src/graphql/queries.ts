@@ -407,6 +407,157 @@ export const listAccounts = /* GraphQL */ `
     }
   }
 `;
+export const getHoldings = /* GraphQL */ `
+  query GetHoldings($id: ID!) {
+    getHoldings(id: $id) {
+      id
+      instruments {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      deposits {
+        amt
+        start
+        end
+        rate
+      }
+      loans {
+        type
+        per
+        rate
+        dur
+        ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        emi
+        pmi
+        peper
+      }
+      savings
+      current
+      property {
+        type
+        pin
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        address
+      }
+      gold {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      crypto {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      other {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listHoldingss = /* GraphQL */ `
+  query ListHoldingss(
+    $filter: ModelHoldingsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listHoldingss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        instruments {
+          id
+          qty
+          name
+        }
+        deposits {
+          amt
+          start
+          end
+          rate
+        }
+        loans {
+          type
+          per
+          rate
+          dur
+          ry
+          emi
+          pmi
+          peper
+        }
+        savings
+        current
+        property {
+          type
+          pin
+          address
+        }
+        gold {
+          id
+          qty
+          name
+        }
+        crypto {
+          id
+          qty
+          name
+        }
+        other {
+          id
+          qty
+          name
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const getFeedback = /* GraphQL */ `
   query GetFeedback($id: ID!) {
     getFeedback(id: $id) {
@@ -513,6 +664,86 @@ export const listRegistrations = /* GraphQL */ `
         country
         lat
         long
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getInstruments = /* GraphQL */ `
+  query GetInstruments($isin: String!) {
+    getInstruments(isin: $isin) {
+      isin
+      name
+      symbol
+      ttl
+      country
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInstrumentss = /* GraphQL */ `
+  query ListInstrumentss(
+    $isin: String
+    $filter: ModelInstrumentsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInstrumentss(
+      isin: $isin
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        isin
+        name
+        symbol
+        ttl
+        country
+        type
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getInsPrice = /* GraphQL */ `
+  query GetInsPrice($isin: String!) {
+    getInsPrice(isin: $isin) {
+      isin
+      eodAdj
+      ttl
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInsPrices = /* GraphQL */ `
+  query ListInsPrices(
+    $isin: String
+    $filter: ModelInsPriceFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInsPrices(
+      isin: $isin
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        isin
+        eodAdj
+        ttl
         createdAt
         updatedAt
       }

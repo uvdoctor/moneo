@@ -7,11 +7,11 @@ type Data = {
 };
 
 export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
-	const { query: { token }, method } = req;
-	console.log('Going to recaptcha with token: ', token);
+	const { query: { isin }, method } = req;
+	console.log('Going to get data for isin: ', isin);
 	if (method === 'POST') {
 		const api_key = finnhub.ApiClient.instance.authentications['api_key'];
-		api_key.apiKey = "c024huv48v6vllnqorng"
+		api_key.apiKey = "sandbox_c024huv48v6vllnqoro0"
 		const finnhubClient = new finnhub.DefaultApi()
 		console.log(finnhubClient);
 		// fetch('https://www.google.com/recaptcha/api/siteverify', {

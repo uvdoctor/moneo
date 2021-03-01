@@ -191,3 +191,88 @@ type Registration
 	lat: Float
 	long: Float
 }
+
+enum InsType {
+	S
+	CB
+	GB
+	MB
+	ETF
+	M
+}
+
+type Instruments
+	@model
+	@aws_iam
+	@aws_cognito_user_pools
+	@key(fields: ["isin"])
+	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update, delete] }]) {
+	isin: String!
+	name: String!
+	symbol: String!
+	ttl: Int!
+	country: String!
+	type: InsType!
+}
+
+type InsPrice
+	@model
+	@aws_iam
+	@aws_cognito_user_pools
+	@key(fields: ["isin"])
+	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update, delete] }]) {
+	isin: String!
+	eodAdj: Float!
+	ttl: Int!
+}
+
+type Holding {
+	id: String!
+	qty: Float!
+	purchase: [Purchase!]
+	name: String
+}
+
+type Deposit {
+	amt: Float!
+	start: Int!
+	end: Int!
+	rate: Float!
+}
+
+enum PropertyType {
+	P
+	A
+	H
+	C
+	O
+	T
+	OTHER
+}
+
+type Purchase {
+	amt: Float!
+	date: Int!
+	qty: Float!
+	unit: String
+}
+
+type Property {
+	type: PropertyType!
+	pin: Int!
+	purchase: Purchase
+	address: String
+}
+
+type Holdings @model @auth(rules: [{ allow: owner }]) {
+	id: ID!
+	instruments: [Holding!]
+	deposits: [Deposit!]
+	loans: [Loan!]
+	savings: Float!
+	current: Float
+	property: [Property!]
+	gold: [Holding!]
+	crypto: [Holding!]
+	other: [Holding!]
+}

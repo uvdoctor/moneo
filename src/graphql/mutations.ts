@@ -698,6 +698,288 @@ export const deleteRegistration = /* GraphQL */ `
     }
   }
 `;
+export const createHoldings = /* GraphQL */ `
+  mutation CreateHoldings(
+    $input: CreateHoldingsInput!
+    $condition: ModelHoldingsConditionInput
+  ) {
+    createHoldings(input: $input, condition: $condition) {
+      id
+      instruments {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      deposits {
+        amt
+        start
+        end
+        rate
+      }
+      loans {
+        type
+        per
+        rate
+        dur
+        ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        emi
+        pmi
+        peper
+      }
+      savings
+      current
+      property {
+        type
+        pin
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        address
+      }
+      gold {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      crypto {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      other {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateHoldings = /* GraphQL */ `
+  mutation UpdateHoldings(
+    $input: UpdateHoldingsInput!
+    $condition: ModelHoldingsConditionInput
+  ) {
+    updateHoldings(input: $input, condition: $condition) {
+      id
+      instruments {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      deposits {
+        amt
+        start
+        end
+        rate
+      }
+      loans {
+        type
+        per
+        rate
+        dur
+        ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        emi
+        pmi
+        peper
+      }
+      savings
+      current
+      property {
+        type
+        pin
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        address
+      }
+      gold {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      crypto {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      other {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteHoldings = /* GraphQL */ `
+  mutation DeleteHoldings(
+    $input: DeleteHoldingsInput!
+    $condition: ModelHoldingsConditionInput
+  ) {
+    deleteHoldings(input: $input, condition: $condition) {
+      id
+      instruments {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      deposits {
+        amt
+        start
+        end
+        rate
+      }
+      loans {
+        type
+        per
+        rate
+        dur
+        ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        emi
+        pmi
+        peper
+      }
+      savings
+      current
+      property {
+        type
+        pin
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        address
+      }
+      gold {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      crypto {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      other {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const createFeedback = /* GraphQL */ `
   mutation CreateFeedback(
     $input: CreateFeedbackInput!
@@ -795,6 +1077,99 @@ export const updateRegistration = /* GraphQL */ `
       country
       lat
       long
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createInstruments = /* GraphQL */ `
+  mutation CreateInstruments(
+    $input: CreateInstrumentsInput!
+    $condition: ModelInstrumentsConditionInput
+  ) {
+    createInstruments(input: $input, condition: $condition) {
+      isin
+      name
+      symbol
+      ttl
+      country
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateInstruments = /* GraphQL */ `
+  mutation UpdateInstruments(
+    $input: UpdateInstrumentsInput!
+    $condition: ModelInstrumentsConditionInput
+  ) {
+    updateInstruments(input: $input, condition: $condition) {
+      isin
+      name
+      symbol
+      ttl
+      country
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteInstruments = /* GraphQL */ `
+  mutation DeleteInstruments(
+    $input: DeleteInstrumentsInput!
+    $condition: ModelInstrumentsConditionInput
+  ) {
+    deleteInstruments(input: $input, condition: $condition) {
+      isin
+      name
+      symbol
+      ttl
+      country
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createInsPrice = /* GraphQL */ `
+  mutation CreateInsPrice(
+    $input: CreateInsPriceInput!
+    $condition: ModelInsPriceConditionInput
+  ) {
+    createInsPrice(input: $input, condition: $condition) {
+      isin
+      eodAdj
+      ttl
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateInsPrice = /* GraphQL */ `
+  mutation UpdateInsPrice(
+    $input: UpdateInsPriceInput!
+    $condition: ModelInsPriceConditionInput
+  ) {
+    updateInsPrice(input: $input, condition: $condition) {
+      isin
+      eodAdj
+      ttl
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteInsPrice = /* GraphQL */ `
+  mutation DeleteInsPrice(
+    $input: DeleteInsPriceInput!
+    $condition: ModelInsPriceConditionInput
+  ) {
+    deleteInsPrice(input: $input, condition: $condition) {
+      isin
+      eodAdj
+      ttl
       createdAt
       updatedAt
     }

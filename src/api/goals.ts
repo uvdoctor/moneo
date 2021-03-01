@@ -67,6 +67,23 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export type Feedback = {
+  __typename: "Feedback",
+  id?: string,
+  type?: FeedbackType,
+  email?: string,
+  name?: Name,
+  feedback?: string,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type Name = {
+  __typename: "Name",
+  fn?: string,
+  ln?: string | null,
+};
+
 export type DeleteRatingInput = {
   id?: string | null,
 };
@@ -105,6 +122,16 @@ export type ModelIntInput = {
   between?: Array< number | null > | null,
   attributeExists?: boolean | null,
   attributeType?: ModelAttributeTypes | null,
+};
+
+export type Rating = {
+  __typename: "Rating",
+  id?: string,
+  type?: CalcType,
+  rating?: number,
+  feedbackId?: string | null,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type CreateGoalInput = {
@@ -255,6 +282,66 @@ export type ModelYNInput = {
   ne?: YN | null,
 };
 
+export type Goal = {
+  __typename: "Goal",
+  id?: string,
+  sy?: number,
+  sm?: number | null,
+  ey?: number,
+  by?: number,
+  btr?: number | null,
+  tdr?: number,
+  tdl?: number,
+  tbi?: number | null,
+  tdli?: number | null,
+  tbr?: number | null,
+  name?: string,
+  type?: GoalType,
+  ccy?: string,
+  cp?: number | null,
+  chg?: number | null,
+  achg?: number | null,
+  tgts?:  Array<Target > | null,
+  loan?: Loan,
+  imp?: LMH,
+  met?: YN | null,
+  prob?: LMH | null,
+  manual?: number,
+  amper?: number | null,
+  amsy?: number | null,
+  aiper?: number | null,
+  aisy?: number | null,
+  dr?: number | null,
+  sa?: number | null,
+  pg?:  Array<Target | null > | null,
+  pl?:  Array<Target | null > | null,
+  ra?: number | null,
+  rachg?: number | null,
+  createdAt?: string,
+  updatedAt?: string,
+  owner?: string | null,
+};
+
+export type Target = {
+  __typename: "Target",
+  num?: number,
+  val?: number,
+};
+
+export type Loan = {
+  __typename: "Loan",
+  type?: LoanType,
+  per?: number,
+  rate?: number | null,
+  dur?: number,
+  ry?: number,
+  pp?:  Array<Target > | null,
+  ira?:  Array<Target > | null,
+  emi?: number | null,
+  pmi?: number | null,
+  peper?: number | null,
+};
+
 export type UpdateGoalInput = {
   id: string,
   sy?: number | null,
@@ -322,6 +409,17 @@ export type ModelMilestoneAttrInput = {
   ne?: MilestoneAttr | null,
 };
 
+export type Milestone = {
+  __typename: "Milestone",
+  id?: string,
+  tgt?: Target,
+  attr?: MilestoneAttr,
+  goals?:  Array<Goal | null > | null,
+  createdAt?: string,
+  updatedAt?: string,
+  owner?: string | null,
+};
+
 export type UpdateMilestoneInput = {
   id: string,
   tgt?: TargetInput | null,
@@ -350,6 +448,19 @@ export type ModelProfileConditionInput = {
   and?: Array< ModelProfileConditionInput | null > | null,
   or?: Array< ModelProfileConditionInput | null > | null,
   not?: ModelProfileConditionInput | null,
+};
+
+export type Profile = {
+  __typename: "Profile",
+  id?: string,
+  citizen?: string,
+  tr?: string,
+  itr?: number,
+  cgtr?: number,
+  curr?: string,
+  createdAt?: string,
+  updatedAt?: string,
+  owner?: string | null,
 };
 
 export type UpdateProfileInput = {
@@ -383,6 +494,19 @@ export type ModelItemConditionInput = {
   and?: Array< ModelItemConditionInput | null > | null,
   or?: Array< ModelItemConditionInput | null > | null,
   not?: ModelItemConditionInput | null,
+};
+
+export type Item = {
+  __typename: "Item",
+  id?: string,
+  p_at?: string,
+  p_id?: string,
+  p_instid?: string,
+  instname?: string,
+  status?: string,
+  createdAt?: string,
+  updatedAt?: string,
+  owner?: string | null,
 };
 
 export type UpdateItemInput = {
@@ -426,6 +550,25 @@ export type ModelAccountConditionInput = {
   and?: Array< ModelAccountConditionInput | null > | null,
   or?: Array< ModelAccountConditionInput | null > | null,
   not?: ModelAccountConditionInput | null,
+};
+
+export type Account = {
+  __typename: "Account",
+  id?: string,
+  item?: Item,
+  p_id?: string,
+  name?: string,
+  mask?: string,
+  offname?: string,
+  currbal?: number,
+  availbal?: number,
+  curr?: string,
+  uncurr?: string | null,
+  type?: string,
+  subtype?: string,
+  createdAt?: string,
+  updatedAt?: string,
+  owner?: string | null,
 };
 
 export type UpdateAccountInput = {
@@ -472,6 +615,144 @@ export enum Status {
   P = "P",
 }
 
+
+export type Registration = {
+  __typename: "Registration",
+  email?: string,
+  status?: Status,
+  code?: string,
+  country?: string,
+  lat?: number | null,
+  long?: number | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type CreateHoldingsInput = {
+  id?: string | null,
+  instruments?: Array< HoldingInput > | null,
+  deposits?: Array< DepositInput > | null,
+  loans?: Array< LoanInput > | null,
+  savings: number,
+  current?: number | null,
+  property?: Array< PropertyInput > | null,
+  gold?: Array< HoldingInput > | null,
+  crypto?: Array< HoldingInput > | null,
+  other?: Array< HoldingInput > | null,
+};
+
+export type HoldingInput = {
+  id: string,
+  qty: number,
+  purchase?: Array< PurchaseInput > | null,
+  name?: string | null,
+};
+
+export type PurchaseInput = {
+  amt: number,
+  date: number,
+  qty: number,
+  unit?: string | null,
+};
+
+export type DepositInput = {
+  amt: number,
+  start: number,
+  end: number,
+  rate: number,
+};
+
+export type PropertyInput = {
+  type: PropertyType,
+  pin: number,
+  purchase?: PurchaseInput | null,
+  address?: string | null,
+};
+
+export enum PropertyType {
+  P = "P",
+  A = "A",
+  H = "H",
+  C = "C",
+  O = "O",
+  T = "T",
+  OTHER = "OTHER",
+}
+
+
+export type ModelHoldingsConditionInput = {
+  savings?: ModelFloatInput | null,
+  current?: ModelFloatInput | null,
+  and?: Array< ModelHoldingsConditionInput | null > | null,
+  or?: Array< ModelHoldingsConditionInput | null > | null,
+  not?: ModelHoldingsConditionInput | null,
+};
+
+export type Holdings = {
+  __typename: "Holdings",
+  id?: string,
+  instruments?:  Array<Holding > | null,
+  deposits?:  Array<Deposit > | null,
+  loans?:  Array<Loan > | null,
+  savings?: number,
+  current?: number | null,
+  property?:  Array<Property > | null,
+  gold?:  Array<Holding > | null,
+  crypto?:  Array<Holding > | null,
+  other?:  Array<Holding > | null,
+  createdAt?: string,
+  updatedAt?: string,
+  owner?: string | null,
+};
+
+export type Holding = {
+  __typename: "Holding",
+  id?: string,
+  qty?: number,
+  purchase?:  Array<Purchase > | null,
+  name?: string | null,
+};
+
+export type Purchase = {
+  __typename: "Purchase",
+  amt?: number,
+  date?: number,
+  qty?: number,
+  unit?: string | null,
+};
+
+export type Deposit = {
+  __typename: "Deposit",
+  amt?: number,
+  start?: number,
+  end?: number,
+  rate?: number,
+};
+
+export type Property = {
+  __typename: "Property",
+  type?: PropertyType,
+  pin?: number,
+  purchase?: Purchase,
+  address?: string | null,
+};
+
+export type UpdateHoldingsInput = {
+  id: string,
+  instruments?: Array< HoldingInput > | null,
+  deposits?: Array< DepositInput > | null,
+  loans?: Array< LoanInput > | null,
+  savings?: number | null,
+  current?: number | null,
+  property?: Array< PropertyInput > | null,
+  gold?: Array< HoldingInput > | null,
+  crypto?: Array< HoldingInput > | null,
+  other?: Array< HoldingInput > | null,
+};
+
+export type DeleteHoldingsInput = {
+  id?: string | null,
+};
 
 export type CreateFeedbackInput = {
   id?: string | null,
@@ -526,6 +807,99 @@ export type UpdateRegistrationInput = {
   long?: number | null,
 };
 
+export type CreateInstrumentsInput = {
+  isin: string,
+  name: string,
+  symbol: string,
+  ttl: number,
+  country: string,
+  type: InsType,
+};
+
+export enum InsType {
+  S = "S",
+  CB = "CB",
+  GB = "GB",
+  MB = "MB",
+  ETF = "ETF",
+  M = "M",
+}
+
+
+export type ModelInstrumentsConditionInput = {
+  name?: ModelStringInput | null,
+  symbol?: ModelStringInput | null,
+  ttl?: ModelIntInput | null,
+  country?: ModelStringInput | null,
+  type?: ModelInsTypeInput | null,
+  and?: Array< ModelInstrumentsConditionInput | null > | null,
+  or?: Array< ModelInstrumentsConditionInput | null > | null,
+  not?: ModelInstrumentsConditionInput | null,
+};
+
+export type ModelInsTypeInput = {
+  eq?: InsType | null,
+  ne?: InsType | null,
+};
+
+export type Instruments = {
+  __typename: "Instruments",
+  isin?: string,
+  name?: string,
+  symbol?: string,
+  ttl?: number,
+  country?: string,
+  type?: InsType,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateInstrumentsInput = {
+  isin: string,
+  name?: string | null,
+  symbol?: string | null,
+  ttl?: number | null,
+  country?: string | null,
+  type?: InsType | null,
+};
+
+export type DeleteInstrumentsInput = {
+  isin: string,
+};
+
+export type CreateInsPriceInput = {
+  isin: string,
+  eodAdj: number,
+  ttl: number,
+};
+
+export type ModelInsPriceConditionInput = {
+  eodAdj?: ModelFloatInput | null,
+  ttl?: ModelIntInput | null,
+  and?: Array< ModelInsPriceConditionInput | null > | null,
+  or?: Array< ModelInsPriceConditionInput | null > | null,
+  not?: ModelInsPriceConditionInput | null,
+};
+
+export type InsPrice = {
+  __typename: "InsPrice",
+  isin?: string,
+  eodAdj?: number,
+  ttl?: number,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateInsPriceInput = {
+  isin: string,
+  eodAdj?: number | null,
+  ttl?: number | null,
+};
+
+export type DeleteInsPriceInput = {
+  isin: string,
+};
+
 export type ModelGoalFilterInput = {
   id?: ModelIDInput | null,
   sy?: ModelIntInput | null,
@@ -577,12 +951,24 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
+export type ModelGoalConnection = {
+  __typename: "ModelGoalConnection",
+  items?:  Array<Goal | null > | null,
+  nextToken?: string | null,
+};
+
 export type ModelMilestoneFilterInput = {
   id?: ModelIDInput | null,
   attr?: ModelMilestoneAttrInput | null,
   and?: Array< ModelMilestoneFilterInput | null > | null,
   or?: Array< ModelMilestoneFilterInput | null > | null,
   not?: ModelMilestoneFilterInput | null,
+};
+
+export type ModelMilestoneConnection = {
+  __typename: "ModelMilestoneConnection",
+  items?:  Array<Milestone | null > | null,
+  nextToken?: string | null,
 };
 
 export type ModelProfileFilterInput = {
@@ -597,6 +983,12 @@ export type ModelProfileFilterInput = {
   not?: ModelProfileFilterInput | null,
 };
 
+export type ModelProfileConnection = {
+  __typename: "ModelProfileConnection",
+  items?:  Array<Profile | null > | null,
+  nextToken?: string | null,
+};
+
 export type ModelItemFilterInput = {
   id?: ModelIDInput | null,
   p_at?: ModelStringInput | null,
@@ -607,6 +999,12 @@ export type ModelItemFilterInput = {
   and?: Array< ModelItemFilterInput | null > | null,
   or?: Array< ModelItemFilterInput | null > | null,
   not?: ModelItemFilterInput | null,
+};
+
+export type ModelItemConnection = {
+  __typename: "ModelItemConnection",
+  items?:  Array<Item | null > | null,
+  nextToken?: string | null,
 };
 
 export type ModelAccountFilterInput = {
@@ -626,6 +1024,27 @@ export type ModelAccountFilterInput = {
   not?: ModelAccountFilterInput | null,
 };
 
+export type ModelAccountConnection = {
+  __typename: "ModelAccountConnection",
+  items?:  Array<Account | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelHoldingsFilterInput = {
+  id?: ModelIDInput | null,
+  savings?: ModelFloatInput | null,
+  current?: ModelFloatInput | null,
+  and?: Array< ModelHoldingsFilterInput | null > | null,
+  or?: Array< ModelHoldingsFilterInput | null > | null,
+  not?: ModelHoldingsFilterInput | null,
+};
+
+export type ModelHoldingsConnection = {
+  __typename: "ModelHoldingsConnection",
+  items?:  Array<Holdings | null > | null,
+  nextToken?: string | null,
+};
+
 export type ModelFeedbackFilterInput = {
   id?: ModelIDInput | null,
   type?: ModelFeedbackTypeInput | null,
@@ -636,6 +1055,12 @@ export type ModelFeedbackFilterInput = {
   not?: ModelFeedbackFilterInput | null,
 };
 
+export type ModelFeedbackConnection = {
+  __typename: "ModelFeedbackConnection",
+  items?:  Array<Feedback | null > | null,
+  nextToken?: string | null,
+};
+
 export type ModelRatingFilterInput = {
   id?: ModelIDInput | null,
   type?: ModelCalcTypeInput | null,
@@ -644,6 +1069,12 @@ export type ModelRatingFilterInput = {
   and?: Array< ModelRatingFilterInput | null > | null,
   or?: Array< ModelRatingFilterInput | null > | null,
   not?: ModelRatingFilterInput | null,
+};
+
+export type ModelRatingConnection = {
+  __typename: "ModelRatingConnection",
+  items?:  Array<Rating | null > | null,
+  nextToken?: string | null,
 };
 
 export type ModelRegistrationFilterInput = {
@@ -664,13 +1095,52 @@ export enum ModelSortDirection {
 }
 
 
+export type ModelRegistrationConnection = {
+  __typename: "ModelRegistrationConnection",
+  items?:  Array<Registration | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelInstrumentsFilterInput = {
+  isin?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  symbol?: ModelStringInput | null,
+  ttl?: ModelIntInput | null,
+  country?: ModelStringInput | null,
+  type?: ModelInsTypeInput | null,
+  and?: Array< ModelInstrumentsFilterInput | null > | null,
+  or?: Array< ModelInstrumentsFilterInput | null > | null,
+  not?: ModelInstrumentsFilterInput | null,
+};
+
+export type ModelInstrumentsConnection = {
+  __typename: "ModelInstrumentsConnection",
+  items?:  Array<Instruments | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelInsPriceFilterInput = {
+  isin?: ModelStringInput | null,
+  eodAdj?: ModelFloatInput | null,
+  ttl?: ModelIntInput | null,
+  and?: Array< ModelInsPriceFilterInput | null > | null,
+  or?: Array< ModelInsPriceFilterInput | null > | null,
+  not?: ModelInsPriceFilterInput | null,
+};
+
+export type ModelInsPriceConnection = {
+  __typename: "ModelInsPriceConnection",
+  items?:  Array<InsPrice | null > | null,
+  nextToken?: string | null,
+};
+
 export type DeleteFeedbackMutationVariables = {
-  input: DeleteFeedbackInput,
+  input?: DeleteFeedbackInput,
   condition?: ModelFeedbackConditionInput | null,
 };
 
 export type DeleteFeedbackMutation = {
-  deleteFeedback:  {
+  deleteFeedback?:  {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
@@ -678,7 +1148,7 @@ export type DeleteFeedbackMutation = {
     name:  {
       __typename: "Name",
       fn: string,
-      ln: string | null,
+      ln?: string | null,
     },
     feedback: string,
     createdAt: string,
@@ -687,266 +1157,266 @@ export type DeleteFeedbackMutation = {
 };
 
 export type DeleteRatingMutationVariables = {
-  input: DeleteRatingInput,
+  input?: DeleteRatingInput,
   condition?: ModelRatingConditionInput | null,
 };
 
 export type DeleteRatingMutation = {
-  deleteRating:  {
+  deleteRating?:  {
     __typename: "Rating",
     id: string,
     type: CalcType,
     rating: number,
-    feedbackId: string | null,
+    feedbackId?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type CreateGoalMutationVariables = {
-  input: CreateGoalInput,
+  input?: CreateGoalInput,
   condition?: ModelGoalConditionInput | null,
 };
 
 export type CreateGoalMutation = {
-  createGoal:  {
+  createGoal?:  {
     __typename: "Goal",
     id: string,
     sy: number,
-    sm: number | null,
+    sm?: number | null,
     ey: number,
     by: number,
-    btr: number | null,
+    btr?: number | null,
     tdr: number,
     tdl: number,
-    tbi: number | null,
-    tdli: number | null,
-    tbr: number | null,
+    tbi?: number | null,
+    tdli?: number | null,
+    tbr?: number | null,
     name: string,
     type: GoalType,
     ccy: string,
-    cp: number | null,
-    chg: number | null,
-    achg: number | null,
-    tgts:  Array< {
+    cp?: number | null,
+    chg?: number | null,
+    achg?: number | null,
+    tgts?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } > | null,
-    loan:  {
+    loan?:  {
       __typename: "Loan",
       type: LoanType,
       per: number,
-      rate: number | null,
+      rate?: number | null,
       dur: number,
       ry: number,
-      pp:  Array< {
+      pp?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      ira:  Array< {
+      ira?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      emi: number | null,
-      pmi: number | null,
-      peper: number | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
     } | null,
     imp: LMH,
-    met: YN | null,
-    prob: LMH | null,
+    met?: YN | null,
+    prob?: LMH | null,
     manual: number,
-    amper: number | null,
-    amsy: number | null,
-    aiper: number | null,
-    aisy: number | null,
-    dr: number | null,
-    sa: number | null,
-    pg:  Array< {
+    amper?: number | null,
+    amsy?: number | null,
+    aiper?: number | null,
+    aisy?: number | null,
+    dr?: number | null,
+    sa?: number | null,
+    pg?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    pl:  Array< {
+    pl?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    ra: number | null,
-    rachg: number | null,
+    ra?: number | null,
+    rachg?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type UpdateGoalMutationVariables = {
-  input: UpdateGoalInput,
+  input?: UpdateGoalInput,
   condition?: ModelGoalConditionInput | null,
 };
 
 export type UpdateGoalMutation = {
-  updateGoal:  {
+  updateGoal?:  {
     __typename: "Goal",
     id: string,
     sy: number,
-    sm: number | null,
+    sm?: number | null,
     ey: number,
     by: number,
-    btr: number | null,
+    btr?: number | null,
     tdr: number,
     tdl: number,
-    tbi: number | null,
-    tdli: number | null,
-    tbr: number | null,
+    tbi?: number | null,
+    tdli?: number | null,
+    tbr?: number | null,
     name: string,
     type: GoalType,
     ccy: string,
-    cp: number | null,
-    chg: number | null,
-    achg: number | null,
-    tgts:  Array< {
+    cp?: number | null,
+    chg?: number | null,
+    achg?: number | null,
+    tgts?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } > | null,
-    loan:  {
+    loan?:  {
       __typename: "Loan",
       type: LoanType,
       per: number,
-      rate: number | null,
+      rate?: number | null,
       dur: number,
       ry: number,
-      pp:  Array< {
+      pp?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      ira:  Array< {
+      ira?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      emi: number | null,
-      pmi: number | null,
-      peper: number | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
     } | null,
     imp: LMH,
-    met: YN | null,
-    prob: LMH | null,
+    met?: YN | null,
+    prob?: LMH | null,
     manual: number,
-    amper: number | null,
-    amsy: number | null,
-    aiper: number | null,
-    aisy: number | null,
-    dr: number | null,
-    sa: number | null,
-    pg:  Array< {
+    amper?: number | null,
+    amsy?: number | null,
+    aiper?: number | null,
+    aisy?: number | null,
+    dr?: number | null,
+    sa?: number | null,
+    pg?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    pl:  Array< {
+    pl?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    ra: number | null,
-    rachg: number | null,
+    ra?: number | null,
+    rachg?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type DeleteGoalMutationVariables = {
-  input: DeleteGoalInput,
+  input?: DeleteGoalInput,
   condition?: ModelGoalConditionInput | null,
 };
 
 export type DeleteGoalMutation = {
-  deleteGoal:  {
+  deleteGoal?:  {
     __typename: "Goal",
     id: string,
     sy: number,
-    sm: number | null,
+    sm?: number | null,
     ey: number,
     by: number,
-    btr: number | null,
+    btr?: number | null,
     tdr: number,
     tdl: number,
-    tbi: number | null,
-    tdli: number | null,
-    tbr: number | null,
+    tbi?: number | null,
+    tdli?: number | null,
+    tbr?: number | null,
     name: string,
     type: GoalType,
     ccy: string,
-    cp: number | null,
-    chg: number | null,
-    achg: number | null,
-    tgts:  Array< {
+    cp?: number | null,
+    chg?: number | null,
+    achg?: number | null,
+    tgts?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } > | null,
-    loan:  {
+    loan?:  {
       __typename: "Loan",
       type: LoanType,
       per: number,
-      rate: number | null,
+      rate?: number | null,
       dur: number,
       ry: number,
-      pp:  Array< {
+      pp?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      ira:  Array< {
+      ira?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      emi: number | null,
-      pmi: number | null,
-      peper: number | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
     } | null,
     imp: LMH,
-    met: YN | null,
-    prob: LMH | null,
+    met?: YN | null,
+    prob?: LMH | null,
     manual: number,
-    amper: number | null,
-    amsy: number | null,
-    aiper: number | null,
-    aisy: number | null,
-    dr: number | null,
-    sa: number | null,
-    pg:  Array< {
+    amper?: number | null,
+    amsy?: number | null,
+    aiper?: number | null,
+    aisy?: number | null,
+    dr?: number | null,
+    sa?: number | null,
+    pg?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    pl:  Array< {
+    pl?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    ra: number | null,
-    rachg: number | null,
+    ra?: number | null,
+    rachg?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type CreateMilestoneMutationVariables = {
-  input: CreateMilestoneInput,
+  input?: CreateMilestoneInput,
   condition?: ModelMilestoneConditionInput | null,
 };
 
 export type CreateMilestoneMutation = {
-  createMilestone:  {
+  createMilestone?:  {
     __typename: "Milestone",
     id: string,
     tgt:  {
@@ -955,80 +1425,80 @@ export type CreateMilestoneMutation = {
       val: number,
     },
     attr: MilestoneAttr,
-    goals:  Array< {
+    goals?:  Array< {
       __typename: "Goal",
       id: string,
       sy: number,
-      sm: number | null,
+      sm?: number | null,
       ey: number,
       by: number,
-      btr: number | null,
+      btr?: number | null,
       tdr: number,
       tdl: number,
-      tbi: number | null,
-      tdli: number | null,
-      tbr: number | null,
+      tbi?: number | null,
+      tdli?: number | null,
+      tbr?: number | null,
       name: string,
       type: GoalType,
       ccy: string,
-      cp: number | null,
-      chg: number | null,
-      achg: number | null,
-      tgts:  Array< {
+      cp?: number | null,
+      chg?: number | null,
+      achg?: number | null,
+      tgts?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      loan:  {
+      loan?:  {
         __typename: "Loan",
         type: LoanType,
         per: number,
-        rate: number | null,
+        rate?: number | null,
         dur: number,
         ry: number,
-        emi: number | null,
-        pmi: number | null,
-        peper: number | null,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
       } | null,
       imp: LMH,
-      met: YN | null,
-      prob: LMH | null,
+      met?: YN | null,
+      prob?: LMH | null,
       manual: number,
-      amper: number | null,
-      amsy: number | null,
-      aiper: number | null,
-      aisy: number | null,
-      dr: number | null,
-      sa: number | null,
-      pg:  Array< {
+      amper?: number | null,
+      amsy?: number | null,
+      aiper?: number | null,
+      aisy?: number | null,
+      dr?: number | null,
+      sa?: number | null,
+      pg?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      pl:  Array< {
+      pl?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      ra: number | null,
-      rachg: number | null,
+      ra?: number | null,
+      rachg?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type UpdateMilestoneMutationVariables = {
-  input: UpdateMilestoneInput,
+  input?: UpdateMilestoneInput,
   condition?: ModelMilestoneConditionInput | null,
 };
 
 export type UpdateMilestoneMutation = {
-  updateMilestone:  {
+  updateMilestone?:  {
     __typename: "Milestone",
     id: string,
     tgt:  {
@@ -1037,80 +1507,80 @@ export type UpdateMilestoneMutation = {
       val: number,
     },
     attr: MilestoneAttr,
-    goals:  Array< {
+    goals?:  Array< {
       __typename: "Goal",
       id: string,
       sy: number,
-      sm: number | null,
+      sm?: number | null,
       ey: number,
       by: number,
-      btr: number | null,
+      btr?: number | null,
       tdr: number,
       tdl: number,
-      tbi: number | null,
-      tdli: number | null,
-      tbr: number | null,
+      tbi?: number | null,
+      tdli?: number | null,
+      tbr?: number | null,
       name: string,
       type: GoalType,
       ccy: string,
-      cp: number | null,
-      chg: number | null,
-      achg: number | null,
-      tgts:  Array< {
+      cp?: number | null,
+      chg?: number | null,
+      achg?: number | null,
+      tgts?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      loan:  {
+      loan?:  {
         __typename: "Loan",
         type: LoanType,
         per: number,
-        rate: number | null,
+        rate?: number | null,
         dur: number,
         ry: number,
-        emi: number | null,
-        pmi: number | null,
-        peper: number | null,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
       } | null,
       imp: LMH,
-      met: YN | null,
-      prob: LMH | null,
+      met?: YN | null,
+      prob?: LMH | null,
       manual: number,
-      amper: number | null,
-      amsy: number | null,
-      aiper: number | null,
-      aisy: number | null,
-      dr: number | null,
-      sa: number | null,
-      pg:  Array< {
+      amper?: number | null,
+      amsy?: number | null,
+      aiper?: number | null,
+      aisy?: number | null,
+      dr?: number | null,
+      sa?: number | null,
+      pg?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      pl:  Array< {
+      pl?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      ra: number | null,
-      rachg: number | null,
+      ra?: number | null,
+      rachg?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type DeleteMilestoneMutationVariables = {
-  input: DeleteMilestoneInput,
+  input?: DeleteMilestoneInput,
   condition?: ModelMilestoneConditionInput | null,
 };
 
 export type DeleteMilestoneMutation = {
-  deleteMilestone:  {
+  deleteMilestone?:  {
     __typename: "Milestone",
     id: string,
     tgt:  {
@@ -1119,80 +1589,80 @@ export type DeleteMilestoneMutation = {
       val: number,
     },
     attr: MilestoneAttr,
-    goals:  Array< {
+    goals?:  Array< {
       __typename: "Goal",
       id: string,
       sy: number,
-      sm: number | null,
+      sm?: number | null,
       ey: number,
       by: number,
-      btr: number | null,
+      btr?: number | null,
       tdr: number,
       tdl: number,
-      tbi: number | null,
-      tdli: number | null,
-      tbr: number | null,
+      tbi?: number | null,
+      tdli?: number | null,
+      tbr?: number | null,
       name: string,
       type: GoalType,
       ccy: string,
-      cp: number | null,
-      chg: number | null,
-      achg: number | null,
-      tgts:  Array< {
+      cp?: number | null,
+      chg?: number | null,
+      achg?: number | null,
+      tgts?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      loan:  {
+      loan?:  {
         __typename: "Loan",
         type: LoanType,
         per: number,
-        rate: number | null,
+        rate?: number | null,
         dur: number,
         ry: number,
-        emi: number | null,
-        pmi: number | null,
-        peper: number | null,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
       } | null,
       imp: LMH,
-      met: YN | null,
-      prob: LMH | null,
+      met?: YN | null,
+      prob?: LMH | null,
       manual: number,
-      amper: number | null,
-      amsy: number | null,
-      aiper: number | null,
-      aisy: number | null,
-      dr: number | null,
-      sa: number | null,
-      pg:  Array< {
+      amper?: number | null,
+      amsy?: number | null,
+      aiper?: number | null,
+      aisy?: number | null,
+      dr?: number | null,
+      sa?: number | null,
+      pg?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      pl:  Array< {
+      pl?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      ra: number | null,
-      rachg: number | null,
+      ra?: number | null,
+      rachg?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type CreateProfileMutationVariables = {
-  input: CreateProfileInput,
+  input?: CreateProfileInput,
   condition?: ModelProfileConditionInput | null,
 };
 
 export type CreateProfileMutation = {
-  createProfile:  {
+  createProfile?:  {
     __typename: "Profile",
     id: string,
     citizen: string,
@@ -1202,17 +1672,17 @@ export type CreateProfileMutation = {
     curr: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type UpdateProfileMutationVariables = {
-  input: UpdateProfileInput,
+  input?: UpdateProfileInput,
   condition?: ModelProfileConditionInput | null,
 };
 
 export type UpdateProfileMutation = {
-  updateProfile:  {
+  updateProfile?:  {
     __typename: "Profile",
     id: string,
     citizen: string,
@@ -1222,17 +1692,17 @@ export type UpdateProfileMutation = {
     curr: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type DeleteProfileMutationVariables = {
-  input: DeleteProfileInput,
+  input?: DeleteProfileInput,
   condition?: ModelProfileConditionInput | null,
 };
 
 export type DeleteProfileMutation = {
-  deleteProfile:  {
+  deleteProfile?:  {
     __typename: "Profile",
     id: string,
     citizen: string,
@@ -1242,17 +1712,17 @@ export type DeleteProfileMutation = {
     curr: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type CreateItemMutationVariables = {
-  input: CreateItemInput,
+  input?: CreateItemInput,
   condition?: ModelItemConditionInput | null,
 };
 
 export type CreateItemMutation = {
-  createItem:  {
+  createItem?:  {
     __typename: "Item",
     id: string,
     p_at: string,
@@ -1262,17 +1732,17 @@ export type CreateItemMutation = {
     status: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type UpdateItemMutationVariables = {
-  input: UpdateItemInput,
+  input?: UpdateItemInput,
   condition?: ModelItemConditionInput | null,
 };
 
 export type UpdateItemMutation = {
-  updateItem:  {
+  updateItem?:  {
     __typename: "Item",
     id: string,
     p_at: string,
@@ -1282,17 +1752,17 @@ export type UpdateItemMutation = {
     status: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type DeleteItemMutationVariables = {
-  input: DeleteItemInput,
+  input?: DeleteItemInput,
   condition?: ModelItemConditionInput | null,
 };
 
 export type DeleteItemMutation = {
-  deleteItem:  {
+  deleteItem?:  {
     __typename: "Item",
     id: string,
     p_at: string,
@@ -1302,20 +1772,20 @@ export type DeleteItemMutation = {
     status: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type CreateAccountMutationVariables = {
-  input: CreateAccountInput,
+  input?: CreateAccountInput,
   condition?: ModelAccountConditionInput | null,
 };
 
 export type CreateAccountMutation = {
-  createAccount:  {
+  createAccount?:  {
     __typename: "Account",
     id: string,
-    item:  {
+    item?:  {
       __typename: "Item",
       id: string,
       p_at: string,
@@ -1325,7 +1795,7 @@ export type CreateAccountMutation = {
       status: string,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null,
     p_id: string,
     name: string,
@@ -1334,25 +1804,25 @@ export type CreateAccountMutation = {
     currbal: number,
     availbal: number,
     curr: string,
-    uncurr: string | null,
+    uncurr?: string | null,
     type: string,
     subtype: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type UpdateAccountMutationVariables = {
-  input: UpdateAccountInput,
+  input?: UpdateAccountInput,
   condition?: ModelAccountConditionInput | null,
 };
 
 export type UpdateAccountMutation = {
-  updateAccount:  {
+  updateAccount?:  {
     __typename: "Account",
     id: string,
-    item:  {
+    item?:  {
       __typename: "Item",
       id: string,
       p_at: string,
@@ -1362,7 +1832,7 @@ export type UpdateAccountMutation = {
       status: string,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null,
     p_id: string,
     name: string,
@@ -1371,25 +1841,25 @@ export type UpdateAccountMutation = {
     currbal: number,
     availbal: number,
     curr: string,
-    uncurr: string | null,
+    uncurr?: string | null,
     type: string,
     subtype: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type DeleteAccountMutationVariables = {
-  input: DeleteAccountInput,
+  input?: DeleteAccountInput,
   condition?: ModelAccountConditionInput | null,
 };
 
 export type DeleteAccountMutation = {
-  deleteAccount:  {
+  deleteAccount?:  {
     __typename: "Account",
     id: string,
-    item:  {
+    item?:  {
       __typename: "Item",
       id: string,
       p_at: string,
@@ -1399,7 +1869,7 @@ export type DeleteAccountMutation = {
       status: string,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null,
     p_id: string,
     name: string,
@@ -1408,41 +1878,371 @@ export type DeleteAccountMutation = {
     currbal: number,
     availbal: number,
     curr: string,
-    uncurr: string | null,
+    uncurr?: string | null,
     type: string,
     subtype: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type DeleteRegistrationMutationVariables = {
-  input: DeleteRegistrationInput,
+  input?: DeleteRegistrationInput,
   condition?: ModelRegistrationConditionInput | null,
 };
 
 export type DeleteRegistrationMutation = {
-  deleteRegistration:  {
+  deleteRegistration?:  {
     __typename: "Registration",
     email: string,
     status: Status,
     code: string,
     country: string,
-    lat: number | null,
-    long: number | null,
+    lat?: number | null,
+    long?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
+export type CreateHoldingsMutationVariables = {
+  input?: CreateHoldingsInput,
+  condition?: ModelHoldingsConditionInput | null,
+};
+
+export type CreateHoldingsMutation = {
+  createHoldings?:  {
+    __typename: "Holdings",
+    id: string,
+    instruments?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    deposits?:  Array< {
+      __typename: "Deposit",
+      amt: number,
+      start: number,
+      end: number,
+      rate: number,
+    } > | null,
+    loans?:  Array< {
+      __typename: "Loan",
+      type: LoanType,
+      per: number,
+      rate?: number | null,
+      dur: number,
+      ry: number,
+      pp?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      ira?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
+    } > | null,
+    savings: number,
+    current?: number | null,
+    property?:  Array< {
+      __typename: "Property",
+      type: PropertyType,
+      pin: number,
+      purchase?:  {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } | null,
+      address?: string | null,
+    } > | null,
+    gold?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    crypto?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    other?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateHoldingsMutationVariables = {
+  input?: UpdateHoldingsInput,
+  condition?: ModelHoldingsConditionInput | null,
+};
+
+export type UpdateHoldingsMutation = {
+  updateHoldings?:  {
+    __typename: "Holdings",
+    id: string,
+    instruments?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    deposits?:  Array< {
+      __typename: "Deposit",
+      amt: number,
+      start: number,
+      end: number,
+      rate: number,
+    } > | null,
+    loans?:  Array< {
+      __typename: "Loan",
+      type: LoanType,
+      per: number,
+      rate?: number | null,
+      dur: number,
+      ry: number,
+      pp?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      ira?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
+    } > | null,
+    savings: number,
+    current?: number | null,
+    property?:  Array< {
+      __typename: "Property",
+      type: PropertyType,
+      pin: number,
+      purchase?:  {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } | null,
+      address?: string | null,
+    } > | null,
+    gold?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    crypto?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    other?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteHoldingsMutationVariables = {
+  input?: DeleteHoldingsInput,
+  condition?: ModelHoldingsConditionInput | null,
+};
+
+export type DeleteHoldingsMutation = {
+  deleteHoldings?:  {
+    __typename: "Holdings",
+    id: string,
+    instruments?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    deposits?:  Array< {
+      __typename: "Deposit",
+      amt: number,
+      start: number,
+      end: number,
+      rate: number,
+    } > | null,
+    loans?:  Array< {
+      __typename: "Loan",
+      type: LoanType,
+      per: number,
+      rate?: number | null,
+      dur: number,
+      ry: number,
+      pp?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      ira?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
+    } > | null,
+    savings: number,
+    current?: number | null,
+    property?:  Array< {
+      __typename: "Property",
+      type: PropertyType,
+      pin: number,
+      purchase?:  {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } | null,
+      address?: string | null,
+    } > | null,
+    gold?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    crypto?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    other?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
 export type CreateFeedbackMutationVariables = {
-  input: CreateFeedbackInput,
+  input?: CreateFeedbackInput,
   condition?: ModelFeedbackConditionInput | null,
 };
 
 export type CreateFeedbackMutation = {
-  createFeedback:  {
+  createFeedback?:  {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
@@ -1450,7 +2250,7 @@ export type CreateFeedbackMutation = {
     name:  {
       __typename: "Name",
       fn: string,
-      ln: string | null,
+      ln?: string | null,
     },
     feedback: string,
     createdAt: string,
@@ -1459,12 +2259,12 @@ export type CreateFeedbackMutation = {
 };
 
 export type UpdateFeedbackMutationVariables = {
-  input: UpdateFeedbackInput,
+  input?: UpdateFeedbackInput,
   condition?: ModelFeedbackConditionInput | null,
 };
 
 export type UpdateFeedbackMutation = {
-  updateFeedback:  {
+  updateFeedback?:  {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
@@ -1472,7 +2272,7 @@ export type UpdateFeedbackMutation = {
     name:  {
       __typename: "Name",
       fn: string,
-      ln: string | null,
+      ln?: string | null,
     },
     feedback: string,
     createdAt: string,
@@ -1481,152 +2281,257 @@ export type UpdateFeedbackMutation = {
 };
 
 export type CreateRatingMutationVariables = {
-  input: CreateRatingInput,
+  input?: CreateRatingInput,
   condition?: ModelRatingConditionInput | null,
 };
 
 export type CreateRatingMutation = {
-  createRating:  {
+  createRating?:  {
     __typename: "Rating",
     id: string,
     type: CalcType,
     rating: number,
-    feedbackId: string | null,
+    feedbackId?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type UpdateRatingMutationVariables = {
-  input: UpdateRatingInput,
+  input?: UpdateRatingInput,
   condition?: ModelRatingConditionInput | null,
 };
 
 export type UpdateRatingMutation = {
-  updateRating:  {
+  updateRating?:  {
     __typename: "Rating",
     id: string,
     type: CalcType,
     rating: number,
-    feedbackId: string | null,
+    feedbackId?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type CreateRegistrationMutationVariables = {
-  input: CreateRegistrationInput,
+  input?: CreateRegistrationInput,
   condition?: ModelRegistrationConditionInput | null,
 };
 
 export type CreateRegistrationMutation = {
-  createRegistration:  {
+  createRegistration?:  {
     __typename: "Registration",
     email: string,
     status: Status,
     code: string,
     country: string,
-    lat: number | null,
-    long: number | null,
+    lat?: number | null,
+    long?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type UpdateRegistrationMutationVariables = {
-  input: UpdateRegistrationInput,
+  input?: UpdateRegistrationInput,
   condition?: ModelRegistrationConditionInput | null,
 };
 
 export type UpdateRegistrationMutation = {
-  updateRegistration:  {
+  updateRegistration?:  {
     __typename: "Registration",
     email: string,
     status: Status,
     code: string,
     country: string,
-    lat: number | null,
-    long: number | null,
+    lat?: number | null,
+    long?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateInstrumentsMutationVariables = {
+  input?: CreateInstrumentsInput,
+  condition?: ModelInstrumentsConditionInput | null,
+};
+
+export type CreateInstrumentsMutation = {
+  createInstruments?:  {
+    __typename: "Instruments",
+    isin: string,
+    name: string,
+    symbol: string,
+    ttl: number,
+    country: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateInstrumentsMutationVariables = {
+  input?: UpdateInstrumentsInput,
+  condition?: ModelInstrumentsConditionInput | null,
+};
+
+export type UpdateInstrumentsMutation = {
+  updateInstruments?:  {
+    __typename: "Instruments",
+    isin: string,
+    name: string,
+    symbol: string,
+    ttl: number,
+    country: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteInstrumentsMutationVariables = {
+  input?: DeleteInstrumentsInput,
+  condition?: ModelInstrumentsConditionInput | null,
+};
+
+export type DeleteInstrumentsMutation = {
+  deleteInstruments?:  {
+    __typename: "Instruments",
+    isin: string,
+    name: string,
+    symbol: string,
+    ttl: number,
+    country: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateInsPriceMutationVariables = {
+  input?: CreateInsPriceInput,
+  condition?: ModelInsPriceConditionInput | null,
+};
+
+export type CreateInsPriceMutation = {
+  createInsPrice?:  {
+    __typename: "InsPrice",
+    isin: string,
+    eodAdj: number,
+    ttl: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateInsPriceMutationVariables = {
+  input?: UpdateInsPriceInput,
+  condition?: ModelInsPriceConditionInput | null,
+};
+
+export type UpdateInsPriceMutation = {
+  updateInsPrice?:  {
+    __typename: "InsPrice",
+    isin: string,
+    eodAdj: number,
+    ttl: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteInsPriceMutationVariables = {
+  input?: DeleteInsPriceInput,
+  condition?: ModelInsPriceConditionInput | null,
+};
+
+export type DeleteInsPriceMutation = {
+  deleteInsPrice?:  {
+    __typename: "InsPrice",
+    isin: string,
+    eodAdj: number,
+    ttl: number,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type GetGoalQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetGoalQuery = {
-  getGoal:  {
+  getGoal?:  {
     __typename: "Goal",
     id: string,
     sy: number,
-    sm: number | null,
+    sm?: number | null,
     ey: number,
     by: number,
-    btr: number | null,
+    btr?: number | null,
     tdr: number,
     tdl: number,
-    tbi: number | null,
-    tdli: number | null,
-    tbr: number | null,
+    tbi?: number | null,
+    tdli?: number | null,
+    tbr?: number | null,
     name: string,
     type: GoalType,
     ccy: string,
-    cp: number | null,
-    chg: number | null,
-    achg: number | null,
-    tgts:  Array< {
+    cp?: number | null,
+    chg?: number | null,
+    achg?: number | null,
+    tgts?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } > | null,
-    loan:  {
+    loan?:  {
       __typename: "Loan",
       type: LoanType,
       per: number,
-      rate: number | null,
+      rate?: number | null,
       dur: number,
       ry: number,
-      pp:  Array< {
+      pp?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      ira:  Array< {
+      ira?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      emi: number | null,
-      pmi: number | null,
-      peper: number | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
     } | null,
     imp: LMH,
-    met: YN | null,
-    prob: LMH | null,
+    met?: YN | null,
+    prob?: LMH | null,
     manual: number,
-    amper: number | null,
-    amsy: number | null,
-    aiper: number | null,
-    aisy: number | null,
-    dr: number | null,
-    sa: number | null,
-    pg:  Array< {
+    amper?: number | null,
+    amsy?: number | null,
+    aiper?: number | null,
+    aisy?: number | null,
+    dr?: number | null,
+    sa?: number | null,
+    pg?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    pl:  Array< {
+    pl?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    ra: number | null,
-    rachg: number | null,
+    ra?: number | null,
+    rachg?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -1637,89 +2542,79 @@ export type ListGoalsQueryVariables = {
 };
 
 export type ListGoalsQuery = {
-  listGoals:  {
+  listGoals?:  {
     __typename: "ModelGoalConnection",
-    items:  Array< {
+    items?:  Array< {
       __typename: "Goal",
       id: string,
       sy: number,
-      sm: number | null,
+      sm?: number | null,
       ey: number,
       by: number,
-      btr: number | null,
+      btr?: number | null,
       tdr: number,
       tdl: number,
-      tbi: number | null,
-      tdli: number | null,
-      tbr: number | null,
+      tbi?: number | null,
+      tdli?: number | null,
+      tbr?: number | null,
       name: string,
       type: GoalType,
       ccy: string,
-      cp: number | null,
-      chg: number | null,
-      achg: number | null,
-      tgts:  Array< {
+      cp?: number | null,
+      chg?: number | null,
+      achg?: number | null,
+      tgts?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      loan:  {
+      loan?:  {
         __typename: "Loan",
         type: LoanType,
         per: number,
-        rate: number | null,
+        rate?: number | null,
         dur: number,
         ry: number,
-        emi: number | null,
-        pmi: number | null,
-        peper: number | null,
-        pp:  Array< {
-          __typename: "Target",
-          num: number,
-          val: number,
-        } > | null,
-        ira:  Array< {
-          __typename: "Target",
-          num: number,
-          val: number,
-        } > | null
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
       } | null,
       imp: LMH,
-      met: YN | null,
-      prob: LMH | null,
+      met?: YN | null,
+      prob?: LMH | null,
       manual: number,
-      amper: number | null,
-      amsy: number | null,
-      aiper: number | null,
-      aisy: number | null,
-      dr: number | null,
-      sa: number | null,
-      pg:  Array< {
+      amper?: number | null,
+      amsy?: number | null,
+      aiper?: number | null,
+      aisy?: number | null,
+      dr?: number | null,
+      sa?: number | null,
+      pg?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      pl:  Array< {
+      pl?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      ra: number | null,
-      rachg: number | null,
+      ra?: number | null,
+      rachg?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null > | null,
-    nextToken: string | null,
+    nextToken?: string | null,
   } | null,
 };
 
 export type GetMilestoneQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetMilestoneQuery = {
-  getMilestone:  {
+  getMilestone?:  {
     __typename: "Milestone",
     id: string,
     tgt:  {
@@ -1728,70 +2623,70 @@ export type GetMilestoneQuery = {
       val: number,
     },
     attr: MilestoneAttr,
-    goals:  Array< {
+    goals?:  Array< {
       __typename: "Goal",
       id: string,
       sy: number,
-      sm: number | null,
+      sm?: number | null,
       ey: number,
       by: number,
-      btr: number | null,
+      btr?: number | null,
       tdr: number,
       tdl: number,
-      tbi: number | null,
-      tdli: number | null,
-      tbr: number | null,
+      tbi?: number | null,
+      tdli?: number | null,
+      tbr?: number | null,
       name: string,
       type: GoalType,
       ccy: string,
-      cp: number | null,
-      chg: number | null,
-      achg: number | null,
-      tgts:  Array< {
+      cp?: number | null,
+      chg?: number | null,
+      achg?: number | null,
+      tgts?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      loan:  {
+      loan?:  {
         __typename: "Loan",
         type: LoanType,
         per: number,
-        rate: number | null,
+        rate?: number | null,
         dur: number,
         ry: number,
-        emi: number | null,
-        pmi: number | null,
-        peper: number | null,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
       } | null,
       imp: LMH,
-      met: YN | null,
-      prob: LMH | null,
+      met?: YN | null,
+      prob?: LMH | null,
       manual: number,
-      amper: number | null,
-      amsy: number | null,
-      aiper: number | null,
-      aisy: number | null,
-      dr: number | null,
-      sa: number | null,
-      pg:  Array< {
+      amper?: number | null,
+      amsy?: number | null,
+      aiper?: number | null,
+      aisy?: number | null,
+      dr?: number | null,
+      sa?: number | null,
+      pg?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      pl:  Array< {
+      pl?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      ra: number | null,
-      rachg: number | null,
+      ra?: number | null,
+      rachg?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -1802,9 +2697,9 @@ export type ListMilestonesQueryVariables = {
 };
 
 export type ListMilestonesQuery = {
-  listMilestones:  {
+  listMilestones?:  {
     __typename: "ModelMilestoneConnection",
-    items:  Array< {
+    items?:  Array< {
       __typename: "Milestone",
       id: string,
       tgt:  {
@@ -1813,55 +2708,55 @@ export type ListMilestonesQuery = {
         val: number,
       },
       attr: MilestoneAttr,
-      goals:  Array< {
+      goals?:  Array< {
         __typename: "Goal",
         id: string,
         sy: number,
-        sm: number | null,
+        sm?: number | null,
         ey: number,
         by: number,
-        btr: number | null,
+        btr?: number | null,
         tdr: number,
         tdl: number,
-        tbi: number | null,
-        tdli: number | null,
-        tbr: number | null,
+        tbi?: number | null,
+        tdli?: number | null,
+        tbr?: number | null,
         name: string,
         type: GoalType,
         ccy: string,
-        cp: number | null,
-        chg: number | null,
-        achg: number | null,
+        cp?: number | null,
+        chg?: number | null,
+        achg?: number | null,
         imp: LMH,
-        met: YN | null,
-        prob: LMH | null,
+        met?: YN | null,
+        prob?: LMH | null,
         manual: number,
-        amper: number | null,
-        amsy: number | null,
-        aiper: number | null,
-        aisy: number | null,
-        dr: number | null,
-        sa: number | null,
-        ra: number | null,
-        rachg: number | null,
+        amper?: number | null,
+        amsy?: number | null,
+        aiper?: number | null,
+        aisy?: number | null,
+        dr?: number | null,
+        sa?: number | null,
+        ra?: number | null,
+        rachg?: number | null,
         createdAt: string,
         updatedAt: string,
-        owner: string | null,
+        owner?: string | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null > | null,
-    nextToken: string | null,
+    nextToken?: string | null,
   } | null,
 };
 
 export type GetProfileQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetProfileQuery = {
-  getProfile:  {
+  getProfile?:  {
     __typename: "Profile",
     id: string,
     citizen: string,
@@ -1871,7 +2766,7 @@ export type GetProfileQuery = {
     curr: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -1882,9 +2777,9 @@ export type ListProfilesQueryVariables = {
 };
 
 export type ListProfilesQuery = {
-  listProfiles:  {
+  listProfiles?:  {
     __typename: "ModelProfileConnection",
-    items:  Array< {
+    items?:  Array< {
       __typename: "Profile",
       id: string,
       citizen: string,
@@ -1894,18 +2789,18 @@ export type ListProfilesQuery = {
       curr: string,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null > | null,
-    nextToken: string | null,
+    nextToken?: string | null,
   } | null,
 };
 
 export type GetItemQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetItemQuery = {
-  getItem:  {
+  getItem?:  {
     __typename: "Item",
     id: string,
     p_at: string,
@@ -1915,7 +2810,7 @@ export type GetItemQuery = {
     status: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -1926,9 +2821,9 @@ export type ListItemsQueryVariables = {
 };
 
 export type ListItemsQuery = {
-  listItems:  {
+  listItems?:  {
     __typename: "ModelItemConnection",
-    items:  Array< {
+    items?:  Array< {
       __typename: "Item",
       id: string,
       p_at: string,
@@ -1938,21 +2833,21 @@ export type ListItemsQuery = {
       status: string,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null > | null,
-    nextToken: string | null,
+    nextToken?: string | null,
   } | null,
 };
 
 export type GetAccountQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetAccountQuery = {
-  getAccount:  {
+  getAccount?:  {
     __typename: "Account",
     id: string,
-    item:  {
+    item?:  {
       __typename: "Item",
       id: string,
       p_at: string,
@@ -1962,7 +2857,7 @@ export type GetAccountQuery = {
       status: string,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null,
     p_id: string,
     name: string,
@@ -1971,12 +2866,12 @@ export type GetAccountQuery = {
     currbal: number,
     availbal: number,
     curr: string,
-    uncurr: string | null,
+    uncurr?: string | null,
     type: string,
     subtype: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -1987,12 +2882,12 @@ export type ListAccountsQueryVariables = {
 };
 
 export type ListAccountsQuery = {
-  listAccounts:  {
+  listAccounts?:  {
     __typename: "ModelAccountConnection",
-    items:  Array< {
+    items?:  Array< {
       __typename: "Account",
       id: string,
-      item:  {
+      item?:  {
         __typename: "Item",
         id: string,
         p_at: string,
@@ -2002,7 +2897,7 @@ export type ListAccountsQuery = {
         status: string,
         createdAt: string,
         updatedAt: string,
-        owner: string | null,
+        owner?: string | null,
       } | null,
       p_id: string,
       name: string,
@@ -2011,23 +2906,202 @@ export type ListAccountsQuery = {
       currbal: number,
       availbal: number,
       curr: string,
-      uncurr: string | null,
+      uncurr?: string | null,
       type: string,
       subtype: string,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null > | null,
-    nextToken: string | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetHoldingsQueryVariables = {
+  id?: string,
+};
+
+export type GetHoldingsQuery = {
+  getHoldings?:  {
+    __typename: "Holdings",
+    id: string,
+    instruments?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    deposits?:  Array< {
+      __typename: "Deposit",
+      amt: number,
+      start: number,
+      end: number,
+      rate: number,
+    } > | null,
+    loans?:  Array< {
+      __typename: "Loan",
+      type: LoanType,
+      per: number,
+      rate?: number | null,
+      dur: number,
+      ry: number,
+      pp?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      ira?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
+    } > | null,
+    savings: number,
+    current?: number | null,
+    property?:  Array< {
+      __typename: "Property",
+      type: PropertyType,
+      pin: number,
+      purchase?:  {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } | null,
+      address?: string | null,
+    } > | null,
+    gold?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    crypto?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    other?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListHoldingssQueryVariables = {
+  filter?: ModelHoldingsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListHoldingssQuery = {
+  listHoldingss?:  {
+    __typename: "ModelHoldingsConnection",
+    items?:  Array< {
+      __typename: "Holdings",
+      id: string,
+      instruments?:  Array< {
+        __typename: "Holding",
+        id: string,
+        qty: number,
+        name?: string | null,
+      } > | null,
+      deposits?:  Array< {
+        __typename: "Deposit",
+        amt: number,
+        start: number,
+        end: number,
+        rate: number,
+      } > | null,
+      loans?:  Array< {
+        __typename: "Loan",
+        type: LoanType,
+        per: number,
+        rate?: number | null,
+        dur: number,
+        ry: number,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
+      } > | null,
+      savings: number,
+      current?: number | null,
+      property?:  Array< {
+        __typename: "Property",
+        type: PropertyType,
+        pin: number,
+        address?: string | null,
+      } > | null,
+      gold?:  Array< {
+        __typename: "Holding",
+        id: string,
+        qty: number,
+        name?: string | null,
+      } > | null,
+      crypto?:  Array< {
+        __typename: "Holding",
+        id: string,
+        qty: number,
+        name?: string | null,
+      } > | null,
+      other?:  Array< {
+        __typename: "Holding",
+        id: string,
+        qty: number,
+        name?: string | null,
+      } > | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
   } | null,
 };
 
 export type GetFeedbackQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetFeedbackQuery = {
-  getFeedback:  {
+  getFeedback?:  {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
@@ -2035,7 +3109,7 @@ export type GetFeedbackQuery = {
     name:  {
       __typename: "Name",
       fn: string,
-      ln: string | null,
+      ln?: string | null,
     },
     feedback: string,
     createdAt: string,
@@ -2050,9 +3124,9 @@ export type ListFeedbacksQueryVariables = {
 };
 
 export type ListFeedbacksQuery = {
-  listFeedbacks:  {
+  listFeedbacks?:  {
     __typename: "ModelFeedbackConnection",
-    items:  Array< {
+    items?:  Array< {
       __typename: "Feedback",
       id: string,
       type: FeedbackType,
@@ -2060,27 +3134,27 @@ export type ListFeedbacksQuery = {
       name:  {
         __typename: "Name",
         fn: string,
-        ln: string | null,
+        ln?: string | null,
       },
       feedback: string,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
-    nextToken: string | null,
+    nextToken?: string | null,
   } | null,
 };
 
 export type GetRatingQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetRatingQuery = {
-  getRating:  {
+  getRating?:  {
     __typename: "Rating",
     id: string,
     type: CalcType,
     rating: number,
-    feedbackId: string | null,
+    feedbackId?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2093,34 +3167,34 @@ export type ListRatingsQueryVariables = {
 };
 
 export type ListRatingsQuery = {
-  listRatings:  {
+  listRatings?:  {
     __typename: "ModelRatingConnection",
-    items:  Array< {
+    items?:  Array< {
       __typename: "Rating",
       id: string,
       type: CalcType,
       rating: number,
-      feedbackId: string | null,
+      feedbackId?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
-    nextToken: string | null,
+    nextToken?: string | null,
   } | null,
 };
 
 export type GetRegistrationQueryVariables = {
-  email: string,
+  email?: string,
 };
 
 export type GetRegistrationQuery = {
-  getRegistration:  {
+  getRegistration?:  {
     __typename: "Registration",
     email: string,
     status: Status,
     code: string,
     country: string,
-    lat: number | null,
-    long: number | null,
+    lat?: number | null,
+    long?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2135,263 +3209,345 @@ export type ListRegistrationsQueryVariables = {
 };
 
 export type ListRegistrationsQuery = {
-  listRegistrations:  {
+  listRegistrations?:  {
     __typename: "ModelRegistrationConnection",
-    items:  Array< {
+    items?:  Array< {
       __typename: "Registration",
       email: string,
       status: Status,
       code: string,
       country: string,
-      lat: number | null,
-      long: number | null,
+      lat?: number | null,
+      long?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
-    nextToken: string | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetInstrumentsQueryVariables = {
+  isin?: string,
+};
+
+export type GetInstrumentsQuery = {
+  getInstruments?:  {
+    __typename: "Instruments",
+    isin: string,
+    name: string,
+    symbol: string,
+    ttl: number,
+    country: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListInstrumentssQueryVariables = {
+  isin?: string | null,
+  filter?: ModelInstrumentsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListInstrumentssQuery = {
+  listInstrumentss?:  {
+    __typename: "ModelInstrumentsConnection",
+    items?:  Array< {
+      __typename: "Instruments",
+      isin: string,
+      name: string,
+      symbol: string,
+      ttl: number,
+      country: string,
+      type: InsType,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetInsPriceQueryVariables = {
+  isin?: string,
+};
+
+export type GetInsPriceQuery = {
+  getInsPrice?:  {
+    __typename: "InsPrice",
+    isin: string,
+    eodAdj: number,
+    ttl: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListInsPricesQueryVariables = {
+  isin?: string | null,
+  filter?: ModelInsPriceFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListInsPricesQuery = {
+  listInsPrices?:  {
+    __typename: "ModelInsPriceConnection",
+    items?:  Array< {
+      __typename: "InsPrice",
+      isin: string,
+      eodAdj: number,
+      ttl: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
   } | null,
 };
 
 export type OnCreateGoalSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnCreateGoalSubscription = {
-  onCreateGoal:  {
+  onCreateGoal?:  {
     __typename: "Goal",
     id: string,
     sy: number,
-    sm: number | null,
+    sm?: number | null,
     ey: number,
     by: number,
-    btr: number | null,
+    btr?: number | null,
     tdr: number,
     tdl: number,
-    tbi: number | null,
-    tdli: number | null,
-    tbr: number | null,
+    tbi?: number | null,
+    tdli?: number | null,
+    tbr?: number | null,
     name: string,
     type: GoalType,
     ccy: string,
-    cp: number | null,
-    chg: number | null,
-    achg: number | null,
-    tgts:  Array< {
+    cp?: number | null,
+    chg?: number | null,
+    achg?: number | null,
+    tgts?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } > | null,
-    loan:  {
+    loan?:  {
       __typename: "Loan",
       type: LoanType,
       per: number,
-      rate: number | null,
+      rate?: number | null,
       dur: number,
       ry: number,
-      pp:  Array< {
+      pp?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      ira:  Array< {
+      ira?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      emi: number | null,
-      pmi: number | null,
-      peper: number | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
     } | null,
     imp: LMH,
-    met: YN | null,
-    prob: LMH | null,
+    met?: YN | null,
+    prob?: LMH | null,
     manual: number,
-    amper: number | null,
-    amsy: number | null,
-    aiper: number | null,
-    aisy: number | null,
-    dr: number | null,
-    sa: number | null,
-    pg:  Array< {
+    amper?: number | null,
+    amsy?: number | null,
+    aiper?: number | null,
+    aisy?: number | null,
+    dr?: number | null,
+    sa?: number | null,
+    pg?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    pl:  Array< {
+    pl?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    ra: number | null,
-    rachg: number | null,
+    ra?: number | null,
+    rachg?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateGoalSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnUpdateGoalSubscription = {
-  onUpdateGoal:  {
+  onUpdateGoal?:  {
     __typename: "Goal",
     id: string,
     sy: number,
-    sm: number | null,
+    sm?: number | null,
     ey: number,
     by: number,
-    btr: number | null,
+    btr?: number | null,
     tdr: number,
     tdl: number,
-    tbi: number | null,
-    tdli: number | null,
-    tbr: number | null,
+    tbi?: number | null,
+    tdli?: number | null,
+    tbr?: number | null,
     name: string,
     type: GoalType,
     ccy: string,
-    cp: number | null,
-    chg: number | null,
-    achg: number | null,
-    tgts:  Array< {
+    cp?: number | null,
+    chg?: number | null,
+    achg?: number | null,
+    tgts?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } > | null,
-    loan:  {
+    loan?:  {
       __typename: "Loan",
       type: LoanType,
       per: number,
-      rate: number | null,
+      rate?: number | null,
       dur: number,
       ry: number,
-      pp:  Array< {
+      pp?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      ira:  Array< {
+      ira?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      emi: number | null,
-      pmi: number | null,
-      peper: number | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
     } | null,
     imp: LMH,
-    met: YN | null,
-    prob: LMH | null,
+    met?: YN | null,
+    prob?: LMH | null,
     manual: number,
-    amper: number | null,
-    amsy: number | null,
-    aiper: number | null,
-    aisy: number | null,
-    dr: number | null,
-    sa: number | null,
-    pg:  Array< {
+    amper?: number | null,
+    amsy?: number | null,
+    aiper?: number | null,
+    aisy?: number | null,
+    dr?: number | null,
+    sa?: number | null,
+    pg?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    pl:  Array< {
+    pl?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    ra: number | null,
-    rachg: number | null,
+    ra?: number | null,
+    rachg?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteGoalSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnDeleteGoalSubscription = {
-  onDeleteGoal:  {
+  onDeleteGoal?:  {
     __typename: "Goal",
     id: string,
     sy: number,
-    sm: number | null,
+    sm?: number | null,
     ey: number,
     by: number,
-    btr: number | null,
+    btr?: number | null,
     tdr: number,
     tdl: number,
-    tbi: number | null,
-    tdli: number | null,
-    tbr: number | null,
+    tbi?: number | null,
+    tdli?: number | null,
+    tbr?: number | null,
     name: string,
     type: GoalType,
     ccy: string,
-    cp: number | null,
-    chg: number | null,
-    achg: number | null,
-    tgts:  Array< {
+    cp?: number | null,
+    chg?: number | null,
+    achg?: number | null,
+    tgts?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } > | null,
-    loan:  {
+    loan?:  {
       __typename: "Loan",
       type: LoanType,
       per: number,
-      rate: number | null,
+      rate?: number | null,
       dur: number,
       ry: number,
-      pp:  Array< {
+      pp?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      ira:  Array< {
+      ira?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      emi: number | null,
-      pmi: number | null,
-      peper: number | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
     } | null,
     imp: LMH,
-    met: YN | null,
-    prob: LMH | null,
+    met?: YN | null,
+    prob?: LMH | null,
     manual: number,
-    amper: number | null,
-    amsy: number | null,
-    aiper: number | null,
-    aisy: number | null,
-    dr: number | null,
-    sa: number | null,
-    pg:  Array< {
+    amper?: number | null,
+    amsy?: number | null,
+    aiper?: number | null,
+    aisy?: number | null,
+    dr?: number | null,
+    sa?: number | null,
+    pg?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    pl:  Array< {
+    pl?:  Array< {
       __typename: "Target",
       num: number,
       val: number,
     } | null > | null,
-    ra: number | null,
-    rachg: number | null,
+    ra?: number | null,
+    rachg?: number | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreateMilestoneSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnCreateMilestoneSubscription = {
-  onCreateMilestone:  {
+  onCreateMilestone?:  {
     __typename: "Milestone",
     id: string,
     tgt:  {
@@ -2400,79 +3556,79 @@ export type OnCreateMilestoneSubscription = {
       val: number,
     },
     attr: MilestoneAttr,
-    goals:  Array< {
+    goals?:  Array< {
       __typename: "Goal",
       id: string,
       sy: number,
-      sm: number | null,
+      sm?: number | null,
       ey: number,
       by: number,
-      btr: number | null,
+      btr?: number | null,
       tdr: number,
       tdl: number,
-      tbi: number | null,
-      tdli: number | null,
-      tbr: number | null,
+      tbi?: number | null,
+      tdli?: number | null,
+      tbr?: number | null,
       name: string,
       type: GoalType,
       ccy: string,
-      cp: number | null,
-      chg: number | null,
-      achg: number | null,
-      tgts:  Array< {
+      cp?: number | null,
+      chg?: number | null,
+      achg?: number | null,
+      tgts?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      loan:  {
+      loan?:  {
         __typename: "Loan",
         type: LoanType,
         per: number,
-        rate: number | null,
+        rate?: number | null,
         dur: number,
         ry: number,
-        emi: number | null,
-        pmi: number | null,
-        peper: number | null,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
       } | null,
       imp: LMH,
-      met: YN | null,
-      prob: LMH | null,
+      met?: YN | null,
+      prob?: LMH | null,
       manual: number,
-      amper: number | null,
-      amsy: number | null,
-      aiper: number | null,
-      aisy: number | null,
-      dr: number | null,
-      sa: number | null,
-      pg:  Array< {
+      amper?: number | null,
+      amsy?: number | null,
+      aiper?: number | null,
+      aisy?: number | null,
+      dr?: number | null,
+      sa?: number | null,
+      pg?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      pl:  Array< {
+      pl?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      ra: number | null,
-      rachg: number | null,
+      ra?: number | null,
+      rachg?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateMilestoneSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnUpdateMilestoneSubscription = {
-  onUpdateMilestone:  {
+  onUpdateMilestone?:  {
     __typename: "Milestone",
     id: string,
     tgt:  {
@@ -2481,79 +3637,79 @@ export type OnUpdateMilestoneSubscription = {
       val: number,
     },
     attr: MilestoneAttr,
-    goals:  Array< {
+    goals?:  Array< {
       __typename: "Goal",
       id: string,
       sy: number,
-      sm: number | null,
+      sm?: number | null,
       ey: number,
       by: number,
-      btr: number | null,
+      btr?: number | null,
       tdr: number,
       tdl: number,
-      tbi: number | null,
-      tdli: number | null,
-      tbr: number | null,
+      tbi?: number | null,
+      tdli?: number | null,
+      tbr?: number | null,
       name: string,
       type: GoalType,
       ccy: string,
-      cp: number | null,
-      chg: number | null,
-      achg: number | null,
-      tgts:  Array< {
+      cp?: number | null,
+      chg?: number | null,
+      achg?: number | null,
+      tgts?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      loan:  {
+      loan?:  {
         __typename: "Loan",
         type: LoanType,
         per: number,
-        rate: number | null,
+        rate?: number | null,
         dur: number,
         ry: number,
-        emi: number | null,
-        pmi: number | null,
-        peper: number | null,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
       } | null,
       imp: LMH,
-      met: YN | null,
-      prob: LMH | null,
+      met?: YN | null,
+      prob?: LMH | null,
       manual: number,
-      amper: number | null,
-      amsy: number | null,
-      aiper: number | null,
-      aisy: number | null,
-      dr: number | null,
-      sa: number | null,
-      pg:  Array< {
+      amper?: number | null,
+      amsy?: number | null,
+      aiper?: number | null,
+      aisy?: number | null,
+      dr?: number | null,
+      sa?: number | null,
+      pg?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      pl:  Array< {
+      pl?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      ra: number | null,
-      rachg: number | null,
+      ra?: number | null,
+      rachg?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteMilestoneSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnDeleteMilestoneSubscription = {
-  onDeleteMilestone:  {
+  onDeleteMilestone?:  {
     __typename: "Milestone",
     id: string,
     tgt:  {
@@ -2562,79 +3718,79 @@ export type OnDeleteMilestoneSubscription = {
       val: number,
     },
     attr: MilestoneAttr,
-    goals:  Array< {
+    goals?:  Array< {
       __typename: "Goal",
       id: string,
       sy: number,
-      sm: number | null,
+      sm?: number | null,
       ey: number,
       by: number,
-      btr: number | null,
+      btr?: number | null,
       tdr: number,
       tdl: number,
-      tbi: number | null,
-      tdli: number | null,
-      tbr: number | null,
+      tbi?: number | null,
+      tdli?: number | null,
+      tbr?: number | null,
       name: string,
       type: GoalType,
       ccy: string,
-      cp: number | null,
-      chg: number | null,
-      achg: number | null,
-      tgts:  Array< {
+      cp?: number | null,
+      chg?: number | null,
+      achg?: number | null,
+      tgts?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } > | null,
-      loan:  {
+      loan?:  {
         __typename: "Loan",
         type: LoanType,
         per: number,
-        rate: number | null,
+        rate?: number | null,
         dur: number,
         ry: number,
-        emi: number | null,
-        pmi: number | null,
-        peper: number | null,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
       } | null,
       imp: LMH,
-      met: YN | null,
-      prob: LMH | null,
+      met?: YN | null,
+      prob?: LMH | null,
       manual: number,
-      amper: number | null,
-      amsy: number | null,
-      aiper: number | null,
-      aisy: number | null,
-      dr: number | null,
-      sa: number | null,
-      pg:  Array< {
+      amper?: number | null,
+      amsy?: number | null,
+      aiper?: number | null,
+      aisy?: number | null,
+      dr?: number | null,
+      sa?: number | null,
+      pg?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      pl:  Array< {
+      pl?:  Array< {
         __typename: "Target",
         num: number,
         val: number,
       } | null > | null,
-      ra: number | null,
-      rachg: number | null,
+      ra?: number | null,
+      rachg?: number | null,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreateProfileSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnCreateProfileSubscription = {
-  onCreateProfile:  {
+  onCreateProfile?:  {
     __typename: "Profile",
     id: string,
     citizen: string,
@@ -2644,16 +3800,16 @@ export type OnCreateProfileSubscription = {
     curr: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateProfileSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnUpdateProfileSubscription = {
-  onUpdateProfile:  {
+  onUpdateProfile?:  {
     __typename: "Profile",
     id: string,
     citizen: string,
@@ -2663,16 +3819,16 @@ export type OnUpdateProfileSubscription = {
     curr: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteProfileSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnDeleteProfileSubscription = {
-  onDeleteProfile:  {
+  onDeleteProfile?:  {
     __typename: "Profile",
     id: string,
     citizen: string,
@@ -2682,16 +3838,16 @@ export type OnDeleteProfileSubscription = {
     curr: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreateItemSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnCreateItemSubscription = {
-  onCreateItem:  {
+  onCreateItem?:  {
     __typename: "Item",
     id: string,
     p_at: string,
@@ -2701,16 +3857,16 @@ export type OnCreateItemSubscription = {
     status: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateItemSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnUpdateItemSubscription = {
-  onUpdateItem:  {
+  onUpdateItem?:  {
     __typename: "Item",
     id: string,
     p_at: string,
@@ -2720,16 +3876,16 @@ export type OnUpdateItemSubscription = {
     status: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteItemSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnDeleteItemSubscription = {
-  onDeleteItem:  {
+  onDeleteItem?:  {
     __typename: "Item",
     id: string,
     p_at: string,
@@ -2739,19 +3895,19 @@ export type OnDeleteItemSubscription = {
     status: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreateAccountSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnCreateAccountSubscription = {
-  onCreateAccount:  {
+  onCreateAccount?:  {
     __typename: "Account",
     id: string,
-    item:  {
+    item?:  {
       __typename: "Item",
       id: string,
       p_at: string,
@@ -2761,7 +3917,7 @@ export type OnCreateAccountSubscription = {
       status: string,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null,
     p_id: string,
     name: string,
@@ -2770,24 +3926,24 @@ export type OnCreateAccountSubscription = {
     currbal: number,
     availbal: number,
     curr: string,
-    uncurr: string | null,
+    uncurr?: string | null,
     type: string,
     subtype: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateAccountSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnUpdateAccountSubscription = {
-  onUpdateAccount:  {
+  onUpdateAccount?:  {
     __typename: "Account",
     id: string,
-    item:  {
+    item?:  {
       __typename: "Item",
       id: string,
       p_at: string,
@@ -2797,7 +3953,7 @@ export type OnUpdateAccountSubscription = {
       status: string,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null,
     p_id: string,
     name: string,
@@ -2806,24 +3962,24 @@ export type OnUpdateAccountSubscription = {
     currbal: number,
     availbal: number,
     curr: string,
-    uncurr: string | null,
+    uncurr?: string | null,
     type: string,
     subtype: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteAccountSubscriptionVariables = {
-  owner: string,
+  owner?: string,
 };
 
 export type OnDeleteAccountSubscription = {
-  onDeleteAccount:  {
+  onDeleteAccount?:  {
     __typename: "Account",
     id: string,
-    item:  {
+    item?:  {
       __typename: "Item",
       id: string,
       p_at: string,
@@ -2833,7 +3989,7 @@ export type OnDeleteAccountSubscription = {
       status: string,
       createdAt: string,
       updatedAt: string,
-      owner: string | null,
+      owner?: string | null,
     } | null,
     p_id: string,
     name: string,
@@ -2842,17 +3998,344 @@ export type OnDeleteAccountSubscription = {
     currbal: number,
     availbal: number,
     curr: string,
-    uncurr: string | null,
+    uncurr?: string | null,
     type: string,
     subtype: string,
     createdAt: string,
     updatedAt: string,
-    owner: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateHoldingsSubscriptionVariables = {
+  owner?: string,
+};
+
+export type OnCreateHoldingsSubscription = {
+  onCreateHoldings?:  {
+    __typename: "Holdings",
+    id: string,
+    instruments?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    deposits?:  Array< {
+      __typename: "Deposit",
+      amt: number,
+      start: number,
+      end: number,
+      rate: number,
+    } > | null,
+    loans?:  Array< {
+      __typename: "Loan",
+      type: LoanType,
+      per: number,
+      rate?: number | null,
+      dur: number,
+      ry: number,
+      pp?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      ira?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
+    } > | null,
+    savings: number,
+    current?: number | null,
+    property?:  Array< {
+      __typename: "Property",
+      type: PropertyType,
+      pin: number,
+      purchase?:  {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } | null,
+      address?: string | null,
+    } > | null,
+    gold?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    crypto?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    other?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateHoldingsSubscriptionVariables = {
+  owner?: string,
+};
+
+export type OnUpdateHoldingsSubscription = {
+  onUpdateHoldings?:  {
+    __typename: "Holdings",
+    id: string,
+    instruments?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    deposits?:  Array< {
+      __typename: "Deposit",
+      amt: number,
+      start: number,
+      end: number,
+      rate: number,
+    } > | null,
+    loans?:  Array< {
+      __typename: "Loan",
+      type: LoanType,
+      per: number,
+      rate?: number | null,
+      dur: number,
+      ry: number,
+      pp?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      ira?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
+    } > | null,
+    savings: number,
+    current?: number | null,
+    property?:  Array< {
+      __typename: "Property",
+      type: PropertyType,
+      pin: number,
+      purchase?:  {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } | null,
+      address?: string | null,
+    } > | null,
+    gold?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    crypto?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    other?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteHoldingsSubscriptionVariables = {
+  owner?: string,
+};
+
+export type OnDeleteHoldingsSubscription = {
+  onDeleteHoldings?:  {
+    __typename: "Holdings",
+    id: string,
+    instruments?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    deposits?:  Array< {
+      __typename: "Deposit",
+      amt: number,
+      start: number,
+      end: number,
+      rate: number,
+    } > | null,
+    loans?:  Array< {
+      __typename: "Loan",
+      type: LoanType,
+      per: number,
+      rate?: number | null,
+      dur: number,
+      ry: number,
+      pp?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      ira?:  Array< {
+        __typename: "Target",
+        num: number,
+        val: number,
+      } > | null,
+      emi?: number | null,
+      pmi?: number | null,
+      peper?: number | null,
+    } > | null,
+    savings: number,
+    current?: number | null,
+    property?:  Array< {
+      __typename: "Property",
+      type: PropertyType,
+      pin: number,
+      purchase?:  {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } | null,
+      address?: string | null,
+    } > | null,
+    gold?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    crypto?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    other?:  Array< {
+      __typename: "Holding",
+      id: string,
+      qty: number,
+      purchase?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        date: number,
+        qty: number,
+        unit?: string | null,
+      } > | null,
+      name?: string | null,
+    } > | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreateFeedbackSubscription = {
-  onCreateFeedback:  {
+  onCreateFeedback?:  {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
@@ -2860,7 +4343,7 @@ export type OnCreateFeedbackSubscription = {
     name:  {
       __typename: "Name",
       fn: string,
-      ln: string | null,
+      ln?: string | null,
     },
     feedback: string,
     createdAt: string,
@@ -2869,7 +4352,7 @@ export type OnCreateFeedbackSubscription = {
 };
 
 export type OnUpdateFeedbackSubscription = {
-  onUpdateFeedback:  {
+  onUpdateFeedback?:  {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
@@ -2877,7 +4360,7 @@ export type OnUpdateFeedbackSubscription = {
     name:  {
       __typename: "Name",
       fn: string,
-      ln: string | null,
+      ln?: string | null,
     },
     feedback: string,
     createdAt: string,
@@ -2886,7 +4369,7 @@ export type OnUpdateFeedbackSubscription = {
 };
 
 export type OnDeleteFeedbackSubscription = {
-  onDeleteFeedback:  {
+  onDeleteFeedback?:  {
     __typename: "Feedback",
     id: string,
     type: FeedbackType,
@@ -2894,7 +4377,7 @@ export type OnDeleteFeedbackSubscription = {
     name:  {
       __typename: "Name",
       fn: string,
-      ln: string | null,
+      ln?: string | null,
     },
     feedback: string,
     createdAt: string,
@@ -2903,78 +4386,153 @@ export type OnDeleteFeedbackSubscription = {
 };
 
 export type OnCreateRatingSubscription = {
-  onCreateRating:  {
+  onCreateRating?:  {
     __typename: "Rating",
     id: string,
     type: CalcType,
     rating: number,
-    feedbackId: string | null,
+    feedbackId?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type OnUpdateRatingSubscription = {
-  onUpdateRating:  {
+  onUpdateRating?:  {
     __typename: "Rating",
     id: string,
     type: CalcType,
     rating: number,
-    feedbackId: string | null,
+    feedbackId?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type OnDeleteRatingSubscription = {
-  onDeleteRating:  {
+  onDeleteRating?:  {
     __typename: "Rating",
     id: string,
     type: CalcType,
     rating: number,
-    feedbackId: string | null,
+    feedbackId?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type OnCreateRegistrationSubscription = {
-  onCreateRegistration:  {
+  onCreateRegistration?:  {
     __typename: "Registration",
     email: string,
     status: Status,
     code: string,
     country: string,
-    lat: number | null,
-    long: number | null,
+    lat?: number | null,
+    long?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type OnUpdateRegistrationSubscription = {
-  onUpdateRegistration:  {
+  onUpdateRegistration?:  {
     __typename: "Registration",
     email: string,
     status: Status,
     code: string,
     country: string,
-    lat: number | null,
-    long: number | null,
+    lat?: number | null,
+    long?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type OnDeleteRegistrationSubscription = {
-  onDeleteRegistration:  {
+  onDeleteRegistration?:  {
     __typename: "Registration",
     email: string,
     status: Status,
     code: string,
     country: string,
-    lat: number | null,
-    long: number | null,
+    lat?: number | null,
+    long?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateInstrumentsSubscription = {
+  onCreateInstruments?:  {
+    __typename: "Instruments",
+    isin: string,
+    name: string,
+    symbol: string,
+    ttl: number,
+    country: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateInstrumentsSubscription = {
+  onUpdateInstruments?:  {
+    __typename: "Instruments",
+    isin: string,
+    name: string,
+    symbol: string,
+    ttl: number,
+    country: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteInstrumentsSubscription = {
+  onDeleteInstruments?:  {
+    __typename: "Instruments",
+    isin: string,
+    name: string,
+    symbol: string,
+    ttl: number,
+    country: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateInsPriceSubscription = {
+  onCreateInsPrice?:  {
+    __typename: "InsPrice",
+    isin: string,
+    eodAdj: number,
+    ttl: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateInsPriceSubscription = {
+  onUpdateInsPrice?:  {
+    __typename: "InsPrice",
+    isin: string,
+    eodAdj: number,
+    ttl: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteInsPriceSubscription = {
+  onDeleteInsPrice?:  {
+    __typename: "InsPrice",
+    isin: string,
+    eodAdj: number,
+    ttl: number,
     createdAt: string,
     updatedAt: string,
   } | null,

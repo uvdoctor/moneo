@@ -602,6 +602,279 @@ export const onDeleteAccount = /* GraphQL */ `
     }
   }
 `;
+export const onCreateHoldings = /* GraphQL */ `
+  subscription OnCreateHoldings($owner: String!) {
+    onCreateHoldings(owner: $owner) {
+      id
+      instruments {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      deposits {
+        amt
+        start
+        end
+        rate
+      }
+      loans {
+        type
+        per
+        rate
+        dur
+        ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        emi
+        pmi
+        peper
+      }
+      savings
+      current
+      property {
+        type
+        pin
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        address
+      }
+      gold {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      crypto {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      other {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateHoldings = /* GraphQL */ `
+  subscription OnUpdateHoldings($owner: String!) {
+    onUpdateHoldings(owner: $owner) {
+      id
+      instruments {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      deposits {
+        amt
+        start
+        end
+        rate
+      }
+      loans {
+        type
+        per
+        rate
+        dur
+        ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        emi
+        pmi
+        peper
+      }
+      savings
+      current
+      property {
+        type
+        pin
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        address
+      }
+      gold {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      crypto {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      other {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteHoldings = /* GraphQL */ `
+  subscription OnDeleteHoldings($owner: String!) {
+    onDeleteHoldings(owner: $owner) {
+      id
+      instruments {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      deposits {
+        amt
+        start
+        end
+        rate
+      }
+      loans {
+        type
+        per
+        rate
+        dur
+        ry
+        pp {
+          num
+          val
+        }
+        ira {
+          num
+          val
+        }
+        emi
+        pmi
+        peper
+      }
+      savings
+      current
+      property {
+        type
+        pin
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        address
+      }
+      gold {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      crypto {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      other {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+          unit
+        }
+        name
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const onCreateFeedback = /* GraphQL */ `
   subscription OnCreateFeedback {
     onCreateFeedback {
@@ -723,6 +996,81 @@ export const onDeleteRegistration = /* GraphQL */ `
       country
       lat
       long
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateInstruments = /* GraphQL */ `
+  subscription OnCreateInstruments {
+    onCreateInstruments {
+      isin
+      name
+      symbol
+      ttl
+      country
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateInstruments = /* GraphQL */ `
+  subscription OnUpdateInstruments {
+    onUpdateInstruments {
+      isin
+      name
+      symbol
+      ttl
+      country
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteInstruments = /* GraphQL */ `
+  subscription OnDeleteInstruments {
+    onDeleteInstruments {
+      isin
+      name
+      symbol
+      ttl
+      country
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateInsPrice = /* GraphQL */ `
+  subscription OnCreateInsPrice {
+    onCreateInsPrice {
+      isin
+      eodAdj
+      ttl
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateInsPrice = /* GraphQL */ `
+  subscription OnUpdateInsPrice {
+    onUpdateInsPrice {
+      isin
+      eodAdj
+      ttl
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteInsPrice = /* GraphQL */ `
+  subscription OnDeleteInsPrice {
+    onDeleteInsPrice {
+      isin
+      eodAdj
+      ttl
       createdAt
       updatedAt
     }
