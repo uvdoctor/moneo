@@ -1,13 +1,13 @@
 import { withAuthenticator } from "@aws-amplify/ui-react";
 import React from "react";
 import NW from "../components/nw/nw";
-import Amplify from "aws-amplify";
-import awsmobile from "../aws-exports";
+//import Amplify from "aws-amplify";
+//import awsmobile from "../aws-exports";
 import BasicPage from "../components/BasicPage";
 
-Amplify.configure(awsmobile);
+//Amplify.configure(awsmobile);
 
-const Get = () => {
+export default function Get() {
 	return (
 		<BasicPage title="Get Net Worth">
 			<NW />
@@ -15,4 +15,4 @@ const Get = () => {
 	);
 };
 
-export default withAuthenticator(Get);
+//export default withAuthenticator(Get);

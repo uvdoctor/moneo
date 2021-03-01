@@ -144,7 +144,7 @@ export default function NW() {
 					)}
 				</TabPane>
 				</Tabs>
-			: !fileParsing && <p>Could not find any investment.</p>}
+			: !fileParsing && <p>No investment data.</p>}
 		</Fragment>
 	);
 }
