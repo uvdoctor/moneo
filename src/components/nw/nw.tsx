@@ -11,9 +11,16 @@ const getQty = (val: string, isMF: boolean = false) => {
 	val = val.replace(/,/g, "");
 	let result = parseInt(val);
 	if(Number.isNaN(result)) return null;
-	if (!isMF && val.includes(".")) return null;
 	if (val.includes(".")) {
-		if (val.split(".")[0].length > 6) return null;
+		let wholeNum = val.split(".")[0];
+		let decimals = val.split(".")[1];
+		if (wholeNum.length > 6) return null;
+		if (decimals.length > 3) return null;
+		if (!isMF) {
+			let zeroStr = "0";
+			for (let i = 1; i < decimals.length; i++) zeroStr += "0";
+			if (!decimals.includes(zeroStr)) return null;
+		}
 		return parseFloat(val);
 	} else {
 		if (val.length > 6) return null;
@@ -36,7 +43,6 @@ export default function NW() {
 		for (let i = 1; i <= pdf.numPages; i++) {
 			const page = await pdf.getPage(i);
 			const textContent = await page.getTextContent();
-			if (i > 2 && i < pdf.numPages - 1) {
 				let isin = '';
 				for (let i = 0; i < textContent.items.length; i++) {
 					let value = textContent.items[i].str.trim();
@@ -45,15 +51,11 @@ export default function NW() {
 							|| value.includes("NSDL") || value.includes("Your") ||
 							value.includes("Note") || value.includes(":") || value.includes("-"))
 							continue;
-						if (value.includes("Equity Shares")) {
-							mode = 'E';
-						} else if (mode && value.includes(" Bonds (")) {
-							mode = 'B';
-						} else if (isISIN(value)) {
+						if (isISIN(value)) {
 							isin = value;
-							if (isin.startsWith("INF")) {
-								mode = 'M';
-							}
+							mode = isin.startsWith('INF') ? 'M' : 'E';
+						} else if (isin && value.includes("Bond")) {
+							mode = 'B';
 						} else if (isin) {
 							let qty = getQty(value, mode === 'M');
 							if (qty) {
@@ -63,7 +65,6 @@ export default function NW() {
 						}
 					}
 				}
-			}
 		}
 		setAllBonds(bonds);
 		setAllEquities(equities);
