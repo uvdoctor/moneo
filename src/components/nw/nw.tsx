@@ -28,6 +28,8 @@ const getQty = (val: string, isMF: boolean = false) => {
 	}
 }
 
+const hasHoldingStarted = (value: string) => value.toLowerCase().includes("as on");
+
 export default function NW() {
 	const [allEquities, setAllEquities] = useState<any>({});
 	const [allBonds, setAllBonds] = useState<any>({});
@@ -40,17 +42,19 @@ export default function NW() {
 		let mfs: any = {};
 		let bonds: any = {};
 		let mode = '';
+		let holdingStarted = false;
 		for (let i = 1; i <= pdf.numPages; i++) {
 			const page = await pdf.getPage(i);
 			const textContent = await page.getTextContent();
 				let isin = '';
 				for (let i = 0; i < textContent.items.length; i++) {
 					let value = textContent.items[i].str.trim();
-					if (value.length && value.length < 40 && value.split(" ").length < 5) {
-						if (value.includes("Page") || value.includes("Statement")
-							|| value.includes("NSDL") || value.includes("Your") ||
-							value.includes("Note") || value.includes(":") || value.includes("-"))
-							continue;
+					if (value.length && value.length < 50 && value.split(" ").length < 6) {
+						if (!holdingStarted) {
+							console.log("Value to check if holding started: ", value);
+							holdingStarted = hasHoldingStarted(value);
+						}
+						if (!holdingStarted) continue;
 						if (isISIN(value)) {
 							isin = value;
 							mode = isin.startsWith('INF') ? 'M' : 'E';
