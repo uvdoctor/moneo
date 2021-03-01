@@ -1,4 +1,4 @@
-import { withAuthenticator } from "@aws-amplify/ui-react";
+//import { withAuthenticator } from "@aws-amplify/ui-react";
 import React from "react";
 import NW from "../components/nw/nw";
 //import Amplify from "aws-amplify";
