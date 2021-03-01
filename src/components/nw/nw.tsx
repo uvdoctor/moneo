@@ -5,7 +5,18 @@ import * as pdfjsLib from 'pdfjs-dist';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import { appendValue } from '../utils';
 
-const isISIN = (val: string) => val.length === 12 && val.startsWith("IN") && !val.includes(" ");
+const isValidISIN = (val: string) => val.length === 12 && val.startsWith("IN") && !val.includes(" ");
+
+const getISIN = (val: string) => {
+	if (val.length < 12 || val.length > 100) return null;
+	if (isValidISIN(val)) return val;
+	let values = val.split(" ");
+	for (let value of values) {
+		value = value.trim();
+		if (isValidISIN(value)) return value;
+	}
+	return null;
+}
 
 const getQty = (val: string, isMF: boolean = false) => {
 	val = val.replace(/,/g, "");
@@ -28,7 +39,10 @@ const getQty = (val: string, isMF: boolean = false) => {
 	}
 }
 
-const hasHoldingStarted = (value: string) => value.toLowerCase().includes("as on");
+const hasHoldingStarted = (value: string) => {
+	value = value.toLowerCase();
+	return value.includes("as on") || value.includes("as of");
+};
 
 export default function NW() {
 	const [allEquities, setAllEquities] = useState<any>({});
@@ -46,29 +60,26 @@ export default function NW() {
 		for (let i = 1; i <= pdf.numPages; i++) {
 			const page = await pdf.getPage(i);
 			const textContent = await page.getTextContent();
-				let isin = '';
-				for (let i = 0; i < textContent.items.length; i++) {
+			let isin: string | null = null;
+			for (let i = 0; i < textContent.items.length; i++) {
 					let value = textContent.items[i].str.trim();
-					if (value.length && value.length < 50 && value.split(" ").length < 6) {
-						if (!holdingStarted) {
-							console.log("Value to check if holding started: ", value);
-							holdingStarted = hasHoldingStarted(value);
-						}
-						if (!holdingStarted) continue;
-						if (isISIN(value)) {
-							isin = value;
-							mode = isin.startsWith('INF') ? 'M' : 'E';
-						} else if (isin && value.includes("Bond")) {
-							mode = 'B';
-						} else if (isin) {
-							let qty = getQty(value, mode === 'M');
-							if (qty) {
-								appendValue(mode === 'E' ? equities : mode === 'B' ? bonds : mfs, isin, qty);
-								isin = '';
-							}
+					if (!value.length) continue;
+					if (!holdingStarted) holdingStarted = hasHoldingStarted(value);
+					if (!holdingStarted) continue;
+					let retVal = getISIN(value);
+					if (!isin && retVal) {
+						isin = retVal;
+						mode = isin.startsWith('INF') ? 'M' : 'E';
+					} else if (isin && value.includes("Bond")) {
+						mode = 'B';
+					} else if (isin) {
+						let qty = getQty(value, mode === 'M');
+						if (qty) {
+							appendValue(mode === 'E' ? equities : mode === 'B' ? bonds : mfs, isin, qty);
+							isin = null;
 						}
 					}
-				}
+			}
 		}
 		setAllBonds(bonds);
 		setAllEquities(equities);
@@ -104,13 +115,9 @@ export default function NW() {
 
 	return (
 		<Fragment>
-		<Row justify="center">
-			<Col>
-				<input id="fu" type="file" onChange={(event: any) => processPDF(event?.currentTarget.files[0])} accept=".pdf" />
-			</Col>
-			</Row>
+			<input id="fu" type="file" onChange={(event: any) => processPDF(event?.currentTarget.files[0])} accept=".pdf" />
 			{!fileParsing &&
-				<Tabs defaultActiveKey="E" type="card">
+			<Tabs defaultActiveKey="E" type="card">
 				<TabPane key="E" tab="Equities">
 					{Object.keys(allEquities)?.map((key: string, i: number) =>
 						<Row key={"stock" + i} justify="center">
