@@ -22,7 +22,7 @@ const getISIN = (val: string) => {
 	return null;
 };
 
-const getQty = (val: string) => {
+const getQty = (val: string, isBond: boolean = false) => {
 	val = val.replace(/,/g, "");
 	let result = parseInt(val);
 	if (Number.isNaN(result)) return null;
@@ -33,6 +33,7 @@ const getQty = (val: string) => {
 		if (decimals.length > 3) return null;
 		let result = parseFloat(val);
 		if (Number.isNaN(result)) return null;
+		if (isBond && decimals && parseInt(decimals)) return null;
 		return result;
 	} else {
 		if (val.length > 6) return null;
@@ -85,7 +86,8 @@ export default function NW() {
 			let isin: string | null = null;
 			let quantity: number | null = null;
 			let name: string | null = null;
-			let recordStarted: number | null = null;
+			let lastNameCapture: number | null = null;
+			let lastQtyCapture: number | null = null;
 			let fv: number | null = null;
 			let hasFV = false;
 			for (let i = 0; i < textContent.items.length; i++) {
@@ -95,7 +97,6 @@ export default function NW() {
 					holdingStarted = hasHoldingStarted(value);
 					continue;
 				}
-				console.log("Going to check value: ", value);
 				let lVal = value.toLowerCase();
 				if (lVal.includes("face value")) {
 					hasFV = true;
@@ -109,68 +110,57 @@ export default function NW() {
 					continue;
 				let retVal = getISIN(value);
 				if (retVal) {
-					if (isin && quantity && recordStarted) {
+					if (lastNameCapture && (i - lastNameCapture > 7)) {
+						console.log("Detected unrelated name capture: ", lastNameCapture);
+						name = null;
+						lastNameCapture = null;
+					}
+					if (lastQtyCapture && (i - lastQtyCapture > 7)) {
+						console.log("Detected unrelated qty capture: ", lastQtyCapture);
+						quantity = null;
+						lastQtyCapture = null;
+					}
+					if (isin && quantity) {
 						console.log("Record completed...");
-						recordStarted = null;
 						appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
 						if(!insNames[isin]) insNames[isin] = name ? name : isin;
 						quantity = null;
-						isin = null;
 						name = null;
+						lastNameCapture = null;
+						lastQtyCapture = null;
 					}
-					if (!isin) {
-						console.log("Detected ISIN: ", retVal);
-						isin = retVal;
-						recordStarted = i;
-						quantity = null;
-						name = null;
-					}
+					console.log("Detected ISIN: ", retVal);
+					isin = retVal;
 					mode = retVal.startsWith('INF') ? 'M' : 'E';
-				} else {
-					if (value.includes("Bond")) mode = 'B';
-					let numberOfWords = value.split(" ").length;
-					if (value.length > 5 && numberOfWords > 1 && numberOfWords < 12) {
-						if (isin && quantity && recordStarted) {
-							console.log("Record completed...");
-							appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
-							if (!insNames[isin]) insNames[isin] = name ? name : isin;
-							isin = null;
-							quantity = null;
-							name = value;
-							recordStarted = i;
-						} else if (isin || quantity) {
-							if (!name) {
-								name = value;
-							}
-						} else {
-							name = value;
-						}
-					} else {
-						let qty: number | null = getQty(value);
-						if (!qty) continue;
-						if (isin && quantity && recordStarted) {
-							console.log("Record completed...");
-							recordStarted = null;
-							appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
-							if(!insNames[isin]) insNames[isin] = name ? name : isin;
-							isin = null;
-							quantity = null;
-							name = null;
-						}
-						if (!quantity || !recordStarted) {
-							if (hasFV) {
-								if (!fv) {
-									fv = qty;
-									continue;
-								} else {
-									console.log("Detected quantity: ", qty);
-									quantity = qty;
-									fv = null;
-								}
-							} else quantity = qty;
-						}
-					}
+					continue;
 				}
+				if (quantity) continue;
+				console.log("Going to check value: ", value);
+				if (value.toLowerCase().includes("bond")) {
+					console.log("Detected bond...");
+					mode = 'B';
+				}
+				let numberOfWords = value.split(" ").length;
+				if (value.length > 5 && numberOfWords > 1 && numberOfWords < 12) {
+					if (name) continue;
+					name = value;
+					lastNameCapture = i;
+					quantity = null;
+					lastQtyCapture = null;
+					console.log("Detected name: ", name);
+					continue;
+				} 
+				let qty: number | null = getQty(value, mode === 'B');
+				if (!qty) continue;
+				if (hasFV && !fv) {
+					console.log("Detected fv: ", qty);
+					fv = qty;
+					continue;
+				}
+				console.log("Detected quantity: ", qty);
+				lastQtyCapture = i;
+				quantity = qty;
+				if (hasFV) fv = null;
 			}
 		}
 		setAllBonds(bonds);
