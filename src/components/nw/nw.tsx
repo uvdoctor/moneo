@@ -57,6 +57,7 @@ export default function NW() {
 	const uploaderSettings = {
 		accept: ".pdf",
 		name: "file",
+		action: "",
 		multiple: false,
 		onChange: (info: any) => {
 			const { status } = info.file;
