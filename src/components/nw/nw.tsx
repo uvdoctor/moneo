@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Row, Tabs, Upload, Empty, notification } from "antd";
-import { InboxOutlined } from "@ant-design/icons";
+import { Row, Tabs, Upload, Empty, notification, Modal, Input } from "antd";
+import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
@@ -53,6 +53,7 @@ export default function NW() {
 	const [fileParsing, setFileParsing] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
 	const { TabPane } = Tabs;
+	const { confirm } = Modal;
 	const { Dragger } = Upload;
 	const uploaderSettings = {
 		accept: ".pdf",
@@ -71,8 +72,8 @@ export default function NW() {
 				console.log(info.file, info.fileList);
 			}
 			if (status === "done") {
-				console.log(info);
-				console.log(`${info.file.name} file uploaded successfully.`);
+				//console.log(info);
+				//console.log(`${info.file.name} file uploaded successfully.`);
 				processPDF(info.file.originFileObj);
 			} else if (status === "error") {
 				notification.error({
@@ -227,8 +228,11 @@ export default function NW() {
 			const pdfLoadingTask = pdfjsLib.getDocument({
 				data: new Uint8Array(reader.result as ArrayBuffer),
 			});
-			pdfLoadingTask.onPassword = (pwdHandler: Function, response: any) => {
-				let retVal = prompt(
+			pdfLoadingTask.onPassword = async (
+				pwdHandler: Function,
+				response: any
+			) => {
+				const retVal = await getPDFPassword(
 					response === pdfjsLib.PasswordResponses.INCORRECT_PASSWORD
 						? "Invalid Password. Please try again."
 						: "Password"
@@ -249,6 +253,26 @@ export default function NW() {
 				message: "Error while reading file",
 				description: error,
 			});
+	};
+
+	const getPDFPassword = (title: string) => {
+		return new Promise((resolve, reject) => {
+			confirm({
+				title,
+				icon: <ExclamationCircleOutlined />,
+				content: (
+					<Input id="pdf-password" placeholder="Enter PDF password..." />
+				),
+				onOk: () => {
+					// @ts-ignore
+					const password = document.getElementById("pdf-password").value;
+					resolve(password);
+				},
+				onCancel: () => {
+					reject("Cancel");
+				},
+			});
+		});
 	};
 
 	const hasNoHoldings = () =>
