@@ -132,13 +132,12 @@ export default function NW() {
 					if (value.length > 5 && numberOfWords > 1 && numberOfWords < 12) {
 						if (isin && quantity && recordStarted) {
 							console.log("Record completed...");
-							recordStarted = null;
 							appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
 							if (!insNames[isin]) insNames[isin] = name ? name : isin;
 							isin = null;
 							quantity = null;
 							name = value;
-							if (!recordStarted) recordStarted = i;
+							recordStarted = i;
 						} else if (isin || quantity) {
 							if (!name) {
 								name = value;
@@ -159,12 +158,12 @@ export default function NW() {
 							name = null;
 						}
 						if (!quantity || !recordStarted) {
-							console.log("Detected quantity: ", qty);
 							if (hasFV) {
 								if (!fv) {
 									fv = qty;
 									continue;
 								} else {
+									console.log("Detected quantity: ", qty);
 									quantity = qty;
 									fv = null;
 								}
@@ -235,7 +234,7 @@ export default function NW() {
 					Click or drag file to this area to upload
 				</p>
 				<p className="ant-upload-hint">
-					Support for a single upload. Strictly prohibit from uploading company
+					Supports single pdf upload. Strictly prohibit from uploading company
 					data or other band files
 				</p>
 			</Dragger>
