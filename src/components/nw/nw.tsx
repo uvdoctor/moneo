@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Tabs, Upload, Empty, notification, Modal, Input } from "antd";
+import { Tabs, Upload, Empty, notification, Modal, Input } from "antd";
 import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
@@ -46,7 +46,10 @@ const hasHoldingStarted = (value: string) => {
 	return value.includes("holding statement")
 		|| value.includes("holding as of")
 		|| value.includes("holding as on")
-		|| value.includes("holdings");
+		|| value.includes("holdings")
+		|| value.includes("balances as of")
+		|| value.includes("balances as on")
+		|| value.includes("no transaction");
 };
 
 export default function NW() {
@@ -94,16 +97,24 @@ export default function NW() {
 		let mode = "";
 		let holdingStarted = false;
 		let insNames: any = {};
+		let recordBroken = false;
+		let isin: string | null = null;
+		let quantity: number | null = null;
+		let name: string | null = null;
+		let lastNameCapture: number | null = null;
+		let lastQtyCapture: number | null = null;
+		let fv: number | null = null;
+		let hasFV = false;
 		for (let i = 1; i <= pdf.numPages; i++) {
+			lastNameCapture = null;
+			lastQtyCapture = null;
+			if (!recordBroken) {
+				isin = null;
+				quantity = null;
+				name = null;
+			}
 			const page = await pdf.getPage(i);
 			const textContent = await page.getTextContent();
-			let isin: string | null = null;
-			let quantity: number | null = null;
-			let name: string | null = null;
-			let lastNameCapture: number | null = null;
-			let lastQtyCapture: number | null = null;
-			let fv: number | null = null;
-			let hasFV = false;
 			for (let i = 0; i < textContent.items.length; i++) {
 				let value = textContent.items[i].str.trim();
 				if (!value.length) continue;
@@ -111,6 +122,7 @@ export default function NW() {
 					holdingStarted = hasHoldingStarted(value);
 					continue;
 				}
+				if (value.length > 100) continue;
 				let lVal = value.toLowerCase();
 				if (
 					lVal.includes("commission paid") ||
@@ -121,14 +133,13 @@ export default function NW() {
 					hasFV = true;
 					continue;
 				}
-				if (lVal.includes("closing ") || lVal.includes("opening ")
+				if (lVal.includes("closing") || lVal.includes("opening")
 					|| lVal.includes("summary") || lVal.includes("year")
 					|| lVal.includes("portfolio") || lVal.includes("total")
-					|| lVal.includes("asset") || lVal.includes("%") || lVal.includes("shares") 
-					|| lVal.includes("equities") || lVal.includes("listed") || lVal.includes("not ")
-					|| lVal.includes("value (") || lVal.includes("value in"))
+					|| lVal.includes("%") || lVal.includes("equities") || lVal.includes("listed") || lVal.includes("not ")
+					|| lVal.includes("value (") || lVal.includes("value in")
+					|| lVal.includes("free b"))
 					continue;
-				console.log("Going to check value: ", value);
 				let retVal = getISIN(value);
 				if (retVal) {
 					if (lastQtyCapture && i - lastQtyCapture > 9) {
@@ -159,22 +170,50 @@ export default function NW() {
 					continue;
 				}
 				if (quantity) continue;
+				console.log("Going to check value: ", value);
+				if (!isin && value.toLowerCase().includes("page")) continue;
+				if (isin && value.toLowerCase().includes("page") && (i - textContent.items.length) < 5) {
+					console.log("Detected broken record between pages...");
+					recordBroken = true;
+					lastQtyCapture = null;
+					lastNameCapture = null;
+					break;
+				}
 				let numberOfWords = value.split(" ").length;
-				if (value.length > 6 && numberOfWords > 1 && numberOfWords < 12 && !value.includes(",")) {
-					if (value.toLowerCase().includes("bond")) {
+				if (!recordBroken && value.length > 7 && numberOfWords > 1 && numberOfWords < 12 && !value.includes(",")) {
+					if (value.toLowerCase().includes("bond")
+					|| value.toLowerCase().includes("bd")) {
 						console.log("Detected bond...");
 						mode = "B";
 					}
-					if (name && lastNameCapture) {
+					if (lastNameCapture) {
 						let diff = i - lastNameCapture;
-						if (isin && diff < 7) continue;
-						if (diff < 3) continue;
+						if (mode !== 'M' && diff < 5) continue;
 					}
 					value = cleanName(value, "#");
 					value = cleanName(value, "(");
 					value = cleanName(value, "-");
 					value = cleanName(value, "/");
-					name = value;
+					value = cleanName(value, "NEW RS.")
+					value = cleanName(value, "RS.");
+					value = cleanName(value, "NEW RE.")
+					value = cleanName(value, "RE.");
+					value = cleanName(value, "NEW F.V");
+					value = cleanName(value, "NEW FV");
+					value = value.replace(" LIMITED", "");
+					value = value.replace(" EQUITY", "");
+					value = value.replace(" EQ", "");
+					value = value.replace(" LTD", "");
+					value = value.replace(" SHARES", "");
+					value = value.trim();
+					if (value.endsWith(" AND"))
+						value = value.replace(" AND", "");
+					if (value.endsWith(" OF")) 
+						value = value.replace(" OF", "");
+					if (value.endsWith(" &")) 
+						value = value.replace(" &", "");
+					if (mode === 'M' && name && lastNameCapture && ((i - lastNameCapture) <= 2)) name += " " + value.trim();
+					else name = value.trim();
 					lastNameCapture = i;
 					quantity = null;
 					lastQtyCapture = null;
@@ -183,7 +222,8 @@ export default function NW() {
 				}
 				let qty: number | null = getQty(value, mode === "M");
 				if (!qty) continue;
-				if (lastQtyCapture && ((i - lastQtyCapture) < 7)) continue;
+				if (!recordBroken && lastQtyCapture && ((i - lastQtyCapture) < 7)) continue;
+				recordBroken = false;
 				if (hasFV && !fv && mode === 'E') {
 					console.log("Detected fv: ", qty);
 					fv = qty;
@@ -194,10 +234,9 @@ export default function NW() {
 				quantity = qty;
 				if (hasFV) fv = null;
 				if (isin && quantity) {
-					if (lastNameCapture && i - lastNameCapture > 9) {
-						console.log("Detected unrelated name capture: ", lastNameCapture);
-						name = null;
+					if (recordBroken || (lastNameCapture && (i - lastNameCapture) > 9)) {
 						lastNameCapture = null;
+						recordBroken = false;
 					}
 					console.log("Record completed...");
 					appendValue(
@@ -258,7 +297,12 @@ export default function NW() {
 				title,
 				icon: <ExclamationCircleOutlined />,
 				content: (
-					<Input id="pdf-password" placeholder="Enter PDF password..." />
+					<Input id="pdf-password" placeholder="Enter PDF password..."
+						onPressEnter={(e: any) => {
+							resolve(e.currentTarget.value);
+							Modal.destroyAll();
+						}}
+					/>
 				),
 				onOk: () => {
 					// @ts-ignore
@@ -307,23 +351,23 @@ export default function NW() {
 				<Tabs defaultActiveKey="E" type="card">
 					<TabPane key="E" tab="Equities">
 						{Object.keys(allEquities)?.map((key: string, i: number) => (
-							<Row key={"stock" + i} justify="center">
+							<p key={"stock" + i}>
 								{key} - {insNames[key]}: {allEquities[key]}
-							</Row>
+							</p>
 						))}
 					</TabPane>
 					<TabPane key="B" tab="Bonds">
 						{Object.keys(allBonds)?.map((key: string, i: number) => (
-							<Row key={"bond" + i} justify="center">
+							<p key={"bond" + i}>
 								{key} - {insNames[key]}: {allBonds[key]}
-							</Row>
+							</p>
 						))}
 					</TabPane>
 					<TabPane key="M" tab="Mutual Funds">
 						{Object.keys(allMFs)?.map((key: string, i: number) => (
-							<Row key={"mf" + i} justify="center">
+							<p key={"mf" + i}>
 								{key} - {insNames[key]}: {toReadableNumber(allMFs[key], ("" + allMFs[key]).includes(".") ? 3 : 0)}
-							</Row>
+							</p>
 						))}
 					</TabPane>
 				</Tabs>
