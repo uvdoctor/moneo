@@ -110,11 +110,6 @@ export default function NW() {
 					continue;
 				let retVal = getISIN(value);
 				if (retVal) {
-					if (lastNameCapture && (i - lastNameCapture > 9)) {
-						console.log("Detected unrelated name capture: ", lastNameCapture);
-						name = null;
-						lastNameCapture = null;
-					}
 					if (lastQtyCapture && (i - lastQtyCapture > 9)) {
 						console.log("Detected unrelated qty capture: ", lastQtyCapture);
 						quantity = null;
@@ -128,12 +123,12 @@ export default function NW() {
 				if (quantity) continue;
 				console.log("Going to check value: ", value);
 				let numberOfWords = value.split(" ").length;
-				if (value.length > 5 && numberOfWords > 1 && numberOfWords < 12) {
+				if (value.length > 5 && numberOfWords > 1 && numberOfWords < 12 && !value.includes(",")) {
 					if (value.toLowerCase().includes("bond")) {
 						console.log("Detected bond...");
 						mode = 'B';
 					}
-					if (name) continue;
+					if (name && lastNameCapture && (i - lastNameCapture < 2)) continue;
 					name = value;
 					lastNameCapture = i;
 					quantity = null;
@@ -143,6 +138,7 @@ export default function NW() {
 				} 
 				let qty: number | null = getQty(value, mode === 'B');
 				if (!qty) continue;
+				if (lastQtyCapture && (i - lastQtyCapture < 5)) continue;
 				if (hasFV && !fv && mode === 'E') {
 					console.log("Detected fv: ", qty);
 					fv = qty;
@@ -153,14 +149,17 @@ export default function NW() {
 				quantity = qty;
 				if (hasFV) fv = null;
 				if (isin && quantity) {
+					if (lastNameCapture && (i - lastNameCapture > 9)) {
+						console.log("Detected unrelated name capture: ", lastNameCapture);
+						name = null;
+						lastNameCapture = null;
+					}
 					console.log("Record completed...");
 					appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
 					if(!insNames[isin]) insNames[isin] = name ? name : isin;
 					isin = null;
 					quantity = null;
 					name = null;
-					lastNameCapture = null;
-					lastQtyCapture = null;
 				}
 			}
 		}
