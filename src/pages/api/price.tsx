@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { finnhub } from 'finnhub';
+//import { finnhub } from 'finnhub';
 
 type Data = {
   price: Number[];
