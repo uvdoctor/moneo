@@ -58,6 +58,7 @@ export default function NW() {
 		accept: ".pdf",
 		name: "file",
 		action: "",
+		headers: {"content-type": "application/pdf"},
 		multiple: false,
 		onChange: (info: any) => {
 			const { status } = info.file;
