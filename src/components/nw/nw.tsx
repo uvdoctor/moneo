@@ -106,27 +106,18 @@ export default function NW() {
 					|| lVal.includes("summary") || lVal.includes("year")
 					|| lVal.includes("portfolio") || lVal.includes("total")
 					|| lVal.includes("asset") || lVal.includes("%")
-					|| lVal.includes("Equities"))
+					|| lVal.includes("Equities") || lVal.includes("listed") || lVal.includes("not "))
 					continue;
 				let retVal = getISIN(value);
 				if (retVal) {
-					if (lastNameCapture && (i - lastNameCapture > 7)) {
+					if (lastNameCapture && (i - lastNameCapture > 9)) {
 						console.log("Detected unrelated name capture: ", lastNameCapture);
 						name = null;
 						lastNameCapture = null;
 					}
-					if (lastQtyCapture && (i - lastQtyCapture > 7)) {
+					if (lastQtyCapture && (i - lastQtyCapture > 9)) {
 						console.log("Detected unrelated qty capture: ", lastQtyCapture);
 						quantity = null;
-						lastQtyCapture = null;
-					}
-					if (isin && quantity) {
-						console.log("Record completed...");
-						appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
-						if(!insNames[isin]) insNames[isin] = name ? name : isin;
-						quantity = null;
-						name = null;
-						lastNameCapture = null;
 						lastQtyCapture = null;
 					}
 					console.log("Detected ISIN: ", retVal);
@@ -136,12 +127,12 @@ export default function NW() {
 				}
 				if (quantity) continue;
 				console.log("Going to check value: ", value);
-				if (value.toLowerCase().includes("bond")) {
-					console.log("Detected bond...");
-					mode = 'B';
-				}
 				let numberOfWords = value.split(" ").length;
 				if (value.length > 5 && numberOfWords > 1 && numberOfWords < 12) {
+					if (value.toLowerCase().includes("bond")) {
+						console.log("Detected bond...");
+						mode = 'B';
+					}
 					if (name) continue;
 					name = value;
 					lastNameCapture = i;
@@ -152,7 +143,7 @@ export default function NW() {
 				} 
 				let qty: number | null = getQty(value, mode === 'B');
 				if (!qty) continue;
-				if (hasFV && !fv) {
+				if (hasFV && !fv && mode === 'E') {
 					console.log("Detected fv: ", qty);
 					fv = qty;
 					continue;
@@ -161,6 +152,16 @@ export default function NW() {
 				lastQtyCapture = i;
 				quantity = qty;
 				if (hasFV) fv = null;
+				if (isin && quantity) {
+					console.log("Record completed...");
+					appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
+					if(!insNames[isin]) insNames[isin] = name ? name : isin;
+					isin = null;
+					quantity = null;
+					name = null;
+					lastNameCapture = null;
+					lastQtyCapture = null;
+				}
 			}
 		}
 		setAllBonds(bonds);
