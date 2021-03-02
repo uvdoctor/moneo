@@ -75,8 +75,6 @@ export default function NW() {
 				console.log(info.file, info.fileList);
 			}
 			if (status === "done") {
-				//console.log(info);
-				//console.log(`${info.file.name} file uploaded successfully.`);
 				processPDF(info.file.originFileObj);
 			} else if (status === "error") {
 				notification.error({
