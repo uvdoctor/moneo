@@ -4,7 +4,7 @@ import { InboxOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-import { appendValue } from "../utils";
+import { appendValue, toReadableNumber } from "../utils";
 
 import "./nw.less";
 
@@ -31,7 +31,7 @@ const getQty = (val: string, isMF: boolean = false) => {
 		let decimals = val.split(".")[1];
 		if (wholeNum.length > 5) return null;
 		if (decimals.length > 3) return null;
-		let result = parseFloat(val);
+		let result = Number(parseFloat(val).toFixed(3));
 		if (Number.isNaN(result)) return null;
 		if (!isMF && decimals && parseInt(decimals)) return null;
 		return result;
@@ -43,7 +43,10 @@ const getQty = (val: string, isMF: boolean = false) => {
 
 const hasHoldingStarted = (value: string) => {
 	value = value.toLowerCase();
-	return value.includes("as on") || value.includes("as of");
+	return value.includes("holding statement")
+		|| value.includes("holding as of")
+		|| value.includes("holding as on")
+		|| value.includes("holdings");
 };
 
 export default function NW() {
@@ -83,6 +86,8 @@ export default function NW() {
 		},
 	};
 
+	const cleanName = (value: string, char: string) => value.split(char)[0].trim();
+
 	const parseHoldings = async (pdf: any) => {
 		let equities: any = {};
 		let mfs: any = {};
@@ -118,11 +123,11 @@ export default function NW() {
 				if (lVal.includes("closing ") || lVal.includes("opening ")
 					|| lVal.includes("summary") || lVal.includes("year")
 					|| lVal.includes("portfolio") || lVal.includes("total")
-					|| lVal.includes("asset") || lVal.includes("%")
-					|| lVal.includes("Equities") || lVal.includes("listed") || lVal.includes("not "))
+					|| lVal.includes("asset") || lVal.includes("%") || lVal.includes("shares") 
+					|| lVal.includes("equities") || lVal.includes("listed") || lVal.includes("not ")
+					|| lVal.includes("value (") || lVal.includes("value in"))
 					continue;
 				console.log("Going to check value: ", value);
-				console.log("Index: ", i);
 				let retVal = getISIN(value);
 				if (retVal) {
 					if (lastQtyCapture && ((i - lastQtyCapture) > 9)) {
@@ -150,12 +155,20 @@ export default function NW() {
 				}
 				if (quantity) continue;
 				let numberOfWords = value.split(" ").length;
-				if (value.length > 5 && numberOfWords > 1 && numberOfWords < 12 && !value.includes(",")) {
+				if (value.length > 6 && numberOfWords > 1 && numberOfWords < 12 && !value.includes(",")) {
 					if (value.toLowerCase().includes("bond")) {
 						console.log("Detected bond...");
 						mode = 'B';
 					}
-					if (name && lastNameCapture && ((i - lastNameCapture) < 3)) continue;
+					if (name && lastNameCapture) {
+						let diff = i - lastNameCapture;
+						if (isin && diff < 7) continue;
+						if (diff < 3) continue;
+					}
+					value = cleanName(value, "#");
+					value = cleanName(value, "(");
+					value = cleanName(value, "-");
+					value = cleanName(value, "/");
 					name = value;
 					lastNameCapture = i;
 					quantity = null;
@@ -165,7 +178,7 @@ export default function NW() {
 				} 
 				let qty: number | null = getQty(value, mode === 'M');
 				if (!qty) continue;
-				if (lastQtyCapture && ((i - lastQtyCapture) < 5)) continue;
+				if (lastQtyCapture && ((i - lastQtyCapture) < 7)) continue;
 				if (hasFV && !fv && mode === 'E') {
 					console.log("Detected fv: ", qty);
 					fv = qty;
@@ -186,7 +199,6 @@ export default function NW() {
 					if(!insNames[isin]) insNames[isin] = name ? name : isin;
 					isin = null;
 					quantity = null;
-					name = null;
 				}
 			}
 		}
@@ -277,7 +289,7 @@ export default function NW() {
 					<TabPane key="M" tab="Mutual Funds">
 						{Object.keys(allMFs)?.map((key: string, i: number) => (
 							<Row key={"mf" + i} justify="center">
-								{key} - {insNames[key]}: {allMFs[key]}
+								{key} - {insNames[key]}: {toReadableNumber(allMFs[key], allMFs[key].includes(".") ? 2 : 0)}
 							</Row>
 						))}
 					</TabPane>
