@@ -33,7 +33,7 @@ const getQty = (val: string, isMF: boolean = false) => {
 		if (decimals.length > 3) return null;
 		let result = parseFloat(val);
 		if (Number.isNaN(result)) return null;
-		if (isMF && decimals && parseInt(decimals)) return null;
+		if (!isMF && decimals && parseInt(decimals)) return null;
 		return result;
 	} else {
 		if (val.length > 6) return null;
