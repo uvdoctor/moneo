@@ -113,7 +113,7 @@ export default function NW() {
 		setAllMFs(mfs);
 	};
 
-	const processPDF = (file) => {
+	const processPDF = (file: File) => {
 		setFileParsing(true);
 		const reader = new FileReader();
 		reader.readAsArrayBuffer(file);
