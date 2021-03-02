@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Row, Tabs, Upload, Empty, notification } from "antd";
-import { InboxOutlined } from "@ant-design/icons";
+import { Row, Tabs, Upload, Empty, notification, Modal, Input } from "antd";
+import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
@@ -56,15 +56,16 @@ export default function NW() {
 	const [fileParsing, setFileParsing] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
 	const { TabPane } = Tabs;
+	const { confirm } = Modal;
 	const { Dragger } = Upload;
 	const uploaderSettings = {
 		accept: ".pdf",
 		name: "file",
 		action: "",
 		headers: { "content-type": "application/pdf" },
-		customRequest: ({onSuccess}: any) => {
+		customRequest: ({ onSuccess }: any) => {
 			setTimeout(() => {
-				onSuccess('ok');
+				onSuccess("ok");
 			}, 0);
 		},
 		multiple: false,
@@ -74,13 +75,13 @@ export default function NW() {
 				console.log(info.file, info.fileList);
 			}
 			if (status === "done") {
-				console.log(info);
-				console.log(`${info.file.name} file uploaded successfully.`);
+				//console.log(info);
+				//console.log(`${info.file.name} file uploaded successfully.`);
 				processPDF(info.file.originFileObj);
 			} else if (status === "error") {
 				notification.error({
 					message: "File upload failed",
-					description: `Unable to upload ${info.file.name}`
+					description: `Unable to upload ${info.file.name}`,
 				});
 			}
 		},
@@ -113,8 +114,10 @@ export default function NW() {
 					continue;
 				}
 				let lVal = value.toLowerCase();
-				if (lVal.includes("commission paid")
-					|| lVal.includes("end of statement"))
+				if (
+					lVal.includes("commission paid") ||
+					lVal.includes("end of statement")
+				)
 					break;
 				if (lVal.includes("face value")) {
 					hasFV = true;
@@ -130,23 +133,27 @@ export default function NW() {
 				console.log("Going to check value: ", value);
 				let retVal = getISIN(value);
 				if (retVal) {
-					if (lastQtyCapture && ((i - lastQtyCapture) > 9)) {
+					if (lastQtyCapture && i - lastQtyCapture > 9) {
 						console.log("Detected unrelated qty capture: ", lastQtyCapture);
 						quantity = null;
 						lastQtyCapture = null;
 					}
 					console.log("Detected ISIN: ", retVal);
 					isin = retVal;
-					mode = isin.startsWith('INF') ? 'M' : 'E';
+					mode = isin.startsWith("INF") ? "M" : "E";
 					if (isin && quantity) {
-						if (lastNameCapture && ((i - lastNameCapture) > 9)) {
+						if (lastNameCapture && i - lastNameCapture > 9) {
 							console.log("Detected unrelated name capture: ", lastNameCapture);
 							name = null;
 							lastNameCapture = null;
 						}
 						console.log("Record completed...");
-						appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
-						if(!insNames[isin]) insNames[isin] = name ? name : isin;
+						appendValue(
+							mode === "E" ? equities : mode === "M" ? mfs : bonds,
+							isin,
+							quantity
+						);
+						if (!insNames[isin]) insNames[isin] = name ? name : isin;
 						isin = null;
 						quantity = null;
 						name = null;
@@ -158,7 +165,7 @@ export default function NW() {
 				if (value.length > 6 && numberOfWords > 1 && numberOfWords < 12 && !value.includes(",")) {
 					if (value.toLowerCase().includes("bond")) {
 						console.log("Detected bond...");
-						mode = 'B';
+						mode = "B";
 					}
 					if (name && lastNameCapture) {
 						let diff = i - lastNameCapture;
@@ -175,8 +182,8 @@ export default function NW() {
 					lastQtyCapture = null;
 					console.log("Detected name: ", name);
 					continue;
-				} 
-				let qty: number | null = getQty(value, mode === 'M');
+				}
+				let qty: number | null = getQty(value, mode === "M");
 				if (!qty) continue;
 				if (lastQtyCapture && ((i - lastQtyCapture) < 7)) continue;
 				if (hasFV && !fv && mode === 'E') {
@@ -189,14 +196,18 @@ export default function NW() {
 				quantity = qty;
 				if (hasFV) fv = null;
 				if (isin && quantity) {
-					if (lastNameCapture && ((i - lastNameCapture) > 9)) {
+					if (lastNameCapture && i - lastNameCapture > 9) {
 						console.log("Detected unrelated name capture: ", lastNameCapture);
 						name = null;
 						lastNameCapture = null;
 					}
 					console.log("Record completed...");
-					appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
-					if(!insNames[isin]) insNames[isin] = name ? name : isin;
+					appendValue(
+						mode === "E" ? equities : mode === "M" ? mfs : bonds,
+						isin,
+						quantity
+					);
+					if (!insNames[isin]) insNames[isin] = name ? name : isin;
 					isin = null;
 					quantity = null;
 				}
@@ -216,8 +227,11 @@ export default function NW() {
 			const pdfLoadingTask = pdfjsLib.getDocument({
 				data: new Uint8Array(reader.result as ArrayBuffer),
 			});
-			pdfLoadingTask.onPassword = (pwdHandler: Function, response: any) => {
-				let retVal = prompt(
+			pdfLoadingTask.onPassword = async (
+				pwdHandler: Function,
+				response: any
+			) => {
+				const retVal = await getPDFPassword(
 					response === pdfjsLib.PasswordResponses.INCORRECT_PASSWORD
 						? "Invalid Password. Please try again."
 						: "Password"
@@ -233,9 +247,30 @@ export default function NW() {
 				setFileParsing(false);
 			});
 		};
-		reader.onerror = (error: any) => notification.error({
-			message: 'Error while reading file',
-			description: error
+		reader.onerror = (error: any) =>
+			notification.error({
+				message: "Error while reading file",
+				description: error,
+			});
+	};
+
+	const getPDFPassword = (title: string) => {
+		return new Promise((resolve, reject) => {
+			confirm({
+				title,
+				icon: <ExclamationCircleOutlined />,
+				content: (
+					<Input id="pdf-password" placeholder="Enter PDF password..." />
+				),
+				onOk: () => {
+					// @ts-ignore
+					const password = document.getElementById("pdf-password").value;
+					resolve(password);
+				},
+				onCancel: () => {
+					reject("Cancel");
+				},
+			});
 		});
 	};
 
@@ -255,7 +290,7 @@ export default function NW() {
 			})
 		});
 	}, []);*/
-	
+
 	return (
 		<div className="nw-container">
 			<Dragger {...uploaderSettings}>
