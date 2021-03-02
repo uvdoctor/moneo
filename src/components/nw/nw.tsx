@@ -322,7 +322,7 @@ export default function NW() {
 					<TabPane key="M" tab="Mutual Funds">
 						{Object.keys(allMFs)?.map((key: string, i: number) => (
 							<Row key={"mf" + i} justify="center">
-								{key} - {insNames[key]}: {toReadableNumber(allMFs[key], allMFs[key].includes(".") ? 2 : 0)}
+								{key} - {insNames[key]}: {toReadableNumber(allMFs[key], ("" + allMFs[key]).includes(".") ? 3 : 0)}
 							</Row>
 						))}
 					</TabPane>
