@@ -59,7 +59,7 @@ export default function NW() {
 		accept: ".pdf",
 		name: "file",
 		multiple: false,
-		onChange(info) {
+		onChange: (info: any) => {
 			const { status } = info.file;
 			if (status !== "uploading") {
 				console.log(info.file, info.fileList);
