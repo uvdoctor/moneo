@@ -121,6 +121,8 @@ export default function NW() {
 					|| lVal.includes("asset") || lVal.includes("%")
 					|| lVal.includes("Equities") || lVal.includes("listed") || lVal.includes("not "))
 					continue;
+				console.log("Going to check value: ", value);
+				console.log("Index: ", i);
 				let retVal = getISIN(value);
 				if (retVal) {
 					if (lastQtyCapture && ((i - lastQtyCapture) > 9)) {
@@ -131,10 +133,22 @@ export default function NW() {
 					console.log("Detected ISIN: ", retVal);
 					isin = retVal;
 					mode = retVal.startsWith('INF') ? 'M' : 'E';
+					if (isin && quantity) {
+						if (lastNameCapture && ((i - lastNameCapture) > 9)) {
+							console.log("Detected unrelated name capture: ", lastNameCapture);
+							name = null;
+							lastNameCapture = null;
+						}
+						console.log("Record completed...");
+						appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
+						if(!insNames[isin]) insNames[isin] = name ? name : isin;
+						isin = null;
+						quantity = null;
+						name = null;
+					}
 					continue;
 				}
 				if (quantity) continue;
-				console.log("Going to check value: ", value);
 				let numberOfWords = value.split(" ").length;
 				if (value.length > 5 && numberOfWords > 1 && numberOfWords < 12 && !value.includes(",")) {
 					if (value.toLowerCase().includes("bond")) {
@@ -142,7 +156,8 @@ export default function NW() {
 						mode = 'B';
 					}
 					if (name && lastNameCapture && ((i - lastNameCapture) < 3)) continue;
-					name = value;
+					let fullName = value.split(" ");
+					name = `${fullName[0]} ${fullName[1]} ${fullName[2] ? fullName[2] : ""}`;
 					lastNameCapture = i;
 					quantity = null;
 					lastQtyCapture = null;
