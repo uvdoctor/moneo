@@ -22,7 +22,7 @@ const getISIN = (val: string) => {
 	return null;
 };
 
-const getQty = (val: string, isBond: boolean = false) => {
+const getQty = (val: string, isMF: boolean = false) => {
 	val = val.replace(/,/g, "");
 	let result = parseInt(val);
 	if (Number.isNaN(result)) return null;
@@ -33,7 +33,7 @@ const getQty = (val: string, isBond: boolean = false) => {
 		if (decimals.length > 3) return null;
 		let result = parseFloat(val);
 		if (Number.isNaN(result)) return null;
-		if (isBond && decimals && parseInt(decimals)) return null;
+		if (isMF && decimals && parseInt(decimals)) return null;
 		return result;
 	} else {
 		if (val.length > 6) return null;
@@ -123,7 +123,7 @@ export default function NW() {
 					continue;
 				let retVal = getISIN(value);
 				if (retVal) {
-					if (lastQtyCapture && (i - lastQtyCapture > 9)) {
+					if (lastQtyCapture && ((i - lastQtyCapture) > 9)) {
 						console.log("Detected unrelated qty capture: ", lastQtyCapture);
 						quantity = null;
 						lastQtyCapture = null;
@@ -141,7 +141,7 @@ export default function NW() {
 						console.log("Detected bond...");
 						mode = 'B';
 					}
-					if (name && lastNameCapture && (i - lastNameCapture < 3)) continue;
+					if (name && lastNameCapture && ((i - lastNameCapture) < 3)) continue;
 					name = value;
 					lastNameCapture = i;
 					quantity = null;
@@ -149,9 +149,9 @@ export default function NW() {
 					console.log("Detected name: ", name);
 					continue;
 				} 
-				let qty: number | null = getQty(value, mode === 'B');
+				let qty: number | null = getQty(value, mode === 'M');
 				if (!qty) continue;
-				if (lastQtyCapture && (i - lastQtyCapture < 5)) continue;
+				if (lastQtyCapture && ((i - lastQtyCapture) < 5)) continue;
 				if (hasFV && !fv && mode === 'E') {
 					console.log("Detected fv: ", qty);
 					fv = qty;
@@ -162,7 +162,7 @@ export default function NW() {
 				quantity = qty;
 				if (hasFV) fv = null;
 				if (isin && quantity) {
-					if (lastNameCapture && (i - lastNameCapture > 9)) {
+					if (lastNameCapture && ((i - lastNameCapture) > 9)) {
 						console.log("Detected unrelated name capture: ", lastNameCapture);
 						name = null;
 						lastNameCapture = null;
