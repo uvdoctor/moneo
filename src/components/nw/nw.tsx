@@ -59,9 +59,9 @@ export default function NW() {
 		name: "file",
 		action: "",
 		headers: { "content-type": "application/pdf" },
-		customRequest: ({onSuccess}: any) => {
+		customRequest: ({ onSuccess }: any) => {
 			setTimeout(() => {
-				onSuccess('ok');
+				onSuccess("ok");
 			}, 0);
 		},
 		multiple: false,
@@ -77,7 +77,7 @@ export default function NW() {
 			} else if (status === "error") {
 				notification.error({
 					message: "File upload failed",
-					description: `Unable to upload ${info.file.name}`
+					description: `Unable to upload ${info.file.name}`,
 				});
 			}
 		},
@@ -108,40 +108,54 @@ export default function NW() {
 					continue;
 				}
 				let lVal = value.toLowerCase();
-				if (lVal.includes("commission paid")
-					|| lVal.includes("end of statement"))
+				if (
+					lVal.includes("commission paid") ||
+					lVal.includes("end of statement")
+				)
 					break;
 				if (lVal.includes("face value")) {
 					hasFV = true;
 					continue;
 				}
-				if (lVal.includes("closing ") || lVal.includes("opening ")
-					|| lVal.includes("summary") || lVal.includes("year")
-					|| lVal.includes("portfolio") || lVal.includes("total")
-					|| lVal.includes("asset") || lVal.includes("%")
-					|| lVal.includes("Equities") || lVal.includes("listed") || lVal.includes("not "))
+				if (
+					lVal.includes("closing ") ||
+					lVal.includes("opening ") ||
+					lVal.includes("summary") ||
+					lVal.includes("year") ||
+					lVal.includes("portfolio") ||
+					lVal.includes("total") ||
+					lVal.includes("asset") ||
+					lVal.includes("%") ||
+					lVal.includes("Equities") ||
+					lVal.includes("listed") ||
+					lVal.includes("not ")
+				)
 					continue;
 				console.log("Going to check value: ", value);
 				console.log("Index: ", i);
 				let retVal = getISIN(value);
 				if (retVal) {
-					if (lastQtyCapture && ((i - lastQtyCapture) > 9)) {
+					if (lastQtyCapture && i - lastQtyCapture > 9) {
 						console.log("Detected unrelated qty capture: ", lastQtyCapture);
 						quantity = null;
 						lastQtyCapture = null;
 					}
 					console.log("Detected ISIN: ", retVal);
 					isin = retVal;
-					mode = isin.startsWith('INF') ? 'M' : 'E';
+					mode = isin.startsWith("INF") ? "M" : "E";
 					if (isin && quantity) {
-						if (lastNameCapture && ((i - lastNameCapture) > 9)) {
+						if (lastNameCapture && i - lastNameCapture > 9) {
 							console.log("Detected unrelated name capture: ", lastNameCapture);
 							name = null;
 							lastNameCapture = null;
 						}
 						console.log("Record completed...");
-						appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
-						if(!insNames[isin]) insNames[isin] = name ? name : isin;
+						appendValue(
+							mode === "E" ? equities : mode === "M" ? mfs : bonds,
+							isin,
+							quantity
+						);
+						if (!insNames[isin]) insNames[isin] = name ? name : isin;
 						isin = null;
 						quantity = null;
 						name = null;
@@ -150,23 +164,28 @@ export default function NW() {
 				}
 				if (quantity) continue;
 				let numberOfWords = value.split(" ").length;
-				if (value.length > 5 && numberOfWords > 1 && numberOfWords < 12 && !value.includes(",")) {
+				if (
+					value.length > 5 &&
+					numberOfWords > 1 &&
+					numberOfWords < 12 &&
+					!value.includes(",")
+				) {
 					if (value.toLowerCase().includes("bond")) {
 						console.log("Detected bond...");
-						mode = 'B';
+						mode = "B";
 					}
-					if (name && lastNameCapture && ((i - lastNameCapture) < 3)) continue;
+					if (name && lastNameCapture && i - lastNameCapture < 3) continue;
 					name = value;
 					lastNameCapture = i;
 					quantity = null;
 					lastQtyCapture = null;
 					console.log("Detected name: ", name);
 					continue;
-				} 
-				let qty: number | null = getQty(value, mode === 'M');
+				}
+				let qty: number | null = getQty(value, mode === "M");
 				if (!qty) continue;
-				if (lastQtyCapture && ((i - lastQtyCapture) < 5)) continue;
-				if (hasFV && !fv && mode === 'E') {
+				if (lastQtyCapture && i - lastQtyCapture < 5) continue;
+				if (hasFV && !fv && mode === "E") {
 					console.log("Detected fv: ", qty);
 					fv = qty;
 					continue;
@@ -176,14 +195,18 @@ export default function NW() {
 				quantity = qty;
 				if (hasFV) fv = null;
 				if (isin && quantity) {
-					if (lastNameCapture && ((i - lastNameCapture) > 9)) {
+					if (lastNameCapture && i - lastNameCapture > 9) {
 						console.log("Detected unrelated name capture: ", lastNameCapture);
 						name = null;
 						lastNameCapture = null;
 					}
 					console.log("Record completed...");
-					appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
-					if(!insNames[isin]) insNames[isin] = name ? name : isin;
+					appendValue(
+						mode === "E" ? equities : mode === "M" ? mfs : bonds,
+						isin,
+						quantity
+					);
+					if (!insNames[isin]) insNames[isin] = name ? name : isin;
 					isin = null;
 					quantity = null;
 					name = null;
@@ -221,10 +244,11 @@ export default function NW() {
 				setFileParsing(false);
 			});
 		};
-		reader.onerror = (error: any) => notification.error({
-			message: 'Error while reading file',
-			description: error
-		});
+		reader.onerror = (error: any) =>
+			notification.error({
+				message: "Error while reading file",
+				description: error,
+			});
 	};
 
 	const hasNoHoldings = () =>
@@ -243,7 +267,7 @@ export default function NW() {
 			})
 		});
 	}, []);*/
-	
+
 	return (
 		<div className="nw-container">
 			<Dragger {...uploaderSettings}>
