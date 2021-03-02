@@ -1,11 +1,15 @@
-import { Row, Tabs } from 'antd';
-import React, { Fragment, useState } from 'react';
-import * as pdfjsLib from 'pdfjs-dist';
+import React, { useState } from "react";
+import { Row, Tabs, Upload, Empty } from "antd";
+import { InboxOutlined } from "@ant-design/icons";
+import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
-import { appendValue } from '../utils';
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+import { appendValue } from "../utils";
 
-const isValidISIN = (val: string) => val.length === 12 && val.startsWith("IN") && !val.includes(" ");
+import "./nw.less";
+
+const isValidISIN = (val: string) =>
+	val.length === 12 && val.startsWith("IN") && !val.includes(" ");
 
 const getISIN = (val: string) => {
 	if (val.length < 12 || val.length > 100) return null;
@@ -16,12 +20,12 @@ const getISIN = (val: string) => {
 		if (isValidISIN(value)) return value;
 	}
 	return null;
-}
+};
 
 const getQty = (val: string) => {
 	val = val.replace(/,/g, "");
 	let result = parseInt(val);
-	if(Number.isNaN(result)) return null;
+	if (Number.isNaN(result)) return null;
 	if (val.includes(".")) {
 		let wholeNum = val.split(".")[0];
 		let decimals = val.split(".")[1];
@@ -34,7 +38,7 @@ const getQty = (val: string) => {
 		if (val.length > 6) return null;
 		return result;
 	}
-}
+};
 
 const hasHoldingStarted = (value: string) => {
 	value = value.toLowerCase();
@@ -48,12 +52,31 @@ export default function NW() {
 	const [fileParsing, setFileParsing] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
 	const { TabPane } = Tabs;
+	const { Dragger } = Upload;
+	const uploaderSettings = {
+		accept: ".pdf",
+		name: "file",
+		multiple: false,
+		onChange: (info: any) => {
+			const { status } = info.file;
+			if (status !== "uploading") {
+				console.log(info.file, info.fileList);
+			}
+			if (status === "done") {
+				console.log(info);
+				console.log(`${info.file.name} file uploaded successfully.`);
+				processPDF(info.file.originFileObj);
+			} else if (status === "error") {
+				console.log(`${info.file.name} file upload failed.`);
+			}
+		},
+	};
 
 	const parseHoldings = async (pdf: any) => {
 		let equities: any = {};
 		let mfs: any = {};
 		let bonds: any = {};
-		let mode = '';
+		let mode = "";
 		let holdingStarted = false;
 		let insNames: any = {};
 		for (let i = 1; i <= pdf.numPages; i++) {
@@ -163,14 +186,15 @@ export default function NW() {
 		reader.readAsArrayBuffer(file);
 		reader.onload = () => {
 			pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
-			const pdfLoadingTask = pdfjsLib.getDocument({ data: new Uint8Array(reader.result as ArrayBuffer) });
+			const pdfLoadingTask = pdfjsLib.getDocument({
+				data: new Uint8Array(reader.result as ArrayBuffer),
+			});
 			pdfLoadingTask.onPassword = (pwdHandler: Function, response: any) => {
-				let retVal =
-					prompt(
-						response === pdfjsLib.PasswordResponses.INCORRECT_PASSWORD
-							? 'Invalid Password. Please try again.'
-							: 'Password'
-					);
+				let retVal = prompt(
+					response === pdfjsLib.PasswordResponses.INCORRECT_PASSWORD
+						? "Invalid Password. Please try again."
+						: "Password"
+				);
 				if (retVal) pwdHandler(retVal);
 				else {
 					setFileParsing(false);
@@ -184,9 +208,10 @@ export default function NW() {
 		reader.onerror = (error: any) => console.log(error);
 	};
 
-	const hasNoHoldings = () => !Object.keys(allBonds).length
-		&& !Object.keys(allEquities).length
-		&& !Object.keys(allMFs).length;
+	const hasNoHoldings = () =>
+		!Object.keys(allBonds).length &&
+		!Object.keys(allEquities).length &&
+		!Object.keys(allMFs).length;
 
 	/*useEffect(() => {
 		fetch('/api/price', {
@@ -201,33 +226,46 @@ export default function NW() {
 	}, []);*/
 	
 	return (
-		<Fragment>
-			<input id="fu" type="file" onChange={(event: any) => processPDF(event?.currentTarget?.files[0])} accept=".pdf" />
-			{!fileParsing && !hasNoHoldings() ?
-			<Tabs defaultActiveKey="E" type="card">
-				<TabPane key="E" tab="Equities">
-					{Object.keys(allEquities)?.map((key: string, i: number) =>
-						<Row key={"stock" + i} justify="center">
-							{key}: {insNames[key]} - {allEquities[key]}
-						</Row>
-					)}
-				</TabPane>
-				<TabPane key="B" tab="Bonds">
-					{Object.keys(allBonds)?.map((key: string, i: number) =>
-						<Row key={"bond" + i} justify="center">
-							{key}: {insNames[key]} - {allBonds[key]}
-						</Row>
-					)}
-				</TabPane>
-				<TabPane key="M" tab="Mutual Funds">
-					{Object.keys(allMFs)?.map((key: string, i: number) =>
-						<Row key={"mf" + i} justify="center">
-							{key}: {insNames[key]} - {allMFs[key]}
-						</Row>
-					)}
-				</TabPane>
+		<div className="nw-container">
+			<Dragger {...uploaderSettings}>
+				<p className="ant-upload-drag-icon">
+					<InboxOutlined className="upload-icon" />
+				</p>
+				<p className="ant-upload-text">
+					Click or drag file to this area to upload
+				</p>
+				<p className="ant-upload-hint">
+					Support for a single upload. Strictly prohibit from uploading company
+					data or other band files
+				</p>
+			</Dragger>
+			{!fileParsing && !hasNoHoldings() ? (
+				<Tabs defaultActiveKey="E" type="card">
+					<TabPane key="E" tab="Equities">
+						{Object.keys(allEquities)?.map((key: string, i: number) => (
+							<Row key={"stock" + i} justify="center">
+								{key} - {insNames[key]}: {allEquities[key]}
+							</Row>
+						))}
+					</TabPane>
+					<TabPane key="B" tab="Bonds">
+						{Object.keys(allBonds)?.map((key: string, i: number) => (
+							<Row key={"bond" + i} justify="center">
+								{key} - {insNames[key]}: {allBonds[key]}
+							</Row>
+						))}
+					</TabPane>
+					<TabPane key="M" tab="Mutual Funds">
+						{Object.keys(allMFs)?.map((key: string, i: number) => (
+							<Row key={"mf" + i} justify="center">
+								{key} - {insNames[key]}: {allMFs[key]}
+							</Row>
+						))}
+					</TabPane>
 				</Tabs>
-			: !fileParsing && <p>No investment data.</p>}
-		</Fragment>
+			) : (
+				!fileParsing && <Empty description={<p>No investment data.</p>} />
+			)}
+		</div>
 	);
 }
