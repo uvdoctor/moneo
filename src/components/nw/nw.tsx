@@ -132,7 +132,7 @@ export default function NW() {
 					}
 					console.log("Detected ISIN: ", retVal);
 					isin = retVal;
-					mode = retVal.startsWith('INF') ? 'M' : 'E';
+					mode = isin.startsWith('INF') ? 'M' : 'E';
 					if (isin && quantity) {
 						if (lastNameCapture && ((i - lastNameCapture) > 9)) {
 							console.log("Detected unrelated name capture: ", lastNameCapture);
@@ -156,8 +156,7 @@ export default function NW() {
 						mode = 'B';
 					}
 					if (name && lastNameCapture && ((i - lastNameCapture) < 3)) continue;
-					let fullName = value.split(" ");
-					name = `${fullName[0]} ${fullName[1]} ${fullName[2] ? fullName[2] : ""}`;
+					name = value;
 					lastNameCapture = i;
 					quantity = null;
 					lastQtyCapture = null;
