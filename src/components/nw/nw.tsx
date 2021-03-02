@@ -58,7 +58,12 @@ export default function NW() {
 		accept: ".pdf",
 		name: "file",
 		action: "",
-		headers: {"content-type": "application/pdf"},
+		headers: { "content-type": "application/pdf" },
+		customRequest: ({onSuccess}: any) => {
+			setTimeout(() => {
+				onSuccess('ok');
+			}, 0);
+		},
 		multiple: false,
 		onChange: (info: any) => {
 			const { status } = info.file;
