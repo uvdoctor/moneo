@@ -18,21 +18,18 @@ const getISIN = (val: string) => {
 	return null;
 }
 
-const getQty = (val: string, isMF: boolean = false) => {
+const getQty = (val: string) => {
 	val = val.replace(/,/g, "");
 	let result = parseInt(val);
 	if(Number.isNaN(result)) return null;
 	if (val.includes(".")) {
 		let wholeNum = val.split(".")[0];
 		let decimals = val.split(".")[1];
-		if (wholeNum.length > 6) return null;
+		if (wholeNum.length > 5) return null;
 		if (decimals.length > 3) return null;
-		if (!isMF) {
-			let zeroStr = "0";
-			for (let i = 1; i < decimals.length; i++) zeroStr += "0";
-			if (!decimals.includes(zeroStr)) return null;
-		}
-		return parseFloat(val);
+		let result = parseFloat(val);
+		if (Number.isNaN(result)) return null;
+		return result;
 	} else {
 		if (val.length > 6) return null;
 		return result;
@@ -49,6 +46,7 @@ export default function NW() {
 	const [allBonds, setAllBonds] = useState<any>({});
 	const [allMFs, setAllMFs] = useState<any>({});
 	const [fileParsing, setFileParsing] = useState<boolean>(false);
+	const [insNames, setInsNames] = useState<any>({});
 	const { TabPane } = Tabs;
 
 	const parseHoldings = async (pdf: any) => {
@@ -57,33 +55,106 @@ export default function NW() {
 		let bonds: any = {};
 		let mode = '';
 		let holdingStarted = false;
+		let insNames: any = {};
 		for (let i = 1; i <= pdf.numPages; i++) {
 			const page = await pdf.getPage(i);
 			const textContent = await page.getTextContent();
 			let isin: string | null = null;
+			let quantity: number | null = null;
+			let name: string | null = null;
+			let recordStarted: number | null = null;
+			let fv: number | null = null;
+			let hasFV = false;
 			for (let i = 0; i < textContent.items.length; i++) {
-					let value = textContent.items[i].str.trim();
-					if (!value.length) continue;
-					if (!holdingStarted) holdingStarted = hasHoldingStarted(value);
-					if (!holdingStarted) continue;
-					let retVal = getISIN(value);
-					if (!isin && retVal) {
+				let value = textContent.items[i].str.trim();
+				if (!value.length) continue;
+				if (!holdingStarted) {
+					holdingStarted = hasHoldingStarted(value);
+					continue;
+				}
+				console.log("Going to check value: ", value);
+				let lVal = value.toLowerCase();
+				if (lVal.includes("face value")) {
+					hasFV = true;
+					continue;
+				}
+				if (lVal.includes("closing ") || lVal.includes("opening ")
+					|| lVal.includes("summary") || lVal.includes("year")
+					|| lVal.includes("portfolio") || lVal.includes("total")
+					|| lVal.includes("asset") || lVal.includes("%")
+					|| lVal.includes("Equities"))
+					continue;
+				let retVal = getISIN(value);
+				if (retVal) {
+					if (isin && quantity && recordStarted) {
+						console.log("Record completed...");
+						recordStarted = null;
+						appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
+						if(!insNames[isin]) insNames[isin] = name ? name : isin;
+						quantity = null;
+						isin = null;
+						name = null;
+					}
+					if (!isin) {
+						console.log("Detected ISIN: ", retVal);
 						isin = retVal;
-						mode = isin.startsWith('INF') ? 'M' : 'E';
-					} else if (isin && value.includes("Bond")) {
-						mode = 'B';
-					} else if (isin) {
-						let qty = getQty(value, mode === 'M');
-						if (qty) {
-							appendValue(mode === 'E' ? equities : mode === 'B' ? bonds : mfs, isin, qty);
+						recordStarted = i;
+						quantity = null;
+						name = null;
+					}
+					mode = retVal.startsWith('INF') ? 'M' : 'E';
+				} else {
+					if (value.includes("Bond")) mode = 'B';
+					let numberOfWords = value.split(" ").length;
+					if (value.length > 5 && numberOfWords > 1 && numberOfWords < 12) {
+						if (isin && quantity && recordStarted) {
+							console.log("Record completed...");
+							recordStarted = null;
+							appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
+							if (!insNames[isin]) insNames[isin] = name ? name : isin;
 							isin = null;
+							quantity = null;
+							name = value;
+							if (!recordStarted) recordStarted = i;
+						} else if (isin || quantity) {
+							if (!name) {
+								name = value;
+							}
+						} else {
+							name = value;
+						}
+					} else {
+						let qty: number | null = getQty(value);
+						if (!qty) continue;
+						if (isin && quantity && recordStarted) {
+							console.log("Record completed...");
+							recordStarted = null;
+							appendValue(mode === 'E' ? equities : mode === 'M' ? mfs : bonds, isin, quantity);
+							if(!insNames[isin]) insNames[isin] = name ? name : isin;
+							isin = null;
+							quantity = null;
+							name = null;
+						}
+						if (!quantity || !recordStarted) {
+							console.log("Detected quantity: ", qty);
+							if (hasFV) {
+								if (!fv) {
+									fv = qty;
+									continue;
+								} else {
+									quantity = qty;
+									fv = null;
+								}
+							} else quantity = qty;
 						}
 					}
+				}
 			}
 		}
 		setAllBonds(bonds);
 		setAllEquities(equities);
 		setAllMFs(mfs);
+		setInsNames(insNames);
 	};
 
 	const processPDF = (file: File) => {
@@ -117,6 +188,18 @@ export default function NW() {
 		&& !Object.keys(allEquities).length
 		&& !Object.keys(allMFs).length;
 
+	/*useEffect(() => {
+		fetch('/api/price', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify({
+				isin: 'IN'
+			})
+		});
+	}, []);*/
+	
 	return (
 		<Fragment>
 			<input id="fu" type="file" onChange={(event: any) => processPDF(event?.currentTarget?.files[0])} accept=".pdf" />
@@ -125,21 +208,21 @@ export default function NW() {
 				<TabPane key="E" tab="Equities">
 					{Object.keys(allEquities)?.map((key: string, i: number) =>
 						<Row key={"stock" + i} justify="center">
-							{key}: {allEquities[key]}
+							{key}: {insNames[key]} - {allEquities[key]}
 						</Row>
 					)}
 				</TabPane>
 				<TabPane key="B" tab="Bonds">
 					{Object.keys(allBonds)?.map((key: string, i: number) =>
 						<Row key={"bond" + i} justify="center">
-							{key}: {allBonds[key]}
+							{key}: {insNames[key]} - {allBonds[key]}
 						</Row>
 					)}
 				</TabPane>
 				<TabPane key="M" tab="Mutual Funds">
 					{Object.keys(allMFs)?.map((key: string, i: number) =>
 						<Row key={"mf" + i} justify="center">
-							{key}: {allMFs[key]}
+							{key}: {insNames[key]} - {allMFs[key]}
 						</Row>
 					)}
 				</TabPane>
