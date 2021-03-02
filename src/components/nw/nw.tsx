@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Tabs, Upload, Empty } from "antd";
+import { Row, Tabs, Upload, Empty, notification } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
@@ -68,7 +68,10 @@ export default function NW() {
 				console.log(`${info.file.name} file uploaded successfully.`);
 				processPDF(info.file.originFileObj);
 			} else if (status === "error") {
-				console.log(`${info.file.name} file upload failed.`);
+				notification.error({
+					message: "File upload failed",
+					description: `Unable to upload ${info.file.name}`
+				});
 			}
 		},
 	};
@@ -98,6 +101,9 @@ export default function NW() {
 					continue;
 				}
 				let lVal = value.toLowerCase();
+				if (lVal.includes("commission paid")
+					|| lVal.includes("end of statement"))
+					break;
 				if (lVal.includes("face value")) {
 					hasFV = true;
 					continue;
@@ -128,7 +134,7 @@ export default function NW() {
 						console.log("Detected bond...");
 						mode = 'B';
 					}
-					if (name && lastNameCapture && (i - lastNameCapture < 2)) continue;
+					if (name && lastNameCapture && (i - lastNameCapture < 3)) continue;
 					name = value;
 					lastNameCapture = i;
 					quantity = null;
@@ -170,7 +176,6 @@ export default function NW() {
 	};
 
 	const processPDF = (file: File) => {
-		setFileParsing(true);
 		const reader = new FileReader();
 		reader.readAsArrayBuffer(file);
 		reader.onload = () => {
@@ -190,11 +195,15 @@ export default function NW() {
 				}
 			};
 			pdfLoadingTask.promise.then(async (pdf) => {
+				setFileParsing(true);
 				await parseHoldings(pdf);
 				setFileParsing(false);
 			});
 		};
-		reader.onerror = (error: any) => console.log(error);
+		reader.onerror = (error: any) => notification.error({
+			message: 'Error while reading file',
+			description: error
+		});
 	};
 
 	const hasNoHoldings = () =>
