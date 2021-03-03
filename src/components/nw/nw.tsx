@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-	Tabs,
 	Upload,
 	Empty,
 	notification,
@@ -15,7 +14,7 @@ import { useFullScreenBrowser } from "react-browser-hooks";
 import { isMobileDevice } from "../utils";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-import { appendValue } from "../utils";
+import { appendValue, cleanName, includesAny, replaceIfFound } from "../utils";
 import HoldingTabs from "./HoldingTabs";
 
 import "./nw.less";
@@ -56,18 +55,10 @@ const getQty = (val: string, isMF: boolean = false) => {
 	}
 };
 
-const hasHoldingStarted = (value: string) => {
-	value = value.toLowerCase();
-	return (
-		value.includes("holding statement") ||
-		value.includes("holding as of") ||
-		value.includes("holding as on") ||
-		value.includes("holdings") ||
-		value.includes("balances as of") ||
-		value.includes("balances as on") ||
-		value.includes("no transaction")
-	);
-};
+const hasHoldingStarted = (value: string) =>
+	includesAny(value, ["holding statement", "holding as of",
+		"holding as on", "holdings", "balances as of", "balances as on",
+		"no transaction"]);
 
 export default function NW() {
 	const fsb = useFullScreenBrowser();
@@ -77,7 +68,6 @@ export default function NW() {
 	const [fileParsing, setFileParsing] = useState<boolean>(false);
 	const [showUpdateHoldings, setUpdateHoldings] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
-	const { TabPane } = Tabs;
 	const { confirm } = Modal;
 	const { Dragger } = Upload;
 	const uploaderSettings = {
@@ -106,9 +96,6 @@ export default function NW() {
 			}
 		},
 	};
-
-	const cleanName = (value: string, char: string) =>
-		value.split(char)[0].trim();
 
 	const removeDuplicates = (value: string) => {
 		let values = value.split(" ");
@@ -156,31 +143,15 @@ export default function NW() {
 					continue;
 				}
 				if (value.length > 100) continue;
-				let lVal = value.toLowerCase();
-				if (
-					lVal.includes("commission paid") ||
-					lVal.includes("end of statement")
-				)
+				if (includesAny(value, ["commission paid", "end of statement"]))
 					break;
-				if (lVal.includes("face value")) {
+				if (includesAny(value, ["face value"])) {
 					hasFV = true;
 					continue;
 				}
-				if (
-					lVal.includes("closing") ||
-					lVal.includes("opening") ||
-					lVal.includes("summary") ||
-					lVal.includes("year") ||
-					lVal.includes("portfolio") ||
-					lVal.includes("total") ||
-					lVal.includes("%") ||
-					lVal.includes("equities") ||
-					lVal.includes("listed") ||
-					lVal.includes("not ") ||
-					lVal.includes("value (") ||
-					lVal.includes("value in") ||
-					lVal.includes("free b")
-				)
+				if (includesAny(value,
+					["closing", "opening", "summary", "year", "portfolio", "total",
+						"%", "equities", "listed", "not ", "value (", "value in", "free b"]))
 					continue;
 				let retVal = getISIN(value);
 				if (!retVal) {
@@ -237,38 +208,18 @@ export default function NW() {
 					numberOfWords < 12 &&
 					!value.includes(",")
 				) {
-					if (
-						value.toLowerCase().includes("bond") ||
-						value.toLowerCase().includes("bd")
-					) {
-						console.log("Detected bond...");
+					if (includesAny(value, ["bond", "bd"]))
 						mode = "B";
-					}
 					if (lastNameCapture) {
 						let diff = i - lastNameCapture;
 						if (mode !== "M" && diff < 5) continue;
 					}
-					value = cleanName(value, "#");
-					value = cleanName(value, "(");
-					value = cleanName(value, "-");
-					value = cleanName(value, "/");
-					value = cleanName(value, "NEW RS.");
-					value = cleanName(value, "RS.");
-					value = cleanName(value, "NEW RE.");
-					value = cleanName(value, "RE.");
-					value = cleanName(value, "NEW F.V");
-					value = cleanName(value, "NEW FV");
-					value = value.replace("LIMITED", "");
-					value = value.replace(" EQUITY", "");
-					value = value.replace(" EQ", "");
-					value = value.replace(" LTD", "");
-					value = value.replace(" SHARES", "");
-					value = value.replace("Beneficiary", "");
-					value.trim();
-					if (value.endsWith(" AND")) value = value.replace(" AND", "");
-					if (value.endsWith(" OF")) value = value.replace(" OF", "");
-					if (value.endsWith(" &")) value = value.replace(" &", "");
-					if (!value.trim()) continue;
+					value = cleanName(value, ["#", "(", "-", "/", 
+					"NEW RS.", "RS.", "NEW RE.", "RE.", "NEW F.V", "NEW FV"]);
+					value = replaceIfFound(value,
+						["LIMITED", "EQUITY", " EQ", " LTD", " SHARES", "Beneficiary"]);
+					value = replaceIfFound(value, [" AND", " OF", " &"], "", true);
+					if (!value) continue;
 					if (
 						mode === "M" &&
 						name &&
@@ -277,7 +228,10 @@ export default function NW() {
 					)
 						name += " " + value.trim();
 					else name = value.trim();
-					if (mode === "M") name = removeDuplicates(name as string);
+					if (mode === 'M') {
+						name = removeDuplicates(name as string);
+						name = cleanName(name as string, ["(", ")"]);
+					}
 					lastNameCapture = i;
 					quantity = null;
 					lastQtyCapture = null;

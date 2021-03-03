@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs, Empty } from "antd";
+import { Tabs } from "antd";
 import HoldingsTable from "./HoldingsTable";
 
 export default function HoldingTabs({
@@ -7,7 +7,7 @@ export default function HoldingTabs({
 	equities,
 	bonds,
 	mutualFunds,
-}) {
+}: any) {
 	const { TabPane } = Tabs;
 
 	return (

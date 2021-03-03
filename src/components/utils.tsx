@@ -676,3 +676,27 @@ export const getDaysDiff = (dateTime: string) => {
   if (diff <= dayInMs) return 'Yesterday';
   return Math.round(diff / dayInMs) + ' days ago';
 }
+
+export const includesAny = (value: string, items: Array<string>) => {
+  let v = value.trim().toLowerCase();
+  for (let item of items) {
+    if (v.includes(item.toLowerCase())) return true;
+  }
+  return false;
+}
+
+export const replaceIfFound = (value: string, items: Array<string>, replacement: string = "", endsWith: boolean = false) => {
+  let v = value.trim().toLowerCase();
+  for (let item of items) {
+    if (endsWith ? v.endsWith(item.toLowerCase()) : v.includes(item.toLowerCase())) 
+      value = value.replace(item, replacement);
+  }
+  return value.trim();
+};
+
+export const cleanName = (value: string, items: Array<string>) => {
+  for (let item of items) {
+    value = value.split(item)[0].trim();
+  }
+  return value;
+}
