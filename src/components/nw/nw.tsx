@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-	Row,
 	Tabs,
 	Upload,
 	Empty,
