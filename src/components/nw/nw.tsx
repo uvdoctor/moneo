@@ -11,6 +11,8 @@ import {
 } from "antd";
 import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";
+import { useFullScreenBrowser } from "react-browser-hooks";
+import { isMobileDevice } from "../utils";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 import { appendValue } from "../utils";
@@ -68,6 +70,7 @@ const hasHoldingStarted = (value: string) => {
 };
 
 export default function NW() {
+	const fsb = useFullScreenBrowser();
 	const [allEquities, setAllEquities] = useState<any>({});
 	const [allBonds, setAllBonds] = useState<any>({});
 	const [allMFs, setAllMFs] = useState<any>({});
@@ -418,7 +421,8 @@ export default function NW() {
 			{!fileParsing && !hasNoHoldings() ? (
 				<>
 					<Drawer
-						width={320}
+						className="upload-holdings-drawer"
+						width={isMobileDevice(fsb) ? 320 : 550}
 						title="Update holdings"
 						placement="right"
 						closable={false}
