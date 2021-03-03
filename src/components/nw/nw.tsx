@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-	Row,
 	Tabs,
 	Upload,
 	Empty,
@@ -22,14 +21,17 @@ import "./nw.less";
 const isValidISIN = (val: string) =>
 	val.length === 12 && val.startsWith("IN") && !val.includes(" ");
 
-const getISIN = (val: string) => {
-	if (val.length < 12 || val.length > 100) return null;
-	if (isValidISIN(val)) return val;
+const containsISIN = (val: string) => {
 	let values = val.split(" ");
 	for (let value of values) {
-		value = value.trim();
-		if (isValidISIN(value)) return value;
+		if (isValidISIN(value.trim())) return value;
 	}
+	return null;
+};
+
+const getISIN = (val: string) => {
+	if (val.length < 12) return null;
+	if (isValidISIN(val)) return val;
 	return null;
 };
 
@@ -105,6 +107,18 @@ export default function NW() {
 	const cleanName = (value: string, char: string) =>
 		value.split(char)[0].trim();
 
+	const removeDuplicates = (value: string) => {
+		let values = value.split(" ");
+		for (let i = 2; i < values.length; i++) {
+			let v = values[i].trim();
+			for (let j = 1; j < i; j++) {
+				let token = values[j].trim();
+				if (v === token) value = value.replace(token, "");
+			}
+		}
+		return value.trim();
+	};
+
 	const parseHoldings = async (pdf: any) => {
 		let equities: any = {};
 		let mfs: any = {};
@@ -120,6 +134,7 @@ export default function NW() {
 		let lastQtyCapture: number | null = null;
 		let fv: number | null = null;
 		let hasFV = false;
+		let checkMultipleValues = false;
 		for (let i = 1; i <= pdf.numPages; i++) {
 			lastNameCapture = null;
 			lastQtyCapture = null;
@@ -165,6 +180,10 @@ export default function NW() {
 				)
 					continue;
 				let retVal = getISIN(value);
+				if (!retVal) {
+					retVal = containsISIN(value);
+					checkMultipleValues = true;
+				}
 				if (retVal) {
 					if (lastQtyCapture && i - lastQtyCapture > 9) {
 						console.log("Detected unrelated qty capture: ", lastQtyCapture);
@@ -191,7 +210,7 @@ export default function NW() {
 						quantity = null;
 						name = null;
 					}
-					continue;
+					if (!checkMultipleValues) continue;
 				}
 				if (quantity) continue;
 				console.log("Going to check value: ", value);
@@ -236,15 +255,17 @@ export default function NW() {
 					value = cleanName(value, "RE.");
 					value = cleanName(value, "NEW F.V");
 					value = cleanName(value, "NEW FV");
-					value = value.replace(" LIMITED", "");
+					value = value.replace("LIMITED", "");
 					value = value.replace(" EQUITY", "");
 					value = value.replace(" EQ", "");
 					value = value.replace(" LTD", "");
 					value = value.replace(" SHARES", "");
-					value = value.trim();
+					value = value.replace("Beneficiary", "");
+					value.trim();
 					if (value.endsWith(" AND")) value = value.replace(" AND", "");
 					if (value.endsWith(" OF")) value = value.replace(" OF", "");
 					if (value.endsWith(" &")) value = value.replace(" &", "");
+					if (!value.trim()) continue;
 					if (
 						mode === "M" &&
 						name &&
@@ -253,11 +274,12 @@ export default function NW() {
 					)
 						name += " " + value.trim();
 					else name = value.trim();
+					if (mode === "M") name = removeDuplicates(name as string);
 					lastNameCapture = i;
 					quantity = null;
 					lastQtyCapture = null;
 					console.log("Detected name: ", name);
-					continue;
+					if (!checkMultipleValues) continue;
 				}
 				let qty: number | null = getQty(value, mode === "M");
 				if (!qty) continue;
@@ -378,6 +400,35 @@ export default function NW() {
 	function onCloseUpdateHoldings() {
 		setUpdateHoldings(false);
 	}
+
+	const getTabData = (obj: any, type: string) => {
+		let arr = Object.keys(obj);
+		return (
+			<TabPane key={type} tab={type}>
+				{!arr.length ? (
+					<Empty description={<p>No data found.</p>} />
+				) : (
+					arr.map((key: string, i: number) => (
+						<p key={type + i}>
+							{key} - {insNames[key]}:{" "}
+							{toReadableNumber(
+								obj[key],
+								("" + obj[key]).includes(".") ? 3 : 0
+							)}
+						</p>
+					))
+				)}
+			</TabPane>
+		);
+	};
+
+	const getAllTabs = () => (
+		<Tabs type="card">
+			{getTabData(allEquities, "Stocks")}
+			{getTabData(allBonds, "Bonds")}
+			{getTabData(allMFs, "Mutual Funds")}
+		</Tabs>
+	);
 
 	return (
 		<div className="nw-container">
