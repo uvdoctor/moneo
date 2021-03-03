@@ -106,6 +106,19 @@ export default function NW() {
 	const cleanName = (value: string, char: string) =>
 		value.split(char)[0].trim();
 
+	const removeDuplicates = (value: string) => {
+		let values = value.split(" ");
+		for (let i = 2; i < values.length; i++) {
+			let v = values[i].trim();
+			for (let j = 1; j < i; j++) {
+				let token = values[j].trim();
+				if (v === token) 
+					value = value.replace(token, "");
+			}
+		}
+		return value.trim();
+	};
+
 	const parseHoldings = async (pdf: any) => {
 		let equities: any = {};
 		let mfs: any = {};
@@ -248,7 +261,7 @@ export default function NW() {
 					value = value.replace(" LTD", "");
 					value = value.replace(" SHARES", "");
 					value = value.replace("Beneficiary", "");
-					value = value.trim();
+					value.trim();
 					if (value.endsWith(" AND")) value = value.replace(" AND", "");
 					if (value.endsWith(" OF")) value = value.replace(" OF", "");
 					if (value.endsWith(" &")) value = value.replace(" &", "");
@@ -261,6 +274,7 @@ export default function NW() {
 					)
 						name += " " + value.trim();
 					else name = value.trim();
+					if (mode === 'M') name = removeDuplicates(name as string);
 					lastNameCapture = i;
 					quantity = null;
 					lastQtyCapture = null;
