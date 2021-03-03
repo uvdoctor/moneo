@@ -2,7 +2,7 @@ import React from "react";
 import { Empty } from "antd";
 import { toReadableNumber } from "../utils";
 
-export default function HoldingsTable({ data, insNames }) {
+export default function HoldingsTable({ data, insNames }: any) {
 	return (
 		<>
 			{Object.keys(data)?.length ? (
