@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Row, Tabs, Upload, Empty, notification, Modal, Input } from "antd";
+import {
+	Row,
+	Tabs,
+	Upload,
+	Empty,
+	notification,
+	Modal,
+	Input,
+	Drawer,
+	Button,
+} from "antd";
 import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
@@ -51,6 +61,7 @@ export default function NW() {
 	const [allBonds, setAllBonds] = useState<any>({});
 	const [allMFs, setAllMFs] = useState<any>({});
 	const [fileParsing, setFileParsing] = useState<boolean>(false);
+	const [showUpdateHoldings, setUpdateHoldings] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
 	const { TabPane } = Tabs;
 	const { confirm } = Modal;
@@ -218,6 +229,7 @@ export default function NW() {
 		setAllEquities(equities);
 		setAllMFs(mfs);
 		setInsNames(insNames);
+		setUpdateHoldings(true);
 	};
 
 	const processPDF = (file: File) => {
@@ -292,6 +304,10 @@ export default function NW() {
 		});
 	}, []);*/
 
+	function onCloseUpdateHoldings() {
+		setUpdateHoldings(false);
+	}
+
 	return (
 		<div className="nw-container">
 			<Dragger {...uploaderSettings}>
@@ -307,29 +323,75 @@ export default function NW() {
 				</p>
 			</Dragger>
 			{!fileParsing && !hasNoHoldings() ? (
-				<Tabs defaultActiveKey="E" type="card">
-					<TabPane key="E" tab="Equities">
-						{Object.keys(allEquities)?.map((key: string, i: number) => (
-							<Row key={"stock" + i} justify="center">
-								{key} - {insNames[key]}: {allEquities[key]}
-							</Row>
-						))}
-					</TabPane>
-					<TabPane key="B" tab="Bonds">
-						{Object.keys(allBonds)?.map((key: string, i: number) => (
-							<Row key={"bond" + i} justify="center">
-								{key} - {insNames[key]}: {allBonds[key]}
-							</Row>
-						))}
-					</TabPane>
-					<TabPane key="M" tab="Mutual Funds">
-						{Object.keys(allMFs)?.map((key: string, i: number) => (
-							<Row key={"mf" + i} justify="center">
-								{key} - {insNames[key]}: {allMFs[key]}
-							</Row>
-						))}
-					</TabPane>
-				</Tabs>
+				<>
+					<Drawer
+						width={320}
+						title="Update holdings"
+						placement="right"
+						closable={false}
+						visible={showUpdateHoldings}
+						footer={
+							<div className="text-right">
+								<Button
+									onClick={onCloseUpdateHoldings}
+									style={{ marginRight: 8 }}
+								>
+									Cancel
+								</Button>
+								<Button onClick={onCloseUpdateHoldings} type="primary">
+									Update
+								</Button>
+							</div>
+						}
+					>
+						<Tabs defaultActiveKey="E" type="card">
+							<TabPane key="E" tab="Equities">
+								{Object.keys(allEquities)?.map((key: string, i: number) => (
+									<Row key={"stock" + i} justify="center">
+										{key} - {insNames[key]}: {allEquities[key]}
+									</Row>
+								))}
+							</TabPane>
+							<TabPane key="B" tab="Bonds">
+								{Object.keys(allBonds)?.map((key: string, i: number) => (
+									<Row key={"bond" + i} justify="center">
+										{key} - {insNames[key]}: {allBonds[key]}
+									</Row>
+								))}
+							</TabPane>
+							<TabPane key="M" tab="Mutual Funds">
+								{Object.keys(allMFs)?.map((key: string, i: number) => (
+									<Row key={"mf" + i} justify="center">
+										{key} - {insNames[key]}: {allMFs[key]}
+									</Row>
+								))}
+							</TabPane>
+						</Tabs>
+					</Drawer>
+					<Tabs defaultActiveKey="E" type="card">
+						<TabPane key="E" tab="Equities">
+							{Object.keys(allEquities)?.map((key: string, i: number) => (
+								<Row key={"stock" + i} justify="center">
+									{key} - {insNames[key]}: {allEquities[key]}
+								</Row>
+							))}
+						</TabPane>
+						<TabPane key="B" tab="Bonds">
+							{Object.keys(allBonds)?.map((key: string, i: number) => (
+								<Row key={"bond" + i} justify="center">
+									{key} - {insNames[key]}: {allBonds[key]}
+								</Row>
+							))}
+						</TabPane>
+						<TabPane key="M" tab="Mutual Funds">
+							{Object.keys(allMFs)?.map((key: string, i: number) => (
+								<Row key={"mf" + i} justify="center">
+									{key} - {insNames[key]}: {allMFs[key]}
+								</Row>
+							))}
+						</TabPane>
+					</Tabs>
+				</>
 			) : (
 				!fileParsing && <Empty description={<p>No investment data.</p>} />
 			)}
