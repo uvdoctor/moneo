@@ -1,5 +1,5 @@
 import React from "react";
-import { Empty, Collapse, Input, Row, Col, Button, Tooltip, Space } from "antd";
+import { Empty, Collapse, Input, Row, Col, Button, Space } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { isMobileDevice } from "../utils";
@@ -7,7 +7,12 @@ import { toReadableNumber } from "../utils";
 
 import "./HoldingsTable.less";
 
-export default function HoldingsTable({ data, insNames }) {
+interface HoldingsTableProp {
+	data?: any;
+	insNames?: any;
+}
+
+export default function HoldingsTable({ data, insNames }: HoldingsTableProp) {
 	const fsb = useFullScreenBrowser();
 	const { Panel } = Collapse;
 
