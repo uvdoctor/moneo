@@ -401,35 +401,6 @@ export default function NW() {
 		setUpdateHoldings(false);
 	}
 
-	const getTabData = (obj: any, type: string) => {
-		let arr = Object.keys(obj);
-		return (
-			<TabPane key={type} tab={type}>
-				{!arr.length ? (
-					<Empty description={<p>No data found.</p>} />
-				) : (
-					arr.map((key: string, i: number) => (
-						<p key={type + i}>
-							{key} - {insNames[key]}:{" "}
-							{toReadableNumber(
-								obj[key],
-								("" + obj[key]).includes(".") ? 3 : 0
-							)}
-						</p>
-					))
-				)}
-			</TabPane>
-		);
-	};
-
-	const getAllTabs = () => (
-		<Tabs type="card">
-			{getTabData(allEquities, "Stocks")}
-			{getTabData(allBonds, "Bonds")}
-			{getTabData(allMFs, "Mutual Funds")}
-		</Tabs>
-	);
-
 	return (
 		<div className="nw-container">
 			<Dragger {...uploaderSettings}>
