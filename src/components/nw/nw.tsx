@@ -13,7 +13,7 @@ import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-import { appendValue, toReadableNumber } from "../utils";
+import { appendValue, cleanName, includesAny, toReadableNumber } from "../utils";
 
 import "./nw.less";
 
@@ -103,9 +103,6 @@ export default function NW() {
 		},
 	};
 
-	const cleanName = (value: string, char: string) =>
-		value.split(char)[0].trim();
-
 	const removeDuplicates = (value: string) => {
 		let values = value.split(" ");
 		for (let i = 2; i < values.length; i++) {
@@ -153,31 +150,15 @@ export default function NW() {
 					continue;
 				}
 				if (value.length > 100) continue;
-				let lVal = value.toLowerCase();
-				if (
-					lVal.includes("commission paid") ||
-					lVal.includes("end of statement")
-				)
+				if (includesAny(value, ["commission paid", "end of statement"]))
 					break;
-				if (lVal.includes("face value")) {
+				if (value.includesAny(["face value"])) {
 					hasFV = true;
 					continue;
 				}
-				if (
-					lVal.includes("closing") ||
-					lVal.includes("opening") ||
-					lVal.includes("summary") ||
-					lVal.includes("year") ||
-					lVal.includes("portfolio") ||
-					lVal.includes("total") ||
-					lVal.includes("%") ||
-					lVal.includes("equities") ||
-					lVal.includes("listed") ||
-					lVal.includes("not ") ||
-					lVal.includes("value (") ||
-					lVal.includes("value in") ||
-					lVal.includes("free b")
-				)
+				if (includesAny(value,
+					["closing", "opening", "summary", "year", "portfolio", "total",
+						"%", "equities", "listed", "not ", "value (", "value in", "free b"]))
 					continue;
 				let retVal = getISIN(value);
 				if (!retVal) {
@@ -234,38 +215,18 @@ export default function NW() {
 					numberOfWords < 12 &&
 					!value.includes(",")
 				) {
-					if (
-						value.toLowerCase().includes("bond") ||
-						value.toLowerCase().includes("bd")
-					) {
-						console.log("Detected bond...");
+					if (includesAny(value, ["bond", "bd"]))
 						mode = "B";
-					}
 					if (lastNameCapture) {
 						let diff = i - lastNameCapture;
 						if (mode !== "M" && diff < 5) continue;
 					}
-					value = cleanName(value, "#");
-					value = cleanName(value, "(");
-					value = cleanName(value, "-");
-					value = cleanName(value, "/");
-					value = cleanName(value, "NEW RS.");
-					value = cleanName(value, "RS.");
-					value = cleanName(value, "NEW RE.");
-					value = cleanName(value, "RE.");
-					value = cleanName(value, "NEW F.V");
-					value = cleanName(value, "NEW FV");
-					value = value.replace("LIMITED", "");
-					value = value.replace(" EQUITY", "");
-					value = value.replace(" EQ", "");
-					value = value.replace(" LTD", "");
-					value = value.replace(" SHARES", "");
-					value = value.replace("Beneficiary", "");
-					value.trim();
-					if (value.endsWith(" AND")) value = value.replace(" AND", "");
-					if (value.endsWith(" OF")) value = value.replace(" OF", "");
-					if (value.endsWith(" &")) value = value.replace(" &", "");
-					if (!value.trim()) continue;
+					value = cleanName(value, ["#", "(", "-", "/", 
+					"NEW RS.", "RS.", "NEW RE.", "RE.", "NEW F.V", "NEW FV"]);
+					value = value.replaceIfFound(value,
+						["LIMITED", "EQUITY", " EQ", " LTD", " SHARES", "Beneficiary"]);
+					value = value.replaceIfFound(value, [" AND", " OF", " &"], "", true);
+					if (!value) continue;
 					if (
 						mode === "M" &&
 						name &&
@@ -274,7 +235,10 @@ export default function NW() {
 					)
 						name += " " + value.trim();
 					else name = value.trim();
-					if (mode === 'M') name = removeDuplicates(name as string);
+					if (mode === 'M') {
+						name = removeDuplicates(name as string);
+						name = cleanName(name as string, ["(", ")"]);
+					}
 					lastNameCapture = i;
 					quantity = null;
 					lastQtyCapture = null;
