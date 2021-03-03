@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-	Tabs,
 	Upload,
 	Empty,
 	notification,
@@ -13,7 +12,8 @@ import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-import { appendValue, cleanName, includesAny, toReadableNumber } from "../utils";
+import { appendValue, cleanName, includesAny } from "../utils";
+import HoldingTabs from "./HoldingTabs";
 
 import "./nw.less";
 
@@ -53,18 +53,10 @@ const getQty = (val: string, isMF: boolean = false) => {
 	}
 };
 
-const hasHoldingStarted = (value: string) => {
-	value = value.toLowerCase();
-	return (
-		value.includes("holding statement") ||
-		value.includes("holding as of") ||
-		value.includes("holding as on") ||
-		value.includes("holdings") ||
-		value.includes("balances as of") ||
-		value.includes("balances as on") ||
-		value.includes("no transaction")
-	);
-};
+const hasHoldingStarted = (value: string) =>
+	includesAny(value, ["holding statement", "holding as of",
+		"holding as on", "holdings", "balances as of", "balances as on",
+		"no transaction"]);
 
 export default function NW() {
 	const [allEquities, setAllEquities] = useState<any>({});
@@ -73,7 +65,6 @@ export default function NW() {
 	const [fileParsing, setFileParsing] = useState<boolean>(false);
 	const [showUpdateHoldings, setUpdateHoldings] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
-	const { TabPane } = Tabs;
 	const { confirm } = Modal;
 	const { Dragger } = Upload;
 	const uploaderSettings = {
@@ -109,8 +100,7 @@ export default function NW() {
 			let v = values[i].trim();
 			for (let j = 1; j < i; j++) {
 				let token = values[j].trim();
-				if (v === token) 
-					value = value.replace(token, "");
+				if (v === token) value = value.replace(token, "");
 			}
 		}
 		return value.trim();
@@ -191,7 +181,7 @@ export default function NW() {
 						quantity = null;
 						name = null;
 					}
-					if(!checkMultipleValues) continue;
+					if (!checkMultipleValues) continue;
 				}
 				if (quantity) continue;
 				console.log("Going to check value: ", value);
@@ -243,7 +233,7 @@ export default function NW() {
 					quantity = null;
 					lastQtyCapture = null;
 					console.log("Detected name: ", name);
-					if(!checkMultipleValues) continue;
+					if (!checkMultipleValues) continue;
 				}
 				let qty: number | null = getQty(value, mode === "M");
 				if (!qty) continue;
@@ -365,26 +355,6 @@ export default function NW() {
 		setUpdateHoldings(false);
 	}
 
-	const getTabData = (obj: any, type: string) => {
-		let arr = Object.keys(obj);
-		return <TabPane key={type} tab={type}>
-		{!arr.length ?
-			<Empty description={<p>No data found.</p>} />
-		: arr.map((key: string, i: number) => (
-				<p key={type + i}>
-					{key} - {insNames[key]}: {toReadableNumber(obj[key], ("" + obj[key]).includes(".") ? 3 : 0)}
-				</p>
-			))}
-		</TabPane>
-	};
-
-	const getAllTabs = () => 
-		<Tabs type="card">
-			{getTabData(allEquities, "Stocks")}
-			{getTabData(allBonds, "Bonds")}
-			{getTabData(allMFs, "Mutual Funds")}
-		</Tabs>
-
 	return (
 		<div className="nw-container">
 			<Dragger {...uploaderSettings}>
@@ -421,9 +391,19 @@ export default function NW() {
 							</div>
 						}
 					>
-						{getAllTabs()}
+						<HoldingTabs
+							equities={allEquities}
+							bonds={allBonds}
+							mutualFunds={allMFs}
+							insNames={insNames}
+						/>
 					</Drawer>
-					{getAllTabs()}
+					<HoldingTabs
+						equities={allEquities}
+						bonds={allBonds}
+						mutualFunds={allMFs}
+						insNames={insNames}
+					/>
 				</>
 			) : (
 				!fileParsing && <Empty description={<p>No investment data.</p>} />
