@@ -12,7 +12,7 @@ import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-import { appendValue, cleanName, includesAny } from "../utils";
+import { appendValue, cleanName, includesAny, replaceIfFound } from "../utils";
 import HoldingTabs from "./HoldingTabs";
 
 import "./nw.less";
@@ -213,9 +213,9 @@ export default function NW() {
 					}
 					value = cleanName(value, ["#", "(", "-", "/", 
 					"NEW RS.", "RS.", "NEW RE.", "RE.", "NEW F.V", "NEW FV"]);
-					value = value.replaceIfFound(value,
+					value = replaceIfFound(value,
 						["LIMITED", "EQUITY", " EQ", " LTD", " SHARES", "Beneficiary"]);
-					value = value.replaceIfFound(value, [" AND", " OF", " &"], "", true);
+					value = replaceIfFound(value, [" AND", " OF", " &"], "", true);
 					if (!value) continue;
 					if (
 						mode === "M" &&
