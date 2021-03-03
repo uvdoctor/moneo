@@ -14,7 +14,8 @@ import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-import { appendValue, toReadableNumber } from "../utils";
+import { appendValue } from "../utils";
+import HoldingTabs from "./HoldingTabs";
 
 import "./nw.less";
 
@@ -414,61 +415,19 @@ export default function NW() {
 							</div>
 						}
 					>
-						<Tabs defaultActiveKey="E" type="card">
-							<TabPane key="E" tab="Equities">
-								{Object.keys(allEquities)?.map((key: string, i: number) => (
-									<p key={"stock" + i}>
-										{key} - {insNames[key]}: {allEquities[key]}
-									</p>
-								))}
-							</TabPane>
-							<TabPane key="B" tab="Bonds">
-								{Object.keys(allBonds)?.map((key: string, i: number) => (
-									<p key={"bond" + i}>
-										{key} - {insNames[key]}: {allBonds[key]}
-									</p>
-								))}
-							</TabPane>
-							<TabPane key="M" tab="Mutual Funds">
-								{Object.keys(allMFs)?.map((key: string, i: number) => (
-									<p key={"mf" + i}>
-										{key} - {insNames[key]}:{" "}
-										{toReadableNumber(
-											allMFs[key],
-											("" + allMFs[key]).includes(".") ? 3 : 0
-										)}
-									</p>
-								))}
-							</TabPane>
-						</Tabs>
+						<HoldingTabs
+							equities={allEquities}
+							bonds={allBonds}
+							mutualFunds={allMFs}
+							insNames={insNames}
+						/>
 					</Drawer>
-					<Tabs defaultActiveKey="E" type="card">
-						<TabPane key="E" tab="Equities">
-							{Object.keys(allEquities)?.map((key: string, i: number) => (
-								<p key={"stock" + i}>
-									{key} - {insNames[key]}: {allEquities[key]}
-								</p>
-							))}
-						</TabPane>
-						<TabPane key="B" tab="Bonds">
-							{Object.keys(allBonds)?.map((key: string, i: number) => (
-								<p key={"bond" + i}>
-									{key} - {insNames[key]}: {allBonds[key]}
-								</p>
-							))}
-						</TabPane>
-						<TabPane key="M" tab="Mutual Funds">
-							{Object.keys(allMFs)?.map((key: string, i: number) => (
-								<p key={"mf" + i}>
-									{key} - {insNames[key]}:{" "}
-									{toReadableNumber(
-										allMFs[key],
-										("" + allMFs[key]).includes(".") ? 3 : 0
-									)}
-								</p>
-							))}
-						</TabPane>
-					</Tabs>
+					<HoldingTabs
+						equities={allEquities}
+						bonds={allBonds}
+						mutualFunds={allMFs}
+						insNames={insNames}
+					/>
 				</>
 			) : (
 				!fileParsing && <Empty description={<p>No investment data.</p>} />
