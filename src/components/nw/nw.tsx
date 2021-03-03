@@ -142,7 +142,7 @@ export default function NW() {
 				if (value.length > 100) continue;
 				if (includesAny(value, ["commission paid", "end of statement"]))
 					break;
-				if (value.includesAny(["face value"])) {
+				if (includesAny(value, ["face value"])) {
 					hasFV = true;
 					continue;
 				}
