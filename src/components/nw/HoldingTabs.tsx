@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs, Empty } from "antd";
-import { toReadableNumber } from "../utils";
+import HoldingsTable from "./HoldingsTable";
 
 export default function HoldingTabs({
 	insNames,
@@ -13,27 +13,14 @@ export default function HoldingTabs({
 	return (
 		<Tabs defaultActiveKey="E" type="card">
 			<TabPane key="E" tab="Equities">
-				{!Object.keys(equities).length && (
-					<Empty description={<p>No data found.</p>} />
-				)}
-				{Object.keys(equities)?.map((key: string, i: number) => (
-					<p key={"stock" + i}>
-						{key} - {insNames[key]}: {equities[key]}
-					</p>
-				))}
+				<HoldingsTable data={equities} insNames={insNames} />
 			</TabPane>
 			<TabPane key="B" tab="Bonds">
-				{!Object.keys(bonds).length && (
-					<Empty description={<p>No data found.</p>} />
-				)}
-				{Object.keys(bonds)?.map((key: string, i: number) => (
-					<p key={"bond" + i}>
-						{key} - {insNames[key]}: {bonds[key]}
-					</p>
-				))}
+				<HoldingsTable data={bonds} insNames={insNames} />
 			</TabPane>
 			<TabPane key="M" tab="Mutual Funds">
-				{!Object.keys(mutualFunds).length && (
+				<HoldingsTable data={mutualFunds} insNames={insNames} />
+				{/*{!Object.keys(mutualFunds).length && (
 					<Empty description={<p>No data found.</p>} />
 				)}
 				{Object.keys(mutualFunds)?.map((key: string, i: number) => (
@@ -44,7 +31,7 @@ export default function HoldingTabs({
 							("" + mutualFunds[key]).includes(".") ? 3 : 0
 						)}
 					</p>
-				))}
+				))}*/}
 			</TabPane>
 		</Tabs>
 	);
