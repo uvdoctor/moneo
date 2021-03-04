@@ -175,7 +175,7 @@ export default function NW() {
 				}
 				if (includesAny(value,
 					["closing", "opening", "summary", "year", "portfolio", "total",
-						"%", "equities", "listed", "not", "value (", "value in", "free b",
+						"%", "+", "equities", "listed", "not", "value (", "value in", "free b",
 					"consolidated", "statement", "account", "available"]))
 					continue;
 				let retVal = getISIN(value);
