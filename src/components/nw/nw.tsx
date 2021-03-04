@@ -7,6 +7,7 @@ import {
 	Input,
 	Drawer,
 	Button,
+	Row,
 } from "antd";
 import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";
@@ -22,10 +23,18 @@ import "./nw.less";
 const isValidISIN = (val: string) =>
 	val.length === 12 && val.startsWith("IN") && !val.includes(" ");
 
-const containsISIN = (val: string) => {
+const isValidPAN = (val: string) => val.length === 10 &&
+!val.includes(" ") && val.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/);
+
+const contains = (val: string, type: string = 'ISIN') => {
 	let values = val.split(" ");
 	for (let value of values) {
-		if (isValidISIN(value.trim())) return value;
+		value = value.trim();
+		if (type === 'PAN') {
+			value = replaceIfFound(value, ["pan", ":", "(", ")"]);
+		}
+		if (type === 'ISIN' ? isValidISIN(value) : isValidPAN(value)) 
+			return value;
 	}
 	return null;
 };
@@ -68,6 +77,8 @@ export default function NW() {
 	const [fileParsing, setFileParsing] = useState<boolean>(false);
 	const [showUpdateHoldings, setUpdateHoldings] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
+	const [taxId, setTaxId] = useState<string>('');
+
 	const { confirm } = Modal;
 	const { Dragger } = Upload;
 	const uploaderSettings = {
@@ -125,6 +136,8 @@ export default function NW() {
 		let fv: number | null = null;
 		let hasFV = false;
 		let checkMultipleValues = false;
+		let hasData = false;
+		let taxId: string | null = null;
 		for (let i = 1; i <= pdf.numPages; i++) {
 			lastNameCapture = null;
 			lastQtyCapture = null;
@@ -138,12 +151,18 @@ export default function NW() {
 			for (let i = 0; i < textContent.items.length; i++) {
 				let value = textContent.items[i].str.trim();
 				if (!value.length) continue;
+				if (value.trim().length >= 10 && !taxId) {
+					taxId = contains(value, 'PAN');
+					if (taxId) continue;
+				}
 				if (!holdingStarted) {
 					holdingStarted = hasHoldingStarted(value);
 					continue;
 				}
 				if (value.length > 100) continue;
 				if (includesAny(value, ["commission paid", "end of statement"]))
+					break;
+				if (hasData && includesAny(value, ["transaction statement"]))
 					break;
 				if (includesAny(value, ["face value"])) {
 					hasFV = true;
@@ -155,7 +174,7 @@ export default function NW() {
 					continue;
 				let retVal = getISIN(value);
 				if (!retVal) {
-					retVal = containsISIN(value);
+					retVal = contains(value);
 					checkMultipleValues = true;
 				}
 				if (retVal) {
@@ -174,6 +193,7 @@ export default function NW() {
 							lastNameCapture = null;
 						}
 						console.log("Record completed...");
+						hasData = true;
 						appendValue(
 							mode === "E" ? equities : mode === "M" ? mfs : bonds,
 							isin,
@@ -187,7 +207,6 @@ export default function NW() {
 					if (!checkMultipleValues) continue;
 				}
 				if (quantity) continue;
-				console.log("Going to check value: ", value);
 				if (!isin && value.toLowerCase().includes("page")) continue;
 				if (
 					isin &&
@@ -257,6 +276,7 @@ export default function NW() {
 						recordBroken = false;
 					}
 					console.log("Record completed...");
+					hasData = true;
 					appendValue(
 						mode === "E" ? equities : mode === "M" ? mfs : bonds,
 						isin,
@@ -273,6 +293,7 @@ export default function NW() {
 		setAllMFs(mfs);
 		setInsNames(insNames);
 		setUpdateHoldings(true);
+		if(taxId) setTaxId(taxId);
 	};
 
 	const processPDF = (file: File) => {
@@ -395,6 +416,7 @@ export default function NW() {
 							</div>
 						}
 					>
+						<Row justify="center">PAN: {taxId}</Row>
 						<HoldingTabs
 							equities={allEquities}
 							bonds={allBonds}
