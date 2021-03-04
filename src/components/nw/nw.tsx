@@ -31,7 +31,7 @@ const contains = (val: string, type: string = 'ISIN') => {
 	for (let value of values) {
 		value = value.trim();
 		if (type === 'PAN') {
-			value = replaceIfFound(value, ["pan", ":", "(", ")"]);
+			value = replaceIfFound(value, ["PAN", ":", "(", ")"]);
 		}
 		if (type === 'ISIN' ? isValidISIN(value) : isValidPAN(value)) 
 			return value;
@@ -138,7 +138,8 @@ export default function NW() {
 		let checkMultipleValues = false;
 		let hasData = false;
 		let taxId: string | null = null;
-		for (let i = 1; i <= pdf.numPages; i++) {
+		let eof = false;
+		for (let i = 1; i <= pdf.numPages && !eof; i++) {
 			lastNameCapture = null;
 			lastQtyCapture = null;
 			if (!recordBroken) {
@@ -148,10 +149,11 @@ export default function NW() {
 			}
 			const page = await pdf.getPage(i);
 			const textContent = await page.getTextContent();
-			for (let i = 0; i < textContent.items.length; i++) {
-				let value = textContent.items[i].str.trim();
+			if (i > 2) console.log("Text content: ", textContent);
+			for (let j = 0; j < textContent.items.length; j++) {
+				let value = textContent.items[j].str.trim();
 				if (!value.length) continue;
-				if (value.trim().length >= 10 && !taxId) {
+				if (value.length >= 10 && value.length < 100 && !taxId) {
 					taxId = contains(value, 'PAN');
 					if (taxId) continue;
 				}
@@ -159,10 +161,13 @@ export default function NW() {
 					holdingStarted = hasHoldingStarted(value);
 					continue;
 				}
+				console.log("Going to check: ", value);
 				if (value.length > 100) continue;
-				if (includesAny(value, ["commission paid", "end of statement"]))
+				if (includesAny(value, ["commission paid", "end of statement"])) {
+					eof = true;
 					break;
-				if (hasData && includesAny(value, ["transaction statement"]))
+				}
+				if (hasData && includesAny(value, ["transaction details"]))
 					break;
 				if (includesAny(value, ["face value"])) {
 					hasFV = true;
@@ -170,7 +175,8 @@ export default function NW() {
 				}
 				if (includesAny(value,
 					["closing", "opening", "summary", "year", "portfolio", "total",
-						"%", "equities", "listed", "not ", "value (", "value in", "free b"]))
+						"%", "equities", "listed", "not", "value (", "value in", "free b",
+					"consolidated", "statement", "account", "available"]))
 					continue;
 				let retVal = getISIN(value);
 				if (!retVal) {
@@ -178,7 +184,7 @@ export default function NW() {
 					checkMultipleValues = true;
 				}
 				if (retVal) {
-					if (lastQtyCapture && i - lastQtyCapture > 9) {
+					if (lastQtyCapture && j - lastQtyCapture > 9) {
 						console.log("Detected unrelated qty capture: ", lastQtyCapture);
 						quantity = null;
 						lastQtyCapture = null;
@@ -187,7 +193,7 @@ export default function NW() {
 					isin = retVal;
 					mode = isin.startsWith("INF") ? "M" : "E";
 					if (isin && quantity) {
-						if (lastNameCapture && i - lastNameCapture > 9) {
+						if (lastNameCapture && j - lastNameCapture > 9) {
 							console.log("Detected unrelated name capture: ", lastNameCapture);
 							name = null;
 							lastNameCapture = null;
@@ -211,7 +217,7 @@ export default function NW() {
 				if (
 					isin &&
 					value.toLowerCase().includes("page") &&
-					i - textContent.items.length < 5
+					j - textContent.items.length < 5
 				) {
 					console.log("Detected broken record between pages...");
 					recordBroken = true;
@@ -224,13 +230,13 @@ export default function NW() {
 					!recordBroken &&
 					value.length > 7 &&
 					numberOfWords > 1 &&
-					numberOfWords < 12 &&
+					numberOfWords < 15 &&
 					!value.includes(",")
 				) {
 					if (includesAny(value, ["bond", "bd"]))
 						mode = "B";
 					if (lastNameCapture) {
-						let diff = i - lastNameCapture;
+						let diff = j - lastNameCapture;
 						if (mode !== "M" && diff < 5) continue;
 					}
 					value = cleanName(value, ["#", "(", "-", "/", 
@@ -243,7 +249,7 @@ export default function NW() {
 						mode === "M" &&
 						name &&
 						lastNameCapture &&
-						i - lastNameCapture <= 2
+						j - lastNameCapture <= 2
 					)
 						name += " " + value.trim();
 					else name = value.trim();
@@ -251,7 +257,7 @@ export default function NW() {
 						name = removeDuplicates(name as string);
 						name = cleanName(name as string, ["(", ")"]);
 					}
-					lastNameCapture = i;
+					lastNameCapture = j;
 					quantity = null;
 					lastQtyCapture = null;
 					console.log("Detected name: ", name);
@@ -259,7 +265,7 @@ export default function NW() {
 				}
 				let qty: number | null = getQty(value, mode === "M");
 				if (!qty) continue;
-				if (!recordBroken && lastQtyCapture && i - lastQtyCapture < 7) continue;
+				if (!recordBroken && lastQtyCapture && j - lastQtyCapture < 7) continue;
 				recordBroken = false;
 				if (hasFV && !fv && mode === "E") {
 					console.log("Detected fv: ", qty);
@@ -267,11 +273,11 @@ export default function NW() {
 					continue;
 				}
 				console.log("Detected quantity: ", qty);
-				lastQtyCapture = i;
+				lastQtyCapture = j;
 				quantity = qty;
 				if (hasFV) fv = null;
 				if (isin && quantity) {
-					if (recordBroken || (lastNameCapture && i - lastNameCapture > 9)) {
+					if (recordBroken || (lastNameCapture && j - lastNameCapture > 9)) {
 						lastNameCapture = null;
 						recordBroken = false;
 					}

@@ -686,9 +686,8 @@ export const includesAny = (value: string, items: Array<string>) => {
 }
 
 export const replaceIfFound = (value: string, items: Array<string>, replacement: string = "", endsWith: boolean = false) => {
-  let v = value.trim().toLowerCase();
   for (let item of items) {
-    if (endsWith ? v.endsWith(item.toLowerCase()) : v.includes(item.toLowerCase())) 
+    if (endsWith ? value.endsWith(item) : value.includes(item)) 
       value = value.replace(item, replacement);
   }
   return value.trim();
