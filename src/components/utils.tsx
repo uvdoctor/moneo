@@ -700,3 +700,30 @@ export const cleanName = (value: string, items: Array<string>) => {
   }
   return value;
 }
+
+export const hasNumberAtEnd = (value: string) => {
+  let words = value.split(" ");
+  return !Number.isNaN(parseInt(words[words.length - 1].trim()));
+}
+
+export const countWords = (value: string) => {
+  let words = value.split(" ");
+  let numOfWords = 1;
+  for (let word of words) {
+    if (word.trim()) numOfWords++;
+  }
+  return numOfWords;
+}
+
+export const removeDuplicates = (value: string) => {
+  let values = value.split(" ");
+  for (let i = 2; i < values.length; i++) {
+    let v = values[i].trim();
+    for (let j = 1; j < i; j++) {
+      let token = values[j].trim();
+      if (v === token) value = value.replace(token, "");
+    }
+  }
+  return value.trim();
+};
+
