@@ -46,7 +46,7 @@ export default function Holding({ assetName, qty }: HoldingProp) {
 							</span>
 						) : (
 							<Row className="edit-qty-container" gutter={[5, 5]}>
-								<Col flex="1 1 180px">
+								<Col flex="1 1 176px">
 									<Input value={qty} placeholder="Update quantity" />
 								</Col>
 								<Col flex="0 1 80px">
