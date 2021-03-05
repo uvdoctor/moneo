@@ -1,8 +1,5 @@
 import React from "react";
 import { Empty } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { useFullScreenBrowser } from "react-browser-hooks";
-import { isMobileDevice } from "../utils";
 import { toReadableNumber } from "../utils";
 import Holding from "./Holding";
 
@@ -14,8 +11,6 @@ interface HoldingsTableProp {
 }
 
 export default function HoldingsTable({ data, insNames }: HoldingsTableProp) {
-	const fsb = useFullScreenBrowser();
-
 	return Object.keys(data)?.length ? (
 		<>
 			{Object.keys(data)?.map((key: string, i: number) => {

@@ -7,7 +7,6 @@ import {
 	Input,
 	Drawer,
 	Button,
-	Row,
 } from "antd";
 import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import * as pdfjsLib from "pdfjs-dist";

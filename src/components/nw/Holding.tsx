@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Button, Badge, Input } from "antd";
+import { Row, Col, Button, Input } from "antd";
 import {
 	DeleteOutlined,
 	EditOutlined,
@@ -10,7 +10,12 @@ import {
 
 import "./Holding.less";
 
-export default function Holding({ assetName, qty }) {
+interface HoldingProp {
+	assetName?: string;
+	qty?: any;
+}
+
+export default function Holding({ assetName, qty }: HoldingProp) {
 	const [isEditMode, setEditMode] = useState(false);
 
 	function onEdit() {
@@ -23,7 +28,7 @@ export default function Holding({ assetName, qty }) {
 
 	function onDelete() {}
 	return (
-		<Row className="holding" align="middle" gutter={[10]}>
+		<Row className="holding" align="middle" gutter={[10, 10]}>
 			<Col flex="1 1 250px">
 				<p>{assetName}</p>
 				{!isEditMode ? (
@@ -31,7 +36,7 @@ export default function Holding({ assetName, qty }) {
 						<ShoppingCartOutlined /> {qty}
 					</span>
 				) : (
-					<Row gutter={[5]}>
+					<Row gutter={[5, 5]}>
 						<Col flex="1 1 210px">
 							<Input value={qty} placeholder="Update quantity" />
 						</Col>
