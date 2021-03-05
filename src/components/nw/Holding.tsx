@@ -1,14 +1,8 @@
-import React, { useState } from "react";
-import { Row, Col, Button, Input, Badge } from "antd";
-import {
-	DeleteOutlined,
-	EditOutlined,
-	ShoppingCartOutlined,
-	SaveOutlined,
-	CloseOutlined,
-} from "@ant-design/icons";
+import React, { Fragment, useState } from 'react';
+import { Row, Col, Button, Input, Badge } from 'antd';
+import { DeleteOutlined, EditOutlined, ShoppingCartOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 
-import "./Holding.less";
+import './Holding.less';
 
 interface HoldingProp {
 	assetName?: string;
@@ -17,7 +11,7 @@ interface HoldingProp {
 }
 
 export default function Holding({ assetName, qty, isin }: HoldingProp) {
-	const [isEditMode, setEditMode] = useState(false);
+	const [ isEditMode, setEditMode ] = useState(false);
 
 	function onEdit() {
 		setEditMode(true);
@@ -29,7 +23,8 @@ export default function Holding({ assetName, qty, isin }: HoldingProp) {
 
 	function onDelete() {}
 	return (
-		<Row className="holding" align="middle" gutter={[10, 10]}>
+		<Fragment>
+			{/*<Row className="holding" align="middle" gutter={[10, 10]}>
 			<Col flex="1 1 200px">
 				<Row
 					align="middle"
@@ -88,6 +83,35 @@ export default function Holding({ assetName, qty, isin }: HoldingProp) {
 					/>
 				</Col>
 			)}
-		</Row>
+			</Row>*/}
+			<Row gutter={[ 10, 10 ]}>
+				{assetName}
+			</Row>
+			<Row className="holding" align="middle" justify="space-between">
+				<Col>
+					<Badge count={isin} />
+				</Col>
+				<Col>
+					{isEditMode ? (
+						<Input type="number" value={qty} size="small" />
+					) : (
+						<span className="quantity">
+							<ShoppingCartOutlined /> {qty}
+						</span>
+					)}
+					<Button
+						type="link"
+						icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
+						onClick={isEditMode ? onCancel : onEdit}
+					/>
+					<Button
+						type="link"
+						icon={isEditMode ? <CloseOutlined /> : <DeleteOutlined />}
+						onClick={isEditMode ? onCancel : onDelete}
+						danger
+					/>
+				</Col>
+			</Row>
+		</Fragment>
 	);
 }
