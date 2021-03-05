@@ -40,7 +40,7 @@ export default function Holding({ assetName, qty, isin }: HoldingProp) {
 				<Badge count={isin} />
 			</Col>
 			<Col>
-				<Row>
+				<Row align="middle">
 					{isEditMode ? (
 						<Col>
 							<Input type="number" value={qty} size="small" />
