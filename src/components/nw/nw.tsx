@@ -23,18 +23,19 @@ import "./nw.less";
 const isValidISIN = (val: string) =>
 	val.length === 12 && val.startsWith("IN") && !val.includes(" ");
 
-const isValidPAN = (val: string) => val.length === 10 &&
-!val.includes(" ") && val.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/);
+const isValidPAN = (val: string) =>
+	val.length === 10 &&
+	!val.includes(" ") &&
+	val.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/);
 
-const contains = (val: string, type: string = 'ISIN') => {
+const contains = (val: string, type: string = "ISIN") => {
 	let values = val.split(" ");
 	for (let value of values) {
 		value = value.trim();
-		if (type === 'PAN') {
+		if (type === "PAN") {
 			value = replaceIfFound(value, ["pan", ":", "(", ")"]);
 		}
-		if (type === 'ISIN' ? isValidISIN(value) : isValidPAN(value)) 
-			return value;
+		if (type === "ISIN" ? isValidISIN(value) : isValidPAN(value)) return value;
 	}
 	return null;
 };
@@ -65,9 +66,15 @@ const getQty = (val: string, isMF: boolean = false) => {
 };
 
 const hasHoldingStarted = (value: string) =>
-	includesAny(value, ["holding statement", "holding as of",
-		"holding as on", "holdings", "balances as of", "balances as on",
-		"no transaction"]);
+	includesAny(value, [
+		"holding statement",
+		"holding as of",
+		"holding as on",
+		"holdings",
+		"balances as of",
+		"balances as on",
+		"no transaction",
+	]);
 
 export default function NW() {
 	const fsb = useFullScreenBrowser();
@@ -77,7 +84,7 @@ export default function NW() {
 	const [fileParsing, setFileParsing] = useState<boolean>(false);
 	const [showUpdateHoldings, setUpdateHoldings] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
-	const [taxId, setTaxId] = useState<string>('');
+	const [taxId, setTaxId] = useState<string>("");
 
 	const { confirm } = Modal;
 	const { Dragger } = Upload;
@@ -152,7 +159,7 @@ export default function NW() {
 				let value = textContent.items[i].str.trim();
 				if (!value.length) continue;
 				if (value.trim().length >= 10 && !taxId) {
-					taxId = contains(value, 'PAN');
+					taxId = contains(value, "PAN");
 					if (taxId) continue;
 				}
 				if (!holdingStarted) {
@@ -160,17 +167,29 @@ export default function NW() {
 					continue;
 				}
 				if (value.length > 100) continue;
-				if (includesAny(value, ["commission paid", "end of statement"]))
-					break;
-				if (hasData && includesAny(value, ["transaction statement"]))
-					break;
+				if (includesAny(value, ["commission paid", "end of statement"])) break;
+				if (hasData && includesAny(value, ["transaction statement"])) break;
 				if (includesAny(value, ["face value"])) {
 					hasFV = true;
 					continue;
 				}
-				if (includesAny(value,
-					["closing", "opening", "summary", "year", "portfolio", "total",
-						"%", "equities", "listed", "not ", "value (", "value in", "free b"]))
+				if (
+					includesAny(value, [
+						"closing",
+						"opening",
+						"summary",
+						"year",
+						"portfolio",
+						"total",
+						"%",
+						"equities",
+						"listed",
+						"not ",
+						"value (",
+						"value in",
+						"free b",
+					])
+				)
 					continue;
 				let retVal = getISIN(value);
 				if (!retVal) {
@@ -227,16 +246,31 @@ export default function NW() {
 					numberOfWords < 12 &&
 					!value.includes(",")
 				) {
-					if (includesAny(value, ["bond", "bd"]))
-						mode = "B";
+					if (includesAny(value, ["bond", "bd"])) mode = "B";
 					if (lastNameCapture) {
 						let diff = i - lastNameCapture;
 						if (mode !== "M" && diff < 5) continue;
 					}
-					value = cleanName(value, ["#", "(", "-", "/", 
-					"NEW RS.", "RS.", "NEW RE.", "RE.", "NEW F.V", "NEW FV"]);
-					value = replaceIfFound(value,
-						["LIMITED", "EQUITY", " EQ", " LTD", " SHARES", "Beneficiary"]);
+					value = cleanName(value, [
+						"#",
+						"(",
+						"-",
+						"/",
+						"NEW RS.",
+						"RS.",
+						"NEW RE.",
+						"RE.",
+						"NEW F.V",
+						"NEW FV",
+					]);
+					value = replaceIfFound(value, [
+						"LIMITED",
+						"EQUITY",
+						" EQ",
+						" LTD",
+						" SHARES",
+						"Beneficiary",
+					]);
 					value = replaceIfFound(value, [" AND", " OF", " &"], "", true);
 					if (!value) continue;
 					if (
@@ -247,7 +281,7 @@ export default function NW() {
 					)
 						name += " " + value.trim();
 					else name = value.trim();
-					if (mode === 'M') {
+					if (mode === "M") {
 						name = removeDuplicates(name as string);
 						name = cleanName(name as string, ["(", ")"]);
 					}
@@ -293,7 +327,7 @@ export default function NW() {
 		setAllMFs(mfs);
 		setInsNames(insNames);
 		setUpdateHoldings(true);
-		if(taxId) setTaxId(taxId);
+		if (taxId) setTaxId(taxId);
 	};
 
 	const processPDF = (file: File) => {
@@ -397,8 +431,12 @@ export default function NW() {
 				<>
 					<Drawer
 						className="upload-holdings-drawer"
-						width={isMobileDevice(fsb) ? 320 : 550}
-						title="Update holdings"
+						width={isMobileDevice(fsb) ? 320 : 320}
+						title={
+							<>
+								Update holdings for PAN no <strong>{taxId}</strong>
+							</>
+						}
 						placement="right"
 						closable={false}
 						visible={showUpdateHoldings}
@@ -416,7 +454,6 @@ export default function NW() {
 							</div>
 						}
 					>
-						<Row justify="center">PAN: {taxId}</Row>
 						<HoldingTabs
 							equities={allEquities}
 							bonds={allBonds}
