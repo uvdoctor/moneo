@@ -29,23 +29,29 @@ export default function Holding({ assetName, qty }: HoldingProp) {
 	function onDelete() {}
 	return (
 		<Row className="holding" align="middle" gutter={[10, 10]}>
-			<Col flex="1 1 250px">
-				<p>{assetName}</p>
-				{!isEditMode ? (
-					<span className="quantity">
-						<ShoppingCartOutlined /> {qty}
-					</span>
-				) : (
-					<Row gutter={[5, 5]}>
-						<Col flex="1 1 210px">
-							<Input value={qty} placeholder="Update quantity" />
-						</Col>
-						<Col flex="0 1 80px">
-							<Button icon={<SaveOutlined />} type="primary" />
-							<Button icon={<CloseOutlined />} onClick={onCancel} danger />
-						</Col>
-					</Row>
-				)}
+			<Col flex="1 1 200px">
+				<Row>
+					<Col xs={24} sm={24} md={12}>
+						<p>{assetName}</p>
+					</Col>
+					<Col xs={24} sm={24} md={12}>
+						{!isEditMode ? (
+							<span className="quantity">
+								<ShoppingCartOutlined /> {qty}
+							</span>
+						) : (
+							<Row className="edit-qty-container" gutter={[5, 5]}>
+								<Col flex="1 1 180px">
+									<Input value={qty} placeholder="Update quantity" />
+								</Col>
+								<Col flex="0 1 80px">
+									<Button icon={<SaveOutlined />} type="primary" />
+									<Button icon={<CloseOutlined />} onClick={onCancel} danger />
+								</Col>
+							</Row>
+						)}
+					</Col>
+				</Row>
 			</Col>
 			{!isEditMode && (
 				<Col flex="0 1 35px">
