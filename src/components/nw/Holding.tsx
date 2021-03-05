@@ -60,8 +60,8 @@ export default function Holding({ assetName, qty }: HoldingProp) {
 			</Col>
 			{!isEditMode && (
 				<Col flex="0 1 35px">
-					<Button icon={<EditOutlined />} onClick={onEdit} />
-					<Button icon={<DeleteOutlined />} onClick={onDelete} />
+					<Button type="link" icon={<EditOutlined />} onClick={onEdit} />
+					<Button type="link" icon={<DeleteOutlined />} onClick={onDelete} danger />
 				</Col>
 			)}
 		</Row>
