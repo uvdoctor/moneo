@@ -47,11 +47,11 @@ export default function Holding({ assetName, qty }: HoldingProp) {
 						) : (
 							<Row className="edit-qty-container" gutter={[5, 5]}>
 								<Col flex="1 1 176px">
-									<Input value={qty} placeholder="Update quantity" />
+									<Input type="number" value={qty} placeholder="Update quantity" />
 								</Col>
 								<Col flex="0 1 80px">
-									<Button icon={<SaveOutlined />} type="primary" />
-									<Button icon={<CloseOutlined />} onClick={onCancel} danger />
+									<Button type="link" icon={<SaveOutlined />} />
+									<Button type="link" icon={<CloseOutlined />} onClick={onCancel} danger />
 								</Col>
 							</Row>
 						)}
