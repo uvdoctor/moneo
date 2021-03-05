@@ -70,6 +70,8 @@ const hasHoldingStarted = (value: string) =>
 		"holding as of",
 		"holding as on",
 		"holdings",
+		"holding details",
+		"portfolio summary",
 		"balances as of",
 		"balances as on",
 		"no transaction",
@@ -174,7 +176,6 @@ export default function NW() {
 					break;
 				}
 				if (hasData && includesAny(value, ["transaction details"])) break;
-
 				if (includesAny(value, ["face value"])) {
 					hasFV = true;
 					continue;
@@ -257,10 +258,10 @@ export default function NW() {
 					numberOfWords < 15 &&
 					!value.includes(",")
 				) {
-					if (includesAny(value, ["bond", "bd"])) mode = "B";
+					if (includesAny(value, ["bond", "bd", "ncd", "debenture"])) mode = "B";
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
-						if (mode !== "M" && diff < 5) continue;
+						if (mode !== "M" && diff < 4) continue;
 					}
 					value = cleanName(value, [
 						"#",
@@ -277,10 +278,11 @@ export default function NW() {
 					value = replaceIfFound(value, [
 						"LIMITED",
 						"EQUITY",
-						" EQ",
-						" LTD",
-						" SHARES",
+						"EQ",
+						"LTD",
+						"SHARES",
 						"Beneficiary",
+						"PVT"
 					]);
 					value = replaceIfFound(value, [" AND", " OF", " &"], "", true);
 					if (!value) continue;
