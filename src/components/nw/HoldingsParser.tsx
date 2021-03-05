@@ -1,18 +1,21 @@
 import React, { useState } from "react";
-import {
-	Upload,
-	Empty,
-	Drawer,
-	Button,
-} from "antd";
+import { Upload, Empty, Drawer, Button, Row, Col } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { isMobileDevice, removeDuplicates } from "../utils";
 import { cleanName, includesAny, replaceIfFound } from "../utils";
 import HoldingTabs from "./HoldingTabs";
+import HoldingsChart from "./HoldingsChart";
 
 import "./nw.less";
-import { completeRecord, contains, getISIN, getQty, getUploaderSettings, hasHoldingStarted } from "./parseutils";
+import {
+	completeRecord,
+	contains,
+	getISIN,
+	getQty,
+	getUploaderSettings,
+	hasHoldingStarted,
+} from "./parseutils";
 
 export default function HoldingsParser() {
 	const fsb = useFullScreenBrowser();
@@ -114,8 +117,27 @@ export default function HoldingsParser() {
 					console.log("Detected ISIN: ", retVal);
 					isin = retVal;
 					mode = isin.startsWith("INF") ? "M" : "E";
-					if (isin && quantity) 
-						({ recordBroken, lastNameCapture, hasData, isin, quantity } = completeRecord(recordBroken, lastNameCapture, j, hasData, mode, equities, mfs, bonds, isin, quantity, insNames, name));
+					if (isin && quantity)
+						({
+							recordBroken,
+							lastNameCapture,
+							hasData,
+							isin,
+							quantity,
+						} = completeRecord(
+							recordBroken,
+							lastNameCapture,
+							j,
+							hasData,
+							mode,
+							equities,
+							mfs,
+							bonds,
+							isin,
+							quantity,
+							insNames,
+							name
+						));
 					if (!checkMultipleValues) continue;
 				}
 				if (quantity) continue;
@@ -139,7 +161,8 @@ export default function HoldingsParser() {
 					numberOfWords < 15 &&
 					!value.includes(",")
 				) {
-					if (includesAny(value, ["bond", "bd", "ncd", "debenture"])) mode = "B";
+					if (includesAny(value, ["bond", "bd", "ncd", "debenture"]))
+						mode = "B";
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
 						if (mode !== "M" && diff < 4) continue;
@@ -163,7 +186,7 @@ export default function HoldingsParser() {
 						"LTD",
 						"SHARES",
 						"Beneficiary",
-						"PVT"
+						"PVT",
 					]);
 					value = replaceIfFound(value, [" AND", " OF", " &"], "", true);
 					if (!value) continue;
@@ -199,7 +222,26 @@ export default function HoldingsParser() {
 				quantity = qty;
 				if (hasFV) fv = null;
 				if (isin && quantity) {
-					({ recordBroken, lastNameCapture, hasData, isin, quantity } = completeRecord(recordBroken, lastNameCapture, j, hasData, mode, equities, mfs, bonds, isin, quantity, insNames, name));
+					({
+						recordBroken,
+						lastNameCapture,
+						hasData,
+						isin,
+						quantity,
+					} = completeRecord(
+						recordBroken,
+						lastNameCapture,
+						j,
+						hasData,
+						mode,
+						equities,
+						mfs,
+						bonds,
+						isin,
+						quantity,
+						insNames,
+						name
+					));
 				}
 			}
 		}
@@ -268,16 +310,23 @@ export default function HoldingsParser() {
 							insNames={insNames}
 						/>
 					</Drawer>
-					<HoldingTabs
-						equities={allEquities}
-						bonds={allBonds}
-						mutualFunds={allMFs}
-						insNames={insNames}
-					/>
+					<Row>
+						<Col xs={24} sm={24} md={8}>
+							<HoldingsChart />
+						</Col>
+						<Col xs={24} sm={24} md={16}>
+							<HoldingTabs
+								equities={allEquities}
+								bonds={allBonds}
+								mutualFunds={allMFs}
+								insNames={insNames}
+							/>
+						</Col>
+					</Row>
 				</>
 			) : (
 				<Empty description={<p>No investment data.</p>} />
 			)}
-			</div>
+		</div>
 	);
 }
