@@ -442,7 +442,7 @@ export default function NW() {
 				<>
 					<Drawer
 						className="upload-holdings-drawer"
-						width={isMobileDevice(fsb) ? 320 : 320}
+						width={isMobileDevice(fsb) ? 320 : 550}
 						title={
 							<>
 								Update holdings for PAN no <strong>{taxId}</strong>

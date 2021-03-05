@@ -7,6 +7,8 @@ import {
 	SaveOutlined,
 	CloseOutlined,
 } from "@ant-design/icons";
+import { useFullScreenBrowser } from "react-browser-hooks";
+import { isMobileDevice } from "../utils";
 
 import "./Holding.less";
 
@@ -16,6 +18,7 @@ interface HoldingProp {
 }
 
 export default function Holding({ assetName, qty }: HoldingProp) {
+	const fsb = useFullScreenBrowser();
 	const [isEditMode, setEditMode] = useState(false);
 
 	function onEdit() {
@@ -30,7 +33,12 @@ export default function Holding({ assetName, qty }: HoldingProp) {
 	return (
 		<Row className="holding" align="middle" gutter={[10, 10]}>
 			<Col flex="1 1 200px">
-				<Row>
+				<Row
+					gutter={[
+						{ xs: 0, sm: 0, md: 15 },
+						{ xs: 0, sm: 0, md: 15 },
+					]}
+				>
 					<Col xs={24} sm={24} md={12}>
 						<p>{assetName}</p>
 					</Col>
