@@ -7,8 +7,6 @@ import {
 	SaveOutlined,
 	CloseOutlined,
 } from "@ant-design/icons";
-import { useFullScreenBrowser } from "react-browser-hooks";
-import { isMobileDevice } from "../utils";
 
 import "./Holding.less";
 
@@ -18,7 +16,6 @@ interface HoldingProp {
 }
 
 export default function Holding({ assetName, qty }: HoldingProp) {
-	const fsb = useFullScreenBrowser();
 	const [isEditMode, setEditMode] = useState(false);
 
 	function onEdit() {
