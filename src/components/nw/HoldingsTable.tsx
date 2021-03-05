@@ -2,7 +2,7 @@ import React from "react";
 import { Empty } from "antd";
 import { toReadableNumber } from "../utils";
 import Holding from "./Holding";
-import HoldingsFilter from "./HoldingsFilter";
+import AddHoldings from "./AddHoldings";
 
 import "./HoldingsTable.less";
 
@@ -14,7 +14,7 @@ interface HoldingsTableProp {
 export default function HoldingsTable({ data, insNames }: HoldingsTableProp) {
 	return Object.keys(data)?.length ? (
 		<>
-			<HoldingsFilter />
+			<AddHoldings />
 			{Object.keys(data)?.map((key: string, i: number) => {
 				const qty = toReadableNumber(
 					data[key],

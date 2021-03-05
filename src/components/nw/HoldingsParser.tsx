@@ -6,6 +6,7 @@ import { isMobileDevice, removeDuplicates } from "../utils";
 import { cleanName, includesAny, replaceIfFound } from "../utils";
 import HoldingTabs from "./HoldingTabs";
 import HoldingsChart from "./HoldingsChart";
+import HoldingsFilter from "./HoldingsFilter";
 
 import "./nw.less";
 import {
@@ -310,17 +311,18 @@ export default function HoldingsParser() {
 							insNames={insNames}
 						/>
 					</Drawer>
-					<Row>
-						<Col xs={24} sm={24} md={8}>
-							<HoldingsChart />
-						</Col>
+					<Row gutter={[10, 10]}>
 						<Col xs={24} sm={24} md={16}>
+							<HoldingsFilter />
 							<HoldingTabs
 								equities={allEquities}
 								bonds={allBonds}
 								mutualFunds={allMFs}
 								insNames={insNames}
 							/>
+						</Col>
+						<Col xs={24} sm={24} md={8}>
+							<HoldingsChart />
 						</Col>
 					</Row>
 				</>
