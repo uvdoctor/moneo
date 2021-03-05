@@ -1,6 +1,6 @@
 //import { withAuthenticator } from "@aws-amplify/ui-react";
 import React from "react";
-import NW from "../components/nw/nw";
+import { NWContextProvider } from "../components/nw/NWContext";
 //import Amplify from "aws-amplify";
 //import awsmobile from "../aws-exports";
 import BasicPage from "../components/BasicPage";
@@ -10,7 +10,7 @@ import BasicPage from "../components/BasicPage";
 export default function Get() {
 	return (
 		<BasicPage title="Get Net Worth">
-			<NW />
+			<NWContextProvider />
 		</BasicPage>
 	);
 };

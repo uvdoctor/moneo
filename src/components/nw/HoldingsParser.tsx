@@ -2,131 +2,28 @@ import React, { useState } from "react";
 import {
 	Upload,
 	Empty,
-	notification,
-	Modal,
-	Input,
 	Drawer,
 	Button,
 } from "antd";
-import { InboxOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
-import * as pdfjsLib from "pdfjs-dist";
+import { InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import { isMobileDevice } from "../utils";
-//@ts-ignore
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-import { appendValue, cleanName, includesAny, replaceIfFound } from "../utils";
+import { isMobileDevice, removeDuplicates } from "../utils";
+import { cleanName, includesAny, replaceIfFound } from "../utils";
 import HoldingTabs from "./HoldingTabs";
 
 import "./nw.less";
+import { completeRecord, contains, getISIN, getQty, getUploaderSettings, hasHoldingStarted } from "./parseutils";
 
-const isValidISIN = (val: string) =>
-	val.length === 12 && val.startsWith("IN") && !val.includes(" ");
-
-const isValidPAN = (val: string) =>
-	val.length === 10 &&
-	!val.includes(" ") &&
-	val.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/);
-
-const contains = (val: string, type: string = "ISIN") => {
-	let values = val.split(" ");
-	for (let value of values) {
-		value = value.trim();
-		if (type === "PAN") {
-			value = replaceIfFound(value, ["pan", ":", "(", ")"]);
-		}
-		if (type === "ISIN" ? isValidISIN(value) : isValidPAN(value)) return value;
-	}
-	return null;
-};
-
-const getISIN = (val: string) => {
-	if (val.length < 12) return null;
-	if (isValidISIN(val)) return val;
-	return null;
-};
-
-const getQty = (val: string, isMF: boolean = false) => {
-	val = val.replace(/,/g, "");
-	let result = parseInt(val);
-	if (Number.isNaN(result)) return null;
-	if (val.includes(".")) {
-		let wholeNum = val.split(".")[0];
-		let decimals = val.split(".")[1];
-		if (wholeNum.length > 5) return null;
-		if (decimals.length > 3) return null;
-		let result = Number(parseFloat(val).toFixed(3));
-		if (Number.isNaN(result)) return null;
-		if (!isMF && decimals && parseInt(decimals)) return null;
-		return result;
-	} else {
-		if (val.length > 6) return null;
-		return result;
-	}
-};
-
-const hasHoldingStarted = (value: string) =>
-	includesAny(value, [
-		"holding statement",
-		"holding as of",
-		"holding as on",
-		"holdings",
-		"holding details",
-		"portfolio summary",
-		"balances as of",
-		"balances as on",
-		"no transaction",
-	]);
-
-export default function NW() {
+export default function HoldingsParser() {
 	const fsb = useFullScreenBrowser();
 	const [allEquities, setAllEquities] = useState<any>({});
 	const [allBonds, setAllBonds] = useState<any>({});
 	const [allMFs, setAllMFs] = useState<any>({});
-	const [fileParsing, setFileParsing] = useState<boolean>(false);
 	const [showUpdateHoldings, setUpdateHoldings] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
 	const [taxId, setTaxId] = useState<string>("");
 
-	const { confirm } = Modal;
 	const { Dragger } = Upload;
-	const uploaderSettings = {
-		accept: ".pdf",
-		name: "file",
-		action: "",
-		headers: { "content-type": "application/pdf" },
-		customRequest: ({ onSuccess }: any) => {
-			setTimeout(() => {
-				onSuccess("ok");
-			}, 0);
-		},
-		multiple: false,
-		onChange: (info: any) => {
-			const { status } = info.file;
-			if (status !== "uploading") {
-				console.log(info.file, info.fileList);
-			}
-			if (status === "done") {
-				processPDF(info.file.originFileObj);
-			} else if (status === "error") {
-				notification.error({
-					message: "File upload failed",
-					description: `Unable to upload ${info.file.name}`,
-				});
-			}
-		},
-	};
-
-	const removeDuplicates = (value: string) => {
-		let values = value.split(" ");
-		for (let i = 2; i < values.length; i++) {
-			let v = values[i].trim();
-			for (let j = 1; j < i; j++) {
-				let token = values[j].trim();
-				if (v === token) value = value.replace(token, "");
-			}
-		}
-		return value.trim();
-	};
 
 	const parseHoldings = async (pdf: any) => {
 		let equities: any = {};
@@ -217,24 +114,8 @@ export default function NW() {
 					console.log("Detected ISIN: ", retVal);
 					isin = retVal;
 					mode = isin.startsWith("INF") ? "M" : "E";
-					if (isin && quantity) {
-						if (lastNameCapture && j - lastNameCapture > 9) {
-							console.log("Detected unrelated name capture: ", lastNameCapture);
-							name = null;
-							lastNameCapture = null;
-						}
-						console.log("Record completed...");
-						hasData = true;
-						appendValue(
-							mode === "E" ? equities : mode === "M" ? mfs : bonds,
-							isin,
-							quantity
-						);
-						if (!insNames[isin]) insNames[isin] = name ? name : isin;
-						isin = null;
-						quantity = null;
-						name = null;
-					}
+					if (isin && quantity) 
+						({ recordBroken, lastNameCapture, hasData, isin, quantity } = completeRecord(recordBroken, lastNameCapture, j, hasData, mode, equities, mfs, bonds, isin, quantity, insNames, name));
 					if (!checkMultipleValues) continue;
 				}
 				if (quantity) continue;
@@ -318,20 +199,7 @@ export default function NW() {
 				quantity = qty;
 				if (hasFV) fv = null;
 				if (isin && quantity) {
-					if (recordBroken || (lastNameCapture && j - lastNameCapture > 9)) {
-						lastNameCapture = null;
-						recordBroken = false;
-					}
-					console.log("Record completed...");
-					hasData = true;
-					appendValue(
-						mode === "E" ? equities : mode === "M" ? mfs : bonds,
-						isin,
-						quantity
-					);
-					if (!insNames[isin]) insNames[isin] = name ? name : isin;
-					isin = null;
-					quantity = null;
+					({ recordBroken, lastNameCapture, hasData, isin, quantity } = completeRecord(recordBroken, lastNameCapture, j, hasData, mode, equities, mfs, bonds, isin, quantity, insNames, name));
 				}
 			}
 		}
@@ -343,84 +211,10 @@ export default function NW() {
 		if (taxId) setTaxId(taxId);
 	};
 
-	const processPDF = (file: File) => {
-		const reader = new FileReader();
-		reader.readAsArrayBuffer(file);
-		reader.onload = () => {
-			pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
-			const pdfLoadingTask = pdfjsLib.getDocument({
-				data: new Uint8Array(reader.result as ArrayBuffer),
-			});
-			pdfLoadingTask.onPassword = async (
-				pwdHandler: Function,
-				response: any
-			) => {
-				const retVal = await getPDFPassword(
-					response === pdfjsLib.PasswordResponses.INCORRECT_PASSWORD
-						? "Invalid Password. Please try again."
-						: "Password"
-				);
-				if (retVal) pwdHandler(retVal);
-				else {
-					setFileParsing(false);
-				}
-			};
-			pdfLoadingTask.promise.then(async (pdf) => {
-				setFileParsing(true);
-				await parseHoldings(pdf);
-				setFileParsing(false);
-			});
-		};
-		reader.onerror = (error: any) =>
-			notification.error({
-				message: "Error while reading file",
-				description: error,
-			});
-	};
-
-	const getPDFPassword = (title: string) => {
-		return new Promise((resolve, reject) => {
-			confirm({
-				title,
-				icon: <ExclamationCircleOutlined />,
-				content: (
-					<Input
-						id="pdf-password"
-						placeholder="Enter PDF password..."
-						onPressEnter={(e: any) => {
-							resolve(e.currentTarget.value);
-							Modal.destroyAll();
-						}}
-					/>
-				),
-				onOk: () => {
-					// @ts-ignore
-					const password = document.getElementById("pdf-password").value;
-					resolve(password);
-				},
-				onCancel: () => {
-					reject("Cancel");
-				},
-			});
-		});
-	};
-
 	const hasNoHoldings = () =>
 		!Object.keys(allBonds).length &&
 		!Object.keys(allEquities).length &&
 		!Object.keys(allMFs).length;
-
-	/*useEffect(() => {
-		fetch('/api/price', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json;charset=utf-8'
-			},
-			body: JSON.stringify({
-				isin: 'IN'
-			})
-		});
-	}, []);*/
 
 	function onCloseUpdateHoldings() {
 		setUpdateHoldings(false);
@@ -428,7 +222,7 @@ export default function NW() {
 
 	return (
 		<div className="nw-container">
-			<Dragger {...uploaderSettings}>
+			<Dragger {...getUploaderSettings(parseHoldings)}>
 				<p className="ant-upload-drag-icon">
 					<InboxOutlined className="upload-icon" />
 				</p>
@@ -440,7 +234,7 @@ export default function NW() {
 					data or other band files
 				</p>
 			</Dragger>
-			{!fileParsing && !hasNoHoldings() ? (
+			{!hasNoHoldings() ? (
 				<>
 					<Drawer
 						className="upload-holdings-drawer"
@@ -482,8 +276,8 @@ export default function NW() {
 					/>
 				</>
 			) : (
-				!fileParsing && <Empty description={<p>No investment data.</p>} />
+				<Empty description={<p>No investment data.</p>} />
 			)}
-		</div>
+			</div>
 	);
 }
