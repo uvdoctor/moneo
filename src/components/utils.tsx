@@ -693,23 +693,26 @@ export const replaceIfFound = (value: string, items: Array<string>, replacement:
   return value.trim();
 };
 
-export const cleanName = (value: string, items: Array<string>) => {
+export const getValueBefore = (value: string, items: Array<string>) => {
   for (let item of items) {
     value = value.split(item)[0].trim();
   }
   return value;
 }
 
-export const hasNumberAtEnd = (value: string) => {
+export const getNumberAtEnd = (value: string) => {
   let words = value.split(" ");
-  return !Number.isNaN(parseInt(words[words.length - 1].trim()));
+  let endWord = words[words.length - 1].trim();
+  if (!Number.isNaN(parseFloat(endWord)))
+    return endWord;
+  return null;
 }
 
 export const countWords = (value: string) => {
   let words = value.split(" ");
-  let numOfWords = 1;
+  let numOfWords = 0;
   for (let word of words) {
-    if (word.trim()) numOfWords++;
+    if (word.trim().length) numOfWords++;
   }
   return numOfWords;
 }

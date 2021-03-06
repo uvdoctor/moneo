@@ -1,5 +1,5 @@
 import { Modal, notification, Input } from "antd";
-import { appendValue, includesAny, replaceIfFound } from "../utils";
+import { appendValue, getValueBefore, includesAny, replaceIfFound } from "../utils";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
@@ -179,3 +179,30 @@ export const getUploaderSettings = (parsePDF: Function) => {
 	}
 };
 
+export const cleanAssetName = (val: string) => {
+	let value = val.trim();
+	value = getValueBefore(value, [
+		"#",
+		"(",
+		"-",
+		"/",
+		"NEW RS.",
+		"RS.",
+		"NEW RE.",
+		"RE.",
+		"NEW F.V",
+		"NEW FV",
+		"EQ"
+	]);
+	value = replaceIfFound(value, [
+		"LIMITED",
+		"EQUITY",
+		"LTD",
+		"SHARES",
+		"Beneficiary",
+		"PVT",
+	]);
+	value = replaceIfFound(value, [" AND", " OF", " &"], "", true);
+	if (!value) return null;
+	return value;
+}
