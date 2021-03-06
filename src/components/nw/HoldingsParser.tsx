@@ -57,10 +57,14 @@ export default function HoldingsParser() {
 		for (let i = 1; i <= pdf.numPages && !eof; i++) {
 			lastNameCapture = null;
 			lastQtyCapture = null;
-			if (!recordBroken) {
-				isin = null;
-				quantity = null;
-				name = null;
+			if (i > 1) {
+				if (isin || quantity) recordBroken = true;
+				else recordBroken = false;
+				if(!recordBroken) {
+					isin = null;
+					quantity = null;
+					name = null;
+				}
 			}
 			const page = await pdf.getPage(i);
 			const textContent = await page.getTextContent();
@@ -78,7 +82,7 @@ export default function HoldingsParser() {
 				}
 				console.log("Going to check: ", value);
 				if (value.length > 100) continue;
-				if (includesAny(value, ["commission paid", "end of statement"])) {
+				if (includesAny(value, ["commission paid", "end of statement", "end of report"])) {
 					eof = true;
 					break;
 				}
@@ -150,17 +154,6 @@ export default function HoldingsParser() {
 				}
 				if (quantity) continue;
 				if (!isin && value.toLowerCase().includes("page")) continue;
-				if (
-					isin &&
-					value.toLowerCase().includes("page") &&
-					j - textContent.items.length < 5
-				) {
-					console.log("Detected broken record between pages...");
-					recordBroken = true;
-					lastQtyCapture = null;
-					lastNameCapture = null;
-					break;
-				}
 				let numberOfWords = countWords(value);
 				if (
 					!recordBroken &&
@@ -176,10 +169,14 @@ export default function HoldingsParser() {
 					if (numberAtEnd) console.log("Detected number at end: ", numberAtEnd);
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
-						if (mode !== "M" && mode !== "ETF" && diff < 4) continue;
+						if (mode !== "M" && mode !== "ETF" && !numberAtEnd && diff < 4) continue;
 					}
+					if(numberAtEnd) value = replaceIfFound(value, ['' + numberAtEnd]);
 					value = cleanAssetName(value);
-					if (!value) continue;
+					if (!value) {
+						numberAtEnd = null;
+						continue;
+					}
 					if (
 						(mode === "M" || mode === "ETF") &&
 						name &&
@@ -200,7 +197,6 @@ export default function HoldingsParser() {
 				let qty: number | null = checkForMultiple && name && numberAtEnd ? parseFloat(numberAtEnd) : getQty(value, mode === "M" || mode === "ETF");
 				if (!qty) continue;
 				if (!recordBroken && lastQtyCapture && j - lastQtyCapture < 7) continue;
-				recordBroken = false;
 				if (hasFV && !fv && mode === "E") {
 					console.log("Detected fv: ", qty);
 					fv = qty;
@@ -209,10 +205,6 @@ export default function HoldingsParser() {
 				console.log("Detected quantity: ", qty);
 				lastQtyCapture = j;
 				if (lastQtyCapture !== lastNameCapture) checkForMultiple = false;
-				if (checkForMultiple && isin && name && lastQtyCapture === lastNameCapture) {
-					name = replaceIfFound(name, ['' + qty]);
-					name = cleanAssetName(name);
-				}
 				quantity = qty;
 				if (hasFV) fv = null;
 				if (isin && quantity) {
