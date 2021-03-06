@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Upload, Empty, Drawer, Button, Row, Col } from "antd";
+import { Upload, Empty, Drawer, Button } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { isMobileDevice, removeDuplicates } from "../utils";
@@ -7,6 +7,7 @@ import { cleanName, includesAny, replaceIfFound } from "../utils";
 import HoldingTabs from "./HoldingTabs";
 import HoldingsChart from "./HoldingsChart";
 import HoldingsFilter from "./HoldingsFilter";
+import DataSwitcher from "../DataSwitcher";
 
 import "./nw.less";
 import {
@@ -26,6 +27,7 @@ export default function HoldingsParser() {
 	const [showUpdateHoldings, setUpdateHoldings] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
 	const [taxId, setTaxId] = useState<string>("");
+	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
 	const { Dragger } = Upload;
 
@@ -311,8 +313,11 @@ export default function HoldingsParser() {
 							insNames={insNames}
 						/>
 					</Drawer>
-					<Row gutter={[10, 10]}>
-						<Col xs={24} sm={24} md={16}>
+					<DataSwitcher>
+						<Chart>
+							<HoldingsChart />
+						</Chart>
+						<DataSwitcherList>
 							<HoldingsFilter />
 							<HoldingTabs
 								equities={allEquities}
@@ -320,11 +325,8 @@ export default function HoldingsParser() {
 								mutualFunds={allMFs}
 								insNames={insNames}
 							/>
-						</Col>
-						<Col xs={24} sm={24} md={8}>
-							<HoldingsChart />
-						</Col>
-					</Row>
+						</DataSwitcherList>
+					</DataSwitcher>
 				</>
 			) : (
 				<Empty description={<p>No investment data.</p>} />
