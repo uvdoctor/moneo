@@ -313,7 +313,7 @@ export default function HoldingsParser() {
 							insNames={insNames}
 						/>
 					</Drawer>
-					<DataSwitcher>
+					<DataSwitcher title={<h3>Holdings details</h3>}>
 						<Chart>
 							<HoldingsChart />
 						</Chart>
