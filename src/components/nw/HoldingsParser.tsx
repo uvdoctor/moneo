@@ -24,6 +24,7 @@ export default function HoldingsParser() {
 	const [allEquities, setAllEquities] = useState<any>({});
 	const [allBonds, setAllBonds] = useState<any>({});
 	const [allMFs, setAllMFs] = useState<any>({});
+	const [allETFs, setAllETFs] = useState<any>({});
 	const [showUpdateHoldings, setUpdateHoldings] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
 	const [taxId, setTaxId] = useState<string>("");
@@ -35,7 +36,8 @@ export default function HoldingsParser() {
 		let equities: any = {};
 		let mfs: any = {};
 		let bonds: any = {};
-		let mode = "";
+		let etfs: any = {};
+		let mode = "M";
 		let holdingStarted = false;
 		let insNames: any = {};
 		let recordBroken = false;
@@ -93,6 +95,8 @@ export default function HoldingsParser() {
 						"total",
 						"%",
 						"+",
+						"^",
+						"pledged",
 						"equities",
 						"listed",
 						"not",
@@ -135,6 +139,7 @@ export default function HoldingsParser() {
 							mode,
 							equities,
 							mfs,
+							etfs,
 							bonds,
 							isin,
 							quantity,
@@ -166,9 +171,10 @@ export default function HoldingsParser() {
 				) {
 					if (includesAny(value, ["bond", "bd", "ncd", "debenture"]))
 						mode = "B";
+					else if (includesAny(value, ["etf"])) mode = "ETF";
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
-						if (mode !== "M" && diff < 4) continue;
+						if (mode !== "M" && mode !== "ETF" && diff < 4) continue;
 					}
 					value = cleanName(value, [
 						"#",
@@ -181,11 +187,11 @@ export default function HoldingsParser() {
 						"RE.",
 						"NEW F.V",
 						"NEW FV",
+						"EQ"
 					]);
 					value = replaceIfFound(value, [
 						"LIMITED",
 						"EQUITY",
-						"EQ",
 						"LTD",
 						"SHARES",
 						"Beneficiary",
@@ -194,14 +200,14 @@ export default function HoldingsParser() {
 					value = replaceIfFound(value, [" AND", " OF", " &"], "", true);
 					if (!value) continue;
 					if (
-						mode === "M" &&
+						(mode === "M" || mode === "ETF") &&
 						name &&
 						lastNameCapture &&
 						j - lastNameCapture <= 2
 					)
 						name += " " + value.trim();
 					else name = value.trim();
-					if (mode === "M") {
+					if (mode === "M" || mode === "ETF") {
 						name = removeDuplicates(name as string);
 						name = cleanName(name as string, ["(", ")"]);
 					}
@@ -211,7 +217,7 @@ export default function HoldingsParser() {
 					console.log("Detected name: ", name);
 					if (!checkMultipleValues) continue;
 				}
-				let qty: number | null = getQty(value, mode === "M");
+				let qty: number | null = getQty(value, mode === "M" || mode === "ETF");
 				if (!qty) continue;
 				if (!recordBroken && lastQtyCapture && j - lastQtyCapture < 7) continue;
 				recordBroken = false;
@@ -239,6 +245,7 @@ export default function HoldingsParser() {
 						mode,
 						equities,
 						mfs,
+						etfs,
 						bonds,
 						isin,
 						quantity,
@@ -251,6 +258,7 @@ export default function HoldingsParser() {
 		setAllBonds(bonds);
 		setAllEquities(equities);
 		setAllMFs(mfs);
+		setAllETFs(etfs);
 		setInsNames(insNames);
 		setUpdateHoldings(true);
 		if (taxId) setTaxId(taxId);
@@ -310,6 +318,7 @@ export default function HoldingsParser() {
 							equities={allEquities}
 							bonds={allBonds}
 							mutualFunds={allMFs}
+							etfs={allETFs}
 							insNames={insNames}
 						/>
 					</Drawer>
@@ -323,6 +332,7 @@ export default function HoldingsParser() {
 								equities={allEquities}
 								bonds={allBonds}
 								mutualFunds={allMFs}
+								etfs={allETFs}
 								insNames={insNames}
 							/>
 						</DataSwitcherList>

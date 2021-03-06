@@ -77,7 +77,7 @@ export const removeDuplicates = (value: string) => {
   return value.trim();
 };
 
-export const completeRecord = (recordBroken: boolean, lastNameCapture: number | null, j: number, hasData: boolean, mode: string, equities: any, mfs: any, bonds: any, isin: string | null, quantity: number | null, insNames: any, name: string | null) => {
+export const completeRecord = (recordBroken: boolean, lastNameCapture: number | null, j: number, hasData: boolean, mode: string, equities: any, mfs: any, etfs: any, bonds: any, isin: string | null, quantity: number | null, insNames: any, name: string | null) => {
   if (recordBroken || (lastNameCapture && j - lastNameCapture > 9)) {
     lastNameCapture = null;
     recordBroken = false;
@@ -85,7 +85,7 @@ export const completeRecord = (recordBroken: boolean, lastNameCapture: number | 
   console.log("Record completed...");
   hasData = true;
   appendValue(
-    mode === "E" ? equities : mode === "M" ? mfs : bonds,
+    mode === "E" ? equities : mode === "M" ? mfs : mode === "ETF" ? etfs : bonds,
     isin as string,
     quantity as number
   );
