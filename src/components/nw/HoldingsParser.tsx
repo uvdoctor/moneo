@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Upload, Empty, Drawer, Button } from "antd";
+import { Upload, Empty, Drawer, Button, Statistic, Select } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { isMobileDevice, removeDuplicates } from "../utils";
@@ -21,6 +21,7 @@ import {
 
 export default function HoldingsParser() {
 	const fsb = useFullScreenBrowser();
+	const { Option } = Select;
 	const [allEquities, setAllEquities] = useState<any>({});
 	const [allBonds, setAllBonds] = useState<any>({});
 	const [allMFs, setAllMFs] = useState<any>({});
@@ -267,7 +268,32 @@ export default function HoldingsParser() {
 
 	return (
 		<div className="nw-container">
-			<Dragger {...getUploaderSettings(parseHoldings)}>
+			<Statistic
+				title="Total Portfolio Value"
+				value={213454654}
+				prefix={
+					<Select defaultValue="₹">
+						<Option value="₹">₹</Option>
+						<Option value="$">$</Option>
+						<Option value="€">€</Option>
+					</Select>
+				}
+			/>
+			<DataSwitcher title={<h3>Holdings details</h3>}>
+				<Chart>
+					<HoldingsChart />
+				</Chart>
+				<DataSwitcherList>
+					<HoldingsFilter />
+					<HoldingTabs
+						equities={allEquities}
+						bonds={allBonds}
+						mutualFunds={allMFs}
+						insNames={insNames}
+					/>
+				</DataSwitcherList>
+			</DataSwitcher>
+			{/*<Dragger {...getUploaderSettings(parseHoldings)}>
 				<p className="ant-upload-drag-icon">
 					<InboxOutlined className="upload-icon" />
 				</p>
@@ -278,7 +304,7 @@ export default function HoldingsParser() {
 					Supports single pdf upload. Strictly prohibit from uploading company
 					data or other band files
 				</p>
-			</Dragger>
+			</Dragger>*/}
 			{!hasNoHoldings() ? (
 				<>
 					<Drawer
