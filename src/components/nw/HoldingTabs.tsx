@@ -9,6 +9,7 @@ export default function HoldingTabs({
 	equities,
 	bonds,
 	mutualFunds,
+	etfs,
 }: any) {
 	const { TabPane } = Tabs;
 

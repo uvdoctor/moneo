@@ -2,8 +2,13 @@ import React, { useState } from "react";
 import { Upload, Empty, Drawer, Button, Statistic, Select } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import { isMobileDevice, removeDuplicates } from "../utils";
-import { cleanName, includesAny, replaceIfFound } from "../utils";
+import {
+	countWords,
+	getNumberAtEnd,
+	isMobileDevice,
+	removeDuplicates,
+} from "../utils";
+import { getValueBefore, includesAny, replaceIfFound } from "../utils";
 import HoldingTabs from "./HoldingTabs";
 import HoldingsChart from "./HoldingsChart";
 import HoldingsFilter from "./HoldingsFilter";
@@ -11,6 +16,7 @@ import DataSwitcher from "../DataSwitcher";
 
 import "./nw.less";
 import {
+	cleanAssetName,
 	completeRecord,
 	contains,
 	getISIN,
@@ -25,6 +31,7 @@ export default function HoldingsParser() {
 	const [allEquities, setAllEquities] = useState<any>({});
 	const [allBonds, setAllBonds] = useState<any>({});
 	const [allMFs, setAllMFs] = useState<any>({});
+	const [allETFs, setAllETFs] = useState<any>({});
 	const [showUpdateHoldings, setUpdateHoldings] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
 	const [taxId, setTaxId] = useState<string>("");
@@ -36,7 +43,8 @@ export default function HoldingsParser() {
 		let equities: any = {};
 		let mfs: any = {};
 		let bonds: any = {};
-		let mode = "";
+		let etfs: any = {};
+		let mode = "M";
 		let holdingStarted = false;
 		let insNames: any = {};
 		let recordBroken = false;
@@ -47,17 +55,22 @@ export default function HoldingsParser() {
 		let lastQtyCapture: number | null = null;
 		let fv: number | null = null;
 		let hasFV = false;
-		let checkMultipleValues = false;
 		let hasData = false;
 		let taxId: string | null = null;
 		let eof = false;
+		let numberAtEnd: string | null = null;
+		let checkForMultiple = true;
 		for (let i = 1; i <= pdf.numPages && !eof; i++) {
 			lastNameCapture = null;
 			lastQtyCapture = null;
-			if (!recordBroken) {
-				isin = null;
-				quantity = null;
-				name = null;
+			if (i > 1) {
+				if (isin || quantity) recordBroken = true;
+				else recordBroken = false;
+				if (!recordBroken) {
+					isin = null;
+					quantity = null;
+					name = null;
+				}
 			}
 			const page = await pdf.getPage(i);
 			const textContent = await page.getTextContent();
@@ -75,7 +88,13 @@ export default function HoldingsParser() {
 				}
 				console.log("Going to check: ", value);
 				if (value.length > 100) continue;
-				if (includesAny(value, ["commission paid", "end of statement"])) {
+				if (
+					includesAny(value, [
+						"commission paid",
+						"end of statement",
+						"end of report",
+					])
+				) {
 					eof = true;
 					break;
 				}
@@ -94,6 +113,8 @@ export default function HoldingsParser() {
 						"total",
 						"%",
 						"+",
+						"^",
+						"pledged",
 						"equities",
 						"listed",
 						"not",
@@ -110,7 +131,6 @@ export default function HoldingsParser() {
 				let retVal = getISIN(value);
 				if (!retVal) {
 					retVal = contains(value);
-					checkMultipleValues = true;
 				}
 				if (retVal) {
 					if (lastQtyCapture && j - lastQtyCapture > 9) {
@@ -136,28 +156,17 @@ export default function HoldingsParser() {
 							mode,
 							equities,
 							mfs,
+							etfs,
 							bonds,
 							isin,
 							quantity,
 							insNames,
 							name
 						));
-					if (!checkMultipleValues) continue;
 				}
 				if (quantity) continue;
 				if (!isin && value.toLowerCase().includes("page")) continue;
-				if (
-					isin &&
-					value.toLowerCase().includes("page") &&
-					j - textContent.items.length < 5
-				) {
-					console.log("Detected broken record between pages...");
-					recordBroken = true;
-					lastQtyCapture = null;
-					lastNameCapture = null;
-					break;
-				}
-				let numberOfWords = value.split(" ").length;
+				let numberOfWords = countWords(value);
 				if (
 					!recordBroken &&
 					value.length > 7 &&
@@ -167,55 +176,43 @@ export default function HoldingsParser() {
 				) {
 					if (includesAny(value, ["bond", "bd", "ncd", "debenture"]))
 						mode = "B";
+					else if (includesAny(value, ["etf"])) mode = "ETF";
+					if (checkForMultiple) numberAtEnd = getNumberAtEnd(value);
+					if (numberAtEnd) console.log("Detected number at end: ", numberAtEnd);
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
-						if (mode !== "M" && diff < 4) continue;
+						if (mode !== "M" && mode !== "ETF" && !numberAtEnd && diff < 4)
+							continue;
 					}
-					value = cleanName(value, [
-						"#",
-						"(",
-						"-",
-						"/",
-						"NEW RS.",
-						"RS.",
-						"NEW RE.",
-						"RE.",
-						"NEW F.V",
-						"NEW FV",
-					]);
-					value = replaceIfFound(value, [
-						"LIMITED",
-						"EQUITY",
-						"EQ",
-						"LTD",
-						"SHARES",
-						"Beneficiary",
-						"PVT",
-					]);
-					value = replaceIfFound(value, [" AND", " OF", " &"], "", true);
-					if (!value) continue;
+					if (numberAtEnd) value = replaceIfFound(value, ["" + numberAtEnd]);
+					value = cleanAssetName(value);
+					if (!value) {
+						numberAtEnd = null;
+						continue;
+					}
 					if (
-						mode === "M" &&
+						(mode === "M" || mode === "ETF") &&
 						name &&
 						lastNameCapture &&
 						j - lastNameCapture <= 2
 					)
 						name += " " + value.trim();
 					else name = value.trim();
-					if (mode === "M") {
+					if (mode === "M" || mode === "ETF") {
 						name = removeDuplicates(name as string);
-						name = cleanName(name as string, ["(", ")"]);
+						name = getValueBefore(name as string, ["(", ")"]);
 					}
 					lastNameCapture = j;
 					quantity = null;
 					lastQtyCapture = null;
 					console.log("Detected name: ", name);
-					if (!checkMultipleValues) continue;
-				}
-				let qty: number | null = getQty(value, mode === "M");
+				} else numberAtEnd = null;
+				let qty: number | null =
+					checkForMultiple && name && numberAtEnd
+						? parseFloat(numberAtEnd)
+						: getQty(value, mode === "M" || mode === "ETF");
 				if (!qty) continue;
 				if (!recordBroken && lastQtyCapture && j - lastQtyCapture < 7) continue;
-				recordBroken = false;
 				if (hasFV && !fv && mode === "E") {
 					console.log("Detected fv: ", qty);
 					fv = qty;
@@ -223,6 +220,7 @@ export default function HoldingsParser() {
 				}
 				console.log("Detected quantity: ", qty);
 				lastQtyCapture = j;
+				if (lastQtyCapture !== lastNameCapture) checkForMultiple = false;
 				quantity = qty;
 				if (hasFV) fv = null;
 				if (isin && quantity) {
@@ -240,6 +238,7 @@ export default function HoldingsParser() {
 						mode,
 						equities,
 						mfs,
+						etfs,
 						bonds,
 						isin,
 						quantity,
@@ -252,6 +251,7 @@ export default function HoldingsParser() {
 		setAllBonds(bonds);
 		setAllEquities(equities);
 		setAllMFs(mfs);
+		setAllETFs(etfs);
 		setInsNames(insNames);
 		setUpdateHoldings(true);
 		if (taxId) setTaxId(taxId);
@@ -293,7 +293,7 @@ export default function HoldingsParser() {
 					/>
 				</DataSwitcherList>
 			</DataSwitcher>
-			{/*<Dragger {...getUploaderSettings(parseHoldings)}>
+			<Dragger {...getUploaderSettings(parseHoldings)}>
 				<p className="ant-upload-drag-icon">
 					<InboxOutlined className="upload-icon" />
 				</p>
@@ -304,7 +304,7 @@ export default function HoldingsParser() {
 					Supports single pdf upload. Strictly prohibit from uploading company
 					data or other band files
 				</p>
-			</Dragger>*/}
+			</Dragger>
 			{!hasNoHoldings() ? (
 				<>
 					<Drawer
@@ -336,6 +336,7 @@ export default function HoldingsParser() {
 							equities={allEquities}
 							bonds={allBonds}
 							mutualFunds={allMFs}
+							etfs={allETFs}
 							insNames={insNames}
 						/>
 					</Drawer>
@@ -349,6 +350,7 @@ export default function HoldingsParser() {
 								equities={allEquities}
 								bonds={allBonds}
 								mutualFunds={allMFs}
+								etfs={allETFs}
 								insNames={insNames}
 							/>
 						</DataSwitcherList>
