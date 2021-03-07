@@ -35,6 +35,9 @@ export default function HoldingTabs({
 					<TabPane key="M" tab="Mutual Funds">
 						<HoldingsTable data={mutualFunds} insNames={insNames} />
 					</TabPane>
+					<TabPane key="ETF" tab="ETFs">
+						<HoldingsTable data={etfs} insNames={insNames} />
+					</TabPane>
 				</Tabs>
 			</TabPane>
 			<TabPane key="L" tab="Loans">

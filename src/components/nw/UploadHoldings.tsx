@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Button, Form, Select, Input, Upload, Drawer } from "antd";
+import { Button, Upload, Drawer } from "antd";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 
 export default function UploadHoldings() {
