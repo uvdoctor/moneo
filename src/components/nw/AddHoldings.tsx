@@ -16,9 +16,7 @@ export default function AddHoldings() {
 
 	return (
 		<div className="text-right">
-			<Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
-				Add
-			</Button>
+			<Button type="primary" icon={<PlusOutlined />} onClick={showModal} />
 			<Modal
 				title="Add Asset"
 				visible={isModalVisible}

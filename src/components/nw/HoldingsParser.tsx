@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import { Upload, Empty, Drawer, Button } from "antd";
+import { Upload, Empty, Drawer, Button, Statistic, Select } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
-import { countWords, getNumberAtEnd, isMobileDevice, removeDuplicates } from "../utils";
+import {
+	countWords,
+	getNumberAtEnd,
+	isMobileDevice,
+	removeDuplicates,
+} from "../utils";
 import { getValueBefore, includesAny, replaceIfFound } from "../utils";
 import HoldingTabs from "./HoldingTabs";
 import HoldingsChart from "./HoldingsChart";
@@ -22,6 +27,7 @@ import {
 
 export default function HoldingsParser() {
 	const fsb = useFullScreenBrowser();
+	const { Option } = Select;
 	const [allEquities, setAllEquities] = useState<any>({});
 	const [allBonds, setAllBonds] = useState<any>({});
 	const [allMFs, setAllMFs] = useState<any>({});
@@ -188,9 +194,10 @@ export default function HoldingsParser() {
 					if (checkForMultiple) numberAtEnd = getNumberAtEnd(value);
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
-						if (mode !== "M" && mode !== "ETF" && !numberAtEnd && diff < 4) continue;
+						if (mode !== "M" && mode !== "ETF" && !numberAtEnd && diff < 4)
+							continue;
 					}
-					if(numberAtEnd) value = replaceIfFound(value, ['' + numberAtEnd]);
+					if (numberAtEnd) value = replaceIfFound(value, ["" + numberAtEnd]);
 					value = cleanAssetName(value);
 					if (!value) {
 						numberAtEnd = null;
@@ -270,6 +277,31 @@ export default function HoldingsParser() {
 
 	return (
 		<div className="nw-container">
+			<Statistic
+				title="Total Portfolio Value"
+				value={213454654}
+				prefix={
+					<Select defaultValue="₹">
+						<Option value="₹">₹</Option>
+						<Option value="$">$</Option>
+						<Option value="€">€</Option>
+					</Select>
+				}
+			/>
+			<DataSwitcher title={<h3>Holdings details</h3>}>
+				<Chart>
+					<HoldingsChart />
+				</Chart>
+				<DataSwitcherList>
+					<HoldingsFilter />
+					<HoldingTabs
+						equities={allEquities}
+						bonds={allBonds}
+						mutualFunds={allMFs}
+						insNames={insNames}
+					/>
+				</DataSwitcherList>
+			</DataSwitcher>
 			<Dragger {...getUploaderSettings(parseHoldings)}>
 				<p className="ant-upload-drag-icon">
 					<InboxOutlined className="upload-icon" />
