@@ -1,4 +1,5 @@
 import { ASSET_CATEGORIES, ASSET_TYPES, COLORS } from "../CONSTANTS";
+import { getQty } from "./nw/parseutils";
 
 export function getCurrencyList() {
   return {
@@ -703,9 +704,7 @@ export const getValueBefore = (value: string, items: Array<string>) => {
 export const getNumberAtEnd = (value: string) => {
   let words = value.split(" ");
   let endWord = words[words.length - 1].trim();
-  if (!Number.isNaN(parseFloat(endWord)))
-    return endWord;
-  return null;
+  return getQty(endWord);
 }
 
 export const countWords = (value: string) => {

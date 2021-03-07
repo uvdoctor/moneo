@@ -20,7 +20,7 @@ export const contains = (val: string, type: string = "ISIN") => {
 	for (let value of values) {
 		value = value.trim();
 		if (type === "PAN") {
-			value = replaceIfFound(value, ["pan", ":", "(", ")"]);
+			value = replaceIfFound(value, ["PAN", ":", "(", ")"]);
 		}
 		if (type === "ISIN" ? isValidISIN(value) : isValidPAN(value)) return value;
 	}
@@ -33,23 +33,17 @@ export const getISIN = (val: string) => {
 	return null;
 };
 
-export const getQty = (val: string, isMF: boolean = false) => {
+export const getQty = (val: string) => {
 	val = val.replace(/,/g, "");
 	let result = parseInt(val);
 	if (Number.isNaN(result)) return null;
-	if (val.includes(".")) {
-		let wholeNum = val.split(".")[0];
-		let decimals = val.split(".")[1];
-		if (wholeNum.length > 5) return null;
-		if (decimals.length > 3) return null;
-		let result = Number(parseFloat(val).toFixed(3));
-		if (Number.isNaN(result)) return null;
-		if (!isMF && decimals && parseInt(decimals)) return null;
-		return result;
-	} else {
-		if (val.length > 6) return null;
-		return result;
-	}
+	if (result < 0) return null;
+	if (!val.includes(".")) 
+		return val.length > 6 || !result ? null : result;
+	let numbers = val.split(".");
+	if (numbers[0].length > 6 || numbers[1].length > 3) return null;
+	//return isMF ? parseFloat(val) : parseInt(numbers[1]) ? null : result;
+	return parseFloat(val);
 };
 
 export const hasHoldingStarted = (value: string) =>
