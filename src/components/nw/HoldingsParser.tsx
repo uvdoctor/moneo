@@ -44,7 +44,7 @@ export default function HoldingsParser() {
 		let mfs: any = {};
 		let bonds: any = {};
 		let etfs: any = {};
-		let mode = "M";
+		let insType = "M";
 		let holdingStarted = false;
 		let insNames: any = {};
 		let recordBroken = false;
@@ -149,9 +149,9 @@ export default function HoldingsParser() {
 					console.log("Detected ISIN: ", retVal);
 					isin = retVal;
 					if (isin.startsWith("INF")) {
-						if (mode !== "ETF") mode = "M";
+						if (insType !== "ETF") insType = "M";
 					} else {
-						if (mode !== "B") mode = "E";
+						if (insType !== "B") insType = "E";
 					}
 					if (isin && quantity) {
 						({
@@ -165,7 +165,7 @@ export default function HoldingsParser() {
 							lastNameCapture,
 							j,
 							hasData,
-							mode,
+							insType,
 							equities,
 							mfs,
 							etfs,
@@ -189,12 +189,13 @@ export default function HoldingsParser() {
 					!value.includes(",")
 				) {
 					if (includesAny(value, ["bond", "bd", "ncd", "debenture"]))
-						mode = "B";
-					else if (value.includes("ETF")) mode = "ETF";
+						insType = "B";
+					else if (value.includes("ETF")) insType = "ETF";
+					else if (insType !== 'M') insType = "E";
 					if (checkForMultiple) numberAtEnd = getNumberAtEnd(value);
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
-						if (mode !== "M" && mode !== "ETF" && !numberAtEnd && diff < 4)
+						if (insType !== "M" && insType !== "ETF" && !numberAtEnd && diff < 4)
 							continue;
 					}
 					if (numberAtEnd) value = replaceIfFound(value, ["" + numberAtEnd]);
@@ -204,14 +205,14 @@ export default function HoldingsParser() {
 						continue;
 					}
 					if (
-						(mode === "M" || mode === "ETF") &&
+						(insType === "M" || insType === "ETF") &&
 						name &&
 						lastNameCapture &&
 						j - lastNameCapture <= 2
 					)
 						name += " " + value.trim();
 					else name = value.trim();
-					if (mode === "M" || mode === "ETF") {
+					if (insType === "M" || insType === "ETF") {
 						name = removeDuplicates(name as string);
 						name = getValueBefore(name as string, ["(", ")"]);
 					}
@@ -222,8 +223,8 @@ export default function HoldingsParser() {
 				}
 				let qty: number | null = checkForMultiple && name && numberAtEnd ? numberAtEnd : getQty(value);
 				if (!qty) continue;
-				if (!recordBroken && lastQtyCapture && j - lastQtyCapture < 7) continue;
-				if (hasFV && !fv && mode === "E") {
+				if (!recordBroken && ((name && lastNameCapture && j - lastNameCapture > 4) || (lastQtyCapture && j - lastQtyCapture < 7))) continue;
+				if (hasFV && !fv && insType === "E") {
 					console.log("Detected fv: ", qty);
 					fv = qty;
 					continue;
@@ -245,7 +246,7 @@ export default function HoldingsParser() {
 						lastNameCapture,
 						j,
 						hasData,
-						mode,
+						insType,
 						equities,
 						mfs,
 						etfs,
