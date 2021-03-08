@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs, Space } from "antd";
+import { Tabs } from "antd";
 import HoldingsTable from "./HoldingsTable";
 import AddHoldings from "./AddHoldings";
 import UploadHoldings from "./UploadHoldings";
@@ -14,17 +14,9 @@ export default function HoldingTabs({
 	const { TabPane } = Tabs;
 
 	return (
-		<Tabs
-			defaultActiveKey="I"
-			type="card"
-			tabBarExtraContent={
-				<Space>
-					<UploadHoldings />
-					<AddHoldings />
-				</Space>
-			}
-		>
+		<Tabs defaultActiveKey="I" type="card" tabBarExtraContent={<AddHoldings />}>
 			<TabPane key="I" tab="Investements">
+				<UploadHoldings />
 				<Tabs defaultActiveKey="E" type="card">
 					<TabPane key="E" tab="Equities">
 						<HoldingsTable data={equities} insNames={insNames} />
