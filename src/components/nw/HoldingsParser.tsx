@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-import { Upload, Empty, Drawer, Button, Statistic, Select } from "antd";
-import { InboxOutlined } from "@ant-design/icons";
+import { Empty, Drawer, Button, Statistic, Select } from "antd";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { NWContext } from "./NWContext";
 import HoldingTabs from "./HoldingTabs";
@@ -26,8 +25,6 @@ export default function HoldingsParser() {
 		taxId,
 		hasNoHoldings,
 	}: any = useContext(NWContext);
-
-	const { Dragger } = Upload;
 
 	function onCloseUpdateHoldings() {
 		setUpdateHoldings(false);
