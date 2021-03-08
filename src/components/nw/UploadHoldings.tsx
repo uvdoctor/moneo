@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Upload, Drawer } from "antd";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+import { NWContext } from "./NWContext";
+import { getUploaderSettings } from "./parseutils";
 
 export default function UploadHoldings() {
+	const { parseHoldings }: any = useContext(NWContext);
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
 
@@ -25,7 +28,7 @@ export default function UploadHoldings() {
 				onClose={onCloseDrawer}
 				visible={showDrawer}
 			>
-				<Dragger>
+				<Dragger {...getUploaderSettings(parseHoldings)}>
 					<p className="ant-upload-drag-icon">
 						<InboxOutlined className="upload-icon" />
 					</p>

@@ -7,7 +7,6 @@ import HoldingTabs from "./HoldingTabs";
 import HoldingsChart from "./HoldingsChart";
 import HoldingsFilter from "./HoldingsFilter";
 import DataSwitcher from "../DataSwitcher";
-import { getUploaderSettings } from "./parseutils";
 import { isMobileDevice } from "../utils";
 
 import "./nw.less";
@@ -26,7 +25,6 @@ export default function HoldingsParser() {
 		insNames,
 		taxId,
 		hasNoHoldings,
-		parseHoldings,
 	}: any = useContext(NWContext);
 
 	const { Dragger } = Upload;
@@ -64,18 +62,6 @@ export default function HoldingsParser() {
 					/>
 				</DataSwitcherList>
 			</DataSwitcher>
-			<Dragger {...getUploaderSettings(parseHoldings)}>
-				<p className="ant-upload-drag-icon">
-					<InboxOutlined className="upload-icon" />
-				</p>
-				<p className="ant-upload-text">
-					Click or drag file to this area to upload
-				</p>
-				<p className="ant-upload-hint">
-					Supports single pdf upload. Strictly prohibit from uploading company
-					data or other band files
-				</p>
-			</Dragger>
 			{!hasNoHoldings() ? (
 				<>
 					<Drawer
