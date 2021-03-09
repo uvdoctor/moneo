@@ -290,6 +290,7 @@ function NWContextProvider() {
 				tabs: [
 					{
 						label: "Investements",
+						hasUploader: true,
 						childrens: [
 							{
 								label: "Equities",
@@ -319,6 +320,7 @@ function NWContextProvider() {
 					},
 					{
 						label: "NPS",
+						hasUploader: true,
 						data: [],
 					},
 					{
