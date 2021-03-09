@@ -13,7 +13,7 @@ export default function UploadHoldings() {
 	const {
 		parseHoldings,
 		showUpdateHoldings,
-		onCloseUpdateHoldings,
+		setUpdateHoldings,
 		taxId,
 		allEquities: equities,
 		allBonds: bonds,
@@ -34,6 +34,10 @@ export default function UploadHoldings() {
 
 	function onShowDrawer() {
 		setDrawerVisibility(true);
+	}
+
+	function onCloseUpdateHoldings() {
+		setUpdateHoldings(false);
 	}
 
 	return (
