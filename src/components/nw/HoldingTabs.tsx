@@ -7,6 +7,7 @@ import UploadHoldings from "./UploadHoldings";
 
 export default function HoldingTabs() {
 	const {
+		tabs,
 		allEquities: equities,
 		allBonds: bonds,
 		allMFs: mutualFunds,
@@ -17,6 +18,15 @@ export default function HoldingTabs() {
 
 	return (
 		<Tabs defaultActiveKey="I" type="card" tabBarExtraContent={<AddHoldings />}>
+			{tabs.map(({label, data, childrens}) => {
+				return (
+					<TabPane key={label} tab={label}>
+						{childrens ?  : <HoldingTab data={data} />}
+					</TabPane>
+				)
+			})}
+
+
 			<TabPane key="I" tab="Investements">
 				<UploadHoldings />
 				<Tabs defaultActiveKey="E" type="card">

@@ -289,6 +289,45 @@ function NWContextProvider() {
 	return (
 		<NWContext.Provider
 			value={{
+				tabs: [
+					{
+						label: "Investements",
+						childrens: [
+							{
+								label: "Equities",
+								data: allEquities,
+								total: 0,
+							},
+							{
+								label: "Bonds",
+								data: allBonds,
+								total: 0,
+							},
+							{
+								label: "Mutual Funds",
+								data: allMFs,
+								total: 0,
+							},
+							{
+								label: "ETFs",
+								data: allETFs,
+								total: 0,
+							},
+						],
+					},
+					{
+						label: "Loans",
+						data: [],
+					},
+					{
+						label: "NPS",
+						data: [],
+					},
+					{
+						label: "Deposites",
+						data: [],
+					},
+				],
 				allEquities,
 				setAllEquities,
 				allBonds,
