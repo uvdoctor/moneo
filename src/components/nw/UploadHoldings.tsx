@@ -1,13 +1,32 @@
-import React, { useState, useContext } from "react";
-import { Button, Upload, Drawer } from "antd";
+import React, { useState, useContext, useEffect } from "react";
+import { Button, Upload, Drawer, Tabs } from "antd";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+import { useFullScreenBrowser } from "react-browser-hooks";
+import HoldingsTable from "./HoldingsTable";
 import { NWContext } from "./NWContext";
 import { getUploaderSettings } from "./parseutils";
+import { isMobileDevice } from "../utils";
 
 export default function UploadHoldings() {
-	const { parseHoldings }: any = useContext(NWContext);
+	const fsb = useFullScreenBrowser();
+	const { TabPane } = Tabs;
+	const {
+		parseHoldings,
+		showUpdateHoldings,
+		onCloseUpdateHoldings,
+		taxId,
+		allEquities: equities,
+		allBonds: bonds,
+		allMFs: mutualFunds,
+		allETFs: etfs,
+		insNames,
+	}: any = useContext(NWContext);
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
+
+	useEffect(() => {
+		if (showUpdateHoldings) setDrawerVisibility(false);
+	}, [showUpdateHoldings]);
 
 	function onCloseDrawer() {
 		setDrawerVisibility(false);
@@ -21,7 +40,7 @@ export default function UploadHoldings() {
 		<>
 			<Button icon={<UploadOutlined />} onClick={onShowDrawer} />
 			<Drawer
-				width={310}
+				width={isMobileDevice(fsb) ? 320 : 550}
 				title="Upload PDF Statements"
 				placement="right"
 				closable={false}
@@ -40,6 +59,43 @@ export default function UploadHoldings() {
 						data or other band files
 					</p>
 				</Dragger>
+			</Drawer>
+			<Drawer
+				className="upload-holdings-drawer"
+				width={isMobileDevice(fsb) ? 320 : 550}
+				title={
+					<>
+						Update holdings for PAN no <strong>{taxId}</strong>
+					</>
+				}
+				placement="right"
+				closable={false}
+				visible={showUpdateHoldings}
+				footer={
+					<div className="text-right">
+						<Button onClick={onCloseUpdateHoldings} style={{ marginRight: 8 }}>
+							Cancel
+						</Button>
+						<Button onClick={onCloseUpdateHoldings} type="primary">
+							Update
+						</Button>
+					</div>
+				}
+			>
+				<Tabs defaultActiveKey="E" type="card">
+					<TabPane key="E" tab="Equities">
+						<HoldingsTable data={equities} insNames={insNames} />
+					</TabPane>
+					<TabPane key="B" tab="Bonds">
+						<HoldingsTable data={bonds} insNames={insNames} />
+					</TabPane>
+					<TabPane key="M" tab="Mutual Funds">
+						<HoldingsTable data={mutualFunds} insNames={insNames} />
+					</TabPane>
+					<TabPane key="ETF" tab="ETFs">
+						<HoldingsTable data={etfs} insNames={insNames} />
+					</TabPane>
+				</Tabs>
 			</Drawer>
 		</>
 	);

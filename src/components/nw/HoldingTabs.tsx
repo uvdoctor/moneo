@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Tabs } from "antd";
+import { NWContext } from "./NWContext";
 import HoldingsTable from "./HoldingsTable";
 import AddHoldings from "./AddHoldings";
 import UploadHoldings from "./UploadHoldings";
 
-export default function HoldingTabs({
-	insNames,
-	equities,
-	bonds,
-	mutualFunds,
-	etfs,
-}: any) {
+export default function HoldingTabs() {
+	const {
+		allEquities: equities,
+		allBonds: bonds,
+		allMFs: mutualFunds,
+		allETFs: etfs,
+		insNames,
+	}: any = useContext(NWContext);
 	const { TabPane } = Tabs;
 
 	return (
