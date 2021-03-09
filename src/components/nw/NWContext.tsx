@@ -71,7 +71,6 @@ function NWContextProvider() {
 			}
 			const page = await pdf.getPage(i);
 			const textContent = await page.getTextContent();
-			if (i > 3) console.log("Page text content: ", textContent.items);
 			for (let j = 0; j < textContent.items.length; j++) {
 				let numberAtEnd: number | null = null;
 				if (
@@ -153,9 +152,8 @@ function NWContextProvider() {
 					isin = retVal;
 					if (isin.startsWith("INF")) {
 						if (insType !== "ETF") insType = "M";
-					} else {
-						if (insType !== "B") insType = "E";
-					}
+					} else if (isin.startsWith("IN0")) insType = "B";
+					else if (insType !== "B") insType = "E";
 					if (isin && quantity) {
 						({
 							recordBroken,
