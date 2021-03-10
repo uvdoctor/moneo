@@ -12,13 +12,14 @@ interface DataSwitcherProp {
 	children?: ReactNode;
 	header?: ReactNode;
 	title?: string | ReactNode;
+	icons?: ReactNode;
 }
 
 interface ChildrenProp {
 	children?: ReactNode;
 }
 
-function DataSwitcher({ children, header, title }: DataSwitcherProp) {
+function DataSwitcher({ children, header, title, icons }: DataSwitcherProp) {
 	const [active, setActive] = useState<string>("chart");
 
 	function onChange(e: any) {
@@ -33,6 +34,7 @@ function DataSwitcher({ children, header, title }: DataSwitcherProp) {
 						<h4>{title}</h4>
 					</Col>
 					<Col span={8} className="switcher">
+						{icons}
 						<Radio.Group value={active} onChange={onChange}>
 							<Radio.Button value="chart">
 								<AreaChartOutlined />

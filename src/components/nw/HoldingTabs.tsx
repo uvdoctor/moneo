@@ -11,17 +11,17 @@ export default function HoldingTabs() {
 	const { TabPane } = Tabs;
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
-	function renderTabs(tabsData: any) {
+	function renderTabs(tabsData: any, isRoot?: boolean) {
 		return (
 			<Tabs
 				defaultActiveKey="I"
-				type="card"
-				tabBarExtraContent={<AddHoldings />}
+				type={isRoot ? "card" : "line"}
+				tabBarExtraContent={isRoot ? <AddHoldings /> : null}
 			>
-				{tabsData.map(({ label, data, childrens }: any) => {
+				{tabsData.map(({ label, hasUploader, data, childrens }: any) => {
 					return (
 						<TabPane key={label} tab={label}>
-							<DataSwitcher title={<h3>Holdings details</h3>}>
+							<DataSwitcher icons={hasUploader ? <UploadHoldings /> : null}>
 								<Chart>Chart goes here...</Chart>
 								<DataSwitcherList>
 									{childrens ? (
@@ -38,10 +38,5 @@ export default function HoldingTabs() {
 		);
 	}
 
-	return (
-		<>
-			<UploadHoldings />
-			{renderTabs(tabs)}
-		</>
-	);
+	return renderTabs(tabs, true);
 }
