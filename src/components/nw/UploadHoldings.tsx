@@ -20,9 +20,14 @@ export default function UploadHoldings() {
 		allMFs: mutualFunds,
 		allETFs: etfs,
 		insNames,
+		hasNoHoldings,
 	}: any = useContext(NWContext);
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
+
+	useState(() => {
+		if (hasNoHoldings()) setDrawerVisibility(true);
+	}, [null]);
 
 	useEffect(() => {
 		if (showUpdateHoldings) setDrawerVisibility(false);
