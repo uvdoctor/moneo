@@ -81,6 +81,7 @@ function NWContextProvider() {
 					console.log("Detected unrelated qty capture: ", lastQtyCapture);
 					quantity = null;
 					lastQtyCapture = null;
+					fv = null;
 				}
 				if (
 					name &&
@@ -110,7 +111,6 @@ function NWContextProvider() {
 					break;
 				}
 				if (hasData && includesAny(value, ["transaction details"])) break;
-				console.log("Going to check: ", value);
 				if (includesAny(value, ["face value"])) {
 					hasFV = true;
 					continue;
@@ -140,6 +140,7 @@ function NWContextProvider() {
 						"name",
 						"about",
 						"no.",
+						"year"
 					])
 				)
 					continue;
@@ -153,7 +154,7 @@ function NWContextProvider() {
 					if (isin.startsWith("INF")) {
 						if (insType !== "ETF") insType = "M";
 					} else if (isin.startsWith("IN0")) insType = "B";
-					else if (insType !== "B") insType = "E";
+					else if(insType !== "B") insType = "E";
 					if (isin && quantity) {
 						({
 							recordBroken,
@@ -175,12 +176,13 @@ function NWContextProvider() {
 							quantity,
 							insNames,
 							name
-						));
+							));
 						continue;
 					}
 				}
 				if (quantity) continue;
 				if (!isin && includesAny(value, ["page"])) continue;
+				console.log("Going to check: ", value);
 				let numberOfWords = countWords(value);
 				if (
 					!recordBroken &&
@@ -192,6 +194,7 @@ function NWContextProvider() {
 					if (includesAny(value, ["bond", "bd", "ncd", "debenture"]))
 						insType = "B";
 					else if (value.includes("ETF")) insType = "ETF";
+					else if (value.includes("REIT")) insType = "M";
 					else if (insType !== "M") insType = "E";
 					if (checkForMultiple) numberAtEnd = getNumberAtEnd(value);
 					if (lastNameCapture) {
@@ -225,6 +228,7 @@ function NWContextProvider() {
 					lastNameCapture = j;
 					quantity = null;
 					lastQtyCapture = null;
+					fv = null;
 					console.log("Detected name: ", name);
 				}
 				let qty: number | null =
@@ -232,15 +236,17 @@ function NWContextProvider() {
 				if (!qty) continue;
 				if (
 					!recordBroken &&
-					((name && lastNameCapture && j - lastNameCapture > 4) ||
+					((name && lastNameCapture && j - lastNameCapture > 5) ||
 						(lastQtyCapture && j - lastQtyCapture < 7))
 				)
 					continue;
+				if (insType === "E") console.log("Going to check if FV: ", qty);
 				if (hasFV && !fv && insType === "E") {
 					console.log("Detected fv: ", qty);
 					fv = qty;
 					continue;
 				}
+				if (insType === "B" && !Number.isInteger(qty)) continue;
 				console.log("Detected quantity: ", qty);
 				lastQtyCapture = j;
 				if (lastQtyCapture !== lastNameCapture) checkForMultiple = false;
