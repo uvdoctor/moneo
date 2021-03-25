@@ -41,8 +41,8 @@ export const getQty = (val: string) => {
 	if (!val.includes(".")) 
 		return val.length > 6 || !result ? null : result;
 	let numbers = val.split(".");
+	if (numbers.length > 2) return null;
 	if (numbers[0].length > 6 || numbers[1].length > 3) return null;
-	//return isMF ? parseFloat(val) : parseInt(numbers[1]) ? null : result;
 	return parseFloat(val);
 };
 
