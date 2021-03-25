@@ -11,5 +11,6 @@
   "git.enableSmartCommit": true,
   "git.fetchOnPull": true,
   "git.rebaseWhenSync": true,
-  "git.autofetch": true
+  "git.autofetch": true,
+  "gitlens.blame.ignoreWhitespace": true
 }
