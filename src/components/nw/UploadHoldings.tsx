@@ -25,9 +25,9 @@ export default function UploadHoldings() {
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
 
-	useState(() => {
+	useEffect(() => {
 		if (hasNoHoldings()) setDrawerVisibility(true);
-	}, [null]);
+	}, []);
 
 	useEffect(() => {
 		if (showUpdateHoldings) setDrawerVisibility(false);
