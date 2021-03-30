@@ -2,8 +2,9 @@ import React from "react";
 import { Statistic, Select } from "antd";
 import HoldingTabs from "./HoldingTabs";
 import HoldingsChart from "./HoldingsChart";
-import HoldingsFilter from "./HoldingsFilter";
+import SearchFilter from "./SearchFilter";
 import DataSwitcher from "../DataSwitcher";
+import FilterHoldings from "./FilterHoldings";
 
 import "./nw.less";
 
@@ -24,6 +25,7 @@ export default function HoldingsParser() {
 							<Option value="€">€</Option>
 						</Select>
 					}
+					suffix={<FilterHoldings />}
 				/>
 			</div>
 			<DataSwitcher title={<h3>Holdings details</h3>}>
@@ -31,7 +33,7 @@ export default function HoldingsParser() {
 					<HoldingsChart />
 				</Chart>
 				<DataSwitcherList>
-					<HoldingsFilter />
+					<SearchFilter />
 					<HoldingTabs />
 				</DataSwitcherList>
 			</DataSwitcher>

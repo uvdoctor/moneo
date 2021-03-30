@@ -5,6 +5,7 @@ import HoldingsTable from "./HoldingsTable";
 import AddHoldings from "./AddHoldings";
 import UploadHoldings from "./UploadHoldings";
 import DataSwitcher from "../DataSwitcher";
+import AutoTrack from "./AutoTrack";
 
 export default function HoldingTabs() {
 	const { tabs, insNames }: any = useContext(NWContext);
@@ -21,7 +22,16 @@ export default function HoldingTabs() {
 				{tabsData.map(({ label, hasUploader, data, childrens }: any) => {
 					return (
 						<TabPane key={label} tab={label}>
-							<DataSwitcher icons={hasUploader ? <UploadHoldings /> : null}>
+							<DataSwitcher
+								icons={
+									hasUploader ? (
+										<>
+											<AutoTrack />
+											<UploadHoldings />
+										</>
+									) : null
+								}
+							>
 								<Chart>Chart goes here...</Chart>
 								<DataSwitcherList>
 									{childrens ? (

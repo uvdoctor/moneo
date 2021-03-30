@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Radio, Row, Col } from "antd";
+import { Radio, Row, Col, Space } from "antd";
 import { AreaChartOutlined, MenuOutlined } from "@ant-design/icons";
 
 import "./DataSwitcher.less";
@@ -34,15 +34,17 @@ function DataSwitcher({ children, header, title, icons }: DataSwitcherProp) {
 						<h4>{title}</h4>
 					</Col>
 					<Col span={8} className="switcher">
-						{icons}
-						<Radio.Group value={active} onChange={onChange}>
-							<Radio.Button value="chart">
-								<AreaChartOutlined />
-							</Radio.Button>
-							<Radio.Button value="list">
-								<MenuOutlined />
-							</Radio.Button>
-						</Radio.Group>
+						<Space>
+							{icons}
+							<Radio.Group value={active} onChange={onChange}>
+								<Radio.Button value="chart">
+									<AreaChartOutlined />
+								</Radio.Button>
+								<Radio.Button value="list">
+									<MenuOutlined />
+								</Radio.Button>
+							</Radio.Group>
+						</Space>
 					</Col>
 				</Row>
 				<Row>
