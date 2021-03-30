@@ -111,7 +111,7 @@ function NWContextProvider() {
 					break;
 				}
 				if (hasData && includesAny(value, ["transaction details"])) break;
-				if (includesAny(value, ["face value"])) {
+				if (holdingStarted && !hasData && !isin && includesAny(value, ["face value"])) {
 					hasFV = true;
 					continue;
 				}
@@ -191,11 +191,11 @@ function NWContextProvider() {
 					numberOfWords < 15 &&
 					!value.includes(",")
 				) {
-					if (includesAny(value, ["bond", "bd", "ncd", "debenture"]))
+					if (includesAny(value, ["bond", "bd", "ncd", "debenture", "sgb"]))
 						insType = "B";
 					else if (value.includes("ETF")) insType = "ETF";
-					else if (value.includes("REIT")) insType = "M";
-					else if (insType !== "M") insType = "E";
+					else if (value.includes("REIT") || value.includes("FMP")) insType = "M";
+					else insType = "E";
 					if (checkForMultiple) numberAtEnd = getNumberAtEnd(value);
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
@@ -240,7 +240,6 @@ function NWContextProvider() {
 						(lastQtyCapture && j - lastQtyCapture < 7))
 				)
 					continue;
-				if (insType === "E") console.log("Going to check if FV: ", qty);
 				if (hasFV && !fv && insType === "E") {
 					console.log("Detected fv: ", qty);
 					fv = qty;
@@ -288,7 +287,8 @@ function NWContextProvider() {
 	const hasNoHoldings = () =>
 		!Object.keys(allBonds).length &&
 		!Object.keys(allEquities).length &&
-		!Object.keys(allMFs).length;
+		!Object.keys(allMFs).length &&
+		!Object.keys(allETFs).length;
 
 	return (
 		<NWContext.Provider
