@@ -2,22 +2,26 @@ import React, { useContext } from "react";
 import { Tabs } from "antd";
 import { NWContext } from "./NWContext";
 import HoldingsTable from "./HoldingsTable";
-import AddHoldings from "./AddHoldings";
+import AddHoldings from "./addHoldings/AddHoldings";
 import UploadHoldings from "./UploadHoldings";
 import DataSwitcher from "../DataSwitcher";
 import AutoTrack from "./AutoTrack";
 
 export default function HoldingTabs() {
-	const { tabs, insNames }: any = useContext(NWContext);
+	const { tabs, insNames, activeTab, setActiveTab }: any = useContext(
+		NWContext
+	);
 	const { TabPane } = Tabs;
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
 	function renderTabs(tabsData: any, isRoot?: boolean) {
 		return (
 			<Tabs
-				defaultActiveKey="I"
+				defaultActiveKey={activeTab}
+				activeKey={activeTab}
 				type={isRoot ? "card" : "line"}
 				tabBarExtraContent={isRoot ? <AddHoldings /> : null}
+				onChange={(activeKey) => setActiveTab(activeKey)}
 			>
 				{tabsData.map(({ label, hasUploader, data, childrens }: any) => {
 					return (

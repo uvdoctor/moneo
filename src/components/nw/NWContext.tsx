@@ -28,6 +28,7 @@ function NWContextProvider() {
 	const [showUpdateHoldings, setUpdateHoldings] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
 	const [taxId, setTaxId] = useState<string>("");
+	const [activeTab, setActiveTab] = useState<string>("Investements");
 
 	const parseHoldings = async (pdf: any) => {
 		let equities: any = {};
@@ -111,7 +112,12 @@ function NWContextProvider() {
 					break;
 				}
 				if (hasData && includesAny(value, ["transaction details"])) break;
-				if (holdingStarted && !hasData && !isin && includesAny(value, ["face value"])) {
+				if (
+					holdingStarted &&
+					!hasData &&
+					!isin &&
+					includesAny(value, ["face value"])
+				) {
 					hasFV = true;
 					continue;
 				}
@@ -140,7 +146,7 @@ function NWContextProvider() {
 						"name",
 						"about",
 						"no.",
-						"year"
+						"year",
 					])
 				)
 					continue;
@@ -154,7 +160,7 @@ function NWContextProvider() {
 					if (isin.startsWith("INF")) {
 						if (insType !== "ETF") insType = "M";
 					} else if (isin.startsWith("IN0")) insType = "B";
-					else if(insType !== "B") insType = "E";
+					else if (insType !== "B") insType = "E";
 					if (isin && quantity) {
 						({
 							recordBroken,
@@ -176,7 +182,7 @@ function NWContextProvider() {
 							quantity,
 							insNames,
 							name
-							));
+						));
 						continue;
 					}
 				}
@@ -194,7 +200,8 @@ function NWContextProvider() {
 					if (includesAny(value, ["bond", "bd", "ncd", "debenture", "sgb"]))
 						insType = "B";
 					else if (value.includes("ETF")) insType = "ETF";
-					else if (value.includes("REIT") || value.includes("FMP")) insType = "M";
+					else if (value.includes("REIT") || value.includes("FMP"))
+						insType = "M";
 					else insType = "E";
 					if (checkForMultiple) numberAtEnd = getNumberAtEnd(value);
 					if (lastNameCapture) {
@@ -334,6 +341,8 @@ function NWContextProvider() {
 						data: [],
 					},
 				],
+				activeTab,
+				setActiveTab,
 				allEquities,
 				setAllEquities,
 				allBonds,
