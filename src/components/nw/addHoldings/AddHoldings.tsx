@@ -21,12 +21,11 @@ export default function AddHoldings() {
 			<Modal
 				title="Add Asset"
 				visible={isModalVisible}
-				okText="Add"
-				onOk={onClose}
+				footer={null}
 				onCancel={onClose}
 			>
 				<ContextProvider>
-					<FormGenerator />
+					<FormGenerator onClose={onClose} />
 				</ContextProvider>
 			</Modal>
 		</div>

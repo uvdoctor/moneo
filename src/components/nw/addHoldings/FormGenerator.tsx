@@ -1,15 +1,27 @@
 import React, { useContext } from "react";
-import { Form, Select, Input } from "antd";
+import { Form, Select, Input, Space, Button } from "antd";
 import { Context } from "./Context";
 
-export default function FormGenerator() {
+interface FormGeneratorProp {
+	onClose?: any;
+}
+
+export default function FormGenerator({ onClose }: FormGeneratorProp) {
 	const { Option } = Select;
 	const {
 		selectedType,
 		selectedFormConfig,
 		getHoldingOptions,
 		onHoldingTypeChange,
+		formState,
+		dispatch,
+		addHoldings,
 	}: any = useContext(Context);
+
+	function onAddHoldings() {
+		addHoldings();
+		onClose();
+	}
 
 	return (
 		<Form>
@@ -24,17 +36,36 @@ export default function FormGenerator() {
 					))}
 				</Select>
 			</Form.Item>
-
-			{selectedFormConfig.map(({ label, type }: any) => {
+			{selectedFormConfig.map(({ label, name, type }: any) => {
 				switch (type) {
 					case "text":
 						return (
 							<Form.Item>
-								<Input placeholder={label} />
+								<Input
+									name={name}
+									value={formState[name].value}
+									placeholder={label}
+									onChange={(e) =>
+										//@ts-ignore
+										dispatch({
+											type: "fieldUpdate",
+											name,
+											value: e.target.value,
+										})
+									}
+								/>
 							</Form.Item>
 						);
 				}
 			})}
+			<Form.Item>
+				<Space>
+					<Button type="primary" onClick={onAddHoldings}>
+						Add
+					</Button>
+					<Button onClick={onClose}>Cancel</Button>
+				</Space>
+			</Form.Item>
 		</Form>
 	);
 }

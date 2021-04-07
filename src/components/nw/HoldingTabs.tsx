@@ -14,11 +14,15 @@ export default function HoldingTabs() {
 	const { TabPane } = Tabs;
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
-	function renderTabs(tabsData: any, isRoot?: boolean) {
+	function renderTabs(
+		tabsData: any,
+		isRoot?: boolean,
+		defaultActiveKey?: string
+	) {
 		return (
 			<Tabs
-				defaultActiveKey={activeTab}
-				activeKey={activeTab}
+				defaultActiveKey={defaultActiveKey}
+				activeKey={defaultActiveKey}
 				type={isRoot ? "card" : "line"}
 				tabBarExtraContent={isRoot ? <AddHoldings /> : null}
 				onChange={(activeKey) => setActiveTab(activeKey)}
@@ -52,5 +56,5 @@ export default function HoldingTabs() {
 		);
 	}
 
-	return renderTabs(tabs, true);
+	return renderTabs(tabs, true, activeTab);
 }

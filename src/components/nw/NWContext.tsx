@@ -297,6 +297,13 @@ function NWContextProvider() {
 		!Object.keys(allMFs).length &&
 		!Object.keys(allETFs).length;
 
+	function onAddHoldings(formState: any) {
+		setAllEquities({
+			...allEquities,
+			[formState.name.value]: formState.qty.value,
+		});
+	}
+
 	return (
 		<NWContext.Provider
 			value={{
@@ -359,6 +366,7 @@ function NWContextProvider() {
 				setTaxId,
 				hasNoHoldings,
 				parseHoldings,
+				onAddHoldings,
 			}}
 		>
 			<HoldingsParser />
