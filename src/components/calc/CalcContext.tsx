@@ -210,7 +210,8 @@ function CalcContextProvider({
     if (!existingCFs?.length) return false;
     if (cfs.length !== existingCFs.length) return true;
     if (wipGoal.name !== goal.name || wipGoal.imp !== goal.imp
-    || wipGoal.sy !== goal.sy || wipGoal.ey !== goal.ey) return true;
+    || wipGoal.sy !== goal.sy || wipGoal.ey !== goal.ey || wipGoal.ra !== goal.ra
+    || wipGoal.rachg !== goal.rachg || wipGoal.tbr !== goal.tbr) return true;
     for (let i in cfs) 
       if (cfs[i] !== existingCFs[i]) return true;
     return false;
