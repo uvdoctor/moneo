@@ -131,7 +131,7 @@ export default function NumberInput(props: NumberInputProps) {
 												: toReadableNumber(val as number, 2)}
 										parser={(val) =>
 											props.currency
-												? parseNumber(val as string, props.currency)
+												? parseFloat(parseNumber(val as string, props.currency))
 												: parseFloat(val as string)}
 										onPressEnter={(e: any) => {
 											e.preventDefault();
