@@ -93,13 +93,15 @@ export default function SummaryView() {
 					</Row>
 				</Fragment>
 			}
-			cover={<BasicLineChart summaryView />}
 		>
 			<Card.Grid style={{ width: '50%' }}>
 				<FIImpact />
 			</Card.Grid>
 			<Card.Grid style={{ width: '50%' }}>
 				<DefaultOppCostResult />
+			</Card.Grid>
+			<Card.Grid style={{ width: '100%'}}>
+				<BasicLineChart summaryView />
 			</Card.Grid>
 		</Card>
 	);
