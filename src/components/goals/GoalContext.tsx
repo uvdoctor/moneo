@@ -625,7 +625,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
 
   useEffect(() => {
     wipGoal.ra = rentAmt;
-    wipGoal.raChg = rentChgPer;
+    wipGoal.rachg = rentChgPer;
     wipGoal.tbr = rentTaxBenefit;
     setWipGoal(wipGoal);
     if (!sellAfter || !allBuyCFs.length) return;
@@ -654,11 +654,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   }, [analyzeFor, cfs, allInputDone]);
 
   useEffect(() => {
-    if (!brAns && rentAmt) {
-      wipGoal.ra = rentAmt;
-      setWipGoal(wipGoal);
-      setAllBuyCFsForComparison();
-    }
+    if (!brAns && rentAmt) setAllBuyCFsForComparison();
   }, [rentAmt]);
 
     return (
