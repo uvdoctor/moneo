@@ -93,19 +93,14 @@ export default function SummaryView() {
 					</Row>
 				</Fragment>
 			}
-			cover={
-				<div style={{ cursor: 'pointer' }} onClick={() => editGoal(goal.id)}>
-					<BasicLineChart summaryView />
-				</div>
-			}
-			actions={[
-				<div key="fii" onClick={() => editGoal(goal.id)}>
-					<FIImpact />
-				</div>,
-				<div key="oppcost" onClick={() => editGoal(goal.id)}>
-					<DefaultOppCostResult />
-				</div>
-			]}
-		/>
+			cover={<BasicLineChart summaryView />}
+		>
+			<Card.Grid style={{ width: '50%' }}>
+				<FIImpact />
+			</Card.Grid>
+			<Card.Grid style={{ width: '50%' }}>
+				<DefaultOppCostResult />
+			</Card.Grid>
+		</Card>
 	);
 }

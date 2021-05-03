@@ -76,7 +76,7 @@ export default function BuyRentChart() {
 							const y = parseInt(years);
 							const isAns =
 								name === getAns(brChartData[0].values[y - 3], brChartData[1].values[y - 3]);
-							const valueStr = `${value ? 'Gain' : 'Loss'} of ${toCurrency(
+							const valueStr = `${value >= 0 ? 'Gain' : 'Loss'} of ${toCurrency(
 								Math.abs(value),
 								currency
 							)} over ${years} Years`;
