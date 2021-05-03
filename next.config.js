@@ -4,7 +4,6 @@ const withLess = require("@zeit/next-less");
 const lessToJS = require("less-vars-to-js");
 const fs = require("fs");
 const path = require("path");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 //const isProd = process.env.NODE_ENV === "production";
 
 const themeVariables = lessToJS(
@@ -21,12 +20,6 @@ const themeVariables = lessToJS(
 		register: true,
 	},
 });*/
-
-/*module.exports = {
-	optimization: {
-		minimizer: [new UglifyJsPlugin()],
-	},
-};*/
 
 module.exports = withCSS(
 	withLess({
