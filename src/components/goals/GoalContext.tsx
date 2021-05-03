@@ -63,41 +63,27 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const goalType = goal.type as GoalType;
-  const [loanRepaymentMonths, setLoanRepaymentMonths] = useState<
-    number | null | undefined
-  >(goal?.loan?.ry);
+  const [loanRepaymentMonths, setLoanRepaymentMonths] = useState<number | null | undefined>(goal?.loan?.ry);
   const [price, setPrice] = useState<number>(0);
   const [taxRate, setTaxRate] = useState<number>(goal?.tdr);
   const [maxTaxDeduction, setMaxTaxDeduction] = useState<number>(goal?.tdl);
-  const [taxBenefitInt, setTaxBenefitInt] = useState<number | null | undefined>(
-    goal?.tbi
-  );
-  const [maxTaxDeductionInt, setMaxTaxDeductionInt] = useState<
-    number | null | undefined
-  >(goal?.tdli);
+  const [taxBenefitInt, setTaxBenefitInt] = useState<number | null | undefined>(goal?.tbi);
+  const [maxTaxDeductionInt, setMaxTaxDeductionInt] = useState<number | null | undefined>(goal?.tdli);
   const [totalPTaxBenefit, setTotalPTaxBenefit] = useState<number>(0);
   const [totalITaxBenefit, setTotalITaxBenefit] = useState<number>(0);
-  const [sellAfter, setSellAfter] = useState<number | undefined | null>(
-    goal?.sa
-  );
-  const [loanPer, setLoanPer] = useState<number | undefined | null>(
-    goal?.loan?.per
-  );
+  const [sellAfter, setSellAfter] = useState<number | undefined | null>(goal?.sa);
+  const [loanPer, setLoanPer] = useState<number | undefined | null>(goal?.loan?.per);
   const [eduLoanSISchedule, setEduLoanSISchedule] = useState<Array<number>>([]);
   const [eduLoanPSchedule, setEduLoanPSchedule] = useState<Array<number>>([]);
   const [eduLoanPDueSchedule, setEduLoanPDueSchedule] = useState<Array<number>>([]);
   const [eduCostSemester, setEduCostSemester] = useState<number>(goal.tbr);
  	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal?.loan?.type);
-  const [loanGracePeriod, setLoanGracePeriod] = useState<
-    number | undefined | null
-    >(goal?.achg);
+  const [loanGracePeriod, setLoanGracePeriod] = useState<number | undefined | null>(goal?.achg);
   const [loanPrepayments, setLoanPrepayments] = useState<Array<TargetInput>>(goal?.loan?.pp as Array<TargetInput>);
   const [loanIRAdjustments, setLoanIRAdjustments] = useState<Array<TargetInput>>(goal?.loan?.ira as Array<TargetInput>);
   const [totalIntAmt, setTotalIntAmt] = useState<number>(0);
   const [ totalInsAmt, setTotalInsAmt ] = useState<number>(0);
-  const [startingPrice, setStartingPrice] = useState<number>(
-    goal?.cp as number
-  );
+  const [startingPrice, setStartingPrice] = useState<number>(goal?.cp as number);
   const [impLevel, setImpLevel] = useState<LMH>(goal?.imp);
   const [manualMode, setManualMode] = useState<number>(goal?.manual);
   const [name, setName] = useState<string>(goal.name);
@@ -638,6 +624,10 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   }, [brAns]);
 
   useEffect(() => {
+    wipGoal.ra = rentAmt;
+    wipGoal.raChg = rentChgPer;
+    wipGoal.tbr = rentTaxBenefit;
+    setWipGoal(wipGoal);
     if (!sellAfter || !allBuyCFs.length) return;
     if (!!rentAmt) {
       let data = initBRCompNPVs();
@@ -664,7 +654,11 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   }, [analyzeFor, cfs, allInputDone]);
 
   useEffect(() => {
-    if (!brAns && rentAmt) setAllBuyCFsForComparison();
+    if (!brAns && rentAmt) {
+      wipGoal.ra = rentAmt;
+      setWipGoal(wipGoal);
+      setAllBuyCFsForComparison();
+    }
   }, [rentAmt]);
 
     return (
