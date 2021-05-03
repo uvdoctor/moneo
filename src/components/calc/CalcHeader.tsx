@@ -82,7 +82,22 @@ export default function CalcHeader() {
 					</Col>
 					<Col span={24} className="secondary-header">
 						<Row justify="space-between" align="middle">
-							<Col flex="auto">
+							{!isPublicCalc && (
+								<Col>
+									&nbsp;&nbsp;
+									<Tooltip title="Save">
+										<Button
+											icon={<SaveOutlined />}
+											loading={btnClicked}
+											disabled={disableSubmit}
+											onClick={() => handleSubmit()}
+										>
+											Save
+										</Button>
+									</Tooltip>
+								</Col>
+							)}
+							<Col>
 								<SelectInput
 									key="currselect"
 									pre="Currency"
@@ -91,32 +106,17 @@ export default function CalcHeader() {
 									currency
 								/>
 							</Col>
-							<Row align="middle">
-								<Col flex="20px">
-									<Tooltip
-										title={
-											<div className="tooltip-share">
-												<SocialShare />
-											</div>
-										}
-									>
-										<ShareAltOutlined />
-									</Tooltip>
-								</Col>
-								{!isPublicCalc && (
-									<Col>
-										&nbsp;&nbsp;
-										<Tooltip title="Save">
-											<Button
-												icon={<SaveOutlined />}
-												loading={btnClicked}
-												disabled={disableSubmit}
-												onClick={() => handleSubmit()}
-											/>
-										</Tooltip>
-									</Col>
-								)}
-							</Row>
+							<Col flex="20px">
+								<Tooltip
+									title={
+										<div className="tooltip-share">
+											<SocialShare />
+										</div>
+									}
+								>
+									<ShareAltOutlined />
+								</Tooltip>
+							</Col>
 						</Row>
 					</Col>
 				</Row>
