@@ -598,9 +598,9 @@ const calculateTryAllocation = (
 };
 
 const buildEmptyAA = (fromYear: number, toYear: number) => {
-  let aa: any = {};
-  getAllAssetTypes().forEach((key) => (aa[key] = buildArray(fromYear, toYear)));
-  return aa;
+  let emptyAA: any = {};
+  getAllAssetTypes().forEach((key) => (emptyAA[key] = buildArray(fromYear, toYear)));
+  return emptyAA;
 };
 
 const getRR = (aa: any, index: number, pp: any) => {
@@ -613,7 +613,7 @@ const getRR = (aa: any, index: number, pp: any) => {
 
 const allocate = (arr: Array<number>, index: number, val: number, remVal: number, maxLimit: number = 100, minLimit: number = 0) => {
   if (remVal <= 0) return 0;
-  if (val <= 0) return remVal;
+  if (val < 0) return remVal;
   if (val < minLimit) val = minLimit;
   if (val > maxLimit) val = maxLimit;
   if (val > remVal) val = remVal;
@@ -624,9 +624,9 @@ const allocate = (arr: Array<number>, index: number, val: number, remVal: number
 const allocateCash = (aa: any, ffGoalEndYear: number, year: number, mustAllocation: any, cs: number) => {
   let nowYear = new Date().getFullYear();
   let i = year - (nowYear + 1);
-  let remPer = allocate(aa[ASSET_TYPES.SAVINGS], i, Math.round((mustAllocation.savings[year] / cs) * 100), 100, 100);
+  let remPer = allocate(aa[ASSET_TYPES.SAVINGS], i, Math.round((mustAllocation.savings[year] / cs) * 100), 100, 100, 0.25);
   return allocate(aa[ASSET_TYPES.DEPOSITS], i, Math.round((mustAllocation.deposits[year] / cs) * 100), remPer,
-    year < ffGoalEndYear - 10 ? remPer : (30 - 2 * (ffGoalEndYear - year)) - aa[ASSET_TYPES.SAVINGS][i], 1);
+    year < ffGoalEndYear - 10 ? remPer : (30 - 2 * (ffGoalEndYear - year)) - aa[ASSET_TYPES.SAVINGS][i], 5 - aa[ASSET_TYPES.SAVINGS][i]);
 };
 
 const allocateREIT = (aa: any, year: number, ffYear: number, ffGoal: APIt.CreateGoalInput, remPer: number) => {
@@ -648,11 +648,11 @@ const allocateStocks = (aa: any, year: number, ffYear: number, ffGoal: APIt.Crea
   let nowYear = new Date().getFullYear();
   let i = year - (nowYear + 1);
   const ffGoalEndYear = ffGoal.sy + (ffGoal.loan?.dur as number);
-  const age = year - ffGoal.sy;
-  let maxStocksPer = 120 - age;
-  if (year >= ffYear && maxStocksPer > 60) maxStocksPer = 60;
+  let maxStocksPer = 120 - (year - ffGoal.sy);
+  let maxAllowedPer = ffGoal.imp === APIt.LMH.H ? 70 : 50;
+  if (maxStocksPer > maxAllowedPer) maxStocksPer = maxAllowedPer;
   if (maxStocksPer > remPer) maxStocksPer = remPer;
-  remPer = allocate(aa[ASSET_TYPES.GOLD], i, Math.round(maxStocksPer * 0.1), remPer);
+  remPer = allocate(aa[ASSET_TYPES.GOLD], i, Math.round(maxStocksPer * (ffGoal.imp === APIt.LMH.H ? 0.1 : 0.2)), remPer);
   maxStocksPer -= aa[ASSET_TYPES.GOLD][i];
   if (year >= ffGoalEndYear - 20) {
     remPer = allocate(aa[ASSET_TYPES.DIVIDEND_GROWTH_STOCKS], i, Math.round(((100 - 2 * (ffGoalEndYear - year)) / 100) * maxStocksPer), remPer);
@@ -687,6 +687,8 @@ const calculateAllocation = (
   remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, tryBA, remPer);
   if (!remPer) return;
   if (ffGoal.imp === APIt.LMH.L) {
+      remPer = allocate(aa[ASSET_TYPES.GOLD], i, Math.round(remPer * 0.1), remPer);
+      remPer = allocate(aa[ASSET_TYPES.REAL_ESTATE], i, Math.round(remPer * 0.3), remPer);
       remPer = allocate(allocateTEBonds ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round(remPer * 0.5), remPer);
       remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, remPer, remPer);
   } else {

@@ -87,6 +87,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       [ASSET_TYPES.TAX_EXEMPT_BONDS]: 3.5 + irDiff, //medium term tax efficient bonds
       [ASSET_TYPES.EMERGING_BONDS]: 7,
       [ASSET_TYPES.REIT]: 5 + irDiff,
+      [ASSET_TYPES.REAL_ESTATE]: 5 + irDiff,
       [ASSET_TYPES.GOLD]: 3,
       [ASSET_TYPES.LARGE_CAP_STOCKS]: 5 + irDiff,
       [ASSET_TYPES.MID_CAP_STOCKS]: 6 + irDiff,

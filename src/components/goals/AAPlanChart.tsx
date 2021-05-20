@@ -28,6 +28,7 @@ export default function AAPlanChart() {
 	const filterAA = () => {
 		let result: any = {};
 		let aa = goal ? wipResult.aa : ffResult.aa;
+		console.log(aa);
 		for (let key in aa) {
 			if (!hasAllZeros(aa[key])) {
 				result[key] = aa[key].slice(1);

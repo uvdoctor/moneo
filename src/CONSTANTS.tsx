@@ -46,6 +46,7 @@ export const ASSET_TYPES = {
     SMALL_CAP_STOCKS: "Small-cap Stocks",
     INTERNATIONAL_STOCKS: "International Large-cap Stocks",
     DIVIDEND_GROWTH_STOCKS: "Dividend-Growth Stocks",
+    REAL_ESTATE: "Real Estate"
 };
 
 export const COLORS = {

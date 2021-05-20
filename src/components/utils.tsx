@@ -274,12 +274,6 @@ export const buildArray = (
   return arr;
 };
 
-export const buildYearsArray = (startYear: number, endYear: number) => {
-  let years = [];
-  for (let i = startYear; i <= endYear; i++) years.push(i);
-  return years;
-};
-
 export const convertPerToDec = (arr: Array<number>) => {
   let retArr: Array<number> = [];
   arr.forEach((val) => retArr.push(val / 100));
@@ -527,6 +521,8 @@ export const getAssetColour = (type: string) => {
       return "#f6e05e";
     case ASSET_TYPES.REIT:
       return "#7cd9fd";
+    case ASSET_TYPES.REAL_ESTATE:
+      return "#7cd9fd";
     default:
       return "";
   }
@@ -558,7 +554,7 @@ export const getAllAssetTypesByCategory = (category: string) => {
         ASSET_TYPES.DIVIDEND_GROWTH_STOCKS,
       ];
     case ASSET_CATEGORIES.ALTERNATIVE:
-      return [ASSET_TYPES.REIT, ASSET_TYPES.GOLD];
+      return [ASSET_TYPES.REIT, ASSET_TYPES.GOLD, ASSET_TYPES.REAL_ESTATE];
     default:
       return [];
   }
