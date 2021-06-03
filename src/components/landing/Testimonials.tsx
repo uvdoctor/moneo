@@ -94,7 +94,7 @@ export default function Testimonials() {
 						My family has been living on rent since 20 years, and my husband uses a rental car for his
 						office commute. I had been trying to convince him to buy an apartment and a car since sometime,
 						but he wasn't sure as it required us to use most of our savings. This had become a hotly debated
-						topic in the family. Finally, Moneo came to our resuce. Using Moneo's Buy v/s Rent and Invest
+						topic in the family. Finally, Moneo came to our rescue. Using Moneo's Buy vs Rent and Invest
 						calculator, we realized that we are much better off renting the apartment and car. We saved XYZ
 						amount by running our plan through the calculator.
 					</p>
