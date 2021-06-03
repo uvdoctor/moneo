@@ -6,8 +6,10 @@ import RollingImages from '../RollingImages';
 const BannerContent = () => {
 	return (
 		<Fragment>
-			<h3>Your Money Coach for</h3>
-			<h2>Stress-free Financial Independence</h2>
+			<h1><b>Make your money work hard to live life on your terms</b></h1>
+			<p>&nbsp;</p>
+			<h3>Your Financial Coach for</h3>
+			<h2>Worry-free Financial Independence</h2>
 			<h3 className="with-icon-anim">
 				& Achieving Goals <RollingImages />
 			</h3>
