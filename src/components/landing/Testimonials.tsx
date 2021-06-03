@@ -70,15 +70,12 @@ export default function Testimonials() {
 						</Col>
 					</Row>
 					<p>
-						I have been working for more than 30 years, and keen for early retirement. However, my wife and
-						I were unsure if we would have enough money for family needs, including my daughter's foreign
-						education, and unplanned emergencies. While I am not comfortable with financial jargons, using
-						Moneo was a breeze! Within 15 minutes, I was able to define my goals and had a concrete
-						understanding of the money needed for early retirement. I also realized that I could retire
-						within 5 years! Moneo presented detailed graphs and information to give me a better
-						understanding of my financial situation and the road ahead. My wife and I are so relaxed about
-						our financial situation, and refer to Moneo for all our financial queries. I highly recommend
-						Moneo to everyone.
+						I have been working for more than 30 years, and keen for early retirement. While I am not
+						comfortable with financial jargons, using Moneo was a breeze! Within 15 minutes, I was able to
+						define my goals and had a concrete understanding of the money needed for early retirement. I
+						also realized that I could retire within 5 years! Moneo presented detailed graphs and
+						information to give me a better understanding of my financial situation and the road ahead. My
+						wife and I are so relaxed about our financial situation. I highly recommend Moneo to everyone.
 					</p>
 				</div>
 				<div key="t3" className="client-testimonial">
