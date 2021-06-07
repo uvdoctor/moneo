@@ -16,8 +16,8 @@ export default function HoldingTabs() {
 
 	function renderTabs(
 		tabsData: any,
+		defaultActiveKey: string,
 		isRoot?: boolean,
-		defaultActiveKey?: string
 	) {
 		return (
 			<Tabs
@@ -43,7 +43,7 @@ export default function HoldingTabs() {
 								<Chart>Chart goes here...</Chart>
 								<DataSwitcherList>
 									{childrens ? (
-										renderTabs(childrens)
+										renderTabs(childrens, activeTab)
 									) : (
 										<HoldingsTable data={data} insNames={insNames} />
 									)}
@@ -56,5 +56,5 @@ export default function HoldingTabs() {
 		);
 	}
 
-	return renderTabs(tabs, true, activeTab);
+	return renderTabs(tabs, activeTab, true);
 }
