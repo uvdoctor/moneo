@@ -1,17 +1,14 @@
 import React, { Fragment, useContext, useEffect } from 'react';
 import { Button, Steps, Row, Col, Space, Affix } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import { SaveOutlined } from '@ant-design/icons';
 import { CalcContext } from '../calc/CalcContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import VideoPlayer from '../VideoPlayer';
 
 import './Input.less';
 import ResultCarousel from '../ResultCarousel';
-import { PlanContext } from './PlanContext';
 
 export default function Input() {
-	const { isPublicCalc }: any = useContext(PlanContext);
 	const {
 		inputTabs,
 		inputTabIndex,
@@ -20,9 +17,6 @@ export default function Input() {
 		setAllInputDone,
 		showOptionsForm,
 		setOptionsVisibility,
-		handleSubmit,
-		disableSubmit,
-		btnClicked,
 		stepVideoUrl,
 		error,
 		handleStepChange,
@@ -169,24 +163,6 @@ export default function Input() {
 									{inputTabs[inputTabIndex].content}
 								</Fragment>
 							)}
-							{!isPublicCalc ? (
-								<Row justify="center">
-									<Space>
-										<Button onClick={() => handleSubmit(true)} disabled={disableSubmit}>
-											Cancel
-										</Button>
-										<Button
-											type="primary"
-											onClick={() => handleSubmit()}
-											icon={<SaveOutlined />}
-											disabled={disableSubmit}
-											loading={btnClicked}
-										>
-											Save
-										</Button>
-									</Space>
-								</Row>
-							) : null}
 						</section>
 					</div>
 				</Affix>

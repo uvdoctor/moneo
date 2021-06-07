@@ -16,8 +16,6 @@ export default function CalcHeader() {
 	const { isPublicCalc }: any = useContext(PlanContext);
 	const {
 		goal,
-		currency,
-		setCurrency,
 		rating,
 		setRating,
 		showFeedbackModal,
@@ -25,7 +23,8 @@ export default function CalcHeader() {
 		disableSubmit,
 		handleSubmit,
 		btnClicked,
-		setError
+		setError,
+		allInputDone
 	}: any = useContext(CalcContext);
 	const { name, setName, impLevel, setImpLevel }: any = useContext(GoalContext);
 	const ratingLabels = [ 'Rate Calculator', 'Very Poor', 'Poor', 'Average', 'Good', 'Awesome!' ];
@@ -81,31 +80,7 @@ export default function CalcHeader() {
 						/>
 					</Col>
 					<Col span={24} className="secondary-header">
-						<Row justify="space-between" align="middle">
-							{!isPublicCalc && (
-								<Col>
-									&nbsp;&nbsp;
-									<Tooltip title="Save">
-										<Button
-											icon={<SaveOutlined />}
-											loading={btnClicked}
-											disabled={disableSubmit}
-											onClick={() => handleSubmit()}
-										>
-											Save
-										</Button>
-									</Tooltip>
-								</Col>
-							)}
-							<Col>
-								<SelectInput
-									key="currselect"
-									pre="Currency"
-									value={currency}
-									changeHandler={setCurrency}
-									currency
-								/>
-							</Col>
+						<Row justify={!isPublicCalc ? 'space-between' : 'end'} align="middle">
 							<Col flex="20px">
 								<Tooltip
 									title={
@@ -117,6 +92,25 @@ export default function CalcHeader() {
 									<ShareAltOutlined />
 								</Tooltip>
 							</Col>
+							{!isPublicCalc && (
+								<Col>
+									<Button
+										icon={<SaveOutlined />}
+										loading={btnClicked}
+										disabled={disableSubmit || !allInputDone}
+										onClick={() => handleSubmit()}
+									>
+										Submit
+									</Button>
+								</Col>
+							)}
+							{!isPublicCalc && (
+								<Col>
+									<Button type="text" onClick={() => handleSubmit(true)} disabled={disableSubmit}>
+										<b>Cancel</b>
+									</Button>
+								</Col>
+							)}
 						</Row>
 					</Col>
 				</Row>

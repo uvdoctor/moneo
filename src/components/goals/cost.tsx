@@ -10,15 +10,10 @@ import { CalcContext } from '../calc/CalcContext';
 import { isLoanEligible } from './goalutils';
 import { useRouter } from 'next/router';
 import { ROUTES } from '../../CONSTANTS';
+import SelectInput from '../form/selectinput';
 
 export default function Cost() {
-	const {
-		goal,
-		currency,
-		startYear,
-		inputTabs,
-		setInputTabs,
-	}: any = useContext(CalcContext);
+	const { goal, currency, setCurrency, startYear, inputTabs, setInputTabs }: any = useContext(CalcContext);
 	const {
 		startingPrice,
 		setStartingPrice,
@@ -48,23 +43,26 @@ export default function Cost() {
 			if (checked) {
 				if (inputTabs[loanTabIndex].active) {
 					inputTabs[loanTabIndex].active = false;
-					setInputTabs([...inputTabs]);
+					setInputTabs([ ...inputTabs ]);
 				}
 			} else {
 				if (!inputTabs[loanTabIndex].active) {
 					inputTabs[loanTabIndex].active = true;
-					setInputTabs([...inputTabs]);
+					setInputTabs([ ...inputTabs ]);
 				}
 			}
 		}
 		setManualMode(checked);
-	}
+	};
 
 	return (
 		<Section
 			title={`In ${startYear}, ${isLoanPublicCalc ? 'Borrow' : 'Cost'} ~ ${toCurrency(price, currency)}`}
 			toggle={
-				setManualMode && !isLoanMandatory && <HSwitch rightText={`Custom Payment Plan`} value={manualMode} setter={changeManualMode} />
+				setManualMode &&
+				!isLoanMandatory && (
+					<HSwitch rightText={`Custom Payment Plan`} value={manualMode} setter={changeManualMode} />
+				)
 			}
 			manualInput={
 				wipTargets && (
@@ -89,19 +87,26 @@ export default function Cost() {
 			manualMode={manualMode}
 			videoSrc={`https://www.youtube.com/watch?v=uYMTsmeZyfU`}
 		>
+			<SelectInput pre="Currency" value={currency} changeHandler={setCurrency} currency />
+
 			<NumberInput
-				pre={isLoanPublicCalc ? 'Borrow Amount' : `Cost ${goal.type !== GoalType.D && 'including taxes & fees'}`}
+				pre={
+					isLoanPublicCalc ? 'Borrow Amount' : `Cost ${goal.type !== GoalType.D && 'including taxes & fees'}`
+				}
 				currency={currency}
 				value={startingPrice}
 				changeHandler={setStartingPrice}
 				min={100}
 				max={goal.type === GoalType.B || isLoanPublicCalc ? 1500000 : 50000}
 				step={100}
-				note={goal.type === GoalType.E ?
-					<HSwitch value={eduCostSemester} setter={setEduCostSemester} rightText="Every 6 Months" /> : null
+				note={
+					goal.type === GoalType.E ? (
+						<HSwitch value={eduCostSemester} setter={setEduCostSemester} rightText="Every 6 Months" />
+					) : null
 				}
 			/>
-			{startYear > goal.by && !isLoanPublicCalc && (
+			{startYear > goal.by &&
+			!isLoanPublicCalc && (
 				<NumberInput
 					pre={`Yearly Cost Change from ${new Date().getFullYear()} to ${startYear}`}
 					unit="%"

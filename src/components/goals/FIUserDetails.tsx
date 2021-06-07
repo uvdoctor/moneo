@@ -10,7 +10,7 @@ import { FIGoalContext } from './FIGoalContext';
 import { getRAOptions } from './goalutils';
 
 export default function FIUserDetails() {
-	const { currency, startYear, changeStartYear }: any = useContext(CalcContext);
+	const { currency, setCurrency, startYear, changeStartYear }: any = useContext(CalcContext);
 	const {
 		nw,
 		setNW,
@@ -32,6 +32,7 @@ export default function FIUserDetails() {
 				changeHandler={changeStartYear}
 				options={initOptions(nowYear - 60, 45)}
 			/>
+			<SelectInput pre="Currency" value={currency} changeHandler={setCurrency} currency />
 			<NumberInput
 				info={`Your Total Portfolio Value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc. Please do NOT include Your Home in the Investment Portfolio.`}
 				value={nw}

@@ -12,7 +12,7 @@ export const SPEND_MONTHLY = 'Monthly';
 export const SPEND_YEARLY = 'Yearly';
 
 export default function Spend() {
-	const { currency }: any = useContext(CalcContext);
+	const { currency, setCurrency }: any = useContext(CalcContext);
 	const { freq, setFreq, amt, setAmt, duration, setDuration, totalCost }: any = useContext(TrueCostContext);
 	const freqOptions = {
 		[SPEND_ONCE]: SPEND_ONCE,
@@ -29,6 +29,7 @@ export default function Spend() {
 				options={freqOptions}
 				info="Frequency at which You wish to Spend - One time, Monthly or Yearly."
 			/>
+			<SelectInput pre="Currency" value={currency} changeHandler={setCurrency} currency />
 			<NumberInput
 				pre="Amount"
 				value={amt}
