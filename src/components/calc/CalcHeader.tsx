@@ -1,6 +1,6 @@
 import { Modal, PageHeader, Rate, Row, Col, Tooltip, Button } from 'antd';
 import React, { Fragment, useContext, useState } from 'react';
-import { ShareAltOutlined, SaveOutlined } from '@ant-design/icons';
+import { ShareAltOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import SelectInput from '../form/selectinput';
 import { CalcContext } from './CalcContext';
 import SocialShare from '../SocialShare';
@@ -80,7 +80,7 @@ export default function CalcHeader() {
 						/>
 					</Col>
 					<Col span={24} className="secondary-header">
-						<Row justify={!isPublicCalc ? 'space-between' : 'end'} align="middle">
+						<Row justify="space-between" align="middle">
 							<Col flex="20px">
 								<Tooltip
 									title={
@@ -104,13 +104,9 @@ export default function CalcHeader() {
 									</Button>
 								</Col>
 							)}
-							{!isPublicCalc && (
-								<Col>
-									<Button type="text" onClick={() => handleSubmit(true)} disabled={disableSubmit}>
-										<b>Cancel</b>
-									</Button>
-								</Col>
-							)}
+							<Col onClick={() => handleSubmit(true)} style={{ color: COLORS.WHITE, cursor: 'pointer' }}>
+								<CloseOutlined />
+							</Col>
 						</Row>
 					</Col>
 				</Row>
