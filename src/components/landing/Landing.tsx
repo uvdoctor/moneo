@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Row } from "antd";
 import { Parallax } from "rc-scroll-anim";
 import Content from "../Content";
@@ -15,9 +15,11 @@ import TakeQuickStep from "./TakeQuickStep";
 import Testimonials from "./Testimonials";
 
 import "./Landing.less";
+import { AppContext } from "../AppContext";
 
 export default function Landing() {
-
+  const { defaultCountry }: any = useContext(AppContext);
+  
   return (
     <JoinContextProvider>
       <Content className="with-banner">
@@ -55,7 +57,7 @@ export default function Landing() {
               title="Get"
               subTitle="Net Worth"
               content="Link with various accounts to automatically calculate, what you own minus, what you owe."
-              imgSrc="images/step1.jpg"
+              imgSrc={defaultCountry === 'IN' ? "images/step1-india.jpg" : "images/step1.jpg"}
             />
             <Step
               className="step2"
@@ -68,7 +70,7 @@ export default function Landing() {
             <Step
               className="step3"
               count="03"
-              title="Go"
+              title="Grow"
               subTitle="Make Money Work"
               content="Helps You to not only align Savings &amp; Investements to Your Goals, but also become more financially savvy via engaging games."
               imgSrc="images/step3.jpg"

@@ -38,6 +38,7 @@ export default function Testimonials() {
 					title="Moneo has become my go-to financial coach"
 					name="Nipa"
 					location="Ahmedabad"
+					imageLocation="images/testimonials/nipa.jpg"
 					content="I had taken a home loan of Rs. 25 lakhs over 20 years. After paying installments for 7
 				years, I was wondering if I should prepay the remaining loan of Rs. 17 lakhs to save interest or invest the money. By using
 				Moneo's loan calculator, I was instantly able to get answers to various scenarios. It even
@@ -49,6 +50,7 @@ export default function Testimonials() {
 					title="Moneo removed my financial worries"
 					name="Snehal"
 					location="Bangalore"
+					imageLocation="images/testimonials/snehal.jpg"
 					content="After working for 30 years, I have been keen to retire. While I am not
 				comfortable with financial jargon, using Moneo is a breeze. Within 15 minutes, I was able to
 				define my goals and understand the money needed for early retirement. I
@@ -58,10 +60,21 @@ export default function Testimonials() {
 				/>
 
 				<TestimonialTemplate
+					title="Moneo helped me to become my own boss"
+					name="Nancy"
+					location="Delhi"
+					imageLocation="images/testimonials/nancy.jpg"
+					content="I worked in a job I hated, but stuck around for stable income. I always dreamt of starting my cosmetics business. 
+					A friend suggested Moneo as I had no idea about how to manage money. It not only gave me a financial reality check, but also showed me that investing regularly is more important than just saving. 
+					As I understood more about investing and the power of compounding, it helped me to overcome my fear. 
+					Finally, I quit my job and became my own boss!"
+				/>
+
+				<TestimonialTemplate
 					title="Moneo saved Rs. 30 lakhs"
 					name="Neha"
 					location="Bangalore"
-					imageLocation="images/neha.jpg"
+					imageLocation="images/testimonials/nipa.jpg"
 					content="My family has been living on rent since 20 years, and my husband uses a rental car for his
 				office commute. I had been trying to convince him to buy an apartment and a car since sometime,
 				but he wasn't sure as it required us to spend most of our savings. This had become a hotly debated
@@ -70,14 +83,13 @@ export default function Testimonials() {
 				/>
 
 				<TestimonialTemplate
-					title="Moneo makes my money work hard"
+					title="Moneo helped me to invest globally"
 					name="Neha"
 					location="Auroville"
-					content="My family has been living on rent since 20 years, and my husband uses a rental car for his
-				office commute. I had been trying to convince him to buy an apartment and a car since sometime,
-				but he wasn't sure as it required us to spend most of our savings. This had become a hotly debated
-				topic in the family. Finally, Moneo came to our rescue. Using Moneo's Buy vs Rent and Invest
-				calculator, we realized that we are better off by Rs. 30 lakhs by continuing to rent the apartment and car."
+					imageLocation="images/testimonials/nipa.jpg"
+					content="Most of my savings, across multiple currencies, was sitting idle as I found it difficult to invest myself. I also wasn't able to trust an advisor. Besides, good advisors are too expensive. 
+					Moneo has been a godsent. Within 15 minutes, I got a diversified and global investment plan based on my life goals without paying a single penny! I have been able to invest globally using Moneo's sound investment process.
+				I can now sleep peacefully knowing that my portfolio is safe and working 24x7 for my secure future."
 				/>
 			</Carousel>
 		</Content>
