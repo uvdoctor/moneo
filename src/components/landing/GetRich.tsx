@@ -67,8 +67,7 @@ export default function GetRich() {
       <div className="get-rich">
         <h2>Get Rich Slowly</h2>
         <p>
-          No More Boring Budgets or Confusing Investment Choices. DollarDarwin
-          helps You to Grow Your Money without taking any undue stress.
+          No more budgeting or confusing investment choices. Grow your money slowly and steadily without taking any undue stress.
         </p>
         <Row
           gutter={[
