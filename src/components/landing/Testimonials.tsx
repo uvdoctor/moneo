@@ -86,7 +86,7 @@ export default function Testimonials() {
 					title="Moneo helped me to invest globally"
 					name="Helen"
 					location="Pondicherry"
-					imageLocation="images/testimonials/nipa.jpg"
+					imageLocation="images/testimonials/helen.jpg"
 					content="Most of my savings, across multiple currencies, was sitting idle as I found it difficult to invest myself. I also wasn't able to trust an advisor. Besides, good advisors are too expensive. 
 					Moneo has been a godsent. Within 15 minutes, I got a diversified and global investment plan based on my life goals without paying a single penny! I have been able to invest globally using Moneo's sound investment process.
 				I can now sleep peacefully knowing that my portfolio is safe and working 24x7 for my secure future."
