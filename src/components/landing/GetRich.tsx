@@ -15,16 +15,16 @@ import "./GetRich.less";
 export default function GetRich() {
   const featuresList = [
     {
-      label: "Holistic Financial Health",
+      label: "Holistic Financial Analysis",
       svg: TorchSVG,
       desc:
-        "Analyzes Your Net Worth Across Currencies & if Your Money is working hard enough.",
+        "Analyzes Your Net Worth Across Currencies & checks investment portfolio performance.",
     },
     {
       label: "Goal-based Savings",
       svg: DartSVG,
       desc:
-        "To Identify what has to be achieved today & how it will affect tomorrow.",
+        "Identify what has to be achieved today & how it will affect tomorrow.",
     },
     {
       label: "Uncover Money Leaks",
@@ -40,13 +40,13 @@ export default function GetRich() {
       label: "Diversify Globally",
       svg: AbacusSVG,
       desc:
-        "To Maximize Earning Opportunities & Reduce Risk of over-reliance on 1 Country & Currency. ",
+        "Maximize Earning Opportunities & Reduce Risk of over-reliance on 1 Country & Currency. ",
     },
     {
       label: "Adaptable Financial Plan",
       svg: AdaptablePlanSVG,
       desc:
-        "That Evolves with Your Goals. Understand long-term impact of Your decisions.",
+        "Evolve Your Plan with with Your Goals. Understand long-term impact of Your decisions.",
     },
     {
       label: "No Commissions. Ever.",
@@ -58,7 +58,7 @@ export default function GetRich() {
       label: "Easy to Use",
       svg: SwimRingSVG,
       desc:
-        "No complex jargons. Helps You to take simple clear steps towards Your Financial Independence.",
+        "No complex jargon. Helps You to take simple clear steps towards Your Financial Independence.",
     },
   ];
 
