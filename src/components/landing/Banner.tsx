@@ -5,12 +5,10 @@ import SocialShare from '../SocialShare';
 import Join from './Join';
 import './Banner.less';
 import { AppContext } from '../AppContext';
-import { Button } from 'antd';
-import { useRouter } from 'next/router';
+import SetGoalsButton from './SetGoalsButton';
 
 export default function Banner() {
 	const { defaultCountry }: any = useContext(AppContext);
-	const router = useRouter();
 
 	return (
 		<div className="site-banner">
@@ -18,10 +16,8 @@ export default function Banner() {
 			<div className="site-banner-content">
 				<BannerContent />
 				{defaultCountry === 'IN' ? (
-					<p style={{textAlign: 'center'}}>
-						<Button type="primary" onClick={() => router.push('/set')}>
-							Set My Financial Plan
-						</Button>
+					<p style={{ textAlign: 'center' }}>
+						<SetGoalsButton />
 					</p>
 				) : (
 					<Join />

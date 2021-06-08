@@ -1,7 +1,6 @@
 import React, { Fragment, useContext } from 'react';
 import { Popover } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import RollingImages from '../RollingImages';
 import { AppContext } from '../AppContext';
 
 const BannerContent = () => {
@@ -9,15 +8,10 @@ const BannerContent = () => {
 
 	return (
 		<Fragment>
-			<h1>
-				<b>Make your money work hard to live life on your terms</b>
-			</h1>
-			<p>&nbsp;</p>
-			<h3>Your Financial Coach for</h3>
 			<h2>Worry-free Financial Independence</h2>
-			<h3 className="with-icon-anim">
-				& Achieving Goals <RollingImages />
-			</h3>
+			<h3>Your Financial Coach that makes your money work hard</h3>
+			<h3>so that you fulfill your life goals</h3>
+			<p>&nbsp;</p>
 			{defaultCountry !== 'IN' && (
 				<h4>
 					Join Waitlist &amp; Earn up to $200 credit*

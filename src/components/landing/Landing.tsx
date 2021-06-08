@@ -55,7 +55,7 @@ export default function Landing() {
               className="step1"
               count="01"
               title="Get"
-              subTitle="Net Worth"
+              subTitle="Financial Health Analysis"
               content="Link with various accounts to automatically calculate, what you own minus, what you owe."
               imgSrc={defaultCountry === 'IN' ? "images/step1-india.jpg" : "images/step1.jpg"}
             />
@@ -71,7 +71,7 @@ export default function Landing() {
               className="step3"
               count="03"
               title="Grow"
-              subTitle="Make Money Work"
+              subTitle="Wealth"
               content="Helps You to not only align Savings &amp; Investements to Your Goals, but also become more financially savvy via engaging games."
               imgSrc="images/step3.jpg"
             />

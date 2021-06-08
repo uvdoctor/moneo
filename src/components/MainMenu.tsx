@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { Menu } from 'antd';
 import FSToggle from './FSToggle';
 import { calcList } from './landing/Calculator';
@@ -6,12 +6,15 @@ import Link from 'next/link';
 import { ROUTES } from '../CONSTANTS';
 import { useRouter } from 'next/router';
 import SecureMenu from './SecureMenu';
+import { AppContext } from './AppContext';
+import SetGoalsButton from './landing/SetGoalsButton';
 
 export interface MainMenuProps {
 	mode?: any;
 }
 
 export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
+	const { defaultCountry }: any = useContext(AppContext);
 	const { SubMenu } = Menu;
 	const router = useRouter();
 	const secureRoutes: Array<string> = [ ROUTES.SET, ROUTES.SAVE, ROUTES.INVEST ];
@@ -48,9 +51,13 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 							</Link>
 						</Menu.Item>*/}
 					<Menu.Item>
-						<a href="https://ant.design" target="_blank" rel="noopener noreferrer">
-							Earn up to $200 credit*
-						</a>
+						{defaultCountry === 'IN' ? (
+							<SetGoalsButton />
+						) : (
+							<a href="https://ant.design" target="_blank" rel="noopener noreferrer">
+								Earn up to $200 credit*
+							</a>
+						)}
 					</Menu.Item>
 				</Menu>
 			)}
