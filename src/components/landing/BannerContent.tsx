@@ -9,8 +9,7 @@ const BannerContent = () => {
 	return (
 		<Fragment>
 			<h2>Worry-free Financial Independence</h2>
-			<h3>Your Financial Coach that makes your money work hard</h3>
-			<h3>so that you fulfill your life goals</h3>
+			<h3>Your Financial Coach that makes your money work hard to fulfill your goals</h3>
 			<p>&nbsp;</p>
 			{defaultCountry !== 'IN' && (
 				<h4>

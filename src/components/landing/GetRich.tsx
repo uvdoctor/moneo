@@ -12,11 +12,7 @@ import SwimRingSVG from "../svgs/3d/SwimRingSVG";
 
 import "./GetRich.less";
 
-interface GetRichProps {
-  featuresRef?: string;
-}
-
-export default function GetRich({ featuresRef }: GetRichProps) {
+export default function GetRich() {
   const featuresList = [
     {
       label: "Holistic Financial Health",
@@ -68,7 +64,7 @@ export default function GetRich({ featuresRef }: GetRichProps) {
 
   return (
     <Content>
-      <div className="get-rich" ref={featuresRef}>
+      <div className="get-rich">
         <h2>Get Rich Slowly</h2>
         <p>
           No More Boring Budgets or Confusing Investment Choices. DollarDarwin

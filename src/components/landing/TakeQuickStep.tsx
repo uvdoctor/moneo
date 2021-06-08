@@ -17,8 +17,8 @@ export default function TakeQuickStep() {
 		<Content className="take-quick-step" whiteBg>
 			<Row align="middle" gutter={[ 50, 0 ]}>
 				<Col xs={24} sm={24} md={12}>
-					<h2 className="text-green-primary">Just 15 minutes for a better future</h2>
-					<p>Set Your Goals to get a personalized Financial Plan.</p>
+					<h2 className="text-green-primary">Just 15 minutes for a personalized Financial Plan</h2>
+					<p>&nbsp;</p>
 					{defaultCountry === 'IN' ? <SetGoalsButton /> : <Join />}
 				</Col>
 				<Col xs={24} sm={24} md={12}>

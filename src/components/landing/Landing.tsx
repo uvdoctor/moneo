@@ -55,8 +55,8 @@ export default function Landing() {
               className="step1"
               count="01"
               title="Get"
-              subTitle="Financial Health Analysis"
-              content="Link with various accounts to automatically calculate, what you own minus, what you owe."
+              subTitle="Holistic Financial Analysis"
+              content="Automatically track your net worth, i.e. what you own minus what you owe, across bank accounts, credit cards, deposits, NPS, loans, etc; and investment portfolio performance."
               imgSrc={defaultCountry === 'IN' ? "images/step1-india.jpg" : "images/step1.jpg"}
             />
             <Step
@@ -64,7 +64,7 @@ export default function Landing() {
               count="02"
               title="Set"
               subTitle="Goals"
-              content="Estimate money required for Your Goals across multiple currencies, and create a personalized Financial Plan to fulfill them."
+              content="Define your life goals to get a persoalized Financial Plan, including analysis of money and time needed to achieve Financial Independence."
               imgSrc="images/step2.jpg"
             />
             <Step
@@ -72,7 +72,7 @@ export default function Landing() {
               count="03"
               title="Grow"
               subTitle="Wealth"
-              content="Helps You to not only align Savings &amp; Investements to Your Goals, but also become more financially savvy via engaging games."
+              content="Improve savings by identifying money leaks and unwanted expenses, and invest money based on your financial plan, risk appetite and ethics."
               imgSrc="images/step3.jpg"
             />
             <GettingStarted />
