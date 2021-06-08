@@ -74,7 +74,7 @@ export default function Testimonials() {
 					title="Moneo saved Rs. 30 lakhs"
 					name="Neha"
 					location="Bangalore"
-					imageLocation="images/testimonials/nipa.jpg"
+					imageLocation="images/testimonials/neha.jpg"
 					content="My family has been living on rent since 20 years, and my husband uses a rental car for his
 				office commute. I had been trying to convince him to buy an apartment and a car since sometime,
 				but he wasn't sure as it required us to spend most of our savings. This had become a hotly debated

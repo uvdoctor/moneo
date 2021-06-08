@@ -55,7 +55,7 @@ export default function Landing() {
               className="step1"
               count="01"
               title="Get"
-              subTitle="Holistic Financial Analysis"
+              subTitle="Real-time Analysis"
               content="Automatically track your net worth, i.e. what you own minus what you owe, across bank accounts, credit cards, deposits, NPS, loans, etc; and investment portfolio performance."
               imgSrc={defaultCountry === 'IN' ? "images/step1-india.jpg" : "images/step1.jpg"}
             />
