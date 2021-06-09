@@ -18,10 +18,10 @@ export default function TestimonialTemplate(props: TestimonialTemplateProps) {
 			<h3>{props.title}</h3>
 			<p>{props.content}</p>
 			<Row align="middle">
-				<Col span={5}>
+				<Col xs={9} lg={5}>
 					<Avatar size={80} src={props.imageLocation} icon={<UserOutlined />} />
 				</Col>
-				<Col span={19}>
+				<Col xs={15} lg={19}>
 					<hgroup>
 						<h3>{props.name}</h3>
 						<h4>{props.location}</h4>
