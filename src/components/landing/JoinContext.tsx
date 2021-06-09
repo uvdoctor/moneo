@@ -1,69 +1,54 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
-import * as queries from "../../graphql/queries";
-import * as mutations from "../../graphql/mutations";
-import awsconfig from "../../aws-exports";
-import { GRAPHQL_AUTH_MODE } from "@aws-amplify/api-graphql";
-import Amplify, { API } from "aws-amplify";
-import { Status } from "../../api/goals";
-import { AppContext } from "../AppContext";
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import * as queries from '../../graphql/queries';
+import * as mutations from '../../graphql/mutations';
+import awsconfig from '../../aws-exports';
+import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
+import Amplify, { API } from 'aws-amplify';
+import { Status } from '../../api/goals';
+import { AppContext } from '../AppContext';
 
 Amplify.configure(awsconfig);
 
 const JoinContext = createContext({});
-const JOIN_KEY = "joinData";
+const JOIN_KEY = 'joinData';
 
 interface JoinContextProviderProps {
 	children: any;
 }
 
 function JoinContextProvider({ children }: JoinContextProviderProps) {
-	const { setDefaultCountry, setDefaultCurrency }: any = useContext(AppContext);
-	const [email, setEmail] = useState<string>("");
-	const [country, setCountry] = useState<string>();
-	const [status, setStatus] = useState<Status>(Status.N);
-	const [isLoading, setLoading] = useState<boolean>(false);
-	const [showVerifyModal, setShowVerifyModal] = useState<boolean>(false);
-	const [error, setError] = useState({});
+	const { defaultCountry, setDefaultCountry }: any = useContext(AppContext);
+	const [ email, setEmail ] = useState<string>('');
+	const [ country, setCountry ] = useState<string>();
+	const [ status, setStatus ] = useState<Status>(Status.N);
+	const [ isLoading, setLoading ] = useState<boolean>(false);
+	const [ showVerifyModal, setShowVerifyModal ] = useState<boolean>(false);
+	const [ error, setError ] = useState({});
 
 	useEffect(() => {
-		const host = window.location.hostname;
-		let defaultCountry = 'US'
-    if (host.endsWith('.in') || host.endsWith('host')) {
-			defaultCountry = 'IN';
-			setDefaultCurrency("INR");
-		} else if (host.endsWith('.uk')) {
-			defaultCountry = 'UK';
-			setDefaultCurrency("UK")
-		}
-		const { email, country, status } = JSON.parse(
-			localStorage.getItem(JOIN_KEY) || "{}"
-		);
-		if (country) defaultCountry = country;
-		setDefaultCountry(defaultCountry);
-		setCountry(defaultCountry);
+		const { email, country, status } = JSON.parse(localStorage.getItem(JOIN_KEY) || '{}');
+		let userCountry = country ? country : defaultCountry;
+		if (country) setDefaultCountry(country);
+		setDefaultCountry(userCountry);
+		setCountry(userCountry);
 		if (!email) return;
-
 		setStatus(status);
 		setEmail(email);
 		setShowVerifyModal(status === Status.P);
 		if (status === Status.Y)
 			setError({
-				type: "warning",
-				title: "Already Registered",
-				message: `You are already registered with ${email}`,
+				type: 'warning',
+				title: 'Already Registered',
+				message: `You are already registered with ${email}`
 			});
 	}, []);
 
 	const doesEntryExist = async (email: string) => {
 		try {
-			const {
-				data: {
-					listRegistrations: { items },
-				},
-			}: any = await API.graphql({
+			const { data: { listRegistrations: { items } } }: any = await API.graphql({
 				query: queries.listRegistrations,
 				variables: { email },
-				authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
+				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
 			});
 			if (items.length === 0) return false;
 
@@ -75,18 +60,18 @@ function JoinContextProvider({ children }: JoinContextProviderProps) {
 			if (email) {
 				status === Status.P
 					? setError({
-							title: "Email Already Registered",
-							message: `${email} has already been registered. Either verify this account or try again with another email address.`,
-					  })
+							title: 'Email Already Registered',
+							message: `${email} has already been registered. Either verify this account or try again with another email address.`
+						})
 					: setError({
-							title: "Email Already Registered",
-							message: `${email} has already been registered. You can try with another email address.`,
-					  });
+							title: 'Email Already Registered',
+							message: `${email} has already been registered. You can try with another email address.`
+						});
 			}
 		} catch (e) {
 			setError({
-				title: "Error while checking for existing registration",
-				message: e.toString(),
+				title: 'Error while checking for existing registration',
+				message: e.toString()
 			});
 			return true;
 		}
@@ -111,23 +96,20 @@ function JoinContextProvider({ children }: JoinContextProviderProps) {
 						email,
 						status,
 						country,
-						code: "a123",
-					},
+						code: 'a123'
+					}
 				},
-				authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
+				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
 			});
 
 			if (result) {
-				localStorage.setItem(
-					JOIN_KEY,
-					JSON.stringify({ country, email, status })
-				);
+				localStorage.setItem(JOIN_KEY, JSON.stringify({ country, email, status }));
 				setStatus(status);
 			}
 		} catch (e) {
 			setError({
-				title: "Error while registering",
-				message: e.errors ? e.errors[0].message : e.toString(),
+				title: 'Error while registering',
+				message: e.errors ? e.errors[0].message : e.toString()
 			});
 		}
 
@@ -137,13 +119,10 @@ function JoinContextProvider({ children }: JoinContextProviderProps) {
 	const onSecurityCode = () => {
 		setLoading(true);
 
-		setTimeout(function () {
+		setTimeout(function() {
 			setLoading(false);
 			setStatus(Status.Y);
-			localStorage.setItem(
-				JOIN_KEY,
-				JSON.stringify({ country, email, status: Status.Y })
-			);
+			localStorage.setItem(JOIN_KEY, JSON.stringify({ country, email, status: Status.Y }));
 		}, 5000);
 	};
 
@@ -158,7 +137,7 @@ function JoinContextProvider({ children }: JoinContextProviderProps) {
 				setShowVerifyModal,
 				error,
 				onFormSubmit,
-				onSecurityCode,
+				onSecurityCode
 			}}
 		>
 			{children}

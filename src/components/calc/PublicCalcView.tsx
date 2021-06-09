@@ -14,7 +14,7 @@ import KeyFeatures from './blog/KeyFeatures';
 import CommonTerms from './blog/CommonTerms';
 
 interface PublicCalcViewProps {
-	type?: GoalType;
+	type?: GoalType | undefined;
 	title: string;
 	features: Array<any>;
 	assumptions: Array<any>;

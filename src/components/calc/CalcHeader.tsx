@@ -65,48 +65,68 @@ export default function CalcHeader() {
 								)
 							}
 							extra={[
-								<Fragment key="rating">
-									<Row style={{ color: COLORS.WHITE }}>
-										{ratingLabel ? ratingLabel : ratingLabels[rating]}
-									</Row>
-									<Rate
-										allowClear
-										value={rating}
-										onChange={(rating: number) => setRating(rating)}
-										onHoverChange={(rating: number) => setRatingLabel(ratingLabels[rating])}
-									/>
-								</Fragment>
-							]}
-						/>
-					</Col>
-					<Col span={24} className="secondary-header">
-						<Row justify="space-between" align="middle">
-							<Col flex="20px">
-								<Tooltip
-									title={
-										<div className="tooltip-share">
-											<SocialShare />
-										</div>
-									}
-								>
-									<ShareAltOutlined />
-								</Tooltip>
-							</Col>
-							{!isPublicCalc && (
-								<Col>
+								isPublicCalc ? (
+									<Tooltip
+										title={
+											<div className="tooltip-share">
+												<SocialShare />
+											</div>
+										}
+									>
+										<Button
+											type="link"
+											icon={<ShareAltOutlined />}
+											style={{ color: COLORS.WHITE }}
+										/>
+									</Tooltip>
+								) : (
 									<Button
 										icon={<SaveOutlined />}
 										loading={btnClicked}
 										disabled={disableSubmit || !allInputDone}
 										onClick={() => handleSubmit()}
+										size="large"
+										className="steps-start-btn"
 									>
 										Submit
 									</Button>
+								)
+							]}
+						/>
+					</Col>
+					<Col span={24} className="secondary-header">
+						<Row justify="space-between" align="middle">
+							<Col style={{ color: COLORS.WHITE }}>
+								<Rate
+									allowClear
+									value={rating}
+									onChange={(rating: number) => setRating(rating)}
+									onHoverChange={(rating: number) => setRatingLabel(ratingLabels[rating])}
+								/>
+								&nbsp;&nbsp;{ratingLabel ? ratingLabel : ratingLabels[rating]}
+							</Col>
+							{!isPublicCalc && (
+								<Col>
+									<Row>
+										<Tooltip
+											title={
+												<div className="tooltip-share">
+													<SocialShare />
+												</div>
+											}
+										>
+											<ShareAltOutlined />
+										</Tooltip>
+										&nbsp;&nbsp;
+										<div
+											onClick={() => handleSubmit(true)}
+											style={{ color: COLORS.WHITE, cursor: 'pointer' }}
+										>
+											<CloseOutlined />
+										</div>
+									</Row>
 								</Col>
 							)}
-							<Col onClick={() => handleSubmit(true)} style={{ color: COLORS.WHITE, cursor: 'pointer' }}>
-								<CloseOutlined />
-							</Col>
 						</Row>
 					</Col>
 				</Row>
