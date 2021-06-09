@@ -5,7 +5,6 @@ import HoldingsTable from "./HoldingsTable";
 import AddHoldings from "./addHoldings/AddHoldings";
 import UploadHoldings from "./UploadHoldings";
 import DataSwitcher from "../DataSwitcher";
-import AutoTrack from "./AutoTrack";
 
 export default function HoldingTabs() {
 	const { tabs, insNames, activeTab, setActiveTab }: any = useContext(
@@ -34,7 +33,6 @@ export default function HoldingTabs() {
 								icons={
 									hasUploader ? (
 										<>
-											<AutoTrack />
 											<UploadHoldings />
 										</>
 									) : null

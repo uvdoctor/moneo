@@ -12,23 +12,19 @@ import SwimRingSVG from "../svgs/3d/SwimRingSVG";
 
 import "./GetRich.less";
 
-interface GetRichProps {
-  featuresRef?: string;
-}
-
-export default function GetRich({ featuresRef }: GetRichProps) {
+export default function GetRich() {
   const featuresList = [
     {
-      label: "Holistic Financial Health",
+      label: "Holistic Financial Analysis",
       svg: TorchSVG,
       desc:
-        "Analyzes Your Net Worth Across Currencies & if Your Money is working hard enough.",
+        "Analyzes Your Net Worth Across Currencies & checks investment portfolio performance.",
     },
     {
       label: "Goal-based Savings",
       svg: DartSVG,
       desc:
-        "To Identify what has to be achieved today & how it will affect tomorrow.",
+        "Identify what has to be achieved today & how it will affect tomorrow.",
     },
     {
       label: "Uncover Money Leaks",
@@ -44,13 +40,13 @@ export default function GetRich({ featuresRef }: GetRichProps) {
       label: "Diversify Globally",
       svg: AbacusSVG,
       desc:
-        "To Maximize Earning Opportunities & Reduce Risk of over-reliance on 1 Country & Currency. ",
+        "Maximize Earning Opportunities & Reduce Risk of over-reliance on 1 Country & Currency. ",
     },
     {
       label: "Adaptable Financial Plan",
       svg: AdaptablePlanSVG,
       desc:
-        "That Evolves with Your Goals. Understand long-term impact of Your decisions.",
+        "Evolve Your Plan with with Your Goals. Understand long-term impact of Your decisions.",
     },
     {
       label: "No Commissions. Ever.",
@@ -62,17 +58,16 @@ export default function GetRich({ featuresRef }: GetRichProps) {
       label: "Easy to Use",
       svg: SwimRingSVG,
       desc:
-        "No complex jargons. Helps You to take simple clear steps towards Your Financial Independence.",
+        "No complex jargon. Helps You to take simple clear steps towards Your Financial Independence.",
     },
   ];
 
   return (
     <Content>
-      <div className="get-rich" ref={featuresRef}>
+      <div className="get-rich">
         <h2>Get Rich Slowly</h2>
         <p>
-          No More Boring Budgets or Confusing Investment Choices. DollarDarwin
-          helps You to Grow Your Money without taking any undue stress.
+          No more budgeting or confusing investment choices. Grow your money slowly and steadily without taking any undue stress.
         </p>
         <Row
           gutter={[

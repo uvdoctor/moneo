@@ -9,7 +9,7 @@ interface TestimonialTemplateProps {
 	content: string;
 	name: string;
 	location: string;
-	imageLocation?: string;
+	imageLocation: string;
 }
 
 export default function TestimonialTemplate(props: TestimonialTemplateProps) {

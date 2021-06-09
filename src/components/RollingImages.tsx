@@ -5,6 +5,8 @@ import DiamondSVG from "./goals/svgdiamond";
 import HomeSVG from "./goals/svghome";
 import TravelSVG from "./goals/svgtravel";
 
+import './RollingImages.less';
+
 export default function RollingImages() {
   const animationStyle = "transient 2s linear";
   const [svgCtr, setSvgCtr] = useState(-1);
