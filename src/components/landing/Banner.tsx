@@ -18,21 +18,21 @@ export default function Banner() {
 			<div className="site-banner-content">
 				<BannerContent />
 				{defaultCountry === 'IN' ? (
-					<p style={{ textAlign: 'center' }}>
+					<p>
 						<SetGoalsButton />
 					</p>
 				) : (
 					<Join />
 				)}
-				<h3 style={{ textAlign: 'center' }}>
+				<h3>
 					<WalletTwoTone twoToneColor={COLORS.GREEN} />
 					No Commissions.
 				</h3>
-				<h3 style={{ textAlign: 'center' }}>
+				<h3>
 					<LockTwoTone twoToneColor={COLORS.GREEN} />
 					Respects Privacy.
 				</h3>
-				<h3 style={{ textAlign: 'center' }}>
+				<h3>
 					<SafetyCertificateTwoTone twoToneColor={COLORS.GREEN} />
 					Bank-grade Security.
 				</h3>
