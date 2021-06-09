@@ -6,6 +6,8 @@ import Join from './Join';
 import './Banner.less';
 import { AppContext } from '../AppContext';
 import SetGoalsButton from './SetGoalsButton';
+import { WalletTwoTone, SafetyCertificateTwoTone, LockTwoTone } from '@ant-design/icons';
+import { COLORS } from '../../CONSTANTS';
 
 export default function Banner() {
 	const { defaultCountry }: any = useContext(AppContext);
@@ -22,7 +24,18 @@ export default function Banner() {
 				) : (
 					<Join />
 				)}
-				<h3 style={{ textAlign: 'center', marginBottom: '10px' }}>No Commissions. Full Data Privacy.</h3>
+				<h3 style={{ textAlign: 'center' }}>
+					<WalletTwoTone twoToneColor={COLORS.GREEN} />
+					No Commissions.
+				</h3>
+				<h3 style={{ textAlign: 'center' }}>
+					<LockTwoTone twoToneColor={COLORS.GREEN} />
+					Respects Privacy.
+				</h3>
+				<h3 style={{ textAlign: 'center' }}>
+					<SafetyCertificateTwoTone twoToneColor={COLORS.GREEN} />
+					Bank-grade Security.
+				</h3>
 				{defaultCountry !== 'IN' && <SocialShare />}
 			</div>
 		</div>
