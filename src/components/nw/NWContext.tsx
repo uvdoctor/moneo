@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, ReactNode, useState } from "react";
 import "./nw.less";
 import HoldingsParser from "./HoldingsParser";
 import {
@@ -25,10 +25,24 @@ function NWContextProvider() {
 	const [allBonds, setAllBonds] = useState<any>({});
 	const [allMFs, setAllMFs] = useState<any>({});
 	const [allETFs, setAllETFs] = useState<any>({});
+	const [allProperties, setAllProperties] = useState<any>({});
+	const [allVehicles, setAllVehicles] = useState<any>({});
+	const [allDeposits, setAllDeposits] = useState<any>({});
+	const [allPreciousMetals, setAllPreciousMetals] = useState<any>({});
+	const [allNPS, setAllNPS] = useState<any>({});
+	const [allLoans, setAllLoans] = useState<any>({});
+	const [allCreditCards, setAllCreditCards] = useState<any>({});
+	const [allEPF, setAllEPF] = useState<any>({});
+	const [allPPF, setAllPPF] = useState<{}>({});
+	const [allInsurance, setAllInsurance] = useState<{}>({});
+	const [nw, setNW] = useState<number>(0);
+	const [totalAssets, setTotalAssets] = useState<number>(0);
+	const [totalLiabilities, setTotalLiabilities] = useState<number>(0);
 	const [showUpdateHoldings, setUpdateHoldings] = useState<boolean>(false);
 	const [insNames, setInsNames] = useState<any>({});
 	const [taxId, setTaxId] = useState<string>("");
 	const [activeTab, setActiveTab] = useState<string>("Investements");
+	const [holdingsResult, setHoldingsResult] = useState<ReactNode | null>(null);
 
 	const parseHoldings = async (pdf: any) => {
 		let equities: any = {};
@@ -291,7 +305,7 @@ function NWContextProvider() {
 		setUpdateHoldings(true);
 	};
 
-	const hasNoHoldings = () =>
+	const hasNoDematHoldings = () =>
 		!Object.keys(allBonds).length &&
 		!Object.keys(allEquities).length &&
 		!Object.keys(allMFs).length &&
@@ -309,7 +323,7 @@ function NWContextProvider() {
 			value={{
 				tabs: [
 					{
-						label: "Investements",
+						label: "Demat Holdings",
 						hasUploader: true,
 						childrens: [
 							{
@@ -335,17 +349,44 @@ function NWContextProvider() {
 						],
 					},
 					{
+						label: "Properties",
+						data: allProperties
+					},
+					{
+						label: "Vehicles",
+						data: allVehicles
+					},
+					{
+						label: "Precious Metals",
+						data: allPreciousMetals
+					},
+					{
+						label: "Deposits",
+						data: allDeposits
+					},
+					{
+						label: "Credit Cards",
+						data: allCreditCards
+					},
+					{
 						label: "Loans",
-						data: [],
+						data: allLoans
+					},
+					{
+						label: "Insurance",
+						data: allInsurance
+					},
+					{
+						label: "PPF",
+						data: allPPF
+					},
+					{
+						label: "EPF",
+						data: allEPF
 					},
 					{
 						label: "NPS",
-						hasUploader: true,
-						data: [],
-					},
-					{
-						label: "Deposites",
-						data: [],
+						data:allNPS
 					},
 				],
 				activeTab,
@@ -364,9 +405,37 @@ function NWContextProvider() {
 				setInsNames,
 				taxId,
 				setTaxId,
-				hasNoHoldings,
+				hasNoHoldings: hasNoDematHoldings,
 				parseHoldings,
 				onAddHoldings,
+				nw,
+				setNW,
+				allProperties,
+				setAllProperties,
+				allPreciousMetals,
+				setAllPreciousMetals,
+				allDeposits,
+				setAllDeposits,
+				allNPS,
+				setAllNPS,
+				totalAssets,
+				setTotalAssets,
+				totalLiabilities,
+				setTotalLiabilities,
+				allLoans,
+				setAllLoans,
+				allCreditCards,
+				setAllCreditCards,
+				allEPF,
+				setAllEPF,
+				allPPF,
+				setAllPPF,
+				allVehicles,
+				setAllVehicles,
+				allInsurance,
+				setAllInsurance,
+				holdingsResult,
+				setHoldingsResult
 			}}
 		>
 			<HoldingsParser />

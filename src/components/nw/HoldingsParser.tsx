@@ -1,41 +1,24 @@
-import React from "react";
-import { Statistic, Select } from "antd";
-import HoldingTabs from "./HoldingTabs";
-import HoldingsChart from "./HoldingsChart";
-import SearchFilter from "./SearchFilter";
-import DataSwitcher from "../DataSwitcher";
+import React, { useContext, useEffect } from 'react';
+import HoldingTabs from './HoldingTabs';
+import HoldingsChart from './HoldingsChart';
+import SearchFilter from './SearchFilter';
+import DataSwitcher from '../DataSwitcher';
 
-import "./nw.less";
+import './nw.less';
+import { NWContext } from './NWContext';
+import HoldingsResult from './HoldingsResult';
 
 export default function HoldingsParser() {
-	const { Option } = Select;
+	const { holdingsResult, setHoldingsResult }: any = useContext(NWContext);
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
+	useEffect(() => {
+		setHoldingsResult(<HoldingsResult />);
+	}, []);
+	
 	return (
 		<div className="nw-container">
-			<div className="dd-stat">
-				<Statistic
-					title={
-						<Select
-							defaultValue="total"
-							style={{ width: 200 }}
-							bordered={false}
-						>
-							<Option value="total">Total Portfolio Value</Option>
-							<Option value="ANZOIRU4526">ANZOIRU4526</Option>
-							<Option value="BMKJFI2578D">BMKJFI2578D</Option>
-						</Select>
-					}
-					value={213454654}
-					prefix={
-						<Select className="currency-selector" defaultValue="₹">
-							<Option value="₹">₹</Option>
-							<Option value="$">$</Option>
-							<Option value="€">€</Option>
-						</Select>
-					}
-				/>
-			</div>
+			{holdingsResult}
 			<DataSwitcher title={<h3>Holdings details</h3>}>
 				<Chart>
 					<HoldingsChart />
