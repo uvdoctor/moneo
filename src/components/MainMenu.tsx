@@ -1,5 +1,5 @@
 import React, { Fragment, useContext } from 'react';
-import { Menu } from 'antd';
+import { Button, Menu } from 'antd';
 import FSToggle from './FSToggle';
 import { calcList } from './landing/Calculator';
 import Link from 'next/link';
@@ -7,7 +7,6 @@ import { ROUTES } from '../CONSTANTS';
 import { useRouter } from 'next/router';
 import SecureMenu from './SecureMenu';
 import { AppContext } from './AppContext';
-import SetGoalsButton from './landing/SetGoalsButton';
 
 export interface MainMenuProps {
 	mode?: any;
@@ -52,7 +51,11 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 						</Menu.Item>*/}
 					<Menu.Item>
 						{defaultCountry === 'IN' ? (
-							<SetGoalsButton />
+							<Link href={ROUTES.SET}>
+								<a>
+									<Button type="link">Login</Button>
+								</a>
+							</Link>
 						) : (
 							<a href="https://ant.design" target="_blank" rel="noopener noreferrer">
 								Earn up to $200 credit*
