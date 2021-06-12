@@ -68,7 +68,7 @@ export default function SummaryView() {
 								<Col>
 									<hgroup>
 										<h3>{goalName}</h3>
-										<h4>Costs: {toHumanFriendlyCurrency(Math.abs(totalCost), currency)}</h4>
+										<h4>Costs about {toHumanFriendlyCurrency(Math.abs(totalCost), currency)}</h4>
 									</hgroup>
 								</Col>
 							</Row>
