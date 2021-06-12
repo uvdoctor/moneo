@@ -503,9 +503,9 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     if(wipGoal.id) setDiscountRates([...result.rr]);
     if(cfs.length) {
       let tc = cfs.reduce((val: number, total: number) => val + total);
-      if(goalType === GoalType.B) tc -= sellPrice ? sellPrice : calculateSellPrice(price, goal.achg as number, goal.sa);
+      if(goalType === GoalType.B) tc -= sellPrice;
       setTotalCost(tc);
-    }
+    } else setTotalCost(0);
   }, [cfs, impLevel]);
 
   useEffect(() => {
