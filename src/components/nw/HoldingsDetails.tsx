@@ -32,7 +32,7 @@ export default function HoldingsDetails() {
 				<Col>
 					<SelectInput
 						options={allFamily}
-						pre="Show Investments for"
+						pre="Show for"
 						value={selectedMember}
 						changeHandler={setSelectedMember}
 					/>
