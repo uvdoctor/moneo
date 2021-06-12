@@ -40,7 +40,9 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
 									key !== GoalType.FF && (
 										<MenuItem key={key} icon={<FontAwesomeIcon icon={getDefaultIconForGoalType(key as GoalType)} size="lg" color={COLORS.DEFAULT} />} 
 										onClick={() => setGoal(createNewGoalInput(key as GoalType, ffGoal.ccy))}>
-											&nbsp;&nbsp;&nbsp;{getGoalTypes()[key as GoalType]}
+											&nbsp;&nbsp;&nbsp;
+											{`${(key === GoalType.E || key === GoalType.T || key === GoalType.D || key === GoalType.S) ? ' ' : ''}`}
+											{getGoalTypes()[key as GoalType]}
 										</MenuItem>
 									))}
 							</Menu>
