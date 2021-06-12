@@ -503,7 +503,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     if(wipGoal.id) setDiscountRates([...result.rr]);
     if(cfs.length) {
       let tc = cfs.reduce((val: number, total: number) => val + total);
-      if(goalType === GoalType.B) tc -= sellPrice;
+      if(goalType === GoalType.B) tc -= sellPrice ? sellPrice : calculateSellPrice(price, goal.achg as number, goal.sa);
       setTotalCost(tc);
     }
   }, [cfs, impLevel]);

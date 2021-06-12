@@ -7,12 +7,12 @@ import {
 	faUserGraduate,
 	faShoppingCart,
 	faSuitcaseRolling,
-	faTruckLoading,
-	faGlassCheers,
-	faSkiingNordic,
+	faBirthdayCake,
 	faDonate,
 	faCrosshairs,
-	faUserSecret
+	faUserSecret,
+	faParachuteBox,
+	faFileContract
 } from '@fortawesome/free-solid-svg-icons';
 
 export const getGoalsList = async () => {
@@ -289,15 +289,15 @@ export const getDefaultIconForGoalType = (goalType: APIt.GoalType) => {
 		case APIt.GoalType.B:
 			return faShoppingCart;
 		case APIt.GoalType.R:
-			return faTruckLoading;
+			return faFileContract;
 		case APIt.GoalType.E:
 			return faUserGraduate;
 		case APIt.GoalType.T:
 			return faSuitcaseRolling;
 		case APIt.GoalType.C:
-			return faGlassCheers;
+			return faBirthdayCake;
 		case APIt.GoalType.X:
-			return faSkiingNordic;
+			return faParachuteBox;
 		case APIt.GoalType.D:
 			return faDonate;
 		case APIt.GoalType.S:
