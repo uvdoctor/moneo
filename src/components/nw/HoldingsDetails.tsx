@@ -3,12 +3,13 @@ import HoldingTabs from './HoldingTabs';
 import HoldingsChart from './HoldingsChart';
 import SearchFilter from './SearchFilter';
 import DataSwitcher from '../DataSwitcher';
-
-import './nw.less';
 import { NWContext } from './NWContext';
 import HoldingsResult from './HoldingsResult';
-import { Col, Row } from 'antd';
+import { Button, Col, PageHeader, Row } from 'antd';
 import SelectInput from '../form/selectinput';
+import { SaveOutlined } from '@ant-design/icons';
+
+import './nw.less';
 
 export default function HoldingsDetails() {
 	const {
@@ -28,19 +29,43 @@ export default function HoldingsDetails() {
 
 	return (
 		<div className="nw-container">
-			<Row justify="space-around" align="middle">
-				<Col>
-					<SelectInput
-						options={allFamily}
-						pre="Show for"
-						value={selectedMember}
-						changeHandler={setSelectedMember}
-					/>
-				</Col>
-				<Col>
-					<SelectInput pre="Currency" value={selectedCurrency} changeHandler={setSelectedCurrency} currency />
-				</Col>
-			</Row>
+			<div className="primary-header">
+				<Row>
+					<Col span={24}>
+						<PageHeader
+							title="Financial Diagnosis"
+							extra={[
+								<Button
+									icon={<SaveOutlined />}
+									onClick={() => {}}
+									size="large"
+									className="steps-start-btn"
+								>
+									Save
+								</Button>
+							]}
+						/>
+					</Col>
+				</Row>
+				<Row justify="space-between" align="middle" className="secondary-header">
+					<Col>
+						<SelectInput
+							options={allFamily}
+							pre="Show for"
+							value={selectedMember}
+							changeHandler={setSelectedMember}
+						/>
+					</Col>
+					<Col>
+						<SelectInput
+							pre="Currency"
+							value={selectedCurrency}
+							changeHandler={setSelectedCurrency}
+							currency
+						/>
+					</Col>
+				</Row>
+			</div>
 			<p>&nbsp;</p>
 			{holdingsResult}
 			<p>&nbsp;</p>

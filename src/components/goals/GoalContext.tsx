@@ -15,6 +15,7 @@ import { ROUTES } from "../../CONSTANTS";
 import LoanIntResult from "../calc/LoanIntResult";
 import TaxBenefitResult from "../calc/TaxBenefitResult";
 import { PlanContext } from "./PlanContext";
+import TotalCostResult from "./TotalCostResult";
 
 const GoalContext = createContext({});
 
@@ -59,7 +60,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     wipGoal,
     setWipGoal,
     summary,
-    setDiscountRates
+    setDiscountRates,
   }: any = useContext(CalcContext);
   const nowYear = new Date().getFullYear();
   const goalType = goal.type as GoalType;
@@ -87,6 +88,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   const [impLevel, setImpLevel] = useState<LMH>(goal?.imp);
   const [manualMode, setManualMode] = useState<number>(goal?.manual);
   const [name, setName] = useState<string>(goal.name);
+  const [totalCost, setTotalCost] = useState<number>(0);
   const router = useRouter();
 	const isLoanMandatory = router.pathname === ROUTES.LOAN || router.pathname === ROUTES.EDUCATION;
   const isEndYearHidden = isLoanMandatory && goalType === GoalType.O;
@@ -208,6 +210,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     setResults([...[
       !isPublicCalc && <FIImpact />,
       <DefaultOppCostResult />,
+      <TotalCostResult />,
       goalType === GoalType.B && <BuyReturnResult />,
       goalType === GoalType.B && <BuyRentResult />,
       isLoanEligible(goalType) && <LoanIntResult />,
@@ -498,6 +501,11 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     let result = calculateFFImpactYear(startYear, cfs, goal.id, impLevel);
     setFFImpactYears(result.impactYears);
     if(wipGoal.id) setDiscountRates([...result.rr]);
+    if(cfs.length) {
+      let tc = cfs.reduce((val: number, total: number) => val + total);
+      if(goalType === GoalType.B) tc -= sellPrice;
+      setTotalCost(tc);
+    }
   }, [cfs, impLevel]);
 
   useEffect(() => {
@@ -761,6 +769,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
           setLoanPMI,
           loanPMIEndPer,
           setLoanPMIEndPer,
+          totalCost,
+          setTotalCost
         }}>
         {children ? children : <CalcTemplate />}
       </GoalContext.Provider>

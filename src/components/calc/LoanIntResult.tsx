@@ -8,8 +8,8 @@ export default function LoanIntResult() {
 	const { totalIntAmt, totalInsAmt }: any = useContext(GoalContext);
 
 	return totalIntAmt ? (
-		<ItemDisplay label={`Total Loan Cost`} result={totalIntAmt + totalInsAmt} currency={currency}
-		info="Includes loan interest and any insurance paid to protect repayment." />
+		<ItemDisplay label='Loan Cost' result={totalIntAmt + totalInsAmt} currency={currency}
+		info="Loan Cost includes loan interest and any insurance paid to protect repayment." />
 	) : (
 		<ItemDisplay label={`Total Loan Cost`} result="No Loan." />
 	);

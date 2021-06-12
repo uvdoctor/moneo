@@ -84,8 +84,8 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
           <AppContextProvider>
             <Layout className={`dd-site ${props.className}`}>
               <Nav
-                scrollable={props.navScrollable}
-                isFixed={props.fixedNav}
+                scrollable={props.navScrollable ? props.navScrollable : false}
+                isFixed={props.fixedNav ? props.fixedNav : false}
                 onBack={props.onBack} />
               {props.children}
               <Footer />
