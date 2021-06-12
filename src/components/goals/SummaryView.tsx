@@ -13,11 +13,11 @@ import FIImpact from './FIImpact';
 import BasicLineChart from './BasicLineChart';
 import { CalcContext } from '../calc/CalcContext';
 import { GoalContext } from './GoalContext';
-import { getDaysDiff } from '../utils';
+import { getDaysDiff, toHumanFriendlyCurrency } from '../utils';
 
 export default function SummaryView() {
 	const { removeGoal, editGoal, allGoals }: any = useContext(PlanContext);
-	const { goal, currency }: any = useContext(CalcContext);
+	const { goal, currency, cfs }: any = useContext(CalcContext);
 	const { impLevel, name }: any = useContext(GoalContext);
 	const [ goalImp, setGoalImp ] = useState<LMH>(impLevel);
 	const [ goalName, setGoalName ] = useState<string>(name);
@@ -28,7 +28,7 @@ export default function SummaryView() {
 	const impLevels: any = getImpLevels();
 	const { confirm } = Modal;
 	const [ lastUpdated, setLastUpdated ] = useState<string>(getDaysDiff(goal.updatedAt));
-
+	const [ totalCost, setTotalCost ] = useState<string>('')
 	useEffect(
 		() => {
 			let g: CreateGoalInput = allGoals.filter((g: CreateGoalInput) => g.id === goal.id)[0];
@@ -40,6 +40,13 @@ export default function SummaryView() {
 			setLastUpdated(getDaysDiff(g.updatedAt));
 		},
 		[ allGoals ]
+	);
+
+	useEffect(
+		() => {
+			cfs.length && setTotalCost(toHumanFriendlyCurrency(Math.abs(cfs.reduce((val:number, total:number) => total + val)), goalCurrency));
+		},
+		[ cfs ]
 	);
 
 	return (
@@ -59,7 +66,7 @@ export default function SummaryView() {
 								</Col>
 							</Row>
 							<Row>
-								<Col>{goalCurrency}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Col>
+								<Col>{goalTypes[goal.type as GoalType]}</Col>
 							</Row>
 						</Col>
 						<Col>
@@ -70,7 +77,7 @@ export default function SummaryView() {
 								<Col>
 									<hgroup>
 										<h3>{goalName}</h3>
-										<h4>{goalTypes[goal.type as GoalType]}</h4>
+										<h4>{totalCost}</h4>
 									</hgroup>
 								</Col>
 							</Row>
