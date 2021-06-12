@@ -44,7 +44,15 @@ export default function SummaryView() {
 
 	useEffect(
 		() => {
-			cfs.length && setTotalCost(toHumanFriendlyCurrency(Math.abs(cfs.reduce((val:number, total:number) => total + val)), goalCurrency));
+			cfs.length && setTotalCost(
+				toHumanFriendlyCurrency(
+					Math.abs(
+						cfs.reduce(
+							(val:number, total:number) => total + val
+						)
+					), goalCurrency
+				)
+			);
 		},
 		[ cfs ]
 	);
