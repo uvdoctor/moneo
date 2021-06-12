@@ -5,9 +5,10 @@ import HoldingsTable from "./HoldingsTable";
 import AddHoldings from "./addHoldings/AddHoldings";
 import UploadHoldings from "./UploadHoldings";
 import DataSwitcher from "../DataSwitcher";
+import { toCurrency } from "../utils";
 
 export default function HoldingTabs() {
-	const { tabs, insNames, activeTab, setActiveTab }: any = useContext(
+	const { tabs, insNames, activeTab, setActiveTab, selectedCurrency, activeTabSum }: any = useContext(
 		NWContext
 	);
 	const { TabPane } = Tabs;
@@ -37,6 +38,7 @@ export default function HoldingTabs() {
 										</>
 									) : null
 								}
+								title={<strong>{`Total Value is ${toCurrency(activeTabSum, selectedCurrency)}`}</strong>}
 							>
 								<Chart>Chart goes here...</Chart>
 								<DataSwitcherList>

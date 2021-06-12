@@ -39,7 +39,7 @@ export default function SelectInput(props: SelectInputProps) {
 				filterOption={(input, option) =>
 					option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
 				}
-				disabled={props.disabled}
+				disabled={props.disabled ? props.disabled : false}
 				defaultValue={selectOptions[props.value]}
 			>
 				{Object.keys(selectOptions).map((key) => (
