@@ -1,5 +1,5 @@
 import React, { useContext, useState, Fragment } from 'react';
-import { getImpOptions, getGoalTypes, createNewGoalInput } from './goalutils';
+import { getImpOptions, getGoalTypes, createNewGoalInput, getDefaultIconForGoalType } from './goalutils';
 import SelectInput from '../form/selectinput';
 import PlanStart from './PlanStart';
 import FISummaryHeader from './FISummaryHeader';
@@ -16,6 +16,7 @@ import { FIGoalContextProvider } from './FIGoalContext';
 import DynamicAAChart from './DynamicAAChart';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FIPortfolioChart from './FIPortfolioChart';
+import { COLORS } from '../../CONSTANTS';
 
 interface PlanViewProps {
 	activeTab: string;
@@ -37,8 +38,8 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
 							<Menu>
 								{Object.keys(getGoalTypes()).map((key: string) =>
 									key !== GoalType.FF && (
-										<MenuItem key={key} onClick={() => setGoal(createNewGoalInput(key as GoalType, ffGoal.ccy))}>
-											{getGoalTypes()[key as GoalType]}
+										<MenuItem key={key} icon={<FontAwesomeIcon icon={getDefaultIconForGoalType(key as GoalType)} size="lg" color={COLORS.DEFAULT} />} onClick={() => setGoal(createNewGoalInput(key as GoalType, ffGoal.ccy))}>
+											&nbsp;&nbsp;&nbsp;{getGoalTypes()[key as GoalType]}
 										</MenuItem>
 									))}
 							</Menu>
