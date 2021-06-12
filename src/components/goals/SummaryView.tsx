@@ -63,7 +63,7 @@ export default function SummaryView() {
 						<Col>
 							<Row align="middle">
 								<Col>
-									<Avatar size={50} src={null} icon={<FontAwesomeIcon icon={faUser} />} />
+									<Avatar size={50} icon={<FontAwesomeIcon icon={faUser} />} />
 								</Col>
 								<Col>
 									<hgroup>
