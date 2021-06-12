@@ -2,7 +2,8 @@ import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { getGoalTypes, getImpLevels } from './goalutils';
 import { CreateGoalInput, GoalType, LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
-import { Card, Row, Col, Badge, Button, Modal, Tooltip } from 'antd';
+import { Card, Row, Col, Badge, Button, Modal, Tooltip, Avatar } from 'antd';
+import { UserOutlined } from "@ant-design/icons";
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { PlanContext } from './PlanContext';
 import { ExclamationCircleOutlined, FieldTimeOutlined } from '@ant-design/icons';
@@ -49,46 +50,63 @@ export default function SummaryView() {
 				<Fragment>
 					<Row justify="space-between">
 						<Col>
-							<Badge
-								count={impLevels[goalImp]}
-								style={{ backgroundColor: impColor, color: COLORS.WHITE }}
-							/>
+							<Row>
+								<Col>
+									<Badge
+										count={impLevels[goalImp]}
+										style={{ backgroundColor: impColor, color: COLORS.WHITE }}
+									/>
+								</Col>
+							</Row>
+							<Row>
+								<Col>{goalCurrency}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Col>
+							</Row>
 						</Col>
 						<Col>
-							<strong>{goalTypes[goal.type as GoalType]}</strong>
+							<Row align="middle">
+								<Col>
+									<Avatar size={50} src={null} icon={<UserOutlined />} />
+								</Col>
+								<Col>
+									<hgroup>
+										<h3>{goalName}</h3>
+										<h4>{goalTypes[goal.type as GoalType]}</h4>
+									</hgroup>
+								</Col>
+							</Row>
 						</Col>
 						<Col>
-							<Tooltip title={`You Updated this Goal ${lastUpdated}`}>
-								<FieldTimeOutlined />
-								{lastUpdated}
-							</Tooltip>
-						</Col>
-					</Row>
-					<Row justify="space-between">
-						<Col>{goalCurrency}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Col>
-						<Col>
-							<strong>{goalName}</strong>
-						</Col>
-						<Col>
-							<Tooltip title="Edit">
-								<Button type="link" icon={<EditOutlined />} onClick={() => editGoal(goal.id)} />
-							</Tooltip>
-							<Tooltip title="Delete">
-								<Button
-									type="link"
-									icon={<DeleteOutlined />}
-									danger
-									onClick={() => {
-										confirm({
-											icon: <ExclamationCircleOutlined />,
-											content: 'Are You Sure about Deleting this Goal?',
-											onOk() {
-												removeGoal(goal.id);
-											}
-										});
-									}}
-								/>
-							</Tooltip>
+							<Row>
+								<Col>
+									<Tooltip title={`You Updated this Goal ${lastUpdated}`}>
+										<FieldTimeOutlined />
+										{lastUpdated}
+									</Tooltip>
+								</Col>
+							</Row>
+							<Row>
+								<Col>
+									<Tooltip title="Edit">
+										<Button type="link" icon={<EditOutlined />} onClick={() => editGoal(goal.id)} />
+									</Tooltip>
+									<Tooltip title="Delete">
+										<Button
+											type="link"
+											icon={<DeleteOutlined />}
+											danger
+											onClick={() => {
+												confirm({
+													icon: <ExclamationCircleOutlined />,
+													content: 'Are You Sure about Deleting this Goal?',
+													onOk() {
+														removeGoal(goal.id);
+													}
+												});
+											}}
+										/>
+									</Tooltip>
+								</Col>
+							</Row>
 						</Col>
 					</Row>
 				</Fragment>
