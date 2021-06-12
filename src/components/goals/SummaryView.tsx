@@ -1,9 +1,8 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { getGoalTypes, getImpLevels } from './goalutils';
+import { getGoalTypes, getImpLevels, getDefaultIconForGoalType } from './goalutils';
 import { CreateGoalInput, GoalType, LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
 import { Card, Row, Col, Badge, Button, Modal, Tooltip, Avatar } from 'antd';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { PlanContext } from './PlanContext';
@@ -63,7 +62,7 @@ export default function SummaryView() {
 						<Col>
 							<Row align="middle">
 								<Col>
-									<Avatar size={50} icon={<FontAwesomeIcon icon={faUser} />} />
+									<Avatar size={50} icon={<FontAwesomeIcon icon={getDefaultIconForGoalType(goal.type)} />} />
 								</Col>
 								<Col>
 									<hgroup>
