@@ -62,7 +62,7 @@ export default function SummaryView() {
 						<Col>
 							<Row align="middle">
 								<Col>
-								<Avatar size={50} icon={<FontAwesomeIcon icon={getDefaultIconForGoalType(goal.type)} />} />
+									<Avatar size={50} icon={<FontAwesomeIcon icon={getDefaultIconForGoalType(goal.type)} />} />
 								</Col>
 								<Col>
 									<hgroup>
