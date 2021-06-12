@@ -37,7 +37,7 @@ export default function HoldingTabs() {
 										</>
 									) : null
 								}
-								title={<strong>{`Portfolio for ${allFamily[selectedMember]}`}</strong>}>
+								title={`Portfolio for ${allFamily[selectedMember]}`}>
 								<Chart>Chart goes here...</Chart>
 								<DataSwitcherList>
 									{childrens ? (
