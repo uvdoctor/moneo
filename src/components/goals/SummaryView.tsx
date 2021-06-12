@@ -3,7 +3,8 @@ import { getGoalTypes, getImpLevels } from './goalutils';
 import { CreateGoalInput, GoalType, LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
 import { Card, Row, Col, Badge, Button, Modal, Tooltip, Avatar } from 'antd';
-import { UserOutlined } from "@ant-design/icons";
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { PlanContext } from './PlanContext';
 import { ExclamationCircleOutlined, FieldTimeOutlined } from '@ant-design/icons';
@@ -17,44 +18,26 @@ import { getDaysDiff, toHumanFriendlyCurrency } from '../utils';
 
 export default function SummaryView() {
 	const { removeGoal, editGoal, allGoals }: any = useContext(PlanContext);
-	const { goal, currency, cfs }: any = useContext(CalcContext);
-	const { impLevel, name }: any = useContext(GoalContext);
+	const { goal, currency }: any = useContext(CalcContext);
+	const { impLevel, name, totalCost }: any = useContext(GoalContext);
 	const [ goalImp, setGoalImp ] = useState<LMH>(impLevel);
 	const [ goalName, setGoalName ] = useState<string>(name);
-	const [ goalCurrency, setGoalCurrency ] = useState<string>(currency);
 	const getImpColor = (imp: LMH) => (imp === LMH.H ? COLORS.BLUE : imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN);
 	const [ impColor, setImpColor ] = useState<string>(getImpColor(impLevel as LMH));
 	const goalTypes: any = getGoalTypes();
 	const impLevels: any = getImpLevels();
 	const { confirm } = Modal;
 	const [ lastUpdated, setLastUpdated ] = useState<string>(getDaysDiff(goal.updatedAt));
-	const [ totalCost, setTotalCost ] = useState<string>('')
 	useEffect(
 		() => {
 			let g: CreateGoalInput = allGoals.filter((g: CreateGoalInput) => g.id === goal.id)[0];
 			setGoalImp(g.imp);
 			setImpColor(getImpColor(g.imp as LMH));
 			setGoalName(g.name);
-			setGoalCurrency(g.ccy);
 			//@ts-ignore
 			setLastUpdated(getDaysDiff(g.updatedAt));
 		},
 		[ allGoals ]
-	);
-
-	useEffect(
-		() => {
-			cfs.length && setTotalCost(
-				toHumanFriendlyCurrency(
-					Math.abs(
-						cfs.reduce(
-							(val:number, total:number) => total + val
-						)
-					), goalCurrency
-				)
-			);
-		},
-		[ cfs ]
 	);
 
 	return (
@@ -80,12 +63,12 @@ export default function SummaryView() {
 						<Col>
 							<Row align="middle">
 								<Col>
-									<Avatar size={50} src={null} icon={<UserOutlined />} />
+									<Avatar size={50} src={null} icon={<FontAwesomeIcon icon={faUser} />} />
 								</Col>
 								<Col>
 									<hgroup>
 										<h3>{goalName}</h3>
-										<h4>{totalCost}</h4>
+										<h4>Costs: {toHumanFriendlyCurrency(Math.abs(totalCost), currency)}</h4>
 									</hgroup>
 								</Col>
 							</Row>
