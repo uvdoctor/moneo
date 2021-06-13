@@ -36,28 +36,30 @@ export default function FormGenerator({ onClose }: FormGeneratorProp) {
 					))}
 				</Select>
 			</Form.Item>
-			{selectedFormConfig.map(({ label, name, type }: any) => {
-				switch (type) {
-					case "text":
-						return (
-							<Form.Item>
-								<Input
-									name={name}
-									value={formState[name].value}
-									placeholder={label}
-									onChange={(e) =>
-										//@ts-ignore
-										dispatch({
-											type: "fieldUpdate",
-											name,
-											value: e.target.value,
-										})
-									}
-								/>
-							</Form.Item>
-						);
+			{(selectedFormConfig.formConfig || []).map(
+				({ label, name, type }: any) => {
+					switch (type) {
+						case "text":
+							return (
+								<Form.Item>
+									<Input
+										name={name}
+										value={formState[name].value}
+										placeholder={label}
+										onChange={(e) =>
+											//@ts-ignore
+											dispatch({
+												type: "fieldUpdate",
+												name,
+												value: e.target.value,
+											})
+										}
+									/>
+								</Form.Item>
+							);
+					}
 				}
-			})}
+			)}
 			<Form.Item>
 				<Space>
 					<Button type="primary" onClick={onAddHoldings}>

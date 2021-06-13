@@ -7,16 +7,21 @@ import UploadHoldings from "./UploadHoldings";
 import DataSwitcher from "../DataSwitcher";
 
 export default function HoldingTabs() {
-	const { tabs, insNames, activeTab, setActiveTab, allFamily, selectedMember }: any = useContext(
-		NWContext
-	);
+	const {
+		tabs,
+		insNames,
+		activeTab,
+		setActiveTab,
+		allFamily,
+		selectedMember,
+	}: any = useContext(NWContext);
 	const { TabPane } = Tabs;
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
 	function renderTabs(
 		tabsData: any,
 		defaultActiveKey: string,
-		isRoot?: boolean,
+		isRoot?: boolean
 	) {
 		return (
 			<Tabs
@@ -26,7 +31,9 @@ export default function HoldingTabs() {
 				tabBarExtraContent={isRoot ? <AddHoldings /> : null}
 				onChange={(activeKey) => setActiveTab(activeKey)}
 			>
-				{tabsData.map(({ label, hasUploader, data, childrens }: any) => {
+				{Object.keys(tabsData).map((tabName) => {
+					const { label, hasUploader, data, childrens } = tabsData[tabName];
+
 					return (
 						<TabPane key={label} tab={label}>
 							<DataSwitcher
@@ -37,7 +44,8 @@ export default function HoldingTabs() {
 										</>
 									) : null
 								}
-								title={`Portfolio for ${allFamily[selectedMember]}`}>
+								title={`Portfolio for ${allFamily[selectedMember]}`}
+							>
 								<Chart>Chart goes here...</Chart>
 								<DataSwitcherList>
 									{childrens ? (
@@ -56,4 +64,3 @@ export default function HoldingTabs() {
 
 	return renderTabs(tabs, activeTab, true);
 }
-

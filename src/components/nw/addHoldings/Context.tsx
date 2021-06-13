@@ -6,7 +6,6 @@ import React, {
 	useReducer,
 } from "react";
 import { NWContext } from "../NWContext";
-import formConfig from "./formConfig";
 
 const Context = createContext({});
 
@@ -15,11 +14,11 @@ interface ContextProviderProp {
 }
 
 function ContextProvider({ children }: ContextProviderProp) {
-	const { activeTab, onAddHoldings }: any = useContext(NWContext);
+	const { activeTab, onAddHoldings, tabs }: any = useContext(NWContext);
 	const [selectedType, setSelectedType] = useState(activeTab);
 	const [selectedFormConfig, setSelectedFormConfig] = useState(
 		//@ts-ignore
-		formConfig[selectedType]
+		tabs[selectedType]
 	);
 	const [formState, dispatch] = useReducer(
 		reducer,
@@ -29,12 +28,12 @@ function ContextProvider({ children }: ContextProviderProp) {
 	useEffect(() => {
 		setSelectedType(activeTab);
 		//@ts-ignore
-		setSelectedFormConfig(formConfig[activeTab]);
+		setSelectedFormConfig(tabs[activeTab]);
 		//@ts-ignore
 		dispatch({
 			type: "replace",
 			//@ts-ignore
-			data: formConfig[activeTab],
+			data: tabs[activeTab],
 		});
 	}, [activeTab]);
 
@@ -52,13 +51,13 @@ function ContextProvider({ children }: ContextProviderProp) {
 	}
 
 	function getHoldingOptions() {
-		return Object.keys(formConfig);
+		return Object.keys(tabs);
 	}
 
-	function getFormState(data: any) {
+	function getFormState(config: any) {
 		const formValues = {};
 
-		data.forEach(({ name }: any) => {
+		Object.keys(config.data || {}).forEach(({ name }: any) => {
 			//@ts-ignore
 			formValues[name] = {
 				value: "",
@@ -74,10 +73,10 @@ function ContextProvider({ children }: ContextProviderProp) {
 		dispatch({
 			type: "replace",
 			//@ts-ignore
-			data: formConfig[value],
+			data: tabs[value],
 		});
 		//@ts-ignore
-		setSelectedFormConfig(formConfig[value]);
+		setSelectedFormConfig(tabs[value]);
 	}
 
 	function addHoldings() {
