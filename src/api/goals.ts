@@ -628,15 +628,52 @@ export type Registration = {
   updatedAt?: string,
 };
 
+export type CreateFamilyInput = {
+  id?: string | null,
+  tid: string,
+  name: string,
+  relation?: string | null,
+};
+
+export type ModelFamilyConditionInput = {
+  tid?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  relation?: ModelStringInput | null,
+  and?: Array< ModelFamilyConditionInput | null > | null,
+  or?: Array< ModelFamilyConditionInput | null > | null,
+  not?: ModelFamilyConditionInput | null,
+};
+
+export type Family = {
+  __typename: "Family",
+  id?: string,
+  tid?: string,
+  name?: string,
+  relation?: string | null,
+  createdAt?: string,
+  updatedAt?: string,
+  owner?: string | null,
+};
+
+export type UpdateFamilyInput = {
+  id: string,
+  tid?: string | null,
+  name?: string | null,
+  relation?: string | null,
+};
+
+export type DeleteFamilyInput = {
+  id?: string | null,
+};
+
 export type CreateHoldingsInput = {
   id?: string | null,
   instruments?: Array< HoldingInput > | null,
   deposits?: Array< DepositInput > | null,
-  loans?: Array< LoanInput > | null,
+  loans?: Array< LiabilityInput > | null,
   savings: number,
-  current?: number | null,
   property?: Array< PropertyInput > | null,
-  gold?: Array< HoldingInput > | null,
+  pm?: Array< HoldingInput > | null,
   crypto?: Array< HoldingInput > | null,
   other?: Array< HoldingInput > | null,
 };
@@ -646,13 +683,13 @@ export type HoldingInput = {
   qty: number,
   purchase?: Array< PurchaseInput > | null,
   name?: string | null,
+  curr: string,
 };
 
 export type PurchaseInput = {
   amt: number,
   date: number,
   qty: number,
-  unit?: string | null,
 };
 
 export type DepositInput = {
@@ -660,6 +697,12 @@ export type DepositInput = {
   start: number,
   end: number,
   rate: number,
+  curr: string,
+};
+
+export type LiabilityInput = {
+  loan?: LoanInput | null,
+  curr: string,
 };
 
 export type PropertyInput = {
@@ -667,6 +710,8 @@ export type PropertyInput = {
   pin: number,
   purchase?: PurchaseInput | null,
   address?: string | null,
+  curr: string,
+  country: string,
 };
 
 export enum PropertyType {
@@ -682,7 +727,6 @@ export enum PropertyType {
 
 export type ModelHoldingsConditionInput = {
   savings?: ModelFloatInput | null,
-  current?: ModelFloatInput | null,
   and?: Array< ModelHoldingsConditionInput | null > | null,
   or?: Array< ModelHoldingsConditionInput | null > | null,
   not?: ModelHoldingsConditionInput | null,
@@ -693,11 +737,10 @@ export type Holdings = {
   id?: string,
   instruments?:  Array<Holding > | null,
   deposits?:  Array<Deposit > | null,
-  loans?:  Array<Loan > | null,
+  loans?:  Array<Liability > | null,
   savings?: number,
-  current?: number | null,
   property?:  Array<Property > | null,
-  gold?:  Array<Holding > | null,
+  pm?:  Array<Holding > | null,
   crypto?:  Array<Holding > | null,
   other?:  Array<Holding > | null,
   createdAt?: string,
@@ -711,6 +754,8 @@ export type Holding = {
   qty?: number,
   purchase?:  Array<Purchase > | null,
   name?: string | null,
+  owners?:  Array<Family >,
+  curr?: string,
 };
 
 export type Purchase = {
@@ -718,7 +763,6 @@ export type Purchase = {
   amt?: number,
   date?: number,
   qty?: number,
-  unit?: string | null,
 };
 
 export type Deposit = {
@@ -727,6 +771,15 @@ export type Deposit = {
   start?: number,
   end?: number,
   rate?: number,
+  owners?:  Array<Family >,
+  curr?: string,
+};
+
+export type Liability = {
+  __typename: "Liability",
+  loan?: Loan,
+  owners?:  Array<Family >,
+  curr?: string,
 };
 
 export type Property = {
@@ -735,17 +788,19 @@ export type Property = {
   pin?: number,
   purchase?: Purchase,
   address?: string | null,
+  owners?:  Array<Family >,
+  curr?: string,
+  country?: string,
 };
 
 export type UpdateHoldingsInput = {
   id: string,
   instruments?: Array< HoldingInput > | null,
   deposits?: Array< DepositInput > | null,
-  loans?: Array< LoanInput > | null,
+  loans?: Array< LiabilityInput > | null,
   savings?: number | null,
-  current?: number | null,
   property?: Array< PropertyInput > | null,
-  gold?: Array< HoldingInput > | null,
+  pm?: Array< HoldingInput > | null,
   crypto?: Array< HoldingInput > | null,
   other?: Array< HoldingInput > | null,
 };
@@ -811,9 +866,9 @@ export type CreateInstrumentsInput = {
   isin: string,
   name: string,
   symbol: string,
-  ttl: number,
   country: string,
   type: InsType,
+  eodAdj: number,
 };
 
 export enum InsType {
@@ -829,9 +884,9 @@ export enum InsType {
 export type ModelInstrumentsConditionInput = {
   name?: ModelStringInput | null,
   symbol?: ModelStringInput | null,
-  ttl?: ModelIntInput | null,
   country?: ModelStringInput | null,
   type?: ModelInsTypeInput | null,
+  eodAdj?: ModelFloatInput | null,
   and?: Array< ModelInstrumentsConditionInput | null > | null,
   or?: Array< ModelInstrumentsConditionInput | null > | null,
   not?: ModelInstrumentsConditionInput | null,
@@ -847,9 +902,9 @@ export type Instruments = {
   isin?: string,
   name?: string,
   symbol?: string,
-  ttl?: number,
   country?: string,
   type?: InsType,
+  eodAdj?: number,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -858,45 +913,12 @@ export type UpdateInstrumentsInput = {
   isin: string,
   name?: string | null,
   symbol?: string | null,
-  ttl?: number | null,
   country?: string | null,
   type?: InsType | null,
+  eodAdj?: number | null,
 };
 
 export type DeleteInstrumentsInput = {
-  isin: string,
-};
-
-export type CreateInsPriceInput = {
-  isin: string,
-  eodAdj: number,
-  ttl: number,
-};
-
-export type ModelInsPriceConditionInput = {
-  eodAdj?: ModelFloatInput | null,
-  ttl?: ModelIntInput | null,
-  and?: Array< ModelInsPriceConditionInput | null > | null,
-  or?: Array< ModelInsPriceConditionInput | null > | null,
-  not?: ModelInsPriceConditionInput | null,
-};
-
-export type InsPrice = {
-  __typename: "InsPrice",
-  isin?: string,
-  eodAdj?: number,
-  ttl?: number,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type UpdateInsPriceInput = {
-  isin: string,
-  eodAdj?: number | null,
-  ttl?: number | null,
-};
-
-export type DeleteInsPriceInput = {
   isin: string,
 };
 
@@ -1030,10 +1052,25 @@ export type ModelAccountConnection = {
   nextToken?: string | null,
 };
 
+export type ModelFamilyFilterInput = {
+  id?: ModelIDInput | null,
+  tid?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  relation?: ModelStringInput | null,
+  and?: Array< ModelFamilyFilterInput | null > | null,
+  or?: Array< ModelFamilyFilterInput | null > | null,
+  not?: ModelFamilyFilterInput | null,
+};
+
+export type ModelFamilyConnection = {
+  __typename: "ModelFamilyConnection",
+  items?:  Array<Family | null > | null,
+  nextToken?: string | null,
+};
+
 export type ModelHoldingsFilterInput = {
   id?: ModelIDInput | null,
   savings?: ModelFloatInput | null,
-  current?: ModelFloatInput | null,
   and?: Array< ModelHoldingsFilterInput | null > | null,
   or?: Array< ModelHoldingsFilterInput | null > | null,
   not?: ModelHoldingsFilterInput | null,
@@ -1105,9 +1142,9 @@ export type ModelInstrumentsFilterInput = {
   isin?: ModelStringInput | null,
   name?: ModelStringInput | null,
   symbol?: ModelStringInput | null,
-  ttl?: ModelIntInput | null,
   country?: ModelStringInput | null,
   type?: ModelInsTypeInput | null,
+  eodAdj?: ModelFloatInput | null,
   and?: Array< ModelInstrumentsFilterInput | null > | null,
   or?: Array< ModelInstrumentsFilterInput | null > | null,
   not?: ModelInstrumentsFilterInput | null,
@@ -1116,21 +1153,6 @@ export type ModelInstrumentsFilterInput = {
 export type ModelInstrumentsConnection = {
   __typename: "ModelInstrumentsConnection",
   items?:  Array<Instruments | null > | null,
-  nextToken?: string | null,
-};
-
-export type ModelInsPriceFilterInput = {
-  isin?: ModelStringInput | null,
-  eodAdj?: ModelFloatInput | null,
-  ttl?: ModelIntInput | null,
-  and?: Array< ModelInsPriceFilterInput | null > | null,
-  or?: Array< ModelInsPriceFilterInput | null > | null,
-  not?: ModelInsPriceFilterInput | null,
-};
-
-export type ModelInsPriceConnection = {
-  __typename: "ModelInsPriceConnection",
-  items?:  Array<InsPrice | null > | null,
   nextToken?: string | null,
 };
 
@@ -1906,6 +1928,60 @@ export type DeleteRegistrationMutation = {
   } | null,
 };
 
+export type CreateFamilyMutationVariables = {
+  input?: CreateFamilyInput,
+  condition?: ModelFamilyConditionInput | null,
+};
+
+export type CreateFamilyMutation = {
+  createFamily?:  {
+    __typename: "Family",
+    id: string,
+    tid: string,
+    name: string,
+    relation?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateFamilyMutationVariables = {
+  input?: UpdateFamilyInput,
+  condition?: ModelFamilyConditionInput | null,
+};
+
+export type UpdateFamilyMutation = {
+  updateFamily?:  {
+    __typename: "Family",
+    id: string,
+    tid: string,
+    name: string,
+    relation?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteFamilyMutationVariables = {
+  input?: DeleteFamilyInput,
+  condition?: ModelFamilyConditionInput | null,
+};
+
+export type DeleteFamilyMutation = {
+  deleteFamily?:  {
+    __typename: "Family",
+    id: string,
+    tid: string,
+    name: string,
+    relation?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
 export type CreateHoldingsMutationVariables = {
   input?: CreateHoldingsInput,
   condition?: ModelHoldingsConditionInput | null,
@@ -1924,9 +2000,19 @@ export type CreateHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -1934,30 +2020,44 @@ export type CreateHoldingsMutation = {
       start: number,
       end: number,
       rate: number,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     loans?:  Array< {
-      __typename: "Loan",
-      type: LoanType,
-      per: number,
-      rate?: number | null,
-      dur: number,
-      ry: number,
-      pp?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      ira?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      emi?: number | null,
-      pmi?: number | null,
-      peper?: number | null,
+      __typename: "Liability",
+      loan?:  {
+        __typename: "Loan",
+        type: LoanType,
+        per: number,
+        rate?: number | null,
+        dur: number,
+        ry: number,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
+      } | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     savings: number,
-    current?: number | null,
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
@@ -1967,11 +2067,22 @@ export type CreateHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } | null,
       address?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
+      country: string,
     } > | null,
-    gold?:  Array< {
+    pm?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
@@ -1980,9 +2091,19 @@ export type CreateHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -1993,9 +2114,19 @@ export type CreateHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -2006,9 +2137,19 @@ export type CreateHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -2034,9 +2175,19 @@ export type UpdateHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -2044,30 +2195,44 @@ export type UpdateHoldingsMutation = {
       start: number,
       end: number,
       rate: number,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     loans?:  Array< {
-      __typename: "Loan",
-      type: LoanType,
-      per: number,
-      rate?: number | null,
-      dur: number,
-      ry: number,
-      pp?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      ira?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      emi?: number | null,
-      pmi?: number | null,
-      peper?: number | null,
+      __typename: "Liability",
+      loan?:  {
+        __typename: "Loan",
+        type: LoanType,
+        per: number,
+        rate?: number | null,
+        dur: number,
+        ry: number,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
+      } | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     savings: number,
-    current?: number | null,
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
@@ -2077,11 +2242,22 @@ export type UpdateHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } | null,
       address?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
+      country: string,
     } > | null,
-    gold?:  Array< {
+    pm?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
@@ -2090,9 +2266,19 @@ export type UpdateHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -2103,9 +2289,19 @@ export type UpdateHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -2116,9 +2312,19 @@ export type UpdateHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -2144,9 +2350,19 @@ export type DeleteHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -2154,30 +2370,44 @@ export type DeleteHoldingsMutation = {
       start: number,
       end: number,
       rate: number,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     loans?:  Array< {
-      __typename: "Loan",
-      type: LoanType,
-      per: number,
-      rate?: number | null,
-      dur: number,
-      ry: number,
-      pp?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      ira?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      emi?: number | null,
-      pmi?: number | null,
-      peper?: number | null,
+      __typename: "Liability",
+      loan?:  {
+        __typename: "Loan",
+        type: LoanType,
+        per: number,
+        rate?: number | null,
+        dur: number,
+        ry: number,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
+      } | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     savings: number,
-    current?: number | null,
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
@@ -2187,11 +2417,22 @@ export type DeleteHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } | null,
       address?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
+      country: string,
     } > | null,
-    gold?:  Array< {
+    pm?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
@@ -2200,9 +2441,19 @@ export type DeleteHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -2213,9 +2464,19 @@ export type DeleteHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -2226,9 +2487,19 @@ export type DeleteHoldingsMutation = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -2363,9 +2634,9 @@ export type CreateInstrumentsMutation = {
     isin: string,
     name: string,
     symbol: string,
-    ttl: number,
     country: string,
     type: InsType,
+    eodAdj: number,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2382,9 +2653,9 @@ export type UpdateInstrumentsMutation = {
     isin: string,
     name: string,
     symbol: string,
-    ttl: number,
     country: string,
     type: InsType,
+    eodAdj: number,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2401,57 +2672,9 @@ export type DeleteInstrumentsMutation = {
     isin: string,
     name: string,
     symbol: string,
-    ttl: number,
     country: string,
     type: InsType,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateInsPriceMutationVariables = {
-  input?: CreateInsPriceInput,
-  condition?: ModelInsPriceConditionInput | null,
-};
-
-export type CreateInsPriceMutation = {
-  createInsPrice?:  {
-    __typename: "InsPrice",
-    isin: string,
     eodAdj: number,
-    ttl: number,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateInsPriceMutationVariables = {
-  input?: UpdateInsPriceInput,
-  condition?: ModelInsPriceConditionInput | null,
-};
-
-export type UpdateInsPriceMutation = {
-  updateInsPrice?:  {
-    __typename: "InsPrice",
-    isin: string,
-    eodAdj: number,
-    ttl: number,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteInsPriceMutationVariables = {
-  input?: DeleteInsPriceInput,
-  condition?: ModelInsPriceConditionInput | null,
-};
-
-export type DeleteInsPriceMutation = {
-  deleteInsPrice?:  {
-    __typename: "InsPrice",
-    isin: string,
-    eodAdj: number,
-    ttl: number,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2917,6 +3140,46 @@ export type ListAccountsQuery = {
   } | null,
 };
 
+export type GetFamilyQueryVariables = {
+  id?: string,
+};
+
+export type GetFamilyQuery = {
+  getFamily?:  {
+    __typename: "Family",
+    id: string,
+    tid: string,
+    name: string,
+    relation?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListFamilysQueryVariables = {
+  filter?: ModelFamilyFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListFamilysQuery = {
+  listFamilys?:  {
+    __typename: "ModelFamilyConnection",
+    items?:  Array< {
+      __typename: "Family",
+      id: string,
+      tid: string,
+      name: string,
+      relation?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetHoldingsQueryVariables = {
   id?: string,
 };
@@ -2934,9 +3197,19 @@ export type GetHoldingsQuery = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -2944,30 +3217,44 @@ export type GetHoldingsQuery = {
       start: number,
       end: number,
       rate: number,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     loans?:  Array< {
-      __typename: "Loan",
-      type: LoanType,
-      per: number,
-      rate?: number | null,
-      dur: number,
-      ry: number,
-      pp?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      ira?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      emi?: number | null,
-      pmi?: number | null,
-      peper?: number | null,
+      __typename: "Liability",
+      loan?:  {
+        __typename: "Loan",
+        type: LoanType,
+        per: number,
+        rate?: number | null,
+        dur: number,
+        ry: number,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
+      } | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     savings: number,
-    current?: number | null,
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
@@ -2977,11 +3264,22 @@ export type GetHoldingsQuery = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } | null,
       address?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
+      country: string,
     } > | null,
-    gold?:  Array< {
+    pm?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
@@ -2990,9 +3288,19 @@ export type GetHoldingsQuery = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -3003,9 +3311,19 @@ export type GetHoldingsQuery = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -3016,9 +3334,19 @@ export type GetHoldingsQuery = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -3043,6 +3371,7 @@ export type ListHoldingssQuery = {
         id: string,
         qty: number,
         name?: string | null,
+        curr: string,
       } > | null,
       deposits?:  Array< {
         __typename: "Deposit",
@@ -3050,43 +3379,41 @@ export type ListHoldingssQuery = {
         start: number,
         end: number,
         rate: number,
+        curr: string,
       } > | null,
       loans?:  Array< {
-        __typename: "Loan",
-        type: LoanType,
-        per: number,
-        rate?: number | null,
-        dur: number,
-        ry: number,
-        emi?: number | null,
-        pmi?: number | null,
-        peper?: number | null,
+        __typename: "Liability",
+        curr: string,
       } > | null,
       savings: number,
-      current?: number | null,
       property?:  Array< {
         __typename: "Property",
         type: PropertyType,
         pin: number,
         address?: string | null,
+        curr: string,
+        country: string,
       } > | null,
-      gold?:  Array< {
+      pm?:  Array< {
         __typename: "Holding",
         id: string,
         qty: number,
         name?: string | null,
+        curr: string,
       } > | null,
       crypto?:  Array< {
         __typename: "Holding",
         id: string,
         qty: number,
         name?: string | null,
+        curr: string,
       } > | null,
       other?:  Array< {
         __typename: "Holding",
         id: string,
         qty: number,
         name?: string | null,
+        curr: string,
       } > | null,
       createdAt: string,
       updatedAt: string,
@@ -3236,9 +3563,9 @@ export type GetInstrumentsQuery = {
     isin: string,
     name: string,
     symbol: string,
-    ttl: number,
     country: string,
     type: InsType,
+    eodAdj: number,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3260,47 +3587,9 @@ export type ListInstrumentssQuery = {
       isin: string,
       name: string,
       symbol: string,
-      ttl: number,
       country: string,
       type: InsType,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetInsPriceQueryVariables = {
-  isin?: string,
-};
-
-export type GetInsPriceQuery = {
-  getInsPrice?:  {
-    __typename: "InsPrice",
-    isin: string,
-    eodAdj: number,
-    ttl: number,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListInsPricesQueryVariables = {
-  isin?: string | null,
-  filter?: ModelInsPriceFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListInsPricesQuery = {
-  listInsPrices?:  {
-    __typename: "ModelInsPriceConnection",
-    items?:  Array< {
-      __typename: "InsPrice",
-      isin: string,
       eodAdj: number,
-      ttl: number,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -4007,6 +4296,57 @@ export type OnDeleteAccountSubscription = {
   } | null,
 };
 
+export type OnCreateFamilySubscriptionVariables = {
+  owner?: string,
+};
+
+export type OnCreateFamilySubscription = {
+  onCreateFamily?:  {
+    __typename: "Family",
+    id: string,
+    tid: string,
+    name: string,
+    relation?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateFamilySubscriptionVariables = {
+  owner?: string,
+};
+
+export type OnUpdateFamilySubscription = {
+  onUpdateFamily?:  {
+    __typename: "Family",
+    id: string,
+    tid: string,
+    name: string,
+    relation?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteFamilySubscriptionVariables = {
+  owner?: string,
+};
+
+export type OnDeleteFamilySubscription = {
+  onDeleteFamily?:  {
+    __typename: "Family",
+    id: string,
+    tid: string,
+    name: string,
+    relation?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
 export type OnCreateHoldingsSubscriptionVariables = {
   owner?: string,
 };
@@ -4024,9 +4364,19 @@ export type OnCreateHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -4034,30 +4384,44 @@ export type OnCreateHoldingsSubscription = {
       start: number,
       end: number,
       rate: number,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     loans?:  Array< {
-      __typename: "Loan",
-      type: LoanType,
-      per: number,
-      rate?: number | null,
-      dur: number,
-      ry: number,
-      pp?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      ira?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      emi?: number | null,
-      pmi?: number | null,
-      peper?: number | null,
+      __typename: "Liability",
+      loan?:  {
+        __typename: "Loan",
+        type: LoanType,
+        per: number,
+        rate?: number | null,
+        dur: number,
+        ry: number,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
+      } | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     savings: number,
-    current?: number | null,
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
@@ -4067,11 +4431,22 @@ export type OnCreateHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } | null,
       address?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
+      country: string,
     } > | null,
-    gold?:  Array< {
+    pm?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
@@ -4080,9 +4455,19 @@ export type OnCreateHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -4093,9 +4478,19 @@ export type OnCreateHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -4106,9 +4501,19 @@ export type OnCreateHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -4133,9 +4538,19 @@ export type OnUpdateHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -4143,30 +4558,44 @@ export type OnUpdateHoldingsSubscription = {
       start: number,
       end: number,
       rate: number,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     loans?:  Array< {
-      __typename: "Loan",
-      type: LoanType,
-      per: number,
-      rate?: number | null,
-      dur: number,
-      ry: number,
-      pp?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      ira?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      emi?: number | null,
-      pmi?: number | null,
-      peper?: number | null,
+      __typename: "Liability",
+      loan?:  {
+        __typename: "Loan",
+        type: LoanType,
+        per: number,
+        rate?: number | null,
+        dur: number,
+        ry: number,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
+      } | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     savings: number,
-    current?: number | null,
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
@@ -4176,11 +4605,22 @@ export type OnUpdateHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } | null,
       address?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
+      country: string,
     } > | null,
-    gold?:  Array< {
+    pm?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
@@ -4189,9 +4629,19 @@ export type OnUpdateHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -4202,9 +4652,19 @@ export type OnUpdateHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -4215,9 +4675,19 @@ export type OnUpdateHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -4242,9 +4712,19 @@ export type OnDeleteHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -4252,30 +4732,44 @@ export type OnDeleteHoldingsSubscription = {
       start: number,
       end: number,
       rate: number,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     loans?:  Array< {
-      __typename: "Loan",
-      type: LoanType,
-      per: number,
-      rate?: number | null,
-      dur: number,
-      ry: number,
-      pp?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      ira?:  Array< {
-        __typename: "Target",
-        num: number,
-        val: number,
-      } > | null,
-      emi?: number | null,
-      pmi?: number | null,
-      peper?: number | null,
+      __typename: "Liability",
+      loan?:  {
+        __typename: "Loan",
+        type: LoanType,
+        per: number,
+        rate?: number | null,
+        dur: number,
+        ry: number,
+        emi?: number | null,
+        pmi?: number | null,
+        peper?: number | null,
+      } | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     savings: number,
-    current?: number | null,
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
@@ -4285,11 +4779,22 @@ export type OnDeleteHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } | null,
       address?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
+      country: string,
     } > | null,
-    gold?:  Array< {
+    pm?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
@@ -4298,9 +4803,19 @@ export type OnDeleteHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -4311,9 +4826,19 @@ export type OnDeleteHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -4324,9 +4849,19 @@ export type OnDeleteHoldingsSubscription = {
         amt: number,
         date: number,
         qty: number,
-        unit?: string | null,
       } > | null,
       name?: string | null,
+      owners:  Array< {
+        __typename: "Family",
+        id: string,
+        tid: string,
+        name: string,
+        relation?: string | null,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } >,
+      curr: string,
     } > | null,
     createdAt: string,
     updatedAt: string,
@@ -4469,9 +5004,9 @@ export type OnCreateInstrumentsSubscription = {
     isin: string,
     name: string,
     symbol: string,
-    ttl: number,
     country: string,
     type: InsType,
+    eodAdj: number,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4483,9 +5018,9 @@ export type OnUpdateInstrumentsSubscription = {
     isin: string,
     name: string,
     symbol: string,
-    ttl: number,
     country: string,
     type: InsType,
+    eodAdj: number,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4497,42 +5032,9 @@ export type OnDeleteInstrumentsSubscription = {
     isin: string,
     name: string,
     symbol: string,
-    ttl: number,
     country: string,
     type: InsType,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateInsPriceSubscription = {
-  onCreateInsPrice?:  {
-    __typename: "InsPrice",
-    isin: string,
     eodAdj: number,
-    ttl: number,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateInsPriceSubscription = {
-  onUpdateInsPrice?:  {
-    __typename: "InsPrice",
-    isin: string,
-    eodAdj: number,
-    ttl: number,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteInsPriceSubscription = {
-  onDeleteInsPrice?:  {
-    __typename: "InsPrice",
-    isin: string,
-    eodAdj: number,
-    ttl: number,
     createdAt: string,
     updatedAt: string,
   } | null,

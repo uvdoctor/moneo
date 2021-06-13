@@ -407,6 +407,39 @@ export const listAccounts = /* GraphQL */ `
     }
   }
 `;
+export const getFamily = /* GraphQL */ `
+  query GetFamily($id: ID!) {
+    getFamily(id: $id) {
+      id
+      tid
+      name
+      relation
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listFamilys = /* GraphQL */ `
+  query ListFamilys(
+    $filter: ModelFamilyFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFamilys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        tid
+        name
+        relation
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const getHoldings = /* GraphQL */ `
   query GetHoldings($id: ID!) {
     getHoldings(id: $id) {
@@ -418,36 +451,58 @@ export const getHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       deposits {
         amt
         start
         end
         rate
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       loans {
-        type
-        per
-        rate
-        dur
-        ry
-        pp {
-          num
-          val
+        loan {
+          type
+          per
+          rate
+          dur
+          ry
+          emi
+          pmi
+          peper
         }
-        ira {
-          num
-          val
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
         }
-        emi
-        pmi
-        peper
+        curr
       }
       savings
-      current
       property {
         type
         pin
@@ -455,20 +510,39 @@ export const getHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         address
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
+        country
       }
-      gold {
+      pm {
         id
         qty
         purchase {
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       crypto {
         id
@@ -477,9 +551,18 @@ export const getHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       other {
         id
@@ -488,9 +571,18 @@ export const getHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       createdAt
       updatedAt
@@ -511,44 +603,43 @@ export const listHoldingss = /* GraphQL */ `
           id
           qty
           name
+          curr
         }
         deposits {
           amt
           start
           end
           rate
+          curr
         }
         loans {
-          type
-          per
-          rate
-          dur
-          ry
-          emi
-          pmi
-          peper
+          curr
         }
         savings
-        current
         property {
           type
           pin
           address
+          curr
+          country
         }
-        gold {
+        pm {
           id
           qty
           name
+          curr
         }
         crypto {
           id
           qty
           name
+          curr
         }
         other {
           id
           qty
           name
+          curr
         }
         createdAt
         updatedAt
@@ -677,9 +768,9 @@ export const getInstruments = /* GraphQL */ `
       isin
       name
       symbol
-      ttl
       country
       type
+      eodAdj
       createdAt
       updatedAt
     }
@@ -704,46 +795,9 @@ export const listInstrumentss = /* GraphQL */ `
         isin
         name
         symbol
-        ttl
         country
         type
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getInsPrice = /* GraphQL */ `
-  query GetInsPrice($isin: String!) {
-    getInsPrice(isin: $isin) {
-      isin
-      eodAdj
-      ttl
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInsPrices = /* GraphQL */ `
-  query ListInsPrices(
-    $isin: String
-    $filter: ModelInsPriceFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listInsPrices(
-      isin: $isin
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        isin
         eodAdj
-        ttl
         createdAt
         updatedAt
       }

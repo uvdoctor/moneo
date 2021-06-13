@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { Fragment, useContext, useEffect } from 'react';
 import HoldingTabs from './HoldingTabs';
 import HoldingsChart from './HoldingsChart';
 import SearchFilter from './SearchFilter';
@@ -28,7 +28,7 @@ export default function HoldingsDetails() {
 	}, []);
 
 	return (
-		<div className="nw-container">
+		<Fragment>
 			<div className="primary-header">
 				<Row>
 					<Col span={24}>
@@ -66,18 +66,19 @@ export default function HoldingsDetails() {
 					</Col>
 				</Row>
 			</div>
-			<p>&nbsp;</p>
-			{holdingsResult}
-			<p>&nbsp;</p>
-			<DataSwitcher title={<h3>Holdings details</h3>}>
-				<Chart>
-					<HoldingsChart />
-				</Chart>
-				<DataSwitcherList>
-					<SearchFilter />
-					<HoldingTabs />
-				</DataSwitcherList>
-			</DataSwitcher>
-		</div>
+			<div className="nw-container">
+				{holdingsResult}
+				<p>&nbsp;</p>
+				<DataSwitcher title={<h3>Holdings details</h3>}>
+					<Chart>
+						<HoldingsChart />
+					</Chart>
+					<DataSwitcherList>
+						<SearchFilter />
+						<HoldingTabs />
+					</DataSwitcherList>
+				</DataSwitcher>
+			</div>
+		</Fragment>
 	);
 }

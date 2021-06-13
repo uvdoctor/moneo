@@ -210,20 +210,16 @@ type Instruments
 	isin: String!
 	name: String!
 	symbol: String!
-	ttl: Int!
 	country: String!
 	type: InsType!
+	eodAdj: Float!
 }
 
-type InsPrice
-	@model
-	@aws_iam
-	@aws_cognito_user_pools
-	@key(fields: ["isin"])
-	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update, delete] }]) {
-	isin: String!
-	eodAdj: Float!
-	ttl: Int!
+type Family @model @auth(rules: [{ allow: owner }]) {
+	id: ID!
+	tid: String!
+	name: String!
+	relation: String
 }
 
 type Holding {
@@ -231,6 +227,8 @@ type Holding {
 	qty: Float!
 	purchase: [Purchase!]
 	name: String
+	owners: [Family!]!
+	curr: String!
 }
 
 type Deposit {
@@ -238,6 +236,8 @@ type Deposit {
 	start: Int!
 	end: Int!
 	rate: Float!
+	owners: [Family!]!
+	curr: String!
 }
 
 enum PropertyType {
@@ -254,7 +254,6 @@ type Purchase {
 	amt: Float!
 	date: Int!
 	qty: Float!
-	unit: String
 }
 
 type Property {
@@ -262,17 +261,25 @@ type Property {
 	pin: Int!
 	purchase: Purchase
 	address: String
+	owners: [Family!]!
+	curr: String!
+	country: String!
+}
+
+type Liability {
+	loan: Loan
+	owners: [Family!]!
+	curr: String!
 }
 
 type Holdings @model @auth(rules: [{ allow: owner }]) {
 	id: ID!
 	instruments: [Holding!]
 	deposits: [Deposit!]
-	loans: [Loan!]
+	loans: [Liability!]
 	savings: Float!
-	current: Float
 	property: [Property!]
-	gold: [Holding!]
+	pm: [Holding!]
 	crypto: [Holding!]
 	other: [Holding!]
 }

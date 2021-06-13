@@ -698,6 +698,54 @@ export const deleteRegistration = /* GraphQL */ `
     }
   }
 `;
+export const createFamily = /* GraphQL */ `
+  mutation CreateFamily(
+    $input: CreateFamilyInput!
+    $condition: ModelFamilyConditionInput
+  ) {
+    createFamily(input: $input, condition: $condition) {
+      id
+      tid
+      name
+      relation
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateFamily = /* GraphQL */ `
+  mutation UpdateFamily(
+    $input: UpdateFamilyInput!
+    $condition: ModelFamilyConditionInput
+  ) {
+    updateFamily(input: $input, condition: $condition) {
+      id
+      tid
+      name
+      relation
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteFamily = /* GraphQL */ `
+  mutation DeleteFamily(
+    $input: DeleteFamilyInput!
+    $condition: ModelFamilyConditionInput
+  ) {
+    deleteFamily(input: $input, condition: $condition) {
+      id
+      tid
+      name
+      relation
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const createHoldings = /* GraphQL */ `
   mutation CreateHoldings(
     $input: CreateHoldingsInput!
@@ -712,36 +760,58 @@ export const createHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       deposits {
         amt
         start
         end
         rate
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       loans {
-        type
-        per
-        rate
-        dur
-        ry
-        pp {
-          num
-          val
+        loan {
+          type
+          per
+          rate
+          dur
+          ry
+          emi
+          pmi
+          peper
         }
-        ira {
-          num
-          val
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
         }
-        emi
-        pmi
-        peper
+        curr
       }
       savings
-      current
       property {
         type
         pin
@@ -749,20 +819,39 @@ export const createHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         address
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
+        country
       }
-      gold {
+      pm {
         id
         qty
         purchase {
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       crypto {
         id
@@ -771,9 +860,18 @@ export const createHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       other {
         id
@@ -782,9 +880,18 @@ export const createHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       createdAt
       updatedAt
@@ -806,36 +913,58 @@ export const updateHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       deposits {
         amt
         start
         end
         rate
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       loans {
-        type
-        per
-        rate
-        dur
-        ry
-        pp {
-          num
-          val
+        loan {
+          type
+          per
+          rate
+          dur
+          ry
+          emi
+          pmi
+          peper
         }
-        ira {
-          num
-          val
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
         }
-        emi
-        pmi
-        peper
+        curr
       }
       savings
-      current
       property {
         type
         pin
@@ -843,20 +972,39 @@ export const updateHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         address
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
+        country
       }
-      gold {
+      pm {
         id
         qty
         purchase {
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       crypto {
         id
@@ -865,9 +1013,18 @@ export const updateHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       other {
         id
@@ -876,9 +1033,18 @@ export const updateHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       createdAt
       updatedAt
@@ -900,36 +1066,58 @@ export const deleteHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       deposits {
         amt
         start
         end
         rate
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       loans {
-        type
-        per
-        rate
-        dur
-        ry
-        pp {
-          num
-          val
+        loan {
+          type
+          per
+          rate
+          dur
+          ry
+          emi
+          pmi
+          peper
         }
-        ira {
-          num
-          val
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
         }
-        emi
-        pmi
-        peper
+        curr
       }
       savings
-      current
       property {
         type
         pin
@@ -937,20 +1125,39 @@ export const deleteHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         address
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
+        country
       }
-      gold {
+      pm {
         id
         qty
         purchase {
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       crypto {
         id
@@ -959,9 +1166,18 @@ export const deleteHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       other {
         id
@@ -970,9 +1186,18 @@ export const deleteHoldings = /* GraphQL */ `
           amt
           date
           qty
-          unit
         }
         name
+        owners {
+          id
+          tid
+          name
+          relation
+          createdAt
+          updatedAt
+          owner
+        }
+        curr
       }
       createdAt
       updatedAt
@@ -1091,9 +1316,9 @@ export const createInstruments = /* GraphQL */ `
       isin
       name
       symbol
-      ttl
       country
       type
+      eodAdj
       createdAt
       updatedAt
     }
@@ -1108,9 +1333,9 @@ export const updateInstruments = /* GraphQL */ `
       isin
       name
       symbol
-      ttl
       country
       type
+      eodAdj
       createdAt
       updatedAt
     }
@@ -1125,51 +1350,9 @@ export const deleteInstruments = /* GraphQL */ `
       isin
       name
       symbol
-      ttl
       country
       type
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createInsPrice = /* GraphQL */ `
-  mutation CreateInsPrice(
-    $input: CreateInsPriceInput!
-    $condition: ModelInsPriceConditionInput
-  ) {
-    createInsPrice(input: $input, condition: $condition) {
-      isin
       eodAdj
-      ttl
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateInsPrice = /* GraphQL */ `
-  mutation UpdateInsPrice(
-    $input: UpdateInsPriceInput!
-    $condition: ModelInsPriceConditionInput
-  ) {
-    updateInsPrice(input: $input, condition: $condition) {
-      isin
-      eodAdj
-      ttl
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteInsPrice = /* GraphQL */ `
-  mutation DeleteInsPrice(
-    $input: DeleteInsPriceInput!
-    $condition: ModelInsPriceConditionInput
-  ) {
-    deleteInsPrice(input: $input, condition: $condition) {
-      isin
-      eodAdj
-      ttl
       createdAt
       updatedAt
     }
