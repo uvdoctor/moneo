@@ -32,7 +32,6 @@ export const createNewAccount = async (account: APIt.CreateAccountInput) => {
 
 export const getAllFamilyMembers = () => {
 	return {
-		all: 'All Family Members',
 		self: 'My Name (PAN: AAPD0000R)',
 		partner: 'My Partner (PAN: AAPD0001R)',
 		father: 'My Father (PAN: AAPD0002R)',

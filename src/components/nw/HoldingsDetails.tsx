@@ -10,16 +10,14 @@ import SelectInput from '../form/selectinput';
 import { SaveOutlined } from '@ant-design/icons';
 
 import './nw.less';
+import SelectInputFamily from './SelectInputFamily';
 
 export default function HoldingsDetails() {
 	const {
 		holdingsResult,
 		setHoldingsResult,
-		selectedMember,
 		selectedCurrency,
 		setSelectedCurrency,
-		setSelectedMember,
-		allFamily
 	}: any = useContext(NWContext);
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
@@ -49,12 +47,7 @@ export default function HoldingsDetails() {
 				</Row>
 				<Row justify="space-between" align="middle" className="secondary-header">
 					<Col>
-						<SelectInput
-							options={allFamily}
-							pre="Show for"
-							value={selectedMember}
-							changeHandler={setSelectedMember}
-						/>
+						<SelectInputFamily />
 					</Col>
 					<Col>
 						<SelectInput

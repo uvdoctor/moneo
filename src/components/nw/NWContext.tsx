@@ -25,7 +25,7 @@ const NWContext = createContext({});
 function NWContextProvider() {
 	const { defaultCurrency }: any = useContext(AppContext);
 	const [allFamily, setAllFamily] = useState<any>(getAllFamilyMembers());
-	const [selectedMember, setSelectedMember] = useState<string>("all");
+	const [selectedMembers, setSelectedMembers] = useState<Array<string>>(["All"]);
 	const [selectedCurrency, setSelectedCurrency] = useState<string>(
 		defaultCurrency
 	);
@@ -501,8 +501,8 @@ function NWContextProvider() {
 				setAllLendings,
 				allCrypto,
 				setAllCrypto,
-				selectedMember,
-				setSelectedMember,
+				selectedMembers,
+				setSelectedMembers,
 				selectedCurrency,
 				setSelectedCurrency,
 				activeTabSum,
