@@ -23,9 +23,8 @@ export default function FamilyInput() {
     const [ loading, setLoading ] = useState<boolean>(true);
     const [ includeAllOption, setIncludeAllOption ] = useState<boolean>(false);
 
-    const getDefaultFamilySelection = (familyList?: any) => {
-        let list = familyList ? familyList : allFamily;
-        let keys = Object.keys(list);
+    const getDefaultFamilySelection = () => {
+        let keys = Object.keys(allFamily);
         return !keys.length ? '' : keys.length > 1 ? ALL_FAMILY : keys[0];
     }
 
@@ -51,6 +50,9 @@ export default function FamilyInput() {
 
 	useEffect(() => {
         setIncludeAllOption(Object.keys(allFamily).length > 1);
+        if(Object.keys(allFamily).length === 1) {
+            setSelectedMembers([...[getDefaultFamilySelection()]]);
+        }
     }, [ Object.keys(allFamily).length ]);
 
 	const selectMember = (val: string[]) => {
@@ -58,11 +60,11 @@ export default function FamilyInput() {
 			setSelectedMembers([ ...[ getDefaultFamilySelection() ] ]);
 			return;
 		}
-        if(val.length === 1) {
+        if(val.length === 1 && val[0]) {
             setSelectedMembers([...val]);
             return;
         }
-        let filteredOpts = val.filter((key: string) => key !== ALL_FAMILY);
+        let filteredOpts = val.filter((key: string) => key && key !== ALL_FAMILY);
 		setSelectedMembers([ ...filteredOpts ]);
 	};
 
@@ -163,7 +165,9 @@ export default function FamilyInput() {
                         </Tooltip>
                     </Col> : null}
                 </Row>
-            : <Button icon={<UserAddOutlined />} onClick={() => addMember()} loading={loading}>Set up Family List</Button>}
+            : <Button icon={<UserAddOutlined />} onClick={() => setMode(ADD_MODE)} loading={loading}>
+                Set up Family List
+            </Button>}
             {mode && 
                 <Modal title={`${mode} Family Member`} visible={mode.length > 0} onCancel={() => setMode('')}
                 onOk={() => mode === ADD_MODE ? addMember() : changeMember()}
