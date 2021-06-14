@@ -16,7 +16,11 @@ export default function SelectInputFamily() {
 
 	useEffect(
 		() => {
-			if (Object.keys(allFamily).length) setOptions(Object.assign(options, allFamily));
+			if (Object.keys(allFamily).length) {
+                let opts: any = {};
+                Object.keys(options).forEach((key: string) => opts[key] = allFamily[key].name);
+                setOptions(opts);
+            }
 		},
 		[ allFamily ]
 	);

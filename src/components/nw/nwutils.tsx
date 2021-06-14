@@ -42,7 +42,9 @@ export const getAllFamilyMembers = async () => {
 		console.log('Got all family relations from db....', family);
 		if(!family || !family.length) return {};
 		let familyList: any = {};
-		family.forEach((val: APIt.CreateFamilyInput) => familyList[val.id as string] = {name: val.name, taxId: val.tid});
+		family.forEach((val: APIt.CreateFamilyInput) => {
+			if(val.id) familyList[val.id as string] = {name: val.name, taxId: val.tid}
+		});
 		return family;
 	} catch (e) {
 		console.log('Error while getting family list: ', e);
@@ -50,9 +52,9 @@ export const getAllFamilyMembers = async () => {
 	}
 };
 
-export const addFamilyMember = async (member: APIt.CreateFamilyInput) => {
+export const addFamilyMember = async (name: string, taxId: string) => {
 	try {
-		const { data } = (await API.graphql(graphqlOperation(mutations.createFamily, { input: member }))) as {
+		const { data } = (await API.graphql(graphqlOperation(mutations.createFamily, { input: {name: name, tid: taxId} }))) as {
 			data: APIt.CreateFamilyMutation;
 		};
 		return data.createFamily as APIt.CreateFamilyInput;
