@@ -101,6 +101,7 @@ export const createGoal = /* GraphQL */ `
       }
       ra
       rachg
+      img
       createdAt
       updatedAt
       owner
@@ -172,6 +173,7 @@ export const updateGoal = /* GraphQL */ `
       }
       ra
       rachg
+      img
       createdAt
       updatedAt
       owner
@@ -243,6 +245,7 @@ export const deleteGoal = /* GraphQL */ `
       }
       ra
       rachg
+      img
       createdAt
       updatedAt
       owner
@@ -313,6 +316,7 @@ export const createMilestone = /* GraphQL */ `
         }
         ra
         rachg
+        img
         createdAt
         updatedAt
         owner
@@ -387,6 +391,7 @@ export const updateMilestone = /* GraphQL */ `
         }
         ra
         rachg
+        img
         createdAt
         updatedAt
         owner
@@ -461,6 +466,7 @@ export const deleteMilestone = /* GraphQL */ `
         }
         ra
         rachg
+        img
         createdAt
         updatedAt
         owner

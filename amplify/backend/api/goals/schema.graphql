@@ -122,6 +122,7 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
 	pl: [Target]
 	ra: Int
 	rachg: Float
+	img: String
 }
 
 enum MilestoneAttr {
