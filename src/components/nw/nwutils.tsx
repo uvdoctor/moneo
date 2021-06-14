@@ -31,7 +31,7 @@ export const createNewAccount = async (account: APIt.CreateAccountInput) => {
 	}
 };
 
-export const getAllFamilyMembers = async () => {
+export const loadAllFamilyMembers = async () => {
 	try {
 		const { data: { listFamilys } } = (await API.graphql(graphqlOperation(queries.listFamilys))) as {
 			data: APIt.ListFamilysQuery;
@@ -45,7 +45,7 @@ export const getAllFamilyMembers = async () => {
 		family.forEach((val: APIt.CreateFamilyInput) => {
 			if(val.id) familyList[val.id as string] = {name: val.name, taxId: val.tid}
 		});
-		return family;
+		return familyList;
 	} catch (e) {
 		console.log('Error while getting family list: ', e);
 		return null;

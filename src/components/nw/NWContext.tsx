@@ -18,15 +18,14 @@ import {
 	removeDuplicates,
 } from "../utils";
 import { AppContext } from "../AppContext";
-import { getAllFamilyMembers } from "./nwutils";
 import { ALL_FAMILY } from "./FamilyInput";
 
 const NWContext = createContext({});
 
 function NWContextProvider() {
 	const { defaultCurrency }: any = useContext(AppContext);
-	const [allFamily, setAllFamily] = useState<any>(getAllFamilyMembers());
-	const [selectedMembers, setSelectedMembers] = useState<Array<string>>([ALL_FAMILY]);
+	const [allFamily, setAllFamily] = useState<any>({});
+	const [selectedMembers, setSelectedMembers] = useState<Array<string>>(['']);
 	const [selectedCurrency, setSelectedCurrency] = useState<string>(
 		defaultCurrency
 	);

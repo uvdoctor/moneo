@@ -31,7 +31,7 @@ export default function HoldingsDetails() {
 				<Row>
 					<Col span={24}>
 						<PageHeader
-							title="Financial Diagnosis"
+							title="Real-time Analysis"
 							extra={[
 								<Button
 									icon={<SaveOutlined />}
