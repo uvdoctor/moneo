@@ -113,7 +113,7 @@ export default function FamilyInput() {
             if(member) allFamily[id] = {name: member.name, taxId: member.tid};
             setAllFamily(allFamily);
             setMode('');
-            notification.success({ message: 'Family Member Updated', description: `Success! Details of ${name} have been updated.`})
+            notification.success({ message: 'Family Member Updated', description: `Success! Family member details have been updated.`})
             return true;
         } catch (err) {
             notification.error({ message: 'Family Member not updated', description: "Sorry! Unable to update this family member: " + err });
