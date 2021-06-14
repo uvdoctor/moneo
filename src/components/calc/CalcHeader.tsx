@@ -45,7 +45,6 @@ export default function CalcHeader() {
 									goal.name
 								) : (
 									<TextInput
-										name="name"
 										pre={(getGoalTypes() as any)[goal.type]}
 										post={
 											<SelectInput

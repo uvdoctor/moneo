@@ -17,7 +17,9 @@ const awsmobile = {
             "endpoint": "https://zxfkz0ic24.execute-api.us-east-1.amazonaws.com/dev",
             "region": "us-east-1"
         }
-    ]
+    ],
+    "aws_user_files_s3_bucket": "goal-images154010-dev",
+    "aws_user_files_s3_bucket_region": "us-east-1"
 };
 
 

@@ -10,7 +10,7 @@ import SelectInput from '../form/selectinput';
 import { SaveOutlined } from '@ant-design/icons';
 
 import './nw.less';
-import SelectInputFamily from './SelectInputFamily';
+import FamilyInput from './FamilyInput';
 
 export default function HoldingsDetails() {
 	const {
@@ -47,7 +47,7 @@ export default function HoldingsDetails() {
 				</Row>
 				<Row justify="space-between" align="middle" className="secondary-header">
 					<Col>
-						<SelectInputFamily />
+						<FamilyInput />
 					</Col>
 					<Col>
 						<SelectInput

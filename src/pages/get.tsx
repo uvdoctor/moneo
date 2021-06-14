@@ -8,7 +8,7 @@ import BasicPage from '../components/BasicPage';
 Amplify.configure(awsmobile);
 
 const Get = () => (
-	<BasicPage title="Get Net Worth">
+	<BasicPage title="Get Real-time Analysis">
 		<NWContextProvider />
 	</BasicPage>
 );

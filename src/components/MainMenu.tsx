@@ -16,7 +16,7 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 	const { defaultCountry }: any = useContext(AppContext);
 	const { SubMenu } = Menu;
 	const router = useRouter();
-	const secureRoutes: Array<string> = [ ROUTES.SET, ROUTES.SAVE, ROUTES.INVEST ];
+	const secureRoutes: Array<string> = [ ROUTES.GET, ROUTES.SET, ROUTES.SAVE, ROUTES.INVEST ];
 
 	return (
 		<Fragment>

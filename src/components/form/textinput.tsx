@@ -1,30 +1,37 @@
-import React, { useEffect } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { Input } from 'antd';
 interface TextInputProps {
-	pre: string;
+	pre: ReactNode;
 	post?: any;
 	value: string;
-	name: string;
 	changeHandler: Function;
 	placeholder?: string;
 	minLength?: number;
 	setError?: Function;
 	fieldName?: string;
+	pattern?: string;
 }
 
 export default function TextInput(props: TextInputProps) {
 	const validate = () => {
 		if (!props.minLength || !props.setError || !props.fieldName) return;
-		if (props.value.length < props.minLength) {
-			props.setError(`${props.fieldName} should at least be ${props.minLength} characters.`);
-		} else {
+		if (!props.value) {
 			props.setError('');
+			return;
 		}
+		if (props.value.length < props.minLength) {
+			props.setError(`${props.fieldName} should at least be ${props.minLength} characters`);
+		} else if (props.pattern && !props.value.match(props.pattern)) {
+			props.setError(`${props.fieldName} should be in the format ${props.placeholder}`);
+		} else props.setError('');
 	};
 
-	useEffect(() => {
-		validate();
-	}, [props.value]);
+	useEffect(
+		() => {
+			validate();
+		},
+		[ props.value ]
+	);
 
 	return (
 		<Input
@@ -32,12 +39,12 @@ export default function TextInput(props: TextInputProps) {
 			type="text"
 			addonBefore={props.pre}
 			addonAfter={props.post}
-			name={props.name}
-			placeholder={props.placeholder}
+			placeholder={props.placeholder ? props.placeholder : ''}
 			value={props.value}
 			onChange={(e) => props.changeHandler(e.currentTarget.value)}
+			pattern={props.pattern ? props.pattern : ''}
 			required
-			size='large'
+			size="large"
 			onPressEnter={(e: any) => {
 				e.preventDefault();
 				validate();

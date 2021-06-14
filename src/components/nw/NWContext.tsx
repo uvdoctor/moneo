@@ -19,7 +19,7 @@ import {
 } from "../utils";
 import { AppContext } from "../AppContext";
 import { getAllFamilyMembers } from "./nwutils";
-import { ALL_FAMILY } from "./SelectInputFamily";
+import { ALL_FAMILY } from "./FamilyInput";
 
 const NWContext = createContext({});
 
