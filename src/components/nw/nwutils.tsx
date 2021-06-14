@@ -1,6 +1,7 @@
 import * as mutations from '../../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as APIt from '../../api/goals';
+import * as queries from '../../graphql/queries';
 
 export const createNewItem = async (item: APIt.CreateItemInput) => {
 	console.log('Going to create item...', item);
@@ -30,13 +31,45 @@ export const createNewAccount = async (account: APIt.CreateAccountInput) => {
 	}
 };
 
-export const getAllFamilyMembers = () => {
-	return {
-		self: 'My Name (PAN: AAPD0000R)',
-		partner: 'My Partner (PAN: AAPD0001R)',
-		father: 'My Father (PAN: AAPD0002R)',
-		mother: 'My Mother (PAN: AAPD0000R)',
-		son: 'My Son (PAN: AAPD0001R)',
-		daughter: 'My Daughter (PAN: AAPD0002R)'
-	};
+export const getAllFamilyMembers = async () => {
+	try {
+		const { data: { listFamilys } } = (await API.graphql(graphqlOperation(queries.listFamilys))) as {
+			data: APIt.ListFamilysQuery;
+		};
+		let family: Array<APIt.CreateFamilyInput> | null = listFamilys
+			? listFamilys.items as Array<APIt.CreateFamilyInput>
+			: null;
+		console.log('Got all family relations from db....', family);
+		if(!family || !family.length) return {};
+		let familyList: any = {};
+		family.forEach((val: APIt.CreateFamilyInput) => familyList[val.id as string] = {name: val.name, taxId: val.tid});
+		return family;
+	} catch (e) {
+		console.log('Error while getting family list: ', e);
+		return null;
+	}
+};
+
+export const addFamilyMember = async (member: APIt.CreateFamilyInput) => {
+	try {
+		const { data } = (await API.graphql(graphqlOperation(mutations.createFamily, { input: member }))) as {
+			data: APIt.CreateFamilyMutation;
+		};
+		return data.createFamily as APIt.CreateFamilyInput;
+	} catch (e) {
+		console.log('Error while adding family member: ', e);
+		return null;
+	}
+};
+
+export const updateFamilyMember = async (member: APIt.UpdateFamilyInput) => {
+	try {
+		const { data } = (await API.graphql(graphqlOperation(mutations.updateFamily, { input: member }))) as {
+			data: APIt.UpdateFamilyMutation;
+		};
+		return data.updateFamily as APIt.UpdateFamilyInput;
+	} catch (e) {
+		console.log('Error while updating family member: ', e);
+		return null;
+	}
 };

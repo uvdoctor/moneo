@@ -713,7 +713,6 @@ export const createFamily = /* GraphQL */ `
       id
       tid
       name
-      relation
       createdAt
       updatedAt
       owner
@@ -729,7 +728,6 @@ export const updateFamily = /* GraphQL */ `
       id
       tid
       name
-      relation
       createdAt
       updatedAt
       owner
@@ -745,7 +743,6 @@ export const deleteFamily = /* GraphQL */ `
       id
       tid
       name
-      relation
       createdAt
       updatedAt
       owner
@@ -768,15 +765,7 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         name
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       deposits {
@@ -784,15 +773,7 @@ export const createHoldings = /* GraphQL */ `
         start
         end
         rate
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       loans {
@@ -806,15 +787,7 @@ export const createHoldings = /* GraphQL */ `
           pmi
           peper
         }
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       savings
@@ -827,15 +800,7 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         address
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
         country
       }
@@ -848,15 +813,7 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         name
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       crypto {
@@ -868,15 +825,7 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         name
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       other {
@@ -888,15 +837,7 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         name
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       createdAt
@@ -921,15 +862,7 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         name
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       deposits {
@@ -937,15 +870,7 @@ export const updateHoldings = /* GraphQL */ `
         start
         end
         rate
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       loans {
@@ -959,15 +884,7 @@ export const updateHoldings = /* GraphQL */ `
           pmi
           peper
         }
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       savings
@@ -980,15 +897,7 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         address
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
         country
       }
@@ -1001,15 +910,7 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         name
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       crypto {
@@ -1021,15 +922,7 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         name
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       other {
@@ -1041,15 +934,7 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         name
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       createdAt
@@ -1074,15 +959,7 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       deposits {
@@ -1090,15 +967,7 @@ export const deleteHoldings = /* GraphQL */ `
         start
         end
         rate
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       loans {
@@ -1112,15 +981,7 @@ export const deleteHoldings = /* GraphQL */ `
           pmi
           peper
         }
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       savings
@@ -1133,15 +994,7 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         address
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
         country
       }
@@ -1154,15 +1007,7 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       crypto {
@@ -1174,15 +1019,7 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       other {
@@ -1194,15 +1031,7 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        owners {
-          id
-          tid
-          name
-          relation
-          createdAt
-          updatedAt
-          owner
-        }
+        familyIds
         curr
       }
       createdAt

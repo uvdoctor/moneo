@@ -220,7 +220,6 @@ type Family @model @auth(rules: [{ allow: owner }]) {
 	id: ID!
 	tid: String!
 	name: String!
-	relation: String
 }
 
 type Holding {
@@ -228,7 +227,7 @@ type Holding {
 	qty: Float!
 	purchase: [Purchase!]
 	name: String
-	owners: [Family!]!
+	familyIds: [String!]!
 	curr: String!
 }
 
@@ -237,7 +236,7 @@ type Deposit {
 	start: Int!
 	end: Int!
 	rate: Float!
-	owners: [Family!]!
+	familyIds: [String!]!
 	curr: String!
 }
 
@@ -262,14 +261,14 @@ type Property {
 	pin: Int!
 	purchase: Purchase
 	address: String
-	owners: [Family!]!
+	familyIds: [String!]!
 	curr: String!
 	country: String!
 }
 
 type Liability {
 	loan: Loan
-	owners: [Family!]!
+	familyIds: [String!]!
 	curr: String!
 }
 
