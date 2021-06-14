@@ -769,8 +769,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
           setLoanPMI,
           loanPMIEndPer,
           setLoanPMIEndPer,
-          totalCost,
-          setTotalCost
+          totalCost
         }}>
         {children ? children : <CalcTemplate />}
       </GoalContext.Provider>
