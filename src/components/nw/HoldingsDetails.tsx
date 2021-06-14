@@ -4,25 +4,31 @@ import HoldingsChart from './HoldingsChart';
 import SearchFilter from './SearchFilter';
 import DataSwitcher from '../DataSwitcher';
 import { NWContext } from './NWContext';
-import HoldingsResult from './HoldingsResult';
 import { Button, Col, PageHeader, Row } from 'antd';
 import SelectInput from '../form/selectinput';
 import { SaveOutlined } from '@ant-design/icons';
 
 import './nw.less';
 import FamilyInput from './FamilyInput';
+import ItemDisplay from '../calc/ItemDisplay';
+import ResultCarousel from '../ResultCarousel';
 
 export default function HoldingsDetails() {
 	const {
-		holdingsResult,
-		setHoldingsResult,
+		results,
+		setResults,
 		selectedCurrency,
 		setSelectedCurrency,
+		nw, totalAssets, totalLiabilities
 	}: any = useContext(NWContext);
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
 	useEffect(() => {
-		setHoldingsResult(<HoldingsResult />);
+		setResults([...[
+			<ItemDisplay label="Net Worth" result={nw} currency={selectedCurrency} pl />,
+			<ItemDisplay label="You Own" result={totalAssets} currency={selectedCurrency} pl />,
+			<ItemDisplay label="You Owe" result={totalLiabilities} currency={selectedCurrency} pl />
+		]]);
 	}, []);
 
 	return (
@@ -60,8 +66,7 @@ export default function HoldingsDetails() {
 				</Row>
 			</div>
 			<div className="nw-container">
-				{holdingsResult}
-				<p>&nbsp;</p>
+				<ResultCarousel results={results} />
 				<DataSwitcher title={<h3>Holdings details</h3>}>
 					<Chart>
 						<HoldingsChart />

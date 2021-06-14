@@ -21,6 +21,7 @@ export default function Input() {
 		error,
 		handleStepChange,
 		fsb,
+		results
 	}: any = useContext(CalcContext);
 	const { Step } = Steps;
 
@@ -157,7 +158,7 @@ export default function Input() {
 								<Fragment>
 									{!error && (
 										<div className="mobile-only-carousel">
-											<ResultCarousel />
+											<ResultCarousel results={results} />
 										</div>
 									)}
 									{inputTabs[inputTabIndex].content}

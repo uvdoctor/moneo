@@ -148,7 +148,7 @@ export default function FamilyInput() {
                         ))}
                         {includeAllOption ? 
                             <Option key={ALL_FAMILY} value={ALL_FAMILY} disabled>
-                                All Family Members
+                                All Members
                             </Option>
                         : null}
                     </Select>

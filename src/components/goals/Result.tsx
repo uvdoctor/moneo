@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ResultCarousel from '../ResultCarousel';
 
 export default function Result() {
-	const { resultTabs, resultTabIndex, setResultTabIndex, error }: any = useContext(CalcContext);
+	const { resultTabs, resultTabIndex, setResultTabIndex, error, results }: any = useContext(CalcContext);
 	const chartDiv = useRef(null);
 	const { toggle, fullScreen } = useFullScreen({ element: chartDiv });
 	const { TabPane } = Tabs;
@@ -18,7 +18,7 @@ export default function Result() {
 			<CalcHeader />
 			{!error && (
 				<div className={`results-content ${fullScreen ? 'fullScreen-mode-enabled' : ''}`} ref={chartDiv}>
-					<ResultCarousel />
+					<ResultCarousel results={results} />
 					<Tabs
 						className="dd-chart"
 						onTabClick={(key: string) => setResultTabIndex(parseInt(key))}

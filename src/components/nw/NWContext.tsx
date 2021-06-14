@@ -52,7 +52,7 @@ function NWContextProvider() {
 	const [taxId, setTaxId] = useState<string>("");
 	const [activeTab, setActiveTab] = useState<string>("Demat Holdings");
 	const [activeTabSum, setActiveTabSum] = useState<number>(0);
-	const [holdingsResult, setHoldingsResult] = useState<ReactNode | null>(null);
+	const [results, setResults] = useState<Array<any>>([]);
 	const allTabs = {
 		"Demat Holdings": {
 			label: "Demat Holdings",
@@ -490,8 +490,8 @@ function NWContextProvider() {
 				setAllVehicles,
 				allInsurance,
 				setAllInsurance,
-				holdingsResult,
-				setHoldingsResult,
+				results,
+				setResults,
 				allFamily,
 				setAllFamily,
 				allSavings,
