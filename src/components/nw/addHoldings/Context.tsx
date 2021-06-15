@@ -14,7 +14,7 @@ interface ContextProviderProp {
 }
 
 function ContextProvider({ children }: ContextProviderProp) {
-	const { activeTab, onAddHoldings, tabs }: any = useContext(NWContext);
+	const { activeTab, tabs }: any = useContext(NWContext);
 	const [selectedType, setSelectedType] = useState(activeTab);
 	const [selectedFormConfig, setSelectedFormConfig] = useState(
 		//@ts-ignore
@@ -80,7 +80,7 @@ function ContextProvider({ children }: ContextProviderProp) {
 	}
 
 	function addHoldings() {
-		onAddHoldings(formState);
+		//onAddHoldings(formState);
 	}
 
 	return (

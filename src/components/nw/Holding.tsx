@@ -1,23 +1,19 @@
-import React, { useState } from "react";
-import { Row, Col, Button, Input, Badge } from "antd";
-import {
-	DeleteOutlined,
-	EditOutlined,
-	ShoppingCartOutlined,
-	SaveOutlined,
-	CloseOutlined,
-} from "@ant-design/icons";
+import React, { useState } from 'react';
+import { Row, Col, Button, Badge, InputNumber } from 'antd';
+import { DeleteOutlined, EditOutlined, ShoppingCartOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 
-import "./Holding.less";
+import './Holding.less';
+import { toReadableNumber } from '../utils';
 
 interface HoldingProp {
-	assetName?: string;
-	qty?: any;
-	isin?: any;
+	isin: string;
+	data: any;
+	onChange: Function;
 }
 
-export default function Holding({ assetName, qty, isin }: HoldingProp) {
-	const [isEditMode, setEditMode] = useState(false);
+export default function Holding({ isin, data, onChange }: HoldingProp) {
+	const [ id, setID ] = useState<string | null>(isin);
+	const [ isEditMode, setEditMode ] = useState(false);
 
 	function onEdit() {
 		setEditMode(true);
@@ -27,15 +23,15 @@ export default function Holding({ assetName, qty, isin }: HoldingProp) {
 		setEditMode(false);
 	}
 
-	function onDelete() {}
+	function onDelete() {
+		delete data[isin];
+		onChange(data);
+		setID(null);
+	}
+
 	return (
-		<Row
-			className="holding"
-			align="middle"
-			justify="space-between"
-			gutter={[5, 5]}
-		>
-			<Col span={24}>{assetName}</Col>
+		id ? <Row className="holding" align="middle" justify="space-between" gutter={[ 5, 5 ]}>
+			<Col span={24}>{data[isin].name}</Col>
 			<Col>
 				<Badge count={isin} />
 			</Col>
@@ -43,12 +39,23 @@ export default function Holding({ assetName, qty, isin }: HoldingProp) {
 				<Row align="middle">
 					{isEditMode ? (
 						<Col>
-							<Input type="number" value={qty} size="small" />
+							<InputNumber
+								value={data[isin].quantity}
+								size="small"
+								onChange={(val) => {
+									data[isin].quantity = val as number;
+									onChange(data);
+								}}
+							/>
 						</Col>
 					) : (
 						<Col>
 							<span className="quantity">
-								<ShoppingCartOutlined /> {qty}
+								<ShoppingCartOutlined />{' '}
+								{toReadableNumber(
+									data[isin].quantity,
+									('' + data[isin].quantity).includes('.') ? 3 : 0
+								)}
 							</span>
 						</Col>
 					)}
@@ -67,6 +74,6 @@ export default function Holding({ assetName, qty, isin }: HoldingProp) {
 					</Col>
 				</Row>
 			</Col>
-		</Row>
+		</Row> : null
 	);
 }

@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React, { Fragment, useContext } from "react";
 import { Tabs } from "antd";
 import { NWContext } from "./NWContext";
-import HoldingsTable from "./HoldingsTable";
 import AddHoldings from "./addHoldings/AddHoldings";
 import UploadHoldings from "./UploadHoldings";
 import DataSwitcher from "../DataSwitcher";
@@ -10,11 +9,11 @@ import { getFamilyNames } from "./nwutils";
 export default function HoldingTabs() {
 	const {
 		tabs,
-		insNames,
 		activeTab,
 		setActiveTab,
 		allFamily,
 		selectedMembers,
+		loading
 	}: any = useContext(NWContext);
 	const { TabPane } = Tabs;
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
@@ -52,7 +51,7 @@ export default function HoldingTabs() {
 									{childrens ? (
 										renderTabs(childrens, activeTab)
 									) : (
-										<HoldingsTable data={data} insNames={insNames} />
+										!loading && data && <Fragment />
 									)}
 								</DataSwitcherList>
 							</DataSwitcher>

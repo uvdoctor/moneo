@@ -173,7 +173,7 @@ const getNewLineBreaks = (newLineSeparator: string, newLineBreakCount: number) =
   return str;
 };
 
-export const appendValue = (obj: any, prop: string | number, val: number | string, newLineSeparator: string = '\n', newLineBreakCount: number = 1) => {
+export const appendValue = (obj: any, prop: string | number, val: number | string | any, newLineSeparator: string = '\n', newLineBreakCount: number = 1) => {
   obj.hasOwnProperty(prop) ? (obj[prop] += typeof val === 'string' ? getNewLineBreaks(newLineSeparator, newLineBreakCount) + val : val) : (obj[prop] = val);
 };
 

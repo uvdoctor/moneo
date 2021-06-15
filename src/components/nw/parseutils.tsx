@@ -81,7 +81,7 @@ export const completeRecord = (recordBroken: boolean, lastNameCapture: number | 
   appendValue(
     mode === "E" ? equities : mode === "M" ? mfs : mode === "ETF" ? etfs : bonds,
     isin as string,
-    quantity as number
+    {quantity: quantity as number, name: name ? name : isin, type: mode}
   );
   if (!insNames[isin as string])
     insNames[isin as string] = name ? name : isin;
