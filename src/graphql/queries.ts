@@ -457,6 +457,7 @@ export const getHoldings = /* GraphQL */ `
         name
         familyIds
         curr
+        chg
       }
       deposits {
         amt
@@ -480,7 +481,11 @@ export const getHoldings = /* GraphQL */ `
         familyIds
         curr
       }
-      savings
+      savings {
+        amt
+        curr
+        name
+      }
       property {
         type
         pin
@@ -494,6 +499,19 @@ export const getHoldings = /* GraphQL */ `
         curr
         country
       }
+      vehicles {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+        }
+        name
+        familyIds
+        curr
+        chg
+      }
       pm {
         id
         qty
@@ -505,6 +523,46 @@ export const getHoldings = /* GraphQL */ `
         name
         familyIds
         curr
+        chg
+      }
+      ppf {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+        }
+        name
+        familyIds
+        curr
+        chg
+      }
+      epf {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+        }
+        name
+        familyIds
+        curr
+        chg
+      }
+      nps {
+        id
+        qty
+        purchase {
+          amt
+          date
+          qty
+        }
+        name
+        familyIds
+        curr
+        chg
       }
       crypto {
         id
@@ -517,6 +575,7 @@ export const getHoldings = /* GraphQL */ `
         name
         familyIds
         curr
+        chg
       }
       other {
         id
@@ -529,6 +588,7 @@ export const getHoldings = /* GraphQL */ `
         name
         familyIds
         curr
+        chg
       }
       createdAt
       updatedAt
@@ -551,6 +611,7 @@ export const listHoldingss = /* GraphQL */ `
           name
           familyIds
           curr
+          chg
         }
         deposits {
           amt
@@ -564,7 +625,11 @@ export const listHoldingss = /* GraphQL */ `
           familyIds
           curr
         }
-        savings
+        savings {
+          amt
+          curr
+          name
+        }
         property {
           type
           pin
@@ -573,12 +638,45 @@ export const listHoldingss = /* GraphQL */ `
           curr
           country
         }
+        vehicles {
+          id
+          qty
+          name
+          familyIds
+          curr
+          chg
+        }
         pm {
           id
           qty
           name
           familyIds
           curr
+          chg
+        }
+        ppf {
+          id
+          qty
+          name
+          familyIds
+          curr
+          chg
+        }
+        epf {
+          id
+          qty
+          name
+          familyIds
+          curr
+          chg
+        }
+        nps {
+          id
+          qty
+          name
+          familyIds
+          curr
+          chg
         }
         crypto {
           id
@@ -586,6 +684,7 @@ export const listHoldingss = /* GraphQL */ `
           name
           familyIds
           curr
+          chg
         }
         other {
           id
@@ -593,6 +692,7 @@ export const listHoldingss = /* GraphQL */ `
           name
           familyIds
           curr
+          chg
         }
         createdAt
         updatedAt

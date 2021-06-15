@@ -229,6 +229,7 @@ type Holding {
 	name: String
 	familyIds: [String!]!
 	curr: String!
+	chg: Float!
 }
 
 type Deposit {
@@ -272,14 +273,24 @@ type Liability {
 	curr: String!
 }
 
+type Balance {
+	amt: Float!
+	curr: String!
+	name: String
+}
+
 type Holdings @model @auth(rules: [{ allow: owner }]) {
 	id: ID!
 	instruments: [Holding!]
 	deposits: [Deposit!]
 	loans: [Liability!]
-	savings: Float!
+	savings: [Balance!]
 	property: [Property!]
+	vehicles: [Holding!]
 	pm: [Holding!]
+	ppf: [Holding!]
+	epf: [Holding!]
+	nps: [Holding!]
 	crypto: [Holding!]
 	other: [Holding!]
 }
