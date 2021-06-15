@@ -9,7 +9,7 @@ import BRComp from "../goals/BRComp";
 import BasicLineChart from "../goals/BasicLineChart";
 import BuyRentChart from "../goals/BuyRentChart";
 import { CalcType, CreateGoalInput, CreateRatingMutation, GoalType, UpdateGoalInput } from '../../api/goals';
-import { isLoanEligible } from '../goals/goalutils';
+import { isLoanEligible, goalImgStorage } from '../goals/goalutils';
 import FIMoneyOutflow from '../goals/FIMoneyOutflow';
 import FIBenefit from '../goals/FIBenefit';
 import { AfterFI } from '../goals/AfterFI';
@@ -209,6 +209,7 @@ function CalcContextProvider({
     } else existingCFs = allCFs[wipGoal.id];
     if (!existingCFs?.length) return false;
     if (cfs.length !== existingCFs.length) return true;
+    if (wipGoal.img !== goal.img) return true;
     if (wipGoal.name !== goal.name || wipGoal.imp !== goal.imp
     || wipGoal.sy !== goal.sy || wipGoal.ey !== goal.ey || wipGoal.ra !== goal.ra
     || wipGoal.rachg !== goal.rachg || wipGoal.tbr !== goal.tbr) return true;
@@ -290,6 +291,18 @@ function CalcContextProvider({
       console.log('Error while updating rating', e)
 		} 
   }
+
+  const uploadGoalImage = async (file: any) => {
+    goalImgStorage.validateImg(file)
+    try {
+      const result = await goalImgStorage.storeGoalImg(file)
+      return goalImgStorage.getUrlFromKey(result.key)
+              .then((url: Object | String) => { return {key: result.key, url: url} })
+              .catch(error => {throw new Error(error)})
+    } catch (error) {
+      throw new Error(error);
+    }  
+  }
   
   useEffect(() => {
     if (!rating) return;
@@ -364,7 +377,8 @@ function CalcContextProvider({
         setWipGoal,
         summary,
         discountRates,
-        setDiscountRates
+        setDiscountRates,
+        uploadGoalImage
 			}}
     >
       {children}

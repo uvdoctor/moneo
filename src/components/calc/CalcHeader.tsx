@@ -5,6 +5,7 @@ import SelectInput from '../form/selectinput';
 import { CalcContext } from './CalcContext';
 import SocialShare from '../SocialShare';
 import Feedback from '../feedback/Feedback';
+import GoalImage from './GoalImage'
 import { getGoalTypes, getImpLevels } from '../goals/goalutils';
 import { PlanContext } from '../goals/PlanContext';
 import TextInput from '../form/textinput';
@@ -31,36 +32,41 @@ export default function CalcHeader() {
 	const [ ratingLabel, setRatingLabel ] = useState<string>('');
 
 	const closeModal = () => setShowFeedbackModal(false);
-
+	
 	return (
 		<Fragment>
 			<div className="primary-header">
 				<Row>
 					<Col span={24}>
 						<PageHeader
+							className="goals-page-header"
 							title={
 								isPublicCalc ? (
 									goal.name
 								) : goal.type === GoalType.FF ? (
 									goal.name
 								) : (
-									<TextInput
-										pre={(getGoalTypes() as any)[goal.type]}
-										post={
-											<SelectInput
-												pre=""
-												value={impLevel}
-												changeHandler={setImpLevel}
-												options={getImpLevels()}
-											/>
-										}
-										placeholder="Goal Name"
-										value={name}
-										changeHandler={setName}
-										fieldName="Goal Name"
-										minLength={3}
-										setError={setError}
-									/>
+									<Fragment>
+										<GoalImage />
+										<TextInput
+											pre={
+												(getGoalTypes() as any)[goal.type]}
+											post={
+												<SelectInput
+													pre=""
+													value={impLevel}
+													changeHandler={setImpLevel}
+													options={getImpLevels()}
+												/>
+											}
+											placeholder="Goal Name"
+											value={name}
+											changeHandler={setName}
+											fieldName="Goal Name"
+											minLength={3}
+											setError={setError}
+										/>
+									</Fragment>
 								)
 							}
 							extra={[
