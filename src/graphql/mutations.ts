@@ -765,7 +765,7 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -774,7 +774,15 @@ export const createHoldings = /* GraphQL */ `
         start
         end
         rate
-        familyIds
+        fIds
+        curr
+      }
+      lendings {
+        amt
+        start
+        end
+        rate
+        fIds
         curr
       }
       loans {
@@ -788,7 +796,7 @@ export const createHoldings = /* GraphQL */ `
           pmi
           peper
         }
-        familyIds
+        fIds
         curr
       }
       savings {
@@ -805,7 +813,7 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         address
-        familyIds
+        fIds
         curr
         country
       }
@@ -818,7 +826,7 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -831,7 +839,7 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -844,7 +852,7 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -857,7 +865,7 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -870,7 +878,7 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -883,22 +891,15 @@ export const createHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
-      other {
-        id
-        qty
-        purchase {
-          amt
-          date
-          qty
-        }
-        name
-        familyIds
+      ins {
+        premium
+        years
+        fIds
         curr
-        chg
       }
       createdAt
       updatedAt
@@ -922,7 +923,7 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -931,7 +932,15 @@ export const updateHoldings = /* GraphQL */ `
         start
         end
         rate
-        familyIds
+        fIds
+        curr
+      }
+      lendings {
+        amt
+        start
+        end
+        rate
+        fIds
         curr
       }
       loans {
@@ -945,7 +954,7 @@ export const updateHoldings = /* GraphQL */ `
           pmi
           peper
         }
-        familyIds
+        fIds
         curr
       }
       savings {
@@ -962,7 +971,7 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         address
-        familyIds
+        fIds
         curr
         country
       }
@@ -975,7 +984,7 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -988,7 +997,7 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -1001,7 +1010,7 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -1014,7 +1023,7 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -1027,7 +1036,7 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -1040,22 +1049,15 @@ export const updateHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
-      other {
-        id
-        qty
-        purchase {
-          amt
-          date
-          qty
-        }
-        name
-        familyIds
+      ins {
+        premium
+        years
+        fIds
         curr
-        chg
       }
       createdAt
       updatedAt
@@ -1079,7 +1081,7 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -1088,7 +1090,15 @@ export const deleteHoldings = /* GraphQL */ `
         start
         end
         rate
-        familyIds
+        fIds
+        curr
+      }
+      lendings {
+        amt
+        start
+        end
+        rate
+        fIds
         curr
       }
       loans {
@@ -1102,7 +1112,7 @@ export const deleteHoldings = /* GraphQL */ `
           pmi
           peper
         }
-        familyIds
+        fIds
         curr
       }
       savings {
@@ -1119,7 +1129,7 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         address
-        familyIds
+        fIds
         curr
         country
       }
@@ -1132,7 +1142,7 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -1145,7 +1155,7 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -1158,7 +1168,7 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -1171,7 +1181,7 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -1184,7 +1194,7 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
@@ -1197,22 +1207,15 @@ export const deleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        familyIds
+        fIds
         curr
         chg
       }
-      other {
-        id
-        qty
-        purchase {
-          amt
-          date
-          qty
-        }
-        name
-        familyIds
+      ins {
+        premium
+        years
+        fIds
         curr
-        chg
       }
       createdAt
       updatedAt

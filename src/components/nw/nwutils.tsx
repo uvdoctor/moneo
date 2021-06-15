@@ -33,24 +33,28 @@ export const createNewAccount = async (account: APIt.CreateAccountInput) => {
 };
 
 export const loadAllFamilyMembers = async () => {
-	try {
-		const { data: { listFamilys } } = (await API.graphql(graphqlOperation(queries.listFamilys))) as {
-			data: APIt.ListFamilysQuery;
-		};
-		let family: Array<APIt.CreateFamilyInput> | null = listFamilys
-			? listFamilys.items as Array<APIt.CreateFamilyInput>
-			: null;
-		console.log('Got all family relations from db....', family);
-		if (!family || !family.length) return {};
-		let familyList: any = {};
-		family.forEach((val: APIt.CreateFamilyInput) => {
-			if (val.id) familyList[val.id as string] = { name: val.name, taxId: val.tid };
-		});
-		return familyList;
-	} catch (e) {
-		console.log('Error while getting family list: ', e);
-		return null;
-	}
+	const { data: { listFamilys } } = (await API.graphql(graphqlOperation(queries.listFamilys))) as {
+		data: APIt.ListFamilysQuery;
+	};
+	let family: Array<APIt.CreateFamilyInput> | null = listFamilys
+		? listFamilys.items as Array<APIt.CreateFamilyInput>
+		: null;
+	if (!family || !family.length) return {};
+	let familyList: any = {};
+	family.forEach((val: APIt.CreateFamilyInput) => {
+		if (val.id) familyList[val.id as string] = { name: val.name, taxId: val.tid };
+	});
+	return familyList;
+};
+
+export const loadHoldings = async () => {
+	const { data: { listHoldingss } } = (await API.graphql(graphqlOperation(queries.listHoldingss))) as {
+		data: APIt.ListHoldingssQuery;
+	};
+	let holdings: Array<APIt.CreateHoldingsInput> | null = listHoldingss
+		? listHoldingss.items as Array<APIt.CreateHoldingsInput>
+		: null;
+	return holdings ? holdings[0] : null;
 };
 
 export const addFamilyMember = async (name: string, taxId: string) => {
@@ -79,13 +83,37 @@ export const updateFamilyMember = async (member: APIt.UpdateFamilyInput) => {
 	}
 };
 
-export const toReadableFormat = (selectedMembers: string[], allFamily: any) => {
-	if (!selectedMembers || !selectedMembers.length) return '';
+export const addHoldings = async (holdings: APIt.CreateHoldingsInput) => {
+	try {
+		const { data } = (await API.graphql(graphqlOperation(mutations.createHoldings, { input: holdings }))) as {
+			data: APIt.CreateHoldingsMutation;
+		};
+		return data.createHoldings as APIt.CreateHoldingsInput;
+	} catch (e) {
+		console.log('Error while adding holdings: ', e);
+		return null;
+	}
+};
+
+export const updateHoldings = async (holdings: APIt.UpdateHoldingsInput) => {
+	try {
+		const { data } = (await API.graphql(graphqlOperation(mutations.updateHoldings, { input: holdings }))) as {
+			data: APIt.UpdateHoldingsMutation;
+		};
+		return data.updateHoldings as APIt.UpdateHoldingsInput;
+	} catch (e) {
+		console.log('Error while updating holdings: ', e);
+		return null;
+	}
+};
+
+export const getFamilyNames = (selectedMembers: string[], allFamily: any) => {
+	if (!selectedMembers || !selectedMembers.length || !selectedMembers[0]) return '';
 	if (selectedMembers.includes(ALL_FAMILY)) return 'Family';
-	if(!allFamily || !Object.keys(allFamily).length) return '';
+	if (!allFamily || !Object.keys(allFamily).length) return '';
 	let result: string = allFamily[selectedMembers[0]].name;
 	selectedMembers.forEach((key: string, index: number) => {
-		if(index) result += `, ${allFamily[key].name}`
+		if (index) result += `, ${allFamily[key].name}`;
 	});
 	return result;
 };

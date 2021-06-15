@@ -5,7 +5,7 @@ import HoldingsTable from "./HoldingsTable";
 import AddHoldings from "./addHoldings/AddHoldings";
 import UploadHoldings from "./UploadHoldings";
 import DataSwitcher from "../DataSwitcher";
-import { toReadableFormat } from "./nwutils";
+import { getFamilyNames } from "./nwutils";
 
 export default function HoldingTabs() {
 	const {
@@ -45,7 +45,7 @@ export default function HoldingTabs() {
 										</>
 									) : null
 								}
-								title={`${toReadableFormat(selectedMembers, allFamily)} Portfolio`}
+								title={`${getFamilyNames(selectedMembers, allFamily)} Portfolio`}
 							>
 								<Chart>Chart goes here...</Chart>
 								<DataSwitcherList>

@@ -18,14 +18,16 @@ import {
 	removeDuplicates,
 } from "../utils";
 import { AppContext } from "../AppContext";
-import { loadAllFamilyMembers } from "./nwutils";
+import { loadAllFamilyMembers, loadHoldings } from "./nwutils";
 import { notification } from "antd";
+import { CreateHoldingsInput } from "../../api/goals";
 
 const NWContext = createContext({});
 
 function NWContextProvider() {
 	const { defaultCurrency }: any = useContext(AppContext);
 	const [allFamily, setAllFamily] = useState<any>({});
+	const [holdings, setHoldings] = useState<CreateHoldingsInput | null>(null);
 	const [selectedMembers, setSelectedMembers] = useState<Array<string>>(['']);
 	const [selectedCurrency, setSelectedCurrency] = useState<string>(
 		defaultCurrency
@@ -57,7 +59,7 @@ function NWContextProvider() {
 	const [results, setResults] = useState<Array<any>>([]);
 	const [ loading, setLoading ] = useState<boolean>(true);
 
-	const allTabs = {
+	const tabs = {
 		"Demat Holdings": {
 			label: "Demat Holdings",
 			hasUploader: true,
@@ -175,16 +177,24 @@ function NWContextProvider() {
 
 	const initializeFamilyList = async () => {
         try {
-            let familyList = await loadAllFamilyMembers();
-            setAllFamily(familyList);
+            setAllFamily(await loadAllFamilyMembers());
         } catch(err) {
             notification.error({message: 'Family list not loaded', description: 'Sorry! Unable to fetch details of your family members.'});
             return false;
         }
     };
 
+	const initializeHoldings = async () => {
+        try {
+            setHoldings(await loadHoldings());
+        } catch(err) {
+            notification.error({message: 'Holdings not loaded', description: 'Sorry! Unable to fetch holdings.'});
+            return false;
+        }
+    };
+
     useEffect(() => {
-        initializeFamilyList().then(() => setLoading(false));
+        initializeHoldings().then(() => initializeFamilyList().then(() => setLoading(false)));
     }
     , []);
 
@@ -465,9 +475,11 @@ function NWContextProvider() {
 	return (
 		<NWContext.Provider
 			value={{
-				tabs: allTabs,
+				tabs,
 				activeTab,
 				setActiveTab,
+				holdings,
+				setHoldings,
 				allEquities,
 				setAllEquities,
 				allBonds,

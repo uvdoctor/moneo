@@ -227,7 +227,7 @@ type Holding {
 	qty: Float!
 	purchase: [Purchase!]
 	name: String
-	familyIds: [String!]!
+	fIds: [String!]!
 	curr: String!
 	chg: Float!
 }
@@ -237,7 +237,7 @@ type Deposit {
 	start: Int!
 	end: Int!
 	rate: Float!
-	familyIds: [String!]!
+	fIds: [String!]!
 	curr: String!
 }
 
@@ -262,14 +262,21 @@ type Property {
 	pin: Int!
 	purchase: Purchase
 	address: String
-	familyIds: [String!]!
+	fIds: [String!]!
 	curr: String!
 	country: String!
 }
 
 type Liability {
 	loan: Loan
-	familyIds: [String!]!
+	fIds: [String!]!
+	curr: String!
+}
+
+type Insurance {
+	premium: Float!
+	years: Int!
+	fIds: [String!]!
 	curr: String!
 }
 
@@ -283,6 +290,7 @@ type Holdings @model @auth(rules: [{ allow: owner }]) {
 	id: ID!
 	instruments: [Holding!]
 	deposits: [Deposit!]
+	lendings: [Deposit!]
 	loans: [Liability!]
 	savings: [Balance!]
 	property: [Property!]
@@ -292,5 +300,5 @@ type Holdings @model @auth(rules: [{ allow: owner }]) {
 	epf: [Holding!]
 	nps: [Holding!]
 	crypto: [Holding!]
-	other: [Holding!]
+	ins: [Insurance!]
 }
