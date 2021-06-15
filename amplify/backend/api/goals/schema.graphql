@@ -228,8 +228,9 @@ type Holding {
 	purchase: [Purchase!]
 	name: String
 	fIds: [String!]!
-	curr: String!
-	chg: Float!
+	curr: String
+	chg: Float
+	type: String
 }
 
 type Deposit {
