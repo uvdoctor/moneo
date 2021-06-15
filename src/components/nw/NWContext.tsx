@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import "./nw.less";
 import HoldingsDetails from "./HoldingsDetails";
 import {
@@ -18,6 +18,8 @@ import {
 	removeDuplicates,
 } from "../utils";
 import { AppContext } from "../AppContext";
+import { loadAllFamilyMembers } from "./nwutils";
+import { notification } from "antd";
 
 const NWContext = createContext({});
 
@@ -53,6 +55,8 @@ function NWContextProvider() {
 	const [activeTab, setActiveTab] = useState<string>("Demat Holdings");
 	const [activeTabSum, setActiveTabSum] = useState<number>(0);
 	const [results, setResults] = useState<Array<any>>([]);
+	const [ loading, setLoading ] = useState<boolean>(true);
+
 	const allTabs = {
 		"Demat Holdings": {
 			label: "Demat Holdings",
@@ -168,6 +172,21 @@ function NWContextProvider() {
 			data: allCrypto,
 		},
 	};
+
+	const initializeFamilyList = async () => {
+        try {
+            let familyList = await loadAllFamilyMembers();
+            setAllFamily(familyList);
+        } catch(err) {
+            notification.error({message: 'Family list not loaded', description: 'Sorry! Unable to fetch details of your family members.'});
+            return false;
+        }
+    };
+
+    useEffect(() => {
+        initializeFamilyList().then(() => setLoading(false));
+    }
+    , []);
 
 	const parseHoldings = async (pdf: any) => {
 		let equities: any = {};
@@ -506,6 +525,7 @@ function NWContextProvider() {
 				setSelectedCurrency,
 				activeTabSum,
 				setActiveTabSum,
+				loading
 			}}
 		>
 			<HoldingsDetails />

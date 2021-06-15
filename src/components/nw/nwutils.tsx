@@ -2,6 +2,7 @@ import * as mutations from '../../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as APIt from '../../api/goals';
 import * as queries from '../../graphql/queries';
+import { ALL_FAMILY } from './FamilyInput';
 
 export const createNewItem = async (item: APIt.CreateItemInput) => {
 	console.log('Going to create item...', item);
@@ -40,10 +41,10 @@ export const loadAllFamilyMembers = async () => {
 			? listFamilys.items as Array<APIt.CreateFamilyInput>
 			: null;
 		console.log('Got all family relations from db....', family);
-		if(!family || !family.length) return {};
+		if (!family || !family.length) return {};
 		let familyList: any = {};
 		family.forEach((val: APIt.CreateFamilyInput) => {
-			if(val.id) familyList[val.id as string] = {name: val.name, taxId: val.tid}
+			if (val.id) familyList[val.id as string] = { name: val.name, taxId: val.tid };
 		});
 		return familyList;
 	} catch (e) {
@@ -54,7 +55,9 @@ export const loadAllFamilyMembers = async () => {
 
 export const addFamilyMember = async (name: string, taxId: string) => {
 	try {
-		const { data } = (await API.graphql(graphqlOperation(mutations.createFamily, { input: {name: name, tid: taxId} }))) as {
+		const { data } = (await API.graphql(
+			graphqlOperation(mutations.createFamily, { input: { name: name, tid: taxId } })
+		)) as {
 			data: APIt.CreateFamilyMutation;
 		};
 		return data.createFamily as APIt.CreateFamilyInput;
@@ -74,4 +77,15 @@ export const updateFamilyMember = async (member: APIt.UpdateFamilyInput) => {
 		console.log('Error while updating family member: ', e);
 		return null;
 	}
+};
+
+export const toReadableFormat = (selectedMembers: string[], allFamily: any) => {
+	if (!selectedMembers || !selectedMembers.length) return '';
+	if (selectedMembers.includes(ALL_FAMILY)) return 'Family';
+	if(!allFamily || !Object.keys(allFamily).length) return '';
+	let result: string = allFamily[selectedMembers[0]].name;
+	selectedMembers.forEach((key: string, index: number) => {
+		if(index) result += `, ${allFamily[key].name}`
+	});
+	return result;
 };

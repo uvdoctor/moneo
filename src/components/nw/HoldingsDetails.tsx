@@ -19,16 +19,21 @@ export default function HoldingsDetails() {
 		setResults,
 		selectedCurrency,
 		setSelectedCurrency,
-		nw, totalAssets, totalLiabilities
+		nw,
+		totalAssets,
+		totalLiabilities,
+		loading
 	}: any = useContext(NWContext);
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
 	useEffect(() => {
-		setResults([...[
-			<ItemDisplay label="Net Worth" result={nw} currency={selectedCurrency} pl />,
-			<ItemDisplay label="You Own" result={totalAssets} currency={selectedCurrency} pl />,
-			<ItemDisplay label="You Owe" result={totalLiabilities} currency={selectedCurrency} pl />
-		]]);
+		setResults([
+			...[
+				<ItemDisplay label="Net Worth" result={nw} currency={selectedCurrency} pl />,
+				<ItemDisplay label="You Own" result={totalAssets} currency={selectedCurrency} pl />,
+				<ItemDisplay label="You Owe" result={totalLiabilities} currency={selectedCurrency} pl />
+			]
+		]);
 	}, []);
 
 	return (
@@ -73,7 +78,7 @@ export default function HoldingsDetails() {
 					</Chart>
 					<DataSwitcherList>
 						<SearchFilter />
-						<HoldingTabs />
+						{!loading ? <HoldingTabs /> : null}
 					</DataSwitcherList>
 				</DataSwitcher>
 			</div>

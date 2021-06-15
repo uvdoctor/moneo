@@ -4,7 +4,7 @@ import { NWContext } from './NWContext';
 import { UserAddOutlined, EditOutlined, SaveOutlined, UserOutlined } from '@ant-design/icons';
 import { COLORS } from '../../CONSTANTS';
 import TextInput from '../form/textinput';
-import { addFamilyMember, loadAllFamilyMembers, updateFamilyMember } from './nwutils';
+import { addFamilyMember, updateFamilyMember } from './nwutils';
 import { CreateFamilyInput, UpdateFamilyInput } from '../../api/goals';
 
 export const ALL_FAMILY = 'All';
@@ -13,35 +13,19 @@ const ADD_MODE = 'Add';
 const EDIT_MODE = 'Edit';
 
 export default function FamilyInput() {
-	const { allFamily, selectedMembers, setSelectedMembers, setAllFamily }: any = useContext(NWContext);
+	const { allFamily, selectedMembers, setSelectedMembers, setAllFamily, loading }: any = useContext(NWContext);
 	const { Option } = Select;
     const [ mode, setMode ] = useState<string>('');
     const [ id, setId ] = useState<string>('');
     const [ name, setName ] = useState<string>('');
     const [ taxId, setTaxId ] = useState<string>('');
     const [ error, setError ] = useState<string>('');
-    const [ loading, setLoading ] = useState<boolean>(true);
     const [ includeAllOption, setIncludeAllOption ] = useState<boolean>(false);
 
     const getDefaultFamilySelection = () => {
         let keys = Object.keys(allFamily);
         return !keys.length ? '' : keys.length > 1 ? ALL_FAMILY : keys[0];
     }
-
-    const initializeFamilyList = async () => {
-        try {
-            let familyList = await loadAllFamilyMembers();
-            setAllFamily(familyList);
-        } catch(err) {
-            notification.error({message: 'Family list not loaded', description: 'Sorry! Unable to fetch details of your family members.'});
-            return false;
-        }
-    };
-
-    useEffect(() => {
-        initializeFamilyList().then(() => setLoading(false));
-    }
-    , []);
 
     useEffect(() => {
         if(loading) return;
