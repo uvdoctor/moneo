@@ -465,6 +465,7 @@ function NWContextProvider() {
 		!Object.keys(allMFs).length &&
 		!Object.keys(allETFs).length;
 
+	
 	function onAddHoldings(formState: any) {
 		setAllEquities({
 			...allEquities,

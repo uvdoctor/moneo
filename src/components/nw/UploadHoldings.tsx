@@ -50,7 +50,7 @@ export default function UploadHoldings() {
 			<Button icon={<UploadOutlined />} onClick={onShowDrawer} />
 			<Drawer
 				width={isMobileDevice(fsb) ? 320 : 550}
-				title="Upload PDF Statements"
+				title="Upload NSDL or CSDL Monthly Statement"
 				placement="right"
 				closable={false}
 				onClose={onCloseDrawer}
@@ -61,11 +61,10 @@ export default function UploadHoldings() {
 						<InboxOutlined className="upload-icon" />
 					</p>
 					<p className="ant-upload-text">
-						Click or drag file to this area to upload
+						Click or drag the pdf file to this area to upload
 					</p>
 					<p className="ant-upload-hint">
-						Supports single pdf upload. Strictly prohibit from uploading company
-						data or other band files
+						Supports single pdf upload only. Please upload the latest file to get relevant results.
 					</p>
 				</Dragger>
 			</Drawer>
