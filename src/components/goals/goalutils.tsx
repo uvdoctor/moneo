@@ -324,7 +324,7 @@ export const goalImgStorage = {
 	validateImg: (file:File) => {
 		// size validation
 		const maxAllowedSize = 1000000
-		if(file.size > maxAllowedSize) throw new Error(`Image size should not exceed ${maxAllowedSize/1000}Kbs`);
+		if(file.size > maxAllowedSize) throw new Error(`Image size should not exceed ${maxAllowedSize/1000} KB`);
 		
 		return true
 	}

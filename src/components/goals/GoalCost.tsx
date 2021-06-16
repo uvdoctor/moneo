@@ -8,6 +8,7 @@ import Section from '../form/section';
 import { CalcContext } from '../calc/CalcContext';
 import { GoalType } from '../../api/goals';
 import { PlanContext } from './PlanContext';
+import { getImpLevels } from './goalutils';
 
 export default function GoalCost() {
 	const { isPublicCalc, ffGoal }: any = useContext(PlanContext);
@@ -19,16 +20,24 @@ export default function GoalCost() {
 		changeEndYear,
 		eyOptions,
 		startMonth,
-		changeStartMonth
+		changeStartMonth,
 	}: any = useContext(CalcContext);
 	const ffGoalEndYear = ffGoal ? (ffGoal.sy + (ffGoal.loan?.dur as number)) : goal.by + 50;
-	const { manualMode, isEndYearHidden }: any = useContext(GoalContext);
+	const { manualMode, isEndYearHidden, impLevel, setImpLevel}: any = useContext(GoalContext);
 	const firstStartYear = isPublicCalc ? goal.by - 20 : goal.by + 1;
 	const syOptions = initOptions(firstStartYear, ffGoalEndYear - 20 - firstStartYear);
 
 	return (
 		<Col span={24}>
 			<Section title="Payment Schedule">
+				{!isPublicCalc && (
+					<SelectInput
+						pre="Priority"
+						value={impLevel}
+						changeHandler={setImpLevel}
+						options={getImpLevels()}
+					/>
+				)}
 				<SelectInput
 					pre="From Year"
 					info="Year in which You Start Paying"

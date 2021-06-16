@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState, useLayoutEffect } from "react";
 import { Avatar, Spin, notification } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { EditOutlined } from "@ant-design/icons";
 import { getDefaultIconForGoalType, goalImgStorage } from "../goals/goalutils";
 import { CalcContext } from "./CalcContext";
 import { GoalContext } from "../goals/GoalContext";
@@ -42,9 +42,10 @@ export default function GoalImage() {
         }
         inputEl.current.value = "";
       }
-    } catch (error) {
+    } catch (error: any) {
       notification.error({
-        message: `${error.toString()}`,
+        message: 'Error while uploading goal image',
+        description: `${error.toString()}`
       });
       setLoader(false);
     }
@@ -63,7 +64,7 @@ export default function GoalImage() {
         icon={<FontAwesomeIcon icon={getDefaultIconForGoalType(goal.type)} />}
       />
       <span className="image-edit-icon">
-        <FontAwesomeIcon icon={faEdit} />
+        <EditOutlined />
       </span>
       <input type="file" ref={inputEl} onChange={getImage} />
     </span>

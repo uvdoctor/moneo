@@ -1,12 +1,11 @@
 import { Modal, PageHeader, Rate, Row, Col, Tooltip, Button } from 'antd';
 import React, { Fragment, useContext, useState } from 'react';
 import { ShareAltOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
-import SelectInput from '../form/selectinput';
 import { CalcContext } from './CalcContext';
 import SocialShare from '../SocialShare';
 import Feedback from '../feedback/Feedback';
-import GoalImage from './GoalImage'
-import { getGoalTypes, getImpLevels } from '../goals/goalutils';
+import GoalImage from './GoalImage';
+import { getGoalTypes } from '../goals/goalutils';
 import { PlanContext } from '../goals/PlanContext';
 import TextInput from '../form/textinput';
 import { GoalContext } from '../goals/GoalContext';
@@ -27,12 +26,12 @@ export default function CalcHeader() {
 		setError,
 		allInputDone
 	}: any = useContext(CalcContext);
-	const { name, setName, impLevel, setImpLevel }: any = useContext(GoalContext);
+	const { name, setName }: any = useContext(GoalContext);
 	const ratingLabels = [ 'Rate Calculator', 'Very Poor', 'Poor', 'Average', 'Good', 'Awesome!' ];
 	const [ ratingLabel, setRatingLabel ] = useState<string>('');
 
 	const closeModal = () => setShowFeedbackModal(false);
-	
+
 	return (
 		<Fragment>
 			<div className="primary-header">
@@ -46,27 +45,16 @@ export default function CalcHeader() {
 								) : goal.type === GoalType.FF ? (
 									goal.name
 								) : (
-									<Fragment>
-										<GoalImage />
-										<TextInput
-											pre={
-												(getGoalTypes() as any)[goal.type]}
-											post={
-												<SelectInput
-													pre=""
-													value={impLevel}
-													changeHandler={setImpLevel}
-													options={getImpLevels()}
-												/>
-											}
-											placeholder="Goal Name"
-											value={name}
-											changeHandler={setName}
-											fieldName="Goal Name"
-											minLength={3}
-											setError={setError}
-										/>
-									</Fragment>
+									<TextInput
+										pre={(getGoalTypes() as any)[goal.type]}
+										prefix={<GoalImage />}
+										placeholder="Goal Name"
+										value={name}
+										changeHandler={setName}
+										fieldName="Goal Name"
+										minLength={3}
+										setError={setError}
+									/>
 								)
 							}
 							extra={[

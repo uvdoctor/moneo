@@ -1,7 +1,9 @@
 import React, { ReactNode, useEffect } from 'react';
 import { Input } from 'antd';
+import { SizeType } from 'antd/lib/config-provider/SizeContext';
 interface TextInputProps {
 	pre: ReactNode;
+	prefix?: ReactNode;
 	post?: any;
 	value: string;
 	changeHandler: Function;
@@ -10,6 +12,7 @@ interface TextInputProps {
 	setError?: Function;
 	fieldName?: string;
 	pattern?: string;
+	size?: SizeType
 }
 
 export default function TextInput(props: TextInputProps) {
@@ -39,12 +42,13 @@ export default function TextInput(props: TextInputProps) {
 			type="text"
 			addonBefore={props.pre}
 			addonAfter={props.post}
+			prefix={props.prefix}
+			size={props.size ? props.size : "large"}
 			placeholder={props.placeholder ? props.placeholder : ''}
 			value={props.value}
 			onChange={(e) => props.changeHandler(e.currentTarget.value)}
 			pattern={props.pattern ? props.pattern : ''}
 			required
-			size="large"
 			onPressEnter={(e: any) => {
 				e.preventDefault();
 				validate();
