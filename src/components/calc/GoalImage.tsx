@@ -59,7 +59,8 @@ export default function GoalImage() {
         </span>
       )}
       <Avatar
-        size={50}
+        size={{ xs: 24, sm: 32, md: 50 }}
+        alt="Goal image"
         src={goalImgUrl}
         icon={<FontAwesomeIcon icon={getDefaultIconForGoalType(goal.type)} />}
       />
