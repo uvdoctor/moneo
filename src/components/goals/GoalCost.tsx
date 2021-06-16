@@ -36,10 +36,11 @@ export default function GoalCost() {
 						value={impLevel}
 						changeHandler={setImpLevel}
 						options={getImpLevels()}
+						info='How important is it for you to achieve this goal? Investment strategy will consider this in order to come up with possible options.'
 					/>
 				)}
 				<SelectInput
-					pre="From Year"
+					pre="Starting Year"
 					info="Year in which You Start Paying"
 					value={startYear}
 					changeHandler={changeStartYear}
@@ -55,7 +56,7 @@ export default function GoalCost() {
 				/>}
 				{!isEndYearHidden && (
 					<SelectInput
-						pre="To Year"
+						pre="Ending Year"
 						value={endYear}
 						info="Year in which You End Paying"
 						disabled={goal.type === GoalType.B && manualMode < 1}
