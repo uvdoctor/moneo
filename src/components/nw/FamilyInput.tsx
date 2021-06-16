@@ -13,7 +13,7 @@ const ADD_MODE = 'Add';
 const EDIT_MODE = 'Edit';
 
 export default function FamilyInput() {
-	const { allFamily, selectedMembers, setSelectedMembers, setAllFamily, loading }: any = useContext(NWContext);
+	const { allFamily, selectedMembers, setSelectedMembers, setAllFamily, loadingFamily }: any = useContext(NWContext);
 	const { Option } = Select;
     const [ mode, setMode ] = useState<string>('');
     const [ id, setId ] = useState<string>('');
@@ -28,9 +28,9 @@ export default function FamilyInput() {
     }
 
     useEffect(() => {
-        if(loading) return;
+        if(loadingFamily) return;
         setSelectedMembers([...[getDefaultFamilySelection()]]);
-    }, [loading]);
+    }, [loadingFamily]);
 
 	useEffect(() => {
         setIncludeAllOption(Object.keys(allFamily).length > 1);
@@ -118,7 +118,7 @@ export default function FamilyInput() {
                         value={selectedMembers}
                         onChange={(val: string[]) => selectMember(val)}
                         showArrow={Object.keys(allFamily).length > 1}
-                        loading={loading}
+                        loading={loadingFamily}
                         filterOption={(input, option) =>
                             option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
@@ -149,7 +149,7 @@ export default function FamilyInput() {
                         </Tooltip>
                     </Col> : null}
                 </Row>
-            : <Button icon={<UserAddOutlined />} onClick={() => setMode(ADD_MODE)} loading={loading}>
+            : <Button icon={<UserAddOutlined />} onClick={() => setMode(ADD_MODE)} loading={loadingFamily}>
                 Set up Family List
             </Button>}
             {mode && 

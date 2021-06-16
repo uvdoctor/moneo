@@ -13,6 +13,7 @@ interface SelectInputProps {
 	unit?: string;
 	changeHandler: any;
 	currency?: boolean;
+	loading?: boolean;
 }
 
 export default function SelectInput(props: SelectInputProps) {
@@ -41,6 +42,7 @@ export default function SelectInput(props: SelectInputProps) {
 				}
 				disabled={props.disabled ? props.disabled : false}
 				defaultValue={selectOptions[props.value]}
+				loading={props.loading ? props.loading : false}
 			>
 				{Object.keys(selectOptions).map((key) => (
 					<Option key={key} value={key}>

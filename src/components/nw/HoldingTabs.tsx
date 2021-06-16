@@ -13,7 +13,7 @@ export default function HoldingTabs() {
 		setActiveTab,
 		allFamily,
 		selectedMembers,
-		loading
+		loadingHoldings
 	}: any = useContext(NWContext);
 	const { TabPane } = Tabs;
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
@@ -51,7 +51,7 @@ export default function HoldingTabs() {
 									{childrens ? (
 										renderTabs(childrens, activeTab)
 									) : (
-										!loading && data && <Fragment />
+										!loadingHoldings && data && <Fragment />
 									)}
 								</DataSwitcherList>
 							</DataSwitcher>

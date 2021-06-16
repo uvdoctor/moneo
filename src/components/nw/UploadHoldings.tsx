@@ -23,6 +23,7 @@ import {
 	getNumberAtEnd,
 	removeDuplicates,
 } from "../utils";
+import { addFamilyMemberSilently } from "./nwutils";
 
 
 export default function UploadHoldings() {
@@ -39,10 +40,15 @@ export default function UploadHoldings() {
 		setTaxId,
 		holdings,
 		setHoldings,
-		allFamily
+		allFamily,
+		setAllFamily,
+		currencyList,
+		setCurrencyList,
+		setSelectedCurrency
 	}: any = useContext(NWContext);
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
+	console.log("Holdings: ", holdings);
 
 	useEffect(() => setDrawerVisibility(!holdings || !Object.keys(holdings).length), []);
 
@@ -52,7 +58,7 @@ export default function UploadHoldings() {
 		setDrawerVisibility(true);
 	}
 
-	const addUploadedInstruments = (insHoldings: Array<HoldingInput>, list: any) => {
+	const addUploadedInstruments = (insHoldings: Array<HoldingInput>, list: any, currency: string) => {
 		let keys = Object.keys(list);
 		if(!list || !keys.length) return;
 		keys.forEach((key: string) => 
@@ -61,7 +67,8 @@ export default function UploadHoldings() {
 				qty: list[key].quantity,
 				name: list[key].name,
 				type: list[key].type,
-				fIds: [taxId]
+				fIds: [taxId],
+				curr: currency
 			})
 		);
 	};
@@ -71,24 +78,23 @@ export default function UploadHoldings() {
 		return !filteredEntries?.length ? [] : filteredEntries;
 	};
 
-	const checkIfTaxIdInFamily = () => {
-		if(!allFamily) return false;
-		let keys = Object.keys(allFamily);
-		if(!keys.length || !keys[0]) return false;
-		keys.map((key: string) => {
-			if(allFamily[key].taxId === taxId) return true;
-		})
-		return false;
-	};
-
 	const addInstruments = () => {
-		if(taxId) checkIfTaxIdInFamily();
-		holdings.instruments =  filterExistingTaxIdEntries();
-		addUploadedInstruments(holdings.instruments, equities);
-		addUploadedInstruments(holdings.instruments, bonds);
-		addUploadedInstruments(holdings.instruments, etfs);
-		addUploadedInstruments(holdings.instruments, mutualFunds);
+		if(!taxId) return;
+		addFamilyMemberSilently(allFamily, setAllFamily, taxId);
+		holdings.instruments = filterExistingTaxIdEntries();
+		let currency = 'INR';
+		if(!currencyList[currency]) {
+			currencyList[currency] = currency;
+			setCurrencyList(currencyList);
+		}
+		setSelectedCurrency(currency);
+		addUploadedInstruments(holdings.instruments, equities, currency);
+		addUploadedInstruments(holdings.instruments, bonds, currency);
+		addUploadedInstruments(holdings.instruments, etfs, currency);
+		addUploadedInstruments(holdings.instruments, mutualFunds, currency);
 		setHoldings(holdings);
+		setDrawerVisibility(false);
+		setShowInsUpload(false);
 	}
 	
 	const parseHoldings = async (pdf: any) => {
