@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
 import { CreateGoalInput, GoalType, LMH, LoanType, TargetInput } from "../../api/goals";
 import { initOptions } from "../utils";
-import { createNewTarget, getDuration, isLoanEligible } from "../goals/goalutils";
+import { createNewTarget, getDuration, isLoanEligible, goalImgStorage } from "../goals/goalutils";
 import { createAmortizingLoanCFs, createEduLoanMonthlyCFs, getCompoundedIncome, getEmi, getNPV } from "../calc/finance";
 import { adjustAccruedInterest, calculateCFs, calculateSellPrice, createLoanCFs, getClosestTargetVal, getEduLoanAnnualDPs, getLoanBorrowAmt } from "./cfutils";
 import { CalcContext } from "../calc/CalcContext";
@@ -147,7 +147,9 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       goalType === GoalType.E
     )
   );
-  const [allBuyCFs, setAllBuyCFs] = useState<Array<Array<number>>>([]);
+  const [ allBuyCFs, setAllBuyCFs ] = useState<Array<Array<number>>>([]);
+  const [ goalImgKey, setGoalImgKey ] = useState<string>(goal.img)
+  const [ goalImgUrl, setGoalImgUrl ] = useState<string | null | Object>(null)
   
   useEffect(() =>
     setDisableSubmit(name.length < 3 || !price || btnClicked || !allInputDone || !cfs.length),
@@ -392,6 +394,13 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
 			if (manualMode > 0) initTargets();
 		},
 		[ manualMode, startYear, endYear ]
+	);
+
+  useEffect(
+		() => {
+      wipGoal.img = goalImgKey;
+		},
+		[ goalImgKey ]
 	);
 
   const calculateYearlyCFs = (
@@ -665,6 +674,12 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     if (!brAns && rentAmt) setAllBuyCFsForComparison();
   }, [rentAmt]);
 
+  useEffect(() => {
+    goalImgStorage.getUrlFromKey(goalImgKey)
+      .then(url => setGoalImgUrl(url))
+      .catch(error => console.log(`Error occured while getting URL, ${error}`));
+  }, [goalImgKey])
+
     return (
       <GoalContext.Provider
         value={{
@@ -769,7 +784,11 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
           setLoanPMI,
           loanPMIEndPer,
           setLoanPMIEndPer,
-          totalCost
+          totalCost,
+          goalImgKey,
+          setGoalImgKey,
+          goalImgUrl,
+          setGoalImgUrl
         }}>
         {children ? children : <CalcTemplate />}
       </GoalContext.Provider>

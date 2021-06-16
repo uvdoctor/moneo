@@ -14,6 +14,7 @@ import {
 	faParachuteBox,
 	faFileContract
 } from '@fortawesome/free-solid-svg-icons';
+import { Storage } from 'aws-amplify';
 
 export const getGoalsList = async () => {
 	try {
@@ -307,3 +308,25 @@ export const getDefaultIconForGoalType = (goalType: APIt.GoalType) => {
 			return faCrosshairs;
 	}
 };
+Storage.configure({ level: 'private' });
+export const goalImgStorage = {
+	getUrlFromKey: async (key: string) => {
+		return Storage.vault.get(key, { expires: 9999 })
+	},
+	storeGoalImg: async (file: File) => {
+		return await Storage.put(file.name, file, {
+			contentType: 'image'
+		});
+	},
+	removeGoalImg: async (key: string) => {
+		return await Storage.remove(key);
+	},
+	validateImg: (file:File) => {
+		// size validation
+		const maxAllowedSize = 1000000
+		if(file.size > maxAllowedSize) throw new Error(`Image size should not exceed ${maxAllowedSize/1000}Kbs`);
+		
+		return true
+	}
+}
+

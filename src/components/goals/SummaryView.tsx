@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { getGoalTypes, getImpLevels, getDefaultIconForGoalType } from './goalutils';
+import { getGoalTypes, getImpLevels, getDefaultIconForGoalType, goalImgStorage } from './goalutils';
 import { CreateGoalInput, GoalType, LMH } from '../../api/goals';
 import { COLORS } from '../../CONSTANTS';
 import { Card, Row, Col, Badge, Button, Modal, Tooltip, Avatar } from 'antd';
@@ -18,21 +18,24 @@ import { getDaysDiff, toHumanFriendlyCurrency } from '../utils';
 export default function SummaryView() {
 	const { removeGoal, editGoal, allGoals }: any = useContext(PlanContext);
 	const { goal, currency }: any = useContext(CalcContext);
-	const { impLevel, name, totalCost }: any = useContext(GoalContext);
+	const { impLevel, name, totalCost, goalImgUrl }: any = useContext(GoalContext);
 	const [ goalImp, setGoalImp ] = useState<LMH>(impLevel);
 	const [ goalName, setGoalName ] = useState<string>(name);
+	const [ goalImg, setGoalImg ] = useState<string>(goalImgUrl);
 	const getImpColor = (imp: LMH) => (imp === LMH.H ? COLORS.BLUE : imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN);
 	const [ impColor, setImpColor ] = useState<string>(getImpColor(impLevel as LMH));
 	const goalTypes: any = getGoalTypes();
 	const impLevels: any = getImpLevels();
 	const { confirm } = Modal;
 	const [ lastUpdated, setLastUpdated ] = useState<string>(getDaysDiff(goal.updatedAt));
+	
 	useEffect(
 		() => {
 			let g: CreateGoalInput = allGoals.filter((g: CreateGoalInput) => g.id === goal.id)[0];
 			setGoalImp(g.imp);
 			setImpColor(getImpColor(g.imp as LMH));
 			setGoalName(g.name);
+			g.img && goalImgStorage.getUrlFromKey(g.img).then((url: any) => { setGoalImg(url) })
 			//@ts-ignore
 			setLastUpdated(getDaysDiff(g.updatedAt));
 		},
@@ -62,7 +65,7 @@ export default function SummaryView() {
 						<Col>
 							<Row align="middle">
 								<Col>
-									<Avatar size={50} icon={<FontAwesomeIcon icon={getDefaultIconForGoalType(goal.type)} />} />
+									<Avatar size={50} src={goalImg} icon={<FontAwesomeIcon icon={getDefaultIconForGoalType(goal.type)} />} />
 								</Col>
 								<Col>
 									<hgroup>
