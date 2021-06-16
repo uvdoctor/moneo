@@ -44,7 +44,8 @@ export default function UploadHoldings() {
 		setAllFamily,
 		currencyList,
 		setCurrencyList,
-		setSelectedCurrency
+		setSelectedCurrency,
+		setSelectedMembers
 	}: any = useContext(NWContext);
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
@@ -80,7 +81,8 @@ export default function UploadHoldings() {
 
 	const addInstruments = () => {
 		if(!taxId) return;
-		addFamilyMemberSilently(allFamily, setAllFamily, taxId);
+		let id = addFamilyMemberSilently(allFamily, setAllFamily, taxId);
+		setSelectedMembers([...[id]]);
 		holdings.instruments = filterExistingTaxIdEntries();
 		let currency = 'INR';
 		if(!currencyList[currency]) {

@@ -87,18 +87,20 @@ export const addFamilyMember = async (name: string, taxId: string) => {
 };
 
 export const checkIfMemberExists = (allFamily: any, taxId: string) => {
-	if(!allFamily) return false;
+	if(!allFamily) return null;
 	let keys = Object.keys(allFamily);
-	if(!keys.length || !keys[0]) return false;
+	if(!keys.length || !keys[0]) return null;
 	let filteredEntries = keys.filter((key: string) => allFamily[key].taxId === taxId);
-	return filteredEntries.length ? true : false;
+	return filteredEntries.length ? filteredEntries[0] : null;
 };
 
 export const addFamilyMemberSilently = async (allFamily: any, allFamilySetter: Function, taxId: string) => {
-	if(checkIfMemberExists(allFamily, taxId)) return;
+	let id = checkIfMemberExists(allFamily, taxId);
+	if(id) return id;
 	let member = await addFamilyMember(taxId, taxId);
 	allFamily[member?.id as string] = {name: member?.name, taxId: member?.tid};
 	allFamilySetter(allFamily);
+	return member?.id;
 };
 
 export const updateFamilyMember = async (member: APIt.UpdateFamilyInput) => {

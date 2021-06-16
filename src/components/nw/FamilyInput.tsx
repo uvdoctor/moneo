@@ -107,7 +107,7 @@ export default function FamilyInput() {
 
 	return (
         <Fragment>
-            {Object.keys(allFamily).length ? 
+            {selectedMembers.length && selectedMembers[0] ? 
                 <Row align="middle">
                     <Col>
                         Family List &nbsp;
