@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from "react";
+import React, { useContext } from "react";
 import { Tabs } from "antd";
 import { NWContext } from "./NWContext";
 import AddHoldings from "./addHoldings/AddHoldings";
@@ -32,7 +32,7 @@ export default function HoldingTabs() {
 				onChange={(activeKey) => setActiveTab(activeKey)}
 			>
 				{Object.keys(tabsData).map((tabName) => {
-					const { label, hasUploader, data, childrens } = tabsData[tabName];
+					const { label, hasUploader, childrens } = tabsData[tabName];
 
 					return (
 						<TabPane key={label} tab={label}>
@@ -51,7 +51,7 @@ export default function HoldingTabs() {
 									{childrens ? (
 										renderTabs(childrens, activeTab)
 									) : (
-										!loadingHoldings && data && <Fragment />
+										!loadingHoldings ? tabs[tabName].content : null
 									)}
 								</DataSwitcherList>
 							</DataSwitcher>
