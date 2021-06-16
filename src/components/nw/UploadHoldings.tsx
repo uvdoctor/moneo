@@ -81,8 +81,7 @@ export default function UploadHoldings() {
 
 	const addInstruments = () => {
 		if(!taxId) return;
-		let id = addFamilyMemberSilently(allFamily, setAllFamily, taxId);
-		setSelectedMembers([...[id]]);
+		addFamilyMemberSilently(allFamily, setAllFamily, taxId);
 		holdings.instruments = filterExistingTaxIdEntries();
 		let currency = 'INR';
 		if(!currencyList[currency]) {
