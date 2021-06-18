@@ -5,6 +5,7 @@ import { AppContext } from "../AppContext";
 import { createEmptyHoldings, getRelatedCurrencies, loadAllFamilyMembers, loadHoldings } from "./nwutils";
 import { notification } from "antd";
 import { CreateHoldingsInput } from "../../api/goals";
+import InstrumentValuation from "./InstrumentValuation";
 
 const NWContext = createContext({});
 
@@ -30,11 +31,13 @@ function NWContextProvider() {
 		"Demat Holdings": {
 			label: "Demat Holdings",
 			hasUploader: true,
-			data: holdings?.instruments
+			data: holdings?.instruments,
+			content: <InstrumentValuation />
 		},
 		Properties: {
 			label: "Properties",
 			data: holdings?.property,
+			content: <InstrumentValuation />,
 			formConfig: [
 				{
 					label: "Name",
@@ -51,34 +54,42 @@ function NWContextProvider() {
 		Vehicles: {
 			label: "Vehicles",
 			data: holdings?.vehicles,
+			content: <InstrumentValuation />
 		},
 		"Precious Metals": {
 			label: "Precious Metals",
 			data: holdings?.pm,
+			content: <InstrumentValuation />
 		},
 		Deposits: {
 			label: "Deposits",
 			data: holdings?.deposits,
+			content: <InstrumentValuation />
 		},
 		Savings: {
 			label: "Savings",
 			data: holdings?.savings,
+			content: <InstrumentValuation />
 		},
 		PPF: {
 			label: "PPF",
 			data: holdings?.ppf,
+			content: <InstrumentValuation />
 		},
 		EPF: {
 			label: "EPF",
 			data: holdings?.epf,
+			content: <InstrumentValuation />
 		},
 		NPS: {
 			label: "NPS",
 			data: holdings?.nps,
+			content: <InstrumentValuation />
 		},
 		Loans: {
 			label: "Loans",
 			data: holdings?.loans,
+			content: <InstrumentValuation />,
 			formConfig: [
 				{
 					label: "Bank Name",
@@ -110,14 +121,17 @@ function NWContextProvider() {
 		Insurance: {
 			label: "Insurance",
 			data: holdings?.ins,
+			content: <InstrumentValuation />
 		},
 		Lendings: {
 			label: "Lendings",
 			data: holdings?.lendings,
+			content: <InstrumentValuation />
 		},
-		"Digital Coins": {
-			label: "Digital Coins",
+		Crypto: {
+			label: "Crypto",
 			data: holdings?.crypto,
+			content: <InstrumentValuation />
 		},
 	};
 

@@ -45,7 +45,6 @@ export default function UploadHoldings() {
 		currencyList,
 		setCurrencyList,
 		setSelectedCurrency,
-		setSelectedMembers
 	}: any = useContext(NWContext);
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
