@@ -42,10 +42,10 @@ export default function GoalImage() {
         }
         inputEl.current.value = "";
       }
-    } catch (error: any) {
+    } catch (error) {
       notification.error({
         message: 'Error while uploading goal image',
-        description: `${error.toString()}`
+        description: `${error}`
       });
       setLoader(false);
     }
