@@ -113,10 +113,11 @@ export default function GoalImage() {
           >
             Upload Photo
           </Button>,
-          <Button
+          goalImgUrl && <Button
             type="dashed"
             key="Cancel"
             className="image-upload-modal-button"
+            style={{}}
             onClick={removeImage}
           >
             Remove Photo
