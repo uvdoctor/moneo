@@ -675,9 +675,10 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   }, [rentAmt]);
 
   useEffect(() => {
-    goalImgStorage.getUrlFromKey(goalImgKey)
+    goalImgKey ? goalImgStorage.getUrlFromKey(goalImgKey)
       .then((url: any) => setGoalImgUrl(url))
-      .catch((error: string) => console.log(`Error occured while getting URL, ${error}`));
+      .catch((error: string) => console.log(`Error occured while getting URL, ${error}`)) 
+      : setGoalImgUrl(null);
   }, [goalImgKey])
 
     return (

@@ -11,32 +11,36 @@ body,
     position: relative;
     cursor: pointer;
 
-    & .image-edit-icon {
-      display: none;
-      position: absolute;
-      top: -6px;
-      right: 4px;
-      color: #000;
-    }
-
-    &:hover .image-edit-icon {
-      display: inline-block;
-    }
-
     & input[type="file"] {
       display: none;
     }
-
-    & .goal-image-loader {
-      position: absolute;
-      z-index: 2;
-      left: 14px;
-      top: 14px;
-    }
+    
   }
   .ant-page-header-heading-title {
     display: flex;
   }
+}
+
+.preview-image-holder {
+  position: relative;
+  display: flex;
+  text-align: center;
+  
+  & .goal-image-loader {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+  }
+
+  & .preview-image {
+    flex: 1
+  }
+}
+
+.image-upload-modal-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .chart-options-row {

@@ -21,7 +21,7 @@ export default function SummaryView() {
 	const { impLevel, name, totalCost, goalImgUrl }: any = useContext(GoalContext);
 	const [ goalImp, setGoalImp ] = useState<LMH>(impLevel);
 	const [ goalName, setGoalName ] = useState<string>(name);
-	const [ goalImg, setGoalImg ] = useState<string>(goalImgUrl);
+	const [ goalImg, setGoalImg ] = useState<string | null>(goalImgUrl);
 	const getImpColor = (imp: LMH) => (imp === LMH.H ? COLORS.BLUE : imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN);
 	const [ impColor, setImpColor ] = useState<string>(getImpColor(impLevel as LMH));
 	const goalTypes: any = getGoalTypes();
@@ -35,7 +35,8 @@ export default function SummaryView() {
 			setGoalImp(g.imp);
 			setImpColor(getImpColor(g.imp as LMH));
 			setGoalName(g.name);
-			g.img && goalImgStorage.getUrlFromKey(g.img).then((url: any) => { setGoalImg(url) })
+			g.img ? goalImgStorage.getUrlFromKey(g.img).then((url: any) => { setGoalImg(url) }) : setGoalImg(null)
+			
 			//@ts-ignore
 			setLastUpdated(getDaysDiff(g.updatedAt));
 		},
