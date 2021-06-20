@@ -1,3 +1,5 @@
+import { Menu } from "antd";
+import Link from "next/link";
 import { ASSET_CATEGORIES, ASSET_TYPES, COLORS } from "../CONSTANTS";
 import { getQty } from "./nw/parseutils";
 
@@ -673,6 +675,17 @@ export const getDaysDiff = (dateTime: string) => {
   if (diff <= dayInMs) return 'Yesterday';
   return Math.round(diff / dayInMs) + ' days ago';
 }
+
+export const menuItem = (name: string, path: string, selectedKey: string, multiCol: boolean = false) => 
+<Menu.Item key={path} className={multiCol ? "multi-col-submenu" : ""}>
+  {selectedKey !== path ? (
+    <Link href={path}>
+      <a>{name}</a>
+    </Link>
+  ) : (
+    <label style={{ color: COLORS.GREEN }}>{name}</label>
+  )}
+</Menu.Item>
 
 export const includesAny = (value: string, items: Array<string>) => {
   let v = value.trim().toLowerCase();

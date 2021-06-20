@@ -52,7 +52,9 @@ export default function UploadHoldings() {
 
 	useEffect(() => setDrawerVisibility(!holdings || !Object.keys(holdings).length), []);
 
-	useEffect(() => setDrawerVisibility(!showInsUpload), [showInsUpload]);
+	useEffect(() => {
+		if(showInsUpload) setDrawerVisibility(false);
+	}, [showInsUpload]);
 
 	function onShowDrawer() {
 		setDrawerVisibility(true);

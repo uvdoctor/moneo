@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, Fragment } from 'react';
+import React, { useEffect, useContext, Fragment, useState } from 'react';
 import { Avatar, Menu } from 'antd';
 import { AppContext } from './AppContext';
 import { Auth, Hub } from 'aws-amplify';
@@ -8,10 +8,12 @@ import { COLORS, ROUTES } from '../CONSTANTS';
 import { useRouter } from 'next/router';
 import { calcList } from './landing/Calculator';
 import { UserOutlined } from '@ant-design/icons';
+import { menuItem } from './utils';
 
 export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
-	const { username, setUsername }: any = useContext(AppContext);
 	const router = useRouter();
+	const { username, setUsername }: any = useContext(AppContext);
+	const [ selectedKey, setSelectedKey ] = useState<string>(router.pathname);
 	const { SubMenu } = Menu;
 
 	const updateUser = (username: string | null) => {
@@ -59,7 +61,7 @@ export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 	};
 
 	return (
-		<Menu mode={mode}>
+		<Menu mode={mode} onSelect={(info: any) => setSelectedKey(info.key)}>
 			<SubMenu title="Calculate">
 				{calcList.map(({ name, link }) => (
 					<Menu.Item key={name} className="multi-col-submenu">
@@ -69,48 +71,21 @@ export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 					</Menu.Item>
 				))}
 			</SubMenu>
-			<Menu.Item>
-				<Link href={ROUTES.GET}>
-					<a>Get</a>
-				</Link>
-			</Menu.Item>
-			<Menu.Item>
-				<Link href={ROUTES.SET}>
-					<a>Set</a>
-				</Link>
-			</Menu.Item>
-			<Menu.Item>
-				<Link href={ROUTES.SAVE}>
-					<a>Save</a>
-				</Link>
-			</Menu.Item>
-			<Menu.Item>
-				<Link href={ROUTES.INVEST}>
-					<a>Invest</a>
-				</Link>
-			</Menu.Item>
+			{menuItem('Get', ROUTES.GET, selectedKey)}
+			{menuItem('Set', ROUTES.SET, selectedKey)}
+			{menuItem('Grow', ROUTES.GROW, selectedKey)}
 			{username && (
 				<SubMenu
 					title={
 						<Fragment>
-							<Avatar size="small" icon={<UserOutlined />} style={{backgroundColor: COLORS.GREEN}} />
+							<Avatar size="small" icon={<UserOutlined />} style={{ backgroundColor: COLORS.GREEN }} />
 							&nbsp;{username}
 						</Fragment>
 					}
 				>
-					<Menu.Item>
-						<Link href="#">
-							<a>Settings</a>
-						</Link>
-					</Menu.Item>
-					<Menu.Item>
-						<Link href={ROUTES.CONTACT_US}>
-							<a>Support</a>
-						</Link>
-					</Menu.Item>
-					<Menu.Item onClick={handleLogout}>
-							Logout
-					</Menu.Item>
+					{menuItem('Settings', "#", selectedKey)}
+					{menuItem('Support', ROUTES.CONTACT_US, selectedKey)}
+					<Menu.Item onClick={handleLogout}>Logout</Menu.Item>
 				</SubMenu>
 			)}
 		</Menu>

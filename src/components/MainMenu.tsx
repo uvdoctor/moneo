@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { Button, Menu } from 'antd';
 import FSToggle from './FSToggle';
 import { calcList } from './landing/Calculator';
@@ -7,16 +7,18 @@ import { ROUTES } from '../CONSTANTS';
 import { useRouter } from 'next/router';
 import SecureMenu from './SecureMenu';
 import { AppContext } from './AppContext';
+import { menuItem } from './utils';
 
 export interface MainMenuProps {
 	mode?: any;
 }
 
 export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
-	const { defaultCountry }: any = useContext(AppContext);
-	const { SubMenu } = Menu;
 	const router = useRouter();
-	const secureRoutes: Array<string> = [ ROUTES.GET, ROUTES.SET, ROUTES.SAVE, ROUTES.INVEST ];
+	const { defaultCountry }: any = useContext(AppContext);
+	const [ selectedKey, setSelectedKey ] = useState<string>(router.pathname);
+	const { SubMenu } = Menu;
+	const secureRoutes: Array<string> = [ ROUTES.GET, ROUTES.SET, ROUTES.GROW ];
 
 	return (
 		<Fragment>
@@ -24,7 +26,7 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 			{secureRoutes.includes(router.pathname) ? (
 				<SecureMenu mode={mode} />
 			) : (
-				<Menu mode={mode}>
+				<Menu mode={mode} onSelect={(info: any) => setSelectedKey(info.key)}>
 					<SubMenu title="Calculate">
 						{calcList.map(({ name, link }) => (
 							<Menu.Item key={name} className="multi-col-submenu">
@@ -34,16 +36,8 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 							</Menu.Item>
 						))}
 					</SubMenu>
-					<Menu.Item>
-						<Link href={ROUTES.ABOUT}>
-							<a>About</a>
-						</Link>
-					</Menu.Item>
-					<Menu.Item>
-						<Link href={ROUTES.CONTACT_US}>
-							<a>Contact Us</a>
-						</Link>
-					</Menu.Item>
+					{menuItem('About', ROUTES.ABOUT, selectedKey)}
+					{menuItem('Contact Us', ROUTES.CONTACT_US, selectedKey)}
 					{/**<Menu.Item>
 							<Link href={ROUTES.FEATURES}>
 								<a>Features</a>
