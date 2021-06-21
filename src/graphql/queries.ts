@@ -449,7 +449,7 @@ export const getHoldings = /* GraphQL */ `
       instruments {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -511,7 +511,7 @@ export const getHoldings = /* GraphQL */ `
       vehicles {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -525,7 +525,7 @@ export const getHoldings = /* GraphQL */ `
       pm {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -539,7 +539,7 @@ export const getHoldings = /* GraphQL */ `
       ppf {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -553,7 +553,7 @@ export const getHoldings = /* GraphQL */ `
       epf {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -567,7 +567,7 @@ export const getHoldings = /* GraphQL */ `
       nps {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -581,7 +581,7 @@ export const getHoldings = /* GraphQL */ `
       crypto {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -836,42 +836,52 @@ export const listRegistrations = /* GraphQL */ `
     }
   }
 `;
-export const getInstruments = /* GraphQL */ `
-  query GetInstruments($isin: String!) {
-    getInstruments(isin: $isin) {
-      isin
+export const getInstrument = /* GraphQL */ `
+  query GetInstrument($id: String!) {
+    getInstrument(id: $id) {
+      id
       name
-      symbol
       country
       type
-      eodAdj
+      subt
+      price
+      sm
+      sy
+      mm
+      my
+      rate
       createdAt
       updatedAt
     }
   }
 `;
-export const listInstrumentss = /* GraphQL */ `
-  query ListInstrumentss(
-    $isin: String
-    $filter: ModelInstrumentsFilterInput
+export const listInstruments = /* GraphQL */ `
+  query ListInstruments(
+    $id: String
+    $filter: ModelInstrumentFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listInstrumentss(
-      isin: $isin
+    listInstruments(
+      id: $id
       filter: $filter
       limit: $limit
       nextToken: $nextToken
       sortDirection: $sortDirection
     ) {
       items {
-        isin
+        id
         name
-        symbol
         country
         type
-        eodAdj
+        subt
+        price
+        sm
+        sy
+        mm
+        my
+        rate
         createdAt
         updatedAt
       }

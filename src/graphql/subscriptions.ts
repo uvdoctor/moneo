@@ -651,7 +651,7 @@ export const onCreateHoldings = /* GraphQL */ `
       instruments {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -713,7 +713,7 @@ export const onCreateHoldings = /* GraphQL */ `
       vehicles {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -727,7 +727,7 @@ export const onCreateHoldings = /* GraphQL */ `
       pm {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -741,7 +741,7 @@ export const onCreateHoldings = /* GraphQL */ `
       ppf {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -755,7 +755,7 @@ export const onCreateHoldings = /* GraphQL */ `
       epf {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -769,7 +769,7 @@ export const onCreateHoldings = /* GraphQL */ `
       nps {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -783,7 +783,7 @@ export const onCreateHoldings = /* GraphQL */ `
       crypto {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -813,7 +813,7 @@ export const onUpdateHoldings = /* GraphQL */ `
       instruments {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -875,7 +875,7 @@ export const onUpdateHoldings = /* GraphQL */ `
       vehicles {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -889,7 +889,7 @@ export const onUpdateHoldings = /* GraphQL */ `
       pm {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -903,7 +903,7 @@ export const onUpdateHoldings = /* GraphQL */ `
       ppf {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -917,7 +917,7 @@ export const onUpdateHoldings = /* GraphQL */ `
       epf {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -931,7 +931,7 @@ export const onUpdateHoldings = /* GraphQL */ `
       nps {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -945,7 +945,7 @@ export const onUpdateHoldings = /* GraphQL */ `
       crypto {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -975,7 +975,7 @@ export const onDeleteHoldings = /* GraphQL */ `
       instruments {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -1037,7 +1037,7 @@ export const onDeleteHoldings = /* GraphQL */ `
       vehicles {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -1051,7 +1051,7 @@ export const onDeleteHoldings = /* GraphQL */ `
       pm {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -1065,7 +1065,7 @@ export const onDeleteHoldings = /* GraphQL */ `
       ppf {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -1079,7 +1079,7 @@ export const onDeleteHoldings = /* GraphQL */ `
       epf {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -1093,7 +1093,7 @@ export const onDeleteHoldings = /* GraphQL */ `
       nps {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -1107,7 +1107,7 @@ export const onDeleteHoldings = /* GraphQL */ `
       crypto {
         id
         qty
-        purchase {
+        pur {
           amt
           date
           qty
@@ -1256,43 +1256,58 @@ export const onDeleteRegistration = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInstruments = /* GraphQL */ `
-  subscription OnCreateInstruments {
-    onCreateInstruments {
-      isin
+export const onCreateInstrument = /* GraphQL */ `
+  subscription OnCreateInstrument {
+    onCreateInstrument {
+      id
       name
-      symbol
       country
       type
-      eodAdj
+      subt
+      price
+      sm
+      sy
+      mm
+      my
+      rate
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateInstruments = /* GraphQL */ `
-  subscription OnUpdateInstruments {
-    onUpdateInstruments {
-      isin
+export const onUpdateInstrument = /* GraphQL */ `
+  subscription OnUpdateInstrument {
+    onUpdateInstrument {
+      id
       name
-      symbol
       country
       type
-      eodAdj
+      subt
+      price
+      sm
+      sy
+      mm
+      my
+      rate
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteInstruments = /* GraphQL */ `
-  subscription OnDeleteInstruments {
-    onDeleteInstruments {
-      isin
+export const onDeleteInstrument = /* GraphQL */ `
+  subscription OnDeleteInstrument {
+    onDeleteInstrument {
+      id
       name
-      symbol
       country
       type
-      eodAdj
+      subt
+      price
+      sm
+      sy
+      mm
+      my
+      rate
       createdAt
       updatedAt
     }

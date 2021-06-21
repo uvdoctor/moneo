@@ -3,7 +3,7 @@
 //  This file was automatically generated and should not be edited.
 
 export type DeleteFeedbackInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type ModelFeedbackConditionInput = {
@@ -85,7 +85,7 @@ export type Name = {
 };
 
 export type DeleteRatingInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type ModelRatingConditionInput = {
@@ -383,7 +383,7 @@ export type UpdateGoalInput = {
 };
 
 export type DeleteGoalInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateMilestoneInput = {
@@ -431,7 +431,7 @@ export type UpdateMilestoneInput = {
 };
 
 export type DeleteMilestoneInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateProfileInput = {
@@ -477,7 +477,7 @@ export type UpdateProfileInput = {
 };
 
 export type DeleteProfileInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateItemInput = {
@@ -523,7 +523,7 @@ export type UpdateItemInput = {
 };
 
 export type DeleteItemInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateAccountInput = {
@@ -590,7 +590,7 @@ export type UpdateAccountInput = {
 };
 
 export type DeleteAccountInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type DeleteRegistrationInput = {
@@ -663,7 +663,7 @@ export type UpdateFamilyInput = {
 };
 
 export type DeleteFamilyInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateHoldingsInput = {
@@ -686,7 +686,7 @@ export type CreateHoldingsInput = {
 export type HoldingInput = {
   id: string,
   qty: number,
-  purchase?: Array< PurchaseInput > | null,
+  pur?: Array< PurchaseInput > | null,
   name?: string | null,
   fIds: Array< string >,
   curr?: string | null,
@@ -780,7 +780,7 @@ export type Holding = {
   __typename: "Holding",
   id?: string,
   qty?: number,
-  purchase?:  Array<Purchase > | null,
+  pur?:  Array<Purchase > | null,
   name?: string | null,
   fIds?: Array< string >,
   curr?: string | null,
@@ -856,7 +856,7 @@ export type UpdateHoldingsInput = {
 };
 
 export type DeleteHoldingsInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateFeedbackInput = {
@@ -912,34 +912,52 @@ export type UpdateRegistrationInput = {
   long?: number | null,
 };
 
-export type CreateInstrumentsInput = {
-  isin: string,
+export type CreateInstrumentInput = {
+  id: string,
   name: string,
-  symbol: string,
   country: string,
   type: InsType,
-  eodAdj: number,
+  subt: InsSubType,
+  price: number,
+  sm?: number | null,
+  sy?: number | null,
+  mm?: number | null,
+  my?: number | null,
+  rate?: number | null,
 };
 
 export enum InsType {
+  E = "E",
+  F = "F",
+  A = "A",
+}
+
+
+export enum InsSubType {
   S = "S",
   CB = "CB",
   GB = "GB",
   MB = "MB",
   ETF = "ETF",
   M = "M",
+  GoldB = "GoldB",
 }
 
 
-export type ModelInstrumentsConditionInput = {
+export type ModelInstrumentConditionInput = {
   name?: ModelStringInput | null,
-  symbol?: ModelStringInput | null,
   country?: ModelStringInput | null,
   type?: ModelInsTypeInput | null,
-  eodAdj?: ModelFloatInput | null,
-  and?: Array< ModelInstrumentsConditionInput | null > | null,
-  or?: Array< ModelInstrumentsConditionInput | null > | null,
-  not?: ModelInstrumentsConditionInput | null,
+  subt?: ModelInsSubTypeInput | null,
+  price?: ModelFloatInput | null,
+  sm?: ModelIntInput | null,
+  sy?: ModelIntInput | null,
+  mm?: ModelIntInput | null,
+  my?: ModelIntInput | null,
+  rate?: ModelFloatInput | null,
+  and?: Array< ModelInstrumentConditionInput | null > | null,
+  or?: Array< ModelInstrumentConditionInput | null > | null,
+  not?: ModelInstrumentConditionInput | null,
 };
 
 export type ModelInsTypeInput = {
@@ -947,29 +965,44 @@ export type ModelInsTypeInput = {
   ne?: InsType | null,
 };
 
-export type Instruments = {
-  __typename: "Instruments",
-  isin?: string,
+export type ModelInsSubTypeInput = {
+  eq?: InsSubType | null,
+  ne?: InsSubType | null,
+};
+
+export type Instrument = {
+  __typename: "Instrument",
+  id?: string,
   name?: string,
-  symbol?: string,
   country?: string,
   type?: InsType,
-  eodAdj?: number,
+  subt?: InsSubType,
+  price?: number,
+  sm?: number | null,
+  sy?: number | null,
+  mm?: number | null,
+  my?: number | null,
+  rate?: number | null,
   createdAt?: string,
   updatedAt?: string,
 };
 
-export type UpdateInstrumentsInput = {
-  isin: string,
+export type UpdateInstrumentInput = {
+  id: string,
   name?: string | null,
-  symbol?: string | null,
   country?: string | null,
   type?: InsType | null,
-  eodAdj?: number | null,
+  subt?: InsSubType | null,
+  price?: number | null,
+  sm?: number | null,
+  sy?: number | null,
+  mm?: number | null,
+  my?: number | null,
+  rate?: number | null,
 };
 
-export type DeleteInstrumentsInput = {
-  isin: string,
+export type DeleteInstrumentInput = {
+  id: string,
 };
 
 export type ModelGoalFilterInput = {
@@ -1187,21 +1220,26 @@ export type ModelRegistrationConnection = {
   nextToken?: string | null,
 };
 
-export type ModelInstrumentsFilterInput = {
-  isin?: ModelStringInput | null,
+export type ModelInstrumentFilterInput = {
+  id?: ModelStringInput | null,
   name?: ModelStringInput | null,
-  symbol?: ModelStringInput | null,
   country?: ModelStringInput | null,
   type?: ModelInsTypeInput | null,
-  eodAdj?: ModelFloatInput | null,
-  and?: Array< ModelInstrumentsFilterInput | null > | null,
-  or?: Array< ModelInstrumentsFilterInput | null > | null,
-  not?: ModelInstrumentsFilterInput | null,
+  subt?: ModelInsSubTypeInput | null,
+  price?: ModelFloatInput | null,
+  sm?: ModelIntInput | null,
+  sy?: ModelIntInput | null,
+  mm?: ModelIntInput | null,
+  my?: ModelIntInput | null,
+  rate?: ModelFloatInput | null,
+  and?: Array< ModelInstrumentFilterInput | null > | null,
+  or?: Array< ModelInstrumentFilterInput | null > | null,
+  not?: ModelInstrumentFilterInput | null,
 };
 
-export type ModelInstrumentsConnection = {
-  __typename: "ModelInstrumentsConnection",
-  items?:  Array<Instruments | null > | null,
+export type ModelInstrumentConnection = {
+  __typename: "ModelInstrumentConnection",
+  items?:  Array<Instrument | null > | null,
   nextToken?: string | null,
 };
 
@@ -2047,7 +2085,7 @@ export type CreateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2118,7 +2156,7 @@ export type CreateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2134,7 +2172,7 @@ export type CreateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2150,7 +2188,7 @@ export type CreateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2166,7 +2204,7 @@ export type CreateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2182,7 +2220,7 @@ export type CreateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2198,7 +2236,7 @@ export type CreateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2236,7 +2274,7 @@ export type UpdateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2307,7 +2345,7 @@ export type UpdateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2323,7 +2361,7 @@ export type UpdateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2339,7 +2377,7 @@ export type UpdateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2355,7 +2393,7 @@ export type UpdateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2371,7 +2409,7 @@ export type UpdateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2387,7 +2425,7 @@ export type UpdateHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2425,7 +2463,7 @@ export type DeleteHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2496,7 +2534,7 @@ export type DeleteHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2512,7 +2550,7 @@ export type DeleteHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2528,7 +2566,7 @@ export type DeleteHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2544,7 +2582,7 @@ export type DeleteHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2560,7 +2598,7 @@ export type DeleteHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2576,7 +2614,7 @@ export type DeleteHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -2717,58 +2755,73 @@ export type UpdateRegistrationMutation = {
   } | null,
 };
 
-export type CreateInstrumentsMutationVariables = {
-  input?: CreateInstrumentsInput,
-  condition?: ModelInstrumentsConditionInput | null,
+export type CreateInstrumentMutationVariables = {
+  input?: CreateInstrumentInput,
+  condition?: ModelInstrumentConditionInput | null,
 };
 
-export type CreateInstrumentsMutation = {
-  createInstruments?:  {
-    __typename: "Instruments",
-    isin: string,
+export type CreateInstrumentMutation = {
+  createInstrument?:  {
+    __typename: "Instrument",
+    id: string,
     name: string,
-    symbol: string,
     country: string,
     type: InsType,
-    eodAdj: number,
+    subt: InsSubType,
+    price: number,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
+    rate?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateInstrumentsMutationVariables = {
-  input?: UpdateInstrumentsInput,
-  condition?: ModelInstrumentsConditionInput | null,
+export type UpdateInstrumentMutationVariables = {
+  input?: UpdateInstrumentInput,
+  condition?: ModelInstrumentConditionInput | null,
 };
 
-export type UpdateInstrumentsMutation = {
-  updateInstruments?:  {
-    __typename: "Instruments",
-    isin: string,
+export type UpdateInstrumentMutation = {
+  updateInstrument?:  {
+    __typename: "Instrument",
+    id: string,
     name: string,
-    symbol: string,
     country: string,
     type: InsType,
-    eodAdj: number,
+    subt: InsSubType,
+    price: number,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
+    rate?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteInstrumentsMutationVariables = {
-  input?: DeleteInstrumentsInput,
-  condition?: ModelInstrumentsConditionInput | null,
+export type DeleteInstrumentMutationVariables = {
+  input?: DeleteInstrumentInput,
+  condition?: ModelInstrumentConditionInput | null,
 };
 
-export type DeleteInstrumentsMutation = {
-  deleteInstruments?:  {
-    __typename: "Instruments",
-    isin: string,
+export type DeleteInstrumentMutation = {
+  deleteInstrument?:  {
+    __typename: "Instrument",
+    id: string,
     name: string,
-    symbol: string,
     country: string,
     type: InsType,
-    eodAdj: number,
+    subt: InsSubType,
+    price: number,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
+    rate?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3288,7 +3341,7 @@ export type GetHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -3359,7 +3412,7 @@ export type GetHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -3375,7 +3428,7 @@ export type GetHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -3391,7 +3444,7 @@ export type GetHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -3407,7 +3460,7 @@ export type GetHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -3423,7 +3476,7 @@ export type GetHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -3439,7 +3492,7 @@ export type GetHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -3729,43 +3782,53 @@ export type ListRegistrationsQuery = {
   } | null,
 };
 
-export type GetInstrumentsQueryVariables = {
-  isin?: string,
+export type GetInstrumentQueryVariables = {
+  id?: string,
 };
 
-export type GetInstrumentsQuery = {
-  getInstruments?:  {
-    __typename: "Instruments",
-    isin: string,
+export type GetInstrumentQuery = {
+  getInstrument?:  {
+    __typename: "Instrument",
+    id: string,
     name: string,
-    symbol: string,
     country: string,
     type: InsType,
-    eodAdj: number,
+    subt: InsSubType,
+    price: number,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
+    rate?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListInstrumentssQueryVariables = {
-  isin?: string | null,
-  filter?: ModelInstrumentsFilterInput | null,
+export type ListInstrumentsQueryVariables = {
+  id?: string | null,
+  filter?: ModelInstrumentFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListInstrumentssQuery = {
-  listInstrumentss?:  {
-    __typename: "ModelInstrumentsConnection",
+export type ListInstrumentsQuery = {
+  listInstruments?:  {
+    __typename: "ModelInstrumentConnection",
     items?:  Array< {
-      __typename: "Instruments",
-      isin: string,
+      __typename: "Instrument",
+      id: string,
       name: string,
-      symbol: string,
       country: string,
       type: InsType,
-      eodAdj: number,
+      subt: InsSubType,
+      price: number,
+      sm?: number | null,
+      sy?: number | null,
+      mm?: number | null,
+      my?: number | null,
+      rate?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -4538,7 +4601,7 @@ export type OnCreateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4609,7 +4672,7 @@ export type OnCreateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4625,7 +4688,7 @@ export type OnCreateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4641,7 +4704,7 @@ export type OnCreateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4657,7 +4720,7 @@ export type OnCreateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4673,7 +4736,7 @@ export type OnCreateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4689,7 +4752,7 @@ export type OnCreateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4726,7 +4789,7 @@ export type OnUpdateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4797,7 +4860,7 @@ export type OnUpdateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4813,7 +4876,7 @@ export type OnUpdateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4829,7 +4892,7 @@ export type OnUpdateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4845,7 +4908,7 @@ export type OnUpdateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4861,7 +4924,7 @@ export type OnUpdateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4877,7 +4940,7 @@ export type OnUpdateHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4914,7 +4977,7 @@ export type OnDeleteHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -4985,7 +5048,7 @@ export type OnDeleteHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -5001,7 +5064,7 @@ export type OnDeleteHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -5017,7 +5080,7 @@ export type OnDeleteHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -5033,7 +5096,7 @@ export type OnDeleteHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -5049,7 +5112,7 @@ export type OnDeleteHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -5065,7 +5128,7 @@ export type OnDeleteHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      purchase?:  Array< {
+      pur?:  Array< {
         __typename: "Purchase",
         amt: number,
         date: number,
@@ -5219,43 +5282,58 @@ export type OnDeleteRegistrationSubscription = {
   } | null,
 };
 
-export type OnCreateInstrumentsSubscription = {
-  onCreateInstruments?:  {
-    __typename: "Instruments",
-    isin: string,
+export type OnCreateInstrumentSubscription = {
+  onCreateInstrument?:  {
+    __typename: "Instrument",
+    id: string,
     name: string,
-    symbol: string,
     country: string,
     type: InsType,
-    eodAdj: number,
+    subt: InsSubType,
+    price: number,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
+    rate?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateInstrumentsSubscription = {
-  onUpdateInstruments?:  {
-    __typename: "Instruments",
-    isin: string,
+export type OnUpdateInstrumentSubscription = {
+  onUpdateInstrument?:  {
+    __typename: "Instrument",
+    id: string,
     name: string,
-    symbol: string,
     country: string,
     type: InsType,
-    eodAdj: number,
+    subt: InsSubType,
+    price: number,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
+    rate?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteInstrumentsSubscription = {
-  onDeleteInstruments?:  {
-    __typename: "Instruments",
-    isin: string,
+export type OnDeleteInstrumentSubscription = {
+  onDeleteInstrument?:  {
+    __typename: "Instrument",
+    id: string,
     name: string,
-    symbol: string,
     country: string,
     type: InsType,
-    eodAdj: number,
+    subt: InsSubType,
+    price: number,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
+    rate?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,

@@ -194,26 +194,37 @@ type Registration
 }
 
 enum InsType {
+	E
+	F
+	A
+}
+
+enum InsSubType {
 	S
 	CB
 	GB
 	MB
 	ETF
 	M
+	GoldB
 }
 
-type Instruments
+type Instrument
 	@model
 	@aws_iam
-	@aws_cognito_user_pools
-	@key(fields: ["isin"])
-	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update, delete] }]) {
-	isin: String!
+	@key(fields: ["id"])
+	@auth(rules: [{ allow: private, provider: iam, operations: [create, read, update, delete] }]) {
+	id: String!
 	name: String!
-	symbol: String!
 	country: String!
 	type: InsType!
-	eodAdj: Float!
+	subt: InsSubType!
+	price: Float!
+	sm: Int
+	sy: Int
+	mm: Int
+	my: Int
+	rate: Float
 }
 
 type Family @model @auth(rules: [{ allow: owner }]) {
@@ -225,7 +236,7 @@ type Family @model @auth(rules: [{ allow: owner }]) {
 type Holding {
 	id: String!
 	qty: Float!
-	purchase: [Purchase!]
+	pur: [Purchase!]
 	name: String
 	fIds: [String!]!
 	curr: String

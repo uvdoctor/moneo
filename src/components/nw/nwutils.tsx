@@ -164,13 +164,13 @@ export const getRelatedCurrencies = (holdings: APIt.CreateHoldingsInput, default
 }
 
 export const loadMatchingInstruments = async (instruments: Array<APIt.HoldingInput>) => {
-	let idList: Array<APIt.ModelInstrumentsFilterInput> = [];
+	let idList: Array<APIt.ModelInstrumentFilterInput> = [];
 	instruments.forEach((instrument: APIt.HoldingInput) => {
-		idList.push({isin: {eq: instrument.id}});
+		idList.push({id: {eq: instrument.id}});
 	})
-	let filterList: APIt.ModelInstrumentsFilterInput = {and: idList};
-	const { data: { listInstrumentss } } = (await API.graphql(graphqlOperation(queries.listInstrumentss))) as {
-		data: APIt.ListInstrumentssQuery;
+	let filterList: APIt.ModelInstrumentFilterInput = {or: idList};
+	const { data: { listInstruments } } = (await API.graphql(graphqlOperation(queries.listInstruments, {filter: filterList}))) as {
+		data: APIt.ListInstrumentsQuery;
 	};
-	return listInstrumentss;
+	return listInstruments?.items;
 }
