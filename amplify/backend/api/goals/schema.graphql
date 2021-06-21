@@ -221,7 +221,9 @@ type Instrument
 	) {
 	id: String!
 	name: String!
+	exchg: String!
 	country: String!
+	curr: String!
 	type: InsType!
 	subt: InsSubType!
 	price: Float!

@@ -841,7 +841,9 @@ export const getInstrument = /* GraphQL */ `
     getInstrument(id: $id) {
       id
       name
+      exchg
       country
+      curr
       type
       subt
       price
@@ -873,7 +875,9 @@ export const listInstruments = /* GraphQL */ `
       items {
         id
         name
+        exchg
         country
+        curr
         type
         subt
         price

@@ -1354,7 +1354,9 @@ export const createInstrument = /* GraphQL */ `
     createInstrument(input: $input, condition: $condition) {
       id
       name
+      exchg
       country
+      curr
       type
       subt
       price
@@ -1376,7 +1378,9 @@ export const updateInstrument = /* GraphQL */ `
     updateInstrument(input: $input, condition: $condition) {
       id
       name
+      exchg
       country
+      curr
       type
       subt
       price
@@ -1398,7 +1402,9 @@ export const deleteInstrument = /* GraphQL */ `
     deleteInstrument(input: $input, condition: $condition) {
       id
       name
+      exchg
       country
+      curr
       type
       subt
       price

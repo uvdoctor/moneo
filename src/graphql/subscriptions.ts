@@ -1261,7 +1261,9 @@ export const onCreateInstrument = /* GraphQL */ `
     onCreateInstrument {
       id
       name
+      exchg
       country
+      curr
       type
       subt
       price
@@ -1280,7 +1282,9 @@ export const onUpdateInstrument = /* GraphQL */ `
     onUpdateInstrument {
       id
       name
+      exchg
       country
+      curr
       type
       subt
       price
@@ -1299,7 +1303,9 @@ export const onDeleteInstrument = /* GraphQL */ `
     onDeleteInstrument {
       id
       name
+      exchg
       country
+      curr
       type
       subt
       price
