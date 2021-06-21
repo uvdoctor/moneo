@@ -213,7 +213,12 @@ type Instrument
 	@model
 	@aws_iam
 	@key(fields: ["id"])
-	@auth(rules: [{ allow: private, provider: iam, operations: [create, read, update, delete] }]) {
+	@auth(
+		rules: [
+			{ allow: private, provider: iam, operations: [create, read, update, delete] }
+			{ allow: private, operations: [read] }
+		]
+	) {
 	id: String!
 	name: String!
 	country: String!

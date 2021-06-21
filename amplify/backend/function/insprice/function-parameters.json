@@ -1,3 +1,13 @@
 {
-  "lambdaLayers": []
+  "lambdaLayers": [],
+  "permissions": {
+    "api": {
+      "goals": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  }
 }

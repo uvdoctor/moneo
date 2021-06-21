@@ -1,4 +1,9 @@
-
+/* Amplify Params - DO NOT EDIT
+	API_GOALS_GRAPHQLAPIENDPOINTOUTPUT
+	API_GOALS_GRAPHQLAPIIDOUTPUT
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */
 
 exports.handler = async (event) => {
     // TODO implement
