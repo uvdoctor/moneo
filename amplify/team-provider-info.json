@@ -33,6 +33,10 @@
         "AdminQueries9798a8c9": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
           "s3Key": "amplify-builds/AdminQueries9798a8c9-523768486c6576436571-build.zip"
+        },
+        "insprice": {
+          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
+          "s3Key": "amplify-builds/insprice-776135422f5268724464-build.zip"
         }
       }
     }

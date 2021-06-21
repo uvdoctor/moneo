@@ -1,7 +1,6 @@
 import React, { Fragment, useContext, useEffect } from 'react';
 import HoldingTabs from './HoldingTabs';
 import HoldingsChart from './HoldingsChart';
-import SearchFilter from './SearchFilter';
 import DataSwitcher from '../DataSwitcher';
 import { NWContext } from './NWContext';
 import { Button, Col, PageHeader, Row } from 'antd';
@@ -83,7 +82,6 @@ export default function HoldingsDetails() {
 						<HoldingsChart />
 					</Chart>
 					<DataSwitcherList>
-						<SearchFilter />
 						{!loadingHoldings ? <HoldingTabs /> : null}
 					</DataSwitcherList>
 				</DataSwitcher>

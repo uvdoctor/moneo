@@ -170,7 +170,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
       chg: priceChgRate,
       tgts: manualMode ? wipTargets : [],
       imp: impLevel,
-      manual: manualMode
+      manual: manualMode,
+      img: goalImgKey
     }
   };
 
