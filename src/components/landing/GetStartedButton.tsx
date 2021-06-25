@@ -8,7 +8,7 @@ export default function GetStartedButton() {
 	return (
 		<Link href={ROUTES.SET}>
 			<a>
-				<Button icon={<RollingImages />} type="primary" size="large" className="start-steps-btn set-button">
+				<Button icon={<RollingImages />} type="primary" size="large" className="start-steps-btn">
 					Get Started
 				</Button>
 			</a>
