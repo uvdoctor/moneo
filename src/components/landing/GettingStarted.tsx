@@ -5,7 +5,7 @@ import Join from './Join';
 import './GettingStarted.less';
 import { Status } from '../../api/goals';
 import { AppContext } from '../AppContext';
-import SetGoalsButton from './SetGoalsButton';
+import GetStartedButton from './GetStartedButton';
 
 export default function GettingStarted() {
 	const { defaultCountry }: any = useContext(AppContext);
@@ -16,7 +16,7 @@ export default function GettingStarted() {
 			<h2>One-stop solution for Your family's financial concerns</h2>
 			<Image preview={false} src="images/kick-start.jpg" />
 			<p style={{ textAlign: 'center' }}>
-				{defaultCountry === 'IN' ? <SetGoalsButton /> : status !== Status.Y ? <Join /> : null}
+				{defaultCountry === 'IN' ? <GetStartedButton /> : status !== Status.Y ? <Join /> : null}
 			</p>
 		</Col>
 	);

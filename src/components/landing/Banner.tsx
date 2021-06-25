@@ -5,7 +5,7 @@ import SocialShare from '../SocialShare';
 import Join from './Join';
 import './Banner.less';
 import { AppContext } from '../AppContext';
-import SetGoalsButton from './SetGoalsButton';
+import GetStartedButton from './GetStartedButton';
 import { WalletTwoTone, SafetyCertificateTwoTone, LockTwoTone } from '@ant-design/icons';
 import { COLORS } from '../../CONSTANTS';
 
@@ -19,7 +19,7 @@ export default function Banner() {
 				<BannerContent />
 				{defaultCountry === 'IN' ? (
 					<p>
-						<SetGoalsButton />
+						<GetStartedButton />
 					</p>
 				) : (
 					<Join />

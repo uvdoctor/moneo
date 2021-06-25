@@ -1,9 +1,7 @@
 import React from 'react';
-import { Row, Col, Image, Button } from 'antd';
+import { Row, Col, Image } from 'antd';
 import './Step.less';
-import Link from 'next/link';
-import { ROUTES } from '../../CONSTANTS';
-import { RocketOutlined } from '@ant-design/icons';
+import GetStartedButton from './GetStartedButton';
 
 interface StepProps {
 	className: string;
@@ -32,11 +30,7 @@ export default function Step({ className, count, title, subTitle, content, imgSr
 				<p>{content}</p>
 				<Image preview={false} src={imgSrc} />
 				<p style={{textAlign: 'center'}}>
-					<Link href={ROUTES.GET}>
-						<a>
-							<Button icon={<RocketOutlined />} type="primary" className="steps-start-btn">Get Started</Button>
-						</a>
-					</Link>
+					<GetStartedButton />
 				</p>
 			</div>
 		</Col>

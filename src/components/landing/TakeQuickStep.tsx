@@ -7,7 +7,7 @@ import { Status } from '../../api/goals';
 
 import './TakeQuickStep.less';
 import { AppContext } from '../AppContext';
-import SetGoalsButton from './SetGoalsButton';
+import GetStartedButton from './GetStartedButton';
 
 export default function TakeQuickStep() {
 	const { defaultCountry }: any = useContext(AppContext);
@@ -19,7 +19,7 @@ export default function TakeQuickStep() {
 				<Col xs={24} sm={24} md={12}>
 					<h2 className="text-green-primary">Just 15 minutes for a personalized Financial Plan</h2>
 					<p>&nbsp;</p>
-					{defaultCountry === 'IN' ? <SetGoalsButton /> : <Join />}
+					{defaultCountry === 'IN' ? <GetStartedButton /> : <Join />}
 				</Col>
 				<Col xs={24} sm={24} md={12}>
 					<img src="images/quick-step.jpg" />

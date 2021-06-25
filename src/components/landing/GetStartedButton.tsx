@@ -4,7 +4,7 @@ import React from 'react';
 import { ROUTES } from '../../CONSTANTS';
 import RollingImages from '../RollingImages';
 
-export default function SetGoalsButton() {
+export default function GetStartedButton() {
 	return (
 		<Link href={ROUTES.SET}>
 			<a>
