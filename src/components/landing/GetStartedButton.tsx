@@ -1,4 +1,4 @@
-import { Button, Row } from 'antd';
+import { Button } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 import { ROUTES } from '../../CONSTANTS';
