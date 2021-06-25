@@ -1,17 +1,15 @@
-import { Button, Row } from 'antd';
+import { Button } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 import { ROUTES } from '../../CONSTANTS';
 import RollingImages from '../RollingImages';
 
-export default function SetGoalsButton() {
+export default function GetStartedButton() {
 	return (
 		<Link href={ROUTES.SET}>
 			<a>
-				<Button type="primary" size="large" className="set-button">
-					<Row align="middle">
-						Set My Goals &nbsp;<RollingImages />
-					</Row>
+				<Button icon={<RollingImages />} type="primary" size="large" className="start-steps-btn">
+					Get Started
 				</Button>
 			</a>
 		</Link>
