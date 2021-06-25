@@ -12,12 +12,12 @@ export default function GettingStarted() {
 	const { status }: any = useContext(JoinContext);
 
 	return (
-		<Col xs={24} sm={24} md={12}>
-			<div className="getting-started">
-				<h2>Kick-start Your Financial Independence</h2>
+		<Col xs={24} sm={24} md={12} className="getting-started">
+			<h2>One-stop solution for Your family's financial concerns</h2>
+			<Image preview={false} src="images/kick-start.jpg" />
+			<p style={{ textAlign: 'center' }}>
 				{defaultCountry === 'IN' ? <SetGoalsButton /> : status !== Status.Y ? <Join /> : null}
-				<Image preview={false} src="images/kick-start.jpg" />
-			</div>
+			</p>
 		</Col>
 	);
 }

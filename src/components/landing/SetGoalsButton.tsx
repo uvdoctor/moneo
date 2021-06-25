@@ -8,10 +8,8 @@ export default function SetGoalsButton() {
 	return (
 		<Link href={ROUTES.SET}>
 			<a>
-				<Button type="primary" size="large" className="set-button">
-					<Row align="middle">
-						Set My Goals &nbsp;<RollingImages />
-					</Row>
+				<Button icon={<RollingImages />} type="primary" size="large" className="start-steps-btn set-button">
+					Get Started
 				</Button>
 			</a>
 		</Link>
