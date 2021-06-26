@@ -62,7 +62,7 @@ function CalcContextProvider({
 }: CalcContextProviderProps) {
   const { defaultCurrency }: any = useContext(AppContext);
   const { rr, addGoal, updateGoal, setGoal, isPublicCalc, allCFs, ffResult, oppCostCache, setOppCostCache }: any = useContext(PlanContext);
-  let { goal }: any = useContext(PlanContext);
+  let { goal, allGoals }: any = useContext(PlanContext);
   if (calculateFor && !goal) goal = calculateFor;
   const { feedbackId }: any = useContext(FeedbackContext);
   const fsb = useFullScreenBrowser();
@@ -93,7 +93,7 @@ function CalcContextProvider({
   const [oppCost, setOppCost] = useState<number>(0);
   const [ wipGoal, setWipGoal ] = useState<CreateGoalInput | null>(goal);
   const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
-
+  
  const getCalcType = () => {
   switch(goal.name) {
     case CALC_NAMES.BR: return CalcType.BR;
@@ -218,8 +218,17 @@ function CalcContextProvider({
     return false;
   };
 
-  const handleViewReset = () => {
+  const deleteUnusedGoalImg = async (image: string) => {
+    try {
+      await goalImgStorage.removeGoalImg(image);
+    } catch (error) {
+      console.log(`An error occured while deleting the goal image, ${error.toString()}`)
+    }
+  }
+
+  const handleViewReset = (shouldTryToDeleteImage:boolean) => {
     setShowConfirmationModal(false);
+    if (shouldTryToDeleteImage && wipGoal?.img && wipGoal.img !== goal.img && !goalImgStorage.imageShared(allGoals, goal.id, wipGoal.img)) deleteUnusedGoalImg(wipGoal.img)
     setWipGoal(null);
     setBtnClicked(false);
     setGoal(null);
@@ -231,14 +240,15 @@ function CalcContextProvider({
     if (cancelAction && hasGoalChanged()) setShowConfirmationModal(true);
     else if (!cancelAction) {
       if (goal?.id) {
+        if (goal?.img && goal.img !== wipGoal.img && !goalImgStorage.imageShared(allGoals, goal.id, goal.img)) deleteUnusedGoalImg(goal.img)
         await updateGoal(wipGoal as UpdateGoalInput, cfs);
         if (goal.type !== GoalType.FF) {
           oppCostCache[goal.id] = oppCost;
           setOppCostCache(oppCostCache);
         }
       } else await addGoal(wipGoal, cfs);
-      handleViewReset();
-    } else handleViewReset();
+      handleViewReset(false);
+    } else handleViewReset(false);
   };
 
   const handleStepChange = (count: number = 1) => {
@@ -387,7 +397,7 @@ function CalcContextProvider({
           centered
         title={<Fragment><WarningOutlined /> Detected Changes</Fragment>}
           onOk={() => handleSubmit()}
-        onCancel={() => handleViewReset()}
+        onCancel={() => handleViewReset(true)}
         okText="Yes"
         cancelText="No"
                 destroyOnClose

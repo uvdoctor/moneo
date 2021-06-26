@@ -308,7 +308,9 @@ export const getDefaultIconForGoalType = (goalType: APIt.GoalType) => {
 			return faCrosshairs;
 	}
 };
+
 Storage.configure({ level: 'private' });
+
 export const goalImgStorage = {
 	getUrlFromKey: async (key: string) => {
 		return Storage.vault.get(key, { expires: 9999 })
@@ -323,10 +325,17 @@ export const goalImgStorage = {
 	},
 	validateImg: (file:File) => {
 		// size validation
-		const maxAllowedSize = 1000000
+		const maxAllowedSize = 250000
+		const isImage = file.type.split('/')[0] === 'image'
+		if(!isImage) throw new Error(`Only image file is allowed, e.g .png, .jpg, .jpeg or .gif`)
 		if(file.size > maxAllowedSize) throw new Error(`Image size should not exceed ${maxAllowedSize/1000} KB`);
 		
 		return true
+	},
+	imageShared: (allGoals: any, goalId: string, goalImgKey: string) => {
+		return allGoals.some((curGoal: any) => {
+			return curGoal.id !== goalId && curGoal.img === goalImgKey;
+	  	});
 	}
 }
 

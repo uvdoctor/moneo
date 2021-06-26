@@ -5,7 +5,7 @@ import React, {
   useLayoutEffect,
   useEffect,
 } from "react";
-import { Avatar, Spin, notification, Modal, Image, Button } from "antd";
+import { Avatar, Spin, notification, Modal, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDefaultIconForGoalType, goalImgStorage } from "../goals/goalutils";
 import { CalcContext } from "./CalcContext";
@@ -23,28 +23,21 @@ export default function GoalImage() {
   const [isImageShared, setIsImageShared] = useState<boolean>(false);
 
   const openBrowse = () => {
-    if (inputEl !== null && inputEl.current !== null) inputEl.current.click();
+    if (inputEl?.current !== null) inputEl.current.click();
   };
-
-  const imageShared: boolean = allGoals.some((curGoal: any) => {
-    return curGoal.id !== goal.id && curGoal.img === goalImgKey;
-  });
 
   useLayoutEffect(() => {
     setLoader(false);
   }, [goalImgUrl]);
 
   useEffect(() => {
-    setIsImageShared(imageShared);
+    setIsImageShared(goalImgStorage.imageShared(allGoals, goal.id, goalImgKey));
   }, [goalImgUrl]);
 
   const getImage = async () => {
     try {
       if (
-        inputEl !== null &&
-        inputEl.current !== null &&
-        inputEl.current.files &&
-        inputEl.current.files.length
+        inputEl?.current?.files?.length
       ) {
         setLoader(true);
         const { key, url } = await uploadGoalImage(
@@ -54,9 +47,7 @@ export default function GoalImage() {
         const prevGoalImgKey = goalImgKey;
         setGoalImgKey(key);
         setGoalImgUrl(url);
-        if (prevGoalImgKey !== key && !isImageShared) {
-          await goalImgStorage.removeGoalImg(prevGoalImgKey);
-        }
+        if (goal.img !== prevGoalImgKey && !isImageShared) await goalImgStorage.removeGoalImg(prevGoalImgKey);
         inputEl.current.value = "";
       }
     } catch (error) {
@@ -71,7 +62,7 @@ export default function GoalImage() {
   const removeImage = async () => {
     try {
       setLoader(true);
-      if (!isImageShared) await goalImgStorage.removeGoalImg(goalImgKey);
+      if (goal.img !== goalImgKey && !isImageShared) await goalImgStorage.removeGoalImg(goalImgKey);
       setGoalImgKey(null);
       setGoalImgUrl(null);
       setLoader(false);
@@ -117,7 +108,6 @@ export default function GoalImage() {
             type="dashed"
             key="Cancel"
             className="image-upload-modal-button"
-            style={{}}
             onClick={removeImage}
           >
             Remove Photo
@@ -140,7 +130,7 @@ export default function GoalImage() {
           )}
           <div className="preview-image">
             {goalImgUrl ? (
-              <Image width="100%" src={goalImgUrl} />
+              <img width="100%" src={goalImgUrl} />
             ) : (
               <span onClick={openBrowse}>{avatar(300)}</span>
             )}
