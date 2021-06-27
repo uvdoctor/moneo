@@ -4,6 +4,7 @@ import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { HoldingInput, InsSubType, InsType } from "../../api/goals";
 
 const { confirm } = Modal;
 
@@ -71,7 +72,7 @@ export const removeDuplicates = (value: string) => {
   return value.trim();
 };
 
-export const completeRecord = (recordBroken: boolean, lastNameCapture: number | null, j: number, hasData: boolean, mode: string, equities: any, mfs: any, etfs: any, bonds: any, isin: string | null, quantity: number | null, insNames: any, name: string | null) => {
+export const completeRecord = (recordBroken: boolean, lastNameCapture: number | null, j: number, hasData: boolean, mode: string, equities: any, mfs: any, etfs: any, bonds: any, isin: string | null, quantity: number | null, insNames: any, name: string | null, taxId: string, currency: string) => {
   if (recordBroken || (lastNameCapture && j - lastNameCapture > 9)) {
     lastNameCapture = null;
     recordBroken = false;
@@ -79,9 +80,9 @@ export const completeRecord = (recordBroken: boolean, lastNameCapture: number | 
   console.log("Record completed...");
   hasData = true;
   appendValue(
-    mode === "E" ? equities : mode === "M" ? mfs : mode === "ETF" ? etfs : bonds,
+    mode === InsSubType.S ? equities : mode === InsSubType.M ? mfs : mode === InsSubType.ETF ? etfs : bonds,
     isin as string,
-    {quantity: quantity as number, name: name ? name : isin, type: mode}
+    {id: isin, qty: quantity as number, name: name ? name : isin, type: mode !== InsType.F ? InsType.E : InsType.F, subt: mode === InsType.F ? InsSubType.CB : mode, fIds: [taxId], curr: currency} as HoldingInput
   );
   if (!insNames[isin as string])
     insNames[isin as string] = name ? name : isin;

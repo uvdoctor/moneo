@@ -207,6 +207,7 @@ enum InsSubType {
 	ETF
 	M
 	GoldB
+	REIT
 }
 
 type Instrument
@@ -220,6 +221,7 @@ type Instrument
 		]
 	) {
 	id: String!
+	sid: String
 	name: String!
 	exchg: String!
 	country: String!
@@ -249,6 +251,7 @@ type Holding {
 	curr: String
 	chg: Float
 	type: String
+	subt: String
 }
 
 type Deposit {

@@ -692,6 +692,7 @@ export type HoldingInput = {
   curr?: string | null,
   chg?: number | null,
   type?: string | null,
+  subt?: string | null,
 };
 
 export type PurchaseInput = {
@@ -786,6 +787,7 @@ export type Holding = {
   curr?: string | null,
   chg?: number | null,
   type?: string | null,
+  subt?: string | null,
 };
 
 export type Purchase = {
@@ -914,6 +916,7 @@ export type UpdateRegistrationInput = {
 
 export type CreateInstrumentInput = {
   id: string,
+  sid?: string | null,
   name: string,
   exchg: string,
   country: string,
@@ -943,10 +946,12 @@ export enum InsSubType {
   ETF = "ETF",
   M = "M",
   GoldB = "GoldB",
+  REIT = "REIT",
 }
 
 
 export type ModelInstrumentConditionInput = {
+  sid?: ModelStringInput | null,
   name?: ModelStringInput | null,
   exchg?: ModelStringInput | null,
   country?: ModelStringInput | null,
@@ -977,6 +982,7 @@ export type ModelInsSubTypeInput = {
 export type Instrument = {
   __typename: "Instrument",
   id?: string,
+  sid?: string | null,
   name?: string,
   exchg?: string,
   country?: string,
@@ -995,6 +1001,7 @@ export type Instrument = {
 
 export type UpdateInstrumentInput = {
   id: string,
+  sid?: string | null,
   name?: string | null,
   exchg?: string | null,
   country?: string | null,
@@ -1230,6 +1237,7 @@ export type ModelRegistrationConnection = {
 
 export type ModelInstrumentFilterInput = {
   id?: ModelStringInput | null,
+  sid?: ModelStringInput | null,
   name?: ModelStringInput | null,
   exchg?: ModelStringInput | null,
   country?: ModelStringInput | null,
@@ -2106,6 +2114,7 @@ export type CreateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -2177,6 +2186,7 @@ export type CreateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -2193,6 +2203,7 @@ export type CreateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ppf?:  Array< {
       __typename: "Holding",
@@ -2209,6 +2220,7 @@ export type CreateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     epf?:  Array< {
       __typename: "Holding",
@@ -2225,6 +2237,7 @@ export type CreateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -2241,6 +2254,7 @@ export type CreateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -2257,6 +2271,7 @@ export type CreateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ins?:  Array< {
       __typename: "Insurance",
@@ -2295,6 +2310,7 @@ export type UpdateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -2366,6 +2382,7 @@ export type UpdateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -2382,6 +2399,7 @@ export type UpdateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ppf?:  Array< {
       __typename: "Holding",
@@ -2398,6 +2416,7 @@ export type UpdateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     epf?:  Array< {
       __typename: "Holding",
@@ -2414,6 +2433,7 @@ export type UpdateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -2430,6 +2450,7 @@ export type UpdateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -2446,6 +2467,7 @@ export type UpdateHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ins?:  Array< {
       __typename: "Insurance",
@@ -2484,6 +2506,7 @@ export type DeleteHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -2555,6 +2578,7 @@ export type DeleteHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -2571,6 +2595,7 @@ export type DeleteHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ppf?:  Array< {
       __typename: "Holding",
@@ -2587,6 +2612,7 @@ export type DeleteHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     epf?:  Array< {
       __typename: "Holding",
@@ -2603,6 +2629,7 @@ export type DeleteHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -2619,6 +2646,7 @@ export type DeleteHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -2635,6 +2663,7 @@ export type DeleteHoldingsMutation = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ins?:  Array< {
       __typename: "Insurance",
@@ -2774,6 +2803,7 @@ export type CreateInstrumentMutation = {
   createInstrument?:  {
     __typename: "Instrument",
     id: string,
+    sid?: string | null,
     name: string,
     exchg: string,
     country: string,
@@ -2800,6 +2830,7 @@ export type UpdateInstrumentMutation = {
   updateInstrument?:  {
     __typename: "Instrument",
     id: string,
+    sid?: string | null,
     name: string,
     exchg: string,
     country: string,
@@ -2826,6 +2857,7 @@ export type DeleteInstrumentMutation = {
   deleteInstrument?:  {
     __typename: "Instrument",
     id: string,
+    sid?: string | null,
     name: string,
     exchg: string,
     country: string,
@@ -3368,6 +3400,7 @@ export type GetHoldingsQuery = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -3439,6 +3472,7 @@ export type GetHoldingsQuery = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -3455,6 +3489,7 @@ export type GetHoldingsQuery = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ppf?:  Array< {
       __typename: "Holding",
@@ -3471,6 +3506,7 @@ export type GetHoldingsQuery = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     epf?:  Array< {
       __typename: "Holding",
@@ -3487,6 +3523,7 @@ export type GetHoldingsQuery = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -3503,6 +3540,7 @@ export type GetHoldingsQuery = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -3519,6 +3557,7 @@ export type GetHoldingsQuery = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ins?:  Array< {
       __typename: "Insurance",
@@ -3554,6 +3593,7 @@ export type ListHoldingssQuery = {
         curr?: string | null,
         chg?: number | null,
         type?: string | null,
+        subt?: string | null,
       } > | null,
       deposits?:  Array< {
         __typename: "Deposit",
@@ -3602,6 +3642,7 @@ export type ListHoldingssQuery = {
         curr?: string | null,
         chg?: number | null,
         type?: string | null,
+        subt?: string | null,
       } > | null,
       pm?:  Array< {
         __typename: "Holding",
@@ -3612,6 +3653,7 @@ export type ListHoldingssQuery = {
         curr?: string | null,
         chg?: number | null,
         type?: string | null,
+        subt?: string | null,
       } > | null,
       ppf?:  Array< {
         __typename: "Holding",
@@ -3622,6 +3664,7 @@ export type ListHoldingssQuery = {
         curr?: string | null,
         chg?: number | null,
         type?: string | null,
+        subt?: string | null,
       } > | null,
       epf?:  Array< {
         __typename: "Holding",
@@ -3632,6 +3675,7 @@ export type ListHoldingssQuery = {
         curr?: string | null,
         chg?: number | null,
         type?: string | null,
+        subt?: string | null,
       } > | null,
       nps?:  Array< {
         __typename: "Holding",
@@ -3642,6 +3686,7 @@ export type ListHoldingssQuery = {
         curr?: string | null,
         chg?: number | null,
         type?: string | null,
+        subt?: string | null,
       } > | null,
       crypto?:  Array< {
         __typename: "Holding",
@@ -3652,6 +3697,7 @@ export type ListHoldingssQuery = {
         curr?: string | null,
         chg?: number | null,
         type?: string | null,
+        subt?: string | null,
       } > | null,
       ins?:  Array< {
         __typename: "Insurance",
@@ -3806,6 +3852,7 @@ export type GetInstrumentQuery = {
   getInstrument?:  {
     __typename: "Instrument",
     id: string,
+    sid?: string | null,
     name: string,
     exchg: string,
     country: string,
@@ -3837,6 +3884,7 @@ export type ListInstrumentsQuery = {
     items?:  Array< {
       __typename: "Instrument",
       id: string,
+      sid?: string | null,
       name: string,
       exchg: string,
       country: string,
@@ -4632,6 +4680,7 @@ export type OnCreateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -4703,6 +4752,7 @@ export type OnCreateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -4719,6 +4769,7 @@ export type OnCreateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ppf?:  Array< {
       __typename: "Holding",
@@ -4735,6 +4786,7 @@ export type OnCreateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     epf?:  Array< {
       __typename: "Holding",
@@ -4751,6 +4803,7 @@ export type OnCreateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -4767,6 +4820,7 @@ export type OnCreateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -4783,6 +4837,7 @@ export type OnCreateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ins?:  Array< {
       __typename: "Insurance",
@@ -4820,6 +4875,7 @@ export type OnUpdateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -4891,6 +4947,7 @@ export type OnUpdateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -4907,6 +4964,7 @@ export type OnUpdateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ppf?:  Array< {
       __typename: "Holding",
@@ -4923,6 +4981,7 @@ export type OnUpdateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     epf?:  Array< {
       __typename: "Holding",
@@ -4939,6 +4998,7 @@ export type OnUpdateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -4955,6 +5015,7 @@ export type OnUpdateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -4971,6 +5032,7 @@ export type OnUpdateHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ins?:  Array< {
       __typename: "Insurance",
@@ -5008,6 +5070,7 @@ export type OnDeleteHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     deposits?:  Array< {
       __typename: "Deposit",
@@ -5079,6 +5142,7 @@ export type OnDeleteHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     pm?:  Array< {
       __typename: "Holding",
@@ -5095,6 +5159,7 @@ export type OnDeleteHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ppf?:  Array< {
       __typename: "Holding",
@@ -5111,6 +5176,7 @@ export type OnDeleteHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     epf?:  Array< {
       __typename: "Holding",
@@ -5127,6 +5193,7 @@ export type OnDeleteHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     nps?:  Array< {
       __typename: "Holding",
@@ -5143,6 +5210,7 @@ export type OnDeleteHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     crypto?:  Array< {
       __typename: "Holding",
@@ -5159,6 +5227,7 @@ export type OnDeleteHoldingsSubscription = {
       curr?: string | null,
       chg?: number | null,
       type?: string | null,
+      subt?: string | null,
     } > | null,
     ins?:  Array< {
       __typename: "Insurance",
@@ -5306,6 +5375,7 @@ export type OnCreateInstrumentSubscription = {
   onCreateInstrument?:  {
     __typename: "Instrument",
     id: string,
+    sid?: string | null,
     name: string,
     exchg: string,
     country: string,
@@ -5327,6 +5397,7 @@ export type OnUpdateInstrumentSubscription = {
   onUpdateInstrument?:  {
     __typename: "Instrument",
     id: string,
+    sid?: string | null,
     name: string,
     exchg: string,
     country: string,
@@ -5348,6 +5419,7 @@ export type OnDeleteInstrumentSubscription = {
   onDeleteInstrument?:  {
     __typename: "Instrument",
     id: string,
+    sid?: string | null,
     name: string,
     exchg: string,
     country: string,

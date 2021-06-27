@@ -459,6 +459,7 @@ export const getHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       deposits {
         amt
@@ -521,6 +522,7 @@ export const getHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       pm {
         id
@@ -535,6 +537,7 @@ export const getHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       ppf {
         id
@@ -549,6 +552,7 @@ export const getHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       epf {
         id
@@ -563,6 +567,7 @@ export const getHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       nps {
         id
@@ -577,6 +582,7 @@ export const getHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       crypto {
         id
@@ -591,6 +597,7 @@ export const getHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       ins {
         premium
@@ -621,6 +628,7 @@ export const listHoldingss = /* GraphQL */ `
           curr
           chg
           type
+          subt
         }
         deposits {
           amt
@@ -663,6 +671,7 @@ export const listHoldingss = /* GraphQL */ `
           curr
           chg
           type
+          subt
         }
         pm {
           id
@@ -672,6 +681,7 @@ export const listHoldingss = /* GraphQL */ `
           curr
           chg
           type
+          subt
         }
         ppf {
           id
@@ -681,6 +691,7 @@ export const listHoldingss = /* GraphQL */ `
           curr
           chg
           type
+          subt
         }
         epf {
           id
@@ -690,6 +701,7 @@ export const listHoldingss = /* GraphQL */ `
           curr
           chg
           type
+          subt
         }
         nps {
           id
@@ -699,6 +711,7 @@ export const listHoldingss = /* GraphQL */ `
           curr
           chg
           type
+          subt
         }
         crypto {
           id
@@ -708,6 +721,7 @@ export const listHoldingss = /* GraphQL */ `
           curr
           chg
           type
+          subt
         }
         ins {
           premium
@@ -840,6 +854,7 @@ export const getInstrument = /* GraphQL */ `
   query GetInstrument($id: String!) {
     getInstrument(id: $id) {
       id
+      sid
       name
       exchg
       country
@@ -874,6 +889,7 @@ export const listInstruments = /* GraphQL */ `
     ) {
       items {
         id
+        sid
         name
         exchg
         country

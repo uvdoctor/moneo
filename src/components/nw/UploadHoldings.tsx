@@ -6,7 +6,7 @@ import HoldingsTable from "./HoldingsTable";
 import { NWContext } from "./NWContext";
 import { getUploaderSettings } from "./parseutils";
 import { isMobileDevice } from "../utils";
-import { HoldingInput } from "../../api/goals";
+import { HoldingInput, InsSubType, InsType } from "../../api/goals";
 import {
 	cleanAssetName,
 	completeRecord,
@@ -60,20 +60,10 @@ export default function UploadHoldings() {
 		setDrawerVisibility(true);
 	}
 
-	const addUploadedInstruments = (insHoldings: Array<HoldingInput>, list: any, currency: string) => {
-		let keys = Object.keys(list);
-		if(!list || !keys.length) return;
-		keys.forEach((key: string) => 
-			insHoldings.push({
-				id: key,
-				qty: list[key].quantity,
-				name: list[key].name,
-				type: list[key].type,
-				fIds: [taxId],
-				curr: currency
-			})
-		);
-	};
+	const addUploadedInstruments = (insHoldings: Array<HoldingInput>, list: any) => {
+		if(!list || !Object.keys(list).length) return;
+		insHoldings.push(...Object.values(list) as Array<HoldingInput>);
+	}
 
 	const filterExistingTaxIdEntries = () => {
 		let filteredEntries =  holdings.instruments?.filter((entry: HoldingInput) => !entry.fIds.includes(taxId));
@@ -90,10 +80,10 @@ export default function UploadHoldings() {
 			setCurrencyList(currencyList);
 		}
 		setSelectedCurrency(currency);
-		addUploadedInstruments(holdings.instruments, equities, currency);
-		addUploadedInstruments(holdings.instruments, bonds, currency);
-		addUploadedInstruments(holdings.instruments, etfs, currency);
-		addUploadedInstruments(holdings.instruments, mutualFunds, currency);
+		addUploadedInstruments(holdings.instruments, equities);
+		addUploadedInstruments(holdings.instruments, bonds);
+		addUploadedInstruments(holdings.instruments, etfs);
+		addUploadedInstruments(holdings.instruments, mutualFunds);
 		setHoldings(holdings);
 		setDrawerVisibility(false);
 		setShowInsUpload(false);
@@ -104,7 +94,7 @@ export default function UploadHoldings() {
 		let mfs: any = {};
 		let bonds: any = {};
 		let etfs: any = {};
-		let insType = "M";
+		let insType: string = InsSubType.M;
 		let holdingStarted = false;
 		let insNames: any = {};
 		let recordBroken = false;
@@ -119,6 +109,7 @@ export default function UploadHoldings() {
 		let taxId: string | null = null;
 		let eof = false;
 		let checkForMultiple = true;
+		let currency = 'INR';
 		for (let i = 1; i <= pdf.numPages && !eof; i++) {
 			lastNameCapture = null;
 			lastQtyCapture = null;
@@ -227,9 +218,9 @@ export default function UploadHoldings() {
 					console.log("Detected ISIN: ", retVal);
 					isin = retVal;
 					if (isin.startsWith("INF")) {
-						if (insType !== "ETF") insType = "M";
-					} else if (isin.startsWith("IN0")) insType = "B";
-					else if (insType !== "B") insType = "E";
+						if (insType !== InsSubType.ETF) insType = InsSubType.M;
+					} else if (isin.startsWith("IN0")) insType = InsType.F;
+					else if (insType !== InsType.F) insType = InsSubType.S;
 					if (isin && quantity) {
 						({
 							recordBroken,
@@ -250,7 +241,9 @@ export default function UploadHoldings() {
 							isin,
 							quantity,
 							insNames,
-							name
+							name,
+							taxId as string,
+							currency
 						));
 						continue;
 					}
@@ -267,17 +260,17 @@ export default function UploadHoldings() {
 					!value.includes(",")
 				) {
 					if (includesAny(value, ["bond", "bd", "ncd", "debenture", "sgb"]))
-						insType = "B";
-					else if (value.includes("ETF")) insType = "ETF";
+						insType = InsType.F;
+					else if (value.includes("ETF")) insType = InsSubType.ETF;
 					else if (value.includes("REIT") || value.includes("FMP"))
-						insType = "M";
-					else insType = "E";
+						insType = InsSubType.M;
+					else insType = InsSubType.S;
 					if (checkForMultiple) numberAtEnd = getNumberAtEnd(value);
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
 						if (
-							insType !== "M" &&
-							insType !== "ETF" &&
+							insType !== InsSubType.M &&
+							insType !== InsSubType.ETF &&
 							!numberAtEnd &&
 							diff < 4
 						)
@@ -290,14 +283,14 @@ export default function UploadHoldings() {
 						continue;
 					}
 					if (
-						(insType === "M" || insType === "ETF") &&
+						(insType === InsSubType.M || insType === InsSubType.ETF) &&
 						name &&
 						lastNameCapture &&
 						j - lastNameCapture <= 2
 					)
 						name += " " + value.trim();
 					else name = value.trim();
-					if (insType === "M" || insType === "ETF") {
+					if (insType === InsSubType.M || insType === InsSubType.ETF) {
 						name = removeDuplicates(name as string);
 						name = getValueBefore(name as string, ["(", ")"]);
 					}
@@ -316,7 +309,7 @@ export default function UploadHoldings() {
 						(lastQtyCapture && j - lastQtyCapture < 7))
 				)
 					continue;
-				if (hasFV && !fv && insType === "E") {
+				if (hasFV && !fv && insType === InsSubType.S) {
 					console.log("Detected fv: ", qty);
 					fv = qty;
 					continue;
@@ -347,7 +340,9 @@ export default function UploadHoldings() {
 						isin,
 						quantity,
 						insNames,
-						name
+						name,
+						taxId as string,
+						currency
 					));
 				}
 			}

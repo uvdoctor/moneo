@@ -1,8 +1,9 @@
-import React from "react";
-import { Empty } from "antd";
-import Holding from "./Holding";
+import React, { Fragment, useState } from 'react';
+import { Empty } from 'antd';
+import Holding from './Holding';
 
-import "./HoldingsTable.less";
+import './HoldingsTable.less';
+import { HoldingInput } from '../../api/goals';
 
 interface HoldingsTableProp {
 	data: any;
@@ -10,12 +11,25 @@ interface HoldingsTableProp {
 }
 
 export default function HoldingsTable({ data, onChange }: HoldingsTableProp) {
-	return Object.keys(data)?.length ? (
-		<>
-			{Object.keys(data)?.map((key: string, i: number) => 
-					<Holding key={i} isin={key} data={data} onChange={onChange} />
-			)}
-		</>
+	const [ids, setIds] = useState<Array<string>>(Object.keys(data));
+
+	const deleteHolding = (id: string) => {
+		delete data[id];
+		setIds([...Object.keys(data)]);
+		onChange(data);
+	};
+
+	const editHolding = (holding: HoldingInput) => {
+		data[holding.id] = holding;
+		onChange(data);
+	};
+
+	return ids.length ? (
+		<Fragment>
+			{Object.keys(data).map((key: string) => (
+				<Holding key={key} holding={data[key]} onChange={editHolding} onDelete={deleteHolding} />
+			))}
+		</Fragment>
 	) : (
 		<Empty description={<p>No data found.</p>} />
 	);

@@ -4,16 +4,17 @@ import { DeleteOutlined, EditOutlined, ShoppingCartOutlined, SaveOutlined, Close
 
 import './Holding.less';
 import { toReadableNumber } from '../utils';
+import { HoldingInput } from '../../api/goals';
 
 interface HoldingProp {
-	isin: string;
-	data: any;
-	onChange: Function;
+	holding: HoldingInput;
+	onDelete: Function;
+	onChange?: Function;
 }
 
-export default function Holding({ isin, data, onChange }: HoldingProp) {
-	const [ id, setID ] = useState<string | null>(isin);
+export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 	const [ isEditMode, setEditMode ] = useState(false);
+	console.log('Holding is: ', holding);
 
 	function onEdit() {
 		setEditMode(true);
@@ -23,28 +24,22 @@ export default function Holding({ isin, data, onChange }: HoldingProp) {
 		setEditMode(false);
 	}
 
-	function onDelete() {
-		delete data[isin];
-		onChange(data);
-		setID(null);
-	}
-
 	return (
-		id ? <Row className="holding" align="middle" justify="space-between" gutter={[ 5, 5 ]}>
-			<Col span={24}>{data[isin].name}</Col>
+		<Row className="holding" align="middle" justify="space-between" gutter={[ 5, 5 ]}>
+			<Col span={24}>{holding.name}</Col>
 			<Col>
-				<Badge count={isin} />
+				<Badge count={holding.id} />
 			</Col>
 			<Col>
 				<Row align="middle">
 					{isEditMode ? (
 						<Col>
 							<InputNumber
-								value={data[isin].quantity}
+								value={holding.qty}
 								size="small"
 								onChange={(val) => {
-									data[isin].quantity = val as number;
-									onChange(data);
+									holding.qty = val as number;
+									if(onChange) onChange(holding);
 								}}
 							/>
 						</Col>
@@ -52,10 +47,7 @@ export default function Holding({ isin, data, onChange }: HoldingProp) {
 						<Col>
 							<span className="quantity">
 								<ShoppingCartOutlined />{' '}
-								{toReadableNumber(
-									data[isin].quantity,
-									('' + data[isin].quantity).includes('.') ? 3 : 0
-								)}
+								{toReadableNumber(holding.qty, ('' + holding.qty).includes('.') ? 3 : 0)}
 							</span>
 						</Col>
 					)}
@@ -68,12 +60,12 @@ export default function Holding({ isin, data, onChange }: HoldingProp) {
 						<Button
 							type="link"
 							icon={isEditMode ? <CloseOutlined /> : <DeleteOutlined />}
-							onClick={isEditMode ? onCancel : onDelete}
+							onClick={() => (isEditMode ? onCancel() : onDelete(holding.id))}
 							danger
 						/>
 					</Col>
 				</Row>
 			</Col>
-		</Row> : null
+		</Row>
 	);
 }

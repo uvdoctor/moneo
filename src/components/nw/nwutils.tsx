@@ -174,3 +174,17 @@ export const loadMatchingInstruments = async (instruments: Array<APIt.HoldingInp
 	};
 	return listInstruments?.items;
 }
+
+export const getInsSubTypeName = (type: APIt.InsType, st: APIt.InsSubType) => {
+		switch(st) {
+			case APIt.InsSubType.S : return "Stock";
+			case APIt.InsSubType.M : return type === APIt.InsType.E ? "Equity Mutual Fund" : "Debt Mutual Fund";
+			case APIt.InsSubType.GoldB: return "Gold Bond";
+			case APIt.InsSubType.ETF: return type === APIt.InsType.E ? "Equity ETF" : "Debt ETF";
+			case APIt.InsSubType.CB: return "Corporate Bond";
+			case APIt.InsSubType.MB: return "Municipal Bond";
+			case APIt.InsSubType.GB: return "Sovereign Bond";
+			case APIt.InsSubType.REIT: return "REIT";
+			default: return "Unknown";
+		}
+}

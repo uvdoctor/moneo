@@ -769,6 +769,7 @@ export const createHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       deposits {
         amt
@@ -831,6 +832,7 @@ export const createHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       pm {
         id
@@ -845,6 +847,7 @@ export const createHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       ppf {
         id
@@ -859,6 +862,7 @@ export const createHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       epf {
         id
@@ -873,6 +877,7 @@ export const createHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       nps {
         id
@@ -887,6 +892,7 @@ export const createHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       crypto {
         id
@@ -901,6 +907,7 @@ export const createHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       ins {
         premium
@@ -934,6 +941,7 @@ export const updateHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       deposits {
         amt
@@ -996,6 +1004,7 @@ export const updateHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       pm {
         id
@@ -1010,6 +1019,7 @@ export const updateHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       ppf {
         id
@@ -1024,6 +1034,7 @@ export const updateHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       epf {
         id
@@ -1038,6 +1049,7 @@ export const updateHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       nps {
         id
@@ -1052,6 +1064,7 @@ export const updateHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       crypto {
         id
@@ -1066,6 +1079,7 @@ export const updateHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       ins {
         premium
@@ -1099,6 +1113,7 @@ export const deleteHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       deposits {
         amt
@@ -1161,6 +1176,7 @@ export const deleteHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       pm {
         id
@@ -1175,6 +1191,7 @@ export const deleteHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       ppf {
         id
@@ -1189,6 +1206,7 @@ export const deleteHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       epf {
         id
@@ -1203,6 +1221,7 @@ export const deleteHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       nps {
         id
@@ -1217,6 +1236,7 @@ export const deleteHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       crypto {
         id
@@ -1231,6 +1251,7 @@ export const deleteHoldings = /* GraphQL */ `
         curr
         chg
         type
+        subt
       }
       ins {
         premium
@@ -1353,6 +1374,7 @@ export const createInstrument = /* GraphQL */ `
   ) {
     createInstrument(input: $input, condition: $condition) {
       id
+      sid
       name
       exchg
       country
@@ -1377,6 +1399,7 @@ export const updateInstrument = /* GraphQL */ `
   ) {
     updateInstrument(input: $input, condition: $condition) {
       id
+      sid
       name
       exchg
       country
@@ -1401,6 +1424,7 @@ export const deleteInstrument = /* GraphQL */ `
   ) {
     deleteInstrument(input: $input, condition: $condition) {
       id
+      sid
       name
       exchg
       country
