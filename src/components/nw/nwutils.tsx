@@ -185,6 +185,10 @@ export const getInsSubTypeName = (type: APIt.InsType, st: APIt.InsSubType) => {
 			case APIt.InsSubType.MB: return "Municipal Bond";
 			case APIt.InsSubType.GB: return "Sovereign Bond";
 			case APIt.InsSubType.REIT: return "REIT";
-			default: return "Unknown";
+			default: return "Other";
 		}
 }
+
+export const getAllInsSubTypeNames = () => [
+	"Stock", "Equity Mutual Fund", "Equity ETF", "Debt Mutual Fund", "Debt ETF", "REIT", "Gold Bond", "Sovereign Bond", "Corporate Bond", "Municipal Bond", "Other"
+]

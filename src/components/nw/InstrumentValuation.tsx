@@ -1,15 +1,18 @@
-import { Badge, Empty, Table } from 'antd';
-import React, { useContext, useEffect, useState } from 'react';
+import { Empty, Table, Tag } from 'antd';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { HoldingInput, InsSubType, InsType } from '../../api/goals';
 import { ALL_FAMILY } from './FamilyInput';
 import { NWContext } from './NWContext';
 import Holding from './Holding';
-import { getInsSubTypeName } from './nwutils';
+import { getAllInsSubTypeNames, getInsSubTypeName } from './nwutils';
+import { includesAny } from '../utils';
 
 export default function InstrumentValuation() {
+	const { CheckableTag } = Tag;
 	const { holdings, selectedMembers, selectedCurrency, allFamily, currencyList }: any = useContext(NWContext);
 	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([]);
-    const [ typeFilterValues, setTypeFilterValues ] = useState<Array<any>>([ {} ]);
+	const tagsData = getAllInsSubTypeNames();
+	const [ selectedTags, setSelectedTags ] = useState<Array<string>>(tagsData);
 	const [ nameFilterValues, setNameFilterValues ] = useState<Array<any>>([ {} ]);
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
 
@@ -25,17 +28,8 @@ export default function InstrumentValuation() {
 			filteredValue: filteredInfo.name || null,
 			filters: nameFilterValues,
 			onFilter: (value: Array<any>, record: any) => record.name.includes(value),
-			render: (record: any) => 
-				<Holding holding={record as HoldingInput} onDelete={delRecord} />
-		},
-        {
-            title: 'Type',
-            key: 'type',
-			filteredValue: filteredInfo.name || null,
-			filters: typeFilterValues,
-            onFilter: (value: Array<any>, record: any) => record.type.includes(value),
-            render: (record: any) => <Badge count={getInsSubTypeName(record.type, record.subt)} />
-        }
+			render: (record: any) => <Holding holding={record as HoldingInput} onDelete={delRecord} />
+		}
 	];
 
 	const getFilterItem = (val: string) => {
@@ -73,44 +67,57 @@ export default function InstrumentValuation() {
 				setFilteredInstruments([ ...[] ]);
 				return;
 			}
-			setFilteredInstruments([ ...filteredData ]);
+			setFilteredInstruments([
+				...filteredData.filter((instrument: HoldingInput) =>
+					includesAny(
+						getInsSubTypeName(instrument.type as InsType, instrument.subt as InsSubType),
+						selectedTags
+					)
+				)
+			]);
 		},
-		[ holdings.instruments.length, selectedMembers, selectedCurrency ]
+		[ holdings.instruments.length, selectedMembers, selectedCurrency, selectedTags ]
 	);
-
-    const hasSubType = (filterItems: Array<any>, subType: string) => {
-        for(let i = 0; i < filterItems.length; i++) {
-            if(filterItems[i].value === subType) return true;
-        }
-        return false;
-    };
 
 	useEffect(
 		() => {
-			let filteredTypes: Array<any> = [];
 			let filteredNames: Array<any> = [];
 			filteredInstruments.forEach((instrument: HoldingInput) => {
-                let typeName: string = getInsSubTypeName(instrument.type as InsType, instrument.subt as InsSubType);
-                if(!hasSubType(filteredTypes, typeName))
-				    filteredTypes.push(getFilterItem(typeName));
 				filteredNames.push(getFilterItem(instrument.name as string));
 			});
-            setTypeFilterValues([...filteredTypes]);
 			setNameFilterValues([ ...filteredNames ]);
 		},
 		[ filteredInstruments ]
 	);
 
-	return filteredInstruments.length ? (
-		<Table
-			dataSource={filteredInstruments}
-			//@ts-ignore
-			columns={columns}
-			size="small"
-			bordered
-			onChange={handleChange}
-		/>
-	) : (
-		<Empty description={<p>No data found.</p>} />
+	return (
+		<Fragment>
+			{tagsData.map((tag: string) => (
+				<CheckableTag
+					key={tag}
+					checked={selectedTags.indexOf(tag) > -1}
+					onChange={(checked: boolean) => {
+						if (checked) {
+							selectedTags.push(tag);
+							setSelectedTags([ ...selectedTags ]);
+						} else setSelectedTags([ ...selectedTags.filter((t: string) => t !== tag) ]);
+					}}
+				>
+					{tag}
+				</CheckableTag>
+			))}
+			{filteredInstruments.length ? (
+				<Table
+					dataSource={filteredInstruments}
+					//@ts-ignore
+					columns={columns}
+					size="small"
+					bordered
+					onChange={handleChange}
+				/>
+			) : (
+				<Empty description={<p>No data found.</p>} />
+			)}
+		</Fragment>
 	);
 }
