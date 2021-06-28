@@ -26,15 +26,15 @@ export default function Banner() {
 				)}
 				<h3>
 					<WalletTwoTone twoToneColor={COLORS.GREEN} />
-					No Commissions.
+					No Commissions
 				</h3>
 				<h3>
 					<LockTwoTone twoToneColor={COLORS.GREEN} />
-					Respects Privacy.
+					Respects Privacy
 				</h3>
 				<h3>
 					<SafetyCertificateTwoTone twoToneColor={COLORS.GREEN} />
-					Bank-grade Security.
+					Bank-grade Security
 				</h3>
 				{defaultCountry !== 'IN' && <SocialShare />}
 			</div>
