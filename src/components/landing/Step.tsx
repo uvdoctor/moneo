@@ -1,7 +1,7 @@
-import React from 'react';
-import { Row, Col, Image } from 'antd';
-import './Step.less';
-import GetStartedButton from './GetStartedButton';
+import React from "react";
+import { Row, Col, Image } from "antd";
+import "./Step.less";
+import GetStartedButton from "./GetStartedButton";
 
 interface StepProps {
 	className: string;
@@ -12,7 +12,14 @@ interface StepProps {
 	imgSrc: any;
 }
 
-export default function Step({ className, count, title, subTitle, content, imgSrc }: StepProps) {
+export default function Step({
+	className,
+	count,
+	title,
+	subTitle,
+	content,
+	imgSrc,
+}: StepProps) {
 	return (
 		<Col xs={24} sm={24} md={12}>
 			<div className={`step ${className}`}>
@@ -29,8 +36,11 @@ export default function Step({ className, count, title, subTitle, content, imgSr
 				</Row>
 				<p>{content}</p>
 				<Image preview={false} src={imgSrc} />
-				<p style={{textAlign: 'center'}}>
-					<GetStartedButton />
+				<p style={{ textAlign: "center" }}>
+					{/*<GetStartedButton />*/}
+					<span className="btn-3d">
+						<span>Start</span>
+					</span>
 				</p>
 			</div>
 		</Col>

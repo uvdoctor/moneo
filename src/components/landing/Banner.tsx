@@ -1,13 +1,20 @@
-import React, { useContext } from 'react';
-import ResImg from '../ResImg';
-import BannerContent from './BannerContent';
-import SocialShare from '../SocialShare';
-import Join from './Join';
-import './Banner.less';
-import { AppContext } from '../AppContext';
-import GetStartedButton from './GetStartedButton';
-import { WalletTwoTone, SafetyCertificateTwoTone, LockTwoTone } from '@ant-design/icons';
-import { COLORS } from '../../CONSTANTS';
+import React, { useContext } from "react";
+import ResImg from "../ResImg";
+import BannerContent from "./BannerContent";
+import SocialShare from "../SocialShare";
+import Join from "./Join";
+import "./Banner.less";
+import { AppContext } from "../AppContext";
+import GetStartedButton from "./GetStartedButton";
+import {
+	WalletTwoTone,
+	SafetyCertificateTwoTone,
+	LockTwoTone,
+} from "@ant-design/icons";
+import WalletSVG from "../svgs/2d/wallet";
+import LockSVG from "../svgs/2d/lock";
+import SecuritySVG from "../svgs/2d/security";
+//import { COLORS } from "../../CONSTANTS";
 
 export default function Banner() {
 	const { defaultCountry }: any = useContext(AppContext);
@@ -17,7 +24,7 @@ export default function Banner() {
 			<ResImg name="cover" />
 			<div className="site-banner-content">
 				<BannerContent />
-				{defaultCountry === 'IN' ? (
+				{defaultCountry === "IN" ? (
 					<p>
 						<GetStartedButton />
 					</p>
@@ -25,18 +32,18 @@ export default function Banner() {
 					<Join />
 				)}
 				<h3>
-					<WalletTwoTone twoToneColor={COLORS.GREEN} />
+					<WalletSVG />
 					No Commissions
 				</h3>
 				<h3>
-					<LockTwoTone twoToneColor={COLORS.GREEN} />
+					<LockSVG />
 					Respects Privacy
 				</h3>
 				<h3>
-					<SafetyCertificateTwoTone twoToneColor={COLORS.GREEN} />
+					<SecuritySVG />
 					Bank-grade Security
 				</h3>
-				{defaultCountry !== 'IN' && <SocialShare />}
+				{defaultCountry !== "IN" && <SocialShare />}
 			</div>
 		</div>
 	);
