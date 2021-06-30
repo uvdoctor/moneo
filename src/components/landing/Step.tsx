@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col, Image } from "antd";
 import "./Step.less";
-import GetStartedButton from "./GetStartedButton";
+//import GetStartedButton from "./GetStartedButton";
 
 interface StepProps {
 	className: string;

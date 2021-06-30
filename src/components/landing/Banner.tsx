@@ -6,15 +6,9 @@ import Join from "./Join";
 import "./Banner.less";
 import { AppContext } from "../AppContext";
 import GetStartedButton from "./GetStartedButton";
-import {
-	WalletTwoTone,
-	SafetyCertificateTwoTone,
-	LockTwoTone,
-} from "@ant-design/icons";
 import WalletSVG from "../svgs/2d/wallet";
 import LockSVG from "../svgs/2d/lock";
 import SecuritySVG from "../svgs/2d/security";
-//import { COLORS } from "../../CONSTANTS";
 
 export default function Banner() {
 	const { defaultCountry }: any = useContext(AppContext);
