@@ -17,14 +17,14 @@ interface BasicPageProps {
 }
 
 export default function BasicPage(props: BasicPageProps) {
-  const RECAPTCHA_CLIENT_TOKEN = '6LdTyd8ZAAAAAHZqurv84AUu_qsMvb_j9V3W_8WP';
+  const RECAPTCHA_CLIENT_TOKEN = "6LdTyd8ZAAAAAHZqurv84AUu_qsMvb_j9V3W_8WP";
   return (
     <Fragment>
       <Head>
         <meta charSet="utf-8" />
         <meta
           name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
+          content="minimum-scale=1, initial-scale=1, maximum-scale=2, width=device-width, shrink-to-fit=no, user-scalable=yes, viewport-fit=cover"
         />
         <meta name="theme-color" content="#000000" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -43,10 +43,7 @@ Personal finance for Millennial, personal finance advisor, personal finance, Dig
 personal finance app, Budget goals, Budgeting,  Mutual Funds, Stock, Equity trading, personal money management, online money management, personal
 finance plan, personal finance management, Banking App, Mobile Banking, Budgeting, Financial planning, Investing, Neo Banking Canada, Neo Banking USA, Neo Banking India"
         />
-        <meta
-          property="og:title"
-          content="Moneo - Your Money Coach"
-        />
+        <meta property="og:title" content="Moneo - Your Money Coach" />
         <meta
           property="og:description"
           content="
@@ -79,20 +76,19 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta name="format-detection" content="telephone=no" />
         <title>{props.title}</title>
       </Head>
-      <GoogleReCaptchaProvider
-        reCaptchaKey= { RECAPTCHA_CLIENT_TOKEN }>
-          <AppContextProvider>
-            <Layout className={`dd-site ${props.className}`}>
-              <Nav
-                scrollable={props.navScrollable ? props.navScrollable : false}
-                isFixed={props.fixedNav ? props.fixedNav : false}
-                onBack={props.onBack} />
-              {props.children}
-              <Footer />
-            </Layout>
-          </AppContextProvider>
+      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_CLIENT_TOKEN}>
+        <AppContextProvider>
+          <Layout className={`dd-site ${props.className}`}>
+            <Nav
+              scrollable={props.navScrollable ? props.navScrollable : false}
+              isFixed={props.fixedNav ? props.fixedNav : false}
+              onBack={props.onBack}
+            />
+            {props.children}
+            <Footer />
+          </Layout>
+        </AppContextProvider>
       </GoogleReCaptchaProvider>
-      
     </Fragment>
   );
 }
