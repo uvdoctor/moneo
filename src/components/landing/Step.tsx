@@ -1,5 +1,7 @@
 import React from "react";
 import { Row, Col, Image } from "antd";
+import { useFullScreenBrowser } from "react-browser-hooks";
+import { isMobileDevice } from "../utils";
 import "./Step.less";
 //import GetStartedButton from "./GetStartedButton";
 
@@ -20,6 +22,8 @@ export default function Step({
 	content,
 	imgSrc,
 }: StepProps) {
+	const fsb = useFullScreenBrowser();
+
 	return (
 		<Col xs={24} sm={24} md={12}>
 			<div className={`step ${className}`}>
@@ -35,12 +39,10 @@ export default function Step({
 					</Col>
 				</Row>
 				<p>{content}</p>
-				<Image preview={false} src={imgSrc} />
+				<Image preview={isMobileDevice(fsb) ? true : false} src={imgSrc} />
 				<p style={{ textAlign: "center" }}>
 					{/*<GetStartedButton />*/}
-					<span className="btn-3d">
-						<span>Start</span>
-					</span>
+					<button className="btn-3d">Start</button>
 				</p>
 			</div>
 		</Col>
