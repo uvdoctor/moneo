@@ -1,7 +1,7 @@
 import React from "react";
-import { Row, Col, Image } from "antd";
+import { Row, Col, Image, Button } from "antd";
+import Link from "next/link";
 import "./Step.less";
-//import GetStartedButton from "./GetStartedButton";
 
 interface StepProps {
 	className: string;
@@ -10,6 +10,7 @@ interface StepProps {
 	subTitle: string;
 	content: string;
 	imgSrc: any;
+	link: string;
 }
 
 export default function Step({
@@ -19,6 +20,7 @@ export default function Step({
 	subTitle,
 	content,
 	imgSrc,
+	link,
 }: StepProps) {
 	return (
 		<Col xs={24} sm={24} md={12}>
@@ -37,8 +39,11 @@ export default function Step({
 				<p>{content}</p>
 				<Image preview={false} src={imgSrc} />
 				<p style={{ textAlign: "center" }}>
-					{/*<GetStartedButton />*/}
-					<button className="btn-3d">Start</button>
+					<Link href={link}>
+						<Button type="primary" size="large">
+							Get Started
+						</Button>
+					</Link>
 				</p>
 			</div>
 		</Col>

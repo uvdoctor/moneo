@@ -13,13 +13,15 @@ import Security from "./Security";
 import GetRich from "./GetRich";
 import TakeQuickStep from "./TakeQuickStep";
 import Testimonials from "./Testimonials";
+import FinancialIndependence from "./FinancialIndependence";
+import { ROUTES } from "../../CONSTANTS";
 
 import "./Landing.less";
 import { AppContext } from "../AppContext";
 
 export default function Landing() {
   const { defaultCountry }: any = useContext(AppContext);
-  
+
   return (
     <JoinContextProvider>
       <Content className="with-banner">
@@ -56,14 +58,20 @@ export default function Landing() {
               count="01"
               title="Get"
               subTitle="Real-time Analysis"
+              link={ROUTES.SET}
               content="Automatically track your net worth, i.e. what you own minus what you owe, across bank accounts, credit cards, deposits, NPS, loans, etc; and investment portfolio performance."
-              imgSrc={defaultCountry === 'IN' ? "images/step1-india.jpg" : "images/step1.jpg"}
+              imgSrc={
+                defaultCountry === "IN"
+                  ? "images/step1-india.jpg"
+                  : "images/step1.jpg"
+              }
             />
             <Step
               className="step2"
               count="02"
               title="Set"
               subTitle="Goals"
+              link={ROUTES.GET}
               content="Define your life goals to get a persoalized Financial Plan, including analysis of money and time needed to achieve Financial Independence."
               imgSrc="images/step2.jpg"
             />
@@ -72,6 +80,7 @@ export default function Landing() {
               count="03"
               title="Grow"
               subTitle="Wealth"
+              link={ROUTES.SET}
               content="Improve savings by identifying money leaks and unwanted expenses, and invest money based on your financial plan, risk appetite and ethics."
               imgSrc="images/step3.jpg"
             />
@@ -84,6 +93,7 @@ export default function Landing() {
       <Security />
       <GetRich />
       <TakeQuickStep />
+      <FinancialIndependence />
     </JoinContextProvider>
   );
 }

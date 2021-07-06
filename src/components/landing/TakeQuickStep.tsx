@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
-import { Row, Col } from 'antd';
-import Content from '../Content';
-import { JoinContext } from './JoinContext';
-import Join from './Join';
-import { Status } from '../../api/goals';
+import React, { useContext } from "react";
+import { Row, Col } from "antd";
+import Content from "../Content";
+import { JoinContext } from "./JoinContext";
+import Join from "./Join";
+import { Status } from "../../api/goals";
 
-import './TakeQuickStep.less';
-import { AppContext } from '../AppContext';
-import GetStartedButton from './GetStartedButton';
+import "./TakeQuickStep.less";
+import { AppContext } from "../AppContext";
+import GetStartedButton from "./GetStartedButton";
 
 export default function TakeQuickStep() {
 	const { defaultCountry }: any = useContext(AppContext);
@@ -15,11 +15,13 @@ export default function TakeQuickStep() {
 
 	return status !== Status.Y ? (
 		<Content className="take-quick-step" whiteBg>
-			<Row align="middle" gutter={[ 50, 0 ]}>
+			<Row align="middle" gutter={[50, 0]}>
 				<Col xs={24} sm={24} md={12}>
-					<h2 className="text-green-primary">Just 15 minutes for a personalized Financial Plan</h2>
+					<h2 className="text-green-primary">
+						Just 15 minutes for a personalized Financial Plan
+					</h2>
 					<p>&nbsp;</p>
-					{defaultCountry === 'IN' ? <GetStartedButton /> : <Join />}
+					{defaultCountry === "IN" ? <GetStartedButton /> : <Join />}
 				</Col>
 				<Col xs={24} sm={24} md={12}>
 					<img src="images/quick-step.jpg" />

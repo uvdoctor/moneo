@@ -18,6 +18,11 @@ export default {
 			type: "text",
 		},
 		{
+			label: "Bank Name",
+			name: "bankName",
+			type: "slect",
+		},
+		{
 			label: "Amount",
 			name: "amount",
 			type: "text",
@@ -49,12 +54,12 @@ export default {
 		{
 			label: "Bank Name",
 			name: "bankName",
-			type: "text",
+			type: "slect",
 		},
 		{
 			label: "Cash Amount",
 			name: "cashAmount",
-			type: "text",
+			type: "radial",
 		},
 	],
 };
