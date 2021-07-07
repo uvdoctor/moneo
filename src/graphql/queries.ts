@@ -862,6 +862,7 @@ export const getInstrument = /* GraphQL */ `
       type
       subt
       price
+      prev
       sm
       sy
       mm
@@ -897,6 +898,7 @@ export const listInstruments = /* GraphQL */ `
         type
         subt
         price
+        prev
         sm
         sy
         mm

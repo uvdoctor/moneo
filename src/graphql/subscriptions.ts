@@ -1289,6 +1289,7 @@ export const onCreateInstrument = /* GraphQL */ `
       type
       subt
       price
+      prev
       sm
       sy
       mm
@@ -1311,6 +1312,7 @@ export const onUpdateInstrument = /* GraphQL */ `
       type
       subt
       price
+      prev
       sm
       sy
       mm
@@ -1333,6 +1335,7 @@ export const onDeleteInstrument = /* GraphQL */ `
       type
       subt
       price
+      prev
       sm
       sy
       mm

@@ -223,12 +223,13 @@ type Instrument
 	id: String!
 	sid: String
 	name: String!
-	exchg: String!
+	exchg: String
 	country: String!
 	curr: String!
 	type: InsType!
 	subt: InsSubType!
 	price: Float!
+	prev: Float
 	sm: Int
 	sy: Int
 	mm: Int
