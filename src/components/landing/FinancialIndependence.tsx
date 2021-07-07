@@ -19,7 +19,7 @@ export default function FinancialIndependence() {
 				<img src={imgPath} />
 				<div className="site-banner-content">
 					<h2>Break-free to live on your terms</h2>
-					<h3>Just 15 minutes for a persoalized Financial Plan</h3>
+					<h3>Just 15 minutes for a personalized financial plan</h3>
 					{defaultCountry === 'IN' ? (
 						<p>
 							<GetStartedButton />
