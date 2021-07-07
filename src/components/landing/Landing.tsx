@@ -11,7 +11,6 @@ import Step from "./Step";
 import GettingStarted from "./GettingStarted";
 import Security from "./Security";
 import GetRich from "./GetRich";
-import TakeQuickStep from "./TakeQuickStep";
 import Testimonials from "./Testimonials";
 import FinancialIndependence from "./FinancialIndependence";
 import { ROUTES } from "../../CONSTANTS";
@@ -92,7 +91,6 @@ export default function Landing() {
       </Content>
       <Security />
       <GetRich />
-      <TakeQuickStep />
       <FinancialIndependence />
     </JoinContextProvider>
   );
