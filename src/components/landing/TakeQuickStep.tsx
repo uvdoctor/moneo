@@ -2,15 +2,12 @@ import React, { useContext } from "react";
 import { Row, Col } from "antd";
 import Content from "../Content";
 import { JoinContext } from "./JoinContext";
-import Join from "./Join";
 import { Status } from "../../api/goals";
 
 import "./TakeQuickStep.less";
-import { AppContext } from "../AppContext";
 import GetStartedButton from "./GetStartedButton";
 
 export default function TakeQuickStep() {
-	const { defaultCountry }: any = useContext(AppContext);
 	const { status }: any = useContext(JoinContext);
 
 	return status !== Status.Y ? (
@@ -21,7 +18,7 @@ export default function TakeQuickStep() {
 						Just 15 minutes for a personalized Financial Plan
 					</h2>
 					<p>&nbsp;</p>
-					{defaultCountry === "IN" ? <GetStartedButton /> : <Join />}
+					<GetStartedButton />
 				</Col>
 				<Col xs={24} sm={24} md={12}>
 					<img src="images/quick-step.jpg" />
