@@ -1,16 +1,11 @@
-import React, { Fragment, useContext } from "react";
-import { Popover } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { AppContext } from "../AppContext";
+import React, { Fragment } from "react";
 
 const BannerContent = () => {
-	const { defaultCountry }: any = useContext(AppContext);
-
 	return (
 		<Fragment>
 			<h2>Worry-free Financial Independence</h2>
 			<h3>Your family's financial coach that champions your goals</h3>
-			{defaultCountry !== "IN" && (
+			{/*defaultCountry !== "IN" && (
 				<h4>
 					Join Waitlist &amp; Earn up to $200 credit*
 					<Popover
@@ -31,7 +26,7 @@ const BannerContent = () => {
 						</span>
 					</Popover>
 				</h4>
-			)}
+					)*/}
 		</Fragment>
 	);
 };
