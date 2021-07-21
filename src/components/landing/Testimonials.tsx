@@ -60,17 +60,6 @@ export default function Testimonials() {
 				/>
 
 				<TestimonialTemplate
-					title="Moneo helped me to become my own boss"
-					name="Nancy"
-					location="Delhi"
-					imageLocation="images/testimonials/nancy.jpg"
-					content="I worked in a job I hated, but stuck around for stable income. I always dreamt of starting my cosmetics business. 
-					A friend suggested Moneo as I had no idea about how to manage money. It not only gave me a financial reality check, but also showed me that investing regularly is more important than just saving. 
-					As I understood more about investing and the power of compounding, it helped me to overcome my fear. 
-					Finally, I quit my job and became my own boss!"
-				/>
-
-				<TestimonialTemplate
 					title="Moneo saved Rs. 30 lakhs"
 					name="Neha"
 					location="Bangalore"
