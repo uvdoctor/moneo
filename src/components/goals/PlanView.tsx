@@ -3,7 +3,7 @@ import { getImpOptions, getGoalTypes, createNewGoalInput, getDefaultIconForGoalT
 import SelectInput from '../form/selectinput';
 import PlanStart from './PlanStart';
 import FISummaryHeader from './FISummaryHeader';
-import { Button, Col, Dropdown, Menu, Row, Tabs } from 'antd';
+import { Button, Col, Dropdown, Menu, Row, Skeleton, Tabs } from 'antd';
 import { faChartLine, faChartPie, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import GoalSummary from './GoalSummary';
 import { PlanContext } from './PlanContext';
@@ -131,5 +131,5 @@ export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
 		</Fragment>
 	) : (
 		<PlanStart />
-	) : null;
+	) : <Skeleton active />
 }

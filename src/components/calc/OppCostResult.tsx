@@ -17,8 +17,9 @@ interface OppCostResultProps {
 
 export default function OppCostResult({ oppCost, numOfYears, numOfYearsOptions, oppCostHandler }: OppCostResultProps) {
 	const drOptions = initOptions(1, 9);
-	const { dr, setDR }: any = useContext(PlanContext);
-	const { goal, currency }: any = useContext(CalcContext);
+	const { dr, setDR, isPublicCalc }: any = useContext(PlanContext);
+	const { goal, startYear, currency }: any = useContext(CalcContext);
+
 	return (
 		<ItemDisplay
 			result={oppCost}
@@ -26,7 +27,7 @@ export default function OppCostResult({ oppCost, numOfYears, numOfYearsOptions, 
 			label={
 				<Fragment>
 					{`${goal.type === GoalType.B ? 'Buy' : 'Spend'} v/s Invest`}
-					{dr && (
+					{isPublicCalc && (
 						<Fragment>
 							{` @ `}
 							<SelectInput
@@ -44,7 +45,7 @@ export default function OppCostResult({ oppCost, numOfYears, numOfYearsOptions, 
 			pl
 			unit={
 				goal.type !== GoalType.FF &&
-				goal.type !== GoalType.B && dr && (
+				isPublicCalc && (
 					<Row align="middle">
 						{`in `}
 						<SelectInput
@@ -60,7 +61,8 @@ export default function OppCostResult({ oppCost, numOfYears, numOfYearsOptions, 
 			info={`${dr ? `Given that Investment earns ${dr}% Yearly, ` : ''}You ${oppCost < 0
 				? 'Lose'
 				: 'Gain'} about ${toHumanFriendlyCurrency(Math.abs(oppCost), currency)} in ${numOfYears} Years
-    by ${goal.type === GoalType.B ? 'Buying' : 'Spending'} instead of Investing.`}
+    by ${goal.type === GoalType.B ? 'Buying' : 'Spending'} instead of Investing.
+	${!isPublicCalc && ` This calculation assumes that cash flows are invested according to the the target asset allocation until ${startYear + numOfYears}. `}`}
 		/>
 	);
 }

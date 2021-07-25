@@ -68,7 +68,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     });
     removeFromArray(goals, "id", ffGoalId);
     setAllCFs(allCFs);
-    setAllGoals([...goals]);
+    setAllGoals([...goals?.sort((g1: CreateGoalInput, g2: CreateGoalInput) =>  g1.sy - g2.sy)]);
   };
 
   // potential performance
@@ -179,14 +179,14 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     setGoal(null);
     if (g.type === GoalType.FF) {
       setFFGoal(g);
-      setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
+      setAllGoals([...(allGoals?.sort((g1: CreateGoalInput, g2: CreateGoalInput) => g1.sy - g2.sy) as Array<CreateGoalInput>)]);
       return true;
     }
     notification.success({message: 'New Goal Created', description: `Success! New Goal ${g.name} has been Created.`});
     allGoals?.push(g as CreateGoalInput);
     allCFs[g.id as string] = cfs;
     setAllCFs(allCFs);
-    setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
+    setAllGoals([...(allGoals?.sort((g1: CreateGoalInput, g2: CreateGoalInput) =>  g1.sy - g2.sy) as Array<CreateGoalInput>)]);
   };
 
   const updateGoal = async (
@@ -204,7 +204,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     if (savedGoal.type === GoalType.FF) {
       notification.success({ message: "Target Updated", description: "Success! Your Financial Independence Target has been Updated." });
       setFFGoal(savedGoal as CreateGoalInput);
-      setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
+      setAllGoals([...(allGoals?.sort((g1: CreateGoalInput, g2: CreateGoalInput) =>  g1.sy - g2.sy) as Array<CreateGoalInput>)]);
       return true;
     } 
     notification.success({ message: "Goal Updated", description: `Success! Goal ${savedGoal.name} has been Updated.` });
@@ -220,7 +220,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     }
     allCFs[savedGoal.id] = cfs;
     setAllCFs(allCFs);
-    setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
+    setAllGoals([...(allGoals?.sort((g1: CreateGoalInput, g2: CreateGoalInput) =>  g1.sy - g2.sy) as Array<CreateGoalInput>)]);
     return true;
   };
 
@@ -236,7 +236,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     delete allCFs[id];
     setAllCFs(allCFs);
     setGoal(null);
-    setAllGoals([...(allGoals as Array<CreateGoalInput>)]);
+    setAllGoals([...(allGoals?.sort((g1: CreateGoalInput, g2: CreateGoalInput) =>  g1.sy - g2.sy) as Array<CreateGoalInput>)]);
   };
 
   const editGoal = (id: string) => {
