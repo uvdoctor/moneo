@@ -684,7 +684,7 @@ const calculateAllocation = (
   const allocateTEBonds = y < ffYear && ffGoal.manual > 0;
   remPer = allocate(allocateTEBonds ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS],
     i, Math.round((mustAllocation.bonds[y] / cs) * 100), remPer);
-  remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, tryBA, remPer);
+  remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round((tryBA / cs) * 100), remPer);
   if (!remPer) return;
   if (ffGoal.imp === APIt.LMH.L) {
       remPer = allocate(aa[ASSET_TYPES.GOLD], i, Math.round(remPer * 0.1), remPer);

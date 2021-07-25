@@ -14,7 +14,7 @@ interface BasicLineChartProps {
 	chartTitle?: string;
 	title?: string;
 	showRange?: boolean;
-	summaryView?: boolean;
+	showFromYear?: number;
 	dataMarkers?: Array<string>;
 	lineAnnotations?: Array<any>;
 	tooltips?: any;
@@ -30,7 +30,7 @@ export default function BasicLineChart({
 	chartTitle,
 	title,
 	showRange,
-	summaryView,
+	showFromYear,
 	dataMarkers,
 	lineAnnotations,
 	tooltips
@@ -42,13 +42,13 @@ export default function BasicLineChart({
 	const getCF = (year: number) => {
 		if (!goal && wipGoal.type === GoalType.FF && ffResult.ffCfs)
 			return ffResult.ffCfs[year];
-		let startYear = wipGoal.type === GoalType.FF ? new Date().getFullYear() : wipGoal.sy;
+		let startYear = wipGoal.type === GoalType.FF ? new Date().getFullYear() : showFromYear ? showFromYear : wipGoal.sy;
 		return cfs[year - startYear];
 	};
 
 	useEffect(() => {
 		let data: Array<any> = [];
-		let startVal = numberOfYears ? 1 : wipGoal.type === GoalType.FF ? new Date().getFullYear() : startYear;
+		let startVal = numberOfYears ? 1 : wipGoal.type === GoalType.FF ? new Date().getFullYear() : showFromYear ? showFromYear : startYear;
 		let endLength = !goal && wipGoal.type === GoalType.FF && ffResult.ffCfs ? Object.keys(ffResult.ffCfs).length : cfs.length;
 		for (let i = 0; i < endLength; i++)
 				data.push({
@@ -56,7 +56,7 @@ export default function BasicLineChart({
 					value: getCF(startVal + i)
 			});
 		setData([...data]);
-	}, [ cfs, rr ]);
+	}, [ cfs, rr, showFromYear]);
 
 
 	return (
@@ -83,7 +83,7 @@ export default function BasicLineChart({
 					</Col>
 				</Row>
 			)}
-			<Row style={{ minHeight: summaryView ? '250px' : '400px' }}>
+			<Row style={{ minHeight: showFromYear ? '250px' : '400px' }}>
 				<Col span={24}>
 					<LineChart
 						data={data}

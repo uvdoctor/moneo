@@ -222,6 +222,7 @@ function CalcContextProvider({
     try {
       await goalImgStorage.removeGoalImg(image);
     } catch (error) {
+      //@ts-ignore
       console.log(`An error occured while deleting the goal image, ${error.toString()}`)
     }
   }
@@ -310,6 +311,7 @@ function CalcContextProvider({
               .then((url: Object | String) => { return {key: result.key, url: url} })
               .catch(error => {throw new Error(error)})
     } catch (error) {
+      //@ts-ignore
       throw new Error(error);
     }  
   }

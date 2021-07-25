@@ -208,8 +208,16 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       return true;
     } 
     notification.success({ message: "Goal Updated", description: `Success! Goal ${savedGoal.name} has been Updated.` });
-    removeFromArray(allGoals as Array<CreateGoalInput>, "id", g.id);
-    allGoals?.unshift(savedGoal as CreateGoalInput);
+    if(allGoals && allGoals.length) {
+      let existingGoalIndex = -1;
+      for(let i = 0; i < allGoals.length; i++) {
+        if(allGoals[i].id === savedGoal.id) {
+          existingGoalIndex = i;
+          break;
+        }
+      }
+      if(existingGoalIndex >= 0) allGoals[existingGoalIndex] = savedGoal as CreateGoalInput;
+    }
     allCFs[savedGoal.id] = cfs;
     setAllCFs(allCFs);
     setAllGoals([...(allGoals as Array<CreateGoalInput>)]);

@@ -22,6 +22,7 @@ export default function SummaryView() {
 	const [ goalImp, setGoalImp ] = useState<LMH>(impLevel);
 	const [ goalName, setGoalName ] = useState<string>(name);
 	const [ goalImg, setGoalImg ] = useState<string | null>(goalImgUrl);
+	const [ goalSY, setGoalSY ] = useState<number>(goal.sy);
 	const getImpColor = (imp: LMH) => (imp === LMH.H ? COLORS.BLUE : imp === LMH.M ? COLORS.ORANGE : COLORS.GREEN);
 	const [ impColor, setImpColor ] = useState<string>(getImpColor(impLevel as LMH));
 	const goalTypes: any = getGoalTypes();
@@ -35,6 +36,7 @@ export default function SummaryView() {
 			setGoalImp(g.imp);
 			setImpColor(getImpColor(g.imp as LMH));
 			setGoalName(g.name);
+			setGoalSY(g.sy);
 			g.img ? goalImgStorage.getUrlFromKey(g.img).then((url: any) => { setGoalImg(url) }) : setGoalImg(null)
 			
 			//@ts-ignore
@@ -120,7 +122,7 @@ export default function SummaryView() {
 				<DefaultOppCostResult />
 			</Card.Grid>
 			<Card.Grid style={{ width: '100%'}}>
-				<BasicLineChart summaryView />
+				<BasicLineChart showFromYear={goalSY} />
 			</Card.Grid>
 		</Card>
 	);
