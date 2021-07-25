@@ -15,7 +15,7 @@ interface TestimonialTemplateProps {
 export default function TestimonialTemplate(props: TestimonialTemplateProps) {
 	return (
 		<div className="client-testimonial">
-			<h3>{props.title}</h3>
+			{/*<h3>{props.title}</h3>*/}
 			<p>{props.content}</p>
 			<Row align="middle">
 				<Col xs={9} lg={5}>
