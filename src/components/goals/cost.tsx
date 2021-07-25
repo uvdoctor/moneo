@@ -91,7 +91,7 @@ export default function Cost() {
 
 			<NumberInput
 				pre={
-					isLoanPublicCalc ? 'Borrow Amount' : `Cost ${goal.type !== GoalType.D && 'including taxes & fees'}`
+					isLoanPublicCalc ? 'Borrow Amount' : `Today's cost ${goal.type !== GoalType.D && 'including taxes & fees'}`
 				}
 				currency={currency}
 				value={startingPrice}
@@ -108,7 +108,7 @@ export default function Cost() {
 			{startYear > goal.by &&
 			!isLoanPublicCalc && (
 				<NumberInput
-					pre={`Yearly Cost Change from ${new Date().getFullYear()} to ${startYear}`}
+					pre='Yearly Cost Changes by'
 					unit="%"
 					min={-10}
 					max={10}
