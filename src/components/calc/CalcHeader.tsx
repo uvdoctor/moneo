@@ -70,6 +70,7 @@ export default function CalcHeader() {
 											type="link"
 											icon={<ShareAltOutlined />}
 											style={{ color: COLORS.WHITE }}
+											key="sharebtn"
 										/>
 									</Tooltip>
 								) : (
@@ -80,6 +81,7 @@ export default function CalcHeader() {
 										onClick={() => handleSubmit()}
 										size="large"
 										className="steps-start-btn"
+										key="submitbtn"
 									>
 										Submit
 									</Button>
