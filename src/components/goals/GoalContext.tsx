@@ -508,7 +508,7 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
     if (isPublicCalc) return;
     wipGoal.imp = impLevel;
     setWipGoal(wipGoal);
-    let result = calculateFFImpactYear(startYear, cfs, goal.id, impLevel);
+    let result = calculateFFImpactYear(startYear, cfs, goal.id, impLevel, goal.ccy);
     setFFImpactYears(result.impactYears);
     if(wipGoal.id) setDiscountRates([...result.rr]);
     if(cfs.length) {

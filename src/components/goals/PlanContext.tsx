@@ -2,7 +2,7 @@ import { notification } from "antd";
 import React, { createContext, useEffect, useState, ReactNode } from "react";
 import { CreateGoalInput, GoalType, LMH, UpdateGoalInput } from "../../api/goals";
 import { ASSET_TYPES, ROUTES } from "../../CONSTANTS";
-import { appendValue, removeFromArray } from "../utils";
+import { appendValue, getRangeFactor, removeFromArray } from "../utils";
 import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import { changeGoal, createNewGoal, deleteGoal, getDuration, getGoalsList } from "./goalutils";
 import { useRouter } from 'next/router';
@@ -32,9 +32,11 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   const [rr, setRR] = useState<Array<number>>([]);
   const [dr, setDR] = useState<number | null>(!isPublicCalc ? null : 5);
   const [planError, setPlanError] = useState<string>('');
-
+  const [defaultCurrency, setDefaultCurrency] = useState<string>('USD');
   const nowYear = new Date().getFullYear();
   
+  const getCurrencyFactor = (currency: string) => getRangeFactor(defaultCurrency) / getRangeFactor(currency);
+
   const loadAllGoals = async () => {
     let goals: Array<CreateGoalInput> | null = await getGoalsList();
     if (!goals || goals.length === 0) {
@@ -46,6 +48,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     goals?.forEach((g) => {
       if (g.type === GoalType.FF) {
         setFFGoal(g);
+        setDefaultCurrency(g.ccy);
         ffGoalId = g.id as string;
       } else {
         let result: any = calculateCFs(
@@ -151,11 +154,11 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       let cfs: Array<number> = allCFs[g.id as string];
       if (!cfs) return;
       if (g.imp === LMH.H)
-        populateData(mustCFs, cfs, g.sy, yearRange.from);
+        populateData(mustCFs, cfs, g.sy, yearRange.from, g.ccy);
       else if (g.imp === LMH.M)
-        populateData(tryCFs, cfs, g.sy, yearRange.from);
-      else populateData(optCFs, cfs, g.sy, yearRange.from);
-      mergeCFs(mCFs, cfs, g.sy);
+        populateData(tryCFs, cfs, g.sy, yearRange.from, g.ccy);
+      else populateData(optCFs, cfs, g.sy, yearRange.from, g.ccy);
+      mergeCFs(mCFs, cfs, g.sy, g.ccy);
     });
     setMustCFs([...mustCFs]);
     setOptCFs([...optCFs]);
@@ -274,18 +277,21 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     totalCfs: Array<number>,
     cfs: Array<number>,
     sy: number,
-    firstYear: number
+    firstYear: number,
+    goalCurrency: string
   ) => {
     let firstIndex = sy - firstYear;
+    let currencyFactor = getCurrencyFactor(goalCurrency);
     cfs.forEach((cf, i) => {
-      if (firstIndex + i >= 0) totalCfs[firstIndex + i] += cf;
+      if (firstIndex + i >= 0) totalCfs[firstIndex + i] += cf * currencyFactor;
     });
   };
 
-  const mergeCFs = (obj: Object, cfs: Array<number>, sy: number) => {
+  const mergeCFs = (obj: Object, cfs: Array<number>, sy: number, goalCurrency: string) => {
+    let currencyFactor = getCurrencyFactor(goalCurrency);
     cfs.forEach((cf, i) => {
       let year = sy + i;
-      appendValue(obj, year, cf);
+      appendValue(obj, year, cf * currencyFactor);
     });
   };
 
@@ -294,6 +300,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     cfs: Array<number>,
     goalId: string,
     goalImp: LMH,
+    goalCurrency: string,
     result?: any,
     mergedCashflows?: any,
     mustCashflows?: any,
@@ -304,6 +311,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     let highImpCFs: any = Object.assign([], mustCashflows ? mustCashflows : mustCFs);
     let medImpCFs: any = Object.assign([], tryCashflows ? tryCashflows : tryCFs);
     let nowYear = new Date().getFullYear();
+    let currencyFactor = getCurrencyFactor(goalCurrency);
     if (goalId) {
       let existingGoal = (allGoals?.filter((g) => g.id === goalId) as Array<
         CreateGoalInput
@@ -312,12 +320,13 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       let existingImp = existingGoal.imp;
       let existingCFs = allCFs[goalId];
       existingCFs.forEach((cf: number, i: number) => {
-        appendValue(mCFs, existingSY + i, -cf);
+        let cashFlow = -cf * currencyFactor;
+        appendValue(mCFs, existingSY + i, cashFlow);
         let index = existingSY + i - (nowYear + 1);
         if (existingImp === LMH.H) {
-          appendValue(highImpCFs, index, -cf);
+          appendValue(highImpCFs, index, cashFlow);
         } else if (existingImp === LMH.M) {
-          appendValue(medImpCFs, index, -cf);
+          appendValue(medImpCFs, index, cashFlow);
         }
       });
     }
@@ -335,12 +344,13 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       rr: resultWithoutGoal.rr
     };
     cfs.forEach((cf, i) => {
-      appendValue(mCFs, startYear + i, cf);
+      let cashFlow = cf * currencyFactor;
+      appendValue(mCFs, startYear + i, cashFlow);
       let index = startYear + i - (nowYear + 1);
       if (goalImp === LMH.H) {
-        appendValue(highImpCFs, index, cf);
+        appendValue(highImpCFs, index, cashFlow);
       } else if (goalImp === LMH.M) {
-        appendValue(medImpCFs, index, cf);
+        appendValue(medImpCFs, index, cashFlow);
       }
     });
     let resultWithGoal = result ? result : findEarliestFFYear(

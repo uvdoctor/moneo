@@ -17,6 +17,7 @@ import DynamicAAChart from './DynamicAAChart';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FIPortfolioChart from './FIPortfolioChart';
 import { COLORS } from '../../CONSTANTS';
+import { AppContext } from '../AppContext';
 
 interface PlanViewProps {
 	activeTab: string;
@@ -24,11 +25,12 @@ interface PlanViewProps {
 }
 
 export default function PlanView({ activeTab, setActiveTab }: PlanViewProps) {
+	const { appContextLoaded }: any = useContext(AppContext);
 	const { allGoals, ffGoal, goalsLoaded, setGoal }: any = useContext(PlanContext);
 	const { TabPane } = Tabs;
 	const [ impFilter, setImpFilter ] = useState<string>('');
 	
-	return goalsLoaded ? ffGoal ? (
+	return goalsLoaded && appContextLoaded ? ffGoal ? (
 		<Fragment>
 			<div className="primary-header" style={{ marginBottom: '10px' }}>
 				<FISummaryHeader />
