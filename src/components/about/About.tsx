@@ -1,8 +1,9 @@
 import React from "react";
 import { Row, Col, Image } from "antd";
+import Card from "./Card";
 import Content from "../Content";
 
-import "./about.less";
+import "./About.less";
 
 export default function Home() {
 	return (
@@ -30,6 +31,36 @@ export default function Home() {
 				with desktop publishing software like Aldus PageMaker including versions
 				of Lorem Ipsum.
 			</p>
+
+			<Row
+				align="middle"
+				gutter={[
+					{ xs: 0, sm: 15, md: 30, lg: 50 },
+					{ xs: 15, sm: 15, md: 30, lg: 50 },
+				]}
+			>
+				<Col xs={24} md={8}>
+					<Card
+						title="How"
+						description="With a digital-first, no-nonsense approach. No branches or tiresome paperwork"
+						imageUrl="images/about-how.jpg"
+					/>
+				</Col>
+				<Col xs={24} md={8}>
+					<Card
+						title="Why"
+						description="To help people get better with their money"
+						imageUrl="images/about-why.jpg"
+					/>
+				</Col>
+				<Col xs={24} md={8}>
+					<Card
+						title="What"
+						description="Through a platform where privacy &amp; security area priority"
+						imageUrl="images/about-what.jpg"
+					/>
+				</Col>
+			</Row>
 
 			<Row className="banner" align="middle">
 				<Col xs={24} md={13}>
