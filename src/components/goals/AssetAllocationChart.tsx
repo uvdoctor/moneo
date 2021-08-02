@@ -64,7 +64,7 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 		if (isMobileDevice(fsb) && (assetName.endsWith('nds') || assetName.endsWith('cks'))) {
 			let result = '';
 			let strings = assetName.split(' ');
-			strings.forEach((str) => (result += str + '\n'));
+			strings.forEach((str) => result += str + !str.endsWith(',') ? '\n' : '');
 			return result;
 		} else return assetName + '\n';
 	};

@@ -501,7 +501,7 @@ export const getAssetColour = (type: string) => {
       return COLORS.WHITE;
     case ASSET_TYPES.MED_TERM_BONDS:
       return "#aa8dfa";
-    case ASSET_TYPES.EMERGING_BONDS:
+    case ASSET_TYPES.INTERNATIONAL_BONDS:
       return "#855cf8";
     case ASSET_TYPES.TAX_EXEMPT_BONDS:
       return "#e7defe";
@@ -525,6 +525,8 @@ export const getAssetColour = (type: string) => {
       return "#7cd9fd";
     case ASSET_TYPES.REAL_ESTATE:
       return "#7cd9fd";
+    case ASSET_TYPES.INDIA_FIXED_INCOME:
+      return "#aa8dfa";
     default:
       return "";
   }
@@ -544,8 +546,9 @@ export const getAllAssetTypesByCategory = (category: string) => {
     case ASSET_CATEGORIES.BONDS:
       return [
         ASSET_TYPES.MED_TERM_BONDS,
-        ASSET_TYPES.EMERGING_BONDS,
+        ASSET_TYPES.INTERNATIONAL_BONDS,
         ASSET_TYPES.TAX_EXEMPT_BONDS,
+        ASSET_TYPES.INDIA_FIXED_INCOME
       ];
     case ASSET_CATEGORIES.STOCKS:
       return [

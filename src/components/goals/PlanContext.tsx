@@ -88,15 +88,16 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
       [ASSET_TYPES.DEPOSITS]: 1.5 + irDiff,
       [ASSET_TYPES.MED_TERM_BONDS]: 3 + irDiff, // 1-5 medium term
       [ASSET_TYPES.TAX_EXEMPT_BONDS]: 3.5 + irDiff, //medium term tax efficient bonds
-      [ASSET_TYPES.EMERGING_BONDS]: 7,
+      [ASSET_TYPES.INTERNATIONAL_BONDS]: 7,
       [ASSET_TYPES.REIT]: 5 + irDiff,
       [ASSET_TYPES.REAL_ESTATE]: 5 + irDiff,
-      [ASSET_TYPES.GOLD]: 3,
+      [ASSET_TYPES.GOLD]: 3 + irDiff,
       [ASSET_TYPES.LARGE_CAP_STOCKS]: 5 + irDiff,
       [ASSET_TYPES.MID_CAP_STOCKS]: 6 + irDiff,
       [ASSET_TYPES.DIVIDEND_GROWTH_STOCKS]: 5 + irDiff,
       [ASSET_TYPES.INTERNATIONAL_STOCKS]: 9,
-      [ASSET_TYPES.SMALL_CAP_STOCKS]: 9,
+      [ASSET_TYPES.SMALL_CAP_STOCKS]: 9 + irDiff,
+      [ASSET_TYPES.INDIA_FIXED_INCOME]: 8
     };
   };
 

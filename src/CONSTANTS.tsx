@@ -35,8 +35,8 @@ export const ASSET_CATEGORIES = {
 export const ASSET_TYPES = {
     SAVINGS: "Savings",
     DEPOSITS: "Deposits",
-    MED_TERM_BONDS: "Intermediate-term Bonds",
-    EMERGING_BONDS: "Emerging Market Bonds",
+    MED_TERM_BONDS: "Domestic Bonds",
+    INTERNATIONAL_BONDS: "International Bonds",
     TAX_EXEMPT_BONDS: "Tax-exempt Bonds",
     REIT: "REIT",
     GOLD: "Gold",
@@ -45,7 +45,8 @@ export const ASSET_TYPES = {
     SMALL_CAP_STOCKS: "Small-cap Stocks",
     INTERNATIONAL_STOCKS: "International Large-cap Stocks",
     DIVIDEND_GROWTH_STOCKS: "Dividend-Growth Stocks",
-    REAL_ESTATE: "Real Estate"
+    REAL_ESTATE: "Real Estate",
+    INDIA_FIXED_INCOME: "PPF, EPF, VPF, NSC, Bonds"
 };
 
 export const COLORS = {

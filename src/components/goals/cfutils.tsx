@@ -358,7 +358,9 @@ const createAutoLoanCFs = (price: number,
   let loanSchedule: any = {};
   if (goal.type === GoalType.E) {
     let result = createEduLoanMonthlyCFs(goal.sy, goal.ey, price, goal.chg as number, goal?.loan?.per as number, goal?.loan?.dur as number, goal?.loan?.pp as Array<TargetInput>, goal?.loan?.ira as Array<TargetInput>, goal.achg as number, goal.tbr ? true : false);
+    console.log("Result is: ", result);
     loanStartingCFs = getEduLoanAnnualDPs(goal.sm as number, result.dp);
+    console.log("Loan starting cfs: ", loanStartingCFs);
     loanSchedule = createAmortizingLoanCFs(
       result.borrowAmt,
       getClosestTargetVal(goal?.loan?.ira as Array<TargetInput>, result.interest.length, goal?.loan?.rate as number),
@@ -371,6 +373,7 @@ const createAutoLoanCFs = (price: number,
       0,
       result.interest.length
     );
+    console.log("Amortizing schedule is: ", loanSchedule);
   } else {
     let loanBorrowAmt = getLoanBorrowAmt(
       price,
@@ -682,33 +685,39 @@ const calculateAllocation = (
   let remPer = allocateCash(aa, ffGoalEndYear, y, mustAllocation, cs);
   if (!remPer) return;
   const allocateTEBonds = y < ffYear && ffGoal.manual > 0;
-  remPer = allocate(allocateTEBonds ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS],
+  let fixedIncomeTEAsset = aa[ASSET_TYPES.TAX_EXEMPT_BONDS];
+  let fixedIncomeAsset = aa[ASSET_TYPES.MED_TERM_BONDS];
+  if(ffGoal.ccy === 'INR') {
+    fixedIncomeTEAsset = aa[ASSET_TYPES.INDIA_FIXED_INCOME];
+    fixedIncomeAsset = aa[ASSET_TYPES.INDIA_FIXED_INCOME];
+  }
+  remPer = allocate(allocateTEBonds ? fixedIncomeTEAsset : fixedIncomeAsset,
     i, Math.round((mustAllocation.bonds[y] / cs) * 100), remPer);
-  remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round((tryBA / cs) * 100), remPer);
+  remPer = allocate(fixedIncomeAsset, i, Math.round((tryBA / cs) * 100), remPer);
   if (!remPer) return;
   if (ffGoal.imp === APIt.LMH.L) {
       remPer = allocate(aa[ASSET_TYPES.GOLD], i, Math.round(remPer * 0.1), remPer);
       remPer = allocate(aa[ASSET_TYPES.REAL_ESTATE], i, Math.round(remPer * 0.3), remPer);
-      remPer = allocate(allocateTEBonds ? aa[ASSET_TYPES.TAX_EXEMPT_BONDS] : aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round(remPer * 0.5), remPer);
-      remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, remPer, remPer);
+      remPer = allocate(allocateTEBonds ? fixedIncomeTEAsset : fixedIncomeAsset, i, Math.round(remPer * 0.5), remPer);
+      remPer = allocate(fixedIncomeAsset, i, remPer, remPer);
   } else {
     remPer = allocateREIT(aa, y, ffYear, ffGoal, remPer);
     if (!remPer) return;
-    let teBondsPer = aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i];
-    let meBondsPer = aa[ASSET_TYPES.MED_TERM_BONDS][i];
+    let teBondsPer = fixedIncomeTEAsset[i];
+    let meBondsPer = fixedIncomeAsset[i];
     if(teBondsPer + meBondsPer < 15) {
-        if (allocateTEBonds) remPer = allocate(aa[ASSET_TYPES.TAX_EXEMPT_BONDS], i, 5 - teBondsPer, remPer);
+        if (allocateTEBonds) remPer = allocate(fixedIncomeTEAsset, i, 5 - teBondsPer, remPer);
         let minMEBondsPer = !allocateTEBonds ? 10 : 5;
-        remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, minMEBondsPer - meBondsPer, remPer);
-        let totalBondsPer = aa[ASSET_TYPES.TAX_EXEMPT_BONDS][i] + aa[ASSET_TYPES.MED_TERM_BONDS][i];
-        remPer = allocate(aa[ASSET_TYPES.EMERGING_BONDS], i, 15 - totalBondsPer, remPer);
-    } else remPer = allocate(aa[ASSET_TYPES.EMERGING_BONDS], i, 5, remPer);
+        remPer = allocate(fixedIncomeAsset, i, minMEBondsPer - meBondsPer, remPer);
+        let totalBondsPer = fixedIncomeTEAsset[i] + fixedIncomeAsset[i];
+        remPer = allocate(aa[ASSET_TYPES.INTERNATIONAL_BONDS], i, 15 - totalBondsPer, remPer);
+    } else remPer = allocate(aa[ASSET_TYPES.INTERNATIONAL_BONDS], i, 5, remPer);
     if (!remPer) return;
     remPer = allocateStocks(aa, y, ffYear, ffGoal, remPer);
     if (remPer) {
-        if (allocateTEBonds) remPer = allocate(aa[ASSET_TYPES.TAX_EXEMPT_BONDS], i, Math.round(remPer * 0.4), remPer);
-        remPer = allocate(aa[ASSET_TYPES.MED_TERM_BONDS], i, Math.round(remPer * 0.7), remPer);
-        allocate(aa[ASSET_TYPES.EMERGING_BONDS], i, remPer, remPer);
+        if (allocateTEBonds) remPer = allocate(fixedIncomeTEAsset, i, Math.round(remPer * 0.4), remPer);
+        remPer = allocate(fixedIncomeAsset, i, Math.round(remPer * 0.7), remPer);
+        allocate(aa[ASSET_TYPES.INTERNATIONAL_BONDS], i, remPer, remPer);
     }
   }
 };
@@ -757,12 +766,13 @@ export const checkForFF = (
     if (minReq < 0) minReq = 0;
     let i = y - (nowYear + 1);
     let rate = 0;
+    let fixedIncomeAsset = ffGoal.ccy === 'INR' ? ASSET_TYPES.INDIA_FIXED_INCOME : ASSET_TYPES.MED_TERM_BONDS;
     if (cs > minReq) calculateAllocation(ffGoal, y, cs, aa, mustAllocation, tryBA, ffYear);
     else {
       if (cs <= 0 || sa <= 0 || cs <= sa) aa[ASSET_TYPES.SAVINGS][i] = 100;
       else {
         let remPer = allocateCash(aa, ffGoalEndYear, y, mustAllocation, cs);
-        if (remPer) aa[ASSET_TYPES.MED_TERM_BONDS][i] += remPer;
+        if (remPer) aa[fixedIncomeAsset][i] += remPer;
       }
       oom.push(y);
     }
