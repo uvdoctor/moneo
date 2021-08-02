@@ -9,8 +9,7 @@ export default function Home() {
 	const cardData = [
 		{
 			title: "What",
-			description:
-				"Through a platform where privacy &amp; security area priority",
+			description: "Through a platform where privacy & security area priority",
 			imageUrl: "images/about-what.jpg",
 		},
 		{
@@ -64,18 +63,6 @@ export default function Home() {
 						<Card {...data} />
 					</Col>
 				))}
-			</Row>
-
-			<Row className="banner" align="middle">
-				<Col xs={24} md={13}>
-					<h2>
-						Dummy: Your Financial Analyst for Stress-free Savings &amp;
-						Investments to Meet Your Goals
-					</h2>
-				</Col>
-				<Col xs={24} md={11}>
-					<Image preview={false} src="images/money-grow.jpg" />
-				</Col>
 			</Row>
 
 			<h2>Company (Optional)</h2>
