@@ -6,6 +6,25 @@ import Content from "../Content";
 import "./About.less";
 
 export default function Home() {
+	const cardData = [
+		{
+			title: "What",
+			description: "Through a platform where privacy & security area priority",
+			imageUrl: "images/about-what.jpg",
+		},
+		{
+			title: "Why",
+			description: "To help people get better with their money",
+			imageUrl: "images/about-why.jpg",
+		},
+		{
+			title: "How",
+			description:
+				"With a digital-first, no-nonsense approach. No branches or tiresome paperwork",
+			imageUrl: "images/about-how.jpg",
+		},
+	];
+
 	return (
 		<Content className="about">
 			<h2>About US</h2>
@@ -39,39 +58,11 @@ export default function Home() {
 					{ xs: 15, sm: 15, md: 30, lg: 50 },
 				]}
 			>
-				<Col xs={24} md={8}>
-					<Card
-						title="How"
-						description="With a digital-first, no-nonsense approach. No branches or tiresome paperwork"
-						imageUrl="images/about-how.jpg"
-					/>
-				</Col>
-				<Col xs={24} md={8}>
-					<Card
-						title="Why"
-						description="To help people get better with their money"
-						imageUrl="images/about-why.jpg"
-					/>
-				</Col>
-				<Col xs={24} md={8}>
-					<Card
-						title="What"
-						description="Through a platform where privacy &amp; security area priority"
-						imageUrl="images/about-what.jpg"
-					/>
-				</Col>
-			</Row>
-
-			<Row className="banner" align="middle">
-				<Col xs={24} md={13}>
-					<h2>
-						Dummy: Your Financial Analyst for Stress-free Savings &amp;
-						Investments to Meet Your Goals
-					</h2>
-				</Col>
-				<Col xs={24} md={11}>
-					<Image preview={false} src="images/money-grow.jpg" />
-				</Col>
+				{cardData.map((data) => (
+					<Col xs={24} md={8}>
+						<Card {...data} />
+					</Col>
+				))}
 			</Row>
 
 			<h2>Company (Optional)</h2>
