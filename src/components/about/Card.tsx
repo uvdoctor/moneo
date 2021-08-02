@@ -3,7 +3,13 @@ import { Image } from "antd";
 
 import "./Card.less";
 
-export default function Card({ title, description, imageUrl }) {
+interface CardProps {
+	title: string;
+	description: string;
+	imageUrl: string;
+}
+
+export default function Card({ title, description, imageUrl }: CardProps) {
 	return (
 		<div className="about-card">
 			<Image preview={false} src={imageUrl} />
