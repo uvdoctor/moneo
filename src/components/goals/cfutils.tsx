@@ -357,23 +357,22 @@ const createAutoLoanCFs = (price: number,
   let loanStartingCFs: Array<number> = [];
   let loanSchedule: any = {};
   if (goal.type === GoalType.E) {
-    let result = createEduLoanMonthlyCFs(goal.sy, goal.ey, price, goal.chg as number, goal?.loan?.per as number, goal?.loan?.dur as number, goal?.loan?.pp as Array<TargetInput>, goal?.loan?.ira as Array<TargetInput>, goal.achg as number, goal.tbr ? true : false);
-    console.log("Result is: ", result);
+    let result = createEduLoanMonthlyCFs(goal.sy, goal.ey, price, goal.chg as number, goal?.loan?.per as number, goal?.loan?.rate as number, goal?.loan?.pp as Array<TargetInput>, goal?.loan?.ira as Array<TargetInput>, goal.achg as number, goal.tbr ? true : false);
     loanStartingCFs = getEduLoanAnnualDPs(goal.sm as number, result.dp);
-    console.log("Loan starting cfs: ", loanStartingCFs);
     loanSchedule = createAmortizingLoanCFs(
       result.borrowAmt,
       getClosestTargetVal(goal?.loan?.ira as Array<TargetInput>, result.interest.length, goal?.loan?.rate as number),
       goal?.loan?.emi as number,
       goal?.loan?.pp as Array<TargetInput>,
       goal?.loan?.ira as Array<TargetInput>,
-      goal?.loan?.rate as number,
+      goal?.loan?.dur as number,
       null,
       0,
       0,
       result.interest.length
     );
-    console.log("Amortizing schedule is: ", loanSchedule);
+    loanSchedule.interest = [...result.interest, ...loanSchedule.interest];
+    loanSchedule.principal = [...result.principal, ...loanSchedule.principal];
   } else {
     let loanBorrowAmt = getLoanBorrowAmt(
       price,
