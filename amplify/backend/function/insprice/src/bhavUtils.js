@@ -13,12 +13,13 @@ const cleanDirectory = async (tempDir, msg) => {
 const downloadZip = (NSE_URL, tempDir, zipFile) => {
   return new Promise((resolve, reject) => {
     const req = https.get(NSE_URL, async (res) => {
-      if (res.statusCode < 200 || res.statusCode >= 300) {
+      const { statusCode } = res;
+      if (statusCode < 200 || statusCode >= 300) {
         await cleanDirectory(
           tempDir,
-          `Unable to download zip file, ${res.statusCode}`
+          `Unable to download zip file, ${statusCode}`
         );
-        return reject(new Error("statusCode=" + res.statusCode));
+        return reject(new Error("statusCode=" + statusCode));
       }
       res.pipe(fs.createWriteStream(zipFile));
       res.on("end", function () {
@@ -39,17 +40,17 @@ const downloadZip = (NSE_URL, tempDir, zipFile) => {
 const unzipDownloads = async (zipFile, tempDir) => {
   try {
     await extract(zipFile, {
-      dir: __dirname + "/temp",
+      dir: tempDir,
     });
   } catch (err) {
     await cleanDirectory(tempDir, `Unable to extract zip file, ${err.message}`);
-    throw new Error(err.message)
+    throw new Error(err.message);
   }
 };
 
 const extractDataFromCSV = async (tempDir, fileName) => {
   const end = new Promise((resolve, reject) => {
-    let results = []
+    let results = [];
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", ({ SYMBOL, ISIN, CLOSE }) => {
@@ -57,17 +58,22 @@ const extractDataFromCSV = async (tempDir, fileName) => {
       })
       .on("end", async () => {
         await cleanDirectory(
-          tempDir, "Results extracted successfully and directory is cleaned"
+          tempDir,
+          "Results extracted successfully and directory is cleaned"
         );
         resolve(results);
       })
       .on("error", (err) => {
         cleanDirectory(tempDir, `Unable to read csv file, ${err.message}`);
-        throw new Error(err.message)
+        throw new Error(err.message);
       });
   });
   return await end;
 };
 
-
-module.exports = { downloadZip, unzipDownloads, extractDataFromCSV };
+module.exports = {
+  downloadZip,
+  unzipDownloads,
+  extractDataFromCSV,
+  cleanDirectory,
+};
