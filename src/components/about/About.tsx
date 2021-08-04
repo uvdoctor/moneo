@@ -3,7 +3,7 @@ import { Row, Col } from "antd";
 import Card from "./Card";
 import Content from "../Content";
 
-import "./About.less";
+import "./about.less";
 
 export default function Home() {
 	const cardData = [
