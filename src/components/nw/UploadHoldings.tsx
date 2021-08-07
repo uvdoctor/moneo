@@ -252,16 +252,17 @@ export default function UploadHoldings() {
 						));
 						continue;
 					}
-					continue;
 				}
-				if (!isin) continue;
+				
+				if (quantity) continue;
+				if (!isin && includesAny(value, ["page"])) continue;
 				let numberOfWords = countWords(value);
 				if (
 					!recordBroken &&
 					value.length > 7 &&
 					numberOfWords > 1 &&
 					numberOfWords < 15 &&
-					!value.includes(",")
+					!includesAny(value, ["no :", ","])
 				) {
 					console.log("Going to check: ", value);
 					if (includesAny(value, ["bond", "bd", "ncd", "debenture", "sgb"]))
