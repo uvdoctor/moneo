@@ -171,7 +171,7 @@ export default function UploadHoldings() {
 					eof = true;
 					break;
 				}
-				if (hasData && includesAny(value, ["transaction details", "commission paid"])) {
+				if (includesAny(value, ["transaction details", "commission paid"])) {
 					isin = null;
 					quantity = null;
 					name = null;
@@ -181,7 +181,7 @@ export default function UploadHoldings() {
 					holdingStarted &&
 					!hasData &&
 					!isin &&
-					includesAny(value, ["face value"])
+					includesAny(value, ["face value", "coupon rate"])
 				) {
 					hasFV = true;
 					continue;
@@ -225,7 +225,7 @@ export default function UploadHoldings() {
 					if (isin.startsWith("INF")) {
 						if (insType !== InsSubType.ETF) insType = InsSubType.M;
 					} else if (isin.startsWith("IN0")) insType = InsType.F;
-					else if (insType !== InsType.F) insType = InsSubType.S;
+					else if(isin.startsWith("INE")) insType = InsSubType.S;
 					if (isin && quantity) {
 						({
 							recordBroken,
@@ -310,13 +310,14 @@ export default function UploadHoldings() {
 				let qty: number | null =
 					checkForMultiple && name && numberAtEnd ? numberAtEnd : getQty(value);
 				if (!qty) continue;
+				if(insType === InsSubType.M && !value.includes(".")) continue;
 				if (
 					!recordBroken &&
 					((name && lastNameCapture && j - lastNameCapture > 5) ||
 						(lastQtyCapture && j - lastQtyCapture < 7))
 				)
 					continue;
-				if (hasFV && !fv && insType === InsSubType.S) {
+				if (hasFV && !fv && (insType === InsSubType.S || insType === InsType.F)) {
 					console.log("Detected fv: ", qty);
 					fv = qty;
 					continue;

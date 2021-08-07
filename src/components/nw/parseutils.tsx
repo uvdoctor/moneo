@@ -77,13 +77,23 @@ export const completeRecord = (recordBroken: boolean, lastNameCapture: number | 
     lastNameCapture = null;
     recordBroken = false;
   }
-  console.log("Record completed...");
   hasData = true;
-  appendValue(
-    mode === InsSubType.S ? equities : mode === InsSubType.M ? mfs : mode === InsSubType.ETF ? etfs : bonds,
-    isin as string,
-    {id: isin, qty: quantity as number, name: name ? name : isin, type: mode !== InsType.F ? InsType.E : InsType.F, subt: mode === InsType.F ? InsSubType.CB : mode, fIds: [taxId], curr: currency} as HoldingInput
-  );
+  let existingEntry = null;
+  if (insNames[isin as string]) {
+	let list = mode === InsSubType.S ? equities : mode === InsSubType.M ? mfs : mode === InsSubType.ETF ? etfs : bonds;
+	if(list[isin as string]) existingEntry = list[isin as string];
+  } 
+  if(existingEntry)
+  	existingEntry.qty += quantity as number;
+  else {
+	appendValue(
+		mode === InsSubType.S ? equities : mode === InsSubType.M ? mfs : mode === InsSubType.ETF ? etfs : bonds,
+		isin as string,
+		{id: isin, qty: quantity as number, name: name ? name : isin, type: mode !== InsType.F ? InsType.E : InsType.F, subt: mode === InsType.F ? InsSubType.CB : mode, fIds: [taxId], curr: currency} as HoldingInput
+	  );
+  }
+  
+  console.log("Record completed for...", isin);
   if (!insNames[isin as string])
     insNames[isin as string] = name ? name : isin;
   isin = null;
