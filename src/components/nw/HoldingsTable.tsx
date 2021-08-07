@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Empty } from 'antd';
 import Holding from './Holding';
 
@@ -27,7 +27,7 @@ export default function HoldingsTable({ data, onChange }: HoldingsTableProp) {
 	return ids.length ? (
 		<Fragment>
 			{Object.keys(data).map((key: string) => (
-				<Holding key={key} holding={data[key]} onChange={editHolding} onDelete={deleteHolding} />
+				data[key].qty && <Holding key={key} holding={data[key]} onChange={editHolding} onDelete={deleteHolding} />
 			))}
 		</Fragment>
 	) : (

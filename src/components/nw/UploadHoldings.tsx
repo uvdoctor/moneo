@@ -167,11 +167,16 @@ export default function UploadHoldings() {
 					continue;
 				}
 				if (value.length > 100) continue;
-				if (includesAny(value, ["commission paid", "end of report"])) {
+				if (includesAny(value, ["end of report"])) {
 					eof = true;
 					break;
 				}
-				if (hasData && includesAny(value, ["transaction details"])) break;
+				if (hasData && includesAny(value, ["transaction details", "commission paid"])) {
+					isin = null;
+					quantity = null;
+					name = null;
+					break;
+				}
 				if (
 					holdingStarted &&
 					!hasData &&
@@ -247,10 +252,9 @@ export default function UploadHoldings() {
 						));
 						continue;
 					}
+					continue;
 				}
-				if (quantity) continue;
-				if (!isin && includesAny(value, ["page"])) continue;
-				console.log("Going to check: ", value);
+				if (!isin) continue;
 				let numberOfWords = countWords(value);
 				if (
 					!recordBroken &&
@@ -259,12 +263,13 @@ export default function UploadHoldings() {
 					numberOfWords < 15 &&
 					!value.includes(",")
 				) {
+					console.log("Going to check: ", value);
 					if (includesAny(value, ["bond", "bd", "ncd", "debenture", "sgb"]))
 						insType = InsType.F;
 					else if (value.includes("ETF")) insType = InsSubType.ETF;
 					else if (value.includes("REIT") || value.includes("FMP"))
 						insType = InsSubType.M;
-					else insType = InsSubType.S;
+					else if(insType !== InsSubType.M) insType = InsSubType.S;
 					if (checkForMultiple) numberAtEnd = getNumberAtEnd(value);
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
@@ -300,6 +305,7 @@ export default function UploadHoldings() {
 					fv = null;
 					console.log("Detected name: ", name);
 				}
+				if(!isin && !name) continue;
 				let qty: number | null =
 					checkForMultiple && name && numberAtEnd ? numberAtEnd : getQty(value);
 				if (!qty) continue;
@@ -352,7 +358,6 @@ export default function UploadHoldings() {
 		setMutualFunds(mfs);
 		setETFs(etfs);
 		setShowInsUpload(true);
-		console.log(equities);
 	};
 
 	return (

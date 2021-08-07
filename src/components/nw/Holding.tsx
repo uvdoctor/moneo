@@ -14,7 +14,6 @@ interface HoldingProp {
 
 export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 	const [ isEditMode, setEditMode ] = useState(false);
-	console.log('Holding is: ', holding);
 
 	function onEdit() {
 		setEditMode(true);

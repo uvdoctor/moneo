@@ -49,6 +49,7 @@ export default function HoldingsDetails() {
 							title="Real-time Analysis"
 							extra={[
 								<Button
+									key="save"
 									icon={<SaveOutlined />}
 									onClick={() => {}}
 									size="large"
@@ -77,7 +78,7 @@ export default function HoldingsDetails() {
 			</div>
 			<div className="nw-container">
 				<ResultCarousel results={results} />
-				<DataSwitcher title={<h3>Holdings details</h3>}>
+				<DataSwitcher title="Holdings details">
 					<Chart>
 						<HoldingsChart />
 					</Chart>
