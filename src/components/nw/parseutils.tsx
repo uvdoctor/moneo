@@ -49,7 +49,6 @@ export const getQty = (val: string) => {
 
 export const hasHoldingStarted = (value: string) =>
 	includesAny(value, [
-		"holding statement",
 		"holding details",
 		"as of",
 		"as on",
@@ -89,7 +88,9 @@ export const shouldIgnore = (value: string) =>
 		"valuation",
 		"negative",
 		"positive",
-		"nomination"
+		"nomination",
+		"category",
+		"client"
 	]);
 
 export const getInsTypeFromName = (isin: string | null, insType: string | null, value: string) => {

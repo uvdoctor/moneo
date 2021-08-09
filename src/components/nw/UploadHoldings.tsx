@@ -206,6 +206,13 @@ export default function UploadHoldings() {
 				}
 				if (shouldIgnore(value)) continue;
 				let retVal = getISIN(value);
+				if(retVal) {
+					if(!name && !isin && quantity) {
+						quantity = null;
+						lastQtyCapture = null;
+						fv = null;
+					}
+				}
 				if (!retVal && checkForMultiple) {
 					retVal = contains(value);
 				}
