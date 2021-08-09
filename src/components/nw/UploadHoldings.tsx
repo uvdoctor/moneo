@@ -213,7 +213,7 @@ export default function UploadHoldings() {
 						"name",
 						"about",
 						"no.",
-						"year",
+						"year"
 					])
 				)
 					continue;
