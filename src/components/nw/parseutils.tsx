@@ -51,10 +51,45 @@ export const hasHoldingStarted = (value: string) =>
 	includesAny(value, [
 		"holding statement",
 		"holding details",
-		"portfolio summary",
 		"as of",
 		"as on",
-		"no transaction",
+	]);
+
+export const shouldIgnore = (value: string) => 
+	includesAny(value, [
+		"closing",
+		"opening",
+		"summary",
+		"year",
+		"portfolio",
+		"total",
+		"+",
+		"^",
+		"pledged",
+		"equities",
+		"listed",
+		"not",
+		"value (",
+		"value in",
+		"free b",
+		"consolidated",
+		"statement",
+		"account",
+		"available",
+		"name",
+		"about",
+		"no.",
+		"year",
+		"invested",
+		"registration",
+		"status",
+		"frozen",
+		"`",
+		"individual",
+		"valuation",
+		"negative",
+		"positive",
+		"nomination"
 	]);
 
 export const removeDuplicates = (value: string) => {

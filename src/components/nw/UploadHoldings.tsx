@@ -4,7 +4,7 @@ import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import HoldingsTable from "./HoldingsTable";
 import { NWContext } from "./NWContext";
-import { getUploaderSettings } from "./parseutils";
+import { getUploaderSettings, shouldIgnore } from "./parseutils";
 import { isMobileDevice } from "../utils";
 import { HoldingInput, InsSubType, InsType } from "../../api/goals";
 import {
@@ -24,7 +24,6 @@ import {
 	removeDuplicates,
 } from "../utils";
 import { addFamilyMemberSilently } from "./nwutils";
-
 
 export default function UploadHoldings() {
 	const fsb = useFullScreenBrowser();
@@ -98,7 +97,7 @@ export default function UploadHoldings() {
 		let mfs: any = {};
 		let bonds: any = {};
 		let etfs: any = {};
-		let insType: string = InsSubType.S;
+		let insType: string | null = null;
 		let holdingStarted = false;
 		let insNames: any = {};
 		let recordBroken = false;
@@ -193,34 +192,7 @@ export default function UploadHoldings() {
 					hasFV = true;
 					continue;
 				}
-				if (
-					includesAny(value, [
-						"closing",
-						"opening",
-						"summary",
-						"year",
-						"portfolio",
-						"total",
-						"+",
-						"^",
-						"pledged",
-						"equities",
-						"listed",
-						"not",
-						"value (",
-						"value in",
-						"free b",
-						"consolidated",
-						"statement",
-						"account",
-						"available",
-						"name",
-						"about",
-						"no.",
-						"year"
-					])
-				)
-					continue;
+				if (shouldIgnore(value)) continue;
 				let retVal = getISIN(value);
 				if (!retVal) {
 					retVal = contains(value);
@@ -249,7 +221,7 @@ export default function UploadHoldings() {
 							lastNameCapture,
 							j,
 							hasData,
-							insType,
+							insType as string,
 							equities,
 							mfs,
 							etfs,
@@ -281,7 +253,7 @@ export default function UploadHoldings() {
 						if(isin && isin.startsWith("INF")) insType = InsSubType.M;
 						else insType = InsType.F;
 					} else if (value.includes("ETF")) insType = InsSubType.ETF;
-					else if (value.includes("REIT") || value.includes("FMP"))
+					else if (value.includes("REIT") || value.includes("FMP") || value.includes("Fund"))
 						insType = InsSubType.M;
 					else if(!isin && insType !== InsSubType.M && insType !== InsType.F && insType!== InsSubType.ETF) insType = InsSubType.S;
 					if (checkForMultiple) numberAtEnd = getNumberAtEnd(value);
@@ -353,7 +325,7 @@ export default function UploadHoldings() {
 						lastNameCapture,
 						j,
 						hasData,
-						insType,
+						insType as string,
 						equities,
 						mfs,
 						etfs,
@@ -427,42 +399,34 @@ export default function UploadHoldings() {
 			>
 				<Tabs defaultActiveKey="E" type="card">
 					<TabPane key="E" tab={
-						<Fragment>
-							Equities
-							<Row justify="center">
-								<Col><Badge count={equitiesNum} showZero /></Col>
-							</Row>
-						</Fragment>
+						<Row align="middle">
+							<Col>Equities&nbsp;</Col>
+							<Col><Badge count={equitiesNum} showZero /></Col>
+						</Row>
 					}>
 						<HoldingsTable data={equities} onChange={setEquities} num={equitiesNum} onNumChange={setEquitiesNum} />
 					</TabPane>
 					<TabPane key="B" tab={
-						<Fragment>
-							Bonds
-							<Row justify="center">
-								<Col><Badge count={bondsNum} showZero /></Col>
-							</Row>
-						</Fragment>
+						<Row align="middle">
+							<Col>Bonds&nbsp;</Col>
+							<Col><Badge count={bondsNum} showZero /></Col>
+						</Row>
 					}>
 						<HoldingsTable data={bonds} onChange={setBonds} num={bondsNum} onNumChange={setBondsNum} />
 					</TabPane>
 					<TabPane key="M" tab={
-						<Fragment>
-							Mutual Funds
-							<Row justify="center">
-								<Col><Badge count={mfsNum} showZero /></Col>
-							</Row>
-						</Fragment>
+						<Row align="middle">
+							<Col>Mutual Funds&nbsp;</Col>
+							<Col><Badge count={mfsNum} showZero /></Col>
+						</Row>
 					}>
 						<HoldingsTable data={mutualFunds} onChange={setMutualFunds} num={mfsNum} onNumChange={setMFsNum} />
 					</TabPane>
 					<TabPane key="ETF" tab={
-						<Fragment>
-							ETFs
-							<Row justify="center">
-								<Col><Badge count={etfsNum} showZero /></Col>
-							</Row>
-						</Fragment>
+						<Row align="middle">
+							<Col>ETFs&nbsp;</Col>
+							<Col><Badge count={etfsNum} showZero /></Col>
+						</Row>
 					}>
 						<HoldingsTable data={etfs} onChange={setETFs} num={etfsNum} onNumChange={setETFsNum} />
 					</TabPane>
