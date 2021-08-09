@@ -4,7 +4,7 @@ import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import HoldingsTable from "./HoldingsTable";
 import { NWContext } from "./NWContext";
-import { getUploaderSettings, shouldIgnore } from "./parseutils";
+import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgnore } from "./parseutils";
 import { isMobileDevice } from "../utils";
 import { HoldingInput, InsSubType, InsType } from "../../api/goals";
 import {
@@ -92,6 +92,18 @@ export default function UploadHoldings() {
 		setShowInsUpload(false);
 	}
 	
+	const setValues = (equities: any, bonds: any, mfs: any, etfs: any) => {
+		setBonds(bonds);
+		setEquities(equities);
+		setMutualFunds(mfs);
+		setETFs(etfs);
+		setEquitiesNum(Object.keys(equities).length);
+		setBondsNum(Object.keys(bonds).length);
+		setETFsNum(Object.keys(etfs).length);
+		setMFsNum(Object.keys(mfs).length);
+		setShowInsUpload(true);
+	};
+
 	const parseHoldings = async (pdf: any) => {
 		let equities: any = {};
 		let mfs: any = {};
@@ -194,7 +206,7 @@ export default function UploadHoldings() {
 				}
 				if (shouldIgnore(value)) continue;
 				let retVal = getISIN(value);
-				if (!retVal) {
+				if (!retVal && checkForMultiple) {
 					retVal = contains(value);
 				}
 				if (retVal) {
@@ -202,13 +214,11 @@ export default function UploadHoldings() {
 					if(isin && retVal && !quantity) {
 						isin = null;
 						name = null;
+						fv = null;
 						recordBroken = false;
 					}
 					isin = retVal;
-					if (isin.startsWith("INF")) {
-						if (insType !== InsSubType.ETF) insType = InsSubType.M;
-					} else if (isin.startsWith("IN0")) insType = InsType.F;
-					else if(isin.startsWith("INE")) insType = InsSubType.S;
+					insType = getInsTypeFromISIN(isin, insType);
 					if (isin && quantity) {
 						({
 							recordBroken,
@@ -249,13 +259,7 @@ export default function UploadHoldings() {
 				) {
 					console.log("Going to check: ", value);
 					if(name && includesAny(value, ["page"])) continue;
-					if (includesAny(value, ["bond", "ncd", "debenture", "sgb"])) {
-						if(isin && isin.startsWith("INF")) insType = InsSubType.M;
-						else insType = InsType.F;
-					} else if (value.includes("ETF")) insType = InsSubType.ETF;
-					else if (value.includes("REIT") || value.includes("FMP") || value.includes("Fund"))
-						insType = InsSubType.M;
-					else if(!isin && insType !== InsSubType.M && insType !== InsType.F && insType!== InsSubType.ETF) insType = InsSubType.S;
+					insType = getInsTypeFromName(isin, insType, value);
 					if (checkForMultiple) numberAtEnd = getNumberAtEnd(value);
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
@@ -340,15 +344,7 @@ export default function UploadHoldings() {
 				}
 			}
 		}
-		setBonds(bonds);
-		setEquities(equities);
-		setMutualFunds(mfs);
-		setETFs(etfs);
-		setEquitiesNum(Object.keys(equities).length);
-		setBondsNum(Object.keys(bonds).length);
-		setETFsNum(Object.keys(etfs).length);
-		setMFsNum(Object.keys(mfs).length);
-		setShowInsUpload(true);
+		setValues(equities, bonds, mfs, etfs);
 	};
 
 	return (

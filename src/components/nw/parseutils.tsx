@@ -92,6 +92,25 @@ export const shouldIgnore = (value: string) =>
 		"nomination"
 	]);
 
+export const getInsTypeFromName = (isin: string | null, insType: string | null, value: string) => {
+	if (includesAny(value, ["bond", "ncd", "debenture", "sgb"])) {
+		if(isin && isin.startsWith("INF")) return InsSubType.M;
+		else return InsType.F;
+	} else if (value.includes("ETF")) return InsSubType.ETF;
+	else if (value.includes("REIT") || value.includes("FMP") || value.includes("Fund"))
+		return InsSubType.M;
+	else if(!isin && insType !== InsSubType.M && insType !== InsType.F && insType!== InsSubType.ETF) return InsSubType.S;
+	return insType;
+};
+
+export const getInsTypeFromISIN = (isin: string, insType: string | null) => {
+	if (isin.startsWith("INF")) {
+		if (insType !== InsSubType.ETF) return InsSubType.M;
+	} else if (isin.startsWith("IN0")) return InsType.F;
+	else if(isin.startsWith("INE")) return InsSubType.S;
+	return insType;
+};
+
 export const removeDuplicates = (value: string) => {
   let values = value.split(" ");
   for (let i = 2; i < values.length; i++) {
