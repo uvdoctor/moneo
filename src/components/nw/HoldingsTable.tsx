@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Empty } from 'antd';
 import Holding from './Holding';
 
@@ -11,12 +11,12 @@ interface HoldingsTableProp {
 }
 
 export default function HoldingsTable({ data, onChange }: HoldingsTableProp) {
-	const [ids, setIds] = useState<Array<string>>(Object.keys(data));
+	const [numOfHoldings, setNumOfHoldings] = useState<number>(Object.keys(data).length);
 
 	const deleteHolding = (id: string) => {
 		delete data[id];
-		setIds([...Object.keys(data)]);
 		onChange(data);
+		setNumOfHoldings(numOfHoldings - 1);
 	};
 
 	const editHolding = (holding: HoldingInput) => {
@@ -24,7 +24,15 @@ export default function HoldingsTable({ data, onChange }: HoldingsTableProp) {
 		onChange(data);
 	};
 
-	return ids.length ? (
+	useEffect(() => {
+		setNumOfHoldings(Object.keys(data).length);
+	}, []);
+
+	useEffect(() => {
+		setNumOfHoldings(Object.keys(data).length);
+	}, [Object.keys(data)]);
+
+	return numOfHoldings ? (
 		<Fragment>
 			{Object.keys(data).map((key: string) => (
 				data[key].qty && <Holding key={key} holding={data[key]} onChange={editHolding} onDelete={deleteHolding} />

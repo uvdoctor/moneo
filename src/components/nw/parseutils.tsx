@@ -52,7 +52,6 @@ export const hasHoldingStarted = (value: string) =>
 		"holding statement",
 		"holding as of",
 		"holding as on",
-		"holdings",
 		"holding details",
 		"portfolio summary",
 		"balances as of",
@@ -92,7 +91,6 @@ export const completeRecord = (recordBroken: boolean, lastNameCapture: number | 
 		{id: isin, qty: quantity as number, name: name ? name : isin, type: mode !== InsType.F ? InsType.E : InsType.F, subt: mode === InsType.F ? InsSubType.CB : mode, fIds: [taxId], curr: currency} as HoldingInput
 	  );
   }
-  
   console.log("Record completed for...", isin);
   if (!insNames[isin as string])
     insNames[isin as string] = name ? name : isin;

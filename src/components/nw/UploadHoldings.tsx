@@ -48,7 +48,6 @@ export default function UploadHoldings() {
 	}: any = useContext(NWContext);
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
-	console.log("Holdings: ", holdings);
 
 	useEffect(() => setDrawerVisibility(!holdings || !Object.keys(holdings).length), []);
 
@@ -94,7 +93,7 @@ export default function UploadHoldings() {
 		let mfs: any = {};
 		let bonds: any = {};
 		let etfs: any = {};
-		let insType: string = InsSubType.M;
+		let insType: string = InsSubType.S;
 		let holdingStarted = false;
 		let insNames: any = {};
 		let recordBroken = false;
@@ -171,11 +170,14 @@ export default function UploadHoldings() {
 					eof = true;
 					break;
 				}
-				if (includesAny(value, ["transaction details", "commission paid"])) {
+				if (includesAny(value, ["transaction details", "commission paid", "transaction particulars", "statement of transactions", "other details", "transactions for the period"])) {
 					isin = null;
 					quantity = null;
 					name = null;
-					break;
+					holdingStarted = false;
+					lastQtyCapture = null;
+					lastNameCapture = null;
+					continue;
 				}
 				if (
 					holdingStarted &&
@@ -221,6 +223,11 @@ export default function UploadHoldings() {
 				}
 				if (retVal) {
 					console.log("Detected ISIN: ", retVal);
+					if(isin && retVal && !quantity) {
+						isin = null;
+						name = null;
+						recordBroken = false;
+					}
 					isin = retVal;
 					if (isin.startsWith("INF")) {
 						if (insType !== InsSubType.ETF) insType = InsSubType.M;
@@ -265,12 +272,13 @@ export default function UploadHoldings() {
 					!includesAny(value, ["no :", ","])
 				) {
 					console.log("Going to check: ", value);
+					if(name && includesAny(value, ["page"])) continue;
 					if (includesAny(value, ["bond", "bd", "ncd", "debenture", "sgb"]))
 						insType = InsType.F;
 					else if (value.includes("ETF")) insType = InsSubType.ETF;
 					else if (value.includes("REIT") || value.includes("FMP"))
 						insType = InsSubType.M;
-					else if(insType !== InsSubType.M) insType = InsSubType.S;
+					else if(!isin && insType !== InsSubType.M && insType !== InsType.F && insType!== InsSubType.ETF) insType = InsSubType.S;
 					if (checkForMultiple) numberAtEnd = getNumberAtEnd(value);
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
@@ -306,7 +314,6 @@ export default function UploadHoldings() {
 					fv = null;
 					console.log("Detected name: ", name);
 				}
-				if(!isin && !name) continue;
 				let qty: number | null =
 					checkForMultiple && name && numberAtEnd ? numberAtEnd : getQty(value);
 				if (!qty) continue;
@@ -322,7 +329,7 @@ export default function UploadHoldings() {
 					fv = qty;
 					continue;
 				}
-				if (insType === "B" && !Number.isInteger(qty)) continue;
+				if (insType === InsType.F && !Number.isInteger(qty)) continue;
 				console.log("Detected quantity: ", qty);
 				lastQtyCapture = j;
 				if (lastQtyCapture !== lastNameCapture) checkForMultiple = false;
