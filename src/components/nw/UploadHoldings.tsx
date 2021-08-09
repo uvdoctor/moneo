@@ -259,8 +259,8 @@ export default function UploadHoldings() {
 						));
 						continue;
 					}
+					if(!checkForMultiple) continue;
 				}
-				
 				if (quantity) continue;
 				if (!isin && includesAny(value, ["page"])) continue;
 				let numberOfWords = countWords(value);
@@ -273,9 +273,10 @@ export default function UploadHoldings() {
 				) {
 					console.log("Going to check: ", value);
 					if(name && includesAny(value, ["page"])) continue;
-					if (includesAny(value, ["bond", "bd", "ncd", "debenture", "sgb"]))
-						insType = InsType.F;
-					else if (value.includes("ETF")) insType = InsSubType.ETF;
+					if (includesAny(value, ["bond", "ncd", "debenture", "sgb"])) {
+						if(!isin || !isin.startsWith("INF")) insType = InsType.F;
+						else insType = InsSubType.M;
+					} else if (value.includes("ETF")) insType = InsSubType.ETF;
 					else if (value.includes("REIT") || value.includes("FMP"))
 						insType = InsSubType.M;
 					else if(!isin && insType !== InsSubType.M && insType !== InsType.F && insType!== InsSubType.ETF) insType = InsSubType.S;
@@ -313,6 +314,7 @@ export default function UploadHoldings() {
 					lastQtyCapture = null;
 					fv = null;
 					console.log("Detected name: ", name);
+					if(!checkForMultiple) continue;
 				}
 				let qty: number | null =
 					checkForMultiple && name && numberAtEnd ? numberAtEnd : getQty(value);
