@@ -50,12 +50,10 @@ export const getQty = (val: string) => {
 export const hasHoldingStarted = (value: string) =>
 	includesAny(value, [
 		"holding statement",
-		"holding as of",
-		"holding as on",
 		"holding details",
 		"portfolio summary",
-		"balances as of",
-		"balances as on",
+		"as of",
+		"as on",
 		"no transaction",
 	]);
 
