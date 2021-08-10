@@ -1,3 +1,4 @@
 {
-  "CloudWatchRule": "cron(0 22 ? * MON-FRI *)"
+  "CloudWatchRule": "cron(0 22 ? * MON-FRI *)",
+  "timeout": 900
 }

@@ -1,3 +1,4 @@
+const insertInstrument = require("./insertInstruments");
 const https = require("https");
 const fs = require("fs");
 const fsPromise = require("fs/promises");
@@ -53,8 +54,24 @@ const extractDataFromCSV = async (tempDir, fileName) => {
     let results = [];
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
-      .on("data", ({ SYMBOL, ISIN, CLOSE }) => {
-        results.push({ SYMBOL, ISIN, CLOSE });
+      .on("data", ({ SYMBOL, ISIN, SERIES, LAST, PREVCLOSE }) => {
+        results.push({
+          id: ISIN,
+          sid: SERIES,
+          name: SYMBOL,
+          exchg: "NSE",
+          country: "IN",
+          curr: "INR",
+          type: "E",
+          subt: "S",
+          price: LAST,
+          prev: PREVCLOSE,
+          sm: 0,
+          sy: 0,
+          mm: 0,
+          my: 0,
+          rate: 0,
+        });
       })
       .on("end", async () => {
         await cleanDirectory(
@@ -71,9 +88,40 @@ const extractDataFromCSV = async (tempDir, fileName) => {
   return await end;
 };
 
+const pushData = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let instrumentData = {
+        updatedIDs: [],
+        errorIDs: [],
+      };
+      const alreadyAddedInstruments = await insertInstrument(
+        {},
+        "ListInstruments"
+      );
+      for (let i = 0; i < data.length; i++) {
+        const insertedData =
+          alreadyAddedInstruments.body.data.listInstruments.items.some(
+            (item) => item.id === data[i].id
+          )
+            ? await insertInstrument(data[i], "UpdateInstrument")
+            : await insertInstrument(data[i], "CreateInstrument");
+        insertedData.body.errors
+          ? instrumentData.errorIDs.push(data[i].id)
+          : instrumentData.updatedIDs.push(data[i].id);
+
+        i === data.length - 1 && resolve(instrumentData);
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 module.exports = {
   downloadZip,
   unzipDownloads,
   extractDataFromCSV,
   cleanDirectory,
+  pushData,
 };

@@ -9,6 +9,7 @@
     "url": "latest",
     "csv-parser": "latest",
     "extract-zip": "latest",
-    "axios": "latest"
+    "axios": "latest",
+    "graphql-tag": "latest"
   }
 }

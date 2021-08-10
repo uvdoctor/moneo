@@ -1,33 +1,17 @@
 const https = require("https");
 const AWS = require("aws-sdk");
+const gql = require("graphql-tag");
 const urlParse = require("url").URL;
 const appsyncUrl = process.env.API_GOALS_GRAPHQLAPIENDPOINTOUTPUT;
 const region = process.env.REGION;
 const endpoint = new urlParse(appsyncUrl).hostname.toString();
 const graphqlQuery = require("./query.js").mutation;
 const apiKey = process.env.API_GOALS_GRAPHQLAPIKEYOUTPUT;
-
-module.exports = async function insertInstrument (event){
+module.exports = async function insertInstrument(inputData, operationName) {
   const req = new AWS.HttpRequest(appsyncUrl, region);
 
   const item = {
-    input: {
-      id: "101",
-      sid: "12",
-      name: "Service",
-      exchg: "BSE",
-      country: "IN",
-      curr: "11",
-      type: "E",
-      subt: "S",
-      price: 12.00,
-      prev: 11.99,
-      sm: 1,
-      sy: 2,
-      mm: 3,
-      my: 4,
-      rate: 5.5
-    },
+    input: inputData,
   };
 
   req.method = "POST";
@@ -35,8 +19,8 @@ module.exports = async function insertInstrument (event){
   req.headers.host = endpoint;
   req.headers["Content-Type"] = "application/json";
   req.body = JSON.stringify({
-    query: graphqlQuery,
-    operationName: "createInstrument",
+    query: graphqlQuery[operationName],
+    operationName: operationName,
     variables: item,
   });
   if (apiKey) {

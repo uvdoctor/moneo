@@ -325,3 +325,25 @@ type Holdings @model @auth(rules: [{ allow: owner }]) {
 	crypto: [Holding!]
 	ins: [Insurance!]
 }
+
+input CreateBatchInstrument {
+  id: String!
+  sid: String
+  name: String!
+  exchg: String
+  country: String!
+  curr: String!
+  type: InsType!
+  subt: InsSubType!
+  price: Float!
+  prev: Float
+  sm: Int
+  sy: Int
+  mm: Int
+  my: Int
+  rate: Float
+}
+
+type Mutation {
+  batchAddInstruments(input: [CreateBatchInstrument]): [Instrument]
+}
