@@ -49,16 +49,68 @@ export const getQty = (val: string) => {
 
 export const hasHoldingStarted = (value: string) =>
 	includesAny(value, [
-		"holding statement",
-		"holding as of",
-		"holding as on",
-		"holdings",
 		"holding details",
-		"portfolio summary",
-		"balances as of",
-		"balances as on",
-		"no transaction",
+		"as of",
+		"as on",
 	]);
+
+export const shouldIgnore = (value: string) => 
+	includesAny(value, [
+		"closing",
+		"opening",
+		"summary",
+		"year",
+		"portfolio",
+		"total",
+		"+",
+		"^",
+		"pledged",
+		"equities",
+		"listed",
+		"not",
+		"value (",
+		"value in",
+		"free b",
+		"consolidated",
+		"statement",
+		"account",
+		"available",
+		"name",
+		"about",
+		"no.",
+		"year",
+		"invested",
+		"registration",
+		"status",
+		"frozen",
+		"`",
+		"individual",
+		"valuation",
+		"negative",
+		"positive",
+		"nomination",
+		"category",
+		"client"
+	]);
+
+export const getInsTypeFromName = (isin: string | null, insType: string | null, value: string) => {
+	if (includesAny(value, ["bond", "ncd", "debenture", "sgb"])) {
+		if(isin && isin.startsWith("INF")) return InsSubType.M;
+		else return InsType.F;
+	} else if (value.includes("ETF")) return InsSubType.ETF;
+	else if (value.includes("REIT") || value.includes("FMP") || value.includes("Fund"))
+		return InsSubType.M;
+	else if(!isin && insType !== InsSubType.M && insType !== InsType.F && insType!== InsSubType.ETF) return InsSubType.S;
+	return insType;
+};
+
+export const getInsTypeFromISIN = (isin: string, insType: string | null) => {
+	if (isin.startsWith("INF")) {
+		if (insType !== InsSubType.ETF) return InsSubType.M;
+	} else if (isin.startsWith("IN0")) return InsType.F;
+	else if(isin.startsWith("INE")) return InsSubType.S;
+	return insType;
+};
 
 export const removeDuplicates = (value: string) => {
   let values = value.split(" ");
@@ -77,13 +129,22 @@ export const completeRecord = (recordBroken: boolean, lastNameCapture: number | 
     lastNameCapture = null;
     recordBroken = false;
   }
-  console.log("Record completed...");
   hasData = true;
-  appendValue(
-    mode === InsSubType.S ? equities : mode === InsSubType.M ? mfs : mode === InsSubType.ETF ? etfs : bonds,
-    isin as string,
-    {id: isin, qty: quantity as number, name: name ? name : isin, type: mode !== InsType.F ? InsType.E : InsType.F, subt: mode === InsType.F ? InsSubType.CB : mode, fIds: [taxId], curr: currency} as HoldingInput
-  );
+  let existingEntry = null;
+  if (insNames[isin as string]) {
+	let list = mode === InsSubType.S ? equities : mode === InsSubType.M ? mfs : mode === InsSubType.ETF ? etfs : bonds;
+	if(list[isin as string]) existingEntry = list[isin as string];
+  } 
+  if(existingEntry)
+  	existingEntry.qty += quantity as number;
+  else {
+	appendValue(
+		mode === InsSubType.S ? equities : mode === InsSubType.M ? mfs : mode === InsSubType.ETF ? etfs : bonds,
+		isin as string,
+		{id: isin, qty: quantity as number, name: name ? name : isin, type: mode !== InsType.F ? InsType.E : InsType.F, subt: mode === InsType.F ? InsSubType.CB : mode, fIds: [taxId], curr: currency} as HoldingInput
+	  );
+  }
+  console.log("Record completed for...", isin);
   if (!insNames[isin as string])
     insNames[isin as string] = name ? name : isin;
   isin = null;
