@@ -109,9 +109,8 @@ const pushData = (data) => {
         insertedData.body.errors
           ? instrumentData.errorIDs.push(data[i].id)
           : instrumentData.updatedIDs.push(data[i].id);
-
-        i === data.length - 1 && resolve(instrumentData);
       }
+      resolve(instrumentData);
     } catch (err) {
       reject(err);
     }
