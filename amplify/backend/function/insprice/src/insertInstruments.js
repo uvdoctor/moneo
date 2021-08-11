@@ -1,6 +1,5 @@
 const https = require("https");
 const AWS = require("aws-sdk");
-const gql = require("graphql-tag");
 const urlParse = require("url").URL;
 const appsyncUrl = process.env.API_GOALS_GRAPHQLAPIENDPOINTOUTPUT;
 const region = process.env.REGION;

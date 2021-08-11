@@ -110,6 +110,7 @@ const pushData = (data) => {
           ? instrumentData.errorIDs.push(data[i].id)
           : instrumentData.updatedIDs.push(data[i].id);
       }
+      console.log(instrumentData)
       resolve(instrumentData);
     } catch (err) {
       reject(err);
