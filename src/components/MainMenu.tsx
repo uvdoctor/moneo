@@ -16,7 +16,7 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 	const router = useRouter();
 	const [ selectedKey, setSelectedKey ] = useState<string>(router.pathname);
 	const { SubMenu } = Menu;
-	const secureRoutes: Array<string> = [ ROUTES.SET, ROUTES.GROW ];
+	const secureRoutes: Array<string> = [ ROUTES.GET, ROUTES.SET, ROUTES.GROW ];
 
 	return (
 		<Fragment>
