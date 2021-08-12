@@ -137,6 +137,12 @@
           ]
         }
       ]
+    },
+    "EODPrice": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": []
     }
   },
   "storage": {
