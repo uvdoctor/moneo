@@ -40,14 +40,14 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 							<Link href={ROUTES.FEATURES}>
 								<a>Features</a>
 							</Link>
-						</Menu.Item>*/}
+						</Menu.Item>
 					<Menu.Item>
 						<Link href={ROUTES.SET}>
 							<a>
 								<Button type="link">Login</Button>
 							</a>
 						</Link>
-					</Menu.Item>
+					</Menu.Item>*/}
 				</Menu>
 			)}
 		</Fragment>
