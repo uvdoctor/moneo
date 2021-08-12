@@ -2,6 +2,64 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
+export type CreateBatchInstrument = {
+  id: string,
+  sid?: string | null,
+  name: string,
+  exchg?: string | null,
+  country: string,
+  curr: string,
+  type: InsType,
+  subt: InsSubType,
+  price: number,
+  prev?: number | null,
+  sm?: number | null,
+  sy?: number | null,
+  mm?: number | null,
+  my?: number | null,
+  rate?: number | null,
+};
+
+export enum InsType {
+  E = "E",
+  F = "F",
+  A = "A",
+}
+
+
+export enum InsSubType {
+  S = "S",
+  CB = "CB",
+  GB = "GB",
+  MB = "MB",
+  ETF = "ETF",
+  M = "M",
+  GoldB = "GoldB",
+  REIT = "REIT",
+}
+
+
+export type Instrument = {
+  __typename: "Instrument",
+  id?: string,
+  sid?: string | null,
+  name?: string,
+  exchg?: string | null,
+  country?: string,
+  curr?: string,
+  type?: InsType,
+  subt?: InsSubType,
+  price?: number,
+  prev?: number | null,
+  sm?: number | null,
+  sy?: number | null,
+  mm?: number | null,
+  my?: number | null,
+  rate?: number | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
 export type DeleteFeedbackInput = {
   id: string,
 };
@@ -932,25 +990,6 @@ export type CreateInstrumentInput = {
   rate?: number | null,
 };
 
-export enum InsType {
-  E = "E",
-  F = "F",
-  A = "A",
-}
-
-
-export enum InsSubType {
-  S = "S",
-  CB = "CB",
-  GB = "GB",
-  MB = "MB",
-  ETF = "ETF",
-  M = "M",
-  GoldB = "GoldB",
-  REIT = "REIT",
-}
-
-
 export type ModelInstrumentConditionInput = {
   sid?: ModelStringInput | null,
   name?: ModelStringInput | null,
@@ -981,27 +1020,6 @@ export type ModelInsSubTypeInput = {
   ne?: InsSubType | null,
 };
 
-export type Instrument = {
-  __typename: "Instrument",
-  id?: string,
-  sid?: string | null,
-  name?: string,
-  exchg?: string | null,
-  country?: string,
-  curr?: string,
-  type?: InsType,
-  subt?: InsSubType,
-  price?: number,
-  prev?: number | null,
-  sm?: number | null,
-  sy?: number | null,
-  mm?: number | null,
-  my?: number | null,
-  rate?: number | null,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
 export type UpdateInstrumentInput = {
   id: string,
   sid?: string | null,
@@ -1021,6 +1039,39 @@ export type UpdateInstrumentInput = {
 };
 
 export type DeleteInstrumentInput = {
+  id: string,
+};
+
+export type CreateEODPricesInput = {
+  id: string,
+  price: number,
+  name?: string | null,
+};
+
+export type ModelEODPricesConditionInput = {
+  price?: ModelFloatInput | null,
+  name?: ModelStringInput | null,
+  and?: Array< ModelEODPricesConditionInput | null > | null,
+  or?: Array< ModelEODPricesConditionInput | null > | null,
+  not?: ModelEODPricesConditionInput | null,
+};
+
+export type EODPrices = {
+  __typename: "EODPrices",
+  id?: string,
+  price?: number,
+  name?: string | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateEODPricesInput = {
+  id: string,
+  price?: number | null,
+  name?: string | null,
+};
+
+export type DeleteEODPricesInput = {
   id: string,
 };
 
@@ -1264,6 +1315,48 @@ export type ModelInstrumentConnection = {
   __typename: "ModelInstrumentConnection",
   items?:  Array<Instrument | null > | null,
   nextToken?: string | null,
+};
+
+export type ModelEODPricesFilterInput = {
+  id?: ModelStringInput | null,
+  price?: ModelFloatInput | null,
+  name?: ModelStringInput | null,
+  and?: Array< ModelEODPricesFilterInput | null > | null,
+  or?: Array< ModelEODPricesFilterInput | null > | null,
+  not?: ModelEODPricesFilterInput | null,
+};
+
+export type ModelEODPricesConnection = {
+  __typename: "ModelEODPricesConnection",
+  items?:  Array<EODPrices | null > | null,
+  nextToken?: string | null,
+};
+
+export type BatchAddInstrumentsMutationVariables = {
+  input?: Array< CreateBatchInstrument | null > | null,
+};
+
+export type BatchAddInstrumentsMutation = {
+  batchAddInstruments?:  Array< {
+    __typename: "Instrument",
+    id: string,
+    sid?: string | null,
+    name: string,
+    exchg?: string | null,
+    country: string,
+    curr: string,
+    type: InsType,
+    subt: InsSubType,
+    price: number,
+    prev?: number | null,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
+    rate?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null > | null,
 };
 
 export type DeleteFeedbackMutationVariables = {
@@ -2883,6 +2976,54 @@ export type DeleteInstrumentMutation = {
   } | null,
 };
 
+export type CreateEodPricesMutationVariables = {
+  input?: CreateEODPricesInput,
+  condition?: ModelEODPricesConditionInput | null,
+};
+
+export type CreateEodPricesMutation = {
+  createEODPrices?:  {
+    __typename: "EODPrices",
+    id: string,
+    price: number,
+    name?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateEodPricesMutationVariables = {
+  input?: UpdateEODPricesInput,
+  condition?: ModelEODPricesConditionInput | null,
+};
+
+export type UpdateEodPricesMutation = {
+  updateEODPrices?:  {
+    __typename: "EODPrices",
+    id: string,
+    price: number,
+    name?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteEodPricesMutationVariables = {
+  input?: DeleteEODPricesInput,
+  condition?: ModelEODPricesConditionInput | null,
+};
+
+export type DeleteEodPricesMutation = {
+  deleteEODPrices?:  {
+    __typename: "EODPrices",
+    id: string,
+    price: number,
+    name?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type GetGoalQueryVariables = {
   id?: string,
 };
@@ -3907,6 +4048,44 @@ export type ListInstrumentsQuery = {
       mm?: number | null,
       my?: number | null,
       rate?: number | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetEodPricesQueryVariables = {
+  id?: string,
+};
+
+export type GetEodPricesQuery = {
+  getEODPrices?:  {
+    __typename: "EODPrices",
+    id: string,
+    price: number,
+    name?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListEodPricessQueryVariables = {
+  id?: string | null,
+  filter?: ModelEODPricesFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListEodPricessQuery = {
+  listEODPricess?:  {
+    __typename: "ModelEODPricesConnection",
+    items?:  Array< {
+      __typename: "EODPrices",
+      id: string,
+      price: number,
+      name?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -5445,6 +5624,39 @@ export type OnDeleteInstrumentSubscription = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateEodPricesSubscription = {
+  onCreateEODPrices?:  {
+    __typename: "EODPrices",
+    id: string,
+    price: number,
+    name?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateEodPricesSubscription = {
+  onUpdateEODPrices?:  {
+    __typename: "EODPrices",
+    id: string,
+    price: number,
+    name?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteEodPricesSubscription = {
+  onDeleteEODPrices?:  {
+    __typename: "EODPrices",
+    id: string,
+    price: number,
+    name?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,

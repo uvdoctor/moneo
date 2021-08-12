@@ -344,6 +344,21 @@ input CreateBatchInstrument {
   rate: Float
 }
 
+type EODPrices 
+	@model
+	@aws_iam
+	@key(fields: ["id"])
+	@auth(
+		rules: [
+			{ allow: private, provider: iam, operations: [create, read, update, delete] }
+			{ allow: private, operations: [read] }
+		]
+	) {
+	id: String!
+	price: Float!
+	name: String
+}
+
 type Mutation {
   batchAddInstruments(input: [CreateBatchInstrument]): [Instrument]
 }

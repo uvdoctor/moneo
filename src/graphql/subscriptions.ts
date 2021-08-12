@@ -1346,3 +1346,36 @@ export const onDeleteInstrument = /* GraphQL */ `
     }
   }
 `;
+export const onCreateEodPrices = /* GraphQL */ `
+  subscription OnCreateEodPrices {
+    onCreateEODPrices {
+      id
+      price
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateEodPrices = /* GraphQL */ `
+  subscription OnUpdateEodPrices {
+    onUpdateEODPrices {
+      id
+      price
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteEodPrices = /* GraphQL */ `
+  subscription OnDeleteEodPrices {
+    onDeleteEODPrices {
+      id
+      price
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;

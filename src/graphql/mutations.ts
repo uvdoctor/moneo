@@ -2,6 +2,29 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const batchAddInstruments = /* GraphQL */ `
+  mutation BatchAddInstruments($input: [CreateBatchInstrument]) {
+    batchAddInstruments(input: $input) {
+      id
+      sid
+      name
+      exchg
+      country
+      curr
+      type
+      subt
+      price
+      prev
+      sm
+      sy
+      mm
+      my
+      rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const deleteFeedback = /* GraphQL */ `
   mutation DeleteFeedback(
     $input: DeleteFeedbackInput!
@@ -1440,6 +1463,48 @@ export const deleteInstrument = /* GraphQL */ `
       mm
       my
       rate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createEodPrices = /* GraphQL */ `
+  mutation CreateEodPrices(
+    $input: CreateEODPricesInput!
+    $condition: ModelEODPricesConditionInput
+  ) {
+    createEODPrices(input: $input, condition: $condition) {
+      id
+      price
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateEodPrices = /* GraphQL */ `
+  mutation UpdateEodPrices(
+    $input: UpdateEODPricesInput!
+    $condition: ModelEODPricesConditionInput
+  ) {
+    updateEODPrices(input: $input, condition: $condition) {
+      id
+      price
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteEodPrices = /* GraphQL */ `
+  mutation DeleteEodPrices(
+    $input: DeleteEODPricesInput!
+    $condition: ModelEODPricesConditionInput
+  ) {
+    deleteEODPrices(input: $input, condition: $condition) {
+      id
+      price
+      name
       createdAt
       updatedAt
     }

@@ -911,3 +911,40 @@ export const listInstruments = /* GraphQL */ `
     }
   }
 `;
+export const getEodPrices = /* GraphQL */ `
+  query GetEodPrices($id: String!) {
+    getEODPrices(id: $id) {
+      id
+      price
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listEodPricess = /* GraphQL */ `
+  query ListEodPricess(
+    $id: String
+    $filter: ModelEODPricesFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listEODPricess(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        price
+        name
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
