@@ -57,7 +57,7 @@ const extractDataFromCSV = async (tempDir, fileName) => {
       .on("data", ({ SYMBOL, ISIN, SERIES, LAST, PREVCLOSE }) => {
         results.push({
           id: ISIN,
-          sid: SERIES,
+          sid: SYMBOL,
           name: SYMBOL,
           exchg: "NSE",
           country: "IN",
