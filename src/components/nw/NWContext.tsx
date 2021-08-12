@@ -1,17 +1,16 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import "./nw.less";
 import HoldingsDetails from "./HoldingsDetails";
-//import { AppContext } from "../AppContext";
-//import { createEmptyHoldings, getRelatedCurrencies, loadAllFamilyMembers, loadHoldings } from "./nwutils";
-import { createEmptyHoldings } from "./nwutils";
-//import { notification } from "antd";
+import { AppContext } from "../AppContext";
+import { createEmptyHoldings, getRelatedCurrencies, loadAllFamilyMembers, loadHoldings } from "./nwutils";
+import { notification } from "antd";
 import { CreateHoldingsInput } from "../../api/goals";
 import InstrumentValuation from "./InstrumentValuation";
 
 const NWContext = createContext({});
 
 function NWContextProvider() {
-	//const { defaultCurrency, appContextLoaded }: any = useContext(AppContext);
+	const { defaultCurrency, appContextLoaded }: any = useContext(AppContext);
 	const [allFamily, setAllFamily] = useState<any>({});
 	const [holdings, setHoldings] = useState<CreateHoldingsInput>(createEmptyHoldings());
 	const [selectedMembers, setSelectedMembers] = useState<Array<string>>(['']);
@@ -25,8 +24,8 @@ function NWContextProvider() {
 	const [activeTab, setActiveTab] = useState<string>("Demat Holdings");
 	const [activeTabSum, setActiveTabSum] = useState<number>(0);
 	const [results, setResults] = useState<Array<any>>([]);
-	//const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
-	//const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
+	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
+	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
 
 	const tabs = {
 		"Demat Holdings": {
@@ -136,7 +135,7 @@ function NWContextProvider() {
 		},
 	};
 
-	/*const initializeFamilyList = async () => {
+	const initializeFamilyList = async () => {
         try {
             setAllFamily(await loadAllFamilyMembers());
 			setLoadingFamily(false);
@@ -158,16 +157,16 @@ function NWContextProvider() {
             notification.error({message: 'Holdings not loaded', description: 'Sorry! Unable to fetch holdings.'});
             return false;
         }
-    };*/
+    };
 
-	/*useEffect(() => {
+	useEffect(() => {
 		if(appContextLoaded) initializeHoldings();
-	}, [appContextLoaded]);*/
+	}, [appContextLoaded]);
 
-    /*useEffect(() => {
+    useEffect(() => {
         initializeFamilyList();
     }
-    , []);*/
+    , []);
 
 	return (
 		<NWContext.Provider
@@ -197,8 +196,8 @@ function NWContextProvider() {
 				setSelectedCurrency,
 				activeTabSum,
 				setActiveTabSum,
-				//loadingFamily,
-				//loadingHoldings,
+				loadingFamily,
+				loadingHoldings,
 				currencyList,
 				setCurrencyList
 			}}

@@ -1,4 +1,4 @@
-//import { withAuthenticator } from '@aws-amplify/ui-react';
+import { withAuthenticator } from '@aws-amplify/ui-react';
 import React from 'react';
 import { NWContextProvider } from '../components/nw/NWContext';
 import Amplify from 'aws-amplify';
@@ -7,7 +7,7 @@ import BasicPage from '../components/BasicPage';
 
 Amplify.configure(awsmobile);
 
-export default function Get() {
+function Get() {
 	return (
 		<BasicPage title="Get Real-time Analysis">
 			<NWContextProvider />
@@ -15,4 +15,4 @@ export default function Get() {
 	);
 }
 
-//export default withAuthenticator(Get);
+export default withAuthenticator(Get);

@@ -16,7 +16,7 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 	const router = useRouter();
 	const [ selectedKey, setSelectedKey ] = useState<string>(router.pathname);
 	const { SubMenu } = Menu;
-	const secureRoutes: Array<string> = [ ROUTES.SET, ROUTES.GROW ];
+	const secureRoutes: Array<string> = [ ROUTES.GET, ROUTES.SET, ROUTES.GROW ];
 
 	return (
 		<Fragment>
@@ -40,14 +40,14 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 							<Link href={ROUTES.FEATURES}>
 								<a>Features</a>
 							</Link>
-						</Menu.Item>*/}
+						</Menu.Item>
 					<Menu.Item>
 						<Link href={ROUTES.SET}>
 							<a>
 								<Button type="link">Login</Button>
 							</a>
 						</Link>
-					</Menu.Item>
+					</Menu.Item>*/}
 				</Menu>
 			)}
 		</Fragment>
