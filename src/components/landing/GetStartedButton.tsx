@@ -1,11 +1,10 @@
 import { Button } from "antd";
 import Link from "next/link";
-import { ROUTES } from "../../CONSTANTS";
 import RollingImages from "../RollingImages";
 
 export default function GetStartedButton() {
 	return (
-		<Link href={ROUTES.SET}>
+		<Link href="#">
 			<Button
 				icon={<RollingImages />}
 				type="primary"
