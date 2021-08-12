@@ -20,7 +20,7 @@ export default function Footer() {
 		<Content className="footer">
 			<Row justify="center">
 				<Col>
-					<h3><strong>Moneo India Private Limited</strong></h3>
+					<h3><strong>Moneo Advisors Private Limited</strong></h3>
 					<p>
 						1, Anita Society, Nr. Vishwakunj Cross-roads,<br />
 						Narayan Nagar Road, Paldi.<br />

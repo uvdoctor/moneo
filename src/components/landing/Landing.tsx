@@ -57,7 +57,7 @@ export default function Landing() {
               count="01"
               title="Get"
               subTitle="Real-time Analysis"
-              link={ROUTES.SET}
+              link="#"
               content="Automatically track your net worth, i.e. what you own minus what you owe, across bank accounts, credit cards, deposits, NPS, loans, etc; and investment portfolio performance."
               imgSrc={
                 defaultCountry === "IN"
@@ -70,7 +70,7 @@ export default function Landing() {
               count="02"
               title="Set"
               subTitle="Goals"
-              link={ROUTES.GET}
+              link="#"
               content="Define your life goals to get a persoalized Financial Plan, including analysis of money and time needed to achieve Financial Independence."
               imgSrc="images/step2.jpg"
             />
@@ -79,7 +79,7 @@ export default function Landing() {
               count="03"
               title="Grow"
               subTitle="Wealth"
-              link={ROUTES.SET}
+              link="#"
               content="Improve savings by identifying money leaks and unwanted expenses, and invest money based on your financial plan, risk appetite and ethics."
               imgSrc="images/step3.jpg"
             />
