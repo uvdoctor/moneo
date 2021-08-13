@@ -5,5 +5,15 @@
       "cloudFormationParameterName": "eodApiKey",
       "environmentVariableName": "EOD_API_KEY"
     }
-  ]
+  ],
+  "permissions": {
+    "api": {
+      "goals": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  }
 }

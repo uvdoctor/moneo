@@ -18,6 +18,14 @@
     },
     "eodApiKey": {
       "Type": "String"
+    },
+    "apigoalsGraphQLAPIIdOutput": {
+      "Type": "String",
+      "Default": "apigoalsGraphQLAPIIdOutput"
+    },
+    "apigoalsGraphQLAPIEndpointOutput": {
+      "Type": "String",
+      "Default": "apigoalsGraphQLAPIEndpointOutput"
     }
   },
   "Conditions": {
@@ -72,6 +80,12 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "API_GOALS_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apigoalsGraphQLAPIIdOutput"
+            },
+            "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT": {
+              "Ref": "apigoalsGraphQLAPIEndpointOutput"
             },
             "EOD_API_KEY": {
               "Ref": "eodApiKey"
@@ -206,6 +220,78 @@
           "Fn::GetAtt": [
             "CloudWatchEvent",
             "Arn"
+          ]
+        }
+      }
+    },
+    "AmplifyResourcesPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "amplify-lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "appsync:Create*",
+                "appsync:StartSchemaCreation",
+                "appsync:GraphQL",
+                "appsync:Get*",
+                "appsync:List*",
+                "appsync:Update*",
+                "appsync:Delete*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:appsync:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":apis/",
+                      {
+                        "Ref": "apigoalsGraphQLAPIIdOutput"
+                      },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:appsync:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":apis/",
+                      {
+                        "Ref": "apigoalsGraphQLAPIIdOutput"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
           ]
         }
       }
