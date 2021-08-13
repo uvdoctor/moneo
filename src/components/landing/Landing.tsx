@@ -13,7 +13,6 @@ import Security from "./Security";
 import GetRich from "./GetRich";
 import Testimonials from "./Testimonials";
 import FinancialIndependence from "./FinancialIndependence";
-import { ROUTES } from "../../CONSTANTS";
 
 import "./Landing.less";
 import { AppContext } from "../AppContext";
