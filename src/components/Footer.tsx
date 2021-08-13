@@ -50,8 +50,7 @@ export default function Footer() {
 			<Row justify="center">
 				<Col>
 					<a href="#">Terms & Conditions</a>&nbsp; | &nbsp;
-					<a href="#">Privacy</a> &nbsp; | &nbsp;
-					<a href="#">Refund</a>
+					<a href="#">Privacy Policy</a> &nbsp; | &nbsp;
 				</Col>
 			</Row>
 			<Row justify="center">
