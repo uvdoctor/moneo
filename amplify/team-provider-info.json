@@ -40,7 +40,7 @@
         },
         "EODPrice": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/EODPrice-55424578686448683352-build.zip",
+          "s3Key": "amplify-builds/EODPrice-5a505445734446663958-build.zip",
           "eodApiKey": "60d03a689523a3.63944368"
         }
       }
