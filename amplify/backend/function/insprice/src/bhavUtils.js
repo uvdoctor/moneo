@@ -49,23 +49,23 @@ const unzipDownloads = async (zipFile, tempDir) => {
   }
 };
 
-const extractDataFromCSV = async (tempDir, fileName) => {
+const extractDataFromCSV = async (tempDir, fileName, type, codes) => {
   const end = new Promise((resolve, reject) => {
     let results = [];
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
-      .on("data", ({ SYMBOL, ISIN, SERIES, LAST, PREVCLOSE }) => {
+      .on("data", (record) => {
         results.push({
-          id: ISIN,
-          sid: SYMBOL,
-          name: SYMBOL,
-          exchg: "NSE",
+          id: record[codes.id],
+          sid: record[codes.sid],
+          name: record[codes.name],
+          exchg: type,
           country: "IN",
           curr: "INR",
           type: "E",
           subt: "S",
-          price: LAST,
-          prev: PREVCLOSE,
+          price: record[codes.price],
+          prev: record[codes.prev],
           sm: 0,
           sy: 0,
           mm: 0,
@@ -76,12 +76,12 @@ const extractDataFromCSV = async (tempDir, fileName) => {
       .on("end", async () => {
         await cleanDirectory(
           tempDir,
-          "Results extracted successfully and directory is cleaned"
+          `${type} results extracted successfully and directory is cleaned`
         );
         resolve(results);
       })
       .on("error", (err) => {
-        cleanDirectory(tempDir, `Unable to read csv file, ${err.message}`);
+        cleanDirectory(tempDir, `Unable to read ${type} csv file, ${err.message}`);
         throw new Error(err.message);
       });
   });
@@ -107,10 +107,10 @@ const pushData = (data) => {
             ? await insertInstrument(data[i], "UpdateInstrument")
             : await insertInstrument(data[i], "CreateInstrument");
         insertedData.body.errors
-          ? instrumentData.errorIDs.push(data[i].id)
+          ? instrumentData.errorIDs.push({id: data[i].id, error: insertedData.body.errors})
           : instrumentData.updatedIDs.push(data[i].id);
       }
-      console.log(instrumentData)
+      console.log(instrumentData);
       resolve(instrumentData);
     } catch (err) {
       reject(err);
