@@ -18,7 +18,7 @@ export default function Footer() {
 
 	return !goal ? (
 		<Content className="footer">
-			<Row justify="center">
+			{/*<Row justify="center">
 				<Col>
 					<h3><strong>Moneo Advisors Private Limited</strong></h3>
 					<p>
@@ -27,7 +27,7 @@ export default function Footer() {
 						Ahmedabad - 380007. Gujarat.
 					</p>
 				</Col>
-			</Row>
+	</Row>*/}
 			<Row justify="center">
 				<Col xs={20} sm={12} md={10} lg={6} className="social-icons">
 					<a target="_blank" href={url} rel="noopener noreferrer">
