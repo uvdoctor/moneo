@@ -1,4 +1,4 @@
-import { Button, Form, Input, Radio, Divider, Row, Col } from "antd";
+import { Button, Col, Form, Input, Radio, Row } from "antd";
 import React, { useContext, useEffect, useRef } from "react";
 import Content from "../Content";
 import { FeedbackType } from "../../api/goals";
@@ -6,13 +6,13 @@ import { FormInstance } from "antd/lib/form";
 import { FeedbackContext } from "./FeedbackContext";
 import TextArea from "antd/lib/input/TextArea";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+/*import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMapMarkerAlt,
   faMobile,
   faEnvelope,
   faTools,
-} from "@fortawesome/free-solid-svg-icons";
+} from "@fortawesome/free-solid-svg-icons";*/
 import { validateCaptcha } from "../utils";
 
 import "./Feedback.less";
@@ -53,7 +53,8 @@ export default function Feedback() {
 
   return (
     <Content className="feedback">
-      <h2>Contact US</h2>
+      <Row justify="center">
+      {/*<h2>Contact US</h2>
       <Divider />
       <Row
         gutter={[
@@ -113,7 +114,7 @@ export default function Feedback() {
               </div>
             </Col>
           </Row>
-        </Col>
+          </Col>*/}
         <Col xs={24} sm={24} md={24} lg={12}>
           <Form
             form={form}
