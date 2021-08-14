@@ -26,6 +26,12 @@
     "apigoalsGraphQLAPIEndpointOutput": {
       "Type": "String",
       "Default": "apigoalsGraphQLAPIEndpointOutput"
+    },
+    "apiGoalsGraphqlapiendpointoutput": {
+      "Type": "String"
+    },
+    "apiGoalsGraphqlapiidoutput": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -82,10 +88,10 @@
               "Ref": "AWS::Region"
             },
             "API_GOALS_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apigoalsGraphQLAPIIdOutput"
+              "Ref": "apiGoalsGraphqlapiidoutput"
             },
             "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT": {
-              "Ref": "apigoalsGraphQLAPIEndpointOutput"
+              "Ref": "apiGoalsGraphqlapiendpointoutput"
             },
             "EOD_API_KEY": {
               "Ref": "eodApiKey"

@@ -1,40 +1,53 @@
 module.exports = {
-    mutation: {
-    createEodPrices : `
-    "mutation CreateEodPrices(
+  mutation: {
+    CreateEodPrices: `mutation CreateEodPrices(
       $input: CreateEODPricesInput!
-      $condition: ModelEODPricesConditionInput) {
-    createEODPrices(input: $input, condition: $condition) {
-      id
-      price
-      name
-      createdAt
-      updatedAt
-    }
-  }`,
-    updateEodPrices : `
-    mutation UpdateEodPrices(
+      $condition: ModelEODPricesConditionInput
+    ) {
+      createEODPrices(input: $input, condition: $condition) {
+        id
+        price
+        name
+        createdAt
+        updatedAt
+      }
+    }`,
+    UpdateEodPrices: `mutation UpdateEodPrices(
       $input: UpdateEODPricesInput!
-      $condition: ModelEODPricesConditionInput) {
-    updateEODPrices(input: $input, condition: $condition) {
-      id
-      price
-      name
-      createdAt
-      updatedAt
+      $condition: ModelEODPricesConditionInput
+    ) {
+      updateEODPrices(input: $input, condition: $condition) {
+        id
+        price
+        name
+        createdAt
+        updatedAt
+      }
+    }`,
+    ListEodPrices: `query ListEodPricess(
+      $id: String
+      $filter: ModelEODPricesFilterInput
+      $limit: Int
+      $nextToken: String
+      $sortDirection: ModelSortDirection
+    ) {
+      listEODPricess(
+        id: $id
+        filter: $filter
+        limit: $limit
+        nextToken: $nextToken
+        sortDirection: $sortDirection
+      ) {
+        items {
+          id
+          price
+          name
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
     }
-  }`,
-    deleteEodPrices : `
-    mutation DeleteEodPrices(
-      $input: DeleteEODPricesInput!
-      $condition: ModelEODPricesConditionInput) {
-    deleteEODPrices(input: $input, condition: $condition) {
-      id
-      price
-      name
-      createdAt
-      updatedAt
-    }
-  }`
-}
+  `
+  }
 }
