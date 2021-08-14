@@ -9,10 +9,6 @@ const apiKey = process.env.API_GOALS_GRAPHQLAPIKEYOUTPUT;
 module.exports = async function insertInstrument(inputData, operationName) {
   const req = new AWS.HttpRequest(appsyncUrl, region);
 
-  const item = {
-    input: inputData,
-  };
-
   req.method = "POST";
   req.path = "/graphql";
   req.headers.host = endpoint;
@@ -20,7 +16,7 @@ module.exports = async function insertInstrument(inputData, operationName) {
   req.body = JSON.stringify({
     query: graphqlQuery[operationName],
     operationName: operationName,
-    variables: item,
+    variables: inputData,
   });
   if (apiKey) {
     req.headers["x-api-key"] = apiKey;

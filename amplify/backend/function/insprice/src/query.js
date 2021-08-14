@@ -75,6 +75,7 @@ module.exports = {
 `,
 ListInstruments: `query ListInstruments(
   $filter: ModelInstrumentFilterInput
+  $limit: Int
   $nextToken: String
 ) {
   listInstruments(

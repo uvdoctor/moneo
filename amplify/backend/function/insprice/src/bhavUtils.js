@@ -81,7 +81,10 @@ const extractDataFromCSV = async (tempDir, fileName, type, codes) => {
         resolve(results);
       })
       .on("error", (err) => {
-        cleanDirectory(tempDir, `Unable to read ${type} csv file, ${err.message}`);
+        cleanDirectory(
+          tempDir,
+          `Unable to read ${type} csv file, ${err.message}`
+        );
         throw new Error(err.message);
       });
   });
@@ -96,7 +99,7 @@ const pushData = (data) => {
         errorIDs: [],
       };
       const alreadyAddedInstruments = await insertInstrument(
-        {},
+        { limit: 10000 },
         "ListInstruments"
       );
       for (let i = 0; i < data.length; i++) {
@@ -104,10 +107,13 @@ const pushData = (data) => {
           alreadyAddedInstruments.body.data.listInstruments.items.some(
             (item) => item.id === data[i].id
           )
-            ? await insertInstrument(data[i], "UpdateInstrument")
-            : await insertInstrument(data[i], "CreateInstrument");
+            ? await insertInstrument({ input: data[i] }, "UpdateInstrument")
+            : await insertInstrument({ input: data[i] }, "CreateInstrument");
         insertedData.body.errors
-          ? instrumentData.errorIDs.push({id: data[i].id, error: insertedData.body.errors})
+          ? instrumentData.errorIDs.push({
+              id: data[i].id,
+              error: insertedData.body.errors,
+            })
           : instrumentData.updatedIDs.push(data[i].id);
       }
       console.log(instrumentData);
