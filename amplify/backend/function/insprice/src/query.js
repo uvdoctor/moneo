@@ -80,7 +80,7 @@ ListInstruments: `query ListInstruments(
 ) {
   listInstruments(
     filter: $filter
-    limit: 10000
+    limit: $limit
     nextToken: $nextToken
   ) {
     items {
