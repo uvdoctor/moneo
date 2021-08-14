@@ -15,8 +15,6 @@ exports.handler = async (inputData) => {
     },
     "UpdateEodPrices"
   );
-  insertedData?.body?.errors
-    ? console.log(insertedData?.body?.errors)
-    : insertedData?.body?.data.createEODPrices;
+  console.log("Operation result:", insertedData)
   return insertedData;
 };
