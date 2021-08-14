@@ -5,10 +5,6 @@ const eodHistoricalDataUrl = `https://eodhistoricaldata.com/api/real-time/EUR.FO
 exports.handler = async (inputData) => {
   const { data } = await axios.get(eodHistoricalDataUrl);
   const { code, close } = data;
-
-  const alreadyInsertedData = await (graphqlOperation({},'ListEodPrices'))
-  console.log(alreadyInsertedData);
-  
   const insertedData = await graphqlOperation(
     {
       input: {
@@ -19,8 +15,6 @@ exports.handler = async (inputData) => {
     },
     "UpdateEodPrices"
   );
-
-  
 
   console.log("Operation result:", insertedData)
   return alreadyInsertedData;
