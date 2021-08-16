@@ -2,6 +2,14 @@
   "lambdaLayers": [],
   "environmentVariableList": [
     {
+      "cloudFormationParameterName": "apiGoalsGraphqlapiendpointoutput",
+      "environmentVariableName": "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT"
+    },
+    {
+      "cloudFormationParameterName": "apiGoalsGraphqlapiidoutput",
+      "environmentVariableName": "API_GOALS_GRAPHQLAPIIDOUTPUT"
+    },
+    {
       "cloudFormationParameterName": "eodApiKey",
       "environmentVariableName": "EOD_API_KEY"
     }

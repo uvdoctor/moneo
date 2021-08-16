@@ -7,8 +7,10 @@ const endpoint = new urlParse(appsyncUrl).hostname.toString();
 const graphqlQuery = require("./query.js").mutation;
 const apiKey = process.env.API_GOALS_GRAPHQLAPIKEYOUTPUT;
 module.exports = async function insertInstrument(inputData, operationName) {
+  const items = {
+    input : inputData
+  }
   const req = new AWS.HttpRequest(appsyncUrl, region);
-
   req.method = "POST";
   req.path = "/graphql";
   req.headers.host = endpoint;
@@ -16,7 +18,7 @@ module.exports = async function insertInstrument(inputData, operationName) {
   req.body = JSON.stringify({
     query: graphqlQuery[operationName],
     operationName: operationName,
-    variables: inputData,
+    variables: items,
   });
   if (apiKey) {
     req.headers["x-api-key"] = apiKey;
@@ -28,12 +30,12 @@ module.exports = async function insertInstrument(inputData, operationName) {
   const data = await new Promise((resolve, reject) => {
     const httpRequest = https.request({ ...req, host: endpoint }, (result) => {
       let data = "";
-
       result.on("data", (chunk) => {
         data += chunk;
       });
 
       result.on("end", () => {
+        console.log(data);
         resolve(JSON.parse(data.toString()));
       });
     });
@@ -41,7 +43,6 @@ module.exports = async function insertInstrument(inputData, operationName) {
     httpRequest.write(req.body);
     httpRequest.end();
   });
-
   return {
     statusCode: 200,
     body: data,
