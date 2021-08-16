@@ -24,7 +24,7 @@ module.exports = {
         updatedAt
       }
     }`,
-    ListEodPrices: `query ListEodPricess(
+    ListEodPricess: `query ListEodPricess(
       $id: String
       $filter: ModelEODPricesFilterInput
       $limit: Int
