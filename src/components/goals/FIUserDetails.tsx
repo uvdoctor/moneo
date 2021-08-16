@@ -37,11 +37,11 @@ export default function FIUserDetails() {
 				info={`Your Total Portfolio Value across cash, deposits, real estate, gold, stocks, bonds, retirement accounts, etc. Please do NOT include Your Home in the Investment Portfolio.`}
 				value={nw}
 				pre="Total"
-				min={5000}
+				min={500}
 				max={900000}
 				post="Portfolio"
 				changeHandler={setNW}
-				step={1000}
+				step={100}
 				currency={currency}
 			/>
 			<SelectInput
