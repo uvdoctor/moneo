@@ -161,6 +161,9 @@ eodCurrenciesPrice = () => {
         //   eodURL(element.name, element.type, element.url)
         // );
         let { code, close } = data;
+        if (element.type === commodityAbbr){
+          close = close/31.1
+        }
         code = code.slice(0, code.lastIndexOf("."));
 
         const alreadyInsertedData = await graphqlOperation(
