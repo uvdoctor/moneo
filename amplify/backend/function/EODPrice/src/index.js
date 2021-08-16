@@ -1,5 +1,6 @@
 const graphqlOperation = require("./operation");
-const eodApiKey = process.env.EOD_API_KEY;
+const eodApiKey = process.env.EOD_API_KEY.split(',');
+
 // const eodAPi = ()=>{for (i of api){[1,2,3,4,5,6,7,8,9,10]}}
 const axios = require("axios");
 const eodCurrenciesURL = (index) =>
