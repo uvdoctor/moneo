@@ -1,52 +1,165 @@
 const graphqlOperation = require("./operation");
-const eodApiKey = process.env.EOD_API_KEY.split(',');
-
-// const eodAPi = ()=>{for (i of api){[1,2,3,4,5,6,7,8,9,10]}}
 const axios = require("axios");
-const eodCurrenciesURL = (index) =>
-  `https://eodhistoricaldata.com/api/real-time/${index}.FOREX?api_token=${eodApiKey}&order=d&fmt=json`;
-const eodCommodityURL = (index) =>
-  `https://eodhistoricaldata.com/api/real-time/${index}.COMM?api_token=${eodApiKey}&order=d&fmt=json&from=2017-08-01.`;
+const eodApiKey = process.env.EOD_API_KEY;
+const eodApiKeyArray = eodApiKey.split(",");
+const cryptoAbbr = "CC";
+const currencyAbbr = "FOREX";
+const commodityAbbr = "COMM";
+
+const eodURL = (name, type, apiToken) =>
+  `https://eodhistoricaldata.com/api/real-time/${name}.${type}?api_token=${apiToken}&order=d&fmt=json`;
+
+// apiURL = {
+//   name :[],
+//   type:[],
+//   url:
+// }
 const apiURL = [
   {
-    key: "EUR",
-    url: eodCurrenciesURL("EUR"),
+    name: "BTC-USD",
+    type: cryptoAbbr,
+    url: eodApiKeyArray[0],
   },
   {
-    key: "INR",
-    url: eodCurrenciesURL("INR"),
+    name: "LTC-USD",
+    type: cryptoAbbr,
+    url: eodApiKeyArray[0],
   },
   {
-    key: "AUD",
-    url: eodCurrenciesURL("AUD"),
+    name: "ETH-USD",
+    type: cryptoAbbr,
+    url: eodApiKeyArray[0],
   },
   {
-    key: "CAD",
-    url: eodCurrenciesURL("CAD"),
+    name: "XRP-USD",
+    type: cryptoAbbr,
+    url: eodApiKeyArray[0],
   },
-  // {
-  //   key: "GOLD",
-  //   url: eodCommodityURL("GC"),
-  // },
-  // {
-  //   key: "Platinum",
-  //   url: eodCommodityURL("PL"),
-  // },
-  // {
-  //   key: "SILVER",
-  //   url: eodCommodityURL("SI"),
-  // },
-  // {
-  //   key: "Palladium",
-  //   url: eodCommodityURL("PA"),
-  // },
+  {
+    name: "DASH-USD",
+    type: cryptoAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "XMR-USD",
+    type: cryptoAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "ETC-USD",
+    type: cryptoAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "BCH-USD",
+    type: cryptoAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "DOGE-USD",
+    type: cryptoAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "XLM-USD",
+    type: cryptoAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "EUR",
+    type: currencyAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "INR",
+    type: currencyAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "AUD",
+    type: currencyAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "CAD",
+    type: currencyAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "JPY",
+    type: currencyAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "CNY",
+    type: currencyAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "CHF",
+    type: currencyAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "GBP",
+    type: currencyAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "SEK",
+    type: currencyAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "NZD",
+    type: currencyAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "GC",
+    type: commodityAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "PL",
+    type: commodityAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "SI",
+    type: commodityAbbr,
+    url: eodApiKeyArray[0],
+  },
+  {
+    name: "PA",
+    type: commodityAbbr,
+    url: eodApiKeyArray[0],
+  },
 ];
 
 eodCurrenciesPrice = () => {
   return new Promise(async (resolve, reject) => {
     try {
       apiURL.forEach(async (element) => {
-        const { data } = await axios.get(element.url);
+        getData = () => {
+          return new Promise(async (resolve, reject) => {
+            try {
+              const { data } = await axios.get(eodURL(element.name,element.type,element.url));
+              console.log(data,"try");
+              resolve(data);
+            } catch (err) {
+              // const indexOfKey = eodApiKey.indexOf(element.url) + 1;
+              // element.url = eodApiKey[indexOfKey]
+              eodApiKeyArray.shift();
+              console.log(err);
+              reject(err);
+            }
+          });
+        };
+        const data = await getData();
+        // const { data } = await axios.get(
+        //   eodURL(element.name, element.type, element.url)
+        // );
         let { code, close } = data;
         code = code.slice(0, code.lastIndexOf("."));
 
