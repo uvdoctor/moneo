@@ -87,11 +87,11 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT": {
-              "Ref": "apiGoalsGraphqlapiendpointoutput"
-            },
             "API_GOALS_GRAPHQLAPIIDOUTPUT": {
               "Ref": "apiGoalsGraphqlapiidoutput"
+            },
+            "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT": {
+              "Ref": "apiGoalsGraphqlapiendpointoutput"
             },
             "EOD_API_KEY": {
               "Ref": "eodApiKey"

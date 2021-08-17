@@ -35,7 +35,7 @@ module.exports = async function insertInstrument(inputData, operationName) {
       });
 
       result.on("end", () => {
-        console.log(data);
+        console.log(data,123);
         resolve(JSON.parse(data.toString()));
       });
     });
