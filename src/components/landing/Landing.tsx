@@ -9,6 +9,8 @@ import Calculator from "./Calculator";
 import HelloFinancialIndep from "./HelloFinancialIndep";
 import Step from "./Step";
 import GettingStarted from "./GettingStarted";
+import SmartSaver from "./SmartSaver";
+import CouponsBanner from "./CouponsBanner";
 import Security from "./Security";
 import GetRich from "./GetRich";
 import Testimonials from "./Testimonials";
@@ -25,6 +27,10 @@ export default function Landing() {
       <Content className="with-banner">
         <Banner />
         <VerifyCodeModal />
+      </Content>
+      <SmartSaver />
+      <CouponsBanner />
+      <Content>
         <Parallax
           animation={[
             { x: 0, opacity: 1, playScale: [0, 0.6] },
