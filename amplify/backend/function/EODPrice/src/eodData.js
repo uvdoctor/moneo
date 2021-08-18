@@ -137,12 +137,10 @@ const apiToCall = [
 
 const getData = async (element, index) => {
   try {
-    console.log(index);
     let token = apiKeys.eodhistoricaldata[index];
     const { data } = await axios.get(eodURL(element.name, element.type, token));
     return data;
   } catch (error) {
-    console.log(1);
     const errMessage = error.response.statusText.toString();
     const errCode = error.response.status.toString();
     if (errMessage.includes("Payment Required") && errCode == 402) {
@@ -160,18 +158,16 @@ const pushData = async (code, close) => {
     { Limit: 10000 },
     "ListEodPricess"
   );
+
   const insertedData =
-    (await alreadyInsertedData.body.data.listEODPricess.items.some(
-      (result) => result.id === code
-    ))
-      ? await graphqlOperation(
+    await alreadyInsertedData.body.data.listEODPricess.items.some(
+      async (result) => {
+        return await graphqlOperation(
           { id: code, price: close, name: code },
-          "UpdateEodPrices"
-        )
-      : await graphqlOperation(
-          { id: code, price: close, name: code },
-          "CreateEodPrices"
+          result.id === code ? "UpdateEodPrices" : "CreateEodPrices"
         );
+      }
+    );
 
   console.log("Operation result:", insertedData.body);
   return insertedData;
