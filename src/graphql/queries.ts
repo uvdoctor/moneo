@@ -855,6 +855,7 @@ export const getInstrument = /* GraphQL */ `
     getInstrument(id: $id) {
       id
       sid
+      tid
       name
       exchg
       country
@@ -868,6 +869,7 @@ export const getInstrument = /* GraphQL */ `
       mm
       my
       rate
+      mftype
       createdAt
       updatedAt
     }
@@ -891,6 +893,7 @@ export const listInstruments = /* GraphQL */ `
       items {
         id
         sid
+        tid
         name
         exchg
         country
@@ -904,6 +907,7 @@ export const listInstruments = /* GraphQL */ `
         mm
         my
         rate
+        mftype
         createdAt
         updatedAt
       }
@@ -941,57 +945,6 @@ export const listEodPricess = /* GraphQL */ `
         id
         price
         name
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getMfPrices = /* GraphQL */ `
-  query GetMfPrices($id: String!) {
-    getMFPrices(id: $id) {
-      id
-      sid
-      stype
-      rid
-      nav
-      name
-      amc
-      country
-      curr
-      type
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listMfPricess = /* GraphQL */ `
-  query ListMfPricess(
-    $id: String
-    $filter: ModelMFPricesFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listMFPricess(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        sid
-        stype
-        rid
-        nav
-        name
-        amc
-        country
-        curr
-        type
         createdAt
         updatedAt
       }

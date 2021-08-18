@@ -2,65 +2,6 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateBatchInstrument = {
-  id: string,
-  sid?: string | null,
-  name: string,
-  exchg?: string | null,
-  country: string,
-  curr: string,
-  type: InsType,
-  subt: InsSubType,
-  price: number,
-  prev?: number | null,
-  sm?: number | null,
-  sy?: number | null,
-  mm?: number | null,
-  my?: number | null,
-  rate?: number | null,
-};
-
-export enum InsType {
-  E = "E",
-  F = "F",
-  A = "A",
-  H = "H",
-}
-
-
-export enum InsSubType {
-  S = "S",
-  CB = "CB",
-  GB = "GB",
-  MB = "MB",
-  ETF = "ETF",
-  M = "M",
-  GoldB = "GoldB",
-  REIT = "REIT",
-}
-
-
-export type Instrument = {
-  __typename: "Instrument",
-  id?: string,
-  sid?: string | null,
-  name?: string,
-  exchg?: string | null,
-  country?: string,
-  curr?: string,
-  type?: InsType,
-  subt?: InsSubType,
-  price?: number,
-  prev?: number | null,
-  sm?: number | null,
-  sy?: number | null,
-  mm?: number | null,
-  my?: number | null,
-  rate?: number | null,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
 export type DeleteFeedbackInput = {
   id: string,
 };
@@ -976,6 +917,7 @@ export type UpdateRegistrationInput = {
 export type CreateInstrumentInput = {
   id: string,
   sid?: string | null,
+  tid?: string | null,
   name: string,
   exchg?: string | null,
   country: string,
@@ -989,10 +931,39 @@ export type CreateInstrumentInput = {
   mm?: number | null,
   my?: number | null,
   rate?: number | null,
+  mftype?: MFSchemeType | null,
 };
+
+export enum InsType {
+  E = "E",
+  F = "F",
+  A = "A",
+  H = "H",
+}
+
+
+export enum InsSubType {
+  S = "S",
+  CB = "CB",
+  GB = "GB",
+  MB = "MB",
+  ETF = "ETF",
+  M = "M",
+  GoldB = "GoldB",
+  REIT = "REIT",
+}
+
+
+export enum MFSchemeType {
+  O = "O",
+  C = "C",
+  I = "I",
+}
+
 
 export type ModelInstrumentConditionInput = {
   sid?: ModelStringInput | null,
+  tid?: ModelStringInput | null,
   name?: ModelStringInput | null,
   exchg?: ModelStringInput | null,
   country?: ModelStringInput | null,
@@ -1006,6 +977,7 @@ export type ModelInstrumentConditionInput = {
   mm?: ModelIntInput | null,
   my?: ModelIntInput | null,
   rate?: ModelFloatInput | null,
+  mftype?: ModelMFSchemeTypeInput | null,
   and?: Array< ModelInstrumentConditionInput | null > | null,
   or?: Array< ModelInstrumentConditionInput | null > | null,
   not?: ModelInstrumentConditionInput | null,
@@ -1021,9 +993,38 @@ export type ModelInsSubTypeInput = {
   ne?: InsSubType | null,
 };
 
+export type ModelMFSchemeTypeInput = {
+  eq?: MFSchemeType | null,
+  ne?: MFSchemeType | null,
+};
+
+export type Instrument = {
+  __typename: "Instrument",
+  id?: string,
+  sid?: string | null,
+  tid?: string | null,
+  name?: string,
+  exchg?: string | null,
+  country?: string,
+  curr?: string,
+  type?: InsType,
+  subt?: InsSubType,
+  price?: number,
+  prev?: number | null,
+  sm?: number | null,
+  sy?: number | null,
+  mm?: number | null,
+  my?: number | null,
+  rate?: number | null,
+  mftype?: MFSchemeType | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
 export type UpdateInstrumentInput = {
   id: string,
   sid?: string | null,
+  tid?: string | null,
   name?: string | null,
   exchg?: string | null,
   country?: string | null,
@@ -1037,6 +1038,7 @@ export type UpdateInstrumentInput = {
   mm?: number | null,
   my?: number | null,
   rate?: number | null,
+  mftype?: MFSchemeType | null,
 };
 
 export type DeleteInstrumentInput = {
@@ -1073,79 +1075,6 @@ export type UpdateEODPricesInput = {
 };
 
 export type DeleteEODPricesInput = {
-  id: string,
-};
-
-export type CreateMFPricesInput = {
-  id: string,
-  sid: string,
-  stype: MFSchemeType,
-  rid?: string | null,
-  nav: number,
-  name: string,
-  amc: string,
-  country: string,
-  curr: string,
-  type: InsType,
-};
-
-export enum MFSchemeType {
-  O = "O",
-  C = "C",
-  I = "I",
-}
-
-
-export type ModelMFPricesConditionInput = {
-  sid?: ModelStringInput | null,
-  stype?: ModelMFSchemeTypeInput | null,
-  rid?: ModelStringInput | null,
-  nav?: ModelFloatInput | null,
-  name?: ModelStringInput | null,
-  amc?: ModelStringInput | null,
-  country?: ModelStringInput | null,
-  curr?: ModelStringInput | null,
-  type?: ModelInsTypeInput | null,
-  and?: Array< ModelMFPricesConditionInput | null > | null,
-  or?: Array< ModelMFPricesConditionInput | null > | null,
-  not?: ModelMFPricesConditionInput | null,
-};
-
-export type ModelMFSchemeTypeInput = {
-  eq?: MFSchemeType | null,
-  ne?: MFSchemeType | null,
-};
-
-export type MFPrices = {
-  __typename: "MFPrices",
-  id?: string,
-  sid?: string,
-  stype?: MFSchemeType,
-  rid?: string | null,
-  nav?: number,
-  name?: string,
-  amc?: string,
-  country?: string,
-  curr?: string,
-  type?: InsType,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type UpdateMFPricesInput = {
-  id: string,
-  sid?: string | null,
-  stype?: MFSchemeType | null,
-  rid?: string | null,
-  nav?: number | null,
-  name?: string | null,
-  amc?: string | null,
-  country?: string | null,
-  curr?: string | null,
-  type?: InsType | null,
-};
-
-export type DeleteMFPricesInput = {
   id: string,
 };
 
@@ -1367,6 +1296,7 @@ export type ModelRegistrationConnection = {
 export type ModelInstrumentFilterInput = {
   id?: ModelStringInput | null,
   sid?: ModelStringInput | null,
+  tid?: ModelStringInput | null,
   name?: ModelStringInput | null,
   exchg?: ModelStringInput | null,
   country?: ModelStringInput | null,
@@ -1380,6 +1310,7 @@ export type ModelInstrumentFilterInput = {
   mm?: ModelIntInput | null,
   my?: ModelIntInput | null,
   rate?: ModelFloatInput | null,
+  mftype?: ModelMFSchemeTypeInput | null,
   and?: Array< ModelInstrumentFilterInput | null > | null,
   or?: Array< ModelInstrumentFilterInput | null > | null,
   not?: ModelInstrumentFilterInput | null,
@@ -1404,55 +1335,6 @@ export type ModelEODPricesConnection = {
   __typename: "ModelEODPricesConnection",
   items?:  Array<EODPrices | null > | null,
   nextToken?: string | null,
-};
-
-export type ModelMFPricesFilterInput = {
-  id?: ModelStringInput | null,
-  sid?: ModelStringInput | null,
-  stype?: ModelMFSchemeTypeInput | null,
-  rid?: ModelStringInput | null,
-  nav?: ModelFloatInput | null,
-  name?: ModelStringInput | null,
-  amc?: ModelStringInput | null,
-  country?: ModelStringInput | null,
-  curr?: ModelStringInput | null,
-  type?: ModelInsTypeInput | null,
-  and?: Array< ModelMFPricesFilterInput | null > | null,
-  or?: Array< ModelMFPricesFilterInput | null > | null,
-  not?: ModelMFPricesFilterInput | null,
-};
-
-export type ModelMFPricesConnection = {
-  __typename: "ModelMFPricesConnection",
-  items?:  Array<MFPrices | null > | null,
-  nextToken?: string | null,
-};
-
-export type BatchAddInstrumentsMutationVariables = {
-  input?: Array< CreateBatchInstrument | null > | null,
-};
-
-export type BatchAddInstrumentsMutation = {
-  batchAddInstruments?:  Array< {
-    __typename: "Instrument",
-    id: string,
-    sid?: string | null,
-    name: string,
-    exchg?: string | null,
-    country: string,
-    curr: string,
-    type: InsType,
-    subt: InsSubType,
-    price: number,
-    prev?: number | null,
-    sm?: number | null,
-    sy?: number | null,
-    mm?: number | null,
-    my?: number | null,
-    rate?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null > | null,
 };
 
 export type DeleteFeedbackMutationVariables = {
@@ -2998,6 +2880,7 @@ export type CreateInstrumentMutation = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -3011,6 +2894,7 @@ export type CreateInstrumentMutation = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3026,6 +2910,7 @@ export type UpdateInstrumentMutation = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -3039,6 +2924,7 @@ export type UpdateInstrumentMutation = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3054,6 +2940,7 @@ export type DeleteInstrumentMutation = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -3067,6 +2954,7 @@ export type DeleteInstrumentMutation = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3115,75 +3003,6 @@ export type DeleteEodPricesMutation = {
     id: string,
     price: number,
     name?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateMfPricesMutationVariables = {
-  input?: CreateMFPricesInput,
-  condition?: ModelMFPricesConditionInput | null,
-};
-
-export type CreateMfPricesMutation = {
-  createMFPrices?:  {
-    __typename: "MFPrices",
-    id: string,
-    sid: string,
-    stype: MFSchemeType,
-    rid?: string | null,
-    nav: number,
-    name: string,
-    amc: string,
-    country: string,
-    curr: string,
-    type: InsType,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateMfPricesMutationVariables = {
-  input?: UpdateMFPricesInput,
-  condition?: ModelMFPricesConditionInput | null,
-};
-
-export type UpdateMfPricesMutation = {
-  updateMFPrices?:  {
-    __typename: "MFPrices",
-    id: string,
-    sid: string,
-    stype: MFSchemeType,
-    rid?: string | null,
-    nav: number,
-    name: string,
-    amc: string,
-    country: string,
-    curr: string,
-    type: InsType,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteMfPricesMutationVariables = {
-  input?: DeleteMFPricesInput,
-  condition?: ModelMFPricesConditionInput | null,
-};
-
-export type DeleteMfPricesMutation = {
-  deleteMFPrices?:  {
-    __typename: "MFPrices",
-    id: string,
-    sid: string,
-    stype: MFSchemeType,
-    rid?: string | null,
-    nav: number,
-    name: string,
-    amc: string,
-    country: string,
-    curr: string,
-    type: InsType,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4167,6 +3986,7 @@ export type GetInstrumentQuery = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -4180,6 +4000,7 @@ export type GetInstrumentQuery = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4200,6 +4021,7 @@ export type ListInstrumentsQuery = {
       __typename: "Instrument",
       id: string,
       sid?: string | null,
+      tid?: string | null,
       name: string,
       exchg?: string | null,
       country: string,
@@ -4213,6 +4035,7 @@ export type ListInstrumentsQuery = {
       mm?: number | null,
       my?: number | null,
       rate?: number | null,
+      mftype?: MFSchemeType | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -4251,58 +4074,6 @@ export type ListEodPricessQuery = {
       id: string,
       price: number,
       name?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetMfPricesQueryVariables = {
-  id?: string,
-};
-
-export type GetMfPricesQuery = {
-  getMFPrices?:  {
-    __typename: "MFPrices",
-    id: string,
-    sid: string,
-    stype: MFSchemeType,
-    rid?: string | null,
-    nav: number,
-    name: string,
-    amc: string,
-    country: string,
-    curr: string,
-    type: InsType,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListMfPricessQueryVariables = {
-  id?: string | null,
-  filter?: ModelMFPricesFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListMfPricessQuery = {
-  listMFPricess?:  {
-    __typename: "ModelMFPricesConnection",
-    items?:  Array< {
-      __typename: "MFPrices",
-      id: string,
-      sid: string,
-      stype: MFSchemeType,
-      rid?: string | null,
-      nav: number,
-      name: string,
-      amc: string,
-      country: string,
-      curr: string,
-      type: InsType,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -5782,6 +5553,7 @@ export type OnCreateInstrumentSubscription = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -5795,6 +5567,7 @@ export type OnCreateInstrumentSubscription = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5805,6 +5578,7 @@ export type OnUpdateInstrumentSubscription = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -5818,6 +5592,7 @@ export type OnUpdateInstrumentSubscription = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5828,6 +5603,7 @@ export type OnDeleteInstrumentSubscription = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -5841,6 +5617,7 @@ export type OnDeleteInstrumentSubscription = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5874,60 +5651,6 @@ export type OnDeleteEodPricesSubscription = {
     id: string,
     price: number,
     name?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateMfPricesSubscription = {
-  onCreateMFPrices?:  {
-    __typename: "MFPrices",
-    id: string,
-    sid: string,
-    stype: MFSchemeType,
-    rid?: string | null,
-    nav: number,
-    name: string,
-    amc: string,
-    country: string,
-    curr: string,
-    type: InsType,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateMfPricesSubscription = {
-  onUpdateMFPrices?:  {
-    __typename: "MFPrices",
-    id: string,
-    sid: string,
-    stype: MFSchemeType,
-    rid?: string | null,
-    nav: number,
-    name: string,
-    amc: string,
-    country: string,
-    curr: string,
-    type: InsType,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteMfPricesSubscription = {
-  onDeleteMFPrices?:  {
-    __typename: "MFPrices",
-    id: string,
-    sid: string,
-    stype: MFSchemeType,
-    rid?: string | null,
-    nav: number,
-    name: string,
-    amc: string,
-    country: string,
-    curr: string,
-    type: InsType,
     createdAt: string,
     updatedAt: string,
   } | null,
