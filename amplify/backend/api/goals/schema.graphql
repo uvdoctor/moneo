@@ -197,6 +197,7 @@ enum InsType {
 	E
 	F
 	A
+	H
 }
 
 enum InsSubType {
@@ -312,6 +313,7 @@ type Balance {
 enum MFSchemeType {
 	O
 	C
+	I
 }
 
 type Holdings @model @auth(rules: [{ allow: owner }]) {
