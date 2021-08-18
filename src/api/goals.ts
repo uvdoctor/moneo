@@ -24,6 +24,7 @@ export enum InsType {
   E = "E",
   F = "F",
   A = "A",
+  H = "H",
 }
 
 
@@ -1091,6 +1092,7 @@ export type CreateMFPricesInput = {
 export enum MFSchemeType {
   O = "O",
   C = "C",
+  I = "I",
 }
 
 
