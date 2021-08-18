@@ -948,3 +948,54 @@ export const listEodPricess = /* GraphQL */ `
     }
   }
 `;
+export const getMfPrices = /* GraphQL */ `
+  query GetMfPrices($id: String!) {
+    getMFPrices(id: $id) {
+      id
+      sid
+      stype
+      rid
+      nav
+      name
+      amc
+      country
+      curr
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listMfPricess = /* GraphQL */ `
+  query ListMfPricess(
+    $id: String
+    $filter: ModelMFPricesFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listMFPricess(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        stype
+        rid
+        nav
+        name
+        amc
+        country
+        curr
+        type
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

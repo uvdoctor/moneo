@@ -309,6 +309,11 @@ type Balance {
 	name: String
 }
 
+enum MFSchemeType {
+	O
+	C
+}
+
 type Holdings @model @auth(rules: [{ allow: owner }]) {
 	id: ID!
 	instruments: [Holding!]
@@ -357,6 +362,28 @@ type EODPrices
 	id: String!
 	price: Float!
 	name: String
+}
+
+type MFPrices 
+	@model
+	@aws_iam
+	@key(fields: ["id"])
+	@auth(
+		rules: [
+			{ allow: private, provider: iam, operations: [create, read, update, delete] }
+			{ allow: private, operations: [read] }
+		]
+	) {
+	id: String!
+	sid: String!
+	stype: MFSchemeType!
+	rid: String
+	nav: Float!
+	name: String!
+	amc: String!
+	country: String!
+	curr: String!
+	type: InsType!
 }
 
 type Mutation {

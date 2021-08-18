@@ -1075,6 +1075,78 @@ export type DeleteEODPricesInput = {
   id: string,
 };
 
+export type CreateMFPricesInput = {
+  id: string,
+  sid: string,
+  stype: MFSchemeType,
+  rid?: string | null,
+  nav: number,
+  name: string,
+  amc: string,
+  country: string,
+  curr: string,
+  type: InsType,
+};
+
+export enum MFSchemeType {
+  O = "O",
+  C = "C",
+}
+
+
+export type ModelMFPricesConditionInput = {
+  sid?: ModelStringInput | null,
+  stype?: ModelMFSchemeTypeInput | null,
+  rid?: ModelStringInput | null,
+  nav?: ModelFloatInput | null,
+  name?: ModelStringInput | null,
+  amc?: ModelStringInput | null,
+  country?: ModelStringInput | null,
+  curr?: ModelStringInput | null,
+  type?: ModelInsTypeInput | null,
+  and?: Array< ModelMFPricesConditionInput | null > | null,
+  or?: Array< ModelMFPricesConditionInput | null > | null,
+  not?: ModelMFPricesConditionInput | null,
+};
+
+export type ModelMFSchemeTypeInput = {
+  eq?: MFSchemeType | null,
+  ne?: MFSchemeType | null,
+};
+
+export type MFPrices = {
+  __typename: "MFPrices",
+  id?: string,
+  sid?: string,
+  stype?: MFSchemeType,
+  rid?: string | null,
+  nav?: number,
+  name?: string,
+  amc?: string,
+  country?: string,
+  curr?: string,
+  type?: InsType,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateMFPricesInput = {
+  id: string,
+  sid?: string | null,
+  stype?: MFSchemeType | null,
+  rid?: string | null,
+  nav?: number | null,
+  name?: string | null,
+  amc?: string | null,
+  country?: string | null,
+  curr?: string | null,
+  type?: InsType | null,
+};
+
+export type DeleteMFPricesInput = {
+  id: string,
+};
+
 export type ModelGoalFilterInput = {
   id?: ModelIDInput | null,
   sy?: ModelIntInput | null,
@@ -1329,6 +1401,28 @@ export type ModelEODPricesFilterInput = {
 export type ModelEODPricesConnection = {
   __typename: "ModelEODPricesConnection",
   items?:  Array<EODPrices | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelMFPricesFilterInput = {
+  id?: ModelStringInput | null,
+  sid?: ModelStringInput | null,
+  stype?: ModelMFSchemeTypeInput | null,
+  rid?: ModelStringInput | null,
+  nav?: ModelFloatInput | null,
+  name?: ModelStringInput | null,
+  amc?: ModelStringInput | null,
+  country?: ModelStringInput | null,
+  curr?: ModelStringInput | null,
+  type?: ModelInsTypeInput | null,
+  and?: Array< ModelMFPricesFilterInput | null > | null,
+  or?: Array< ModelMFPricesFilterInput | null > | null,
+  not?: ModelMFPricesFilterInput | null,
+};
+
+export type ModelMFPricesConnection = {
+  __typename: "ModelMFPricesConnection",
+  items?:  Array<MFPrices | null > | null,
   nextToken?: string | null,
 };
 
@@ -3024,6 +3118,75 @@ export type DeleteEodPricesMutation = {
   } | null,
 };
 
+export type CreateMfPricesMutationVariables = {
+  input?: CreateMFPricesInput,
+  condition?: ModelMFPricesConditionInput | null,
+};
+
+export type CreateMfPricesMutation = {
+  createMFPrices?:  {
+    __typename: "MFPrices",
+    id: string,
+    sid: string,
+    stype: MFSchemeType,
+    rid?: string | null,
+    nav: number,
+    name: string,
+    amc: string,
+    country: string,
+    curr: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateMfPricesMutationVariables = {
+  input?: UpdateMFPricesInput,
+  condition?: ModelMFPricesConditionInput | null,
+};
+
+export type UpdateMfPricesMutation = {
+  updateMFPrices?:  {
+    __typename: "MFPrices",
+    id: string,
+    sid: string,
+    stype: MFSchemeType,
+    rid?: string | null,
+    nav: number,
+    name: string,
+    amc: string,
+    country: string,
+    curr: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteMfPricesMutationVariables = {
+  input?: DeleteMFPricesInput,
+  condition?: ModelMFPricesConditionInput | null,
+};
+
+export type DeleteMfPricesMutation = {
+  deleteMFPrices?:  {
+    __typename: "MFPrices",
+    id: string,
+    sid: string,
+    stype: MFSchemeType,
+    rid?: string | null,
+    nav: number,
+    name: string,
+    amc: string,
+    country: string,
+    curr: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type GetGoalQueryVariables = {
   id?: string,
 };
@@ -4086,6 +4249,58 @@ export type ListEodPricessQuery = {
       id: string,
       price: number,
       name?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetMfPricesQueryVariables = {
+  id?: string,
+};
+
+export type GetMfPricesQuery = {
+  getMFPrices?:  {
+    __typename: "MFPrices",
+    id: string,
+    sid: string,
+    stype: MFSchemeType,
+    rid?: string | null,
+    nav: number,
+    name: string,
+    amc: string,
+    country: string,
+    curr: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListMfPricessQueryVariables = {
+  id?: string | null,
+  filter?: ModelMFPricesFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListMfPricessQuery = {
+  listMFPricess?:  {
+    __typename: "ModelMFPricesConnection",
+    items?:  Array< {
+      __typename: "MFPrices",
+      id: string,
+      sid: string,
+      stype: MFSchemeType,
+      rid?: string | null,
+      nav: number,
+      name: string,
+      amc: string,
+      country: string,
+      curr: string,
+      type: InsType,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -5657,6 +5872,60 @@ export type OnDeleteEodPricesSubscription = {
     id: string,
     price: number,
     name?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateMfPricesSubscription = {
+  onCreateMFPrices?:  {
+    __typename: "MFPrices",
+    id: string,
+    sid: string,
+    stype: MFSchemeType,
+    rid?: string | null,
+    nav: number,
+    name: string,
+    amc: string,
+    country: string,
+    curr: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateMfPricesSubscription = {
+  onUpdateMFPrices?:  {
+    __typename: "MFPrices",
+    id: string,
+    sid: string,
+    stype: MFSchemeType,
+    rid?: string | null,
+    nav: number,
+    name: string,
+    amc: string,
+    country: string,
+    curr: string,
+    type: InsType,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteMfPricesSubscription = {
+  onDeleteMFPrices?:  {
+    __typename: "MFPrices",
+    id: string,
+    sid: string,
+    stype: MFSchemeType,
+    rid?: string | null,
+    nav: number,
+    name: string,
+    amc: string,
+    country: string,
+    curr: string,
+    type: InsType,
     createdAt: string,
     updatedAt: string,
   } | null,

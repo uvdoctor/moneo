@@ -1510,3 +1510,66 @@ export const deleteEodPrices = /* GraphQL */ `
     }
   }
 `;
+export const createMfPrices = /* GraphQL */ `
+  mutation CreateMfPrices(
+    $input: CreateMFPricesInput!
+    $condition: ModelMFPricesConditionInput
+  ) {
+    createMFPrices(input: $input, condition: $condition) {
+      id
+      sid
+      stype
+      rid
+      nav
+      name
+      amc
+      country
+      curr
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateMfPrices = /* GraphQL */ `
+  mutation UpdateMfPrices(
+    $input: UpdateMFPricesInput!
+    $condition: ModelMFPricesConditionInput
+  ) {
+    updateMFPrices(input: $input, condition: $condition) {
+      id
+      sid
+      stype
+      rid
+      nav
+      name
+      amc
+      country
+      curr
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteMfPrices = /* GraphQL */ `
+  mutation DeleteMfPrices(
+    $input: DeleteMFPricesInput!
+    $condition: ModelMFPricesConditionInput
+  ) {
+    deleteMFPrices(input: $input, condition: $condition) {
+      id
+      sid
+      stype
+      rid
+      nav
+      name
+      amc
+      country
+      curr
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;

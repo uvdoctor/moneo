@@ -1379,3 +1379,57 @@ export const onDeleteEodPrices = /* GraphQL */ `
     }
   }
 `;
+export const onCreateMfPrices = /* GraphQL */ `
+  subscription OnCreateMfPrices {
+    onCreateMFPrices {
+      id
+      sid
+      stype
+      rid
+      nav
+      name
+      amc
+      country
+      curr
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateMfPrices = /* GraphQL */ `
+  subscription OnUpdateMfPrices {
+    onUpdateMFPrices {
+      id
+      sid
+      stype
+      rid
+      nav
+      name
+      amc
+      country
+      curr
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteMfPrices = /* GraphQL */ `
+  subscription OnDeleteMfPrices {
+    onDeleteMFPrices {
+      id
+      sid
+      stype
+      rid
+      nav
+      name
+      amc
+      country
+      curr
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
