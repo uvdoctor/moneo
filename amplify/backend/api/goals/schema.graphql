@@ -223,6 +223,7 @@ type Instrument
 	) {
 	id: String!
 	sid: String
+	tid: String
 	name: String!
 	exchg: String
 	country: String!
@@ -236,6 +237,7 @@ type Instrument
 	mm: Int
 	my: Int
 	rate: Float
+	mftype: MFSchemeType
 }
 
 type Family @model @auth(rules: [{ allow: owner }]) {
@@ -333,24 +335,6 @@ type Holdings @model @auth(rules: [{ allow: owner }]) {
 	ins: [Insurance!]
 }
 
-input CreateBatchInstrument {
-  id: String!
-  sid: String
-  name: String!
-  exchg: String
-  country: String!
-  curr: String!
-  type: InsType!
-  subt: InsSubType!
-  price: Float!
-  prev: Float
-  sm: Int
-  sy: Int
-  mm: Int
-  my: Int
-  rate: Float
-}
-
 type EODPrices 
 	@model
 	@aws_iam
@@ -364,30 +348,4 @@ type EODPrices
 	id: String!
 	price: Float!
 	name: String
-}
-
-type MFPrices 
-	@model
-	@aws_iam
-	@key(fields: ["id"])
-	@auth(
-		rules: [
-			{ allow: private, provider: iam, operations: [create, read, update, delete] }
-			{ allow: private, operations: [read] }
-		]
-	) {
-	id: String!
-	sid: String!
-	stype: MFSchemeType!
-	rid: String
-	nav: Float!
-	name: String!
-	amc: String!
-	country: String!
-	curr: String!
-	type: InsType!
-}
-
-type Mutation {
-  batchAddInstruments(input: [CreateBatchInstrument]): [Instrument]
 }
