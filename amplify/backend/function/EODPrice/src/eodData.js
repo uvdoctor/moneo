@@ -1,9 +1,6 @@
 const graphqlOperation = require("./operation");
 const axios = require("axios");
 const eodApiKey = process.env.EOD_API_KEY;
-const cryptoAbbr = "CC";
-const currencyAbbr = "FOREX";
-const commodityAbbr = "COMM";
 
 const apiKeys = {
   eodhistoricaldata: eodApiKey.split(","),
@@ -11,129 +8,6 @@ const apiKeys = {
 
 const eodURL = (name, type, token) =>
   `https://eodhistoricaldata.com/api/real-time/${name}.${type}?api_token=${token}&fmt=json`;
-
-const apiToCall = [
-  {
-    name: "BTC-USD",
-    type: cryptoAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "LTC-USD",
-    type: cryptoAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "ETH-USD",
-    type: cryptoAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "XRP-USD",
-    type: cryptoAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "DASH-USD",
-    type: cryptoAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "XMR-USD",
-    type: cryptoAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "ETC-USD",
-    type: cryptoAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "BCH-USD",
-    type: cryptoAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "DOGE-USD",
-    type: cryptoAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "XLM-USD",
-    type: cryptoAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "EUR",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "INR",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "AUD",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "CAD",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "JPY",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "CNY",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "CHF",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "GBP",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "SEK",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "NZD",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "GC",
-    type: commodityAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "PL",
-    type: commodityAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "SI",
-    type: commodityAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "PA",
-    type: commodityAbbr,
-    fieldName: "close",
-  },
-];
 
 const getData = async (element, index) => {
   try {
@@ -160,23 +34,23 @@ const pushData = async (code, close) => {
   );
 
   const insertedData =
-    await alreadyInsertedData.body.data.listEODPricess.items.some(
-      async (result) => {
-        return await graphqlOperation(
+    (await alreadyInsertedData.body.data.listEODPricess.items.some(
+      async (result) => result.id === code
+    ))
+      ? await graphqlOperation(
           { id: code, price: close, name: code },
-          result.id === code ? "UpdateEodPrices" : "CreateEodPrices"
+          "UpdateEodPrices"
+        )
+      : await graphqlOperation(
+          { id: code, price: close, name: code },
+          "CreateEodPrices"
         );
-      }
-    );
 
   console.log("Operation result:", insertedData.body);
   return insertedData;
 };
 
 module.exports = {
-  cryptoAbbr,
-  commodityAbbr,
-  apiToCall,
   getData,
   pushData,
 };
