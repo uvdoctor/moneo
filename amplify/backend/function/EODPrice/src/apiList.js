@@ -48,61 +48,61 @@ const apiToCall = [
   //   type: cryptoAbbr,
   //   fieldName: "close",
   // },
-  {
-    name: "XLM-USD",
-    type: cryptoAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "EUR",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "INR",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "AUD",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "CAD",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "JPY",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "CNY",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "CHF",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "GBP",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "SEK",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
-  {
-    name: "NZD",
-    type: currencyAbbr,
-    fieldName: "close",
-  },
+  // {
+  //   name: "XLM-USD",
+  //   type: cryptoAbbr,
+  //   fieldName: "close",
+  // },
+  // {
+  //   name: "EUR",
+  //   type: currencyAbbr,
+  //   fieldName: "close",
+  // },
+  // {
+  //   name: "INR",
+  //   type: currencyAbbr,
+  //   fieldName: "close",
+  // },
+  // {
+  //   name: "AUD",
+  //   type: currencyAbbr,
+  //   fieldName: "close",
+  // },
+  // {
+  //   name: "CAD",
+  //   type: currencyAbbr,
+  //   fieldName: "close",
+  // },
+  // {
+  //   name: "JPY",
+  //   type: currencyAbbr,
+  //   fieldName: "close",
+  // },
+  // {
+  //   name: "CNY",
+  //   type: currencyAbbr,
+  //   fieldName: "close",
+  // },
+  // {
+  //   name: "CHF",
+  //   type: currencyAbbr,
+  //   fieldName: "close",
+  // },
+  // {
+  //   name: "GBP",
+  //   type: currencyAbbr,
+  //   fieldName: "close",
+  // },
+  // {
+  //   name: "SEK",
+  //   type: currencyAbbr,
+  //   fieldName: "close",
+  // },
+  // {
+  //   name: "NZD",
+  //   type: currencyAbbr,
+  //   fieldName: "close",
+  // },
   {
     name: "GC",
     type: commodityAbbr,
