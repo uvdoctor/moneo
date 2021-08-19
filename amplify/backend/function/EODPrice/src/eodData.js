@@ -20,6 +20,7 @@ const getData = async (element, index) => {
     if (errMessage.includes("Payment Required") && errCode == 402) {
       if (index <= apiKeys.eodhistoricaldata.length - 1) {
         index++;
+        // console.log(index);
         return await getData(element, index);
       }
     }
@@ -35,7 +36,7 @@ const pushData = async (code, close) => {
 
   const insertedData =
     (await alreadyInsertedData.body.data.listEODPricess.items.some(
-      async (result) => result.id === code
+      (result) => result.id === code
     ))
       ? await graphqlOperation(
           { id: code, price: close, name: code },
