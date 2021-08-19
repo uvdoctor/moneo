@@ -40,26 +40,28 @@ const mfType = (element) => {
 
 const pushData = (mfList) => {
   return new Promise(async (resolve, reject) => {
-    const updatedData = [];
-    const alreadyAddedData = await graphqlOperation(
-      { limit: 100000 },
-      "ListInstruments"
-    );
-    console.log(alreadyAddedData);
-    for (result of mfList) {
-      console.log(
-        alreadyAddedData.body.data.listInstruments.items[0].id === result.id
+    try {
+      const updatedData = [];
+      const alreadyAddedData = await graphqlOperation(
+        { limit: 100000 },
+        "ListInstruments"
       );
-      const insertedData =
-        (await alreadyAddedData.body.data.listInstruments.items.some(
-          (item) => item.id === result.id
-        ))
-          ? await graphqlOperation({ input: result }, "UpdateInstrument")
-          : await graphqlOperation({ input: result }, "CreateInstrument");
-      console.log(insertedData.body);
-      updatedData.push(insertedData);
+      for (i in mfList) {
+        const insertedData =
+          (await alreadyAddedData.body.data.listInstruments.items.some(
+            (item) => item.id === mfList[i].id
+          ))
+            ? await graphqlOperation({ input: mfList[i] }, "UpdateInstrument")
+            : await graphqlOperation({ input: mfList[i] }, "CreateInstrument");
+
+        console.log(insertedData.body);
+        updatedData.push(insertedData);
+      }
+      resolve(updatedData);
+    } catch (err) {
+      console.log(err);
+      reject(err);
     }
-    resolve(updatedData);
   });
 };
 
