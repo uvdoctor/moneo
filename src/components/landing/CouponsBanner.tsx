@@ -1,4 +1,5 @@
 import React from "react";
+import { Row, Col } from "antd";
 import { Carousel } from "react-responsive-carousel";
 import Content from "../Content";
 
@@ -18,9 +19,27 @@ export default function CouponsBanner() {
 			>
 				<div>
 					<img src="images/travel-banner.jpg" />
+					<Row align="middle" justify="center" gutter={[15, 0]}>
+						{["amazon", "flipkart", "flipkart", "flipkart", "flipkart"].map(
+							(brand) => (
+								<Col>
+									<div className={`${brand}-coupon`}></div>
+								</Col>
+							)
+						)}
+					</Row>
 				</div>
 				<div>
 					<img src="images/travel-banner.jpg" />
+					<Row align="middle" justify="center" gutter={[15, 0]}>
+						{["amazon", "flipkart", "flipkart", "flipkart", "flipkart"].map(
+							(brand) => (
+								<Col>
+									<div className={`${brand}-coupon`}></div>
+								</Col>
+							)
+						)}
+					</Row>
 				</div>
 			</Carousel>
 		</Content>
