@@ -438,6 +438,49 @@ svg {
 }
 //Carousel custom style end
 
+/************************************************
+						react-responsive-carousel
+************************************************/
+.carousel.carousel-slider {
+	& .control-arrow {
+		height: 35px !important;
+		border: #000 1px solid !important;
+		border-radius: 20px;
+		color: #000 !important;
+		top: 50% !important;
+
+		&:before {
+			border-left: 14px solid #000 !important;
+			margin: 0px 3px 9px 8px !important;
+		}
+
+		&:hover,
+		&:focus {
+			background: @primary-color !important;
+			border-color: @primary-color !important;
+
+			&:before {
+				border-left-color: #fff !important;
+			}
+		}
+	}
+
+	& .control-prev.control-arrow {
+		&:before {
+			border-left: none !important;
+			border-right: 14px solid #000 !important;
+			margin: 0px 8px 9px 3px !important;
+		}
+
+		&:hover,
+		&:focus {
+			&:before {
+				border-right-color: #fff !important;
+			}
+		}
+	}
+}
+
 @media all and (max-width: 576px) {
 	.rec-carousel-wrapper {
 		padding: 0 5px;
