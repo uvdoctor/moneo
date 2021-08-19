@@ -2,64 +2,6 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateBatchInstrument = {
-  id: string,
-  sid?: string | null,
-  name: string,
-  exchg?: string | null,
-  country: string,
-  curr: string,
-  type: InsType,
-  subt: InsSubType,
-  price: number,
-  prev?: number | null,
-  sm?: number | null,
-  sy?: number | null,
-  mm?: number | null,
-  my?: number | null,
-  rate?: number | null,
-};
-
-export enum InsType {
-  E = "E",
-  F = "F",
-  A = "A",
-}
-
-
-export enum InsSubType {
-  S = "S",
-  CB = "CB",
-  GB = "GB",
-  MB = "MB",
-  ETF = "ETF",
-  M = "M",
-  GoldB = "GoldB",
-  REIT = "REIT",
-}
-
-
-export type Instrument = {
-  __typename: "Instrument",
-  id?: string,
-  sid?: string | null,
-  name?: string,
-  exchg?: string | null,
-  country?: string,
-  curr?: string,
-  type?: InsType,
-  subt?: InsSubType,
-  price?: number,
-  prev?: number | null,
-  sm?: number | null,
-  sy?: number | null,
-  mm?: number | null,
-  my?: number | null,
-  rate?: number | null,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
 export type DeleteFeedbackInput = {
   id: string,
 };
@@ -975,6 +917,7 @@ export type UpdateRegistrationInput = {
 export type CreateInstrumentInput = {
   id: string,
   sid?: string | null,
+  tid?: string | null,
   name: string,
   exchg?: string | null,
   country: string,
@@ -988,10 +931,39 @@ export type CreateInstrumentInput = {
   mm?: number | null,
   my?: number | null,
   rate?: number | null,
+  mftype?: MFSchemeType | null,
 };
+
+export enum InsType {
+  E = "E",
+  F = "F",
+  A = "A",
+  H = "H",
+}
+
+
+export enum InsSubType {
+  S = "S",
+  CB = "CB",
+  GB = "GB",
+  MB = "MB",
+  ETF = "ETF",
+  M = "M",
+  GoldB = "GoldB",
+  REIT = "REIT",
+}
+
+
+export enum MFSchemeType {
+  O = "O",
+  C = "C",
+  I = "I",
+}
+
 
 export type ModelInstrumentConditionInput = {
   sid?: ModelStringInput | null,
+  tid?: ModelStringInput | null,
   name?: ModelStringInput | null,
   exchg?: ModelStringInput | null,
   country?: ModelStringInput | null,
@@ -1005,6 +977,7 @@ export type ModelInstrumentConditionInput = {
   mm?: ModelIntInput | null,
   my?: ModelIntInput | null,
   rate?: ModelFloatInput | null,
+  mftype?: ModelMFSchemeTypeInput | null,
   and?: Array< ModelInstrumentConditionInput | null > | null,
   or?: Array< ModelInstrumentConditionInput | null > | null,
   not?: ModelInstrumentConditionInput | null,
@@ -1020,9 +993,38 @@ export type ModelInsSubTypeInput = {
   ne?: InsSubType | null,
 };
 
+export type ModelMFSchemeTypeInput = {
+  eq?: MFSchemeType | null,
+  ne?: MFSchemeType | null,
+};
+
+export type Instrument = {
+  __typename: "Instrument",
+  id?: string,
+  sid?: string | null,
+  tid?: string | null,
+  name?: string,
+  exchg?: string | null,
+  country?: string,
+  curr?: string,
+  type?: InsType,
+  subt?: InsSubType,
+  price?: number,
+  prev?: number | null,
+  sm?: number | null,
+  sy?: number | null,
+  mm?: number | null,
+  my?: number | null,
+  rate?: number | null,
+  mftype?: MFSchemeType | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
 export type UpdateInstrumentInput = {
   id: string,
   sid?: string | null,
+  tid?: string | null,
   name?: string | null,
   exchg?: string | null,
   country?: string | null,
@@ -1036,6 +1038,7 @@ export type UpdateInstrumentInput = {
   mm?: number | null,
   my?: number | null,
   rate?: number | null,
+  mftype?: MFSchemeType | null,
 };
 
 export type DeleteInstrumentInput = {
@@ -1293,6 +1296,7 @@ export type ModelRegistrationConnection = {
 export type ModelInstrumentFilterInput = {
   id?: ModelStringInput | null,
   sid?: ModelStringInput | null,
+  tid?: ModelStringInput | null,
   name?: ModelStringInput | null,
   exchg?: ModelStringInput | null,
   country?: ModelStringInput | null,
@@ -1306,6 +1310,7 @@ export type ModelInstrumentFilterInput = {
   mm?: ModelIntInput | null,
   my?: ModelIntInput | null,
   rate?: ModelFloatInput | null,
+  mftype?: ModelMFSchemeTypeInput | null,
   and?: Array< ModelInstrumentFilterInput | null > | null,
   or?: Array< ModelInstrumentFilterInput | null > | null,
   not?: ModelInstrumentFilterInput | null,
@@ -1330,33 +1335,6 @@ export type ModelEODPricesConnection = {
   __typename: "ModelEODPricesConnection",
   items?:  Array<EODPrices | null > | null,
   nextToken?: string | null,
-};
-
-export type BatchAddInstrumentsMutationVariables = {
-  input?: Array< CreateBatchInstrument | null > | null,
-};
-
-export type BatchAddInstrumentsMutation = {
-  batchAddInstruments?:  Array< {
-    __typename: "Instrument",
-    id: string,
-    sid?: string | null,
-    name: string,
-    exchg?: string | null,
-    country: string,
-    curr: string,
-    type: InsType,
-    subt: InsSubType,
-    price: number,
-    prev?: number | null,
-    sm?: number | null,
-    sy?: number | null,
-    mm?: number | null,
-    my?: number | null,
-    rate?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null > | null,
 };
 
 export type DeleteFeedbackMutationVariables = {
@@ -2902,6 +2880,7 @@ export type CreateInstrumentMutation = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -2915,6 +2894,7 @@ export type CreateInstrumentMutation = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2930,6 +2910,7 @@ export type UpdateInstrumentMutation = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -2943,6 +2924,7 @@ export type UpdateInstrumentMutation = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2958,6 +2940,7 @@ export type DeleteInstrumentMutation = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -2971,6 +2954,7 @@ export type DeleteInstrumentMutation = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4002,6 +3986,7 @@ export type GetInstrumentQuery = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -4015,6 +4000,7 @@ export type GetInstrumentQuery = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4035,6 +4021,7 @@ export type ListInstrumentsQuery = {
       __typename: "Instrument",
       id: string,
       sid?: string | null,
+      tid?: string | null,
       name: string,
       exchg?: string | null,
       country: string,
@@ -4048,6 +4035,7 @@ export type ListInstrumentsQuery = {
       mm?: number | null,
       my?: number | null,
       rate?: number | null,
+      mftype?: MFSchemeType | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -5565,6 +5553,7 @@ export type OnCreateInstrumentSubscription = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -5578,6 +5567,7 @@ export type OnCreateInstrumentSubscription = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5588,6 +5578,7 @@ export type OnUpdateInstrumentSubscription = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -5601,6 +5592,7 @@ export type OnUpdateInstrumentSubscription = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5611,6 +5603,7 @@ export type OnDeleteInstrumentSubscription = {
     __typename: "Instrument",
     id: string,
     sid?: string | null,
+    tid?: string | null,
     name: string,
     exchg?: string | null,
     country: string,
@@ -5624,6 +5617,7 @@ export type OnDeleteInstrumentSubscription = {
     mm?: number | null,
     my?: number | null,
     rate?: number | null,
+    mftype?: MFSchemeType | null,
     createdAt: string,
     updatedAt: string,
   } | null,

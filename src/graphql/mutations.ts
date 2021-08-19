@@ -2,29 +2,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const batchAddInstruments = /* GraphQL */ `
-  mutation BatchAddInstruments($input: [CreateBatchInstrument]) {
-    batchAddInstruments(input: $input) {
-      id
-      sid
-      name
-      exchg
-      country
-      curr
-      type
-      subt
-      price
-      prev
-      sm
-      sy
-      mm
-      my
-      rate
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const deleteFeedback = /* GraphQL */ `
   mutation DeleteFeedback(
     $input: DeleteFeedbackInput!
@@ -1398,6 +1375,7 @@ export const createInstrument = /* GraphQL */ `
     createInstrument(input: $input, condition: $condition) {
       id
       sid
+      tid
       name
       exchg
       country
@@ -1411,6 +1389,7 @@ export const createInstrument = /* GraphQL */ `
       mm
       my
       rate
+      mftype
       createdAt
       updatedAt
     }
@@ -1424,6 +1403,7 @@ export const updateInstrument = /* GraphQL */ `
     updateInstrument(input: $input, condition: $condition) {
       id
       sid
+      tid
       name
       exchg
       country
@@ -1437,6 +1417,7 @@ export const updateInstrument = /* GraphQL */ `
       mm
       my
       rate
+      mftype
       createdAt
       updatedAt
     }
@@ -1450,6 +1431,7 @@ export const deleteInstrument = /* GraphQL */ `
     deleteInstrument(input: $input, condition: $condition) {
       id
       sid
+      tid
       name
       exchg
       country
@@ -1463,6 +1445,7 @@ export const deleteInstrument = /* GraphQL */ `
       mm
       my
       rate
+      mftype
       createdAt
       updatedAt
     }

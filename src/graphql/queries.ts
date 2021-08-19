@@ -855,6 +855,7 @@ export const getInstrument = /* GraphQL */ `
     getInstrument(id: $id) {
       id
       sid
+      tid
       name
       exchg
       country
@@ -868,6 +869,7 @@ export const getInstrument = /* GraphQL */ `
       mm
       my
       rate
+      mftype
       createdAt
       updatedAt
     }
@@ -891,6 +893,7 @@ export const listInstruments = /* GraphQL */ `
       items {
         id
         sid
+        tid
         name
         exchg
         country
@@ -904,6 +907,7 @@ export const listInstruments = /* GraphQL */ `
         mm
         my
         rate
+        mftype
         createdAt
         updatedAt
       }

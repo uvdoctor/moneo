@@ -1,28 +1,5 @@
 module.exports = {
   mutation: {
-    BatchAddInstrument: `mutation BatchCreateInstrument(
-      $input: CreateBatchInstruments
-    ) {
-      batchAddInstruments(input: $input) {
-        id
-        sid
-        name
-        exchg
-        country
-        curr
-        type
-        subt
-        price
-        prev
-        sm
-        sy
-        mm
-        my
-        rate
-        createdAt
-        updatedAt
-      }
-    }`,
     CreateInstrument: `mutation CreateInstrument(
       $input: CreateInstrumentInput!
       $condition: ModelInstrumentConditionInput
@@ -30,6 +7,7 @@ module.exports = {
       createInstrument(input: $input, condition: $condition) {
         id
         sid
+        tid
         name
         exchg
         country
@@ -43,9 +21,10 @@ module.exports = {
         mm
         my
         rate
+        mftype
         createdAt
         updatedAt
-      }
+        }
     }
   `,
   UpdateInstrument: `mutation UpdateInstrument(
@@ -55,6 +34,7 @@ module.exports = {
     updateInstrument(input: $input, condition: $condition) {
       id
       sid
+      tid
       name
       exchg
       country
@@ -68,6 +48,7 @@ module.exports = {
       mm
       my
       rate
+      mftype
       createdAt
       updatedAt
     }
@@ -80,12 +61,13 @@ ListInstruments: `query ListInstruments(
 ) {
   listInstruments(
     filter: $filter
-    limit: 10000
+    limit: $limit
     nextToken: $nextToken
   ) {
     items {
       id
       sid
+      tid
       name
       exchg
       country
@@ -99,6 +81,7 @@ ListInstruments: `query ListInstruments(
       mm
       my
       rate
+      mftype
       createdAt
       updatedAt
     }

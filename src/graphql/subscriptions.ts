@@ -1282,6 +1282,7 @@ export const onCreateInstrument = /* GraphQL */ `
     onCreateInstrument {
       id
       sid
+      tid
       name
       exchg
       country
@@ -1295,6 +1296,7 @@ export const onCreateInstrument = /* GraphQL */ `
       mm
       my
       rate
+      mftype
       createdAt
       updatedAt
     }
@@ -1305,6 +1307,7 @@ export const onUpdateInstrument = /* GraphQL */ `
     onUpdateInstrument {
       id
       sid
+      tid
       name
       exchg
       country
@@ -1318,6 +1321,7 @@ export const onUpdateInstrument = /* GraphQL */ `
       mm
       my
       rate
+      mftype
       createdAt
       updatedAt
     }
@@ -1328,6 +1332,7 @@ export const onDeleteInstrument = /* GraphQL */ `
     onDeleteInstrument {
       id
       sid
+      tid
       name
       exchg
       country
@@ -1341,6 +1346,7 @@ export const onDeleteInstrument = /* GraphQL */ `
       mm
       my
       rate
+      mftype
       createdAt
       updatedAt
     }
