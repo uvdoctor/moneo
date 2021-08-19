@@ -118,11 +118,11 @@ const apiToCall = [
     type: commodityAbbr,
     fieldName: "close",
   },
-  // {
-  //   name: "PA",
-  //   type: commodityAbbr,
-  //   fieldName: "close",
-  // },
+  {
+    name: "PA",
+    type: commodityAbbr,
+    fieldName: "close",
+  },
 ];
 
 module.exports = { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall };
