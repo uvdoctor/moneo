@@ -38,3 +38,4 @@ exports.handler = async (event) => {
   const data = await getData();
   return await pushData(data)
 };
+
