@@ -1,5 +1,5 @@
 const mfdata = require("india-mutual-fund-info");
-const  graphqlOperation = require("./operation");
+const graphqlOperation = require("./operation");
 
 const getType = (element) => {
   switch (true) {
@@ -20,7 +20,7 @@ const getType = (element) => {
   }
 };
 
-const subType = () => {
+const subType = (element) => {
   switch (true) {
     case element["Scheme Type"].includes("Open"):
       return (stype = "O");
@@ -31,69 +31,48 @@ const subType = () => {
   }
 };
 
+const pushData = (data) => {
+  return new Promise(async (resolve, reject) => {
+    const alreadyAddedData = await graphqlOperation(
+      { limit: 10000 },
+      "ListInstruments"
+    );
+    for (let i = 0; i < data.length; i++) {
+      const insertedData =
+        alreadyAddedData.body.data.listInstruments.items.some(
+          (item) => item.id === data[i].id
+        )
+          ? await graphqlOperation({ input: data[i] }, "UpdateInstrument")
+          : await graphqlOperation({ input: data[i] }, "CreateInstrument");
+      console.log(insertedData.body);
+      resolve(insertedData);
+    }
+  });
+};
+
 const getData = () => {
   return new Promise(async (resolve, reject) => {
     const mfInfoArray = await mfdata.today();
-    await Promise.all(
-      mfInfoArray.map(async (element) => {
-        const mfList = {
-          id: element["ISIN Div Payout/ ISIN Growth"],
-          sid: element["Scheme Code"],
-          stype: subType(),
-          tid: element["ISIN Div Reinvestment"],
-          price: element["Net Asset Value"],
-          name: element["Scheme Name"],
-        //   amc: element["AMC Name"],
-        id: String!
-	sid: String
-	tid: String
-	name: String!
-	exchg: String
-	country: String!
-	curr: String!
-	type: InsType!
-	subt: InsSubType!
-	price: Float!
-	prev: Float
-	sm: Int
-	sy: Int
-	mm: Int
-	my: Int
-	rate: Float
-	mftype: MFSchemeType
-          country: "INR",
-          curr: "INR",
-          type: getType(element),
-          mfType : element["Scheme Type"]
-        };
-        // console.log(mfList);
-        // const alreadyInsertedData = await graphqlOperation(
-        //     { Limit: 10000 },
-        //     "ListEodPricess"
-        //   );
-        
-        //   const insertedData =
-        //     await alreadyInsertedData.body.data.listEODPricess.items.some(
-        //       async (result) => {
-        //         return await graphqlOperation(
-        //           { id: code, price: close, name: code },
-        //           result.id === code ? "UpdateEodPrices" : "CreateEodPrices"
-        //         );
-        //       }
-        //     );
-        
-        //   console.log("Operation result:", insertedData.body);
-        //   return insertedData;
-        // };
-      })
-    );
+    const mfList = [];
+    mfInfoArray.map(async (element) => {
+      mfList.push({
+        id: element["ISIN Div Payout/ ISIN Growth"],
+        sid: element["Scheme Code"],
+        tid: element["ISIN Div Reinvestment"],
+        name: element["Scheme Name"],
+        country: "IN",
+        curr: "INR",
+        type: "M",
+        subt: getType(element),
+        price: element["Net Asset Value"],
+        mfType: subType(element),
+      });
+    });
+    resolve(mfList);
   });
 };
-// getData();
+
 export async function handler(event) {
   let data = await getData();
-  return data;
+  return await pushData(data);
 }
-
-
-

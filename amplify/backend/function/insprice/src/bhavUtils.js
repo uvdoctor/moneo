@@ -65,7 +65,12 @@ const extractDataFromCSV = async (tempDir, fileName, type, codes) => {
           type: "E",
           subt: "S",
           price: record[codes.price],
-          prev: record[codes.prev]
+          prev: record[codes.prev],
+          sm: 0,
+          sy: 0,
+          mm: 0,
+          my: 0,
+          rate: 0,
         });
       })
       .on("end", async () => {
