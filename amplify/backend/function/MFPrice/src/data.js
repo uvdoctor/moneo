@@ -36,16 +36,18 @@ const pushData = (data) => {
       { limit: 10000 },
       "ListInstruments"
     );
-    for (let i = 0; i < data.length; i++) {
-      const insertedData =
-        alreadyAddedData.body.data.listInstruments.items.some(
-          (item) => item.id === data[i].id
-        )
-          ? await graphqlOperation({ input: data[i] }, "UpdateInstrument")
-          : await graphqlOperation({ input: data[i] }, "CreateInstrument");
-    //   console.log(insertedData.body);
-      resolve(insertedData);
-    }
+    await Promise.all(
+      data.map(async (result) => {
+        const insertedData =
+          alreadyAddedData.body.data.listInstruments.items.some(
+            (item) => item.id === result.id
+          )
+            ? await graphqlOperation({ input: result }, "UpdateInstrument")
+            : await graphqlOperation({ input: result }, "CreateInstrument");
+        //   console.log(insertedData.body);
+        resolve(insertedData);
+      })
+    );
   });
 };
 

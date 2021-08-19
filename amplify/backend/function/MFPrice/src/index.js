@@ -1,7 +1,6 @@
 const mfData = require("india-mutual-fund-info");
 const dataInfo = require("./data");
 const { getType, mfType, pushData } = dataInfo;
-
 const getData = () => {
   return new Promise(async (resolve, reject) => {
     const mfInfoArray = await mfData.today();
