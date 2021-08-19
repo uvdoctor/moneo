@@ -1,5 +1,7 @@
 const eodData = require("./eodData");
-const { cryptoAbbr, commodityAbbr, apiToCall, getData, pushData } = eodData;
+const apiListData = require("./apiList");
+const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
+const { getData, pushData } = eodData;
 
 const eodPrice = () => {
   return new Promise(async (resolve, reject) => {
