@@ -1,33 +1,33 @@
-const mfdata = require("india-mutual-fund-info");
 const graphqlOperation = require("./operation");
+const mfData = require("india-mutual-fund-info");
 
 const getType = (element) => {
   switch (true) {
     case element["Scheme Type"].includes("Equity"):
-      return (type = "E");
+      return (subt = "E");
     case element["Scheme Type"].includes("Debt"):
-      return (type = "F");
+      return (subt = "F");
     case element["Scheme Type"].includes("Hybrid"):
-      return (type = "H");
+      return (subt = "H");
     case element["Scheme Type"].includes("ELSS"):
-      return (type = "E");
+      return (subt = "E");
     case element["Scheme Type"].includes("Income"):
-      return (type = "F");
+      return (subt = "F");
     case element["Scheme Type"].includes("Growth"):
-      return (type = "E");
+      return (subt = "E");
     case element["Scheme Type"].includes("Other"):
-      return (type = "A");
+      return (subt = "A");
   }
 };
 
-const subType = (element) => {
+const mfType = (element) => {
   switch (true) {
     case element["Scheme Type"].includes("Open"):
-      return (stype = "O");
+      return (mftype = "O");
     case element["Scheme Type"].includes("Close"):
-      return (stype = "C");
+      return (mftype = "C");
     case element["Scheme Type"].includes("Interval"):
-      return (stype = "I");
+      return (mftype = "I");
   }
 };
 
@@ -52,27 +52,29 @@ const pushData = (data) => {
 
 const getData = () => {
   return new Promise(async (resolve, reject) => {
-    const mfInfoArray = await mfdata.today();
+    const mfInfoArray = await mfData.today();
     const mfList = [];
-    mfInfoArray.map(async (element) => {
-      mfList.push({
-        id: element["ISIN Div Payout/ ISIN Growth"],
-        sid: element["Scheme Code"],
-        tid: element["ISIN Div Reinvestment"],
-        name: element["Scheme Name"],
-        country: "IN",
-        curr: "INR",
-        type: "M",
-        subt: getType(element),
-        price: element["Net Asset Value"],
-        mfType: subType(element),
-      });
-    });
+    await Promise.all(
+      mfInfoArray.map(async (element) => {
+        mfList.push({
+          id: element["ISIN Div Payout/ ISIN Growth"],
+          sid: element["Scheme Code"],
+          tid: element["ISIN Div Reinvestment"],
+          name: element["Scheme Name"],
+          country: "IN",
+          curr: "INR",
+          type: getType(element),
+          subt: "M",
+          price: element["Net Asset Value"],
+          mftype: mfType(element),
+        });
+      })
+    );
     resolve(mfList);
   });
 };
 
-export async function handler(event) {
-  let data = await getData();
+exports.handler = async (event) => {
+  const data = await getData();
   return await pushData(data);
-}
+};
