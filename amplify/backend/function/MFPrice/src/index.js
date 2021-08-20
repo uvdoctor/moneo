@@ -24,7 +24,7 @@ const getData = () => {
         curr: "INR",
         type: getType(element),
         subt: "M",
-        price: element["Net Asset Value"],
+        price: parseFloat(element["Net Asset Value"]),
         mftype: mfType(element),
       });
     });

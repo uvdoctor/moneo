@@ -1,4 +1,3 @@
-const { isInferTypeNode } = require("typescript");
 const graphqlOperation = require("./operation");
 
 const getType = (element) => {
@@ -74,7 +73,6 @@ const getDataFromListInstruments = async () => {
 
 const pushData = (mfList) => {
   return new Promise(async (resolve, reject) => {
-    // try {
     const updatedData = [];
     const getInstrumentsArray = await getDataFromListInstruments();
 
