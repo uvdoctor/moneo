@@ -27,7 +27,7 @@ module.exports = {
         }
     }
   `,
-  UpdateInstrument: `mutation UpdateInstrument(
+    UpdateInstrument: `mutation UpdateInstrument(
     $input: UpdateInstrumentInput!
     $condition: ModelInstrumentConditionInput
   ) {
@@ -54,7 +54,7 @@ module.exports = {
     }
   }
 `,
-ListInstruments: `query ListInstruments(
+    ListInstruments: `query ListInstruments(
   $filter: ModelInstrumentFilterInput
   $limit: Int
   $nextToken: String
@@ -87,6 +87,30 @@ ListInstruments: `query ListInstruments(
     }
     nextToken
     }
-    }`
-  }
+    }`,
+    DeleteInstrument: `mutation DeleteInstrument(
+    $input: DeleteInstrumentInput!
+    $condition: ModelInstrumentConditionInput
+  ) {
+    deleteInstrument(input: $input, condition: $condition) {
+      id
+      sid
+      tid
+      name
+      exchg
+      country
+      curr
+      type
+      subt
+      price
+      prev
+      sm
+      sy
+      mm
+      my
+      rate
+      mftype
+      createdAt
+      updatedAt`,
+  },
 };

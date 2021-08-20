@@ -3,51 +3,51 @@ const currencyAbbr = "FOREX";
 const commodityAbbr = "COMM";
 
 const apiToCall = [
-  // {
-  //   name: "BTC-USD",
-  //   type: cryptoAbbr,
-  //   fieldName: "close",
-  // },
-  // {
-  //   name: "LTC-USD",
-  //   type: cryptoAbbr,
-  //   fieldName: "close",
-  // },
-  // {
-  //   name: "ETH-USD",
-  //   type: cryptoAbbr,
-  //   fieldName: "close",
-  // },
-  // {
-  //   name: "XRP-USD",
-  //   type: cryptoAbbr,
-  //   fieldName: "close",
-  // },
-  // {
-  //   name: "DASH-USD",
-  //   type: cryptoAbbr,
-  //   fieldName: "close",
-  // },
-  // {
-  //   name: "XMR-USD",
-  //   type: cryptoAbbr,
-  //   fieldName: "close",
-  // },
-  // {
-  //   name: "ETC-USD",
-  //   type: cryptoAbbr,
-  //   fieldName: "close",
-  // },
-  // {
-  //   name: "BCH-USD",
-  //   type: cryptoAbbr,
-  //   fieldName: "close",
-  // },
-  // {
-  //   name: "DOGE-USD",
-  //   type: cryptoAbbr,
-  //   fieldName: "close",
-  // },
+  {
+    name: "BTC-USD",
+    type: cryptoAbbr,
+    fieldName: "close",
+  },
+  {
+    name: "LTC-USD",
+    type: cryptoAbbr,
+    fieldName: "close",
+  },
+  {
+    name: "ETH-USD",
+    type: cryptoAbbr,
+    fieldName: "close",
+  },
+  {
+    name: "XRP-USD",
+    type: cryptoAbbr,
+    fieldName: "close",
+  },
+  {
+    name: "DASH-USD",
+    type: cryptoAbbr,
+    fieldName: "close",
+  },
+  {
+    name: "XMR-USD",
+    type: cryptoAbbr,
+    fieldName: "close",
+  },
+  {
+    name: "ETC-USD",
+    type: cryptoAbbr,
+    fieldName: "close",
+  },
+  {
+    name: "BCH-USD",
+    type: cryptoAbbr,
+    fieldName: "close",
+  },
+  {
+    name: "DOGE-USD",
+    type: cryptoAbbr,
+    fieldName: "close",
+  },
   {
     name: "XLM-USD",
     type: cryptoAbbr,
@@ -125,4 +125,4 @@ const apiToCall = [
   },
 ];
 
-module.exports = {commodityAbbr,cryptoAbbr,currencyAbbr,apiToCall};
+module.exports = { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall };

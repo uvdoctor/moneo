@@ -5,6 +5,7 @@ const { getData, pushData } = eodData;
 
 const eodPrice = () => {
   return new Promise(async (resolve, reject) => {
+    const eodList = [];
     await Promise.all(
       apiToCall.map(async (element) => {
         index = 0;
@@ -23,15 +24,15 @@ const eodPrice = () => {
             code = code.slice(0, code.lastIndexOf("."));
             break;
         }
-
-        const dataToPush = await pushData(code, close);
-        resolve(dataToPush);
+        let data = { code, close };
+        eodList.push(data);
       })
     );
+    resolve(eodList);
   });
 };
 
 exports.handler = async (event) => {
   let data = await eodPrice();
-  return data;
+  return await pushData(data);
 };
