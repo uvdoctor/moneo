@@ -97,7 +97,7 @@ const pushData = (mfList) => {
             "UpdateInstrument"
           );
           // console.log(insertedData.body);
-          updatedData.push(insertedData.body)
+          updatedData.push(insertedData.body);
           break;
         }
       }
@@ -106,11 +106,11 @@ const pushData = (mfList) => {
           { input: mfList[i] },
           "CreateInstrument"
         );
-        updatedData.push(insertedData.body)
+        updatedData.push(insertedData.body);
         // console.log(insertedData.body);
       }
     }
-    resolve(updatedData)
+    resolve(updatedData);
   });
 };
 
