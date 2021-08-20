@@ -84,7 +84,7 @@ const extractDataFromCSV = async (
       .pipe(csv())
       .on("data", (record) => {
         results.push({
-          id: `${record[codes.id]}_${typeIdentifier}`,
+          id: `${record[codes.id]}__${typeIdentifier}`,
           sid: typeIdentifier,
           name: record[codes.name],
           exchg: type,
@@ -92,8 +92,8 @@ const extractDataFromCSV = async (
           curr: "INR",
           type: calcType(record[codes.type]),
           subt: calcSubType(record[codes.type], record[codes.subt]),
-          price: record[codes.price],
-          prev: record[codes.prev],
+          price: Number(record[codes.price]),
+          prev: Number(record[codes.prev]),
           sm: 0,
           sy: 0,
           mm: 0,
@@ -126,7 +126,7 @@ const getAlreadyAddedInstruments = async (typeIdentifier) => {
       const getInstrumentData = async (token) => {
         const query = {
           limit: 100000,
-          filter: { exchg: { eq: typeIdentifier } },
+          filter: { sid: { eq: typeIdentifier } },
         };
         if (token) {
           query.nextToken = token;
@@ -158,8 +158,8 @@ const pushData = (data, typeIdentifier) => {
         errorIDs: [],
       };
 
-      let insdata = await getAlreadyAddedInstruments(typeIdentifier);
-      for (let i = 0; i < data[i].length; i++) {
+      const insdata = await getAlreadyAddedInstruments(typeIdentifier);
+      for (let i = 0; i < data.length; i++) {
         const insertedData = insdata.filter((bunch) => bunch.some((item) => item.id === data[i].id)).length
           ? await insertInstrument({ input: data[i] }, "UpdateInstrument")
           : await insertInstrument({ input: data[i] }, "CreateInstrument");
@@ -170,7 +170,6 @@ const pushData = (data, typeIdentifier) => {
               error: insertedData.body.errors,
             })
           : instrumentData.updatedIDs.push(data[i].id);
-        console.log(i, data.length, data[i].id, typeIdentifier, insertedData.body.errors)
       }
       console.log(instrumentData);
       resolve(instrumentData);

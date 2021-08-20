@@ -15,7 +15,7 @@ const monthsArray = [
   "DEC",
 ];
 const today = new Date();
-const todayDate = today.getDate() - 1;
+const todayDate = today.getDate();
 const date = todayDate < 10 ? `0${todayDate}` : todayDate;
 
 // For BSE
