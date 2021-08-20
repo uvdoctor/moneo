@@ -20,7 +20,6 @@ const getData = async (element, index) => {
     if (errMessage.includes("Payment Required") && errCode == 402) {
       if (index <= apiKeys.eodhistoricaldata.length - 1) {
         index++;
-        // console.log(index);
         return await getData(element, index);
       }
     }
@@ -28,27 +27,37 @@ const getData = async (element, index) => {
   }
 };
 
-const pushData = async (code, close) => {
+const pushData = async (data) => {
   const alreadyInsertedData = await graphqlOperation(
     { Limit: 10000 },
     "ListEodPricess"
   );
-
-  const insertedData =
-    (await alreadyInsertedData.body.data.listEODPricess.items.some(
-      (result) => result.id === code
-    ))
-      ? await graphqlOperation(
-          { id: code, price: close, name: code },
-          "UpdateEodPrices"
-        )
-      : await graphqlOperation(
-          { id: code, price: close, name: code },
-          "CreateEodPrices"
-        );
-
-  console.log("Operation result:", insertedData.body);
-  return insertedData;
+  const updatedList = [];
+  for (i in data) {
+    const insertedData =
+      (await alreadyInsertedData.body.data.listEODPricess.items.some(
+        (result) => result.id === data[i].code
+      ))
+        ? await graphqlOperation(
+            {
+              id: data[i].code,
+              price: data[i].close,
+              name: data[i].code,
+            },
+            "UpdateEodPrices"
+          )
+        : await graphqlOperation(
+            {
+              id: data[i].code,
+              price: data[i].close,
+              name: data[i].code,
+            },
+            "CreateEodPrices"
+          );
+    console.log(insertedData.body);
+    updatedList.push(insertedData.body);
+  }
+  return updatedList;
 };
 
 module.exports = {
