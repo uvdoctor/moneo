@@ -1,6 +1,5 @@
+const { isInferTypeNode } = require("typescript");
 const graphqlOperation = require("./operation");
-const nextToken =
-  "eyJ2ZXJzaW9uIjoyLCJ0b2tlbiI6IkFRSUNBSGg5OUIvN3BjWU41eE96NDZJMW5GeGM4WUNGeG1acmFOMUpqajZLWkFDQ25BRWh2MVBOOGRmSWFDNktkaUJUV3Q1cUFBQUIvekNDQWZzR0NTcUdTSWIzRFFFSEJxQ0NBZXd3Z2dIb0FnRUFNSUlCNFFZSktvWklodmNOQVFjQk1CNEdDV0NHU0FGbEF3UUJMakFSQkF4TDgzZkhVU1ptWmtjdHBhNENBUkNBZ2dHeStxVmFPQ25NUWU2d1E1U0RpZmFhWFRmQUFqRG9GU1JkZ0t3a3dhM0x6VzcrWm4vNDF0KzlXNkFtUVB6RXUwUHFWSTNVaElTT1Z4NkJHUXFxL1hxblJtdUpadGd4MjFSVzhyM0JGNWVPRFIyN09LZzE1TDZJQzJTc0FzSS9TejNIb2owN0dLUmZlNUpzeThOQVI2emxUdnFuRlhKcUxGZUZEendxY2c0NE9RVVRNOXJCbFdhTk5UU1RwRkl6dlZ2c2JuL2pSWkhPZXd3Q1RSdC9nRTVxWjkyd2kxd24vd0hFWS9uMDlmUGQ3SGhiTCtqT3d6M2N0Mm11b3loYS9kY01Ba2NIaWlPRHd6V1FnT1FMZ24wTkhGeWtqZzg3ZmxYUHBUbUg5bDA1aEc5dGQ1RGpTaTNmT1pESGFIWTZqRGdxRXBlOEdSTkdyY2VURlpES093dzhPQmM0Q3RBUURGQlpvUVZ4VFBRWFAxVSsyWk9YKzhLd3RaNUNocDNEVkZkT2xXMVhIb0xoZmFQbTJ2TWw4TldGSVI0T1lzY2p0SGtkbUJBeHlKK0RaemQ2aTFsbXpnK1JmV09SQnNXWEdGckFlSFdidzJYTmFlY2ZWOU5SQUN5QlJjT2ZERjB3N0hCVy9sbm15emtQMmREaDlWdVc5RGl2RER1d1Y3VUdsYU1ubysyWVc3OWRwRGhRdjIvaHdxN3FHUEpqbnpDM0xWbkwvOVdTQzI1VklmQzdNMUtGV0xYZERKL3lFdEtsUVFYM2duOD0ifQ==";
 
 const getType = (element) => {
   switch (true) {
@@ -40,41 +39,78 @@ const mfType = (element) => {
   }
 };
 
+const getDataFromListInstruments = async () => {
+  const getDataAtOnce = await graphqlOperation(
+    { limit: 100000 },
+    "ListInstruments"
+  );
+
+  let dataAlreadyAdded = [...getDataAtOnce.body.data.listInstruments.items];
+  let token = getDataAtOnce.body.data.listInstruments.nextToken;
+
+  const dataByToken = async (token) =>
+    await graphqlOperation(
+      { limit: 100000, nextToken: token },
+      "ListInstruments"
+    );
+
+  const checkToken = async () => {
+    const getDataFromToken = await dataByToken(token);
+    token = getDataFromToken.body.data.listInstruments.nextToken;
+    dataAlreadyAdded = dataAlreadyAdded.concat(
+      getDataFromToken.body.data.listInstruments.items
+    );
+
+    if (token === null) {
+      return dataAlreadyAdded;
+    } else {
+      await checkToken();
+    }
+  };
+
+  await checkToken();
+  return dataAlreadyAdded;
+};
+
 const pushData = (mfList) => {
   return new Promise(async (resolve, reject) => {
-    try {
-      const updatedData = [];
-      // let alreadyAddedData = [];
-      // const getAlreadyAddedData = await graphqlOperation
-      // );
-      // const data = await graphqlOperation(
-      //   { limit: 100000, nextToken: nextToken },
-      //   "ListInstruments"
-      // );
-      // alreadyAddedData = [...getAlreadyAddedData.body.data.listInstruments.items, ...data.body.data.listInstruments.items];
-      // console.log(alreadyAddedData);
-      // console.log(alreadyAddedData.length);
+    // try {
+    const updatedData = [];
+    const getInstrumentsArray = await getDataFromListInstruments();
 
-      // const alreadyAddedData = await graphqlOperation(
-      //   { limit: 100000, nextToken: },
-      //   "ListInstruments"
-      // );
-      // console.log(alreadyAddedData.body.data.listInstruments);
-      for (let i = 0; i < mfList.length; i++) {
-        // const insertedData =
-        //   (alreadyAddedData.body.data.listInstruments.items.some(
-        //     (item) => item.id === mfList[i].id
-        //   ))
-        //     ? await graphqlOperation({ input: mfList[i] }, "UpdateInstrument")
-        //     : await graphqlOperation({ input: mfList[i] }, "CreateInstrument");
-        // console.log(insertedData.body);
-        // updatedData.push(insertedData);
+    const getSubDividedArray = new Array(
+      Math.ceil(getInstrumentsArray.length / 1000)
+    )
+      .fill()
+      .map((_) => getInstrumentsArray.splice(0, 1000));
+
+    for (let i = 0; i < mfList.length; i++) {
+      let checkData = "";
+      let insertedData = {};
+      for (index in getSubDividedArray) {
+        checkData = getSubDividedArray[index].some(
+          (item) => item.id === mfList[i].id
+        );
+        if (checkData === true) {
+          insertedData = await graphqlOperation(
+            { input: mfList[i] },
+            "UpdateInstrument"
+          );
+          // console.log(insertedData.body);
+          updatedData.push(insertedData.body)
+          break;
+        }
       }
-      resolve(updatedData);
-    } catch (err) {
-      console.log(err);
-      reject(err);
+      if (checkData != true) {
+        insertedData = await graphqlOperation(
+          { input: mfList[i] },
+          "CreateInstrument"
+        );
+        updatedData.push(insertedData.body)
+        // console.log(insertedData.body);
+      }
     }
+    resolve(updatedData)
   });
 };
 
