@@ -49,21 +49,49 @@ const unzipDownloads = async (zipFile, tempDir) => {
   }
 };
 
-const extractDataFromCSV = async (tempDir, fileName, type, codes) => {
+const extractDataFromCSV = async (
+  tempDir,
+  fileName,
+  type,
+  codes,
+  typeIdentifier
+) => {
+  const calcType = (type) => {
+    if (type === "Q" || type === "P") {
+      return "E";
+    } else if (type === "B" || type === "D") {
+      return "F";
+    } else {
+      return "E";
+    }
+  };
+
+  const calcSubType = (type, subt) => {
+    if (type === "Q" || type === "P") {
+      return "S";
+    } else if (type === "B" && subt === "G") {
+      return "GB";
+    } else if ((type === "B" || type === "D") && subt === "F") {
+      return "CB";
+    } else {
+      return "S";
+    }
+  };
+
   const end = new Promise((resolve, reject) => {
     let results = [];
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
         results.push({
-          id: record[codes.id],
-          sid: record[codes.sid],
+          id: `${record[codes.id]}_${typeIdentifier}`,
+          sid: typeIdentifier,
           name: record[codes.name],
           exchg: type,
           country: "IN",
           curr: "INR",
-          type: "E",
-          subt: "S",
+          type: calcType(record[codes.type]),
+          subt: calcSubType(record[codes.type], record[codes.subt]),
           price: record[codes.price],
           prev: record[codes.prev],
           sm: 0,
@@ -76,7 +104,7 @@ const extractDataFromCSV = async (tempDir, fileName, type, codes) => {
       .on("end", async () => {
         await cleanDirectory(
           tempDir,
-          `${type} results extracted successfully and directory is cleaned`
+          `${typeIdentifier} results extracted successfully and directory is cleaned`
         );
         resolve(results);
       })
@@ -91,30 +119,58 @@ const extractDataFromCSV = async (tempDir, fileName, type, codes) => {
   return await end;
 };
 
-const pushData = (data) => {
+const getAlreadyAddedInstruments = async (typeIdentifier) => {
+  let alreadyAddedInstruments = [];
+  return new Promise(async (resolve, reject) => {
+    try {
+      const getInstrumentData = async (token) => {
+        const query = {
+          limit: 100000,
+          filter: { exchg: { eq: typeIdentifier } },
+        };
+        if (token) {
+          query.nextToken = token;
+        }
+        const dataInstruments = await insertInstrument(
+          query,
+          "ListInstruments"
+        );
+        const { items, nextToken } = dataInstruments.body.data.listInstruments;
+        alreadyAddedInstruments.push(items);
+        if (nextToken) {
+          getInstrumentData(nextToken);
+        } else {
+          resolve(alreadyAddedInstruments);
+        }
+      };
+      getInstrumentData();
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+const pushData = (data, typeIdentifier) => {
   return new Promise(async (resolve, reject) => {
     try {
       let instrumentData = {
         updatedIDs: [],
         errorIDs: [],
       };
-      const alreadyAddedInstruments = await insertInstrument(
-        { limit: 10000 },
-        "ListInstruments"
-      );
-      for (let i = 0; i < data.length; i++) {
-        const insertedData =
-          alreadyAddedInstruments.body.data.listInstruments.items.some(
-            (item) => item.id === data[i].id
-          )
-            ? await insertInstrument({ input: data[i] }, "UpdateInstrument")
-            : await insertInstrument({ input: data[i] }, "CreateInstrument");
+
+      let insdata = await getAlreadyAddedInstruments(typeIdentifier);
+      for (let i = 0; i < data[i].length; i++) {
+        const insertedData = insdata.filter((bunch) => bunch.some((item) => item.id === data[i].id)).length
+          ? await insertInstrument({ input: data[i] }, "UpdateInstrument")
+          : await insertInstrument({ input: data[i] }, "CreateInstrument");
+          
         insertedData.body.errors
           ? instrumentData.errorIDs.push({
               id: data[i].id,
               error: insertedData.body.errors,
             })
           : instrumentData.updatedIDs.push(data[i].id);
+        console.log(i, data.length, data[i].id, typeIdentifier, insertedData.body.errors)
       }
       console.log(instrumentData);
       resolve(instrumentData);

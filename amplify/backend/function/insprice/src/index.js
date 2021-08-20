@@ -12,7 +12,7 @@ const {
   pushData,
 } = bhaoUtils;
 
-const getData = () => {
+const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
     let results = [];
     try {
@@ -20,12 +20,12 @@ const getData = () => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const { type, fileName, url, codes } = apiArray[i];
+        const { type, fileName, url, codes, typeIdentifier } = apiArray[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
-        const data = await extractDataFromCSV(tempDir, fileName, type, codes);
-        results = [...results, ...data];
+        const data = await extractDataFromCSV(tempDir, fileName, type, codes, typeIdentifier);
+        await pushData(data, typeIdentifier)
       }
       resolve(results);
     } catch (err) {
@@ -35,6 +35,5 @@ const getData = () => {
 };
 
 exports.handler = async (event) => {
-  const data = await getData();
-  return await pushData(data)
+  return await getAndPushData()
 };
