@@ -40,7 +40,7 @@ const mfType = (element) => {
 
 const getDataFromListInstruments = async () => {
   const getDataAtOnce = await graphqlOperation(
-    { limit: 100000 },
+    { limit: 100000, filter: { subt: { eq: "M" } } },
     "ListInstruments"
   );
 
@@ -49,7 +49,7 @@ const getDataFromListInstruments = async () => {
 
   const dataByToken = async (token) =>
     await graphqlOperation(
-      { limit: 100000, nextToken: token },
+      { limit: 100000, filter: { subt: { eq: "M" } }, nextToken: token },
       "ListInstruments"
     );
 
@@ -94,7 +94,7 @@ const pushData = (mfList) => {
             { input: mfList[i] },
             "UpdateInstrument"
           );
-          // console.log(insertedData.body);
+          console.log(insertedData.body);
           updatedData.push(insertedData.body);
           break;
         }
@@ -105,7 +105,7 @@ const pushData = (mfList) => {
           "CreateInstrument"
         );
         updatedData.push(insertedData.body);
-        // console.log(insertedData.body);
+        console.log(insertedData.body);
       }
     }
     resolve(updatedData);
