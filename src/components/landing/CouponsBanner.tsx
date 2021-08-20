@@ -40,7 +40,7 @@ export default function CouponsBanner() {
 					</div>
 				</div>
 				<div>
-					<img src="images/travel-banner.jpg" />
+					<img src="images/buy-banner.jpg" />
 					<div className="brand-coupon">
 						<Row
 							align="middle"
