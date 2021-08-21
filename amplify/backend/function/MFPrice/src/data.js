@@ -1,63 +1,63 @@
 const graphqlOperation = require("./operation");
 
-const getType = (element) => {
+const getAssetType = (data) => {
   switch (true) {
-    case element["Scheme Type"].includes("Equity"):
+    case data.includes("Equity"):
       return (subt = "E");
-    case element["Scheme Type"].includes("Debt"):
+    case data.includes("Debt"):
       return (subt = "F");
-    case element["Scheme Type"].includes("Hybrid"):
+    case data.includes("Hybrid"):
       return (subt = "H");
-    case element["Scheme Type"].includes("ELSS"):
+    case data.includes("ELSS"):
       return (subt = "E");
-    case element["Scheme Type"].includes("Income"):
+    case data.includes("Income"):
       return (subt = "F");
-    case element["Scheme Type"].includes("Growth"):
+    case data.includes("Growth"):
       return (subt = "E");
-    case element["Scheme Type"].includes("Other"):
+    case data.includes("Other"):
       return (subt = "A");
-    case element["Scheme Type"].includes("Floating"):
+    case data.includes("Floating"):
       return (subt = "F");
-    case element["Scheme Type"].includes("Gilt"):
+    case data.includes("Gilt"):
       return (subt = "F");
-    case element["Scheme Type"].includes("Money Market"):
+    case data.includes("Money Market"):
       return (subt = "F");
-    case element["Scheme Type"].includes("Solution"):
+    case data.includes("Solution"):
       return (subt = "H");
   }
 };
 
-const mfType = (element) => {
+const mfType = (data) => {
   switch (true) {
-    case element["Scheme Type"].includes("Open"):
+    case data.includes("Open"):
       return (mftype = "O");
-    case element["Scheme Type"].includes("Close"):
+    case data.includes("Close"):
       return (mftype = "C");
-    case element["Scheme Type"].includes("Interval"):
+    case data.includes("Interval"):
       return (mftype = "I");
   }
 };
 
 const getDataFromListInstruments = async () => {
   const getDataAtOnce = await graphqlOperation(
-    { limit: 100000, filter: { subt: { eq: "M" } } },
-    "ListInstruments"
+    {
+      limit: 100000,
+      // filter: { subt: { eq: "M" } } },
+    },
+    "ListInmf"
   );
 
-  let dataAlreadyAdded = [...getDataAtOnce.body.data.listInstruments.items];
-  let token = getDataAtOnce.body.data.listInstruments.nextToken;
+  let dataAlreadyAdded = [...getDataAtOnce.body.data.listInmf.items];
+  let token = getDataAtOnce.body.data.listInmf.nextToken;
 
   const dataByToken = async (token) =>
-    await graphqlOperation(
-      { limit: 100000, filter: { subt: { eq: "M" } }, nextToken: token },
-      "ListInstruments"
-    );
+    await graphqlOperation({ limit: 100000, nextToken: token }, "ListInmf");
 
   const checkToken = async () => {
     const getDataFromToken = await dataByToken(token);
-    token = getDataFromToken.body.data.listInstruments.nextToken;
+    token = getDataFromToken.body.data.listInmf.nextToken;
     dataAlreadyAdded = dataAlreadyAdded.concat(
-      getDataFromToken.body.data.listInstruments.items
+      getDataFromToken.body.data.listInmf.items
     );
 
     if (!token) {
@@ -92,7 +92,7 @@ const pushData = (mfList) => {
         if (checkData) {
           insertedData = await graphqlOperation(
             { input: mfList[i] },
-            "UpdateInstrument"
+            "UpdateInmf"
           );
           console.log(insertedData.body);
           updatedData.push(insertedData.body);
@@ -102,7 +102,7 @@ const pushData = (mfList) => {
       if (!checkData) {
         insertedData = await graphqlOperation(
           { input: mfList[i] },
-          "CreateInstrument"
+          "CreateInmf"
         );
         updatedData.push(insertedData.body);
         console.log(insertedData.body);
@@ -113,7 +113,7 @@ const pushData = (mfList) => {
 };
 
 module.exports = {
-  getType,
+  getAssetType,
   mfType,
   pushData,
 };
