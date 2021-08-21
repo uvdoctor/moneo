@@ -219,6 +219,7 @@ enum MCap {
 	S
 	M
 	L
+	H
 }
 
 enum CreditRating {
