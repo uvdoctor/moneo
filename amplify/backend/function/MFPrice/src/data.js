@@ -60,7 +60,7 @@ const getDataFromListInstruments = async () => {
       getDataFromToken.body.data.listInstruments.items
     );
 
-    if (token === null) {
+    if (!token) {
       return dataAlreadyAdded;
     } else {
       await checkToken();
@@ -89,7 +89,7 @@ const pushData = (mfList) => {
         checkData = getSubDividedArray[index].some(
           (item) => item.id === mfList[i].id
         );
-        if (checkData === true) {
+        if (checkData) {
           insertedData = await graphqlOperation(
             { input: mfList[i] },
             "UpdateInstrument"
@@ -99,7 +99,7 @@ const pushData = (mfList) => {
           break;
         }
       }
-      if (checkData != true) {
+      if (!checkData) {
         insertedData = await graphqlOperation(
           { input: mfList[i] },
           "CreateInstrument"
