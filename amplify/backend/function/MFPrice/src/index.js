@@ -1,10 +1,20 @@
 const mfData = require("india-mutual-fund-info");
 const dataInfo = require("./data");
-const { getAssetType, mfType, pushData } = dataInfo;
+const {
+  getDirISIN,
+  directISIN,
+  getAssetSubType,
+  getAssetType,
+  mfType,
+  pushData,
+  mCap,
+} = dataInfo;
 
 const getData = () => {
   return new Promise(async (resolve, reject) => {
     const mfInfoArray = await mfData.today();
+    const regdirData = directISIN(mfInfoArray);
+    const { regularData, directData } = regdirData;
     const mfList = [];
     mfInfoArray.map((element) => {
       const tidToCompare = element["ISIN Div Reinvestment"];
@@ -15,19 +25,27 @@ const getData = () => {
       if (id === "-" && tid === "-") {
         return;
       }
-      mfList.push({
+      const dataToAdd = {
         id: id,
         sid: element["Scheme Code"],
         tid: tid,
+        dir: getDirISIN(regularData, directData, element),
         name: element["Scheme Name"],
         type: getAssetType(element["Scheme Type"]),
-        subt: "M",
-        // subt: getAssetSubType(element["Scheme Type"]),
+        subt: getAssetSubType(element),
         nav: parseFloat(element["Net Asset Value"]),
         mftype: mfType(element["Scheme Type"]),
-        // mcap: MCap,
+        mcap: mCap(element),
         tf: element["Scheme Name"].includes("Tax") ? "Y" : "N",
+      };
+
+      Object.keys(dataToAdd).forEach((key) => {
+        if (dataToAdd[key] === false) {
+          delete dataToAdd[key];
+        }
       });
+      console.log(dataToAdd);
+      mfList.push(dataToAdd);
     });
     resolve(mfList);
   });

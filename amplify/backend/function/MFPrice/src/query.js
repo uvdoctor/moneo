@@ -63,5 +63,38 @@ module.exports = {
     }
   }
 `,
-  },
+  ListInmFs :`
+  query ListInmFs(
+    $id: String
+    $filter: ModelINMFFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINMFs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        tid
+        name
+        type
+        subt
+        nav
+        mftype
+        mcap
+        tf
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
+  }
 };
