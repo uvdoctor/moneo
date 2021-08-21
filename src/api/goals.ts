@@ -914,27 +914,20 @@ export type UpdateRegistrationInput = {
   long?: number | null,
 };
 
-export type CreateInstrumentInput = {
+export type CreateINExchangeInput = {
   id: string,
-  sid?: string | null,
-  tid?: string | null,
+  sid: string,
   name: string,
-  exchg?: string | null,
-  country: string,
-  curr: string,
-  type: InsType,
-  subt: InsSubType,
+  exchg: string,
+  type: AssetType,
+  subt: AssetSubType,
+  itype?: InsType | null,
   price: number,
-  prev?: number | null,
-  sm?: number | null,
-  sy?: number | null,
-  mm?: number | null,
-  my?: number | null,
-  rate?: number | null,
-  mftype?: MFSchemeType | null,
+  prev: number,
+  mcap?: MCap | null,
 };
 
-export enum InsType {
+export enum AssetType {
   E = "E",
   F = "F",
   A = "A",
@@ -942,17 +935,204 @@ export enum InsType {
 }
 
 
-export enum InsSubType {
+export enum AssetSubType {
   S = "S",
   CB = "CB",
   GB = "GB",
-  MB = "MB",
-  ETF = "ETF",
-  M = "M",
+  GBO = "GBO",
   GoldB = "GoldB",
+  R = "R",
+}
+
+
+export enum InsType {
+  ETF = "ETF",
   REIT = "REIT",
 }
 
+
+export enum MCap {
+  S = "S",
+  M = "M",
+  L = "L",
+}
+
+
+export type ModelINExchangeConditionInput = {
+  sid?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  exchg?: ModelStringInput | null,
+  type?: ModelAssetTypeInput | null,
+  subt?: ModelAssetSubTypeInput | null,
+  itype?: ModelInsTypeInput | null,
+  price?: ModelFloatInput | null,
+  prev?: ModelFloatInput | null,
+  mcap?: ModelMCapInput | null,
+  and?: Array< ModelINExchangeConditionInput | null > | null,
+  or?: Array< ModelINExchangeConditionInput | null > | null,
+  not?: ModelINExchangeConditionInput | null,
+};
+
+export type ModelAssetTypeInput = {
+  eq?: AssetType | null,
+  ne?: AssetType | null,
+};
+
+export type ModelAssetSubTypeInput = {
+  eq?: AssetSubType | null,
+  ne?: AssetSubType | null,
+};
+
+export type ModelInsTypeInput = {
+  eq?: InsType | null,
+  ne?: InsType | null,
+};
+
+export type ModelMCapInput = {
+  eq?: MCap | null,
+  ne?: MCap | null,
+};
+
+export type INExchange = {
+  __typename: "INExchange",
+  id?: string,
+  sid?: string,
+  name?: string,
+  exchg?: string,
+  type?: AssetType,
+  subt?: AssetSubType,
+  itype?: InsType | null,
+  price?: number,
+  prev?: number,
+  mcap?: MCap | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateINExchangeInput = {
+  id: string,
+  sid?: string | null,
+  name?: string | null,
+  exchg?: string | null,
+  type?: AssetType | null,
+  subt?: AssetSubType | null,
+  itype?: InsType | null,
+  price?: number | null,
+  prev?: number | null,
+  mcap?: MCap | null,
+};
+
+export type DeleteINExchangeInput = {
+  id: string,
+};
+
+export type CreateINBondInput = {
+  id: string,
+  sid: string,
+  tid?: string | null,
+  name: string,
+  subt: AssetSubType,
+  price: number,
+  sm: number,
+  sy: number,
+  mm: number,
+  my: number,
+  rate: number,
+  fr: YN,
+  tf: YN,
+  fv: number,
+  cr: CreditRating,
+};
+
+export enum CreditRating {
+  E = "E",
+  H = "H",
+  M = "M",
+  L = "L",
+  J = "J",
+}
+
+
+export type ModelINBondConditionInput = {
+  sid?: ModelStringInput | null,
+  tid?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  subt?: ModelAssetSubTypeInput | null,
+  price?: ModelFloatInput | null,
+  sm?: ModelIntInput | null,
+  sy?: ModelIntInput | null,
+  mm?: ModelIntInput | null,
+  my?: ModelIntInput | null,
+  rate?: ModelFloatInput | null,
+  fr?: ModelYNInput | null,
+  tf?: ModelYNInput | null,
+  fv?: ModelIntInput | null,
+  cr?: ModelCreditRatingInput | null,
+  and?: Array< ModelINBondConditionInput | null > | null,
+  or?: Array< ModelINBondConditionInput | null > | null,
+  not?: ModelINBondConditionInput | null,
+};
+
+export type ModelCreditRatingInput = {
+  eq?: CreditRating | null,
+  ne?: CreditRating | null,
+};
+
+export type INBond = {
+  __typename: "INBond",
+  id?: string,
+  sid?: string,
+  tid?: string | null,
+  name?: string,
+  subt?: AssetSubType,
+  price?: number,
+  sm?: number,
+  sy?: number,
+  mm?: number,
+  my?: number,
+  rate?: number,
+  fr?: YN,
+  tf?: YN,
+  fv?: number,
+  cr?: CreditRating,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateINBondInput = {
+  id: string,
+  sid?: string | null,
+  tid?: string | null,
+  name?: string | null,
+  subt?: AssetSubType | null,
+  price?: number | null,
+  sm?: number | null,
+  sy?: number | null,
+  mm?: number | null,
+  my?: number | null,
+  rate?: number | null,
+  fr?: YN | null,
+  tf?: YN | null,
+  fv?: number | null,
+  cr?: CreditRating | null,
+};
+
+export type DeleteINBondInput = {
+  id: string,
+};
+
+export type CreateINMFInput = {
+  id: string,
+  sid: string,
+  tid?: string | null,
+  name: string,
+  type: AssetType,
+  subt: AssetSubType,
+  nav: number,
+  mftype: MFSchemeType,
+  mcap?: MCap | null,
+  tf?: YN | null,
+};
 
 export enum MFSchemeType {
   O = "O",
@@ -961,36 +1141,19 @@ export enum MFSchemeType {
 }
 
 
-export type ModelInstrumentConditionInput = {
+export type ModelINMFConditionInput = {
   sid?: ModelStringInput | null,
   tid?: ModelStringInput | null,
   name?: ModelStringInput | null,
-  exchg?: ModelStringInput | null,
-  country?: ModelStringInput | null,
-  curr?: ModelStringInput | null,
-  type?: ModelInsTypeInput | null,
-  subt?: ModelInsSubTypeInput | null,
-  price?: ModelFloatInput | null,
-  prev?: ModelFloatInput | null,
-  sm?: ModelIntInput | null,
-  sy?: ModelIntInput | null,
-  mm?: ModelIntInput | null,
-  my?: ModelIntInput | null,
-  rate?: ModelFloatInput | null,
+  type?: ModelAssetTypeInput | null,
+  subt?: ModelAssetSubTypeInput | null,
+  nav?: ModelFloatInput | null,
   mftype?: ModelMFSchemeTypeInput | null,
-  and?: Array< ModelInstrumentConditionInput | null > | null,
-  or?: Array< ModelInstrumentConditionInput | null > | null,
-  not?: ModelInstrumentConditionInput | null,
-};
-
-export type ModelInsTypeInput = {
-  eq?: InsType | null,
-  ne?: InsType | null,
-};
-
-export type ModelInsSubTypeInput = {
-  eq?: InsSubType | null,
-  ne?: InsSubType | null,
+  mcap?: ModelMCapInput | null,
+  tf?: ModelYNInput | null,
+  and?: Array< ModelINMFConditionInput | null > | null,
+  or?: Array< ModelINMFConditionInput | null > | null,
+  not?: ModelINMFConditionInput | null,
 };
 
 export type ModelMFSchemeTypeInput = {
@@ -998,50 +1161,36 @@ export type ModelMFSchemeTypeInput = {
   ne?: MFSchemeType | null,
 };
 
-export type Instrument = {
-  __typename: "Instrument",
+export type INMF = {
+  __typename: "INMF",
   id?: string,
-  sid?: string | null,
+  sid?: string,
   tid?: string | null,
   name?: string,
-  exchg?: string | null,
-  country?: string,
-  curr?: string,
-  type?: InsType,
-  subt?: InsSubType,
-  price?: number,
-  prev?: number | null,
-  sm?: number | null,
-  sy?: number | null,
-  mm?: number | null,
-  my?: number | null,
-  rate?: number | null,
-  mftype?: MFSchemeType | null,
+  type?: AssetType,
+  subt?: AssetSubType,
+  nav?: number,
+  mftype?: MFSchemeType,
+  mcap?: MCap | null,
+  tf?: YN | null,
   createdAt?: string,
   updatedAt?: string,
 };
 
-export type UpdateInstrumentInput = {
+export type UpdateINMFInput = {
   id: string,
   sid?: string | null,
   tid?: string | null,
   name?: string | null,
-  exchg?: string | null,
-  country?: string | null,
-  curr?: string | null,
-  type?: InsType | null,
-  subt?: InsSubType | null,
-  price?: number | null,
-  prev?: number | null,
-  sm?: number | null,
-  sy?: number | null,
-  mm?: number | null,
-  my?: number | null,
-  rate?: number | null,
+  type?: AssetType | null,
+  subt?: AssetSubType | null,
+  nav?: number | null,
   mftype?: MFSchemeType | null,
+  mcap?: MCap | null,
+  tf?: YN | null,
 };
 
-export type DeleteInstrumentInput = {
+export type DeleteINMFInput = {
   id: string,
 };
 
@@ -1293,32 +1442,74 @@ export type ModelRegistrationConnection = {
   nextToken?: string | null,
 };
 
-export type ModelInstrumentFilterInput = {
+export type ModelINExchangeFilterInput = {
+  id?: ModelStringInput | null,
+  sid?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  exchg?: ModelStringInput | null,
+  type?: ModelAssetTypeInput | null,
+  subt?: ModelAssetSubTypeInput | null,
+  itype?: ModelInsTypeInput | null,
+  price?: ModelFloatInput | null,
+  prev?: ModelFloatInput | null,
+  mcap?: ModelMCapInput | null,
+  and?: Array< ModelINExchangeFilterInput | null > | null,
+  or?: Array< ModelINExchangeFilterInput | null > | null,
+  not?: ModelINExchangeFilterInput | null,
+};
+
+export type ModelINExchangeConnection = {
+  __typename: "ModelINExchangeConnection",
+  items?:  Array<INExchange | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelINBondFilterInput = {
   id?: ModelStringInput | null,
   sid?: ModelStringInput | null,
   tid?: ModelStringInput | null,
   name?: ModelStringInput | null,
-  exchg?: ModelStringInput | null,
-  country?: ModelStringInput | null,
-  curr?: ModelStringInput | null,
-  type?: ModelInsTypeInput | null,
-  subt?: ModelInsSubTypeInput | null,
+  subt?: ModelAssetSubTypeInput | null,
   price?: ModelFloatInput | null,
-  prev?: ModelFloatInput | null,
   sm?: ModelIntInput | null,
   sy?: ModelIntInput | null,
   mm?: ModelIntInput | null,
   my?: ModelIntInput | null,
   rate?: ModelFloatInput | null,
-  mftype?: ModelMFSchemeTypeInput | null,
-  and?: Array< ModelInstrumentFilterInput | null > | null,
-  or?: Array< ModelInstrumentFilterInput | null > | null,
-  not?: ModelInstrumentFilterInput | null,
+  fr?: ModelYNInput | null,
+  tf?: ModelYNInput | null,
+  fv?: ModelIntInput | null,
+  cr?: ModelCreditRatingInput | null,
+  and?: Array< ModelINBondFilterInput | null > | null,
+  or?: Array< ModelINBondFilterInput | null > | null,
+  not?: ModelINBondFilterInput | null,
 };
 
-export type ModelInstrumentConnection = {
-  __typename: "ModelInstrumentConnection",
-  items?:  Array<Instrument | null > | null,
+export type ModelINBondConnection = {
+  __typename: "ModelINBondConnection",
+  items?:  Array<INBond | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelINMFFilterInput = {
+  id?: ModelStringInput | null,
+  sid?: ModelStringInput | null,
+  tid?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  type?: ModelAssetTypeInput | null,
+  subt?: ModelAssetSubTypeInput | null,
+  nav?: ModelFloatInput | null,
+  mftype?: ModelMFSchemeTypeInput | null,
+  mcap?: ModelMCapInput | null,
+  tf?: ModelYNInput | null,
+  and?: Array< ModelINMFFilterInput | null > | null,
+  or?: Array< ModelINMFFilterInput | null > | null,
+  not?: ModelINMFFilterInput | null,
+};
+
+export type ModelINMFConnection = {
+  __typename: "ModelINMFConnection",
+  items?:  Array<INMF | null > | null,
   nextToken?: string | null,
 };
 
@@ -2870,91 +3061,223 @@ export type UpdateRegistrationMutation = {
   } | null,
 };
 
-export type CreateInstrumentMutationVariables = {
-  input?: CreateInstrumentInput,
-  condition?: ModelInstrumentConditionInput | null,
+export type CreateInExchangeMutationVariables = {
+  input?: CreateINExchangeInput,
+  condition?: ModelINExchangeConditionInput | null,
 };
 
-export type CreateInstrumentMutation = {
-  createInstrument?:  {
-    __typename: "Instrument",
+export type CreateInExchangeMutation = {
+  createINExchange?:  {
+    __typename: "INExchange",
     id: string,
-    sid?: string | null,
-    tid?: string | null,
+    sid: string,
     name: string,
-    exchg?: string | null,
-    country: string,
-    curr: string,
-    type: InsType,
-    subt: InsSubType,
+    exchg: string,
+    type: AssetType,
+    subt: AssetSubType,
+    itype?: InsType | null,
     price: number,
-    prev?: number | null,
-    sm?: number | null,
-    sy?: number | null,
-    mm?: number | null,
-    my?: number | null,
-    rate?: number | null,
-    mftype?: MFSchemeType | null,
+    prev: number,
+    mcap?: MCap | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateInstrumentMutationVariables = {
-  input?: UpdateInstrumentInput,
-  condition?: ModelInstrumentConditionInput | null,
+export type UpdateInExchangeMutationVariables = {
+  input?: UpdateINExchangeInput,
+  condition?: ModelINExchangeConditionInput | null,
 };
 
-export type UpdateInstrumentMutation = {
-  updateInstrument?:  {
-    __typename: "Instrument",
+export type UpdateInExchangeMutation = {
+  updateINExchange?:  {
+    __typename: "INExchange",
     id: string,
-    sid?: string | null,
-    tid?: string | null,
+    sid: string,
     name: string,
-    exchg?: string | null,
-    country: string,
-    curr: string,
-    type: InsType,
-    subt: InsSubType,
+    exchg: string,
+    type: AssetType,
+    subt: AssetSubType,
+    itype?: InsType | null,
     price: number,
-    prev?: number | null,
-    sm?: number | null,
-    sy?: number | null,
-    mm?: number | null,
-    my?: number | null,
-    rate?: number | null,
-    mftype?: MFSchemeType | null,
+    prev: number,
+    mcap?: MCap | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteInstrumentMutationVariables = {
-  input?: DeleteInstrumentInput,
-  condition?: ModelInstrumentConditionInput | null,
+export type DeleteInExchangeMutationVariables = {
+  input?: DeleteINExchangeInput,
+  condition?: ModelINExchangeConditionInput | null,
 };
 
-export type DeleteInstrumentMutation = {
-  deleteInstrument?:  {
-    __typename: "Instrument",
+export type DeleteInExchangeMutation = {
+  deleteINExchange?:  {
+    __typename: "INExchange",
     id: string,
-    sid?: string | null,
+    sid: string,
+    name: string,
+    exchg: string,
+    type: AssetType,
+    subt: AssetSubType,
+    itype?: InsType | null,
+    price: number,
+    prev: number,
+    mcap?: MCap | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateInBondMutationVariables = {
+  input?: CreateINBondInput,
+  condition?: ModelINBondConditionInput | null,
+};
+
+export type CreateInBondMutation = {
+  createINBond?:  {
+    __typename: "INBond",
+    id: string,
+    sid: string,
     tid?: string | null,
     name: string,
-    exchg?: string | null,
-    country: string,
-    curr: string,
-    type: InsType,
-    subt: InsSubType,
+    subt: AssetSubType,
     price: number,
-    prev?: number | null,
-    sm?: number | null,
-    sy?: number | null,
-    mm?: number | null,
-    my?: number | null,
-    rate?: number | null,
-    mftype?: MFSchemeType | null,
+    sm: number,
+    sy: number,
+    mm: number,
+    my: number,
+    rate: number,
+    fr: YN,
+    tf: YN,
+    fv: number,
+    cr: CreditRating,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateInBondMutationVariables = {
+  input?: UpdateINBondInput,
+  condition?: ModelINBondConditionInput | null,
+};
+
+export type UpdateInBondMutation = {
+  updateINBond?:  {
+    __typename: "INBond",
+    id: string,
+    sid: string,
+    tid?: string | null,
+    name: string,
+    subt: AssetSubType,
+    price: number,
+    sm: number,
+    sy: number,
+    mm: number,
+    my: number,
+    rate: number,
+    fr: YN,
+    tf: YN,
+    fv: number,
+    cr: CreditRating,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteInBondMutationVariables = {
+  input?: DeleteINBondInput,
+  condition?: ModelINBondConditionInput | null,
+};
+
+export type DeleteInBondMutation = {
+  deleteINBond?:  {
+    __typename: "INBond",
+    id: string,
+    sid: string,
+    tid?: string | null,
+    name: string,
+    subt: AssetSubType,
+    price: number,
+    sm: number,
+    sy: number,
+    mm: number,
+    my: number,
+    rate: number,
+    fr: YN,
+    tf: YN,
+    fv: number,
+    cr: CreditRating,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateInmfMutationVariables = {
+  input?: CreateINMFInput,
+  condition?: ModelINMFConditionInput | null,
+};
+
+export type CreateInmfMutation = {
+  createINMF?:  {
+    __typename: "INMF",
+    id: string,
+    sid: string,
+    tid?: string | null,
+    name: string,
+    type: AssetType,
+    subt: AssetSubType,
+    nav: number,
+    mftype: MFSchemeType,
+    mcap?: MCap | null,
+    tf?: YN | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateInmfMutationVariables = {
+  input?: UpdateINMFInput,
+  condition?: ModelINMFConditionInput | null,
+};
+
+export type UpdateInmfMutation = {
+  updateINMF?:  {
+    __typename: "INMF",
+    id: string,
+    sid: string,
+    tid?: string | null,
+    name: string,
+    type: AssetType,
+    subt: AssetSubType,
+    nav: number,
+    mftype: MFSchemeType,
+    mcap?: MCap | null,
+    tf?: YN | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteInmfMutationVariables = {
+  input?: DeleteINMFInput,
+  condition?: ModelINMFConditionInput | null,
+};
+
+export type DeleteInmfMutation = {
+  deleteINMF?:  {
+    __typename: "INMF",
+    id: string,
+    sid: string,
+    tid?: string | null,
+    name: string,
+    type: AssetType,
+    subt: AssetSubType,
+    nav: number,
+    mftype: MFSchemeType,
+    mcap?: MCap | null,
+    tf?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3977,65 +4300,165 @@ export type ListRegistrationsQuery = {
   } | null,
 };
 
-export type GetInstrumentQueryVariables = {
+export type GetInExchangeQueryVariables = {
   id?: string,
 };
 
-export type GetInstrumentQuery = {
-  getInstrument?:  {
-    __typename: "Instrument",
+export type GetInExchangeQuery = {
+  getINExchange?:  {
+    __typename: "INExchange",
     id: string,
-    sid?: string | null,
-    tid?: string | null,
+    sid: string,
     name: string,
-    exchg?: string | null,
-    country: string,
-    curr: string,
-    type: InsType,
-    subt: InsSubType,
+    exchg: string,
+    type: AssetType,
+    subt: AssetSubType,
+    itype?: InsType | null,
     price: number,
-    prev?: number | null,
-    sm?: number | null,
-    sy?: number | null,
-    mm?: number | null,
-    my?: number | null,
-    rate?: number | null,
-    mftype?: MFSchemeType | null,
+    prev: number,
+    mcap?: MCap | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListInstrumentsQueryVariables = {
+export type ListInExchangesQueryVariables = {
   id?: string | null,
-  filter?: ModelInstrumentFilterInput | null,
+  filter?: ModelINExchangeFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListInstrumentsQuery = {
-  listInstruments?:  {
-    __typename: "ModelInstrumentConnection",
+export type ListInExchangesQuery = {
+  listINExchanges?:  {
+    __typename: "ModelINExchangeConnection",
     items?:  Array< {
-      __typename: "Instrument",
+      __typename: "INExchange",
       id: string,
-      sid?: string | null,
+      sid: string,
+      name: string,
+      exchg: string,
+      type: AssetType,
+      subt: AssetSubType,
+      itype?: InsType | null,
+      price: number,
+      prev: number,
+      mcap?: MCap | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetInBondQueryVariables = {
+  id?: string,
+};
+
+export type GetInBondQuery = {
+  getINBond?:  {
+    __typename: "INBond",
+    id: string,
+    sid: string,
+    tid?: string | null,
+    name: string,
+    subt: AssetSubType,
+    price: number,
+    sm: number,
+    sy: number,
+    mm: number,
+    my: number,
+    rate: number,
+    fr: YN,
+    tf: YN,
+    fv: number,
+    cr: CreditRating,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListInBondsQueryVariables = {
+  id?: string | null,
+  filter?: ModelINBondFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListInBondsQuery = {
+  listINBonds?:  {
+    __typename: "ModelINBondConnection",
+    items?:  Array< {
+      __typename: "INBond",
+      id: string,
+      sid: string,
       tid?: string | null,
       name: string,
-      exchg?: string | null,
-      country: string,
-      curr: string,
-      type: InsType,
-      subt: InsSubType,
+      subt: AssetSubType,
       price: number,
-      prev?: number | null,
-      sm?: number | null,
-      sy?: number | null,
-      mm?: number | null,
-      my?: number | null,
-      rate?: number | null,
-      mftype?: MFSchemeType | null,
+      sm: number,
+      sy: number,
+      mm: number,
+      my: number,
+      rate: number,
+      fr: YN,
+      tf: YN,
+      fv: number,
+      cr: CreditRating,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetInmfQueryVariables = {
+  id?: string,
+};
+
+export type GetInmfQuery = {
+  getINMF?:  {
+    __typename: "INMF",
+    id: string,
+    sid: string,
+    tid?: string | null,
+    name: string,
+    type: AssetType,
+    subt: AssetSubType,
+    nav: number,
+    mftype: MFSchemeType,
+    mcap?: MCap | null,
+    tf?: YN | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListInmFsQueryVariables = {
+  id?: string | null,
+  filter?: ModelINMFFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListInmFsQuery = {
+  listINMFs?:  {
+    __typename: "ModelINMFConnection",
+    items?:  Array< {
+      __typename: "INMF",
+      id: string,
+      sid: string,
+      tid?: string | null,
+      name: string,
+      type: AssetType,
+      subt: AssetSubType,
+      nav: number,
+      mftype: MFSchemeType,
+      mcap?: MCap | null,
+      tf?: YN | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -5548,76 +5971,178 @@ export type OnDeleteRegistrationSubscription = {
   } | null,
 };
 
-export type OnCreateInstrumentSubscription = {
-  onCreateInstrument?:  {
-    __typename: "Instrument",
+export type OnCreateInExchangeSubscription = {
+  onCreateINExchange?:  {
+    __typename: "INExchange",
     id: string,
-    sid?: string | null,
-    tid?: string | null,
+    sid: string,
     name: string,
-    exchg?: string | null,
-    country: string,
-    curr: string,
-    type: InsType,
-    subt: InsSubType,
+    exchg: string,
+    type: AssetType,
+    subt: AssetSubType,
+    itype?: InsType | null,
     price: number,
-    prev?: number | null,
-    sm?: number | null,
-    sy?: number | null,
-    mm?: number | null,
-    my?: number | null,
-    rate?: number | null,
-    mftype?: MFSchemeType | null,
+    prev: number,
+    mcap?: MCap | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateInstrumentSubscription = {
-  onUpdateInstrument?:  {
-    __typename: "Instrument",
+export type OnUpdateInExchangeSubscription = {
+  onUpdateINExchange?:  {
+    __typename: "INExchange",
     id: string,
-    sid?: string | null,
-    tid?: string | null,
+    sid: string,
     name: string,
-    exchg?: string | null,
-    country: string,
-    curr: string,
-    type: InsType,
-    subt: InsSubType,
+    exchg: string,
+    type: AssetType,
+    subt: AssetSubType,
+    itype?: InsType | null,
     price: number,
-    prev?: number | null,
-    sm?: number | null,
-    sy?: number | null,
-    mm?: number | null,
-    my?: number | null,
-    rate?: number | null,
-    mftype?: MFSchemeType | null,
+    prev: number,
+    mcap?: MCap | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteInstrumentSubscription = {
-  onDeleteInstrument?:  {
-    __typename: "Instrument",
+export type OnDeleteInExchangeSubscription = {
+  onDeleteINExchange?:  {
+    __typename: "INExchange",
     id: string,
-    sid?: string | null,
+    sid: string,
+    name: string,
+    exchg: string,
+    type: AssetType,
+    subt: AssetSubType,
+    itype?: InsType | null,
+    price: number,
+    prev: number,
+    mcap?: MCap | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateInBondSubscription = {
+  onCreateINBond?:  {
+    __typename: "INBond",
+    id: string,
+    sid: string,
     tid?: string | null,
     name: string,
-    exchg?: string | null,
-    country: string,
-    curr: string,
-    type: InsType,
-    subt: InsSubType,
+    subt: AssetSubType,
     price: number,
-    prev?: number | null,
-    sm?: number | null,
-    sy?: number | null,
-    mm?: number | null,
-    my?: number | null,
-    rate?: number | null,
-    mftype?: MFSchemeType | null,
+    sm: number,
+    sy: number,
+    mm: number,
+    my: number,
+    rate: number,
+    fr: YN,
+    tf: YN,
+    fv: number,
+    cr: CreditRating,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateInBondSubscription = {
+  onUpdateINBond?:  {
+    __typename: "INBond",
+    id: string,
+    sid: string,
+    tid?: string | null,
+    name: string,
+    subt: AssetSubType,
+    price: number,
+    sm: number,
+    sy: number,
+    mm: number,
+    my: number,
+    rate: number,
+    fr: YN,
+    tf: YN,
+    fv: number,
+    cr: CreditRating,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteInBondSubscription = {
+  onDeleteINBond?:  {
+    __typename: "INBond",
+    id: string,
+    sid: string,
+    tid?: string | null,
+    name: string,
+    subt: AssetSubType,
+    price: number,
+    sm: number,
+    sy: number,
+    mm: number,
+    my: number,
+    rate: number,
+    fr: YN,
+    tf: YN,
+    fv: number,
+    cr: CreditRating,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateInmfSubscription = {
+  onCreateINMF?:  {
+    __typename: "INMF",
+    id: string,
+    sid: string,
+    tid?: string | null,
+    name: string,
+    type: AssetType,
+    subt: AssetSubType,
+    nav: number,
+    mftype: MFSchemeType,
+    mcap?: MCap | null,
+    tf?: YN | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateInmfSubscription = {
+  onUpdateINMF?:  {
+    __typename: "INMF",
+    id: string,
+    sid: string,
+    tid?: string | null,
+    name: string,
+    type: AssetType,
+    subt: AssetSubType,
+    nav: number,
+    mftype: MFSchemeType,
+    mcap?: MCap | null,
+    tf?: YN | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteInmfSubscription = {
+  onDeleteINMF?:  {
+    __typename: "INMF",
+    id: string,
+    sid: string,
+    tid?: string | null,
+    name: string,
+    type: AssetType,
+    subt: AssetSubType,
+    nav: number,
+    mftype: MFSchemeType,
+    mcap?: MCap | null,
+    tf?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
