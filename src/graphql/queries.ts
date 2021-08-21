@@ -968,6 +968,7 @@ export const getInmf = /* GraphQL */ `
       id
       sid
       tid
+      dir
       name
       type
       subt
@@ -999,6 +1000,7 @@ export const listInmFs = /* GraphQL */ `
         id
         sid
         tid
+        dir
         name
         type
         subt
