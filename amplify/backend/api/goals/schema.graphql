@@ -193,25 +193,42 @@ type Registration
 	long: Float
 }
 
-enum InsType {
+enum AssetType {
 	E
 	F
 	A
 	H
 }
 
-enum InsSubType {
+enum AssetSubType {
 	S
 	CB
 	GB
-	MB
-	ETF
-	M
+	GBO
 	GoldB
+	R
+}
+
+enum InsType {
+	ETF
 	REIT
 }
 
-type Instrument
+enum MCap {
+	S
+	M
+	L
+}
+
+enum CreditRating {
+	E
+	H
+	M
+	L
+	J
+}
+
+type INExchange
 	@model
 	@aws_iam
 	@key(fields: ["id"])
@@ -222,22 +239,64 @@ type Instrument
 		]
 	) {
 	id: String!
-	sid: String
+	sid: String!
+	name: String!
+	exchg: String!
+	type: AssetType!
+	subt: AssetSubType!
+	itype: InsType
+	price: Float!
+	prev: Float!
+	mcap: MCap
+}
+
+type INBond
+	@model
+	@aws_iam
+	@key(fields: ["id"])
+	@auth(
+		rules: [
+			{ allow: private, provider: iam, operations: [create, read, update, delete] }
+			{ allow: private, operations: [read] }
+		]
+	) {
+	id: String!
+	sid: String!
 	tid: String
 	name: String!
-	exchg: String
-	country: String!
-	curr: String!
-	type: InsType!
-	subt: InsSubType!
+	subt: AssetSubType!
 	price: Float!
-	prev: Float
-	sm: Int
-	sy: Int
-	mm: Int
-	my: Int
-	rate: Float
-	mftype: MFSchemeType
+	sm: Int!
+	sy: Int!
+	mm: Int!
+	my: Int!
+	rate: Float!
+	fr: YN!
+	tf: YN!
+	fv: Int!
+	cr: CreditRating!
+}
+
+type INMF
+	@model
+	@aws_iam
+	@key(fields: ["id"])
+	@auth(
+		rules: [
+			{ allow: private, provider: iam, operations: [create, read, update, delete] }
+			{ allow: private, operations: [read] }
+		]
+	) {
+	id: String!
+	sid: String!
+	tid: String
+	name: String!
+	type: AssetType!
+	subt: AssetSubType!
+	nav: Float!
+	mftype: MFSchemeType!
+	mcap: MCap
+	tf: YN
 }
 
 type Family @model @auth(rules: [{ allow: owner }]) {
