@@ -150,7 +150,7 @@ const getAlreadyAddedInstruments = async (typeIdentifier) => {
   });
 };
 
-const pushData = (data, typeIdentifier) => {
+const pushData = (data, insdata) => {
   return new Promise(async (resolve, reject) => {
     try {
       let instrumentData = {
@@ -158,12 +158,13 @@ const pushData = (data, typeIdentifier) => {
         errorIDs: [],
       };
 
-      const insdata = await getAlreadyAddedInstruments(typeIdentifier);
       for (let i = 0; i < data.length; i++) {
-        const insertedData = insdata.filter((bunch) => bunch.some((item) => item.id === data[i].id)).length
+        const insertedData = insdata.filter((bunch) =>
+          bunch.some((item) => item.id === data[i].id)
+        ).length
           ? await insertInstrument({ input: data[i] }, "UpdateInstrument")
           : await insertInstrument({ input: data[i] }, "CreateInstrument");
-          
+
         insertedData.body.errors
           ? instrumentData.errorIDs.push({
               id: data[i].id,
@@ -184,5 +185,6 @@ module.exports = {
   unzipDownloads,
   extractDataFromCSV,
   cleanDirectory,
+  getAlreadyAddedInstruments,
   pushData,
 };

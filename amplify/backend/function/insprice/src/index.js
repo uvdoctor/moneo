@@ -9,14 +9,14 @@ const {
   unzipDownloads,
   extractDataFromCSV,
   cleanDirectory,
+  getAlreadyAddedInstruments,
   pushData,
 } = bhaoUtils;
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
-    let results = [];
-    try {
-      for (let i = 0; i < apiArray.length; i++) {
+    for (let i = 0; i < apiArray.length; i++) {
+      try {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
@@ -24,16 +24,23 @@ const getAndPushData = () => {
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
-        const data = await extractDataFromCSV(tempDir, fileName, type, codes, typeIdentifier);
-        await pushData(data, typeIdentifier)
+        const data = await extractDataFromCSV(
+          tempDir,
+          fileName,
+          type,
+          codes,
+          typeIdentifier
+        );
+        const insdata = await getAlreadyAddedInstruments(typeIdentifier);
+        await pushData(data, insdata);
+      } catch (err) {
+        reject(err);
       }
-      resolve(results);
-    } catch (err) {
-      reject(err);
     }
+    resolve();
   });
 };
 
 exports.handler = async (event) => {
-  return await getAndPushData()
+  return await getAndPushData();
 };

@@ -1,4 +1,4 @@
-const tempDir = `${__dirname}/temp` //`/tmp/temp`;
+const tempDir = `/tmp/temp`;
 const zipFile = `${tempDir}/download.zip`;
 const monthsArray = [
   "JAN",
