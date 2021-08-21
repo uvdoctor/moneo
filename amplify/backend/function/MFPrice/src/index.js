@@ -1,6 +1,6 @@
 const mfData = require("india-mutual-fund-info");
 const dataInfo = require("./data");
-const { getType, mfType, pushData } = dataInfo;
+const { getAssetType, mfType, pushData } = dataInfo;
 
 const getData = () => {
   return new Promise(async (resolve, reject) => {
@@ -20,12 +20,13 @@ const getData = () => {
         sid: element["Scheme Code"],
         tid: tid,
         name: element["Scheme Name"],
-        country: "IN",
-        curr: "INR",
-        type: getType(element),
+        type: getAssetType(element["Scheme Type"]),
         subt: "M",
-        price: parseFloat(element["Net Asset Value"]),
-        mftype: mfType(element),
+        // subt: getAssetSubType(element["Scheme Type"]),
+        nav: parseFloat(element["Net Asset Value"]),
+        mftype: mfType(element["Scheme Type"]),
+        // mcap: MCap,
+        tf: element["Scheme Name"].includes("Tax") ? "Y" : "N",
       });
     });
     resolve(mfList);
