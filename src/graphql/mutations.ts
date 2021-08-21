@@ -1517,6 +1517,7 @@ export const createInmf = /* GraphQL */ `
       id
       sid
       tid
+      dir
       name
       type
       subt
@@ -1538,6 +1539,7 @@ export const updateInmf = /* GraphQL */ `
       id
       sid
       tid
+      dir
       name
       type
       subt
@@ -1559,6 +1561,7 @@ export const deleteInmf = /* GraphQL */ `
       id
       sid
       tid
+      dir
       name
       type
       subt

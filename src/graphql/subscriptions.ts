@@ -1406,6 +1406,7 @@ export const onCreateInmf = /* GraphQL */ `
       id
       sid
       tid
+      dir
       name
       type
       subt
@@ -1424,6 +1425,7 @@ export const onUpdateInmf = /* GraphQL */ `
       id
       sid
       tid
+      dir
       name
       type
       subt
@@ -1442,6 +1444,7 @@ export const onDeleteInmf = /* GraphQL */ `
       id
       sid
       tid
+      dir
       name
       type
       subt
