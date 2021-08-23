@@ -1,6 +1,6 @@
 import { Empty, Table, Tag } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { HoldingInput, InsSubType, InsType } from '../../api/goals';
+import { HoldingInput, AssetSubType, AssetType, InsType } from '../../api/goals';
 import { ALL_FAMILY } from './FamilyInput';
 import { NWContext } from './NWContext';
 import Holding from './Holding';
@@ -70,7 +70,7 @@ export default function InstrumentValuation() {
 			setFilteredInstruments([
 				...filteredData.filter((instrument: HoldingInput) =>
 					includesAny(
-						getInsSubTypeName(instrument.type as InsType, instrument.subt as InsSubType),
+						getInsSubTypeName(instrument.type as AssetType, instrument.subt as AssetSubType | InsType),
 						selectedTags
 					)
 				)
