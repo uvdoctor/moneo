@@ -941,6 +941,8 @@ export enum AssetSubType {
   GB = "GB",
   GBO = "GBO",
   GoldB = "GoldB",
+  Gold = "Gold",
+  I = "I",
   L = "L",
   R = "R",
 }
@@ -949,6 +951,7 @@ export enum AssetSubType {
 export enum InsType {
   ETF = "ETF",
   REIT = "REIT",
+  InvIT = "InvIT",
 }
 
 

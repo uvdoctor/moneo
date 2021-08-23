@@ -47,7 +47,7 @@
         },
         "MFPrice": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/MFPrice-34482b6d663743486173-build.zip"
+          "s3Key": "amplify-builds/MFPrice-69793370396870724f48-build.zip"
         }
       }
     }
