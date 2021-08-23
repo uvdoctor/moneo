@@ -44,7 +44,6 @@ const getData = () => {
           delete dataToAdd[key];
         }
       });
-      console.log(dataToAdd);
       mfList.push(dataToAdd);
     });
     resolve(mfList);

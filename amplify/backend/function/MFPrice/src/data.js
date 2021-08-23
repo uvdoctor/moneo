@@ -1,5 +1,3 @@
-const { registerGeometry } = require("bizcharts");
-const { isTryStatement } = require("typescript");
 const graphqlOperation = require("./operation");
 
 const getAssetType = (data) => {
@@ -64,7 +62,7 @@ const directISIN = (mfInfoArray) => {
   const regularData = [];
   const directData = [];
   mfInfoArray.map((item) => {
-    let name = item["Scheme Name"].toLowerCase();
+    let name = item["Scheme Name"].toLowerCase().replace(/\s/g, "");
     const ISIN =
       item["ISIN Div Payout/ ISIN Growth"] != "-"
         ? item["ISIN Div Payout/ ISIN Growth"]
@@ -80,19 +78,20 @@ const directISIN = (mfInfoArray) => {
 };
 
 const getDirISIN = (regularData, directData, element) => {
-  const name = element["Scheme Name"].toLowerCase();
+  let name = element["Scheme Name"].toLowerCase().replace(/\s/g, "");
   const checkRegular = regularData.some((item) => item === name);
   if (!checkRegular) {
     return false;
   }
-  const compareRegAndDir = directData.some((item) => {
-    if (item.name === name) {
-      return item.ISIN;
+  let compareRegAndDir = directData.find((item) => name.includes(item.name));
+  if (!compareRegAndDir) {
+    name = name.substring(0, name.indexOf("regular") + "regular".length);
+    compareRegAndDir = directData.find((item) => name.includes(item.name));
+    if (!compareRegAndDir) {
+      return false;
     }
-    
-  });
-  // console.log(compareRegAndDir);
-  return compareRegAndDir;
+  }
+  return compareRegAndDir.ISIN;
 };
 
 const mCap = (element) => {
@@ -113,63 +112,47 @@ const mCap = (element) => {
 };
 
 const getDataFromListInmfs = async () => {
-  // const getDataAtOnce = await graphqlOperation({ limit: 100000 }, "ListInmfs");
-  // let dataAlreadyAdded = [...getDataAtOnce.body.data.listInmfs.items];
-  // let token = getDataAtOnce.body.data.listInmfs.nextToken;
-  // const dataByToken = async (token) =>
-  //   await graphqlOperation({ limit: 100000, nextToken: token }, "ListInmfs");
-  // const checkToken = async () => {
-  //   const getDataFromToken = await dataByToken(token);
-  //   token = getDataFromToken.body.data.listInmfs.nextToken;
-  //   dataAlreadyAdded = dataAlreadyAdded.concat(
-  //     getDataFromToken.body.data.listInmfs.items
-  //   );
-  //   if (!token) {
-  //     return dataAlreadyAdded;
-  //   } else {
-  //     await checkToken();
-  //   }
-  // };
-  // await checkToken();
-  // return dataAlreadyAdded;
+  const alreadyAddedData = [];
+  return new Promise(async (resolve, reject) => {
+    try {
+      const getInstrumentData = async (token) => {
+        const query = {
+          limit: 100000,
+        };
+        if (token) {
+          query.nextToken = token;
+        }
+        const dataFromListInmfs = await graphqlOperation(query, "ListInmFs");
+        const { items, nextToken } = dataFromListInmfs.body.data.listINMFs;
+        alreadyAddedData.push(items);
+        if (nextToken) {
+          getInstrumentData(nextToken);
+        } else {
+          resolve(alreadyAddedData);
+        }
+      };
+      getInstrumentData();
+    } catch (err) {
+      reject(err);
+    }
+  });
 };
 
-const pushData = (mfList) => {
+const pushData = (data) => {
   return new Promise(async (resolve, reject) => {
-    // const updatedData = [];
-    // const getInstrumentsArray = await getDataFromListInmfs();
-    // const getSubDividedArray = new Array(
-    //   Math.ceil(getInstrumentsArray.length / 1000)
-    // )
-    //   .fill()
-    //   .map((_) => getInstrumentsArray.splice(0, 1000));
-    // for (let i = 0; i < mfList.length; i++) {
-    //   let checkData = "";
-    //   let insertedData = {};
-    //   for (index in getSubDividedArray) {
-    //     checkData = getSubDividedArray[index].some(
-    //       (item) => item.id === mfList[i].id
-    //     );
-    //     if (checkData) {
-    //       insertedData = await graphqlOperation(
-    //         { input: mfList[i] },
-    //         "UpdateInmf"
-    //       );
-    //       console.log(insertedData.body);
-    //       updatedData.push(insertedData.body);
-    //       break;
-    //     }
-    //   }
-    //   if (!checkData) {
-    //     insertedData = await graphqlOperation(
-    //       { input: mfList[i] },
-    //       "CreateInmf"
-    //     );
-    //     updatedData.push(insertedData.body);
-    //     console.log(insertedData.body);
-    //   }
-    // }
-    // resolve(updatedData);
+    const updatedData = [];
+    const getInstrumentsArray = await getDataFromListInmfs();
+
+    for (let i = 0; i < data.length; i++) {
+      const insertedData = getInstrumentsArray.filter((bunch) =>
+        bunch.some((item) => item.id === data[i].id)
+      ).length
+        ? await graphqlOperation({ input: data[i] }, "UpdateInmf")
+        : await graphqlOperation({ input: data[i] }, "CreateInmf");
+      updatedData.push(insertedData.body);
+      console.log(insertedData.body);
+    }
+    resolve(updatedData);
   });
 };
 

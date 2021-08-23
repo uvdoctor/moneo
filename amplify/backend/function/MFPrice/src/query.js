@@ -1,7 +1,7 @@
 module.exports = {
   mutation: {
     CreateInmf: `
-  mutation CreateInmf(
+    mutation CreateInmf(
     $input: CreateINMFInput!
     $condition: ModelINMFConditionInput
   ) {
@@ -9,6 +9,7 @@ module.exports = {
       id
       sid
       tid
+      dir
       name
       type
       subt
@@ -22,14 +23,15 @@ module.exports = {
   }
 `,
     UpdateInmf: `
-  mutation UpdateInmf(
+mutation UpdateInmf(
   $input: UpdateINMFInput!
   $condition: ModelINMFConditionInput
-    ) {
+) {
   updateINMF(input: $input, condition: $condition) {
     id
     sid
     tid
+    dir
     name
     type
     subt
@@ -43,14 +45,47 @@ module.exports = {
 }
 `,
     DeleteInmf: `
-  mutation DeleteInmf(
-    $input: DeleteINMFInput!
-    $condition: ModelINMFConditionInput
+mutation DeleteInmf(
+  $input: DeleteINMFInput!
+  $condition: ModelINMFConditionInput
+) {
+  deleteINMF(input: $input, condition: $condition) {
+    id
+    sid
+    tid
+    dir
+    name
+    type
+    subt
+    nav
+    mftype
+    mcap
+    tf
+    createdAt
+    updatedAt
+  }
+}
+`,
+    ListInmFs: `
+query ListInmFs(
+  $id: String
+  $filter: ModelINMFFilterInput
+  $limit: Int
+  $nextToken: String
+  $sortDirection: ModelSortDirection
+) {
+  listINMFs(
+    id: $id
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    sortDirection: $sortDirection
   ) {
-    deleteINMF(input: $input, condition: $condition) {
+    items {
       id
       sid
       tid
+      dir
       name
       type
       subt
@@ -61,40 +96,9 @@ module.exports = {
       createdAt
       updatedAt
     }
+    nextToken
   }
+}
 `,
-  ListInmFs :`
-  query ListInmFs(
-    $id: String
-    $filter: ModelINMFFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listINMFs(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        sid
-        tid
-        name
-        type
-        subt
-        nav
-        mftype
-        mcap
-        tf
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`
-  }
+  },
 };
