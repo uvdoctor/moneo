@@ -1,92 +1,216 @@
 module.exports = {
   mutation: {
-    CreateInstrument: `mutation CreateInstrument(
-      $input: CreateInstrumentInput!
-      $condition: ModelInstrumentConditionInput
-    ) {
-      createInstrument(input: $input, condition: $condition) {
-        id
-        sid
-        tid
-        name
-        exchg
-        country
-        curr
-        type
-        subt
-        price
-        prev
-        sm
-        sy
-        mm
-        my
-        rate
-        mftype
-        createdAt
-        updatedAt
-        }
-    }
-  `,
-  UpdateInstrument: `mutation UpdateInstrument(
-    $input: UpdateInstrumentInput!
-    $condition: ModelInstrumentConditionInput
+    CreateInExchange: `
+  mutation CreateInExchange(
+    $input: CreateINExchangeInput!
+    $condition: ModelINExchangeConditionInput
   ) {
-    updateInstrument(input: $input, condition: $condition) {
+    createINExchange(input: $input, condition: $condition) {
       id
       sid
-      tid
       name
       exchg
-      country
-      curr
       type
       subt
+      itype
       price
       prev
-      sm
-      sy
-      mm
-      my
-      rate
-      mftype
+      mcap
       createdAt
       updatedAt
     }
   }
 `,
-ListInstruments: `query ListInstruments(
-  $filter: ModelInstrumentFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listInstruments(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
+    UpdateInExchange: `
+  mutation UpdateInExchange(
+    $input: UpdateINExchangeInput!
+    $condition: ModelINExchangeConditionInput
   ) {
-    items {
+    updateINExchange(input: $input, condition: $condition) {
+      id
+      sid
+      name
+      exchg
+      type
+      subt
+      itype
+      price
+      prev
+      mcap
+      createdAt
+      updatedAt
+    }
+  }
+`,
+    DeleteInExchange: `
+  mutation DeleteInExchange(
+    $input: DeleteINExchangeInput!
+    $condition: ModelINExchangeConditionInput
+  ) {
+    deleteINExchange(input: $input, condition: $condition) {
+      id
+      sid
+      name
+      exchg
+      type
+      subt
+      itype
+      price
+      prev
+      mcap
+      createdAt
+      updatedAt
+    }
+  }
+`,
+    CreateInBond: `
+  mutation CreateInBond(
+    $input: CreateINBondInput!
+    $condition: ModelINBondConditionInput
+  ) {
+    createINBond(input: $input, condition: $condition) {
       id
       sid
       tid
       name
-      exchg
-      country
-      curr
-      type
       subt
       price
-      prev
       sm
       sy
       mm
       my
       rate
-      mftype
+      fr
+      tf
+      fv
+      cr
       createdAt
       updatedAt
     }
-    nextToken
-    }
-    }`
   }
+`,
+    UpdateInBond: `
+  mutation UpdateInBond(
+    $input: UpdateINBondInput!
+    $condition: ModelINBondConditionInput
+  ) {
+    updateINBond(input: $input, condition: $condition) {
+      id
+      sid
+      tid
+      name
+      subt
+      price
+      sm
+      sy
+      mm
+      my
+      rate
+      fr
+      tf
+      fv
+      cr
+      createdAt
+      updatedAt
+    }
+  }
+`,
+    DeleteInBond: `
+  mutation DeleteInBond(
+    $input: DeleteINBondInput!
+    $condition: ModelINBondConditionInput
+  ) {
+    deleteINBond(input: $input, condition: $condition) {
+      id
+      sid
+      tid
+      name
+      subt
+      price
+      sm
+      sy
+      mm
+      my
+      rate
+      fr
+      tf
+      fv
+      cr
+      createdAt
+      updatedAt
+    }
+  }
+`,
+    ListInExchanges: `
+  query ListInExchanges(
+    $id: String
+    $filter: ModelINExchangeFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINExchanges(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        name
+        exchg
+        type
+        subt
+        itype
+        price
+        prev
+        mcap
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`,
+    ListInBonds: `
+  query ListInBonds(
+    $id: String
+    $filter: ModelINBondFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINBonds(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        tid
+        name
+        subt
+        price
+        sm
+        sy
+        mm
+        my
+        rate
+        fr
+        tf
+        fv
+        cr
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`,
+  },
 };

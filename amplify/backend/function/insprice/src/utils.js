@@ -27,51 +27,63 @@ const year =
   today.getYear().toString().charAt(1) + today.getYear().toString().charAt(2);
 const yearFull = today.getFullYear();
 const baseFileName = `EQ_ISINCODE_${date}${month}${year}`;
-const baseFileDebtName = `DEBTBHAVCOPY${date}${month}${yearFull}`
+const baseFileDebtName = `DEBTBHAVCOPY${date}${month}${yearFull}`;
 // For NSE
 const monthChar = monthsArray[today.getMonth()];
 const NSEBaseFileName = `cm${date}${monthChar}${yearFull}bhav.csv`;
 
 const apiArray = [
-  {
-    type: "BSE",
-    fileName: `fgroup${date}${month}${yearFull}.csv`,
-    url: `https://www.bseindia.com/download/Bhavcopy/Debt/${baseFileDebtName}.zip`,
-    codes: {
-      sid: "Security_cd",
-      id: "ISIN No.",
-      name: "sc_name",
-      price: "Close Price",
-      prev: "Open Price",
-    },
-    typeIdentifier: 'BSE_DEBT_FGROUP'
-  },
-  {
-    type: "BSE",
-    fileName: `icdm${date}${month}${yearFull}.csv`,
-    url: `https://www.bseindia.com/download/Bhavcopy/Debt/${baseFileDebtName}.zip`,
-    codes: {
-      sid: "Security_cd",
-      id: "ISIN No.",
-      name: "Issuer Name",
-      price: "Weighted Average Price",
-      prev: "Weighted Average Yield",
-    },
-    typeIdentifier: 'BSE_DEBT_ICDM'
-  },
-  {
-    type: "BSE",
-    fileName: `wdm${date}${month}${yearFull}.csv`,
-    url: `https://www.bseindia.com/download/Bhavcopy/Debt/${baseFileDebtName}.zip`,
-    codes: {
-      sid: "Scrip Code",
-      id: "Security Code",
-      name: "Security Description",
-      price: "Close Price",
-      prev: "Open Price",
-    },
-    typeIdentifier: 'BSE_DEBT_WDM'
-  },
+  // {
+  //   type: "BSE",
+  //   fileName: `fgroup${date}${month}${yearFull}.csv`,
+  //   url: `https://www.bseindia.com/download/Bhavcopy/Debt/${baseFileDebtName}.zip`,
+  //   codes: {
+  //     sid: "Security_cd",
+  //     id: "ISIN No.",
+  //     name: "sc_name",
+  //     price: "Close Price",
+  //     prev: "Open Price",
+  //   },
+  //   typeIdentifier: "BSE_DEBT_FGROUP",
+  //   listQuery: "ListInBonds",
+  //   updateMutation: "UpdateInBond",
+  //   createMutation: "CreateInBond",
+  //   listOperationName: "listINBonds",
+  // },
+  // {
+  //   type: "BSE",
+  //   fileName: `icdm${date}${month}${yearFull}.csv`,
+  //   url: `https://www.bseindia.com/download/Bhavcopy/Debt/${baseFileDebtName}.zip`,
+  //   codes: {
+  //     sid: "Security_cd",
+  //     id: "ISIN No.",
+  //     name: "Issuer Name",
+  //     price: "Weighted Average Price",
+  //     prev: "Weighted Average Yield",
+  //   },
+  //   typeIdentifier: "BSE_DEBT_ICDM",
+  //   listQuery: "ListInBonds",
+  //   updateMutation: "UpdateInBond",
+  //   createMutation: "CreateInBond",
+  //   listOperationName: "listINBonds",
+  // },
+  // {
+  //   type: "BSE",
+  //   fileName: `wdm${date}${month}${yearFull}.csv`,
+  //   url: `https://www.bseindia.com/download/Bhavcopy/Debt/${baseFileDebtName}.zip`,
+  //   codes: {
+  //     sid: "Scrip Code",
+  //     id: "Security Code",
+  //     name: "Security Description",
+  //     price: "Close Price",
+  //     prev: "Open Price",
+  //   },
+  //   typeIdentifier: "BSE_DEBT_WDM",
+  //   listQuery: "ListInBonds",
+  //   updateMutation: "UpdateInBond",
+  //   createMutation: "CreateInBond",
+  //   listOperationName: "listINBonds",
+  // },
   {
     type: "NSE",
     fileName: NSEBaseFileName,
@@ -82,13 +94,19 @@ const apiArray = [
       name: "SERIES",
       price: "LAST",
       prev: "PREVCLOSE",
+      type: "SERIES"
     },
-    typeIdentifier: 'NSE_EQUITY'
+    typeIdentifier: "NSE_EQUITY",
+    listQuery: "ListInExchanges",
+    updateMutation: "UpdateInExchange",
+    createMutation: "CreateInExchange",
+    listOperationName: "listINExchanges",
   },
   {
     type: "BSE",
     fileName: baseFileName + ".CSV",
     url: `https://www.bseindia.com/download/BhavCopy/Equity/${baseFileName}.zip`,
+    // schema: {sid: "",id: "",name: "",price: "",prev: "",exchg: "",type: "",subt: "",itype: "",mcap: "",},
     codes: {
       sid: "SC_CODE",
       id: "ISIN_CODE",
@@ -98,7 +116,11 @@ const apiArray = [
       type: "SC_TYPE",
       subt: "SC_GRP",
     },
-    typeIdentifier: 'BSE_EQUITY'
+    typeIdentifier: "BSE_EQUITY",
+    listQuery: "ListInExchanges",
+    updateMutation: "UpdateInExchange",
+    createMutation: "CreateInExchange",
+    listOperationName: "listINExchanges",
   },
 ];
 

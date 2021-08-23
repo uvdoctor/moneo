@@ -55,9 +55,15 @@ const extractDataFromCSV = async (
   type,
   codes,
   typeIdentifier
+  // schema
 ) => {
-  const calcType = (type) => {
-    if (type === "Q" || type === "P") {
+  const calcType = (type, subt,typeIdentifier) => {
+    if(typeIdentifier === "BSE_EQUITY"){
+    if (type === "Q" && subt === "F") {
+      return "F";
+    } else if (type === "Q" && subt === "B") {
+      return "F";
+    } else if (type === "Q" || type === "P") {
       return "E";
     } else if (type === "B" || type === "D") {
       return "F";
@@ -65,16 +71,48 @@ const extractDataFromCSV = async (
       return "E";
     }
   };
+  if(typeIdentifier === "NSE_EQUITY"){
+    const equity = ['EQ','BE','BZ','E1','SM','ST','X1','P1','P2']
+    const fixed = ['GB','GS','N1','N2','N3','N4','N5','N6','N7','N8','N9','NA','NB','NC','ND','NE','NF','NG','NH','NI','NK','NL','NM','NN','NO','NP','NQ','NR','NS','NU','NW','NX','NY',]
+    if (equity.some(item=>item===type)){
+      return "E"
+    }else if(equity.some(item=>item===type)) {
+      return "F";
+    } else if (type === "IV") {
+      return "A";
+    } 
+    // warrants = fixed,RR = A, P1,P2,NYZ= fixed
+  }
+}
 
-  const calcSubType = (type, subt) => {
-    if (type === "Q" || type === "P") {
-      return "S";
-    } else if (type === "B" && subt === "G") {
+  const calcSubType = (type, subt, name,typeIdentifier) => {
+    if(typeIdentifier === "BSE_EQUITY"){
+    if (name.includes("LIQUID")) {
+      return "L";
+    } else if (type === "Q" && subt === "F") {
       return "GB";
+    } else if (type === "B" && subt === "G") {
+      return "GoldB";
+    } else if (type === "Q" && subt === "B") {
+      return "I";
     } else if ((type === "B" || type === "D") && subt === "F") {
       return "CB";
+    } else if (type === "Q" || type === "P") {
+      return "S";
     } else {
       return "S";
+    }
+  }
+  if(typeIdentifier === "NSE_EQUITY"){
+    // etf to be done on name variations,GC,GS=gov, GB= goldbond, 
+    // MF - ignore , Invtype= Reit, N,Z,Y series = CB, bharat bonds = GBO
+    // EQ = stocks
+  }
+  };
+
+  const calcInsType = (type, subt,typeIdentifier) => {
+    if (type === "Q" && subt === "E") {
+      return "ETF";
     }
   };
 
@@ -83,23 +121,29 @@ const extractDataFromCSV = async (
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        results.push({
-          id: `${record[codes.id]}__${typeIdentifier}`,
+        const schema = {
+          id: record[codes.id],
           sid: typeIdentifier,
           name: record[codes.name],
           exchg: type,
-          country: "IN",
-          curr: "INR",
-          type: calcType(record[codes.type]),
-          subt: calcSubType(record[codes.type], record[codes.subt]),
+          type: calcType(record[codes.type],typeIdentifier),
+          subt: calcSubType(
+            record[codes.type],
+            record[codes.subt],
+            record[codes.name],
+            typeIdentifier
+          ),
+          itype: calcInsType(record[codes.type], record[codes.subt],typeIdentifier),
           price: Number(record[codes.price]),
           prev: Number(record[codes.prev]),
-          sm: 0,
-          sy: 0,
-          mm: 0,
-          my: 0,
-          rate: 0,
+          mcap: "",
+        };
+        Object.keys(schema).map((key) => {
+          if (!schema[key]) {
+            delete schema[key];
+          }
         });
+        results.push(schema);
       })
       .on("end", async () => {
         await cleanDirectory(
@@ -119,7 +163,11 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const getAlreadyAddedInstruments = async (typeIdentifier) => {
+const getAlreadyAddedInstruments = async (
+  typeIdentifier,
+  listQuery,
+  listOperationName
+) => {
   let alreadyAddedInstruments = [];
   return new Promise(async (resolve, reject) => {
     try {
@@ -131,11 +179,9 @@ const getAlreadyAddedInstruments = async (typeIdentifier) => {
         if (token) {
           query.nextToken = token;
         }
-        const dataInstruments = await insertInstrument(
-          query,
-          "ListInstruments"
-        );
-        const { items, nextToken } = dataInstruments.body.data.listInstruments;
+        const dataInstruments = await insertInstrument(query, listQuery);
+        const { items, nextToken } =
+          dataInstruments.body.data[listOperationName];
         alreadyAddedInstruments.push(items);
         if (nextToken) {
           getInstrumentData(nextToken);
@@ -150,7 +196,7 @@ const getAlreadyAddedInstruments = async (typeIdentifier) => {
   });
 };
 
-const pushData = (data, insdata) => {
+const pushData = (data, insdata, updateMutation, createMutation) => {
   return new Promise(async (resolve, reject) => {
     try {
       let instrumentData = {
@@ -162,9 +208,10 @@ const pushData = (data, insdata) => {
         const insertedData = insdata.filter((bunch) =>
           bunch.some((item) => item.id === data[i].id)
         ).length
-          ? await insertInstrument({ input: data[i] }, "UpdateInstrument")
-          : await insertInstrument({ input: data[i] }, "CreateInstrument");
+          ? await insertInstrument({ input: data[i] }, updateMutation)
+          : await insertInstrument({ input: data[i] }, createMutation);
 
+        console.log(insertedData);
         insertedData.body.errors
           ? instrumentData.errorIDs.push({
               id: data[i].id,
