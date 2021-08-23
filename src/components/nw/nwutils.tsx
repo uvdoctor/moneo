@@ -163,29 +163,52 @@ export const getRelatedCurrencies = (holdings: APIt.CreateHoldingsInput, default
 	return currencyList;
 }
 
-export const loadMatchingInstruments = async (instruments: Array<APIt.HoldingInput>) => {
-	let idList: Array<APIt.ModelInstrumentFilterInput> = [];
+export const loadMatchingINExchange = async (instruments: Array<APIt.HoldingInput>) => {
+	let idList: Array<APIt.ModelINExchangeFilterInput> = [];
 	instruments.forEach((instrument: APIt.HoldingInput) => {
 		idList.push({id: {eq: instrument.id}});
 	})
-	let filterList: APIt.ModelInstrumentFilterInput = {or: idList};
-	const { data: { listInstruments } } = (await API.graphql(graphqlOperation(queries.listInstruments, {filter: filterList}))) as {
-		data: APIt.ListInstrumentsQuery;
+	let filterList: APIt.ModelINExchangeFilterInput = {or: idList};
+	const { data: { listINExchanges } } = (await API.graphql(graphqlOperation(queries.listInExchanges, {filter: filterList}))) as {
+		data: APIt.ListInExchangesQuery;
 	};
-	return listInstruments?.items;
+	return listINExchanges?.items;
 }
 
-export const getInsSubTypeName = (type: APIt.InsType, st: APIt.InsSubType) => {
+export const loadMatchingINMF = async (instruments: Array<APIt.HoldingInput>) => {
+	let idList: Array<APIt.ModelINMFFilterInput> = [];
+	instruments.forEach((instrument: APIt.HoldingInput) => {
+		idList.push({id: {eq: instrument.id}});
+	})
+	let filterList: APIt.ModelINMFFilterInput = {or: idList};
+	const { data: { listINMFs } } = (await API.graphql(graphqlOperation(queries.listInmFs, {filter: filterList}))) as {
+		data: APIt.ListInmFsQuery;
+	};
+	return listINMFs?.items;
+}
+
+export const loadMatchingINBond = async (instruments: Array<APIt.HoldingInput>) => {
+	let idList: Array<APIt.ModelINBondFilterInput> = [];
+	instruments.forEach((instrument: APIt.HoldingInput) => {
+		idList.push({id: {eq: instrument.id}});
+	})
+	let filterList: APIt.ModelINBondFilterInput = {or: idList};
+	const { data: { listINBonds } } = (await API.graphql(graphqlOperation(queries.listInBonds, {filter: filterList}))) as {
+		data: APIt.ListInBondsQuery;
+	};
+	return listINBonds?.items;
+}
+
+export const getInsSubTypeName = (type: APIt.AssetType, st: APIt.AssetSubType | APIt.InsType) => {
 		switch(st) {
-			case APIt.InsSubType.S : return "Stock";
-			case APIt.InsSubType.M : return type === APIt.InsType.E ? "Equity Mutual Fund" : "Debt Mutual Fund";
-			case APIt.InsSubType.GoldB: return "Gold Bond";
-			case APIt.InsSubType.ETF: return type === APIt.InsType.E ? "Equity ETF" : "Debt ETF";
-			case APIt.InsSubType.CB: return "Corporate Bond";
-			case APIt.InsSubType.MB: return "Municipal Bond";
-			case APIt.InsSubType.GB: return "Sovereign Bond";
-			case APIt.InsSubType.REIT: return "REIT";
-			default: return "Other";
+			case APIt.AssetSubType.S : return "Stock";
+			case APIt.AssetSubType.GoldB: return "Gold Bond";
+			case APIt.InsType.ETF: return type === APIt.AssetType.E ? "Equity ETF" : "Debt ETF";
+			case APIt.AssetSubType.CB: return "Corporate Bond";
+			case APIt.AssetSubType.GBO: return "Public Sector Bond";
+			case APIt.AssetSubType.GB: return "Sovereign Bond";
+			case APIt.InsType.REIT: return "REIT";
+			default: return type === APIt.AssetType.E ? "Equity Mutual Fund" : "Debt Mutual Fund";
 		}
 }
 

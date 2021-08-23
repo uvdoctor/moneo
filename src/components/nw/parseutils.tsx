@@ -4,7 +4,7 @@ import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { HoldingInput, InsSubType, InsType } from "../../api/goals";
+import { HoldingInput, AssetSubType, InsType, AssetType } from "../../api/goals";
 
 const { confirm } = Modal;
 
@@ -95,20 +95,20 @@ export const shouldIgnore = (value: string) =>
 
 export const getInsTypeFromName = (isin: string | null, insType: string | null, value: string) => {
 	if (includesAny(value, ["bond", "ncd", "debenture", "sgb"])) {
-		if(isin && isin.startsWith("INF")) return InsSubType.M;
-		else return InsType.F;
-	} else if (value.includes("ETF")) return InsSubType.ETF;
+		if(isin && isin.startsWith("INF")) return 'M';
+		else return AssetType.F;
+	} else if (value.includes("ETF")) return InsType.ETF;
 	else if (value.includes("REIT") || value.includes("FMP") || value.includes("Fund"))
-		return InsSubType.M;
-	else if(!isin && insType !== InsSubType.M && insType !== InsType.F && insType!== InsSubType.ETF) return InsSubType.S;
+		return 'M';
+	else if(!isin && insType !== 'M' && insType !== AssetType.F && insType!== InsType.ETF) return AssetSubType.S;
 	return insType;
 };
 
 export const getInsTypeFromISIN = (isin: string, insType: string | null) => {
 	if (isin.startsWith("INF")) {
-		if (insType !== InsSubType.ETF) return InsSubType.M;
-	} else if (isin.startsWith("IN0")) return InsType.F;
-	else if(isin.startsWith("INE")) return InsSubType.S;
+		if (insType !== InsType.ETF) return 'M';
+	} else if (isin.startsWith("IN0")) return AssetType.F;
+	else if(isin.startsWith("INE")) return AssetSubType.S;
 	return insType;
 };
 
@@ -132,16 +132,16 @@ export const completeRecord = (recordBroken: boolean, lastNameCapture: number | 
   hasData = true;
   let existingEntry = null;
   if (insNames[isin as string]) {
-	let list = mode === InsSubType.S ? equities : mode === InsSubType.M ? mfs : mode === InsSubType.ETF ? etfs : bonds;
+	let list = mode === AssetSubType.S ? equities : mode === 'M' ? mfs : mode === InsType.ETF ? etfs : bonds;
 	if(list[isin as string]) existingEntry = list[isin as string];
   } 
   if(existingEntry)
   	existingEntry.qty += quantity as number;
   else {
 	appendValue(
-		mode === InsSubType.S ? equities : mode === InsSubType.M ? mfs : mode === InsSubType.ETF ? etfs : bonds,
+		mode === AssetSubType.S ? equities : mode === 'M' ? mfs : mode === InsType.ETF ? etfs : bonds,
 		isin as string,
-		{id: isin, qty: quantity as number, name: name ? name : isin, type: mode !== InsType.F ? InsType.E : InsType.F, subt: mode === InsType.F ? InsSubType.CB : mode, fIds: [taxId], curr: currency} as HoldingInput
+		{id: isin, qty: quantity as number, name: name ? name : isin, type: mode !== AssetType.F ? AssetType.E : AssetType.F, subt: mode === AssetType.F ? AssetSubType.CB : mode, fIds: [taxId], curr: currency} as HoldingInput
 	  );
   }
   console.log("Record completed for...", isin);

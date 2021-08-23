@@ -206,6 +206,8 @@ enum AssetSubType {
 	GB
 	GBO
 	GoldB
+	Gold
+	I
 	L
 	R
 }
