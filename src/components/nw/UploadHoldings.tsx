@@ -6,7 +6,7 @@ import HoldingsTable from "./HoldingsTable";
 import { NWContext } from "./NWContext";
 import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgnore } from "./parseutils";
 import { isMobileDevice } from "../utils";
-import { HoldingInput, InsSubType, InsType } from "../../api/goals";
+import { HoldingInput, AssetSubType, InsType, AssetType } from "../../api/goals";
 import {
 	cleanAssetName,
 	completeRecord,
@@ -271,28 +271,28 @@ export default function UploadHoldings() {
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
 						if (
-							insType !== InsSubType.M &&
-							insType !== InsSubType.ETF &&
+							insType !== 'M' &&
+							insType !== InsType.ETF &&
 							!numberAtEnd &&
 							diff < 4
 						)
 							continue;
 					}
 					if (numberAtEnd) value = replaceIfFound(value, ["" + numberAtEnd]);
-					if(insType === InsSubType.S) value = cleanAssetName(value);
+					if(insType === AssetSubType.S) value = cleanAssetName(value);
 					if (!value) {
 						numberAtEnd = null;
 						continue;
 					}
 					if (
-						(insType !== InsSubType.S) &&
+						(insType !== AssetSubType.S) &&
 						name &&
 						lastNameCapture &&
 						j - lastNameCapture <= 2
 					)
 						name += " " + value.trim();
 					else name = value.trim();
-					if (insType === InsSubType.M || insType === InsSubType.ETF) {
+					if (insType === 'M' || insType === InsType.ETF) {
 						name = removeDuplicates(name as string);
 						name = getValueBefore(name as string, ["(", ")"]);
 					}
@@ -306,19 +306,19 @@ export default function UploadHoldings() {
 				let qty: number | null =
 					checkForMultiple && name && numberAtEnd ? numberAtEnd : getQty(value);
 				if (!qty) continue;
-				if(insType === InsSubType.M && !value.includes(".")) continue;
+				if(insType === 'M' && !value.includes(".")) continue;
 				if (
 					!recordBroken &&
 					((name && lastNameCapture && j - lastNameCapture > 5) ||
 						(lastQtyCapture && j - lastQtyCapture < 7))
 				)
 					continue;
-				if (hasFV && !fv && (insType === InsSubType.S || insType === InsType.F)) {
+				if (hasFV && !fv && (insType === AssetSubType.S || insType === AssetType.F)) {
 					console.log("Detected fv: ", qty);
 					fv = qty;
 					continue;
 				}
-				if (insType === InsType.F && !Number.isInteger(qty)) continue;
+				if (insType === AssetType.F && !Number.isInteger(qty)) continue;
 				console.log("Detected quantity: ", qty);
 				lastQtyCapture = j;
 				if (lastQtyCapture !== lastNameCapture) checkForMultiple = false;
