@@ -6,7 +6,7 @@ import HoldingsTable from "./HoldingsTable";
 import { NWContext } from "./NWContext";
 import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgnore } from "./parseutils";
 import { isMobileDevice } from "../utils";
-import { HoldingInput, AssetSubType, InsType, AssetType, INExchange, INMF } from "../../api/goals";
+import { HoldingInput, AssetSubType, InsType, AssetType } from "../../api/goals";
 import {
 	cleanAssetName,
 	completeRecord,
@@ -73,6 +73,25 @@ export default function UploadHoldings() {
 		return !filteredEntries?.length ? [] : filteredEntries;
 	};
 
+	const priceInstruments = async (fun: Function, input: any) => {
+		let matchingList: Array<any> | null = await fun(Object.keys(input));
+		if(!matchingList) addUploadedInstruments(holdings.instruments, input);
+		else {
+			Object.keys(input).forEach((key) => {
+				let matchingEntry = matchingList?.find((match) => match?.id === key);
+				let instrument = input[key];
+				if(matchingEntry && matchingList) {
+					instrument.price = matchingEntry.price;
+					instrument.name = matchingEntry.name;
+					instrument.type = matchingEntry.type;
+					instrument.subt = matchingEntry.subt;
+					instrument.curr = 'INR';
+				}
+				holdings.instruments.push(input[key]);
+			})
+		}
+	};
+
 	const addInstruments = async () => {
 		if(!taxId) return;
 		addFamilyMemberSilently(allFamily, setAllFamily, taxId);
@@ -83,28 +102,10 @@ export default function UploadHoldings() {
 			setCurrencyList(currencyList);
 		}
 		setSelectedCurrency(currency);
-		let matchingMFs: Array<INMF> | null = await loadMatchingINMF(Object.keys(mutualFunds));
-		if(!matchingMFs) addUploadedInstruments(holdings.instruments, mutualFunds);
-		else {
-			Object.keys(mutualFunds).forEach((key) => {
-				let matchingEntry = matchingMFs?.find((match) => match?.id === key);
-				let mf = mutualFunds[key];
-				if(matchingEntry && matchingMFs) {
-					mf.price = matchingEntry.price;
-					mf.name = matchingEntry.name;
-					mf.type = matchingEntry.type;
-					mf.subt = matchingEntry.subt;
-					mf.curr = 'INR';
-				}
-				holdings.instruments.push(mutualFunds[key]);
-			})
-		}
-		console.log(await loadMatchingINExchange([...Object.keys(equities), ...Object.keys(etfs)]));
-		console.log(await loadMatchingINBond(Object.keys(bonds)));
-		addUploadedInstruments(holdings.instruments, equities);
-		addUploadedInstruments(holdings.instruments, bonds);
-		addUploadedInstruments(holdings.instruments, etfs);
-		addUploadedInstruments(holdings.instruments, mutualFunds);
+		await priceInstruments(loadMatchingINMF, mutualFunds);
+		await priceInstruments(loadMatchingINBond, bonds);
+		await priceInstruments(loadMatchingINExchange, equities);
+		await priceInstruments(loadMatchingINExchange, etfs);
 		setHoldings(holdings);
 		setDrawerVisibility(false);
 		setShowInsUpload(false);
