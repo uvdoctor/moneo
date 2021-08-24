@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Row, Col, Button, Badge, InputNumber } from 'antd';
 import { DeleteOutlined, EditOutlined, ShoppingCartOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 
 import './Holding.less';
 import { toReadableNumber } from '../utils';
 import { HoldingInput } from '../../api/goals';
+import { NWContext } from './NWContext';
 
 interface HoldingProp {
 	holding: HoldingInput;
+	showPrice?: boolean;
 	onDelete: Function;
 	onChange?: Function;
 }
 
-export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
+export default function Holding({ holding, showPrice, onDelete, onChange }: HoldingProp) {
+	const { insPrices }: any = useContext(NWContext);
 	const [ isEditMode, setEditMode ] = useState(false);
 
 	function onEdit() {
@@ -47,6 +50,7 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 							<span className="quantity">
 								<ShoppingCartOutlined />{' '}
 								{toReadableNumber(holding.qty, ('' + holding.qty).includes('.') ? 3 : 0)}
+								{showPrice ? ` x ${toReadableNumber(insPrices[holding.id] ? insPrices[holding.id] : 0, 2)}` : ''}
 							</span>
 						</Col>
 					)}

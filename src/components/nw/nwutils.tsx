@@ -94,6 +94,13 @@ export const checkIfMemberExists = (allFamily: any, taxId: string) => {
 	return filteredEntries.length ? filteredEntries[0] : null;
 };
 
+export const checkIfMemberIsSelected = (allFamily: any, selectedMembers: Array<string>, taxId: string) => {
+	if(!allFamily) return null;
+	if(!selectedMembers.length || !selectedMembers[0]) return null;
+	let filteredEntries = selectedMembers.filter((key: string) => allFamily[key].taxId === taxId);
+	return filteredEntries.length ? filteredEntries[0] : null;
+};
+
 export const addFamilyMemberSilently = async (allFamily: any, allFamilySetter: Function, taxId: string) => {
 	let id = checkIfMemberExists(allFamily, taxId);
 	if(id) return id;

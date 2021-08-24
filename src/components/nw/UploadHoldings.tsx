@@ -26,6 +26,7 @@ import {
 import { addFamilyMemberSilently, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMF } from "./nwutils";
 
 export default function UploadHoldings() {
+	const { insPrices, setInsPrices }: any = useContext(NWContext);
 	const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
 	const [equities, setEquities] = useState<any>({});
@@ -73,22 +74,24 @@ export default function UploadHoldings() {
 		return !filteredEntries?.length ? [] : filteredEntries;
 	};
 
-	const priceInstruments = async (fun: Function, input: any) => {
+	const priceInstruments = async (fun: Function, input: any, taxId: string) => {
 		let matchingList: Array<any> | null = await fun(Object.keys(input));
-		if(!matchingList) addUploadedInstruments(holdings.instruments, input);
+		if(!matchingList || !matchingList.length) addUploadedInstruments(holdings.instruments, input);
 		else {
 			Object.keys(input).forEach((key) => {
 				let matchingEntry = matchingList?.find((match) => match?.id === key);
 				let instrument = input[key];
 				if(matchingEntry && matchingList) {
-					instrument.price = matchingEntry.price;
+					insPrices[key] = matchingEntry.price;
 					instrument.name = matchingEntry.name;
 					instrument.type = matchingEntry.type;
 					instrument.subt = matchingEntry.subt;
+					instrument.fIds = [taxId];
 					instrument.curr = 'INR';
 				}
 				holdings.instruments.push(input[key]);
 			})
+			setInsPrices(insPrices);
 		}
 	};
 
@@ -102,10 +105,10 @@ export default function UploadHoldings() {
 			setCurrencyList(currencyList);
 		}
 		setSelectedCurrency(currency);
-		await priceInstruments(loadMatchingINMF, mutualFunds);
-		await priceInstruments(loadMatchingINBond, bonds);
-		await priceInstruments(loadMatchingINExchange, equities);
-		await priceInstruments(loadMatchingINExchange, etfs);
+		await priceInstruments(loadMatchingINMF, mutualFunds, taxId);
+		await priceInstruments(loadMatchingINBond, bonds, taxId);
+		await priceInstruments(loadMatchingINExchange, equities, taxId);
+		await priceInstruments(loadMatchingINExchange, etfs, taxId);
 		setHoldings(holdings);
 		setDrawerVisibility(false);
 		setShowInsUpload(false);
