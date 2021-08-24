@@ -13,7 +13,7 @@ module.exports = {
       name
       type
       subt
-      nav
+      price
       mftype
       mcap
       tf
@@ -35,7 +35,7 @@ mutation UpdateInmf(
     name
     type
     subt
-    nav
+    price
     mftype
     mcap
     tf
@@ -57,7 +57,7 @@ mutation DeleteInmf(
     name
     type
     subt
-    nav
+    price
     mftype
     mcap
     tf
@@ -89,7 +89,7 @@ query ListInmFs(
       name
       type
       subt
-      nav
+      price
       mftype
       mcap
       tf

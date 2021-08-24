@@ -1527,7 +1527,7 @@ export const createInmf = /* GraphQL */ `
       name
       type
       subt
-      nav
+      price
       mftype
       mcap
       tf
@@ -1549,7 +1549,7 @@ export const updateInmf = /* GraphQL */ `
       name
       type
       subt
-      nav
+      price
       mftype
       mcap
       tf
@@ -1571,7 +1571,7 @@ export const deleteInmf = /* GraphQL */ `
       name
       type
       subt
-      nav
+      price
       mftype
       mcap
       tf

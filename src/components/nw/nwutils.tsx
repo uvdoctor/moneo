@@ -163,40 +163,36 @@ export const getRelatedCurrencies = (holdings: APIt.CreateHoldingsInput, default
 	return currencyList;
 }
 
-export const loadMatchingINExchange = async (instruments: Array<APIt.HoldingInput>) => {
+const getORIdList = (list: Array<any>, ids: Array<string>) => {
+	ids.forEach((id: string) => list.push({id: {eq: id}}));
+	return {or: list}
+}
+
+export const loadMatchingINExchange = async (isins: Array<string>) => {
+	if(!isins.length) return null;
 	let idList: Array<APIt.ModelINExchangeFilterInput> = [];
-	instruments.forEach((instrument: APIt.HoldingInput) => {
-		idList.push({id: {eq: instrument.id}});
-	})
-	let filterList: APIt.ModelINExchangeFilterInput = {or: idList};
-	const { data: { listINExchanges } } = (await API.graphql(graphqlOperation(queries.listInExchanges, {filter: filterList}))) as {
+	const { data: { listINExchanges } } = (await API.graphql(graphqlOperation(queries.listInExchanges, {filter: getORIdList(idList, isins)}))) as {
 		data: APIt.ListInExchangesQuery;
 	};
-	return listINExchanges?.items;
+	return listINExchanges?.items?.length ? listINExchanges.items as Array<APIt.INExchange> : null;
 }
 
-export const loadMatchingINMF = async (instruments: Array<APIt.HoldingInput>) => {
+export const loadMatchingINMF = async (isins: Array<string>) => {
+	if(!isins.length) return null;
 	let idList: Array<APIt.ModelINMFFilterInput> = [];
-	instruments.forEach((instrument: APIt.HoldingInput) => {
-		idList.push({id: {eq: instrument.id}});
-	})
-	let filterList: APIt.ModelINMFFilterInput = {or: idList};
-	const { data: { listINMFs } } = (await API.graphql(graphqlOperation(queries.listInmFs, {filter: filterList}))) as {
+	const { data: { listINMFs } } = (await API.graphql(graphqlOperation(queries.listInmFs, {filter: getORIdList(idList, isins)}))) as {
 		data: APIt.ListInmFsQuery;
 	};
-	return listINMFs?.items;
+	return listINMFs?.items?.length ? listINMFs.items as Array<APIt.INMF> : null;
 }
 
-export const loadMatchingINBond = async (instruments: Array<APIt.HoldingInput>) => {
+export const loadMatchingINBond = async (isins: Array<string>) => {
+	if(!isins.length) return null;
 	let idList: Array<APIt.ModelINBondFilterInput> = [];
-	instruments.forEach((instrument: APIt.HoldingInput) => {
-		idList.push({id: {eq: instrument.id}});
-	})
-	let filterList: APIt.ModelINBondFilterInput = {or: idList};
-	const { data: { listINBonds } } = (await API.graphql(graphqlOperation(queries.listInBonds, {filter: filterList}))) as {
+	const { data: { listINBonds } } = (await API.graphql(graphqlOperation(queries.listInBonds, {filter: getORIdList(idList, isins)}))) as {
 		data: APIt.ListInBondsQuery;
 	};
-	return listINBonds?.items;
+	return listINBonds?.items?.length ? listINBonds.items as Array<APIt.INBond> : null;
 }
 
 export const getInsSubTypeName = (type: APIt.AssetType, st: APIt.AssetSubType | APIt.InsType) => {

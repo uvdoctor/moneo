@@ -6,7 +6,7 @@ import HoldingsTable from "./HoldingsTable";
 import { NWContext } from "./NWContext";
 import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgnore } from "./parseutils";
 import { isMobileDevice } from "../utils";
-import { HoldingInput, AssetSubType, InsType, AssetType } from "../../api/goals";
+import { HoldingInput, AssetSubType, InsType, AssetType, INExchange, INMF } from "../../api/goals";
 import {
 	cleanAssetName,
 	completeRecord,
@@ -23,7 +23,7 @@ import {
 	getNumberAtEnd,
 	removeDuplicates,
 } from "../utils";
-import { addFamilyMemberSilently } from "./nwutils";
+import { addFamilyMemberSilently, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMF } from "./nwutils";
 
 export default function UploadHoldings() {
 	const fsb = useFullScreenBrowser();
@@ -73,7 +73,7 @@ export default function UploadHoldings() {
 		return !filteredEntries?.length ? [] : filteredEntries;
 	};
 
-	const addInstruments = () => {
+	const addInstruments = async () => {
 		if(!taxId) return;
 		addFamilyMemberSilently(allFamily, setAllFamily, taxId);
 		holdings.instruments = filterExistingTaxIdEntries();
@@ -83,6 +83,24 @@ export default function UploadHoldings() {
 			setCurrencyList(currencyList);
 		}
 		setSelectedCurrency(currency);
+		let matchingMFs: Array<INMF> | null = await loadMatchingINMF(Object.keys(mutualFunds));
+		if(!matchingMFs) addUploadedInstruments(holdings.instruments, mutualFunds);
+		else {
+			Object.keys(mutualFunds).forEach((key) => {
+				let matchingEntry = matchingMFs?.find((match) => match?.id === key);
+				let mf = mutualFunds[key];
+				if(matchingEntry && matchingMFs) {
+					mf.price = matchingEntry.nav;
+					mf.name = matchingEntry.name;
+					mf.type = matchingEntry.type;
+					mf.subt = matchingEntry.subt;
+					mf.curr = 'INR';
+				}
+				holdings.instruments.push(mutualFunds[key]);
+			})
+		}
+		console.log(await loadMatchingINExchange([...Object.keys(equities), ...Object.keys(etfs)]));
+		console.log(await loadMatchingINBond(Object.keys(bonds)));
 		addUploadedInstruments(holdings.instruments, equities);
 		addUploadedInstruments(holdings.instruments, bonds);
 		addUploadedInstruments(holdings.instruments, etfs);

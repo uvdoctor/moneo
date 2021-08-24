@@ -976,7 +976,7 @@ export const getInmf = /* GraphQL */ `
       name
       type
       subt
-      nav
+      price
       mftype
       mcap
       tf
@@ -1008,7 +1008,7 @@ export const listInmFs = /* GraphQL */ `
         name
         type
         subt
-        nav
+        price
         mftype
         mcap
         tf
