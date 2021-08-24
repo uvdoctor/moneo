@@ -15,7 +15,7 @@ const monthsArray = [
   "DEC",
 ];
 const today = new Date();
-const todayDate = today.getDate();
+const todayDate = today.getDate() - 1;
 const date = todayDate < 10 ? `0${todayDate}` : todayDate;
 
 // For BSE
@@ -88,13 +88,26 @@ const apiArray = [
     type: "NSE",
     fileName: NSEBaseFileName,
     url: `https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${NSEBaseFileName}.zip`,
+    schema: {
+      id: "",
+      sid: "",
+      name: "",
+      exchg: "",
+      type: "",
+      subt: "",
+      itype: "",
+      price: 0,
+      prev: 0,
+      mcap: "",
+    },
     codes: {
       sid: "SYMBOL",
       id: "ISIN",
-      name: "SERIES",
+      name: "SYMBOL",
       price: "LAST",
       prev: "PREVCLOSE",
-      type: "SERIES"
+      type: "SERIES",
+      subt:""
     },
     typeIdentifier: "NSE_EQUITY",
     listQuery: "ListInExchanges",
@@ -106,7 +119,18 @@ const apiArray = [
     type: "BSE",
     fileName: baseFileName + ".CSV",
     url: `https://www.bseindia.com/download/BhavCopy/Equity/${baseFileName}.zip`,
-    // schema: {sid: "",id: "",name: "",price: "",prev: "",exchg: "",type: "",subt: "",itype: "",mcap: "",},
+    schema: {
+      id: "",
+      sid: "",
+      name: "",
+      exchg: "",
+      type: "",
+      subt: "",
+      itype: "",
+      price: 0,
+      prev: 0,
+      mcap: "",
+    },
     codes: {
       sid: "SC_CODE",
       id: "ISIN_CODE",
@@ -114,7 +138,7 @@ const apiArray = [
       price: "LAST",
       prev: "PREVCLOSE",
       type: "SC_TYPE",
-      subt: "SC_GRP",
+      subt: "SC_GROUP",
     },
     typeIdentifier: "BSE_EQUITY",
     listQuery: "ListInExchanges",

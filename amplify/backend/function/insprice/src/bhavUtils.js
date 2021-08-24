@@ -54,96 +54,156 @@ const extractDataFromCSV = async (
   fileName,
   type,
   codes,
-  typeIdentifier
-  // schema
+  typeIdentifier,
+  schema
 ) => {
-  const calcType = (type, subt,typeIdentifier) => {
-    if(typeIdentifier === "BSE_EQUITY"){
-    if (type === "Q" && subt === "F") {
-      return "F";
-    } else if (type === "Q" && subt === "B") {
-      return "F";
-    } else if (type === "Q" || type === "P") {
-      return "E";
-    } else if (type === "B" || type === "D") {
-      return "F";
-    } else {
-      return "E";
+  const calcType = (type, subt, name) => {
+    if (typeIdentifier === "BSE_EQUITY") {
+      if (type === "Q" && subt === "F") {
+        return "F";
+      } else if (type === "Q" && subt === "B") {
+        return "F";
+      } else if (type === "Q" || type === "P") {
+        return "E";
+      } else if (type === "B" || type === "D") {
+        return "F";
+      } else {
+        return "E";
+      }
+    } else if (typeIdentifier === "NSE_EQUITY") {
+      const equity = ["EQ", "BE", "BZ", "E1", "SM", "ST", "X1", "P1", "P2"];
+      const fixed = ["GB", "GS", "W", "N", "Y", "Z"];
+      if (type === "MF") {
+        return "MF"
+      } else if (name.includes("ETF")) {
+        if (
+          name.includes("GOLD") ||
+          name.includes("GILT") ||
+          name.includes("BBETF") ||
+          name.includes("LIQUID")
+        ) {
+          return "F";
+        }else{
+          return "E"
+        }
+      } else if (equity.some((item) => item === type)) {
+        return "E";
+      } else if (fixed.some((item) => item === type || type.startsWith(item))) {
+        return "F";
+      } else if (type === "IV") {
+        return "A";
+      } else if (type === "RR") {
+        return "A";
+      }
     }
   };
-  if(typeIdentifier === "NSE_EQUITY"){
-    const equity = ['EQ','BE','BZ','E1','SM','ST','X1','P1','P2']
-    const fixed = ['GB','GS','N1','N2','N3','N4','N5','N6','N7','N8','N9','NA','NB','NC','ND','NE','NF','NG','NH','NI','NK','NL','NM','NN','NO','NP','NQ','NR','NS','NU','NW','NX','NY',]
-    if (equity.some(item=>item===type)){
-      return "E"
-    }else if(equity.some(item=>item===type)) {
-      return "F";
-    } else if (type === "IV") {
-      return "A";
-    } 
-    // warrants = fixed,RR = A, P1,P2,NYZ= fixed
-  }
-}
 
-  const calcSubType = (type, subt, name,typeIdentifier) => {
-    if(typeIdentifier === "BSE_EQUITY"){
-    if (name.includes("LIQUID")) {
-      return "L";
-    } else if (type === "Q" && subt === "F") {
-      return "GB";
-    } else if (type === "B" && subt === "G") {
-      return "GoldB";
-    } else if (type === "Q" && subt === "B") {
-      return "I";
-    } else if ((type === "B" || type === "D") && subt === "F") {
-      return "CB";
-    } else if (type === "Q" || type === "P") {
-      return "S";
-    } else {
-      return "S";
+  const calcSubType = (type, subt, name) => {
+    if (typeIdentifier === "BSE_EQUITY") {
+      if (name.includes("LIQUID")) {
+        return "L";
+      } else if (type === "Q" && subt === "F") {
+        return "GB";
+      } else if (type === "B" && subt === "G") {
+        return "GoldB";
+      } else if (type === "Q" && subt === "B") {
+        return "I";
+      } else if ((type === "B" || type === "D") && subt === "F") {
+        return "CB";
+      } else if (type === "Q" || type === "P") {
+        return "S";
+      } else {
+        return "S";
+      }
+    } else if (typeIdentifier === "NSE_EQUITY") {
+      if (name.includes("ETF")) {
+        if (name.includes("GOLD")) {
+          return "Gold";
+        } else if (name.includes("GILT")) {
+          return "GB";
+        } else if (name.includes("BBETF")) {
+          return "GBO";
+        } else if (name.includes("LIQUID")) {
+          return "L";
+        } else {
+          return "I";
+        }
+      } else if (type === "GC" || type === "GS") {
+        return "GB";
+      } else if (type === "GB") {
+        return "GoldB";
+      } else if (type === "RR" || type === "IV") {
+        return "R";
+      } else if (
+        type.includes("N") ||
+        type.includes("Y") ||
+        type.includes("Z")
+      ) {
+        return "CB";
+      } else {
+        return "S";
+      }
     }
-  }
-  if(typeIdentifier === "NSE_EQUITY"){
-    // etf to be done on name variations,GC,GS=gov, GB= goldbond, 
-    // MF - ignore , Invtype= Reit, N,Z,Y series = CB, bharat bonds = GBO
-    // EQ = stocks
-  }
   };
 
-  const calcInsType = (type, subt,typeIdentifier) => {
-    if (type === "Q" && subt === "E") {
-      return "ETF";
+  const calcInsType = (type, subt, name) => {
+    if (typeIdentifier === "BSE_EQUITY") {
+      if (type === "Q" && subt === "E") {
+        return "ETF";
+      }
+    } else if (typeIdentifier === "NSE_EQUITY") {
+      if (name.includes("ETF")) {
+        return "ETF";
+      } else if (type === "IV") {
+        return "InvIT";
+      } else if (type === "RR") {
+        return "REIT";
+      }
     }
   };
 
   const end = new Promise((resolve, reject) => {
-    let results = [];
+    let results = []
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        const schema = {
-          id: record[codes.id],
-          sid: typeIdentifier,
-          name: record[codes.name],
-          exchg: type,
-          type: calcType(record[codes.type],typeIdentifier),
-          subt: calcSubType(
-            record[codes.type],
-            record[codes.subt],
-            record[codes.name],
-            typeIdentifier
-          ),
-          itype: calcInsType(record[codes.type], record[codes.subt],typeIdentifier),
-          price: Number(record[codes.price]),
-          prev: Number(record[codes.prev]),
-          mcap: "",
-        };
         Object.keys(schema).map((key) => {
-          if (!schema[key]) {
+          if(key === "type"){
+            schema.type = calcType(
+              record[codes.type],
+              record[codes.subt],
+              record[codes.name]
+            );
+          }else if(key === "subt"){
+            schema.subt = calcSubType(
+              record[codes.type],
+              record[codes.subt],
+              record[codes.name]
+            );}
+          else if(key === "itype"){
+            schema.itype = calcInsType(
+              record[codes.type],
+              record[codes.subt],
+              record[codes.name]
+            );}
+          else if(key === "exchg"){
+            schema.exchg = type; }
+          else{
+            schema[key] = record[codes[key]];
+          }
+          
+        });
+        // console.log("Schema: ", schema);
+        Object.keys(schema).map((key) => {
+          if (schema.type === "MF"){
+            delete schema
+          }
+          else if (schema[key]=== undefined) {
             delete schema[key];
           }
         });
-        results.push(schema);
+        results.push(Object.assign({}, schema));
+        // console.log("Results:", results);
       })
       .on("end", async () => {
         await cleanDirectory(
@@ -174,7 +234,7 @@ const getAlreadyAddedInstruments = async (
       const getInstrumentData = async (token) => {
         const query = {
           limit: 100000,
-          filter: { sid: { eq: typeIdentifier } },
+          // filter: { sid: { eq: typeIdentifier } },
         };
         if (token) {
           query.nextToken = token;
@@ -211,7 +271,7 @@ const pushData = (data, insdata, updateMutation, createMutation) => {
           ? await insertInstrument({ input: data[i] }, updateMutation)
           : await insertInstrument({ input: data[i] }, createMutation);
 
-        console.log(insertedData);
+        console.log(insertedData.body);
         insertedData.body.errors
           ? instrumentData.errorIDs.push({
               id: data[i].id,

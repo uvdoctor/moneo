@@ -20,7 +20,18 @@ const getAndPushData = () => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const { type, fileName, url, codes, typeIdentifier,listQuery,updateMutation,createMutation,listOperationName } = apiArray[i];
+        const {
+          type,
+          fileName,
+          url,
+          codes,
+          schema,
+          typeIdentifier,
+          listQuery,
+          updateMutation,
+          createMutation,
+          listOperationName,
+        } = apiArray[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
@@ -30,6 +41,7 @@ const getAndPushData = () => {
           type,
           codes,
           typeIdentifier,
+          schema
         );
         const insdata = await getAlreadyAddedInstruments(typeIdentifier,listQuery,listOperationName);
         await pushData(data, insdata,updateMutation,createMutation);
