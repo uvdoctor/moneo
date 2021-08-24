@@ -919,6 +919,8 @@ export const getInBond = /* GraphQL */ `
       tf
       fv
       cr
+      crstr
+      ytm
       createdAt
       updatedAt
     }
@@ -955,6 +957,8 @@ export const listInBonds = /* GraphQL */ `
         tf
         fv
         cr
+        crstr
+        ytm
         createdAt
         updatedAt
       }

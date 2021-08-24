@@ -1451,6 +1451,8 @@ export const createInBond = /* GraphQL */ `
       tf
       fv
       cr
+      crstr
+      ytm
       createdAt
       updatedAt
     }
@@ -1477,6 +1479,8 @@ export const updateInBond = /* GraphQL */ `
       tf
       fv
       cr
+      crstr
+      ytm
       createdAt
       updatedAt
     }
@@ -1503,6 +1507,8 @@ export const deleteInBond = /* GraphQL */ `
       tf
       fv
       cr
+      crstr
+      ytm
       createdAt
       updatedAt
     }

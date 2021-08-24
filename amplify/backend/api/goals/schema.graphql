@@ -278,8 +278,10 @@ type INBond
 	rate: Float!
 	fr: YN!
 	tf: YN!
-	fv: Int!
-	cr: CreditRating!
+	fv: Int
+	cr: CreditRating
+	crstr: String
+	ytm: Float
 }
 
 type INMF
