@@ -90,7 +90,7 @@ export default function UploadHoldings() {
 				let matchingEntry = matchingMFs?.find((match) => match?.id === key);
 				let mf = mutualFunds[key];
 				if(matchingEntry && matchingMFs) {
-					mf.price = matchingEntry.nav;
+					mf.price = matchingEntry.price;
 					mf.name = matchingEntry.name;
 					mf.type = matchingEntry.type;
 					mf.subt = matchingEntry.subt;
