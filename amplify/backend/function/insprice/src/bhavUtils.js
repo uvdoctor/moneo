@@ -57,110 +57,111 @@ const extractDataFromCSV = async (
   typeIdentifier,
   schema
 ) => {
-  const calcType = (type, subt, name) => {
-    if (typeIdentifier === "BSE_EQUITY") {
-      if (type === "Q" && subt === "F") {
-        return "F";
-      } else if (type === "Q" && subt === "B") {
-        return "F";
-      } else if (type === "Q" || type === "P") {
-        return "E";
-      } else if (type === "B" || type === "D") {
-        return "F";
-      } else {
-        return "E";
+ const calcType = {
+    BSE_EQUITY: (type, subt, name) => {
+      switch (true) {
+        case type === "Q" && (subt === "F" || subt === "B"):
+        case type === "B" || type === "D":
+          return "F"
+        case type === "Q" || type === "P":
+          return "E"
+        default:
+          return "E"
       }
-    } else if (typeIdentifier === "NSE_EQUITY") {
+    },
+    NSE_EQUITY: (type, subt, name) => {
       const equity = ["EQ", "BE", "BZ", "E1", "SM", "ST", "X1", "P1", "P2"];
       const fixed = ["GB", "GS", "W", "N", "Y", "Z"];
-      if (type === "MF") {
-        return "MF"
-      } else if (name.includes("ETF")) {
-        if (
-          name.includes("GOLD") ||
-          name.includes("GILT") ||
-          name.includes("BBETF") ||
-          name.includes("LIQUID")
-        ) {
-          return "F";
-        }else{
+      switch (true) {
+        case type === "MF":
+          return "MF"
+        case name.includes('ETF'):
+          switch (true) {
+            case name.includes('GOLD'):
+            case name.includes('GILT'):
+            case name.includes('BBETF'):
+            case name.includes('LIQUID'):
+              return "F"
+            default:
+              return "E"
+          }
+        case equity.some((item) => item === type):
           return "E"
-        }
-      } else if (equity.some((item) => item === type)) {
-        return "E";
-      } else if (fixed.some((item) => item === type || type.startsWith(item))) {
-        return "F";
-      } else if (type === "IV") {
-        return "A";
-      } else if (type === "RR") {
-        return "A";
+        case fixed.some((item) => item === type || type.startsWith(item)):
+          return "F"
+        case type === "IV" || type === "RR":
+          return "A"
+        default:
+          return "E"
+      }
+    },
+  }
+  const calcSubType = {
+    BSE_EQUITY: (type, subt, name) => {
+      switch (true) {
+        case name.includes("LIQUID"):
+          return "L"
+        case type === "Q" && subt === "F":
+          return "GB"
+        case type === "B" && subt === "G":
+          return "GoldB"
+        case type === "Q" && subt === "B":
+          return "I"
+        case (type === "B" || type === "D") && subt === "F":
+          return "CB"
+        case type === "Q" || type === "P":
+          return "S"
+        default:
+          return "S"
+      }
+    },
+    NSE_EQUITY: (type, subt, name) => {
+      switch (true) {
+        case name.includes("ETF"):
+          switch (true) {
+            case name.includes("GOLD"):
+              return "Gold"
+            case name.includes("GILT"):
+              return "GB"
+            case name.includes("BBETF"):
+              return "GBO"
+            case name.includes("LIQUID"):
+              return "L"
+            default:
+              return "I"
+          }
+        case type === "GC" || type === "GS":
+          return "GB"
+        case type === "GB":
+          return "GoldB"
+        case type === "RR" || type === "IV":
+          return "R"
+        case type.includes("N"):
+        case type.includes("Y"):
+        case type.includes("Z"):
+          return "CB"
+        default:
+          return "S"
       }
     }
-  };
-
-  const calcSubType = (type, subt, name) => {
-    if (typeIdentifier === "BSE_EQUITY") {
-      if (name.includes("LIQUID")) {
-        return "L";
-      } else if (type === "Q" && subt === "F") {
-        return "GB";
-      } else if (type === "B" && subt === "G") {
-        return "GoldB";
-      } else if (type === "Q" && subt === "B") {
-        return "I";
-      } else if ((type === "B" || type === "D") && subt === "F") {
-        return "CB";
-      } else if (type === "Q" || type === "P") {
-        return "S";
-      } else {
-        return "S";
-      }
-    } else if (typeIdentifier === "NSE_EQUITY") {
-      if (name.includes("ETF")) {
-        if (name.includes("GOLD")) {
-          return "Gold";
-        } else if (name.includes("GILT")) {
-          return "GB";
-        } else if (name.includes("BBETF")) {
-          return "GBO";
-        } else if (name.includes("LIQUID")) {
-          return "L";
-        } else {
-          return "I";
-        }
-      } else if (type === "GC" || type === "GS") {
-        return "GB";
-      } else if (type === "GB") {
-        return "GoldB";
-      } else if (type === "RR" || type === "IV") {
-        return "R";
-      } else if (
-        type.includes("N") ||
-        type.includes("Y") ||
-        type.includes("Z")
-      ) {
-        return "CB";
-      } else {
-        return "S";
-      }
-    }
-  };
-
-  const calcInsType = (type, subt, name) => {
-    if (typeIdentifier === "BSE_EQUITY") {
+  }
+  const calcInsType = {
+    BSE_EQUITY: (type, subt, name) => {
       if (type === "Q" && subt === "E") {
         return "ETF";
       }
-    } else if (typeIdentifier === "NSE_EQUITY") {
-      if (name.includes("ETF")) {
-        return "ETF";
-      } else if (type === "IV") {
-        return "InvIT";
-      } else if (type === "RR") {
-        return "REIT";
+    },
+    NSE_EQUITY: (type, subt, name) => {
+      switch (true) {
+        case name.includes("ETF"):
+          return "ETF"
+        case type === "IV":
+          return "InvIT"
+        case type === "RR":
+          return "REIT"
       }
     }
-  };
+  }
 
   const end = new Promise((resolve, reject) => {
     let results = []
@@ -168,37 +169,40 @@ const extractDataFromCSV = async (
       .pipe(csv())
       .on("data", (record) => {
         Object.keys(schema).map((key) => {
-          if(key === "type"){
-            schema.type = calcType(
+          if (key === "type") {
+            schema.type = calcType[typeIdentifier](
               record[codes.type],
               record[codes.subt],
               record[codes.name]
             );
-          }else if(key === "subt"){
-            schema.subt = calcSubType(
+          } else if (key === "subt") {
+            schema.subt = calcSubType[typeIdentifier](
               record[codes.type],
               record[codes.subt],
               record[codes.name]
-            );}
-          else if(key === "itype"){
-            schema.itype = calcInsType(
+            );
+          }
+          else if (key === "itype") {
+            schema.itype = calcInsType[typeIdentifier](
               record[codes.type],
               record[codes.subt],
               record[codes.name]
-            );}
-          else if(key === "exchg"){
-            schema.exchg = type; }
-          else{
+            );
+          }
+          else if (key === "exchg") {
+            schema.exchg = type;
+          }
+          else {
             schema[key] = record[codes[key]];
           }
-          
+
         });
-        // console.log("Schema: ", schema);
+  
         Object.keys(schema).map((key) => {
-          if (schema.type === "MF"){
+          if (schema.type === "MF") {
             delete schema
           }
-          else if (schema[key]=== undefined) {
+          else if (!schema[key]) {
             delete schema[key];
           }
         });
@@ -224,7 +228,6 @@ const extractDataFromCSV = async (
 };
 
 const getAlreadyAddedInstruments = async (
-  typeIdentifier,
   listQuery,
   listOperationName
 ) => {
@@ -234,7 +237,6 @@ const getAlreadyAddedInstruments = async (
       const getInstrumentData = async (token) => {
         const query = {
           limit: 100000,
-          // filter: { sid: { eq: typeIdentifier } },
         };
         if (token) {
           query.nextToken = token;
@@ -274,9 +276,9 @@ const pushData = (data, insdata, updateMutation, createMutation) => {
         console.log(insertedData.body);
         insertedData.body.errors
           ? instrumentData.errorIDs.push({
-              id: data[i].id,
-              error: insertedData.body.errors,
-            })
+            id: data[i].id,
+            error: insertedData.body.errors,
+          })
           : instrumentData.updatedIDs.push(data[i].id);
       }
       console.log(instrumentData);
