@@ -3,21 +3,17 @@ const graphqlOperation = require("./operation");
 const getAssetType = (data) => {
   switch (true) {
     case data.includes("Equity"):
+    case data.includes("ELSS"):
+    case data.includes("Growth"):
       return "E";
     case data.includes("Debt"):
+    case data.includes("Income"):
+    case data.includes("Solution"):
       return "F";
     case data.includes("Hybrid"):
       return "H";
-    case data.includes("ELSS"):
-      return "E";
-    case data.includes("Income"):
-      return "F";
-    case data.includes("Growth"):
-      return "E";
     case data.includes("Other"):
       return "A";
-    case data.includes("Solution"):
-      return "F";
   }
 };
 
