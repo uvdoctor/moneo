@@ -25,37 +25,75 @@ const month =
     : `${today.getMonth() + 1}`;
 const year =
   today.getYear().toString().charAt(1) + today.getYear().toString().charAt(2);
+const yearFull = today.getFullYear();
 const baseFileName = `EQ_ISINCODE_${date}${month}${year}`;
-
+const baseFileDebtName = `DEBTBHAVCOPY${date}${month}${yearFull}`;
 // For NSE
 const monthChar = monthsArray[today.getMonth()];
-const yearFull = today.getFullYear();
 const NSEBaseFileName = `cm${date}${monthChar}${yearFull}bhav.csv`;
 
 const apiArray = [
   {
-    type: "BSE",
+    typeExchg: "NSE",
+    fileName: NSEBaseFileName,
+    url: `https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${NSEBaseFileName}.zip`,
+    schema: {
+      id: "",
+      sid: "",
+      name: "",
+      exchg: "",
+      type: "",
+      subt: "",
+      itype: "",
+      price: 0,
+      prev: 0,
+      mcap: "",
+    },
+    codes: {
+      sid: "SYMBOL",
+      id: "ISIN",
+      name: "SYMBOL",
+      price: "LAST",
+      prev: "PREVCLOSE",
+      type: "SERIES",
+      subt: "",
+    },
+    typeIdentifier: "NSE_EQUITY",
+    listQuery: "ListInExchanges",
+    updateMutation: "UpdateInExchange",
+    createMutation: "CreateInExchange",
+    listOperationName: "listINExchanges",
+  },
+  {
+    typeExchg: "BSE",
     fileName: baseFileName + ".CSV",
     url: `https://www.bseindia.com/download/BhavCopy/Equity/${baseFileName}.zip`,
+    schema: {
+      id: "",
+      sid: "",
+      name: "",
+      exchg: "",
+      type: "",
+      subt: "",
+      itype: "",
+      price: 0,
+      prev: 0,
+      mcap: "",
+    },
     codes: {
       sid: "SC_CODE",
       id: "ISIN_CODE",
       name: "SC_NAME",
       price: "LAST",
       prev: "PREVCLOSE",
+      type: "SC_TYPE",
+      subt: "SC_GROUP",
     },
-  },
-  {
-    type: "NSE",
-    fileName: NSEBaseFileName,
-    url: `https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${NSEBaseFileName}.zip`,
-    codes: {
-      sid: "SYMBOL",
-      id: "ISIN",
-      name: "SERIES",
-      price: "LAST",
-      prev: "PREVCLOSE",
-    },
+    typeIdentifier: "BSE_EQUITY",
+    listQuery: "ListInExchanges",
+    updateMutation: "UpdateInExchange",
+    createMutation: "CreateInExchange",
+    listOperationName: "listINExchanges",
   },
 ];
 

@@ -850,40 +850,91 @@ export const listRegistrations = /* GraphQL */ `
     }
   }
 `;
-export const getInstrument = /* GraphQL */ `
-  query GetInstrument($id: String!) {
-    getInstrument(id: $id) {
+export const getInExchange = /* GraphQL */ `
+  query GetInExchange($id: String!) {
+    getINExchange(id: $id) {
       id
       sid
-      tid
       name
       exchg
-      country
-      curr
       type
       subt
+      itype
       price
       prev
-      sm
-      sy
-      mm
-      my
-      rate
-      mftype
+      mcap
       createdAt
       updatedAt
     }
   }
 `;
-export const listInstruments = /* GraphQL */ `
-  query ListInstruments(
+export const listInExchanges = /* GraphQL */ `
+  query ListInExchanges(
     $id: String
-    $filter: ModelInstrumentFilterInput
+    $filter: ModelINExchangeFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listInstruments(
+    listINExchanges(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        name
+        exchg
+        type
+        subt
+        itype
+        price
+        prev
+        mcap
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getInBond = /* GraphQL */ `
+  query GetInBond($id: String!) {
+    getINBond(id: $id) {
+      id
+      sid
+      tid
+      name
+      subt
+      price
+      sm
+      sy
+      mm
+      my
+      rate
+      fr
+      tf
+      fv
+      cr
+      crstr
+      ytm
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInBonds = /* GraphQL */ `
+  query ListInBonds(
+    $id: String
+    $filter: ModelINBondFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINBonds(
       id: $id
       filter: $filter
       limit: $limit
@@ -895,19 +946,72 @@ export const listInstruments = /* GraphQL */ `
         sid
         tid
         name
-        exchg
-        country
-        curr
-        type
         subt
         price
-        prev
         sm
         sy
         mm
         my
         rate
+        fr
+        tf
+        fv
+        cr
+        crstr
+        ytm
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getInmf = /* GraphQL */ `
+  query GetInmf($id: String!) {
+    getINMF(id: $id) {
+      id
+      sid
+      tid
+      dir
+      name
+      type
+      subt
+      price
+      mftype
+      mcap
+      tf
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInmFs = /* GraphQL */ `
+  query ListInmFs(
+    $id: String
+    $filter: ModelINMFFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINMFs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        tid
+        dir
+        name
+        type
+        subt
+        price
         mftype
+        mcap
+        tf
         createdAt
         updatedAt
       }

@@ -1,92 +1,100 @@
 module.exports = {
   mutation: {
-    CreateInstrument: `mutation CreateInstrument(
-      $input: CreateInstrumentInput!
-      $condition: ModelInstrumentConditionInput
-    ) {
-      createInstrument(input: $input, condition: $condition) {
-        id
-        sid
-        tid
-        name
-        exchg
-        country
-        curr
-        type
-        subt
-        price
-        prev
-        sm
-        sy
-        mm
-        my
-        rate
-        mftype
-        createdAt
-        updatedAt
-        }
-    }
-  `,
-  UpdateInstrument: `mutation UpdateInstrument(
-    $input: UpdateInstrumentInput!
-    $condition: ModelInstrumentConditionInput
+    CreateInExchange: `
+  mutation CreateInExchange(
+    $input: CreateINExchangeInput!
+    $condition: ModelINExchangeConditionInput
   ) {
-    updateInstrument(input: $input, condition: $condition) {
+    createINExchange(input: $input, condition: $condition) {
       id
       sid
-      tid
       name
       exchg
-      country
-      curr
       type
       subt
+      itype
       price
       prev
-      sm
-      sy
-      mm
-      my
-      rate
-      mftype
+      mcap
       createdAt
       updatedAt
     }
   }
 `,
-ListInstruments: `query ListInstruments(
-  $filter: ModelInstrumentFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listInstruments(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
+    UpdateInExchange: `
+  mutation UpdateInExchange(
+    $input: UpdateINExchangeInput!
+    $condition: ModelINExchangeConditionInput
   ) {
-    items {
+    updateINExchange(input: $input, condition: $condition) {
       id
       sid
-      tid
       name
       exchg
-      country
-      curr
       type
       subt
+      itype
       price
       prev
-      sm
-      sy
-      mm
-      my
-      rate
-      mftype
+      mcap
       createdAt
       updatedAt
     }
-    nextToken
-    }
-    }`
   }
+`,
+    DeleteInExchange: `
+  mutation DeleteInExchange(
+    $input: DeleteINExchangeInput!
+    $condition: ModelINExchangeConditionInput
+  ) {
+    deleteINExchange(input: $input, condition: $condition) {
+      id
+      sid
+      name
+      exchg
+      type
+      subt
+      itype
+      price
+      prev
+      mcap
+      createdAt
+      updatedAt
+    }
+  }
+`,
+    ListInExchanges: `
+  query ListInExchanges(
+    $id: String
+    $filter: ModelINExchangeFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINExchanges(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        name
+        exchg
+        type
+        subt
+        itype
+        price
+        prev
+        mcap
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`,
+  },
 };

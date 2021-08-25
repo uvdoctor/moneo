@@ -13,7 +13,7 @@ const ADD_MODE = 'Add';
 const EDIT_MODE = 'Edit';
 
 export default function FamilyInput() {
-	const { allFamily, selectedMembers, setSelectedMembers, setAllFamily/*, loadingFamily*/ }: any = useContext(NWContext);
+	const { allFamily, selectedMembers, setSelectedMembers, setAllFamily, loadingFamily }: any = useContext(NWContext);
 	const { Option } = Select;
     const [ mode, setMode ] = useState<string>('');
     const [ id, setId ] = useState<string>('');
@@ -27,10 +27,10 @@ export default function FamilyInput() {
         return !keys.length ? '' : keys.length > 1 ? ALL_FAMILY : keys[0];
     }
 
-    /*useEffect(() => {
+    useEffect(() => {
         if(loadingFamily) return;
         setSelectedMembers([...[getDefaultFamilySelection()]]);
-    }, [loadingFamily]);*/
+    }, [loadingFamily]);
 
 	useEffect(() => {
         setIncludeAllOption(Object.keys(allFamily).length > 1);

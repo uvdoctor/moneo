@@ -1367,85 +1367,214 @@ export const updateRegistration = /* GraphQL */ `
     }
   }
 `;
-export const createInstrument = /* GraphQL */ `
-  mutation CreateInstrument(
-    $input: CreateInstrumentInput!
-    $condition: ModelInstrumentConditionInput
+export const createInExchange = /* GraphQL */ `
+  mutation CreateInExchange(
+    $input: CreateINExchangeInput!
+    $condition: ModelINExchangeConditionInput
   ) {
-    createInstrument(input: $input, condition: $condition) {
+    createINExchange(input: $input, condition: $condition) {
       id
       sid
-      tid
       name
       exchg
-      country
-      curr
       type
       subt
+      itype
       price
       prev
-      sm
-      sy
-      mm
-      my
-      rate
-      mftype
+      mcap
       createdAt
       updatedAt
     }
   }
 `;
-export const updateInstrument = /* GraphQL */ `
-  mutation UpdateInstrument(
-    $input: UpdateInstrumentInput!
-    $condition: ModelInstrumentConditionInput
+export const updateInExchange = /* GraphQL */ `
+  mutation UpdateInExchange(
+    $input: UpdateINExchangeInput!
+    $condition: ModelINExchangeConditionInput
   ) {
-    updateInstrument(input: $input, condition: $condition) {
+    updateINExchange(input: $input, condition: $condition) {
       id
       sid
-      tid
       name
       exchg
-      country
-      curr
       type
       subt
+      itype
       price
       prev
-      sm
-      sy
-      mm
-      my
-      rate
-      mftype
+      mcap
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteInstrument = /* GraphQL */ `
-  mutation DeleteInstrument(
-    $input: DeleteInstrumentInput!
-    $condition: ModelInstrumentConditionInput
+export const deleteInExchange = /* GraphQL */ `
+  mutation DeleteInExchange(
+    $input: DeleteINExchangeInput!
+    $condition: ModelINExchangeConditionInput
   ) {
-    deleteInstrument(input: $input, condition: $condition) {
+    deleteINExchange(input: $input, condition: $condition) {
+      id
+      sid
+      name
+      exchg
+      type
+      subt
+      itype
+      price
+      prev
+      mcap
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createInBond = /* GraphQL */ `
+  mutation CreateInBond(
+    $input: CreateINBondInput!
+    $condition: ModelINBondConditionInput
+  ) {
+    createINBond(input: $input, condition: $condition) {
       id
       sid
       tid
       name
-      exchg
-      country
-      curr
-      type
       subt
       price
-      prev
       sm
       sy
       mm
       my
       rate
+      fr
+      tf
+      fv
+      cr
+      crstr
+      ytm
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateInBond = /* GraphQL */ `
+  mutation UpdateInBond(
+    $input: UpdateINBondInput!
+    $condition: ModelINBondConditionInput
+  ) {
+    updateINBond(input: $input, condition: $condition) {
+      id
+      sid
+      tid
+      name
+      subt
+      price
+      sm
+      sy
+      mm
+      my
+      rate
+      fr
+      tf
+      fv
+      cr
+      crstr
+      ytm
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteInBond = /* GraphQL */ `
+  mutation DeleteInBond(
+    $input: DeleteINBondInput!
+    $condition: ModelINBondConditionInput
+  ) {
+    deleteINBond(input: $input, condition: $condition) {
+      id
+      sid
+      tid
+      name
+      subt
+      price
+      sm
+      sy
+      mm
+      my
+      rate
+      fr
+      tf
+      fv
+      cr
+      crstr
+      ytm
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createInmf = /* GraphQL */ `
+  mutation CreateInmf(
+    $input: CreateINMFInput!
+    $condition: ModelINMFConditionInput
+  ) {
+    createINMF(input: $input, condition: $condition) {
+      id
+      sid
+      tid
+      dir
+      name
+      type
+      subt
+      price
       mftype
+      mcap
+      tf
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateInmf = /* GraphQL */ `
+  mutation UpdateInmf(
+    $input: UpdateINMFInput!
+    $condition: ModelINMFConditionInput
+  ) {
+    updateINMF(input: $input, condition: $condition) {
+      id
+      sid
+      tid
+      dir
+      name
+      type
+      subt
+      price
+      mftype
+      mcap
+      tf
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteInmf = /* GraphQL */ `
+  mutation DeleteInmf(
+    $input: DeleteINMFInput!
+    $condition: ModelINMFConditionInput
+  ) {
+    deleteINMF(input: $input, condition: $condition) {
+      id
+      sid
+      tid
+      dir
+      name
+      type
+      subt
+      price
+      mftype
+      mcap
+      tf
       createdAt
       updatedAt
     }

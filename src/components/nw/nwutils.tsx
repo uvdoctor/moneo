@@ -94,6 +94,13 @@ export const checkIfMemberExists = (allFamily: any, taxId: string) => {
 	return filteredEntries.length ? filteredEntries[0] : null;
 };
 
+export const checkIfMemberIsSelected = (allFamily: any, selectedMembers: Array<string>, taxId: string) => {
+	if(!allFamily) return null;
+	if(!selectedMembers.length || !selectedMembers[0]) return null;
+	let filteredEntries = selectedMembers.filter((key: string) => allFamily[key].taxId === taxId);
+	return filteredEntries.length ? filteredEntries[0] : null;
+};
+
 export const addFamilyMemberSilently = async (allFamily: any, allFamilySetter: Function, taxId: string) => {
 	let id = checkIfMemberExists(allFamily, taxId);
 	if(id) return id;
@@ -163,29 +170,48 @@ export const getRelatedCurrencies = (holdings: APIt.CreateHoldingsInput, default
 	return currencyList;
 }
 
-export const loadMatchingInstruments = async (instruments: Array<APIt.HoldingInput>) => {
-	let idList: Array<APIt.ModelInstrumentFilterInput> = [];
-	instruments.forEach((instrument: APIt.HoldingInput) => {
-		idList.push({id: {eq: instrument.id}});
-	})
-	let filterList: APIt.ModelInstrumentFilterInput = {or: idList};
-	const { data: { listInstruments } } = (await API.graphql(graphqlOperation(queries.listInstruments, {filter: filterList}))) as {
-		data: APIt.ListInstrumentsQuery;
-	};
-	return listInstruments?.items;
+const getORIdList = (list: Array<any>, ids: Array<string>) => {
+	ids.forEach((id: string) => list.push({id: {eq: id}}));
+	return {or: list}
 }
 
-export const getInsSubTypeName = (type: APIt.InsType, st: APIt.InsSubType) => {
+export const loadMatchingINExchange = async (isins: Array<string>) => {
+	if(!isins.length) return null;
+	let idList: Array<APIt.ModelINExchangeFilterInput> = [];
+	const { data: { listINExchanges } } = (await API.graphql(graphqlOperation(queries.listInExchanges, {filter: getORIdList(idList, isins)}))) as {
+		data: APIt.ListInExchangesQuery;
+	};
+	return listINExchanges?.items?.length ? listINExchanges.items as Array<APIt.INExchange> : null;
+}
+
+export const loadMatchingINMF = async (isins: Array<string>) => {
+	if(!isins.length) return null;
+	let idList: Array<APIt.ModelINMFFilterInput> = [];
+	const { data: { listINMFs } } = (await API.graphql(graphqlOperation(queries.listInmFs, {filter: getORIdList(idList, isins)}))) as {
+		data: APIt.ListInmFsQuery;
+	};
+	return listINMFs?.items?.length ? listINMFs.items as Array<APIt.INMF> : null;
+}
+
+export const loadMatchingINBond = async (isins: Array<string>) => {
+	if(!isins.length) return null;
+	let idList: Array<APIt.ModelINBondFilterInput> = [];
+	const { data: { listINBonds } } = (await API.graphql(graphqlOperation(queries.listInBonds, {filter: getORIdList(idList, isins)}))) as {
+		data: APIt.ListInBondsQuery;
+	};
+	return listINBonds?.items?.length ? listINBonds.items as Array<APIt.INBond> : null;
+}
+
+export const getInsSubTypeName = (type: APIt.AssetType, st: APIt.AssetSubType | APIt.InsType) => {
 		switch(st) {
-			case APIt.InsSubType.S : return "Stock";
-			case APIt.InsSubType.M : return type === APIt.InsType.E ? "Equity Mutual Fund" : "Debt Mutual Fund";
-			case APIt.InsSubType.GoldB: return "Gold Bond";
-			case APIt.InsSubType.ETF: return type === APIt.InsType.E ? "Equity ETF" : "Debt ETF";
-			case APIt.InsSubType.CB: return "Corporate Bond";
-			case APIt.InsSubType.MB: return "Municipal Bond";
-			case APIt.InsSubType.GB: return "Sovereign Bond";
-			case APIt.InsSubType.REIT: return "REIT";
-			default: return "Other";
+			case APIt.AssetSubType.S : return "Stock";
+			case APIt.AssetSubType.GoldB: return "Gold Bond";
+			case APIt.InsType.ETF: return type === APIt.AssetType.E ? "Equity ETF" : "Debt ETF";
+			case APIt.AssetSubType.CB: return "Corporate Bond";
+			case APIt.AssetSubType.GBO: return "Public Sector Bond";
+			case APIt.AssetSubType.GB: return "Sovereign Bond";
+			case APIt.InsType.REIT: return "REIT";
+			default: return type === APIt.AssetType.E ? "Equity Mutual Fund" : "Debt Mutual Fund";
 		}
 }
 

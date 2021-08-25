@@ -6,7 +6,7 @@ import HoldingsTable from "./HoldingsTable";
 import { NWContext } from "./NWContext";
 import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgnore } from "./parseutils";
 import { isMobileDevice } from "../utils";
-import { HoldingInput, InsSubType, InsType } from "../../api/goals";
+import { HoldingInput, AssetSubType, InsType, AssetType } from "../../api/goals";
 import {
 	cleanAssetName,
 	completeRecord,
@@ -23,9 +23,10 @@ import {
 	getNumberAtEnd,
 	removeDuplicates,
 } from "../utils";
-import { addFamilyMemberSilently } from "./nwutils";
+import { addFamilyMemberSilently, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMF } from "./nwutils";
 
 export default function UploadHoldings() {
+	const { insPrices, setInsPrices }: any = useContext(NWContext);
 	const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
 	const [equities, setEquities] = useState<any>({});
@@ -73,7 +74,28 @@ export default function UploadHoldings() {
 		return !filteredEntries?.length ? [] : filteredEntries;
 	};
 
-	const addInstruments = () => {
+	const priceInstruments = async (fun: Function, input: any, taxId: string) => {
+		let matchingList: Array<any> | null = await fun(Object.keys(input));
+		if(!matchingList || !matchingList.length) addUploadedInstruments(holdings.instruments, input);
+		else {
+			Object.keys(input).forEach((key) => {
+				let matchingEntry = matchingList?.find((match) => match?.id === key);
+				let instrument = input[key];
+				if(matchingEntry && matchingList) {
+					insPrices[key] = matchingEntry.price;
+					instrument.name = matchingEntry.name;
+					instrument.type = matchingEntry.type;
+					instrument.subt = matchingEntry.subt;
+					instrument.fIds = [taxId];
+					instrument.curr = 'INR';
+				}
+				holdings.instruments.push(input[key]);
+			})
+			setInsPrices(insPrices);
+		}
+	};
+
+	const addInstruments = async () => {
 		if(!taxId) return;
 		addFamilyMemberSilently(allFamily, setAllFamily, taxId);
 		holdings.instruments = filterExistingTaxIdEntries();
@@ -83,10 +105,10 @@ export default function UploadHoldings() {
 			setCurrencyList(currencyList);
 		}
 		setSelectedCurrency(currency);
-		addUploadedInstruments(holdings.instruments, equities);
-		addUploadedInstruments(holdings.instruments, bonds);
-		addUploadedInstruments(holdings.instruments, etfs);
-		addUploadedInstruments(holdings.instruments, mutualFunds);
+		await priceInstruments(loadMatchingINMF, mutualFunds, taxId);
+		await priceInstruments(loadMatchingINBond, bonds, taxId);
+		await priceInstruments(loadMatchingINExchange, equities, taxId);
+		await priceInstruments(loadMatchingINExchange, etfs, taxId);
 		setHoldings(holdings);
 		setDrawerVisibility(false);
 		setShowInsUpload(false);
@@ -271,28 +293,28 @@ export default function UploadHoldings() {
 					if (lastNameCapture) {
 						let diff = j - lastNameCapture;
 						if (
-							insType !== InsSubType.M &&
-							insType !== InsSubType.ETF &&
+							insType !== 'M' &&
+							insType !== InsType.ETF &&
 							!numberAtEnd &&
 							diff < 4
 						)
 							continue;
 					}
 					if (numberAtEnd) value = replaceIfFound(value, ["" + numberAtEnd]);
-					if(insType === InsSubType.S) value = cleanAssetName(value);
+					if(insType === AssetSubType.S) value = cleanAssetName(value);
 					if (!value) {
 						numberAtEnd = null;
 						continue;
 					}
 					if (
-						(insType !== InsSubType.S) &&
+						(insType !== AssetSubType.S) &&
 						name &&
 						lastNameCapture &&
 						j - lastNameCapture <= 2
 					)
 						name += " " + value.trim();
 					else name = value.trim();
-					if (insType === InsSubType.M || insType === InsSubType.ETF) {
+					if (insType === 'M' || insType === InsType.ETF) {
 						name = removeDuplicates(name as string);
 						name = getValueBefore(name as string, ["(", ")"]);
 					}
@@ -306,19 +328,19 @@ export default function UploadHoldings() {
 				let qty: number | null =
 					checkForMultiple && name && numberAtEnd ? numberAtEnd : getQty(value);
 				if (!qty) continue;
-				if(insType === InsSubType.M && !value.includes(".")) continue;
+				if(insType === 'M' && !value.includes(".")) continue;
 				if (
 					!recordBroken &&
 					((name && lastNameCapture && j - lastNameCapture > 5) ||
 						(lastQtyCapture && j - lastQtyCapture < 7))
 				)
 					continue;
-				if (hasFV && !fv && (insType === InsSubType.S || insType === InsType.F)) {
+				if (hasFV && !fv && (insType === AssetSubType.S || insType === AssetType.F)) {
 					console.log("Detected fv: ", qty);
 					fv = qty;
 					continue;
 				}
-				if (insType === InsType.F && !Number.isInteger(qty)) continue;
+				if (insType === AssetType.F && !Number.isInteger(qty)) continue;
 				console.log("Detected quantity: ", qty);
 				lastQtyCapture = j;
 				if (lastQtyCapture !== lastNameCapture) checkForMultiple = false;

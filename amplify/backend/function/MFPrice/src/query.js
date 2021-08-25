@@ -1,116 +1,104 @@
 module.exports = {
   mutation: {
-    CreateInstrument: `mutation CreateInstrument(
-      $input: CreateInstrumentInput!
-      $condition: ModelInstrumentConditionInput
-    ) {
-      createInstrument(input: $input, condition: $condition) {
-        id
-        sid
-        tid
-        name
-        exchg
-        country
-        curr
-        type
-        subt
-        price
-        prev
-        sm
-        sy
-        mm
-        my
-        rate
-        mftype
-        createdAt
-        updatedAt
-        }
-    }
-  `,
-    UpdateInstrument: `mutation UpdateInstrument(
-    $input: UpdateInstrumentInput!
-    $condition: ModelInstrumentConditionInput
+    CreateInmf: `
+    mutation CreateInmf(
+    $input: CreateINMFInput!
+    $condition: ModelINMFConditionInput
   ) {
-    updateInstrument(input: $input, condition: $condition) {
+    createINMF(input: $input, condition: $condition) {
       id
       sid
       tid
+      dir
       name
-      exchg
-      country
-      curr
       type
       subt
       price
-      prev
-      sm
-      sy
-      mm
-      my
-      rate
       mftype
+      mcap
+      tf
       createdAt
       updatedAt
     }
   }
 `,
-    ListInstruments: `query ListInstruments(
-  $filter: ModelInstrumentFilterInput
+    UpdateInmf: `
+mutation UpdateInmf(
+  $input: UpdateINMFInput!
+  $condition: ModelINMFConditionInput
+) {
+  updateINMF(input: $input, condition: $condition) {
+    id
+    sid
+    tid
+    dir
+    name
+    type
+    subt
+    price
+    mftype
+    mcap
+    tf
+    createdAt
+    updatedAt
+  }
+}
+`,
+    DeleteInmf: `
+mutation DeleteInmf(
+  $input: DeleteINMFInput!
+  $condition: ModelINMFConditionInput
+) {
+  deleteINMF(input: $input, condition: $condition) {
+    id
+    sid
+    tid
+    dir
+    name
+    type
+    subt
+    price
+    mftype
+    mcap
+    tf
+    createdAt
+    updatedAt
+  }
+}
+`,
+    ListInmFs: `
+query ListInmFs(
+  $id: String
+  $filter: ModelINMFFilterInput
   $limit: Int
   $nextToken: String
+  $sortDirection: ModelSortDirection
 ) {
-  listInstruments(
+  listINMFs(
+    id: $id
     filter: $filter
     limit: $limit
     nextToken: $nextToken
+    sortDirection: $sortDirection
   ) {
     items {
       id
       sid
       tid
+      dir
       name
-      exchg
-      country
-      curr
       type
       subt
       price
-      prev
-      sm
-      sy
-      mm
-      my
-      rate
       mftype
+      mcap
+      tf
       createdAt
       updatedAt
     }
     nextToken
-    }
-    }`,
-    DeleteInstrument: `mutation DeleteInstrument(
-    $input: DeleteInstrumentInput!
-    $condition: ModelInstrumentConditionInput
-  ) {
-    deleteInstrument(input: $input, condition: $condition) {
-      id
-      sid
-      tid
-      name
-      exchg
-      country
-      curr
-      type
-      subt
-      price
-      prev
-      sm
-      sy
-      mm
-      my
-      rate
-      mftype
-      createdAt
-      updatedAt`,
+  }
+}
+`,
   },
 };

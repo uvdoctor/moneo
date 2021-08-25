@@ -1277,76 +1277,187 @@ export const onDeleteRegistration = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInstrument = /* GraphQL */ `
-  subscription OnCreateInstrument {
-    onCreateInstrument {
+export const onCreateInExchange = /* GraphQL */ `
+  subscription OnCreateInExchange {
+    onCreateINExchange {
       id
       sid
-      tid
       name
       exchg
-      country
-      curr
       type
       subt
+      itype
       price
       prev
-      sm
-      sy
-      mm
-      my
-      rate
-      mftype
+      mcap
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateInstrument = /* GraphQL */ `
-  subscription OnUpdateInstrument {
-    onUpdateInstrument {
+export const onUpdateInExchange = /* GraphQL */ `
+  subscription OnUpdateInExchange {
+    onUpdateINExchange {
       id
       sid
-      tid
       name
       exchg
-      country
-      curr
       type
       subt
+      itype
       price
       prev
-      sm
-      sy
-      mm
-      my
-      rate
-      mftype
+      mcap
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteInstrument = /* GraphQL */ `
-  subscription OnDeleteInstrument {
-    onDeleteInstrument {
+export const onDeleteInExchange = /* GraphQL */ `
+  subscription OnDeleteInExchange {
+    onDeleteINExchange {
+      id
+      sid
+      name
+      exchg
+      type
+      subt
+      itype
+      price
+      prev
+      mcap
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateInBond = /* GraphQL */ `
+  subscription OnCreateInBond {
+    onCreateINBond {
       id
       sid
       tid
       name
-      exchg
-      country
-      curr
-      type
       subt
       price
-      prev
       sm
       sy
       mm
       my
       rate
+      fr
+      tf
+      fv
+      cr
+      crstr
+      ytm
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateInBond = /* GraphQL */ `
+  subscription OnUpdateInBond {
+    onUpdateINBond {
+      id
+      sid
+      tid
+      name
+      subt
+      price
+      sm
+      sy
+      mm
+      my
+      rate
+      fr
+      tf
+      fv
+      cr
+      crstr
+      ytm
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteInBond = /* GraphQL */ `
+  subscription OnDeleteInBond {
+    onDeleteINBond {
+      id
+      sid
+      tid
+      name
+      subt
+      price
+      sm
+      sy
+      mm
+      my
+      rate
+      fr
+      tf
+      fv
+      cr
+      crstr
+      ytm
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateInmf = /* GraphQL */ `
+  subscription OnCreateInmf {
+    onCreateINMF {
+      id
+      sid
+      tid
+      dir
+      name
+      type
+      subt
+      price
       mftype
+      mcap
+      tf
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateInmf = /* GraphQL */ `
+  subscription OnUpdateInmf {
+    onUpdateINMF {
+      id
+      sid
+      tid
+      dir
+      name
+      type
+      subt
+      price
+      mftype
+      mcap
+      tf
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteInmf = /* GraphQL */ `
+  subscription OnDeleteInmf {
+    onDeleteINMF {
+      id
+      sid
+      tid
+      dir
+      name
+      type
+      subt
+      price
+      mftype
+      mcap
+      tf
       createdAt
       updatedAt
     }

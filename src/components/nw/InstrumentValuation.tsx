@@ -1,10 +1,10 @@
 import { Empty, Table, Tag } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { HoldingInput, InsSubType, InsType } from '../../api/goals';
+import { HoldingInput, AssetSubType, AssetType, InsType } from '../../api/goals';
 import { ALL_FAMILY } from './FamilyInput';
 import { NWContext } from './NWContext';
 import Holding from './Holding';
-import { getAllInsSubTypeNames, getInsSubTypeName } from './nwutils';
+import { checkIfMemberIsSelected, getAllInsSubTypeNames, getInsSubTypeName } from './nwutils';
 import { includesAny } from '../utils';
 
 export default function InstrumentValuation() {
@@ -28,7 +28,7 @@ export default function InstrumentValuation() {
 			filteredValue: filteredInfo.name || null,
 			filters: nameFilterValues,
 			onFilter: (value: Array<any>, record: any) => record.name.includes(value),
-			render: (record: any) => <Holding holding={record as HoldingInput} onDelete={delRecord} />
+			render: (record: any) => <Holding key={record.id} holding={record as HoldingInput} onDelete={delRecord} showPrice />
 		}
 	];
 
@@ -46,16 +46,16 @@ export default function InstrumentValuation() {
 
 	const filterByFamilyAndCurrency = () => {
 		if (
-			Object.keys(allFamily).length <= 1 ||
+			!allFamily || Object.keys(allFamily).length <= 1 ||
 			selectedMembers.includes(ALL_FAMILY) ||
 			Object.keys(allFamily).length === selectedMembers.length
 		) {
-			if (Object.keys(currencyList).length === 1) return holdings.instruments;
+			if (!currencyList || Object.keys(currencyList).length === 1) return holdings.instruments;
 			return holdings.instruments.filter((instrument: HoldingInput) => instrument.curr === selectedCurrency);
 		}
 		return holdings.instruments.filter(
 			(instrument: HoldingInput) =>
-				selectedMembers.includes(instrument.fIds[0]) && instrument.curr === selectedCurrency
+				checkIfMemberIsSelected(allFamily, selectedMembers, instrument.fIds[0]) && instrument.curr === selectedCurrency
 		);
 	};
 
@@ -70,7 +70,7 @@ export default function InstrumentValuation() {
 			setFilteredInstruments([
 				...filteredData.filter((instrument: HoldingInput) =>
 					includesAny(
-						getInsSubTypeName(instrument.type as InsType, instrument.subt as InsSubType),
+						getInsSubTypeName(instrument.type as AssetType, instrument.subt as AssetSubType | InsType),
 						selectedTags
 					)
 				)
