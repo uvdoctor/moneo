@@ -33,7 +33,7 @@ const getData = () => {
         name: element["Scheme Name"],
         type: getAssetType(element["Scheme Type"]),
         subt: getAssetSubType(element),
-        nav: parseFloat(element["Net Asset Value"]),
+        price: parseFloat(element["Net Asset Value"]),
         mftype: mfType(element["Scheme Type"]),
         mcap: mCap(element),
         tf: element["Scheme Name"].includes("Tax") ? "Y" : "N",

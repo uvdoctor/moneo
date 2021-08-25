@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { Row, Col, Button, Badge, InputNumber } from 'antd';
 import { DeleteOutlined, EditOutlined, ShoppingCartOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 
 import './Holding.less';
-import { toReadableNumber } from '../utils';
+import { toCurrency, toReadableNumber } from '../utils';
 import { HoldingInput } from '../../api/goals';
+import { NWContext } from './NWContext';
 
 interface HoldingProp {
 	holding: HoldingInput;
+	showPrice?: boolean;
 	onDelete: Function;
 	onChange?: Function;
 }
 
-export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
+export default function Holding({ holding, showPrice, onDelete, onChange }: HoldingProp) {
+	const { insPrices, setInsPrices }: any = useContext(NWContext);
 	const [ isEditMode, setEditMode ] = useState(false);
 
 	function onEdit() {
@@ -32,21 +35,44 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 			<Col>
 				<Row align="middle">
 					{isEditMode ? (
-						<Col>
-							<InputNumber
-								value={holding.qty}
-								size="small"
-								onChange={(val) => {
-									holding.qty = val as number;
-									if(onChange) onChange(holding);
-								}}
-							/>
-						</Col>
+						<Fragment>
+							<Col>
+								<InputNumber
+									value={holding.qty}
+									size="small"
+									onChange={(val) => {
+										holding.qty = val as number;
+										if (onChange) onChange(holding);
+									}}
+								/>
+							</Col>
+							{showPrice && (
+								<Fragment>
+									<Col>&nbsp;x&nbsp;</Col>
+									<Col>
+										<InputNumber
+											value={insPrices[holding.id] ? insPrices[holding.id] : 0}
+											size="small"
+											onChange={(val) => {
+												insPrices[holding.id] = val;
+												setInsPrices(insPrices);
+											}}
+										/>
+									</Col>
+								</Fragment>
+							)}
+						</Fragment>
 					) : (
 						<Col>
 							<span className="quantity">
 								<ShoppingCartOutlined />{' '}
 								{toReadableNumber(holding.qty, ('' + holding.qty).includes('.') ? 3 : 0)}
+								{showPrice &&
+									` x ${toCurrency(
+										insPrices[holding.id] ? insPrices[holding.id] : 0,
+										holding.curr as string
+									)} 
+									= ${toCurrency(holding.qty * (insPrices[holding.id] ? insPrices[holding.id] : 0), holding.curr as string)}`}
 							</span>
 						</Col>
 					)}

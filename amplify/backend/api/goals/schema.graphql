@@ -301,7 +301,7 @@ type INMF
 	name: String!
 	type: AssetType!
 	subt: AssetSubType!
-	nav: Float!
+	price: Float!
 	mftype: MFSchemeType!
 	mcap: MCap
 	tf: YN
