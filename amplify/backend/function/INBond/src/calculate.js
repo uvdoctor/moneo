@@ -65,7 +65,7 @@ const calc = {
 
   calcSY: (sDate) => {
     const year = sDate.slice(sDate.lastIndexOf("-") + 1, sDate.length);
-    return year;
+    return Number(year);
   },
 
   calcMM: (mDate) => {
@@ -78,19 +78,21 @@ const calc = {
 
   calcMY: (mDate) => {
     const matYear = mDate.slice(mDate.lastIndexOf("-") + 1, mDate.length);
-    return matYear;
+    return Number(matYear);
   },
 
   calcFR: (frate) => {
     if (frate === "RESET") {
       return "Y";
     }
+    return "N"
   },
 
   calcTF: (subt) => {
     if (subt === "IF" || subt === "PF") {
       return "Y";
     }
+    return "N"
   },
 
   calcCR: (crstr) => {
@@ -103,13 +105,25 @@ const calc = {
         return "L";
       case crstr.includes("BB") || crstr.includes("BBB"):
         return "M";
+      default:
+        return undefined
     }
-  },
-  calcYTM: (sm, sy, mm, my, rate, fv, price) => {
-    const numOfYear = ((12 - sm) / 12) + ((my - sy) - 1) + (mm / 12);
-    const ytm = (rate + ((fv - price) / numOfYear)) / ((fv + price) / 2);
-    return ytm;
   },
 };
 
-module.exports = calc;
+const calcYTM = (record , codes ,rate, fv, price) => {
+  const matrMonth = calc.calcMM(record[codes.mDate])
+  const matrYear = calc.calcMY(record[codes.mDate])
+  const startMonth = calc.calcSM(record[codes.sDate])
+  const startYear = calc.calcSY(record[codes.sDate])
+  const numOfYear = ((12 - startMonth) / 12) + ((matrYear - startYear) - 1) + (matrMonth / 12);
+  let mPrice = Number(price)
+  if(!price){
+    mPrice = 100
+  }
+  const ytm = (Number(rate) + ((fv - mPrice) / numOfYear)) / ((fv + mPrice) / 2)
+  const ytmFinal = Math.round(ytm*1000)/1000;
+  return ytmFinal
+}
+
+module.exports ={ calc,calcYTM};

@@ -15,13 +15,17 @@ const monthsArray = [
   "DEC",
 ];
 const today = new Date();
+const month =
+  today.getMonth() + 1 < 10
+    ? `0${today.getMonth()}`
+    : `${today.getMonth()}`;
+
 const yearFull = today.getFullYear();
-const monthChar = monthsArray[today.getMonth()] - 1;
 
 const apiArray = [
   {
-    fileName: `MLY${monthChar}${yearFull}.csv`,
-    url: `https://www1.nseindia.com/archives/debt/monthly/MLY${monthChar}${yearFull}.zip`,
+    fileName: `MLY${month}${yearFull}.csv`,
+    url: `https://www1.nseindia.com/archives/debt/monthly/MLY${month}${yearFull}.zip`,
     schema: {
       id: "",
       sid: "",
@@ -33,8 +37,8 @@ const apiArray = [
       mm: 0,
       my: 0,
       rate: 0,
-      fr: YN,
-      tf: YN,
+      fr: "",
+      tf: "",
       fv: 0,
       cr: "",
       crstr: "",
@@ -50,7 +54,7 @@ const apiArray = [
       sDate : "ISSUE_DATE",
       mDate : "MAT_DATE",
       rate: "CRATE",
-      crstr : "CREDIT_RATING"
+      crstr : "CREDIT_RATING",
     },
     typeIdentifier: "NSE_DEBT",
     listQuery: "ListInBonds",

@@ -5,7 +5,7 @@ const fsPromise = require("fs/promises");
 const { rmdir } = fsPromise;
 const extract = require("extract-zip");
 const csv = require("csv-parser");
-const calc = require("./calculate");
+const {calc,calcYTM} = require("./calculate");
 
 const cleanDirectory = async (tempDir, msg) => {
   await rmdir(tempDir, { recursive: true });
@@ -67,34 +67,38 @@ const extractDataFromCSV = async (
         }
         Object.keys(schema).map((key) => {
           switch (key) {
+            case "price":
+              if(!record[codes.price]){
+                return schema.price = 100
+              }
+              return schema.price = record[codes.price]
             case "subt":
               return (schema.subt = calc.calcSubType(record[codes.subt]));
             case "sm":
-              const startMonth = calc.calcSM(record[codes.sDate]);
-              return (schema.sm = startMonth);
+              return schema.sm = calc.calcSM(record[codes.sDate]);
             case "sy":
-              const startYear = calc.calcSY(record[codes.sDate]);
-              return (schema.sy = startYear);
+              return schema.sy = calc.calcSY(record[codes.sDate]);
             case "mm":
-              const matrMonth = calc.calcMM(record[codes.mDate]);
-              return (schema.mm = matrMonth);
+              return schema.mm = calc.calcMM(record[codes.mDate]);
             case "my":
-              const matrYear = calc.calcMY(record[codes.mDate]);
-              return (schema.my = matrYear);
+              return schema.my = calc.calcMY(record[codes.mDate]);
             case "fr":
               return (schema.fr = calc.calcFR(record[codes.frate]));
             case "tf":
               return (schema.tf = calc.calcTF(record[codes.subt]));
             case "cr":
               return (schema.cr = calc.calcCR(record[codes.crstr]));
+            case "crstr":
+              if(record[codes.crstr]===""){
+                return schema.crstr = undefined
+              }
+              return schema.crstr = record[codes.crstr]
+            case "fv":
+              return schema.fv = 100;
             case "ytm":
-              return (schema.ytm = calc.calcYTM(
-                startMonth,
-                startYear,
-                matrMonth,
-                matrYear,
+              return (schema.ytm = calcYTM(record,codes,
                 record[codes.rate],
-                record[codes.fv],
+                100,
                 record[codes.price]
               ));
             default:
@@ -103,7 +107,7 @@ const extractDataFromCSV = async (
         });
 
         Object.keys(schema).map((key) => {
-          if (!schema[key]) {
+          if (schema[key]===undefined) {
             delete schema[key];
           }
         });
