@@ -21,7 +21,7 @@ const getAndPushData = () => {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
         const {
-          type,
+          typeExchg,
           fileName,
           url,
           codes,
@@ -38,12 +38,12 @@ const getAndPushData = () => {
         const data = await extractDataFromCSV(
           tempDir,
           fileName,
-          type,
+          typeExchg,
           codes,
           typeIdentifier,
           schema
         );
-        const insdata = await getAlreadyAddedInstruments(typeIdentifier,listQuery,listOperationName);
+        const insdata = await getAlreadyAddedInstruments(listQuery,listOperationName);
         await pushData(data, insdata,updateMutation,createMutation);
       } catch (err) {
         reject(err);
