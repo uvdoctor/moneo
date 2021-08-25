@@ -1438,7 +1438,6 @@ export const createInBond = /* GraphQL */ `
     createINBond(input: $input, condition: $condition) {
       id
       sid
-      tid
       name
       subt
       price
@@ -1466,7 +1465,6 @@ export const updateInBond = /* GraphQL */ `
     updateINBond(input: $input, condition: $condition) {
       id
       sid
-      tid
       name
       subt
       price
@@ -1494,7 +1492,6 @@ export const deleteInBond = /* GraphQL */ `
     deleteINBond(input: $input, condition: $condition) {
       id
       sid
-      tid
       name
       subt
       price

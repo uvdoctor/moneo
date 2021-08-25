@@ -906,7 +906,6 @@ export const getInBond = /* GraphQL */ `
     getINBond(id: $id) {
       id
       sid
-      tid
       name
       subt
       price
@@ -944,7 +943,6 @@ export const listInBonds = /* GraphQL */ `
       items {
         id
         sid
-        tid
         name
         subt
         price

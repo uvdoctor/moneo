@@ -267,7 +267,6 @@ type INBond
 	) {
 	id: String!
 	sid: String!
-	tid: String
 	name: String!
 	subt: AssetSubType!
 	price: Float!
