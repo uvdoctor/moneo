@@ -38,12 +38,11 @@ const getAndPushData = () => {
         const data = await extractDataFromCSV(
           tempDir,
           fileName,
-          type,
           codes,
           typeIdentifier,
           schema
         );
-        const insdata = await getAlreadyAddedInstruments(typeIdentifier,listQuery,listOperationName);
+        const insdata = await getAlreadyAddedInstruments(listQuery,listOperationName);
         await pushData(data, insdata,updateMutation,createMutation);
       } catch (err) {
         reject(err);
