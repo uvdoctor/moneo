@@ -17,8 +17,9 @@ const calc = {
         case name.includes("LIQUID"):
           return "L";
         case type === "Q" && subt === "F":
-          return "GB";
+          return "GBO";
         case type === "B" && subt === "G":
+        case type === "Q" && subt === "E":
           return "GoldB";
         case type === "Q" && subt === "B":
           return "I";
@@ -51,6 +52,8 @@ const calc = {
             default:
               return "E";
           }
+        case name.includes("NIF")||name.includes("50")||name.includes("100")||name.includes("SEN"):
+          return "F"
         case equity.some((item) => item === type):
           return "E";
         case fixed.some((item) => item === type || type.startsWith(item)):
@@ -76,6 +79,8 @@ const calc = {
             default:
               return "I";
           }
+        case name.includes("NIF")||name.includes("50")||name.includes("100")||name.includes("SEN"):
+          return "I"
         case type === "GC" || type === "GS":
           return "GB";
         case type === "GB":
