@@ -202,19 +202,11 @@ export const loadMatchingINBond = async (isins: Array<string>) => {
 	return listINBonds?.items?.length ? listINBonds.items as Array<APIt.INBond> : null;
 }
 
-export const getInsSubTypeName = (type: APIt.AssetType, st: APIt.AssetSubType | APIt.InsType) => {
-		switch(st) {
-			case APIt.AssetSubType.S : return "Stock";
-			case APIt.AssetSubType.GoldB: return "Gold Bond";
-			case APIt.InsType.ETF: return type === APIt.AssetType.E ? "Equity ETF" : "Debt ETF";
-			case APIt.AssetSubType.CB: return "Corporate Bond";
-			case APIt.AssetSubType.GBO: return "Public Sector Bond";
-			case APIt.AssetSubType.GB: return "Sovereign Bond";
-			case APIt.InsType.REIT: return "REIT";
-			default: return type === APIt.AssetType.E ? "Equity Mutual Fund" : "Debt Mutual Fund";
-		}
+export const getAssetTypes = () => {
+	return {
+		[APIt.AssetType.E]: "Equity",
+		[APIt.AssetType.F]: "Fixed Income",
+		[APIt.AssetType.H]: "Hybrid",
+		[APIt.AssetType.A]: "Alternative"
+	}
 }
-
-export const getAllInsSubTypeNames = () => [
-	"Stock", "Equity Mutual Fund", "Equity ETF", "Debt Mutual Fund", "Debt ETF", "REIT", "Gold Bond", "Sovereign Bond", "Corporate Bond", "Municipal Bond", "Other"
-]
