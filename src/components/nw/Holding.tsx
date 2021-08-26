@@ -7,6 +7,7 @@ import { toCurrency, toHumanFriendlyCurrency, toReadableNumber } from '../utils'
 import { HoldingInput } from '../../api/goals';
 import { NWContext } from './NWContext';
 import { useEffect } from 'react';
+import { getAssetSubTypes } from './nwutils';
 
 interface HoldingProp {
 	holding: HoldingInput;
@@ -20,6 +21,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 	const [ price, setPrice ] = useState<number>(insData[holding.id] ? insData[holding.id].price : 0);
 	const [ total, setTotal ] = useState<number>(holding.qty * price);
 	const [ isEditMode, setEditMode ] = useState(false);
+	const assetSubTypes: any = getAssetSubTypes();
 
 	function onEdit() {
 		setEditMode(true);
@@ -38,6 +40,12 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 
 	return (
 		<Row className="holding" align="middle" justify="space-between" gutter={[ 5, 5 ]}>
+			{showPrice && insData[holding.id] && (
+				<Col span={24}>
+					{assetSubTypes[insData[holding.id].subt]} 
+					{insData[holding.id].itype ? ` - ${insData[holding.id].itype}` : ''}
+				</Col>
+			)}
 			<Col span={24}>
 				<Row justify="space-between">
 					<Col>{holding.name}</Col>

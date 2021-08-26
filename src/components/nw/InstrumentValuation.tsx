@@ -10,7 +10,7 @@ import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
 
 export default function InstrumentValuation() {
-	const { insData }: any = useContext(NWContext);
+	const { insData, totalDemat, setTotalDemat }: any = useContext(NWContext);
 	const { CheckableTag } = Tag;
 	const { holdings, selectedMembers, selectedCurrency, allFamily, currencyList }: any = useContext(NWContext);
 	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([]);
@@ -18,7 +18,6 @@ export default function InstrumentValuation() {
 	const [ selectedAssetTypes, setSelectedAssetTypes ] = useState<Array<string>>(assetTypes);
 	const [ nameFilterValues, setNameFilterValues ] = useState<Array<any>>([ {} ]);
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
-	const [ filteredTotal, setFilteredTotal ] = useState<number>(0);
 
 	const delRecord = (id: string) => {
 		setFilteredInstruments([ ...filteredInstruments.filter((record: any) => record.id !== id) ]);
@@ -27,7 +26,7 @@ export default function InstrumentValuation() {
 
 	const columns = [
 		{
-			title: <strong style={{color: COLORS.GREEN}}>Total ~ {toHumanFriendlyCurrency(filteredTotal, selectedCurrency)}</strong>,
+			title: <strong style={{color: COLORS.GREEN}}>Total ~ {toHumanFriendlyCurrency(totalDemat, selectedCurrency)}</strong>,
 			key: 'name',
 			filterIcon: <FilterTwoTone twoToneColor={COLORS.GREEN} style={{fontSize: 20}} />,
 			filteredValue: filteredInfo.name || null,
@@ -94,7 +93,7 @@ export default function InstrumentValuation() {
 				total += instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
 			});
 			setNameFilterValues([ ...filteredNames ]);
-			setFilteredTotal(total);
+			setTotalDemat(total);
 		},
 		[ filteredInstruments ]
 	);

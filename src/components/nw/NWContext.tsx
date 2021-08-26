@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import "./nw.less";
-import HoldingsDetails from "./HoldingsDetails";
+import NWView from "./NWView";
 import { AppContext } from "../AppContext";
 import { createEmptyHoldings, getRelatedCurrencies, loadAllFamilyMembers, loadHoldings } from "./nwutils";
 import { notification } from "antd";
@@ -18,6 +18,11 @@ function NWContextProvider() {
 	const [selectedCurrency, setSelectedCurrency] = useState<string>('');
 	const [nw, setNW] = useState<number>(0);
 	const [totalAssets, setTotalAssets] = useState<number>(0);
+	const [totalDemat, setTotalDemat] = useState<number>(0);
+	const [totalPM, setTotalPM] = useState<number>(0);
+	const [totalProperty, setTotalProperty] = useState<number>(0);
+	const [totalVehicles, setTotalVehicles] = useState<number>(0);
+	const [totalCrypto, setTotalCrypto] = useState<number>(0);
 	const [totalLiabilities, setTotalLiabilities] = useState<number>(0);
 	const [showInsUpload, setShowInsUpload] = useState<boolean>(false);
 	const [taxId, setTaxId] = useState<string>("");
@@ -169,6 +174,14 @@ function NWContextProvider() {
     }
     , []);
 
+	useEffect(() => {
+		setNW(totalAssets - totalLiabilities);
+	}, [totalAssets, totalLiabilities]);
+
+	useEffect(() => {
+		setTotalAssets(totalDemat + totalVehicles + totalPM + totalProperty + totalCrypto);
+	}, [totalDemat, totalVehicles, totalPM, totalProperty, totalCrypto]);
+
 	return (
 		<NWContext.Provider
 			value={{
@@ -202,10 +215,20 @@ function NWContextProvider() {
 				currencyList,
 				setCurrencyList,
 				insData,
-				setInsData
+				setInsData,
+				totalDemat,
+				setTotalDemat,
+				totalProperty,
+				setTotalProperty,
+				totalCrypto,
+				setTotalCrypto,
+				totalVehicles,
+				setTotalVehicles,
+				totalPM,
+				setTotalPM,
 			}}
 		>
-			<HoldingsDetails />
+			<NWView />
 		</NWContext.Provider>
 	);
 }
