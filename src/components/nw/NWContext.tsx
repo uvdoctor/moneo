@@ -2,10 +2,11 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import "./nw.less";
 import NWView from "./NWView";
 import { AppContext } from "../AppContext";
-import { createEmptyHoldings, getRelatedCurrencies, loadAllFamilyMembers, loadHoldings } from "./nwutils";
+import { createEmptyHoldings, getRelatedCurrencies, loadAllFamilyMembers, loadFXCommCryptoRates, loadHoldings } from "./nwutils";
 import { notification } from "antd";
-import { CreateHoldingsInput } from "../../api/goals";
+import { CreateEODPricesInput, CreateHoldingsInput } from "../../api/goals";
 import InstrumentValuation from "./InstrumentValuation";
+import PMValuation from "./PMValuation";
 
 const NWContext = createContext({});
 
@@ -65,7 +66,7 @@ function NWContextProvider() {
 		"Precious Metals": {
 			label: "Precious Metals",
 			data: holdings?.pm,
-			content: <InstrumentValuation />
+			content: <PMValuation />
 		},
 		Deposits: {
 			label: "Deposits",
@@ -151,6 +152,19 @@ function NWContextProvider() {
         }
     };
 
+	const initializeFXCommCryptoRates = async () => {
+        try {
+            let result: Array<CreateEODPricesInput> | null = await loadFXCommCryptoRates();
+			console.log(result);
+			if(result && result.length) {
+				result.forEach((record: CreateEODPricesInput) => insData[record.id] = {name: record.name, price: record.price});
+			}
+        } catch(err) {
+            console.log('Unable to fetch fx, commodities & crypto rates.');
+            return false;
+        }
+    };
+
 	const initializeHoldings = async () => {
         try {
 			let allHoldings: CreateHoldingsInput = await loadHoldings();
@@ -171,6 +185,7 @@ function NWContextProvider() {
 
     useEffect(() => {
         initializeFamilyList();
+		initializeFXCommCryptoRates();
     }
     , []);
 

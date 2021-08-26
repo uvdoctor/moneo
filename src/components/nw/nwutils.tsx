@@ -72,6 +72,13 @@ export const loadHoldings = async () => {
 	return listHoldingss && listHoldingss.items?.length ? (listHoldingss.items as Array<APIt.CreateHoldingsInput>)[0] : createEmptyHoldings();
 };
 
+export const loadFXCommCryptoRates = async () => {
+	const { data: { listEODPricess } } = (await API.graphql(graphqlOperation(queries.listEodPricess))) as {
+		data: APIt.ListEodPricessQuery;
+	};
+	return listEODPricess?.items?.length ? (listEODPricess.items as Array<APIt.CreateEODPricesInput>) : null;
+};
+
 export const addFamilyMember = async (name: string, taxId: string) => {
 	try {
 		const { data } = (await API.graphql(
@@ -222,5 +229,23 @@ export const getAssetSubTypes = () => {
 		[APIt.AssetSubType.L]: "Liquid",
 		[APIt.AssetSubType.R]: "Real-estate",
 		[APIt.AssetSubType.S]: "Stock"
+	}
+}
+
+export const getFamilyOptions = (allFamily: any) => {
+	if(!Object.keys(allFamily).length) return null;
+	let options: any = {};
+	Object.keys(allFamily).forEach((key) => options[key] = allFamily[key].name);
+	return options;
+}
+
+export const getGoldTypes = () => {
+	return {
+		24: "24",
+		22: "22",
+		20: "20",
+		18: "18",
+		16: "16",
+		14: "14"
 	}
 }
