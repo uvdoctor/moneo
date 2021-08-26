@@ -40,10 +40,17 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 
 	return (
 		<Row className="holding" align="middle" justify="space-between" gutter={[ 5, 5 ]}>
-			{showPrice && insData[holding.id] && (
+			{showPrice &&
+			insData[holding.id] && (
 				<Col span={24}>
-					{assetSubTypes[insData[holding.id].subt]} 
-					{insData[holding.id].itype ? ` - ${insData[holding.id].itype}` : ''}
+					{insData[holding.id].itype ? (
+						`${insData[holding.id].itype} - `
+					) : holding.id.startsWith('INF') ? (
+						'Mutual Fund - '
+					) : (
+						''
+					)}
+					{assetSubTypes[insData[holding.id].subt]}
 				</Col>
 			)}
 			<Col span={24}>
