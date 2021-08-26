@@ -101,10 +101,10 @@ const calc = {
         return "H";
       case crstr.includes("AAA"):
         return "E";
-      case crstr.includes("BB-"):
-        return "L";
       case crstr.includes("BB") || crstr.includes("BBB"):
         return "M";
+      case crstr.includes("BB-"):
+        return "L";
       default:
         return undefined
     }
