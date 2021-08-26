@@ -6,7 +6,6 @@ const { rmdir } = fsPromise;
 const extract = require("extract-zip");
 const csv = require("csv-parser");
 
-
 const cleanDirectory = async (tempDir, msg) => {
   await rmdir(tempDir, { recursive: true });
   console.log(msg);
@@ -76,6 +75,8 @@ const extractDataFromCSV = async (
             schema.itype = calc[typeIdentifier].calcInsType(type, subt, name);
           } else if (key === "exchg") {
             schema.exchg = typeExchg;
+          } else if (key === "name") {
+            schema.name = name.trim();
           } else {
             schema[key] = record[codes[key]];
           }
