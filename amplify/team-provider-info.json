@@ -36,7 +36,7 @@
         },
         "insprice": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/insprice-594635676778335a314b-build.zip"
+          "s3Key": "amplify-builds/insprice-5862723367435a696475-build.zip"
         },
         "EODPrice": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
@@ -47,11 +47,11 @@
         },
         "MFPrice": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/MFPrice-734478764b7039526a51-build.zip"
+          "s3Key": "amplify-builds/MFPrice-4b677858332b2b567150-build.zip"
         },
         "INBond": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/INBond-414d35484a612f323142-build.zip"
+          "s3Key": "amplify-builds/INBond-2f2b48786f4f72412b39-build.zip"
         }
       }
     }
