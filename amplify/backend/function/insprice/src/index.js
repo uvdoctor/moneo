@@ -12,6 +12,7 @@ const {
   getAlreadyAddedInstruments,
   pushData,
 } = bhaoUtils;
+const calc = require("./calculate");
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
@@ -41,7 +42,8 @@ const getAndPushData = () => {
           typeExchg,
           codes,
           typeIdentifier,
-          schema
+          schema,
+          calc
         );
         const insdata = await getAlreadyAddedInstruments(listQuery,listOperationName);
         await pushData(data, insdata,updateMutation,createMutation);

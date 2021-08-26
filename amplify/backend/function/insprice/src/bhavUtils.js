@@ -5,7 +5,7 @@ const fsPromise = require("fs/promises");
 const { rmdir } = fsPromise;
 const extract = require("extract-zip");
 const csv = require("csv-parser");
-const calc = require("./calculate");
+
 
 const cleanDirectory = async (tempDir, msg) => {
   await rmdir(tempDir, { recursive: true });
@@ -56,7 +56,8 @@ const extractDataFromCSV = async (
   typeExchg,
   codes,
   typeIdentifier,
-  schema
+  schema,
+  calc
 ) => {
   const end = new Promise((resolve, reject) => {
     let results = [];
@@ -119,7 +120,6 @@ const getAlreadyAddedInstruments = async (listQuery, listOperationName) => {
           query.nextToken = token;
         }
         const dataInstruments = await insertInstrument(query, listQuery);
-        console.log(dataInstruments.body);
         const { items, nextToken } =
           dataInstruments.body.data[listOperationName];
         alreadyAddedInstruments.push(items);

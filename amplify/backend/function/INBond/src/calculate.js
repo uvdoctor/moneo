@@ -109,18 +109,22 @@ const calc = {
         return undefined
     }
   },
+  calcPrice : (price)=>{
+    if (!price) {
+      return 100
+    }
+    return Number(price);
+  },
+ 
 };
 
-const calcYTM = (record , codes ,rate, fv, price) => {
+const calcYTM = (record , codes ,rate, fv) => {
   const matrMonth = calc.calcMM(record[codes.mDate])
   const matrYear = calc.calcMY(record[codes.mDate])
   const startMonth = calc.calcSM(record[codes.sDate])
   const startYear = calc.calcSY(record[codes.sDate])
   const numOfYear = ((12 - startMonth) / 12) + ((matrYear - startYear) - 1) + (matrMonth / 12);
-  let mPrice = Number(price)
-  if(!price){
-    mPrice = 100
-  }
+  const mPrice = calc.calcPrice(record[codes.price])
   const ytm = (Number(rate) + ((fv - mPrice) / numOfYear)) / ((fv + mPrice) / 2)
   const ytmFinal = Math.round(ytm*1000)/1000;
   return ytmFinal

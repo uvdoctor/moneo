@@ -5,7 +5,6 @@ const fsPromise = require("fs/promises");
 const { rmdir } = fsPromise;
 const extract = require("extract-zip");
 const csv = require("csv-parser");
-const {calc,calcYTM} = require("./calculate");
 
 const cleanDirectory = async (tempDir, msg) => {
   await rmdir(tempDir, { recursive: true });
@@ -55,51 +54,46 @@ const extractDataFromCSV = async (
   fileName,
   codes,
   typeIdentifier,
-  schema
+  schema,
+  calc,
+  calcYTM
 ) => {
   const end = new Promise((resolve, reject) => {
     let results = [];
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        if (record[codes.subt]==="MC"){
-          return
+        if (record[codes.subt] === "MC") {
+          return;
         }
         Object.keys(schema).map((key) => {
           switch (key) {
             case "price":
-              if(!record[codes.price]){
-                return schema.price = 100
-              }
-              return schema.price = record[codes.price]
+              return (schema.price = calc.calcPrice(record[codes.price]));
             case "subt":
               return (schema.subt = calc.calcSubType(record[codes.subt]));
             case "sm":
-              return schema.sm = calc.calcSM(record[codes.sDate]);
+              return (schema.sm = calc.calcSM(record[codes.sDate]));
             case "sy":
-              return schema.sy = calc.calcSY(record[codes.sDate]);
+              return (schema.sy = calc.calcSY(record[codes.sDate]));
             case "mm":
-              return schema.mm = calc.calcMM(record[codes.mDate]);
+              return (schema.mm = calc.calcMM(record[codes.mDate]));
             case "my":
-              return schema.my = calc.calcMY(record[codes.mDate]);
+              return (schema.my = calc.calcMY(record[codes.mDate]));
             case "fr":
               return (schema.fr = calc.calcFR(record[codes.frate]));
             case "tf":
               return (schema.tf = calc.calcTF(record[codes.subt]));
             case "cr":
               return (schema.cr = calc.calcCR(record[codes.crstr]));
-            case "crstr":
-              if(record[codes.crstr]===""){
-                return schema.crstr = undefined
-              }
-              return schema.crstr = record[codes.crstr]
             case "fv":
-              return schema.fv = 100;
+              return (schema.fv = 100);
             case "ytm":
-              return (schema.ytm = calcYTM(record,codes,
+              return (schema.ytm = calcYTM(
+                record,
+                codes,
                 record[codes.rate],
-                100,
-                record[codes.price]
+                100
               ));
             default:
               schema[key] = record[codes[key]];
@@ -107,11 +101,11 @@ const extractDataFromCSV = async (
         });
 
         Object.keys(schema).map((key) => {
-          if (schema[key]===undefined) {
+          if (schema[key] === undefined) {
             delete schema[key];
           }
         });
-        console.log(schema);
+
         results.push(Object.assign({}, schema));
         // console.log("Results:", results);
       })
@@ -143,7 +137,6 @@ const getAlreadyAddedInstruments = async (listQuery, listOperationName) => {
           query.nextToken = token;
         }
         const dataInstruments = await insertInstrument(query, listQuery);
-        console.log(dataInstruments.body);
         const { items, nextToken } =
           dataInstruments.body.data[listOperationName];
         alreadyAddedInstruments.push(items);
@@ -167,7 +160,6 @@ const pushData = (data, insdata, updateMutation, createMutation) => {
         updatedIDs: [],
         errorIDs: [],
       };
-      console.log(insdata);
       for (let i = 0; i < data.length; i++) {
         const insertedData = insdata.filter((bunch) =>
           bunch.some((item) => item.id === data[i].id)

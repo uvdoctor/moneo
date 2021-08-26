@@ -12,6 +12,7 @@ const {
   getAlreadyAddedInstruments,
   pushData,
 } = bhaoUtils;
+const { calc, calcYTM } = require("./calculate");
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
@@ -21,6 +22,7 @@ const getAndPushData = () => {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
         const {
+          type,
           fileName,
           url,
           codes,
@@ -39,10 +41,15 @@ const getAndPushData = () => {
           fileName,
           codes,
           typeIdentifier,
-          schema
+          schema,
+          calc,
+          calcYTM
         );
-        const insdata = await getAlreadyAddedInstruments(listQuery,listOperationName);
-        await pushData(data, insdata,updateMutation,createMutation);
+        const insdata = await getAlreadyAddedInstruments(
+          listQuery,
+          listOperationName
+        );
+        await pushData(data, insdata, updateMutation, createMutation);
       } catch (err) {
         reject(err);
       }
