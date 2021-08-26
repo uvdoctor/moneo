@@ -64,9 +64,6 @@ const extractDataFromCSV = async (
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        if (record[codes.id].includes("INF")) {
-          return;
-        }
         const type = record[codes.type];
         const subt = record[codes.subt];
         const name = record[codes.name];

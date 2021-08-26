@@ -41,8 +41,6 @@ const calc = {
       const equity = ["EQ", "BE", "BZ", "E1", "SM", "ST", "X1", "P1", "P2"];
       const fixed = ["GB", "GS", "W", "N", "Y", "Z"];
       switch (true) {
-        case type === "MF":
-          return "MF";
         case name.includes("ETF"):
           switch (true) {
             case name.includes("GOLD"):

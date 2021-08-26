@@ -9,6 +9,8 @@ const getAssetType = (data) => {
     case data.includes("Debt"):
     case data.includes("Income"):
     case data.includes("Solution"):
+    case data.includes("Gilt"):
+    case data.includes("Index"):
       return "F";
     case data.includes("Hybrid"):
       return "H";
@@ -37,6 +39,8 @@ const getAssetSubType = (element) => {
     } else {
       return "CB";
     }
+  } else if (sType.includes("Index")) {
+    return "I";
   } else {
     return "S";
   }
