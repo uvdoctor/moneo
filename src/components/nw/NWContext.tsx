@@ -26,7 +26,7 @@ function NWContextProvider() {
 	const [results, setResults] = useState<Array<any>>([]);
 	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
 	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
-	const [insPrices, setInsPrices] = useState<any>({});
+	const [insData, setInsData] = useState<any>({});
 
 	const tabs = {
 		"Demat Holdings": {
@@ -201,8 +201,8 @@ function NWContextProvider() {
 				loadingHoldings,
 				currencyList,
 				setCurrencyList,
-				insPrices,
-				setInsPrices
+				insData,
+				setInsData
 			}}
 		>
 			<HoldingsDetails />

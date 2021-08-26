@@ -26,7 +26,7 @@ import {
 import { addFamilyMemberSilently, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMF } from "./nwutils";
 
 export default function UploadHoldings() {
-	const { insPrices, setInsPrices }: any = useContext(NWContext);
+	const { insData, setInsData }: any = useContext(NWContext);
 	const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
 	const [equities, setEquities] = useState<any>({});
@@ -82,7 +82,7 @@ export default function UploadHoldings() {
 				let matchingEntry = matchingList?.find((match) => match?.id === key);
 				let instrument = input[key];
 				if(matchingEntry && matchingList) {
-					insPrices[key] = matchingEntry.price;
+					insData[key] = matchingEntry;
 					instrument.name = matchingEntry.name;
 					instrument.type = matchingEntry.type;
 					instrument.subt = matchingEntry.subt;
@@ -91,7 +91,7 @@ export default function UploadHoldings() {
 				}
 				holdings.instruments.push(input[key]);
 			})
-			setInsPrices(insPrices);
+			setInsData(insData);
 		}
 	};
 

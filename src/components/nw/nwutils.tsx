@@ -172,13 +172,13 @@ export const getRelatedCurrencies = (holdings: APIt.CreateHoldingsInput, default
 
 const getORIdList = (list: Array<any>, ids: Array<string>) => {
 	ids.forEach((id: string) => list.push({id: {eq: id}}));
-	return {or: list}
+	return {or: list};
 }
 
 export const loadMatchingINExchange = async (isins: Array<string>) => {
 	if(!isins.length) return null;
 	let idList: Array<APIt.ModelINExchangeFilterInput> = [];
-	const { data: { listINExchanges } } = (await API.graphql(graphqlOperation(queries.listInExchanges, {filter: getORIdList(idList, isins)}))) as {
+	const { data: { listINExchanges } } = (await API.graphql(graphqlOperation(queries.listInExchanges, {limit: 10000, filter: getORIdList(idList, isins)}))) as {
 		data: APIt.ListInExchangesQuery;
 	};
 	return listINExchanges?.items?.length ? listINExchanges.items as Array<APIt.INExchange> : null;
@@ -187,7 +187,7 @@ export const loadMatchingINExchange = async (isins: Array<string>) => {
 export const loadMatchingINMF = async (isins: Array<string>) => {
 	if(!isins.length) return null;
 	let idList: Array<APIt.ModelINMFFilterInput> = [];
-	const { data: { listINMFs } } = (await API.graphql(graphqlOperation(queries.listInmFs, {filter: getORIdList(idList, isins)}))) as {
+	const { data: { listINMFs } } = (await API.graphql(graphqlOperation(queries.listInmFs, {limit: 20000, filter: getORIdList(idList, isins)}))) as {
 		data: APIt.ListInmFsQuery;
 	};
 	return listINMFs?.items?.length ? listINMFs.items as Array<APIt.INMF> : null;
@@ -196,7 +196,7 @@ export const loadMatchingINMF = async (isins: Array<string>) => {
 export const loadMatchingINBond = async (isins: Array<string>) => {
 	if(!isins.length) return null;
 	let idList: Array<APIt.ModelINBondFilterInput> = [];
-	const { data: { listINBonds } } = (await API.graphql(graphqlOperation(queries.listInBonds, {filter: getORIdList(idList, isins)}))) as {
+	const { data: { listINBonds } } = (await API.graphql(graphqlOperation(queries.listInBonds, {limit: 10000, filter: getORIdList(idList, isins)}))) as {
 		data: APIt.ListInBondsQuery;
 	};
 	return listINBonds?.items?.length ? listINBonds.items as Array<APIt.INBond> : null;
