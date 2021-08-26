@@ -21,7 +21,6 @@ const getAndPushData = () => {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
         const {
-          type,
           fileName,
           url,
           codes,

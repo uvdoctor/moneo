@@ -8,7 +8,6 @@ module.exports = {
     createINBond(input: $input, condition: $condition) {
       id
       sid
-      tid
       name
       subt
       price
@@ -36,7 +35,6 @@ module.exports = {
     updateINBond(input: $input, condition: $condition) {
       id
       sid
-      tid
       name
       subt
       price
@@ -64,7 +62,6 @@ module.exports = {
     deleteINBond(input: $input, condition: $condition) {
       id
       sid
-      tid
       name
       subt
       price
@@ -102,7 +99,6 @@ module.exports = {
         items {
           id
           sid
-          tid
           name
           subt
           price

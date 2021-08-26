@@ -1,19 +1,5 @@
 const tempDir = `/tmp/temp`;
 const zipFile = `${tempDir}/download.zip`;
-const monthsArray = [
-  "JAN",
-  "FEB",
-  "MAR",
-  "APR",
-  "MAY",
-  "JUN",
-  "JUL",
-  "AUG",
-  "SEP",
-  "OCT",
-  "NOV",
-  "DEC",
-];
 const today = new Date();
 const month =
   today.getMonth() + 1 < 10
