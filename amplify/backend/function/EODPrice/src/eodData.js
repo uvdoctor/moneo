@@ -27,37 +27,40 @@ const getData = async (element, index) => {
   }
 };
 
-const pushData = async (data) => {
-  const alreadyInsertedData = await graphqlOperation(
-    { Limit: 10000 },
-    "ListEodPricess"
-  );
-  const updatedList = [];
-  for (i in data) {
-    const insertedData =
-      (await alreadyInsertedData.body.data.listEODPricess.items.some(
-        (result) => result.id === data[i].code
-      ))
-        ? await graphqlOperation(
-            {
-              id: data[i].code,
-              price: data[i].close,
-              name: data[i].code,
-            },
-            "UpdateEodPrices"
-          )
-        : await graphqlOperation(
-            {
-              id: data[i].code,
-              price: data[i].close,
-              name: data[i].code,
-            },
-            "CreateEodPrices"
-          );
-    console.log(insertedData.body);
-    updatedList.push(insertedData.body);
-  }
-  return updatedList;
+const executeMutation = async (mutation, input) => {
+  return await graphqlOperation({ input: input }, mutation);
+};
+
+const pushData = (data) => {
+  let instrumentData = { updatedIDs: [], errorIDs: [] };
+  return new Promise(async (resolve, reject) => {
+    for (let i = 0; i < data.length; i++) {
+      const dataToInsert = {
+        id: data[i].code,
+        price: data[i].close,
+        name: data[i].code,
+      };
+      try {
+        const updatedData = await executeMutation(
+          "UpdateEodPrices",
+          dataToInsert
+        );
+        if (!updatedData.body.data.updateEODPrices) {
+          await executeMutation("CreateEodPrices", dataToInsert);
+        }
+        insertedData.body.errors
+          ? instrumentData.errorIDs.push({
+              id: data[i].id,
+              error: insertedData.body.errors,
+            })
+          : instrumentData.updatedIDs.push(data[i]);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    console.log(instrumentData);
+    resolve(instrumentData);
+  });
 };
 
 module.exports = {

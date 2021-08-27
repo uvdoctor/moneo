@@ -64,21 +64,21 @@ const extractDataFromCSV = async (
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        const idCheck = instrumentList.some(item => item === record[codes.id])
-        console.log(idCheck);
-        if(!idCheck){
-        const updateSchema = calcSchema(
-          record,
-          codes,
-          schema,
-          typeIdentifier,
-          typeExchg
+        const idCheck = instrumentList.some(
+          (item) => item === record[codes.id]
         );
-        results.push(Object.assign({}, updateSchema));
+        if (!idCheck) {
+          const updateSchema = calcSchema(
+            record,
+            codes,
+            schema,
+            typeIdentifier,
+            typeExchg
+          );
+          results.push(Object.assign({}, updateSchema));
         }
       })
       .on("end", async () => {
-        console.log(results.length);
         await cleanDirectory(
           tempDir,
           `${typeIdentifier} results extracted successfully and directory is cleaned`
@@ -109,13 +109,14 @@ const pushData = (data, updateMutation, createMutation) => {
         if (!updatedData.body.data.updateINExchange) {
           await executeMutation(createMutation, data[i]);
         }
-        console.log(updatedData.body.data);
-        instrumentData.updatedIDs.push(data[i].id);
+        insertedData.body.errors
+          ? instrumentData.errorIDs.push({
+              id: data[i].id,
+              error: insertedData.body.errors,
+            })
+          : instrumentData.updatedIDs.push(data[i]);
       } catch (err) {
-        instrumentData.errorIDs.push({
-          id: data[i].id,
-          error: insertedData.body.errors,
-        });
+        console.log(err);
       }
     }
     console.log(instrumentData);

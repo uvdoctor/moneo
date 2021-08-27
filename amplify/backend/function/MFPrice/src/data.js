@@ -124,13 +124,14 @@ const pushData = (data) => {
         if (!updatedData.body.data.updateINMF) {
           await executeMutation("CreateInmf", data[i]);
         }
-        console.log(updatedData.body.data);
-        instrumentData.updatedIDs.push(data[i].id);
+        insertedData.body.errors
+          ? instrumentData.errorIDs.push({
+              id: data[i].id,
+              error: insertedData.body.errors,
+            })
+          : instrumentData.updatedIDs.push(data[i]);
       } catch (err) {
-        instrumentData.errorIDs.push({
-          id: data[i].id,
-          error: insertedData.body.errors,
-        });
+        console.log(err);
       }
     }
     console.log(instrumentData);
