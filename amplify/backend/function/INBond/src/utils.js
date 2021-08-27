@@ -10,7 +10,7 @@ const yearFull = today.getFullYear();
 
 const apiArray = [
   {
-    type:"NSE",
+    typeExchg:"NSE",
     fileName: `MLY${month}${yearFull}.csv`,
     url: `https://www1.nseindia.com/archives/debt/monthly/MLY${month}${yearFull}.zip`,
     schema: {

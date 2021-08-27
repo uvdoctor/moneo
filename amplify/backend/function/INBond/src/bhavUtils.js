@@ -55,7 +55,7 @@ const extractDataFromCSV = async (
   codes,
   typeIdentifier,
   schema,
-  type,
+  typeExchg,
   updateSchema
 ) => {
   const end = new Promise((resolve, reject) => {
@@ -133,7 +133,6 @@ const pushData = (data, insdata, updateMutation, createMutation) => {
             })
           : instrumentData.updatedIDs.push(data[i].id);
       }
-      console.log(instrumentData);
       resolve(instrumentData);
     } catch (err) {
       reject(err);

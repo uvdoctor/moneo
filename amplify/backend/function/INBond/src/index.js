@@ -22,7 +22,7 @@ const getAndPushData = () => {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
         const {
-          type,
+          typeExchg,
           fileName,
           url,
           codes,
@@ -42,7 +42,7 @@ const getAndPushData = () => {
           codes,
           typeIdentifier,
           schema,
-          type,
+          typeExchg,
           updateSchema
         );
         const insdata = await getAlreadyAddedInstruments(

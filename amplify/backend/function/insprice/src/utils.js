@@ -47,7 +47,7 @@ const apiArray = [
       itype: "",
       price: 0,
       prev: 0,
-      mcap: "",
+      mcap: null,
     },
     codes: {
       sid: "SYMBOL",
@@ -78,7 +78,7 @@ const apiArray = [
       itype: "",
       price: 0,
       prev: 0,
-      mcap: "",
+      mcap: null,
     },
     codes: {
       sid: "SC_CODE",

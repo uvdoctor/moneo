@@ -56,39 +56,15 @@ const extractDataFromCSV = async (
   codes,
   typeIdentifier,
   schema,
-  calc
+  calcSchema,
 ) => {
   const end = new Promise((resolve, reject) => {
     let results = [];
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        const type = record[codes.type];
-        const subt = record[codes.subt];
-        const name = record[codes.name];
-        Object.keys(schema).map((key) => {
-          if (key === "type") {
-            schema.type = calc[typeIdentifier].calcType(type, subt, name);
-          } else if (key === "subt") {
-            schema.subt = calc[typeIdentifier].calcSubType(type, subt, name);
-          } else if (key === "itype") {
-            schema.itype = calc[typeIdentifier].calcInsType(type, subt, name);
-          } else if (key === "exchg") {
-            schema.exchg = typeExchg;
-          } else if (key === "name") {
-            schema.name = name.trim();
-          } else {
-            schema[key] = record[codes[key]];
-          }
-        });
-
-        Object.keys(schema).map((key) => {
-          if (!schema[key]) {
-            delete schema[key];
-          }
-        });
-        results.push(Object.assign({}, schema));
-        // console.log("Results:", results);
+        const updateSchema = calcSchema(record,codes,schema,typeIdentifier,typeExchg)
+        results.push(Object.assign({}, updateSchema));
       })
       .on("end", async () => {
         await cleanDirectory(
@@ -149,7 +125,6 @@ const pushData = (data, insdata, updateMutation, createMutation) => {
           ? await insertInstrument({ input: data[i] }, updateMutation)
           : await insertInstrument({ input: data[i] }, createMutation);
 
-        console.log(insertedData.body);
         insertedData.body.errors
           ? instrumentData.errorIDs.push({
               id: data[i].id,

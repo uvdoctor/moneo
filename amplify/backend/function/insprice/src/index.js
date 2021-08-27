@@ -4,6 +4,7 @@ const { mkdir } = fsPromise;
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray } = utils;
 const bhaoUtils = require("./bhavUtils");
+const calcSchema = require("./calculate");
 const {
   downloadZip,
   unzipDownloads,
@@ -12,7 +13,7 @@ const {
   getAlreadyAddedInstruments,
   pushData,
 } = bhaoUtils;
-const calc = require("./calculate");
+
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
@@ -22,6 +23,7 @@ const getAndPushData = () => {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
         const {
+          type,
           typeExchg,
           fileName,
           url,
@@ -43,7 +45,7 @@ const getAndPushData = () => {
           codes,
           typeIdentifier,
           schema,
-          calc
+          calcSchema,
         );
         const insdata = await getAlreadyAddedInstruments(listQuery,listOperationName);
         await pushData(data, insdata,updateMutation,createMutation);

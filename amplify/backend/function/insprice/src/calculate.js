@@ -123,4 +123,25 @@ const calc = {
   },
 };
 
-module.exports = calc;
+const calcSchema = (record,codes,schema,typeIdentifier,typeExchg) => {
+  const type = record[codes.type];
+  const subt = record[codes.subt];
+  const name = record[codes.name];
+  Object.keys(schema).map((key) => {
+    if (key === "type") {
+      schema.type = calc[typeIdentifier].calcType(type, subt, name);
+    } else if (key === "subt") {
+      schema.subt = calc[typeIdentifier].calcSubType(type, subt, name);
+    } else if (key === "itype") {
+      schema.itype = calc[typeIdentifier].calcInsType(type, subt, name);
+    } else if (key === "exchg") {
+      schema.exchg = typeExchg;
+    } else if (key === "name") {
+      schema.name = name.trim();
+    } else {
+      schema[key] = record[codes[key]];
+    }
+  });
+  return schema
+};
+module.exports = calcSchema;
