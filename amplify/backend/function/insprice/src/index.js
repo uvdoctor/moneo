@@ -10,10 +10,9 @@ const {
   unzipDownloads,
   extractDataFromCSV,
   cleanDirectory,
-  getAlreadyAddedInstruments,
   pushData,
 } = bhaoUtils;
-
+let instrumentList = [];
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
@@ -23,17 +22,14 @@ const getAndPushData = () => {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
         const {
-          type,
           typeExchg,
           fileName,
           url,
           codes,
           schema,
           typeIdentifier,
-          listQuery,
           updateMutation,
           createMutation,
-          listOperationName,
         } = apiArray[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
@@ -46,9 +42,10 @@ const getAndPushData = () => {
           typeIdentifier,
           schema,
           calcSchema,
+          instrumentList
         );
-        const insdata = await getAlreadyAddedInstruments(listQuery,listOperationName);
-        await pushData(data, insdata,updateMutation,createMutation);
+        const details = await pushData(data, updateMutation, createMutation);
+        instrumentList = instrumentList.concat(details.updatedIDs);
       } catch (err) {
         reject(err);
       }

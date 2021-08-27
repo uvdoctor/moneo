@@ -57,16 +57,28 @@ const extractDataFromCSV = async (
   typeIdentifier,
   schema,
   calcSchema,
+  instrumentList
 ) => {
   const end = new Promise((resolve, reject) => {
     let results = [];
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        const updateSchema = calcSchema(record,codes,schema,typeIdentifier,typeExchg)
+        const idCheck = instrumentList.some(item => item === record[codes.id])
+        console.log(idCheck);
+        if(!idCheck){
+        const updateSchema = calcSchema(
+          record,
+          codes,
+          schema,
+          typeIdentifier,
+          typeExchg
+        );
         results.push(Object.assign({}, updateSchema));
+        }
       })
       .on("end", async () => {
+        console.log(results.length);
         await cleanDirectory(
           tempDir,
           `${typeIdentifier} results extracted successfully and directory is cleaned`
@@ -84,67 +96,36 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const getAlreadyAddedInstruments = async (listQuery, listOperationName) => {
-  let alreadyAddedInstruments = [];
-  return new Promise(async (resolve, reject) => {
-    try {
-      const getInstrumentData = async (token) => {
-        const query = { limit: 100000 };
-        if (token) {
-          query.nextToken = token;
-        }
-        const dataInstruments = await insertInstrument(query, listQuery);
-        const { items, nextToken } =
-          dataInstruments.body.data[listOperationName];
-        alreadyAddedInstruments.push(items);
-        if (nextToken) {
-          getInstrumentData(nextToken);
-        } else {
-          resolve(alreadyAddedInstruments);
-        }
-      };
-      getInstrumentData();
-    } catch (err) {
-      reject(err);
-    }
-  });
+const executeMutation = async (mutation, input) => {
+  return await insertInstrument({ input: input }, mutation);
 };
 
-const pushData = (data, insdata, updateMutation, createMutation) => {
+const pushData = (data, updateMutation, createMutation) => {
+  let instrumentData = { updatedIDs: [], errorIDs: [] };
   return new Promise(async (resolve, reject) => {
-    try {
-      let instrumentData = {
-        updatedIDs: [],
-        errorIDs: [],
-      };
-      console.log(insdata);
-      for (let i = 0; i < data.length; i++) {
-        const insertedData = insdata.filter((bunch) =>
-          bunch.some((item) => item.id === data[i].id)
-        ).length
-          ? await insertInstrument({ input: data[i] }, updateMutation)
-          : await insertInstrument({ input: data[i] }, createMutation);
-
-        insertedData.body.errors
-          ? instrumentData.errorIDs.push({
-              id: data[i].id,
-              error: insertedData.body.errors,
-            })
-          : instrumentData.updatedIDs.push(data[i].id);
+    for (let i = 0; i < data.length; i++) {
+      try {
+        const updatedData = await executeMutation(updateMutation, data[i]);
+        if (!updatedData.body.data.updateINExchange) {
+          await executeMutation(createMutation, data[i]);
+        }
+        console.log(updatedData.body.data);
+        instrumentData.updatedIDs.push(data[i].id);
+      } catch (err) {
+        instrumentData.errorIDs.push({
+          id: data[i].id,
+          error: insertedData.body.errors,
+        });
       }
-      console.log(instrumentData);
-      resolve(instrumentData);
-    } catch (err) {
-      reject(err);
     }
+    console.log(instrumentData);
+    resolve(instrumentData);
   });
 };
-
 module.exports = {
   downloadZip,
   unzipDownloads,
   extractDataFromCSV,
   cleanDirectory,
-  getAlreadyAddedInstruments,
   pushData,
 };
