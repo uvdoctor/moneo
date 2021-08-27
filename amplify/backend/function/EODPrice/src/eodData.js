@@ -48,10 +48,10 @@ const pushData = (data) => {
         if (!updatedData.body.data.updateEODPrices) {
           await executeMutation("CreateEodPrices", dataToInsert);
         }
-        insertedData.body.errors
+        updatedData.body.errors
           ? instrumentData.errorIDs.push({
               id: data[i].id,
-              error: insertedData.body.errors,
+              error: updatedData.body.errors,
             })
           : instrumentData.updatedIDs.push(data[i]);
       } catch (err) {

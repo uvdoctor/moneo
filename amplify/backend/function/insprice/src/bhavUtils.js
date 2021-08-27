@@ -109,10 +109,11 @@ const pushData = (data, updateMutation, createMutation) => {
         if (!updatedData.body.data.updateINExchange) {
           await executeMutation(createMutation, data[i]);
         }
-        insertedData.body.errors
+        // console.log(updatedData.body.data);
+        updatedData.body.errors
           ? instrumentData.errorIDs.push({
               id: data[i].id,
-              error: insertedData.body.errors,
+              error: updatedData.body.errors,
             })
           : instrumentData.updatedIDs.push(data[i]);
       } catch (err) {

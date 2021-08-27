@@ -10,7 +10,6 @@ const {
   unzipDownloads,
   extractDataFromCSV,
   cleanDirectory,
-  getAlreadyAddedInstruments,
   pushData,
 } = bhaoUtils;
 
@@ -28,10 +27,8 @@ const getAndPushData = () => {
           codes,
           schema,
           typeIdentifier,
-          listQuery,
           updateMutation,
           createMutation,
-          listOperationName,
         } = apiArray[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
@@ -45,11 +42,7 @@ const getAndPushData = () => {
           typeExchg,
           updateSchema
         );
-        const insdata = await getAlreadyAddedInstruments(
-          listQuery,
-          listOperationName
-        );
-        await pushData(data, insdata, updateMutation, createMutation);
+        await pushData(data, updateMutation, createMutation);
       } catch (err) {
         reject(err);
       }
