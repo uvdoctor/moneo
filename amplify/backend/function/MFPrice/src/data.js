@@ -111,48 +111,30 @@ const mCap = (element) => {
   }
 };
 
-const getDataFromListInmfs = async () => {
-  const alreadyAddedData = [];
-  return new Promise(async (resolve, reject) => {
-    try {
-      const getInstrumentData = async (token) => {
-        const query = {
-          limit: 100000,
-        };
-        if (token) {
-          query.nextToken = token;
-        }
-        const dataFromListInmfs = await graphqlOperation(query, "ListInmFs");
-        const { items, nextToken } = dataFromListInmfs.body.data.listINMFs;
-        alreadyAddedData.push(items);
-        if (nextToken) {
-          getInstrumentData(nextToken);
-        } else {
-          resolve(alreadyAddedData);
-        }
-      };
-      getInstrumentData();
-    } catch (err) {
-      reject(err);
-    }
-  });
+const executeMutation = async (mutation, input) => {
+  return await graphqlOperation({ input: input }, mutation);
 };
 
 const pushData = (data) => {
+  let instrumentData = { updatedIDs: [], errorIDs: [] };
   return new Promise(async (resolve, reject) => {
-    const updatedData = [];
-    const getInstrumentsArray = await getDataFromListInmfs();
-
     for (let i = 0; i < data.length; i++) {
-      const insertedData = getInstrumentsArray.filter((bunch) =>
-        bunch.some((item) => item.id === data[i].id)
-      ).length
-        ? await graphqlOperation({ input: data[i] }, "UpdateInmf")
-        : await graphqlOperation({ input: data[i] }, "CreateInmf");
-      updatedData.push(insertedData.body);
-      console.log(insertedData.body);
+      try {
+        const updatedData = await executeMutation("UpdateInmf", data[i]);
+        if (!updatedData.body.data.updateINMF) {
+          await executeMutation("CreateInmf", data[i]);
+        }
+        console.log(updatedData.body.data);
+        instrumentData.updatedIDs.push(data[i].id);
+      } catch (err) {
+        instrumentData.errorIDs.push({
+          id: data[i].id,
+          error: insertedData.body.errors,
+        });
+      }
     }
-    resolve(updatedData);
+    console.log(instrumentData);
+    resolve(instrumentData);
   });
 };
 
