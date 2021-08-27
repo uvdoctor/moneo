@@ -5,7 +5,7 @@ import { ALL_FAMILY } from './FamilyInput';
 import { NWContext } from './NWContext';
 import Holding from './Holding';
 import { checkIfMemberIsSelected, getAssetTypes } from './nwutils';
-import { includesAny, toHumanFriendlyCurrency } from '../utils';
+import { toHumanFriendlyCurrency } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
 
@@ -26,9 +26,13 @@ export default function InstrumentValuation() {
 
 	const columns = [
 		{
-			title: <strong style={{color: COLORS.GREEN}}>Total ~ {toHumanFriendlyCurrency(totalDemat, selectedCurrency)}</strong>,
+			title: (
+				<strong style={{ color: COLORS.GREEN }}>
+					Total ~ {toHumanFriendlyCurrency(totalDemat, selectedCurrency)}
+				</strong>
+			),
 			key: 'name',
-			filterIcon: <FilterTwoTone twoToneColor={COLORS.GREEN} style={{fontSize: 20}} />,
+			filterIcon: <FilterTwoTone twoToneColor={COLORS.GREEN} style={{ fontSize: 20 }} />,
 			filteredValue: filteredInfo.name || null,
 			filters: nameFilterValues,
 			onFilter: (value: Array<any>, record: any) => record.name.includes(value),
@@ -76,8 +80,8 @@ export default function InstrumentValuation() {
 				return;
 			}
 			setFilteredInstruments([
-				...filteredData.filter((instrument: HoldingInput) =>
-					includesAny(instrument.type as string, selectedAssetTypes)
+				...filteredData.filter(
+					(instrument: HoldingInput) => selectedAssetTypes.indexOf(instrument.type as string) > -1
 				)
 			]);
 		},
@@ -100,7 +104,7 @@ export default function InstrumentValuation() {
 
 	return (
 		<Fragment>
-			<p style={{textAlign: "center"}}>
+			<p style={{ textAlign: 'center' }}>
 				{assetTypes.map((tag: string) => (
 					<CheckableTag
 						key={tag}
