@@ -1336,7 +1336,6 @@ export const onCreateInBond = /* GraphQL */ `
     onCreateINBond {
       id
       sid
-      tid
       name
       subt
       price
@@ -1361,7 +1360,6 @@ export const onUpdateInBond = /* GraphQL */ `
     onUpdateINBond {
       id
       sid
-      tid
       name
       subt
       price
@@ -1386,7 +1384,6 @@ export const onDeleteInBond = /* GraphQL */ `
     onDeleteINBond {
       id
       sid
-      tid
       name
       subt
       price

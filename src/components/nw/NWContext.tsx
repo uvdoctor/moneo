@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import "./nw.less";
-import HoldingsDetails from "./HoldingsDetails";
+import NWView from "./NWView";
 import { AppContext } from "../AppContext";
-import { createEmptyHoldings, getRelatedCurrencies, loadAllFamilyMembers, loadHoldings } from "./nwutils";
+import { createEmptyHoldings, getRelatedCurrencies, loadAllFamilyMembers, loadFXCommCryptoRates, loadHoldings } from "./nwutils";
 import { notification } from "antd";
-import { CreateHoldingsInput } from "../../api/goals";
+import { CreateEODPricesInput, CreateHoldingsInput } from "../../api/goals";
 import InstrumentValuation from "./InstrumentValuation";
+import PMValuation from "./PMValuation";
 
 const NWContext = createContext({});
 
@@ -18,6 +19,11 @@ function NWContextProvider() {
 	const [selectedCurrency, setSelectedCurrency] = useState<string>('');
 	const [nw, setNW] = useState<number>(0);
 	const [totalAssets, setTotalAssets] = useState<number>(0);
+	const [totalDemat, setTotalDemat] = useState<number>(0);
+	const [totalPM, setTotalPM] = useState<number>(0);
+	const [totalProperty, setTotalProperty] = useState<number>(0);
+	const [totalVehicles, setTotalVehicles] = useState<number>(0);
+	const [totalCrypto, setTotalCrypto] = useState<number>(0);
 	const [totalLiabilities, setTotalLiabilities] = useState<number>(0);
 	const [showInsUpload, setShowInsUpload] = useState<boolean>(false);
 	const [taxId, setTaxId] = useState<string>("");
@@ -26,7 +32,8 @@ function NWContextProvider() {
 	const [results, setResults] = useState<Array<any>>([]);
 	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
 	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
-	const [insPrices, setInsPrices] = useState<any>({});
+	const [insData, setInsData] = useState<any>({});
+	const [ratesData, setRatesData] = useState<any>({});
 
 	const tabs = {
 		"Demat Holdings": {
@@ -60,7 +67,7 @@ function NWContextProvider() {
 		"Precious Metals": {
 			label: "Precious Metals",
 			data: holdings?.pm,
-			content: <InstrumentValuation />
+			content: <PMValuation />
 		},
 		Deposits: {
 			label: "Deposits",
@@ -146,6 +153,19 @@ function NWContextProvider() {
         }
     };
 
+	const initializeFXCommCryptoRates = async () => {
+        try {
+            let result: Array<CreateEODPricesInput> | null = await loadFXCommCryptoRates();
+			if(result && result.length) {
+				result.forEach((record: CreateEODPricesInput) => ratesData[record.id] = record.price);
+			}
+			setRatesData(ratesData);
+        } catch(err) {
+            console.log('Unable to fetch fx, commodities & crypto rates.');
+            return false;
+        }
+    };
+
 	const initializeHoldings = async () => {
         try {
 			let allHoldings: CreateHoldingsInput = await loadHoldings();
@@ -166,8 +186,17 @@ function NWContextProvider() {
 
     useEffect(() => {
         initializeFamilyList();
+		initializeFXCommCryptoRates();
     }
     , []);
+
+	useEffect(() => {
+		setNW(totalAssets - totalLiabilities);
+	}, [totalAssets, totalLiabilities]);
+
+	useEffect(() => {
+		setTotalAssets(totalDemat + totalVehicles + totalPM + totalProperty + totalCrypto);
+	}, [totalDemat, totalVehicles, totalPM, totalProperty, totalCrypto]);
 
 	return (
 		<NWContext.Provider
@@ -201,11 +230,21 @@ function NWContextProvider() {
 				loadingHoldings,
 				currencyList,
 				setCurrencyList,
-				insPrices,
-				setInsPrices
+				insData,
+				setInsData,
+				totalDemat,
+				setTotalDemat,
+				totalProperty,
+				setTotalProperty,
+				totalCrypto,
+				setTotalCrypto,
+				totalVehicles,
+				setTotalVehicles,
+				totalPM,
+				setTotalPM,
 			}}
 		>
-			<HoldingsDetails />
+			<NWView />
 		</NWContext.Provider>
 	);
 }

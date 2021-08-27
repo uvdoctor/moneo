@@ -1,56 +1,46 @@
 const graphqlOperation = require("./operation");
 
 const getAssetType = (data) => {
-  switch (true) {
-    case data.includes("Equity"):
-    case data.includes("ELSS"):
-    case data.includes("Growth"):
-      return "E";
-    case data.includes("Debt"):
-    case data.includes("Income"):
-    case data.includes("Solution"):
-      return "F";
-    case data.includes("Hybrid"):
-      return "H";
-    case data.includes("Other"):
-      return "A";
-  }
+  if (data.includes("Hybrid")) return "H";
+  if (
+    data.includes("Debt") ||
+    data.includes("Income") ||
+    data.includes("Solution") ||
+    data.includes("Gilt") ||
+    data.includes("Index")
+  )
+    return "F";
+  if (data.includes("Other")) return "A";
+  return "E";
 };
 
 const getAssetSubType = (element) => {
   const sType = element["Scheme Type"];
   const sName = element["Scheme Name"];
-  if (sType.includes("Debt Scheme")) {
-    if (
-      sType.includes("Liquid") ||
+  if (
+    sType.includes("Debt Scheme") &&
+    (sType.includes("Liquid") ||
       sType.includes("Money Market") ||
-      sType.includes("Overnight")
-    ) {
-      return "L";
-    } else if (
-      sName.includes("Government") ||
+      sType.includes("Overnight"))
+  )
+    return "L";
+  if (
+    sType.includes("Debt Scheme") &&
+    (sName.includes("Government") ||
       sName.includes("Treasury") ||
       sName.includes("Gilt") ||
-      sName.includes("GILT")
-    ) {
-      return "GB";
-    } else {
-      return "CB";
-    }
-  } else {
-    return "S";
-  }
+      sName.includes("GILT"))
+  )
+    return "GB";
+  if (sType.includes("Debt Scheme")) return "CB";
+  if (sType.includes("Index")) return "I";
+  return "S";
 };
 
 const mfType = (data) => {
-  switch (true) {
-    case data.includes("Open"):
-      return "O";
-    case data.includes("Close"):
-      return "C";
-    case data.includes("Interval"):
-      return "I";
-  }
+  if (data.includes("Open")) return "O";
+  if (data.includes("Close")) return "C";
+  if (data.includes("Interval")) return "I";
 };
 
 // direct ISIN as per comparison to Regular
@@ -107,48 +97,32 @@ const mCap = (element) => {
   }
 };
 
-const getDataFromListInmfs = async () => {
-  const alreadyAddedData = [];
-  return new Promise(async (resolve, reject) => {
-    try {
-      const getInstrumentData = async (token) => {
-        const query = {
-          limit: 100000,
-        };
-        if (token) {
-          query.nextToken = token;
-        }
-        const dataFromListInmfs = await graphqlOperation(query, "ListInmFs");
-        const { items, nextToken } = dataFromListInmfs.body.data.listINMFs;
-        alreadyAddedData.push(items);
-        if (nextToken) {
-          getInstrumentData(nextToken);
-        } else {
-          resolve(alreadyAddedData);
-        }
-      };
-      getInstrumentData();
-    } catch (err) {
-      reject(err);
-    }
-  });
+const executeMutation = async (mutation, input) => {
+  return await graphqlOperation({ input: input }, mutation);
 };
 
 const pushData = (data) => {
+  let instrumentData = { updatedIDs: [], errorIDs: [] };
   return new Promise(async (resolve, reject) => {
-    const updatedData = [];
-    const getInstrumentsArray = await getDataFromListInmfs();
-
     for (let i = 0; i < data.length; i++) {
-      const insertedData = getInstrumentsArray.filter((bunch) =>
-        bunch.some((item) => item.id === data[i].id)
-      ).length
-        ? await graphqlOperation({ input: data[i] }, "UpdateInmf")
-        : await graphqlOperation({ input: data[i] }, "CreateInmf");
-      updatedData.push(insertedData.body);
-      console.log(insertedData.body);
+      try {
+        const updatedData = await executeMutation("UpdateInmf", data[i]);
+        if (!updatedData.body.data.updateINMF) {
+          await executeMutation("CreateInmf", data[i]);
+        }
+        // console.log(updatedData.body.data);
+        updatedData.body.errors
+          ? instrumentData.errorIDs.push({
+              id: data[i].id,
+              error: updatedData.body.errors,
+            })
+          : instrumentData.updatedIDs.push(data[i]);
+      } catch (err) {
+        console.log(err);
+      }
     }
-    resolve(updatedData);
+    console.log(instrumentData);
+    resolve(instrumentData);
   });
 };
 

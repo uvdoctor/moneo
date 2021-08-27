@@ -4,14 +4,15 @@ const { mkdir } = fsPromise;
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray } = utils;
 const bhaoUtils = require("./bhavUtils");
+const calcSchema = require("./calculate");
 const {
   downloadZip,
   unzipDownloads,
   extractDataFromCSV,
   cleanDirectory,
-  getAlreadyAddedInstruments,
   pushData,
 } = bhaoUtils;
+let instrumentList = [];
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
@@ -27,10 +28,8 @@ const getAndPushData = () => {
           codes,
           schema,
           typeIdentifier,
-          listQuery,
           updateMutation,
           createMutation,
-          listOperationName,
         } = apiArray[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
@@ -41,10 +40,12 @@ const getAndPushData = () => {
           typeExchg,
           codes,
           typeIdentifier,
-          schema
+          schema,
+          calcSchema,
+          instrumentList
         );
-        const insdata = await getAlreadyAddedInstruments(listQuery,listOperationName);
-        await pushData(data, insdata,updateMutation,createMutation);
+        const details = await pushData(data, updateMutation, createMutation);
+        instrumentList = instrumentList.concat(details.updatedIDs);
       } catch (err) {
         reject(err);
       }

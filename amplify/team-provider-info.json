@@ -36,22 +36,22 @@
         },
         "insprice": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/insprice-6f53357876634d41644e-build.zip"
+          "s3Key": "amplify-builds/insprice-50794c2f317353326676-build.zip"
         },
         "EODPrice": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/EODPrice-4d315547536b61446964-build.zip",
+          "s3Key": "amplify-builds/EODPrice-714b424234527245506e-build.zip",
           "apiGoalsGraphqlapiendpointoutput": "https://q5jdufebkjfgzn4upyqfi5sjga.appsync-api.us-east-1.amazonaws.com/graphql",
           "apiGoalsGraphqlapiidoutput": "bvyjaqmusfh5zelcbeeji6xxoe",
           "eodApiKey": "6119fe9f8f6d30.56370709,60d03a689523a3.63944368,611a0115bd4cd5.84750550,611a01dc0083c5.19670434,611a020d72d487.59800610"
         },
         "MFPrice": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/MFPrice-664139584c4241545873-build.zip"
+          "s3Key": "amplify-builds/MFPrice-4b454349577849616851-build.zip"
         },
         "INBond": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/INBond-737a3642715257536a55-build.zip"
+          "s3Key": "amplify-builds/INBond-307a476f2b6d7a2f572b-build.zip"
         }
       }
     }
