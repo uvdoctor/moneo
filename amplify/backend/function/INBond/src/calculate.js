@@ -14,19 +14,6 @@ const monthsArray = [
 ];
 const calc = {
   calcSubType: (subt) => {
-    const cb = [
-      "BB",
-      "BP",
-      "BZ",
-      "CF",
-      "CI",
-      "DB",
-      "DC",
-      "DP",
-      "PS",
-      "VD",
-      "VF",
-    ];
     const gbo = [
       "AT",
       "CP",
@@ -46,12 +33,12 @@ const calc = {
     ];
     const gb = ["GF", "GI", "GS", "TB"];
     switch (true) {
-      case cb.some((item) => item === subt):
-        return "CB";
-      case gbo.some((item) => item === subt):
-        return "GBO";
-      case gb.some((item) => item === subt):
+      case gbo.indexOf(subt)>-1:
+        return "GBO"
+      case gb.indexOf(subt)>-1:
         return "GB";
+      default:
+        return "CB"
     }
   },
 
@@ -96,19 +83,14 @@ const calc = {
   },
 
   calcCR: (crstr) => {
-    switch (true) {
-      case crstr.includes("AAA"):
-        return "E";
-      case crstr.includes("AA") || crstr.includes("A"):
-        return "H";
-      case crstr.includes("BB") || crstr.includes("BBB"):
-        return "M";
-      case crstr.includes("BB-"):
-        return "L";
-      default:
-        return null
-    }
-  },
+    if (!crstr)return null
+    if(crstr.includes("AA")&& !crstr.includes('-'))return "E"
+    if(crstr.includes("A"))return "H"
+    if(crstr.includes("BBB")||crstr.includes("+"))return "M";
+    if(crstr.includes("BB")) return "L";
+    return "J"
+    },
+
   calcPrice : (price)=>{
     if (!price) {
       return 100
