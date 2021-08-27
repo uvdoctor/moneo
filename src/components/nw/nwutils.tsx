@@ -72,6 +72,13 @@ export const loadHoldings = async () => {
 	return listHoldingss && listHoldingss.items?.length ? (listHoldingss.items as Array<APIt.CreateHoldingsInput>)[0] : createEmptyHoldings();
 };
 
+export const loadFXCommCryptoRates = async () => {
+	const { data: { listEODPricess } } = (await API.graphql(graphqlOperation(queries.listEodPricess))) as {
+		data: APIt.ListEodPricessQuery;
+	};
+	return listEODPricess?.items?.length ? (listEODPricess.items as Array<APIt.CreateEODPricesInput>) : null;
+};
+
 export const addFamilyMember = async (name: string, taxId: string) => {
 	try {
 		const { data } = (await API.graphql(
@@ -172,13 +179,13 @@ export const getRelatedCurrencies = (holdings: APIt.CreateHoldingsInput, default
 
 const getORIdList = (list: Array<any>, ids: Array<string>) => {
 	ids.forEach((id: string) => list.push({id: {eq: id}}));
-	return {or: list}
+	return {or: list};
 }
 
 export const loadMatchingINExchange = async (isins: Array<string>) => {
 	if(!isins.length) return null;
 	let idList: Array<APIt.ModelINExchangeFilterInput> = [];
-	const { data: { listINExchanges } } = (await API.graphql(graphqlOperation(queries.listInExchanges, {filter: getORIdList(idList, isins)}))) as {
+	const { data: { listINExchanges } } = (await API.graphql(graphqlOperation(queries.listInExchanges, {limit: 10000, filter: getORIdList(idList, isins)}))) as {
 		data: APIt.ListInExchangesQuery;
 	};
 	return listINExchanges?.items?.length ? listINExchanges.items as Array<APIt.INExchange> : null;
@@ -187,7 +194,7 @@ export const loadMatchingINExchange = async (isins: Array<string>) => {
 export const loadMatchingINMF = async (isins: Array<string>) => {
 	if(!isins.length) return null;
 	let idList: Array<APIt.ModelINMFFilterInput> = [];
-	const { data: { listINMFs } } = (await API.graphql(graphqlOperation(queries.listInmFs, {filter: getORIdList(idList, isins)}))) as {
+	const { data: { listINMFs } } = (await API.graphql(graphqlOperation(queries.listInmFs, {limit: 20000, filter: getORIdList(idList, isins)}))) as {
 		data: APIt.ListInmFsQuery;
 	};
 	return listINMFs?.items?.length ? listINMFs.items as Array<APIt.INMF> : null;
@@ -196,25 +203,49 @@ export const loadMatchingINMF = async (isins: Array<string>) => {
 export const loadMatchingINBond = async (isins: Array<string>) => {
 	if(!isins.length) return null;
 	let idList: Array<APIt.ModelINBondFilterInput> = [];
-	const { data: { listINBonds } } = (await API.graphql(graphqlOperation(queries.listInBonds, {filter: getORIdList(idList, isins)}))) as {
+	const { data: { listINBonds } } = (await API.graphql(graphqlOperation(queries.listInBonds, {limit: 10000, filter: getORIdList(idList, isins)}))) as {
 		data: APIt.ListInBondsQuery;
 	};
 	return listINBonds?.items?.length ? listINBonds.items as Array<APIt.INBond> : null;
 }
 
-export const getInsSubTypeName = (type: APIt.AssetType, st: APIt.AssetSubType | APIt.InsType) => {
-		switch(st) {
-			case APIt.AssetSubType.S : return "Stock";
-			case APIt.AssetSubType.GoldB: return "Gold Bond";
-			case APIt.InsType.ETF: return type === APIt.AssetType.E ? "Equity ETF" : "Debt ETF";
-			case APIt.AssetSubType.CB: return "Corporate Bond";
-			case APIt.AssetSubType.GBO: return "Public Sector Bond";
-			case APIt.AssetSubType.GB: return "Sovereign Bond";
-			case APIt.InsType.REIT: return "REIT";
-			default: return type === APIt.AssetType.E ? "Equity Mutual Fund" : "Debt Mutual Fund";
-		}
+export const getAssetTypes = () => {
+	return {
+		[APIt.AssetType.E]: "Equity",
+		[APIt.AssetType.F]: "Fixed Income",
+		[APIt.AssetType.H]: "Hybrid",
+		[APIt.AssetType.A]: "Alternative"
+	}
 }
 
-export const getAllInsSubTypeNames = () => [
-	"Stock", "Equity Mutual Fund", "Equity ETF", "Debt Mutual Fund", "Debt ETF", "REIT", "Gold Bond", "Sovereign Bond", "Corporate Bond", "Municipal Bond", "Other"
-]
+export const getAssetSubTypes = () => {
+	return {
+		[APIt.AssetSubType.CB]: "Corporate Bond",
+		[APIt.AssetSubType.GB]: "Government Bond",
+		[APIt.AssetSubType.GBO]: "Public Bond",
+		[APIt.AssetSubType.Gold]: "Gold",
+		[APIt.AssetSubType.GoldB]: "Gold Bond",
+		[APIt.AssetSubType.I]: "Index",
+		[APIt.AssetSubType.L]: "Liquid",
+		[APIt.AssetSubType.R]: "Real-estate",
+		[APIt.AssetSubType.S]: "Stock"
+	}
+}
+
+export const getFamilyOptions = (allFamily: any) => {
+	if(!Object.keys(allFamily).length) return null;
+	let options: any = {};
+	Object.keys(allFamily).forEach((key) => options[key] = allFamily[key].name);
+	return options;
+}
+
+export const getGoldTypes = () => {
+	return {
+		24: "24",
+		22: "22",
+		20: "20",
+		18: "18",
+		16: "16",
+		14: "14"
+	}
+}

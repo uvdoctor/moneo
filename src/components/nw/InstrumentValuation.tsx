@@ -1,18 +1,21 @@
 import { Empty, Table, Tag } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { HoldingInput, AssetSubType, AssetType, InsType } from '../../api/goals';
+import { HoldingInput, AssetType } from '../../api/goals';
 import { ALL_FAMILY } from './FamilyInput';
 import { NWContext } from './NWContext';
 import Holding from './Holding';
-import { checkIfMemberIsSelected, getAllInsSubTypeNames, getInsSubTypeName } from './nwutils';
-import { includesAny } from '../utils';
+import { checkIfMemberIsSelected, getAssetTypes } from './nwutils';
+import { includesAny, toHumanFriendlyCurrency } from '../utils';
+import { COLORS } from '../../CONSTANTS';
+import { FilterTwoTone } from '@ant-design/icons';
 
 export default function InstrumentValuation() {
+	const { insData, totalDemat, setTotalDemat }: any = useContext(NWContext);
 	const { CheckableTag } = Tag;
 	const { holdings, selectedMembers, selectedCurrency, allFamily, currencyList }: any = useContext(NWContext);
 	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([]);
-	const tagsData = getAllInsSubTypeNames();
-	const [ selectedTags, setSelectedTags ] = useState<Array<string>>(tagsData);
+	const assetTypes = Object.keys(getAssetTypes());
+	const [ selectedAssetTypes, setSelectedAssetTypes ] = useState<Array<string>>(assetTypes);
 	const [ nameFilterValues, setNameFilterValues ] = useState<Array<any>>([ {} ]);
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
 
@@ -23,12 +26,15 @@ export default function InstrumentValuation() {
 
 	const columns = [
 		{
-			title: 'Name',
+			title: <strong style={{color: COLORS.GREEN}}>Total ~ {toHumanFriendlyCurrency(totalDemat, selectedCurrency)}</strong>,
 			key: 'name',
+			filterIcon: <FilterTwoTone twoToneColor={COLORS.GREEN} style={{fontSize: 20}} />,
 			filteredValue: filteredInfo.name || null,
 			filters: nameFilterValues,
 			onFilter: (value: Array<any>, record: any) => record.name.includes(value),
-			render: (record: any) => <Holding key={record.id} holding={record as HoldingInput} onDelete={delRecord} showPrice />
+			render: (record: any) => (
+				<Holding key={record.id} holding={record as HoldingInput} onDelete={delRecord} showPrice />
+			)
 		}
 	];
 
@@ -46,7 +52,8 @@ export default function InstrumentValuation() {
 
 	const filterByFamilyAndCurrency = () => {
 		if (
-			!allFamily || Object.keys(allFamily).length <= 1 ||
+			!allFamily ||
+			Object.keys(allFamily).length <= 1 ||
 			selectedMembers.includes(ALL_FAMILY) ||
 			Object.keys(allFamily).length === selectedMembers.length
 		) {
@@ -55,7 +62,8 @@ export default function InstrumentValuation() {
 		}
 		return holdings.instruments.filter(
 			(instrument: HoldingInput) =>
-				checkIfMemberIsSelected(allFamily, selectedMembers, instrument.fIds[0]) && instrument.curr === selectedCurrency
+				checkIfMemberIsSelected(allFamily, selectedMembers, instrument.fIds[0]) &&
+				instrument.curr === selectedCurrency
 		);
 	};
 
@@ -69,43 +77,45 @@ export default function InstrumentValuation() {
 			}
 			setFilteredInstruments([
 				...filteredData.filter((instrument: HoldingInput) =>
-					includesAny(
-						getInsSubTypeName(instrument.type as AssetType, instrument.subt as AssetSubType | InsType),
-						selectedTags
-					)
+					includesAny(instrument.type as string, selectedAssetTypes)
 				)
 			]);
 		},
-		[ holdings.instruments.length, selectedMembers, selectedCurrency, selectedTags ]
+		[ holdings.instruments.length, selectedMembers, selectedCurrency, selectedAssetTypes ]
 	);
 
 	useEffect(
 		() => {
 			let filteredNames: Array<any> = [];
+			let total = 0;
 			filteredInstruments.forEach((instrument: HoldingInput) => {
 				filteredNames.push(getFilterItem(instrument.name as string));
+				total += instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
 			});
 			setNameFilterValues([ ...filteredNames ]);
+			setTotalDemat(total);
 		},
 		[ filteredInstruments ]
 	);
 
 	return (
 		<Fragment>
-			{tagsData.map((tag: string) => (
-				<CheckableTag
-					key={tag}
-					checked={selectedTags.indexOf(tag) > -1}
-					onChange={(checked: boolean) => {
-						if (checked) {
-							selectedTags.push(tag);
-							setSelectedTags([ ...selectedTags ]);
-						} else setSelectedTags([ ...selectedTags.filter((t: string) => t !== tag) ]);
-					}}
-				>
-					{tag}
-				</CheckableTag>
-			))}
+			<p style={{textAlign: "center"}}>
+				{assetTypes.map((tag: string) => (
+					<CheckableTag
+						key={tag}
+						checked={selectedAssetTypes.indexOf(tag) > -1}
+						onChange={(checked: boolean) => {
+							if (checked) {
+								selectedAssetTypes.push(tag);
+								setSelectedAssetTypes([ ...selectedAssetTypes ]);
+							} else setSelectedAssetTypes([ ...selectedAssetTypes.filter((t: string) => t !== tag) ]);
+						}}
+					>
+						{getAssetTypes()[tag as AssetType]}
+					</CheckableTag>
+				))}
+			</p>
 			{filteredInstruments.length ? (
 				<Table
 					dataSource={filteredInstruments}

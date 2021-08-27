@@ -9,18 +9,17 @@ import { SaveOutlined } from '@ant-design/icons';
 
 import './nw.less';
 import FamilyInput from './FamilyInput';
-import ItemDisplay from '../calc/ItemDisplay';
 import ResultCarousel from '../ResultCarousel';
+import TotalAssets from './TotalAssets';
+import TotalNetWorth from './TotalNetWorth';
+import TotalLiabilities from './TotalLiabilities';
 
-export default function HoldingsDetails() {
+export default function NWView() {
 	const {
 		results,
 		setResults,
 		selectedCurrency,
 		setSelectedCurrency,
-		nw,
-		totalAssets,
-		totalLiabilities,
 		loadingHoldings,
 		currencyList
 	}: any = useContext(NWContext);
@@ -31,9 +30,9 @@ export default function HoldingsDetails() {
 			if (!loadingHoldings)
 				setResults([
 					...[
-						<ItemDisplay label="Net Worth" result={nw} currency={selectedCurrency} pl />,
-						<ItemDisplay label="You Own" result={totalAssets} currency={selectedCurrency} pl />,
-						<ItemDisplay label="You Owe" result={totalLiabilities} currency={selectedCurrency} pl />
+						<TotalNetWorth />,
+						<TotalAssets />,
+						<TotalLiabilities />
 					]
 				]);
 		},

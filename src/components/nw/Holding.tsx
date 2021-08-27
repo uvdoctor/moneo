@@ -3,9 +3,11 @@ import { Row, Col, Button, Badge, InputNumber } from 'antd';
 import { DeleteOutlined, EditOutlined, ShoppingCartOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 
 import './Holding.less';
-import { toCurrency, toReadableNumber } from '../utils';
+import { toCurrency, toHumanFriendlyCurrency, toReadableNumber } from '../utils';
 import { HoldingInput } from '../../api/goals';
 import { NWContext } from './NWContext';
+import { useEffect } from 'react';
+import { getAssetSubTypes } from './nwutils';
 
 interface HoldingProp {
 	holding: HoldingInput;
@@ -15,8 +17,11 @@ interface HoldingProp {
 }
 
 export default function Holding({ holding, showPrice, onDelete, onChange }: HoldingProp) {
-	const { insPrices, setInsPrices }: any = useContext(NWContext);
+	const { insData }: any = useContext(NWContext);
+	const [ price, setPrice ] = useState<number>(insData[holding.id] ? insData[holding.id].price : 0);
+	const [ total, setTotal ] = useState<number>(holding.qty * price);
 	const [ isEditMode, setEditMode ] = useState(false);
+	const assetSubTypes: any = getAssetSubTypes();
 
 	function onEdit() {
 		setEditMode(true);
@@ -26,9 +31,38 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 		setEditMode(false);
 	}
 
+	useEffect(
+		() => {
+			setTotal(holding.qty * price);
+		},
+		[ price ]
+	);
+
 	return (
 		<Row className="holding" align="middle" justify="space-between" gutter={[ 5, 5 ]}>
-			<Col span={24}>{holding.name}</Col>
+			{showPrice &&
+			insData[holding.id] && (
+				<Col span={24}>
+					{insData[holding.id].itype ? (
+						`${insData[holding.id].itype} - `
+					) : holding.id.startsWith('INF') ? (
+						'Mutual Fund - '
+					) : (
+						''
+					)}
+					{assetSubTypes[insData[holding.id].subt]}
+				</Col>
+			)}
+			<Col span={24}>
+				<Row justify="space-between">
+					<Col>{holding.name}</Col>
+					{showPrice && (
+						<Col className="quantity">
+							<strong>{toHumanFriendlyCurrency(total, holding.curr as string)}</strong>
+						</Col>
+					)}
+				</Row>
+			</Col>
 			<Col>
 				<Badge count={holding.id} />
 			</Col>
@@ -51,11 +85,10 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 									<Col>&nbsp;x&nbsp;</Col>
 									<Col>
 										<InputNumber
-											value={insPrices[holding.id] ? insPrices[holding.id] : 0}
+											value={price}
 											size="small"
 											onChange={(val) => {
-												insPrices[holding.id] = val;
-												setInsPrices(insPrices);
+												setPrice(val);
 											}}
 										/>
 									</Col>
@@ -67,12 +100,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 							<span className="quantity">
 								<ShoppingCartOutlined />{' '}
 								{toReadableNumber(holding.qty, ('' + holding.qty).includes('.') ? 3 : 0)}
-								{showPrice &&
-									` x ${toCurrency(
-										insPrices[holding.id] ? insPrices[holding.id] : 0,
-										holding.curr as string
-									)} 
-									= ${toCurrency(holding.qty * (insPrices[holding.id] ? insPrices[holding.id] : 0), holding.curr as string)}`}
+								{showPrice && ` x ${toCurrency(price, holding.curr as string)}`}
 							</span>
 						</Col>
 					)}
