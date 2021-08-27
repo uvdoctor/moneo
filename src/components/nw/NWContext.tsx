@@ -6,7 +6,6 @@ import { createEmptyHoldings, getRelatedCurrencies, loadAllFamilyMembers, loadFX
 import { notification } from "antd";
 import { CreateEODPricesInput, CreateHoldingsInput } from "../../api/goals";
 import InstrumentValuation from "./InstrumentValuation";
-import PMValuation from "./PMValuation";
 
 const NWContext = createContext({});
 
@@ -66,7 +65,7 @@ function NWContextProvider() {
 		"Precious Metals": {
 			label: "Precious Metals",
 			data: holdings?.pm,
-			content: <PMValuation />
+			content: <InstrumentValuation />
 		},
 		Deposits: {
 			label: "Deposits",
