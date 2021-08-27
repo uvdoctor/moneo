@@ -27,8 +27,8 @@ const apiArray = [
       fr: "",
       tf: "",
       fv: 0,
-      cr: "",
-      crstr: "",
+      cr: null,
+      crstr: null,
       ytm: 0,
     },	
     codes: {

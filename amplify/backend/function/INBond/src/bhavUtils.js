@@ -55,58 +55,16 @@ const extractDataFromCSV = async (
   codes,
   typeIdentifier,
   schema,
-  calc,
-  calcYTM
+  type,
+  updateSchema
 ) => {
   const end = new Promise((resolve, reject) => {
     let results = [];
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        if (record[codes.subt] === "MC") {
-          return;
-        }
-        Object.keys(schema).map((key) => {
-          switch (key) {
-            case "price":
-              return (schema.price = calc.calcPrice(record[codes.price]));
-            case "subt":
-              return (schema.subt = calc.calcSubType(record[codes.subt]));
-            case "sm":
-              return (schema.sm = calc.calcSM(record[codes.sDate]));
-            case "sy":
-              return (schema.sy = calc.calcSY(record[codes.sDate]));
-            case "mm":
-              return (schema.mm = calc.calcMM(record[codes.mDate]));
-            case "my":
-              return (schema.my = calc.calcMY(record[codes.mDate]));
-            case "fr":
-              return (schema.fr = calc.calcFR(record[codes.frate]));
-            case "tf":
-              return (schema.tf = calc.calcTF(record[codes.subt]));
-            case "cr":
-              return (schema.cr = calc.calcCR(record[codes.crstr]));
-            case "fv":
-              return (schema.fv = 100);
-            case "ytm":
-              return (schema.ytm = calcYTM(
-                record,
-                codes,
-                record[codes.rate],
-                100
-              ));
-            default:
-              schema[key] = record[codes[key]];
-          }
-        });
-
-        Object.keys(schema).map((key) => {
-          if (schema[key] === undefined) {
-            delete schema[key];
-          }
-        });
-
-        results.push(Object.assign({}, schema));
+        const schemaData = updateSchema(record,codes,schema)
+        results.push(Object.assign({},schemaData));
         // console.log("Results:", results);
       })
       .on("end", async () => {

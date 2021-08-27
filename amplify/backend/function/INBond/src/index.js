@@ -4,6 +4,7 @@ const { mkdir } = fsPromise;
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray } = utils;
 const bhaoUtils = require("./bhavUtils");
+const updateSchema = require("./calculate");
 const {
   downloadZip,
   unzipDownloads,
@@ -12,7 +13,6 @@ const {
   getAlreadyAddedInstruments,
   pushData,
 } = bhaoUtils;
-const { calc, calcYTM } = require("./calculate");
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
@@ -42,8 +42,8 @@ const getAndPushData = () => {
           codes,
           typeIdentifier,
           schema,
-          calc,
-          calcYTM
+          type,
+          updateSchema
         );
         const insdata = await getAlreadyAddedInstruments(
           listQuery,
