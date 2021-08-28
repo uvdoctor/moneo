@@ -12,7 +12,8 @@ const {
   cleanDirectory,
   pushData,
 } = bhaoUtils;
-let instrumentList = []
+const table = "INExchg-bvyjaqmusfh5zelcbeeji6xxoe-dev";
+const instrumentList = [];
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
@@ -21,14 +22,8 @@ const getAndPushData = () => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const {
-          typeExchg,
-          fileName,
-          url,
-          codes,
-          schema,
-          typeIdentifier,
-        } = apiArray[i];
+        const { typeExchg, fileName, url, codes, schema, typeIdentifier } =
+          apiArray[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
@@ -42,9 +37,8 @@ const getAndPushData = () => {
           calcSchema,
           instrumentList
         );
-        const details = await pushData(data);
-        // console.log(details);
-        // instrumentList = instrumentList.concat(details.updatedIDs);
+        const details = await pushData(data, table);
+        console.log(details);
       } catch (err) {
         reject(err);
       }
@@ -56,4 +50,3 @@ const getAndPushData = () => {
 exports.handler = async (event) => {
   return await getAndPushData();
 };
-

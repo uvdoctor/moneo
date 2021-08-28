@@ -30,7 +30,7 @@ const baseFileName = `EQ_ISINCODE_${date}${month}${year}`;
 const baseFileDebtName = `DEBTBHAVCOPY${date}${month}${yearFull}`;
 // For NSE
 const monthChar = monthsArray[today.getMonth()];
-const NSEBaseFileName = `cm${date}${monthChar}${yearFull}bhav.csv`;
+const nseBaseFileName = `cm${date}${monthChar}${yearFull}bhav.csv`;
 
 const apiArray = [
   {
@@ -48,6 +48,8 @@ const apiArray = [
       price: 0,
       prev: 0,
       mcap: null,
+      createdAt: "",
+      updatedAt: "",
     },
     codes: {
       sid: "SC_CODE",
@@ -59,15 +61,11 @@ const apiArray = [
       subt: "SC_GROUP",
     },
     typeIdentifier: "BSE_EQUITY",
-    listQuery: "ListInExchgs",
-    updateMutation: "UpdateInExchg",
-    createMutation: "CreateInExchg",
-    listOperationName: "listINExchgs",
   },
   {
     typeExchg: "NSE",
-    fileName: NSEBaseFileName,
-    url: `https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${NSEBaseFileName}.zip`,
+    fileName: nseBaseFileName,
+    url: `https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${nseBaseFileName}.zip`,
     schema: {
       id: "",
       sid: "",
@@ -79,6 +77,8 @@ const apiArray = [
       price: 0,
       prev: 0,
       mcap: null,
+      createdAt: "",
+      updatedAt: "",
     },
     codes: {
       sid: "SYMBOL",
@@ -90,10 +90,6 @@ const apiArray = [
       subt: "",
     },
     typeIdentifier: "NSE_EQUITY",
-    listQuery: "ListInExchgs",
-    updateMutation: "UpdateInExchg",
-    createMutation: "CreateInExchg",
-    listOperationName: "listINExchgs",
   },
 ];
 

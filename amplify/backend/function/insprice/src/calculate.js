@@ -94,18 +94,31 @@ const calcSchema = (record, codes, schema, typeIdentifier, typeExchg) => {
   const subt = record[codes.subt];
   const name = record[codes.name];
   Object.keys(schema).map((key) => {
-    if (key === "type") {
-      schema.type = calc[typeIdentifier].calcType(type, subt, name);
-    } else if (key === "subt") {
-      schema.subt = calc[typeIdentifier].calcSubType(type, subt, name);
-    } else if (key === "itype") {
-      schema.itype = calc[typeIdentifier].calcInsType(type, subt, name);
-    } else if (key === "exchg") {
-      schema.exchg = typeExchg;
-    } else if (key === "name") {
-      schema.name = name.trim();
-    } else {
-      schema[key] = record[codes[key]];
+    switch (key) {
+      case "name":
+        return (schema.name = name.trim());
+      case "type":
+        return (schema.type = calc[typeIdentifier].calcType(type, subt, name));
+      case "subt":
+        return (schema.subt = calc[typeIdentifier].calcSubType(
+          type,
+          subt,
+          name
+        ));
+      case "itype":
+        return (schema.itype = calc[typeIdentifier].calcInsType(
+          type,
+          subt,
+          name
+        ));
+      case "exchg":
+        return (schema.exchg = typeExchg);
+      case "createdAt":
+        return (schema.createdAt = new Date().toISOString());
+      case "updatedAt":
+        return (schema.updatedAt = new Date().toISOString());
+      default:
+        schema[key] = record[codes[key]];
     }
   });
   return schema;

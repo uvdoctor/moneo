@@ -1,4 +1,4 @@
-const insertInstrument = require("./operation");
+const docClient = require("./insertIntoDB");
 const https = require("https");
 const fs = require("fs");
 const fsPromise = require("fs/promises");
@@ -52,27 +52,40 @@ const unzipDownloads = async (zipFile, tempDir) => {
 const extractDataFromCSV = async (
   tempDir,
   fileName,
+  typeExchg,
   codes,
   typeIdentifier,
   schema,
-  typeExchg,
-  updateSchema
+  calcSchema,
+  instrumentList
 ) => {
   const end = new Promise((resolve, reject) => {
-    let results = [];
+    let batches = [];
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        const schemaData = updateSchema(record, codes, schema);
-        results.push(Object.assign({}, schemaData));
-        // console.log("Results:", results);
+        const idCheck = instrumentList.some(
+          (item) => item === record[codes.id]
+        );
+        if (!idCheck) {
+          const updateSchema = calcSchema(
+            record,
+            codes,
+            schema,
+            typeIdentifier,
+            typeExchg
+          );
+          const dataToPush = JSON.parse(JSON.stringify(updateSchema));
+          batches.push({ PutRequest: { Item: dataToPush } });
+        }
       })
       .on("end", async () => {
+        batches.map((item) => instrumentList.push(item.PutRequest.Item.id));
         await cleanDirectory(
           tempDir,
           `${typeIdentifier} results extracted successfully and directory is cleaned`
         );
-        resolve(results);
+        resolve(batches);
       })
       .on("error", (err) => {
         cleanDirectory(
@@ -85,34 +98,27 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const executeMutation = async (mutation, input) => {
-  return await insertInstrument({ input: input }, mutation);
-};
+const pushData = async (data, table) => {
+  return new Promise((resolve, reject) => {
+    const result = new Array(Math.ceil(data.length / 25))
+      .fill()
+      .map((_) => data.splice(0, 25));
 
-const pushData = (data, updateMutation, createMutation) => {
-  let instrumentData = { updatedIDs: [], errorIDs: [] };
-  return new Promise(async (resolve, reject) => {
-    for (let i = 0; i < data.length; i++) {
+    result.filter(async (bunch) => {
+      var params = {
+        RequestItems: {
+          [table]: bunch,
+        },
+      };
       try {
-        const updatedData = await executeMutation(updateMutation, data[i]);
-        if (!updatedData.body.data.updateINExchg) {
-          await executeMutation(createMutation, data[i]);
-        }
-        // console.log(updatedData.body.data);
-        updatedData.body.errors
-          ? instrumentData.errorIDs.push({
-              id: data[i].id,
-              error: updatedData.body.errors,
-            })
-          : instrumentData.updatedIDs.push(data[i]);
-      } catch (err) {
-        console.log(err);
+        resolve(await docClient.batchWrite(params).promise());
+      } catch (error) {
+        reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
       }
-    }
-    console.log(instrumentData);
-    resolve(instrumentData);
+    });
   });
 };
+
 module.exports = {
   downloadZip,
   unzipDownloads,

@@ -1,12 +1,4 @@
-const AWS = require("aws-sdk");
-const region = "us-east-1";
-const creds = new AWS.Credentials({
-  accessKeyId: "AKIAROHCVNGYE4MNWMOM",
-  secretAccessKey: "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",
-  sessionToken: null,
-});
-AWS.config.update({ region: region, credentials: creds });
-const ddb = new AWS.DynamoDB.DocumentClient();
+const docClient = require("./insertIntoDB");
 const https = require("https");
 const fs = require("fs");
 const fsPromise = require("fs/promises");
@@ -68,7 +60,6 @@ const extractDataFromCSV = async (
   instrumentList
 ) => {
   const end = new Promise((resolve, reject) => {
-    let results = [];
     let batches = [];
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
@@ -84,13 +75,12 @@ const extractDataFromCSV = async (
             typeIdentifier,
             typeExchg
           );
-          batches.push(
-            Object.assign({}, { PutRequest: { Item: updateSchema } })
-          );
-          // instrumentList.push(Object.assign({},updateSchema.id))
+          const dataToPush = JSON.parse(JSON.stringify(updateSchema));
+          batches.push({ PutRequest: { Item: dataToPush } });
         }
       })
       .on("end", async () => {
+        batches.map((item) => instrumentList.push(item.PutRequest.Item.id));
         await cleanDirectory(
           tempDir,
           `${typeIdentifier} results extracted successfully and directory is cleaned`
@@ -108,13 +98,12 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const pushData = async (data) => {
+const pushData = async (data, table) => {
   return new Promise((resolve, reject) => {
     const result = new Array(Math.ceil(data.length / 25))
       .fill()
       .map((_) => data.splice(0, 25));
 
-    const table = "INExchange-bvyjaqmusfh5zelcbeeji6xxoe-dev";
     result.filter(async (bunch) => {
       var params = {
         RequestItems: {
@@ -122,28 +111,14 @@ const pushData = async (data) => {
         },
       };
       try {
-        resolve(await ddb.batchWrite(params).promise());
+        resolve(await docClient.batchWrite(params).promise());
       } catch (error) {
-        throw new Error(`Error in dynamoDB: ${JSON.stringify(error)}`);
-=======
-        const updatedData = await executeMutation(updateMutation, data[i]);
-        if (!updatedData.body.data.updateINExchg) {
-          await executeMutation(createMutation, data[i]);
-        }
-        // console.log(updatedData.body.data);
-        updatedData.body.errors
-          ? instrumentData.errorIDs.push({
-              id: data[i].id,
-              error: updatedData.body.errors,
-            })
-          : instrumentData.updatedIDs.push(data[i]);
-      } catch (err) {
-        console.log(err);
->>>>>>> 7b86e597c65ea675967884ffa89e589c7b2fd30c
+        reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
       }
     });
   });
 };
+
 module.exports = {
   downloadZip,
   unzipDownloads,
