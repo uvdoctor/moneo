@@ -1,4 +1,12 @@
-const insertInstrument = require("./insertInstruments");
+const AWS = require("aws-sdk");
+const region = "us-east-1";
+const creds = new AWS.Credentials({
+  accessKeyId: "AKIAROHCVNGYE4MNWMOM",
+  secretAccessKey: "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",
+  sessionToken: null,
+});
+AWS.config.update({ region: region, credentials: creds });
+const ddb = new AWS.DynamoDB.DocumentClient();
 const https = require("https");
 const fs = require("fs");
 const fsPromise = require("fs/promises");
@@ -61,6 +69,7 @@ const extractDataFromCSV = async (
 ) => {
   const end = new Promise((resolve, reject) => {
     let results = [];
+    let batches = [];
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
@@ -75,7 +84,10 @@ const extractDataFromCSV = async (
             typeIdentifier,
             typeExchg
           );
-          results.push(Object.assign({}, updateSchema));
+          batches.push(
+            Object.assign({}, { PutRequest: { Item: updateSchema } })
+          );
+          // instrumentList.push(Object.assign({},updateSchema.id))
         }
       })
       .on("end", async () => {
@@ -83,7 +95,7 @@ const extractDataFromCSV = async (
           tempDir,
           `${typeIdentifier} results extracted successfully and directory is cleaned`
         );
-        resolve(results);
+        resolve(batches);
       })
       .on("error", (err) => {
         cleanDirectory(
@@ -96,32 +108,25 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const executeMutation = async (mutation, input) => {
-  return await insertInstrument({ input: input }, mutation);
-};
+const pushData = async (data) => {
+  return new Promise((resolve, reject) => {
+    const result = new Array(Math.ceil(data.length / 25))
+      .fill()
+      .map((_) => data.splice(0, 25));
 
-const pushData = (data, updateMutation, createMutation) => {
-  let instrumentData = { updatedIDs: [], errorIDs: [] };
-  return new Promise(async (resolve, reject) => {
-    for (let i = 0; i < data.length; i++) {
+    const table = "INExchange-bvyjaqmusfh5zelcbeeji6xxoe-dev";
+    result.filter(async (bunch) => {
+      var params = {
+        RequestItems: {
+          [table]: bunch,
+        },
+      };
       try {
-        const updatedData = await executeMutation(updateMutation, data[i]);
-        if (!updatedData.body.data.updateINExchange) {
-          await executeMutation(createMutation, data[i]);
-        }
-        // console.log(updatedData.body.data);
-        updatedData.body.errors
-          ? instrumentData.errorIDs.push({
-              id: data[i].id,
-              error: updatedData.body.errors,
-            })
-          : instrumentData.updatedIDs.push(data[i]);
-      } catch (err) {
-        console.log(err);
+        resolve(await ddb.batchWrite(params).promise());
+      } catch (error) {
+        throw new Error(`Error in dynamoDB: ${JSON.stringify(error)}`);
       }
-    }
-    console.log(instrumentData);
-    resolve(instrumentData);
+    });
   });
 };
 module.exports = {

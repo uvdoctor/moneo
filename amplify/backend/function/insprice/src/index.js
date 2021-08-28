@@ -12,7 +12,7 @@ const {
   cleanDirectory,
   pushData,
 } = bhaoUtils;
-let instrumentList = [];
+let instrumentList = []
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
@@ -28,8 +28,6 @@ const getAndPushData = () => {
           codes,
           schema,
           typeIdentifier,
-          updateMutation,
-          createMutation,
         } = apiArray[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
@@ -44,8 +42,9 @@ const getAndPushData = () => {
           calcSchema,
           instrumentList
         );
-        const details = await pushData(data, updateMutation, createMutation);
-        instrumentList = instrumentList.concat(details.updatedIDs);
+        const details = await pushData(data);
+        // console.log(details);
+        // instrumentList = instrumentList.concat(details.updatedIDs);
       } catch (err) {
         reject(err);
       }
@@ -57,3 +56,4 @@ const getAndPushData = () => {
 exports.handler = async (event) => {
   return await getAndPushData();
 };
+
