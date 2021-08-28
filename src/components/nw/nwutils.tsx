@@ -75,23 +75,21 @@ export const addFamilyMember = async (name: string, taxId: string) => {
 	}
 };
 
-export const checkIfMemberExists = (allFamily: any, taxId: string) => {
-	if(!allFamily) return null;
-	let keys = Object.keys(allFamily);
-	if(!keys.length || !keys[0]) return null;
-	let filteredEntries = keys.filter((key: string) => allFamily[key].taxId === taxId);
-	return filteredEntries.length ? filteredEntries[0] : null;
-};
+export const getFamilyMemberKey = (allFamily: any, taxId: string) => {
+	if(!allFamily || !taxId) return null;
+	let allKeys = Object.keys(allFamily);
+	for(let i = 0; i < allKeys.length; i++) {
+		if(allFamily[allKeys[i]].taxId === taxId) return allKeys[i];
+	}
+	return null;
+}
 
-export const checkIfMemberIsSelected = (allFamily: any, selectedMembers: Array<string>, taxId: string) => {
-	if(!allFamily) return null;
-	if(!selectedMembers.length || !selectedMembers[0]) return null;
-	let filteredEntries = selectedMembers.filter((key: string) => allFamily[key].taxId === taxId);
-	return filteredEntries.length ? filteredEntries[0] : null;
-};
+export const doesHoldingMatch = (instrument: APIt.HoldingInput, selectedMembers: Array<string>, selectedCurrency: string) =>
+	((selectedMembers.indexOf(ALL_FAMILY) > -1 || selectedMembers.indexOf(instrument.fIds[0]) > -1)
+		&& instrument.curr === selectedCurrency)
 
 export const addFamilyMemberSilently = async (allFamily: any, allFamilySetter: Function, taxId: string) => {
-	let id = checkIfMemberExists(allFamily, taxId);
+	let id = getFamilyMemberKey(allFamily, taxId);
 	if(id) return id;
 	let member = await addFamilyMember(taxId, taxId);
 	allFamily[member?.id as string] = {name: member?.name, taxId: member?.tid};

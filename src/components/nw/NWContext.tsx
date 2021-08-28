@@ -3,6 +3,7 @@ import './nw.less';
 import NWView from './NWView';
 import { AppContext } from '../AppContext';
 import {
+	doesHoldingMatch,
 	getRelatedCurrencies,
 	loadAllFamilyMembers,
 	loadFXCommCryptoRates,
@@ -21,7 +22,6 @@ import {
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
 import PMValuation from './PMValuation';
-import { ALL_FAMILY } from './FamilyInput';
 
 const NWContext = createContext({});
 
@@ -290,10 +290,8 @@ function NWContextProvider() {
 	const priceInstruments = () => {
 		let total = 0;
 		instruments.forEach((instrument: HoldingInput) => {
-			if(selectedMembers.indexOf(ALL_FAMILY) > -1 || selectedMembers.indexOf(instrument.fIds[0]) > -1) {
-				if(selectedCurrency === instrument.curr)
-				total += insData[instrument.id] ? instrument.qty * insData[instrument.id].price : 0;
-			}
+			if(doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) 
+					total += insData[instrument.id] ? instrument.qty * insData[instrument.id].price : 0;
 		})
 		setTotalInstruments(total);
 	};

@@ -1,27 +1,33 @@
 import { Empty, Table, Tag } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { HoldingInput, AssetType } from '../../api/goals';
-import { ALL_FAMILY } from './FamilyInput';
 import { NWContext } from './NWContext';
 import Holding from './Holding';
-import { checkIfMemberIsSelected, getAssetTypes } from './nwutils';
+import { doesHoldingMatch, getAssetTypes } from './nwutils';
 import { toHumanFriendlyCurrency } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
 
 export default function InstrumentValuation() {
-	const { instruments, setInstruments, selectedMembers, selectedCurrency, allFamily, currencyList, insData, totalInstruments }: any = useContext(NWContext);
+	const {
+		instruments,
+		setInstruments,
+		selectedMembers,
+		selectedCurrency,
+		insData,
+		totalInstruments
+	}: any = useContext(NWContext);
 	const { CheckableTag } = Tag;
-	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([...instruments]);
+	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([ ...instruments ]);
 	const assetTypes = Object.keys(getAssetTypes());
 	const [ selectedAssetTypes, setSelectedAssetTypes ] = useState<Array<string>>(assetTypes);
 	const [ nameFilterValues, setNameFilterValues ] = useState<Array<any>>([ {} ]);
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
-	const [total, setTotal] = useState<number>(totalInstruments);
+	const [ total, setTotal ] = useState<number>(totalInstruments);
 
 	const delRecord = (id: string) => {
 		setFilteredInstruments([ ...filteredInstruments.filter((record: any) => record.id !== id) ]);
-		setInstruments([...instruments.filter((record: any) => record.id !== id)]);
+		setInstruments([ ...instruments.filter((record: any) => record.id !== id) ]);
 	};
 
 	const columns = [
@@ -54,22 +60,10 @@ export default function InstrumentValuation() {
 		setFilteredInfo(filters);
 	};
 
-	const filterByFamilyAndCurrency = () => {
-		if (
-			!allFamily ||
-			Object.keys(allFamily).length <= 1 ||
-			selectedMembers.includes(ALL_FAMILY) ||
-			Object.keys(allFamily).length === selectedMembers.length
-		) {
-			if (!currencyList || Object.keys(currencyList).length === 1) return instruments;
-			return instruments.filter((instrument: HoldingInput) => instrument.curr === selectedCurrency);
-		}
-		return instruments.filter(
-			(instrument: HoldingInput) =>
-				checkIfMemberIsSelected(allFamily, selectedMembers, instrument.fIds[0]) &&
-				instrument.curr === selectedCurrency
+	const filterByFamilyAndCurrency = () =>
+		instruments.filter((instrument: HoldingInput) =>
+			doesHoldingMatch(instrument, selectedMembers, selectedCurrency)
 		);
-	};
 
 	useEffect(
 		() => {
@@ -79,7 +73,7 @@ export default function InstrumentValuation() {
 				setFilteredInstruments([ ...[] ]);
 				return;
 			}
-			
+
 			setFilteredInstruments([
 				...filteredData.filter(
 					(instrument: HoldingInput) => selectedAssetTypes.indexOf(instrument.type as string) > -1

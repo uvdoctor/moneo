@@ -6,7 +6,7 @@ import HoldingsTable from "./HoldingsTable";
 import { NWContext } from "./NWContext";
 import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgnore } from "./parseutils";
 import { isMobileDevice } from "../utils";
-import { HoldingInput, AssetSubType, InsType, AssetType } from "../../api/goals";
+import { AssetSubType, InsType, AssetType } from "../../api/goals";
 import {
 	cleanAssetName,
 	completeRecord,
@@ -23,7 +23,7 @@ import {
 	getNumberAtEnd,
 	removeDuplicates,
 } from "../utils";
-import { addFamilyMemberSilently, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMF } from "./nwutils";
+import { addFamilyMemberSilently, getFamilyMemberKey, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMF } from "./nwutils";
 
 export default function UploadHoldings() {
 	const { insData, showInsUpload,
@@ -63,25 +63,24 @@ export default function UploadHoldings() {
 
 	const loadInstrumentPrices = async (fun: Function, input: any, taxId: string) => {
 		if(!input || !Object.keys(input).length) return;
+		let memberKey = getFamilyMemberKey(allFamily, taxId);
+		if(!memberKey) return;
 		let matchingList: Array<any> | null = await fun(Object.keys(input));
-		if(!matchingList || !matchingList.length) {
-			instruments.push(...Object.values(input) as Array<HoldingInput>);
-		} else {
-			Object.keys(input).forEach((key) => {
+		Object.keys(input).forEach((key) => {
+			let instrument = input[key];
+			if(matchingList && matchingList.length) {
 				let matchingEntry = matchingList?.find((match) => match?.id === key);
-				let instrument = input[key];
-				if(matchingEntry && matchingList) {
+				if(matchingEntry) {
 					insData[key] = matchingEntry;
 					instrument.name = matchingEntry.name;
 					instrument.type = matchingEntry.type;
 					instrument.subt = matchingEntry.subt;
-					instrument.fIds = [taxId];
-					instrument.curr = 'INR';
 				}
-				instruments.push(input[key]);
-			})
-			//setInsData(insData);
-		}
+			}
+			instrument.curr = 'INR'
+			instrument.fIds = [memberKey];
+			instruments.push(instrument);
+		})
 	};
 
 	const addInstruments = async () => {
