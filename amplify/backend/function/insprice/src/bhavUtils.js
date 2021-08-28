@@ -125,6 +125,21 @@ const pushData = async (data) => {
         resolve(await ddb.batchWrite(params).promise());
       } catch (error) {
         throw new Error(`Error in dynamoDB: ${JSON.stringify(error)}`);
+=======
+        const updatedData = await executeMutation(updateMutation, data[i]);
+        if (!updatedData.body.data.updateINExchg) {
+          await executeMutation(createMutation, data[i]);
+        }
+        // console.log(updatedData.body.data);
+        updatedData.body.errors
+          ? instrumentData.errorIDs.push({
+              id: data[i].id,
+              error: updatedData.body.errors,
+            })
+          : instrumentData.updatedIDs.push(data[i]);
+      } catch (err) {
+        console.log(err);
+>>>>>>> 7b86e597c65ea675967884ffa89e589c7b2fd30c
       }
     });
   });

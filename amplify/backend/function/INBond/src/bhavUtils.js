@@ -95,7 +95,7 @@ const pushData = (data, updateMutation, createMutation) => {
     for (let i = 0; i < data.length; i++) {
       try {
         const updatedData = await executeMutation(updateMutation, data[i]);
-        if (!updatedData.body.data.updateINExchange) {
+        if (!updatedData.body.data.updateINExchg) {
           await executeMutation(createMutation, data[i]);
         }
         // console.log(updatedData.body.data);

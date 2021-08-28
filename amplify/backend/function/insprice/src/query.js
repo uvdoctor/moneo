@@ -1,11 +1,11 @@
 module.exports = {
   mutation: {
-    CreateInExchange: `
-  mutation CreateInExchange(
-    $input: CreateINExchangeInput!
-    $condition: ModelINExchangeConditionInput
+    CreateInExchg: `
+  mutation CreateInExchg(
+    $input: CreateINExchgInput!
+    $condition: ModelINExchgConditionInput
   ) {
-    createINExchange(input: $input, condition: $condition) {
+    createINExchg(input: $input, condition: $condition) {
       id
       sid
       name
@@ -21,12 +21,12 @@ module.exports = {
     }
   }
 `,
-    UpdateInExchange: `
-  mutation UpdateInExchange(
-    $input: UpdateINExchangeInput!
-    $condition: ModelINExchangeConditionInput
+    UpdateInExchg: `
+  mutation UpdateInExchg(
+    $input: UpdateINExchgInput!
+    $condition: ModelINExchgConditionInput
   ) {
-    updateINExchange(input: $input, condition: $condition) {
+    updateINExchg(input: $input, condition: $condition) {
       id
       sid
       name
@@ -42,12 +42,12 @@ module.exports = {
     }
   }
 `,
-    DeleteInExchange: `
-  mutation DeleteInExchange(
-    $input: DeleteINExchangeInput!
-    $condition: ModelINExchangeConditionInput
+    DeleteInExchg: `
+  mutation DeleteInExchg(
+    $input: DeleteINExchgInput!
+    $condition: ModelINExchgConditionInput
   ) {
-    deleteINExchange(input: $input, condition: $condition) {
+    deleteINExchg(input: $input, condition: $condition) {
       id
       sid
       name
@@ -63,15 +63,15 @@ module.exports = {
     }
   }
 `,
-    ListInExchanges: `
-  query ListInExchanges(
+    ListInExchgs: `
+  query ListInExchgs(
     $id: String
-    $filter: ModelINExchangeFilterInput
+    $filter: ModelINExchgFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listINExchanges(
+    listINExchgs(
       id: $id
       filter: $filter
       limit: $limit

@@ -850,9 +850,9 @@ export const listRegistrations = /* GraphQL */ `
     }
   }
 `;
-export const getInExchange = /* GraphQL */ `
-  query GetInExchange($id: String!) {
-    getINExchange(id: $id) {
+export const getInExchg = /* GraphQL */ `
+  query GetInExchg($id: String!) {
+    getINExchg(id: $id) {
       id
       sid
       name
@@ -868,15 +868,15 @@ export const getInExchange = /* GraphQL */ `
     }
   }
 `;
-export const listInExchanges = /* GraphQL */ `
-  query ListInExchanges(
+export const listInExchgs = /* GraphQL */ `
+  query ListInExchgs(
     $id: String
-    $filter: ModelINExchangeFilterInput
+    $filter: ModelINExchgFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listINExchanges(
+    listINExchgs(
       id: $id
       filter: $filter
       limit: $limit
