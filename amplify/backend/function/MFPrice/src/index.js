@@ -24,7 +24,10 @@ const getData = () => {
 
       if (id === "-" && tid === "-") {
         return;
-      } else if (element["Scheme Type"].includes("ETF") || element["Scheme Name"].includes("ETF")) {
+      } else if (
+        element["Scheme Type"].includes("ETF") ||
+        element["Scheme Name"].includes("ETF")
+      ) {
         return;
       }
       const dataToAdd = {

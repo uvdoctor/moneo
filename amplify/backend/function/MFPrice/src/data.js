@@ -82,19 +82,11 @@ const getDirISIN = (regularData, directData, element) => {
 
 const mCap = (element) => {
   const type = element["Scheme Type"].toLowerCase();
-  if (type.includes("equity")) {
-    if (type.includes("large")) {
-      return "L";
-    } else if (type.includes("mid")) {
-      return "M";
-    } else if (type.includes("small")) {
-      return "S";
-    } else {
-      return "H";
-    }
-  } else {
-    return false;
-  }
+  if (type.includes("equity") && type.includes("large")) return "L";
+  if (type.includes("equity") && type.includes("mid")) return "M";
+  if (type.includes("equity") && type.includes("small")) return "S";
+  if (type.includes("equity")) return "H";
+  return false;
 };
 
 const executeMutation = async (mutation, input) => {
