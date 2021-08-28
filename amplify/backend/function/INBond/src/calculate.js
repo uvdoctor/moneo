@@ -33,16 +33,17 @@ const calc = {
     ];
     const gb = ["GF", "GI", "GS", "TB"];
     switch (true) {
-      case gbo.indexOf(subt)>-1:
-        return "GBO"
-      case gb.indexOf(subt)>-1:
+      case gbo.indexOf(subt) > -1:
+        return "GBO";
+      case gb.indexOf(subt) > -1:
         return "GB";
       default:
-        return "CB"
+        return "CB";
     }
   },
 
   calcSM: (sDate) => {
+    if (!sDate) return null;
     const month =
       monthsArray.indexOf(
         sDate.slice(sDate.indexOf("-") + 1, sDate.lastIndexOf("-"))
@@ -51,11 +52,13 @@ const calc = {
   },
 
   calcSY: (sDate) => {
+    if (!sDate) return null;
     const year = sDate.slice(sDate.lastIndexOf("-") + 1, sDate.length);
     return Number(year);
   },
 
   calcMM: (mDate) => {
+    if (!mDate) return null;
     const matMonth =
       monthsArray.indexOf(
         mDate.slice(mDate.indexOf("-") + 1, mDate.lastIndexOf("-"))
@@ -64,6 +67,7 @@ const calc = {
   },
 
   calcMY: (mDate) => {
+    if (!mDate) return null;
     const matYear = mDate.slice(mDate.lastIndexOf("-") + 1, mDate.length);
     return Number(matYear);
   },
@@ -72,57 +76,59 @@ const calc = {
     if (frate === "RESET") {
       return "Y";
     }
-    return "N"
+    return "N";
   },
 
   calcTF: (subt) => {
     if (subt === "IF" || subt === "PF") {
       return "Y";
     }
-    return "N"
+    return "N";
   },
 
   calcCR: (crstr) => {
-    if (!crstr)return null
-    if(crstr.includes("AA")&& !crstr.includes('-'))return "E"
-    if(crstr.includes("A"))return "H"
-    if(crstr.includes("BBB")||crstr.includes("+"))return "M";
-    if(crstr.includes("BB")) return "L";
-    return "J"
-    },
+    if (!crstr) return null;
+    if (crstr.includes("AA") && !crstr.includes("-")) return "E";
+    if (crstr.includes("A")) return "H";
+    if (crstr.includes("BBB") || crstr.includes("+")) return "M";
+    if (crstr.includes("BB")) return "L";
+    return "J";
+  },
 
-  calcPrice : (price)=>{
+  calcPrice: (price) => {
     if (!price) {
-      return 100
+      return 100;
     }
     return Number(price);
   },
- 
 };
 
-const calcYTM = (record , codes ,rate) => {
-  const fv=100
-  const matrMonth = calc.calcMM(record[codes.mDate])
-  const matrYear = calc.calcMY(record[codes.mDate])
-  const startMonth = calc.calcSM(record[codes.sDate])
-  const startYear = calc.calcSY(record[codes.sDate])
-  const numOfYear = ((12 - startMonth) / 12) + ((matrYear - startYear) - 1) + (matrMonth / 12);
-  const mPrice = calc.calcPrice(record[codes.price])
-  const ytm = (Number(rate) + ((fv - mPrice) / numOfYear)) / ((fv + mPrice) / 2)
-  const ytmFinal = Math.round(ytm*1000)/1000;
-  return ytmFinal
-}
+const calcYTM = (record, codes, rate) => {
+  const fv = 100;
+  const matrMonth = calc.calcMM(record[codes.mDate]);
+  const matrYear = calc.calcMY(record[codes.mDate]);
+  const startMonth = calc.calcSM(record[codes.sDate]);
+  const startYear = calc.calcSY(record[codes.sDate]);
+  const numOfYear =
+    (12 - startMonth) / 12 + (matrYear - startYear - 1) + matrMonth / 12;
+  const mPrice = calc.calcPrice(record[codes.price]);
+  const ytm = (Number(rate) + (fv - mPrice) / numOfYear) / ((fv + mPrice) / 2);
+  const ytmFinal = Math.round(ytm * 1000) / 1000;
+  return ytmFinal;
+};
 
-const updateSchema = (record,codes,schema) =>{
+const calcSchema = (record, codes, schema, typeExchg, typeIdentifier) => {
   if (record[codes.subt] === "MC") {
-      return;
-    }
+    return;
+  }
   Object.keys(schema).map((key) => {
     switch (key) {
       case "price":
         return (schema.price = calc.calcPrice(record[codes.price]));
       case "subt":
         return (schema.subt = calc.calcSubType(record[codes.subt]));
+      case "exchg":
+        return (schema.exchg = typeExchg);
       case "sm":
         return (schema.sm = calc.calcSM(record[codes.sDate]));
       case "sy":
@@ -137,15 +143,17 @@ const updateSchema = (record,codes,schema) =>{
         return (schema.tf = calc.calcTF(record[codes.subt]));
       case "cr":
         return (schema.cr = calc.calcCR(record[codes.crstr]));
+      case "rate":
+        const reset = record[codes.rate];
+        return (schema.rate = reset.includes("RESET") ? 0 : reset);
       case "fv":
         return (schema.fv = 100);
       case "ytm":
-        return (schema.ytm = calcYTM(record,codes,record[codes.rate],
-        ));
+        return (schema.ytm = calcYTM(record, codes, record[codes.rate]));
       default:
         schema[key] = record[codes[key]];
-  }
-});
-  return schema
-}
-module.exports = updateSchema;
+    }
+  });
+  return schema;
+};
+module.exports = calcSchema;
