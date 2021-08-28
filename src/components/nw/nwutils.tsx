@@ -166,11 +166,11 @@ const getORIdList = (list: Array<any>, ids: Array<string>) => {
 
 export const loadMatchingINExchange = async (isins: Array<string>) => {
 	if(!isins.length) return null;
-	let idList: Array<APIt.ModelINExchangeFilterInput> = [];
-	const { data: { listINExchanges } } = (await API.graphql(graphqlOperation(queries.listInExchanges, {limit: 10000, filter: getORIdList(idList, isins)}))) as {
-		data: APIt.ListInExchangesQuery;
+	let idList: Array<APIt.ModelINExchgFilterInput> = [];
+	const { data: { listINExchgs } } = (await API.graphql(graphqlOperation(queries.listInExchgs, {limit: 10000, filter: getORIdList(idList, isins)}))) as {
+		data: APIt.ListInExchgsQuery;
 	};
-	return listINExchanges?.items?.length ? listINExchanges.items as Array<APIt.INExchange> : null;
+	return listINExchgs?.items?.length ? listINExchgs.items as Array<APIt.INExchg> : null;
 }
 
 export const loadMatchingINMF = async (isins: Array<string>) => {
