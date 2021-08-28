@@ -4,7 +4,7 @@ const { mkdir } = fsPromise;
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray } = utils;
 const bhaoUtils = require("./bhavUtils");
-const updateSchema = require("./calculate");
+const calcSchema = require("./calculate");
 const {
   downloadZip,
   unzipDownloads,
@@ -12,6 +12,8 @@ const {
   cleanDirectory,
   pushData,
 } = bhaoUtils;
+const table = "INBond-bvyjaqmusfh5zelcbeeji6xxoe-dev";
+const instrumentList = [];
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
@@ -20,29 +22,23 @@ const getAndPushData = () => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const {
-          typeExchg,
-          fileName,
-          url,
-          codes,
-          schema,
-          typeIdentifier,
-          updateMutation,
-          createMutation,
-        } = apiArray[i];
+        const { typeExchg, fileName, url, codes, schema, typeIdentifier } =
+          apiArray[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
         const data = await extractDataFromCSV(
           tempDir,
           fileName,
+          typeExchg,
           codes,
           typeIdentifier,
           schema,
-          typeExchg,
-          updateSchema
+          calcSchema,
+          instrumentList
         );
-        await pushData(data, updateMutation, createMutation);
+        const details = await pushData(data, table);
+        console.log(details);
       } catch (err) {
         reject(err);
       }
