@@ -4,24 +4,6 @@ import * as APIt from '../../api/goals';
 import * as queries from '../../graphql/queries';
 import { ALL_FAMILY } from './FamilyInput';
 
-export const createEmptyHoldings = () => {
-	return {
-		instruments: [],
-		property: [],
-		pm: [],
-		ppf: [],
-		epf: [],
-		nps: [],
-		vehicles: [],
-		crypto: [],
-		deposits: [],
-		lendings: [],
-		savings: [],
-		ins: [],
-		loans: []
-	}
-};
-
 export const createNewItem = async (item: APIt.CreateItemInput) => {
 	console.log('Going to create item...', item);
 	try {
@@ -69,7 +51,7 @@ export const loadHoldings = async () => {
 	const { data: { listHoldingss } } = (await API.graphql(graphqlOperation(queries.listHoldingss))) as {
 		data: APIt.ListHoldingssQuery;
 	};
-	return listHoldingss && listHoldingss.items?.length ? (listHoldingss.items as Array<APIt.CreateHoldingsInput>)[0] : createEmptyHoldings();
+	return listHoldingss && listHoldingss.items?.length ? (listHoldingss.items as Array<APIt.CreateHoldingsInput>)[0] : null;
 };
 
 export const loadFXCommCryptoRates = async () => {
@@ -164,7 +146,7 @@ export const getFamilyNames = (selectedMembers: string[], allFamily: any) => {
 	return result;
 };
 
-export const getRelatedCurrencies = (holdings: APIt.CreateHoldingsInput, defaultCurrency: string) => {
+export const getRelatedCurrencies = (holdings: APIt.CreateHoldingsInput | null, defaultCurrency: string) => {
 	let currencyList: any = {[defaultCurrency]: defaultCurrency};
 	if(!holdings || !Object.keys(holdings).length) return currencyList;
 	Object.keys(holdings).forEach((key) => {

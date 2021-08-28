@@ -47,11 +47,11 @@
         },
         "MFPrice": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/MFPrice-4b454349577849616851-build.zip"
+          "s3Key": "amplify-builds/MFPrice-2b7644746a53616d5448-build.zip"
         },
         "INBond": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/INBond-307a476f2b6d7a2f572b-build.zip"
+          "s3Key": "amplify-builds/INBond-30734e74593568746a36-build.zip"
         }
       }
     }

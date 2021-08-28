@@ -233,7 +233,7 @@ enum CreditRating {
 	J
 }
 
-type INExchange
+type INExchg
 	@model
 	@aws_iam
 	@key(fields: ["id"])

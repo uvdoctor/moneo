@@ -914,7 +914,7 @@ export type UpdateRegistrationInput = {
   long?: number | null,
 };
 
-export type CreateINExchangeInput = {
+export type CreateINExchgInput = {
   id: string,
   sid: string,
   name: string,
@@ -963,7 +963,7 @@ export enum MCap {
 }
 
 
-export type ModelINExchangeConditionInput = {
+export type ModelINExchgConditionInput = {
   sid?: ModelStringInput | null,
   name?: ModelStringInput | null,
   exchg?: ModelStringInput | null,
@@ -973,9 +973,9 @@ export type ModelINExchangeConditionInput = {
   price?: ModelFloatInput | null,
   prev?: ModelFloatInput | null,
   mcap?: ModelMCapInput | null,
-  and?: Array< ModelINExchangeConditionInput | null > | null,
-  or?: Array< ModelINExchangeConditionInput | null > | null,
-  not?: ModelINExchangeConditionInput | null,
+  and?: Array< ModelINExchgConditionInput | null > | null,
+  or?: Array< ModelINExchgConditionInput | null > | null,
+  not?: ModelINExchgConditionInput | null,
 };
 
 export type ModelAssetTypeInput = {
@@ -998,8 +998,8 @@ export type ModelMCapInput = {
   ne?: MCap | null,
 };
 
-export type INExchange = {
-  __typename: "INExchange",
+export type INExchg = {
+  __typename: "INExchg",
   id?: string,
   sid?: string,
   name?: string,
@@ -1014,7 +1014,7 @@ export type INExchange = {
   updatedAt?: string,
 };
 
-export type UpdateINExchangeInput = {
+export type UpdateINExchgInput = {
   id: string,
   sid?: string | null,
   name?: string | null,
@@ -1027,7 +1027,7 @@ export type UpdateINExchangeInput = {
   mcap?: MCap | null,
 };
 
-export type DeleteINExchangeInput = {
+export type DeleteINExchgInput = {
   id: string,
 };
 
@@ -1455,7 +1455,7 @@ export type ModelRegistrationConnection = {
   nextToken?: string | null,
 };
 
-export type ModelINExchangeFilterInput = {
+export type ModelINExchgFilterInput = {
   id?: ModelStringInput | null,
   sid?: ModelStringInput | null,
   name?: ModelStringInput | null,
@@ -1466,14 +1466,14 @@ export type ModelINExchangeFilterInput = {
   price?: ModelFloatInput | null,
   prev?: ModelFloatInput | null,
   mcap?: ModelMCapInput | null,
-  and?: Array< ModelINExchangeFilterInput | null > | null,
-  or?: Array< ModelINExchangeFilterInput | null > | null,
-  not?: ModelINExchangeFilterInput | null,
+  and?: Array< ModelINExchgFilterInput | null > | null,
+  or?: Array< ModelINExchgFilterInput | null > | null,
+  not?: ModelINExchgFilterInput | null,
 };
 
-export type ModelINExchangeConnection = {
-  __typename: "ModelINExchangeConnection",
-  items?:  Array<INExchange | null > | null,
+export type ModelINExchgConnection = {
+  __typename: "ModelINExchgConnection",
+  items?:  Array<INExchg | null > | null,
   nextToken?: string | null,
 };
 
@@ -3076,14 +3076,14 @@ export type UpdateRegistrationMutation = {
   } | null,
 };
 
-export type CreateInExchangeMutationVariables = {
-  input?: CreateINExchangeInput,
-  condition?: ModelINExchangeConditionInput | null,
+export type CreateInExchgMutationVariables = {
+  input?: CreateINExchgInput,
+  condition?: ModelINExchgConditionInput | null,
 };
 
-export type CreateInExchangeMutation = {
-  createINExchange?:  {
-    __typename: "INExchange",
+export type CreateInExchgMutation = {
+  createINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -3099,14 +3099,14 @@ export type CreateInExchangeMutation = {
   } | null,
 };
 
-export type UpdateInExchangeMutationVariables = {
-  input?: UpdateINExchangeInput,
-  condition?: ModelINExchangeConditionInput | null,
+export type UpdateInExchgMutationVariables = {
+  input?: UpdateINExchgInput,
+  condition?: ModelINExchgConditionInput | null,
 };
 
-export type UpdateInExchangeMutation = {
-  updateINExchange?:  {
-    __typename: "INExchange",
+export type UpdateInExchgMutation = {
+  updateINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -3122,14 +3122,14 @@ export type UpdateInExchangeMutation = {
   } | null,
 };
 
-export type DeleteInExchangeMutationVariables = {
-  input?: DeleteINExchangeInput,
-  condition?: ModelINExchangeConditionInput | null,
+export type DeleteInExchgMutationVariables = {
+  input?: DeleteINExchgInput,
+  condition?: ModelINExchgConditionInput | null,
 };
 
-export type DeleteInExchangeMutation = {
-  deleteINExchange?:  {
-    __typename: "INExchange",
+export type DeleteInExchgMutation = {
+  deleteINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -4321,13 +4321,13 @@ export type ListRegistrationsQuery = {
   } | null,
 };
 
-export type GetInExchangeQueryVariables = {
+export type GetInExchgQueryVariables = {
   id?: string,
 };
 
-export type GetInExchangeQuery = {
-  getINExchange?:  {
-    __typename: "INExchange",
+export type GetInExchgQuery = {
+  getINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -4343,19 +4343,19 @@ export type GetInExchangeQuery = {
   } | null,
 };
 
-export type ListInExchangesQueryVariables = {
+export type ListInExchgsQueryVariables = {
   id?: string | null,
-  filter?: ModelINExchangeFilterInput | null,
+  filter?: ModelINExchgFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListInExchangesQuery = {
-  listINExchanges?:  {
-    __typename: "ModelINExchangeConnection",
+export type ListInExchgsQuery = {
+  listINExchgs?:  {
+    __typename: "ModelINExchgConnection",
     items?:  Array< {
-      __typename: "INExchange",
+      __typename: "INExchg",
       id: string,
       sid: string,
       name: string,
@@ -5996,9 +5996,9 @@ export type OnDeleteRegistrationSubscription = {
   } | null,
 };
 
-export type OnCreateInExchangeSubscription = {
-  onCreateINExchange?:  {
-    __typename: "INExchange",
+export type OnCreateInExchgSubscription = {
+  onCreateINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -6014,9 +6014,9 @@ export type OnCreateInExchangeSubscription = {
   } | null,
 };
 
-export type OnUpdateInExchangeSubscription = {
-  onUpdateINExchange?:  {
-    __typename: "INExchange",
+export type OnUpdateInExchgSubscription = {
+  onUpdateINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -6032,9 +6032,9 @@ export type OnUpdateInExchangeSubscription = {
   } | null,
 };
 
-export type OnDeleteInExchangeSubscription = {
-  onDeleteINExchange?:  {
-    __typename: "INExchange",
+export type OnDeleteInExchgSubscription = {
+  onDeleteINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,

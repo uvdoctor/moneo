@@ -26,7 +26,18 @@ import {
 import { addFamilyMemberSilently, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMF } from "./nwutils";
 
 export default function UploadHoldings() {
-	const { insData, setInsData }: any = useContext(NWContext);
+	const { insData, showInsUpload,
+		setShowInsUpload,
+		taxId,
+		setTaxId,
+		instruments,
+		setInstruments,
+		allFamily,
+		setAllFamily,
+		currencyList,
+		setCurrencyList,
+		setSelectedCurrency, 
+	}: any = useContext(NWContext);
 	const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
 	const [equities, setEquities] = useState<any>({});
@@ -37,24 +48,10 @@ export default function UploadHoldings() {
 	const [bondsNum, setBondsNum] = useState<number>(0);
 	const [etfsNum, setETFsNum] = useState<number>(0);
 	const [mfsNum, setMFsNum] = useState<number>(0);
-	
-	const {
-		showInsUpload,
-		setShowInsUpload,
-		taxId,
-		setTaxId,
-		holdings,
-		setHoldings,
-		allFamily,
-		setAllFamily,
-		currencyList,
-		setCurrencyList,
-		setSelectedCurrency,
-	}: any = useContext(NWContext);
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
 
-	useEffect(() => setDrawerVisibility(!holdings || !Object.keys(holdings).length), []);
+	useEffect(() => setDrawerVisibility(!Object.keys(instruments).length), []);
 
 	useEffect(() => {
 		if(showInsUpload) setDrawerVisibility(false);
@@ -64,20 +61,12 @@ export default function UploadHoldings() {
 		setDrawerVisibility(true);
 	}
 
-	const addUploadedInstruments = (insHoldings: Array<HoldingInput>, list: any) => {
-		if(!list || !Object.keys(list).length) return;
-		insHoldings.push(...Object.values(list) as Array<HoldingInput>);
-	}
-
-	const filterExistingTaxIdEntries = () => {
-		let filteredEntries =  holdings.instruments?.filter((entry: HoldingInput) => !entry.fIds.includes(taxId));
-		return !filteredEntries?.length ? [] : filteredEntries;
-	};
-
-	const priceInstruments = async (fun: Function, input: any, taxId: string) => {
+	const loadInstrumentPrices = async (fun: Function, input: any, taxId: string) => {
+		if(!input || !Object.keys(input).length) return;
 		let matchingList: Array<any> | null = await fun(Object.keys(input));
-		if(!matchingList || !matchingList.length) addUploadedInstruments(holdings.instruments, input);
-		else {
+		if(!matchingList || !matchingList.length) {
+			instruments.push(...Object.values(input) as Array<HoldingInput>);
+		} else {
 			Object.keys(input).forEach((key) => {
 				let matchingEntry = matchingList?.find((match) => match?.id === key);
 				let instrument = input[key];
@@ -89,27 +78,27 @@ export default function UploadHoldings() {
 					instrument.fIds = [taxId];
 					instrument.curr = 'INR';
 				}
-				holdings.instruments.push(input[key]);
+				instruments.push(input[key]);
 			})
-			setInsData(insData);
+			//setInsData(insData);
 		}
 	};
 
 	const addInstruments = async () => {
 		if(!taxId) return;
 		addFamilyMemberSilently(allFamily, setAllFamily, taxId);
-		holdings.instruments = filterExistingTaxIdEntries();
+		//let instruments = filterExistingTaxIdEntries();
 		let currency = 'INR';
 		if(!currencyList[currency]) {
 			currencyList[currency] = currency;
 			setCurrencyList(currencyList);
 		}
 		setSelectedCurrency(currency);
-		await priceInstruments(loadMatchingINMF, mutualFunds, taxId);
-		await priceInstruments(loadMatchingINBond, bonds, taxId);
-		await priceInstruments(loadMatchingINExchange, equities, taxId);
-		await priceInstruments(loadMatchingINExchange, etfs, taxId);
-		setHoldings(holdings);
+		await loadInstrumentPrices(loadMatchingINMF, mutualFunds, taxId);
+		await loadInstrumentPrices(loadMatchingINBond, bonds, taxId);
+		await loadInstrumentPrices(loadMatchingINExchange, equities, taxId);
+		await loadInstrumentPrices(loadMatchingINExchange, etfs, taxId);
+		setInstruments([...instruments]);
 		setDrawerVisibility(false);
 		setShowInsUpload(false);
 	}

@@ -1277,9 +1277,9 @@ export const onDeleteRegistration = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInExchange = /* GraphQL */ `
-  subscription OnCreateInExchange {
-    onCreateINExchange {
+export const onCreateInExchg = /* GraphQL */ `
+  subscription OnCreateInExchg {
+    onCreateINExchg {
       id
       sid
       name
@@ -1295,9 +1295,9 @@ export const onCreateInExchange = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateInExchange = /* GraphQL */ `
-  subscription OnUpdateInExchange {
-    onUpdateINExchange {
+export const onUpdateInExchg = /* GraphQL */ `
+  subscription OnUpdateInExchg {
+    onUpdateINExchg {
       id
       sid
       name
@@ -1313,9 +1313,9 @@ export const onUpdateInExchange = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteInExchange = /* GraphQL */ `
-  subscription OnDeleteInExchange {
-    onDeleteINExchange {
+export const onDeleteInExchg = /* GraphQL */ `
+  subscription OnDeleteInExchg {
+    onDeleteINExchg {
       id
       sid
       name
