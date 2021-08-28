@@ -1,8 +1,8 @@
 {
   "lambdaLayers": [],
   "permissions": {
-    "api": {
-      "goals": [
+    "auth": {
+      "ddpwa0063633b": [
         "create",
         "read",
         "update",

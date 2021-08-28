@@ -129,11 +129,10 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "api",
-          "resourceName": "goals",
+          "category": "auth",
+          "resourceName": "ddpwa0063633b",
           "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
+            "UserPoolId"
           ]
         }
       ]
