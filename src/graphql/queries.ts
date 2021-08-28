@@ -909,6 +909,7 @@ export const getInBond = /* GraphQL */ `
       name
       subt
       price
+      exchg
       sm
       sy
       mm
@@ -946,6 +947,7 @@ export const listInBonds = /* GraphQL */ `
         name
         subt
         price
+        exchg
         sm
         sy
         mm

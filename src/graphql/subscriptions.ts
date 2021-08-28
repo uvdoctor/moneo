@@ -1339,6 +1339,7 @@ export const onCreateInBond = /* GraphQL */ `
       name
       subt
       price
+      exchg
       sm
       sy
       mm
@@ -1363,6 +1364,7 @@ export const onUpdateInBond = /* GraphQL */ `
       name
       subt
       price
+      exchg
       sm
       sy
       mm
@@ -1387,6 +1389,7 @@ export const onDeleteInBond = /* GraphQL */ `
       name
       subt
       price
+      exchg
       sm
       sy
       mm

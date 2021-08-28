@@ -25,10 +25,7 @@ export default function InstrumentValuation() {
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
 	const [ total, setTotal ] = useState<number>(totalInstruments);
 
-	const delRecord = (id: string) => {
-		setFilteredInstruments([ ...filteredInstruments.filter((record: any) => record.id !== id) ]);
-		setInstruments([ ...instruments.filter((record: any) => record.id !== id) ]);
-	};
+	const delRecord = (id: string) => setInstruments([ ...instruments.filter((record: any) => record.id !== id) ]);
 
 	const columns = [
 		{
@@ -37,7 +34,7 @@ export default function InstrumentValuation() {
 					Total ~ {toHumanFriendlyCurrency(total, selectedCurrency)}
 				</strong>
 			),
-			key: 'name',
+			key: 'id',
 			filterIcon: <FilterTwoTone twoToneColor={COLORS.GREEN} style={{ fontSize: 20 }} />,
 			filteredValue: filteredInfo.name || null,
 			filters: nameFilterValues,
@@ -60,25 +57,15 @@ export default function InstrumentValuation() {
 		setFilteredInfo(filters);
 	};
 
-	const filterByFamilyAndCurrency = () =>
-		instruments.filter((instrument: HoldingInput) =>
-			doesHoldingMatch(instrument, selectedMembers, selectedCurrency)
-		);
-
 	useEffect(
 		() => {
 			if (!instruments.length) return;
-			let filteredData: Array<HoldingInput> = filterByFamilyAndCurrency();
-			if (!filteredData.length) {
-				setFilteredInstruments([ ...[] ]);
-				return;
-			}
-
-			setFilteredInstruments([
-				...filteredData.filter(
-					(instrument: HoldingInput) => selectedAssetTypes.indexOf(instrument.type as string) > -1
-				)
-			]);
+			let filteredData: Array<HoldingInput> = instruments.filter(
+				(instrument: HoldingInput) =>
+					doesHoldingMatch(instrument, selectedMembers, selectedCurrency) &&
+					selectedAssetTypes.indexOf(instrument.type as string) > -1
+			);
+			setFilteredInstruments([ ...filteredData ]);
 		},
 		[ instruments, selectedMembers, selectedCurrency, selectedAssetTypes ]
 	);
