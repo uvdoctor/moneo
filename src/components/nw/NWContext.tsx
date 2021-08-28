@@ -67,6 +67,7 @@ function NWContextProvider() {
 	const [ results, setResults ] = useState<Array<any>>([]);
 	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
 	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
+	const [ loadingRates, setLoadingRates] = useState<boolean>(true);
 	const [ insData, setInsData ] = useState<any>({});
 	const [ ratesData, setRatesData ] = useState<any>({});
 
@@ -198,6 +199,7 @@ function NWContextProvider() {
 				result.forEach((record: CreateEODPricesInput) => (ratesData[record.id] = record.price));
 			}
 			setRatesData(ratesData);
+			setLoadingRates(false);
 		} catch (err) {
 			console.log('Unable to fetch fx, commodities & crypto rates.');
 			return false;
@@ -291,18 +293,19 @@ function NWContextProvider() {
 		let total = 0;
 		instruments.forEach((instrument: HoldingInput) => {
 			if(insData[instrument.id] && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
-				console.log("Going to price: ", instrument.id);
-				console.log(instrument.qty * insData[instrument.id].price);
 				total += instrument.qty * insData[instrument.id].price;
 			}
 		})
-		console.log("Total is: ", total);
 		setTotalInstruments(total);
 	};
 
 	useEffect(() => {
 		priceInstruments();
-	}, [instruments, selectedMembers, selectedCurrency]);
+	}, [selectedMembers, selectedCurrency]);
+
+	useEffect(() => {
+		priceInstruments();
+	}, [instruments]);
 
 	return (
 		<NWContext.Provider
@@ -332,10 +335,12 @@ function NWContextProvider() {
 				setActiveTabSum,
 				loadingFamily,
 				loadingHoldings,
+				loadingRates,
 				currencyList,
 				setCurrencyList,
 				insData,
 				setInsData,
+				ratesData,
 				totalInstruments,
 				setTotalInstruments,
 				totalProperty,

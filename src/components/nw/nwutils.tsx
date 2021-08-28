@@ -174,19 +174,36 @@ export const loadMatchingINExchange = async (isins: Array<string>) => {
 export const loadMatchingINMF = async (isins: Array<string>) => {
 	if(!isins.length) return null;
 	let idList: Array<APIt.ModelINMFFilterInput> = [];
-	const { data: { listINMFs } } = (await API.graphql(graphqlOperation(queries.listInmFs, {limit: 20000, filter: getORIdList(idList, isins)}))) as {
-		data: APIt.ListInmFsQuery;
-	};
-	return listINMFs?.items?.length ? listINMFs.items as Array<APIt.INMF> : null;
+	let returnList: Array<APIt.INMF> = [];
+	let nextToken = null;
+	console.log("Going to execute matching MF query...");
+	do {
+		let variables:any = {limit: 20000, filter: getORIdList(idList, isins)};
+		if(nextToken) variables.nextToken = nextToken;
+		const { data: { listINMFs } } = (await API.graphql(graphqlOperation(queries.listInmFs, variables))) as {
+			data: APIt.ListInmFsQuery;
+		};
+		if(listINMFs?.items?.length) returnList.push(...listINMFs.items as Array<APIt.INMF>);
+		nextToken = listINMFs?.nextToken;
+	} while(nextToken);
+	return returnList.length ? returnList : null;
 }
 
 export const loadMatchingINBond = async (isins: Array<string>) => {
 	if(!isins.length) return null;
 	let idList: Array<APIt.ModelINBondFilterInput> = [];
-	const { data: { listINBonds } } = (await API.graphql(graphqlOperation(queries.listInBonds, {limit: 10000, filter: getORIdList(idList, isins)}))) as {
-		data: APIt.ListInBondsQuery;
-	};
-	return listINBonds?.items?.length ? listINBonds.items as Array<APIt.INBond> : null;
+	let returnList: Array<APIt.INBond> = [];
+	let nextToken = null;
+	do {
+		let variables:any = {limit: 10000, filter: getORIdList(idList, isins)};
+		if(nextToken) variables.nextToken = nextToken;
+		const { data: { listINBonds } } = (await API.graphql(graphqlOperation(queries.listInBonds, variables))) as {
+			data: APIt.ListInBondsQuery;
+		};
+		if(listINBonds?.items?.length) returnList.push(...listINBonds.items as Array<APIt.INBond>);
+		nextToken = listINBonds?.nextToken;
+	} while(nextToken);
+	return returnList.length ? returnList : null;
 }
 
 export const getAssetTypes = () => {
@@ -227,5 +244,18 @@ export const getGoldTypes = () => {
 		18: "18",
 		16: "16",
 		14: "14"
+	}
+}
+
+export const getColourForAssetType = (at: APIt.AssetType) => {
+	switch(at) {
+		case APIt.AssetType.E: 
+			return "#e78284";
+		case APIt.AssetType.F:
+			return "#aa8dfa";
+		case APIt.AssetType.A:
+			return "#7cd9fd";
+		default:
+			return "#fdd0cb";
 	}
 }

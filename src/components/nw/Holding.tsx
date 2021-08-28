@@ -4,10 +4,11 @@ import { DeleteOutlined, EditOutlined, ShoppingCartOutlined, SaveOutlined, Close
 
 import './Holding.less';
 import { toCurrency, toHumanFriendlyCurrency, toReadableNumber } from '../utils';
-import { HoldingInput } from '../../api/goals';
+import { AssetType, HoldingInput } from '../../api/goals';
 import { NWContext } from './NWContext';
 import { useEffect } from 'react';
-import { getAssetSubTypes } from './nwutils';
+import { getAssetSubTypes, getColourForAssetType } from './nwutils';
+import { COLORS } from '../../CONSTANTS';
 
 interface HoldingProp {
 	holding: HoldingInput;
@@ -42,7 +43,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 		<Row className="holding" align="middle" justify="space-between" gutter={[ 5, 5 ]}>
 			{showPrice &&
 			insData[holding.id] && (
-				<Col span={24}>
+				<Col>
 					{insData[holding.id].itype ? (
 						`${insData[holding.id].itype} - `
 					) : holding.id.startsWith('INF') ? (
@@ -64,7 +65,16 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 				</Row>
 			</Col>
 			<Col>
-				<Badge count={holding.id} />
+				<Badge
+					count={holding.id}
+					style={
+						showPrice ? (
+							{ color: COLORS.WHITE, backgroundColor: getColourForAssetType(holding.type as AssetType) }
+						) : (
+							{}
+						)
+					}
+				/>
 			</Col>
 			<Col>
 				<Row align="middle">
