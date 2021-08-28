@@ -73,7 +73,8 @@ export default function UploadHoldings() {
 				if(matchingEntry) {
 					insData[key] = matchingEntry;
 					instrument.name = matchingEntry.name;
-					instrument.type = matchingEntry.type;
+					if(matchingEntry.type) instrument.type = matchingEntry.type;
+					else instrument.type = AssetType.F;
 					instrument.subt = matchingEntry.subt;
 				}
 			}

@@ -270,10 +270,11 @@ type INBond
 	name: String!
 	subt: AssetSubType!
 	price: Float!
-	sm: Int!
-	sy: Int!
-	mm: Int!
-	my: Int!
+	exchg: String!
+	sm: Int
+	sy: Int
+	mm: Int
+	my: Int
 	rate: Float!
 	fr: YN!
 	tf: YN!

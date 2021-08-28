@@ -290,9 +290,13 @@ function NWContextProvider() {
 	const priceInstruments = () => {
 		let total = 0;
 		instruments.forEach((instrument: HoldingInput) => {
-			if(doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) 
-					total += insData[instrument.id] ? instrument.qty * insData[instrument.id].price : 0;
+			if(insData[instrument.id] && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
+				console.log("Going to price: ", instrument.id);
+				console.log(instrument.qty * insData[instrument.id].price);
+				total += instrument.qty * insData[instrument.id].price;
+			}
 		})
+		console.log("Total is: ", total);
 		setTotalInstruments(total);
 	};
 
