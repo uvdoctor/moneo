@@ -23,7 +23,7 @@ import {
 	Property
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
-import PMValuation from './PMValuation';
+import DynamicHoldingInput from './DynamicHoldingInput';
 
 const NWContext = createContext({});
 
@@ -110,7 +110,7 @@ function NWContextProvider() {
 		'Precious Metals': {
 			label: 'Precious Metals',
 			data: preciousMetals,
-			content: <PMValuation />
+			content: <DynamicHoldingInput holdings={preciousMetals} changeHoldings={setPreciousMetals} />
 		},
 		Deposits: {
 			label: 'Deposits',
