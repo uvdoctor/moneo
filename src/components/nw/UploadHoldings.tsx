@@ -6,6 +6,7 @@ import HoldingsTable from "./HoldingsTable";
 import { NWContext } from "./NWContext";
 import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgnore } from "./parseutils";
 import { isMobileDevice } from "../utils";
+import simpleStorage from "simplestorage.js";
 import { AssetSubType, InsType, AssetType, HoldingInput } from "../../api/goals";
 import {
 	cleanAssetName,
@@ -113,10 +114,10 @@ export default function UploadHoldings() {
 		})
 		await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, memberKey, existingInstrMap);
 		let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, memberKey, existingFixedMap);
-		let exchangeLookup = {};
-		if(unmatchedBonds && Object.keys(unmatchedBonds).length) exchangeLookup={...unmatchedBonds, ...equities, ...etfs}
-		else exchangeLookup={...equities, ...etfs};
+		let exchangeLookup = {...equities, etfs};
+		if(unmatchedBonds && Object.keys(unmatchedBonds).length) exchangeLookup={...unmatchedBonds, ...exchangeLookup}
 		await loadInstrumentPrices(loadMatchingINExchange, exchangeLookup, memberKey, existingInstrMap);
+		simpleStorage.set("insData", insData, {TTL: 10000000});
 		setInstruments([...instruments]);
 		setDrawerVisibility(false);
 		setShowInsUpload(false);

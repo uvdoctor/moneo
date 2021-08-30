@@ -24,6 +24,7 @@ import {
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
 import DynamicHoldingInput from './DynamicHoldingInput';
+import simpleStorage from 'simplestorage.js';
 
 const NWContext = createContext({});
 
@@ -249,6 +250,11 @@ function NWContextProvider() {
 	useEffect(() => {
 		initializeFamilyList();
 		initializeFXCommCryptoRates();
+		let localInsData = simpleStorage.get("insData");
+		if(localInsData) {
+			setInsData(localInsData);
+			console.log("Local data saved: ", localInsData);
+		}
 	}, []);
 
 	useEffect(
