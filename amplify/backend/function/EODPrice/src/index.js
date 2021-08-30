@@ -26,8 +26,8 @@ const eodPrice = () => {
             code = code.slice(0, code.lastIndexOf("."));
             break;
         }
-        const dataToAdd = {
-          __typename: "EODPrices",
+        const dataToPush = {
+          __typename: table.slice(0, table.indexOf("-")),
           id: code,
           price: close,
           createdAt: new Date().toISOString(),

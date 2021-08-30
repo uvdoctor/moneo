@@ -14,32 +14,32 @@ const getData = () => {
   return new Promise(async (resolve, reject) => {
     let batches = [];
     let batchRecords = [];
+    let isinMap = {};
     let count = 0;
     const mfInfoArray = await mfData.today();
     const regdirData = directISIN(mfInfoArray);
     const { regularData, directData } = regdirData;
     mfInfoArray.map((element) => {
-      const tidToCompare = element["ISIN Div Reinvestment"];
-      const idToCompare = element["ISIN Div Payout/ ISIN Growth"];
-      const id = idToCompare === "-" ? tidToCompare : idToCompare;
-      const tid = idToCompare === "-" ? idToCompare : tidToCompare;
-
-      if (id === "-" && tid === "-") return;
+      const id = element["ISIN Div Payout/ ISIN Growth"];
+      const price = parseFloat(element["Net Asset Value"]);
       if (
+        id.length < 12 ||
         element["Scheme Type"].includes("ETF") ||
-        element["Scheme Name"].includes("ETF")
+        element["Scheme Name"].includes("ETF") ||
+        Number.isNaN(price) ||
+        isinMap[id]
       )
         return;
       const dataToPush = {
-        __typename: "INMF",
+        __typename: table.slice(0, table.indexOf("-")),
         id: id,
         sid: element["Scheme Code"],
-        tid: tid,
+        tid: element["ISIN Div Reinvestment"],
         dir: getDirISIN(regularData, directData, element),
         name: element["Scheme Name"],
         type: getAssetType(element["Scheme Type"]),
         subt: getAssetSubType(element),
-        price: parseFloat(element["Net Asset Value"]),
+        price: price,
         mftype: mfType(element["Scheme Type"]),
         mcap: mCap(element),
         tf: element["Scheme Name"].includes("Tax") ? "Y" : "N",
@@ -47,8 +47,8 @@ const getData = () => {
         updatedAt: new Date().toISOString(),
       };
 
-      // batches.push({ DeleteRequest: { Key: { id: dataToPush.id } } });
       batches.push({ PutRequest: { Item: dataToPush } });
+      isinMap[id] = id;
       count++;
       if (count === 25) {
         batchRecords.push(batches);
@@ -56,11 +56,14 @@ const getData = () => {
         count = 0;
       }
     });
+
     resolve(batchRecords);
   });
 };
 
 exports.handler = async (event) => {
   const data = await getData();
-  return await pushData(data, table);
+  for (let batch of data) {
+    await pushData(batch, table);
+  }
 };
