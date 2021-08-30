@@ -5,7 +5,6 @@ import { DeleteOutlined, EditOutlined, ShoppingCartOutlined, SaveOutlined, Close
 import './Holding.less';
 import { toCurrency, toHumanFriendlyCurrency, toReadableNumber } from '../utils';
 import { AssetType, HoldingInput } from '../../api/goals';
-import { NWContext } from './NWContext';
 import { useEffect } from 'react';
 import { getAssetSubTypes, getColourForAssetType } from './nwutils';
 import { COLORS } from '../../CONSTANTS';
