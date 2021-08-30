@@ -7,14 +7,15 @@ import { doesHoldingMatch, getAssetTypes } from './nwutils';
 import { toHumanFriendlyCurrency } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
+import { AppContext } from '../AppContext';
 
 export default function InstrumentValuation() {
+	const { insData }: any = useContext(AppContext);
 	const {
 		instruments,
 		setInstruments,
 		selectedMembers,
 		selectedCurrency,
-		insData,
 		totalInstruments
 	}: any = useContext(NWContext);
 	const { CheckableTag } = Tag;

@@ -4,6 +4,7 @@ import * as APIt from '../../api/goals';
 import * as queries from '../../graphql/queries';
 import { ALL_FAMILY } from './FamilyInput';
 import { GOLD } from './NWContext';
+import { getFXRate } from '../utils';
 
 export const createNewItem = async (item: APIt.CreateItemInput) => {
 	try {
@@ -51,13 +52,6 @@ export const loadHoldings = async () => {
 		data: APIt.ListHoldingssQuery;
 	};
 	return listHoldingss && listHoldingss.items?.length ? (listHoldingss.items as Array<APIt.CreateHoldingsInput>)[0] : null;
-};
-
-export const loadFXCommCryptoRates = async () => {
-	const { data: { listEODPricess } } = (await API.graphql(graphqlOperation(queries.listEodPricess))) as {
-		data: APIt.ListEodPricessQuery;
-	};
-	return listEODPricess?.items?.length ? (listEODPricess.items as Array<APIt.CreateEODPricesInput>) : null;
 };
 
 export const addFamilyMember = async (name: string, taxId: string) => {
@@ -262,7 +256,6 @@ export const getColourForAssetType = (at: APIt.AssetType) => {
 
 export const getCommodityRate = (ratesData: any, subtype: string, purity: string, currency: string) => {
 	let rate = subtype === APIt.AssetSubType.Gold ? ratesData[GOLD] : ratesData[subtype];
-	rate *= Number.parseFloat(purity) / (subtype === APIt.AssetSubType.Gold ? 24 : 100);
-	if(ratesData[currency]) rate *= ratesData[currency];
-	return rate;
+	if(!rate) return 0;
+	return rate * getFXRate(ratesData, currency) * Number.parseFloat(purity) / (subtype === APIt.AssetSubType.Gold ? 24 : 100);
 }

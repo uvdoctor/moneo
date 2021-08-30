@@ -3,7 +3,8 @@ import { Button, Upload, Drawer, Tabs, Row, Badge, Col } from "antd";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import HoldingsTable from "./HoldingsTable";
-import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY, NWContext } from "./NWContext";
+import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../AppContext";
+import { NWContext } from "./NWContext";
 import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgnore } from "./parseutils";
 import { isMobileDevice } from "../utils";
 import simpleStorage from "simplestorage.js";
@@ -27,7 +28,8 @@ import {
 import { addFamilyMemberSilently, getFamilyMemberKey, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMutual } from "./nwutils";
 
 export default function UploadHoldings() {
-	const { insData, showInsUpload,
+	const { insData }: any = useContext(AppContext);
+	const { showInsUpload,
 		setShowInsUpload,
 		taxId,
 		setTaxId,
@@ -114,9 +116,11 @@ export default function UploadHoldings() {
 		})
 		await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, memberKey, existingInstrMap);
 		let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, memberKey, existingFixedMap);
-		let exchangeLookup = {...equities, etfs};
-		if(unmatchedBonds && Object.keys(unmatchedBonds).length) exchangeLookup={...unmatchedBonds, ...exchangeLookup}
-		await loadInstrumentPrices(loadMatchingINExchange, exchangeLookup, memberKey, existingInstrMap);
+		if(unmatchedBonds && Object.keys(unmatchedBonds).length) 
+			Object.keys(unmatchedBonds).forEach((key: string) => equities[key] = unmatchedBonds[key]);
+		if(etfs && Object.keys(etfs).length)
+			Object.keys(etfs).forEach((key: string) => equities[key] = etfs[key]);
+		await loadInstrumentPrices(loadMatchingINExchange, equities, memberKey, existingInstrMap);
 		simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
 		setInstruments([...instruments]);
 		setDrawerVisibility(false);

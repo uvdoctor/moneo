@@ -9,6 +9,7 @@ import { NWContext } from './NWContext';
 import { useEffect } from 'react';
 import { getAssetSubTypes, getColourForAssetType } from './nwutils';
 import { COLORS } from '../../CONSTANTS';
+import { AppContext } from '../AppContext';
 
 interface HoldingProp {
 	holding: HoldingInput;
@@ -18,7 +19,7 @@ interface HoldingProp {
 }
 
 export default function Holding({ holding, showPrice, onDelete, onChange }: HoldingProp) {
-	const { insData }: any = useContext(NWContext);
+	const { insData }: any = useContext(AppContext);
 	const [ price, setPrice ] = useState<number>(insData[holding.id] ? insData[holding.id].price : 0);
 	const [ total, setTotal ] = useState<number>(holding.qty * price);
 	const [ isEditMode, setEditMode ] = useState(false);

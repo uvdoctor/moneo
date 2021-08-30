@@ -7,6 +7,7 @@ import { getCommodityRate, getFamilyOptions } from './nwutils';
 import { PlusOutlined, DeleteOutlined, UserOutlined } from '@ant-design/icons';
 import { initOptions, toCurrency } from '../utils';
 import { stringType } from 'aws-sdk/clients/iam';
+import { AppContext } from '../AppContext';
 
 interface DynamicHoldingInputProps {
 	holdings: Array<HoldingInput>;
@@ -14,7 +15,8 @@ interface DynamicHoldingInputProps {
 }
 
 export default function DynamicHoldingInput({ holdings, changeHoldings }: DynamicHoldingInputProps) {
-	const { allFamily, selectedCurrency, ratesData }: any = useContext(NWContext);
+	const { ratesData }: any = useContext(AppContext);
+	const { allFamily, selectedCurrency }: any = useContext(NWContext);
 	const options: any = {
 		[AssetSubType.Gold]: initOptions(8, 16),
 		[SILVER]: {

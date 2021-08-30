@@ -1,11 +1,12 @@
 import { notification } from "antd";
-import React, { createContext, useEffect, useState, ReactNode } from "react";
+import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
 import { CreateGoalInput, GoalType, LMH, UpdateGoalInput } from "../../api/goals";
 import { ASSET_TYPES, ROUTES } from "../../CONSTANTS";
-import { appendValue, getRangeFactor, removeFromArray } from "../utils";
+import { appendValue, getFXRate, removeFromArray } from "../utils";
 import { calculateCFs, findEarliestFFYear, isFFPossible } from "./cfutils";
 import { changeGoal, createNewGoal, deleteGoal, getDuration, getGoalsList } from "./goalutils";
 import { useRouter } from 'next/router';
+import { AppContext } from "../AppContext";
 
 const PlanContext = createContext({});
 
@@ -16,6 +17,7 @@ interface PlanContextProviderProps {
 }
 
 function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderProps) {
+  const { ratesData, appContextLoaded }: any = useContext(AppContext);
   const router = useRouter();
   const isPublicCalc = router.pathname === ROUTES.SET ? false : true;
   const [allGoals, setAllGoals] = useState<Array<CreateGoalInput> | null>([]);
@@ -35,7 +37,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
   const [defaultCurrency, setDefaultCurrency] = useState<string>('USD');
   const nowYear = new Date().getFullYear();
   
-  const getCurrencyFactor = (currency: string) => getRangeFactor(defaultCurrency) / getRangeFactor(currency);
+  const getCurrencyFactor = (currency: string) => getFXRate(ratesData, defaultCurrency) / getFXRate(ratesData, currency);
 
   const loadAllGoals = async () => {
     let goals: Array<CreateGoalInput> | null = await getGoalsList();
@@ -135,7 +137,7 @@ function PlanContextProvider({ children, goal, setGoal }: PlanContextProviderPro
     if (isPublicCalc) {
       setAllGoals([...[]]);
     } else loadAllGoals().then(() => { });
-  }, []);
+  }, [appContextLoaded]);
 
   useEffect(() => {
     if (!ffGoal) return;

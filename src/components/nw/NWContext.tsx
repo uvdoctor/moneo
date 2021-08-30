@@ -8,13 +8,11 @@ import {
 	getCommodityRate,
 	getRelatedCurrencies,
 	loadAllFamilyMembers,
-	loadFXCommCryptoRates,
 	loadHoldings
 } from './nwutils';
 import { notification } from 'antd';
 import {
 	BalanceInput,
-	CreateEODPricesInput,
 	CreateHoldingsInput,
 	DepositInput,
 	HoldingInput,
@@ -24,7 +22,6 @@ import {
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
 import DynamicHoldingInput from './DynamicHoldingInput';
-import simpleStorage from 'simplestorage.js';
 
 const NWContext = createContext({});
 
@@ -32,12 +29,9 @@ export const GOLD = 'GC';
 export const SILVER = 'SI';
 export const PLATINUM = 'PL';
 export const PALLADIUM = 'PA';
-export const LOCAL_INS_DATA_KEY = "insData";
-export const LOCAL_RATES_DATA_KEY = "ratesData";
-export const LOCAL_DATA_TTL = {TTL: 86400000}; //1 day
 
 function NWContextProvider() {
-	const { defaultCurrency, appContextLoaded }: any = useContext(AppContext);
+	const { defaultCurrency, appContextLoaded, insData, ratesData }: any = useContext(AppContext);
 	const [ allFamily, setAllFamily ] = useState<any>({});
 	const [ instruments, setInstruments ] = useState<Array<HoldingInput>>([]);
 	const [ preciousMetals, setPreciousMetals ] = useState<Array<HoldingInput>>([]);
@@ -78,9 +72,6 @@ function NWContextProvider() {
 	const [ results, setResults ] = useState<Array<any>>([]);
 	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
 	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
-	const [ loadingRates, setLoadingRates] = useState<boolean>(true);
-	const [ insData, setInsData ] = useState<any>({});
-	const [ ratesData, setRatesData ] = useState<any>({});
 
 	const tabs = {
 		'Demat Holdings': {
@@ -203,25 +194,6 @@ function NWContextProvider() {
 		}
 	};
 
-	const initializeFXCommCryptoRates = async () => {
-		const ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
-		if(ratesData) {
-			setRatesData(ratesData);
-			return;
-		}
-		try {
-			let result: Array<CreateEODPricesInput> | null = await loadFXCommCryptoRates();
-			if (result && result.length) {
-				result.forEach((record: CreateEODPricesInput) => (ratesData[record.id] = record.price));
-			}
-			setRatesData(ratesData);
-			simpleStorage.put(LOCAL_RATES_DATA_KEY, ratesData, LOCAL_DATA_TTL);
-			setLoadingRates(false);
-		} catch (err) {
-			console.log('Unable to fetch fx, commodities & crypto rates.');
-			return false;
-		}
-	};
 
 	const initializeHoldings = async () => {
 		try {
@@ -258,9 +230,6 @@ function NWContextProvider() {
 
 	useEffect(() => {
 		initializeFamilyList();
-		initializeFXCommCryptoRates();
-		let localInsData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-		if(localInsData) setInsData(localInsData);
 	}, []);
 
 	useEffect(
@@ -368,12 +337,8 @@ function NWContextProvider() {
 				setActiveTabSum,
 				loadingFamily,
 				loadingHoldings,
-				loadingRates,
 				currencyList,
 				setCurrencyList,
-				insData,
-				setInsData,
-				ratesData,
 				totalInstruments,
 				setTotalInstruments,
 				totalProperty,
