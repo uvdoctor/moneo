@@ -40,14 +40,14 @@
         },
         "EODPrice": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/EODPrice-554e46636b3959795577-build.zip",
+          "s3Key": "amplify-builds/EODPrice-6e346259696957687837-build.zip",
           "apiGoalsGraphqlapiendpointoutput": "https://q5jdufebkjfgzn4upyqfi5sjga.appsync-api.us-east-1.amazonaws.com/graphql",
           "apiGoalsGraphqlapiidoutput": "bvyjaqmusfh5zelcbeeji6xxoe",
           "eodApiKey": "6119fe9f8f6d30.56370709,60d03a689523a3.63944368,611a0115bd4cd5.84750550,611a01dc0083c5.19670434,611a020d72d487.59800610"
         },
         "MFPrice": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/MFPrice-786f72614d75546c7145-build.zip"
+          "s3Key": "amplify-builds/MFPrice-7371334a3473514a764a-build.zip"
         },
         "INBond": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",

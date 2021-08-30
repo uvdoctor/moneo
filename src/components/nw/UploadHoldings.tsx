@@ -62,25 +62,32 @@ export default function UploadHoldings() {
 	}
 
 	const loadInstrumentPrices = async (fun: Function, input: any, memberKey: string, existingMap: any) => {
-		if(!input || !Object.keys(input).length || !memberKey) return;
-		let matchingList: Array<any> | null = await fun(Object.keys(input));
+		if(!input || !Object.keys(input).length || !memberKey) return null;
+		let unmatched: any = {};
+		let queryIds: Array<string> = [];
+		Object.keys(input).forEach((key) => {
+			if(!insData[key]) queryIds.push(key);
+		});
+		let matchingList: Array<any> | null = null;
+		if(queryIds.length) matchingList = await fun(queryIds);
 		Object.keys(input).forEach((key) => {
 			let instrument = input[key];
-			if(matchingList && matchingList.length) {
-				let matchingEntry = matchingList?.find((match) => match?.id === key);
-				if(matchingEntry) {
-					insData[key] = matchingEntry;
-					instrument.name = matchingEntry.name;
-					if(matchingEntry.type) instrument.type = matchingEntry.type;
-					else instrument.type = AssetType.F;
-					instrument.subt = matchingEntry.subt;
-				}
-			}
+			let matchingEntry: HoldingInput | null = insData[key] ? insData[key] : null;
+			if(queryIds.indexOf(key) > -1 && matchingList && matchingList.length) 
+				matchingEntry = matchingList?.find((match) => match?.id === key);
+			if(matchingEntry) {
+				insData[key] = matchingEntry;
+				instrument.name = matchingEntry.name;
+				instrument.type = matchingEntry.type;
+				instrument.subt = matchingEntry.subt;
+			} else unmatched[key] = instrument;
+			if(!instrument.type) instrument.type = AssetType.F;
 			instrument.curr = 'INR'
 			instrument.fIds = [memberKey];
 			if(existingMap[instrument.id]) existingMap[instrument.id] = instrument;
 			else instruments.push(instrument);
 		})
+		return unmatched;
 	};
 
 	const addInstruments = async () => {
@@ -94,23 +101,22 @@ export default function UploadHoldings() {
 		setSelectedCurrency(currency);
 		let memberKey = getFamilyMemberKey(allFamily, taxId);
 		if(!memberKey) return;
-		let existingEquitiesMap: any = {};
 		let existingFixedMap: any = {};
 		let existingInstrMap: any = {};
 		instruments.forEach((instrument: HoldingInput) => {
 			if(instrument.curr === currency && instrument.fIds[0] === memberKey) {
-				if(instrument.type === AssetType.E) {
-					existingEquitiesMap[instrument.id] = instrument;
-				} else if(instrument.type === AssetType.F) {
+				if(instrument.type === AssetType.F) {
 					existingFixedMap[instrument.id] = instrument;
 				}
 				existingInstrMap[instrument.id] = instrument;
 			}
 		})
 		await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, memberKey, existingInstrMap);
-		await loadInstrumentPrices(loadMatchingINBond, bonds, memberKey, existingFixedMap);
-		await loadInstrumentPrices(loadMatchingINExchange, equities, memberKey, existingEquitiesMap);
-		await loadInstrumentPrices(loadMatchingINExchange, etfs, memberKey, existingInstrMap);
+		let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, memberKey, existingFixedMap);
+		let exchangeLookup = {};
+		if(unmatchedBonds && Object.keys(unmatchedBonds).length) exchangeLookup={...unmatchedBonds, ...equities, ...etfs}
+		else exchangeLookup={...equities, ...etfs};
+		await loadInstrumentPrices(loadMatchingINExchange, exchangeLookup, memberKey, existingInstrMap);
 		setInstruments([...instruments]);
 		setDrawerVisibility(false);
 		setShowInsUpload(false);
