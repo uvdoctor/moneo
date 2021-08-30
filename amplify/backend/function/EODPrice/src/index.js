@@ -25,9 +25,9 @@ const eodPrice = () => {
             break;
         }
         const dataToAdd = {
+          __typename: "EODPrices",
           id: code,
           price: close,
-          name: code,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };

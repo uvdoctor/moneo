@@ -121,6 +121,7 @@ const calcSchema = (record, codes, schema, typeIdentifier, typeExchg) => {
         schema[key] = record[codes[key]];
     }
   });
+  schema.__typename = "INExchg";
   return schema;
 };
 module.exports = calcSchema;

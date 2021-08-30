@@ -116,6 +116,7 @@ const calcYTM = (record, codes) => {
 const calcSchema = (record, codes, schema, typeExchg, typeIdentifier) => {
   if (!record[codes.id]) return;
   if (record[codes.subt] === "MC") return;
+  schema.__typename = "INBond";
   schema.id = record[codes.id];
   schema.sid = record[codes.sid];
   schema.name = record[codes.name] ? record[codes.name] : record[codes.sid];

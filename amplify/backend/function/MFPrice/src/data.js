@@ -66,14 +66,14 @@ const getDirISIN = (regularData, directData, element) => {
   let name = element["Scheme Name"].toLowerCase().replace(/\s/g, "");
   const checkRegular = regularData.some((item) => item === name);
   if (!checkRegular) {
-    return false;
+    return null;
   }
   let compareRegAndDir = directData.find((item) => name.includes(item.name));
   if (!compareRegAndDir) {
     name = name.substring(0, name.indexOf("regular") + "regular".length);
     compareRegAndDir = directData.find((item) => name.includes(item.name));
     if (!compareRegAndDir) {
-      return false;
+      return null;
     }
   }
   return compareRegAndDir.ISIN;
@@ -85,7 +85,7 @@ const mCap = (element) => {
   if (type.includes("equity") && type.includes("mid")) return "M";
   if (type.includes("equity") && type.includes("small")) return "S";
   if (type.includes("equity")) return "H";
-  return false;
+  return null;
 };
 
 const pushData = async (data, table) => {
@@ -95,6 +95,7 @@ const pushData = async (data, table) => {
       .map((_) => data.splice(0, 25));
 
     result.filter(async (bunch) => {
+      console.log(bunch[0].PutRequest.Item)
       var params = {
         RequestItems: {
           [table]: bunch,

@@ -22,15 +22,14 @@ const getData = () => {
       const id = idToCompare === "-" ? tidToCompare : idToCompare;
       const tid = idToCompare === "-" ? idToCompare : tidToCompare;
 
-      if (id === "-" && tid === "-") {
-        return;
-      } else if (
+      if (id === "-" && tid === "-") return;
+      if (
         element["Scheme Type"].includes("ETF") ||
         element["Scheme Name"].includes("ETF")
-      ) {
+      )
         return;
-      }
       const dataToAdd = {
+        __typename: "INMF",
         id: id,
         sid: element["Scheme Code"],
         tid: tid,
@@ -45,12 +44,12 @@ const getData = () => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-
-      Object.keys(dataToAdd).forEach((key) => {
-        if (dataToAdd[key] === false) {
-          delete dataToAdd[key];
-        }
-      });
+      // Object.keys(dataToAdd).forEach((key) => {
+      //   if (dataToAdd[key] === false) {
+      //     delete dataToAdd[key];
+      //   }
+      // });
+      // mfList.push({ DeleteRequest: { Key: { id: dataToAdd.id } } });
       mfList.push({ PutRequest: { Item: dataToAdd } });
     });
     resolve(mfList);
