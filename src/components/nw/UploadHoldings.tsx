@@ -3,7 +3,7 @@ import { Button, Upload, Drawer, Tabs, Row, Badge, Col } from "antd";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import HoldingsTable from "./HoldingsTable";
-import { NWContext } from "./NWContext";
+import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY, NWContext } from "./NWContext";
 import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgnore } from "./parseutils";
 import { isMobileDevice } from "../utils";
 import simpleStorage from "simplestorage.js";
@@ -117,7 +117,7 @@ export default function UploadHoldings() {
 		let exchangeLookup = {...equities, etfs};
 		if(unmatchedBonds && Object.keys(unmatchedBonds).length) exchangeLookup={...unmatchedBonds, ...exchangeLookup}
 		await loadInstrumentPrices(loadMatchingINExchange, exchangeLookup, memberKey, existingInstrMap);
-		simpleStorage.set("insData", insData, {TTL: 10000000});
+		simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
 		setInstruments([...instruments]);
 		setDrawerVisibility(false);
 		setShowInsUpload(false);

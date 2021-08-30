@@ -32,6 +32,9 @@ export const GOLD = 'GC';
 export const SILVER = 'SI';
 export const PLATINUM = 'PL';
 export const PALLADIUM = 'PA';
+export const LOCAL_INS_DATA_KEY = "insData";
+export const LOCAL_RATES_DATA_KEY = "ratesData";
+export const LOCAL_DATA_TTL = {TTL: 86400000}; //1 day
 
 function NWContextProvider() {
 	const { defaultCurrency, appContextLoaded }: any = useContext(AppContext);
@@ -201,12 +204,18 @@ function NWContextProvider() {
 	};
 
 	const initializeFXCommCryptoRates = async () => {
+		const ratesData = simpleStorage.get(LOCAL_RATES_DATA_KEY);
+		if(ratesData) {
+			setRatesData(ratesData);
+			return;
+		}
 		try {
 			let result: Array<CreateEODPricesInput> | null = await loadFXCommCryptoRates();
 			if (result && result.length) {
 				result.forEach((record: CreateEODPricesInput) => (ratesData[record.id] = record.price));
 			}
 			setRatesData(ratesData);
+			simpleStorage.put(LOCAL_RATES_DATA_KEY, ratesData, LOCAL_DATA_TTL);
 			setLoadingRates(false);
 		} catch (err) {
 			console.log('Unable to fetch fx, commodities & crypto rates.');
@@ -250,11 +259,8 @@ function NWContextProvider() {
 	useEffect(() => {
 		initializeFamilyList();
 		initializeFXCommCryptoRates();
-		let localInsData = simpleStorage.get("insData");
-		if(localInsData) {
-			setInsData(localInsData);
-			console.log("Local data saved: ", localInsData);
-		}
+		let localInsData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+		if(localInsData) setInsData(localInsData);
 	}, []);
 
 	useEffect(
