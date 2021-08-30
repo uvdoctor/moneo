@@ -9,7 +9,7 @@ const {
   pushData,
   mCap,
 } = dataInfo;
-const table = "INMF-bvyjaqmusfh5zelcbeeji6xxoe-dev";
+const table = "INMutual-bvyjaqmusfh5zelcbeeji6xxoe-dev";
 const getData = () => {
   return new Promise(async (resolve, reject) => {
     let batches = [];
@@ -18,7 +18,6 @@ const getData = () => {
     const mfInfoArray = await mfData.today();
     const regdirData = directISIN(mfInfoArray);
     const { regularData, directData } = regdirData;
-    const mfList = [];
     mfInfoArray.map((element) => {
       const tidToCompare = element["ISIN Div Reinvestment"];
       const idToCompare = element["ISIN Div Payout/ ISIN Growth"];
@@ -48,6 +47,7 @@ const getData = () => {
         updatedAt: new Date().toISOString(),
       };
 
+      // batches.push({ DeleteRequest: { Key: { id: dataToPush.id } } });
       batches.push({ PutRequest: { Item: dataToPush } });
       count++;
       if (count === 25) {

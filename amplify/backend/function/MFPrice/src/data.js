@@ -91,6 +91,7 @@ const mCap = (element) => {
 const pushData = async (data, table) => {
   return new Promise((resolve, reject) => {
     data.filter(async (bunch) => {
+      
       var params = {
         RequestItems: {
           [table]: bunch,
