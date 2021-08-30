@@ -32,7 +32,7 @@ const pushData = async (data, table) => {
     const result = new Array(Math.ceil(data.length / 25))
       .fill()
       .map((_) => data.splice(0, 25));
-    
+
     result.filter(async (bunch) => {
       var params = {
         RequestItems: {
