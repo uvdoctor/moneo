@@ -1134,7 +1134,7 @@ export type DeleteINBondInput = {
   id: string,
 };
 
-export type CreateINMFInput = {
+export type CreateINMutualInput = {
   id: string,
   sid: string,
   tid?: string | null,
@@ -1155,7 +1155,7 @@ export enum MFSchemeType {
 }
 
 
-export type ModelINMFConditionInput = {
+export type ModelINMutualConditionInput = {
   sid?: ModelStringInput | null,
   tid?: ModelStringInput | null,
   dir?: ModelStringInput | null,
@@ -1166,9 +1166,9 @@ export type ModelINMFConditionInput = {
   mftype?: ModelMFSchemeTypeInput | null,
   mcap?: ModelMCapInput | null,
   tf?: ModelYNInput | null,
-  and?: Array< ModelINMFConditionInput | null > | null,
-  or?: Array< ModelINMFConditionInput | null > | null,
-  not?: ModelINMFConditionInput | null,
+  and?: Array< ModelINMutualConditionInput | null > | null,
+  or?: Array< ModelINMutualConditionInput | null > | null,
+  not?: ModelINMutualConditionInput | null,
 };
 
 export type ModelMFSchemeTypeInput = {
@@ -1176,8 +1176,8 @@ export type ModelMFSchemeTypeInput = {
   ne?: MFSchemeType | null,
 };
 
-export type INMF = {
-  __typename: "INMF",
+export type INMutual = {
+  __typename: "INMutual",
   id?: string,
   sid?: string,
   tid?: string | null,
@@ -1193,7 +1193,7 @@ export type INMF = {
   updatedAt?: string,
 };
 
-export type UpdateINMFInput = {
+export type UpdateINMutualInput = {
   id: string,
   sid?: string | null,
   tid?: string | null,
@@ -1207,7 +1207,7 @@ export type UpdateINMFInput = {
   tf?: YN | null,
 };
 
-export type DeleteINMFInput = {
+export type DeleteINMutualInput = {
   id: string,
 };
 
@@ -1510,7 +1510,7 @@ export type ModelINBondConnection = {
   nextToken?: string | null,
 };
 
-export type ModelINMFFilterInput = {
+export type ModelINMutualFilterInput = {
   id?: ModelStringInput | null,
   sid?: ModelStringInput | null,
   tid?: ModelStringInput | null,
@@ -1522,14 +1522,14 @@ export type ModelINMFFilterInput = {
   mftype?: ModelMFSchemeTypeInput | null,
   mcap?: ModelMCapInput | null,
   tf?: ModelYNInput | null,
-  and?: Array< ModelINMFFilterInput | null > | null,
-  or?: Array< ModelINMFFilterInput | null > | null,
-  not?: ModelINMFFilterInput | null,
+  and?: Array< ModelINMutualFilterInput | null > | null,
+  or?: Array< ModelINMutualFilterInput | null > | null,
+  not?: ModelINMutualFilterInput | null,
 };
 
-export type ModelINMFConnection = {
-  __typename: "ModelINMFConnection",
-  items?:  Array<INMF | null > | null,
+export type ModelINMutualConnection = {
+  __typename: "ModelINMutualConnection",
+  items?:  Array<INMutual | null > | null,
   nextToken?: string | null,
 };
 
@@ -3240,14 +3240,14 @@ export type DeleteInBondMutation = {
   } | null,
 };
 
-export type CreateInmfMutationVariables = {
-  input?: CreateINMFInput,
-  condition?: ModelINMFConditionInput | null,
+export type CreateInMutualMutationVariables = {
+  input?: CreateINMutualInput,
+  condition?: ModelINMutualConditionInput | null,
 };
 
-export type CreateInmfMutation = {
-  createINMF?:  {
-    __typename: "INMF",
+export type CreateInMutualMutation = {
+  createINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,
@@ -3264,14 +3264,14 @@ export type CreateInmfMutation = {
   } | null,
 };
 
-export type UpdateInmfMutationVariables = {
-  input?: UpdateINMFInput,
-  condition?: ModelINMFConditionInput | null,
+export type UpdateInMutualMutationVariables = {
+  input?: UpdateINMutualInput,
+  condition?: ModelINMutualConditionInput | null,
 };
 
-export type UpdateInmfMutation = {
-  updateINMF?:  {
-    __typename: "INMF",
+export type UpdateInMutualMutation = {
+  updateINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,
@@ -3288,14 +3288,14 @@ export type UpdateInmfMutation = {
   } | null,
 };
 
-export type DeleteInmfMutationVariables = {
-  input?: DeleteINMFInput,
-  condition?: ModelINMFConditionInput | null,
+export type DeleteInMutualMutationVariables = {
+  input?: DeleteINMutualInput,
+  condition?: ModelINMutualConditionInput | null,
 };
 
-export type DeleteInmfMutation = {
-  deleteINMF?:  {
-    __typename: "INMF",
+export type DeleteInMutualMutation = {
+  deleteINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,
@@ -4447,13 +4447,13 @@ export type ListInBondsQuery = {
   } | null,
 };
 
-export type GetInmfQueryVariables = {
+export type GetInMutualQueryVariables = {
   id?: string,
 };
 
-export type GetInmfQuery = {
-  getINMF?:  {
-    __typename: "INMF",
+export type GetInMutualQuery = {
+  getINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,
@@ -4470,19 +4470,19 @@ export type GetInmfQuery = {
   } | null,
 };
 
-export type ListInmFsQueryVariables = {
+export type ListInMutualsQueryVariables = {
   id?: string | null,
-  filter?: ModelINMFFilterInput | null,
+  filter?: ModelINMutualFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListInmFsQuery = {
-  listINMFs?:  {
-    __typename: "ModelINMFConnection",
+export type ListInMutualsQuery = {
+  listINMutuals?:  {
+    __typename: "ModelINMutualConnection",
     items?:  Array< {
-      __typename: "INMF",
+      __typename: "INMutual",
       id: string,
       sid: string,
       tid?: string | null,
@@ -6135,9 +6135,9 @@ export type OnDeleteInBondSubscription = {
   } | null,
 };
 
-export type OnCreateInmfSubscription = {
-  onCreateINMF?:  {
-    __typename: "INMF",
+export type OnCreateInMutualSubscription = {
+  onCreateINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,
@@ -6154,9 +6154,9 @@ export type OnCreateInmfSubscription = {
   } | null,
 };
 
-export type OnUpdateInmfSubscription = {
-  onUpdateINMF?:  {
-    __typename: "INMF",
+export type OnUpdateInMutualSubscription = {
+  onUpdateINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,
@@ -6173,9 +6173,9 @@ export type OnUpdateInmfSubscription = {
   } | null,
 };
 
-export type OnDeleteInmfSubscription = {
-  onDeleteINMF?:  {
-    __typename: "INMF",
+export type OnDeleteInMutualSubscription = {
+  onDeleteINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,

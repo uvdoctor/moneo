@@ -3,9 +3,9 @@ import { API, graphqlOperation } from 'aws-amplify';
 import * as APIt from '../../api/goals';
 import * as queries from '../../graphql/queries';
 import { ALL_FAMILY } from './FamilyInput';
+import { GOLD } from './NWContext';
 
 export const createNewItem = async (item: APIt.CreateItemInput) => {
-	console.log('Going to create item...', item);
 	try {
 		const { data } = (await API.graphql(graphqlOperation(mutations.createItem, { input: item }))) as {
 			data: APIt.CreateItemMutation;
@@ -19,7 +19,6 @@ export const createNewItem = async (item: APIt.CreateItemInput) => {
 };
 
 export const createNewAccount = async (account: APIt.CreateAccountInput) => {
-	console.log('Going to create account...', account);
 	try {
 		const { data } = (await API.graphql(graphqlOperation(mutations.createAccount, { input: account }))) as {
 			data: APIt.CreateAccountMutation;
@@ -173,20 +172,19 @@ export const loadMatchingINExchange = async (isins: Array<string>) => {
 	return listINExchgs?.items?.length ? listINExchgs.items as Array<APIt.INExchg> : null;
 }
 
-export const loadMatchingINMF = async (isins: Array<string>) => {
+export const loadMatchingINMutual = async (isins: Array<string>) => {
 	if(!isins.length) return null;
-	let idList: Array<APIt.ModelINMFFilterInput> = [];
-	let returnList: Array<APIt.INMF> = [];
+	let idList: Array<APIt.ModelINMutualFilterInput> = [];
+	let returnList: Array<APIt.INMutual> = [];
 	let nextToken = null;
-	console.log("Going to execute matching MF query...");
 	do {
 		let variables:any = {limit: 20000, filter: getORIdList(idList, isins)};
 		if(nextToken) variables.nextToken = nextToken;
-		const { data: { listINMFs } } = (await API.graphql(graphqlOperation(queries.listInmFs, variables))) as {
-			data: APIt.ListInmFsQuery;
+		const { data: { listINMutuals } } = (await API.graphql(graphqlOperation(queries.listInMutuals, variables))) as {
+			data: APIt.ListInMutualsQuery;
 		};
-		if(listINMFs?.items?.length) returnList.push(...listINMFs.items as Array<APIt.INMF>);
-		nextToken = listINMFs?.nextToken;
+		if(listINMutuals?.items?.length) returnList.push(...listINMutuals.items as Array<APIt.INMutual>);
+		nextToken = listINMutuals?.nextToken;
 	} while(nextToken);
 	return returnList.length ? returnList : null;
 }
@@ -260,4 +258,11 @@ export const getColourForAssetType = (at: APIt.AssetType) => {
 		default:
 			return "#fdd0cb";
 	}
+}
+
+export const getCommodityRate = (ratesData: any, subtype: string, purity: string, currency: string) => {
+	let rate = subtype === APIt.AssetSubType.Gold ? ratesData[GOLD] : ratesData[subtype];
+	rate *= Number.parseFloat(purity) / (subtype === APIt.AssetSubType.Gold ? 24 : 100);
+	if(ratesData[currency]) rate *= ratesData[currency];
+	return rate;
 }

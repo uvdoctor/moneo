@@ -6,7 +6,7 @@ import HoldingsTable from "./HoldingsTable";
 import { NWContext } from "./NWContext";
 import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgnore } from "./parseutils";
 import { isMobileDevice } from "../utils";
-import { AssetSubType, InsType, AssetType } from "../../api/goals";
+import { AssetSubType, InsType, AssetType, HoldingInput } from "../../api/goals";
 import {
 	cleanAssetName,
 	completeRecord,
@@ -23,7 +23,7 @@ import {
 	getNumberAtEnd,
 	removeDuplicates,
 } from "../utils";
-import { addFamilyMemberSilently, getFamilyMemberKey, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMF } from "./nwutils";
+import { addFamilyMemberSilently, getFamilyMemberKey, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMutual } from "./nwutils";
 
 export default function UploadHoldings() {
 	const { insData, showInsUpload,
@@ -61,10 +61,8 @@ export default function UploadHoldings() {
 		setDrawerVisibility(true);
 	}
 
-	const loadInstrumentPrices = async (fun: Function, input: any, taxId: string) => {
-		if(!input || !Object.keys(input).length) return;
-		let memberKey = getFamilyMemberKey(allFamily, taxId);
-		if(!memberKey) return;
+	const loadInstrumentPrices = async (fun: Function, input: any, memberKey: string, existingMap: any) => {
+		if(!input || !Object.keys(input).length || !memberKey) return;
 		let matchingList: Array<any> | null = await fun(Object.keys(input));
 		Object.keys(input).forEach((key) => {
 			let instrument = input[key];
@@ -80,24 +78,39 @@ export default function UploadHoldings() {
 			}
 			instrument.curr = 'INR'
 			instrument.fIds = [memberKey];
-			instruments.push(instrument);
+			if(existingMap[instrument.id]) existingMap[instrument.id] = instrument;
+			else instruments.push(instrument);
 		})
 	};
 
 	const addInstruments = async () => {
 		if(!taxId) return;
 		addFamilyMemberSilently(allFamily, setAllFamily, taxId);
-		//let instruments = filterExistingTaxIdEntries();
 		let currency = 'INR';
 		if(!currencyList[currency]) {
 			currencyList[currency] = currency;
 			setCurrencyList(currencyList);
 		}
 		setSelectedCurrency(currency);
-		await loadInstrumentPrices(loadMatchingINMF, mutualFunds, taxId);
-		await loadInstrumentPrices(loadMatchingINBond, bonds, taxId);
-		await loadInstrumentPrices(loadMatchingINExchange, equities, taxId);
-		await loadInstrumentPrices(loadMatchingINExchange, etfs, taxId);
+		let memberKey = getFamilyMemberKey(allFamily, taxId);
+		if(!memberKey) return;
+		let existingEquitiesMap: any = {};
+		let existingFixedMap: any = {};
+		let existingInstrMap: any = {};
+		instruments.forEach((instrument: HoldingInput) => {
+			if(instrument.curr === currency && instrument.fIds[0] === memberKey) {
+				if(instrument.type === AssetType.E) {
+					existingEquitiesMap[instrument.id] = instrument;
+				} else if(instrument.type === AssetType.F) {
+					existingFixedMap[instrument.id] = instrument;
+				}
+				existingInstrMap[instrument.id] = instrument;
+			}
+		})
+		await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, memberKey, existingInstrMap);
+		await loadInstrumentPrices(loadMatchingINBond, bonds, memberKey, existingFixedMap);
+		await loadInstrumentPrices(loadMatchingINExchange, equities, memberKey, existingEquitiesMap);
+		await loadInstrumentPrices(loadMatchingINExchange, etfs, memberKey, existingInstrMap);
 		setInstruments([...instruments]);
 		setDrawerVisibility(false);
 		setShowInsUpload(false);

@@ -6,7 +6,7 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 interface SelectInputProps {
 	disabled?: boolean;
 	info?: string;
-	pre: string;
+	pre: string | ReactNode;
 	post?: ReactNode;
 	options?: any;
 	value: string | number;
