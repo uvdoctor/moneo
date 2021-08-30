@@ -1406,9 +1406,9 @@ export const onDeleteInBond = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInmf = /* GraphQL */ `
-  subscription OnCreateInmf {
-    onCreateINMF {
+export const onCreateInMutual = /* GraphQL */ `
+  subscription OnCreateInMutual {
+    onCreateINMutual {
       id
       sid
       tid
@@ -1425,9 +1425,9 @@ export const onCreateInmf = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateInmf = /* GraphQL */ `
-  subscription OnUpdateInmf {
-    onUpdateINMF {
+export const onUpdateInMutual = /* GraphQL */ `
+  subscription OnUpdateInMutual {
+    onUpdateINMutual {
       id
       sid
       tid
@@ -1444,9 +1444,9 @@ export const onUpdateInmf = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteInmf = /* GraphQL */ `
-  subscription OnDeleteInmf {
-    onDeleteINMF {
+export const onDeleteInMutual = /* GraphQL */ `
+  subscription OnDeleteInMutual {
+    onDeleteINMutual {
       id
       sid
       tid

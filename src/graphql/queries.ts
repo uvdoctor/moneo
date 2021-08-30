@@ -966,9 +966,9 @@ export const listInBonds = /* GraphQL */ `
     }
   }
 `;
-export const getInmf = /* GraphQL */ `
-  query GetInmf($id: String!) {
-    getINMF(id: $id) {
+export const getInMutual = /* GraphQL */ `
+  query GetInMutual($id: String!) {
+    getINMutual(id: $id) {
       id
       sid
       tid
@@ -985,15 +985,15 @@ export const getInmf = /* GraphQL */ `
     }
   }
 `;
-export const listInmFs = /* GraphQL */ `
-  query ListInmFs(
+export const listInMutuals = /* GraphQL */ `
+  query ListInMutuals(
     $id: String
-    $filter: ModelINMFFilterInput
+    $filter: ModelINMutualFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listINMFs(
+    listINMutuals(
       id: $id
       filter: $filter
       limit: $limit

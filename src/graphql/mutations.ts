@@ -1514,12 +1514,12 @@ export const deleteInBond = /* GraphQL */ `
     }
   }
 `;
-export const createInmf = /* GraphQL */ `
-  mutation CreateInmf(
-    $input: CreateINMFInput!
-    $condition: ModelINMFConditionInput
+export const createInMutual = /* GraphQL */ `
+  mutation CreateInMutual(
+    $input: CreateINMutualInput!
+    $condition: ModelINMutualConditionInput
   ) {
-    createINMF(input: $input, condition: $condition) {
+    createINMutual(input: $input, condition: $condition) {
       id
       sid
       tid
@@ -1536,12 +1536,12 @@ export const createInmf = /* GraphQL */ `
     }
   }
 `;
-export const updateInmf = /* GraphQL */ `
-  mutation UpdateInmf(
-    $input: UpdateINMFInput!
-    $condition: ModelINMFConditionInput
+export const updateInMutual = /* GraphQL */ `
+  mutation UpdateInMutual(
+    $input: UpdateINMutualInput!
+    $condition: ModelINMutualConditionInput
   ) {
-    updateINMF(input: $input, condition: $condition) {
+    updateINMutual(input: $input, condition: $condition) {
       id
       sid
       tid
@@ -1558,12 +1558,12 @@ export const updateInmf = /* GraphQL */ `
     }
   }
 `;
-export const deleteInmf = /* GraphQL */ `
-  mutation DeleteInmf(
-    $input: DeleteINMFInput!
-    $condition: ModelINMFConditionInput
+export const deleteInMutual = /* GraphQL */ `
+  mutation DeleteInMutual(
+    $input: DeleteINMutualInput!
+    $condition: ModelINMutualConditionInput
   ) {
-    deleteINMF(input: $input, condition: $condition) {
+    deleteINMutual(input: $input, condition: $condition) {
       id
       sid
       tid

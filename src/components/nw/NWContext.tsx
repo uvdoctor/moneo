@@ -5,6 +5,7 @@ import { AppContext } from '../AppContext';
 import {
 	doesHoldingMatch,
 	doesMemberMatch,
+	getCommodityRate,
 	getRelatedCurrencies,
 	loadAllFamilyMembers,
 	loadFXCommCryptoRates,
@@ -12,7 +13,6 @@ import {
 } from './nwutils';
 import { notification } from 'antd';
 import {
-	AssetSubType,
 	BalanceInput,
 	CreateEODPricesInput,
 	CreateHoldingsInput,
@@ -299,11 +299,8 @@ function NWContextProvider() {
 	const pricePM = () => {
 		let total = 0;
 		preciousMetals.forEach((instrument: HoldingInput) => {
-			let rate = instrument.subt === AssetSubType.Gold ? ratesData[GOLD] : ratesData[instrument.subt as string];
-			if(rate && doesMemberMatch(instrument, selectedMembers)) {
-				if(ratesData[selectedCurrency]) rate *= ratesData[selectedCurrency];
-				total += instrument.qty * rate;
-			}
+			let rate = getCommodityRate(ratesData, instrument.subt as string, instrument.name as string, selectedCurrency);
+			if(rate && doesMemberMatch(instrument, selectedMembers)) total += instrument.qty * rate;
 		})
 		setTotalPM(total);
 	};
