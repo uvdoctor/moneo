@@ -79,6 +79,7 @@ const extractDataFromCSV = async (
           );
           const dataToPush = JSON.parse(JSON.stringify(updateSchema));
           batches.push({ PutRequest: { Item: dataToPush } });
+
           count++;
           if (count === 25) {
             batchRecords.push(batches);
@@ -108,6 +109,7 @@ const extractDataFromCSV = async (
 const pushData = async (data, table, instrumentList) => {
   return new Promise((resolve, reject) => {
     data.filter(async (bunch) => {
+      bunch.map((item) => instrumentList.push(item.PutRequest.Item.id));
       var params = {
         RequestItems: {
           [table]: bunch,
@@ -115,7 +117,6 @@ const pushData = async (data, table, instrumentList) => {
       };
       try {
         const updateRecord = await docClient.batchWrite(params).promise();
-        bunch.map((item) => instrumentList.push(item.PutRequest.Item.id));
         resolve(updateRecord);
       } catch (error) {
         reject(`Error in dynamoDB: ${JSON.stringify(error)}`);

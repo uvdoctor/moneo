@@ -90,21 +90,16 @@ const mCap = (element) => {
 
 const pushData = async (data, table) => {
   return new Promise((resolve, reject) => {
-    const result = new Array(Math.ceil(data.length / 25))
-      .fill()
-      .map((_) => data.splice(0, 25));
-
-    result.filter(async (bunch) => {
-      console.log(bunch[0].PutRequest.Item)
+    data.filter(async (bunch) => {
       var params = {
         RequestItems: {
           [table]: bunch,
         },
       };
       try {
-        const details = await docClient.batchWrite(params).promise();
-        console.log(details);
-        resolve(details);
+        const updateRecord = await docClient.batchWrite(params).promise();
+        console.log(updateRecord);
+        resolve(updateRecord);
       } catch (error) {
         reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
       }

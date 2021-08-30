@@ -113,7 +113,7 @@ const calcYTM = (record, codes) => {
   return ytmFinal;
 };
 
-const calcSchema = (record, codes, schema, typeExchg, typeIdentifier) => {
+const calcSchema = (record, codes, schema, typeIdentifier, typeExchg) => {
   if (!record[codes.id]) return;
   if (record[codes.subt] === "MC") return;
   schema.__typename = "INBond";
@@ -131,7 +131,7 @@ const calcSchema = (record, codes, schema, typeExchg, typeIdentifier) => {
   schema.tf = calc.calcTF(record[codes.subt]);
   schema.cr = calc.calcCR(record[codes.crstr]);
   const reset = record[codes.rate];
-  schema.rate = reset.includes("RESET") || reset >= 20 ? 0 : reset;
+  schema.rate = reset.includes("RESET") || reset >20 ? 0 : parseFloat(reset);
   schema.fv = 100;
   schema.ytm = calcYTM(record, codes, record[codes.rate]);
   schema.createdAt = new Date().toISOString();

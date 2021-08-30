@@ -60,6 +60,8 @@ const extractDataFromCSV = async (
 ) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
+    let batchRecords = [];
+    let count = 0;
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
@@ -71,21 +73,27 @@ const extractDataFromCSV = async (
             record,
             codes,
             schema,
-            typeExchg,
-            typeIdentifier
+            typeIdentifier,
+            typeExchg
           );
           if (!updateSchema) return;
           const dataToPush = JSON.parse(JSON.stringify(updateSchema));
           batches.push({ PutRequest: { Item: dataToPush } });
+
+          count++;
+          if (count === 25) {
+            batchRecords.push(batches);
+            batches = [];
+            count = 0;
+          }
         }
       })
       .on("end", async () => {
-        batches.map((item) => instrumentList.push(item.PutRequest.Item.id));
         await cleanDirectory(
           tempDir,
           `${typeIdentifier} results extracted successfully and directory is cleaned`
         );
-        resolve(batches);
+        resolve(batchRecords);
       })
       .on("error", (err) => {
         cleanDirectory(
@@ -98,20 +106,18 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const pushData = async (data, table) => {
+const pushData = async (data, table, instrumentList) => {
   return new Promise((resolve, reject) => {
-    const result = new Array(Math.ceil(data.length / 25))
-      .fill()
-      .map((_) => data.splice(0, 25));
-
-    result.filter(async (bunch) => {
+    data.filter(async (bunch) => {
+      bunch.map((item) => instrumentList.push(item.PutRequest.Item.id));
       var params = {
         RequestItems: {
           [table]: bunch,
         },
       };
       try {
-        resolve(await docClient.batchWrite(params).promise());
+        const updateRecord = await docClient.batchWrite(params).promise();
+        resolve(updateRecord);
       } catch (error) {
         reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
       }

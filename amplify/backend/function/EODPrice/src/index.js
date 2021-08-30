@@ -5,7 +5,9 @@ const { getData, pushData } = eodData;
 const table = "EODPrices-bvyjaqmusfh5zelcbeeji6xxoe-dev";
 const eodPrice = () => {
   return new Promise(async (resolve, reject) => {
-    const eodList = [];
+    let batches = [];
+    let batchRecords = [];
+    let count = 0;
     await Promise.all(
       apiToCall.map(async (element) => {
         index = 0;
@@ -31,10 +33,16 @@ const eodPrice = () => {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
-        eodList.push({ PutRequest: { Item: dataToAdd } });
+        batches.push({ PutRequest: { Item: dataToPush } });
+        count++;
+        if (count === 25) {
+          batchRecords.push(batches);
+          batches = [];
+          count = 0;
+        }
       })
     );
-    resolve(eodList);
+    resolve(batchRecords);
   });
 };
 

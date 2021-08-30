@@ -12,6 +12,9 @@ const {
 const table = "INMF-bvyjaqmusfh5zelcbeeji6xxoe-dev";
 const getData = () => {
   return new Promise(async (resolve, reject) => {
+    let batches = [];
+    let batchRecords = [];
+    let count = 0;
     const mfInfoArray = await mfData.today();
     const regdirData = directISIN(mfInfoArray);
     const { regularData, directData } = regdirData;
@@ -28,7 +31,7 @@ const getData = () => {
         element["Scheme Name"].includes("ETF")
       )
         return;
-      const dataToAdd = {
+      const dataToPush = {
         __typename: "INMF",
         id: id,
         sid: element["Scheme Code"],
@@ -44,15 +47,16 @@ const getData = () => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-      // Object.keys(dataToAdd).forEach((key) => {
-      //   if (dataToAdd[key] === false) {
-      //     delete dataToAdd[key];
-      //   }
-      // });
-      // mfList.push({ DeleteRequest: { Key: { id: dataToAdd.id } } });
-      mfList.push({ PutRequest: { Item: dataToAdd } });
+
+      batches.push({ PutRequest: { Item: dataToPush } });
+      count++;
+      if (count === 25) {
+        batchRecords.push(batches);
+        batches = [];
+        count = 0;
+      }
     });
-    resolve(mfList);
+    resolve(batchRecords);
   });
 };
 

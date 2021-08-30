@@ -40,7 +40,7 @@ const getAndPushData = () => {
           calcSchema,
           instrumentList
         );
-        const details = await pushData(data, table);
+        const details = await pushData(data, table, instrumentList);
         console.log(details);
       } catch (err) {
         reject(err);
