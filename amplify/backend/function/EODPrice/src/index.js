@@ -2,7 +2,7 @@ const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
 const { getData, pushData } = eodData;
-
+const table = "EODPrices-bvyjaqmusfh5zelcbeeji6xxoe-dev";
 const eodPrice = () => {
   return new Promise(async (resolve, reject) => {
     const eodList = [];
@@ -14,7 +14,7 @@ const eodPrice = () => {
 
         switch (element.type) {
           case commodityAbbr:
-            close = (close / 31.1).toFixed(2);
+            close = Number((close / 31.1).toFixed(2));
             code = code.slice(0, code.lastIndexOf("."));
             break;
           case cryptoAbbr:
@@ -24,8 +24,14 @@ const eodPrice = () => {
             code = code.slice(0, code.lastIndexOf("."));
             break;
         }
-        let data = { code, close };
-        eodList.push(data);
+        const dataToAdd = {
+          id: code,
+          price: close,
+          name: code,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        eodList.push({ PutRequest: { Item: dataToAdd } });
       })
     );
     resolve(eodList);
@@ -34,5 +40,5 @@ const eodPrice = () => {
 
 exports.handler = async (event) => {
   let data = await eodPrice();
-  return await pushData(data);
+  return await pushData(data, table);
 };

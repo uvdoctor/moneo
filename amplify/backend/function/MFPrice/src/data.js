@@ -1,5 +1,4 @@
-const graphqlOperation = require("./operation");
-
+const docClient = require("./insertIntoDB");
 const getAssetType = (data) => {
   if (data.includes("Hybrid")) return "H";
   if (
@@ -89,32 +88,26 @@ const mCap = (element) => {
   return false;
 };
 
-const executeMutation = async (mutation, input) => {
-  return await graphqlOperation({ input: input }, mutation);
-};
-
-const pushData = (data) => {
-  let instrumentData = { updatedIDs: [], errorIDs: [] };
-  return new Promise(async (resolve, reject) => {
-    for (let i = 0; i < data.length; i++) {
+const pushData = async (data, table) => {
+  return new Promise((resolve, reject) => {
+    const result = new Array(Math.ceil(data.length / 25))
+      .fill()
+      .map((_) => data.splice(0, 25));
+    
+    result.filter(async (bunch) => {
+      var params = {
+        RequestItems: {
+          [table]: bunch,
+        },
+      };
       try {
-        const updatedData = await executeMutation("UpdateInmf", data[i]);
-        if (!updatedData.body.data.updateINMF) {
-          await executeMutation("CreateInmf", data[i]);
-        }
-        // console.log(updatedData.body.data);
-        updatedData.body.errors
-          ? instrumentData.errorIDs.push({
-              id: data[i].id,
-              error: updatedData.body.errors,
-            })
-          : instrumentData.updatedIDs.push(data[i]);
-      } catch (err) {
-        console.log(err);
+        const details = await docClient.batchWrite(params).promise();
+        console.log(details);
+        resolve(details);
+      } catch (error) {
+        reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
       }
-    }
-    console.log(instrumentData);
-    resolve(instrumentData);
+    });
   });
 };
 

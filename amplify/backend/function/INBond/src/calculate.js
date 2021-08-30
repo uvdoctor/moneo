@@ -97,7 +97,9 @@ const calc = {
   },
 };
 
-const calcYTM = (record, codes, rate) => {
+const calcYTM = (record, codes) => {
+  const reset = record[codes.rate];
+  const rate = reset.includes("RESET") || reset >= 20 ? 0 : reset;
   const fv = 100;
   const matrMonth = calc.calcMM(record[codes.mDate]);
   const matrYear = calc.calcMY(record[codes.mDate]);
@@ -114,48 +116,25 @@ const calcYTM = (record, codes, rate) => {
 const calcSchema = (record, codes, schema, typeExchg, typeIdentifier) => {
   if (!record[codes.id]) return;
   if (record[codes.subt] === "MC") return;
-  Object.keys(schema).map((key) => {
-    switch (key) {
-      case "name":
-        return (schema.name = record[codes.name]
-          ? record[codes.name]
-          : record[codes.sid]);
-      case "price":
-        return (schema.price = calc.calcPrice(record[codes.price]));
-      case "subt":
-        return (schema.subt = calc.calcSubType(record[codes.subt]));
-      case "exchg":
-        return (schema.exchg = typeExchg);
-      case "sm":
-        return (schema.sm = calc.calcSM(record[codes.sDate]));
-      case "sy":
-        return (schema.sy = calc.calcSY(record[codes.sDate]));
-      case "mm":
-        return (schema.mm = calc.calcMM(record[codes.mDate]));
-      case "my":
-        return (schema.my = calc.calcMY(record[codes.mDate]));
-      case "fr":
-        return (schema.fr = calc.calcFR(record[codes.frate]));
-      case "tf":
-        return (schema.tf = calc.calcTF(record[codes.subt]));
-      case "cr":
-        return (schema.cr = calc.calcCR(record[codes.crstr]));
-      case "rate":
-        const reset = record[codes.rate];
-        return (schema.rate =
-          reset.includes("RESET") || reset >= 20 ? 0 : reset);
-      case "fv":
-        return (schema.fv = 100);
-      case "ytm":
-        return (schema.ytm = calcYTM(record, codes, record[codes.rate]));
-      case "createdAt":
-        return (schema.createdAt = new Date().toISOString());
-      case "updatedAt":
-        return (schema.updatedAt = new Date().toISOString());
-      default:
-        schema[key] = record[codes[key]];
-    }
-  });
+  schema.id = record[codes.id];
+  schema.sid = record[codes.sid];
+  schema.name = record[codes.name] ? record[codes.name] : record[codes.sid];
+  schema.price = calc.calcPrice(record[codes.price]);
+  schema.subt = calc.calcSubType(record[codes.subt]);
+  schema.exchg = typeExchg;
+  schema.sm = calc.calcSM(record[codes.sDate]);
+  schema.sy = calc.calcSY(record[codes.sDate]);
+  schema.mm = calc.calcMM(record[codes.mDate]);
+  schema.my = calc.calcMY(record[codes.mDate]);
+  schema.fr = calc.calcFR(record[codes.frate]);
+  schema.tf = calc.calcTF(record[codes.subt]);
+  schema.cr = calc.calcCR(record[codes.crstr]);
+  const reset = record[codes.rate];
+  schema.rate = reset.includes("RESET") || reset >= 20 ? 0 : reset;
+  schema.fv = 100;
+  schema.ytm = calcYTM(record, codes, record[codes.rate]);
+  schema.createdAt = new Date().toISOString();
+  schema.updatedAt = new Date().toISOString();
   return schema;
 };
 module.exports = calcSchema;

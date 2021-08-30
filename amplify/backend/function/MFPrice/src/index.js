@@ -9,7 +9,7 @@ const {
   pushData,
   mCap,
 } = dataInfo;
-
+const table = "INMF-bvyjaqmusfh5zelcbeeji6xxoe-dev";
 const getData = () => {
   return new Promise(async (resolve, reject) => {
     const mfInfoArray = await mfData.today();
@@ -42,6 +42,8 @@ const getData = () => {
         mftype: mfType(element["Scheme Type"]),
         mcap: mCap(element),
         tf: element["Scheme Name"].includes("Tax") ? "Y" : "N",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       Object.keys(dataToAdd).forEach((key) => {
@@ -49,7 +51,7 @@ const getData = () => {
           delete dataToAdd[key];
         }
       });
-      mfList.push(dataToAdd);
+      mfList.push({ PutRequest: { Item: dataToAdd } });
     });
     resolve(mfList);
   });
@@ -57,5 +59,5 @@ const getData = () => {
 
 exports.handler = async (event) => {
   const data = await getData();
-  return await pushData(data);
+  return await pushData(data, table);
 };
