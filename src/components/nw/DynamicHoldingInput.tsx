@@ -1,99 +1,107 @@
-import { Button, Col, Row } from 'antd';
-import React, { useContext, useEffect, useState } from 'react';
-import { AssetType, HoldingInput } from '../../api/goals';
-import NumberInput from '../form/numberinput';
+import { Button, Col, InputNumber, Row } from 'antd';
+import React, { useContext } from 'react';
+import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
-import { NWContext } from './NWContext';
+import { NWContext, PALLADIUM, SILVER, PLATINUM } from './NWContext';
 import { getFamilyOptions } from './nwutils';
-import { DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 
 interface DynamicHoldingInputProps {
-    holding: HoldingInput;
 	holdings: Array<HoldingInput>;
-	subType: string;
 	changeHoldings: Function;
-	rate?: number;
 }
 
-export default function DynamicHoldingInput({
-    holding,
-	holdings,
-	subType,
-	changeHoldings,
-	rate
-}: DynamicHoldingInputProps) {
+export default function DynamicHoldingInput({ holdings, changeHoldings }: DynamicHoldingInputProps) {
 	const { allFamily }: any = useContext(NWContext);
-	const [ quantity, setQuantity ] = useState<number>(holding ? holding.qty : 0);
-	const [ value, setValue ] = useState<number>(rate ? quantity * rate : 0);
-	const [ memberKey, setMemberKey ] = useState<string>(holding ? holding.fIds[0] : Object.keys(allFamily)[0]);
 
-    const findMatchingHolding = () => holdings.filter(
-        (holding: HoldingInput) =>
-            holding.fIds[0] === memberKey && holding.type === AssetType.A && holding.subt === subType
-    )[0];
+	const newRec = () => {
+		return {
+			id: '',
+			type: AssetType.A,
+			subt: AssetSubType.Gold,
+			fIds: [ Object.keys(allFamily)[0] ],
+			qty: 0,
+			curr: 'USD'
+		};
+	};
 
-	useEffect(
-		() => {
-			let existingEntry = findMatchingHolding();
-			if (existingEntry && existingEntry.qty !== quantity) {
-				existingEntry.qty = quantity;
-			} /*else {
-                holdings.push({
-                    id: AssetType.A+"-"+subType+"-"+memberKey,
-                    type: AssetType.A,
-                    subt: subType as AssetSubType,
-                    fIds: [memberKey],
-                    qty: quantity
-                })
-            }*/
-			//changeHoldings([ ...holdings ]);
-		},
-		[ quantity, memberKey ]
-	);
+	const changeQty = (quantity: number, i: number) => {
+		holdings[i].qty = quantity;
+		changeHoldings([ ...holdings ]);
+	};
 
-	useEffect(
-		() => {
-			if (rate) setValue(quantity * rate);
-		},
-		[ quantity ]
-	);
+	const changeSubtype = (subtype: string, i: number) => {
+		holdings[i].subt = subtype;
+		changeHoldings([ ...holdings ]);
+	};
 
-    const removeHolding = () => {
-        for(let i = 0; i < holdings.length; i++) {
-            let holding = holdings[i];
-            if(holding.type === AssetType.A && holding.subt === subType && holding.fIds[0] === memberKey) {
-                holdings.splice(i, 1);
-                changeHoldings([...holdings]);
-            }
-        }
-    }
+	const changeOwner = (ownerKey: string, i: number) => {
+		holdings[i].fIds[0] = ownerKey;
+		changeHoldings([ ...holdings ]);
+	};
+
+	const addHolding = () => {
+		holdings.push(newRec());
+		changeHoldings([ ...holdings ]);
+	};
+
+	const removeHolding = (i: number) => {
+		holdings.splice(i, 1);
+		changeHoldings([ ...holdings ]);
+	};
 
 	return (
 		<Row justify="space-around">
-			<Col>
-				<NumberInput
-					pre="Quantity"
-					value={quantity}
-					changeHandler={setQuantity}
-					min={0}
-					max={1000}
-					step={0.1}
-					unit="grams"
-				/>
-			</Col>
-			<Col>
-				<SelectInput
-					pre="Owned by"
-					value={memberKey}
-					options={getFamilyOptions(allFamily)}
-					changeHandler={setMemberKey}
-                    post={
-                        <Button type="link" onClick={() => removeHolding()} danger>
-                            <DeleteOutlined />
-                        </Button>
-                    }
-				/>
-			</Col>
+			{holdings &&
+				holdings[0] &&
+				holdings.map((holding: HoldingInput, i: number) => (
+					<Col span={24}>
+						<Row justify="space-around">
+							<Col>
+								<SelectInput
+									pre=""
+									value={holding.subt as string}
+									options={{
+										[AssetSubType.Gold]: 'Gold',
+										[SILVER]: 'Silver',
+										[PLATINUM]: 'Platinum',
+										[PALLADIUM]: 'Palladium'
+									}}
+									changeHandler={(val: string) => changeSubtype(val, i)}
+								/>
+							</Col>
+							<Col>
+								<InputNumber
+									value={holding.qty}
+									onChange={(quantity: number) => changeQty(quantity, i)}
+									min={0}
+									max={1000}
+									step={0.1}
+								/>
+								{` grams`}
+							</Col>
+							<Col>
+								<SelectInput
+									pre="Owner"
+									value={holding.fIds[0]}
+									options={getFamilyOptions(allFamily)}
+									changeHandler={(key: string) => changeOwner(key, i)}
+									post={
+										<Button type="link" onClick={() => removeHolding(i)} danger>
+											<DeleteOutlined />
+										</Button>
+									}
+								/>
+							</Col>
+						</Row>
+						<Col span={24} className="fields-divider" />
+					</Col>
+				))}
+			<Row justify="center">
+				<Col>
+					<Button shape="circle" type="primary" onClick={() => addHolding()} icon={<PlusOutlined />} />
+				</Col>
+			</Row>
 		</Row>
 	);
 }

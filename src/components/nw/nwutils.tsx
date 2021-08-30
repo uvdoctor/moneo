@@ -84,9 +84,11 @@ export const getFamilyMemberKey = (allFamily: any, taxId: string) => {
 	return null;
 }
 
+export const doesMemberMatch = (instrument: APIt.HoldingInput, selectedMembers: Array<string>) =>
+	selectedMembers.indexOf(ALL_FAMILY) > -1 || selectedMembers.indexOf(instrument.fIds[0]) > -1
+
 export const doesHoldingMatch = (instrument: APIt.HoldingInput, selectedMembers: Array<string>, selectedCurrency: string) =>
-	((selectedMembers.indexOf(ALL_FAMILY) > -1 || selectedMembers.indexOf(instrument.fIds[0]) > -1)
-		&& instrument.curr === selectedCurrency)
+	doesMemberMatch(instrument, selectedMembers)&& instrument.curr === selectedCurrency
 
 export const addFamilyMemberSilently = async (allFamily: any, allFamilySetter: Function, taxId: string) => {
 	let id = getFamilyMemberKey(allFamily, taxId);
