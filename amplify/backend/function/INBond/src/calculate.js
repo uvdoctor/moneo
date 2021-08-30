@@ -73,16 +73,12 @@ const calc = {
   },
 
   calcFR: (frate) => {
-    if (frate === "RESET") {
-      return "Y";
-    }
+    if (frate === "RESET") return "Y";
     return "N";
   },
 
   calcTF: (subt) => {
-    if (subt === "IF" || subt === "PF") {
-      return "Y";
-    }
+    if (subt === "IF" || subt === "PF") return "Y";
     return "N";
   },
 
@@ -96,9 +92,7 @@ const calc = {
   },
 
   calcPrice: (price) => {
-    if (!price) {
-      return 100;
-    }
+    if (!price) return 100;
     return Number(price);
   },
 };
@@ -118,11 +112,14 @@ const calcYTM = (record, codes, rate) => {
 };
 
 const calcSchema = (record, codes, schema, typeExchg, typeIdentifier) => {
-  if (record[codes.subt] === "MC") {
-    return;
-  }
+  if (!record[codes.id]) return;
+  if (record[codes.subt] === "MC") return;
   Object.keys(schema).map((key) => {
     switch (key) {
+      case "name":
+        return (schema.name = record[codes.name]
+          ? record[codes.name]
+          : record[codes.sid]);
       case "price":
         return (schema.price = calc.calcPrice(record[codes.price]));
       case "subt":
@@ -145,11 +142,16 @@ const calcSchema = (record, codes, schema, typeExchg, typeIdentifier) => {
         return (schema.cr = calc.calcCR(record[codes.crstr]));
       case "rate":
         const reset = record[codes.rate];
-        return (schema.rate = reset.includes("RESET") ? 0 : reset);
+        return (schema.rate =
+          reset.includes("RESET") || reset >= 20 ? 0 : reset);
       case "fv":
         return (schema.fv = 100);
       case "ytm":
         return (schema.ytm = calcYTM(record, codes, record[codes.rate]));
+      case "createdAt":
+        return (schema.createdAt = new Date().toISOString());
+      case "updatedAt":
+        return (schema.updatedAt = new Date().toISOString());
       default:
         schema[key] = record[codes[key]];
     }

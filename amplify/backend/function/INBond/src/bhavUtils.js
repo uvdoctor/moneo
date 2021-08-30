@@ -10,30 +10,9 @@ const cleanDirectory = async (tempDir, msg) => {
   console.log(msg);
 };
 
-// const downloadFile = (url, tempDir) => {
-//   return new Promise((resolve, reject) => {
-//     const req = https.get(url, async (res) => {
-//       const { statusCode } = res;
-//       if (statusCode < 200 || statusCode >= 300) {
-//         await cleanDirectory(tempDir, `Unable to download file, ${statusCode}`);
-//         return reject(new Error("statusCode=" + statusCode));
-//       }
-//       res.pipe(fs.createWriteStream(tempDir));
-//       res.on("end", function () {
-//         resolve();
-//       });
-//     });
-//     req.on("error", async (e) => {
-//       await cleanDirectory(tempDir, `Unable to download file, ${e.message}`);
-//       reject(e.message);
-//     });
-//     req.end();
-//   });
-// };
-
-const downloadZip = (NSE_URL, tempDir, zipFile) => {
+const downloadZip = (url, tempDir, file) => {
   return new Promise((resolve, reject) => {
-    const req = https.get(NSE_URL, async (res) => {
+    const req = https.get(url, async (res) => {
       const { statusCode } = res;
       if (statusCode < 200 || statusCode >= 300) {
         await cleanDirectory(
@@ -42,7 +21,7 @@ const downloadZip = (NSE_URL, tempDir, zipFile) => {
         );
         return reject(new Error("statusCode=" + statusCode));
       }
-      res.pipe(fs.createWriteStream(zipFile));
+      res.pipe(fs.createWriteStream(file));
       res.on("end", function () {
         resolve();
       });
@@ -84,7 +63,6 @@ const extractDataFromCSV = async (
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        // console.log(1);
         const idCheck = instrumentList.some(
           (item) => item === record[codes.id]
         );
@@ -93,11 +71,11 @@ const extractDataFromCSV = async (
             record,
             codes,
             schema,
-            typeIdentifier,
-            typeExchg
+            typeExchg,
+            typeIdentifier
           );
+          if (!updateSchema) return;
           const dataToPush = JSON.parse(JSON.stringify(updateSchema));
-          console.log(dataToPush);
           batches.push({ PutRequest: { Item: dataToPush } });
         }
       })

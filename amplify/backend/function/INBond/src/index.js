@@ -2,7 +2,7 @@ const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const utils = require("./utils");
-const { tempDir, zipFile, apiArray } = utils;
+const { tempDir, zipFile, apiArray, csvFile } = utils;
 const bhaoUtils = require("./bhavUtils");
 const calcSchema = require("./calculate");
 const {
@@ -25,8 +25,11 @@ const getAndPushData = () => {
         const { typeExchg, fileName, url, codes, schema, typeIdentifier } =
           apiArray[i];
         await mkdir(tempDir);
-        await downloadZip(url, tempDir, zipFile);
-        await unzipDownloads(zipFile, tempDir);
+        if (url.includes("zip")) {
+          await downloadZip(url, tempDir, zipFile);
+          await unzipDownloads(zipFile, tempDir);
+        }
+        await downloadZip(url, tempDir, csvFile);
         const data = await extractDataFromCSV(
           tempDir,
           fileName,
