@@ -4,6 +4,7 @@ import NWView from './NWView';
 import { AppContext } from '../AppContext';
 import {
 	doesHoldingMatch,
+	doesMemberMatch,
 	getRelatedCurrencies,
 	loadAllFamilyMembers,
 	loadFXCommCryptoRates,
@@ -11,6 +12,7 @@ import {
 } from './nwutils';
 import { notification } from 'antd';
 import {
+	AssetSubType,
 	BalanceInput,
 	CreateEODPricesInput,
 	CreateHoldingsInput,
@@ -21,9 +23,14 @@ import {
 	Property
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
-import PMValuation from './PMValuation';
+import DynamicHoldingInput from './DynamicHoldingInput';
 
 const NWContext = createContext({});
+
+export const GOLD = 'GC';
+export const SILVER = 'SI';
+export const PLATINUM = 'PL';
+export const PALLADIUM = 'PA';
 
 function NWContextProvider() {
 	const { defaultCurrency, appContextLoaded }: any = useContext(AppContext);
@@ -103,7 +110,7 @@ function NWContextProvider() {
 		'Precious Metals': {
 			label: 'Precious Metals',
 			data: preciousMetals,
-			content: <PMValuation />
+			content: <DynamicHoldingInput holdings={preciousMetals} changeHoldings={setPreciousMetals} />
 		},
 		Deposits: {
 			label: 'Deposits',
@@ -289,6 +296,18 @@ function NWContextProvider() {
 		]
 	);
 
+	const pricePM = () => {
+		let total = 0;
+		preciousMetals.forEach((instrument: HoldingInput) => {
+			let rate = instrument.subt === AssetSubType.Gold ? ratesData[GOLD] : ratesData[instrument.subt as string];
+			if(rate && doesMemberMatch(instrument, selectedMembers)) {
+				if(ratesData[selectedCurrency]) rate *= ratesData[selectedCurrency];
+				total += instrument.qty * rate;
+			}
+		})
+		setTotalPM(total);
+	};
+
 	const priceInstruments = () => {
 		let total = 0;
 		instruments.forEach((instrument: HoldingInput) => {
@@ -301,11 +320,16 @@ function NWContextProvider() {
 
 	useEffect(() => {
 		priceInstruments();
+		pricePM();
 	}, [selectedMembers, selectedCurrency]);
 
 	useEffect(() => {
 		priceInstruments();
 	}, [instruments]);
+
+	useEffect(() => {
+		pricePM();
+	}, [preciousMetals]);
 
 	return (
 		<NWContext.Provider
