@@ -95,12 +95,6 @@ function NWContextProvider() {
 					setData: setLendings,
 					content: <InstrumentValuation />
 				},
-				Crypto: {
-					label: 'Crypto',
-					data: crypto,
-					setData: setCrypto,
-					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
-				}
 			}
 		},
 		Physical: {
@@ -166,6 +160,41 @@ function NWContextProvider() {
 					setData: setNPS,
 					content: <InstrumentValuation />
 				},
+			}
+		},
+		Exotic: {
+			label: 'Exotic',
+			children: {
+				Memberships: {
+					label: 'Memberships',
+					data: crypto,
+					setData: setCrypto,
+					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+				},
+				Crypto: {
+					label: 'Crypto',
+					data: crypto,
+					setData: setCrypto,
+					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+				},
+				Art: {
+					label: 'Art',
+					data: crypto,
+					setData: setCrypto,
+					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+				}, 
+				'Luxury Watches': {
+					label: 'Luxury Watches',
+					data: crypto,
+					setData: setCrypto,
+					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+				}, 
+				'Angel Investments': {
+					label: 'Angel Investments',
+					data: crypto,
+					setData: setCrypto,
+					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+				}
 			}
 		},
 		Loans: {
