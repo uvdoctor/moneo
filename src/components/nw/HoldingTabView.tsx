@@ -7,7 +7,7 @@ import { getFamilyNames } from './nwutils';
 
 export default function HoldingTabView() {
 	const { tabs, activeTab, setActiveTab, allFamily, selectedMembers, loadingHoldings }: any = useContext(NWContext);
-	const [childTab, setChildTab] = useState<string>('');
+	const [ childTab, setChildTab ] = useState<string>('');
 	const { TabPane } = Tabs;
 
 	function renderTabs(tabsData: any, defaultActiveKey: string, isRoot?: boolean) {
@@ -17,7 +17,7 @@ export default function HoldingTabView() {
 				activeKey={isRoot ? activeTab : childTab ? childTab : defaultActiveKey}
 				type={isRoot ? 'card' : 'line'}
 				onChange={(activeKey) => {
-					if(isRoot) {
+					if (isRoot) {
 						setActiveTab(activeKey);
 						setChildTab('');
 					} else setChildTab(activeKey);
@@ -39,9 +39,7 @@ export default function HoldingTabView() {
 												isPrimary={!hasUploader}
 												data={tabsData[tabName].data}
 												changeData={tabsData[tabName].setData}
-											>
-												Dummy
-											</AddHoldings>
+											/>
 										</Col>
 									</Row>
 									{!loadingHoldings ? (

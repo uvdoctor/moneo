@@ -177,24 +177,18 @@ function NWContextProvider() {
 					setData: setCrypto,
 					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
 				},
-				Art: {
-					label: 'Art',
-					data: crypto,
-					setData: setCrypto,
-					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
-				}, 
-				'Luxury Watches': {
-					label: 'Luxury Watches',
-					data: crypto,
-					setData: setCrypto,
-					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
-				}, 
 				'Angel Investments': {
 					label: 'Angel Investments',
 					data: crypto,
 					setData: setCrypto,
 					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
-				}
+				},
+				Other: {
+					label: 'Other',
+					data: crypto,
+					setData: setCrypto,
+					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+				}, 
 			}
 		},
 		Loans: {

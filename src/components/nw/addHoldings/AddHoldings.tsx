@@ -1,21 +1,25 @@
-import React, { Fragment, ReactNode, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { Modal, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import FormGenerator from './FormGenerator';
+import { Context, ContextProvider } from './Context';
 
 interface AddHoldingsProps {
 	data: Array<any>;
 	changeData: Function;
 	isPrimary: boolean;
-	children: ReactNode;
 }
 
-export default function AddHoldings({ data, changeData, isPrimary, children }: AddHoldingsProps) {
+export default function AddHoldings({ data, changeData, isPrimary }: AddHoldingsProps) {
 	const [ isModalVisible, setModalVisibility ] = useState(false);
+	const { add }: any = useContext(Context);
+	
+	const onClose = () => setModalVisibility(false);
 
-	const add = () => {
-		data.push();
-		changeData([ ...data ]);
-	};
+	const addHolding = (input: any) => {
+		data.push(input);
+		changeData([...data]);
+	}
 
 	return (
 		<Fragment>
@@ -27,18 +31,17 @@ export default function AddHoldings({ data, changeData, isPrimary, children }: A
 			>
 				{isPrimary ? 'Add' : 'Add Manually'}
 			</Button>
-			<Modal
-				title="Add"
-				visible={isModalVisible}
-				footer={null}
-				onCancel={() => setModalVisibility(false)}
-				onOk={add}
-			>
-				{children}
-				{/*<ContextProvider>
+			<ContextProvider>
+				<Modal
+					title="Add"
+					visible={isModalVisible}
+					footer={null}
+					onCancel={onClose}
+					onOk={() => add((input: any) => addHolding(input))}
+				>
 					<FormGenerator onClose={onClose} />
-				</ContextProvider>*/}
-			</Modal>
+				</Modal>
+			</ContextProvider>
 		</Fragment>
 	);
 }
