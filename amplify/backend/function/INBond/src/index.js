@@ -1,4 +1,8 @@
-const fs = require("fs");
+/* Amplify Params - DO NOT EDIT
+	AUTH_DDPWA0063633B_USERPOOLID
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const utils = require("./utils");

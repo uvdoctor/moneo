@@ -1,4 +1,8 @@
-const mfData = require("india-mutual-fund-info");
+/* Amplify Params - DO NOT EDIT
+	AUTH_DDPWA0063633B_USERPOOLID
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */const mfData = require("india-mutual-fund-info");
 const dataInfo = require("./data");
 const {
   getDirISIN,
