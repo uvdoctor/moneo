@@ -113,10 +113,9 @@ const calcYTM = (record, codes) => {
   return ytmFinal;
 };
 
-const calcSchema = (record, codes, schema, typeIdentifier, typeExchg) => {
-  if (!record[codes.id]) return;
-  if (record[codes.subt] === "MC") return;
-  schema.__typename = "INBond";
+const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
+  if (!record[codes.id] || record[codes.subt] === "MC") return;
+  schema.__typename = table.slice(0, table.indexOf("-"));
   schema.id = record[codes.id];
   schema.sid = record[codes.sid];
   schema.name = record[codes.name] ? record[codes.name] : record[codes.sid];
@@ -131,11 +130,12 @@ const calcSchema = (record, codes, schema, typeIdentifier, typeExchg) => {
   schema.tf = calc.calcTF(record[codes.subt]);
   schema.cr = calc.calcCR(record[codes.crstr]);
   const reset = record[codes.rate];
-  schema.rate = reset.includes("RESET") || reset >20 ? 0 : parseFloat(reset);
+  schema.rate = reset.includes("RESET") || reset > 20 ? 0 : parseFloat(reset);
   schema.fv = 100;
   schema.ytm = calcYTM(record, codes, record[codes.rate]);
   schema.createdAt = new Date().toISOString();
   schema.updatedAt = new Date().toISOString();
+  isinMap[record[codes.id]] = record[codes.id];
   return schema;
 };
 module.exports = calcSchema;

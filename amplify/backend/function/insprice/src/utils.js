@@ -27,7 +27,6 @@ const year =
   today.getYear().toString().charAt(1) + today.getYear().toString().charAt(2);
 const yearFull = today.getFullYear();
 const baseFileName = `EQ_ISINCODE_${date}${month}${year}`;
-const baseFileDebtName = `DEBTBHAVCOPY${date}${month}${yearFull}`;
 // For NSE
 const monthChar = monthsArray[today.getMonth()];
 const nseBaseFileName = `cm${date}${monthChar}${yearFull}bhav.csv`;
@@ -60,7 +59,6 @@ const apiArray = [
       type: "SC_TYPE",
       subt: "SC_GROUP",
     },
-    typeIdentifier: "BSE_EQUITY",
   },
   {
     typeExchg: "NSE",
@@ -89,7 +87,6 @@ const apiArray = [
       type: "SERIES",
       subt: "",
     },
-    typeIdentifier: "NSE_EQUITY",
   },
 ];
 

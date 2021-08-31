@@ -22,8 +22,7 @@ const getAndPushData = () => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const { typeExchg, fileName, url, codes, schema, typeIdentifier } =
-          apiArray[i];
+        const { typeExchg, fileName, url, codes, schema } = apiArray[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
@@ -32,13 +31,15 @@ const getAndPushData = () => {
           fileName,
           typeExchg,
           codes,
-          typeIdentifier,
           schema,
           calcSchema,
-          instrumentList
+          instrumentList,
+          table
         );
-        const details = await pushData(data, table,instrumentList);
-        console.log(details);
+        for (let batch of data) {
+          const details = await pushData(batch, table, instrumentList);
+          console.log(details);
+        }
       } catch (err) {
         reject(err);
       }

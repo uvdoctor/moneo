@@ -11,9 +11,9 @@ const cleanDirectory = async (tempDir, msg) => {
   console.log(msg);
 };
 
-const downloadZip = (NSE_URL, tempDir, zipFile) => {
+const downloadZip = (url, tempDir, file) => {
   return new Promise((resolve, reject) => {
-    const req = https.get(NSE_URL, async (res) => {
+    const req = https.get(url, async (res) => {
       const { statusCode } = res;
       if (statusCode < 200 || statusCode >= 300) {
         await cleanDirectory(
@@ -22,7 +22,7 @@ const downloadZip = (NSE_URL, tempDir, zipFile) => {
         );
         return reject(new Error("statusCode=" + statusCode));
       }
-      res.pipe(fs.createWriteStream(zipFile));
+      res.pipe(fs.createWriteStream(file));
       res.on("end", function () {
         resolve();
       });
@@ -54,18 +54,20 @@ const extractDataFromCSV = async (
   fileName,
   typeExchg,
   codes,
-  typeIdentifier,
   schema,
   calcSchema,
-  instrumentList
+  instrumentList,
+  table
 ) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
     let batchRecords = [];
     let count = 0;
+    const isinMap = {};
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
+        if (isinMap[record[codes.id]]) return;
         const idCheck = instrumentList.some(
           (item) => item === record[codes.id]
         );
@@ -74,9 +76,11 @@ const extractDataFromCSV = async (
             record,
             codes,
             schema,
-            typeIdentifier,
-            typeExchg
+            typeExchg,
+            isinMap,
+            table
           );
+          if (!updateSchema) return;
           const dataToPush = JSON.parse(JSON.stringify(updateSchema));
           batches.push({ PutRequest: { Item: dataToPush } });
 
@@ -91,7 +95,7 @@ const extractDataFromCSV = async (
       .on("end", async () => {
         await cleanDirectory(
           tempDir,
-          `${typeIdentifier} results extracted successfully and directory is cleaned`
+          `${fileName} of ${typeExchg} results extracted successfully and directory is cleaned`
         );
         resolve(batchRecords);
       })
@@ -107,21 +111,19 @@ const extractDataFromCSV = async (
 };
 
 const pushData = async (data, table, instrumentList) => {
-  return new Promise((resolve, reject) => {
-    data.filter(async (bunch) => {
-      bunch.map((item) => instrumentList.push(item.PutRequest.Item.id));
-      var params = {
-        RequestItems: {
-          [table]: bunch,
-        },
-      };
-      try {
-        const updateRecord = await docClient.batchWrite(params).promise();
-        resolve(updateRecord);
-      } catch (error) {
-        reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
-      }
-    });
+  return new Promise(async (resolve, reject) => {
+    data.map((item) => instrumentList.push(item.PutRequest.Item.id));
+    var params = {
+      RequestItems: {
+        [table]: data,
+      },
+    };
+    try {
+      const updateRecord = await docClient.batchWrite(params).promise();
+      resolve(updateRecord);
+    } catch (error) {
+      reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
+    }
   });
 };
 

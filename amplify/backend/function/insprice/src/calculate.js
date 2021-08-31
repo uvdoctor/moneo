@@ -1,5 +1,5 @@
 const calc = {
-  BSE_EQUITY: {
+  BSE: {
     calcType: (type, subt, name) => {
       if (subt === "IF") return "A";
       if (
@@ -32,7 +32,7 @@ const calc = {
     },
   },
 
-  NSE_EQUITY: {
+  NSE: {
     calcType: (type, subt, name) => {
       const fixed = ["GB", "GS", "W", "N", "Y", "Z"];
       if (type === "IV" || type === "RR") return "A";
@@ -89,7 +89,7 @@ const calc = {
   },
 };
 
-const calcSchema = (record, codes, schema, typeIdentifier, typeExchg) => {
+const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
   const type = record[codes.type];
   const subt = record[codes.subt];
   const name = record[codes.name];
@@ -98,19 +98,11 @@ const calcSchema = (record, codes, schema, typeIdentifier, typeExchg) => {
       case "name":
         return (schema.name = name.trim());
       case "type":
-        return (schema.type = calc[typeIdentifier].calcType(type, subt, name));
+        return (schema.type = calc[typeExchg].calcType(type, subt, name));
       case "subt":
-        return (schema.subt = calc[typeIdentifier].calcSubType(
-          type,
-          subt,
-          name
-        ));
+        return (schema.subt = calc[typeExchg].calcSubType(type, subt, name));
       case "itype":
-        return (schema.itype = calc[typeIdentifier].calcInsType(
-          type,
-          subt,
-          name
-        ));
+        return (schema.itype = calc[typeExchg].calcInsType(type, subt, name));
       case "exchg":
         return (schema.exchg = typeExchg);
       case "createdAt":
@@ -121,7 +113,8 @@ const calcSchema = (record, codes, schema, typeIdentifier, typeExchg) => {
         schema[key] = record[codes[key]];
     }
   });
-  schema.__typename = "INExchg";
+  schema.__typename = table.slice(0, table.indexOf("-"));
+  isinMap[record[codes.id]] = record[codes.id];
   return schema;
 };
 module.exports = calcSchema;

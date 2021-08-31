@@ -42,11 +42,16 @@ const eodPrice = () => {
         }
       })
     );
+    if (count < 25 && batchRecords === []) {
+      batchRecords.push(batches);
+    }
     resolve(batchRecords);
   });
 };
 
 exports.handler = async (event) => {
   let data = await eodPrice();
-  return await pushData(data, table);
+  for (let batch of data) {
+    await pushData(batch, table);
+  }
 };

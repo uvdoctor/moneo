@@ -28,21 +28,18 @@ const getData = async (element, index) => {
 };
 
 const pushData = async (data, table) => {
-  return new Promise((resolve, reject) => {
-    data.filter(async (bunch) => {
-      var params = {
-        RequestItems: {
-          [table]: bunch,
-        },
-      };
-      try {
-        const updateRecord = await docClient.batchWrite(params).promise();
-        console.log(updateRecord);
-        resolve(updateRecord);
-      } catch (error) {
-        reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
-      }
-    });
+  return new Promise(async (resolve, reject) => {
+    var params = {
+      RequestItems: {
+        [table]: data,
+      },
+    };
+    try {
+      const updateRecord = await docClient.batchWrite(params).promise();
+      resolve(updateRecord);
+    } catch (error) {
+      reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
+    }
   });
 };
 
