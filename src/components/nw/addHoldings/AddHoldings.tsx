@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { Fragment, ReactNode, useState } from "react";
 import { Modal, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { ContextProvider } from "./Context";
-import FormGenerator from "./FormGenerator";
 
-export default function AddHoldings() {
+interface AddHoldingsProps {
+	isPrimary: boolean;
+	children: ReactNode;
+}
+
+export default function AddHoldings({isPrimary, children}: AddHoldingsProps) {
 	const [isModalVisible, setModalVisibility] = useState(false);
 
 	function showModal() {
@@ -16,18 +19,22 @@ export default function AddHoldings() {
 	}
 
 	return (
-		<div className="text-right">
-			<Button type="primary" icon={<PlusOutlined />} onClick={showModal} />
+		<Fragment>
+			&nbsp;&nbsp;
+			<Button type={isPrimary ? "primary" : "default"} icon={<PlusOutlined />} onClick={showModal}>
+				{isPrimary? "Add" : "Add Manually"}
+			</Button>
 			<Modal
 				title="Add Asset"
 				visible={isModalVisible}
 				footer={null}
 				onCancel={onClose}
 			>
-				<ContextProvider>
+				{/*<ContextProvider>
 					<FormGenerator onClose={onClose} />
-				</ContextProvider>
+				</ContextProvider>*/}
+				{children}
 			</Modal>
-		</div>
+		</Fragment>
 	);
 }
