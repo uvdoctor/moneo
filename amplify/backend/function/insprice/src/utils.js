@@ -15,7 +15,7 @@ const monthsArray = [
   "DEC",
 ];
 const today = new Date();
-const todayDate = today.getDate() - 1;
+const todayDate = today.getDate();
 const date = todayDate < 10 ? `0${todayDate}` : todayDate;
 
 // For BSE
@@ -27,10 +27,9 @@ const year =
   today.getYear().toString().charAt(1) + today.getYear().toString().charAt(2);
 const yearFull = today.getFullYear();
 const baseFileName = `EQ_ISINCODE_${date}${month}${year}`;
-const baseFileDebtName = `DEBTBHAVCOPY${date}${month}${yearFull}`;
 // For NSE
 const monthChar = monthsArray[today.getMonth()];
-const NSEBaseFileName = `cm${date}${monthChar}${yearFull}bhav.csv`;
+const nseBaseFileName = `cm${date}${monthChar}${yearFull}bhav.csv`;
 
 const apiArray = [
   {
@@ -48,6 +47,8 @@ const apiArray = [
       price: 0,
       prev: 0,
       mcap: null,
+      createdAt: "",
+      updatedAt: "",
     },
     codes: {
       sid: "SC_CODE",
@@ -58,16 +59,11 @@ const apiArray = [
       type: "SC_TYPE",
       subt: "SC_GROUP",
     },
-    typeIdentifier: "BSE_EQUITY",
-    listQuery: "ListInExchanges",
-    updateMutation: "UpdateInExchange",
-    createMutation: "CreateInExchange",
-    listOperationName: "listINExchanges",
   },
   {
     typeExchg: "NSE",
-    fileName: NSEBaseFileName,
-    url: `https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${NSEBaseFileName}.zip`,
+    fileName: nseBaseFileName,
+    url: `https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${nseBaseFileName}.zip`,
     schema: {
       id: "",
       sid: "",
@@ -79,6 +75,8 @@ const apiArray = [
       price: 0,
       prev: 0,
       mcap: null,
+      createdAt: "",
+      updatedAt: "",
     },
     codes: {
       sid: "SYMBOL",
@@ -89,11 +87,6 @@ const apiArray = [
       type: "SERIES",
       subt: "",
     },
-    typeIdentifier: "NSE_EQUITY",
-    listQuery: "ListInExchanges",
-    updateMutation: "UpdateInExchange",
-    createMutation: "CreateInExchange",
-    listOperationName: "listINExchanges",
   },
 ];
 

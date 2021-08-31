@@ -6,3 +6,4 @@
 /// <reference path="./reactbrowserhooks.d.ts" />
 /// <reference path="./finnhub.d.ts" />
 /// <reference path="./awssdk.d.ts" />
+/// <reference path="./simplestorage.js.d.ts" />

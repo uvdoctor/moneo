@@ -233,7 +233,7 @@ enum CreditRating {
 	J
 }
 
-type INExchange
+type INExchg
 	@model
 	@aws_iam
 	@key(fields: ["id"])
@@ -270,10 +270,11 @@ type INBond
 	name: String!
 	subt: AssetSubType!
 	price: Float!
-	sm: Int!
-	sy: Int!
-	mm: Int!
-	my: Int!
+	exchg: String!
+	sm: Int
+	sy: Int
+	mm: Int
+	my: Int
 	rate: Float!
 	fr: YN!
 	tf: YN!
@@ -283,7 +284,7 @@ type INBond
 	ytm: Float
 }
 
-type INMF
+type INMutual
 	@model
 	@aws_iam
 	@key(fields: ["id"])

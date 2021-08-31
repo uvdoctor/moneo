@@ -1,11 +1,17 @@
-const eodData = require("./eodData");
+/* Amplify Params - DO NOT EDIT
+	AUTH_DDPWA0063633B_USERPOOLID
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
 const { getData, pushData } = eodData;
-
+const table = "EODPrices-bvyjaqmusfh5zelcbeeji6xxoe-dev";
 const eodPrice = () => {
   return new Promise(async (resolve, reject) => {
-    const eodList = [];
+    let batches = [];
+    let batchRecords = [];
+    let count = 0;
     await Promise.all(
       apiToCall.map(async (element) => {
         index = 0;
@@ -14,7 +20,7 @@ const eodPrice = () => {
 
         switch (element.type) {
           case commodityAbbr:
-            close = (close / 31.1).toFixed(2);
+            close = Number((close / 31.1).toFixed(2));
             code = code.slice(0, code.lastIndexOf("."));
             break;
           case cryptoAbbr:
@@ -24,15 +30,32 @@ const eodPrice = () => {
             code = code.slice(0, code.lastIndexOf("."));
             break;
         }
-        let data = { code, close };
-        eodList.push(data);
+        const dataToPush = {
+          __typename: table.slice(0, table.indexOf("-")),
+          id: code,
+          price: close,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        batches.push({ PutRequest: { Item: dataToPush } });
+        count++;
+        if (count === 25) {
+          batchRecords.push(batches);
+          batches = [];
+          count = 0;
+        }
       })
     );
-    resolve(eodList);
+    if (count < 25 && batchRecords === []) {
+      batchRecords.push(batches);
+    }
+    resolve(batchRecords);
   });
 };
 
 exports.handler = async (event) => {
   let data = await eodPrice();
-  return await pushData(data);
+  for (let batch of data) {
+    await pushData(batch, table);
+  }
 };

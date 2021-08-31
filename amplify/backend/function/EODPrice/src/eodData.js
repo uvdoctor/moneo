@@ -1,4 +1,4 @@
-const graphqlOperation = require("./operation");
+const docClient = require("./insertIntoDB");
 const axios = require("axios");
 const eodApiKey = process.env.EOD_API_KEY;
 
@@ -27,39 +27,19 @@ const getData = async (element, index) => {
   }
 };
 
-const executeMutation = async (mutation, input) => {
-  return await graphqlOperation({ input: input }, mutation);
-};
-
-const pushData = (data) => {
-  let instrumentData = { updatedIDs: [], errorIDs: [] };
+const pushData = async (data, table) => {
   return new Promise(async (resolve, reject) => {
-    for (let i = 0; i < data.length; i++) {
-      const dataToInsert = {
-        id: data[i].code,
-        price: data[i].close,
-        name: data[i].code,
-      };
-      try {
-        const updatedData = await executeMutation(
-          "UpdateEodPrices",
-          dataToInsert
-        );
-        if (!updatedData.body.data.updateEODPrices) {
-          await executeMutation("CreateEodPrices", dataToInsert);
-        }
-        updatedData.body.errors
-          ? instrumentData.errorIDs.push({
-              id: data[i].id,
-              error: updatedData.body.errors,
-            })
-          : instrumentData.updatedIDs.push(data[i]);
-      } catch (err) {
-        console.log(err);
-      }
+    var params = {
+      RequestItems: {
+        [table]: data,
+      },
+    };
+    try {
+      const updateRecord = await docClient.batchWrite(params).promise();
+      resolve(updateRecord);
+    } catch (error) {
+      reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
     }
-    console.log(instrumentData);
-    resolve(instrumentData);
   });
 };
 

@@ -1367,12 +1367,12 @@ export const updateRegistration = /* GraphQL */ `
     }
   }
 `;
-export const createInExchange = /* GraphQL */ `
-  mutation CreateInExchange(
-    $input: CreateINExchangeInput!
-    $condition: ModelINExchangeConditionInput
+export const createInExchg = /* GraphQL */ `
+  mutation CreateInExchg(
+    $input: CreateINExchgInput!
+    $condition: ModelINExchgConditionInput
   ) {
-    createINExchange(input: $input, condition: $condition) {
+    createINExchg(input: $input, condition: $condition) {
       id
       sid
       name
@@ -1388,12 +1388,12 @@ export const createInExchange = /* GraphQL */ `
     }
   }
 `;
-export const updateInExchange = /* GraphQL */ `
-  mutation UpdateInExchange(
-    $input: UpdateINExchangeInput!
-    $condition: ModelINExchangeConditionInput
+export const updateInExchg = /* GraphQL */ `
+  mutation UpdateInExchg(
+    $input: UpdateINExchgInput!
+    $condition: ModelINExchgConditionInput
   ) {
-    updateINExchange(input: $input, condition: $condition) {
+    updateINExchg(input: $input, condition: $condition) {
       id
       sid
       name
@@ -1409,12 +1409,12 @@ export const updateInExchange = /* GraphQL */ `
     }
   }
 `;
-export const deleteInExchange = /* GraphQL */ `
-  mutation DeleteInExchange(
-    $input: DeleteINExchangeInput!
-    $condition: ModelINExchangeConditionInput
+export const deleteInExchg = /* GraphQL */ `
+  mutation DeleteInExchg(
+    $input: DeleteINExchgInput!
+    $condition: ModelINExchgConditionInput
   ) {
-    deleteINExchange(input: $input, condition: $condition) {
+    deleteINExchg(input: $input, condition: $condition) {
       id
       sid
       name
@@ -1441,6 +1441,7 @@ export const createInBond = /* GraphQL */ `
       name
       subt
       price
+      exchg
       sm
       sy
       mm
@@ -1468,6 +1469,7 @@ export const updateInBond = /* GraphQL */ `
       name
       subt
       price
+      exchg
       sm
       sy
       mm
@@ -1495,6 +1497,7 @@ export const deleteInBond = /* GraphQL */ `
       name
       subt
       price
+      exchg
       sm
       sy
       mm
@@ -1511,12 +1514,12 @@ export const deleteInBond = /* GraphQL */ `
     }
   }
 `;
-export const createInmf = /* GraphQL */ `
-  mutation CreateInmf(
-    $input: CreateINMFInput!
-    $condition: ModelINMFConditionInput
+export const createInMutual = /* GraphQL */ `
+  mutation CreateInMutual(
+    $input: CreateINMutualInput!
+    $condition: ModelINMutualConditionInput
   ) {
-    createINMF(input: $input, condition: $condition) {
+    createINMutual(input: $input, condition: $condition) {
       id
       sid
       tid
@@ -1533,12 +1536,12 @@ export const createInmf = /* GraphQL */ `
     }
   }
 `;
-export const updateInmf = /* GraphQL */ `
-  mutation UpdateInmf(
-    $input: UpdateINMFInput!
-    $condition: ModelINMFConditionInput
+export const updateInMutual = /* GraphQL */ `
+  mutation UpdateInMutual(
+    $input: UpdateINMutualInput!
+    $condition: ModelINMutualConditionInput
   ) {
-    updateINMF(input: $input, condition: $condition) {
+    updateINMutual(input: $input, condition: $condition) {
       id
       sid
       tid
@@ -1555,12 +1558,12 @@ export const updateInmf = /* GraphQL */ `
     }
   }
 `;
-export const deleteInmf = /* GraphQL */ `
-  mutation DeleteInmf(
-    $input: DeleteINMFInput!
-    $condition: ModelINMFConditionInput
+export const deleteInMutual = /* GraphQL */ `
+  mutation DeleteInMutual(
+    $input: DeleteINMutualInput!
+    $condition: ModelINMutualConditionInput
   ) {
-    deleteINMF(input: $input, condition: $condition) {
+    deleteINMutual(input: $input, condition: $condition) {
       id
       sid
       tid

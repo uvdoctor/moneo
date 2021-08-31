@@ -1,4 +1,8 @@
-const mfData = require("india-mutual-fund-info");
+/* Amplify Params - DO NOT EDIT
+	AUTH_DDPWA0063633B_USERPOOLID
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */const mfData = require("india-mutual-fund-info");
 const dataInfo = require("./data");
 const {
   getDirISIN,
@@ -9,50 +13,61 @@ const {
   pushData,
   mCap,
 } = dataInfo;
-
+const table = "INMutual-bvyjaqmusfh5zelcbeeji6xxoe-dev";
 const getData = () => {
   return new Promise(async (resolve, reject) => {
+    let batches = [];
+    let batchRecords = [];
+    let isinMap = {};
+    let count = 0;
     const mfInfoArray = await mfData.today();
     const regdirData = directISIN(mfInfoArray);
     const { regularData, directData } = regdirData;
-    const mfList = [];
     mfInfoArray.map((element) => {
-      const tidToCompare = element["ISIN Div Reinvestment"];
-      const idToCompare = element["ISIN Div Payout/ ISIN Growth"];
-      const id = idToCompare === "-" ? tidToCompare : idToCompare;
-      const tid = idToCompare === "-" ? idToCompare : tidToCompare;
-
-      if (id === "-" && tid === "-") {
+      const id = element["ISIN Div Payout/ ISIN Growth"];
+      const price = parseFloat(element["Net Asset Value"]);
+      if (
+        id.length < 12 ||
+        element["Scheme Type"].includes("ETF") ||
+        element["Scheme Name"].includes("ETF") ||
+        Number.isNaN(price) ||
+        isinMap[id]
+      )
         return;
-      } else if (element["Scheme Type"].includes("ETF") || element["Scheme Name"].includes("ETF")) {
-        return;
-      }
-      const dataToAdd = {
+      const dataToPush = {
+        __typename: table.slice(0, table.indexOf("-")),
         id: id,
         sid: element["Scheme Code"],
-        tid: tid,
+        tid: element["ISIN Div Reinvestment"],
         dir: getDirISIN(regularData, directData, element),
         name: element["Scheme Name"],
         type: getAssetType(element["Scheme Type"]),
         subt: getAssetSubType(element),
-        price: parseFloat(element["Net Asset Value"]),
+        price: price,
         mftype: mfType(element["Scheme Type"]),
         mcap: mCap(element),
         tf: element["Scheme Name"].includes("Tax") ? "Y" : "N",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
-      Object.keys(dataToAdd).forEach((key) => {
-        if (dataToAdd[key] === false) {
-          delete dataToAdd[key];
-        }
-      });
-      mfList.push(dataToAdd);
+      batches.push({ PutRequest: { Item: dataToPush } });
+      isinMap[id] = id;
+      count++;
+      if (count === 25) {
+        batchRecords.push(batches);
+        batches = [];
+        count = 0;
+      }
     });
-    resolve(mfList);
+
+    resolve(batchRecords);
   });
 };
 
 exports.handler = async (event) => {
   const data = await getData();
-  return await pushData(data);
+  for (let batch of data) {
+    await pushData(batch, table);
+  }
 };

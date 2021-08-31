@@ -914,7 +914,7 @@ export type UpdateRegistrationInput = {
   long?: number | null,
 };
 
-export type CreateINExchangeInput = {
+export type CreateINExchgInput = {
   id: string,
   sid: string,
   name: string,
@@ -963,7 +963,7 @@ export enum MCap {
 }
 
 
-export type ModelINExchangeConditionInput = {
+export type ModelINExchgConditionInput = {
   sid?: ModelStringInput | null,
   name?: ModelStringInput | null,
   exchg?: ModelStringInput | null,
@@ -973,9 +973,9 @@ export type ModelINExchangeConditionInput = {
   price?: ModelFloatInput | null,
   prev?: ModelFloatInput | null,
   mcap?: ModelMCapInput | null,
-  and?: Array< ModelINExchangeConditionInput | null > | null,
-  or?: Array< ModelINExchangeConditionInput | null > | null,
-  not?: ModelINExchangeConditionInput | null,
+  and?: Array< ModelINExchgConditionInput | null > | null,
+  or?: Array< ModelINExchgConditionInput | null > | null,
+  not?: ModelINExchgConditionInput | null,
 };
 
 export type ModelAssetTypeInput = {
@@ -998,8 +998,8 @@ export type ModelMCapInput = {
   ne?: MCap | null,
 };
 
-export type INExchange = {
-  __typename: "INExchange",
+export type INExchg = {
+  __typename: "INExchg",
   id?: string,
   sid?: string,
   name?: string,
@@ -1014,7 +1014,7 @@ export type INExchange = {
   updatedAt?: string,
 };
 
-export type UpdateINExchangeInput = {
+export type UpdateINExchgInput = {
   id: string,
   sid?: string | null,
   name?: string | null,
@@ -1027,7 +1027,7 @@ export type UpdateINExchangeInput = {
   mcap?: MCap | null,
 };
 
-export type DeleteINExchangeInput = {
+export type DeleteINExchgInput = {
   id: string,
 };
 
@@ -1037,10 +1037,11 @@ export type CreateINBondInput = {
   name: string,
   subt: AssetSubType,
   price: number,
-  sm: number,
-  sy: number,
-  mm: number,
-  my: number,
+  exchg: string,
+  sm?: number | null,
+  sy?: number | null,
+  mm?: number | null,
+  my?: number | null,
   rate: number,
   fr: YN,
   tf: YN,
@@ -1064,6 +1065,7 @@ export type ModelINBondConditionInput = {
   name?: ModelStringInput | null,
   subt?: ModelAssetSubTypeInput | null,
   price?: ModelFloatInput | null,
+  exchg?: ModelStringInput | null,
   sm?: ModelIntInput | null,
   sy?: ModelIntInput | null,
   mm?: ModelIntInput | null,
@@ -1092,10 +1094,11 @@ export type INBond = {
   name?: string,
   subt?: AssetSubType,
   price?: number,
-  sm?: number,
-  sy?: number,
-  mm?: number,
-  my?: number,
+  exchg?: string,
+  sm?: number | null,
+  sy?: number | null,
+  mm?: number | null,
+  my?: number | null,
   rate?: number,
   fr?: YN,
   tf?: YN,
@@ -1113,6 +1116,7 @@ export type UpdateINBondInput = {
   name?: string | null,
   subt?: AssetSubType | null,
   price?: number | null,
+  exchg?: string | null,
   sm?: number | null,
   sy?: number | null,
   mm?: number | null,
@@ -1130,7 +1134,7 @@ export type DeleteINBondInput = {
   id: string,
 };
 
-export type CreateINMFInput = {
+export type CreateINMutualInput = {
   id: string,
   sid: string,
   tid?: string | null,
@@ -1151,7 +1155,7 @@ export enum MFSchemeType {
 }
 
 
-export type ModelINMFConditionInput = {
+export type ModelINMutualConditionInput = {
   sid?: ModelStringInput | null,
   tid?: ModelStringInput | null,
   dir?: ModelStringInput | null,
@@ -1162,9 +1166,9 @@ export type ModelINMFConditionInput = {
   mftype?: ModelMFSchemeTypeInput | null,
   mcap?: ModelMCapInput | null,
   tf?: ModelYNInput | null,
-  and?: Array< ModelINMFConditionInput | null > | null,
-  or?: Array< ModelINMFConditionInput | null > | null,
-  not?: ModelINMFConditionInput | null,
+  and?: Array< ModelINMutualConditionInput | null > | null,
+  or?: Array< ModelINMutualConditionInput | null > | null,
+  not?: ModelINMutualConditionInput | null,
 };
 
 export type ModelMFSchemeTypeInput = {
@@ -1172,8 +1176,8 @@ export type ModelMFSchemeTypeInput = {
   ne?: MFSchemeType | null,
 };
 
-export type INMF = {
-  __typename: "INMF",
+export type INMutual = {
+  __typename: "INMutual",
   id?: string,
   sid?: string,
   tid?: string | null,
@@ -1189,7 +1193,7 @@ export type INMF = {
   updatedAt?: string,
 };
 
-export type UpdateINMFInput = {
+export type UpdateINMutualInput = {
   id: string,
   sid?: string | null,
   tid?: string | null,
@@ -1203,7 +1207,7 @@ export type UpdateINMFInput = {
   tf?: YN | null,
 };
 
-export type DeleteINMFInput = {
+export type DeleteINMutualInput = {
   id: string,
 };
 
@@ -1455,7 +1459,7 @@ export type ModelRegistrationConnection = {
   nextToken?: string | null,
 };
 
-export type ModelINExchangeFilterInput = {
+export type ModelINExchgFilterInput = {
   id?: ModelStringInput | null,
   sid?: ModelStringInput | null,
   name?: ModelStringInput | null,
@@ -1466,14 +1470,14 @@ export type ModelINExchangeFilterInput = {
   price?: ModelFloatInput | null,
   prev?: ModelFloatInput | null,
   mcap?: ModelMCapInput | null,
-  and?: Array< ModelINExchangeFilterInput | null > | null,
-  or?: Array< ModelINExchangeFilterInput | null > | null,
-  not?: ModelINExchangeFilterInput | null,
+  and?: Array< ModelINExchgFilterInput | null > | null,
+  or?: Array< ModelINExchgFilterInput | null > | null,
+  not?: ModelINExchgFilterInput | null,
 };
 
-export type ModelINExchangeConnection = {
-  __typename: "ModelINExchangeConnection",
-  items?:  Array<INExchange | null > | null,
+export type ModelINExchgConnection = {
+  __typename: "ModelINExchgConnection",
+  items?:  Array<INExchg | null > | null,
   nextToken?: string | null,
 };
 
@@ -1483,6 +1487,7 @@ export type ModelINBondFilterInput = {
   name?: ModelStringInput | null,
   subt?: ModelAssetSubTypeInput | null,
   price?: ModelFloatInput | null,
+  exchg?: ModelStringInput | null,
   sm?: ModelIntInput | null,
   sy?: ModelIntInput | null,
   mm?: ModelIntInput | null,
@@ -1505,7 +1510,7 @@ export type ModelINBondConnection = {
   nextToken?: string | null,
 };
 
-export type ModelINMFFilterInput = {
+export type ModelINMutualFilterInput = {
   id?: ModelStringInput | null,
   sid?: ModelStringInput | null,
   tid?: ModelStringInput | null,
@@ -1517,14 +1522,14 @@ export type ModelINMFFilterInput = {
   mftype?: ModelMFSchemeTypeInput | null,
   mcap?: ModelMCapInput | null,
   tf?: ModelYNInput | null,
-  and?: Array< ModelINMFFilterInput | null > | null,
-  or?: Array< ModelINMFFilterInput | null > | null,
-  not?: ModelINMFFilterInput | null,
+  and?: Array< ModelINMutualFilterInput | null > | null,
+  or?: Array< ModelINMutualFilterInput | null > | null,
+  not?: ModelINMutualFilterInput | null,
 };
 
-export type ModelINMFConnection = {
-  __typename: "ModelINMFConnection",
-  items?:  Array<INMF | null > | null,
+export type ModelINMutualConnection = {
+  __typename: "ModelINMutualConnection",
+  items?:  Array<INMutual | null > | null,
   nextToken?: string | null,
 };
 
@@ -3076,14 +3081,14 @@ export type UpdateRegistrationMutation = {
   } | null,
 };
 
-export type CreateInExchangeMutationVariables = {
-  input?: CreateINExchangeInput,
-  condition?: ModelINExchangeConditionInput | null,
+export type CreateInExchgMutationVariables = {
+  input?: CreateINExchgInput,
+  condition?: ModelINExchgConditionInput | null,
 };
 
-export type CreateInExchangeMutation = {
-  createINExchange?:  {
-    __typename: "INExchange",
+export type CreateInExchgMutation = {
+  createINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -3099,14 +3104,14 @@ export type CreateInExchangeMutation = {
   } | null,
 };
 
-export type UpdateInExchangeMutationVariables = {
-  input?: UpdateINExchangeInput,
-  condition?: ModelINExchangeConditionInput | null,
+export type UpdateInExchgMutationVariables = {
+  input?: UpdateINExchgInput,
+  condition?: ModelINExchgConditionInput | null,
 };
 
-export type UpdateInExchangeMutation = {
-  updateINExchange?:  {
-    __typename: "INExchange",
+export type UpdateInExchgMutation = {
+  updateINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -3122,14 +3127,14 @@ export type UpdateInExchangeMutation = {
   } | null,
 };
 
-export type DeleteInExchangeMutationVariables = {
-  input?: DeleteINExchangeInput,
-  condition?: ModelINExchangeConditionInput | null,
+export type DeleteInExchgMutationVariables = {
+  input?: DeleteINExchgInput,
+  condition?: ModelINExchgConditionInput | null,
 };
 
-export type DeleteInExchangeMutation = {
-  deleteINExchange?:  {
-    __typename: "INExchange",
+export type DeleteInExchgMutation = {
+  deleteINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -3158,10 +3163,11 @@ export type CreateInBondMutation = {
     name: string,
     subt: AssetSubType,
     price: number,
-    sm: number,
-    sy: number,
-    mm: number,
-    my: number,
+    exchg: string,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
     rate: number,
     fr: YN,
     tf: YN,
@@ -3187,10 +3193,11 @@ export type UpdateInBondMutation = {
     name: string,
     subt: AssetSubType,
     price: number,
-    sm: number,
-    sy: number,
-    mm: number,
-    my: number,
+    exchg: string,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
     rate: number,
     fr: YN,
     tf: YN,
@@ -3216,10 +3223,11 @@ export type DeleteInBondMutation = {
     name: string,
     subt: AssetSubType,
     price: number,
-    sm: number,
-    sy: number,
-    mm: number,
-    my: number,
+    exchg: string,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
     rate: number,
     fr: YN,
     tf: YN,
@@ -3232,14 +3240,14 @@ export type DeleteInBondMutation = {
   } | null,
 };
 
-export type CreateInmfMutationVariables = {
-  input?: CreateINMFInput,
-  condition?: ModelINMFConditionInput | null,
+export type CreateInMutualMutationVariables = {
+  input?: CreateINMutualInput,
+  condition?: ModelINMutualConditionInput | null,
 };
 
-export type CreateInmfMutation = {
-  createINMF?:  {
-    __typename: "INMF",
+export type CreateInMutualMutation = {
+  createINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,
@@ -3256,14 +3264,14 @@ export type CreateInmfMutation = {
   } | null,
 };
 
-export type UpdateInmfMutationVariables = {
-  input?: UpdateINMFInput,
-  condition?: ModelINMFConditionInput | null,
+export type UpdateInMutualMutationVariables = {
+  input?: UpdateINMutualInput,
+  condition?: ModelINMutualConditionInput | null,
 };
 
-export type UpdateInmfMutation = {
-  updateINMF?:  {
-    __typename: "INMF",
+export type UpdateInMutualMutation = {
+  updateINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,
@@ -3280,14 +3288,14 @@ export type UpdateInmfMutation = {
   } | null,
 };
 
-export type DeleteInmfMutationVariables = {
-  input?: DeleteINMFInput,
-  condition?: ModelINMFConditionInput | null,
+export type DeleteInMutualMutationVariables = {
+  input?: DeleteINMutualInput,
+  condition?: ModelINMutualConditionInput | null,
 };
 
-export type DeleteInmfMutation = {
-  deleteINMF?:  {
-    __typename: "INMF",
+export type DeleteInMutualMutation = {
+  deleteINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,
@@ -4321,13 +4329,13 @@ export type ListRegistrationsQuery = {
   } | null,
 };
 
-export type GetInExchangeQueryVariables = {
+export type GetInExchgQueryVariables = {
   id?: string,
 };
 
-export type GetInExchangeQuery = {
-  getINExchange?:  {
-    __typename: "INExchange",
+export type GetInExchgQuery = {
+  getINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -4343,19 +4351,19 @@ export type GetInExchangeQuery = {
   } | null,
 };
 
-export type ListInExchangesQueryVariables = {
+export type ListInExchgsQueryVariables = {
   id?: string | null,
-  filter?: ModelINExchangeFilterInput | null,
+  filter?: ModelINExchgFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListInExchangesQuery = {
-  listINExchanges?:  {
-    __typename: "ModelINExchangeConnection",
+export type ListInExchgsQuery = {
+  listINExchgs?:  {
+    __typename: "ModelINExchgConnection",
     items?:  Array< {
-      __typename: "INExchange",
+      __typename: "INExchg",
       id: string,
       sid: string,
       name: string,
@@ -4385,10 +4393,11 @@ export type GetInBondQuery = {
     name: string,
     subt: AssetSubType,
     price: number,
-    sm: number,
-    sy: number,
-    mm: number,
-    my: number,
+    exchg: string,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
     rate: number,
     fr: YN,
     tf: YN,
@@ -4419,10 +4428,11 @@ export type ListInBondsQuery = {
       name: string,
       subt: AssetSubType,
       price: number,
-      sm: number,
-      sy: number,
-      mm: number,
-      my: number,
+      exchg: string,
+      sm?: number | null,
+      sy?: number | null,
+      mm?: number | null,
+      my?: number | null,
       rate: number,
       fr: YN,
       tf: YN,
@@ -4437,13 +4447,13 @@ export type ListInBondsQuery = {
   } | null,
 };
 
-export type GetInmfQueryVariables = {
+export type GetInMutualQueryVariables = {
   id?: string,
 };
 
-export type GetInmfQuery = {
-  getINMF?:  {
-    __typename: "INMF",
+export type GetInMutualQuery = {
+  getINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,
@@ -4460,19 +4470,19 @@ export type GetInmfQuery = {
   } | null,
 };
 
-export type ListInmFsQueryVariables = {
+export type ListInMutualsQueryVariables = {
   id?: string | null,
-  filter?: ModelINMFFilterInput | null,
+  filter?: ModelINMutualFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListInmFsQuery = {
-  listINMFs?:  {
-    __typename: "ModelINMFConnection",
+export type ListInMutualsQuery = {
+  listINMutuals?:  {
+    __typename: "ModelINMutualConnection",
     items?:  Array< {
-      __typename: "INMF",
+      __typename: "INMutual",
       id: string,
       sid: string,
       tid?: string | null,
@@ -5996,9 +6006,9 @@ export type OnDeleteRegistrationSubscription = {
   } | null,
 };
 
-export type OnCreateInExchangeSubscription = {
-  onCreateINExchange?:  {
-    __typename: "INExchange",
+export type OnCreateInExchgSubscription = {
+  onCreateINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -6014,9 +6024,9 @@ export type OnCreateInExchangeSubscription = {
   } | null,
 };
 
-export type OnUpdateInExchangeSubscription = {
-  onUpdateINExchange?:  {
-    __typename: "INExchange",
+export type OnUpdateInExchgSubscription = {
+  onUpdateINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -6032,9 +6042,9 @@ export type OnUpdateInExchangeSubscription = {
   } | null,
 };
 
-export type OnDeleteInExchangeSubscription = {
-  onDeleteINExchange?:  {
-    __typename: "INExchange",
+export type OnDeleteInExchgSubscription = {
+  onDeleteINExchg?:  {
+    __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
@@ -6058,10 +6068,11 @@ export type OnCreateInBondSubscription = {
     name: string,
     subt: AssetSubType,
     price: number,
-    sm: number,
-    sy: number,
-    mm: number,
-    my: number,
+    exchg: string,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
     rate: number,
     fr: YN,
     tf: YN,
@@ -6082,10 +6093,11 @@ export type OnUpdateInBondSubscription = {
     name: string,
     subt: AssetSubType,
     price: number,
-    sm: number,
-    sy: number,
-    mm: number,
-    my: number,
+    exchg: string,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
     rate: number,
     fr: YN,
     tf: YN,
@@ -6106,10 +6118,11 @@ export type OnDeleteInBondSubscription = {
     name: string,
     subt: AssetSubType,
     price: number,
-    sm: number,
-    sy: number,
-    mm: number,
-    my: number,
+    exchg: string,
+    sm?: number | null,
+    sy?: number | null,
+    mm?: number | null,
+    my?: number | null,
     rate: number,
     fr: YN,
     tf: YN,
@@ -6122,9 +6135,9 @@ export type OnDeleteInBondSubscription = {
   } | null,
 };
 
-export type OnCreateInmfSubscription = {
-  onCreateINMF?:  {
-    __typename: "INMF",
+export type OnCreateInMutualSubscription = {
+  onCreateINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,
@@ -6141,9 +6154,9 @@ export type OnCreateInmfSubscription = {
   } | null,
 };
 
-export type OnUpdateInmfSubscription = {
-  onUpdateINMF?:  {
-    __typename: "INMF",
+export type OnUpdateInMutualSubscription = {
+  onUpdateINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,
@@ -6160,9 +6173,9 @@ export type OnUpdateInmfSubscription = {
   } | null,
 };
 
-export type OnDeleteInmfSubscription = {
-  onDeleteINMF?:  {
-    __typename: "INMF",
+export type OnDeleteInMutualSubscription = {
+  onDeleteINMutual?:  {
+    __typename: "INMutual",
     id: string,
     sid: string,
     tid?: string | null,

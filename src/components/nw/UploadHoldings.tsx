@@ -3,10 +3,12 @@ import { Button, Upload, Drawer, Tabs, Row, Badge, Col } from "antd";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import HoldingsTable from "./HoldingsTable";
+import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../AppContext";
 import { NWContext } from "./NWContext";
 import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgnore } from "./parseutils";
 import { isMobileDevice } from "../utils";
-import { HoldingInput, AssetSubType, InsType, AssetType } from "../../api/goals";
+import simpleStorage from "simplestorage.js";
+import { AssetSubType, InsType, AssetType, HoldingInput } from "../../api/goals";
 import {
 	cleanAssetName,
 	completeRecord,
@@ -23,10 +25,22 @@ import {
 	getNumberAtEnd,
 	removeDuplicates,
 } from "../utils";
-import { addFamilyMemberSilently, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMF } from "./nwutils";
+import { addFamilyMemberSilently, getFamilyMemberKey, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMutual } from "./nwutils";
 
 export default function UploadHoldings() {
-	const { insData, setInsData }: any = useContext(NWContext);
+	const { insData }: any = useContext(AppContext);
+	const { showInsUpload,
+		setShowInsUpload,
+		taxId,
+		setTaxId,
+		instruments,
+		setInstruments,
+		allFamily,
+		setAllFamily,
+		currencyList,
+		setCurrencyList,
+		setSelectedCurrency, 
+	}: any = useContext(NWContext);
 	const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
 	const [equities, setEquities] = useState<any>({});
@@ -37,24 +51,10 @@ export default function UploadHoldings() {
 	const [bondsNum, setBondsNum] = useState<number>(0);
 	const [etfsNum, setETFsNum] = useState<number>(0);
 	const [mfsNum, setMFsNum] = useState<number>(0);
-	
-	const {
-		showInsUpload,
-		setShowInsUpload,
-		taxId,
-		setTaxId,
-		holdings,
-		setHoldings,
-		allFamily,
-		setAllFamily,
-		currencyList,
-		setCurrencyList,
-		setSelectedCurrency,
-	}: any = useContext(NWContext);
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
 
-	useEffect(() => setDrawerVisibility(!holdings || !Object.keys(holdings).length), []);
+	useEffect(() => setDrawerVisibility(!Object.keys(instruments).length), []);
 
 	useEffect(() => {
 		if(showInsUpload) setDrawerVisibility(false);
@@ -64,52 +64,65 @@ export default function UploadHoldings() {
 		setDrawerVisibility(true);
 	}
 
-	const addUploadedInstruments = (insHoldings: Array<HoldingInput>, list: any) => {
-		if(!list || !Object.keys(list).length) return;
-		insHoldings.push(...Object.values(list) as Array<HoldingInput>);
-	}
-
-	const filterExistingTaxIdEntries = () => {
-		let filteredEntries =  holdings.instruments?.filter((entry: HoldingInput) => !entry.fIds.includes(taxId));
-		return !filteredEntries?.length ? [] : filteredEntries;
-	};
-
-	const priceInstruments = async (fun: Function, input: any, taxId: string) => {
-		let matchingList: Array<any> | null = await fun(Object.keys(input));
-		if(!matchingList || !matchingList.length) addUploadedInstruments(holdings.instruments, input);
-		else {
-			Object.keys(input).forEach((key) => {
-				let matchingEntry = matchingList?.find((match) => match?.id === key);
-				let instrument = input[key];
-				if(matchingEntry && matchingList) {
-					insData[key] = matchingEntry;
-					instrument.name = matchingEntry.name;
-					instrument.type = matchingEntry.type;
-					instrument.subt = matchingEntry.subt;
-					instrument.fIds = [taxId];
-					instrument.curr = 'INR';
-				}
-				holdings.instruments.push(input[key]);
-			})
-			setInsData(insData);
-		}
+	const loadInstrumentPrices = async (fun: Function, input: any, memberKey: string, existingMap: any) => {
+		if(!input || !Object.keys(input).length || !memberKey) return null;
+		let unmatched: any = {};
+		let queryIds: Array<string> = [];
+		Object.keys(input).forEach((key) => {
+			if(!insData[key]) queryIds.push(key);
+		});
+		let matchingList: Array<any> | null = null;
+		if(queryIds.length) matchingList = await fun(queryIds);
+		Object.keys(input).forEach((key) => {
+			let instrument = input[key];
+			let matchingEntry: HoldingInput | null = insData[key] ? insData[key] : null;
+			if(queryIds.indexOf(key) > -1 && matchingList && matchingList.length) 
+				matchingEntry = matchingList?.find((match) => match?.id === key);
+			if(matchingEntry) {
+				insData[key] = matchingEntry;
+				instrument.name = matchingEntry.name;
+				instrument.type = matchingEntry.type;
+				instrument.subt = matchingEntry.subt;
+			} else unmatched[key] = instrument;
+			if(!instrument.type) instrument.type = AssetType.F;
+			instrument.curr = 'INR'
+			instrument.fIds = [memberKey];
+			if(existingMap[instrument.id]) existingMap[instrument.id] = instrument;
+			else instruments.push(instrument);
+		})
+		return unmatched;
 	};
 
 	const addInstruments = async () => {
 		if(!taxId) return;
 		addFamilyMemberSilently(allFamily, setAllFamily, taxId);
-		holdings.instruments = filterExistingTaxIdEntries();
 		let currency = 'INR';
 		if(!currencyList[currency]) {
 			currencyList[currency] = currency;
 			setCurrencyList(currencyList);
 		}
 		setSelectedCurrency(currency);
-		await priceInstruments(loadMatchingINMF, mutualFunds, taxId);
-		await priceInstruments(loadMatchingINBond, bonds, taxId);
-		await priceInstruments(loadMatchingINExchange, equities, taxId);
-		await priceInstruments(loadMatchingINExchange, etfs, taxId);
-		setHoldings(holdings);
+		let memberKey = getFamilyMemberKey(allFamily, taxId);
+		if(!memberKey) return;
+		let existingFixedMap: any = {};
+		let existingInstrMap: any = {};
+		instruments.forEach((instrument: HoldingInput) => {
+			if(instrument.curr === currency && instrument.fIds[0] === memberKey) {
+				if(instrument.type === AssetType.F) {
+					existingFixedMap[instrument.id] = instrument;
+				}
+				existingInstrMap[instrument.id] = instrument;
+			}
+		})
+		await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, memberKey, existingInstrMap);
+		let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, memberKey, existingFixedMap);
+		if(unmatchedBonds && Object.keys(unmatchedBonds).length) 
+			Object.keys(unmatchedBonds).forEach((key: string) => equities[key] = unmatchedBonds[key]);
+		if(etfs && Object.keys(etfs).length)
+			Object.keys(etfs).forEach((key: string) => equities[key] = etfs[key]);
+		await loadInstrumentPrices(loadMatchingINExchange, equities, memberKey, existingInstrMap);
+		simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
+		setInstruments([...instruments]);
 		setDrawerVisibility(false);
 		setShowInsUpload(false);
 	}
@@ -378,7 +391,9 @@ export default function UploadHoldings() {
 
 	return (
 		<Fragment>
-			<Button icon={<UploadOutlined />} onClick={onShowDrawer} />
+			<Button icon={<UploadOutlined />} onClick={onShowDrawer} type="primary">
+				Upload Statement
+			</Button>
 			<Drawer
 				width={isMobileDevice(fsb) ? 320 : 550}
 				title="Upload NSDL or CSDL Monthly Statement"

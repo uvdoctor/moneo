@@ -3,27 +3,10 @@ import { API, graphqlOperation } from 'aws-amplify';
 import * as APIt from '../../api/goals';
 import * as queries from '../../graphql/queries';
 import { ALL_FAMILY } from './FamilyInput';
-
-export const createEmptyHoldings = () => {
-	return {
-		instruments: [],
-		property: [],
-		pm: [],
-		ppf: [],
-		epf: [],
-		nps: [],
-		vehicles: [],
-		crypto: [],
-		deposits: [],
-		lendings: [],
-		savings: [],
-		ins: [],
-		loans: []
-	}
-};
+import { GOLD } from './NWContext';
+import { getFXRate } from '../utils';
 
 export const createNewItem = async (item: APIt.CreateItemInput) => {
-	console.log('Going to create item...', item);
 	try {
 		const { data } = (await API.graphql(graphqlOperation(mutations.createItem, { input: item }))) as {
 			data: APIt.CreateItemMutation;
@@ -37,7 +20,6 @@ export const createNewItem = async (item: APIt.CreateItemInput) => {
 };
 
 export const createNewAccount = async (account: APIt.CreateAccountInput) => {
-	console.log('Going to create account...', account);
 	try {
 		const { data } = (await API.graphql(graphqlOperation(mutations.createAccount, { input: account }))) as {
 			data: APIt.CreateAccountMutation;
@@ -69,14 +51,7 @@ export const loadHoldings = async () => {
 	const { data: { listHoldingss } } = (await API.graphql(graphqlOperation(queries.listHoldingss))) as {
 		data: APIt.ListHoldingssQuery;
 	};
-	return listHoldingss && listHoldingss.items?.length ? (listHoldingss.items as Array<APIt.CreateHoldingsInput>)[0] : createEmptyHoldings();
-};
-
-export const loadFXCommCryptoRates = async () => {
-	const { data: { listEODPricess } } = (await API.graphql(graphqlOperation(queries.listEodPricess))) as {
-		data: APIt.ListEodPricessQuery;
-	};
-	return listEODPricess?.items?.length ? (listEODPricess.items as Array<APIt.CreateEODPricesInput>) : null;
+	return listHoldingss && listHoldingss.items?.length ? (listHoldingss.items as Array<APIt.CreateHoldingsInput>)[0] : null;
 };
 
 export const addFamilyMember = async (name: string, taxId: string) => {
@@ -93,23 +68,23 @@ export const addFamilyMember = async (name: string, taxId: string) => {
 	}
 };
 
-export const checkIfMemberExists = (allFamily: any, taxId: string) => {
-	if(!allFamily) return null;
-	let keys = Object.keys(allFamily);
-	if(!keys.length || !keys[0]) return null;
-	let filteredEntries = keys.filter((key: string) => allFamily[key].taxId === taxId);
-	return filteredEntries.length ? filteredEntries[0] : null;
-};
+export const getFamilyMemberKey = (allFamily: any, taxId: string) => {
+	if(!allFamily || !taxId) return null;
+	let allKeys = Object.keys(allFamily);
+	for(let i = 0; i < allKeys.length; i++) {
+		if(allFamily[allKeys[i]].taxId === taxId) return allKeys[i];
+	}
+	return null;
+}
 
-export const checkIfMemberIsSelected = (allFamily: any, selectedMembers: Array<string>, taxId: string) => {
-	if(!allFamily) return null;
-	if(!selectedMembers.length || !selectedMembers[0]) return null;
-	let filteredEntries = selectedMembers.filter((key: string) => allFamily[key].taxId === taxId);
-	return filteredEntries.length ? filteredEntries[0] : null;
-};
+export const doesMemberMatch = (instrument: APIt.HoldingInput, selectedMembers: Array<string>) =>
+	selectedMembers.indexOf(ALL_FAMILY) > -1 || selectedMembers.indexOf(instrument.fIds[0]) > -1
+
+export const doesHoldingMatch = (instrument: APIt.HoldingInput, selectedMembers: Array<string>, selectedCurrency: string) =>
+	doesMemberMatch(instrument, selectedMembers)&& instrument.curr === selectedCurrency
 
 export const addFamilyMemberSilently = async (allFamily: any, allFamilySetter: Function, taxId: string) => {
-	let id = checkIfMemberExists(allFamily, taxId);
+	let id = getFamilyMemberKey(allFamily, taxId);
 	if(id) return id;
 	let member = await addFamilyMember(taxId, taxId);
 	allFamily[member?.id as string] = {name: member?.name, taxId: member?.tid};
@@ -164,7 +139,7 @@ export const getFamilyNames = (selectedMembers: string[], allFamily: any) => {
 	return result;
 };
 
-export const getRelatedCurrencies = (holdings: APIt.CreateHoldingsInput, defaultCurrency: string) => {
+export const getRelatedCurrencies = (holdings: APIt.CreateHoldingsInput | null, defaultCurrency: string) => {
 	let currencyList: any = {[defaultCurrency]: defaultCurrency};
 	if(!holdings || !Object.keys(holdings).length) return currencyList;
 	Object.keys(holdings).forEach((key) => {
@@ -184,29 +159,45 @@ const getORIdList = (list: Array<any>, ids: Array<string>) => {
 
 export const loadMatchingINExchange = async (isins: Array<string>) => {
 	if(!isins.length) return null;
-	let idList: Array<APIt.ModelINExchangeFilterInput> = [];
-	const { data: { listINExchanges } } = (await API.graphql(graphqlOperation(queries.listInExchanges, {limit: 10000, filter: getORIdList(idList, isins)}))) as {
-		data: APIt.ListInExchangesQuery;
+	let idList: Array<APIt.ModelINExchgFilterInput> = [];
+	const { data: { listINExchgs } } = (await API.graphql(graphqlOperation(queries.listInExchgs, {limit: 10000, filter: getORIdList(idList, isins)}))) as {
+		data: APIt.ListInExchgsQuery;
 	};
-	return listINExchanges?.items?.length ? listINExchanges.items as Array<APIt.INExchange> : null;
+	return listINExchgs?.items?.length ? listINExchgs.items as Array<APIt.INExchg> : null;
 }
 
-export const loadMatchingINMF = async (isins: Array<string>) => {
+export const loadMatchingINMutual = async (isins: Array<string>) => {
 	if(!isins.length) return null;
-	let idList: Array<APIt.ModelINMFFilterInput> = [];
-	const { data: { listINMFs } } = (await API.graphql(graphqlOperation(queries.listInmFs, {limit: 20000, filter: getORIdList(idList, isins)}))) as {
-		data: APIt.ListInmFsQuery;
-	};
-	return listINMFs?.items?.length ? listINMFs.items as Array<APIt.INMF> : null;
+	let idList: Array<APIt.ModelINMutualFilterInput> = [];
+	let returnList: Array<APIt.INMutual> = [];
+	let nextToken = null;
+	do {
+		let variables:any = {limit: 20000, filter: getORIdList(idList, isins)};
+		if(nextToken) variables.nextToken = nextToken;
+		const { data: { listINMutuals } } = (await API.graphql(graphqlOperation(queries.listInMutuals, variables))) as {
+			data: APIt.ListInMutualsQuery;
+		};
+		if(listINMutuals?.items?.length) returnList.push(...listINMutuals.items as Array<APIt.INMutual>);
+		nextToken = listINMutuals?.nextToken;
+	} while(nextToken);
+	return returnList.length ? returnList : null;
 }
 
 export const loadMatchingINBond = async (isins: Array<string>) => {
 	if(!isins.length) return null;
 	let idList: Array<APIt.ModelINBondFilterInput> = [];
-	const { data: { listINBonds } } = (await API.graphql(graphqlOperation(queries.listInBonds, {limit: 10000, filter: getORIdList(idList, isins)}))) as {
-		data: APIt.ListInBondsQuery;
-	};
-	return listINBonds?.items?.length ? listINBonds.items as Array<APIt.INBond> : null;
+	let returnList: Array<APIt.INBond> = [];
+	let nextToken = null;
+	do {
+		let variables:any = {limit: 10000, filter: getORIdList(idList, isins)};
+		if(nextToken) variables.nextToken = nextToken;
+		const { data: { listINBonds } } = (await API.graphql(graphqlOperation(queries.listInBonds, variables))) as {
+			data: APIt.ListInBondsQuery;
+		};
+		if(listINBonds?.items?.length) returnList.push(...listINBonds.items as Array<APIt.INBond>);
+		nextToken = listINBonds?.nextToken;
+	} while(nextToken);
+	return returnList.length ? returnList : null;
 }
 
 export const getAssetTypes = () => {
@@ -248,4 +239,23 @@ export const getGoldTypes = () => {
 		16: "16",
 		14: "14"
 	}
+}
+
+export const getColourForAssetType = (at: APIt.AssetType) => {
+	switch(at) {
+		case APIt.AssetType.E: 
+			return "#e78284";
+		case APIt.AssetType.F:
+			return "#aa8dfa";
+		case APIt.AssetType.A:
+			return "#7cd9fd";
+		default:
+			return "#fdd0cb";
+	}
+}
+
+export const getCommodityRate = (ratesData: any, subtype: string, purity: string, currency: string) => {
+	let rate = subtype === APIt.AssetSubType.Gold ? ratesData[GOLD] : ratesData[subtype];
+	if(!rate) return 0;
+	return rate * getFXRate(ratesData, currency) * Number.parseFloat(purity) / (subtype === APIt.AssetSubType.Gold ? 24 : 100);
 }

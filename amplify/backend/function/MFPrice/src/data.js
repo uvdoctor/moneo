@@ -1,5 +1,4 @@
-const graphqlOperation = require("./operation");
-
+const docClient = require("./insertIntoDB");
 const getAssetType = (data) => {
   if (data.includes("Hybrid")) return "H";
   if (
@@ -67,14 +66,14 @@ const getDirISIN = (regularData, directData, element) => {
   let name = element["Scheme Name"].toLowerCase().replace(/\s/g, "");
   const checkRegular = regularData.some((item) => item === name);
   if (!checkRegular) {
-    return false;
+    return null;
   }
   let compareRegAndDir = directData.find((item) => name.includes(item.name));
   if (!compareRegAndDir) {
     name = name.substring(0, name.indexOf("regular") + "regular".length);
     compareRegAndDir = directData.find((item) => name.includes(item.name));
     if (!compareRegAndDir) {
-      return false;
+      return null;
     }
   }
   return compareRegAndDir.ISIN;
@@ -82,47 +81,26 @@ const getDirISIN = (regularData, directData, element) => {
 
 const mCap = (element) => {
   const type = element["Scheme Type"].toLowerCase();
-  if (type.includes("equity")) {
-    if (type.includes("large")) {
-      return "L";
-    } else if (type.includes("mid")) {
-      return "M";
-    } else if (type.includes("small")) {
-      return "S";
-    } else {
-      return "H";
-    }
-  } else {
-    return false;
-  }
+  if (type.includes("equity") && type.includes("large")) return "L";
+  if (type.includes("equity") && type.includes("mid")) return "M";
+  if (type.includes("equity") && type.includes("small")) return "S";
+  if (type.includes("equity")) return "H";
+  return null;
 };
 
-const executeMutation = async (mutation, input) => {
-  return await graphqlOperation({ input: input }, mutation);
-};
-
-const pushData = (data) => {
-  let instrumentData = { updatedIDs: [], errorIDs: [] };
+const pushData = async (data, table) => {
   return new Promise(async (resolve, reject) => {
-    for (let i = 0; i < data.length; i++) {
-      try {
-        const updatedData = await executeMutation("UpdateInmf", data[i]);
-        if (!updatedData.body.data.updateINMF) {
-          await executeMutation("CreateInmf", data[i]);
-        }
-        // console.log(updatedData.body.data);
-        updatedData.body.errors
-          ? instrumentData.errorIDs.push({
-              id: data[i].id,
-              error: updatedData.body.errors,
-            })
-          : instrumentData.updatedIDs.push(data[i]);
-      } catch (err) {
-        console.log(err);
-      }
+    const params = {
+      RequestItems: {
+        [table]: data,
+      },
+    };
+    try {
+      const updateRecord = await docClient.batchWrite(params).promise();
+      resolve(updateRecord);
+    } catch (error) {
+      reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
     }
-    console.log(instrumentData);
-    resolve(instrumentData);
   });
 };
 

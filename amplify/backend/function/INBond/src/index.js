@@ -1,10 +1,14 @@
-const fs = require("fs");
+/* Amplify Params - DO NOT EDIT
+	AUTH_DDPWA0063633B_USERPOOLID
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const utils = require("./utils");
-const { tempDir, zipFile, apiArray } = utils;
+const { tempDir, zipFile, apiArray, csvFile } = utils;
 const bhaoUtils = require("./bhavUtils");
-const updateSchema = require("./calculate");
+const calcSchema = require("./calculate");
 const {
   downloadZip,
   unzipDownloads,
@@ -12,6 +16,8 @@ const {
   cleanDirectory,
   pushData,
 } = bhaoUtils;
+const table = "INBond-bvyjaqmusfh5zelcbeeji6xxoe-dev";
+const instrumentList = [];
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
@@ -20,29 +26,27 @@ const getAndPushData = () => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const {
-          typeExchg,
-          fileName,
-          url,
-          codes,
-          schema,
-          typeIdentifier,
-          updateMutation,
-          createMutation,
-        } = apiArray[i];
+        const { typeExchg, fileName, url, codes, schema } = apiArray[i];
         await mkdir(tempDir);
-        await downloadZip(url, tempDir, zipFile);
-        await unzipDownloads(zipFile, tempDir);
+        if (url.includes("zip")) {
+          await downloadZip(url, tempDir, zipFile);
+          await unzipDownloads(zipFile, tempDir);
+        }
+        await downloadZip(url, tempDir, csvFile);
         const data = await extractDataFromCSV(
           tempDir,
           fileName,
-          codes,
-          typeIdentifier,
-          schema,
           typeExchg,
-          updateSchema
+          codes,
+          schema,
+          calcSchema,
+          instrumentList,
+          table
         );
-        await pushData(data, updateMutation, createMutation);
+        for (let batch of data) {
+          const details = await pushData(batch, table, instrumentList);
+          console.log(details);
+        }
       } catch (err) {
         reject(err);
       }

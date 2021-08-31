@@ -1,4 +1,4 @@
-const insertInstrument = require("./operation");
+const docClient = require("./insertIntoDB");
 const https = require("https");
 const fs = require("fs");
 const fsPromise = require("fs/promises");
@@ -11,9 +11,9 @@ const cleanDirectory = async (tempDir, msg) => {
   console.log(msg);
 };
 
-const downloadZip = (NSE_URL, tempDir, zipFile) => {
+const downloadZip = (url, tempDir, file) => {
   return new Promise((resolve, reject) => {
-    const req = https.get(NSE_URL, async (res) => {
+    const req = https.get(url, async (res) => {
       const { statusCode } = res;
       if (statusCode < 200 || statusCode >= 300) {
         await cleanDirectory(
@@ -22,7 +22,7 @@ const downloadZip = (NSE_URL, tempDir, zipFile) => {
         );
         return reject(new Error("statusCode=" + statusCode));
       }
-      res.pipe(fs.createWriteStream(zipFile));
+      res.pipe(fs.createWriteStream(file));
       res.on("end", function () {
         resolve();
       });
@@ -52,27 +52,52 @@ const unzipDownloads = async (zipFile, tempDir) => {
 const extractDataFromCSV = async (
   tempDir,
   fileName,
-  codes,
-  typeIdentifier,
-  schema,
   typeExchg,
-  updateSchema
+  codes,
+  schema,
+  calcSchema,
+  instrumentList,
+  table
 ) => {
   const end = new Promise((resolve, reject) => {
-    let results = [];
+    let batches = [];
+    let batchRecords = [];
+    let count = 0;
+    const isinMap = {};
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        const schemaData = updateSchema(record, codes, schema);
-        results.push(Object.assign({}, schemaData));
-        // console.log("Results:", results);
+        if (isinMap[record[codes.id]]) return;
+        const idCheck = instrumentList.some(
+          (item) => item === record[codes.id]
+        );
+        if (!idCheck) {
+          const updateSchema = calcSchema(
+            record,
+            codes,
+            schema,
+            typeExchg,
+            isinMap,
+            table
+          );
+          if (!updateSchema) return;
+          const dataToPush = JSON.parse(JSON.stringify(updateSchema));
+          batches.push({ PutRequest: { Item: dataToPush } });
+
+          count++;
+          if (count === 25) {
+            batchRecords.push(batches);
+            batches = [];
+            count = 0;
+          }
+        }
       })
       .on("end", async () => {
         await cleanDirectory(
           tempDir,
-          `${typeIdentifier} results extracted successfully and directory is cleaned`
+          `${fileName} of ${typeExchg} results extracted successfully and directory is cleaned`
         );
-        resolve(results);
+        resolve(batchRecords);
       })
       .on("error", (err) => {
         cleanDirectory(
@@ -85,34 +110,23 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const executeMutation = async (mutation, input) => {
-  return await insertInstrument({ input: input }, mutation);
-};
-
-const pushData = (data, updateMutation, createMutation) => {
-  let instrumentData = { updatedIDs: [], errorIDs: [] };
+const pushData = async (data, table, instrumentList) => {
   return new Promise(async (resolve, reject) => {
-    for (let i = 0; i < data.length; i++) {
-      try {
-        const updatedData = await executeMutation(updateMutation, data[i]);
-        if (!updatedData.body.data.updateINExchange) {
-          await executeMutation(createMutation, data[i]);
-        }
-        // console.log(updatedData.body.data);
-        updatedData.body.errors
-          ? instrumentData.errorIDs.push({
-              id: data[i].id,
-              error: updatedData.body.errors,
-            })
-          : instrumentData.updatedIDs.push(data[i]);
-      } catch (err) {
-        console.log(err);
-      }
+    data.map((item) => instrumentList.push(item.PutRequest.Item.id));
+    var params = {
+      RequestItems: {
+        [table]: data,
+      },
+    };
+    try {
+      const updateRecord = await docClient.batchWrite(params).promise();
+      resolve(updateRecord);
+    } catch (error) {
+      reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
     }
-    console.log(instrumentData);
-    resolve(instrumentData);
   });
 };
+
 module.exports = {
   downloadZip,
   unzipDownloads,

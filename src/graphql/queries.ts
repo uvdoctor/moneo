@@ -850,9 +850,9 @@ export const listRegistrations = /* GraphQL */ `
     }
   }
 `;
-export const getInExchange = /* GraphQL */ `
-  query GetInExchange($id: String!) {
-    getINExchange(id: $id) {
+export const getInExchg = /* GraphQL */ `
+  query GetInExchg($id: String!) {
+    getINExchg(id: $id) {
       id
       sid
       name
@@ -868,15 +868,15 @@ export const getInExchange = /* GraphQL */ `
     }
   }
 `;
-export const listInExchanges = /* GraphQL */ `
-  query ListInExchanges(
+export const listInExchgs = /* GraphQL */ `
+  query ListInExchgs(
     $id: String
-    $filter: ModelINExchangeFilterInput
+    $filter: ModelINExchgFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listINExchanges(
+    listINExchgs(
       id: $id
       filter: $filter
       limit: $limit
@@ -909,6 +909,7 @@ export const getInBond = /* GraphQL */ `
       name
       subt
       price
+      exchg
       sm
       sy
       mm
@@ -946,6 +947,7 @@ export const listInBonds = /* GraphQL */ `
         name
         subt
         price
+        exchg
         sm
         sy
         mm
@@ -964,9 +966,9 @@ export const listInBonds = /* GraphQL */ `
     }
   }
 `;
-export const getInmf = /* GraphQL */ `
-  query GetInmf($id: String!) {
-    getINMF(id: $id) {
+export const getInMutual = /* GraphQL */ `
+  query GetInMutual($id: String!) {
+    getINMutual(id: $id) {
       id
       sid
       tid
@@ -983,15 +985,15 @@ export const getInmf = /* GraphQL */ `
     }
   }
 `;
-export const listInmFs = /* GraphQL */ `
-  query ListInmFs(
+export const listInMutuals = /* GraphQL */ `
+  query ListInMutuals(
     $id: String
-    $filter: ModelINMFFilterInput
+    $filter: ModelINMutualFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listINMFs(
+    listINMutuals(
       id: $id
       filter: $filter
       limit: $limit
