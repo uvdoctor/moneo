@@ -88,7 +88,7 @@ const mCap = (element) => {
   return null;
 };
 
-const pushData = async (data, table) => {
+const pushData = async (data, table, index) => {
   return new Promise(async (resolve, reject) => {
     const params = {
       RequestItems: {
@@ -99,7 +99,7 @@ const pushData = async (data, table) => {
       const updateRecord = await docClient.batchWrite(params).promise();
       resolve(updateRecord);
     } catch (error) {
-      reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
+      reject(`Error in dynamoDB: ${JSON.stringify(error)}, ${index}`);
     }
   });
 };

@@ -110,7 +110,7 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const pushData = async (data, table, instrumentList) => {
+const pushData = async (data, table, instrumentList, index) => {
   return new Promise(async (resolve, reject) => {
     data.map((item) => instrumentList.push(item.PutRequest.Item.id));
     var params = {
@@ -122,7 +122,7 @@ const pushData = async (data, table, instrumentList) => {
       const updateRecord = await docClient.batchWrite(params).promise();
       resolve(updateRecord);
     } catch (error) {
-      reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
+      reject(`Error in dynamoDB: ${JSON.stringify(error)}, ${index}`);
     }
   });
 };

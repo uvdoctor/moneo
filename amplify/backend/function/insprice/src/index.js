@@ -36,9 +36,8 @@ const getAndPushData = () => {
           instrumentList,
           table
         );
-        for (let batch of data) {
-          const details = await pushData(batch, table, instrumentList);
-          console.log(details);
+        for (let batch in data) {
+          await pushData(data[batch], table, instrumentList, batch);
         }
       } catch (err) {
         reject(err);

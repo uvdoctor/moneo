@@ -1,4 +1,5 @@
 const mfData = require("india-mutual-fund-info");
+const { index } = require("simplestorage.js");
 const dataInfo = require("./data");
 const {
   getDirISIN,
@@ -63,7 +64,7 @@ const getData = () => {
 
 exports.handler = async (event) => {
   const data = await getData();
-  for (let batch of data) {
-    await pushData(batch, table);
+  for (let batch in data) {
+    await pushData(data[batch], table, batch);
   }
 };
