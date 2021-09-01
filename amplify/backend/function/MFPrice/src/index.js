@@ -1,5 +1,4 @@
 const mfData = require("india-mutual-fund-info");
-const { index } = require("simplestorage.js");
 const dataInfo = require("./data");
 const {
   getDirISIN,
