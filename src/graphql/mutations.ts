@@ -915,6 +915,51 @@ export const createHoldings = /* GraphQL */ `
         fIds
         curr
       }
+      mem {
+        id
+        qty
+        pur {
+          amt
+          date
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        type
+        subt
+      }
+      angel {
+        id
+        qty
+        pur {
+          amt
+          date
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        type
+        subt
+      }
+      other {
+        id
+        qty
+        pur {
+          amt
+          date
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        type
+        subt
+      }
       createdAt
       updatedAt
       owner
@@ -1087,6 +1132,51 @@ export const updateHoldings = /* GraphQL */ `
         fIds
         curr
       }
+      mem {
+        id
+        qty
+        pur {
+          amt
+          date
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        type
+        subt
+      }
+      angel {
+        id
+        qty
+        pur {
+          amt
+          date
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        type
+        subt
+      }
+      other {
+        id
+        qty
+        pur {
+          amt
+          date
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        type
+        subt
+      }
       createdAt
       updatedAt
       owner
@@ -1258,6 +1348,51 @@ export const deleteHoldings = /* GraphQL */ `
         years
         fIds
         curr
+      }
+      mem {
+        id
+        qty
+        pur {
+          amt
+          date
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        type
+        subt
+      }
+      angel {
+        id
+        qty
+        pur {
+          amt
+          date
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        type
+        subt
+      }
+      other {
+        id
+        qty
+        pur {
+          amt
+          date
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        type
+        subt
       }
       createdAt
       updatedAt

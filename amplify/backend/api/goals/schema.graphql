@@ -202,14 +202,21 @@ enum AssetType {
 
 enum AssetSubType {
 	S
+	A
 	CB
 	GB
+	HB
 	GBO
 	GoldB
 	Gold
 	I
 	L
 	R
+	C
+	M
+	O
+	V
+	Cash
 }
 
 enum InsType {
@@ -400,6 +407,9 @@ type Holdings @model @auth(rules: [{ allow: owner }]) {
 	nps: [Holding!]
 	crypto: [Holding!]
 	ins: [Insurance!]
+	mem: [Holding!]
+	angel: [Holding!]
+	other: [Holding!]
 }
 
 type EODPrices 

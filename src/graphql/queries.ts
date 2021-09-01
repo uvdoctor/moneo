@@ -605,6 +605,51 @@ export const getHoldings = /* GraphQL */ `
         fIds
         curr
       }
+      mem {
+        id
+        qty
+        pur {
+          amt
+          date
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        type
+        subt
+      }
+      angel {
+        id
+        qty
+        pur {
+          amt
+          date
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        type
+        subt
+      }
+      other {
+        id
+        qty
+        pur {
+          amt
+          date
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        type
+        subt
+      }
       createdAt
       updatedAt
       owner
@@ -728,6 +773,36 @@ export const listHoldingss = /* GraphQL */ `
           years
           fIds
           curr
+        }
+        mem {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          type
+          subt
+        }
+        angel {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          type
+          subt
+        }
+        other {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          type
+          subt
         }
         createdAt
         updatedAt

@@ -43,6 +43,8 @@ function NWContextProvider() {
 	const [ ppf, setPPF ] = useState<Array<HoldingInput>>([]);
 	const [ nps, setNPS ] = useState<Array<HoldingInput>>([]);
 	const [ epf, setEPF ] = useState<Array<HoldingInput>>([]);
+	const [ memberships, setMemberships ] = useState<Array<HoldingInput>>([]);
+	const [ others, setOthers ] = useState<Array<HoldingInput>>([]);
 	const [ crypto, setCrypto ] = useState<Array<HoldingInput>>([]);
 	const [ loans, setLoans ] = useState<Array<LiabilityInput>>([]);
 	const [ insurance, setInsurance ] = useState<Array<InsuranceInput>>([]);
@@ -65,6 +67,8 @@ function NWContextProvider() {
 	const [ totalLoans, setTotalLoans ] = useState<number>(0);
 	const [ totalInsurance, setTotalInsurance ] = useState<number>(0);
 	const [ totalLiabilities, setTotalLiabilities ] = useState<number>(0);
+	const [ totalMemberships, setTotalMemberships ] = useState<number>(0);
+	const [ totalOthers, setTotalOthers ] = useState<number>(0);
 	const [ showInsUpload, setShowInsUpload ] = useState<boolean>(false);
 	const [ taxId, setTaxId ] = useState<string>('');
 	const [ activeTab, setActiveTab ] = useState<string>('Demat Holdings');
@@ -167,8 +171,8 @@ function NWContextProvider() {
 			children: {
 				Memberships: {
 					label: 'Memberships',
-					data: crypto,
-					setData: setCrypto,
+					data: memberships,
+					setData: setMemberships,
 					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
 				},
 				Crypto: {
@@ -441,7 +445,11 @@ function NWContextProvider() {
 				lendings,
 				setLendings,
 				properties,
-				setProperties
+				setProperties,
+				memberships,
+				setMemberships,
+				others,
+				setOthers
 			}}
 		>
 			<NWView />
