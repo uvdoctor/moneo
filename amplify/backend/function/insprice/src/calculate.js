@@ -36,17 +36,17 @@ const calc = {
     calcType: (type, subt, name) => {
       const fixed = ["GB", "GS", "W", "N", "Y", "Z"];
       if (type === "IV" || type === "RR") return "A";
+      if (name.includes("ETF") && name.includes("GOLD")) return "A";
       if (
-        (name.includes("ETF") &&
-          (name.includes("GOLD") ||
-            name.includes("GILT") ||
-            name.includes("BBETF") ||
-            name.includes("LIQUID"))) ||
-        name.includes("NIF") ||
-        name.includes("50") ||
-        name.includes("100") ||
-        name.includes("SEN") ||
-        fixed.some((item) => item === type || type.startsWith(item))
+        name.includes("ETF") &&
+        (name.includes("GILT") ||
+          name.includes("BBETF") ||
+          name.includes("LIQUID") ||
+          name.includes("NIF") ||
+          name.includes("50") ||
+          name.includes("100") ||
+          name.includes("SEN") ||
+          fixed.some((item) => item === type || type.startsWith(item)))
       )
         return "F";
       return "E";
