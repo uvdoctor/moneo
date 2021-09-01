@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect } from 'react';
-import HoldingTabs from './HoldingTabs';
+import HoldingTabView from './HoldingTabView';
 import HoldingsChart from './HoldingsChart';
 import DataSwitcher from '../DataSwitcher';
 import { NWContext } from './NWContext';
@@ -82,7 +82,7 @@ export default function NWView() {
 						<HoldingsChart />
 					</Chart>
 					<DataSwitcherList>
-						{!loadingHoldings ? <HoldingTabs /> : null}
+						{!loadingHoldings ? <HoldingTabView /> : null}
 					</DataSwitcherList>
 				</DataSwitcher>
 			</div>

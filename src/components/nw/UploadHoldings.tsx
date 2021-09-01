@@ -391,7 +391,9 @@ export default function UploadHoldings() {
 
 	return (
 		<Fragment>
-			<Button icon={<UploadOutlined />} onClick={onShowDrawer} />
+			<Button icon={<UploadOutlined />} onClick={onShowDrawer} type="primary">
+				Upload Statement
+			</Button>
 			<Drawer
 				width={isMobileDevice(fsb) ? 320 : 550}
 				title="Upload NSDL or CSDL Monthly Statement"

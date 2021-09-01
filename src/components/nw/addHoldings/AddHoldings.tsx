@@ -1,33 +1,47 @@
-import React, { useState } from "react";
-import { Modal, Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { ContextProvider } from "./Context";
-import FormGenerator from "./FormGenerator";
+import React, { Fragment, useContext, useState } from 'react';
+import { Modal, Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import FormGenerator from './FormGenerator';
+import { Context, ContextProvider } from './Context';
 
-export default function AddHoldings() {
-	const [isModalVisible, setModalVisibility] = useState(false);
+interface AddHoldingsProps {
+	data: Array<any>;
+	changeData: Function;
+	isPrimary: boolean;
+}
 
-	function showModal() {
-		setModalVisibility(true);
-	}
+export default function AddHoldings({ data, changeData, isPrimary }: AddHoldingsProps) {
+	const [ isModalVisible, setModalVisibility ] = useState(false);
+	const { add }: any = useContext(Context);
+	
+	const onClose = () => setModalVisibility(false);
 
-	function onClose() {
-		setModalVisibility(false);
+	const addHolding = (input: any) => {
+		data.push(input);
+		changeData([...data]);
 	}
 
 	return (
-		<div className="text-right">
-			<Button type="primary" icon={<PlusOutlined />} onClick={showModal} />
-			<Modal
-				title="Add Asset"
-				visible={isModalVisible}
-				footer={null}
-				onCancel={onClose}
+		<Fragment>
+			&nbsp;&nbsp;
+			<Button
+				type={isPrimary ? 'primary' : 'default'}
+				icon={<PlusOutlined />}
+				onClick={() => setModalVisibility(true)}
 			>
-				<ContextProvider>
+				{isPrimary ? 'Add' : 'Add Manually'}
+			</Button>
+			<ContextProvider>
+				<Modal
+					title="Add"
+					visible={isModalVisible}
+					footer={null}
+					onCancel={onClose}
+					onOk={() => add((input: any) => addHolding(input))}
+				>
 					<FormGenerator onClose={onClose} />
-				</ContextProvider>
-			</Modal>
-		</div>
+				</Modal>
+			</ContextProvider>
+		</Fragment>
 	);
 }

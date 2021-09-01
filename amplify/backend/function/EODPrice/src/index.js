@@ -1,4 +1,8 @@
-const eodData = require("./eodData");
+/* Amplify Params - DO NOT EDIT
+	AUTH_DDPWA0063633B_USERPOOLID
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
 const { getData, pushData } = eodData;

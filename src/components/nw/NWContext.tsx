@@ -74,67 +74,127 @@ function NWContextProvider() {
 	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
 
 	const tabs = {
-		'Demat Holdings': {
-			label: 'Demat Holdings',
+		Cash: {
+			label: 'Cash',
+			children: {
+				'Deposits': {
+					label: 'Deposits',
+					data: deposits,
+					setData: setDeposits,
+					content: <InstrumentValuation />
+				},
+				'Saving Accounts': {
+					label: 'Saving Accounts',
+					data: savings,
+					setData: setSavings,
+					content: <InstrumentValuation />
+				},
+				'Money Lent': {
+					label: 'Money Lent',
+					data: lendings,
+					setData: setLendings,
+					content: <InstrumentValuation />
+				},
+			}
+		},
+		Physical: {
+			label: 'Physical',
+			children: {
+				Properties: {
+					label: 'Properties',
+					data: properties,
+					setData: setProperties,
+					content: <InstrumentValuation />,
+					formConfig: [
+						{
+							label: 'Name',
+							name: 'name',
+							type: 'text'
+						},
+						{
+							label: 'Qty',
+							name: 'qty',
+							type: 'text'
+						}
+					]
+				},
+				Vehicles: {
+					label: 'Vehicles',
+					data: vehicles,
+					setData: setVehicles,
+					content: <InstrumentValuation />,
+				},
+				'Precious Metals': {
+					label: 'Precious Metals',
+					data: preciousMetals,
+					setData: setPreciousMetals,
+					content: <DynamicHoldingInput holdings={preciousMetals} changeHoldings={setPreciousMetals} />
+				}
+			},
+		},
+		Financial: {
+			label: 'Financial',
 			hasUploader: true,
 			data: instruments,
+			setData: setInstruments,
 			content: <InstrumentValuation />
 		},
-		Properties: {
-			label: 'Properties',
-			data: properties,
-			content: <InstrumentValuation />,
-			formConfig: [
-				{
-					label: 'Name',
-					name: 'name',
-					type: 'text'
+		Retirement: {
+			label: 'Retirement',
+			children: {
+				PPF: {
+					label: 'PPF',
+					data: ppf,
+					setData: setPPF,
+					content: <InstrumentValuation />
 				},
-				{
-					label: 'Qty',
-					name: 'qty',
-					type: 'text'
-				}
-			]
+				EPF: {
+					label: 'EPF',
+					data: epf,
+					setData: setEPF,
+					content: <InstrumentValuation />
+				},
+				NPS: {
+					label: 'NPS',
+					data: nps,
+					setData: setNPS,
+					content: <InstrumentValuation />
+				},
+			}
 		},
-		Vehicles: {
-			label: 'Vehicles',
-			data: vehicles,
-			content: <InstrumentValuation />
-		},
-		'Precious Metals': {
-			label: 'Precious Metals',
-			data: preciousMetals,
-			content: <DynamicHoldingInput holdings={preciousMetals} changeHoldings={setPreciousMetals} />
-		},
-		Deposits: {
-			label: 'Deposits',
-			data: deposits,
-			content: <InstrumentValuation />
-		},
-		Savings: {
-			label: 'Savings',
-			data: savings,
-			content: <InstrumentValuation />
-		},
-		PPF: {
-			label: 'PPF',
-			data: ppf,
-			content: <InstrumentValuation />
-		},
-		EPF: {
-			label: 'EPF',
-			data: epf,
-			content: <InstrumentValuation />
-		},
-		NPS: {
-			label: 'NPS',
-			data: nps,
-			content: <InstrumentValuation />
+		Exotic: {
+			label: 'Exotic',
+			children: {
+				Memberships: {
+					label: 'Memberships',
+					data: crypto,
+					setData: setCrypto,
+					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+				},
+				Crypto: {
+					label: 'Crypto',
+					data: crypto,
+					setData: setCrypto,
+					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+				},
+				'Angel Investments': {
+					label: 'Angel Investments',
+					data: crypto,
+					setData: setCrypto,
+					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+				},
+				Other: {
+					label: 'Other',
+					data: crypto,
+					setData: setCrypto,
+					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+				}, 
+			}
 		},
 		Loans: {
 			label: 'Loans',
 			data: loans,
+			setData: setLoans,
 			content: <InstrumentValuation />,
 			formConfig: [
 				{
@@ -167,18 +227,9 @@ function NWContextProvider() {
 		Insurance: {
 			label: 'Insurance',
 			data: insurance,
+			setData: setInsurance,
 			content: <InstrumentValuation />
 		},
-		Lendings: {
-			label: 'Lendings',
-			data: lendings,
-			content: <InstrumentValuation />
-		},
-		Crypto: {
-			label: 'Crypto',
-			data: crypto,
-			content: <InstrumentValuation />
-		}
 	};
 
 	const initializeFamilyList = async () => {

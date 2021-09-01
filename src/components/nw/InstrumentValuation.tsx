@@ -11,13 +11,9 @@ import { AppContext } from '../AppContext';
 
 export default function InstrumentValuation() {
 	const { insData }: any = useContext(AppContext);
-	const {
-		instruments,
-		setInstruments,
-		selectedMembers,
-		selectedCurrency,
-		totalInstruments
-	}: any = useContext(NWContext);
+	const { instruments, setInstruments, selectedMembers, selectedCurrency, totalInstruments }: any = useContext(
+		NWContext
+	);
 	const { CheckableTag } = Tag;
 	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([ ...instruments ]);
 	const assetTypes = Object.keys(getAssetTypes());

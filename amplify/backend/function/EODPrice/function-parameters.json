@@ -2,21 +2,21 @@
   "lambdaLayers": [],
   "environmentVariableList": [
     {
-      "cloudFormationParameterName": "eodApiKey",
-      "environmentVariableName": "EOD_API_KEY"
-    },
-    {
       "cloudFormationParameterName": "apiGoalsGraphqlapiendpointoutput",
       "environmentVariableName": "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT"
     },
     {
       "cloudFormationParameterName": "apiGoalsGraphqlapiidoutput",
       "environmentVariableName": "API_GOALS_GRAPHQLAPIIDOUTPUT"
+    },
+    {
+      "cloudFormationParameterName": "eodApiKey",
+      "environmentVariableName": "EOD_API_KEY"
     }
   ],
   "permissions": {
-    "api": {
-      "goals": [
+    "auth": {
+      "ddpwa0063633b": [
         "create",
         "read",
         "update",
