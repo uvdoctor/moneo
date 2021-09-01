@@ -33,6 +33,12 @@ const getAssetSubType = (element) => {
     return "GB";
   if (sType.includes("Debt Scheme")) return "CB";
   if (sType.includes("Index")) return "I";
+  if (sType.includes("Gilt")) return "GB";
+  if (
+    (sType.includes("Close") || sType.includes("Interval")) &&
+    sType.includes("Income")
+  )
+    return "HB";
   return "S";
 };
 
