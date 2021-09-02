@@ -4,9 +4,18 @@ import { NWContext } from './NWContext';
 import AddHoldings from './addHoldings/AddHoldings';
 import UploadHoldings from './UploadHoldings';
 import { getFamilyNames } from './nwutils';
+import { toHumanFriendlyCurrency } from '../utils';
 
 export default function HoldingTabView() {
-	const { tabs, activeTab, setActiveTab, allFamily, selectedMembers, loadingHoldings }: any = useContext(NWContext);
+	const {
+		tabs,
+		activeTab,
+		setActiveTab,
+		allFamily,
+		selectedMembers,
+		loadingHoldings,
+		selectedCurrency
+	}: any = useContext(NWContext);
 	const [ childTab, setChildTab ] = useState<string>('');
 	const { TabPane } = Tabs;
 
@@ -32,7 +41,13 @@ export default function HoldingTabView() {
 							) : (
 								<Fragment>
 									<Row justify="space-between" className="header">
-										<Col>{`${getFamilyNames(selectedMembers, allFamily)} Portfolio`}</Col>
+										<Col>{`${getFamilyNames(
+											selectedMembers,
+											allFamily
+										)} Portfolio Value is ${toHumanFriendlyCurrency(
+											tabsData[tabName].total,
+											selectedCurrency
+										)}`}</Col>
 										<Col>
 											{hasUploader && <UploadHoldings />}
 											<AddHoldings

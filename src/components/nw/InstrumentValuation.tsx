@@ -27,7 +27,11 @@ export default function InstrumentValuation() {
 	const columns = [
 		{
 			title: (
-				<strong style={{ color: COLORS.GREEN }}>
+				<strong
+					style={{
+						color: filteredInfo && filteredInfo.id && filteredInfo.id.length ? COLORS.GREEN : COLORS.DEFAULT
+					}}
+				>
 					Total ~ {toHumanFriendlyCurrency(total, selectedCurrency)}
 				</strong>
 			),
@@ -68,26 +72,30 @@ export default function InstrumentValuation() {
 		[ instruments, selectedMembers, selectedCurrency, selectedAssetTypes, filteredInfo ]
 	);
 
-	useEffect(() => {
-		let filteredNames: Array<any> = [];
-		filteredInstruments.forEach((instrument: HoldingInput) => 
-			filteredNames.push(getFilterItem(instrument.id as string, instrument.name as string))
-		);
-		setNameFilterValues([ ...filteredNames ]);
-	}, [instruments]);
+	useEffect(
+		() => {
+			let filteredNames: Array<any> = [];
+			instruments.forEach((instrument: HoldingInput) =>
+				filteredNames.push(getFilterItem(instrument.id as string, instrument.name as string))
+			);
+			setNameFilterValues([ ...filteredNames ]);
+		},
+		[ instruments ]
+	);
 
 	useEffect(
 		() => {
 			let total = 0;
-			filteredInstruments.forEach((instrument: HoldingInput) => 
-				total += instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0)
+			filteredInstruments.forEach(
+				(instrument: HoldingInput) =>
+					(total += instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0))
 			);
 			setTotal(total);
 		},
 		[ filteredInstruments ]
 	);
 
-	return (
+	return instruments.length ? (
 		<Fragment>
 			<p style={{ textAlign: 'center' }}>
 				{assetTypes.map((tag: string) => (
@@ -114,9 +122,9 @@ export default function InstrumentValuation() {
 					bordered
 					onChange={handleChange}
 				/>
-			) : (
-				<Empty description={<p>No data found.</p>} />
-			)}
+			) : null}
 		</Fragment>
+	) : (
+		<Empty description={<p>No data found.</p>} />
 	);
 }
