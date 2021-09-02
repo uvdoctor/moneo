@@ -80,6 +80,21 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 				<Row align="middle">
 					{isEditMode ? (
 						<Fragment>
+							{showPrice && (
+								<Fragment>
+									<Col>
+										<InputNumber
+											value={price}
+											size="small"
+											onChange={(val) => {
+												setPrice(val);
+											}}
+										/>
+									</Col>
+									<Col>&nbsp;</Col>
+									<ShoppingCartOutlined />{' '}
+								</Fragment>
+							)}
 							<Col>
 								<InputNumber
 									value={holding.qty}
@@ -90,20 +105,6 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 									}}
 								/>
 							</Col>
-							{showPrice && (
-								<Fragment>
-									<Col>&nbsp;x&nbsp;</Col>
-									<Col>
-										<InputNumber
-											value={price}
-											size="small"
-											onChange={(val) => {
-												setPrice(val);
-											}}
-										/>
-									</Col>
-								</Fragment>
-							)}
 						</Fragment>
 					) : (
 						<Col>
