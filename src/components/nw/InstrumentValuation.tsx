@@ -33,19 +33,19 @@ export default function InstrumentValuation() {
 			),
 			key: 'id',
 			filterIcon: <FilterTwoTone twoToneColor={COLORS.GREEN} style={{ fontSize: 20 }} />,
-			filteredValue: filteredInfo.name || null,
+			filteredValue: filteredInfo.id || null,
 			filters: nameFilterValues,
-			onFilter: (value: Array<any>, record: any) => record.name.includes(value),
+			onFilter: (values: Array<string>, record: any) => values.indexOf(record.id) > -1,
 			render: (record: any) => (
 				<Holding key={record.id} holding={record as HoldingInput} onDelete={delRecord} showPrice />
 			)
 		}
 	];
 
-	const getFilterItem = (val: string) => {
+	const getFilterItem = (id: string, name: string) => {
 		return {
-			text: val,
-			value: val
+			text: name,
+			value: id
 		};
 	};
 
@@ -72,7 +72,7 @@ export default function InstrumentValuation() {
 			let filteredNames: Array<any> = [];
 			let total = 0;
 			filteredInstruments.forEach((instrument: HoldingInput) => {
-				filteredNames.push(getFilterItem(instrument.name as string));
+				filteredNames.push(getFilterItem(instrument.id as string, instrument.name as string));
 				total += instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
 			});
 			setNameFilterValues([ ...filteredNames ]);

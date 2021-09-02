@@ -53,6 +53,7 @@ export default function UploadHoldings() {
 	const [mfsNum, setMFsNum] = useState<number>(0);
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
+	const [ processing, setProcessing ] = useState<boolean>(false);
 
 	useEffect(() => setDrawerVisibility(!Object.keys(instruments).length), []);
 
@@ -94,6 +95,7 @@ export default function UploadHoldings() {
 	};
 
 	const addInstruments = async () => {
+		setProcessing(true);
 		if(!taxId) return;
 		addFamilyMemberSilently(allFamily, setAllFamily, taxId);
 		let currency = 'INR';
@@ -125,6 +127,7 @@ export default function UploadHoldings() {
 		setInstruments([...instruments]);
 		setDrawerVisibility(false);
 		setShowInsUpload(false);
+		setProcessing(false);
 	}
 	
 	const setValues = (equities: any, bonds: any, mfs: any, etfs: any) => {
@@ -428,10 +431,13 @@ export default function UploadHoldings() {
 				visible={showInsUpload}
 				footer={
 					<div className="text-right">
-						<Button onClick={() => setShowInsUpload(false)} style={{ marginRight: 8 }}>
+						<Button onClick={() => setShowInsUpload(false)} style={{ marginRight: 8 }} disabled={processing}>
 							Cancel
 						</Button>
-						<Button onClick={() => addInstruments()} type="primary">
+						<Button onClick={() => {
+							setProcessing(true);
+							addInstruments();
+						}} type="primary" loading={processing}>
 							Done
 						</Button>
 					</div>

@@ -45,6 +45,7 @@ function NWContextProvider() {
 	const [ epf, setEPF ] = useState<Array<HoldingInput>>([]);
 	const [ memberships, setMemberships ] = useState<Array<HoldingInput>>([]);
 	const [ others, setOthers ] = useState<Array<HoldingInput>>([]);
+	const [ angel, setAngel ] = useState<Array<HoldingInput>>([]);
 	const [ crypto, setCrypto ] = useState<Array<HoldingInput>>([]);
 	const [ loans, setLoans ] = useState<Array<LiabilityInput>>([]);
 	const [ insurance, setInsurance ] = useState<Array<InsuranceInput>>([]);
@@ -55,7 +56,7 @@ function NWContextProvider() {
 	const [ totalAssets, setTotalAssets ] = useState<number>(0);
 	const [ totalInstruments, setTotalInstruments ] = useState<number>(0);
 	const [ totalPM, setTotalPM ] = useState<number>(0);
-	const [ totalProperty, setTotalProperty ] = useState<number>(0);
+	const [ totalProperties, setTotalProperties ] = useState<number>(0);
 	const [ totalVehicles, setTotalVehicles ] = useState<number>(0);
 	const [ totalCrypto, setTotalCrypto ] = useState<number>(0);
 	const [ totalSavings, setTotalSavings ] = useState<number>(0);
@@ -69,6 +70,7 @@ function NWContextProvider() {
 	const [ totalLiabilities, setTotalLiabilities ] = useState<number>(0);
 	const [ totalMemberships, setTotalMemberships ] = useState<number>(0);
 	const [ totalOthers, setTotalOthers ] = useState<number>(0);
+	const [ totalAngel, setTotalAngel ] = useState<number>(0);
 	const [ showInsUpload, setShowInsUpload ] = useState<boolean>(false);
 	const [ taxId, setTaxId ] = useState<string>('');
 	const [ activeTab, setActiveTab ] = useState<string>('Demat Holdings');
@@ -85,18 +87,21 @@ function NWContextProvider() {
 					label: 'Deposits',
 					data: deposits,
 					setData: setDeposits,
+					total: totalDeposits,
 					content: <InstrumentValuation />
 				},
 				'Saving Accounts': {
 					label: 'Saving Accounts',
 					data: savings,
 					setData: setSavings,
+					total: totalSavings,
 					content: <InstrumentValuation />
 				},
 				'Money Lent': {
 					label: 'Money Lent',
 					data: lendings,
 					setData: setLendings,
+					total: totalLendings,
 					content: <InstrumentValuation />
 				},
 			}
@@ -108,6 +113,7 @@ function NWContextProvider() {
 					label: 'Properties',
 					data: properties,
 					setData: setProperties,
+					total: totalProperties,
 					content: <InstrumentValuation />,
 					formConfig: [
 						{
@@ -126,12 +132,14 @@ function NWContextProvider() {
 					label: 'Vehicles',
 					data: vehicles,
 					setData: setVehicles,
+					total: totalVehicles,
 					content: <InstrumentValuation />,
 				},
 				'Precious Metals': {
 					label: 'Precious Metals',
 					data: preciousMetals,
 					setData: setPreciousMetals,
+					total: totalPM,
 					content: <DynamicHoldingInput holdings={preciousMetals} changeHoldings={setPreciousMetals} />
 				}
 			},
@@ -141,6 +149,7 @@ function NWContextProvider() {
 			hasUploader: true,
 			data: instruments,
 			setData: setInstruments,
+			total: totalInstruments,
 			content: <InstrumentValuation />
 		},
 		Retirement: {
@@ -150,18 +159,21 @@ function NWContextProvider() {
 					label: 'PPF',
 					data: ppf,
 					setData: setPPF,
+					total: totalPPF,
 					content: <InstrumentValuation />
 				},
 				EPF: {
 					label: 'EPF',
 					data: epf,
 					setData: setEPF,
+					total: totalEPF,
 					content: <InstrumentValuation />
 				},
 				NPS: {
 					label: 'NPS',
 					data: nps,
 					setData: setNPS,
+					total: totalNPS,
 					content: <InstrumentValuation />
 				},
 			}
@@ -173,24 +185,28 @@ function NWContextProvider() {
 					label: 'Memberships',
 					data: memberships,
 					setData: setMemberships,
+					total: totalMemberships,
 					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
 				},
 				Crypto: {
 					label: 'Crypto',
 					data: crypto,
 					setData: setCrypto,
+					total: totalCrypto,
 					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
 				},
 				'Angel Investments': {
 					label: 'Angel Investments',
-					data: crypto,
-					setData: setCrypto,
+					data: angel,
+					setData: setAngel,
+					total: totalAngel,
 					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
 				},
 				Other: {
 					label: 'Other',
 					data: crypto,
 					setData: setCrypto,
+					total: totalCrypto,
 					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
 				}, 
 			}
@@ -199,6 +215,7 @@ function NWContextProvider() {
 			label: 'Loans',
 			data: loans,
 			setData: setLoans,
+			total: totalLoans,
 			content: <InstrumentValuation />,
 			formConfig: [
 				{
@@ -231,6 +248,7 @@ function NWContextProvider() {
 		Insurance: {
 			label: 'Insurance',
 			data: insurance,
+			total: totalInsurance,
 			setData: setInsurance,
 			content: <InstrumentValuation />
 		},
@@ -270,6 +288,9 @@ function NWContextProvider() {
 			setDeposits([ ...(allHoldings?.deposits ? allHoldings.deposits : []) ]);
 			setSavings([ ...(allHoldings?.savings ? allHoldings.savings : []) ]);
 			setLendings([ ...(allHoldings?.lendings ? allHoldings.lendings : []) ]);
+			setAngel([ ...(allHoldings?.angel ? allHoldings.angel : []) ]);
+			setMemberships([ ...(allHoldings?.mem ? allHoldings.mem : []) ]);
+			setOthers([ ...(allHoldings?.other ? allHoldings.other : []) ]);
 		} catch (err) {
 			notification.error({ message: 'Holdings not loaded', description: 'Sorry! Unable to fetch holdings.' });
 			return false;
@@ -307,28 +328,34 @@ function NWContextProvider() {
 				totalInstruments +
 					totalVehicles +
 					totalPM +
-					totalProperty +
+					totalProperties +
 					totalCrypto +
 					totalSavings +
 					totalDeposits +
 					totalLendings +
 					totalPPF +
 					totalEPF +
-					totalNPS
+					totalNPS +
+					totalAngel + 
+					totalMemberships +
+					totalOthers
 			);
 		},
 		[
 			totalInstruments,
 			totalVehicles,
 			totalPM,
-			totalProperty,
+			totalProperties,
 			totalCrypto,
 			totalSavings,
 			totalDeposits,
 			totalLendings,
 			totalPPF,
 			totalEPF,
-			totalNPS
+			totalNPS,
+			totalAngel,
+			totalMemberships,
+			totalOthers
 		]
 	);
 
@@ -351,9 +378,79 @@ function NWContextProvider() {
 		setTotalInstruments(total);
 	};
 
+	const priceDeposits = () => {
+		setTotalDeposits(0);
+	};
+
+	const priceLoans = () => {
+		setTotalLoans(0);
+	};
+
+	const priceSavings = () => {
+		setTotalSavings(0);
+	};
+
+	const priceMemberships = () => {
+		setTotalMemberships(0);
+	};
+
+	const priceProperties = () => {
+		setTotalProperties(0);
+	};
+
+	const priceVehicles = () => {
+		setTotalVehicles(0);
+	};
+
+	const priceCrypto = () => {
+		setTotalCrypto(0);
+	};
+
+	const priceAngel = () => {
+		setTotalAngel(0);
+	};
+
+	const priceOthers = () => {
+		setTotalOthers(0);
+	};
+
+	const pricePPF = () => {
+		setTotalPPF(0);
+	};
+
+	const priceEPF = () => {
+		setTotalEPF(0);
+	};
+
+	const priceNPS = () => {
+		setTotalNPS(0);
+	};
+
+	const priceLendings = () => {
+		setTotalLendings(0);
+	};
+
+	const priceInsurance = () => {
+		setTotalInsurance(0);
+	};
+
 	useEffect(() => {
 		priceInstruments();
 		pricePM();
+		pricePPF();
+		priceNPS();
+		priceEPF();
+		priceAngel();
+		priceProperties();
+		priceVehicles();
+		priceOthers();
+		priceCrypto();
+		priceLendings();
+		priceInsurance();
+		priceMemberships();
+		priceLoans();
+		priceSavings();
+		priceDeposits();
 	}, [selectedMembers, selectedCurrency]);
 
 	useEffect(() => {
@@ -363,6 +460,62 @@ function NWContextProvider() {
 	useEffect(() => {
 		pricePM();
 	}, [preciousMetals]);
+
+	useEffect(() => {
+		priceCrypto();
+	}, [crypto]);
+
+	useEffect(() => {
+		priceAngel();
+	}, [angel]);
+
+	useEffect(() => {
+		priceMemberships();
+	}, [memberships]);
+
+	useEffect(() => {
+		priceOthers();
+	}, [others]);
+
+	useEffect(() => {
+		pricePPF();
+	}, [ppf]);
+
+	useEffect(() => {
+		priceEPF();
+	}, [epf]);
+
+	useEffect(() => {
+		priceNPS();
+	}, [nps]);
+
+	useEffect(() => {
+		priceLoans();
+	}, [loans]);
+
+	useEffect(() => {
+		priceInsurance();
+	}, [insurance]);
+
+	useEffect(() => {
+		priceProperties();
+	}, [properties]);
+
+	useEffect(() => {
+		priceVehicles();
+	}, [vehicles]);
+
+	useEffect(() => {
+		priceDeposits();
+	}, [deposits]);
+
+	useEffect(() => {
+		priceInstruments();
+	}, [instruments]);
+
+	useEffect(() => {
+		priceLendings();
+	}, [lendings]);
 
 	return (
 		<NWContext.Provider
@@ -395,31 +548,21 @@ function NWContextProvider() {
 				currencyList,
 				setCurrencyList,
 				totalInstruments,
-				setTotalInstruments,
-				totalProperty,
-				setTotalProperty,
+				totalProperties,
 				totalCrypto,
-				setTotalCrypto,
 				totalVehicles,
-				setTotalVehicles,
 				totalPM,
-				setTotalPM,
 				totalDeposits,
-				setTotalDeposits,
 				totalSavings,
-				setTotalSavings,
 				totalPPF,
-				setTotalPPF,
 				totalEPF,
-				setTotalEPF,
 				totalNPS,
-				setTotalNPS,
 				totalLendings,
-				setTotalLendings,
 				totalInsurance,
-				setTotalInsurance,
 				totalLoans,
-				setTotalLoans,
+				totalAngel,
+				totalMemberships,
+				totalOthers,
 				instruments,
 				setInstruments,
 				preciousMetals,
@@ -449,7 +592,9 @@ function NWContextProvider() {
 				memberships,
 				setMemberships,
 				others,
-				setOthers
+				setOthers,
+				angel,
+				setAngel
 			}}
 		>
 			<NWView />
