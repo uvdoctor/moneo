@@ -1,4 +1,4 @@
-const docClient = require("./insertIntoDB");
+const docClient = require("/opt/nodejs/insertIntoDB");
 const getAssetType = (data) => {
   if (data.includes("Hybrid")) return "H";
   if (

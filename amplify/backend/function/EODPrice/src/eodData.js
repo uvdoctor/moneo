@@ -1,4 +1,4 @@
-const docClient = require("./insertIntoDB");
+const docClient = require("/opt/nodejs/insertIntoDB");
 const axios = require("axios");
 const eodApiKey = process.env.EOD_API_KEY;
 

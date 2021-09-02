@@ -1,5 +1,13 @@
 {
-  "lambdaLayers": [],
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "moneobhavutils",
+      "env": "dev",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    }
+  ],
   "permissions": {
     "auth": {
       "ddpwa0063633b": [

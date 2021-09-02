@@ -7,7 +7,7 @@ const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray, csvFile } = utils;
-const bhaoUtils = require("./bhavUtils");
+const bhaoUtils = require("/opt/nodejs/bhavUtils");
 const calcSchema = require("./calculate");
 const {
   downloadZip,
@@ -17,7 +17,7 @@ const {
   pushData,
 } = bhaoUtils;
 const table = "INBond-bvyjaqmusfh5zelcbeeji6xxoe-dev";
-const isinMap = {};
+const instrumentList = [];
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
@@ -40,11 +40,11 @@ const getAndPushData = () => {
           codes,
           schema,
           calcSchema,
-          table,
-          isinMap
+          instrumentList,
+          table
         );
         for (let batch in data) {
-          await pushData(data[batch], table, batch);
+          await pushData(data[batch], table, instrumentList, batch);
         }
       } catch (err) {
         reject(err);
