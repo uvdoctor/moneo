@@ -1,10 +1,11 @@
 import React, { Fragment, useContext, useState } from 'react';
-import { Col, Empty, Row, Tabs } from 'antd';
+import { Col, Empty, Row, Skeleton, Tabs } from 'antd';
 import { NWContext } from './NWContext';
 import AddHoldings from './addHoldings/AddHoldings';
 import UploadHoldings from './UploadHoldings';
 import { getFamilyNames } from './nwutils';
 import { toHumanFriendlyCurrency } from '../utils';
+import ListHoldings from './ListHoldings';
 
 export default function HoldingTabView() {
 	const {
@@ -54,13 +55,23 @@ export default function HoldingTabView() {
 												isPrimary={!hasUploader}
 												data={tabsData[tabName].data}
 												changeData={tabsData[tabName].setData}
+												input={tabsData[tabName].input}
+												inputComp={tabsData[tabName].inputComp}
 											/>
 										</Col>
 									</Row>
 									{!loadingHoldings ? (
-										tabsData[tabName].content
+										tabsData[tabName].data.length ?
+										<ListHoldings 
+											data={tabsData[tabName].data}
+											changeData={tabsData[tabName].setData}
+											viewComp={tabsData[tabName].viewComp}
+											typeOptions={tabsData[tabName].typeOptions}
+											subtypeOptions={tabsData[tabName].subtypeOptions}
+										/>
+										: <Empty description="No data found." />
 									) : (
-										<Empty description={<p>No data found.</p>} />
+										<Skeleton loading />
 									)}
 								</Fragment>
 							)}
