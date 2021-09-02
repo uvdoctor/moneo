@@ -108,9 +108,9 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 					) : (
 						<Col>
 							<span className="quantity">
+								{showPrice && `${toCurrency(price, holding.curr as string, true)} `}
 								<ShoppingCartOutlined />{' '}
 								{toReadableNumber(holding.qty, ('' + holding.qty).includes('.') ? 3 : 0)}
-								{showPrice && ` x ${toCurrency(price, holding.curr as string)}`}
 							</span>
 						</Col>
 					)}

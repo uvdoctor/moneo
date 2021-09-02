@@ -50,32 +50,38 @@ export default function InstrumentValuation() {
 	};
 
 	//@ts-ignore
-	const handleChange = (pagination: any, filters: any, sorters: any) => {
-		setFilteredInfo(filters);
-	};
+	const handleChange = (pagination: any, filters: any, sorters: any) => setFilteredInfo(filters);
 
 	useEffect(
 		() => {
 			if (!instruments.length) return;
-			let filteredData: Array<HoldingInput> = instruments.filter(
-				(instrument: HoldingInput) =>
+			let ids = filteredInfo && filteredInfo.id && filteredInfo.id.length ? filteredInfo.id : null;
+			let filteredData: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => {
+				if (ids && ids.indexOf(instrument.id) < 0) return false;
+				return (
 					doesHoldingMatch(instrument, selectedMembers, selectedCurrency) &&
 					selectedAssetTypes.indexOf(instrument.type as string) > -1
-			);
+				);
+			});
 			setFilteredInstruments([ ...filteredData ]);
 		},
-		[ instruments, selectedMembers, selectedCurrency, selectedAssetTypes ]
+		[ instruments, selectedMembers, selectedCurrency, selectedAssetTypes, filteredInfo ]
 	);
+
+	useEffect(() => {
+		let filteredNames: Array<any> = [];
+		filteredInstruments.forEach((instrument: HoldingInput) => 
+			filteredNames.push(getFilterItem(instrument.id as string, instrument.name as string))
+		);
+		setNameFilterValues([ ...filteredNames ]);
+	}, [instruments]);
 
 	useEffect(
 		() => {
-			let filteredNames: Array<any> = [];
 			let total = 0;
-			filteredInstruments.forEach((instrument: HoldingInput) => {
-				filteredNames.push(getFilterItem(instrument.id as string, instrument.name as string));
-				total += instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
-			});
-			setNameFilterValues([ ...filteredNames ]);
+			filteredInstruments.forEach((instrument: HoldingInput) => 
+				total += instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0)
+			);
 			setTotal(total);
 		},
 		[ filteredInstruments ]
