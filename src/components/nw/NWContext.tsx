@@ -23,7 +23,6 @@ import {
 	Property
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
-import ListHoldings from './ListHoldings';
 import AddHoldingInput from './AddHoldingInput';
 import { initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
@@ -188,7 +187,6 @@ function NWContextProvider() {
 					},
 					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
-					contentComp: ListHoldings
 				}
 			},
 		},
@@ -236,7 +234,6 @@ function NWContextProvider() {
 					total: totalMemberships,
 					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
-					contentComp: ListHoldings
 				},
 				Crypto: {
 					label: 'Crypto',
@@ -245,7 +242,6 @@ function NWContextProvider() {
 					total: totalCrypto,
 					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
-					contentComp: ListHoldings
 				},
 				'Angel Investments': {
 					label: 'Angel Investments',
@@ -254,7 +250,6 @@ function NWContextProvider() {
 					total: totalAngel,
 					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
-					contentComp: ListHoldings
 				},
 				Other: {
 					label: 'Other',
@@ -263,7 +258,6 @@ function NWContextProvider() {
 					total: totalCrypto,
 					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
-					contentComp: ListHoldings
 				}, 
 			}
 		},
@@ -416,6 +410,10 @@ function NWContextProvider() {
 	);
 
 	const pricePM = () => {
+		if(!preciousMetals.length) {
+			setTotalPM(0);
+			return;
+		}
 		let total = 0;
 		preciousMetals.forEach((instrument: HoldingInput) => {
 			let rate = getCommodityRate(ratesData, instrument.subt as string, instrument.name as string, selectedCurrency);
@@ -425,6 +423,10 @@ function NWContextProvider() {
 	};
 
 	const priceInstruments = () => {
+		if(!instruments.length) {
+			setTotalInstruments(0);
+			return;
+		}
 		let total = 0;
 		instruments.forEach((instrument: HoldingInput) => {
 			if(insData[instrument.id] && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
