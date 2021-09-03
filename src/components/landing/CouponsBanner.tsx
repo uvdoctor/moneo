@@ -31,7 +31,7 @@ export default function CouponsBanner() {
 						>
 							{["amazon", "flipkart", "flipkart", "flipkart", "flipkart"].map(
 								(brand) => (
-									<Col>
+									<Col key={brand}>
 										<div className={`${brand}-coupon`}></div>
 									</Col>
 								)

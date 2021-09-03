@@ -33,6 +33,7 @@ export default function ListHoldings({ data, changeData, typeOptions, subtypeOpt
 				data[0] &&
 				data.map((holding: HoldingInput, i: number) => (
 					<Row>
+						<Col span={24} className="fields-divider" />
 						<Col span={24}>
 							<Row justify="space-between">
 								{React.createElement(viewComp, {
@@ -57,7 +58,6 @@ export default function ListHoldings({ data, changeData, typeOptions, subtypeOpt
 								</Col>
 							</Row>
 						</Col>
-						<Col span={24} className="fields-divider" />
 					</Row>
 				))}
 		</p>

@@ -47,7 +47,7 @@ export default function HoldingTabView() {
 								<Fragment>
 									<Row justify="space-between">
 										<Col>
-											<Row align="middle">
+											<Row>
 												{selectedMembers.length && (
 													<Col>
 														{selectedMembers.indexOf(ALL_FAMILY) > -1 ? (
@@ -56,7 +56,7 @@ export default function HoldingTabView() {
 																	icon={<FontAwesomeIcon icon={faUserFriends} />}
 																/>
 															</Tooltip>
-														) : Object.keys(allFamily)[0] ? (
+														) : (
 															<Avatar.Group maxCount={2}>
 																{selectedMembers.forEach(
 																	(key: string) =>
@@ -67,15 +67,16 @@ export default function HoldingTabView() {
 																		)
 																)}
 															</Avatar.Group>
-														) : null}
+														)}
 													</Col>
 												)}
 												<Col>
 													<h3 style={{ color: COLORS.GREEN }}>
-														{` ${toHumanFriendlyCurrency(
+														&nbsp;&nbsp;
+														{toHumanFriendlyCurrency(
 															tabsData[tabName].total,
 															selectedCurrency
-														)}`}
+														)}
 													</h3>
 												</Col>
 											</Row>

@@ -76,7 +76,6 @@ function NWContextProvider() {
 	const [ totalOthers, setTotalOthers ] = useState<number>(0);
 	const [ totalAngel, setTotalAngel ] = useState<number>(0);
 	const [ showInsUpload, setShowInsUpload ] = useState<boolean>(false);
-	const [ taxId, setTaxId ] = useState<string>('');
 	const [ activeTab, setActiveTab ] = useState<string>('Demat Holdings');
 	const [ activeTabSum, setActiveTabSum ] = useState<number>(0);
 	const [ results, setResults ] = useState<Array<any>>([]);
@@ -583,8 +582,6 @@ function NWContextProvider() {
 				setActiveTab,
 				showInsUpload,
 				setShowInsUpload,
-				taxId,
-				setTaxId,
 				nw,
 				setNW,
 				totalAssets,
