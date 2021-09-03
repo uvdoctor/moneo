@@ -116,8 +116,6 @@ export default function UploadHoldings() {
 			setCurrencyList(currencyList);
 		}
 		setSelectedCurrency(currency);
-		
-		if(!memberKey) return;
 		let existingFixedMap: any = {};
 		let existingInstrMap: any = {};
 		instruments.forEach((instrument: HoldingInput) => {
