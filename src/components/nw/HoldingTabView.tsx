@@ -88,7 +88,6 @@ export default function HoldingTabView() {
 												data={tabsData[tabName].data}
 												changeData={tabsData[tabName].setData}
 												input={tabsData[tabName].input}
-												inputComp={tabsData[tabName].inputComp}
 												title={`${tabsData[tabName].label} - Add Record`}
 											/>
 										</Col>

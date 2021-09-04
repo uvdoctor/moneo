@@ -18,12 +18,12 @@ import {
 	CreateHoldingsInput,
 	DepositInput,
 	HoldingInput,
+	InsType,
 	InsuranceInput,
 	LiabilityInput,
 	Property
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
-import AddHoldingInput from './AddHoldingInput';
 import { initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
 
@@ -61,6 +61,7 @@ function NWContextProvider() {
 	const [ totalInstruments, setTotalInstruments ] = useState<number>(0);
 	const [ totalPM, setTotalPM ] = useState<number>(0);
 	const [ totalProperties, setTotalProperties ] = useState<number>(0);
+	const [ totalFRE, setTotalFRE ] = useState<number>(0);
 	const [ totalVehicles, setTotalVehicles ] = useState<number>(0);
 	const [ totalCrypto, setTotalCrypto ] = useState<number>(0);
 	const [ totalSavings, setTotalSavings ] = useState<number>(0);
@@ -75,6 +76,11 @@ function NWContextProvider() {
 	const [ totalMemberships, setTotalMemberships ] = useState<number>(0);
 	const [ totalOthers, setTotalOthers ] = useState<number>(0);
 	const [ totalAngel, setTotalAngel ] = useState<number>(0);
+	const [ totalEquity, setTotalEquity ] = useState<number>(0);
+	const [ totalFixed, setTotalFixed ] = useState<number>(0);
+	const [ totalAlternative, setTotalAlternative ] = useState<number>(0);
+	const [ totalPGold, setTotalPGold ] = useState<number>(0);
+	const [ totalFGold, setTotalFGold ] = useState<number>(0);
 	const [ showInsUpload, setShowInsUpload ] = useState<boolean>(false);
 	const [ activeTab, setActiveTab ] = useState<string>('Demat Holdings');
 	const [ activeTabSum, setActiveTabSum ] = useState<number>(0);
@@ -184,7 +190,6 @@ function NWContextProvider() {
 						[PLATINUM]: 'Platinum',
 						[PALLADIUM]: 'Palladium'
 					},
-					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
 				}
 			},
@@ -231,7 +236,6 @@ function NWContextProvider() {
 					data: memberships,
 					setData: setMemberships,
 					total: totalMemberships,
-					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
 				},
 				Crypto: {
@@ -239,7 +243,6 @@ function NWContextProvider() {
 					data: crypto,
 					setData: setCrypto,
 					total: totalCrypto,
-					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
 				},
 				'Angel Investments': {
@@ -247,7 +250,6 @@ function NWContextProvider() {
 					data: angel,
 					setData: setAngel,
 					total: totalAngel,
-					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
 				},
 				Other: {
@@ -255,7 +257,6 @@ function NWContextProvider() {
 					data: crypto,
 					setData: setCrypto,
 					total: totalCrypto,
-					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
 				}, 
 			}
@@ -408,31 +409,61 @@ function NWContextProvider() {
 		]
 	);
 
+	useEffect(() => {
+		setTotalAlternative(totalOthers + totalVehicles + totalProperties + totalPM + totalCrypto + totalMemberships + totalFGold + totalFRE);
+	}, [totalOthers, totalVehicles, totalProperties, totalCrypto, totalMemberships, totalPM, totalFGold, totalFRE]);
+
 	const pricePM = () => {
 		if(!preciousMetals.length) {
 			setTotalPM(0);
+			setTotalPGold(0);
 			return;
 		}
 		let total = 0;
+		let totalPGold = 0;
 		preciousMetals.forEach((instrument: HoldingInput) => {
 			let rate = getCommodityRate(ratesData, instrument.subt as string, instrument.name as string, selectedCurrency);
-			if(rate && doesMemberMatch(instrument, selectedMembers)) total += instrument.qty * rate;
+			if(rate && doesMemberMatch(instrument, selectedMembers)) {
+				total += instrument.qty * rate;
+				if(instrument.subt === AssetSubType.Gold) totalPGold += instrument.qty * rate;
+			}
 		})
 		setTotalPM(total);
+		setTotalPGold(totalPGold);
 	};
 
 	const priceInstruments = () => {
 		if(!instruments.length) {
 			setTotalInstruments(0);
+			setTotalFGold(0);
+			setTotalFRE(0);
+			setTotalEquity(0);
+			setTotalFixed(0);
 			return;
 		}
 		let total = 0;
+		let totalFGold = 0;
+		let totalFRE = 0;
+		let totalEquity = 0;
+		let totalFixed = 0;
 		instruments.forEach((instrument: HoldingInput) => {
 			if(insData[instrument.id] && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
-				total += instrument.qty * insData[instrument.id].price;
+				let value = instrument.qty * insData[instrument.id].price;
+				total += value;
+				if(instrument.subt === AssetSubType.GoldB) totalFGold += value;
+				else if(insData[instrument.id].itype && insData[instrument.id].itype === InsType.REIT) 
+					totalFRE += value;
+				else if(instrument.type === AssetType.E) 
+					totalEquity += value;
+				else if(instrument.type === AssetType.F)
+					totalFixed += value;
 			}
 		})
 		setTotalInstruments(total);
+		setTotalFGold(totalFGold);
+		setTotalEquity(totalEquity);
+		setTotalFixed(totalFixed);
+		setTotalFRE(totalFRE);
 	};
 
 	const priceDeposits = () => {
@@ -649,7 +680,13 @@ function NWContextProvider() {
 				others,
 				setOthers,
 				angel,
-				setAngel
+				setAngel,
+				totalEquity,
+				totalPGold,
+				totalFGold,
+				totalFixed,
+				totalAlternative,
+				totalFRE
 			}}
 		>
 			<NWView />

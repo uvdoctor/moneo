@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, Fragment } from "react";
-import { Button, Upload, Drawer, Tabs, Row, Badge, Col, Alert } from "antd";
+import { Button, Upload, Drawer, Tabs, Row, Badge, Col, Alert, Empty } from "antd";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import HoldingsTable from "./HoldingsTable";
@@ -28,6 +28,8 @@ import {
 } from "../utils";
 import { addFamilyMemberSilently, getFamilyMemberKey, getFamilyOptions, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMutual } from "./nwutils";
 import SelectInput from "../form/selectinput";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 
 export default function UploadHoldings() {
 	const { insData }: any = useContext(AppContext);
@@ -108,33 +110,35 @@ export default function UploadHoldings() {
 
 	const addInstruments = async () => {
 		setProcessing(true);
-		let member = taxId ? getFamilyMemberKey(allFamily, taxId) : memberKey; 
-		if(taxId) addFamilyMemberSilently(allFamily, setAllFamily, taxId);
-		let currency = 'INR';
-		if(!currencyList[currency]) {
-			currencyList[currency] = currency;
-			setCurrencyList(currencyList);
-		}
-		setSelectedCurrency(currency);
-		let existingFixedMap: any = {};
-		let existingInstrMap: any = {};
-		instruments.forEach((instrument: HoldingInput) => {
-			if(instrument.curr === currency && instrument.fIds[0] === memberKey) {
-				if(instrument.type === AssetType.F) {
-					existingFixedMap[instrument.id] = instrument;
-				}
-				existingInstrMap[instrument.id] = instrument;
+		if(equitiesNum || mfsNum || bondsNum || etfsNum) {
+			let member = taxId ? getFamilyMemberKey(allFamily, taxId) : memberKey; 
+			if(taxId) addFamilyMemberSilently(allFamily, setAllFamily, taxId);
+			let currency = 'INR';
+			if(!currencyList[currency]) {
+				currencyList[currency] = currency;
+				setCurrencyList(currencyList);
 			}
-		})
-		await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, member as string, existingInstrMap);
-		let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, member as string, existingFixedMap);
-		if(unmatchedBonds && Object.keys(unmatchedBonds).length) 
-			Object.keys(unmatchedBonds).forEach((key: string) => equities[key] = unmatchedBonds[key]);
-		if(etfs && Object.keys(etfs).length)
-			Object.keys(etfs).forEach((key: string) => equities[key] = etfs[key]);
-		await loadInstrumentPrices(loadMatchingINExchange, equities, member as string, existingInstrMap);
-		simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
-		setInstruments([...instruments]);
+			setSelectedCurrency(currency);
+			let existingFixedMap: any = {};
+			let existingInstrMap: any = {};
+			instruments.forEach((instrument: HoldingInput) => {
+				if(instrument.curr === currency && instrument.fIds[0] === memberKey) {
+					if(instrument.type === AssetType.F) {
+						existingFixedMap[instrument.id] = instrument;
+					}
+					existingInstrMap[instrument.id] = instrument;
+				}
+			})
+			await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, member as string, existingInstrMap);
+			let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, member as string, existingFixedMap);
+			if(unmatchedBonds && Object.keys(unmatchedBonds).length) 
+				Object.keys(unmatchedBonds).forEach((key: string) => equities[key] = unmatchedBonds[key]);
+			if(etfs && Object.keys(etfs).length)
+				Object.keys(etfs).forEach((key: string) => equities[key] = etfs[key]);
+			await loadInstrumentPrices(loadMatchingINExchange, equities, member as string, existingInstrMap);
+			simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
+			setInstruments([...instruments]);
+		}
 		setDrawerVisibility(false);
 		setShowInsUpload(false);
 		setProcessing(false);
@@ -412,7 +416,7 @@ export default function UploadHoldings() {
 			</Button>
 			<Drawer
 				width={isMobileDevice(fsb) ? 320 : 550}
-				title="Upload NSDL or CSDL Monthly Statement"
+				title="Upload NSDL or CSDL Monthly PDF Statement"
 				placement="right"
 				closable={false}
 				onClose={() => setDrawerVisibility(false)}
@@ -474,7 +478,7 @@ export default function UploadHoldings() {
 					</div>
 				}
 			>
-				<Tabs defaultActiveKey="E" type="card">
+				{(equitiesNum || etfsNum || mfsNum || bondsNum) ? <Tabs defaultActiveKey="E" type="card">
 					<TabPane key="E" tab={
 						<Row align="middle">
 							<Col>Equities&nbsp;</Col>
@@ -507,7 +511,8 @@ export default function UploadHoldings() {
 					}>
 						<HoldingsTable data={etfs} onChange={setETFs} num={etfsNum} onNumChange={setETFsNum} />
 					</TabPane>
-				</Tabs>
+				</Tabs> : <Empty description={<h2>No data found in the uploaded file.</h2>} 
+				image={<FontAwesomeIcon icon={faFilePdf} size="3x" />} />}
 			</Drawer>
 		</Fragment>
 	);

@@ -5,6 +5,7 @@ import * as queries from '../../graphql/queries';
 import { ALL_FAMILY } from './FamilyInput';
 import { GOLD } from './NWContext';
 import { getFXRate } from '../utils';
+import { COLORS } from '../../CONSTANTS';
 
 export const createNewItem = async (item: APIt.CreateItemInput) => {
 	try {
@@ -233,13 +234,13 @@ export const getGoldTypes = () => {
 export const getColourForAssetType = (at: APIt.AssetType) => {
 	switch(at) {
 		case APIt.AssetType.E: 
-			return "#e78284";
+			return COLORS.ORANGE;
 		case APIt.AssetType.F:
-			return "#aa8dfa";
+			return COLORS.BLUE;
 		case APIt.AssetType.A:
-			return "#7cd9fd";
+			return "#f6e05e";
 		default:
-			return "#fdd0cb";
+			return "#f9aaa6";
 	}
 }
 

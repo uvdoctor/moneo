@@ -3,7 +3,7 @@ import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { HoldingInput, AssetType } from '../../api/goals';
 import { NWContext } from './NWContext';
 import Holding from './Holding';
-import { doesHoldingMatch, getAssetTypes } from './nwutils';
+import { doesHoldingMatch, getAssetTypes, getColourForAssetType } from './nwutils';
 import { toHumanFriendlyCurrency } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
@@ -101,6 +101,8 @@ export default function InstrumentValuation() {
 				{assetTypes.map((tag: string) => (
 					<CheckableTag
 						key={tag}
+						style={{backgroundColor: getColourForAssetType(tag as AssetType), 
+							opacity: selectedAssetTypes.indexOf(tag) > -1 ? 1 : 0.5}}
 						checked={selectedAssetTypes.indexOf(tag) > -1}
 						onChange={(checked: boolean) => {
 							if (checked) {

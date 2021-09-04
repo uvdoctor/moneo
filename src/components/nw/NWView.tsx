@@ -1,6 +1,5 @@
 import React, { Fragment, useContext, useEffect } from 'react';
 import HoldingTabView from './HoldingTabView';
-import HoldingsChart from './HoldingsChart';
 import DataSwitcher from '../DataSwitcher';
 import { NWContext } from './NWContext';
 import { Button, Col, PageHeader, Row } from 'antd';
@@ -13,6 +12,7 @@ import ResultCarousel from '../ResultCarousel';
 import TotalAssets from './TotalAssets';
 import TotalNetWorth from './TotalNetWorth';
 import TotalLiabilities from './TotalLiabilities';
+import CurrentAA from './CurrentAA';
 
 export default function NWView() {
 	const {
@@ -77,9 +77,9 @@ export default function NWView() {
 			</div>
 			<div className="nw-container">
 				<ResultCarousel results={results} />
-				<DataSwitcher title="Holdings details">
+				<DataSwitcher title="Current Asset Allocation">
 					<Chart>
-						<HoldingsChart />
+						<CurrentAA />
 					</Chart>
 					<DataSwitcherList>
 						{!loadingHoldings ? <HoldingTabView /> : null}

@@ -1,6 +1,6 @@
 import { UserOutlined } from '@ant-design/icons';
-import { InputNumber } from 'antd';
-import React, { Fragment, useContext, useState } from 'react';
+import { Col, InputNumber, Row } from 'antd';
+import React, { useContext, useState } from 'react';
 import { AssetSubType, HoldingInput } from '../../api/goals';
 import { AppContext } from '../AppContext';
 import SelectInput from '../form/selectinput';
@@ -75,8 +75,8 @@ export default function AddHoldingInput({ input, disableOk }: AddHoldingInputPro
 	};
 
 	return (
-		<Fragment>
-			<p>
+		<Row>
+			<Col span={24}>
 				<SelectInput
 					pre=""
 					value={input.subt as string}
@@ -96,8 +96,8 @@ export default function AddHoldingInput({ input, disableOk }: AddHoldingInputPro
 					changeHandler={(val: string) => changeName(val)}
 					post={subtype === AssetSubType.Gold ? 'karat' : ''}
 				/>
-			</p>
-			<p>
+			</Col>
+			<Col span={24}>
 				<InputNumber
 					value={quantity}
 					onChange={(quantity: number) => changeQuantity(quantity)}
@@ -113,15 +113,15 @@ export default function AddHoldingInput({ input, disableOk }: AddHoldingInputPro
 					quantity * getCommodityRate(ratesData, subtype as string, name as string, selectedCurrency),
 					selectedCurrency
 				)}`}
-			</p>
-			<p>
+			</Col>
+			<Col span={24}>
 				<SelectInput
 					pre={<UserOutlined />}
 					value={memberKey}
 					options={getFamilyOptions(allFamily)}
 					changeHandler={(key: string) => changeMember(key)}
 				/>
-			</p>
-		</Fragment>
+			</Col>
+		</Row>
 	);
 }

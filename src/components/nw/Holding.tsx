@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useState } from 'react';
-import { Row, Col, Button, Badge, InputNumber, Tooltip } from 'antd';
+import { Row, Col, Button, Badge, InputNumber, Tooltip, Rate } from 'antd';
 import {
 	DeleteOutlined,
 	EditOutlined,
@@ -87,6 +87,13 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 										&nbsp;&nbsp;
 										<FontAwesomeIcon icon={faHandHoldingUsd} />
 										{` ${insData[holding.id].ytm * 100}%`}
+									</Tooltip>
+								)}
+								{insData[holding.id].cr && (
+									<Tooltip title="Credit rating">
+										&nbsp;&nbsp;
+										<Rate value={4} />
+										{insData[holding.id].crstr}
 									</Tooltip>
 								)}
 							</Col>
