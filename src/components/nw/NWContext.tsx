@@ -23,7 +23,6 @@ import {
 	Property
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
-import ListHoldings from './ListHoldings';
 import AddHoldingInput from './AddHoldingInput';
 import { initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
@@ -77,7 +76,6 @@ function NWContextProvider() {
 	const [ totalOthers, setTotalOthers ] = useState<number>(0);
 	const [ totalAngel, setTotalAngel ] = useState<number>(0);
 	const [ showInsUpload, setShowInsUpload ] = useState<boolean>(false);
-	const [ taxId, setTaxId ] = useState<string>('');
 	const [ activeTab, setActiveTab ] = useState<string>('Demat Holdings');
 	const [ activeTabSum, setActiveTabSum ] = useState<number>(0);
 	const [ results, setResults ] = useState<Array<any>>([]);
@@ -188,7 +186,6 @@ function NWContextProvider() {
 					},
 					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
-					contentComp: ListHoldings
 				}
 			},
 		},
@@ -236,7 +233,6 @@ function NWContextProvider() {
 					total: totalMemberships,
 					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
-					contentComp: ListHoldings
 				},
 				Crypto: {
 					label: 'Crypto',
@@ -245,7 +241,6 @@ function NWContextProvider() {
 					total: totalCrypto,
 					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
-					contentComp: ListHoldings
 				},
 				'Angel Investments': {
 					label: 'Angel Investments',
@@ -254,7 +249,6 @@ function NWContextProvider() {
 					total: totalAngel,
 					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
-					contentComp: ListHoldings
 				},
 				Other: {
 					label: 'Other',
@@ -263,7 +257,6 @@ function NWContextProvider() {
 					total: totalCrypto,
 					inputComp: AddHoldingInput,
 					viewComp: ViewHoldingInput,
-					contentComp: ListHoldings
 				}, 
 			}
 		},
@@ -416,6 +409,10 @@ function NWContextProvider() {
 	);
 
 	const pricePM = () => {
+		if(!preciousMetals.length) {
+			setTotalPM(0);
+			return;
+		}
 		let total = 0;
 		preciousMetals.forEach((instrument: HoldingInput) => {
 			let rate = getCommodityRate(ratesData, instrument.subt as string, instrument.name as string, selectedCurrency);
@@ -425,6 +422,10 @@ function NWContextProvider() {
 	};
 
 	const priceInstruments = () => {
+		if(!instruments.length) {
+			setTotalInstruments(0);
+			return;
+		}
 		let total = 0;
 		instruments.forEach((instrument: HoldingInput) => {
 			if(insData[instrument.id] && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
@@ -581,8 +582,6 @@ function NWContextProvider() {
 				setActiveTab,
 				showInsUpload,
 				setShowInsUpload,
-				taxId,
-				setTaxId,
 				nw,
 				setNW,
 				totalAssets,

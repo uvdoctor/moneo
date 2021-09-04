@@ -8,9 +8,10 @@ interface AddHoldingsProps {
 	input: any;
 	inputComp: any;
 	isPrimary: boolean;
+	title: string;
 }
 
-export default function AddHoldings({ data, changeData, input, inputComp, isPrimary }: AddHoldingsProps) {
+export default function AddHoldings({ data, changeData, input, inputComp, isPrimary, title }: AddHoldingsProps) {
 	const [ isModalVisible, setModalVisibility ] = useState<boolean>(false);
 	const [ okDisabled, setOkDisabled ] = useState<boolean>(true);
 	const [ newRec, setNewRec ] = useState<any>(Object.assign({}, input));
@@ -37,7 +38,7 @@ export default function AddHoldings({ data, changeData, input, inputComp, isPrim
 				{isPrimary ? 'Add' : 'Add Manually'}
 			</Button>
 			<Modal
-				title="Add"
+				title={title}
 				visible={isModalVisible}
 				onCancel={close}
 				onOk={() => addHolding()}

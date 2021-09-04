@@ -1,5 +1,5 @@
 import { Button, Col, Row } from 'antd';
-import React, { Fragment, useContext } from 'react';
+import React, { useContext } from 'react';
 import { HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
 import { NWContext } from './NWContext';
@@ -28,11 +28,12 @@ export default function ListHoldings({ data, changeData, typeOptions, subtypeOpt
 	};
 
 	return (
-		<Row>
+		<p>
 			{data &&
 				data[0] &&
 				data.map((holding: HoldingInput, i: number) => (
-					<Fragment>
+					<Row>
+						<Col span={24} className="fields-divider" />
 						<Col span={24}>
 							<Row justify="space-between">
 								{React.createElement(viewComp, {
@@ -57,9 +58,8 @@ export default function ListHoldings({ data, changeData, typeOptions, subtypeOpt
 								</Col>
 							</Row>
 						</Col>
-						<Col span={24} className="fields-divider" />
-					</Fragment>
+					</Row>
 				))}
-		</Row>
+		</p>
 	);
 }

@@ -1,11 +1,15 @@
 import React, { Fragment, useContext, useState } from 'react';
-import { Col, Empty, Row, Skeleton, Tabs } from 'antd';
+import { Col, Empty, Row, Skeleton, Tabs, Avatar, Tooltip } from 'antd';
 import { NWContext } from './NWContext';
 import AddHoldings from './addHoldings/AddHoldings';
 import UploadHoldings from './UploadHoldings';
-import { getFamilyNames } from './nwutils';
 import { toHumanFriendlyCurrency } from '../utils';
 import ListHoldings from './ListHoldings';
+import { COLORS } from '../../CONSTANTS';
+import { ALL_FAMILY } from './FamilyInput';
+import { UserOutlined } from '@ant-design/icons';
+import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function HoldingTabView() {
 	const {
@@ -41,14 +45,42 @@ export default function HoldingTabView() {
 								renderTabs(children, Object.keys(children)[0])
 							) : (
 								<Fragment>
-									<Row justify="space-between" className="header">
-										<Col>{`${getFamilyNames(
-											selectedMembers,
-											allFamily
-										)} Portfolio Value is ${toHumanFriendlyCurrency(
-											tabsData[tabName].total,
-											selectedCurrency
-										)}`}</Col>
+									<Row justify="space-between">
+										<Col>
+											<Row>
+												{selectedMembers.length && (
+													<Col>
+														{selectedMembers.indexOf(ALL_FAMILY) > -1 ? (
+															<Tooltip title="Family">
+																<Avatar
+																	icon={<FontAwesomeIcon icon={faUserFriends} />}
+																/>
+															</Tooltip>
+														) : (
+															<Avatar.Group maxCount={2}>
+																{selectedMembers.forEach(
+																	(key: string) =>
+																		allFamily[key] && (
+																			<Tooltip title={allFamily[key].name}>
+																				<Avatar icon={<UserOutlined />} />
+																			</Tooltip>
+																		)
+																)}
+															</Avatar.Group>
+														)}
+													</Col>
+												)}
+												<Col>
+													<h3 style={{ color: COLORS.GREEN }}>
+														&nbsp;&nbsp;
+														{toHumanFriendlyCurrency(
+															tabsData[tabName].total,
+															selectedCurrency
+														)}
+													</h3>
+												</Col>
+											</Row>
+										</Col>
 										<Col>
 											{hasUploader && <UploadHoldings />}
 											<AddHoldings
@@ -57,19 +89,23 @@ export default function HoldingTabView() {
 												changeData={tabsData[tabName].setData}
 												input={tabsData[tabName].input}
 												inputComp={tabsData[tabName].inputComp}
+												title={`${tabsData[tabName].label} - Add Record`}
 											/>
 										</Col>
 									</Row>
-									{!loadingHoldings ? (
-										tabsData[tabName].data.length ?
-										<ListHoldings 
+									{!loadingHoldings ? tabsData[tabName].data.length ? tabsData[tabName]
+										.contentComp ? (
+										tabsData[tabName].contentComp
+									) : (
+										<ListHoldings
 											data={tabsData[tabName].data}
 											changeData={tabsData[tabName].setData}
 											viewComp={tabsData[tabName].viewComp}
 											typeOptions={tabsData[tabName].typeOptions}
 											subtypeOptions={tabsData[tabName].subtypeOptions}
 										/>
-										: <Empty description="No data found." />
+									) : (
+										<Empty description="No data found." />
 									) : (
 										<Skeleton loading />
 									)}

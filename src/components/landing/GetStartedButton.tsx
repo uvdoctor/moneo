@@ -11,7 +11,7 @@ export default function GetStartedButton() {
 				size="large"
 				className="start-steps-btn"
 			>
-				Get Started
+				Get...Set...Grow &nbsp;&gt;&gt;&gt;
 			</Button>
 		</Link>
 	);
