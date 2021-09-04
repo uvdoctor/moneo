@@ -92,8 +92,9 @@ const calc = {
   },
 
   calcPrice: (price) => {
-    if (!price) return 100;
-    return Number(price);
+    const value = Number(price)
+    if (!value) return 100;
+    return value
   },
 };
 
@@ -132,7 +133,7 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
   const reset = record[codes.rate];
   schema.rate = reset.includes("RESET") || reset > 20 ? 0 : parseFloat(reset);
   schema.fv = 100;
-  schema.ytm = calcYTM(record, codes, record[codes.rate]);
+  schema.ytm = calcYTM(record, codes);
   schema.createdAt = new Date().toISOString();
   schema.updatedAt = new Date().toISOString();
   isinMap[record[codes.id]] = record[codes.id];
