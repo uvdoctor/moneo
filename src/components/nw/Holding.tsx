@@ -86,7 +86,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 									<Tooltip title="Annualized return if you hold the bond till maturity">
 										&nbsp;
 										<FontAwesomeIcon icon={faHandHoldingUsd} />
-										{` ${insData[holding.id].ytm}%`}
+										{` ${insData[holding.id].ytm * 100}%`}
 									</Tooltip>
 								)}
 							</Col>
