@@ -83,7 +83,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 									</Tooltip>
 								)}
 								{insData[holding.id].ytm && (
-									<Tooltip title="Annualized return if you buy the bond today and hold it till maturity">
+									<Tooltip title="Annual rate of return of this bond if it is bought today and held till maturity">
 										&nbsp;&nbsp;
 										<FontAwesomeIcon icon={faHandHoldingUsd} />
 										{` ${insData[holding.id].ytm * 100}%`}
