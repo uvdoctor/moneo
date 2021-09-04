@@ -202,7 +202,7 @@ export const getAssetSubTypes = () => {
 	return {
 		[APIt.AssetSubType.CB]: "Corporate Bond",
 		[APIt.AssetSubType.GB]: "Government Bond",
-		[APIt.AssetSubType.GBO]: "Public Bond",
+		[APIt.AssetSubType.GBO]: "Government-backed Bond",
 		[APIt.AssetSubType.Gold]: "Gold",
 		[APIt.AssetSubType.GoldB]: "Gold Bond",
 		[APIt.AssetSubType.I]: "Index",

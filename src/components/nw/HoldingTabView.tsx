@@ -61,7 +61,7 @@ export default function HoldingTabView() {
 																{selectedMembers.forEach(
 																	(key: string) =>
 																		allFamily[key] && (
-																			<Tooltip title={allFamily[key].name}>
+																			<Tooltip title={allFamily[key]}>
 																				<Avatar icon={<UserOutlined />} />
 																			</Tooltip>
 																		)
@@ -71,13 +71,13 @@ export default function HoldingTabView() {
 													</Col>
 												)}
 												<Col>
-													<h3 style={{ color: COLORS.GREEN }}>
+													<h2 style={{ color: COLORS.GREEN }}>
 														&nbsp;&nbsp;
 														{toHumanFriendlyCurrency(
 															tabsData[tabName].total,
 															selectedCurrency
 														)}
-													</h3>
+													</h2>
 												</Col>
 											</Row>
 										</Col>

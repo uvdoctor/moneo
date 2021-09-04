@@ -55,7 +55,7 @@
         },
         "moneobhavutils": {
           "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/moneobhavutils-LambdaLayerVersion3fb0b513-build.zip"
+          "s3Key": "amplify-builds/moneobhavutils-LambdaLayerVersion5b8300f8-build.zip"
         }
       }
     }

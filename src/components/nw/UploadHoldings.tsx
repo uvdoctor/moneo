@@ -89,7 +89,7 @@ export default function UploadHoldings() {
 		Object.keys(input).forEach((key) => {
 			let instrument = input[key];
 			let matchingEntry: HoldingInput | null = insData[key] ? insData[key] : null;
-			if(queryIds.indexOf(key) > -1 && matchingList && matchingList.length) 
+			if(!matchingEntry && matchingList && matchingList.length) 
 				matchingEntry = matchingList?.find((match) => match?.id === key);
 			if(matchingEntry) {
 				insData[key] = matchingEntry;
