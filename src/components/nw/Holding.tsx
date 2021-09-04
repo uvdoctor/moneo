@@ -70,21 +70,21 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 							<Col>
 								{insData[holding.id].rate && (
 									<Tooltip title="Interest rate">
-										&nbsp;
+										&nbsp;&nbsp;
 										<FontAwesomeIcon icon={faCoins} />
 										{` ${insData[holding.id].rate}%`}
 									</Tooltip>
 								)}
 								{insData[holding.id].my && (
 									<Tooltip title="Maturity Year">
-										&nbsp;
+										&nbsp;&nbsp;
 										<HourglassOutlined />
 										{insData[holding.id].my}
 									</Tooltip>
 								)}
 								{insData[holding.id].ytm && (
-									<Tooltip title="Annualized return if you hold the bond till maturity">
-										&nbsp;
+									<Tooltip title="Annualized return if you buy the bond today and hold it till maturity">
+										&nbsp;&nbsp;
 										<FontAwesomeIcon icon={faHandHoldingUsd} />
 										{` ${insData[holding.id].ytm * 100}%`}
 									</Tooltip>
