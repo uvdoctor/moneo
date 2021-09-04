@@ -92,15 +92,15 @@ const calc = {
   },
 
   calcPrice: (price) => {
-    const value = Number(price)
+    const value = Number(price);
     if (!value) return 100;
-    return value
+    return value;
   },
 };
 
 const calcYTM = (record, codes) => {
   const reset = record[codes.rate];
-  const rate = reset.includes("RESET") || reset >= 20 ? 0 : reset;
+  const rate = reset.includes("RESET") || reset >= 20 ? 0 : parseFloat(reset);
   const fv = 100;
   const matrMonth = calc.calcMM(record[codes.mDate]);
   const matrYear = calc.calcMY(record[codes.mDate]);
