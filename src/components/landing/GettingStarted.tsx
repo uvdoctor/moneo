@@ -14,7 +14,7 @@ export default function GettingStarted() {
 					{/*defaultCountry === "IN" ? (*/}
 					<Link href={ROUTES.SET}>
 						<Button type="primary" size="large">
-							Get Started
+							Get...Set...Grow &nbsp;&gt;&gt;&gt;
 						</Button>
 					</Link>
 					{/*) : status !== Status.Y ? (

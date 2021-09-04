@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, Fragment } from "react";
-import { Button, Upload, Drawer, Tabs, Row, Badge, Col } from "antd";
+import { Button, Upload, Drawer, Tabs, Row, Badge, Col, Alert } from "antd";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import HoldingsTable from "./HoldingsTable";
@@ -9,6 +9,7 @@ import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgno
 import { isMobileDevice } from "../utils";
 import simpleStorage from "simplestorage.js";
 import { AssetSubType, InsType, AssetType, HoldingInput } from "../../api/goals";
+import { UserOutlined } from "@ant-design/icons";
 import {
 	cleanAssetName,
 	completeRecord,
@@ -25,14 +26,13 @@ import {
 	getNumberAtEnd,
 	removeDuplicates,
 } from "../utils";
-import { addFamilyMemberSilently, getFamilyMemberKey, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMutual } from "./nwutils";
+import { addFamilyMemberSilently, getFamilyMemberKey, getFamilyOptions, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMutual } from "./nwutils";
+import SelectInput from "../form/selectinput";
 
 export default function UploadHoldings() {
 	const { insData }: any = useContext(AppContext);
 	const { showInsUpload,
 		setShowInsUpload,
-		taxId,
-		setTaxId,
 		instruments,
 		setInstruments,
 		allFamily,
@@ -54,12 +54,24 @@ export default function UploadHoldings() {
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
 	const [ processing, setProcessing ] = useState<boolean>(false);
+	const [taxId, setTaxId] = useState<string>('');
+	const [memberKey, setMemberKey] = useState<string>('');
+	const [error, setError] = useState<string>('');
 
 	useEffect(() => setDrawerVisibility(!Object.keys(instruments).length), []);
 
 	useEffect(() => {
 		if(showInsUpload) setDrawerVisibility(false);
 	}, [showInsUpload]);
+
+	useEffect(() => {
+		return () => {
+			setTaxId('');
+			setMemberKey('');
+			setError('');
+			setProcessing(false);
+		}
+	}, []);
 
 	function onShowDrawer() {
 		setDrawerVisibility(true);
@@ -77,7 +89,7 @@ export default function UploadHoldings() {
 		Object.keys(input).forEach((key) => {
 			let instrument = input[key];
 			let matchingEntry: HoldingInput | null = insData[key] ? insData[key] : null;
-			if(queryIds.indexOf(key) > -1 && matchingList && matchingList.length) 
+			if(!matchingEntry && matchingList && matchingList.length) 
 				matchingEntry = matchingList?.find((match) => match?.id === key);
 			if(matchingEntry) {
 				insData[key] = matchingEntry;
@@ -96,16 +108,14 @@ export default function UploadHoldings() {
 
 	const addInstruments = async () => {
 		setProcessing(true);
-		if(!taxId) return;
-		addFamilyMemberSilently(allFamily, setAllFamily, taxId);
+		let member = taxId ? getFamilyMemberKey(allFamily, taxId) : memberKey; 
+		if(taxId) addFamilyMemberSilently(allFamily, setAllFamily, taxId);
 		let currency = 'INR';
 		if(!currencyList[currency]) {
 			currencyList[currency] = currency;
 			setCurrencyList(currencyList);
 		}
 		setSelectedCurrency(currency);
-		let memberKey = getFamilyMemberKey(allFamily, taxId);
-		if(!memberKey) return;
 		let existingFixedMap: any = {};
 		let existingInstrMap: any = {};
 		instruments.forEach((instrument: HoldingInput) => {
@@ -116,13 +126,13 @@ export default function UploadHoldings() {
 				existingInstrMap[instrument.id] = instrument;
 			}
 		})
-		await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, memberKey, existingInstrMap);
-		let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, memberKey, existingFixedMap);
+		await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, member as string, existingInstrMap);
+		let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, member as string, existingFixedMap);
 		if(unmatchedBonds && Object.keys(unmatchedBonds).length) 
 			Object.keys(unmatchedBonds).forEach((key: string) => equities[key] = unmatchedBonds[key]);
 		if(etfs && Object.keys(etfs).length)
 			Object.keys(etfs).forEach((key: string) => equities[key] = etfs[key]);
-		await loadInstrumentPrices(loadMatchingINExchange, equities, memberKey, existingInstrMap);
+		await loadInstrumentPrices(loadMatchingINExchange, equities, member as string, existingInstrMap);
 		simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
 		setInstruments([...instruments]);
 		setDrawerVisibility(false);
@@ -389,6 +399,9 @@ export default function UploadHoldings() {
 				}
 			}
 		}
+		if(!taxId) {
+			setError('Please select approriate family member');
+		}
 		setValues(equities, bonds, mfs, etfs);
 	};
 
@@ -420,12 +433,30 @@ export default function UploadHoldings() {
 			<Drawer
 				className="upload-holdings-drawer"
 				width={isMobileDevice(fsb) ? 320 : 550}
-				title={
-					<Row justify="space-between">
-						<Col>PAN <strong>{taxId}</strong></Col>
-						<Col><Badge count={equitiesNum + mfsNum + etfsNum + bondsNum} showZero /></Col>
-					</Row>
-				}
+				title={(equitiesNum || etfsNum || mfsNum || bondsNum) ? 
+					<Fragment>
+						{error && <p>
+							<Alert type="error" message={error} />
+						</p>}
+						<Row justify="space-between">
+							<Col>
+								<UserOutlined />
+								{taxId ? 
+								<strong>{taxId}</strong>
+									: <SelectInput
+										pre=""
+										value={memberKey}
+										options={getFamilyOptions(allFamily)}
+										changeHandler={(key: string) => {
+											setMemberKey(key);
+											setError('');
+										}} />
+								}
+							</Col>
+							<Col><Badge count={equitiesNum + mfsNum + etfsNum + bondsNum} showZero /></Col>
+						</Row>
+					</Fragment>
+				: null}
 				placement="right"
 				closable={false}
 				visible={showInsUpload}
@@ -437,7 +468,7 @@ export default function UploadHoldings() {
 						<Button onClick={() => {
 							setProcessing(true);
 							addInstruments();
-						}} type="primary" loading={processing}>
+						}} type="primary" loading={processing} disabled={!taxId && !memberKey}>
 							Done
 						</Button>
 					</div>

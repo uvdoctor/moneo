@@ -128,17 +128,6 @@ export const updateHoldings = async (holdings: APIt.UpdateHoldingsInput) => {
 	}
 };
 
-export const getFamilyNames = (selectedMembers: string[], allFamily: any) => {
-	if (!selectedMembers || !selectedMembers.length || !selectedMembers[0]) return '';
-	if (selectedMembers.includes(ALL_FAMILY)) return 'Family';
-	if (!allFamily || !Object.keys(allFamily).length) return '';
-	let result: string = allFamily[selectedMembers[0]].name;
-	selectedMembers.forEach((key: string, index: number) => {
-		if (index) result += `, ${allFamily[key].name}`;
-	});
-	return result;
-};
-
 export const getRelatedCurrencies = (holdings: APIt.CreateHoldingsInput | null, defaultCurrency: string) => {
 	let currencyList: any = {[defaultCurrency]: defaultCurrency};
 	if(!holdings || !Object.keys(holdings).length) return currencyList;
@@ -213,7 +202,7 @@ export const getAssetSubTypes = () => {
 	return {
 		[APIt.AssetSubType.CB]: "Corporate Bond",
 		[APIt.AssetSubType.GB]: "Government Bond",
-		[APIt.AssetSubType.GBO]: "Public Bond",
+		[APIt.AssetSubType.GBO]: "Government-backed Bond",
 		[APIt.AssetSubType.Gold]: "Gold",
 		[APIt.AssetSubType.GoldB]: "Gold Bond",
 		[APIt.AssetSubType.I]: "Index",

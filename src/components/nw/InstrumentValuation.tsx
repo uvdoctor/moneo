@@ -29,14 +29,14 @@ export default function InstrumentValuation() {
 			title: (
 				<strong
 					style={{
-						color: filteredInfo && filteredInfo.id && filteredInfo.id.length ? COLORS.GREEN : COLORS.DEFAULT
+						color: COLORS.GREEN
 					}}
 				>
 					Total ~ {toHumanFriendlyCurrency(total, selectedCurrency)}
 				</strong>
 			),
 			key: 'id',
-			filterIcon: <FilterTwoTone twoToneColor={COLORS.GREEN} style={{ fontSize: 20 }} />,
+			filterIcon: <FilterTwoTone twoToneColor={filteredInfo?.id ? COLORS.GREEN : COLORS.DEFAULT} style={{ fontSize: 20 }} />,
 			filteredValue: filteredInfo.id || null,
 			filters: nameFilterValues,
 			onFilter: (values: Array<string>, record: any) => values.indexOf(record.id) > -1,

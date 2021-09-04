@@ -1,6 +1,14 @@
 import React, { Fragment, useContext, useState } from 'react';
-import { Row, Col, Button, Badge, InputNumber } from 'antd';
-import { DeleteOutlined, EditOutlined, ShoppingCartOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
+import { Row, Col, Button, Badge, InputNumber, Tooltip } from 'antd';
+import {
+	DeleteOutlined,
+	EditOutlined,
+	ShoppingCartOutlined,
+	SaveOutlined,
+	CloseOutlined,
+	UserOutlined,
+	HourglassOutlined
+} from '@ant-design/icons';
 
 import './Holding.less';
 import { toCurrency, toHumanFriendlyCurrency, toReadableNumber } from '../utils';
@@ -9,6 +17,9 @@ import { useEffect } from 'react';
 import { getAssetSubTypes, getColourForAssetType } from './nwutils';
 import { COLORS } from '../../CONSTANTS';
 import { AppContext } from '../AppContext';
+import { NWContext } from './NWContext';
+import { faCoins, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface HoldingProp {
 	holding: HoldingInput;
@@ -19,6 +30,7 @@ interface HoldingProp {
 
 export default function Holding({ holding, showPrice, onDelete, onChange }: HoldingProp) {
 	const { insData }: any = useContext(AppContext);
+	const { allFamily }: any = useContext(NWContext);
 	const [ price, setPrice ] = useState<number>(insData[holding.id] ? insData[holding.id].price : 0);
 	const [ total, setTotal ] = useState<number>(holding.qty * price);
 	const [ isEditMode, setEditMode ] = useState(false);
@@ -39,19 +51,50 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 		[ price ]
 	);
 
+	const getInsTypeStr = (id: string) =>
+		insData[id].itype ? `${insData[holding.id].itype} - ` : holding.id.startsWith('INF') ? 'Mutual Fund - ' : '';
+
 	return (
 		<Row className="holding" align="middle" justify="space-between" gutter={[ 5, 5 ]}>
-			{showPrice &&
-			insData[holding.id] && (
-				<Col>
-					{insData[holding.id].itype ? (
-						`${insData[holding.id].itype} - `
-					) : holding.id.startsWith('INF') ? (
-						'Mutual Fund - '
-					) : (
-						''
-					)}
-					{assetSubTypes[insData[holding.id].subt]}
+			{showPrice && (
+				<Col span={24}>
+					<Row justify="space-between">
+						<Col>
+							{insData[holding.id] ? (
+								`${getInsTypeStr(holding.id)}${assetSubTypes[insData[holding.id].subt]}`
+							) : (
+								<h4 style={{ color: COLORS.RED }}>Sorry, unable to find price for this one!</h4>
+							)}
+						</Col>
+						{insData[holding.id] && (
+							<Col>
+								{insData[holding.id].rate && (
+									<Tooltip title="Interest rate">
+										&nbsp;&nbsp;
+										<FontAwesomeIcon icon={faCoins} />
+										{` ${insData[holding.id].rate}%`}
+									</Tooltip>
+								)}
+								{insData[holding.id].my && (
+									<Tooltip title="Maturity Year">
+										&nbsp;&nbsp;
+										<HourglassOutlined />
+										{insData[holding.id].my}
+									</Tooltip>
+								)}
+								{insData[holding.id].ytm && (
+									<Tooltip title="Annual rate of return of this bond if it is bought today and held till maturity">
+										&nbsp;&nbsp;
+										<FontAwesomeIcon icon={faHandHoldingUsd} />
+										{` ${insData[holding.id].ytm * 100}%`}
+									</Tooltip>
+								)}
+							</Col>
+						)}
+						<Col>
+							<UserOutlined />&nbsp;{allFamily[holding.fIds[0]].name}
+						</Col>
+					</Row>
 				</Col>
 			)}
 			<Col span={24}>

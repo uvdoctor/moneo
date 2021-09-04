@@ -1,25 +1,31 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Modal, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import FormGenerator from './FormGenerator';
-import { Context, ContextProvider } from './Context';
 
 interface AddHoldingsProps {
 	data: Array<any>;
 	changeData: Function;
+	input: any;
+	inputComp: any;
 	isPrimary: boolean;
+	title: string;
 }
 
-export default function AddHoldings({ data, changeData, isPrimary }: AddHoldingsProps) {
-	const [ isModalVisible, setModalVisibility ] = useState(false);
-	const { add }: any = useContext(Context);
-	
-	const onClose = () => setModalVisibility(false);
+export default function AddHoldings({ data, changeData, input, inputComp, isPrimary, title }: AddHoldingsProps) {
+	const [ isModalVisible, setModalVisibility ] = useState<boolean>(false);
+	const [ okDisabled, setOkDisabled ] = useState<boolean>(true);
+	const [ newRec, setNewRec ] = useState<any>(Object.assign({}, input));
 
-	const addHolding = (input: any) => {
-		data.push(input);
-		changeData([...data]);
-	}
+	const close = () => {
+		setModalVisibility(false);
+		setNewRec(Object.assign({}, input));
+	};
+
+	const addHolding = () => {
+		data.push(newRec);
+		changeData([ ...data ]);
+		close();
+	};
 
 	return (
 		<Fragment>
@@ -31,17 +37,16 @@ export default function AddHoldings({ data, changeData, isPrimary }: AddHoldings
 			>
 				{isPrimary ? 'Add' : 'Add Manually'}
 			</Button>
-			<ContextProvider>
-				<Modal
-					title="Add"
-					visible={isModalVisible}
-					footer={null}
-					onCancel={onClose}
-					onOk={() => add((input: any) => addHolding(input))}
-				>
-					<FormGenerator onClose={onClose} />
-				</Modal>
-			</ContextProvider>
+			<Modal
+				title={title}
+				visible={isModalVisible}
+				onCancel={close}
+				onOk={() => addHolding()}
+				okButtonProps={{ disabled: okDisabled }}
+				destroyOnClose
+			>
+				{React.createElement(inputComp, { input: newRec, disableOk: setOkDisabled })}
+			</Modal>
 		</Fragment>
 	);
 }

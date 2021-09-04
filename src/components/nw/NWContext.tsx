@@ -12,6 +12,8 @@ import {
 } from './nwutils';
 import { notification } from 'antd';
 import {
+	AssetSubType,
+	AssetType,
 	BalanceInput,
 	CreateHoldingsInput,
 	DepositInput,
@@ -21,7 +23,9 @@ import {
 	Property
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
-import DynamicHoldingInput from './DynamicHoldingInput';
+import AddHoldingInput from './AddHoldingInput';
+import { initOptions } from '../utils';
+import ViewHoldingInput from './ViewHoldingInput';
 
 const NWContext = createContext({});
 
@@ -72,7 +76,6 @@ function NWContextProvider() {
 	const [ totalOthers, setTotalOthers ] = useState<number>(0);
 	const [ totalAngel, setTotalAngel ] = useState<number>(0);
 	const [ showInsUpload, setShowInsUpload ] = useState<boolean>(false);
-	const [ taxId, setTaxId ] = useState<string>('');
 	const [ activeTab, setActiveTab ] = useState<string>('Demat Holdings');
 	const [ activeTabSum, setActiveTabSum ] = useState<number>(0);
 	const [ results, setResults ] = useState<Array<any>>([]);
@@ -88,21 +91,21 @@ function NWContextProvider() {
 					data: deposits,
 					setData: setDeposits,
 					total: totalDeposits,
-					content: <InstrumentValuation />
+					contentComp: <InstrumentValuation />
 				},
 				'Saving Accounts': {
 					label: 'Saving Accounts',
 					data: savings,
 					setData: setSavings,
 					total: totalSavings,
-					content: <InstrumentValuation />
+					contentComp: <InstrumentValuation />
 				},
 				'Money Lent': {
 					label: 'Money Lent',
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
-					content: <InstrumentValuation />
+					contentComp: <InstrumentValuation />
 				},
 			}
 		},
@@ -114,7 +117,7 @@ function NWContextProvider() {
 					data: properties,
 					setData: setProperties,
 					total: totalProperties,
-					content: <InstrumentValuation />,
+					contentComp: <InstrumentValuation />,
 					formConfig: [
 						{
 							label: 'Name',
@@ -133,14 +136,56 @@ function NWContextProvider() {
 					data: vehicles,
 					setData: setVehicles,
 					total: totalVehicles,
-					content: <InstrumentValuation />,
+					contentComp: <InstrumentValuation />,
 				},
 				'Precious Metals': {
 					label: 'Precious Metals',
 					data: preciousMetals,
 					setData: setPreciousMetals,
 					total: totalPM,
-					content: <DynamicHoldingInput holdings={preciousMetals} changeHoldings={setPreciousMetals} />
+					input: {
+						id: '',
+						type: AssetType.A,
+						subt: AssetSubType.Gold,
+						fIds: [ Object.keys(allFamily)[0] ],
+						qty: 0,
+						curr: 'USD',
+						name: '24'
+					},
+					subtypeOptions: {
+						[AssetSubType.Gold]: initOptions(8, 16),
+						[SILVER]: {
+							'100': 'Pure',
+							'95.8': 'Brittania (95.8%)',
+							'92.5': 'Sterling (92.5%)',
+							'90': 'Coin (90%)',
+							'80': 'Jewellery (80%)'
+						},
+						[PLATINUM]: {
+							'100': 'Pure',
+							'95': '95%',
+							'90': '90%',
+							'85': '85%',
+							'80': '80%',
+							'50': '50%'
+						},
+						[PALLADIUM]: {
+							'100': 'Pure',
+							'95': '95%',
+							'90%': '90%',
+							'85': '85%',
+							'80': '80%',
+							'50': '50%'
+						}
+					},
+					typeOptions: {
+						[AssetSubType.Gold]: 'Gold',
+						[SILVER]: 'Silver',
+						[PLATINUM]: 'Platinum',
+						[PALLADIUM]: 'Palladium'
+					},
+					inputComp: AddHoldingInput,
+					viewComp: ViewHoldingInput,
 				}
 			},
 		},
@@ -150,7 +195,7 @@ function NWContextProvider() {
 			data: instruments,
 			setData: setInstruments,
 			total: totalInstruments,
-			content: <InstrumentValuation />
+			contentComp: <InstrumentValuation />
 		},
 		Retirement: {
 			label: 'Retirement',
@@ -160,21 +205,21 @@ function NWContextProvider() {
 					data: ppf,
 					setData: setPPF,
 					total: totalPPF,
-					content: <InstrumentValuation />
+					contentComp: <InstrumentValuation />
 				},
 				EPF: {
 					label: 'EPF',
 					data: epf,
 					setData: setEPF,
 					total: totalEPF,
-					content: <InstrumentValuation />
+					contentComp: <InstrumentValuation />
 				},
 				NPS: {
 					label: 'NPS',
 					data: nps,
 					setData: setNPS,
 					total: totalNPS,
-					content: <InstrumentValuation />
+					contentComp: <InstrumentValuation />
 				},
 			}
 		},
@@ -186,28 +231,32 @@ function NWContextProvider() {
 					data: memberships,
 					setData: setMemberships,
 					total: totalMemberships,
-					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+					inputComp: AddHoldingInput,
+					viewComp: ViewHoldingInput,
 				},
 				Crypto: {
 					label: 'Crypto',
 					data: crypto,
 					setData: setCrypto,
 					total: totalCrypto,
-					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+					inputComp: AddHoldingInput,
+					viewComp: ViewHoldingInput,
 				},
 				'Angel Investments': {
 					label: 'Angel Investments',
 					data: angel,
 					setData: setAngel,
 					total: totalAngel,
-					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+					inputComp: AddHoldingInput,
+					viewComp: ViewHoldingInput,
 				},
 				Other: {
 					label: 'Other',
 					data: crypto,
 					setData: setCrypto,
 					total: totalCrypto,
-					content: <DynamicHoldingInput holdings={crypto} changeHoldings={setCrypto} />
+					inputComp: AddHoldingInput,
+					viewComp: ViewHoldingInput,
 				}, 
 			}
 		},
@@ -216,7 +265,7 @@ function NWContextProvider() {
 			data: loans,
 			setData: setLoans,
 			total: totalLoans,
-			content: <InstrumentValuation />,
+			contentComp: <InstrumentValuation />,
 			formConfig: [
 				{
 					label: 'Bank Name',
@@ -250,7 +299,7 @@ function NWContextProvider() {
 			data: insurance,
 			total: totalInsurance,
 			setData: setInsurance,
-			content: <InstrumentValuation />
+			contentComp: <InstrumentValuation />
 		},
 	};
 
@@ -360,6 +409,10 @@ function NWContextProvider() {
 	);
 
 	const pricePM = () => {
+		if(!preciousMetals.length) {
+			setTotalPM(0);
+			return;
+		}
 		let total = 0;
 		preciousMetals.forEach((instrument: HoldingInput) => {
 			let rate = getCommodityRate(ratesData, instrument.subt as string, instrument.name as string, selectedCurrency);
@@ -369,6 +422,10 @@ function NWContextProvider() {
 	};
 
 	const priceInstruments = () => {
+		if(!instruments.length) {
+			setTotalInstruments(0);
+			return;
+		}
 		let total = 0;
 		instruments.forEach((instrument: HoldingInput) => {
 			if(insData[instrument.id] && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
@@ -525,8 +582,6 @@ function NWContextProvider() {
 				setActiveTab,
 				showInsUpload,
 				setShowInsUpload,
-				taxId,
-				setTaxId,
 				nw,
 				setNW,
 				totalAssets,
