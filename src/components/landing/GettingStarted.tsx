@@ -1,8 +1,7 @@
 import React from "react";
-import { Col, Image, Button } from "antd";
-import Link from "next/link";
+import { Col, Image } from "antd";
 import "./GettingStarted.less";
-import { ROUTES } from "../../CONSTANTS";
+import GetStartedButton from "./GetStartedButton";
 
 export default function GettingStarted() {
 	return (
@@ -12,11 +11,7 @@ export default function GettingStarted() {
 				<Image preview={false} src="images/kick-start.jpg" />
 				<p style={{ textAlign: "center" }}>
 					{/*defaultCountry === "IN" ? (*/}
-					<Link href={ROUTES.SET}>
-						<Button type="primary" size="large">
-							Get. Set. Grow
-						</Button>
-					</Link>
+					<GetStartedButton />
 					{/*) : status !== Status.Y ? (
 					<Join />
 				) : null}*/}

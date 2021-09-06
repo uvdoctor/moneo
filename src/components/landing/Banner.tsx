@@ -8,6 +8,9 @@ import GetStartedButton from './GetStartedButton';
 import WalletSVG from '../svgs/2d/wallet';
 import LockSVG from '../svgs/2d/lock';
 import SecuritySVG from '../svgs/2d/security';
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { COLORS } from '../../CONSTANTS';
 
 export default function Banner() {
 	const { defaultCountry }: any = useContext(AppContext);
@@ -21,8 +24,12 @@ export default function Banner() {
 					<GetStartedButton />
 				</p>
 				<h3>
+					<FontAwesomeIcon icon={faEyeSlash} color={COLORS.GREEN} />
+					No hidden fees
+				</h3>
+				<h3>
 					<WalletSVG />
-					No Commissions
+					Smart deals based on goals
 				</h3>
 				<h3>
 					<LockSVG />

@@ -3,6 +3,7 @@ import { Row, Col } from "antd";
 import Content from "../Content";
 
 import "./SmartSaver.less";
+import GetStartedButton from "./GetStartedButton";
 
 export default function SmartSaver() {
 	return (
@@ -12,11 +13,16 @@ export default function SmartSaver() {
 					<h2>
 						<strong>Smart deals for your goals</strong>
 					</h2>
+					<h3>
+						Curated deals from <strong>100+ partners</strong> to help you save.
+					</h3>
+					<p/>
+					<p/>
 					<p>
-						Curated deals from 100+ partners to help you save while reaching your goals.
+						<GetStartedButton />
 					</p>
 					<h3>
-						<strong>The more you plan, the more you save!</strong>
+						<strong>Plan More, Save More!</strong>
 					</h3>
 				</Col>
 				<Col xs={24} sm={24} md={12}>

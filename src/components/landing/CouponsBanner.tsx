@@ -27,30 +27,18 @@ export default function CouponsBanner() {
 
 	return (
 		<Content className="coupons-banner" whiteBg>
-			<Row align="middle">
-				<Col>
-					<h2>
-						{/*@ts-ignore*/}
-						<strike>Buy</strike>
-					</h2>
-				</Col>
-				<Col>
-					<h2>&nbsp;Plan&nbsp; </h2>
-				</Col>
-				<Col>
-					<h2>Now,&nbsp;</h2>
-				</Col>
-				<Col>
-					<h2>
-						{/*@ts-ignore*/}
-						<strike>Plan Later </strike>
-					</h2>
-				</Col>
-				<Col>
-					<h2>&nbsp;Buy Smarter&nbsp;</h2>
-				</Col>
-			</Row>
-			<h3>Plan big-spends so that Moneo can help you to find good deals and invest accordingly.</h3> 
+			<Col>
+				<h2>
+					{/*@ts-ignore*/}
+					<strike>Buy Now, Plan Later</strike>
+				</h2>
+			</Col>
+			<Col>
+				<h2>
+					<strong>Plan Now, Buy Smarter</strong>
+				</h2>
+			</Col>
+			<h3>Plan big-spends so that Moneo can help you to find good deals and invest accordingly.</h3>
 			<Carousel
 				autoPlay
 				interval={5000}
