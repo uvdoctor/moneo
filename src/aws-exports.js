@@ -3,23 +3,23 @@
 
 const awsmobile = {
     "aws_project_region": "us-east-1",
-    "aws_cognito_identity_pool_id": "us-east-1:082d9d3f-a45b-480d-af35-64aeafd1bd9c",
+    "aws_cognito_identity_pool_id": "us-east-1:24472e8c-fd67-40db-84cb-a9629374f775",
     "aws_cognito_region": "us-east-1",
-    "aws_user_pools_id": "us-east-1_BBncFECx0",
-    "aws_user_pools_web_client_id": "4soeaje91bao53tapeq0cb7b94",
+    "aws_user_pools_id": "us-east-1_5zZRYALIt",
+    "aws_user_pools_web_client_id": "47li3nudvo9q71oa7kf1cbi9qc",
     "oauth": {},
-    "aws_appsync_graphqlEndpoint": "https://q5jdufebkjfgzn4upyqfi5sjga.appsync-api.us-east-1.amazonaws.com/graphql",
+    "aws_appsync_graphqlEndpoint": "https://vtaeridxijgidkstvyzhnlaruq.appsync-api.us-east-1.amazonaws.com/graphql",
     "aws_appsync_region": "us-east-1",
     "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
+    "aws_user_files_s3_bucket": "goal-images204906-newdev",
+    "aws_user_files_s3_bucket_region": "us-east-1",
     "aws_cloud_logic_custom": [
         {
             "name": "AdminQueries",
             "endpoint": "https://zxfkz0ic24.execute-api.us-east-1.amazonaws.com/dev",
             "region": "us-east-1"
         }
-    ],
-    "aws_user_files_s3_bucket": "goal-images154010-dev",
-    "aws_user_files_s3_bucket_region": "us-east-1"
+    ]
 };
 
 

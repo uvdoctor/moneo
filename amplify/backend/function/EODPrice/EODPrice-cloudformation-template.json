@@ -16,9 +16,6 @@
     "s3Key": {
       "Type": "String"
     },
-    "eodApiKey": {
-      "Type": "String"
-    },
     "apiGoalsGraphqlapiendpointoutput": {
       "Type": "String"
     },
@@ -32,6 +29,9 @@
     "functionmoneobhavutilsArn": {
       "Type": "String",
       "Default": "functionmoneobhavutilsArn"
+    },
+    "eodApiKey": {
+      "Type": "String"
     }
   },
   "Conditions": {

@@ -1,61 +1,43 @@
 {
-  "dev": {
+  "newdev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-ddpwa-dev-154010-authRole",
-      "UnauthRoleArn": "arn:aws:iam::099259607472:role/amplify-ddpwa-dev-154010-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::099259607472:role/amplify-ddpwa-dev-154010-authRole",
+      "AuthRoleName": "amplify-moneo-newdev-204906-authRole",
+      "UnauthRoleArn": "arn:aws:iam::099259607472:role/amplify-moneo-newdev-204906-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::099259607472:role/amplify-moneo-newdev-204906-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-      "UnauthRoleName": "amplify-ddpwa-dev-154010-unauthRole",
-      "StackName": "amplify-ddpwa-dev-154010",
-      "StackId": "arn:aws:cloudformation:us-east-1:099259607472:stack/amplify-ddpwa-dev-154010/ef08b960-99b8-11ea-a3cb-1225390e8313",
-      "AmplifyAppId": "d3gydqmgeem77i"
+      "DeploymentBucketName": "amplify-moneo-newdev-204906-deployment",
+      "UnauthRoleName": "amplify-moneo-newdev-204906-unauthRole",
+      "StackName": "amplify-moneo-newdev-204906",
+      "StackId": "arn:aws:cloudformation:us-east-1:099259607472:stack/amplify-moneo-newdev-204906/c8148f80-0f25-11ec-99e8-0a4a6f581873",
+      "AmplifyAppId": "d3rkwx8y4laix4"
     },
     "categories": {
       "auth": {
-        "ddpwa0063633b": {},
-        "userPoolGroups": {}
+        "ddpwa0063633b": {}
       },
       "function": {
-        "ddpwa0063633bDefineAuthChallenge": {
-          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/ddpwa0063633bDefineAuthChallenge-5a6d362b303859677957-build.zip"
-        },
-        "ddpwa0063633bCreateAuthChallenge": {
-          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/ddpwa0063633bCreateAuthChallenge-304f5a78677469624648-build.zip"
-        },
-        "ddpwa0063633bVerifyAuthChallengeResponse": {
-          "RECAPTCHASECRET": "6LdTyd8ZAAAAAEB3B2-P2swyDqrqpBQEcY4m0sOf",
-          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/ddpwa0063633bVerifyAuthChallengeResponse-455851706d494e4b616d-build.zip"
-        },
-        "AdminQueries9798a8c9": {
-          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/AdminQueries9798a8c9-7657462f55593243482f-build.zip"
-        },
         "insprice": {
-          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/insprice-6a624f4a656879315148-build.zip"
+          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
+          "s3Key": "amplify-builds/insprice-3275396b2b352f713553-build.zip"
         },
         "EODPrice": {
-          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
+          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/EODPrice-5a365432397242467956-build.zip",
-          "apiGoalsGraphqlapiendpointoutput": "https://q5jdufebkjfgzn4upyqfi5sjga.appsync-api.us-east-1.amazonaws.com/graphql",
-          "apiGoalsGraphqlapiidoutput": "bvyjaqmusfh5zelcbeeji6xxoe",
-          "eodApiKey": "6119fe9f8f6d30.56370709,60d03a689523a3.63944368,611a0115bd4cd5.84750550,611a01dc0083c5.19670434,611a020d72d487.59800610"
+          "apiGoalsGraphqlapiidoutput": "",
+          "eodApiKey": "",
+          "apiGoalsGraphqlapiendpointoutput": ""
         },
         "MFPrice": {
-          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
+          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/MFPrice-4d58454b445164546841-build.zip"
         },
         "INBond": {
-          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/INBond-454c564a4252636c614b-build.zip"
+          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
+          "s3Key": "amplify-builds/INBond-33766c485952452f515a-build.zip"
         },
         "moneobhavutils": {
-          "deploymentBucketName": "amplify-ddpwa-dev-154010-deployment",
-          "s3Key": "amplify-builds/moneobhavutils-LambdaLayerVersion5b8300f8-build.zip"
+          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
+          "s3Key": "amplify-builds/moneobhavutils-LambdaLayerVersionbf650d0f-build.zip"
         }
       }
     }

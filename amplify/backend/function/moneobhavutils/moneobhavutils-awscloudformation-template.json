@@ -20,7 +20,7 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersion5b8300f8": {
+    "LambdaLayerVersionbf650d0f": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": [
@@ -30,9 +30,9 @@
           "S3Bucket": {
             "Ref": "deploymentBucketName"
           },
-          "S3Key": "amplify-builds/moneobhavutils-LambdaLayerVersion5b8300f8-build.zip"
+          "S3Key": "amplify-builds/moneobhavutils-LambdaLayerVersionbf650d0f-build.zip"
         },
-        "Description": "Updated layer version 2021-09-02T11:18:00.096Z",
+        "Description": "Updated layer version 2021-09-06T15:46:26.386Z",
         "LayerName": {
           "Fn::Sub": [
             "moneobhavutils-${env}",
@@ -47,122 +47,11 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionPrivate5b8300f8": {
+    "LambdaLayerPermissionPrivatebf650d0f": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneobhavutils-dev:7",
-        "Principal": {
-          "Ref": "AWS::AccountId"
-        }
-      }
-    },
-    "LambdaLayerVersion7c508424": {
-      "Type": "AWS::Lambda::LayerVersion",
-      "Properties": {
-        "CompatibleRuntimes": [
-          "nodejs14.x"
-        ],
-        "Content": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": "amplify-builds/moneobhavutils-LambdaLayerVersion7c508424-build.zip"
-        },
-        "Description": "Updated layer version 2021-09-02T10:52:00.494Z",
-        "LayerName": {
-          "Fn::Sub": [
-            "moneobhavutils-${env}",
-            {
-              "env": {
-                "Ref": "env"
-              }
-            }
-          ]
-        }
-      },
-      "DeletionPolicy": "Delete",
-      "UpdateReplacePolicy": "Retain"
-    },
-    "LambdaLayerPermissionPrivate7c508424": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneobhavutils-dev:6",
-        "Principal": {
-          "Ref": "AWS::AccountId"
-        }
-      }
-    },
-    "LambdaLayerVersion3fb0b513": {
-      "Type": "AWS::Lambda::LayerVersion",
-      "Properties": {
-        "CompatibleRuntimes": [
-          "nodejs14.x"
-        ],
-        "Content": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": "amplify-builds/moneobhavutils-LambdaLayerVersion3fb0b513-build.zip"
-        },
-        "Description": "Updated layer version 2021-09-02T08:56:56.753Z",
-        "LayerName": {
-          "Fn::Sub": [
-            "moneobhavutils-${env}",
-            {
-              "env": {
-                "Ref": "env"
-              }
-            }
-          ]
-        }
-      },
-      "DeletionPolicy": "Delete",
-      "UpdateReplacePolicy": "Retain"
-    },
-    "LambdaLayerPermissionPrivate3fb0b513": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneobhavutils-dev:5",
-        "Principal": {
-          "Ref": "AWS::AccountId"
-        }
-      }
-    },
-    "LambdaLayerVersionc07ce237": {
-      "Type": "AWS::Lambda::LayerVersion",
-      "Properties": {
-        "CompatibleRuntimes": [
-          "nodejs14.x"
-        ],
-        "Content": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": "amplify-builds/moneobhavutils-LambdaLayerVersionc07ce237-build.zip"
-        },
-        "Description": "Updated layer version 2021-09-02T08:45:53.257Z",
-        "LayerName": {
-          "Fn::Sub": [
-            "moneobhavutils-${env}",
-            {
-              "env": {
-                "Ref": "env"
-              }
-            }
-          ]
-        }
-      },
-      "DeletionPolicy": "Delete",
-      "UpdateReplacePolicy": "Retain"
-    },
-    "LambdaLayerPermissionPrivatec07ce237": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneobhavutils-dev:4",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneobhavutils-newdev:3",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -172,7 +61,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersion5b8300f8"
+        "Ref": "LambdaLayerVersionbf650d0f"
       }
     }
   }
