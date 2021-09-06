@@ -88,12 +88,10 @@ export default function Landing() {
           </Row>
         </Parallax>
       </Content>
-
-      <SmartSaver />
       <CouponsBanner />
+      <SmartSaver />
       <Calculator />
       <Testimonials />
-
       <Security />
       <GetRich />
       <FinancialIndependence />
