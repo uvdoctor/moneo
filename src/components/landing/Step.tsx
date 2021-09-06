@@ -41,7 +41,7 @@ export default function Step({
 				<p style={{ textAlign: "center" }}>
 					<Link href={link}>
 						<Button type="primary" size="large">
-							Get...Set...Grow &nbsp;&gt;&gt;&gt;
+							Get. Set. Grow
 						</Button>
 					</Link>
 				</p>
