@@ -79,7 +79,7 @@ export default function UploadHoldings() {
 		setDrawerVisibility(true);
 	}
 
-	const loadInstrumentPrices = async (fun: Function, input: any, memberKey: string, existingMap: any) => {
+	const loadInstrumentPrices = async (fun: Function, input: any, memberKey: string, filteredIns: Array<HoldingInput>) => {
 		if(!input || !Object.keys(input).length || !memberKey) return null;
 		let unmatched: any = {};
 		let queryIds: Array<string> = [];
@@ -102,8 +102,7 @@ export default function UploadHoldings() {
 			if(!instrument.type) instrument.type = AssetType.F;
 			instrument.curr = 'INR'
 			instrument.fIds = [memberKey];
-			if(existingMap[instrument.id]) existingMap[instrument.id] = instrument;
-			else instruments.push(instrument);
+			filteredIns.push(instrument);
 		})
 		return unmatched;
 	};
@@ -119,25 +118,16 @@ export default function UploadHoldings() {
 				setCurrencyList(currencyList);
 			}
 			setSelectedCurrency(currency);
-			let existingFixedMap: any = {};
-			let existingInstrMap: any = {};
-			instruments.forEach((instrument: HoldingInput) => {
-				if(instrument.curr === currency && instrument.fIds[0] === memberKey) {
-					if(instrument.type === AssetType.F) {
-						existingFixedMap[instrument.id] = instrument;
-					}
-					existingInstrMap[instrument.id] = instrument;
-				}
-			})
-			await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, member as string, existingInstrMap);
-			let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, member as string, existingFixedMap);
+			let filteredIns: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => instrument.curr !== instrument.curr || instrument.fIds[0] !== member);
+			await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, member as string, filteredIns);
+			let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, member as string, filteredIns);
 			if(unmatchedBonds && Object.keys(unmatchedBonds).length) 
 				Object.keys(unmatchedBonds).forEach((key: string) => equities[key] = unmatchedBonds[key]);
 			if(etfs && Object.keys(etfs).length)
 				Object.keys(etfs).forEach((key: string) => equities[key] = etfs[key]);
-			await loadInstrumentPrices(loadMatchingINExchange, equities, member as string, existingInstrMap);
+			await loadInstrumentPrices(loadMatchingINExchange, equities, member as string, filteredIns);
 			simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
-			setInstruments([...instruments]);
+			setInstruments([...filteredIns]);
 		}
 		setDrawerVisibility(false);
 		setShowInsUpload(false);
