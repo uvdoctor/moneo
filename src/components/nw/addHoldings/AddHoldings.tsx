@@ -54,6 +54,7 @@ export default function AddHoldings({ data, changeData, input, isPrimary, title 
 				onOk={() => addHolding()}
 				okButtonProps={{ disabled: okDisabled }}
 				destroyOnClose
+				centered
 			>
 				<AddHoldingInput input={newRec} disableOk={setOkDisabled} />
 			</Modal>

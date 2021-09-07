@@ -1,5 +1,5 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Col, InputNumber, Row } from 'antd';
+import { InputNumber } from 'antd';
 import React, { useContext, useState } from 'react';
 import { AssetSubType, HoldingInput } from '../../api/goals';
 import { AppContext } from '../AppContext';
@@ -75,8 +75,8 @@ export default function AddHoldingInput({ input, disableOk }: AddHoldingInputPro
 	};
 
 	return (
-		<Row>
-			<Col span={24}>
+		<div style={{textAlign: "center"}}>
+			<p>
 				<SelectInput
 					pre=""
 					value={input.subt as string}
@@ -96,8 +96,8 @@ export default function AddHoldingInput({ input, disableOk }: AddHoldingInputPro
 					changeHandler={(val: string) => changeName(val)}
 					post={subtype === AssetSubType.Gold ? 'karat' : ''}
 				/>
-			</Col>
-			<Col span={24}>
+			</p>
+			<p>
 				<InputNumber
 					value={quantity}
 					onChange={(quantity: number) => changeQuantity(quantity)}
@@ -113,15 +113,15 @@ export default function AddHoldingInput({ input, disableOk }: AddHoldingInputPro
 					quantity * getCommodityRate(ratesData, subtype as string, name as string, selectedCurrency),
 					selectedCurrency
 				)}`}
-			</Col>
-			<Col span={24}>
+			</p>
+			<p>
 				<SelectInput
 					pre={<UserOutlined />}
 					value={memberKey}
 					options={getFamilyOptions(allFamily)}
 					changeHandler={(key: string) => changeMember(key)}
 				/>
-			</Col>
-		</Row>
+			</p>
+		</div>
 	);
 }

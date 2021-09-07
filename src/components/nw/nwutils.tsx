@@ -58,7 +58,7 @@ export const doesMemberMatch = (instrument: APIt.HoldingInput, selectedMembers: 
 export const doesHoldingMatch = (instrument: APIt.HoldingInput, selectedMembers: Array<string>, selectedCurrency: string) =>
 	doesMemberMatch(instrument, selectedMembers)&& instrument.curr === selectedCurrency
 
-export const addFamilyMemberSilently = async (allFamily: any, allFamilySetter: Function, taxId: string) => {
+export const addMemberIfNeeded = async (allFamily: any, allFamilySetter: Function, taxId: string) => {
 	let id = getFamilyMemberKey(allFamily, taxId);
 	if(id) return id;
 	let member = await addFamilyMember(taxId, taxId);

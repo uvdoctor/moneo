@@ -26,7 +26,7 @@ import {
 	getNumberAtEnd,
 	removeDuplicates,
 } from "../utils";
-import { addFamilyMemberSilently, getFamilyMemberKey, getFamilyOptions, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMutual } from "./nwutils";
+import { addMemberIfNeeded, getFamilyOptions, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMutual } from "./nwutils";
 import SelectInput from "../form/selectinput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
@@ -55,7 +55,7 @@ export default function UploadHoldings() {
 	const [mfsNum, setMFsNum] = useState<number>(0);
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
-	const [ processing, setProcessing ] = useState<boolean>(false);
+	const [processing, setProcessing ] = useState<boolean>(false);
 	const [taxId, setTaxId] = useState<string>('');
 	const [memberKey, setMemberKey] = useState<string>('');
 	const [error, setError] = useState<string>('');
@@ -63,20 +63,19 @@ export default function UploadHoldings() {
 	useEffect(() => setDrawerVisibility(!Object.keys(instruments).length), []);
 
 	useEffect(() => {
-		if(showInsUpload) setDrawerVisibility(false);
+		if(showInsUpload) {
+			setDrawerVisibility(false);
+		}
 	}, [showInsUpload]);
 
-	useEffect(() => {
-		return () => {
-			setTaxId('');
-			setMemberKey('');
-			setError('');
-			setProcessing(false);
-		}
-	}, []);
+	const onShowDrawer = () => setDrawerVisibility(true);
 
-	function onShowDrawer() {
-		setDrawerVisibility(true);
+	const resetState = () => {
+		setTaxId('');
+		setMemberKey('');
+		setError('');
+		setProcessing(false);
+		setShowInsUpload(false);
 	}
 
 	const loadInstrumentPrices = async (fun: Function, input: any, memberKey: string, filteredIns: Array<HoldingInput>) => {
@@ -109,15 +108,14 @@ export default function UploadHoldings() {
 
 	const addInstruments = async () => {
 		setProcessing(true);
+		let member = taxId ? await addMemberIfNeeded(allFamily, setAllFamily, taxId) : memberKey;
+		let currency = 'INR';
+		if(!currencyList[currency]) {
+			currencyList[currency] = currency;
+			setCurrencyList(currencyList);
+		}
+		setSelectedCurrency(currency);
 		if(equitiesNum || mfsNum || bondsNum || etfsNum) {
-			let member = taxId ? getFamilyMemberKey(allFamily, taxId) : memberKey; 
-			if(taxId) addFamilyMemberSilently(allFamily, setAllFamily, taxId);
-			let currency = 'INR';
-			if(!currencyList[currency]) {
-				currencyList[currency] = currency;
-				setCurrencyList(currencyList);
-			}
-			setSelectedCurrency(currency);
 			let filteredIns: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => instrument.curr !== instrument.curr || instrument.fIds[0] !== member);
 			await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, member as string, filteredIns);
 			let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, member as string, filteredIns);
@@ -129,9 +127,7 @@ export default function UploadHoldings() {
 			simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
 			setInstruments([...filteredIns]);
 		}
-		setDrawerVisibility(false);
-		setShowInsUpload(false);
-		setProcessing(false);
+		resetState();
 	}
 	
 	const setValues = (equities: any, bonds: any, mfs: any, etfs: any) => {
@@ -409,7 +405,10 @@ export default function UploadHoldings() {
 				title="Upload NSDL or CSDL Monthly PDF Statement"
 				placement="right"
 				closable={false}
-				onClose={() => setDrawerVisibility(false)}
+				onClose={() => {
+					resetState();
+					setDrawerVisibility(false);
+				}}
 				visible={showDrawer}
 			>
 				<Dragger {...getUploaderSettings(parseHoldings)}>
