@@ -57,7 +57,7 @@ export default function UploadHoldings() {
 	const [showDrawer, setDrawerVisibility] = useState(false);
 	const [processing, setProcessing ] = useState<boolean>(false);
 	const [taxId, setTaxId] = useState<string>('');
-	const [memberKey, setMemberKey] = useState<string>('');
+	const [memberKey, setMemberKey] = useState<string | null>(null);
 	const [error, setError] = useState<string>('');
 
 	useEffect(() => setDrawerVisibility(!Object.keys(instruments).length), []);
@@ -72,7 +72,7 @@ export default function UploadHoldings() {
 
 	const resetState = () => {
 		setTaxId('');
-		setMemberKey('');
+		setMemberKey(null);
 		setError('');
 		setProcessing(false);
 		setShowInsUpload(false);
@@ -438,7 +438,7 @@ export default function UploadHoldings() {
 								<strong>{taxId}</strong>
 									: <SelectInput
 										pre=""
-										value={memberKey}
+										value={memberKey ? memberKey : 'Select a Member'}
 										options={getFamilyOptions(allFamily)}
 										changeHandler={(key: string) => {
 											setMemberKey(key);
