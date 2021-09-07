@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { Col, Empty, Row, Skeleton, Tabs, Avatar, Tooltip } from 'antd';
 import { NWContext } from './NWContext';
 import AddHoldings from './addHoldings/AddHoldings';
@@ -19,9 +19,11 @@ export default function HoldingTabView() {
 		allFamily,
 		selectedMembers,
 		loadingHoldings,
-		selectedCurrency
+		selectedCurrency,
+		childTab,
+		setChildTab
 	}: any = useContext(NWContext);
-	const [ childTab, setChildTab ] = useState<string>('');
+	
 	const { TabPane } = Tabs;
 
 	function renderTabs(tabsData: any, defaultActiveKey: string, isRoot?: boolean) {
@@ -89,6 +91,8 @@ export default function HoldingTabView() {
 												changeData={tabsData[tabName].setData}
 												input={tabsData[tabName].input}
 												title={`${tabsData[tabName].label} - Add Record`}
+												categoryOptions={tabsData[tabName].categoryOptions}
+												subCategoryOptions={tabsData[tabName].subCategoryOptions}
 											/>
 										</Col>
 									</Row>
@@ -100,8 +104,8 @@ export default function HoldingTabView() {
 											data={tabsData[tabName].data}
 											changeData={tabsData[tabName].setData}
 											viewComp={tabsData[tabName].viewComp}
-											typeOptions={tabsData[tabName].typeOptions}
-											subtypeOptions={tabsData[tabName].subtypeOptions}
+											categoryOptions={tabsData[tabName].categoryOptions}
+											subCategoryOptions={tabsData[tabName].subCategoryOptions}
 										/>
 									) : (
 										<Empty description="No data found." />

@@ -9,12 +9,12 @@ import { DeleteOutlined, UserOutlined } from '@ant-design/icons';
 interface ListHoldingsProps {
 	data: Array<HoldingInput>;
 	changeData: Function;
-	typeOptions: any;
-	subtypeOptions: any;
+	categoryOptions: any;
 	viewComp: any;
+	subCategoryOptions?: any;
 }
 
-export default function ListHoldings({ data, changeData, typeOptions, subtypeOptions, viewComp }: ListHoldingsProps) {
+export default function ListHoldings({ data, changeData, categoryOptions, viewComp, subCategoryOptions }: ListHoldingsProps) {
 	const { allFamily }: any = useContext(NWContext);
 
 	const changeOwner = (ownerKey: string, i: number) => {
@@ -40,8 +40,8 @@ export default function ListHoldings({ data, changeData, typeOptions, subtypeOpt
 									record: holding,
 									data: data,
 									changeData: changeData,
-									typeOptions: typeOptions,
-									subtypeOptions: subtypeOptions
+									categoryOptions: categoryOptions,
+									subCategoryOptions: subCategoryOptions
 								})}
 								<Col>
 									<SelectInput

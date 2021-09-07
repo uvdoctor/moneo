@@ -36,6 +36,17 @@ export const GOLD = 'GC';
 export const SILVER = 'SI';
 export const PLATINUM = 'PL';
 export const PALLADIUM = 'PA';
+export const BTC = 'BTC';
+export const BTC_CASH = 'BCH';
+export const ETHEREUM = 'ETH';
+export const RIPPLE = 'XRP';
+export const LITECOIN = 'LTC';
+export const DASH = 'DASH';
+export const MONERO = 'XMR';
+export const ETHEREUM_CLASSIC = 'ETC';
+export const DOGECOIN = 'DOGE';
+export const STELLAR = 'XLM';
+export const PM_TAB = 'Precious Metals';
 
 function NWContextProvider() {
 	const { defaultCurrency, appContextLoaded, insData, ratesData }: any = useContext(AppContext);
@@ -93,6 +104,7 @@ function NWContextProvider() {
 	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
 	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
 	const [ id, setId ] = useState<string | null | undefined>(null);
+	const [ childTab, setChildTab ] = useState<string>('');
 
 	const tabs = {
 		Cash: {
@@ -150,8 +162,8 @@ function NWContextProvider() {
 					total: totalVehicles,
 					contentComp: <InstrumentValuation />,
 				},
-				'Precious Metals': {
-					label: 'Precious Metals',
+				[PM_TAB]: {
+					label: PM_TAB,
 					data: preciousMetals,
 					setData: setPreciousMetals,
 					total: totalPM,
@@ -164,7 +176,7 @@ function NWContextProvider() {
 						curr: 'USD',
 						name: '24'
 					},
-					subtypeOptions: {
+					subCategoryOptions: {
 						[AssetSubType.Gold]: initOptions(8, 16),
 						[SILVER]: {
 							'100': 'Pure',
@@ -190,7 +202,7 @@ function NWContextProvider() {
 							'50': '50%'
 						}
 					},
-					typeOptions: {
+					categoryOptions: {
 						[AssetSubType.Gold]: 'Gold',
 						[SILVER]: 'Silver',
 						[PLATINUM]: 'Platinum',
@@ -257,6 +269,18 @@ function NWContextProvider() {
 					setData: setCrypto,
 					total: totalCrypto,
 					viewComp: ViewHoldingInput,
+					categoryOptions: {
+						[BTC]: 'Bitcoin',
+						[BTC_CASH]: 'Bitcoin Cash',
+						[DASH]: 'Dash',
+						[DOGECOIN]: 'Dogecoin',
+						[ETHEREUM]: 'Ethereum',
+						[ETHEREUM_CLASSIC]: 'Ethereum Classic',
+						[RIPPLE]: 'Ripple XRP',
+						[LITECOIN]: 'Litecoin',
+						[MONERO]: 'Monero',
+						[STELLAR]: 'Stellar'
+					}
 				},
 				'Angel Investments': {
 					label: 'Angel Investments',
@@ -743,7 +767,9 @@ function NWContextProvider() {
 				totalFixed,
 				totalAlternative,
 				totalFRE,
-				saveHoldings
+				saveHoldings,
+				childTab,
+				setChildTab
 			}}
 		>
 			<NWView />

@@ -225,3 +225,9 @@ export const getCommodityRate = (ratesData: any, subtype: string, purity: string
 	if(!rate) return 0;
 	return rate * getFXRate(ratesData, currency) * Number.parseFloat(purity) / (subtype === APIt.AssetSubType.Gold ? 24 : 100);
 }
+
+export const getCryptoRate = (ratesData: any, cryptoCode: string, currency: string) => {
+	let rate = ratesData[cryptoCode]
+	if(!rate) return 0;
+	return rate * getFXRate(ratesData, currency);
+}

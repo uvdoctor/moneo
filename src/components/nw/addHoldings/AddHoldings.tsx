@@ -3,7 +3,7 @@ import { Modal, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import AddHoldingInput from '../AddHoldingInput';
 import { AssetSubType, AssetType } from '../../../api/goals';
-import { NWContext } from '../NWContext';
+import { BTC, NWContext, PM_TAB } from '../NWContext';
 
 interface AddHoldingsProps {
 	data: Array<any>;
@@ -11,21 +11,36 @@ interface AddHoldingsProps {
 	input: any;
 	isPrimary: boolean;
 	title: string;
+	categoryOptions: any;
+	subCategoryOptions?: any;
 }
 
-export default function AddHoldings({ data, changeData, input, isPrimary, title }: AddHoldingsProps) {
-	const { allFamily }: any = useContext(NWContext);
+export default function AddHoldings({
+	data,
+	changeData,
+	input,
+	isPrimary,
+	title,
+	categoryOptions,
+	subCategoryOptions
+}: AddHoldingsProps) {
+	const { allFamily, childTab }: any = useContext(NWContext);
 	const [ isModalVisible, setModalVisibility ] = useState<boolean>(false);
 	const [ okDisabled, setOkDisabled ] = useState<boolean>(true);
-	const [ newRec, setNewRec ] = useState<any>(Object.assign({}, {
-		id: '',
-		type: AssetType.A,
-		subt: AssetSubType.Gold,
-		fIds: [ Object.keys(allFamily)[0] ],
-		qty: 0,
-		curr: 'USD',
-		name: '24'
-	}));
+	const [ newRec, setNewRec ] = useState<any>(
+		Object.assign(
+			{},
+			{
+				id: '',
+				type: AssetType.A,
+				subt: childTab === PM_TAB ? AssetSubType.Gold : BTC,
+				fIds: [ Object.keys(allFamily)[0] ],
+				qty: 0,
+				curr: 'USD',
+				name: childTab === PM_TAB ? '24' : ''
+			}
+		)
+	);
 	const close = () => {
 		setModalVisibility(false);
 		setNewRec(Object.assign({}, input));
@@ -56,7 +71,12 @@ export default function AddHoldings({ data, changeData, input, isPrimary, title 
 				destroyOnClose
 				centered
 			>
-				<AddHoldingInput input={newRec} disableOk={setOkDisabled} />
+				<AddHoldingInput
+					input={newRec}
+					disableOk={setOkDisabled}
+					categoryOptions={categoryOptions}
+					subCategoryOptions={subCategoryOptions}
+				/>
 			</Modal>
 		</Fragment>
 	);

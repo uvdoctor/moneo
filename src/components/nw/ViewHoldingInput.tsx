@@ -2,29 +2,29 @@ import { Col, InputNumber } from 'antd';
 import React, { Fragment, useContext } from 'react';
 import { AssetSubType, HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
-import { NWContext } from './NWContext';
-import { getCommodityRate } from './nwutils';
+import { NWContext, PM_TAB } from './NWContext';
+import { getCommodityRate, getCryptoRate } from './nwutils';
 import { toCurrency } from '../utils';
-import { stringType } from 'aws-sdk/clients/iam';
 import { AppContext } from '../AppContext';
 
 interface ViewHoldingInputProps {
 	data: Array<HoldingInput>;
 	changeData: Function;
-	typeOptions: any;
-	subtypeOptions: any;
+	categoryOptions: any;
+	subCategoryOptions: any;
 	record: HoldingInput;
 }
 
 export default function ViewHoldingInput({
 	data,
 	changeData,
-	typeOptions,
-	subtypeOptions,
+	categoryOptions,
+	subCategoryOptions,
 	record
 }: ViewHoldingInputProps) {
 	const { ratesData }: any = useContext(AppContext);
-	const { selectedCurrency }: any = useContext(NWContext);
+	const { selectedCurrency, childTab }: any = useContext(NWContext);
+	console.log("Subcategories: ", subCategoryOptions);
 
 	const changeQty = (quantity: number) => {
 		record.qty = quantity;
@@ -33,8 +33,10 @@ export default function ViewHoldingInput({
 
 	const changeSubtype = (subtype: string) => {
 		record.subt = subtype;
-		let opts = subtypeOptions[subtype];
-		if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
+		if(subCategoryOptions) {
+			let opts = subCategoryOptions[subtype];
+			if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
+		}
 		changeData([ ...data ]);
 	};
 
@@ -43,23 +45,32 @@ export default function ViewHoldingInput({
 		changeData([ ...data ]);
 	};
 
+	const getRate = (subtype: string, name: string) =>
+	!name 
+		? getCryptoRate(ratesData, subtype as string, selectedCurrency)
+		: getCommodityRate(ratesData, subtype as string, name as string, selectedCurrency);
+
 	return (
 		<Fragment>
 			<Col>
 				<SelectInput
 					pre=""
 					value={record.subt as string}
-					options={typeOptions}
+					options={categoryOptions}
 					changeHandler={(val: string) => changeSubtype(val)}
 				/>
-				&nbsp;
-				<SelectInput
-					pre=""
-					value={record.name as string}
-					options={subtypeOptions[record.subt as string]}
-					changeHandler={(val: string) => changePurity(val)}
-					post={record.subt === AssetSubType.Gold ? 'karat' : ''}
-				/>
+				{subCategoryOptions && (
+					<Fragment>
+						&nbsp;
+						<SelectInput
+							pre=""
+							value={record.name as string}
+							options={subCategoryOptions[record.subt as string]}
+							changeHandler={(val: string) => changePurity(val)}
+							post={record.subt === AssetSubType.Gold ? 'karat' : ''}
+						/>
+					</Fragment>
+				)}
 			</Col>
 			<Col>
 				<InputNumber
@@ -70,12 +81,8 @@ export default function ViewHoldingInput({
 					step={0.1}
 					size="small"
 				/>
-				{` grams x ${toCurrency(
-					getCommodityRate(ratesData, record.subt as stringType, record.name as string, selectedCurrency),
-					selectedCurrency
-				)} = ${toCurrency(
-					record.qty *
-						getCommodityRate(ratesData, record.subt as stringType, record.name as string, selectedCurrency),
+				{`${childTab === PM_TAB ? ` grams` : ''} x ${toCurrency(getRate(record.subt as string, record.name as string), selectedCurrency)} = ${toCurrency(
+					record.qty * getRate(record.subt as string, record.name as string),
 					selectedCurrency
 				)}`}
 			</Col>
