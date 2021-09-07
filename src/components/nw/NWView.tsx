@@ -21,7 +21,8 @@ export default function NWView() {
 		selectedCurrency,
 		setSelectedCurrency,
 		loadingHoldings,
-		currencyList
+		currencyList,
+		saveHoldings
 	}: any = useContext(NWContext);
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
@@ -50,7 +51,7 @@ export default function NWView() {
 								<Button
 									key="save"
 									icon={<SaveOutlined />}
-									onClick={() => {}}
+									onClick={() => saveHoldings()}
 									size="large"
 									className="steps-start-btn"
 								>

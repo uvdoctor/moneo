@@ -3,12 +3,14 @@ import './nw.less';
 import NWView from './NWView';
 import { AppContext } from '../AppContext';
 import {
+	addHoldings,
 	doesHoldingMatch,
 	doesMemberMatch,
 	getCommodityRate,
 	getRelatedCurrencies,
 	loadAllFamilyMembers,
-	loadHoldings
+	loadHoldings,
+	updateHoldings
 } from './nwutils';
 import { notification } from 'antd';
 import {
@@ -21,7 +23,8 @@ import {
 	InsType,
 	InsuranceInput,
 	LiabilityInput,
-	Property
+	PropertyInput,
+	UpdateHoldingsInput
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
 import { initOptions } from '../utils';
@@ -39,7 +42,7 @@ function NWContextProvider() {
 	const [ allFamily, setAllFamily ] = useState<any>({});
 	const [ instruments, setInstruments ] = useState<Array<HoldingInput>>([]);
 	const [ preciousMetals, setPreciousMetals ] = useState<Array<HoldingInput>>([]);
-	const [ properties, setProperties ] = useState<Array<Property>>([]);
+	const [ properties, setProperties ] = useState<Array<PropertyInput>>([]);
 	const [ vehicles, setVehicles ] = useState<Array<HoldingInput>>([]);
 	const [ deposits, setDeposits ] = useState<Array<DepositInput>>([]);
 	const [ lendings, setLendings ] = useState<Array<DepositInput>>([]);
@@ -89,6 +92,7 @@ function NWContextProvider() {
 	const [ results, setResults ] = useState<Array<any>>([]);
 	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
 	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
+	const [ id, setId ] = useState<string | null | undefined>(null);
 
 	const tabs = {
 		Cash: {
@@ -328,32 +332,35 @@ function NWContextProvider() {
 
 
 	const initializeHoldings = async () => {
+		let allHoldings: CreateHoldingsInput | null = null;
 		try {
-			let allHoldings: CreateHoldingsInput | null = await loadHoldings();
-			let currencyList = getRelatedCurrencies(allHoldings, defaultCurrency);
-			setSelectedCurrency(Object.keys(currencyList)[0]);
-			setCurrencyList(currencyList);
-			setLoadingHoldings(false);
-			setInstruments([ ...(allHoldings?.instruments ? allHoldings.instruments : []) ]);
-			setPreciousMetals([ ...(allHoldings?.pm ? allHoldings.pm : []) ]);
-			setPPF([ ...(allHoldings?.ppf ? allHoldings.ppf : []) ]);
-			setEPF([ ...(allHoldings?.epf ? allHoldings.epf : []) ]);
-			setNPS([ ...(allHoldings?.nps ? allHoldings.nps : []) ]);
-			setCrypto([ ...(allHoldings?.crypto ? allHoldings.crypto : []) ]);
-			setVehicles([ ...(allHoldings?.vehicles ? allHoldings.vehicles : []) ]);
-			setLoans([ ...(allHoldings?.loans ? allHoldings.loans : []) ]);
-			setInsurance([ ...(allHoldings?.ins ? allHoldings.ins : []) ]);
-			setVehicles([ ...(allHoldings?.vehicles ? allHoldings.vehicles : []) ]);
-			setDeposits([ ...(allHoldings?.deposits ? allHoldings.deposits : []) ]);
-			setSavings([ ...(allHoldings?.savings ? allHoldings.savings : []) ]);
-			setLendings([ ...(allHoldings?.lendings ? allHoldings.lendings : []) ]);
-			setAngel([ ...(allHoldings?.angel ? allHoldings.angel : []) ]);
-			setMemberships([ ...(allHoldings?.mem ? allHoldings.mem : []) ]);
-			setOthers([ ...(allHoldings?.other ? allHoldings.other : []) ]);
+			allHoldings = await loadHoldings();
 		} catch (err) {
 			notification.error({ message: 'Holdings not loaded', description: 'Sorry! Unable to fetch holdings.' });
 			return false;
 		}
+		let currencyList = getRelatedCurrencies(allHoldings, defaultCurrency);
+		setSelectedCurrency(Object.keys(currencyList)[0]);
+		setCurrencyList(currencyList);
+		setId(allHoldings?.id);
+		setInstruments([ ...(allHoldings?.instruments ? allHoldings.instruments : []) ]);
+		setPreciousMetals([ ...(allHoldings?.pm ? allHoldings.pm : []) ]);
+		setPPF([ ...(allHoldings?.ppf ? allHoldings.ppf : []) ]);
+		setEPF([ ...(allHoldings?.epf ? allHoldings.epf : []) ]);
+		setNPS([ ...(allHoldings?.nps ? allHoldings.nps : []) ]);
+		setCrypto([ ...(allHoldings?.crypto ? allHoldings.crypto : []) ]);
+		setVehicles([ ...(allHoldings?.vehicles ? allHoldings.vehicles : []) ]);
+		setLoans([ ...(allHoldings?.loans ? allHoldings.loans : []) ]);
+		setInsurance([ ...(allHoldings?.ins ? allHoldings.ins : []) ]);
+		setVehicles([ ...(allHoldings?.vehicles ? allHoldings.vehicles : []) ]);
+		setDeposits([ ...(allHoldings?.deposits ? allHoldings.deposits : []) ]);
+		setSavings([ ...(allHoldings?.savings ? allHoldings.savings : []) ]);
+		setLendings([ ...(allHoldings?.lendings ? allHoldings.lendings : []) ]);
+		setAngel([ ...(allHoldings?.angel ? allHoldings.angel : []) ]);
+		setMemberships([ ...(allHoldings?.mem ? allHoldings.mem : []) ]);
+		setOthers([ ...(allHoldings?.other ? allHoldings.other : []) ]);
+		setLoadingHoldings(false);
+		return true;
 	};
 
 	useEffect(
@@ -473,6 +480,34 @@ function NWContextProvider() {
 		setTotalEquity(totalEquity);
 		setTotalFixed(totalFixed);
 		setTotalFRE(totalFRE);
+	};
+
+	const saveHoldings = async () => {
+		let updatedHoldings: CreateHoldingsInput = {};
+		if(instruments.length) updatedHoldings.instruments = instruments;
+		if(savings.length) updatedHoldings.savings = savings;
+		if(deposits.length) updatedHoldings.deposits = deposits;
+		if(epf.length) updatedHoldings.epf = epf;
+		if(ppf.length) updatedHoldings.ppf = ppf;
+		if(vpf.length) updatedHoldings.vpf = vpf;
+		if(loans.length) updatedHoldings.loans = loans;
+		if(lendings.length) updatedHoldings.lendings = lendings;
+		if(preciousMetals.length) updatedHoldings.pm = preciousMetals;
+		if(vehicles.length) updatedHoldings.vehicles = vehicles;
+		if(properties.length) updatedHoldings.property = properties;
+		if(memberships.length) updatedHoldings.mem = memberships;
+		if(angel.length) updatedHoldings.angel = angel;
+		if(others.length) updatedHoldings.other = others;
+		if(nps.length) updatedHoldings.nps = nps;
+		if(crypto.length) updatedHoldings.crypto = crypto;
+		if(id) updatedHoldings.id = id;
+		try {
+			if(id) await updateHoldings(updatedHoldings as UpdateHoldingsInput);
+			else await addHoldings(updatedHoldings);
+			notification.success({message: 'Data saved', description: 'All holdings data has been saved.'})
+		} catch(e) {
+			notification.error({message: 'Unable to save holdings', description: 'Sorry! An unexpected error occurred while trying to save the data.'});
+		}
 	};
 
 	const priceDeposits = () => {
@@ -707,7 +742,8 @@ function NWContextProvider() {
 				totalFGold,
 				totalFixed,
 				totalAlternative,
-				totalFRE
+				totalFRE,
+				saveHoldings
 			}}
 		>
 			<NWView />

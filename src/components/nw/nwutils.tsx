@@ -108,10 +108,12 @@ export const getRelatedCurrencies = (holdings: APIt.CreateHoldingsInput | null, 
 	if(!holdings || !Object.keys(holdings).length) return currencyList;
 	Object.keys(holdings).forEach((key) => {
 		//@ts-ignore
-		let arr: Array<any> = holdings[key];
-		arr.forEach((obj: any) => {
-			if(!currencyList(obj.curr)) currencyList[obj.curr] = obj.curr;
-		})
+		let val: Array<any> | null | string = holdings[key];
+		if(val && val instanceof Array) {
+			val.forEach((obj: any) => {
+				if(!currencyList[obj.curr]) currencyList[obj.curr] = obj.curr;
+			})
+		}
 	})
 	return currencyList;
 }
