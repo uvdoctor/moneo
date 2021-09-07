@@ -23,16 +23,17 @@ export default function CurrentAA() {
 		totalFRE,
         totalPPF,
         totalEPF,
+		totalVPF,
 		totalProperties,
 		selectedCurrency,
 		loadingHoldings
 	}: any = useContext(NWContext);
 	const [ totalCash, setTotalCash ] = useState<number>(totalSavings + totalDeposits + totalLendings);
-	const [ total, setTotal ] = useState<number>(totalCash + totalFixed + totalEquity + totalAngel + totalAlternative);
+	const [ total, setTotal ] = useState<number>(totalCash + totalFixed + totalEquity + totalAngel + totalAlternative + totalPPF + totalEPF + totalVPF);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const categories: any = {
 		Equity: { color: COLORS.ORANGE, total: totalEquity + totalAngel },
-		Fixed: { color: COLORS.BLUE, total: totalFixed + totalPPF + totalEPF },
+		Fixed: { color: COLORS.BLUE, total: totalFixed + totalPPF + totalEPF + totalVPF },
 		'Real-estate': { color: '#7cd9fd', total: totalFRE + totalProperties },
 		Gold: { color: '#f6e05e', total: totalFGold + totalPGold },
 		Others: { color: '#aa8dfa', total: totalAlternative - totalFGold - totalPGold - totalProperties - totalFRE	}
@@ -66,9 +67,9 @@ export default function CurrentAA() {
 
 	useEffect(
 		() => {
-			setTotal(totalCash + totalEquity + totalFixed + totalAngel + totalAlternative + totalPPF + totalEPF);
+			setTotal(totalCash + totalEquity + totalFixed + totalAngel + totalAlternative + totalPPF + totalEPF + totalVPF);
 		},
-		[ totalCash, totalEquity, totalFixed, totalAngel, totalAlternative, totalPPF, totalEPF ]
+		[ totalCash, totalEquity, totalFixed, totalAngel, totalAlternative, totalPPF, totalEPF, totalVPF ]
 	);
 
 	return !loadingHoldings ? (

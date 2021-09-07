@@ -47,6 +47,7 @@ function NWContextProvider() {
 	const [ ppf, setPPF ] = useState<Array<HoldingInput>>([]);
 	const [ nps, setNPS ] = useState<Array<HoldingInput>>([]);
 	const [ epf, setEPF ] = useState<Array<HoldingInput>>([]);
+	const [ vpf, setVPF ] = useState<Array<HoldingInput>>([]);
 	const [ memberships, setMemberships ] = useState<Array<HoldingInput>>([]);
 	const [ others, setOthers ] = useState<Array<HoldingInput>>([]);
 	const [ angel, setAngel ] = useState<Array<HoldingInput>>([]);
@@ -68,6 +69,7 @@ function NWContextProvider() {
 	const [ totalDeposits, setTotalDeposits ] = useState<number>(0);
 	const [ totalPPF, setTotalPPF ] = useState<number>(0);
 	const [ totalEPF, setTotalEPF ] = useState<number>(0);
+	const [ totalVPF, setTotalVPF ] = useState<number>(0);
 	const [ totalNPS, setTotalNPS ] = useState<number>(0);
 	const [ totalLendings, setTotalLendings ] = useState<number>(0);
 	const [ totalLoans, setTotalLoans ] = useState<number>(0);
@@ -212,11 +214,18 @@ function NWContextProvider() {
 					total: totalPPF,
 					contentComp: <InstrumentValuation />
 				},
-				EPF: {
-					label: 'EPF',
+				'Employee PF': {
+					label: 'Employee PF',
 					data: epf,
 					setData: setEPF,
 					total: totalEPF,
+					contentComp: <InstrumentValuation />
+				},
+				'Voluntary PF': {
+					label: 'Voluntary PF',
+					data: vpf,
+					setData: setVPF,
+					total: totalVPF,
 					contentComp: <InstrumentValuation />
 				},
 				NPS: {
@@ -510,6 +519,10 @@ function NWContextProvider() {
 		setTotalEPF(0);
 	};
 
+	const priceVPF = () => {
+		setTotalVPF(0);
+	};
+
 	const priceNPS = () => {
 		setTotalNPS(0);
 	};
@@ -528,6 +541,7 @@ function NWContextProvider() {
 		pricePPF();
 		priceNPS();
 		priceEPF();
+		priceVPF();
 		priceAngel();
 		priceProperties();
 		priceVehicles();
@@ -572,6 +586,10 @@ function NWContextProvider() {
 	useEffect(() => {
 		priceEPF();
 	}, [epf]);
+
+	useEffect(() => {
+		priceVPF();
+	}, [vpf]);
 
 	useEffect(() => {
 		priceNPS();
@@ -642,6 +660,7 @@ function NWContextProvider() {
 				totalSavings,
 				totalPPF,
 				totalEPF,
+				totalVPF,
 				totalNPS,
 				totalLendings,
 				totalInsurance,
@@ -663,6 +682,8 @@ function NWContextProvider() {
 				setPPF,
 				epf,
 				setEPF,
+				vpf,
+				setVPF,
 				nps,
 				setNPS,
 				crypto,
