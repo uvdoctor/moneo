@@ -6,7 +6,7 @@ Amplify Params - DO NOT EDIT */const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
 const { getData, pushData } = eodData;
-const table = "EODPrices-bvyjaqmusfh5zelcbeeji6xxoe-dev";
+const table = "EODPrices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 const eodPrice = () => {
   return new Promise(async (resolve, reject) => {
     let batches = [];

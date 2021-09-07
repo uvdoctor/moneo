@@ -16,7 +16,7 @@ const {
   cleanDirectory,
   pushData,
 } = bhaoUtils;
-const table = "INBond-bvyjaqmusfh5zelcbeeji6xxoe-dev";
+const table = "INBond-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 const instrumentList = [];
 
 const getAndPushData = () => {

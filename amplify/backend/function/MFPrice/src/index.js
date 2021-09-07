@@ -13,7 +13,7 @@ const {
   pushData,
   mCap,
 } = dataInfo;
-const table = "INMutual-bvyjaqmusfh5zelcbeeji6xxoe-dev";
+const table = "INMutual-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 const getData = () => {
   return new Promise(async (resolve, reject) => {
     let batches = [];
