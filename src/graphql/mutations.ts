@@ -338,16 +338,18 @@ export const createHoldings = /* GraphQL */ `
       }
       deposits {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
       }
       lendings {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
@@ -370,6 +372,7 @@ export const createHoldings = /* GraphQL */ `
         amt
         curr
         name
+        fIds
       }
       property {
         type
@@ -383,6 +386,10 @@ export const createHoldings = /* GraphQL */ `
         fIds
         curr
         country
+        own {
+          fId
+          per
+        }
       }
       vehicles {
         id
@@ -570,16 +577,18 @@ export const updateHoldings = /* GraphQL */ `
       }
       deposits {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
       }
       lendings {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
@@ -602,6 +611,7 @@ export const updateHoldings = /* GraphQL */ `
         amt
         curr
         name
+        fIds
       }
       property {
         type
@@ -615,6 +625,10 @@ export const updateHoldings = /* GraphQL */ `
         fIds
         curr
         country
+        own {
+          fId
+          per
+        }
       }
       vehicles {
         id
@@ -802,16 +816,18 @@ export const deleteHoldings = /* GraphQL */ `
       }
       deposits {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
       }
       lendings {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
@@ -834,6 +850,7 @@ export const deleteHoldings = /* GraphQL */ `
         amt
         curr
         name
+        fIds
       }
       property {
         type
@@ -847,6 +864,10 @@ export const deleteHoldings = /* GraphQL */ `
         fIds
         curr
         country
+        own {
+          fId
+          per
+        }
       }
       vehicles {
         id

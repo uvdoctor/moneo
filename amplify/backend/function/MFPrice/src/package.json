@@ -5,6 +5,11 @@
   "main": "index",
   "license": "Apache-2.0",
   "dependencies": {
-    "india-mutual-fund-info": "latest"
+    "india-mutual-fund-info": "latest",   
+    "aws-sdk": "latest",
+    "url": "latest",
+    "csv-parser": "latest",
+    "extract-zip": "latest",
+    "axios": "latest"
   }
 }

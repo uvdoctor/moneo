@@ -2,12 +2,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {
-    "aws-sdk": "latest",
-    "url": "latest",
-    "csv-parser": "latest",
-    "extract-zip": "latest",
-    "axios": "latest"
-  },
+  "dependencies": {},
   "devDependencies": {}
 }

@@ -318,7 +318,7 @@ type Property {
 	fIds: [String!]!
 	curr: String!
 	country: String!
-	own: [Ownership]
+	own: [Ownership!]
 }
 
 type Ownership {
