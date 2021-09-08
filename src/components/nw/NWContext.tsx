@@ -360,7 +360,7 @@ function NWContextProvider() {
 		try {
 			allHoldings = await loadHoldings();
 		} catch (err: any) {
-			notification.error({ message: 'Holdings not loaded', description: `Sorry! Unable to fetch holdings: ${err.toString()}` });
+			notification.error({ message: 'Holdings not loaded', description: 'Sorry! Unable to fetch holdings.' });
 		}
 		let currencyList = getRelatedCurrencies(allHoldings, defaultCurrency);
 		setSelectedCurrency(Object.keys(currencyList)[0]);
