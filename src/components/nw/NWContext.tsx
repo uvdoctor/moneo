@@ -361,7 +361,6 @@ function NWContextProvider() {
 			allHoldings = await loadHoldings();
 		} catch (err) {
 			notification.error({ message: 'Holdings not loaded', description: 'Sorry! Unable to fetch holdings.' });
-			return false;
 		}
 		let currencyList = getRelatedCurrencies(allHoldings, defaultCurrency);
 		setSelectedCurrency(Object.keys(currencyList)[0]);
@@ -384,7 +383,6 @@ function NWContextProvider() {
 		setMemberships([ ...(allHoldings?.mem ? allHoldings.mem : []) ]);
 		setOthers([ ...(allHoldings?.other ? allHoldings.other : []) ]);
 		setLoadingHoldings(false);
-		return true;
 	};
 
 	useEffect(
