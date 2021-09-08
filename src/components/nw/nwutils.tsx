@@ -24,7 +24,7 @@ export const loadAllFamilyMembers = async () => {
 
 export const loadHoldings = async () => {
 	console.log("Going to query listHoldingss");
-	const { data: { listHoldingss } } = (await API.graphql(graphqlOperation(queries.getHoldings))) as {
+	const { data: { listHoldingss } } = (await API.graphql(graphqlOperation(queries.listHoldingss))) as {
 		data: APIt.ListHoldingssQuery;
 	};
 	console.log("Holdings data: ", listHoldingss?.items);
