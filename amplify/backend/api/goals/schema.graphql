@@ -286,8 +286,9 @@ type Holding {
 
 type Deposit {
 	amt: Float!
-	start: Int!
-	end: Int!
+	sm: Int!
+	sy: Int!
+	months: Int!
 	rate: Float!
 	fIds: [String!]!
 	curr: String!
@@ -317,6 +318,12 @@ type Property {
 	fIds: [String!]!
 	curr: String!
 	country: String!
+	own: [Ownership]
+}
+
+type Ownership {
+	fId: String!
+	per: Float!
 }
 
 type Liability {
@@ -336,6 +343,7 @@ type Balance {
 	amt: Float!
 	curr: String!
 	name: String
+	fIds: [String!]!
 }
 
 enum MFSchemeType {
