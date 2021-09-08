@@ -75,9 +75,12 @@ export default function InstrumentValuation() {
 	useEffect(
 		() => {
 			let filteredNames: Array<any> = [];
-			instruments.forEach((instrument: HoldingInput) =>
-				filteredNames.push(getFilterItem(instrument.id as string, instrument.name as string))
-			);
+			let ids: Set<string> = new Set();
+			instruments.forEach((instrument: HoldingInput) => {
+				if(!ids.has(instrument.id))
+					filteredNames.push(getFilterItem(instrument.id as string, instrument.name as string));
+				ids.add(instrument.id);
+			});
 			setNameFilterValues([ ...filteredNames ]);
 		},
 		[ instruments ]
