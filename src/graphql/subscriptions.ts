@@ -266,16 +266,18 @@ export const onCreateHoldings = /* GraphQL */ `
       }
       deposits {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
       }
       lendings {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
@@ -298,6 +300,7 @@ export const onCreateHoldings = /* GraphQL */ `
         amt
         curr
         name
+        fIds
       }
       property {
         type
@@ -311,6 +314,10 @@ export const onCreateHoldings = /* GraphQL */ `
         fIds
         curr
         country
+        own {
+          fId
+          per
+        }
       }
       vehicles {
         id
@@ -495,16 +502,18 @@ export const onUpdateHoldings = /* GraphQL */ `
       }
       deposits {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
       }
       lendings {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
@@ -527,6 +536,7 @@ export const onUpdateHoldings = /* GraphQL */ `
         amt
         curr
         name
+        fIds
       }
       property {
         type
@@ -540,6 +550,10 @@ export const onUpdateHoldings = /* GraphQL */ `
         fIds
         curr
         country
+        own {
+          fId
+          per
+        }
       }
       vehicles {
         id
@@ -724,16 +738,18 @@ export const onDeleteHoldings = /* GraphQL */ `
       }
       deposits {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
       }
       lendings {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
@@ -756,6 +772,7 @@ export const onDeleteHoldings = /* GraphQL */ `
         amt
         curr
         name
+        fIds
       }
       property {
         type
@@ -769,6 +786,10 @@ export const onDeleteHoldings = /* GraphQL */ `
         fIds
         curr
         country
+        own {
+          fId
+          per
+        }
       }
       vehicles {
         id

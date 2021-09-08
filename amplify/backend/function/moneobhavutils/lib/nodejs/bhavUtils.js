@@ -15,7 +15,7 @@ const downloadZip = (url, tempDir, file) => {
   return new Promise((resolve, reject) => {
     const req = https.get(url, async (res) => {
       const { statusCode } = res;
-      if (statusCode < 200 || statusCode >= 300) {
+      if (statusCode < 200 || statusCode >= 300) { 
         await cleanDirectory(
           tempDir,
           `Unable to download zip file, ${statusCode}`

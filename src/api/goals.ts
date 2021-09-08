@@ -500,8 +500,9 @@ export type PurchaseInput = {
 
 export type DepositInput = {
   amt: number,
-  start: number,
-  end: number,
+  sm: number,
+  sy: number,
+  months: number,
   rate: number,
   fIds: Array< string >,
   curr: string,
@@ -517,6 +518,7 @@ export type BalanceInput = {
   amt: number,
   curr: string,
   name?: string | null,
+  fIds: Array< string >,
 };
 
 export type PropertyInput = {
@@ -527,6 +529,7 @@ export type PropertyInput = {
   fIds: Array< string >,
   curr: string,
   country: string,
+  own?: Array< OwnershipInput | null > | null,
 };
 
 export enum PropertyType {
@@ -539,6 +542,11 @@ export enum PropertyType {
   OTHER = "OTHER",
 }
 
+
+export type OwnershipInput = {
+  fId: string,
+  per: number,
+};
 
 export type InsuranceInput = {
   premium: number,
@@ -601,8 +609,9 @@ export type Purchase = {
 export type Deposit = {
   __typename: "Deposit",
   amt?: number,
-  start?: number,
-  end?: number,
+  sm?: number,
+  sy?: number,
+  months?: number,
   rate?: number,
   fIds?: Array< string >,
   curr?: string,
@@ -620,6 +629,7 @@ export type Balance = {
   amt?: number,
   curr?: string,
   name?: string | null,
+  fIds?: Array< string >,
 };
 
 export type Property = {
@@ -631,6 +641,13 @@ export type Property = {
   fIds?: Array< string >,
   curr?: string,
   country?: string,
+  own?:  Array<Ownership | null > | null,
+};
+
+export type Ownership = {
+  __typename: "Ownership",
+  fId?: string,
+  per?: number,
 };
 
 export type Insurance = {
@@ -1665,8 +1682,9 @@ export type CreateHoldingsMutation = {
     deposits?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -1674,8 +1692,9 @@ export type CreateHoldingsMutation = {
     lendings?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -1701,6 +1720,7 @@ export type CreateHoldingsMutation = {
       amt: number,
       curr: string,
       name?: string | null,
+      fIds: Array< string >,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -1716,6 +1736,11 @@ export type CreateHoldingsMutation = {
       fIds: Array< string >,
       curr: string,
       country: string,
+      own?:  Array< {
+        __typename: "Ownership",
+        fId: string,
+        per: number,
+      } | null > | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -1929,8 +1954,9 @@ export type UpdateHoldingsMutation = {
     deposits?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -1938,8 +1964,9 @@ export type UpdateHoldingsMutation = {
     lendings?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -1965,6 +1992,7 @@ export type UpdateHoldingsMutation = {
       amt: number,
       curr: string,
       name?: string | null,
+      fIds: Array< string >,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -1980,6 +2008,11 @@ export type UpdateHoldingsMutation = {
       fIds: Array< string >,
       curr: string,
       country: string,
+      own?:  Array< {
+        __typename: "Ownership",
+        fId: string,
+        per: number,
+      } | null > | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -2193,8 +2226,9 @@ export type DeleteHoldingsMutation = {
     deposits?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -2202,8 +2236,9 @@ export type DeleteHoldingsMutation = {
     lendings?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -2229,6 +2264,7 @@ export type DeleteHoldingsMutation = {
       amt: number,
       curr: string,
       name?: string | null,
+      fIds: Array< string >,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -2244,6 +2280,11 @@ export type DeleteHoldingsMutation = {
       fIds: Array< string >,
       curr: string,
       country: string,
+      own?:  Array< {
+        __typename: "Ownership",
+        fId: string,
+        per: number,
+      } | null > | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -3043,8 +3084,9 @@ export type GetHoldingsQuery = {
     deposits?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -3052,8 +3094,9 @@ export type GetHoldingsQuery = {
     lendings?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -3079,6 +3122,7 @@ export type GetHoldingsQuery = {
       amt: number,
       curr: string,
       name?: string | null,
+      fIds: Array< string >,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -3094,6 +3138,11 @@ export type GetHoldingsQuery = {
       fIds: Array< string >,
       curr: string,
       country: string,
+      own?:  Array< {
+        __typename: "Ownership",
+        fId: string,
+        per: number,
+      } | null > | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -3304,8 +3353,9 @@ export type ListHoldingssQuery = {
       deposits?:  Array< {
         __typename: "Deposit",
         amt: number,
-        start: number,
-        end: number,
+        sm: number,
+        sy: number,
+        months: number,
         rate: number,
         fIds: Array< string >,
         curr: string,
@@ -3313,8 +3363,9 @@ export type ListHoldingssQuery = {
       lendings?:  Array< {
         __typename: "Deposit",
         amt: number,
-        start: number,
-        end: number,
+        sm: number,
+        sy: number,
+        months: number,
         rate: number,
         fIds: Array< string >,
         curr: string,
@@ -3329,6 +3380,7 @@ export type ListHoldingssQuery = {
         amt: number,
         curr: string,
         name?: string | null,
+        fIds: Array< string >,
       } > | null,
       property?:  Array< {
         __typename: "Property",
@@ -4117,8 +4169,9 @@ export type OnCreateHoldingsSubscription = {
     deposits?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -4126,8 +4179,9 @@ export type OnCreateHoldingsSubscription = {
     lendings?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -4153,6 +4207,7 @@ export type OnCreateHoldingsSubscription = {
       amt: number,
       curr: string,
       name?: string | null,
+      fIds: Array< string >,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -4168,6 +4223,11 @@ export type OnCreateHoldingsSubscription = {
       fIds: Array< string >,
       curr: string,
       country: string,
+      own?:  Array< {
+        __typename: "Ownership",
+        fId: string,
+        per: number,
+      } | null > | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -4380,8 +4440,9 @@ export type OnUpdateHoldingsSubscription = {
     deposits?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -4389,8 +4450,9 @@ export type OnUpdateHoldingsSubscription = {
     lendings?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -4416,6 +4478,7 @@ export type OnUpdateHoldingsSubscription = {
       amt: number,
       curr: string,
       name?: string | null,
+      fIds: Array< string >,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -4431,6 +4494,11 @@ export type OnUpdateHoldingsSubscription = {
       fIds: Array< string >,
       curr: string,
       country: string,
+      own?:  Array< {
+        __typename: "Ownership",
+        fId: string,
+        per: number,
+      } | null > | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -4643,8 +4711,9 @@ export type OnDeleteHoldingsSubscription = {
     deposits?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -4652,8 +4721,9 @@ export type OnDeleteHoldingsSubscription = {
     lendings?:  Array< {
       __typename: "Deposit",
       amt: number,
-      start: number,
-      end: number,
+      sm: number,
+      sy: number,
+      months: number,
       rate: number,
       fIds: Array< string >,
       curr: string,
@@ -4679,6 +4749,7 @@ export type OnDeleteHoldingsSubscription = {
       amt: number,
       curr: string,
       name?: string | null,
+      fIds: Array< string >,
     } > | null,
     property?:  Array< {
       __typename: "Property",
@@ -4694,6 +4765,11 @@ export type OnDeleteHoldingsSubscription = {
       fIds: Array< string >,
       curr: string,
       country: string,
+      own?:  Array< {
+        __typename: "Ownership",
+        fId: string,
+        per: number,
+      } | null > | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",

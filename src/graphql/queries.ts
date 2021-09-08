@@ -191,16 +191,18 @@ export const getHoldings = /* GraphQL */ `
       }
       deposits {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
       }
       lendings {
         amt
-        start
-        end
+        sm
+        sy
+        months
         rate
         fIds
         curr
@@ -223,6 +225,7 @@ export const getHoldings = /* GraphQL */ `
         amt
         curr
         name
+        fIds
       }
       property {
         type
@@ -236,6 +239,10 @@ export const getHoldings = /* GraphQL */ `
         fIds
         curr
         country
+        own {
+          fId
+          per
+        }
       }
       vehicles {
         id
@@ -420,16 +427,18 @@ export const listHoldingss = /* GraphQL */ `
         }
         deposits {
           amt
-          start
-          end
+          sm
+          sy
+          months
           rate
           fIds
           curr
         }
         lendings {
           amt
-          start
-          end
+          sm
+          sy
+          months
           rate
           fIds
           curr
@@ -442,6 +451,7 @@ export const listHoldingss = /* GraphQL */ `
           amt
           curr
           name
+          fIds
         }
         property {
           type
