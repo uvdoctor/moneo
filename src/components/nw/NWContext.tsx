@@ -359,7 +359,7 @@ function NWContextProvider() {
 		let allHoldings: CreateHoldingsInput | null = null;
 		try {
 			allHoldings = await loadHoldings();
-		} catch (err: any) {
+		} catch (err) {
 			notification.error({ message: 'Holdings not loaded', description: 'Sorry! Unable to fetch holdings.' });
 		}
 		let currencyList = getRelatedCurrencies(allHoldings, defaultCurrency);
