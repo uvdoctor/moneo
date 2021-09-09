@@ -9,7 +9,6 @@ import Calculator from "./Calculator";
 import HelloFinancialIndep from "./HelloFinancialIndep";
 import Step from "./Step";
 import GettingStarted from "./GettingStarted";
-import SmartSaver from "./SmartSaver";
 import CouponsBanner from "./CouponsBanner";
 import Security from "./Security";
 import GetRich from "./GetRich";
@@ -89,7 +88,6 @@ export default function Landing() {
         </Parallax>
       </Content>
       <CouponsBanner />
-      <SmartSaver />
       <Calculator />
       <Testimonials />
       <Security />

@@ -1,8 +1,21 @@
+@coupons-banner-padding: 40px;
+
 .coupons-banner {
 	margin-bottom: 80px;
 
 	& .dd-content {
-		padding-bottom: 80px;
+		padding-top: @coupons-banner-padding;
+		padding-bottom: @coupons-banner-padding;
+	}
+
+	& .more-link {
+		width: 120px;
+		height: 60px;
+		font-weight: bold;
+	}
+
+	& .brand-coupon {
+		padding-top: 20px;
 	}
 }
 
@@ -85,18 +98,21 @@
 	background-position: -250px -140px;
 }
 
-@media all and (max-width: 576px) {
-	.brand-coupon {
-		width: 175%;
-		-ms-transform: scale(0.6); /* IE 9 */
-		-ms-transform-origin: 0 0;
-		-moz-transform: scale(0.6); /* Firefox */
-		-moz-transform-origin: 0 0;
-		-o-transform: scale(0.6); /* Opera */
-		-o-transform-origin: 0 0;
-		-webkit-transform: scale(0.6); /* Safari And Chrome */
-		-webkit-transform-origin: 0 0;
-		transform: scale(0.6); /* Standard Property */
-		transform-origin: 0 0; /* Standard Property */
+/*@media all and (max-width: 576px) {
+	.coupons-banner {
+		& .brand-coupon {
+			width: 175%;
+			-ms-transform: scale(0.6);
+			-ms-transform-origin: 0 0;
+			-moz-transform: scale(0.6);
+			-moz-transform-origin: 0 0;
+			-o-transform: scale(0.6);
+			-o-transform-origin: 0 0;
+			-webkit-transform: scale(0.6);
+			-webkit-transform-origin: 0 0;
+			transform: scale(0.6);
+			transform-origin: 0 0;
+		}
 	}
 }
+*/
