@@ -8,7 +8,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./CouponsBanner.less";
 
 export default function CouponsBanner() {
-	const banners = ["travel-banner.jpg", "buy-banner.jpg", "event-banner.jpg"];
+	const banners = ["buy-banner.jpg", "travel-banner.jpg", "event-banner.jpg"];
 	const coupons = [
 		"amazon",
 		"flipkart",
@@ -24,20 +24,6 @@ export default function CouponsBanner() {
 			<Row align="middle" gutter={[15, 30]}>
 				<Col xs={24} sm={24} md={24} lg={12}>
 					<h2>
-						<strong>Smart deals for your goals</strong>
-					</h2>
-					<h3>
-						Curated deals from <strong>100+ partners</strong> to help you save.
-					</h3>
-					<p />
-					<p />
-					<p>
-						<GetStartedButton />
-					</p>
-					<h3>
-						<strong>Plan More, Save More!</strong>
-					</h3>
-					<h2>
 						{/*@ts-ignore*/}
 						<strike>Buy Now, Plan Later</strike>
 					</h2>
@@ -45,8 +31,14 @@ export default function CouponsBanner() {
 						<strong>Plan Now, Buy Smarter</strong>
 					</h2>
 					<h3>
-						Plan big-spends so that Moneo can help you to find good deals and
-						invest accordingly.
+						Plan big-spends so that Moneo can help you to invest accordingly and 
+						also find awesome deals from <strong>100+ partners</strong>.
+					</h3>
+					<p>
+						<GetStartedButton />
+					</p>
+					<h3>
+						<strong>Plan More, Save More!</strong>
 					</h3>
 					<p className="brand-coupon">
 						<Row
