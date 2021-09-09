@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import './nw.less';
 import NWView from './NWView';
-import { AppContext } from '../AppContext';
+import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from '../AppContext';
 import {
 	addHoldings,
 	doesHoldingMatch,
@@ -10,6 +10,9 @@ import {
 	getRelatedCurrencies,
 	loadAllFamilyMembers,
 	loadHoldings,
+	loadMatchingINBond,
+	loadMatchingINExchange,
+	loadMatchingINMutual,
 	updateHoldings
 } from './nwutils';
 import { notification } from 'antd';
@@ -20,6 +23,9 @@ import {
 	CreateHoldingsInput,
 	DepositInput,
 	HoldingInput,
+	INBond,
+	INExchg,
+	INMutual,
 	InsType,
 	InsuranceInput,
 	LiabilityInput,
@@ -27,8 +33,9 @@ import {
 	UpdateHoldingsInput
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
-import { initOptions } from '../utils';
+import { includesAny, initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
+import simpleStorage from "simplestorage.js";
 
 const NWContext = createContext({});
 
@@ -49,7 +56,7 @@ export const STELLAR = 'XLM';
 export const PM_TAB = 'Precious Metals';
 
 function NWContextProvider() {
-	const { defaultCurrency, appContextLoaded, insData, ratesData }: any = useContext(AppContext);
+	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData }: any = useContext(AppContext);
 	const [ allFamily, setAllFamily ] = useState<any>({});
 	const [ instruments, setInstruments ] = useState<Array<HoldingInput>>([]);
 	const [ preciousMetals, setPreciousMetals ] = useState<Array<HoldingInput>>([]);
@@ -355,6 +362,39 @@ function NWContextProvider() {
 	};
 
 
+	const initializeInsData = async (instruments: Array<HoldingInput>) => {
+		let bondIds: Set<string> = new Set();
+		let otherIds: Set<string> = new Set();
+		let initFromDB = false;
+		instruments.forEach((ins: HoldingInput) => {
+			if(ins.type === AssetType.F) bondIds.add(ins.id);
+			else otherIds.add(ins.id);
+			if(!initFromDB && insData && !insData[ins.id]) initFromDB = true;
+		});
+		if(!initFromDB) return insData;
+		let insCache: any = {};
+		let bonds: Array<INBond> | null = null;
+		if(bondIds.size) bonds = await loadMatchingINBond(Array.from(bondIds));
+		if(bonds) bonds.forEach((bond: INBond) => {
+			insCache[bond.id as string] = bond;
+			bondIds.delete(bond.id as string);
+		});
+		bondIds.forEach((id:string) => otherIds.add(id));
+		let mfs: Array<INMutual> | null = null;
+		if(otherIds.size) mfs = await loadMatchingINMutual(Array.from(otherIds));
+		if(mfs) mfs.forEach((mf: INMutual) => {
+			insCache[mf.id as string] = mf;
+			otherIds.delete(mf.id as string);
+		});
+		if(otherIds.size) {
+			let exchgEntries: Array<INExchg> | null = await loadMatchingINExchange(Array.from(otherIds));
+			exchgEntries?.forEach((entry: INExchg) => insCache[entry.id as string] = entry);
+		}
+		setInsData(insCache);
+		simpleStorage.set(LOCAL_INS_DATA_KEY, insCache, LOCAL_DATA_TTL);
+		return insCache;
+	};
+
 	const initializeHoldings = async () => {
 		let allHoldings: CreateHoldingsInput | null = null;
 		try {
@@ -366,6 +406,8 @@ function NWContextProvider() {
 		setSelectedCurrency(Object.keys(currencyList)[0]);
 		setCurrencyList(currencyList);
 		setId(allHoldings?.id);
+		if(id && allHoldings?.instruments?.length) 
+			await initializeInsData(allHoldings?.instruments);
 		setInstruments([ ...(allHoldings?.instruments ? allHoldings.instruments : []) ]);
 		setPreciousMetals([ ...(allHoldings?.pm ? allHoldings.pm : []) ]);
 		setPPF([ ...(allHoldings?.ppf ? allHoldings.ppf : []) ]);
@@ -484,17 +526,31 @@ function NWContextProvider() {
 		let totalFRE = 0;
 		let totalEquity = 0;
 		let totalFixed = 0;
+		let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+		if(!cachedData) cachedData = insData;
 		instruments.forEach((instrument: HoldingInput) => {
 			if(insData[instrument.id] && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
-				let value = instrument.qty * insData[instrument.id].price;
+				let value = instrument.qty * cachedData[instrument.id].price;
 				total += value;
 				if(instrument.subt === AssetSubType.GoldB) totalFGold += value;
-				else if(insData[instrument.id].itype && insData[instrument.id].itype === InsType.REIT) 
+				else if(insData[instrument.id].itype && cachedData[instrument.id].itype === InsType.REIT) 
 					totalFRE += value;
 				else if(instrument.type === AssetType.E) 
 					totalEquity += value;
 				else if(instrument.type === AssetType.F)
 					totalFixed += value;
+				else if(instrument.type === AssetType.H) {
+					if(includesAny(instrument.name as string, ["aggressive"])) {
+						totalFixed += 0.3 * value;
+						totalEquity += 0.7 * value;
+					} else if(includesAny(instrument.name as string, ["conservative"])) {
+						totalFixed += 0.3 * value;
+						totalEquity += 0.7 * value;
+					} else {
+						totalFixed += 0.5 * value;
+						totalEquity += 0.5 * value;
+					}
+				}
 			}
 		})
 		setTotalInstruments(total);
