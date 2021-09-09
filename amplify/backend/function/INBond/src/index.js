@@ -7,7 +7,7 @@ const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray, csvFile } = utils;
-const bhaoUtils = require("/opt/nodejs/bhavUtils");
+const bhaoUtils = require("./bhavUtils");
 const calcSchema = require("./calculate");
 const {
   downloadZip,

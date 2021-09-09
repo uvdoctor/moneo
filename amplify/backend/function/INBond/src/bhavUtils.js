@@ -1,4 +1,4 @@
-const docClient = require("./insertIntoDB");
+const docClient = require("/opt/nodejs/insertIntoDB");
 const https = require("https");
 const fs = require("fs");
 const fsPromise = require("fs/promises");
