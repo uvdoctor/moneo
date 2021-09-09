@@ -1,10 +1,6 @@
 import React from "react";
 import { Row, Col, Button } from "antd";
-import {
-	Carousel,
-	AnimationHandler,
-	AnimationHandlerResponse,
-} from "react-responsive-carousel";
+import { Carousel } from "react-responsive-carousel";
 import Content from "../Content";
 import GetStartedButton from "./GetStartedButton";
 
@@ -67,7 +63,7 @@ export default function CouponsBanner() {
 								</Col>
 							))}
 							<Col>
-								<Button type="dashed" herf="" className="more-link">
+								<Button type="dashed" href="" className="more-link">
 									More...
 								</Button>
 							</Col>
@@ -83,12 +79,11 @@ export default function CouponsBanner() {
 						showIndicators={false}
 						showArrows={false}
 						stopOnHover={false}
-						infiniteLoop
-						animationHandler="fade"
 						swipeable={false}
+						infiniteLoop
 					>
 						{banners.map((imageName) => (
-							<div>
+							<div key={imageName}>
 								<img src={`images/${imageName}`} />
 							</div>
 						))}
