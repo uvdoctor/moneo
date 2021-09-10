@@ -41,7 +41,7 @@ const getData = () => {
         tid: element["ISIN Div Reinvestment"],
         dir: getDirISIN(regularData, directData, element),
         name: element["Scheme Name"],
-        type: getAssetType(element["Scheme Type"]),
+        type: getAssetType(element),
         subt: getAssetSubType(element),
         price: price,
         mftype: mfType(element),
