@@ -19,7 +19,7 @@ export const loadAllFamilyMembers = async () => {
 	family.forEach((val: APIt.CreateFamilyInput) => {
 		if (val.id) familyList[val.id as string] = { name: val.name, taxId: val.tid };
 	});
-	return familyList;
+	return Object.keys(familyList).length ? familyList : null;
 };
 
 export const loadHoldings = async () => {
@@ -51,6 +51,12 @@ export const getFamilyMemberKey = (allFamily: any, taxId: string) => {
 	}
 	return null;
 }
+
+export const getDefaultMember = (allFamily: any, selectedMembers: Array<string>) => {
+	if(!selectedMembers.length || selectedMembers.indexOf(ALL_FAMILY) > -1)
+		return Object.keys(allFamily)[0];
+	return selectedMembers[0];
+};
 
 export const doesMemberMatch = (instrument: APIt.HoldingInput, selectedMembers: Array<string>) =>
 	selectedMembers.indexOf(ALL_FAMILY) > -1 || selectedMembers.indexOf(instrument.fIds[0]) > -1

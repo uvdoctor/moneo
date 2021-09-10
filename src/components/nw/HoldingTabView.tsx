@@ -1,23 +1,17 @@
 import React, { Fragment, useContext } from 'react';
-import { Col, Empty, Row, Skeleton, Tabs, Avatar, Tooltip } from 'antd';
+import { Col, Empty, Row, Skeleton, Tabs } from 'antd';
 import { NWContext } from './NWContext';
 import AddHoldings from './addHoldings/AddHoldings';
 import UploadHoldings from './UploadHoldings';
 import { toHumanFriendlyCurrency } from '../utils';
 import ListHoldings from './ListHoldings';
 import { COLORS } from '../../CONSTANTS';
-import { ALL_FAMILY } from './FamilyInput';
-import { UserOutlined } from '@ant-design/icons';
-import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function HoldingTabView() {
 	const {
 		tabs,
 		activeTab,
 		setActiveTab,
-		allFamily,
-		selectedMembers,
 		loadingHoldings,
 		selectedCurrency,
 		childTab,
@@ -49,30 +43,6 @@ export default function HoldingTabView() {
 								<Fragment>
 									<Row justify="space-between">
 										<Col>
-											<Row>
-												{selectedMembers.length && (
-													<Col>
-														{selectedMembers.indexOf(ALL_FAMILY) > -1 ? (
-															<Tooltip title="Family">
-																<Avatar
-																	icon={<FontAwesomeIcon icon={faUserFriends} />}
-																/>
-															</Tooltip>
-														) : (
-															<Avatar.Group maxCount={2}>
-																{selectedMembers.forEach(
-																	(key: string) =>
-																		allFamily[key] && (
-																			<Tooltip title={allFamily[key]}>
-																				<Avatar icon={<UserOutlined />} />
-																			</Tooltip>
-																		)
-																)}
-															</Avatar.Group>
-														)}
-													</Col>
-												)}
-												<Col>
 													<h2 style={{ color: COLORS.GREEN }}>
 														&nbsp;&nbsp;
 														{toHumanFriendlyCurrency(
@@ -80,8 +50,6 @@ export default function HoldingTabView() {
 															selectedCurrency
 														)}
 													</h2>
-												</Col>
-											</Row>
 										</Col>
 										<Col>
 											{hasUploader && <UploadHoldings />}
@@ -89,7 +57,6 @@ export default function HoldingTabView() {
 												isPrimary={!hasUploader}
 												data={tabsData[tabName].data}
 												changeData={tabsData[tabName].setData}
-												input={tabsData[tabName].input}
 												title={`${tabsData[tabName].label} - Add Record`}
 												categoryOptions={tabsData[tabName].categoryOptions}
 												subCategoryOptions={tabsData[tabName].subCategoryOptions}

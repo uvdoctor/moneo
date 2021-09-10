@@ -1,14 +1,11 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Modal, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import AddHoldingInput from '../AddHoldingInput';
-import { AssetSubType, AssetType } from '../../../api/goals';
-import { BTC, NWContext, PM_TAB } from '../NWContext';
 
 interface AddHoldingsProps {
 	data: Array<any>;
 	changeData: Function;
-	input: any;
 	isPrimary: boolean;
 	title: string;
 	categoryOptions: any;
@@ -18,32 +15,17 @@ interface AddHoldingsProps {
 export default function AddHoldings({
 	data,
 	changeData,
-	input,
 	isPrimary,
 	title,
 	categoryOptions,
 	subCategoryOptions
 }: AddHoldingsProps) {
-	const { allFamily, childTab }: any = useContext(NWContext);
 	const [ isModalVisible, setModalVisibility ] = useState<boolean>(false);
 	const [ okDisabled, setOkDisabled ] = useState<boolean>(true);
-	const [ newRec, setNewRec ] = useState<any>(
-		Object.assign(
-			{},
-			{
-				id: '',
-				type: AssetType.A,
-				subt: childTab === PM_TAB ? AssetSubType.Gold : BTC,
-				fIds: [ Object.keys(allFamily)[0] ],
-				qty: 0,
-				curr: 'USD',
-				name: childTab === PM_TAB ? '24' : ''
-			}
-		)
-	);
+	const [ newRec, setNewRec ] = useState<any>({});
+
 	const close = () => {
 		setModalVisibility(false);
-		setNewRec(Object.assign({}, input));
 	};
 
 	const addHolding = () => {
@@ -72,7 +54,7 @@ export default function AddHoldings({
 				centered
 			>
 				<AddHoldingInput
-					input={newRec}
+					setInput={setNewRec}
 					disableOk={setOkDisabled}
 					categoryOptions={categoryOptions}
 					subCategoryOptions={subCategoryOptions}
