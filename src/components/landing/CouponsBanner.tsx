@@ -31,7 +31,7 @@ export default function CouponsBanner() {
 						<strong>Plan Now, Buy Smarter</strong>
 					</h2>
 					<h3>
-						Plan big-spends so that Moneo can help you to invest accordingly and 
+						Plan big-spends so that Moneo can help you to invest accordingly and
 						also find awesome deals from <strong>100+ partners</strong>.
 					</h3>
 					<p>
@@ -43,7 +43,7 @@ export default function CouponsBanner() {
 					<p className="brand-coupon">
 						<Row
 							align="middle"
-							justify="center"
+							justify="start"
 							gutter={[
 								{ xs: 5, sm: 5, md: 15 },
 								{ xs: 10, sm: 10, md: 15 },
@@ -55,7 +55,7 @@ export default function CouponsBanner() {
 								</Col>
 							))}
 							<Col>
-								<Button type="dashed" href="" className="more-link">
+								<Button type="primary" href="" className="more-link">
 									More...
 								</Button>
 							</Col>
