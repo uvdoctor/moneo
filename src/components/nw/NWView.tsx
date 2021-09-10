@@ -2,17 +2,19 @@ import React, { Fragment, useContext, useEffect } from 'react';
 import HoldingTabView from './HoldingTabView';
 import DataSwitcher from '../DataSwitcher';
 import { NWContext } from './NWContext';
-import { Button, Col, PageHeader, Row } from 'antd';
+import { Avatar, Button, Col, PageHeader, Row, Skeleton, Tooltip } from 'antd';
 import SelectInput from '../form/selectinput';
-import { SaveOutlined } from '@ant-design/icons';
+import { SaveOutlined, UserOutlined } from '@ant-design/icons';
 
 import './nw.less';
-import FamilyInput from './FamilyInput';
+import FamilyInput, { ALL_FAMILY } from './FamilyInput';
 import ResultCarousel from '../ResultCarousel';
 import TotalAssets from './TotalAssets';
 import TotalNetWorth from './TotalNetWorth';
 import TotalLiabilities from './TotalLiabilities';
 import CurrentAA from './CurrentAA';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
 
 export default function NWView() {
 	const {
@@ -21,21 +23,17 @@ export default function NWView() {
 		selectedCurrency,
 		setSelectedCurrency,
 		loadingHoldings,
+		loadingFamily,
 		currencyList,
-		saveHoldings
+		saveHoldings,
+		selectedMembers,
+		allFamily
 	}: any = useContext(NWContext);
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
 	useEffect(
 		() => {
-			if (!loadingHoldings)
-				setResults([
-					...[
-						<TotalNetWorth />,
-						<TotalAssets />,
-						<TotalLiabilities />
-					]
-				]);
+			if (!loadingHoldings) setResults([ ...[ <TotalNetWorth />, <TotalAssets />, <TotalLiabilities /> ] ]);
 		},
 		[ loadingHoldings ]
 	);
@@ -78,14 +76,46 @@ export default function NWView() {
 			</div>
 			<div className="nw-container">
 				<ResultCarousel results={results} />
-				<DataSwitcher title="Current Asset Allocation">
-					<Chart>
-						<CurrentAA />
-					</Chart>
-					<DataSwitcherList>
-						{!loadingHoldings ? <HoldingTabView /> : null}
-					</DataSwitcherList>
-				</DataSwitcher>
+				{!loadingHoldings && !loadingFamily ? (
+					<DataSwitcher
+						title={
+							<Row>
+								{selectedMembers.length && (
+									<Col>
+										{selectedMembers.indexOf(ALL_FAMILY) > -1 ? (
+											<Tooltip title="Family">
+												<Avatar icon={<FontAwesomeIcon icon={faUserFriends} />} />
+											</Tooltip>
+										) : (
+											<Avatar.Group maxCount={2}>
+												{selectedMembers.forEach(
+													(key: string) =>
+														allFamily[key] && (
+															<Tooltip title={allFamily[key]}>
+																<Avatar icon={<UserOutlined />} />
+															</Tooltip>
+														)
+												)}
+											</Avatar.Group>
+										)}
+									</Col>
+								)}
+								<Col>
+									<h2>&nbsp;Holdings</h2>
+								</Col>
+							</Row>
+						}
+					>
+						<Chart>
+							<CurrentAA />
+						</Chart>
+						<DataSwitcherList>
+							<HoldingTabView />
+						</DataSwitcherList>
+					</DataSwitcher>
+				) : (
+					<Skeleton active />
+				)}
 			</div>
 		</Fragment>
 	);

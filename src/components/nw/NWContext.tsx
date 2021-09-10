@@ -54,10 +54,11 @@ export const ETHEREUM_CLASSIC = 'ETC';
 export const DOGECOIN = 'DOGE';
 export const STELLAR = 'XLM';
 export const PM_TAB = 'Precious Metals';
+export const FIN_TAB = 'Financial';
 
 function NWContextProvider() {
 	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData }: any = useContext(AppContext);
-	const [ allFamily, setAllFamily ] = useState<any>({});
+	const [ allFamily, setAllFamily ] = useState<any | null>(null);
 	const [ instruments, setInstruments ] = useState<Array<HoldingInput>>([]);
 	const [ preciousMetals, setPreciousMetals ] = useState<Array<HoldingInput>>([]);
 	const [ properties, setProperties ] = useState<Array<PropertyInput>>([]);
@@ -75,7 +76,7 @@ function NWContextProvider() {
 	const [ crypto, setCrypto ] = useState<Array<HoldingInput>>([]);
 	const [ loans, setLoans ] = useState<Array<LiabilityInput>>([]);
 	const [ insurance, setInsurance ] = useState<Array<InsuranceInput>>([]);
-	const [ selectedMembers, setSelectedMembers ] = useState<Array<string>>([ '' ]);
+	const [ selectedMembers, setSelectedMembers ] = useState<Array<string>>([]);
 	const [ currencyList, setCurrencyList ] = useState<any>({});
 	const [ selectedCurrency, setSelectedCurrency ] = useState<string>('');
 	const [ nw, setNW ] = useState<number>(0);
@@ -105,7 +106,7 @@ function NWContextProvider() {
 	const [ totalPGold, setTotalPGold ] = useState<number>(0);
 	const [ totalFGold, setTotalFGold ] = useState<number>(0);
 	const [ showInsUpload, setShowInsUpload ] = useState<boolean>(false);
-	const [ activeTab, setActiveTab ] = useState<string>('Demat Holdings');
+	const [ activeTab, setActiveTab ] = useState<string>(FIN_TAB);
 	const [ activeTabSum, setActiveTabSum ] = useState<number>(0);
 	const [ results, setResults ] = useState<Array<any>>([]);
 	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
@@ -114,31 +115,13 @@ function NWContextProvider() {
 	const [ childTab, setChildTab ] = useState<string>('');
 
 	const tabs = {
-		Cash: {
-			label: 'Cash',
-			children: {
-				'Deposits': {
-					label: 'Deposits',
-					data: deposits,
-					setData: setDeposits,
-					total: totalDeposits,
-					contentComp: <InstrumentValuation />
-				},
-				'Saving Accounts': {
-					label: 'Saving Accounts',
-					data: savings,
-					setData: setSavings,
-					total: totalSavings,
-					contentComp: <InstrumentValuation />
-				},
-				'Money Lent': {
-					label: 'Money Lent',
-					data: lendings,
-					setData: setLendings,
-					total: totalLendings,
-					contentComp: <InstrumentValuation />
-				},
-			}
+		[FIN_TAB]: {
+			label: FIN_TAB,
+			hasUploader: true,
+			data: instruments,
+			setData: setInstruments,
+			total: totalInstruments,
+			contentComp: <InstrumentValuation />
 		},
 		Physical: {
 			label: 'Physical',
@@ -174,15 +157,6 @@ function NWContextProvider() {
 					data: preciousMetals,
 					setData: setPreciousMetals,
 					total: totalPM,
-					input: {
-						id: '',
-						type: AssetType.A,
-						subt: AssetSubType.Gold,
-						fIds: [ Object.keys(allFamily)[0] ],
-						qty: 0,
-						curr: 'USD',
-						name: '24'
-					},
 					subCategoryOptions: {
 						[AssetSubType.Gold]: initOptions(8, 16),
 						[SILVER]: {
@@ -219,13 +193,31 @@ function NWContextProvider() {
 				}
 			},
 		},
-		Financial: {
-			label: 'Financial',
-			hasUploader: true,
-			data: instruments,
-			setData: setInstruments,
-			total: totalInstruments,
-			contentComp: <InstrumentValuation />
+		Cash: {
+			label: 'Cash',
+			children: {
+				'Deposits': {
+					label: 'Deposits',
+					data: deposits,
+					setData: setDeposits,
+					total: totalDeposits,
+					contentComp: <InstrumentValuation />
+				},
+				'Saving Accounts': {
+					label: 'Saving Accounts',
+					data: savings,
+					setData: setSavings,
+					total: totalSavings,
+					contentComp: <InstrumentValuation />
+				},
+				'Money Lent': {
+					label: 'Money Lent',
+					data: lendings,
+					setData: setLendings,
+					total: totalLendings,
+					contentComp: <InstrumentValuation />
+				},
+			}
 		},
 		Retirement: {
 			label: 'Retirement',
@@ -396,6 +388,7 @@ function NWContextProvider() {
 	};
 
 	const initializeHoldings = async () => {
+		initializeFamilyList();
 		let allHoldings: CreateHoldingsInput | null = null;
 		try {
 			allHoldings = await loadHoldings();
@@ -433,10 +426,6 @@ function NWContextProvider() {
 		},
 		[ appContextLoaded ]
 	);
-
-	useEffect(() => {
-		initializeFamilyList();
-	}, []);
 
 	useEffect(
 		() => {
