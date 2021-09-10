@@ -10,6 +10,7 @@ const {
   getAssetSubType,
   getAssetType,
   mfType,
+  getName,
   pushData,
   mCap,
 } = dataInfo;
@@ -40,7 +41,7 @@ const getData = () => {
         sid: element["Scheme Code"],
         tid: element["ISIN Div Reinvestment"],
         dir: getDirISIN(regularData, directData, element),
-        name: element["Scheme Name"],
+        name: getName(element),
         type: getAssetType(element),
         subt: getAssetSubType(element),
         price: price,

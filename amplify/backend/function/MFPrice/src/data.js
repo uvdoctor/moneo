@@ -2,16 +2,21 @@ const docClient = require("/opt/nodejs/insertIntoDB");
 const getAssetType = (element) => {
   const sType = element["Scheme Type"];
   const sName = element["Scheme Name"];
-  if (sType.includes("Hybrid")) return "H";
+  if (sType.includes("Hybrid")) {
+    if (sName.includes("Debt") || sName.includes("DEBT")) return "F";
+    return "H";
+  }
   if (
     sType.includes("Debt") ||
     sType.includes("Income") ||
     sType.includes("Solution") ||
-    sType.includes("Gilt") ||
-    (sType.includes("Index") &&
-      (sName.includes("Gilt") || sName.includes("Bond")))
+    sType.includes("Gilt")
   )
     return "F";
+  if (sType.includes("Index")) {
+    if (sName.includes("Gilt") || sName.includes("Bond")) return "F";
+    return "E";
+  }
   if (sType.includes("Other")) return "A";
   return "E";
 };
@@ -19,6 +24,11 @@ const getAssetType = (element) => {
 const getAssetSubType = (element) => {
   const sType = element["Scheme Type"];
   const sName = element["Scheme Name"];
+  if (
+    sType.includes("Hybrid") &&
+    (sName.includes("Debt") || sName.includes("DEBT"))
+  )
+    return "HB";
   if (
     sType.includes("Debt Scheme") &&
     (sType.includes("Liquid") ||
@@ -97,6 +107,13 @@ const mCap = (element) => {
   return null;
 };
 
+const getName = (element) => {
+  const type = element["Scheme Type"];
+  const name = element["Scheme Name"];
+  const hybridText = type.slice(type.indexOf("-"));
+  if (type.includes("Hybrid")) return `${name}-${hybridText}`;
+  return name;
+};
 const pushData = async (data, table, index) => {
   return new Promise(async (resolve, reject) => {
     const params = {
@@ -121,4 +138,5 @@ module.exports = {
   directISIN,
   getDirISIN,
   mCap,
+  getName,
 };
