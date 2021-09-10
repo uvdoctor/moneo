@@ -1,15 +1,18 @@
 const docClient = require("/opt/nodejs/insertIntoDB");
-const getAssetType = (data) => {
-  if (data.includes("Hybrid")) return "H";
+const getAssetType = (element) => {
+  const sType = element["Scheme Type"];
+  const sName = element["Scheme Name"];
+  if (sType.includes("Hybrid")) return "H";
   if (
-    data.includes("Debt") ||
-    data.includes("Income") ||
-    data.includes("Solution") ||
-    data.includes("Gilt") ||
-    data.includes("Index")
+    sType.includes("Debt") ||
+    sType.includes("Income") ||
+    sType.includes("Solution") ||
+    sType.includes("Gilt") ||
+    (sType.includes("Index") &&
+      (sName.includes("Gilt") || sName.includes("Bond")))
   )
     return "F";
-  if (data.includes("Other")) return "A";
+  if (sType.includes("Other")) return "A";
   return "E";
 };
 

@@ -56,6 +56,7 @@ const eodPrice = () => {
 exports.handler = async (event) => {
   let data = await eodPrice();
   for (let batch in data) {
-    await pushData(data[batch], table, batch);
+    const results = await pushData(data[batch], table, batch);
+    console.log(results);
   }
 };
