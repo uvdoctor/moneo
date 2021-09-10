@@ -44,7 +44,7 @@ const getData = () => {
         type: getAssetType(element),
         subt: getAssetSubType(element),
         price: price,
-        mftype: mfType(element),
+        mftype: mfType(element["Scheme Type"]),
         mcap: mCap(element),
         tf: element["Scheme Name"].includes("Tax") ? "Y" : "N",
         createdAt: new Date().toISOString(),
