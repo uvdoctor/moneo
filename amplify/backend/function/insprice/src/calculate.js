@@ -1,3 +1,5 @@
+const { default: SchemaGeom } = require("bizcharts/lib/geometry/Schema");
+
 const calc = {
   BSE: {
     calcType: (type, subt, name) => {
