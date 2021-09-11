@@ -50,7 +50,7 @@ const getName = (element) => {
   const type = element["Scheme Type"];
   const name = element["Scheme Name"];
   const hybridText = type.slice(type.indexOf("-"));
-  if (type.includes("Hybrid")) return `${name}-${hybridText}`;
+  if (type.includes("Hybrid")) return `${name}${hybridText}`;
   return name;
 };
 const pushData = async (data, table, index) => {
