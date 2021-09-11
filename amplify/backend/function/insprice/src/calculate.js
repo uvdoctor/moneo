@@ -117,4 +117,4 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
   isinMap[record[codes.id]] = record[codes.id];
   return schema;
 };
-module.exports = calcSchema;
+module.exports = { calc, calcSchema };

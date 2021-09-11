@@ -8,7 +8,7 @@ const { mkdir } = fsPromise;
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray } = utils;
 const bhaoUtils = require("./bhavUtils");
-const calcSchema = require("./calculate");
+const { calc, calcSchema } = require("./calculate");
 const {
   downloadZip,
   unzipDownloads,
