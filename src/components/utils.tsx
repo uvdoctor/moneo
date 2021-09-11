@@ -436,6 +436,7 @@ export const menuItem = (name: string, path: string, selectedKey: string, multiC
 </Menu.Item>
 
 export const includesAny = (value: string, items: Array<string>) => {
+  if(!value || !items) return false;
   let v = value.trim().toLowerCase();
   for (let item of items) {
     if (v.includes(item.toLowerCase())) return true;

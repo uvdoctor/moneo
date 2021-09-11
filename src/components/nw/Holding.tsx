@@ -66,7 +66,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 								<h4 style={{ color: COLORS.RED }}>Sorry, unable to find price for this one!</h4>
 							)}
 						</Col>
-						{insData[holding.id] && (
+						{insData[holding.id] && holding.type !== AssetType.H && (
 							<Col>
 								{insData[holding.id].rate && (
 									<Tooltip title="Interest rate">

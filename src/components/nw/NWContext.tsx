@@ -529,15 +529,19 @@ function NWContextProvider() {
 				else if(instrument.type === AssetType.F)
 					totalFixed += value;
 				else if(instrument.type === AssetType.H) {
-					if(includesAny(instrument.name as string, ["aggressive"])) {
+					if(includesAny(instrument.name as string, ["conservative"])) {
+						totalFixed += 0.7 * value;
+						totalEquity += 0.3 * value;
+					} else if(includesAny(instrument.name as string, ["multi-asset"])) {
+						totalFGold += 0.1 * value;
+						totalEquity += 0.6 * value;
 						totalFixed += 0.3 * value;
-						totalEquity += 0.7 * value;
-					} else if(includesAny(instrument.name as string, ["conservative"])) {
-						totalFixed += 0.3 * value;
-						totalEquity += 0.7 * value;
+					} else if(includesAny(instrument.name as string, ["balanced"])) {
+						totalEquity += 0.6 * value;
+						totalFixed += 0.4 * value;
 					} else {
-						totalFixed += 0.5 * value;
-						totalEquity += 0.5 * value;
+						totalFixed += 0.7 * value;
+						totalEquity += 0.3 * value;
 					}
 				}
 			}
