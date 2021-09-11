@@ -30,21 +30,21 @@ export default function AddHoldingInput({
 
 	const changeName = (val: string) => {
 		setName(val);
-		setInput(getNewRec());
+		setInput(getNewRec(subtype, memberKey, quantity, val));
 	};
 
 	const changeQuantity = (qty: number) => {
 		setQuantity(qty);
 		disableOk(qty <= 0);
-		setInput(getNewRec());
+		setInput(getNewRec(subtype, memberKey, qty, name));
 	};
 
-	const getNewRec = () => {
+	const getNewRec = (subtype: string, member: string, quantity: number, name: string) => {
 		let newRec = {
 			id: '',
 			type: AssetType.A,
 			subt: subtype,
-			fIds: memberKey,
+			fIds: [member],
 			qty: quantity,
 			curr: 'USD',
 			name: name
@@ -61,12 +61,12 @@ export default function AddHoldingInput({
 				setName(defaultVal);
 			}
 		}
-		setInput(getNewRec());
+		setInput(getNewRec(subtype, memberKey, quantity, name));
 	};
 
 	const changeMember = (key: string) => {
 		setMemberKey(key);
-		setInput(getNewRec());
+		setInput(getNewRec(subtype, key, quantity, name));
 	};
 
 	const getRate = (subtype: string, name: string) =>
