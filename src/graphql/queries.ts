@@ -179,13 +179,16 @@ export const getHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -232,7 +235,9 @@ export const getHoldings = /* GraphQL */ `
         pin
         purchase {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         address
@@ -249,13 +254,16 @@ export const getHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -264,13 +272,16 @@ export const getHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -279,13 +290,16 @@ export const getHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -294,13 +308,16 @@ export const getHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -309,13 +326,16 @@ export const getHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -324,13 +344,16 @@ export const getHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -339,13 +362,16 @@ export const getHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -360,13 +386,16 @@ export const getHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -375,13 +404,16 @@ export const getHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -390,13 +422,16 @@ export const getHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -422,6 +457,7 @@ export const listHoldingss = /* GraphQL */ `
           fIds
           curr
           chg
+          chgF
           type
           subt
         }
@@ -468,6 +504,7 @@ export const listHoldingss = /* GraphQL */ `
           fIds
           curr
           chg
+          chgF
           type
           subt
         }
@@ -478,6 +515,7 @@ export const listHoldingss = /* GraphQL */ `
           fIds
           curr
           chg
+          chgF
           type
           subt
         }
@@ -488,6 +526,7 @@ export const listHoldingss = /* GraphQL */ `
           fIds
           curr
           chg
+          chgF
           type
           subt
         }
@@ -498,6 +537,7 @@ export const listHoldingss = /* GraphQL */ `
           fIds
           curr
           chg
+          chgF
           type
           subt
         }
@@ -508,6 +548,7 @@ export const listHoldingss = /* GraphQL */ `
           fIds
           curr
           chg
+          chgF
           type
           subt
         }
@@ -518,6 +559,7 @@ export const listHoldingss = /* GraphQL */ `
           fIds
           curr
           chg
+          chgF
           type
           subt
         }
@@ -528,6 +570,7 @@ export const listHoldingss = /* GraphQL */ `
           fIds
           curr
           chg
+          chgF
           type
           subt
         }
@@ -544,6 +587,7 @@ export const listHoldingss = /* GraphQL */ `
           fIds
           curr
           chg
+          chgF
           type
           subt
         }
@@ -554,6 +598,7 @@ export const listHoldingss = /* GraphQL */ `
           fIds
           curr
           chg
+          chgF
           type
           subt
         }
@@ -564,6 +609,7 @@ export const listHoldingss = /* GraphQL */ `
           fIds
           curr
           chg
+          chgF
           type
           subt
         }

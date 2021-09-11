@@ -1,12 +1,10 @@
 import { UserOutlined } from '@ant-design/icons';
-import { InputNumber } from 'antd';
 import React, { Fragment, useContext, useState } from 'react';
 import { AssetSubType, AssetType } from '../../api/goals';
-import { AppContext } from '../AppContext';
 import SelectInput from '../form/selectinput';
-import { toCurrency } from '../utils';
 import { BTC, NWContext, PM_TAB } from './NWContext';
-import { getCommodityRate, getCryptoRate, getDefaultMember, getFamilyOptions } from './nwutils';
+import { getDefaultMember, getFamilyOptions } from './nwutils';
+import QuantityWithRate from './QuantityWithRate';
 
 interface AddHoldingInputProps {
 	setInput: Function;
@@ -21,8 +19,8 @@ export default function AddHoldingInput({
 	categoryOptions,
 	subCategoryOptions
 }: AddHoldingInputProps) {
-	const { ratesData }: any = useContext(AppContext);
-	const { selectedCurrency, allFamily, childTab, selectedMembers }: any = useContext(NWContext);
+	
+	const { allFamily, childTab, selectedMembers }: any = useContext(NWContext);
 	const [ name, setName ] = useState<string>(childTab === PM_TAB ? '24' : '');
 	const [ subtype, setSubtype ] = useState<string>(childTab === PM_TAB ? AssetSubType.Gold : BTC);
 	const [ quantity, setQuantity ] = useState<number>(0);
@@ -44,7 +42,7 @@ export default function AddHoldingInput({
 			id: '',
 			type: AssetType.A,
 			subt: subtype,
-			fIds: [member],
+			fIds: [ member ],
 			qty: quantity,
 			curr: 'USD',
 			name: name
@@ -69,11 +67,6 @@ export default function AddHoldingInput({
 		setInput(getNewRec(subtype, key, quantity, name));
 	};
 
-	const getRate = (subtype: string, name: string) =>
-		!name
-			? getCryptoRate(ratesData, subtype, selectedCurrency)
-			: getCommodityRate(ratesData, subtype, name, selectedCurrency);
-
 	return (
 		<div style={{ textAlign: 'center' }}>
 			<p>
@@ -97,18 +90,7 @@ export default function AddHoldingInput({
 				)}
 			</p>
 			<p>
-				<InputNumber
-					value={quantity}
-					onChange={(quantity: number) => changeQuantity(quantity)}
-					min={0}
-					max={100000}
-					step={0.1}
-					size="small"
-				/>
-				{` ${childTab === PM_TAB ? ` grams` : ''} x ${toCurrency(
-					getRate(subtype as string, name as string),
-					selectedCurrency
-				)} = ${toCurrency(quantity * getRate(subtype as string, name as string), selectedCurrency)}`}
+				<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} />
 			</p>
 			<p>
 				<SelectInput
