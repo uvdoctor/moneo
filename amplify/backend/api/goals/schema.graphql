@@ -280,6 +280,7 @@ type Holding {
 	fIds: [String!]!
 	curr: String
 	chg: Float
+	chgF: Int
 	type: String
 	subt: String
 }
@@ -306,7 +307,9 @@ enum PropertyType {
 
 type Purchase {
 	amt: Float!
-	date: Int!
+	day: Int
+	month: Int!
+	year: Int!
 	qty: Float!
 }
 

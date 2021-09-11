@@ -254,13 +254,16 @@ export const onCreateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -307,7 +310,9 @@ export const onCreateHoldings = /* GraphQL */ `
         pin
         purchase {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         address
@@ -324,13 +329,16 @@ export const onCreateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -339,13 +347,16 @@ export const onCreateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -354,13 +365,16 @@ export const onCreateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -369,13 +383,16 @@ export const onCreateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -384,13 +401,16 @@ export const onCreateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -399,13 +419,16 @@ export const onCreateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -414,13 +437,16 @@ export const onCreateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -435,13 +461,16 @@ export const onCreateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -450,13 +479,16 @@ export const onCreateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -465,13 +497,16 @@ export const onCreateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -490,13 +525,16 @@ export const onUpdateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -543,7 +581,9 @@ export const onUpdateHoldings = /* GraphQL */ `
         pin
         purchase {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         address
@@ -560,13 +600,16 @@ export const onUpdateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -575,13 +618,16 @@ export const onUpdateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -590,13 +636,16 @@ export const onUpdateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -605,13 +654,16 @@ export const onUpdateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -620,13 +672,16 @@ export const onUpdateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -635,13 +690,16 @@ export const onUpdateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -650,13 +708,16 @@ export const onUpdateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -671,13 +732,16 @@ export const onUpdateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -686,13 +750,16 @@ export const onUpdateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -701,13 +768,16 @@ export const onUpdateHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -726,13 +796,16 @@ export const onDeleteHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -779,7 +852,9 @@ export const onDeleteHoldings = /* GraphQL */ `
         pin
         purchase {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         address
@@ -796,13 +871,16 @@ export const onDeleteHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -811,13 +889,16 @@ export const onDeleteHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -826,13 +907,16 @@ export const onDeleteHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -841,13 +925,16 @@ export const onDeleteHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -856,13 +943,16 @@ export const onDeleteHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -871,13 +961,16 @@ export const onDeleteHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -886,13 +979,16 @@ export const onDeleteHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -907,13 +1003,16 @@ export const onDeleteHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -922,13 +1021,16 @@ export const onDeleteHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }
@@ -937,13 +1039,16 @@ export const onDeleteHoldings = /* GraphQL */ `
         qty
         pur {
           amt
-          date
+          day
+          month
+          year
           qty
         }
         name
         fIds
         curr
         chg
+        chgF
         type
         subt
       }

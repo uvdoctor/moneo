@@ -29,7 +29,7 @@
         },
         "MFPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/MFPrice-49417067795844515067-build.zip"
+          "s3Key": "amplify-builds/MFPrice-6d50506b6d5951336761-build.zip"
         },
         "INBond": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
