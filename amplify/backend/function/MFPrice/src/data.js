@@ -1,6 +1,5 @@
 const docClient = require("/opt/nodejs/insertIntoDB");
 
-// direct ISIN as per comparison to Regular
 const directISIN = (mfInfoArray) => {
   const regularData = [];
   const directData = [];
@@ -36,23 +35,6 @@ const getDirISIN = (regularData, directData, element) => {
   }
   return compareRegAndDir.ISIN;
 };
-
-const mCap = (element) => {
-  const type = element["Scheme Type"].toLowerCase();
-  if (type.includes("equity") && type.includes("large")) return "L";
-  if (type.includes("equity") && type.includes("mid")) return "M";
-  if (type.includes("equity") && type.includes("small")) return "S";
-  if (type.includes("equity")) return "H";
-  return null;
-};
-
-const getName = (element) => {
-  const type = element["Scheme Type"];
-  const name = element["Scheme Name"];
-  const hybridText = type.slice(type.indexOf("-"));
-  if (type.includes("Hybrid")) return `${name}${hybridText}`;
-  return name;
-};
 const pushData = async (data, table, index) => {
   return new Promise(async (resolve, reject) => {
     const params = {
@@ -69,10 +51,4 @@ const pushData = async (data, table, index) => {
   });
 };
 
-module.exports = {
-  pushData,
-  directISIN,
-  getDirISIN,
-  mCap,
-  getName,
-};
+module.exports = { directISIN, getDirISIN, pushData };
