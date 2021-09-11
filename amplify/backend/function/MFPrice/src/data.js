@@ -46,6 +46,13 @@ const mCap = (element) => {
   return null;
 };
 
+const getName = (element) => {
+  const type = element["Scheme Type"];
+  const name = element["Scheme Name"];
+  const hybridText = type.slice(type.indexOf("-"));
+  if (type.includes("Hybrid")) return `${name}-${hybridText}`;
+  return name;
+};
 const pushData = async (data, table, index) => {
   return new Promise(async (resolve, reject) => {
     const params = {
@@ -67,4 +74,5 @@ module.exports = {
   directISIN,
   getDirISIN,
   mCap,
+  getName,
 };
