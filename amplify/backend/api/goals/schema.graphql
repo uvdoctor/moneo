@@ -279,6 +279,11 @@ enum NPSPFM {
 enum NPSSchemeType {
 	T1
 	T2
+	Lite
+	APY
+	CG
+	SG
+	CCG
 }
 
 type NPS
