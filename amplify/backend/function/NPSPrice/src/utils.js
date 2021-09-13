@@ -12,7 +12,6 @@ const yearFull = today.getFullYear();
 const fileName = `NAV_File_${date}${month}${yearFull}`;
 const apiArray = [
   {
-    typeExchg: "NSE",
     fileName: `${fileName}.out`,
     url: `https://npscra.nsdl.co.in/download/${fileName}.zip`,
   },

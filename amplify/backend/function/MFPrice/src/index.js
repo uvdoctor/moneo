@@ -53,7 +53,9 @@ const getData = () => {
         count = 0;
       }
     });
-
+    if (count < 25) {
+      batchRecords.push(batches);
+    }
     resolve(batchRecords);
   });
 };

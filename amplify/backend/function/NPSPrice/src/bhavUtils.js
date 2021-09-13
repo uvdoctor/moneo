@@ -2,7 +2,6 @@
 const https = require("https");
 const fs = require("fs");
 const fsPromise = require("fs/promises");
-const txtToJson = require("txt-file-to-json");
 const { rmdir } = fsPromise;
 const extract = require("extract-zip");
 const split = require("split");
@@ -50,7 +49,7 @@ const unzipDownloads = async (zipFile, tempDir) => {
   }
 };
 
-const getDataFromTxtFile = async(tempDir, fileName, calc) => {
+const getDataFromTxtFile = async (tempDir, fileName, calc,table) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
     let batchRecords = [];
@@ -69,7 +68,11 @@ const getDataFromTxtFile = async(tempDir, fileName, calc) => {
           type: calc.calcType(name),
           subt: calc.calcSubType(name),
           price: nav,
-        };
+          createdAt:new Date().toISOString(),
+          updatedAt:new Date().toISOString(),
+          __typename = table.slice(0, table.indexOf("-"))
+        }
+
         batches.push({ PutRequest: { Item: schema } });
         count++;
         if (count === 25) {
@@ -79,8 +82,8 @@ const getDataFromTxtFile = async(tempDir, fileName, calc) => {
         }
       })
       .on("end", async () => {
-        if(count<25){
-          batchRecords.push(batches)
+        if (count < 25) {
+          batchRecords.push(batches);
         }
         await cleanDirectory(
           tempDir,
@@ -99,14 +102,26 @@ const getDataFromTxtFile = async(tempDir, fileName, calc) => {
   return await end;
 };
 
-//   const dataInJSON = txtToJson({ filePath: `${tempDir}/${fileName}` });
-//   return dataInJSON;
-// };
+const pushData = async (data, table, index) => {
+  return new Promise(async (resolve, reject) => {
+    var params = {
+      RequestItems: {
+        [table]: data,
+      },
+    };
+    try {
+      const updateRecord = await docClient.batchWrite(params).promise();
+      resolve(updateRecord);
+    } catch (error) {
+      reject(`Error in dynamoDB: ${JSON.stringify(error)}, ${index}`);
+    }
+  });
+};
 
 module.exports = {
   downloadZip,
   unzipDownloads,
   cleanDirectory,
   getDataFromTxtFile,
-  // pushData,
+  pushData,
 };

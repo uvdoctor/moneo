@@ -9,7 +9,12 @@
     "axios": "latest",
     "extract-zip": "latest",
     "split": "latest",
-    "txt-file-to-json": "latest",
     "url": "latest"
+  },
+  "devDependencies": {
+    "jest": "^27.2.0"
+  },
+  "scripts": {
+    "test": "jest --config ../jest.config.json"
   }
 }

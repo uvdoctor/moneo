@@ -21,12 +21,15 @@ const getAndPushData = () => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const { fileName, url, codes } = apiArray[i];
+        const { fileName, url } = apiArray[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
-        const data = await getDataFromTxtFile(tempDir, fileName, calc);
-        console.log(data);
+        const data = await getDataFromTxtFile(tempDir, fileName, calc, table);
+
+        for (let batch in data) {
+          await pushData(data[batch], table, batch);
+        }
       } catch (err) {
         reject(err);
       }
@@ -35,7 +38,7 @@ const getAndPushData = () => {
   });
 };
 
-getAndPushData();
-// exports.handler = async (event) => {
-//   return await getAndPushData();
-// };
+// getAndPushData();
+exports.handler = async (event) => {
+  return await getAndPushData();
+};
