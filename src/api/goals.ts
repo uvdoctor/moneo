@@ -1070,6 +1070,11 @@ export enum NPSPFM {
 export enum NPSSchemeType {
   T1 = "T1",
   T2 = "T2",
+  Lite = "Lite",
+  APY = "APY",
+  CG = "CG",
+  SG = "SG",
+  CCG = "CCG",
 }
 
 
