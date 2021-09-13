@@ -20,12 +20,12 @@ const calc = {
       name.includes(" C") ||
       name.includes(" G") ||
       name.includes("LITE") ||
-      name.includes("APY")
+      name.includes("APY") ||
+      name.includes(" A")
     )
       return "F";
-    if (name.includes(" A")) return "A";
+    if (name.includes("TAX")) return "H";
     if (name.includes(" E")) return "E";
-    // NPS TRUST A/C-SBI PENSION FUND SCHEME TAX SAVER TIER II
   },
   calcSubType: (name) => {
     if (name.includes("STATE")) return "GBO";
@@ -33,10 +33,8 @@ const calc = {
     if (name.includes(" C") || name.includes("CORPORATE-CG")) return "CB";
     if (name.includes("LITE")) return "HB";
     if (name.includes(" E")) return "S";
-    //   name.includes("APY")
-    // if (name.includes("A")) return "A";
-
-    // NPS TRUST A/C-SBI PENSION FUND SCHEME TAX SAVER TIER II
+    if (name.includes("APY") || name.includes(" A") || name.includes("TAX"))
+      return "HB";
   },
 };
 
