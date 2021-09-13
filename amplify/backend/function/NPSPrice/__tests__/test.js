@@ -52,42 +52,58 @@ describe("Test PFM Scheme Type", () => {
   });
 });
 
-// describe("Test Asset Type", () => {
-//   test("Fixed in Case of ETF - BSE", () => {
-//     const data = calc["BSE"].calcType("Q", "B", "NETFNIF100");
-//     expect(data).toEqual("F");
-//   });
-//   test("Fixed in Case of Gold - BSE", () => {
-//     const data = calc["BSE"].calcType("Q", "E", "AXISGOLD");
-//     expect(data).toEqual("F");
-//   });
-//   test("Alternative - BSE", () => {
-//     const data = calc["BSE"].calcType("Q", "IF", "INDIGRID");
-//     expect(data).toEqual("A");
-//   });
-//   test("Equity - BSE", () => {
-//     const data = calc["BSE"].calcType("Q", "A", "KOTAK MAH.BK");
-//     expect(data).toEqual("E");
-//   });
-// });
+describe("Test Asset Type", () => {
+  test("Fixed in case of C", () => {
+    const data = calc.calcType(
+      "ADITYA BIRLA SUNLIFE PENSION FUND SCHEME C - TIER II"
+    );
+    expect(data).toEqual("F");
+  });
+  test("Fixed in case of State", () => {
+    const data = calc.calcType(
+      "UTI RETIREMENT SOLUTIONS PENSION FUND SCHEME- STATE GOVT"
+    );
+    expect(data).toEqual("F");
+  });
+  test("Hybrid", () => {
+    const data = calc.calcType(
+      "ADITYA BIRLA SUN LIFE PENSION FUND SCHEME TAX SAVER TIER II"
+    );
+    expect(data).toEqual("H");
+  });
+  test("Equity", () => {
+    const data = calc.calcType(
+      "HDFC PENSION MANAGEMENT COMPANY LIMITED SCHEME E - TIER I"
+    );
+    expect(data).toEqual("E");
+  });
+});
 
-// describe("Test Asset Subtype", () => {
-//   test("Liquid - BSE", () => {
-//     const data = calc["BSE"].calcSubType("Q", "F", "LIQUIDBEES");
-//     expect(data).toEqual("L");
-//   });
-//   test("Index - BSE", () => {
-//     const data = calc["BSE"].calcSubType("Q", "B", "LICNETFSEN");
-//     expect(data).toEqual("I");
-//   });
-//   test("Other Gov. Bond - BSE", () => {
-//     const data = calc["BSE"].calcSubType("Q", "F", "ABDBSPDG");
-//     expect(data).toEqual("GBO");
-//   });
-//   test("Gold Bond - BSE", () => {
-//     const data = calc["BSE"].calcSubType("B", "G", "SGBFEB27");
-//     expect(data).toEqual("GoldB");
-//   });
-// });
-
-
+describe("Test Asset Subtype", () => {
+  test("Other Gov. Bond", () => {
+    const data = calc.calcSubType(
+      "UTI RETIREMENT SOLUTIONS PENSION FUND SCHEME- STATE GOVT"
+    );
+    expect(data).toEqual("GBO");
+  });
+  test("Gov. Bond", () => {
+    const data = calc.calcSubType(
+      "ICICI PRUDENTIAL PENSION FUND SCHEME G - TIER II"
+    );
+    expect(data).toEqual("GB");
+  });
+  test("Corporate Bond", () => {
+    const data = calc.calcSubType(
+      "ICICI PRUDENTIAL PENSION FUND SCHEME C - TIER I"
+    );
+    expect(data).toEqual("CB");
+  });
+  test("Hybrid Bond", () => {
+    const data = calc.calcSubType("KOTAK PENSION FUND SCHEME A - TIER II");
+    expect(data).toEqual("HB");
+  });
+  test("Stock", () => {
+    const data = calc.calcSubType("KOTAK PENSION FUND SCHEME E - TIER II");
+    expect(data).toEqual("S");
+  });
+});

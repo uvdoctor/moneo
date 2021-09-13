@@ -1,7 +1,7 @@
 const tempDir = `/tmp/temp`;
 const zipFile = `${tempDir}/download.zip`;
 const today = new Date();
-const todayDate = today.getDate() - 1;
+const todayDate = today.getDate();
 const date = todayDate < 10 ? `0${todayDate}` : todayDate;
 
 const month =
