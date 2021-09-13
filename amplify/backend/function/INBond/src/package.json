@@ -6,9 +6,15 @@
   "license": "Apache-2.0",
   "dependencies": {
     "aws-sdk": "latest",
-    "url": "latest",
+    "axios": "latest",
     "csv-parser": "latest",
     "extract-zip": "latest",
-    "axios": "latest"
+    "url": "latest"
+  },
+  "scripts": {
+    "test": "jest --config ../jest.config.json"
+  },
+  "devDependencies": {
+    "jest": "^27.1.1"
   }
 }
