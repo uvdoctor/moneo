@@ -13,7 +13,7 @@ const getType = (element) => {
     (type.includes("Index") && (name.includes("Gilt") || name.includes("Bond")))
   )
     return "F";
-  if (type.includes("Other") && type.includes("Index")) return "E";
+  if (type.includes("Index") && type.includes("Other")) return "E";
   if (type.includes("Other")) return "A";
   return "E";
 };
