@@ -12,7 +12,7 @@ const bhaoUtils = require("./bhavUtils");
 const calc = require("./calculate");
 const { downloadZip, unzipDownloads, cleanDirectory, getDataFromTxtFile } =
   bhaoUtils;
-const table = "INExchg-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
+const table = "NPSPrice-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {

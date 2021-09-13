@@ -1,4 +1,56 @@
-// const calc = require("../src/calculate");
+const calc = require("../src/calculate");
+
+describe("Test PFM Initial Letter", () => {
+  test("Any", () => {
+    const data = calc.calcPFM(
+      "ADITYA BIRLA SUNLIFE PENSION FUND SCHEME C - TIER II"
+    );
+    expect(data).toEqual("A");
+  });
+});
+
+describe("Test PFM Scheme Type", () => {
+  test("Tier I", () => {
+    const data = calc.calcST(
+      "HDFC PENSION MANAGEMENT COMPANY LIMITED SCHEME E - TIER I"
+    );
+    expect(data).toEqual("T1");
+  });
+  test("Tier II", () => {
+    const data = calc.calcST(
+      "ICICI PRUDENTIAL PENSION FUND SCHEME A - TIER II"
+    );
+    expect(data).toEqual("T2");
+  });
+  test("LITE", () => {
+    const data = calc.calcST(
+      "NPS TRUST A/C-KOTAK MAHINDRA PENSION FUND LIMITED- NPS LITE SCHEME - GOVT. PATTERN"
+    );
+    expect(data).toEqual("Lite");
+  });
+  test("APY", () => {
+    const data = calc.calcST(
+      "NPS TRUST - A/C LIC PENSION FUND SCHEME - ATAL PENSION YOJANA (APY)"
+    );
+    expect(data).toEqual("APY");
+  });
+  test("Central Gov.", () => {
+    const data = calc.calcST("LIC PENSION FUND SCHEME - CENTRAL GOVT");
+    expect(data).toEqual("CG");
+  });
+  test("State Gov.", () => {
+    const data = calc.calcST(
+      "UTI RETIREMENT SOLUTIONS PENSION FUND SCHEME- STATE GOVT"
+    );
+    expect(data).toEqual("SG");
+  });
+  test("Corporate Gov.", () => {
+    const data = calc.calcST(
+      "UTI RETIREMENT SOLUTIONS PENSION FUND SCHEME - CORPORATE-CG"
+    );
+    expect(data).toEqual("CCG");
+  });
+});
 
 // describe("Test Asset Type", () => {
 //   test("Fixed in Case of ETF - BSE", () => {
@@ -38,29 +90,4 @@
 //   });
 // });
 
-// // describe("Test Asset InsType", () => {
-// //   test("ETF - BSE", () => {
-// //     const data = calc["BSE"].calcInsType("Q", "E", "IDBIGOLD");
-// //     expect(data).toEqual("ETF");
-// //   });
-// //   test("REIT - BSE", () => {
-// //     const data = calc["BSE"].calcInsType("Q", "IF", "MINDSPACE");
-// //     expect(data).toEqual("REIT");
-// //   });
-// //   test("InvIT - BSE", () => {
-// //     const data = calc["BSE"].calcInsType("Q", "IF", "INDIGRID");
-// //     expect(data).toEqual("InvIT");
-// //   });
-// //   test("ETF - NSE", () => {
-// //     const data = calc["NSE"].calcInsType("EQ", "", "AXISTECETF");
-// //     expect(data).toEqual("ETF");
-// //   });
-// //   test("REIT - NSE", () => {
-// //     const data = calc["NSE"].calcInsType("RR", "", "BIRET");
-// //     expect(data).toEqual("REIT");
-// //   });
-// //   test("InvIT - NSE", () => {
-// //     const data = calc["NSE"].calcInsType("IV", "", "IRBINVIT");
-// //     expect(data).toEqual("InvIT");
-// //   });
-// // });
+
