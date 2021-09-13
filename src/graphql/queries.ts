@@ -170,6 +170,333 @@ export const listFamilys = /* GraphQL */ `
     }
   }
 `;
+export const getFeedback = /* GraphQL */ `
+  query GetFeedback($id: ID!) {
+    getFeedback(id: $id) {
+      id
+      type
+      email
+      name {
+        fn
+        ln
+      }
+      feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFeedbacks = /* GraphQL */ `
+  query ListFeedbacks(
+    $filter: ModelFeedbackFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        email
+        name {
+          fn
+          ln
+        }
+        feedback
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getRating = /* GraphQL */ `
+  query GetRating($id: ID!) {
+    getRating(id: $id) {
+      id
+      type
+      rating
+      feedbackId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRatings = /* GraphQL */ `
+  query ListRatings(
+    $filter: ModelRatingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRatings(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        rating
+        feedbackId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getRegistration = /* GraphQL */ `
+  query GetRegistration($email: String!) {
+    getRegistration(email: $email) {
+      email
+      status
+      code
+      country
+      lat
+      long
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRegistrations = /* GraphQL */ `
+  query ListRegistrations(
+    $email: String
+    $filter: ModelRegistrationFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listRegistrations(
+      email: $email
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        email
+        status
+        code
+        country
+        lat
+        long
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getInExchg = /* GraphQL */ `
+  query GetInExchg($id: String!) {
+    getINExchg(id: $id) {
+      id
+      sid
+      name
+      exchg
+      type
+      subt
+      itype
+      price
+      prev
+      mcap
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInExchgs = /* GraphQL */ `
+  query ListInExchgs(
+    $id: String
+    $filter: ModelINExchgFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINExchgs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        name
+        exchg
+        type
+        subt
+        itype
+        price
+        prev
+        mcap
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getInBond = /* GraphQL */ `
+  query GetInBond($id: String!) {
+    getINBond(id: $id) {
+      id
+      sid
+      name
+      subt
+      price
+      exchg
+      sm
+      sy
+      mm
+      my
+      rate
+      fr
+      tf
+      fv
+      cr
+      crstr
+      ytm
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInBonds = /* GraphQL */ `
+  query ListInBonds(
+    $id: String
+    $filter: ModelINBondFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINBonds(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        name
+        subt
+        price
+        exchg
+        sm
+        sy
+        mm
+        my
+        rate
+        fr
+        tf
+        fv
+        cr
+        crstr
+        ytm
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getInMutual = /* GraphQL */ `
+  query GetInMutual($id: String!) {
+    getINMutual(id: $id) {
+      id
+      sid
+      tid
+      dir
+      name
+      type
+      subt
+      price
+      mftype
+      mcap
+      tf
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInMutuals = /* GraphQL */ `
+  query ListInMutuals(
+    $id: String
+    $filter: ModelINMutualFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINMutuals(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        tid
+        dir
+        name
+        type
+        subt
+        price
+        mftype
+        mcap
+        tf
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getNps = /* GraphQL */ `
+  query GetNps($id: String!) {
+    getNPS(id: $id) {
+      id
+      pfm
+      st
+      name
+      type
+      subt
+      price
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listNpSs = /* GraphQL */ `
+  query ListNpSs(
+    $id: String
+    $filter: ModelNPSFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listNPSs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        pfm
+        st
+        name
+        type
+        subt
+        price
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getHoldings = /* GraphQL */ `
   query GetHoldings($id: ID!) {
     getHoldings(id: $id) {
@@ -616,288 +943,6 @@ export const listHoldingss = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-      }
-      nextToken
-    }
-  }
-`;
-export const getFeedback = /* GraphQL */ `
-  query GetFeedback($id: ID!) {
-    getFeedback(id: $id) {
-      id
-      type
-      email
-      name {
-        fn
-        ln
-      }
-      feedback
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listFeedbacks = /* GraphQL */ `
-  query ListFeedbacks(
-    $filter: ModelFeedbackFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        type
-        email
-        name {
-          fn
-          ln
-        }
-        feedback
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getRating = /* GraphQL */ `
-  query GetRating($id: ID!) {
-    getRating(id: $id) {
-      id
-      type
-      rating
-      feedbackId
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listRatings = /* GraphQL */ `
-  query ListRatings(
-    $filter: ModelRatingFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listRatings(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        type
-        rating
-        feedbackId
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getRegistration = /* GraphQL */ `
-  query GetRegistration($email: String!) {
-    getRegistration(email: $email) {
-      email
-      status
-      code
-      country
-      lat
-      long
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listRegistrations = /* GraphQL */ `
-  query ListRegistrations(
-    $email: String
-    $filter: ModelRegistrationFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listRegistrations(
-      email: $email
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        email
-        status
-        code
-        country
-        lat
-        long
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getInExchg = /* GraphQL */ `
-  query GetInExchg($id: String!) {
-    getINExchg(id: $id) {
-      id
-      sid
-      name
-      exchg
-      type
-      subt
-      itype
-      price
-      prev
-      mcap
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInExchgs = /* GraphQL */ `
-  query ListInExchgs(
-    $id: String
-    $filter: ModelINExchgFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listINExchgs(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        sid
-        name
-        exchg
-        type
-        subt
-        itype
-        price
-        prev
-        mcap
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getInBond = /* GraphQL */ `
-  query GetInBond($id: String!) {
-    getINBond(id: $id) {
-      id
-      sid
-      name
-      subt
-      price
-      exchg
-      sm
-      sy
-      mm
-      my
-      rate
-      fr
-      tf
-      fv
-      cr
-      crstr
-      ytm
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInBonds = /* GraphQL */ `
-  query ListInBonds(
-    $id: String
-    $filter: ModelINBondFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listINBonds(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        sid
-        name
-        subt
-        price
-        exchg
-        sm
-        sy
-        mm
-        my
-        rate
-        fr
-        tf
-        fv
-        cr
-        crstr
-        ytm
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getInMutual = /* GraphQL */ `
-  query GetInMutual($id: String!) {
-    getINMutual(id: $id) {
-      id
-      sid
-      tid
-      dir
-      name
-      type
-      subt
-      price
-      mftype
-      mcap
-      tf
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInMutuals = /* GraphQL */ `
-  query ListInMutuals(
-    $id: String
-    $filter: ModelINMutualFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listINMutuals(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        sid
-        tid
-        dir
-        name
-        type
-        subt
-        price
-        mftype
-        mcap
-        tf
-        createdAt
-        updatedAt
       }
       nextToken
     }

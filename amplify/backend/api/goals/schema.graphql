@@ -266,6 +266,40 @@ type INMutual
 	tf: YN
 }
 
+enum NPSPFM {
+	L
+	H
+	S
+	A
+	I
+	U
+	K
+}
+
+enum NPSSchemeType {
+	T1
+	T2
+}
+
+type NPS
+	@model
+	@aws_iam
+	@key(fields: ["id"])
+	@auth(
+		rules: [
+			{ allow: private, provider: iam, operations: [create, read, update, delete] }
+			{ allow: private, operations: [read] }
+		]
+	) {
+	id: String!
+	pfm: NPSPFM!
+	st: NPSSchemeType!
+	name: String!
+	type: AssetType!
+	subt: AssetSubType!
+	price: Float!
+}
+
 type Family @model @auth(rules: [{ allow: owner }]) {
 	id: ID!
 	tid: String!
@@ -355,7 +389,7 @@ enum MFSchemeType {
 	I
 }
 
-type Holdings @model @auth(rules: [{ allow: owner }]) {
+type Holdings @model @aws_iam @auth(rules: [{ allow: owner }, { allow: private, provider: iam, operations: [read] }]) {
 	id: ID!
 	instruments: [Holding!]
 	deposits: [Deposit!]
@@ -376,7 +410,7 @@ type Holdings @model @auth(rules: [{ allow: owner }]) {
 	other: [Holding!]
 }
 
-type EODPrices 
+type EODPrices
 	@model
 	@aws_iam
 	@key(fields: ["id"])

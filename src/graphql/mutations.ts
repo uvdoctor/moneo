@@ -1451,6 +1451,60 @@ export const deleteInMutual = /* GraphQL */ `
     }
   }
 `;
+export const createNps = /* GraphQL */ `
+  mutation CreateNps(
+    $input: CreateNPSInput!
+    $condition: ModelNPSConditionInput
+  ) {
+    createNPS(input: $input, condition: $condition) {
+      id
+      pfm
+      st
+      name
+      type
+      subt
+      price
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateNps = /* GraphQL */ `
+  mutation UpdateNps(
+    $input: UpdateNPSInput!
+    $condition: ModelNPSConditionInput
+  ) {
+    updateNPS(input: $input, condition: $condition) {
+      id
+      pfm
+      st
+      name
+      type
+      subt
+      price
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteNps = /* GraphQL */ `
+  mutation DeleteNps(
+    $input: DeleteNPSInput!
+    $condition: ModelNPSConditionInput
+  ) {
+    deleteNPS(input: $input, condition: $condition) {
+      id
+      pfm
+      st
+      name
+      type
+      subt
+      price
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createEodPrices = /* GraphQL */ `
   mutation CreateEodPrices(
     $input: CreateEODPricesInput!

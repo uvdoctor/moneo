@@ -18,7 +18,7 @@
       "function": {
         "insprice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/insprice-43366b76456c4b75736c-build.zip"
+          "s3Key": "amplify-builds/insprice-32654e6257386f676b79-build.zip"
         },
         "EODPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
@@ -38,6 +38,10 @@
         "moneobhavutils": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/moneobhavutils-LambdaLayerVersion5840b7da-build.zip"
+        },
+        "NPSPrice": {
+          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
+          "s3Key": "amplify-builds/NPSPrice-3054455375764c485975-build.zip"
         }
       }
     }
