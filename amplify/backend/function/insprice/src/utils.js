@@ -1,3 +1,5 @@
+const { dom } = require("@fortawesome/fontawesome-svg-core");
+
 const tempDir = `/tmp/temp`;
 const zipFile = `${tempDir}/download.zip`;
 const monthsArray = [

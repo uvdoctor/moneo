@@ -41,7 +41,7 @@
         },
         "NPSPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/NPSPrice-6a58507a4e6d676c3570-build.zip"
+          "s3Key": "amplify-builds/NPSPrice-62676e53314c556f5663-build.zip"
         }
       }
     }
