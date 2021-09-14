@@ -82,8 +82,7 @@ const extractDataFromCSV = async (
           );
           if (!updateSchema) return;
           const dataToPush = JSON.parse(JSON.stringify(updateSchema));
-          batches.push({DeleteRequest:{Keys:{id :dataToPush.id}}})
-          // batches.push({ PutRequest: { Item: dataToPush } });
+          batches.push({ PutRequest: { Item: dataToPush } });
 
           count++;
           if (count === 25) {
@@ -116,7 +115,7 @@ const extractDataFromCSV = async (
 
 const pushData = async (data, table, instrumentList, index) => {
   return new Promise(async (resolve, reject) => {
-    // data.map((item) => instrumentList.push(item.PutRequest.Item.id));
+    data.map((item) => instrumentList.push(item.PutRequest.Item.id));
     var params = {
       RequestItems: {
         [table]: data,
