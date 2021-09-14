@@ -6,7 +6,6 @@ let todayDate;
 const getFile = (num) => {
   todayDate = today.getDate() - `${num}`;
   const date = todayDate < 10 ? `0${todayDate}` : todayDate;
-
   const month =
     today.getMonth() + 1 < 10
       ? `0${today.getMonth() + 1}`
@@ -16,7 +15,7 @@ const getFile = (num) => {
   return fileName;
 };
 
-const apiArray =(fileName)=> [
+const apiArray = (fileName) => [
   {
     fileName: `${fileName}.out`,
     url: `https://npscra.nsdl.co.in/download/${fileName}.zip`,
