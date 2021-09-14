@@ -7,7 +7,7 @@ const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const utils = require("./utils");
-const { tempDir, zipFile, apiArray } = utils;
+const { tempDir, zipFile, apiArray, getFile } = utils;
 const bhaoUtils = require("./bhavUtils");
 const calc = require("./calculate");
 const {
@@ -19,14 +19,15 @@ const {
 } = bhaoUtils;
 const table = "NPS-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 
-const getAndPushData = () => {
+const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < apiArray.length; i++) {
       try {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const { fileName, url } = apiArray[i];
+        const file = getFile(diff);
+        const { fileName, url } = apiArray(file)[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
@@ -44,5 +45,5 @@ const getAndPushData = () => {
 };
 
 exports.handler = async (event) => {
-  return await getAndPushData();
+  return await getAndPushData(event.diff);
 };
