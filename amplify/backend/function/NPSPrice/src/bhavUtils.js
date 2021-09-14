@@ -116,6 +116,7 @@ const pushData = (data, table, index) => {
       reject(`Error in dynamoDB: ${JSON.stringify(error)}, ${index}`);
     }
   });
+  
 };
 
 module.exports = {

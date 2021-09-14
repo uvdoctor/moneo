@@ -43,7 +43,6 @@ const getAndPushData = () => {
   });
 };
 
-getAndPushData();
 exports.handler = async (event) => {
   return await getAndPushData();
 };
