@@ -116,7 +116,7 @@ const extractDataFromCSV = async (
 
 const pushData = async (data, table, instrumentList, index) => {
   return new Promise(async (resolve, reject) => {
-    data.map((item) => instrumentList.push(item.PutRequest.Item.id));
+    // data.map((item) => instrumentList.push(item.PutRequest.Item.id));
     var params = {
       RequestItems: {
         [table]: data,
