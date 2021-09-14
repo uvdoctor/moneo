@@ -22,7 +22,7 @@
         },
         "EODPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/EODPrice-773655724130484f6975-build.zip",
+          "s3Key": "amplify-builds/EODPrice-454467584a5143396a62-build.zip",
           "apiGoalsGraphqlapiidoutput": "",
           "apiGoalsGraphqlapiendpointoutput": "",
           "eodApiKey": "611a020d72d487.59800610,611a01dc0083c5.19670434,611a0115bd4cd5.84750550,60d03a689523a3.63944368"
@@ -41,7 +41,7 @@
         },
         "NPSPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/NPSPrice-526e3133583035557837-build.zip"
+          "s3Key": "amplify-builds/NPSPrice-766d426c6d7949355956-build.zip"
         }
       },
       "interactions": {
