@@ -6,7 +6,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "aws-sdk": "latest",
-    "axios": "latest",
     "csv-parser": "latest",
     "extract-zip": "latest",
     "url": "latest"
