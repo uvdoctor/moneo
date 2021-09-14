@@ -43,6 +43,7 @@ export const GOLD = 'GC';
 export const SILVER = 'SI';
 export const PLATINUM = 'PL';
 export const PALLADIUM = 'PA';
+export const DIAMOND = 'DIAM';
 export const BTC = 'BTC';
 export const BTC_CASH = 'BCH';
 export const ETHEREUM = 'ETH';
@@ -177,17 +178,21 @@ function NWContextProvider() {
 						[PALLADIUM]: {
 							'100': 'Pure',
 							'95': '95%',
-							'90%': '90%',
+							'90': '90%',
 							'85': '85%',
 							'80': '80%',
 							'50': '50%'
+						},
+						[DIAMOND]: {
+
 						}
 					},
 					categoryOptions: {
 						[AssetSubType.Gold]: 'Gold',
 						[SILVER]: 'Silver',
 						[PLATINUM]: 'Platinum',
-						[PALLADIUM]: 'Palladium'
+						[PALLADIUM]: 'Palladium',
+						[DIAMOND]: 'Diamond'
 					},
 					viewComp: ViewHoldingInput,
 				}
