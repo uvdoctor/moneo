@@ -13,6 +13,14 @@ const awsmobile = {
     "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
     "aws_user_files_s3_bucket": "goal-images204906-newdev",
     "aws_user_files_s3_bucket_region": "us-east-1",
+    "aws_bots": "enable",
+    "aws_bots_config": [
+        {
+            "name": "ScheduleAppointment_newdev",
+            "alias": "$LATEST",
+            "region": "us-east-1"
+        }
+    ],
     "aws_cloud_logic_custom": [
         {
             "name": "AdminQueries",
