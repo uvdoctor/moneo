@@ -49,7 +49,7 @@ const unzipDownloads = async (zipFile, tempDir) => {
   }
 };
 
-const getDataFromTxtFile = async (tempDir, fileName, calc,table) => {
+const getDataFromTxtFile = async (tempDir, fileName, calc, table) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
     let batchRecords = [];
@@ -58,7 +58,9 @@ const getDataFromTxtFile = async (tempDir, fileName, calc,table) => {
       .pipe(split())
       .on("data", (record) => {
         const data = record.split(",");
-        const [date, pensionNo, fundMng, id, name, nav] = data;
+        const id = data[3];
+        const name = data[4];
+        const nav = data[5];
         if (!id) return;
         const schema = {
           id: id,
@@ -68,10 +70,10 @@ const getDataFromTxtFile = async (tempDir, fileName, calc,table) => {
           type: calc.calcType(name),
           subt: calc.calcSubType(name),
           price: nav,
-          createdAt:new Date().toISOString(),
-          updatedAt:new Date().toISOString(),
-          __typename : table.slice(0, table.indexOf("-"))
-        }
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          __typename: table.slice(0, table.indexOf("-")),
+        };
 
         batches.push({ PutRequest: { Item: schema } });
         count++;
@@ -116,7 +118,6 @@ const pushData = (data, table, index) => {
       reject(`Error in dynamoDB: ${JSON.stringify(error)}, ${index}`);
     }
   });
-  
 };
 
 module.exports = {
