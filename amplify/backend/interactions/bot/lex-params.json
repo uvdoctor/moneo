@@ -36,11 +36,11 @@
             "newSlotTypes": [
                 {
                     "slotType": "AppointmentTypeValue",
-                    "slotTypeDescription": "Type of dentist appointment to schedule",
+                    "slotTypeDescription": "Type of financial planner appointment to schedule",
                     "slotValues": [
-                        "cleaning",
-                        "whitening",
-                        "root canal"
+                        "investment",
+                        "retirement",
+                        "insurance"
                     ]
                 }
             ]
