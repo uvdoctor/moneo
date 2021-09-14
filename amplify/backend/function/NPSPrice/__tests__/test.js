@@ -1,11 +1,23 @@
 const calc = require("../src/calculate");
 
 describe("Test PFM Initial Letter", () => {
-  test("Any", () => {
+  test("ADITYA", () => {
     const data = calc.calcPFM(
       "ADITYA BIRLA SUNLIFE PENSION FUND SCHEME C - TIER II"
     );
     expect(data).toEqual("A");
+  });
+  test("SBI", () => {
+    const data = calc.calcPFM(
+      "NPS TRUST A/C-SBI PENSION FUNDS PRIVATE LIMITED- NPS LITE SCHEME - GOVT. PATTERN"
+    );
+    expect(data).toEqual("S");
+  });
+  test("LIC", () => {
+    const data = calc.calcPFM(
+      "NPS TRUST A/C-LIC PENSION FUND LIMITED- NPS LITE SCHEME - GOVT. PATTERN"
+    );
+    expect(data).toEqual("L");
   });
 });
 

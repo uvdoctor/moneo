@@ -1,7 +1,12 @@
 const calc = {
   calcPFM: (name) => {
-    const firstChar = name[0];
-    return firstChar;
+    if (name.includes("LIC")) return "L";
+    if (name.includes("HDFC")) return "H";
+    if (name.includes("SBI")) return "S";
+    if (name.includes("ADITYA")) return "A";
+    if (name.includes("ICICI")) return "I";
+    if (name.includes("UTI")) return "U";
+    if (name.includes("KOTAK")) return "K";
   },
   calcST: (name) => {
     if (name.includes("TIER II")) return "T2";
