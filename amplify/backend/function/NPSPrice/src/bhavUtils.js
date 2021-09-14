@@ -1,4 +1,4 @@
-// const docClient = require("/opt/nodejs/insertIntoDB");
+const docClient = require("/opt/nodejs/insertIntoDB");
 const https = require("https");
 const fs = require("fs");
 const fsPromise = require("fs/promises");
@@ -70,7 +70,7 @@ const getDataFromTxtFile = async (tempDir, fileName, calc,table) => {
           price: nav,
           createdAt:new Date().toISOString(),
           updatedAt:new Date().toISOString(),
-          __typename = table.slice(0, table.indexOf("-"))
+          __typename : table.slice(0, table.indexOf("-"))
         }
 
         batches.push({ PutRequest: { Item: schema } });
@@ -102,7 +102,7 @@ const getDataFromTxtFile = async (tempDir, fileName, calc,table) => {
   return await end;
 };
 
-const pushData = async (data, table, index) => {
+const pushData = (data, table, index) => {
   return new Promise(async (resolve, reject) => {
     var params = {
       RequestItems: {

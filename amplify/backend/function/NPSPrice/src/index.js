@@ -10,8 +10,13 @@ const utils = require("./utils");
 const { tempDir, zipFile, apiArray } = utils;
 const bhaoUtils = require("./bhavUtils");
 const calc = require("./calculate");
-const { downloadZip, unzipDownloads, cleanDirectory, getDataFromTxtFile } =
-  bhaoUtils;
+const {
+  downloadZip,
+  unzipDownloads,
+  cleanDirectory,
+  getDataFromTxtFile,
+  pushData,
+} = bhaoUtils;
 const table = "NPS-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 
 const getAndPushData = () => {
@@ -38,7 +43,7 @@ const getAndPushData = () => {
   });
 };
 
-// getAndPushData();
+getAndPushData();
 exports.handler = async (event) => {
   return await getAndPushData();
 };
