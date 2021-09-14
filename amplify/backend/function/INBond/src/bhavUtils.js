@@ -82,7 +82,8 @@ const extractDataFromCSV = async (
           );
           if (!updateSchema) return;
           const dataToPush = JSON.parse(JSON.stringify(updateSchema));
-          batches.push({ PutRequest: { Item: dataToPush } });
+          batches.push({DeleteRequest:{Keys:{id :dataToPush.id}}})
+          // batches.push({ PutRequest: { Item: dataToPush } });
 
           count++;
           if (count === 25) {
