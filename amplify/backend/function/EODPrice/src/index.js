@@ -8,15 +8,16 @@ const eodData = require("./eodData");
 const apiListData = require("./apiList");
 
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
-const { getData, pushData } = eodData;
+const { getData, pushData, getDiamondPrice } = eodData;
 const table = "EODPrices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 
 const eodPrice = () => {
   return new Promise(async (resolve, reject) => {
     let batchRecords = [];
     let batches = [];
-    let idsToLog = []
+    let idsToLog = [];
     let count = 0;
+    await getDiamondPrice(batches, table);
     await Promise.all(
       apiToCall.map(async (element) => {
         let { code, close } = await getData(element, 0);
@@ -41,7 +42,7 @@ const eodPrice = () => {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
-        idsToLog.push(code)
+        idsToLog.push(code);
         batches.push({ PutRequest: { Item: dataToPush } });
 
         count++;
