@@ -1,25 +1,60 @@
 .client-testimonials {
 	margin: 10px 0;
 
+	& .client-details {
+		padding-top: 30px;
+		text-align: center;
+	}
+
+	& .dd-content {
+		min-height: 595px;
+		/*background: url("/images/fi-bg.jpg") right center no-repeat;*/
+
+		& .ant-avatar {
+			position: absolute;
+			box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+			top: 10px;
+			margin-left: -60px;
+		}
+	}
+
 	& h2 {
-		margin-bottom: 30px;
+		margin-bottom: 5px;
 	}
 
 	& .rec-carousel-wrapper {
 		padding: 0;
 	}
+
+	& .fa-quote-right,
+	& .fa-quote-left {
+		color: #cbe6bf;
+		font-size: 40px;
+	}
+
+	& .fa-quote-left {
+		margin-right: 20px;
+		margin-bottom: 10px;
+	}
+
+	& .fa-quote-right {
+		margin-left: 20px;
+		margin-top: 10px;
+		float: right;
+	}
 }
 
 .client-testimonial {
 	width: 96%;
-	min-height: 400px;
-	background: #ebf6e6;
-	background-image: linear-gradient(to top, #f0f2f5, #ebf6e6);
-	border-radius: 6px;
+	min-height: 360px;
+	background: rgba(255, 255, 255, 1);
+	border-top-right-radius: 40px;
+	border-bottom-left-radius: 40px;
 	border: #f0f2f5 1px solid;
 	box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-	padding: 30px;
 	margin-bottom: 10px;
+	margin-top: 80px;
+	padding: 30px 80px;
 
 	&:focus {
 		outline: #a3e975 auto 1px;
@@ -30,13 +65,19 @@
 	}
 
 	& h3 {
+		color: @primary-color;
+		font-size: 22px;
 		font-weight: bold;
-		margin-bottom: 2px;
+		margin-bottom: 0;
 	}
 
 	& h4 {
 		color: rgba(0, 0, 0, 0.5);
-		font-style: italic;
+	}
+
+	& > p {
+		margin-top: 35px;
+		padding-bottom: 30px;
 	}
 }
 
