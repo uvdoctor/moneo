@@ -15,10 +15,11 @@ const {
   extractDataFromCSV,
   cleanDirectory,
   pushData,
+  addMetaData,
 } = bhaoUtils;
 const table = "INExchg-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
-const instrumentList = [];
-
+let exchgData = [];
+const isinMap = {};
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < apiArray.length; i++) {
@@ -41,20 +42,22 @@ const getAndPushData = (diff) => {
           codes,
           schema,
           calcSchema,
-          instrumentList,
-          table
+          table,
+          isinMap
         );
-        for (let batch in data) {
-          await pushData(data[batch], table, instrumentList, batch);
-        }
+        exchgData = exchgData.concat(data);
       } catch (err) {
         reject(err);
       }
     }
-    resolve();
+    resolve(exchgData);
   });
 };
 
 exports.handler = async (event) => {
-  return await getAndPushData(event.diff);
+  const exchgData = await getAndPushData(event.diff);
+  const data = await addMetaData(exchgData);
+  for (let batch in data) {
+    await pushData(data[batch], table, batch);
+  }
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Row, Col } from "antd";
+import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { faQuoteLeft, faQuoteRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
