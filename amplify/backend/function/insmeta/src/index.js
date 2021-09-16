@@ -5,7 +5,7 @@
 Amplify Params - DO NOT EDIT */
 
 const apiArray = require("./utils");
-const { getData, pushData } = require("./get&pushData");
+const { getData, pushData } = require("./getandpushData");
 const table = "INExchgMeta-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 const isinMap = {};
 const getAndPushData = () => {

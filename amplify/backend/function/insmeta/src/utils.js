@@ -14,6 +14,12 @@ const apiArray = [
     mcap: "S",
     indices: "NIFTY MULTICAP 50:25:25",
   },
+  {
+    url: "https://www.nseindia.com/api/etf",
+    mcap: null,
+    indices: null
+  },
+  
 ];
 
 module.exports = apiArray;
