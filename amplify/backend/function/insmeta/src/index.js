@@ -29,12 +29,10 @@ const getAndPushData = () => {
         reject(err);
       }
     }
-    console.log(batchRecords.length);
     resolve();
   });
 };
 
-getAndPushData();
 exports.handler = async (event) => {
   return await getAndPushData();
 };
