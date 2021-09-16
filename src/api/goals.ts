@@ -752,7 +752,6 @@ export type CreateINExchgInput = {
   itype?: InsType | null,
   price: number,
   prev: number,
-  mcap?: MCap | null,
 };
 
 export enum AssetType {
@@ -790,14 +789,6 @@ export enum InsType {
 }
 
 
-export enum MCap {
-  S = "S",
-  M = "M",
-  L = "L",
-  H = "H",
-}
-
-
 export type ModelINExchgConditionInput = {
   sid?: ModelStringInput | null,
   name?: ModelStringInput | null,
@@ -807,7 +798,6 @@ export type ModelINExchgConditionInput = {
   itype?: ModelInsTypeInput | null,
   price?: ModelFloatInput | null,
   prev?: ModelFloatInput | null,
-  mcap?: ModelMCapInput | null,
   and?: Array< ModelINExchgConditionInput | null > | null,
   or?: Array< ModelINExchgConditionInput | null > | null,
   not?: ModelINExchgConditionInput | null,
@@ -828,11 +818,6 @@ export type ModelInsTypeInput = {
   ne?: InsType | null,
 };
 
-export type ModelMCapInput = {
-  eq?: MCap | null,
-  ne?: MCap | null,
-};
-
 export type INExchg = {
   __typename: "INExchg",
   id?: string,
@@ -844,10 +829,34 @@ export type INExchg = {
   itype?: InsType | null,
   price?: number,
   prev?: number,
-  mcap?: MCap | null,
+  meta?: INExchgMeta,
   createdAt?: string,
   updatedAt?: string,
 };
+
+export type INExchgMeta = {
+  __typename: "INExchgMeta",
+  id?: string,
+  name?: string,
+  mcap?: MCap | null,
+  ylow?: number,
+  yhigh?: number,
+  mchg?: number | null,
+  ychg?: number | null,
+  ind?: string | null,
+  index?: string | null,
+  under?: string | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export enum MCap {
+  S = "S",
+  M = "M",
+  L = "L",
+  H = "H",
+}
+
 
 export type UpdateINExchgInput = {
   id: string,
@@ -859,10 +868,116 @@ export type UpdateINExchgInput = {
   itype?: InsType | null,
   price?: number | null,
   prev?: number | null,
-  mcap?: MCap | null,
 };
 
 export type DeleteINExchgInput = {
+  id: string,
+};
+
+export type CreateINExchgMetaInput = {
+  id: string,
+  name: string,
+  mcap?: MCap | null,
+  ylow: number,
+  yhigh: number,
+  mchg?: number | null,
+  ychg?: number | null,
+  ind?: string | null,
+  index?: string | null,
+  under?: string | null,
+};
+
+export type ModelINExchgMetaConditionInput = {
+  name?: ModelStringInput | null,
+  mcap?: ModelMCapInput | null,
+  ylow?: ModelFloatInput | null,
+  yhigh?: ModelFloatInput | null,
+  mchg?: ModelFloatInput | null,
+  ychg?: ModelFloatInput | null,
+  ind?: ModelStringInput | null,
+  index?: ModelStringInput | null,
+  under?: ModelStringInput | null,
+  and?: Array< ModelINExchgMetaConditionInput | null > | null,
+  or?: Array< ModelINExchgMetaConditionInput | null > | null,
+  not?: ModelINExchgMetaConditionInput | null,
+};
+
+export type ModelMCapInput = {
+  eq?: MCap | null,
+  ne?: MCap | null,
+};
+
+export type UpdateINExchgMetaInput = {
+  id: string,
+  name?: string | null,
+  mcap?: MCap | null,
+  ylow?: number | null,
+  yhigh?: number | null,
+  mchg?: number | null,
+  ychg?: number | null,
+  ind?: string | null,
+  index?: string | null,
+  under?: string | null,
+};
+
+export type DeleteINExchgMetaInput = {
+  id: string,
+};
+
+export type CreateIndicesInput = {
+  id: string,
+  name: string,
+  price: number,
+  ylow?: number | null,
+  yhigh?: number | null,
+  mchg?: number | null,
+  ychg?: number | null,
+  type: AssetType,
+  curr: string,
+};
+
+export type ModelIndicesConditionInput = {
+  name?: ModelStringInput | null,
+  price?: ModelFloatInput | null,
+  ylow?: ModelFloatInput | null,
+  yhigh?: ModelFloatInput | null,
+  mchg?: ModelFloatInput | null,
+  ychg?: ModelFloatInput | null,
+  type?: ModelAssetTypeInput | null,
+  curr?: ModelStringInput | null,
+  and?: Array< ModelIndicesConditionInput | null > | null,
+  or?: Array< ModelIndicesConditionInput | null > | null,
+  not?: ModelIndicesConditionInput | null,
+};
+
+export type Indices = {
+  __typename: "Indices",
+  id?: string,
+  name?: string,
+  price?: number,
+  ylow?: number | null,
+  yhigh?: number | null,
+  mchg?: number | null,
+  ychg?: number | null,
+  type?: AssetType,
+  curr?: string,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateIndicesInput = {
+  id: string,
+  name?: string | null,
+  price?: number | null,
+  ylow?: number | null,
+  yhigh?: number | null,
+  mchg?: number | null,
+  ychg?: number | null,
+  type?: AssetType | null,
+  curr?: string | null,
+};
+
+export type DeleteIndicesInput = {
   id: string,
 };
 
@@ -1299,7 +1414,6 @@ export type ModelINExchgFilterInput = {
   itype?: ModelInsTypeInput | null,
   price?: ModelFloatInput | null,
   prev?: ModelFloatInput | null,
-  mcap?: ModelMCapInput | null,
   and?: Array< ModelINExchgFilterInput | null > | null,
   or?: Array< ModelINExchgFilterInput | null > | null,
   not?: ModelINExchgFilterInput | null,
@@ -1308,6 +1422,49 @@ export type ModelINExchgFilterInput = {
 export type ModelINExchgConnection = {
   __typename: "ModelINExchgConnection",
   items?:  Array<INExchg | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelINExchgMetaFilterInput = {
+  id?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  mcap?: ModelMCapInput | null,
+  ylow?: ModelFloatInput | null,
+  yhigh?: ModelFloatInput | null,
+  mchg?: ModelFloatInput | null,
+  ychg?: ModelFloatInput | null,
+  ind?: ModelStringInput | null,
+  index?: ModelStringInput | null,
+  under?: ModelStringInput | null,
+  and?: Array< ModelINExchgMetaFilterInput | null > | null,
+  or?: Array< ModelINExchgMetaFilterInput | null > | null,
+  not?: ModelINExchgMetaFilterInput | null,
+};
+
+export type ModelINExchgMetaConnection = {
+  __typename: "ModelINExchgMetaConnection",
+  items?:  Array<INExchgMeta | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelIndicesFilterInput = {
+  id?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  price?: ModelFloatInput | null,
+  ylow?: ModelFloatInput | null,
+  yhigh?: ModelFloatInput | null,
+  mchg?: ModelFloatInput | null,
+  ychg?: ModelFloatInput | null,
+  type?: ModelAssetTypeInput | null,
+  curr?: ModelStringInput | null,
+  and?: Array< ModelIndicesFilterInput | null > | null,
+  or?: Array< ModelIndicesFilterInput | null > | null,
+  not?: ModelIndicesFilterInput | null,
+};
+
+export type ModelIndicesConnection = {
+  __typename: "ModelIndicesConnection",
+  items?:  Array<Indices | null > | null,
   nextToken?: string | null,
 };
 
@@ -2813,7 +2970,21 @@ export type CreateInExchgMutation = {
     itype?: InsType | null,
     price: number,
     prev: number,
-    mcap?: MCap | null,
+    meta?:  {
+      __typename: "INExchgMeta",
+      id: string,
+      name: string,
+      mcap?: MCap | null,
+      ylow: number,
+      yhigh: number,
+      mchg?: number | null,
+      ychg?: number | null,
+      ind?: string | null,
+      index?: string | null,
+      under?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2836,7 +3007,21 @@ export type UpdateInExchgMutation = {
     itype?: InsType | null,
     price: number,
     prev: number,
-    mcap?: MCap | null,
+    meta?:  {
+      __typename: "INExchgMeta",
+      id: string,
+      name: string,
+      mcap?: MCap | null,
+      ylow: number,
+      yhigh: number,
+      mchg?: number | null,
+      ychg?: number | null,
+      ind?: string | null,
+      index?: string | null,
+      under?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2859,7 +3044,156 @@ export type DeleteInExchgMutation = {
     itype?: InsType | null,
     price: number,
     prev: number,
+    meta?:  {
+      __typename: "INExchgMeta",
+      id: string,
+      name: string,
+      mcap?: MCap | null,
+      ylow: number,
+      yhigh: number,
+      mchg?: number | null,
+      ychg?: number | null,
+      ind?: string | null,
+      index?: string | null,
+      under?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateInExchgMetaMutationVariables = {
+  input?: CreateINExchgMetaInput,
+  condition?: ModelINExchgMetaConditionInput | null,
+};
+
+export type CreateInExchgMetaMutation = {
+  createINExchgMeta?:  {
+    __typename: "INExchgMeta",
+    id: string,
+    name: string,
     mcap?: MCap | null,
+    ylow: number,
+    yhigh: number,
+    mchg?: number | null,
+    ychg?: number | null,
+    ind?: string | null,
+    index?: string | null,
+    under?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateInExchgMetaMutationVariables = {
+  input?: UpdateINExchgMetaInput,
+  condition?: ModelINExchgMetaConditionInput | null,
+};
+
+export type UpdateInExchgMetaMutation = {
+  updateINExchgMeta?:  {
+    __typename: "INExchgMeta",
+    id: string,
+    name: string,
+    mcap?: MCap | null,
+    ylow: number,
+    yhigh: number,
+    mchg?: number | null,
+    ychg?: number | null,
+    ind?: string | null,
+    index?: string | null,
+    under?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteInExchgMetaMutationVariables = {
+  input?: DeleteINExchgMetaInput,
+  condition?: ModelINExchgMetaConditionInput | null,
+};
+
+export type DeleteInExchgMetaMutation = {
+  deleteINExchgMeta?:  {
+    __typename: "INExchgMeta",
+    id: string,
+    name: string,
+    mcap?: MCap | null,
+    ylow: number,
+    yhigh: number,
+    mchg?: number | null,
+    ychg?: number | null,
+    ind?: string | null,
+    index?: string | null,
+    under?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateIndicesMutationVariables = {
+  input?: CreateIndicesInput,
+  condition?: ModelIndicesConditionInput | null,
+};
+
+export type CreateIndicesMutation = {
+  createIndices?:  {
+    __typename: "Indices",
+    id: string,
+    name: string,
+    price: number,
+    ylow?: number | null,
+    yhigh?: number | null,
+    mchg?: number | null,
+    ychg?: number | null,
+    type: AssetType,
+    curr: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateIndicesMutationVariables = {
+  input?: UpdateIndicesInput,
+  condition?: ModelIndicesConditionInput | null,
+};
+
+export type UpdateIndicesMutation = {
+  updateIndices?:  {
+    __typename: "Indices",
+    id: string,
+    name: string,
+    price: number,
+    ylow?: number | null,
+    yhigh?: number | null,
+    mchg?: number | null,
+    ychg?: number | null,
+    type: AssetType,
+    curr: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteIndicesMutationVariables = {
+  input?: DeleteIndicesInput,
+  condition?: ModelIndicesConditionInput | null,
+};
+
+export type DeleteIndicesMutation = {
+  deleteIndices?:  {
+    __typename: "Indices",
+    id: string,
+    name: string,
+    price: number,
+    ylow?: number | null,
+    yhigh?: number | null,
+    mchg?: number | null,
+    ychg?: number | null,
+    type: AssetType,
+    curr: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3473,7 +3807,21 @@ export type GetInExchgQuery = {
     itype?: InsType | null,
     price: number,
     prev: number,
-    mcap?: MCap | null,
+    meta?:  {
+      __typename: "INExchgMeta",
+      id: string,
+      name: string,
+      mcap?: MCap | null,
+      ylow: number,
+      yhigh: number,
+      mchg?: number | null,
+      ychg?: number | null,
+      ind?: string | null,
+      index?: string | null,
+      under?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3501,7 +3849,123 @@ export type ListInExchgsQuery = {
       itype?: InsType | null,
       price: number,
       prev: number,
+      meta?:  {
+        __typename: "INExchgMeta",
+        id: string,
+        name: string,
+        mcap?: MCap | null,
+        ylow: number,
+        yhigh: number,
+        mchg?: number | null,
+        ychg?: number | null,
+        ind?: string | null,
+        index?: string | null,
+        under?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetInExchgMetaQueryVariables = {
+  id?: string,
+};
+
+export type GetInExchgMetaQuery = {
+  getINExchgMeta?:  {
+    __typename: "INExchgMeta",
+    id: string,
+    name: string,
+    mcap?: MCap | null,
+    ylow: number,
+    yhigh: number,
+    mchg?: number | null,
+    ychg?: number | null,
+    ind?: string | null,
+    index?: string | null,
+    under?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListInExchgMetasQueryVariables = {
+  id?: string | null,
+  filter?: ModelINExchgMetaFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListInExchgMetasQuery = {
+  listINExchgMetas?:  {
+    __typename: "ModelINExchgMetaConnection",
+    items?:  Array< {
+      __typename: "INExchgMeta",
+      id: string,
+      name: string,
       mcap?: MCap | null,
+      ylow: number,
+      yhigh: number,
+      mchg?: number | null,
+      ychg?: number | null,
+      ind?: string | null,
+      index?: string | null,
+      under?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetIndicesQueryVariables = {
+  id?: string,
+};
+
+export type GetIndicesQuery = {
+  getIndices?:  {
+    __typename: "Indices",
+    id: string,
+    name: string,
+    price: number,
+    ylow?: number | null,
+    yhigh?: number | null,
+    mchg?: number | null,
+    ychg?: number | null,
+    type: AssetType,
+    curr: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListIndicessQueryVariables = {
+  id?: string | null,
+  filter?: ModelIndicesFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListIndicessQuery = {
+  listIndicess?:  {
+    __typename: "ModelIndicesConnection",
+    items?:  Array< {
+      __typename: "Indices",
+      id: string,
+      name: string,
+      price: number,
+      ylow?: number | null,
+      yhigh?: number | null,
+      mchg?: number | null,
+      ychg?: number | null,
+      type: AssetType,
+      curr: string,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -4645,7 +5109,21 @@ export type OnCreateInExchgSubscription = {
     itype?: InsType | null,
     price: number,
     prev: number,
-    mcap?: MCap | null,
+    meta?:  {
+      __typename: "INExchgMeta",
+      id: string,
+      name: string,
+      mcap?: MCap | null,
+      ylow: number,
+      yhigh: number,
+      mchg?: number | null,
+      ychg?: number | null,
+      ind?: string | null,
+      index?: string | null,
+      under?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4663,7 +5141,21 @@ export type OnUpdateInExchgSubscription = {
     itype?: InsType | null,
     price: number,
     prev: number,
-    mcap?: MCap | null,
+    meta?:  {
+      __typename: "INExchgMeta",
+      id: string,
+      name: string,
+      mcap?: MCap | null,
+      ylow: number,
+      yhigh: number,
+      mchg?: number | null,
+      ychg?: number | null,
+      ind?: string | null,
+      index?: string | null,
+      under?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4681,7 +5173,126 @@ export type OnDeleteInExchgSubscription = {
     itype?: InsType | null,
     price: number,
     prev: number,
+    meta?:  {
+      __typename: "INExchgMeta",
+      id: string,
+      name: string,
+      mcap?: MCap | null,
+      ylow: number,
+      yhigh: number,
+      mchg?: number | null,
+      ychg?: number | null,
+      ind?: string | null,
+      index?: string | null,
+      under?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateInExchgMetaSubscription = {
+  onCreateINExchgMeta?:  {
+    __typename: "INExchgMeta",
+    id: string,
+    name: string,
     mcap?: MCap | null,
+    ylow: number,
+    yhigh: number,
+    mchg?: number | null,
+    ychg?: number | null,
+    ind?: string | null,
+    index?: string | null,
+    under?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateInExchgMetaSubscription = {
+  onUpdateINExchgMeta?:  {
+    __typename: "INExchgMeta",
+    id: string,
+    name: string,
+    mcap?: MCap | null,
+    ylow: number,
+    yhigh: number,
+    mchg?: number | null,
+    ychg?: number | null,
+    ind?: string | null,
+    index?: string | null,
+    under?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteInExchgMetaSubscription = {
+  onDeleteINExchgMeta?:  {
+    __typename: "INExchgMeta",
+    id: string,
+    name: string,
+    mcap?: MCap | null,
+    ylow: number,
+    yhigh: number,
+    mchg?: number | null,
+    ychg?: number | null,
+    ind?: string | null,
+    index?: string | null,
+    under?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateIndicesSubscription = {
+  onCreateIndices?:  {
+    __typename: "Indices",
+    id: string,
+    name: string,
+    price: number,
+    ylow?: number | null,
+    yhigh?: number | null,
+    mchg?: number | null,
+    ychg?: number | null,
+    type: AssetType,
+    curr: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateIndicesSubscription = {
+  onUpdateIndices?:  {
+    __typename: "Indices",
+    id: string,
+    name: string,
+    price: number,
+    ylow?: number | null,
+    yhigh?: number | null,
+    mchg?: number | null,
+    ychg?: number | null,
+    type: AssetType,
+    curr: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteIndicesSubscription = {
+  onDeleteIndices?:  {
+    __typename: "Indices",
+    id: string,
+    name: string,
+    price: number,
+    ylow?: number | null,
+    yhigh?: number | null,
+    mchg?: number | null,
+    ychg?: number | null,
+    type: AssetType,
+    curr: string,
     createdAt: string,
     updatedAt: string,
   } | null,

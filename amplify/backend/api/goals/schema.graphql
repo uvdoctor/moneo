@@ -211,7 +211,50 @@ type INExchg
 	itype: InsType
 	price: Float!
 	prev: Float!
+	meta: INExchgMeta
+}
+
+type INExchgMeta
+	@model
+	@aws_iam
+	@key(fields: ["id"])
+	@auth(
+		rules: [
+			{ allow: private, provider: iam, operations: [create, read, update, delete] }
+			{ allow: private, operations: [read] }
+		]
+	) {
+	id: String!
+	name: String!
 	mcap: MCap
+	ylow: Float!
+	yhigh: Float!
+	mchg: Float
+	ychg: Float
+	ind: String
+	index: String
+	under: String
+}
+
+type Indices 
+	@model
+	@aws_iam
+	@key(fields: ["id"])
+	@auth(
+		rules: [
+			{ allow: private, provider: iam, operations: [create, read, update, delete] }
+			{ allow: private, operations: [read] }
+		]
+	) {
+	id: String!
+	name: String!
+	price: Float!
+	ylow: Float
+	yhigh: Float
+	mchg: Float
+	ychg: Float
+	type: AssetType!
+	curr: String!
 }
 
 type INBond

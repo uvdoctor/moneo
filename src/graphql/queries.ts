@@ -295,7 +295,20 @@ export const getInExchg = /* GraphQL */ `
       itype
       price
       prev
-      mcap
+      meta {
+        id
+        name
+        mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -326,7 +339,120 @@ export const listInExchgs = /* GraphQL */ `
         itype
         price
         prev
+        meta {
+          id
+          name
+          mcap
+          ylow
+          yhigh
+          mchg
+          ychg
+          ind
+          index
+          under
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getInExchgMeta = /* GraphQL */ `
+  query GetInExchgMeta($id: String!) {
+    getINExchgMeta(id: $id) {
+      id
+      name
+      mcap
+      ylow
+      yhigh
+      mchg
+      ychg
+      ind
+      index
+      under
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInExchgMetas = /* GraphQL */ `
+  query ListInExchgMetas(
+    $id: String
+    $filter: ModelINExchgMetaFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINExchgMetas(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
         mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getIndices = /* GraphQL */ `
+  query GetIndices($id: String!) {
+    getIndices(id: $id) {
+      id
+      name
+      price
+      ylow
+      yhigh
+      mchg
+      ychg
+      type
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listIndicess = /* GraphQL */ `
+  query ListIndicess(
+    $id: String
+    $filter: ModelIndicesFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listIndicess(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        price
+        ylow
+        yhigh
+        mchg
+        ychg
+        type
+        curr
         createdAt
         updatedAt
       }

@@ -1253,7 +1253,20 @@ export const createInExchg = /* GraphQL */ `
       itype
       price
       prev
-      mcap
+      meta {
+        id
+        name
+        mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -1274,7 +1287,20 @@ export const updateInExchg = /* GraphQL */ `
       itype
       price
       prev
-      mcap
+      meta {
+        id
+        name
+        mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -1295,7 +1321,143 @@ export const deleteInExchg = /* GraphQL */ `
       itype
       price
       prev
+      meta {
+        id
+        name
+        mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createInExchgMeta = /* GraphQL */ `
+  mutation CreateInExchgMeta(
+    $input: CreateINExchgMetaInput!
+    $condition: ModelINExchgMetaConditionInput
+  ) {
+    createINExchgMeta(input: $input, condition: $condition) {
+      id
+      name
       mcap
+      ylow
+      yhigh
+      mchg
+      ychg
+      ind
+      index
+      under
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateInExchgMeta = /* GraphQL */ `
+  mutation UpdateInExchgMeta(
+    $input: UpdateINExchgMetaInput!
+    $condition: ModelINExchgMetaConditionInput
+  ) {
+    updateINExchgMeta(input: $input, condition: $condition) {
+      id
+      name
+      mcap
+      ylow
+      yhigh
+      mchg
+      ychg
+      ind
+      index
+      under
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteInExchgMeta = /* GraphQL */ `
+  mutation DeleteInExchgMeta(
+    $input: DeleteINExchgMetaInput!
+    $condition: ModelINExchgMetaConditionInput
+  ) {
+    deleteINExchgMeta(input: $input, condition: $condition) {
+      id
+      name
+      mcap
+      ylow
+      yhigh
+      mchg
+      ychg
+      ind
+      index
+      under
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createIndices = /* GraphQL */ `
+  mutation CreateIndices(
+    $input: CreateIndicesInput!
+    $condition: ModelIndicesConditionInput
+  ) {
+    createIndices(input: $input, condition: $condition) {
+      id
+      name
+      price
+      ylow
+      yhigh
+      mchg
+      ychg
+      type
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateIndices = /* GraphQL */ `
+  mutation UpdateIndices(
+    $input: UpdateIndicesInput!
+    $condition: ModelIndicesConditionInput
+  ) {
+    updateIndices(input: $input, condition: $condition) {
+      id
+      name
+      price
+      ylow
+      yhigh
+      mchg
+      ychg
+      type
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteIndices = /* GraphQL */ `
+  mutation DeleteIndices(
+    $input: DeleteIndicesInput!
+    $condition: ModelIndicesConditionInput
+  ) {
+    deleteIndices(input: $input, condition: $condition) {
+      id
+      name
+      price
+      ylow
+      yhigh
+      mchg
+      ychg
+      type
+      curr
       createdAt
       updatedAt
     }

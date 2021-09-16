@@ -383,7 +383,20 @@ export const onCreateInExchg = /* GraphQL */ `
       itype
       price
       prev
-      mcap
+      meta {
+        id
+        name
+        mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -401,7 +414,20 @@ export const onUpdateInExchg = /* GraphQL */ `
       itype
       price
       prev
-      mcap
+      meta {
+        id
+        name
+        mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -419,7 +445,125 @@ export const onDeleteInExchg = /* GraphQL */ `
       itype
       price
       prev
+      meta {
+        id
+        name
+        mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateInExchgMeta = /* GraphQL */ `
+  subscription OnCreateInExchgMeta {
+    onCreateINExchgMeta {
+      id
+      name
       mcap
+      ylow
+      yhigh
+      mchg
+      ychg
+      ind
+      index
+      under
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateInExchgMeta = /* GraphQL */ `
+  subscription OnUpdateInExchgMeta {
+    onUpdateINExchgMeta {
+      id
+      name
+      mcap
+      ylow
+      yhigh
+      mchg
+      ychg
+      ind
+      index
+      under
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteInExchgMeta = /* GraphQL */ `
+  subscription OnDeleteInExchgMeta {
+    onDeleteINExchgMeta {
+      id
+      name
+      mcap
+      ylow
+      yhigh
+      mchg
+      ychg
+      ind
+      index
+      under
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateIndices = /* GraphQL */ `
+  subscription OnCreateIndices {
+    onCreateIndices {
+      id
+      name
+      price
+      ylow
+      yhigh
+      mchg
+      ychg
+      type
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateIndices = /* GraphQL */ `
+  subscription OnUpdateIndices {
+    onUpdateIndices {
+      id
+      name
+      price
+      ylow
+      yhigh
+      mchg
+      ychg
+      type
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteIndices = /* GraphQL */ `
+  subscription OnDeleteIndices {
+    onDeleteIndices {
+      id
+      name
+      price
+      ylow
+      yhigh
+      mchg
+      ychg
+      type
+      curr
       createdAt
       updatedAt
     }

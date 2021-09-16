@@ -1,0 +1,3 @@
+{
+  "CloudWatchRule": "cron(20 23 ? * 6 *)"
+}
