@@ -37,7 +37,7 @@ const getDiamondPrice = async (batches, table) => {
   );
   const dom = new JSDOM(response.data);
   let result = dom.window.document.querySelector(
-    "table > tbody > tr:nth-child(7) > td:nth-child(2)"
+    "table.ts > tbody > tr:nth-child(7) > td:nth-child(2)"
   ).textContent;
   result = result.slice(result.indexOf(" ") + 1, result[-1]);
   const dataToPush = {
