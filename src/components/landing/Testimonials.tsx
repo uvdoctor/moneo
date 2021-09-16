@@ -69,8 +69,9 @@ export default function Testimonials() {
 				]}
 				showArrows={false}
 			>
-				{testimonials.map(({ title, name, location, imageName, content }) => (
+				{testimonials.map(({ title, name, location, imageName, content }, index: number) => (
 					<TestimonialTemplate
+						key={"t"+index}
 						title={title}
 						name={name}
 						location={location}
