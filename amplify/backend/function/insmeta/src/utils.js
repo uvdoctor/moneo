@@ -16,4 +16,4 @@ const apiArray = [
   },
 ];
 
-module.exports = apiArray ;
+module.exports = apiArray;
