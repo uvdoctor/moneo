@@ -1,5 +1,5 @@
 const axios = require("axios");
-// const docClient = require("./insertIntoDB");
+const docClient = require("/opt/nodejs/insertIntoDB");
 const getData = async (url, mcap, indices, isinMap, table, batchRecords) => {
   const schema = {};
   let batches = [];
@@ -43,13 +43,13 @@ const pushData = async (data, table, index) => {
         [table]: data,
       },
     };
-    // try {
-    //   const updateRecord = await docClient.batchWrite(params).promise();
-    //   console.log(updateRecord);
-    //   resolve(updateRecord);
-    // } catch (error) {
-    //   reject(`Error in dynamoDB: ${JSON.stringify(error)}, ${index}`);
-    // }
+    try {
+      const updateRecord = await docClient.batchWrite(params).promise();
+      console.log(updateRecord);
+      resolve(updateRecord);
+    } catch (error) {
+      reject(`Error in dynamoDB: ${JSON.stringify(error)}, ${index}`);
+    }
   });
 };
 
