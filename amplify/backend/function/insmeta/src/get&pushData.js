@@ -22,7 +22,7 @@ const getData = (url, mcap, indices, isinMap, table) => {
 
   return new Promise(async (resolve, reject) => {
     const response = await res(urlCount);
-    if (!response) return "Url is not accessible";
+    if (!response) reject("Url is not accessible");
     response.data.data.map((item, index) => {
       if (index === 0) return;
       if (isinMap[item.meta.isin]) return;
