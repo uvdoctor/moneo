@@ -170,411 +170,6 @@ export const listFamilys = /* GraphQL */ `
     }
   }
 `;
-export const getHoldings = /* GraphQL */ `
-  query GetHoldings($id: ID!) {
-    getHoldings(id: $id) {
-      id
-      instruments {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      deposits {
-        amt
-        sm
-        sy
-        months
-        rate
-        fIds
-        curr
-      }
-      lendings {
-        amt
-        sm
-        sy
-        months
-        rate
-        fIds
-        curr
-      }
-      loans {
-        loan {
-          type
-          per
-          rate
-          dur
-          ry
-          emi
-          pmi
-          peper
-        }
-        fIds
-        curr
-      }
-      savings {
-        amt
-        curr
-        name
-        fIds
-      }
-      property {
-        type
-        pin
-        purchase {
-          amt
-          date
-          qty
-        }
-        address
-        fIds
-        curr
-        country
-        own {
-          fId
-          per
-        }
-      }
-      vehicles {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      pm {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      ppf {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      epf {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      vpf {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      nps {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      crypto {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      ins {
-        premium
-        years
-        fIds
-        curr
-      }
-      mem {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      angel {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      other {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const listHoldingss = /* GraphQL */ `
-  query ListHoldingss(
-    $filter: ModelHoldingsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listHoldingss(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        instruments {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          type
-          subt
-        }
-        deposits {
-          amt
-          sm
-          sy
-          months
-          rate
-          fIds
-          curr
-        }
-        lendings {
-          amt
-          sm
-          sy
-          months
-          rate
-          fIds
-          curr
-        }
-        loans {
-          fIds
-          curr
-        }
-        savings {
-          amt
-          curr
-          name
-          fIds
-        }
-        property {
-          type
-          pin
-          address
-          fIds
-          curr
-          country
-        }
-        vehicles {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          type
-          subt
-        }
-        pm {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          type
-          subt
-        }
-        ppf {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          type
-          subt
-        }
-        epf {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          type
-          subt
-        }
-        vpf {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          type
-          subt
-        }
-        nps {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          type
-          subt
-        }
-        crypto {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          type
-          subt
-        }
-        ins {
-          premium
-          years
-          fIds
-          curr
-        }
-        mem {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          type
-          subt
-        }
-        angel {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          type
-          subt
-        }
-        other {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          type
-          subt
-        }
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
 export const getFeedback = /* GraphQL */ `
   query GetFeedback($id: ID!) {
     getFeedback(id: $id) {
@@ -700,7 +295,20 @@ export const getInExchg = /* GraphQL */ `
       itype
       price
       prev
-      mcap
+      meta {
+        id
+        name
+        mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -731,7 +339,120 @@ export const listInExchgs = /* GraphQL */ `
         itype
         price
         prev
+        meta {
+          id
+          name
+          mcap
+          ylow
+          yhigh
+          mchg
+          ychg
+          ind
+          index
+          under
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getInExchgMeta = /* GraphQL */ `
+  query GetInExchgMeta($id: String!) {
+    getINExchgMeta(id: $id) {
+      id
+      name
+      mcap
+      ylow
+      yhigh
+      mchg
+      ychg
+      ind
+      index
+      under
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInExchgMetas = /* GraphQL */ `
+  query ListInExchgMetas(
+    $id: String
+    $filter: ModelINExchgMetaFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listINExchgMetas(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
         mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getIndices = /* GraphQL */ `
+  query GetIndices($id: String!) {
+    getIndices(id: $id) {
+      id
+      name
+      price
+      ylow
+      yhigh
+      mchg
+      ychg
+      type
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listIndicess = /* GraphQL */ `
+  query ListIndicess(
+    $id: String
+    $filter: ModelIndicesFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listIndicess(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        price
+        ylow
+        yhigh
+        mchg
+        ychg
+        type
+        curr
         createdAt
         updatedAt
       }
@@ -852,6 +573,502 @@ export const listInMutuals = /* GraphQL */ `
         tf
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getNps = /* GraphQL */ `
+  query GetNps($id: String!) {
+    getNPS(id: $id) {
+      id
+      pfm
+      st
+      name
+      type
+      subt
+      price
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listNpSs = /* GraphQL */ `
+  query ListNpSs(
+    $id: String
+    $filter: ModelNPSFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listNPSs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        pfm
+        st
+        name
+        type
+        subt
+        price
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getHoldings = /* GraphQL */ `
+  query GetHoldings($id: ID!) {
+    getHoldings(id: $id) {
+      id
+      instruments {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      deposits {
+        amt
+        sm
+        sy
+        months
+        rate
+        fIds
+        curr
+      }
+      lendings {
+        amt
+        sm
+        sy
+        months
+        rate
+        fIds
+        curr
+      }
+      loans {
+        loan {
+          type
+          per
+          rate
+          dur
+          ry
+          emi
+          pmi
+          peper
+        }
+        fIds
+        curr
+      }
+      savings {
+        amt
+        curr
+        name
+        fIds
+      }
+      property {
+        type
+        pin
+        purchase {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        address
+        fIds
+        curr
+        country
+        own {
+          fId
+          per
+        }
+      }
+      vehicles {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      pm {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      ppf {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      epf {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      vpf {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      nps {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      crypto {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      ins {
+        premium
+        years
+        fIds
+        curr
+      }
+      mem {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      angel {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      other {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listHoldingss = /* GraphQL */ `
+  query ListHoldingss(
+    $filter: ModelHoldingsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listHoldingss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        instruments {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        deposits {
+          amt
+          sm
+          sy
+          months
+          rate
+          fIds
+          curr
+        }
+        lendings {
+          amt
+          sm
+          sy
+          months
+          rate
+          fIds
+          curr
+        }
+        loans {
+          fIds
+          curr
+        }
+        savings {
+          amt
+          curr
+          name
+          fIds
+        }
+        property {
+          type
+          pin
+          address
+          fIds
+          curr
+          country
+        }
+        vehicles {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        pm {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        ppf {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        epf {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        vpf {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        nps {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        crypto {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        ins {
+          premium
+          years
+          fIds
+          curr
+        }
+        mem {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        angel {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        other {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        createdAt
+        updatedAt
+        owner
       }
       nextToken
     }

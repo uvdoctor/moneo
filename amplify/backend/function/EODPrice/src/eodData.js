@@ -1,5 +1,7 @@
 const docClient = require("/opt/nodejs/insertIntoDB");
 const axios = require("axios");
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
 const eodApiKey = process.env.EOD_API_KEY;
 
 const apiKeys = {
@@ -29,6 +31,25 @@ const getData = async (element, index) => {
   }
 };
 
+const getDiamondPrice = async (batches, table) => {
+  const response = await axios.get(
+    "https://www.gold-rate.co.in/diamond-prices/united-states-diamond-price-today/"
+  );
+  const dom = new JSDOM(response.data);
+  let result = dom.window.document.querySelector(
+    "table.ts > tbody > tr:nth-child(7) > td:nth-child(2)"
+  ).textContent;
+  result = result.slice(result.indexOf(" ") + 1, result[-1]);
+  const dataToPush = {
+    __typename: table.slice(0, table.indexOf("-")),
+    id: "DIAM",
+    price: result,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  batches.push({ PutRequest: { Item: dataToPush } });
+};
+
 const pushData = async (data, table, index) => {
   return new Promise(async (resolve, reject) => {
     var params = {
@@ -36,7 +57,6 @@ const pushData = async (data, table, index) => {
         [table]: data,
       },
     };
-    console.log(data)
     try {
       const updateRecord = await docClient.batchWrite(params).promise();
       resolve(updateRecord);
@@ -49,4 +69,5 @@ const pushData = async (data, table, index) => {
 module.exports = {
   getData,
   pushData,
+  getDiamondPrice,
 };

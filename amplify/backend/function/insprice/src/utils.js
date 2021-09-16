@@ -15,27 +15,32 @@ const monthsArray = [
   "DEC",
 ];
 const today = new Date();
-const todayDate = today.getDate();
-const date = todayDate < 10 ? `0${todayDate}` : todayDate;
-
-// For BSE
-const month =
-  today.getMonth() + 1 < 10
-    ? `0${today.getMonth() + 1}`
-    : `${today.getMonth() + 1}`;
-const year =
-  today.getYear().toString().charAt(1) + today.getYear().toString().charAt(2);
-const yearFull = today.getFullYear();
-const baseFileName = `EQ_ISINCODE_${date}${month}${year}`;
-// For NSE
 const monthChar = monthsArray[today.getMonth()];
-const nseBaseFileName = `cm${date}${monthChar}${yearFull}bhav.csv`;
+const yearFull = today.getFullYear();
+let todayDate;
 
-const apiArray = [
+const getFile = (num) => {
+  todayDate = today.getDate() - `${num}`;
+  const date = todayDate < 10 ? `0${todayDate}` : todayDate;
+  // For BSE
+  const month =
+    today.getMonth() + 1 < 10
+      ? `0${today.getMonth() + 1}`
+      : `${today.getMonth() + 1}`;
+  const year =
+    today.getYear().toString().charAt(1) + today.getYear().toString().charAt(2);
+
+  const bseFile = `EQ_ISINCODE_${date}${month}${year}`;
+  // For NSE
+  const nseFile = `cm${date}${monthChar}${yearFull}bhav.csv`;
+  return { bseFile, nseFile };
+};
+
+const apiArray = (bseFile, nseFile) => [
   {
     typeExchg: "BSE",
-    fileName: baseFileName + ".CSV",
-    url: `https://www.bseindia.com/download/BhavCopy/Equity/${baseFileName}.zip`,
+    fileName: bseFile + ".CSV",
+    url: `https://www.bseindia.com/download/BhavCopy/Equity/${bseFile}.zip`,
     schema: {
       id: "",
       sid: "",
@@ -62,8 +67,8 @@ const apiArray = [
   },
   {
     typeExchg: "NSE",
-    fileName: nseBaseFileName,
-    url: `https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${nseBaseFileName}.zip`,
+    fileName: nseFile,
+    url: `https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${nseFile}.zip`,
     schema: {
       id: "",
       sid: "",
@@ -90,4 +95,4 @@ const apiArray = [
   },
 ];
 
-module.exports = { tempDir, zipFile, apiArray };
+module.exports = { tempDir, zipFile, apiArray, getFile };

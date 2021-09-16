@@ -2,13 +2,13 @@
 	AUTH_DDPWA0063633B_USERPOOLID
 	ENV
 	REGION
-Amplify Params - DO NOT EDIT */const fs = require("fs");
+Amplify Params - DO NOT EDIT */ const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const utils = require("./utils");
-const { tempDir, zipFile, apiArray } = utils;
+const { tempDir, zipFile, apiArray, getFile } = utils;
 const bhaoUtils = require("./bhavUtils");
-const calcSchema = require("./calculate");
+const { calc, calcSchema } = require("./calculate");
 const {
   downloadZip,
   unzipDownloads,
@@ -19,14 +19,18 @@ const {
 const table = "INExchg-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 const instrumentList = [];
 
-const getAndPushData = () => {
+const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < apiArray.length; i++) {
       try {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const { typeExchg, fileName, url, codes, schema } = apiArray[i];
+        const { bseFile, nseFile } = getFile(diff);
+        const { typeExchg, fileName, url, codes, schema } = apiArray(
+          bseFile,
+          nseFile
+        )[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
@@ -52,5 +56,5 @@ const getAndPushData = () => {
 };
 
 exports.handler = async (event) => {
-  return await getAndPushData();
+  return await getAndPushData(event.diff);
 };

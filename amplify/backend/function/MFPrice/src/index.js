@@ -2,17 +2,10 @@
 	AUTH_DDPWA0063633B_USERPOOLID
 	ENV
 	REGION
-Amplify Params - DO NOT EDIT */const mfData = require("india-mutual-fund-info");
-const dataInfo = require("./data");
-const {
-  getDirISIN,
-  directISIN,
-  getAssetSubType,
-  getAssetType,
-  mfType,
-  pushData,
-  mCap,
-} = dataInfo;
+Amplify Params - DO NOT EDIT */
+const mfData = require("india-mutual-fund-info");
+const { directISIN, getDirISIN, pushData } = require("./data");
+const { getType, getSubType, mfType, mCap, getName } = require("./calculate");
 const table = "INMutual-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 const getData = () => {
   return new Promise(async (resolve, reject) => {
@@ -40,12 +33,12 @@ const getData = () => {
         sid: element["Scheme Code"],
         tid: element["ISIN Div Reinvestment"],
         dir: getDirISIN(regularData, directData, element),
-        name: element["Scheme Name"],
-        type: getAssetType(element["Scheme Type"]),
-        subt: getAssetSubType(element),
+        name: getName(element),
+        type: getType(element),
+        subt: getSubType(element),
         price: price,
         mftype: mfType(element["Scheme Type"]),
-        mcap: mCap(element),
+        mcap: mCap(element["Scheme Type"]),
         tf: element["Scheme Name"].includes("Tax") ? "Y" : "N",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -60,7 +53,9 @@ const getData = () => {
         count = 0;
       }
     });
-
+    if (count < 25) {
+      batchRecords.push(batches);
+    }
     resolve(batchRecords);
   });
 };

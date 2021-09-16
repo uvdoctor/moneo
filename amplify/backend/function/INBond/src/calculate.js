@@ -85,9 +85,9 @@ const calc = {
   calcCR: (crstr) => {
     if (!crstr) return null;
     if (crstr.includes("AA") && !crstr.includes("-")) return "E";
+    if (crstr.includes("BBB") || crstr.includes("B+")) return "M";
     if (crstr.includes("A")) return "H";
-    if (crstr.includes("BBB") || crstr.includes("+")) return "M";
-    if (crstr.includes("BB")) return "L";
+    if (crstr.includes("BB") && !crstr.includes("+")) return "L";
     return "J";
   },
 
@@ -109,8 +109,10 @@ const calcYTM = (record, codes) => {
   const numOfYear =
     (12 - startMonth) / 12 + (matrYear - startYear - 1) + matrMonth / 12;
   const mPrice = calc.calcPrice(record[codes.price]);
-  const ytm = (Number(rate) + (fv - mPrice) / numOfYear) / ((fv + mPrice) / 2);
+  const couponAmt = (fv * Number(rate)) / 100;
+  const ytm = (couponAmt + (fv - mPrice) / numOfYear) / ((fv + mPrice) / 2);
   const ytmFinal = Math.round(ytm * 1000) / 1000;
+  if (ytmFinal === -0) return 0;
   return ytmFinal;
 };
 
@@ -139,4 +141,4 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
   isinMap[record[codes.id]] = record[codes.id];
   return schema;
 };
-module.exports = calcSchema;
+module.exports = { calcSchema, calc, calcYTM };

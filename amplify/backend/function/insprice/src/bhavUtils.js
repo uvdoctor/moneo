@@ -93,6 +93,9 @@ const extractDataFromCSV = async (
         }
       })
       .on("end", async () => {
+        if (count < 25) {
+          batchRecords.push(batches);
+        }
         await cleanDirectory(
           tempDir,
           `${fileName} of ${typeExchg} results extracted successfully and directory is cleaned`

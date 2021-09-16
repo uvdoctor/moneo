@@ -1,11 +1,8 @@
-import { Col, InputNumber } from 'antd';
-import React, { Fragment, useContext } from 'react';
+import { Col } from 'antd';
+import React, { Fragment } from 'react';
 import { AssetSubType, HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
-import { NWContext, PM_TAB } from './NWContext';
-import { getCommodityRate, getCryptoRate } from './nwutils';
-import { toCurrency } from '../utils';
-import { AppContext } from '../AppContext';
+import QuantityWithRate from './QuantityWithRate';
 
 interface ViewHoldingInputProps {
 	data: Array<HoldingInput>;
@@ -22,9 +19,6 @@ export default function ViewHoldingInput({
 	subCategoryOptions,
 	record
 }: ViewHoldingInputProps) {
-	const { ratesData }: any = useContext(AppContext);
-	const { selectedCurrency, childTab }: any = useContext(NWContext);
-	console.log("Subcategories: ", subCategoryOptions);
 
 	const changeQty = (quantity: number) => {
 		record.qty = quantity;
@@ -44,11 +38,6 @@ export default function ViewHoldingInput({
 		record.name = purity;
 		changeData([ ...data ]);
 	};
-
-	const getRate = (subtype: string, name: string) =>
-	!name 
-		? getCryptoRate(ratesData, subtype as string, selectedCurrency)
-		: getCommodityRate(ratesData, subtype as string, name as string, selectedCurrency);
 
 	return (
 		<Fragment>
@@ -73,18 +62,7 @@ export default function ViewHoldingInput({
 				)}
 			</Col>
 			<Col>
-				<InputNumber
-					value={record.qty}
-					onChange={(quantity: number) => changeQty(quantity)}
-					min={0}
-					max={1000}
-					step={0.1}
-					size="small"
-				/>
-				{`${childTab === PM_TAB ? ` grams` : ''} x ${toCurrency(getRate(record.subt as string, record.name as string), selectedCurrency)} = ${toCurrency(
-					record.qty * getRate(record.subt as string, record.name as string),
-					selectedCurrency
-				)}`}
+				<QuantityWithRate quantity={record.qty} name={record.name as string} subtype={record.subt as string} onChange={changeQty} />
 			</Col>
 		</Fragment>
 	);

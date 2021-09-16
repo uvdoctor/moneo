@@ -22,26 +22,25 @@ export default function FamilyInput() {
     const [ error, setError ] = useState<string>('');
     const [ includeAllOption, setIncludeAllOption ] = useState<boolean>(false);
 
-    const getDefaultFamilySelection = () => {
-        let keys = Object.keys(allFamily);
-        return !keys.length ? '' : keys.length > 1 ? ALL_FAMILY : keys[0];
-    }
-
     useEffect(() => {
         if(loadingFamily) return;
-        setSelectedMembers([...[getDefaultFamilySelection()]]);
+        setSelectedMembers([...allFamily ? Object.keys(allFamily).length > 1 ? [ALL_FAMILY] : [Object.keys(allFamily[0])]: []]);
     }, [loadingFamily]);
 
 	useEffect(() => {
+        if(!allFamily) {
+            setSelectedMembers([...[]]);
+            return;
+        }
         setIncludeAllOption(Object.keys(allFamily).length > 1);
         if(Object.keys(allFamily).length === 1) {
-            setSelectedMembers([...[getDefaultFamilySelection()]]);
+            setSelectedMembers([...[Object.keys(allFamily)[0]]]);
         }
-    }, [ Object.keys(allFamily).length ]);
+    }, [ allFamily ]);
 
 	const selectMember = (val: string[]) => {
         if (!val.length) {
-			setSelectedMembers([ ...[ getDefaultFamilySelection() ] ]);
+			setSelectedMembers([ ...[ALL_FAMILY] ]);
 			return;
 		}
         if(val.length === 1 && val[0]) {

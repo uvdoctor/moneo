@@ -245,714 +245,6 @@ export const onDeleteFamily = /* GraphQL */ `
     }
   }
 `;
-export const onCreateHoldings = /* GraphQL */ `
-  subscription OnCreateHoldings($owner: String!) {
-    onCreateHoldings(owner: $owner) {
-      id
-      instruments {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      deposits {
-        amt
-        sm
-        sy
-        months
-        rate
-        fIds
-        curr
-      }
-      lendings {
-        amt
-        sm
-        sy
-        months
-        rate
-        fIds
-        curr
-      }
-      loans {
-        loan {
-          type
-          per
-          rate
-          dur
-          ry
-          emi
-          pmi
-          peper
-        }
-        fIds
-        curr
-      }
-      savings {
-        amt
-        curr
-        name
-        fIds
-      }
-      property {
-        type
-        pin
-        purchase {
-          amt
-          date
-          qty
-        }
-        address
-        fIds
-        curr
-        country
-        own {
-          fId
-          per
-        }
-      }
-      vehicles {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      pm {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      ppf {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      epf {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      vpf {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      nps {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      crypto {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      ins {
-        premium
-        years
-        fIds
-        curr
-      }
-      mem {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      angel {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      other {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdateHoldings = /* GraphQL */ `
-  subscription OnUpdateHoldings($owner: String!) {
-    onUpdateHoldings(owner: $owner) {
-      id
-      instruments {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      deposits {
-        amt
-        sm
-        sy
-        months
-        rate
-        fIds
-        curr
-      }
-      lendings {
-        amt
-        sm
-        sy
-        months
-        rate
-        fIds
-        curr
-      }
-      loans {
-        loan {
-          type
-          per
-          rate
-          dur
-          ry
-          emi
-          pmi
-          peper
-        }
-        fIds
-        curr
-      }
-      savings {
-        amt
-        curr
-        name
-        fIds
-      }
-      property {
-        type
-        pin
-        purchase {
-          amt
-          date
-          qty
-        }
-        address
-        fIds
-        curr
-        country
-        own {
-          fId
-          per
-        }
-      }
-      vehicles {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      pm {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      ppf {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      epf {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      vpf {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      nps {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      crypto {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      ins {
-        premium
-        years
-        fIds
-        curr
-      }
-      mem {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      angel {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      other {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeleteHoldings = /* GraphQL */ `
-  subscription OnDeleteHoldings($owner: String!) {
-    onDeleteHoldings(owner: $owner) {
-      id
-      instruments {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      deposits {
-        amt
-        sm
-        sy
-        months
-        rate
-        fIds
-        curr
-      }
-      lendings {
-        amt
-        sm
-        sy
-        months
-        rate
-        fIds
-        curr
-      }
-      loans {
-        loan {
-          type
-          per
-          rate
-          dur
-          ry
-          emi
-          pmi
-          peper
-        }
-        fIds
-        curr
-      }
-      savings {
-        amt
-        curr
-        name
-        fIds
-      }
-      property {
-        type
-        pin
-        purchase {
-          amt
-          date
-          qty
-        }
-        address
-        fIds
-        curr
-        country
-        own {
-          fId
-          per
-        }
-      }
-      vehicles {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      pm {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      ppf {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      epf {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      vpf {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      nps {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      crypto {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      ins {
-        premium
-        years
-        fIds
-        curr
-      }
-      mem {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      angel {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      other {
-        id
-        qty
-        pur {
-          amt
-          date
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        type
-        subt
-      }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
 export const onCreateFeedback = /* GraphQL */ `
   subscription OnCreateFeedback {
     onCreateFeedback {
@@ -1091,7 +383,20 @@ export const onCreateInExchg = /* GraphQL */ `
       itype
       price
       prev
-      mcap
+      meta {
+        id
+        name
+        mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -1109,7 +414,20 @@ export const onUpdateInExchg = /* GraphQL */ `
       itype
       price
       prev
-      mcap
+      meta {
+        id
+        name
+        mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -1127,7 +445,125 @@ export const onDeleteInExchg = /* GraphQL */ `
       itype
       price
       prev
+      meta {
+        id
+        name
+        mcap
+        ylow
+        yhigh
+        mchg
+        ychg
+        ind
+        index
+        under
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateInExchgMeta = /* GraphQL */ `
+  subscription OnCreateInExchgMeta {
+    onCreateINExchgMeta {
+      id
+      name
       mcap
+      ylow
+      yhigh
+      mchg
+      ychg
+      ind
+      index
+      under
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateInExchgMeta = /* GraphQL */ `
+  subscription OnUpdateInExchgMeta {
+    onUpdateINExchgMeta {
+      id
+      name
+      mcap
+      ylow
+      yhigh
+      mchg
+      ychg
+      ind
+      index
+      under
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteInExchgMeta = /* GraphQL */ `
+  subscription OnDeleteInExchgMeta {
+    onDeleteINExchgMeta {
+      id
+      name
+      mcap
+      ylow
+      yhigh
+      mchg
+      ychg
+      ind
+      index
+      under
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateIndices = /* GraphQL */ `
+  subscription OnCreateIndices {
+    onCreateIndices {
+      id
+      name
+      price
+      ylow
+      yhigh
+      mchg
+      ychg
+      type
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateIndices = /* GraphQL */ `
+  subscription OnUpdateIndices {
+    onUpdateIndices {
+      id
+      name
+      price
+      ylow
+      yhigh
+      mchg
+      ychg
+      type
+      curr
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteIndices = /* GraphQL */ `
+  subscription OnDeleteIndices {
+    onDeleteIndices {
+      id
+      name
+      price
+      ylow
+      yhigh
+      mchg
+      ychg
+      type
+      curr
       createdAt
       updatedAt
     }
@@ -1262,6 +698,864 @@ export const onDeleteInMutual = /* GraphQL */ `
       tf
       createdAt
       updatedAt
+    }
+  }
+`;
+export const onCreateNps = /* GraphQL */ `
+  subscription OnCreateNps {
+    onCreateNPS {
+      id
+      pfm
+      st
+      name
+      type
+      subt
+      price
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateNps = /* GraphQL */ `
+  subscription OnUpdateNps {
+    onUpdateNPS {
+      id
+      pfm
+      st
+      name
+      type
+      subt
+      price
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteNps = /* GraphQL */ `
+  subscription OnDeleteNps {
+    onDeleteNPS {
+      id
+      pfm
+      st
+      name
+      type
+      subt
+      price
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateHoldings = /* GraphQL */ `
+  subscription OnCreateHoldings($owner: String) {
+    onCreateHoldings(owner: $owner) {
+      id
+      instruments {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      deposits {
+        amt
+        sm
+        sy
+        months
+        rate
+        fIds
+        curr
+      }
+      lendings {
+        amt
+        sm
+        sy
+        months
+        rate
+        fIds
+        curr
+      }
+      loans {
+        loan {
+          type
+          per
+          rate
+          dur
+          ry
+          emi
+          pmi
+          peper
+        }
+        fIds
+        curr
+      }
+      savings {
+        amt
+        curr
+        name
+        fIds
+      }
+      property {
+        type
+        pin
+        purchase {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        address
+        fIds
+        curr
+        country
+        own {
+          fId
+          per
+        }
+      }
+      vehicles {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      pm {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      ppf {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      epf {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      vpf {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      nps {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      crypto {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      ins {
+        premium
+        years
+        fIds
+        curr
+      }
+      mem {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      angel {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      other {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateHoldings = /* GraphQL */ `
+  subscription OnUpdateHoldings($owner: String) {
+    onUpdateHoldings(owner: $owner) {
+      id
+      instruments {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      deposits {
+        amt
+        sm
+        sy
+        months
+        rate
+        fIds
+        curr
+      }
+      lendings {
+        amt
+        sm
+        sy
+        months
+        rate
+        fIds
+        curr
+      }
+      loans {
+        loan {
+          type
+          per
+          rate
+          dur
+          ry
+          emi
+          pmi
+          peper
+        }
+        fIds
+        curr
+      }
+      savings {
+        amt
+        curr
+        name
+        fIds
+      }
+      property {
+        type
+        pin
+        purchase {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        address
+        fIds
+        curr
+        country
+        own {
+          fId
+          per
+        }
+      }
+      vehicles {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      pm {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      ppf {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      epf {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      vpf {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      nps {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      crypto {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      ins {
+        premium
+        years
+        fIds
+        curr
+      }
+      mem {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      angel {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      other {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteHoldings = /* GraphQL */ `
+  subscription OnDeleteHoldings($owner: String) {
+    onDeleteHoldings(owner: $owner) {
+      id
+      instruments {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      deposits {
+        amt
+        sm
+        sy
+        months
+        rate
+        fIds
+        curr
+      }
+      lendings {
+        amt
+        sm
+        sy
+        months
+        rate
+        fIds
+        curr
+      }
+      loans {
+        loan {
+          type
+          per
+          rate
+          dur
+          ry
+          emi
+          pmi
+          peper
+        }
+        fIds
+        curr
+      }
+      savings {
+        amt
+        curr
+        name
+        fIds
+      }
+      property {
+        type
+        pin
+        purchase {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        address
+        fIds
+        curr
+        country
+        own {
+          fId
+          per
+        }
+      }
+      vehicles {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      pm {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      ppf {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      epf {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      vpf {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      nps {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      crypto {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      ins {
+        premium
+        years
+        fIds
+        curr
+      }
+      mem {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      angel {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      other {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;

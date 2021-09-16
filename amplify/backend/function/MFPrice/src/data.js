@@ -1,54 +1,5 @@
 const docClient = require("/opt/nodejs/insertIntoDB");
-const getAssetType = (data) => {
-  if (data.includes("Hybrid")) return "H";
-  if (
-    data.includes("Debt") ||
-    data.includes("Income") ||
-    data.includes("Solution") ||
-    data.includes("Gilt") ||
-    data.includes("Index")
-  )
-    return "F";
-  if (data.includes("Other")) return "A";
-  return "E";
-};
 
-const getAssetSubType = (element) => {
-  const sType = element["Scheme Type"];
-  const sName = element["Scheme Name"];
-  if (
-    sType.includes("Debt Scheme") &&
-    (sType.includes("Liquid") ||
-      sType.includes("Money Market") ||
-      sType.includes("Overnight"))
-  )
-    return "L";
-  if (
-    sType.includes("Debt Scheme") &&
-    (sName.includes("Government") ||
-      sName.includes("Treasury") ||
-      sName.includes("Gilt") ||
-      sName.includes("GILT"))
-  )
-    return "GB";
-  if (sType.includes("Debt Scheme")) return "CB";
-  if (sType.includes("Index")) return "I";
-  if (sType.includes("Gilt")) return "GB";
-  if (
-    (sType.includes("Close") || sType.includes("Interval")) &&
-    sType.includes("Income")
-  )
-    return "HB";
-  return "S";
-};
-
-const mfType = (data) => {
-  if (data.includes("Open")) return "O";
-  if (data.includes("Close")) return "C";
-  if (data.includes("Interval")) return "I";
-};
-
-// direct ISIN as per comparison to Regular
 const directISIN = (mfInfoArray) => {
   const regularData = [];
   const directData = [];
@@ -84,16 +35,6 @@ const getDirISIN = (regularData, directData, element) => {
   }
   return compareRegAndDir.ISIN;
 };
-
-const mCap = (element) => {
-  const type = element["Scheme Type"].toLowerCase();
-  if (type.includes("equity") && type.includes("large")) return "L";
-  if (type.includes("equity") && type.includes("mid")) return "M";
-  if (type.includes("equity") && type.includes("small")) return "S";
-  if (type.includes("equity")) return "H";
-  return null;
-};
-
 const pushData = async (data, table, index) => {
   return new Promise(async (resolve, reject) => {
     const params = {
@@ -110,12 +51,4 @@ const pushData = async (data, table, index) => {
   });
 };
 
-module.exports = {
-  getAssetType,
-  mfType,
-  pushData,
-  getAssetSubType,
-  directISIN,
-  getDirISIN,
-  mCap,
-};
+module.exports = { directISIN, getDirISIN, pushData };

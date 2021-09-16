@@ -15,26 +15,31 @@ const monthsArray = [
   "DEC",
 ];
 const today = new Date();
-const todayDate = today.getDate();
-const date = todayDate < 10 ? `0${todayDate}` : todayDate;
-
-// For BSE
-const month =
-  today.getMonth() + 1 < 10
-    ? `0${today.getMonth() + 1}`
-    : `${today.getMonth() + 1}`;
-const yearFull = today.getFullYear();
-const baseFileDebtName = `DEBTBHAVCOPY${date}${month}${yearFull}`;
-// For NSE
 const monthChar = monthsArray[today.getMonth()];
-const nseBaseFileName = `wdmlist_${date}${month}${yearFull}.csv`;
-const csvFile = `${tempDir}/${nseBaseFileName}`;
+const yearFull = today.getFullYear();
 
-const apiArray = [
+const getFile = (num) => {
+  const todayDate = today.getDate() - `${num}`;
+  const date = todayDate < 10 ? `0${todayDate}` : todayDate;
+
+  // For BSE
+  const month =
+    today.getMonth() + 1 < 10
+      ? `0${today.getMonth() + 1}`
+      : `${today.getMonth() + 1}`;
+  const bseFile = `DEBTBHAVCOPY${date}${month}${yearFull}`;
+
+  // For NSE
+  const nseFile = `wdmlist_${date}${month}${yearFull}.csv`;
+  const csvFile = `${tempDir}/${nseFile}`;
+  const bseDate = `${date}${month}${yearFull}`;
+  return { bseFile, nseFile, bseDate, csvFile };
+};
+const apiArray = (bseFile, nseFile, bseDate) => [
   {
     typeExchg: "NSE",
-    fileName: nseBaseFileName,
-    url: `https://www1.nseindia.com/content/historical/WDM/${yearFull}/${monthChar}/${nseBaseFileName}`,
+    fileName: nseFile,
+    url: `https://www1.nseindia.com/content/historical/WDM/${yearFull}/${monthChar}/${nseFile}`,
     schema: {
       id: "",
       sid: "",
@@ -71,8 +76,8 @@ const apiArray = [
   },
   {
     typeExchg: "BSE",
-    fileName: `fgroup${date}${month}${yearFull}.csv`,
-    url: `https://www.bseindia.com/download/Bhavcopy/Debt/${baseFileDebtName}.zip`,
+    fileName: `fgroup${bseDate}.csv`,
+    url: `https://www.bseindia.com/download/Bhavcopy/Debt/${bseFile}.zip`,
     schema: {
       id: "",
       sid: "",
@@ -110,8 +115,8 @@ const apiArray = [
   },
   {
     typeExchg: "BSE",
-    fileName: `icdm${date}${month}${yearFull}.csv`,
-    url: `https://www.bseindia.com/download/Bhavcopy/Debt/${baseFileDebtName}.zip`,
+    fileName: `icdm${bseDate}.csv`,
+    url: `https://www.bseindia.com/download/Bhavcopy/Debt/${bseFile}.zip`,
     schema: {
       id: "",
       sid: "",
@@ -149,4 +154,4 @@ const apiArray = [
   },
 ];
 
-module.exports = { tempDir, zipFile, apiArray, csvFile };
+module.exports = { tempDir, zipFile, apiArray, getFile };
