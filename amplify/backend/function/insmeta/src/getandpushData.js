@@ -5,40 +5,30 @@ const getData = async (url, mcap, indices, isinMap, table) => {
   const schema = {};
   let batches = [];
   let count = 0;
-  let urlCount = 0;
   let batchRecords = [];
-  const res = async (urlCount) => {
-    try {
-      const data = await axios.get(url);
-      return data;
-    } catch (err) {
-      const { status } = err.response;
-      if (status === 401 && urlCount < 5) {
-        console.log(status);
-        urlCount++;
-        return await res(urlCount);
-      }
-    }
-  };
-
-  const response = await res(urlCount);
-  if (!response) return "Url is not accessible";
+  let response;
+  try {
+    response = await axios.get(url);
+  } catch (err) {
+    const { status } = err.response;
+    console.log(status);
+  }
 
   response.data.data.map((item, index) => {
-    if (index === 0) return;
+    if (index === 0 && mcap) return;
     if (isinMap[item.meta.isin]) return;
     schema.id = item.meta.isin;
     schema.name = item.meta.companyName;
     schema.mcap = mcap;
     schema.ychg = item.perChange365d;
     schema.mchg = item.perChange30d;
-    schema.ind = item.meta.industry;
     if (!mcap) {
       schema.yhigh = Math.round(item.wkhi * 100) / 100;
       schema.ylow = Math.round(item.wklo * 100) / 100;
-      schema.index = "All exchange traded fund";
-      schema.under = item.assets;
+      schema.ind = item.meta.industry;
+      if (indices === "ETF") schema.index = item.assets;
     } else {
+      schema.ind = item.meta.industry;
       schema.yhigh = Math.round(item.yearHigh * 100) / 100;
       schema.ylow = Math.round(item.yearLow * 100) / 100;
       schema.index = indices;
@@ -47,8 +37,8 @@ const getData = async (url, mcap, indices, isinMap, table) => {
     schema.createdAt = new Date().toISOString();
     schema.updatedAt = new Date().toISOString();
     isinMap[item.meta.isin] = item.meta.isin;
-
-    batches.push({ PutRequest: { Item: schema } });
+    const dataToPush = JSON.parse(JSON.stringify(schema));
+    batches.push({ PutRequest: { Item: dataToPush } });
     count++;
     if (count === 25) {
       batchRecords.push(batches);

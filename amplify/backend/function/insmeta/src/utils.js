@@ -1,5 +1,15 @@
 const apiArray = [
   {
+    url: "https://www.nseindia.com/api/sovereign-gold-bonds",
+    mcap: null,
+    indices: "SGB",
+  },
+  {
+    url: "https://www.nseindia.com/api/etf",
+    mcap: null,
+    indices:"ETF",
+  },
+  {
     url: `https://www.nseindia.com/api/equity-stockIndices?index=NIFTY%20MIDCAP%20150`,
     mcap: "M",
     indices: "NIFTY MIDCAP 150",
@@ -14,12 +24,6 @@ const apiArray = [
     mcap: "S",
     indices: "NIFTY MULTICAP 50:25:25",
   },
-  {
-    url: "https://www.nseindia.com/api/etf",
-    mcap: null,
-    indices: null
-  },
-  
 ];
 
 module.exports = apiArray;
