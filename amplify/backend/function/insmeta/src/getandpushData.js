@@ -12,6 +12,7 @@ const getData = async (url, mcap, indices, isinMap, table) => {
   } catch (err) {
     const { status } = err.response;
     console.log(status);
+    return;
   }
 
   response.data.data.map((item, index) => {
@@ -47,7 +48,7 @@ const getData = async (url, mcap, indices, isinMap, table) => {
     }
   });
 
-  if (count < 25) {
+  if (count < 25 && count > 0) {
     batchRecords.push(batches);
   }
   return batchRecords;
