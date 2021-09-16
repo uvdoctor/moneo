@@ -9,5 +9,13 @@
       ]
     }
   },
-  "lambdaLayers": []
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "moneobhavutils",
+      "env": "newdev",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    }
+  ]
 }
