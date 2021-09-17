@@ -95,7 +95,7 @@
             "Ref": "functionmoneobhavutilsArn"
           }
         ],
-        "Timeout": 25
+        "Timeout": 900
       }
     },
     "LambdaExecutionRole": {

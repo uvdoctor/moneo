@@ -4,16 +4,25 @@
 	REGION
 Amplify Params - DO NOT EDIT */
 
+const apiArray = require("./utils");
+const { getData, pushData } = require("./getandpushData");
+const table = "Indices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
+
+const getAndPushData = async () => {
+  for (let i = 0; i < apiArray.length; i++) {
+    try {
+      const {url} = apiArray[i];
+      const data = await getData(url, table);
+      for (let batch in data) {
+        const results = await pushData(data[batch], table, batch);
+        console.log(results);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
+
 exports.handler = async (event) => {
-    // TODO implement
-    const response = {
-        statusCode: 200,
-    //  Uncomment below to enable CORS requests
-    //  headers: {
-    //      "Access-Control-Allow-Origin": "*",
-    //      "Access-Control-Allow-Headers": "*"
-    //  }, 
-        body: JSON.stringify('Hello from Lambda!'),
-    };
-    return response;
+  return await getAndPushData();
 };
