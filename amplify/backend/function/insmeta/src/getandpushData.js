@@ -1,6 +1,9 @@
 const axios = require("axios");
 const docClient = require("/opt/nodejs/insertIntoDB");
 
+var instance = axios.create();
+instance.defaults.timeout === 3000;
+
 const getData = async (url, mcap, indices, isinMap, table) => {
   const schema = {};
   let batches = [];
@@ -8,8 +11,10 @@ const getData = async (url, mcap, indices, isinMap, table) => {
   let batchRecords = [];
   let response;
   try {
-    response = await axios.get(url);
+    console.log(url, "before calling url");
+    response = await axios.get(url, { timeout: 3000 });
   } catch (err) {
+    console.log(url, "after calling url");
     const { status } = err.response;
     console.log(status);
     return;
