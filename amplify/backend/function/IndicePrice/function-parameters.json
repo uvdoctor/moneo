@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "auth": {
+      "ddpwa0063633b": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "moneobhavutils",
+      "env": "newdev",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    }
+  ]
+}

@@ -45,7 +45,11 @@
         },
         "insmeta": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/insmeta-596e744f787273453839-build.zip"
+          "s3Key": "amplify-builds/insmeta-6a4d456b78765862724d-build.zip"
+        },
+        "IndicePrice": {
+          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
+          "s3Key": "amplify-builds/IndicePrice-756c454f6b2f52737931-build.zip"
         }
       },
       "interactions": {
