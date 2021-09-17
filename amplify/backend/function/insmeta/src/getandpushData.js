@@ -15,6 +15,7 @@ const getData = async (url, mcap, indices, isinMap, table) => {
     response = await axios.get(url, { timeout: 3000 });
   } catch (err) {
     console.log(url, "after calling url");
+    console.log(err)
     const { status } = err.response;
     console.log(status);
     return;
