@@ -1,5 +1,7 @@
 const axios = require("axios");
 const docClient = require("/opt/nodejs/insertIntoDB");
+var instance = axios.create();
+instance.defaults.timeout === 3000;
 
 const calcType = (type) => {
   if (type === "BROAD MARKET INDICES") return "E";
@@ -16,8 +18,9 @@ const getData = async (url, table) => {
   let batchRecords = [];
   let response;
   try {
-    response = await axios.get(url);
+    response = await axios.get(url, { timeout: 3000 });
   } catch (err) {
+    console.log(err)
     const { status } = err.response;
     console.log(status);
     return;
