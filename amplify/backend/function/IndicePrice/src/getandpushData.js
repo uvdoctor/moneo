@@ -1,7 +1,5 @@
 const axios = require("axios");
 const docClient = require("/opt/nodejs/insertIntoDB");
-var instance = axios.create();
-instance.defaults.timeout === 3000;
 
 const calcType = (type) => {
   if (type === "BROAD MARKET INDICES") return "E";
@@ -20,20 +18,19 @@ const getData = async (url, table) => {
   try {
     response = await axios.get(url, { timeout: 3000 });
   } catch (err) {
-    console.log(err)
     const { status } = err.response;
     console.log(status);
     return;
   }
   response.data.data.map((item) => {
-    schema.id = item.indexSymbol;
-    schema.name = item.index;
+    schema.id = item.indexName;
+    schema.name = item.indexName;
     schema.price = item.last;
     schema.yhigh = Math.round(item.yearHigh * 100) / 100;
     schema.ylow = Math.round(item.yearLow * 100) / 100;
-    schema.ychg = item.perChange365d;
-    schema.mchg = item.perChange30d;
-    schema.type = calcType(item.key);
+    // schema.ychg = item.perChange365d;
+    // schema.mchg = item.perChange30d;
+    // schema.type = calcType(item.key);
     schema.curr = "INR";
     schema.__typename = table.slice(0, table.indexOf("-"));
     schema.createdAt = new Date().toISOString();
