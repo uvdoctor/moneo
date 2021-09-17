@@ -7,6 +7,7 @@ import {
 	doesHoldingMatch,
 	doesMemberMatch,
 	getCommodityRate,
+	getCryptoRate,
 	getRelatedCurrencies,
 	loadAllFamilyMembers,
 	loadHoldings,
@@ -55,6 +56,7 @@ export const ETHEREUM_CLASSIC = 'ETC';
 export const DOGECOIN = 'DOGE';
 export const STELLAR = 'XLM';
 export const PM_TAB = 'Precious Metals';
+export const CRYPTO_TAB = 'Crypto';
 export const FIN_TAB = 'Financial';
 
 function NWContextProvider() {
@@ -116,13 +118,31 @@ function NWContextProvider() {
 	const [ childTab, setChildTab ] = useState<string>('');
 
 	const tabs = {
-		[FIN_TAB]: {
-			label: FIN_TAB,
-			hasUploader: true,
-			data: instruments,
-			setData: setInstruments,
-			total: totalInstruments,
-			contentComp: <InstrumentValuation />
+		Cash: {
+			label: 'Cash',
+			children: {
+				'Deposits': {
+					label: 'Deposits',
+					data: deposits,
+					setData: setDeposits,
+					total: totalDeposits,
+					contentComp: <InstrumentValuation />
+				},
+				'Saving Accounts': {
+					label: 'Saving Accounts',
+					data: savings,
+					setData: setSavings,
+					total: totalSavings,
+					contentComp: <InstrumentValuation />
+				},
+				'Money Lent': {
+					label: 'Money Lent',
+					data: lendings,
+					setData: setLendings,
+					total: totalLendings,
+					contentComp: <InstrumentValuation />
+				},
+			}
 		},
 		Physical: {
 			label: 'Physical',
@@ -184,7 +204,48 @@ function NWContextProvider() {
 							'50': '50%'
 						},
 						[DIAMOND]: {
-
+							'0.005': '0.005',
+							'0.075': '0.075',
+							'0.01' : '0.01',
+							'0.02' : '0.02',
+							'0.03' : '0.03',
+							'0.05' : '0.05',
+							'0.06' : '0.06',
+							'0.08' : '0.08',
+							'0.10' : '0.10',
+							'0.12' : '0.12',
+							'0.15' : '0.15',
+							'0.18' : '0.18',
+							'0.2' : '0.2',
+							'0.24' : '0.24',
+							'0.28' : '0.28',
+							'0.32' : '0.32',
+							'0.37' : '0.37',
+							'0.42' : '0.42',
+							'0.5' : '0.5',
+							'0.6' : '0.6',
+							'0.65' : '0.65',
+							'0.7' : '0.7',
+							'0.75' : '0.75',
+							'0.85' : '0.85',
+							'1' : '1',
+							'1.1' : '1.1',
+							'1.25' : '1.25',
+							'1.4' : '1.4',
+							'1.5' : '1.5',
+							'1.75' : '1.75',
+							'2' : '2',
+							'2.1' : '2.1',
+							'2.25' : '2.25',
+							'2.4' : '2.4',
+							'2.5' : '2.5',
+							'3' : '3',
+							'4' : '4',
+							'4.5' : '4.5',
+							'5' : '5',
+							'6' : '6',
+							'6.5' : '6.5',
+							'10' : '10'
 						}
 					},
 					categoryOptions: {
@@ -198,31 +259,13 @@ function NWContextProvider() {
 				}
 			},
 		},
-		Cash: {
-			label: 'Cash',
-			children: {
-				'Deposits': {
-					label: 'Deposits',
-					data: deposits,
-					setData: setDeposits,
-					total: totalDeposits,
-					contentComp: <InstrumentValuation />
-				},
-				'Saving Accounts': {
-					label: 'Saving Accounts',
-					data: savings,
-					setData: setSavings,
-					total: totalSavings,
-					contentComp: <InstrumentValuation />
-				},
-				'Money Lent': {
-					label: 'Money Lent',
-					data: lendings,
-					setData: setLendings,
-					total: totalLendings,
-					contentComp: <InstrumentValuation />
-				},
-			}
+		[FIN_TAB]: {
+			label: FIN_TAB,
+			hasUploader: true,
+			data: instruments,
+			setData: setInstruments,
+			total: totalInstruments,
+			contentComp: <InstrumentValuation />
 		},
 		Retirement: {
 			label: 'Retirement',
@@ -267,8 +310,8 @@ function NWContextProvider() {
 					total: totalMemberships,
 					viewComp: ViewHoldingInput,
 				},
-				Crypto: {
-					label: 'Crypto',
+				CRYPTO_TAB: {
+					label: CRYPTO_TAB,
 					data: crypto,
 					setData: setCrypto,
 					total: totalCrypto,
@@ -611,7 +654,18 @@ function NWContextProvider() {
 	};
 
 	const priceCrypto = () => {
-		setTotalCrypto(0);
+		if(!crypto.length) {
+			setTotalCrypto(0);
+			return;
+		}
+		let total = 0;
+		crypto.forEach((instrument: HoldingInput) => {
+			let rate = getCryptoRate(ratesData, instrument.subt as string, selectedCurrency);
+			if(rate && doesMemberMatch(instrument, selectedMembers)) {
+				total += instrument.qty * rate;
+			}
+		})
+		setTotalCrypto(total);
 	};
 
 	const priceAngel = () => {
