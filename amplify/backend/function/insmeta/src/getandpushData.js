@@ -38,7 +38,6 @@ const getNseCookies = async () => {
     this.cookieExpiry = new Date().getTime() + cookieMaxAge * 1000;
   }
   cookieUsedCount++;
-  console.log(cookies, "shjkdvdlbdbbbbbbbbbb");
   return this.cookies;
 };
 
@@ -75,7 +74,7 @@ const getData = async (url, mcap, indices, isinMap, table) => {
   let response;
   try {
     console.log(url, "before calling url");
-    response = await getDataFromUrl(url);
+    response = await getDataFromUrl(url, {timeout: 2000});
     console.log(response.data);
     console.log(response.data[0]);
   } catch (err) {
