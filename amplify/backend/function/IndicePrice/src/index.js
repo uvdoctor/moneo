@@ -11,9 +11,10 @@ const table = "Indices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 const getAndPushData = async () => {
   for (let i = 0; i < apiArray.length; i++) {
     try {
-      const {url} = apiArray[i];
+      const { url } = apiArray[i];
       const data = await getData(url, table);
       for (let batch in data) {
+        console.log(data[batch][0].PutRequest)
         const results = await pushData(data[batch], table, batch);
         console.log(results);
       }
