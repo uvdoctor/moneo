@@ -19,7 +19,8 @@ const monthChar = monthsArray[today.getMonth()];
 const yearFull = today.getFullYear();
 
 const getFile = (num) => {
-  const todayDate = today.getDate() - `${num}`;
+  if (!num) num = 0;
+  const todayDate = today.getDate() - parseInt(num);
   const date = todayDate < 10 ? `0${todayDate}` : todayDate;
 
   // For BSE
