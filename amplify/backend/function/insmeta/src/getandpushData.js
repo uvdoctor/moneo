@@ -75,9 +75,9 @@ const getData = async (url, mcap, indices, isinMap, table) => {
   let response;
   try {
     console.log(url, "before calling url");
-    response = getDataFromUrl(url);
+    response = await getDataFromUrl(url);
     console.log(response.data);
-    console.log(response.length);
+    console.log(response.data[0]);
   } catch (err) {
     console.log(url, "after calling url");
     console.log(err);
