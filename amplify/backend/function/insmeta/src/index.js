@@ -11,6 +11,16 @@ const isinMap = {};
 const { NseIndia } = require("stock-nse-india");
 
 const getAndPushData = async () => {
+  const nseIndia = new NseIndia();
+  return new Promise(async(resolve, reject) => {
+    console.log("Executing");
+    const symbol = await nseIndia.getAllStockSymbols();
+    console.log(symbol);
+    const eqDetails = await nseIndia.getEquityDetails("IRCTC");
+    console.log(eqDetails);
+
+    resolve();
+  });
   // for (let i = 0; i < apiArray.length; i++) {
   //   try {
   //     const { url, mcap, indices } = apiArray[i];
@@ -23,27 +33,10 @@ const getAndPushData = async () => {
   //   console.log(err);
   // }
   // }
-  const nseIndia = new NseIndia();
 
   // To get all symbols from NSE
-  nseIndia
-    .getAllStockSymbols()
-    .then((symbols) => {
-      console.log(symbols);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
 
   // To get equity details for specific symbol
-  nseIndia
-    .getEquityDetails("IRCTC")
-    .then((details) => {
-      console.log(details);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
 };
 
 exports.handler = async (event) => {
