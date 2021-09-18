@@ -26,16 +26,25 @@ const getAndPushData = async () => {
   const nseIndia = new NseIndia();
 
   // To get all symbols from NSE
-  nseIndia.getAllStockSymbols().then((symbols) => {
-    console.log(symbols);
-  });
+  nseIndia
+    .getAllStockSymbols()
+    .then((symbols) => {
+      console.log(symbols);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
   // To get equity details for specific symbol
-  nseIndia.getEquityDetails("IRCTC").then((details) => {
-    console.log(details);
-  });
+  nseIndia
+    .getEquityDetails("IRCTC")
+    .then((details) => {
+      console.log(details);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
-
 
 exports.handler = async (event) => {
   return await getAndPushData();
