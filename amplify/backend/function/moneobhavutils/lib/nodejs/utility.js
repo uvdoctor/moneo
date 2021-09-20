@@ -23,8 +23,9 @@ const utils = (num) => {
     today.getMonth() + 1 < 10
       ? `0${today.getMonth() + 1}`
       : `${today.getMonth() + 1}`;
-
-  return { date, month, monthChar, yearFull };
+  const year =
+    today.getYear().toString().charAt(1) + today.getYear().toString().charAt(2);
+  return { date, month, monthChar, year, yearFull };
 };
 
 module.exports = utils;

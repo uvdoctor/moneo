@@ -17,4 +17,4 @@ const pushData = async (data, table, index) => {
   });
 };
 
-module.exports = pushData;
+module.exports = {docClient, pushData};

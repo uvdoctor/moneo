@@ -1,46 +1,28 @@
 const tempDir = `/tmp/temp`;
 const zipFile = `${tempDir}/download.zip`;
-const monthsArray = [
-  "JAN",
-  "FEB",
-  "MAR",
-  "APR",
-  "MAY",
-  "JUN",
-  "JUL",
-  "AUG",
-  "SEP",
-  "OCT",
-  "NOV",
-  "DEC",
-];
-const today = new Date();
-const monthChar = monthsArray[today.getMonth()];
-const yearFull = today.getFullYear();
 
-const getFile = (num) => {
-  if (!num) num = 0;
-  const todayDate = today.getDate() - parseInt(num);
-  const date = todayDate < 10 ? `0${todayDate}` : todayDate;
-  // For BSE
-  const month =
-    today.getMonth() + 1 < 10
-      ? `0${today.getMonth() + 1}`
-      : `${today.getMonth() + 1}`;
-  const year =
-    today.getYear().toString().charAt(1) + today.getYear().toString().charAt(2);
-
-  const bseFile = `EQ_ISINCODE_${date}${month}${year}`;
-  // For NSE
-  const nseFile = `cm${date}${monthChar}${yearFull}bhav.csv`;
-  return { bseFile, nseFile };
+const getFileName = (date, month, monthChar, year, yearFull, typeExchg) => {
+  if (typeExchg === "NSE") return `cm${date}${monthChar}${yearFull}bhav.csv`;
+  if (typeExchg === "BSE") return `EQ_ISINCODE_${date}${month}${year}.csv`;
 };
 
-const apiArray = (bseFile, nseFile) => [
+const getUrl = (url, monthChar, yearFull, fileName) => {
+  if (url.includes("nse"))
+    return (url = url.replace(
+      "${yearFull}/${monthChar}/${fileName}",
+      `${yearFull}/${monthChar}/${fileName}`
+    ));
+  if (url.includes("bse")) {
+    fileName = fileName.replace(".csv", "");
+    url = url.replace("${fileName}", fileName);
+    return url;
+  }
+};
+
+const apiArray = [
   {
     typeExchg: "BSE",
-    fileName: bseFile + ".CSV",
-    url: `https://www.bseindia.com/download/BhavCopy/Equity/${bseFile}.zip`,
+    url: 'https://www.bseindia.com/download/BhavCopy/Equity/${fileName}.zip',
     schema: {
       id: "",
       sid: "",
@@ -67,8 +49,7 @@ const apiArray = (bseFile, nseFile) => [
   },
   {
     typeExchg: "NSE",
-    fileName: nseFile,
-    url: `https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${nseFile}.zip`,
+    url: 'https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${fileName}.zip',
     schema: {
       id: "",
       sid: "",
@@ -95,4 +76,4 @@ const apiArray = (bseFile, nseFile) => [
   },
 ];
 
-module.exports = { tempDir, zipFile, apiArray, getFile };
+module.exports = { tempDir, zipFile, apiArray, getFileName, getUrl };

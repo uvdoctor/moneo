@@ -1,14 +1,10 @@
-/* Amplify Params - DO NOT EDIT
-	AUTH_DDPWA0063633B_USERPOOLID
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */ 
 const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
-const pushData = require("/opt/nodejs/insertIntoDB");
+const { docClient, pushData } = require("/opt/nodejs/insertIntoDB");
+const utility = require("/opt/nodejs/utility");
 const utils = require("./utils");
-const { tempDir, zipFile, apiArray, getFile } = utils;
+const { tempDir, zipFile, apiArray, getFileName, getUrl } = utils;
 const bhaoUtils = require("./bhavUtils");
 const { calc, calcSchema } = require("./calculate");
 const {
@@ -21,6 +17,8 @@ const {
 const table = "INExchg-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 let exchgData = [];
 const isinMap = {};
+const numToDeductFromDate = (num) => num;
+
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < apiArray.length; i++) {
@@ -28,13 +26,22 @@ const getAndPushData = (diff) => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const { bseFile, nseFile } = getFile(diff);
-        const { typeExchg, fileName, url, codes, schema } = apiArray(
-          bseFile,
-          nseFile
-        )[i];
+        const num = numToDeductFromDate(diff);
+        const { date, month, monthChar, year, yearFull } = utility(num);
+        const { typeExchg, url, schema, codes } = apiArray[i];
+        const fileName = getFileName(
+          date,
+          month,
+          monthChar,
+          year,
+          yearFull,
+          typeExchg
+        );
+        console.log(fileName);
+        const urlName = getUrl(url, monthChar, yearFull, fileName);
+        console.log(urlName);
         await mkdir(tempDir);
-        await downloadZip(url, tempDir, zipFile);
+        await downloadZip(urlName, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
         const data = await extractDataFromCSV(
           tempDir,
@@ -57,7 +64,7 @@ const getAndPushData = (diff) => {
 
 exports.handler = async (event) => {
   const exchgData = await getAndPushData(event.diff);
-  const data = await addMetaData(exchgData);
+  const data = await addMetaData(exchgData, docClient);
   for (let batch in data) {
     await pushData(data[batch], table, batch);
   }

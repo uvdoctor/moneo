@@ -106,7 +106,7 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const addMetaData = async (exchgData) => {
+const addMetaData = async (exchgData,docClient) => {
   const table = "INExchgMeta-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
   const params = { TableName: table };
   let data;

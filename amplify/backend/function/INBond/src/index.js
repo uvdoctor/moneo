@@ -1,7 +1,7 @@
 const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
-const pushData = require("/opt/nodejs/insertIntoDB");
+const {docClient, pushData} = require("/opt/nodejs/insertIntoDB");
 const utility = require("/opt/nodejs/utility");
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray, getFileName, getUrl } = utils;
@@ -21,7 +21,7 @@ const getAndPushData = (diff) => {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
         const num = numToDeductFromDate(diff);
-        const { date, month, monthChar, yearFull } = utility(num);
+        const { date, month, monthChar, year, yearFull } = utility(num);
         const dateFormat = `${date}${month}${yearFull}`;
         const { typeExchg, file, url, schema, codes } = apiArray[i];
         const fileName = getFileName(file, dateFormat, typeExchg);
