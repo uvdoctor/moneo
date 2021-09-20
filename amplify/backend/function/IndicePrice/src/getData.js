@@ -11,7 +11,7 @@ const getData = async (url, table) => {
       const schema = {
         id: item.INDX_CD,
         name: item.IndexName,
-        price: item.Prev_Close,
+        price: item.Curvalue,
         yhigh: Math.round(item.Week52High * 100) / 100,
         ylow: Math.round(item.Week52Low * 100) / 100,
         curr: "INR",
