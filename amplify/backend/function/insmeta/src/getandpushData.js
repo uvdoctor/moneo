@@ -1,5 +1,4 @@
 const axios = require("axios");
-const docClient = require("/opt/nodejs/insertIntoDB");
 
 const baseUrl = "https://www.nseindia.com";
 let cookies = "";
@@ -74,7 +73,7 @@ const getData = async (url, mcap, indices, isinMap, table) => {
   let response;
   try {
     console.log(url, "before calling url");
-    response = await getDataFromUrl(url, {timeout: 2000});
+    response = await getDataFromUrl(url, { timeout: 2000 });
     console.log(response.data);
     console.log(response.data[0]);
   } catch (err) {
@@ -124,23 +123,4 @@ const getData = async (url, mcap, indices, isinMap, table) => {
   //   return batchRecords;
 };
 
-const pushData = async (data, table, index) => {
-  return new Promise(async (resolve, reject) => {
-    var params = {
-      RequestItems: {
-        [table]: data,
-      },
-    };
-    try {
-      const updateRecord = await docClient.batchWrite(params).promise();
-      resolve(updateRecord);
-    } catch (error) {
-      reject(`Error in dynamoDB: ${JSON.stringify(error)}, ${index}`);
-    }
-  });
-};
-
-module.exports = {
-  getData,
-  pushData,
-};
+module.exports = getData;

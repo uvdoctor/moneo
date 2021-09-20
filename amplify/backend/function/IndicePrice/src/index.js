@@ -3,9 +3,9 @@
 	ENV
 	REGION
 Amplify Params - DO NOT EDIT */
-
+const pushData = require("/opt/nodejs/insertIntoDB"); 
 const apiArray = require("./utils");
-const { getData, pushData } = require("./getandpushData");
+const getData = require("./getandpushData");
 const table = "Indices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 
 const getAndPushData = async () => {

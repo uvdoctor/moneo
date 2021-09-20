@@ -4,11 +4,11 @@
 	REGION
 Amplify Params - DO NOT EDIT */
 
+const pushData = require("/opt/nodejs/insertIntoDB");
 const eodData = require("./eodData");
 const apiListData = require("./apiList");
-
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
-const { getData, pushData, getDiamondPrice } = eodData;
+const { getData, getDiamondPrice } = eodData;
 const table = "EODPrices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 
 const eodPrice = () => {

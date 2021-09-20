@@ -1,5 +1,3 @@
-const docClient = require("/opt/nodejs/insertIntoDB");
-
 const directISIN = (mfInfoArray) => {
   const regularData = [];
   const directData = [];
@@ -35,20 +33,5 @@ const getDirISIN = (regularData, directData, element) => {
   }
   return compareRegAndDir.ISIN;
 };
-const pushData = async (data, table, index) => {
-  return new Promise(async (resolve, reject) => {
-    const params = {
-      RequestItems: {
-        [table]: data,
-      },
-    };
-    try {
-      const updateRecord = await docClient.batchWrite(params).promise();
-      resolve(updateRecord);
-    } catch (error) {
-      reject(`Error in dynamoDB: ${JSON.stringify(error)}, ${index}`);
-    }
-  });
-};
 
-module.exports = { directISIN, getDirISIN, pushData };
+module.exports = { directISIN, getDirISIN };
