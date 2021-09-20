@@ -3,8 +3,7 @@
 	ENV
 	REGION
 Amplify Params - DO NOT EDIT */
-// const {docClient, pushData} = require("/opt/nodejs/insertIntoDB"); 
-const  { docClient, pushData} = require('./insertIntoDB')
+const {docClient, pushData} = require("/opt/nodejs/insertIntoDB"); 
 const apiArray = require("./utils");
 const getData = require("./getData");
 const table = "Indices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
