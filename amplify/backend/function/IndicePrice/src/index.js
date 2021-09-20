@@ -3,9 +3,10 @@
 	ENV
 	REGION
 Amplify Params - DO NOT EDIT */
-const {docClient, pushData} = require("/opt/nodejs/insertIntoDB"); 
+// const {docClient, pushData} = require("/opt/nodejs/insertIntoDB"); 
+const  { docClient, pushData} = require('./insertIntoDB')
 const apiArray = require("./utils");
-const getData = require("./getandpushData");
+const getData = require("./getData");
 const table = "Indices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 
 const getAndPushData = async () => {
@@ -14,7 +15,6 @@ const getAndPushData = async () => {
       const { url } = apiArray[i];
       const data = await getData(url, table);
       for (let batch in data) {
-        console.log(data[batch][0].PutRequest)
         const results = await pushData(data[batch], table, batch);
         console.log(results);
       }

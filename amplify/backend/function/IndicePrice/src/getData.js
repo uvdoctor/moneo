@@ -7,22 +7,20 @@ const getData = async (url, table) => {
 
   try {
     const { data } = await axios.get(url);
-    data.data.map((item) => {
-      const { indexName, last, yearHigh, yearLow } = item;
+    data.RealTime.map((item) => {
       const schema = {
-        id: indexName,
-        name: indexName,
-        price: last,
-        yhigh: Math.round(yearHigh * 100) / 100,
-        ylow: Math.round(yearLow * 100) / 100,
+        id: item.INDX_CD,
+        name: item.IndexName,
+        price: item.Prev_Close,
+        yhigh: Math.round(item.Week52High * 100) / 100,
+        ylow: Math.round(item.Week52Low * 100) / 100,
         curr: "INR",
         __typename: table.slice(0, table.indexOf("-")),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-
-      const dataToPush = JSON.parse(JSON.stringify(schema));
-      batches.push({ PutRequest: { Item: dataToPush } });
+      // const dataToPush = JSON.parse(JSON.stringify(schema));
+      batches.push({ PutRequest: { Item: schema } });
       count++;
       if (count === 25) {
         batchRecords.push(batches);
