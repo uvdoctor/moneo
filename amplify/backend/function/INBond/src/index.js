@@ -1,24 +1,17 @@
-/* Amplify Params - DO NOT EDIT
-	AUTH_DDPWA0063633B_USERPOOLID
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */
 const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const pushData = require("/opt/nodejs/insertIntoDB");
+const utility = require("/opt/nodejs/utility");
 const utils = require("./utils");
-const { tempDir, zipFile, apiArray, getFile } = utils;
+const { tempDir, zipFile, apiArray, getFileName, getUrl } = utils;
 const bhaoUtils = require("./bhavUtils");
 const { calcSchema, calc, calcYTM } = require("./calculate");
-const {
-  downloadZip,
-  unzipDownloads,
-  extractDataFromCSV,
-  cleanDirectory,
-} = bhaoUtils;
+const { downloadZip, unzipDownloads, extractDataFromCSV, cleanDirectory } =
+  bhaoUtils;
 const table = "INBond-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 const isinMap = {};
+const numToDeductFromDate = (num) => num;
 
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
@@ -27,18 +20,19 @@ const getAndPushData = (diff) => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const { bseFile, nseFile, bseDate, csvFile } = getFile(diff);
-        const { typeExchg, fileName, url, codes, schema } = apiArray(
-          bseFile,
-          nseFile,
-          bseDate
-        )[i];
+        const num = numToDeductFromDate(diff);
+        const { date, month, monthChar, yearFull } = utility(num);
+        const dateFormat = `${date}${month}${yearFull}`;
+        const { typeExchg, file, url, schema, codes } = apiArray[i];
+        const fileName = getFileName(file, dateFormat, typeExchg);
+        const urlName = getUrl(url, monthChar, yearFull, fileName, dateFormat);
+        const csvFile = `${tempDir}/wdmlist_${date}${month}${yearFull}`;
         await mkdir(tempDir);
-        if (url.includes("zip")) {
-          await downloadZip(url, tempDir, zipFile);
+        if (urlName.includes("zip")) {
+          await downloadZip(urlName, tempDir, zipFile);
           await unzipDownloads(zipFile, tempDir);
         }
-        await downloadZip(url, tempDir, csvFile);
+        await downloadZip(urlName, tempDir, csvFile);
         const data = await extractDataFromCSV(
           tempDir,
           fileName,
