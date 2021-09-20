@@ -17,7 +17,7 @@ const {
   pushData,
 } = bhaoUtils;
 const table = "INBond-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
-const instrumentList = [];
+const isinMap = {};
 
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
@@ -45,11 +45,11 @@ const getAndPushData = (diff) => {
           codes,
           schema,
           calcSchema,
-          instrumentList,
+          isinMap,
           table
         );
         for (let batch in data) {
-          await pushData(data[batch], table, instrumentList, batch);
+          await pushData(data[batch], table, batch);
         }
       } catch (err) {
         reject(err);

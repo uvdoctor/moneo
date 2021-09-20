@@ -56,40 +56,35 @@ const extractDataFromCSV = async (
   codes,
   schema,
   calcSchema,
-  instrumentList,
+  isinMap,
   table
 ) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
     let batchRecords = [];
     let count = 0;
-    const isinMap = {};
+
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
         if (isinMap[record[codes.id]]) return;
-        const idCheck = instrumentList.some(
-          (item) => item === record[codes.id]
+        const updateSchema = calcSchema(
+          record,
+          codes,
+          schema,
+          typeExchg,
+          isinMap,
+          table
         );
-        if (!idCheck) {
-          const updateSchema = calcSchema(
-            record,
-            codes,
-            schema,
-            typeExchg,
-            isinMap,
-            table
-          );
-          if (!updateSchema) return;
-          const dataToPush = JSON.parse(JSON.stringify(updateSchema));
-          batches.push({ PutRequest: { Item: dataToPush } });
+        if (!updateSchema) return;
+        const dataToPush = JSON.parse(JSON.stringify(updateSchema));
+        batches.push({ PutRequest: { Item: dataToPush } });
 
-          count++;
-          if (count === 25) {
-            batchRecords.push(batches);
-            batches = [];
-            count = 0;
-          }
+        count++;
+        if (count === 25) {
+          batchRecords.push(batches);
+          batches = [];
+          count = 0;
         }
       })
       .on("end", async () => {
@@ -113,9 +108,8 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const pushData = async (data, table, instrumentList, index) => {
+const pushData = async (data, table, index) => {
   return new Promise(async (resolve, reject) => {
-    data.map((item) => instrumentList.push(item.PutRequest.Item.id));
     var params = {
       RequestItems: {
         [table]: data,
