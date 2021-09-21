@@ -1,6 +1,17 @@
 const AWS = require("aws-sdk");
 const docClient = new AWS.DynamoDB.DocumentClient();
 
+const getAllData = async(table) =>{
+  const params = { TableName: table };
+  try {
+    const data = await docClient.scan(params).promise();
+    return data;
+  } catch (err) {
+    console.log(`Error in dynamoDB: ${JSON.stringify(err)}`);
+    return `Error in dynamoDB: ${JSON.stringify(err)}`;
+  }
+}
+
 const pushData = async (data, table, index) => {
   return new Promise(async (resolve, reject) => {
     const params = {
@@ -17,4 +28,4 @@ const pushData = async (data, table, index) => {
   });
 };
 
-module.exports = {docClient, pushData};
+module.exports = {getAllData, pushData};
