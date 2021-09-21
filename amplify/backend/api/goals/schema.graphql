@@ -192,21 +192,19 @@ enum Industry {
   IT
   MET
   OG
-  PSU
+  PSB
   R
   MED
   TECH
   TC
   CD
-  PO
+  POW
   U
   I
   F
   E
   CDGS
   BASM
-  CPSE
-  INF
   PH
   PB
 }
@@ -306,8 +304,8 @@ type Indices
   yhigh: Float
   mchg: Float
   ychg: Float
-  type: AssetType!
-  subt: AssetSubType!
+  type: AssetType
+  subt: AssetSubType
   curr: String!
   ind: Industry
 }
