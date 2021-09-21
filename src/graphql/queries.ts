@@ -417,12 +417,15 @@ export const getIndices = /* GraphQL */ `
       id
       name
       price
+      prev
       ylow
       yhigh
       mchg
       ychg
       type
+      subt
       curr
+      ind
       createdAt
       updatedAt
     }
@@ -447,12 +450,15 @@ export const listIndicess = /* GraphQL */ `
         id
         name
         price
+        prev
         ylow
         yhigh
         mchg
         ychg
         type
+        subt
         curr
+        ind
         createdAt
         updatedAt
       }

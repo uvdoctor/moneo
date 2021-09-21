@@ -1412,12 +1412,15 @@ export const createIndices = /* GraphQL */ `
       id
       name
       price
+      prev
       ylow
       yhigh
       mchg
       ychg
       type
+      subt
       curr
+      ind
       createdAt
       updatedAt
     }
@@ -1432,12 +1435,15 @@ export const updateIndices = /* GraphQL */ `
       id
       name
       price
+      prev
       ylow
       yhigh
       mchg
       ychg
       type
+      subt
       curr
+      ind
       createdAt
       updatedAt
     }
@@ -1452,12 +1458,15 @@ export const deleteIndices = /* GraphQL */ `
       id
       name
       price
+      prev
       ylow
       yhigh
       mchg
       ychg
       type
+      subt
       curr
+      ind
       createdAt
       updatedAt
     }
