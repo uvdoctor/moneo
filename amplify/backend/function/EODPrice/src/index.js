@@ -4,7 +4,7 @@
 	REGION
 Amplify Params - DO NOT EDIT */
 
-const {docClient, pushData} = require("/opt/nodejs/insertIntoDB");
+const {getAllData, pushData} = require("/opt/nodejs/insertIntoDB");
 const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;

@@ -1,7 +1,7 @@
 const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
-const {docClient, pushData} = require("/opt/nodejs/insertIntoDB");
+const {getAllData, pushData} = require("/opt/nodejs/insertIntoDB");
 const utility = require("/opt/nodejs/utility");
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray, getFileName, getUrl } = utils;
