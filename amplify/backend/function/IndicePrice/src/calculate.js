@@ -12,13 +12,13 @@ const calcInd = (name) => {
   if (name.includes("telecom")) return "TC";
   if (name.includes("utilities")) return "U";
   if (name.includes("auto")) return "A";
+  if (name.includes("psu bank")) return "PSB";
+  if (name.includes("private bank")) return "PB";
   if (name.includes("bank")) return "B";
   if (name.includes("capital goods")) return "CG";
   if (name.includes("discretionary goods")) return "CDGS";
   if (name.includes("metal")) return "MET";
   if (name.includes("media")) return "MED";
-  if (name.includes("psu bank")) return "PSB";
-  if (name.includes("private bank")) return "PB";
   if (name.includes("oil")) return "OG";
   if (name.includes("power")) return "POW";
   if (name.includes("realty")) return "R";
