@@ -1,474 +1,553 @@
 enum LMH {
-	L
-	M
-	H
+  L
+  M
+  H
 }
 
 enum YN {
-	Y
-	N
+  Y
+  N
 }
 
 type Name {
-	fn: String!
-	ln: String
+  fn: String!
+  ln: String
 }
 
 enum FeedbackType {
-	C
-	S
-	Q
+  C
+  S
+  Q
 }
 
 enum CalcType {
-	BR
-	FI
-	LOAN
-	EDU_LOAN
-	DR
-	TC
+  BR
+  FI
+  LOAN
+  EDU_LOAN
+  DR
+  TC
 }
 
 type Feedback
-	@model
-	@aws_iam
-	@aws_cognito_user_pools
-	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
-	id: ID!
-	type: FeedbackType!
-	email: String!
-	name: Name!
-	feedback: String!
+  @model
+  @aws_iam
+  @aws_cognito_user_pools
+  @auth(
+    rules: [
+      { allow: public, provider: iam, operations: [create, read, update] }
+    ]
+  ) {
+  id: ID!
+  type: FeedbackType!
+  email: String!
+  name: Name!
+  feedback: String!
 }
 
 type Rating
-	@model
-	@aws_iam
-	@aws_cognito_user_pools
-	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
-	id: ID!
-	type: CalcType!
-	rating: Int!
-	feedbackId: String
+  @model
+  @aws_iam
+  @aws_cognito_user_pools
+  @auth(
+    rules: [
+      { allow: public, provider: iam, operations: [create, read, update] }
+    ]
+  ) {
+  id: ID!
+  type: CalcType!
+  rating: Int!
+  feedbackId: String
 }
 
 type Target {
-	num: Int!
-	val: Float!
+  num: Int!
+  val: Float!
 }
 
 enum LoanType {
-	A
-	B
+  A
+  B
 }
 
 enum GoalType {
-	B
-	S
-	R
-	E
-	X
-	C
-	FF
-	D
-	O
-	T
+  B
+  S
+  R
+  E
+  X
+  C
+  FF
+  D
+  O
+  T
 }
 
 type Loan {
-	type: LoanType!
-	per: Int!
-	rate: Float
-	dur: Int!
-	ry: Int!
-	pp: [Target!]
-	ira: [Target!]
-	emi: Float
-	pmi: Float
-	peper: Int
+  type: LoanType!
+  per: Int!
+  rate: Float
+  dur: Int!
+  ry: Int!
+  pp: [Target!]
+  ira: [Target!]
+  emi: Float
+  pmi: Float
+  peper: Int
 }
 
 type Goal @model @auth(rules: [{ allow: owner }]) {
-	id: ID!
-	sy: Int!
-	sm: Int
-	ey: Int!
-	by: Int!
-	btr: Float
-	tdr: Float!
-	tdl: Int!
-	tbi: Int
-	tdli: Int
-	tbr: Float
-	name: String!
-	type: GoalType!
-	ccy: String!
-	cp: Int
-	chg: Float
-	achg: Float
-	tgts: [Target!]
-	loan: Loan
-	imp: LMH!
-	met: YN
-	prob: LMH
-	manual: Int!
-	amper: Float
-	amsy: Int
-	aiper: Float
-	aisy: Int
-	dr: Float
-	sa: Int
-	pg: [Target]
-	pl: [Target]
-	ra: Int
-	rachg: Float
-	img: String
+  id: ID!
+  sy: Int!
+  sm: Int
+  ey: Int!
+  by: Int!
+  btr: Float
+  tdr: Float!
+  tdl: Int!
+  tbi: Int
+  tdli: Int
+  tbr: Float
+  name: String!
+  type: GoalType!
+  ccy: String!
+  cp: Int
+  chg: Float
+  achg: Float
+  tgts: [Target!]
+  loan: Loan
+  imp: LMH!
+  met: YN
+  prob: LMH
+  manual: Int!
+  amper: Float
+  amsy: Int
+  aiper: Float
+  aisy: Int
+  dr: Float
+  sa: Int
+  pg: [Target]
+  pl: [Target]
+  ra: Int
+  rachg: Float
+  img: String
 }
 
 enum Status {
-	Y
-	N
-	P
+  Y
+  N
+  P
 }
 
 type Registration
-	@model
-	@aws_iam
-	@aws_cognito_user_pools
-	@key(fields: ["email"])
-	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
-	email: String!
-	status: Status!
-	code: String!
-	country: String!
-	lat: Float
-	long: Float
+  @model
+  @aws_iam
+  @aws_cognito_user_pools
+  @key(fields: ["email"])
+  @auth(
+    rules: [
+      { allow: public, provider: iam, operations: [create, read, update] }
+    ]
+  ) {
+  email: String!
+  status: Status!
+  code: String!
+  country: String!
+  lat: Float
+  long: Float
 }
 
 enum AssetType {
-	E
-	F
-	A
-	H
+  E
+  F
+  A
+  H
 }
 
 enum AssetSubType {
-	S
-	A
-	CB
-	GB
-	HB
-	GBO
-	GoldB
-	Gold
-	I
-	L
-	R
-	C
-	M
-	O
-	V
-	Cash
+  S
+  A
+  CB
+  GB
+  HB
+  GBO
+  GoldB
+  Gold
+  I
+  L
+  R
+  C
+  M
+  O
+  V
+  Cash
+}
+
+enum Industry {
+  A
+  B
+  CG
+  H
+  FMCG
+  IT
+  MET
+  OG
+  PSU
+  R
+  MED
+  TECH
+  TC
+  CD
+  PO
+  U
+  I
+  F
+  E
+  CDGS
+  BASM
+  CPSE
+  INF
+  PH
+  PB
 }
 
 enum InsType {
-	ETF
-	REIT
-	InvIT
+  ETF
+  REIT
+  InvIT
 }
 
 enum MCap {
-	S
-	M
-	L
-	H
+  S
+  M
+  L
+  H
 }
 
 enum CreditRating {
-	E
-	H
-	M
-	L
-	J
+  E
+  H
+  M
+  L
+  J
 }
 
 type INExchg
-	@model
-	@aws_iam
-	@key(fields: ["id"])
-	@auth(
-		rules: [
-			{ allow: private, provider: iam, operations: [create, read, update, delete] }
-			{ allow: private, operations: [read] }
-		]
-	) {
-	id: String!
-	sid: String!
-	name: String!
-	exchg: String!
-	type: AssetType!
-	subt: AssetSubType!
-	itype: InsType
-	price: Float!
-	prev: Float!
-	meta: INExchgMeta
+  @model
+  @aws_iam
+  @key(fields: ["id"])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: String!
+  sid: String!
+  name: String!
+  exchg: String!
+  type: AssetType!
+  subt: AssetSubType!
+  itype: InsType
+  price: Float!
+  prev: Float!
+  meta: INExchgMeta
 }
 
 type INExchgMeta
-	@model
-	@aws_iam
-	@key(fields: ["id"])
-	@auth(
-		rules: [
-			{ allow: private, provider: iam, operations: [create, read, update, delete] }
-			{ allow: private, operations: [read] }
-		]
-	) {
-	id: String!
-	name: String!
-	mcap: MCap
-	ylow: Float!
-	yhigh: Float!
-	mchg: Float
-	ychg: Float
-	ind: String
-	index: String
-	under: String
+  @model
+  @aws_iam
+  @key(fields: ["id"])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: String!
+  name: String!
+  mcap: MCap
+  ylow: Float!
+  yhigh: Float!
+  mchg: Float
+  ychg: Float
+  ind: String
+  index: String
+  under: String
 }
 
-type Indices 
-	@model
-	@aws_iam
-	@key(fields: ["id"])
-	@auth(
-		rules: [
-			{ allow: private, provider: iam, operations: [create, read, update, delete] }
-			{ allow: private, operations: [read] }
-		]
-	) {
-	id: String!
-	name: String!
-	price: Float!
-	ylow: Float
-	yhigh: Float
-	mchg: Float
-	ychg: Float
-	type: AssetType!
-	curr: String!
+type Indices
+  @model
+  @aws_iam
+  @key(fields: ["id"])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: String!
+  name: String!
+  price: Float!
+  prev: Float
+  ylow: Float
+  yhigh: Float
+  mchg: Float
+  ychg: Float
+  type: AssetType!
+  subt: AssetSubType!
+  curr: String!
+  ind: Industry
 }
 
 type INBond
-	@model
-	@aws_iam
-	@key(fields: ["id"])
-	@auth(
-		rules: [
-			{ allow: private, provider: iam, operations: [create, read, update, delete] }
-			{ allow: private, operations: [read] }
-		]
-	) {
-	id: String!
-	sid: String!
-	name: String!
-	subt: AssetSubType!
-	price: Float!
-	exchg: String!
-	sm: Int
-	sy: Int
-	mm: Int
-	my: Int
-	rate: Float!
-	fr: YN!
-	tf: YN!
-	fv: Int
-	cr: CreditRating
-	crstr: String
-	ytm: Float
+  @model
+  @aws_iam
+  @key(fields: ["id"])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: String!
+  sid: String!
+  name: String!
+  subt: AssetSubType!
+  price: Float!
+  exchg: String!
+  sm: Int
+  sy: Int
+  mm: Int
+  my: Int
+  rate: Float!
+  fr: YN!
+  tf: YN!
+  fv: Int
+  cr: CreditRating
+  crstr: String
+  ytm: Float
 }
 
 type INMutual
-	@model
-	@aws_iam
-	@key(fields: ["id"])
-	@auth(
-		rules: [
-			{ allow: private, provider: iam, operations: [create, read, update, delete] }
-			{ allow: private, operations: [read] }
-		]
-	) {
-	id: String!
-	sid: String!
-	tid: String
-	dir: String
-	name: String!
-	type: AssetType!
-	subt: AssetSubType!
-	price: Float!
-	mftype: MFSchemeType!
-	mcap: MCap
-	tf: YN
+  @model
+  @aws_iam
+  @key(fields: ["id"])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: String!
+  sid: String!
+  tid: String
+  dir: String
+  name: String!
+  type: AssetType!
+  subt: AssetSubType!
+  price: Float!
+  mftype: MFSchemeType!
+  mcap: MCap
+  tf: YN
 }
 
 enum NPSPFM {
-	L
-	H
-	S
-	A
-	I
-	U
-	K
+  L
+  H
+  S
+  A
+  I
+  U
+  K
 }
 
 enum NPSSchemeType {
-	T1
-	T2
-	Lite
-	APY
-	CG
-	SG
-	CCG
+  T1
+  T2
+  Lite
+  APY
+  CG
+  SG
+  CCG
 }
 
 type NPS
-	@model
-	@aws_iam
-	@key(fields: ["id"])
-	@auth(
-		rules: [
-			{ allow: private, provider: iam, operations: [create, read, update, delete] }
-			{ allow: private, operations: [read] }
-		]
-	) {
-	id: String!
-	pfm: NPSPFM!
-	st: NPSSchemeType!
-	name: String!
-	type: AssetType!
-	subt: AssetSubType!
-	price: Float!
+  @model
+  @aws_iam
+  @key(fields: ["id"])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: String!
+  pfm: NPSPFM!
+  st: NPSSchemeType!
+  name: String!
+  type: AssetType!
+  subt: AssetSubType!
+  price: Float!
 }
 
 type Family @model @auth(rules: [{ allow: owner }]) {
-	id: ID!
-	tid: String!
-	name: String!
+  id: ID!
+  tid: String!
+  name: String!
 }
 
 type Holding {
-	id: String!
-	qty: Float!
-	pur: [Purchase!]
-	name: String
-	fIds: [String!]!
-	curr: String
-	chg: Float
-	chgF: Int
-	type: String
-	subt: String
+  id: String!
+  qty: Float!
+  pur: [Purchase!]
+  name: String
+  fIds: [String!]!
+  curr: String
+  chg: Float
+  chgF: Int
+  type: String
+  subt: String
 }
 
 type Deposit {
-	amt: Float!
-	sm: Int!
-	sy: Int!
-	months: Int!
-	rate: Float!
-	fIds: [String!]!
-	curr: String!
+  amt: Float!
+  sm: Int!
+  sy: Int!
+  months: Int!
+  rate: Float!
+  fIds: [String!]!
+  curr: String!
 }
 
 enum PropertyType {
-	P
-	A
-	H
-	C
-	O
-	T
-	OTHER
+  P
+  A
+  H
+  C
+  O
+  T
+  OTHER
 }
 
 type Purchase {
-	amt: Float!
-	day: Int
-	month: Int!
-	year: Int!
-	qty: Float!
+  amt: Float!
+  day: Int
+  month: Int!
+  year: Int!
+  qty: Float!
 }
 
 type Property {
-	type: PropertyType!
-	pin: Int!
-	purchase: Purchase
-	address: String
-	fIds: [String!]!
-	curr: String!
-	country: String!
-	own: [Ownership!]
+  type: PropertyType!
+  pin: Int!
+  purchase: Purchase
+  address: String
+  fIds: [String!]!
+  curr: String!
+  country: String!
+  own: [Ownership!]
 }
 
 type Ownership {
-	fId: String!
-	per: Float!
+  fId: String!
+  per: Float!
 }
 
 type Liability {
-	loan: Loan
-	fIds: [String!]!
-	curr: String!
+  loan: Loan
+  fIds: [String!]!
+  curr: String!
 }
 
 type Insurance {
-	premium: Float!
-	years: Int!
-	fIds: [String!]!
-	curr: String!
+  premium: Float!
+  years: Int!
+  fIds: [String!]!
+  curr: String!
 }
 
 type Balance {
-	amt: Float!
-	curr: String!
-	name: String
-	fIds: [String!]!
+  amt: Float!
+  curr: String!
+  name: String
+  fIds: [String!]!
 }
 
 enum MFSchemeType {
-	O
-	C
-	I
+  O
+  C
+  I
 }
 
-type Holdings @model @aws_iam @auth(rules: [{ allow: owner }, { allow: private, provider: iam, operations: [read] }]) {
-	id: ID!
-	instruments: [Holding!]
-	deposits: [Deposit!]
-	lendings: [Deposit!]
-	loans: [Liability!]
-	savings: [Balance!]
-	property: [Property!]
-	vehicles: [Holding!]
-	pm: [Holding!]
-	ppf: [Holding!]
-	epf: [Holding!]
-	vpf: [Holding!]
-	nps: [Holding!]
-	crypto: [Holding!]
-	ins: [Insurance!]
-	mem: [Holding!]
-	angel: [Holding!]
-	other: [Holding!]
+type Holdings
+  @model
+  @aws_iam
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: private, provider: iam, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  instruments: [Holding!]
+  deposits: [Deposit!]
+  lendings: [Deposit!]
+  loans: [Liability!]
+  savings: [Balance!]
+  property: [Property!]
+  vehicles: [Holding!]
+  pm: [Holding!]
+  ppf: [Holding!]
+  epf: [Holding!]
+  vpf: [Holding!]
+  nps: [Holding!]
+  crypto: [Holding!]
+  ins: [Insurance!]
+  mem: [Holding!]
+  angel: [Holding!]
+  other: [Holding!]
 }
 
 type EODPrices
-	@model
-	@aws_iam
-	@key(fields: ["id"])
-	@auth(
-		rules: [
-			{ allow: private, provider: iam, operations: [create, read, update, delete] }
-			{ allow: private, operations: [read] }
-		]
-	) {
-	id: String!
-	price: Float!
-	name: String
+  @model
+  @aws_iam
+  @key(fields: ["id"])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: String!
+  price: Float!
+  name: String
 }
