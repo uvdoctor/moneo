@@ -9,7 +9,7 @@ const { mkdir } = fsPromise;
 const { pushData } = require("/opt/nodejs/insertIntoDB");
 const { tempDir, apiArray, fileName, csvFile } = require("./utils");
 const getData = require("./getData");
-const calcInd = require("./calculate");
+const { calcInd, calcType, calcSubType } = require("./calculate");
 const {
   downloadZip,
   extractDataFromCSV,
@@ -39,7 +39,9 @@ const getAndPushData = async () => {
         subt,
         schema,
         codes,
-        calcInd
+        calcInd,
+        calcType,
+        calcSubType
       );
       for (let batch in data) {
         const results = await pushData(data[batch], table, batch);

@@ -26,4 +26,14 @@ const calcInd = (name) => {
   return null;
 };
 
-module.exports = calcInd;
+const calcType = (name) => {
+  if (name.includes("G-Sec")) return "F";
+  return "E";
+};
+
+const calcSubType = (name) => {
+  if (name.includes("G-Sec")) return "GB";
+  return "S";
+};
+
+module.exports = { calcInd, calcType, calcSubType };

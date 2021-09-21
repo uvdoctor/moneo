@@ -9,7 +9,9 @@ const getData = async (
   subt,
   schema,
   codes,
-  calcInd
+  calcInd,
+  calcType,
+  calcSubType
 ) => {
   let batches = [];
   let count = 0;
@@ -37,8 +39,8 @@ const getData = async (
             schema[key] = record[codes[key]];
         }
       });
-      schema.type = type;
-      schema.subt = subt;
+      schema.type = type ? type : calcType(record[codes[name]]);
+      schema.subt = subt ? subt : calcSubType(record[codes[name]]);
       schema.curr = "INR";
       schema.__typename = table.slice(0, table.indexOf("-"));
       schema.createdAt = new Date().toISOString();
