@@ -6,7 +6,7 @@ const utility = require("/opt/nodejs/utility");
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray, getFileName, getUrl } = utils;
 const bhaoUtils = require("./bhavUtils");
-const { calc, calcSchema } = require("./calculate");
+const { calcSchema } = require("./calculate");
 
 const {
   downloadZip,

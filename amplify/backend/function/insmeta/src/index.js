@@ -3,7 +3,7 @@
 	ENV
 	REGION
 Amplify Params - DO NOT EDIT */
-const {getAllData, pushData} = require("/opt/nodejs/insertIntoDB");
+const { pushData } = require("/opt/nodejs/insertIntoDB");
 const apiArray = require("./utils");
 const getData = require("./getandpushData");
 const table = "INExchgMeta-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
@@ -12,7 +12,7 @@ const { NseIndia } = require("stock-nse-india");
 
 const getAndPushData = async () => {
   const nseIndia = new NseIndia();
-  return new Promise(async(resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     console.log("Executing");
     const symbol = await nseIndia.getAllStockSymbols();
     console.log(symbol);

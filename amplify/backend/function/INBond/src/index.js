@@ -1,12 +1,12 @@
 const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
-const {getAllData, pushData} = require("/opt/nodejs/insertIntoDB");
+const { pushData } = require("/opt/nodejs/insertIntoDB");
 const utility = require("/opt/nodejs/utility");
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray, getFileName, getUrl } = utils;
 const bhaoUtils = require("./bhavUtils");
-const { calcSchema, calc, calcYTM } = require("./calculate");
+const { calcSchema } = require("./calculate");
 const { downloadZip, unzipDownloads, extractDataFromCSV, cleanDirectory } =
   bhaoUtils;
 const table = "INBond-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
