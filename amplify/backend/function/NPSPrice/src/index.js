@@ -7,16 +7,12 @@ const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const utils = require("./utils");
+const {docClient, pushData} = require("/opt/nodejs/insertIntoDB");
 const { tempDir, zipFile, apiArray, getFile } = utils;
 const bhaoUtils = require("./bhavUtils");
 const calc = require("./calculate");
-const {
-  downloadZip,
-  unzipDownloads,
-  cleanDirectory,
-  getDataFromTxtFile,
-  pushData,
-} = bhaoUtils;
+const { downloadZip, unzipDownloads, cleanDirectory, getDataFromTxtFile } =
+  bhaoUtils;
 const table = "NPS-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 
 const getAndPushData = (diff) => {

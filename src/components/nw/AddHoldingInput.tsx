@@ -1,9 +1,10 @@
 import { UserOutlined } from '@ant-design/icons';
 import React, { Fragment, useContext, useState } from 'react';
-import { AssetSubType, AssetType } from '../../api/goals';
+import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
-import { BTC, NWContext, PM_TAB } from './NWContext';
+import { BTC, CRYPTO_TAB, NWContext, PM_TAB } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
+import PurchaseInput from './PurchaseInput';
 import QuantityWithRate from './QuantityWithRate';
 
 interface AddHoldingInputProps {
@@ -11,42 +12,60 @@ interface AddHoldingInputProps {
 	disableOk: Function;
 	categoryOptions: any;
 	subCategoryOptions?: any;
+	purchase?: boolean;
 }
 
 export default function AddHoldingInput({
 	setInput,
 	disableOk,
 	categoryOptions,
-	subCategoryOptions
+	subCategoryOptions,
+	purchase
 }: AddHoldingInputProps) {
-	
-	const { allFamily, childTab, selectedMembers }: any = useContext(NWContext);
+	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const [ name, setName ] = useState<string>(childTab === PM_TAB ? '24' : '');
 	const [ subtype, setSubtype ] = useState<string>(childTab === PM_TAB ? AssetSubType.Gold : BTC);
 	const [ quantity, setQuantity ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
+	const [ amount, setAmount ] = useState<number>(0);
+	const [ month, setMonth ] = useState<number>(1);
+	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
 
 	const changeName = (val: string) => {
 		setName(val);
-		setInput(getNewRec(subtype, memberKey, quantity, val));
+		let rec = getNewRec();
+		rec.name = val;
+		setInput(rec);
 	};
 
 	const changeQuantity = (qty: number) => {
 		setQuantity(qty);
 		disableOk(qty <= 0);
-		setInput(getNewRec(subtype, memberKey, qty, name));
+		let rec = getNewRec();
+		rec.qty = qty;
+		setInput(rec);
 	};
 
-	const getNewRec = (subtype: string, member: string, quantity: number, name: string) => {
-		let newRec = {
+	const getNewRec = () => {
+		let newRec: HoldingInput = {
 			id: '',
 			type: AssetType.A,
 			subt: subtype,
-			fIds: [ member ],
+			fIds: [ memberKey ],
 			qty: quantity,
-			curr: 'USD',
+			curr: childTab === PM_TAB || childTab === CRYPTO_TAB ? 'USD' : selectedCurrency,
 			name: name
 		};
+		if (purchase) {
+			newRec.pur = [
+				{
+					amt: amount,
+					month: month,
+					year: year,
+					qty: 1
+				}
+			];
+		}
 		return newRec;
 	};
 
@@ -59,12 +78,16 @@ export default function AddHoldingInput({
 				setName(defaultVal);
 			}
 		}
-		setInput(getNewRec(subtype, memberKey, quantity, name));
+		let rec = getNewRec();
+		rec.subt = subtype;
+		return rec;
 	};
 
 	const changeMember = (key: string) => {
 		setMemberKey(key);
-		setInput(getNewRec(subtype, key, quantity, name));
+		let rec = getNewRec();
+		rec.fIds = [ key ];
+		setInput(rec);
 	};
 
 	return (
@@ -90,7 +113,18 @@ export default function AddHoldingInput({
 				)}
 			</p>
 			<p>
-				<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} />
+				{purchase ? (
+					<PurchaseInput
+						amount={amount}
+						setAmount={setAmount}
+						month={month}
+						setMonth={setMonth}
+						year={year}
+						setYear={setYear}
+					/>
+				) : (
+					<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} />
+				)}
 			</p>
 			<p>
 				<SelectInput

@@ -1,4 +1,3 @@
-const docClient = require("/opt/nodejs/insertIntoDB");
 const https = require("https");
 const fs = require("fs");
 const fsPromise = require("fs/promises");
@@ -104,26 +103,9 @@ const getDataFromTxtFile = async (tempDir, fileName, calc, table) => {
   return await end;
 };
 
-const pushData = (data, table, index) => {
-  return new Promise(async (resolve, reject) => {
-    var params = {
-      RequestItems: {
-        [table]: data,
-      },
-    };
-    try {
-      const updateRecord = await docClient.batchWrite(params).promise();
-      resolve(updateRecord);
-    } catch (error) {
-      reject(`Error in dynamoDB: ${JSON.stringify(error)}, ${index}`);
-    }
-  });
-};
-
 module.exports = {
   downloadZip,
   unzipDownloads,
   cleanDirectory,
   getDataFromTxtFile,
-  pushData,
 };

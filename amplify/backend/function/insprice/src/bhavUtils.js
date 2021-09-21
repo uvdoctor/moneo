@@ -1,4 +1,3 @@
-const docClient = require("/opt/nodejs/insertIntoDB");
 const https = require("https");
 const fs = require("fs");
 const fsPromise = require("fs/promises");
@@ -15,7 +14,7 @@ const downloadZip = (url, tempDir, file) => {
   return new Promise((resolve, reject) => {
     const req = https.get(url, async (res) => {
       const { statusCode } = res;
-      if (statusCode < 200 || statusCode >= 300) { 
+      if (statusCode < 200 || statusCode >= 300) {
         await cleanDirectory(
           tempDir,
           `Unable to download zip file, ${statusCode}`
@@ -56,40 +55,34 @@ const extractDataFromCSV = async (
   codes,
   schema,
   calcSchema,
-  instrumentList,
-  table
+  table,
+  isinMap
 ) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
     let batchRecords = [];
     let count = 0;
-    const isinMap = {};
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
         if (isinMap[record[codes.id]]) return;
-        const idCheck = instrumentList.some(
-          (item) => item === record[codes.id]
+        const updateSchema = calcSchema(
+          record,
+          codes,
+          schema,
+          typeExchg,
+          isinMap,
+          table
         );
-        if (!idCheck) {
-          const updateSchema = calcSchema(
-            record,
-            codes,
-            schema,
-            typeExchg,
-            isinMap,
-            table
-          );
-          if (!updateSchema) return;
-          const dataToPush = JSON.parse(JSON.stringify(updateSchema));
-          batches.push({ PutRequest: { Item: dataToPush } });
+        if (!updateSchema) return;
+        const dataToPush = JSON.parse(JSON.stringify(updateSchema));
+        batches.push({ PutRequest: { Item: dataToPush } });
 
-          count++;
-          if (count === 25) {
-            batchRecords.push(batches);
-            batches = [];
-            count = 0;
-          }
+        count++;
+        if (count === 25) {
+          batchRecords.push(batches);
+          batches = [];
+          count = 0;
         }
       })
       .on("end", async () => {
@@ -113,21 +106,27 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const pushData = async (data, table, instrumentList, index) => {
-  return new Promise(async (resolve, reject) => {
-    data.map((item) => instrumentList.push(item.PutRequest.Item.id));
-    var params = {
-      RequestItems: {
-        [table]: data,
-      },
-    };
-    try {
-      const updateRecord = await docClient.batchWrite(params).promise();
-      resolve(updateRecord);
-    } catch (error) {
-      reject(`Error in dynamoDB: ${JSON.stringify(error)}, ${index}`);
-    }
+const addMetaData = async (exchgData,docClient) => {
+  const table = "INExchgMeta-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
+  const params = { TableName: table };
+  let data;
+  try {
+    data = await docClient.scan(params).promise();
+  } catch (err) {
+    console.log(`Error in dynamoDB: ${JSON.stringify(err)}`);
+  }
+
+  exchgData.map((element) => {
+    element.map((item) => {
+      const metaData = data.Items.find(
+        (re) => re.id === item.PutRequest.Item.id
+      );
+      if (!metaData) return;
+      item.PutRequest.Item.meta = metaData;
+    });
   });
+
+  return exchgData;
 };
 
 module.exports = {
@@ -135,5 +134,5 @@ module.exports = {
   unzipDownloads,
   extractDataFromCSV,
   cleanDirectory,
-  pushData,
+  addMetaData,
 };

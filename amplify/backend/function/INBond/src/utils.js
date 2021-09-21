@@ -1,45 +1,29 @@
 const tempDir = `/tmp/temp`;
 const zipFile = `${tempDir}/download.zip`;
-const monthsArray = [
-  "JAN",
-  "FEB",
-  "MAR",
-  "APR",
-  "MAY",
-  "JUN",
-  "JUL",
-  "AUG",
-  "SEP",
-  "OCT",
-  "NOV",
-  "DEC",
-];
-const today = new Date();
-const monthChar = monthsArray[today.getMonth()];
-const yearFull = today.getFullYear();
 
-const getFile = (num) => {
-  const todayDate = today.getDate() - `${num}`;
-  const date = todayDate < 10 ? `0${todayDate}` : todayDate;
-
-  // For BSE
-  const month =
-    today.getMonth() + 1 < 10
-      ? `0${today.getMonth() + 1}`
-      : `${today.getMonth() + 1}`;
-  const bseFile = `DEBTBHAVCOPY${date}${month}${yearFull}`;
-
-  // For NSE
-  const nseFile = `wdmlist_${date}${month}${yearFull}.csv`;
-  const csvFile = `${tempDir}/${nseFile}`;
-  const bseDate = `${date}${month}${yearFull}`;
-  return { bseFile, nseFile, bseDate, csvFile };
+const getFileName = (file, dateFormat, typeExchg) => {
+  if (typeExchg === "NSE") return (file = file + dateFormat);
+  if (typeExchg === "BSE") {
+    file = file.replace("${dateFormat}", dateFormat);
+    return file;
+  }
 };
-const apiArray = (bseFile, nseFile, bseDate) => [
+
+const getUrl = (url, monthChar, yearFull, fileName, dateFormat) => {
+  if (url.includes("nse"))
+    return (url = url.replace(
+      "${yearFull}/${monthChar}/${fileName}",
+      `${yearFull}/${monthChar}/${fileName}`
+    ));
+  if (url.includes("bse"))
+    return (url = url.replace("${dateFormat}", dateFormat));
+};
+
+const apiArray = [
   {
     typeExchg: "NSE",
-    fileName: nseFile,
-    url: `https://www1.nseindia.com/content/historical/WDM/${yearFull}/${monthChar}/${nseFile}`,
+    file: "wdmlist_",
+    url: "https://www1.nseindia.com/content/historical/WDM/${yearFull}/${monthChar}/${fileName}.csv",
     schema: {
       id: "",
       sid: "",
@@ -76,8 +60,8 @@ const apiArray = (bseFile, nseFile, bseDate) => [
   },
   {
     typeExchg: "BSE",
-    fileName: `fgroup${bseDate}.csv`,
-    url: `https://www.bseindia.com/download/Bhavcopy/Debt/${bseFile}.zip`,
+    file: "fgroup${dateFormat}.csv",
+    url: "https://www.bseindia.com/download/Bhavcopy/Debt/DEBTBHAVCOPY${dateFormat}.zip",
     schema: {
       id: "",
       sid: "",
@@ -115,8 +99,8 @@ const apiArray = (bseFile, nseFile, bseDate) => [
   },
   {
     typeExchg: "BSE",
-    fileName: `icdm${bseDate}.csv`,
-    url: `https://www.bseindia.com/download/Bhavcopy/Debt/${bseFile}.zip`,
+    file: "icdm${dateFormat}.csv",
+    url: "https://www.bseindia.com/download/Bhavcopy/Debt/DEBTBHAVCOPY${dateFormat}.zip",
     schema: {
       id: "",
       sid: "",
@@ -154,4 +138,4 @@ const apiArray = (bseFile, nseFile, bseDate) => [
   },
 ];
 
-module.exports = { tempDir, zipFile, apiArray, getFile };
+module.exports = { tempDir, zipFile, apiArray, getFileName, getUrl };
