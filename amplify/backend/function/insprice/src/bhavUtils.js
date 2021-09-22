@@ -106,16 +106,9 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const addMetaData = async (exchgData,docClient) => {
+const addMetaData = async (exchgData, getAllData) => {
   const table = "INExchgMeta-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
-  const params = { TableName: table };
-  let data;
-  try {
-    data = await docClient.scan(params).promise();
-  } catch (err) {
-    console.log(`Error in dynamoDB: ${JSON.stringify(err)}`);
-  }
-
+  const data = await getAllData(table);
   exchgData.map((element) => {
     element.map((item) => {
       const metaData = data.Items.find(

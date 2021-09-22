@@ -237,3 +237,35 @@ export const getCryptoRate = (ratesData: any, cryptoCode: string, currency: stri
 	if(!rate) return 0;
 	return rate * getFXRate(ratesData, currency);
 }
+
+export const getIndustry = (at: APIt.Industry) => {
+	const indData = {
+	  A: "Auto",
+	  B: "Bank",
+	  CG: "Capital Goods",
+	  H: "Healthcare",
+	  FMCG: "Fast Moving Consumer Goods",
+	  IT: "Information Technology",
+	  MET: "Metal",
+	  OG: "Oil and Gas",
+	  PSB: "Private Sector Banks",
+	  R: "Realty",
+	  MED: "Media",
+	  TECH: "Technology",
+	  TC: "Telecom",
+	  CD: "Consumer Durables",
+	  POW: "Power",
+	  U: "Utilities",
+	  I: "Industrials",
+	  F: "Finance",
+	  E: "Energy",
+	  CDGS: "Consumer Discretionary Goods and Services",
+	  BASM: "Basic Materials",
+	  PH: "Pharma",
+	  PB: "Private Banks",
+	};
+	Object.keys(indData).forEach((key) => {
+	  if (at === key) return indData[key];
+	});
+  };
+  

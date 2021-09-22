@@ -1,4 +1,4 @@
-const utils = (num) => {
+const utility = (num) => {
   if (!num) num = 0;
   const monthsArray = [
     "JAN",
@@ -28,4 +28,4 @@ const utils = (num) => {
   return { date, month, monthChar, year, yearFull };
 };
 
-module.exports = utils;
+module.exports = utility;

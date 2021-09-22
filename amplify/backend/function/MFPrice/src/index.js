@@ -4,7 +4,7 @@
 	REGION
 Amplify Params - DO NOT EDIT */
 const mfData = require("india-mutual-fund-info");
-const {docClient, pushData} = require("/opt/nodejs/insertIntoDB");
+const { pushData } = require("/opt/nodejs/insertIntoDB");
 const { directISIN, getDirISIN } = require("./data");
 const { getType, getSubType, mfType, mCap, getName } = require("./calculate");
 const table = "INMutual-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";

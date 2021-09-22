@@ -524,12 +524,15 @@ export const onCreateIndices = /* GraphQL */ `
       id
       name
       price
+      prev
       ylow
       yhigh
       mchg
       ychg
       type
+      subt
       curr
+      ind
       createdAt
       updatedAt
     }
@@ -541,12 +544,15 @@ export const onUpdateIndices = /* GraphQL */ `
       id
       name
       price
+      prev
       ylow
       yhigh
       mchg
       ychg
       type
+      subt
       curr
+      ind
       createdAt
       updatedAt
     }
@@ -558,12 +564,15 @@ export const onDeleteIndices = /* GraphQL */ `
       id
       name
       price
+      prev
       ylow
       yhigh
       mchg
       ychg
       type
+      subt
       curr
+      ind
       createdAt
       updatedAt
     }
