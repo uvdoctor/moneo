@@ -44,7 +44,7 @@ const getAndPushData = async () => {
         calcSubType
       );
       for (let batch in data) {
-        const results = await pushData(data[batch], table, batch);
+        const results = await pushData(data[batch], table);
         console.log(results);
       }
     } catch (err) {

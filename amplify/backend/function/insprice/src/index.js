@@ -67,6 +67,6 @@ exports.handler = async (event) => {
   const exchgData = await getAndPushData(event.diff);
   const data = await addMetaData(exchgData, getAllData);
   for (let batch in data) {
-    await pushData(data[batch], table, batch);
+    await pushData(data[batch], table);
   }
 };

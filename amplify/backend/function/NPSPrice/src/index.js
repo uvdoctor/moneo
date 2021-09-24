@@ -29,7 +29,7 @@ const getAndPushData = () => {
         const data = await getDataFromTxtFile(tempDir, fileName, calc, table);
 
         for (let batch in data) {
-          await pushData(data[batch], table, batch);
+          await pushData(data[batch], table);
         }
       } catch (err) {
         reject(err);

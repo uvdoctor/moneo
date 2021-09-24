@@ -65,6 +65,6 @@ const getData = () => {
 exports.handler = async (event) => {
   const data = await getData();
   for (let batch in data) {
-    await pushData(data[batch], table, batch);
+    await pushData(data[batch], table);
   }
 };
