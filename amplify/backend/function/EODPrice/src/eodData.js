@@ -49,25 +49,7 @@ const getDiamondPrice = async (batches, table) => {
   batches.push({ PutRequest: { Item: dataToPush } });
 };
 
-const pushDataForFeed = async (tableRecords, batchRecords) => {
-  //   const feedData = [];
-  //   // const table = "";
-  //   const getLength = (arr) => {
-  //     const len = arr.flat(Infinity);
-  //     return len;
-  //   };
-  //   const schema = {
-  //     table: tableRecords.slice(0, tableRecords.indexOf("-")),
-  //     count: getLength(batchRecords),
-  //   };
-  //   const batches = [{ PutRequest: { Item: schema } }];
-  //   feedData.push(batches);
-  //   return feedData;
-  //   // await pushData(feedData, table);
-};
-
 module.exports = {
   getData,
   getDiamondPrice,
-  pushDataForFeed,
 };

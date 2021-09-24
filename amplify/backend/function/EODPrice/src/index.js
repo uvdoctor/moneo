@@ -4,16 +4,16 @@
 	REGION
 Amplify Params - DO NOT EDIT */
 
-const { pushData } = require("/opt/nodejs/insertIntoDB");
+const {docClient, pushData} = require("/opt/nodejs/insertIntoDB");
 const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
-const { getData, getDiamondPrice, pushDataForFeed } = eodData;
+const { getData, getDiamondPrice } = eodData;
 const table = "EODPrices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
-let batchRecords = [];
 
 const eodPrice = () => {
   return new Promise(async (resolve, reject) => {
+    let batchRecords = [];
     let batches = [];
     let idsToLog = [];
     let count = 0;
@@ -64,7 +64,7 @@ const eodPrice = () => {
 exports.handler = async (event) => {
   let data = await eodPrice();
   for (let batch in data) {
-    const results = await pushData(data[batch], table);
+    const results = await pushData(data[batch], table, batch);
     console.log(results);
   }
 };

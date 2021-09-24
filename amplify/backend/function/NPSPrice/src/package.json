@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "aws-sdk": "latest",
-    "extract-zip": "^2.0.1",
+    "extract-zip": "latest",
     "split": "latest",
     "url": "latest"
   },

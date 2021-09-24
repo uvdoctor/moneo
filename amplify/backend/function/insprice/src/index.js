@@ -1,13 +1,12 @@
 const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
-const { getAllData, pushData } = require("/opt/nodejs/insertIntoDB");
-const { utility } = require("/opt/nodejs/utility");
+const { docClient, pushData } = require("/opt/nodejs/insertIntoDB");
+const { commonUtils } = require("/opt/nodejs/utility");
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray, getFileName, getUrl } = utils;
 const bhaoUtils = require("./bhavUtils");
-const { calcSchema } = require("./calculate");
-
+const { calc, calcSchema } = require("./calculate");
 const {
   downloadZip,
   unzipDownloads,
@@ -18,6 +17,7 @@ const {
 const table = "INExchg-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 let exchgData = [];
 const isinMap = {};
+const numToDeductFromDate = (num) => num;
 
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
@@ -26,7 +26,8 @@ const getAndPushData = (diff) => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const { date, month, monthChar, year, yearFull } = utility(diff);
+        const num = numToDeductFromDate(diff);
+        const { date, month, monthChar, year, yearFull } = commonUtils(num);
         const { typeExchg, url, schema, codes } = apiArray[i];
         const fileName = getFileName(
           date,
@@ -63,8 +64,8 @@ const getAndPushData = (diff) => {
 
 exports.handler = async (event) => {
   const exchgData = await getAndPushData(event.diff);
-  const data = await addMetaData(exchgData, getAllData);
+  const data = await addMetaData(exchgData, docClient);
   for (let batch in data) {
-    await pushData(data[batch], table);
+    await pushData(data[batch], table, batch);
   }
 };
