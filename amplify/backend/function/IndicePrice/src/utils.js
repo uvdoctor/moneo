@@ -1,5 +1,5 @@
 const tempDir = `/tmp/temp`;
-const utility = require("opt/nodejs/utility");
+const { utility } = require("opt/nodejs/utility");
 const { date, month, yearFull } = utility();
 const fileName = `ind_close_all_${date}${month}${yearFull}`;
 const csvFile = `${tempDir}/${fileName}`;

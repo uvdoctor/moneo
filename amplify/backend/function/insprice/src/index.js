@@ -2,7 +2,7 @@ const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const { getAllData, pushData } = require("/opt/nodejs/insertIntoDB");
-const utility = require("/opt/nodejs/utility");
+const { utility } = require("/opt/nodejs/utility");
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray, getFileName, getUrl } = utils;
 const bhaoUtils = require("./bhavUtils");
@@ -64,7 +64,7 @@ const getAndPushData = (diff) => {
 };
 
 exports.handler = async (event) => {
-  const exchgData = await getAndPushData(1);
+  const exchgData = await getAndPushData(event.diff);
   const data = await addMetaData(exchgData, getAllData);
   for (let batch in data) {
     await pushData(data[batch], table, batch);

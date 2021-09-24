@@ -28,4 +28,4 @@ const utility = (num) => {
   return { date, month, monthChar, year, yearFull };
 };
 
-module.exports = utility;
+module.exports = { utility };
