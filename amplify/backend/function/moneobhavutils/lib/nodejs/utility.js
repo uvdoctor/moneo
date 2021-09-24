@@ -28,4 +28,30 @@ const utility = (num) => {
   return { date, month, monthChar, year, yearFull };
 };
 
+// const pushDataForFeed = async (
+//   table,
+//   batchRecords,
+//   url,
+//   identifier,
+//   pushData
+// ) => {
+//   const feedData = [];
+//   const tableName = "";
+//   const getLength = (arr) => {
+//     const len = arr.flat(Infinity);
+//     return len.length;
+//   };
+//   const schema = {
+//     id: table.slice(0, table.indexOf("-")) + identifier,
+//     count: getLength(batchRecords),
+//     url: url,
+//     createdAt: new Date().toISOString(),
+//     updatedAt: new Date().toISOString(),
+//     __typename: tableName.slice(0, tableName.indexOf("-")),
+//   };
+//   const batches = [{ PutRequest: { Item: schema } }];
+//   feedData.push(batches);
+//   await pushData(feedData, table);
+// };
+
 module.exports = { utility };

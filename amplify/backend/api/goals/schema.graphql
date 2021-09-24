@@ -243,7 +243,7 @@ type Feeds
       { allow: private, operations: [read] }
     ]
   ) {
-  id: ID!
+  id: String!
   table: String!
   url: String
   count: Int!
