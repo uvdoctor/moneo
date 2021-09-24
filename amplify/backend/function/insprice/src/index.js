@@ -18,7 +18,6 @@ const {
 const table = "INExchg-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 let exchgData = [];
 const isinMap = {};
-const numToDeductFromDate = (num) => num;
 
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
@@ -27,8 +26,7 @@ const getAndPushData = (diff) => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const num = numToDeductFromDate(diff);
-        const { date, month, monthChar, year, yearFull } = utility(num);
+        const { date, month, monthChar, year, yearFull } = utility(diff);
         const { typeExchg, url, schema, codes } = apiArray[i];
         const fileName = getFileName(
           date,
