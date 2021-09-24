@@ -303,8 +303,8 @@ type Indices
   prev: Float
   ylow: Float
   yhigh: Float
-  mchg: Float
-  ychg: Float
+  pe: Float
+  pb: Float
   type: AssetType
   subt: AssetSubType
   curr: String!

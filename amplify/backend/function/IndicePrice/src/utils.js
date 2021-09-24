@@ -14,12 +14,16 @@ const apiArray = [
       price: 0,
       name: "",
       ind: "",
+      pe: "",
+      pb: "",
     },
     codes: {
       id: "Index Name",
       name: "Index Name",
       ind: "Index Name",
       price: "Closing Index Value",
+      pe: "P/E",
+      pb: "P/B",
     },
   },
   {
