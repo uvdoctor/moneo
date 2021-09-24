@@ -5,10 +5,11 @@
 
 	& .site-banner-content {
 		position: absolute;
-		top: 6%;
+		top: 4%;
 		/*-webkit-transform: translateY(-50%);
 		transform: translateY(-50%);*/
 		text-align: left;
+		max-width: 530px;
 
 		& svg {
 			width: 30px;
@@ -21,13 +22,16 @@
 		}
 
 		& h3 {
-			margin-bottom: 8px;
+			&.h3-list {
+				font-size: 16px;
+				margin-bottom: 2px;
 
-			& svg {
-				width: 28px;
-				height: auto;
-				margin-right: 7px;
-				vertical-align: bottom;
+				& svg {
+					width: 22px;
+					height: auto;
+					margin-right: 7px;
+					vertical-align: middle;
+				}
 			}
 		}
 
@@ -49,32 +53,31 @@
 		}
 
 		& h2 {
-			font-size: 32px;
-			margin-bottom: 5px;
+			font-size: 30px;
+			margin-bottom: 0;
 		}
 
 		& button {
-			margin-top: 25px;
+			margin-top: 15px;
 			margin-bottom: 10px;
 		}
 	}
 }
 
-@media all and (max-width: 767.98px) {
+@media all and (max-width: 851.98px) {
 	.site-banner {
 		margin-bottom: 60px;
 
 		& .site-banner-content {
 			position: inherit;
+			margin-top: 15px;
 
 			& h2 {
-				font-size: 26px;
-				line-height: 34px;
-				margin-bottom: 15px;
+				font-size: 24px;
 			}
 
 			& h3 {
-				font-size: 17px;
+				font-size: 16px;
 			}
 
 			& h4 {
