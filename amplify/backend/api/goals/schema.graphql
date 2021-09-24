@@ -280,6 +280,7 @@ type INExchgMeta
   ind: String
   index: String
   under: String
+  fv: Int
 }
 
 type Indices

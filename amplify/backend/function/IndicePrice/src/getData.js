@@ -47,7 +47,6 @@ const getData = async (
       schema.updatedAt = new Date().toISOString();
 
       const dataToPush = JSON.parse(JSON.stringify(schema));
-      console.log(dataToPush);
       batches.push({ PutRequest: { Item: dataToPush } });
       count++;
       if (count === 25) {
