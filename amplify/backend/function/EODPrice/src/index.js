@@ -8,12 +8,12 @@ const { pushData } = require("/opt/nodejs/insertIntoDB");
 const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
-const { getData, getDiamondPrice } = eodData;
+const { getData, getDiamondPrice, pushDataForFeed } = eodData;
 const table = "EODPrices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
+let batchRecords = [];
 
 const eodPrice = () => {
   return new Promise(async (resolve, reject) => {
-    let batchRecords = [];
     let batches = [];
     let idsToLog = [];
     let count = 0;

@@ -230,6 +230,25 @@ enum CreditRating {
   J
 }
 
+type Feeds
+  @model
+  @aws_iam
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  table: String!
+  url: String
+  count: Int!
+}
+
 type INExchg
   @model
   @aws_iam
