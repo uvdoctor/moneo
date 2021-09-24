@@ -8,22 +8,21 @@ const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const utils = require("./utils");
 const { pushData } = require("/opt/nodejs/insertIntoDB");
-const { tempDir, zipFile, apiArray, getFile } = utils;
+const { tempDir, zipFile, apiArray } = utils;
 const bhaoUtils = require("./bhavUtils");
 const calc = require("./calculate");
 const { downloadZip, unzipDownloads, cleanDirectory, getDataFromTxtFile } =
   bhaoUtils;
 const table = "NPS-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 
-const getAndPushData = (diff) => {
+const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < apiArray.length; i++) {
       try {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const file = getFile(diff);
-        const { fileName, url } = apiArray(file)[i];
+        const { fileName, url } = apiArray[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
@@ -41,5 +40,5 @@ const getAndPushData = (diff) => {
 };
 
 exports.handler = async (event) => {
-  return await getAndPushData(event.diff);
+  return await getAndPushData();
 };
