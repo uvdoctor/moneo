@@ -54,8 +54,7 @@ const pushDataForFeed = async (
   };
   if (exchg) schema.exchg = exchg;
   if (url) schema.url = url;
-  const batches = [{ PutRequest: { Item: schema } }];
-  feedData.push(batches);
+  feedData.push({ PutRequest: { Item: schema } });
   const results = await pushData(feedData, tableName);
   console.log(results, "Data Pushed into Feeds Table");
 };
