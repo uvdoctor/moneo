@@ -9,7 +9,7 @@ const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const { pushData } = require("/opt/nodejs/insertIntoDB");
-const { utility, pushDataForFeed } = require("/opt/nodejs/utility");
+const { pushDataForFeed } = require("/opt/nodejs/utility");
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray } = utils;
 const {
@@ -45,7 +45,7 @@ const getAndPushData = () => {
         reject(err);
       }
     }
-    resolve(results);
+    resolve();
   });
 };
 
