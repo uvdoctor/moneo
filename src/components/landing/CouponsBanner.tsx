@@ -43,18 +43,17 @@ export default function CouponsBanner() {
 					<p className="brand-coupon">
 						<Row
 							align="middle"
-							justify="start"
 							gutter={[
-								{ xs: 5, sm: 5, md: 15 },
+								{ xs: 0, sm: 0, md: 0 },
 								{ xs: 10, sm: 10, md: 15 },
 							]}
 						>
 							{coupons.map((brand, i) => (
-								<Col key={i}>
+								<Col key={i} xs={12} sm={8} md={6} lg={8}>
 									<div className={`${brand}-coupon`} />
 								</Col>
 							))}
-							<Col>
+							<Col xs={12} sm={8} md={6} lg={8}>
 								<Button type="primary" href="" className="more-link">
 									More...
 								</Button>

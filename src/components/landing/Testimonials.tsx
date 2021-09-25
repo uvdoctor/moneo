@@ -69,54 +69,19 @@ export default function Testimonials() {
 				]}
 				showArrows={false}
 			>
-				{testimonials.map(({ title, name, location, imageName, content }, index: number) => (
-					<TestimonialTemplate
-						key={"t"+index}
-						title={title}
-						name={name}
-						location={location}
-						imageLocation={`images/testimonials/${imageName}.jpg`}
-						content={content}
-					/>
-				))}
+				{testimonials.map(
+					({ title, name, location, imageName, content }, index: number) => (
+						<TestimonialTemplate
+							key={"t" + index}
+							title={title}
+							name={name}
+							location={location}
+							imageLocation={`images/testimonials/${imageName}.jpg`}
+							content={content}
+						/>
+					)
+				)}
 			</Carousel>
-			{/*<Row align="middle" gutter={[15, 30]}>
-				<Col xs={24} sm={24} md={24} lg={24}>
-					<Carousel
-						itemsToShow={1}
-						breakPoints={[
-							{
-								width: 300,
-								itemsToShow: mobileSlideCount,
-								itemsToScroll: mobileSlideCount,
-							},
-							{
-								width: 577,
-								itemsToShow: tabletSlideCount,
-								itemsToScroll: tabletSlideCount,
-							},
-							{
-								width: 992,
-								itemsToShow: desktopSlideCount,
-								itemsToScroll: desktopSlideCount,
-							},
-						]}
-						showArrows={false}
-					>
-						{testimonials.map(
-							({ title, name, location, imageName, content }) => (
-								<TestimonialTemplate
-									title={title}
-									name={name}
-									location={location}
-									imageLocation={`images/testimonials/${imageName}.jpg`}
-									content={content}
-								/>
-							)
-						)}
-					</Carousel>
-				</Col>
-			</Row>*/}
 		</Content>
 	);
 }

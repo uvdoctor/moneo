@@ -31,18 +31,6 @@ export default function TestimonialTemplate(props: TestimonialTemplateProps) {
 				{props.content}
 				<FontAwesomeIcon icon={faQuoteRight} />
 			</p>
-
-			{/*<Row align="middle">
-				<Col xs={9} lg={5}>
-					<Avatar size={80} src={props.imageLocation} icon={<UserOutlined />} />
-				</Col>
-				<Col xs={15} lg={19}>
-					<hgroup>
-						<h3>{props.name}</h3>
-						<h4>{props.location}</h4>
-					</hgroup>
-				</Col>
-			</Row>*/}
 		</div>
 	);
 }
