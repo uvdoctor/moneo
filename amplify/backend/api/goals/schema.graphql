@@ -240,7 +240,6 @@ type Feeds
         provider: iam
         operations: [create, read, update, delete]
       }
-      { allow: private, operations: [read] }
     ]
   ) {
   id: String!
