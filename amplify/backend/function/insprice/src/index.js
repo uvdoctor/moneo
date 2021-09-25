@@ -57,7 +57,7 @@ const getAndPushData = (diff) => {
         reject(err);
       }
     }
-    resolve(exchgData);
+    resolve();
   });
 };
 

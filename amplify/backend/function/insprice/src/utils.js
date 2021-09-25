@@ -21,33 +21,6 @@ const getUrl = (url, monthChar, yearFull, fileName) => {
 
 const apiArray = [
   {
-    typeExchg: "BSE",
-    url: "https://www.bseindia.com/download/BhavCopy/Equity/${fileName}.zip",
-    schema: {
-      id: "",
-      sid: "",
-      name: "",
-      exchg: "",
-      type: "",
-      subt: "",
-      itype: "",
-      price: 0,
-      prev: 0,
-      mcap: null,
-      createdAt: "",
-      updatedAt: "",
-    },
-    codes: {
-      sid: "SC_CODE",
-      id: "ISIN_CODE",
-      name: "SC_NAME",
-      price: "LAST",
-      prev: "PREVCLOSE",
-      type: "SC_TYPE",
-      subt: "SC_GROUP",
-    },
-  },
-  {
     typeExchg: "NSE",
     url: "https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${fileName}.zip",
     schema: {
@@ -72,6 +45,33 @@ const apiArray = [
       prev: "PREVCLOSE",
       type: "SERIES",
       subt: "",
+    },
+  },
+  {
+    typeExchg: "BSE",
+    url: "https://www.bseindia.com/download/BhavCopy/Equity/${fileName}.zip",
+    schema: {
+      id: "",
+      sid: "",
+      name: "",
+      exchg: "",
+      type: "",
+      subt: "",
+      itype: "",
+      price: 0,
+      prev: 0,
+      mcap: null,
+      createdAt: "",
+      updatedAt: "",
+    },
+    codes: {
+      sid: "SC_CODE",
+      id: "ISIN_CODE",
+      name: "SC_NAME",
+      price: "LAST",
+      prev: "PREVCLOSE",
+      type: "SC_TYPE",
+      subt: "SC_GROUP",
     },
   },
 ];
