@@ -371,6 +371,39 @@ export const onDeleteRegistration = /* GraphQL */ `
     }
   }
 `;
+export const onCreateFeeds = /* GraphQL */ `
+  subscription OnCreateFeeds {
+    onCreateFeeds {
+      id
+      url
+      count
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFeeds = /* GraphQL */ `
+  subscription OnUpdateFeeds {
+    onUpdateFeeds {
+      id
+      url
+      count
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFeeds = /* GraphQL */ `
+  subscription OnDeleteFeeds {
+    onDeleteFeeds {
+      id
+      url
+      count
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateInExchg = /* GraphQL */ `
   subscription OnCreateInExchg {
     onCreateINExchg {
@@ -394,6 +427,7 @@ export const onCreateInExchg = /* GraphQL */ `
         ind
         index
         under
+        fv
         createdAt
         updatedAt
       }
@@ -425,6 +459,7 @@ export const onUpdateInExchg = /* GraphQL */ `
         ind
         index
         under
+        fv
         createdAt
         updatedAt
       }
@@ -456,6 +491,7 @@ export const onDeleteInExchg = /* GraphQL */ `
         ind
         index
         under
+        fv
         createdAt
         updatedAt
       }
@@ -477,6 +513,7 @@ export const onCreateInExchgMeta = /* GraphQL */ `
       ind
       index
       under
+      fv
       createdAt
       updatedAt
     }
@@ -495,6 +532,7 @@ export const onUpdateInExchgMeta = /* GraphQL */ `
       ind
       index
       under
+      fv
       createdAt
       updatedAt
     }
@@ -513,6 +551,7 @@ export const onDeleteInExchgMeta = /* GraphQL */ `
       ind
       index
       under
+      fv
       createdAt
       updatedAt
     }
@@ -527,8 +566,8 @@ export const onCreateIndices = /* GraphQL */ `
       prev
       ylow
       yhigh
-      mchg
-      ychg
+      pe
+      pb
       type
       subt
       curr
@@ -547,8 +586,8 @@ export const onUpdateIndices = /* GraphQL */ `
       prev
       ylow
       yhigh
-      mchg
-      ychg
+      pe
+      pb
       type
       subt
       curr
@@ -567,8 +606,8 @@ export const onDeleteIndices = /* GraphQL */ `
       prev
       ylow
       yhigh
-      mchg
-      ychg
+      pe
+      pb
       type
       subt
       curr

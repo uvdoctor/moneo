@@ -742,6 +742,39 @@ export type UpdateRegistrationInput = {
   long?: number | null,
 };
 
+export type CreateFeedsInput = {
+  id: string,
+  url?: string | null,
+  count: number,
+};
+
+export type ModelFeedsConditionInput = {
+  url?: ModelStringInput | null,
+  count?: ModelIntInput | null,
+  and?: Array< ModelFeedsConditionInput | null > | null,
+  or?: Array< ModelFeedsConditionInput | null > | null,
+  not?: ModelFeedsConditionInput | null,
+};
+
+export type Feeds = {
+  __typename: "Feeds",
+  id?: string,
+  url?: string | null,
+  count?: number,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateFeedsInput = {
+  id: string,
+  url?: string | null,
+  count?: number | null,
+};
+
+export type DeleteFeedsInput = {
+  id: string,
+};
+
 export type CreateINExchgInput = {
   id: string,
   sid: string,
@@ -846,6 +879,7 @@ export type INExchgMeta = {
   ind?: string | null,
   index?: string | null,
   under?: string | null,
+  fv?: number | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -885,6 +919,7 @@ export type CreateINExchgMetaInput = {
   ind?: string | null,
   index?: string | null,
   under?: string | null,
+  fv?: number | null,
 };
 
 export type ModelINExchgMetaConditionInput = {
@@ -897,6 +932,7 @@ export type ModelINExchgMetaConditionInput = {
   ind?: ModelStringInput | null,
   index?: ModelStringInput | null,
   under?: ModelStringInput | null,
+  fv?: ModelIntInput | null,
   and?: Array< ModelINExchgMetaConditionInput | null > | null,
   or?: Array< ModelINExchgMetaConditionInput | null > | null,
   not?: ModelINExchgMetaConditionInput | null,
@@ -918,6 +954,7 @@ export type UpdateINExchgMetaInput = {
   ind?: string | null,
   index?: string | null,
   under?: string | null,
+  fv?: number | null,
 };
 
 export type DeleteINExchgMetaInput = {
@@ -931,8 +968,8 @@ export type CreateIndicesInput = {
   prev?: number | null,
   ylow?: number | null,
   yhigh?: number | null,
-  mchg?: number | null,
-  ychg?: number | null,
+  pe?: number | null,
+  pb?: number | null,
   type?: AssetType | null,
   subt?: AssetSubType | null,
   curr: string,
@@ -972,8 +1009,8 @@ export type ModelIndicesConditionInput = {
   prev?: ModelFloatInput | null,
   ylow?: ModelFloatInput | null,
   yhigh?: ModelFloatInput | null,
-  mchg?: ModelFloatInput | null,
-  ychg?: ModelFloatInput | null,
+  pe?: ModelFloatInput | null,
+  pb?: ModelFloatInput | null,
   type?: ModelAssetTypeInput | null,
   subt?: ModelAssetSubTypeInput | null,
   curr?: ModelStringInput | null,
@@ -996,8 +1033,8 @@ export type Indices = {
   prev?: number | null,
   ylow?: number | null,
   yhigh?: number | null,
-  mchg?: number | null,
-  ychg?: number | null,
+  pe?: number | null,
+  pb?: number | null,
   type?: AssetType | null,
   subt?: AssetSubType | null,
   curr?: string,
@@ -1013,8 +1050,8 @@ export type UpdateIndicesInput = {
   prev?: number | null,
   ylow?: number | null,
   yhigh?: number | null,
-  mchg?: number | null,
-  ychg?: number | null,
+  pe?: number | null,
+  pb?: number | null,
   type?: AssetType | null,
   subt?: AssetSubType | null,
   curr?: string | null,
@@ -1448,6 +1485,21 @@ export type ModelRegistrationConnection = {
   nextToken?: string | null,
 };
 
+export type ModelFeedsFilterInput = {
+  id?: ModelStringInput | null,
+  url?: ModelStringInput | null,
+  count?: ModelIntInput | null,
+  and?: Array< ModelFeedsFilterInput | null > | null,
+  or?: Array< ModelFeedsFilterInput | null > | null,
+  not?: ModelFeedsFilterInput | null,
+};
+
+export type ModelFeedsConnection = {
+  __typename: "ModelFeedsConnection",
+  items?:  Array<Feeds | null > | null,
+  nextToken?: string | null,
+};
+
 export type ModelINExchgFilterInput = {
   id?: ModelStringInput | null,
   sid?: ModelStringInput | null,
@@ -1480,6 +1532,7 @@ export type ModelINExchgMetaFilterInput = {
   ind?: ModelStringInput | null,
   index?: ModelStringInput | null,
   under?: ModelStringInput | null,
+  fv?: ModelIntInput | null,
   and?: Array< ModelINExchgMetaFilterInput | null > | null,
   or?: Array< ModelINExchgMetaFilterInput | null > | null,
   not?: ModelINExchgMetaFilterInput | null,
@@ -1498,8 +1551,8 @@ export type ModelIndicesFilterInput = {
   prev?: ModelFloatInput | null,
   ylow?: ModelFloatInput | null,
   yhigh?: ModelFloatInput | null,
-  mchg?: ModelFloatInput | null,
-  ychg?: ModelFloatInput | null,
+  pe?: ModelFloatInput | null,
+  pb?: ModelFloatInput | null,
   type?: ModelAssetTypeInput | null,
   subt?: ModelAssetSubTypeInput | null,
   curr?: ModelStringInput | null,
@@ -3000,6 +3053,54 @@ export type UpdateRegistrationMutation = {
   } | null,
 };
 
+export type CreateFeedsMutationVariables = {
+  input?: CreateFeedsInput,
+  condition?: ModelFeedsConditionInput | null,
+};
+
+export type CreateFeedsMutation = {
+  createFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateFeedsMutationVariables = {
+  input?: UpdateFeedsInput,
+  condition?: ModelFeedsConditionInput | null,
+};
+
+export type UpdateFeedsMutation = {
+  updateFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteFeedsMutationVariables = {
+  input?: DeleteFeedsInput,
+  condition?: ModelFeedsConditionInput | null,
+};
+
+export type DeleteFeedsMutation = {
+  deleteFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateInExchgMutationVariables = {
   input?: CreateINExchgInput,
   condition?: ModelINExchgConditionInput | null,
@@ -3029,6 +3130,7 @@ export type CreateInExchgMutation = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3066,6 +3168,7 @@ export type UpdateInExchgMutation = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3103,6 +3206,7 @@ export type DeleteInExchgMutation = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3129,6 +3233,7 @@ export type CreateInExchgMetaMutation = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3152,6 +3257,7 @@ export type UpdateInExchgMetaMutation = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3175,6 +3281,7 @@ export type DeleteInExchgMetaMutation = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3194,8 +3301,8 @@ export type CreateIndicesMutation = {
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -3219,8 +3326,8 @@ export type UpdateIndicesMutation = {
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -3244,8 +3351,8 @@ export type DeleteIndicesMutation = {
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -3847,6 +3954,42 @@ export type ListRegistrationsQuery = {
   } | null,
 };
 
+export type GetFeedsQueryVariables = {
+  id?: string,
+};
+
+export type GetFeedsQuery = {
+  getFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListFeedssQueryVariables = {
+  filter?: ModelFeedsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListFeedssQuery = {
+  listFeedss?:  {
+    __typename: "ModelFeedsConnection",
+    items?:  Array< {
+      __typename: "Feeds",
+      id: string,
+      url?: string | null,
+      count: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetInExchgQueryVariables = {
   id?: string,
 };
@@ -3875,6 +4018,7 @@ export type GetInExchgQuery = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3917,6 +4061,7 @@ export type ListInExchgsQuery = {
         ind?: string | null,
         index?: string | null,
         under?: string | null,
+        fv?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3944,6 +4089,7 @@ export type GetInExchgMetaQuery = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3972,6 +4118,7 @@ export type ListInExchgMetasQuery = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -3992,8 +4139,8 @@ export type GetIndicesQuery = {
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -4022,8 +4169,8 @@ export type ListIndicessQuery = {
       prev?: number | null,
       ylow?: number | null,
       yhigh?: number | null,
-      mchg?: number | null,
-      ychg?: number | null,
+      pe?: number | null,
+      pb?: number | null,
       type?: AssetType | null,
       subt?: AssetSubType | null,
       curr: string,
@@ -5159,6 +5306,39 @@ export type OnDeleteRegistrationSubscription = {
   } | null,
 };
 
+export type OnCreateFeedsSubscription = {
+  onCreateFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateFeedsSubscription = {
+  onUpdateFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteFeedsSubscription = {
+  onDeleteFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateInExchgSubscription = {
   onCreateINExchg?:  {
     __typename: "INExchg",
@@ -5183,6 +5363,7 @@ export type OnCreateInExchgSubscription = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5215,6 +5396,7 @@ export type OnUpdateInExchgSubscription = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5247,6 +5429,7 @@ export type OnDeleteInExchgSubscription = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5268,6 +5451,7 @@ export type OnCreateInExchgMetaSubscription = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5286,6 +5470,7 @@ export type OnUpdateInExchgMetaSubscription = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5304,6 +5489,7 @@ export type OnDeleteInExchgMetaSubscription = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5318,8 +5504,8 @@ export type OnCreateIndicesSubscription = {
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -5338,8 +5524,8 @@ export type OnUpdateIndicesSubscription = {
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -5358,8 +5544,8 @@ export type OnDeleteIndicesSubscription = {
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,

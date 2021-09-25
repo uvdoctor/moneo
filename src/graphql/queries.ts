@@ -283,6 +283,35 @@ export const listRegistrations = /* GraphQL */ `
     }
   }
 `;
+export const getFeeds = /* GraphQL */ `
+  query GetFeeds($id: ID!) {
+    getFeeds(id: $id) {
+      id
+      url
+      count
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFeedss = /* GraphQL */ `
+  query ListFeedss(
+    $filter: ModelFeedsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFeedss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        url
+        count
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getInExchg = /* GraphQL */ `
   query GetInExchg($id: String!) {
     getINExchg(id: $id) {
@@ -306,6 +335,7 @@ export const getInExchg = /* GraphQL */ `
         ind
         index
         under
+        fv
         createdAt
         updatedAt
       }
@@ -350,6 +380,7 @@ export const listInExchgs = /* GraphQL */ `
           ind
           index
           under
+          fv
           createdAt
           updatedAt
         }
@@ -373,6 +404,7 @@ export const getInExchgMeta = /* GraphQL */ `
       ind
       index
       under
+      fv
       createdAt
       updatedAt
     }
@@ -404,6 +436,7 @@ export const listInExchgMetas = /* GraphQL */ `
         ind
         index
         under
+        fv
         createdAt
         updatedAt
       }
@@ -420,8 +453,8 @@ export const getIndices = /* GraphQL */ `
       prev
       ylow
       yhigh
-      mchg
-      ychg
+      pe
+      pb
       type
       subt
       curr
@@ -453,8 +486,8 @@ export const listIndicess = /* GraphQL */ `
         prev
         ylow
         yhigh
-        mchg
-        ychg
+        pe
+        pb
         type
         subt
         curr
