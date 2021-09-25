@@ -4,7 +4,12 @@
 	REGION
 Amplify Params - DO NOT EDIT */
 
-const { pushData } = require("/opt/nodejs/insertIntoDB");
+// const { pushData } = require("/opt/nodejs/insertIntoDB");
+const { pushData } = require("../.././moneobhavutils/lib/nodejs/insertIntoDB");
+const {
+  pushDataForFeed,
+} = require("../.././moneobhavutils/lib/nodejs/utility");
+// const { pushDataForFeed } = require("opt/nodejs/utility");
 const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
@@ -61,11 +66,11 @@ const eodPrice = () => {
   });
 };
 
-eodPrice()
 exports.handler = async (event) => {
   let data = await eodPrice();
   for (let batch in data) {
     const results = await pushData(data[batch], table);
     console.log(results);
   }
+  await pushDataForFeed(table, data, pushData);
 };
