@@ -6,6 +6,7 @@ const csvFile = `${tempDir}/${fileName}`;
 const apiArray = [
   {
     url: `https://archives.nseindia.com/content/indices/${fileName}.csv`,
+    exchg:"NSE",
     cat: "NSE",
     type: null,
     subt: null,
@@ -28,6 +29,7 @@ const apiArray = [
   },
   {
     url: "https://api.bseindia.com/BseIndiaAPI/api/MktCapBoard/w?type=2&cat=1",
+    exchg:"BSE",
     cat: "MarketCap",
     type: "E",
     subt: "S",
@@ -50,6 +52,7 @@ const apiArray = [
   },
   {
     url: "https://api.bseindia.com/BseIndiaAPI/api/MktCapBoard/w?type=2&cat=2",
+    exchg:"BSE",
     cat: "SectorAndInd",
     type: "E",
     subt: "S",
@@ -74,6 +77,7 @@ const apiArray = [
   },
   {
     url: "https://api.bseindia.com/BseIndiaAPI/api/MktCapBoard/w?type=2&cat=3",
+    exchg:"BSE",
     cat: "Thematics",
     type: "E",
     subt: "S",
@@ -96,6 +100,7 @@ const apiArray = [
   },
   {
     url: "https://api.bseindia.com/BseIndiaAPI/api/MktCapBoard/w?type=2&cat=4",
+    exchg:"BSE",
     cat: "Strategy",
     type: "E",
     subt: "S",
@@ -118,6 +123,7 @@ const apiArray = [
   },
   {
     url: "https://api.bseindia.com/BseIndiaAPI/api/MktCapBoard/w?type=2&cat=5",
+    exchg:"BSE",
     cat: "Sustainability",
     type: "E",
     subt: "S",
@@ -140,6 +146,7 @@ const apiArray = [
   },
   {
     url: "https://api.bseindia.com/BseIndiaAPI/api/MktCapBoard/w?type=1&cat=6",
+    exchg:"BSE",
     cat: "Volatility",
     type: "E",
     subt: "S",
@@ -158,6 +165,7 @@ const apiArray = [
   },
   {
     url: "https://api.bseindia.com/BseIndiaAPI/api/MktCapBoard/w?type=1&cat=7",
+    exchg:"BSE",
     cat: "Composite",
     type: "F",
     subt: "CB",
@@ -176,6 +184,7 @@ const apiArray = [
   },
   {
     url: "https://api.bseindia.com/BseIndiaAPI/api/MktCapBoard/w?type=1&cat=8",
+    exchg:"BSE",
     cat: "Government",
     type: "F",
     subt: "GB",
@@ -194,6 +203,7 @@ const apiArray = [
   },
   {
     url: "https://api.bseindia.com/BseIndiaAPI/api/MktCapBoard/w?type=1&cat=9",
+    exchg:"BSE",
     cat: "Corporate",
     type: "F",
     subt: "CB",
@@ -212,6 +222,7 @@ const apiArray = [
   },
   {
     url: "https://api.bseindia.com/BseIndiaAPI/api/MktCapBoard/w?type=1&cat=10",
+    exchg:"BSE",
     cat: "MoneyMarket",
     type: "F",
     subt: "L",
