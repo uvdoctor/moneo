@@ -22,7 +22,7 @@ const getUrl = (url, monthChar, yearFull, fileName) => {
 const apiArray = [
   {
     typeExchg: "BSE",
-    url: 'https://www.bseindia.com/download/BhavCopy/Equity/${fileName}.zip',
+    url: "https://www.bseindia.com/download/BhavCopy/Equity/${fileName}.zip",
     schema: {
       id: "",
       sid: "",
@@ -49,7 +49,7 @@ const apiArray = [
   },
   {
     typeExchg: "NSE",
-    url: 'https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${fileName}.zip',
+    url: "https://www1.nseindia.com/content/historical/EQUITIES/${yearFull}/${monthChar}/${fileName}.zip",
     schema: {
       id: "",
       sid: "",

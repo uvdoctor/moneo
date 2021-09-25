@@ -1,26 +1,53 @@
 const axios = require("axios");
 
-const getData = async (url, table) => {
+const getData = async (
+  nseData,
+  table,
+  url,
+  cat,
+  type,
+  subt,
+  schema,
+  codes,
+  calcInd,
+  calcType,
+  calcSubType
+) => {
   let batches = [];
   let count = 0;
   let batchRecords = [];
-
+  let dataToExtract;
   try {
     const { data } = await axios.get(url);
-    data.RealTime.map((item) => {
-      const schema = {
-        id: item.INDX_CD,
-        name: item.IndexName,
-        price: item.Curvalue,
-        yhigh: Math.round(item.Week52High * 100) / 100,
-        ylow: Math.round(item.Week52Low * 100) / 100,
-        curr: "INR",
-        __typename: table.slice(0, table.indexOf("-")),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      // const dataToPush = JSON.parse(JSON.stringify(schema));
-      batches.push({ PutRequest: { Item: schema } });
+    dataToExtract = data.EOD;
+    if (cat === "NSE") dataToExtract = nseData;
+    if (type === "E" && cat !== "Volatility") dataToExtract = data.RealTime;
+    dataToExtract.map((record) => {
+      Object.keys(schema).map((key) => {
+        switch (key) {
+          case "price":
+            return (schema[key] = Math.round(record[codes[key]] * 100) / 100);
+          case "name":
+            return (schema[key] = record[codes[key]].trim());
+          case "yhigh":
+            return (schema[key] = Math.round(record[codes[key]] * 100) / 100);
+          case "ylow":
+            return (schema[key] = Math.round(record[codes[key]] * 100) / 100);
+          case "ind":
+            return (schema[key] = calcInd(record[codes[key]]));
+          default:
+            schema[key] = record[codes[key]];
+        }
+      });
+      schema.type = type ? type : calcType(record[codes[name]]);
+      schema.subt = subt ? subt : calcSubType(record[codes[name]]);
+      schema.curr = "INR";
+      schema.__typename = table.slice(0, table.indexOf("-"));
+      schema.createdAt = new Date().toISOString();
+      schema.updatedAt = new Date().toISOString();
+
+      const dataToPush = JSON.parse(JSON.stringify(schema));
+      batches.push({ PutRequest: { Item: dataToPush } });
       count++;
       if (count === 25) {
         batchRecords.push(batches);
