@@ -1,4 +1,4 @@
-const commonUtils = (num) => {
+const utility = (num) => {
   if (!num) num = 0;
   const monthsArray = [
     "JAN",
@@ -28,4 +28,36 @@ const commonUtils = (num) => {
   return { date, month, monthChar, year, yearFull };
 };
 
-module.exports = { commonUtils };
+const pushDataForFeed = async (
+  table,
+  data,
+  pushData,
+  identifier,
+  url,
+  exchg
+) => {
+  if (!identifier) identifier = "";
+  const feedData = [];
+  const tname = table.slice(0, table.indexOf("-"));
+  const tableName = "Feeds-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
+  const getLength = (arr) => {
+    const len = arr.flat(Infinity);
+    return len.length;
+  };
+  const schema = {
+    id: `${tname}_${identifier}`,
+    tname: tname,
+    count: getLength(data),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    __typename: tableName.slice(0, tableName.indexOf("-")),
+  };
+  if (exchg) schema.exchg = exchg;
+  if (url) schema.url = url;
+  const batches = [{ PutRequest: { Item: schema } }];
+  feedData.push(batches);
+  const results = await pushData(feedData, tableName);
+  console.log(results, "Data Pushed into Feeds Table");
+};
+
+module.exports = { utility, pushDataForFeed };
