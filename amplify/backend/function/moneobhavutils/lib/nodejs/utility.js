@@ -28,30 +28,36 @@ const utility = (num) => {
   return { date, month, monthChar, year, yearFull };
 };
 
-// const pushDataForFeed = async (
-//   table,
-//   batchRecords,
-//   url,
-//   identifier,
-//   pushData
-// ) => {
-//   const feedData = [];
-//   const tableName = "";
-//   const getLength = (arr) => {
-//     const len = arr.flat(Infinity);
-//     return len.length;
-//   };
-//   const schema = {
-//     id: table.slice(0, table.indexOf("-")) + identifier,
-//     count: getLength(batchRecords),
-//     url: url,
-//     createdAt: new Date().toISOString(),
-//     updatedAt: new Date().toISOString(),
-//     __typename: tableName.slice(0, tableName.indexOf("-")),
-//   };
-//   const batches = [{ PutRequest: { Item: schema } }];
-//   feedData.push(batches);
-//   await pushData(feedData, table);
-// };
+const pushDataForFeed = async (
+  table,
+  data,
+  pushData,
+  identifier,
+  url,
+  exchg
+) => {
+  if (!identifier) identifier = "";
+  const feedData = [];
+  const tname = table.slice(0, table.indexOf("-"));
+  const tableName = "Feeds-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
+  const getLength = (arr) => {
+    const len = arr.flat(Infinity);
+    return len.length;
+  };
+  const schema = {
+    id: `${tname}_${identifier}`,
+    tname: tname,
+    count: getLength(data),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    __typename: tableName.slice(0, tableName.indexOf("-")),
+  };
+  if (exchg) schema.exchg = exchg;
+  if (url) schema.url = url;
+  const batches = [{ PutRequest: { Item: schema } }];
+  feedData.push(batches);
+  const results = await pushData(feedData, tableName);
+  console.log(results, "Data Pushed into Feeds Table");
+};
 
-module.exports = { utility };
+module.exports = { utility, pushDataForFeed };
