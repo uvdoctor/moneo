@@ -8,6 +8,7 @@ const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const utils = require("./utils");
 const { pushData } = require("/opt/nodejs/insertIntoDB");
+const { pushDataForFeed } = require("/opt/nodejs/utility");
 const { tempDir, zipFile, apiArray } = utils;
 const bhaoUtils = require("./bhavUtils");
 const calc = require("./calculate");
@@ -31,6 +32,7 @@ const getAndPushData = () => {
         for (let batch in data) {
           await pushData(data[batch], table);
         }
+        await pushDataForFeed(table, data, pushData, fileName, url);
       } catch (err) {
         reject(err);
       }

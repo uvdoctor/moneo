@@ -2,12 +2,11 @@ const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const { getAllData, pushData } = require("/opt/nodejs/insertIntoDB");
-const { utility } = require("/opt/nodejs/utility");
+const { utility, pushDataForFeed } = require("/opt/nodejs/utility");
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray, getFileName, getUrl } = utils;
 const bhaoUtils = require("./bhavUtils");
 const { calcSchema } = require("./calculate");
-
 const {
   downloadZip,
   unzipDownloads,
@@ -16,7 +15,6 @@ const {
   addMetaData,
 } = bhaoUtils;
 const table = "INExchg-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
-let exchgData = [];
 const isinMap = {};
 
 const getAndPushData = (diff) => {
@@ -36,13 +34,11 @@ const getAndPushData = (diff) => {
           yearFull,
           typeExchg
         );
-        console.log(fileName);
         const urlName = getUrl(url, monthChar, yearFull, fileName);
-        console.log(urlName);
         await mkdir(tempDir);
         await downloadZip(urlName, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
-        const data = await extractDataFromCSV(
+        const exchgData = await extractDataFromCSV(
           tempDir,
           fileName,
           typeExchg,
@@ -52,7 +48,11 @@ const getAndPushData = (diff) => {
           table,
           isinMap
         );
-        exchgData = exchgData.concat(data);
+        const data = await addMetaData(exchgData, getAllData);
+        for (let batch in data) {
+          await pushData(data[batch], table);
+        }
+        await pushDataForFeed(table, data, pushData, typeExchg, url, typeExchg);
       } catch (err) {
         reject(err);
       }
@@ -62,9 +62,5 @@ const getAndPushData = (diff) => {
 };
 
 exports.handler = async (event) => {
-  const exchgData = await getAndPushData(event.diff);
-  const data = await addMetaData(exchgData, getAllData);
-  for (let batch in data) {
-    await pushData(data[batch], table);
-  }
+  return await getAndPushData(event.diff);
 };

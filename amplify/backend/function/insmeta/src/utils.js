@@ -7,6 +7,7 @@ const apiArray = [
   {
     fileName: `${nseData}.xlsx`,
     url: `https://www1.nseindia.com/archives/combine_report/${nseData}.zip`,
+    exchg: "NSE"
   },
 ];
 

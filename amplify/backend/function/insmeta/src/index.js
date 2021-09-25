@@ -9,6 +9,7 @@ const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const { pushData } = require("/opt/nodejs/insertIntoDB");
+const { utility, pushDataForFeed } = require("/opt/nodejs/utility");
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray } = utils;
 const {
@@ -17,8 +18,8 @@ const {
   extractDataFromExcel,
   cleanDirectory,
 } = require("./bhavUtils");
-let results;
 const isinMap = {};
+
 const getAndPushData = () => {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < apiArray.length; i++) {
@@ -26,11 +27,20 @@ const getAndPushData = () => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const { fileName, url } = apiArray[i];
+        const { fileName, url, exchg } = apiArray[i];
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
-        results = await extractDataFromExcel(tempDir, fileName, table, isinMap);
+        const data = await extractDataFromExcel(
+          tempDir,
+          fileName,
+          table,
+          isinMap
+        );
+        for (let batch in data) {
+          await pushData(data[batch], table);
+        }
+        await pushDataForFeed(table, data, pushData, exchg, url, exchg);
       } catch (err) {
         reject(err);
       }
@@ -40,8 +50,5 @@ const getAndPushData = () => {
 };
 
 exports.handler = async (event) => {
-  const data = await getAndPushData();
-  for (let batch in data) {
-    await pushData(data[batch], table);
-  }
+  return await getAndPushData();
 };

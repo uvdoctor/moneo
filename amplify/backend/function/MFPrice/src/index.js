@@ -5,6 +5,7 @@
 Amplify Params - DO NOT EDIT */
 const mfData = require("india-mutual-fund-info");
 const { pushData } = require("/opt/nodejs/insertIntoDB");
+const { pushDataForFeed } = require("/opt/nodejs/utility");
 const { directISIN, getDirISIN } = require("./data");
 const { getType, getSubType, mfType, mCap, getName } = require("./calculate");
 const table = "INMutual-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
@@ -67,4 +68,5 @@ exports.handler = async (event) => {
   for (let batch in data) {
     await pushData(data[batch], table);
   }
+  await pushDataForFeed(table, data, pushData);
 };

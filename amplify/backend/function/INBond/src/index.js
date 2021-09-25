@@ -2,7 +2,7 @@ const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const { pushData } = require("/opt/nodejs/insertIntoDB");
-const { utility } = require("/opt/nodejs/utility");
+const { utility, pushDataForFeed } = require("/opt/nodejs/utility");
 const utils = require("./utils");
 const { tempDir, zipFile, apiArray, getFileName, getUrl } = utils;
 const bhaoUtils = require("./bhavUtils");
@@ -44,6 +44,7 @@ const getAndPushData = (diff) => {
         for (let batch in data) {
           await pushData(data[batch], table);
         }
+        await pushDataForFeed(table, data, pushData, file, url, typeExchg);
       } catch (err) {
         reject(err);
       }
