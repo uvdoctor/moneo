@@ -284,9 +284,11 @@ export const listRegistrations = /* GraphQL */ `
   }
 `;
 export const getFeeds = /* GraphQL */ `
-  query GetFeeds($id: ID!) {
+  query GetFeeds($id: String!) {
     getFeeds(id: $id) {
       id
+      tname
+      exchg
       url
       count
       createdAt
@@ -296,13 +298,23 @@ export const getFeeds = /* GraphQL */ `
 `;
 export const listFeedss = /* GraphQL */ `
   query ListFeedss(
+    $id: String
     $filter: ModelFeedsFilterInput
     $limit: Int
     $nextToken: String
+    $sortDirection: ModelSortDirection
   ) {
-    listFeedss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listFeedss(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
       items {
         id
+        tname
+        exchg
         url
         count
         createdAt
@@ -449,6 +461,7 @@ export const getIndices = /* GraphQL */ `
     getIndices(id: $id) {
       id
       name
+      exchg
       price
       prev
       ylow
@@ -482,6 +495,7 @@ export const listIndicess = /* GraphQL */ `
       items {
         id
         name
+        exchg
         price
         prev
         ylow
