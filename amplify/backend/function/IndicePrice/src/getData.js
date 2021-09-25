@@ -11,7 +11,8 @@ const getData = async (
   codes,
   calcInd,
   calcType,
-  calcSubType
+  calcSubType,
+  exchg
 ) => {
   let batches = [];
   let count = 0;
@@ -20,7 +21,7 @@ const getData = async (
   try {
     const { data } = await axios.get(url);
     dataToExtract = data.EOD;
-    if (cat === "NSE") dataToExtract = nseData;
+    if (exchg === "NSE") dataToExtract = nseData;
     if (type === "E" && cat !== "Volatility") dataToExtract = data.RealTime;
     dataToExtract.map((record) => {
       Object.keys(schema).map((key) => {
@@ -39,6 +40,7 @@ const getData = async (
             schema[key] = record[codes[key]];
         }
       });
+      schema.exchg = exchg;
       schema.type = type ? type : calcType(record[codes[name]]);
       schema.subt = subt ? subt : calcSubType(record[codes[name]]);
       schema.curr = "INR";

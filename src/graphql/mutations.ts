@@ -1238,6 +1238,54 @@ export const updateRegistration = /* GraphQL */ `
     }
   }
 `;
+export const createFeeds = /* GraphQL */ `
+  mutation CreateFeeds(
+    $input: CreateFeedsInput!
+    $condition: ModelFeedsConditionInput
+  ) {
+    createFeeds(input: $input, condition: $condition) {
+      id
+      tname
+      exchg
+      url
+      count
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateFeeds = /* GraphQL */ `
+  mutation UpdateFeeds(
+    $input: UpdateFeedsInput!
+    $condition: ModelFeedsConditionInput
+  ) {
+    updateFeeds(input: $input, condition: $condition) {
+      id
+      tname
+      exchg
+      url
+      count
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteFeeds = /* GraphQL */ `
+  mutation DeleteFeeds(
+    $input: DeleteFeedsInput!
+    $condition: ModelFeedsConditionInput
+  ) {
+    deleteFeeds(input: $input, condition: $condition) {
+      id
+      tname
+      exchg
+      url
+      count
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createInExchg = /* GraphQL */ `
   mutation CreateInExchg(
     $input: CreateINExchgInput!
@@ -1264,6 +1312,7 @@ export const createInExchg = /* GraphQL */ `
         ind
         index
         under
+        fv
         createdAt
         updatedAt
       }
@@ -1298,6 +1347,7 @@ export const updateInExchg = /* GraphQL */ `
         ind
         index
         under
+        fv
         createdAt
         updatedAt
       }
@@ -1332,6 +1382,7 @@ export const deleteInExchg = /* GraphQL */ `
         ind
         index
         under
+        fv
         createdAt
         updatedAt
       }
@@ -1356,6 +1407,7 @@ export const createInExchgMeta = /* GraphQL */ `
       ind
       index
       under
+      fv
       createdAt
       updatedAt
     }
@@ -1377,6 +1429,7 @@ export const updateInExchgMeta = /* GraphQL */ `
       ind
       index
       under
+      fv
       createdAt
       updatedAt
     }
@@ -1398,6 +1451,7 @@ export const deleteInExchgMeta = /* GraphQL */ `
       ind
       index
       under
+      fv
       createdAt
       updatedAt
     }
@@ -1411,12 +1465,13 @@ export const createIndices = /* GraphQL */ `
     createIndices(input: $input, condition: $condition) {
       id
       name
+      exchg
       price
       prev
       ylow
       yhigh
-      mchg
-      ychg
+      pe
+      pb
       type
       subt
       curr
@@ -1434,12 +1489,13 @@ export const updateIndices = /* GraphQL */ `
     updateIndices(input: $input, condition: $condition) {
       id
       name
+      exchg
       price
       prev
       ylow
       yhigh
-      mchg
-      ychg
+      pe
+      pb
       type
       subt
       curr
@@ -1457,12 +1513,13 @@ export const deleteIndices = /* GraphQL */ `
     deleteIndices(input: $input, condition: $condition) {
       id
       name
+      exchg
       price
       prev
       ylow
       yhigh
-      mchg
-      ychg
+      pe
+      pb
       type
       subt
       curr

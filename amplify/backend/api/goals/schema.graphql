@@ -230,6 +230,30 @@ enum CreditRating {
   J
 }
 
+enum Exchange {
+  NSE
+  BSE
+}
+type Feeds
+  @model
+  @aws_iam
+  @key(fields: ["id"])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+    ]
+  ) {
+  id: String!
+  tname: String!
+  exchg: Exchange
+  url: String
+  count: Int!
+}
+
 type INExchg
   @model
   @aws_iam
@@ -247,7 +271,7 @@ type INExchg
   id: String!
   sid: String!
   name: String!
-  exchg: String!
+  exchg: Exchange!
   type: AssetType!
   subt: AssetSubType!
   itype: InsType
@@ -299,12 +323,13 @@ type Indices
   ) {
   id: String!
   name: String!
+  exchg: Exchange!
   price: Float!
   prev: Float
   ylow: Float
   yhigh: Float
-  mchg: Float
-  ychg: Float
+  pe: Float
+  pb: Float
   type: AssetType
   subt: AssetSubType
   curr: String!
@@ -330,7 +355,7 @@ type INBond
   name: String!
   subt: AssetSubType!
   price: Float!
-  exchg: String!
+  exchg: Exchange!
   sm: Int
   sy: Int
   mm: Int

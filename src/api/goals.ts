@@ -742,11 +742,63 @@ export type UpdateRegistrationInput = {
   long?: number | null,
 };
 
+export type CreateFeedsInput = {
+  id: string,
+  tname: string,
+  exchg?: Exchange | null,
+  url?: string | null,
+  count: number,
+};
+
+export enum Exchange {
+  NSE = "NSE",
+  BSE = "BSE",
+}
+
+
+export type ModelFeedsConditionInput = {
+  tname?: ModelStringInput | null,
+  exchg?: ModelExchangeInput | null,
+  url?: ModelStringInput | null,
+  count?: ModelIntInput | null,
+  and?: Array< ModelFeedsConditionInput | null > | null,
+  or?: Array< ModelFeedsConditionInput | null > | null,
+  not?: ModelFeedsConditionInput | null,
+};
+
+export type ModelExchangeInput = {
+  eq?: Exchange | null,
+  ne?: Exchange | null,
+};
+
+export type Feeds = {
+  __typename: "Feeds",
+  id?: string,
+  tname?: string,
+  exchg?: Exchange | null,
+  url?: string | null,
+  count?: number,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateFeedsInput = {
+  id: string,
+  tname?: string | null,
+  exchg?: Exchange | null,
+  url?: string | null,
+  count?: number | null,
+};
+
+export type DeleteFeedsInput = {
+  id: string,
+};
+
 export type CreateINExchgInput = {
   id: string,
   sid: string,
   name: string,
-  exchg: string,
+  exchg: Exchange,
   type: AssetType,
   subt: AssetSubType,
   itype?: InsType | null,
@@ -792,7 +844,7 @@ export enum InsType {
 export type ModelINExchgConditionInput = {
   sid?: ModelStringInput | null,
   name?: ModelStringInput | null,
-  exchg?: ModelStringInput | null,
+  exchg?: ModelExchangeInput | null,
   type?: ModelAssetTypeInput | null,
   subt?: ModelAssetSubTypeInput | null,
   itype?: ModelInsTypeInput | null,
@@ -823,7 +875,7 @@ export type INExchg = {
   id?: string,
   sid?: string,
   name?: string,
-  exchg?: string,
+  exchg?: Exchange,
   type?: AssetType,
   subt?: AssetSubType,
   itype?: InsType | null,
@@ -846,6 +898,7 @@ export type INExchgMeta = {
   ind?: string | null,
   index?: string | null,
   under?: string | null,
+  fv?: number | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -862,7 +915,7 @@ export type UpdateINExchgInput = {
   id: string,
   sid?: string | null,
   name?: string | null,
-  exchg?: string | null,
+  exchg?: Exchange | null,
   type?: AssetType | null,
   subt?: AssetSubType | null,
   itype?: InsType | null,
@@ -885,6 +938,7 @@ export type CreateINExchgMetaInput = {
   ind?: string | null,
   index?: string | null,
   under?: string | null,
+  fv?: number | null,
 };
 
 export type ModelINExchgMetaConditionInput = {
@@ -897,6 +951,7 @@ export type ModelINExchgMetaConditionInput = {
   ind?: ModelStringInput | null,
   index?: ModelStringInput | null,
   under?: ModelStringInput | null,
+  fv?: ModelIntInput | null,
   and?: Array< ModelINExchgMetaConditionInput | null > | null,
   or?: Array< ModelINExchgMetaConditionInput | null > | null,
   not?: ModelINExchgMetaConditionInput | null,
@@ -918,6 +973,7 @@ export type UpdateINExchgMetaInput = {
   ind?: string | null,
   index?: string | null,
   under?: string | null,
+  fv?: number | null,
 };
 
 export type DeleteINExchgMetaInput = {
@@ -927,12 +983,13 @@ export type DeleteINExchgMetaInput = {
 export type CreateIndicesInput = {
   id: string,
   name: string,
+  exchg: Exchange,
   price: number,
   prev?: number | null,
   ylow?: number | null,
   yhigh?: number | null,
-  mchg?: number | null,
-  ychg?: number | null,
+  pe?: number | null,
+  pb?: number | null,
   type?: AssetType | null,
   subt?: AssetSubType | null,
   curr: string,
@@ -968,12 +1025,13 @@ export enum Industry {
 
 export type ModelIndicesConditionInput = {
   name?: ModelStringInput | null,
+  exchg?: ModelExchangeInput | null,
   price?: ModelFloatInput | null,
   prev?: ModelFloatInput | null,
   ylow?: ModelFloatInput | null,
   yhigh?: ModelFloatInput | null,
-  mchg?: ModelFloatInput | null,
-  ychg?: ModelFloatInput | null,
+  pe?: ModelFloatInput | null,
+  pb?: ModelFloatInput | null,
   type?: ModelAssetTypeInput | null,
   subt?: ModelAssetSubTypeInput | null,
   curr?: ModelStringInput | null,
@@ -992,12 +1050,13 @@ export type Indices = {
   __typename: "Indices",
   id?: string,
   name?: string,
+  exchg?: Exchange,
   price?: number,
   prev?: number | null,
   ylow?: number | null,
   yhigh?: number | null,
-  mchg?: number | null,
-  ychg?: number | null,
+  pe?: number | null,
+  pb?: number | null,
   type?: AssetType | null,
   subt?: AssetSubType | null,
   curr?: string,
@@ -1009,12 +1068,13 @@ export type Indices = {
 export type UpdateIndicesInput = {
   id: string,
   name?: string | null,
+  exchg?: Exchange | null,
   price?: number | null,
   prev?: number | null,
   ylow?: number | null,
   yhigh?: number | null,
-  mchg?: number | null,
-  ychg?: number | null,
+  pe?: number | null,
+  pb?: number | null,
   type?: AssetType | null,
   subt?: AssetSubType | null,
   curr?: string | null,
@@ -1031,7 +1091,7 @@ export type CreateINBondInput = {
   name: string,
   subt: AssetSubType,
   price: number,
-  exchg: string,
+  exchg: Exchange,
   sm?: number | null,
   sy?: number | null,
   mm?: number | null,
@@ -1059,7 +1119,7 @@ export type ModelINBondConditionInput = {
   name?: ModelStringInput | null,
   subt?: ModelAssetSubTypeInput | null,
   price?: ModelFloatInput | null,
-  exchg?: ModelStringInput | null,
+  exchg?: ModelExchangeInput | null,
   sm?: ModelIntInput | null,
   sy?: ModelIntInput | null,
   mm?: ModelIntInput | null,
@@ -1088,7 +1148,7 @@ export type INBond = {
   name?: string,
   subt?: AssetSubType,
   price?: number,
-  exchg?: string,
+  exchg?: Exchange,
   sm?: number | null,
   sy?: number | null,
   mm?: number | null,
@@ -1110,7 +1170,7 @@ export type UpdateINBondInput = {
   name?: string | null,
   subt?: AssetSubType | null,
   price?: number | null,
-  exchg?: string | null,
+  exchg?: Exchange | null,
   sm?: number | null,
   sy?: number | null,
   mm?: number | null,
@@ -1448,11 +1508,28 @@ export type ModelRegistrationConnection = {
   nextToken?: string | null,
 };
 
+export type ModelFeedsFilterInput = {
+  id?: ModelStringInput | null,
+  tname?: ModelStringInput | null,
+  exchg?: ModelExchangeInput | null,
+  url?: ModelStringInput | null,
+  count?: ModelIntInput | null,
+  and?: Array< ModelFeedsFilterInput | null > | null,
+  or?: Array< ModelFeedsFilterInput | null > | null,
+  not?: ModelFeedsFilterInput | null,
+};
+
+export type ModelFeedsConnection = {
+  __typename: "ModelFeedsConnection",
+  items?:  Array<Feeds | null > | null,
+  nextToken?: string | null,
+};
+
 export type ModelINExchgFilterInput = {
   id?: ModelStringInput | null,
   sid?: ModelStringInput | null,
   name?: ModelStringInput | null,
-  exchg?: ModelStringInput | null,
+  exchg?: ModelExchangeInput | null,
   type?: ModelAssetTypeInput | null,
   subt?: ModelAssetSubTypeInput | null,
   itype?: ModelInsTypeInput | null,
@@ -1480,6 +1557,7 @@ export type ModelINExchgMetaFilterInput = {
   ind?: ModelStringInput | null,
   index?: ModelStringInput | null,
   under?: ModelStringInput | null,
+  fv?: ModelIntInput | null,
   and?: Array< ModelINExchgMetaFilterInput | null > | null,
   or?: Array< ModelINExchgMetaFilterInput | null > | null,
   not?: ModelINExchgMetaFilterInput | null,
@@ -1494,12 +1572,13 @@ export type ModelINExchgMetaConnection = {
 export type ModelIndicesFilterInput = {
   id?: ModelStringInput | null,
   name?: ModelStringInput | null,
+  exchg?: ModelExchangeInput | null,
   price?: ModelFloatInput | null,
   prev?: ModelFloatInput | null,
   ylow?: ModelFloatInput | null,
   yhigh?: ModelFloatInput | null,
-  mchg?: ModelFloatInput | null,
-  ychg?: ModelFloatInput | null,
+  pe?: ModelFloatInput | null,
+  pb?: ModelFloatInput | null,
   type?: ModelAssetTypeInput | null,
   subt?: ModelAssetSubTypeInput | null,
   curr?: ModelStringInput | null,
@@ -1521,7 +1600,7 @@ export type ModelINBondFilterInput = {
   name?: ModelStringInput | null,
   subt?: ModelAssetSubTypeInput | null,
   price?: ModelFloatInput | null,
-  exchg?: ModelStringInput | null,
+  exchg?: ModelExchangeInput | null,
   sm?: ModelIntInput | null,
   sy?: ModelIntInput | null,
   mm?: ModelIntInput | null,
@@ -3000,6 +3079,60 @@ export type UpdateRegistrationMutation = {
   } | null,
 };
 
+export type CreateFeedsMutationVariables = {
+  input?: CreateFeedsInput,
+  condition?: ModelFeedsConditionInput | null,
+};
+
+export type CreateFeedsMutation = {
+  createFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    tname: string,
+    exchg?: Exchange | null,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateFeedsMutationVariables = {
+  input?: UpdateFeedsInput,
+  condition?: ModelFeedsConditionInput | null,
+};
+
+export type UpdateFeedsMutation = {
+  updateFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    tname: string,
+    exchg?: Exchange | null,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteFeedsMutationVariables = {
+  input?: DeleteFeedsInput,
+  condition?: ModelFeedsConditionInput | null,
+};
+
+export type DeleteFeedsMutation = {
+  deleteFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    tname: string,
+    exchg?: Exchange | null,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateInExchgMutationVariables = {
   input?: CreateINExchgInput,
   condition?: ModelINExchgConditionInput | null,
@@ -3011,7 +3144,7 @@ export type CreateInExchgMutation = {
     id: string,
     sid: string,
     name: string,
-    exchg: string,
+    exchg: Exchange,
     type: AssetType,
     subt: AssetSubType,
     itype?: InsType | null,
@@ -3029,6 +3162,7 @@ export type CreateInExchgMutation = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3048,7 +3182,7 @@ export type UpdateInExchgMutation = {
     id: string,
     sid: string,
     name: string,
-    exchg: string,
+    exchg: Exchange,
     type: AssetType,
     subt: AssetSubType,
     itype?: InsType | null,
@@ -3066,6 +3200,7 @@ export type UpdateInExchgMutation = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3085,7 +3220,7 @@ export type DeleteInExchgMutation = {
     id: string,
     sid: string,
     name: string,
-    exchg: string,
+    exchg: Exchange,
     type: AssetType,
     subt: AssetSubType,
     itype?: InsType | null,
@@ -3103,6 +3238,7 @@ export type DeleteInExchgMutation = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3129,6 +3265,7 @@ export type CreateInExchgMetaMutation = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3152,6 +3289,7 @@ export type UpdateInExchgMetaMutation = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3175,6 +3313,7 @@ export type DeleteInExchgMetaMutation = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3190,12 +3329,13 @@ export type CreateIndicesMutation = {
     __typename: "Indices",
     id: string,
     name: string,
+    exchg: Exchange,
     price: number,
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -3215,12 +3355,13 @@ export type UpdateIndicesMutation = {
     __typename: "Indices",
     id: string,
     name: string,
+    exchg: Exchange,
     price: number,
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -3240,12 +3381,13 @@ export type DeleteIndicesMutation = {
     __typename: "Indices",
     id: string,
     name: string,
+    exchg: Exchange,
     price: number,
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -3268,7 +3410,7 @@ export type CreateInBondMutation = {
     name: string,
     subt: AssetSubType,
     price: number,
-    exchg: string,
+    exchg: Exchange,
     sm?: number | null,
     sy?: number | null,
     mm?: number | null,
@@ -3298,7 +3440,7 @@ export type UpdateInBondMutation = {
     name: string,
     subt: AssetSubType,
     price: number,
-    exchg: string,
+    exchg: Exchange,
     sm?: number | null,
     sy?: number | null,
     mm?: number | null,
@@ -3328,7 +3470,7 @@ export type DeleteInBondMutation = {
     name: string,
     subt: AssetSubType,
     price: number,
-    exchg: string,
+    exchg: Exchange,
     sm?: number | null,
     sy?: number | null,
     mm?: number | null,
@@ -3847,6 +3989,48 @@ export type ListRegistrationsQuery = {
   } | null,
 };
 
+export type GetFeedsQueryVariables = {
+  id?: string,
+};
+
+export type GetFeedsQuery = {
+  getFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    tname: string,
+    exchg?: Exchange | null,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListFeedssQueryVariables = {
+  id?: string | null,
+  filter?: ModelFeedsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListFeedssQuery = {
+  listFeedss?:  {
+    __typename: "ModelFeedsConnection",
+    items?:  Array< {
+      __typename: "Feeds",
+      id: string,
+      tname: string,
+      exchg?: Exchange | null,
+      url?: string | null,
+      count: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetInExchgQueryVariables = {
   id?: string,
 };
@@ -3857,7 +4041,7 @@ export type GetInExchgQuery = {
     id: string,
     sid: string,
     name: string,
-    exchg: string,
+    exchg: Exchange,
     type: AssetType,
     subt: AssetSubType,
     itype?: InsType | null,
@@ -3875,6 +4059,7 @@ export type GetInExchgQuery = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3899,7 +4084,7 @@ export type ListInExchgsQuery = {
       id: string,
       sid: string,
       name: string,
-      exchg: string,
+      exchg: Exchange,
       type: AssetType,
       subt: AssetSubType,
       itype?: InsType | null,
@@ -3917,6 +4102,7 @@ export type ListInExchgsQuery = {
         ind?: string | null,
         index?: string | null,
         under?: string | null,
+        fv?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3944,6 +4130,7 @@ export type GetInExchgMetaQuery = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3972,6 +4159,7 @@ export type ListInExchgMetasQuery = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -3988,12 +4176,13 @@ export type GetIndicesQuery = {
     __typename: "Indices",
     id: string,
     name: string,
+    exchg: Exchange,
     price: number,
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -4018,12 +4207,13 @@ export type ListIndicessQuery = {
       __typename: "Indices",
       id: string,
       name: string,
+      exchg: Exchange,
       price: number,
       prev?: number | null,
       ylow?: number | null,
       yhigh?: number | null,
-      mchg?: number | null,
-      ychg?: number | null,
+      pe?: number | null,
+      pb?: number | null,
       type?: AssetType | null,
       subt?: AssetSubType | null,
       curr: string,
@@ -4047,7 +4237,7 @@ export type GetInBondQuery = {
     name: string,
     subt: AssetSubType,
     price: number,
-    exchg: string,
+    exchg: Exchange,
     sm?: number | null,
     sy?: number | null,
     mm?: number | null,
@@ -4082,7 +4272,7 @@ export type ListInBondsQuery = {
       name: string,
       subt: AssetSubType,
       price: number,
-      exchg: string,
+      exchg: Exchange,
       sm?: number | null,
       sy?: number | null,
       mm?: number | null,
@@ -5159,13 +5349,52 @@ export type OnDeleteRegistrationSubscription = {
   } | null,
 };
 
+export type OnCreateFeedsSubscription = {
+  onCreateFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    tname: string,
+    exchg?: Exchange | null,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateFeedsSubscription = {
+  onUpdateFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    tname: string,
+    exchg?: Exchange | null,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteFeedsSubscription = {
+  onDeleteFeeds?:  {
+    __typename: "Feeds",
+    id: string,
+    tname: string,
+    exchg?: Exchange | null,
+    url?: string | null,
+    count: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateInExchgSubscription = {
   onCreateINExchg?:  {
     __typename: "INExchg",
     id: string,
     sid: string,
     name: string,
-    exchg: string,
+    exchg: Exchange,
     type: AssetType,
     subt: AssetSubType,
     itype?: InsType | null,
@@ -5183,6 +5412,7 @@ export type OnCreateInExchgSubscription = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5197,7 +5427,7 @@ export type OnUpdateInExchgSubscription = {
     id: string,
     sid: string,
     name: string,
-    exchg: string,
+    exchg: Exchange,
     type: AssetType,
     subt: AssetSubType,
     itype?: InsType | null,
@@ -5215,6 +5445,7 @@ export type OnUpdateInExchgSubscription = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5229,7 +5460,7 @@ export type OnDeleteInExchgSubscription = {
     id: string,
     sid: string,
     name: string,
-    exchg: string,
+    exchg: Exchange,
     type: AssetType,
     subt: AssetSubType,
     itype?: InsType | null,
@@ -5247,6 +5478,7 @@ export type OnDeleteInExchgSubscription = {
       ind?: string | null,
       index?: string | null,
       under?: string | null,
+      fv?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5268,6 +5500,7 @@ export type OnCreateInExchgMetaSubscription = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5286,6 +5519,7 @@ export type OnUpdateInExchgMetaSubscription = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5304,6 +5538,7 @@ export type OnDeleteInExchgMetaSubscription = {
     ind?: string | null,
     index?: string | null,
     under?: string | null,
+    fv?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5314,12 +5549,13 @@ export type OnCreateIndicesSubscription = {
     __typename: "Indices",
     id: string,
     name: string,
+    exchg: Exchange,
     price: number,
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -5334,12 +5570,13 @@ export type OnUpdateIndicesSubscription = {
     __typename: "Indices",
     id: string,
     name: string,
+    exchg: Exchange,
     price: number,
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -5354,12 +5591,13 @@ export type OnDeleteIndicesSubscription = {
     __typename: "Indices",
     id: string,
     name: string,
+    exchg: Exchange,
     price: number,
     prev?: number | null,
     ylow?: number | null,
     yhigh?: number | null,
-    mchg?: number | null,
-    ychg?: number | null,
+    pe?: number | null,
+    pb?: number | null,
     type?: AssetType | null,
     subt?: AssetSubType | null,
     curr: string,
@@ -5377,7 +5615,7 @@ export type OnCreateInBondSubscription = {
     name: string,
     subt: AssetSubType,
     price: number,
-    exchg: string,
+    exchg: Exchange,
     sm?: number | null,
     sy?: number | null,
     mm?: number | null,
@@ -5402,7 +5640,7 @@ export type OnUpdateInBondSubscription = {
     name: string,
     subt: AssetSubType,
     price: number,
-    exchg: string,
+    exchg: Exchange,
     sm?: number | null,
     sy?: number | null,
     mm?: number | null,
@@ -5427,7 +5665,7 @@ export type OnDeleteInBondSubscription = {
     name: string,
     subt: AssetSubType,
     price: number,
-    exchg: string,
+    exchg: Exchange,
     sm?: number | null,
     sy?: number | null,
     mm?: number | null,

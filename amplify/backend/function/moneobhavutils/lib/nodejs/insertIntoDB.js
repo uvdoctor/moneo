@@ -12,7 +12,7 @@ const getAllData = async(table) =>{
   }
 }
 
-const pushData = async (data, table, index) => {
+const pushData = async (data, table) => {
   return new Promise(async (resolve, reject) => {
     const params = {
       RequestItems: {
@@ -23,7 +23,7 @@ const pushData = async (data, table, index) => {
       const updateRecord = await docClient.batchWrite(params).promise();
       resolve(updateRecord);
     } catch (error) {
-      reject(`Error in dynamoDB: ${JSON.stringify(error)}, ${index}`);
+      reject(`Error in dynamoDB: ${JSON.stringify(error)}`)
     }
   });
 };

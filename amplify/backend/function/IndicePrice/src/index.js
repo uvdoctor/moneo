@@ -7,6 +7,7 @@ const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const { pushData } = require("/opt/nodejs/insertIntoDB");
+const { pushDataForFeed } = require("/opt/nodejs/utility");
 const { tempDir, apiArray, fileName, csvFile } = require("./utils");
 const getData = require("./getData");
 const { calcInd, calcType, calcSubType } = require("./calculate");
@@ -21,7 +22,7 @@ const getAndPushData = async () => {
   for (let i = 0; i < apiArray.length; i++) {
     try {
       let dataFromNse;
-      const { url, cat, type, subt, schema, codes } = apiArray[i];
+      const { url, exchg, cat, type, subt, schema, codes } = apiArray[i];
       if (i === 0) {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
@@ -41,12 +42,15 @@ const getAndPushData = async () => {
         codes,
         calcInd,
         calcType,
-        calcSubType
+        calcSubType,
+        exchg
       );
       for (let batch in data) {
-        const results = await pushData(data[batch], table, batch);
+        const results = await pushData(data[batch], table);
         console.log(results);
       }
+
+      await pushDataForFeed(table, data, pushData, cat, url, exchg);
     } catch (err) {
       console.log(err);
     }
