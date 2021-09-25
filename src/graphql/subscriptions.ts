@@ -375,6 +375,8 @@ export const onCreateFeeds = /* GraphQL */ `
   subscription OnCreateFeeds {
     onCreateFeeds {
       id
+      tname
+      exchg
       url
       count
       createdAt
@@ -386,6 +388,8 @@ export const onUpdateFeeds = /* GraphQL */ `
   subscription OnUpdateFeeds {
     onUpdateFeeds {
       id
+      tname
+      exchg
       url
       count
       createdAt
@@ -397,6 +401,8 @@ export const onDeleteFeeds = /* GraphQL */ `
   subscription OnDeleteFeeds {
     onDeleteFeeds {
       id
+      tname
+      exchg
       url
       count
       createdAt
@@ -562,6 +568,7 @@ export const onCreateIndices = /* GraphQL */ `
     onCreateIndices {
       id
       name
+      exchg
       price
       prev
       ylow
@@ -582,6 +589,7 @@ export const onUpdateIndices = /* GraphQL */ `
     onUpdateIndices {
       id
       name
+      exchg
       price
       prev
       ylow
@@ -602,6 +610,7 @@ export const onDeleteIndices = /* GraphQL */ `
     onDeleteIndices {
       id
       name
+      exchg
       price
       prev
       ylow

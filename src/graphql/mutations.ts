@@ -1245,6 +1245,8 @@ export const createFeeds = /* GraphQL */ `
   ) {
     createFeeds(input: $input, condition: $condition) {
       id
+      tname
+      exchg
       url
       count
       createdAt
@@ -1259,6 +1261,8 @@ export const updateFeeds = /* GraphQL */ `
   ) {
     updateFeeds(input: $input, condition: $condition) {
       id
+      tname
+      exchg
       url
       count
       createdAt
@@ -1273,6 +1277,8 @@ export const deleteFeeds = /* GraphQL */ `
   ) {
     deleteFeeds(input: $input, condition: $condition) {
       id
+      tname
+      exchg
       url
       count
       createdAt
@@ -1459,6 +1465,7 @@ export const createIndices = /* GraphQL */ `
     createIndices(input: $input, condition: $condition) {
       id
       name
+      exchg
       price
       prev
       ylow
@@ -1482,6 +1489,7 @@ export const updateIndices = /* GraphQL */ `
     updateIndices(input: $input, condition: $condition) {
       id
       name
+      exchg
       price
       prev
       ylow
@@ -1505,6 +1513,7 @@ export const deleteIndices = /* GraphQL */ `
     deleteIndices(input: $input, condition: $condition) {
       id
       name
+      exchg
       price
       prev
       ylow
