@@ -319,9 +319,10 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 												changeHandler={(val: number) =>
 													changeLoanPrepayments(parseInt(record.num), val)}
 												min={0}
-												max={getPrepayment(parseInt(record.num)) + getPrincipalDue(parseInt(record.num))}
+												max={Math.floor(getPrincipalDue(parseInt(record.num) - 1))}
 												step={1}
 												currency={currency}
+												noRangeFactor
 											/>
 											{record.num !== '1' ? (
 												<NumberInput

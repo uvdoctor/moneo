@@ -80,8 +80,8 @@ function GoalContextProvider({ children }: GoalContextProviderProps) {
   const [eduCostSemester, setEduCostSemester] = useState<number>(goal.tbr);
  	const [ loanType, setLoanType ] = useState<LoanType | undefined | null>(goal?.loan?.type);
   const [loanGracePeriod, setLoanGracePeriod] = useState<number | undefined | null>(goal?.achg);
-  const [loanPrepayments, setLoanPrepayments] = useState<Array<TargetInput>>(goal?.loan?.pp as Array<TargetInput>);
-  const [loanIRAdjustments, setLoanIRAdjustments] = useState<Array<TargetInput>>(goal?.loan?.ira as Array<TargetInput>);
+  const [loanPrepayments, setLoanPrepayments] = useState<Array<TargetInput>>(goal?.loan?.pp ? goal.loan.pp as Array<TargetInput> : []);
+  const [loanIRAdjustments, setLoanIRAdjustments] = useState<Array<TargetInput>>(goal?.loan?.ira ? goal.loan.ira as Array<TargetInput> : []);
   const [totalIntAmt, setTotalIntAmt] = useState<number>(0);
   const [ totalInsAmt, setTotalInsAmt ] = useState<number>(0);
   const [startingPrice, setStartingPrice] = useState<number>(goal?.cp as number);
