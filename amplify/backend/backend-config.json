@@ -168,7 +168,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneobhavutils",
+          "resourceName": "moneoutils",
           "attributes": [
             "Arn"
           ]
@@ -189,7 +189,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneobhavutils",
+          "resourceName": "moneoutils",
           "attributes": [
             "Arn"
           ]
