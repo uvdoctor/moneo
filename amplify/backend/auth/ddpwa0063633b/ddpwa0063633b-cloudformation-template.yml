@@ -158,14 +158,6 @@ Parameters:
   permissions:
     Type: CommaDelimitedList
       
-        
-  authProviders:
-    Type: CommaDelimitedList
-      
-  
-  thirdPartyAuth:
-    Type: String
-            
   adminQueryGroup:
     Type: String
   
@@ -174,6 +166,10 @@ Parameters:
   breakCircularDependency:
     Type: String
             
+        
+  authProviders:
+    Type: CommaDelimitedList
+      
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
   
@@ -299,10 +295,8 @@ Resources:
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
       ClientName: ddpwa0063633b_app_clientWeb
-      
       ReadAttributes: !Ref userpoolClientReadAttributes
       WriteAttributes: !Ref userpoolClientWriteAttributes
-      
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
     DependsOn: UserPool
@@ -312,10 +306,8 @@ Resources:
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
       ClientName: ddpwa0063633b_app_client
-      
       ReadAttributes: !Ref userpoolClientReadAttributes
       WriteAttributes: !Ref userpoolClientWriteAttributes
-      
       GenerateSecret: !Ref userpoolClientGenerateSecret
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
