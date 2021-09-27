@@ -201,9 +201,10 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 			bordered
 			expandable={{
 				expandedRowRender: (record) => {
+					const num = parseInt(record.num);
 					const isEditable =
 						editable &&
-						(hasAdjustmentsInLastInstallments() || parseInt(record.num) <= iSchedule.length - 6);
+						(hasAdjustmentsInLastInstallments() || (num > 6 && num <= iSchedule.length - 6));
 					return (
 						<Fragment>
 							<Row align="middle">
@@ -218,7 +219,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 										>
 											<ItemDisplay
 												label="Interest Paid"
-												result={iSchedule[parseInt(record.num) - 1]}
+												result={iSchedule[num - 1]}
 												currency={currency}
 												decimal={2}
 											/>
@@ -246,7 +247,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 										>
 											<ItemDisplay
 												label="Principal Paid"
-												result={pSchedule[parseInt(record.num) - 1]}
+												result={pSchedule[num - 1]}
 												currency={currency}
 												decimal={2}
 											/>
@@ -260,12 +261,12 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 										>
 											<ItemDisplay
 												label="Total Principal Paid"
-												result={getTotalPrincipalPaid(parseInt(record.num))}
+												result={getTotalPrincipalPaid(num)}
 												currency={currency}
 												decimal={2}
 											/>
 										</Col>
-										{hasMonthlyInsurance && getMonthlyInsAmt(parseInt(record.num)) ? (
+										{hasMonthlyInsurance && getMonthlyInsAmt(num) ? (
 											<Col
 												xs={24}
 												sm={12}
@@ -275,7 +276,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 											>
 												<ItemDisplay
 													label="Repayment Insurance"
-													result={getMonthlyInsAmt(parseInt(record.num))}
+													result={getMonthlyInsAmt(num)}
 													currency={currency}
 												/>
 											</Col>
@@ -289,7 +290,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 										>
 											<ItemDisplay
 												label="Remaining Months"
-												result={getRemMonths(parseInt(record.num))}
+												result={getRemMonths(num)}
 											/>
 										</Col>
 										<Col
@@ -301,7 +302,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 										>
 											<ItemDisplay
 												label="Remaining Principal"
-												result={getPrincipalDue(parseInt(record.num))}
+												result={getPrincipalDue(num)}
 												currency={currency}
 												decimal={2}
 											/>
@@ -312,14 +313,14 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 									<Col className="configurations" lg={12}>
 										<Section title="Adjust Loan Schedule">
 											<NumberInput
-												pre={`${isEduLoanSIPayment(parseInt(record.num))
+												pre={`${isEduLoanSIPayment(num)
 													? 'Custom Payment'
 													: 'Additional Principal Payment'}`}
-												value={getPrepayment(parseInt(record.num))}
+												value={getPrepayment(num)}
 												changeHandler={(val: number) =>
-													changeLoanPrepayments(parseInt(record.num), val)}
+													changeLoanPrepayments(num, val)}
 												min={0}
-												max={Math.floor(getPrincipalDue(parseInt(record.num) - 1))}
+												max={Math.floor(getPrincipalDue(num - 1))}
 												step={1}
 												currency={currency}
 												noRangeFactor
@@ -333,11 +334,11 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 														loanIntRate
 													)}
 													changeHandler={(val: number) =>
-														changeLoanIRAdjustments(parseInt(record.num), val)}
+														changeLoanIRAdjustments(num, val)}
 													min={
 														getClosestTargetVal(
 															loanIRAdjustments,
-															parseInt(record.num) - 1,
+															num - 1,
 															loanIntRate
 														) -
 															3 <
@@ -346,7 +347,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 														) : (
 															getClosestTargetVal(
 																loanIRAdjustments,
-																parseInt(record.num) - 1,
+																num - 1,
 																loanIntRate
 															) - 3
 														)
@@ -354,7 +355,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 													max={
 														getClosestTargetVal(
 															loanIRAdjustments,
-															parseInt(record.num) - 1,
+															num - 1,
 															loanIntRate
 														) + 3
 													}
@@ -363,7 +364,7 @@ export default function MonthlyLoanSchedule({ editable }: MonthlyLoanSchedulePro
 													additionalMarks={[
 														getClosestTargetVal(
 															loanIRAdjustments,
-															parseInt(record.num),
+															num,
 															loanIntRate
 														)
 													]}
