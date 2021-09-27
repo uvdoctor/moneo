@@ -57,17 +57,17 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "function",
+          "resourceName": "moneoutils",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
           "category": "auth",
           "resourceName": "ddpwa0063633b",
           "attributes": [
             "UserPoolId"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "moneobhavutils",
-          "attributes": [
-            "Arn"
           ]
         }
       ]
@@ -79,7 +79,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneobhavutils",
+          "resourceName": "moneoutils",
           "attributes": [
             "Arn"
           ]
