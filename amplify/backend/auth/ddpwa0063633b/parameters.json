@@ -11,11 +11,11 @@
         "SMS Text Message",
         "TOTP"
     ],
-    "smsAuthenticationMessage": "Moneo authentication code is {####}",
-    "smsVerificationMessage": "Moneo verification code is {####}",
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
     "emailVerificationSubject": "Moneo verification code",
-    "emailVerificationMessage": "Moneo verification code is {####}",
-    "defaultPasswordPolicy": false,
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": true,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [
         "Requires Lowercase",
@@ -86,7 +86,7 @@
             "Arn"
         ]
     },
-    "useDefault": "default",
+    "useDefault": "manual",
     "userPoolGroupList": [
         "app"
     ],
@@ -101,7 +101,8 @@
         "Ref": "AWS::StackId"
     },
     "permissions": [],
+    "authProviders": [],
+    "thirdPartyAuth": false,
     "adminQueryGroup": "admin",
-    "breakCircularDependency": false,
-    "authProviders": []
+    "breakCircularDependency": false
 }
