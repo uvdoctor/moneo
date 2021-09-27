@@ -83,7 +83,7 @@ export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 						</Fragment>
 					}
 				>
-					{menuItem('Settings', "#", selectedKey)}
+					{menuItem('Settings', ROUTES.SETTINGS, selectedKey)}
 					{menuItem('Support', ROUTES.CONTACT_US, selectedKey)}
 					<Menu.Item onClick={handleLogout}>Logout</Menu.Item>
 				</SubMenu>

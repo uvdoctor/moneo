@@ -12,7 +12,8 @@ export const ROUTES = {
     ABOUT: "/about",
     CONTACT_US: "/contact-us",
     FEATURES: "/features",
-    IA: "/ia"
+    IA: "/ia",
+    SETTINGS: "/settings"
 };
 
 export const CALC_NAMES = {
