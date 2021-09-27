@@ -35,10 +35,6 @@
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/INBond-51694730464778767a47-build.zip"
         },
-        "moneobhavutils": {
-          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/moneobhavutils-LambdaLayerVersionecb2ff68-build.zip"
-        },
         "NPSPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/NPSPrice-6d6f6950786c47443048-build.zip"

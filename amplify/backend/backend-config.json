@@ -135,11 +135,6 @@
         }
       ]
     },
-    "moneobhavutils": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
     "NPSPrice": {
       "build": true,
       "providerPlugin": "awscloudformation",
