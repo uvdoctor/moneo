@@ -3,17 +3,10 @@ const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const { getAllData, pushData } = require("/opt/nodejs/insertIntoDB");
 const { utility, pushDataForFeed } = require("/opt/nodejs/utility");
-const utils = require("./utils");
-const { tempDir, zipFile, apiArray, getFileName, getUrl } = utils;
-const bhaoUtils = require("./bhavUtils");
+const {cleanDirectory, downloadZip, unzipDownloads} = require('opt/nodejs/bhavUtils')
+const { tempDir, zipFile, apiArray, getFileName, getUrl } = require("./utils");
 const { calcSchema } = require("./calculate");
-const {
-  downloadZip,
-  unzipDownloads,
-  extractDataFromCSV,
-  cleanDirectory,
-  addMetaData,
-} = bhaoUtils;
+const { extractDataFromCSV, addMetaData } = require("./bhavUtils");
 const table = "INExchg-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 const isinMap = {};
 
@@ -39,6 +32,7 @@ const getAndPushData = (diff) => {
         await downloadZip(urlName, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
         const exchgData = await extractDataFromCSV(
+          cleanDirectory,
           tempDir,
           fileName,
           typeExchg,
@@ -62,5 +56,5 @@ const getAndPushData = (diff) => {
 };
 
 exports.handler = async (event) => {
-  return await getAndPushData(event.diff);
+  return await getAndPushData();
 };

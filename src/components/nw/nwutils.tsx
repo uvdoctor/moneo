@@ -264,8 +264,7 @@ export const getIndustry = (at: APIt.Industry) => {
 	  PH: "Pharma",
 	  PB: "Private Banks",
 	};
-	Object.keys(indData).forEach((key) => {
-	  if (at === key) return indData[key];
-	});
+ 	return indData[at];
+
   };
   

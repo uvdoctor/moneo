@@ -41,8 +41,8 @@ const getData = async (
         }
       });
       schema.exchg = exchg;
-      schema.type = type ? type : calcType(record[codes[name]]);
-      schema.subt = subt ? subt : calcSubType(record[codes[name]]);
+      schema.type = type ? type : calcType(record[codes.name]);
+      schema.subt = subt ? subt : calcSubType(record[codes.name]);
       schema.curr = "INR";
       schema.__typename = table.slice(0, table.indexOf("-"));
       schema.createdAt = new Date().toISOString();

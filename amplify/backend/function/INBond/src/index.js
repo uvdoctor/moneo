@@ -3,12 +3,14 @@ const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const { pushData } = require("/opt/nodejs/insertIntoDB");
 const { utility, pushDataForFeed } = require("/opt/nodejs/utility");
-const utils = require("./utils");
-const { tempDir, zipFile, apiArray, getFileName, getUrl } = utils;
-const bhaoUtils = require("./bhavUtils");
+const {
+  cleanDirectory,
+  downloadZip,
+  unzipDownloads,
+} = require("opt/nodejs/bhavUtils");
+const { tempDir, zipFile, apiArray, getFileName, getUrl } = require("./utils");
+const extractDataFromCSV = require("./bhavUtils");
 const { calcSchema } = require("./calculate");
-const { downloadZip, unzipDownloads, extractDataFromCSV, cleanDirectory } =
-  bhaoUtils;
 const table = "INBond-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 const isinMap = {};
 
@@ -32,6 +34,7 @@ const getAndPushData = (diff) => {
         }
         await downloadZip(urlName, tempDir, csvFile);
         const data = await extractDataFromCSV(
+          cleanDirectory,
           tempDir,
           fileName,
           typeExchg,

@@ -9,11 +9,14 @@ const { mkdir } = fsPromise;
 const utils = require("./utils");
 const { pushData } = require("/opt/nodejs/insertIntoDB");
 const { pushDataForFeed } = require("/opt/nodejs/utility");
+const {
+  downloadZip,
+  unzipDownloads,
+  cleanDirectory,
+} = require("opt/nodejs/bhavUtils");
 const { tempDir, zipFile, apiArray } = utils;
-const bhaoUtils = require("./bhavUtils");
 const calc = require("./calculate");
-const { downloadZip, unzipDownloads, cleanDirectory, getDataFromTxtFile } =
-  bhaoUtils;
+const getDataFromTxtFile = require("./bhavUtils");
 const table = "NPS-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 
 const getAndPushData = () => {
@@ -27,7 +30,13 @@ const getAndPushData = () => {
         await mkdir(tempDir);
         await downloadZip(url, tempDir, zipFile);
         await unzipDownloads(zipFile, tempDir);
-        const data = await getDataFromTxtFile(tempDir, fileName, calc, table);
+        const data = await getDataFromTxtFile(
+          cleanDirectory,
+          tempDir,
+          fileName,
+          calc,
+          table
+        );
 
         for (let batch in data) {
           await pushData(data[batch], table);

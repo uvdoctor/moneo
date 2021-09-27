@@ -9,10 +9,12 @@ interface TextInputProps {
 	changeHandler: Function;
 	placeholder?: string;
 	minLength?: number;
+	maxLength?: number;
 	setError?: Function;
 	fieldName?: string;
 	pattern?: string;
 	size?: SizeType
+	password?: boolean
 }
 
 export default function TextInput(props: TextInputProps) {
@@ -22,7 +24,7 @@ export default function TextInput(props: TextInputProps) {
 			props.setError('');
 			return;
 		}
-		if (props.value.length < props.minLength) {
+		if (props.minLength && props.value.length < props.minLength) {
 			props.setError(`${props.fieldName} should at least be ${props.minLength} characters`);
 		} else if (props.pattern && !props.value.match(props.pattern)) {
 			props.setError(`${props.fieldName} should be in the format ${props.placeholder}`);
@@ -39,7 +41,7 @@ export default function TextInput(props: TextInputProps) {
 	return (
 		<Input
 			className="input"
-			type="text"
+			type={props.password ? "password" : "text"}
 			addonBefore={props.pre}
 			addonAfter={props.post}
 			prefix={props.prefix}
@@ -57,7 +59,7 @@ export default function TextInput(props: TextInputProps) {
 				e.preventDefault();
 				validate();
 			}}
-			maxLength={20}
+			maxLength={props.maxLength ? props.maxLength : 50}
 		/>
 	);
 }

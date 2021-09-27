@@ -2,10 +2,10 @@
   "lambdaLayers": [
     {
       "type": "ProjectLayer",
-      "resourceName": "moneobhavutils",
+      "resourceName": "moneoutils",
+      "env": "newdev",
       "version": "Always choose latest version",
-      "isLatestVersionSelected": true,
-      "env": "newdev"
+      "isLatestVersionSelected": true
     }
   ],
   "permissions": {
