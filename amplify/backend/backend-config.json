@@ -216,6 +216,11 @@
           ]
         }
       ]
+    },
+    "moneoutils": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
     }
   },
   "storage": {

@@ -54,6 +54,10 @@
         "AdminQueries02d6992c": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/AdminQueries02d6992c-542b307873506d31794c-build.zip"
+        },
+        "moneoutils": {
+          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
+          "s3Key": "amplify-builds/moneoutils-LambdaLayerVersion5f33cbb8-build.zip"
         }
       },
       "interactions": {
