@@ -43,7 +43,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 			setRatesData(ratesData);
 			simpleStorage.set(LOCAL_RATES_DATA_KEY, ratesData, LOCAL_DATA_TTL);
 		} catch (err) {
-			console.log(`Unable to fetch fx, commodities & crypto rates: ${err}`);
+			console.log('Unable to fetch fx, commodities & crypto rates: ', err);
 			return false;
 		}
 	};
