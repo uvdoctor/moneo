@@ -26,13 +26,11 @@
           }
         }
       }
-    }
-  },
-  "function": {
-    "insprice": {
-      "build": true,
+    },
+    "AdminQueries": {
+      "service": "API Gateway",
       "providerPlugin": "awscloudformation",
-      "service": "Lambda",
+      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
       "dependsOn": [
         {
           "category": "auth",
@@ -43,9 +41,33 @@
         },
         {
           "category": "function",
-          "resourceName": "moneobhavutils",
+          "resourceName": "AdminQueries02d6992c",
+          "attributes": [
+            "Arn",
+            "Name"
+          ]
+        }
+      ]
+    }
+  },
+  "function": {
+    "insprice": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "moneoutils",
           "attributes": [
             "Arn"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "ddpwa0063633b",
+          "attributes": [
+            "UserPoolId"
           ]
         }
       ]
@@ -57,7 +79,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneobhavutils",
+          "resourceName": "moneoutils",
           "attributes": [
             "Arn"
           ]
@@ -180,6 +202,25 @@
           ]
         }
       ]
+    },
+    "AdminQueries02d6992c": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "ddpwa0063633b",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ]
+    },
+    "moneoutils": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
     }
   },
   "storage": {
