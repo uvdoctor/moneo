@@ -4,12 +4,8 @@
 	REGION
 Amplify Params - DO NOT EDIT */
 
-// const { pushData } = require("/opt/nodejs/insertIntoDB");
-const { pushData } = require("../.././moneobhavutils/lib/nodejs/insertIntoDB");
-const {
-  pushDataForFeed,
-} = require("../.././moneobhavutils/lib/nodejs/utility");
-// const { pushDataForFeed } = require("opt/nodejs/utility");
+const { pushData } = require("/opt/nodejs/insertIntoDB");
+const { pushDataForFeed } = require("opt/nodejs/utility");
 const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
@@ -58,7 +54,7 @@ const eodPrice = () => {
         }
       })
     );
-    if (count < 25) {
+    if (count < 25 && count > 0) {
       batchRecords.push(batches);
     }
     console.log("Data to update:", idsToLog);

@@ -1,27 +1,19 @@
-/* Amplify Params - DO NOT EDIT
-	AUTH_DDPWA0063633B_USERPOOLID
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */
 const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { mkdir } = fsPromise;
 const { pushData } = require("/opt/nodejs/insertIntoDB");
 const { pushDataForFeed } = require("/opt/nodejs/utility");
 const { tempDir, apiArray, fileName, csvFile } = require("./utils");
+const { cleanDirectory, downloadZip } = require("opt/nodejs/bhavUtils");
 const getData = require("./getData");
 const { calcInd, calcType, calcSubType } = require("./calculate");
-const {
-  downloadZip,
-  extractDataFromCSV,
-  cleanDirectory,
-} = require("./bhavUtils");
+const extractDataFromCSV = require("./bhavUtils");
 const table = "Indices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
+let dataFromNse;
 
 const getAndPushData = async () => {
   for (let i = 0; i < apiArray.length; i++) {
     try {
-      let dataFromNse;
       const { url, exchg, cat, type, subt, schema, codes } = apiArray[i];
       if (i === 0) {
         if (fs.existsSync(tempDir)) {
@@ -29,7 +21,11 @@ const getAndPushData = async () => {
         }
         await mkdir(tempDir);
         await downloadZip(url, tempDir, csvFile);
-        dataFromNse = await extractDataFromCSV(tempDir, fileName);
+        dataFromNse = await extractDataFromCSV(
+          tempDir,
+          fileName,
+          cleanDirectory
+        );
       }
       const data = await getData(
         dataFromNse,
