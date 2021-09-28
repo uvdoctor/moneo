@@ -27,27 +27,6 @@ const awsmobile = {
             "alias": "$LATEST",
             "region": "us-east-1"
         }
-    ],
-    "aws_cognito_login_mechanisms": [],
-    "aws_cognito_signup_attributes": [
-        "EMAIL"
-    ],
-    "aws_cognito_mfa_configuration": "OPTIONAL",
-    "aws_cognito_mfa_types": [
-        "SMS",
-        "TOTP"
-    ],
-    "aws_cognito_password_protection_settings": {
-        "passwordPolicyMinLength": 8,
-        "passwordPolicyCharacters": [
-            "REQUIRES_LOWERCASE",
-            "REQUIRES_UPPERCASE",
-            "REQUIRES_NUMBERS",
-            "REQUIRES_SYMBOLS"
-        ]
-    },
-    "aws_cognito_verification_mechanisms": [
-        "EMAIL"
     ]
 };
 
