@@ -1,13 +1,9 @@
 const fs = require("fs");
 const split = require("split");
+const { tempDir } = require("/opt/nodejs/utility");
+const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
 
-const getDataFromTxtFile = async (
-  cleanDirectory,
-  tempDir,
-  fileName,
-  calc,
-  table
-) => {
+const getDataFromTxtFile = async (fileName, calc, table) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
     let batchRecords = [];
