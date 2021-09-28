@@ -11,5 +11,11 @@
     "extract-zip": "latest",
     "jsdom": "^17.0.0",
     "url": "latest"
+  },
+  "scripts": {
+    "test": "jest --config ../jest.config.json"
+  },
+  "devDependencies": {
+    "jest": "^27.2.2"
   }
 }

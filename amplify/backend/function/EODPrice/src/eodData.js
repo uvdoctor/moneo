@@ -39,6 +39,7 @@ const getDiamondPrice = async (batches, table) => {
     "table.ts > tbody > tr:nth-child(7) > td:nth-child(2)"
   ).textContent;
   result = result.slice(result.indexOf(" ") + 1, result[-1]);
+  result = result.replace("," , "")
   const dataToPush = {
     __typename: table.slice(0, table.indexOf("-")),
     id: "DIAM",
