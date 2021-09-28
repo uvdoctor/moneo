@@ -1,13 +1,9 @@
 const fs = require("fs");
 const excelToJson = require("convert-excel-to-json");
+const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
+const { tempDir } = require("/opt/nodejs/utility");
 
-const extractDataFromExcel = async (
-  cleanDirectory,
-  tempDir,
-  fileName,
-  table,
-  isinMap
-) => {
+const extractDataFromExcel = async (fileName, table, isinMap) => {
   let batches = [];
   let count = 0;
   const batchRecords = [];
