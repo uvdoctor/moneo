@@ -42,7 +42,7 @@ const getDiamondPrice = async (batches, table) => {
   const dataToPush = {
     __typename: table.slice(0, table.indexOf("-")),
     id: "DIAM",
-    price: result,
+    price: Number(result),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
