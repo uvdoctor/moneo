@@ -20,23 +20,56 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersion5f33cbb8": {
+    "LambdaLayerVersion690c3180": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
-        "CompatibleRuntimes": {
-          "Ref": "runtimes"
-        },
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
         "Content": {
           "S3Bucket": {
             "Ref": "deploymentBucketName"
           },
-          "S3Key": {
-            "Ref": "s3Key"
-          }
+          "S3Key": "amplify-builds/moneoutils-LambdaLayerVersion690c3180-build.zip"
         },
-        "Description": {
-          "Ref": "description"
+        "Description": "Updated layer version 2021-09-28T06:11:02.489Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "moneoutils-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate690c3180": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneoutils-newdev:2",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion5f33cbb8": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/moneoutils-LambdaLayerVersion5f33cbb8-build.zip"
         },
+        "Description": "Updated layer version 2021-09-27T07:53:34.961Z",
         "LayerName": {
           "Fn::Sub": [
             "moneoutils-${env}",
@@ -55,9 +88,7 @@
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": {
-          "Ref": "LambdaLayerVersion5f33cbb8"
-        },
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneoutils-newdev:1",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -67,7 +98,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersion5f33cbb8"
+        "Ref": "LambdaLayerVersion690c3180"
       }
     }
   }
