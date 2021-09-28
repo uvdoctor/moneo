@@ -6,9 +6,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "aws-sdk": "latest",
-    "csv-parser": "latest",
-    "extract-zip": "latest",
-    "url": "latest"
+    "csv-parser": "latest"
   },
   "devDependencies": {
     "jest": "^27.1.1"
