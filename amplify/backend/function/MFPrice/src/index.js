@@ -1,11 +1,5 @@
-/* Amplify Params - DO NOT EDIT
-	AUTH_DDPWA0063633B_USERPOOLID
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */
 const mfData = require("india-mutual-fund-info");
-const { pushData } = require("/opt/nodejs/insertIntoDB");
-const { pushDataForFeed } = require("/opt/nodejs/utility");
+const { pushData, pushDataForFeed } = require("/opt/nodejs/insertIntoDB");
 const { directISIN, getDirISIN } = require("./data");
 const { getType, getSubType, mfType, mCap, getName } = require("./calculate");
 const table = "INMutual-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
@@ -56,7 +50,7 @@ const getData = () => {
         count = 0;
       }
     });
-    if (count < 25) {
+    if (count < 25 && count > 0) {
       batchRecords.push(batches);
     }
     resolve(batchRecords);
