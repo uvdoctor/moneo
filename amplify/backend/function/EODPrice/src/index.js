@@ -1,11 +1,4 @@
-/* Amplify Params - DO NOT EDIT
-	AUTH_DDPWA0063633B_USERPOOLID
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */
-
-const { pushData } = require("/opt/nodejs/insertIntoDB");
-const { pushDataForFeed } = require("opt/nodejs/utility");
+const { pushData, pushDataForFeed } = require("/opt/nodejs/insertIntoDB");
 const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
@@ -18,7 +11,9 @@ const eodPrice = () => {
     let batches = [];
     let idsToLog = [];
     let count = 0;
-    await getDiamondPrice(batches, table);
+    const data = await getDiamondPrice(table);
+    console.log(data);
+    batches.push({ PutRequest: { Item: data } });
     await Promise.all(
       apiToCall.map(async (element) => {
         let { code, close } = await getData(element, 0);
@@ -68,5 +63,5 @@ exports.handler = async (event) => {
     const results = await pushData(data[batch], table);
     console.log(results);
   }
-  await pushDataForFeed(table, data, pushData);
+  await pushDataForFeed(table, data);
 };
