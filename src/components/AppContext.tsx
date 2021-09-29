@@ -72,6 +72,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 		let user = null;
 		try {
 			user = await Auth.currentAuthenticatedUser();
+			console.log("user: ", user);
 			if(user) await initData();
 		} catch (e) {
 			console.log('Error while logging in: ', e);
