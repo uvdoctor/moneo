@@ -73,9 +73,10 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 			}
 			sendMail('21.ramit@gmail.com;emailumangdoctor@gmail.com', mailTemplate.email as string , 'FeedbackTemplate', mailTemplate);
 			openNotificationWithIcon('success', 'Success', 'Feedback saved successfully.');
-		} catch (e: any) {
+		} catch (e) {
 			setError({
 				title: 'Error while creating feedback',
+				//@ts-ignore
 				message: e.errors ? e.errors[0].message : e.toString()
 			});
 			openNotificationWithIcon('error', 'Error', 'Error while saving feedback.');
