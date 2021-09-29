@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, Fragment, useState } from 'react';
+import React, { useContext, Fragment, useState } from 'react';
 import { Avatar, Menu } from 'antd';
 import { AppContext } from './AppContext';
 import { Auth, Hub } from 'aws-amplify';
@@ -12,42 +12,9 @@ import { menuItem } from './utils';
 
 export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 	const router = useRouter();
-	const { username, setUsername }: any = useContext(AppContext);
+	const { user }: any = useContext(AppContext);
 	const [ selectedKey, setSelectedKey ] = useState<string>(router.pathname);
 	const { SubMenu } = Menu;
-
-	const updateUser = (username: string | null) => {
-		if (username) {
-			localStorage.setItem('username', username);
-			setUsername(username);
-		} else {
-			localStorage.removeItem('username');
-			setUsername(null);
-		}
-	};
-
-	const listener = (capsule: any) => {
-		let eventType: string = capsule.payload.event;
-		if (eventType === 'signIn') updateUser(capsule.payload.data.username);
-		else updateUser(null);
-	};
-
-	const getUsername = async () => {
-		try {
-			let user = await Auth.currentAuthenticatedUser();
-			if (user) updateUser(user.username);
-		} catch (e) {
-			console.log('Error while logging in: ', e);
-			updateUser(null);
-		}
-	};
-
-	useEffect(() => {
-		Hub.listen('auth', listener);
-		let username = localStorage.getItem('username');
-		username ? setUsername(username) : getUsername();
-		return () => Hub.remove('auth', listener);
-	}, []);
 
 	const handleLogout = async () => {
 		try {
@@ -74,12 +41,12 @@ export default function SecureMenu({ mode = 'horizontal' }: MainMenuProps) {
 			{menuItem('Get', ROUTES.GET, selectedKey)}
 			{menuItem('Set', ROUTES.SET, selectedKey)}
 			{menuItem('Grow', ROUTES.GROW, selectedKey)}
-			{username && (
+			{user && (
 				<SubMenu
 					title={
 						<Fragment>
 							<Avatar size="small" icon={<UserOutlined />} style={{ backgroundColor: COLORS.GREEN }} />
-							&nbsp;{username}
+							&nbsp;{user.username}
 						</Fragment>
 					}
 				>

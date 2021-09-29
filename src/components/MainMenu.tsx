@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { Menu } from 'antd';
 import FSToggle from './FSToggle';
 import { calcList } from './landing/Calculator';
@@ -7,21 +7,25 @@ import { ROUTES } from '../CONSTANTS';
 import { useRouter } from 'next/router';
 import SecureMenu from './SecureMenu';
 import { menuItem } from './utils';
+import { AppContext } from './AppContext';
 
 export interface MainMenuProps {
 	mode?: any;
 }
 
 export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
+	const { user, appContextLoaded }: any = useContext(AppContext);
 	const router = useRouter();
-	const [ selectedKey, setSelectedKey ] = useState<string>(router.pathname);
+	const [
+		selectedKey,
+		setSelectedKey
+	] = useState<string>(router.pathname);
 	const { SubMenu } = Menu;
-	const secureRoutes: Array<string> = [ ROUTES.GET, ROUTES.SET, ROUTES.GROW, ROUTES.SETTINGS];
-	
-	return (
+
+	return appContextLoaded ? (
 		<Fragment>
 			<FSToggle />
-			{secureRoutes.includes(router.pathname) ? (
+			{user ? (
 				<SecureMenu mode={mode} />
 			) : (
 				<Menu mode={mode} onSelect={(info: any) => setSelectedKey(info.key)}>
@@ -51,5 +55,5 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 				</Menu>
 			)}
 		</Fragment>
-	);
+	) : null;
 }
