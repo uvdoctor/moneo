@@ -62,5 +62,5 @@ exports.handler = async (event) => {
   for (let batch in data) {
     await pushData(data[batch], table);
   }
-  await pushDataForFeed(table, data, pushData);
+  await pushDataForFeed(table, data);
 };
