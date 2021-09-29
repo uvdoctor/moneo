@@ -72,7 +72,6 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 		let user = null;
 		try {
 			user = await Auth.currentAuthenticatedUser();
-			console.log("user: ", user);
 			if(user) await initData();
 		} catch (e) {
 			console.log('Error while logging in: ', e);
@@ -98,8 +97,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 		setDefaultCurrency(
 			host.endsWith('.in') || host.endsWith('host') ? 'INR' : host.endsWith('.uk') ? 'GBP' : 'USD'
 		);
-		initUserAndData();
-		setAppContextLoaded(true);
+		initUserAndData().then(() => setAppContextLoaded(true));
 		return () => Hub.remove('auth', listener);
 	}, []);
 
