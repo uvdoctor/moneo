@@ -27,8 +27,9 @@ const getAndPushData = (diff) => {
         if (url.includes("zip")) {
           await downloadZip(url, tempDir, zipFile);
           await unzipDownloads(zipFile, tempDir);
+        } else {
+          await downloadZip(url, tempDir, csvFile);
         }
-        await downloadZip(url, tempDir, csvFile);
         const data = await extractDataFromCSV(
           fileName,
           typeExchg,

@@ -97,8 +97,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 		setDefaultCurrency(
 			host.endsWith('.in') || host.endsWith('host') ? 'INR' : host.endsWith('.uk') ? 'GBP' : 'USD'
 		);
-		initUserAndData();
-		setAppContextLoaded(true);
+		initUserAndData().then(() => setAppContextLoaded(true));
 		return () => Hub.remove('auth', listener);
 	}, []);
 

@@ -17,12 +17,12 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 				res.status(500).end('Google captcha failed');
 			}
 			let isBot = (data.score < 0.5);
+			res.setHeader('Content-Type', 'application/json');
 			if(isBot){
 				res.status(403).json({ success: false });
 			}else{
 				res.status(200).json({ success: true });
 			}
-			res.setHeader('Content-Type', 'application/json');
 		})
 		.catch((e: any) => {
 			console.log("ERROR", e);
