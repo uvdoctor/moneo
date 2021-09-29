@@ -1,14 +1,16 @@
 import { Alert, Button, Col, Modal, Row, Tooltip, notification } from "antd";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import TextInput from "../form/textinput";
 import { COLORS } from "../../CONSTANTS";
 import { SaveOutlined } from "@ant-design/icons";
+import { AppContext } from "../AppContext";
 
 export default function Setting() {
+  const { user }: any = useContext(AppContext);
   const [mode, setMode] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [email, setEmail] = useState<string>(user.email);
   const [password, setPassword] = useState<string>("");
-  const [name, setName] = useState<string>("Mehzabeen");
+  const [name, setName] = useState<string>(user);
   const [contact, setContact] = useState<string>("8268552015");
   const [error, setError] = useState<string>("");
   const [otp, setOtp] = useState<string>("");

@@ -1,7 +1,9 @@
 import { API, Auth, graphqlOperation, Hub } from 'aws-amplify';
+import { useRouter } from 'next/router';
 import React, { createContext, useEffect, useState } from 'react';
 import simpleStorage from "simplestorage.js";
 import { CreateEODPricesInput, ListEodPricessQuery } from '../api/goals';
+import { ROUTES } from '../CONSTANTS';
 import { listEodPricess } from '../graphql/queries';
 
 const AppContext = createContext({});
@@ -19,7 +21,8 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 	const [ appContextLoaded, setAppContextLoaded ] = useState<boolean>(false);
 	const [ ratesData, setRatesData ] = useState<any>({});
 	const [ insData, setInsData ] = useState<any>({});
-
+	const router = useRouter();
+	
 	const loadFXCommCryptoRates = async () => {
 		const { data: { listEODPricess } } = (await API.graphql(graphqlOperation(listEodPricess))) as {
 			data: ListEodPricessQuery;
@@ -53,19 +56,38 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 		else setUser(null);
 	};
 
-	const initUserAndData = async () => {
-		Hub.listen('auth', listener);
-		try {
-			let user = await Auth.currentAuthenticatedUser();
-			if(user) {
-				initializeFXCommCryptoRates();
+	const initData = async () => {
+		let route = router.pathname;
+		if(route === ROUTES.GET || route === ROUTES.SET) {
+			await initializeFXCommCryptoRates();
+			if(router.pathname === ROUTES.GET) {
 				let localInsData = simpleStorage.get(LOCAL_INS_DATA_KEY);
 				if(localInsData) setInsData(localInsData);
 			}
-			setUser(user);
+		}
+	};
+
+	const initUserAndData = async () => {
+		Hub.listen('auth', listener);
+		let user = null;
+		try {
+			user = await Auth.currentAuthenticatedUser();
+			if(user) await initData();
 		} catch (e) {
 			console.log('Error while logging in: ', e);
-			setUser(null);
+		} finally {
+			setUser(user);
+		}
+	};
+
+	const handleLogout = async () => {
+		try {
+			await Auth.signOut();
+			Hub.dispatch('auth', { event: 'signOut' });
+		} catch (error) {
+			console.log('error signing out: ', error);
+		} finally {
+			router.reload();
 		}
 	};
 
@@ -91,7 +113,8 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 				appContextLoaded,
 				ratesData,
 				insData,
-				setInsData
+				setInsData,
+				handleLogout
 			}}
 		>
 			{children}
