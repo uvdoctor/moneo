@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import * as mutations from '../../graphql/mutations';
 import awsconfig from '../../aws-exports';
 import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
@@ -6,6 +6,7 @@ import Amplify, { API } from 'aws-amplify';
 import { CreateFeedbackMutation, FeedbackType } from '../../api/goals';
 import { Form, notification } from 'antd';
 import { sendMail } from '../utils';
+import { AppContext } from '../AppContext';
 
 Amplify.configure(awsconfig);
 
@@ -16,6 +17,7 @@ interface FeedbackContextProviderProps {
 }
 
 function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
+	const { user }: any = useContext(AppContext);
 	const [ feedbackType, setFeedbackType ] = useState<FeedbackType>(FeedbackType.C);
 	const [ feedback, setFeedback ] = useState<String>('');
 	const [ firstName, setFirstName ] = useState<String>('');
@@ -35,12 +37,13 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 	};
 
 	const onFormSubmit = async ({ feedbackType, feedback, firstName, lastName, email }: any) => {
+		let emailAddress = user ? user.attributes.email : email;
 		setLoading(true);
 		setFeedbackType(feedbackType);
 		setFeedback(feedback);
 		setFirstName(firstName);
 		setLastName(lastName);
-		setEmail(email);
+		setEmail(emailAddress);
 		try {
 			const { data }  = (await API.graphql({
 				query: mutations.createFeedback,
@@ -52,7 +55,7 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 							fn: firstName,
 							ln: lastName
 						},
-						email: email
+						email: emailAddress
 					}
 				},
 				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
@@ -70,7 +73,7 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 			}
 			sendMail('21.ramit@gmail.com;emailumangdoctor@gmail.com', mailTemplate.email as string , 'FeedbackTemplate', mailTemplate);
 			openNotificationWithIcon('success', 'Success', 'Feedback saved successfully.');
-		} catch (e) {
+		} catch (e: any) {
 			setError({
 				title: 'Error while creating feedback',
 				message: e.errors ? e.errors[0].message : e.toString()

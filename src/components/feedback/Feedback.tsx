@@ -1,11 +1,11 @@
-import { Button, Col, Form, Input, Radio, Row } from "antd";
-import React, { useContext, useEffect, useRef } from "react";
+import { Button, Col, Form, Input, Radio, Row, Skeleton } from "antd";
+import React, { Fragment, useContext, useEffect, useRef } from "react";
 import Content from "../Content";
 import { FeedbackType } from "../../api/goals";
 import { FormInstance } from "antd/lib/form";
 import { FeedbackContext } from "./FeedbackContext";
 import TextArea from "antd/lib/input/TextArea";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+
 /*import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMapMarkerAlt,
@@ -13,13 +13,12 @@ import {
   faEnvelope,
   faTools,
 } from "@fortawesome/free-solid-svg-icons";*/
-import { validateCaptcha } from "../utils";
 
 import "./Feedback.less";
+import { AppContext } from "../AppContext";
 
 export default function Feedback() {
-  const { executeRecaptcha } = useGoogleReCaptcha();
-
+  const { validateCaptcha, user, appContextLoaded }: any = useContext(AppContext);
   const {
     feedbackType,
     feedback,
@@ -33,23 +32,27 @@ export default function Feedback() {
 
   const formRef = useRef<FormInstance>(null);
 
-  useEffect(() => {
-    let isBot = checkIfBot();
-    console.log("isBot", isBot);
-    if (formRef.current) {
-      formRef.current.setFieldsValue({
-        feedbackType,
-        feedback,
-        firstName,
-        lastName,
-        email,
-      });
-    }
-  }, [feedbackType, feedback, firstName, lastName, email]);
-
-  const checkIfBot = async () => {
-    return await validateCaptcha("feedback", executeRecaptcha);
+  const isValidFeedback = () => {
+    if(!formRef.current?.getFieldValue("feedback")) return false;
+    if(!user && (!formRef.current?.getFieldValue("firstName") || !formRef.current?.getFieldValue("email"))) return false;
+    return true;
   };
+
+  useEffect(() => {
+    validateCaptcha("feedback").then((isBot: boolean) => {
+      console.log("isBot", isBot);
+      if(isBot) return;
+      if (formRef.current) {
+        formRef.current.setFieldsValue({
+          feedbackType,
+          feedback,
+          firstName,
+          lastName,
+          email,
+        });
+      }
+    });
+  }, [feedbackType, feedback, firstName, lastName, email]);
 
   return (
     <Content className="feedback">
@@ -147,56 +150,60 @@ export default function Feedback() {
             >
               <TextArea rows={6} placeholder="Enter feedback" />
             </Form.Item>
-            <Form.Item
-              name="firstName"
-              label="First Name"
-              style={{
-                display: "inline-block",
-                width: "calc(50% - 12px)",
-                marginRight: 10,
-              }}
-              rules={[
-                {
-                  required: true,
-                  type: "string",
-                  message: "Please enter valid first name!",
-                },
-              ]}
-            >
-              <Input placeholder="Enter first name" />
-            </Form.Item>
+            {appContextLoaded ? 
+            !user && <Fragment>
+                <Form.Item
+                name="firstName"
+                label="First Name"
+                style={{
+                  display: "inline-block",
+                  width: "calc(50% - 12px)",
+                  marginRight: 10,
+                }}
+                rules={[
+                  {
+                    required: true,
+                    type: "string",
+                    message: "Please enter valid first name!",
+                  },
+                ]}
+              >
+                <Input placeholder="Enter first name" />
+              </Form.Item>
 
-            <Form.Item
-              name="lastName"
-              label="Last Name"
-              style={{
-                display: "inline-block",
-                width: "calc(50% - 12px)",
-              }}
-              rules={[
-                {
-                  required: false,
-                  type: "string",
-                  message: "Please enter valid last name!",
-                },
-              ]}
-            >
-              <Input placeholder="Enter last name" />
-            </Form.Item>
+              <Form.Item
+                name="lastName"
+                label="Last Name"
+                style={{
+                  display: "inline-block",
+                  width: "calc(50% - 12px)",
+                }}
+                rules={[
+                  {
+                    required: false,
+                    type: "string",
+                    message: "Please enter valid last name!",
+                  },
+                ]}
+              >
+                <Input placeholder="Enter last name" />
+              </Form.Item>
 
-            <Form.Item
-              name="email"
-              label="Email"
-              rules={[
-                {
-                  required: true,
-                  type: "email",
-                  message: "Please enter valid email address!",
-                },
-              ]}
-            >
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  {
+                    required: true,
+                    type: "email",
+                    message: "Please enter valid email address!",
+                  },
+                ]}
+              >
               <Input placeholder="Enter email address" />
-            </Form.Item>
+              </Form.Item>
+            </Fragment> : 
+            <Skeleton active />}
             <Form.Item shouldUpdate={true}>
               {() => (
                 <Button
@@ -206,11 +213,9 @@ export default function Feedback() {
                     form
                       .getFieldsError()
                       .filter(({ errors }: any) => errors.length).length > 0 ||
-                    !formRef.current?.getFieldValue("feedback") ||
-                    !formRef.current?.getFieldValue("firstName") ||
-                    !formRef.current?.getFieldValue("email")
+                      !isValidFeedback()
                   }
-                  loading={isLoading}
+                  loading={isLoading || !appContextLoaded}
                 >
                   Submit
                 </Button>

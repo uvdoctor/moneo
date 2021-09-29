@@ -362,27 +362,6 @@ export const toHumanFriendlyCurrency = (val: number, currency: string) => {
   )} ${unit}`;
 };
 
-export const validateCaptcha = async (action: String, executeRecaptcha: Function) => {
-  const token = await executeRecaptcha(action);
-
-  await fetch('/api/verifycaptcha', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8'
-    },
-    body: JSON.stringify({
-      token: token
-    })
-  }).then((captchRes: any) => 
-    captchRes.json()
-  ).then((data: any) => {
-    return data.success;
-  }).catch((e : any) => {
-    console.log("error while validating captcha ", e);
-    return false;
-  });
-}
-
 export const sendMail = async (to: String, from: String, template: String, templateData: any) => {
   await fetch('/api/sendemail', {
     method: 'POST',

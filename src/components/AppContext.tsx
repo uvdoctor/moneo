@@ -5,6 +5,7 @@ import simpleStorage from "simplestorage.js";
 import { CreateEODPricesInput, ListEodPricessQuery } from '../api/goals';
 import { ROUTES } from '../CONSTANTS';
 import { listEodPricess } from '../graphql/queries';
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const AppContext = createContext({});
 export const LOCAL_INS_DATA_KEY = "insData";
@@ -15,14 +16,36 @@ interface AppContextProviderProps {
 }
 
 function AppContextProvider({ children }: AppContextProviderProps) {
+	const { executeRecaptcha } = useGoogleReCaptcha();
 	const [ defaultCountry, setDefaultCountry ] = useState<string>('US');
 	const [ defaultCurrency, setDefaultCurrency ] = useState<string>('USD');
 	const [ user, setUser ] = useState<string | null>(null);
 	const [ appContextLoaded, setAppContextLoaded ] = useState<boolean>(false);
 	const [ ratesData, setRatesData ] = useState<any>({});
+	
 	const [ insData, setInsData ] = useState<any>({});
 	const router = useRouter();
 	
+	const validateCaptcha = async (action: string) => {
+		const token = await executeRecaptcha(action);
+		let result = await fetch('/api/verifycaptcha', {
+		  method: 'POST',
+		  headers: {
+			'Content-Type': 'application/json;charset=utf-8'
+		  },
+		  body: JSON.stringify({
+			token: token
+		  })
+		}).then((captchRes: any) => 
+		  captchRes.json()
+		).then((data: any) => data.success
+		).catch((e : any) => {
+		  console.log("error while validating captcha ", e);
+		  return false;
+		});
+		return result;
+	  }
+	  
 	const loadFXCommCryptoRates = async () => {
 		const { data: { listEODPricess } } = (await API.graphql(graphqlOperation(listEodPricess))) as {
 			data: ListEodPricessQuery;
@@ -113,7 +136,8 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 				ratesData,
 				insData,
 				setInsData,
-				handleLogout
+				handleLogout,
+				validateCaptcha
 			}}
 		>
 			{children}
