@@ -5,8 +5,12 @@
   "main": "index.js",
   "license": "Apache-2.0",
   "dependencies": {
+    "aws-sdk": "latest",
     "axios": "latest",
-    "jsdom": "^17.0.0"
+    "csv-parser": "latest",
+    "extract-zip": "latest",
+    "jsdom": "^17.0.0",
+    "url": "latest"
   },
   "scripts": {
     "test": "jest --config ../jest.config.json"

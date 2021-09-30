@@ -54,6 +54,10 @@
         "moneoutils": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/moneoutils-LambdaLayerVersion5f33cbb8-build.zip"
+        },
+        "marketCap": {
+          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
+          "s3Key": "amplify-builds/marketCap-49777a2f4e3248544644-build.zip"
         }
       },
       "interactions": {
