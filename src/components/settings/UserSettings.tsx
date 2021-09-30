@@ -178,13 +178,12 @@ export default function UserSettings() {
                   required: true,
                   message: "Password Required",
                 },
-                // {
-                //   type: "string",
-                //   pattern: 
-                //     "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$",
-                //   message:
-                //     "Password must be a mixture of upper,lower,special char and number",
-                // },
+                {
+                  pattern: new RegExp(
+                    "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$"),
+                  message:
+                    "Password must be a mixture of upper,lower,special char and number",
+                },
                 {
                   max: 20,
                   min: 8,
