@@ -155,8 +155,6 @@ export default function UserSettings() {
             <Form.Item
               name="Old Password"
               label="Enter Your Old Password"
-              validateStatus="error"
-              help="Should be combination of numbers & alphabets"
               rules={[
                 {
                   required: true,
@@ -169,34 +167,35 @@ export default function UserSettings() {
               <Input
                 placeholder="Enter"
                 value={oldPass}
-                id = "error"
                 onChange={(e) => setOldPass(e.currentTarget.value)}
               />
             </Form.Item>
             <Form.Item
-            
               name="New Password"
               label="New Password"
-              validateStatus="warning"
               rules={[
                 {
                   required: true,
-                  type: "string", 
-                  message: "Please enter a new valid password",
+                  message: "Password Required",
+                },
+                // {
+                //   type: "string",
+                //   pattern: 
+                //     "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$",
+                //   message:
+                //     "Password must be a mixture of upper,lower,special char and number",
+                // },
+                {
                   max: 20,
                   min: 8,
-
+                  message: "Password length must be between 8-20",
                 },
               ]}
             >
               <Input
                 placeholder="Enter"
-                id = "warning"
                 value={newPass}
                 onChange={(e) => setNewPass(e.currentTarget.value)}
-                pattern={
-                  "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$"
-                }
               />
             </Form.Item>
             <Form.Item
