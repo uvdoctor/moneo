@@ -1,14 +1,14 @@
 const fs = require("fs");
 const csv = require("csv-parser");
+const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
+const { calcSchema } = require("./calculate");
+const { tempDir } = require("/opt/nodejs/utility");
 
 const extractDataFromCSV = async (
-  cleanDirectory,
-  tempDir,
   fileName,
   typeExchg,
   codes,
   schema,
-  calcSchema,
   table,
   isinMap
 ) => {
@@ -40,7 +40,7 @@ const extractDataFromCSV = async (
         }
       })
       .on("end", async () => {
-        if (count < 25) {
+        if (count < 25 && count > 0) {
           batchRecords.push(batches);
         }
         await cleanDirectory(
@@ -60,9 +60,9 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const addMetaData = async (exchgData, getAllData) => {
+const addMetaData = async (exchgData, getDataFromTable) => {
   const table = "INExchgMeta-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
-  const data = await getAllData(table);
+  const data = await getDataFromTable(table);
   exchgData.map((element) => {
     element.map((item) => {
       const metaData = data.Items.find(

@@ -1,7 +1,9 @@
 const csv = require("csv-parser");
 const fs = require("fs");
+const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
+const { tempDir } = require("/opt/nodejs/utility");
 
-const extractDataFromCSV = async (tempDir, fileName, cleanDirectory) => {
+const extractDataFromCSV = async (fileName) => {
   const end = new Promise((resolve, reject) => {
     const dataFromNse = [];
     fs.createReadStream(`${tempDir}/${fileName}`)

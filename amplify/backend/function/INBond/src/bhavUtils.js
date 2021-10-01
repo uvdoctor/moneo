@@ -1,14 +1,14 @@
 const fs = require("fs");
 const csv = require("csv-parser");
+const { tempDir } = require("/opt/nodejs/utility");
+const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
+const { calcSchema } = require("./calculate");
 
 const extractDataFromCSV = async (
-  cleanDirectory,
-  tempDir,
   fileName,
   typeExchg,
   codes,
   schema,
-  calcSchema,
   isinMap,
   table
 ) => {
@@ -16,7 +16,6 @@ const extractDataFromCSV = async (
     let batches = [];
     let batchRecords = [];
     let count = 0;
-
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
@@ -41,7 +40,7 @@ const extractDataFromCSV = async (
         }
       })
       .on("end", async () => {
-        if (count < 25) {
+        if (count < 25 && count > 0) {
           batchRecords.push(batches);
         }
         await cleanDirectory(
@@ -53,7 +52,7 @@ const extractDataFromCSV = async (
       .on("error", (err) => {
         cleanDirectory(
           tempDir,
-          `Unable to read ${type} csv file, ${err.message}`
+          `Unable to read ${typeExchg} csv file, ${err.message}`
         );
         throw new Error(err.message);
       });

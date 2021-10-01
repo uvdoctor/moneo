@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { calcInd, calcType, calcSubType } = require("./calculate");
 
 const getData = async (
   nseData,
@@ -9,9 +10,6 @@ const getData = async (
   subt,
   schema,
   codes,
-  calcInd,
-  calcType,
-  calcSubType,
   exchg
 ) => {
   let batches = [];

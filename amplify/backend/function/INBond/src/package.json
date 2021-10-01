@@ -5,10 +5,7 @@
   "main": "index.js",
   "license": "Apache-2.0",
   "dependencies": {
-    "aws-sdk": "latest",
-    "csv-parser": "latest",
-    "extract-zip": "latest",
-    "url": "latest"
+    "csv-parser": "latest"
   },
   "scripts": {
     "test": "jest --config ../jest.config.json"

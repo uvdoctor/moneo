@@ -30,7 +30,7 @@ const getData = async (element, index) => {
   }
 };
 
-const getDiamondPrice = async (batches, table) => {
+const getDiamondPrice = async (table) => {
   const response = await axios.get(
     "https://www.gold-rate.co.in/diamond-prices/united-states-diamond-price-today/"
   );
@@ -39,14 +39,15 @@ const getDiamondPrice = async (batches, table) => {
     "table.ts > tbody > tr:nth-child(7) > td:nth-child(2)"
   ).textContent;
   result = result.slice(result.indexOf(" ") + 1, result[-1]);
+  result = result.replace("," , "")
   const dataToPush = {
     __typename: table.slice(0, table.indexOf("-")),
     id: "DIAM",
-    price: result,
+    price: Number(result),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
-  batches.push({ PutRequest: { Item: dataToPush } });
+  return dataToPush
 };
 
 module.exports = {

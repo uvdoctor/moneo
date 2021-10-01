@@ -1,15 +1,15 @@
-const tempDir = `/tmp/temp`;
-const zipFile = `${tempDir}/download.zip`;
+const { utility } = require("/opt/nodejs/utility");
 
-const { utility } = require("opt/nodejs/utility");
-const { date, month, yearFull } = utility();
-const fileName = `NAV_File_${date}${month}${yearFull}`;
+const constructedApiArray = (diff) => {
+  const { date, month, yearFull } = utility(diff);
+  const fileName = `NAV_File_${date}${month}${yearFull}`;
 
-const apiArray = [
-  {
+  const apiArray = {
     fileName: `${fileName}.out`,
     url: `https://npscra.nsdl.co.in/download/${fileName}.zip`,
-  },
-];
+  };
 
-module.exports = { tempDir, zipFile, apiArray };
+  return apiArray;
+};
+
+module.exports = constructedApiArray;
