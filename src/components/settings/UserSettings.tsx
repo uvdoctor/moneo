@@ -28,7 +28,7 @@ export default function UserSettings() {
   // const [name, setName] = useState<string>(user);
   // const [contact, setContact] = useState<string>(user?.attributes.phone_number);
   const [error, setError] = useState<string>("");
-  const [otp, setOtp] = useState<string>("");
+  // const [otp, setOtp] = useState<string>("");
 
   // const update = async () => {
   //   const data = await Auth.updateUserAttributes(user, {
