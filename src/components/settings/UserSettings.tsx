@@ -21,47 +21,68 @@ export default function UserSettings() {
   const { user, appContextLoaded }: any = useContext(AppContext);
   const [mode, setMode] = useState<string>("");
   const [email, setEmail] = useState<string>(user?.attributes.email);
-  const [password, setPassword] = useState<string>("********");
+  const [password, setPassword] = useState<string>("**********");
   const [oldPass, setOldPass] = useState<string>("");
   const [newPass, setNewPass] = useState<string>("");
   const [rePass, setRePass] = useState<string>("");
   // const [name, setName] = useState<string>(user);
   // const [contact, setContact] = useState<string>(user?.attributes.phone_number);
   const [error, setError] = useState<string>("");
-  // const [otp, setOtp] = useState<string>("");
-
-  // const update = async () => {
-  //   const data = await Auth.updateUserAttributes(user, {
-  //     email: email,
-  //   });
-  //   alert(data);
-  // let result = await Auth.verifyCurrentUserAttributeSubmit("email", otp);
-  //       alert(result);
-  // };
+  const [otp, setOtp] = useState<string>("");
 
   const SAVE_MODE = "Save";
+  const EDIT_MODE = "Edit";
 
-  const save = async () => {
-    if (newPass) {
-      setMode("");
-      Auth.changePassword(user, oldPass, newPass)
-        .then((data) => {
-          notification.success({
-            message: "Password Updated",
-            description: `Password Updated Status: ${data}`,
-          });
-          return true;
-        })
-        .catch((err) => {
-          notification.error({
-            message: "Wrong Credentials",
-            description: "Sorry! Unable to update : " + err.message,
-          });
-          return false;
-        });
-      setOldPass("");
-      setNewPass("");
+  const updateEmail = async () => {
+    try {
+      const data = await Auth.updateUserAttributes(user, {
+        email: email,
+      });
+      notification.success({
+        message: "Email Updated",
+        description: `${data} "Verify your email Address by entering Otp`,
+      });
+    } catch (error) {
+      notification.error({
+        message: "Unable to update email",
+        description: "Sorry! Unable to update : " + error,
+      });
     }
+  };
+
+  const confirmOtp = async () => {
+    try {
+      const result = await Auth.verifyCurrentUserAttributeSubmit("email", otp);
+      notification.success({
+        message: "Email Verified",
+        description: result,
+      });
+      return true;
+    } catch (error) {
+      notification.error({
+        message: "Wrong Otp",
+        description: "Sorry! Unable to update : " + error,
+      });
+      return false;
+    }
+  };
+
+  const editPassword = async () => {
+    Auth.changePassword(user, oldPass, newPass)
+      .then((data) => {
+        notification.success({
+          message: "Password Updated",
+          description: `Password Updated Status: ${data}`,
+        });
+        return true;
+      })
+      .catch((err) => {
+        notification.error({
+          message: "Wrong Credentials",
+          description: "Sorry! Unable to update : " + err.message,
+        });
+        return false;
+      });
   };
 
   useEffect(() => {
@@ -84,7 +105,7 @@ export default function UserSettings() {
           <Row justify="center">
             <Col>
               <TextInput
-                pre="Email"
+                pre="Email Id"
                 placeholder=""
                 value={email}
                 changeHandler={setEmail}
@@ -100,8 +121,10 @@ export default function UserSettings() {
                   type="link"
                   style={{ color: COLORS.GREEN }}
                   icon={<SaveOutlined />}
+                  disabled={email === user.attributes.email ? true : false}
                   onClick={() => {
                     setMode(SAVE_MODE);
+                    updateEmail();
                   }}
                 />
               </Tooltip>
@@ -117,6 +140,7 @@ export default function UserSettings() {
                 changeHandler={setPassword}
                 fieldName="Password"
                 setError={setError}
+                disabled={true}
               ></TextInput>
             </Col>
             <Col>
@@ -125,7 +149,7 @@ export default function UserSettings() {
                   type="link"
                   style={{ color: COLORS.GREEN }}
                   icon={<EditOutlined />}
-                  onClick={() => setMode(SAVE_MODE)}
+                  onClick={() => setMode(EDIT_MODE)}
                 />
               </Tooltip>
             </Col>
@@ -137,9 +161,9 @@ export default function UserSettings() {
       {mode && (
         <Modal
           title={`${mode}`}
-          visible={mode.length > 0}
+          visible={mode === "Edit"}
           onCancel={() => setMode("")}
-          onOk={() => (mode ? save() : null)}
+          onOk={() => (mode === "Edit" ? editPassword() : null)}
           okText={"Save"}
           okButtonProps={{
             icon: <EditOutlined />,
@@ -158,9 +182,7 @@ export default function UserSettings() {
               rules={[
                 {
                   required: true,
-                  min: 8,
-                  type: "string",
-                  message: "Please enter your old password",
+                  message: "Old password required",
                 },
               ]}
             >
@@ -171,7 +193,7 @@ export default function UserSettings() {
               />
             </Form.Item>
             <Form.Item
-              name="New Password"
+              name="newPassword"
               label="New Password"
               rules={[
                 {
@@ -180,94 +202,79 @@ export default function UserSettings() {
                 },
                 {
                   pattern: new RegExp(
-                    "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$"),
+                    "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,20}$"
+                  ),
                   message:
-                    "Password must be a mixture of upper,lower,special char and number",
-                },
-                {
-                  max: 20,
-                  min: 8,
-                  message: "Password length must be between 8-20",
+                    "Password must have atleast 8 characters, and contain atleast one uppercase, lowercase, number and special character.",
                 },
               ]}
+              hasFeedback
             >
-              <Input
+              <Input.Password
                 placeholder="Enter"
                 value={newPass}
                 onChange={(e) => setNewPass(e.currentTarget.value)}
               />
             </Form.Item>
             <Form.Item
-              name="Re-enter Password"
+              name="reenterPassword"
               label="Re-enter Password"
+              dependencies={["newPassword"]}
               rules={[
                 {
                   required: true,
-                  type: "string",
-                  message: "Enter the New Password Again",
-                  min: 8,
-                  max: 20,
+                  message: "Please confirm your password!",
                 },
+                ({ getFieldValue }) => ({
+                  // @ts-ignore
+                  validator(rule, value, callback) {
+                    if (getFieldValue("newPassword") === value) {
+                      return callback();
+                    }
+                    return callback(
+                      "The two passwords that you entered do not match!"
+                    );
+                  },
+                }),
               ]}
             >
-              <Input
+              <Input.Password
                 placeholder="Enter"
                 value={rePass}
                 onChange={(e) => setRePass(e.currentTarget.value)}
-                pattern={newPass}
               />
             </Form.Item>
           </Form>
-          {/* <TextInput
-            pre="Old Password"
-            placeholder="Enter Your Old Password"
-            value={oldPass}
-            changeHandler={setOldPass}
-            fieldName="oldpass"
-            setError={setError}
-            minLength={6}
-          ></TextInput>
-          <p>&nbsp;</p>
+        </Modal>
+      )}
+      {mode && (
+        <Modal
+          title={`${mode}`}
+          visible={mode === "Save"}
+          onCancel={() => setMode("")}
+          onOk={() => (mode === "Save" ? confirmOtp() : null)}
+          okText={"Save"}
+          okButtonProps={{
+            icon: <SaveOutlined />,
+          }}
+        >
+          {error ? (
+            <Fragment>
+              <Alert type="error" message={error} />
+              <p>&nbsp;</p>
+            </Fragment>
+          ) : null}
           <TextInput
-            pre="New Password"
-            placeholder="Enter Your New Password"
-            value={newPass}
-            changeHandler={setNewPass}
-            fieldName="newPass"
+            pre="OTP"
+            placeholder="Enter Otp"
+            value={otp}
+            changeHandler={setOtp}
+            fieldName="otp"
             setError={setError}
-            minLength={6}
-          ></TextInput> */}
+            minLength={3}
+          ></TextInput>
         </Modal>
       )}
     </Fragment>
   );
 }
-
-// {mode && (
-//   <Modal
-//     title={`${mode} OTP`}
-//     visible={mode.length > 0}
-//     onCancel={() => setMode("")}
-//     onOk={() => (mode ? save() : null)}
-//     okText={"Save"}
-//     okButtonProps={{
-//       icon: <SaveOutlined />,
-//     }}
-//   >
-//     {error ? (
-//       <Fragment>
-//         <Alert type="error" message={error} />
-//         <p>&nbsp;</p>
-//       </Fragment>
-//     ) : null}
-//     <TextInput
-//       pre="OTP"
-//       placeholder="Enter Otp"
-//       value={otp}
-//       changeHandler={setOtp}
-//       fieldName="otp"
-//       setError={setError}
-//       minLength={3}
-//     ></TextInput>
-//   </Modal>
-// )}
