@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "auth": {
+      "ddpwa0063633b": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

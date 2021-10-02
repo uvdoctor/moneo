@@ -1,0 +1,6 @@
+pyproject.toml
+setup.py
+C:/projects/moneo/amplify/backend/function/insmetapy/src/reqlib-metadata/src.egg-info/PKG-INFO
+C:/projects/moneo/amplify/backend/function/insmetapy/src/reqlib-metadata/src.egg-info/SOURCES.txt
+C:/projects/moneo/amplify/backend/function/insmetapy/src/reqlib-metadata/src.egg-info/dependency_links.txt
+C:/projects/moneo/amplify/backend/function/insmetapy/src/reqlib-metadata/src.egg-info/top_level.txt
