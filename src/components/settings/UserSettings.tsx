@@ -25,18 +25,19 @@ export default function UserSettings() {
   const [oldPass, setOldPass] = useState<string>("");
   const [newPass, setNewPass] = useState<string>("");
   const [rePass, setRePass] = useState<string>("");
+  const [counCode, setCounCode] = useState<string>("");
   // const [name, setName] = useState<string>(user);
-  // const [contact, setContact] = useState<string>(user?.attributes.phone_number);
+  const [contact, setContact] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [otp, setOtp] = useState<string>("");
 
   const SAVE_MODE = "Save";
   const EDIT_MODE = "Edit";
 
-  const updateEmail = async () => {
+  const update = async (attr: string, attrValue: any) => {
     try {
       const data = await Auth.updateUserAttributes(user, {
-        email: email,
+        [attr]: attrValue,
       });
       notification.success({
         message: "Email Updated",
@@ -44,27 +45,29 @@ export default function UserSettings() {
       });
     } catch (error) {
       notification.error({
-        message: "Unable to update email",
+        message: `Unable to update ${attr}`,
         description: "Sorry! Unable to update : " + error,
       });
     }
   };
 
-  const confirmOtp = async () => {
-    try {
-      const result = await Auth.verifyCurrentUserAttributeSubmit("email", otp);
-      notification.success({
-        message: "Email Verified",
-        description: result,
+  const confirmOtp = async (attrValue: any) => {
+    const attr = attrValue.includes("@") ? "email" : "phone_number";
+    Auth.verifyCurrentUserAttributeSubmit(attr, attrValue)
+      .then(() => {
+        notification.success({
+          message: `${attr} Verified`,
+          description: "Otp Verified Successfully",
+        });
+        return true;
+      })
+      .catch((err) => {
+        notification.error({
+          message: "Wrong Otp",
+          description: "Sorry! Unable to update : " + err.message,
+        });
+        return false;
       });
-      return true;
-    } catch (error) {
-      notification.error({
-        message: "Wrong Otp",
-        description: "Sorry! Unable to update : " + error,
-      });
-      return false;
-    }
   };
 
   const editPassword = async () => {
@@ -87,7 +90,11 @@ export default function UserSettings() {
 
   useEffect(() => {
     if (!user) return;
+    const phoneNum = user.attributes.phone_number;
+    setContact(user.attributes.phone_number);
     setEmail(user.attributes.email);
+    setCounCode(phoneNum.slice(0, phoneNum.indexOf(1) + 1));
+    setContact(phoneNum.slice(phoneNum.indexOf(1) + 1));
   }, [appContextLoaded]);
 
   return (
@@ -105,8 +112,40 @@ export default function UserSettings() {
           <Row justify="center">
             <Col>
               <TextInput
+                pre="Contact"
+                prefix={counCode}
+                value={contact}
+                changeHandler={setContact}
+                fieldName="contact"
+                pattern="^[0-9]"
+                setError={setError}
+                minLength={10}
+              />
+            </Col>
+            <Col>
+              <Tooltip title="Save">
+                <Button
+                  type="link"
+                  style={{ color: COLORS.GREEN }}
+                  icon={<SaveOutlined />}
+                  disabled={
+                    user.attributes.phone_number === `${counCode}${contact}`
+                      ? true
+                      : false
+                  }
+                  onClick={() => {
+                    setMode(SAVE_MODE);
+                    update(`phone_number`, `${counCode}${contact}`);
+                  }}
+                />
+              </Tooltip>
+            </Col>
+          </Row>
+          <p>&nbsp;</p>
+          <Row justify="center">
+            <Col>
+              <TextInput
                 pre="Email Id"
-                placeholder=""
                 value={email}
                 changeHandler={setEmail}
                 pattern="^(?!.*(?:\.-|-\.))[^@]+@[^\W_](?:[\w-]*[^\W_])?(?:\.[^\W_](?:[\w-]*[^\W_])?)+$"
@@ -124,7 +163,7 @@ export default function UserSettings() {
                   disabled={email === user.attributes.email ? true : false}
                   onClick={() => {
                     setMode(SAVE_MODE);
-                    updateEmail();
+                    update("email", email);
                   }}
                 />
               </Tooltip>
@@ -135,7 +174,6 @@ export default function UserSettings() {
             <Col>
               <TextInput
                 pre="Password"
-                placeholder=""
                 value={password}
                 changeHandler={setPassword}
                 fieldName="Password"
@@ -148,7 +186,7 @@ export default function UserSettings() {
                 <Button
                   type="link"
                   style={{ color: COLORS.GREEN }}
-                  icon={<EditOutlined />}
+                  icon={<SaveOutlined />}
                   onClick={() => setMode(EDIT_MODE)}
                 />
               </Tooltip>
@@ -187,7 +225,6 @@ export default function UserSettings() {
               ]}
             >
               <Input
-                placeholder="Enter"
                 value={oldPass}
                 onChange={(e) => setOldPass(e.currentTarget.value)}
               />
@@ -211,7 +248,6 @@ export default function UserSettings() {
               hasFeedback
             >
               <Input.Password
-                placeholder="Enter"
                 value={newPass}
                 onChange={(e) => setNewPass(e.currentTarget.value)}
               />
@@ -239,7 +275,6 @@ export default function UserSettings() {
               ]}
             >
               <Input.Password
-                placeholder="Enter"
                 value={rePass}
                 onChange={(e) => setRePass(e.currentTarget.value)}
               />
@@ -252,26 +287,18 @@ export default function UserSettings() {
           title={`${mode}`}
           visible={mode === "Save"}
           onCancel={() => setMode("")}
-          onOk={() => (mode === "Save" ? confirmOtp() : null)}
+          onOk={() => (mode === "Save" ? confirmOtp(otp) : null)}
           okText={"Save"}
           okButtonProps={{
             icon: <SaveOutlined />,
           }}
         >
-          {error ? (
-            <Fragment>
-              <Alert type="error" message={error} />
-              <p>&nbsp;</p>
-            </Fragment>
-          ) : null}
           <TextInput
             pre="OTP"
-            placeholder="Enter Otp"
             value={otp}
             changeHandler={setOtp}
             fieldName="otp"
             setError={setError}
-            minLength={3}
           ></TextInput>
         </Modal>
       )}
