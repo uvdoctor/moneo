@@ -29,7 +29,7 @@ const getAndPushData = (diff) => {
         for (let batch in data) {
           await pushData(data[batch], table);
         }
-        await pushDataForFeed(table, data, i + 1, url, exchg);
+        await pushDataForFeed(table, data, exchg, url, exchg);
       } catch (err) {
         reject(err);
       }
