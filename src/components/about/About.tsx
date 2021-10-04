@@ -90,7 +90,7 @@ export default function Home() {
 				<Row className="companies-logo" align="middle" gutter={[50, 50]}>
 					{["natwest", "sapient", "thoughtworks", "jpmorgan", "jabong"].map(
 						(company, i) => (
-							<Col>
+							<Col key={i}>
 								<div className={`${company}-logo`}></div>
 							</Col>
 						)
