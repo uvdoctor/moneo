@@ -66,14 +66,16 @@ export default function Home() {
 				</p>
 
 				<Row
+					className="what-why-how"
 					align="middle"
+					justify="center"
 					gutter={[
 						{ xs: 0, sm: 15, md: 30, lg: 50 },
-						{ xs: 15, sm: 15, md: 30, lg: 50 },
+						{ xs: 50, sm: 50, md: 50, lg: 50 },
 					]}
 				>
 					{cardData.map((data, i) => (
-						<Col key={i} xs={24} md={8}>
+						<Col key={i} xs={24} sm={12} md={8}>
 							<Card {...data} />
 						</Col>
 					))}
@@ -85,32 +87,17 @@ export default function Home() {
 					We have many years of working experience in different organisations.
 					Some of them are listed below.
 				</p>
+				<Row className="companies-logo" align="middle" gutter={[50, 50]}>
+					{["natwest", "sapient", "thoughtworks", "jpmorgan", "jabong"].map(
+						(company, i) => (
+							<Col>
+								<div className={`${company}-logo`}></div>
+							</Col>
+						)
+					)}
+				</Row>
 			</Content>
 			<Content>
-				<h2>Company (Optional)</h2>
-				<p>
-					Lorem Ipsum is simply dummy text of the printing and typesetting
-					industry. Lorem Ipsum has been the industry's standard dummy text ever
-					since the 1500s, when an unknown printer took a galley of type and
-					scrambled it to make a type specimen book. It has survived not only
-					five centuries, but also the leap into electronic typesetting,
-					remaining essentially unchanged. It was popularised in the 1960s with
-					the release of Letraset sheets containing Lorem Ipsum passages, and
-					more recently with desktop publishing software like Aldus PageMaker
-					including versions of Lorem Ipsum.
-				</p>
-				<p>
-					Lorem Ipsum is simply dummy text of the printing and typesetting
-					industry. Lorem Ipsum has been the industry's standard dummy text ever
-					since the 1500s, when an unknown printer took a galley of type and
-					scrambled it to make a type specimen book. It has survived not only
-					five centuries, but also the leap into electronic typesetting,
-					remaining essentially unchanged. It was popularised in the 1960s with
-					the release of Letraset sheets containing Lorem Ipsum passages, and
-					more recently with desktop publishing software like Aldus PageMaker
-					including versions of Lorem Ipsum.
-				</p>
-
 				<h2>What can I use Money Darwin for?</h2>
 				<ul>
 					<li>
