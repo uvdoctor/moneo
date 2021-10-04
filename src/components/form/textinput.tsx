@@ -15,6 +15,7 @@ interface TextInputProps {
 	pattern?: string;
 	size?: SizeType
 	password?: boolean
+	disabled?: boolean
 }
 
 export default function TextInput(props: TextInputProps) {
@@ -41,7 +42,7 @@ export default function TextInput(props: TextInputProps) {
 	return (
 		<Input
 			className="input"
-			type={props.password ? "password" : "text"}
+			type={props.password ? "password" : "text"} 
 			addonBefore={props.pre}
 			addonAfter={props.post}
 			prefix={props.prefix}
@@ -60,6 +61,7 @@ export default function TextInput(props: TextInputProps) {
 				validate();
 			}}
 			maxLength={props.maxLength ? props.maxLength : 50}
+			disabled={props.disabled}
 		/>
 	);
 }
