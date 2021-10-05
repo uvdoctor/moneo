@@ -338,19 +338,17 @@ export const getInExchg = /* GraphQL */ `
       prev
       meta {
         id
-        name
         mcap
         ylow
         yhigh
         mchg
         ychg
         ind
-        index
-        under
-        fv
         createdAt
         updatedAt
       }
+      fv
+      under
       createdAt
       updatedAt
     }
@@ -383,19 +381,17 @@ export const listInExchgs = /* GraphQL */ `
         prev
         meta {
           id
-          name
           mcap
           ylow
           yhigh
           mchg
           ychg
           ind
-          index
-          under
-          fv
           createdAt
           updatedAt
         }
+        fv
+        under
         createdAt
         updatedAt
       }
@@ -407,16 +403,12 @@ export const getInExchgMeta = /* GraphQL */ `
   query GetInExchgMeta($id: String!) {
     getINExchgMeta(id: $id) {
       id
-      name
       mcap
       ylow
       yhigh
       mchg
       ychg
       ind
-      index
-      under
-      fv
       createdAt
       updatedAt
     }
@@ -439,16 +431,12 @@ export const listInExchgMetas = /* GraphQL */ `
     ) {
       items {
         id
-        name
         mcap
         ylow
         yhigh
         mchg
         ychg
         ind
-        index
-        under
-        fv
         createdAt
         updatedAt
       }
