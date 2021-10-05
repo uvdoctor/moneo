@@ -11,7 +11,7 @@ const {
   pushDataForFeed,
 } = require("/opt/nodejs/insertIntoDB");
 const { tempDir, zipFile } = require("/opt/nodejs/utility");
-const { metaApiArray, constructedApiArray } = require("./utils");
+const constructedApiArray = require("./utils");
 const {
   extractPartOfData,
   extractDataFromCSV,
@@ -23,8 +23,9 @@ const isinMap = {};
 
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
-    const apiArray = constructedApiArray(diff);
+    const { apiArray, metaApiArray } = constructedApiArray(diff);
     const metaDataArray = [];
+    const weekHighLowArray = [];
     try {
       if (fs.existsSync(tempDir)) {
         await cleanDirectory(tempDir, "Initial cleaning completed");
@@ -34,8 +35,12 @@ const getAndPushData = (diff) => {
         const csvFile = `${tempDir}/${fileName}`;
         await mkdir(tempDir);
         await downloadZip(url, tempDir, csvFile);
-        await extractPartOfData(fileName, codes, metaDataArray);
-        console.log(metaDataArray.length);
+        await extractPartOfData(
+          fileName,
+          codes,
+          metaDataArray,
+          weekHighLowArray
+        );
       }
       for (let i = 0; i < apiArray.length; i++) {
         const { typeExchg, fileName, url, schema, codes } = apiArray[i];
@@ -50,7 +55,8 @@ const getAndPushData = (diff) => {
           schema,
           table,
           isinMap,
-          metaDataArray
+          metaDataArray,
+          weekHighLowArray
         );
         const data = await addMetaData(exchgData, getDataFromTable);
         for (let batch in data) {

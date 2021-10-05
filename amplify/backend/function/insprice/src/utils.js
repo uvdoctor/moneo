@@ -4,6 +4,7 @@ const constructedApiArray = (diff) => {
   const { date, month, monthChar, year, yearFull } = utility(diff);
   const nseFileName = `cm${date}${monthChar}${yearFull}bhav.csv`;
   const bseFileName = `EQ_ISINCODE_${date}${month}${year}`;
+  const weekHLFileName = `CM_52_wk_High_low_${date}${month}${yearFull}.csv`;
   const apiArray = [
     {
       typeExchg: "NSE",
@@ -62,41 +63,52 @@ const constructedApiArray = (diff) => {
       },
     },
   ];
-  return apiArray;
+
+  const metaApiArray = [
+    {
+      typeExchg: "NSE",
+      fileName: "EQUITY_L.csv",
+      url: "https://www1.nseindia.com/content/equities/EQUITY_L.csv",
+      codes: {
+        id: " ISIN NUMBER",
+        name: "NAME OF COMPANY",
+        fv: " FACE VALUE",
+      },
+    },
+    {
+      typeExchg: "NSE",
+      fileName: "REITS_L.csv",
+      url: "https://www1.nseindia.com/content/equities/REITS_L.csv",
+      codes: {
+        id: " ISIN NUMBER",
+        name: "NAME OF COMPANY",
+        fv: " FACE VALUE",
+      },
+    },
+    {
+      typeExchg: "NSE",
+      fileName: "eq_etfseclist.csv",
+      url: "https://www1.nseindia.com/content/equities/eq_etfseclist.csv",
+      codes: {
+        id: "ISIN Number",
+        name: "Security Name",
+        fv: " Face Value",
+        under: "Underlying",
+      },
+    },
+    {
+      typeExchg: "NSE",
+      fileName: weekHLFileName,
+      url: `https://archives.nseindia.com/content/${weekHLFileName}`,
+      codes: {
+        sid: "SYMBOL",
+        yhigh: "Adjusted 52_Week_High",
+        ylow: "Adjusted 52_Week_Low",
+      },
+    },
+  ];
+
+  return { apiArray, metaApiArray };
 };
 
-const metaApiArray = [
-  {
-    typeExchg: "NSE",
-    fileName: "EQUITY_L.csv",
-    url: "https://www1.nseindia.com/content/equities/EQUITY_L.csv",
-    codes: {
-      id: " ISIN NUMBER",
-      name: "NAME OF COMPANY",
-      fv: " FACE VALUE",
-    },
-  },
-  {
-    typeExchg: "NSE",
-    fileName: "REITS_L.csv",
-    url: "https://www1.nseindia.com/content/equities/REITS_L.csv",
-    codes: {
-      id: " ISIN NUMBER",
-      name: "NAME OF COMPANY",
-      fv: " FACE VALUE",
-    },
-  },
-  {
-    typeExchg: "NSE",
-    fileName: "eq_etfseclist.csv",
-    url: "https://www1.nseindia.com/content/equities/eq_etfseclist.csv",
-    codes: {
-      id: "ISIN Number",
-      name: "Security Name",
-      fv: " Face Value",
-      under: "Underlying",
-    },
-  },
-];
-
-module.exports = { constructedApiArray, metaApiArray };
+module.exports = constructedApiArray;
