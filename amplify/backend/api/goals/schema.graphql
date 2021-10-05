@@ -295,7 +295,6 @@ type INExchgMeta
     ]
   ) {
   id: String!
-  name: String!
   mcap: MCap
   ylow: Float!
   yhigh: Float!
@@ -304,7 +303,6 @@ type INExchgMeta
   ind: String
   index: String
   under: String
-  fv: Int
 }
 
 type Indices

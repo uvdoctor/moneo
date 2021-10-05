@@ -1,14 +1,10 @@
 const fs = require("fs");
 const fsPromise = require("fs/promises");
 const { pushData, pushDataForFeed } = require("/opt/nodejs/insertIntoDB");
-const {
-  cleanDirectory,
-  downloadZip,
-  unzipDownloads,
-} = require("/opt/nodejs/bhavUtils");
-const { tempDir, zipFile } = require("/opt/nodejs/utility");
+const { tempDir } = require("/opt/nodejs/utility");
+const { cleanDirectory, downloadZip } = require("/opt/nodejs/bhavUtils");
 const constructedApiArray = require("./utils");
-const extractDataFromExcel = require("./bhavUtils");
+const extractData = require("./bhavUtils");
 const { mkdir } = fsPromise;
 const table = "INExchgMeta-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 const isinMap = {};
@@ -21,15 +17,15 @@ const getAndPushData = (diff) => {
         if (fs.existsSync(tempDir)) {
           await cleanDirectory(tempDir, "Initial cleaning completed");
         }
-        const { fileName, url, exchg } = apiArray[i];
+        const { fileName, url, exchg, codes } = apiArray[i];
+        const csvFile = `${tempDir}/${fileName}`;
         await mkdir(tempDir);
-        await downloadZip(url, tempDir, zipFile);
-        await unzipDownloads(zipFile, tempDir);
-        const data = await extractDataFromExcel(fileName, table, isinMap);
+        await downloadZip(url, tempDir, csvFile);
+        const data = await extractData(fileName, codes, isinMap, table);
         for (let batch in data) {
           await pushData(data[batch], table);
         }
-        await pushDataForFeed(table, data, exchg, url, exchg);
+        await pushDataForFeed(table, data, `${exchg}${i}`, url, exchg);
       } catch (err) {
         reject(err);
       }
