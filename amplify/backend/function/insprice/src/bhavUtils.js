@@ -11,7 +11,8 @@ const extractDataFromCSV = async (
   schema,
   table,
   isinMap,
-  metaDataArray
+  metaDataArray,
+  weekHighLowArray
 ) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
@@ -36,6 +37,12 @@ const extractDataFromCSV = async (
             dataToPush.name = item.name;
             dataToPush.fv = item.fv;
             if (item.under) dataToPush.under = item.under;
+          }
+        });
+        weekHighLowArray.map((item) => {
+          if (item.sid === dataToPush.sid) {
+            dataToPush.yhigh = item.yhigh;
+            dataToPush.ylow = item.ylow;
           }
         });
         batches.push({ PutRequest: { Item: dataToPush } });
@@ -67,19 +74,33 @@ const extractDataFromCSV = async (
   return await end;
 };
 
-const extractPartOfData = async (fileName, codes, metaDataArray) => {
+const extractPartOfData = async (
+  fileName,
+  codes,
+  metaDataArray,
+  weekHighLowArray
+) => {
   const end = new Promise((resolve, reject) => {
     fs.createReadStream(`${tempDir}/${fileName}`)
       .pipe(csv())
       .on("data", (record) => {
-        const schema = {
-          id: record[codes.id],
-          fv: Number(record[codes.fv]),
-          name: record[codes.name],
-        };
-        if (fileName === "eq_etfseclist.csv")
-          schema.under = record[codes.under];
-        metaDataArray.push(schema);
+        if (fileName === "CM_52_wk_High_low_04102021.csv") {
+          const schema = {
+            sid: record[codes.sid],
+            yhigh: record[codes.yhigh],
+            ylow: record[codes.ylow],
+          };
+          weekHighLowArray.push(schema);
+        } else {
+          const schema = {
+            id: record[codes.id],
+            fv: Number(record[codes.fv]),
+            name: record[codes.name],
+          };
+          if (fileName === "eq_etfseclist.csv")
+            schema.under = record[codes.under];
+          metaDataArray.push(schema);
+        }
       })
       .on("end", async () => {
         await cleanDirectory(

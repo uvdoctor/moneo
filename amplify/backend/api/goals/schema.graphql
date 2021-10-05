@@ -280,6 +280,8 @@ type INExchg
   meta: INExchgMeta
   fv: Int
   under: String
+  yhigh: Float
+  ylow: Float
 }
 
 type INExchgMeta
@@ -298,10 +300,6 @@ type INExchgMeta
   ) {
   id: String!
   mcap: MCap
-  ylow: Float!
-  yhigh: Float!
-  mchg: Float
-  ychg: Float
   ind: String
 }
 
