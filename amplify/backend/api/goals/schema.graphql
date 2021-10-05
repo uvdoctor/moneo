@@ -278,6 +278,8 @@ type INExchg
   price: Float!
   prev: Float!
   meta: INExchgMeta
+  fv: Int
+  under: String
 }
 
 type INExchgMeta
@@ -301,8 +303,6 @@ type INExchgMeta
   mchg: Float
   ychg: Float
   ind: String
-  index: String
-  under: String
 }
 
 type Indices

@@ -1,8 +1,8 @@
 const fs = require("fs");
 const csv = require("csv-parser");
 const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
-const { calcSchema } = require("./calculate");
 const { tempDir } = require("/opt/nodejs/utility");
+const { calcSchema } = require("./calculate");
 
 const extractDataFromCSV = async (
   fileName,
@@ -10,7 +10,8 @@ const extractDataFromCSV = async (
   codes,
   schema,
   table,
-  isinMap
+  isinMap,
+  metaDataArray
 ) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
@@ -30,8 +31,14 @@ const extractDataFromCSV = async (
         );
         if (!updateSchema) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));
+        metaDataArray.map((item) => {
+          if (item.id === dataToPush.id) {
+            dataToPush.name = item.name;
+            dataToPush.fv = item.fv;
+            if (item.under) dataToPush.under = item.under;
+          }
+        });
         batches.push({ PutRequest: { Item: dataToPush } });
-
         count++;
         if (count === 25) {
           batchRecords.push(batches);
@@ -60,6 +67,38 @@ const extractDataFromCSV = async (
   return await end;
 };
 
+const extractPartOfData = async (fileName, codes, metaDataArray) => {
+  const end = new Promise((resolve, reject) => {
+    fs.createReadStream(`${tempDir}/${fileName}`)
+      .pipe(csv())
+      .on("data", (record) => {
+        const schema = {
+          id: record[codes.id],
+          fv: Number(record[codes.fv]),
+          name: record[codes.name],
+        };
+        if (fileName === "eq_etfseclist.csv")
+          schema.under = record[codes.under];
+        metaDataArray.push(schema);
+      })
+      .on("end", async () => {
+        await cleanDirectory(
+          tempDir,
+          `${fileName} results extracted successfully and directory is cleaned`
+        );
+        resolve();
+      })
+      .on("error", (err) => {
+        cleanDirectory(
+          tempDir,
+          `Unable to read ${fileName} csv file, ${err.message}`
+        );
+        throw new Error(err.message);
+      });
+  });
+  return await end;
+};
+
 const addMetaData = async (exchgData, getDataFromTable) => {
   const table = "INExchgMeta-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
   const data = await getDataFromTable(table);
@@ -78,5 +117,6 @@ const addMetaData = async (exchgData, getDataFromTable) => {
 
 module.exports = {
   extractDataFromCSV,
+  extractPartOfData,
   addMetaData,
 };
