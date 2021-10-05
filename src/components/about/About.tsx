@@ -16,13 +16,13 @@ export default function Home() {
 		},
 		{
 			title: "Why",
-			description: "There is nothing personal about personal finance. Moneo is here to change that.",
+			description: "There is nothing personal about personal finance. Moneo is here to change that. No more budgeting or paying commissions.",
 			imageUrl: "images/about-why.jpg",
 		},
 		{
 			title: "How",
 			description:
-				"Moneo not only provides a personalized financial plan, but also helps you to find deals and invest accordingly.",
+				"Moneo not only provides a personalized financial plan, but also helps you to find deals based on your goals, and invest accordingly.",
 			imageUrl: "images/about-how.jpg",
 		},
 	];
