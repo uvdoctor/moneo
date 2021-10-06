@@ -16,7 +16,7 @@ export default function Home() {
 		},
 		{
 			title: "Why",
-			description: "There is nothing personal about personal finance. Moneo is here to change that. ",
+			description: "There is nothing personal about personal finance. Moneo is here to change that. No more budgeting or paying commissions.",
 			imageUrl: "images/about-why.jpg",
 		},
 		{
