@@ -1,25 +1,7 @@
 .about {
-	& .banner {
-		background-color: #fff;
-		box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-		border-radius: 10px;
-		margin: 40px 0;
-
-		& img {
-			border-top-right-radius: 10px;
-			border-bottom-right-radius: 10px;
-		}
-
-		& h2 {
-			color: @primary-color;
-			font-size: 30px;
-			font-weight: bold;
-			padding-left: 30px;
-		}
-	}
-
 	& .founder-quote {
 		background-color: #3e4c54;
+		text-align: right;
 
 		& .dd-content {
 			position: relative;
@@ -31,6 +13,7 @@
 			max-width: 500px;
 			padding: 20px;
 			top: 100px;
+			text-align: left;
 		}
 
 		& .fa-quote-left {
@@ -53,7 +36,11 @@
 
 		& h4 {
 			font-size: 18px;
-			padding-left: 30px;
+			padding-left: 10px;
+		}
+
+		& img {
+			max-width: 780px;
 		}
 	}
 
@@ -103,21 +90,41 @@
 	}
 }
 
-@media all and (max-width: 767.98px) {
+@media all and (max-width: 991.98px) {
 	.about {
-		.banner {
-			margin: 30px 0;
+		& .founder-quote {
+			margin-bottom: 30px;
 
-			& img {
-				border-top-right-radius: 0;
-				border-bottom-right-radius: 10px;
-				border-bottom-left-radius: 10px;
+			& hgroup {
+				width: 100%;
+				max-width: inherit;
+				background-color: @primary-color;
+				top: auto;
+				bottom: -25px;
 			}
 
 			& h2 {
 				font-size: 25px;
-				padding: 20px;
-				text-align: center;
+			}
+
+			& h4 {
+				font-size: 16px;
+			}
+		}
+	}
+}
+
+@media all and (max-width: 576px) {
+	.about {
+		& .founder-quote {
+			margin-bottom: 120px;
+
+			& hgroup {
+				bottom: -125px;
+			}
+
+			& h2 {
+				font-size: 22px;
 			}
 		}
 	}
