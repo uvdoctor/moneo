@@ -425,16 +425,14 @@ export const onCreateInExchg = /* GraphQL */ `
       meta {
         id
         mcap
-        ylow
-        yhigh
-        mchg
-        ychg
         ind
         createdAt
         updatedAt
       }
       fv
       under
+      yhigh
+      ylow
       createdAt
       updatedAt
     }
@@ -455,16 +453,14 @@ export const onUpdateInExchg = /* GraphQL */ `
       meta {
         id
         mcap
-        ylow
-        yhigh
-        mchg
-        ychg
         ind
         createdAt
         updatedAt
       }
       fv
       under
+      yhigh
+      ylow
       createdAt
       updatedAt
     }
@@ -485,16 +481,14 @@ export const onDeleteInExchg = /* GraphQL */ `
       meta {
         id
         mcap
-        ylow
-        yhigh
-        mchg
-        ychg
         ind
         createdAt
         updatedAt
       }
       fv
       under
+      yhigh
+      ylow
       createdAt
       updatedAt
     }
@@ -505,10 +499,6 @@ export const onCreateInExchgMeta = /* GraphQL */ `
     onCreateINExchgMeta {
       id
       mcap
-      ylow
-      yhigh
-      mchg
-      ychg
       ind
       createdAt
       updatedAt
@@ -520,10 +510,6 @@ export const onUpdateInExchgMeta = /* GraphQL */ `
     onUpdateINExchgMeta {
       id
       mcap
-      ylow
-      yhigh
-      mchg
-      ychg
       ind
       createdAt
       updatedAt
@@ -535,10 +521,6 @@ export const onDeleteInExchgMeta = /* GraphQL */ `
     onDeleteINExchgMeta {
       id
       mcap
-      ylow
-      yhigh
-      mchg
-      ychg
       ind
       createdAt
       updatedAt
