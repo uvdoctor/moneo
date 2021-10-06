@@ -53,13 +53,7 @@ export default function Calculator({ calculateRef }: CalculatorProps) {
 			<div>
 				<div className="calculator-title">
 					<h2>Calculators</h2>
-					<div
-						className="bg-white border rounded-lg p-4 text-center"
-						style={{
-							backgroundImage: "linear-gradient(to left, #b5be93, #d2d6bc)",
-							border: "5px solid #989898",
-						}}
-					>
+					<div className="bg-white border rounded-lg p-4 text-center">
 						<img
 							className="inline-block"
 							src="images/try-advance-calculator.jpg"

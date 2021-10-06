@@ -11,12 +11,14 @@ export default function Home() {
 	const cardData = [
 		{
 			title: "What",
-			description: "Moneo is a one-stop financial coaching platform to help families achieve worry-free financial independence.",
+			description:
+				"Moneo is a one-stop financial coaching platform to help families achieve worry-free financial independence.",
 			imageUrl: "images/about-what.jpg",
 		},
 		{
 			title: "Why",
-			description: "There is nothing personal about personal finance. Moneo is here to change that. No more budgeting or paying commissions.",
+			description:
+				"There is nothing personal about personal finance. Moneo is here to change that. No more budgeting or paying commissions.",
 			imageUrl: "images/about-why.jpg",
 		},
 		{
@@ -84,16 +86,24 @@ export default function Home() {
 			<Content whiteBg>
 				<h2>100+ years of experience</h2>
 				<p>
-					We have brought financial and technology experts to build a global financial planning platform that leverages the best of human and machine capabilities.
+					We have brought financial and technology experts to build a global
+					financial planning platform that leverages the best of human and
+					machine capabilities.
 				</p>
 				<Row className="companies-logo" align="middle" gutter={[50, 50]}>
-					{["natwest", "sapient", "thoughtworks", "jpmorgan", "jabong"].map(
-						(company, i) => (
-							<Col key={i}>
-								<div className={`${company}-logo`}></div>
-							</Col>
-						)
-					)}
+					{[
+						"blackrock",
+						"natwest",
+						"sapient",
+						"thoughtworks",
+						"jpmorgan",
+						"barclays",
+						"snapdeal",
+					].map((company, i) => (
+						<Col key={i}>
+							<div className={`${company}-logo`}></div>
+						</Col>
+					))}
 				</Row>
 			</Content>
 		</div>
