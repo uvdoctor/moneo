@@ -16,13 +16,13 @@ export default function Home() {
 		},
 		{
 			title: "Why",
-			description: "There is nothing personal about personal finance. Moneo is here to change that. No more budgeting or paying commissions.",
+			description: "There is nothing personal about personal finance. Moneo is here to change that. ",
 			imageUrl: "images/about-why.jpg",
 		},
 		{
 			title: "How",
 			description:
-				"Moneo not only provides a personalized financial plan, but also helps you to find deals based on your goals, and invest accordingly.",
+				"Moneo not only provides a personalized financial plan, but also helps you to invest according to the plan.",
 			imageUrl: "images/about-how.jpg",
 		},
 	];
@@ -37,11 +37,11 @@ export default function Home() {
 						We're building the world's most human digital financial coach.
 						<FontAwesomeIcon icon={faQuoteRight} />
 					</h2>
-					<h4>- Umang Doctor, CEO</h4>
+					<h4>- Umang Doctor, Founder</h4>
 				</hgroup>
 			</Content>
 			<Content>
-				<h2>About US</h2>
+				<h2>About Us</h2>
 				<p>
 					Lorem Ipsum is simply dummy text of the printing and typesetting
 					industry. Lorem Ipsum has been the industry's standard dummy text ever
@@ -82,9 +82,9 @@ export default function Home() {
 				</Row>
 			</Content>
 			<Content whiteBg>
-				<h2>100+ years of experience</h2>
+				<h2><strong>150+ years of global experience</strong></h2>
 				<p>
-					We have brought financial and technology experts to build a global financial planning platform that leverages the best of human and machine capabilities.
+					We have hired leading financial and technology experts from around the world to build a global financial platform from the ground-up so that it leverages the best of human and machine capabilities to help families achieve worry-free financial independence.
 				</p>
 				<Row className="companies-logo" align="middle" gutter={[50, 50]}>
 					{["natwest", "sapient", "thoughtworks", "jpmorgan", "jabong"].map(
