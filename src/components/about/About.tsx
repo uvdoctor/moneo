@@ -11,12 +11,14 @@ export default function Home() {
 	const cardData = [
 		{
 			title: "What",
-			description: "Moneo is a one-stop financial coaching platform to help families achieve worry-free financial independence.",
+			description:
+				"Moneo is a one-stop financial coaching platform to help families achieve worry-free financial independence.",
 			imageUrl: "images/about-what.jpg",
 		},
 		{
 			title: "Why",
-			description: "There is nothing personal about personal finance. Moneo is here to change that. No more budgeting or paying commissions.",
+			description:
+				"There is nothing personal about personal finance. Moneo is here to change that. No more budgeting or paying commissions.",
 			imageUrl: "images/about-why.jpg",
 		},
 		{
@@ -82,18 +84,29 @@ export default function Home() {
 				</Row>
 			</Content>
 			<Content whiteBg>
-				<h2><strong>150+ years of global experience</strong></h2>
+				<h2>
+					<strong>150+ years of global experience</strong>
+				</h2>
 				<p>
-					We have hired leading financial and technology experts from around the world to build a global financial platform from the ground-up so that it leverages the best of human and machine capabilities, while ensuring security and data privacy.
+					We have hired leading financial and technology experts from around the
+					world to build a global financial platform from the ground-up so that
+					it leverages the best of human and machine capabilities, while
+					ensuring security and data privacy.
 				</p>
 				<Row className="companies-logo" align="middle" gutter={[50, 50]}>
-					{["natwest", "sapient", "thoughtworks", "jpmorgan", "jabong"].map(
-						(company, i) => (
-							<Col key={i}>
-								<div className={`${company}-logo`}></div>
-							</Col>
-						)
-					)}
+					{[
+						"blackrock",
+						"natwest",
+						"sapient",
+						"thoughtworks",
+						"jpmorgan",
+						"barclays",
+						"snapdeal",
+					].map((company, i) => (
+						<Col key={i}>
+							<div className={`${company}-logo`}></div>
+						</Col>
+					))}
 				</Row>
 			</Content>
 		</div>
