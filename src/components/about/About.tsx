@@ -84,7 +84,7 @@ export default function Home() {
 			<Content whiteBg>
 				<h2><strong>150+ years of global experience</strong></h2>
 				<p>
-					We have hired leading financial and technology experts from around the world to build a global financial platform from the ground-up so that it leverages the best of human and machine capabilities to help families achieve worry-free financial independence.
+					We have hired leading financial and technology experts from around the world to build a global financial platform from the ground-up so that it leverages the best of human and machine capabilities, while ensuring security and data privacy.
 				</p>
 				<Row className="companies-logo" align="middle" gutter={[50, 50]}>
 					{["natwest", "sapient", "thoughtworks", "jpmorgan", "jabong"].map(
