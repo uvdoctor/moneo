@@ -11,18 +11,18 @@ export default function Home() {
 	const cardData = [
 		{
 			title: "What",
-			description: "Through a platform where privacy & security area priority",
+			description: "Moneo is a one-stop financial coaching platform to help families achieve worry-free financial independence.",
 			imageUrl: "images/about-what.jpg",
 		},
 		{
 			title: "Why",
-			description: "To help people get better with their money",
+			description: "There is nothing personal about personal finance. Moneo is here to change that. No more budgeting or paying commissions.",
 			imageUrl: "images/about-why.jpg",
 		},
 		{
 			title: "How",
 			description:
-				"With a digital-first, no-nonsense approach. No branches or tiresome paperwork",
+				"Moneo not only provides a personalized financial plan, but also helps you to find deals based on your goals, and invest accordingly.",
 			imageUrl: "images/about-how.jpg",
 		},
 	];
@@ -34,7 +34,7 @@ export default function Home() {
 				<hgroup>
 					<h2>
 						<FontAwesomeIcon icon={faQuoteLeft} />
-						We're building the world's most human financial company.
+						We're building the world's most human digital financial coach.
 						<FontAwesomeIcon icon={faQuoteRight} />
 					</h2>
 					<h4>- Umang Doctor, CEO</h4>
@@ -82,10 +82,9 @@ export default function Home() {
 				</Row>
 			</Content>
 			<Content whiteBg>
-				<h2>Experience</h2>
+				<h2>100+ years of experience</h2>
 				<p>
-					We have many years of working experience in different organisations.
-					Some of them are listed below.
+					We have brought financial and technology experts to build a global financial planning platform that leverages the best of human and machine capabilities.
 				</p>
 				<Row className="companies-logo" align="middle" gutter={[50, 50]}>
 					{["natwest", "sapient", "thoughtworks", "jpmorgan", "jabong"].map(
@@ -96,29 +95,6 @@ export default function Home() {
 						)
 					)}
 				</Row>
-			</Content>
-			<Content>
-				<h2>What can I use Money Darwin for?</h2>
-				<ul>
-					<li>
-						It is a long established fact that a reader will be distracted by
-						the readable content of a page when looking at its layout.
-					</li>
-					<li>
-						The point of using Lorem Ipsum is that it has a more-or-less normal
-						distribution of letters, as opposed to using 'Content here, content
-						here', making it look like readable English.
-					</li>
-					<li>
-						Many desktop publishing packages and web page editors now use Lorem
-						Ipsum as their default model text, and a search for 'lorem ipsum'
-						will uncover many web sites still in their infancy.
-					</li>
-					<li>
-						Various versions have evolved over the years, sometimes by accident,
-						sometimes on purpose (injected humour and the like).
-					</li>
-				</ul>
 			</Content>
 		</div>
 	);

@@ -278,6 +278,10 @@ type INExchg
   price: Float!
   prev: Float!
   meta: INExchgMeta
+  fv: Int
+  under: String
+  yhigh: Float
+  ylow: Float
 }
 
 type INExchgMeta
@@ -295,16 +299,8 @@ type INExchgMeta
     ]
   ) {
   id: String!
-  name: String!
   mcap: MCap
-  ylow: Float!
-  yhigh: Float!
-  mchg: Float
-  ychg: Float
   ind: String
-  index: String
-  under: String
-  fv: Int
 }
 
 type Indices
