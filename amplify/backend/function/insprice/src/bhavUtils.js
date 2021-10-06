@@ -11,8 +11,8 @@ const extractDataFromCSV = async (
   schema,
   table,
   isinMap,
-  metaDataArray,
-  weekHighLowArray
+  nameArray,
+  weekHLArray
 ) => {
   const end = new Promise((resolve, reject) => {
     let batches = [];
@@ -32,14 +32,14 @@ const extractDataFromCSV = async (
         );
         if (!updateSchema) return;
         const dataToPush = JSON.parse(JSON.stringify(updateSchema));
-        metaDataArray.map((item) => {
+        nameArray.map((item) => {
           if (item.id === dataToPush.id) {
             dataToPush.name = item.name;
             dataToPush.fv = item.fv;
             if (item.under) dataToPush.under = item.under;
           }
         });
-        weekHighLowArray.map((item) => {
+        weekHLArray.map((item) => {
           if (item.sid === dataToPush.sid) {
             dataToPush.yhigh = item.yhigh;
             dataToPush.ylow = item.ylow;
@@ -77,29 +77,34 @@ const extractDataFromCSV = async (
 const extractPartOfData = async (
   fileName,
   codes,
-  metaDataArray,
-  weekHighLowArray
+  nameArray,
+  weekHLArray
 ) => {
   const end = new Promise((resolve, reject) => {
+    const csvFormat = fileName.includes("CM_52_wk_High_low")
+      ? csv({ headers: true })
+      : csv();
     fs.createReadStream(`${tempDir}/${fileName}`)
-      .pipe(csv())
+      .pipe(csvFormat)
       .on("data", (record) => {
-        if (fileName === "CM_52_wk_High_low_04102021.csv") {
+        if (fileName.includes("CM_52_wk_High_low")) {
+          const yhigh = parseFloat(record[codes.yhigh]);
+          const ylow = parseFloat(record[codes.ylow]);
           const schema = {
             sid: record[codes.sid],
-            yhigh: record[codes.yhigh],
-            ylow: record[codes.ylow],
+            yhigh: yhigh ? yhigh : null,
+            ylow: ylow ? ylow : null,
           };
-          weekHighLowArray.push(schema);
+          weekHLArray.push(schema);
         } else {
           const schema = {
             id: record[codes.id],
-            fv: Number(record[codes.fv]),
+            fv: Number(record[codes.fv]) ? Number(record[codes.fv]) : null,
             name: record[codes.name],
           };
           if (fileName === "eq_etfseclist.csv")
             schema.under = record[codes.under];
-          metaDataArray.push(schema);
+          nameArray.push(schema);
         }
       })
       .on("end", async () => {

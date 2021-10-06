@@ -14,15 +14,11 @@ const constructedApiArray = (diff) => {
         id: "",
         sid: "",
         name: "",
-        exchg: "",
         type: "",
         subt: "",
         itype: "",
         price: 0,
         prev: 0,
-        mcap: null,
-        createdAt: "",
-        updatedAt: "",
       },
       codes: {
         sid: "SYMBOL",
@@ -42,15 +38,11 @@ const constructedApiArray = (diff) => {
         id: "",
         sid: "",
         name: "",
-        exchg: "",
         type: "",
         subt: "",
         itype: "",
         price: 0,
         prev: 0,
-        mcap: null,
-        createdAt: "",
-        updatedAt: "",
       },
       codes: {
         sid: "SC_CODE",
@@ -64,7 +56,7 @@ const constructedApiArray = (diff) => {
     },
   ];
 
-  const metaApiArray = [
+  const nameApiArray = [
     {
       typeExchg: "NSE",
       fileName: "EQUITY_L.csv",
@@ -101,14 +93,14 @@ const constructedApiArray = (diff) => {
       fileName: weekHLFileName,
       url: `https://archives.nseindia.com/content/${weekHLFileName}`,
       codes: {
-        sid: "SYMBOL",
-        yhigh: "Adjusted 52_Week_High",
-        ylow: "Adjusted 52_Week_Low",
+        sid: "_0",
+        yhigh: "_2",
+        ylow: "_4",
       },
     },
   ];
 
-  return { apiArray, metaApiArray };
+  return { apiArray, nameApiArray };
 };
 
 module.exports = constructedApiArray;

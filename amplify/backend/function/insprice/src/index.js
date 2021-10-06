@@ -23,24 +23,19 @@ const isinMap = {};
 
 const getAndPushData = (diff) => {
   return new Promise(async (resolve, reject) => {
-    const { apiArray, metaApiArray } = constructedApiArray(diff);
-    const metaDataArray = [];
-    const weekHighLowArray = [];
+    const { apiArray, nameApiArray } = constructedApiArray(diff);
+    const nameArray = [];
+    const weekHLArray = [];
     try {
       if (fs.existsSync(tempDir)) {
         await cleanDirectory(tempDir, "Initial cleaning completed");
       }
-      for (let ind = 0; ind < metaApiArray.length; ind++) {
-        const { fileName, url, codes } = metaApiArray[ind];
+      for (let ind = 0; ind < nameApiArray.length; ind++) {
+        const { fileName, url, codes } = nameApiArray[ind];
         const csvFile = `${tempDir}/${fileName}`;
         await mkdir(tempDir);
         await downloadZip(url, tempDir, csvFile);
-        await extractPartOfData(
-          fileName,
-          codes,
-          metaDataArray,
-          weekHighLowArray
-        );
+        await extractPartOfData(fileName, codes, nameArray, weekHLArray);
       }
       for (let i = 0; i < apiArray.length; i++) {
         const { typeExchg, fileName, url, schema, codes } = apiArray[i];
@@ -55,8 +50,8 @@ const getAndPushData = (diff) => {
           schema,
           table,
           isinMap,
-          metaDataArray,
-          weekHighLowArray
+          nameArray,
+          weekHLArray
         );
         const data = await addMetaData(exchgData, getDataFromTable);
         for (let batch in data) {
