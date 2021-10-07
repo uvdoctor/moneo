@@ -89,7 +89,7 @@ const calc = {
   },
 };
 
-const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
+const calcSchema = (record, codes, schema, exchg, isinMap, table) => {
   const type = record[codes.type];
   const subt = record[codes.subt];
   const name = record[codes.name];
@@ -103,16 +103,16 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
       case "prev":
         return (schema[key] = parse(record[codes[key]]));
       case "type":
-        return (schema.type = calc[typeExchg].calcType(type, subt, name));
+        return (schema.type = calc[exchg].calcType(type, subt, name));
       case "subt":
-        return (schema.subt = calc[typeExchg].calcSubType(type, subt, name));
+        return (schema.subt = calc[exchg].calcSubType(type, subt, name));
       case "itype":
-        return (schema.itype = calc[typeExchg].calcInsType(type, subt, name));
+        return (schema.itype = calc[exchg].calcInsType(type, subt, name));
       default:
         schema[key] = record[codes[key]];
     }
   });
-  schema.exchg = typeExchg;
+  schema.exchg = exchg;
   schema.createdAt = new Date().toISOString();
   schema.updatedAt = new Date().toISOString();
   schema.__typename = table.slice(0, table.indexOf("-"));
