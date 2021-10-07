@@ -16,6 +16,7 @@ import { COLORS } from "../../CONSTANTS";
 import { SaveOutlined, EditOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
 import { Auth } from "aws-amplify";
+import { useForm } from "antd/lib/form/Form";
 
 export default function UserSettings() {
   const { user, appContextLoaded }: any = useContext(AppContext);
@@ -26,39 +27,53 @@ export default function UserSettings() {
   const [newPass, setNewPass] = useState<string>("");
   const [rePass, setRePass] = useState<string>("");
   const [counCode, setCounCode] = useState<string>("");
-  // const [name, setName] = useState<string>(user);
+  const [disabledForm, setDisabledForm] = useState(true);
   const [contact, setContact] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [otp, setOtp] = useState<string>("");
+  const [attrName, setAttrName] = useState<string>("");
 
   const SAVE_MODE = "Save";
   const EDIT_MODE = "Edit";
-
+  const [form] = useForm();
+  
+  const handleFormChange = () => {
+    const hasErrors = form.getFieldsError().some(({ errors }) => errors.length) || !form.isFieldsTouched(true);
+    setDisabledForm(hasErrors);
+  }
+  
+  const handleInputChange = (fieldValue:any, userAttr:any) =>{
+    let bool;
+    bool =( fieldValue === userAttr) ? true : (error.length>0) ? true :false;
+    return bool
+  }
+  
   const update = async (attr: string, attrValue: any) => {
     try {
       const data = await Auth.updateUserAttributes(user, {
         [attr]: attrValue,
       });
       notification.success({
-        message: "Email Updated",
-        description: `${data} "Verify your email Address by entering Otp`,
+        message: `${attrName} Updated`,
+        description: `${data} "Verify your ${attrName} by entering Otp`,
       });
+      setMode(SAVE_MODE);
     } catch (error) {
       notification.error({
-        message: `Unable to update ${attr}`,
+        message: `Unable to update ${attrName}`,
         description: "Sorry! Unable to update : " + error,
       });
     }
   };
 
   const confirmOtp = async (attrValue: any) => {
-    const attr = attrValue.includes("@") ? "email" : "phone_number";
-    Auth.verifyCurrentUserAttributeSubmit(attr, attrValue)
+    Auth.verifyCurrentUserAttributeSubmit(attrName, attrValue)
       .then(() => {
         notification.success({
-          message: `${attr} Verified`,
+          message: `${attrName} Verified`,
           description: "Otp Verified Successfully",
         });
+        setMode("");
         return true;
       })
       .catch((err) => {
@@ -66,8 +81,10 @@ export default function UserSettings() {
           message: "Wrong Otp",
           description: "Sorry! Unable to update : " + err.message,
         });
+        setMode("");
         return false;
       });
+    return true;
   };
 
   const editPassword = async () => {
@@ -77,6 +94,7 @@ export default function UserSettings() {
           message: "Password Updated",
           description: `Password Updated Status: ${data}`,
         });
+        setMode("");
         return true;
       })
       .catch((err) => {
@@ -84,6 +102,7 @@ export default function UserSettings() {
           message: "Wrong Credentials",
           description: "Sorry! Unable to update : " + err.message,
         });
+        setMode("");
         return false;
       });
   };
@@ -128,14 +147,10 @@ export default function UserSettings() {
                   type="link"
                   style={{ color: COLORS.GREEN }}
                   icon={<SaveOutlined />}
-                  disabled={
-                    user.attributes.phone_number === `${counCode}${contact}`
-                      ? true
-                      : false
-                  }
+                  disabled={handleInputChange(user.attributes.phone_number, `${counCode}${contact}`)}
                   onClick={() => {
-                    setMode(SAVE_MODE);
-                    update(`phone_number`, `${counCode}${contact}`);
+                    setAttrName(`phone_number`)
+                    update(attrName, `${counCode}${contact}`);
                   }}
                 />
               </Tooltip>
@@ -160,10 +175,10 @@ export default function UserSettings() {
                   type="link"
                   style={{ color: COLORS.GREEN }}
                   icon={<SaveOutlined />}
-                  disabled={email === user.attributes.email ? true : false}
+                  disabled={handleInputChange(email , user.attributes.email)}
                   onClick={() => {
-                    setMode(SAVE_MODE);
-                    update("email", email);
+                    setAttrName("email")
+                    update(attrName, email);
                   }}
                 />
               </Tooltip>
@@ -182,11 +197,11 @@ export default function UserSettings() {
               ></TextInput>
             </Col>
             <Col>
-              <Tooltip title="Save">
+              <Tooltip title="Edit">
                 <Button
                   type="link"
                   style={{ color: COLORS.GREEN }}
-                  icon={<SaveOutlined />}
+                  icon={<EditOutlined />}
                   onClick={() => setMode(EDIT_MODE)}
                 />
               </Tooltip>
@@ -202,9 +217,10 @@ export default function UserSettings() {
           visible={mode === "Edit"}
           onCancel={() => setMode("")}
           onOk={() => (mode === "Edit" ? editPassword() : null)}
-          okText={"Save"}
+          okText={"Save"}    
           okButtonProps={{
-            icon: <EditOutlined />,
+            disabled: disabledForm,
+            icon: <SaveOutlined />,
           }}
         >
           {error ? (
@@ -213,18 +229,14 @@ export default function UserSettings() {
               <p>&nbsp;</p>
             </Fragment>
           ) : null}
-          <Form name="submit" layout="vertical">
+          <Form name="submit" layout="vertical" form={form} onFieldsChange={handleFormChange}>
             <Form.Item
               name="Old Password"
-              label="Enter Your Old Password"
-              rules={[
-                {
-                  required: true,
-                  message: "Old password required",
-                },
-              ]}
+              label="Enter Your Old Password"              
+              required={true}
             >
-              <Input
+              <Input.Password
+                allowClear
                 value={oldPass}
                 onChange={(e) => setOldPass(e.currentTarget.value)}
               />
@@ -232,22 +244,32 @@ export default function UserSettings() {
             <Form.Item
               name="newPassword"
               label="New Password"
+              required={true}
               rules={[
                 {
-                  required: true,
-                  message: "Password Required",
+                  min:8,
+                  max:10,
+                  message:"Password must be between 8-20 length"
                 },
                 {
-                  pattern: new RegExp(
-                    "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,20}$"
-                  ),
-                  message:
-                    "Password must have atleast 8 characters, and contain atleast one uppercase, lowercase, number and special character.",
+                  pattern: new RegExp("(?=.*[a-z])"),
+                  message: "Atleast one lowercase"
+                },{
+                  pattern: new RegExp("(?=.*[A-Z])"),
+                  message: "Atleast one uppercase"
                 },
+                {
+                  pattern: new RegExp(".*[0-9].*"),
+                  message: "Atleast one digit"
+                },
+                {
+                  pattern: new RegExp("(?=.*[!@#$%^&*])"),
+                  message: "Atleast one special characters"
+                }
               ]}
-              hasFeedback
             >
               <Input.Password
+                allowClear
                 value={newPass}
                 onChange={(e) => setNewPass(e.currentTarget.value)}
               />
@@ -262,11 +284,8 @@ export default function UserSettings() {
                   message: "Please confirm your password!",
                 },
                 ({ getFieldValue }) => ({
-                  // @ts-ignore
-                  validator(rule, value, callback) {
-                    if (getFieldValue("newPassword") === value) {
-                      return callback();
-                    }
+                  validator(_, value, callback) {
+                    if (getFieldValue("newPassword") === value) return callback();
                     return callback(
                       "The two passwords that you entered do not match!"
                     );
@@ -275,6 +294,7 @@ export default function UserSettings() {
               ]}
             >
               <Input.Password
+                allowClear
                 value={rePass}
                 onChange={(e) => setRePass(e.currentTarget.value)}
               />
