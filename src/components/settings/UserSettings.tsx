@@ -19,7 +19,7 @@ import { Auth } from "aws-amplify";
 import { useForm } from "antd/lib/form/Form";
 
 export default function UserSettings() {
-  const { user, appContextLoaded }: any = useContext(AppContext);
+  const { validateCaptcha, user, appContextLoaded }: any = useContext(AppContext);
   const [mode, setMode] = useState<string>("");
   const [email, setEmail] = useState<string>(user?.attributes.email);
   const [password, setPassword] = useState<string>("**********");
@@ -36,18 +36,18 @@ export default function UserSettings() {
   const SAVE_MODE = "Save";
   const EDIT_MODE = "Edit";
   const [form] = useForm();
-  
+
   const handleFormChange = () => {
     const hasErrors = form.getFieldsError().some(({ errors }) => errors.length) || !form.isFieldsTouched(true);
     setDisabledForm(hasErrors);
   }
-  
-  const handleInputChange = (fieldValue:any, userAttr:any) =>{
+
+  const handleInputChange = (fieldValue: any, userAttr: any) => {
     let bool;
-    bool =( fieldValue === userAttr) ? true : (error.length>0) ? true :false;
+    bool = (fieldValue === userAttr) ? true : (error.length > 0) ? true : false;
     return bool
   }
-  
+
   const update = async (attr: string, attrValue: any) => {
     try {
       const data = await Auth.updateUserAttributes(user, {
@@ -149,8 +149,14 @@ export default function UserSettings() {
                   icon={<SaveOutlined />}
                   disabled={handleInputChange(user.attributes.phone_number, `${counCode}${contact}`)}
                   onClick={() => {
-                    setAttrName(`phone_number`)
-                    update(attrName, `${counCode}${contact}`);
+                    validateCaptcha("phone_change").then((success: boolean) => {
+                      if (!success) {
+                        console.log("Bot");
+                        return
+                      };
+                      setAttrName(`phone_number`)
+                      update(attrName, `${counCode}${contact}`);
+                    })
                   }}
                 />
               </Tooltip>
@@ -175,10 +181,18 @@ export default function UserSettings() {
                   type="link"
                   style={{ color: COLORS.GREEN }}
                   icon={<SaveOutlined />}
-                  disabled={handleInputChange(email , user.attributes.email)}
+                  disabled={handleInputChange(email, user.attributes.email)}
                   onClick={() => {
-                    setAttrName("email")
-                    update(attrName, email);
+                    validateCaptcha("email_change").then((success: boolean) => {
+                      if (!success) {
+                        console.log("Bot");
+                        return
+                      };
+                      setAttrName("email")
+                      update(attrName, email);
+                    })
+
+
                   }}
                 />
               </Tooltip>
@@ -202,7 +216,15 @@ export default function UserSettings() {
                   type="link"
                   style={{ color: COLORS.GREEN }}
                   icon={<EditOutlined />}
-                  onClick={() => setMode(EDIT_MODE)}
+                  onClick={() => {
+                    validateCaptcha("password_change").then((success: boolean) => {
+                      if (!success) {
+                        console.log("Bot");
+                        return
+                      };
+                      setMode(EDIT_MODE)
+                    })
+                  }}
                 />
               </Tooltip>
             </Col>
@@ -217,7 +239,7 @@ export default function UserSettings() {
           visible={mode === "Edit"}
           onCancel={() => setMode("")}
           onOk={() => (mode === "Edit" ? editPassword() : null)}
-          okText={"Save"}    
+          okText={"Save"}
           okButtonProps={{
             disabled: disabledForm,
             icon: <SaveOutlined />,
@@ -232,7 +254,7 @@ export default function UserSettings() {
           <Form name="submit" layout="vertical" form={form} onFieldsChange={handleFormChange}>
             <Form.Item
               name="Old Password"
-              label="Enter Your Old Password"              
+              label="Enter Your Old Password"
               required={true}
             >
               <Input.Password
@@ -247,14 +269,14 @@ export default function UserSettings() {
               required={true}
               rules={[
                 {
-                  min:8,
-                  max:10,
-                  message:"Password must be between 8-20 length"
+                  min: 8,
+                  max: 10,
+                  message: "Password must be between 8-20 length"
                 },
                 {
                   pattern: new RegExp("(?=.*[a-z])"),
                   message: "Atleast one lowercase"
-                },{
+                }, {
                   pattern: new RegExp("(?=.*[A-Z])"),
                   message: "Atleast one uppercase"
                 },
