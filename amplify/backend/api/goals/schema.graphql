@@ -185,28 +185,31 @@ enum AssetSubType {
 
 enum Industry {
   A
-  B
+  IM
+  F
   CG
+  CC
+  CH
+  CS
+  FP
+  C
   H
-  FMCG
+  PH
   IT
+  MED
   MET
   OG
-  PSB
-  R
-  MED
-  TECH
-  TC
-  CD
   POW
-  U
-  I
-  F
+  S
+  TC
+  TEX
+  CAPG
+  TECH
+  CD
   E
   CDGS
   BASM
-  PH
-  PB
+  U
 }
 
 enum InsType {
