@@ -31,11 +31,11 @@ export default function BasicPage(props: BasicPageProps) {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta
           name="apple-mobile-web-app-title"
-          content="Moneo - Your Money Coach"
+          content="Moneo - Get. Set. Grow."
         />
         <meta name="application-name" content="Moneo" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="description" content="Your Money Coach" />
+        <meta name="description" content="Your family's financial coach" />
         <meta
           name="Personal finance management app"
           content="Automated Banking, Investing and Financial Planning, Moneo, Finance coach, Money Coach,
@@ -43,7 +43,7 @@ Personal finance for Millennial, personal finance advisor, personal finance, Dig
 personal finance app, Budget goals, Budgeting,  Mutual Funds, Stock, Equity trading, personal money management, online money management, personal
 finance plan, personal finance management, Banking App, Mobile Banking, Budgeting, Financial planning, Investing, Neo Banking Canada, Neo Banking USA, Neo Banking India"
         />
-        <meta property="og:title" content="Moneo - Your Money Coach" />
+        <meta property="og:title" content="Moneo - Get. Set. Grow." />
         <meta
           property="og:description"
           content="
@@ -54,14 +54,14 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <meta
           property="og:image"
           itemProp="image"
-          content="https://moneo.money/images/icons/tlogo256.png"
+          content="https://moneo.in/images/icons/tlogo256.png"
         />
         <meta property="og:type" content="website" />
-        <meta property="og:locale" content="en-US" />
-        <meta property="og:locale:alternate" content="en-CA" />
-        <meta property="og:url" content="https://moneo.money" />
-        <meta name="twitter:card" content="Your Money Coach" />
-        <meta name="twitter:url" content="https://moneo.money" />
+        <meta property="og:locale" content="en-IN" />
+        <meta property="og:locale:alternate" content="en-US" />
+        <meta property="og:url" content="https://moneo.in" />
+        <meta name="twitter:card" content="Your family's financial coach" />
+        <meta name="twitter:url" content="https://moneo.in" />
         <meta name="twitter:title" content="Moneo" />
         <meta
           name="twitter:description"
@@ -69,7 +69,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         />
         <meta
           name="twitter:image"
-          content="https://moneo.money/images/icons/tlogo192.png"
+          content="https://moneo.in/images/icons/tlogo192.png"
         />
         <meta name="twitter:creator" content="@moneocoach" />
         <meta name="msapplication-tap-highlight" content="no" />
