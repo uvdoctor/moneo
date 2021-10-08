@@ -18,10 +18,8 @@ export default function UserSettings() {
 	const [ contact, setContact ] = useState<string>('');
 	const [ error, setError ] = useState<string>('');
 	const [ otp, setOtp ] = useState<string>('');
-	const [ attrName, setAttrName ] = useState<string>('');
 
-	const SAVE_MODE = 'Save';
-	const EDIT_MODE = 'Edit';
+	let attrName = "";
   const counCode = countrylist.find(item => item.countryCode===defaultCountry ) 
 	const [ form ] = useForm();
 
@@ -37,7 +35,7 @@ export default function UserSettings() {
 				message: `${attrName} Updated`,
 				description: `${data} "Verify your ${attrName} by entering Otp`
 			});
-			setMode(SAVE_MODE);
+			setMode("Save");
 		} catch (error) {
 			notification.error({
 				message: `Unable to update ${attrName}`,
@@ -140,7 +138,7 @@ export default function UserSettings() {
 									onClick={() => {
 										validateCaptcha('phone_change').then((success: boolean) => {
 											if (!success) return;
-											setAttrName(`phone_number`);
+											attrName = 'phone_number';
 											update(`${counCode?.value}${contact}`);
 										});
 									}}
@@ -170,7 +168,7 @@ export default function UserSettings() {
 									onClick={() => {
 										validateCaptcha('email_change').then((success: boolean) => {
 											if (!success) return;
-											setAttrName('email');
+											attrName = 'email';
 											update(email);
 										});
 									}}
@@ -198,7 +196,7 @@ export default function UserSettings() {
 									onClick={() => {
 										validateCaptcha('password_change').then((success: boolean) => {
 											if (!success) return;
-											setMode(EDIT_MODE);
+											setMode("Edit");
 										});
 									}}
 								/>
