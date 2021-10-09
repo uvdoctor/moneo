@@ -1,32 +1,33 @@
-import React from "react";
-import { Row, Col } from "antd";
-import { faQuoteLeft, faQuoteRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Card from "./Card";
-import Content from "../Content";
+import React from 'react';
+import { Row, Col } from 'antd';
+import { faQuoteLeft, faQuoteRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Card from './Card';
+import Content from '../Content';
 
-import "./about.less";
+import './about.less';
+import GetStartedButton from '../landing/GetStartedButton';
 
 export default function Home() {
 	const cardData = [
 		{
-			title: "What",
+			title: 'What',
 			description:
-				"Moneo is a one-stop financial coaching platform to help families achieve worry-free financial independence.",
-			imageUrl: "images/about-what.jpg",
+				'Moneo is a one-stop financial coaching platform to help families achieve worry-free financial independence.',
+			imageUrl: 'images/about-what.jpg'
 		},
 		{
-			title: "Why",
+			title: 'Why',
 			description:
-				"There is nothing personal about personal finance. Moneo is here to change that. No more budgeting or paying commissions.",
-			imageUrl: "images/about-why.jpg",
+				'There is nothing personal about personal finance. Moneo is here to change that. No more budgeting or paying commissions.',
+			imageUrl: 'images/about-why.jpg'
 		},
 		{
-			title: "How",
+			title: 'How',
 			description:
-				"Moneo not only provides a personalized financial plan, but also helps you to invest according to the plan.",
-			imageUrl: "images/about-how.jpg",
-		},
+				'Moneo not only provides a personalized financial plan, but also helps you to invest according to the plan.',
+			imageUrl: 'images/about-how.jpg'
+		}
 	];
 
 	return (
@@ -43,39 +44,23 @@ export default function Home() {
 				</hgroup>
 			</Content>
 			<Content>
-				<h2>About Us</h2>
+				<h2>
+					<strong>We believe in Financial Independence for All</strong>
+				</h2>
 				<p>
-					Lorem Ipsum is simply dummy text of the printing and typesetting
-					industry. Lorem Ipsum has been the industry's standard dummy text ever
-					since the 1500s, when an unknown printer took a galley of type and
-					scrambled it to make a type specimen book. It has survived not only
-					five centuries, but also the leap into electronic typesetting,
-					remaining essentially unchanged. It was popularised in the 1960s with
-					the release of Letraset sheets containing Lorem Ipsum passages, and
-					more recently with desktop publishing software like Aldus PageMaker
-					including versions of Lorem Ipsum.
+					That's why we are building a platform for the masses that leverages time-tested financial practices
+					in order to help them make smart financial choices. We do not sell any financial product or your
+					data. We earn from providing unbiased coaching service with your interest at heart. We also have
+					human coaches available on call.
 				</p>
-				<p>
-					Lorem Ipsum is simply dummy text of the printing and typesetting
-					industry. Lorem Ipsum has been the industry's standard dummy text ever
-					since the 1500s, when an unknown printer took a galley of type and
-					scrambled it to make a type specimen book. It has survived not only
-					five centuries, but also the leap into electronic typesetting,
-					remaining essentially unchanged. It was popularised in the 1960s with
-					the release of Letraset sheets containing Lorem Ipsum passages, and
-					more recently with desktop publishing software like Aldus PageMaker
-					including versions of Lorem Ipsum.
-				</p>
-
 				<Row
 					className="what-why-how"
 					align="middle"
 					justify="center"
 					gutter={[
 						{ xs: 0, sm: 15, md: 30, lg: 50 },
-						{ xs: 50, sm: 50, md: 50, lg: 50 },
-					]}
-				>
+						{ xs: 50, sm: 50, md: 50, lg: 50 }
+					]}>
 					{cardData.map((data, i) => (
 						<Col key={i} xs={24} sm={12} md={8}>
 							<Card {...data} />
@@ -88,25 +73,43 @@ export default function Home() {
 					<strong>150+ years of global experience</strong>
 				</h2>
 				<p>
-					We have hired leading financial and technology experts from around the
-					world to build a global financial platform from the ground-up so that
-					it leverages the best of human and machine capabilities, while
-					ensuring security and data privacy.
+					We have hired leading financial and technology experts from around the world to build a global
+					financial platform from the ground-up so that it leverages the best of human and machine
+					capabilities, while ensuring security and data privacy.
 				</p>
-				<Row className="companies-logo" align="middle" gutter={[50, 50]}>
+				<Row
+					className="companies-logo"
+					align="middle"
+					gutter={[
+						50,
+						50
+					]}>
 					{[
-						"blackrock",
-						"natwest",
-						"sapient",
-						"thoughtworks",
-						"jpmorgan",
-						"barclays",
-						"snapdeal",
+						'blackrock',
+						'jpmorgan',
+						'barclays',
+						'natwest',
+						'thoughtworks',
+						'sapient'
 					].map((company, i) => (
 						<Col key={i}>
-							<div className={`${company}-logo`}></div>
+							<div className={`${company}-logo`} />
 						</Col>
 					))}
+				</Row>
+				<Row align="middle">
+					<Col xs={24} sm={24} md={12}>
+						<img src="images/quick-step.jpg" />
+					</Col>
+					<Col xs={24} sm={24} md={12}>
+						<h2>
+							<strong>Break-free to live on your terms</strong>
+						</h2>
+						<h3>Just 15 minutes for a personalized financial plan</h3>
+						<p>
+							<GetStartedButton />
+						</p>
+					</Col>
 				</Row>
 			</Content>
 		</div>
