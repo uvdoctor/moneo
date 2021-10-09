@@ -1,4 +1,4 @@
-import { Alert, Button, Col, Modal, Row, Tooltip, notification, Skeleton, Form, Input, DatePicker } from 'antd';
+import { Alert, Button, Col, Modal, Row, Tooltip, notification, Skeleton, Form, Input } from 'antd';
 import React, { Fragment, useContext, useState, useEffect } from 'react';
 import TextInput from '../form/textinput';
 import { COLORS } from '../../CONSTANTS';
@@ -7,8 +7,15 @@ import { AppContext } from '../AppContext';
 import { Auth } from 'aws-amplify';
 import { useForm } from 'antd/lib/form/Form';
 import { countrylist } from './CountryCode';
+import dateFnsGenerateConfig from "rc-picker/lib/generate/dateFns";
+import 'antd/lib/date-picker/style/index';
+import { parse } from "date-fns";
+import generatePicker from 'antd/lib/date-picker/generatePicker';
+const dateFormat = "yyyy-MM-dd";
 
-export default function UserSettings() {
+const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
+
+export default function UserSettings(): JSX.Element {
 	const { validateCaptcha, user, appContextLoaded, defaultCountry }: any = useContext(AppContext);
 	const [ mode, setMode ] = useState<string>('');
 	const [ email, setEmail ] = useState<string>('');
@@ -94,7 +101,6 @@ export default function UserSettings() {
 		() => {
 			if (!user) return;
 			console.log(user);
-			
 			setName(user.attributes.name)
 			setMiddleName(user.attributes.middle_name)
 			setSurname(user.attributes.family_name)
@@ -244,7 +250,9 @@ export default function UserSettings() {
 					<Col>
 					<Input.Group style={{ width: 400}} size='large'>
 					<Input style={{ width: '30%'}} defaultValue="DOB" disabled={true}/>
-					<DatePicker style={{ width: '70%'}} placeholder={dob} size='large' onChange={(_, ds)=>
+					<DatePicker style={{ width: '70%'}} defaultValue={parse(dob, dateFormat, new Date()) }
+      		format={dateFormat} size='large' onChange={(_, ds)=>
+					
 						//@ts-ignore
 						setDob(ds.toString()) 
 					}/>
@@ -372,6 +380,7 @@ export default function UserSettings() {
 						<Form.Item
 							name="name"
 							label="Enter your name"
+							required={true}
 							rules={[
 								{
 									pattern: new RegExp("^[a-zA-Z'-.,]+$"),
@@ -384,11 +393,12 @@ export default function UserSettings() {
 								}
 							]}
 						>
-						<Input allowClear value={name} onChange={(e) => setName(e.currentTarget.value)} />
+						<Input allowClear placeholder={name} value={name} onChange={(e) => setName(e.currentTarget.value)} />
 						</Form.Item>
 						<Form.Item
 							name="middleName"
 							label="Enter your Middle Name"
+							// valuePropName={middleName}
 							rules={[
 								{
 									pattern: new RegExp("^[a-zA-Z'-.,]+$"),
@@ -403,13 +413,15 @@ export default function UserSettings() {
 						>
 						<Input
 							allowClear
-							value={middleName}
+							placeholder={middleName}
+							value={middleName} 
 							onChange={(e) => setMiddleName(e.currentTarget.value)}
 							/>
 						</Form.Item>
 						<Form.Item
 							name="surname"
 							label="Enter your Surname"
+							// valuePropName={surname}
 							rules={[
 								{
 									pattern: new RegExp("^[a-zA-Z'-.,]+$"),
@@ -422,7 +434,7 @@ export default function UserSettings() {
 								}
 							]}
 						>
-							<Input allowClear value={surname} onChange={(e) => setSurname(e.currentTarget.value)} />
+							<Input allowClear  placeholder={surname} value={surname}  onChange={(e) => setSurname(e.currentTarget.value)} />
 						</Form.Item>
 					</Form>
 				</Modal>
