@@ -1,5 +1,6 @@
-import { Alert, Button, Col, Modal, Row, Tooltip, notification, Skeleton, Form, Input } from 'antd';
+import { Alert, Button, Col, Modal, Row, Tooltip, notification, Skeleton, Form, Input, DatePicker } from 'antd';
 import React, { Fragment, useContext, useState, useEffect } from 'react';
+import moment from 'moment';
 import TextInput from '../form/textinput';
 import { COLORS } from '../../CONSTANTS';
 import { SaveOutlined, EditOutlined } from '@ant-design/icons';
@@ -12,6 +13,11 @@ export default function UserSettings() {
 	const { validateCaptcha, user, appContextLoaded, defaultCountry }: any = useContext(AppContext);
 	const [ mode, setMode ] = useState<string>('');
 	const [ email, setEmail ] = useState<string>('');
+	const [ fullName, setFullName ] = useState<string>('');
+	const [ name, setName ] = useState<string>('');
+	const [ middleName, setMiddleName ] = useState<string>('');
+	const [ dob , setDob ] = useState<any>({});
+	const [ surname, setSurname ] = useState<string>('');
 	const [ oldPass, setOldPass ] = useState<string>('');
 	const [ newPass, setNewPass ] = useState<string>('');
 	const [ disabledForm, setDisabledForm ] = useState(true);
@@ -19,29 +25,30 @@ export default function UserSettings() {
 	const [ error, setError ] = useState<string>('');
 	const [ otp, setOtp ] = useState<string>('');
 
-	let attrName = "";
-  const counCode = countrylist.find(item => item.countryCode===defaultCountry ) 
+	let attrName = '';
+	const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
 	const [ form ] = useForm();
 
 	const handleFormChange = () =>
 		setDisabledForm(form.getFieldsError().some(({ errors }) => errors.length) || !form.isFieldsTouched(true));
 
-	const update = async (attrValue: any) => {
+	const update = async (attr: any , attrValue: any, mode: string) => {
+		for (const ind in attr){	
 		try {
-			const data = await Auth.updateUserAttributes(user, {
-				[attrName]: attrValue
-			});
+			attrName = attr[ind]
+			await Auth.updateUserAttributes(user, { [attr[ind]]: attrValue[ind] });
 			notification.success({
-				message: `${attrName} Updated`,
-				description: `${data} "Verify your ${attrName} by entering Otp`
+				message: `${attr[ind]} Updated Successfully`,
+				description: `Enter your otp to verify`
 			});
-			setMode("Save");
+			setMode(mode);
 		} catch (error) {
 			notification.error({
-				message: `Unable to update ${attrName}`,
-				description: 'Sorry! Unable to update : ' + error
+				message: `Unable to update ${attr[ind]}`,
+				description: `${error}`
 			});
 		}
+	}
 	};
 
 	const confirmOtp = async (attrValue: any) => {
@@ -87,8 +94,15 @@ export default function UserSettings() {
 	useEffect(
 		() => {
 			if (!user) return;
+			console.log(user);
+			
+			setName(user.attributes.name)
+			setMiddleName(user.attributes.middle_name)
+			setSurname(user.attributes.family_name)
 			setContact(user.attributes.phone_number);
+			setFullName(`${user.attributes.name} ${user.attributes.middle_name} ${user.attributes.family_name}`);
 			setEmail(user.attributes.email);
+			setDob(user.attributes.birthdate)
 			setContact(user.attributes.phone_number.replace(counCode?.value, ""));
 		},
 		[ appContextLoaded ]
@@ -102,10 +116,35 @@ export default function UserSettings() {
 				</Fragment>
 			) : null}
 			<p>&nbsp;</p>
-			<Row justify="center" style={{ fontSize: 30 }}>Settings</Row>
+			<Row justify="center" style={{ fontSize: 25 }}>
+				Settings
+			</Row>
 			<p>&nbsp;</p>
 			{appContextLoaded ? (
 				<Fragment>
+					<Row justify="center">
+					<Col>
+						<TextInput
+						pre="Name"
+						value={fullName}
+						changeHandler={setFullName}
+						setError={setError}
+						fieldName="name"
+						disabled={true}
+					/>
+					</Col>
+					<Col>
+						<Tooltip title="Save">
+							<Button
+							type="link"
+							style={{ color: COLORS.GREEN }}
+							icon={<EditOutlined />}
+							onClick={() => {  setMode("EditOne") }}
+						/>
+						</Tooltip>
+					</Col>
+				</Row>
+				<p>&nbsp;</p>
 					<Row justify="center">
 						<Col>
 							<TextInput
@@ -138,8 +177,7 @@ export default function UserSettings() {
 									onClick={() => {
 										validateCaptcha('phone_change').then((success: boolean) => {
 											if (!success) return;
-											attrName = 'phone_number';
-											update(`${counCode?.value}${contact}`);
+											update(['phone_number'], [`${counCode?.value}${contact}`], 'Save');
 										});
 									}}
 								/>
@@ -168,8 +206,7 @@ export default function UserSettings() {
 									onClick={() => {
 										validateCaptcha('email_change').then((success: boolean) => {
 											if (!success) return;
-											attrName = 'email';
-											update(email);
+											update( ['email'], [email], 'Save');
 										});
 									}}
 								/>
@@ -203,6 +240,30 @@ export default function UserSettings() {
 							</Tooltip>
 						</Col>
 					</Row>
+					<p>&nbsp;</p>
+					<Row justify="center">
+					<Col>
+					<Input.Group style={{ width: 400}} size='large'>
+					<Input style={{ width: '30%'}} defaultValue="DOB" disabled={true}/>
+					<DatePicker style={{ width: '70%'}} placeholder={dob} size='large' onChange={(_, ds)=>
+						//@ts-ignore
+						setDob(ds.toString()) 
+					}/>
+					</Input.Group>
+					</Col>
+					<Col>
+						<Tooltip title="Save">
+							<Button
+							type="link"
+							style={{ color: COLORS.GREEN }}
+							icon={<SaveOutlined />}
+							onClick={() => {
+								alert(dob)  
+								update(['birthdate'], [dob], "" ) }}
+						/>
+						</Tooltip>
+					</Col>
+				</Row>
 				</Fragment>
 			) : (
 				<Skeleton active />
@@ -234,7 +295,7 @@ export default function UserSettings() {
 							rules={[
 								{
 									min: 8,
-									max: 10,
+									max: 20,
 									message: 'Password must be between 8-20 length'
 								},
 								{
@@ -286,15 +347,86 @@ export default function UserSettings() {
 			{mode && (
 				<Modal
 					title={`${mode}`}
-					visible={mode === 'Save'}
+					visible={ mode === 'Save' }
 					onCancel={() => setMode('')}
 					onOk={() => (mode === 'Save' ? confirmOtp(otp) : null)}
 					okText={'Save'}
+					okButtonProps={{ icon: <SaveOutlined /> }}
+				>
+				<TextInput pre="OTP" value={otp} changeHandler={setOtp} fieldName="otp" setError={setError} />
+				</Modal>
+			)}
+			{mode && (
+				<Modal
+					title={`${mode}`}
+					visible={mode === 'EditOne'}
+					onCancel={() => setMode('')}
+					onOk={ () =>
+					(mode === 'EditOne' ? update(['name', 'middle_name', 'family_name'],[name, middleName, surname], "") : null)
+				}
+					okText={'Save'}
 					okButtonProps={{
+						disabled: disabledForm,
 						icon: <SaveOutlined />
 					}}
 				>
-					<TextInput pre="OTP" value={otp} changeHandler={setOtp} fieldName="otp" setError={setError} />
+					<Form name="submit" layout="vertical" form={form} onFieldsChange={handleFormChange}>
+						<Form.Item
+							name="name"
+							label="Enter your name"
+							rules={[
+								{
+									pattern: new RegExp("^[a-zA-Z'-.,]+$"),
+									message: 'Invalid Format'
+								},
+								{
+									min: 2,
+									max: 20,
+									message: 'Length 2-20'
+								}
+							]}
+						>
+						<Input allowClear value={name} onChange={(e) => setName(e.currentTarget.value)} />
+						</Form.Item>
+						<Form.Item
+							name="middleName"
+							label="Enter your Middle Name"
+							rules={[
+								{
+									pattern: new RegExp("^[a-zA-Z'-.,]+$"),
+									message: 'Invalid Format'
+								},
+								{
+									min: 2,
+									max: 20,
+									message: 'Length 2-20'
+								}
+							]}
+						>
+						<Input
+							allowClear
+							value={middleName}
+							onChange={(e) => setMiddleName(e.currentTarget.value)}
+							/>
+						</Form.Item>
+						<Form.Item
+							name="surname"
+							label="Enter your Surname"
+							rules={[
+								{
+									pattern: new RegExp("^[a-zA-Z'-.,]+$"),
+									message: 'Invalid Format'
+								},
+								{
+									min: 2,
+									max: 20,
+									message: 'Length 2-20'
+								}
+							]}
+						>
+							<Input allowClear value={surname} onChange={(e) => setSurname(e.currentTarget.value)} />
+						</Form.Item>
+					</Form>
 				</Modal>
 			)}
 		</Fragment>
