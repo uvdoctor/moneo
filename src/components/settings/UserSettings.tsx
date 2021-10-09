@@ -1,6 +1,5 @@
 import { Alert, Button, Col, Modal, Row, Tooltip, notification, Skeleton, Form, Input, DatePicker } from 'antd';
 import React, { Fragment, useContext, useState, useEffect } from 'react';
-import moment from 'moment';
 import TextInput from '../form/textinput';
 import { COLORS } from '../../CONSTANTS';
 import { SaveOutlined, EditOutlined } from '@ant-design/icons';
@@ -258,7 +257,6 @@ export default function UserSettings() {
 							style={{ color: COLORS.GREEN }}
 							icon={<SaveOutlined />}
 							onClick={() => {
-								alert(dob)  
 								update(['birthdate'], [dob], "" ) }}
 						/>
 						</Tooltip>
