@@ -11,8 +11,8 @@ import dateFnsGenerateConfig from "rc-picker/lib/generate/dateFns";
 import 'antd/lib/date-picker/style/index';
 import { parse } from "date-fns";
 import generatePicker from 'antd/lib/date-picker/generatePicker';
-const dateFormat = "yyyy-MM-dd";
 
+const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
 
 export default function UserSettings(): JSX.Element {
@@ -21,20 +21,18 @@ export default function UserSettings(): JSX.Element {
 	const [ disabledForm, setDisabledForm ] = useState(true);
 	const [ email, setEmail ]  = useState<string>(user?.attributes.email);
 	const [ contact, setContact ]  = useState<string>(user?.attributes.phone_number);
+	const [ error, setError ] = useState<string>('');
+	const [ otp, setOtp ] = useState<string>('');
 	const name = useRef<string>(user?.attributes.name);
 	const middleName = useRef<string>(user?.attributes.middle_name);
 	const surname = useRef<string>(user?.attributes.family_name);
 	const dob = useRef<string>(user?.attributes.birthdate || '');
 	const oldPass = useRef<string>('');
 	const newPass = useRef<string>('');
-	const [ error, setError ] = useState<string>('');
-	const [ otp, setOtp ] = useState<string>('');
-	const [ attrName, setAttrName ] = useState<string>('');
-
-	const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
+	const attrName = useRef<string>('');
 	const [ form ] = useForm();
-
-
+	const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
+	
 	const handleFormChange = () =>
 		setDisabledForm(form.getFieldsError().some(({ errors }) => errors.length) || !form.isFieldsTouched(true));
 
@@ -52,7 +50,6 @@ export default function UserSettings(): JSX.Element {
 		const check = (ele: any, _index: number, _array: any) => {
 			return ele === "SUCCESS";
 		};
-
 		if (dataValue.every(check)) {
 			notification.success({ message: 'Updated Successfully' });
 		} else {
@@ -62,10 +59,10 @@ export default function UserSettings(): JSX.Element {
 
 
 	const confirmOtp = async (attrValue: any) => {
-		Auth.verifyCurrentUserAttributeSubmit(attrName, attrValue)
+		Auth.verifyCurrentUserAttributeSubmit(attrName.current, attrValue)
 			.then(() => {
 				notification.success({
-					message: `${attrName} Verified`,
+					message: `${attrName.current} Verified`,
 					description: 'Otp Verified Successfully'
 				});
 				setMode('');
@@ -76,7 +73,7 @@ export default function UserSettings(): JSX.Element {
 					message: 'Wrong Otp',
 					description: 'Sorry! Unable to update : ' + err.message
 				});
-				setMode('');
+				// setMode('');
 				return false;
 			});
 	};
@@ -104,13 +101,11 @@ export default function UserSettings(): JSX.Element {
 	useEffect(
 		() => {
 			if (!user) return;
-			console.log(user);
-			name.current = user.attributes.name ? user.attributes.name : "";
-			middleName.current = user.attributes.middle_name ? user.attributes.middle_name : "";
-			surname.current =  user.attributes.family_name ? user.attributes.family_name : "";
+			name.current = user.attributes.name || '';
+			middleName.current = user.attributes.middle_name || '';
+			surname.current =  user.attributes.family_name || '';
 			setContact(user.attributes.phone_number);
 			setEmail(user.attributes.email);
-			dob.current = user.attributes.birthdate;
 			setContact(user.attributes.phone_number.replace(counCode?.value, ""));
 		},
 		[ appContextLoaded ]
@@ -180,7 +175,7 @@ export default function UserSettings(): JSX.Element {
 									onClick={() => {
 										validateCaptcha('phone_change').then((success: boolean) => {
 											if (!success) return;
-											setAttrName('phone_number');
+											attrName.current = 'phone_number';
 											update(['phone_number'], [`${counCode?.value}${contact}`], 'Save');
 										});
 									}}
@@ -210,7 +205,7 @@ export default function UserSettings(): JSX.Element {
 									onClick={() => {
 										validateCaptcha('email_change').then((success: boolean) => {
 											if (!success) return;
-											setAttrName('email');
+											attrName.current = 'email';
 											update( ['email'], [email], 'Save');
 										});
 									}}
@@ -246,7 +241,7 @@ export default function UserSettings(): JSX.Element {
 					<Col>
 					<Input.Group style={{ width: 400}} size='large'>
 					<Input style={{ width: '30%'}} defaultValue="DOB" disabled={true}/>
-					<DatePicker style={{ width: '70%'}} defaultValue={parse(dob.current, dateFormat, new Date()) }
+					<DatePicker style={{ width: '70%'}} defaultValue={parse(user?.attributes.birthdate , dateFormat, new Date()) }
       		format={dateFormat} size='large' onChange={(_, ds)=>
 						//@ts-ignore
 						dob.current = ds.toString()
