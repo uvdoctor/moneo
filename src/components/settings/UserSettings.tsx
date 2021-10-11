@@ -1,5 +1,5 @@
 import { Alert, Button, Col, Modal, Row, Tooltip, notification, Skeleton, Form, Input } from 'antd';
-import React, { Fragment, useContext, useState, useEffect } from 'react';
+import React, { Fragment, useContext, useState, useEffect, useRef } from 'react';
 import TextInput from '../form/textinput';
 import { COLORS } from '../../CONSTANTS';
 import { SaveOutlined, EditOutlined } from '@ant-design/icons';
@@ -18,44 +18,48 @@ const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
 export default function UserSettings(): JSX.Element {
 	const { validateCaptcha, user, appContextLoaded, defaultCountry }: any = useContext(AppContext);
 	const [ mode, setMode ] = useState<string>('');
-	const [ email, setEmail ] = useState<string>('');
-	const [ fullName, setFullName ] = useState<string>('');
-	const [ name, setName ] = useState<string>('');
-	const [ middleName, setMiddleName ] = useState<string>('');
-	const [ dob , setDob ] = useState<any>({});
-	const [ surname, setSurname ] = useState<string>('');
-	const [ oldPass, setOldPass ] = useState<string>('');
-	const [ newPass, setNewPass ] = useState<string>('');
 	const [ disabledForm, setDisabledForm ] = useState(true);
-	const [ contact, setContact ] = useState<string>('');
+	const [ email, setEmail ]  = useState<string>(user?.attributes.email);
+	const [ contact, setContact ]  = useState<string>(user?.attributes.phone_number);
+	const name = useRef<string>(user?.attributes.name);
+	const middleName = useRef<string>(user?.attributes.middle_name);
+	const surname = useRef<string>(user?.attributes.family_name);
+	const dob = useRef<string>(user?.attributes.birthdate || '');
+	const oldPass = useRef<string>('');
+	const newPass = useRef<string>('');
 	const [ error, setError ] = useState<string>('');
 	const [ otp, setOtp ] = useState<string>('');
+	const [ attrName, setAttrName ] = useState<string>('');
 
-	let attrName = '';
 	const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
 	const [ form ] = useForm();
+
 
 	const handleFormChange = () =>
 		setDisabledForm(form.getFieldsError().some(({ errors }) => errors.length) || !form.isFieldsTouched(true));
 
-	const update = async (attr: any , attrValue: any, mode: string) => {
-		for (const ind in attr){	
-		try {
-			attrName = attr[ind]
-			await Auth.updateUserAttributes(user, { [attr[ind]]: attrValue[ind] });
-			notification.success({
-				message: `${attr[ind]} Updated Successfully`,
-				description: `Enter your otp to verify`
-			});
-			setMode(mode);
-		} catch (error) {
-			notification.error({
-				message: `Unable to update ${attr[ind]}`,
-				description: `${error}`
-			});
+	const update = async (attr: any, attrValue: any, mode: string) => {
+		const dataValue = [];
+		for (const ind in attr) {
+			try {
+				const data = await Auth.updateUserAttributes(user, { [attr[ind]]: attrValue[ind] });
+				dataValue.push(data);
+				setMode(mode);
+			} catch (error) {
+				dataValue.push(error);
+			}
 		}
-	}
+		const check = (ele: any, _index: number, _array: any) => {
+			return ele === "SUCCESS";
+		};
+
+		if (dataValue.every(check)) {
+			notification.success({ message: 'Updated Successfully' });
+		} else {
+			notification.error({ message: `Unable to update, ${error}` });
+		}
 	};
+
 
 	const confirmOtp = async (attrValue: any) => {
 		Auth.verifyCurrentUserAttributeSubmit(attrName, attrValue)
@@ -78,7 +82,7 @@ export default function UserSettings(): JSX.Element {
 	};
 
 	const editPassword = async () => {
-		Auth.changePassword(user, oldPass, newPass)
+		Auth.changePassword(user, oldPass.current, newPass.current)
 			.then((data) => {
 				notification.success({
 					message: 'Password Updated',
@@ -101,13 +105,12 @@ export default function UserSettings(): JSX.Element {
 		() => {
 			if (!user) return;
 			console.log(user);
-			setName(user.attributes.name)
-			setMiddleName(user.attributes.middle_name)
-			setSurname(user.attributes.family_name)
+			name.current = user.attributes.name ? user.attributes.name : "";
+			middleName.current = user.attributes.middle_name ? user.attributes.middle_name : "";
+			surname.current =  user.attributes.family_name ? user.attributes.family_name : "";
 			setContact(user.attributes.phone_number);
-			setFullName(`${user.attributes.name} ${user.attributes.middle_name} ${user.attributes.family_name}`);
 			setEmail(user.attributes.email);
-			setDob(user.attributes.birthdate)
+			dob.current = user.attributes.birthdate;
 			setContact(user.attributes.phone_number.replace(counCode?.value, ""));
 		},
 		[ appContextLoaded ]
@@ -129,14 +132,8 @@ export default function UserSettings(): JSX.Element {
 				<Fragment>
 					<Row justify="center">
 					<Col>
-						<TextInput
-						pre="Name"
-						value={fullName}
-						changeHandler={setFullName}
-						setError={setError}
-						fieldName="name"
-						disabled={true}
-					/>
+					<Input addonBefore="Name" value={`${name.current} ${middleName.current} ${surname.current}`} style={{width:400}}
+						disabled={true} size={'large'} />
 					</Col>
 					<Col>
 						<Tooltip title="Save">
@@ -144,7 +141,8 @@ export default function UserSettings(): JSX.Element {
 							type="link"
 							style={{ color: COLORS.GREEN }}
 							icon={<EditOutlined />}
-							onClick={() => {  setMode("EditOne") }}
+							onClick={() => {  
+								setMode("Edit Name") }}
 						/>
 						</Tooltip>
 					</Col>
@@ -182,6 +180,7 @@ export default function UserSettings(): JSX.Element {
 									onClick={() => {
 										validateCaptcha('phone_change').then((success: boolean) => {
 											if (!success) return;
+											setAttrName('phone_number');
 											update(['phone_number'], [`${counCode?.value}${contact}`], 'Save');
 										});
 									}}
@@ -211,6 +210,7 @@ export default function UserSettings(): JSX.Element {
 									onClick={() => {
 										validateCaptcha('email_change').then((success: boolean) => {
 											if (!success) return;
+											setAttrName('email');
 											update( ['email'], [email], 'Save');
 										});
 									}}
@@ -221,12 +221,8 @@ export default function UserSettings(): JSX.Element {
 					<p>&nbsp;</p>
 					<Row justify="center">
 						<Col>
-							<TextInput
-								pre="Password"
-								value={'************'}
-								changeHandler={() => {}}
-								fieldName="password"
-								disabled={true}
+							<Input.Password
+								addonBefore="Password" value={"********"} disabled={true} style={{width:400}} size={'large'}
 							/>
 						</Col>
 						<Col>
@@ -250,11 +246,10 @@ export default function UserSettings(): JSX.Element {
 					<Col>
 					<Input.Group style={{ width: 400}} size='large'>
 					<Input style={{ width: '30%'}} defaultValue="DOB" disabled={true}/>
-					<DatePicker style={{ width: '70%'}} defaultValue={parse(dob, dateFormat, new Date()) }
+					<DatePicker style={{ width: '70%'}} defaultValue={parse(dob.current, dateFormat, new Date()) }
       		format={dateFormat} size='large' onChange={(_, ds)=>
-					
 						//@ts-ignore
-						setDob(ds.toString()) 
+						dob.current = ds.toString()
 					}/>
 					</Input.Group>
 					</Col>
@@ -265,7 +260,7 @@ export default function UserSettings(): JSX.Element {
 							style={{ color: COLORS.GREEN }}
 							icon={<SaveOutlined />}
 							onClick={() => {
-								update(['birthdate'], [dob], "" ) }}
+								update(['birthdate'], [dob.current], "" ) }}
 						/>
 						</Tooltip>
 					</Col>
@@ -290,8 +285,8 @@ export default function UserSettings(): JSX.Element {
 						<Form.Item name="Old Password" label="Enter Your Old Password" required={true}>
 							<Input.Password
 								allowClear
-								value={oldPass}
-								onChange={(e) => setOldPass(e.currentTarget.value)}
+								value={oldPass.current}
+								onChange={(e) => oldPass.current = (e.currentTarget.value)}
 							/>
 						</Form.Item>
 						<Form.Item
@@ -324,8 +319,8 @@ export default function UserSettings(): JSX.Element {
 						>
 							<Input.Password
 								allowClear
-								value={newPass}
-								onChange={(e) => setNewPass(e.currentTarget.value)}
+								value={newPass.current}
+								onChange={(e) => newPass.current = (e.currentTarget.value)}
 							/>
 						</Form.Item>
 						<Form.Item
@@ -365,10 +360,10 @@ export default function UserSettings(): JSX.Element {
 			{mode && (
 				<Modal
 					title={`${mode}`}
-					visible={mode === 'EditOne'}
+					visible={mode === 'Edit Name'}
 					onCancel={() => setMode('')}
 					onOk={ () =>
-					(mode === 'EditOne' ? update(['name', 'middle_name', 'family_name'],[name, middleName, surname], "") : null)
+					(mode === 'Edit Name' ? update(['name', 'middle_name', 'family_name'],[name.current, middleName.current, surname.current], "") : null)
 				}
 					okText={'Save'}
 					okButtonProps={{
@@ -380,25 +375,26 @@ export default function UserSettings(): JSX.Element {
 						<Form.Item
 							name="name"
 							label="Enter your name"
-							required={true}
+							initialValue={name.current}
 							rules={[
 								{
 									pattern: new RegExp("^[a-zA-Z'-.,]+$"),
 									message: 'Invalid Format'
 								},
 								{
+									required:true,
 									min: 2,
 									max: 20,
 									message: 'Length 2-20'
 								}
 							]}
 						>
-						<Input allowClear placeholder={name} value={name} onChange={(e) => setName(e.currentTarget.value)} />
+						<Input allowClear value={name.current} onChange={(e) => name.current=(e.currentTarget.value)} />
 						</Form.Item>
 						<Form.Item
 							name="middleName"
 							label="Enter your Middle Name"
-							// valuePropName={middleName}
+							initialValue={middleName.current}
 							rules={[
 								{
 									pattern: new RegExp("^[a-zA-Z'-.,]+$"),
@@ -413,15 +409,14 @@ export default function UserSettings(): JSX.Element {
 						>
 						<Input
 							allowClear
-							placeholder={middleName}
-							value={middleName} 
-							onChange={(e) => setMiddleName(e.currentTarget.value)}
+							value={middleName.current} 
+							onChange={(e) => middleName.current = (e.currentTarget.value)}
 							/>
 						</Form.Item>
 						<Form.Item
 							name="surname"
 							label="Enter your Surname"
-							// valuePropName={surname}
+							initialValue={surname.current}
 							rules={[
 								{
 									pattern: new RegExp("^[a-zA-Z'-.,]+$"),
@@ -434,7 +429,7 @@ export default function UserSettings(): JSX.Element {
 								}
 							]}
 						>
-							<Input allowClear  placeholder={surname} value={surname}  onChange={(e) => setSurname(e.currentTarget.value)} />
+							<Input allowClear value={surname.current}  onChange={(e) => surname.current =(e.currentTarget.value)} />
 						</Form.Item>
 					</Form>
 				</Modal>
