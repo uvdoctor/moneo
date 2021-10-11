@@ -67,7 +67,7 @@
       "interactions": {
         "bot": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/bot-4551686472796d767850-build.zip"
+          "s3Key": "amplify-builds/bot-6d36686c654e79674c47-build.zip"
         }
       }
     }
