@@ -85,6 +85,8 @@ export default function UserSettings(): JSX.Element {
 					message: 'Password Updated',
 					description: `Password Updated Status: ${data}`
 				});
+				oldPass.current = '';
+				newPass.current = '';
 				setMode('');
 				return true;
 			})
