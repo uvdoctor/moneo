@@ -21,7 +21,7 @@ export default function UserSettings(): JSX.Element {
 	const [ disabledForm, setDisabledForm ] = useState(true);
 	const [ email, setEmail ]  = useState<string>(user?.attributes.email);
 	const [ contact, setContact ]  = useState<string>(user?.attributes.phone_number);
-	const [ error, setError ] = useState<string>('');
+	const [ error, setError ] = useState<any>('');
 	const [ otp, setOtp ] = useState<string>('');
 	const name = useRef<string>(user?.attributes.name);
 	const middleName = useRef<string>(user?.attributes.middle_name);
@@ -349,7 +349,7 @@ export default function UserSettings(): JSX.Element {
 					okText={'Save'}
 					okButtonProps={{ icon: <SaveOutlined /> }}
 				>
-				<TextInput pre="OTP" value={otp} changeHandler={setOtp} fieldName="otp" setError={setError} />
+				<TextInput pre="OTP" value={otp} changeHandler={setOtp} fieldName="otp" />
 				</Modal>
 			)}
 			{mode && (
