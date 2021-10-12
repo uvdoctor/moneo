@@ -19,12 +19,12 @@ const getAndPushData = (diff) => {
 				await cleanDirectory(tempDir, 'Initial cleaning completed');
 			}
 			for (let ind = 0; ind < partOfDataApiArray.length; ind++) {
-				const { exchg, fileName, url, codes } = partOfDataApiArray[ind];
+				const { exchg, id, fileName, url, codes } = partOfDataApiArray[ind];
 				const csvFile = `${tempDir}/${fileName}`;
 				await mkdir(tempDir);
 				await downloadZip(url, tempDir, csvFile);
 				const dataCount = await extractPartOfData(fileName, codes, nameMap, weekHLMap);
-				await pushDataForFeed(table, dataCount, `${exchg}${ind + 1}`, url, exchg);
+				await pushDataForFeed(table, dataCount, `${id}${ind + 1}`, url, exchg);
 			}
 			for (let i = 0; i < apiArray.length; i++) {
 				const { exchg, fileName, url, schema, codes } = apiArray[i];

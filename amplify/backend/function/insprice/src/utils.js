@@ -58,7 +58,8 @@ const constructedApiArray = (diff) => {
 
 	const partOfDataApiArray = [
 		{
-			exchg: 'NSE_PARTOF',
+			exchg : 'NSE',
+			id: 'NSE_PARTOF',
 			fileName: 'EQUITY_L.csv',
 			url: 'https://www1.nseindia.com/content/equities/EQUITY_L.csv',
 			codes: {
@@ -68,7 +69,8 @@ const constructedApiArray = (diff) => {
 			}
 		},
 		{
-			exchg: 'NSE_PARTOF',
+			exchg : 'NSE',
+			id: 'NSE_PARTOF',
 			fileName: 'REITS_L.csv',
 			url: 'https://www1.nseindia.com/content/equities/REITS_L.csv',
 			codes: {
@@ -78,7 +80,8 @@ const constructedApiArray = (diff) => {
 			}
 		},
 		{
-			exchg: 'NSE_PARTOF',
+			exchg : 'NSE',
+			id: 'NSE_PARTOF',
 			fileName: 'eq_etfseclist.csv',
 			url: 'https://www1.nseindia.com/content/equities/eq_etfseclist.csv',
 			codes: {
@@ -89,7 +92,8 @@ const constructedApiArray = (diff) => {
 			}
 		},
 		{
-			exchg: 'NSE_PARTOF',
+			exchg : 'NSE',
+			id: 'NSE_PARTOF',
 			fileName: weekHLFileName,
 			url: `https://archives.nseindia.com/content/${weekHLFileName}`,
 			codes: {
