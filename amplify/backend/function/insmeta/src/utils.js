@@ -7,7 +7,7 @@ const constructedApiArray = (diff) => {
     {
       fileName: "ind_nifty100list.csv",
       url: `https://www1.nseindia.com/content/indices/ind_nifty100list.csv`,
-      exchg: "NSELarge",
+      exchg: "NSE",
       codes: {
         id: "ISIN Code",
         mcap: "L",
@@ -17,7 +17,7 @@ const constructedApiArray = (diff) => {
     {
       fileName: "ind_niftymidcap150list.csv",
       url: `https://www1.nseindia.com/content/indices/ind_niftymidcap150list.csv`,
-      exchg: "NSEMid",
+      exchg: "NSE",
       codes: {
         id: "ISIN Code",
         mcap: "M",
