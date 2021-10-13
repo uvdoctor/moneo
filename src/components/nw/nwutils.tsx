@@ -3,7 +3,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import * as APIt from '../../api/goals';
 import * as queries from '../../graphql/queries';
 import { ALL_FAMILY } from './FamilyInput';
-import { DIAMOND, GOLD } from './NWContext';
+import { GOLD } from './NWContext';
 import { getFXRate } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 
@@ -229,7 +229,7 @@ export const getColourForAssetType = (at: APIt.AssetType) => {
 export const getCommodityRate = (ratesData: any, subtype: string, purity: string, currency: string) => {
 	let rate = subtype === APIt.AssetSubType.Gold ? ratesData[GOLD] : ratesData[subtype];
 	if(!rate) return 0;
-	return rate * getFXRate(ratesData, currency) * Number.parseFloat(purity) / (subtype === APIt.AssetSubType.Gold ? 24 : subtype === DIAMOND ? 5 : 100);
+	return rate * getFXRate(ratesData, currency) * Number.parseFloat(purity) / (subtype === APIt.AssetSubType.Gold ? 24 : 100);
 }
 
 export const getCryptoRate = (ratesData: any, cryptoCode: string, currency: string) => {

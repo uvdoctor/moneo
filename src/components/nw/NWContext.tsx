@@ -44,7 +44,6 @@ export const GOLD = 'GC';
 export const SILVER = 'SI';
 export const PLATINUM = 'PL';
 export const PALLADIUM = 'PA';
-export const DIAMOND = 'DIAM';
 export const BTC = 'BTC';
 export const BTC_CASH = 'BCH';
 export const ETHEREUM = 'ETH';
@@ -202,19 +201,6 @@ function NWContextProvider() {
 							'85': '85%',
 							'80': '80%',
 							'50': '50%'
-						},
-						[DIAMOND]: {
-							'0.005': 'Flawless (F)',
-							'0.075': 'Internally Flawless (IF)',
-							'0.01' : 'Very, very slight included 1 (VVS1)',
-							'0.02' : 'Very, very slight included 2 (VVS2)',
-							'0.03' : 'Very slight included 1 (VS1)',
-							'0.05' : 'Very slight included 2 (VS2)',
-							'0.06' : 'Slight included 1 (SI1)',
-							'0.08' : 'Slight included 2 (SI2)',
-							'0.10' : 'Included 1 (I1)',
-							'0.12' : 'Included 2 (I2)',
-							'0.15' : 'Included 3 (I3)'
 						}
 					},
 					categoryOptions: {
@@ -222,7 +208,6 @@ function NWContextProvider() {
 						[SILVER]: 'Silver',
 						[PLATINUM]: 'Platinum',
 						[PALLADIUM]: 'Palladium',
-						[DIAMOND]: 'Diamond'
 					},
 					viewComp: ViewHoldingInput,
 				}
