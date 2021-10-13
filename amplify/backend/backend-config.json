@@ -221,20 +221,6 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
-    },
-    "insmetapy": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "ddpwa0063633b",
-          "attributes": [
-            "UserPoolId"
-          ]
-        }
-      ]
     }
   },
   "storage": {

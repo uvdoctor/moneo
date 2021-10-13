@@ -22,7 +22,7 @@
         },
         "EODPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/EODPrice-3879336e476b4d424d43-build.zip",
+          "s3Key": "amplify-builds/EODPrice-7372686147584a796e49-build.zip",
           "apiGoalsGraphqlapiidoutput": "",
           "apiGoalsGraphqlapiendpointoutput": "",
           "eodApiKey": "611a020d72d487.59800610,611a01dc0083c5.19670434,611a0115bd4cd5.84750550,60d03a689523a3.63944368"
@@ -58,10 +58,6 @@
         "marketCap": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/marketCap-49777a2f4e3248544644-build.zip"
-        },
-        "insmetapy": {
-          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/insmetapy-546157536b5855353470-build.zip"
         }
       },
       "interactions": {
