@@ -66,7 +66,6 @@ export default function UserSettings(): JSX.Element {
 					description: 'Otp Verified Successfully'
 				});
 				setMode('');
-				return true;
 			})
 			.catch((err) => {
 				notification.error({
@@ -74,7 +73,6 @@ export default function UserSettings(): JSX.Element {
 					description: 'Sorry! Unable to update : ' + err.message
 				});
 				// setMode('');
-				return false;
 			});
 	};
 
@@ -88,7 +86,6 @@ export default function UserSettings(): JSX.Element {
 				oldPass.current = '';
 				newPass.current = '';
 				setMode('');
-				return true;
 			})
 			.catch((err) => {
 				notification.error({
@@ -96,7 +93,6 @@ export default function UserSettings(): JSX.Element {
 					description: 'Sorry! Unable to update : ' + err.message
 				});
 				setMode('');
-				return false;
 			});
 	};
 
