@@ -2,7 +2,7 @@ const { pushData, pushDataForFeed } = require("/opt/nodejs/insertIntoDB");
 const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
-const { getData, getDiamondPrice } = eodData;
+const getData = eodData;
 const table = "EODPrices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
 let batchRecords = [];
 
@@ -11,9 +11,6 @@ const eodPrice = () => {
     let batches = [];
     let idsToLog = [];
     let count = 0;
-    const data = await getDiamondPrice(table);
-    console.log(data);
-    batches.push({ PutRequest: { Item: data } });
     await Promise.all(
       apiToCall.map(async (element) => {
         let { code, close } = await getData(element, 0);
