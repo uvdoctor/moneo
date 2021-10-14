@@ -28,10 +28,13 @@ export default function ModalComponent({
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const handleOk = () => {
-    if (isModalVisible) {
-      perform ? perform() : null;
-      setIsModalVisible(false);
-    }
+    if (perform)
+      action.includes("email")
+        ? perform("email")
+        : action.includes("phone")
+        ? perform("phone_number")
+        : perform();
+    setIsModalVisible(false);
   };
 
   const handleCancel = () => {

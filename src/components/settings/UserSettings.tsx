@@ -23,15 +23,15 @@ const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry }: any =
     useContext(AppContext);
-  const [disabledForm, setDisabledForm] = useState(true);
-  const [email, setEmail] = useState<string>(user?.attributes.email);
-  const [contact, setContact] = useState<string>(user?.attributes.phone_number);
+  const [disabledForm, setDisabledForm] = useState<boolean>(true);
+  const [email, setEmail] = useState<string>("");
+  const [contact, setContact] = useState<string>("");
   const [error, setError] = useState<any>("");
   const otp = useRef<any>("");
   const name = useRef<string>("");
   const middleName = useRef<string>("");
   const surname = useRef<string>("");
-  const dob = useRef<string>(user?.attributes.birthdate || "");
+  const dob = useRef<string>("");
   const oldPass = useRef<string>("");
   const newPass = useRef<string>("");
   const attrName = useRef<string>("");
@@ -41,101 +41,83 @@ export default function UserSettings(): JSX.Element {
     (item) => item.countryCode === defaultCountry
   );
 
-  const handleFormChange = () =>
+  const handleFormChange = () => {
     setDisabledForm(
       form.getFieldsError().some(({ errors }) => errors.length) ||
         !form.isFieldsTouched(true)
     );
+  };
 
-  const success = () =>
-    notification.success({ message: "Updated Successfully" });
+  const disableButton = (prevValue: any, currValue: any) => {
+    return prevValue === currValue ? true : error.length > 0 ? true : false;
+  };
 
-  const failure = () =>
-    notification.error({ message: `Unable to update, ${error}` });
+  const success = (message: any) => notification.success({ message: message });
 
-  const updateUserAttributes = (attr: string, attrValue: any) =>
-    Auth.updateUserAttributes(user, { [attr]: attrValue });
+  const failure = (message: any) => notification.error({ message: message });
 
   const updatePhoneNumber = async () => {
     try {
-      await updateUserAttributes(
-        "phone_number",
-        `${counCode?.value}${contact}`
-      );
-      success();
+      await Auth.updateUserAttributes(user, {
+        ["phone_number"]: `${counCode?.value}${contact}`,
+      });
+      success("Contact updated successfully");
     } catch (error) {
-      failure();
+      failure(`Unable to update, ${error}`);
     }
   };
 
   const updateEmail = async () => {
     try {
-      await updateUserAttributes("email", setEmail);
-      success();
+      await Auth.updateUserAttributes(user, { ["email"]: email });
+      success("Email updated successfully");
     } catch (error) {
-      failure();
+      failure(`Unable to update, ${error}`);
     }
   };
 
   const updateBirthDate = async () => {
     try {
-      await updateUserAttributes("birthdate", dob.current);
-      success();
+      await Auth.updateUserAttributes(user, { ["birthdate"]: dob.current });
+      success("Birthdate updated successfully");
     } catch (error) {
-      failure();
+      failure(`Unable to update, ${error}`);
     }
   };
 
   const updateName = async () => {
     const attr = ["name", "middle_name", "family_name"];
     const attrValue = [name.current, middleName.current, surname.current];
-    const dataValue = [];
-    for (const ind in attr) {
-      attrName.current = attr[ind];
+    let errorLength = 0;
+    for (let ind = 0; ind < attr.length; ind++) {
       try {
-        const data = await Auth.updateUserAttributes(user, {
-          [attr[ind]]: attrValue[ind],
-        });
-        dataValue.push(data);
+        await Auth.updateUserAttributes(user, { [attr[ind]]: attrValue[ind] });
       } catch (error) {
-        dataValue.push(error);
+        errorLength++;
+        failure(`Unable to update ${attrValue[ind]}, ${error}`);
       }
     }
-    const check = (ele: any, _index: number, _array: any) => {
-      return ele === "SUCCESS";
-    };
-    if (dataValue.every(check)) {
-      success();
-    } else {
-      failure();
-    }
+    if (errorLength === 0) success("Name updated successfully");
   };
 
-  const confirmOtp = async (attrName: string) => {
-    Auth.verifyCurrentUserAttributeSubmit(attrName, otp.current)
+  const confirmOtp = async (attr: string) => {
+    attrName.current = attr;
+    Auth.verifyCurrentUserAttributeSubmit(attrName.current, otp.current)
       .then(() => {
-        notification.success({
-          message: "Otp Verified Successfully",
-        });
+        success("Otp Verified Successfully");
       })
       .catch((err) => {
-        notification.error({
-          message: "Wrong Otp" + err.message,
-        });
+        failure("Wrong Otp" + err.message);
       });
   };
 
   const editPassword = async () => {
     Auth.changePassword(user, oldPass.current, newPass.current)
       .then(() => {
-        notification.success({
-          message: "Password Updated",
-        });
+        success("Password Updated");
       })
       .catch((err) => {
-        notification.error({
-          message: "Wrong Credentials" + err.message,
-        });
+        failure("Wrong Credentials" + err.message);
       });
   };
 
@@ -165,7 +147,6 @@ export default function UserSettings(): JSX.Element {
           <Alert type="error" message={error} />
         </Fragment>
       ) : null}
-      <p>&nbsp;</p>
       <Row justify="center" style={{ fontSize: 25 }}>
         Settings
       </Row>
@@ -188,7 +169,7 @@ export default function UserSettings(): JSX.Element {
               <ModalComponent
                 perform={updateName}
                 onClickAction={null}
-                disableModal={false}
+                disableModal={disabledForm}
                 disableButton={false}
                 action={"name_change"}
                 icon={"Edit"}
@@ -203,20 +184,20 @@ export default function UserSettings(): JSX.Element {
                       name="name"
                       label="Enter your name"
                       required={true}
+                      initialValue={user?.attributes.name}
                       rules={nameRules()}
                     >
                       <Input
-                        defaultValue={user?.attributes.name}
                         onChange={(e) => (name.current = e.target.value)}
                       />
                     </Form.Item>
                     <Form.Item
                       name="middleName"
                       label="Enter your Middle Name"
+                      initialValue={user?.attributes.middle_name}
                       rules={nameRules()}
                     >
                       <Input
-                        defaultValue={user?.attributes.middle_name}
                         onChange={(e) => (middleName.current = e.target.value)}
                       />
                     </Form.Item>
@@ -224,9 +205,9 @@ export default function UserSettings(): JSX.Element {
                       name="surname"
                       label="Enter your Surname"
                       rules={nameRules()}
+                      initialValue={user?.attributes.family_name}
                     >
                       <Input
-                        defaultValue={user?.attributes.family_name}
                         onChange={(e) => (surname.current = e.target.value)}
                       />
                     </Form.Item>
@@ -260,15 +241,11 @@ export default function UserSettings(): JSX.Element {
                 }
                 perform={confirmOtp}
                 disableModal={false}
-                disableButton={
-                  user.attributes.phone_number ===
+                disableButton={disableButton(
+                  user.attributes.phone_number,
                   `${counCode?.value}${contact}`
-                    ? true
-                    : error.length > 0
-                    ? true
-                    : false
-                }
-                action={"contact_change"}
+                )}
+                action={"phone_change"}
                 icon={"Save"}
                 onClickAction={updatePhoneNumber}
               />
@@ -296,14 +273,8 @@ export default function UserSettings(): JSX.Element {
                 }
                 perform={confirmOtp}
                 disableModal={false}
-                disableButton={
-                  email === user.attributes.email
-                    ? true
-                    : error.length > 0
-                    ? true
-                    : false
-                }
-                action={"contact_change"}
+                disableButton={disableButton(email, user.attributes.email)}
+                action={"email_change"}
                 icon={"Save"}
                 onClickAction={updateEmail}
               />
@@ -432,13 +403,13 @@ export default function UserSettings(): JSX.Element {
             </Col>
             <Col>
               <ModalComponent
-                perform={null}
                 onClickAction={updateBirthDate}
                 disableModal={false}
                 disableButton={false}
                 action={"dob_change"}
                 icon={"Save"}
                 content={null}
+                perform={null}
               />
             </Col>
           </Row>
