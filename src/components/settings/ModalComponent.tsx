@@ -65,7 +65,7 @@ export default function ModalComponent({
         />
       </Tooltip>
       <Modal
-        title={"Okay"}
+        title={icon}
         visible={isModalVisible}
         onCancel={handleCancel}
         onOk={handleOk}

@@ -1,4 +1,4 @@
-import { Alert, Col, Row, notification, Skeleton, Form, Input } from "antd";
+import { Alert, Col, Row, notification, Skeleton, Input } from "antd";
 import React, {
   Fragment,
   useContext,
@@ -10,12 +10,13 @@ import TextInput from "../form/textinput";
 import ModalComponent from "./ModalComponent";
 import { AppContext } from "../AppContext";
 import { Auth } from "aws-amplify";
-import { useForm } from "antd/lib/form/Form";
 import { countrylist } from "./CountryCode";
 import dateFnsGenerateConfig from "rc-picker/lib/generate/dateFns";
 import "antd/lib/date-picker/style/index";
 import { parse } from "date-fns";
 import generatePicker from "antd/lib/date-picker/generatePicker";
+import NameComponent from "../form/NameInput";
+import PasswordComponent from "./PasswordComponent";
 
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
@@ -30,22 +31,14 @@ export default function UserSettings(): JSX.Element {
   const otp = useRef<any>("");
   const name = useRef<string>("");
   const middleName = useRef<string>("");
-  const surname = useRef<string>("");
+  const lastName = useRef<string>("");
   const dob = useRef<string>("");
   const oldPass = useRef<string>("");
   const newPass = useRef<string>("");
-  const [form] = useForm();
 
   const counCode = countrylist.find(
     (item) => item.countryCode === defaultCountry
   );
-
-  const handleFormChange = () => {
-    setDisabledForm(
-      form.getFieldsError().some(({ errors }) => errors.length) ||
-        !form.isFieldsTouched(true)
-    );
-  };
 
   const disableButton = (prevValue: any, currValue: any) => {
     return prevValue === currValue ? true : error.length > 0 ? true : false;
@@ -86,7 +79,7 @@ export default function UserSettings(): JSX.Element {
 
   const updateName = async () => {
     const attr = ["name", "middle_name", "family_name"];
-    const attrValue = [name.current, middleName.current, surname.current];
+    const attrValue = [name.current, middleName.current, lastName.current];
     let errorLength = 0;
     for (let ind = 0; ind < attr.length; ind++) {
       try {
@@ -119,21 +112,8 @@ export default function UserSettings(): JSX.Element {
       });
   };
 
-  const nameRules = () => [
-    {
-      pattern: new RegExp("^[a-zA-Z'-.,]+$"),
-      message: "Invalid Format",
-    },
-    {
-      min: 2,
-      max: 20,
-      message: "Length 2-20",
-    },
-  ];
-
   useEffect(() => {
     if (!user) return;
-    setContact(user.attributes.phone_number);
     setEmail(user.attributes.email);
     setContact(user.attributes.phone_number.replace(counCode?.value, ""));
   }, [appContextLoaded]);
@@ -172,44 +152,13 @@ export default function UserSettings(): JSX.Element {
                 action={"name_change"}
                 icon={"Edit"}
                 content={
-                  <Form
-                    name="namechange"
-                    layout="vertical"
-                    form={form}
-                    onFieldsChange={handleFormChange}
-                  >
-                    <Form.Item
-                      name="name"
-                      label="Enter your name"
-                      required={true}
-                      initialValue={user?.attributes.name}
-                      rules={nameRules()}
-                    >
-                      <Input
-                        onChange={(e) => (name.current = e.target.value)}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="middleName"
-                      label="Enter your Middle Name"
-                      initialValue={user?.attributes.middle_name}
-                      rules={nameRules()}
-                    >
-                      <Input
-                        onChange={(e) => (middleName.current = e.target.value)}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="surname"
-                      label="Enter your Surname"
-                      rules={nameRules()}
-                      initialValue={user?.attributes.family_name}
-                    >
-                      <Input
-                        onChange={(e) => (surname.current = e.target.value)}
-                      />
-                    </Form.Item>
-                  </Form>
+                  <NameComponent
+                    name={name}
+                    middleName={middleName}
+                    lastName={lastName}
+                    user={user}
+                    setDisabledForm={setDisabledForm}
+                  />
                 }
               />
             </Col>
@@ -292,78 +241,11 @@ export default function UserSettings(): JSX.Element {
             <Col>
               <ModalComponent
                 content={
-                  <Form
-                    name="password"
-                    layout="vertical"
-                    form={form}
-                    onFieldsChange={handleFormChange}
-                  >
-                    <Form.Item
-                      name="oldpassword"
-                      label="Enter Your Old Password"
-                      required={true}
-                    >
-                      <Input.Password
-                        allowClear
-                        onChange={(e) => (oldPass.current = e.target.value)}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="newPassword"
-                      label="New Password"
-                      required={true}
-                      rules={[
-                        {
-                          min: 8,
-                          max: 20,
-                          message: "Password must be between 8-20 length",
-                        },
-                        {
-                          pattern: new RegExp("(?=.*[a-z])"),
-                          message: "Atleast one lowercase",
-                        },
-                        {
-                          pattern: new RegExp("(?=.*[A-Z])"),
-                          message: "Atleast one uppercase",
-                        },
-                        {
-                          pattern: new RegExp(".*[0-9].*"),
-                          message: "Atleast one digit",
-                        },
-                        {
-                          pattern: new RegExp("(?=.*[!@#$%^&*])"),
-                          message: "Atleast one special characters",
-                        },
-                      ]}
-                    >
-                      <Input.Password
-                        allowClear
-                        onChange={(e) => (newPass.current = e.target.value)}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="reenterPassword"
-                      label="Re-enter Password"
-                      dependencies={["newPassword"]}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please confirm your password!",
-                        },
-                        ({ getFieldValue }) => ({
-                          validator(_, value) {
-                            if (getFieldValue("newPassword") === value)
-                              return Promise.resolve();
-                            return Promise.reject(
-                              "The two passwords that you entered do not match!"
-                            );
-                          },
-                        }),
-                      ]}
-                    >
-                      <Input.Password allowClear />
-                    </Form.Item>
-                  </Form>
+                  <PasswordComponent
+                    oldPass={oldPass}
+                    newPass={newPass}
+                    setDisabledForm={setDisabledForm}
+                  />
                 }
                 perform={editPassword}
                 disableModal={disabledForm}
