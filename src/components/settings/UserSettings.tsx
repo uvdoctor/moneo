@@ -36,17 +36,15 @@ export default function UserSettings(): JSX.Element {
   const oldPass = useRef<string>("");
   const newPass = useRef<string>("");
 
+  const success = (message: any) => notification.success({ message: message });
+  const failure = (message: any) => notification.error({ message: message });
+
   const counCode = countrylist.find(
     (item) => item.countryCode === defaultCountry
   );
 
-  const disableButton = (prevValue: any, currValue: any) => {
-    return prevValue === currValue ? true : error.length > 0 ? true : false;
-  };
-
-  const success = (message: any) => notification.success({ message: message });
-
-  const failure = (message: any) => notification.error({ message: message });
+  const disableButton = (prevValue: any, currValue: any) =>
+    prevValue === currValue ? true : error.length > 0 ? true : false;
 
   const updatePhoneNumber = async () => {
     try {
