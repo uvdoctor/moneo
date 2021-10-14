@@ -34,7 +34,6 @@ export default function UserSettings(): JSX.Element {
   const dob = useRef<string>("");
   const oldPass = useRef<string>("");
   const newPass = useRef<string>("");
-  const attrName = useRef<string>("");
   const [form] = useForm();
 
   const counCode = countrylist.find(
@@ -101,8 +100,7 @@ export default function UserSettings(): JSX.Element {
   };
 
   const confirmOtp = async (attr: string) => {
-    attrName.current = attr;
-    Auth.verifyCurrentUserAttributeSubmit(attrName.current, otp.current)
+    Auth.verifyCurrentUserAttributeSubmit(attr, otp.current)
       .then(() => {
         success("Otp Verified Successfully");
       })
