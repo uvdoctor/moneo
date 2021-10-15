@@ -49,6 +49,7 @@ export default function PasswordInput({
           message: "Atleast one special characters",
         },
       ]}
+      hasFeedback
     >
       <Input.Password allowClear onChange={handleFormChange} />
     </Form.Item>

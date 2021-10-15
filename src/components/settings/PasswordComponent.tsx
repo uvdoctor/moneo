@@ -1,6 +1,6 @@
 import { Form, Input } from "antd";
 import { useForm } from "antd/lib/form/Form";
-import React from "react";
+import React, { useRef, useState } from "react";
 import PasswordInput from "../form/PasswordInput";
 
 interface PasswordComponentProps {
@@ -15,12 +15,20 @@ export default function PasswordComponent({
   setDisabledForm,
 }: PasswordComponentProps) {
   const [form] = useForm();
+  const [isEnable, setIsEnable] = useState<boolean>(true);
 
   const handleFormChange = () => {
     setDisabledForm(
       form.getFieldsError().some(({ errors }) => errors.length) ||
         !form.isFieldsTouched(true)
     );
+
+    setIsEnable(
+      form.getFieldError("pass").some((e) => e.length) ||
+        !form.isFieldTouched("pass") ||
+        !form.getFieldValue("pass")
+    );
+
     oldPass.current = form.getFieldValue("oldpass");
     pass.current = form.getFieldValue("pass");
   };
@@ -39,7 +47,7 @@ export default function PasswordComponent({
       <Form.Item
         name="repass"
         label="Re-enter Password"
-        dependencies={["newpass"]}
+        dependencies={["pass"]}
         rules={[
           {
             required: true,
@@ -47,7 +55,6 @@ export default function PasswordComponent({
           },
           ({ getFieldValue }) => ({
             validator(_, value) {
-              // if(getFieldValue("pass"))
               if (getFieldValue("pass") === value) return Promise.resolve();
               return Promise.reject(
                 "The two passwords that you entered do not match!"
@@ -56,7 +63,7 @@ export default function PasswordComponent({
           }),
         ]}
       >
-        <Input.Password allowClear />
+        <Input.Password allowClear disabled={isEnable} />
       </Form.Item>
     </Form>
   );
