@@ -1,16 +1,17 @@
 import { Form, Input } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import React from "react";
+import PasswordInput from "../form/PasswordInput";
 
 interface PasswordComponentProps {
   oldPass: any;
-  newPass: any;
+  pass: any;
   setDisabledForm: any;
 }
 
 export default function PasswordComponent({
   oldPass,
-  newPass,
+  pass,
   setDisabledForm,
 }: PasswordComponentProps) {
   const [form] = useForm();
@@ -21,7 +22,7 @@ export default function PasswordComponent({
         !form.isFieldsTouched(true)
     );
     oldPass.current = form.getFieldValue("oldpass");
-    newPass.current = form.getFieldValue("newpass");
+    pass.current = form.getFieldValue("pass");
   };
 
   return (
@@ -34,42 +35,7 @@ export default function PasswordComponent({
       <Form.Item name="oldpass" label="Old Password" required={true}>
         <Input.Password allowClear />
       </Form.Item>
-      <Form.Item
-        name="newpass"
-        label="New Password"
-        required={true}
-        rules={[
-          {
-            min: 8,
-            max: 20,
-            message: "Password must be between 8-20 length",
-          },
-          {
-            pattern: new RegExp("(?=.*[a-z])"),
-            message: "Atleast one lowercase",
-          },
-          {
-            pattern: new RegExp("(?=.*[A-Z])"),
-            message: "Atleast one uppercase",
-          },
-          {
-            pattern: new RegExp(".*[0-9].*"),
-            message: "Atleast one digit",
-          },
-          {
-            pattern: new RegExp("(?=.*[!@#$%^&*])"),
-            message: "Atleast one special characters",
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (getFieldValue("oldpass") !== value) return Promise.resolve();
-              return Promise.reject("Old and New password should not be same");
-            },
-          }),
-        ]}
-      >
-        <Input.Password allowClear />
-      </Form.Item>
+      <PasswordInput pass={pass} setDisabledForm={handleFormChange} />
       <Form.Item
         name="repass"
         label="Re-enter Password"
@@ -81,7 +47,8 @@ export default function PasswordComponent({
           },
           ({ getFieldValue }) => ({
             validator(_, value) {
-              if (getFieldValue("newpass") === value) return Promise.resolve();
+              // if(getFieldValue("pass"))
+              if (getFieldValue("pass") === value) return Promise.resolve();
               return Promise.reject(
                 "The two passwords that you entered do not match!"
               );

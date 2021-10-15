@@ -34,7 +34,7 @@ export default function UserSettings(): JSX.Element {
   const lastName = useRef<string>("");
   const dob = useRef<string>("");
   const oldPass = useRef<string>("");
-  const newPass = useRef<string>("");
+  const pass = useRef<string>("");
 
   const success = (message: any) => notification.success({ message: message });
   const failure = (message: any) => notification.error({ message: message });
@@ -101,7 +101,8 @@ export default function UserSettings(): JSX.Element {
   };
 
   const editPassword = async () => {
-    Auth.changePassword(user, oldPass.current, newPass.current)
+    console.log(oldPass.current, pass.current);
+    Auth.changePassword(user, oldPass.current, pass.current)
       .then(() => {
         success("Password Updated");
       })
@@ -241,7 +242,7 @@ export default function UserSettings(): JSX.Element {
                 content={
                   <PasswordComponent
                     oldPass={oldPass}
-                    newPass={newPass}
+                    pass={pass}
                     setDisabledForm={setDisabledForm}
                   />
                 }
