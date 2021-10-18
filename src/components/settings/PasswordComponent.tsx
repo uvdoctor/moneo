@@ -1,6 +1,6 @@
 import { Form, Input } from "antd";
 import { useForm } from "antd/lib/form/Form";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import PasswordInput from "../form/PasswordInput";
 
 interface PasswordComponentProps {
