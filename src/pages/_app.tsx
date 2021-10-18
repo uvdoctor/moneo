@@ -3,43 +3,45 @@ import { AppProps } from "next/app";
 import "../styles/index.less";
 import * as gtag from "../lib/gtag";
 import { Router } from "next/router";
-import React from "react";
 import {
   AmplifyAuthenticator,
   AmplifySignUp,
 } from "@aws-amplify/ui-react";
+import React from "react";
 
 Router.events.on("routeChangeComplete", (url) => gtag.pageview(url));
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+
   return (
     <AmplifyAuthenticator>
       <AmplifySignUp
         slot="sign-up"
-        // usernameAlias="email"
         formFields={[
-					{
+          {
             type: "username",
-            label: "Custom User Name",
+            label: "Username",
             placeholder: "Enter",
-						inputProps: { required: true, autocomplete: "username" },
+            inputProps: { required: true, autocomplete: "username" },
+            hint: "Your username is permanent and cannot be changed later",
           },
           {
             type: "email",
-            label: "Custom Email Label",
-            placeholder: "Enter",
-            inputProps: { required: true, autocomplete: "email" , hint: "MAx length- 8"},
+            label: "Email",
+            placeholder: "abc@xyz.com",
+            inputProps: { required: true, autocomplete: "email" },
+            hint: "Enter a valid email address",
           },
           {
             type: "password",
-            label: "Custom Password Label",
+            label: "Password",
             placeholder: "Enter",
-            inputProps: { required: true, autocomplete: "new-password" , hint: "MAx length- 8"},
+            inputProps: { required: true, autocomplete: "password" },
+            hint: "At least 8 characters. Must contain a number, lower and uppercase and a symbol.",
           },
-         
         ]}
       />
-      {/* <AmplifySignIn/> */}
+     
       <Component {...pageProps} />
     </AmplifyAuthenticator>
   );
