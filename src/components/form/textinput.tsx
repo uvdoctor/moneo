@@ -16,12 +16,11 @@ interface TextInputProps {
 	size?: SizeType
 	password?: boolean
 	disabled?: boolean
-	width?: number
 }
 
 export default function TextInput(props: TextInputProps) {
 	const validate = () => {
-		if (!props.minLength || !props.setError || !props.fieldName) return;
+		if ( !props.setError || !props.fieldName ) return;
 		if (!props.value) {
 			props.setError('');
 			return;
@@ -43,7 +42,6 @@ export default function TextInput(props: TextInputProps) {
 	return (
 		<Input
 			className="input"
-			style={{width : props.width ? props.width: 400}}
 			type={props.password ? "password" : "text"} 
 			addonBefore={props.pre}
 			addonAfter={props.post}

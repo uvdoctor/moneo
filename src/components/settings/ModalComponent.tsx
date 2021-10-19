@@ -55,7 +55,7 @@ export default function ModalComponent({
 
   return (
     <>
-      <Tooltip title="Edit">
+      <Tooltip title={icon}>
         <Button
           type="link"
           style={{ color: COLORS.GREEN }}
