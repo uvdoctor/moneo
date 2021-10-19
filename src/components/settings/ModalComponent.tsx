@@ -13,6 +13,7 @@ interface ModalComponentProps {
   action: string;
   icon: string;
   content: any;
+  title: string | null;
 }
 
 export default function ModalComponent({
@@ -23,6 +24,7 @@ export default function ModalComponent({
   action,
   icon,
   content,
+  title
 }: ModalComponentProps) {
   const { validateCaptcha }: any = useContext(AppContext);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -65,7 +67,7 @@ export default function ModalComponent({
         />
       </Tooltip>
       <Modal
-        title={icon}
+        title={title}
         visible={isModalVisible}
         onCancel={handleCancel}
         onOk={handleOk}
