@@ -49,7 +49,7 @@ export default function NameComponent({
     >
       <Form.Item
         name="name"
-        label="Name"
+        label="First Name"
         required={true}
         initialValue={user?.attributes.name}
         rules={nameRules()}

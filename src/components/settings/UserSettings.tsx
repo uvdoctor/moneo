@@ -29,7 +29,6 @@ import NameComponent from "../form/NameInput";
 import PasswordInput from "../form/PasswordInput";
 import "antd/lib/date-picker/style/index";
 import "./Layout.less";
-
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
 
@@ -138,202 +137,200 @@ export default function UserSettings(): JSX.Element {
         </Col>
       </Row>
       <p>&nbsp;</p>
-      {appContextLoaded ? (
-        <Row className=".steps-content">
-          <Col span={24}>
-            <Tabs
-              tabPosition={isMobileDevice(fsb) ? "top" : "left"}
-              type={isMobileDevice(fsb) ? "card" : "line"}
-              animated
-            >
-              <TabPane tab="Personal" key="1">
-			  <p>&nbsp;</p>
-                <Row justify="center">
-                  <Col xs={20} sm={18}>
-                    <Input
-                      addonBefore="Name"
-                      value={`${user?.attributes.name || ""} ${
-                        user?.attributes.middle_name || ""
-                      } ${user?.attributes.family_name || ""}`}
-                      disabled={true}
-                      size={"large"}
-                    />
-                  </Col>
-                  <Col xs={4} sm={6}>
-                    <ModalComponent
-                      perform={updateName}
-                      onClickAction={null}
-                      disableModal={disabledForm}
-                      disableButton={false}
-                      action={"name_change"}
-                      icon={"Edit"}
-                      content={
-                        <NameComponent
-                          name={name}
-                          middleName={middleName}
-                          lastName={lastName}
-                          user={user}
-                          setDisabledForm={setDisabledForm}
-                        />
-                      }
-                    />
-                  </Col>
-                </Row>
-                <p>&nbsp;</p>
-                <Row justify="center">
-                  <Col xs={20} sm={18}>
-                    <TextInput
-                      pre="Contact"
-                      prefix={counCode?.value}
-                      value={contact}
-                      changeHandler={setContact}
-                      fieldName="contact"
-                      pattern="^[0-9]"
-                      setError={setError}
-                      minLength={10}
-                      maxLength={10}
-                    />
-                  </Col>
-                  <Col xs={4} sm={6}>
-                    <ModalComponent
-                      content={
-                        <Input
-                          addonBefore="OTP"
-                          onChange={(e) => (otp.current = e.target.value)}
-                        />
-                      }
-                      perform={confirmOtp}
-                      disableModal={false}
-                      disableButton={disableButton(
-                        user.attributes.phone_number,
-                        `${counCode?.value}${contact}`
-                      )}
-                      action={"phone_change"}
-                      icon={"Save"}
-                      onClickAction={updatePhoneNumber}
-                    />
-                  </Col>
-                </Row>
-                <p>&nbsp;</p>
-                <Row justify="center">
-                  <Col xs={20} sm={18}>
-                    <TextInput
-                      pre="Email Id"
-                      placeholder={"abc@xyz.com"}
-                      value={email}
-                      changeHandler={setEmail}
-                      pattern={
-                        "^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"
-                      }
-                      setError={setError}
-                      fieldName="email"
-                    />
-                  </Col>
-                  <Col xs={4} sm={6}>
-                    <ModalComponent
-                      content={
-                        <Input
-                          addonBefore="OTP"
-                          onChange={(e) => (otp.current = e.target.value)}
-                        />
-                      }
-                      perform={confirmOtp}
-                      disableModal={false}
-                      disableButton={disableButton(
-                        email,
-                        user.attributes.email
-                      )}
-                      action={"email_change"}
-                      icon={"Save"}
-                      onClickAction={updateEmail}
-                    />
-                  </Col>
-                </Row>
-                <p>&nbsp;</p>
-              </TabPane>
-              <TabPane tab="Others" key="2">
-                <p>&nbsp;</p>
-                <Row justify="center">
-                  <Col xs={20} sm={18}>
-                    <Input.Password
-                      addonBefore="Password"
-                      value={"********"}
-                      disabled={true}
-                      size={"large"}
-                    />
-                  </Col>
-                  <Col xs={4} sm={6}>
-                    <ModalComponent
-                      content={
-                        <>
-                          <h3>Old Password</h3>
-                          <Input.Password
-                            allowClear
-                            onChange={(e) =>
-                              (oldPass.current = e.currentTarget.value)
-                            }
-                          />
-                          <p>&nbsp;</p>
-                          <PasswordInput
-                            pass={pass}
+      <Row justify="center">
+        {appContextLoaded ? (
+          <Row className=".steps-content">
+            <Col xs={24} sm={24} md={24} lg={12}>
+              <Tabs
+                tabPosition={isMobileDevice(fsb) ? "top" : "left"}
+                type={isMobileDevice(fsb) ? "card" : "line"}
+                animated
+              >
+                <TabPane tab="Personal" key="1">
+                  <Row justify="center">
+                    <Col>
+                      <Input
+                        style={{ width: 350 }}
+                        addonBefore="Name"
+                        value={`${user?.attributes.name || ""} ${
+                          user?.attributes.middle_name || ""
+                        } ${user?.attributes.family_name || ""}`}
+                        disabled={true}
+                        size={"large"}
+                      />
+                    </Col>
+                    <Col>
+                      <ModalComponent
+                        perform={updateName}
+                        onClickAction={null}
+                        disableModal={disabledForm}
+                        disableButton={false}
+                        action={"name_change"}
+                        icon={"Edit"}
+                        content={
+                          <NameComponent
+                            name={name}
+                            middleName={middleName}
+                            lastName={lastName}
+                            user={user}
                             setDisabledForm={setDisabledForm}
                           />
-                        </>
-                      }
-                      perform={editPassword}
-                      disableModal={disabledForm}
-                      disableButton={false}
-                      action={"password_change"}
-                      icon={"Edit"}
-                      onClickAction={null}
-                    />
-                  </Col>
-                </Row>
-                <p>&nbsp;</p>
-                <Row justify="center">
-                  <Col xs={20} sm={18}>
-				  <Input.Group size="large">
-                <Input
-                  style={{ width: "20%" }}
-                  defaultValue="DOB"
-                  disabled={true}
-                />
-                <DatePicker
-                  style={{ width: "80%" }}
-                  defaultValue={parse(
-                    user?.attributes.birthdate,
-                    dateFormat,
-                    new Date()
-                  )}
-                  format={dateFormat}
-                  size="large"
-                  onChange={(_, ds) =>
-                    //@ts-ignore
-                    (dob.current = ds.toString())
-                  }
-                />
-              </Input.Group>
-                  </Col>
-                  <Col xs={4} sm={6}>
-                    <ModalComponent
-                      onClickAction={updateBirthDate}
-                      disableModal={false}
-                      disableButton={false}
-                      action={"dob_change"}
-                      icon={"Save"}
-                      content={null}
-                      perform={null}
-                    />
-                  </Col>
+                        }
+                      />
+                    </Col>
+                  </Row>
                   <p>&nbsp;</p>
-                </Row>
-              </TabPane>
-            </Tabs>
-          </Col>
-        </Row>
-      ) : (
-        <Skeleton active />
-      )}
+                  <Row justify="center">
+                    <Col>
+                      <TextInput
+                        pre="Mobile"
+                        prefix={counCode?.value}
+                        value={contact}
+                        changeHandler={setContact}
+                        fieldName="contact"
+                        pattern="^[0-9]"
+                        setError={setError}
+                        minLength={10}
+                        maxLength={10}
+                      />
+                    </Col>
+                    <Col>
+                      <ModalComponent
+                        content={
+                          <Input
+                            addonBefore="OTP"
+                            onChange={(e) => (otp.current = e.target.value)}
+                          />
+                        }
+                        perform={confirmOtp}
+                        disableModal={false}
+                        disableButton={disableButton(
+                          user.attributes.phone_number,
+                          `${counCode?.value}${contact}`
+                        )}
+                        action={"phone_change"}
+                        icon={"Save"}
+                        onClickAction={updatePhoneNumber}
+                      />
+                    </Col>
+                  </Row>
+                  <p>&nbsp;</p>
+                  <Row justify="center">
+                    <Col>
+                      <TextInput
+                        pre="Email Id"
+                        placeholder={"abc@xyz.com"}
+                        value={email}
+                        changeHandler={setEmail}
+                        pattern={
+                          "^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"
+                        }
+                        setError={setError}
+                        fieldName="email"
+                      />
+                    </Col>
+                    <Col>
+                      <ModalComponent
+                        content={
+                          <Input
+                            addonBefore="OTP"
+                            onChange={(e) => (otp.current = e.target.value)}
+                          />
+                        }
+                        perform={confirmOtp}
+                        disableModal={false}
+                        disableButton={disableButton(
+                          email,
+                          user.attributes.email
+                        )}
+                        action={"email_change"}
+                        icon={"Save"}
+                        onClickAction={updateEmail}
+                      />
+                    </Col>
+                  </Row>
+                  <p>&nbsp;</p>
+                  <Row justify="center">
+                    <Col>
+                      <Input.Group size="large">
+                        <label>&nbsp;&nbsp;Date of birth&nbsp;&nbsp;</label>
+                        <DatePicker
+                          style={{ width: 250 }}
+                          defaultValue={parse(
+                            user?.attributes.birthdate || new Date(),
+                            dateFormat,
+                            new Date()
+                          )}
+                          format={dateFormat}
+                          size="large"
+                          onChange={(_, ds) =>
+                            //@ts-ignore
+                            (dob.current = ds.toString())
+                          }
+                        />
+                      </Input.Group>
+                    </Col>
+                    <Col>
+                      <ModalComponent
+                        onClickAction={updateBirthDate}
+                        disableModal={false}
+                        disableButton={false}
+                        action={"dob_change"}
+                        icon={"Save"}
+                        content={null}
+                        perform={null}
+                      />
+                    </Col>
+                    <p>&nbsp;</p>
+                  </Row>
+                </TabPane>
+                <TabPane tab="Password" key="2">
+                  <p>&nbsp;</p>
+                  <Row justify="center">
+                    <Col>
+                      <Input.Password
+                        addonBefore="Password"
+                        value={"********"}
+                        disabled={true}
+                        size={"large"}
+                      />
+                    </Col>
+                    <Col>
+                      <ModalComponent
+                        content={
+                          <>
+                            <h3>Old Password</h3>
+                            <Input.Password
+                              allowClear
+                              onChange={(e) =>
+                                (oldPass.current = e.currentTarget.value)
+                              }
+                            />
+                            <p>&nbsp;</p>
+                            <PasswordInput
+                              pass={pass}
+                              setDisabledForm={setDisabledForm}
+                            />
+                          </>
+                        }
+                        perform={editPassword}
+                        disableModal={disabledForm}
+                        disableButton={false}
+                        action={"password_change"}
+                        icon={"Edit"}
+                        onClickAction={null}
+                      />
+                    </Col>
+                  </Row>
+                  <p>&nbsp;</p>
+                </TabPane>
+              </Tabs>
+            </Col>
+          </Row>
+        ) : (
+          <Skeleton active />
+        )}
+      </Row>
     </Fragment>
   );
 }

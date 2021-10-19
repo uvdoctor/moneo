@@ -16,6 +16,7 @@ interface TextInputProps {
 	size?: SizeType
 	password?: boolean
 	disabled?: boolean
+	width?: number | string
 }
 
 export default function TextInput(props: TextInputProps) {
@@ -47,6 +48,7 @@ export default function TextInput(props: TextInputProps) {
 			addonAfter={props.post}
 			prefix={props.prefix}
 			size={props.size ? props.size : "large"}
+			style={{width : props.width ? props.width: 350}}
 			placeholder={props.placeholder ? props.placeholder : ''}
 			value={props.value}
 			onChange={(e) => props.changeHandler(e.currentTarget.value)}
