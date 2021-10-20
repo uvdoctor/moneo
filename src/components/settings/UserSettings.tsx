@@ -158,8 +158,7 @@ export default function UserSettings(): JSX.Element {
                     value={""}
                     size={"large"}
                   />
-                  <GoalImage />
-                  {/* <ModalComponent
+                  <ModalComponent
                     title={"Upload Image"}
                     perform={null}
                     onClickAction={null}
@@ -169,7 +168,8 @@ export default function UserSettings(): JSX.Element {
                     icon={"Edit"}
                     content={
                       <GoalImage/>
-                    } */}
+                    }
+                    />
                 </Row>
                 <p>&nbsp;</p>
                 <Row justify="start">
