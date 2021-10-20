@@ -29,7 +29,8 @@ import NameComponent from "../form/NameInput";
 import PasswordInput from "../form/PasswordInput";
 import "antd/lib/date-picker/style/index";
 import "./Layout.less";
-import GoalImage from "../calc/GoalImage";
+import PictureComponent from './PictureComponent';
+
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
 const getTodayDate = () => {
@@ -151,31 +152,11 @@ export default function UserSettings(): JSX.Element {
               animated
             >
               <TabPane className="tabPane" tab="Personal" key="1">
-                <Row justify="start">
-                  <Input
-                    style={{ width: 350 }}
-                    addonBefore="Profile"
-                    value={""}
-                    size={"large"}
-                  />
-                  <ModalComponent
-                    title={"Upload Image"}
-                    perform={null}
-                    onClickAction={null}
-                    disableModal={disabledForm}
-                    disableButton={false}
-                    action={"name_change"}
-                    icon={"Edit"}
-                    content={
-                      <GoalImage/>
-                    }
-                    />
-                </Row>
-                <p>&nbsp;</p>
-                <Row justify="start">
+                <Row>
                   <Input
                     style={{ width: 350 }}
                     addonBefore="Name"
+                    prefix={<PictureComponent user={user}/>}
                     value={`${user?.attributes.name || ""} ${
                       user?.attributes.middle_name || ""
                     } ${user?.attributes.family_name || ""}`}

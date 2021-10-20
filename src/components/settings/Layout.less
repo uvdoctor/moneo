@@ -2,33 +2,69 @@
 
 body,
 #__next {
-	background-color: @background-color-light;
+  background-color: @background-color-light;
+}
+
+.image-holder {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+
+  & input[type="file"] {
+    display: none;
+  }
+}
+.ant-page-header-heading-title {
+  display: flex;
+}
+
+.preview-image-holder {
+  position: relative;
+  display: flex;
+  text-align: center;
+
+  & .goal-image-loader {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+  }
+
+  & .preview-image {
+    flex: 1;
+  }
+}
+
+.image-upload-modal-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 label.dob {
-	border: 1px solid #ccc;
-	padding: 7px;
+  border-radius: 6px 0px 0px 6px;
+  border: 1px solid #ccc;
+  padding: 7px;
 }
 
 .steps-content {
-	padding: 25px 20px 30px;
+  padding: 25px 20px 30px;
 
-	& h3,
-	h4 {
-		font-weight: bold;
-	}
+  & h3,
+  h4 {
+    font-weight: bold;
+  }
 
-	& .ant-collapse-header {
-		font-weight: bold;
-	}
+  & .ant-collapse-header {
+    font-weight: bold;
+  }
 }
 
 .tabPane {
-    margin-left: 70px;
+  margin-left: 70px;
 }
 
 @media all and (max-width: 576px) {
-	.steps-content {
-		padding: 0 10px;
-	}
+  .steps-content {
+    padding: 0 10px;
+  }
 }
