@@ -29,6 +29,7 @@ import NameComponent from "../form/NameInput";
 import PasswordInput from "../form/PasswordInput";
 import "antd/lib/date-picker/style/index";
 import "./Layout.less";
+import GoalImage from "../calc/GoalImage";
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
 const getTodayDate = () => {
@@ -149,8 +150,29 @@ export default function UserSettings(): JSX.Element {
               type={isMobileDevice(fsb) ? "card" : "line"}
               animated
             >
-              <TabPane tab="Personal" key="1">
-                <Row justify='start'>
+              <TabPane className="tabPane" tab="Personal" key="1">
+                <Row justify="start">
+                  <Input
+                    style={{ width: 350 }}
+                    addonBefore="Profile"
+                    value={""}
+                    size={"large"}
+                  />
+                  <GoalImage />
+                  {/* <ModalComponent
+                    title={"Upload Image"}
+                    perform={null}
+                    onClickAction={null}
+                    disableModal={disabledForm}
+                    disableButton={false}
+                    action={"name_change"}
+                    icon={"Edit"}
+                    content={
+                      <GoalImage/>
+                    } */}
+                </Row>
+                <p>&nbsp;</p>
+                <Row justify="start">
                   <Input
                     style={{ width: 350 }}
                     addonBefore="Name"
@@ -244,7 +266,7 @@ export default function UserSettings(): JSX.Element {
                 <Row justify="start">
                   <Col>
                     <Input.Group size="large">
-                      <label>&nbsp;&nbsp;Date of birth&nbsp;&nbsp;</label>
+                      <label className="dob">Date of birth</label>
                       <DatePicker
                         style={{ width: 250 }}
                         defaultValue={parse(
@@ -276,7 +298,7 @@ export default function UserSettings(): JSX.Element {
                 </Row>
                 <p>&nbsp;</p>
               </TabPane>
-              <TabPane tab="Password" key="2">
+              <TabPane className="tabPane" tab="Password" key="2">
                 <Row justify="start">
                   <Col>
                     <Input.Password
