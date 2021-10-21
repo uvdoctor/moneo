@@ -1,9 +1,10 @@
 import React, { useRef, useState } from "react";
-import { Avatar, Button, Modal, notification, Spin } from "antd";
+import { Avatar, Button, Modal, notification, Spin, Tooltip } from "antd";
 import { goalImgStorage } from "../goals/goalutils";
 import { Auth } from "aws-amplify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { COLORS } from "../../CONSTANTS";
+import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
+import { UserOutlined } from '@ant-design/icons';
 interface PictureComponentProps {
   user: any;
 }
@@ -37,7 +38,6 @@ export default function PictureComponent({ user }: PictureComponentProps) {
         const result: any = await goalImgStorage.storeGoalImg(file);
         const url = await goalImgStorage.getUrlFromKey(result.key);
         imgKey.current = result.key;
-        console.log(imgKey.current);
         if (user?.attributes.profile !== imgKey.current)
           await goalImgStorage.removeGoalImg(user?.attributes.profile);
         await updateProfile(url, imgKey.current);
@@ -57,10 +57,10 @@ export default function PictureComponent({ user }: PictureComponentProps) {
   const avatar = (size: any, src: any) => {
     return (
       <Avatar
-        style={{ color: COLORS.GREEN }}
+        style={{ backgroundColor: "gray" }}
         size={size}
         alt="Profile"
-        src={src}
+        src={src || <UserOutlined/>}
         icon={<FontAwesomeIcon icon={src} />}
       />
     );
@@ -69,14 +69,14 @@ export default function PictureComponent({ user }: PictureComponentProps) {
   const removeImage = async () => {
     try {
       setLoader(true);
-      if (user?.attributes.profile)
-        await goalImgStorage.removeGoalImg(user?.attributes.profile);
-      await updateProfile("", "");
+      if (user?.attributes.profile) await goalImgStorage.removeGoalImg(user?.attributes.profile);
       imgKey.current = null;
+      await updateProfile("", imgKey.current);
       setLoader(false);
+      setIsModalVisible(false)
     } catch (error) {
       notification.error({
-        message: "Error while deleting goal image",
+        message: "Error while deleting profile picture",
         description: `${error}`,
       });
       setLoader(false);
@@ -86,9 +86,17 @@ export default function PictureComponent({ user }: PictureComponentProps) {
   return (
     <>
       <span className="image-holder">
-        <span onClick={() => setIsModalVisible(true)}>
-          {avatar(30, user?.attributes.picture)}
+        <span onClick={user?.attributes.picture ? () =>  setIsModalVisible(true): openBrowse}>
+          {avatar(100, user?.attributes.picture)}
         </span>
+        <Tooltip className='edit-icon' title={"Edit Photo"}>
+          <Button
+            type="link"
+            style={{ color: "black" }}
+            icon={<EditOutlined />}
+            onClick={user?.attributes.picture ? () =>  setIsModalVisible(true): openBrowse}
+          />
+        </Tooltip>
         <input type="file" ref={inputEl} onChange={getImage} />
       </span>
       <Modal

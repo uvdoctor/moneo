@@ -1,5 +1,21 @@
-import { Alert, Col, Row, notification, Skeleton, Input, Tabs, PageHeader } from "antd";
-import React, { Fragment, useContext, useState, useEffect, useRef } from "react";
+import {
+  Alert,
+  Col,
+  Row,
+  notification,
+  Skeleton,
+  Input,
+  Tabs,
+  PageHeader,
+  Button,
+} from "antd";
+import React, {
+  Fragment,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { Auth } from "aws-amplify";
 import { parse } from "date-fns";
@@ -10,11 +26,12 @@ import TextInput from "../form/textinput";
 import ModalComponent from "./ModalComponent";
 import dateFnsGenerateConfig from "rc-picker/lib/generate/dateFns";
 import generatePicker from "antd/lib/date-picker/generatePicker";
-import NameComponent from "../form/NameInput";
 import PasswordInput from "../form/PasswordInput";
 import "antd/lib/date-picker/style/index";
 import "./Layout.less";
 import PictureComponent from "./PictureComponent";
+import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
+import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
@@ -24,7 +41,8 @@ const getTodayDate = () => {
 };
 
 export default function UserSettings(): JSX.Element {
-  const { user, appContextLoaded, defaultCountry }: any = useContext(AppContext);
+  const { user, appContextLoaded, defaultCountry }: any =
+    useContext(AppContext);
   const [disabledForm, setDisabledForm] = useState<boolean>(true);
   const [email, setEmail] = useState<string>("");
   const [contact, setContact] = useState<string>("");
@@ -36,7 +54,7 @@ export default function UserSettings(): JSX.Element {
   const dob = useRef<string>("");
   const oldPass = useRef<string>("");
   const pass = useRef<string>("");
-
+  const [isEditMode, setEditMode] = useState(false);
   const { TabPane } = Tabs;
   const fsb = useFullScreenBrowser();
   const success = (message: any) => notification.success({ message: message });
@@ -44,6 +62,14 @@ export default function UserSettings(): JSX.Element {
   const counCode = countrylist.find(
     (item) => item.countryCode === defaultCountry
   );
+
+  function onEdit() {
+    setEditMode(true);
+  }
+
+  function onCancel() {
+    setEditMode(false);
+  }
 
   const disableButton = (prevValue: any, currValue: any) =>
     prevValue === currValue ? true : error.length > 0 ? true : false;
@@ -112,6 +138,14 @@ export default function UserSettings(): JSX.Element {
       });
   };
 
+  const addOnAfterName = (
+    <Button
+      type="link"
+      icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
+      onClick={isEditMode ? onCancel : onEdit}
+    />
+  );
+
   useEffect(() => {
     if (!user) return;
     setEmail(user.attributes.email);
@@ -137,34 +171,46 @@ export default function UserSettings(): JSX.Element {
             >
               <TabPane className="tabPane" tab="Personal" key="1">
                 <Row>
-                  <Input
-                    style={{ width: 350 }}
-                    addonBefore="Name"
-                    prefix={<PictureComponent user={user} />}
-                    value={`${user?.attributes.name || ""} ${
-                      user?.attributes.middle_name || ""
-                    } ${user?.attributes.family_name || ""}`}
-                    disabled={true}
-                    size={"large"}
-                  />
-                  <ModalComponent
-                    title={"Edit Name"}
-                    perform={updateName}
-                    onClickAction={null}
-                    disableModal={disabledForm}
-                    disableButton={false}
-                    action={"name_change"}
-                    icon={"Edit"}
-                    content={
-                      <NameComponent
-                        name={name}
-                        middleName={middleName}
-                        lastName={lastName}
-                        user={user}
-                        setDisabledForm={setDisabledForm}
-                      />
-                    }
-                  />
+                  <Col>
+                    <PictureComponent user={user} />
+                  </Col>
+                  <Col>
+                    <Row>
+                      {isEditMode ? (
+                        <Input
+                          style={{ width: 250 }}
+                          onChange={(e) => (name.current = e.target.value)}
+                        />
+                      ) : (
+                        <span>{user?.attributes.name || "First Name"}</span>
+                      )}
+                      <Col>{addOnAfterName}</Col>
+                    </Row>
+                    <Row>
+                      {isEditMode ? (
+                        <Input
+                          style={{ width: 250 }}
+                          onChange={(e) =>
+                            (middleName.current = e.target.value)
+                          }
+                        />
+                      ) : (
+                        <span>{user?.attributes.middle_name || "Middle Name"}</span>
+                      )}
+                      <Col>{addOnAfterName}</Col>
+                    </Row>
+                    <Row>
+                      {isEditMode ? (
+                        <Input
+                          style={{ width: 250 }}
+                          onChange={(e) => (lastName.current = e.target.value)}
+                        />
+                      ) : (
+                        <span>{user?.attributes.family_name || "Last Name"}</span>
+                      )}
+                      <Col>{addOnAfterName}</Col>
+                    </Row>
+                  </Col>
                 </Row>
                 <p>&nbsp;</p>
                 <Row justify="start">
@@ -172,7 +218,7 @@ export default function UserSettings(): JSX.Element {
                     <Input.Group size="large">
                       <label className="dob">Date of birth</label>
                       <DatePicker
-                        style={{ width: 250 }}
+                        style={{ width: 200 }}
                         defaultValue={parse(
                           user?.attributes.birthdate || getTodayDate(),
                           dateFormat,
@@ -214,24 +260,26 @@ export default function UserSettings(): JSX.Element {
                     setError={setError}
                     minLength={10}
                     maxLength={10}
-                  />
-                  <ModalComponent
-                    title={"Enter OTP"}
-                    content={
-                      <Input
-                        addonBefore="OTP"
-                        onChange={(e) => (otp.current = e.target.value)}
+                    post={
+                      <ModalComponent
+                        title={"Enter OTP"}
+                        content={
+                          <Input
+                            addonBefore="OTP"
+                            onChange={(e) => (otp.current = e.target.value)}
+                          />
+                        }
+                        perform={confirmOtp}
+                        disableModal={false}
+                        disableButton={disableButton(
+                          user.attributes.phone_number,
+                          `${counCode?.value}${contact}`
+                        )}
+                        action={"phone_change"}
+                        icon={"Save"}
+                        onClickAction={updatePhoneNumber}
                       />
                     }
-                    perform={confirmOtp}
-                    disableModal={false}
-                    disableButton={disableButton(
-                      user.attributes.phone_number,
-                      `${counCode?.value}${contact}`
-                    )}
-                    action={"phone_change"}
-                    icon={"Save"}
-                    onClickAction={updatePhoneNumber}
                   />
                 </Row>
                 <p>&nbsp;</p>
@@ -246,21 +294,26 @@ export default function UserSettings(): JSX.Element {
                     }
                     setError={setError}
                     fieldName="email"
-                  />
-                  <ModalComponent
-                    title={"Enter OTP"}
-                    content={
-                      <Input
-                        addonBefore="OTP"
-                        onChange={(e) => (otp.current = e.target.value)}
+                    post={
+                      <ModalComponent
+                        title={"Enter OTP"}
+                        content={
+                          <Input
+                            addonBefore="OTP"
+                            onChange={(e) => (otp.current = e.target.value)}
+                          />
+                        }
+                        perform={confirmOtp}
+                        disableModal={false}
+                        disableButton={disableButton(
+                          email,
+                          user.attributes.email
+                        )}
+                        action={"email_change"}
+                        icon={"Save"}
+                        onClickAction={updateEmail}
                       />
                     }
-                    perform={confirmOtp}
-                    disableModal={false}
-                    disableButton={disableButton(email, user.attributes.email)}
-                    action={"email_change"}
-                    icon={"Save"}
-                    onClickAction={updateEmail}
                   />
                 </Row>
                 <p>&nbsp;</p>
@@ -273,33 +326,33 @@ export default function UserSettings(): JSX.Element {
                       value={"********"}
                       disabled={true}
                       size={"large"}
-                    />
-                  </Col>
-                  <Col>
-                    <ModalComponent
-                      title={"Enter Password"}
-                      content={
-                        <>
-                          <h3>Old Password</h3>
-                          <Input.Password
-                            allowClear
-                            onChange={(e) =>
-                              (oldPass.current = e.currentTarget.value)
-                            }
-                          />
-                          <p>&nbsp;</p>
-                          <PasswordInput
-                            pass={pass}
-                            setDisabledForm={setDisabledForm}
-                          />
-                        </>
+                      addonAfter={
+                        <ModalComponent
+                          title={"Enter Password"}
+                          content={
+                            <>
+                              <h3>Old Password</h3>
+                              <Input.Password
+                                allowClear
+                                onChange={(e) =>
+                                  (oldPass.current = e.currentTarget.value)
+                                }
+                              />
+                              <p>&nbsp;</p>
+                              <PasswordInput
+                                pass={pass}
+                                setDisabledForm={setDisabledForm}
+                              />
+                            </>
+                          }
+                          perform={editPassword}
+                          disableModal={disabledForm}
+                          disableButton={false}
+                          action={"password_change"}
+                          icon={"Edit"}
+                          onClickAction={null}
+                        />
                       }
-                      perform={editPassword}
-                      disableModal={disabledForm}
-                      disableButton={false}
-                      action={"password_change"}
-                      icon={"Edit"}
-                      onClickAction={null}
                     />
                   </Col>
                 </Row>
