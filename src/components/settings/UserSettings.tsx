@@ -103,20 +103,20 @@ export default function UserSettings(): JSX.Element {
     }
   };
 
-  const updateName = async () => {
-    const attr = ["name", "middle_name", "family_name"];
-    const attrValue = [name.current, middleName.current, lastName.current];
-    let errorLength = 0;
-    for (let ind = 0; ind < attr.length; ind++) {
-      try {
-        await Auth.updateUserAttributes(user, { [attr[ind]]: attrValue[ind] });
-      } catch (error) {
-        errorLength++;
-        failure(`Unable to update ${attrValue[ind]}, ${error}`);
-      }
-    }
-    if (errorLength === 0) success("Name updated successfully");
-  };
+  // const updateName = async () => {
+  //   const attr = ["name", "middle_name", "family_name"];
+  //   const attrValue = [name.current, middleName.current, lastName.current];
+  //   let errorLength = 0;
+  //   for (let ind = 0; ind < attr.length; ind++) {
+  //     try {
+  //       await Auth.updateUserAttributes(user, { [attr[ind]]: attrValue[ind] });
+  //     } catch (error) {
+  //       errorLength++;
+  //       failure(`Unable to update ${attrValue[ind]}, ${error}`);
+  //     }
+  //   }
+  //   if (errorLength === 0) success("Name updated successfully");
+  // };
 
   const confirmOtp = async (attr: string) => {
     Auth.verifyCurrentUserAttributeSubmit(attr, otp.current)
