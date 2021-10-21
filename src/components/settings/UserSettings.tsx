@@ -1,20 +1,5 @@
-import {
-  Alert,
-  Col,
-  Row,
-  notification,
-  Skeleton,
-  Input,
-  Tabs,
-  PageHeader,
-} from "antd";
-import React, {
-  Fragment,
-  useContext,
-  useState,
-  useEffect,
-  useRef,
-} from "react";
+import { Alert, Col, Row, notification, Skeleton, Input, Tabs, PageHeader } from "antd";
+import React, { Fragment, useContext, useState, useEffect, useRef } from "react";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { Auth } from "aws-amplify";
 import { parse } from "date-fns";
@@ -29,18 +14,17 @@ import NameComponent from "../form/NameInput";
 import PasswordInput from "../form/PasswordInput";
 import "antd/lib/date-picker/style/index";
 import "./Layout.less";
-import PictureComponent from './PictureComponent';
+import PictureComponent from "./PictureComponent";
 
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
 const getTodayDate = () => {
   const today = new Date();
-  return `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+  return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 };
 
 export default function UserSettings(): JSX.Element {
-  const { user, appContextLoaded, defaultCountry }: any =
-    useContext(AppContext);
+  const { user, appContextLoaded, defaultCountry }: any = useContext(AppContext);
   const [disabledForm, setDisabledForm] = useState<boolean>(true);
   const [email, setEmail] = useState<string>("");
   const [contact, setContact] = useState<string>("");
@@ -156,7 +140,7 @@ export default function UserSettings(): JSX.Element {
                   <Input
                     style={{ width: 350 }}
                     addonBefore="Name"
-                    prefix={<PictureComponent user={user}/>}
+                    prefix={<PictureComponent user={user} />}
                     value={`${user?.attributes.name || ""} ${
                       user?.attributes.middle_name || ""
                     } ${user?.attributes.family_name || ""}`}
@@ -183,6 +167,42 @@ export default function UserSettings(): JSX.Element {
                   />
                 </Row>
                 <p>&nbsp;</p>
+                <Row justify="start">
+                  <Col>
+                    <Input.Group size="large">
+                      <label className="dob">Date of birth</label>
+                      <DatePicker
+                        style={{ width: 250 }}
+                        defaultValue={parse(
+                          user?.attributes.birthdate || getTodayDate(),
+                          dateFormat,
+                          new Date()
+                        )}
+                        format={dateFormat}
+                        size="large"
+                        onChange={(_, ds) =>
+                          //@ts-ignore
+                          (dob.current = ds.toString())
+                        }
+                      />
+                    </Input.Group>
+                  </Col>
+                  <Col>
+                    <ModalComponent
+                      title={null}
+                      onClickAction={updateBirthDate}
+                      disableModal={false}
+                      disableButton={false}
+                      action={"dob_change"}
+                      icon={"Save"}
+                      content={null}
+                      perform={null}
+                    />
+                  </Col>
+                </Row>
+                <p>&nbsp;</p>
+              </TabPane>
+              <TabPane tab="Contact" key="2">
                 <Row justify="start">
                   <TextInput
                     pre="Mobile"
@@ -244,42 +264,8 @@ export default function UserSettings(): JSX.Element {
                   />
                 </Row>
                 <p>&nbsp;</p>
-                <Row justify="start">
-                  <Col>
-                    <Input.Group size="large">
-                      <label className="dob">Date of birth</label>
-                      <DatePicker
-                        style={{ width: 250 }}
-                        defaultValue={parse(
-                          user?.attributes.birthdate || getTodayDate(),
-                          dateFormat,
-                          new Date()
-                        )}
-                        format={dateFormat}
-                        size="large"
-                        onChange={(_, ds) =>
-                          //@ts-ignore
-                          (dob.current = ds.toString())
-                        }
-                      />
-                    </Input.Group>
-                  </Col>
-                  <Col>
-                    <ModalComponent
-                      title={null}
-                      onClickAction={updateBirthDate}
-                      disableModal={false}
-                      disableButton={false}
-                      action={"dob_change"}
-                      icon={"Save"}
-                      content={null}
-                      perform={null}
-                    />
-                  </Col>
-                </Row>
-                <p>&nbsp;</p>
               </TabPane>
-              <TabPane className="tabPane" tab="Password" key="2">
+              <TabPane tab="Password" key="3">
                 <Row justify="start">
                   <Col>
                     <Input.Password

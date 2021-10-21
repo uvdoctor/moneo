@@ -1,11 +1,9 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Avatar, Button, Modal, notification, Spin } from "antd";
-import PictureOutlined from "@ant-design/icons/lib/icons/PictureOutlined";
 import { goalImgStorage } from "../goals/goalutils";
 import { Auth } from "aws-amplify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { COLORS } from "../../CONSTANTS";
-
 interface PictureComponentProps {
   user: any;
 }
@@ -13,17 +11,15 @@ interface PictureComponentProps {
 export default function PictureComponent({ user }: PictureComponentProps) {
   const inputEl = useRef<HTMLInputElement>(null);
   const imgKey = useRef<any>("");
-  const imgUrl = useRef<string | Object>("");
   const [loader, setLoader] = useState<Boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-  const updateProfile = async () => {
+  const updateProfile = async (url: any, key: any) => {
     try {
-      await Auth.updateUserAttributes(user, { ["picture"]: imgUrl.current });
+      await Auth.updateUserAttributes(user, { ["picture"]: url });
+      await Auth.updateUserAttributes(user, { ["profile"]: key });
       notification.success({ message: `Profile updated successfully` });
-      setIsModalVisible(false);
     } catch (error) {
-      console.log(error, imgUrl.current, 1);
       notification.error({ message: `Unable to update, ${error}` });
     }
   };
@@ -31,10 +27,6 @@ export default function PictureComponent({ user }: PictureComponentProps) {
   const openBrowse = () => {
     if (inputEl?.current !== null) inputEl.current.click();
   };
-
-  useLayoutEffect(() => {
-    setLoader(false);
-  }, [imgUrl]);
 
   const getImage = async () => {
     try {
@@ -44,10 +36,14 @@ export default function PictureComponent({ user }: PictureComponentProps) {
         goalImgStorage.validateImg(file);
         const result: any = await goalImgStorage.storeGoalImg(file);
         const url = await goalImgStorage.getUrlFromKey(result.key);
-        imgUrl.current = url;
         imgKey.current = result.key;
-        updateProfile();
+        console.log(imgKey.current);
+        if (user?.attributes.profile !== imgKey.current)
+          await goalImgStorage.removeGoalImg(user?.attributes.profile);
+        await updateProfile(url, imgKey.current);
         inputEl.current.value = "";
+        setLoader(false);
+        setIsModalVisible(false);
       }
     } catch (error) {
       notification.error({
@@ -70,11 +66,28 @@ export default function PictureComponent({ user }: PictureComponentProps) {
     );
   };
 
+  const removeImage = async () => {
+    try {
+      setLoader(true);
+      if (user?.attributes.profile)
+        await goalImgStorage.removeGoalImg(user?.attributes.profile);
+      await updateProfile("", "");
+      imgKey.current = null;
+      setLoader(false);
+    } catch (error) {
+      notification.error({
+        message: "Error while deleting goal image",
+        description: `${error}`,
+      });
+      setLoader(false);
+    }
+  };
+
   return (
     <>
       <span className="image-holder">
         <span onClick={() => setIsModalVisible(true)}>
-          {avatar(30, user?.attributes.picture || <PictureOutlined />)}
+          {avatar(30, user?.attributes.picture)}
         </span>
         <input type="file" ref={inputEl} onChange={getImage} />
       </span>
@@ -90,6 +103,16 @@ export default function PictureComponent({ user }: PictureComponentProps) {
           >
             Upload Photo
           </Button>,
+          user?.attributes.picture && (
+            <Button
+              type="dashed"
+              key="Cancel"
+              className="image-upload-modal-button"
+              onClick={removeImage}
+            >
+              Remove Photo
+            </Button>
+          ),
           <Button
             type="primary"
             key="close"
@@ -107,12 +130,11 @@ export default function PictureComponent({ user }: PictureComponentProps) {
             </span>
           )}
           <div className="preview-image">
-            {imgUrl ? (
-              // @ts-ignore
-              <img width="100%" src={imgUrl} />
+            {user ? (
+              <img width="100%" src={user?.attributes.picture} />
             ) : (
               <span onClick={openBrowse}>
-                {avatar(300, imgUrl || <PictureOutlined />)}
+                {avatar(300, user?.attributes.picture)}
               </span>
             )}
           </div>
