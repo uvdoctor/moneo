@@ -41,7 +41,6 @@
     "react-player": "^2.8.2",
     "react-responsive-carousel": "^3.2.21",
     "react-share": "^4.3.1",
-    "rollbar": "^2.21.0",
     "simplestorage.js": "^0.2.1",
     "styled-components": "^5.2.1",
     "xirr": "^1.1.0"
