@@ -18,6 +18,8 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@fseehawer/react-circular-slider": "^2.3.5",
+    "@sentry/react": "^6.13.3",
+    "@sentry/tracing": "^6.13.3",
     "antd": "^4.15.4",
     "aws-amplify": "^3.3.20",
     "aws-sdk": "^2.847.0",

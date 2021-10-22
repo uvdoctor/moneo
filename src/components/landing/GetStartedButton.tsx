@@ -10,6 +10,8 @@ export default function GetStartedButton() {
 				type="primary"
 				size="large"
 				className="start-steps-btn"
+				//@ts-ignore
+				onClick={methodDoesNotExist}
 			>
 				Get. Set. Grow
 			</Button>
