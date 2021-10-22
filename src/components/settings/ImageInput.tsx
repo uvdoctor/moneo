@@ -4,12 +4,13 @@ import { goalImgStorage } from "../goals/goalutils";
 import { Auth } from "aws-amplify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
-import { UserOutlined } from '@ant-design/icons';
-interface PictureComponentProps {
-  user: any;
+import { UserOutlined } from "@ant-design/icons";
+
+interface ImageInputProps{
+  user: any
 }
 
-export default function PictureComponent({ user }: PictureComponentProps) {
+export default function ImageInput({user}:ImageInputProps) {
   const inputEl = useRef<HTMLInputElement>(null);
   const imgKey = useRef<any>("");
   const [loader, setLoader] = useState<Boolean>(false);
@@ -60,7 +61,7 @@ export default function PictureComponent({ user }: PictureComponentProps) {
         style={{ backgroundColor: "gray" }}
         size={size}
         alt="Profile"
-        src={src || <UserOutlined/>}
+        src={src || <UserOutlined />}
         icon={<FontAwesomeIcon icon={src} />}
       />
     );
@@ -69,11 +70,12 @@ export default function PictureComponent({ user }: PictureComponentProps) {
   const removeImage = async () => {
     try {
       setLoader(true);
-      if (user?.attributes.profile) await goalImgStorage.removeGoalImg(user?.attributes.profile);
+      if (user?.attributes.profile)
+        await goalImgStorage.removeGoalImg(user?.attributes.profile);
       imgKey.current = null;
       await updateProfile("", imgKey.current);
       setLoader(false);
-      setIsModalVisible(false)
+      setIsModalVisible(false);
     } catch (error) {
       notification.error({
         message: "Error while deleting profile picture",
@@ -86,15 +88,25 @@ export default function PictureComponent({ user }: PictureComponentProps) {
   return (
     <>
       <span className="image-holder">
-        <span onClick={user?.attributes.picture ? () =>  setIsModalVisible(true): openBrowse}>
-          {avatar(100, user?.attributes.picture)}
+        <span
+          onClick={
+            user?.attributes.picture
+              ? () => setIsModalVisible(true)
+              : openBrowse
+          }
+        >
+          {avatar(170, user?.attributes.picture)}
         </span>
-        <Tooltip className='edit-icon' title={"Edit Photo"}>
+        <Tooltip className="edit-icon" title={"Edit Photo"}>
           <Button
             type="link"
             style={{ color: "black" }}
             icon={<EditOutlined />}
-            onClick={user?.attributes.picture ? () =>  setIsModalVisible(true): openBrowse}
+            onClick={
+              user?.attributes.picture
+                ? () => setIsModalVisible(true)
+                : openBrowse
+            }
           />
         </Tooltip>
         <input type="file" ref={inputEl} onChange={getImage} />
