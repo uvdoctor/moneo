@@ -54,10 +54,6 @@
         "marketCap": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/marketCap-49777a2f4e3248544644-build.zip"
-        },
-        "AdminQueries02d6992c": {
-          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/AdminQueries02d6992c-542b307873506d31794c-build.zip"
         }
       },
       "interactions": {
