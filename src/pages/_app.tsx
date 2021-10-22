@@ -7,21 +7,9 @@ import {
   AmplifyAuthenticator,
   AmplifySignUp,
 } from "@aws-amplify/ui-react";
-import * as Sentry from "@sentry/react";
-import { Integrations } from "@sentry/tracing";
 import React from "react";
 
 Router.events.on("routeChangeComplete", (url) => gtag.pageview(url));
-
-Sentry.init({
-  dsn: "https://1602dc188f824b5a8866649405d5246b@o1048380.ingest.sentry.io/6027644",
-  integrations: [new Integrations.BrowserTracing()],
-
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  // We recommend adjusting this value in production
-  tracesSampleRate: 1.0,
-});
 
 export default function MyApp({ Component, pageProps }: AppProps) {
 

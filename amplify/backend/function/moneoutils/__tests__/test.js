@@ -1,4 +1,4 @@
-const{utility }= require('../lib/nodejs/utility');
+const utility = require('../lib/nodejs/utility');
 const monthsArray = [
   "JAN",
   "FEB",
@@ -15,6 +15,7 @@ const monthsArray = [
 ];
 const today = new Date();
 const monthChar = monthsArray[today.getMonth()];
+const today = new Date();
 const date = today.getDate();
 const month = today.getMonth();
 const yearFull = today.getFullYear();
@@ -24,28 +25,20 @@ describe('Test Date, Month, Year, MonthChar and Fullyear', () => {
 	test('Today date without passing any parameter', () => {
 		const data = utility();
 		expect(data).toEqual({
-			date: date,
-			month: (month+1).toString(),
-			monthChar: monthChar,
-			year: year,
-			yearFull: yearFull
+			date, month, monthChar, year, yearFull
 		});
 	});
 	test('Today date with passing parameter', () => {
 		const data = utility(0);
 		expect(data).toEqual({
-      date: date,
-			month: (month+1).toString(),
-			monthChar: monthChar,
-			year: year,
-			yearFull: yearFull
+			date, month, monthChar, year, yearFull
 		});
 	});
 	test('Subtracting Days from todayDate to get previous Days data', () => {
-		const data = utility(1);
+		const data = utility(2);
 		expect(data).toEqual({
 			date: date-1,
-			month: (month+1).toString(),
+			month: month,
 			monthChar: monthChar,
 			year: year,
 			yearFull: yearFull
