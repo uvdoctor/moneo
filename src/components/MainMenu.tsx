@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { menuItem } from './utils';
 import { AppContext } from './AppContext';
 import { UserOutlined } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 export interface MainMenuProps {
 	mode?: any;
 }
@@ -44,10 +45,11 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 								<Fragment>
 									<Avatar
 										size="small"
-										icon={<UserOutlined />}
+										src={user?.attributes.picture}
+										icon={user?.attributes.picture ? user?.attributes.picture : <UserOutlined />}
 										style={{ backgroundColor: COLORS.GREEN }}
 									/>
-									&nbsp;{user.username}
+									&nbsp;{user?.attributes.name ? user?.attributes.name : user.username}
 								</Fragment>
 							}>
 							{menuItem('Settings', ROUTES.SETTINGS, selectedKey)}
