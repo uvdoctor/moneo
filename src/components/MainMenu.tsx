@@ -39,6 +39,7 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 						{menuItem('Get', ROUTES.GET, selectedKey)}
 						{menuItem('Set', ROUTES.SET, selectedKey)}
 						{menuItem('Grow', ROUTES.GROW, selectedKey)}
+						{menuItem('Contact Us', ROUTES.CONTACT_US, selectedKey)}
 						<SubMenu
 							title={
 								<Fragment>
@@ -57,7 +58,10 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 						</SubMenu>
 					</Fragment>
 				) : (
-					menuItem('About', ROUTES.ABOUT, selectedKey)
+					<Fragment>
+					{menuItem('About', ROUTES.ABOUT, selectedKey)}
+					{menuItem('Contact Us', ROUTES.CONTACT_US, selectedKey)}
+					</Fragment>
 				)}
 				{/**<Menu.Item>
 							<Link href={ROUTES.FEATURES}>
@@ -66,7 +70,7 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 						</Menu.Item>
 					*/}
 
-				{menuItem('Contact Us', ROUTES.CONTACT_US, selectedKey)}
+				
 			</Menu>
 		</Fragment>
 	) : null;

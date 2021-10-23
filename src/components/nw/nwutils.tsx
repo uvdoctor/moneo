@@ -14,7 +14,11 @@ export const loadAllFamilyMembers = async () => {
 	let family: Array<APIt.CreateFamilyInput> | null = listFamilys
 		? listFamilys.items as Array<APIt.CreateFamilyInput>
 		: null;
-	if (!family || !family.length) return {};
+	if (!family || !family.length) {
+		let member = await addFamilyMember('Self', 'XXXXX1234X');
+		if(member) return [ {name: member.name, taxId: member.tid } ];
+		else return null;
+	}
 	let familyList: any = {};
 	family.forEach((val: APIt.CreateFamilyInput) => {
 		if (val.id) familyList[val.id as string] = { name: val.name, taxId: val.tid };
