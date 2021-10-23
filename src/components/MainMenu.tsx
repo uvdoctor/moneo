@@ -42,12 +42,13 @@ export default function MainMenu({ mode = 'horizontal' }: MainMenuProps) {
 						<SubMenu
 							title={
 								<Fragment>
-									<Avatar
+									{user?.attributes.picture ? 
+										<Avatar size="large" src={user?.attributes.picture} />
+									:<Avatar
 										size="small"
-										src={user?.attributes.picture}
-										icon={user?.attributes.picture ? user?.attributes.picture : <UserOutlined />}
+										icon={<UserOutlined />}
 										style={{ backgroundColor: COLORS.GREEN }}
-									/>
+									/>}
 									&nbsp;{user?.attributes.name ? user?.attributes.name : user.username}
 								</Fragment>
 							}>
