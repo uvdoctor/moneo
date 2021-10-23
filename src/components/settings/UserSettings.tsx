@@ -39,9 +39,7 @@ export default function UserSettings(): JSX.Element {
     return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
   };
 
-  const counCode = countrylist.find(
-    (item) => item.countryCode === defaultCountry
-  );
+  const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
 
   const disableButton = (prevValue: any, currValue: any) =>
     prevValue === currValue ? true : error.length > 0 ? true : false;
