@@ -3,15 +3,12 @@ import { AppProps } from "next/app";
 import "../styles/index.less";
 import * as gtag from "../lib/gtag";
 import { Router } from "next/router";
-import { AmplifyAuthenticator } from "@aws-amplify/ui-react";
 import React from "react";
 
 Router.events.on("routeChangeComplete", (url) => gtag.pageview(url));
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <AmplifyAuthenticator>
       <Component {...pageProps} />
-    </AmplifyAuthenticator>
   );
 }
