@@ -19,10 +19,6 @@ import OtpInput from "./OtpInput";
 
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
-const getTodayDate = () => {
-  const today = new Date();
-  return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-};
 
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha }: any = useContext(AppContext);
@@ -31,12 +27,18 @@ export default function UserSettings(): JSX.Element {
   const [error, setError] = useState<any>("");
   const [name, setName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
-  const [dob, setDob] = useState<string>("");
-
+  const [dob, setDob] = useState<string>();
   const { TabPane } = Tabs;
   const fsb = useFullScreenBrowser();
+
   const success = (message: any) => notification.success({ message: message });
   const failure = (message: any) => notification.error({ message: message });
+
+  const getTodayDate = () => {
+    const today = new Date();
+    return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+  };
+
   const counCode = countrylist.find(
     (item) => item.countryCode === defaultCountry
   );
@@ -85,9 +87,8 @@ export default function UserSettings(): JSX.Element {
   useEffect(() => {
     if (!user) return;
     setEmail(user.attributes.email);
-    setName(user.attributes.name || "");
-    setLastName(user.attributes.family_name || "");
-    setDob(user?.attributes.birthdate);
+    setName(user.attributes.name);
+    setLastName(user.attributes.family_name);
     setContact(user.attributes.phone_number.replace(counCode?.value, ""));
   }, [appContextLoaded]);
 
@@ -155,7 +156,7 @@ export default function UserSettings(): JSX.Element {
                           <label className="dob">Date of birth</label>
                           <DatePicker
                             style={{ width: 200 }}
-                            defaultValue={parse( dob || getTodayDate(), dateFormat, new Date() )}
+                            defaultValue={parse( user?.attributes.birthdate || getTodayDate(), dateFormat, new Date() )}
                             format={dateFormat}
                             size="large"
                             onChange={(_, ds) => setDob(ds.toString())}
