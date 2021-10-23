@@ -75,6 +75,8 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 
 	const listener = async (capsule: any) => {
 		let eventType: string = capsule.payload.event;
+		console.log(eventType);
+		alert(eventType);
 		if (eventType === 'signIn') setUser(capsule.payload.data);
 		else if(eventType==="tokenRefresh")setUser(await Auth.currentAuthenticatedUser());
 		else setUser(null);
