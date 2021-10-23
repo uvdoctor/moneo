@@ -15,7 +15,7 @@ import "./Layout.less";
 import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
-import OtpInput from "./OtpInput";
+import OtpDialogue from "./OtpDialogue";
 
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
@@ -189,7 +189,7 @@ export default function UserSettings(): JSX.Element {
                       minLength={10}
                       maxLength={10}
                       post={
-                        <OtpInput
+                        <OtpDialogue
                           disableButton={disableButton(user.attributes.phone_number, `${counCode?.value}${contact}` )}
                           action={"phone_number"}
                           onClickAction={updatePhoneNumber}
@@ -210,7 +210,7 @@ export default function UserSettings(): JSX.Element {
                       setError={setError}
                       fieldName="email"
                       post={
-                        <OtpInput
+                        <OtpDialogue
                           disableButton={disableButton( email, user.attributes.email )}
                           action={"email"}
                           onClickAction={updateEmail}
