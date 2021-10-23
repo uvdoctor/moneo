@@ -25,7 +25,7 @@ export default function UserSettings(): JSX.Element {
   const [email, setEmail] = useState<string>("");
   const [contact, setContact] = useState<string>("");
   const [error, setError] = useState<any>("");
-  const [name, setName] = useState<string>("");
+  const [name, setName] = useState<string>(user?.attributes.name);
   const [lastName, setLastName] = useState<string>("");
   const [dob, setDob] = useState<string>();
   const { TabPane } = Tabs;
