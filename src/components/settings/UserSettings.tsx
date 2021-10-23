@@ -48,7 +48,7 @@ export default function UserSettings(): JSX.Element {
 
   const updatePhoneNumber = async () => {
     try {
-      await Auth.updateUserAttributes(user, {["phone_number"]: `${counCode?.value}${contact}` });
+      await Auth.updateUserAttributes(user, { phone_number: `${counCode?.value}${contact}` });
       success("Contact updated successfully. Enter Otp to verify");
     } catch (error) {
       failure(`Unable to update, ${error}`);
@@ -57,7 +57,7 @@ export default function UserSettings(): JSX.Element {
 
   const updateEmail = async () => {
     try {
-      await Auth.updateUserAttributes(user, { ["email"]: email });
+      await Auth.updateUserAttributes(user, { email: email });
       success("Email updated successfully. Enter Otp to verify");
     } catch (error) {
       failure(`Unable to update, ${error}`);
@@ -65,23 +65,12 @@ export default function UserSettings(): JSX.Element {
   };
 
   const updatePersonaTab = async () => {
-    const values: any = {
-      name: "First Name",
-      family_name: "Last Name",
-      birthdate: "Date of Birh",
-    };
-    const attr = ["name", "family_name", "birthdate"];
-    const attrValue = [name, lastName, dob];
-    let errorLength = 0;
-    for (let ind = 0; ind < attr.length; ind++) {
-      try {
-        await Auth.updateUserAttributes(user, { [attr[ind]]: attrValue[ind] });
-      } catch (error) {
-        errorLength++;
-        failure(`Unable to update ${values[attr[ind]]}, ${error}`);
-      }
+    try {
+      await Auth.updateUserAttributes(user, { name:name, family_name:lastName, birthdate:dob });
+      success("Updated Successfully");
+    } catch (error) {
+      failure(`Unable to update ${error}`);
     }
-    if (errorLength === 0) success("Updated Successfully");
   };
 
   useEffect(() => {
@@ -89,6 +78,7 @@ export default function UserSettings(): JSX.Element {
     setEmail(user.attributes.email);
     setName(user.attributes.name);
     setLastName(user.attributes.family_name);
+    setDob(user.attributes.birthdate);
     setContact(user.attributes.phone_number.replace(counCode?.value, ""));
   }, [appContextLoaded]);
 
@@ -171,6 +161,7 @@ export default function UserSettings(): JSX.Element {
                           type="primary"
                           style={{ color: COLORS.WHITE }}
                           icon={<SaveOutlined />}
+                          disabled={error.length > 0 ? true : false}
                           onClick={()=>{
                             validateCaptcha("personalTab_change").then((success: boolean) => {
                               if (!success) return;
