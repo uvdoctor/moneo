@@ -16,7 +16,7 @@ export const loadAllFamilyMembers = async () => {
 		: null;
 	if (!family || !family.length) {
 		let member = await addFamilyMember('Self', 'XXXXX1234X');
-		if(member) return [ {name: member.name, taxId: member.tid } ];
+		if(member) return {[member.id as string] : {name: member.name, taxId: member.tid}};
 		else return null;
 	}
 	let familyList: any = {};
