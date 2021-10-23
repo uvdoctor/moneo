@@ -12,7 +12,7 @@ interface OtpInputProps {
   action: string;
 }
 
-export default function OtpInput({
+export default function OtpDialogue({
   onClickAction,
   disableButton,
   action,

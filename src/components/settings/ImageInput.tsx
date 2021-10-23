@@ -18,8 +18,7 @@ export default function ImageInput({ user }: ImageInputProps) {
 
   const updateProfile = async (url: any, key: any) => {
     try {
-      await Auth.updateUserAttributes(user, { picture: url,  profile: key});
-      //await Auth.updateUserAttributes(user, { ["profile"]: key });
+      await Auth.updateUserAttributes(user, { picture: url, profile: key });
       notification.success({ message: `Profile updated successfully` });
     } catch (error) {
       notification.error({ message: `Unable to update, ${error}` });
@@ -57,14 +56,14 @@ export default function ImageInput({ user }: ImageInputProps) {
     }
   };
 
-  const avatar = (size: any, src: any) => {
+  const avatar = (size: any) => {
     return (
       <Avatar
         style={{ backgroundColor: "gray" }}
         size={size}
         alt="Profile"
-        src={src}
-        icon={src || <UserOutlined />}
+        src={user.attributes.picture || <UserOutlined />}
+        icon={user.attributes.picture || <UserOutlined />}
       />
     );
   };
@@ -94,12 +93,10 @@ export default function ImageInput({ user }: ImageInputProps) {
       <span className="image-holder">
         <span
           onClick={
-            user?.attributes.picture
-              ? () => setIsModalVisible(true)
-              : openBrowse
+            user.attributes.picture ? () => setIsModalVisible(true) : openBrowse
           }
         >
-          {avatar(170, user?.attributes.picture)}
+          {avatar(170)}
         </span>
         <Tooltip className="edit-icon" title={"Edit Photo"}>
           <Button
@@ -107,7 +104,7 @@ export default function ImageInput({ user }: ImageInputProps) {
             style={{ color: "black" }}
             icon={<EditOutlined />}
             onClick={
-              user?.attributes.picture
+              user.attributes.picture
                 ? () => setIsModalVisible(true)
                 : openBrowse
             }
@@ -120,30 +117,30 @@ export default function ImageInput({ user }: ImageInputProps) {
         onCancel={() => setIsModalVisible(false)}
         footer={[
           <Button
-            type="dashed"
-            key="Upload"
-            className="image-upload-modal-button"
-            onClick={openBrowse}
-          >
-            Upload Photo
-          </Button>,
-          user?.attributes.picture && (
-            <Button
-              type="dashed"
-              key="Cancel"
-              className="image-upload-modal-button"
-              onClick={removeImage}
-            >
-              Remove Photo
-            </Button>
-          ),
-          <Button
-            type="primary"
+            type="link"
             key="close"
             className="image-upload-modal-button"
             onClick={() => setIsModalVisible(false)}
           >
-            Close
+            Cancel
+          </Button>,
+          user.attributes.picture && (
+            <Button
+              type="link"
+              key="Cancel"
+              className="image-upload-modal-button"
+              onClick={removeImage}
+            >
+              Remove
+            </Button>
+          ),
+          <Button
+            type="primary"
+            key="Upload"
+            className="image-upload-modal-button"
+            onClick={openBrowse}
+          >
+            Update
           </Button>,
         ]}
       >
@@ -154,12 +151,10 @@ export default function ImageInput({ user }: ImageInputProps) {
             </span>
           )}
           <div className="preview-image">
-            {user ? (
-              <img width="100%" src={user?.attributes.picture} />
+            {user.attributes.picture ? (
+              <img width="100%" src={user.attributes.picture} />
             ) : (
-              <span onClick={openBrowse}>
-                {avatar(300, user?.attributes.picture)}
-              </span>
+              <span onClick={openBrowse}>{avatar(300)}</span>
             )}
           </div>
         </div>
