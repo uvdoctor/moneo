@@ -15,6 +15,7 @@ import "./Layout.less";
 import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
+import OtpInput from "./OtpInput";
 
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
@@ -24,12 +25,10 @@ const getTodayDate = () => {
 };
 
 export default function UserSettings(): JSX.Element {
-  const { user, appContextLoaded, defaultCountry }: any = useContext(AppContext);
+  const { user, appContextLoaded, defaultCountry, validateCaptcha }: any = useContext(AppContext);
   const [email, setEmail] = useState<string>("");
   const [contact, setContact] = useState<string>("");
   const [error, setError] = useState<any>("");
-  const [otp, setOtp] = useState<any>("");
-  const [otpMode, setOtpMode] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [dob, setDob] = useState<string>("");
@@ -47,11 +46,8 @@ export default function UserSettings(): JSX.Element {
 
   const updatePhoneNumber = async () => {
     try {
-      await Auth.updateUserAttributes(user, {
-        ["phone_number"]: `${counCode?.value}${contact}`,
-      });
-      success("Contact updated successfully");
-      setOtpMode(true);
+      await Auth.updateUserAttributes(user, {["phone_number"]: `${counCode?.value}${contact}` });
+      success("Contact updated successfully. Enter Otp to verify");
     } catch (error) {
       failure(`Unable to update, ${error}`);
     }
@@ -60,40 +56,10 @@ export default function UserSettings(): JSX.Element {
   const updateEmail = async () => {
     try {
       await Auth.updateUserAttributes(user, { ["email"]: email });
-      success("Email updated successfully");
-      setOtpMode(true);
+      success("Email updated successfully. Enter Otp to verify");
     } catch (error) {
       failure(`Unable to update, ${error}`);
     }
-  };
-
-  const displayOtp = (attr: string) => {
-    return (
-      <TextInput
-        pre={"Enter Otp"}
-        value={otp}
-        changeHandler={setOtp}
-        post={
-          <Button
-            type="link"
-            style={{ color: COLORS.GREEN }}
-            icon={<SaveOutlined />}
-            onClick={() => confirmOtp(attr)}
-          />
-        }
-      />
-    );
-  };
-
-  const confirmOtp = async (attr: string) => {
-    Auth.verifyCurrentUserAttributeSubmit(attr, otp)
-      .then(() => {
-        success("Otp Verified Successfully");
-      })
-      .catch((err) => {
-        failure("Wrong Otp" + err.message);
-      });
-    setOtpMode(false);
   };
 
   const updatePersonaTab = async () => {
@@ -150,10 +116,10 @@ export default function UserSettings(): JSX.Element {
                   <p>&nbsp;</p>
                   <Col>
                     <Row justify="center">
-                      <Col className="firstname-view">
+                      <Col className="first-col-view">
                         <TextInput
                           pre="First Name"
-                          placeholder="abcdefg"
+                          placeholder="Name"
                           value={name}
                           changeHandler={setName}
                           width={300}
@@ -170,7 +136,7 @@ export default function UserSettings(): JSX.Element {
                       <Col>
                         <TextInput
                           pre="Last Name"
-                          placeholder="abcdefg"
+                          placeholder="Last Name"
                           value={lastName}
                           changeHandler={setLastName}
                           width={300}
@@ -189,11 +155,7 @@ export default function UserSettings(): JSX.Element {
                           <label className="dob">Date of birth</label>
                           <DatePicker
                             style={{ width: 200 }}
-                            defaultValue={parse(
-                              dob || getTodayDate(),
-                              dateFormat,
-                              new Date()
-                            )}
+                            defaultValue={parse( dob || getTodayDate(), dateFormat, new Date() )}
                             format={dateFormat}
                             size="large"
                             onChange={(_, ds) => setDob(ds.toString())}
@@ -204,17 +166,28 @@ export default function UserSettings(): JSX.Element {
                     <p>&nbsp;</p>
                     <Row justify="center">
                       <Col>
-                        <Button type="primary" style={{ color: COLORS.WHITE }} icon={<SaveOutlined />}
-                          onClick={updatePersonaTab}>Save</Button>
+                        <Button
+                          type="primary"
+                          style={{ color: COLORS.WHITE }}
+                          icon={<SaveOutlined />}
+                          onClick={()=>{
+                            validateCaptcha("personalTab_change").then((success: boolean) => {
+                              if (!success) return;
+                              updatePersonaTab();
+                            })
+                          }
+                        }
+                        >
+                          Save
+                        </Button>
                       </Col>
                     </Row>
                   </Col>
                 </Row>
-                <p>&nbsp;</p>
               </TabPane>
               <TabPane tab="Contact" key="2">
                 <Row justify="start">
-                  <Col>
+                  <Col className="first-col-view">
                     <TextInput
                       pre="Mobile"
                       prefix={counCode?.value}
@@ -226,21 +199,15 @@ export default function UserSettings(): JSX.Element {
                       minLength={10}
                       maxLength={10}
                       post={
-                        <Button
-                          type="text"
-                          style={{ color: COLORS.GREEN }}
-                          icon={<SaveOutlined />}
-                          onClick={updatePhoneNumber}
-                          disabled={disableButton(
-                            user.attributes.phone_number,
-                            `${counCode?.value}${contact}`
-                          )}
+                        <OtpInput
+                          disableButton={disableButton(user.attributes.phone_number, `${counCode?.value}${contact}` )}
+                          action={"phone_number"}
+                          onClickAction={updatePhoneNumber}
                         />
                       }
                     />
                   </Col>
                 </Row>
-
                 <p>&nbsp;</p>
                 <Row justify="start">
                   <Col>
@@ -249,26 +216,18 @@ export default function UserSettings(): JSX.Element {
                       placeholder={"abc@xyz.com"}
                       value={email}
                       changeHandler={setEmail}
-                      pattern={
-                        "^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"
-                      }
+                      pattern={"^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"}
                       setError={setError}
                       fieldName="email"
                       post={
-                        <Button
-                          type="link"
-                          style={{ color: COLORS.GREEN }}
-                          icon={<SaveOutlined />}
-                          onClick={updateEmail}
-                          disabled={disableButton(email, user.attributes.email)}
+                        <OtpInput
+                          disableButton={disableButton( email, user.attributes.email )}
+                          action={"email"}
+                          onClickAction={updateEmail}
                         />
                       }
                     />
                   </Col>
-                </Row>
-                <p>&nbsp;</p>
-                <Row>
-                  <Col>{otpMode ? displayOtp("email") : null}</Col>
                 </Row>
               </TabPane>
               <TabPane tab="Password" key="3">
@@ -277,7 +236,6 @@ export default function UserSettings(): JSX.Element {
                     <PasswordInput user={user} />
                   </Col>
                 </Row>
-                <p>&nbsp;</p>
               </TabPane>
             </Tabs>
           </Col>

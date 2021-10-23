@@ -1,14 +1,16 @@
 import { Button, Form, Input, notification } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { Auth } from "aws-amplify";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FormInstance } from "antd/lib/form";
+import { AppContext } from "../AppContext";
 
 interface PasswordInputProps {
-  user:any
+  user: any;
 }
 
-export default function PasswordInput({user}:PasswordInputProps) {
+export default function PasswordInput({ user }: PasswordInputProps) {
+  const { validateCaptcha }: any = useContext(AppContext);
   const [disabledForm, setDisabledForm] = useState<boolean>(true);
   const [form] = useForm();
   const inputEl = React.createRef<FormInstance>();
@@ -20,24 +22,26 @@ export default function PasswordInput({user}:PasswordInputProps) {
         notification.success({ message: "Password Updated" });
       })
       .catch((err) => {
-        notification.error({ message: "Wrong Credentials" + err.message });
+        notification.error({ message: "Wrong Credentials " + err.message });
       });
   };
 
-  const handleFormChange = () => 
-    setDisabledForm(form.getFieldsError().some(({ errors }) => errors.length) ||!form.isFieldsTouched(true));
+  const handleFormChange = () =>
+    setDisabledForm(
+      form.getFieldsError().some(({ errors }) => errors.length) ||
+        !form.isFieldsTouched(true)
+    );
 
   return (
     <Form
       name="password"
       layout="horizontal"
-      size='large'
+      size="large"
       form={form}
       onFieldsChange={handleFormChange}
       ref={inputEl}
     >
       <Form.Item
-    
         name="oldpass"
         label="Old Password"
         rules={[{ required: true, message: "Please input your password!" }]}
@@ -92,7 +96,12 @@ export default function PasswordInput({user}:PasswordInputProps) {
           type="primary"
           htmlType="submit"
           disabled={disabledForm}
-          onClick={updatePassword}
+          onClick={() => {
+            validateCaptcha("password_change").then((success: boolean) => {
+              if (!success) return;
+              updatePassword();
+            });
+          }}
         >
           Submit
         </Button>

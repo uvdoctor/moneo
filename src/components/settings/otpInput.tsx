@@ -1,42 +1,40 @@
 import React, { useContext, useState } from "react";
-import { Button, Modal, Tooltip } from "antd";
+import { Button, Modal, notification, Tooltip } from "antd";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import { COLORS } from "../../CONSTANTS";
 import { AppContext } from "../AppContext";
-import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
+import TextInput from "../form/textinput";
+import { Auth } from "aws-amplify";
 
-interface ModalComponentProps {
-  perform: Function | null;
-  onClickAction: Function | null;
-  disableModal: boolean;
+interface OtpInputProps {
+  onClickAction: Function;
   disableButton: boolean;
   action: string;
-  icon: string;
-  content: any;
-  title: string | null;
 }
 
-export default function ModalComponent({
-  perform,
+export default function OtpInput({
   onClickAction,
-  disableModal,
   disableButton,
   action,
-  icon,
-  content,
-  title
-}: ModalComponentProps) {
+}: OtpInputProps) {
   const { validateCaptcha }: any = useContext(AppContext);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [otp, setOtp] = useState<any>();
+
+  const confirmOtp = async (attr: string) => {
+    Auth.verifyCurrentUserAttributeSubmit(attr, otp)
+      .then(() => {
+        notification.success({ message: "Otp Verified Successfully" });
+        setIsModalVisible(false);
+      })
+      .catch((err) => {
+        notification.error({ message: "Wrong Otp " + err.message });
+        setIsModalVisible(true);
+      });
+  };
 
   const handleOk = () => {
-    if (perform)
-      action.includes("email")
-        ? perform("email")
-        : action.includes("phone")
-        ? perform("phone_number")
-        : perform();
-    setIsModalVisible(false);
+    confirmOtp(action);
   };
 
   const handleCancel = () => {
@@ -50,34 +48,31 @@ export default function ModalComponent({
   const onClick = () => {
     validateCaptcha(action).then((success: boolean) => {
       if (!success) return;
-      onClickAction ? onClickAction() : null;
-      content ? showModal() : setIsModalVisible(false);
+      onClickAction();
+      showModal();
     });
   };
 
   return (
     <>
-      <Tooltip title={icon}>
+      <Tooltip title="Save">
         <Button
           type="link"
           style={{ color: COLORS.GREEN }}
-          icon={icon === "Save" ? <SaveOutlined /> : <EditOutlined />}
+          icon={<SaveOutlined />}
           disabled={disableButton}
           onClick={onClick}
         />
       </Tooltip>
       <Modal
-        title={title}
+        title={"Enter Otp"}
         visible={isModalVisible}
         onCancel={handleCancel}
         onOk={handleOk}
         okText={"Save"}
-        okButtonProps={{
-          disabled: disableModal,
-          icon: <SaveOutlined />,
-        }}
+        okButtonProps={{ icon: <SaveOutlined /> }}
       >
-        {content}
+        <TextInput pre="OTP" value={otp} changeHandler={setOtp} />
       </Modal>
     </>
   );

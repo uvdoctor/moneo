@@ -1,18 +1,19 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Avatar, Button, Modal, notification, Spin, Tooltip } from "antd";
 import { goalImgStorage } from "../goals/goalutils";
 import { Auth } from "aws-amplify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
 import { UserOutlined } from "@ant-design/icons";
+import { AppContext } from "../AppContext";
 
 interface ImageInputProps {
   user: any;
 }
 
 export default function ImageInput({ user }: ImageInputProps) {
+  const { validateCaptcha }: any = useContext(AppContext);
   const inputEl = useRef<HTMLInputElement>(null);
-  const imgKey = useRef<any>("");
   const [loader, setLoader] = useState<Boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
@@ -32,20 +33,22 @@ export default function ImageInput({ user }: ImageInputProps) {
 
   const getImage = async () => {
     try {
-      if (inputEl?.current?.files?.length) {
-        setLoader(true);
-        const file = inputEl.current.files[0];
-        goalImgStorage.validateImg(file);
-        const result: any = await goalImgStorage.storeGoalImg(file);
-        const url = await goalImgStorage.getUrlFromKey(result.key);
-        imgKey.current = result.key;
-        if (user?.attributes.profile !== imgKey.current)
-          await goalImgStorage.removeGoalImg(user?.attributes.profile);
-        await updateProfile(url, imgKey.current);
-        inputEl.current.value = "";
-        setLoader(false);
-        setIsModalVisible(false);
-      }
+      validateCaptcha("image_change").then(async (success: boolean) => {
+        if (!success) return;
+        if (inputEl?.current?.files?.length) {
+          setLoader(true);
+          const file = inputEl.current.files[0];
+          goalImgStorage.validateImg(file);
+          const result: any = await goalImgStorage.storeGoalImg(file);
+          const url = await goalImgStorage.getUrlFromKey(result.key);
+          if (user?.attributes.profile !== result.key)
+            await goalImgStorage.removeGoalImg(user?.attributes.profile);
+          await updateProfile(url, result.key);
+          inputEl.current.value = "";
+          setLoader(false);
+          setIsModalVisible(false);
+        }
+      });
     } catch (error) {
       notification.error({
         message: "Error while uploading goal image",
@@ -70,12 +73,14 @@ export default function ImageInput({ user }: ImageInputProps) {
   const removeImage = async () => {
     try {
       setLoader(true);
-      if (user?.attributes.profile)
-        await goalImgStorage.removeGoalImg(user?.attributes.profile);
-      imgKey.current = null;
-      await updateProfile("", imgKey.current);
-      setLoader(false);
-      setIsModalVisible(false);
+      validateCaptcha("image_change").then(async (success: boolean) => {
+        if (!success) return;
+        if (user?.attributes.profile)
+          await goalImgStorage.removeGoalImg(user?.attributes.profile);
+        await updateProfile("", "");
+        setLoader(false);
+        setIsModalVisible(false);
+      });
     } catch (error) {
       notification.error({
         message: "Error while deleting profile picture",
@@ -96,22 +101,19 @@ export default function ImageInput({ user }: ImageInputProps) {
           }
         >
           {avatar(170, user?.attributes.picture)}
-          <span>
-            <Tooltip className="edit-icon" title={"Edit Photo"}>
-              <Button
-                type="link"
-                style={{ color: "black" }}
-                icon={<EditOutlined />}
-                onClick={
-                  user?.attributes.picture
-                    ? () => setIsModalVisible(true)
-                    : openBrowse
-                }
-              />
-            </Tooltip>
-          </span>
         </span>
-
+        <Tooltip className="edit-icon" title={"Edit Photo"}>
+          <Button
+            type="link"
+            style={{ color: "black" }}
+            icon={<EditOutlined />}
+            onClick={
+              user?.attributes.picture
+                ? () => setIsModalVisible(true)
+                : openBrowse
+            }
+          />
+        </Tooltip>
         <input type="file" ref={inputEl} onChange={getImage} />
       </span>
       <Modal
