@@ -19,8 +19,8 @@ export default function ImageInput({ user }: ImageInputProps) {
 
   const updateProfile = async (url: any, key: any) => {
     try {
-      await Auth.updateUserAttributes(user, { ["picture"]: url });
-      await Auth.updateUserAttributes(user, { ["profile"]: key });
+      await Auth.updateUserAttributes(user, { picture: url,  profile: key});
+      //await Auth.updateUserAttributes(user, { ["profile"]: key });
       notification.success({ message: `Profile updated successfully` });
     } catch (error) {
       notification.error({ message: `Unable to update, ${error}` });
