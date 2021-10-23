@@ -62,7 +62,7 @@ export default function ImageInput({ user }: ImageInputProps) {
         style={{ backgroundColor: "gray" }}
         size={size}
         alt="Profile"
-        src={src}
+        src={src || <UserOutlined />}
         icon={src || <UserOutlined />}
       />
     );
