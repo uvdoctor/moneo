@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 import { menuItem } from './utils';
 import { AppContext } from './AppContext';
 import { UserOutlined } from '@ant-design/icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 export interface MainMenuProps {
 	mode?: any;
 }

@@ -2,7 +2,6 @@ import React, { useContext, useRef, useState } from "react";
 import { Avatar, Button, Modal, notification, Spin, Tooltip } from "antd";
 import { goalImgStorage } from "../goals/goalutils";
 import { Auth } from "aws-amplify";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
 import { UserOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
@@ -64,8 +63,8 @@ export default function ImageInput({ user }: ImageInputProps) {
         style={{ backgroundColor: "gray" }}
         size={size}
         alt="Profile"
-        src={src || <UserOutlined />}
-        icon={<FontAwesomeIcon icon={src} />}
+        src={src}
+        icon={src || <UserOutlined />}
       />
     );
   };
