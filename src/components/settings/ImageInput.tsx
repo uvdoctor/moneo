@@ -14,6 +14,7 @@ export default function ImageInput({ user }: ImageInputProps) {
   const { validateCaptcha }: any = useContext(AppContext);
   const inputEl = useRef<HTMLInputElement>(null);
   const [loader, setLoader] = useState<Boolean>(false);
+  const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const updateProfile = async (url: any, key: any) => {
@@ -31,6 +32,7 @@ export default function ImageInput({ user }: ImageInputProps) {
 
   const getImage = async () => {
     try {
+      setIsButtonVisible(true);
       validateCaptcha("image_change").then(async (success: boolean) => {
         if (!success) return;
         if (inputEl?.current?.files?.length) {
@@ -45,6 +47,7 @@ export default function ImageInput({ user }: ImageInputProps) {
           inputEl.current.value = "";
           setLoader(false);
           setIsModalVisible(false);
+          setIsButtonVisible(false);
         }
       });
     } catch (error) {
@@ -53,6 +56,7 @@ export default function ImageInput({ user }: ImageInputProps) {
         description: `${error}`,
       });
       setLoader(false);
+      setIsButtonVisible(false);
     }
   };
 
@@ -70,6 +74,7 @@ export default function ImageInput({ user }: ImageInputProps) {
 
   const removeImage = async () => {
     try {
+      setIsButtonVisible(true);
       setLoader(true);
       validateCaptcha("image_change").then(async (success: boolean) => {
         if (!success) return;
@@ -78,6 +83,7 @@ export default function ImageInput({ user }: ImageInputProps) {
         await updateProfile("", "");
         setLoader(false);
         setIsModalVisible(false);
+        setIsButtonVisible(false);
       });
     } catch (error) {
       notification.error({
@@ -85,6 +91,7 @@ export default function ImageInput({ user }: ImageInputProps) {
         description: `${error}`,
       });
       setLoader(false);
+      setIsButtonVisible(false);
     }
   };
 
@@ -104,9 +111,7 @@ export default function ImageInput({ user }: ImageInputProps) {
             style={{ color: "black" }}
             icon={<EditOutlined />}
             onClick={
-              user.attributes.picture
-                ? () => setIsModalVisible(true)
-                : openBrowse
+              user.attributes.picture ? () => setIsModalVisible(true) : openBrowse
             }
           />
         </Tooltip>
@@ -121,6 +126,7 @@ export default function ImageInput({ user }: ImageInputProps) {
             key="close"
             className="image-upload-modal-button"
             onClick={() => setIsModalVisible(false)}
+            disabled={isButtonVisible}
           >
             Cancel
           </Button>,
@@ -129,6 +135,7 @@ export default function ImageInput({ user }: ImageInputProps) {
               type="link"
               key="Cancel"
               className="image-upload-modal-button"
+              disabled={isButtonVisible}
               onClick={removeImage}
             >
               Remove
@@ -139,6 +146,7 @@ export default function ImageInput({ user }: ImageInputProps) {
             key="Upload"
             className="image-upload-modal-button"
             onClick={openBrowse}
+            disabled={isButtonVisible}
           >
             Update
           </Button>,
