@@ -6,11 +6,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
 import { UserOutlined } from "@ant-design/icons";
 
-interface ImageInputProps{
-  user: any
+interface ImageInputProps {
+  user: any;
 }
 
-export default function ImageInput({user}:ImageInputProps) {
+export default function ImageInput({ user }: ImageInputProps) {
   const inputEl = useRef<HTMLInputElement>(null);
   const imgKey = useRef<any>("");
   const [loader, setLoader] = useState<Boolean>(false);
@@ -96,19 +96,22 @@ export default function ImageInput({user}:ImageInputProps) {
           }
         >
           {avatar(170, user?.attributes.picture)}
+          <span>
+            <Tooltip className="edit-icon" title={"Edit Photo"}>
+              <Button
+                type="link"
+                style={{ color: "black" }}
+                icon={<EditOutlined />}
+                onClick={
+                  user?.attributes.picture
+                    ? () => setIsModalVisible(true)
+                    : openBrowse
+                }
+              />
+            </Tooltip>
+          </span>
         </span>
-        <Tooltip className="edit-icon" title={"Edit Photo"}>
-          <Button
-            type="link"
-            style={{ color: "black" }}
-            icon={<EditOutlined />}
-            onClick={
-              user?.attributes.picture
-                ? () => setIsModalVisible(true)
-                : openBrowse
-            }
-          />
-        </Tooltip>
+
         <input type="file" ref={inputEl} onChange={getImage} />
       </span>
       <Modal
