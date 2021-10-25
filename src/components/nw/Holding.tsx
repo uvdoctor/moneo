@@ -51,6 +51,11 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 		[ price ]
 	);
 
+	useEffect(() => {
+		let ins = insData[holding.id];
+		if(ins) setPrice(ins.price);
+	}, [ insData ]);
+
 	const getInsTypeStr = (id: string) =>
 		insData[id].itype ? `${insData[holding.id].itype} - ` : holding.id.startsWith('INF') ? 'Mutual Fund - ' : '';
 
