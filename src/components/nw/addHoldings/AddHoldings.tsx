@@ -1,65 +1,73 @@
-import React, { Fragment, useState } from 'react';
-import { Modal, Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import AddHoldingInput from '../AddHoldingInput';
+import React, { Fragment, useState, useContext } from "react";
+import { Modal, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import AddHoldingInput from "../AddHoldingInput";
+import AddHoldingFiancialInput from "../AddHoldingFinancialInput";
+import { NWContext } from "../NWContext";
 
 interface AddHoldingsProps {
-	data: Array<any>;
-	changeData: Function;
-	isPrimary: boolean;
-	title: string;
-	categoryOptions: any;
-	subCategoryOptions?: any;
+  data: Array<any>;
+  changeData: Function;
+  isPrimary: boolean;
+  title: string;
+  categoryOptions: any;
+  subCategoryOptions?: any;
 }
 
 export default function AddHoldings({
-	data,
-	changeData,
-	isPrimary,
-	title,
-	categoryOptions,
-	subCategoryOptions
+  data,
+  changeData,
+  isPrimary,
+  title,
+  categoryOptions,
+  subCategoryOptions,
 }: AddHoldingsProps) {
-	const [ isModalVisible, setModalVisibility ] = useState<boolean>(false);
-	const [ okDisabled, setOkDisabled ] = useState<boolean>(true);
-	const [ newRec, setNewRec ] = useState<any>({});
+  const [isModalVisible, setModalVisibility] = useState<boolean>(false);
+  const [okDisabled, setOkDisabled] = useState<boolean>(true);
+  const [newRec, setNewRec] = useState<any>({});
+  const { activeTab }: any = useContext(NWContext);
 
-	const close = () => {
-		setModalVisibility(false);
-	};
+  const close = () => {
+    setModalVisibility(false);
+  };
 
-	const addHolding = () => {
-		data.push(newRec);
-		changeData([ ...data ]);
-		close();
-	};
+  const addHolding = () => {
+    data.push(newRec);
+    changeData([...data]);
+    close();
+  };
 
-	return (
-		<Fragment>
-			&nbsp;&nbsp;
-			<Button
-				type={isPrimary ? 'primary' : 'default'}
-				icon={<PlusOutlined />}
-				onClick={() => setModalVisibility(true)}
-			>
-				{isPrimary ? 'Add' : 'Add Manually'}
-			</Button>
-			<Modal
-				title={title}
-				visible={isModalVisible}
-				onCancel={close}
-				onOk={() => addHolding()}
-				okButtonProps={{ disabled: okDisabled }}
-				destroyOnClose
-				centered
-			>
-				<AddHoldingInput
-					setInput={setNewRec}
-					disableOk={setOkDisabled}
-					categoryOptions={categoryOptions}
-					subCategoryOptions={subCategoryOptions}
-				/>
-			</Modal>
-		</Fragment>
-	);
+  return (
+    <Fragment>
+      &nbsp;&nbsp;
+      <Button
+        type={isPrimary ? "primary" : "default"}
+        icon={<PlusOutlined />}
+        onClick={() => setModalVisibility(true)}
+      >
+        {isPrimary ? "Add" : "Add Manually"}
+      </Button>
+      <Modal
+        title={title}
+        visible={isModalVisible}
+        onCancel={close}
+        onOk={() => addHolding()}
+        okButtonProps={{ disabled: okDisabled }}
+        destroyOnClose
+        centered
+        width="800px"
+      >
+        {activeTab === "Financial" ? (
+          <AddHoldingFiancialInput disableOk={setOkDisabled} />
+        ) : (
+          <AddHoldingInput
+            setInput={setNewRec}
+            disableOk={setOkDisabled}
+            categoryOptions={categoryOptions}
+            subCategoryOptions={subCategoryOptions}
+          />
+        )}
+      </Modal>
+    </Fragment>
+  );
 }
