@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Row, Col, Button, Select, Input, AutoComplete, Divider } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import { AppContext } from "../AppContext";
 import { COLORS } from "../../CONSTANTS";
 import { NWContext } from "./NWContext";
 const financialAssetTypes = [
