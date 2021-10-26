@@ -1,77 +1,174 @@
-import {
-  AmplifyAuthenticator,
-  AmplifyCheckbox,
-  AmplifyAuthFields,
-  AmplifyFormSection,
-} from "@aws-amplify/ui-react";
-import React from "react";
+import { AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
+import React, { useState } from "react";
 import { NWContextProvider } from "../components/nw/NWContext";
-import Amplify from "aws-amplify";
+import Amplify, { Auth } from "aws-amplify";
 import awsmobile from "../aws-exports";
 import BasicPage from "../components/BasicPage";
+import { Alert, Button, Col, Form, Input, Row } from "antd";
+import { FormInstance, useForm } from "antd/lib/form/Form";
+import Checkbox from "antd/lib/checkbox/Checkbox";
 
 Amplify.configure(awsmobile);
 
 function Get(this: any) {
-  // const [accept, setAccept] = useState<Boolean>(true);
+  const [form] = useForm();
+  const inputEl = React.createRef<FormInstance>();
+  const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
+  const [disabledUserName, setDisabledUserName] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
-  // const handleRegistrationSubmit = (e: any) => {
-  //   console.log(e);
+  const handleRegistrationSubmit = () => {
+    const value = (name: string) => inputEl.current?.getFieldValue(name);
+    console.log(1);
+    
+    Auth.signUp({
+      username: value("username"),
+      password: value("password"),
+      attributes: {
+        email: value("email"),
+      },
+    })
+      .then((response) => {
+        console.log("Auth.signIn success", response);
+      })
+      .catch((error) => {
+        console.log(error);
+       setError(error.message);
+      });
+  };
 
-  //   e.preventDefault();
-  //   const { username, password, email } = e.target;
-  //   if (accept) {
-  //     Auth.signUp({
-  //       username: username.value,
-  //       password: password.value,
-  //       attributes: {
-  //         email: email.value,
-  //       },
-  //     })
-  //       .then((response) => {
-  //         console.log("Auth.signIn success", response);
-  //       })
-  //       .catch((error) => {
-  //         console.log(error.message);
-  //       });
-  //   } else alert("Please accept the terms and conditions.");
-  // };
+  const handleFormChange = () => {
+    const fieldErr = (name: string) => form.getFieldError(name).length > 0;
+    const fieldTouch = (name: string) => !form.isFieldTouched(name);
+
+    setDisabledUserName(
+      fieldErr("email") ||
+        fieldErr("password") ||
+        fieldTouch("email") ||
+        fieldTouch("password")
+    );
+
+    setDisabledSubmit(fieldErr("username") || fieldTouch("username"));
+  };
 
   return (
     <AmplifyAuthenticator>
-      <AmplifyFormSection slot="sign-up">
-        <div slot="amplify-form-section-header">
-          <AmplifyAuthFields
-            formFields={[
+      <AmplifySection slot="sign-up">
+        <h3>Sign Up</h3>
+        <Form
+          name="signUp"
+          layout="vertical"
+          size="large"
+          form={form}
+          onFieldsChange={handleFormChange}
+          ref={inputEl}
+        >
+          <Form.Item
+            name="email"
+            label="Email Address"
+            rules={[
               {
-                type: "username",
-                label: "Username",
-                placeholder: "Enter",
-                inputProps: { required: true, autocomplete: "username" },
-                hint: "Your username is permanent and cannot be changed later",
-              },
-              {
-                type: "email",
-                label: "Email",
-                placeholder: "abc@xyz.com",
-                inputProps: { required: true, autocomplete: "email" },
-                hint: "Enter a valid email address",
-              },
-              {
-                type: "password",
-                label: "Password",
-                placeholder: "Enter",
-                inputProps: { required: true, autocomplete: "password" },
-                hint: "At least 8 characters. Must contain a number, lower and uppercase and a symbol.",
+                required: true,
+                pattern:
+                  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                message: "Enter a valid email address",
               },
             ]}
-          />
-        </div>
-        <div slot="amplify-form-section-footer">
-          <AmplifyCheckbox label="Terms and Conditions" checked={true} />
-          <AmplifyCheckbox label="Offer Letters" checked={true} />
-        </div>
-      </AmplifyFormSection>
+            hasFeedback
+          >
+            <Input placeholder="Enter your Email Address" />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[
+              {
+                required: true,
+                min: 8,
+                max: 20,
+                message: "Password must be between 8-20 length",
+              },
+              {
+                pattern: new RegExp("(?=.*[a-z])"),
+                message: "Atleast one lowercase",
+              },
+              {
+                pattern: new RegExp("(?=.*[A-Z])"),
+                message: "Atleast one uppercase",
+              },
+              {
+                pattern: new RegExp(".*[0-9].*"),
+                message: "Atleast one digit",
+              },
+              {
+                pattern: new RegExp("(?=.*[!@#$%^&*])"),
+                message: "Atleast one special characters",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input.Password placeholder="Enter your password" allowClear />
+          </Form.Item>
+          <Form.Item
+            name="username"
+            label="Username"
+            required={true}
+            help={
+              disabledUserName
+                ? null
+                : "Your username is permanent and cannot be changed later"
+            }
+            rules={[
+              {
+                required: true,
+                min: 2,
+                message: "Username cannot be empty",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input
+              placeholder="Enter your username"
+              disabled={disabledUserName}
+            />
+          </Form.Item>
+          {error && <Alert message={error}></Alert>}
+          <p>&nbsp;</p>
+          <Row>
+            <Col>
+              <Checkbox
+                onChange={(e) =>
+                  e.target.checked
+                    ? setDisabledSubmit(false)
+                    : setDisabledSubmit(true)
+                }
+              />
+            </Col>
+            <Col>
+              <label>Terms and Conditions</label>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Checkbox defaultChecked={true} />
+            </Col>
+            <Col>
+              <label>Subscribe to Offer and NewsLetter</label>
+            </Col>
+          </Row>
+          <p>&nbsp;</p>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={disabledSubmit}
+              onClick={handleRegistrationSubmit}
+            >
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      </AmplifySection>
       <BasicPage title="Get Real-time Analysis">
         <NWContextProvider />
       </BasicPage>
