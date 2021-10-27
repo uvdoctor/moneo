@@ -11,30 +11,33 @@ import Checkbox from "antd/lib/checkbox/Checkbox";
 Amplify.configure(awsmobile);
 
 function Get(this: any) {
-  const [form] = useForm();
-  const inputEl = React.createRef<FormInstance>();
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
   const [disabledUserName, setDisabledUserName] = useState<boolean>(false);
+  const [checkTC, setCheckTC] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const inputEl = React.createRef<FormInstance>();
+  const [form] = useForm();
 
   const handleRegistrationSubmit = () => {
-    const value = (name: string) => inputEl.current?.getFieldValue(name);
-    console.log(1);
-    
-    Auth.signUp({
-      username: value("username"),
-      password: value("password"),
-      attributes: {
-        email: value("email"),
-      },
-    })
-      .then((response) => {
-        console.log("Auth.signIn success", response);
+    setError("");
+    if (checkTC) {
+      const value = (name: string) => inputEl.current?.getFieldValue(name);
+      Auth.signUp({
+        username: value("username"),
+        password: value("password"),
+        attributes: {
+          email: value("email"),
+        },
       })
-      .catch((error) => {
-        console.log(error);
-       setError(error.message);
-      });
+        .then((response) => {
+          console.log("Auth.signIn success", response);
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+    } else {
+      setError("Please accept the terms and conditions");
+    }
   };
 
   const handleFormChange = () => {
@@ -47,8 +50,10 @@ function Get(this: any) {
         fieldTouch("email") ||
         fieldTouch("password")
     );
-
-    setDisabledSubmit(fieldErr("username") || fieldTouch("username"));
+    setDisabledSubmit(
+      form.getFieldsError().some(({ errors }) => errors.length) ||
+        !form.isFieldsTouched(true)
+    );
   };
 
   return (
@@ -113,11 +118,6 @@ function Get(this: any) {
             name="username"
             label="Username"
             required={true}
-            help={
-              disabledUserName
-                ? null
-                : "Your username is permanent and cannot be changed later"
-            }
             rules={[
               {
                 required: true,
@@ -137,11 +137,10 @@ function Get(this: any) {
           <Row>
             <Col>
               <Checkbox
-                onChange={(e) =>
-                  e.target.checked
-                    ? setDisabledSubmit(false)
-                    : setDisabledSubmit(true)
-                }
+                onChange={(e) => {
+                  e.target.checked ? setCheckTC(true) : setCheckTC(false);
+                }}
+                disabled={disabledUserName}
               />
             </Col>
             <Col>
@@ -150,7 +149,7 @@ function Get(this: any) {
           </Row>
           <Row>
             <Col>
-              <Checkbox defaultChecked={true} />
+              <Checkbox defaultChecked={true} disabled={disabledUserName} />
             </Col>
             <Col>
               <label>Subscribe to Offer and NewsLetter</label>
