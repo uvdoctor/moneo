@@ -6,7 +6,7 @@ import Content from './Content';
 
 import './Footer.less';
 import { PlanContext } from './goals/PlanContext';
-import { COLORS } from '../CONSTANTS';
+import { COLORS, ROUTES } from '../CONSTANTS';
 
 export default function Footer() {
 	const websiteUrl = 'https://moneo.in';
@@ -49,8 +49,8 @@ export default function Footer() {
 			</Row>
 			<Row justify="center">
 				<Col>
-					<a href="#">Terms & Conditions</a>&nbsp; | &nbsp;
-					<a href="#">Privacy Policy</a> &nbsp; | &nbsp;
+					<a target="_blank" href={ROUTES.POLICYTC}>Terms & Conditions</a>&nbsp; | &nbsp;
+					<a target="_blank" href={ROUTES.POLICYPRIVACY}>Privacy Policy</a> &nbsp; | &nbsp;
 				</Col>
 			</Row>
 			<Row justify="center">

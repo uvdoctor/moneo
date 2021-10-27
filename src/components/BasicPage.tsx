@@ -14,6 +14,8 @@ interface BasicPageProps {
   fixedNav?: boolean;
   navScrollable?: boolean;
   noFooter?: boolean;
+  hideMenu?: boolean;
+  hidMenuTitle?: string;
 }
 
 export default function BasicPage(props: BasicPageProps) {
@@ -83,9 +85,10 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
               scrollable={props.navScrollable ? props.navScrollable : false}
               isFixed={props.fixedNav ? props.fixedNav : false}
               onBack={props.onBack}
+              hideMenu={props.hideMenu} hidMenuTitle={props.hidMenuTitle}
             />
             {props.children}
-            <Footer />
+            {!props.noFooter && <Footer />}
           </Layout>
         </AppContextProvider>
       </GoogleReCaptchaProvider>
