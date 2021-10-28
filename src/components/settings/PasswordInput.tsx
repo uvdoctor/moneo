@@ -43,15 +43,13 @@ export default function PasswordInput({ user }: PasswordInputProps) {
     >
       <Form.Item
         name="oldpass"
-        label="Old Password"
         rules={[{ required: true, message: "Please input your password!" }]}
         hasFeedback
       >
-        <Input.Password allowClear />
+        <Input.Password addonBefore={'Old Password'} allowClear />
       </Form.Item>
       <Form.Item
         name="pass"
-        label="Password"
         required={true}
         dependencies={["oldpass"]}
         hasFeedback
@@ -89,7 +87,7 @@ export default function PasswordInput({ user }: PasswordInputProps) {
           }),
         ]}
       >
-        <Input.Password allowClear />
+        <Input.Password addonBefore={'New Password'} allowClear />
       </Form.Item>
       <Form.Item>
         <Button
