@@ -22,10 +22,16 @@ export default function Policies({ stringParams }: PoliciesProps) {
   };
 
   const sections: any = {
-    "Terms & Conditions": <MajorAssumptions elements={[...tcConent]} />,
+    "Terms & Conditions": "",
     Privacy: <MajorAssumptions elements={[...privacyContent]} />,
     Security: <MajorAssumptions elements={[...securityContent]} />,
   };
+
+  const tcSections: any = {
+    General: <MajorAssumptions elements={[...tcConent.General]} />,
+    Rewards: <MajorAssumptions elements={[...tcConent.Rewards]} />,
+  };
+
   return (
     <Fragment>
       <Row className="steps-content">
@@ -38,7 +44,17 @@ export default function Policies({ stringParams }: PoliciesProps) {
           >
             {Object.keys(sections).map((key) => (
               <TabPane key={tabKey[key]} tab={key}>
-                {sections[key]}
+                {key === "Terms & Conditions" ? (
+                  <Tabs tabPosition={"top"} type={"line"} animated>
+                    {Object.keys(tcSections).map((key) => (
+                      <TabPane key={key} tab={key}>
+                        {sections[key]}
+                      </TabPane>
+                    ))}
+                  </Tabs>
+                ) : (
+                  sections[key]
+                )}
               </TabPane>
             ))}
           </Tabs>
