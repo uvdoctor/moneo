@@ -64,8 +64,8 @@ export default function Footer() {
 			<Row justify="center">
 				<Col className="disclaimer">
 					Disclaimer: This site is protected by reCAPTCHA and the Google{' '}
-					<a href="https://policies.google.com/privacy">Privacy Policy</a> and{' '}
-					<a href="https://policies.google.com/terms">Terms of Service</a> apply.
+					<a target="_blank" href={ROUTES.POLICYPRIVACY}>Privacy Policy</a> and{' '}
+					<a target="_blank" href={ROUTES.POLICYTC}>Terms of Service</a> apply.
 				</Col>
 			</Row>
 		</Content>
