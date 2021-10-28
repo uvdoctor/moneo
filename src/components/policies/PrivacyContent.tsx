@@ -184,14 +184,14 @@ const privacyContent = [
             https://mfs.kfintech.com/investor/General/ConsolidatedAccountStatement.
           </Paragraph>
           <Paragraph>
-            <h6>(ii) Enter the information manually</h6>
+            <Text strong>(ii) Enter the information manually</Text>
             You provide investment details like scheme name, investment type,
             investment date and investment value by manually entering the data.
           </Paragraph>
           <Paragraph>
-            <h6>
+            <Text strong>
               (iii) Employees Provident Fund Passbook (“EPF passbook”) details:
-            </h6>
+            </Text>
             You can choose to provide explicit consent to Moneo to collect this
             information from
             https://passbook.epfindia.gov.in/MemberPassBook/Login, by providing
@@ -205,9 +205,9 @@ const privacyContent = [
             investment details on your Moneo dashboard.
           </Paragraph>
           <Paragraph>
-            <h6>
+            <Text strong>
               (iv) National Pension Scheme (“NPS-Tier I”) statement details:
-            </h6>
+            </Text>
             You can choose to provide explicit consent to Moneo to collect this
             information from your NPS-Tier I statement assigned to you as a
             member of NPS-Tier I, and the related password to open the NPS Tier
@@ -223,7 +223,7 @@ const privacyContent = [
             Investments section or by writing to xxxx@xxx.in.
           </Paragraph>
           <Paragraph>
-            <h6>Voluntary information:</h6>
+            <Text strong>Voluntary information:</Text>
             We may collect additional information at other times, including but
             not limited to, when You provide feedback, comments, change Your
             content or email preferences, respond to a survey, or any
@@ -233,7 +233,7 @@ const privacyContent = [
             only.
           </Paragraph>
           <Paragraph>
-            <h6>Credit score & Liabilities information : </h6>
+            <Text strong>Credit score & Liabilities information : </Text>
             You provide an explicit consent to Moneo to collect this information
             from third party service provider that are expressly authorised by
             you to distribute such information (for example, Experian or CRIF
@@ -246,7 +246,7 @@ const privacyContent = [
             </Title>
           </Paragraph>
           <Paragraph>
-            <h6>Cookies & Third Party Analytics Services</h6>
+            <Text strong>Cookies & Third Party Analytics Services</Text>
             We use Local Storage Objects (LSOs) to store content information,
             preferences and to keep you signed-in. We identify the user’s
             signed-in state with a token which has encoded a user identifier.
@@ -272,7 +272,7 @@ const privacyContent = [
             providers.
           </Paragraph>
           <Paragraph>
-            <h6>Log File Information</h6>
+            <Text strong>Log File Information</Text>
             We automatically collect limited information about Your computer's
             connection to the Internet, mobile number, including Your IP
             address, when You visit Our site, application or service. Your IP
@@ -288,11 +288,11 @@ const privacyContent = [
             version, CPU speed, and connection speed etc.
           </Paragraph>
           <Paragraph>
-            <h6>
+            <Text strong>
               Your Expenses and Saving Account analytics via SMS (Short message
               service) on your Android phone (Applicable for only Android
               phones):
-            </h6>
+            </Text>
             You can choose to provide specific & explicit consent to allow
             Moneo’s Android App to access your text messages (SMS) inbox
             received on your Android mobile device. After obtaining such
@@ -314,11 +314,11 @@ const privacyContent = [
             analytics by visiting Moneo’s Android App permission settings.
           </Paragraph>
           <Paragraph>
-            <h6>
+            <Text strong>
               Your SMS information with respect to giving explicit permission to
               Moneo application with respect to your SMSes related to expenses &
               saving account balances (Personal & Sensitive information):
-            </h6>
+            </Text>
             We will never rent or sell your information or data to anyone. Moneo
             ensures that it is always in compliance with the Google Play store
             policies and Google policies.
@@ -374,7 +374,7 @@ const privacyContent = [
       content: (
         <>
           <Paragraph>
-            <h6>Demographic and other information: </h6>
+            <Text strong>Demographic and other information: </Text>
             We may reference other sources of demographic and other information
             in order to provide You with more targeted communications and
             promotions. We use Google Analytics, among others, to track the user
@@ -388,7 +388,7 @@ const privacyContent = [
             provided by Google.
           </Paragraph>
           <Paragraph>
-            <h6>Links to third party sites/Ad-servers: </h6>
+            <Text strong>Links to third party sites/Ad-servers: </Text>
             The Sites may include links to other websites or applications. Such
             websites or applications are governed by their respective privacy
             policies, which are beyond Our control. Once You leave Our servers
@@ -418,7 +418,7 @@ const privacyContent = [
             </Paragraph>
           </Paragraph>
           <Paragraph>
-            <h6>Information use by the company</h6>
+            <Text strong>Information use by the company</Text>
             The Personal information provided by the User is used by the Company
             for the purposes, including, without limitation:
             <li>
@@ -683,7 +683,7 @@ const privacyContent = [
             including any statutory retention requirements.
           </Paragraph>
           <Paragraph>
-            <h6>Retention of Data</h6>
+            <Text strong>Retention of Data</Text>
             We shall retain the records as per applicable laws and such other
             statutory / regulatory requirements from time to time. In the event
             any legal / regulatory proceeding is pending, we can retain records
