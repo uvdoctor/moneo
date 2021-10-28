@@ -1,7 +1,8 @@
 import { AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
+import { AuthState } from "@aws-amplify/ui-components";
 import React, { useState } from "react";
 import { NWContextProvider } from "../components/nw/NWContext";
-import Amplify, { Auth } from "aws-amplify";
+import Amplify, { Auth, Hub } from "aws-amplify";
 import awsmobile from "../aws-exports";
 import BasicPage from "../components/BasicPage";
 import { Alert, Button, Col, Form, Input, Row } from "antd";
@@ -18,19 +19,31 @@ function Get(this: any) {
   const [error, setError] = useState<string>("");
   const inputEl = React.createRef<FormInstance>();
   const [form] = useForm();
+  const [user, setUser] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
   const handleRegistrationSubmit = () => {
     if (checkTC) {
       setError("");
-      const value = (name: string) => inputEl.current?.getFieldValue(name);
       Auth.signUp({
-        username: value("username"),
-        password: value("password"),
+        username: user,
+        password: password,
         attributes: {
-          email: value("email"),
+          email: email,
         },
       })
-        .then((response) => {
+        .then(async (response) => {
+          Hub.dispatch("UI Auth", {
+            event: "AuthStateChange",
+            message: AuthState.ConfirmSignUp,
+            data: {
+              ...response.user,
+              username: user,
+              password: password,
+              attributes: { email: email },
+            },
+          });
           console.log("Auth.signIn success", response);
         })
         .catch((error) => {
@@ -82,7 +95,10 @@ function Get(this: any) {
             ]}
             hasFeedback
           >
-            <Input placeholder="Enter your Email Address" />
+            <Input
+              placeholder="Enter your Email Address"
+              onChange={(e) => setEmail(e.currentTarget.value)}
+            />
           </Form.Item>
           <Form.Item
             name="password"
@@ -113,7 +129,11 @@ function Get(this: any) {
             ]}
             hasFeedback
           >
-            <Input.Password placeholder="Enter your password" allowClear />
+            <Input.Password
+              placeholder="Enter your password"
+              allowClear
+              onChange={(e) => setPassword(e.currentTarget.value)}
+            />
           </Form.Item>
           <Form.Item
             name="username"
@@ -131,9 +151,10 @@ function Get(this: any) {
             <Input
               placeholder="Enter your username"
               disabled={disabledUserName}
+              onChange={(e) => setUser(e.currentTarget.value)}
             />
           </Form.Item>
-          {error && <Alert message={error} type='error'></Alert>}
+          {error && <Alert message={error} type="error"></Alert>}
           <p>&nbsp;</p>
           <Row>
             <Col>
