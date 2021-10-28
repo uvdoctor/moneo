@@ -4,6 +4,8 @@ import MajorAssumptions from "../calc/blog/MajorAssumptions";
 import { isMobileDevice } from "../utils";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import privacyContent from "./PrivacyContent";
+import securityContent from "./SecurityContent";
+import tcConent from "./TCContent";
 
 interface PoliciesProps {
   stringParams: string;
@@ -20,9 +22,9 @@ export default function Policies({ stringParams }: PoliciesProps) {
   };
 
   const sections: any = {
-    "Terms & Conditions": <MajorAssumptions elements={[]} />,
+    "Terms & Conditions": <MajorAssumptions elements={[...tcConent]} />,
     Privacy: <MajorAssumptions elements={[...privacyContent]} />,
-    Security: <MajorAssumptions elements={[]} />,
+    Security: <MajorAssumptions elements={[...securityContent]} />,
   };
   return (
     <Fragment>
