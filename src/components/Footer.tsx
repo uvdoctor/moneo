@@ -51,6 +51,7 @@ export default function Footer() {
 				<Col>
 					<a target="_blank" href={ROUTES.POLICYTC}>Terms & Conditions</a>&nbsp; | &nbsp;
 					<a target="_blank" href={ROUTES.POLICYPRIVACY}>Privacy Policy</a> &nbsp; | &nbsp;
+					<a target="_blank" href={ROUTES.POLICYSECURITY}>Security Policy</a> &nbsp;
 				</Col>
 			</Row>
 			<Row justify="center">
