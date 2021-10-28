@@ -20,8 +20,8 @@ function Get(this: any) {
   const [form] = useForm();
 
   const handleRegistrationSubmit = () => {
-    setError("");
     if (checkTC) {
+      setError("");
       const value = (name: string) => inputEl.current?.getFieldValue(name);
       Auth.signUp({
         username: value("username"),
@@ -133,41 +133,34 @@ function Get(this: any) {
               disabled={disabledUserName}
             />
           </Form.Item>
-          {error && <Alert message={error}></Alert>}
+          {error && <Alert message={error} type='error'></Alert>}
           <p>&nbsp;</p>
           <Row>
             <Col>
               <Checkbox
-                onChange={(e) => {
-                  e.target.checked ? setCheckTC(true) : setCheckTC(false);
-                }}
+                onChange={(e) => setCheckTC(e.target.checked)}
                 disabled={disabledUserName}
-              />
-            </Col>
-            <Col>
-              <label>
-                I agree to the{" "}
+              >
+                I accept the{" "}
                 <a target="_blank" href={ROUTES.POLICYTC}>
                   Terms & Conditions
                 </a>
-                &nbsp;,
+                ,&nbsp;
                 <a target="_blank" href={ROUTES.POLICYPRIVACY}>
                   Privacy Policy
                 </a>{" "}
-                &nbsp;,
+                &nbsp;and&nbsp;
                 <a target="_blank" href={ROUTES.POLICYSECURITY}>
                   Security Policy
-                </a>{" "}
-                &nbsp;,
-              </label>
+                </a>
+              </Checkbox>
             </Col>
           </Row>
           <Row>
             <Col>
-              <Checkbox defaultChecked={true} disabled={disabledUserName} />
-            </Col>
-            <Col>
-              <label>Subscribe to Offer and NewsLetter</label>
+              <Checkbox defaultChecked={true} disabled={disabledUserName}>
+                Subscribe to Offer and NewsLetters
+              </Checkbox>
             </Col>
           </Row>
           <p>&nbsp;</p>
