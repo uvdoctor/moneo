@@ -7,6 +7,7 @@ import BasicPage from "../components/BasicPage";
 import { Alert, Button, Col, Form, Input, Row } from "antd";
 import { FormInstance, useForm } from "antd/lib/form/Form";
 import Checkbox from "antd/lib/checkbox/Checkbox";
+import { ROUTES } from "../CONSTANTS";
 
 Amplify.configure(awsmobile);
 
@@ -144,7 +145,21 @@ function Get(this: any) {
               />
             </Col>
             <Col>
-              <label>Terms and Conditions</label>
+              <label>
+                I agree to the{" "}
+                <a target="_blank" href={ROUTES.POLICYTC}>
+                  Terms & Conditions
+                </a>
+                &nbsp;,
+                <a target="_blank" href={ROUTES.POLICYPRIVACY}>
+                  Privacy Policy
+                </a>{" "}
+                &nbsp;,
+                <a target="_blank" href={ROUTES.POLICYSECURITY}>
+                  Security Policy
+                </a>{" "}
+                &nbsp;,
+              </label>
             </Col>
           </Row>
           <Row>
