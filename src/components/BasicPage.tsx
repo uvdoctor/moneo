@@ -89,7 +89,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
               onBack={props.onBack}
               hideMenu={props.hideMenu} hidMenuTitle={props.hidMenuTitle}
             />
-            { props.isSecured ?  <BasicAuthenticator children={undefined}/> : props.children}
+            { props.isSecured ?  <BasicAuthenticator children={props.children}/> : props.children}
             {!props.noFooter && <Footer />}
           </Layout>
         </AppContextProvider>
