@@ -1,0 +1,21 @@
+{
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "moneoutils",
+      "env": "newdev",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    }
+  ],
+  "permissions": {
+    "auth": {
+      "ddpwa0063633b": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  }
+}

@@ -12,10 +12,10 @@
   "lambdaLayers": [
     {
       "type": "ProjectLayer",
-      "resourceName": "moneopriceutils",
+      "resourceName": "moneoutils",
+      "env": "newdev",
       "version": "Always choose latest version",
-      "isLatestVersionSelected": true,
-      "env": "indiadev"
+      "isLatestVersionSelected": true
     }
   ]
 }

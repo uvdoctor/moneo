@@ -18,8 +18,10 @@
       "function": {
         "EODPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/EODPrice-6b736c42415954527765-build.zip",
-          "eodApiKey": "611a020d72d487.59800610,611a01dc0083c5.19670434,611a0115bd4cd5.84750550,60d03a689523a3.63944368"
+          "s3Key": "amplify-builds/EODPrice-7372686147584a796e49-build.zip",
+          "eodApiKey": "611a020d72d487.59800610,611a01dc0083c5.19670434,611a0115bd4cd5.84750550,60d03a689523a3.63944368",
+          "apiGoalsGraphqlapiidoutput": "",
+          "apiGoalsGraphqlapiendpointoutput": ""
         },
         "MFPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
@@ -48,71 +50,20 @@
         "INExchgPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/INExchgPrice-4c362f494b5561444f52-build.zip"
+        },
+        "insprice": {
+          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
+          "s3Key": "amplify-builds/insprice-3277386c357631646f79-build.zip"
+        },
+        "moneoutils": {
+          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
+          "s3Key": "amplify-builds/moneoutils-LambdaLayerVersion5f33cbb8-build.zip"
         }
       },
       "interactions": {
         "bot": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/bot-6d36686c654e79674c47-build.zip"
-        }
-      }
-    }
-  },
-  "indiadev": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-moneo-indiadev-232357-authRole",
-      "UnauthRoleArn": "arn:aws:iam::099259607472:role/amplify-moneo-indiadev-232357-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::099259607472:role/amplify-moneo-indiadev-232357-authRole",
-      "Region": "ap-south-1",
-      "DeploymentBucketName": "amplify-moneo-indiadev-232357-deployment",
-      "UnauthRoleName": "amplify-moneo-indiadev-232357-unauthRole",
-      "StackName": "amplify-moneo-indiadev-232357",
-      "StackId": "arn:aws:cloudformation:ap-south-1:099259607472:stack/amplify-moneo-indiadev-232357/334527d0-38e1-11ec-b0f2-0a4589909006",
-      "AmplifyAppId": "d2kpvz1d8vuq18"
-    },
-    "categories": {
-      "auth": {
-        "ddpwa0063633b": {}
-      },
-      "function": {
-        "EODPrice": {
-          "eodApiKey": "611a020d72d487.59800610,611a01dc0083c5.19670434,611a0115bd4cd5.84750550,60d03a689523a3.63944368",
-          "deploymentBucketName": "amplify-moneo-indiadev-232357-deployment",
-          "s3Key": "amplify-builds/EODPrice-6b736c42415954527765-build.zip"
-        },
-        "MFPrice": {
-          "deploymentBucketName": "amplify-moneo-indiadev-232357-deployment",
-          "s3Key": "amplify-builds/MFPrice-4f7a64413265704b4734-build.zip"
-        },
-        "INBond": {
-          "deploymentBucketName": "amplify-moneo-indiadev-232357-deployment",
-          "s3Key": "amplify-builds/INBond-393058545230646c6148-build.zip"
-        },
-        "NPSPrice": {
-          "deploymentBucketName": "amplify-moneo-indiadev-232357-deployment",
-          "s3Key": "amplify-builds/NPSPrice-6c5233722b7476536379-build.zip"
-        },
-        "insmeta": {
-          "deploymentBucketName": "amplify-moneo-indiadev-232357-deployment",
-          "s3Key": "amplify-builds/insmeta-69536d78732b4257636c-build.zip"
-        },
-        "IndicePrice": {
-          "deploymentBucketName": "amplify-moneo-indiadev-232357-deployment",
-          "s3Key": "amplify-builds/IndicePrice-6c7a694c446a2b427766-build.zip"
-        },
-        "INExchgPrice": {
-          "deploymentBucketName": "amplify-moneo-indiadev-232357-deployment",
-          "s3Key": "amplify-builds/INExchgPrice-50734b4670704f615174-build.zip"
-        },
-        "moneopriceutils": {
-          "deploymentBucketName": "amplify-moneo-indiadev-232357-deployment",
-          "s3Key": "amplify-builds/moneopriceutils-LambdaLayerVersiona228bede-build.zip"
-        }
-      },
-      "interactions": {
-        "bot": {
-          "deploymentBucketName": "amplify-moneo-indiadev-232357-deployment",
-          "s3Key": "amplify-builds/bot-4551686472796d767850-build.zip"
         }
       }
     }

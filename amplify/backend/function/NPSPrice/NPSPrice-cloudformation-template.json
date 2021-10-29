@@ -23,10 +23,6 @@
     "functionmoneoutilsArn": {
       "Type": "String",
       "Default": "functionmoneoutilsArn"
-    },
-    "functionmoneopriceutilsArn": {
-      "Type": "String",
-      "Default": "functionmoneopriceutilsArn"
     }
   },
   "Conditions": {
@@ -96,7 +92,7 @@
         "Runtime": "nodejs14.x",
         "Layers": [
           {
-            "Ref": "functionmoneopriceutilsArn"
+            "Ref": "functionmoneoutilsArn"
           }
         ],
         "Timeout": 25

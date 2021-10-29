@@ -7,11 +7,5 @@
       "authddpwa0063633b",
       "Outputs.UserPoolId"
     ]
-  },
-  "authRoleName": {
-    "Ref": "AuthRoleName"
-  },
-  "unauthRoleName": {
-    "Ref": "UnauthRoleName"
   }
 }

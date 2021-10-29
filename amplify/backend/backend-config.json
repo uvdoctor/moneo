@@ -29,6 +29,27 @@
     }
   },
   "function": {
+    "insprice": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "moneoutils",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "ddpwa0063633b",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ]
+    },
     "EODPrice": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -36,7 +57,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneopriceutils",
+          "resourceName": "moneoutils",
           "attributes": [
             "Arn"
           ]
@@ -57,7 +78,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneopriceutils",
+          "resourceName": "moneoutils",
           "attributes": [
             "Arn"
           ]
@@ -78,7 +99,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneopriceutils",
+          "resourceName": "moneoutils",
           "attributes": [
             "Arn"
           ]
@@ -99,7 +120,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneopriceutils",
+          "resourceName": "moneoutils",
           "attributes": [
             "Arn"
           ]
@@ -120,7 +141,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneopriceutils",
+          "resourceName": "moneoutils",
           "attributes": [
             "Arn"
           ]
@@ -141,7 +162,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneopriceutils",
+          "resourceName": "moneoutils",
           "attributes": [
             "Arn"
           ]
@@ -155,24 +176,20 @@
         }
       ]
     },
-    "moneopriceutils": {
+    "moneoutils": {
       "providerPlugin": "awscloudformation",
       "service": "LambdaLayer",
       "build": true
     },
-    "INExchgPrice": {
+    "marketCap": {
       "build": true,
       "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "moneopriceutils",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
+      "service": "Lambda"
+    },
+    "moneopriceutils": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
     }
   },
   "storage": {
