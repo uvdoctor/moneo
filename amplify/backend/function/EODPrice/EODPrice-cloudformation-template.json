@@ -30,6 +30,10 @@
       "Type": "String",
       "Default": "functionmoneoutilsArn"
     },
+    "functionmoneopriceutilsArn": {
+      "Type": "String",
+      "Default": "functionmoneopriceutilsArn"
+    },
     "eodApiKey": {
       "Type": "String"
     }
@@ -104,7 +108,7 @@
         "Runtime": "nodejs14.x",
         "Layers": [
           {
-            "Ref": "functionmoneoutilsArn"
+            "Ref": "functionmoneopriceutilsArn"
           }
         ],
         "Timeout": 25
