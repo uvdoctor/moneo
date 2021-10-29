@@ -1,4 +1,3 @@
-import { withAuthenticator } from '@aws-amplify/ui-react';
 import React from 'react';
 import Amplify from 'aws-amplify';
 import awsmobile from '../aws-exports';
@@ -7,12 +6,10 @@ import UserSettings from '../components/settings/UserSettings';
 
 Amplify.configure(awsmobile);
 
-function Settings() {
+export default function Settings() {
 	return (
 		<BasicPage title="Settings" isSecured={true}>
         <UserSettings />
 		</BasicPage>
 	);
 }
-
-export default withAuthenticator(Settings);

@@ -6,7 +6,7 @@ import BasicPage from "../components/BasicPage";
 
 Amplify.configure(awsmobile);
 
-function Get() {
+export default function Get() {
   return (
     <BasicPage title="Get Real-time Analysis" isSecured={true}>
       <NWContextProvider />
@@ -14,4 +14,3 @@ function Get() {
   );
 }
 
-export default Get;
