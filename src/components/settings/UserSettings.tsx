@@ -11,7 +11,7 @@ import dateFnsGenerateConfig from "rc-picker/lib/generate/dateFns";
 import generatePicker from "antd/lib/date-picker/generatePicker";
 import PasswordInput from "./PasswordInput";
 import "antd/lib/date-picker/style/index";
-import "./Layout.less";
+import "./Settings.less";
 import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
@@ -73,11 +73,11 @@ export default function UserSettings(): JSX.Element {
 
   useEffect(() => {
     if (!user) return;
-    setEmail(user.attributes.email);
-    setName(user.attributes.name);
-    setLastName(user.attributes.family_name);
-    setDob(user.attributes.birthdate);
-    setContact(user.attributes.phone_number.replace(counCode?.value, ""));
+    setEmail(user?.attributes.email);
+    setName(user?.attributes.name);
+    setLastName(user?.attributes.family_name);
+    setDob(user?.attributes.birthdate);
+    setContact(user?.attributes.phone_number.replace(counCode?.value, ""));
   }, [appContextLoaded]);
 
   return (
@@ -190,7 +190,7 @@ export default function UserSettings(): JSX.Element {
                       maxLength={10}
                       post={
                         <OtpDialogue
-                          disableButton={disableButton(user.attributes.phone_number, `${counCode?.value}${contact}` )}
+                          disableButton={disableButton(user?.attributes.phone_number, `${counCode?.value}${contact}` )}
                           action={"phone_number"}
                           onClickAction={updatePhoneNumber}
                         />
@@ -211,7 +211,7 @@ export default function UserSettings(): JSX.Element {
                       fieldName="email"
                       post={
                         <OtpDialogue
-                          disableButton={disableButton( email, user.attributes.email )}
+                          disableButton={disableButton( email, user?.attributes.email )}
                           action={"email"}
                           onClickAction={updateEmail}
                         />

@@ -75,10 +75,7 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
             ]}
             hasFeedback
           >
-            <Input
-              placeholder={Translations.EMAIL_PLACEHOLDER}
-              onChange={(e) => setEmail(e.currentTarget.value)}
-            />
+            <Input onChange={(e) => setEmail(e.currentTarget.value)} />
           </Form.Item>
           <Form.Item
             name="password"
@@ -109,7 +106,6 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
             hasFeedback
           >
             <Input.Password
-              placeholder={Translations.PASSWORD_PLACEHOLDER}
               allowClear
               onChange={(e) => setPassword(e.currentTarget.value)}
             />
@@ -120,10 +116,7 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
             validateStatus={error ? "error" : undefined}
             help={error ? error : null}
           >
-            <Input
-              placeholder={Translations.USERNAME_PLACEHOLDER}
-              onChange={(e) => setUser(e.currentTarget.value)}
-            />
+            <Input onChange={(e) => setUser(e.currentTarget.value)} />
           </Form.Item>
           <Form.Item
             name="terms"

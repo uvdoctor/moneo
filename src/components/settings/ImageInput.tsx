@@ -66,8 +66,8 @@ export default function ImageInput({ user }: ImageInputProps) {
         style={{ backgroundColor: "gray" }}
         size={size}
         alt="Profile"
-        src={user.attributes.picture || <UserOutlined />}
-        icon={user.attributes.picture || <UserOutlined />}
+        src={user?.attributes.picture || <UserOutlined />}
+        icon={user?.attributes.picture || <UserOutlined />}
       />
     );
   };
@@ -100,7 +100,7 @@ export default function ImageInput({ user }: ImageInputProps) {
       <span className="image-holder">
         <span
           onClick={
-            user.attributes.picture ? () => setIsModalVisible(true) : openBrowse
+            user?.attributes.picture ? () => setIsModalVisible(true) : openBrowse
           }
         >
           {avatar(170)}
@@ -111,7 +111,7 @@ export default function ImageInput({ user }: ImageInputProps) {
             style={{ color: "black" }}
             icon={<EditOutlined />}
             onClick={
-              user.attributes.picture ? () => setIsModalVisible(true) : openBrowse
+              user?.attributes.picture ? () => setIsModalVisible(true) : openBrowse
             }
           />
         </Tooltip>
@@ -130,7 +130,7 @@ export default function ImageInput({ user }: ImageInputProps) {
           >
             Cancel
           </Button>,
-          user.attributes.picture && (
+          user?.attributes.picture && (
             <Button
               type="link"
               key="Cancel"
@@ -159,8 +159,8 @@ export default function ImageInput({ user }: ImageInputProps) {
             </span>
           )}
           <div className="preview-image">
-            {user.attributes.picture ? (
-              <img width="100%" src={user.attributes.picture} />
+            {user?.attributes.picture ? (
+              <img width="100%" src={user?.attributes.picture} />
             ) : (
               <span onClick={openBrowse}>{avatar(300)}</span>
             )}
