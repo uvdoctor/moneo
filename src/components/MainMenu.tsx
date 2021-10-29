@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useState } from "react";
-import { Avatar, Menu } from "antd";
+import { Avatar, Menu, Row } from "antd";
 import FSToggle from "./FSToggle";
 import { calcList } from "./landing/Calculator";
 import Link from "next/link";
@@ -11,13 +11,13 @@ import { UserOutlined } from "@ant-design/icons";
 export interface MainMenuProps {
   mode?: any;
   hidMenu?: boolean;
-  hidchildren?: any;
+  hidMenuTitle?: string;
 }
 
 export default function MainMenu({
   mode = "horizontal",
   hidMenu,
-  hidchildren,
+  hidMenuTitle,
 }: MainMenuProps) {
   const { user, appContextLoaded, handleLogout }: any = useContext(AppContext);
   const router = useRouter();
@@ -29,7 +29,11 @@ export default function MainMenu({
       {hidMenu ? (
         <>
           <FSToggle />
-          {hidchildren}
+          <Row justify="center">
+                <h2>
+                  <strong>{hidMenuTitle}</strong>
+                </h2>
+              </Row>
         </>
       ) : (
         <>

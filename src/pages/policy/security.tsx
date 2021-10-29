@@ -9,7 +9,7 @@ Amplify.configure(awsmobile);
 export default function POLICYSECURITY() {
 	return (
 		<BasicPage
-      title="Privacy Policy"
+      title="Security Policy"
       hideMenu
       noFooter
       hidMenuTitle={"Policies"}

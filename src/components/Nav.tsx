@@ -54,16 +54,7 @@ export default function Nav({
       {hideMenu ? (
         <>
           <Logo hidBackArrow />
-          <MainMenu
-            hidMenu
-            hidchildren={
-              <Row justify="center">
-                <h2>
-                  <strong>{hidMenuTitle}</strong>
-                </h2>
-              </Row>
-            }
-          />
+          <MainMenu hidMenu hidMenuTitle={hidMenuTitle} />
         </>
       ) : (
         <Fragment>

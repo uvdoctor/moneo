@@ -6,52 +6,49 @@ import Amplify, { Auth, Hub } from "aws-amplify";
 import awsmobile from "../aws-exports";
 import BasicPage from "../components/BasicPage";
 import { Alert, Button, Col, Form, Input, Row } from "antd";
-import { FormInstance, useForm } from "antd/lib/form/Form";
+import { useForm } from "antd/lib/form/Form";
 import Checkbox from "antd/lib/checkbox/Checkbox";
 import { ROUTES } from "../CONSTANTS";
+import Logo from "../components/Logo";
+import Title from "antd/lib/typography/Title";
 
 Amplify.configure(awsmobile);
 
 function Get(this: any) {
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
   const [disabledUserName, setDisabledUserName] = useState<boolean>(false);
-  const [checkTC, setCheckTC] = useState<boolean>(false);
+  const [checkTC, setCheckTC] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const inputEl = React.createRef<FormInstance>();
   const [form] = useForm();
   const [user, setUser] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
 
   const handleRegistrationSubmit = () => {
-    if (checkTC) {
-      setError("");
-      Auth.signUp({
-        username: user,
-        password: password,
-        attributes: {
-          email: email,
-        },
-      })
-        .then(async (response) => {
-          Hub.dispatch("UI Auth", {
-            event: "AuthStateChange",
-            message: AuthState.ConfirmSignUp,
-            data: {
-              ...response.user,
-              username: user,
-              password: password,
-              attributes: { email: email },
-            },
-          });
-          console.log("Auth.signIn success", response);
-        })
-        .catch((error) => {
-          setError(error.message);
+    setError("");
+    Auth.signUp({
+      username: user,
+      password: password,
+      attributes: {
+        email: email,
+      },
+    })
+      .then((response) => {
+        Hub.dispatch("UI Auth", {
+          event: "AuthStateChange",
+          message: AuthState.ConfirmSignUp,
+          data: {
+            ...response.user,
+            username: user,
+            password: password,
+            attributes: { email: email },
+          },
         });
-    } else {
-      setError("Please accept the terms and conditions");
-    }
+        console.log("Auth.signIn success", response);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
   };
 
   const handleFormChange = () => {
@@ -73,14 +70,20 @@ function Get(this: any) {
   return (
     <AmplifyAuthenticator>
       <AmplifySection slot="sign-up">
-        <h3>Sign Up</h3>
+        <Row>
+          <Logo hidBackArrow />
+          <Title style={{ margin: "auto" }} level={5}>
+            Create New Account
+          </Title>
+        </Row>
+        <Row>{error ? <Alert type="error" message={error} /> : null}</Row>
+        <p>&nbsp;</p>
         <Form
           name="signUp"
           layout="vertical"
           size="large"
           form={form}
           onFieldsChange={handleFormChange}
-          ref={inputEl}
         >
           <Form.Item
             name="email"
@@ -138,7 +141,8 @@ function Get(this: any) {
           <Form.Item
             name="username"
             label="Username"
-            required={true}
+            validateStatus={error ? "error" : undefined}
+            help={error ? error : null}
             rules={[
               {
                 required: true,
@@ -146,7 +150,6 @@ function Get(this: any) {
                 message: "Username cannot be empty",
               },
             ]}
-            hasFeedback
           >
             <Input
               placeholder="Enter your username"
@@ -154,47 +157,85 @@ function Get(this: any) {
               onChange={(e) => setUser(e.currentTarget.value)}
             />
           </Form.Item>
-          {error && <Alert message={error} type="error"></Alert>}
           <p>&nbsp;</p>
           <Row>
             <Col>
-              <Checkbox
-                onChange={(e) => setCheckTC(e.target.checked)}
-                disabled={disabledUserName}
+              <Form.Item
+                name="terms"
+                valuePropName="checked"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please accept the terms and conditions",
+                  },
+                  {
+                    validator: (_, value) =>
+                      value
+                        ? Promise.resolve()
+                        : Promise.reject(
+                            new Error("Please accept the terms and conditions")
+                          ),
+                  },
+                ]}
               >
-                I accept the{" "}
-                <a target="_blank" href={ROUTES.POLICYTC}>
-                  Terms & Conditions
-                </a>
-                ,&nbsp;
-                <a target="_blank" href={ROUTES.POLICYPRIVACY}>
-                  Privacy Policy
-                </a>{" "}
-                &nbsp;and&nbsp;
-                <a target="_blank" href={ROUTES.POLICYSECURITY}>
-                  Security Policy
-                </a>
-              </Checkbox>
+                <Checkbox
+                  defaultChecked={true}
+                  onChange={(e) => setCheckTC(e.target.checked)}
+                >
+                  I accept the{" "}
+                  <a target="_blank" href={ROUTES.POLICYTC}>
+                    Terms & Conditions
+                  </a>
+                  ,&nbsp;
+                  <a target="_blank" href={ROUTES.POLICYPRIVACY}>
+                    Privacy Policy
+                  </a>{" "}
+                  &nbsp;and&nbsp;
+                  <a target="_blank" href={ROUTES.POLICYSECURITY}>
+                    Security Policy
+                  </a>
+                </Checkbox>
+              </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col>
-              <Checkbox defaultChecked={true} disabled={disabledUserName}>
+              <Checkbox defaultChecked={true}>
                 Subscribe to Offer and NewsLetters
               </Checkbox>
             </Col>
           </Row>
           <p>&nbsp;</p>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={disabledSubmit}
-              onClick={handleRegistrationSubmit}
-            >
-              Submit
-            </Button>
-          </Form.Item>
+          <Row justify="end">
+            <Col>
+              <Form.Item>
+                <Button
+                  type="link"
+                  htmlType="button"
+                  onClick={() =>
+                    Hub.dispatch("UI Auth", {
+                      event: "AuthStateChange",
+                      message: AuthState.SignIn,
+                    })
+                  }
+                >
+                  Cancel
+                </Button>
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  disabled={disabledSubmit || !checkTC}
+                  onClick={handleRegistrationSubmit}
+                >
+                  Submit
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
         </Form>
       </AmplifySection>
       <BasicPage title="Get Real-time Analysis">
