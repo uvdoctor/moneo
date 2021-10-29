@@ -31,8 +31,8 @@ export default function UserSettings(): JSX.Element {
   const { TabPane } = Tabs;
   const fsb = useFullScreenBrowser();
 
-  const success = (message: any) => notification.success({ message: message });
-  const failure = (message: any) => notification.error({ message: message });
+  const success = (message: any) => notification.success({ message });
+  const failure = (message: any) => notification.error({ message });
 
   const getTodayDate = () => {
     const today = new Date();

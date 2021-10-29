@@ -12,10 +12,10 @@ interface ImageInputProps {
 
 export default function ImageInput({ user }: ImageInputProps) {
   const { validateCaptcha }: any = useContext(AppContext);
-  const inputEl = useRef<HTMLInputElement>(null);
   const [loader, setLoader] = useState<Boolean>(false);
   const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const inputEl = useRef<HTMLInputElement>(null);
 
   const updateProfile = async (url: any, key: any) => {
     try {

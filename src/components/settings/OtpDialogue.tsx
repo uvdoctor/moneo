@@ -12,11 +12,7 @@ interface OtpInputProps {
   action: string;
 }
 
-export default function OtpDialogue({
-  onClickAction,
-  disableButton,
-  action,
-}: OtpInputProps) {
+export default function OtpDialogue( props : OtpInputProps) {
   const { validateCaptcha }: any = useContext(AppContext);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [otp, setOtp] = useState<any>();
@@ -34,7 +30,7 @@ export default function OtpDialogue({
   };
 
   const handleOk = () => {
-    confirmOtp(action);
+    confirmOtp(props.action);
   };
 
   const handleCancel = () => {
@@ -46,9 +42,9 @@ export default function OtpDialogue({
   };
 
   const onClick = () => {
-    validateCaptcha(action).then((success: boolean) => {
+    validateCaptcha(props.action).then((success: boolean) => {
       if (!success) return;
-      onClickAction();
+      props.onClickAction();
       showModal();
     });
   };
@@ -60,7 +56,7 @@ export default function OtpDialogue({
           type="link"
           style={{ color: COLORS.GREEN }}
           icon={<SaveOutlined />}
-          disabled={disableButton}
+          disabled={props.disableButton}
           onClick={onClick}
         />
       </Tooltip>
