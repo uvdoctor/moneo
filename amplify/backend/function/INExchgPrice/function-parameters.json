@@ -3,9 +3,9 @@
     {
       "type": "ProjectLayer",
       "resourceName": "moneopriceutils",
-      "env": "newdev",
       "version": "Always choose latest version",
-      "isLatestVersionSelected": true
+      "isLatestVersionSelected": true,
+      "env": "indiadev"
     }
   ]
 }

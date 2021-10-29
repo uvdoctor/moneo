@@ -155,11 +155,6 @@
         }
       ]
     },
-    "marketCap": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "moneopriceutils": {
       "providerPlugin": "awscloudformation",
       "service": "LambdaLayer",

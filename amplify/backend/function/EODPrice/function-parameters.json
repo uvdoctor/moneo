@@ -3,20 +3,12 @@
     {
       "type": "ProjectLayer",
       "resourceName": "moneopriceutils",
-      "env": "newdev",
       "version": "Always choose latest version",
-      "isLatestVersionSelected": true
+      "isLatestVersionSelected": true,
+      "env": "indiadev"
     }
   ],
   "environmentVariableList": [
-    {
-      "cloudFormationParameterName": "apiGoalsGraphqlapiendpointoutput",
-      "environmentVariableName": "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT"
-    },
-    {
-      "cloudFormationParameterName": "apiGoalsGraphqlapiidoutput",
-      "environmentVariableName": "API_GOALS_GRAPHQLAPIIDOUTPUT"
-    },
     {
       "cloudFormationParameterName": "eodApiKey",
       "environmentVariableName": "EOD_API_KEY"

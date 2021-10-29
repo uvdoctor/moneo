@@ -16,12 +16,6 @@
     "s3Key": {
       "Type": "String"
     },
-    "apiGoalsGraphqlapiendpointoutput": {
-      "Type": "String"
-    },
-    "apiGoalsGraphqlapiidoutput": {
-      "Type": "String"
-    },
     "authddpwa0063633bUserPoolId": {
       "Type": "String",
       "Default": "authddpwa0063633bUserPoolId"
