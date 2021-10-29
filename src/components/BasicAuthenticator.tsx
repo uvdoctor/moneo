@@ -2,19 +2,17 @@ import { AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
 import { Auth, Hub } from "aws-amplify";
 import React, { useState } from "react";
-import { AuthState } from "@aws-amplify/ui-components";
+import { AuthState, Translations } from "@aws-amplify/ui-components";
 import { Alert, Button, Checkbox, Form, Input, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
-import Logo from "./Logo";
 import Title from "antd/lib/typography/Title";
-
+import "./BasicAuthenticator.less";
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
 
 export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
-  const [disabledUserName, setDisabledUserName] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [user, setUser] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -47,14 +45,6 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
   };
 
   const handleFormChange = () => {
-    const fieldErr = (name: string) => form.getFieldError(name).length > 0;
-    const fieldTouch = (name: string) => !form.isFieldTouched(name);
-    setDisabledUserName(
-      fieldErr("email") ||
-        fieldErr("password") ||
-        fieldTouch("email") ||
-        fieldTouch("password")
-    );
     setDisabledSubmit(
       form.getFieldsError().some(({ errors }) => errors.length) ||
         !form.isFieldsTouched(true)
@@ -62,15 +52,9 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
   };
 
   return (
-    <AmplifyAuthenticator>
+    <AmplifyAuthenticator initialAuthState={AuthState.SignIn}>
       <AmplifySection slot="sign-up">
-        <Row>
-          <Logo hidBackArrow />
-          <Title style={{ margin: "auto" }} level={5}>
-            Create New Account
-          </Title>
-        </Row>
-        <p>&nbsp;</p>
+        <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
         <Row>{error ? <Alert type="error" message={error} /> : null}</Row>
         <Form
           name="signup"
@@ -81,10 +65,9 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
         >
           <Form.Item
             name="email"
-            label="Email Address"
+            label={Translations.EMAIL_LABEL}
             rules={[
               {
-                required: true,
                 pattern:
                   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                 message: "Enter a valid email address",
@@ -93,16 +76,15 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
             hasFeedback
           >
             <Input
-              placeholder="Enter your Email Address"
+              placeholder={Translations.EMAIL_PLACEHOLDER}
               onChange={(e) => setEmail(e.currentTarget.value)}
             />
           </Form.Item>
           <Form.Item
             name="password"
-            label="Password"
+            label={Translations.PASSWORD_LABEL}
             rules={[
               {
-                required: true,
                 min: 8,
                 max: 20,
                 message: "Password must be between 8-20 length",
@@ -127,26 +109,19 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
             hasFeedback
           >
             <Input.Password
-              placeholder="Enter your password"
+              placeholder={Translations.PASSWORD_PLACEHOLDER}
               allowClear
               onChange={(e) => setPassword(e.currentTarget.value)}
             />
           </Form.Item>
           <Form.Item
             name="username"
-            label="Username"
+            label={Translations.USERNAME_LABEL}
             validateStatus={error ? "error" : undefined}
             help={error ? error : null}
-            rules={[
-              {
-                required: true,
-                message: "Username cannot be empty",
-              },
-            ]}
           >
             <Input
-              placeholder="Enter your username"
-              disabled={disabledUserName}
+              placeholder={Translations.USERNAME_PLACEHOLDER}
               onChange={(e) => setUser(e.currentTarget.value)}
             />
           </Form.Item>

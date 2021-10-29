@@ -17,7 +17,7 @@ const Set = () => {
       className="calculator-container steps-landing"
       navScrollable
       fixedNav
-      isSecured={true}
+      isSecured
     >
       <PlanContextProvider goal={goal} setGoal={setGoal}>
         <SetPlan />
