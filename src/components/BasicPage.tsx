@@ -17,7 +17,7 @@ interface BasicPageProps {
   noFooter?: boolean;
   hideMenu?: boolean;
   hidMenuTitle?: string;
-  isSecured?: boolean;
+  secure?: boolean;
 }
 
 export default function BasicPage(props: BasicPageProps) {
@@ -89,7 +89,9 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
               onBack={props.onBack}
               hideMenu={props.hideMenu} hidMenuTitle={props.hidMenuTitle}
             />
-            { props.isSecured ?  <BasicAuthenticator children={props.children}/> : props.children}
+            { props.secure ?  
+              <BasicAuthenticator>{props.children}</BasicAuthenticator> 
+            : props.children}
             {!props.noFooter && <Footer />}
           </Layout>
         </AppContextProvider>

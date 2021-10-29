@@ -8,7 +8,7 @@ Amplify.configure(awsmobile);
 
 export default function Settings() {
   return (
-    <BasicPage title="Settings" isSecured>
+    <BasicPage title="Settings" secure>
       <UserSettings />
     </BasicPage>
   );

@@ -8,7 +8,7 @@ Amplify.configure(awsmobile);
 
 export default function Get() {
   return (
-    <BasicPage title="Get Real-time Analysis" isSecured>
+    <BasicPage title="Get Real-time Analysis" secure>
       <NWContextProvider />
     </BasicPage>
   );
