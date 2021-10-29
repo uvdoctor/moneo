@@ -50,6 +50,10 @@
         "moneopriceutils": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/moneopriceutils-LambdaLayerVersion4880e457-build.zip"
+        },
+        "INExchgPrice": {
+          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
+          "s3Key": "amplify-builds/INExchgPrice-4c362f494b5561444f52-build.zip"
         }
       },
       "interactions": {
