@@ -1,12 +1,12 @@
 import { AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
 import { Auth, Hub } from "aws-amplify";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AuthState, Translations } from "@aws-amplify/ui-components";
 import { Alert, Button, Checkbox, Form, Input, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import Title from "antd/lib/typography/Title";
-import "./BasicAuthenticator.less";
+import Logo from "./Logo";
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
@@ -14,7 +14,8 @@ interface BasicAuthenticatorProps {
 export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [user, setUser] = useState<string>("");
+  const [user, setUser] = useState<any | null>(null);
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [form] = useForm();
@@ -22,7 +23,7 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
   const handleRegistrationSubmit = () => {
     setError("");
     Auth.signUp({
-      username: user,
+      username: username,
       password: password,
       attributes: { email: email },
     })
@@ -32,7 +33,7 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
           message: AuthState.ConfirmSignUp,
           data: {
             ...response.user,
-            username: user,
+            username: username,
             password: password,
             attributes: { email: email },
           },
@@ -51,10 +52,22 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
     );
   };
 
+  const initialize = async () => setUser(await Auth.currentAuthenticatedUser());
+
+  useEffect(() => {
+    initialize();
+  }, []);
+
   return (
     <AmplifyAuthenticator initialAuthState={AuthState.SignIn}>
       <AmplifySection slot="sign-up">
-        <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
+        <Row>
+          <Logo hidBackArrow />
+          <Title style={{ margin: "auto" }} level={5}>
+            {Translations.SIGN_UP_HEADER_TEXT}
+          </Title>
+        </Row>
+        <p>&nbsp;</p>
         <Row>{error ? <Alert type="error" message={error} /> : null}</Row>
         <Form
           name="signup"
@@ -75,10 +88,7 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
             ]}
             hasFeedback
           >
-            <Input
-              placeholder={Translations.EMAIL_PLACEHOLDER}
-              onChange={(e) => setEmail(e.currentTarget.value)}
-            />
+            <Input onChange={(e) => setEmail(e.currentTarget.value)} />
           </Form.Item>
           <Form.Item
             name="password"
@@ -109,7 +119,6 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
             hasFeedback
           >
             <Input.Password
-              placeholder={Translations.PASSWORD_PLACEHOLDER}
               allowClear
               onChange={(e) => setPassword(e.currentTarget.value)}
             />
@@ -120,10 +129,7 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
             validateStatus={error ? "error" : undefined}
             help={error ? error : null}
           >
-            <Input
-              placeholder={Translations.USERNAME_PLACEHOLDER}
-              onChange={(e) => setUser(e.currentTarget.value)}
-            />
+            <Input onChange={(e) => setUsername(e.currentTarget.value)} />
           </Form.Item>
           <Form.Item
             name="terms"
@@ -184,7 +190,7 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
           </Row>
         </Form>
       </AmplifySection>
-      {props.children}
+      {user ? props.children : null}
     </AmplifyAuthenticator>
   );
 }

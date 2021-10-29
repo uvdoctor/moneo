@@ -9,7 +9,7 @@ interface PasswordInputProps {
   user: any;
 }
 
-export default function PasswordInput({ user }: PasswordInputProps) {
+export default function PasswordInput(user : PasswordInputProps) {
   const { validateCaptcha }: any = useContext(AppContext);
   const [disabledForm, setDisabledForm] = useState<boolean>(true);
   const [form] = useForm();
