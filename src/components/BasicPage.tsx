@@ -1,11 +1,8 @@
 import React, { Fragment } from "react";
-import { Layout } from "antd";
-import Nav from "./Nav";
-import Footer from "./Footer";
 import Head from "next/head";
-import { AppContextProvider } from "./AppContext";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import BasicAuthenticator from "./BasicAuthenticator";
+import BasicLayout from "./BasicLayout";
 
 interface BasicPageProps {
   className?: string;
@@ -81,20 +78,31 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <title>{props.title}</title>
       </Head>
       <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_CLIENT_TOKEN}>
-        <AppContextProvider>
-          <Layout className={`dd-site ${props.className}`}>
-            <Nav
-              scrollable={props.navScrollable ? props.navScrollable : false}
-              isFixed={props.fixedNav ? props.fixedNav : false}
+        {props.secure ? (
+          <BasicAuthenticator>
+            <BasicLayout
+              className={props.className}
               onBack={props.onBack}
-              hideMenu={props.hideMenu} hidMenuTitle={props.hidMenuTitle}
+              fixedNav={props.fixedNav}
+              navScrollable={props.navScrollable}
+              noFooter={props.noFooter}
+              hideMenu={props.hideMenu}
+              hidMenuTitle={props.hidMenuTitle}
+              children={props.children}
             />
-            { props.secure ?  
-              <BasicAuthenticator>{props.children}</BasicAuthenticator> 
-            : props.children}
-            {!props.noFooter && <Footer />}
-          </Layout>
-        </AppContextProvider>
+          </BasicAuthenticator>
+        ) : (
+          <BasicLayout
+            className={props.className}
+            onBack={props.onBack}
+            fixedNav={props.fixedNav}
+            navScrollable={props.navScrollable}
+            noFooter={props.noFooter}
+            hideMenu={props.hideMenu}
+            hidMenuTitle={props.hidMenuTitle}
+            children={props.children}
+          />
+        )}
       </GoogleReCaptchaProvider>
     </Fragment>
   );

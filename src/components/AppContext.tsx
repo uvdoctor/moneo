@@ -110,9 +110,7 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 			Hub.dispatch('auth', { event: 'signOut' });
 		} catch (error) {
 			console.log('error signing out: ', error);
-		} finally {
-			router.reload();
-		}
+		} 
 	};
 
 	useEffect(() => {
