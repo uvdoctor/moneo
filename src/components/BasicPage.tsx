@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import Head from "next/head";
 import { AppContextProvider } from "./AppContext";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import BasicAuthenticator from "./BasicAuthenticator";
 
 interface BasicPageProps {
   className?: string;
@@ -16,6 +17,7 @@ interface BasicPageProps {
   noFooter?: boolean;
   hideMenu?: boolean;
   hidMenuTitle?: string;
+  isSecured?: boolean;
 }
 
 export default function BasicPage(props: BasicPageProps) {
@@ -87,7 +89,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
               onBack={props.onBack}
               hideMenu={props.hideMenu} hidMenuTitle={props.hidMenuTitle}
             />
-            {props.children}
+            { props.isSecured ?  <BasicAuthenticator children={undefined}/> : props.children}
             {!props.noFooter && <Footer />}
           </Layout>
         </AppContextProvider>
