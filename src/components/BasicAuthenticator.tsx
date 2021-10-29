@@ -70,8 +70,8 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
             Create New Account
           </Title>
         </Row>
-        <Row>{error ? <Alert type="error" message={error} /> : null}</Row>
         <p>&nbsp;</p>
+        <Row>{error ? <Alert type="error" message={error} /> : null}</Row>
         <Form
           name="signup"
           layout="vertical"
@@ -179,11 +179,9 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
               </a>
             </Checkbox>
           </Form.Item>
-          <Form.Item name="letter" valuePropName="checked">
-            <Checkbox defaultChecked={true}>
-              Subscribe to Offer and NewsLetters
-            </Checkbox>
-          </Form.Item>
+          <Checkbox defaultChecked={true}>
+            Subscribe to Offer and NewsLetters
+          </Checkbox>
           <p>&nbsp;</p>
           <Row justify="end">
             <Form.Item>
