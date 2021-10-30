@@ -34,9 +34,10 @@ import {
 	UpdateHoldingsInput
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
-import { includesAny, initOptions } from '../utils';
+import { getCurrencyList, includesAny, initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
+import SavingTabInput from './SavingTabInput';
 
 const NWContext = createContext({});
 
@@ -132,7 +133,8 @@ function NWContextProvider() {
 					data: savings,
 					setData: setSavings,
 					total: totalSavings,
-					contentComp: <InstrumentValuation />
+					categoryOptions: getCurrencyList(),
+					viewComp: SavingTabInput,
 				},
 				'Money Lent': {
 					label: 'Money Lent',

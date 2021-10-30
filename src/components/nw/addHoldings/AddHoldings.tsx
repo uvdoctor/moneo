@@ -25,7 +25,7 @@ export default function AddHoldings({
   const [isModalVisible, setModalVisibility] = useState<boolean>(false);
   const [okDisabled, setOkDisabled] = useState<boolean>(true);
   const [newRec, setNewRec] = useState<any>({});
-  const { activeTab }: any = useContext(NWContext);
+  const { activeTab , childTab }: any = useContext(NWContext);
 
   const close = () => {
     setModalVisibility(false);
@@ -65,6 +65,7 @@ export default function AddHoldings({
             disableOk={setOkDisabled}
             categoryOptions={categoryOptions}
             subCategoryOptions={subCategoryOptions}
+            savingAcc={childTab === 'Saving Accounts'}
           />
         )}
       </Modal>

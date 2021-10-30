@@ -28,9 +28,9 @@ export default function QuantityWithRate({ quantity, subtype, name, onChange }: 
 				min={0}
 				max={100000}
 				step={0.1}
-				size="small"
+				size='small'
 			/>
-			{` ${childTab === PM_TAB ? ` grams` : ''} x ${toCurrency(getRate(subtype, name), selectedCurrency)} = ${toCurrency(
+			{` ${childTab === PM_TAB ? ` grams` : subtype} x ${toCurrency(getRate(subtype, name), selectedCurrency)} = ${toCurrency(
 				quantity * getRate(subtype, name),
 				selectedCurrency
 			)}`}

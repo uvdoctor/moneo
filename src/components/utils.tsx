@@ -32,7 +32,7 @@ export function getCurrencyList() {
   };
 }
 
-const getPeggedCurrencyRates = () => {
+export const getPeggedCurrencyRates = () => {
   return {
     USD: 1,
     BHD: 0.38,
