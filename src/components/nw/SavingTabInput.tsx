@@ -50,15 +50,3 @@ export default function SavingTabInput({
     </Fragment>
   );
 }
-
-// 	const changeQty = (quantity: number) => {
-// 		record.qty = quantity;
-// 		changeData([ ...data ]);
-// 	};
-
-// 	const changePurity = (purity: string) => {
-// 		record.name = purity;
-// 		changeData([ ...data ]);
-// 	};
-
-// 	return (

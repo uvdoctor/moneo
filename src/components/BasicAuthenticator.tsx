@@ -6,7 +6,6 @@ import { AuthState, Translations } from "@aws-amplify/ui-components";
 import { Alert, Button, Checkbox, Form, Input, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import Title from "antd/lib/typography/Title";
-import Logo from "./Logo";
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
@@ -61,12 +60,7 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
   return (
     <AmplifyAuthenticator initialAuthState={AuthState.SignIn}>
       <AmplifySection slot="sign-up">
-        <Row>
-          <Logo hidBackArrow />
-          <Title style={{ margin: "auto" }} level={5}>
-            {Translations.SIGN_UP_HEADER_TEXT}
-          </Title>
-        </Row>
+        <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
         <p>&nbsp;</p>
         <Row>{error ? <Alert type="error" message={error} /> : null}</Row>
         <Form
