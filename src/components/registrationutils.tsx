@@ -14,9 +14,8 @@ export const doesEmailExist = async (email: string) => {
 		else {
 			return 'Email Already Registered. You can try with another email address.'
 		}
-	} catch (e:any) {
-        console.log(e);
-		return e.toString()
+	} catch (e) {
+        console.log("Error while checking if email address is unique: ", e);
 	}
 };
 
@@ -28,10 +27,7 @@ export const addEmailPostSignup = async (email: string) => {
 			authMode: GRAPHQL_AUTH_MODE.AWS_IAM
 		});
         console.log(data);
-	} catch (e:any) {
-		return {
-			title: 'Error while adding data in table',
-			message: e.errors ? e.errors[0].message : e.toString()
-		};
+	} catch (e) {
+		console.log("Error while adding email address post sign-up: ", e);
 	}
 };

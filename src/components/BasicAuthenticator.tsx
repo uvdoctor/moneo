@@ -6,7 +6,7 @@ import { AuthState, Translations } from '@aws-amplify/ui-components';
 import { Alert, Button, Checkbox, Form, Input, Row } from 'antd';
 import { ROUTES } from '../CONSTANTS';
 import Title from 'antd/lib/typography/Title';
-import { addEmailPostSignup, doesEmailExist } from './regUtils';
+import { addEmailPostSignup, doesEmailExist } from './registrationutils';
 
 interface BasicAuthenticatorProps {
 	children: React.ReactNode;
