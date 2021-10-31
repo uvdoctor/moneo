@@ -13,24 +13,54 @@ interface BasicAuthenticatorProps {
 }
 
 export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
-	const [ disabledSubmit, setDisabledSubmit ] = useState<boolean>(false);
-	const [ error, setError ] = useState<string>('');
-	const [ user, setUser ] = useState<any | null>(null);
-	const [ username, setUsername ] = useState<string>('');
-	const [ password, setPassword ] = useState<string>('');
-	const [ email, setEmail ] = useState<string>('');
-	const [ form ] = useForm();
+	const [
+		disabledSubmit,
+		setDisabledSubmit
+	] = useState<boolean>(false);
+	const [
+		error,
+		setError
+	] = useState<string>('');
+	const [
+		user,
+		setUser
+	] = useState<any | null>(null);
+	const [
+		username,
+		setUsername
+	] = useState<string>('');
+	const [
+		password,
+		setPassword
+	] = useState<string>('');
+	const [
+		email,
+		setEmail
+	] = useState<string>('');
+	const [
+		form
+	] = useForm();
 
-	const handleRegistrationSubmit = async() => {
-    const uniqueEmail = await doesEmailExist(email)
-    uniqueEmail ? setError(uniqueEmail) : setError(''); 
-		if(uniqueEmail)return; 
+	/*const handleUniqueChecks = async () => {
+		const exists = await doesEmailExist(email);
+		if (exists) {
+			setError(
+				'Please register with another email address as this email address has already been used by another account.'
+			);
+			return false;
+		}
+		return true;
+	};*/
+
+	const handleRegistrationSubmit = async () => {
+		//const unique = await handleUniqueChecks();
+		//if(!unique) return;
 		Auth.signUp({
 			username: username,
 			password: password,
 			attributes: { email: email }
 		})
-			.then(async(response) => {
+			.then(async (response) => {
 				Hub.dispatch('UI Auth', {
 					event: 'AuthStateChange',
 					message: AuthState.ConfirmSignUp,
@@ -41,7 +71,7 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
 						attributes: { email: email }
 					}
 				});
-        await addEmailPostSignup(email)
+				await addEmailPostSignup(email, username);
 				console.log('Auth.signIn success', response);
 			})
 			.catch((error) => {
@@ -69,16 +99,29 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
 					<Form.Item
 						name="email"
 						label={Translations.EMAIL_LABEL}
-            validateStatus={error ? 'error' : undefined}
+						validateStatus={error ? 'error' : undefined}
 						help={error ? error : null}
+						validateFirst
+						validateTrigger="onBlur"
 						rules={[
 							{
 								pattern: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 								message: 'Enter a valid email address'
-							}
+							},
+							({ getFieldValue }) => ({
+								async validator() {
+									if (!await doesEmailExist(getFieldValue('email'))) {
+										return Promise.resolve();
+									}
+									return Promise.reject(
+										new Error(
+											'Please use another email address as this email address has already been used by another account.'
+										)
+									);
+								}
+							})
 						]}
-						hasFeedback
-					>
+						hasFeedback>
 						<Input onChange={(e) => setEmail(e.currentTarget.value)} />
 					</Form.Item>
 					<Form.Item
@@ -107,16 +150,14 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
 								message: 'Atleast one special characters'
 							}
 						]}
-						hasFeedback
-					>
+						hasFeedback>
 						<Input.Password allowClear onChange={(e) => setPassword(e.currentTarget.value)} />
 					</Form.Item>
 					<Form.Item
 						name="username"
 						label={Translations.USERNAME_LABEL}
 						validateStatus={error ? 'error' : undefined}
-						help={error ? error : null}
-					>
+						help={error ? error : null}>
 						<Input onChange={(e) => setUsername(e.currentTarget.value)} />
 					</Form.Item>
 					<Form.Item
@@ -129,8 +170,7 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
 										? Promise.resolve()
 										: Promise.reject(new Error('Please accept the terms and conditions'))
 							}
-						]}
-					>
+						]}>
 						<Checkbox defaultChecked={true}>
 							I accept the{' '}
 							<a target="_blank" href={ROUTES.POLICYTC}>
@@ -157,16 +197,14 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
 									Hub.dispatch('UI Auth', {
 										event: 'AuthStateChange',
 										message: AuthState.SignIn
-									})}
-							>
+									})}>
 								Cancel
 							</Button>
 							<Button
 								type="primary"
 								htmlType="submit"
 								disabled={disabledSubmit}
-								onClick={handleRegistrationSubmit}
-							>
+								onClick={handleRegistrationSubmit}>
 								Submit
 							</Button>
 						</Form.Item>

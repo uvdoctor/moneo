@@ -165,14 +165,12 @@ type RegMob
   @auth(
     rules: [
       {
-        allow: public, provider: iam, operations: [read]
-      },
-      {
-        allow: private, operations: [create, read, delete]
+        allow: public, provider: iam, operations: [create, read, delete]
       }
     ]
   ) {
     mob: Int!
+    user: String!
   }
 type RegEmail
   @model
@@ -182,14 +180,12 @@ type RegEmail
   @auth(
     rules: [
       {
-        allow: public, provider: iam, operations: [read]
-      },
-      {
-        allow: private, operations: [create, read, delete]
+        allow: public, provider: iam, operations: [create, read, delete]
       }
     ]
   ) {
     email: String!
+    user: String!
   }
 
 enum AssetType {

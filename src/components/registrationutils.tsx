@@ -10,23 +10,21 @@ export const doesEmailExist = async (email: string) => {
 			variables: { email },
 			authMode: GRAPHQL_AUTH_MODE.AWS_IAM
 		});
-		if (items.length === 0) return false;
-		else {
-			return 'Email Already Registered. You can try with another email address.'
-		}
+		return items.length > 0;
 	} catch (e) {
         console.log("Error while checking if email address is unique: ", e);
 	}
 };
 
-export const addEmailPostSignup = async (email: string) => {
+export const addEmailPostSignup = async (email: string, user: string) => {
 	try {
 		const data = await API.graphql({
 			query: mutations.createRegEmail,
-			variables: { input: { email } },
+			variables: { input: { email, user } },
 			authMode: GRAPHQL_AUTH_MODE.AWS_IAM
 		});
         console.log(data);
+		return true;
 	} catch (e) {
 		console.log("Error while adding email address post sign-up: ", e);
 	}
