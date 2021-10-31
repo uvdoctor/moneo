@@ -371,6 +371,60 @@ export const onDeleteRegistration = /* GraphQL */ `
     }
   }
 `;
+export const onCreateRegMob = /* GraphQL */ `
+  subscription OnCreateRegMob {
+    onCreateRegMob {
+      mob
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateRegMob = /* GraphQL */ `
+  subscription OnUpdateRegMob {
+    onUpdateRegMob {
+      mob
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteRegMob = /* GraphQL */ `
+  subscription OnDeleteRegMob {
+    onDeleteRegMob {
+      mob
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateRegEmail = /* GraphQL */ `
+  subscription OnCreateRegEmail {
+    onCreateRegEmail {
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateRegEmail = /* GraphQL */ `
+  subscription OnUpdateRegEmail {
+    onUpdateRegEmail {
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteRegEmail = /* GraphQL */ `
+  subscription OnDeleteRegEmail {
+    onDeleteRegEmail {
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateFeeds = /* GraphQL */ `
   subscription OnCreateFeeds {
     onCreateFeeds {

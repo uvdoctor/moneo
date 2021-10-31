@@ -425,6 +425,40 @@ export type Registration = {
   updatedAt?: string,
 };
 
+export type UpdateRegMobInput = {
+  mob: number,
+};
+
+export type ModelRegMobConditionInput = {
+  and?: Array< ModelRegMobConditionInput | null > | null,
+  or?: Array< ModelRegMobConditionInput | null > | null,
+  not?: ModelRegMobConditionInput | null,
+};
+
+export type RegMob = {
+  __typename: "RegMob",
+  mob?: number,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateRegEmailInput = {
+  email: string,
+};
+
+export type ModelRegEmailConditionInput = {
+  and?: Array< ModelRegEmailConditionInput | null > | null,
+  or?: Array< ModelRegEmailConditionInput | null > | null,
+  not?: ModelRegEmailConditionInput | null,
+};
+
+export type RegEmail = {
+  __typename: "RegEmail",
+  email?: string,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
 export type CreateFamilyInput = {
   id?: string | null,
   tid: string,
@@ -719,6 +753,22 @@ export type UpdateRegistrationInput = {
   country?: string | null,
   lat?: number | null,
   long?: number | null,
+};
+
+export type CreateRegMobInput = {
+  mob: number,
+};
+
+export type DeleteRegMobInput = {
+  mob: number,
+};
+
+export type CreateRegEmailInput = {
+  email: string,
+};
+
+export type DeleteRegEmailInput = {
+  email: string,
 };
 
 export type CreateFeedsInput = {
@@ -1474,6 +1524,32 @@ export type ModelRegistrationConnection = {
   nextToken?: string | null,
 };
 
+export type ModelRegMobFilterInput = {
+  mob?: ModelIntInput | null,
+  and?: Array< ModelRegMobFilterInput | null > | null,
+  or?: Array< ModelRegMobFilterInput | null > | null,
+  not?: ModelRegMobFilterInput | null,
+};
+
+export type ModelRegMobConnection = {
+  __typename: "ModelRegMobConnection",
+  items?:  Array<RegMob | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelRegEmailFilterInput = {
+  email?: ModelStringInput | null,
+  and?: Array< ModelRegEmailFilterInput | null > | null,
+  or?: Array< ModelRegEmailFilterInput | null > | null,
+  not?: ModelRegEmailFilterInput | null,
+};
+
+export type ModelRegEmailConnection = {
+  __typename: "ModelRegEmailConnection",
+  items?:  Array<RegEmail | null > | null,
+  nextToken?: string | null,
+};
+
 export type ModelFeedsFilterInput = {
   id?: ModelStringInput | null,
   tname?: ModelStringInput | null,
@@ -1948,6 +2024,34 @@ export type DeleteRegistrationMutation = {
     country: string,
     lat?: number | null,
     long?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateRegMobMutationVariables = {
+  input?: UpdateRegMobInput,
+  condition?: ModelRegMobConditionInput | null,
+};
+
+export type UpdateRegMobMutation = {
+  updateRegMob?:  {
+    __typename: "RegMob",
+    mob: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateRegEmailMutationVariables = {
+  input?: UpdateRegEmailInput,
+  condition?: ModelRegEmailConditionInput | null,
+};
+
+export type UpdateRegEmailMutation = {
+  updateRegEmail?:  {
+    __typename: "RegEmail",
+    email: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2960,6 +3064,62 @@ export type UpdateRegistrationMutation = {
   } | null,
 };
 
+export type CreateRegMobMutationVariables = {
+  input?: CreateRegMobInput,
+  condition?: ModelRegMobConditionInput | null,
+};
+
+export type CreateRegMobMutation = {
+  createRegMob?:  {
+    __typename: "RegMob",
+    mob: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteRegMobMutationVariables = {
+  input?: DeleteRegMobInput,
+  condition?: ModelRegMobConditionInput | null,
+};
+
+export type DeleteRegMobMutation = {
+  deleteRegMob?:  {
+    __typename: "RegMob",
+    mob: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateRegEmailMutationVariables = {
+  input?: CreateRegEmailInput,
+  condition?: ModelRegEmailConditionInput | null,
+};
+
+export type CreateRegEmailMutation = {
+  createRegEmail?:  {
+    __typename: "RegEmail",
+    email: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteRegEmailMutationVariables = {
+  input?: DeleteRegEmailInput,
+  condition?: ModelRegEmailConditionInput | null,
+};
+
+export type DeleteRegEmailMutation = {
+  deleteRegEmail?:  {
+    __typename: "RegEmail",
+    email: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateFeedsMutationVariables = {
   input?: CreateFeedsInput,
   condition?: ModelFeedsConditionInput | null,
@@ -3827,6 +3987,74 @@ export type ListRegistrationsQuery = {
       country: string,
       lat?: number | null,
       long?: number | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetRegMobQueryVariables = {
+  mob?: number,
+};
+
+export type GetRegMobQuery = {
+  getRegMob?:  {
+    __typename: "RegMob",
+    mob: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListRegMobsQueryVariables = {
+  mob?: number | null,
+  filter?: ModelRegMobFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListRegMobsQuery = {
+  listRegMobs?:  {
+    __typename: "ModelRegMobConnection",
+    items?:  Array< {
+      __typename: "RegMob",
+      mob: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetRegEmailQueryVariables = {
+  email?: string,
+};
+
+export type GetRegEmailQuery = {
+  getRegEmail?:  {
+    __typename: "RegEmail",
+    email: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListRegEmailsQueryVariables = {
+  email?: string | null,
+  filter?: ModelRegEmailFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListRegEmailsQuery = {
+  listRegEmails?:  {
+    __typename: "ModelRegEmailConnection",
+    items?:  Array< {
+      __typename: "RegEmail",
+      email: string,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -5119,6 +5347,60 @@ export type OnDeleteRegistrationSubscription = {
     country: string,
     lat?: number | null,
     long?: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateRegMobSubscription = {
+  onCreateRegMob?:  {
+    __typename: "RegMob",
+    mob: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateRegMobSubscription = {
+  onUpdateRegMob?:  {
+    __typename: "RegMob",
+    mob: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteRegMobSubscription = {
+  onDeleteRegMob?:  {
+    __typename: "RegMob",
+    mob: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateRegEmailSubscription = {
+  onCreateRegEmail?:  {
+    __typename: "RegEmail",
+    email: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateRegEmailSubscription = {
+  onUpdateRegEmail?:  {
+    __typename: "RegEmail",
+    email: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteRegEmailSubscription = {
+  onDeleteRegEmail?:  {
+    __typename: "RegEmail",
+    email: string,
     createdAt: string,
     updatedAt: string,
   } | null,

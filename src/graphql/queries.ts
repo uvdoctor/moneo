@@ -283,6 +283,72 @@ export const listRegistrations = /* GraphQL */ `
     }
   }
 `;
+export const getRegMob = /* GraphQL */ `
+  query GetRegMob($mob: Int!) {
+    getRegMob(mob: $mob) {
+      mob
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRegMobs = /* GraphQL */ `
+  query ListRegMobs(
+    $mob: Int
+    $filter: ModelRegMobFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listRegMobs(
+      mob: $mob
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        mob
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getRegEmail = /* GraphQL */ `
+  query GetRegEmail($email: String!) {
+    getRegEmail(email: $email) {
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRegEmails = /* GraphQL */ `
+  query ListRegEmails(
+    $email: String
+    $filter: ModelRegEmailFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listRegEmails(
+      email: $email
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        email
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getFeeds = /* GraphQL */ `
   query GetFeeds($id: String!) {
     getFeeds(id: $id) {

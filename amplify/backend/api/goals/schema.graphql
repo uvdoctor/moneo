@@ -157,33 +157,31 @@ type Registration
   long: Float
 }
 
-type regMobile
+type RegMob
   @model
   @aws_iam
-  @aws_cognito_user_pools
-  @key(fields: [mob])
+  @key(fields: ["mob"])
   @auth(
     rules: [
       {
         allow: private
         provider: iam
-        operations: [create, read, update, delete]
+        operations: [create, read, delete]
       }
     ]
   ) {
-    mob: int!
+    mob: Int!
   }
-type regEmail
+type RegEmail
   @model
   @aws_iam
-  @aws_cognito_user_pools
-  @key(fields: [email])
+  @key(fields: ["email"])
   @auth(
     rules: [
       {
         allow: private
         provider: iam
-        operations: [create, read, update, delete]
+        operations: [create, read, delete]
       }
     ]
   ) {
