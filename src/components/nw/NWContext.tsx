@@ -20,7 +20,6 @@ import { notification } from 'antd';
 import {
 	AssetSubType,
 	AssetType,
-	BalanceInput,
 	CreateHoldingsInput,
 	DepositInput,
 	HoldingInput,
@@ -68,14 +67,12 @@ function NWContextProvider() {
 	const [ vehicles, setVehicles ] = useState<Array<HoldingInput>>([]);
 	const [ deposits, setDeposits ] = useState<Array<DepositInput>>([]);
 	const [ lendings, setLendings ] = useState<Array<DepositInput>>([]);
-	const [ savings, setSavings ] = useState<Array<BalanceInput>>([]);
+	const [ savings, setSavings ] = useState<Array<HoldingInput>>([]);
 	const [ ppf, setPPF ] = useState<Array<HoldingInput>>([]);
 	const [ nps, setNPS ] = useState<Array<HoldingInput>>([]);
 	const [ epf, setEPF ] = useState<Array<HoldingInput>>([]);
 	const [ vpf, setVPF ] = useState<Array<HoldingInput>>([]);
-	const [ memberships, setMemberships ] = useState<Array<HoldingInput>>([]);
 	const [ others, setOthers ] = useState<Array<HoldingInput>>([]);
-	const [ angel, setAngel ] = useState<Array<HoldingInput>>([]);
 	const [ crypto, setCrypto ] = useState<Array<HoldingInput>>([]);
 	const [ loans, setLoans ] = useState<Array<LiabilityInput>>([]);
 	const [ insurance, setInsurance ] = useState<Array<InsuranceInput>>([]);
@@ -100,9 +97,7 @@ function NWContextProvider() {
 	const [ totalLoans, setTotalLoans ] = useState<number>(0);
 	const [ totalInsurance, setTotalInsurance ] = useState<number>(0);
 	const [ totalLiabilities, setTotalLiabilities ] = useState<number>(0);
-	const [ totalMemberships, setTotalMemberships ] = useState<number>(0);
 	const [ totalOthers, setTotalOthers ] = useState<number>(0);
-	const [ totalAngel, setTotalAngel ] = useState<number>(0);
 	const [ totalEquity, setTotalEquity ] = useState<number>(0);
 	const [ totalFixed, setTotalFixed ] = useState<number>(0);
 	const [ totalAlternative, setTotalAlternative ] = useState<number>(0);
@@ -259,13 +254,6 @@ function NWContextProvider() {
 		Exotic: {
 			label: 'Exotic',
 			children: {
-				Memberships: {
-					label: 'Memberships',
-					data: memberships,
-					setData: setMemberships,
-					total: totalMemberships,
-					viewComp: ViewHoldingInput,
-				},
 				CRYPTO_TAB: {
 					label: CRYPTO_TAB,
 					data: crypto,
@@ -284,13 +272,6 @@ function NWContextProvider() {
 						[MONERO]: 'Monero',
 						[STELLAR]: 'Stellar'
 					}
-				},
-				'Angel Investments': {
-					label: 'Angel Investments',
-					data: angel,
-					setData: setAngel,
-					total: totalAngel,
-					viewComp: ViewHoldingInput,
 				},
 				Other: {
 					label: 'Other',
@@ -418,8 +399,6 @@ function NWContextProvider() {
 		setDeposits([ ...(allHoldings?.deposits ? allHoldings.deposits : []) ]);
 		setSavings([ ...(allHoldings?.savings ? allHoldings.savings : []) ]);
 		setLendings([ ...(allHoldings?.lendings ? allHoldings.lendings : []) ]);
-		setAngel([ ...(allHoldings?.angel ? allHoldings.angel : []) ]);
-		setMemberships([ ...(allHoldings?.mem ? allHoldings.mem : []) ]);
 		setOthers([ ...(allHoldings?.other ? allHoldings.other : []) ]);
 		setLoadingHoldings(false);
 	};
@@ -459,8 +438,6 @@ function NWContextProvider() {
 					totalPPF +
 					totalEPF +
 					totalNPS +
-					totalAngel + 
-					totalMemberships +
 					totalOthers
 			);
 		},
@@ -476,15 +453,13 @@ function NWContextProvider() {
 			totalPPF,
 			totalEPF,
 			totalNPS,
-			totalAngel,
-			totalMemberships,
 			totalOthers
 		]
 	);
 
 	useEffect(() => {
-		setTotalAlternative(totalOthers + totalVehicles + totalProperties + totalPM + totalCrypto + totalMemberships + totalFGold + totalFRE);
-	}, [totalOthers, totalVehicles, totalProperties, totalCrypto, totalMemberships, totalPM, totalFGold, totalFRE]);
+		setTotalAlternative(totalOthers + totalVehicles + totalProperties + totalPM + totalCrypto + totalFGold + totalFRE);
+	}, [totalOthers, totalVehicles, totalProperties, totalCrypto, totalPM, totalFGold, totalFRE]);
 
 	const pricePM = () => {
 		if(!preciousMetals.length) {
@@ -570,8 +545,6 @@ function NWContextProvider() {
 		if(preciousMetals.length) updatedHoldings.pm = preciousMetals;
 		if(vehicles.length) updatedHoldings.vehicles = vehicles;
 		if(properties.length) updatedHoldings.property = properties;
-		if(memberships.length) updatedHoldings.mem = memberships;
-		if(angel.length) updatedHoldings.angel = angel;
 		if(others.length) updatedHoldings.other = others;
 		if(nps.length) updatedHoldings.nps = nps;
 		if(crypto.length) updatedHoldings.crypto = crypto;
@@ -597,10 +570,6 @@ function NWContextProvider() {
 		setTotalSavings(0);
 	};
 
-	const priceMemberships = () => {
-		setTotalMemberships(0);
-	};
-
 	const priceProperties = () => {
 		setTotalProperties(0);
 	};
@@ -622,10 +591,6 @@ function NWContextProvider() {
 			}
 		})
 		setTotalCrypto(total);
-	};
-
-	const priceAngel = () => {
-		setTotalAngel(0);
 	};
 
 	const priceOthers = () => {
@@ -663,14 +628,12 @@ function NWContextProvider() {
 		priceNPS();
 		priceEPF();
 		priceVPF();
-		priceAngel();
 		priceProperties();
 		priceVehicles();
 		priceOthers();
 		priceCrypto();
 		priceLendings();
 		priceInsurance();
-		priceMemberships();
 		priceLoans();
 		priceSavings();
 		priceDeposits();
@@ -687,14 +650,6 @@ function NWContextProvider() {
 	useEffect(() => {
 		priceCrypto();
 	}, [crypto]);
-
-	useEffect(() => {
-		priceAngel();
-	}, [angel]);
-
-	useEffect(() => {
-		priceMemberships();
-	}, [memberships]);
 
 	useEffect(() => {
 		priceOthers();
@@ -786,8 +741,6 @@ function NWContextProvider() {
 				totalLendings,
 				totalInsurance,
 				totalLoans,
-				totalAngel,
-				totalMemberships,
 				totalOthers,
 				instruments,
 				setInstruments,
@@ -817,12 +770,8 @@ function NWContextProvider() {
 				setLendings,
 				properties,
 				setProperties,
-				memberships,
-				setMemberships,
 				others,
 				setOthers,
-				angel,
-				setAngel,
 				totalEquity,
 				totalPGold,
 				totalFGold,

@@ -18,12 +18,15 @@ interface NumberInputProps {
 	step: number;
 	feedback?: any;
 	additionalMarks?: Array<number>;
-	noRangeFactor?: boolean
+	noRangeFactor?: boolean;
+	hidSlider?: boolean;
 }
 
 export default function NumberInput(props: NumberInputProps) {
 	const inputRef = useRef(null);
-	const [ rangeFactor, setRangeFactor ] = useState<number>(props.currency && !props.noRangeFactor ? getRangeFactor(props.currency) : 1);
+	const [ rangeFactor, setRangeFactor ] = useState<number>(
+		props.currency && !props.noRangeFactor ? getRangeFactor(props.currency) : 1
+	);
 	const [ sliderBorderColor, setSliderBorderColor ] = useState<string>(COLORS.GREEN);
 	const [ feedbackText, setFeedbackText ] = useState<string>('');
 	const [ minNum, setMinNum ] = useState<number>(props.min * rangeFactor);
@@ -163,21 +166,23 @@ export default function NumberInput(props: NumberInputProps) {
 					)}
 					<Col span={props.currency || props.step < 1 ? 13 : 24}>
 						{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
-						<Slider
-							min={props.min * rangeFactor}
-							max={props.max * rangeFactor}
-							marks={marks}
-							step={props.step * rangeFactor}
-							value={props.value}
-							onChange={(val: number) => {
-								provideFeedback(val);
-								props.changeHandler(val);
-							}}
-							handleStyle={{
-								cursor: 'grab',
-								borderColor: sliderBorderColor
-							}}
-						/>
+						{props.hidSlider ? null : (
+							<Slider
+								min={props.min * rangeFactor}
+								max={props.max * rangeFactor}
+								marks={marks}
+								step={props.step * rangeFactor}
+								value={props.value}
+								onChange={(val: number) => {
+									provideFeedback(val);
+									props.changeHandler(val);
+								}}
+								handleStyle={{
+									cursor: 'grab',
+									borderColor: sliderBorderColor
+								}}
+							/>
+						)}
 						{feedbackText && (
 							<Col span={24} style={{ textAlign: 'center' }}>
 								{feedbackText}

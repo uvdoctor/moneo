@@ -1,6 +1,7 @@
 import { UserOutlined } from '@ant-design/icons';
 import React, { Fragment, useContext, useState } from 'react';
-import { AssetSubType, AssetType, HoldingInput, BalanceInput } from '../../api/goals';
+import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
+import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
 import { BTC, CRYPTO_TAB, NWContext, PM_TAB } from './NWContext';
@@ -33,7 +34,6 @@ export default function AddHoldingInput({
 	const [ amount, setAmount ] = useState<number>(0);
 	const [ month, setMonth ] = useState<number>(1);
 	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
-	const [individualName, setIndividualName] = useState<string>('');
 
 	const changeName = (val: string) => {
 		setName(val);
@@ -42,29 +42,22 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const changeIndividualName = (val: string)=> {
-		setIndividualName(val);
-		let rec = getNewRec();
-		rec.name= val;
-		setInput(rec);
-	}
-
 	const changeQuantity = (qty: number) => {
 		setQuantity(qty);
 		disableOk(qty <= 0);
 		let rec = getNewRec();
-		// @ts-ignore
-		savingAcc ? rec.amt = qty : rec.qty = qty;
+		rec.qty = qty;
 		setInput(rec);
 	};
 
 	const getNewRec = () => {
 		if(savingAcc){
-			let newRec : BalanceInput ={
-				amt : quantity,
+			let newRec : HoldingInput = {
+				id:'',
+				qty : quantity,
 				curr: subtype,
+				name: name,
 				fIds: [ memberKey ],
-				name: individualName
 			}	
 		return newRec;
 		}
@@ -146,8 +139,9 @@ export default function AddHoldingInput({
 					/>
 				) : 
 				savingAcc?
-				<><p><TextInput pre={'Name'} value={individualName} changeHandler={changeIndividualName} size={'small'}/></p>
-				<p><QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={''} /></p></>
+				<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
+				<p><NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={subtype} step={1}  /></p>
+				</>
 				:
 				(
 					<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} />
