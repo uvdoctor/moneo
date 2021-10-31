@@ -62,7 +62,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 		const nameParts = email.replace(/@.+/, "");
 		// Replace all special characters like "@ . _ ";
 		let name = nameParts.replace(/[&/\\#,+()$~%._@'":*?<>{}]/g, "");
-		// Create and return unique username
 		if(name.length > 5) name = name.substring(0, 5);
 		return name + ("" + Math.random()).substring(2, 6);
 	  }
@@ -74,7 +73,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 
 	const handleRegistrationSubmit = async () => {
 		const username = generateFromEmail(email);
-		console.log("Generated username: ", username);
 		Auth.signUp({
 			username: username,
 			password: password,
