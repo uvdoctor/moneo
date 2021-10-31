@@ -1,6 +1,5 @@
 /* Amplify Params - DO NOT EDIT
-	API_GOALS_GRAPHQLAPIENDPOINTOUTPUT
-	API_GOALS_GRAPHQLAPIIDOUTPUT
+	AUTH_MONEO3E6273BC_USERPOOLID
 	ENV
 	REGION
 Amplify Params - DO NOT EDIT */const { pushData, pushDataForFeed } = require("/opt/nodejs/insertIntoDB");

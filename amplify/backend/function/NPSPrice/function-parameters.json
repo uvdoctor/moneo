@@ -1,8 +1,11 @@
 {
   "permissions": {
-    "api": {
-      "goals": [
-        "read"
+    "auth": {
+      "moneo3e6273bc": [
+        "create",
+        "read",
+        "update",
+        "delete"
       ]
     }
   },
