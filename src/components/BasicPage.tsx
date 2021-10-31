@@ -3,6 +3,7 @@ import Head from "next/head";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import BasicAuthenticator from "./BasicAuthenticator";
 import BasicLayout from "./BasicLayout";
+import { AppContextProvider } from "./AppContext";
 
 interface BasicPageProps {
   className?: string;
@@ -92,16 +93,18 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
             />
           </BasicAuthenticator>
         ) : (
-          <BasicLayout
-            className={props.className}
-            onBack={props.onBack}
-            fixedNav={props.fixedNav}
-            navScrollable={props.navScrollable}
-            noFooter={props.noFooter}
-            hideMenu={props.hideMenu}
-            title={props.menuTitle}
-            children={props.children}
-          />
+          <AppContextProvider>
+            <BasicLayout
+              className={props.className}
+              onBack={props.onBack}
+              fixedNav={props.fixedNav}
+              navScrollable={props.navScrollable}
+              noFooter={props.noFooter}
+              hideMenu={props.hideMenu}
+              title={props.menuTitle}
+              children={props.children}
+            />
+          </AppContextProvider>
         )}
       </GoogleReCaptchaProvider>
     </Fragment>

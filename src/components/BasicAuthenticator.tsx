@@ -8,12 +8,13 @@ import { ROUTES } from '../CONSTANTS';
 import Title from 'antd/lib/typography/Title';
 import { addEmailPostSignup, doesEmailExist } from './registrationutils';
 import Nav from './Nav';
+import { AppContextProvider } from './AppContext';
 
 interface BasicAuthenticatorProps {
 	children: React.ReactNode;
 }
 
-export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
+export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
 	const [
 		disabledSubmit,
 		setDisabledSubmit
@@ -42,20 +43,30 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
 		form
 	] = useForm();
 
-	/*const handleUniqueChecks = async () => {
-		const exists = await doesEmailExist(email);
-		if (exists) {
-			setError(
-				'Please register with another email address as this email address has already been used by another account.'
-			);
-			return false;
+	const listener = async (capsule: any) => {
+		let eventType: string = capsule.payload.event;
+		let user = null;
+		if (eventType === 'signIn') user = capsule.payload.data;
+		else if (eventType === 'tokenRefresh' || eventType === 'configured')
+			user = await Auth.currentAuthenticatedUser();
+		setUser(user);
+	};
+
+	const handleLogout = async () => {
+		try {
+			await Auth.signOut();
+			Hub.dispatch('auth', { event: 'signOut' });
+		} catch (error) {
+			console.log('error signing out: ', error);
 		}
-		return true;
-	};*/
+	};
+
+	useEffect(() => {
+		Hub.listen('auth', listener);
+		return () => Hub.remove('auth', listener);
+	}, []);
 
 	const handleRegistrationSubmit = async () => {
-		//const unique = await handleUniqueChecks();
-		//if(!unique) return;
 		Auth.signUp({
 			username: username,
 			password: password,
@@ -83,12 +94,6 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
 	const handleFormChange = () => {
 		setDisabledSubmit(form.getFieldsError().some(({ errors }) => errors.length) || !form.isFieldsTouched(true));
 	};
-
-	const initialize = async () => setUser(await Auth.currentAuthenticatedUser());
-
-	useEffect(() => {
-		initialize();
-	}, []);
 
 	return (
 		<Fragment>
@@ -219,7 +224,11 @@ export default function BasicAuthenticator(props: BasicAuthenticatorProps) {
 						</Row>
 					</Form>
 				</AmplifySection>
-				{user ? props.children : null}
+				{user ? (
+					<AppContextProvider user={user} handleLogout={handleLogout}>
+						{children}
+					</AppContextProvider>
+				) : null}
 			</AmplifyAuthenticator>
 		</Fragment>
 	);

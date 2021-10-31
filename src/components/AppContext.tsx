@@ -1,4 +1,4 @@
-import { API, Auth, graphqlOperation, Hub } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import React, { createContext, useEffect, useState } from 'react';
 import simpleStorage from "simplestorage.js";
@@ -13,13 +13,14 @@ export const LOCAL_RATES_DATA_KEY = "ratesData";
 export const LOCAL_DATA_TTL = {TTL: 86400000}; //1 day
 interface AppContextProviderProps {
 	children: any;
+	user?: any
+	handleLogout?: Function;
 }
 
-function AppContextProvider({ children }: AppContextProviderProps) {
+function AppContextProvider({ children, user, handleLogout }: AppContextProviderProps) {
 	const { executeRecaptcha } = useGoogleReCaptcha();
 	const [ defaultCountry, setDefaultCountry ] = useState<string>('US');
 	const [ defaultCurrency, setDefaultCurrency ] = useState<string>('USD');
-	const [ user, setUser ] = useState<string | null>(null);
 	const [ appContextLoaded, setAppContextLoaded ] = useState<boolean>(false);
 	const [ ratesData, setRatesData ] = useState<any>({});
 	
@@ -73,14 +74,8 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 		}
 	};
 
-	const listener = async (capsule: any) => {
-		let eventType: string = capsule.payload.event;
-		if (eventType === 'signIn')setUser(capsule.payload.data);
-		else if(eventType==="tokenRefresh" || eventType === 'configured')setUser(await Auth.currentAuthenticatedUser());
-		else setUser(null);
-	};
-
 	const initData = async () => {
+		if(!user) return;
 		let route = router.pathname;
 		if(route === ROUTES.GET || route === ROUTES.SET) {
 			await initializeFXCommCryptoRates();
@@ -91,37 +86,18 @@ function AppContextProvider({ children }: AppContextProviderProps) {
 		}
 	};
 
-	const initUserAndData = async () => {
-		Hub.listen('auth', listener);
-		let user = null;
-		try {
-			user = await Auth.currentAuthenticatedUser();
-			if(user) await initData();
-		} catch (e) {
-			console.log('Error while logging in: ', e);
-		} finally {
-			setUser(user);
-		}
-	};
-
-	const handleLogout = async () => {
-		try {
-			await Auth.signOut();
-			Hub.dispatch('auth', { event: 'signOut' });
-		} catch (error) {
-			console.log('error signing out: ', error);
-		} 
-	};
-
 	useEffect(() => {
 		const host = window.location.hostname;
 		setDefaultCountry(host.endsWith('.in') || host.endsWith('host') ? 'IN' : host.endsWith('.uk') ? 'UK' : 'US');
 		setDefaultCurrency(
 			host.endsWith('.in') || host.endsWith('host') ? 'INR' : host.endsWith('.uk') ? 'GBP' : 'USD'
 		);
-		initUserAndData().then(() => setAppContextLoaded(true));
-		return () => Hub.remove('auth', listener);
+		if(!user) setAppContextLoaded(true);
 	}, []);
+
+	useEffect(() => {
+		if(user) initData().then(() => setAppContextLoaded(true));
+	}, [user]);
 
 	return (
 		<AppContext.Provider
