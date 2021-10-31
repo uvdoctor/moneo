@@ -109,11 +109,10 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 					<Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
 					<p>&nbsp;</p>
 					<Row>{error ? <Alert type="error" message={error} /> : null}</Row>
-					<Form name="signup" form={form} onFieldsChange={handleFormChange}>
+					<Form name="signup" form={form} onFieldsChange={handleFormChange} layout="vertical">
 						<Form.Item
 							name="email"
-							label="Email"
-							required
+							label={Translations.EMAIL_LABEL}
 							validateStatus={error ? 'error' : undefined}
 							help={error ? error : null}
 							validateFirst
@@ -141,8 +140,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 						</Form.Item>
 						<Form.Item
 							name="password"
-							label="Password"
-							required
+							label={Translations.PASSWORD_LABEL}
 							rules={[
 								{
 									min: 8,
