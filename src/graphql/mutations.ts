@@ -372,10 +372,22 @@ export const createHoldings = /* GraphQL */ `
         curr
       }
       savings {
-        amt
-        curr
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
         name
         fIds
+        curr
+        chg
+        chgF
+        type
+        subt
       }
       property {
         type
@@ -527,42 +539,6 @@ export const createHoldings = /* GraphQL */ `
         years
         fIds
         curr
-      }
-      mem {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      angel {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        chgF
-        type
-        subt
       }
       other {
         id
@@ -646,10 +622,22 @@ export const updateHoldings = /* GraphQL */ `
         curr
       }
       savings {
-        amt
-        curr
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
         name
         fIds
+        curr
+        chg
+        chgF
+        type
+        subt
       }
       property {
         type
@@ -801,42 +789,6 @@ export const updateHoldings = /* GraphQL */ `
         years
         fIds
         curr
-      }
-      mem {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      angel {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        chgF
-        type
-        subt
       }
       other {
         id
@@ -920,10 +872,22 @@ export const deleteHoldings = /* GraphQL */ `
         curr
       }
       savings {
-        amt
-        curr
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
         name
         fIds
+        curr
+        chg
+        chgF
+        type
+        subt
       }
       property {
         type
@@ -1075,42 +1039,6 @@ export const deleteHoldings = /* GraphQL */ `
         years
         fIds
         curr
-      }
-      mem {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      angel {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        chgF
-        type
-        subt
       }
       other {
         id

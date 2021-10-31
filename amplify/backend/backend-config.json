@@ -36,7 +36,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneoutils",
+          "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
           ]
@@ -57,7 +57,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneoutils",
+          "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
           ]
@@ -78,7 +78,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneoutils",
+          "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
           ]
@@ -99,7 +99,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneoutils",
+          "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
           ]
@@ -120,7 +120,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneoutils",
+          "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
           ]
@@ -141,7 +141,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneoutils",
+          "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
           ]
@@ -162,7 +162,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneoutils",
+          "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
           ]
@@ -175,16 +175,6 @@
           ]
         }
       ]
-    },
-    "moneoutils": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
-    "marketCap": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
     },
     "moneopriceutils": {
       "providerPlugin": "awscloudformation",

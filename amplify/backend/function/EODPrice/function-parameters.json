@@ -2,21 +2,13 @@
   "lambdaLayers": [
     {
       "type": "ProjectLayer",
-      "resourceName": "moneoutils",
-      "env": "newdev",
+      "resourceName": "moneopriceutils",
+      "env": "usdev",
       "version": "Always choose latest version",
       "isLatestVersionSelected": true
     }
   ],
   "environmentVariableList": [
-    {
-      "cloudFormationParameterName": "apiGoalsGraphqlapiendpointoutput",
-      "environmentVariableName": "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT"
-    },
-    {
-      "cloudFormationParameterName": "apiGoalsGraphqlapiidoutput",
-      "environmentVariableName": "API_GOALS_GRAPHQLAPIIDOUTPUT"
-    },
     {
       "cloudFormationParameterName": "eodApiKey",
       "environmentVariableName": "EOD_API_KEY"

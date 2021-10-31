@@ -541,7 +541,7 @@ type Holdings
   deposits: [Deposit!]
   lendings: [Deposit!]
   loans: [Liability!]
-  savings: [Balance!]
+  savings: [Holding!]
   property: [Property!]
   vehicles: [Holding!]
   pm: [Holding!]
@@ -551,8 +551,6 @@ type Holdings
   nps: [Holding!]
   crypto: [Holding!]
   ins: [Insurance!]
-  mem: [Holding!]
-  angel: [Holding!]
   other: [Holding!]
 }
 

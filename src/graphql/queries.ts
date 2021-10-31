@@ -707,10 +707,22 @@ export const getHoldings = /* GraphQL */ `
         curr
       }
       savings {
-        amt
-        curr
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
         name
         fIds
+        curr
+        chg
+        chgF
+        type
+        subt
       }
       property {
         type
@@ -863,42 +875,6 @@ export const getHoldings = /* GraphQL */ `
         fIds
         curr
       }
-      mem {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      angel {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fIds
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       other {
         id
         qty
@@ -966,10 +942,15 @@ export const listHoldingss = /* GraphQL */ `
           curr
         }
         savings {
-          amt
-          curr
+          id
+          qty
           name
           fIds
+          curr
+          chg
+          chgF
+          type
+          subt
         }
         property {
           type
@@ -1061,28 +1042,6 @@ export const listHoldingss = /* GraphQL */ `
           years
           fIds
           curr
-        }
-        mem {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          chgF
-          type
-          subt
-        }
-        angel {
-          id
-          qty
-          name
-          fIds
-          curr
-          chg
-          chgF
-          type
-          subt
         }
         other {
           id
