@@ -57,6 +57,10 @@ export const STELLAR = 'XLM';
 export const PM_TAB = 'Precious Metals';
 export const CRYPTO_TAB = 'Crypto';
 export const FIN_TAB = 'Financial';
+export const SAV_TAB = 'Saving Accounts';
+export const DEPO_TAB = 'Deposits';
+export const ML_TAB = 'Money Lent';
+export const OTHER_TAB = 'Others';
 
 function NWContextProvider() {
 	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData }: any = useContext(AppContext);
@@ -116,23 +120,23 @@ function NWContextProvider() {
 		Cash: {
 			label: 'Cash',
 			children: {
-				'Deposits': {
-					label: 'Deposits',
+				[DEPO_TAB]: {
+					label: [DEPO_TAB],
 					data: deposits,
 					setData: setDeposits,
 					total: totalDeposits,
 					contentComp: <InstrumentValuation />
 				},
-				'Saving Accounts': {
-					label: 'Saving Accounts',
+				[SAV_TAB]: {
+					label: [SAV_TAB],
 					data: savings,
 					setData: setSavings,
 					total: totalSavings,
 					categoryOptions: getCurrencyList(),
 					viewComp: SavingTabInput,
 				},
-				'Money Lent': {
-					label: 'Money Lent',
+				[ML_TAB]: {
+					label: [ML_TAB],
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
@@ -273,11 +277,17 @@ function NWContextProvider() {
 						[STELLAR]: 'Stellar'
 					}
 				},
-				Other: {
-					label: 'Other',
+				[OTHER_TAB]: {
+					label: [OTHER_TAB],
 					data: crypto,
 					setData: setCrypto,
 					total: totalCrypto,
+					categoryOptions: getCurrencyList(),
+					subCategoryOptions: {
+						Art: 'Art',
+						Watch: 'Watch',
+						Angel: 'Angel Investments'
+					},
 					viewComp: ViewHoldingInput,
 				}, 
 			}
