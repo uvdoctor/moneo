@@ -1,4 +1,9 @@
-const mfData = require("india-mutual-fund-info");
+/* Amplify Params - DO NOT EDIT
+	API_GOALS_GRAPHQLAPIENDPOINTOUTPUT
+	API_GOALS_GRAPHQLAPIIDOUTPUT
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */const mfData = require("india-mutual-fund-info");
 const { pushData, pushDataForFeed } = require("/opt/nodejs/insertIntoDB");
 const { directISIN, getDirISIN } = require("./data");
 const { getType, getSubType, mfType, mCap, getName } = require("./calculate");

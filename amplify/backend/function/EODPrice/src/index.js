@@ -1,4 +1,9 @@
-const { pushData, pushDataForFeed } = require("/opt/nodejs/insertIntoDB");
+/* Amplify Params - DO NOT EDIT
+	API_GOALS_GRAPHQLAPIENDPOINTOUTPUT
+	API_GOALS_GRAPHQLAPIIDOUTPUT
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */const { pushData, pushDataForFeed } = require("/opt/nodejs/insertIntoDB");
 const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;

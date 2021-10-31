@@ -1,7 +1,8 @@
 {
   "auth": {
-    "ddpwa0063633b": {
+    "moneo3e6273bc": {
       "service": "Cognito",
+      "serviceType": "imported",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false
@@ -35,17 +36,18 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "api",
+          "resourceName": "goals",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        },
+        {
           "category": "function",
           "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "ddpwa0063633b",
-          "attributes": [
-            "UserPoolId"
           ]
         }
       ]
@@ -56,17 +58,18 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "api",
+          "resourceName": "goals",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        },
+        {
           "category": "function",
           "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "ddpwa0063633b",
-          "attributes": [
-            "UserPoolId"
           ]
         }
       ]
@@ -77,17 +80,18 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "api",
+          "resourceName": "goals",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        },
+        {
           "category": "function",
           "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "ddpwa0063633b",
-          "attributes": [
-            "UserPoolId"
           ]
         }
       ]
@@ -98,17 +102,18 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "api",
+          "resourceName": "goals",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        },
+        {
           "category": "function",
           "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "ddpwa0063633b",
-          "attributes": [
-            "UserPoolId"
           ]
         }
       ]
@@ -119,17 +124,18 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "api",
+          "resourceName": "goals",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        },
+        {
           "category": "function",
           "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "ddpwa0063633b",
-          "attributes": [
-            "UserPoolId"
           ]
         }
       ]
@@ -140,17 +146,18 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "api",
+          "resourceName": "goals",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        },
+        {
           "category": "function",
           "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "ddpwa0063633b",
-          "attributes": [
-            "UserPoolId"
           ]
         }
       ]
@@ -161,17 +168,18 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "api",
+          "resourceName": "goals",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        },
+        {
           "category": "function",
           "resourceName": "moneopriceutils",
           "attributes": [
             "Arn"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "ddpwa0063633b",
-          "attributes": [
-            "UserPoolId"
           ]
         }
       ]

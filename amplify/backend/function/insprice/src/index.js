@@ -1,4 +1,9 @@
-const fs = require('fs');
+/* Amplify Params - DO NOT EDIT
+	API_GOALS_GRAPHQLAPIENDPOINTOUTPUT
+	API_GOALS_GRAPHQLAPIIDOUTPUT
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */const fs = require('fs');
 const fsPromise = require('fs/promises');
 const { cleanDirectory, downloadZip, unzipDownloads } = require('/opt/nodejs/bhavUtils');
 const { getDataFromTable, pushData, pushDataForFeed } = require('/opt/nodejs/insertIntoDB');
