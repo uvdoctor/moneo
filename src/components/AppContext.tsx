@@ -23,7 +23,6 @@ function AppContextProvider({ children, user, handleLogout }: AppContextProvider
 	const [ defaultCurrency, setDefaultCurrency ] = useState<string>('USD');
 	const [ appContextLoaded, setAppContextLoaded ] = useState<boolean>(false);
 	const [ ratesData, setRatesData ] = useState<any>({});
-	
 	const [ insData, setInsData ] = useState<any>({});
 	const router = useRouter();
 	

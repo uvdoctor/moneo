@@ -28,10 +28,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 		setUser
 	] = useState<any | null>(null);
 	const [
-		username,
-		setUsername
-	] = useState<string>('');
-	const [
 		password,
 		setPassword
 	] = useState<string>('');
@@ -61,12 +57,24 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 		}
 	};
 
+	const generateFromEmail = (email: string) => {
+		// Retrive name from email address
+		const nameParts = email.replace(/@.+/, "");
+		// Replace all special characters like "@ . _ ";
+		let name = nameParts.replace(/[&/\\#,+()$~%._@'":*?<>{}]/g, "");
+		// Create and return unique username
+		if(name.length > 5) name = name.substring(0, 5);
+		return name + ("" + Math.random()).substring(2, 6);
+	  }
+
 	useEffect(() => {
 		Hub.listen('auth', listener);
 		return () => Hub.remove('auth', listener);
 	}, []);
 
 	const handleRegistrationSubmit = async () => {
+		const username = generateFromEmail(email);
+		console.log("Generated username: ", username);
 		Auth.signUp({
 			username: username,
 			password: password,
@@ -162,13 +170,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 							]}
 							hasFeedback>
 							<Input.Password allowClear onChange={(e) => setPassword(e.currentTarget.value)} />
-						</Form.Item>
-						<Form.Item
-							name="username"
-							label={Translations.PREFERRED_USERNAME_LABEL}
-							validateStatus={error ? 'error' : undefined}
-							help={error ? error : null}>
-							<Input onChange={(e) => setUsername(e.currentTarget.value)} />
 						</Form.Item>
 						<Form.Item
 							name="terms"
