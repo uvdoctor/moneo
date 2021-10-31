@@ -157,6 +157,39 @@ type Registration
   long: Float
 }
 
+type regMobile
+  @model
+  @aws_iam
+  @aws_cognito_user_pools
+  @key(fields: [mob])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+    ]
+  ) {
+    mob: int!
+  }
+type regEmail
+  @model
+  @aws_iam
+  @aws_cognito_user_pools
+  @key(fields: [email])
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+    ]
+  ) {
+    email: String!
+  }
+
 enum AssetType {
   E
   F
