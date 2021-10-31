@@ -10,33 +10,32 @@ import { AppContext } from "./AppContext";
 import { UserOutlined } from "@ant-design/icons";
 export interface MainMenuProps {
   mode?: any;
-  hidMenu?: boolean;
-  hidMenuTitle?: string;
+  hideMenu?: boolean;
+  title?: string;
 }
 
 export default function MainMenu({
   mode = "horizontal",
-  hidMenu,
-  hidMenuTitle,
+  hideMenu,
+  title,
 }: MainMenuProps) {
   const { user, appContextLoaded, handleLogout }: any = useContext(AppContext);
   const router = useRouter();
   const [selectedKey, setSelectedKey] = useState<string>(router.pathname);
   const { SubMenu } = Menu;
 
-  return appContextLoaded ? (
-    <Fragment>
-      {hidMenu ? (
+  return hideMenu ? 
         <>
           <FSToggle />
-          <Row justify="center">
+          {title && 
+              <Row justify="center">
                 <h2>
-                  <strong>{hidMenuTitle}</strong>
+                  <strong>{title}</strong>
                 </h2>
-              </Row>
+              </Row>}
         </>
-      ) : (
-        <>
+  : appContextLoaded ? (
+    <Fragment>
           <FSToggle />
           <Menu mode={mode} onSelect={(info: any) => setSelectedKey(info.key)}>
             <SubMenu title="Calculate">
@@ -90,8 +89,6 @@ export default function MainMenu({
             </Menu.Item>
         */}
           </Menu>
-        </>
-      )}
     </Fragment>
   ) : null;
 }

@@ -8,10 +8,10 @@ import securityContent from "./SecurityContent";
 import tcConent from "./TCContent";
 
 interface PoliciesProps {
-  stringParams: string;
+  type: string;
 }
 
-export default function Policies({ stringParams }: PoliciesProps) {
+export default function Policies({ type }: PoliciesProps) {
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
 
@@ -32,7 +32,7 @@ export default function Policies({ stringParams }: PoliciesProps) {
       <Row className="steps-content">
         <Col>
           <Tabs
-            defaultActiveKey={stringParams}
+            defaultActiveKey={type}
             tabPosition={isMobileDevice(fsb) ? "top" : "left"}
             type={isMobileDevice(fsb) ? "card" : "line"}
             animated

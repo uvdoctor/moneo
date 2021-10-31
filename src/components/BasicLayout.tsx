@@ -12,7 +12,7 @@ interface BasicLayoutProps {
   navScrollable?: boolean;
   noFooter?: boolean;
   hideMenu?: boolean;
-  hidMenuTitle?: string;
+  title?: string;
 }
 
 export default function BasicLayout(props: BasicLayoutProps) {
@@ -24,7 +24,7 @@ export default function BasicLayout(props: BasicLayoutProps) {
           isFixed={props.fixedNav ? props.fixedNav : false}
           onBack={props.onBack}
           hideMenu={props.hideMenu}
-          hidMenuTitle={props.hidMenuTitle}
+          title={props.title}
         />
         {props.children}
         {!props.noFooter && <Footer />}

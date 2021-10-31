@@ -19,7 +19,7 @@ interface NavProps {
   isFixed?: boolean;
   scrollable?: boolean;
   hideMenu?: boolean;
-  hidMenuTitle?: string;
+  title?: string;
 }
 
 export default function Nav({
@@ -27,7 +27,7 @@ export default function Nav({
   isFixed,
   scrollable,
   hideMenu,
-  hidMenuTitle,
+  title,
 }: NavProps) {
   const { defaultCurrency, setDefaultCurrency }: any = useContext(AppContext);
   const { top } = useScroll();
@@ -53,8 +53,8 @@ export default function Nav({
     <Header className={`dd-header ${top > 10 || isFixed ? "fixed-nav" : ""}`}>
       {hideMenu ? (
         <>
-          <Logo hidBackArrow />
-          <MainMenu hidMenu hidMenuTitle={hidMenuTitle} />
+          <Logo hideBackArrow />
+          <MainMenu hideMenu title={title} />
         </>
       ) : (
         <Fragment>

@@ -6,15 +6,15 @@ import BasicPage from "../../components/BasicPage";
 
 Amplify.configure(awsmobile);
 
-export default function POLICYTC() {
+export default function PolicyTC() {
   return (
     <BasicPage
       title="Terms and Conditions"
       hideMenu
       noFooter
-      hidMenuTitle={"Policies"}
+      menuTitle="Policies"
     >
-      <Policies stringParams={"terms-and-conditions"} />
+      <Policies type="terms-and-conditions" />
     </BasicPage>
   );
 }

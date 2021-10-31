@@ -6,15 +6,15 @@ import BasicPage from '../../components/BasicPage';
 
 Amplify.configure(awsmobile);
 
-export default function POLICYSECURITY() {
+export default function PolicySecurity() {
 	return (
 		<BasicPage
       title="Security Policy"
       hideMenu
       noFooter
-      hidMenuTitle={"Policies"}
+      menuTitle={"Policies"}
     >
-        <Policies stringParams={'security'} />
+        <Policies type='security' />
 		</BasicPage>
 	);
 }

@@ -10,17 +10,17 @@ import { PlanContext } from "./goals/PlanContext";
 import { CalcContext } from "./calc/CalcContext";
 interface LogoProps {
   onBack?: Function | undefined | null;
-  hidBackArrow?: boolean;
+  hideBackArrow?: boolean;
 }
 
-export default function Logo({ onBack, hidBackArrow }: LogoProps) {
+export default function Logo({ onBack, hideBackArrow }: LogoProps) {
   const { isPublicCalc }: any = useContext(PlanContext);
   const { handleSubmit }: any = useContext(CalcContext);
 
   const router = useRouter();
   return (
     <div style={{ cursor: "pointer" }} className="logo">
-      {hidBackArrow ? (
+      {hideBackArrow ? (
         <Link href={ROUTES.HOME}>
           <a>
             <MainLogo />

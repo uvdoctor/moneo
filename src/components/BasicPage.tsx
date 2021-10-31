@@ -13,8 +13,8 @@ interface BasicPageProps {
   navScrollable?: boolean;
   noFooter?: boolean;
   hideMenu?: boolean;
-  hidMenuTitle?: string;
   secure?: boolean;
+  menuTitle?: string;
 }
 
 export default function BasicPage(props: BasicPageProps) {
@@ -87,7 +87,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
               navScrollable={props.navScrollable}
               noFooter={props.noFooter}
               hideMenu={props.hideMenu}
-              hidMenuTitle={props.hidMenuTitle}
+              title={props.menuTitle}
               children={props.children}
             />
           </BasicAuthenticator>
@@ -99,7 +99,7 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
             navScrollable={props.navScrollable}
             noFooter={props.noFooter}
             hideMenu={props.hideMenu}
-            hidMenuTitle={props.hidMenuTitle}
+            title={props.menuTitle}
             children={props.children}
           />
         )}
