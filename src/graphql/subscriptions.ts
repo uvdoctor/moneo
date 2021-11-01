@@ -1010,7 +1010,9 @@ export const onCreateHoldings = /* GraphQL */ `
       }
       ins {
         premium
-        years
+        sy
+        ey
+        yearly
         fIds
         curr
       }
@@ -1257,7 +1259,9 @@ export const onUpdateHoldings = /* GraphQL */ `
       }
       ins {
         premium
-        years
+        sy
+        ey
+        yearly
         fIds
         curr
       }
@@ -1504,7 +1508,9 @@ export const onDeleteHoldings = /* GraphQL */ `
       }
       ins {
         premium
-        years
+        sy
+        ey
+        yearly
         fIds
         curr
       }

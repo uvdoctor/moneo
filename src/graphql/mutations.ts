@@ -252,20 +252,6 @@ export const deleteGoal = /* GraphQL */ `
     }
   }
 `;
-export const createRegMob = /* GraphQL */ `
-  mutation CreateRegMob(
-    $input: CreateRegMobInput!
-    $condition: ModelRegMobConditionInput
-  ) {
-    createRegMob(input: $input, condition: $condition) {
-      mob
-      user
-      notify
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const updateRegMob = /* GraphQL */ `
   mutation UpdateRegMob(
     $input: UpdateRegMobInput!
@@ -287,20 +273,6 @@ export const deleteRegMob = /* GraphQL */ `
   ) {
     deleteRegMob(input: $input, condition: $condition) {
       mob
-      user
-      notify
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createRegEmail = /* GraphQL */ `
-  mutation CreateRegEmail(
-    $input: CreateRegEmailInput!
-    $condition: ModelRegEmailConditionInput
-  ) {
-    createRegEmail(input: $input, condition: $condition) {
-      email
       user
       notify
       createdAt
@@ -603,7 +575,9 @@ export const createHoldings = /* GraphQL */ `
       }
       ins {
         premium
-        years
+        sy
+        ey
+        yearly
         fIds
         curr
       }
@@ -853,7 +827,9 @@ export const updateHoldings = /* GraphQL */ `
       }
       ins {
         premium
-        years
+        sy
+        ey
+        yearly
         fIds
         curr
       }
@@ -1103,7 +1079,9 @@ export const deleteHoldings = /* GraphQL */ `
       }
       ins {
         premium
-        years
+        sy
+        ey
+        yearly
         fIds
         curr
       }
@@ -1194,6 +1172,34 @@ export const updateRating = /* GraphQL */ `
       type
       rating
       feedbackId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createRegMob = /* GraphQL */ `
+  mutation CreateRegMob(
+    $input: CreateRegMobInput!
+    $condition: ModelRegMobConditionInput
+  ) {
+    createRegMob(input: $input, condition: $condition) {
+      mob
+      user
+      notify
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createRegEmail = /* GraphQL */ `
+  mutation CreateRegEmail(
+    $input: CreateRegEmailInput!
+    $condition: ModelRegEmailConditionInput
+  ) {
+    createRegEmail(input: $input, condition: $condition) {
+      email
+      user
+      notify
       createdAt
       updatedAt
     }

@@ -386,10 +386,10 @@ export type DeleteGoalInput = {
   id: string,
 };
 
-export type CreateRegMobInput = {
+export type UpdateRegMobInput = {
   mob: number,
-  user: string,
-  notify: YN,
+  user?: string | null,
+  notify?: YN | null,
 };
 
 export type ModelRegMobConditionInput = {
@@ -409,20 +409,14 @@ export type RegMob = {
   updatedAt?: string,
 };
 
-export type UpdateRegMobInput = {
-  mob: number,
-  user?: string | null,
-  notify?: YN | null,
-};
-
 export type DeleteRegMobInput = {
   mob: number,
 };
 
-export type CreateRegEmailInput = {
+export type UpdateRegEmailInput = {
   email: string,
-  user: string,
-  notify: YN,
+  user?: string | null,
+  notify?: YN | null,
 };
 
 export type ModelRegEmailConditionInput = {
@@ -440,12 +434,6 @@ export type RegEmail = {
   notify?: YN,
   createdAt?: string,
   updatedAt?: string,
-};
-
-export type UpdateRegEmailInput = {
-  email: string,
-  user?: string | null,
-  notify?: YN | null,
 };
 
 export type DeleteRegEmailInput = {
@@ -571,7 +559,9 @@ export type OwnershipInput = {
 
 export type InsuranceInput = {
   premium: number,
-  years: number,
+  sy: number,
+  ey: number,
+  yearly: YN,
   fIds: Array< string >,
   curr: string,
 };
@@ -667,7 +657,9 @@ export type Ownership = {
 export type Insurance = {
   __typename: "Insurance",
   premium?: number,
-  years?: number,
+  sy?: number,
+  ey?: number,
+  yearly?: YN,
   fIds?: Array< string >,
   curr?: string,
 };
@@ -728,6 +720,18 @@ export type UpdateRatingInput = {
   type?: CalcType | null,
   rating?: number | null,
   feedbackId?: string | null,
+};
+
+export type CreateRegMobInput = {
+  mob: number,
+  user: string,
+  notify: YN,
+};
+
+export type CreateRegEmailInput = {
+  email: string,
+  user: string,
+  notify: YN,
 };
 
 export type CreateFeedsInput = {
@@ -1955,22 +1959,6 @@ export type DeleteGoalMutation = {
   } | null,
 };
 
-export type CreateRegMobMutationVariables = {
-  input?: CreateRegMobInput,
-  condition?: ModelRegMobConditionInput | null,
-};
-
-export type CreateRegMobMutation = {
-  createRegMob?:  {
-    __typename: "RegMob",
-    mob: number,
-    user: string,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type UpdateRegMobMutationVariables = {
   input?: UpdateRegMobInput,
   condition?: ModelRegMobConditionInput | null,
@@ -1996,22 +1984,6 @@ export type DeleteRegMobMutation = {
   deleteRegMob?:  {
     __typename: "RegMob",
     mob: number,
-    user: string,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateRegEmailMutationVariables = {
-  input?: CreateRegEmailInput,
-  condition?: ModelRegEmailConditionInput | null,
-};
-
-export type CreateRegEmailMutation = {
-  createRegEmail?:  {
-    __typename: "RegEmail",
-    email: string,
     user: string,
     notify: YN,
     createdAt: string,
@@ -2352,7 +2324,9 @@ export type CreateHoldingsMutation = {
     ins?:  Array< {
       __typename: "Insurance",
       premium: number,
-      years: number,
+      sy: number,
+      ey: number,
+      yearly: YN,
       fIds: Array< string >,
       curr: string,
     } > | null,
@@ -2632,7 +2606,9 @@ export type UpdateHoldingsMutation = {
     ins?:  Array< {
       __typename: "Insurance",
       premium: number,
-      years: number,
+      sy: number,
+      ey: number,
+      yearly: YN,
       fIds: Array< string >,
       curr: string,
     } > | null,
@@ -2912,7 +2888,9 @@ export type DeleteHoldingsMutation = {
     ins?:  Array< {
       __typename: "Insurance",
       premium: number,
-      years: number,
+      sy: number,
+      ey: number,
+      yearly: YN,
       fIds: Array< string >,
       curr: string,
     } > | null,
@@ -3015,6 +2993,38 @@ export type UpdateRatingMutation = {
     type: CalcType,
     rating: number,
     feedbackId?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateRegMobMutationVariables = {
+  input?: CreateRegMobInput,
+  condition?: ModelRegMobConditionInput | null,
+};
+
+export type CreateRegMobMutation = {
+  createRegMob?:  {
+    __typename: "RegMob",
+    mob: number,
+    user: string,
+    notify: YN,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateRegEmailMutationVariables = {
+  input?: CreateRegEmailInput,
+  condition?: ModelRegEmailConditionInput | null,
+};
+
+export type CreateRegEmailMutation = {
+  createRegEmail?:  {
+    __typename: "RegEmail",
+    email: string,
+    user: string,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4553,7 +4563,9 @@ export type GetHoldingsQuery = {
     ins?:  Array< {
       __typename: "Insurance",
       premium: number,
-      years: number,
+      sy: number,
+      ey: number,
+      yearly: YN,
       fIds: Array< string >,
       curr: string,
     } > | null,
@@ -4740,7 +4752,9 @@ export type ListHoldingssQuery = {
       ins?:  Array< {
         __typename: "Insurance",
         premium: number,
-        years: number,
+        sy: number,
+        ey: number,
+        yearly: YN,
         fIds: Array< string >,
         curr: string,
       } > | null,
@@ -5888,7 +5902,9 @@ export type OnCreateHoldingsSubscription = {
     ins?:  Array< {
       __typename: "Insurance",
       premium: number,
-      years: number,
+      sy: number,
+      ey: number,
+      yearly: YN,
       fIds: Array< string >,
       curr: string,
     } > | null,
@@ -6167,7 +6183,9 @@ export type OnUpdateHoldingsSubscription = {
     ins?:  Array< {
       __typename: "Insurance",
       premium: number,
-      years: number,
+      sy: number,
+      ey: number,
+      yearly: YN,
       fIds: Array< string >,
       curr: string,
     } > | null,
@@ -6446,7 +6464,9 @@ export type OnDeleteHoldingsSubscription = {
     ins?:  Array< {
       __typename: "Insurance",
       premium: number,
-      years: number,
+      sy: number,
+      ey: number,
+      yearly: YN,
       fIds: Array< string >,
       curr: string,
     } > | null,

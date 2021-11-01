@@ -902,7 +902,9 @@ export const getHoldings = /* GraphQL */ `
       }
       ins {
         premium
-        years
+        sy
+        ey
+        yearly
         fIds
         curr
       }
@@ -1070,7 +1072,9 @@ export const listHoldingss = /* GraphQL */ `
         }
         ins {
           premium
-          years
+          sy
+          ey
+          yearly
           fIds
           curr
         }

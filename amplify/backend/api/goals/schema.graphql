@@ -131,7 +131,7 @@ type RegMob
 	@aws_cognito_user_pools
 	@key(fields: ["mob"])
 	@auth(
-		rules: [{ allow: public, provider: iam, operations: [read] }, { allow: private, operations: [update, delete] }]
+		rules: [{ allow: public, provider: iam, operations: [create, read] }, { allow: private, operations: [update, delete] }]
 	) {
 	mob: Int!
 	user: String!
@@ -144,7 +144,7 @@ type RegEmail
 	@aws_cognito_user_pools
 	@key(fields: ["email"])
 	@auth(
-		rules: [{ allow: public, provider: iam, operations: [read] }, { allow: private, operations: [update, delete] }]
+		rules: [{ allow: public, provider: iam, operations: [create, read] }, { allow: private, operations: [update, delete] }]
 	) {
 	email: String!
 	user: String!
@@ -472,7 +472,9 @@ type Liability {
 
 type Insurance {
 	premium: Float!
-	years: Int!
+	sy: Int!
+	ey: Int!
+	yearly: YN!
 	fIds: [String!]!
 	curr: String!
 }
