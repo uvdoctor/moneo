@@ -7,7 +7,7 @@ export const doesEmailExist = async (email: string) => {
 	let nextToken = null;
 	try {
 		do {
-			let variables:any = {limit: 20000, filter: {eq: email}};
+			let variables:any = {limit: 20000, email: email};
 			if(nextToken) variables.nextToken = nextToken;
 			const { data: { listRegEmails } } = (await API.graphql({
 				query: queries.listRegEmails,
