@@ -10,6 +10,7 @@ import { doesEmailExist } from './registrationutils';
 import Nav from './Nav';
 import { AppContextProvider } from './AppContext';
 import { Form, Input, Button } from 'antd';
+import router from 'next/router';
 interface BasicAuthenticatorProps {
 	children: React.ReactNode;
 }
@@ -36,6 +37,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 			Hub.dispatch('auth', { event: 'signOut' });
 		} catch (error) {
 			console.log('error signing out: ', error);
+		} finally {
+			router.reload();
 		}
 	};
 
@@ -57,15 +60,16 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	const verifyEmail = async() => {
 		setLoading(true);
 		setEmailError('');
-		if (!await doesEmailExist(email)) {
+		let exists = await doesEmailExist(email);
+		if (!exists) {
 			setBack(false)
 			setNext(true);
-			setLoading(false);
 		}
 		else{
-			setLoading(false);
+			setNext(false);
 			setEmailError('Please use another email address as this one is already used by another account.')
 		}
+		setLoading(false);
 	}
 
 	const onBackClick = () => {
