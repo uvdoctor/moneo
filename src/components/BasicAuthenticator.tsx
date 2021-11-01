@@ -40,13 +40,12 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	] = useForm();
 
 	const listener = async (capsule: any) => {
-		let eventType: string = capsule.payload.event;
-		let user = null;
-		if (eventType === 'signIn') user = capsule.payload.data;
-		else if (eventType === 'tokenRefresh' || eventType === 'configured')
-			user = await Auth.currentAuthenticatedUser();
+		let user = capsule.payload.data;
+		if(!user) user = await Auth.currentAuthenticatedUser();
 		setUser(user);
 	};
+
+	const initUser = async() => setUser(await Auth.currentAuthenticatedUser());
 
 	const handleLogout = async () => {
 		try {
@@ -68,6 +67,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 
 	useEffect(() => {
 		Hub.listen('auth', listener);
+		initUser();
 		return () => Hub.remove('auth', listener);
 	}, []);
 
