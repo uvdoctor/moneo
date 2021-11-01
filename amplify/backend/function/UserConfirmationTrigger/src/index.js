@@ -13,10 +13,10 @@ const pushDataSingly = async (data, table) => {
 	}
 };
 
-exports.handler = async (event, context) => {
+exports.handler = async (event, context, callback) => {
 	const data = event.request.userAttributes;
-	console.log(data.email);
-	if (data) {
+	console.log("Going to insert email: ", data.email);
+	if (data.email) {
 		await pushDataSingly(
 			{
 				__typename: 'RegEmail',
@@ -29,9 +29,9 @@ exports.handler = async (event, context) => {
 			table
 		);
 		console.log('Success: Everything executed correctly');
-		context.done(null, event);
+		callback(null, event);
 	} else {
 		console.log('Error: Nothing was written to DynamoDB');
-		context.done(null, event);
+		callback(null, event);
 	}
 };
