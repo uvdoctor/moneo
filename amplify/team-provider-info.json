@@ -123,7 +123,7 @@
         },
         "UserConfirmationTrigger": {
           "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/UserConfirmationTrigger-4e4843374a55754c3870-build.zip"
+          "s3Key": "amplify-builds/UserConfirmationTrigger-4d41744e4d67746c5149-build.zip"
         }
       },
       "interactions": {
