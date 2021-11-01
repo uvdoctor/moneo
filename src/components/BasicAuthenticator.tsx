@@ -9,7 +9,7 @@ import Title from 'antd/lib/typography/Title';
 import { addEmailPostSignup, doesEmailExist } from './registrationutils';
 import Nav from './Nav';
 import { AppContextProvider } from './AppContext';
-import { Status } from '../api/goals';
+import { YN } from '../api/goals';
 
 interface BasicAuthenticatorProps {
 	children: React.ReactNode;
@@ -21,7 +21,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	const [ user, setUser ] = useState<any | null>(null);
 	const [ password, setPassword ] = useState<string>('');
 	const [ email, setEmail ] = useState<string>('');
-	const [ notify, setNotify ] = useState<Status>(Status.Y);
+	const [ notify, setNotify ] = useState<YN>(YN.Y);
 	const [ form ] = useForm();
 
 	const initUser = async() => setUser(await Auth.currentAuthenticatedUser());
@@ -185,7 +185,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 						</Form.Item>
 						<Checkbox
 							defaultChecked={true}
-							onChange={(e) => (e.target.checked ? setNotify(Status.Y) : setNotify(Status.N))}
+							onChange={(e) => (e.target.checked ? setNotify(YN.Y) : setNotify(YN.N))}
 						>
 							<strong>Get 20% off</strong>
 							&nbsp; by signing up for emails and text
