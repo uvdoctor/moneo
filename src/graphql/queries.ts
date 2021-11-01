@@ -247,6 +247,7 @@ export const getRegMob = /* GraphQL */ `
       notify
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -270,6 +271,7 @@ export const listRegMobs = /* GraphQL */ `
         notify
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }

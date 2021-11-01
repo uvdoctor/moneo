@@ -252,6 +252,20 @@ export const deleteGoal = /* GraphQL */ `
     }
   }
 `;
+export const createRegMob = /* GraphQL */ `
+  mutation CreateRegMob(
+    $input: CreateRegMobInput!
+    $condition: ModelRegMobConditionInput
+  ) {
+    createRegMob(input: $input, condition: $condition) {
+      mob
+      notify
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const updateRegMob = /* GraphQL */ `
   mutation UpdateRegMob(
     $input: UpdateRegMobInput!
@@ -262,6 +276,7 @@ export const updateRegMob = /* GraphQL */ `
       notify
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -275,6 +290,7 @@ export const deleteRegMob = /* GraphQL */ `
       notify
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -1168,19 +1184,6 @@ export const updateRating = /* GraphQL */ `
       type
       rating
       feedbackId
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createRegMob = /* GraphQL */ `
-  mutation CreateRegMob(
-    $input: CreateRegMobInput!
-    $condition: ModelRegMobConditionInput
-  ) {
-    createRegMob(input: $input, condition: $condition) {
-      mob
-      notify
       createdAt
       updatedAt
     }

@@ -330,32 +330,35 @@ export const onDeleteRating = /* GraphQL */ `
   }
 `;
 export const onCreateRegMob = /* GraphQL */ `
-  subscription OnCreateRegMob {
-    onCreateRegMob {
+  subscription OnCreateRegMob($owner: String) {
+    onCreateRegMob(owner: $owner) {
       mob
       notify
       createdAt
       updatedAt
+      owner
     }
   }
 `;
 export const onUpdateRegMob = /* GraphQL */ `
-  subscription OnUpdateRegMob {
-    onUpdateRegMob {
+  subscription OnUpdateRegMob($owner: String) {
+    onUpdateRegMob(owner: $owner) {
       mob
       notify
       createdAt
       updatedAt
+      owner
     }
   }
 `;
 export const onDeleteRegMob = /* GraphQL */ `
-  subscription OnDeleteRegMob {
-    onDeleteRegMob {
+  subscription OnDeleteRegMob($owner: String) {
+    onDeleteRegMob(owner: $owner) {
       mob
       notify
       createdAt
       updatedAt
+      owner
     }
   }
 `;

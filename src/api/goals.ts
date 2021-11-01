@@ -386,9 +386,9 @@ export type DeleteGoalInput = {
   id: string,
 };
 
-export type UpdateRegMobInput = {
+export type CreateRegMobInput = {
   mob: number,
-  notify?: YN | null,
+  notify: YN,
 };
 
 export type ModelRegMobConditionInput = {
@@ -404,6 +404,12 @@ export type RegMob = {
   notify?: YN,
   createdAt?: string,
   updatedAt?: string,
+  owner?: string | null,
+};
+
+export type UpdateRegMobInput = {
+  mob: number,
+  notify?: YN | null,
 };
 
 export type DeleteRegMobInput = {
@@ -714,11 +720,6 @@ export type UpdateRatingInput = {
   type?: CalcType | null,
   rating?: number | null,
   feedbackId?: string | null,
-};
-
-export type CreateRegMobInput = {
-  mob: number,
-  notify: YN,
 };
 
 export type CreateRegEmailInput = {
@@ -1949,6 +1950,22 @@ export type DeleteGoalMutation = {
   } | null,
 };
 
+export type CreateRegMobMutationVariables = {
+  input?: CreateRegMobInput,
+  condition?: ModelRegMobConditionInput | null,
+};
+
+export type CreateRegMobMutation = {
+  createRegMob?:  {
+    __typename: "RegMob",
+    mob: number,
+    notify: YN,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
 export type UpdateRegMobMutationVariables = {
   input?: UpdateRegMobInput,
   condition?: ModelRegMobConditionInput | null,
@@ -1961,6 +1978,7 @@ export type UpdateRegMobMutation = {
     notify: YN,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1976,6 +1994,7 @@ export type DeleteRegMobMutation = {
     notify: YN,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -2984,21 +3003,6 @@ export type UpdateRatingMutation = {
   } | null,
 };
 
-export type CreateRegMobMutationVariables = {
-  input?: CreateRegMobInput,
-  condition?: ModelRegMobConditionInput | null,
-};
-
-export type CreateRegMobMutation = {
-  createRegMob?:  {
-    __typename: "RegMob",
-    mob: number,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateRegEmailMutationVariables = {
   input?: CreateRegEmailInput,
   condition?: ModelRegEmailConditionInput | null,
@@ -3855,6 +3859,7 @@ export type GetRegMobQuery = {
     notify: YN,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -3875,6 +3880,7 @@ export type ListRegMobsQuery = {
       notify: YN,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -5168,6 +5174,10 @@ export type OnDeleteRatingSubscription = {
   } | null,
 };
 
+export type OnCreateRegMobSubscriptionVariables = {
+  owner?: string | null,
+};
+
 export type OnCreateRegMobSubscription = {
   onCreateRegMob?:  {
     __typename: "RegMob",
@@ -5175,7 +5185,12 @@ export type OnCreateRegMobSubscription = {
     notify: YN,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
+};
+
+export type OnUpdateRegMobSubscriptionVariables = {
+  owner?: string | null,
 };
 
 export type OnUpdateRegMobSubscription = {
@@ -5185,7 +5200,12 @@ export type OnUpdateRegMobSubscription = {
     notify: YN,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
+};
+
+export type OnDeleteRegMobSubscriptionVariables = {
+  owner?: string | null,
 };
 
 export type OnDeleteRegMobSubscription = {
@@ -5195,6 +5215,7 @@ export type OnDeleteRegMobSubscription = {
     notify: YN,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
