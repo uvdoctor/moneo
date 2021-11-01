@@ -25,7 +25,7 @@ export default function UserSettings(): JSX.Element {
   const [email, setEmail] = useState<string>("");
   const [contact, setContact] = useState<string>("");
   const [error, setError] = useState<any>("");
-  const [name, setName] = useState<string>(user?.attributes.name);
+  const [name, setName] = useState<string>('');
   const [lastName, setLastName] = useState<string>("");
   const [dob, setDob] = useState<string>();
   const { TabPane } = Tabs;
@@ -73,11 +73,11 @@ export default function UserSettings(): JSX.Element {
 
   useEffect(() => {
     if (!user) return;
-    setEmail(user?.attributes.email);
-    setName(user?.attributes.name);
-    setLastName(user?.attributes.family_name);
-    setDob(user?.attributes.birthdate);
-    setContact(user?.attributes.phone_number.replace(counCode?.value, ""));
+    setEmail(user?.attributes.email || '');
+    setName(user?.attributes.name || '');
+    setLastName(user?.attributes.family_name || '');
+    setDob(user?.attributes.birthdate || '');
+    setContact(user?.attributes.phone_number ? user?.attributes.phone_number.replace(counCode?.value, "") : '');
   }, [appContextLoaded]);
 
   return (
