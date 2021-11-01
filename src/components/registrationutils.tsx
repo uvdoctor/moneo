@@ -16,11 +16,11 @@ export const doesEmailExist = async (email: string) => {
 	}
 };
 
-export const addEmailPostSignup = async (email: string, user: string) => {
+export const addEmailPostSignup = async (email: string, user: string, notify: string) => {
 	try {
 		const data = await API.graphql({
 			query: mutations.createRegEmail,
-			variables: { input: { email, user } },
+			variables: { input: { email, user, notify } },
 			authMode: GRAPHQL_AUTH_MODE.AWS_IAM
 		});
         console.log(data);

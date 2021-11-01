@@ -9,35 +9,20 @@ import Title from 'antd/lib/typography/Title';
 import { addEmailPostSignup, doesEmailExist } from './registrationutils';
 import Nav from './Nav';
 import { AppContextProvider } from './AppContext';
+import { YN } from '../api/goals';
 
 interface BasicAuthenticatorProps {
 	children: React.ReactNode;
 }
 
 export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
-	const [
-		disabledSubmit,
-		setDisabledSubmit
-	] = useState<boolean>(false);
-	const [
-		error,
-		setError
-	] = useState<string>('');
-	const [
-		user,
-		setUser
-	] = useState<any | null>(null);
-	const [
-		password,
-		setPassword
-	] = useState<string>('');
-	const [
-		email,
-		setEmail
-	] = useState<string>('');
-	const [
-		form
-	] = useForm();
+	const [ disabledSubmit, setDisabledSubmit ] = useState<boolean>(false);
+	const [ error, setError ] = useState<string>('');
+	const [ user, setUser ] = useState<any | null>(null);
+	const [ password, setPassword ] = useState<string>('');
+	const [ email, setEmail ] = useState<string>('');
+	const [ notify, setNotify ] = useState<YN>(YN.Y);
+	const [ form ] = useForm();
 
 	const listener = async (capsule: any) => {
 		let eventType: string = capsule.payload.event;
@@ -61,12 +46,12 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 
 	const generateFromEmail = (email: string) => {
 		// Retrive name from email address
-		const nameParts = email.replace(/@.+/, "");
+		const nameParts = email.replace(/@.+/, '');
 		// Replace all special characters like "@ . _ ";
-		let name = nameParts.replace(/[&/\\#,+()$~%._@'":*?<>{}]/g, "");
-		if(name.length > 5) name = name.substring(0, 5);
-		return name + ("" + Math.random()).substring(2, 6);
-	  }
+		let name = nameParts.replace(/[&/\\#,+()$~%._@'":*?<>{}]/g, '');
+		if (name.length > 5) name = name.substring(0, 5);
+		return name + ('' + Math.random()).substring(2, 6);
+	};
 
 	useEffect(() => {
 		Hub.listen('auth', listener);
@@ -79,7 +64,11 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 		Auth.signUp({
 			username: username,
 			password: password,
-			attributes: { email: email }
+			attributes: {
+				email: email,
+				'custom:tc': new Date().toISOString(),
+				'custom:notify': new Date().toISOString()
+			}
 		})
 			.then(async (response) => {
 				Hub.dispatch('UI Auth', {
@@ -89,10 +78,14 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 						...response.user,
 						username: username,
 						password: password,
-						attributes: { email: email }
+						attributes: {
+							email: email,
+							'custom:tc': new Date().toISOString(),
+							'custom:notify': new Date().toISOString()
+						}
 					}
 				});
-				await addEmailPostSignup(email, username);
+				await addEmailPostSignup(email, username, notify);
 				console.log('Auth.signIn success', response);
 			})
 			.catch((error) => {
@@ -138,7 +131,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 									}
 								})
 							]}
-							hasFeedback>
+							hasFeedback
+						>
 							<Input onChange={(e) => setEmail(e.currentTarget.value)} />
 						</Form.Item>
 						<Form.Item
@@ -167,7 +161,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 									message: 'At least one special character'
 								}
 							]}
-							hasFeedback>
+							hasFeedback
+						>
 							<Input.Password allowClear onChange={(e) => setPassword(e.currentTarget.value)} />
 						</Form.Item>
 						<Form.Item
@@ -180,7 +175,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 											? Promise.resolve()
 											: Promise.reject(new Error('Please verify that you agree to the policies'))
 								}
-							]}>
+							]}
+						>
 							<Checkbox defaultChecked={true}>
 								I accept the{' '}
 								<a target="_blank" href={ROUTES.POLICYTC}>
@@ -196,7 +192,10 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 								</a>
 							</Checkbox>
 						</Form.Item>
-						<Checkbox defaultChecked={true}>
+						<Checkbox
+							defaultChecked={true}
+							onChange={(e) => (e.target.checked ? setNotify(YN.Y) : setNotify(YN.N))}
+						>
 							<strong>Get 20% off</strong>
 							&nbsp; by signing up for emails and text
 						</Checkbox>
@@ -210,14 +209,16 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 										Hub.dispatch('UI Auth', {
 											event: 'AuthStateChange',
 											message: AuthState.SignIn
-										})}>
+										})}
+								>
 									Cancel
 								</Button>
 								<Button
 									type="primary"
 									htmlType="submit"
 									disabled={disabledSubmit}
-									onClick={handleRegistrationSubmit}>
+									onClick={handleRegistrationSubmit}
+								>
 									Submit
 								</Button>
 							</Form.Item>
