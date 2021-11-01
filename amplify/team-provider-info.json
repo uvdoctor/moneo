@@ -120,6 +120,10 @@
         "INExchgPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/INExchgPrice-4c362f494b5561444f52-build.zip"
+        },
+        "UserConfirmationTrigger": {
+          "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
+          "s3Key": "amplify-builds/UserConfirmationTrigger-527a59656c4c7a6d7261-build.zip"
         }
       },
       "interactions": {
