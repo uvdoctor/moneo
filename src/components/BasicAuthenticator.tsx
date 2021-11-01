@@ -45,7 +45,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 		// Replace all special characters like "@ . _ ";
 		let name = nameParts.replace(/[&/\\#,+()$~%._@'":*?<>{}]/g, '');
 		if (name.length > 5) name = name.substring(0, 5);
-		return name + ('' + Math.random()).substring(2, 6);
+		return name + ('' + Math.random()).substring(2, 7);
 	};
 
 	useEffect(() => {
