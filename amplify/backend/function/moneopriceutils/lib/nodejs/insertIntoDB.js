@@ -1,31 +1,42 @@
-const AWS = require("aws-sdk");
+const AWS = require('aws-sdk');
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 const getDataFromTable = async (table) => {
-  const params = { TableName: table };
-  try {
-    const data = await docClient.scan(params).promise();
-    return data;
-  } catch (err) {
-    console.log(`Error in dynamoDB: ${JSON.stringify(err)}`);
-    return `Error in dynamoDB: ${JSON.stringify(err)}`;
-  }
+	const params = { TableName: table };
+	try {
+		const data = await docClient.scan(params).promise();
+		return data;
+	} catch (err) {
+		console.log(`Error in dynamoDB: ${JSON.stringify(err)}`);
+		return `Error in dynamoDB: ${JSON.stringify(err)}`;
+	}
+};
+
+const pushDataSingly = async (data, table) => {
+	const params = { TableName: table, Item: data };
+	try {
+		const data = await docClient.put(params).promise();
+		return data;
+	} catch (err) {
+		console.log(`Error in dynamoDB: ${JSON.stringify(err)}`);
+		return `Error in dynamoDB: ${JSON.stringify(err)}`;
+	}
 };
 
 const pushData = async (data, table) => {
-  return new Promise(async (resolve, reject) => {
-    const params = {
-      RequestItems: {
-        [table]: data,
-      },
-    };
-    try {
-      const updateRecord = await docClient.batchWrite(params).promise();
-      resolve(updateRecord);
-    } catch (error) {
-      reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
-    }
-  });
+	return new Promise(async (resolve, reject) => {
+		const params = {
+			RequestItems: {
+				[table]: data
+			}
+		};
+		try {
+			const updateRecord = await docClient.batchWrite(params).promise();
+			resolve(updateRecord);
+		} catch (error) {
+			reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
+		}
+	});
 };
 
 const pushDataForFeed = async (table, data, identifier, url, exchg) => {
@@ -52,4 +63,4 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 	const results = await pushData(feedData, tableName);
 	console.log(results, 'Data Pushed into Feeds Table');
 };
-module.exports = { getDataFromTable, pushData, pushDataForFeed };
+module.exports = { getDataFromTable, pushData, pushDataForFeed, pushDataSingly };
