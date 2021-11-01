@@ -133,7 +133,6 @@ type RegMob
 		rules: [{ allow: private, provider: iam, operations: [create, read] }, { allow: private, operations: [update, delete] }]
 	) {
 	mob: Int!
-	user: String!
 	notify: YN!
 }
 
@@ -146,7 +145,6 @@ type RegEmail
 		rules: [{ allow: private, provider: iam, operations: [create, read] }, { allow: private, operations: [update, delete] }]
 	) {
 	email: String!
-	user: String!
 	notify: YN!
 }
 

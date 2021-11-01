@@ -4,18 +4,21 @@ const table = 'RegEmail-fdun77s5lzbinkbgvnuidw6ihq-usdev';
 
 exports.handler = async (event, context) => {
 	let date = new Date();
-
-	if (event.request.userAttributes.sub) {
+	console.log('Event request: ', event.request);
+	if (
+		event.request.userAttributes['cognito:user_status'] === 'CONFIRMED' &&
+		event.request.userAttributes['email_verified'] === 'true'
+	) {
+		let notify = event.request.userAttributes['custom:notify'];
 		let params = {
-			Item: {
-				__typename: { S: 'RegEmail' },
-				user: { S: event.request.userAttributes.name },
-				email: { S: event.request.userAttributes.email },
-				notify: { S: event.request.userAttributes.notify },
-				createdAt: { S: date.toISOString() },
-				updatedAt: { S: date.toISOString() }
+			Item      : {
+				__typename : { S: 'RegEmail' },
+				email      : { S: event.request.userAttributes.email },
+				notify     : { S: !notify || notify.length === 1 ? 'N' : 'Y' },
+				createdAt  : { S: date.toISOString() },
+				updatedAt  : { S: date.toISOString() }
 			},
-			TableName: table
+			TableName : table
 		};
 		// Call DynamoDB
 		try {

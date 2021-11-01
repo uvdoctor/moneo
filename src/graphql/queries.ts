@@ -244,7 +244,6 @@ export const getRegMob = /* GraphQL */ `
   query GetRegMob($mob: Int!) {
     getRegMob(mob: $mob) {
       mob
-      user
       notify
       createdAt
       updatedAt
@@ -268,7 +267,6 @@ export const listRegMobs = /* GraphQL */ `
     ) {
       items {
         mob
-        user
         notify
         createdAt
         updatedAt
@@ -281,7 +279,6 @@ export const getRegEmail = /* GraphQL */ `
   query GetRegEmail($email: String!) {
     getRegEmail(email: $email) {
       email
-      user
       notify
       createdAt
       updatedAt
@@ -305,7 +302,6 @@ export const listRegEmails = /* GraphQL */ `
     ) {
       items {
         email
-        user
         notify
         createdAt
         updatedAt
