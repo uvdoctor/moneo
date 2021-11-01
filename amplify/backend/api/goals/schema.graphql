@@ -133,30 +133,6 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
   img: String
 }
 
-enum Status {
-  Y
-  N
-  P
-}
-
-type Registration
-  @model
-  @aws_iam
-  @aws_cognito_user_pools
-  @key(fields: ["email"])
-  @auth(
-    rules: [
-      { allow: public, provider: iam, operations: [create, read, update] }
-    ]
-  ) {
-  email: String!
-  status: Status!
-  code: String!
-  country: String!
-  lat: Float
-  long: Float
-}
-
 type RegMob
   @model
   @aws_iam
@@ -171,6 +147,7 @@ type RegMob
   ) {
     mob: Int!
     user: String!
+    notify: YN!
   }
 type RegEmail
   @model
@@ -186,6 +163,7 @@ type RegEmail
   ) {
     email: String!
     user: String!
+    notify: YN!
   }
 
 enum AssetType {

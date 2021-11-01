@@ -428,10 +428,12 @@ export type Registration = {
 export type UpdateRegMobInput = {
   mob: number,
   user?: string | null,
+  notify?: YN | null,
 };
 
 export type ModelRegMobConditionInput = {
   user?: ModelStringInput | null,
+  notify?: ModelYNInput | null,
   and?: Array< ModelRegMobConditionInput | null > | null,
   or?: Array< ModelRegMobConditionInput | null > | null,
   not?: ModelRegMobConditionInput | null,
@@ -441,6 +443,7 @@ export type RegMob = {
   __typename: "RegMob",
   mob?: number,
   user?: string,
+  notify?: YN | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -448,10 +451,12 @@ export type RegMob = {
 export type UpdateRegEmailInput = {
   email: string,
   user?: string | null,
+  notify?: YN | null,
 };
 
 export type ModelRegEmailConditionInput = {
   user?: ModelStringInput | null,
+  notify?: ModelYNInput | null,
   and?: Array< ModelRegEmailConditionInput | null > | null,
   or?: Array< ModelRegEmailConditionInput | null > | null,
   not?: ModelRegEmailConditionInput | null,
@@ -461,6 +466,7 @@ export type RegEmail = {
   __typename: "RegEmail",
   email?: string,
   user?: string,
+  notify?: YN | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -764,6 +770,7 @@ export type UpdateRegistrationInput = {
 export type CreateRegMobInput = {
   mob: number,
   user: string,
+  notify?: YN | null,
 };
 
 export type DeleteRegMobInput = {
@@ -773,6 +780,7 @@ export type DeleteRegMobInput = {
 export type CreateRegEmailInput = {
   email: string,
   user: string,
+  notify?: YN | null,
 };
 
 export type DeleteRegEmailInput = {
@@ -1535,6 +1543,7 @@ export type ModelRegistrationConnection = {
 export type ModelRegMobFilterInput = {
   mob?: ModelIntInput | null,
   user?: ModelStringInput | null,
+  notify?: ModelYNInput | null,
   and?: Array< ModelRegMobFilterInput | null > | null,
   or?: Array< ModelRegMobFilterInput | null > | null,
   not?: ModelRegMobFilterInput | null,
@@ -1549,6 +1558,7 @@ export type ModelRegMobConnection = {
 export type ModelRegEmailFilterInput = {
   email?: ModelStringInput | null,
   user?: ModelStringInput | null,
+  notify?: ModelYNInput | null,
   and?: Array< ModelRegEmailFilterInput | null > | null,
   or?: Array< ModelRegEmailFilterInput | null > | null,
   not?: ModelRegEmailFilterInput | null,
@@ -2049,6 +2059,7 @@ export type UpdateRegMobMutation = {
     __typename: "RegMob",
     mob: number,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2064,6 +2075,7 @@ export type UpdateRegEmailMutation = {
     __typename: "RegEmail",
     email: string,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3086,6 +3098,7 @@ export type CreateRegMobMutation = {
     __typename: "RegMob",
     mob: number,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3101,6 +3114,7 @@ export type DeleteRegMobMutation = {
     __typename: "RegMob",
     mob: number,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3116,6 +3130,7 @@ export type CreateRegEmailMutation = {
     __typename: "RegEmail",
     email: string,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3131,6 +3146,7 @@ export type DeleteRegEmailMutation = {
     __typename: "RegEmail",
     email: string,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4019,6 +4035,7 @@ export type GetRegMobQuery = {
     __typename: "RegMob",
     mob: number,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4039,6 +4056,7 @@ export type ListRegMobsQuery = {
       __typename: "RegMob",
       mob: number,
       user: string,
+      notify?: YN | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -4055,6 +4073,7 @@ export type GetRegEmailQuery = {
     __typename: "RegEmail",
     email: string,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4075,6 +4094,7 @@ export type ListRegEmailsQuery = {
       __typename: "RegEmail",
       email: string,
       user: string,
+      notify?: YN | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -5377,6 +5397,7 @@ export type OnCreateRegMobSubscription = {
     __typename: "RegMob",
     mob: number,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5387,6 +5408,7 @@ export type OnUpdateRegMobSubscription = {
     __typename: "RegMob",
     mob: number,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5397,6 +5419,7 @@ export type OnDeleteRegMobSubscription = {
     __typename: "RegMob",
     mob: number,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5407,6 +5430,7 @@ export type OnCreateRegEmailSubscription = {
     __typename: "RegEmail",
     email: string,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5417,6 +5441,7 @@ export type OnUpdateRegEmailSubscription = {
     __typename: "RegEmail",
     email: string,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5427,6 +5452,7 @@ export type OnDeleteRegEmailSubscription = {
     __typename: "RegEmail",
     email: string,
     user: string,
+    notify?: YN | null,
     createdAt: string,
     updatedAt: string,
   } | null,

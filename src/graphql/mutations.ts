@@ -277,6 +277,7 @@ export const updateRegMob = /* GraphQL */ `
     updateRegMob(input: $input, condition: $condition) {
       mob
       user
+      notify
       createdAt
       updatedAt
     }
@@ -290,6 +291,7 @@ export const updateRegEmail = /* GraphQL */ `
     updateRegEmail(input: $input, condition: $condition) {
       email
       user
+      notify
       createdAt
       updatedAt
     }
@@ -1200,6 +1202,7 @@ export const createRegMob = /* GraphQL */ `
     createRegMob(input: $input, condition: $condition) {
       mob
       user
+      notify
       createdAt
       updatedAt
     }
@@ -1213,6 +1216,7 @@ export const deleteRegMob = /* GraphQL */ `
     deleteRegMob(input: $input, condition: $condition) {
       mob
       user
+      notify
       createdAt
       updatedAt
     }
@@ -1226,6 +1230,7 @@ export const createRegEmail = /* GraphQL */ `
     createRegEmail(input: $input, condition: $condition) {
       email
       user
+      notify
       createdAt
       updatedAt
     }
@@ -1239,6 +1244,7 @@ export const deleteRegEmail = /* GraphQL */ `
     deleteRegEmail(input: $input, condition: $condition) {
       email
       user
+      notify
       createdAt
       updatedAt
     }

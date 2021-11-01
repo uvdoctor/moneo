@@ -376,6 +376,7 @@ export const onCreateRegMob = /* GraphQL */ `
     onCreateRegMob {
       mob
       user
+      notify
       createdAt
       updatedAt
     }
@@ -386,6 +387,7 @@ export const onUpdateRegMob = /* GraphQL */ `
     onUpdateRegMob {
       mob
       user
+      notify
       createdAt
       updatedAt
     }
@@ -396,6 +398,7 @@ export const onDeleteRegMob = /* GraphQL */ `
     onDeleteRegMob {
       mob
       user
+      notify
       createdAt
       updatedAt
     }
@@ -406,6 +409,7 @@ export const onCreateRegEmail = /* GraphQL */ `
     onCreateRegEmail {
       email
       user
+      notify
       createdAt
       updatedAt
     }
@@ -416,6 +420,7 @@ export const onUpdateRegEmail = /* GraphQL */ `
     onUpdateRegEmail {
       email
       user
+      notify
       createdAt
       updatedAt
     }
@@ -426,6 +431,7 @@ export const onDeleteRegEmail = /* GraphQL */ `
     onDeleteRegEmail {
       email
       user
+      notify
       createdAt
       updatedAt
     }
