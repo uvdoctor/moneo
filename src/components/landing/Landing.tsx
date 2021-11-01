@@ -3,7 +3,6 @@ import { Row } from 'antd';
 import { Parallax } from 'rc-scroll-anim';
 import Content from '../Content';
 import Banner from './Banner';
-import VerifyCodeModal from './VerifyCodeModal';
 import Calculator from './Calculator';
 import HelloFinancialIndep from './HelloFinancialIndep';
 import Step from './Step';
@@ -24,7 +23,6 @@ export default function Landing() {
 		<Fragment>
 			<Content className="with-banner">
 				<Banner />
-				<VerifyCodeModal />
 				<Parallax
 					animation={[
 						{
