@@ -252,23 +252,6 @@ export const deleteGoal = /* GraphQL */ `
     }
   }
 `;
-export const deleteRegistration = /* GraphQL */ `
-  mutation DeleteRegistration(
-    $input: DeleteRegistrationInput!
-    $condition: ModelRegistrationConditionInput
-  ) {
-    deleteRegistration(input: $input, condition: $condition) {
-      email
-      status
-      code
-      country
-      lat
-      long
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const updateRegMob = /* GraphQL */ `
   mutation UpdateRegMob(
     $input: UpdateRegMobInput!
@@ -1155,40 +1138,6 @@ export const updateRating = /* GraphQL */ `
       type
       rating
       feedbackId
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createRegistration = /* GraphQL */ `
-  mutation CreateRegistration(
-    $input: CreateRegistrationInput!
-    $condition: ModelRegistrationConditionInput
-  ) {
-    createRegistration(input: $input, condition: $condition) {
-      email
-      status
-      code
-      country
-      lat
-      long
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateRegistration = /* GraphQL */ `
-  mutation UpdateRegistration(
-    $input: UpdateRegistrationInput!
-    $condition: ModelRegistrationConditionInput
-  ) {
-    updateRegistration(input: $input, condition: $condition) {
-      email
-      status
-      code
-      country
-      lat
-      long
       createdAt
       updatedAt
     }

@@ -240,49 +240,6 @@ export const listRatings = /* GraphQL */ `
     }
   }
 `;
-export const getRegistration = /* GraphQL */ `
-  query GetRegistration($email: String!) {
-    getRegistration(email: $email) {
-      email
-      status
-      code
-      country
-      lat
-      long
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listRegistrations = /* GraphQL */ `
-  query ListRegistrations(
-    $email: String
-    $filter: ModelRegistrationFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listRegistrations(
-      email: $email
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        email
-        status
-        code
-        country
-        lat
-        long
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getRegMob = /* GraphQL */ `
   query GetRegMob($mob: Int!) {
     getRegMob(mob: $mob) {

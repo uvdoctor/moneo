@@ -386,45 +386,6 @@ export type DeleteGoalInput = {
   id: string,
 };
 
-export type DeleteRegistrationInput = {
-  email: string,
-};
-
-export type ModelRegistrationConditionInput = {
-  status?: ModelStatusInput | null,
-  code?: ModelStringInput | null,
-  country?: ModelStringInput | null,
-  lat?: ModelFloatInput | null,
-  long?: ModelFloatInput | null,
-  and?: Array< ModelRegistrationConditionInput | null > | null,
-  or?: Array< ModelRegistrationConditionInput | null > | null,
-  not?: ModelRegistrationConditionInput | null,
-};
-
-export type ModelStatusInput = {
-  eq?: Status | null,
-  ne?: Status | null,
-};
-
-export enum Status {
-  Y = "Y",
-  N = "N",
-  P = "P",
-}
-
-
-export type Registration = {
-  __typename: "Registration",
-  email?: string,
-  status?: Status,
-  code?: string,
-  country?: string,
-  lat?: number | null,
-  long?: number | null,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
 export type UpdateRegMobInput = {
   mob: number,
   user?: string | null,
@@ -443,7 +404,7 @@ export type RegMob = {
   __typename: "RegMob",
   mob?: number,
   user?: string,
-  notify?: YN | null,
+  notify?: YN,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -466,7 +427,7 @@ export type RegEmail = {
   __typename: "RegEmail",
   email?: string,
   user?: string,
-  notify?: YN | null,
+  notify?: YN,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -749,28 +710,10 @@ export type UpdateRatingInput = {
   feedbackId?: string | null,
 };
 
-export type CreateRegistrationInput = {
-  email: string,
-  status: Status,
-  code: string,
-  country: string,
-  lat?: number | null,
-  long?: number | null,
-};
-
-export type UpdateRegistrationInput = {
-  email: string,
-  status?: Status | null,
-  code?: string | null,
-  country?: string | null,
-  lat?: number | null,
-  long?: number | null,
-};
-
 export type CreateRegMobInput = {
   mob: number,
   user: string,
-  notify?: YN | null,
+  notify: YN,
 };
 
 export type DeleteRegMobInput = {
@@ -780,7 +723,7 @@ export type DeleteRegMobInput = {
 export type CreateRegEmailInput = {
   email: string,
   user: string,
-  notify?: YN | null,
+  notify: YN,
 };
 
 export type DeleteRegEmailInput = {
@@ -1516,30 +1459,6 @@ export type ModelRatingConnection = {
   nextToken?: string | null,
 };
 
-export type ModelRegistrationFilterInput = {
-  email?: ModelStringInput | null,
-  status?: ModelStatusInput | null,
-  code?: ModelStringInput | null,
-  country?: ModelStringInput | null,
-  lat?: ModelFloatInput | null,
-  long?: ModelFloatInput | null,
-  and?: Array< ModelRegistrationFilterInput | null > | null,
-  or?: Array< ModelRegistrationFilterInput | null > | null,
-  not?: ModelRegistrationFilterInput | null,
-};
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
-
-export type ModelRegistrationConnection = {
-  __typename: "ModelRegistrationConnection",
-  items?:  Array<Registration | null > | null,
-  nextToken?: string | null,
-};
-
 export type ModelRegMobFilterInput = {
   mob?: ModelIntInput | null,
   user?: ModelStringInput | null,
@@ -1548,6 +1467,12 @@ export type ModelRegMobFilterInput = {
   or?: Array< ModelRegMobFilterInput | null > | null,
   not?: ModelRegMobFilterInput | null,
 };
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
 
 export type ModelRegMobConnection = {
   __typename: "ModelRegMobConnection",
@@ -2030,25 +1955,6 @@ export type DeleteGoalMutation = {
   } | null,
 };
 
-export type DeleteRegistrationMutationVariables = {
-  input?: DeleteRegistrationInput,
-  condition?: ModelRegistrationConditionInput | null,
-};
-
-export type DeleteRegistrationMutation = {
-  deleteRegistration?:  {
-    __typename: "Registration",
-    email: string,
-    status: Status,
-    code: string,
-    country: string,
-    lat?: number | null,
-    long?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type UpdateRegMobMutationVariables = {
   input?: UpdateRegMobInput,
   condition?: ModelRegMobConditionInput | null,
@@ -2059,7 +1965,7 @@ export type UpdateRegMobMutation = {
     __typename: "RegMob",
     mob: number,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2075,7 +1981,7 @@ export type UpdateRegEmailMutation = {
     __typename: "RegEmail",
     email: string,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3050,44 +2956,6 @@ export type UpdateRatingMutation = {
   } | null,
 };
 
-export type CreateRegistrationMutationVariables = {
-  input?: CreateRegistrationInput,
-  condition?: ModelRegistrationConditionInput | null,
-};
-
-export type CreateRegistrationMutation = {
-  createRegistration?:  {
-    __typename: "Registration",
-    email: string,
-    status: Status,
-    code: string,
-    country: string,
-    lat?: number | null,
-    long?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateRegistrationMutationVariables = {
-  input?: UpdateRegistrationInput,
-  condition?: ModelRegistrationConditionInput | null,
-};
-
-export type UpdateRegistrationMutation = {
-  updateRegistration?:  {
-    __typename: "Registration",
-    email: string,
-    status: Status,
-    code: string,
-    country: string,
-    lat?: number | null,
-    long?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateRegMobMutationVariables = {
   input?: CreateRegMobInput,
   condition?: ModelRegMobConditionInput | null,
@@ -3098,7 +2966,7 @@ export type CreateRegMobMutation = {
     __typename: "RegMob",
     mob: number,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3114,7 +2982,7 @@ export type DeleteRegMobMutation = {
     __typename: "RegMob",
     mob: number,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3130,7 +2998,7 @@ export type CreateRegEmailMutation = {
     __typename: "RegEmail",
     email: string,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3146,7 +3014,7 @@ export type DeleteRegEmailMutation = {
     __typename: "RegEmail",
     email: string,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3982,50 +3850,6 @@ export type ListRatingsQuery = {
   } | null,
 };
 
-export type GetRegistrationQueryVariables = {
-  email?: string,
-};
-
-export type GetRegistrationQuery = {
-  getRegistration?:  {
-    __typename: "Registration",
-    email: string,
-    status: Status,
-    code: string,
-    country: string,
-    lat?: number | null,
-    long?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListRegistrationsQueryVariables = {
-  email?: string | null,
-  filter?: ModelRegistrationFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListRegistrationsQuery = {
-  listRegistrations?:  {
-    __typename: "ModelRegistrationConnection",
-    items?:  Array< {
-      __typename: "Registration",
-      email: string,
-      status: Status,
-      code: string,
-      country: string,
-      lat?: number | null,
-      long?: number | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type GetRegMobQueryVariables = {
   mob?: number,
 };
@@ -4035,7 +3859,7 @@ export type GetRegMobQuery = {
     __typename: "RegMob",
     mob: number,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4056,7 +3880,7 @@ export type ListRegMobsQuery = {
       __typename: "RegMob",
       mob: number,
       user: string,
-      notify?: YN | null,
+      notify: YN,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -4073,7 +3897,7 @@ export type GetRegEmailQuery = {
     __typename: "RegEmail",
     email: string,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4094,7 +3918,7 @@ export type ListRegEmailsQuery = {
       __typename: "RegEmail",
       email: string,
       user: string,
-      notify?: YN | null,
+      notify: YN,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -5350,54 +5174,12 @@ export type OnDeleteRatingSubscription = {
   } | null,
 };
 
-export type OnCreateRegistrationSubscription = {
-  onCreateRegistration?:  {
-    __typename: "Registration",
-    email: string,
-    status: Status,
-    code: string,
-    country: string,
-    lat?: number | null,
-    long?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateRegistrationSubscription = {
-  onUpdateRegistration?:  {
-    __typename: "Registration",
-    email: string,
-    status: Status,
-    code: string,
-    country: string,
-    lat?: number | null,
-    long?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteRegistrationSubscription = {
-  onDeleteRegistration?:  {
-    __typename: "Registration",
-    email: string,
-    status: Status,
-    code: string,
-    country: string,
-    lat?: number | null,
-    long?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type OnCreateRegMobSubscription = {
   onCreateRegMob?:  {
     __typename: "RegMob",
     mob: number,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5408,7 +5190,7 @@ export type OnUpdateRegMobSubscription = {
     __typename: "RegMob",
     mob: number,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5419,7 +5201,7 @@ export type OnDeleteRegMobSubscription = {
     __typename: "RegMob",
     mob: number,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5430,7 +5212,7 @@ export type OnCreateRegEmailSubscription = {
     __typename: "RegEmail",
     email: string,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5441,7 +5223,7 @@ export type OnUpdateRegEmailSubscription = {
     __typename: "RegEmail",
     email: string,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5452,7 +5234,7 @@ export type OnDeleteRegEmailSubscription = {
     __typename: "RegEmail",
     email: string,
     user: string,
-    notify?: YN | null,
+    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,

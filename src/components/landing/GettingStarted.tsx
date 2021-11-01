@@ -10,11 +10,7 @@ export default function GettingStarted() {
 				<h2>One-stop financial platform for Your family</h2>
 				<Image preview={false} src="images/kick-start.jpg" />
 				<p style={{ textAlign: "center" }}>
-					{/*defaultCountry === "IN" ? (*/}
 					<GetStartedButton />
-					{/*) : status !== Status.Y ? (
-					<Join />
-				) : null}*/}
 				</p>
 			</div>
 		</Col>
