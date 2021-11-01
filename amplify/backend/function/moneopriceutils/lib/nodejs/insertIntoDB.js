@@ -32,7 +32,7 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 	if (!identifier) identifier = '';
 	const feedData = [];
 	const tname = table.slice(0, table.indexOf('-'));
-	const tableName = 'Feeds-4cf7om4zvjc4xhdn4qk2auzbdm-newdev';
+	const tableName = 'Feeds-fdun77s5lzbinkbgvnuidw6ihq-usdev';
 	const getLength = (arr) => {
 		if (typeof arr === 'number') return arr;
 		const len = arr.flat(Infinity);

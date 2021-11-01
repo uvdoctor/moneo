@@ -10,7 +10,7 @@ const { cleanDirectory, downloadZip } = require("/opt/nodejs/bhavUtils");
 const constructedApiArray = require("./utils");
 const extractData = require("./bhavUtils");
 const { mkdir } = fsPromise;
-const table = "INExchgMeta-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
+const table = "INExchgMeta-fdun77s5lzbinkbgvnuidw6ihq-usdev";
 const isinMap = {};
 
 const getAndPushData = (diff) => {

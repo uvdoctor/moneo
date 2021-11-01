@@ -386,10 +386,10 @@ export type DeleteGoalInput = {
   id: string,
 };
 
-export type UpdateRegMobInput = {
+export type CreateRegMobInput = {
   mob: number,
-  user?: string | null,
-  notify?: YN | null,
+  user: string,
+  notify: YN,
 };
 
 export type ModelRegMobConditionInput = {
@@ -409,10 +409,20 @@ export type RegMob = {
   updatedAt?: string,
 };
 
-export type UpdateRegEmailInput = {
-  email: string,
+export type UpdateRegMobInput = {
+  mob: number,
   user?: string | null,
   notify?: YN | null,
+};
+
+export type DeleteRegMobInput = {
+  mob: number,
+};
+
+export type CreateRegEmailInput = {
+  email: string,
+  user: string,
+  notify: YN,
 };
 
 export type ModelRegEmailConditionInput = {
@@ -430,6 +440,16 @@ export type RegEmail = {
   notify?: YN,
   createdAt?: string,
   updatedAt?: string,
+};
+
+export type UpdateRegEmailInput = {
+  email: string,
+  user?: string | null,
+  notify?: YN | null,
+};
+
+export type DeleteRegEmailInput = {
+  email: string,
 };
 
 export type CreateFamilyInput = {
@@ -708,26 +728,6 @@ export type UpdateRatingInput = {
   type?: CalcType | null,
   rating?: number | null,
   feedbackId?: string | null,
-};
-
-export type CreateRegMobInput = {
-  mob: number,
-  user: string,
-  notify: YN,
-};
-
-export type DeleteRegMobInput = {
-  mob: number,
-};
-
-export type CreateRegEmailInput = {
-  email: string,
-  user: string,
-  notify: YN,
-};
-
-export type DeleteRegEmailInput = {
-  email: string,
 };
 
 export type CreateFeedsInput = {
@@ -1955,6 +1955,22 @@ export type DeleteGoalMutation = {
   } | null,
 };
 
+export type CreateRegMobMutationVariables = {
+  input?: CreateRegMobInput,
+  condition?: ModelRegMobConditionInput | null,
+};
+
+export type CreateRegMobMutation = {
+  createRegMob?:  {
+    __typename: "RegMob",
+    mob: number,
+    user: string,
+    notify: YN,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type UpdateRegMobMutationVariables = {
   input?: UpdateRegMobInput,
   condition?: ModelRegMobConditionInput | null,
@@ -1971,6 +1987,38 @@ export type UpdateRegMobMutation = {
   } | null,
 };
 
+export type DeleteRegMobMutationVariables = {
+  input?: DeleteRegMobInput,
+  condition?: ModelRegMobConditionInput | null,
+};
+
+export type DeleteRegMobMutation = {
+  deleteRegMob?:  {
+    __typename: "RegMob",
+    mob: number,
+    user: string,
+    notify: YN,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateRegEmailMutationVariables = {
+  input?: CreateRegEmailInput,
+  condition?: ModelRegEmailConditionInput | null,
+};
+
+export type CreateRegEmailMutation = {
+  createRegEmail?:  {
+    __typename: "RegEmail",
+    email: string,
+    user: string,
+    notify: YN,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type UpdateRegEmailMutationVariables = {
   input?: UpdateRegEmailInput,
   condition?: ModelRegEmailConditionInput | null,
@@ -1978,6 +2026,22 @@ export type UpdateRegEmailMutationVariables = {
 
 export type UpdateRegEmailMutation = {
   updateRegEmail?:  {
+    __typename: "RegEmail",
+    email: string,
+    user: string,
+    notify: YN,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteRegEmailMutationVariables = {
+  input?: DeleteRegEmailInput,
+  condition?: ModelRegEmailConditionInput | null,
+};
+
+export type DeleteRegEmailMutation = {
+  deleteRegEmail?:  {
     __typename: "RegEmail",
     email: string,
     user: string,
@@ -2951,70 +3015,6 @@ export type UpdateRatingMutation = {
     type: CalcType,
     rating: number,
     feedbackId?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateRegMobMutationVariables = {
-  input?: CreateRegMobInput,
-  condition?: ModelRegMobConditionInput | null,
-};
-
-export type CreateRegMobMutation = {
-  createRegMob?:  {
-    __typename: "RegMob",
-    mob: number,
-    user: string,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteRegMobMutationVariables = {
-  input?: DeleteRegMobInput,
-  condition?: ModelRegMobConditionInput | null,
-};
-
-export type DeleteRegMobMutation = {
-  deleteRegMob?:  {
-    __typename: "RegMob",
-    mob: number,
-    user: string,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateRegEmailMutationVariables = {
-  input?: CreateRegEmailInput,
-  condition?: ModelRegEmailConditionInput | null,
-};
-
-export type CreateRegEmailMutation = {
-  createRegEmail?:  {
-    __typename: "RegEmail",
-    email: string,
-    user: string,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteRegEmailMutationVariables = {
-  input?: DeleteRegEmailInput,
-  condition?: ModelRegEmailConditionInput | null,
-};
-
-export type DeleteRegEmailMutation = {
-  deleteRegEmail?:  {
-    __typename: "RegEmail",
-    email: string,
-    user: string,
-    notify: YN,
     createdAt: string,
     updatedAt: string,
   } | null,

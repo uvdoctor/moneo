@@ -11,7 +11,7 @@ const constructedApiArray = require("./utils");
 const getData = require("./getData");
 const extractDataFromCSV = require("./bhavUtils");
 const { mkdir } = fsPromise;
-const table = "Indices-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
+const table = "Indices-fdun77s5lzbinkbgvnuidw6ihq-usdev";
 let dataFromNse;
 
 const getAndPushData = async (diff) => {

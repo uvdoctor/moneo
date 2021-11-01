@@ -10,7 +10,7 @@ const { tempDir, zipFile } = require('/opt/nodejs/utility');
 const constructedApiArray = require('./utils');
 const { extractPartOfData, extractDataFromCSV, addMetaData } = require('./bhavUtils');
 const { mkdir } = fsPromise;
-const table = 'INExchg-4cf7om4zvjc4xhdn4qk2auzbdm-newdev';
+const table = 'INExchg-fdun77s5lzbinkbgvnuidw6ihq-usdev';
 const isinMap = {};
 
 const getAndPushData = (diff) => {

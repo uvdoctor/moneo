@@ -6,7 +6,7 @@ Amplify Params - DO NOT EDIT */const mfData = require("india-mutual-fund-info");
 const { pushData, pushDataForFeed } = require("/opt/nodejs/insertIntoDB");
 const { directISIN, getDirISIN } = require("./data");
 const { getType, getSubType, mfType, mCap, getName } = require("./calculate");
-const table = "INMutual-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
+const table = "INMutual-fdun77s5lzbinkbgvnuidw6ihq-usdev";
 
 const getData = () => {
   return new Promise(async (resolve, reject) => {

@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 const docClient = new AWS.DynamoDB.DocumentClient();
-const table = 'RegEmail-4cf7om4zvjc4xhdn4qk2auzbdm-usdev';
+const table = 'RegEmail-fdun77s5lzbinkbgvnuidw6ihq-usdev';
 
 const pushDataSingly = async (data, table) => {
 	const params = { TableName: table, Item: data };

@@ -14,7 +14,7 @@ const {
 const constructedApiArray = require("./utils");
 const extractDataFromCSV = require("./bhavUtils");
 const { mkdir } = fsPromise;
-const table = "INBond-4cf7om4zvjc4xhdn4qk2auzbdm-newdev";
+const table = "INBond-fdun77s5lzbinkbgvnuidw6ihq-usdev";
 const isinMap = {};
 
 const getAndPushData = (diff) => {

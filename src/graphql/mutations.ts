@@ -252,6 +252,20 @@ export const deleteGoal = /* GraphQL */ `
     }
   }
 `;
+export const createRegMob = /* GraphQL */ `
+  mutation CreateRegMob(
+    $input: CreateRegMobInput!
+    $condition: ModelRegMobConditionInput
+  ) {
+    createRegMob(input: $input, condition: $condition) {
+      mob
+      user
+      notify
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const updateRegMob = /* GraphQL */ `
   mutation UpdateRegMob(
     $input: UpdateRegMobInput!
@@ -266,12 +280,54 @@ export const updateRegMob = /* GraphQL */ `
     }
   }
 `;
+export const deleteRegMob = /* GraphQL */ `
+  mutation DeleteRegMob(
+    $input: DeleteRegMobInput!
+    $condition: ModelRegMobConditionInput
+  ) {
+    deleteRegMob(input: $input, condition: $condition) {
+      mob
+      user
+      notify
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createRegEmail = /* GraphQL */ `
+  mutation CreateRegEmail(
+    $input: CreateRegEmailInput!
+    $condition: ModelRegEmailConditionInput
+  ) {
+    createRegEmail(input: $input, condition: $condition) {
+      email
+      user
+      notify
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const updateRegEmail = /* GraphQL */ `
   mutation UpdateRegEmail(
     $input: UpdateRegEmailInput!
     $condition: ModelRegEmailConditionInput
   ) {
     updateRegEmail(input: $input, condition: $condition) {
+      email
+      user
+      notify
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteRegEmail = /* GraphQL */ `
+  mutation DeleteRegEmail(
+    $input: DeleteRegEmailInput!
+    $condition: ModelRegEmailConditionInput
+  ) {
+    deleteRegEmail(input: $input, condition: $condition) {
       email
       user
       notify
@@ -1138,62 +1194,6 @@ export const updateRating = /* GraphQL */ `
       type
       rating
       feedbackId
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createRegMob = /* GraphQL */ `
-  mutation CreateRegMob(
-    $input: CreateRegMobInput!
-    $condition: ModelRegMobConditionInput
-  ) {
-    createRegMob(input: $input, condition: $condition) {
-      mob
-      user
-      notify
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteRegMob = /* GraphQL */ `
-  mutation DeleteRegMob(
-    $input: DeleteRegMobInput!
-    $condition: ModelRegMobConditionInput
-  ) {
-    deleteRegMob(input: $input, condition: $condition) {
-      mob
-      user
-      notify
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createRegEmail = /* GraphQL */ `
-  mutation CreateRegEmail(
-    $input: CreateRegEmailInput!
-    $condition: ModelRegEmailConditionInput
-  ) {
-    createRegEmail(input: $input, condition: $condition) {
-      email
-      user
-      notify
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteRegEmail = /* GraphQL */ `
-  mutation DeleteRegEmail(
-    $input: DeleteRegEmailInput!
-    $condition: ModelRegEmailConditionInput
-  ) {
-    deleteRegEmail(input: $input, condition: $condition) {
-      email
-      user
-      notify
       createdAt
       updatedAt
     }
