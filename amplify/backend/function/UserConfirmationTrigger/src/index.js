@@ -1,40 +1,34 @@
 const AWS = require('aws-sdk');
-const docClient = new AWS.DynamoDB.DocumentClient();
+const ddb = new AWS.DynamoDB();
 const table = 'RegEmail-fdun77s5lzbinkbgvnuidw6ihq-usdev';
 
-const pushDataSingly = async (data, table) => {
-	const params = { TableName: table, Item: data };
-	try {
-		const data = await docClient.put(params).promise();
-		return data;
-	} catch (err) {
-		console.log(`Error in dynamoDB: ${JSON.stringify(err)}`);
-		return `Error in dynamoDB: ${JSON.stringify(err)}`;
-	}
-};
+exports.handler = async (event, context) => {
+	let date = new Date();
 
-const getEntry = (data) => {
-	return {
-		__typename: 'RegEmail',
-		email: data.email,
-		user: data.username,
-		notify: data.notify,
-		createdAt: new Date().toISOString(),
-		updatedAt: new Date().toISOString()
-	}
-}
-
-exports.handler = async (event, context, callback) => {
-	const data = event.request.userAttributes;
-	console.log("Going to insert email: ", data.email);
-	if (data.email) {
+	if (event.request.userAttributes.sub) {
+		let params = {
+			Item: {
+				__typename: { S: 'RegEmail' },
+				user: { S: event.request.userAttributes.name },
+				email: { S: event.request.userAttributes.email },
+				notify: { S: event.request.userAttributes.notify },
+				createdAt: { S: date.toISOString() },
+				updatedAt: { S: date.toISOString() }
+			},
+			TableName: table
+		};
+		// Call DynamoDB
 		try {
-			await pushDataSingly(getEntry(data), table);
-			console.log('Success: Everything executed correctly');
-		} catch(e) {
-			console.log('Error while inserting email into db: ', e);
-		} finally {
-			callback(null, event);
+			await ddb.putItem(params).promise();
+			console.log('Success');
+		} catch (err) {
+			console.log('Error', err);
 		}
-	} 
+		console.log('Success: Everything executed correctly');
+		context.done(null, event);
+	} else {
+		// Nothing to do, the user's email ID is unknown
+		console.log('Error: Nothing was written to DynamoDB');
+		context.done(null, event);
+	}
 };
