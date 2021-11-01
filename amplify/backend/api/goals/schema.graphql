@@ -130,7 +130,10 @@ type RegMob
 	@aws_iam
 	@key(fields: ["mob"])
 	@auth(
-		rules: [{ allow: private, provider: iam, operations: [create, read] }, { allow: private, operations: [update, delete] }]
+		rules: [
+			{ allow: private, provider: iam, operations: [read] }
+			{ allow: owner, operations: [create, read, update, delete] }
+		]
 	) {
 	mob: Int!
 	notify: YN!
@@ -139,10 +142,13 @@ type RegMob
 type RegEmail
 	@model
 	@aws_iam
-	@aws_cognito_user_pools
 	@key(fields: ["email"])
 	@auth(
-		rules: [{ allow: private, provider: iam, operations: [create, read] }, { allow: private, operations: [update, delete] }]
+		rules: [
+			{ allow: public, provider: iam, operations: [read] }
+			{ allow: private, provider: iam, operations: [create, read] }
+			{ allow: private, operations: [create, read, delete] }
+		]
 	) {
 	email: String!
 	notify: YN!
