@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 const ddb = new AWS.DynamoDB();
 const table = 'RegEmail-fdun77s5lzbinkbgvnuidw6ihq-usdev';
 
-const pushDataSingly = (params) => {
+const pushDataSingly = (params, email) => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			await ddb.putItem(params).promise();
@@ -30,7 +30,7 @@ const getDataFromEventAndPush = (event, context) => {
 					},
 					TableName: table
 				};
-				const response = await pushDataSingly(params);
+				const response = await pushDataSingly(params, email);
 				console.log(response);
 			} else {
 				console.log('Error: Nothing was written to table as email is not verified');
