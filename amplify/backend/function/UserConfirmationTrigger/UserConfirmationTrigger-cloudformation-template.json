@@ -184,7 +184,7 @@
               "Sid": "WriteTable",
               "Effect": "Allow",
               "Action": "dynamodb:PutItem",
-              "Resource": "arn:aws:dynamodb:*:*:table/RegEmail-fdun77s5lzbinkbgvnuidw6ihq-usdev"
+              "Resource": "arn:aws:dynamodb:*:*:table/RegEmail-*"
             }
           ]
         }
