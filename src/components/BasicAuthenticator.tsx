@@ -231,6 +231,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 						>
 						Cancel
 						</Button>
+						<Button type="link" onClick={onBackClick} >Back</Button>
 						<Button
 							type="primary"
 							htmlType="submit"
@@ -243,10 +244,9 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 					</Form.Item>
 				</Row></>
 					}
-
-            	{back ? <Button type="primary" onClick={verifyEmail} disabled={disabledNext} loading={loading}>Next</Button>
-              	    : <Button type="link" onClick={onBackClick} >Back</Button>
-				}
+            	{back && <Row justify='end'>
+					<Button type="primary" onClick={verifyEmail} disabled={disabledNext} loading={loading}>Next</Button>
+					</Row>}
 				</Form>
 			</AmplifySection>}
 			{user ? (
