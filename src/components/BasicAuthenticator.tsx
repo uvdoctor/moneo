@@ -1,4 +1,4 @@
-import { AmplifyAuthenticator, AmplifySection } from '@aws-amplify/ui-react';
+import { AmplifyAuthContainer, AmplifyAuthenticator, AmplifySection } from '@aws-amplify/ui-react';
 import { useForm } from 'antd/lib/form/Form';
 import { Auth, Hub } from 'aws-amplify';
 import React, { Fragment, useEffect, useState } from 'react';
@@ -122,7 +122,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	  
 	return (
 		<Fragment>
-			{!user && <Nav hideMenu title="Almost there..." />}
+			{/* {!user && <Nav hideMenu title="Almost there..." />} */}
+			<AmplifyAuthContainer>
 			<AmplifyAuthenticator>
 				<AmplifySection slot="sign-up">
 					<Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
@@ -247,6 +248,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 				</AppContextProvider>
 				) : null}
 			</AmplifyAuthenticator>
+			</AmplifyAuthContainer>
 		</Fragment>
 	);
 }
