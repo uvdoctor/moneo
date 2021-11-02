@@ -136,7 +136,7 @@ type RegMob
 			{ allow: owner, operations: [create, read, update, delete] }
 		]
 	) {
-	mob: Int!
+	mob: Float!
 	cc: Int!
 	notify: YN!
 }

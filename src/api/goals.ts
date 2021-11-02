@@ -1461,7 +1461,7 @@ export type ModelRatingConnection = {
 };
 
 export type ModelRegMobFilterInput = {
-  mob?: ModelIntInput | null,
+  mob?: ModelFloatInput | null,
   cc?: ModelIntInput | null,
   notify?: ModelYNInput | null,
   and?: Array< ModelRegMobFilterInput | null > | null,

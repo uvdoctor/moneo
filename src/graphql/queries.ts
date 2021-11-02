@@ -241,7 +241,7 @@ export const listRatings = /* GraphQL */ `
   }
 `;
 export const getRegMob = /* GraphQL */ `
-  query GetRegMob($mob: Int!) {
+  query GetRegMob($mob: Float!) {
     getRegMob(mob: $mob) {
       mob
       cc
@@ -254,7 +254,7 @@ export const getRegMob = /* GraphQL */ `
 `;
 export const listRegMobs = /* GraphQL */ `
   query ListRegMobs(
-    $mob: Int
+    $mob: Float
     $filter: ModelRegMobFilterInput
     $limit: Int
     $nextToken: String
