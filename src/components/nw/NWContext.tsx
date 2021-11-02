@@ -279,14 +279,16 @@ function NWContextProvider() {
 				},
 				[OTHER_TAB]: {
 					label: [OTHER_TAB],
-					data: crypto,
-					setData: setCrypto,
-					total: totalCrypto,
-					categoryOptions: getCurrencyList(),
-					subCategoryOptions: {
+					data: others,
+					setData: setOthers,
+					total: totalOthers,
+					categoryOptions: {
 						Art: 'Art',
 						Watch: 'Watch',
-						Angel: 'Angel Investments'
+						Angel: 'Angel Investments',
+						Club: 'Club Memberships',
+						Time: 'Time Sharing Memberships',
+						Others: 'Others'
 					},
 					viewComp: ViewHoldingInput,
 				}, 
@@ -347,7 +349,6 @@ function NWContextProvider() {
 			return false;
 		}
 	};
-
 
 	const initializeInsData = async (instruments: Array<HoldingInput>) => {
 		let bondIds: Set<string> = new Set();

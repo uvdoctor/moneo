@@ -73,6 +73,7 @@ export default function HoldingTabView() {
 											viewComp={tabsData[tabName].viewComp}
 											categoryOptions={tabsData[tabName].categoryOptions}
 											subCategoryOptions={tabsData[tabName].subCategoryOptions}
+											childTab={tabsData[tabName].label}
 										/>
 									) : (
 										<Empty description="No data found." />

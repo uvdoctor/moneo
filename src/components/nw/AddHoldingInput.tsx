@@ -4,7 +4,7 @@ import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { BTC, CRYPTO_TAB, NWContext, PM_TAB } from './NWContext';
+import { BTC, CRYPTO_TAB, NWContext, OTHER_TAB, PM_TAB, SAV_TAB } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
 import PurchaseInput from './PurchaseInput';
 import QuantityWithRate from './QuantityWithRate';
@@ -15,7 +15,7 @@ interface AddHoldingInputProps {
 	categoryOptions: any;
 	subCategoryOptions?: any;
 	purchase?: boolean;
-	savingAcc?: boolean;
+	tab?: string;
 }
 
 export default function AddHoldingInput({
@@ -24,7 +24,7 @@ export default function AddHoldingInput({
 	categoryOptions,
 	subCategoryOptions,
 	purchase,
-	savingAcc
+	tab
 }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const [ name, setName ] = useState<string>(childTab === PM_TAB ? '24' : '');
@@ -34,7 +34,7 @@ export default function AddHoldingInput({
 	const [ amount, setAmount ] = useState<number>(0);
 	const [ month, setMonth ] = useState<number>(1);
 	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
-
+	
 	const changeName = (val: string) => {
 		setName(val);
 		let rec = getNewRec();
@@ -51,13 +51,24 @@ export default function AddHoldingInput({
 	};
 
 	const getNewRec = () => {
-		if(savingAcc){
+		if(tab===SAV_TAB){
 			let newRec : HoldingInput = {
 				id:'',
 				qty : quantity,
 				curr: subtype,
 				name: name,
 				fIds: [ memberKey ],
+			}	
+		return newRec;
+		}
+		if(tab===OTHER_TAB){
+			let newRec : HoldingInput = {
+				id:'',
+				qty : quantity,
+				subt: subtype,
+				fIds: [ memberKey ],
+				name: name,
+				curr: selectedCurrency,
 			}	
 		return newRec;
 		}
@@ -94,7 +105,7 @@ export default function AddHoldingInput({
 		}
 		let rec = getNewRec();
 		// @ts-ignore
-		(savingAcc ? rec.curr = subtype : rec.subt = subtype)
+		(tab===SAV_TAB ? rec.curr = subtype : rec.subt = subtype)
 		return rec;
 	};
 
@@ -138,9 +149,9 @@ export default function AddHoldingInput({
 						setYear={setYear}
 					/>
 				) : 
-				savingAcc?
+				tab===SAV_TAB || tab === OTHER_TAB?
 				<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
-				<p><NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={subtype} step={1}  /></p>
+				<p><NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1}  /></p>
 				</>
 				:
 				(

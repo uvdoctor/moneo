@@ -12,9 +12,10 @@ interface ListHoldingsProps {
 	categoryOptions: any;
 	viewComp: any;
 	subCategoryOptions?: any;
+	childTab?:any
 }
 
-export default function ListHoldings({ data, changeData, categoryOptions, viewComp, subCategoryOptions }: ListHoldingsProps) {
+export default function ListHoldings({ data, changeData, categoryOptions, viewComp, subCategoryOptions, childTab }: ListHoldingsProps) {
 	const { allFamily }: any = useContext(NWContext);
 
 	const changeOwner = (ownerKey: string, i: number) => {
@@ -41,7 +42,8 @@ export default function ListHoldings({ data, changeData, categoryOptions, viewCo
 									data: data,
 									changeData: changeData,
 									categoryOptions: categoryOptions,
-									subCategoryOptions: subCategoryOptions
+									subCategoryOptions: subCategoryOptions,
+									childTab: childTab
 								})}
 								<Col>
 									<SelectInput

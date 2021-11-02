@@ -65,7 +65,7 @@ export default function AddHoldings({
             disableOk={setOkDisabled}
             categoryOptions={categoryOptions}
             subCategoryOptions={subCategoryOptions}
-            savingAcc={childTab === 'Saving Accounts'}
+            tab={childTab}
           />
         )}
       </Modal>

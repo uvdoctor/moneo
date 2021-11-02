@@ -1,7 +1,10 @@
 import { Col } from 'antd';
 import React, { Fragment } from 'react';
 import { AssetSubType, HoldingInput } from '../../api/goals';
+import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
+import TextInput from '../form/textinput';
+import { OTHER_TAB } from './NWContext';
 import QuantityWithRate from './QuantityWithRate';
 
 interface ViewHoldingInputProps {
@@ -10,6 +13,7 @@ interface ViewHoldingInputProps {
 	categoryOptions: any;
 	subCategoryOptions: any;
 	record: HoldingInput;
+	childTab?: any
 }
 
 export default function ViewHoldingInput({
@@ -17,9 +21,15 @@ export default function ViewHoldingInput({
 	changeData,
 	categoryOptions,
 	subCategoryOptions,
-	record
+	record,
+	childTab
 }: ViewHoldingInputProps) {
 
+	const changeName = (e: any) => {
+		record.name = e.target.value;
+		changeData([ ...data ]);
+	};
+	
 	const changeQty = (quantity: number) => {
 		record.qty = quantity;
 		changeData([ ...data ]);
@@ -61,9 +71,23 @@ export default function ViewHoldingInput({
 					</Fragment>
 				)}
 			</Col>
+			{childTab[0] === OTHER_TAB ? 
+			<><Col>
+					<TextInput pre="Name" changeHandler={changeName} value={record.name as string} size={'small'} />
+				</Col><Col>
+						<NumberInput
+							pre={'Amount'}
+							min={0}
+							max={100000}
+							value={record.qty}
+							changeHandler={changeQty}
+							currency={record.curr as string}
+							step={1}
+							hidSlider />
+					</Col></> :
 			<Col>
 				<QuantityWithRate quantity={record.qty} name={record.name as string} subtype={record.subt as string} onChange={changeQty} />
-			</Col>
+			</Col>}
 		</Fragment>
 	);
 }
