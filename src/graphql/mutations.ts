@@ -259,6 +259,7 @@ export const createRegMob = /* GraphQL */ `
   ) {
     createRegMob(input: $input, condition: $condition) {
       mob
+      cc
       notify
       createdAt
       updatedAt
@@ -273,6 +274,7 @@ export const updateRegMob = /* GraphQL */ `
   ) {
     updateRegMob(input: $input, condition: $condition) {
       mob
+      cc
       notify
       createdAt
       updatedAt
@@ -287,6 +289,7 @@ export const deleteRegMob = /* GraphQL */ `
   ) {
     deleteRegMob(input: $input, condition: $condition) {
       mob
+      cc
       notify
       createdAt
       updatedAt

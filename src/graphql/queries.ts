@@ -244,6 +244,7 @@ export const getRegMob = /* GraphQL */ `
   query GetRegMob($mob: Int!) {
     getRegMob(mob: $mob) {
       mob
+      cc
       notify
       createdAt
       updatedAt
@@ -268,6 +269,7 @@ export const listRegMobs = /* GraphQL */ `
     ) {
       items {
         mob
+        cc
         notify
         createdAt
         updatedAt

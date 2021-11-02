@@ -333,6 +333,7 @@ export const onCreateRegMob = /* GraphQL */ `
   subscription OnCreateRegMob($owner: String) {
     onCreateRegMob(owner: $owner) {
       mob
+      cc
       notify
       createdAt
       updatedAt
@@ -344,6 +345,7 @@ export const onUpdateRegMob = /* GraphQL */ `
   subscription OnUpdateRegMob($owner: String) {
     onUpdateRegMob(owner: $owner) {
       mob
+      cc
       notify
       createdAt
       updatedAt
@@ -355,6 +357,7 @@ export const onDeleteRegMob = /* GraphQL */ `
   subscription OnDeleteRegMob($owner: String) {
     onDeleteRegMob(owner: $owner) {
       mob
+      cc
       notify
       createdAt
       updatedAt

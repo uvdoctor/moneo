@@ -388,10 +388,12 @@ export type DeleteGoalInput = {
 
 export type CreateRegMobInput = {
   mob: number,
+  cc: number,
   notify: YN,
 };
 
 export type ModelRegMobConditionInput = {
+  cc?: ModelIntInput | null,
   notify?: ModelYNInput | null,
   and?: Array< ModelRegMobConditionInput | null > | null,
   or?: Array< ModelRegMobConditionInput | null > | null,
@@ -401,6 +403,7 @@ export type ModelRegMobConditionInput = {
 export type RegMob = {
   __typename: "RegMob",
   mob?: number,
+  cc?: number,
   notify?: YN,
   createdAt?: string,
   updatedAt?: string,
@@ -409,6 +412,7 @@ export type RegMob = {
 
 export type UpdateRegMobInput = {
   mob: number,
+  cc?: number | null,
   notify?: YN | null,
 };
 
@@ -1458,6 +1462,7 @@ export type ModelRatingConnection = {
 
 export type ModelRegMobFilterInput = {
   mob?: ModelIntInput | null,
+  cc?: ModelIntInput | null,
   notify?: ModelYNInput | null,
   and?: Array< ModelRegMobFilterInput | null > | null,
   or?: Array< ModelRegMobFilterInput | null > | null,
@@ -1959,6 +1964,7 @@ export type CreateRegMobMutation = {
   createRegMob?:  {
     __typename: "RegMob",
     mob: number,
+    cc: number,
     notify: YN,
     createdAt: string,
     updatedAt: string,
@@ -1975,6 +1981,7 @@ export type UpdateRegMobMutation = {
   updateRegMob?:  {
     __typename: "RegMob",
     mob: number,
+    cc: number,
     notify: YN,
     createdAt: string,
     updatedAt: string,
@@ -1991,6 +1998,7 @@ export type DeleteRegMobMutation = {
   deleteRegMob?:  {
     __typename: "RegMob",
     mob: number,
+    cc: number,
     notify: YN,
     createdAt: string,
     updatedAt: string,
@@ -3856,6 +3864,7 @@ export type GetRegMobQuery = {
   getRegMob?:  {
     __typename: "RegMob",
     mob: number,
+    cc: number,
     notify: YN,
     createdAt: string,
     updatedAt: string,
@@ -3877,6 +3886,7 @@ export type ListRegMobsQuery = {
     items?:  Array< {
       __typename: "RegMob",
       mob: number,
+      cc: number,
       notify: YN,
       createdAt: string,
       updatedAt: string,
@@ -5182,6 +5192,7 @@ export type OnCreateRegMobSubscription = {
   onCreateRegMob?:  {
     __typename: "RegMob",
     mob: number,
+    cc: number,
     notify: YN,
     createdAt: string,
     updatedAt: string,
@@ -5197,6 +5208,7 @@ export type OnUpdateRegMobSubscription = {
   onUpdateRegMob?:  {
     __typename: "RegMob",
     mob: number,
+    cc: number,
     notify: YN,
     createdAt: string,
     updatedAt: string,
@@ -5212,6 +5224,7 @@ export type OnDeleteRegMobSubscription = {
   onDeleteRegMob?:  {
     __typename: "RegMob",
     mob: number,
+    cc: number,
     notify: YN,
     createdAt: string,
     updatedAt: string,
