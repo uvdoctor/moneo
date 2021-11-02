@@ -1,13 +1,13 @@
-import { AmplifyAuthContainer, AmplifyAuthenticator, AmplifySection } from '@aws-amplify/ui-react';
+import { AmplifyAuthenticator, AmplifySection } from '@aws-amplify/ui-react';
 import { useForm } from 'antd/lib/form/Form';
 import { Auth, Hub } from 'aws-amplify';
 import React, { Fragment, useEffect, useState } from 'react';
-import { AuthState, Translations } from '@aws-amplify/ui-components';
+import { AuthState, Translations, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import { Alert, Checkbox, Row } from 'antd';
 import { ROUTES } from '../CONSTANTS';
 import Title from 'antd/lib/typography/Title';
 import { doesEmailExist } from './registrationutils';
-// import Nav from './Nav';
+import Nav from './Nav';
 import { AppContextProvider } from './AppContext';
 import { Form, Input, Button } from 'antd';
 import router from 'next/router';
@@ -27,6 +27,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	const [ back, setBack ] = useState<boolean>(true);
 	const [ next, setNext ] = useState<boolean>(false);
 	const [ loading, setLoading ] = useState<boolean>(false);
+	const [ authState, setAuthState] = useState<string>('');
 	const [ form ] = useForm();
 
 	const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
@@ -119,12 +120,18 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 		setDisabledSubmit(fieldErr('password') || fieldErr('terms') || fieldTouch('password') || fieldTouch('terms'));
 		setDisabledNext(fieldErr('email') || fieldTouch('email') || form.getFieldValue('email').length===0);
 	};
+
+	useEffect(() => {
+		return onAuthUIStateChange((nextAuthState) => {
+		  setAuthState(nextAuthState);
+		});
+	  }, []);
 	  
 	return (
 		<Fragment>
-			{/* {!user && <Nav hideMenu title="Almost there..." />} */}
-			<AmplifyAuthContainer>
+			{!user && <Nav hideMenu title="Almost there..." />}
 			<AmplifyAuthenticator>
+				{authState === AuthState.SignUp &&
 				<AmplifySection slot="sign-up">
 					<Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
 					<Form name="signup" form={form} onFieldsChange={handleFormChange} layout="vertical">
@@ -241,14 +248,13 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
               	    : <Button type="link" onClick={onBackClick} >Back</Button>
 				}
 				</Form>
-			</AmplifySection>
+			</AmplifySection>}
 			{user ? (
 				<AppContextProvider user={user} handleLogout={handleLogout}>
 					{children}
 				</AppContextProvider>
 				) : null}
 			</AmplifyAuthenticator>
-			</AmplifyAuthContainer>
 		</Fragment>
 	);
 }
