@@ -5,22 +5,28 @@ import { COLORS } from "../../CONSTANTS";
 import { AppContext } from "../AppContext";
 import TextInput from "../form/textinput";
 import { Auth } from "aws-amplify";
+import { addEmailOnceVerify } from "../registrationutils";
 
 interface OtpInputProps {
   onClickAction: Function;
   disableButton: boolean;
   action: string;
+  attrVal?: any;
+  notify?: any;
+  cc?:any;
 }
 
 export default function OtpDialogue( props : OtpInputProps) {
   const { validateCaptcha }: any = useContext(AppContext);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [otp, setOtp] = useState<any>();
 
   const confirmOtp = async (attr: string) => {
     Auth.verifyCurrentUserAttributeSubmit(attr, otp)
-      .then(() => {
+      .then(async() => {
         notification.success({ message: "Otp Verified Successfully" });
+        attr === 'email' && await addEmailOnceVerify(props.attrVal, props.notify);
         setIsModalVisible(false);
       })
       .catch((err) => {
@@ -42,9 +48,12 @@ export default function OtpDialogue( props : OtpInputProps) {
   };
 
   const onClick = () => {
-    validateCaptcha(props.action).then((success: boolean) => {
+    setLoading(true);
+    validateCaptcha(props.action).then(async(success: boolean) => {
       if (!success) return;
-      props.onClickAction();
+      const data = await props.onClickAction();
+      setLoading(false);
+      if(!data) return;
       showModal();
     });
   };
@@ -58,6 +67,7 @@ export default function OtpDialogue( props : OtpInputProps) {
           icon={<SaveOutlined />}
           disabled={props.disableButton}
           onClick={onClick}
+          loading={loading}
         />
       </Tooltip>
       <Modal

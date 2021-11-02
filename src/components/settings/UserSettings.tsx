@@ -16,6 +16,7 @@ import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
+import { addMobOnceVerify, deleteEmailOnceUpdated, deleteMobOnceUpdated, doesEmailExist, doesMobileExist } from "../registrationutils";
 
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
@@ -23,10 +24,11 @@ const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha }: any = useContext(AppContext);
   const [email, setEmail] = useState<string>("");
-  const [contact, setContact] = useState<string>("");
+  const [contact, setContact] = useState<any>('');
   const [error, setError] = useState<any>("");
   const [name, setName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>('');
+  const [prefuser, setPrefuser] = useState<string>('');
   const [dob, setDob] = useState<string>();
   const { TabPane } = Tabs;
   const fsb = useFullScreenBrowser();
@@ -41,13 +43,23 @@ export default function UserSettings(): JSX.Element {
 
   const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
 
+  const notify = !user?.attributes['custom:notify'] || user?.attributes['custom:notify'] ==='N' ? 'N' : 'Y';
+
   const disableButton = (prevValue: any, currValue: any) =>
     prevValue === currValue ? true : error.length > 0 ? true : false;
 
   const updatePhoneNumber = async () => {
     try {
+      const prevMob = user?.attributes.phone_number.replace(counCode?.value, "");
+      const exist = await doesMobileExist(Number(contact));
+      if(exist) { failure('Please use another mobile as this one is already used by another account.');
+      return false;
+      }
       await Auth.updateUserAttributes(user, { phone_number: `${counCode?.value}${contact}` });
       success("Contact updated successfully. Enter Otp to verify");
+      await deleteMobOnceUpdated(Number(prevMob));
+      await addMobOnceVerify(Number(contact), notify, Number(counCode?.value.slice(1)))
+      return true;
     } catch (error) {
       failure(`Unable to update, ${error}`);
     }
@@ -55,14 +67,30 @@ export default function UserSettings(): JSX.Element {
 
   const updateEmail = async () => {
     try {
+      const prevEmail = user?.attributes.email;
+      const exist = await doesEmailExist(email);
+      if(exist) { failure('Please use another email address as this one is already used by another account.');
+      return false;
+      }
       await Auth.updateUserAttributes(user, { email: email });
       success("Email updated successfully. Enter Otp to verify");
+      await deleteEmailOnceUpdated(prevEmail);
+      return true;
     } catch (error) {
       failure(`Unable to update, ${error}`);
     }
   };
 
-  const updatePersonaTab = async () => {
+  const updatePrefUsername = async () => {
+    try {
+      await Auth.updateUserAttributes(user, { preferred_username:prefuser });
+      success("Preferred username updated successfully");
+    } catch (error) {
+      failure(`Unable to update ${error}`);
+    }
+  }
+
+  const updatePersonalTab = async () => {
     try {
       await Auth.updateUserAttributes(user, { name:name, family_name:lastName, birthdate:dob });
       success("Updated Successfully");
@@ -77,7 +105,8 @@ export default function UserSettings(): JSX.Element {
     setName(user?.attributes.name || '');
     setLastName(user?.attributes.family_name || '');
     setDob(user?.attributes.birthdate || '');
-    setContact(user?.attributes.phone_number ? user?.attributes.phone_number.replace(counCode?.value, "") : '');
+    setContact(user?.attributes.phone_number ? user?.attributes.phone_number.replace(counCode?.value, "") : '');4
+    setPrefuser(user?.attributes.preferred_username)
   }, [appContextLoaded]);
 
   return (
@@ -163,7 +192,7 @@ export default function UserSettings(): JSX.Element {
                           onClick={()=>{
                             validateCaptcha("personalTab_change").then((success: boolean) => {
                               if (!success) return;
-                              updatePersonaTab();
+                              updatePersonalTab();
                             })
                           }
                         }
@@ -175,9 +204,35 @@ export default function UserSettings(): JSX.Element {
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab="Contact" key="2">
-                <Row justify="start">
+              <TabPane tab="Account" key="2">
+              <Row justify="start">
                   <Col className="first-col-view">
+                    <TextInput
+                      pre="Login Name"
+                      value={prefuser}
+                      changeHandler={setPrefuser}
+                      fieldName="prefusername"
+                      setError={setError}
+                      post={
+                        <Button
+                          type="link"
+                          style={{ color: COLORS.GREEN }}
+                          icon={<SaveOutlined />}
+                          disabled={error.length > 0 ? true : false}
+                          onClick={()=>{
+                            validateCaptcha("prefusername_change").then((success: boolean) => {
+                              if (!success) return;
+                              updatePrefUsername();
+                            })
+                          }
+                        }
+                    />}
+                    />
+                  </Col>
+                </Row>
+                <p>&nbsp;</p>
+                <Row justify="start">
+                  <Col>
                     <TextInput
                       pre="Mobile"
                       prefix={counCode?.value}
@@ -214,6 +269,8 @@ export default function UserSettings(): JSX.Element {
                           disableButton={disableButton( email, user?.attributes.email )}
                           action={"email"}
                           onClickAction={updateEmail}
+                          attrVal={email}
+                          notify={notify}
                         />
                       }
                     />

@@ -60,7 +60,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	const verifyEmail = async() => {
 		setLoading(true);
 		setEmailError('');
-		let exists = await doesEmailExist(email);
+		let exists = await doesEmailExist(email, 'AWS_IAM');
 		if (!exists) {
 			setBack(false)
 			setNext(true);
