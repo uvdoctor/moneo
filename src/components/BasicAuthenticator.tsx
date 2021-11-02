@@ -7,7 +7,7 @@ import { Alert, Checkbox, Row } from 'antd';
 import { ROUTES } from '../CONSTANTS';
 import Title from 'antd/lib/typography/Title';
 import { doesEmailExist } from './registrationutils';
-import Nav from './Nav';
+// import Nav from './Nav';
 import { AppContextProvider } from './AppContext';
 import { Form, Input, Button } from 'antd';
 import router from 'next/router';
@@ -122,7 +122,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	  
 	return (
 		<Fragment>
-			{!user && <Nav hideMenu title="Almost there..." />}
+			{/* {!user && <Nav hideMenu title="Almost there..." />} */}
 			<AmplifyAuthContainer>
 			<AmplifyAuthenticator>
 				<AmplifySection slot="sign-up">
