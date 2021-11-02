@@ -122,7 +122,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 	  
 	return (
 		<Fragment>
-			{/* {!user && <Nav hideMenu title="Almost there..." />} */}
+			{!user && <Nav hideMenu title="Almost there..." />}
 			<AmplifyAuthContainer>
 			<AmplifyAuthenticator>
 				<AmplifySection slot="sign-up">
