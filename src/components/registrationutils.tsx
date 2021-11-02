@@ -50,11 +50,8 @@ export const addEmailOnceVerify = async (email: string, notify: string) => {
 			variables: { input: { email: email, notify: notify } },
 		});
 		console.log(data);
-	} catch (e:any) {
-		return {
-			title: 'Error while adding email in table',
-			message: e.errors ? e.errors[0].message : e.toString()
-		};
+	} catch (e) {
+		console.log('Error while adding email in table', e);
 	}
 };
 
@@ -65,11 +62,8 @@ export const addMobOnceVerify = async (mob: number, notify: string, cc:number) =
 			variables: { input: { mob: mob, notify: notify, cc:cc } },
 		});
 		console.log(data);
-	} catch (e:any) {
-		return {
-			title: 'Error while adding mobile in table',
-			message: e.errors ? e.errors[0].message : e.toString()
-		};
+	} catch (e) {
+		console.log('Error while adding mobile in table', e);
 	}
 };
 
@@ -80,11 +74,8 @@ export const deleteEmailOnceUpdated = async (email: string) => {
 			variables: { input: { email: email } },
 		});
 		console.log(data);
-	} catch (e:any) {
-		return {
-			title: 'Error while deleting email in table',
-			message: e.errors ? e.errors[0].message : e.toString()
-		};
+	} catch (e) {
+		console.log('Error while deleting email in table', e);
 	}
 };
 
@@ -95,10 +86,7 @@ export const deleteMobOnceUpdated = async (mob: number) => {
 			variables: { input: { mob: mob } },
 		});
 		console.log(data);
-	} catch (e:any) {
-		return {
-			title: 'Error while deleting mobile in table',
-			message: e.errors ? e.errors[0].message : e.toString()
-		};
+	} catch (e) {
+		console.log('Error while deleting mobile in table', e);
 	}
 };
