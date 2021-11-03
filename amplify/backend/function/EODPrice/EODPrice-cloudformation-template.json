@@ -379,6 +379,12 @@
               "Effect": "Allow",
               "Action": "*",
               "Resource": "arn:aws:dynamodb:*:*:table/EODPrices-*"
+            },
+            {
+              "Sid": "ReadWriteFeedTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/Feeds-*"
             }
           ]
         }

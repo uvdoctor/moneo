@@ -28,6 +28,14 @@ const pushData = async (data, table) => {
 	});
 };
 
+const appendGenericFields = (schema, tableName) => {
+	let dateStr = new Date().toISOString();
+	schema.createdAt = dateStr;
+	schema.updatedAt = dateStr;
+	schema.__typename = tableName.slice(0, tableName.indexOf('-'));
+	return schema;
+};
+
 const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 	if (!identifier) identifier = '';
 	const feedData = [];
@@ -38,14 +46,13 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 		const len = arr.flat(Infinity);
 		return len.length;
 	};
-	const schema = {
+	let schema = {
 		id: `${tname}_${identifier}`,
 		tname: tname,
 		count: getLength(data),
-		createdAt: new Date().toISOString(),
-		updatedAt: new Date().toISOString(),
-		__typename: tableName.slice(0, tableName.indexOf('-'))
 	};
+	schema = appendGenericFields(schema, tableName);
+	console.log("Feed schema to be inserted: ", schema);
 	if (exchg) schema.exchg = exchg;
 	if (url) schema.url = url;
 	feedData.push({ PutRequest: { Item: schema } });
