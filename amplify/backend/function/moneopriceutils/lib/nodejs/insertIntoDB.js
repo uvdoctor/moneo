@@ -41,6 +41,7 @@ const pushDataSingly = (schema, tableName) => {
 const pushData = async (data, tableInitial) => {
 	return new Promise(async (resolve, reject) => {
 		const table = await getTableNameFromInitialWord(tableInitial);
+		console.log("Table name fetched: ", table);
 		const params = { RequestItems: { [table]: data }};
 		try {
 			const updateRecord = await docClient.batchWrite(params).promise();
@@ -63,6 +64,7 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 	if (!identifier) identifier = '';
 	const tname = table.slice(0, table.indexOf('-'));
 	const tableName = await getTableNameFromInitialWord('Feeds');
+	console.log("Table name fetched: ", tableName);
 	const getLength = (arr) => {
 		if (typeof arr === 'number') return arr;
 		const len = arr.flat(Infinity);

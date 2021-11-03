@@ -15,34 +15,34 @@
       "function": {
         "insprice": {
           "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/insprice-6d637469376169395446-build.zip"
+          "s3Key": "amplify-builds/insprice-76676a336c7a39427430-build.zip"
         },
         "EODPrice": {
           "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/EODPrice-73335971624a45666368-build.zip",
+          "s3Key": "amplify-builds/EODPrice-4b4a546c667034656747-build.zip",
           "apiGoalsGraphqlapiidoutput": "",
           "apiGoalsGraphqlapiendpointoutput": "",
           "eodApiKey": "611a020d72d487.59800610,611a01dc0083c5.19670434,611a0115bd4cd5.84750550,60d03a689523a3.63944368"
         },
         "MFPrice": {
           "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/MFPrice-4b32514d4646706f566f-build.zip"
+          "s3Key": "amplify-builds/MFPrice-624d4d496a534c69355a-build.zip"
         },
         "INBond": {
           "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/INBond-5355624c67714d774136-build.zip"
+          "s3Key": "amplify-builds/INBond-53585678566832585234-build.zip"
         },
         "NPSPrice": {
           "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/NPSPrice-5955553334617a783469-build.zip"
+          "s3Key": "amplify-builds/NPSPrice-6e6d313243486e35584a-build.zip"
         },
         "insmeta": {
           "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/insmeta-6b4c45774535496d3355-build.zip"
+          "s3Key": "amplify-builds/insmeta-486d31514437684c6646-build.zip"
         },
         "IndicePrice": {
           "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/IndicePrice-4b2b642b353365496254-build.zip"
+          "s3Key": "amplify-builds/IndicePrice-56665857647932312f47-build.zip"
         },
         "moneopriceutils": {
           "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
