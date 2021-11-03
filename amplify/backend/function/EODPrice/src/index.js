@@ -7,7 +7,7 @@ const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
 const getData = eodData;
-const table = "EODPrices-fdun77s5lzbinkbgvnuidw6ihq-usdev";
+const table = "EODPrices";
 let batchRecords = [];
 
 const eodPrice = () => {
