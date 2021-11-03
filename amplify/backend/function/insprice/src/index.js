@@ -2,7 +2,7 @@
 	AUTH_MONEO3E6273BC_USERPOOLID
 	ENV
 	REGION
-Amplify Params - DO NOT EDIT */const fs = require('fs');
+Amplify Params - DO NOT EDIT */ const fs = require('fs');
 const fsPromise = require('fs/promises');
 const { cleanDirectory, downloadZip, unzipDownloads } = require('/opt/nodejs/bhavUtils');
 const { getDataFromTable, pushData, pushDataForFeed } = require('/opt/nodejs/insertIntoDB');
@@ -12,6 +12,7 @@ const { extractPartOfData, extractDataFromCSV, addMetaData } = require('./bhavUt
 const { mkdir } = fsPromise;
 const table = 'INExchg-fdun77s5lzbinkbgvnuidw6ihq-usdev';
 const isinMap = {};
+const dataToPushInFeeds = [];
 
 const getAndPushData = (diff) => {
 	return new Promise(async (resolve, reject) => {
@@ -28,7 +29,7 @@ const getAndPushData = (diff) => {
 				await mkdir(tempDir);
 				await downloadZip(url, tempDir, csvFile);
 				const dataCount = await extractPartOfData(fileName, codes, nameMap, weekHLMap);
-				await pushDataForFeed(table, dataCount, `${id}${ind + 1}`, url, exchg);
+				dataToPushInFeeds.push({ table, dataCount, identifier: `${id}${ind + 1}`, url, exchg });
 			}
 			for (let i = 0; i < apiArray.length; i++) {
 				const { exchg, fileName, url, schema, codes } = apiArray[i];
@@ -50,7 +51,10 @@ const getAndPushData = (diff) => {
 				for (let batch in data) {
 					await pushData(data[batch], table);
 				}
-				await pushDataForFeed(table, data, exchg, url, exchg);
+				dataToPushInFeeds.push({ table, dataCount: data, identifier: exchg, url, exchg });
+			}
+			for (item of dataToPushInFeeds) {
+				await pushDataForFeed(item.table, item.dataCount, item.identifier, item.url, item.exchg);
 			}
 		} catch (err) {
 			reject(err);

@@ -12,6 +12,18 @@ const getDataFromTable = async (table) => {
 	}
 };
 
+const pushDataSingly = (schema, tableName) => {
+	return new Promise(async (resolve, reject) => {
+		const params = { TableName: tableName, Item: schema };
+		try {
+			const data = await docClient.put(params).promise();
+			resolve(data);
+		} catch (err) {
+			reject(err);
+		}
+	});
+};
+
 const pushData = async (data, table) => {
 	return new Promise(async (resolve, reject) => {
 		const params = {
@@ -38,7 +50,6 @@ const appendGenericFields = (schema, tableName) => {
 
 const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 	if (!identifier) identifier = '';
-	const feedData = [];
 	const tname = table.slice(0, table.indexOf('-'));
 	const tableName = 'Feeds-fdun77s5lzbinkbgvnuidw6ihq-usdev';
 	const getLength = (arr) => {
@@ -49,14 +60,13 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 	let schema = {
 		id: `${tname}_${identifier}`,
 		tname: tname,
-		count: getLength(data),
+		count: getLength(data)
 	};
 	schema = appendGenericFields(schema, tableName);
-	console.log("Feed schema to be inserted: ", schema);
+	console.log('Feed schema to be inserted: ', schema);
 	if (exchg) schema.exchg = exchg;
 	if (url) schema.url = url;
-	feedData.push({ PutRequest: { Item: schema } });
-	const results = await pushData(feedData, tableName);
+	const results = await pushDataSingly(schema, tableName);
 	console.log(results, 'Data Pushed into Feeds Table');
 };
-module.exports = { getDataFromTable, pushData, pushDataForFeed };
+module.exports = { getDataFromTable, pushData, pushDataForFeed, pushDataSingly };

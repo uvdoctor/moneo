@@ -68,14 +68,17 @@ const extractPartOfData = async (fileName, codes, nameMap, weekHLMap) => {
 						yhigh: parse(record[codes.yhigh]),
 						ylow: parse(record[codes.ylow])
 					};
+				} else if (fileName === 'eq_etfseclist.csv') {
+					nameMap[record[codes.id]] = {
+						fv: parse(record[codes.fv]),
+						name: record[codes.name],
+						under: record[codes.under]
+					};
 				} else {
 					nameMap[record[codes.id]] = {
 						fv: parse(record[codes.fv]),
 						name: record[codes.name]
 					};
-					if (fileName === 'eq_etfseclist.csv'){
-						nameMap[record[codes.id]].under = record[codes.under].replace(/\n/g, '');
-					}
 				}
 				count++;
 			})

@@ -1,4 +1,4 @@
-const { utility } = require("/opt/nodejs/utility");
+const { utility } = require('/opt/nodejs/utility');
 
 const constructedApiArray = (diff) => {
 	const { date, month, monthChar, year, yearFull } = utility(diff);
@@ -58,7 +58,7 @@ const constructedApiArray = (diff) => {
 
 	const partOfDataApiArray = [
 		{
-			exchg : 'NSE',
+			exchg: 'NSE',
 			id: 'NSE_PARTOF',
 			fileName: 'EQUITY_L.csv',
 			url: 'https://www1.nseindia.com/content/equities/EQUITY_L.csv',
@@ -69,7 +69,7 @@ const constructedApiArray = (diff) => {
 			}
 		},
 		{
-			exchg : 'NSE',
+			exchg: 'NSE',
 			id: 'NSE_PARTOF',
 			fileName: 'REITS_L.csv',
 			url: 'https://www1.nseindia.com/content/equities/REITS_L.csv',
@@ -80,7 +80,7 @@ const constructedApiArray = (diff) => {
 			}
 		},
 		{
-			exchg : 'NSE',
+			exchg: 'NSE',
 			id: 'NSE_PARTOF',
 			fileName: 'eq_etfseclist.csv',
 			url: 'https://www1.nseindia.com/content/equities/eq_etfseclist.csv',
@@ -92,7 +92,7 @@ const constructedApiArray = (diff) => {
 			}
 		},
 		{
-			exchg : 'NSE',
+			exchg: 'NSE',
 			id: 'NSE_PARTOF',
 			fileName: weekHLFileName,
 			url: `https://archives.nseindia.com/content/${weekHLFileName}`,
