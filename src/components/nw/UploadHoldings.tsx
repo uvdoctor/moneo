@@ -198,7 +198,7 @@ export default function UploadHoldings() {
 					fv = null;
 				}
 				if (
-					name &&
+					name && !isin &&
 					((!recordBroken && lastNameCapture === null) ||
 						(lastNameCapture !== null && j - lastNameCapture > 9))
 				) {
