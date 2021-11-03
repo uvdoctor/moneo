@@ -1,10 +1,10 @@
 import { UserOutlined } from '@ant-design/icons';
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { BTC, CRYPTO_TAB, NWContext, OTHER_TAB, PM_TAB, SAV_TAB } from './NWContext';
+import { BTC, CRYPTO_TAB, NPS_TAB, NWContext, OTHER_TAB, PM_TAB, SAV_TAB } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
 import PurchaseInput from './PurchaseInput';
 import QuantityWithRate from './QuantityWithRate';
@@ -15,7 +15,6 @@ interface AddHoldingInputProps {
 	categoryOptions: any;
 	subCategoryOptions?: any;
 	purchase?: boolean;
-	tab?: string;
 }
 
 export default function AddHoldingInput({
@@ -23,18 +22,17 @@ export default function AddHoldingInput({
 	disableOk,
 	categoryOptions,
 	subCategoryOptions,
-	purchase,
-	tab
+	purchase
 }: AddHoldingInputProps) {
-	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
-	const [ name, setName ] = useState<string>(childTab === PM_TAB ? '24' : '');
-	const [ subtype, setSubtype ] = useState<string>(childTab === PM_TAB ? AssetSubType.Gold : BTC);
+	const { allFamily, childTab, selectedMembers, selectedCurrency, addHoldings }: any = useContext(NWContext);
+	const [ subtype, setSubtype ] = useState<string>(childTab === PM_TAB ? AssetSubType.Gold : childTab === NPS_TAB ? 'L' : BTC);
+	const [ name, setName ] = useState<string>('');
 	const [ quantity, setQuantity ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ amount, setAmount ] = useState<number>(0);
 	const [ month, setMonth ] = useState<number>(1);
 	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
-	
+
 	const changeName = (val: string) => {
 		setName(val);
 		let rec = getNewRec();
@@ -51,26 +49,26 @@ export default function AddHoldingInput({
 	};
 
 	const getNewRec = () => {
-		if(tab===SAV_TAB){
-			let newRec : HoldingInput = {
-				id:'',
-				qty : quantity,
-				curr: subtype,
+		if (childTab === SAV_TAB) {
+			let newRec: HoldingInput = {
+				id: '',
+				qty: quantity,
+				curr: selectedCurrency,
 				name: name,
-				fIds: [ memberKey ],
-			}	
-		return newRec;
+				fIds: [ memberKey ]
+			};
+			return newRec;
 		}
-		if(tab===OTHER_TAB){
-			let newRec : HoldingInput = {
-				id:'',
-				qty : quantity,
+		if (childTab === OTHER_TAB) {
+			let newRec: HoldingInput = {
+				id: '',
+				qty: quantity,
 				subt: subtype,
 				fIds: [ memberKey ],
 				name: name,
-				curr: selectedCurrency,
-			}	
-		return newRec;
+				curr: selectedCurrency
+			};
+			return newRec;
 		}
 		let newRec: HoldingInput = {
 			id: '',
@@ -105,7 +103,7 @@ export default function AddHoldingInput({
 		}
 		let rec = getNewRec();
 		// @ts-ignore
-		(tab===SAV_TAB ? rec.curr = subtype : rec.subt = subtype)
+		childTab === SAV_TAB ? (rec.curr = subtype) : (rec.subt = subtype);
 		return rec;
 	};
 
@@ -116,15 +114,19 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
+	useEffect(() => {
+		setName(subCategoryOptions ? Object.keys(subCategoryOptions[subtype])[0] : '')
+	},[ addHoldings ]);
+
 	return (
 		<div style={{ textAlign: 'center' }}>
 			<p>
-				<SelectInput
+				{categoryOptions && <SelectInput
 					pre=""
 					value={subtype}
 					options={categoryOptions}
 					changeHandler={(val: string) => changeSubtype(val)}
-				/>
+				/>}
 				{subCategoryOptions && (
 					<Fragment>
 						&nbsp;
@@ -137,6 +139,7 @@ export default function AddHoldingInput({
 						/>
 					</Fragment>
 				)}
+
 			</p>
 			<p>
 				{purchase ? (
@@ -148,8 +151,8 @@ export default function AddHoldingInput({
 						year={year}
 						setYear={setYear}
 					/>
-				) : 
-				tab===SAV_TAB || tab === OTHER_TAB?
+				) :
+				childTab===SAV_TAB || childTab === OTHER_TAB?
 				<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
 				<p><NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1}  /></p>
 				</>

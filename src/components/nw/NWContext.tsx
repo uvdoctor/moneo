@@ -8,6 +8,8 @@ import {
 	doesMemberMatch,
 	getCommodityRate,
 	getCryptoRate,
+	getNPSData,
+	getNPSFundManagers,
 	getRelatedCurrencies,
 	loadAllFamilyMembers,
 	loadHoldings,
@@ -21,6 +23,7 @@ import {
 	AssetSubType,
 	AssetType,
 	CreateHoldingsInput,
+	CreateNPSInput,
 	DepositInput,
 	HoldingInput,
 	INBond,
@@ -33,10 +36,9 @@ import {
 	UpdateHoldingsInput
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
-import { getCurrencyList, includesAny, initOptions } from '../utils';
+import { includesAny, initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
-import SavingTabInput from './SavingTabInput';
 
 const NWContext = createContext({});
 
@@ -61,6 +63,7 @@ export const SAV_TAB = 'Saving Accounts';
 export const DEPO_TAB = 'Deposits';
 export const ML_TAB = 'Money Lent';
 export const OTHER_TAB = 'Others';
+export const NPS_TAB = 'NPS';
 
 function NWContextProvider() {
 	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData }: any = useContext(AppContext);
@@ -115,6 +118,20 @@ function NWContextProvider() {
 	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
 	const [ id, setId ] = useState<string | null | undefined>(null);
 	const [ childTab, setChildTab ] = useState<string>('');
+	const [ npsData, setNPSData] = useState<Array<CreateNPSInput>>([]);
+
+	const loadNPSSubCategories = async () => {
+		// @ts-ignore
+		let npsData: Array<CreateNPSInput> = await getNPSData();
+		setNPSData([...npsData]);
+
+		let subCategories: any = getNPSFundManagers();
+		Object.keys(subCategories).forEach((key: string) => subCategories[key] = {});
+		for(let item of npsData) {
+ 			subCategories[item.pfm][item.id] = item.name;
+		}
+		return subCategories;
+	};
 
 	const tabs = {
 		Cash: {
@@ -132,8 +149,7 @@ function NWContextProvider() {
 					data: savings,
 					setData: setSavings,
 					total: totalSavings,
-					categoryOptions: getCurrencyList(),
-					viewComp: SavingTabInput,
+					viewComp: ViewHoldingInput,
 				},
 				[ML_TAB]: {
 					label: [ML_TAB],
@@ -246,12 +262,14 @@ function NWContextProvider() {
 					total: totalVPF,
 					contentComp: <InstrumentValuation />
 				},
-				NPS: {
-					label: 'NPS',
+				[NPS_TAB]: {
+					label: [NPS_TAB],
 					data: nps,
 					setData: setNPS,
 					total: totalNPS,
-					contentComp: <InstrumentValuation />
+					categoryOptions: getNPSFundManagers(),
+					subCategoryOptions: loadNPSSubCategories,
+					viewComp: ViewHoldingInput
 				},
 			}
 		},
@@ -791,7 +809,10 @@ function NWContextProvider() {
 				totalFRE,
 				saveHoldings,
 				childTab,
-				setChildTab
+				setChildTab,
+				npsData,
+				setNPSData,
+				loadNPSSubCategories
 			}}
 		>
 			<NWView />

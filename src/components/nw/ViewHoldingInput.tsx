@@ -4,7 +4,7 @@ import { AssetSubType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { OTHER_TAB } from './NWContext';
+import { OTHER_TAB, SAV_TAB } from './NWContext';
 import QuantityWithRate from './QuantityWithRate';
 
 interface ViewHoldingInputProps {
@@ -51,8 +51,8 @@ export default function ViewHoldingInput({
 
 	return (
 		<Fragment>
-			<Col>
-				<SelectInput
+			{categoryOptions && <Col>
+				 <SelectInput
 					pre=""
 					value={record.subt as string}
 					options={categoryOptions}
@@ -70,8 +70,8 @@ export default function ViewHoldingInput({
 						/>
 					</Fragment>
 				)}
-			</Col>
-			{childTab[0] === OTHER_TAB ? 
+			</Col>}
+			{childTab[0] === OTHER_TAB || childTab[0] === SAV_TAB ? 
 			<><Col>
 					<TextInput pre="Name" changeHandler={changeName} value={record.name as string} size={'small'} />
 				</Col><Col>

@@ -2,7 +2,7 @@ import { InputNumber } from 'antd';
 import React, { Fragment, useContext } from 'react';
 import { AppContext } from '../AppContext';
 import { toCurrency } from '../utils';
-import { NWContext, PM_TAB } from './NWContext';
+import { NPS_TAB, NWContext, PM_TAB } from './NWContext';
 import { getCommodityRate, getCryptoRate } from './nwutils';
 
 interface QuantityWithRateProps {
@@ -12,14 +12,18 @@ interface QuantityWithRateProps {
 	onChange: Function;
 }
 export default function QuantityWithRate({ quantity, subtype, name, onChange }: QuantityWithRateProps) {
-	const { selectedCurrency, childTab }: any = useContext(NWContext);
+	const { selectedCurrency, childTab, npsData }: any = useContext(NWContext);
     const { ratesData }: any = useContext(AppContext);
     
-    const getRate = (subtype: string, name: string) =>
-		!name
-			? getCryptoRate(ratesData, subtype, selectedCurrency)
-			: getCommodityRate(ratesData, subtype, name, selectedCurrency);
-
+    const getRate = (subtype: string, name: string) => {
+		if(childTab===NPS_TAB) {
+			const price = npsData.find((item:any) => item.id === name);
+			if(price) return price.price*quantity;
+			}
+		if(!name) return getCryptoRate(ratesData, subtype, selectedCurrency);
+		return getCommodityRate(ratesData, subtype, name, selectedCurrency);
+	}
+	
 	return (
 		<Fragment>
 			<InputNumber
@@ -30,7 +34,7 @@ export default function QuantityWithRate({ quantity, subtype, name, onChange }: 
 				step={0.1}
 				size='small'
 			/>
-			{` ${childTab === PM_TAB ? ` grams` : subtype} x ${toCurrency(getRate(subtype, name), selectedCurrency)} = ${toCurrency(
+			{` ${childTab === PM_TAB ? ` grams` : ''} x ${toCurrency(getRate(subtype, name), selectedCurrency)} = ${toCurrency(
 				quantity * getRate(subtype, name),
 				selectedCurrency
 			)}`}

@@ -1,6 +1,6 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Col, Empty, Row, Skeleton, Tabs } from 'antd';
-import { NWContext } from './NWContext';
+import { NPS_TAB, NWContext } from './NWContext';
 import AddHoldings from './addHoldings/AddHoldings';
 import UploadHoldings from './UploadHoldings';
 import { toHumanFriendlyCurrency } from '../utils';
@@ -15,10 +15,20 @@ export default function HoldingTabView() {
 		loadingHoldings,
 		selectedCurrency,
 		childTab,
-		setChildTab
+		setChildTab,
+		npsData,
+		loadNPSSubCategories
 	}: any = useContext(NWContext);
-	
+	const [ npsSubCat, setNPSSubCat ] = useState<any>({});
 	const { TabPane } = Tabs;
+
+	useEffect(() => {
+		if(childTab === NPS_TAB) {
+		if(npsData.length===0) {
+			(async() => setNPSSubCat(await loadNPSSubCategories()))();
+		}
+	}
+	}, [childTab])
 
 	function renderTabs(tabsData: any, defaultActiveKey: string, isRoot?: boolean) {
 		return (
@@ -59,7 +69,7 @@ export default function HoldingTabView() {
 												changeData={tabsData[tabName].setData}
 												title={`${tabsData[tabName].label} - Add Record`}
 												categoryOptions={tabsData[tabName].categoryOptions}
-												subCategoryOptions={tabsData[tabName].subCategoryOptions}
+												subCategoryOptions={childTab===NPS_TAB ? npsSubCat : tabsData[tabName].subCategoryOptions}
 											/>
 										</Col>
 									</Row>
@@ -72,7 +82,7 @@ export default function HoldingTabView() {
 											changeData={tabsData[tabName].setData}
 											viewComp={tabsData[tabName].viewComp}
 											categoryOptions={tabsData[tabName].categoryOptions}
-											subCategoryOptions={tabsData[tabName].subCategoryOptions}
+											subCategoryOptions={childTab===NPS_TAB ? npsSubCat : tabsData[tabName].subCategoryOptions}
 											childTab={tabsData[tabName].label}
 										/>
 									) : (

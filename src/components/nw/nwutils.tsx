@@ -275,3 +275,26 @@ export const getIndustry = (at: APIt.Industry) => {
 
   };
   
+export const getNPSFundManagers = () => {
+	return {
+		L: 'LIC PENSION FUND LIMITED',
+		H: 'HDFC PENSION MANAGEMENT COMPANY LIMITED',
+		S: 'SBI PENSION FUNDS PRIVATE LIMITED',
+		A: 'ADITYA BIRLA SUN LIFE PENSION MANAGEMENT LIMITED',
+		I: 'ICICI PRUDENTIAL PENSION FUNDS MANAGEMENT COMPANY LIMITED',
+		U: 'UTI RETIREMENT SOLUTIONS LIMITED',
+		K: 'KOTAK MAHINDRA PENSION FUND LIMITED'
+	}
+}
+
+export const getNPSData = async () => {
+	try {
+		const { data: { listNPSs } } = await API.graphql({
+			query: queries.listNpSs,
+		}) as { data: APIt.ListNpSsQuery};
+		return listNPSs?.items;
+	} catch (e) {
+		console.log("Error while fetching NPS data: ", e);
+	}
+};
+
