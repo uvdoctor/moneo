@@ -27,6 +27,7 @@ function AppContextProvider({ children, user, handleLogout }: AppContextProvider
 	const router = useRouter();
 	
 	const validateCaptcha = async (action: string) => {
+		//@ts-ignore
 		const token = await executeRecaptcha(action);
 		let result = await fetch('/api/verifycaptcha', {
 		  method: 'POST',
