@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { HomeOutlined, CarOutlined, SketchOutlined, ShoppingCartOutlined, HeartOutlined } from '@ant-design/icons';
 
-import './RollingImages.less';
+require('./RollingImages.less');
 
 export default function RollingImages() {
 	const [ svgCtr, setSvgCtr ] = useState(-1);

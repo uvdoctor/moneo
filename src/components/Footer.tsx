@@ -4,7 +4,7 @@ import { FacebookIcon, LinkedinIcon, TwitterIcon } from 'react-share';
 import { YoutubeFilled, InstagramFilled } from '@ant-design/icons';
 import Content from './Content';
 
-import './Footer.less';
+require('./Footer.less');
 import { PlanContext } from './goals/PlanContext';
 import { COLORS, ROUTES } from '../CONSTANTS';
 

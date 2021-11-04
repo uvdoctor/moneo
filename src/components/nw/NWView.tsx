@@ -6,7 +6,7 @@ import { Avatar, Button, Col, PageHeader, Row, Skeleton, Tooltip } from 'antd';
 import SelectInput from '../form/selectinput';
 import { SaveOutlined, UserOutlined } from '@ant-design/icons';
 
-import './nw.less';
+require('./nw.less');
 import FamilyInput, { ALL_FAMILY } from './FamilyInput';
 import ResultCarousel from '../ResultCarousel';
 import TotalAssets from './TotalAssets';

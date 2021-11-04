@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Col } from "antd";
 import Content from "../Content";
 
-import "./SmartSaver.less";
+require("./SmartSaver.less");
 import GetStartedButton from "./GetStartedButton";
 
 export default function SmartSaver() {

@@ -3,7 +3,7 @@ import { Row, Col } from "antd";
 import ResImg from "../ResImg";
 import BannerContent from "./BannerContent";
 import SocialShare from "../SocialShare";
-import "./Banner.less";
+require("./Banner.less");
 import { AppContext } from "../AppContext";
 import GetStartedButton from "./GetStartedButton";
 import WalletSVG from "../svgs/2d/wallet";

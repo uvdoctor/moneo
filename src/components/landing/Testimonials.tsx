@@ -2,7 +2,7 @@ import React from "react";
 import Carousel from "react-elastic-carousel";
 import Content from "../Content";
 
-import "./testimonials.less";
+require("./testimonials.less");
 import TestimonialTemplate from "./TestimonialTemplate";
 
 export default function Testimonials() {

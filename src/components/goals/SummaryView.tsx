@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { PlanContext } from './PlanContext';
 import { ExclamationCircleOutlined, FieldTimeOutlined } from '@ant-design/icons';
-import './SummaryView.less';
+require('./SummaryView.less');
 import DefaultOppCostResult from '../calc/DefaultOppCostResult';
 import FIImpact from './FIImpact';
 import BasicLineChart from './BasicLineChart';

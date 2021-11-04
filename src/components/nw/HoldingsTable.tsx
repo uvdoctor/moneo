@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Empty } from 'antd';
 import Holding from './Holding';
 
-import './HoldingsTable.less';
+require('./HoldingsTable.less');
 import { HoldingInput } from '../../api/goals';
 
 interface HoldingsTableProp {

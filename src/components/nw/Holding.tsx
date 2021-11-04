@@ -10,7 +10,7 @@ import {
 	HourglassOutlined
 } from '@ant-design/icons';
 
-import './Holding.less';
+require('./Holding.less');
 import { toCurrency, toHumanFriendlyCurrency, toReadableNumber } from '../utils';
 import { AssetType, HoldingInput } from '../../api/goals';
 import { useEffect } from 'react';

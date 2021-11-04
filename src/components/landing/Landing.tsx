@@ -13,7 +13,7 @@ import GetRich from './GetRich';
 import Testimonials from './Testimonials';
 import FinancialIndependence from './FinancialIndependence';
 
-import './Landing.less';
+require('./Landing.less');
 import { AppContext } from '../AppContext';
 
 export default function Landing() {

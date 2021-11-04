@@ -11,7 +11,7 @@ import { MenuOutlined } from "@ant-design/icons";
 import MainMenu from "./MainMenu";
 import Logo from "./Logo";
 
-import "./Nav.less";
+require("./Nav.less");
 import { AppContext } from "./AppContext";
 
 interface NavProps {

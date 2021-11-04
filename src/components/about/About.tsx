@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Card from './Card';
 import Content from '../Content';
 
-import './about.less';
+require('./about.less');
 import GetStartedButton from '../landing/GetStartedButton';
 
 export default function Home() {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col } from 'antd';
 import Content from '../Content';
 
-import './TakeQuickStep.less';
+require('./TakeQuickStep.less');
 import GetStartedButton from './GetStartedButton';
 
 export default function TakeQuickStep() {

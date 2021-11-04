@@ -14,7 +14,7 @@ import {
   faTools,
 } from "@fortawesome/free-solid-svg-icons";*/
 
-import "./Feedback.less";
+require("./Feedback.less");
 import { AppContext } from "../AppContext";
 
 export default function Feedback() {

@@ -1,5 +1,5 @@
 import React from "react";
-import "./HelloFinancialIndep.less";
+require("./HelloFinancialIndep.less");
 
 export default function HelloFinancialIndep() {
   return (

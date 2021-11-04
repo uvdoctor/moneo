@@ -1,9 +1,6 @@
 /// <reference types="next" />
 /// <reference types="next/types/global" />
-/// <reference path="./circularslider.d.ts" />
-/// <reference path="./bizcharts.d.ts" />
-/// <reference path="./xirr.d.ts" />
-/// <reference path="./reactbrowserhooks.d.ts" />
-/// <reference path="./finnhub.d.ts" />
-/// <reference path="./awssdk.d.ts" />
-/// <reference path="./simplestorage.js.d.ts" />
+/// <reference types="next/image-types/global" />
+
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/basic-features/typescript for more information.

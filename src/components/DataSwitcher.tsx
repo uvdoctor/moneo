@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Radio, Row, Col, Space } from "antd";
 import { AreaChartOutlined, MenuOutlined } from "@ant-design/icons";
 
-import "./DataSwitcher.less";
+require("./DataSwitcher.less");
 
 const DataContext = createContext({
 	active: "chart",

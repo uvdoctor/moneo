@@ -7,7 +7,7 @@ import { FIGoalContextProvider } from '../goals/FIGoalContext';
 import { FeedbackContextProvider } from '../feedback/FeedbackContext';
 import { PlanContextProvider } from '../goals/PlanContext';
 import PublicCalcView from './PublicCalcView';
-import './Layout.less';
+require('./Layout.less');
 
 export interface BlogInputProps {
 	elements: Array<any>;

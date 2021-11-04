@@ -5,7 +5,7 @@ import Content from "../Content";
 import GetStartedButton from "./GetStartedButton";
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import "./CouponsBanner.less";
+require("./CouponsBanner.less");
 
 export default function CouponsBanner() {
 	const banners = ["buy-banner.jpg", "travel-banner.jpg", "event-banner.jpg"];

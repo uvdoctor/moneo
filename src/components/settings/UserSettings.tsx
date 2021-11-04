@@ -11,7 +11,7 @@ import dateFnsGenerateConfig from "rc-picker/lib/generate/dateFns";
 import generatePicker from "antd/lib/date-picker/generatePicker";
 import PasswordInput from "./PasswordInput";
 import "antd/lib/date-picker/style/index";
-import "./Settings.less";
+require("./Settings.less");
 import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";

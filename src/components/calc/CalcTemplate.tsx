@@ -6,7 +6,7 @@ import Result from '../goals/Result';
 import { CalcContext } from './CalcContext';
 import CalcHeader from './CalcHeader';
 
-import './CalcTemplate.less';
+require('./CalcTemplate.less');
 
 export default function CalcTemplate() {
 	const { allInputDone, error }: any = useContext(CalcContext);

@@ -23,7 +23,7 @@ import {
   ViberIcon,
 } from "react-share";
 
-import "./SocialShare.less";
+require("./SocialShare.less");
 
 interface SocialMediaShareProps {
   url: string;

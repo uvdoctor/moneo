@@ -23,7 +23,7 @@ import {
 	ViberIcon
 } from 'react-share';
 
-import './SocialShare.less';
+require('./SocialShare.less');
 import { AppContext } from './AppContext';
 
 export default function SocialMediaShare() {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Image } from "antd";
 
-import "./Card.less";
+require("./Card.less");
 
 interface CardProps {
 	title: string;

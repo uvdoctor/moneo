@@ -3,7 +3,7 @@ import MonthlyLoanSchedule from "../calc/MonthlyLoanSchedule";
 import LoanScheduleChart from "../goals/LoanScheduleChart";
 import DataSwitcher from "../DataSwitcher";
 
-import "./LoanSchedule.less";
+require("./LoanSchedule.less");
 
 export default function LoanSchedule() {
 	const { Chart, List: DataSwitcherList } = DataSwitcher;

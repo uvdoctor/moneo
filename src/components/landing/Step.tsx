@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col, Image, Button } from "antd";
 import Link from "next/link";
-import "./Step.less";
+require("./Step.less");
 
 interface StepProps {
 	className: string;

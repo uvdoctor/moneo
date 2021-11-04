@@ -1,6 +1,6 @@
 import "@aws-amplify/ui/dist/style.css";
 import { AppProps } from "next/app";
-import "../styles/index.less";
+require("../styles/index.less");
 import * as gtag from "../lib/gtag";
 import { Router } from "next/router";
 import React from "react";

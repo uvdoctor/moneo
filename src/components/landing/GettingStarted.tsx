@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Image } from "antd";
-import "./GettingStarted.less";
+require("./GettingStarted.less");
 import GetStartedButton from "./GetStartedButton";
 
 export default function GettingStarted() {

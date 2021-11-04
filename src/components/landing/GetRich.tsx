@@ -10,7 +10,7 @@ import AdaptablePlanSVG from "../svgs/3d/AdaptablePlanSVG";
 import CashBunchSVG from "../svgs/3d/CashBunchSVG";
 import SwimRingSVG from "../svgs/3d/SwimRingSVG";
 
-import "./GetRich.less";
+require("./GetRich.less");
 
 export default function GetRich() {
   const featuresList = [

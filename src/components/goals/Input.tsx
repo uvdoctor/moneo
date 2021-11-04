@@ -5,7 +5,7 @@ import { CalcContext } from '../calc/CalcContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import VideoPlayer from '../VideoPlayer';
 
-import './Input.less';
+require('./Input.less');
 import ResultCarousel from '../ResultCarousel';
 
 export default function Input() {

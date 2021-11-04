@@ -4,7 +4,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { faQuoteLeft, faQuoteRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import "./testimonials.less";
+require("./testimonials.less");
 
 interface TestimonialTemplateProps {
 	title: string;

@@ -3,7 +3,7 @@ import { Row, Col, Button } from "antd";
 import { RightOutlined, CalculatorOutlined } from "@ant-design/icons";
 import { CALC_NAMES, ROUTES } from "../../CONSTANTS";
 
-import "./Calculator.less";
+require("./Calculator.less");
 
 interface CalculatorProps {
 	calculateRef?: string;
