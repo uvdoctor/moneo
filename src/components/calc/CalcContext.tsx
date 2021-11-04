@@ -4,7 +4,7 @@ import { useFullScreenBrowser } from 'react-browser-hooks';
 import TaxAdjustment from "../calc/TaxAdjustment";
 import GoalCost from "../goals/GoalCost";
 import LoanDetails from "./LoanDetails";
-import Sell from "../goals/sell";
+import SellAsset from "../goals/SellAsset";
 import BRComp from "../goals/BRComp";
 import BasicLineChart from "../goals/BasicLineChart";
 import BuyRentChart from "../goals/BuyRentChart";
@@ -174,7 +174,7 @@ function CalcContextProvider({
     let options = [
       { label: "Cost", active: true, svg: faMoneyBillWave, content: <GoalCost /> }];
     if (type === GoalType.B) {
-      options.push({ label: "Sell", active: true, svg: faHandshake, content: <Sell /> });
+      options.push({ label: "Sell", active: true, svg: faHandshake, content: <SellAsset /> });
     }
     if (isLoanEligible(type)) options.push(
       { label: "Loan", active: true, svg: faHandHoldingUsd, content: <LoanDetails /> }
