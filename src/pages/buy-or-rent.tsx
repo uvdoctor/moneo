@@ -14,11 +14,11 @@ export default function BuyOrRent() {
 	const features = [
 		{
 			title: "Works for any Asset",
-			content: "Calculation will work for any Asset that can be bought / rented (eg: property, car, furniture, gadget, etc)"
+			content: `Calculation will work for any Asset that can be bought / rented (eg: property, car, furniture, gadget, etc)`
 		},
 		{
 			title: "Supports custom payment plan",
-			content: "Works even for multiple payments across different timelines (eg: progress-linked payments for off-plan properties)"
+			content: `Works even for multiple payments across different timelines (eg: progress-linked payments for off-plan properties)`
 		},
 		{
 			title: "XIRR for loss / gain calculation",
@@ -26,12 +26,12 @@ export default function BuyOrRent() {
 		},
 		{
 			title: "NPV for buy vs rent comparison",
-			content: "Compares Net Present Value (NPV) of both options from 1 to upto 50 years to identify the cheaper option"
+			content: `Compares Net Present Value (NPV) of both options from 1 to upto 50 years to identify the cheaper option`
 		}
 	];
 
 	const results = [
-		"Which option is cheaper - buy or rent? Up to how many years? Analysis available for up to 50 years",
+		`Which option is cheaper - buy or rent? Up to how many years? Analysis available for up to 50 years`,
 		"Yearly Gain or Loss for Buy option",
 		"Total Maintenance Cost",
 		"Total Income that can be expected"
