@@ -164,7 +164,7 @@ export default function Feedback() {
                   {
                     required: true,
                     type: "string",
-                    message: "Please enter valid first name!",
+                    message: "Please enter valid first name",
                   },
                 ]}
               >
@@ -182,7 +182,7 @@ export default function Feedback() {
                   {
                     required: false,
                     type: "string",
-                    message: "Please enter valid last name!",
+                    message: "Please enter valid last name",
                   },
                 ]}
               >
@@ -196,7 +196,8 @@ export default function Feedback() {
                   {
                     required: true,
                     type: "email",
-                    message: "Please enter valid email address!",
+                    pattern: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                    message: "Please enter valid email address",
                   },
                 ]}
               >

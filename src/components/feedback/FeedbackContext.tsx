@@ -72,14 +72,14 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 				type: (data.createFeedback?.type==='C'?'comment':(data.createFeedback?.type==='S'?'suggestion':'question'))
 			}
 			sendMail('21.ramit@gmail.com;emailumangdoctor@gmail.com', mailTemplate.email as string , 'FeedbackTemplate', mailTemplate);
-			openNotificationWithIcon('success', 'Success', 'Feedback saved successfully.');
+			openNotificationWithIcon('success', 'Success', 'Feedback saved successfully');
 		} catch (e) {
 			setError({
 				title: 'Error while creating feedback',
 				//@ts-ignore
 				message: e.errors ? e.errors[0].message : e.toString()
 			});
-			openNotificationWithIcon('error', 'Error', 'Error while saving feedback.');
+			openNotificationWithIcon('error', 'Error', 'Error while saving feedback');
 		} finally {
 			setLoading(false);
 		}

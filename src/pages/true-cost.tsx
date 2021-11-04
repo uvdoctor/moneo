@@ -29,23 +29,23 @@ export default function TrueCost() {
 	const features = [
 		{
 			title: 'Amortization',
-			content: 'We bring all of your money to one place, from balances and bills to credit score and more.'
+			content: `We bring all of your money to one place, from balances and bills to credit score and more.`
 		},
 		{
 			title: 'Simple Savings',
-			content: 'Easily create budgets, and see our suggestions based on your spending.'
+			content: `Easily create budgets, and see our suggestions based on your spending.`
 		},
 		{
 			title: 'Cost-of-living',
-			content: 'We bring all of your money to one place, from balances and bills to credit score and more.'
+			content: `We bring all of your money to one place, from balances and bills to credit score and more.`
 		},
 		{
 			title: 'CD calculator',
-			content: 'Easily create budgets, and see our suggestions based on your spending.'
+			content: `Easily create budgets, and see our suggestions based on your spending.`
 		},
 		{
 			title: 'Home affordability',
-			content: 'Check your free credit score as many times as you like, and get tips to help improve it.'
+			content: `Check your free credit score as many times as you like, and get tips to help improve it.`
 		}
 	];
 
@@ -54,7 +54,7 @@ export default function TrueCost() {
 	const terms = [
 		{
 			title: 'Term 1',
-			content: 'Definition...'
+			content: `Definition...`
 		}
 	];
 
