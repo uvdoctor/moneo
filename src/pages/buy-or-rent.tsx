@@ -6,7 +6,7 @@ import { CALC_NAMES } from '../CONSTANTS';
 export default function BuyOrRent() {
 	const assumptions = [
 		{
-			title: 'Money saved from not Buying is immediately Invested.',
+			title: 'Money saved from not Buying is immediately Invested',
 			content: `For Buy v/s Rent comparison, Calculation assumes that Money saved due to Renting instead of Buying is immediately Invested. For instance, consider furniture worth $9,000 with Yearly Rent of $1,000. This means that if You Pay $1,000 for Yearly Rent, then remaining $8,000 will be immediately Invested.`
 		},
 	];
@@ -22,19 +22,19 @@ export default function BuyOrRent() {
 		},
 		{
 			title: "XIRR for loss / gain calculation",
-			content: "Uses industry standard Extended Internal Rate of Return (XIRR) method to calculate loss / gain as multiple cash flows happen at different times."
+			content: "Uses industry standard Extended Internal Rate of Return (XIRR) method to calculate loss / gain as multiple cash flows happen at different times"
 		},
 		{
 			title: "NPV for buy vs rent comparison",
-			content: "Compares Net Present Value (NPV) of both options from 1 to upto 50 years to identify the cheaper option."
+			content: "Compares Net Present Value (NPV) of both options from 1 to upto 50 years to identify the cheaper option"
 		}
 	];
 
 	const results = [
-		"Which option is cheaper - buy or rent? Up to how many years? Analysis available for up to 50 years.",
-		"Yearly Gain or Loss for Buy option.",
-		"Total Maintenance Cost.",
-		"Total Income that can be expected."
+		"Which option is cheaper - buy or rent? Up to how many years? Analysis available for up to 50 years",
+		"Yearly Gain or Loss for Buy option",
+		"Total Maintenance Cost",
+		"Total Income that can be expected"
 	];
 
 	const terms = [

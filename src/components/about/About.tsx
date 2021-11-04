@@ -4,7 +4,6 @@ import { faQuoteLeft, faQuoteRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Card from './Card';
 import Content from '../Content';
-import Image from 'next/image';
 
 require('./about.less');
 import GetStartedButton from '../landing/GetStartedButton';
@@ -34,7 +33,7 @@ export default function Home() {
 	return (
 		<div className="about">
 			<Content className="founder-quote" whiteBg>
-				<Image src="images/founder.jpg" alt="founder image" />
+				<img src="images/founder.jpg" alt="founder image" />
 				<hgroup>
 					<h2>
 						<FontAwesomeIcon icon={faQuoteLeft} />
@@ -100,7 +99,7 @@ export default function Home() {
 				</Row>
 				<Row align="middle">
 					<Col xs={24} sm={24} md={12}>
-						<Image src="images/quick-step.jpg" alt="quick step image" />
+						<img src="images/quick-step.jpg" alt="quick step image" />
 					</Col>
 					<Col xs={24} sm={24} md={12}>
 						<h2>
