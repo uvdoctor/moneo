@@ -67,7 +67,7 @@ export default function DynamicTargetInput({ lossInput }: DynamicTargetInputProp
 			{tgts &&
 				tgts[0] &&
 				tgts.map((t: TargetInput, i: number) => (
-					<Fragment>
+					<Fragment key={"t" + i}>
 						<SelectInput
 							pre="Year"
 							post={

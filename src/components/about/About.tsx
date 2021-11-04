@@ -4,6 +4,7 @@ import { faQuoteLeft, faQuoteRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Card from './Card';
 import Content from '../Content';
+import Image from 'next/image';
 
 require('./about.less');
 import GetStartedButton from '../landing/GetStartedButton';
@@ -33,11 +34,11 @@ export default function Home() {
 	return (
 		<div className="about">
 			<Content className="founder-quote" whiteBg>
-				<img src="images/founder.jpg" />
+				<Image src="images/founder.jpg" alt="founder image" />
 				<hgroup>
 					<h2>
 						<FontAwesomeIcon icon={faQuoteLeft} />
-						We're building the world's most human digital financial coach.
+						We&apos;re building the world&apos;s most human digital financial coach.
 						<FontAwesomeIcon icon={faQuoteRight} />
 					</h2>
 					<h4>- Umang Doctor, Founder</h4>
@@ -48,7 +49,7 @@ export default function Home() {
 					<strong>We believe in Financial Independence for All</strong>
 				</h2>
 				<p>
-					That's why we are building a platform for the masses that leverages time-tested financial practices
+					That is why we are building a platform for the masses that leverages time-tested financial practices
 					in order to help them make smart financial choices. We do not sell any financial product or your
 					data. We earn from providing unbiased coaching service with your interest at heart. We also have
 					human coaches available on call.
@@ -99,7 +100,7 @@ export default function Home() {
 				</Row>
 				<Row align="middle">
 					<Col xs={24} sm={24} md={12}>
-						<img src="images/quick-step.jpg" />
+						<Image src="images/quick-step.jpg" alt="quick step image" />
 					</Col>
 					<Col xs={24} sm={24} md={12}>
 						<h2>

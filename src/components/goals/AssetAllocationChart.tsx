@@ -249,7 +249,7 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 										className="heading"
 										actions={[
 											toHumanFriendlyCurrency(Math.round(getCF(index) * value / 100), getCurrency()),
-											<Badge count={`${value}%`} />
+											<Badge count={`${value}%`} key="cfv" />
 										]}
 									>
 										{title}
@@ -266,7 +266,7 @@ export default function AssetAllocationChart({ yearChangeable }: AssetAllocation
 																Math.round(getCF(index) * value / 100),
 																getCurrency()
 															),
-															<Badge count={`${value}%`} />
+															<Badge count={`${value}%`} key={name} />
 														]}
 													>
 														<span style={{ background: assetColor }} />

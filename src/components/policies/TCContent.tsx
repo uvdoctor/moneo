@@ -7,11 +7,11 @@ const tcConent = [
     content: (
       <Typography>
         <Paragraph>
-          Moneo Private Limited (hereinafter referred to as "Company") is a
+          Moneo Private Limited (hereinafter referred to as &quot;Company&quot;) is a
           company incorporated under the Companies Act, 2013, CIN:XXXXXXXXXXX
           having registered office at xxxxxxxxxxxxxxxxxxx. Moneo Private Limited
           is an AMFI Registered ARN Holder has developed and solely operate
-          mobile applications (“App”, which expression shall include future
+          mobile applications (&ldquo;App&rdquo;, which expression shall include future
           releases of the application) and websites https://moneo.in under brand
           names Moneo. Moneo is committed to operating its website and mobile
           applications with the highest ethical standards and appropriate
@@ -20,13 +20,13 @@ const tcConent = [
         <Paragraph>
           Please note that your visit, use of or access to our websites
           https://moneo.in/ and mobile applications (collectively referred to as
-          “Services” or “Application”) are subject to the following terms; if
+          &ldquo;Services&rdquo; or &ldquo;Application&rdquo;) are subject to the following terms; if
           you do not agree to all of the following, you may not use or access
           the Services in any manner.
         </Paragraph>
         <Paragraph>
-          xxxxx Private Limited (hereinafter referred to as “Moneo” or “We” or
-          “Us” or “Our”) is a company registered with the Securities and
+          xxxxx Private Limited (hereinafter referred to as &ldquo;Moneo&rdquo; or &ldquo;We&rdquo; or
+          &ldquo;Us&rdquo; or &ldquo;Our&rdquo;) is a company registered with the Securities and
           Exchange Board of India as an Investment Advisor under SEBI
           (Investment Advisers) Regulations, 2013 vide registration no.
           INA100012190 dated December 17, 2018 having its registered office at
@@ -288,7 +288,7 @@ const tcConent = [
         secret and/or other relevant intellectual property laws. No information,
         content or material from the Application may be copied, reproduced,
         republished, uploaded, posted, transmitted or distributed in any way
-        without Moneo's express written permission. You are hereby given a
+        without Moneo&apos;s express written permission. You are hereby given a
         limited licence to use the Application for your personal and
         non-commercial use, subject to your agreement of these Terms. You agree
         not to sell, license, distribute, copy, modify, publicly perform or

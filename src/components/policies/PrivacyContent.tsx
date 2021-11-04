@@ -26,7 +26,7 @@ const privacyContent = [
             We take your privacy extremely seriously. Your privacy is important
             to us and maintaining your trust is imperative. This Policy forms
             part and parcel of the Terms of Use and other terms on the Moneo
-            Platform ("Terms of Use"). The Privacy Policy should always be read
+            Platform (&quot;Terms of Use&quot;). The Privacy Policy should always be read
             in conjunction with the Terms and Conditions. This Privacy Policy
             explains how Moneo collects, uses & protects your information when
             you access Moneo website(s) & mobile apps (collectively referred to
@@ -39,13 +39,13 @@ const privacyContent = [
           </Paragraph>
           <Paragraph>
             This Privacy Policy is applicable to a User who avails the Services.
-            The term "User" for the purposes of this Privacy Policy shall mean
+            The term &quot;User&quot; for the purposes of this Privacy Policy shall mean
             You, in the capacity of an individual, a guest user, browser and/ or
             representative of an entity, who visits, accesses, uses, downloads,
             deals with, avails Services and/ or transacts through Moneo
             Platform. For the purpose of this Policy, wherever the context so
-            requires "You" or "Your" shall mean User and the term "We", "Us",
-            "Our" shall mean Company.
+            requires &quot;You&quot; or &quot;Your&quot; shall mean User and the term &quot;We&quot;, &quot;Us&quot;,
+            &quot;Our&quot; shall mean Company.
           </Paragraph>
           <Paragraph>
             In case You do not wish to provide any information, including
@@ -273,17 +273,17 @@ const privacyContent = [
           </Paragraph>
           <Paragraph>
             <Text strong>Log File Information</Text>
-            We automatically collect limited information about Your computer's
+            We automatically collect limited information about Your computer&apos;s
             connection to the Internet, mobile number, including Your IP
             address, when You visit Our site, application or service. Your IP
             address is a number that lets computers attached to the Internet
             know where to send You data -- such as the pages You view. We
             automatically receive and log information from Your browser,
-            including but not limited to Your IP address, Your computer's name,
+            including but not limited to Your IP address, Your computer&apos;s name,
             Your operating system, browser type and version, CPU speed, and
             connection speed. We may also collect log information from Your
-            device, including Your location, IP address, Your device's name,
-            device's serial number or unique identification number (e.g.. UDiD
+            device, including Your location, IP address, Your device&apos;s name,
+            device&apos;s serial number or unique identification number (e.g.. UDiD
             on Your iOS device), Your device operating system, browser type and
             version, CPU speed, and connection speed etc.
           </Paragraph>
@@ -296,7 +296,7 @@ const privacyContent = [
             You can choose to provide specific & explicit consent to allow
             Moneo’s Android App to access your text messages (SMS) inbox
             received on your Android mobile device. After obtaining such
-            explicit consent from you, Moneo's Android App may automatically
+            explicit consent from you, Moneo&apos;s Android App may automatically
             read your SMS text messages pertaining to yours expenses and/or
             saving account balance data information arising out of transactions
             made from cards, banks, wallets through text messages (SMS) received
@@ -337,7 +337,7 @@ const privacyContent = [
               This also helps you to get an accurate picture of your overall
               NetWorth and overall financial picture in combination with your
               investments & liabilities. You can anytime choose to opt-out of
-              this permission by visiting the Moneo App's permission settings or
+              this permission by visiting the Moneo App&apos;s permission settings or
               you opt out by writing to xxx@xxx.in ; You can also ask to delete
               your information by writing to https://moneo.in/contact-us
             </li>
@@ -347,7 +347,7 @@ const privacyContent = [
               not allow and we prohibit access to any of the third party
               analytics providers.
             </li>
-            <li> 3. We don't allow humans to read the data, unless : </li>
+            <li> 3. We don&apos;t allow humans to read the data, unless : </li>
             <li>
               (a) We first obtain your affirmative agreement for specific
               messages;
@@ -380,7 +380,7 @@ const privacyContent = [
             promotions. We use Google Analytics, among others, to track the user
             behaviour on Our Sites. Google Analytics specifically has been
             enabled to support display advertising towards helping Us gain
-            understanding of Our users' demographics and interests. The reports
+            understanding of Our users&apos; demographics and interests. The reports
             are anonymous and cannot be associated with any individual
             personally identifiable information that You may have shared with
             Us. You can opt-out of Google Analytics for display advertising and
@@ -395,9 +395,9 @@ const privacyContent = [
             (You can tell where You are by checking the URL in the location bar
             on Your browser), use of any information You provide is governed by
             the privacy policy of the operator of the application, you are
-            visiting. That privacy policy may differ from Ours. If You can't
+            visiting. That privacy policy may differ from Ours. If You can&apos;t
             find the privacy policy of any of these sites via a link from the
-            application's homepage, You should contact the application owners
+            application&apos;s homepage, You should contact the application owners
             directly for more information. We do not provide any personally
             identifiable Information to third party websites/ application/
             advertisers/ ad-servers without Your consent except in the
@@ -476,7 +476,7 @@ const privacyContent = [
             </li>
             <li>• Analyse Your behaviour on Moneo Platform;</li>
             <li>
-              • Facilitate Company's marketing, advertising and educational
+              • Facilitate Company&apos;s marketing, advertising and educational
               activities/initiatives
             </li>
             <li>• Auditing and investigation purposes;</li>
@@ -491,7 +491,7 @@ const privacyContent = [
             We may also use Your email address or other personally identifiable
             information to send commercial or marketing messages about Our
             Services and/or such additional updates and features about third
-            parties' products and services with an option to subscribe /
+            parties&apos; products and services with an option to subscribe /
             unsubscribe. We may, however, use Your email address for
             non-marketing or administrative purposes (such as notifying You of
             major changes, for customer service purposes, billing, etc.).
@@ -611,16 +611,16 @@ const privacyContent = [
             <li>
               1. We only transfer the data to others if necessary to provide or
               improve user-facing features that are prominent in the requesting
-              application's user interface. We may also transfer data as
+              application&apos;s user interface. We may also transfer data as
               necessary to comply with applicable law or as part of a merger,
               acquisition, or sale of assets with notice to users. All other
               transfers or sales of the user data are prohibited
             </li>
             <li>
-              2. We don't use or transfer the data for serving ads, including
+              2. We don&apos;t use or transfer the data for serving ads, including
               retargeting, personalized, or interest-based advertising; and
             </li>
-            <li>3. We don't allow humans to read the data, unless :</li>
+            <li>3. We don&apos;t allow humans to read the data, unless :</li>
             <Paragraph>
               <li>
                 (a) We first obtain your affirmative agreement for specific
@@ -787,7 +787,7 @@ const privacyContent = [
       content: (
         <Typography>
           <Paragraph>
-            We at Moneo are committed to our client's data and privacy. We blend
+            We at Moneo are committed to our client&apos;s data and privacy. We blend
             security at multiple steps within our products with state of the art
             technology to ensure our systems maintain strong security measures.
             The overall data and privacy security design allows us to defend our

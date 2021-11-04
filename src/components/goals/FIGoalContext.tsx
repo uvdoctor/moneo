@@ -161,8 +161,8 @@ function FIGoalContextProvider({ children }: FIGoalContextProviderProps) {
 
   useEffect(() => {
     setResults([...[
-        <FIYearResult />,
-        <FISavingsResult />
+        <FIYearResult key="fiyear" />,
+        <FISavingsResult key="fiamt" />
       ]]);
   }, [cfs]);
 

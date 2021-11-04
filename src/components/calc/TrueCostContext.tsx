@@ -28,7 +28,7 @@ function TrueCostContextProvider() {
 	const [ cfsWithoutOppCost, setCFsWithoutOppCost ] = useState<Array<number>>([]);
 
 	useEffect(() => {
-		setResults([ ...[ <TimeCostResult />, <TrueOppCostResult /> ] ]);
+		setResults([ ...[ <TimeCostResult key="tcr" />, <TrueOppCostResult key="tocr" /> ] ]);
 	}, []);
 
 	useEffect(

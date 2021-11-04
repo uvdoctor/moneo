@@ -55,12 +55,12 @@ const securityContent = [
     content: (
       <Paragraph>
         <li>
-          All users' data is managed in the encrypted format at all times. This
+          All users&apos; data is managed in the encrypted format at all times. This
           encryption on data is applied at both in-transit and in-rest.
         </li>
         <li>
           The transmission of data is encrypted by a bank-grade TLS encryption
-          algorithm, which helps in protecting users' data from
+          algorithm, which helps in protecting users&apos; data from
           Man-in-the-middle and eavesdropping attacks.
         </li>
         <li>
@@ -72,7 +72,7 @@ const securityContent = [
         </li>
         <li>
           Additionally, multi-level role-based access control is implemented to
-          secure users' data. Internally, we limit the access of development
+          secure users&apos; data. Internally, we limit the access of development
           server through bundling identity management and secured multi-tunnel
           private VPN channels.
         </li>
@@ -227,14 +227,14 @@ const securityContent = [
     content: (
       <Typography>
         <Paragraph>
-          We are committed to keeping our users' data safe and secure. Keeping
-          up with our users' trust, we have implemented the highest grade of
+          We are committed to keeping our users&apos; data safe and secure. Keeping
+          up with our users&apos; trust, we have implemented the highest grade of
           security standards and perform vulnerability scans, conduct
           penetration tests, and apply security patches to our systems
           periodically.
         </Paragraph>
         <Paragraph>
-          Despite our best efforts, if you're a tech enthusiast or a researcher
+          Despite our best efforts, if you are a tech enthusiast or a researcher
           and identify any potential security vulnerability issue, we encourage
           you to report the same responsibly by writing to us at
           xxx@xxxx.co along with supporting screenshots/videos and

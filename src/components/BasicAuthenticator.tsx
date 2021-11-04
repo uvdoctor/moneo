@@ -201,15 +201,15 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 					>
 					<Checkbox defaultChecked={true}>
 						I accept the{' '}
-						<a target="_blank" href={ROUTES.POLICYTC}>
+						<a target="_blank" href={ROUTES.POLICYTC} rel="noreferrer">
 							Terms & Conditions
 						</a>
 						,&nbsp;
-						<a target="_blank" href={ROUTES.POLICYPRIVACY}>
+						<a target="_blank" href={ROUTES.POLICYPRIVACY} rel="noreferrer">
 							Privacy Policy
 						</a>{' '}
 						&nbsp;and&nbsp;
-						<a target="_blank" href={ROUTES.POLICYSECURITY}>
+						<a target="_blank" href={ROUTES.POLICYSECURITY} rel="noreferrer">
 							Security Policy
 						</a>
 					</Checkbox>

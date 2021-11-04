@@ -20,7 +20,7 @@ interface OfferingsProps {
 
 const Feature = ({ offerings }: FeatureProps) =>
 	offerings.map(({ title, notSupported, features }: OfferingsProps) => (
-		<Col className={notSupported ? "not-supported" : ""} span={24}>
+		<Col key={title} className={notSupported ? "not-supported" : ""} span={24}>
 			<h3>
 				{notSupported ? (
 					<FontAwesomeIcon icon={faTimes} />
@@ -31,8 +31,8 @@ const Feature = ({ offerings }: FeatureProps) =>
 			</h3>
 			{features && (
 				<ul>
-					{features.map((feature: any) => (
-						<li>{feature}</li>
+					{features.map((feature: any, index: number) => (
+						<li key={"f" + index}>{feature}</li>
 					))}
 				</ul>
 			)}
