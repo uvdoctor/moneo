@@ -14,11 +14,11 @@ export default function BuyOrRent() {
 	const features = [
 		{
 			title: "Works for any Asset",
-			content: "Calculation will work for any Asset that can be bought / rented (eg: property, car, furniture, gadget, etc.)"
+			content: "Calculation will work for any Asset that can be bought / rented (eg: property, car, furniture, gadget, etc)"
 		},
 		{
 			title: "Supports custom payment plan",
-			content: "Works even for multiple payments across different timelines (eg: progress-linked payments for off-plan properties)."
+			content: "Works even for multiple payments across different timelines (eg: progress-linked payments for off-plan properties)"
 		},
 		{
 			title: "XIRR for loss / gain calculation",
@@ -40,7 +40,7 @@ export default function BuyOrRent() {
 	const terms = [
 		{
 			title: 'Custom Payment Plan',
-			content: 'Default payment option allows for a single payment for buying an asset, or down-payment followed by monthly payments in case of Loan. However, it is possible that You want to input a multi-year payment plan where payment amount and schedule vary. For instance, in case of buying an off-plan property, there may be a payment plan spread over multiple years and linked to percentage completion of the property. In such a case, You can use Custom Payment Plan option to input specific payments for specific years.'
+			content: `Default payment option allows for a single payment for buying an asset, or down-payment followed by monthly payments in case of Loan. However, it is possible that You want to input a multi-year payment plan where payment amount and schedule vary. For instance, in case of buying an off-plan property, there may be a payment plan spread over multiple years and linked to percentage completion of the property. In such a case, You can use Custom Payment Plan option to input specific payments for specific years.`
 		}
 	];
 
