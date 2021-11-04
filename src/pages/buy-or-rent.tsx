@@ -22,7 +22,7 @@ export default function BuyOrRent() {
 		},
 		{
 			title: "XIRR for loss / gain calculation",
-			content: "Uses industry standard Extended Internal Rate of Return (XIRR) method to calculate loss / gain as multiple cash flows happen at different times"
+			content: `Uses industry standard Extended Internal Rate of Return (XIRR) method to calculate loss / gain as multiple cash flows happen at different times`
 		},
 		{
 			title: "NPV for buy vs rent comparison",
@@ -50,7 +50,7 @@ export default function BuyOrRent() {
 			type={GoalType.B}
 			assumptions={assumptions}
 			features={features}
-			demoUrl="https://www.youtube.com/watch?v=M_4cdKdKYiw"
+			demoUrl={`https://www.youtube.com/watch?v=M_4cdKdKYiw`}
 			results={results}
 			terms={terms}
 		/>
