@@ -33,7 +33,7 @@ export default function NWView() {
 
 	useEffect(
 		() => {
-			if (!loadingHoldings) setResults([ ...[ <TotalNetWorth />, <TotalAssets />, <TotalLiabilities /> ] ]);
+			if (!loadingHoldings) setResults([ ...[ <TotalNetWorth key="tnw" />, <TotalAssets key="ta" />, <TotalLiabilities key="tl" /> ] ]);
 		},
 		[ loadingHoldings ]
 	);

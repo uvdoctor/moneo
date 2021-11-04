@@ -49,9 +49,9 @@ export default function Footer() {
 			</Row>
 			<Row justify="center">
 				<Col>
-					<a target="_blank" href={ROUTES.POLICYTC}>Terms & Conditions</a>&nbsp; | &nbsp;
-					<a target="_blank" href={ROUTES.POLICYPRIVACY}>Privacy Policy</a> &nbsp; | &nbsp;
-					<a target="_blank" href={ROUTES.POLICYSECURITY}>Security Policy</a> &nbsp;
+					<a target="_blank" href={ROUTES.POLICYTC} rel="noreferrer">Terms & Conditions</a>&nbsp; | &nbsp;
+					<a target="_blank" href={ROUTES.POLICYPRIVACY} rel="noreferrer">Privacy Policy</a> &nbsp; | &nbsp;
+					<a target="_blank" href={ROUTES.POLICYSECURITY} rel="noreferrer">Security Policy</a> &nbsp;
 				</Col>
 			</Row>
 			<Row justify="center">
@@ -65,8 +65,8 @@ export default function Footer() {
 			<Row justify="center">
 				<Col className="disclaimer">
 					Disclaimer: This site is protected by reCAPTCHA and the Google{' '}
-					<a target="_blank" href={ROUTES.POLICYPRIVACY}>Privacy Policy</a> and{' '}
-					<a target="_blank" href={ROUTES.POLICYTC}>Terms of Service</a> apply.
+					<a target="_blank" href={ROUTES.POLICYPRIVACY} rel="noreferrer">Privacy Policy</a> and{' '}
+					<a target="_blank" href={ROUTES.POLICYTC} rel="noreferrer">Terms of Service</a> apply.
 				</Col>
 			</Row>
 		</Content>

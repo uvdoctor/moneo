@@ -4,7 +4,7 @@ const BannerContent = () => {
 	return (
 		<Fragment>
 			<h2>Worry-free Financial Independence</h2>
-			<h3>Your family's financial coach that champions your goals</h3>
+			<h3>Your family financial coach that champions your goals</h3>
 			{/*defaultCountry !== "IN" && (
 				<h4>
 					Join Waitlist &amp; Earn up to $200 credit*

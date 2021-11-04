@@ -5,7 +5,7 @@ import { Auth } from "aws-amplify";
 import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
 import { UserOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
-
+import Image from "next/image";
 interface ImageInputProps {
   user: any;
 }
@@ -160,7 +160,7 @@ export default function ImageInput({ user }: ImageInputProps) {
           )}
           <div className="preview-image">
             {user?.attributes.picture ? (
-              <img width="100%" src={user?.attributes.picture} />
+              <Image width={60} src={user?.attributes.picture} alt="profile picture" />
             ) : (
               <span onClick={openBrowse}>{avatar(300)}</span>
             )}

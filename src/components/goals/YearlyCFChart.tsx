@@ -4,12 +4,15 @@ import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } 
 import { PlanContext } from './PlanContext';
 import { Row, Col } from 'antd';
 import { COLORS } from '../../CONSTANTS';
-import { toHumanFriendlyCurrency } from '../utils';
+import { isMobileDevice, toHumanFriendlyCurrency } from '../utils';
+import { useFullScreenBrowser } from "react-browser-hooks";
+
 
 const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function YearlyCFChart() {
+	const { fsb } = useFullScreenBrowser();
 	const { mustCFs, tryCFs, optCFs, ffGoal }: any = useContext(PlanContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const currency = ffGoal.ccy;
@@ -65,7 +68,7 @@ export default function YearlyCFChart() {
 					xField="year"
 					yField="value"
 					seriesField="name"
-					yAxis={getCommonYAxis()}
+					yAxis={getCommonYAxis(!isMobileDevice(fsb))}
 					xAxis={getCommonXAxis('Year')}
 					meta={getCommonMeta(currency)}
 					legend={{ position: 'top' }}
@@ -87,3 +90,4 @@ export default function YearlyCFChart() {
 		</Row>
 	);
 }
+

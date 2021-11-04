@@ -89,8 +89,9 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
               noFooter={props.noFooter}
               hideMenu={props.hideMenu}
               title={props.menuTitle}
-              children={props.children}
-            />
+            >
+              {props.children}
+            </BasicLayout>
           </BasicAuthenticator>
         ) : (
           <AppContextProvider>
@@ -102,8 +103,9 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
               noFooter={props.noFooter}
               hideMenu={props.hideMenu}
               title={props.menuTitle}
-              children={props.children}
-            />
+            >
+              {props.children}
+            </BasicLayout>
           </AppContextProvider>
         )}
       </GoogleReCaptchaProvider>

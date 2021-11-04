@@ -3,7 +3,8 @@ import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
 import { CalcContext } from './CalcContext';
 import { FIGoalContext } from '../goals/FIGoalContext';
-import { getMonthName } from '../utils';
+import { getMonthName, isMobileDevice } from '../utils';
+import { useFullScreenBrowser } from "react-browser-hooks";
 
 const AreaChart = dynamic(() => import('bizcharts/lib/plots/AreaChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
@@ -12,7 +13,8 @@ export default function FIMonthlyInvTargetChart() {
 	const { currency, cfs }: any = useContext(CalcContext);
 	const { avgMonthlySavings, monthlySavingsRate, monthlyMaxSavings, wipResult }: any = useContext(FIGoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
-
+	const { fsb } = useFullScreenBrowser();
+	
 	useEffect(
 		() => {
 			let data: Array<any> = [];
@@ -44,7 +46,7 @@ export default function FIMonthlyInvTargetChart() {
 			data={data}
 			xField="month"
 			yField="value"
-			yAxis={getCommonYAxis()}
+			yAxis={getCommonYAxis(!isMobileDevice(fsb))}
 			xAxis={getCommonXAxis('Month')}
 			meta={getCommonMeta(currency)}
 		>

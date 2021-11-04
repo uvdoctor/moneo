@@ -1,6 +1,5 @@
 import { COLORS } from '../CONSTANTS';
-import { useFullScreenBrowser } from 'react-browser-hooks';
-import { isMobileDevice, toCurrency } from './utils';
+import { toCurrency } from './utils';
 
 export const getCommonMeta = (currency: string) => {
 	return {
@@ -33,8 +32,7 @@ export const getCommonXAxis = (titleText: string) => {
 	};
 };
 
-export const getCommonYAxis = () => {
-	const show = !isMobileDevice(useFullScreenBrowser());
+export const getCommonYAxis = (show: boolean) => {
 	return {
 		label: show ? {} : null,
 		grid: show ? {} : null

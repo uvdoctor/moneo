@@ -6,8 +6,9 @@ import { GoalType } from '../../api/goals';
 import { Col, Row } from 'antd';
 import NumberInput from '../form/numberinput';
 import { COLORS } from '../../CONSTANTS';
-import { toHumanFriendlyCurrency } from '../utils';
+import { isMobileDevice, toHumanFriendlyCurrency } from '../utils';
 import { PlanContext } from './PlanContext';
+import { useFullScreenBrowser } from "react-browser-hooks";
 
 interface BasicLineChartProps {
 	numberOfYears?: boolean;
@@ -38,7 +39,8 @@ export default function BasicLineChart({
 	const { goal, rr, ffResult }: any = useContext(PlanContext);
 	const { wipGoal, startYear, currency, cfs, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
-
+	const { fsb } = useFullScreenBrowser();
+	
 	const getCF = (year: number) => {
 		if (!goal && wipGoal.type === GoalType.FF && ffResult.ffCfs)
 			return ffResult.ffCfs[year];
@@ -89,7 +91,7 @@ export default function BasicLineChart({
 						data={data}
 						xField="year"
 						yField="value"
-						yAxis={getCommonYAxis()}
+						yAxis={getCommonYAxis(!isMobileDevice(fsb))}
 						xAxis={getCommonXAxis(title ? title : numberOfYears ? 'Number of Years' : 'Year')}
 						meta={getCommonMeta(currency)}
 						point={!dataMarkers}

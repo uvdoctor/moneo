@@ -1,11 +1,12 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } from '../chartutils';
-import { toCurrency } from '../utils';
+import { isMobileDevice, toCurrency } from '../utils';
 import { GoalContext } from './GoalContext';
 import { Col, Row } from 'antd';
 import { CalcContext } from '../calc/CalcContext';
 import NumberInput from '../form/numberinput';
+import { useFullScreenBrowser } from "react-browser-hooks";
 
 const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
@@ -14,7 +15,8 @@ export default function BuyRentChart() {
 	const { currency, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
 	const { brChartData }: any = useContext(GoalContext);
 	const [ stackedData, setStackedData ] = useState<Array<any>>([]);
-
+	const { fsb } = useFullScreenBrowser();
+	
 	useEffect(
 		() => {
 			if (!brChartData || brChartData.length !== 2) {
@@ -64,7 +66,7 @@ export default function BuyRentChart() {
 					yField="value"
 					seriesField="name"
 					data={stackedData}
-					yAxis={getCommonYAxis()}
+					yAxis={getCommonYAxis(!isMobileDevice(fsb))}
 					xAxis={getCommonXAxis('Number of Years')}
 					legend={{
 						position: 'top',

@@ -121,3 +121,4 @@ function AppContextProvider({ children, user, handleLogout }: AppContextProvider
 }
 
 export { AppContext, AppContextProvider };
+

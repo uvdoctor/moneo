@@ -4,6 +4,8 @@ import { getCommonMeta, getCommonXAxis, getCommonYAxis, getDefaultSliderProps } 
 import { GoalContext } from './GoalContext';
 import { CalcContext } from '../calc/CalcContext';
 import { createYearlyFromMonthlyLoanCFs } from '../calc/finance';
+import { isMobileDevice } from '../utils';
+import { useFullScreenBrowser } from "react-browser-hooks";
 
 const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { ssr: false });
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
@@ -13,7 +15,8 @@ export default function LoanScheduleChart() {
 	const { pSchedule, iSchedule, insSchedule, loanRepaymentMonths }: any = useContext(GoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [ hasMonthlyInsurance, setHasMonthlyInsurance ] = useState<boolean>(false);
-
+	const { fsb } = useFullScreenBrowser();
+	
 	useEffect(
 		() => {
 			for (let p of insSchedule) {
@@ -70,7 +73,7 @@ export default function LoanScheduleChart() {
 			xField="year"
 			yField="value"
 			seriesField="name"
-			yAxis={getCommonYAxis()}
+			yAxis={getCommonYAxis(!isMobileDevice(fsb))}
 			xAxis={getCommonXAxis('Year')}
 			data={data}
 			legend={{ position: 'top' }}
