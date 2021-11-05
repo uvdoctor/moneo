@@ -1,9 +1,7 @@
-//const withPWA = require("next-pwa");
 const lessToJS = require('less-vars-to-js');
 const fs = require('fs');
 const path = require('path');
 const withPlugins = require('next-compose-plugins');
-//const isProd = process.env.NODE_ENV === "production";
 const withAntdLess = require('next-plugin-antd-less');
 
 const themeVariables = lessToJS(fs.readFileSync(path.resolve(__dirname, './src/styles/antd-custom.less'), 'utf8'));
@@ -33,11 +31,3 @@ module.exports = withPlugins(
 		swcMinify : true
 	}
 );
-
-/*module.exports = withPWA({
-	pwa: {
-		disable: !isProd,
-		dest: "public",
-		register: true,
-	},
-});*/
