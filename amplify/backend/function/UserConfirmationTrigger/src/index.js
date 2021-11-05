@@ -1,6 +1,5 @@
 const AWS = require('aws-sdk');
 const ddb = new AWS.DynamoDB();
-const table = 'RegEmail-fdun77s5lzbinkbgvnuidw6ihq-usdev';
 
 const getTableNameFromInitialWord = async (tableInitial) => {
 	var params = {
@@ -8,7 +7,7 @@ const getTableNameFromInitialWord = async (tableInitial) => {
 		Limit: 1
 	  };
 	try {
-	   const table = await dynamodb.listTables(params).promise();
+	   const table = await ddb.listTables(params).promise();
 	   return table.TableNames[0];
 	} catch(err){
 		console.log(err);
