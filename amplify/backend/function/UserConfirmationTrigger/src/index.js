@@ -2,6 +2,19 @@ const AWS = require('aws-sdk');
 const ddb = new AWS.DynamoDB();
 const table = 'RegEmail-fdun77s5lzbinkbgvnuidw6ihq-usdev';
 
+const getTableNameFromInitialWord = async (tableInitial) => {
+	var params = {
+		ExclusiveStartTableName: tableInitial,
+		Limit: 1
+	  };
+	try {
+	   const table = await dynamodb.listTables(params).promise();
+	   return table.TableNames[0];
+	} catch(err){
+		console.log(err);
+	}
+}
+
 const pushDataSingly = (params, email) => {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -20,6 +33,7 @@ const getDataFromEventAndPush = (event, context) => {
 			if (event.request.userAttributes['email_verified'] === 'true') {
 				let notify = event.request.userAttributes['custom:notify'];
 				let email = event.request.userAttributes.email;
+				const table = await getTableNameFromInitialWord('RegEmail')
 				let params = {
 					Item: {
 						__typename: { S: 'RegEmail' },
