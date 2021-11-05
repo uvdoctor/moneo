@@ -18,7 +18,7 @@ module.exports = withPlugins(
 			// optional https://github.com/webpack-contrib/css-loader#object
 			cssLoaderOptions                     : {
 				esModule: true,
-      			sourceMap: true,
+      			sourceMap: false,
       			modules: {
         			auto: true,
       			},
