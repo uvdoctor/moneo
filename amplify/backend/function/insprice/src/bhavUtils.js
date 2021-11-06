@@ -1,6 +1,7 @@
 const fs = require('fs');
 const csv = require('csv-parser');
 const { cleanDirectory } = require('/opt/nodejs/bhavUtils');
+const { getTableNameFromInitialWord } = require('/opt/nodejs/insertIntoDB');
 const { tempDir } = require('/opt/nodejs/utility');
 const { calcSchema } = require('./calculate');
 
@@ -95,7 +96,7 @@ const extractPartOfData = async (fileName, codes, nameMap, weekHLMap) => {
 };
 
 const addMetaData = async (exchgData, getDataFromTable) => {
-	const table = 'INExchgMeta-fdun77s5lzbinkbgvnuidw6ihq-usdev';
+	const table = await getTableNameFromInitialWord('INExchgMeta');
 	const data = await getDataFromTable(table);
 	exchgData.map((element) => {
 		element.map((item) => {
