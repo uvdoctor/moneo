@@ -16,12 +16,11 @@ module.exports = withPlugins(
 			// optional
 			lessVarsFilePathAppendToEndOfContent : false,
 			// optional https://github.com/webpack-contrib/css-loader#object
-			cssLoaderOptions                     : {
-				esModule: true,
-      			sourceMap: false,
-      			modules: {
-        			auto: true,
-      			},
+			cssLoaderOptions                     : {},
+			lessLoaderOptions: {
+				lessOptions: {
+					javascriptEnabled: true
+				}
 			},
 			// Other Config Here...
 
