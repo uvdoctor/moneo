@@ -15,12 +15,6 @@ export default function Policies({ type }: PoliciesProps) {
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
 
-  const tabKey: any = {
-    "Terms and Conditions": "terms-and-conditions",
-    Privacy: "privacy",
-    Security: "security",
-  };
-
   const sections: any = {
     "Terms & Conditions": <MajorAssumptions elements={[...tcConent]} />,
     Privacy: <MajorAssumptions elements={[...privacyContent]} />,
