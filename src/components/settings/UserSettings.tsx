@@ -107,7 +107,7 @@ export default function UserSettings(): JSX.Element {
     setDob(user?.attributes.birthdate || '');
     setContact(user?.attributes.phone_number ? user?.attributes.phone_number.replace(counCode?.value, "") : '');4
     setPrefuser(user?.attributes.preferred_username)
-  }, [appContextLoaded]);
+  }, [appContextLoaded, counCode?.value, user]);
 
   return (
     <Fragment>
@@ -126,8 +126,8 @@ export default function UserSettings(): JSX.Element {
               type={isMobileDevice(fsb) ? "card" : "line"}
               animated
             >
-              <TabPane className="tabPane" tab="Personal" key="1">
-                <Row>
+              <TabPane tab="Personal" key="1">
+                <Row className="tabPane">
                   <Col className="personal-tabpane-image-view">
                     <ImageInput user={user} />
                   </Col>
@@ -205,7 +205,7 @@ export default function UserSettings(): JSX.Element {
                 </Row>
               </TabPane>
               <TabPane tab="Account" key="2">
-              <Row justify="start">
+              <Row justify="start" className="tabPane">
                   <Col className="first-col-view">
                     <TextInput
                       pre="Login Name"
@@ -231,7 +231,7 @@ export default function UserSettings(): JSX.Element {
                   </Col>
                 </Row>
                 <p>&nbsp;</p>
-                <Row justify="start">
+                <Row justify="start" className="tabPane">
                   <Col>
                     <TextInput
                       pre="Mobile"
@@ -254,7 +254,7 @@ export default function UserSettings(): JSX.Element {
                   </Col>
                 </Row>
                 <p>&nbsp;</p>
-                <Row justify="start">
+                <Row justify="start" className="tabPane">
                   <Col>
                     <TextInput
                       pre="Email Id"
@@ -278,7 +278,7 @@ export default function UserSettings(): JSX.Element {
                 </Row>
               </TabPane>
               <TabPane tab="Password" key="3">
-                <Row justify="start">
+                <Row justify="start" className="tabPane">
                   <Col>
                     <PasswordInput user={user} />
                   </Col>
