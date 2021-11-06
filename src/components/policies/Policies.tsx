@@ -38,7 +38,7 @@ export default function Policies({ type }: PoliciesProps) {
             animated
           >
             {Object.keys(sections).map((key) => (
-              <TabPane key={tabKey[key]} tab={key}>
+              <TabPane key={key} tab={key}>
                 {sections[key]}
               </TabPane>
             ))}
