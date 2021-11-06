@@ -16,12 +16,11 @@ module.exports = withPlugins(
 			// optional
 			lessVarsFilePathAppendToEndOfContent : false,
 			// optional https://github.com/webpack-contrib/css-loader#object
-			cssLoaderOptions                     : {
-				esModule: true,
-      			sourceMap: false,
-      			modules: {
-        			auto: true,
-      			},
+			cssLoaderOptions                     : {},
+			lessLoaderOptions: {
+				lessOptions: {
+					javascriptEnabled: true
+				}
 			},
 			// Other Config Here...
 
@@ -34,6 +33,14 @@ module.exports = withPlugins(
 		eslint    : {
 			ignoreDuringBuilds : true
 		},
-		swcMinify : true
+		swcMinify : true,
+    	rules: [
+			{
+				exclude: [path.resolve(__dirname, "node_modules")], // in order to ignore all modules in node_modules folder
+			}
+		],
+    	externalsPresets: {
+        	node: true // in order to ignore built-in modules like path, fs, etc. 
+    	}
 	}
 );
