@@ -34,7 +34,11 @@ module.exports = withPlugins(
 			ignoreDuringBuilds : true
 		},
 		swcMinify : true,
-    	exclude:path.resolve(__dirname, "node_modules"), // in order to ignore all modules in node_modules folder
+    	rules: [
+			{
+				exclude: [path.resolve(__dirname, "node_modules")], // in order to ignore all modules in node_modules folder
+			}
+		],
     	externalsPresets: {
         	node: true // in order to ignore built-in modules like path, fs, etc. 
     	}
