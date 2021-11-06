@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext } from "react";
+import React, { Fragment, useState, useContext, useEffect } from "react";
 import { Modal, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import AddHoldingInput from "../AddHoldingInput";
@@ -25,16 +25,31 @@ export default function AddHoldings({
   const [isModalVisible, setModalVisibility] = useState<boolean>(false);
   const [okDisabled, setOkDisabled] = useState<boolean>(true);
   const [newRec, setNewRec] = useState<any>({});
-  const { activeTab }: any = useContext(NWContext);
+  const { activeTab, setInstruments, instruments }: any = useContext(NWContext);
+  const [instrumentsList, setInstrumentsList] = useState<any>([]);
+
+  useEffect(() => {
+    setOkDisabled(instrumentsList.length > 0 ? false : true);
+  }, [instrumentsList])
 
   const close = () => {
     setModalVisibility(false);
   };
 
   const addHolding = () => {
+    if (activeTab === "Financial") {
+      setInstruments(instrumentsList);
+      setInstrumentsList([])
+      close();
+      return;
+    }
     data.push(newRec);
     changeData([...data]);
     close();
+  };
+
+  const updateInstruments = (instrumentsToAdd: []) => {
+    setInstrumentsList([...instrumentsToAdd, ...instruments]);
   };
 
   return (
@@ -58,7 +73,10 @@ export default function AddHoldings({
         width="800px"
       >
         {activeTab === "Financial" ? (
-          <AddHoldingFiancialInput disableOk={setOkDisabled} />
+          <AddHoldingFiancialInput
+            updateInstruments={updateInstruments}
+            instrumentsList={instrumentsList}
+          />
         ) : (
           <AddHoldingInput
             setInput={setNewRec}
