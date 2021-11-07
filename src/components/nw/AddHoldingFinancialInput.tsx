@@ -17,7 +17,6 @@ import {
 import { getAssetSubTypes, getColourForAssetType } from "./nwutils";
 import { NWContext } from "./NWContext";
 import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../AppContext";
-require("./addHoldingFinancialInput.less");
 
 export default function AddHoldingFinancialInput(props: any) {
   const { insData, setInsData }: any = useContext(AppContext);
@@ -125,7 +124,7 @@ export default function AddHoldingFinancialInput(props: any) {
       {holdings.length > 0 && (
         <>
           <Divider></Divider>
-          <div className="addHoldingFinancialInput">
+          <div className="holdings-entry-container">
             {holdings.map((holding, key) => (
               <HoldingsRow holding={holding} key={key} />
             ))}

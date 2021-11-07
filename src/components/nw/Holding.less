@@ -1,23 +1,30 @@
 .holding {
-	border-bottom: #d9d9d9 1px solid;
-	padding: 10px 0;
-	font-size: 15px;
+  border-bottom: #d9d9d9 1px solid;
+  padding: 10px 0;
+  font-size: 15px;
 
-	& p {
-		margin: 0;
-	}
+  & p {
+    margin: 0;
+  }
 
-	& .ant-badge-count {
-		color: #999;
-		background-color: #fff;
-		box-shadow: 0 0 0 1px #d9d9d9 inset;
-	}
+  & .ant-badge-count {
+    color: #999;
+    background-color: #fff;
+    box-shadow: 0 0 0 1px #d9d9d9 inset;
+  }
 
-	& .quantity {
-		color: @primary-color;
-	}
+  & .quantity {
+    color: @primary-color;
+  }
 
-	& .edit-qty-container {
-		max-width: 300px;
-	}
+  & .edit-qty-container {
+    max-width: 300px;
+  }
+}
+
+.holdings-entry-container {
+	max-height: 60vh;
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding-right: 10px;
 }
