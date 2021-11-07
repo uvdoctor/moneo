@@ -41,13 +41,16 @@ module.exports = withPlugins(
     //swcMinify: true,
     rules: [
       {
-        test: /\.js$/,
+        /*test: /\.js$/,
         exclude: /node_modules(?!(\/|\\)pdfjs-dist)/,
         loader: 'babel-loader',
         options: {
           'presets': ['@babel/preset-env'],
           'plugins': ['@babel/plugin-proposal-optional-chaining']
-        }
+        }*/
+        test: /\.tsx$/,
+        include: [path.resolve(__dirname, './src')],
+        exclude: [path.resolve(__dirname, "./node_modules")]
       },
     ],
     externalsPresets: {
