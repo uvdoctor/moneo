@@ -171,7 +171,7 @@ const processPDF = (file: File, parsePDF: Function) => {
 			);
 			if (retVal) pwdHandler(retVal);
 		};
-		pdfLoadingTask.promise.then(async (pdf) => {
+		pdfLoadingTask.promise.then(async (pdf: any) => {
 			await parsePDF(pdf);
 		});
 	};
