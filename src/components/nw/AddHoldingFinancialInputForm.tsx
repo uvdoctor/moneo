@@ -175,7 +175,7 @@ export default function HoldingInput(props: any) {
   };
 
   const updateButtonStatus = (data: {}) => {
-    const toValidateArr = ["assetType", "familyMember", "qty", "name"];
+    const toValidateArr = ["assetType", "familyMember", "qty", "name", "id"];
     const toValidateHoldingState = Object.assign(
       {},
       holdingState,
@@ -183,7 +183,7 @@ export default function HoldingInput(props: any) {
       data
     );
     const isAllItemFiled = toValidateArr.every((item) => {
-      return toValidateHoldingState[item].length > 0;
+      return toValidateHoldingState[item] && toValidateHoldingState[item].length > 0;
     });
     dispatchDataState({
       type: "dataUpdate",
@@ -264,7 +264,10 @@ export default function HoldingInput(props: any) {
           onChange={(option) => {
             const data = { name: option };
             dispatch({ type: "formUpdate", data });
-            updateButtonStatus(data);
+            dispatchDataState({
+              type: "dataUpdate",
+              data: { buttonState: true },
+            });
           }}
           onSelect={(option, obj) => {
             const { price, id, type, subt } = obj;
@@ -274,6 +277,7 @@ export default function HoldingInput(props: any) {
             });
             dispatchDataState({ type: "formUpdate", data: { price } });
             setRawDetails({ [id]: obj });
+            updateButtonStatus({ name: option, id });
           }}
           value={holdingState.name}
           onSearch={onSearch}
