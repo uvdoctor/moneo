@@ -16,8 +16,8 @@ import {
 } from "../utils";
 import { getAssetSubTypes, getColourForAssetType } from "./nwutils";
 import { NWContext } from "./NWContext";
-import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from '../AppContext';
-require("./Holding.less");
+import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../AppContext";
+require("./addHoldingFinancialInput.less");
 
 export default function AddHoldingFinancialInput(props: any) {
   const { insData, setInsData }: any = useContext(AppContext);
@@ -26,24 +26,24 @@ export default function AddHoldingFinancialInput(props: any) {
   const { updateInstruments, disableOk } = props;
 
   useEffect(() => {
-    disableOk(true)
-  }, [disableOk])
+    disableOk(true);
+  }, [disableOk]);
 
   const deleteFromHoldings = (key: number) => {
     holdings.splice(key, 1);
     setHoldings([...holdings]);
     updateInstruments([...holdings]);
-    disableOk(holdings.length > 0 ? false : true)
+    disableOk(holdings.length > 0 ? false : true);
   };
 
   const addToHoldings = (newHolding: any, newRawDetails: any) => {
-    const mergedInsData = Object.assign({}, insData, newRawDetails)
-    const mergedHoldings = [...[newHolding], ...holdings]
+    const mergedInsData = Object.assign({}, insData, newRawDetails);
+    const mergedHoldings = [...[newHolding], ...holdings];
     setHoldings(mergedHoldings);
     updateInstruments(mergedHoldings);
     setInsData(mergedInsData);
     simpleStorage.set(LOCAL_INS_DATA_KEY, mergedInsData, LOCAL_DATA_TTL);
-    disableOk(mergedHoldings.length > 0 ? false : true)
+    disableOk(mergedHoldings.length > 0 ? false : true);
   };
 
   const HoldingsRow = (props: { holding: any; key: number }) => {
@@ -57,12 +57,7 @@ export default function AddHoldingFinancialInput(props: any) {
       itype ? `${itype} - ` : id.startsWith("INF") ? "Mutual Fund - " : "";
 
     return (
-      <Row
-        className="holding"
-        style={{ marginBottom: "10px" }}
-        gutter={[16, 50]}
-        key={key}
-      >
+      <Row className="holding" gutter={[16, 50]} key={key}>
         <Col span={24}>
           <Row justify="space-between">
             <Col>
@@ -127,10 +122,16 @@ export default function AddHoldingFinancialInput(props: any) {
         addToHoldings={addToHoldings}
         deleteFromHoldings={deleteFromHoldings}
       />
-      <Divider orientation="left"></Divider>
-      {holdings.map((holding, key) => (
-        <HoldingsRow holding={holding} key={key} />
-      ))}
+      {holdings.length > 0 && (
+        <>
+          <Divider></Divider>
+          <div className="addHoldingFinancialInput">
+            {holdings.map((holding, key) => (
+              <HoldingsRow holding={holding} key={key} />
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 }

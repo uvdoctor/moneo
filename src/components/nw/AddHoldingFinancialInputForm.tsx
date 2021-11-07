@@ -192,7 +192,7 @@ export default function HoldingInput(props: any) {
   };
 
   return (
-    <Row style={{ marginBottom: "10px" }} gutter={[16, 16]}>
+    <Row gutter={[16, 16]}>
       <Col span={5}>
         <label htmlFor="assetType">Type</label> <br />
         <Select
