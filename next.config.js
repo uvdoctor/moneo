@@ -30,15 +30,6 @@ module.exports = withPlugins(
       // Other Config Here...
 
       webpack(config) {
-        config.module.rules.unshift({
-          test: /\.js$/,
-          exclude: /node_modules(?!(\/|\\)pdfjs-dist)/,
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env"],
-            plugins: ["@babel/plugin-proposal-optional-chaining"],
-          },
-        });
         return config;
       },
     }),
