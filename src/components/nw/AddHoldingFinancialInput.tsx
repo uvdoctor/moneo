@@ -5,6 +5,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import simpleStorage from "simplestorage.js";
 import { COLORS } from "../../CONSTANTS";
 import { AssetType } from "../../api/goals";
 import HoldingInput from "./AddHoldingFinancialInputForm";
@@ -15,11 +16,12 @@ import {
 } from "../utils";
 import { getAssetSubTypes, getColourForAssetType } from "./nwutils";
 import { NWContext } from "./NWContext";
+import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from '../AppContext';
 require("./Holding.less");
 
 export default function AddHoldingFinancialInput(props: any) {
+  const { insData, setInsData }: any = useContext(AppContext);
   const [holdings, setHoldings] = useState<{}[]>([]);
-  const [rawDetails, setRawDetails] = useState<any>({});
   const { allFamily }: any = useContext(NWContext);
   const { updateInstruments } = props;
   const deleteFromHoldings = (key: number) => {
@@ -29,9 +31,11 @@ export default function AddHoldingFinancialInput(props: any) {
   };
 
   const addToHoldings = (newHolding: any, newRawDetails: any) => {
+    const mergedInsData = Object.assign({}, insData, newRawDetails)
     setHoldings([...[newHolding], ...holdings]);
     updateInstruments([...[newHolding], ...holdings]);
-    setRawDetails(Object.assign({}, rawDetails, newRawDetails));
+    setInsData(mergedInsData);
+    simpleStorage.set(LOCAL_INS_DATA_KEY, mergedInsData, LOCAL_DATA_TTL);
   };
 
   const HoldingsRow = (props: { holding: any; key: number }) => {
@@ -39,7 +43,7 @@ export default function AddHoldingFinancialInput(props: any) {
       holding: { curr, name, qty, id, subt, fIds },
       key,
     } = props;
-    const { itype, price, type } = rawDetails[id];
+    const { itype, price, type } = insData[id];
     const assetSubTypes: any = getAssetSubTypes();
     const getInsTypeStr = (id: string) =>
       itype ? `${itype} - ` : id.startsWith("INF") ? "Mutual Fund - " : "";
@@ -54,7 +58,7 @@ export default function AddHoldingFinancialInput(props: any) {
         <Col span={24}>
           <Row justify="space-between">
             <Col>
-              {rawDetails[id] ? (
+              {insData[id] ? (
                 `${getInsTypeStr(id)}${assetSubTypes[subt]}`
               ) : (
                 <h4 style={{ color: COLORS.RED }}>

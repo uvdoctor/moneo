@@ -102,7 +102,7 @@ const dataReducer = (
 export default function HoldingInput(props: any) {
   const { allFamily }: any = useContext(NWContext);
   const [showSpinner, setShowSpinner] = useState(false);
-  const [rawDetails, setRawDetails] = useState({})
+  const [rawDetails, setRawDetails] = useState({});
   const [holdingState, dispatch] = useReducer(holdingReducer, {
     qty: 0,
     name: "",
@@ -125,7 +125,8 @@ export default function HoldingInput(props: any) {
     suggestions: [],
     buttonState: true,
   });
-  const { instrumentData, suggestions, buttonState, assetType, familyMember } = dataState;
+  const { instrumentData, suggestions, buttonState, assetType, familyMember } =
+    dataState;
   const { Option } = Select;
 
   const onSearch = (searchText: any) => {
@@ -146,7 +147,13 @@ export default function HoldingInput(props: any) {
 
   const updateOptions = async (option: string) => {
     setShowSpinner(true);
-    const data = await getInstrumentDataWithKey(optionTableMap[option]);
+    let filter = null;
+    if (option === "Gold Bond") {
+      filter = { prop: "subt", value: "GoldB" };
+    } else if (option === "ETF") {
+      filter = { prop: "itype", value: "ETF" };
+    }
+    const data = await getInstrumentDataWithKey(optionTableMap[option], filter);
     const fetchedInstrumentData = Object.assign(instrumentData, {
       [optionTableMap[option]]: data,
     });
@@ -260,7 +267,7 @@ export default function HoldingInput(props: any) {
               data: { name: option, id, type, subt },
             });
             dispatchDataState({ type: "formUpdate", data: { price } });
-            setRawDetails({[id]: obj})
+            setRawDetails({ [id]: obj });
           }}
           value={holdingState.name}
           onSearch={onSearch}

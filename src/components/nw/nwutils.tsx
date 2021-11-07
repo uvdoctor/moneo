@@ -7,6 +7,7 @@ import { GOLD } from "./NWContext";
 import { getFXRate } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
+import { LOCAL_DATA_TTL, LOCAL_INSTRUMENT_RAW_DATA_KEY } from "../AppContext";
 
 interface OptionTableMap {
   [Stock: string]: string;
@@ -373,7 +374,10 @@ export const getNPSData = async () => {
   }
 };
 
-export const getInstrumentDataWithKey = async (key: string) => {
+export const getInstrumentDataWithKey = async (
+  key: string,
+  filter: { prop: string; value: string } | null
+) => {
   const instrumentData = simpleStorage.get("instrumentData") || {};
   const newQueries: OptionTableMap = Object.assign({}, queries);
   const dataKeys: OptionTableMap = {
@@ -381,29 +385,38 @@ export const getInstrumentDataWithKey = async (key: string) => {
     listInBonds: "listINBonds",
     listInMutuals: "listINMutuals",
   };
-  const getData = async (query:any, nextToken:any) => {
+  const getData = async (query: any, nextToken: any) => {
     const data: any = await API.graphql({
       query: query,
       variables: { limit: 20000, nextToken: nextToken },
     });
-    return data
-  }
+    return data;
+  };
 
   try {
-    if (instrumentData && instrumentData[key]) {
+    if (!instrumentData || !instrumentData[key]) {
+      let nextToken = undefined;
+      let items: any = [];
+      while (nextToken !== null) {
+        const data: any = await getData(newQueries[key], nextToken);
+        const dataObj = data.data[dataKeys[key]];
+        items = [...dataObj.items, ...items];
+        nextToken = dataObj.nextToken;
+      }
+      instrumentData[key] = items;
+      simpleStorage.set(
+        LOCAL_INSTRUMENT_RAW_DATA_KEY,
+        instrumentData,
+        LOCAL_DATA_TTL
+      );
+    }
+    if (!filter) {
       return instrumentData[key];
     }
-    let nextToken = undefined
-    let items:any = []
-    while(nextToken !== null) {
-      const data:any = await getData(newQueries[key], nextToken)
-      const dataObj = data.data[dataKeys[key]]
-      items = [...dataObj.items, ...items]
-      nextToken = dataObj.nextToken
-    }
-    instrumentData[key] = items;
-    simpleStorage.set("instrumentData", instrumentData, { TTL: 86400000 });
-    return instrumentData[key];
+    const { prop, value } = filter;
+    return instrumentData[key].filter(
+      (item: OptionTableMap) => item[prop] === value
+    );
   } catch (e) {
     console.log("Error while fetching instrument data: ", e);
   }
