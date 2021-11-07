@@ -29,7 +29,7 @@
     "date-fns": "^2.25.0",
     "next": "^12.0.2",
     "nextjs": "^0.0.3",
-    "pdfjs-dist": "^2.10.377",
+    "pdfjs-dist": "^2.6.347",
     "rc-picker": "^2.5.19",
     "rc-scroll-anim": "^2.7.6",
     "react": "^17.0.2",
