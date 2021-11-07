@@ -38,7 +38,7 @@ module.exports = withPlugins(
     eslint: {
       ignoreDuringBuilds: true,
     },
-    swcMinify: true,
+    //swcMinify: true,
     rules: [
       {
         exclude: [path.resolve(__dirname, "node_modules")], // in order to ignore all modules in node_modules folder
