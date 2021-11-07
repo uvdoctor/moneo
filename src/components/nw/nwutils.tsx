@@ -361,6 +361,14 @@ export const getNPSFundManagers = () => {
   };
 };
 
+export const financialAssetTypes = [
+  "Stock",
+  "Gold Bond",
+  "ETF",
+  "Bond",
+  "Mutual Fund",
+];
+
 export const getNPSData = async () => {
   try {
     const {

@@ -1,7 +1,7 @@
 import React, { useReducer, useContext, useState } from "react";
 import { Row, Col, Button, Select, Input, AutoComplete, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { getInstrumentDataWithKey } from "./nwutils";
+import { getInstrumentDataWithKey, financialAssetTypes } from "./nwutils";
 import { NWContext } from "./NWContext";
 
 interface InstrumentsData {
@@ -32,14 +32,6 @@ interface DataState {
 interface OptionTableMap {
   [Stock: string]: string;
 }
-
-const financialAssetTypes = [
-  "Stock",
-  "Gold Bond",
-  "ETF",
-  "Bond",
-  "Mutual Fund",
-];
 
 const optionTableMap: OptionTableMap = {
   Stock: "listInExchgs",
@@ -101,8 +93,8 @@ const dataReducer = (
 
 export default function HoldingInput(props: any) {
   const { allFamily }: any = useContext(NWContext);
-  const [showSpinner, setShowSpinner] = useState(false);
-  const [rawDetails, setRawDetails] = useState({});
+  const [showSpinner, setShowSpinner] = useState<boolean>(false);
+  const [rawDetails, setRawDetails] = useState<{}>({});
   const [holdingState, dispatch] = useReducer(holdingReducer, {
     qty: 0,
     name: "",
@@ -145,27 +137,38 @@ export default function HoldingInput(props: any) {
     dispatchDataState({ type: "reset", data: {} });
   };
 
+  const getFilters = (option: string) => {
+    switch (option) {
+      case "Gold Bond":
+        return { prop: "subt", value: "GoldB" };
+      case "ETF":
+        return { prop: "itype", value: "ETF" };
+      default:
+        return null;
+    }
+  };
+
   const updateOptions = async (option: string) => {
     setShowSpinner(true);
-    let filter = null;
-    if (option === "Gold Bond") {
-      filter = { prop: "subt", value: "GoldB" };
-    } else if (option === "ETF") {
-      filter = { prop: "itype", value: "ETF" };
-    }
-    const data = await getInstrumentDataWithKey(optionTableMap[option], filter);
+    const data = await getInstrumentDataWithKey(
+      optionTableMap[option],
+      getFilters(option)
+    );
     const fetchedInstrumentData = Object.assign(instrumentData, {
       [optionTableMap[option]]: data,
     });
+
+    // required value prop to render in auto suggestions
     data.forEach(
       (item: { value: string; name: string }) => (item.value = item.name)
     );
-    dispatch({ type: "formUpdate", data: { name: "" } });
+    dispatch({ type: "formUpdate", data: { name: "", qty: 0 } });
     dispatchDataState({
       type: "dataUpdate",
       data: {
         instrumentData: Object.assign({}, fetchedInstrumentData),
         suggestions: data,
+        familyMember: "",
       },
     });
     setShowSpinner(false);
@@ -194,6 +197,7 @@ export default function HoldingInput(props: any) {
         <label htmlFor="assetType">Type</label> <br />
         <Select
           id="assetType"
+          style={{ width: 130 }}
           onSelect={async (option: string) => {
             const data = { assetType: option };
             dispatchDataState({ type: "formUpdate", data });
@@ -210,11 +214,12 @@ export default function HoldingInput(props: any) {
         </Select>
       </Col>
 
-      <Col span={4}>
+      <Col span={6}>
         <label htmlFor="familyMember">Family member</label> <br />
         <Select
           id="familyMember"
           value={familyMember}
+          style={{ width: 170 }}
           onSelect={async (option: string, details) => {
             const { value, fid } = details;
             dispatch({ type: "formUpdate", data: { fIds: [fid] } });
@@ -233,13 +238,14 @@ export default function HoldingInput(props: any) {
         </Select>
       </Col>
 
-      <Col span={5}>
+      <Col span={3}>
         <label htmlFor="qty">Quantity</label> <br />
         <Input
           id="qty"
           value={qty}
           placeholder="Quanity"
           min={0}
+          style={{ width: 80 }}
           onChange={(e) => {
             const data = { qty: e.target.value };
             dispatch({ type: "formUpdate", data });
@@ -254,7 +260,7 @@ export default function HoldingInput(props: any) {
         <AutoComplete
           id="name"
           options={suggestions}
-          style={{ width: 200 }}
+          style={{ width: 230 }}
           onChange={(option) => {
             const data = { name: option };
             dispatch({ type: "formUpdate", data });

@@ -28,10 +28,6 @@ export default function AddHoldings({
   const { activeTab, setInstruments, instruments }: any = useContext(NWContext);
   const [instrumentsList, setInstrumentsList] = useState<any>([]);
 
-  useEffect(() => {
-    setOkDisabled(instrumentsList.length > 0 ? false : true);
-  }, [instrumentsList])
-
   const close = () => {
     setModalVisibility(false);
   };
@@ -40,11 +36,10 @@ export default function AddHoldings({
     if (activeTab === "Financial") {
       setInstruments(instrumentsList);
       setInstrumentsList([])
-      close();
-      return;
+    } else {
+      data.push(newRec);
+      changeData([...data]);
     }
-    data.push(newRec);
-    changeData([...data]);
     close();
   };
 
@@ -75,7 +70,7 @@ export default function AddHoldings({
         {activeTab === "Financial" ? (
           <AddHoldingFiancialInput
             updateInstruments={updateInstruments}
-            instrumentsList={instrumentsList}
+            disableOk={setOkDisabled}
           />
         ) : (
           <AddHoldingInput

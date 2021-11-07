@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Row, Col, Button, Divider, Badge } from "antd";
 import {
   DeleteOutlined,
@@ -23,19 +23,27 @@ export default function AddHoldingFinancialInput(props: any) {
   const { insData, setInsData }: any = useContext(AppContext);
   const [holdings, setHoldings] = useState<{}[]>([]);
   const { allFamily }: any = useContext(NWContext);
-  const { updateInstruments } = props;
+  const { updateInstruments, disableOk } = props;
+
+  useEffect(() => {
+    disableOk(true)
+  }, [disableOk])
+
   const deleteFromHoldings = (key: number) => {
     holdings.splice(key, 1);
     setHoldings([...holdings]);
     updateInstruments([...holdings]);
+    disableOk(holdings.length > 0 ? false : true)
   };
 
   const addToHoldings = (newHolding: any, newRawDetails: any) => {
     const mergedInsData = Object.assign({}, insData, newRawDetails)
-    setHoldings([...[newHolding], ...holdings]);
-    updateInstruments([...[newHolding], ...holdings]);
+    const mergedHoldings = [...[newHolding], ...holdings]
+    setHoldings(mergedHoldings);
+    updateInstruments(mergedHoldings);
     setInsData(mergedInsData);
     simpleStorage.set(LOCAL_INS_DATA_KEY, mergedInsData, LOCAL_DATA_TTL);
+    disableOk(mergedHoldings.length > 0 ? false : true)
   };
 
   const HoldingsRow = (props: { holding: any; key: number }) => {
@@ -72,14 +80,17 @@ export default function AddHoldingFinancialInput(props: any) {
               &nbsp;{allFamily[fIds[0]].name}
             </Col>
           </Row>
+
           <Row justify="space-between">
             <Col>{name}</Col>
+
             <Col className="quantity">
               <strong>
                 {toHumanFriendlyCurrency(qty * price, curr as string)}
               </strong>
             </Col>
           </Row>
+
           <Row justify="space-between">
             <Col>
               <Badge
@@ -90,6 +101,7 @@ export default function AddHoldingFinancialInput(props: any) {
                 }}
               />
             </Col>
+
             <Col>
               <span className="quantity">
                 {`${toCurrency(price, curr as string, true)} `}
