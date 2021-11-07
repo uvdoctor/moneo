@@ -6,12 +6,16 @@
     "verbose": true
   },
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "next lint"
+  },
+  "resolutions": {
+    "acorn": "8.0.1"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^1.2.22",

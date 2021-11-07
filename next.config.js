@@ -38,8 +38,8 @@ module.exports = withPlugins(
     eslint: {
       ignoreDuringBuilds: true,
     },
-    //swcMinify: true,
-    rules: [
+    swcMinify: true,
+    /*rules: [
       {
         test: /\.js$/,
         include: [path.resolve(__dirname, "node_modules/pdfjs-dist")],
@@ -52,6 +52,6 @@ module.exports = withPlugins(
     ],
     externalsPresets: {
       node: true, // in order to ignore built-in modules like path, fs, etc.
-    }
+    }*/
   }
 );
