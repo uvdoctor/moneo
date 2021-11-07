@@ -22,13 +22,6 @@ module.exports = withPlugins(
       lessVarsFilePathAppendToEndOfContent: false,
       // optional https://github.com/webpack-contrib/css-loader#object
       cssLoaderOptions: {},
-      lessLoaderOptions: {
-        lessOptions: {
-          javascriptEnabled: true,
-        },
-      },
-      // Other Config Here...
-
       webpack(config) {
         return config;
       },
@@ -39,19 +32,5 @@ module.exports = withPlugins(
       ignoreDuringBuilds: true,
     },
     swcMinify: true,
-    /*rules: [
-      {
-        test: /\.js$/,
-        include: [path.resolve(__dirname, "node_modules/pdfjs-dist")],
-        loader: 'babel-loader',
-        options: {
-          'presets': ['@babel/preset-env'],
-          'plugins': ['@babel/plugin-proposal-optional-chaining']
-        }
-      },
-    ],
-    externalsPresets: {
-      node: true, // in order to ignore built-in modules like path, fs, etc.
-    }*/
   }
 );
