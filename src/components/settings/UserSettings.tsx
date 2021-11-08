@@ -105,7 +105,7 @@ export default function UserSettings(): JSX.Element {
     setName(user?.attributes.name || '');
     setLastName(user?.attributes.family_name || '');
     setDob(user?.attributes.birthdate || '');
-    setContact(user?.attributes.phone_number ? user?.attributes.phone_number.replace(counCode?.value, "") : '');4
+    setContact(user?.attributes.phone_number ? user?.attributes.phone_number.replace(counCode?.value, "") : '');
     setPrefuser(user?.attributes.preferred_username)
   }, [appContextLoaded, counCode?.value, user]);
 
