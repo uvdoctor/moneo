@@ -17,7 +17,6 @@ import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
 import { addMobile, deleteEmail, deleteMobile, doesEmailExist, doesMobileExist } from "../registrationutils";
-import DeleteAccount from "./DeleteAccount";
 
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
