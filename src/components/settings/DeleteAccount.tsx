@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Modal, notification, Space, Tooltip } from "antd";
-import { COLORS } from "../../CONSTANTS";
+import { Button, Menu, Modal, notification, Space } from "antd";
 import { AppContext } from "../AppContext";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import Text from "antd/lib/typography/Text";
@@ -10,16 +9,12 @@ import { Hub } from "@aws-amplify/core";
 import router from "next/router";
 import { deleteEmail, deleteMobile } from "../registrationutils";
 import { GoalContext } from "../goals/GoalContext";
-import { Storage } from 'aws-amplify';
+import { Storage } from "aws-amplify";
 
-interface DeleteAccountProps {
-  mobile?: number;
-  email: string;
-}
-
-export default function DeleteAccount({ mobile, email }: DeleteAccountProps) {
+export default function DeleteAccount() {
   const { goalImgKey }: any = useContext(GoalContext);
   const { validateCaptcha }: any = useContext(AppContext);
+  const [ loading, setloading ] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [input, setInput] = useState<string>("");
 
@@ -43,21 +38,24 @@ export default function DeleteAccount({ mobile, email }: DeleteAccountProps) {
   };
 
   const handleOk = () => {
+    setloading(true);
     if (input === "delete") {
       try {
         validateCaptcha("delete_change").then(async (success: boolean) => {
           if (!success) return;
           const user = await Auth.currentAuthenticatedUser();
+          const mob = user?.attributes.phone_number;
           await Storage.remove(user?.attributes.profile);
           await Storage.remove(goalImgKey);
-          mobile ? await deleteMobile(mobile) : null;
-          await deleteEmail(email);
+          mob ? await deleteMobile(mob.slice(mob.length - 10)) : null;
+          await deleteEmail(user?.attributes.email);
           user.deleteUser((error: any, data: any) => {
             if (error) {
               console.log(error);
               throw error;
             }
             console.log(data);
+            setIsModalVisible(false);
             handleLogout();
           });
           notification.success({
@@ -74,31 +72,31 @@ export default function DeleteAccount({ mobile, email }: DeleteAccountProps) {
     } else {
       notification.error({ message: "Enter the input correctly" });
     }
-    setIsModalVisible(false);
   };
 
-  
   return (
     <>
-      <Tooltip title="Save">
-        <Button
-          type="link"
-          style={{ color: COLORS.RED }}
-          icon={<DeleteOutlined />}
-          onClick={showModal}
-        >
-          Delete Account
-        </Button>
-      </Tooltip>
+      <Menu.Item onClick={showModal}>Delete Account</Menu.Item>
       <Modal
         title={"Delete Account"}
         visible={isModalVisible}
-        onCancel={handleCancel}
-        onOk={handleOk}
+        onCancel={() => setIsModalVisible(false)}
         okText={"Delete My Account"}
-        okType="danger"
-        style={{ color: COLORS.RED }}
-        okButtonProps={{ icon: <DeleteOutlined /> }}
+        footer={[
+          <Button key="cancel" type="link" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button
+            key="delete"
+            type="primary"
+            onClick={handleOk}
+            danger
+            loading={loading}
+            icon={<DeleteOutlined />}
+          >
+            Delete My Account
+          </Button>,
+        ]}
       >
         <Space direction="vertical">
           <Text strong>Are you sure you want to delete this account?</Text>
@@ -107,7 +105,10 @@ export default function DeleteAccount({ mobile, email }: DeleteAccountProps) {
             account and all your data will be deleted.
           </Text>
           <Text>
-            To confirm deletion, enter <Text italic strong>delete</Text>
+            To confirm deletion, enter{" "}
+            <Text italic strong>
+              delete
+            </Text>
           </Text>
         </Space>
         <TextInput pre={""} value={input} changeHandler={setInput} />

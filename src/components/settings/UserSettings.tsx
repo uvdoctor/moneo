@@ -290,13 +290,6 @@ export default function UserSettings(): JSX.Element {
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab="Delete My Account" key="4">
-                <Row justify="start" className="tabPane">
-                  <Col>
-                  <DeleteAccount mobile={mobile} email={email} />
-                  </Col>
-                </Row>
-              </TabPane>
             </Tabs>
           </Col>
         </Row>

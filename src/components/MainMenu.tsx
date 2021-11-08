@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { menuItem } from "./utils";
 import { AppContext } from "./AppContext";
 import { UserOutlined } from "@ant-design/icons";
+import DeleteAccount from "./settings/DeleteAccount";
 export interface MainMenuProps {
   mode?: any;
   hideMenu?: boolean;
@@ -73,6 +74,7 @@ export default function MainMenu({
                   }
                 >
                   {menuItem("Settings", ROUTES.SETTINGS, selectedKey)}
+                  <DeleteAccount/>
                   <Menu.Item onClick={handleLogout}>Logout</Menu.Item>
                 </SubMenu>
               </Fragment>
