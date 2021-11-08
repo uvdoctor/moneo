@@ -1,5 +1,5 @@
 import { Alert, Col, Row, notification, Skeleton, Tabs, PageHeader, Button } from "antd";
-import React, { Fragment, useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { Auth } from "aws-amplify";
 import { parse } from "date-fns";
@@ -16,7 +16,8 @@ import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
-import { addMobOnceVerify, deleteEmailOnceUpdated, deleteMobOnceUpdated, doesEmailExist, doesMobileExist } from "../registrationutils";
+import { addMobile, deleteEmail, deleteMobile, doesEmailExist, doesMobileExist } from "../registrationutils";
+import DeleteAccount from "./DeleteAccount";
 
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
@@ -24,7 +25,7 @@ const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha }: any = useContext(AppContext);
   const [email, setEmail] = useState<string>("");
-  const [contact, setContact] = useState<any>('');
+  const [mobile, setMobile] = useState<any>('');
   const [error, setError] = useState<any>("");
   const [name, setName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -51,14 +52,14 @@ export default function UserSettings(): JSX.Element {
   const updatePhoneNumber = async () => {
     try {
       const prevMob = user?.attributes.phone_number.replace(counCode?.value, "");
-      const exist = await doesMobileExist(Number(contact));
+      const exist = await doesMobileExist(Number(mobile));
       if(exist) { failure('Please use another mobile as this one is already used by another account.');
       return false;
       }
-      await Auth.updateUserAttributes(user, { phone_number: `${counCode?.value}${contact}` });
-      success("Contact updated successfully. Enter Otp to verify");
-      await deleteMobOnceUpdated(Number(prevMob));
-      await addMobOnceVerify(Number(contact), notify, Number(counCode?.value.slice(1)))
+      await Auth.updateUserAttributes(user, { phone_number: `${counCode?.value}${mobile}` });
+      success("Mobile number updated successfully. Enter Otp to verify");
+      await deleteMobile(Number(prevMob));
+      await addMobile(Number(mobile), notify, Number(counCode?.value.slice(1)))
       return true;
     } catch (error) {
       failure(`Unable to update, ${error}`);
@@ -74,7 +75,7 @@ export default function UserSettings(): JSX.Element {
       }
       await Auth.updateUserAttributes(user, { email: email });
       success("Email updated successfully. Enter Otp to verify");
-      await deleteEmailOnceUpdated(prevEmail);
+      await deleteEmail(prevEmail);
       return true;
     } catch (error) {
       failure(`Unable to update, ${error}`);
@@ -105,12 +106,12 @@ export default function UserSettings(): JSX.Element {
     setName(user?.attributes.name || '');
     setLastName(user?.attributes.family_name || '');
     setDob(user?.attributes.birthdate || '');
-    setContact(user?.attributes.phone_number ? user?.attributes.phone_number.replace(counCode?.value, "") : '');
+    setMobile(user?.attributes.phone_number ? user?.attributes.phone_number.replace(counCode?.value, "") : '');
     setPrefuser(user?.attributes.preferred_username)
   }, [appContextLoaded, counCode?.value, user]);
 
   return (
-    <Fragment>
+    <>
       {error ? <Alert type="error" message={error} /> : null}
       <Row className="primary-header">
         <Col>
@@ -206,6 +207,8 @@ export default function UserSettings(): JSX.Element {
               </TabPane>
               <TabPane tab="Account" key="2">
               <Row justify="start" className="tabPane">
+                <Col>
+                <Row justify="start">
                   <Col className="first-col-view">
                     <TextInput
                       pre="Login Name"
@@ -231,21 +234,21 @@ export default function UserSettings(): JSX.Element {
                   </Col>
                 </Row>
                 <p>&nbsp;</p>
-                <Row justify="start" className="tabPane">
+                <Row justify="start">
                   <Col>
                     <TextInput
                       pre="Mobile"
                       prefix={counCode?.value}
-                      value={contact}
-                      changeHandler={setContact}
-                      fieldName="contact"
+                      value={mobile}
+                      changeHandler={setMobile}
+                      fieldName="mobile"
                       pattern="^[0-9]"
                       setError={setError}
                       minLength={10}
                       maxLength={10}
                       post={
                         <OtpDialogue
-                          disableButton={disableButton(user?.attributes.phone_number, `${counCode?.value}${contact}` )}
+                          disableButton={disableButton(user?.attributes.phone_number, `${counCode?.value}${mobile}` )}
                           action={"phone_number"}
                           onClickAction={updatePhoneNumber}
                         />
@@ -254,7 +257,7 @@ export default function UserSettings(): JSX.Element {
                   </Col>
                 </Row>
                 <p>&nbsp;</p>
-                <Row justify="start" className="tabPane">
+                <Row justify="start">
                   <Col>
                     <TextInput
                       pre="Email Id"
@@ -275,6 +278,9 @@ export default function UserSettings(): JSX.Element {
                       }
                     />
                   </Col>
+
+                </Row>
+                </Col>
                 </Row>
               </TabPane>
               <TabPane tab="Password" key="3">
@@ -284,12 +290,19 @@ export default function UserSettings(): JSX.Element {
                   </Col>
                 </Row>
               </TabPane>
+              <TabPane tab="Delete My Account" key="4">
+                <Row justify="start" className="tabPane">
+                  <Col>
+                  <DeleteAccount mobile={mobile} email={email} />
+                  </Col>
+                </Row>
+              </TabPane>
             </Tabs>
           </Col>
         </Row>
       ) : (
         <Skeleton active />
       )}
-    </Fragment>
+    </>
   );
 }
