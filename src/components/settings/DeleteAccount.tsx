@@ -9,6 +9,8 @@ import Auth from "@aws-amplify/auth";
 import { Hub } from "@aws-amplify/core";
 import router from "next/router";
 import { deleteEmail, deleteMobile } from "../registrationutils";
+import { GoalContext } from "../goals/GoalContext";
+import { Storage } from 'aws-amplify';
 
 interface DeleteAccountProps {
   mobile?: number;
@@ -16,6 +18,7 @@ interface DeleteAccountProps {
 }
 
 export default function DeleteAccount({ mobile, email }: DeleteAccountProps) {
+  const { goalImgKey }: any = useContext(GoalContext);
   const { validateCaptcha }: any = useContext(AppContext);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [input, setInput] = useState<string>("");
@@ -45,6 +48,8 @@ export default function DeleteAccount({ mobile, email }: DeleteAccountProps) {
         validateCaptcha("delete_change").then(async (success: boolean) => {
           if (!success) return;
           const user = await Auth.currentAuthenticatedUser();
+          await Storage.remove(user?.attributes.profile);
+          await Storage.remove(goalImgKey);
           mobile ? await deleteMobile(mobile) : null;
           await deleteEmail(email);
           user.deleteUser((error: any, data: any) => {
