@@ -102,7 +102,7 @@ export default function DeleteAccount({ mobile, email }: DeleteAccountProps) {
             account and all your data will be deleted.
           </Text>
           <Text>
-            To confirm deletion, enter<Text italic strong>delete</Text>
+            To confirm deletion, enter <Text italic strong>delete</Text>
           </Text>
         </Space>
         <TextInput pre={""} value={input} changeHandler={setInput} />
