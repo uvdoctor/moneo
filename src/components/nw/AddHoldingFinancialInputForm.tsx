@@ -193,7 +193,7 @@ export default function HoldingInput(props: any) {
 
   return (
     <Row gutter={[16, 16]}>
-      <Col span={5}>
+      <Col flex={5}>
         <label htmlFor="assetType">Type</label> <br />
         <Select
           id="assetType"
@@ -214,7 +214,7 @@ export default function HoldingInput(props: any) {
         </Select>
       </Col>
 
-      <Col span={6}>
+      <Col flex={6}>
         <label htmlFor="familyMember">Family member</label> <br />
         <Select
           id="familyMember"
@@ -238,7 +238,7 @@ export default function HoldingInput(props: any) {
         </Select>
       </Col>
 
-      <Col span={3}>
+      <Col flex={3}>
         <label htmlFor="qty">Quantity</label> <br />
         <Input
           id="qty"
@@ -255,7 +255,7 @@ export default function HoldingInput(props: any) {
         />
       </Col>
 
-      <Col span={8}>
+      <Col flex={8}>
         <label htmlFor="name">Name</label> <br />
         <AutoComplete
           id="name"
@@ -289,7 +289,7 @@ export default function HoldingInput(props: any) {
         )}
       </Col>
 
-      <Col span={2}>
+      <Col flex={2}>
         <label>&nbsp;</label> <br />
         <Button type="default" onClick={addToHoldings} disabled={buttonState}>
           <PlusOutlined />
