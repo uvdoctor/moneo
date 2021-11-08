@@ -5,7 +5,7 @@ import { COLORS } from "../../CONSTANTS";
 import { AppContext } from "../AppContext";
 import TextInput from "../form/textinput";
 import { Auth } from "aws-amplify";
-import { addEmailOnceVerify } from "../registrationutils";
+import { addEmail } from "../registrationutils";
 
 interface OtpInputProps {
   onClickAction: Function;
@@ -26,7 +26,7 @@ export default function OtpDialogue( props : OtpInputProps) {
     Auth.verifyCurrentUserAttributeSubmit(attr, otp)
       .then(async() => {
         notification.success({ message: "Otp Verified Successfully" });
-        attr === 'email' && await addEmailOnceVerify(props.attrVal, props.notify);
+        attr === 'email' && await addEmail(props.attrVal, props.notify);
         setIsModalVisible(false);
       })
       .catch((err) => {

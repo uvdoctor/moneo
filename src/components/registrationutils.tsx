@@ -43,7 +43,7 @@ export const doesMobileExist = async (mob: number) => {
 	}
 };
 
-export const addEmailOnceVerify = async (email: string, notify: string) => {
+export const addEmail = async (email: string, notify: string) => {
 	try {
 		const data = await API.graphql({
 			query: mutations.createRegEmail,
@@ -55,7 +55,7 @@ export const addEmailOnceVerify = async (email: string, notify: string) => {
 	}
 };
 
-export const addMobOnceVerify = async (mob: number, notify: string, cc:number) => {
+export const addMobile = async (mob: number, notify: string, cc:number) => {
 	try {
 		const data = await API.graphql({
 			query: mutations.createRegMob,
@@ -67,7 +67,7 @@ export const addMobOnceVerify = async (mob: number, notify: string, cc:number) =
 	}
 };
 
-export const deleteEmailOnceUpdated = async (email: string) => {
+export const deleteEmail = async (email: string) => {
 	try {
 		const data = await API.graphql({
 			query: mutations.deleteRegEmail,
@@ -79,7 +79,7 @@ export const deleteEmailOnceUpdated = async (email: string) => {
 	}
 };
 
-export const deleteMobOnceUpdated = async (mob: number) => {
+export const deleteMobile = async (mob: number) => {
 	try {
 		const data = await API.graphql({
 			query: mutations.deleteRegMob,
