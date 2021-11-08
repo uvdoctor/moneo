@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { calcInd, calcType, calcSubType } = require("./calculate");
+const { appendGenericFields } = require('/opt/nodejs/insertIntoDB');
 
 const getData = async (
   nseData,
@@ -42,9 +43,7 @@ const getData = async (
       schema.type = type ? type : calcType(record[codes.name]);
       schema.subt = subt ? subt : calcSubType(record[codes.name]);
       schema.curr = "INR";
-      schema.__typename = table.slice(0, table.indexOf("-"));
-      schema.createdAt = new Date().toISOString();
-      schema.updatedAt = new Date().toISOString();
+      appendGenericFields(schema, table)
 
       const dataToPush = JSON.parse(JSON.stringify(schema));
       batches.push({ PutRequest: { Item: dataToPush } });

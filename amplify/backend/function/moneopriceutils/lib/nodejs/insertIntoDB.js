@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-var dynamodb = new AWS.DynamoDB();
+var ddb = new AWS.DynamoDB();
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 const getTableNameFromInitialWord = async (tableInitial) => {
@@ -8,7 +8,7 @@ const getTableNameFromInitialWord = async (tableInitial) => {
 		Limit: 1
 	  };
 	try {
-	   const table = await dynamodb.listTables(params).promise();
+	   const table = await ddb.listTables(params).promise();
 	   return table.TableNames[0];
 	} catch(err){
 		console.log(err);
@@ -56,14 +56,15 @@ const appendGenericFields = (schema, tableName) => {
 	let dateStr = new Date().toISOString();
 	schema.createdAt = dateStr;
 	schema.updatedAt = dateStr;
-	schema.__typename = tableName.slice(0, tableName.indexOf('-'));
+	schema.__typename = tableName
+	console.log(schema);
 	return schema;
 };
 
-const pushDataForFeed = async (table, data, identifier, url, exchg) => {
+const pushDataForFeed = async (tname, data, identifier, url, exchg) => {
 	if (!identifier) identifier = '';
-	const tname = table.slice(0, table.indexOf('-'));
-	const tableName = await getTableNameFromInitialWord('Feeds');
+	const tableInitial = 'Feeds';
+	const tableName = await getTableNameFromInitialWord(tableInitial);
 	console.log("Table name fetched: ", tableName);
 	const getLength = (arr) => {
 		if (typeof arr === 'number') return arr;
@@ -75,11 +76,11 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 		tname: tname,
 		count: getLength(data)
 	};
-	schema = appendGenericFields(schema, tableName);
+	schema = appendGenericFields(schema, tableInitial);
 	console.log('Feed schema to be inserted: ', schema);
 	if (exchg) schema.exchg = exchg;
 	if (url) schema.url = url;
 	const results = await pushDataSingly(schema, tableName);
 	console.log(results, 'Data Pushed into Feeds Table');
 };
-module.exports = { getDataFromTable, pushData, pushDataForFeed, pushDataSingly, getTableNameFromInitialWord };
+module.exports = { getDataFromTable, pushData, pushDataForFeed, pushDataSingly, getTableNameFromInitialWord, appendGenericFields };

@@ -2,6 +2,7 @@ const fs = require("fs");
 const split = require("split");
 const { tempDir } = require("/opt/nodejs/utility");
 const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
+const { appendGenericFields } = require('/opt/nodejs/insertIntoDB');
 
 const getDataFromTxtFile = async (fileName, calc, table) => {
   const end = new Promise((resolve, reject) => {
@@ -16,7 +17,7 @@ const getDataFromTxtFile = async (fileName, calc, table) => {
         const name = data[4];
         const nav = data[5];
         if (!id) return;
-        const schema = {
+        let schema = {
           id: id,
           pfm: calc.calcPFM(name),
           st: calc.calcST(name),
@@ -24,11 +25,8 @@ const getDataFromTxtFile = async (fileName, calc, table) => {
           type: calc.calcType(name),
           subt: calc.calcSubType(name),
           price: nav,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          __typename: table.slice(0, table.indexOf("-")),
         };
-
+        schema = appendGenericFields(schema, table)
         batches.push({ PutRequest: { Item: schema } });
         count++;
         if (count === 25) {

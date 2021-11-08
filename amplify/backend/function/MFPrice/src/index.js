@@ -4,6 +4,7 @@
 	REGION
 Amplify Params - DO NOT EDIT */ const mfData = require('india-mutual-fund-info');
 const { pushData, pushDataForFeed } = require('/opt/nodejs/insertIntoDB');
+const { appendGenericFields } = require('/opt/nodejs/insertIntoDB');
 const { directISIN, getDirISIN } = require('./data');
 const { getType, getSubType, mfType, mCap, getName } = require('./calculate');
 const table = 'INMutual';
@@ -28,8 +29,7 @@ const getData = () => {
 				isinMap[id]
 			)
 				return;
-			const dataToPush = {
-				__typename: table.slice(0, table.indexOf('-')),
+			let dataToPush = {
 				id: id,
 				sid: element['Scheme Code'],
 				tid: element['ISIN Div Reinvestment'],
@@ -41,10 +41,8 @@ const getData = () => {
 				mftype: mfType(element['Scheme Type']),
 				mcap: mCap(element['Scheme Type']),
 				tf: element['Scheme Name'].includes('Tax') ? 'Y' : 'N',
-				createdAt: new Date().toISOString(),
-				updatedAt: new Date().toISOString()
 			};
-
+			dataToPush = appendGenericFields(dataToPush, table)
 			batches.push({ PutRequest: { Item: dataToPush } });
 			isinMap[id] = id;
 			count++;

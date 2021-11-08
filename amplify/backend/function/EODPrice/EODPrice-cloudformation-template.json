@@ -111,7 +111,7 @@
             "Ref": "functionmoneopriceutilsArn"
           }
         ],
-        "Timeout": 25
+        "Timeout": 500
       }
     },
     "LambdaExecutionRole": {

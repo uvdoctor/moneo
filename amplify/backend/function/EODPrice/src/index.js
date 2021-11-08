@@ -2,7 +2,8 @@
 	AUTH_MONEO3E6273BC_USERPOOLID
 	ENV
 	REGION
-Amplify Params - DO NOT EDIT */const { pushData, pushDataForFeed } = require("/opt/nodejs/insertIntoDB");
+// Amplify Params - DO NOT EDIT */
+const { pushData, pushDataForFeed, appendGenericFields } = require("/opt/nodejs/insertIntoDB");
 const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
@@ -32,13 +33,11 @@ const eodPrice = () => {
             break;
         }
 
-        const dataToPush = {
-          __typename: table.slice(0, table.indexOf("-")),
+        let dataToPush = {
           id: code,
           price: close,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
         };
+        dataToPush = appendGenericFields(dataToPush, table);
         idsToLog.push(code);
         batches.push({ PutRequest: { Item: dataToPush } });
 

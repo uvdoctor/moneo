@@ -1,3 +1,5 @@
+const { appendGenericFields } = require('/opt/nodejs/insertIntoDB');
+
 const calc = {
   BSE: {
     calcType: (type, subt, name) => {
@@ -113,9 +115,7 @@ const calcSchema = (record, codes, schema, exchg, isinMap, table) => {
     }
   });
   schema.exchg = exchg;
-  schema.createdAt = new Date().toISOString();
-  schema.updatedAt = new Date().toISOString();
-  schema.__typename = table.slice(0, table.indexOf("-"));
+  appendGenericFields(schema, table)
   isinMap[record[codes.id]] = record[codes.id];
   return schema;
 };

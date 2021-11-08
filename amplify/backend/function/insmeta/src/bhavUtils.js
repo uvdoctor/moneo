@@ -2,6 +2,7 @@ const fs = require("fs");
 const csv = require("csv-parser");
 const { tempDir } = require("/opt/nodejs/utility");
 const { cleanDirectory } = require("/opt/nodejs/bhavUtils");
+const { appendGenericFields } = require('/opt/nodejs/insertIntoDB');
 const calcInd = require("./calculate");
 
 const extractData = async (fileName, codes, isinMap, table) => {
@@ -16,10 +17,8 @@ const extractData = async (fileName, codes, isinMap, table) => {
         const schema = {
           ind: calcInd(record[codes.ind].trim()),
           id: record[codes.id],
-          __typename: table.slice(0, table.indexOf("-")),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
         };
+        appendGenericFields(schema, table)
         if (
           fileName === "ind_nifty100list.csv" ||
           fileName === "ind_niftymidcap150list.csv"
