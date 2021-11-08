@@ -321,8 +321,6 @@ export const buildTabsArray = (items: any) => {
   return result;
 };
 
-export const isTopBottomLayout = (fsb: any) => fsb.info.innerWidth < 1024;
-
 export const isMobileDevice = (fsb: any) => fsb.info.innerWidth < 768;
 
 export const MONTHS: any = {

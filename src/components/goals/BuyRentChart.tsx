@@ -15,7 +15,7 @@ export default function BuyRentChart() {
 	const { currency, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
 	const { brChartData }: any = useContext(GoalContext);
 	const [ stackedData, setStackedData ] = useState<Array<any>>([]);
-	const { fsb } = useFullScreenBrowser();
+	const fsb = useFullScreenBrowser();
 	
 	useEffect(
 		() => {

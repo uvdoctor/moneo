@@ -13,7 +13,7 @@ export default function FIMonthlyInvTargetChart() {
 	const { currency, cfs }: any = useContext(CalcContext);
 	const { avgMonthlySavings, monthlySavingsRate, monthlyMaxSavings, wipResult }: any = useContext(FIGoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
-	const { fsb } = useFullScreenBrowser();
+	const fsb = useFullScreenBrowser();
 	
 	useEffect(
 		() => {

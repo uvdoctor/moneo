@@ -15,7 +15,7 @@ export default function LoanScheduleChart() {
 	const { pSchedule, iSchedule, insSchedule, loanRepaymentMonths }: any = useContext(GoalContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const [ hasMonthlyInsurance, setHasMonthlyInsurance ] = useState<boolean>(false);
-	const { fsb } = useFullScreenBrowser();
+	const fsb = useFullScreenBrowser();
 	
 	useEffect(
 		() => {

@@ -39,7 +39,7 @@ export default function BasicLineChart({
 	const { goal, rr, ffResult }: any = useContext(PlanContext);
 	const { wipGoal, startYear, currency, cfs, analyzeFor, setAnalyzeFor }: any = useContext(CalcContext);
 	const [ data, setData ] = useState<Array<any>>([]);
-	const { fsb } = useFullScreenBrowser();
+	const fsb = useFullScreenBrowser();
 	
 	const getCF = (year: number) => {
 		if (!goal && wipGoal.type === GoalType.FF && ffResult.ffCfs)

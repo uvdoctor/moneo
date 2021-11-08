@@ -12,7 +12,7 @@ const ColumnChart = dynamic(() => import('bizcharts/lib/plots/ColumnChart'), { s
 const Slider = dynamic(() => import('bizcharts/lib/components/Slider'), { ssr: false });
 
 export default function YearlyCFChart() {
-	const { fsb } = useFullScreenBrowser();
+	const fsb = useFullScreenBrowser();
 	const { mustCFs, tryCFs, optCFs, ffGoal }: any = useContext(PlanContext);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const currency = ffGoal.ccy;
