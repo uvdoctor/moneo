@@ -13,7 +13,7 @@ interface OptionTableMap {
   [Stock: string]: string;
 }
 
-export const loadAllFamilyMembers = async () => {
+export const getFamilysList = async () => {
   const {
     data: { listFamilys },
   } = (await API.graphql(graphqlOperation(queries.listFamilys))) as {
@@ -22,6 +22,11 @@ export const loadAllFamilyMembers = async () => {
   let family: Array<APIt.CreateFamilyInput> | null = listFamilys
     ? (listFamilys.items as Array<APIt.CreateFamilyInput>)
     : null;
+  return family;
+}
+
+export const loadAllFamilyMembers = async () => {
+  const family = await getFamilysList();
   if (!family || !family.length) {
     let member = await addFamilyMember("Self", "XXXXX1234X");
     if (member)

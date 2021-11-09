@@ -9,14 +9,15 @@ import { Hub } from '@aws-amplify/core';
 import router from 'next/router';
 import { deleteEmail, deleteMobile } from '../registrationutils';
 import { GoalContext } from '../goals/GoalContext';
-import { Storage } from 'aws-amplify';
-// import * as mutations from '../../graphql/mutations';
-// import { deleteGoal } from '../goals/goalutils';
+import { API, graphqlOperation, Storage } from 'aws-amplify';
+import * as mutations from '../../graphql/mutations';
+import { getGoalsList } from '../goals/goalutils';
+import { getFamilysList, loadHoldings } from '../nw/nwutils';
 
 export default function DeleteAccount() {
 	const { goalImgKey }: any = useContext(GoalContext);
 	const { validateCaptcha }: any = useContext(AppContext);
-	const [ loading, setloading ] = useState<boolean>(false);
+	const [ loading, setLoading ] = useState<boolean>(false);
 	const [ isModalVisible, setIsModalVisible ] = useState<boolean>(false);
 	const [ input, setInput ] = useState<string>('');
 
@@ -28,14 +29,51 @@ export default function DeleteAccount() {
 		setIsModalVisible(true);
 	};
 
-	// const deleteData = async (username: string, operation: any) => {
-	// 	try {
-	// 		const data = await API.graphql(graphqlOperation(operation, { input: { owner: username } }));
-	// 		console.log(data);
-	// 	} catch (e) {
-	// 		console.log('Error while deleting: ', e);
-	// 	}
-	// };
+	const deleteGoal = async () => {
+		try {
+			const goalList = await getGoalsList();
+			if (goalList) {
+				for (const goal of goalList) {
+					const result = await API.graphql(
+						graphqlOperation(mutations.deleteGoal, { input: { id: goal.id } })
+					);
+					console.log(result);
+				}
+			}
+		} catch (e) {
+			console.log('Error while deleting: ', e);
+		}
+	};
+
+	const deleteFamilyList = async () => {
+		try {
+			const familyList = await getFamilysList();
+			if (familyList) {
+				for (const family of familyList) {
+					const result = await API.graphql(
+						graphqlOperation(mutations.deleteFamily, { input: { id: family.id } })
+					);
+					console.log(result);
+				}
+			}
+		} catch (e) {
+			console.log('Error while deleting: ', e);
+		}
+	};
+
+	const deleteHoldings = async () => {
+		try {
+			const holdings = await loadHoldings();
+			if (holdings) {
+				const result = await API.graphql(
+					graphqlOperation(mutations.deleteHoldings, { input: { id: holdings.id } })
+				);
+				console.log(result);
+			}
+		} catch (e) {
+			console.log('Error while deleting: ', e);
+		}
+	};
 
 	const handleLogout = async () => {
 		try {
@@ -49,13 +87,15 @@ export default function DeleteAccount() {
 	};
 
 	const handleOk = () => {
-		setloading(true);
+		setLoading(true);
 		if (input === 'delete') {
 			try {
 				validateCaptcha('delete_change').then(async (success: boolean) => {
 					if (!success) return;
 					const user = await Auth.currentAuthenticatedUser();
-					// await deleteData(user.username, mutations.deleteGoal);
+					await deleteGoal();
+					await deleteHoldings();
+					await deleteFamilyList();
 					const mob = user.attributes.phone_number;
 					await Storage.remove(user.attributes.profile);
 					await Storage.remove(goalImgKey);
@@ -67,7 +107,6 @@ export default function DeleteAccount() {
 							throw error;
 						}
 						console.log(data);
-						setIsModalVisible(false);
 						handleLogout();
 					});
 					notification.success({
@@ -84,6 +123,7 @@ export default function DeleteAccount() {
 		} else {
 			notification.error({ message: 'Enter the input correctly' });
 		}
+		setLoading(false);
 	};
 
 	return (
