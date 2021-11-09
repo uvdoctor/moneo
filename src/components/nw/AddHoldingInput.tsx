@@ -4,7 +4,7 @@ import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { BTC, CRYPTO_TAB, NPS_TAB, NWContext, OTHER_TAB, PM_TAB, SAV_TAB } from './NWContext';
+import { BTC, CRYPTO_TAB, EPF_TAB, NPS_TAB, NWContext, OTHER_TAB, PM_TAB, PPF_TAB, SAV_TAB, VPF_TAB } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
 import PurchaseInput from './PurchaseInput';
 import QuantityWithRate from './QuantityWithRate';
@@ -29,6 +29,7 @@ export default function AddHoldingInput({
 	const [ name, setName ] = useState<string>('');
 	const [ quantity, setQuantity ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
+	const [ chg, setChg ] = useState<number>(0);
 	const [ amount, setAmount ] = useState<number>(0);
 	const [ month, setMonth ] = useState<number>(1);
 	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
@@ -37,6 +38,13 @@ export default function AddHoldingInput({
 		setName(val);
 		let rec = getNewRec();
 		rec.name = val;
+		setInput(rec);
+	};
+
+	const changeChg = (val: number) => {
+		setChg(val);
+		let rec = getNewRec();
+		rec.chg = val;
 		setInput(rec);
 	};
 
@@ -67,6 +75,20 @@ export default function AddHoldingInput({
 				fIds: [ memberKey ],
 				name: name,
 				curr: selectedCurrency
+			};
+			return newRec;
+		}
+		if (childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ) {
+			let newRec: HoldingInput = {
+				id: '',
+				qty: quantity,
+				curr: selectedCurrency,
+				name: name,
+				fIds: [ memberKey ],
+				chg: chg,
+				chgF: childTab === PPF_TAB ? 1 : 12,
+				type: AssetType.F,
+				subt: childTab
 			};
 			return newRec;
 		}
@@ -116,6 +138,7 @@ export default function AddHoldingInput({
 
 	useEffect(() => {
 		setName(subCategoryOptions ? Object.keys(subCategoryOptions[subtype])[0] : '')
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[ addHoldings ]);
 
 	return (
@@ -152,11 +175,16 @@ export default function AddHoldingInput({
 						setYear={setYear}
 					/>
 				) :
-				childTab===SAV_TAB || childTab === OTHER_TAB?
+				childTab===SAV_TAB || childTab === OTHER_TAB ?
 				<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
 				<p><NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1}  /></p>
 				</>
-				:
+				: 
+				childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ? 
+				<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
+				<p><NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={chg} step={0.1}/></p>
+				<p><NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1} post={childTab === PPF_TAB ? '(Annually)' : '(Monthly)'} /></p>
+				</> :
 				(
 					<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} />
 				)}

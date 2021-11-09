@@ -4,7 +4,7 @@ import { AssetSubType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { OTHER_TAB, SAV_TAB } from './NWContext';
+import { EPF_TAB, OTHER_TAB, PPF_TAB, SAV_TAB, VPF_TAB } from './NWContext';
 import QuantityWithRate from './QuantityWithRate';
 
 interface ViewHoldingInputProps {
@@ -13,7 +13,7 @@ interface ViewHoldingInputProps {
 	categoryOptions: any;
 	subCategoryOptions: any;
 	record: HoldingInput;
-	childTab?: any
+	childTab?: any;
 }
 
 export default function ViewHoldingInput({
@@ -24,7 +24,6 @@ export default function ViewHoldingInput({
 	record,
 	childTab
 }: ViewHoldingInputProps) {
-
 	const changeName = (e: any) => {
 		record.name = e.target.value;
 		changeData([ ...data ]);
@@ -32,6 +31,11 @@ export default function ViewHoldingInput({
 	
 	const changeQty = (quantity: number) => {
 		record.qty = quantity;
+		changeData([ ...data ]);
+	};
+
+	const changeChg = (chg: number) => {
+		record.qty = chg;
 		changeData([ ...data ]);
 	};
 
@@ -71,20 +75,26 @@ export default function ViewHoldingInput({
 					</Fragment>
 				)}
 			</Col>}
-			{childTab[0] === OTHER_TAB || childTab[0] === SAV_TAB ? 
-			<><Col>
+			{childTab[0] === OTHER_TAB || childTab[0] === SAV_TAB || childTab[0] === PPF_TAB || childTab[0] === EPF_TAB || childTab[0] === VPF_TAB ? 
+			<>
+				<Col>
 					<TextInput pre="Name" changeHandler={changeName} value={record.name as string} size={'small'} />
-				</Col><Col>
-						<NumberInput
-							pre={'Amount'}
-							min={0}
-							max={100000}
-							value={record.qty}
-							changeHandler={changeQty}
-							currency={record.curr as string}
-							step={1}
-							hidSlider />
-					</Col></> :
+				</Col>
+				{childTab[0] === PPF_TAB || childTab[0] === EPF_TAB || childTab[0] ? <Col>
+					<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={record.chg as number} step={0.1} hidSlider/>
+				</Col> : null}
+				<Col>
+					<NumberInput
+						pre={'Amount'}
+						min={0}
+						max={100000}
+						value={record.qty}
+						changeHandler={changeQty}
+						currency={record.curr as string}
+						step={1}
+						hidSlider />
+				</Col>
+				</> :
 			<Col>
 				<QuantityWithRate quantity={record.qty} name={record.name as string} subtype={record.subt as string} onChange={changeQty} />
 			</Col>}

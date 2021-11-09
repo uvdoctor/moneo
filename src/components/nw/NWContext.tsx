@@ -64,6 +64,9 @@ export const DEPO_TAB = 'Deposits';
 export const ML_TAB = 'Money Lent';
 export const OTHER_TAB = 'Others';
 export const NPS_TAB = 'NPS';
+export const PPF_TAB = 'PPF';
+export const EPF_TAB = 'Employee PF';
+export const VPF_TAB = 'Voluntary PF';
 
 function NWContextProvider() {
 	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData }: any = useContext(AppContext);
@@ -241,26 +244,26 @@ function NWContextProvider() {
 		Retirement: {
 			label: 'Retirement',
 			children: {
-				PPF: {
-					label: 'PPF',
+				[PPF_TAB]: {
+					label: PPF_TAB,
 					data: ppf,
 					setData: setPPF,
 					total: totalPPF,
-					contentComp: <InstrumentValuation />
+					viewComp: ViewHoldingInput
 				},
-				'Employee PF': {
-					label: 'Employee PF',
+				[EPF_TAB]: {
+					label: [EPF_TAB],
 					data: epf,
 					setData: setEPF,
 					total: totalEPF,
-					contentComp: <InstrumentValuation />
+					viewComp: ViewHoldingInput
 				},
-				'Voluntary PF': {
-					label: 'Voluntary PF',
+				[VPF_TAB]: {
+					label: VPF_TAB,
 					data: vpf,
 					setData: setVPF,
 					total: totalVPF,
-					contentComp: <InstrumentValuation />
+					viewComp: ViewHoldingInput
 				},
 				[NPS_TAB]: {
 					label: [NPS_TAB],
@@ -436,6 +439,7 @@ function NWContextProvider() {
 		() => {
 			if (appContextLoaded) initializeHoldings();
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[ appContextLoaded ]
 	);
 
