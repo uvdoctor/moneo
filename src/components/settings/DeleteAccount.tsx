@@ -1,118 +1,130 @@
-import React, { useContext, useState } from "react";
-import { Button, Menu, Modal, notification, Space } from "antd";
-import { AppContext } from "../AppContext";
-import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
-import Text from "antd/lib/typography/Text";
-import TextInput from "../form/textinput";
-import Auth from "@aws-amplify/auth";
-import { Hub } from "@aws-amplify/core";
-import router from "next/router";
-import { deleteEmail, deleteMobile } from "../registrationutils";
-import { GoalContext } from "../goals/GoalContext";
-import { Storage } from "aws-amplify";
+import React, { Fragment, useContext, useState } from 'react';
+import { Button, Menu, Modal, notification, Space } from 'antd';
+import { AppContext } from '../AppContext';
+import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined';
+import Text from 'antd/lib/typography/Text';
+import TextInput from '../form/textinput';
+import Auth from '@aws-amplify/auth';
+import { Hub } from '@aws-amplify/core';
+import router from 'next/router';
+import { deleteEmail, deleteMobile } from '../registrationutils';
+import { GoalContext } from '../goals/GoalContext';
+import { Storage } from 'aws-amplify';
+// import * as mutations from '../../graphql/mutations';
+// import { deleteGoal } from '../goals/goalutils';
 
 export default function DeleteAccount() {
-  const { goalImgKey }: any = useContext(GoalContext);
-  const { validateCaptcha }: any = useContext(AppContext);
-  const [ loading, setloading ] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [input, setInput] = useState<string>("");
+	const { goalImgKey }: any = useContext(GoalContext);
+	const { validateCaptcha }: any = useContext(AppContext);
+	const [ loading, setloading ] = useState<boolean>(false);
+	const [ isModalVisible, setIsModalVisible ] = useState<boolean>(false);
+	const [ input, setInput ] = useState<string>('');
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+	const handleCancel = () => {
+		setIsModalVisible(false);
+	};
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
+	const showModal = () => {
+		setIsModalVisible(true);
+	};
 
-  const handleLogout = async () => {
-    try {
-      await Auth.signOut();
-      Hub.dispatch("auth", { event: "signOut" });
-    } catch (error) {
-      console.log("error signing out: ", error);
-    } finally {
-      router.reload();
-    }
-  };
+	// const deleteData = async (username: string, operation: any) => {
+	// 	try {
+	// 		const data = await API.graphql(graphqlOperation(operation, { input: { owner: username } }));
+	// 		console.log(data);
+	// 	} catch (e) {
+	// 		console.log('Error while deleting: ', e);
+	// 	}
+	// };
 
-  const handleOk = () => {
-    setloading(true);
-    if (input === "delete") {
-      try {
-        validateCaptcha("delete_change").then(async (success: boolean) => {
-          if (!success) return;
-          const user = await Auth.currentAuthenticatedUser();
-          const mob = user?.attributes.phone_number;
-          await Storage.remove(user?.attributes.profile);
-          await Storage.remove(goalImgKey);
-          mob ? await deleteMobile(mob.slice(mob.length - 10)) : null;
-          await deleteEmail(user?.attributes.email);
-          user.deleteUser((error: any, data: any) => {
-            if (error) {
-              console.log(error);
-              throw error;
-            }
-            console.log(data);
-            setIsModalVisible(false);
-            handleLogout();
-          });
-          notification.success({
-            message: "Deleted sucessfully",
-            description: "Your account will be logged out automatically.",
-          });
-        });
-      } catch (err) {
-        notification.error({
-          message: "Unable to delete your account",
-          description: `${err}`,
-        });
-      }
-    } else {
-      notification.error({ message: "Enter the input correctly" });
-    }
-  };
+	const handleLogout = async () => {
+		try {
+			await Auth.signOut();
+			Hub.dispatch('auth', { event: 'signOut' });
+		} catch (error) {
+			console.log('error signing out: ', error);
+		} finally {
+			router.reload();
+		}
+	};
 
-  return (
-    <>
-      <Menu.Item onClick={showModal}>Delete Account</Menu.Item>
-      <Modal
-        title={"Delete Account"}
-        visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        okText={"Delete My Account"}
-        footer={[
-          <Button key="cancel" type="link" onClick={handleCancel}>
-            Cancel
-          </Button>,
-          <Button
-            key="delete"
-            type="primary"
-            onClick={handleOk}
-            danger
-            loading={loading}
-            icon={<DeleteOutlined />}
-          >
-            Delete My Account
-          </Button>,
-        ]}
-      >
-        <Space direction="vertical">
-          <Text strong>Are you sure you want to delete this account?</Text>
-          <Text>
-            This action cannot be undone. This will permanently delete your
-            account and all your data will be deleted.
-          </Text>
-          <Text>
-            To confirm deletion, enter{" "}
-            <Text italic strong>
-              delete
-            </Text>
-          </Text>
-        </Space>
-        <TextInput pre={""} value={input} changeHandler={setInput} />
-      </Modal>
-    </>
-  );
+	const handleOk = () => {
+		setloading(true);
+		if (input === 'delete') {
+			try {
+				validateCaptcha('delete_change').then(async (success: boolean) => {
+					if (!success) return;
+					const user = await Auth.currentAuthenticatedUser();
+					// await deleteData(user.username, mutations.deleteGoal);
+					const mob = user.attributes.phone_number;
+					await Storage.remove(user.attributes.profile);
+					await Storage.remove(goalImgKey);
+					mob ? await deleteMobile(mob.slice(mob.length - 10)) : null;
+					await deleteEmail(user.attributes.email);
+					user.deleteUser((error: any, data: any) => {
+						if (error) {
+							console.log(error);
+							throw error;
+						}
+						console.log(data);
+						setIsModalVisible(false);
+						handleLogout();
+					});
+					notification.success({
+						message: 'Deleted sucessfully',
+						description: 'Your account will be logged out automatically.'
+					});
+				});
+			} catch (err) {
+				notification.error({
+					message: 'Unable to delete your account',
+					description: `${err}`
+				});
+			}
+		} else {
+			notification.error({ message: 'Enter the input correctly' });
+		}
+	};
+
+	return (
+		<Fragment>
+			<Menu.Item onClick={showModal}>Delete Account</Menu.Item>
+			<Modal
+				title={'Delete Account'}
+				visible={isModalVisible}
+				onCancel={() => setIsModalVisible(false)}
+				okText={'Delete My Account'}
+				footer={[
+					<Button key="cancel" type="link" onClick={handleCancel}>
+						Cancel
+					</Button>,
+					<Button
+						key="delete"
+						type="primary"
+						onClick={handleOk}
+						danger
+						loading={loading}
+						icon={<DeleteOutlined />}
+					>
+						Delete My Account
+					</Button>
+				]}
+			>
+				<Space direction="vertical">
+					<Text strong>Are you sure you want to delete this account?</Text>
+					<Text>
+						This action cannot be undone. This will permanently delete your account and all your data will
+						be deleted.
+					</Text>
+					<Text>
+						To confirm deletion, enter{' '}
+						<Text italic strong>
+							delete
+						</Text>
+					</Text>
+				</Space>
+				<TextInput pre={''} value={input} changeHandler={setInput} />
+			</Modal>
+		</Fragment>
+	);
 }
