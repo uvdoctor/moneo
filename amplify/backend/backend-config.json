@@ -195,5 +195,11 @@
       "dependsOn": []
     }
   },
-  "interactions": {}
+  "interactions": {
+    "scheduler": {
+      "service": "Lex",
+      "providerPlugin": "awscloudformation",
+      "build": true
+    }
+  }
 }
