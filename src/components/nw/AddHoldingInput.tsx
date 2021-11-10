@@ -1,5 +1,5 @@
 import { UserOutlined } from '@ant-design/icons';
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
@@ -24,9 +24,9 @@ export default function AddHoldingInput({
 	subCategoryOptions,
 	purchase
 }: AddHoldingInputProps) {
-	const { allFamily, childTab, selectedMembers, selectedCurrency, addHoldings }: any = useContext(NWContext);
+	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const [ subtype, setSubtype ] = useState<string>(childTab === PM_TAB ? AssetSubType.Gold : childTab === NPS_TAB ? 'L' : BTC);
-	const [ name, setName ] = useState<string>('');
+	const [ name, setName ] = useState<string>(subCategoryOptions ? Object.keys(subCategoryOptions[subtype])[0] : '');
 	const [ quantity, setQuantity ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ chg, setChg ] = useState<number>(0);
@@ -136,11 +136,6 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	useEffect(() => {
-		setName(subCategoryOptions ? Object.keys(subCategoryOptions[subtype])[0] : '')
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	},[ addHoldings ]);
-
 	return (
 		<div style={{ textAlign: 'center' }}>
 			<p>
@@ -150,6 +145,7 @@ export default function AddHoldingInput({
 					options={categoryOptions}
 					changeHandler={(val: string) => changeSubtype(val)}
 				/>}
+				{/* // Object.keys(subCategoryOptions[subtype as string]).length */}
 				{subCategoryOptions && (
 					<Fragment>
 						&nbsp;

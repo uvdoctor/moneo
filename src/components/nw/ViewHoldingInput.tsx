@@ -62,7 +62,7 @@ export default function ViewHoldingInput({
 					options={categoryOptions}
 					changeHandler={(val: string) => changeSubtype(val)}
 				/>
-				{subCategoryOptions && (
+				{subCategoryOptions[record.subt as string] && (
 					<Fragment>
 						&nbsp;
 						<SelectInput
