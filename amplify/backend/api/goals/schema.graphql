@@ -434,6 +434,8 @@ type Deposit {
 	rate: Float!
 	fIds: [String!]!
 	curr: String!
+	cum: Boolean!
+	cumf: Int!
 }
 
 enum PropertyType {

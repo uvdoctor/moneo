@@ -713,6 +713,8 @@ export const getHoldings = /* GraphQL */ `
         rate
         fIds
         curr
+        cum
+        cumf
       }
       lendings {
         amt
@@ -722,6 +724,8 @@ export const getHoldings = /* GraphQL */ `
         rate
         fIds
         curr
+        cum
+        cumf
       }
       loans {
         loan {
@@ -960,6 +964,8 @@ export const listHoldingss = /* GraphQL */ `
           rate
           fIds
           curr
+          cum
+          cumf
         }
         lendings {
           amt
@@ -969,6 +975,8 @@ export const listHoldingss = /* GraphQL */ `
           rate
           fIds
           curr
+          cum
+          cumf
         }
         loans {
           fIds

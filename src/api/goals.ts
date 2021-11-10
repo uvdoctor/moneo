@@ -526,6 +526,8 @@ export type DepositInput = {
   rate: number,
   fIds: Array< string >,
   curr: string,
+  cum: boolean,
+  cumf: number,
 };
 
 export type LiabilityInput = {
@@ -631,6 +633,8 @@ export type Deposit = {
   rate?: number,
   fIds?: Array< string >,
   curr?: string,
+  cum?: boolean,
+  cumf?: number,
 };
 
 export type Liability = {
@@ -2125,6 +2129,8 @@ export type CreateHoldingsMutation = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     lendings?:  Array< {
       __typename: "Deposit",
@@ -2135,6 +2141,8 @@ export type CreateHoldingsMutation = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
@@ -2407,6 +2415,8 @@ export type UpdateHoldingsMutation = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     lendings?:  Array< {
       __typename: "Deposit",
@@ -2417,6 +2427,8 @@ export type UpdateHoldingsMutation = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
@@ -2689,6 +2701,8 @@ export type DeleteHoldingsMutation = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     lendings?:  Array< {
       __typename: "Deposit",
@@ -2699,6 +2713,8 @@ export type DeleteHoldingsMutation = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
@@ -4347,6 +4363,8 @@ export type GetHoldingsQuery = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     lendings?:  Array< {
       __typename: "Deposit",
@@ -4357,6 +4375,8 @@ export type GetHoldingsQuery = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
@@ -4624,6 +4644,8 @@ export type ListHoldingssQuery = {
         rate: number,
         fIds: Array< string >,
         curr: string,
+        cum: boolean,
+        cumf: number,
       } > | null,
       lendings?:  Array< {
         __typename: "Deposit",
@@ -4634,6 +4656,8 @@ export type ListHoldingssQuery = {
         rate: number,
         fIds: Array< string >,
         curr: string,
+        cum: boolean,
+        cumf: number,
       } > | null,
       loans?:  Array< {
         __typename: "Liability",
@@ -5698,6 +5722,8 @@ export type OnCreateHoldingsSubscription = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     lendings?:  Array< {
       __typename: "Deposit",
@@ -5708,6 +5734,8 @@ export type OnCreateHoldingsSubscription = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
@@ -5979,6 +6007,8 @@ export type OnUpdateHoldingsSubscription = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     lendings?:  Array< {
       __typename: "Deposit",
@@ -5989,6 +6019,8 @@ export type OnUpdateHoldingsSubscription = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
@@ -6260,6 +6292,8 @@ export type OnDeleteHoldingsSubscription = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     lendings?:  Array< {
       __typename: "Deposit",
@@ -6270,6 +6304,8 @@ export type OnDeleteHoldingsSubscription = {
       rate: number,
       fIds: Array< string >,
       curr: string,
+      cum: boolean,
+      cumf: number,
     } > | null,
     loans?:  Array< {
       __typename: "Liability",

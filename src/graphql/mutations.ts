@@ -401,6 +401,8 @@ export const createHoldings = /* GraphQL */ `
         rate
         fIds
         curr
+        cum
+        cumf
       }
       lendings {
         amt
@@ -410,6 +412,8 @@ export const createHoldings = /* GraphQL */ `
         rate
         fIds
         curr
+        cum
+        cumf
       }
       loans {
         loan {
@@ -653,6 +657,8 @@ export const updateHoldings = /* GraphQL */ `
         rate
         fIds
         curr
+        cum
+        cumf
       }
       lendings {
         amt
@@ -662,6 +668,8 @@ export const updateHoldings = /* GraphQL */ `
         rate
         fIds
         curr
+        cum
+        cumf
       }
       loans {
         loan {
@@ -905,6 +913,8 @@ export const deleteHoldings = /* GraphQL */ `
         rate
         fIds
         curr
+        cum
+        cumf
       }
       lendings {
         amt
@@ -914,6 +924,8 @@ export const deleteHoldings = /* GraphQL */ `
         rate
         fIds
         curr
+        cum
+        cumf
       }
       loans {
         loan {
