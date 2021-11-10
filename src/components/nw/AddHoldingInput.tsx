@@ -4,7 +4,7 @@ import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { BTC, CRYPTO_TAB, EPF_TAB, NPS_TAB, NWContext, OTHER_TAB, PM_TAB, PPF_TAB, SAV_TAB, VPF_TAB } from './NWContext';
+import { BTC, CRYPTO_TAB, EPF_TAB, NPS_TAB, NWContext, OTHER_TAB, PM_TAB, PPF_TAB, SAV_TAB, VEHICLE_TAB, VPF_TAB } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
 import PurchaseInput from './PurchaseInput';
 import QuantityWithRate from './QuantityWithRate';
@@ -92,6 +92,20 @@ export default function AddHoldingInput({
 			};
 			return newRec;
 		}
+		if(childTab === VEHICLE_TAB){
+		let newRec: HoldingInput = {
+			id: '',
+			qty: quantity,
+			curr: selectedCurrency,
+			name: name,
+			fIds: [ memberKey ],
+			chg: 15,
+			chgF: 1,
+			type: AssetType.A,
+			subt: subtype
+		};
+		return newRec;
+	}
 		let newRec: HoldingInput = {
 			id: '',
 			type: AssetType.A,
@@ -171,7 +185,7 @@ export default function AddHoldingInput({
 						setYear={setYear}
 					/>
 				) :
-				childTab===SAV_TAB || childTab === OTHER_TAB ?
+				childTab===SAV_TAB || childTab === OTHER_TAB || childTab === VEHICLE_TAB ?
 				<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
 				<p><NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1}  /></p>
 				</>
@@ -179,7 +193,7 @@ export default function AddHoldingInput({
 				childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ? 
 				<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
 				<p><NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={chg} step={0.1}/></p>
-				<p><NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1} post={childTab === PPF_TAB ? '(Annually)' : '(Monthly)'} /></p>
+				<p><NumberInput pre={'Amount'} min={10} max={100000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1} post={childTab === PPF_TAB ? '(Annually)' : '(Monthly)'} /></p>
 				</> :
 				(
 					<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} />

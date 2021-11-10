@@ -4,7 +4,7 @@ import { AssetSubType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { EPF_TAB, OTHER_TAB, PPF_TAB, SAV_TAB, VPF_TAB } from './NWContext';
+import { EPF_TAB, OTHER_TAB, PPF_TAB, SAV_TAB, VEHICLE_TAB, VPF_TAB } from './NWContext';
 import QuantityWithRate from './QuantityWithRate';
 
 interface ViewHoldingInputProps {
@@ -62,7 +62,7 @@ export default function ViewHoldingInput({
 					options={categoryOptions}
 					changeHandler={(val: string) => changeSubtype(val)}
 				/>
-				{subCategoryOptions[record.subt as string] && (
+				{subCategoryOptions ? subCategoryOptions[record.subt as string] && (	
 					<Fragment>
 						&nbsp;
 						<SelectInput
@@ -73,16 +73,16 @@ export default function ViewHoldingInput({
 							post={record.subt === AssetSubType.Gold ? 'karat' : ''}
 						/>
 					</Fragment>
-				)}
+				): null}
 			</Col>}
-			{childTab[0] === OTHER_TAB || childTab[0] === SAV_TAB || childTab[0] === PPF_TAB || childTab[0] === EPF_TAB || childTab[0] === VPF_TAB ? 
+			{childTab[0] === OTHER_TAB || childTab[0] === SAV_TAB || childTab[0] === PPF_TAB || childTab[0] === EPF_TAB || childTab[0] === VPF_TAB || childTab[0] === VEHICLE_TAB ? 
 			<>
 				<Col>
 					<TextInput pre="Name" changeHandler={changeName} value={record.name as string} size={'small'} />
 				</Col>
-				{childTab[0] === PPF_TAB || childTab[0] === EPF_TAB || childTab[0] ? <Col>
+				{childTab[0] === PPF_TAB || childTab[0] === EPF_TAB || childTab[0] === VPF_TAB && <Col>
 					<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={record.chg as number} step={0.1} hidSlider/>
-				</Col> : null}
+				</Col>}
 				<Col>
 					<NumberInput
 						pre={'Amount'}

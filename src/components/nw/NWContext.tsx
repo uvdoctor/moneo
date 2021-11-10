@@ -67,6 +67,7 @@ export const NPS_TAB = 'NPS';
 export const PPF_TAB = 'PPF';
 export const EPF_TAB = 'Employee PF';
 export const VPF_TAB = 'Voluntary PF';
+export const VEHICLE_TAB  = 'Vehicles';
 
 function NWContextProvider() {
 	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData }: any = useContext(AppContext);
@@ -185,12 +186,17 @@ function NWContextProvider() {
 						}
 					]
 				},
-				Vehicles: {
-					label: 'Vehicles',
+				[VEHICLE_TAB]: {
+					label: [VEHICLE_TAB],
 					data: vehicles,
 					setData: setVehicles,
 					total: totalVehicles,
-					contentComp: <InstrumentValuation />,
+					categoryOptions: {
+						2: 'Two-Wheeler',
+						3: 'Three-Wheeler',
+						4: 'Four-Wheeler'
+					},
+					viewComp: ViewHoldingInput,
 				},
 				[PM_TAB]: {
 					label: PM_TAB,
