@@ -57,12 +57,6 @@
           "s3Key": "amplify-builds/UserConfirmationTrigger-4477437634576c476257-build.zip"
         }
       },
-      "interactions": {
-        "bot": {
-          "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/bot-6d36686c654e79674c47-build.zip"
-        }
-      },
       "auth": {
         "moneo3e6273bc": {
           "userPoolId": "us-east-1_3N0D6fw9V",
