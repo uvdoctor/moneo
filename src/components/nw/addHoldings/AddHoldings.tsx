@@ -3,7 +3,8 @@ import { Modal, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import AddHoldingInput from "../AddHoldingInput";
 import AddHoldingFiancialInput from "../AddHoldingFinancialInput";
-import { NWContext } from "../NWContext";
+import { DEPO_TAB, ML_TAB, NWContext } from "../NWContext";
+import AddDepositInput from "../AddDepositInput";
 
 interface AddHoldingsProps {
   data: Array<any>;
@@ -25,7 +26,7 @@ export default function AddHoldings({
   const [isModalVisible, setModalVisibility] = useState<boolean>(false);
   const [okDisabled, setOkDisabled] = useState<boolean>(true);
   const [newRec, setNewRec] = useState<any>({});
-  const { activeTab, setInstruments, instruments }: any = useContext(NWContext);
+  const { activeTab, setInstruments, instruments, childTab }: any = useContext(NWContext);
   const [instrumentsList, setInstrumentsList] = useState<any>([]);
 
   const close = () => {
@@ -72,7 +73,10 @@ export default function AddHoldings({
             updateInstruments={updateInstruments}
             disableOk={setOkDisabled}
           />
-        ) : (
+        ) : 
+        childTab === DEPO_TAB || childTab === ML_TAB ?
+        <AddDepositInput setInput={setNewRec} disableOk={setOkDisabled} categoryOptions={categoryOptions} subCategoryOptions={subCategoryOptions}/> :
+        (
           <AddHoldingInput
             setInput={setNewRec}
             disableOk={setOkDisabled}

@@ -39,6 +39,7 @@ import InstrumentValuation from './InstrumentValuation';
 import { includesAny, initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
+import ViewDepositInput from './ViewDepositInput';
 
 const NWContext = createContext({});
 
@@ -147,7 +148,15 @@ function NWContextProvider() {
 					data: deposits,
 					setData: setDeposits,
 					total: totalDeposits,
-					contentComp: <InstrumentValuation />
+					categoryOptions: { false : 'No', true: 'Yes' },
+					subCategoryOptions: { 'false' : { 
+						1: 'Anually',
+						2: 'Bi-Anually',
+						4: 'Quarterly',
+						12: 'Monthly'
+						}
+					},
+					viewComp: ViewDepositInput
 				},
 				[SAV_TAB]: {
 					label: [SAV_TAB],
@@ -161,7 +170,15 @@ function NWContextProvider() {
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
-					contentComp: <InstrumentValuation />
+					categoryOptions: { false : 'No', true: 'Yes' },
+					subCategoryOptions: { 'false' : { 
+						1: 'Anually',
+						2: 'Bi-Anually',
+						4: 'Quarterly',
+						12: 'Monthly'
+						}
+					},
+					viewComp: ViewDepositInput
 				},
 			}
 		},

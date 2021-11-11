@@ -138,7 +138,6 @@ export default function AddHoldingInput({
 			}
 		}
 		let rec = getNewRec();
-		// @ts-ignore
 		childTab === SAV_TAB ? (rec.curr = subtype) : (rec.subt = subtype);
 		return rec;
 	};
@@ -159,8 +158,7 @@ export default function AddHoldingInput({
 					options={categoryOptions}
 					changeHandler={(val: string) => changeSubtype(val)}
 				/>}
-				{/* // Object.keys(subCategoryOptions[subtype as string]).length */}
-				{subCategoryOptions && (
+				{subCategoryOptions ? subCategoryOptions[subtype as string] && (	
 					<Fragment>
 						&nbsp;
 						<SelectInput
@@ -171,8 +169,7 @@ export default function AddHoldingInput({
 							post={subtype === AssetSubType.Gold ? 'karat' : ''}
 						/>
 					</Fragment>
-				)}
-
+				): null}
 			</p>
 			<p>
 				{purchase ? (
