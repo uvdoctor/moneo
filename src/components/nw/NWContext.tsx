@@ -104,6 +104,7 @@ function NWContextProvider() {
 	const [ totalEPF, setTotalEPF ] = useState<number>(0);
 	const [ totalVPF, setTotalVPF ] = useState<number>(0);
 	const [ totalNPS, setTotalNPS ] = useState<number>(0);
+	const [ totalAngel, setTotalAngel ] = useState<number>(0);
 	const [ totalLendings, setTotalLendings ] = useState<number>(0);
 	const [ totalLoans, setTotalLoans ] = useState<number>(0);
 	const [ totalInsurance, setTotalInsurance ] = useState<number>(0);
@@ -312,10 +313,10 @@ function NWContextProvider() {
 					categoryOptions: {
 						Art: 'Art',
 						Watch: 'Watch',
-						Angel: 'Angel Investments',
-						Club: 'Club Memberships',
-						Time: 'Time Sharing Memberships',
-						Others: 'Others'
+						Angel: 'Angel Investment',
+						Club: 'Club Membership',
+						Time: 'Time Sharing Membership',
+						Other: 'Other'
 					},
 					viewComp: ViewHoldingInput,
 				}, 
@@ -327,33 +328,6 @@ function NWContextProvider() {
 			setData: setLoans,
 			total: totalLoans,
 			contentComp: <InstrumentValuation />,
-			formConfig: [
-				{
-					label: 'Bank Name',
-					name: 'bankName',
-					type: 'text'
-				},
-				{
-					label: 'Bank Name',
-					name: 'bankName',
-					type: 'select'
-				},
-				{
-					label: 'Amount',
-					name: 'amount',
-					type: 'text'
-				},
-				{
-					label: 'Duration',
-					name: 'duration',
-					type: 'text'
-				},
-				{
-					label: 'Interest Rate',
-					name: 'interestRate',
-					type: 'text'
-				}
-			]
 		},
 		Insurance: {
 			label: 'Insurance',
@@ -777,6 +751,7 @@ function NWContextProvider() {
 				totalEPF,
 				totalVPF,
 				totalNPS,
+				totalAngel,
 				totalLendings,
 				totalInsurance,
 				totalLoans,
