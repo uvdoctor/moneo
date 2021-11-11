@@ -69,6 +69,7 @@ export const PPF_TAB = 'PPF';
 export const EPF_TAB = 'Employee PF';
 export const VPF_TAB = 'Voluntary PF';
 export const VEHICLE_TAB  = 'Vehicles';
+export const ANGEL_TAB = 'Angel Investments';
 
 function NWContextProvider() {
 	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData }: any = useContext(AppContext);
@@ -324,6 +325,13 @@ function NWContextProvider() {
 						[STELLAR]: 'Stellar'
 					}
 				},
+				[ANGEL_TAB]: {
+					label: [ANGEL_TAB],
+					data: angel,
+					setData: setAngel,
+					total: totalAngel,
+					viewComp: ViewHoldingInput,
+				}, 
 				[OTHER_TAB]: {
 					label: [OTHER_TAB],
 					data: others,
@@ -332,7 +340,6 @@ function NWContextProvider() {
 					categoryOptions: {
 						Art: 'Art',
 						Watch: 'Watch',
-						Angel: 'Angel Investment',
 						Club: 'Club Membership',
 						Time: 'Time Sharing Membership',
 						Other: 'Other'
