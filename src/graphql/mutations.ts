@@ -252,71 +252,30 @@ export const deleteGoal = /* GraphQL */ `
     }
   }
 `;
-export const createRegMob = /* GraphQL */ `
-  mutation CreateRegMob(
-    $input: CreateRegMobInput!
-    $condition: ModelRegMobConditionInput
+export const updateContacts = /* GraphQL */ `
+  mutation UpdateContacts(
+    $input: UpdateContactsInput!
+    $condition: ModelContactsConditionInput
   ) {
-    createRegMob(input: $input, condition: $condition) {
-      mob
-      cc
-      notify
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const updateRegMob = /* GraphQL */ `
-  mutation UpdateRegMob(
-    $input: UpdateRegMobInput!
-    $condition: ModelRegMobConditionInput
-  ) {
-    updateRegMob(input: $input, condition: $condition) {
-      mob
-      cc
-      notify
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const deleteRegMob = /* GraphQL */ `
-  mutation DeleteRegMob(
-    $input: DeleteRegMobInput!
-    $condition: ModelRegMobConditionInput
-  ) {
-    deleteRegMob(input: $input, condition: $condition) {
-      mob
-      cc
-      notify
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const updateRegEmail = /* GraphQL */ `
-  mutation UpdateRegEmail(
-    $input: UpdateRegEmailInput!
-    $condition: ModelRegEmailConditionInput
-  ) {
-    updateRegEmail(input: $input, condition: $condition) {
+    updateContacts(input: $input, condition: $condition) {
       email
+      im
+      mob
       notify
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteRegEmail = /* GraphQL */ `
-  mutation DeleteRegEmail(
-    $input: DeleteRegEmailInput!
-    $condition: ModelRegEmailConditionInput
+export const deleteContacts = /* GraphQL */ `
+  mutation DeleteContacts(
+    $input: DeleteContactsInput!
+    $condition: ModelContactsConditionInput
   ) {
-    deleteRegEmail(input: $input, condition: $condition) {
+    deleteContacts(input: $input, condition: $condition) {
       email
+      im
+      mob
       notify
       createdAt
       updatedAt
@@ -1258,13 +1217,15 @@ export const updateRating = /* GraphQL */ `
     }
   }
 `;
-export const createRegEmail = /* GraphQL */ `
-  mutation CreateRegEmail(
-    $input: CreateRegEmailInput!
-    $condition: ModelRegEmailConditionInput
+export const createContacts = /* GraphQL */ `
+  mutation CreateContacts(
+    $input: CreateContactsInput!
+    $condition: ModelContactsConditionInput
   ) {
-    createRegEmail(input: $input, condition: $condition) {
+    createContacts(input: $input, condition: $condition) {
       email
+      im
+      mob
       notify
       createdAt
       updatedAt

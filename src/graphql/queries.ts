@@ -240,64 +240,27 @@ export const listRatings = /* GraphQL */ `
     }
   }
 `;
-export const getRegMob = /* GraphQL */ `
-  query GetRegMob($mob: Float!) {
-    getRegMob(mob: $mob) {
-      mob
-      cc
-      notify
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const listRegMobs = /* GraphQL */ `
-  query ListRegMobs(
-    $mob: Float
-    $filter: ModelRegMobFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listRegMobs(
-      mob: $mob
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        mob
-        cc
-        notify
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-export const getRegEmail = /* GraphQL */ `
-  query GetRegEmail($email: String!) {
-    getRegEmail(email: $email) {
+export const getContacts = /* GraphQL */ `
+  query GetContacts($email: String!) {
+    getContacts(email: $email) {
       email
+      im
+      mob
       notify
       createdAt
       updatedAt
     }
   }
 `;
-export const listRegEmails = /* GraphQL */ `
-  query ListRegEmails(
+export const listContactss = /* GraphQL */ `
+  query ListContactss(
     $email: String
-    $filter: ModelRegEmailFilterInput
+    $filter: ModelContactsFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listRegEmails(
+    listContactss(
       email: $email
       filter: $filter
       limit: $limit
@@ -306,6 +269,62 @@ export const listRegEmails = /* GraphQL */ `
     ) {
       items {
         email
+        im
+        mob
+        notify
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const regByIm = /* GraphQL */ `
+  query RegByIm(
+    $im: Float
+    $sortDirection: ModelSortDirection
+    $filter: ModelContactsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    regByIM(
+      im: $im
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        email
+        im
+        mob
+        notify
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const regByMob = /* GraphQL */ `
+  query RegByMob(
+    $mob: Float
+    $sortDirection: ModelSortDirection
+    $filter: ModelContactsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    regByMob(
+      mob: $mob
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        email
+        im
+        mob
         notify
         createdAt
         updatedAt

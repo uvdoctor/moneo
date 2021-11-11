@@ -329,66 +329,36 @@ export const onDeleteRating = /* GraphQL */ `
     }
   }
 `;
-export const onCreateRegMob = /* GraphQL */ `
-  subscription OnCreateRegMob($owner: String) {
-    onCreateRegMob(owner: $owner) {
-      mob
-      cc
-      notify
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdateRegMob = /* GraphQL */ `
-  subscription OnUpdateRegMob($owner: String) {
-    onUpdateRegMob(owner: $owner) {
-      mob
-      cc
-      notify
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeleteRegMob = /* GraphQL */ `
-  subscription OnDeleteRegMob($owner: String) {
-    onDeleteRegMob(owner: $owner) {
-      mob
-      cc
-      notify
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onCreateRegEmail = /* GraphQL */ `
-  subscription OnCreateRegEmail {
-    onCreateRegEmail {
+export const onCreateContacts = /* GraphQL */ `
+  subscription OnCreateContacts {
+    onCreateContacts {
       email
+      im
+      mob
       notify
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateRegEmail = /* GraphQL */ `
-  subscription OnUpdateRegEmail {
-    onUpdateRegEmail {
+export const onUpdateContacts = /* GraphQL */ `
+  subscription OnUpdateContacts {
+    onUpdateContacts {
       email
+      im
+      mob
       notify
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteRegEmail = /* GraphQL */ `
-  subscription OnDeleteRegEmail {
-    onDeleteRegEmail {
+export const onDeleteContacts = /* GraphQL */ `
+  subscription OnDeleteContacts {
+    onDeleteContacts {
       email
+      im
+      mob
       notify
       createdAt
       updatedAt

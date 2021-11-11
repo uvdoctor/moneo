@@ -386,61 +386,40 @@ export type DeleteGoalInput = {
   id: string,
 };
 
-export type CreateRegMobInput = {
-  mob: number,
-  cc: number,
-  notify: YN,
-};
-
-export type ModelRegMobConditionInput = {
-  cc?: ModelIntInput | null,
-  notify?: ModelYNInput | null,
-  and?: Array< ModelRegMobConditionInput | null > | null,
-  or?: Array< ModelRegMobConditionInput | null > | null,
-  not?: ModelRegMobConditionInput | null,
-};
-
-export type RegMob = {
-  __typename: "RegMob",
-  mob?: number,
-  cc?: number,
-  notify?: YN,
-  createdAt?: string,
-  updatedAt?: string,
-  owner?: string | null,
-};
-
-export type UpdateRegMobInput = {
-  mob: number,
-  cc?: number | null,
-  notify?: YN | null,
-};
-
-export type DeleteRegMobInput = {
-  mob: number,
-};
-
-export type UpdateRegEmailInput = {
+export type UpdateContactsInput = {
   email: string,
-  notify?: YN | null,
+  im?: number | null,
+  mob?: number | null,
+  notify?: boolean | null,
 };
 
-export type ModelRegEmailConditionInput = {
-  notify?: ModelYNInput | null,
-  and?: Array< ModelRegEmailConditionInput | null > | null,
-  or?: Array< ModelRegEmailConditionInput | null > | null,
-  not?: ModelRegEmailConditionInput | null,
+export type ModelContactsConditionInput = {
+  im?: ModelFloatInput | null,
+  mob?: ModelFloatInput | null,
+  notify?: ModelBooleanInput | null,
+  and?: Array< ModelContactsConditionInput | null > | null,
+  or?: Array< ModelContactsConditionInput | null > | null,
+  not?: ModelContactsConditionInput | null,
 };
 
-export type RegEmail = {
-  __typename: "RegEmail",
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type Contacts = {
+  __typename: "Contacts",
   email?: string,
-  notify?: YN,
+  im?: number | null,
+  mob?: number | null,
+  notify?: boolean | null,
   createdAt?: string,
   updatedAt?: string,
 };
 
-export type DeleteRegEmailInput = {
+export type DeleteContactsInput = {
   email: string,
 };
 
@@ -733,9 +712,11 @@ export type UpdateRatingInput = {
   feedbackId?: string | null,
 };
 
-export type CreateRegEmailInput = {
+export type CreateContactsInput = {
   email: string,
-  notify: YN,
+  im?: number | null,
+  mob?: number | null,
+  notify?: boolean | null,
 };
 
 export type CreateFeedsInput = {
@@ -1467,13 +1448,14 @@ export type ModelRatingConnection = {
   nextToken?: string | null,
 };
 
-export type ModelRegMobFilterInput = {
+export type ModelContactsFilterInput = {
+  email?: ModelStringInput | null,
+  im?: ModelFloatInput | null,
   mob?: ModelFloatInput | null,
-  cc?: ModelIntInput | null,
-  notify?: ModelYNInput | null,
-  and?: Array< ModelRegMobFilterInput | null > | null,
-  or?: Array< ModelRegMobFilterInput | null > | null,
-  not?: ModelRegMobFilterInput | null,
+  notify?: ModelBooleanInput | null,
+  and?: Array< ModelContactsFilterInput | null > | null,
+  or?: Array< ModelContactsFilterInput | null > | null,
+  not?: ModelContactsFilterInput | null,
 };
 
 export enum ModelSortDirection {
@@ -1482,23 +1464,9 @@ export enum ModelSortDirection {
 }
 
 
-export type ModelRegMobConnection = {
-  __typename: "ModelRegMobConnection",
-  items?:  Array<RegMob | null > | null,
-  nextToken?: string | null,
-};
-
-export type ModelRegEmailFilterInput = {
-  email?: ModelStringInput | null,
-  notify?: ModelYNInput | null,
-  and?: Array< ModelRegEmailFilterInput | null > | null,
-  or?: Array< ModelRegEmailFilterInput | null > | null,
-  not?: ModelRegEmailFilterInput | null,
-};
-
-export type ModelRegEmailConnection = {
-  __typename: "ModelRegEmailConnection",
-  items?:  Array<RegEmail | null > | null,
+export type ModelContactsConnection = {
+  __typename: "ModelContactsConnection",
+  items?:  Array<Contacts | null > | null,
   nextToken?: string | null,
 };
 
@@ -1962,82 +1930,35 @@ export type DeleteGoalMutation = {
   } | null,
 };
 
-export type CreateRegMobMutationVariables = {
-  input?: CreateRegMobInput,
-  condition?: ModelRegMobConditionInput | null,
+export type UpdateContactsMutationVariables = {
+  input?: UpdateContactsInput,
+  condition?: ModelContactsConditionInput | null,
 };
 
-export type CreateRegMobMutation = {
-  createRegMob?:  {
-    __typename: "RegMob",
-    mob: number,
-    cc: number,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type UpdateRegMobMutationVariables = {
-  input?: UpdateRegMobInput,
-  condition?: ModelRegMobConditionInput | null,
-};
-
-export type UpdateRegMobMutation = {
-  updateRegMob?:  {
-    __typename: "RegMob",
-    mob: number,
-    cc: number,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type DeleteRegMobMutationVariables = {
-  input?: DeleteRegMobInput,
-  condition?: ModelRegMobConditionInput | null,
-};
-
-export type DeleteRegMobMutation = {
-  deleteRegMob?:  {
-    __typename: "RegMob",
-    mob: number,
-    cc: number,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type UpdateRegEmailMutationVariables = {
-  input?: UpdateRegEmailInput,
-  condition?: ModelRegEmailConditionInput | null,
-};
-
-export type UpdateRegEmailMutation = {
-  updateRegEmail?:  {
-    __typename: "RegEmail",
+export type UpdateContactsMutation = {
+  updateContacts?:  {
+    __typename: "Contacts",
     email: string,
-    notify: YN,
+    im?: number | null,
+    mob?: number | null,
+    notify?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteRegEmailMutationVariables = {
-  input?: DeleteRegEmailInput,
-  condition?: ModelRegEmailConditionInput | null,
+export type DeleteContactsMutationVariables = {
+  input?: DeleteContactsInput,
+  condition?: ModelContactsConditionInput | null,
 };
 
-export type DeleteRegEmailMutation = {
-  deleteRegEmail?:  {
-    __typename: "RegEmail",
+export type DeleteContactsMutation = {
+  deleteContacts?:  {
+    __typename: "Contacts",
     email: string,
-    notify: YN,
+    im?: number | null,
+    mob?: number | null,
+    notify?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3090,16 +3011,18 @@ export type UpdateRatingMutation = {
   } | null,
 };
 
-export type CreateRegEmailMutationVariables = {
-  input?: CreateRegEmailInput,
-  condition?: ModelRegEmailConditionInput | null,
+export type CreateContactsMutationVariables = {
+  input?: CreateContactsInput,
+  condition?: ModelContactsConditionInput | null,
 };
 
-export type CreateRegEmailMutation = {
-  createRegEmail?:  {
-    __typename: "RegEmail",
+export type CreateContactsMutation = {
+  createContacts?:  {
+    __typename: "Contacts",
     email: string,
-    notify: YN,
+    im?: number | null,
+    mob?: number | null,
+    notify?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3935,75 +3858,87 @@ export type ListRatingsQuery = {
   } | null,
 };
 
-export type GetRegMobQueryVariables = {
-  mob?: number,
+export type GetContactsQueryVariables = {
+  email?: string,
 };
 
-export type GetRegMobQuery = {
-  getRegMob?:  {
-    __typename: "RegMob",
-    mob: number,
-    cc: number,
-    notify: YN,
+export type GetContactsQuery = {
+  getContacts?:  {
+    __typename: "Contacts",
+    email: string,
+    im?: number | null,
+    mob?: number | null,
+    notify?: boolean | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
-export type ListRegMobsQueryVariables = {
-  mob?: number | null,
-  filter?: ModelRegMobFilterInput | null,
+export type ListContactssQueryVariables = {
+  email?: string | null,
+  filter?: ModelContactsFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListRegMobsQuery = {
-  listRegMobs?:  {
-    __typename: "ModelRegMobConnection",
+export type ListContactssQuery = {
+  listContactss?:  {
+    __typename: "ModelContactsConnection",
     items?:  Array< {
-      __typename: "RegMob",
-      mob: number,
-      cc: number,
-      notify: YN,
+      __typename: "Contacts",
+      email: string,
+      im?: number | null,
+      mob?: number | null,
+      notify?: boolean | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
 };
 
-export type GetRegEmailQueryVariables = {
-  email?: string,
+export type RegByImQueryVariables = {
+  im?: number | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelContactsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
 };
 
-export type GetRegEmailQuery = {
-  getRegEmail?:  {
-    __typename: "RegEmail",
-    email: string,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
+export type RegByImQuery = {
+  regByIM?:  {
+    __typename: "ModelContactsConnection",
+    items?:  Array< {
+      __typename: "Contacts",
+      email: string,
+      im?: number | null,
+      mob?: number | null,
+      notify?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
   } | null,
 };
 
-export type ListRegEmailsQueryVariables = {
-  email?: string | null,
-  filter?: ModelRegEmailFilterInput | null,
+export type RegByMobQueryVariables = {
+  mob?: number | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelContactsFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
 };
 
-export type ListRegEmailsQuery = {
-  listRegEmails?:  {
-    __typename: "ModelRegEmailConnection",
+export type RegByMobQuery = {
+  regByMob?:  {
+    __typename: "ModelContactsConnection",
     items?:  Array< {
-      __typename: "RegEmail",
+      __typename: "Contacts",
       email: string,
-      notify: YN,
+      im?: number | null,
+      mob?: number | null,
+      notify?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -5303,79 +5238,37 @@ export type OnDeleteRatingSubscription = {
   } | null,
 };
 
-export type OnCreateRegMobSubscriptionVariables = {
-  owner?: string | null,
-};
-
-export type OnCreateRegMobSubscription = {
-  onCreateRegMob?:  {
-    __typename: "RegMob",
-    mob: number,
-    cc: number,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnUpdateRegMobSubscriptionVariables = {
-  owner?: string | null,
-};
-
-export type OnUpdateRegMobSubscription = {
-  onUpdateRegMob?:  {
-    __typename: "RegMob",
-    mob: number,
-    cc: number,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnDeleteRegMobSubscriptionVariables = {
-  owner?: string | null,
-};
-
-export type OnDeleteRegMobSubscription = {
-  onDeleteRegMob?:  {
-    __typename: "RegMob",
-    mob: number,
-    cc: number,
-    notify: YN,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnCreateRegEmailSubscription = {
-  onCreateRegEmail?:  {
-    __typename: "RegEmail",
+export type OnCreateContactsSubscription = {
+  onCreateContacts?:  {
+    __typename: "Contacts",
     email: string,
-    notify: YN,
+    im?: number | null,
+    mob?: number | null,
+    notify?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateRegEmailSubscription = {
-  onUpdateRegEmail?:  {
-    __typename: "RegEmail",
+export type OnUpdateContactsSubscription = {
+  onUpdateContacts?:  {
+    __typename: "Contacts",
     email: string,
-    notify: YN,
+    im?: number | null,
+    mob?: number | null,
+    notify?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteRegEmailSubscription = {
-  onDeleteRegEmail?:  {
-    __typename: "RegEmail",
+export type OnDeleteContactsSubscription = {
+  onDeleteContacts?:  {
+    __typename: "Contacts",
     email: string,
-    notify: YN,
+    im?: number | null,
+    mob?: number | null,
+    notify?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,

@@ -125,27 +125,13 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
 	img: String
 }
 
-type RegMob
-	@model
-	@aws_iam
-	@aws_cognito_user_pools
-	@key(fields: ["mob"])
-	@auth(
-		rules: [
-			{ allow: private, provider: iam, operations: [read] }
-			{ allow: owner, operations: [create, read, update, delete] }
-		]
-	) {
-	mob: Float!
-	cc: Int!
-	notify: YN!
-}
-
-type RegEmail
+type Contacts
 	@model
 	@aws_iam
 	@aws_cognito_user_pools
 	@key(fields: ["email"])
+	@key(name: "ByIM", fields:["im"], queryField: "regByIM")
+	@key(name: "ByMob", fields:["mob"], queryField: "regByMob")
 	@auth(
 		rules: [
 			{ allow: public, provider: iam, operations: [read] }
@@ -154,7 +140,9 @@ type RegEmail
 		]
 	) {
 	email: String!
-	notify: YN!
+	im: Float
+	mob: Float
+	notify: Boolean
 }
 
 enum AssetType {
