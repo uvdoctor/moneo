@@ -517,6 +517,7 @@ type Holdings @model @aws_iam @auth(rules: [{ allow: owner }, { allow: private, 
 	crypto: [Holding!]
 	ins: [Insurance!]
 	other: [Holding!]
+	angel: [Holding!]
 }
 
 type EODPrices

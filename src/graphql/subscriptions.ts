@@ -1038,6 +1038,24 @@ export const onCreateHoldings = /* GraphQL */ `
         type
         subt
       }
+      angel {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
       createdAt
       updatedAt
       owner
@@ -1291,6 +1309,24 @@ export const onUpdateHoldings = /* GraphQL */ `
         type
         subt
       }
+      angel {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
       createdAt
       updatedAt
       owner
@@ -1527,6 +1563,24 @@ export const onDeleteHoldings = /* GraphQL */ `
         curr
       }
       other {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      angel {
         id
         qty
         pur {

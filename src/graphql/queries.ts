@@ -930,6 +930,24 @@ export const getHoldings = /* GraphQL */ `
         type
         subt
       }
+      angel {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fIds
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
       createdAt
       updatedAt
       owner
@@ -1087,6 +1105,17 @@ export const listHoldingss = /* GraphQL */ `
           curr
         }
         other {
+          id
+          qty
+          name
+          fIds
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        angel {
           id
           qty
           name

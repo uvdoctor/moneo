@@ -86,6 +86,7 @@ function NWContextProvider() {
 	const [ vpf, setVPF ] = useState<Array<HoldingInput>>([]);
 	const [ others, setOthers ] = useState<Array<HoldingInput>>([]);
 	const [ crypto, setCrypto ] = useState<Array<HoldingInput>>([]);
+	const [ angel, setAngel ] = useState<Array<HoldingInput>>([]);
 	const [ loans, setLoans ] = useState<Array<LiabilityInput>>([]);
 	const [ insurance, setInsurance ] = useState<Array<InsuranceInput>>([]);
 	const [ selectedMembers, setSelectedMembers ] = useState<Array<string>>([]);
@@ -97,6 +98,7 @@ function NWContextProvider() {
 	const [ totalPM, setTotalPM ] = useState<number>(0);
 	const [ totalProperties, setTotalProperties ] = useState<number>(0);
 	const [ totalFRE, setTotalFRE ] = useState<number>(0);
+	const [ totalFEquity, setTotalFEquity ] = useState<number>(0);
 	const [ totalVehicles, setTotalVehicles ] = useState<number>(0);
 	const [ totalCrypto, setTotalCrypto ] = useState<number>(0);
 	const [ totalSavings, setTotalSavings ] = useState<number>(0);
@@ -429,6 +431,7 @@ function NWContextProvider() {
 		setSavings([ ...(allHoldings?.savings ? allHoldings.savings : []) ]);
 		setLendings([ ...(allHoldings?.lendings ? allHoldings.lendings : []) ]);
 		setOthers([ ...(allHoldings?.other ? allHoldings.other : []) ]);
+		setAngel([ ...(allHoldings?.angel ? allHoldings.angel : []) ]);
 		setLoadingHoldings(false);
 	};
 
@@ -468,7 +471,8 @@ function NWContextProvider() {
 					totalPPF +
 					totalEPF +
 					totalNPS +
-					totalOthers
+					totalOthers +
+					totalAngel
 			);
 		},
 		[
@@ -483,7 +487,8 @@ function NWContextProvider() {
 			totalPPF,
 			totalEPF,
 			totalNPS,
-			totalOthers
+			totalOthers,
+			totalAngel
 		]
 	);
 
@@ -515,15 +520,15 @@ function NWContextProvider() {
 			setTotalInstruments(0);
 			setTotalFGold(0);
 			setTotalFRE(0);
-			setTotalEquity(0);
+			setTotalFEquity(0);
 			setTotalFixed(0);
 			return;
 		}
 		let total = 0;
 		let totalFGold = 0;
 		let totalFRE = 0;
-		let totalEquity = 0;
 		let totalFixed = 0;
+		let totalFEquity = 0;
 		let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
 		if(!cachedData) cachedData = insData;
 		instruments.forEach((instrument: HoldingInput) => {
@@ -534,30 +539,30 @@ function NWContextProvider() {
 				else if(insData[instrument.id].itype && cachedData[instrument.id].itype === InsType.REIT) 
 					totalFRE += value;
 				else if(instrument.type === AssetType.E) 
-					totalEquity += value;
+					totalFEquity += value;
 				else if(instrument.type === AssetType.F)
 					totalFixed += value;
 				else if(instrument.type === AssetType.H) {
 					if(includesAny(instrument.name as string, ["conservative"])) {
 						totalFixed += 0.7 * value;
-						totalEquity += 0.3 * value;
+						totalFEquity += 0.3 * value;
 					} else if(includesAny(instrument.name as string, ["multi-asset"])) {
 						totalFGold += 0.1 * value;
-						totalEquity += 0.6 * value;
+						totalFEquity += 0.6 * value;
 						totalFixed += 0.3 * value;
 					} else if(includesAny(instrument.name as string, ["balanced"])) {
-						totalEquity += 0.6 * value;
+						totalFEquity += 0.6 * value;
 						totalFixed += 0.4 * value;
 					} else {
 						totalFixed += 0.7 * value;
-						totalEquity += 0.3 * value;
+						totalFEquity += 0.3 * value;
 					}
 				}
 			}
 		})
 		setTotalInstruments(total);
 		setTotalFGold(totalFGold);
-		setTotalEquity(totalEquity);
+		setTotalFEquity(totalFEquity);
 		setTotalFixed(totalFixed);
 		setTotalFRE(totalFRE);
 	};
@@ -608,6 +613,10 @@ function NWContextProvider() {
 		setTotalVehicles(0);
 	};
 
+	const priceAngel = () => {
+		setTotalAngel(0);
+	}
+
 	const priceCrypto = () => {
 		if(!crypto.length) {
 			setTotalCrypto(0);
@@ -652,6 +661,10 @@ function NWContextProvider() {
 	};
 
 	useEffect(() => {
+		setTotalEquity(totalAngel + totalFEquity);
+	}, [totalAngel, totalFEquity]);
+
+	useEffect(() => {
 		priceInstruments();
 		pricePM();
 		pricePPF();
@@ -680,6 +693,10 @@ function NWContextProvider() {
 	useEffect(() => {
 		priceCrypto();
 	}, [crypto]);
+
+	useEffect(() => {
+		priceAngel();
+	}, [angel]);
 
 	useEffect(() => {
 		priceOthers();
@@ -803,12 +820,15 @@ function NWContextProvider() {
 				setProperties,
 				others,
 				setOthers,
+				angel,
+				setAngel,
 				totalEquity,
 				totalPGold,
 				totalFGold,
 				totalFixed,
 				totalAlternative,
 				totalFRE,
+				totalFEquity,
 				saveHoldings,
 				childTab,
 				setChildTab,
