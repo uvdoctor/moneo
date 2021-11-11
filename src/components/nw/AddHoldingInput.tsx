@@ -4,7 +4,7 @@ import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { BTC, CRYPTO_TAB, EPF_TAB, NPS_TAB, NWContext, OTHER_TAB, PM_TAB, PPF_TAB, SAV_TAB, VEHICLE_TAB, VPF_TAB } from './NWContext';
+import { ANGEL_TAB, BTC, CRYPTO_TAB, EPF_TAB, NPS_TAB, NWContext, OTHER_TAB, PM_TAB, PPF_TAB, SAV_TAB, VEHICLE_TAB, VPF_TAB } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
 import PurchaseInput from './PurchaseInput';
 import QuantityWithRate from './QuantityWithRate';
@@ -57,7 +57,7 @@ export default function AddHoldingInput({
 	};
 
 	const getNewRec = () => {
-		if (childTab === SAV_TAB) {
+		if (childTab === SAV_TAB || childTab === ANGEL_TAB) {
 			let newRec: HoldingInput = {
 				id: '',
 				qty: quantity,
@@ -182,7 +182,7 @@ export default function AddHoldingInput({
 						setYear={setYear}
 					/>
 				) :
-				childTab===SAV_TAB || childTab === OTHER_TAB || childTab === VEHICLE_TAB ?
+				childTab===SAV_TAB || childTab === OTHER_TAB || childTab === VEHICLE_TAB || childTab === ANGEL_TAB ?
 				<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
 				<p><NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1}  /></p>
 				</>

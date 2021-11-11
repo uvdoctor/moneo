@@ -4,7 +4,7 @@ import { AssetSubType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { EPF_TAB, OTHER_TAB, PPF_TAB, SAV_TAB, VEHICLE_TAB, VPF_TAB } from './NWContext';
+import { ANGEL_TAB, EPF_TAB, OTHER_TAB, PPF_TAB, SAV_TAB, VEHICLE_TAB, VPF_TAB } from './NWContext';
 import QuantityWithRate from './QuantityWithRate';
 
 interface ViewHoldingInputProps {
@@ -75,7 +75,7 @@ export default function ViewHoldingInput({
 					</Fragment>
 				): null}
 			</Col>}
-			{childTab[0] === OTHER_TAB || childTab[0] === SAV_TAB || childTab[0] === PPF_TAB || childTab[0] === EPF_TAB || childTab[0] === VPF_TAB || childTab[0] === VEHICLE_TAB ? 
+			{childTab[0] === OTHER_TAB || childTab[0] === SAV_TAB || childTab[0] === PPF_TAB || childTab[0] === EPF_TAB || childTab[0] === VPF_TAB || childTab[0] === VEHICLE_TAB || childTab[0] === ANGEL_TAB? 
 			<>
 				<Col>
 					<TextInput pre="Name" changeHandler={changeName} value={record.name as string} size={'small'} />
