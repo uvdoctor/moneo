@@ -136,7 +136,7 @@ type Contacts
 		rules: [
 			{ allow: public, provider: iam, operations: [read] }
 			{ allow: private, provider: iam, operations: [create, read] }
-			{ allow: private, operations: [create, read, delete] }
+			{ allow: private, operations: [create, read, update, delete] }
 		]
 	) {
 	email: String!
@@ -470,7 +470,7 @@ type Insurance {
 	premium: Float!
 	sy: Int!
 	ey: Int!
-	yearly: YN!
+	yearly: Boolean!
 	fIds: [String!]!
 	curr: String!
 }
