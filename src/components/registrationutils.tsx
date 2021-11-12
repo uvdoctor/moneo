@@ -2,7 +2,8 @@ import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 import { API } from 'aws-amplify';
-import { ListRegEmailsQuery, ListRegMobsQuery } from '../api/goals';
+import { ListContactssQuery, RegByImQuery, RegByMobQuery } from '../api/goals';
+import { float } from 'aws-sdk/clients/lightsail';
 
 export const doesEmailExist = async (email: string, authMode?: string) => {
 	let nextToken = null;
@@ -10,13 +11,15 @@ export const doesEmailExist = async (email: string, authMode?: string) => {
 		do {
 			let variables: any = { limit: 20000, email: email };
 			if (nextToken) variables.nextToken = nextToken;
-			const { data: { listRegEmails } } = (await API.graphql({
-				query: queries.listRegEmails,
+			const { data: { listContactss } } = (await API.graphql({
+				query: queries.listContactss,
 				variables: variables,
 				authMode: authMode === 'AWS_IAM' ? GRAPHQL_AUTH_MODE.AWS_IAM :GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
-			})) as { data: ListRegEmailsQuery };
-			if(listRegEmails?.items?.length) return true;
-			nextToken = listRegEmails?.nextToken;
+			})) as { data: ListContactssQuery };
+			console.log(listContactss?.items);
+			
+			if(listContactss?.items?.length) return true;
+			nextToken = listContactss?.nextToken;
 		} while (nextToken);
 		return false;
 	} catch (e) {
@@ -24,18 +27,19 @@ export const doesEmailExist = async (email: string, authMode?: string) => {
 	}
 };
 
-export const doesMobileExist = async (mob: number) => {
+export const doesMobExist = async (mob: float) => {
 	let nextToken = null;
 	try {
 		do {
 			let variables: any = { limit: 20000, mob: mob };
 			if (nextToken) variables.nextToken = nextToken;
-			const { data: { listRegMobs } } = (await API.graphql({
-				query: queries.listRegMobs,
+			const { data: { regByMob } } = (await API.graphql({
+				query: queries.regByMob,
 				variables: variables,
-			})) as { data: ListRegMobsQuery };
-			if(listRegMobs?.items?.length) return true;
-			nextToken = listRegMobs?.nextToken;
+			})) as { data: RegByMobQuery };
+			console.log(regByMob?.items);
+			if(regByMob?.items?.length) return true;
+			nextToken = regByMob?.nextToken;
 		} while (nextToken);
 		return false;
 	} catch (e) {
@@ -43,10 +47,30 @@ export const doesMobileExist = async (mob: number) => {
 	}
 };
 
-export const addEmail = async (email: string, notify: string) => {
+export const doesImExist = async (im: float) => {
+	let nextToken = null;
+	try {
+		do {
+			let variables: any = { limit: 20000, im: im };
+			if (nextToken) variables.nextToken = nextToken;
+			const { data: { regByIM } } = (await API.graphql({
+				query: queries.regByIm,
+				variables: variables,
+			})) as { data: RegByImQuery };
+			console.log(regByIM?.items);
+			if(regByIM?.items?.length) return true;
+			nextToken = regByIM?.nextToken;
+		} while (nextToken);
+		return false;
+	} catch (e) {
+		console.log('Error while checking if email address is unique: ', e);
+	}
+};
+
+export const createContact = async (email: string, notify: boolean) => {
 	try {
 		const data = await API.graphql({
-			query: mutations.createRegEmail,
+			query: mutations.createContacts,
 			variables: { input: { email: email, notify: notify } },
 		});
 		console.log(data);
@@ -55,11 +79,11 @@ export const addEmail = async (email: string, notify: string) => {
 	}
 };
 
-export const addMobile = async (mob: number, notify: string, cc:number) => {
+export const updateMobInContact = async (email:string, mob: float) => {
 	try {
 		const data = await API.graphql({
-			query: mutations.createRegMob,
-			variables: { input: { mob: mob, notify: notify, cc:cc } },
+			query: mutations.updateContacts,
+			variables: { input: { email, mob } },
 		});
 		console.log(data);
 	} catch (e) {
@@ -67,26 +91,38 @@ export const addMobile = async (mob: number, notify: string, cc:number) => {
 	}
 };
 
-export const deleteEmail = async (email: string) => {
+export const updateImInContact = async (email: string, im: float) => {
 	try {
 		const data = await API.graphql({
-			query: mutations.deleteRegEmail,
-			variables: { input: { email: email } },
+			query: mutations.updateContacts,
+			variables: { input: { email, im } },
 		});
 		console.log(data);
 	} catch (e) {
-		console.log('Error while deleting email in table', e);
+		console.log('Error while adding im in table', e);
 	}
 };
 
-export const deleteMobile = async (mob: number) => {
+export const updateEmailInContact = async (email: string, mob: float, im: float, notify: boolean ) => {
 	try {
 		const data = await API.graphql({
-			query: mutations.deleteRegMob,
-			variables: { input: { mob: mob } },
+			query: mutations.updateContacts,
+			variables: { input: { email, mob, im, notify } }
 		});
 		console.log(data);
 	} catch (e) {
-		console.log('Error while deleting mobile in table', e);
+		console.log('Error while updating email in table', e);
+	}
+};
+
+export const deleteContact = async (email: string) => {
+	try {
+		const data = await API.graphql({
+			query: mutations.deleteContacts,
+			variables: { input: { email } },
+		});
+		console.log(data);
+	} catch (e) {
+		console.log('Error while deleting contacts in table', e);
 	}
 };

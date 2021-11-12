@@ -1,4 +1,4 @@
-import { Alert, Col, Row, notification, Skeleton, Tabs, PageHeader, Button } from "antd";
+import { Alert, Col, Row, notification, Skeleton, Tabs, PageHeader, Button, Checkbox } from "antd";
 import React, { useContext, useState, useEffect } from "react";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { Auth } from "aws-amplify";
@@ -16,7 +16,7 @@ import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
-import { addMobile, deleteEmail, deleteMobile, doesEmailExist, doesMobileExist } from "../registrationutils";
+import { doesEmailExist, doesImExist, doesMobExist, updateImInContact, updateMobInContact } from "../registrationutils";
 
 const dateFormat = "yyyy-MM-dd";
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
@@ -30,6 +30,7 @@ export default function UserSettings(): JSX.Element {
   const [lastName, setLastName] = useState<string>('');
   const [prefuser, setPrefuser] = useState<string>('');
   const [dob, setDob] = useState<string>();
+  const [whatsapp, setWhatsapp] = useState<any>('');
   const { TabPane } = Tabs;
   const fsb = useFullScreenBrowser();
 
@@ -43,22 +44,37 @@ export default function UserSettings(): JSX.Element {
 
   const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
 
-  const notify = !user?.attributes['custom:notify'] || user?.attributes['custom:notify'] ==='N' ? 'N' : 'Y';
+  const notify = !user?.attributes['custom:notify'] || user?.attributes['custom:notify'] ==='N' ? false : true;
 
   const disableButton = (prevValue: any, currValue: any) =>
     prevValue === currValue ? true : error.length > 0 ? true : false;
 
   const updatePhoneNumber = async () => {
     try {
-      const prevMob = user?.attributes.phone_number.replace(counCode?.value, "");
-      const exist = await doesMobileExist(Number(mobile));
+      const mob = parseFloat(counCode?.value.slice(1)+mobile);
+      const exist = await doesMobExist(mob);
       if(exist) { failure('Please use another mobile as this one is already used by another account.');
       return false;
       }
       await Auth.updateUserAttributes(user, { phone_number: `${counCode?.value}${mobile}` });
       success("Mobile number updated successfully. Enter Otp to verify");
-      await deleteMobile(Number(prevMob));
-      await addMobile(Number(mobile), notify, Number(counCode?.value.slice(1)))
+      await updateMobInContact(user?.attributes.email, mob);
+      return true;
+    } catch (error) {
+      failure(`Unable to update, ${error}`);
+    }
+  };
+
+  const updateWhatsapp = async () => {
+    try {
+      const im = parseFloat(whatsapp);
+      const exist = await doesImExist(im);
+      if(exist) { failure('Please use another whatsapp number as this one is already used by another account.');
+      return false;
+      }
+      await Auth.updateUserAttributes(user, { nickname: whatsapp });
+      success("Whatsapp number updated successfully. Enter Otp to verify");
+      await updateImInContact(user?.attributes.email, im);
       return true;
     } catch (error) {
       failure(`Unable to update, ${error}`);
@@ -67,19 +83,26 @@ export default function UserSettings(): JSX.Element {
 
   const updateEmail = async () => {
     try {
-      const prevEmail = user?.attributes.email;
       const exist = await doesEmailExist(email);
       if(exist) { failure('Please use another email address as this one is already used by another account.');
       return false;
       }
       await Auth.updateUserAttributes(user, { email: email });
       success("Email updated successfully. Enter Otp to verify");
-      await deleteEmail(prevEmail);
       return true;
     } catch (error) {
       failure(`Unable to update, ${error}`);
     }
   };
+
+  const updateImIfSameAsMob = async () => {
+    if(user?.attributes.phone_number) {
+      setWhatsapp(mobile);
+      await updateWhatsapp();
+    }else{
+      failure('Update your mobile, your mobile number is empty.');
+    }
+  }
 
   const updatePrefUsername = async () => {
     try {
@@ -105,8 +128,9 @@ export default function UserSettings(): JSX.Element {
     setName(user?.attributes.name || '');
     setLastName(user?.attributes.family_name || '');
     setDob(user?.attributes.birthdate || '');
-    setMobile(user?.attributes.phone_number ? user?.attributes.phone_number.replace(counCode?.value, "") : '');
-    setPrefuser(user?.attributes.preferred_username)
+    setMobile(user?.attributes.phone_number ? user?.attributes.phone_number.replace(counCode?.value, "") : '' || '');
+    setPrefuser(user?.attributes.preferred_username || '');
+    setWhatsapp(user?.attributes.nickname || '');
   }, [appContextLoaded, counCode?.value, user]);
 
   return (
@@ -258,6 +282,40 @@ export default function UserSettings(): JSX.Element {
                 <p>&nbsp;</p>
                 <Row justify="start">
                   <Col>
+                   <Checkbox
+                    onChange={(e) => 
+                      e.target.checked ? updateImIfSameAsMob() : null
+                    }
+                  >
+                    <strong>Whatsapp number same as mobile number</strong>
+                  </Checkbox>
+                  </Col>
+                </Row>
+                <Row justify="start">
+                  <Col>
+                    <TextInput
+                      pre="Whatsapp"
+                      prefix={counCode?.value}
+                      value={whatsapp}
+                      changeHandler={setWhatsapp}
+                      fieldName="whatsapp"
+                      pattern="^[0-9]"
+                      setError={setError}
+                      minLength={10}
+                      maxLength={10}
+                      post={
+                        <OtpDialogue
+                          disableButton={disableButton(user?.attributes.nickname, whatsapp )}
+                          action={"whatsapp_number"}
+                          onClickAction={updateWhatsapp}
+                        />
+                      }
+                    />
+                  </Col>
+                </Row>
+                <p>&nbsp;</p>
+                <Row justify="start">
+                  <Col>
                     <TextInput
                       pre="Email Id"
                       placeholder={"abc@xyz.com"}
@@ -271,7 +329,9 @@ export default function UserSettings(): JSX.Element {
                           disableButton={disableButton( email, user?.attributes.email )}
                           action={"email"}
                           onClickAction={updateEmail}
-                          attrVal={email}
+                          email={email}
+                          mob={parseFloat(counCode?.value.slice(1)+mobile)}
+                          im={parseFloat(whatsapp)}
                           notify={notify}
                         />
                       }

@@ -7,7 +7,7 @@ import TextInput from '../form/textinput';
 import Auth from '@aws-amplify/auth';
 import { Hub } from '@aws-amplify/core';
 import router from 'next/router';
-import { deleteEmail, deleteMobile } from '../registrationutils';
+import { deleteContact } from '../registrationutils';
 import { GoalContext } from '../goals/GoalContext';
 import { API, graphqlOperation, Storage } from 'aws-amplify';
 import * as mutations from '../../graphql/mutations';
@@ -96,11 +96,9 @@ export default function DeleteAccount() {
 					await deleteGoal();
 					await deleteHoldings();
 					await deleteFamilyList();
-					const mob = user.attributes.phone_number;
 					await Storage.remove(user.attributes.profile);
 					await Storage.remove(goalImgKey);
-					mob ? await deleteMobile(mob.slice(mob.length - 10)) : null;
-					await deleteEmail(user.attributes.email);
+					await deleteContact(user.attributes.email);
 					user.deleteUser((error: any, data: any) => {
 						if (error) {
 							console.log(error);

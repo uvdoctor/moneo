@@ -32,12 +32,12 @@ const getDataFromEventAndPush = (event, context) => {
 			if (event.request.userAttributes['email_verified'] === 'true') {
 				let notify = event.request.userAttributes['custom:notify'];
 				let email = event.request.userAttributes.email;
-				const table = await getTableNameFromInitialWord('RegEmail')
+				const table = await getTableNameFromInitialWord('Contacts')
 				let params = {
 					Item: {
 						__typename: { S: 'RegEmail' },
 						email: { S: email },
-						notify: { S: !notify || notify.length === 1 ? 'N' : 'Y' },
+						notify: { S: !notify || notify.length === 1 ? false : true },
 						createdAt: { S: date.toISOString() },
 						updatedAt: { S: date.toISOString() }
 					},

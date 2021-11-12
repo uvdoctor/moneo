@@ -117,7 +117,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
         attributes: {
           email: email,
           "custom:tc": new Date().toISOString(),
-          "custom:notify": notify ? new Date().toISOString() : "N",
+          "custom:notify": notify ? new Date().toISOString() : false
         },
       })
         .then(async (response) => {
@@ -132,7 +132,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
               attributes: {
                 email: email,
                 "custom:tc": new Date().toISOString(),
-                "custom:notify": notify ? new Date().toISOString() : "N",
+                "custom:notify": notify ? new Date().toISOString() : false,
               },
             },
           });
