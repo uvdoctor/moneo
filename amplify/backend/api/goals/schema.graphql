@@ -4,11 +4,6 @@ enum LMH {
 	H
 }
 
-enum YN {
-	Y
-	N
-}
-
 type Name {
 	fn: String!
 	ln: String
@@ -109,7 +104,7 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
 	tgts: [Target!]
 	loan: Loan
 	imp: LMH!
-	met: YN
+	met: Boolean
 	prob: LMH
 	manual: Int!
 	amper: Float
@@ -325,8 +320,8 @@ type INBond
 	mm: Int
 	my: Int
 	rate: Float!
-	fr: YN!
-	tf: YN!
+	fr: Boolean!
+	tf: Boolean!
 	fv: Int
 	cr: CreditRating
 	crstr: String
@@ -353,7 +348,7 @@ type INMutual
 	price: Float!
 	mftype: MFSchemeType!
 	mcap: MCap
-	tf: YN
+	tf: Boolean
 }
 
 enum NPSPFM {
