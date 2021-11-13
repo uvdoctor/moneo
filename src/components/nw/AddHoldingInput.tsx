@@ -4,7 +4,20 @@ import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { ANGEL_TAB, BTC, CRYPTO_TAB, EPF_TAB, NPS_TAB, NWContext, OTHER_TAB, PM_TAB, PPF_TAB, SAV_TAB, VEHICLE_TAB, VPF_TAB } from './NWContext';
+import {
+	ANGEL_TAB,
+	BTC,
+	CRYPTO_TAB,
+	EPF_TAB,
+	NPS_TAB,
+	NWContext,
+	OTHER_TAB,
+	PM_TAB,
+	PPF_TAB,
+	SAV_TAB,
+	VEHICLE_TAB,
+	VPF_TAB
+} from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
 import PurchaseInput from './PurchaseInput';
 import QuantityWithRate from './QuantityWithRate';
@@ -57,64 +70,38 @@ export default function AddHoldingInput({
 	};
 
 	const getNewRec = () => {
-		if (childTab === SAV_TAB || childTab === ANGEL_TAB) {
-			let newRec: HoldingInput = {
-				id: '',
-				qty: quantity,
-				curr: selectedCurrency,
-				name: name,
-				fIds: [ memberKey ]
-			};
-			return newRec;
+		let newRec: HoldingInput = { id: '', qty: 0, fIds: [] };
+		switch (childTab) {
+			case NPS_TAB:
+				newRec.subt = subtype;
+				break;
+			case OTHER_TAB:
+				newRec.subt = subtype;
+				break;
+			case PPF_TAB:
+			case EPF_TAB:
+			case VPF_TAB:
+				newRec.chg = chg; 
+				newRec.chgF = childTab === PPF_TAB ? 1 : 12;
+				newRec.type = AssetType.F;
+				newRec.subt = childTab;
+				break;
+			case VEHICLE_TAB:
+				newRec.chg = 15;
+				newRec.chgF = 1;
+				newRec.type = AssetType.A;
+				newRec.subt = subtype;
+				break;
+			case PM_TAB:
+				newRec.type = AssetType.A;
+				newRec.subt = subtype;
+				break;
+			case CRYPTO_TAB:
+				newRec.type = AssetType.A;
+				newRec.subt = subtype;
+				break;
 		}
-		if (childTab === OTHER_TAB) {
-			let newRec: HoldingInput = {
-				id: '',
-				qty: quantity,
-				subt: subtype,
-				fIds: [ memberKey ],
-				name: name,
-				curr: selectedCurrency
-			};
-			return newRec;
-		}
-		if (childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ) {
-			let newRec: HoldingInput = {
-				id: '',
-				qty: quantity,
-				curr: selectedCurrency,
-				name: name,
-				fIds: [ memberKey ],
-				chg: chg,
-				chgF: childTab === PPF_TAB ? 1 : 12,
-				type: AssetType.F,
-				subt: childTab
-			};
-			return newRec;
-		}
-		if(childTab === VEHICLE_TAB){
-		let newRec: HoldingInput = {
-			id: '',
-			qty: quantity,
-			curr: selectedCurrency,
-			name: name,
-			fIds: [ memberKey ],
-			chg: 15,
-			chgF: 1,
-			type: AssetType.A,
-			subt: subtype
-		};
-		return newRec;
-	}
-		let newRec: HoldingInput = {
-			id: '',
-			type: AssetType.A,
-			subt: subtype,
-			fIds: [ memberKey ],
-			qty: quantity,
-			curr: childTab === PM_TAB || childTab === CRYPTO_TAB ? 'USD' : selectedCurrency,
-			name: name
-		};
+		childTab === PM_TAB || childTab === CRYPTO_TAB ? (newRec.curr = 'USD') : (newRec.curr = selectedCurrency);
 		if (purchase) {
 			newRec.pur = [
 				{
@@ -125,6 +112,9 @@ export default function AddHoldingInput({
 				}
 			];
 		}
+		newRec.qty = quantity;
+		newRec.name = name;
+		newRec.fIds = [ memberKey ];
 		return newRec;
 	};
 
@@ -150,60 +140,60 @@ export default function AddHoldingInput({
 	};
 
 	return (
-		<div style={{ textAlign: 'center' }}>
-			<p>
-				{categoryOptions && <SelectInput
-					pre=""
-					value={subtype}
-					options={categoryOptions}
-					changeHandler={(val: string) => changeSubtype(val)}
-				/>}
-				{subCategoryOptions ? subCategoryOptions[subtype as string] && (	
-					<Fragment>
-						&nbsp;
-						<SelectInput
-							pre=""
-							value={name as string}
-							options={subCategoryOptions[subtype as string]}
-							changeHandler={(val: string) => changeName(val)}
-							post={subtype === AssetSubType.Gold ? 'karat' : ''}
-						/>
-					</Fragment>
-				): null}
-			</p>
-			<p>
-				{purchase ? (
-					<PurchaseInput
-						amount={amount}
-						setAmount={setAmount}
-						month={month}
-						setMonth={setMonth}
-						year={year}
-						setYear={setYear}
+	<div style={{ textAlign: 'center' }}>
+		<p>
+			{categoryOptions && <SelectInput
+				pre=""
+				value={subtype}
+				options={categoryOptions}
+				changeHandler={(val: string) => changeSubtype(val)}
+			/>}
+			{subCategoryOptions ? subCategoryOptions[subtype as string] && (
+				<Fragment>
+					&nbsp;
+					<SelectInput
+						pre=""
+						value={name as string}
+						options={subCategoryOptions[subtype as string]}
+						changeHandler={(val: string) => changeName(val)}
+						post={subtype === AssetSubType.Gold ? 'karat' : ''}
 					/>
-				) :
-				childTab===SAV_TAB || childTab === OTHER_TAB || childTab === VEHICLE_TAB || childTab === ANGEL_TAB ?
-				<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
-				<p><NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1}  /></p>
-				</>
-				: 
-				childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ? 
-				<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
-				<p><NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={chg} step={0.1}/></p>
-				<p><NumberInput pre={'Amount'} min={10} max={100000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1} post={childTab === PPF_TAB ? '(Annually)' : '(Monthly)'} /></p>
-				</> :
-				(
-					<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} />
-				)}
-			</p>
-			<p>
-				<SelectInput
-					pre={<UserOutlined />}
-					value={memberKey}
-					options={getFamilyOptions(allFamily)}
-					changeHandler={(key: string) => changeMember(key)}
+				</Fragment>
+			): null}
+		</p>
+		<p>
+			{purchase ? (
+				<PurchaseInput
+					amount={amount}
+					setAmount={setAmount}
+					month={month}
+					setMonth={setMonth}
+					year={year}
+					setYear={setYear}
 				/>
-			</p>
-		</div>
-	);
+			) :
+			childTab===SAV_TAB || childTab === OTHER_TAB || childTab === VEHICLE_TAB || childTab === ANGEL_TAB ?
+			<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
+			<p><NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1}  /></p>
+			</>
+			:
+			childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ?
+			<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
+			<p><NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={chg} step={0.1}/></p>
+			<p><NumberInput pre={'Amount'} min={10} max={100000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1} post={childTab === PPF_TAB ? '(Annually)' : '(Monthly)'} /></p>
+			</> :
+			(
+				<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} />
+			)}
+		</p>
+		<p>
+			<SelectInput
+				pre={<UserOutlined />}
+				value={memberKey}
+				options={getFamilyOptions(allFamily)}
+				changeHandler={(key: string) => changeMember(key)}
+			/>
+		</p>
+	</div>
+	)
 }
