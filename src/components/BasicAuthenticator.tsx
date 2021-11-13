@@ -168,7 +168,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 
   useEffect(() => {
     return onAuthUIStateChange((nextAuthState) => {
-      alert(nextAuthState);
       setAuthState(nextAuthState);
     });
   }, []);
