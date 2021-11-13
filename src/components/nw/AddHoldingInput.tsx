@@ -5,7 +5,6 @@ import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
 import {
-	ANGEL_TAB,
 	BTC,
 	CRYPTO_TAB,
 	EPF_TAB,
@@ -46,28 +45,6 @@ export default function AddHoldingInput({
 	const [ amount, setAmount ] = useState<number>(0);
 	const [ month, setMonth ] = useState<number>(1);
 	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
-
-	const changeName = (val: string) => {
-		setName(val);
-		let rec = getNewRec();
-		rec.name = val;
-		setInput(rec);
-	};
-
-	const changeChg = (val: number) => {
-		setChg(val);
-		let rec = getNewRec();
-		rec.chg = val;
-		setInput(rec);
-	};
-
-	const changeQuantity = (qty: number) => {
-		setQuantity(qty);
-		disableOk(qty <= 0);
-		let rec = getNewRec();
-		rec.qty = qty;
-		setInput(rec);
-	};
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fIds: [] };
@@ -118,6 +95,28 @@ export default function AddHoldingInput({
 		return newRec;
 	};
 
+	const changeName = (val: string) => {
+		setName(val);
+		let rec = getNewRec();
+		rec.name = val;
+		setInput(rec);
+	};
+
+	const changeChg = (val: number) => {
+		setChg(val);
+		let rec = getNewRec();
+		rec.chg = val;
+		setInput(rec);
+	};
+
+	const changeQuantity = (qty: number) => {
+		setQuantity(qty);
+		disableOk(qty <= 0);
+		let rec = getNewRec();
+		rec.qty = qty;
+		setInput(rec);
+	};
+
 	const changeSubtype = (subtype: string) => {
 		setSubtype(subtype);
 		if (subCategoryOptions) {
@@ -162,29 +161,21 @@ export default function AddHoldingInput({
 			): null}
 		</p>
 		<p>
-			{purchase ? (
-				<PurchaseInput
-					amount={amount}
-					setAmount={setAmount}
-					month={month}
-					setMonth={setMonth}
-					year={year}
-					setYear={setYear}
-				/>
-			) :
-			childTab===SAV_TAB || childTab === OTHER_TAB || childTab === VEHICLE_TAB || childTab === ANGEL_TAB ?
-			<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
-			<p><NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1}  /></p>
-			</>
-			:
-			childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ?
-			<><p><TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'}/></p>
-			<p><NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={chg} step={0.1}/></p>
-			<p><NumberInput pre={'Amount'} min={10} max={100000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} step={1} post={childTab === PPF_TAB ? '(Annually)' : '(Monthly)'} /></p>
-			</> :
-			(
-				<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} />
-			)}
+			{purchase &&  <PurchaseInput amount={amount} setAmount={setAmount} month={month} setMonth={setMonth} year={year} setYear={setYear}/>}
+			
+			{childTab === PM_TAB || childTab === NPS_TAB || childTab === CRYPTO_TAB ? null : 
+			   <TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} /> }
+			
+			{ childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ?
+				<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={chg} step={0.1} />
+				: null
+			}
+			
+			{childTab === PM_TAB || childTab === NPS_TAB || childTab === CRYPTO_TAB ? 
+				<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} /> 
+			  : <NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} 
+			  	step={1} post={childTab === PPF_TAB ? '(Annually)' : childTab === EPF_TAB || childTab === VPF_TAB ? '(Monthly)' : ''}  />
+			}
 		</p>
 		<p>
 			<SelectInput
