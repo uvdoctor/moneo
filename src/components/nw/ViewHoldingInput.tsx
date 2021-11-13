@@ -1,10 +1,10 @@
 import { Col } from 'antd';
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { AssetSubType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { ANGEL_TAB, EPF_TAB, OTHER_TAB, PPF_TAB, SAV_TAB, VEHICLE_TAB, VPF_TAB } from './NWContext';
+import { CRYPTO_TAB, EPF_TAB, NPS_TAB, NWContext, PM_TAB, PPF_TAB, VPF_TAB } from './NWContext';
 import QuantityWithRate from './QuantityWithRate';
 
 interface ViewHoldingInputProps {
@@ -13,7 +13,6 @@ interface ViewHoldingInputProps {
 	categoryOptions: any;
 	subCategoryOptions: any;
 	record: HoldingInput;
-	childTab?: any;
 }
 
 export default function ViewHoldingInput({
@@ -22,8 +21,9 @@ export default function ViewHoldingInput({
 	categoryOptions,
 	subCategoryOptions,
 	record,
-	childTab
 }: ViewHoldingInputProps) {
+	const { childTab }: any = useContext(NWContext);
+	
 	const changeName = (e: any) => {
 		record.name = e.target.value;
 		changeData([ ...data ]);
@@ -75,14 +75,16 @@ export default function ViewHoldingInput({
 					</Fragment>
 				): null}
 			</Col>}
-			{childTab[0] === OTHER_TAB || childTab[0] === SAV_TAB || childTab[0] === PPF_TAB || childTab[0] === EPF_TAB || childTab[0] === VPF_TAB || childTab[0] === VEHICLE_TAB || childTab[0] === ANGEL_TAB? 
-			<>
-				<Col>
+			{childTab === CRYPTO_TAB || childTab === NPS_TAB || childTab === PM_TAB  ? 
+			<Col>
+				<QuantityWithRate quantity={record.qty} name={record.name as string} subtype={record.subt as string} onChange={changeQty} />
+			</Col> : 
+			    <><Col>
 					<TextInput pre="Name" changeHandler={changeName} value={record.name as string} size={'small'} />
 				</Col>
-				{childTab[0] === PPF_TAB || childTab[0] === EPF_TAB || childTab[0] === VPF_TAB && <Col>
+				{childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ? <Col>
 					<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={record.chg as number} step={0.1} hidSlider/>
-				</Col>}
+				</Col>: null}
 				<Col>
 					<NumberInput
 						pre={'Amount'}
@@ -94,10 +96,8 @@ export default function ViewHoldingInput({
 						step={1}
 						hidSlider />
 				</Col>
-				</> :
-			<Col>
-				<QuantityWithRate quantity={record.qty} name={record.name as string} subtype={record.subt as string} onChange={changeQty} />
-			</Col>}
+				</>
+			}
 		</Fragment>
 	);
 }
