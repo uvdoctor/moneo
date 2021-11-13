@@ -74,13 +74,13 @@ const calc = {
   },
 
   calcFR: (frate) => {
-    if (frate === "RESET") return "Y";
-    return "N";
+    if (frate === "RESET") return true;
+    return false;
   },
 
   calcTF: (subt) => {
-    if (subt === "IF" || subt === "PF") return "Y";
-    return "N";
+    if (subt === "IF" || subt === "PF") return true;
+    return false;
   },
 
   calcCR: (crstr) => {

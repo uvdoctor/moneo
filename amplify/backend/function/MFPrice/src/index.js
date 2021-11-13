@@ -40,7 +40,7 @@ const getData = () => {
 				price: price,
 				mftype: mfType(element['Scheme Type']),
 				mcap: mCap(element['Scheme Type']),
-				tf: element['Scheme Name'].includes('Tax') ? 'Y' : 'N',
+				tf: element['Scheme Name'].includes('Tax') ? true : false,
 			};
 			dataToPush = appendGenericFields(dataToPush, table)
 			batches.push({ PutRequest: { Item: dataToPush } });
