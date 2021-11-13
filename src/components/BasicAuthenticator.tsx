@@ -32,26 +32,26 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   const [authState, setAuthState] = useState<string>("");
   const [form] = useForm();
 
-  const validateCaptcha = async (action: string) => {
-    //@ts-ignore
-    const token = await executeRecaptcha(action);
-    let result = await fetch("/api/verifycaptcha", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify({
-        token: token,
-      }),
-    })
-      .then((captchRes: any) => captchRes.json())
-      .then((data: any) => data.success)
-      .catch((e: any) => {
-        console.log("error while validating captcha ", e);
-        return false;
-      });
-    return result;
-  };
+  // const validateCaptcha = async (action: string) => {
+  //   //@ts-ignore
+  //   const token = await executeRecaptcha(action);
+  //   let result = await fetch("/api/verifycaptcha", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json;charset=utf-8",
+  //     },
+  //     body: JSON.stringify({
+  //       token: token,
+  //     }),
+  //   })
+  //     .then((captchRes: any) => captchRes.json())
+  //     .then((data: any) => data.success)
+  //     .catch((e: any) => {
+  //       console.log("error while validating captcha ", e);
+  //       return false;
+  //     });
+  //   return result;
+  // };
 
   const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
 
