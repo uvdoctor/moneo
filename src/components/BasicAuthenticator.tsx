@@ -117,7 +117,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
         attributes: {
           email: email,
           "custom:tc": new Date().toISOString(),
-          "custom:notify": notify ? new Date().toISOString() : false
+          "custom:notify": notify ? new Date().toISOString() : 'N'
         },
       })
         .then(async (response) => {
@@ -132,7 +132,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
               attributes: {
                 email: email,
                 "custom:tc": new Date().toISOString(),
-                "custom:notify": notify ? new Date().toISOString() : false,
+                "custom:notify": notify ? new Date().toISOString() : 'N',
               },
             },
           });
@@ -166,6 +166,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 
   useEffect(() => {
     return onAuthUIStateChange((nextAuthState) => {
+      console.log(nextAuthState);
       setAuthState(nextAuthState);
     });
   }, []);
