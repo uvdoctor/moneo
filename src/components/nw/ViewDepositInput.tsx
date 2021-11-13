@@ -81,10 +81,10 @@ export default function ViewDepositInput({ data, changeData, record, categoryOpt
 				<label>Duration</label><InputNumber onChange={changeDuration} value={record.months as number} />
 				</Col>
 		    <Col>
-		   		<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={record.rate as number} step={0.1} hidSlider/>
+		   		<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={record.rate as number} step={0.1} noSlider/>
 			</Col>
 			<Col>
-				<NumberInput pre={'Amount'} min={10} max={100000} value={record.amt as number} changeHandler={changeAmount} currency={record.curr as string} step={1} hidSlider/>
+				<NumberInput pre={'Amount'} min={10} max={100000} value={record.amt as number} changeHandler={changeAmount} currency={record.curr as string} step={1} noSlider/>
 			</Col>
 		</Fragment>
 	);

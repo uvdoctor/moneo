@@ -167,14 +167,14 @@ export default function AddHoldingInput({
 			   <TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} /> }
 			
 			{ childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ?
-				<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={chg} step={0.1} />
+				<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={20} value={chg} step={0.1} noSlider />
 				: null
 			}
 			
 			{childTab === PM_TAB || childTab === NPS_TAB || childTab === CRYPTO_TAB ? 
 				<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} /> 
 			  : <NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} 
-			  	step={1} post={childTab === PPF_TAB ? '(Annually)' : childTab === EPF_TAB || childTab === VPF_TAB ? '(Monthly)' : ''}  />
+			  	step={1} post={childTab === PPF_TAB ? '(Annually)' : childTab === EPF_TAB || childTab === VPF_TAB ? '(Monthly)' : ''}  noSlider />
 			}
 		</p>
 		<p>

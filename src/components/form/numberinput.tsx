@@ -19,7 +19,7 @@ interface NumberInputProps {
 	feedback?: any;
 	additionalMarks?: Array<number>;
 	noRangeFactor?: boolean;
-	hidSlider?: boolean;
+	noSlider?: boolean;
 }
 
 export default function NumberInput(props: NumberInputProps) {
@@ -166,7 +166,7 @@ export default function NumberInput(props: NumberInputProps) {
 					)}
 					<Col span={props.currency || props.step < 1 ? 13 : 24}>
 						{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
-						{props.hidSlider ? null : (
+						{props.noSlider ? null : (
 							<Slider
 								min={props.min * rangeFactor}
 								max={props.max * rangeFactor}

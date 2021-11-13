@@ -83,7 +83,7 @@ export default function ViewHoldingInput({
 					<TextInput pre="Name" changeHandler={changeName} value={record.name as string} size={'small'} />
 				</Col>
 				{childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ? <Col>
-					<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={record.chg as number} step={0.1} hidSlider/>
+					<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={record.chg as number} step={0.1} noSlider/>
 				</Col>: null}
 				<Col>
 					<NumberInput
@@ -94,7 +94,7 @@ export default function ViewHoldingInput({
 						changeHandler={changeQty}
 						currency={record.curr as string}
 						step={1}
-						hidSlider />
+						noSlider />
 				</Col>
 				</>
 			}
