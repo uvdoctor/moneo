@@ -2,17 +2,16 @@ const AWS = require('aws-sdk');
 const ddb = new AWS.DynamoDB();
 
 const getTableNameFromInitialWord = async (tableInitial) => {
-	var params = {
-		ExclusiveStartTableName: tableInitial,
-		Limit: 1
-	  };
-	try {
-	   const table = await ddb.listTables(params).promise();
-       console.log(table);
-	   return table.TableNames[0];
-	} catch(err){
-		console.log(err);
-	};
+	return new Promise(async (resolve, reject) => {
+		var params = { ExclusiveStartTableName: tableInitial, Limit: 1 };
+		try {
+			const table = await ddb.listTables(params).promise();
+			resolve(table.TableNames[0]);
+		} catch (err) {
+			console.log(err);
+			reject(err);
+		}
+	});
 };
 
 const pushDataSingly = (params, email) => {
@@ -33,7 +32,7 @@ const getDataFromEventAndPush = (event, context) => {
 			if (event.request.userAttributes['email_verified'] === 'true') {
 				let notify = event.request.userAttributes['custom:notify'];
 				let email = event.request.userAttributes.email;
-				const table = await getTableNameFromInitialWord('Contacts')
+				const table = await getTableNameFromInitialWord('Contacts');
 				let params = {
 					Item: {
 						__typename: { S: 'Contacts' },

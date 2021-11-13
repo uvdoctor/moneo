@@ -4,7 +4,7 @@ describe('Inserting Data', () => {
 	test('Insert', async () => {
 		const context = {
 			done: (abc, event) => {
-				console.log(event);
+				return event;
 			}
 		};
 		const event = {
@@ -17,13 +17,12 @@ describe('Inserting Data', () => {
 			},
 			response: {}
 		};
-		const data = await getDataFromEventAndPush(event, context);
-		pushDataSingly = jest.fn().mockImplementation(() => {
-			return 3;
+		const pushDataSingly = jest.fn().mockImplementation(() => {
+			return 'Success';
 		});
-		getTableNameFromInitialWord = jest.fn().mockImplementation(() => {
-			return 5;
+		const getTableNameFromInitialWord = jest.fn().mockImplementation(() => {
+			return 'Contacts';
 		});
-		expect(await getDataFromEventAndPush()).toEqual(3);
+		expect(getDataFromEventAndPush(event, context)).toEqual(3);
 	},10000);
 });
