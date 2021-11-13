@@ -11,13 +11,13 @@ import Nav from "./Nav";
 import { AppContextProvider } from "./AppContext";
 import { Form, Input, Button } from "antd";
 import router from "next/router";
-// import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
 
 export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
-  // const { executeRecaptcha } = useGoogleReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [emailError, setEmailError] = useState<any>("");
@@ -32,26 +32,26 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   const [authState, setAuthState] = useState<string>("");
   const [form] = useForm();
 
-  // const validateCaptcha = async (action: string) => {
-  //   //@ts-ignore
-  //   const token = await executeRecaptcha(action);
-  //   let result = await fetch("/api/verifycaptcha", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json;charset=utf-8",
-  //     },
-  //     body: JSON.stringify({
-  //       token: token,
-  //     }),
-  //   })
-  //     .then((captchRes: any) => captchRes.json())
-  //     .then((data: any) => data.success)
-  //     .catch((e: any) => {
-  //       console.log("error while validating captcha ", e);
-  //       return false;
-  //     });
-  //   return result;
-  // };
+  const validateCaptcha = async (action: string) => {
+    //@ts-ignore
+    const token = await executeRecaptcha(action);
+    let result = await fetch("/api/verifycaptcha", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify({
+        token: token,
+      }),
+    })
+      .then((captchRes: any) => captchRes.json())
+      .then((data: any) => data.success)
+      .catch((e: any) => {
+        console.log("error while validating captcha ", e);
+        return false;
+      });
+    return result;
+  };
 
   const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
 
@@ -61,7 +61,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       Hub.dispatch("auth", { event: "signOut" });
     } catch (error) {
       console.log("error signing out: ", error);
-    } finally {
+    } 
+    finally {
       router.reload();
     }
   };
@@ -82,8 +83,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   }, []);
 
   const verifyEmail = async () => {
-    // validateCaptcha("NextButton_change").then(async (success: boolean) => {
-      // if (!success) return;
+    validateCaptcha("NextButton_change").then(async (success: boolean) => {
+      if (!success) return;
       setLoading(true);
       setEmailError("");
       let exists = await doesEmailExist(email, "AWS_IAM");
@@ -97,7 +98,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
         );
       }
       setLoading(false);
-    // });
+    });
   };
 
   const onBackClick = () => {
@@ -107,8 +108,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   };
 
   const handleRegistrationSubmit = async () => {
-    // validateCaptcha("OnSubmit_change").then(async (success: boolean) => {
-    //   if (!success) return;
+    validateCaptcha("OnSubmit_change").then(async (success: boolean) => {
+      if (!success) return;
       setLoading(true);
       const username = generateFromEmail(email);
       Auth.signUp({
@@ -141,7 +142,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
           setLoading(false);
           setError(error.message);
         });
-    // });
+    });
   };
 
   const handleFormChange = () => {
@@ -174,7 +175,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   return (
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
-      <AmplifyAuthenticator>
+      <AmplifyAuthenticator initialAuthState={AuthState.SignIn}>
         {authState === AuthState.SignUp && (
           <AmplifySection slot="sign-up">
             <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
