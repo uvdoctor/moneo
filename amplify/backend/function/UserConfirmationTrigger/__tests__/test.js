@@ -23,6 +23,6 @@ describe('Inserting Data', () => {
 		const getTableNameFromInitialWord = jest.fn().mockImplementation(() => {
 			return 'Contacts';
 		});
-		expect(getDataFromEventAndPush(event, context)).toEqual(3);
+		expect(getDataFromEventAndPush(event, context)).toEqual({});
 	},10000);
 });

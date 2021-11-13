@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 var dynamodb = new AWS.DynamoDB();
 const docClient = new AWS.DynamoDB.DocumentClient();
 
-const getTableNameFromInitialWord = async (tableInitial) => {
+const getTableNameFromInitialWord = (tableInitial) => {
 	return new Promise(async (resolve, reject) => {
 		var params = { ExclusiveStartTableName: tableInitial, Limit: 1 };
 		try {
