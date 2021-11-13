@@ -74,11 +74,12 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     let name = nameParts.replace(/[&/\\#,+()$~%._@'":*?<>{}]/g, "");
     if (name.length > 5) name = name.substring(0, 5);
     return name + ("" + Math.random()).substring(2, 7);
-  };
+  }
 
   useEffect(() => {
     Hub.listen("auth", initUser);
-    initUser();
+    initUser()
+    alert(user);
     return () => Hub.remove("auth", initUser);
   }, []);
 
