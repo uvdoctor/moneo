@@ -11,13 +11,13 @@ import Nav from "./Nav";
 import { AppContextProvider } from "./AppContext";
 import { Form, Input, Button } from "antd";
 import router from "next/router";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+// import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
 
 export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
-  const { executeRecaptcha } = useGoogleReCaptcha();
+  // const { executeRecaptcha } = useGoogleReCaptcha();
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [emailError, setEmailError] = useState<any>("");
@@ -81,9 +81,9 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     return () => Hub.remove("auth", initUser);
   }, []);
 
-  const verifyEmail = () => {
-    validateCaptcha("NextButton_change").then(async (success: boolean) => {
-      if (!success) return;
+  const verifyEmail = async () => {
+    // validateCaptcha("NextButton_change").then(async (success: boolean) => {
+      // if (!success) return;
       setLoading(true);
       setEmailError("");
       let exists = await doesEmailExist(email, "AWS_IAM");
@@ -97,7 +97,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
         );
       }
       setLoading(false);
-    });
+    // });
   };
 
   const onBackClick = () => {
@@ -107,8 +107,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   };
 
   const handleRegistrationSubmit = async () => {
-    validateCaptcha("OnSubmit_change").then(async (success: boolean) => {
-      if (!success) return;
+    // validateCaptcha("OnSubmit_change").then(async (success: boolean) => {
+    //   if (!success) return;
       setLoading(true);
       const username = generateFromEmail(email);
       Auth.signUp({
@@ -141,7 +141,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
           setLoading(false);
           setError(error.message);
         });
-    });
+    // });
   };
 
   const handleFormChange = () => {
@@ -166,7 +166,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 
   useEffect(() => {
     return onAuthUIStateChange((nextAuthState) => {
-      console.log(nextAuthState);
+      alert(nextAuthState);
       setAuthState(nextAuthState);
     });
   }, []);
@@ -328,7 +328,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                   </Button>
                   <Button
                     type="primary"
-                    onClick={verifyEmail}
+                    onClick={ verifyEmail}
                     disabled={disabledNext}
                     loading={loading}
                   >
