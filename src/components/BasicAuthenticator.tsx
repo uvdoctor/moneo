@@ -2,7 +2,7 @@ import { AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
 import { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useEffect, useState } from "react";
-import { AuthState, Translations, onAuthUIStateChange } from "@aws-amplify/ui-components";
+import { AuthState, Translations } from "@aws-amplify/ui-components";
 import { Alert, Checkbox, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import Title from "antd/lib/typography/Title";
@@ -29,7 +29,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   const [back, setBack] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [authState, setAuthState] = useState<string>("");
   const [form] = useForm();
 
   const validateCaptcha = async (action: string) => {
@@ -78,12 +77,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   useEffect(() => {
     Hub.listen("auth", initUser);
     initUser();
-    return () => {
-      Hub.remove("auth", initUser);
-      onAuthUIStateChange((nextAuthState) => {
-        setAuthState(nextAuthState);
-      });
-    };
+    return () => Hub.remove("auth", initUser);
   }, []);
 
   const verifyEmail = () => {
@@ -173,7 +167,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
-        {authState === AuthState.SignUp && (
           <AmplifySection slot="sign-up">
             <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
             <Form
@@ -336,7 +329,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
               )}
             </Form>
           </AmplifySection>
-        )}
         {user ? (
           <AppContextProvider user={user} handleLogout={handleLogout}>
             {children}
