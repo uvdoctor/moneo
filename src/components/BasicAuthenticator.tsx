@@ -1,4 +1,4 @@
-import { AmplifyAuthenticator, AmplifySection, AmplifySignIn } from "@aws-amplify/ui-react";
+import { AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
 import { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useEffect, useState } from "react";
@@ -24,8 +24,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   const [user, setUser] = useState<any | null>(null);
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [pass, setPass] = useState<string>("");
-  const [e, setE] = useState<string>("");
+  // const [pass, setPass] = useState<string>("");
+  // const [e, setE] = useState<string>("");
   const [notify, setNotify] = useState<boolean>(true);
   const [disabledNext, setDisabledNext] = useState<boolean>(true);
   const [back, setBack] = useState<boolean>(true);
@@ -55,12 +55,17 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     return result;
   };
 
-  const initUser = async () =>{ 
-    console.log("Inside initUser");
-    console.log(await Auth.currentAuthenticatedUser());
-    setUser(await Auth.currentAuthenticatedUser());
-    console.log(user, user);
-     }
+  const listener = async (capsule: any) => {
+		let eventType: string = capsule.payload.event;
+    alert(eventType)
+		let user = null;
+		if (eventType === 'signIn') user = capsule.payload.data;
+		else if (eventType === 'tokenRefresh' || eventType === 'configured') user = await Auth.currentAuthenticatedUser();
+		setUser(user);
+	};
+
+  // const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
+    
 
   const handleLogout = async () => {
     try {
@@ -82,11 +87,16 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     return name + ("" + Math.random()).substring(2, 7);
   };
 
+  // useEffect(() => {
+  //   Hub.listen("auth", initUser);
+  //   initUser();
+  //   return () => Hub.remove("auth", initUser);
+  // }, []);
+
   useEffect(() => {
-    Hub.listen("auth", initUser);
-    initUser();
-    return () => Hub.remove("auth", initUser);
-  }, []);
+		Hub.listen('auth', listener);
+		return () => Hub.remove('auth', listener);
+	}, []);
 
   const verifyEmail = () => {
     validateCaptcha("NextButton_change").then(async (success: boolean) => {
@@ -171,24 +181,19 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     Hub.dispatch("UI Auth", { event: "AuthStateChange", message: AuthState.SignIn });
   };
 
-  const handleSubmit = async(event: any) => {
-    if (event) {
-			event.preventDefault();
-		} 
-    console.log(e, pass);
-    try{
-    const user = await Auth.signIn(e, pass);
-    console.log("Auth Success", user);
-    }catch(err){
-      console.log(err);
-    }
-    console.log('Completed');
-    
-      // .then(response => {
-      //     console.log('Auth.signIn success', response);
-      // }).catch(err=>{console.log(err);
-      // });
-  }
+  // const handleSubmit = async(event: any) => {
+  //   if (event) {
+	// 		event.preventDefault();
+	// 	} 
+  //   console.log(e, pass);
+  //   try{
+  //   const user = await Auth.signIn(e, pass);
+  //   console.log("Auth Success", user);
+  //   }catch(err){
+  //     console.log(err);
+  //   }
+  //   console.log('Completed');
+  // }
 
   useEffect(() => {
     return onAuthUIStateChange((nextAuthState) => {
@@ -200,7 +205,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
-        {authState === AuthState.SignIn && (
+        {/* {authState === AuthState.SignIn && (
           <AmplifySignIn handleSubmit={(event)=>handleSubmit(event)}  slot="sign-in"
           
             formFields={[
@@ -210,7 +215,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
             { type: "password", handleInputChange: (inputEvent: Event)=>{setPass(inputEvent.target.value)} },
           ]}
         />
-        )}
+        )} */}
         {authState === AuthState.SignUp && (
           <AmplifySection slot="sign-up">
             <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
