@@ -142,7 +142,8 @@
               "Action": [
                 "logs:CreateLogGroup",
                 "logs:CreateLogStream",
-                "logs:PutLogEvents"
+                "logs:PutLogEvents",
+                "cognito-idp:ListTables"
               ],
               "Resource": {
                 "Fn::Sub": [
