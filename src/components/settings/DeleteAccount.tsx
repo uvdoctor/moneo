@@ -114,7 +114,7 @@ export default function DeleteAccount() {
 
 	return (
 		<Fragment>
-			<Menu.Item onClick={showModal} key={'delete'}>Delete Account</Menu.Item>
+			<Menu.Item onClick={showModal} key='delete'>Delete Account</Menu.Item>
 			<Modal
 				title={'Delete Account'}
 				visible={isModalVisible}

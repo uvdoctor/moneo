@@ -52,7 +52,12 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     return result;
   };
 
-  const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
+  const initUser = async () => {
+    console.log("Going to init user....");
+    let user = await Auth.currentAuthenticatedUser();
+    console.log("User: ", user);
+    setUser(user);
+  }
 
   const handleLogout = async () => {
     try {
@@ -60,9 +65,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       Hub.dispatch("auth", { event: "signOut" });
     } catch (error) {
       console.log("error signing out: ", error);
-    } finally {
-      router.reload();
-    }
+    } 
   };
 
   const generateFromEmail = (email: string) => {
@@ -167,7 +170,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
-          <AmplifySection slot="sign-up">
+          {!user && <AmplifySection slot="sign-up">
             <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
             <Form
               name="signup"
@@ -328,7 +331,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                 </Row>
               )}
             </Form>
-          </AmplifySection>
+          </AmplifySection>}
         {user ? (
           <AppContextProvider user={user} handleLogout={handleLogout}>
             {children}
