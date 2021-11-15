@@ -14,7 +14,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
-Auth.configure({ authenticationFlowType: 'USER_PASSWORD_AUTH', });
+
 export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
@@ -28,6 +28,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   const [back, setBack] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [authState, setAuthState] = useState<string>('signIn');
   const [form] = useForm();
 
   const validateCaptcha = async (action: string) => {
@@ -62,6 +63,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     try {
       await Auth.signOut();
       Hub.dispatch("auth", { event: "signOut" });
+      setUser(null);
     } catch (error) {
       console.log("error signing out: ", error);
     } 
@@ -77,7 +79,11 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   };
 
   useEffect(() => {
-    Hub.listen("auth", initUser);
+    Hub.listen("auth", (data) => {
+      console.log("Auth state: ", data.payload.event);
+      setAuthState(data.payload.event);
+      initUser();
+    });
     initUser();
     return () => Hub.remove("auth", initUser);
   }, []);
@@ -169,8 +175,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
-          {!user && <AmplifySection slot="sign-up">
-            <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
+      {authState !== 'signIn' && <AmplifySection slot="sign-up">
+          <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
             <Form
               name="signup"
               form={form}
