@@ -54,7 +54,12 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 
   const initUser = async () => {
     console.log("Going to init user....");
-    let user = await Auth.currentAuthenticatedUser();
+    let user = null;
+    try {
+      user = await Auth.currentAuthenticatedUser();
+    } catch(e) {
+      console.log("Error while trying to get authenticated user: ", e);
+    }
     console.log("User: ", user);
     setUser(user);
   }
