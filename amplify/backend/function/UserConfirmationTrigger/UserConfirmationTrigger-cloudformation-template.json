@@ -142,8 +142,7 @@
               "Action": [
                 "logs:CreateLogGroup",
                 "logs:CreateLogStream",
-                "logs:PutLogEvents",
-                "dynamodb:ListTables"
+                "logs:PutLogEvents"
               ],
               "Resource": {
                 "Fn::Sub": [
