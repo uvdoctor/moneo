@@ -94,7 +94,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       setAuthState(data.payload.event);
       initUser();
     });
-    initUser();
+    //initUser();
     return () => Hub.remove("auth", initUser);
   }, []);
 
@@ -185,7 +185,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
-      {authState !== 'signIn' && <AmplifySection slot="sign-up">
+      {authState !== 'signIn' && 
+        <AmplifySection slot="sign-up">
           <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
             <Form
               name="signup"
@@ -346,12 +347,13 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                 </Row>
               )}
             </Form>
-          </AmplifySection>}
-        {user ? (
+        </AmplifySection>
+      }
+      {user ? (
           <AppContextProvider user={user} handleLogout={handleLogout}>
             {children}
           </AppContextProvider>
-        ) : null}
+      ) : null}
       </AmplifyAuthenticator>
     </Fragment>
   );
