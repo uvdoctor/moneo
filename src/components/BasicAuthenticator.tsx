@@ -24,6 +24,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   const [user, setUser] = useState<any | null>(null);
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [pass, setPass] = useState<string>("");
+  const [e, setE] = useState<string>("");
   const [notify, setNotify] = useState<boolean>(true);
   const [disabledNext, setDisabledNext] = useState<boolean>(true);
   const [back, setBack] = useState<boolean>(true);
@@ -169,15 +171,15 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     Hub.dispatch("UI Auth", { event: "AuthStateChange", message: AuthState.SignIn });
   };
 
-  const handleSubmit = (event: Event) => {
-    console.log(event.target)
-    
-      // event.preventDefault();
-      // const { email, password } = event.target;
-      // Auth.signIn(email.value, password.value)
-      // .then(response => {
-      //     console.log('Auth.signIn success', response);
-      // });
+  const handleSubmit = (event: any) => {
+    if (event) {
+			event.preventDefault();
+		} 
+      Auth.signIn(e, pass)
+      .then(response => {
+          console.log('Auth.signIn success', response);
+      }).catch(err=>{console.log(err);
+      });
   }
 
   useEffect(() => {
@@ -191,10 +193,13 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
         {authState === AuthState.SignIn && (
-          <AmplifySignIn handleSubmit={event=>handleSubmit(event)}  slot="sign-in"
+          <AmplifySignIn handleSubmit={(event)=>handleSubmit(event)}  slot="sign-in"
+          
             formFields={[
-            { type: "username" },
-            { type: "password" },
+            // @ts-ignore
+            { type: "username", handleInputChange: (inputEvent: Event)=>{setE(inputEvent.target.value)} },
+            // @ts-ignore
+            { type: "password", handleInputChange: (inputEvent: Event)=>{setPass(inputEvent.target.value)} },
           ]}
         />
         )}
