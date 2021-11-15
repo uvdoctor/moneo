@@ -55,7 +55,10 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
 
   const initUser = async () =>{ 
     console.log("Inside initUser");
-    setUser(await Auth.currentAuthenticatedUser()); }
+    console.log(await Auth.currentAuthenticatedUser());
+    setUser(await Auth.currentAuthenticatedUser());
+    console.log(user, user);
+     }
 
   const handleLogout = async () => {
     try {
