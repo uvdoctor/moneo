@@ -172,7 +172,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
-      {authState !== AuthState.SignedIn && 
+      {authState !== 'signin' && 
         <AmplifySection slot="sign-up">
           <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
             <Form
