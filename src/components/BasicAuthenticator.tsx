@@ -2,7 +2,7 @@ import { AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
 import { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useEffect, useState } from "react";
-import { AuthState, Translations } from "@aws-amplify/ui-components";
+import { AuthState, Translations, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import { Alert, Checkbox, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import Title from "antd/lib/typography/Title";
@@ -88,14 +88,17 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     return name + ("" + Math.random()).substring(2, 7);
   };
 
+  const listener = (data: any) => {
+    console.log("Auth state: ", data.payload.event);
+    setAuthState(data.payload.event);
+    initUser();
+  };
+
   useEffect(() => {
-    Hub.listen("auth", (data) => {
-      console.log("Auth state: ", data.payload.event);
-      setAuthState(data.payload.event);
-      initUser();
-    });
+    Hub.listen("auth", listener);
+    onAuthUIStateChange((nextAuthState) => setAuthState(nextAuthState));
     //initUser();
-    return () => Hub.remove("auth", initUser);
+    return () => Hub.remove("auth", listener);
   }, []);
 
   const verifyEmail = () => {
