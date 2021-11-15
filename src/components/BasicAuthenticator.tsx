@@ -33,7 +33,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   const [back, setBack] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [authState, setAuthState] = useState<string>('signIn');
+  const [authState, setAuthState] = useState<string>('signin');
   const [form] = useForm();
 
   const validateCaptcha = async (action: string) => {
@@ -56,18 +56,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       });
     return result;
   };
-
-  /*const initUser = async () => {
-    console.log("Going to init user....");
-    let user = null;
-    try {
-      user = await Auth.currentAuthenticatedUser();
-    } catch(e) {
-      console.log("Error while trying to get authenticated user: ", e);
-    }
-    console.log("User: ", user);
-    setUser(user);
-  }*/
 
   const handleLogout = async () => {
     try {
