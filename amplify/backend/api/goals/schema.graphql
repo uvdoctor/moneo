@@ -137,7 +137,7 @@ type Contacts
 	email: String!
 	im: Float
 	mob: Float
-	notify: Boolean
+	notify: Boolean!
 }
 
 enum AssetType {

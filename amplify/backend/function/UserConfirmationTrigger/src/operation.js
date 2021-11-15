@@ -38,7 +38,7 @@ const getDataFromEventAndPush = (event, context) => {
 					Item: {
 						__typename: { S: 'Contacts' },
 						email: { S: email },
-						notify: { S: !notify || notify.length === 1 ? false : true },
+						notify: { BOOL: !notify || notify.length === 1 ? false : true },
 						createdAt: { S: date.toISOString() },
 						updatedAt: { S: date.toISOString() }
 					},
