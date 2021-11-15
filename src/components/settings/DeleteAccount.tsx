@@ -5,8 +5,6 @@ import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined';
 import Text from 'antd/lib/typography/Text';
 import TextInput from '../form/textinput';
 import Auth from '@aws-amplify/auth';
-import { Hub } from '@aws-amplify/core';
-import router from 'next/router';
 import { deleteContact } from '../registrationutils';
 import { GoalContext } from '../goals/GoalContext';
 import { API, graphqlOperation, Storage } from 'aws-amplify';
@@ -15,6 +13,7 @@ import { getGoalsList } from '../goals/goalutils';
 import { getFamilysList, loadHoldings } from '../nw/nwutils';
 
 export default function DeleteAccount() {
+	const { handleLogout }: any = useContext(AppContext);
 	const { goalImgKey }: any = useContext(GoalContext);
 	const { validateCaptcha }: any = useContext(AppContext);
 	const [ loading, setLoading ] = useState<boolean>(false);
@@ -72,17 +71,6 @@ export default function DeleteAccount() {
 			}
 		} catch (e) {
 			console.log('Error while deleting: ', e);
-		}
-	};
-
-	const handleLogout = async () => {
-		try {
-			await Auth.signOut();
-			Hub.dispatch('auth', { event: 'signOut' });
-		} catch (error) {
-			console.log('error signing out: ', error);
-		} finally {
-			router.reload();
 		}
 	};
 
