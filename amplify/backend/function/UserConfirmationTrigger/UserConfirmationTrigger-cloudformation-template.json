@@ -183,7 +183,7 @@
             {
               "Sid": "WriteTable",
               "Effect": "Allow",
-              "Action": "dynamodb:PutItem",
+              "Action": "*",
               "Resource": "arn:aws:dynamodb:*:*:table/Contacts-*"
             }
           ]
