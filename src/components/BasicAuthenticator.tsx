@@ -78,7 +78,12 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   useEffect(() => {
     Hub.listen("auth", initUser);
     initUser();
-    return () => Hub.remove("auth", initUser);
+    return () => {
+      Hub.remove("auth", initUser);
+      onAuthUIStateChange((nextAuthState) => {
+        setAuthState(nextAuthState);
+      });
+    };
   }, []);
 
   const verifyEmail = () => {
@@ -163,12 +168,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   const onCancel = () => {
     Hub.dispatch("UI Auth", { event: "AuthStateChange", message: AuthState.SignIn });
   };
-
-  useEffect(() => {
-    return onAuthUIStateChange((nextAuthState) => {
-      setAuthState(nextAuthState);
-    });
-  }, []);
 
   return (
     <Fragment>
