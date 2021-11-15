@@ -1,8 +1,16 @@
-import { AmplifyAuthenticator, AmplifySection, AmplifySignIn } from "@aws-amplify/ui-react";
+import {
+  AmplifyAuthenticator,
+  AmplifySection,
+  AmplifySignIn,
+} from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
 import { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useEffect, useState } from "react";
-import { AuthState, Translations, onAuthUIStateChange } from "@aws-amplify/ui-components";
+import {
+  AuthState,
+  Translations,
+  onAuthUIStateChange,
+} from "@aws-amplify/ui-components";
 import { Alert, Checkbox, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import Title from "antd/lib/typography/Title";
@@ -16,7 +24,9 @@ interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
 
-export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
+export default function BasicAuthenticator({
+  children,
+}: BasicAuthenticatorProps) {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -53,12 +63,12 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     return result;
   };
 
-  const initUser = async () =>{ 
+  const initUser = async () => {
     console.log("Inside initUser");
     console.log(await Auth.currentAuthenticatedUser());
     setUser(await Auth.currentAuthenticatedUser());
     console.log(user, user);
-     }
+  };
 
   const handleLogout = async () => {
     try {
@@ -166,19 +176,11 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   };
 
   const onCancel = () => {
-    Hub.dispatch("UI Auth", { event: "AuthStateChange", message: AuthState.SignIn });
+    Hub.dispatch("UI Auth", {
+      event: "AuthStateChange",
+      message: AuthState.SignIn,
+    });
   };
-
-  const handleSubmit = (event: Event) => {
-    console.log(event.target)
-    
-      // event.preventDefault();
-      // const { email, password } = event.target;
-      // Auth.signIn(email.value, password.value)
-      // .then(response => {
-      //     console.log('Auth.signIn success', response);
-      // });
-  }
 
   useEffect(() => {
     return onAuthUIStateChange((nextAuthState) => {
@@ -190,9 +192,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
-        {authState === AuthState.SignIn && (
-          <AmplifySignIn slot="sign-in" />
-        )}
+        {authState === AuthState.SignIn && <AmplifySignIn slot="sign-in" />}
         {authState === AuthState.SignUp && (
           <AmplifySection slot="sign-up">
             <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
