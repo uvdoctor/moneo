@@ -175,6 +175,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     if (event) {
 			event.preventDefault();
 		} 
+    console.log(e, pass);
       Auth.signIn(e, pass)
       .then(response => {
           console.log('Auth.signIn success', response);
