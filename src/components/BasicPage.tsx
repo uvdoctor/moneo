@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import Head from "next/head";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import BasicAuthenticator from "./BasicAuth";
+import BasicAuthenticator from "./BasicAuthenticator";
 import BasicLayout from "./BasicLayout";
 import { AppContextProvider } from "./AppContext";
 
