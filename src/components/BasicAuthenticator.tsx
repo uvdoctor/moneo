@@ -57,7 +57,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     return result;
   };
 
-  const initUser = async () => {
+  /*const initUser = async () => {
     console.log("Going to init user....");
     let user = null;
     try {
@@ -67,7 +67,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     }
     console.log("User: ", user);
     setUser(user);
-  }
+  }*/
 
   const handleLogout = async () => {
     try {
@@ -88,17 +88,13 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     return name + ("" + Math.random()).substring(2, 7);
   };
 
-  const listener = (data: any) => {
-    console.log("Auth state: ", data.payload.event);
-    setAuthState(data.payload.event);
-    initUser();
-  };
-
   useEffect(() => {
-    Hub.listen("auth", listener);
-    onAuthUIStateChange((nextAuthState) => setAuthState(nextAuthState));
-    //initUser();
-    return () => Hub.remove("auth", listener);
+    return onAuthUIStateChange((nextAuthState, authData) => {
+      console.log("Next auth state: ", nextAuthState);
+      console.log("Auth data: ", authData);
+      setAuthState(nextAuthState);
+      setUser(authData);
+    });
   }, []);
 
   const verifyEmail = () => {
@@ -188,7 +184,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
-      {authState !== 'signIn' && 
+      {authState !== AuthState.SignedIn && 
         <AmplifySection slot="sign-up">
           <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
             <Form
