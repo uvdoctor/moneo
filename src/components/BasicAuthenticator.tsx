@@ -170,11 +170,10 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   };
 
   const handleSubmit = (event: Event) => {
-    console.log(event.target)
-    
-      // event.preventDefault();
+    console.log(AuthState)
+      event.preventDefault();
       // const { email, password } = event.target;
-      // Auth.signIn(email.value, password.value)
+      // Auth.signIn("rahul19728", "a@A12345678")
       // .then(response => {
       //     console.log('Auth.signIn success', response);
       // });
@@ -191,12 +190,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
         {authState === AuthState.SignIn && (
-          <AmplifySignIn handleSubmit={event=>handleSubmit(event)}  slot="sign-in"
-            formFields={[
-            { type: "username" },
-            { type: "password" },
-          ]}
-        />
+          <AmplifySignIn slot="sign-in" />
         )}
         {authState === AuthState.SignUp && (
           <AmplifySection slot="sign-up">
