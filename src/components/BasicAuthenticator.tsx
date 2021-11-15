@@ -23,7 +23,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
-
+Auth.configure({ authenticationFlowType: 'USER_PASSWORD_AUTH', });
 export default function BasicAuthenticator({
   children,
 }: BasicAuthenticatorProps) {
