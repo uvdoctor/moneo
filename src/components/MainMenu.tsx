@@ -74,7 +74,7 @@ export default function MainMenu({
                   }
                 >
                   {menuItem("Settings", ROUTES.SETTINGS, selectedKey)}
-                  <DeleteAccount/> 
+                  {/* <DeleteAccount/>  */}
                   <Menu.Item key='logout' onClick={handleLogout}>Logout</Menu.Item>
                 </SubMenu>
               </Fragment>
