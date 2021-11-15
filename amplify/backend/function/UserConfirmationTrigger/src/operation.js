@@ -57,4 +57,4 @@ const getDataFromEventAndPush = (event, context) => {
 	});
 };
 
-module.exports = { getDataFromEventAndPush, getTableNameFromInitialWord, pushDataSingly };
+module.exports = { getDataFromEventAndPush, pushDataSingly };

@@ -1,4 +1,4 @@
-const { getDataFromEventAndPush, getTableNameFromInitialWord, pushDataSingly } = require('../src/operation');
+const { getDataFromEventAndPush, pushDataSingly } = require('../src/operation');
 
 describe('Inserting Data', () => {
 	test('Insert', async () => {
@@ -20,9 +20,9 @@ describe('Inserting Data', () => {
 		const pushDataSingly = jest.fn().mockImplementation(() => {
 			return 'Success';
 		});
-		const getTableNameFromInitialWord = jest.fn().mockImplementation(() => {
-			return 'Contacts';
-		});
+		// const getTableNameFromInitialWord = jest.fn().mockImplementation(() => {
+		// 	return 'Contacts';
+		// });
 		expect(getDataFromEventAndPush(event, context)).toEqual({});
 	},10000);
 });
