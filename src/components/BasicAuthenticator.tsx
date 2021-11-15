@@ -53,7 +53,9 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     return result;
   };
 
-  const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
+  const initUser = async () =>{ 
+    console.log("Inside initUser");
+    setUser(await Auth.currentAuthenticatedUser()); }
 
   const handleLogout = async () => {
     try {
@@ -165,8 +167,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   };
 
   useEffect(() => {
-    return onAuthUIStateChange((nextAuthState, user) => {
-      nextAuthState === AuthState.SignIn ? console.log(user) : null;
+    return onAuthUIStateChange((nextAuthState) => {
       setAuthState(nextAuthState);
     });
   }, []);
