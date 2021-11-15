@@ -1,16 +1,8 @@
-import {
-  AmplifyAuthenticator,
-  AmplifySection,
-  AmplifySignIn,
-} from "@aws-amplify/ui-react";
+import { AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
 import { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useEffect, useState } from "react";
-import {
-  AuthState,
-  Translations,
-  onAuthUIStateChange,
-} from "@aws-amplify/ui-components";
+import { AuthState, Translations, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import { Alert, Checkbox, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import Title from "antd/lib/typography/Title";
@@ -24,9 +16,7 @@ interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
 Auth.configure({ authenticationFlowType: 'USER_PASSWORD_AUTH', });
-export default function BasicAuthenticator({
-  children,
-}: BasicAuthenticatorProps) {
+export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -63,12 +53,7 @@ export default function BasicAuthenticator({
     return result;
   };
 
-  const initUser = async () => {
-    console.log("Inside initUser");
-    console.log(await Auth.currentAuthenticatedUser());
-    setUser(await Auth.currentAuthenticatedUser());
-    console.log(user, user);
-  };
+  const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
 
   const handleLogout = async () => {
     try {
@@ -176,10 +161,7 @@ export default function BasicAuthenticator({
   };
 
   const onCancel = () => {
-    Hub.dispatch("UI Auth", {
-      event: "AuthStateChange",
-      message: AuthState.SignIn,
-    });
+    Hub.dispatch("UI Auth", { event: "AuthStateChange", message: AuthState.SignIn });
   };
 
   useEffect(() => {
@@ -192,7 +174,6 @@ export default function BasicAuthenticator({
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
-        {authState === AuthState.SignIn && <AmplifySignIn slot="sign-in" />}
         {authState === AuthState.SignUp && (
           <AmplifySection slot="sign-up">
             <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
