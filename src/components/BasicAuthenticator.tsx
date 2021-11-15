@@ -171,16 +171,23 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     Hub.dispatch("UI Auth", { event: "AuthStateChange", message: AuthState.SignIn });
   };
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = async(event: any) => {
     if (event) {
 			event.preventDefault();
 		} 
     console.log(e, pass);
-      Auth.signIn(e, pass)
-      .then(response => {
-          console.log('Auth.signIn success', response);
-      }).catch(err=>{console.log(err);
-      });
+    try{
+    const user = await Auth.signIn(e, pass);
+    console.log("Auth Success", user);
+    }catch(err){
+      console.log(err);
+    }
+    console.log('Completed');
+    
+      // .then(response => {
+      //     console.log('Auth.signIn success', response);
+      // }).catch(err=>{console.log(err);
+      // });
   }
 
   useEffect(() => {
