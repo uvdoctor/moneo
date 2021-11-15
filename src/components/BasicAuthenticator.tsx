@@ -1,4 +1,4 @@
-import { AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
+import { AmplifyAuthContainer, AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
 import { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useEffect, useState } from "react";
@@ -171,6 +171,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
   return (
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
+      <AmplifyAuthContainer>
       <AmplifyAuthenticator>
       {authState !== 'signin' && 
         <AmplifySection slot="sign-up">
@@ -342,6 +343,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
           </AppContextProvider>
       ) : null}
       </AmplifyAuthenticator>
+      </AmplifyAuthContainer>
     </Fragment>
   );
 }
