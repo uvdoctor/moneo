@@ -191,12 +191,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
         {authState === AuthState.SignIn && (
-          <AmplifySignIn handleSubmit={event=>handleSubmit(event)}  slot="sign-in"
-            formFields={[
-            { type: "username" },
-            { type: "password" },
-          ]}
-        />
+          <AmplifySignIn slot="sign-in" />
         )}
         {authState === AuthState.SignUp && (
           <AmplifySection slot="sign-up">
