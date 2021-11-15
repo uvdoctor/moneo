@@ -1,4 +1,4 @@
-import { AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
+import { AmplifyAuthenticator, AmplifySection, AmplifySignIn } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
 import { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useEffect, useState } from "react";
@@ -169,6 +169,17 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     Hub.dispatch("UI Auth", { event: "AuthStateChange", message: AuthState.SignIn });
   };
 
+  const handleSubmit = (event: Event) => {
+    console.log(event.target)
+    
+      // event.preventDefault();
+      // const { email, password } = event.target;
+      // Auth.signIn(email.value, password.value)
+      // .then(response => {
+      //     console.log('Auth.signIn success', response);
+      // });
+  }
+
   useEffect(() => {
     return onAuthUIStateChange((nextAuthState) => {
       setAuthState(nextAuthState);
@@ -179,6 +190,14 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
+        {authState === AuthState.SignIn && (
+          <AmplifySignIn handleSubmit={event=>handleSubmit(event)}  slot="sign-in"
+            formFields={[
+            { type: "username" },
+            { type: "password" },
+          ]}
+        />
+        )}
         {authState === AuthState.SignUp && (
           <AmplifySection slot="sign-up">
             <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
