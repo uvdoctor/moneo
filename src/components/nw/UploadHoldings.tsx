@@ -5,13 +5,12 @@ import { useFullScreenBrowser } from "react-browser-hooks";
 import HoldingsTable from "./HoldingsTable";
 import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../AppContext";
 import { NWContext } from "./NWContext";
-import { getInsTypeFromISIN, getInsTypeFromName, getUploaderSettings, shouldIgnore } from "./parseutils";
+import { getInsTypeFromISIN, getUploaderSettings } from "./parseutils";
 import { isMobileDevice } from "../utils";
 import simpleStorage from "simplestorage.js";
-import { AssetSubType, InsType, AssetType, HoldingInput } from "../../api/goals";
+import { AssetSubType, AssetType, HoldingInput } from "../../api/goals";
 import { UserOutlined } from "@ant-design/icons";
 import {
-	cleanAssetName,
 	completeRecord,
 	contains,
 	getISIN,
@@ -19,12 +18,7 @@ import {
 	hasHoldingStarted,
 } from "./parseutils";
 import {
-	getValueBefore,
 	includesAny,
-	replaceIfFound,
-	countWords,
-	getNumberAtEnd,
-	removeDuplicates,
 } from "../utils";
 import { addMemberIfNeeded, getFamilyOptions, loadMatchingINBond, loadMatchingINExchange, loadMatchingINMutual } from "./nwutils";
 import SelectInput from "../form/selectinput";
@@ -56,7 +50,7 @@ export default function UploadHoldings() {
 	const { Dragger } = Upload;
 	const [showDrawer, setDrawerVisibility] = useState(false);
 	const [processing, setProcessing ] = useState<boolean>(false);
-	const [taxId, setTaxId] = useState<string>('');
+	const [taxId, setTaxId] = useState<string | null>(null);
 	const [memberKey, setMemberKey] = useState<string | null>(null);
 	const [error, setError] = useState<string>('');
 
@@ -71,7 +65,7 @@ export default function UploadHoldings() {
 	const onShowDrawer = () => setDrawerVisibility(true);
 
 	const resetState = () => {
-		setTaxId('');
+		setTaxId(null);
 		setMemberKey(null);
 		setError('');
 		setProcessing(false);
@@ -149,22 +143,17 @@ export default function UploadHoldings() {
 		let etfs: any = {};
 		let insType: string | null = null;
 		let holdingStarted = false;
-		let insNames: any = {};
 		let recordBroken = false;
 		let isin: string | null = null;
 		let quantity: number | null = null;
-		let name: string | null = null;
-		let lastNameCapture: number | null = null;
 		let lastQtyCapture: number | null = null;
 		let fv: number | null = null;
 		let hasFV = false;
 		let hasData = false;
 		let taxId: string | null = null;
 		let eof = false;
-		let checkForMultiple = true;
 		let currency = 'INR';
 		for (let i = 1; i <= pdf.numPages && !eof; i++) {
-			lastNameCapture = null;
 			lastQtyCapture = null;
 			if (i > 1) {
 				if (
@@ -180,13 +169,11 @@ export default function UploadHoldings() {
 				if (!recordBroken) {
 					isin = null;
 					quantity = null;
-					name = null;
 				}
 			}
 			const page = await pdf.getPage(i);
 			const textContent = await page.getTextContent();
 			for (let j = 0; j < textContent.items.length; j++) {
-				let numberAtEnd: number | null = null;
 				if (
 					quantity &&
 					((!recordBroken && lastQtyCapture === null) ||
@@ -196,15 +183,6 @@ export default function UploadHoldings() {
 					quantity = null;
 					lastQtyCapture = null;
 					fv = null;
-				}
-				if (
-					name && !isin &&
-					((!recordBroken && lastNameCapture === null) ||
-						(lastNameCapture !== null && j - lastNameCapture > 9))
-				) {
-					console.log("Detected unrelated name capture: ", lastNameCapture);
-					name = null;
-					lastNameCapture = null;
 				}
 				let value = textContent.items[j].str.trim();
 				if (!value.length) continue;
@@ -227,10 +205,8 @@ export default function UploadHoldings() {
 				if (includesAny(value, ["transaction details", "commission paid", "transaction particulars", "statement of transactions", "other details", "transactions for the period"])) {
 					isin = null;
 					quantity = null;
-					name = null;
 					holdingStarted = false;
 					lastQtyCapture = null;
-					lastNameCapture = null;
 					continue;
 				}
 				if (
@@ -242,115 +218,19 @@ export default function UploadHoldings() {
 					hasFV = true;
 					continue;
 				}
-				if (shouldIgnore(value)) continue;
 				let retVal = getISIN(value);
 				if(retVal) {
-					if(!name && !isin && quantity) {
-						quantity = null;
-						lastQtyCapture = null;
-						fv = null;
-					}
-				}
-				if (!retVal && checkForMultiple) {
-					retVal = contains(value);
-				}
-				if (retVal) {
 					console.log("Detected ISIN: ", retVal);
-					if(isin && retVal && !quantity) {
-						isin = null;
-						name = null;
-						fv = null;
-						recordBroken = false;
-					}
+					quantity = null;
+					fv = null;
+					recordBroken = false;
 					isin = retVal;
 					insType = getInsTypeFromISIN(isin, insType);
-					if (isin && quantity) {
-						({
-							recordBroken,
-							lastNameCapture,
-							hasData,
-							isin,
-							quantity,
-						} = completeRecord(
-							recordBroken,
-							lastNameCapture,
-							j,
-							hasData,
-							insType as string,
-							equities,
-							mfs,
-							etfs,
-							bonds,
-							isin,
-							quantity,
-							insNames,
-							name,
-							taxId as string,
-							currency
-						));
-						continue;
-					}
-					if(!checkForMultiple) continue;
 				}
-				if (quantity) continue;
-				if (!isin && includesAny(value, ["page"])) continue;
-				let numberOfWords = countWords(value);
-				if (
-					!recordBroken &&
-					value.length > 7 &&
-					numberOfWords > 1 &&
-					numberOfWords < 15 &&
-					!includesAny(value, ["no :", ","])
-				) {
-					console.log("Going to check: ", value);
-					if(name && includesAny(value, ["page"])) continue;
-					insType = getInsTypeFromName(isin, insType, value);
-					if (checkForMultiple) numberAtEnd = getNumberAtEnd(value);
-					if (lastNameCapture) {
-						let diff = j - lastNameCapture;
-						if (
-							insType !== 'M' &&
-							insType !== InsType.ETF &&
-							!numberAtEnd &&
-							diff < 4
-						)
-							continue;
-					}
-					if (numberAtEnd) value = replaceIfFound(value, ["" + numberAtEnd]);
-					if(insType === AssetSubType.S) value = cleanAssetName(value);
-					if (!value) {
-						numberAtEnd = null;
-						continue;
-					}
-					if (
-						(insType !== AssetSubType.S) &&
-						name &&
-						lastNameCapture &&
-						j - lastNameCapture <= 2
-					)
-						name += " " + value.trim();
-					else name = value.trim();
-					if (insType === 'M' || insType === InsType.ETF) {
-						name = removeDuplicates(name as string);
-						name = getValueBefore(name as string, ["(", ")"]);
-					}
-					lastNameCapture = j;
-					quantity = null;
-					lastQtyCapture = null;
-					fv = null;
-					console.log("Detected name: ", name);
-					if(!checkForMultiple) continue;
-				}
-				let qty: number | null =
-					checkForMultiple && name && numberAtEnd ? numberAtEnd : getQty(value);
+				if (!isin) continue;
+				let qty: number | null = getQty(value);
 				if (!qty) continue;
 				if(insType === 'M' && !value.includes(".")) continue;
-				if (
-					!recordBroken &&
-					((name && lastNameCapture && j - lastNameCapture > 5) ||
-						(lastQtyCapture && j - lastQtyCapture < 7))
-				)
-					continue;
 				if (hasFV && !fv && (insType === AssetSubType.S || insType === AssetType.F)) {
 					console.log("Detected fv: ", qty);
 					fv = qty;
@@ -359,34 +239,23 @@ export default function UploadHoldings() {
 				if (insType === AssetType.F && !Number.isInteger(qty)) continue;
 				console.log("Detected quantity: ", qty);
 				lastQtyCapture = j;
-				if (lastQtyCapture !== lastNameCapture) checkForMultiple = false;
 				quantity = qty;
 				if (hasFV) fv = null;
-				if (isin && quantity) {
-					({
-						recordBroken,
-						lastNameCapture,
-						hasData,
-						isin,
-						quantity,
-					} = completeRecord(
-						recordBroken,
-						lastNameCapture,
-						j,
-						hasData,
-						insType as string,
-						equities,
-						mfs,
-						etfs,
-						bonds,
-						isin,
-						quantity,
-						insNames,
-						name,
-						taxId as string,
-						currency
-					));
-				}
+				completeRecord(
+					recordBroken,
+					insType as string,
+					equities,
+					mfs,
+					etfs,
+					bonds,
+					isin,
+					quantity,
+					taxId as string,
+					currency
+				);
+				isin = null;
+				quantity = null;
+				hasData = true;
 			}
 		}
 		if(!taxId) {
@@ -458,10 +327,7 @@ export default function UploadHoldings() {
 						<Button onClick={() => setShowInsUpload(false)} style={{ marginRight: 8 }} disabled={processing}>
 							Cancel
 						</Button>
-						<Button onClick={() => {
-							setProcessing(true);
-							addInstruments();
-						}} type="primary" loading={processing} disabled={!taxId && !memberKey}>
+						<Button onClick={() => addInstruments()} type="primary" loading={processing} disabled={!taxId && !memberKey}>
 							Done
 						</Button>
 					</div>

@@ -1,5 +1,5 @@
 import { Modal, notification, Input } from "antd";
-import { appendValue, getValueBefore, includesAny, replaceIfFound } from "../utils";
+import { appendValue, includesAny, replaceIfFound } from "../utils";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
@@ -52,6 +52,7 @@ export const hasHoldingStarted = (value: string) =>
 		"holding details",
 		"as of",
 		"as on",
+		"holdings"
 	]);
 
 export const shouldIgnore = (value: string) => 
@@ -93,17 +94,6 @@ export const shouldIgnore = (value: string) =>
 		"client"
 	]);
 
-export const getInsTypeFromName = (isin: string | null, insType: string | null, value: string) => {
-	if (includesAny(value, ["bond", "ncd", "debenture", "sgb"])) {
-		if(isin && isin.startsWith("INF")) return 'M';
-		else return AssetType.F;
-	} else if (value.includes("ETF")) return InsType.ETF;
-	else if (value.includes("REIT") || value.includes("FMP") || value.includes("Fund"))
-		return 'M';
-	else if(!isin && insType !== 'M' && insType !== AssetType.F && insType!== InsType.ETF) return AssetSubType.S;
-	return insType;
-};
-
 export const getInsTypeFromISIN = (isin: string, insType: string | null) => {
 	if (isin.startsWith("INF")) {
 		if (insType !== InsType.ETF) return 'M';
@@ -112,44 +102,23 @@ export const getInsTypeFromISIN = (isin: string, insType: string | null) => {
 	return insType;
 };
 
-export const removeDuplicates = (value: string) => {
-  let values = value.split(" ");
-  for (let i = 2; i < values.length; i++) {
-    let v = values[i].trim();
-    for (let j = 1; j < i; j++) {
-      let token = values[j].trim();
-      if (v === token) value = value.replace(token, "");
-    }
-  }
-  return value.trim();
-};
-
-export const completeRecord = (recordBroken: boolean, lastNameCapture: number | null, j: number, hasData: boolean, mode: string, equities: any, mfs: any, etfs: any, bonds: any, isin: string | null, quantity: number | null, insNames: any, name: string | null, taxId: string, currency: string) => {
-  if (recordBroken || (lastNameCapture && j - lastNameCapture > 9)) {
-    lastNameCapture = null;
-    recordBroken = false;
-  }
-  hasData = true;
-  let existingEntry = null;
-  if (insNames[isin as string]) {
+export const completeRecord = (recordBroken: boolean, mode: string, equities: any, mfs: any, etfs: any, bonds: any, isin: string | null, quantity: number | null, taxId: string, currency: string) => {
+  	if (recordBroken) {
+    	recordBroken = false;
+  	}
+  	let existingEntry = null;
 	let list = mode === AssetSubType.S ? equities : mode === 'M' ? mfs : mode === InsType.ETF ? etfs : bonds;
 	if(list[isin as string]) existingEntry = list[isin as string];
-  } 
-  if(existingEntry)
-  	existingEntry.qty += quantity as number;
-  else {
-	appendValue(
-		mode === AssetSubType.S ? equities : mode === 'M' ? mfs : mode === InsType.ETF ? etfs : bonds,
-		isin as string,
-		{id: isin, qty: quantity as number, name: name ? name : isin, type: mode !== AssetType.F ? AssetType.E : AssetType.F, subt: mode === AssetType.F ? AssetSubType.CB : mode, fIds: [taxId], curr: currency} as HoldingInput
-	  );
-  }
-  console.log("Record completed for...", isin);
-  if (!insNames[isin as string])
-    insNames[isin as string] = name ? name : isin;
-  isin = null;
-  quantity = null;
-  return { recordBroken, lastNameCapture, hasData, isin, quantity };
+  	if(existingEntry)
+  		existingEntry.qty += quantity as number;
+  	else {
+		appendValue(
+			mode === AssetSubType.S ? equities : mode === 'M' ? mfs : mode === InsType.ETF ? etfs : bonds,
+			isin as string,
+			{id: isin, qty: quantity as number, name: isin, type: mode !== AssetType.F ? AssetType.E : AssetType.F, subt: mode === AssetType.F ? AssetSubType.CB : mode, fIds: [taxId], curr: currency} as HoldingInput
+	  	);
+  	}
+	console.log("Record completed for...", isin);
 }
 
 const processPDF = (file: File, parsePDF: Function) => {
@@ -234,31 +203,3 @@ export const getUploaderSettings = (parsePDF: Function) => {
 		},
 	}
 };
-
-export const cleanAssetName = (val: string) => {
-	let value = val.trim();
-	value = getValueBefore(value, [
-		"#",
-		"(",
-		"-",
-		"/",
-		"NEW RS.",
-		"RS.",
-		"NEW RE.",
-		"RE.",
-		"NEW F.V",
-		"NEW FV",
-		"EQ"
-	]);
-	value = replaceIfFound(value, [
-		"LIMITED",
-		"EQUITY",
-		"LTD",
-		"SHARES",
-		"Beneficiary",
-		"PVT",
-	]);
-	value = replaceIfFound(value, [" AND", " OF", " &"], "", true);
-	if (!value) return null;
-	return value;
-}
