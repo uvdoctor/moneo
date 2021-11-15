@@ -10,7 +10,6 @@ import { doesEmailExist } from "./registrationutils";
 import Nav from "./Nav";
 import { AppContextProvider } from "./AppContext";
 import { Form, Input, Button } from "antd";
-import router from "next/router";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
