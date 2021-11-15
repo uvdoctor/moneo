@@ -1,57 +1,57 @@
-import { AmplifyAuthenticator } from "@aws-amplify/ui-react";
-// import { useForm } from "antd/lib/form/Form";
+import { AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
+import { useForm } from "antd/lib/form/Form";
 import { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useEffect, useState } from "react";
-// import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
-// import { Alert, Checkbox, Row } from "antd";
-// import { ROUTES } from "../CONSTANTS";
-// import Title from "antd/lib/typography/Title";
-// import { doesEmailExist } from "./registrationutils";
+import { AuthState, Translations, onAuthUIStateChange } from "@aws-amplify/ui-components";
+import { Alert, Checkbox, Row } from "antd";
+import { ROUTES } from "../CONSTANTS";
+import Title from "antd/lib/typography/Title";
+import { doesEmailExist } from "./registrationutils";
 import Nav from "./Nav";
 import { AppContextProvider } from "./AppContext";
-// import { Form, Input, Button } from "antd";
+import { Form, Input, Button } from "antd";
 import router from "next/router";
-// import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
 
 export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
-  // const { executeRecaptcha } = useGoogleReCaptcha();
-  // const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
-  // const [error, setError] = useState<string>("");
-  // const [emailError, setEmailError] = useState<any>("");
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [emailError, setEmailError] = useState<any>("");
   const [user, setUser] = useState<any | null>(null);
-  // const [password, setPassword] = useState<string>("");
-  // const [email, setEmail] = useState<string>("");
-  // const [notify, setNotify] = useState<boolean>(true);
-  // const [disabledNext, setDisabledNext] = useState<boolean>(true);
-  // const [back, setBack] = useState<boolean>(true);
-  // const [next, setNext] = useState<boolean>(false);
-  // const [loading, setLoading] = useState<boolean>(false);
-  // const [authState, setAuthState] = useState<string>("");
-  // const [form] = useForm();
+  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [notify, setNotify] = useState<boolean>(true);
+  const [disabledNext, setDisabledNext] = useState<boolean>(true);
+  const [back, setBack] = useState<boolean>(true);
+  const [next, setNext] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [authState, setAuthState] = useState<string>("");
+  const [form] = useForm();
 
-  // const validateCaptcha = async (action: string) => {
-  //   //@ts-ignore
-  //   const token = await executeRecaptcha(action);
-  //   let result = await fetch("/api/verifycaptcha", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json;charset=utf-8",
-  //     },
-  //     body: JSON.stringify({
-  //       token: token,
-  //     }),
-  //   })
-  //     .then((captchRes: any) => captchRes.json())
-  //     .then((data: any) => data.success)
-  //     .catch((e: any) => {
-  //       console.log("error while validating captcha ", e);
-  //       return false;
-  //     });
-  //   return result;
-  // };
+  const validateCaptcha = async (action: string) => {
+    //@ts-ignore
+    const token = await executeRecaptcha(action);
+    let result = await fetch("/api/verifycaptcha", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify({
+        token: token,
+      }),
+    })
+      .then((captchRes: any) => captchRes.json())
+      .then((data: any) => data.success)
+      .catch((e: any) => {
+        console.log("error while validating captcha ", e);
+        return false;
+      });
+    return result;
+  };
 
   const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
 
@@ -66,14 +66,14 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     }
   };
 
-  // const generateFromEmail = (email: string) => {
-  //   // Retrive name from email address
-  //   const nameParts = email.replace(/@.+/, "");
-  //   // Replace all special characters like "@ . _ ";
-  //   let name = nameParts.replace(/[&/\\#,+()$~%._@'":*?<>{}]/g, "");
-  //   if (name.length > 5) name = name.substring(0, 5);
-  //   return name + ("" + Math.random()).substring(2, 7);
-  // };
+  const generateFromEmail = (email: string) => {
+    // Retrive name from email address
+    const nameParts = email.replace(/@.+/, "");
+    // Replace all special characters like "@ . _ ";
+    let name = nameParts.replace(/[&/\\#,+()$~%._@'":*?<>{}]/g, "");
+    if (name.length > 5) name = name.substring(0, 5);
+    return name + ("" + Math.random()).substring(2, 7);
+  };
 
   useEffect(() => {
     Hub.listen("auth", initUser);
@@ -81,100 +81,100 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     return () => Hub.remove("auth", initUser);
   }, []);
 
-  // const verifyEmail = () => {
-  //   validateCaptcha("NextButton_change").then(async (success: boolean) => {
-  //     if (!success) return;
-  //     setLoading(true);
-  //     setEmailError("");
-  //     let exists = await doesEmailExist(email, "AWS_IAM");
-  //     if (!exists) {
-  //       setBack(false);
-  //       setNext(true);
-  //     } else {
-  //       setNext(false);
-  //       setEmailError(
-  //         "Please use another email address as this one is already used by another account."
-  //       );
-  //     }
-  //     setLoading(false);
-  //   });
-  // };
+  const verifyEmail = () => {
+    validateCaptcha("NextButton_change").then(async (success: boolean) => {
+      if (!success) return;
+      setLoading(true);
+      setEmailError("");
+      let exists = await doesEmailExist(email, "AWS_IAM");
+      if (!exists) {
+        setBack(false);
+        setNext(true);
+      } else {
+        setNext(false);
+        setEmailError(
+          "Please use another email address as this one is already used by another account."
+        );
+      }
+      setLoading(false);
+    });
+  };
 
-  // const onBackClick = () => {
-  //   setLoading(false);
-  //   setNext(false);
-  //   setBack(true);
-  // };
+  const onBackClick = () => {
+    setLoading(false);
+    setNext(false);
+    setBack(true);
+  };
 
-  // const handleRegistrationSubmit = async () => {
-  //   validateCaptcha("OnSubmit_change").then(async (success: boolean) => {
-  //     if (!success) return;
-  //     setLoading(true);
-  //     const username = generateFromEmail(email);
-  //     Auth.signUp({
-  //       username: username,
-  //       password: password,
-  //       attributes: {
-  //         email: email,
-  //         "custom:tc": new Date().toISOString(),
-  //         "custom:notify": notify ? new Date().toISOString() : "N",
-  //       },
-  //     })
-  //       .then(async (response) => {
-  //         setLoading(false);
-  //         Hub.dispatch("UI Auth", {
-  //           event: "AuthStateChange",
-  //           message: AuthState.ConfirmSignUp,
-  //           data: {
-  //             ...response.user,
-  //             username: username,
-  //             password: password,
-  //             attributes: {
-  //               email: email,
-  //               "custom:tc": new Date().toISOString(),
-  //               "custom:notify": notify ? new Date().toISOString() : "N",
-  //             },
-  //           },
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         setLoading(false);
-  //         setError(error.message);
-  //       });
-  //   });
-  // };
+  const handleRegistrationSubmit = async () => {
+    validateCaptcha("OnSubmit_change").then(async (success: boolean) => {
+      if (!success) return;
+      setLoading(true);
+      const username = generateFromEmail(email);
+      Auth.signUp({
+        username: username,
+        password: password,
+        attributes: {
+          email: email,
+          "custom:tc": new Date().toISOString(),
+          "custom:notify": notify ? new Date().toISOString() : "N",
+        },
+      })
+        .then(async (response) => {
+          setLoading(false);
+          Hub.dispatch("UI Auth", {
+            event: "AuthStateChange",
+            message: AuthState.ConfirmSignUp,
+            data: {
+              ...response.user,
+              username: username,
+              password: password,
+              attributes: {
+                email: email,
+                "custom:tc": new Date().toISOString(),
+                "custom:notify": notify ? new Date().toISOString() : "N",
+              },
+            },
+          });
+        })
+        .catch((error) => {
+          setLoading(false);
+          setError(error.message);
+        });
+    });
+  };
 
-  // const handleFormChange = () => {
-  //   const fieldErr = (name: string) => form.getFieldError(name).length > 0;
-  //   const fieldTouch = (name: string) => !form.isFieldTouched(name);
-  //   setDisabledSubmit(
-  //     fieldErr("password") ||
-  //       fieldErr("terms") ||
-  //       fieldTouch("password") ||
-  //       fieldTouch("terms")
-  //   );
-  //   setDisabledNext(
-  //     fieldErr("email") ||
-  //       fieldTouch("email") ||
-  //       form.getFieldValue("email").length === 0
-  //   );
-  // };
+  const handleFormChange = () => {
+    const fieldErr = (name: string) => form.getFieldError(name).length > 0;
+    const fieldTouch = (name: string) => !form.isFieldTouched(name);
+    setDisabledSubmit(
+      fieldErr("password") ||
+        fieldErr("terms") ||
+        fieldTouch("password") ||
+        fieldTouch("terms")
+    );
+    setDisabledNext(
+      fieldErr("email") ||
+        fieldTouch("email") ||
+        form.getFieldValue("email").length === 0
+    );
+  };
 
-  // const onCancel = () => {
-  //   Hub.dispatch("UI Auth", { event: "AuthStateChange", message: AuthState.SignIn });
-  // };
+  const onCancel = () => {
+    Hub.dispatch("UI Auth", { event: "AuthStateChange", message: AuthState.SignIn });
+  };
 
-  // useEffect(() => {
-  //   return onAuthUIStateChange((nextAuthState) => {
-  //     setAuthState(nextAuthState);
-  //   });
-  // }, []);
+  useEffect(() => {
+    return onAuthUIStateChange((nextAuthState) => {
+      setAuthState(nextAuthState);
+    });
+  }, []);
 
   return (
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthenticator>
-        {/* {authState === AuthState.SignUp && (
+        {authState === AuthState.SignUp && (
           <AmplifySection slot="sign-up">
             <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
             <Form
@@ -337,7 +337,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
               )}
             </Form>
           </AmplifySection>
-        )} */}
+        )}
         {user ? (
           <AppContextProvider user={user} handleLogout={handleLogout}>
             {children}
