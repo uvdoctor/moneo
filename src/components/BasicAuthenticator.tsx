@@ -19,7 +19,7 @@ interface BasicAuthenticatorProps {
 }
 
 Amplify.configure(awsconfig);
-Auth.configure({authenticationFlowType: 'USER_PASSWORD_AUTH'});
+Amplify.configure({Auth: {authenticationFlowType: 'USER_PASSWORD_AUTH'}});
 
 export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
   const { executeRecaptcha } = useGoogleReCaptcha();
