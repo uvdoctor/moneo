@@ -44,6 +44,7 @@ export default function AddHoldings({
 		close();
 	};
 
+	
 	const updateInstruments = (instrumentsToAdd: []) => {
 		setInstrumentsList([ ...instrumentsToAdd, ...instruments ]);
 	};
@@ -70,7 +71,7 @@ export default function AddHoldings({
 			>
 				{activeTab === 'Financial' ? (
 					<AddHoldingFiancialInput updateInstruments={updateInstruments} disableOk={setOkDisabled} />
-				) : childTab === DEPO_TAB || childTab === ML_TAB ? (
+				) : !childTab ? 'Select to proceed' : childTab === DEPO_TAB || childTab === ML_TAB ? (
 					<AddDepositInput
 						setInput={setNewRec}
 						disableOk={setOkDisabled}
