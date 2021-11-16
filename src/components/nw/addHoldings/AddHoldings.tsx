@@ -71,7 +71,7 @@ export default function AddHoldings({
 			>
 				{activeTab === 'Financial' ? (
 					<AddHoldingFiancialInput updateInstruments={updateInstruments} disableOk={setOkDisabled} />
-				) : !childTab ? 'Select to proceed' : childTab === DEPO_TAB || childTab === ML_TAB ? (
+				) : childTab === DEPO_TAB || childTab === ML_TAB ? (
 					<AddDepositInput
 						setInput={setNewRec}
 						disableOk={setOkDisabled}
