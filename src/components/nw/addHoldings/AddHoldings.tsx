@@ -80,7 +80,8 @@ export default function AddHoldings({
 					/>
 				) : childTab === PROP_TAB ? <AddPropertiesInput 
 						setInput={setNewRec} 
-						disableOk={setOkDisabled} /> 
+						disableOk={setOkDisabled}
+						categoryOptions={categoryOptions} /> 
 				  : (
 					<AddHoldingInput
 						setInput={setNewRec}

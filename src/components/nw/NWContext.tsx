@@ -194,6 +194,15 @@ function NWContextProvider() {
 					label: [PROP_TAB],
 					data: properties,
 					setData: setProperties,
+					categoryOptions: {
+						P: "Plot",
+						A: "Apartment",
+						H: "Home",
+						C: "Condominium",	
+						O: "Other",
+						T: "Townhouse",
+						OTHER: 'Others'
+					},
 					viewComp: ViewPropertiesInput,
 				},
 				[VEHICLE_TAB]: {
