@@ -1,6 +1,6 @@
 import { AmplifyAuthContainer, AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
-import Amplify, { Auth, Hub, Logger } from "aws-amplify";
+import Amplify, { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useEffect, useState } from "react";
 import { AuthState, Translations, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import { Alert, Checkbox, Row } from "antd";
@@ -18,7 +18,7 @@ interface BasicAuthenticatorProps {
 }
 
 Amplify.configure(awsconfig);
-Auth.configure({authenticationFlowType: 'USER_PASSWORD_AUTH'});
+// Auth.configure({authenticationFlowType: 'USER_PASSWORD_AUTH'});
 
 export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -76,36 +76,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     return name + ("" + Math.random()).substring(2, 7);
   };
 
-  const logger = new Logger('My-Logger');
-
-  const listener = (data: { payload: { event: any; }; }) => {
-    switch (data.payload.event) {
-      case 'signIn':
-          logger.info('user signed in');
-          break;
-      case 'signUp':
-          logger.info('user signed up');
-          break;
-      case 'signOut':
-          logger.info('user signed out');
-          break;
-      case 'signIn_failure':
-          logger.error('user sign in failed');
-          break;
-      case 'tokenRefresh':
-          logger.info('token refresh succeeded');
-          break;
-      case 'tokenRefresh_failure':
-          logger.error('token refresh failed');
-          break;
-      case 'configured':
-            logger.info('the Auth module is configured');
-    }
-  }
-  
-
   useEffect(() => {
-    Hub.listen('auth', listener);
     return onAuthUIStateChange((nextAuthState, authData) => {
       console.log("Next auth state: ", nextAuthState);
       console.log("Auth data: ", authData);
