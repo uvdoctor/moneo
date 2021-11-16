@@ -11,17 +11,14 @@ import Nav from "./Nav";
 import { AppContextProvider } from "./AppContext";
 import { Form, Input, Button } from "antd";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
-// import awsconfig from '../aws-exports';
+import awsconfig from '../aws-exports';
 
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
 
-// Amplify.configure(awsconfig);
-// Auth.configure({authenticationFlowType: 'USER_PASSWORD_AUTH'});
-Amplify.configure({
-  Auth:{ authenticationFlowType: 'USER_PASSWORD_AUTH' }
-})
+Amplify.configure(awsconfig);
+Auth.configure({authenticationFlowType: 'USER_PASSWORD_AUTH'});
 
 export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
   const { executeRecaptcha } = useGoogleReCaptcha();
