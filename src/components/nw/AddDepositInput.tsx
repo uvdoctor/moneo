@@ -138,8 +138,8 @@ export default function AddHoldingInput({
 				<label>Start Year</label><InputNumber onChange={changeYear} value={year}/>&nbsp;&nbsp;
 				<label>Duration</label><InputNumber onChange={changeDuration} value={duration}/>
 			</p>
-			<p><NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={chg} step={0.1} /></p>
-			<p><NumberInput pre={'Amount'} min={10} max={100000} value={amount} changeHandler={changeAmount} currency={selectedCurrency} step={1}  /></p>
+			<p><NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={chg} step={0.1} noSlider/></p>
+			<p><NumberInput pre={'Amount'} min={10} max={100000} value={amount} changeHandler={changeAmount} currency={selectedCurrency} step={1} noSlider/></p>
 			<p>
 				<SelectInput
 					pre={<UserOutlined />}

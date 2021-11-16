@@ -43,7 +43,6 @@ export default function AddHoldings({
 		}
 		close();
 	};
-
 	
 	const updateInstruments = (instrumentsToAdd: []) => {
 		setInstrumentsList([ ...instrumentsToAdd, ...instruments ]);
