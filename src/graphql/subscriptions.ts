@@ -848,13 +848,19 @@ export const onCreateHoldings = /* GraphQL */ `
           qty
         }
         address
-        fIds
         curr
+        city
         country
+        district
+        state
         own {
           fId
           per
         }
+        rate
+        mv
+        mvy
+        mvm
       }
       vehicles {
         id
@@ -1119,13 +1125,19 @@ export const onUpdateHoldings = /* GraphQL */ `
           qty
         }
         address
-        fIds
         curr
+        city
         country
+        district
+        state
         own {
           fId
           per
         }
+        rate
+        mv
+        mvy
+        mvm
       }
       vehicles {
         id
@@ -1390,13 +1402,19 @@ export const onDeleteHoldings = /* GraphQL */ `
           qty
         }
         address
-        fIds
         curr
+        city
         country
+        district
+        state
         own {
           fId
           per
         }
+        rate
+        mv
+        mvy
+        mvm
       }
       vehicles {
         id

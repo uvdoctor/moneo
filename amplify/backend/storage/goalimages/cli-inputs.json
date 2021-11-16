@@ -1,0 +1,12 @@
+{
+  "resourceName": "goalimages",
+  "bucketName": "goal-images",
+  "policyUUID": "ff9ddbc0",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}

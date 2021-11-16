@@ -507,13 +507,19 @@ export type LiabilityInput = {
 
 export type PropertyInput = {
   type: PropertyType,
-  pin: number,
+  pin?: number | null,
   purchase?: PurchaseInput | null,
   address?: string | null,
-  fIds: Array< string >,
   curr: string,
-  country: string,
-  own?: Array< OwnershipInput > | null,
+  city?: string | null,
+  country?: string | null,
+  district?: string | null,
+  state?: string | null,
+  own: Array< OwnershipInput >,
+  rate: number,
+  mv?: number | null,
+  mvy?: number | null,
+  mvm?: number | null,
 };
 
 export enum PropertyType {
@@ -617,13 +623,19 @@ export type Liability = {
 export type Property = {
   __typename: "Property",
   type?: PropertyType,
-  pin?: number,
+  pin?: number | null,
   purchase?: Purchase,
   address?: string | null,
-  fIds?: Array< string >,
   curr?: string,
-  country?: string,
-  own?:  Array<Ownership > | null,
+  city?: string | null,
+  country?: string | null,
+  district?: string | null,
+  state?: string | null,
+  own?:  Array<Ownership >,
+  rate?: number,
+  mv?: number | null,
+  mvy?: number | null,
+  mvm?: number | null,
 };
 
 export type Ownership = {
@@ -1386,7 +1398,7 @@ export type ModelIDInput = {
 
 export type ModelGoalConnection = {
   __typename: "ModelGoalConnection",
-  items?:  Array<Goal | null > | null,
+  items?:  Array<Goal >,
   nextToken?: string | null,
 };
 
@@ -1401,7 +1413,7 @@ export type ModelFamilyFilterInput = {
 
 export type ModelFamilyConnection = {
   __typename: "ModelFamilyConnection",
-  items?:  Array<Family | null > | null,
+  items?:  Array<Family >,
   nextToken?: string | null,
 };
 
@@ -1417,7 +1429,7 @@ export type ModelFeedbackFilterInput = {
 
 export type ModelFeedbackConnection = {
   __typename: "ModelFeedbackConnection",
-  items?:  Array<Feedback | null > | null,
+  items?:  Array<Feedback >,
   nextToken?: string | null,
 };
 
@@ -1433,7 +1445,7 @@ export type ModelRatingFilterInput = {
 
 export type ModelRatingConnection = {
   __typename: "ModelRatingConnection",
-  items?:  Array<Rating | null > | null,
+  items?:  Array<Rating >,
   nextToken?: string | null,
 };
 
@@ -1455,7 +1467,7 @@ export enum ModelSortDirection {
 
 export type ModelContactsConnection = {
   __typename: "ModelContactsConnection",
-  items?:  Array<Contacts | null > | null,
+  items?:  Array<Contacts >,
   nextToken?: string | null,
 };
 
@@ -1472,7 +1484,7 @@ export type ModelFeedsFilterInput = {
 
 export type ModelFeedsConnection = {
   __typename: "ModelFeedsConnection",
-  items?:  Array<Feeds | null > | null,
+  items?:  Array<Feeds >,
   nextToken?: string | null,
 };
 
@@ -1497,7 +1509,7 @@ export type ModelINExchgFilterInput = {
 
 export type ModelINExchgConnection = {
   __typename: "ModelINExchgConnection",
-  items?:  Array<INExchg | null > | null,
+  items?:  Array<INExchg >,
   nextToken?: string | null,
 };
 
@@ -1512,7 +1524,7 @@ export type ModelINExchgMetaFilterInput = {
 
 export type ModelINExchgMetaConnection = {
   __typename: "ModelINExchgMetaConnection",
-  items?:  Array<INExchgMeta | null > | null,
+  items?:  Array<INExchgMeta >,
   nextToken?: string | null,
 };
 
@@ -1537,7 +1549,7 @@ export type ModelIndicesFilterInput = {
 
 export type ModelIndicesConnection = {
   __typename: "ModelIndicesConnection",
-  items?:  Array<Indices | null > | null,
+  items?:  Array<Indices >,
   nextToken?: string | null,
 };
 
@@ -1566,7 +1578,7 @@ export type ModelINBondFilterInput = {
 
 export type ModelINBondConnection = {
   __typename: "ModelINBondConnection",
-  items?:  Array<INBond | null > | null,
+  items?:  Array<INBond >,
   nextToken?: string | null,
 };
 
@@ -1589,7 +1601,7 @@ export type ModelINMutualFilterInput = {
 
 export type ModelINMutualConnection = {
   __typename: "ModelINMutualConnection",
-  items?:  Array<INMutual | null > | null,
+  items?:  Array<INMutual >,
   nextToken?: string | null,
 };
 
@@ -1608,7 +1620,7 @@ export type ModelNPSFilterInput = {
 
 export type ModelNPSConnection = {
   __typename: "ModelNPSConnection",
-  items?:  Array<NPS | null > | null,
+  items?:  Array<NPS >,
   nextToken?: string | null,
 };
 
@@ -1621,7 +1633,7 @@ export type ModelHoldingsFilterInput = {
 
 export type ModelHoldingsConnection = {
   __typename: "ModelHoldingsConnection",
-  items?:  Array<Holdings | null > | null,
+  items?:  Array<Holdings >,
   nextToken?: string | null,
 };
 
@@ -1636,7 +1648,7 @@ export type ModelEODPricesFilterInput = {
 
 export type ModelEODPricesConnection = {
   __typename: "ModelEODPricesConnection",
-  items?:  Array<EODPrices | null > | null,
+  items?:  Array<EODPrices >,
   nextToken?: string | null,
 };
 
@@ -2096,7 +2108,7 @@ export type CreateHoldingsMutation = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
-      pin: number,
+      pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
         amt: number,
@@ -2106,14 +2118,20 @@ export type CreateHoldingsMutation = {
         qty: number,
       } | null,
       address?: string | null,
-      fIds: Array< string >,
       curr: string,
-      country: string,
-      own?:  Array< {
+      city?: string | null,
+      country?: string | null,
+      district?: string | null,
+      state?: string | null,
+      own:  Array< {
         __typename: "Ownership",
         fId: string,
         per: number,
-      } > | null,
+      } >,
+      rate: number,
+      mv?: number | null,
+      mvy?: number | null,
+      mvm?: number | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -2402,7 +2420,7 @@ export type UpdateHoldingsMutation = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
-      pin: number,
+      pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
         amt: number,
@@ -2412,14 +2430,20 @@ export type UpdateHoldingsMutation = {
         qty: number,
       } | null,
       address?: string | null,
-      fIds: Array< string >,
       curr: string,
-      country: string,
-      own?:  Array< {
+      city?: string | null,
+      country?: string | null,
+      district?: string | null,
+      state?: string | null,
+      own:  Array< {
         __typename: "Ownership",
         fId: string,
         per: number,
-      } > | null,
+      } >,
+      rate: number,
+      mv?: number | null,
+      mvy?: number | null,
+      mvm?: number | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -2708,7 +2732,7 @@ export type DeleteHoldingsMutation = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
-      pin: number,
+      pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
         amt: number,
@@ -2718,14 +2742,20 @@ export type DeleteHoldingsMutation = {
         qty: number,
       } | null,
       address?: string | null,
-      fIds: Array< string >,
       curr: string,
-      country: string,
-      own?:  Array< {
+      city?: string | null,
+      country?: string | null,
+      district?: string | null,
+      state?: string | null,
+      own:  Array< {
         __typename: "Ownership",
         fId: string,
         per: number,
-      } > | null,
+      } >,
+      rate: number,
+      mv?: number | null,
+      mvy?: number | null,
+      mvm?: number | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -3657,7 +3687,7 @@ export type ListGoalsQueryVariables = {
 export type ListGoalsQuery = {
   listGoals?:  {
     __typename: "ModelGoalConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Goal",
       id: string,
       sy: number,
@@ -3718,7 +3748,7 @@ export type ListGoalsQuery = {
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -3748,7 +3778,7 @@ export type ListFamilysQueryVariables = {
 export type ListFamilysQuery = {
   listFamilys?:  {
     __typename: "ModelFamilyConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Family",
       id: string,
       tid: string,
@@ -3756,7 +3786,7 @@ export type ListFamilysQuery = {
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -3791,7 +3821,7 @@ export type ListFeedbacksQueryVariables = {
 export type ListFeedbacksQuery = {
   listFeedbacks?:  {
     __typename: "ModelFeedbackConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Feedback",
       id: string,
       type: FeedbackType,
@@ -3804,7 +3834,7 @@ export type ListFeedbacksQuery = {
       feedback: string,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -3834,7 +3864,7 @@ export type ListRatingsQueryVariables = {
 export type ListRatingsQuery = {
   listRatings?:  {
     __typename: "ModelRatingConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Rating",
       id: string,
       type: CalcType,
@@ -3842,7 +3872,7 @@ export type ListRatingsQuery = {
       feedbackId?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -3874,7 +3904,7 @@ export type ListContactssQueryVariables = {
 export type ListContactssQuery = {
   listContactss?:  {
     __typename: "ModelContactsConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Contacts",
       email: string,
       im?: number | null,
@@ -3882,7 +3912,7 @@ export type ListContactssQuery = {
       notify: boolean,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -3898,7 +3928,7 @@ export type RegByImQueryVariables = {
 export type RegByImQuery = {
   regByIM?:  {
     __typename: "ModelContactsConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Contacts",
       email: string,
       im?: number | null,
@@ -3906,7 +3936,7 @@ export type RegByImQuery = {
       notify: boolean,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -3922,7 +3952,7 @@ export type RegByMobQueryVariables = {
 export type RegByMobQuery = {
   regByMob?:  {
     __typename: "ModelContactsConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Contacts",
       email: string,
       im?: number | null,
@@ -3930,7 +3960,7 @@ export type RegByMobQuery = {
       notify: boolean,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -3963,7 +3993,7 @@ export type ListFeedssQueryVariables = {
 export type ListFeedssQuery = {
   listFeedss?:  {
     __typename: "ModelFeedsConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Feeds",
       id: string,
       tname: string,
@@ -3972,7 +4002,7 @@ export type ListFeedssQuery = {
       count: number,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -4021,7 +4051,7 @@ export type ListInExchgsQueryVariables = {
 export type ListInExchgsQuery = {
   listINExchgs?:  {
     __typename: "ModelINExchgConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "INExchg",
       id: string,
       sid: string,
@@ -4046,7 +4076,7 @@ export type ListInExchgsQuery = {
       ylow?: number | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -4077,14 +4107,14 @@ export type ListInExchgMetasQueryVariables = {
 export type ListInExchgMetasQuery = {
   listINExchgMetas?:  {
     __typename: "ModelINExchgMetaConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "INExchgMeta",
       id: string,
       mcap?: MCap | null,
       ind?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -4125,7 +4155,7 @@ export type ListIndicessQueryVariables = {
 export type ListIndicessQuery = {
   listIndicess?:  {
     __typename: "ModelIndicesConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Indices",
       id: string,
       name: string,
@@ -4142,7 +4172,7 @@ export type ListIndicessQuery = {
       ind?: Industry | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -4187,7 +4217,7 @@ export type ListInBondsQueryVariables = {
 export type ListInBondsQuery = {
   listINBonds?:  {
     __typename: "ModelINBondConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "INBond",
       id: string,
       sid: string,
@@ -4208,7 +4238,7 @@ export type ListInBondsQuery = {
       ytm?: number | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -4247,7 +4277,7 @@ export type ListInMutualsQueryVariables = {
 export type ListInMutualsQuery = {
   listINMutuals?:  {
     __typename: "ModelINMutualConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "INMutual",
       id: string,
       sid: string,
@@ -4262,7 +4292,7 @@ export type ListInMutualsQuery = {
       tf?: boolean | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -4297,7 +4327,7 @@ export type ListNpSsQueryVariables = {
 export type ListNpSsQuery = {
   listNPSs?:  {
     __typename: "ModelNPSConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "NPS",
       id: string,
       pfm: NPSPFM,
@@ -4308,7 +4338,7 @@ export type ListNpSsQuery = {
       price: number,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -4404,7 +4434,7 @@ export type GetHoldingsQuery = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
-      pin: number,
+      pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
         amt: number,
@@ -4414,14 +4444,20 @@ export type GetHoldingsQuery = {
         qty: number,
       } | null,
       address?: string | null,
-      fIds: Array< string >,
       curr: string,
-      country: string,
-      own?:  Array< {
+      city?: string | null,
+      country?: string | null,
+      district?: string | null,
+      state?: string | null,
+      own:  Array< {
         __typename: "Ownership",
         fId: string,
         per: number,
-      } > | null,
+      } >,
+      rate: number,
+      mv?: number | null,
+      mvy?: number | null,
+      mvm?: number | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -4627,7 +4663,7 @@ export type ListHoldingssQueryVariables = {
 export type ListHoldingssQuery = {
   listHoldingss?:  {
     __typename: "ModelHoldingsConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Holdings",
       id: string,
       instruments?:  Array< {
@@ -4686,11 +4722,17 @@ export type ListHoldingssQuery = {
       property?:  Array< {
         __typename: "Property",
         type: PropertyType,
-        pin: number,
+        pin?: number | null,
         address?: string | null,
-        fIds: Array< string >,
         curr: string,
-        country: string,
+        city?: string | null,
+        country?: string | null,
+        district?: string | null,
+        state?: string | null,
+        rate: number,
+        mv?: number | null,
+        mvy?: number | null,
+        mvm?: number | null,
       } > | null,
       vehicles?:  Array< {
         __typename: "Holding",
@@ -4812,7 +4854,7 @@ export type ListHoldingssQuery = {
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -4843,14 +4885,14 @@ export type ListEodPricessQueryVariables = {
 export type ListEodPricessQuery = {
   listEODPricess?:  {
     __typename: "ModelEODPricesConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "EODPrices",
       id: string,
       price: number,
       name?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -5753,7 +5795,7 @@ export type OnCreateHoldingsSubscription = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
-      pin: number,
+      pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
         amt: number,
@@ -5763,14 +5805,20 @@ export type OnCreateHoldingsSubscription = {
         qty: number,
       } | null,
       address?: string | null,
-      fIds: Array< string >,
       curr: string,
-      country: string,
-      own?:  Array< {
+      city?: string | null,
+      country?: string | null,
+      district?: string | null,
+      state?: string | null,
+      own:  Array< {
         __typename: "Ownership",
         fId: string,
         per: number,
-      } > | null,
+      } >,
+      rate: number,
+      mv?: number | null,
+      mvy?: number | null,
+      mvm?: number | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -6058,7 +6106,7 @@ export type OnUpdateHoldingsSubscription = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
-      pin: number,
+      pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
         amt: number,
@@ -6068,14 +6116,20 @@ export type OnUpdateHoldingsSubscription = {
         qty: number,
       } | null,
       address?: string | null,
-      fIds: Array< string >,
       curr: string,
-      country: string,
-      own?:  Array< {
+      city?: string | null,
+      country?: string | null,
+      district?: string | null,
+      state?: string | null,
+      own:  Array< {
         __typename: "Ownership",
         fId: string,
         per: number,
-      } > | null,
+      } >,
+      rate: number,
+      mv?: number | null,
+      mvy?: number | null,
+      mvm?: number | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -6363,7 +6417,7 @@ export type OnDeleteHoldingsSubscription = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
-      pin: number,
+      pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
         amt: number,
@@ -6373,14 +6427,20 @@ export type OnDeleteHoldingsSubscription = {
         qty: number,
       } | null,
       address?: string | null,
-      fIds: Array< string >,
       curr: string,
-      country: string,
-      own?:  Array< {
+      city?: string | null,
+      country?: string | null,
+      district?: string | null,
+      state?: string | null,
+      own:  Array< {
         __typename: "Ownership",
         fId: string,
         per: number,
-      } > | null,
+      } >,
+      rate: number,
+      mv?: number | null,
+      mvy?: number | null,
+      mvm?: number | null,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",

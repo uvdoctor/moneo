@@ -789,13 +789,19 @@ export const getHoldings = /* GraphQL */ `
           qty
         }
         address
-        fIds
         curr
+        city
         country
+        district
+        state
         own {
           fId
           per
         }
+        rate
+        mv
+        mvy
+        mvm
       }
       vehicles {
         id
@@ -1034,9 +1040,15 @@ export const listHoldingss = /* GraphQL */ `
           type
           pin
           address
-          fIds
           curr
+          city
           country
+          district
+          state
+          rate
+          mv
+          mvy
+          mvm
         }
         vehicles {
           id

@@ -441,13 +441,19 @@ type Purchase {
 
 type Property {
 	type: PropertyType!
-	pin: Int!
+	pin: Int
 	purchase: Purchase
 	address: String
-	fIds: [String!]!
 	curr: String!
-	country: String!
-	own: [Ownership!]
+	city: String
+	country: String
+	district: String
+	state: String
+	own: [Ownership!]!
+	rate: Float!
+	mv: Float
+	mvy: Int
+	mvm: Int
 }
 
 type Ownership {
