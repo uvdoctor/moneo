@@ -40,6 +40,7 @@ import { includesAny, initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
 import ViewDepositInput from './ViewDepositInput';
+import ViewPropertiesInput from './ViewPropertiesInput';
 
 const NWContext = createContext({});
 
@@ -70,6 +71,7 @@ export const EPF_TAB = 'Employee PF';
 export const VPF_TAB = 'Voluntary PF';
 export const VEHICLE_TAB  = 'Vehicles';
 export const ANGEL_TAB = 'Angel Investments';
+export const PROP_TAB = 'Properties';
 
 function NWContextProvider() {
 	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData }: any = useContext(AppContext);
@@ -188,24 +190,11 @@ function NWContextProvider() {
 		Physical: {
 			label: 'Physical',
 			children: {
-				Properties: {
-					label: 'Properties',
+				[PROP_TAB]: {
+					label: [PROP_TAB],
 					data: properties,
 					setData: setProperties,
-					total: totalProperties,
-					contentComp: <InstrumentValuation />,
-					formConfig: [
-						{
-							label: 'Name',
-							name: 'name',
-							type: 'text'
-						},
-						{
-							label: 'Qty',
-							name: 'qty',
-							type: 'text'
-						}
-					]
+					viewComp: ViewPropertiesInput,
 				},
 				[VEHICLE_TAB]: {
 					label: [VEHICLE_TAB],

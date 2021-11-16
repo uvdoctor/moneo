@@ -94,7 +94,7 @@ export default function NumberInput(props: NumberInputProps) {
 	return (
 		<div style={{ minWidth: '250px' }}>
 			<Col span={24}>
-				<Row justify="space-between" align="middle">
+					{!props.noSlider && <Row justify="space-between" align="middle">
 					<Col>
 						{props.pre}
 						{props.post && ` ${props.post}`}
@@ -110,10 +110,11 @@ export default function NumberInput(props: NumberInputProps) {
 					props.step >= 1 && (
 						<b>{`${toReadableNumber(props.value, props.step && props.step < 1 ? 2 : 0)} ${props.unit}`}</b>
 					)}
-				</Row>
+				</Row>}
 			</Col>
 			<Col span={24}>
-				<Row justify="space-between" align="top" style={{ marginBottom: '1.5rem' }}>
+				<Row justify={props.noSlider?"center":"space-between"} align="top" style={{ marginBottom: '1.5rem' }}>
+					{props.noSlider && <Col>{props.pre}&nbsp;</Col>}
 					{(props.currency || props.step < 1) && (
 						<Col span={10}>
 							<Row align="middle">
@@ -164,9 +165,8 @@ export default function NumberInput(props: NumberInputProps) {
 							) : null}
 						</Col>
 					)}
-					<Col span={props.currency || props.step < 1 ? 13 : 24}>
+					{props.noSlider ? null : (<Col span={props.currency || props.step < 1 ? 13 : 24}>
 						{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
-						{props.noSlider ? null : (
 							<Slider
 								min={props.min * rangeFactor}
 								max={props.max * rangeFactor}
@@ -182,13 +182,12 @@ export default function NumberInput(props: NumberInputProps) {
 									borderColor: sliderBorderColor
 								}}
 							/>
-						)}
 						{feedbackText && (
 							<Col span={24} style={{ textAlign: 'center' }}>
 								{feedbackText}
 							</Col>
 						)}
-					</Col>
+					</Col>)}
 				</Row>
 			</Col>
 			{props.note && <Col span={24}>{props.note}</Col>}

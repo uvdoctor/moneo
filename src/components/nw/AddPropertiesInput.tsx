@@ -10,7 +10,7 @@ import { getDefaultMember, getFamilyOptions } from './nwutils';
 interface AddHoldingInputProps {
 	setInput: Function;
 	disableOk: Function;
-	categoryOptions: any;
+	categoryOptions?: any;
 	subCategoryOptions?: any;
 }
 
