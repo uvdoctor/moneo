@@ -148,6 +148,7 @@ export default function AddPropertyInput({
 		console.log(value);
 		setOwn([])
 		setPer(0);
+		setMemberKey('');
 		console.log(per);
 		
 	  }
