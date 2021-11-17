@@ -57,7 +57,7 @@ export default function MainMenu({
                 <SubMenu
                   title={
                     <Fragment>
-                      {user?.attributes.picture ? (
+                      {user?.attributes?.picture ? (
                         <Avatar size="large" src={user?.attributes.picture} />
                       ) : (
                         <Avatar
@@ -67,9 +67,9 @@ export default function MainMenu({
                         />
                       )}
                       &nbsp;
-                      {user?.attributes.name
+                      {user?.attributes?.name
                         ? user?.attributes.name 
-                        : user?.attributes.preferred_username ? user?.attributes.preferred_username : user.username}
+                        : user?.attributes?.preferred_username ? user?.attributes.preferred_username : user.username}
                     </Fragment>
                   }
                 >
