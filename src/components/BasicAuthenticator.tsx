@@ -35,7 +35,7 @@ export default function BasicAuthenticator({
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [emailError, setEmailError] = useState<any>("");
-  const [user, setUser] = useState<any | null>({});
+  const [user, setUser] = useState<any>({});
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [notify, setNotify] = useState<boolean>(true);
@@ -71,7 +71,7 @@ export default function BasicAuthenticator({
     try {
       await Auth.signOut();
       Hub.dispatch("auth", { event: "signOut" });
-      setUser(null);
+      setUser({});
     } catch (error) {
       console.log("error signing out: ", error);
     }
@@ -88,6 +88,8 @@ export default function BasicAuthenticator({
 
   useEffect(() => {
     return onAuthUIStateChange((nextAuthState, authData) => {
+      console.log("Next auth state: ", nextAuthState);
+      console.log("Auth data: ", authData);
       setAuthState(nextAuthState);
       setUser(Object.assign({}, authData));
     });
@@ -354,7 +356,7 @@ export default function BasicAuthenticator({
               </Form>
             </AmplifySection>
           )}
-          {user ? (
+          {Object.keys(user).length > 0 ? (
             <AppContextProvider user={user} handleLogout={handleLogout}>
               {children}
             </AppContextProvider>
