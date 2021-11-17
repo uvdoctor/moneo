@@ -44,7 +44,7 @@ export default function UserSettings(): JSX.Element {
 
   const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
 
-  const notify = !user?.attributes['custom:notify'] || user?.attributes['custom:notify'] ==='N' ? false : true;
+  const notify = !user || !user?.attributes['custom:notify'] || user?.attributes['custom:notify'] ==='N' ? false : true;
 
   const disableButton = (prevValue: any, currValue: any) =>
     prevValue === currValue ? true : error.length > 0 ? true : false;
