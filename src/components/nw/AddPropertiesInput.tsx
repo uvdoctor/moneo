@@ -88,16 +88,22 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 
 	const changePin = async (e: any) => {
 		setPin(e.target.value);
-		if (e.target.value.length === 6) {
-			const response = await fetch(`https://api.postalpincode.in/pincode/${e.target.value}`);
-			const data = await response.json();
-			setState(data[0].PostOffice[0].State);
-			setCity(data[0].PostOffice[0].Block);
-			setDistrict(data[0].PostOffice[0].District);
+		if (selectedCurrency === 'INR') {
+			if (e.target.value.length === 6) {
+				const response = await fetch(`https://api.postalpincode.in/pincode/${e.target.value}`);
+				const data = await response.json();
+				setState(data[0].PostOffice[0].State);
+				setCity(data[0].PostOffice[0].Block);
+				setDistrict(data[0].PostOffice[0].District);
+				let rec = getNewRec();
+				rec.state = state;
+				rec.city = city;
+				rec.district = district;
+				rec.pin = pin;
+				setInput(rec);
+			}
+		} else {
 			let rec = getNewRec();
-			rec.state = state;
-			rec.city = city;
-			rec.district = district;
 			rec.pin = pin;
 			setInput(rec);
 		}
@@ -106,7 +112,7 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	const getNewRec = () => {
 		let newRec: PropertyInput = {
 			// @ts-ignore
-			type: setSubtype,
+			type: subtype,
 			pin: pin,
 			purchase: { amt: amount, month: month, year: year, qty: 1 },
 			address: address,
@@ -128,7 +134,7 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 		setSubtype(subtype);
 		let rec = getNewRec();
 		rec.type = subtype;
-		return rec;
+		setInput(rec);
 	};
 
 	const changeMember = (i: number, key: string) => {
@@ -175,27 +181,26 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 					changeHandler={(val: any) => changeSubtype(val)}
 				/>
 			</p>
-			{selectedCurrency === 'INR' && (
-				<p>
-					<Row justify={'space-around'}>
-						<Col>
-							<Input addonBefore={'Pincode'} value={pin} onChange={changePin} />
-						</Col>
-						<Col>
-							<TextInput pre={'District'} value={district} changeHandler={setDistrict} size={'middle'} />
-						</Col>
-					</Row>
-					<p />
-					<Row justify={'space-around'}>
-						<Col>
-							<TextInput pre={'City'} value={city} changeHandler={setCity} size={'middle'} />
-						</Col>
-						<Col>
-							<TextInput pre={'State'} value={state} changeHandler={setState} size={'middle'} />
-						</Col>
-					</Row>
-				</p>
-			)}
+			<p>
+				<Row justify={'space-around'}>
+					<Col>
+						<Input addonBefore={'Pincode'} value={pin} onChange={changePin} />
+					</Col>
+					<Col>
+						<TextInput pre={'District'} value={district} changeHandler={setDistrict} size={'middle'} />
+					</Col>
+				</Row>
+				<p />
+				<Row justify={'space-around'}>
+					<Col>
+						<TextInput pre={'City'} value={city} changeHandler={setCity} size={'middle'} />
+					</Col>
+					<Col>
+						<TextInput pre={'State'} value={state} changeHandler={setState} size={'middle'} />
+					</Col>
+				</Row>
+			</p>
+
 			<p>
 				<Input addonBefore={'Address'} value={address} onChange={changeAddress} />
 			</p>

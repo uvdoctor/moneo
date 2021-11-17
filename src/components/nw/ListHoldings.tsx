@@ -2,7 +2,7 @@ import { Button, Col, Row } from 'antd';
 import React, { Fragment, useContext } from 'react';
 import { HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
-import { NWContext } from './NWContext';
+import { NWContext, PROP_TAB } from './NWContext';
 import { getFamilyOptions } from './nwutils';
 import { DeleteOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -15,7 +15,7 @@ interface ListHoldingsProps {
 }
 
 export default function ListHoldings({ data, changeData, categoryOptions, viewComp, subCategoryOptions }: ListHoldingsProps) {
-	const { allFamily }: any = useContext(NWContext);
+	const { allFamily, childTab }: any = useContext(NWContext);
 
 	const changeOwner = (ownerKey: string, i: number) => {
 		data[i].fIds[0] = ownerKey;
@@ -43,7 +43,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, viewCo
 									categoryOptions: categoryOptions,
 									subCategoryOptions: subCategoryOptions,
 								})}
-								<Col>
+								{childTab === PROP_TAB ? null : <Col>
 									<SelectInput
 										pre={<UserOutlined />}
 										value={holding.fIds[0]}
@@ -55,7 +55,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, viewCo
 											</Button>
 										}
 									/>
-								</Col>
+								</Col>}
 							</Row>
 						</Col>
 					</Fragment>
