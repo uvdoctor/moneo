@@ -40,7 +40,6 @@ import { includesAny, initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
 import ViewDepositInput from './ViewDepositInput';
-import ViewPropertiesInput from './ViewPropertiesInput';
 
 const NWContext = createContext({});
 
@@ -203,7 +202,6 @@ function NWContextProvider() {
 						T: "Townhouse",
 						OTHER: 'Others'
 					},
-					viewComp: ViewPropertiesInput,
 				},
 				[VEHICLE_TAB]: {
 					label: [VEHICLE_TAB],
