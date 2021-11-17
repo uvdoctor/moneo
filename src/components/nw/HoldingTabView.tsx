@@ -1,11 +1,12 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Col, Empty, Row, Skeleton, Tabs } from 'antd';
-import { NPS_TAB, NWContext } from './NWContext';
+import { NPS_TAB, NWContext, PROP_TAB } from './NWContext';
 import AddHoldings from './addHoldings/AddHoldings';
 import UploadHoldings from './UploadHoldings';
 import { toHumanFriendlyCurrency } from '../utils';
 import ListHoldings from './ListHoldings';
 import { COLORS } from '../../CONSTANTS';
+import ListProperties from './ListProperties';
 
 export default function HoldingTabView() {
 	const {
@@ -77,7 +78,12 @@ export default function HoldingTabView() {
 									{!loadingHoldings ? tabsData[tabName].data.length ? tabsData[tabName]
 										.contentComp ? (
 										tabsData[tabName].contentComp
-									) : (
+									) : childTab === PROP_TAB ? 
+										<ListProperties
+											data={tabsData[tabName].data}
+											changeData={tabsData[tabName].setData}
+											categoryOptions={tabsData[tabName].categoryOptions} />
+									  : (
 										<ListHoldings
 											data={tabsData[tabName].data}
 											changeData={tabsData[tabName].setData}
