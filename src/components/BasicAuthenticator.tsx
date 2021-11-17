@@ -1,12 +1,8 @@
-import { AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
+import { AmplifyAuthContainer, AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
-import { Auth, Hub } from "aws-amplify";
+import Amplify, { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useEffect, useState } from "react";
-import {
-  AuthState,
-  Translations,
-  onAuthUIStateChange,
-} from "@aws-amplify/ui-components";
+import { AuthState, Translations, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import { Alert, Checkbox, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import Title from "antd/lib/typography/Title";
@@ -14,14 +10,18 @@ import { doesEmailExist } from "./registrationutils";
 import Nav from "./Nav";
 import { AppContextProvider } from "./AppContext";
 import { Form, Input, Button } from "antd";
-import router from "next/router";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import awsconfig from '../aws-exports';
+
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
 
-export default function BasicAuthenticator({
-  children,
-}: BasicAuthenticatorProps) {
+Amplify.configure(awsconfig);
+Auth.configure({authenticationFlowType: 'USER_PASSWORD_AUTH'});
+
+export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [emailError, setEmailError] = useState<any>("");
@@ -33,20 +33,38 @@ export default function BasicAuthenticator({
   const [back, setBack] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [authState, setAuthState] = useState<string>("");
+  const [authState, setAuthState] = useState<string>('signin');
   const [form] = useForm();
 
-  const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
+  const validateCaptcha = async (action: string) => {
+    //@ts-ignore
+    const token = await executeRecaptcha(action);
+    let result = await fetch("/api/verifycaptcha", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify({
+        token: token,
+      }),
+    })
+      .then((captchRes: any) => captchRes.json())
+      .then((data: any) => data.success)
+      .catch((e: any) => {
+        console.log("error while validating captcha ", e);
+        return false;
+      });
+    return result;
+  };
 
   const handleLogout = async () => {
     try {
       await Auth.signOut();
       Hub.dispatch("auth", { event: "signOut" });
+      setUser(null);
     } catch (error) {
       console.log("error signing out: ", error);
-    } finally {
-      router.reload();
-    }
+    } 
   };
 
   const generateFromEmail = (email: string) => {
@@ -59,25 +77,31 @@ export default function BasicAuthenticator({
   };
 
   useEffect(() => {
-    Hub.listen("auth", initUser);
-    initUser();
-    return () => Hub.remove("auth", initUser);
+    return onAuthUIStateChange((nextAuthState, authData) => {
+      console.log("Next auth state: ", nextAuthState);
+      console.log("Auth data: ", authData);
+      setAuthState(nextAuthState);
+      setUser(authData);
+    });
   }, []);
 
-  const verifyEmail = async () => {
-    setLoading(true);
-    setEmailError("");
-    let exists = await doesEmailExist(email, "AWS_IAM");
-    if (!exists) {
-      setBack(false);
-      setNext(true);
-    } else {
-      setNext(false);
-      setEmailError(
-        "Please use another email address as this one is already used by another account."
-      );
-    }
-    setLoading(false);
+  const verifyEmail = () => {
+    validateCaptcha("NextButton_change").then(async (success: boolean) => {
+      if (!success) return;
+      setLoading(true);
+      setEmailError("");
+      let exists = await doesEmailExist(email, "AWS_IAM");
+      if (!exists) {
+        setBack(false);
+        setNext(true);
+      } else {
+        setNext(false);
+        setEmailError(
+          "Please use another email address as this one is already used by another account."
+        );
+      }
+      setLoading(false);
+    });
   };
 
   const onBackClick = () => {
@@ -87,38 +111,41 @@ export default function BasicAuthenticator({
   };
 
   const handleRegistrationSubmit = async () => {
-    setLoading(true);
-    const username = generateFromEmail(email);
-    Auth.signUp({
-      username: username,
-      password: password,
-      attributes: {
-        email: email,
-        "custom:tc": new Date().toISOString(),
-        "custom:notify": notify ? new Date().toISOString() : "N",
-      },
-    })
-      .then(async (response) => {
-        setLoading(false);
-        Hub.dispatch("UI Auth", {
-          event: "AuthStateChange",
-          message: AuthState.ConfirmSignUp,
-          data: {
-            ...response.user,
-            username: username,
-            password: password,
-            attributes: {
-              email: email,
-              "custom:tc": new Date().toISOString(),
-              "custom:notify": notify ? new Date().toISOString() : "N",
-            },
-          },
-        });
+    validateCaptcha("OnSubmit_change").then(async (success: boolean) => {
+      if (!success) return;
+      setLoading(true);
+      const username = generateFromEmail(email);
+      Auth.signUp({
+        username: username,
+        password: password,
+        attributes: {
+          email: email,
+          "custom:tc": new Date().toISOString(),
+          "custom:notify": notify ? new Date().toISOString() : "N",
+        },
       })
-      .catch((error) => {
-        setLoading(false);
-        setError(error.message);
-      });
+        .then(async (response) => {
+          setLoading(false);
+          Hub.dispatch("UI Auth", {
+            event: "AuthStateChange",
+            message: AuthState.ConfirmSignUp,
+            data: {
+              ...response.user,
+              username: username,
+              password: password,
+              attributes: {
+                email: email,
+                "custom:tc": new Date().toISOString(),
+                "custom:notify": notify ? new Date().toISOString() : "N",
+              },
+            },
+          });
+        })
+        .catch((error) => {
+          setLoading(false);
+          setError(error.message);
+        });
+    });
   };
 
   const handleFormChange = () => {
@@ -137,19 +164,18 @@ export default function BasicAuthenticator({
     );
   };
 
-  useEffect(() => {
-    return onAuthUIStateChange((nextAuthState) => {
-      setAuthState(nextAuthState);
-    });
-  }, []);
+  const onCancel = () => {
+    Hub.dispatch("UI Auth", { event: "AuthStateChange", message: AuthState.SignIn });
+  };
 
   return (
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
+      <AmplifyAuthContainer>
       <AmplifyAuthenticator>
-        {authState === AuthState.SignUp && (
-          <AmplifySection slot="sign-up">
-            <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
+      {authState !== 'signin' && 
+        <AmplifySection slot="sign-up">
+          <Title level={5}>{Translations.SIGN_UP_HEADER_TEXT}</Title>
             <Form
               name="signup"
               form={form}
@@ -237,15 +263,27 @@ export default function BasicAuthenticator({
                   >
                     <Checkbox defaultChecked={true}>
                       I accept the{" "}
-                      <a target="_blank" href={ROUTES.POLICYTC}>
+                      <a
+                        target="_blank"
+                        href={ROUTES.POLICYTC}
+                        rel="noreferrer"
+                      >
                         Terms & Conditions
                       </a>
                       ,&nbsp;
-                      <a target="_blank" href={ROUTES.POLICYPRIVACY}>
+                      <a
+                        target="_blank"
+                        href={ROUTES.POLICYPRIVACY}
+                        rel="noreferrer"
+                      >
                         Privacy Policy
                       </a>{" "}
                       &nbsp;and&nbsp;
-                      <a target="_blank" href={ROUTES.POLICYSECURITY}>
+                      <a
+                        target="_blank"
+                        href={ROUTES.POLICYSECURITY}
+                        rel="noreferrer"
+                      >
                         Security Policy
                       </a>
                     </Checkbox>
@@ -262,16 +300,7 @@ export default function BasicAuthenticator({
                   <p>&nbsp;</p>
                   <Row justify="end">
                     <Form.Item>
-                      <Button
-                        type="link"
-                        htmlType="button"
-                        onClick={() =>
-                          Hub.dispatch("UI Auth", {
-                            event: "AuthStateChange",
-                            message: AuthState.SignIn,
-                          })
-                        }
-                      >
+                      <Button type="link" htmlType="button" onClick={onCancel}>
                         Cancel
                       </Button>
                       <Button type="link" onClick={onBackClick}>
@@ -292,6 +321,9 @@ export default function BasicAuthenticator({
               )}
               {back && (
                 <Row justify="end">
+                  <Button type="link" htmlType="button" onClick={onCancel}>
+                    Cancel
+                  </Button>
                   <Button
                     type="primary"
                     onClick={verifyEmail}
@@ -303,14 +335,15 @@ export default function BasicAuthenticator({
                 </Row>
               )}
             </Form>
-          </AmplifySection>
-        )}
-        {user ? (
+        </AmplifySection>
+      }
+      {user ? (
           <AppContextProvider user={user} handleLogout={handleLogout}>
             {children}
           </AppContextProvider>
-        ) : null}
+      ) : null}
       </AmplifyAuthenticator>
+      </AmplifyAuthContainer>
     </Fragment>
   );
 }
