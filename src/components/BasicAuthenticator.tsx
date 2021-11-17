@@ -18,7 +18,7 @@ import { doesEmailExist } from "./registrationutils";
 import Nav from "./Nav";
 import { AppContextProvider } from "./AppContext";
 import { Form, Input, Button } from "antd";
-// import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import awsconfig from "../aws-exports";
 
 interface BasicAuthenticatorProps {
@@ -31,7 +31,7 @@ Auth.configure({ authenticationFlowType: "USER_PASSWORD_AUTH" });
 export default function BasicAuthenticator({
   children,
 }: BasicAuthenticatorProps) {
-  // const { executeRecaptcha } = useGoogleReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [emailError, setEmailError] = useState<any>("");
