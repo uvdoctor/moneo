@@ -812,6 +812,7 @@ export const onCreateHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       savings {
         id
@@ -990,6 +991,7 @@ export const onCreateHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       other {
         id
@@ -1084,6 +1086,7 @@ export const onUpdateHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       savings {
         id
@@ -1262,6 +1265,7 @@ export const onUpdateHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       other {
         id
@@ -1356,6 +1360,7 @@ export const onDeleteHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       savings {
         id
@@ -1534,6 +1539,7 @@ export const onDeleteHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       other {
         id

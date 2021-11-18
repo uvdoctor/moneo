@@ -753,6 +753,7 @@ export const getHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       savings {
         id
@@ -931,6 +932,7 @@ export const getHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       other {
         id
@@ -1023,6 +1025,7 @@ export const listHoldingss = /* GraphQL */ `
           curr
           yearly
           name
+          type
         }
         savings {
           id
@@ -1134,6 +1137,7 @@ export const listHoldingss = /* GraphQL */ `
           curr
           yearly
           name
+          type
         }
         other {
           id

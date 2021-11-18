@@ -506,6 +506,7 @@ export type LiabilityInput = {
   curr: string,
   yearly: boolean,
   name?: string | null,
+  type?: string | null,
 };
 
 export type PropertyInput = {
@@ -616,6 +617,7 @@ export type Liability = {
   curr?: string,
   yearly?: boolean,
   name?: string | null,
+  type?: string | null,
 };
 
 export type Property = {
@@ -2066,6 +2068,7 @@ export type CreateHoldingsMutation = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -2264,6 +2267,7 @@ export type CreateHoldingsMutation = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -2372,6 +2376,7 @@ export type UpdateHoldingsMutation = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -2570,6 +2575,7 @@ export type UpdateHoldingsMutation = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -2678,6 +2684,7 @@ export type DeleteHoldingsMutation = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -2876,6 +2883,7 @@ export type DeleteHoldingsMutation = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -4374,6 +4382,7 @@ export type GetHoldingsQuery = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -4572,6 +4581,7 @@ export type GetHoldingsQuery = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -4675,6 +4685,7 @@ export type ListHoldingssQuery = {
         curr: string,
         yearly: boolean,
         name?: string | null,
+        type?: string | null,
       } > | null,
       savings?:  Array< {
         __typename: "Holding",
@@ -4796,6 +4807,7 @@ export type ListHoldingssQuery = {
         curr: string,
         yearly: boolean,
         name?: string | null,
+        type?: string | null,
       } > | null,
       other?:  Array< {
         __typename: "Holding",
@@ -5734,6 +5746,7 @@ export type OnCreateHoldingsSubscription = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -5932,6 +5945,7 @@ export type OnCreateHoldingsSubscription = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -6039,6 +6053,7 @@ export type OnUpdateHoldingsSubscription = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -6237,6 +6252,7 @@ export type OnUpdateHoldingsSubscription = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -6344,6 +6360,7 @@ export type OnDeleteHoldingsSubscription = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -6542,6 +6559,7 @@ export type OnDeleteHoldingsSubscription = {
       curr: string,
       yearly: boolean,
       name?: string | null,
+      type?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",

@@ -381,6 +381,7 @@ export const createHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       savings {
         id
@@ -559,6 +560,7 @@ export const createHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       other {
         id
@@ -656,6 +658,7 @@ export const updateHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       savings {
         id
@@ -834,6 +837,7 @@ export const updateHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       other {
         id
@@ -931,6 +935,7 @@ export const deleteHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       savings {
         id
@@ -1109,6 +1114,7 @@ export const deleteHoldings = /* GraphQL */ `
         curr
         yearly
         name
+        type
       }
       other {
         id

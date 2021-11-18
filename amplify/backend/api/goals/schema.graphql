@@ -469,6 +469,7 @@ type Liability {
 	curr: String!
 	yearly: Boolean!
 	name: String
+	type: String
 }
 
 type Balance {
