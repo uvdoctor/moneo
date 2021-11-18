@@ -84,12 +84,11 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 
 	const changePurchaseDate = (val: any) => {
 		setPurchaseDate(val);
-		disableOk(!purchaseDate);
 		let rec = getNewRec();
 		// @ts-ignore
-		rec.purchase.month = Number(purchaseDate.slice(0, purchaseDate.indexOf('-')));
+		rec.purchase.year = Number(purchaseDate.slice(0, purchaseDate.indexOf('-')));
 		// @ts-ignore
-		rec.purchase.year = Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1));
+		rec.purchase.month = Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1));
 		setInput(rec);
 	};
 
@@ -139,8 +138,8 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 			pin: pin,
 			purchase: { 
 				amt: amount, 
-				month: Number(purchaseDate.slice(0, purchaseDate.indexOf('-'))), 
-				year: Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1)), 
+				month: Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1)),  
+				year: Number(purchaseDate.slice(0, purchaseDate.indexOf('-'))),
 				qty: 1
 			},
 			address: address,
@@ -203,7 +202,7 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 		<div style={{ textAlign: 'center' }}>
 			<p>
 				<Row justify="center">
-					{subtype === 'O' ? null : <Col>
+					{subtype === 'O' || subtype === 'P' ? null : <Col>
 						<Checkbox onChange={(e)=>changeRes(e.target.checked)}>Residential</Checkbox>
 					</Col>}
 					<span>&nbsp;&nbsp;</span>
@@ -273,7 +272,7 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 							defaultVal={purchaseDate}
 							size={'middle'}
 						/>
-						</Col>
+					</Col>
 				</Row>
 			</p>
 			<p>
