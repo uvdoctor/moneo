@@ -30,7 +30,6 @@ import {
 	INExchg,
 	INMutual,
 	InsType,
-	InsuranceInput,
 	LiabilityInput,
 	PropertyInput,
 	UpdateHoldingsInput
@@ -40,6 +39,7 @@ import { includesAny, initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
 import ViewDepositInput from './ViewDepositInput';
+import ViewLiabilityInput from './ViewLiabilityInput';
 
 const NWContext = createContext({});
 
@@ -90,7 +90,7 @@ function NWContextProvider() {
 	const [ crypto, setCrypto ] = useState<Array<HoldingInput>>([]);
 	const [ angel, setAngel ] = useState<Array<HoldingInput>>([]);
 	const [ loans, setLoans ] = useState<Array<LiabilityInput>>([]);
-	const [ insurance, setInsurance ] = useState<Array<InsuranceInput>>([]);
+	const [ insurance, setInsurance ] = useState<Array<LiabilityInput>>([]);
 	const [ selectedMembers, setSelectedMembers ] = useState<Array<string>>([]);
 	const [ currencyList, setCurrencyList ] = useState<any>({});
 	const [ selectedCurrency, setSelectedCurrency ] = useState<string>('');
@@ -349,14 +349,21 @@ function NWContextProvider() {
 			data: loans,
 			setData: setLoans,
 			total: totalLoans,
-			contentComp: <InstrumentValuation />,
+			viewComp: ViewLiabilityInput,
 		},
 		Insurance: {
 			label: 'Insurance',
 			data: insurance,
 			total: totalInsurance,
 			setData: setInsurance,
-			contentComp: <InstrumentValuation />
+			categoryOptions: {
+				L: 'Life',
+				H: 'Health',
+				P: 'Property',
+				V: 'Vehicle',
+				O: 'Other'
+			},
+			viewComp: ViewLiabilityInput
 		},
 	};
 

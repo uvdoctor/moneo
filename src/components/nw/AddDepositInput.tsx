@@ -7,19 +7,19 @@ import SelectInput from '../form/selectinput';
 import { NWContext } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
 
-interface AddHoldingInputProps {
+interface AddDepositInputProps {
 	setInput: Function;
 	disableOk: Function;
 	categoryOptions: any;
 	subCategoryOptions?: any;
 }
 
-export default function AddHoldingInput({
+export default function AddDepositInput({
 	setInput,
 	disableOk,
 	categoryOptions,
 	subCategoryOptions,
-}: AddHoldingInputProps) {
+}: AddDepositInputProps) {
 	const { allFamily, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const [ cum, setCum ] = useState<string>('true');
 	const [ cumf, setCumf ] = useState<string>('1');
