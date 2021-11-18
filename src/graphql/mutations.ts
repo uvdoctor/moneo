@@ -375,18 +375,12 @@ export const createHoldings = /* GraphQL */ `
         cumf
       }
       loans {
-        loan {
-          type
-          per
-          rate
-          dur
-          ry
-          emi
-          pmi
-          peper
-        }
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       savings {
         id
@@ -559,12 +553,12 @@ export const createHoldings = /* GraphQL */ `
         subt
       }
       ins {
-        premium
-        sy
-        ey
-        yearly
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       other {
         id
@@ -656,18 +650,12 @@ export const updateHoldings = /* GraphQL */ `
         cumf
       }
       loans {
-        loan {
-          type
-          per
-          rate
-          dur
-          ry
-          emi
-          pmi
-          peper
-        }
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       savings {
         id
@@ -840,12 +828,12 @@ export const updateHoldings = /* GraphQL */ `
         subt
       }
       ins {
-        premium
-        sy
-        ey
-        yearly
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       other {
         id
@@ -937,18 +925,12 @@ export const deleteHoldings = /* GraphQL */ `
         cumf
       }
       loans {
-        loan {
-          type
-          per
-          rate
-          dur
-          ry
-          emi
-          pmi
-          peper
-        }
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       savings {
         id
@@ -1121,12 +1103,12 @@ export const deleteHoldings = /* GraphQL */ `
         subt
       }
       ins {
-        premium
-        sy
-        ey
-        yearly
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       other {
         id

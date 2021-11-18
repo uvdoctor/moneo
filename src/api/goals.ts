@@ -461,7 +461,7 @@ export type CreateHoldingsInput = {
   vpf?: Array< HoldingInput > | null,
   nps?: Array< HoldingInput > | null,
   crypto?: Array< HoldingInput > | null,
-  ins?: Array< InsuranceInput > | null,
+  ins?: Array< LiabilityInput > | null,
   other?: Array< HoldingInput > | null,
   angel?: Array< HoldingInput > | null,
 };
@@ -500,9 +500,12 @@ export type DepositInput = {
 };
 
 export type LiabilityInput = {
-  loan?: LoanInput | null,
-  fIds: Array< string >,
+  amt: number,
+  dur: number,
+  fId: string,
   curr: string,
+  yearly: boolean,
+  name?: string | null,
 };
 
 export type PropertyInput = {
@@ -539,15 +542,6 @@ export type OwnershipInput = {
   per: number,
 };
 
-export type InsuranceInput = {
-  premium: number,
-  sy: number,
-  ey: number,
-  yearly: boolean,
-  fIds: Array< string >,
-  curr: string,
-};
-
 export type ModelHoldingsConditionInput = {
   and?: Array< ModelHoldingsConditionInput | null > | null,
   or?: Array< ModelHoldingsConditionInput | null > | null,
@@ -570,7 +564,7 @@ export type Holdings = {
   vpf?:  Array<Holding > | null,
   nps?:  Array<Holding > | null,
   crypto?:  Array<Holding > | null,
-  ins?:  Array<Insurance > | null,
+  ins?:  Array<Liability > | null,
   other?:  Array<Holding > | null,
   angel?:  Array<Holding > | null,
   createdAt?: string,
@@ -616,9 +610,12 @@ export type Deposit = {
 
 export type Liability = {
   __typename: "Liability",
-  loan?: Loan,
-  fIds?: Array< string >,
+  amt?: number,
+  dur?: number,
+  fId?: string,
   curr?: string,
+  yearly?: boolean,
+  name?: string | null,
 };
 
 export type Property = {
@@ -646,16 +643,6 @@ export type Ownership = {
   per?: number,
 };
 
-export type Insurance = {
-  __typename: "Insurance",
-  premium?: number,
-  sy?: number,
-  ey?: number,
-  yearly?: boolean,
-  fIds?: Array< string >,
-  curr?: string,
-};
-
 export type UpdateHoldingsInput = {
   id: string,
   instruments?: Array< HoldingInput > | null,
@@ -671,7 +658,7 @@ export type UpdateHoldingsInput = {
   vpf?: Array< HoldingInput > | null,
   nps?: Array< HoldingInput > | null,
   crypto?: Array< HoldingInput > | null,
-  ins?: Array< InsuranceInput > | null,
+  ins?: Array< LiabilityInput > | null,
   other?: Array< HoldingInput > | null,
   angel?: Array< HoldingInput > | null,
 };
@@ -2073,19 +2060,12 @@ export type CreateHoldingsMutation = {
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
-      loan?:  {
-        __typename: "Loan",
-        type: LoanType,
-        per: number,
-        rate?: number | null,
-        dur: number,
-        ry: number,
-        emi?: number | null,
-        pmi?: number | null,
-        peper?: number | null,
-      } | null,
-      fIds: Array< string >,
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -2277,13 +2257,13 @@ export type CreateHoldingsMutation = {
       subt?: string | null,
     } > | null,
     ins?:  Array< {
-      __typename: "Insurance",
-      premium: number,
-      sy: number,
-      ey: number,
-      yearly: boolean,
-      fIds: Array< string >,
+      __typename: "Liability",
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -2386,19 +2366,12 @@ export type UpdateHoldingsMutation = {
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
-      loan?:  {
-        __typename: "Loan",
-        type: LoanType,
-        per: number,
-        rate?: number | null,
-        dur: number,
-        ry: number,
-        emi?: number | null,
-        pmi?: number | null,
-        peper?: number | null,
-      } | null,
-      fIds: Array< string >,
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -2590,13 +2563,13 @@ export type UpdateHoldingsMutation = {
       subt?: string | null,
     } > | null,
     ins?:  Array< {
-      __typename: "Insurance",
-      premium: number,
-      sy: number,
-      ey: number,
-      yearly: boolean,
-      fIds: Array< string >,
+      __typename: "Liability",
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -2699,19 +2672,12 @@ export type DeleteHoldingsMutation = {
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
-      loan?:  {
-        __typename: "Loan",
-        type: LoanType,
-        per: number,
-        rate?: number | null,
-        dur: number,
-        ry: number,
-        emi?: number | null,
-        pmi?: number | null,
-        peper?: number | null,
-      } | null,
-      fIds: Array< string >,
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -2903,13 +2869,13 @@ export type DeleteHoldingsMutation = {
       subt?: string | null,
     } > | null,
     ins?:  Array< {
-      __typename: "Insurance",
-      premium: number,
-      sy: number,
-      ey: number,
-      yearly: boolean,
-      fIds: Array< string >,
+      __typename: "Liability",
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -4402,19 +4368,12 @@ export type GetHoldingsQuery = {
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
-      loan?:  {
-        __typename: "Loan",
-        type: LoanType,
-        per: number,
-        rate?: number | null,
-        dur: number,
-        ry: number,
-        emi?: number | null,
-        pmi?: number | null,
-        peper?: number | null,
-      } | null,
-      fIds: Array< string >,
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -4606,13 +4565,13 @@ export type GetHoldingsQuery = {
       subt?: string | null,
     } > | null,
     ins?:  Array< {
-      __typename: "Insurance",
-      premium: number,
-      sy: number,
-      ey: number,
-      yearly: boolean,
-      fIds: Array< string >,
+      __typename: "Liability",
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -4710,8 +4669,12 @@ export type ListHoldingssQuery = {
       } > | null,
       loans?:  Array< {
         __typename: "Liability",
-        fIds: Array< string >,
+        amt: number,
+        dur: number,
+        fId: string,
         curr: string,
+        yearly: boolean,
+        name?: string | null,
       } > | null,
       savings?:  Array< {
         __typename: "Holding",
@@ -4826,13 +4789,13 @@ export type ListHoldingssQuery = {
         subt?: string | null,
       } > | null,
       ins?:  Array< {
-        __typename: "Insurance",
-        premium: number,
-        sy: number,
-        ey: number,
-        yearly: boolean,
-        fIds: Array< string >,
+        __typename: "Liability",
+        amt: number,
+        dur: number,
+        fId: string,
         curr: string,
+        yearly: boolean,
+        name?: string | null,
       } > | null,
       other?:  Array< {
         __typename: "Holding",
@@ -5765,19 +5728,12 @@ export type OnCreateHoldingsSubscription = {
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
-      loan?:  {
-        __typename: "Loan",
-        type: LoanType,
-        per: number,
-        rate?: number | null,
-        dur: number,
-        ry: number,
-        emi?: number | null,
-        pmi?: number | null,
-        peper?: number | null,
-      } | null,
-      fIds: Array< string >,
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -5969,13 +5925,13 @@ export type OnCreateHoldingsSubscription = {
       subt?: string | null,
     } > | null,
     ins?:  Array< {
-      __typename: "Insurance",
-      premium: number,
-      sy: number,
-      ey: number,
-      yearly: boolean,
-      fIds: Array< string >,
+      __typename: "Liability",
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -6077,19 +6033,12 @@ export type OnUpdateHoldingsSubscription = {
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
-      loan?:  {
-        __typename: "Loan",
-        type: LoanType,
-        per: number,
-        rate?: number | null,
-        dur: number,
-        ry: number,
-        emi?: number | null,
-        pmi?: number | null,
-        peper?: number | null,
-      } | null,
-      fIds: Array< string >,
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -6281,13 +6230,13 @@ export type OnUpdateHoldingsSubscription = {
       subt?: string | null,
     } > | null,
     ins?:  Array< {
-      __typename: "Insurance",
-      premium: number,
-      sy: number,
-      ey: number,
-      yearly: boolean,
-      fIds: Array< string >,
+      __typename: "Liability",
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",
@@ -6389,19 +6338,12 @@ export type OnDeleteHoldingsSubscription = {
     } > | null,
     loans?:  Array< {
       __typename: "Liability",
-      loan?:  {
-        __typename: "Loan",
-        type: LoanType,
-        per: number,
-        rate?: number | null,
-        dur: number,
-        ry: number,
-        emi?: number | null,
-        pmi?: number | null,
-        peper?: number | null,
-      } | null,
-      fIds: Array< string >,
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     savings?:  Array< {
       __typename: "Holding",
@@ -6593,13 +6535,13 @@ export type OnDeleteHoldingsSubscription = {
       subt?: string | null,
     } > | null,
     ins?:  Array< {
-      __typename: "Insurance",
-      premium: number,
-      sy: number,
-      ey: number,
-      yearly: boolean,
-      fIds: Array< string >,
+      __typename: "Liability",
+      amt: number,
+      dur: number,
+      fId: string,
       curr: string,
+      yearly: boolean,
+      name?: string | null,
     } > | null,
     other?:  Array< {
       __typename: "Holding",

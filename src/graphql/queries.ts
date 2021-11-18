@@ -747,18 +747,12 @@ export const getHoldings = /* GraphQL */ `
         cumf
       }
       loans {
-        loan {
-          type
-          per
-          rate
-          dur
-          ry
-          emi
-          pmi
-          peper
-        }
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       savings {
         id
@@ -931,12 +925,12 @@ export const getHoldings = /* GraphQL */ `
         subt
       }
       ins {
-        premium
-        sy
-        ey
-        yearly
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       other {
         id
@@ -1023,8 +1017,12 @@ export const listHoldingss = /* GraphQL */ `
           cumf
         }
         loans {
-          fIds
+          amt
+          dur
+          fId
           curr
+          yearly
+          name
         }
         savings {
           id
@@ -1130,12 +1128,12 @@ export const listHoldingss = /* GraphQL */ `
           subt
         }
         ins {
-          premium
-          sy
-          ey
-          yearly
-          fIds
+          amt
+          dur
+          fId
           curr
+          yearly
+          name
         }
         other {
           id

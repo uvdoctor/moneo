@@ -463,18 +463,12 @@ type Ownership {
 }
 
 type Liability {
-	loan: Loan
-	fIds: [String!]!
+	amt: Int!
+	dur: Int!
+	fId: String!
 	curr: String!
-}
-
-type Insurance {
-	premium: Float!
-	sy: Int!
-	ey: Int!
 	yearly: Boolean!
-	fIds: [String!]!
-	curr: String!
+	name: String
 }
 
 type Balance {
@@ -505,7 +499,7 @@ type Holdings @model @aws_iam @auth(rules: [{ allow: owner }, { allow: private, 
 	vpf: [Holding!]
 	nps: [Holding!]
 	crypto: [Holding!]
-	ins: [Insurance!]
+	ins: [Liability!]
 	other: [Holding!]
 	angel: [Holding!]
 }

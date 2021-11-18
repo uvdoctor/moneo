@@ -806,18 +806,12 @@ export const onCreateHoldings = /* GraphQL */ `
         cumf
       }
       loans {
-        loan {
-          type
-          per
-          rate
-          dur
-          ry
-          emi
-          pmi
-          peper
-        }
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       savings {
         id
@@ -990,12 +984,12 @@ export const onCreateHoldings = /* GraphQL */ `
         subt
       }
       ins {
-        premium
-        sy
-        ey
-        yearly
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       other {
         id
@@ -1084,18 +1078,12 @@ export const onUpdateHoldings = /* GraphQL */ `
         cumf
       }
       loans {
-        loan {
-          type
-          per
-          rate
-          dur
-          ry
-          emi
-          pmi
-          peper
-        }
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       savings {
         id
@@ -1268,12 +1256,12 @@ export const onUpdateHoldings = /* GraphQL */ `
         subt
       }
       ins {
-        premium
-        sy
-        ey
-        yearly
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       other {
         id
@@ -1362,18 +1350,12 @@ export const onDeleteHoldings = /* GraphQL */ `
         cumf
       }
       loans {
-        loan {
-          type
-          per
-          rate
-          dur
-          ry
-          emi
-          pmi
-          peper
-        }
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       savings {
         id
@@ -1546,12 +1528,12 @@ export const onDeleteHoldings = /* GraphQL */ `
         subt
       }
       ins {
-        premium
-        sy
-        ey
-        yearly
-        fIds
+        amt
+        dur
+        fId
         curr
+        yearly
+        name
       }
       other {
         id
