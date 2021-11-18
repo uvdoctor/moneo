@@ -206,14 +206,14 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 						<Checkbox onChange={(e)=>changeRes(e.target.checked)}>Residential</Checkbox>
 					</Col>}
 					<span>&nbsp;&nbsp;</span>
-					<Col>
+					{categoryOptions && <Col>
 						<SelectInput
 							pre={'Type'}
 							value={subtype}
 							options={categoryOptions}
 							changeHandler={(val: any) => changeSubtype(val)}
 						/>
-					</Col>
+					</Col>}
 					<span>&nbsp;&nbsp;</span>
 					<Col>
 						<TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} />

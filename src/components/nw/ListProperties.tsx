@@ -170,11 +170,11 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 	    dataSource.push({
             key: i,
 			res: data[i].type === 'P' || data[i].type === 'O' ? 'Non-residential' : <Checkbox checked={data[i].res} onChange={(e)=>changeRes(e.target.checked, i)}/>,
-            type: <SelectInput
+            type: categoryOptions && <SelectInput
 	                pre=""
 	                value={data[i].type as string}
 	                options={categoryOptions}
-	                changeHandler={(val: any) => { data[i].type = val; changeData([ ...data ]) }} />,
+	                changeHandler={(val: any) => { data[i].type = val; changeData([ ...data ]) }} /> ,
             mv: <InputNumber
                     onChange={(val: number) => { data[i].mv = val; changeData([ ...data ]) }}
                     min={10}
