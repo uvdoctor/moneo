@@ -2,24 +2,18 @@ import { Alert, Col, Row, notification, Skeleton, Tabs, PageHeader, Button, Chec
 import React, { useContext, useState, useEffect } from "react";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { Auth } from "aws-amplify";
-import { parse } from "date-fns";
 import { isMobileDevice } from "../utils";
 import { AppContext } from "../AppContext";
 import { countrylist } from "./CountryCode";
 import TextInput from "../form/textinput";
-import dateFnsGenerateConfig from "rc-picker/lib/generate/dateFns";
-import generatePicker from "antd/lib/date-picker/generatePicker";
 import PasswordInput from "./PasswordInput";
-import "antd/lib/date-picker/style/index";
 require("./Settings.less");
 import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
 import { doesEmailExist, doesImExist, doesMobExist, updateImInContact, updateMobInContact } from "../registrationutils";
-
-const dateFormat = "yyyy-MM-dd";
-const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
+import DatePickerInput from "../form/DatePickerInput";
 
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha }: any = useContext(AppContext);
@@ -36,11 +30,6 @@ export default function UserSettings(): JSX.Element {
 
   const success = (message: any) => notification.success({ message });
   const failure = (message: any) => notification.error({ message });
-
-  const getTodayDate = () => {
-    const today = new Date();
-    return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-  };
 
   const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
 
@@ -193,16 +182,7 @@ export default function UserSettings(): JSX.Element {
                     <span>&nbsp;</span>
                     <Row justify="center">
                       <Col>
-                        <span>
-                          <label className="dob">Date of birth</label>
-                          <DatePicker
-                            style={{ width: 200 }}
-                            defaultValue={parse( user?.attributes.birthdate || getTodayDate(), dateFormat, new Date() )}
-                            format={dateFormat}
-                            size="large"
-                            onChange={(_, ds) => setDob(ds.toString())}
-                          />
-                        </span>
+                        <DatePickerInput title={"Date of birth"} className="dob" defaultVal={user?.attributes.birthdate} changeHandler={setDob}/>
                       </Col>
                     </Row>
                     <p>&nbsp;</p>
@@ -337,7 +317,6 @@ export default function UserSettings(): JSX.Element {
                       }
                     />
                   </Col>
-
                 </Row>
                 </Col>
                 </Row>

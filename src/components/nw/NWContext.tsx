@@ -198,7 +198,7 @@ function NWContextProvider() {
 						A: "Apartment",
 						H: "Home",
 						C: "Condominium",	
-						O: "Other",
+						O: "Office",
 						T: "Townhouse",
 						OTHER: 'Others'
 					},

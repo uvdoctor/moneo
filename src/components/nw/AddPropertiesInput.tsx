@@ -1,9 +1,10 @@
 import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined';
 import UserAddOutlined from '@ant-design/icons/lib/icons/UserAddOutlined';
 import UserOutlined from '@ant-design/icons/lib/icons/UserOutlined';
-import { Button, Col, Input, InputNumber, Row } from 'antd';
+import { Button, Checkbox, Col, InputNumber, Row } from 'antd';
 import React, { Fragment, useContext, useState } from 'react';
 import { Ownership, PropertyInput } from '../../api/goals';
+import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
@@ -24,20 +25,51 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(0);
 	const [ amount, setAmount ] = useState<number>(0);
-	const [ month, setMonth ] = useState<number>(1);
-	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
+	const [ purchaseDate, setPurchaseDate ] = useState<string>('2000-4');
 	const [ city, setCity ] = useState<string>('');
 	const [ address, setAddress ] = useState<string>('');
 	const [ mv, setMv ] = useState<number>(0);
 	const [ mvy, setMvy ] = useState<number>(new Date().getFullYear() - 5);
 	const [ mvm, setMvm ] = useState<number>(1);
-	const [ district, setDistrict ] = useState<string>('');
 	const [ state, setState ] = useState<string>('');
+	const [ name, setName ] = useState<string>('');
+	const [ res, setRes ] = useState<boolean>(false);
 
 	const changeRate = (val: number) => {
 		setRate(val);
+		disableOk(!rate);
 		let rec = getNewRec();
 		rec.rate = val;
+		setInput(rec);
+	};
+
+	const changeRes = (val: boolean) => {
+		setRes(val);
+		let rec = getNewRec();
+		rec.res = val;
+		setInput(rec);
+		console.log(rec);
+	}
+
+	const changeName = (val: string) => {
+		setName(val);
+		disableOk(!val);
+		let rec = getNewRec();
+		rec.name = val;
+		setInput(rec);
+	};
+
+	const changeState = (val: string) => {
+		setState(val);
+		let rec = getNewRec();
+		rec.state = val;
+		setInput(rec);
+	};
+
+	const changeCity = (val: string) => {
+		setCity(val);
+		let rec = getNewRec();
+		rec.city = val;
 		setInput(rec);
 	};
 
@@ -50,26 +82,19 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 		setInput(rec);
 	};
 
-	const changeMonth = (month: number) => {
-		setMonth(month);
-		disableOk(month <= 0);
+	const changePurchaseDate = (val: any) => {
+		setPurchaseDate(val);
+		disableOk(!purchaseDate);
 		let rec = getNewRec();
 		// @ts-ignore
-		rec.purchase.month = month;
+		rec.purchase.month = Number(purchaseDate.slice(0, purchaseDate.indexOf('-')));
+		// @ts-ignore
+		rec.purchase.year = Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1));
 		setInput(rec);
 	};
 
-	const changeYear = (year: number) => {
-		setYear(year);
-		disableOk(year <= 0);
-		let rec = getNewRec();
-		// @ts-ignore
-		rec.purchase.year = year;
-		setInput(rec);
-	};
-
-	const changeAddress = (e: any) => {
-		setAddress(e.target.value);
+	const changeAddress = (val: string) => {
+		setAddress(val);
 		let rec = getNewRec();
 		rec.address = address;
 		setInput(rec);
@@ -86,25 +111,23 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 		setInput(rec);
 	};
 
-	const changePin = async (e: any) => {
-		setPin(e.target.value);
+	const changePin = async (val: any) => {
+		setPin(val);
 		if (selectedCurrency === 'INR') {
-			if (e.target.value.length === 6) {
-				const response = await fetch(`https://api.postalpincode.in/pincode/${e.target.value}`);
+			if (val.length === 6) {
+				const response = await fetch(`https://api.postalpincode.in/pincode/${val}`);
 				const data = await response.json();
 				setState(data[0].PostOffice[0].State);
-				setCity(data[0].PostOffice[0].Block);
-				setDistrict(data[0].PostOffice[0].District);
+				setCity(data[0].PostOffice[0].District);
 				let rec = getNewRec();
 				rec.state = state;
 				rec.city = city;
-				rec.district = district;
-				rec.pin = pin;
+				rec.pin = Number(pin);
 				setInput(rec);
 			}
 		} else {
 			let rec = getNewRec();
-			rec.pin = pin;
+			rec.pin = Number(pin);
 			setInput(rec);
 		}
 	};
@@ -114,18 +137,23 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 			// @ts-ignore
 			type: subtype,
 			pin: pin,
-			purchase: { amt: amount, month: month, year: year, qty: 1 },
+			purchase: { 
+				amt: amount, 
+				month: Number(purchaseDate.slice(0, purchaseDate.indexOf('-'))), 
+				year: Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1)), 
+				qty: 1
+			},
 			address: address,
 			curr: selectedCurrency,
 			country: selectedCurrency === 'INR' ? 'India' : 'US',
-			district: district,
 			state: state,
 			city: city,
 			own: own,
 			rate: rate,
 			mv: mv,
 			mvy: mvy,
-			mvm: mvm
+			mvm: mvm,
+			res: res
 		};
 		return newRec;
 	};
@@ -174,74 +202,104 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	return (
 		<div style={{ textAlign: 'center' }}>
 			<p>
-				<SelectInput
-					pre=""
-					value={subtype}
-					options={categoryOptions}
-					changeHandler={(val: any) => changeSubtype(val)}
-				/>
+				<Row justify="center">
+					{subtype === 'O' ? null : <Col>
+						<Checkbox onChange={(e)=>changeRes(e.target.checked)}>Residential</Checkbox>
+					</Col>}
+					<span>&nbsp;&nbsp;</span>
+					<Col>
+						<SelectInput
+							pre={'Type'}
+							value={subtype}
+							options={categoryOptions}
+							changeHandler={(val: any) => changeSubtype(val)}
+						/>
+					</Col>
+					<span>&nbsp;&nbsp;</span>
+					<Col>
+						<TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} />
+					</Col>
+				</Row>
 			</p>
 			<p>
 				<Row justify={'space-around'}>
 					<Col>
-						<Input addonBefore={'Pincode'} value={pin} onChange={changePin} />
+						<TextInput pre={'Pincode'} value={pin} changeHandler={changePin} size={'middle'} width={200} />
 					</Col>
 					<Col>
-						<TextInput pre={'District'} value={district} changeHandler={setDistrict} size={'middle'} />
+						<TextInput
+							pre={'City'}
+							value={city}
+							changeHandler={changeCity}
+							size={'middle'}
+							width={200}
+							disabled={true}
+						/>
 					</Col>
-				</Row>
-				<p />
-				<Row justify={'space-around'}>
 					<Col>
-						<TextInput pre={'City'} value={city} changeHandler={setCity} size={'middle'} />
-					</Col>
-					<Col>
-						<TextInput pre={'State'} value={state} changeHandler={setState} size={'middle'} />
+						<TextInput
+							pre={'State'}
+							value={state}
+							changeHandler={changeState}
+							size={'middle'}
+							width={200}
+							disabled={true}
+						/>
 					</Col>
 				</Row>
 			</p>
-
 			<p>
-				<Input addonBefore={'Address'} value={address} onChange={changeAddress} />
-			</p>
-			<p>
-				<NumberInput
-					pre={'Purchase Amount'}
-					min={10}
-					max={100000}
-					value={amount}
-					changeHandler={changeAmount}
-					currency={selectedCurrency}
-					step={1}
-					noSlider
-				/>
-				<label>Purchase Month</label>
-				<InputNumber onChange={changeMonth} min={1} max={12} value={month} />&nbsp;&nbsp;
-				<label>Purchase Year</label>
-				<InputNumber onChange={changeYear} min={1900} max={new Date().getFullYear()} value={year} />&nbsp;&nbsp;
+				<TextInput pre={'Address'} value={address} changeHandler={changeAddress} size={'middle'} width={700} />
 			</p>
 			<p>
 				<Row justify={'center'}>
-					<NumberInput
-						pre={'Rate'}
-						changeHandler={changeRate}
-						post={'%'}
-						min={0}
+					<Col>
+						<NumberInput
+							pre={'Purchase Amount'}
+							min={10}
+							max={100000}
+							value={amount}
+							changeHandler={changeAmount}
+							currency={selectedCurrency}
+							step={1}
+							noSlider
+						/>
+					</Col>
+					<Col>
+						<DatePickerInput
+							picker="month"
+							title={'Purchase Date'}
+							changeHandler={changePurchaseDate}
+							defaultVal={purchaseDate}
+							size={'middle'}
+						/>
+						</Col>
+				</Row>
+			</p>
+			<p>
+				<Row justify={'center'}>
+					<Col>
+						<label>Appreciation Rate</label>&nbsp;
+						<InputNumber
+						onChange={changeRate}
+						min={1}
 						max={50}
 						value={rate}
 						step={0.1}
-						noSlider
 					/>
-					<NumberInput
-						pre={'Market Value'}
-						min={10}
-						max={100000}
-						value={mv}
-						changeHandler={changeMv}
-						currency={selectedCurrency}
-						step={1}
-						noSlider
-					/>
+					</Col>
+					<Col>
+						<NumberInput
+							pre={'Market Value'}
+							min={10}
+							max={100000}
+							value={mv}
+							changeHandler={changeMv}
+							currency={selectedCurrency}
+							step={1}
+							noSlider
+						/>
+					</Col>
 				</Row>
 			</p>
 			<p>
