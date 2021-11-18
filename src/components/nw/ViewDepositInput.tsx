@@ -1,6 +1,7 @@
 import { Col, InputNumber } from 'antd';
 import React, { Fragment } from 'react';
 import { DepositInput } from '../../api/goals';
+import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 
@@ -23,18 +24,8 @@ export default function ViewDepositInput({ data, changeData, record, categoryOpt
 		changeData([ ...data ]);
 	};
 
-	const changeDuration = (e: any) => {
-		record.months = e.target.value;
-		changeData([ ...data ]);
-	};
-
-	const changeMonth = (e: any) => {
-		record.sm = e.target.value;
-		changeData([ ...data ]);
-	};
-
-	const changeYear = (e: any) => {
-		record.sy = e.target.value;
+	const changeDuration = (val: any) => {
+		record.months = val
 		changeData([ ...data ]);
 	};
 
@@ -51,6 +42,12 @@ export default function ViewDepositInput({ data, changeData, record, categoryOpt
 	const changeCumf = (val: number) => {
 		record.cumf = val;
 		changeData([ ...data ]);
+	};
+
+	const changeStartDate = (val: string) => {
+		record.sm = Number(val.slice(0, val.indexOf('-')));
+		record.sy = Number(val.slice(val.indexOf('-') + 1));
+		changeData([ ...data ])
 	};
 
 	return (
@@ -76,12 +73,17 @@ export default function ViewDepositInput({ data, changeData, record, categoryOpt
 			): null}
 		</Col>}
 			<Col>
-				<label>Start Month</label><InputNumber onChange={changeMonth} value={record.sm as number} />&nbsp;&nbsp;
-				<label>Start Year</label><InputNumber onChange={changeYear} value={record.sy as number} />&nbsp;&nbsp;
+				<DatePickerInput
+					picker="month"
+					title={'Start Date'}
+					changeHandler={(val:string)=>changeStartDate(val)}
+					defaultVal={`${record.sy}-${record.sm}` as string}
+					size={'middle'}
+				/>&nbsp;&nbsp;
 				<label>Duration</label><InputNumber onChange={changeDuration} value={record.months as number} />
 				</Col>
 		    <Col>
-		   		<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={record.rate as number} step={0.1} noSlider/>
+		   		<NumberInput pre={'Rate'} changeHandler={changeChg} min={0} max={50} value={record.rate as number} step={0.1} noSlider/>
 			</Col>
 			<Col>
 				<NumberInput pre={'Amount'} min={10} max={100000} value={record.amt as number} changeHandler={changeAmount} currency={record.curr as string} step={1} noSlider/>

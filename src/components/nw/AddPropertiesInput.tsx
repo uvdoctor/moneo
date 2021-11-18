@@ -86,16 +86,16 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 		setPurchaseDate(val);
 		let rec = getNewRec();
 		// @ts-ignore
-		rec.purchase.year = Number(purchaseDate.slice(0, purchaseDate.indexOf('-')));
+		rec.purchase.year = Number(val.slice(0, val.indexOf('-')));
 		// @ts-ignore
-		rec.purchase.month = Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1));
+		rec.purchase.month = Number(val.slice(val.indexOf('-') + 1));
 		setInput(rec);
 	};
 
 	const changeAddress = (val: string) => {
 		setAddress(val);
 		let rec = getNewRec();
-		rec.address = address;
+		rec.address = val;
 		setInput(rec);
 	};
 
@@ -104,7 +104,7 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 		setMvm(new Date().getMonth() + 1);
 		setMvy(new Date().getFullYear());
 		let rec = getNewRec();
-		rec.mv = mv;
+		rec.mv = val;
 		rec.mvm = mvm;
 		rec.mvy = mvy;
 		setInput(rec);

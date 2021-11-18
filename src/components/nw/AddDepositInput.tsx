@@ -1,7 +1,8 @@
 import { UserOutlined } from '@ant-design/icons';
-import { InputNumber } from 'antd';
+import { InputNumber, Row } from 'antd';
 import React, { Fragment, useContext, useState } from 'react';
 import { DepositInput } from '../../api/goals';
+import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import { NWContext } from './NWContext';
@@ -26,8 +27,7 @@ export default function AddDepositInput({
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ chg, setChg ] = useState<number>(0);
 	const [ amount, setAmount ] = useState<number>(0);
-	const [ month, setMonth ] = useState<number>(1);
-	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
+	const [ startDate, setStartDate ] = useState<string>('1900-4');
 	const [ duration, setDuration ] = useState<number>(12);
 
 	const changeName = (val: string) => {
@@ -59,27 +59,11 @@ export default function AddDepositInput({
 		setInput(rec);
 	};
 
-	const changeMonth = (month: number) => {
-		setMonth(month);
-		disableOk(month <= 0);
-		let rec = getNewRec();
-		rec.sm = month;
-		setInput(rec);
-	};
-
-	const changeYear = (year: number) => {
-		setYear(year);
-		disableOk(year <= 0);
-		let rec = getNewRec();
-		rec.sy = year;
-		setInput(rec);
-	};
-
 	const getNewRec = () => {
         let newRec: DepositInput = {
             amt: amount,
-            sm: month,
-            sy: year,
+			sm: Number(startDate.slice(startDate.indexOf('-') + 1)),  
+			sy: Number(startDate.slice(0, startDate.indexOf('-'))),
             months: duration,
             rate: chg,
             fIds: [ memberKey ],
@@ -111,6 +95,14 @@ export default function AddDepositInput({
 		setInput(rec);
 	};
 
+	const changeStartDate = (val: any) => {
+		setStartDate(val);
+		let rec = getNewRec();
+		rec.sy = Number(val.slice(0, val.indexOf('-')));
+		rec.sm = Number(val.slice(val.indexOf('-') + 1));
+		setInput(rec);
+	};
+
 	return (
 		<div style={{ textAlign: 'center' }}>
 			<p>
@@ -134,12 +126,21 @@ export default function AddDepositInput({
 				) : null}
 			</p>
             <p>
-				<label>Start Month</label><InputNumber onChange={changeMonth} value={month}/>&nbsp;&nbsp;
-				<label>Start Year</label><InputNumber onChange={changeYear} value={year}/>&nbsp;&nbsp;
+				<DatePickerInput
+					picker="month"
+					title={'Start Date'}
+					changeHandler={changeStartDate}
+					defaultVal={startDate}
+					size={'middle'}
+				/>&nbsp;&nbsp;
 				<label>Duration</label><InputNumber onChange={changeDuration} value={duration}/>
 			</p>
-			<p><NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={chg} step={0.1} noSlider/></p>
-			<p><NumberInput pre={'Amount'} min={10} max={100000} value={amount} changeHandler={changeAmount} currency={selectedCurrency} step={1} noSlider/></p>
+			<p> 
+				<Row justify='center'>
+					<NumberInput pre={'Rate'} changeHandler={changeChg} min={0} max={50} value={chg} step={0.1} noSlider/>
+					<NumberInput pre={'Amount'} min={10} max={100000} value={amount} changeHandler={changeAmount} currency={selectedCurrency} step={1} noSlider/>
+				</Row>
+			</p>
 			<p>
 				<SelectInput
 					pre={<UserOutlined />}
