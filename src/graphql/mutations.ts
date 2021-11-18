@@ -408,6 +408,7 @@ export const createHoldings = /* GraphQL */ `
       }
       property {
         type
+        name
         pin
         purchase {
           amt
@@ -420,7 +421,6 @@ export const createHoldings = /* GraphQL */ `
         curr
         city
         country
-        district
         state
         own {
           fId
@@ -430,6 +430,7 @@ export const createHoldings = /* GraphQL */ `
         mv
         mvy
         mvm
+        res
       }
       vehicles {
         id
@@ -688,6 +689,7 @@ export const updateHoldings = /* GraphQL */ `
       }
       property {
         type
+        name
         pin
         purchase {
           amt
@@ -700,7 +702,6 @@ export const updateHoldings = /* GraphQL */ `
         curr
         city
         country
-        district
         state
         own {
           fId
@@ -710,6 +711,7 @@ export const updateHoldings = /* GraphQL */ `
         mv
         mvy
         mvm
+        res
       }
       vehicles {
         id
@@ -968,6 +970,7 @@ export const deleteHoldings = /* GraphQL */ `
       }
       property {
         type
+        name
         pin
         purchase {
           amt
@@ -980,7 +983,6 @@ export const deleteHoldings = /* GraphQL */ `
         curr
         city
         country
-        district
         state
         own {
           fId
@@ -990,6 +992,7 @@ export const deleteHoldings = /* GraphQL */ `
         mv
         mvy
         mvm
+        res
       }
       vehicles {
         id

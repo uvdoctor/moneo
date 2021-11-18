@@ -507,19 +507,20 @@ export type LiabilityInput = {
 
 export type PropertyInput = {
   type: PropertyType,
+  name?: string | null,
   pin?: number | null,
   purchase?: PurchaseInput | null,
   address?: string | null,
   curr: string,
   city?: string | null,
   country?: string | null,
-  district?: string | null,
   state?: string | null,
   own: Array< OwnershipInput >,
   rate: number,
   mv?: number | null,
   mvy?: number | null,
   mvm?: number | null,
+  res: boolean,
 };
 
 export enum PropertyType {
@@ -623,19 +624,20 @@ export type Liability = {
 export type Property = {
   __typename: "Property",
   type?: PropertyType,
+  name?: string | null,
   pin?: number | null,
   purchase?: Purchase,
   address?: string | null,
   curr?: string,
   city?: string | null,
   country?: string | null,
-  district?: string | null,
   state?: string | null,
   own?:  Array<Ownership >,
   rate?: number,
   mv?: number | null,
   mvy?: number | null,
   mvm?: number | null,
+  res?: boolean,
 };
 
 export type Ownership = {
@@ -2108,6 +2110,7 @@ export type CreateHoldingsMutation = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
+      name?: string | null,
       pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
@@ -2121,7 +2124,6 @@ export type CreateHoldingsMutation = {
       curr: string,
       city?: string | null,
       country?: string | null,
-      district?: string | null,
       state?: string | null,
       own:  Array< {
         __typename: "Ownership",
@@ -2132,6 +2134,7 @@ export type CreateHoldingsMutation = {
       mv?: number | null,
       mvy?: number | null,
       mvm?: number | null,
+      res: boolean,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -2420,6 +2423,7 @@ export type UpdateHoldingsMutation = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
+      name?: string | null,
       pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
@@ -2433,7 +2437,6 @@ export type UpdateHoldingsMutation = {
       curr: string,
       city?: string | null,
       country?: string | null,
-      district?: string | null,
       state?: string | null,
       own:  Array< {
         __typename: "Ownership",
@@ -2444,6 +2447,7 @@ export type UpdateHoldingsMutation = {
       mv?: number | null,
       mvy?: number | null,
       mvm?: number | null,
+      res: boolean,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -2732,6 +2736,7 @@ export type DeleteHoldingsMutation = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
+      name?: string | null,
       pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
@@ -2745,7 +2750,6 @@ export type DeleteHoldingsMutation = {
       curr: string,
       city?: string | null,
       country?: string | null,
-      district?: string | null,
       state?: string | null,
       own:  Array< {
         __typename: "Ownership",
@@ -2756,6 +2760,7 @@ export type DeleteHoldingsMutation = {
       mv?: number | null,
       mvy?: number | null,
       mvm?: number | null,
+      res: boolean,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -4434,6 +4439,7 @@ export type GetHoldingsQuery = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
+      name?: string | null,
       pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
@@ -4447,7 +4453,6 @@ export type GetHoldingsQuery = {
       curr: string,
       city?: string | null,
       country?: string | null,
-      district?: string | null,
       state?: string | null,
       own:  Array< {
         __typename: "Ownership",
@@ -4458,6 +4463,7 @@ export type GetHoldingsQuery = {
       mv?: number | null,
       mvy?: number | null,
       mvm?: number | null,
+      res: boolean,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -4722,17 +4728,18 @@ export type ListHoldingssQuery = {
       property?:  Array< {
         __typename: "Property",
         type: PropertyType,
+        name?: string | null,
         pin?: number | null,
         address?: string | null,
         curr: string,
         city?: string | null,
         country?: string | null,
-        district?: string | null,
         state?: string | null,
         rate: number,
         mv?: number | null,
         mvy?: number | null,
         mvm?: number | null,
+        res: boolean,
       } > | null,
       vehicles?:  Array< {
         __typename: "Holding",
@@ -5795,6 +5802,7 @@ export type OnCreateHoldingsSubscription = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
+      name?: string | null,
       pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
@@ -5808,7 +5816,6 @@ export type OnCreateHoldingsSubscription = {
       curr: string,
       city?: string | null,
       country?: string | null,
-      district?: string | null,
       state?: string | null,
       own:  Array< {
         __typename: "Ownership",
@@ -5819,6 +5826,7 @@ export type OnCreateHoldingsSubscription = {
       mv?: number | null,
       mvy?: number | null,
       mvm?: number | null,
+      res: boolean,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -6106,6 +6114,7 @@ export type OnUpdateHoldingsSubscription = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
+      name?: string | null,
       pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
@@ -6119,7 +6128,6 @@ export type OnUpdateHoldingsSubscription = {
       curr: string,
       city?: string | null,
       country?: string | null,
-      district?: string | null,
       state?: string | null,
       own:  Array< {
         __typename: "Ownership",
@@ -6130,6 +6138,7 @@ export type OnUpdateHoldingsSubscription = {
       mv?: number | null,
       mvy?: number | null,
       mvm?: number | null,
+      res: boolean,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",
@@ -6417,6 +6426,7 @@ export type OnDeleteHoldingsSubscription = {
     property?:  Array< {
       __typename: "Property",
       type: PropertyType,
+      name?: string | null,
       pin?: number | null,
       purchase?:  {
         __typename: "Purchase",
@@ -6430,7 +6440,6 @@ export type OnDeleteHoldingsSubscription = {
       curr: string,
       city?: string | null,
       country?: string | null,
-      district?: string | null,
       state?: string | null,
       own:  Array< {
         __typename: "Ownership",
@@ -6441,6 +6450,7 @@ export type OnDeleteHoldingsSubscription = {
       mv?: number | null,
       mvy?: number | null,
       mvm?: number | null,
+      res: boolean,
     } > | null,
     vehicles?:  Array< {
       __typename: "Holding",

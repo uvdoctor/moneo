@@ -441,19 +441,20 @@ type Purchase {
 
 type Property {
 	type: PropertyType!
+	name: String
 	pin: Int
 	purchase: Purchase
 	address: String
 	curr: String!
 	city: String
 	country: String
-	district: String
 	state: String
 	own: [Ownership!]!
 	rate: Float!
 	mv: Float
 	mvy: Int
 	mvm: Int
+	res: Boolean!
 }
 
 type Ownership {

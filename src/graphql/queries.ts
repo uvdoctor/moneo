@@ -780,6 +780,7 @@ export const getHoldings = /* GraphQL */ `
       }
       property {
         type
+        name
         pin
         purchase {
           amt
@@ -792,7 +793,6 @@ export const getHoldings = /* GraphQL */ `
         curr
         city
         country
-        district
         state
         own {
           fId
@@ -802,6 +802,7 @@ export const getHoldings = /* GraphQL */ `
         mv
         mvy
         mvm
+        res
       }
       vehicles {
         id
@@ -1038,17 +1039,18 @@ export const listHoldingss = /* GraphQL */ `
         }
         property {
           type
+          name
           pin
           address
           curr
           city
           country
-          district
           state
           rate
           mv
           mvy
           mvm
+          res
         }
         vehicles {
           id
