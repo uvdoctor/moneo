@@ -85,7 +85,7 @@ export default function ViewHoldingInput({
 				</Col> : 
 			    <>
 					<Col>
-						<TextInput pre="Name" changeHandler={changeName} value={record.name as string} size={'small'} />
+						<TextInput pre="Name" changeHandler={(val: string)=>changeName(val)} value={record.name as string} size={'small'} />
 					</Col>
 					{(childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB) &&
 					<Col>
