@@ -148,7 +148,7 @@ function NWContextProvider() {
 			label: 'Cash',
 			children: {
 				[DEPO_TAB]: {
-					label: [DEPO_TAB],
+					label: DEPO_TAB,
 					data: deposits,
 					setData: setDeposits,
 					total: totalDeposits,
@@ -163,14 +163,14 @@ function NWContextProvider() {
 					viewComp: ViewDepositInput
 				},
 				[SAV_TAB]: {
-					label: [SAV_TAB],
+					label: SAV_TAB,
 					data: savings,
 					setData: setSavings,
 					total: totalSavings,
 					viewComp: ViewHoldingInput,
 				},
 				[ML_TAB]: {
-					label: [ML_TAB],
+					label: ML_TAB,
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
@@ -190,7 +190,7 @@ function NWContextProvider() {
 			label: 'Physical',
 			children: {
 				[PROP_TAB]: {
-					label: [PROP_TAB],
+					label: PROP_TAB,
 					data: properties,
 					setData: setProperties,
 					total: totalProperties,
@@ -205,7 +205,7 @@ function NWContextProvider() {
 					},
 				},
 				[VEHICLE_TAB]: {
-					label: [VEHICLE_TAB],
+					label: VEHICLE_TAB,
 					data: vehicles,
 					setData: setVehicles,
 					total: totalVehicles,
@@ -276,7 +276,7 @@ function NWContextProvider() {
 					viewComp: ViewHoldingInput
 				},
 				[EPF_TAB]: {
-					label: [EPF_TAB],
+					label: EPF_TAB,
 					data: epf,
 					setData: setEPF,
 					total: totalEPF,
@@ -290,7 +290,7 @@ function NWContextProvider() {
 					viewComp: ViewHoldingInput
 				},
 				[NPS_TAB]: {
-					label: [NPS_TAB],
+					label: NPS_TAB,
 					data: nps,
 					setData: setNPS,
 					total: totalNPS,
@@ -323,14 +323,14 @@ function NWContextProvider() {
 					}
 				},
 				[ANGEL_TAB]: {
-					label: [ANGEL_TAB],
+					label: ANGEL_TAB,
 					data: angel,
 					setData: setAngel,
 					total: totalAngel,
 					viewComp: ViewHoldingInput,
 				}, 
 				[OTHER_TAB]: {
-					label: [OTHER_TAB],
+					label: OTHER_TAB,
 					data: others,
 					setData: setOthers,
 					total: totalOthers,

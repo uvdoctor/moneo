@@ -7,7 +7,7 @@ import { getFamilyOptions } from './nwutils';
 import { DeleteOutlined, UserOutlined } from '@ant-design/icons';
 
 interface ListHoldingsProps {
-	data: Array<HoldingInput>;
+	data: Array<HoldingInput> | Array<DepositInput> | Array<LiabilityInput>  ;
 	changeData: Function;
 	categoryOptions: any;
 	viewComp: any;
@@ -29,10 +29,9 @@ export default function ListHoldings({ data, changeData, categoryOptions, viewCo
 
 	return (
 		<Row>
-			{console.log(data[0])}
 			{data &&
 				data[0] &&
-				data.map((holding: HoldingInput, i: number) => (
+				data.map((holding: HoldingInput | DepositInput | LiabilityInput, i: number) => (
 					<Fragment key={''+i}>
 						<Col span={24} className="fields-divider" />
 						<Col span={24}>

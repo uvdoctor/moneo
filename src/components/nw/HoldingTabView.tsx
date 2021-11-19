@@ -78,7 +78,7 @@ export default function HoldingTabView() {
 									{!loadingHoldings ? tabsData[tabName].data.length ? tabsData[tabName]
 										.contentComp ? (
 										tabsData[tabName].contentComp
-									) : childTab === PROP_TAB ? 
+									) : tabsData[tabName].label === PROP_TAB ? 
 										<ListProperties
 											data={tabsData[tabName].data}
 											changeData={tabsData[tabName].setData}
