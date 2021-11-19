@@ -585,22 +585,22 @@ function NWContextProvider() {
 
 	const saveHoldings = async () => {
 		let updatedHoldings: CreateHoldingsInput = {};
-		if(instruments.length) updatedHoldings.instruments = instruments;
-		if(savings.length) updatedHoldings.savings = savings;
-		if(deposits.length) updatedHoldings.deposits = deposits;
-		if(lendings.length) updatedHoldings.lendings = lendings;
-		if(angel.length) updatedHoldings.angel = angel;
-		if(epf.length) updatedHoldings.epf = epf;
-		if(ppf.length) updatedHoldings.ppf = ppf;
-		if(vpf.length) updatedHoldings.vpf = vpf;
-		if(loans.length) updatedHoldings.loans = loans;
-		if(lendings.length) updatedHoldings.lendings = lendings;
-		if(preciousMetals.length) updatedHoldings.pm = preciousMetals;
-		if(vehicles.length) updatedHoldings.vehicles = vehicles;
-		if(properties.length) updatedHoldings.property = properties;
-		if(others.length) updatedHoldings.other = others;
-		if(nps.length) updatedHoldings.nps = nps;
-		if(crypto.length) updatedHoldings.crypto = crypto;
+		updatedHoldings.instruments = instruments;
+		updatedHoldings.savings = savings;
+		updatedHoldings.deposits = deposits;
+		updatedHoldings.lendings = lendings;
+		updatedHoldings.angel = angel;
+		updatedHoldings.epf = epf;
+		updatedHoldings.ppf = ppf;
+		updatedHoldings.vpf = vpf;
+		updatedHoldings.loans = loans;
+		updatedHoldings.lendings = lendings;
+		updatedHoldings.pm = preciousMetals;
+		updatedHoldings.vehicles = vehicles;
+		updatedHoldings.property = properties;
+		updatedHoldings.other = others;
+		updatedHoldings.nps = nps;
+		updatedHoldings.crypto = crypto;
 		if(id) updatedHoldings.id = id;
 		try {
 			if(id) await updateHoldings(updatedHoldings as UpdateHoldingsInput);

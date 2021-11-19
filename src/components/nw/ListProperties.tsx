@@ -48,7 +48,7 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 		}
 	};
 
-	const removeTgt = (index: number, i: number) => {
+	const removeOwners = (index: number, i: number) => {
 		data[index].own.splice(i, 1);
 		changeData([ ...data ]);
 	};
@@ -125,7 +125,7 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 			</Row>
 			
 			<Row justify='space-between'><h3>Own By:-</h3>
-				{owners.map((own: OwnershipInput, ind: number) => {
+				{owners && owners.map((own: OwnershipInput, ind: number) => {
 					return(
 						// eslint-disable-next-line react/jsx-key
 						<Col>
@@ -139,7 +139,7 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 								max={100}
 								value={own.per}
 								onChange={(val: number) => { own.per = val; changeData([...data]); } } />
-							<Button type="link" onClick={() => removeTgt(i, ind)} danger>
+							<Button type="link" onClick={() => removeOwners(i, ind)} danger>
 								<DeleteOutlined />
 							</Button>
 						</Col>
