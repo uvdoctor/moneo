@@ -24,8 +24,8 @@ export default function ViewHoldingInput({
 }: ViewHoldingInputProps) {
 	const { childTab }: any = useContext(NWContext);
 	
-	const changeName = (e: any) => {
-		record.name = e.target.value;
+	const changeName = (val: any) => {
+		record.name = val;
 		changeData([ ...data ]);
 	};
 	
