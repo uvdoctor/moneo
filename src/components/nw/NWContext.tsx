@@ -588,6 +588,8 @@ function NWContextProvider() {
 		if(instruments.length) updatedHoldings.instruments = instruments;
 		if(savings.length) updatedHoldings.savings = savings;
 		if(deposits.length) updatedHoldings.deposits = deposits;
+		if(lendings.length) updatedHoldings.lendings = lendings;
+		if(angel.length) updatedHoldings.angel = angel;
 		if(epf.length) updatedHoldings.epf = epf;
 		if(ppf.length) updatedHoldings.ppf = ppf;
 		if(vpf.length) updatedHoldings.vpf = vpf;
