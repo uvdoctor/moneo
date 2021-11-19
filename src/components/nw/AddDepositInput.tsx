@@ -1,5 +1,5 @@
 import { UserOutlined } from '@ant-design/icons';
-import { InputNumber, Row } from 'antd';
+import { Col, InputNumber, Row } from 'antd';
 import React, { Fragment, useContext, useState } from 'react';
 import { DepositInput } from '../../api/goals';
 import DatePickerInput from '../form/DatePickerInput';
@@ -137,7 +137,10 @@ export default function AddDepositInput({
 			</p>
 			<p> 
 				<Row justify='center'>
-					<NumberInput pre={'Rate'} changeHandler={changeChg} min={0} max={50} value={chg} step={0.1} noSlider/>
+					<Col>
+						<label>Rate</label>&nbsp;
+						<InputNumber onChange={changeChg} min={1} max={50} value={chg} step={0.1} />
+					</Col>
 					<NumberInput pre={'Amount'} min={10} max={100000} value={amount} changeHandler={changeAmount} currency={selectedCurrency} step={1} noSlider/>
 				</Row>
 			</p>

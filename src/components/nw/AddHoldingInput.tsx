@@ -1,5 +1,5 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Row } from 'antd';
+import { InputNumber, Row } from 'antd';
 import React, { Fragment, useContext, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
@@ -161,10 +161,9 @@ export default function AddHoldingInput({
 				</Fragment>
 			): null}
 		</p>
+		{purchase &&  <p><PurchaseInput amount={amount} setAmount={setAmount} month={month} setMonth={setMonth} year={year} setYear={setYear}/></p>}
 		<p>
 			<Row justify='center'>
-			{purchase &&  <PurchaseInput amount={amount} setAmount={setAmount} month={month} setMonth={setMonth} year={year} setYear={setYear}/>}
-			
 			{childTab === PM_TAB || childTab === NPS_TAB || childTab === CRYPTO_TAB ? null : 
 			   <TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} /> }
 			
@@ -175,12 +174,17 @@ export default function AddHoldingInput({
 			}
 			</Row>
 		</p>
-		<p>
-			{ childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ?
-				<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={20} value={chg} step={0.1} noSlider />
-				: null
-			}
-		</p>
+		{ (childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB) &&
+		 	<p>
+				<label>Rate</label>&nbsp;
+				<InputNumber
+				onChange={changeChg}
+				min={1}
+				max={50}
+				value={chg}
+				step={0.1} />
+			</p>
+		}
 		<p>
 			<SelectInput
 				pre={<UserOutlined />}

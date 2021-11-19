@@ -1,4 +1,4 @@
-import { Col } from 'antd';
+import { Col, InputNumber } from 'antd';
 import React, { Fragment, useContext } from 'react';
 import { AssetSubType, HoldingInput } from '../../api/goals';
 import NumberInput from '../form/numberinput';
@@ -82,9 +82,16 @@ export default function ViewHoldingInput({
 			    <><Col>
 					<TextInput pre="Name" changeHandler={changeName} value={record.name as string} size={'small'} />
 				</Col>
-				{childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB ? <Col>
-					<NumberInput pre={'Rate'} changeHandler={changeChg} post={'%'} min={0} max={50} value={record.chg as number} step={0.1} noSlider/>
-				</Col>: null}
+				{(childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB) &&
+				<Col>
+					<label>Rate</label>&nbsp;
+					<InputNumber
+						onChange={changeChg}
+						min={1}
+						max={50}
+						value={record.chg as number}
+						step={0.1} />
+				</Col> }
 				<Col>
 					<NumberInput
 						pre={'Amount'}
