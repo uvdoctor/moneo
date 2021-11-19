@@ -776,7 +776,7 @@ export const onCreateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -789,7 +789,7 @@ export const onCreateHoldings = /* GraphQL */ `
         sy
         months
         rate
-        fIds
+        fId
         curr
         cum
         cumf
@@ -800,7 +800,7 @@ export const onCreateHoldings = /* GraphQL */ `
         sy
         months
         rate
-        fIds
+        fId
         curr
         cum
         cumf
@@ -825,7 +825,7 @@ export const onCreateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -869,7 +869,7 @@ export const onCreateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -887,7 +887,7 @@ export const onCreateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -905,7 +905,7 @@ export const onCreateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -923,7 +923,7 @@ export const onCreateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -941,7 +941,7 @@ export const onCreateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -959,7 +959,7 @@ export const onCreateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -977,7 +977,7 @@ export const onCreateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1004,7 +1004,7 @@ export const onCreateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1022,7 +1022,7 @@ export const onCreateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1050,7 +1050,7 @@ export const onUpdateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1063,7 +1063,7 @@ export const onUpdateHoldings = /* GraphQL */ `
         sy
         months
         rate
-        fIds
+        fId
         curr
         cum
         cumf
@@ -1074,7 +1074,7 @@ export const onUpdateHoldings = /* GraphQL */ `
         sy
         months
         rate
-        fIds
+        fId
         curr
         cum
         cumf
@@ -1099,7 +1099,7 @@ export const onUpdateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1143,7 +1143,7 @@ export const onUpdateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1161,7 +1161,7 @@ export const onUpdateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1179,7 +1179,7 @@ export const onUpdateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1197,7 +1197,7 @@ export const onUpdateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1215,7 +1215,7 @@ export const onUpdateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1233,7 +1233,7 @@ export const onUpdateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1251,7 +1251,7 @@ export const onUpdateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1278,7 +1278,7 @@ export const onUpdateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1296,7 +1296,7 @@ export const onUpdateHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1324,7 +1324,7 @@ export const onDeleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1337,7 +1337,7 @@ export const onDeleteHoldings = /* GraphQL */ `
         sy
         months
         rate
-        fIds
+        fId
         curr
         cum
         cumf
@@ -1348,7 +1348,7 @@ export const onDeleteHoldings = /* GraphQL */ `
         sy
         months
         rate
-        fIds
+        fId
         curr
         cum
         cumf
@@ -1373,7 +1373,7 @@ export const onDeleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1417,7 +1417,7 @@ export const onDeleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1435,7 +1435,7 @@ export const onDeleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1453,7 +1453,7 @@ export const onDeleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1471,7 +1471,7 @@ export const onDeleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1489,7 +1489,7 @@ export const onDeleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1507,7 +1507,7 @@ export const onDeleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1525,7 +1525,7 @@ export const onDeleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1552,7 +1552,7 @@ export const onDeleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -1570,7 +1570,7 @@ export const onDeleteHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF

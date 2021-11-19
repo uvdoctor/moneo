@@ -717,7 +717,7 @@ export const getHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -730,7 +730,7 @@ export const getHoldings = /* GraphQL */ `
         sy
         months
         rate
-        fIds
+        fId
         curr
         cum
         cumf
@@ -741,7 +741,7 @@ export const getHoldings = /* GraphQL */ `
         sy
         months
         rate
-        fIds
+        fId
         curr
         cum
         cumf
@@ -766,7 +766,7 @@ export const getHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -810,7 +810,7 @@ export const getHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -828,7 +828,7 @@ export const getHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -846,7 +846,7 @@ export const getHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -864,7 +864,7 @@ export const getHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -882,7 +882,7 @@ export const getHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -900,7 +900,7 @@ export const getHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -918,7 +918,7 @@ export const getHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -945,7 +945,7 @@ export const getHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -963,7 +963,7 @@ export const getHoldings = /* GraphQL */ `
           qty
         }
         name
-        fIds
+        fId
         curr
         chg
         chgF
@@ -989,7 +989,7 @@ export const listHoldingss = /* GraphQL */ `
           id
           qty
           name
-          fIds
+          fId
           curr
           chg
           chgF
@@ -1002,7 +1002,7 @@ export const listHoldingss = /* GraphQL */ `
           sy
           months
           rate
-          fIds
+          fId
           curr
           cum
           cumf
@@ -1013,7 +1013,7 @@ export const listHoldingss = /* GraphQL */ `
           sy
           months
           rate
-          fIds
+          fId
           curr
           cum
           cumf
@@ -1031,7 +1031,7 @@ export const listHoldingss = /* GraphQL */ `
           id
           qty
           name
-          fIds
+          fId
           curr
           chg
           chgF
@@ -1057,7 +1057,7 @@ export const listHoldingss = /* GraphQL */ `
           id
           qty
           name
-          fIds
+          fId
           curr
           chg
           chgF
@@ -1068,7 +1068,7 @@ export const listHoldingss = /* GraphQL */ `
           id
           qty
           name
-          fIds
+          fId
           curr
           chg
           chgF
@@ -1079,7 +1079,7 @@ export const listHoldingss = /* GraphQL */ `
           id
           qty
           name
-          fIds
+          fId
           curr
           chg
           chgF
@@ -1090,7 +1090,7 @@ export const listHoldingss = /* GraphQL */ `
           id
           qty
           name
-          fIds
+          fId
           curr
           chg
           chgF
@@ -1101,7 +1101,7 @@ export const listHoldingss = /* GraphQL */ `
           id
           qty
           name
-          fIds
+          fId
           curr
           chg
           chgF
@@ -1112,7 +1112,7 @@ export const listHoldingss = /* GraphQL */ `
           id
           qty
           name
-          fIds
+          fId
           curr
           chg
           chgF
@@ -1123,7 +1123,7 @@ export const listHoldingss = /* GraphQL */ `
           id
           qty
           name
-          fIds
+          fId
           curr
           chg
           chgF
@@ -1143,7 +1143,7 @@ export const listHoldingss = /* GraphQL */ `
           id
           qty
           name
-          fIds
+          fId
           curr
           chg
           chgF
@@ -1154,7 +1154,7 @@ export const listHoldingss = /* GraphQL */ `
           id
           qty
           name
-          fIds
+          fId
           curr
           chg
           chgF

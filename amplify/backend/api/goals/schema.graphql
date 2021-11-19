@@ -401,7 +401,7 @@ type Holding {
 	qty: Float!
 	pur: [Purchase!]
 	name: String
-	fIds: [String!]!
+	fId: String!
 	curr: String
 	chg: Float
 	chgF: Int
@@ -415,7 +415,7 @@ type Deposit {
 	sy: Int!
 	months: Int!
 	rate: Float!
-	fIds: [String!]!
+	fId: String!
 	curr: String!
 	cum: Boolean!
 	cumf: Int!
@@ -476,7 +476,7 @@ type Balance {
 	amt: Float!
 	curr: String!
 	name: String
-	fIds: [String!]!
+	fId: String!
 }
 
 enum MFSchemeType {
