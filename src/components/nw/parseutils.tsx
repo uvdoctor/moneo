@@ -115,7 +115,7 @@ export const completeRecord = (recordBroken: boolean, mode: string, equities: an
 		appendValue(
 			mode === AssetSubType.S ? equities : mode === 'M' ? mfs : mode === InsType.ETF ? etfs : bonds,
 			isin as string,
-			{id: isin, qty: quantity as number, name: isin, type: mode !== AssetType.F ? AssetType.E : AssetType.F, subt: mode === AssetType.F ? AssetSubType.CB : mode, fIds: [taxId], curr: currency} as HoldingInput
+			{id: isin, qty: quantity as number, name: isin, type: mode !== AssetType.F ? AssetType.E : AssetType.F, subt: mode === AssetType.F ? AssetSubType.CB : mode, fId: taxId, curr: currency} as HoldingInput
 	  	);
   	}
 	console.log("Record completed for...", isin);

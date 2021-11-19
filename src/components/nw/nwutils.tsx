@@ -93,7 +93,7 @@ export const doesMemberMatch = (
   selectedMembers: Array<string>
 ) =>
   selectedMembers.indexOf(ALL_FAMILY) > -1 ||
-  selectedMembers.indexOf(instrument.fIds[0]) > -1;
+  selectedMembers.indexOf(instrument.fId) > -1;
 
 export const doesHoldingMatch = (
   instrument: APIt.HoldingInput,
