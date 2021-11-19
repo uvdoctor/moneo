@@ -84,8 +84,8 @@ export default function DeleteAccount() {
 					await deleteGoal();
 					await deleteHoldings();
 					await deleteFamilyList();
-					await Storage.remove(user.attributes.profile);
-					await Storage.remove(goalImgKey);
+					user.attributes.profile ? await Storage.remove(user.attributes.profile) : null;
+					goalImgKey ? await Storage.remove(goalImgKey) : null;
 					await deleteContact(user.attributes.email);
 					user.deleteUser((error: any, data: any) => {
 						if (error) {
