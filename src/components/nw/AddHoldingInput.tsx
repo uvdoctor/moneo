@@ -39,10 +39,10 @@ export default function AddHoldingInput({
 	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const [ subtype, setSubtype ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
 	const [ name, setName ] = useState<string>(subCategoryOptions ? Object.keys(subCategoryOptions[subtype])[0] : '');
-	const [ quantity, setQuantity ] = useState<number>(0);
+	const [ quantity, setQuantity ] = useState<number>(1);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ chg, setChg ] = useState<number>(0);
-	const [ amount, setAmount ] = useState<number>(0);
+	const [ amount, setAmount ] = useState<number>(1000);
 	const [ month, setMonth ] = useState<number>(1);
 	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
 
@@ -104,6 +104,7 @@ export default function AddHoldingInput({
 
 	const changeChg = (val: number) => {
 		setChg(val);
+		disableOk(val <= 0);
 		let rec = getNewRec();
 		rec.chg = val;
 		setInput(rec);

@@ -25,8 +25,8 @@ export default function AddDepositInput({
 	const [ cum, setCum ] = useState<string>('true');
 	const [ cumf, setCumf ] = useState<string>('1');
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
-	const [ chg, setChg ] = useState<number>(0);
-	const [ amount, setAmount ] = useState<number>(0);
+	const [ chg, setChg ] = useState<number>(1);
+	const [ amount, setAmount ] = useState<number>(1000);
 	const [ startDate, setStartDate ] = useState<string>('1900-4');
 	const [ duration, setDuration ] = useState<number>(12);
 
@@ -39,6 +39,7 @@ export default function AddDepositInput({
 
 	const changeDuration = (val: number) => {
 		setDuration(val);
+		disableOk(val <= 0);
 		let rec = getNewRec();
 		rec.months = val;
 		setInput(rec);
@@ -46,6 +47,7 @@ export default function AddDepositInput({
 
 	const changeChg = (val: number) => {
 		setChg(val);
+		disableOk(val <= 0);
 		let rec = getNewRec();
 		rec.rate = val;
 		setInput(rec);

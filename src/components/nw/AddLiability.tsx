@@ -17,7 +17,7 @@ interface AddLiabilityInputProps {
 export default function AddLiabilityInput({ setInput, disableOk, categoryOptions }: AddLiabilityInputProps) {
 	const { allFamily, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
-	const [ amount, setAmount ] = useState<number>(0);
+	const [ amount, setAmount ] = useState<number>(1000);
 	const [ type, setType ] = useState<string>('L');
 	const [ yearly, setYearly ] = useState('true');
 	const [ name, setName ] = useState<string>('');
