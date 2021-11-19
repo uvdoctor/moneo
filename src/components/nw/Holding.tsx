@@ -104,7 +104,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 							</Col>
 						)}
 						<Col>
-							<UserOutlined />&nbsp;{allFamily[holding.fIds[0]].name}
+							<UserOutlined />&nbsp;{allFamily[holding.fId].name}
 						</Col>
 					</Row>
 				</Col>

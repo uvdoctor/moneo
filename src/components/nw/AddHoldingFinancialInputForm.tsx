@@ -13,7 +13,7 @@ interface InstrumentsData {
 interface Holding {
   qty: number;
   name: string;
-  fIds: [];
+  fId: string;
   id: string;
   curr: string;
   subt: string;
@@ -52,7 +52,7 @@ const holdingReducer = (
         ...{
           qty: 0,
           name: "",
-          fIds: [],
+          fIds: '',
           id: "",
           curr: "INR",
           subt: "",
@@ -98,7 +98,7 @@ export default function HoldingInput(props: any) {
   const [holdingState, dispatch] = useReducer(holdingReducer, {
     qty: 0,
     name: "",
-    fIds: [],
+    fIds: '',
     id: "",
     curr: "INR",
     subt: "",
@@ -222,7 +222,7 @@ export default function HoldingInput(props: any) {
           style={{ width: 170 }}
           onSelect={async (option: string, details) => {
             const { value, fid } = details;
-            dispatch({ type: "formUpdate", data: { fIds: [fid] } });
+            dispatch({ type: "formUpdate", data: { fId: fid } });
             dispatchDataState({
               type: "formUpdate",
               data: { familyMember: value },

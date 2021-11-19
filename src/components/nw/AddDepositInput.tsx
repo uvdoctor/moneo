@@ -66,7 +66,7 @@ export default function AddDepositInput({
 			sy: Number(startDate.slice(0, startDate.indexOf('-'))),
             months: duration,
             rate: chg,
-            fIds: [ memberKey ],
+            fId: memberKey,
             curr: selectedCurrency,
             cum: cum === 'true' ? true : false ,
             cumf: Number(cumf)
@@ -91,7 +91,7 @@ export default function AddDepositInput({
 	const changeMember = (key: string) => {
 		setMemberKey(key);
 		let rec = getNewRec();
-		rec.fIds = [ key ];
+		rec.fId = key;
 		setInput(rec);
 	};
 

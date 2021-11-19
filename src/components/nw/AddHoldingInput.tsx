@@ -48,7 +48,7 @@ export default function AddHoldingInput({
 	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
 
 	const getNewRec = () => {
-		let newRec: HoldingInput = { id: '', qty: 0, fIds: [] };
+		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
 		switch (childTab) {
 			case NPS_TAB:
 				newRec.subt = subtype;
@@ -92,7 +92,7 @@ export default function AddHoldingInput({
 		}
 		newRec.qty = quantity;
 		newRec.name = name;
-		newRec.fIds = [ memberKey ];
+		newRec.fId = memberKey;
 		return newRec;
 	};
 
@@ -135,7 +135,7 @@ export default function AddHoldingInput({
 	const changeMember = (key: string) => {
 		setMemberKey(key);
 		let rec = getNewRec();
-		rec.fIds = [ key ];
+		rec.fId = key;
 		setInput(rec);
 	};
 

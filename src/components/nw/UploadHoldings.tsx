@@ -110,7 +110,7 @@ export default function UploadHoldings() {
 		}
 		setSelectedCurrency(currency);
 		if(equitiesNum || mfsNum || bondsNum || etfsNum) {
-			let filteredIns: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => instrument.curr !== instrument.curr || instrument?.fIds[0] !== member);
+			let filteredIns: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => instrument.curr !== instrument.curr || instrument?.fId !== member);
 			await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, member as string, filteredIns);
 			let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, member as string, filteredIns);
 			if(unmatchedBonds && Object.keys(unmatchedBonds).length) 

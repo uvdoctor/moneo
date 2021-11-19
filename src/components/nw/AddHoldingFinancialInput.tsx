@@ -47,7 +47,7 @@ export default function AddHoldingFinancialInput(props: any) {
 
   const HoldingsRow = (props: { holding: any; key: number }) => {
     const {
-      holding: { curr, name, qty, id, subt, fIds },
+      holding: { curr, name, qty, id, subt, fId },
       key,
     } = props;
     const { itype, price, type } = insData[id];
@@ -71,7 +71,7 @@ export default function AddHoldingFinancialInput(props: any) {
 
             <Col>
               <UserOutlined />
-              &nbsp;{allFamily[fIds[0]].name}
+              &nbsp;{allFamily[fId].name}
             </Col>
           </Row>
 

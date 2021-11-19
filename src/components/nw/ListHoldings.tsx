@@ -1,6 +1,6 @@
 import { Button, Col, Row } from 'antd';
 import React, { Fragment, useContext } from 'react';
-import { HoldingInput } from '../../api/goals';
+import { DepositInput, HoldingInput, LiabilityInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
 import { NWContext } from './NWContext';
 import { getFamilyOptions } from './nwutils';
@@ -18,7 +18,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, viewCo
 	const { allFamily }: any = useContext(NWContext);
 
 	const changeOwner = (ownerKey: string, i: number) => {
-		data[i].fIds[0] = ownerKey;
+		data[i].fId = ownerKey;
 		changeData([ ...data ]);
 	};
 
@@ -29,6 +29,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, viewCo
 
 	return (
 		<Row>
+			{console.log(data[0])}
 			{data &&
 				data[0] &&
 				data.map((holding: HoldingInput, i: number) => (
@@ -46,7 +47,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, viewCo
 								<Col>
 									<SelectInput
 										pre={<UserOutlined />}
-										value={holding.fIds ? holding.fIds[0] : ''}
+										value={holding.fId ? holding.fId : ''}
 										options={getFamilyOptions(allFamily)}
 										changeHandler={(key: string) => changeOwner(key, i)}
 										post={

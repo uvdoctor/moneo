@@ -193,6 +193,7 @@ function NWContextProvider() {
 					label: [PROP_TAB],
 					data: properties,
 					setData: setProperties,
+					total: totalProperties,
 					categoryOptions: {
 						P: "Plot",
 						A: "Apartment",
@@ -434,9 +435,9 @@ function NWContextProvider() {
 		setNPS([ ...(allHoldings?.nps ? allHoldings.nps : []) ]);
 		setCrypto([ ...(allHoldings?.crypto ? allHoldings.crypto : []) ]);
 		setVehicles([ ...(allHoldings?.vehicles ? allHoldings.vehicles : []) ]);
+		setProperties([ ...(allHoldings?.property ? allHoldings.property: []) ]);
 		setLoans([ ...(allHoldings?.loans ? allHoldings.loans : []) ]);
 		setInsurance([ ...(allHoldings?.ins ? allHoldings.ins : []) ]);
-		setVehicles([ ...(allHoldings?.vehicles ? allHoldings.vehicles : []) ]);
 		setDeposits([ ...(allHoldings?.deposits ? allHoldings.deposits : []) ]);
 		setSavings([ ...(allHoldings?.savings ? allHoldings.savings : []) ]);
 		setLendings([ ...(allHoldings?.lendings ? allHoldings.lendings : []) ]);
