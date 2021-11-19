@@ -6,7 +6,6 @@ import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
 import {
-	BTC,
 	CRYPTO_TAB,
 	EPF_TAB,
 	NPS_TAB,
@@ -38,7 +37,7 @@ export default function AddHoldingInput({
 	purchase
 }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
-	const [ subtype, setSubtype ] = useState<string>(childTab === PM_TAB ? AssetSubType.Gold : childTab === NPS_TAB ? 'L' : BTC);
+	const [ subtype, setSubtype ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
 	const [ name, setName ] = useState<string>(subCategoryOptions ? Object.keys(subCategoryOptions[subtype])[0] : '');
 	const [ quantity, setQuantity ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
@@ -59,8 +58,8 @@ export default function AddHoldingInput({
 			case PPF_TAB:
 			case EPF_TAB:
 			case VPF_TAB:
-				newRec.chg = chg; 
-				newRec.chgF = childTab === PPF_TAB ? 1 : 12;
+				newRec.chg = chg;
+				newRec.chgF = childTab === PPF_TAB ? Number(subtype) : 12;
 				newRec.type = AssetType.F;
 				newRec.subt = childTab;
 				break;
@@ -140,59 +139,88 @@ export default function AddHoldingInput({
 	};
 
 	return (
-	<div style={{ textAlign: 'center' }}>
-		<p>
-			{categoryOptions && <SelectInput
-				pre=""
-				value={subtype}
-				options={categoryOptions}
-				changeHandler={(val: string) => changeSubtype(val)}
-			/>}
-			{subCategoryOptions ? subCategoryOptions[subtype as string] && (
-				<Fragment>
-					&nbsp;
+		<div style={{ textAlign: 'center' }}>
+			<p>
+				{categoryOptions && (
 					<SelectInput
 						pre=""
-						value={name as string}
-						options={subCategoryOptions[subtype as string]}
-						changeHandler={(val: string) => changeName(val)}
-						post={subtype === AssetSubType.Gold ? 'karat' : ''}
+						value={subtype}
+						options={categoryOptions}
+						changeHandler={(val: string) => changeSubtype(val)}
 					/>
-				</Fragment>
-			): null}
-		</p>
-		{purchase &&  <p><PurchaseInput amount={amount} setAmount={setAmount} month={month} setMonth={setMonth} year={year} setYear={setYear}/></p>}
-		<p>
-			<Row justify='center'>
-			{childTab === PM_TAB || childTab === NPS_TAB || childTab === CRYPTO_TAB ? null : 
-			   <TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} /> }
-			
-			{childTab === PM_TAB || childTab === NPS_TAB || childTab === CRYPTO_TAB ? 
-				<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} /> 
-			  : <NumberInput pre={'Amount'} min={0} max={10000} value={quantity} changeHandler={changeQuantity} currency={selectedCurrency} 
-			  	step={1} post={childTab === PPF_TAB ? '(Annually)' : childTab === EPF_TAB || childTab === VPF_TAB ? '(Monthly)' : ''}  noSlider />
-			}
-			</Row>
-		</p>
-		{ (childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB) &&
-		 	<p>
-				<label>Rate</label>&nbsp;
-				<InputNumber
-				onChange={changeChg}
-				min={1}
-				max={50}
-				value={chg}
-				step={0.1} />
+				)}
+				{subCategoryOptions ? (
+					subCategoryOptions[subtype as string] && (
+						<Fragment>
+							&nbsp;
+							<SelectInput
+								pre=""
+								value={name as string}
+								options={subCategoryOptions[subtype as string]}
+								changeHandler={(val: string) => changeName(val)}
+								post={subtype === AssetSubType.Gold ? 'karat' : ''}
+							/>
+						</Fragment>
+					)
+				) : null}
 			</p>
-		}
-		<p>
-			<SelectInput
-				pre={<UserOutlined />}
-				value={memberKey}
-				options={getFamilyOptions(allFamily)}
-				changeHandler={(key: string) => changeMember(key)}
-			/>
-		</p>
-	</div>
-	)
+			{purchase && (
+				<p>
+					<PurchaseInput
+						amount={amount}
+						setAmount={setAmount}
+						month={month}
+						setMonth={setMonth}
+						year={year}
+						setYear={setYear}
+					/>
+				</p>
+			)}
+			<p>
+				<Row justify="center">
+					{childTab === PM_TAB || childTab === NPS_TAB || childTab === CRYPTO_TAB ? null : (
+						<TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} />
+					)}
+
+					{childTab === PM_TAB || childTab === NPS_TAB || childTab === CRYPTO_TAB ? (
+						<QuantityWithRate quantity={quantity} onChange={changeQuantity} subtype={subtype} name={name} />
+					) : (
+						<NumberInput
+							pre={'Amount'}
+							min={0}
+							max={10000}
+							value={quantity}
+							changeHandler={changeQuantity}
+							currency={selectedCurrency}
+							step={1}
+							post={
+								childTab === PPF_TAB ? (
+									'(Annually)'
+								) : childTab === EPF_TAB || childTab === VPF_TAB ? (
+									'(Monthly)'
+								) : (
+									''
+								)
+							}
+							noSlider
+						/>
+					)}
+				</Row>
+			</p>
+			{(childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB) && (
+				<p>
+					<label>Rate</label>&nbsp;
+					<InputNumber onChange={changeChg} min={1} max={50} value={chg} step={0.1} />
+				</p>
+			)}
+			<p>
+				<SelectInput
+					pre={<UserOutlined />}
+					value={memberKey}
+					options={getFamilyOptions(allFamily)}
+					changeHandler={(key: string) => changeMember(key)}
+				/>
+			</p>
+		</div>
+	);
 }

@@ -55,56 +55,60 @@ export default function ViewHoldingInput({
 
 	return (
 		<Fragment>
-			{categoryOptions && <Col>
+			{categoryOptions && 
+			<Col>
 				 <SelectInput
 					pre=""
-					value={record.subt as string}
+					value={childTab === PPF_TAB ? record.chgF as number : record.subt as string}
 					options={categoryOptions}
 					changeHandler={(val: string) => changeSubtype(val)}
 				/>
-				{subCategoryOptions ? subCategoryOptions[record.subt as string] && (	
-					<Fragment>
-						&nbsp;
-						<SelectInput
-							pre=""
-							value={record.name as string}
-							options={subCategoryOptions[record.subt as string]}
-							changeHandler={(val: string) => changePurity(val)}
-							post={record.subt === AssetSubType.Gold ? 'karat' : ''}
-						/>
-					</Fragment>
-				): null}
+			{subCategoryOptions ? subCategoryOptions[record.subt as string] && (	
+				<Fragment>&nbsp;
+					<SelectInput
+						pre=""
+						value={record.name as string}
+						options={subCategoryOptions[record.subt as string]}
+						changeHandler={(val: string) => changePurity(val)}
+						post={record.subt === AssetSubType.Gold ? 'karat' : ''}
+					/>
+				</Fragment>)
+				: null}
 			</Col>}
 			{childTab === CRYPTO_TAB || childTab === NPS_TAB || childTab === PM_TAB  ? 
-			<Col>
-				<QuantityWithRate quantity={record.qty} name={record.name as string} subtype={record.subt as string} onChange={changeQty} />
-			</Col> : 
-			    <><Col>
-					<TextInput pre="Name" changeHandler={changeName} value={record.name as string} size={'small'} />
-				</Col>
-				{(childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB) &&
 				<Col>
-					<label>Rate</label>&nbsp;
-					<InputNumber
-						onChange={changeChg}
-						min={1}
-						max={50}
-						value={record.chg as number}
-						step={0.1} />
-				</Col> }
-				<Col>
-					<NumberInput
-						pre={'Amount'}
-						min={0}
-						max={100000}
-						value={record.qty}
-						changeHandler={changeQty}
-						currency={record.curr as string}
-						step={1}
-						noSlider />
-				</Col>
-				</>
-			}
-		</Fragment>
+					<QuantityWithRate 
+						quantity={record.qty} 
+						name={record.name as string} 
+						subtype={record.subt as string} 
+						onChange={changeQty} />
+				</Col> : 
+			    <>
+					<Col>
+						<TextInput pre="Name" changeHandler={changeName} value={record.name as string} size={'small'} />
+					</Col>
+					{(childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB) &&
+					<Col>
+						<label>Rate</label>&nbsp;
+						<InputNumber
+							onChange={changeChg}
+							min={1}
+							max={50}
+							value={record.chg as number}
+							step={0.1} />
+					</Col> }
+					<Col>
+						<NumberInput
+							pre={'Amount'}
+							min={0}
+							max={100000}
+							value={record.qty}
+							changeHandler={changeQty}
+							currency={record.curr as string}
+							step={1}
+							noSlider />
+					</Col>
+				</>}
+			</Fragment>
 	);
 }

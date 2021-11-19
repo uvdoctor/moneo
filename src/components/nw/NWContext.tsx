@@ -273,6 +273,10 @@ function NWContextProvider() {
 					data: ppf,
 					setData: setPPF,
 					total: totalPPF,
+					categoryOptions: {
+						1: 'Yearly',
+						12: 'Monthly'
+					},
 					viewComp: ViewHoldingInput
 				},
 				[EPF_TAB]: {
@@ -432,6 +436,7 @@ function NWContextProvider() {
 		setPreciousMetals([ ...(allHoldings?.pm ? allHoldings.pm : []) ]);
 		setPPF([ ...(allHoldings?.ppf ? allHoldings.ppf : []) ]);
 		setEPF([ ...(allHoldings?.epf ? allHoldings.epf : []) ]);
+		setVPF([ ...(allHoldings?.vpf ? allHoldings.vpf : []) ]);
 		setNPS([ ...(allHoldings?.nps ? allHoldings.nps : []) ]);
 		setCrypto([ ...(allHoldings?.crypto ? allHoldings.crypto : []) ]);
 		setVehicles([ ...(allHoldings?.vehicles ? allHoldings.vehicles : []) ]);
