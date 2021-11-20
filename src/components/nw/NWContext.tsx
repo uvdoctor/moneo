@@ -667,7 +667,33 @@ function NWContextProvider() {
 	};
 
 	const priceNPS = () => {
-		setTotalNPS(0);
+		if(!nps.length) {
+			setTotalNPS(0);
+			setTotalFEquity(0);
+			setTotalFixed(0);
+			setTotalEquity(0);
+			return;
+		}
+		let total = 0;
+		let totalFixed = 0;
+		let totalFEquity = 0;
+		
+		nps.forEach((npsItem: HoldingInput) => {
+			const data = npsData.find((item)=>item.id === npsItem.name);
+			if(data && doesHoldingMatch(npsItem, selectedMembers, selectedCurrency)) {
+				let value = npsItem.qty * data.price;
+				total += value;
+			if(data.type === AssetType.E) totalFEquity += value;
+			else if(data.type === AssetType.F) totalFixed += value;
+			else if(data.type === AssetType.H) {
+				totalFixed += 0.7 * value;
+				totalFEquity += 0.3 * value;
+				}
+			}
+		})
+		setTotalNPS(total);
+		setTotalFEquity(totalFEquity);
+		setTotalFixed(totalFixed);
 	};
 
 	const priceLendings = () => {
