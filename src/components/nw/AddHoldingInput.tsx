@@ -2,6 +2,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { InputNumber, Row } from 'antd';
 import React, { Fragment, useContext, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
+import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
@@ -45,6 +46,7 @@ export default function AddHoldingInput({
 	const [ amount, setAmount ] = useState<number>(1000);
 	const [ month, setMonth ] = useState<number>(1);
 	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
+	const [ purchaseDate, setPurchaseDate ] = useState<string>('2000-4');
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
@@ -68,6 +70,14 @@ export default function AddHoldingInput({
 				newRec.chgF = 1;
 				newRec.type = AssetType.A;
 				newRec.subt = subtype;
+				newRec.pur = [
+					{
+						amt: quantity,
+						qty: 1,
+						month: Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1)),
+						year: Number(purchaseDate.slice(0, purchaseDate.indexOf('-'))),
+					}
+				]
 				break;
 			case PM_TAB:
 				newRec.type = AssetType.A;
@@ -82,17 +92,27 @@ export default function AddHoldingInput({
 		if (purchase) {
 			newRec.pur = [
 				{
-					amt: amount,
+					amt: quantity,
 					month: month,
 					year: year,
 					qty: 1
 				}
 			];
 		}
-		newRec.qty = quantity;
+		newRec.qty = VEHICLE_TAB ? 0 : quantity;
 		newRec.name = name;
 		newRec.fId = memberKey;
 		return newRec;
+	};
+
+	const changePurchaseDate = (val: any) => {
+		setPurchaseDate(val);
+		let rec = getNewRec();
+		// @ts-ignore
+		rec.pur[0].year = Number(val.slice(0, val.indexOf('-')));
+		// @ts-ignore
+		rec.pur[0].month = Number(val.slice(val.indexOf('-') + 1));
+		setInput(rec);
 	};
 
 	const changeName = (val: string) => {
@@ -212,6 +232,17 @@ export default function AddHoldingInput({
 				<p>
 					<label>Rate</label>&nbsp;
 					<InputNumber onChange={changeChg} min={1} max={50} value={chg} step={0.1} />
+				</p>
+			)}
+			{childTab === VEHICLE_TAB && (
+				<p>
+					<DatePickerInput
+						picker="month"
+						title={'Purchase Date'}
+						changeHandler={changePurchaseDate}
+						defaultVal={purchaseDate}
+						size={'middle'}
+					/>
 				</p>
 			)}
 			<p>

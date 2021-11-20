@@ -628,7 +628,21 @@ function NWContextProvider() {
 	};
 
 	const priceVehicles = () => {
-		setTotalVehicles(0);
+		if(!nps.length) {
+			setTotalVehicles(0);
+			setTotalFixed(0);
+			return;
+		}
+		let total = 0;
+		let totalFixed = 0;
+		vehicles.forEach((vehicle: HoldingInput) => {
+			if(vehicle.id && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
+				let value = vehicle.qty ;
+				total += value;
+				totalFixed += value;
+			}
+		})
+		setTotalVehicles(total);
 	};
 
 	const priceAngel = () => {
@@ -677,7 +691,6 @@ function NWContextProvider() {
 		let total = 0;
 		let totalFixed = 0;
 		let totalFEquity = 0;
-		
 		nps.forEach((npsItem: HoldingInput) => {
 			const data = npsData.find((item)=>item.id === npsItem.name);
 			if(data && doesHoldingMatch(npsItem, selectedMembers, selectedCurrency)) {

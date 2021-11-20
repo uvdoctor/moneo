@@ -1,10 +1,11 @@
 import { Col, InputNumber } from 'antd';
 import React, { Fragment, useContext } from 'react';
 import { AssetSubType, HoldingInput } from '../../api/goals';
+import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { CRYPTO_TAB, EPF_TAB, NPS_TAB, NWContext, PM_TAB, PPF_TAB, VPF_TAB } from './NWContext';
+import { CRYPTO_TAB, EPF_TAB, NPS_TAB, NWContext, PM_TAB, PPF_TAB, VEHICLE_TAB, VPF_TAB } from './NWContext';
 import QuantityWithRate from './QuantityWithRate';
 
 interface ViewHoldingInputProps {
@@ -23,6 +24,8 @@ export default function ViewHoldingInput({
 	record,
 }: ViewHoldingInputProps) {
 	const { childTab }: any = useContext(NWContext);
+
+	console.log( record );
 	
 	const changeName = (val: any) => {
 		record.name = val;
@@ -30,7 +33,9 @@ export default function ViewHoldingInput({
 	};
 	
 	const changeQty = (quantity: number) => {
-		record.qty = quantity;
+		// @ts-ignore
+		if(childTab === VEHICLE_TAB) record.pur[0].amt = quantity;
+		else record.qty = quantity;
 		changeData([ ...data ]);
 	};
 
@@ -51,6 +56,14 @@ export default function ViewHoldingInput({
 	const changePurity = (purity: string) => {
 		record.name = purity;
 		changeData([ ...data ]);
+	};
+
+	const changePurchaseDate = (val: string) => {
+		// @ts-ignore
+		record.pur[0].month = Number(val.slice(0, val.indexOf('-')));
+		// @ts-ignore
+		record[0].pur.year = Number(val.slice(val.indexOf('-') + 1));
+		changeData([ ...data ])
 	};
 
 	return (
@@ -100,15 +113,27 @@ export default function ViewHoldingInput({
 					<Col>
 						<NumberInput
 							pre={'Amount'}
-							min={0}
-							max={100000}
-							value={record.qty}
+							min={10}
+							max={100000000}
+							// @ts-ignore
+							value={childTab === VEHICLE_TAB ? record.pur && record.pur[0].amt : record.qty}
 							changeHandler={changeQty}
 							currency={record.curr as string}
 							step={1}
 							noSlider />
 					</Col>
 				</>}
+				{childTab === VEHICLE_TAB && record.pur && 
+					<Col>
+						<DatePickerInput
+							picker="month"
+							title={'Date'}
+							changeHandler={(val:string)=>changePurchaseDate(val)}
+							// @ts-ignore
+							defaultVal={`${record.pur[0]?.year}-${record.pur[0]?.month}` as string}
+							size={'middle'}
+						/>
+					</Col>}
 			</Fragment>
 	);
 }
