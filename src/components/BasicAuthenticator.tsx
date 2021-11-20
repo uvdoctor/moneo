@@ -6,7 +6,7 @@ import { AuthState, Translations, onAuthUIStateChange } from "@aws-amplify/ui-co
 import { Alert, Checkbox, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import Title from "antd/lib/typography/Title";
-import { doesEmailExist } from "./registrationutils";
+import { doesEmailExist } from "./contactutils";
 import Nav from "./Nav";
 import { AppContextProvider } from "./AppContext";
 import { Form, Input, Button } from "antd";
@@ -56,6 +56,14 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       });
     return result;
   };
+
+  const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
+  
+  useEffect(() => {
+    Hub.listen("auth", initUser);
+    initUser();
+    return () => Hub.remove("auth", initUser);
+  }, []);
 
   const handleLogout = async () => {
     try {

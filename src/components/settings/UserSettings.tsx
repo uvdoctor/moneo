@@ -12,8 +12,13 @@ import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
-import { doesEmailExist, doesImExist, doesMobExist, updateImInContact, updateMobInContact } from "../registrationutils";
+import { deleteContact, doesEmailExist, doesImExist, doesMobExist, updateImInContact } from "../contactutils";
 import DatePickerInput from "../form/DatePickerInput";
+import AWS from "aws-sdk";
+import awsconfig from '../../aws-exports';
+
+AWS.config.region = awsconfig.aws_cognito_region;;
+const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha }: any = useContext(AppContext);
@@ -24,7 +29,7 @@ export default function UserSettings(): JSX.Element {
   const [lastName, setLastName] = useState<string>('');
   const [prefuser, setPrefuser] = useState<string>('');
   const [dob, setDob] = useState<string>();
-  const [whatsapp, setWhatsapp] = useState<any>('');
+  const [whatsapp, setWhatsapp] = useState<string>('');
   const { TabPane } = Tabs;
   const fsb = useFullScreenBrowser();
 
@@ -32,22 +37,33 @@ export default function UserSettings(): JSX.Element {
   const failure = (message: any) => notification.error({ message });
 
   const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
-
   const notify = !user || !user?.attributes['custom:notify'] || user?.attributes['custom:notify'] ==='N' ? false : true;
+  const disableButton = (prevValue: any, currValue: any) => prevValue === currValue ? true : error.length > 0 ? true : false;
 
-  const disableButton = (prevValue: any, currValue: any) =>
-    prevValue === currValue ? true : error.length > 0 ? true : false;
+  const counCodeWithOutPlusSign = counCode?.value.slice(1);
+
+  const sendOtp = () => {
+    const params = {
+      AccessToken: user.signInUserSession.accessToken.jwtToken, 
+      AttributeName: 'phone_number', 
+    };
+    cognitoidentityserviceprovider.getUserAttributeVerificationCode(params, (err: any, data: any) => {
+      if (err) console.log(err);
+      else console.log(data);
+    })
+  }
 
   const updatePhoneNumber = async () => {
     try {
-      const mob = parseFloat(counCode?.value.slice(1)+mobile);
+      const mob = parseFloat(counCodeWithOutPlusSign+mobile);
       const exist = await doesMobExist(mob);
-      if(exist) { failure('Please use another mobile as this one is already used by another account.');
-      return false;
+      if(exist) { 
+        failure('Please use another mobile as this one is already used by another account.');
+        return false;
       }
-      await Auth.updateUserAttributes(user, { phone_number: `${counCode?.value}${mobile}` });
+      await Auth.updateUserAttributes(user, { phone_number: counCode?.value+mobile });
+      sendOtp();
       success("Mobile number updated successfully. Enter Otp to verify");
-      await updateMobInContact(user?.attributes.email, mob);
       return true;
     } catch (error) {
       failure(`Unable to update, ${error}`);
@@ -56,12 +72,13 @@ export default function UserSettings(): JSX.Element {
 
   const updateWhatsapp = async () => {
     try {
-      const im = parseFloat(whatsapp);
+      const im = parseFloat(counCodeWithOutPlusSign+whatsapp);
       const exist = await doesImExist(im);
-      if(exist) { failure('Please use another whatsapp number as this one is already used by another account.');
-      return false;
-      }
-      await Auth.updateUserAttributes(user, { nickname: whatsapp });
+      if(exist) { 
+        failure('Please use another whatsapp number as this one is already used by another account.');
+        return false;
+      };
+      await Auth.updateUserAttributes(user, { nickname: counCode?.value+whatsapp });
       success("Whatsapp number updated successfully. Enter Otp to verify");
       await updateImInContact(user?.attributes.email, im);
       return true;
@@ -73,9 +90,11 @@ export default function UserSettings(): JSX.Element {
   const updateEmail = async () => {
     try {
       const exist = await doesEmailExist(email);
-      if(exist) { failure('Please use another email address as this one is already used by another account.');
-      return false;
+      if(exist) { 
+        failure('Please use another email address as this one is already used by another account.');
+        return false;
       }
+      await deleteContact(user?.attributes.email);
       await Auth.updateUserAttributes(user, { email: email });
       success("Email updated successfully. Enter Otp to verify");
       return true;
@@ -110,6 +129,7 @@ export default function UserSettings(): JSX.Element {
       failure(`Unable to update ${error}`);
     }
   };
+  
 
   useEffect(() => {
     if (!user) return;
@@ -117,9 +137,9 @@ export default function UserSettings(): JSX.Element {
     setName(user?.attributes.name || '');
     setLastName(user?.attributes.family_name || '');
     setDob(user?.attributes.birthdate || '');
-    setMobile(user?.attributes.phone_number ? user?.attributes.phone_number.replace(counCode?.value, "") : '' || '');
     setPrefuser(user?.attributes.preferred_username || '');
-    setWhatsapp(user?.attributes.nickname || '');
+    user?.attributes.nickname && setWhatsapp(user?.attributes.nickname.replace(counCode?.value, ""));
+    user?.attributes.phone_number && setMobile(user?.attributes.phone_number.replace(counCode?.value, ""));
   }, [appContextLoaded, counCode?.value, user]);
 
   return (
@@ -251,9 +271,11 @@ export default function UserSettings(): JSX.Element {
                       maxLength={10}
                       post={
                         <OtpDialogue
-                          disableButton={disableButton(user?.attributes.phone_number, `${counCode?.value}${mobile}` )}
-                          action={"phone_number"}
+                          disableButton={disableButton(user?.attributes.phone_number, counCode?.value+mobile)}
+                          action={"phone_number"} user={user}
+                          mob={parseFloat(counCodeWithOutPlusSign+mobile)}
                           onClickAction={updatePhoneNumber}
+                          resendOtp={sendOtp}             
                         />
                       }
                     />
@@ -262,13 +284,9 @@ export default function UserSettings(): JSX.Element {
                 <p>&nbsp;</p>
                 <Row justify="start">
                   <Col>
-                   <Checkbox
-                    onChange={(e) => 
-                      e.target.checked ? updateImIfSameAsMob() : null
-                    }
-                  >
+                   <Checkbox checked={whatsapp===mobile} onChange={(e) => e.target.checked ? updateImIfSameAsMob() : null}>
                     <strong>Whatsapp number same as mobile number</strong>
-                  </Checkbox>
+                   </Checkbox>
                   </Col>
                 </Row>
                 <Row justify="start">
@@ -285,11 +303,11 @@ export default function UserSettings(): JSX.Element {
                       maxLength={10}
                       post={
                         <OtpDialogue
-                          disableButton={disableButton(user?.attributes.nickname, whatsapp )}
+                          disableButton={disableButton(user?.attributes.nickname, counCode?.value+mobile)}
                           action={"whatsapp_number"}
-                          onClickAction={updateWhatsapp}
-                        />
-                      }
+                          im={parseFloat(counCodeWithOutPlusSign+mobile)}
+                          onClickAction={updateWhatsapp}              
+                        />}
                     />
                   </Col>
                 </Row>
@@ -306,16 +324,15 @@ export default function UserSettings(): JSX.Element {
                       fieldName="email"
                       post={
                         <OtpDialogue
-                          disableButton={disableButton( email, user?.attributes.email )}
+                          disableButton={disableButton(email, user?.attributes.email)}
                           action={"email"}
                           onClickAction={updateEmail}
                           email={email}
-                          mob={parseFloat(counCode?.value.slice(1)+mobile)}
-                          im={parseFloat(whatsapp)}
-                          notify={notify}
-                        />
-                      }
-                    />
+                          mob={parseFloat(counCodeWithOutPlusSign + mobile)}
+                          im={parseFloat(counCodeWithOutPlusSign + whatsapp)}
+                          notify={notify}    
+                          resendOtp={sendOtp}/>}
+                      />
                   </Col>
                 </Row>
                 </Col>
@@ -336,4 +353,4 @@ export default function UserSettings(): JSX.Element {
       )}
     </>
   );
-}
+};

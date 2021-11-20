@@ -5,7 +5,7 @@ import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined';
 import Text from 'antd/lib/typography/Text';
 import TextInput from '../form/textinput';
 import Auth from '@aws-amplify/auth';
-import { deleteContact } from '../registrationutils';
+import { deleteContact } from '../contactutils';
 import { GoalContext } from '../goals/GoalContext';
 import { API, graphqlOperation, Storage } from 'aws-amplify';
 import * as mutations from '../../graphql/mutations';
