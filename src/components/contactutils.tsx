@@ -67,11 +67,11 @@ export const doesImExist = async (im: float) => {
 	}
 };
 
-export const createContact = async (email: string, notify: boolean) => {
+export const createContact = async (email: string, mob: float, im: float, notify: boolean ) => {
 	try {
 		const data = await API.graphql({
 			query: mutations.createContacts,
-			variables: { input: { email: email, notify: notify } },
+			variables: { input: { email, mob: mob ? mob : 0, im: im ? im : 0, notify } },
 		});
 		console.log(data);
 	} catch (e) {
