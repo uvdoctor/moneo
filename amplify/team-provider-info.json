@@ -1,85 +1,4 @@
 {
-  "usdev": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-moneo-usdev-115157-authRole",
-      "UnauthRoleArn": "arn:aws:iam::099259607472:role/amplify-moneo-usdev-115157-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::099259607472:role/amplify-moneo-usdev-115157-authRole",
-      "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-      "UnauthRoleName": "amplify-moneo-usdev-115157-unauthRole",
-      "StackName": "amplify-moneo-usdev-115157",
-      "StackId": "arn:aws:cloudformation:us-east-1:099259607472:stack/amplify-moneo-usdev-115157/da9eb820-3a12-11ec-9811-12352e518863",
-      "AmplifyAppId": "d3rkwx8y4laix4"
-    },
-    "categories": {
-      "function": {
-        "insprice": {
-          "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/insprice-34397a7955686d665448-build.zip"
-        },
-        "EODPrice": {
-          "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/EODPrice-4f5562737a47786f4439-build.zip",
-          "apiGoalsGraphqlapiidoutput": "",
-          "apiGoalsGraphqlapiendpointoutput": "",
-          "eodApiKey": "611a020d72d487.59800610,611a01dc0083c5.19670434,611a0115bd4cd5.84750550,60d03a689523a3.63944368"
-        },
-        "MFPrice": {
-          "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/MFPrice-49646448535873456239-build.zip"
-        },
-        "INBond": {
-          "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/INBond-66334c30505344514273-build.zip"
-        },
-        "NPSPrice": {
-          "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/NPSPrice-4e4c6171762b62315772-build.zip"
-        },
-        "insmeta": {
-          "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/insmeta-46536959525248455636-build.zip"
-        },
-        "IndicePrice": {
-          "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/IndicePrice-4969424a6a644f486850-build.zip"
-        },
-        "moneopriceutils": {
-          "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/moneopriceutils-LambdaLayerVersionaedf934d-build.zip"
-        },
-        "INExchgPrice": {
-          "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
-          "s3Key": "amplify-builds/INExchgPrice-4c362f494b5561444f52-build.zip"
-        },
-        "UserConfirmationTrigger": {
-          "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/UserConfirmationTrigger-33794f2f6a383468556c-build.zip"
-        }
-      },
-      "auth": {
-        "moneo3e6273bc": {
-          "userPoolId": "us-east-1_3N0D6fw9V",
-          "userPoolName": "users_usdev",
-          "webClientId": "5lnl445333npfc9tj5rlcrd9vo",
-          "nativeClientId": "5lnl445333npfc9tj5rlcrd9vo",
-          "identityPoolId": "us-east-1:7d526af8-e47d-4096-a54f-b16374b43418",
-          "identityPoolName": "ids_usdev",
-          "allowUnauthenticatedIdentities": true,
-          "authRoleArn": "arn:aws:iam::099259607472:role/Cognito_ids_usdevAuth_Role",
-          "authRoleName": "Cognito_ids_usdevAuth_Role",
-          "unauthRoleArn": "arn:aws:iam::099259607472:role/Cognito_ids_usdevUnauth_Role",
-          "unauthRoleName": "Cognito_ids_usdevUnauth_Role"
-        }
-      },
-      "interactions": {
-        "scheduler": {
-          "deploymentBucketName": "amplify-moneo-usdev-115157-deployment",
-          "s3Key": "amplify-builds/scheduler-596f54744d6867517132-build.zip"
-        }
-      }
-    }
-  },
   "dev": {
     "awscloudformation": {
       "AuthRoleName": "amplify-moneo-dev-104733-authRole",
@@ -136,21 +55,10 @@
         "INExchgPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
           "s3Key": "amplify-builds/INExchgPrice-4c362f494b5561444f52-build.zip"
-        }
-      },
-      "auth": {
-        "moneo3e6273bc": {
-          "userPoolId": "us-east-1_3N0D6fw9V",
-          "userPoolName": "users_usdev",
-          "webClientId": "5lnl445333npfc9tj5rlcrd9vo",
-          "nativeClientId": "5lnl445333npfc9tj5rlcrd9vo",
-          "identityPoolId": "us-east-1:7d526af8-e47d-4096-a54f-b16374b43418",
-          "identityPoolName": "ids_usdev",
-          "allowUnauthenticatedIdentities": true,
-          "authRoleArn": "arn:aws:iam::099259607472:role/Cognito_ids_usdevAuth_Role",
-          "authRoleName": "Cognito_ids_usdevAuth_Role",
-          "unauthRoleArn": "arn:aws:iam::099259607472:role/Cognito_ids_usdevUnauth_Role",
-          "unauthRoleName": "Cognito_ids_usdevUnauth_Role"
+        },
+        "moneousersPostConfirmation": {
+          "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
+          "s3Key": "amplify-builds/moneousersPostConfirmation-5567334b4669626a5075-build.zip"
         }
       },
       "interactions": {
@@ -158,6 +66,9 @@
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
           "s3Key": "amplify-builds/scheduler-596f54744d6867517132-build.zip"
         }
+      },
+      "auth": {
+        "moneousers": {}
       }
     }
   }
