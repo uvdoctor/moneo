@@ -725,35 +725,58 @@ export const getHoldings = /* GraphQL */ `
         subt
       }
       deposits {
-        amt
-        sm
-        sy
-        months
-        rate
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
         fId
         curr
-        cum
-        cumf
+        chg
+        chgF
+        type
+        subt
       }
       lendings {
-        amt
-        sm
-        sy
-        months
-        rate
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
         fId
         curr
-        cum
-        cumf
+        chg
+        chgF
+        type
+        subt
       }
       loans {
-        amt
-        dur
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
         fId
         curr
-        yearly
-        name
+        chg
+        chgF
         type
+        subt
       }
       savings {
         id
@@ -926,13 +949,22 @@ export const getHoldings = /* GraphQL */ `
         subt
       }
       ins {
-        amt
-        dur
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
         fId
         curr
-        yearly
-        name
+        chg
+        chgF
         type
+        subt
       }
       other {
         id
@@ -997,35 +1029,37 @@ export const listHoldingss = /* GraphQL */ `
           subt
         }
         deposits {
-          amt
-          sm
-          sy
-          months
-          rate
+          id
+          qty
+          name
           fId
           curr
-          cum
-          cumf
+          chg
+          chgF
+          type
+          subt
         }
         lendings {
-          amt
-          sm
-          sy
-          months
-          rate
+          id
+          qty
+          name
           fId
           curr
-          cum
-          cumf
+          chg
+          chgF
+          type
+          subt
         }
         loans {
-          amt
-          dur
+          id
+          qty
+          name
           fId
           curr
-          yearly
-          name
+          chg
+          chgF
           type
+          subt
         }
         savings {
           id
@@ -1131,13 +1165,15 @@ export const listHoldingss = /* GraphQL */ `
           subt
         }
         ins {
-          amt
-          dur
+          id
+          qty
+          name
           fId
           curr
-          yearly
-          name
+          chg
+          chgF
           type
+          subt
         }
         other {
           id

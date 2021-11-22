@@ -409,18 +409,6 @@ type Holding {
 	subt: String
 }
 
-type Deposit {
-	amt: Float!
-	sm: Int!
-	sy: Int!
-	months: Int!
-	rate: Float!
-	fId: String!
-	curr: String!
-	cum: Boolean!
-	cumf: Int!
-}
-
 enum PropertyType {
 	P
 	A
@@ -462,16 +450,6 @@ type Ownership {
 	per: Float!
 }
 
-type Liability {
-	amt: Int!
-	dur: Int!
-	fId: String!
-	curr: String!
-	yearly: Boolean!
-	name: String
-	type: String
-}
-
 type Balance {
 	amt: Float!
 	curr: String!
@@ -488,9 +466,9 @@ enum MFSchemeType {
 type Holdings @model @aws_iam @auth(rules: [{ allow: owner }, { allow: private, provider: iam, operations: [read] }]) {
 	id: ID!
 	instruments: [Holding!]
-	deposits: [Deposit!]
-	lendings: [Deposit!]
-	loans: [Liability!]
+	deposits: [Holding!]
+	lendings: [Holding!]
+	loans: [Holding!]
 	savings: [Holding!]
 	property: [Property!]
 	vehicles: [Holding!]
@@ -500,7 +478,7 @@ type Holdings @model @aws_iam @auth(rules: [{ allow: owner }, { allow: private, 
 	vpf: [Holding!]
 	nps: [Holding!]
 	crypto: [Holding!]
-	ins: [Liability!]
+	ins: [Holding!]
 	other: [Holding!]
 	angel: [Holding!]
 }
