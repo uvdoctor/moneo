@@ -101,6 +101,9 @@ function NWContextProvider() {
 	const [ totalProperties, setTotalProperties ] = useState<number>(0);
 	const [ totalFRE, setTotalFRE ] = useState<number>(0);
 	const [ totalFEquity, setTotalFEquity ] = useState<number>(0);
+	const [ totalNPSEquity, setTotalNPSEquity ] = useState<number>(0);
+	const [ totalFFixed, setTotalFFixed ] = useState<number>(0);
+	const [ totalNPSFixed, setTotalNPSFixed ] = useState<number>(0);
 	const [ totalVehicles, setTotalVehicles ] = useState<number>(0);
 	const [ totalCrypto, setTotalCrypto ] = useState<number>(0);
 	const [ totalSavings, setTotalSavings ] = useState<number>(0);
@@ -430,7 +433,7 @@ function NWContextProvider() {
 		setSelectedCurrency(Object.keys(currencyList)[0]);
 		setCurrencyList(currencyList);
 		setId(allHoldings?.id);
-		if(id && allHoldings?.instruments?.length) 
+		if(allHoldings?.id && allHoldings?.instruments?.length) 
 			await initializeInsData(allHoldings?.instruments);
 		setInstruments([ ...(allHoldings?.instruments ? allHoldings.instruments : []) ]);
 		setPreciousMetals([ ...(allHoldings?.pm ? allHoldings.pm : []) ]);
@@ -537,13 +540,13 @@ function NWContextProvider() {
 			setTotalFGold(0);
 			setTotalFRE(0);
 			setTotalFEquity(0);
-			setTotalFixed(0);
+			setTotalFFixed(0);
 			return;
 		}
 		let total = 0;
 		let totalFGold = 0;
 		let totalFRE = 0;
-		let totalFixed = 0;
+		let totalFFixed = 0;
 		let totalFEquity = 0;
 		let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
 		if(!cachedData) cachedData = insData;
@@ -557,20 +560,20 @@ function NWContextProvider() {
 				else if(instrument.type === AssetType.E) 
 					totalFEquity += value;
 				else if(instrument.type === AssetType.F)
-					totalFixed += value;
+					totalFFixed += value;
 				else if(instrument.type === AssetType.H) {
 					if(includesAny(instrument.name as string, ["conservative"])) {
-						totalFixed += 0.7 * value;
+						totalFFixed += 0.7 * value;
 						totalFEquity += 0.3 * value;
 					} else if(includesAny(instrument.name as string, ["multi-asset"])) {
 						totalFGold += 0.1 * value;
 						totalFEquity += 0.6 * value;
-						totalFixed += 0.3 * value;
+						totalFFixed += 0.3 * value;
 					} else if(includesAny(instrument.name as string, ["balanced"])) {
 						totalFEquity += 0.6 * value;
-						totalFixed += 0.4 * value;
+						totalFFixed += 0.4 * value;
 					} else {
-						totalFixed += 0.7 * value;
+						totalFFixed += 0.7 * value;
 						totalFEquity += 0.3 * value;
 					}
 				}
@@ -579,7 +582,7 @@ function NWContextProvider() {
 		setTotalInstruments(total);
 		setTotalFGold(totalFGold);
 		setTotalFEquity(totalFEquity);
-		setTotalFixed(totalFixed);
+		setTotalFixed(totalFFixed);
 		setTotalFRE(totalFRE);
 	};
 
@@ -603,6 +606,7 @@ function NWContextProvider() {
 		updatedHoldings.crypto = crypto;
 		if(id) updatedHoldings.id = id;
 		try {
+			console.log(updatedHoldings);
 			if(id) await updateHoldings(updatedHoldings as UpdateHoldingsInput);
 			else await addHoldings(updatedHoldings);
 			notification.success({message: 'Data saved', description: 'All holdings data has been saved.'})
@@ -628,21 +632,21 @@ function NWContextProvider() {
 	};
 
 	const priceVehicles = () => {
-		if(!nps.length) {
-			setTotalVehicles(0);
-			setTotalFixed(0);
-			return;
-		}
-		let total = 0;
-		let totalFixed = 0;
-		vehicles.forEach((vehicle: HoldingInput) => {
-			if(vehicle.id && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
-				let value = vehicle.qty ;
-				total += value;
-				totalFixed += value;
-			}
-		})
-		setTotalVehicles(total);
+		// if(!nps.length) {
+		// 	setTotalVehicles(0);
+		// 	setTotalFixed(0);
+		// 	return;
+		// }
+		// let total = 0;
+		// let totalFixed = 0;
+		// vehicles.forEach((vehicle: HoldingInput) => {
+		// 	if(vehicle.id && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
+		// 		let value = vehicle.qty ;
+		// 		total += value;
+		// 		totalFixed += value;
+		// 	}
+		// })
+		setTotalVehicles(0);
 	};
 
 	const priceAngel = () => {
@@ -683,30 +687,30 @@ function NWContextProvider() {
 	const priceNPS = () => {
 		if(!nps.length) {
 			setTotalNPS(0);
-			setTotalFEquity(0);
-			setTotalFixed(0);
+			setTotalNPSEquity(0);
+			setTotalNPSFixed(0);
 			setTotalEquity(0);
 			return;
 		}
 		let total = 0;
-		let totalFixed = 0;
-		let totalFEquity = 0;
+		let totalNPSFixed = 0;
+		let totalNPSEquity = 0;
 		nps.forEach((npsItem: HoldingInput) => {
 			const data = npsData.find((item)=>item.id === npsItem.name);
 			if(data && doesHoldingMatch(npsItem, selectedMembers, selectedCurrency)) {
 				let value = npsItem.qty * data.price;
 				total += value;
-			if(data.type === AssetType.E) totalFEquity += value;
-			else if(data.type === AssetType.F) totalFixed += value;
+			if(data.type === AssetType.E) totalNPSEquity += value;
+			else if(data.type === AssetType.F) totalNPSFixed += value;
 			else if(data.type === AssetType.H) {
-				totalFixed += 0.7 * value;
-				totalFEquity += 0.3 * value;
+				totalNPSFixed += 0.7 * value;
+				totalNPSEquity += 0.3 * value;
 				}
 			}
 		})
 		setTotalNPS(total);
-		setTotalFEquity(totalFEquity);
-		setTotalFixed(totalFixed);
+		setTotalFEquity(totalNPSEquity);
+		setTotalFixed(totalNPSFixed);
 	};
 
 	const priceLendings = () => {
@@ -718,8 +722,12 @@ function NWContextProvider() {
 	};
 
 	useEffect(() => {
-		setTotalEquity(totalAngel + totalFEquity);
-	}, [totalAngel, totalFEquity]);
+		setTotalEquity(totalAngel + totalFEquity + totalNPSEquity);
+	}, [totalAngel, totalFEquity, totalNPSEquity]);
+
+	useEffect(() => {
+		setTotalFixed( totalFFixed + totalNPSFixed);
+	}, [totalFFixed, totalNPSFixed])
 
 	useEffect(() => {
 		priceInstruments();
