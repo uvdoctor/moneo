@@ -17,7 +17,7 @@ import DatePickerInput from "../form/DatePickerInput";
 import AWS from "aws-sdk";
 import awsconfig from '../../aws-exports';
 
-AWS.config.region = awsconfig.aws_cognito_region;;
+AWS.config.region = awsconfig.aws_project_region;
 const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 
 export default function UserSettings(): JSX.Element {
