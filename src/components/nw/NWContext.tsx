@@ -689,7 +689,6 @@ function NWContextProvider() {
 			setTotalNPS(0);
 			setTotalNPSEquity(0);
 			setTotalNPSFixed(0);
-			setTotalEquity(0);
 			return;
 		}
 		let total = 0;
@@ -703,8 +702,8 @@ function NWContextProvider() {
 			if(data.type === AssetType.E) totalNPSEquity += value;
 			else if(data.type === AssetType.F) totalNPSFixed += value;
 			else if(data.type === AssetType.H) {
-				totalNPSFixed += 0.7 * value;
-				totalNPSEquity += 0.3 * value;
+				totalNPSFixed += 0.8 * value;
+				totalNPSEquity += 0.2 * value;
 				}
 			}
 		})
@@ -726,7 +725,7 @@ function NWContextProvider() {
 	}, [totalAngel, totalFEquity, totalNPSEquity]);
 
 	useEffect(() => {
-		setTotalFixed( totalFFixed + totalNPSFixed);
+		setTotalFixed(totalFFixed + totalNPSFixed);
 	}, [totalFFixed, totalNPSFixed])
 
 	useEffect(() => {
