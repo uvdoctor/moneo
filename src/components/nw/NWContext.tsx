@@ -643,7 +643,7 @@ function NWContextProvider() {
 				// @ts-ignore
 				const years = new Date().getFullYear() - vehicle.pur[0].year;
 				// @ts-ignore
-				let value = getCompoundedIncome(vehicle.chg, vehicle.pur[0].amt, years) ;
+				let value = getCompoundedIncome(-(vehicle.chg), vehicle.pur[0].amt, years) ;
 				console.log('Value', value);
 				total += value;
 			}
