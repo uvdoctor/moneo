@@ -184,7 +184,7 @@
               "Sid": "WriteTable",
               "Effect": "Allow",
               "Action": "*",
-              "Resource": "arn:aws:dynamodb:*:*:table/Contacts-*"
+              "Resource": "arn:aws:dynamodb:*:*:*"
             }
           ]
         }
