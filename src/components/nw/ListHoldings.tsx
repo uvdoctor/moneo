@@ -1,13 +1,13 @@
 import { Button, Col, Row } from 'antd';
 import React, { Fragment, useContext } from 'react';
-import { DepositInput, HoldingInput, LiabilityInput } from '../../api/goals';
+import { HoldingInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
 import { NWContext } from './NWContext';
 import { getFamilyOptions } from './nwutils';
 import { DeleteOutlined, UserOutlined } from '@ant-design/icons';
 
 interface ListHoldingsProps {
-	data: Array<HoldingInput> | Array<DepositInput> | Array<LiabilityInput>  ;
+	data: Array<HoldingInput>  ;
 	changeData: Function;
 	categoryOptions: any;
 	viewComp: any;
@@ -31,7 +31,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, viewCo
 		<Row>
 			{data &&
 				data[0] &&
-				data.map((holding: HoldingInput | DepositInput | LiabilityInput, i: number) => (
+				data.map((holding: HoldingInput, i: number) => (
 					<Fragment key={''+i}>
 						<Col span={24} className="fields-divider" />
 						<Col span={24}>
