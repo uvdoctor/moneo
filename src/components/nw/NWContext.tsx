@@ -607,7 +607,6 @@ function NWContextProvider() {
 		updatedHoldings.crypto = crypto;
 		if(id) updatedHoldings.id = id;
 		try {
-			console.log(updatedHoldings);
 			if(id) await updateHoldings(updatedHoldings as UpdateHoldingsInput);
 			else await addHoldings(updatedHoldings);
 			notification.success({message: 'Data saved', description: 'All holdings data has been saved.'})
@@ -644,7 +643,6 @@ function NWContextProvider() {
 				const years = new Date().getFullYear() - vehicle.pur[0].year;
 				// @ts-ignore
 				let value = getCompoundedIncome(-(vehicle.chg), vehicle.pur[0].amt, years) ;
-				console.log('Value', value);
 				total += value;
 			}
 		})
