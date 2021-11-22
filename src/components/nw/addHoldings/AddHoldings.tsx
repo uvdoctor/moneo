@@ -3,8 +3,7 @@ import { Modal, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import AddHoldingInput from '../AddHoldingInput';
 import AddHoldingFiancialInput from '../AddHoldingFinancialInput';
-import { DEPO_TAB, ML_TAB, NWContext, PROP_TAB } from '../NWContext';
-import AddDepositInput from '../AddDepositInput';
+import { NWContext, PROP_TAB } from '../NWContext';
 import AddPropertiesInput from '../AddPropertiesInput';
 import AddLiabilityInput from '../AddLiability';
 
@@ -73,14 +72,7 @@ export default function AddHoldings({
 				{activeTab === 'Financial' ? (
 					<AddHoldingFiancialInput updateInstruments={updateInstruments} disableOk={setOkDisabled} />
 				) : activeTab === 'Loans' || activeTab === 'Insurance' ? <AddLiabilityInput setInput={setNewRec} disableOk={setOkDisabled} categoryOptions={categoryOptions}/>
-				  : childTab === DEPO_TAB || childTab === ML_TAB ? (
-					<AddDepositInput
-						setInput={setNewRec}
-						disableOk={setOkDisabled}
-						categoryOptions={categoryOptions}
-						subCategoryOptions={subCategoryOptions}
-					/>
-				) : childTab === PROP_TAB ? <AddPropertiesInput 
+				  : childTab === PROP_TAB ? <AddPropertiesInput 
 						setInput={setNewRec} 
 						disableOk={setOkDisabled}
 						categoryOptions={categoryOptions} /> 

@@ -156,14 +156,12 @@ function NWContextProvider() {
 					data: deposits,
 					setData: setDeposits,
 					total: totalDeposits,
-					categoryOptions: { false : 'No', true: 'Yes' },
-					subCategoryOptions: { 'false' : { 
+					categoryOptions: { 
 						1: 'Anually',
 						2: 'Bi-Anually',
 						4: 'Quarterly',
-						12: 'Monthly'
-						}
-					},
+						12: 'Monthly',
+						0: 'Nil' },
 					viewComp: ViewDepositInput
 				},
 				[SAV_TAB]: {
@@ -178,14 +176,12 @@ function NWContextProvider() {
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
-					categoryOptions: { false : 'No', true: 'Yes' },
-					subCategoryOptions: { 'false' : { 
+					categoryOptions: { 
 						1: 'Anually',
 						2: 'Bi-Anually',
 						4: 'Quarterly',
-						12: 'Monthly'
-						}
-					},
+						12: 'Monthly',
+						0: 'Nil' },
 					viewComp: ViewDepositInput
 				},
 			}

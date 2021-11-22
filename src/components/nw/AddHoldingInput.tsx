@@ -8,7 +8,9 @@ import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
 import {
 	CRYPTO_TAB,
+	DEPO_TAB,
 	EPF_TAB,
+	ML_TAB,
 	NPS_TAB,
 	NWContext,
 	OTHER_TAB,
@@ -47,10 +49,24 @@ export default function AddHoldingInput({
 	const [ month, setMonth ] = useState<number>(1);
 	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
 	const [ purchaseDate, setPurchaseDate ] = useState<string>('2000-4');
+	const [ duration, setDuration ] = useState<number>(12);
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
 		switch (childTab) {
+			case DEPO_TAB:
+				newRec.chg = chg,
+				newRec.chgF = Number(subtype)
+				newRec.pur = [
+					{
+						amt: quantity,
+						qty: 1,
+						month: Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1)),
+						year: Number(purchaseDate.slice(0, purchaseDate.indexOf('-'))),
+						day: duration
+					}
+				]
+				break;
 			case NPS_TAB:
 				newRec.subt = subtype;
 				break;
@@ -159,6 +175,15 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
+	const changeDuration = (val: number) => {
+		setDuration(val);
+		disableOk(val <= 0);
+		let rec = getNewRec();
+		// @ts-ignore
+		rec.pur[0].day = val;
+		setInput(rec);
+	};
+
 	return (
 		<div style={{ textAlign: 'center' }}>
 			<p>
@@ -228,7 +253,7 @@ export default function AddHoldingInput({
 					)}
 				</Row>
 			</p>
-			{(childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB) && (
+			{(childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB || childTab === ML_TAB || childTab === DEPO_TAB) && (
 				<p>
 					<label>Rate</label>&nbsp;
 					<InputNumber onChange={changeChg} min={1} max={50} value={chg} step={0.1} />
@@ -245,6 +270,17 @@ export default function AddHoldingInput({
 					/>
 				</p>
 			)}
+			{ (childTab === ML_TAB || childTab === DEPO_TAB) &&
+			<p>
+				<DatePickerInput
+					picker="month"
+					title={'Start Date'}
+					changeHandler={changePurchaseDate}
+					defaultVal={purchaseDate}
+					size={'middle'}
+				/>&nbsp;&nbsp;
+				<label>Duration</label><InputNumber onChange={changeDuration} value={duration}/>
+			</p>}
 			<p>
 				<SelectInput
 					pre={<UserOutlined />}
