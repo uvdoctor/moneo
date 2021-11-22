@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "moneoaf01c8c0_identitypool_af01c8c0",
+    "identityPoolName": "moneobacb277e_identitypool_bacb277e",
     "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "moneoaf01c8c0",
-    "userPoolName": "moneoaf01c8c0_userpool_af01c8c0",
+    "resourceNameTruncated": "moneobacb277e",
+    "userPoolName": "moneobacb277e_userpool_bacb277e",
     "autoVerifiedAttributes": [
       "email", "phone_number"
     ],
@@ -13,7 +13,7 @@
       "SMS Text Message",
       "TOTP"
     ],
-    "smsAuthenticationMessage": "Moneo authentication code is {####}",
+    "smsAuthenticationMessage": "Moneo verification code is {####}",
     "smsVerificationMessage": "Moneo verification code is {####}",
     "emailVerificationSubject": "Moneo verification code",
     "emailVerificationMessage": "Moneo verification code is {####}",
@@ -71,55 +71,27 @@
       "email_verified",
       "phone_number_verified"
     ],
-    "userpoolClientLambdaRole": "moneoaaf01c8c0_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "moneobbacb277e_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": true,
-    "sharedId": "af01c8c0",
-    "resourceName": "moneoaf01c8c0",
+    "sharedId": "bacb277e",
+    "resourceName": "moneobacb277ebacb277e",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
+    "thirdPartyAuth": false,
+    "userPoolGroups": true,
+    "adminQueries": false,
     "triggers": {
       "PostConfirmation": [
+        "add-to-group",
         "custom"
       ]
     },
-    "userPoolGroupList": [],
-    "serviceName": "Cognito",
-    "useEnabledMfas": false,
-    "authRoleArn": {
-      "Fn::GetAtt": [
-        "AuthRole",
-        "Arn"
-      ]
-    },
-    "unauthRoleArn": {
-      "Fn::GetAtt": [
-        "UnauthRole",
-        "Arn"
-      ]
-    },
-    "breakCircularDependency": false,
-    "dependsOn": [
-      {
-        "category": "function",
-        "resourceName": "moneoaf01c8c0PostConfirmation",
-        "triggerProvider": "Cognito",
-        "attributes": [
-          "Arn",
-          "Name"
-        ]
-      }
-    ],
-    "thirdPartyAuth": false,
-    "userPoolGroups": false,
-    "adminQueries": false,
     "hostedUI": false,
-    "authProviders": [],
-    "parentStack": {
-      "Ref": "AWS::StackId"
-    },
-    "permissions": [],
-    "authTriggerConnections": [
-      "{\"triggerType\":\"PostConfirmation\",\"lambdaFunctionName\":\"moneoaf01c8c0PostConfirmation\"}"
-    ]
+    "userPoolGroupList": [
+      "free",
+      "paid"
+    ],
+    "serviceName": "Cognito",
+    "useEnabledMfas": false
   }
 }

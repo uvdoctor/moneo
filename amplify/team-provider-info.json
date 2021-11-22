@@ -63,6 +63,11 @@
         "moneoaf01c8c0PostConfirmation": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
           "s3Key": "amplify-builds/moneoaf01c8c0PostConfirmation-434d362b68394b4a4c55-build.zip"
+        },
+        "moneobacb277ebacb277ePostConfirmation": {
+          "GROUP": "free",
+          "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
+          "s3Key": "amplify-builds/moneobacb277ebacb277ePostConfirmation-73637466507655693744-build.zip"
         }
       },
       "interactions": {
@@ -72,7 +77,7 @@
         }
       },
       "auth": {
-        "moneoaf01c8c0": {}
+        "moneobacb277ebacb277e": {}
       }
     }
   }

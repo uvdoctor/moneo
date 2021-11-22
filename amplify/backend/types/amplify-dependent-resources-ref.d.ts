@@ -1,6 +1,10 @@
 export type AmplifyDependentResourcesAttributes = {
     "auth": {
-        "moneoaf01c8c0": {
+        "userPoolGroups": {
+            "freeGroupRole": "string",
+            "paidGroupRole": "string"
+        },
+        "moneobacb277ebacb277e": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "UserPoolId": "string",
@@ -83,6 +87,12 @@ export type AmplifyDependentResourcesAttributes = {
             "Region": "string"
         },
         "moneoaf01c8c0PostConfirmation": {
+            "Name": "string",
+            "Arn": "string",
+            "LambdaExecutionRole": "string",
+            "Region": "string"
+        },
+        "moneobacb277ebacb277ePostConfirmation": {
             "Name": "string",
             "Arn": "string",
             "LambdaExecutionRole": "string",
