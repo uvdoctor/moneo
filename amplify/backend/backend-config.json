@@ -36,10 +36,11 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "auth",
-          "resourceName": "moneo3e6273bc",
+          "category": "api",
+          "resourceName": "goals",
           "attributes": [
-            "UserPoolId"
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
           ]
         },
         {
@@ -57,10 +58,11 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "auth",
-          "resourceName": "moneo3e6273bc",
+          "category": "api",
+          "resourceName": "goals",
           "attributes": [
-            "UserPoolId"
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
           ]
         },
         {
@@ -78,10 +80,11 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "auth",
-          "resourceName": "moneo3e6273bc",
+          "category": "api",
+          "resourceName": "goals",
           "attributes": [
-            "UserPoolId"
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
           ]
         },
         {
@@ -99,10 +102,11 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "auth",
-          "resourceName": "moneo3e6273bc",
+          "category": "api",
+          "resourceName": "goals",
           "attributes": [
-            "UserPoolId"
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
           ]
         },
         {
@@ -120,10 +124,11 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "auth",
-          "resourceName": "moneo3e6273bc",
+          "category": "api",
+          "resourceName": "goals",
           "attributes": [
-            "UserPoolId"
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
           ]
         },
         {
@@ -141,10 +146,11 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "auth",
-          "resourceName": "moneo3e6273bc",
+          "category": "api",
+          "resourceName": "goals",
           "attributes": [
-            "UserPoolId"
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
           ]
         },
         {
@@ -162,10 +168,11 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "auth",
-          "resourceName": "moneo3e6273bc",
+          "category": "api",
+          "resourceName": "goals",
           "attributes": [
-            "UserPoolId"
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
           ]
         },
         {
