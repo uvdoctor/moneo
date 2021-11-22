@@ -40,6 +40,7 @@ import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
 import ViewDepositInput from './ViewDepositInput';
 import ViewLiabilityInput from './ViewLiabilityInput';
+import { getCompoundedIncome } from '../calc/finance';
 
 const NWContext = createContext({});
 
@@ -632,21 +633,22 @@ function NWContextProvider() {
 	};
 
 	const priceVehicles = () => {
-		// if(!nps.length) {
-		// 	setTotalVehicles(0);
-		// 	setTotalFixed(0);
-		// 	return;
-		// }
-		// let total = 0;
-		// let totalFixed = 0;
-		// vehicles.forEach((vehicle: HoldingInput) => {
-		// 	if(vehicle.id && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
-		// 		let value = vehicle.qty ;
-		// 		total += value;
-		// 		totalFixed += value;
-		// 	}
-		// })
-		setTotalVehicles(0);
+		if(!vehicles.length) {
+			setTotalVehicles(0);			
+			return;
+		}
+		let total = 0;
+		vehicles.forEach((vehicle: HoldingInput) => {
+			if(vehicle && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
+				// @ts-ignore
+				const years = new Date().getFullYear() - vehicle.pur[0].year;
+				// @ts-ignore
+				let value = getCompoundedIncome(vehicle.chg, vehicle.pur[0].amt, years) ;
+				console.log('Value', value);
+				total += value;
+			}
+		})
+		setTotalVehicles(total);
 	};
 
 	const priceAngel = () => {
