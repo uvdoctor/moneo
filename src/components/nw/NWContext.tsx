@@ -24,13 +24,11 @@ import {
 	AssetType,
 	CreateHoldingsInput,
 	CreateNPSInput,
-	DepositInput,
 	HoldingInput,
 	INBond,
 	INExchg,
 	INMutual,
 	InsType,
-	LiabilityInput,
 	PropertyInput,
 	UpdateHoldingsInput
 } from '../../api/goals';
@@ -38,8 +36,6 @@ import InstrumentValuation from './InstrumentValuation';
 import { includesAny, initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
-import ViewDepositInput from './ViewDepositInput';
-import ViewLiabilityInput from './ViewLiabilityInput';
 import { getCompoundedIncome } from '../calc/finance';
 
 const NWContext = createContext({});
@@ -72,6 +68,8 @@ export const VPF_TAB = 'Voluntary PF';
 export const VEHICLE_TAB  = 'Vehicles';
 export const ANGEL_TAB = 'Angel Investments';
 export const PROP_TAB = 'Properties';
+export const LOAN_TAB = 'Loans';
+export const INS_TAB = 'Insurance';
 
 function NWContextProvider() {
 	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData }: any = useContext(AppContext);
@@ -80,8 +78,8 @@ function NWContextProvider() {
 	const [ preciousMetals, setPreciousMetals ] = useState<Array<HoldingInput>>([]);
 	const [ properties, setProperties ] = useState<Array<PropertyInput>>([]);
 	const [ vehicles, setVehicles ] = useState<Array<HoldingInput>>([]);
-	const [ deposits, setDeposits ] = useState<Array<DepositInput>>([]);
-	const [ lendings, setLendings ] = useState<Array<DepositInput>>([]);
+	const [ deposits, setDeposits ] = useState<Array<HoldingInput>>([]);
+	const [ lendings, setLendings ] = useState<Array<HoldingInput>>([]);
 	const [ savings, setSavings ] = useState<Array<HoldingInput>>([]);
 	const [ ppf, setPPF ] = useState<Array<HoldingInput>>([]);
 	const [ nps, setNPS ] = useState<Array<HoldingInput>>([]);
@@ -90,8 +88,8 @@ function NWContextProvider() {
 	const [ others, setOthers ] = useState<Array<HoldingInput>>([]);
 	const [ crypto, setCrypto ] = useState<Array<HoldingInput>>([]);
 	const [ angel, setAngel ] = useState<Array<HoldingInput>>([]);
-	const [ loans, setLoans ] = useState<Array<LiabilityInput>>([]);
-	const [ insurance, setInsurance ] = useState<Array<LiabilityInput>>([]);
+	const [ loans, setLoans ] = useState<Array<HoldingInput>>([]);
+	const [ insurance, setInsurance ] = useState<Array<HoldingInput>>([]);
 	const [ selectedMembers, setSelectedMembers ] = useState<Array<string>>([]);
 	const [ currencyList, setCurrencyList ] = useState<any>({});
 	const [ selectedCurrency, setSelectedCurrency ] = useState<string>('');
@@ -135,16 +133,16 @@ function NWContextProvider() {
 	const [ npsData, setNPSData] = useState<Array<CreateNPSInput>>([]);
 
 	const loadNPSSubCategories = async () => {
-		// @ts-ignore
-		let npsData: Array<CreateNPSInput> = await getNPSData();
-		setNPSData([...npsData]);
-
-		let subCategories: any = getNPSFundManagers();
-		Object.keys(subCategories).forEach((key: string) => subCategories[key] = {});
-		for(let item of npsData) {
- 			subCategories[item.pfm][item.id] = item.name;
+		let npsData: Array<CreateNPSInput> | undefined = await getNPSData();
+		if (npsData) {
+			setNPSData([...npsData]);
+			let subCategories: any = getNPSFundManagers();
+			Object.keys(subCategories).forEach((key: string) => subCategories[key] = {});
+			for(let item of npsData) {
+				subCategories[item.pfm][item.id] = item.name;
+			}
+			return subCategories;
 		}
-		return subCategories;
 	};
 
 	const tabs = {
@@ -162,7 +160,7 @@ function NWContextProvider() {
 						4: 'Quarterly',
 						12: 'Monthly',
 						0: 'Nil' },
-					viewComp: ViewDepositInput
+					viewComp: ViewHoldingInput
 				},
 				[SAV_TAB]: {
 					label: SAV_TAB,
@@ -182,7 +180,7 @@ function NWContextProvider() {
 						4: 'Quarterly',
 						12: 'Monthly',
 						0: 'Nil' },
-					viewComp: ViewDepositInput
+					viewComp: ViewHoldingInput
 				},
 			}
 		},
@@ -349,15 +347,15 @@ function NWContextProvider() {
 				}, 
 			}
 		},
-		Loans: {
-			label: 'Loans',
+		LOAN_TAB: {
+			label: LOAN_TAB,
 			data: loans,
 			setData: setLoans,
 			total: totalLoans,
-			viewComp: ViewLiabilityInput,
+			viewComp: ViewHoldingInput,
 		},
-		Insurance: {
-			label: 'Insurance',
+		INS_TAB: {
+			label: INS_TAB,
 			data: insurance,
 			total: totalInsurance,
 			setData: setInsurance,
@@ -368,7 +366,7 @@ function NWContextProvider() {
 				V: 'Vehicle',
 				O: 'Other'
 			},
-			viewComp: ViewLiabilityInput
+			viewComp: ViewHoldingInput
 		},
 	};
 
@@ -594,7 +592,6 @@ function NWContextProvider() {
 		updatedHoldings.ppf = ppf;
 		updatedHoldings.vpf = vpf;
 		updatedHoldings.loans = loans;
-		updatedHoldings.lendings = lendings;
 		updatedHoldings.pm = preciousMetals;
 		updatedHoldings.vehicles = vehicles;
 		updatedHoldings.property = properties;

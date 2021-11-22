@@ -5,7 +5,7 @@ import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { CRYPTO_TAB, EPF_TAB, NPS_TAB, NWContext, PM_TAB, PPF_TAB, VEHICLE_TAB, VPF_TAB } from './NWContext';
+import { CRYPTO_TAB, DEPO_TAB, EPF_TAB, INS_TAB, LOAN_TAB, ML_TAB, NPS_TAB, NWContext, PM_TAB, PPF_TAB, VEHICLE_TAB, VPF_TAB } from './NWContext';
 import QuantityWithRate from './QuantityWithRate';
 
 interface ViewHoldingInputProps {
@@ -23,7 +23,22 @@ export default function ViewHoldingInput({
 	subCategoryOptions,
 	record,
 }: ViewHoldingInputProps) {
-	const { childTab }: any = useContext(NWContext);
+	const { childTab, activeTab }: any = useContext(NWContext);
+	const pur = record.pur ? record.pur : null ;
+
+	const changeDuration = (val: any) => {
+		if(pur) { 
+			pur[0].qty = val;
+			changeData([ ...data ]);
+		}
+	};
+
+	const changeInstallmet = (val: number) => {
+		if(pur) { 
+			pur[0].amt = val;
+			changeData([ ...data ]);
+		}
+	};
 
 	const changeName = (val: any) => {
 		record.name = val;
@@ -31,14 +46,20 @@ export default function ViewHoldingInput({
 	};
 	
 	const changeQty = (quantity: number) => {
-		// @ts-ignore
-		if(childTab === VEHICLE_TAB) record.pur[0].amt = quantity;
-		else record.qty = quantity;
-		changeData([ ...data ]);
+		if(pur){
+			if(childTab === VEHICLE_TAB) pur[0].amt = quantity;
+			else record.qty = quantity;
+			changeData([ ...data ]);
+		}
 	};
 
 	const changeChg = (chg: number) => {
 		record.qty = chg;
+		changeData([ ...data ]);
+	};
+
+	const changeYearly = (val: number) => {
+		record.chgF = val
 		changeData([ ...data ]);
 	};
 
@@ -57,11 +78,11 @@ export default function ViewHoldingInput({
 	};
 
 	const changePurchaseDate = (val: string) => {
-		// @ts-ignore
-		record.pur[0].month = Number(val.slice(0, val.indexOf('-')));
-		// @ts-ignore
-		record[0].pur.year = Number(val.slice(val.indexOf('-') + 1));
-		changeData([ ...data ])
+		if (pur) {
+			pur[0].month = Number(val.slice(0, val.indexOf('-')));
+			pur[0].year = Number(val.slice(val.indexOf('-') + 1));
+			changeData([ ...data ])
+		}
 	};
 
 	return (
@@ -70,7 +91,7 @@ export default function ViewHoldingInput({
 			<Col>
 				 <SelectInput
 					pre=""
-					value={childTab === PPF_TAB ? record.chgF as number : record.subt as string}
+					value={( childTab === PPF_TAB || childTab === DEPO_TAB || childTab === ML_TAB ) ? record.chgF as number : record.subt as string}
 					options={categoryOptions}
 					changeHandler={(val: string) => changeSubtype(val)}
 				/>
@@ -98,7 +119,7 @@ export default function ViewHoldingInput({
 					<Col>
 						<TextInput pre="Name" changeHandler={(val: string)=>changeName(val)} value={record.name as string} size={'small'} />
 					</Col>
-					{(childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB) &&
+					{(childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB || childTab === ML_TAB || childTab === DEPO_TAB) &&
 					<Col>
 						<label>Rate</label>&nbsp;
 						<InputNumber
@@ -114,14 +135,14 @@ export default function ViewHoldingInput({
 							min={10}
 							max={100000000}
 							// @ts-ignore
-							value={childTab === VEHICLE_TAB ? record.pur && record.pur[0].amt : record.qty}
+							value={(childTab === VEHICLE_TAB || childTab === ML_TAB || childTab === DEPO_TAB) ? record.pur && record.pur[0].amt : record.qty}
 							changeHandler={changeQty}
 							currency={record.curr as string}
 							step={1}
 							noSlider />
 					</Col>
 				</>}
-				{childTab === VEHICLE_TAB && record.pur && 
+				{record.pur && (childTab === VEHICLE_TAB || childTab === DEPO_TAB || childTab === ML_TAB) &&  
 					<Col>
 						<DatePickerInput
 							picker="month"
@@ -131,7 +152,29 @@ export default function ViewHoldingInput({
 							defaultVal={`${record.pur[0]?.year}-${record.pur[0]?.month}` as string}
 							size={'middle'}
 						/>
+						{(childTab === DEPO_TAB || childTab === ML_TAB) && 
+						<><label>Duration</label><InputNumber onChange={changeDuration} value={record.pur[0].qty as number} /></>
+						}
 					</Col>}
+				{(activeTab === LOAN_TAB || activeTab === INS_TAB) &&
+					 <Col>
+					 <SelectInput
+							 pre={'Installment Type'}
+							 value={record.chgF as number}
+							 options={{ 1: 'Yearly', 12: 'Monthly' }}
+							 changeHandler={changeYearly}
+						 />
+						 &nbsp;
+						 <label>No. of installment</label>
+						 <InputNumber
+							 min={1}
+							 max={1000}
+							// @ts-ignore
+							 value={record.pur[0].amt as number}
+							 onChange={changeInstallmet}
+							 step={1}
+						 />
+				 </Col> }
 			</Fragment>
 	);
 }

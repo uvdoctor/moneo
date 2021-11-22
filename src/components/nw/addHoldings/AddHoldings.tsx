@@ -5,7 +5,6 @@ import AddHoldingInput from '../AddHoldingInput';
 import AddHoldingFiancialInput from '../AddHoldingFinancialInput';
 import { NWContext, PROP_TAB } from '../NWContext';
 import AddPropertiesInput from '../AddPropertiesInput';
-import AddLiabilityInput from '../AddLiability';
 
 interface AddHoldingsProps {
 	data: Array<any>;
@@ -71,8 +70,7 @@ export default function AddHoldings({
 			>
 				{activeTab === 'Financial' ? (
 					<AddHoldingFiancialInput updateInstruments={updateInstruments} disableOk={setOkDisabled} />
-				) : activeTab === 'Loans' || activeTab === 'Insurance' ? <AddLiabilityInput setInput={setNewRec} disableOk={setOkDisabled} categoryOptions={categoryOptions}/>
-				  : childTab === PROP_TAB ? <AddPropertiesInput 
+				) : childTab === PROP_TAB ? <AddPropertiesInput 
 						setInput={setNewRec} 
 						disableOk={setOkDisabled}
 						categoryOptions={categoryOptions} /> 

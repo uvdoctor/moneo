@@ -10,6 +10,8 @@ import {
 	CRYPTO_TAB,
 	DEPO_TAB,
 	EPF_TAB,
+	INS_TAB,
+	LOAN_TAB,
 	ML_TAB,
 	NPS_TAB,
 	NWContext,
@@ -39,31 +41,32 @@ export default function AddHoldingInput({
 	subCategoryOptions,
 	purchase
 }: AddHoldingInputProps) {
-	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
+	const { allFamily, childTab, selectedMembers, selectedCurrency, activeTab }: any = useContext(NWContext);
 	const [ subtype, setSubtype ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
 	const [ name, setName ] = useState<string>(subCategoryOptions ? Object.keys(subCategoryOptions[subtype])[0] : '');
-	const [ quantity, setQuantity ] = useState<number>(1);
+	const [ quantity, setQuantity ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ chg, setChg ] = useState<number>(0);
-	const [ amount, setAmount ] = useState<number>(1000);
+	const [ amount, setAmount ] = useState<number>(0);
 	const [ month, setMonth ] = useState<number>(1);
 	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
 	const [ purchaseDate, setPurchaseDate ] = useState<string>('2000-4');
 	const [ duration, setDuration ] = useState<number>(12);
+	const [ chgF, setChgF ] = useState<number>(1);
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
 		switch (childTab) {
 			case DEPO_TAB:
+			case ML_TAB:
 				newRec.chg = chg,
 				newRec.chgF = Number(subtype)
 				newRec.pur = [
 					{
 						amt: quantity,
-						qty: 1,
 						month: Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1)),
 						year: Number(purchaseDate.slice(0, purchaseDate.indexOf('-'))),
-						day: duration
+						qty: duration
 					}
 				]
 				break;
@@ -104,6 +107,29 @@ export default function AddHoldingInput({
 				newRec.subt = subtype;
 				break;
 		}
+		if (activeTab === INS_TAB) {
+			newRec.subt = subtype;
+			newRec.chgF = Number(chgF);
+			newRec.pur = [
+				{
+					amt: amount,
+					month: 1,
+					year: 1,
+					qty: 1
+				}
+			]
+		}
+		if (activeTab === LOAN_TAB ){
+			newRec.chgF = Number(chgF);
+			newRec.pur = [
+				{
+					amt: amount,
+					month: 1,
+					year: 1,
+					qty: 1
+				}
+			]
+		}
 		childTab === PM_TAB || childTab === CRYPTO_TAB ? (newRec.curr = 'USD') : (newRec.curr = selectedCurrency);
 		if (purchase) {
 			newRec.pur = [
@@ -115,7 +141,7 @@ export default function AddHoldingInput({
 				}
 			];
 		}
-		newRec.qty = VEHICLE_TAB ? 0 : quantity;
+		newRec.qty = childTab === VEHICLE_TAB ? 0 : quantity;
 		newRec.name = name;
 		newRec.fId = memberKey;
 		return newRec;
@@ -124,10 +150,18 @@ export default function AddHoldingInput({
 	const changePurchaseDate = (val: any) => {
 		setPurchaseDate(val);
 		let rec = getNewRec();
-		// @ts-ignore
-		rec.pur[0].year = Number(val.slice(0, val.indexOf('-')));
-		// @ts-ignore
-		rec.pur[0].month = Number(val.slice(val.indexOf('-') + 1));
+		if(rec.pur) {
+			rec.pur[0].year = Number(val.slice(0, val.indexOf('-')));
+			rec.pur[0].month = Number(val.slice(val.indexOf('-') + 1)); 
+		}
+		setInput(rec);
+	};
+
+	const changeAmount = (val: number) => {
+		// used for loans and insurance as duration
+		setAmount(val);
+		let rec = getNewRec();
+		if(rec.pur) rec.pur[0].amt = val;
 		setInput(rec);
 	};
 
@@ -179,8 +213,14 @@ export default function AddHoldingInput({
 		setDuration(val);
 		disableOk(val <= 0);
 		let rec = getNewRec();
-		// @ts-ignore
-		rec.pur[0].day = val;
+		if(rec.pur) rec.pur[0].qty = val;
+		setInput(rec);
+	};
+
+	const changeYearly = (val: number) => {
+		setChgF(val);
+		let rec = getNewRec();
+		rec.chgF = Number(chgF)
 		setInput(rec);
 	};
 
@@ -253,6 +293,17 @@ export default function AddHoldingInput({
 					)}
 				</Row>
 			</p>
+			{ (childTab === ML_TAB || childTab === DEPO_TAB) &&
+			<p>
+				<DatePickerInput
+					picker="month"
+					title={'Start Date'}
+					changeHandler={changePurchaseDate}
+					defaultVal={purchaseDate}
+					size={'middle'}
+				/>&nbsp;&nbsp;
+				<label>Duration</label><InputNumber onChange={changeDuration} value={duration}/>
+			</p>}
 			{(childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB || childTab === ML_TAB || childTab === DEPO_TAB) && (
 				<p>
 					<label>Rate</label>&nbsp;
@@ -270,17 +321,18 @@ export default function AddHoldingInput({
 					/>
 				</p>
 			)}
-			{ (childTab === ML_TAB || childTab === DEPO_TAB) &&
-			<p>
-				<DatePickerInput
-					picker="month"
-					title={'Start Date'}
-					changeHandler={changePurchaseDate}
-					defaultVal={purchaseDate}
-					size={'middle'}
-				/>&nbsp;&nbsp;
-				<label>Duration</label><InputNumber onChange={changeDuration} value={duration}/>
-			</p>}
+			{ (activeTab === LOAN_TAB || activeTab === INS_TAB) && 
+				<p>
+				<SelectInput
+					pre={'Installment Type'}
+					value={chgF}
+					options={{ 1: 'Yearly', 12: 'Monthly' }}
+					changeHandler={changeYearly}
+				/>
+				&nbsp;
+				<label>No. of installment</label>
+				<InputNumber min={1} max={1000} value={amount} onChange={changeAmount} step={1} />
+				</p> }
 			<p>
 				<SelectInput
 					pre={<UserOutlined />}

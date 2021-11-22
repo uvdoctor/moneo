@@ -40,8 +40,8 @@ export default function HoldingTabView() {
 				onChange={(activeKey) => {
 					if (isRoot) {
 						setActiveTab(activeKey);
-						const children = tabs[activeKey].children;
-						children ? setChildTab(Object.keys(children)[0]) : setChildTab('');
+						const child = tabs[activeKey];
+						child ? setChildTab(Object.keys(child.children)[0]) : setChildTab('');
 					} else setChildTab(activeKey);
 				}}
 			>
