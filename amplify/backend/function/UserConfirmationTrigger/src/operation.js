@@ -27,7 +27,7 @@ const pushDataSingly = (params, email) => {
 
 const getDataFromEventAndPush = (event, context) => {
 	return new Promise(async (resolve, reject) => {
-		const table = 'Contacts-fdun77s5lzbinkbgvnuidw6ihq-usdev';
+		const table = 'Contacts-fdun77s5lzbinkbgvnuidw6ihq-dev';
 		let date = new Date();
 		try {
 			if (event.request.userAttributes['email_verified'] === 'true') {
