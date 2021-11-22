@@ -243,16 +243,6 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "moneousersPostConfirmation": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "moneoaf01c8c0PostConfirmation": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "moneobacb277ebacb277ePostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",

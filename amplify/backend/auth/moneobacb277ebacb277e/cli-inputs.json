@@ -6,7 +6,7 @@
     "resourceNameTruncated": "moneobacb277e",
     "userPoolName": "moneobacb277e_userpool_bacb277e",
     "autoVerifiedAttributes": [
-      "email", "phone_number"
+      "email"
     ],
     "mfaConfiguration": "OPTIONAL",
     "mfaTypes": [
