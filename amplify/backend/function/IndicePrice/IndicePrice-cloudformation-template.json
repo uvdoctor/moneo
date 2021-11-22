@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Lambda Function resource stack creation using Amplify CLI",
+  "Description": "{\"createdOn\":\"Windows\",\"createdBy\":\"Amplify\",\"createdWith\":\"7.4.4\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -24,9 +24,13 @@
       "Type": "String",
       "Default": "functionmoneopriceutilsArn"
     },
-    "authmoneo3e6273bcUserPoolId": {
+    "apigoalsGraphQLAPIIdOutput": {
       "Type": "String",
-      "Default": "authmoneo3e6273bcUserPoolId"
+      "Default": "apigoalsGraphQLAPIIdOutput"
+    },
+    "apigoalsGraphQLAPIEndpointOutput": {
+      "Type": "String",
+      "Default": "apigoalsGraphQLAPIEndpointOutput"
     }
   },
   "Conditions": {
@@ -82,8 +86,11 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "AUTH_MONEO3E6273BC_USERPOOLID": {
-              "Ref": "authmoneo3e6273bcUserPoolId"
+            "API_GOALS_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apigoalsGraphQLAPIIdOutput"
+            },
+            "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT": {
+              "Ref": "apigoalsGraphQLAPIEndpointOutput"
             }
           }
         },
@@ -202,94 +209,15 @@
             {
               "Effect": "Allow",
               "Action": [
-                "cognito-idp:ConfirmSignUp",
-                "cognito-idp:AdminCreateUser",
-                "cognito-idp:CreateUserImportJob",
-                "cognito-idp:AdminSetUserSettings",
-                "cognito-idp:AdminLinkProviderForUser",
-                "cognito-idp:CreateIdentityProvider",
-                "cognito-idp:AdminConfirmSignUp",
-                "cognito-idp:AdminDisableUser",
-                "cognito-idp:AdminRemoveUserFromGroup",
-                "cognito-idp:SetUserMFAPreference",
-                "cognito-idp:SetUICustomization",
-                "cognito-idp:SignUp",
-                "cognito-idp:VerifyUserAttribute",
-                "cognito-idp:SetRiskConfiguration",
-                "cognito-idp:StartUserImportJob",
-                "cognito-idp:AdminSetUserPassword",
-                "cognito-idp:AssociateSoftwareToken",
-                "cognito-idp:CreateResourceServer",
-                "cognito-idp:RespondToAuthChallenge",
-                "cognito-idp:CreateUserPoolClient",
-                "cognito-idp:AdminUserGlobalSignOut",
-                "cognito-idp:GlobalSignOut",
-                "cognito-idp:AddCustomAttributes",
-                "cognito-idp:CreateGroup",
-                "cognito-idp:CreateUserPool",
-                "cognito-idp:AdminForgetDevice",
-                "cognito-idp:AdminAddUserToGroup",
-                "cognito-idp:AdminRespondToAuthChallenge",
-                "cognito-idp:ForgetDevice",
-                "cognito-idp:CreateUserPoolDomain",
-                "cognito-idp:AdminEnableUser",
-                "cognito-idp:AdminUpdateDeviceStatus",
-                "cognito-idp:StopUserImportJob",
-                "cognito-idp:InitiateAuth",
-                "cognito-idp:AdminInitiateAuth",
-                "cognito-idp:AdminSetUserMFAPreference",
-                "cognito-idp:ConfirmForgotPassword",
-                "cognito-idp:SetUserSettings",
-                "cognito-idp:VerifySoftwareToken",
-                "cognito-idp:AdminDisableProviderForUser",
-                "cognito-idp:SetUserPoolMfaConfig",
-                "cognito-idp:ChangePassword",
-                "cognito-idp:ConfirmDevice",
-                "cognito-idp:AdminResetUserPassword",
-                "cognito-idp:ResendConfirmationCode",
-                "cognito-identity:Describe*",
-                "cognito-identity:Get*",
-                "cognito-identity:List*",
-                "cognito-idp:Describe*",
-                "cognito-idp:AdminGetDevice",
-                "cognito-idp:AdminGetUser",
-                "cognito-idp:AdminList*",
-                "cognito-idp:List*",
-                "cognito-sync:Describe*",
-                "cognito-sync:Get*",
-                "cognito-sync:List*",
-                "iam:ListOpenIdConnectProviders",
-                "iam:ListRoles",
-                "sns:ListPlatformApplications",
-                "cognito-idp:ForgotPassword",
-                "cognito-idp:UpdateAuthEventFeedback",
-                "cognito-idp:UpdateResourceServer",
-                "cognito-idp:UpdateUserPoolClient",
-                "cognito-idp:AdminUpdateUserAttributes",
-                "cognito-idp:UpdateUserAttributes",
-                "cognito-idp:UpdateUserPoolDomain",
-                "cognito-idp:UpdateIdentityProvider",
-                "cognito-idp:UpdateGroup",
-                "cognito-idp:AdminUpdateAuthEventFeedback",
-                "cognito-idp:UpdateDeviceStatus",
-                "cognito-idp:UpdateUserPool",
-                "cognito-idp:DeleteUserPoolDomain",
-                "cognito-idp:DeleteResourceServer",
-                "cognito-idp:DeleteGroup",
-                "cognito-idp:AdminDeleteUserAttributes",
-                "cognito-idp:DeleteUserPoolClient",
-                "cognito-idp:DeleteUserAttributes",
-                "cognito-idp:DeleteUserPool",
-                "cognito-idp:AdminDeleteUser",
-                "cognito-idp:DeleteIdentityProvider",
-                "cognito-idp:DeleteUser"
+                "appsync:Get*",
+                "appsync:List*"
               ],
               "Resource": [
                 {
                   "Fn::Join": [
                     "",
                     [
-                      "arn:aws:cognito-idp:",
+                      "arn:aws:appsync:",
                       {
                         "Ref": "AWS::Region"
                       },
@@ -297,8 +225,10 @@
                       {
                         "Ref": "AWS::AccountId"
                       },
-                      ":userpool/",
-                      "us-east-1_3N0D6fw9V"
+                      ":apis/",
+                      {
+                        "Ref": "apigoalsGraphQLAPIIdOutput"
+                      }
                     ]
                   ]
                 }

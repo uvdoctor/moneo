@@ -3,9 +3,9 @@
     {
       "type": "ProjectLayer",
       "resourceName": "moneopriceutils",
-      "env": "usdev",
       "version": "Always choose latest version",
-      "isLatestVersionSelected": true
+      "isLatestVersionSelected": true,
+      "env": "dev"
     }
   ],
   "environmentVariableList": [
@@ -15,12 +15,9 @@
     }
   ],
   "permissions": {
-    "auth": {
-      "moneo3e6273bc": [
-        "create",
-        "read",
-        "update",
-        "delete"
+    "api": {
+      "goals": [
+        "read"
       ]
     }
   }
