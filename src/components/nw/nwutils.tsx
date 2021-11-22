@@ -49,9 +49,16 @@ export const loadHoldings = async () => {
   } = (await API.graphql(graphqlOperation(queries.listHoldingss))) as {
     data: APIt.ListHoldingssQuery;
   };
-  return listHoldingss?.items?.length
-    ? (listHoldingss.items as Array<APIt.CreateHoldingsInput>)[0]
-    : null;
+  const id = listHoldingss?.items[0].id;
+  if(id) {
+    const { data: { getHoldings }} = 
+      await API.graphql(graphqlOperation(queries.getHoldings, { id: id })) as {
+      data: APIt.GetHoldingsQuery;
+    };
+    return getHoldings ? getHoldings : null;
+  }else{
+    return null;
+  }
 };
 
 export const addFamilyMember = async (name: string, taxId: string) => {
