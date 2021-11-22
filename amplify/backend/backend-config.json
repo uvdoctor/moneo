@@ -1,12 +1,12 @@
 {
   "auth": {
-    "moneousers": {
+    "moneoaf01c8c0": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneousersPostConfirmation",
+          "resourceName": "moneoaf01c8c0PostConfirmation",
           "triggerProvider": "Cognito",
           "attributes": [
             "Arn",
@@ -23,17 +23,11 @@
         ],
         "passwordProtectionSettings": {
           "passwordPolicyMinLength": 8,
-          "passwordPolicyCharacters": [
-            "REQUIRES_LOWERCASE",
-            "REQUIRES_UPPERCASE",
-            "REQUIRES_NUMBERS",
-            "REQUIRES_SYMBOLS"
-          ]
+          "passwordPolicyCharacters": []
         },
-        "mfaConfiguration": "OPTIONAL",
+        "mfaConfiguration": "OFF",
         "mfaTypes": [
-          "SMS",
-          "TOTP"
+          "SMS"
         ],
         "verificationMechanisms": [
           "EMAIL"
@@ -55,7 +49,7 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authmoneousers"
+              "userPoolId": "authmoneoaf01c8c0"
             }
           }
         }
@@ -228,6 +222,11 @@
       "service": "Lambda"
     },
     "moneousersPostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "moneoaf01c8c0PostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"

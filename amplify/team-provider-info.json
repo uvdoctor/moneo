@@ -59,6 +59,10 @@
         "moneousersPostConfirmation": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
           "s3Key": "amplify-builds/moneousersPostConfirmation-5567334b4669626a5075-build.zip"
+        },
+        "moneoaf01c8c0PostConfirmation": {
+          "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
+          "s3Key": "amplify-builds/moneoaf01c8c0PostConfirmation-434d362b68394b4a4c55-build.zip"
         }
       },
       "interactions": {
@@ -68,7 +72,7 @@
         }
       },
       "auth": {
-        "moneousers": {}
+        "moneoaf01c8c0": {}
       }
     }
   }

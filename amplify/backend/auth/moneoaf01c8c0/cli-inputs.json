@@ -1,20 +1,20 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "moneoids",
+    "identityPoolName": "moneoaf01c8c0_identitypool_af01c8c0",
     "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "moneo481a292b",
-    "userPoolName": "moneouserpool",
+    "resourceNameTruncated": "moneoaf01c8c0",
+    "userPoolName": "moneoaf01c8c0_userpool_af01c8c0",
     "autoVerifiedAttributes": [
-      "email"
+      "email", "phone_number"
     ],
     "mfaConfiguration": "OPTIONAL",
     "mfaTypes": [
       "SMS Text Message",
       "TOTP"
     ],
-    "smsAuthenticationMessage": "Moneo verification code is {####}",
-    "smsVerificationMessage": "Your verification code is {####}",
+    "smsAuthenticationMessage": "Moneo authentication code is {####}",
+    "smsVerificationMessage": "Moneo verification code is {####}",
     "emailVerificationSubject": "Moneo verification code",
     "emailVerificationMessage": "Moneo verification code is {####}",
     "defaultPasswordPolicy": true,
@@ -28,7 +28,7 @@
     "requiredAttributes": [
       "email"
     ],
-    "aliasAttributes": [],
+    "aliasAttributes": ["email", "phone_number", "preferred_username"],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [
@@ -71,21 +71,17 @@
       "email_verified",
       "phone_number_verified"
     ],
-    "userpoolClientLambdaRole": "moneou481a292b_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "moneoaaf01c8c0_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": true,
-    "sharedId": "481a292b",
-    "resourceName": "moneousers",
+    "sharedId": "af01c8c0",
+    "resourceName": "moneoaf01c8c0",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
-    "thirdPartyAuth": false,
-    "userPoolGroups": false,
-    "adminQueries": false,
     "triggers": {
       "PostConfirmation": [
         "custom"
       ]
     },
-    "hostedUI": false,
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "useEnabledMfas": false,
@@ -105,7 +101,7 @@
     "dependsOn": [
       {
         "category": "function",
-        "resourceName": "moneousersPostConfirmation",
+        "resourceName": "moneoaf01c8c0PostConfirmation",
         "triggerProvider": "Cognito",
         "attributes": [
           "Arn",
@@ -113,13 +109,17 @@
         ]
       }
     ],
-    "permissions": [],
-    "authTriggerConnections": [
-      "{\"triggerType\":\"PostConfirmation\",\"lambdaFunctionName\":\"moneousersPostConfirmation\"}"
-    ],
+    "thirdPartyAuth": false,
+    "userPoolGroups": false,
+    "adminQueries": false,
+    "hostedUI": false,
     "authProviders": [],
     "parentStack": {
       "Ref": "AWS::StackId"
-    }
+    },
+    "permissions": [],
+    "authTriggerConnections": [
+      "{\"triggerType\":\"PostConfirmation\",\"lambdaFunctionName\":\"moneoaf01c8c0PostConfirmation\"}"
+    ]
   }
 }
