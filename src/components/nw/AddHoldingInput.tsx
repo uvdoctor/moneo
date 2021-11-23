@@ -151,80 +151,17 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const Amount = (childTab: string) => {
-		switch (childTab) {
-			case PM:
-			case NPS:
-			case CRYPTO:
-				return (<QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={name}/>);
-			default:
-				return ( 
-					<NumberInput pre={'Amount'} min={0} max={10000} value={qty} changeHandler={changeQty}
-						currency={selectedCurrency} step={1} noSlider/> )
-		}
-	};
+	const isLiability = (activeTab: string) => [LOAN, INS].includes(activeTab);
 
-	const DateView = (childTab: string) => {
-		switch (childTab) {
-			case ML:
-			case DEPO:
-			case VEHICLE:
-				return ( <DatePickerInput picker="month" title={'Date'} changeHandler={changeDate}
-							defaultVal={date} size={'middle'} />);
-		}
-	};
+	const hasRate = (childTab: string) => [PPF, VPF, EPF, ML, DEPO].includes(childTab);
 
-	const Rate = (childTab: string) => {
-		switch (childTab) {
-			case PPF:
-			case EPF:
-			case VPF:
-			case ML:
-			case DEPO:
-				return(<p>
-				<label>Rate</label>&nbsp;
-				<InputNumber onChange={changeRate} min={1} max={50} value={rate} step={0.1} />
-			</p>)
-		}
-	};
+	const hasName = (childTab: string) => ![PM, NPS, CRYPTO].includes(childTab);
 
-	const Duration = (childTab: string) => {
-		switch (childTab) {
-			case ML:
-			case DEPO:
-				return (<><label>Duration</label><InputNumber onChange={changeDuration} value={duration} /></>)
-		}
-	};
+	const hasQtyWithRate = (childTab: string) => [PM, NPS, CRYPTO].includes(childTab);
 
-	const Installment = (activeTab: string) => {
-		switch (activeTab) {
-			case LOAN:
-			case INS:
-				return (
-				<p>
-					<SelectInput
-						pre={'Installment Type'}
-						value={frequency}
-						options={{ 1: 'Yearly', 12: 'Monthly' }}
-						changeHandler={changeFrequency}
-					/>&nbsp;
-					<label>No. of installment</label>
-					<InputNumber min={1} max={1000} value={duration} onChange={changeDuration} step={1} />
-				</p>
-			);
-		}
-	};
+	const hasDuration = (childTab: string) => [ML, DEPO].includes(childTab);
 
-	const Name = (childTab: string) => {
-		switch (childTab) {
-			case PM:
-			case NPS:
-			case CRYPTO:
-				return;
-			default:
-				return <TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} />;
-		}
-	};
+	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE].includes(childTab);
 
 	return (
 		<div style={{ textAlign: 'center' }}>
@@ -237,8 +174,7 @@ export default function AddHoldingInput({
 						changeHandler={(val: string) => changeCategory(val)}
 					/>
 				)}
-				{subCategoryOptions ? (
-					subCategoryOptions[category as string] && (
+				{subCategoryOptions && subCategoryOptions[category as string] && (
 						<Fragment>
 							&nbsp;
 							<SelectInput
@@ -249,21 +185,43 @@ export default function AddHoldingInput({
 								post={category === AssetSubType.Gold ? 'karat' : ''}
 							/>
 						</Fragment>
-					)
-				): null}
+					)}
 			</p>
 			<p>
 				<Row justify="center">
-					{Name(childTab)}
-					{Amount(childTab)}
+					{hasName(childTab) && <TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} />}
+					{hasQtyWithRate(childTab) ? 
+						<QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={name}/>
+					: <NumberInput pre={'Amount'} min={0} max={10000} value={qty} changeHandler={changeQty}
+						currency={selectedCurrency} step={1} noSlider/>
+					}
 				</Row>
 			</p>
 			{ !activeTab && <p>
-				{DateView(childTab)}&nbsp;&nbsp;
-				{Duration(childTab)}
+				{hasDate(childTab) &&
+					<DatePickerInput picker="month" title={'Date'} changeHandler={changeDate}
+							defaultVal={date} size={'middle'} />
+				}&nbsp;&nbsp;
+				{hasDuration(childTab) && 
+					<><label>Duration</label><InputNumber onChange={changeDuration} value={duration} /></>
+				}
 			</p> }
-			{Rate(childTab)}
-			{Installment(activeTab)}
+			{hasRate(childTab) && <p>
+				<label>Rate</label>&nbsp;
+				<InputNumber onChange={changeRate} min={1} max={50} value={rate} step={0.1} />
+			</p>}
+			{isLiability(activeTab) && 
+				<p>
+					<SelectInput
+						pre={'Installment Type'}
+						value={frequency}
+						options={{ 1: 'Yearly', 12: 'Monthly' }}
+						changeHandler={changeFrequency}
+					/>&nbsp;
+					<label>No. of installment</label>
+					<InputNumber min={1} max={1000} value={duration} onChange={changeDuration} step={1} />
+				</p>
+			}
 			<p>
 				<SelectInput
 					pre={<UserOutlined />}
