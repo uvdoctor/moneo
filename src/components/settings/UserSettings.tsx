@@ -14,11 +14,13 @@ import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
 import { deleteContact, doesEmailExist, doesImExist, doesMobExist, updateImInContact } from "../contactutils";
 import DatePickerInput from "../form/DatePickerInput";
-import AWS from "aws-sdk";
-import awsconfig from '../../aws-exports';
+// import { CognitoIdentityServiceProvider } from "aws-sdk";
+// import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
+// import AWS from "aws-sdk";
+// import awsconfig from '../../aws-exports';
 
-AWS.config.region = awsconfig.aws_project_region;
-const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+// AWS.config.region = awsconfig.aws_project_region;
+// const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha }: any = useContext(AppContext);
@@ -42,15 +44,9 @@ export default function UserSettings(): JSX.Element {
 
   const counCodeWithOutPlusSign = counCode?.value.slice(1);
 
-  const sendOtp = () => {
-    const params = {
-      AccessToken: user.signInUserSession.accessToken.jwtToken, 
-      AttributeName: 'phone_number', 
-    };
-    cognitoidentityserviceprovider.getUserAttributeVerificationCode(params, (err: any, data: any) => {
-      if (err) console.log(err);
-      else console.log(data);
-    })
+  const sendOtp = async () => {
+    const data = await Auth.resendSignUp(user?.attributes.phone_number);
+    console.log(data);
   }
 
   const updatePhoneNumber = async () => {
@@ -62,7 +58,6 @@ export default function UserSettings(): JSX.Element {
         return false;
       }
       await Auth.updateUserAttributes(user, { phone_number: counCode?.value+mobile });
-      sendOtp();
       success("Mobile number updated successfully. Enter Otp to verify");
       return true;
     } catch (error) {
@@ -273,6 +268,7 @@ export default function UserSettings(): JSX.Element {
                         <OtpDialogue
                           disableButton={disableButton(user?.attributes.phone_number, counCode?.value+mobile)}
                           action={"phone_number"} user={user}
+                          email={email}
                           mob={parseFloat(counCodeWithOutPlusSign+mobile)}
                           onClickAction={updatePhoneNumber}
                           resendOtp={sendOtp}             
@@ -305,6 +301,7 @@ export default function UserSettings(): JSX.Element {
                         <OtpDialogue
                           disableButton={disableButton(user?.attributes.nickname, counCode?.value+mobile)}
                           action={"whatsapp_number"}
+                          email={email}
                           im={parseFloat(counCodeWithOutPlusSign+mobile)}
                           onClickAction={updateWhatsapp}              
                         />}

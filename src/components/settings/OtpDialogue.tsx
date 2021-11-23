@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useState } from 'react';
-import { Button, Modal, notification, Spin, Tooltip } from 'antd';
+import { Button, Modal, notification, Tooltip } from 'antd';
 import SaveOutlined from '@ant-design/icons/lib/icons/SaveOutlined';
 import { COLORS } from '../../CONSTANTS';
 import { AppContext } from '../AppContext';
@@ -33,10 +33,8 @@ export default function OtpDialogue(props: OtpInputProps) {
 		Auth.verifyCurrentUserAttributeSubmit(attr, otp)
 			.then(async () => {
 				notification.success({ message: 'Otp Verified Successfully' });
-				if (attr === 'phone_number') {
-					await Auth.updateUserAttributes(props.user, { phone_number_verified: 'true' });
-					await updateMobInContact(props.email, props.mob);
-				} else await createContact(props.email, props.mob, props.im, props.notify);
+				if (attr === 'phone_number') await updateMobInContact(props.email, props.mob);
+				else await createContact(props.email, props.mob, props.im, props.notify);
 				setLoading(false);
 				setIsModalVisible(false);
 			})
@@ -51,8 +49,8 @@ export default function OtpDialogue(props: OtpInputProps) {
 		setViewResendOtp(true);
 	};
 
-	const callResendOtp = () => {
-		props.resendOtp && props.resendOtp();
+	const callResendOtp = async () => {
+		props.resendOtp && await props.resendOtp();
 		setViewResendOtp(false);
 	};
 
@@ -106,9 +104,7 @@ export default function OtpDialogue(props: OtpInputProps) {
               : <Countdown
                   valueStyle={{ fontSize: '15px', color:COLORS.GREEN}}
                   value={targetTime}
-                  format={'ss'}
-                  prefix={<><Spin size={'small'} /> Resend otp in</>}
-                  suffix={'seconds'}
+                  format={'mm:ss'}
                   onFinish={onFinish}/>
         }
           </Button>,
