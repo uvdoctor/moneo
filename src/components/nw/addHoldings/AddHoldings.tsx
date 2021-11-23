@@ -3,7 +3,7 @@ import { Modal, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import AddHoldingInput from '../AddHoldingInput';
 import AddHoldingFiancialInput from '../AddHoldingFinancialInput';
-import { NWContext, PROP_TAB } from '../NWContext';
+import { NWContext, TAB } from '../NWContext';
 import AddPropertiesInput from '../AddPropertiesInput';
 
 interface AddHoldingsProps {
@@ -70,7 +70,7 @@ export default function AddHoldings({
 			>
 				{activeTab === 'Financial' ? (
 					<AddHoldingFiancialInput updateInstruments={updateInstruments} disableOk={setOkDisabled} />
-				) : childTab === PROP_TAB ? <AddPropertiesInput 
+				) : childTab === TAB.PROP ? <AddPropertiesInput 
 						setInput={setNewRec} 
 						disableOk={setOkDisabled}
 						categoryOptions={categoryOptions} /> 

@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Col, Empty, Row, Skeleton, Tabs } from 'antd';
-import { NPS_TAB, NWContext, PROP_TAB } from './NWContext';
+import { TAB, NWContext } from './NWContext';
 import AddHoldings from './addHoldings/AddHoldings';
 import UploadHoldings from './UploadHoldings';
 import { toHumanFriendlyCurrency } from '../utils';
@@ -24,7 +24,7 @@ export default function HoldingTabView() {
 	const { TabPane } = Tabs;
 
 	useEffect(() => {
-		if(childTab === NPS_TAB) {
+		if(childTab === TAB.NPS) {
 		if(npsData.length===0) {
 			(async() => setNPSSubCat(await loadNPSSubCategories()))();
 		}
@@ -40,8 +40,8 @@ export default function HoldingTabView() {
 				onChange={(activeKey) => {
 					if (isRoot) {
 						setActiveTab(activeKey);
-						const child = tabs[activeKey];
-						child ? setChildTab(Object.keys(child.children)[0]) : setChildTab('');
+						const children = tabs[activeKey] ? tabs[activeTab].children : '';
+						children ? setChildTab(Object.keys(children)[0]) : setChildTab('');
 					} else setChildTab(activeKey);
 				}}
 			>
@@ -71,14 +71,14 @@ export default function HoldingTabView() {
 												changeData={tabsData[tabName].setData}
 												title={`${tabsData[tabName].label} - Add Record`}
 												categoryOptions={tabsData[tabName].categoryOptions}
-												subCategoryOptions={childTab===NPS_TAB ? npsSubCat : tabsData[tabName].subCategoryOptions}
+												subCategoryOptions={childTab===TAB.NPS ? npsSubCat : tabsData[tabName].subCategoryOptions}
 											/>
 										</Col>
 									</Row>
 									{!loadingHoldings ? tabsData[tabName].data.length ? tabsData[tabName]
 										.contentComp ? (
 										tabsData[tabName].contentComp
-									) : tabsData[tabName].label === PROP_TAB ? 
+									) : tabsData[tabName].label === TAB.PROP ? 
 										<ListProperties
 											data={tabsData[tabName].data}
 											changeData={tabsData[tabName].setData}
@@ -89,7 +89,7 @@ export default function HoldingTabView() {
 											changeData={tabsData[tabName].setData}
 											viewComp={tabsData[tabName].viewComp}
 											categoryOptions={tabsData[tabName].categoryOptions}
-											subCategoryOptions={childTab===NPS_TAB ? npsSubCat : tabsData[tabName].subCategoryOptions}
+											subCategoryOptions={childTab===TAB.NPS ? npsSubCat : tabsData[tabName].subCategoryOptions}
 										/>
 									) : (
 										<Empty description="No data found." />

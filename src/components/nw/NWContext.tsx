@@ -54,22 +54,25 @@ export const MONERO = 'XMR';
 export const ETHEREUM_CLASSIC = 'ETC';
 export const DOGECOIN = 'DOGE';
 export const STELLAR = 'XLM';
-export const PM_TAB = 'Precious Metals';
-export const CRYPTO_TAB = 'Crypto';
-export const FIN_TAB = 'Financial';
-export const SAV_TAB = 'Saving Accounts';
-export const DEPO_TAB = 'Deposits';
-export const ML_TAB = 'Money Lent';
-export const OTHER_TAB = 'Others';
-export const NPS_TAB = 'NPS';
-export const PPF_TAB = 'PPF';
-export const EPF_TAB = 'Employee PF';
-export const VPF_TAB = 'Voluntary PF';
-export const VEHICLE_TAB  = 'Vehicles';
-export const ANGEL_TAB = 'Angel Investments';
-export const PROP_TAB = 'Properties';
-export const LOAN_TAB = 'Loans';
-export const INS_TAB = 'Insurance';
+
+export const TAB = {
+	PM: 'Precious Metals',
+	CRYPTO: 'Crypto',
+	FIN: 'Financial',
+	SAV: 'Saving Accounts',
+	DEPO: 'Deposits',
+	ML: 'Money Lent',
+	OTHER: 'Others',
+	NPS: 'NPS',
+	PPF: 'PPF',
+	EPF: 'Employee PF',
+	VPF: 'Voluntary PF',
+	VEHICLE: 'Vehicles',
+	ANGEL: 'Angel Investments',
+	PROP: 'Properties',
+	LOAN: 'Loans',
+	INS: 'Insurance',
+};
 
 function NWContextProvider() {
 	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData, owner }: any = useContext(AppContext);
@@ -123,7 +126,7 @@ function NWContextProvider() {
 	const [ totalPGold, setTotalPGold ] = useState<number>(0);
 	const [ totalFGold, setTotalFGold ] = useState<number>(0);
 	const [ showInsUpload, setShowInsUpload ] = useState<boolean>(false);
-	const [ activeTab, setActiveTab ] = useState<string>(FIN_TAB);
+	const [ activeTab, setActiveTab ] = useState<string>(TAB.FIN);
 	const [ activeTabSum, setActiveTabSum ] = useState<number>(0);
 	const [ results, setResults ] = useState<Array<any>>([]);
 	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
@@ -149,8 +152,8 @@ function NWContextProvider() {
 		Cash: {
 			label: 'Cash',
 			children: {
-				[DEPO_TAB]: {
-					label: DEPO_TAB,
+				[TAB.DEPO]: {
+					label: TAB.DEPO,
 					data: deposits,
 					setData: setDeposits,
 					total: totalDeposits,
@@ -162,15 +165,15 @@ function NWContextProvider() {
 						0: 'Nil' },
 					viewComp: ViewHoldingInput
 				},
-				[SAV_TAB]: {
-					label: SAV_TAB,
+				[TAB.SAV]: {
+					label: TAB.SAV,
 					data: savings,
 					setData: setSavings,
 					total: totalSavings,
 					viewComp: ViewHoldingInput,
 				},
-				[ML_TAB]: {
-					label: ML_TAB,
+				[TAB.ML]: {
+					label: TAB.ML,
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
@@ -187,8 +190,8 @@ function NWContextProvider() {
 		Physical: {
 			label: 'Physical',
 			children: {
-				[PROP_TAB]: {
-					label: PROP_TAB,
+				[TAB.PROP]: {
+					label: TAB.PROP,
 					data: properties,
 					setData: setProperties,
 					total: totalProperties,
@@ -202,8 +205,8 @@ function NWContextProvider() {
 						OTHER: 'Others'
 					},
 				},
-				[VEHICLE_TAB]: {
-					label: VEHICLE_TAB,
+				[TAB.VEHICLE]: {
+					label: TAB.VEHICLE,
 					data: vehicles,
 					setData: setVehicles,
 					total: totalVehicles,
@@ -214,8 +217,8 @@ function NWContextProvider() {
 					},
 					viewComp: ViewHoldingInput,
 				},
-				[PM_TAB]: {
-					label: PM_TAB,
+				[TAB.PM]: {
+					label: TAB.PM,
 					data: preciousMetals,
 					setData: setPreciousMetals,
 					total: totalPM,
@@ -255,8 +258,8 @@ function NWContextProvider() {
 				}
 			},
 		},
-		[FIN_TAB]: {
-			label: FIN_TAB,
+		[TAB.FIN]: {
+			label: TAB.FIN,
 			hasUploader: true,
 			data: instruments,
 			setData: setInstruments,
@@ -266,8 +269,8 @@ function NWContextProvider() {
 		Retirement: {
 			label: 'Retirement',
 			children: {
-				[PPF_TAB]: {
-					label: PPF_TAB,
+				[TAB.PPF]: {
+					label: TAB.PPF,
 					data: ppf,
 					setData: setPPF,
 					total: totalPPF,
@@ -277,22 +280,22 @@ function NWContextProvider() {
 					},
 					viewComp: ViewHoldingInput
 				},
-				[EPF_TAB]: {
-					label: EPF_TAB,
+				[TAB.EPF]: {
+					label: TAB.EPF,
 					data: epf,
 					setData: setEPF,
 					total: totalEPF,
 					viewComp: ViewHoldingInput
 				},
-				[VPF_TAB]: {
-					label: VPF_TAB,
+				[TAB.VPF]: {
+					label: TAB.VPF,
 					data: vpf,
 					setData: setVPF,
 					total: totalVPF,
 					viewComp: ViewHoldingInput
 				},
-				[NPS_TAB]: {
-					label: NPS_TAB,
+				[TAB.NPS]: {
+					label: TAB.NPS,
 					data: nps,
 					setData: setNPS,
 					total: totalNPS,
@@ -306,7 +309,7 @@ function NWContextProvider() {
 			label: 'Exotic',
 			children: {
 				CRYPTO_TAB: {
-					label: CRYPTO_TAB,
+					label: TAB.CRYPTO,
 					data: crypto,
 					setData: setCrypto,
 					total: totalCrypto,
@@ -324,15 +327,15 @@ function NWContextProvider() {
 						[STELLAR]: 'Stellar'
 					}
 				},
-				[ANGEL_TAB]: {
-					label: ANGEL_TAB,
+				[TAB.ANGEL]: {
+					label: TAB.ANGEL,
 					data: angel,
 					setData: setAngel,
 					total: totalAngel,
 					viewComp: ViewHoldingInput,
 				}, 
-				[OTHER_TAB]: {
-					label: OTHER_TAB,
+				[TAB.OTHER]: {
+					label: TAB.OTHER,
 					data: others,
 					setData: setOthers,
 					total: totalOthers,
@@ -347,15 +350,15 @@ function NWContextProvider() {
 				}, 
 			}
 		},
-		LOAN_TAB: {
-			label: LOAN_TAB,
+		[TAB.LOAN] : {
+			label: TAB.LOAN,
 			data: loans,
 			setData: setLoans,
 			total: totalLoans,
 			viewComp: ViewHoldingInput,
 		},
-		INS_TAB: {
-			label: INS_TAB,
+		[TAB.INS]: {
+			label: TAB.INS,
 			data: insurance,
 			total: totalInsurance,
 			setData: setInsurance,

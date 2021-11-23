@@ -5,7 +5,7 @@ import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
-import { CRYPTO_TAB, DEPO_TAB, EPF_TAB, INS_TAB, LOAN_TAB, ML_TAB, NPS_TAB, NWContext, PM_TAB, PPF_TAB, VEHICLE_TAB, VPF_TAB } from './NWContext';
+import { NWContext, TAB } from './NWContext';
 import QuantityWithRate from './QuantityWithRate';
 
 interface ViewHoldingInputProps {
@@ -24,6 +24,7 @@ export default function ViewHoldingInput({
 	record,
 }: ViewHoldingInputProps) {
 	const { childTab, activeTab }: any = useContext(NWContext);
+	const { PM, CRYPTO, DEPO, ML, NPS, PPF, EPF, VPF, VEHICLE, LOAN, INS } = TAB;
 	const pur = record.pur ? record.pur : null ;
 
 	const changeDuration = (val: any) => {
@@ -47,7 +48,7 @@ export default function ViewHoldingInput({
 	
 	const changeQty = (quantity: number) => {
 		if(pur){
-			if(childTab === VEHICLE_TAB) pur[0].amt = quantity;
+			if(childTab === VEHICLE ) pur[0].amt = quantity;
 			else record.qty = quantity;
 			changeData([ ...data ]);
 		}
@@ -91,7 +92,7 @@ export default function ViewHoldingInput({
 			<Col>
 				 <SelectInput
 					pre=""
-					value={( childTab === PPF_TAB || childTab === DEPO_TAB || childTab === ML_TAB ) ? record.chgF as number : record.subt as string}
+					value={( childTab === PPF || childTab === DEPO || childTab === ML ) ? record.chgF as number : record.subt as string}
 					options={categoryOptions}
 					changeHandler={(val: string) => changeCategory(val)}
 				/>
@@ -107,7 +108,7 @@ export default function ViewHoldingInput({
 				</Fragment>)
 				: null}
 			</Col>}
-			{childTab === CRYPTO_TAB || childTab === NPS_TAB || childTab === PM_TAB  ? 
+			{childTab === CRYPTO || childTab === NPS || childTab === PM  ? 
 				<Col>
 					<QuantityWithRate 
 						quantity={record.qty} 
@@ -119,7 +120,7 @@ export default function ViewHoldingInput({
 					<Col>
 						<TextInput pre="Name" changeHandler={(val: string)=>changeName(val)} value={record.name as string} size={'small'} />
 					</Col>
-					{(childTab === PPF_TAB || childTab === EPF_TAB || childTab === VPF_TAB || childTab === ML_TAB || childTab === DEPO_TAB) &&
+					{(childTab === PPF || childTab === EPF || childTab === VPF || childTab === ML || childTab === DEPO) &&
 					<Col>
 						<label>Rate</label>&nbsp;
 						<InputNumber
@@ -135,14 +136,14 @@ export default function ViewHoldingInput({
 							min={10}
 							max={100000000}
 							// @ts-ignore
-							value={(childTab === VEHICLE_TAB || childTab === ML_TAB || childTab === DEPO_TAB) ? record.pur && record.pur[0].amt : record.qty}
+							value={(childTab === VEHICLE || childTab === ML || childTab === DEPO) ? record.pur && record.pur[0].amt : record.qty}
 							changeHandler={changeQty}
 							currency={record.curr as string}
 							step={1}
 							noSlider />
 					</Col>
 				</>}
-				{record.pur && (childTab === VEHICLE_TAB || childTab === DEPO_TAB || childTab === ML_TAB) &&  
+				{record.pur && (childTab === VEHICLE || childTab === DEPO || childTab === ML) &&  
 					<Col>
 						<DatePickerInput
 							picker="month"
@@ -152,11 +153,11 @@ export default function ViewHoldingInput({
 							defaultVal={`${record.pur[0]?.year}-${record.pur[0]?.month}` as string}
 							size={'middle'}
 						/>
-						{(childTab === DEPO_TAB || childTab === ML_TAB) && 
+						{(childTab === DEPO || childTab === ML) && 
 						<><label>Duration</label><InputNumber onChange={changeDuration} value={record.pur[0].qty as number} /></>
 						}
 					</Col>}
-				{(activeTab === LOAN_TAB || activeTab === INS_TAB) &&
+				{(activeTab === LOAN || activeTab === INS) &&
 					<Col>
 					 	<SelectInput
 							 pre={'Installment Type'}
