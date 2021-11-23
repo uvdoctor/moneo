@@ -9,5 +9,7 @@ export function override(resources: AmplifyAuthCognitoStackTemplate) {
     };
     resources.userPool.aliasAttributes = ["email", "phone_number", "preferred_username"];
     resources.userPoolClient.preventUserExistenceErrors = "ENABLED";
-    resources.userPoolClient.explicitAuthFlows = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_CUSTOM_AUTH"]
+    resources.userPoolClientWeb.preventUserExistenceErrors = "ENABLED";
+    resources.userPoolClient.explicitAuthFlows = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_CUSTOM_AUTH"];
+    resources.userPoolClientWeb.explicitAuthFlows = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_CUSTOM_AUTH"];
 }
