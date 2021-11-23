@@ -1,6 +1,8 @@
 const tempDir = `/tmp/temp`;
 const zipFile = `${tempDir}/download.zip`;
 
+const getStr = (num) => num < 10 ? `0${num}` : '' + num;
+
 const utility = (num) => {
     if (!num) num = 0;
     const monthsArray = [
@@ -17,18 +19,14 @@ const utility = (num) => {
       "NOV",
       "DEC",
     ];
-    const today = new Date();
-    const monthChar = monthsArray[today.getMonth()];
-    const yearFull = today.getFullYear();
-    const todayDate = today.getDate() - parseInt(num);
-    const date = todayDate < 10 ? `0${todayDate}` : todayDate;
-    const month =
-      today.getMonth() + 1 < 10
-        ? `0${today.getMonth() + 1}`
-        : `${today.getMonth() + 1}`;
+    const todayDate = new Date() - parseInt(num);
+    const monthChar = monthsArray[todayDate.getMonth()];
+    const yearFull = todayDate.getFullYear();
+    const dateStr = getStr(todayDate);
+    const monthStr = getStr(todayDate.getMonth() + 1);
     const year =
-      today.getYear().toString().charAt(1) + today.getYear().toString().charAt(2);
-    return { date, month, monthChar, year, yearFull };
+      todayDate.getYear().toString().charAt(1) + todayDate.getYear().toString().charAt(2);
+    return { dateStr, monthStr, monthChar, year, yearFull };
   };
   
   module.exports = { utility, tempDir, zipFile };

@@ -64,7 +64,6 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 	if (!identifier) identifier = '';
 	const tname = table.slice(0, table.indexOf('-'));
 	const tableName = await getTableNameFromInitialWord('Feeds');
-	console.log("Table name fetched: ", tableName);
 	const getLength = (arr) => {
 		if (typeof arr === 'number') return arr;
 		const len = arr.flat(Infinity);
