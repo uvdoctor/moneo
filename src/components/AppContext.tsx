@@ -25,10 +25,9 @@ function AppContextProvider({ children, user, handleLogout }: AppContextProvider
 	const [ appContextLoaded, setAppContextLoaded ] = useState<boolean>(false);
 	const [ ratesData, setRatesData ] = useState<any>({});
 	const [ insData, setInsData ] = useState<any>({});
+	const [ owner, setOwner ] = useState<string>('');
 	const router = useRouter();
 
-	const owner = (JSON.parse(user?.storage[user.userDataKey])).Username;
-	
 	const validateCaptcha = async (action: string) => {
 		//@ts-ignore
 		const token = await executeRecaptcha(action);
@@ -99,7 +98,10 @@ function AppContextProvider({ children, user, handleLogout }: AppContextProvider
 	}, []);
 
 	useEffect(() => {
-		if(user) initData().then(() => setAppContextLoaded(true));
+		if(user) { 
+			initData().then(() => setAppContextLoaded(true));
+			setOwner((JSON.parse(user?.storage[user.userDataKey])).Username)
+		}
 	}, [user]);
 
 	return (
