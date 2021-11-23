@@ -86,6 +86,18 @@ export default function ViewHoldingInput({
 		}
 	};
 
+	const isLiability = (activeTab: string) => [LOAN, INS].includes(activeTab);
+
+	const hasRate = (childTab: string) => [PPF, VPF, EPF, ML, DEPO].includes(childTab);
+
+	const hasName = (childTab: string) => ![PM, NPS, CRYPTO].includes(childTab);
+
+	const hasQtyWithRate = (childTab: string) => [PM, NPS, CRYPTO].includes(childTab);
+
+	const hasDuration = (childTab: string) => [ML, DEPO].includes(childTab);
+
+	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE].includes(childTab);
+
 	return (
 		<Fragment>
 			{categoryOptions && 
@@ -108,72 +120,73 @@ export default function ViewHoldingInput({
 				</Fragment>)
 				: null}
 			</Col>}
-			{childTab === CRYPTO || childTab === NPS || childTab === PM  ? 
+			{hasName(childTab) && 
+				<Col>
+				<TextInput pre="Name" changeHandler={(val: string)=>changeName(val)} value={record.name as string} size={'small'} />
+				</Col>
+			}
+			{hasQtyWithRate(childTab) ?
 				<Col>
 					<QuantityWithRate 
 						quantity={record.qty} 
 						name={record.name as string} 
 						subtype={record.subt as string} 
 						onChange={changeQty} />
-				</Col> : 
-			    <>
-					<Col>
-						<TextInput pre="Name" changeHandler={(val: string)=>changeName(val)} value={record.name as string} size={'small'} />
-					</Col>
-					{(childTab === PPF || childTab === EPF || childTab === VPF || childTab === ML || childTab === DEPO) &&
-					<Col>
-						<label>Rate</label>&nbsp;
-						<InputNumber
-							onChange={changeChg}
-							min={1}
-							max={50}
-							value={record.chg as number}
-							step={0.1} />
-					</Col> }
-					<Col>
-						<NumberInput
-							pre={'Amount'}
-							min={10}
-							max={100000000}
-							// @ts-ignore
-							value={(childTab === VEHICLE || childTab === ML || childTab === DEPO) ? record.pur && record.pur[0].amt : record.qty}
-							changeHandler={changeQty}
-							currency={record.curr as string}
-							step={1}
-							noSlider />
-					</Col>
-				</>}
-				{record.pur && (childTab === VEHICLE || childTab === DEPO || childTab === ML) &&  
-					<Col>
-						<DatePickerInput
-							picker="month"
-							title={'Date'}
-							changeHandler={(val:string)=>changePurchaseDate(val)}
-							// @ts-ignore
-							defaultVal={`${record.pur[0]?.year}-${record.pur[0]?.month}` as string}
-							size={'middle'}
-						/>
-						{(childTab === DEPO || childTab === ML) && 
-						<><label>Duration</label><InputNumber onChange={changeDuration} value={record.pur[0].qty as number} /></>
-						}
-					</Col>}
-				{(activeTab === LOAN || activeTab === INS) &&
-					<Col>
-					 	<SelectInput
-							 pre={'Installment Type'}
-							 value={record.chgF as number}
-							 options={{ 1: 'Yearly', 12: 'Monthly' }}
-							 changeHandler={changeYearly}/>&nbsp;
-						<label>No. of installment</label>
-						<InputNumber
-							min={1}
-							max={1000}
-							// @ts-ignore
-							value={record.pur[0].amt as number}
-							onChange={changeInstallmet}
-							step={1}
-						/>
-				 	</Col>}
+				</Col> :
+				<Col>
+				<NumberInput
+					pre={'Amount'}
+					min={10}
+					max={100000000}
+					// @ts-ignore
+					value={(childTab === VEHICLE || childTab === ML || childTab === DEPO) ? record.pur && record.pur[0].amt : record.qty}
+					changeHandler={changeQty}
+					currency={record.curr as string}
+					step={1}
+					noSlider />
+				</Col>
+			}
+			{hasRate(childTab) && 
+				<Col>
+					<label>Rate</label>&nbsp;
+					<InputNumber
+						onChange={changeChg}
+						min={1}
+						max={50}
+						value={record.chg as number}
+						step={0.1} />
+				</Col>}
+			{record.pur && !activeTab && 
+			<Col>
+				{hasDate(childTab) && 
+				<DatePickerInput
+					picker="month"
+					title={'Date'}
+					changeHandler={(val:string)=>changePurchaseDate(val)}
+					// @ts-ignore
+					defaultVal={`${record.pur[0]?.year}-${record.pur[0]?.month}` as string}
+					size={'middle'}
+				/> }&nbsp;&nbsp;
+				{hasDuration(childTab) && 
+					<><label>Duration</label><InputNumber onChange={changeDuration} value={record.pur[0].qty as number} /></>}
+			</Col>}
+			{isLiability(activeTab) &&
+				<Col>
+					<SelectInput
+						pre={'Installment Type'}
+						value={record.chgF as number}
+						options={{ 1: 'Yearly', 12: 'Monthly' }}
+						changeHandler={changeYearly}/>&nbsp;
+					<label>No. of installment</label>
+					<InputNumber
+						min={1}
+						max={1000}
+						// @ts-ignore
+						value={record.pur[0].amt as number}
+						onChange={changeInstallmet}
+						step={1}
+					/>
+				</Col>}
 			</Fragment>
 	);
 }
