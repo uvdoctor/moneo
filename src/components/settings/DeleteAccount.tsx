@@ -13,7 +13,7 @@ import { getGoalsList } from '../goals/goalutils';
 import { getFamilysList, loadHoldings } from '../nw/nwutils';
 
 export default function DeleteAccount() {
-	const { handleLogout }: any = useContext(AppContext);
+	const { handleLogout, owner }: any = useContext(AppContext);
 	const { goalImgKey }: any = useContext(GoalContext);
 	const { validateCaptcha }: any = useContext(AppContext);
 	const [ loading, setLoading ] = useState<boolean>(false);
@@ -82,7 +82,7 @@ export default function DeleteAccount() {
 					if (!success) return;
 					const user = await Auth.currentAuthenticatedUser();
 					await deleteGoal();
-					await deleteHoldings(user?.username);
+					await deleteHoldings(owner);
 					await deleteFamilyList();
 					user.attributes.profile ? await Storage.remove(user.attributes.profile) : null;
 					goalImgKey ? await Storage.remove(goalImgKey) : null;

@@ -159,6 +159,7 @@ export default function ImageInput({ user }: ImageInputProps) {
           )}
           <div className="preview-image">
             {user?.attributes.picture ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={user?.attributes.picture} alt="profile picture" />
             ) : (
               <span onClick={openBrowse}>{avatar(300)}</span>
