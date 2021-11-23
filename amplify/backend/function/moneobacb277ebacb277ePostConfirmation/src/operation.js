@@ -25,35 +25,30 @@ const pushDataSingly = (params, email) => {
 	});
 };
 
-const getDataFromEventAndPush = (event, context) => {
+const getDataFromEventAndPush = (event) => {
 	return new Promise(async (resolve, reject) => {
 		// const table = 'Contacts-fdun77s5lzbinkbgvnuidw6ihq-dev';
 		let date = new Date();
-		try {
-			if (event.request.userAttributes['email_verified'] === 'true') {
-				let notify = event.request.userAttributes['custom:notify'];
-				let email = event.request.userAttributes.email;
-				const table = await getTableNameFromInitialWord('Contacts');
-				let params = {
-					Item: {
-						__typename: { S: 'Contacts' },
-						email: { S: email },
-						notify: { BOOL: !notify || notify.length === 1 ? false : true },
-						createdAt: { S: date.toISOString() },
-						updatedAt: { S: date.toISOString() }
-					},
-					TableName: table
-				};
-				const response = await pushDataSingly(params, email);
-				console.log(response);
-			} else {
-				console.log('Error: Nothing was written to table as email is not verified');
-			}
-			context.done(null, event);
-			resolve();
-		} catch (err) {
-			reject(err);
+		if (event.request.userAttributes['email_verified'] === 'true') {
+			let notify = event.request.userAttributes.website;
+			let email = event.request.userAttributes.email;
+			const table = await getTableNameFromInitialWord('Contacts');
+			let params = {
+				Item: {
+					__typename: { S: 'Contacts' },
+					email: { S: email },
+					notify: { BOOL: !notify || notify.length === 1 ? false : true },
+					createdAt: { S: date.toISOString() },
+					updatedAt: { S: date.toISOString() }
+				},
+				TableName: table
+			};
+			const response = await pushDataSingly(params, email);
+			console.log(response);
+		} else {
+			console.log('Error: Nothing was written to table as email is not verified');
 		}
+		resolve();
 	});
 };
 

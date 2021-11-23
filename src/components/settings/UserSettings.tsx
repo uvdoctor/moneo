@@ -37,7 +37,7 @@ export default function UserSettings(): JSX.Element {
   const failure = (message: any) => notification.error({ message });
 
   const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
-  const notify = !user || !user?.attributes['custom:notify'] || user?.attributes['custom:notify'] ==='N' ? false : true;
+  const notify = !user || !user?.attributes.website || user?.attributes.website ==='N' ? false : true;
   const disableButton = (prevValue: any, currValue: any) => prevValue === currValue ? true : error.length > 0 ? true : false;
 
   const counCodeWithOutPlusSign = counCode?.value.slice(1);

@@ -127,8 +127,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
         password: password,
         attributes: {
           email: email,
-          "custom:tc": new Date().toISOString(),
-          "custom:notify": notify ? new Date().toISOString() : "N",
+          zoneinfo: new Date().toISOString(),  //Terms and condition
+          website: notify ? new Date().toISOString() : "N", //Notify
         },
       })
         .then(async (response) => {
@@ -142,8 +142,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
               password: password,
               attributes: {
                 email: email,
-                "custom:tc": new Date().toISOString(),
-                "custom:notify": notify ? new Date().toISOString() : "N",
+                zoneinfo: new Date().toISOString(),  //Terms and condition
+                website: notify ? new Date().toISOString() : "N",  //Notify
               },
             },
           });

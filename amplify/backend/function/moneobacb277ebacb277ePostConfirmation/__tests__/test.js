@@ -11,7 +11,7 @@ describe('Inserting Data', () => {
 			request: {
 				userAttributes: {
 					email_verified: 'true',
-					'custom:notify': new Date().toISOString(),
+					website: new Date().toISOString(),
 					email: 'mehzabeen20@gmail.com'
 				}
 			},
