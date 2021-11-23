@@ -238,11 +238,6 @@
       "service": "LambdaLayer",
       "build": true
     },
-    "UserConfirmationTrigger": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "moneobacb277ebacb277ePostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",

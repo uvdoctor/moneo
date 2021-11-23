@@ -74,12 +74,6 @@ export type AmplifyDependentResourcesAttributes = {
         "moneopriceutils": {
             "Arn": "string"
         },
-        "UserConfirmationTrigger": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
         "moneobacb277ebacb277ePostConfirmation": {
             "Name": "string",
             "Arn": "string",

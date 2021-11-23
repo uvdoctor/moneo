@@ -44,10 +44,6 @@
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
           "s3Key": "amplify-builds/IndicePrice-66396554707038757051-build.zip"
         },
-        "UserConfirmationTrigger": {
-          "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/UserConfirmationTrigger-6d5748773157664c6736-build.zip"
-        },
         "moneopriceutils": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
           "s3Key": "amplify-builds/moneopriceutils-LambdaLayerVersionb95ec405-build.zip"
