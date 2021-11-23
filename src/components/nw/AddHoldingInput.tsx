@@ -22,7 +22,6 @@ import {
 	VPF_TAB
 } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
-import PurchaseInput from './PurchaseInput';
 import QuantityWithRate from './QuantityWithRate';
 
 interface AddHoldingInputProps {
@@ -30,7 +29,6 @@ interface AddHoldingInputProps {
 	disableOk: Function;
 	categoryOptions: any;
 	subCategoryOptions?: any;
-	purchase?: boolean;
 }
 
 export default function AddHoldingInput({
@@ -38,7 +36,6 @@ export default function AddHoldingInput({
 	disableOk,
 	categoryOptions,
 	subCategoryOptions,
-	purchase
 }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency, activeTab }: any = useContext(NWContext);
 	const [ subtype, setSubtype ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
@@ -47,8 +44,6 @@ export default function AddHoldingInput({
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ chg, setChg ] = useState<number>(0);
 	const [ amount, setAmount ] = useState<number>(0);
-	const [ month, setMonth ] = useState<number>(1);
-	const [ year, setYear ] = useState<number>(new Date().getFullYear() - 5);
 	const [ purchaseDate, setPurchaseDate ] = useState<string>('2000-4');
 	const [ duration, setDuration ] = useState<number>(12);
 	const [ chgF, setChgF ] = useState<number>(1);
@@ -119,16 +114,6 @@ export default function AddHoldingInput({
 			]
 		}
 		childTab === PM_TAB || childTab === CRYPTO_TAB ? (newRec.curr = 'USD') : (newRec.curr = selectedCurrency);
-		if (purchase) {
-			newRec.pur = [
-				{
-					amt: quantity,
-					month: month,
-					year: year,
-					qty: 1
-				}
-			];
-		}
 		newRec.qty = childTab === VEHICLE_TAB ? 0 : quantity;
 		newRec.name = name;
 		newRec.fId = memberKey;
@@ -238,18 +223,6 @@ export default function AddHoldingInput({
 					)
 				) : null}
 			</p>
-			{purchase && (
-				<p>
-					<PurchaseInput
-						amount={amount}
-						setAmount={setAmount}
-						month={month}
-						setMonth={setMonth}
-						year={year}
-						setYear={setYear}
-					/>
-				</p>
-			)}
 			<p>
 				<Row justify="center">
 					{childTab === PM_TAB || childTab === NPS_TAB || childTab === CRYPTO_TAB ? null : (
