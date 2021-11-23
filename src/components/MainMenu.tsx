@@ -20,7 +20,7 @@ export default function MainMenu({
   hideMenu,
   title,
 }: MainMenuProps) {
-  const { user, appContextLoaded, handleLogout }: any = useContext(AppContext);
+  const { user, appContextLoaded, handleLogout, owner }: any = useContext(AppContext);
   const router = useRouter();
   const [selectedKey, setSelectedKey] = useState<string>(router.pathname);
   const { SubMenu } = Menu;
@@ -69,7 +69,7 @@ export default function MainMenu({
                       &nbsp;
                       {user?.attributes?.name
                         ? user?.attributes.name 
-                        : user?.attributes?.preferred_username ? user?.attributes.preferred_username : user.username}
+                        : user?.attributes?.preferred_username ? user?.attributes.preferred_username : owner}
                     </Fragment>
                   }
                 >

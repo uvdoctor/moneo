@@ -26,6 +26,8 @@ function AppContextProvider({ children, user, handleLogout }: AppContextProvider
 	const [ ratesData, setRatesData ] = useState<any>({});
 	const [ insData, setInsData ] = useState<any>({});
 	const router = useRouter();
+
+	const owner = (JSON.parse(user?.storage[user.userDataKey])).Username;
 	
 	const validateCaptcha = async (action: string) => {
 		//@ts-ignore
@@ -113,7 +115,8 @@ function AppContextProvider({ children, user, handleLogout }: AppContextProvider
 				insData,
 				setInsData,
 				handleLogout,
-				validateCaptcha
+				validateCaptcha,
+				owner
 			}}
 		>
 			{children}

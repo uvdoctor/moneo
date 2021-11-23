@@ -72,7 +72,7 @@ export const LOAN_TAB = 'Loans';
 export const INS_TAB = 'Insurance';
 
 function NWContextProvider() {
-	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData, user }: any = useContext(AppContext);
+	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData, owner }: any = useContext(AppContext);
 	const [ allFamily, setAllFamily ] = useState<any | null>(null);
 	const [ instruments, setInstruments ] = useState<Array<HoldingInput>>([]);
 	const [ preciousMetals, setPreciousMetals ] = useState<Array<HoldingInput>>([]);
@@ -128,11 +128,9 @@ function NWContextProvider() {
 	const [ results, setResults ] = useState<Array<any>>([]);
 	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
 	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
-	const [ uname, setUname ] = useState<string | null | undefined>(user?.username);
+	const [ uname, setUname ] = useState<string | null | undefined>(owner);
 	const [ childTab, setChildTab ] = useState<string>('');
-	const [ npsData, setNPSData] = useState<Array<CreateNPSInput>>([]);
-
-	const { Username }  = JSON.parse(user?.storage[user.userDataKey]);	
+	const [ npsData, setNPSData] = useState<Array<CreateNPSInput>>([]);	
 
 	const loadNPSSubCategories = async () => {
 		let npsData: Array<CreateNPSInput> | undefined = await getNPSData();
@@ -422,7 +420,7 @@ function NWContextProvider() {
 		initializeFamilyList();
 		let allHoldings: CreateUserHoldingsInput | null = null;
 		try {
-			allHoldings = await loadHoldings(Username);
+			allHoldings = await loadHoldings(owner);
 		} catch (err) {
 			notification.error({ message: 'Holdings not loaded', description: 'Sorry! Unable to fetch holdings.' });
 		}
@@ -584,7 +582,7 @@ function NWContextProvider() {
 	};
 
 	const saveHoldings = async () => {
-		let updatedHoldings: CreateUserHoldingsInput = { uname: Username };
+		let updatedHoldings: CreateUserHoldingsInput = { uname: owner };
 		updatedHoldings.instruments = instruments;
 		updatedHoldings.savings = savings;
 		updatedHoldings.deposits = deposits;
