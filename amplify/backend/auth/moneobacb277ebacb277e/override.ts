@@ -8,4 +8,6 @@ export function override(resources: AmplifyAuthCognitoStackTemplate) {
         recoveryMechanisms: [{name: "verified_email", priority: 1}]
     };
     resources.userPool.aliasAttributes = ["email", "phone_number", "preferred_username"];
+    resources.userPoolClient.preventUserExistenceErrors = "ENABLED";
+    resources.userPoolClient.explicitAuthFlows = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_CUSTOM_AUTH"]
 }
