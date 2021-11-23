@@ -761,10 +761,10 @@ export const onDeleteNps = /* GraphQL */ `
     }
   }
 `;
-export const onCreateHoldings = /* GraphQL */ `
-  subscription OnCreateHoldings($owner: String) {
-    onCreateHoldings(owner: $owner) {
-      id
+export const onCreateUserHoldings = /* GraphQL */ `
+  subscription OnCreateUserHoldings($owner: String) {
+    onCreateUserHoldings(owner: $owner) {
+      uname
       instruments {
         id
         qty
@@ -1067,10 +1067,10 @@ export const onCreateHoldings = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateHoldings = /* GraphQL */ `
-  subscription OnUpdateHoldings($owner: String) {
-    onUpdateHoldings(owner: $owner) {
-      id
+export const onUpdateUserHoldings = /* GraphQL */ `
+  subscription OnUpdateUserHoldings($owner: String) {
+    onUpdateUserHoldings(owner: $owner) {
+      uname
       instruments {
         id
         qty
@@ -1373,10 +1373,10 @@ export const onUpdateHoldings = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteHoldings = /* GraphQL */ `
-  subscription OnDeleteHoldings($owner: String) {
-    onDeleteHoldings(owner: $owner) {
-      id
+export const onDeleteUserHoldings = /* GraphQL */ `
+  subscription OnDeleteUserHoldings($owner: String) {
+    onDeleteUserHoldings(owner: $owner) {
+      uname
       instruments {
         id
         qty

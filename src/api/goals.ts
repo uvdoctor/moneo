@@ -446,8 +446,8 @@ export type DeleteFamilyInput = {
   id: string,
 };
 
-export type CreateHoldingsInput = {
-  id?: string | null,
+export type CreateUserHoldingsInput = {
+  uname: string,
   instruments?: Array< HoldingInput > | null,
   deposits?: Array< HoldingInput > | null,
   lendings?: Array< HoldingInput > | null,
@@ -521,15 +521,15 @@ export type OwnershipInput = {
   per: number,
 };
 
-export type ModelHoldingsConditionInput = {
-  and?: Array< ModelHoldingsConditionInput | null > | null,
-  or?: Array< ModelHoldingsConditionInput | null > | null,
-  not?: ModelHoldingsConditionInput | null,
+export type ModelUserHoldingsConditionInput = {
+  and?: Array< ModelUserHoldingsConditionInput | null > | null,
+  or?: Array< ModelUserHoldingsConditionInput | null > | null,
+  not?: ModelUserHoldingsConditionInput | null,
 };
 
-export type Holdings = {
-  __typename: "Holdings",
-  id?: string,
+export type UserHoldings = {
+  __typename: "UserHoldings",
+  uname?: string,
   instruments?:  Array<Holding > | null,
   deposits?:  Array<Holding > | null,
   lendings?:  Array<Holding > | null,
@@ -599,8 +599,8 @@ export type Ownership = {
   per?: number,
 };
 
-export type UpdateHoldingsInput = {
-  id: string,
+export type UpdateUserHoldingsInput = {
+  uname: string,
   instruments?: Array< HoldingInput > | null,
   deposits?: Array< HoldingInput > | null,
   lendings?: Array< HoldingInput > | null,
@@ -619,8 +619,8 @@ export type UpdateHoldingsInput = {
   angel?: Array< HoldingInput > | null,
 };
 
-export type DeleteHoldingsInput = {
-  id: string,
+export type DeleteUserHoldingsInput = {
+  uname: string,
 };
 
 export type CreateFeedbackInput = {
@@ -1569,16 +1569,16 @@ export type ModelNPSConnection = {
   nextToken?: string | null,
 };
 
-export type ModelHoldingsFilterInput = {
-  id?: ModelIDInput | null,
-  and?: Array< ModelHoldingsFilterInput | null > | null,
-  or?: Array< ModelHoldingsFilterInput | null > | null,
-  not?: ModelHoldingsFilterInput | null,
+export type ModelUserHoldingsFilterInput = {
+  uname?: ModelStringInput | null,
+  and?: Array< ModelUserHoldingsFilterInput | null > | null,
+  or?: Array< ModelUserHoldingsFilterInput | null > | null,
+  not?: ModelUserHoldingsFilterInput | null,
 };
 
-export type ModelHoldingsConnection = {
-  __typename: "ModelHoldingsConnection",
-  items?:  Array<Holdings >,
+export type ModelUserHoldingsConnection = {
+  __typename: "ModelUserHoldingsConnection",
+  items?:  Array<UserHoldings >,
   nextToken?: string | null,
 };
 
@@ -1961,15 +1961,15 @@ export type DeleteFamilyMutation = {
   } | null,
 };
 
-export type CreateHoldingsMutationVariables = {
-  input?: CreateHoldingsInput,
-  condition?: ModelHoldingsConditionInput | null,
+export type CreateUserHoldingsMutationVariables = {
+  input?: CreateUserHoldingsInput,
+  condition?: ModelUserHoldingsConditionInput | null,
 };
 
-export type CreateHoldingsMutation = {
-  createHoldings?:  {
-    __typename: "Holdings",
-    id: string,
+export type CreateUserHoldingsMutation = {
+  createUserHoldings?:  {
+    __typename: "UserHoldings",
+    uname: string,
     instruments?:  Array< {
       __typename: "Holding",
       id: string,
@@ -2305,15 +2305,15 @@ export type CreateHoldingsMutation = {
   } | null,
 };
 
-export type UpdateHoldingsMutationVariables = {
-  input?: UpdateHoldingsInput,
-  condition?: ModelHoldingsConditionInput | null,
+export type UpdateUserHoldingsMutationVariables = {
+  input?: UpdateUserHoldingsInput,
+  condition?: ModelUserHoldingsConditionInput | null,
 };
 
-export type UpdateHoldingsMutation = {
-  updateHoldings?:  {
-    __typename: "Holdings",
-    id: string,
+export type UpdateUserHoldingsMutation = {
+  updateUserHoldings?:  {
+    __typename: "UserHoldings",
+    uname: string,
     instruments?:  Array< {
       __typename: "Holding",
       id: string,
@@ -2649,15 +2649,15 @@ export type UpdateHoldingsMutation = {
   } | null,
 };
 
-export type DeleteHoldingsMutationVariables = {
-  input?: DeleteHoldingsInput,
-  condition?: ModelHoldingsConditionInput | null,
+export type DeleteUserHoldingsMutationVariables = {
+  input?: DeleteUserHoldingsInput,
+  condition?: ModelUserHoldingsConditionInput | null,
 };
 
-export type DeleteHoldingsMutation = {
-  deleteHoldings?:  {
-    __typename: "Holdings",
-    id: string,
+export type DeleteUserHoldingsMutation = {
+  deleteUserHoldings?:  {
+    __typename: "UserHoldings",
+    uname: string,
     instruments?:  Array< {
       __typename: "Holding",
       id: string,
@@ -4384,14 +4384,14 @@ export type ListNpSsQuery = {
   } | null,
 };
 
-export type GetHoldingsQueryVariables = {
-  id?: string,
+export type GetUserHoldingsQueryVariables = {
+  uname?: string,
 };
 
-export type GetHoldingsQuery = {
-  getHoldings?:  {
-    __typename: "Holdings",
-    id: string,
+export type GetUserHoldingsQuery = {
+  getUserHoldings?:  {
+    __typename: "UserHoldings",
+    uname: string,
     instruments?:  Array< {
       __typename: "Holding",
       id: string,
@@ -4727,18 +4727,20 @@ export type GetHoldingsQuery = {
   } | null,
 };
 
-export type ListHoldingssQueryVariables = {
-  filter?: ModelHoldingsFilterInput | null,
+export type ListUserHoldingssQueryVariables = {
+  uname?: string | null,
+  filter?: ModelUserHoldingsFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
 };
 
-export type ListHoldingssQuery = {
-  listHoldingss?:  {
-    __typename: "ModelHoldingsConnection",
+export type ListUserHoldingssQuery = {
+  listUserHoldingss?:  {
+    __typename: "ModelUserHoldingsConnection",
     items:  Array< {
-      __typename: "Holdings",
-      id: string,
+      __typename: "UserHoldings",
+      uname: string,
       instruments?:  Array< {
         __typename: "Holding",
         id: string,
@@ -5788,14 +5790,14 @@ export type OnDeleteNpsSubscription = {
   } | null,
 };
 
-export type OnCreateHoldingsSubscriptionVariables = {
+export type OnCreateUserHoldingsSubscriptionVariables = {
   owner?: string | null,
 };
 
-export type OnCreateHoldingsSubscription = {
-  onCreateHoldings?:  {
-    __typename: "Holdings",
-    id: string,
+export type OnCreateUserHoldingsSubscription = {
+  onCreateUserHoldings?:  {
+    __typename: "UserHoldings",
+    uname: string,
     instruments?:  Array< {
       __typename: "Holding",
       id: string,
@@ -6131,14 +6133,14 @@ export type OnCreateHoldingsSubscription = {
   } | null,
 };
 
-export type OnUpdateHoldingsSubscriptionVariables = {
+export type OnUpdateUserHoldingsSubscriptionVariables = {
   owner?: string | null,
 };
 
-export type OnUpdateHoldingsSubscription = {
-  onUpdateHoldings?:  {
-    __typename: "Holdings",
-    id: string,
+export type OnUpdateUserHoldingsSubscription = {
+  onUpdateUserHoldings?:  {
+    __typename: "UserHoldings",
+    uname: string,
     instruments?:  Array< {
       __typename: "Holding",
       id: string,
@@ -6474,14 +6476,14 @@ export type OnUpdateHoldingsSubscription = {
   } | null,
 };
 
-export type OnDeleteHoldingsSubscriptionVariables = {
+export type OnDeleteUserHoldingsSubscriptionVariables = {
   owner?: string | null,
 };
 
-export type OnDeleteHoldingsSubscription = {
-  onDeleteHoldings?:  {
-    __typename: "Holdings",
-    id: string,
+export type OnDeleteUserHoldingsSubscription = {
+  onDeleteUserHoldings?:  {
+    __typename: "UserHoldings",
+    uname: string,
     instruments?:  Array< {
       __typename: "Holding",
       id: string,
