@@ -327,13 +327,13 @@ export const deleteFamily = /* GraphQL */ `
     }
   }
 `;
-export const createHoldings = /* GraphQL */ `
-  mutation CreateHoldings(
-    $input: CreateHoldingsInput!
-    $condition: ModelHoldingsConditionInput
+export const createUserHoldings = /* GraphQL */ `
+  mutation CreateUserHoldings(
+    $input: CreateUserHoldingsInput!
+    $condition: ModelUserHoldingsConditionInput
   ) {
-    createHoldings(input: $input, condition: $condition) {
-      id
+    createUserHoldings(input: $input, condition: $condition) {
+      uname
       instruments {
         id
         qty
@@ -636,13 +636,13 @@ export const createHoldings = /* GraphQL */ `
     }
   }
 `;
-export const updateHoldings = /* GraphQL */ `
-  mutation UpdateHoldings(
-    $input: UpdateHoldingsInput!
-    $condition: ModelHoldingsConditionInput
+export const updateUserHoldings = /* GraphQL */ `
+  mutation UpdateUserHoldings(
+    $input: UpdateUserHoldingsInput!
+    $condition: ModelUserHoldingsConditionInput
   ) {
-    updateHoldings(input: $input, condition: $condition) {
-      id
+    updateUserHoldings(input: $input, condition: $condition) {
+      uname
       instruments {
         id
         qty
@@ -945,13 +945,13 @@ export const updateHoldings = /* GraphQL */ `
     }
   }
 `;
-export const deleteHoldings = /* GraphQL */ `
-  mutation DeleteHoldings(
-    $input: DeleteHoldingsInput!
-    $condition: ModelHoldingsConditionInput
+export const deleteUserHoldings = /* GraphQL */ `
+  mutation DeleteUserHoldings(
+    $input: DeleteUserHoldingsInput!
+    $condition: ModelUserHoldingsConditionInput
   ) {
-    deleteHoldings(input: $input, condition: $condition) {
-      id
+    deleteUserHoldings(input: $input, condition: $condition) {
+      uname
       instruments {
         id
         qty

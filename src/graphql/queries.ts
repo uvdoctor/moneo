@@ -702,10 +702,10 @@ export const listNpSs = /* GraphQL */ `
     }
   }
 `;
-export const getHoldings = /* GraphQL */ `
-  query GetHoldings($id: ID!) {
-    getHoldings(id: $id) {
-      id
+export const getUserHoldings = /* GraphQL */ `
+  query GetUserHoldings($uname: String!) {
+    getUserHoldings(uname: $uname) {
+      uname
       instruments {
         id
         qty
@@ -1008,15 +1008,23 @@ export const getHoldings = /* GraphQL */ `
     }
   }
 `;
-export const listHoldingss = /* GraphQL */ `
-  query ListHoldingss(
-    $filter: ModelHoldingsFilterInput
+export const listUserHoldingss = /* GraphQL */ `
+  query ListUserHoldingss(
+    $uname: String
+    $filter: ModelUserHoldingsFilterInput
     $limit: Int
     $nextToken: String
+    $sortDirection: ModelSortDirection
   ) {
-    listHoldingss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUserHoldingss(
+      uname: $uname
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
       items {
-        id
+        uname
         instruments {
           id
           qty
