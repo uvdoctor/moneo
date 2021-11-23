@@ -1,8 +1,7 @@
 const { getDataFromEventAndPush } = require('./operation');
 
-exports.handler = async (event, context) => {
+exports.handler = async (event) => {
 	// insert code to be executed by your lambda trigger
-	if(context) console.log(context);
 	const email = event.request.userAttributes.email;
 	try {
 		await getDataFromEventAndPush(event);
