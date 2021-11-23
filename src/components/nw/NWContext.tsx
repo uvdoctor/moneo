@@ -132,6 +132,8 @@ function NWContextProvider() {
 	const [ childTab, setChildTab ] = useState<string>('');
 	const [ npsData, setNPSData] = useState<Array<CreateNPSInput>>([]);
 
+	const { Username }  = JSON.parse(user?.storage[user.userDataKey]);	
+
 	const loadNPSSubCategories = async () => {
 		let npsData: Array<CreateNPSInput> | undefined = await getNPSData();
 		if (npsData) {
@@ -420,7 +422,7 @@ function NWContextProvider() {
 		initializeFamilyList();
 		let allHoldings: CreateUserHoldingsInput | null = null;
 		try {
-			allHoldings = await loadHoldings(user?.username);
+			allHoldings = await loadHoldings(Username);
 		} catch (err) {
 			notification.error({ message: 'Holdings not loaded', description: 'Sorry! Unable to fetch holdings.' });
 		}
@@ -582,7 +584,7 @@ function NWContextProvider() {
 	};
 
 	const saveHoldings = async () => {
-		let updatedHoldings: CreateUserHoldingsInput = { uname: user?.username };
+		let updatedHoldings: CreateUserHoldingsInput = { uname: Username };
 		updatedHoldings.instruments = instruments;
 		updatedHoldings.savings = savings;
 		updatedHoldings.deposits = deposits;
