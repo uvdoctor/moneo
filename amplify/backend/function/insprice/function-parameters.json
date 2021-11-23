@@ -2,10 +2,10 @@
   "lambdaLayers": [
     {
       "type": "ProjectLayer",
-      "resourceName": "moneopriceutils",
+      "resourceName": "moneopricelayer",
+      "env": "dev",
       "version": "Always choose latest version",
-      "isLatestVersionSelected": true,
-      "env": "dev"
+      "isLatestVersionSelected": true
     }
   ],
   "permissions": {

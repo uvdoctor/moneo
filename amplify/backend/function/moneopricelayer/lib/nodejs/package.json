@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "insertIntoDB.js",
   "devDependencies": {
     "jest": "^27.2.1"
   },
