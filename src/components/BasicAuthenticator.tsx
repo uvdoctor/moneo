@@ -176,18 +176,10 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     Hub.dispatch("UI Auth", { event: "AuthStateChange", message: AuthState.SignIn });
   };
 
-  const onReload = () => { window.location.reload() }
-
   return (
     <Fragment>
       {!user && <Nav hideMenu title="Almost there..." />}
       <AmplifyAuthContainer>
-      <Button
-        type="primary"
-        onClick={onReload}
-      >
-        Reload
-      </Button>
       <AmplifyAuthenticator>
       {authState !== 'signin' && 
         <AmplifySection slot="sign-up">
