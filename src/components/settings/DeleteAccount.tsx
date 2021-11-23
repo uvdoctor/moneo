@@ -60,12 +60,12 @@ export default function DeleteAccount() {
 		}
 	};
 
-	const deleteHoldings = async () => {
+	const deleteHoldings = async (uname: string) => {
 		try {
-			const holdings = await loadHoldings();
+			const holdings = await loadHoldings(uname);
 			if (holdings) {
 				const result = await API.graphql(
-					graphqlOperation(mutations.deleteHoldings, { input: { id: holdings.id } })
+					graphqlOperation(mutations.deleteUserHoldings, { input: { uname: holdings.uname } })
 				);
 				console.log(result);
 			}
@@ -82,7 +82,7 @@ export default function DeleteAccount() {
 					if (!success) return;
 					const user = await Auth.currentAuthenticatedUser();
 					await deleteGoal();
-					await deleteHoldings();
+					await deleteHoldings(user?.username);
 					await deleteFamilyList();
 					user.attributes.profile ? await Storage.remove(user.attributes.profile) : null;
 					goalImgKey ? await Storage.remove(goalImgKey) : null;
