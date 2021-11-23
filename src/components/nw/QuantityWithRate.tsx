@@ -2,7 +2,7 @@ import { InputNumber } from 'antd';
 import React, { Fragment, useContext } from 'react';
 import { AppContext } from '../AppContext';
 import { toCurrency } from '../utils';
-import { NPS_TAB, NWContext, PM_TAB } from './NWContext';
+import { TAB, NWContext, } from './NWContext';
 import { getCommodityRate, getCryptoRate } from './nwutils';
 
 interface QuantityWithRateProps {
@@ -16,7 +16,7 @@ export default function QuantityWithRate({ quantity, subtype, name, onChange }: 
     const { ratesData }: any = useContext(AppContext);
     
     const getRate = (subtype: string, name: string) => {
-		if(childTab===NPS_TAB) {
+		if(childTab===TAB.NPS) {
 			const price = npsData.find((item:any) => item.id === name);
 			if(price) return price.price;
 			}
@@ -34,7 +34,7 @@ export default function QuantityWithRate({ quantity, subtype, name, onChange }: 
 				step={0.1}
 				size='small'
 			/>
-			{` ${childTab === PM_TAB ? ` grams` : ''} x ${toCurrency(getRate(subtype, name), selectedCurrency)} = ${toCurrency(
+			{` ${childTab === TAB.PM ? ` grams` : ''} x ${toCurrency(getRate(subtype, name), selectedCurrency)} = ${toCurrency(
 				quantity * getRate(subtype, name),
 				selectedCurrency
 			)}`}
