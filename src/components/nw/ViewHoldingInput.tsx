@@ -63,7 +63,7 @@ export default function ViewHoldingInput({
 		changeData([ ...data ]);
 	};
 
-	const changeSubtype = (subtype: string) => {
+	const changeCategory = (subtype: string) => {
 		record.subt = subtype;
 		if(subCategoryOptions) {
 			let opts = subCategoryOptions[subtype];
@@ -72,7 +72,7 @@ export default function ViewHoldingInput({
 		changeData([ ...data ]);
 	};
 
-	const changePurity = (purity: string) => {
+	const changeSubCategory = (purity: string) => {
 		record.name = purity;
 		changeData([ ...data ]);
 	};
@@ -93,7 +93,7 @@ export default function ViewHoldingInput({
 					pre=""
 					value={( childTab === PPF_TAB || childTab === DEPO_TAB || childTab === ML_TAB ) ? record.chgF as number : record.subt as string}
 					options={categoryOptions}
-					changeHandler={(val: string) => changeSubtype(val)}
+					changeHandler={(val: string) => changeCategory(val)}
 				/>
 			{subCategoryOptions ? subCategoryOptions[record.subt as string] && (	
 				<Fragment>&nbsp;
@@ -101,7 +101,7 @@ export default function ViewHoldingInput({
 						pre=""
 						value={record.name as string}
 						options={subCategoryOptions[record.subt as string]}
-						changeHandler={(val: string) => changePurity(val)}
+						changeHandler={(val: string) => changeSubCategory(val)}
 						post={record.subt === AssetSubType.Gold ? 'karat' : ''}
 					/>
 				</Fragment>)
@@ -157,24 +157,22 @@ export default function ViewHoldingInput({
 						}
 					</Col>}
 				{(activeTab === LOAN_TAB || activeTab === INS_TAB) &&
-					 <Col>
-					 <SelectInput
+					<Col>
+					 	<SelectInput
 							 pre={'Installment Type'}
 							 value={record.chgF as number}
 							 options={{ 1: 'Yearly', 12: 'Monthly' }}
-							 changeHandler={changeYearly}
-						 />
-						 &nbsp;
-						 <label>No. of installment</label>
-						 <InputNumber
-							 min={1}
-							 max={1000}
+							 changeHandler={changeYearly}/>&nbsp;
+						<label>No. of installment</label>
+						<InputNumber
+							min={1}
+							max={1000}
 							// @ts-ignore
-							 value={record.pur[0].amt as number}
-							 onChange={changeInstallmet}
-							 step={1}
-						 />
-				 </Col> }
+							value={record.pur[0].amt as number}
+							onChange={changeInstallmet}
+							step={1}
+						/>
+				 	</Col>}
 			</Fragment>
 	);
 }

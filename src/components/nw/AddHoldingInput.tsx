@@ -18,7 +18,6 @@ import {
 	OTHER_TAB,
 	PM_TAB,
 	PPF_TAB,
-	SAV_TAB,
 	VEHICLE_TAB,
 	VPF_TAB
 } from './NWContext';
@@ -107,19 +106,8 @@ export default function AddHoldingInput({
 				newRec.subt = subtype;
 				break;
 		}
-		if (activeTab === INS_TAB) {
-			newRec.subt = subtype;
-			newRec.chgF = Number(chgF);
-			newRec.pur = [
-				{
-					amt: amount,
-					month: 1,
-					year: 1,
-					qty: 1
-				}
-			]
-		}
-		if (activeTab === LOAN_TAB ){
+		if (activeTab === INS_TAB) newRec.subt = subtype;
+		if (activeTab === LOAN_TAB || activeTab === INS_TAB){
 			newRec.chgF = Number(chgF);
 			newRec.pur = [
 				{
@@ -198,7 +186,7 @@ export default function AddHoldingInput({
 			}
 		}
 		let rec = getNewRec();
-		childTab === SAV_TAB ? (rec.curr = subtype) : (rec.subt = subtype);
+		rec.subt = subtype;
 		return rec;
 	};
 
@@ -282,7 +270,7 @@ export default function AddHoldingInput({
 							post={
 								childTab === PPF_TAB ? (
 									'(Annually)'
-								) : childTab === EPF_TAB || childTab === VPF_TAB ? (
+								) : (childTab === EPF_TAB || childTab === VPF_TAB) ? (
 									'(Monthly)'
 								) : (
 									''
