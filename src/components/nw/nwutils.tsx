@@ -43,22 +43,12 @@ export const loadAllFamilyMembers = async () => {
   return Object.keys(familyList).length ? familyList : null;
 };
 
-export const loadHoldings = async () => {
-  const {
-    data: { listHoldingss },
-  } = (await API.graphql(graphqlOperation(queries.listHoldingss))) as {
-    data: APIt.ListHoldingssQuery;
+export const loadHoldings = async (uname: string) => {
+  const { data: { getUserHoldings }} = 
+    await API.graphql(graphqlOperation(queries.getUserHoldings, { uname: uname })) as {
+    data: APIt.GetUserHoldingsQuery;
   };
-  const id = listHoldingss?.items[0].id;
-  if(id) {
-    const { data: { getHoldings }} = 
-      await API.graphql(graphqlOperation(queries.getHoldings, { id: id })) as {
-      data: APIt.GetHoldingsQuery;
-    };
-    return getHoldings ? getHoldings : null;
-  }else{
-    return null;
-  }
+  return getUserHoldings ? getUserHoldings : null;
 };
 
 export const addFamilyMember = async (name: string, taxId: string) => {
@@ -137,28 +127,28 @@ export const updateFamilyMember = async (member: APIt.UpdateFamilyInput) => {
   }
 };
 
-export const addHoldings = async (holdings: APIt.CreateHoldingsInput) => {
+export const addHoldings = async (holdings: APIt.CreateUserHoldingsInput) => {
   try {
     const { data } = (await API.graphql(
-      graphqlOperation(mutations.createHoldings, { input: holdings })
+      graphqlOperation(mutations.createUserHoldings, { input: holdings })
     )) as {
-      data: APIt.CreateHoldingsMutation;
+      data: APIt.CreateUserHoldingsMutation;
     };
-    return data.createHoldings as APIt.CreateHoldingsInput;
+    return data.createUserHoldings as APIt.CreateUserHoldingsInput;
   } catch (e) {
     console.log("Error while adding holdings: ", e);
     return null;
   }
 };
 
-export const updateHoldings = async (holdings: APIt.UpdateHoldingsInput) => {
+export const updateHoldings = async (holdings: APIt.UpdateUserHoldingsInput) => {
   try {
     const { data } = (await API.graphql(
-      graphqlOperation(mutations.updateHoldings, { input: holdings })
+      graphqlOperation(mutations.updateUserHoldings, { input: holdings })
     )) as {
-      data: APIt.UpdateHoldingsMutation;
+      data: APIt.UpdateUserHoldingsMutation;
     };
-    return data.updateHoldings as APIt.UpdateHoldingsInput;
+    return data.updateUserHoldings as APIt.UpdateUserHoldingsInput;
   } catch (e) {
     console.log("Error while updating holdings: ", e);
     return null;
@@ -166,7 +156,7 @@ export const updateHoldings = async (holdings: APIt.UpdateHoldingsInput) => {
 };
 
 export const getRelatedCurrencies = (
-  holdings: APIt.CreateHoldingsInput | null,
+  holdings: APIt.CreateUserHoldingsInput | null,
   defaultCurrency: string
 ) => {
   let currencyList: any = { [defaultCurrency]: defaultCurrency };

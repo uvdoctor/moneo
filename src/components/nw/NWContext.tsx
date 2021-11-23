@@ -22,7 +22,7 @@ import { notification } from 'antd';
 import {
 	AssetSubType,
 	AssetType,
-	CreateHoldingsInput,
+	CreateUserHoldingsInput,
 	CreateNPSInput,
 	HoldingInput,
 	INBond,
@@ -30,7 +30,7 @@ import {
 	INMutual,
 	InsType,
 	PropertyInput,
-	UpdateHoldingsInput
+	UpdateUserHoldingsInput
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
 import { includesAny, initOptions } from '../utils';
@@ -72,7 +72,7 @@ export const LOAN_TAB = 'Loans';
 export const INS_TAB = 'Insurance';
 
 function NWContextProvider() {
-	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData }: any = useContext(AppContext);
+	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData, user }: any = useContext(AppContext);
 	const [ allFamily, setAllFamily ] = useState<any | null>(null);
 	const [ instruments, setInstruments ] = useState<Array<HoldingInput>>([]);
 	const [ preciousMetals, setPreciousMetals ] = useState<Array<HoldingInput>>([]);
@@ -128,7 +128,7 @@ function NWContextProvider() {
 	const [ results, setResults ] = useState<Array<any>>([]);
 	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
 	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
-	const [ id, setId ] = useState<string | null | undefined>(null);
+	const [ uname, setUname ] = useState<string | null | undefined>(user?.username);
 	const [ childTab, setChildTab ] = useState<string>('');
 	const [ npsData, setNPSData] = useState<Array<CreateNPSInput>>([]);
 
@@ -418,17 +418,17 @@ function NWContextProvider() {
 
 	const initializeHoldings = async () => {
 		initializeFamilyList();
-		let allHoldings: CreateHoldingsInput | null = null;
+		let allHoldings: CreateUserHoldingsInput | null = null;
 		try {
-			allHoldings = await loadHoldings();
+			allHoldings = await loadHoldings(user?.username);
 		} catch (err) {
 			notification.error({ message: 'Holdings not loaded', description: 'Sorry! Unable to fetch holdings.' });
 		}
 		let currencyList = getRelatedCurrencies(allHoldings, defaultCurrency);
 		setSelectedCurrency(Object.keys(currencyList)[0]);
 		setCurrencyList(currencyList);
-		setId(allHoldings?.id);
-		if(allHoldings?.id && allHoldings?.instruments?.length) 
+		setUname(allHoldings?.uname);
+		if(allHoldings?.uname && allHoldings?.instruments?.length) 
 			await initializeInsData(allHoldings?.instruments);
 		setInstruments([ ...(allHoldings?.instruments ? allHoldings.instruments : []) ]);
 		setPreciousMetals([ ...(allHoldings?.pm ? allHoldings.pm : []) ]);
@@ -582,7 +582,7 @@ function NWContextProvider() {
 	};
 
 	const saveHoldings = async () => {
-		let updatedHoldings: CreateHoldingsInput = {};
+		let updatedHoldings: CreateUserHoldingsInput = { uname: user?.username };
 		updatedHoldings.instruments = instruments;
 		updatedHoldings.savings = savings;
 		updatedHoldings.deposits = deposits;
@@ -598,9 +598,9 @@ function NWContextProvider() {
 		updatedHoldings.other = others;
 		updatedHoldings.nps = nps;
 		updatedHoldings.crypto = crypto;
-		if(id) updatedHoldings.id = id;
+		if(uname) updatedHoldings.uname = uname;
 		try {
-			if(id) await updateHoldings(updatedHoldings as UpdateHoldingsInput);
+			if(uname) await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
 			else await addHoldings(updatedHoldings);
 			notification.success({message: 'Data saved', description: 'All holdings data has been saved.'})
 		} catch(e) {
