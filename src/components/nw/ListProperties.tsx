@@ -111,8 +111,7 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 				</Col>
 				<Col>
 					<TextInput pre={''} 
-					// @ts-ignore
-					value={data[i].pin} 
+					value={String(data[i].pin)}  
 					changeHandler={(val: string) => {changePin(val, i)}} 
 					size={'middle'}/>
 				</Col>
@@ -127,8 +126,7 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 			<Row justify='space-between'><h3>Own By:-</h3>
 				{owners && owners.map((own: OwnershipInput, ind: number) => {
 					return(
-						// eslint-disable-next-line react/jsx-key
-						<Col>
+						<Col key={`owners-${ind}`}>
 							<SelectInput
 								pre={<UserOutlined />}
 								value={own.fId as string}

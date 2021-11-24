@@ -77,18 +77,17 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 		setAmount(amt);
 		disableOk(amt <= 0);
 		let rec = getNewRec();
-		// @ts-ignore
-		rec.purchase.amt = amt;
+		rec.purchase ? rec.purchase.amt = amt : '';
 		setInput(rec);
 	};
 
 	const changePurchaseDate = (val: any) => {
 		setPurchaseDate(val);
 		let rec = getNewRec();
-		// @ts-ignore
-		rec.purchase.year = Number(val.slice(0, val.indexOf('-')));
-		// @ts-ignore
-		rec.purchase.month = Number(val.slice(val.indexOf('-') + 1));
+		if(rec.purchase) {
+			rec.purchase.year = Number(val.slice(0, val.indexOf('-')));
+			rec.purchase.month = Number(val.slice(val.indexOf('-') + 1));
+		}
 		setInput(rec);
 	};
 
