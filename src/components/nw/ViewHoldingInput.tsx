@@ -76,8 +76,8 @@ export default function ViewHoldingInput({
 		if (record.pur) {
 			record.pur[0].month = Number(val.slice(0, val.indexOf('-')));
 			record.pur[0].year = Number(val.slice(val.indexOf('-') + 1));
+			changeData([ ...data ])
 		}
-		changeData([ ...data ])
 	};
 
 	const isLiability = (childTab: string) => [LOAN, INS].includes(childTab);
@@ -125,7 +125,7 @@ export default function ViewHoldingInput({
 						quantity={record.qty} 
 						name={record.name as string} 
 						subtype={record.subt as string} 
-						onChange={changeQty} />
+						onChange={(val: number)=>changeQty(val)} />
 				</Col> :
 				<Col>
 				<NumberInput
@@ -134,7 +134,7 @@ export default function ViewHoldingInput({
 					max={100000000}
 					// @ts-ignore
 					value={(childTab === VEHICLE || childTab === ML || childTab === DEPO) ? record.pur && record.pur[0].amt : record.qty}
-					changeHandler={changeQty}
+					changeHandler={(val: number)=>changeQty(val)}
 					currency={record.curr as string}
 					step={1}
 					noSlider />
@@ -144,7 +144,7 @@ export default function ViewHoldingInput({
 				<Col>
 					<label>Rate</label>&nbsp;
 					<InputNumber
-						onChange={changeChg}
+						onChange={(val: number)=>changeChg(val)}
 						min={1}
 						max={50}
 						value={record.chg as number}
@@ -157,12 +157,13 @@ export default function ViewHoldingInput({
 					picker="month"
 					title={'Date'}
 					changeHandler={(val:string)=>changePurchaseDate(val)}
-					// @ts-ignore
 					defaultVal={`${record.pur[0]?.year}-${record.pur[0]?.month}` as string}
 					size={'middle'}
 				/> }&nbsp;&nbsp;
 				{hasDuration(childTab) && 
-					<><label>Duration</label><InputNumber onChange={changeDuration} value={record.pur[0].qty as number} /></>}
+					<><label>Duration</label><InputNumber 
+						onChange={(val: number)=>changeDuration(val)} 
+						value={record.pur[0].qty as number} /></>}
 			</Col>}
 			{isLiability(childTab) &&
 				<Col>
@@ -170,14 +171,14 @@ export default function ViewHoldingInput({
 						pre={'Installment Type'}
 						value={record.chgF as number}
 						options={{ 1: 'Yearly', 12: 'Monthly' }}
-						changeHandler={changeYearly}/>&nbsp;
+						changeHandler={(val: any)=>changeYearly(val)}/>&nbsp;
 					<label>No. of installment</label>
 					<InputNumber
 						min={1}
 						max={1000}
 						// @ts-ignore
 						value={record.pur ? record.pur[0].amt as number : 0}
-						onChange={changeInstallmet}
+						onChange={(val: number)=>changeInstallmet(val)}
 						step={1}
 					/>
 				</Col>}
