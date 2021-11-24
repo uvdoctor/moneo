@@ -380,7 +380,10 @@ function NWContextProvider() {
 
 	const initializeFamilyList = async () => {
 		try {
-			setAllFamily(await loadAllFamilyMembers());
+			let allFamilyMembers = await loadAllFamilyMembers();
+			let allFamilyKeys = Object.keys(allFamilyMembers);
+			if(allFamilyKeys.length === 1) setSelectedMembers([...[allFamilyKeys[0]]]);
+			setAllFamily(allFamilyMembers);
 			setLoadingFamily(false);
 		} catch (err) {
 			notification.error({
