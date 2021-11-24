@@ -23,22 +23,17 @@ export default function ViewHoldingInput({
 	subCategoryOptions,
 	record,
 }: ViewHoldingInputProps) {
-	const { childTab, activeTab }: any = useContext(NWContext);
+	const { childTab }: any = useContext(NWContext);
 	const { PM, CRYPTO, DEPO, ML, NPS, PPF, EPF, VPF, VEHICLE, LOAN, INS } = TAB;
-	const pur = record.pur ? record.pur : null ;
 
 	const changeDuration = (val: any) => {
-		if(pur) { 
-			pur[0].qty = val;
-			changeData([ ...data ]);
-		}
+		record.pur ? record.pur[0].qty = val : '';
+		changeData([ ...data ]);
 	};
 
 	const changeInstallmet = (val: number) => {
-		if(pur) { 
-			pur[0].amt = val;
-			changeData([ ...data ]);
-		}
+		record.pur ? record.pur[0].amt = val : '' ;
+		changeData([ ...data ]);
 	};
 
 	const changeName = (val: any) => {
@@ -47,11 +42,8 @@ export default function ViewHoldingInput({
 	};
 	
 	const changeQty = (quantity: number) => {
-		if(pur){
-			if(childTab === VEHICLE ) pur[0].amt = quantity;
-			else record.qty = quantity;
-			changeData([ ...data ]);
-		}
+		(record.pur && (childTab === VEHICLE )) ? record.pur[0].amt = quantity : record.qty = quantity;
+		changeData([ ...data ]);
 	};
 
 	const changeChg = (chg: number) => {
@@ -79,14 +71,14 @@ export default function ViewHoldingInput({
 	};
 
 	const changePurchaseDate = (val: string) => {
-		if (pur) {
-			pur[0].month = Number(val.slice(0, val.indexOf('-')));
-			pur[0].year = Number(val.slice(val.indexOf('-') + 1));
-			changeData([ ...data ])
+		if (record.pur) {
+			record.pur[0].month = Number(val.slice(0, val.indexOf('-')));
+			record.pur[0].year = Number(val.slice(val.indexOf('-') + 1));
 		}
+		changeData([ ...data ])
 	};
 
-	const isLiability = (activeTab: string) => [LOAN, INS].includes(activeTab);
+	const isLiability = (childTab: string) => [LOAN, INS].includes(childTab);
 
 	const hasRate = (childTab: string) => [PPF, VPF, EPF, ML, DEPO].includes(childTab);
 
@@ -120,12 +112,12 @@ export default function ViewHoldingInput({
 				</Fragment>)
 				: null}
 			</Col>}
-			{(hasName(childTab) || isLiability(activeTab))&& 
+			{hasName(childTab) && 
 				<Col>
 				<TextInput pre="Name" changeHandler={(val: string)=>changeName(val)} value={record.name as string} size={'small'} />
 				</Col>
 			}
-			{(hasQtyWithRate(childTab) && !isLiability(activeTab)) ?
+			{hasQtyWithRate(childTab) ?
 				<Col>
 					<QuantityWithRate 
 						quantity={record.qty} 
@@ -146,7 +138,7 @@ export default function ViewHoldingInput({
 					noSlider />
 				</Col>
 			}
-			{(hasRate(childTab) || !isLiability(activeTab)) && 
+			{hasRate(childTab) && 
 				<Col>
 					<label>Rate</label>&nbsp;
 					<InputNumber
@@ -156,7 +148,7 @@ export default function ViewHoldingInput({
 						value={record.chg as number}
 						step={0.1} />
 				</Col>}
-			{record.pur && !isLiability(activeTab) && 
+			{record.pur && 
 			<Col>
 				{hasDate(childTab) && 
 				<DatePickerInput
@@ -170,7 +162,7 @@ export default function ViewHoldingInput({
 				{hasDuration(childTab) && 
 					<><label>Duration</label><InputNumber onChange={changeDuration} value={record.pur[0].qty as number} /></>}
 			</Col>}
-			{isLiability(activeTab) &&
+			{isLiability(childTab) &&
 				<Col>
 					<SelectInput
 						pre={'Installment Type'}
@@ -182,7 +174,7 @@ export default function ViewHoldingInput({
 						min={1}
 						max={1000}
 						// @ts-ignore
-						value={record.pur[0].amt as number}
+						value={record.pur ? record.pur[0].amt as number : 0}
 						onChange={changeInstallmet}
 						step={1}
 					/>

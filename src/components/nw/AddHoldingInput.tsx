@@ -23,7 +23,7 @@ export default function AddHoldingInput({
 	categoryOptions,
 	subCategoryOptions
 }: AddHoldingInputProps) {
-	const { allFamily, childTab, selectedMembers, selectedCurrency, activeTab }: any = useContext(NWContext);
+	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const { PM, CRYPTO, DEPO, ML, OTHER, NPS, PPF, EPF, VPF, VEHICLE, LOAN, INS } = TAB;
 	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
 	const [ name, setName ] = useState<string>(childTab === ML || childTab === DEPO ? '' : subCategoryOptions ? Object.keys(subCategoryOptions[category])[0] : '');
@@ -36,7 +36,7 @@ export default function AddHoldingInput({
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
-		switch (childTab || activeTab) {
+		switch (childTab) {
 			case INS:
 			case LOAN:
 				newRec.chgF = Number(frequency);
@@ -76,7 +76,7 @@ export default function AddHoldingInput({
 				newRec.fId = memberKey;
 				break;
 		}
-		if (activeTab === INS) newRec.subt = category;			
+		if (childTab === INS) newRec.subt = category;			
 		childTab === PM || childTab === CRYPTO ? (newRec.curr = 'USD') : (newRec.curr = selectedCurrency);
 		return newRec;
 	};
@@ -152,7 +152,7 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const isLiability = (activeTab: string) => [LOAN, INS].includes(activeTab);
+	const isLiability = (childTab: string) => [LOAN, INS].includes(childTab);
 
 	const hasRate = (childTab: string) => [PPF, VPF, EPF, ML, DEPO].includes(childTab);
 
@@ -190,28 +190,27 @@ export default function AddHoldingInput({
 			</p>
 			<p>
 				<Row justify="center">
-					{(hasName(childTab) || isLiability(activeTab)) && <TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} />}
-					{(hasQtyWithRate(childTab) && !isLiability(activeTab)) ? 
+					{hasName(childTab) && <TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} />}
+					{hasQtyWithRate(childTab) ? 
 						<QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={name}/>
 					: <NumberInput pre={'Amount'} min={0} max={10000} value={qty} changeHandler={changeQty}
 						currency={selectedCurrency} step={1} noSlider/>
 					}
 				</Row>
 			</p>
-			{ !isLiability(activeTab) && <p>
-				{hasDate(childTab) &&
+			{hasDate(childTab) && <p>
 					<DatePickerInput picker="month" title={'Date'} changeHandler={changeDate}
 							defaultVal={date} size={'middle'} />
-				}&nbsp;&nbsp;
+					&nbsp;&nbsp;
 				{hasDuration(childTab) && 
 					<><label>Duration</label><InputNumber onChange={changeDuration} value={duration} /></>
 				}
 			</p> }
-			{!isLiability(activeTab) && hasRate(childTab) && <p>
+			{hasRate(childTab) && <p>
 				<label>Rate</label>&nbsp;
 				<InputNumber onChange={changeRate} min={1} max={50} value={rate} step={0.1} />
 			</p>}
-			{isLiability(activeTab) && 
+			{isLiability(childTab) && 
 				<p>
 					<SelectInput
 						pre={'Installment Type'}
