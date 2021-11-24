@@ -682,9 +682,9 @@ function NWContextProvider() {
 		deposits.forEach((deposit: HoldingInput)=>{
 			if(deposit && doesHoldingMatch(deposit, selectedMembers, selectedCurrency)) {
 				// @ts-ignore
-				const years = getDuration(lending.pur[0].year, lending.pur[0].month);
+				const years = getDuration(deposit.pur[0].year, deposit.pur[0].month);
 				// @ts-ignore
-				const value = getCompoundedIncome(lending.chg, lending.pur[0].amt, years, lending.chgF );
+				const value = getCompoundedIncome(deposit.chg, deposit.pur[0].amt, years, deposit.chgF );
 				total+=value;
 			};
 		})
