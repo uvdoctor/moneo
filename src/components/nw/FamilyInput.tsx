@@ -27,10 +27,6 @@ export default function FamilyInput() {
         setSelectedMembers([...allFamily ? Object.keys(allFamily).length > 1 ? [ALL_FAMILY] : [allFamily[0] && Object.keys(allFamily[0])]: []]);
     }, [loadingFamily]);
 
-    const initMemberOpts = () => {
-        ;
-    };
-
 	useEffect(() => {
         if(!allFamily) {
             setSelectedMembers([...[]]);
