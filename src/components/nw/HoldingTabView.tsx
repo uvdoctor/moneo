@@ -78,7 +78,6 @@ export default function HoldingTabView() {
 											/>
 										</Col>
 									</Row>
-									{activeTab}
 									{!loadingHoldings ? tabsData[tabName].data.length ? tabsData[tabName]
 										.contentComp ? (
 										tabsData[tabName].contentComp
