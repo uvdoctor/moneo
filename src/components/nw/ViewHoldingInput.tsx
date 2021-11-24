@@ -42,9 +42,8 @@ export default function ViewHoldingInput({
 	};
 	
 	const changeQty = (quantity: number) => {
-		if(record.pur){
-			if (childTab === VEHICLE || childTab === ML || childTab === DEPO) record.pur[0].amt = quantity;
-		} else { record.qty = quantity };
+		if(record.pur) record.pur[0].amt = quantity;
+		else record.qty = quantity;
 		changeData([ ...data ]);
 	};
 
@@ -132,7 +131,7 @@ export default function ViewHoldingInput({
 					pre={'Amount'}
 					min={10}
 					max={100000000}
-					value={(record.pur && (childTab === VEHICLE || childTab === ML || childTab === DEPO)) ? record.pur[0].amt : record.qty}
+					value={record.pur ? record.pur[0].amt : record.qty}
 					changeHandler={(val: number)=>changeQty(val)}
 					currency={record.curr as string}
 					step={1}
