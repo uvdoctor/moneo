@@ -29,6 +29,7 @@ export default function ListHoldings({ data, changeData, categoryOptions, viewCo
 
 	return (
 		<Row>
+			{console.log(data)}
 			{data &&
 				data[0] &&
 				data.map((holding: HoldingInput, i: number) => (

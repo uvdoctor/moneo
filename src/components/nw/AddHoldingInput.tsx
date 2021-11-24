@@ -191,7 +191,7 @@ export default function AddHoldingInput({
 			<p>
 				<Row justify="center">
 					{(hasName(childTab) || isLiability(activeTab)) && <TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} />}
-					{(hasQtyWithRate(childTab) || !isLiability(activeTab)) ? 
+					{(hasQtyWithRate(childTab) && !isLiability(activeTab)) ? 
 						<QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={name}/>
 					: <NumberInput pre={'Amount'} min={0} max={10000} value={qty} changeHandler={changeQty}
 						currency={selectedCurrency} step={1} noSlider/>
