@@ -350,27 +350,32 @@ function NWContextProvider() {
 				}, 
 			}
 		},
-		[TAB.LOAN] : {
-			label: TAB.LOAN,
-			data: loans,
-			setData: setLoans,
-			total: totalLoans,
-			viewComp: ViewHoldingInput,
-		},
-		[TAB.INS]: {
-			label: TAB.INS,
-			data: insurance,
-			total: totalInsurance,
-			setData: setInsurance,
-			categoryOptions: {
-				L: 'Life',
-				H: 'Health',
-				P: 'Property',
-				V: 'Vehicle',
-				O: 'Other'
-			},
-			viewComp: ViewHoldingInput
-		},
+		Liabilities: {
+			label: 'Liabilities',
+			children: {
+				[TAB.LOAN] : {
+					label: TAB.LOAN,
+					data: loans,
+					setData: setLoans,
+					total: totalLoans,
+					viewComp: ViewHoldingInput,
+				},
+				[TAB.INS]: {
+					label: TAB.INS,
+					data: insurance,
+					total: totalInsurance,
+					setData: setInsurance,
+					categoryOptions: {
+						L: 'Life',
+						H: 'Health',
+						P: 'Property',
+						V: 'Vehicle',
+						O: 'Other'
+					},
+					viewComp: ViewHoldingInput
+				},
+			}
+		}
 	};
 
 	const initializeFamilyList = async () => {
