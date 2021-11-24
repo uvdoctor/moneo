@@ -120,12 +120,12 @@ export default function ViewHoldingInput({
 				</Fragment>)
 				: null}
 			</Col>}
-			{hasName(childTab) && 
+			{(hasName(childTab) || isLiability(activeTab))&& 
 				<Col>
 				<TextInput pre="Name" changeHandler={(val: string)=>changeName(val)} value={record.name as string} size={'small'} />
 				</Col>
 			}
-			{hasQtyWithRate(childTab) ?
+			{(hasQtyWithRate(childTab) || !isLiability(activeTab)) ?
 				<Col>
 					<QuantityWithRate 
 						quantity={record.qty} 
@@ -146,7 +146,7 @@ export default function ViewHoldingInput({
 					noSlider />
 				</Col>
 			}
-			{hasRate(childTab) && 
+			{(hasRate(childTab) || !isLiability(activeTab)) && 
 				<Col>
 					<label>Rate</label>&nbsp;
 					<InputNumber
@@ -156,7 +156,7 @@ export default function ViewHoldingInput({
 						value={record.chg as number}
 						step={0.1} />
 				</Col>}
-			{record.pur && !activeTab && 
+			{record.pur && !isLiability(activeTab) && 
 			<Col>
 				{hasDate(childTab) && 
 				<DatePickerInput

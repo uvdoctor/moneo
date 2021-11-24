@@ -190,15 +190,15 @@ export default function AddHoldingInput({
 			</p>
 			<p>
 				<Row justify="center">
-					{hasName(childTab) && <TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} />}
-					{hasQtyWithRate(childTab) ? 
+					{(hasName(childTab) || isLiability(activeTab)) && <TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} />}
+					{(hasQtyWithRate(childTab) || !isLiability(activeTab)) ? 
 						<QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={name}/>
 					: <NumberInput pre={'Amount'} min={0} max={10000} value={qty} changeHandler={changeQty}
 						currency={selectedCurrency} step={1} noSlider/>
 					}
 				</Row>
 			</p>
-			{ !activeTab && <p>
+			{ !isLiability(activeTab) && <p>
 				{hasDate(childTab) &&
 					<DatePickerInput picker="month" title={'Date'} changeHandler={changeDate}
 							defaultVal={date} size={'middle'} />
@@ -207,7 +207,7 @@ export default function AddHoldingInput({
 					<><label>Duration</label><InputNumber onChange={changeDuration} value={duration} /></>
 				}
 			</p> }
-			{!activeTab && hasRate(childTab) && <p>
+			{!isLiability(activeTab) && hasRate(childTab) && <p>
 				<label>Rate</label>&nbsp;
 				<InputNumber onChange={changeRate} min={1} max={50} value={rate} step={0.1} />
 			</p>}
