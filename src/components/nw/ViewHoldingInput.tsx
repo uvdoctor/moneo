@@ -27,12 +27,12 @@ export default function ViewHoldingInput({
 	const { PM, CRYPTO, DEPO, ML, NPS, PPF, EPF, VPF, VEHICLE, LOAN, INS } = TAB;
 
 	const changeDuration = (val: any) => {
-		record.pur ? record.pur[0].qty = val : '';
+		if(record.pur) record.pur[0].qty = val;
 		changeData([ ...data ]);
 	};
 
 	const changeInstallmet = (val: number) => {
-		record.pur ? record.pur[0].amt = val : '' ;
+		if(record.pur) record.pur[0].amt = val;
 		changeData([ ...data ]);
 	};
 
@@ -42,7 +42,9 @@ export default function ViewHoldingInput({
 	};
 	
 	const changeQty = (quantity: number) => {
-		(record.pur && (childTab === VEHICLE )) ? record.pur[0].amt = quantity : record.qty = quantity;
+		if(record.pur){
+			if (childTab === VEHICLE ) record.pur[0].amt = quantity
+		} else record.qty = quantity;
 		changeData([ ...data ]);
 	};
 
