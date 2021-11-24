@@ -24,6 +24,7 @@ export default function FamilyInput() {
 
     useEffect(() => {
         if(loadingFamily) return;
+        setMemberKeys([...Object.keys(allFamily)]);
         setSelectedMembers([...allFamily ? Object.keys(allFamily).length > 1 ? [ALL_FAMILY] : [allFamily[0] && Object.keys(allFamily[0])]: []]);
     }, [loadingFamily]);
 
