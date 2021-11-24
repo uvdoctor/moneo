@@ -73,8 +73,8 @@ export default function ViewHoldingInput({
 		changeData([ ...data ]);
 	};
 
-	const changeSubCategory = (purity: string) => {
-		record.name = purity;
+	const changeSubCategory = (val: string) => {
+		(childTab === ML || childTab === DEPO ) ? record.chgF = Number(val) : record.name = val;
 		changeData([ ...data ]);
 	};
 
@@ -104,7 +104,7 @@ export default function ViewHoldingInput({
 			<Col>
 				 <SelectInput
 					pre=""
-					value={( childTab === PPF || childTab === DEPO || childTab === ML ) ? record.chgF as number : record.subt as string}
+					value={childTab === PPF ? record.chgF as number : record.subt as string}
 					options={categoryOptions}
 					changeHandler={(val: string) => changeCategory(val)}
 				/>
@@ -112,7 +112,7 @@ export default function ViewHoldingInput({
 				<Fragment>&nbsp;
 					<SelectInput
 						pre=""
-						value={record.name as string}
+						value={(childTab === DEPO || childTab === ML) ? record.chgF as number : record.name as string}
 						options={subCategoryOptions[record.subt as string]}
 						changeHandler={(val: string) => changeSubCategory(val)}
 						post={record.subt === AssetSubType.Gold ? 'karat' : ''}

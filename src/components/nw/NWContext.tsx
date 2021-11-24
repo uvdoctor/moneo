@@ -157,12 +157,12 @@ function NWContextProvider() {
 					data: deposits,
 					setData: setDeposits,
 					total: totalDeposits,
-					categoryOptions: { 
+					categoryOptions: { No : 'Non-Cummulative', Yes: 'Cummulative' },
+					subCategoryOptions:{ Yes: {
 						1: 'Anually',
 						2: 'Bi-Anually',
 						4: 'Quarterly',
-						12: 'Monthly',
-						0: 'Nil' },
+						12: 'Monthly'}},
 					viewComp: ViewHoldingInput
 				},
 				[TAB.SAV]: {
@@ -177,12 +177,12 @@ function NWContextProvider() {
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
-					categoryOptions: { 
+					categoryOptions: { No : 'Non-Cummulative', Yes: 'Cummulative' },
+					subCategoryOptions:{ Yes: {
 						1: 'Anually',
 						2: 'Bi-Anually',
 						4: 'Quarterly',
-						12: 'Monthly',
-						0: 'Nil' },
+						12: 'Monthly'}},
 					viewComp: ViewHoldingInput
 				},
 			}

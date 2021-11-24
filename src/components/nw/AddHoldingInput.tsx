@@ -26,7 +26,7 @@ export default function AddHoldingInput({
 	const { allFamily, childTab, selectedMembers, selectedCurrency, activeTab }: any = useContext(NWContext);
 	const { PM, CRYPTO, DEPO, ML, OTHER, NPS, PPF, EPF, VPF, VEHICLE, LOAN, INS } = TAB;
 	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
-	const [ name, setName ] = useState<string>(subCategoryOptions ? Object.keys(subCategoryOptions[category])[0] : '');
+	const [ name, setName ] = useState<string>(childTab === ML || childTab === DEPO ? '' : subCategoryOptions ? Object.keys(subCategoryOptions[category])[0] : '');
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(0);
@@ -43,8 +43,9 @@ export default function AddHoldingInput({
 				newRec.pur = [ { amt: duration, month: 1, year: 1, qty: 1 } ];
 			case DEPO:
 			case ML:
+				newRec.subt = category;
 				newRec.chg = rate;
-				newRec.chgF = Number(category);
+				newRec.chgF = Number(frequency);
 			case NPS:
 			case OTHER:
 				newRec.subt = category;
@@ -129,7 +130,7 @@ export default function AddHoldingInput({
 			let opts = subCategoryOptions[subtype];
 			if (opts && Object.keys(opts).length && !opts[name]) {
 				let defaultVal: string = Object.keys(opts)[0];
-				setName(defaultVal);
+				childTab === ML || childTab === DEPO ? setName('') : setName(defaultVal); 
 			}
 		}
 		let rec = getNewRec();
@@ -144,8 +145,8 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const changeFrequency = (val: number) => {
-		setFrequency(val);
+	const changeFrequency = (val: string) => {
+		setFrequency(Number(val));
 		let rec = getNewRec();
 		rec.chgF = Number(frequency);
 		setInput(rec);
@@ -179,9 +180,9 @@ export default function AddHoldingInput({
 							&nbsp;
 							<SelectInput
 								pre=""
-								value={name as string}
+								value={(childTab === ML || childTab === DEPO) ? frequency : name as string}
 								options={subCategoryOptions[category as string]}
-								changeHandler={(val: string) => changeName(val)}
+								changeHandler={(val: string) => (childTab === ML || childTab === DEPO) ? changeFrequency(val) : changeName(val)}
 								post={category === AssetSubType.Gold ? 'karat' : ''}
 							/>
 						</Fragment>

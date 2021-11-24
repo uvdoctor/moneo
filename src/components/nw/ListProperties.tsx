@@ -151,7 +151,6 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 							</Button>
 						</Col>
 				</Row>
-				{console.log(data)}
 			</Fragment>
 		)
 	};
