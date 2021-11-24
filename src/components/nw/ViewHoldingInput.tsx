@@ -43,7 +43,7 @@ export default function ViewHoldingInput({
 	
 	const changeQty = (quantity: number) => {
 		if(record.pur){
-			if (childTab === VEHICLE ) record.pur[0].amt = quantity;
+			if (childTab === VEHICLE || childTab === ML || childTab === DEPO) record.pur[0].amt = quantity;
 		} else { record.qty = quantity };
 		changeData([ ...data ]);
 	};
