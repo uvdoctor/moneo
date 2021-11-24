@@ -19,14 +19,14 @@ const utility = (num) => {
       "NOV",
       "DEC",
     ];
-    const todayDate = new Date() - parseInt(num);
-    const monthChar = monthsArray[todayDate.getMonth()];
-    const yearFull = todayDate.getFullYear();
-    const dateStr = getStr(todayDate);
-    const monthStr = getStr(todayDate.getMonth() + 1);
-    const year =
-      todayDate.getYear().toString().charAt(1) + todayDate.getYear().toString().charAt(2);
-    return { dateStr, monthStr, monthChar, year, yearFull };
+    const today = new Date();
+    const customDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - parseInt(num));
+    const monthChar = monthsArray[customDate.getMonth()];
+    const yearFull = customDate.getFullYear();
+    const date = customDate.getDate();
+    const month = getStr(customDate.getMonth() + 1);
+    const year = customDate.getYear().toString().charAt(1) + customDate.getYear().toString().charAt(2);
+    return { date, month, monthChar, year, yearFull };
   };
-  
+
   module.exports = { utility, tempDir, zipFile };
