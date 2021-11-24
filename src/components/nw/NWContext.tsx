@@ -642,7 +642,7 @@ function NWContextProvider() {
 		}
 		let total = 0;
 		vehicles.forEach((vehicle: HoldingInput) => {
-			if(vehicle && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
+			if(vehicle.id && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
 				// @ts-ignore
 				const years = new Date().getFullYear() - vehicle.pur[0].year;
 				// @ts-ignore

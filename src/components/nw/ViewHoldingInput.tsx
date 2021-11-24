@@ -148,16 +148,14 @@ export default function ViewHoldingInput({
 						value={record.chg as number}
 						step={0.1} />
 				</Col>}
-			{record.pur && 
-			<Col>
-				{hasDate(childTab) && 
+			{hasDate(childTab) && record.pur && <Col>
 				<DatePickerInput
 					picker="month"
 					title={'Date'}
 					changeHandler={(val:string)=>changePurchaseDate(val)}
 					defaultVal={`${record.pur[0]?.year}-${record.pur[0]?.month}` as string}
 					size={'middle'}
-				/> }&nbsp;&nbsp;
+				/>&nbsp;&nbsp;
 				{hasDuration(childTab) && 
 					<><label>Duration</label><InputNumber 
 						onChange={(val: number)=>changeDuration(val)} 
