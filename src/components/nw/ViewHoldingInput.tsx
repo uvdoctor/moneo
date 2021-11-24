@@ -43,13 +43,13 @@ export default function ViewHoldingInput({
 	
 	const changeQty = (quantity: number) => {
 		if(record.pur){
-			if (childTab === VEHICLE ) record.pur[0].amt = quantity
+			if (childTab === VEHICLE ) record.pur[0].amt = quantity;
 		} else { record.qty = quantity };
 		changeData([ ...data ]);
 	};
 
 	const changeChg = (chg: number) => {
-		record.qty = chg;
+		record.chg = chg;
 		changeData([ ...data ]);
 	};
 
