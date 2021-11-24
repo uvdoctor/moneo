@@ -308,7 +308,7 @@ function NWContextProvider() {
 		Exotic: {
 			label: 'Exotic',
 			children: {
-				CRYPTO_TAB: {
+				[TAB.CRYPTO]: {
 					label: TAB.CRYPTO,
 					data: crypto,
 					setData: setCrypto,

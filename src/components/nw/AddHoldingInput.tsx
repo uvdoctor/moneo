@@ -206,7 +206,7 @@ export default function AddHoldingInput({
 					<><label>Duration</label><InputNumber onChange={changeDuration} value={duration} /></>
 				}
 			</p> }
-			{hasRate(childTab) && <p>
+			{!activeTab && hasRate(childTab) && <p>
 				<label>Rate</label>&nbsp;
 				<InputNumber onChange={changeRate} min={1} max={50} value={rate} step={0.1} />
 			</p>}

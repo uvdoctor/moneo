@@ -31,6 +31,11 @@ export default function HoldingTabView() {
 	}
 	}, [childTab])
 
+	useEffect(()=>{
+		const children = tabs[activeTab].children ? tabs[activeTab].children : '';
+		children ? setChildTab(Object.keys(children)[0]) : setChildTab('');
+	}, [activeTab])
+
 	function renderTabs(tabsData: any, defaultActiveKey: string, isRoot?: boolean) {
 		return (
 			<Tabs
@@ -40,8 +45,6 @@ export default function HoldingTabView() {
 				onChange={(activeKey) => {
 					if (isRoot) {
 						setActiveTab(activeKey);
-						const children = tabs[activeKey] ? tabs[activeTab].children : '';
-						children ? setChildTab(Object.keys(children)[0]) : setChildTab('');
 					} else setChildTab(activeKey);
 				}}
 			>

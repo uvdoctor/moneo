@@ -80,8 +80,8 @@ export const getDefaultMember = (
   allFamily: any,
   selectedMembers: Array<string>
 ) => {
-  if (!selectedMembers.length || selectedMembers.indexOf(ALL_FAMILY) > -1)
-    return Object.keys(allFamily)[0];
+  if (!selectedMembers[0] || selectedMembers.indexOf(ALL_FAMILY) > -1) {
+    return Object.keys(allFamily)[0];}
   return selectedMembers[0];
 };
 
