@@ -125,7 +125,7 @@ export default function ViewHoldingInput({
 				<TextInput pre="Name" changeHandler={(val: string)=>changeName(val)} value={record.name as string} size={'small'} />
 				</Col>
 			}
-			{(hasQtyWithRate(childTab) || !isLiability(activeTab)) ?
+			{(hasQtyWithRate(childTab) && !isLiability(activeTab)) ?
 				<Col>
 					<QuantityWithRate 
 						quantity={record.qty} 
