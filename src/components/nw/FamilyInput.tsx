@@ -20,22 +20,27 @@ export default function FamilyInput() {
     const [ name, setName ] = useState<string>('');
     const [ taxId, setTaxId ] = useState<string>('');
     const [ error, setError ] = useState<string>('');
-    const [ includeAllOption, setIncludeAllOption ] = useState<boolean>(false);
+    const [ memberKeys, setMemberKeys ] = useState<Array<string>>([]);
 
     useEffect(() => {
         if(loadingFamily) return;
         setSelectedMembers([...allFamily ? Object.keys(allFamily).length > 1 ? [ALL_FAMILY] : [allFamily[0] && Object.keys(allFamily[0])]: []]);
     }, [loadingFamily]);
 
+    const initMemberOpts = () => {
+        ;
+    };
+
 	useEffect(() => {
         if(!allFamily) {
             setSelectedMembers([...[]]);
             return;
         }
-        setIncludeAllOption(Object.keys(allFamily).length > 1);
-        if(Object.keys(allFamily).length === 1) {
-            setSelectedMembers([...[Object.keys(allFamily)[0]]]);
+        let allFamilyKeys = Object.keys(allFamily);
+        if(allFamilyKeys.length === 1) {
+            setSelectedMembers([...[allFamilyKeys[0]]]);
         }
+        setMemberKeys([...allFamilyKeys]);
     }, [ allFamily ]);
 
 	const selectMember = (val: string[]) => {
@@ -106,8 +111,7 @@ export default function FamilyInput() {
 
 	return (
         <Fragment>
-            {selectedMembers.length && selectedMembers[0] ? 
-                <Row align="middle">
+            <Row align="middle">
                     <Col>
                         Family List &nbsp;
                     </Col>
@@ -117,19 +121,19 @@ export default function FamilyInput() {
                         value={selectedMembers}
                         onChange={(val: string[]) => selectMember(val)}
                         showArrow={Object.keys(allFamily).length > 1}
-                        //loading={loadingFamily}
+                        loading={loadingFamily}
                         filterOption={(input, option) =>
                             option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
                         size="middle"
                         maxTagCount={1}
                     >
-                        {Object.keys(allFamily).map((key: string) => (
+                        {memberKeys.map((key: string) => (
                             <Option key={key} value={key}>
                                 {allFamily[key].name}
                             </Option>
                         ))}
-                        {includeAllOption ? 
+                        {memberKeys.length > 1 ? 
                             <Option key={ALL_FAMILY} value={ALL_FAMILY} disabled>
                                 All Members
                             </Option>
@@ -147,10 +151,7 @@ export default function FamilyInput() {
                             <Button type="link" style={{color: COLORS.WHITE}} icon={<EditOutlined />} onClick={() => setMode(EDIT_MODE)} />
                         </Tooltip>
                     </Col> : null}
-                </Row>
-            : <Button icon={<UserAddOutlined />} onClick={() => setMode(ADD_MODE)} /*loading={loadingFamily}*/>
-                Set up Family List
-            </Button>}
+            </Row>
             {mode && 
                 <Modal title={`${mode} Family Member`} visible={mode.length > 0} onCancel={() => setMode('')}
                 onOk={() => mode === ADD_MODE ? addMember() : changeMember()}
@@ -168,7 +169,7 @@ export default function FamilyInput() {
                             value={id}
                             onChange={(val: string) => setId(val)}
                         >
-                            {Object.keys(allFamily).map((key: string) => 
+                            {memberKeys.map((key: string) => 
                                 <Option key={key} value={key}>
                                     {allFamily[key].name}
                                 </Option>
