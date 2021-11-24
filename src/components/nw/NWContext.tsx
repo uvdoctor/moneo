@@ -460,6 +460,12 @@ function NWContextProvider() {
 		setLoadingHoldings(false);
 	};
 
+	const getDuration = (yr: number, mon: number) => {
+		const today = new Date();		
+		const months = ((today.getFullYear() - yr) * 12) + ((today.getMonth()+1) - mon);
+		return Math.round((months/12) * 100) / 100;
+	}
+
 	useEffect(
 		() => {
 			if (appContextLoaded) initializeHoldings();
@@ -619,10 +625,6 @@ function NWContextProvider() {
 		}
 	};
 
-	const priceDeposits = () => {
-		setTotalDeposits(0);
-	};
-
 	const priceLoans = () => {
 		setTotalLoans(0);
 	};
@@ -642,15 +644,51 @@ function NWContextProvider() {
 		}
 		let total = 0;
 		vehicles.forEach((vehicle: HoldingInput) => {
-			if(vehicle.id && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
+			if(vehicle && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
 				// @ts-ignore
-				const years = new Date().getFullYear() - vehicle.pur[0].year;
+				const years = getDuration(vehicle.pur[0].year, vehicle.pur[0].month);
 				// @ts-ignore
-				let value = getCompoundedIncome(-(vehicle.chg), vehicle.pur[0].amt, years) ;
+				const value = getCompoundedIncome(-(vehicle.chg), vehicle.pur[0].amt, years) ;
 				total += value;
 			}
 		})
 		setTotalVehicles(total);
+	};
+
+	const priceLendings = () => {
+		if(!lendings.length){
+			setTotalLendings(0);
+			return;
+		}
+		let total = 0;
+		lendings.forEach((lending: HoldingInput)=>{
+			if(lending && doesHoldingMatch(lending, selectedMembers, selectedCurrency)) {
+				// @ts-ignore
+				const years = getDuration(lending.pur[0].year, lending.pur[0].month);
+				// @ts-ignore
+				const value = getCompoundedIncome(lending.chg, lending.pur[0].amt, years, lending.chgF );
+				total+=value;
+			};
+		})
+		setTotalLendings(total);
+	};
+
+	const priceDeposits = () => {
+		if(!deposits.length){
+			setTotalDeposits(0);
+			return;
+		}
+		let total = 0;
+		deposits.forEach((deposit: HoldingInput)=>{
+			if(deposit && doesHoldingMatch(deposit, selectedMembers, selectedCurrency)) {
+				// @ts-ignore
+				const years = getDuration(lending.pur[0].year, lending.pur[0].month);
+				// @ts-ignore
+				const value = getCompoundedIncome(lending.chg, lending.pur[0].amt, years, lending.chgF );
+				total+=value;
+			};
+		})
+		setTotalDeposits(total);
 	};
 
 	const priceAngel = () => {
@@ -714,10 +752,6 @@ function NWContextProvider() {
 		setTotalNPS(total);
 		setTotalFEquity(totalNPSEquity);
 		setTotalFixed(totalNPSFixed);
-	};
-
-	const priceLendings = () => {
-		setTotalLendings(0);
 	};
 
 	const priceInsurance = () => {

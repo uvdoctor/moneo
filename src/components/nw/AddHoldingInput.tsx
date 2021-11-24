@@ -75,13 +75,13 @@ export default function AddHoldingInput({
 		newRec.qty = qty;
 		newRec.name = name;
 		newRec.fId = memberKey;
-		if(childTab === VEHICLE || childTab === ML || childTab === LOAN) {
+		if(childTab === VEHICLE || childTab === ML || childTab === DEPO) {
 			newRec.pur = [{ amt: qty, 
 							month: Number(date.slice(date.indexOf('-') + 1)),
 							year: Number(date.slice(0, date.indexOf('-'))), 
 							qty: childTab === VEHICLE ? 1 : duration }] }
 		if (childTab === INS) newRec.subt = category;	
-		if(childTab === VEHICLE || childTab === ML || childTab === LOAN) newRec.qty = 0;		
+		if(childTab === VEHICLE || childTab === ML || childTab === DEPO) newRec.qty = 0;		
 		childTab === PM || childTab === CRYPTO ? (newRec.curr = 'USD') : (newRec.curr = selectedCurrency);
 		return newRec;
 	};
