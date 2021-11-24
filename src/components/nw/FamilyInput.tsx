@@ -108,16 +108,16 @@ export default function FamilyInput() {
 
 	return (
         <Fragment>
-            <Row align="middle">
+            {memberKeys.length && <Row align="middle">
                     <Col>
                         Family List &nbsp;
                     </Col>
                     <Col>
-                    <Select showSearch
+                     <Select showSearch
                         mode="multiple"
                         value={selectedMembers}
                         onChange={(val: string[]) => selectMember(val)}
-                        showArrow={Object.keys(allFamily).length > 1}
+                        showArrow={memberKeys.length > 1}
                         loading={loadingFamily}
                         filterOption={(input, option) =>
                             option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -142,13 +142,13 @@ export default function FamilyInput() {
                         <Button type="link" style={{color: COLORS.WHITE}} icon={<UserAddOutlined />} onClick={() => setMode(ADD_MODE)} />
                     </Tooltip>
                     </Col>
-                    {Object.keys(allFamily).length ?
+                    {memberKeys.length ?
                     <Col>
                         <Tooltip title='Edit Family Member'>
                             <Button type="link" style={{color: COLORS.WHITE}} icon={<EditOutlined />} onClick={() => setMode(EDIT_MODE)} />
                         </Tooltip>
                     </Col> : null}
-            </Row>
+            </Row>}
             {mode && 
                 <Modal title={`${mode} Family Member`} visible={mode.length > 0} onCancel={() => setMode('')}
                 onOk={() => mode === ADD_MODE ? addMember() : changeMember()}
