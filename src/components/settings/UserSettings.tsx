@@ -14,13 +14,6 @@ import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
 import { deleteContact, doesEmailExist, doesImExist, doesMobExist, updateImInContact } from "../contactutils";
 import DatePickerInput from "../form/DatePickerInput";
-// import { CognitoIdentityServiceProvider } from "aws-sdk";
-// import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
-// import AWS from "aws-sdk";
-// import awsconfig from '../../aws-exports';
-
-// AWS.config.region = awsconfig.aws_project_region;
-// const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha }: any = useContext(AppContext);

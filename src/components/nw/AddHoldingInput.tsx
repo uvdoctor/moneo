@@ -30,7 +30,7 @@ export default function AddHoldingInput({
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(0);
-	const [ date, setDate ] = useState<string>(`${new Date().getFullYear() - 5}-4`);
+	const [ date, setDate ] = useState<string>('');
 	const [ duration, setDuration ] = useState<number>(12);
 	const [ frequency, setFrequency ] = useState<number>(1);
 

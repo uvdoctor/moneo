@@ -17,13 +17,16 @@ interface DatePickerInputProps {
     size?: SizeType;
 }
 
-export default function TextInput(props: DatePickerInputProps) {
+export default function DatePickerInput(props: DatePickerInputProps) {
 	const getTodayDate = () => {
 		const today = new Date();
-		return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+		return `${today.getFullYear()-20}-${today.getMonth() + 1}-${today.getDate()}`;
 	};
 
+	const getMonthDate = () => `${new Date().getFullYear() - 5}-4`;
+
 	const dateFormat = props.picker === 'month' ? 'yyyy-MM' : props.picker === 'year' ? 'yyyy' : 'yyyy-MM-dd';
+	const defaultDate = props.picker === 'month' ? getMonthDate() : props.picker === 'year' ? '2000' : getTodayDate();
 
 	return (
 		<Fragment>
@@ -32,7 +35,7 @@ export default function TextInput(props: DatePickerInputProps) {
 				picker={props.picker ? props.picker : 'date'}
 				style={{ width: props.width ? props.width : 200 }}
                 size={props.size ? props.size : "large"}
-				defaultValue={parse(props.defaultVal || getTodayDate(), dateFormat, new Date())}
+				defaultValue={parse(props.defaultVal || defaultDate, dateFormat, new Date())}
 				format={dateFormat}
 				onChange={(_, ds) => props.changeHandler(ds.toString())}
 			/>
