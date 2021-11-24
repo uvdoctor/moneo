@@ -41,14 +41,17 @@ export default function AddHoldingInput({
 			case LOAN:
 				newRec.chgF = Number(frequency);
 				newRec.pur = [ { amt: duration, month: 1, year: 1, qty: 1 } ];
+				break;
 			case DEPO:
 			case ML:
 				newRec.subt = category;
 				newRec.chg = rate;
 				newRec.chgF = Number(frequency);
+				break;
 			case NPS:
 			case OTHER:
 				newRec.subt = category;
+				break;
 			case PPF:
 			case EPF:
 			case VPF:
@@ -56,26 +59,27 @@ export default function AddHoldingInput({
 				newRec.chgF = childTab === PPF ? Number(category) : 12;
 				newRec.type = AssetType.F;
 				newRec.subt = childTab;
+				break;
 			case VEHICLE:
 				newRec.chg = 15;
 				newRec.chgF = 1;
 				newRec.type = AssetType.A;
 				newRec.subt = category;
+				break;
 			case PM:
 			case CRYPTO:
 				newRec.type = AssetType.A;
 				newRec.subt = category;
-			case ML:
-			case DEPO:
-			case VEHICLE:
-				newRec.pur = [{ amt: qty, month: Number(date.slice(date.indexOf('-') + 1)),
-					year: Number(date.slice(0, date.indexOf('-'))), qty: childTab === VEHICLE ? 1 : duration }]
-			default:
-				newRec.qty = qty;
-				newRec.name = name;
-				newRec.fId = memberKey;
 				break;
 		}
+		newRec.qty = qty;
+		newRec.name = name;
+		newRec.fId = memberKey;
+		if(childTab === VEHICLE || childTab === ML || childTab === LOAN) {
+			newRec.pur = [{ amt: qty, 
+							month: Number(date.slice(date.indexOf('-') + 1)),
+							year: Number(date.slice(0, date.indexOf('-'))), 
+							qty: childTab === VEHICLE ? 1 : duration }] }
 		if (childTab === INS) newRec.subt = category;	
 		if(childTab === VEHICLE || childTab === ML || childTab === LOAN) newRec.qty = 0;		
 		childTab === PM || childTab === CRYPTO ? (newRec.curr = 'USD') : (newRec.curr = selectedCurrency);

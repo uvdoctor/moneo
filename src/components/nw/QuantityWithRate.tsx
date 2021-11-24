@@ -20,7 +20,7 @@ export default function QuantityWithRate({ quantity, subtype, name, onChange }: 
 			const price = npsData.find((item:any) => item.id === name);
 			if(price) return price.price;
 			}
-		if(!name) return getCryptoRate(ratesData, subtype, selectedCurrency);
+		if(childTab === TAB.CRYPTO) return getCryptoRate(ratesData, subtype, selectedCurrency);
 		return getCommodityRate(ratesData, subtype, name, selectedCurrency);
 	}
 	
