@@ -94,7 +94,7 @@ function NWContextProvider() {
 	const [ angel, setAngel ] = useState<Array<HoldingInput>>([]);
 	const [ loans, setLoans ] = useState<Array<HoldingInput>>([]);
 	const [ insurance, setInsurance ] = useState<Array<HoldingInput>>([]);
-	const [ credits, setCredits ] = useState<Array<HoldingInput>>([]);
+	const [ credit, setCredit ] = useState<Array<HoldingInput>>([]);
 	const [ selectedMembers, setSelectedMembers ] = useState<Array<string>>([]);
 	const [ currencyList, setCurrencyList ] = useState<any>({});
 	const [ selectedCurrency, setSelectedCurrency ] = useState<string>('');
@@ -379,9 +379,9 @@ function NWContextProvider() {
 				},
 				[TAB.CREDIT]:{
 					label: TAB.CREDIT,
-					data: credits,
+					data: credit,
 					total: totalCredit,
-					setData: setCredits,
+					setData: setCredit,
 					viewComp: ViewHoldingInput
 				}
 			}
@@ -462,7 +462,7 @@ function NWContextProvider() {
 		setProperties([ ...(allHoldings?.property ? allHoldings.property: []) ]);
 		setLoans([ ...(allHoldings?.loans ? allHoldings.loans : []) ]);
 		setInsurance([ ...(allHoldings?.ins ? allHoldings.ins : []) ]);
-		setCredits([...(allHoldings?.credit ? allHoldings.credit : []) ]);
+		setCredit([...(allHoldings?.credit ? allHoldings.credit : []) ]);
 		setDeposits([ ...(allHoldings?.deposits ? allHoldings.deposits : []) ]);
 		setSavings([ ...(allHoldings?.savings ? allHoldings.savings : []) ]);
 		setLendings([ ...(allHoldings?.lendings ? allHoldings.lendings : []) ]);
@@ -497,9 +497,9 @@ function NWContextProvider() {
 
 	useEffect(
 		() => {
-			setTotalLiabilities(totalLoans + totalInsurance);
+			setTotalLiabilities(totalLoans + totalInsurance + totalCredit);
 		},
-		[ totalLoans, totalInsurance ]
+		[totalLoans, totalInsurance, totalCredit]
 	);
 
 	useEffect(
@@ -629,6 +629,7 @@ function NWContextProvider() {
 		updatedHoldings.other = others;
 		updatedHoldings.nps = nps;
 		updatedHoldings.crypto = crypto;
+		updatedHoldings.credit = credit; 
 		if(uname) updatedHoldings.uname = uname;
 		try {
 			if(uname) await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
@@ -643,7 +644,7 @@ function NWContextProvider() {
 		setTotalLoans(0);
 	};
 
-	const priceCredits = () => {
+	const priceCredit = () => {
 		setTotalCredit(0);
 	}
 
@@ -819,7 +820,7 @@ function NWContextProvider() {
 		priceLendings();
 		priceInsurance();
 		priceLoans();
-		priceCredits();
+		priceCredit();
 		priceSavings();
 		priceDeposits();
 	}, [selectedMembers, selectedCurrency]);
@@ -865,8 +866,8 @@ function NWContextProvider() {
 	}, [loans]);
 
 	useEffect(()=>{
-		priceCredits();
-	},[credits]);
+		priceCredit();
+	},[credit]);
 
 	useEffect(() => {
 		priceInsurance();
@@ -980,7 +981,10 @@ function NWContextProvider() {
 				setChildTab,
 				npsData,
 				setNPSData,
-				loadNPSSubCategories
+				loadNPSSubCategories,
+				credit,
+				setCredit,
+				totalCredit,
 			}}
 		>
 			<NWView />
