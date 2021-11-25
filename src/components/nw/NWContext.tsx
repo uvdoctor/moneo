@@ -630,7 +630,18 @@ function NWContextProvider() {
 	};
 
 	const priceSavings = () => {
-		setTotalSavings(0);
+		if(!savings.length) {
+			setTotalSavings(0);			
+			return;
+		}
+		let total = 0;
+		savings.forEach((saving: HoldingInput) => {
+			if(saving && doesHoldingMatch(saving, selectedMembers, selectedCurrency)) {
+				const value = saving.qty;
+				total += value;
+			}
+		})
+		setTotalSavings(total);
 	};
 
 	const priceProperties = () => {
