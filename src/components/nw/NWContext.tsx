@@ -819,6 +819,7 @@ function NWContextProvider() {
 		priceLendings();
 		priceInsurance();
 		priceLoans();
+		priceCredits();
 		priceSavings();
 		priceDeposits();
 	}, [selectedMembers, selectedCurrency]);
@@ -862,6 +863,10 @@ function NWContextProvider() {
 	useEffect(() => {
 		priceLoans();
 	}, [loans]);
+
+	useEffect(()=>{
+		priceCredits();
+	},[credits]);
 
 	useEffect(() => {
 		priceInsurance();
