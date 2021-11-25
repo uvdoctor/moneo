@@ -300,7 +300,7 @@
               "Sid": "ReadWriteTable",
               "Effect": "Allow",
               "Action": "*",
-              "Resource": "arn:aws:dynamodb:*:*:table/NPS-*"
+              "Resource": "arn:aws:dynamodb:*:*:*"
             }
           ]
         }

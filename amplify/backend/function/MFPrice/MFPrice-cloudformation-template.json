@@ -300,7 +300,7 @@
               "Sid": "ReadWriteTable",
               "Effect": "Allow",
               "Action": "*",
-              "Resource": "arn:aws:dynamodb:*:*:table/INMutual-*"
+              "Resource": "arn:aws:dynamodb:*:*:*"
             }
           ]
         }

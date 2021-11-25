@@ -312,7 +312,7 @@
               "Sid": "ReadWriteTable",
               "Effect": "Allow",
               "Action": "*",
-              "Resource": "arn:aws:dynamodb:*:*:table/EODPrices-*"
+              "Resource": "arn:aws:dynamodb:*:*:*"
             }
           ]
         }

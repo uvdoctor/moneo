@@ -72,6 +72,7 @@ export const TAB = {
 	PROP: 'Properties',
 	LOAN: 'Loans',
 	INS: 'Insurance',
+	CREDIT: 'Credit'
 };
 
 function NWContextProvider() {
@@ -93,6 +94,7 @@ function NWContextProvider() {
 	const [ angel, setAngel ] = useState<Array<HoldingInput>>([]);
 	const [ loans, setLoans ] = useState<Array<HoldingInput>>([]);
 	const [ insurance, setInsurance ] = useState<Array<HoldingInput>>([]);
+	const [ credits, setCredits ] = useState<Array<HoldingInput>>([]);
 	const [ selectedMembers, setSelectedMembers ] = useState<Array<string>>([]);
 	const [ currencyList, setCurrencyList ] = useState<any>({});
 	const [ selectedCurrency, setSelectedCurrency ] = useState<string>('');
@@ -118,6 +120,7 @@ function NWContextProvider() {
 	const [ totalLendings, setTotalLendings ] = useState<number>(0);
 	const [ totalLoans, setTotalLoans ] = useState<number>(0);
 	const [ totalInsurance, setTotalInsurance ] = useState<number>(0);
+	const [ totalCredit, setTotalCredit ] = useState<number>(0);
 	const [ totalLiabilities, setTotalLiabilities ] = useState<number>(0);
 	const [ totalOthers, setTotalOthers ] = useState<number>(0);
 	const [ totalEquity, setTotalEquity ] = useState<number>(0);
@@ -374,6 +377,13 @@ function NWContextProvider() {
 					},
 					viewComp: ViewHoldingInput
 				},
+				[TAB.CREDIT]:{
+					label: TAB.CREDIT,
+					data: credits,
+					total: totalCredit,
+					setData: setCredits,
+					viewComp: ViewHoldingInput
+				}
 			}
 		}
 	};
@@ -452,6 +462,7 @@ function NWContextProvider() {
 		setProperties([ ...(allHoldings?.property ? allHoldings.property: []) ]);
 		setLoans([ ...(allHoldings?.loans ? allHoldings.loans : []) ]);
 		setInsurance([ ...(allHoldings?.ins ? allHoldings.ins : []) ]);
+		// setCredits([...(allHoldings?.credits ? allHoldings.credits : []) ]);
 		setDeposits([ ...(allHoldings?.deposits ? allHoldings.deposits : []) ]);
 		setSavings([ ...(allHoldings?.savings ? allHoldings.savings : []) ]);
 		setLendings([ ...(allHoldings?.lendings ? allHoldings.lendings : []) ]);
@@ -631,6 +642,10 @@ function NWContextProvider() {
 	const priceLoans = () => {
 		setTotalLoans(0);
 	};
+
+	const priceCredits = () => {
+		setTotalCredit(0);
+	}
 
 	const priceSavings = () => {
 		if(!savings.length) {
