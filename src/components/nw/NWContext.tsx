@@ -650,7 +650,8 @@ function NWContextProvider() {
 				if ( loan.pur && loan.chg ) {
 					const duration = getDuration(loan.pur[0].year, loan.pur[0].month, loan.pur[0].qty);
 					if(duration) {
-						const getCashFlows = Array(duration.months).fill(loan.pur[0].amt);
+						const durLeft = loan.pur[0].qty - duration.months;
+						const getCashFlows = Array(durLeft).fill(loan.pur[0].amt);
 						console.log(getCashFlows);
 						const value = getNPV(loan.chg, getCashFlows, 0);
 						total += value;
@@ -664,15 +665,16 @@ function NWContextProvider() {
 	const priceInsurance = () => {
 		if(!insurance.length) return setTotalInsurance(0);			
 		let total = 0;
-		let durInMon = 0;
+		// let durInMon = 0;
 		insurance.forEach((ins: HoldingInput) => {
 			if(ins && doesHoldingMatch(ins, selectedMembers, selectedCurrency)) {
 				if ( ins.pur && ins.chg ) {
-					if (ins.chgF === 1) durInMon = ins.pur[0].qty * 12;
-					else durInMon = ins.pur[0].qty;
-					const duration = getDuration(ins.pur[0].year, ins.pur[0].month, durInMon);
+					// if (ins.chgF === 1) durInMon = ins.pur[0].qty * 12;
+					// else durInMon = ins.pur[0].qty;
+					const duration = getDuration(ins.pur[0].year, ins.pur[0].month, ins.pur[0].qty);
 					if(duration) {
-						const getCashFlows = Array(duration.months).fill(ins.pur[0].amt);
+						const durLeft = ins.pur[0].qty - duration.months;
+						const getCashFlows = Array(durLeft).fill(ins.pur[0].amt);
 						console.log(getCashFlows);
 						const value = getNPV(ins.chg, getCashFlows, 0);
 						total += value;
