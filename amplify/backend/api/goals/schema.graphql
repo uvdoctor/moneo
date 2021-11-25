@@ -469,6 +469,7 @@ type UserHoldings @model @aws_iam @key(fields: ["uname"]) @auth(rules: [{ allow:
 	deposits: [Holding!]
 	lendings: [Holding!]
 	loans: [Holding!]
+	credit: [Holding!]
 	savings: [Holding!]
 	property: [Property!]
 	vehicles: [Holding!]

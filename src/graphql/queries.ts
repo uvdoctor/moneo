@@ -778,6 +778,24 @@ export const getUserHoldings = /* GraphQL */ `
         type
         subt
       }
+      credit {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fId
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
       savings {
         id
         qty
@@ -1059,6 +1077,17 @@ export const listUserHoldingss = /* GraphQL */ `
           subt
         }
         loans {
+          id
+          qty
+          name
+          fId
+          curr
+          chg
+          chgF
+          type
+          subt
+        }
+        credit {
           id
           qty
           name
