@@ -81,4 +81,4 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 	const results = await pushDataSingly(schema, tableName);
 	console.log(results, 'Data Pushed into Feeds Table');
 };
-module.exports = { getDataFromTable, pushData, pushDataForFeed, pushDataSingly, appendGenericFields };
+module.exports = { getDataFromTable, pushData, pushDataForFeed, pushDataSingly, appendGenericFields, getTableNameFromInitialWord };
