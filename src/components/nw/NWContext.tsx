@@ -463,11 +463,10 @@ function NWContextProvider() {
 	const getDuration = (yr: number, mon: number, dur?: number) => {
 		const today = new Date();		
 		const months = ((today.getFullYear() - yr) * 12) + ((today.getMonth()+1) - mon);
-		console.log("months", months)
 		if (dur) {
 			if (months > dur) return 0;
 		} 
-		return Math.round((months/12) * 100) / 100;
+		return months/12;
 	}
 
 	useEffect(
@@ -603,31 +602,30 @@ function NWContextProvider() {
 	};
 
 	const saveHoldings = async () => {
-		priceLendings();
-		// let updatedHoldings: CreateUserHoldingsInput = { uname: owner };
-		// updatedHoldings.instruments = instruments;
-		// updatedHoldings.savings = savings;
-		// updatedHoldings.deposits = deposits;
-		// updatedHoldings.lendings = lendings;
-		// updatedHoldings.angel = angel;
-		// updatedHoldings.epf = epf;
-		// updatedHoldings.ppf = ppf;
-		// updatedHoldings.vpf = vpf;
-		// updatedHoldings.loans = loans;
-		// updatedHoldings.pm = preciousMetals;
-		// updatedHoldings.vehicles = vehicles;
-		// updatedHoldings.property = properties;
-		// updatedHoldings.other = others;
-		// updatedHoldings.nps = nps;
-		// updatedHoldings.crypto = crypto;
-		// if(uname) updatedHoldings.uname = uname;
-		// try {
-		// 	if(uname) await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
-		// 	else await addHoldings(updatedHoldings);
-		// 	notification.success({message: 'Data saved', description: 'All holdings data has been saved.'})
-		// } catch(e) {
-		// 	notification.error({message: 'Unable to save holdings', description: 'Sorry! An unexpected error occurred while trying to save the data.'});
-		// }
+		let updatedHoldings: CreateUserHoldingsInput = { uname: owner };
+		updatedHoldings.instruments = instruments;
+		updatedHoldings.savings = savings;
+		updatedHoldings.deposits = deposits;
+		updatedHoldings.lendings = lendings;
+		updatedHoldings.angel = angel;
+		updatedHoldings.epf = epf;
+		updatedHoldings.ppf = ppf;
+		updatedHoldings.vpf = vpf;
+		updatedHoldings.loans = loans;
+		updatedHoldings.pm = preciousMetals;
+		updatedHoldings.vehicles = vehicles;
+		updatedHoldings.property = properties;
+		updatedHoldings.other = others;
+		updatedHoldings.nps = nps;
+		updatedHoldings.crypto = crypto;
+		if(uname) updatedHoldings.uname = uname;
+		try {
+			if(uname) await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
+			else await addHoldings(updatedHoldings);
+			notification.success({message: 'Data saved', description: 'All holdings data has been saved.'})
+		} catch(e) {
+			notification.error({message: 'Unable to save holdings', description: 'Sorry! An unexpected error occurred while trying to save the data.'});
+		}
 	};
 
 	const priceLoans = () => {
@@ -687,8 +685,8 @@ function NWContextProvider() {
 					const years = getDuration(lending.pur[0].year, lending.pur[0].month, lending.pur[0].qty);
 					if(!years) return;
 					const value = getCompoundedIncome(lending.chg, lending.pur[0].amt, years, lending.chgF );
-					total+=value; 
-			}
+					total+= Math.round(value * 100) / 100;
+				}
 			};
 		})
 		setTotalLendings(total);
@@ -710,7 +708,7 @@ function NWContextProvider() {
 					const years = getDuration(deposit.pur[0].year, deposit.pur[0].month, deposit.pur[0].qty);
 					if(!years) return;
 					const value = getCompoundedIncome(deposit.chg, deposit.pur[0].amt, years, deposit.chgF );
-					total+=value;
+					total+= Math.round(value * 100) / 100; 
 				};
 			}
 		})
