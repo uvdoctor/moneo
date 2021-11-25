@@ -1,6 +1,6 @@
 import { UserOutlined } from '@ant-design/icons';
 import { InputNumber, Row } from 'antd';
-import React, { Fragment, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
@@ -24,7 +24,7 @@ export default function AddHoldingInput({
 	subCategoryOptions
 }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
-	const { PM, CRYPTO, DEPO, ML, NPS, PPF, EPF, VPF, VEHICLE, LOAN, INS } = TAB;
+	const { PM, CRYPTO, DEPO, ML, NPS, PPF, EPF, VPF, VEHICLE, LOAN, INS, OTHER } = TAB;
 	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
 	const [ subCat, setSubCat ] = useState<string>(childTab === ML || childTab === DEPO ? '' : subCategoryOptions ? Object.keys(subCategoryOptions[category])[0] : '1');
 	const [ name, setName ] = useState<string>('');
@@ -90,6 +90,10 @@ export default function AddHoldingInput({
 				newRec.subt = category;
 				newRec.name = subCat;
 				break;
+			case OTHER:
+				newRec.subt = category;
+				newRec.name = name;
+				newRec.qty = qty;
 			default:
 				newRec.name = name;
 				newRec.qty = qty;
