@@ -650,7 +650,8 @@ function NWContextProvider() {
 				if ( loan.pur && loan.chg ) {
 					const duration = getDuration(loan.pur[0].year, loan.pur[0].month, loan.pur[0].qty);
 					if(duration) {
-						const getCashFlows = Array(loan.pur[0].amt).fill(duration.months);
+						const getCashFlows = Array(duration.months).fill(loan.pur[0].amt);
+						console.log(getCashFlows);
 						const value = getNPV(loan.chg, getCashFlows, 0);
 						total += value;
 					}
@@ -671,7 +672,8 @@ function NWContextProvider() {
 					else durInMon = ins.pur[0].qty;
 					const duration = getDuration(ins.pur[0].year, ins.pur[0].month, durInMon);
 					if(duration) {
-						const getCashFlows = Array(ins.pur[0].amt).fill(duration.years);
+						const getCashFlows = Array(duration.months).fill(ins.pur[0].amt);
+						console.log(getCashFlows);
 						const value = getNPV(ins.chg, getCashFlows, 0);
 						total += value;
 					}
