@@ -36,7 +36,7 @@ import InstrumentValuation from './InstrumentValuation';
 import { includesAny, initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
-import { getCompoundedIncome } from '../calc/finance';
+import { getCompoundedIncome, getNPV } from '../calc/finance';
 
 const NWContext = createContext({});
 
@@ -94,7 +94,7 @@ function NWContextProvider() {
 	const [ angel, setAngel ] = useState<Array<HoldingInput>>([]);
 	const [ loans, setLoans ] = useState<Array<HoldingInput>>([]);
 	const [ insurance, setInsurance ] = useState<Array<HoldingInput>>([]);
-	const [ credits, setCredits ] = useState<Array<HoldingInput>>([]);
+	const [ credit, setCredit ] = useState<Array<HoldingInput>>([]);
 	const [ selectedMembers, setSelectedMembers ] = useState<Array<string>>([]);
 	const [ currencyList, setCurrencyList ] = useState<any>({});
 	const [ selectedCurrency, setSelectedCurrency ] = useState<string>('');
@@ -373,15 +373,15 @@ function NWContextProvider() {
 						H: 'Health',
 						P: 'Property',
 						V: 'Vehicle',
-						O: 'Other'
+						O: 'Others'
 					},
 					viewComp: ViewHoldingInput
 				},
 				[TAB.CREDIT]:{
 					label: TAB.CREDIT,
-					data: credits,
+					data: credit,
 					total: totalCredit,
-					setData: setCredits,
+					setData: setCredit,
 					viewComp: ViewHoldingInput
 				}
 			}
@@ -462,7 +462,7 @@ function NWContextProvider() {
 		setProperties([ ...(allHoldings?.property ? allHoldings.property: []) ]);
 		setLoans([ ...(allHoldings?.loans ? allHoldings.loans : []) ]);
 		setInsurance([ ...(allHoldings?.ins ? allHoldings.ins : []) ]);
-		setCredits([...(allHoldings?.credit ? allHoldings.credit : []) ]);
+		setCredit([...(allHoldings?.credit ? allHoldings.credit : []) ]);
 		setDeposits([ ...(allHoldings?.deposits ? allHoldings.deposits : []) ]);
 		setSavings([ ...(allHoldings?.savings ? allHoldings.savings : []) ]);
 		setLendings([ ...(allHoldings?.lendings ? allHoldings.lendings : []) ]);
@@ -476,8 +476,9 @@ function NWContextProvider() {
 		const months = ((today.getFullYear() - yr) * 12) + ((today.getMonth()+1) - mon);
 		if (dur) {
 			if (months > dur) return 0;
-		} 
-		return Math.round((months/12) * 100) / 100;
+		}
+		const years = Math.round((months/12) * 100) / 100;
+		return { months, years };
 	}
 
 	useEffect(
@@ -497,9 +498,9 @@ function NWContextProvider() {
 
 	useEffect(
 		() => {
-			setTotalLiabilities(totalLoans + totalInsurance);
+			setTotalLiabilities(totalLoans + totalInsurance + totalCredit);
 		},
-		[ totalLoans, totalInsurance ]
+		[totalLoans, totalInsurance, totalCredit]
 	);
 
 	useEffect(
@@ -629,6 +630,8 @@ function NWContextProvider() {
 		updatedHoldings.other = others;
 		updatedHoldings.nps = nps;
 		updatedHoldings.crypto = crypto;
+		updatedHoldings.credit = credit; 
+		updatedHoldings.ins = insurance;
 		if(uname) updatedHoldings.uname = uname;
 		try {
 			if(uname) await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
@@ -640,18 +643,62 @@ function NWContextProvider() {
 	};
 
 	const priceLoans = () => {
-		setTotalLoans(0);
+		if(!loans.length) return setTotalLoans(0);			
+		let total = 0;
+		loans.forEach((loan: HoldingInput) => {
+			if(loan && doesHoldingMatch(loan, selectedMembers, selectedCurrency)) {
+				if ( loan.pur && loan.chg ) {
+					const duration = getDuration(loan.pur[0].year, loan.pur[0].month, loan.pur[0].qty);
+					if(duration) {
+						const durLeft = loan.pur[0].qty - duration.months;
+						const getCashFlows = Array(durLeft).fill(loan.pur[0].amt);
+						console.log(getCashFlows);
+						const value = getNPV(loan.chg, getCashFlows, 0);
+						total += value;
+					}
+				}
+			}
+		})
+		setTotalLoans(total);
 	};
 
-	const priceCredits = () => {
-		setTotalCredit(0);
-	}
+	const priceInsurance = () => {
+		if(!insurance.length) return setTotalInsurance(0);			
+		let total = 0;
+		// let durInMon = 0;
+		insurance.forEach((ins: HoldingInput) => {
+			if(ins && doesHoldingMatch(ins, selectedMembers, selectedCurrency)) {
+				if ( ins.pur && ins.chg ) {
+					// if (ins.chgF === 1) durInMon = ins.pur[0].qty * 12;
+					// else durInMon = ins.pur[0].qty;
+					const duration = getDuration(ins.pur[0].year, ins.pur[0].month, ins.pur[0].qty);
+					if(duration) {
+						const durLeft = ins.pur[0].qty - duration.months;
+						const getCashFlows = Array(durLeft).fill(ins.pur[0].amt);
+						console.log(getCashFlows);
+						const value = getNPV(ins.chg, getCashFlows, 0);
+						total += value;
+					}
+				}
+			}
+		})
+		setTotalInsurance(total);
+	};
+
+	const priceCredit = () => {
+		if(!credit.length) return setTotalCredit(0);			
+		let total = 0;
+		credit.forEach((creditItem: HoldingInput) => {
+			if(creditItem && doesHoldingMatch(creditItem, selectedMembers, selectedCurrency)) {
+				const value = creditItem.qty;
+				total += value;
+			}
+		})
+		setTotalCredit(total);
+	};
 
 	const priceSavings = () => {
-		if(!savings.length) {
-			setTotalSavings(0);			
-			return;
-		}
+		if(!savings.length) return setTotalSavings(0);			
 		let total = 0;
 		savings.forEach((saving: HoldingInput) => {
 			if(saving && doesHoldingMatch(saving, selectedMembers, selectedCurrency)) {
@@ -667,39 +714,35 @@ function NWContextProvider() {
 	};
 
 	const priceVehicles = () => {
-		if(!vehicles.length) {
-			setTotalVehicles(0);			
-			return;
-		}
+		if(!vehicles.length) return setTotalVehicles(0);
 		let total = 0;
 		vehicles.forEach((vehicle: HoldingInput) => {
 			if(vehicle && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
-				// @ts-ignore
-				const years = getDuration(vehicle.pur[0].year, vehicle.pur[0].month);
-				// @ts-ignore
-				const value = getCompoundedIncome(-(vehicle.chg), vehicle.pur[0].amt, years) ;
-				total += value;
+				if(vehicle.pur && vehicle.chg) {
+					const duration = getDuration(vehicle.pur[0].year, vehicle.pur[0].month);
+					if(duration) {
+						const value = getCompoundedIncome(-(vehicle.chg), vehicle.pur[0].amt, duration.years) ;
+						total += value;
+					}
+				}
 			}
 		})
 		setTotalVehicles(total);
 	};
 
 	const priceLendings = () => {
-		if(!lendings.length){
-			setTotalLendings(0);
-			return;
-		}
+		if(!lendings.length) return setTotalLendings(0);
 		let total = 0;
 		lendings.forEach((lending: HoldingInput)=>{
 			if(lending && doesHoldingMatch(lending, selectedMembers, selectedCurrency)) {
 				if(lending.chg && lending.pur) {
-					const years = getDuration(lending.pur[0].year, lending.pur[0].month, lending.pur[0].qty);
-					if(!years) return;
+					const duration = getDuration(lending.pur[0].year, lending.pur[0].month, lending.pur[0].qty);
+					if(!duration) return;
 					if(!lending.chgF) {
 						total+=lending.pur[0].amt;
 						return setTotalLendings(total);
 					};
-					const value = getCompoundedIncome(lending.chg, lending.pur[0].amt, years, lending.chgF );
+					const value = getCompoundedIncome(lending.chg, lending.pur[0].amt, duration.years, lending.chgF );
 					total+= value;
 				}
 			};
@@ -708,21 +751,18 @@ function NWContextProvider() {
 	};
 
 	const priceDeposits = () => {
-		if(!deposits.length){
-			setTotalDeposits(0);
-			return;
-		}
+		if(!deposits.length) return setTotalDeposits(0);
 		let total = 0;
 		deposits.forEach((deposit: HoldingInput)=>{
 			if(deposit && doesHoldingMatch(deposit, selectedMembers, selectedCurrency)) {
 				if(deposit.chg && deposit.pur) {
-					const years = getDuration(deposit.pur[0].year, deposit.pur[0].month, deposit.pur[0].qty);
-					if(!years) return;
+					const duration = getDuration(deposit.pur[0].year, deposit.pur[0].month, deposit.pur[0].qty);
+					if(!duration) return;
 					if(!deposit.chgF) {
 						total+=deposit.pur[0].amt;
 						return setTotalLendings(total);
 					}
-					const value = getCompoundedIncome(deposit.chg, deposit.pur[0].amt, years, deposit.chgF );
+					const value = getCompoundedIncome(deposit.chg, deposit.pur[0].amt, duration.years, deposit.chgF );
 					total+= value;
 				};
 			}
@@ -731,14 +771,19 @@ function NWContextProvider() {
 	};
 
 	const priceAngel = () => {
-		setTotalAngel(0);
+		if(!angel.length) return setTotalAngel(0);			
+		let total = 0;
+		angel.forEach((holding: HoldingInput) => {
+			if(holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+				const value = holding.qty;
+				total += value;
+			}
+		})
+		setTotalAngel(total);
 	}
 
 	const priceCrypto = () => {
-		if(!crypto.length) {
-			setTotalCrypto(0);
-			return;
-		}
+		if(!crypto.length) return setTotalCrypto(0);
 		let total = 0;
 		crypto.forEach((instrument: HoldingInput) => {
 			let rate = getCryptoRate(ratesData, instrument.subt as string, selectedCurrency);
@@ -750,7 +795,15 @@ function NWContextProvider() {
 	};
 
 	const priceOthers = () => {
-		setTotalOthers(0);
+		if(!others.length) return setTotalOthers(0);			
+		let total = 0;
+		others.forEach((other: HoldingInput) => {
+			if(other && doesHoldingMatch(other, selectedMembers, selectedCurrency)) {
+				const value = other.qty;
+				total += value;
+			}
+		})
+		setTotalOthers(total);
 	};
 
 	const pricePPF = () => {
@@ -793,10 +846,6 @@ function NWContextProvider() {
 		setTotalFixed(totalNPSFixed);
 	};
 
-	const priceInsurance = () => {
-		setTotalInsurance(0);
-	};
-
 	useEffect(() => {
 		setTotalEquity(totalAngel + totalFEquity + totalNPSEquity);
 	}, [totalAngel, totalFEquity, totalNPSEquity]);
@@ -819,7 +868,7 @@ function NWContextProvider() {
 		priceLendings();
 		priceInsurance();
 		priceLoans();
-		priceCredits();
+		priceCredit();
 		priceSavings();
 		priceDeposits();
 	}, [selectedMembers, selectedCurrency]);
@@ -865,8 +914,8 @@ function NWContextProvider() {
 	}, [loans]);
 
 	useEffect(()=>{
-		priceCredits();
-	},[credits]);
+		priceCredit();
+	},[credit]);
 
 	useEffect(() => {
 		priceInsurance();
@@ -980,7 +1029,10 @@ function NWContextProvider() {
 				setChildTab,
 				npsData,
 				setNPSData,
-				loadNPSSubCategories
+				loadNPSSubCategories,
+				credit,
+				setCredit,
+				totalCredit,
 			}}
 		>
 			<NWView />
