@@ -25,7 +25,7 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(8);
 	const [ amount, setAmount ] = useState<number>(1000);
-	const [ purchaseDate, setPurchaseDate ] = useState<string>('');
+	const [ purchaseDate, setPurchaseDate ] = useState<string>(`${new Date().getFullYear() - 5}-4`);
 	const [ city, setCity ] = useState<string>('');
 	const [ address, setAddress ] = useState<string>('');
 	const [ mv, setMv ] = useState<number>(0);

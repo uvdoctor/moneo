@@ -630,6 +630,7 @@ function NWContextProvider() {
 		updatedHoldings.nps = nps;
 		updatedHoldings.crypto = crypto;
 		updatedHoldings.credit = credit; 
+		updatedHoldings.ins = insurance;
 		if(uname) updatedHoldings.uname = uname;
 		try {
 			if(uname) await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
@@ -645,8 +646,19 @@ function NWContextProvider() {
 	};
 
 	const priceCredit = () => {
-		setTotalCredit(0);
-	}
+		if(!credit.length) {
+			setTotalCredit(0);			
+			return;
+		}
+		let total = 0;
+		credit.forEach((creditItem: HoldingInput) => {
+			if(creditItem && doesHoldingMatch(creditItem, selectedMembers, selectedCurrency)) {
+				const value = creditItem.qty;
+				total += value;
+			}
+		})
+		setTotalCredit(total);
+	};
 
 	const priceSavings = () => {
 		if(!savings.length) {
@@ -732,7 +744,18 @@ function NWContextProvider() {
 	};
 
 	const priceAngel = () => {
-		setTotalAngel(0);
+		if(!angel.length) {
+			setTotalAngel(0);			
+			return;
+		}
+		let total = 0;
+		angel.forEach((holding: HoldingInput) => {
+			if(holding && doesHoldingMatch(holding, selectedMembers, selectedCurrency)) {
+				const value = holding.qty;
+				total += value;
+			}
+		})
+		setTotalAngel(total);
 	}
 
 	const priceCrypto = () => {
@@ -751,7 +774,18 @@ function NWContextProvider() {
 	};
 
 	const priceOthers = () => {
-		setTotalOthers(0);
+		if(!others.length) {
+			setTotalOthers(0);			
+			return;
+		}
+		let total = 0;
+		others.forEach((other: HoldingInput) => {
+			if(other && doesHoldingMatch(other, selectedMembers, selectedCurrency)) {
+				const value = other.qty;
+				total += value;
+			}
+		})
+		setTotalOthers(total);
 	};
 
 	const pricePPF = () => {

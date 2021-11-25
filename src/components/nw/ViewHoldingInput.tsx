@@ -31,11 +31,6 @@ export default function ViewHoldingInput({
 		changeData([ ...data ]);
 	};
 
-	const changeInstallmet = (val: number) => {
-		if(record.pur) record.pur[0].amt = val;
-		changeData([ ...data ]);
-	};
-
 	const changeName = (val: any) => {
 		record.name = val;
 		changeData([ ...data ]);
@@ -166,17 +161,17 @@ export default function ViewHoldingInput({
 			</Col>}
 			{isLiability(childTab) &&
 				<Col>
-					<SelectInput
+					{childTab === INS && <SelectInput
 						pre={'Installment Type'}
 						value={record.chgF as number}
 						options={{ 1: 'Yearly', 12: 'Monthly' }}
-						changeHandler={(val: any)=>changeYearly(val)}/>&nbsp;
+						changeHandler={(val: any)=>changeYearly(val)}/>}&nbsp;
 					<label>No. of installment</label>
 					<InputNumber
 						min={1}
 						max={1000}
-						value={record.pur ? record.pur[0].amt as number : 0}
-						onChange={(val: number)=>changeInstallmet(val)}
+						value={record.chg as number}
+						onChange={(val: number)=>changeChg(val)}
 						step={1}
 					/>
 				</Col>}

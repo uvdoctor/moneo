@@ -30,23 +30,23 @@ export default function AddHoldingInput({
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(0);
-	const [ date, setDate ] = useState<string>('');
+	const [ date, setDate ] = useState<string>(`${new Date().getFullYear() - 5}-4`);
 	const [ duration, setDuration ] = useState<number>(12);
-	const [ frequency, setFrequency ] = useState<number>(0);
+	const [ frequency, setFrequency ] = useState<number>(1);
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
 		switch (childTab) {
 			case INS:
 			case LOAN:
-				newRec.chgF = Number(frequency);
-				newRec.pur = [ { amt: duration, month: 1, year: 1, qty: 1 } ];
+				newRec.chg = duration;
+				newRec.chgF =  childTab === LOAN ? 12: Number(frequency);
 				break;
 			case DEPO:
 			case ML:
 				newRec.subt = category;
 				newRec.chg = rate;
-				newRec.chgF = Number(frequency);
+				newRec.chgF = newRec.subt === 'No' ? 0 : Number(frequency);
 				break;
 			case NPS:
 			case OTHER:
@@ -100,9 +100,8 @@ export default function AddHoldingInput({
 		setDuration(val);
 		disableOk(val <= 0);
 		let rec = getNewRec();
-		if (rec.pur) {
-			childTab === LOAN || childTab === INS ? (rec.pur[0].amt = val) : (rec.pur[0].qty = val);
-		}
+		if (rec.pur) rec.pur[0].qty = val;
+		if(childTab === LOAN || childTab === INS) rec.chg = val;
 		setInput(rec);
 	};
 
@@ -136,7 +135,7 @@ export default function AddHoldingInput({
 			if (opts && Object.keys(opts).length && !opts[name]) {
 				let defaultVal: string = Object.keys(opts)[0];
 				childTab === ML || childTab === DEPO ? setFrequency(Number(defaultVal)) : setName(defaultVal); 
-			}
+			} else setFrequency(0);
 		}
 		let rec = getNewRec();
 		rec.subt = subtype;
@@ -217,12 +216,12 @@ export default function AddHoldingInput({
 			</p>}
 			{isLiability(childTab) && 
 				<p>
-					<SelectInput
+					{ childTab === INS && <SelectInput
 						pre={'Installment Type'}
 						value={frequency}
 						options={{ 1: 'Yearly', 12: 'Monthly' }}
 						changeHandler={changeFrequency}
-					/>&nbsp;
+					/>}&nbsp;
 					<label>No. of installment</label>
 					<InputNumber min={1} max={1000} value={duration} onChange={changeDuration} step={1} />
 				</p>
