@@ -693,12 +693,12 @@ function NWContextProvider() {
 		lendings.forEach((lending: HoldingInput)=>{
 			if(lending && doesHoldingMatch(lending, selectedMembers, selectedCurrency)) {
 				if(lending.chg && lending.pur) {
+					const years = getDuration(lending.pur[0].year, lending.pur[0].month, lending.pur[0].qty);
+					if(!years) return;
 					if(!lending.chgF) {
 						total+=lending.pur[0].amt;
 						return setTotalLendings(total);
 					};
-					const years = getDuration(lending.pur[0].year, lending.pur[0].month, lending.pur[0].qty);
-					if(!years) return;
 					const value = getCompoundedIncome(lending.chg, lending.pur[0].amt, years, lending.chgF );
 					total+= value;
 				}
@@ -716,12 +716,12 @@ function NWContextProvider() {
 		deposits.forEach((deposit: HoldingInput)=>{
 			if(deposit && doesHoldingMatch(deposit, selectedMembers, selectedCurrency)) {
 				if(deposit.chg && deposit.pur) {
+					const years = getDuration(deposit.pur[0].year, deposit.pur[0].month, deposit.pur[0].qty);
+					if(!years) return;
 					if(!deposit.chgF) {
 						total+=deposit.pur[0].amt;
 						return setTotalLendings(total);
 					}
-					const years = getDuration(deposit.pur[0].year, deposit.pur[0].month, deposit.pur[0].qty);
-					if(!years) return;
 					const value = getCompoundedIncome(deposit.chg, deposit.pur[0].amt, years, deposit.chgF );
 					total+= value;
 				};
