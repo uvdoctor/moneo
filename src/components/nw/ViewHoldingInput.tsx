@@ -61,6 +61,9 @@ export default function ViewHoldingInput({
 		record.subt = subtype;
 		if(subCategoryOptions) {
 			let opts = subCategoryOptions[subtype];
+			if(childTab === ML || childTab === DEPO) {
+				if (!opts[record.chgF as number]) record.chgF = Number(Object.keys(opts)[0]);
+			}
 			if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
 		}
 		changeData([ ...data ]);
@@ -73,8 +76,8 @@ export default function ViewHoldingInput({
 
 	const changePurchaseDate = (val: string) => {
 		if (record.pur) {
-			record.pur[0].month = Number(val.slice(0, val.indexOf('-')));
-			record.pur[0].year = Number(val.slice(val.indexOf('-') + 1));
+			record.pur[0].year = Number(val.slice(0, val.indexOf('-')));
+			record.pur[0].month = Number(val.slice(val.indexOf('-') + 1));
 			changeData([ ...data ])
 		}
 	};

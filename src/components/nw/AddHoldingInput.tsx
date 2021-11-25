@@ -32,7 +32,7 @@ export default function AddHoldingInput({
 	const [ rate, setRate ] = useState<number>(0);
 	const [ date, setDate ] = useState<string>('');
 	const [ duration, setDuration ] = useState<number>(12);
-	const [ frequency, setFrequency ] = useState<number>(1);
+	const [ frequency, setFrequency ] = useState<number>(0);
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
@@ -135,7 +135,7 @@ export default function AddHoldingInput({
 			let opts = subCategoryOptions[subtype];
 			if (opts && Object.keys(opts).length && !opts[name]) {
 				let defaultVal: string = Object.keys(opts)[0];
-				childTab === ML || childTab === DEPO ? setName('') : setName(defaultVal); 
+				childTab === ML || childTab === DEPO ? setFrequency(Number(defaultVal)) : setName(defaultVal); 
 			}
 		}
 		let rec = getNewRec();

@@ -460,10 +460,13 @@ function NWContextProvider() {
 		setLoadingHoldings(false);
 	};
 
-	const getDuration = (yr: number, mon: number) => {
+	const getDuration = (yr: number, mon: number, dur?: number) => {
 		const today = new Date();		
 		const months = ((today.getFullYear() - yr) * 12) + ((today.getMonth()+1) - mon);
-		return Math.round((months/12) * 100) / 100;
+		if (dur) {
+			if (months > dur) return 0;
+		} 
+		return months/12;
 	}
 
 	useEffect(
@@ -674,11 +677,16 @@ function NWContextProvider() {
 		let total = 0;
 		lendings.forEach((lending: HoldingInput)=>{
 			if(lending && doesHoldingMatch(lending, selectedMembers, selectedCurrency)) {
-				// @ts-ignore
-				const years = getDuration(lending.pur[0].year, lending.pur[0].month);
-				// @ts-ignore
-				const value = getCompoundedIncome(lending.chg, lending.pur[0].amt, years, lending.chgF );
-				total+=value;
+				if(lending.chg && lending.pur) {
+					if(!lending.chgF) {
+						total+=lending.pur[0].amt;
+						return setTotalLendings(total);
+					};
+					const years = getDuration(lending.pur[0].year, lending.pur[0].month, lending.pur[0].qty);
+					if(!years) return;
+					const value = getCompoundedIncome(lending.chg, lending.pur[0].amt, years, lending.chgF );
+					total+= Math.round(value * 100) / 100;
+				}
 			};
 		})
 		setTotalLendings(total);
@@ -692,12 +700,17 @@ function NWContextProvider() {
 		let total = 0;
 		deposits.forEach((deposit: HoldingInput)=>{
 			if(deposit && doesHoldingMatch(deposit, selectedMembers, selectedCurrency)) {
-				// @ts-ignore
-				const years = getDuration(deposit.pur[0].year, deposit.pur[0].month);
-				// @ts-ignore
-				const value = getCompoundedIncome(deposit.chg, deposit.pur[0].amt, years, deposit.chgF );
-				total+=value;
-			};
+				if(deposit.chg && deposit.pur) {
+					if(!deposit.chgF) {
+						total+=deposit.pur[0].amt;
+						return setTotalLendings(total);
+					}
+					const years = getDuration(deposit.pur[0].year, deposit.pur[0].month, deposit.pur[0].qty);
+					if(!years) return;
+					const value = getCompoundedIncome(deposit.chg, deposit.pur[0].amt, years, deposit.chgF );
+					total+= Math.round(value * 100) / 100; 
+				};
+			}
 		})
 		setTotalDeposits(total);
 	};
