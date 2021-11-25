@@ -462,7 +462,7 @@ function NWContextProvider() {
 		setProperties([ ...(allHoldings?.property ? allHoldings.property: []) ]);
 		setLoans([ ...(allHoldings?.loans ? allHoldings.loans : []) ]);
 		setInsurance([ ...(allHoldings?.ins ? allHoldings.ins : []) ]);
-		// setCredits([...(allHoldings?.credits ? allHoldings.credits : []) ]);
+		setCredits([...(allHoldings?.credit ? allHoldings.credit : []) ]);
 		setDeposits([ ...(allHoldings?.deposits ? allHoldings.deposits : []) ]);
 		setSavings([ ...(allHoldings?.savings ? allHoldings.savings : []) ]);
 		setLendings([ ...(allHoldings?.lendings ? allHoldings.lendings : []) ]);

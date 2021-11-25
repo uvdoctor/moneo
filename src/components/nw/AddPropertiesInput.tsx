@@ -53,7 +53,6 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 
 	const changeName = (val: string) => {
 		setName(val);
-		disableOk(!val);
 		let rec = getNewRec();
 		rec.name = val;
 		setInput(rec);
@@ -151,7 +150,8 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 			mv: mv,
 			mvy: mvy,
 			mvm: mvm,
-			res: res
+			res: res,
+			name: name
 		};
 		return newRec;
 	};

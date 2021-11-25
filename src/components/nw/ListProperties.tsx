@@ -70,7 +70,7 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 		const owners = data[i].own;
 		return (
 		<Fragment>
-			<Row justify='space-between'>
+			<Row>
 				<h3>Purchase:-</h3>
 				<Col>
 					<NumberInput
@@ -101,7 +101,7 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 					size={'middle'}/>
 				</Col>
 			</Row>
-			<Row justify='space-between'><h3>Address:-</h3>
+			<Row><h3>Address:-</h3>
 				<Col>
 					<TextInput 
 					pre={''} 
@@ -123,7 +123,7 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 				</Col>
 			</Row>
 			
-			<Row justify='space-between'><h3>Own By:-</h3>
+			<Row><h3>Own By:-</h3>
 				{owners && owners.map((own: OwnershipInput, ind: number) => {
 					return(
 						<Col key={`owners-${ind}`}>
