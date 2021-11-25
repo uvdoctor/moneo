@@ -62,7 +62,6 @@ const appendGenericFields = (schema, tableName) => {
 
 const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 	if (!identifier) identifier = '';
-	const tname = table.slice(0, table.indexOf('-'));
 	const tableName = await getTableNameFromInitialWord('Feeds');
 	const getLength = (arr) => {
 		if (typeof arr === 'number') return arr;
@@ -70,8 +69,8 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 		return len.length;
 	};
 	let schema = {
-		id: `${tname}_${identifier}`,
-		tname: tname,
+		id: `${table}_${identifier}`,
+		tname: table,
 		count: getLength(data)
 	};
 	schema = appendGenericFields(schema, tableName);
