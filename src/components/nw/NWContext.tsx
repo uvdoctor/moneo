@@ -373,7 +373,7 @@ function NWContextProvider() {
 						H: 'Health',
 						P: 'Property',
 						V: 'Vehicle',
-						O: 'Other'
+						O: 'Others'
 					},
 					viewComp: ViewHoldingInput
 				},

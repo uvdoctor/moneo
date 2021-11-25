@@ -24,65 +24,79 @@ export default function AddHoldingInput({
 	subCategoryOptions
 }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
-	const { PM, CRYPTO, DEPO, ML, OTHER, NPS, PPF, EPF, VPF, VEHICLE, LOAN, INS } = TAB;
+	const { PM, CRYPTO, DEPO, ML, NPS, PPF, EPF, VPF, VEHICLE, LOAN, INS } = TAB;
 	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
-	const [ name, setName ] = useState<string>(childTab === ML || childTab === DEPO ? '' : subCategoryOptions ? Object.keys(subCategoryOptions[category])[0] : '');
+	const [ subCat, setSubCat ] = useState<string>(childTab === ML || childTab === DEPO ? '' : subCategoryOptions ? Object.keys(subCategoryOptions[category])[0] : '1');
+	const [ name, setName ] = useState<string>('');
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(0);
 	const [ date, setDate ] = useState<string>(`${new Date().getFullYear() - 5}-4`);
 	const [ duration, setDuration ] = useState<number>(12);
-	const [ frequency, setFrequency ] = useState<number>(1);
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
+		const pur = { amt: qty, 
+					  month: Number(date.slice(date.indexOf('-') + 1)),
+					  year: Number(date.slice(0, date.indexOf('-'))), 
+					  qty: childTab === VEHICLE ? 1 : duration };
+
 		switch (childTab) {
 			case INS:
-			case LOAN:
-				newRec.chg = duration;
-				newRec.chgF =  childTab === LOAN ? 12: Number(frequency);
+				newRec.chg = 10;
+				newRec.chgF = Number(subCat);
+				newRec.pur = [pur];
 				break;
+			case LOAN:
+				newRec.chg = rate;
+				newRec.chgF = 12;
+				newRec.pur = [pur];
+				newRec.name = name;
 			case DEPO:
 			case ML:
 				newRec.subt = category;
 				newRec.chg = rate;
-				newRec.chgF = newRec.subt === 'No' ? 0 : Number(frequency);
+				newRec.chgF = category === 'No' ? 0 : Number(subCat);
+				newRec.pur = [pur];
+				newRec.name = name;
 				break;
 			case NPS:
-			case OTHER:
+				newRec.qty = qty;
 				newRec.subt = category;
+				newRec.name = subCat;
 				break;
 			case PPF:
 			case EPF:
 			case VPF:
+				newRec.qty = qty;
 				newRec.chg = rate;
 				newRec.chgF = childTab === PPF ? Number(category) : 12;
 				newRec.type = AssetType.F;
 				newRec.subt = childTab;
+				newRec.name = name;
 				break;
 			case VEHICLE:
 				newRec.chg = 15;
 				newRec.chgF = 1;
 				newRec.type = AssetType.A;
 				newRec.subt = category;
+				newRec.pur = [pur];
+				newRec.name = name;
 				break;
 			case PM:
 			case CRYPTO:
+				newRec.qty = qty;
 				newRec.type = AssetType.A;
 				newRec.subt = category;
+				newRec.name = subCat;
 				break;
+			default:
+				newRec.name = name;
+				newRec.qty = qty;
 		}
-		newRec.qty = qty;
-		newRec.name = name;
-		newRec.fId = memberKey;
-		if(childTab === VEHICLE || childTab === ML || childTab === DEPO) {
-			newRec.pur = [{ amt: qty, 
-							month: Number(date.slice(date.indexOf('-') + 1)),
-							year: Number(date.slice(0, date.indexOf('-'))), 
-							qty: childTab === VEHICLE ? 1 : duration }] }
 		if (childTab === INS) newRec.subt = category;	
-		if(childTab === VEHICLE || childTab === ML || childTab === DEPO) newRec.qty = 0;		
 		childTab === PM || childTab === CRYPTO ? (newRec.curr = 'USD') : (newRec.curr = selectedCurrency);
+		newRec.fId = memberKey;
 		return newRec;
 	};
 
@@ -101,7 +115,6 @@ export default function AddHoldingInput({
 		disableOk(val <= 0);
 		let rec = getNewRec();
 		if (rec.pur) rec.pur[0].qty = val;
-		if(childTab === LOAN || childTab === INS) rec.chg = val;
 		setInput(rec);
 	};
 
@@ -109,6 +122,13 @@ export default function AddHoldingInput({
 		setName(val);
 		let rec = getNewRec();
 		rec.name = val;
+		setInput(rec);
+	};
+
+	const changeSubCat = (val: string) => {
+		setSubCat(val);
+		let rec = getNewRec();
+		(childTab === ML || childTab === DEPO) ? rec.chgF = Number(subCat) : rec.name = val;
 		setInput(rec);
 	};
 
@@ -132,10 +152,10 @@ export default function AddHoldingInput({
 		setCategory(subtype);
 		if (subCategoryOptions) {
 			let opts = subCategoryOptions[subtype];
-			if (opts && Object.keys(opts).length && !opts[name]) {
+			if (opts && Object.keys(opts).length && !opts[subCat]) {
 				let defaultVal: string = Object.keys(opts)[0];
-				childTab === ML || childTab === DEPO ? setFrequency(Number(defaultVal)) : setName(defaultVal); 
-			} else setFrequency(0);
+				setSubCat(defaultVal); 
+			}
 		}
 		let rec = getNewRec();
 		rec.subt = subtype;
@@ -149,24 +169,15 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const changeFrequency = (val: string) => {
-		setFrequency(Number(val));
-		let rec = getNewRec();
-		rec.chgF = Number(frequency);
-		setInput(rec);
-	};
+	const hasRate = (childTab: string) => [PPF, VPF, EPF, ML, DEPO, LOAN].includes(childTab);
 
-	const isLiability = (childTab: string) => [LOAN, INS].includes(childTab);
-
-	const hasRate = (childTab: string) => [PPF, VPF, EPF, ML, DEPO].includes(childTab);
-
-	const hasName = (childTab: string) => ![PM, NPS, CRYPTO].includes(childTab);
+	const hasName = (childTab: string) => ![PM, NPS, CRYPTO, INS].includes(childTab);
 
 	const hasQtyWithRate = (childTab: string) => [PM, NPS, CRYPTO].includes(childTab);
 
-	const hasDuration = (childTab: string) => [ML, DEPO].includes(childTab);
+	const hasDuration = (childTab: string) => [ML, DEPO, LOAN, INS].includes(childTab);
 
-	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE].includes(childTab);
+	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE, LOAN, INS].includes(childTab);
 
 	return (
 		<div style={{ textAlign: 'center' }}>
@@ -178,54 +189,63 @@ export default function AddHoldingInput({
 						options={categoryOptions}
 						changeHandler={(val: string) => changeCategory(val)}
 					/>
-				)}
+				)}&nbsp;
 				{subCategoryOptions && subCategoryOptions[category as string] && (
-						<Fragment>
-							&nbsp;
-							<SelectInput
-								pre=""
-								value={(childTab === ML || childTab === DEPO) ? frequency : name as string}
-								options={subCategoryOptions[category as string]}
-								changeHandler={(val: string) => (childTab === ML || childTab === DEPO) ? changeFrequency(val) : changeName(val)}
-								post={category === AssetSubType.Gold ? 'karat' : ''}
-							/>
-						</Fragment>
-					)}
+					<SelectInput
+						pre=""
+						value={subCat as string}
+						options={subCategoryOptions[category as string]}
+						changeHandler={(val: string) => changeSubCat(val)}
+						post={category === AssetSubType.Gold ? 'karat' : ''}
+					/>
+				)}
+				{childTab===INS && 
+					<SelectInput pre={''} 
+					options={{1: 'Yearly', 12: 'Monthly'}} 
+					value={subCat as string} 
+					changeHandler={(val: string) => changeSubCat(val)}/>
+				}
 			</p>
 			<p>
 				<Row justify="center">
-					{hasName(childTab) && <TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} />}
-					{hasQtyWithRate(childTab) ? 
-						<QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={name}/>
-					: <NumberInput pre={'Amount'} min={0} max={10000} value={qty} changeHandler={changeQty}
-						currency={selectedCurrency} step={1} noSlider/>
-					}
-				</Row>
-			</p>
+					{hasName(childTab) && 
+						<TextInput 
+							pre={'Name'} 
+							value={name} 
+							changeHandler={changeName} 
+							size={'middle'} 
+							width={250} />
+						}
+					{hasQtyWithRate(childTab) 
+						? <QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={subCat}/>
+						: <NumberInput 
+							pre={'Amount'} 
+							min={0} 
+							max={10000} 
+							value={qty} 
+							changeHandler={changeQty}
+							currency={selectedCurrency} 
+							step={1} 
+							noSlider/>
+						}
+					</Row>
+				</p>
 			{hasDate(childTab) && <p>
-					<DatePickerInput picker="month" title={'Date'} changeHandler={changeDate}
-							defaultVal={date} size={'middle'} />
-					&nbsp;&nbsp;
+				<DatePickerInput 
+					picker="month" 
+					title={'Date'} 
+					changeHandler={changeDate} 
+					defaultVal={date} 
+					size={'middle'} />
+				&nbsp;&nbsp;
 				{hasDuration(childTab) && 
-					<><label>Duration</label><InputNumber onChange={changeDuration} value={duration} /></>
-				}
+					<><label>Duration</label>
+					<InputNumber onChange={changeDuration} value={duration} /></>}
 			</p> }
 			{hasRate(childTab) && <p>
 				<label>Rate</label>&nbsp;
 				<InputNumber onChange={changeRate} min={1} max={50} value={rate} step={0.1} />
 			</p>}
-			{isLiability(childTab) && 
-				<p>
-					{ childTab === INS && <SelectInput
-						pre={'Installment Type'}
-						value={frequency}
-						options={{ 1: 'Yearly', 12: 'Monthly' }}
-						changeHandler={changeFrequency}
-					/>}&nbsp;
-					<label>No. of installment</label>
-					<InputNumber min={1} max={1000} value={duration} onChange={changeDuration} step={1} />
-				</p>
-			}
 			<p>
 				<SelectInput
 					pre={<UserOutlined />}
