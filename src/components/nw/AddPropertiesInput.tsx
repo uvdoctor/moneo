@@ -222,6 +222,7 @@ export default function AddPropertyInput({
 				<Col xs={24} md={12}>
 					<FormItem label="Name">
 						<TextInput
+							pre=""
 							value={name}
 							changeHandler={changeName}
 							size={"middle"}
@@ -239,6 +240,7 @@ export default function AddPropertyInput({
 							<Col xs={24} sm={12}>
 								{categoryOptions && (
 									<SelectInput
+										pre=""
 										value={subtype}
 										options={categoryOptions}
 										changeHandler={(val: any) => changeSubtype(val)}
@@ -258,6 +260,7 @@ export default function AddPropertyInput({
 				<Col xs={24} md={12}>
 					<FormItem label="Address">
 						<TextInput
+							pre=""
 							value={address}
 							changeHandler={changeAddress}
 							size={"middle"}
@@ -267,6 +270,7 @@ export default function AddPropertyInput({
 				<Col xs={24} md={12}>
 					<FormItem label="City">
 						<TextInput
+							pre=""
 							value={city}
 							changeHandler={changeCity}
 							size={"middle"}
@@ -277,6 +281,7 @@ export default function AddPropertyInput({
 				<Col xs={24} md={12}>
 					<FormItem label="State">
 						<TextInput
+							pre=""
 							value={state}
 							changeHandler={changeState}
 							size={"middle"}
@@ -286,12 +291,18 @@ export default function AddPropertyInput({
 				</Col>
 				<Col xs={24} md={12}>
 					<FormItem label="Pincode">
-						<TextInput value={pin} changeHandler={changePin} size={"middle"} />
+						<TextInput
+							pre=""
+							value={pin}
+							changeHandler={changePin}
+							size={"middle"}
+						/>
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
 					<FormItem label="Purchase Amount">
 						<NumberInput
+							pre=""
 							min={10}
 							max={100000}
 							value={amount}
@@ -305,6 +316,7 @@ export default function AddPropertyInput({
 				<Col xs={24} md={12}>
 					<FormItem label="Purchase Date">
 						<DatePickerInput
+							title=""
 							picker="month"
 							changeHandler={changePurchaseDate}
 							defaultVal={purchaseDate}
@@ -326,6 +338,7 @@ export default function AddPropertyInput({
 				<Col xs={24} md={12}>
 					<FormItem label="Market Value">
 						<NumberInput
+							pre=""
 							min={10}
 							max={100000}
 							value={mv}
@@ -336,12 +349,13 @@ export default function AddPropertyInput({
 						/>
 					</FormItem>
 				</Col>
-				<Col xs={24} md={12}>
-					{own &&
-						own[0] &&
-						own.map((own: Ownership, i: number) => (
-							<Row key={"own" + i}>
-								<Col>
+				{/*<Col xs={24} md={12}>*/}
+				{own &&
+					own[0] &&
+					own.map((own: Ownership, i: number) => (
+						<Col key={"own" + i} xs={24} md={12}>
+							<Row gutter={[10, 10]}>
+								<Col key={"own" + i}>
 									<SelectInput
 										pre={<UserOutlined />}
 										value={own.fId as string}
@@ -362,13 +376,15 @@ export default function AddPropertyInput({
 									<DeleteOutlined />
 								</Button>
 							</Row>
-						))}
-
+						</Col>
+					))}
+				<Col xs={24}>
 					<Button onClick={onAddBtnClick}>
 						Add Owners
 						<UserAddOutlined />
 					</Button>
 				</Col>
+				{/*</Col>*/}
 			</Row>
 		</Form>
 	);
