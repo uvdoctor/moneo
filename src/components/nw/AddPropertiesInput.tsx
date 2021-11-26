@@ -1,7 +1,7 @@
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import UserAddOutlined from "@ant-design/icons/lib/icons/UserAddOutlined";
 import UserOutlined from "@ant-design/icons/lib/icons/UserOutlined";
-import { Button, Checkbox, Col, InputNumber, Row } from "antd";
+import { Form, Button, Checkbox, Col, InputNumber, Row } from "antd";
 import React, { useContext, useState } from "react";
 import { Ownership, PropertyInput } from "../../api/goals";
 import DatePickerInput from "../form/DatePickerInput";
@@ -209,143 +209,167 @@ export default function AddPropertyInput({
 		setInput(rec);
 	};
 
+	const { Item: FormItem } = Form;
+
 	return (
-		<Row align="middle" gutter={[15, 15]}>
-			<Col xs={24} lg={12}>
-				<TextInput
-					pre={"Name"}
-					value={name}
-					changeHandler={changeName}
-					size={"middle"}
-				/>
-			</Col>
-			<Col xs={24} lg={12}>
-				{subtype === "O" || subtype === "P" ? null : (
-					<Checkbox onChange={(e) => changeRes(e.target.checked)}>
-						Residential
-					</Checkbox>
-				)}
-				{categoryOptions && (
-					<SelectInput
-						pre={"Type"}
-						value={subtype}
-						options={categoryOptions}
-						changeHandler={(val: any) => changeSubtype(val)}
-					/>
-				)}
-			</Col>
-			<Col xs={24} lg={12}>
-				<TextInput
-					pre={"Address"}
-					value={address}
-					changeHandler={changeAddress}
-					size={"middle"}
-				/>
-			</Col>
-			<Col xs={24} lg={12}>
-				<TextInput
-					pre={"Pincode"}
-					value={pin}
-					changeHandler={changePin}
-					size={"middle"}
-				/>
-			</Col>
-			<Col xs={24} lg={12}>
-				<TextInput
-					pre={"City"}
-					value={city}
-					changeHandler={changeCity}
-					size={"middle"}
-					disabled={true}
-				/>
-			</Col>
-			<Col xs={24} lg={12}>
-				<TextInput
-					pre={"State"}
-					value={state}
-					changeHandler={changeState}
-					size={"middle"}
-					disabled={true}
-				/>
-			</Col>
-			<Col xs={24} lg={12}>
-				<NumberInput
-					pre={"Purchase Amount"}
-					min={10}
-					max={100000}
-					value={amount}
-					changeHandler={changeAmount}
-					currency={selectedCurrency}
-					step={1}
-					noSlider
-				/>
-			</Col>
-			<Col xs={24} lg={12}>
-				<DatePickerInput
-					picker="month"
-					title={"Purchase Date"}
-					changeHandler={changePurchaseDate}
-					defaultVal={purchaseDate}
-					size={"middle"}
-				/>
-			</Col>
-
-			<Col xs={24} lg={12}>
-				<label>Appreciation Rate</label>&nbsp;
-				<InputNumber
-					onChange={changeRate}
-					min={1}
-					max={50}
-					value={rate}
-					step={0.1}
-				/>
-			</Col>
-			<Col xs={24} lg={12}>
-				<NumberInput
-					pre={"Market Value"}
-					min={10}
-					max={100000}
-					value={mv}
-					changeHandler={changeMv}
-					currency={selectedCurrency}
-					step={1}
-					noSlider
-				/>
-			</Col>
-
-			<Col xs={24} lg={12}>
-				{own &&
-					own[0] &&
-					own.map((own: Ownership, i: number) => (
-						<Row key={"own" + i}>
-							<Col>
-								<SelectInput
-									pre={<UserOutlined />}
-									value={own.fId as string}
-									options={getFamilyOptions(allFamily)}
-									changeHandler={(key: string) => changeMember(i, key)}
-								/>
+		<Form layout="vertical">
+			<Row
+				gutter={[
+					{ xs: 0, sm: 0, md: 35 },
+					{ xs: 0, sm: 0, md: 15 },
+				]}
+			>
+				<Col xs={24} md={12}>
+					<FormItem label="Name">
+						<TextInput
+							value={name}
+							changeHandler={changeName}
+							size={"middle"}
+						/>
+					</FormItem>
+				</Col>
+				<Col xs={24} md={12}>
+					<FormItem label="Type">
+						<Row
+							gutter={[
+								{ xs: 0, sm: 0, md: 15 },
+								{ xs: 0, sm: 0, md: 15 },
+							]}
+						>
+							<Col xs={24} sm={12}>
+								{categoryOptions && (
+									<SelectInput
+										value={subtype}
+										options={categoryOptions}
+										changeHandler={(val: any) => changeSubtype(val)}
+									/>
+								)}
 							</Col>
-							<Col>
-								<InputNumber
-									placeholder="Percentage"
-									min={1}
-									max={100}
-									value={own.per}
-									onChange={(val: number) => changePer(i, val)}
-								/>
+							<Col xs={24} md={12}>
+								{subtype === "O" || subtype === "P" ? null : (
+									<Checkbox onChange={(e) => changeRes(e.target.checked)}>
+										Residential
+									</Checkbox>
+								)}
 							</Col>
-							<Button type="link" onClick={() => removeTgt(i)} danger>
-								<DeleteOutlined />
-							</Button>
 						</Row>
-					))}
+					</FormItem>
+				</Col>
+				<Col xs={24} md={12}>
+					<FormItem label="Address">
+						<TextInput
+							value={address}
+							changeHandler={changeAddress}
+							size={"middle"}
+						/>
+					</FormItem>
+				</Col>
+				<Col xs={24} md={12}>
+					<FormItem label="City">
+						<TextInput
+							value={city}
+							changeHandler={changeCity}
+							size={"middle"}
+							disabled={true}
+						/>
+					</FormItem>
+				</Col>
+				<Col xs={24} md={12}>
+					<FormItem label="State">
+						<TextInput
+							value={state}
+							changeHandler={changeState}
+							size={"middle"}
+							disabled={true}
+						/>
+					</FormItem>
+				</Col>
+				<Col xs={24} md={12}>
+					<FormItem label="Pincode">
+						<TextInput value={pin} changeHandler={changePin} size={"middle"} />
+					</FormItem>
+				</Col>
+				<Col xs={24} md={12}>
+					<FormItem label="Purchase Amount">
+						<NumberInput
+							min={10}
+							max={100000}
+							value={amount}
+							changeHandler={changeAmount}
+							currency={selectedCurrency}
+							step={1}
+							noSlider
+						/>
+					</FormItem>
+				</Col>
+				<Col xs={24} md={12}>
+					<FormItem label="Purchase Date">
+						<DatePickerInput
+							picker="month"
+							changeHandler={changePurchaseDate}
+							defaultVal={purchaseDate}
+							size={"middle"}
+						/>
+					</FormItem>
+				</Col>
+				<Col xs={24} md={12}>
+					<FormItem label="Appreciation Rate">
+						<InputNumber
+							onChange={changeRate}
+							min={1}
+							max={50}
+							value={rate}
+							step={0.1}
+						/>
+					</FormItem>
+				</Col>
+				<Col xs={24} md={12}>
+					<FormItem label="Market Value">
+						<NumberInput
+							min={10}
+							max={100000}
+							value={mv}
+							changeHandler={changeMv}
+							currency={selectedCurrency}
+							step={1}
+							noSlider
+						/>
+					</FormItem>
+				</Col>
+				<Col xs={24} md={12}>
+					{own &&
+						own[0] &&
+						own.map((own: Ownership, i: number) => (
+							<Row key={"own" + i}>
+								<Col>
+									<SelectInput
+										pre={<UserOutlined />}
+										value={own.fId as string}
+										options={getFamilyOptions(allFamily)}
+										changeHandler={(key: string) => changeMember(i, key)}
+									/>
+								</Col>
+								<Col>
+									<InputNumber
+										placeholder="Percentage"
+										min={1}
+										max={100}
+										value={own.per}
+										onChange={(val: number) => changePer(i, val)}
+									/>
+								</Col>
+								<Button type="link" onClick={() => removeTgt(i)} danger>
+									<DeleteOutlined />
+								</Button>
+							</Row>
+						))}
 
-				<Button onClick={onAddBtnClick}>
-					Add Owners
-					<UserAddOutlined />
-				</Button>
-			</Col>
-		</Row>
+					<Button onClick={onAddBtnClick}>
+						Add Owners
+						<UserAddOutlined />
+					</Button>
+				</Col>
+			</Row>
+		</Form>
 	);
 }

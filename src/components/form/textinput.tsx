@@ -1,6 +1,6 @@
-import React, { ReactNode, useEffect } from 'react';
-import { Input } from 'antd';
-import { SizeType } from 'antd/lib/config-provider/SizeContext';
+import React, { ReactNode, useEffect } from "react";
+import { Input } from "antd";
+import { SizeType } from "antd/lib/config-provider/SizeContext";
 interface TextInputProps {
 	pre: ReactNode;
 	prefix?: ReactNode;
@@ -13,46 +13,47 @@ interface TextInputProps {
 	setError?: Function;
 	fieldName?: string;
 	pattern?: string;
-	size?: SizeType
-	password?: boolean
-	disabled?: boolean
-	width?: number | string
+	size?: SizeType;
+	password?: boolean;
+	disabled?: boolean;
+	width?: number | string;
 }
 
 export default function TextInput(props: TextInputProps) {
 	const validate = () => {
-		if ( !props.setError || !props.fieldName ) return;
+		if (!props.setError || !props.fieldName) return;
 		if (!props.value) {
-			props.setError('');
+			props.setError("");
 			return;
 		}
 		if (props.minLength && props.value.length < props.minLength) {
-			props.setError(`${props.fieldName} should at least be ${props.minLength} characters`);
+			props.setError(
+				`${props.fieldName} should at least be ${props.minLength} characters`
+			);
 		} else if (props.pattern && !props.value.match(props.pattern)) {
-			props.setError(`${props.fieldName} should be in the format ${props.placeholder}`);
-		} else props.setError('');
+			props.setError(
+				`${props.fieldName} should be in the format ${props.placeholder}`
+			);
+		} else props.setError("");
 	};
 
-	useEffect(
-		() => {
-			validate();
-		},
-		[ props.value ]
-	);
+	useEffect(() => {
+		validate();
+	}, [props.value]);
 
 	return (
 		<Input
 			className="input"
-			type={props.password ? "password" : "text"} 
+			type={props.password ? "password" : "text"}
 			addonBefore={props.pre}
 			addonAfter={props.post}
 			prefix={props.prefix}
 			size={props.size ? props.size : "large"}
-			style={{width : props.width ? props.width: 350}}
-			placeholder={props.placeholder ? props.placeholder : ''}
+			//style={{ width: props.width ? props.width : 260 }}
+			placeholder={props.placeholder ? props.placeholder : ""}
 			value={props.value}
 			onChange={(e) => props.changeHandler(e.currentTarget.value)}
-			pattern={props.pattern ? props.pattern : ''}
+			pattern={props.pattern ? props.pattern : ""}
 			required
 			onPressEnter={(e: any) => {
 				e.preventDefault();
