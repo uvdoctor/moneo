@@ -31,11 +31,6 @@ export default function ViewHoldingInput({
 		changeData([ ...data ]);
 	};
 
-	const changeInstallmet = (val: number) => {
-		if(record.pur) record.pur[0].amt = val;
-		changeData([ ...data ]);
-	};
-
 	const changeName = (val: any) => {
 		record.name = val;
 		changeData([ ...data ]);
@@ -52,44 +47,40 @@ export default function ViewHoldingInput({
 		changeData([ ...data ]);
 	};
 
-	const changeYearly = (val: number) => {
-		record.chgF = val
-		changeData([ ...data ]);
-	};
-
 	const changeCategory = (subtype: string) => {
 		record.subt = subtype;
 		if(subCategoryOptions) {
 			let opts = subCategoryOptions[subtype];
+			if(childTab === ML || childTab === DEPO) {
+				if (!opts[record.chgF as number]) record.chgF = Number(Object.keys(opts)[0]);
+			}
 			if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
 		}
 		changeData([ ...data ]);
 	};
 
 	const changeSubCategory = (val: string) => {
-		(childTab === ML || childTab === DEPO ) ? record.chgF = Number(val) : record.name = val;
+		(childTab === ML || childTab === DEPO || childTab === INS ) ? record.chgF = Number(val) : record.name = val;
 		changeData([ ...data ]);
 	};
 
 	const changePurchaseDate = (val: string) => {
 		if (record.pur) {
-			record.pur[0].month = Number(val.slice(0, val.indexOf('-')));
-			record.pur[0].year = Number(val.slice(val.indexOf('-') + 1));
+			record.pur[0].year = Number(val.slice(0, val.indexOf('-')));
+			record.pur[0].month = Number(val.slice(val.indexOf('-') + 1));
 			changeData([ ...data ])
 		}
 	};
 
-	const isLiability = (childTab: string) => [LOAN, INS].includes(childTab);
+	const hasRate = (childTab: string) => [PPF, VPF, EPF, ML, DEPO, LOAN].includes(childTab);
 
-	const hasRate = (childTab: string) => [PPF, VPF, EPF, ML, DEPO].includes(childTab);
-
-	const hasName = (childTab: string) => ![PM, NPS, CRYPTO].includes(childTab);
+	const hasName = (childTab: string) => ![PM, NPS, CRYPTO, INS].includes(childTab);
 
 	const hasQtyWithRate = (childTab: string) => [PM, NPS, CRYPTO].includes(childTab);
 
-	const hasDuration = (childTab: string) => [ML, DEPO].includes(childTab);
+	const hasDuration = (childTab: string) => [ML, DEPO, LOAN, INS].includes(childTab);
 
-	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE].includes(childTab);
+	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE, LOAN, INS].includes(childTab);
 
 	return (
 		<Fragment>
@@ -112,10 +103,21 @@ export default function ViewHoldingInput({
 					/>
 				</Fragment>)
 				: null}
+			{childTab===INS && 
+				<SelectInput pre={''} 
+				options={{1: 'Yearly', 12: 'Monthly'}} 
+				value={record.chgF as number} 
+				changeHandler={(val: string) => changeSubCategory(val)}/>
+			}
 			</Col>}
 			{hasName(childTab) && 
 				<Col>
-				<TextInput pre="Name" changeHandler={(val: string)=>changeName(val)} value={record.name as string} size={'small'} />
+					<TextInput 
+						pre="Name" 
+						changeHandler={(val: string)=>changeName(val)} 
+						value={record.name as string} 
+						size={'middle'} 
+						width={200}/>
 				</Col>
 			}
 			{hasQtyWithRate(childTab) ?
@@ -153,7 +155,7 @@ export default function ViewHoldingInput({
 					picker="month"
 					title={'Date'}
 					changeHandler={(val:string)=>changePurchaseDate(val)}
-					defaultVal={`${record.pur[0]?.year}-${record.pur[0]?.month}` as string}
+					defaultVal={`${record.pur[0].year}-${record.pur[0].month}` as string}
 					size={'middle'}
 				/>&nbsp;&nbsp;
 				{hasDuration(childTab) && 
@@ -161,22 +163,6 @@ export default function ViewHoldingInput({
 						onChange={(val: number)=>changeDuration(val)} 
 						value={record.pur[0].qty as number} /></>}
 			</Col>}
-			{isLiability(childTab) &&
-				<Col>
-					<SelectInput
-						pre={'Installment Type'}
-						value={record.chgF as number}
-						options={{ 1: 'Yearly', 12: 'Monthly' }}
-						changeHandler={(val: any)=>changeYearly(val)}/>&nbsp;
-					<label>No. of installment</label>
-					<InputNumber
-						min={1}
-						max={1000}
-						value={record.pur ? record.pur[0].amt as number : 0}
-						onChange={(val: number)=>changeInstallmet(val)}
-						step={1}
-					/>
-				</Col>}
 			</Fragment>
 	);
 }

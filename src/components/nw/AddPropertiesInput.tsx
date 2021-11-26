@@ -31,9 +31,11 @@ export default function AddPropertyInput({
 	const [memberKey, setMemberKey] = useState<string>(
 		getDefaultMember(allFamily, selectedMembers)
 	);
-	const [rate, setRate] = useState<number>(1);
+	const [rate, setRate] = useState<number>(8);
 	const [amount, setAmount] = useState<number>(1000);
-	const [purchaseDate, setPurchaseDate] = useState<string>("");
+	const [purchaseDate, setPurchaseDate] = useState<string>(
+		`${new Date().getFullYear() - 5}-4`
+	);
 	const [city, setCity] = useState<string>("");
 	const [address, setAddress] = useState<string>("");
 	const [mv, setMv] = useState<number>(0);
@@ -61,7 +63,6 @@ export default function AddPropertyInput({
 
 	const changeName = (val: string) => {
 		setName(val);
-		disableOk(!val);
 		let rec = getNewRec();
 		rec.name = val;
 		setInput(rec);
@@ -162,6 +163,7 @@ export default function AddPropertyInput({
 			mvy: mvy,
 			mvm: mvm,
 			res: res,
+			name: name,
 		};
 		return newRec;
 	};
@@ -208,142 +210,169 @@ export default function AddPropertyInput({
 	};
 
 	return (
-		<>
-			<Row align="middle" gutter={[15, 15]}>
-				<Col xs={24} lg={12}>
-					<TextInput
-						pre={"Name"}
-						value={name}
-						changeHandler={changeName}
-						size={"middle"}
-					/>
-				</Col>
-				<Col xs={24} lg={12}>
-					{categoryOptions && (
-						<SelectInput
-							pre={"Type"}
-							value={subtype}
-							options={categoryOptions}
-							changeHandler={(val: any) => changeSubtype(val)}
-						/>
-					)}
+		<div style={{ textAlign: "center" }}>
+			<p>
+				<Row justify="center">
 					{subtype === "O" || subtype === "P" ? null : (
-						<Checkbox onChange={(e) => changeRes(e.target.checked)}>
-							Residential
-						</Checkbox>
+						<Col>
+							<Checkbox onChange={(e) => changeRes(e.target.checked)}>
+								Residential
+							</Checkbox>
+						</Col>
 					)}
-				</Col>
-				<Col xs={24} lg={12}>
-					<TextInput
-						pre={"Address"}
-						value={address}
-						changeHandler={changeAddress}
-						size={"middle"}
-					/>
-				</Col>
-				<Col xs={24} lg={12}>
-					<TextInput
-						pre={"City"}
-						value={city}
-						changeHandler={changeCity}
-						size={"middle"}
-						disabled={true}
-					/>
-				</Col>
-				<Col xs={24} lg={12}>
-					<TextInput
-						pre={"State"}
-						value={state}
-						changeHandler={changeState}
-						size={"middle"}
-						disabled={true}
-					/>
-				</Col>
-				<Col xs={24} lg={12}>
-					<TextInput
-						pre={"Pincode"}
-						value={pin}
-						changeHandler={changePin}
-						size={"middle"}
-					/>
-				</Col>
-				<Col xs={24} lg={12}>
-					<NumberInput
-						pre={"Purchase Amount"}
-						min={10}
-						max={100000}
-						value={amount}
-						changeHandler={changeAmount}
-						currency={selectedCurrency}
-						step={1}
-						noSlider
-					/>
-				</Col>
-				<Col xs={24} lg={12}>
-					<DatePickerInput
-						picker="month"
-						title={"Purchase Date"}
-						changeHandler={changePurchaseDate}
-						defaultVal={purchaseDate}
-						size={"middle"}
-					/>
-				</Col>
-				<Col xs={24} lg={12}>
-					<label>Appreciation Rate</label>
-					<InputNumber
-						onChange={changeRate}
-						min={1}
-						max={50}
-						value={rate}
-						step={0.1}
-					/>
-				</Col>
-				<Col xs={24} lg={12}>
-					<NumberInput
-						pre={"Market Value"}
-						min={10}
-						max={100000}
-						value={mv}
-						changeHandler={changeMv}
-						currency={selectedCurrency}
-						step={1}
-						noSlider
-					/>
-				</Col>
-				<Col xs={24}>
+					<span>&nbsp;&nbsp;</span>
+					{categoryOptions && (
+						<Col>
+							<SelectInput
+								pre={"Type"}
+								value={subtype}
+								options={categoryOptions}
+								changeHandler={(val: any) => changeSubtype(val)}
+							/>
+						</Col>
+					)}
+					<span>&nbsp;&nbsp;</span>
+					<Col>
+						<TextInput
+							pre={"Name"}
+							value={name}
+							changeHandler={changeName}
+							size={"middle"}
+						/>
+					</Col>
+				</Row>
+			</p>
+			<p>
+				<Row justify={"space-around"}>
+					<Col>
+						<TextInput
+							pre={"Pincode"}
+							value={pin}
+							changeHandler={changePin}
+							size={"middle"}
+							width={200}
+						/>
+					</Col>
+					<Col>
+						<TextInput
+							pre={"City"}
+							value={city}
+							changeHandler={changeCity}
+							size={"middle"}
+							width={200}
+							disabled={true}
+						/>
+					</Col>
+					<Col>
+						<TextInput
+							pre={"State"}
+							value={state}
+							changeHandler={changeState}
+							size={"middle"}
+							width={200}
+							disabled={true}
+						/>
+					</Col>
+				</Row>
+			</p>
+			<p>
+				<TextInput
+					pre={"Address"}
+					value={address}
+					changeHandler={changeAddress}
+					size={"middle"}
+					width={700}
+				/>
+			</p>
+			<p>
+				<Row justify={"center"}>
+					<Col>
+						<NumberInput
+							pre={"Purchase Amount"}
+							min={10}
+							max={100000}
+							value={amount}
+							changeHandler={changeAmount}
+							currency={selectedCurrency}
+							step={1}
+							noSlider
+						/>
+					</Col>
+					<Col>
+						<DatePickerInput
+							picker="month"
+							title={"Purchase Date"}
+							changeHandler={changePurchaseDate}
+							defaultVal={purchaseDate}
+							size={"middle"}
+						/>
+					</Col>
+				</Row>
+			</p>
+			<p>
+				<Row justify={"center"}>
+					<Col>
+						<label>Appreciation Rate</label>&nbsp;
+						<InputNumber
+							onChange={changeRate}
+							min={1}
+							max={50}
+							value={rate}
+							step={0.1}
+						/>
+					</Col>
+					<Col>
+						<NumberInput
+							pre={"Market Value"}
+							min={10}
+							max={100000}
+							value={mv}
+							changeHandler={changeMv}
+							currency={selectedCurrency}
+							step={1}
+							noSlider
+						/>
+					</Col>
+				</Row>
+			</p>
+			<p>
+				<Col>
 					{own &&
 						own[0] &&
 						own.map((own: Ownership, i: number) => (
-							<Row key={"own" + i}>
-								<Col>
-									<SelectInput
-										pre={<UserOutlined />}
-										value={own.fId as string}
-										options={getFamilyOptions(allFamily)}
-										changeHandler={(key: string) => changeMember(i, key)}
-									/>
-								</Col>
-								<Col>
-									<InputNumber
-										placeholder="Percentage"
-										min={1}
-										max={100}
-										value={own.per}
-										onChange={(val: number) => changePer(i, val)}
-									/>
-								</Col>
-								<Button type="link" onClick={() => removeTgt(i)} danger>
-									<DeleteOutlined />
-								</Button>
-							</Row>
+							<Fragment key={"own" + i}>
+								<Row justify="center">
+									<Col>
+										<SelectInput
+											pre={<UserOutlined />}
+											value={own.fId as string}
+											options={getFamilyOptions(allFamily)}
+											changeHandler={(key: string) => changeMember(i, key)}
+										/>
+									</Col>
+									<Col>
+										<InputNumber
+											placeholder="Percentage"
+											min={1}
+											max={100}
+											value={own.per}
+											onChange={(val: number) => changePer(i, val)}
+										/>
+									</Col>
+									<Button type="link" onClick={() => removeTgt(i)} danger>
+										<DeleteOutlined />
+									</Button>
+								</Row>
+							</Fragment>
 						))}
-
-					<Button onClick={onAddBtnClick}>
-						Add Owners
-						<UserAddOutlined />
-					</Button>
+					<Row justify="center">
+						<Button onClick={onAddBtnClick}>
+							Add Owners
+							<UserAddOutlined />
+						</Button>
+					</Row>
 				</Col>
-			</Row>
-		</>
+			</p>
+		</div>
 	);
 }

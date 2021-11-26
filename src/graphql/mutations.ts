@@ -406,6 +406,24 @@ export const createUserHoldings = /* GraphQL */ `
         type
         subt
       }
+      credit {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fId
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
       savings {
         id
         qty
@@ -715,6 +733,24 @@ export const updateUserHoldings = /* GraphQL */ `
         type
         subt
       }
+      credit {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fId
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
       savings {
         id
         qty
@@ -1007,6 +1043,24 @@ export const deleteUserHoldings = /* GraphQL */ `
         subt
       }
       loans {
+        id
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        name
+        fId
+        curr
+        chg
+        chgF
+        type
+        subt
+      }
+      credit {
         id
         qty
         pur {

@@ -15,11 +15,11 @@
       "function": {
         "insprice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/insprice-614c36327955756f6361-build.zip"
+          "s3Key": "amplify-builds/insprice-453733317a6a36644736-build.zip"
         },
         "EODPrice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/EODPrice-53773464685258637037-build.zip",
+          "s3Key": "amplify-builds/EODPrice-625969494c7266576263-build.zip",
           "apiGoalsGraphqlapiidoutput": "",
           "apiGoalsGraphqlapiendpointoutput": "",
           "eodApiKey": "611a020d72d487.59800610,611a01dc0083c5.19670434,611a0115bd4cd5.84750550,60d03a689523a3.63944368"
@@ -55,7 +55,7 @@
         },
         "moneopricelayer": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/moneopricelayer-LambdaLayerVersion38f4f869-build.zip"
+          "s3Key": "amplify-builds/moneopricelayer-LambdaLayerVersion52127337-build.zip"
         }
       },
       "interactions": {
