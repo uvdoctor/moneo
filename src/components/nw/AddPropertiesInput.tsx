@@ -216,7 +216,7 @@ export default function AddPropertyInput({
 			<Row
 				gutter={[
 					{ xs: 0, sm: 0, md: 35 },
-					{ xs: 0, sm: 0, md: 15 },
+					{ xs: 15, sm: 15, md: 15 },
 				]}
 			>
 				<Col xs={24} md={12}>
