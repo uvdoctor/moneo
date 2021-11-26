@@ -170,7 +170,7 @@ export default function AddHoldingInput({
 	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE].includes(childTab);
 
 	return (
-		<div style={{ textAlign: 'center' }}>
+		<div>
 			<p>
 				{categoryOptions && (
 					<SelectInput
