@@ -88,7 +88,7 @@ export default function ViewHoldingInput({
 			<Col>
 				 <SelectInput
 					pre=""
-					value={childTab === PPF || childTab === ML || childTab === DEPO ? record.chgF as number : record.subt as string}
+					value={(childTab === PPF || childTab === ML || childTab === DEPO) ? record.chgF as number : record.subt as string}
 					options={categoryOptions}
 					changeHandler={(val: string) => changeCategory(val)}
 				/>
