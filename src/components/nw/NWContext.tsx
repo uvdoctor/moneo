@@ -669,12 +669,14 @@ function NWContextProvider() {
 			if(ins && doesHoldingMatch(ins, selectedMembers, selectedCurrency)) {
 				if ( ins.pur && ins.chg ) {
 					if (ins.chgF === 1) {
-						const duration = new Date().getFullYear() - ins.pur[0].year;
-						const durLeft = ins.pur[0].qty - duration;
-						const getCashFlows = Array(durLeft).fill(ins.pur[0].amt);
-						console.log(getCashFlows);
-						const value = getNPV(ins.chg, getCashFlows, 0);
-						total += value;
+						const duration = getDuration(ins.pur[0].year, ins.pur[0].month, ins.pur[0].qty*12);
+						if(duration) {
+							const durLeft = ins.pur[0].qty - duration.years;
+							const getCashFlows = Array(durLeft).fill(ins.pur[0].amt);
+							console.log(getCashFlows);
+							const value = getNPV(ins.chg, getCashFlows, 0);
+							total += value;
+						}
 					}else {
 						const duration = getDuration(ins.pur[0].year, ins.pur[0].month, ins.pur[0].qty);
 						if(duration) {
