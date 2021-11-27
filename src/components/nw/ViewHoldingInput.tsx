@@ -56,9 +56,10 @@ export default function ViewHoldingInput({
 					let opts = subCategoryOptions[subtype];
 					if (!opts[record.chgF as number]) record.chgF = Number(Object.keys(opts)[0]);
 				}
-			}
+			} else {
 			let opts = subCategoryOptions[subtype];
 			if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
+			}
 		}
 		changeData([ ...data ]);
 	};
