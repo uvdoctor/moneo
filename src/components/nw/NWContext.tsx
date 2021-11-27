@@ -718,6 +718,19 @@ function NWContextProvider() {
 	};
 
 	const priceProperties = () => {
+		if(!properties.length) return setTotalProperties(0);
+		// let total = 0;
+		// properties.forEach((property: PropertyInput) => {
+		// 	if(property && doesHoldingMatch(property, selectedMembers, selectedCurrency)) {
+		// 		if(property.pur && property.chg) {
+		// 			const duration = getDuration(property.pur[0].year, property.pur[0].month);
+		// 			if(duration) {
+		// 				const value = getCompoundedIncome(-(property.chg), property.pur[0].amt, duration.years) ;
+		// 				total += value;
+		// 			}
+		// 		}
+		// 	}
+		// })
 		setTotalProperties(0);
 	};
 

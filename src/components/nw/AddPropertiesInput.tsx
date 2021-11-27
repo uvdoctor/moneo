@@ -304,11 +304,11 @@ export default function AddPropertyInput({
 						<NumberInput
 							pre=""
 							min={10}
-							max={100000}
+							max={1000000000}
 							value={amount}
 							changeHandler={changeAmount}
 							currency={selectedCurrency}
-							step={1}
+							step={10}
 							noSlider
 						/>
 					</FormItem>
