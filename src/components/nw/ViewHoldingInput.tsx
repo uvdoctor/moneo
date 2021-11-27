@@ -51,9 +51,6 @@ export default function ViewHoldingInput({
 		record.subt = subtype;
 		if(subCategoryOptions) {
 			let opts = subCategoryOptions[subtype];
-			if(childTab === ML || childTab === DEPO) {
-				if (!opts[record.chgF as number]) record.chgF = Number(Object.keys(opts)[0]);
-			}
 			if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
 		}
 		changeData([ ...data ]);
@@ -88,7 +85,7 @@ export default function ViewHoldingInput({
 			<Col>
 				 <SelectInput
 					pre=""
-					value={(childTab === PPF || childTab === ML || childTab === DEPO) ? record.chgF as number : record.subt as string}
+					value={(childTab === PPF ) ? record.chgF as number : record.subt as string}
 					options={categoryOptions}
 					changeHandler={(val: string) => changeCategory(val)}
 				/>
