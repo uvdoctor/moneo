@@ -676,10 +676,12 @@ function NWContextProvider() {
 	const calculateCompundingIncome = (records: Array<HoldingInput>, setRecords: Function) => {
 		if(!records.length) return setRecords(0);
 		let total = 0;
+		let isMonth = true;
 		records.forEach((record: HoldingInput)=>{
 			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
 				if(record.chg && record.pur) {
-					const duration = getRemainingDuration(record.pur[0].year, record.pur[0].month, record.pur[0].qty);
+					if(record.chgF === 1) isMonth = false;
+					const duration = getRemainingDuration(record.pur[0].year, record.pur[0].month, record.pur[0].qty, isMonth);
 					if(!duration) return;
 					if(!record.chgF) {
 						total+=record.pur[0].amt;
