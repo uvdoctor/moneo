@@ -38,7 +38,8 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	const [ error, setError ] = useState<boolean>(false);
 
 	const duration = () => {
-		const data = getRemainingDuration(Number(purchaseDate.slice(0, purchaseDate.indexOf('-'))),Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1)));
+		const data = getRemainingDuration(Number(purchaseDate.slice(0, purchaseDate.indexOf('-'))),
+					Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1)));
 		return data?.years;
 	}
 	
@@ -51,7 +52,7 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	useEffect(() => {
 		// @ts-ignore
 		setMv(Math.round(getCompoundedIncome(rate, amount, duration())));
-	}, [amount, rate])
+	}, [amount, rate, purchaseDate])
 
 	const changeRate = (val: number) => {
 		setRate(val);
