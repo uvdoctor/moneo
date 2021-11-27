@@ -50,10 +50,14 @@ export default function ViewHoldingInput({
 	const changeCategory = (subtype: string) => {
 		record.subt = subtype;
 		if(subCategoryOptions) {
-			let opts = subCategoryOptions[subtype];
 			if(childTab === ML || childTab === DEPO) {
-				if (!opts[record.chgF as number]) record.chgF = 0;
+				if (subtype === 'No') record.chgF === 0;
+				else { 
+					let opts = subCategoryOptions[subtype];
+					if (!opts[record.chgF as number]) record.chgF = Number(Object.keys(opts)[0]);
+				}
 			}
+			let opts = subCategoryOptions[subtype];
 			if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
 		}
 		changeData([ ...data ]);
