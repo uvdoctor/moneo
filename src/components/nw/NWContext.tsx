@@ -725,7 +725,13 @@ function NWContextProvider() {
 
 	const priceProperties = () => {
 		if(!properties.length) return setTotalProperties(0);
-		setTotalProperties(0);
+		let total = 0;
+		properties.forEach((property: PropertyInput) => {
+			// if(properties && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
+			if(property.mv) total += property.mv;
+			// }
+		})
+		setTotalProperties(total);
 	};
 
 	const priceVehicles = () => {
