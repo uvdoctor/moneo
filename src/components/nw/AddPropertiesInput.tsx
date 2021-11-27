@@ -1,9 +1,9 @@
 import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined';
 import UserAddOutlined from '@ant-design/icons/lib/icons/UserAddOutlined';
 import UserOutlined from '@ant-design/icons/lib/icons/UserOutlined';
-import { Form, Button, Checkbox, Col, InputNumber, Row } from 'antd';
+import { Form, Button, Checkbox, Col, InputNumber, Row, Alert } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
-import { Ownership, PropertyInput } from '../../api/goals';
+import { OwnershipInput, PropertyInput } from '../../api/goals';
 import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
@@ -20,7 +20,7 @@ interface AddPropertiesInputProps {
 export default function AddPropertyInput({ setInput, disableOk, categoryOptions }: AddPropertiesInputProps) {
 	const { allFamily, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const [ subtype, setSubtype ] = useState<string>('P');
-	const [ own, setOwn ] = useState([]);
+	const [ own, setOwn ] = useState<Array<OwnershipInput>>([]);
 	const [ pin, setPin ] = useState<any>('');
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(8);
@@ -28,12 +28,19 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	const [ purchaseDate, setPurchaseDate ] = useState<string>(`${new Date().getFullYear() - 5}-4`);
 	const [ city, setCity ] = useState<string>('');
 	const [ address, setAddress ] = useState<string>('');
-	const [ mv, setMv ] = useState<number>(0);
-	const [ mvy, setMvy ] = useState<number>(2000);
+	const [ mv, setMv ] = useState<number>(1000);
+	const [ mvy, setMvy ] = useState<number>(0);
 	const [ mvm, setMvm ] = useState<number>(1);
 	const [ state, setState ] = useState<string>('');
 	const [ name, setName ] = useState<string>('');
 	const [ res, setRes ] = useState<boolean>(false);
+	const [ error, setError ] = useState<boolean>(false);
+
+	const ownerPercent = () => {
+		let count = 0;
+		own.map((item: any) => (count += item.per));
+		return count;
+	};
 
 	const changeRate = (val: number) => {
 		setRate(val);
@@ -165,22 +172,20 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 
 	const changeMember = (i: number, key: string) => {
 		setMemberKey(key);
-		// @ts-ignore
 		own[i].fId = key;
 		setOwn([ ...own ]);
 	};
 
 	const changePer = (i: number, val: number) => {
-		// @ts-ignore
 		own[i].per = val;
 		setOwn([ ...own ]);
+		const count = ownerPercent();
+		if (count > 100) own[i].per = val - (count - 100);
 	};
 
 	const onAddBtnClick = () => {
-		let count = 0;
-		own.map((item: any) => (count += item.per));
+		const count = ownerPercent();
 		if (count < 100) {
-			// @ts-ignore
 			own.push({ fId: memberKey, per: 100 - count });
 			setOwn([ ...own ]);
 			let rec = getNewRec();
@@ -190,10 +195,23 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	};
 
 	useEffect(() => {
-		// @ts-ignore
-		own.push({ fId: memberKey, per: 100 });
-		setOwn([ ...own ]);
+		if (!own.length) {
+			own.push({ fId: memberKey, per: 100 });
+			setOwn([ ...own ]);
+			let rec = getNewRec();
+			rec.own = own;
+			setInput(rec);
+		}
 	}, []);
+
+	useEffect(
+		() => {
+			const count = ownerPercent();
+			setError(count < 100);
+			disableOk(count < 100);
+		},
+		[ own, disableOk ]
+	);
 
 	const removeOwner = (index: number) => {
 		own.splice(index, 1);
@@ -301,7 +319,7 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 				{/*<Col xs={24} md={12}>*/}
 				{own &&
 					own[0] &&
-					own.map((own: Ownership, i: number) => (
+					own.map((own: OwnershipInput, i: number) => (
 						<Col key={'own' + i} xs={24} md={12}>
 							<Row gutter={[ 10, 10 ]}>
 								<Col key={'own' + i}>
@@ -335,6 +353,7 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 				</Col>
 				{/*</Col>*/}
 			</Row>
+			{error && <Alert type={'error'} message={'Owner percentage combination should equal to 100'} />}
 		</Form>
 	);
 }
