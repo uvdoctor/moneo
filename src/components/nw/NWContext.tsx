@@ -653,7 +653,7 @@ function NWContextProvider() {
 						const durLeft = loan.pur[0].qty - duration.months;
 						const getCashFlows = Array(durLeft).fill(loan.pur[0].amt);
 						console.log(getCashFlows);
-						const value = getNPV(loan.chg, getCashFlows, 0);
+						const value = getNPV(loan.chg, getCashFlows, 0, true);
 						total += value;
 					}
 				}
@@ -665,19 +665,27 @@ function NWContextProvider() {
 	const priceInsurance = () => {
 		if(!insurance.length) return setTotalInsurance(0);			
 		let total = 0;
-		// let durInMon = 0;
 		insurance.forEach((ins: HoldingInput) => {
 			if(ins && doesHoldingMatch(ins, selectedMembers, selectedCurrency)) {
 				if ( ins.pur && ins.chg ) {
-					// if (ins.chgF === 1) durInMon = ins.pur[0].qty * 12;
-					// else durInMon = ins.pur[0].qty;
-					const duration = getDuration(ins.pur[0].year, ins.pur[0].month, ins.pur[0].qty);
-					if(duration) {
-						const durLeft = ins.pur[0].qty - duration.months;
-						const getCashFlows = Array(durLeft).fill(ins.pur[0].amt);
-						console.log(getCashFlows);
-						const value = getNPV(ins.chg, getCashFlows, 0);
-						total += value;
+					if (ins.chgF === 1) {
+						const duration = getDuration(ins.pur[0].year, ins.pur[0].month, ins.pur[0].qty*12);
+						if(duration) {
+							const durLeft = ins.pur[0].qty - duration.years;
+							const getCashFlows = Array(durLeft).fill(ins.pur[0].amt);
+							console.log(getCashFlows);
+							const value = getNPV(ins.chg, getCashFlows, 0);
+							total += value;
+						}
+					}else {
+						const duration = getDuration(ins.pur[0].year, ins.pur[0].month, ins.pur[0].qty);
+						if(duration) {
+							const durLeft = ins.pur[0].qty - duration.months;
+							const getCashFlows = Array(durLeft).fill(ins.pur[0].amt);
+							console.log(getCashFlows);
+							const value = getNPV(ins.chg, getCashFlows, 0, true);
+							total += value;
+						}
 					}
 				}
 			}
@@ -710,6 +718,19 @@ function NWContextProvider() {
 	};
 
 	const priceProperties = () => {
+		if(!properties.length) return setTotalProperties(0);
+		// let total = 0;
+		// properties.forEach((property: PropertyInput) => {
+		// 	if(property && doesHoldingMatch(property, selectedMembers, selectedCurrency)) {
+		// 		if(property.pur && property.chg) {
+		// 			const duration = getDuration(property.pur[0].year, property.pur[0].month);
+		// 			if(duration) {
+		// 				const value = getCompoundedIncome(-(property.chg), property.pur[0].amt, duration.years) ;
+		// 				total += value;
+		// 			}
+		// 		}
+		// 	}
+		// })
 		setTotalProperties(0);
 	};
 

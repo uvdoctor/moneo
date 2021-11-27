@@ -100,7 +100,9 @@ function AppContextProvider({ children, user, handleLogout }: AppContextProvider
 	useEffect(() => {
 		if(user) { 
 			initData().then(() => setAppContextLoaded(true));
-			setOwner((JSON.parse(user?.storage[user.userDataKey])).Username)
+			//setOwner((JSON.parse(user?.storage[user.userDataKey])).Username)
+			if(user.storage[user.userDataKey])
+				setOwner((JSON.parse(user.storage[user.userDataKey])).Username)
 		}
 	}, [user]);
 

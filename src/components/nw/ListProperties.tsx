@@ -76,12 +76,12 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 					<NumberInput
 						pre={'Amount'}
 						min={10}
-						max={100000}
+						max={1000000000}
 						value={data[i].purchase?.amt as number}
 						// @ts-ignore
 						changeHandler={(val: number) => { data[i].purchase?.amt = val; changeData([ ...data ]) }}
 						currency={selectedCurrency}
-						step={1}
+						step={10}
 						noSlider
 					/>
 				</Col>

@@ -1,5 +1,5 @@
 import { UserOutlined } from '@ant-design/icons';
-import { InputNumber, Row } from 'antd';
+import { InputNumber } from 'antd';
 import React, { useContext, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import DatePickerInput from '../form/DatePickerInput';
@@ -184,7 +184,7 @@ export default function AddHoldingInput({
 	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE, LOAN, INS].includes(childTab);
 
 	return (
-		<div style={{ textAlign: 'center' }}>
+		<div>
 			<p>
 				{categoryOptions && (
 					<SelectInput
@@ -211,28 +211,22 @@ export default function AddHoldingInput({
 				}
 			</p>
 			<p>
-				<Row justify="center">
-					{hasName(childTab) && 
-						<TextInput 
-							pre={'Name'} 
-							value={name} 
-							changeHandler={changeName} 
-							size={'middle'} 
-							width={250} />
-						}
-					{hasQtyWithRate(childTab) 
-						? <QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={subCat}/>
-						: <NumberInput 
-							pre={'Amount'} 
-							min={0} 
-							max={10000} 
-							value={qty} 
-							changeHandler={changeQty}
-							currency={selectedCurrency} 
-							step={1} 
-							noSlider/>
-						}
-					</Row>
+				{hasName(childTab) && 
+					<TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} />}
+			</p>
+			<p>
+				{hasQtyWithRate(childTab) 
+					? <QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={subCat}/>
+					: <NumberInput 
+						pre={'Amount'} 
+						min={0} 
+						max={10000} 
+						value={qty} 
+						changeHandler={changeQty}
+						currency={selectedCurrency} 
+						step={1} 
+						noSlider/>
+					}
 				</p>
 			{hasDate(childTab) && <p>
 				<DatePickerInput 
