@@ -103,7 +103,6 @@ export default function AddHoldingInput({
 		if (childTab === INS) newRec.subt = category;	
 		childTab === PM || childTab === CRYPTO ? (newRec.curr = 'USD') : (newRec.curr = selectedCurrency);
 		newRec.fId = memberKey;
-		console.log(newRec);
 		return newRec;
 	};
 
