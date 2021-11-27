@@ -51,6 +51,9 @@ export default function ViewHoldingInput({
 		record.subt = subtype;
 		if(subCategoryOptions) {
 			let opts = subCategoryOptions[subtype];
+			if(childTab === ML || childTab === DEPO) {
+				if (!opts[record.chgF as number]) record.chgF = Number(Object.keys(opts)[0]);
+			}
 			if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
 		}
 		changeData([ ...data ]);
