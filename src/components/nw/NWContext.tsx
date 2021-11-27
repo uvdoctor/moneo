@@ -37,6 +37,7 @@ import { includesAny, initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
 import { getCompoundedIncome, getNPV } from '../calc/finance';
+import { bool } from 'aws-sdk/clients/signer';
 
 const NWContext = createContext({});
 
@@ -471,13 +472,14 @@ function NWContextProvider() {
 		setLoadingHoldings(false);
 	};
 
-	const getDuration = (yr: number, mon: number, dur?: number) => {
+	const getRemainingDuration = (yr: number, mon: number, dur?: number, isMonth: boolean = true) => {
 		const today = new Date();		
 		const months = ((today.getFullYear() - yr) * 12) + ((today.getMonth()+1) - mon);
-		if (dur) {
-			if (months > dur) return 0;
-		}
 		const years = Math.round((months/12) * 100) / 100;
+		if (dur) {
+			let duration = isMonth ? dur : dur*12;
+			if (months > duration) return 0;
+		}
 		return { months, years };
 	}
 
@@ -648,7 +650,7 @@ function NWContextProvider() {
 		loans.forEach((loan: HoldingInput) => {
 			if(loan && doesHoldingMatch(loan, selectedMembers, selectedCurrency)) {
 				if ( loan.pur && loan.chg ) {
-					const duration = getDuration(loan.pur[0].year, loan.pur[0].month, loan.pur[0].qty);
+					const duration = getRemainingDuration(loan.pur[0].year, loan.pur[0].month, loan.pur[0].qty);
 					if(duration) {
 						const durLeft = loan.pur[0].qty - duration.months;
 						const getCashFlows = Array(durLeft).fill(loan.pur[0].amt);
@@ -665,31 +667,22 @@ function NWContextProvider() {
 	const priceInsurance = () => {
 		if(!insurance.length) return setTotalInsurance(0);			
 		let total = 0;
+		let isMonth = true;
 		insurance.forEach((ins: HoldingInput) => {
 			if(ins && doesHoldingMatch(ins, selectedMembers, selectedCurrency)) {
 				if ( ins.pur && ins.chg ) {
-					if (ins.chgF === 1) {
-						const duration = getDuration(ins.pur[0].year, ins.pur[0].month, ins.pur[0].qty*12);
+					if(ins.chgF === 1) isMonth = false;
+					const duration = getRemainingDuration(ins.pur[0].year, ins.pur[0].month, ins.pur[0].qty, isMonth);
 						if(duration) {
-							const durLeft = ins.pur[0].qty - duration.years;
+							const durLeft = ins.pur[0].qty - (isMonth ? duration.months : duration.years);
 							const getCashFlows = Array(durLeft).fill(ins.pur[0].amt);
 							console.log(getCashFlows);
-							const value = getNPV(ins.chg, getCashFlows, 0, false, true);
-							total += value;
-						}
-					}else {
-						const duration = getDuration(ins.pur[0].year, ins.pur[0].month, ins.pur[0].qty);
-						if(duration) {
-							const durLeft = ins.pur[0].qty - duration.months;
-							const getCashFlows = Array(durLeft).fill(ins.pur[0].amt);
-							console.log(getCashFlows);
-							const value = getNPV(ins.chg, getCashFlows, 0, true, true);
+							const value = getNPV(ins.chg, getCashFlows, 0, (isMonth ? true : false), true);
 							total += value;
 						}
 					}
 				}
-			}
-		})
+			})
 		setTotalInsurance(total);
 	};
 
@@ -740,7 +733,7 @@ function NWContextProvider() {
 		vehicles.forEach((vehicle: HoldingInput) => {
 			if(vehicle && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
 				if(vehicle.pur && vehicle.chg) {
-					const duration = getDuration(vehicle.pur[0].year, vehicle.pur[0].month);
+					const duration = getRemainingDuration(vehicle.pur[0].year, vehicle.pur[0].month);
 					if(duration) {
 						const value = getCompoundedIncome(-(vehicle.chg), vehicle.pur[0].amt, duration.years) ;
 						total += value;
@@ -757,7 +750,7 @@ function NWContextProvider() {
 		lendings.forEach((lending: HoldingInput)=>{
 			if(lending && doesHoldingMatch(lending, selectedMembers, selectedCurrency)) {
 				if(lending.chg && lending.pur) {
-					const duration = getDuration(lending.pur[0].year, lending.pur[0].month, lending.pur[0].qty);
+					const duration = getRemainingDuration(lending.pur[0].year, lending.pur[0].month, lending.pur[0].qty);
 					if(!duration) return;
 					if(!lending.chgF) {
 						total+=lending.pur[0].amt;
@@ -777,7 +770,7 @@ function NWContextProvider() {
 		deposits.forEach((deposit: HoldingInput)=>{
 			if(deposit && doesHoldingMatch(deposit, selectedMembers, selectedCurrency)) {
 				if(deposit.chg && deposit.pur) {
-					const duration = getDuration(deposit.pur[0].year, deposit.pur[0].month, deposit.pur[0].qty);
+					const duration = getRemainingDuration(deposit.pur[0].year, deposit.pur[0].month, deposit.pur[0].qty);
 					if(!duration) return;
 					if(!deposit.chgF) {
 						total+=deposit.pur[0].amt;
