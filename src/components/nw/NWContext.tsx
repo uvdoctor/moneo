@@ -674,7 +674,7 @@ function NWContextProvider() {
 							const durLeft = ins.pur[0].qty - duration.years;
 							const getCashFlows = Array(durLeft).fill(ins.pur[0].amt);
 							console.log(getCashFlows);
-							const value = getNPV(ins.chg, getCashFlows, 0);
+							const value = getNPV(ins.chg, getCashFlows, 0, false, true);
 							total += value;
 						}
 					}else {
@@ -683,7 +683,7 @@ function NWContextProvider() {
 							const durLeft = ins.pur[0].qty - duration.months;
 							const getCashFlows = Array(durLeft).fill(ins.pur[0].amt);
 							console.log(getCashFlows);
-							const value = getNPV(ins.chg, getCashFlows, 0, true);
+							const value = getNPV(ins.chg, getCashFlows, 0, true, true);
 							total += value;
 						}
 					}
