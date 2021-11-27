@@ -52,6 +52,7 @@ export default function AddHoldingInput({
 				newRec.chgF = 12;
 				newRec.pur = [pur];
 				newRec.name = name;
+				break;
 			case DEPO:
 			case ML:
 				newRec.subt = category;
@@ -97,10 +98,12 @@ export default function AddHoldingInput({
 			default:
 				newRec.name = name;
 				newRec.qty = qty;
+				break;
 		}
 		if (childTab === INS) newRec.subt = category;	
 		childTab === PM || childTab === CRYPTO ? (newRec.curr = 'USD') : (newRec.curr = selectedCurrency);
 		newRec.fId = memberKey;
+		console.log(newRec);
 		return newRec;
 	};
 
@@ -132,7 +135,7 @@ export default function AddHoldingInput({
 	const changeSubCat = (val: string) => {
 		setSubCat(val);
 		let rec = getNewRec();
-		(childTab === ML || childTab === DEPO) ? rec.chgF = Number(subCat) : rec.name = val;
+		(childTab === ML || childTab === DEPO || childTab === INS) ? rec.chgF = Number(subCat) : rec.name = val;
 		setInput(rec);
 	};
 
