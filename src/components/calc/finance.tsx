@@ -20,15 +20,15 @@ export const getCompoundedIncome = (rate: number, value: number, years: number, 
 	value * getCompoundedRate(rate, years, frequency);
 //Tested
 
-export function getNPV(rr: number | Array<number>, cashFlows: Array<number>, startIndex: number = 0, isMonthly: boolean = false) {
-	let totalPV = 0;
-	for (let i = cashFlows.length - 1; i > 0; i--) {
+export function getNPV(rr: number | Array<number>, cashFlows: Array<number>, startIndex: number = 0, isMonthly: boolean = false, discountFirstCF: boolean = false) {
+	let totalPV = discountFirstCF ? 0 : cashFlows[0];
+	for (let i = cashFlows.length - 1; i > (discountFirstCF ? -1 : 0); i--) {
 		let dr = typeof rr === 'number' ? rr : rr[startIndex + i] ? rr[startIndex + i] : rr[rr.length - 1];
 		if(isMonthly) dr /= 12;
-		totalPV += cashFlows[i] / Math.pow((1 + dr / 100), i);
+		totalPV = (cashFlows[i] + totalPV) / (1 + dr / 100);
 
 	}
-	return Math.round(totalPV + cashFlows[0]);
+	return Math.round(totalPV);
 }
 
 export const findTarget = (loanPrepayments: Array<TargetInput>, installmentNum: number) =>
