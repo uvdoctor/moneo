@@ -25,10 +25,10 @@ export default function CurrentAA() {
 		totalVPF,
 		totalProperties,
 		selectedCurrency,
-		loadingHoldings
+		loadingHoldings,
+		totalAssets
 	}: any = useContext(NWContext);
 	const [ totalCash, setTotalCash ] = useState<number>(totalSavings + totalDeposits + totalLendings);
-	const [ total, setTotal ] = useState<number>(totalCash + totalFixed + totalEquity + totalAlternative + totalPPF + totalEPF + totalVPF);
 	const [ data, setData ] = useState<Array<any>>([]);
 	const categories: any = {
 		Equity: { color: COLORS.ORANGE, total: totalEquity },
@@ -39,7 +39,7 @@ export default function CurrentAA() {
 	};
 
 	const initChartData = () => {
-		if (!total) {
+		if (!totalAssets) {
 			setData([ ...[] ]);
 			return;
 		}
@@ -47,7 +47,7 @@ export default function CurrentAA() {
 		Object.keys(categories).forEach((cat) => {
 			data.push({
 				name: cat,
-				value: (categories[cat].total / total) * 100,
+				value: (categories[cat].total / totalAssets) * 100,
 			});
 		});
 		setData([ ...data ]);
@@ -62,40 +62,27 @@ export default function CurrentAA() {
 
     useEffect(() => {
         initChartData();
-    }, [total]);
-
-	useEffect(
-		() => {
-			setTotal(totalCash + totalEquity + totalFixed + totalAlternative + totalPPF + totalEPF + totalVPF);
-		},
-		[ totalCash, totalEquity, totalFixed, totalAlternative, totalPPF, totalEPF, totalVPF ]
-	);
+    }, [totalAssets]);
 
 	return !loadingHoldings ? (
-		total ? <Fragment>
+		totalAssets ? <Fragment>
+			<p>Total Asset Allocation of {toHumanFriendlyCurrency(totalAssets, selectedCurrency)}</p>
 			<Row>
-				<Col xs={24} lg={6}>
-					<div className="cash active">
-						<span className="arrow-right" />
-						Cash <Badge count={`${total ? totalCash / total : 0} %`} />
-						<strong>{toHumanFriendlyCurrency(totalCash, selectedCurrency)}</strong>
-					</div>
-				</Col>
-				<Col xs={24} sm={12} lg={6}>
+				<Col xs={24} sm={8}>
 					<div className="cash deposits">
-						Deposits <Badge count={`${total ? totalDeposits / total : 0} %`} />
+						Deposits <Badge count={`${toReadableNumber(totalDeposits / totalAssets*100,2)} %`} />
 						<strong>{toHumanFriendlyCurrency(totalDeposits, selectedCurrency)}</strong>
 					</div>
 				</Col>
-				<Col xs={24} sm={12} lg={6}>
+				<Col xs={24} sm={8}>
 					<div className="cash deposits">
-						Lent <Badge count={`${total ? totalLendings / total : 0} %`} />
+						Lent <Badge count={`${toReadableNumber(totalLendings / totalAssets*100,2)} %`} />
 						<strong>{toHumanFriendlyCurrency(totalLendings, selectedCurrency)}</strong>
 					</div>
 				</Col>
-				<Col xs={24} sm={12} lg={6}>
+				<Col xs={24} sm={8}>
 					<div className="cash">
-						Savings <Badge count={`${total ? totalSavings / total : 0} %`} />
+						Savings <Badge count={`${toReadableNumber(totalSavings / totalAssets*100, 2)} %`} />
 						<strong>{toHumanFriendlyCurrency(totalSavings, selectedCurrency)}</strong>
 					</div>
 				</Col>
@@ -103,7 +90,7 @@ export default function CurrentAA() {
 			<TreemapChart
 				data={{
 					name: 'root',
-					value: 100 - (total ? totalCash / total : 0),
+					value: 100 - (totalAssets ? totalCash / totalAssets : 0),
 					children: data
 				}}
 				meta={{
