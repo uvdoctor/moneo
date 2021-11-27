@@ -4,12 +4,13 @@ import UserOutlined from '@ant-design/icons/lib/icons/UserOutlined';
 import { Form, Button, Checkbox, Col, InputNumber, Row, Alert } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { OwnershipInput, PropertyInput } from '../../api/goals';
+import { getCompoundedIncome } from '../calc/finance';
 import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
 import { NWContext } from './NWContext';
-import { getDefaultMember, getFamilyOptions } from './nwutils';
+import { getDefaultMember, getFamilyOptions, getRemainingDuration } from './nwutils';
 
 interface AddPropertiesInputProps {
 	setInput: Function;
@@ -24,11 +25,11 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	const [ pin, setPin ] = useState<any>('');
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(8);
-	const [ amount, setAmount ] = useState<number>(1000);
+	const [ amount, setAmount ] = useState<number>(0);
 	const [ purchaseDate, setPurchaseDate ] = useState<string>(`${new Date().getFullYear() - 5}-4`);
 	const [ city, setCity ] = useState<string>('');
 	const [ address, setAddress ] = useState<string>('');
-	const [ mv, setMv ] = useState<number>(1000);
+	const [ mv, setMv ] = useState<number>(0);
 	const [ mvy, setMvy ] = useState<number>(0);
 	const [ mvm, setMvm ] = useState<number>(1);
 	const [ state, setState ] = useState<string>('');
@@ -36,15 +37,26 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	const [ res, setRes ] = useState<boolean>(false);
 	const [ error, setError ] = useState<boolean>(false);
 
+	const duration = () => {
+		const data = getRemainingDuration(Number(purchaseDate.slice(0, purchaseDate.indexOf('-'))),Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1)));
+		return data?.years;
+	}
+	
 	const ownerPercent = () => {
 		let count = 0;
 		own.map((item: any) => (count += item.per));
 		return count;
 	};
 
+	useEffect(() => {
+		// @ts-ignore
+		setMv(Math.round(getCompoundedIncome(rate, amount, duration())));
+	}, [amount, rate])
+
 	const changeRate = (val: number) => {
 		setRate(val);
 		disableOk(val <= 0);
+		// @ts-ignore
 		let rec = getNewRec();
 		rec.rate = val;
 		setInput(rec);
@@ -276,12 +288,12 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 					<FormItem label="Purchase Amount">
 						<NumberInput
 							pre=""
-							min={10}
+							min={1}
 							max={1000000000}
 							value={amount}
 							changeHandler={changeAmount}
 							currency={selectedCurrency}
-							step={10}
+							step={1}
 							noSlider
 						/>
 					</FormItem>
@@ -306,8 +318,8 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 					<FormItem label="Market Value">
 						<NumberInput
 							pre=""
-							min={10}
-							max={100000}
+							min={1}
+							max={1000000000}
 							value={mv}
 							changeHandler={changeMv}
 							currency={selectedCurrency}

@@ -11,6 +11,7 @@ import {
 	getNPSData,
 	getNPSFundManagers,
 	getRelatedCurrencies,
+	getRemainingDuration,
 	loadAllFamilyMembers,
 	loadHoldings,
 	loadMatchingINBond,
@@ -471,17 +472,6 @@ function NWContextProvider() {
 		setLoadingHoldings(false);
 	};
 
-	const getRemainingDuration = (yr: number, mon: number, dur?: number, isMonth: boolean = true) => {
-		const today = new Date();		
-		const months = ((today.getFullYear() - yr) * 12) + ((today.getMonth()+1) - mon);
-		const years = Math.round((months/12) * 100) / 100;
-		if (dur) {
-			let duration = isMonth ? dur : dur*12;
-			if (months > duration) return;
-		}
-		return { months, years };
-	}
-
 	useEffect(
 		() => {
 			if (appContextLoaded) initializeHoldings();
@@ -676,13 +666,15 @@ function NWContextProvider() {
 	const calculateCompundingIncome = (records: Array<HoldingInput>, setRecords: Function) => {
 		if(!records.length) return setRecords(0);
 		let total = 0;
-		let isMonth = true;
 		records.forEach((record: HoldingInput)=>{
 			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
 				if(record.chg && record.pur) {
-					if(record.chgF === 1 || record.chg === 2 || record.chgF === 4) isMonth = false;
-					const duration = getRemainingDuration(record.pur[0].year, record.pur[0].month, record.pur[0].qty, isMonth);
+					const duration = getRemainingDuration(record.pur[0].year, record.pur[0].month);
 					if(!duration) return;
+					if(record.chgF===1 && duration?.years > record.pur[0].qty) return;
+					if(record.chgF===2 && duration?.months/6 > record.pur[0].qty) return;
+					if(record.chgF===4 && duration?.months/4 > record.pur[0].qty) return;
+					if(record.chgF===12 && duration?.months > record.pur[0].qty) return;
 					if(!record.chgF) {
 						total+=record.pur[0].amt;
 						return setTotalLendings(total);

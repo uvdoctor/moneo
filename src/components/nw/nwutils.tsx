@@ -431,3 +431,14 @@ export const getInstrumentDataWithKey = async (
     console.log("Error while fetching instrument data: ", e);
   }
 };
+
+export const getRemainingDuration = (yr: number, mon: number, dur?: number, isMonth: boolean = true) => {
+  const today = new Date();		
+  const months = ((today.getFullYear() - yr) * 12) + ((today.getMonth()+1) - mon);
+  const years = months/12;
+  if (dur) {
+    let duration = isMonth ? dur : dur*12;
+    if (months > duration) return;
+  }
+  return { months, years };
+};
