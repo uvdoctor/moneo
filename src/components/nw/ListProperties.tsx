@@ -175,9 +175,9 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
             mv: <InputNumber
                     onChange={(val: number) => { data[i].mv = val; changeData([ ...data ]) }}
                     min={10}
-                    max={100000}
+                    max={100000000000}
                     value={data[i].mv as number}
-                    step={1} />,
+                    step={100} />,
 			rate: <InputNumber
 					onChange={(val: number) => { data[i].rate = val; changeData([ ...data ]) }}
 					min={1}
