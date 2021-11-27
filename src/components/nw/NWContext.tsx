@@ -680,7 +680,7 @@ function NWContextProvider() {
 		records.forEach((record: HoldingInput)=>{
 			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
 				if(record.chg && record.pur) {
-					if(record.chgF === 1) isMonth = false;
+					if(record.chgF === 1 || record.chg === 2 || record.chgF === 4) isMonth = false;
 					const duration = getRemainingDuration(record.pur[0].year, record.pur[0].month, record.pur[0].qty, isMonth);
 					if(!duration) return;
 					if(!record.chgF) {
