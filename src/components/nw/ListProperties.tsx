@@ -41,7 +41,7 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 
     const onAddBtnClick = (index: number) => {
 		let count = 0;
-		data[index].own.map((item: any) => (count += item.per));
+		data[index].own.map((item: OwnershipInput) => (count += item.per));
 		if (count < 100) {
 			data[index].own.push({ fId: memberKey, per: 100 - count });
 			changeData([ ...data ]);
