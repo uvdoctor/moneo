@@ -215,20 +215,18 @@ export default function AddHoldingInput({
 					<TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} />}
 			</p>
 			<p>
-				{/* <Row justify="center"> */}
-					{hasQtyWithRate(childTab) 
-						? <QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={subCat}/>
-						: <NumberInput 
-							pre={'Amount'} 
-							min={0} 
-							max={10000} 
-							value={qty} 
-							changeHandler={changeQty}
-							currency={selectedCurrency} 
-							step={1} 
-							noSlider/>
-						}
-					{/* </Row> */}
+				{hasQtyWithRate(childTab) 
+					? <QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={subCat}/>
+					: <NumberInput 
+						pre={'Amount'} 
+						min={0} 
+						max={10000} 
+						value={qty} 
+						changeHandler={changeQty}
+						currency={selectedCurrency} 
+						step={1} 
+						noSlider/>
+					}
 				</p>
 			{hasDate(childTab) && <p>
 				<DatePickerInput 
