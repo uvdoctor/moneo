@@ -669,7 +669,7 @@ function NWContextProvider() {
 			if(ins && doesHoldingMatch(ins, selectedMembers, selectedCurrency)) {
 				if ( ins.pur && ins.chg ) {
 					if (ins.chgF === 1) {
-						const duration = new Date().getFullYear() - ins.pur[0].qty;
+						const duration = new Date().getFullYear() - ins.pur[0].year;
 						const durLeft = ins.pur[0].qty - duration;
 						const getCashFlows = Array(durLeft).fill(ins.pur[0].amt);
 						console.log(getCashFlows);

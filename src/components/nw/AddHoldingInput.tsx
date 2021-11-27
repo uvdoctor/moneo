@@ -211,15 +211,11 @@ export default function AddHoldingInput({
 				}
 			</p>
 			<p>
-				<Row justify="center">
-					{hasName(childTab) && 
-						<TextInput 
-							pre={'Name'} 
-							value={name} 
-							changeHandler={changeName} 
-							size={'middle'} 
-							width={250} />
-						}
+				{hasName(childTab) && 
+					<TextInput pre={'Name'} value={name} changeHandler={changeName} size={'middle'} width={250} />}
+			</p>
+			<p>
+				{/* <Row justify="center"> */}
 					{hasQtyWithRate(childTab) 
 						? <QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={subCat}/>
 						: <NumberInput 
@@ -232,7 +228,7 @@ export default function AddHoldingInput({
 							step={1} 
 							noSlider/>
 						}
-					</Row>
+					{/* </Row> */}
 				</p>
 			{hasDate(childTab) && <p>
 				<DatePickerInput 
