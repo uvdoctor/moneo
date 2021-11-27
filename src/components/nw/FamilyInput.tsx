@@ -46,7 +46,7 @@ export default function FamilyInput() {
 			setSelectedMembers([ ...[ALL_FAMILY] ]);
 			return;
 		}
-        if(val.length === 1 && val[0]) {
+        if(val.length === 1 && val[0] && !selectedMembers.length) {
             setSelectedMembers([...val]);
             return;
         }
@@ -109,7 +109,7 @@ export default function FamilyInput() {
 
 	return (
         <Fragment>
-            {memberKeys.length && <Row align="middle">
+            {memberKeys.length ? <Row align="middle">
                     <Col>
                         Family List &nbsp;
                     </Col>
@@ -149,7 +149,7 @@ export default function FamilyInput() {
                             <Button type="link" style={{color: COLORS.WHITE}} icon={<EditOutlined />} onClick={() => setMode(EDIT_MODE)} />
                         </Tooltip>
                     </Col> : null}
-            </Row>}
+            </Row> : null}
             {mode && 
                 <Modal title={`${mode} Family Member`} visible={mode.length > 0} onCancel={() => setMode('')}
                 onOk={() => mode === ADD_MODE ? addMember() : changeMember()}
