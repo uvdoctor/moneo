@@ -1,15 +1,15 @@
-import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
-import UserAddOutlined from "@ant-design/icons/lib/icons/UserAddOutlined";
-import UserOutlined from "@ant-design/icons/lib/icons/UserOutlined";
-import { Form, Button, Checkbox, Col, InputNumber, Row } from "antd";
-import React, { useContext, useState } from "react";
-import { Ownership, PropertyInput } from "../../api/goals";
-import DatePickerInput from "../form/DatePickerInput";
-import NumberInput from "../form/numberinput";
-import SelectInput from "../form/selectinput";
-import TextInput from "../form/textinput";
-import { NWContext } from "./NWContext";
-import { getDefaultMember, getFamilyOptions } from "./nwutils";
+import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined';
+import UserAddOutlined from '@ant-design/icons/lib/icons/UserAddOutlined';
+import UserOutlined from '@ant-design/icons/lib/icons/UserOutlined';
+import { Form, Button, Checkbox, Col, InputNumber, Row } from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
+import { Ownership, PropertyInput } from '../../api/goals';
+import DatePickerInput from '../form/DatePickerInput';
+import NumberInput from '../form/numberinput';
+import SelectInput from '../form/selectinput';
+import TextInput from '../form/textinput';
+import { NWContext } from './NWContext';
+import { getDefaultMember, getFamilyOptions } from './nwutils';
 
 interface AddPropertiesInputProps {
 	setInput: Function;
@@ -17,33 +17,23 @@ interface AddPropertiesInputProps {
 	categoryOptions: any;
 }
 
-export default function AddPropertyInput({
-	setInput,
-	disableOk,
-	categoryOptions,
-}: AddPropertiesInputProps) {
-	const { allFamily, selectedMembers, selectedCurrency }: any = useContext(
-		NWContext
-	);
-	const [subtype, setSubtype] = useState<string>("P");
-	const [own, setOwn] = useState([]);
-	const [pin, setPin] = useState<any>("");
-	const [memberKey, setMemberKey] = useState<string>(
-		getDefaultMember(allFamily, selectedMembers)
-	);
-	const [rate, setRate] = useState<number>(8);
-	const [amount, setAmount] = useState<number>(1000);
-	const [purchaseDate, setPurchaseDate] = useState<string>(
-		`${new Date().getFullYear() - 5}-4`
-	);
-	const [city, setCity] = useState<string>("");
-	const [address, setAddress] = useState<string>("");
-	const [mv, setMv] = useState<number>(0);
-	const [mvy, setMvy] = useState<number>(2000);
-	const [mvm, setMvm] = useState<number>(1);
-	const [state, setState] = useState<string>("");
-	const [name, setName] = useState<string>("");
-	const [res, setRes] = useState<boolean>(false);
+export default function AddPropertyInput({ setInput, disableOk, categoryOptions }: AddPropertiesInputProps) {
+	const { allFamily, selectedMembers, selectedCurrency }: any = useContext(NWContext);
+	const [ subtype, setSubtype ] = useState<string>('P');
+	const [ own, setOwn ] = useState([]);
+	const [ pin, setPin ] = useState<any>('');
+	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
+	const [ rate, setRate ] = useState<number>(8);
+	const [ amount, setAmount ] = useState<number>(1000);
+	const [ purchaseDate, setPurchaseDate ] = useState<string>(`${new Date().getFullYear() - 5}-4`);
+	const [ city, setCity ] = useState<string>('');
+	const [ address, setAddress ] = useState<string>('');
+	const [ mv, setMv ] = useState<number>(0);
+	const [ mvy, setMvy ] = useState<number>(2000);
+	const [ mvm, setMvm ] = useState<number>(1);
+	const [ state, setState ] = useState<string>('');
+	const [ name, setName ] = useState<string>('');
+	const [ res, setRes ] = useState<boolean>(false);
 
 	const changeRate = (val: number) => {
 		setRate(val);
@@ -86,7 +76,7 @@ export default function AddPropertyInput({
 		setAmount(amt);
 		disableOk(amt <= 0);
 		let rec = getNewRec();
-		rec.purchase ? (rec.purchase.amt = amt) : "";
+		rec.purchase ? (rec.purchase.amt = amt) : '';
 		setInput(rec);
 	};
 
@@ -94,8 +84,8 @@ export default function AddPropertyInput({
 		setPurchaseDate(val);
 		let rec = getNewRec();
 		if (rec.purchase) {
-			rec.purchase.year = Number(val.slice(0, val.indexOf("-")));
-			rec.purchase.month = Number(val.slice(val.indexOf("-") + 1));
+			rec.purchase.year = Number(val.slice(0, val.indexOf('-')));
+			rec.purchase.month = Number(val.slice(val.indexOf('-') + 1));
 		}
 		setInput(rec);
 	};
@@ -120,11 +110,9 @@ export default function AddPropertyInput({
 
 	const changePin = async (val: any) => {
 		setPin(val);
-		if (selectedCurrency === "INR") {
+		if (selectedCurrency === 'INR') {
 			if (val.length === 6) {
-				const response = await fetch(
-					`https://api.postalpincode.in/pincode/${val}`
-				);
+				const response = await fetch(`https://api.postalpincode.in/pincode/${val}`);
 				const data = await response.json();
 				setState(data[0].PostOffice[0].State);
 				setCity(data[0].PostOffice[0].District);
@@ -148,13 +136,13 @@ export default function AddPropertyInput({
 			pin: pin,
 			purchase: {
 				amt: amount,
-				month: Number(purchaseDate.slice(purchaseDate.indexOf("-") + 1)),
-				year: Number(purchaseDate.slice(0, purchaseDate.indexOf("-"))),
-				qty: 1,
+				month: Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1)),
+				year: Number(purchaseDate.slice(0, purchaseDate.indexOf('-'))),
+				qty: 1
 			},
 			address: address,
 			curr: selectedCurrency,
-			country: selectedCurrency === "INR" ? "India" : "US",
+			country: selectedCurrency === 'INR' ? 'India' : 'US',
 			state: state,
 			city: city,
 			own: own,
@@ -163,7 +151,7 @@ export default function AddPropertyInput({
 			mvy: mvy,
 			mvm: mvm,
 			res: res,
-			name: name,
+			name: name
 		};
 		return newRec;
 	};
@@ -179,13 +167,13 @@ export default function AddPropertyInput({
 		setMemberKey(key);
 		// @ts-ignore
 		own[i].fId = key;
-		setOwn([...own]);
+		setOwn([ ...own ]);
 	};
 
 	const changePer = (i: number, val: number) => {
 		// @ts-ignore
 		own[i].per = val;
-		setOwn([...own]);
+		setOwn([ ...own ]);
 	};
 
 	const onAddBtnClick = () => {
@@ -194,16 +182,22 @@ export default function AddPropertyInput({
 		if (count < 100) {
 			// @ts-ignore
 			own.push({ fId: memberKey, per: 100 - count });
-			setOwn([...own]);
+			setOwn([ ...own ]);
 			let rec = getNewRec();
 			rec.own = own;
 			setInput(rec);
 		}
 	};
 
-	const removeTgt = (index: number) => {
+	useEffect(() => {
+		// @ts-ignore
+		own.push({ fId: memberKey, per: 100 });
+		setOwn([ ...own ]);
+	}, []);
+
+	const removeOwner = (index: number) => {
 		own.splice(index, 1);
-		setOwn([...own]);
+		setOwn([ ...own ]);
 		let rec = getNewRec();
 		rec.own = own;
 		setInput(rec);
@@ -213,30 +207,15 @@ export default function AddPropertyInput({
 
 	return (
 		<Form layout="vertical">
-			<Row
-				gutter={[
-					{ xs: 0, sm: 0, md: 35 },
-					{ xs: 15, sm: 15, md: 15 },
-				]}
-			>
+			<Row gutter={[ { xs: 0, sm: 0, md: 35 }, { xs: 15, sm: 15, md: 15 } ]}>
 				<Col xs={24} md={12}>
 					<FormItem label="Name">
-						<TextInput
-							pre=""
-							value={name}
-							changeHandler={changeName}
-							size={"middle"}
-						/>
+						<TextInput pre="" value={name} changeHandler={changeName} size={'middle'} />
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
 					<FormItem label="Type">
-						<Row
-							gutter={[
-								{ xs: 0, sm: 0, md: 15 },
-								{ xs: 0, sm: 0, md: 15 },
-							]}
-						>
+						<Row gutter={[ { xs: 0, sm: 0, md: 15 }, { xs: 0, sm: 0, md: 15 } ]}>
 							<Col xs={24} sm={12}>
 								{categoryOptions && (
 									<SelectInput
@@ -248,10 +227,8 @@ export default function AddPropertyInput({
 								)}
 							</Col>
 							<Col xs={24} md={12}>
-								{subtype === "O" || subtype === "P" ? null : (
-									<Checkbox onChange={(e) => changeRes(e.target.checked)}>
-										Residential
-									</Checkbox>
+								{subtype === 'O' || subtype === 'P' ? null : (
+									<Checkbox onChange={(e) => changeRes(e.target.checked)}>Residential</Checkbox>
 								)}
 							</Col>
 						</Row>
@@ -259,44 +236,22 @@ export default function AddPropertyInput({
 				</Col>
 				<Col xs={24} md={12}>
 					<FormItem label="Address">
-						<TextInput
-							pre=""
-							value={address}
-							changeHandler={changeAddress}
-							size={"middle"}
-						/>
+						<TextInput pre="" value={address} changeHandler={changeAddress} size={'middle'} />
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
 					<FormItem label="City">
-						<TextInput
-							pre=""
-							value={city}
-							changeHandler={changeCity}
-							size={"middle"}
-							disabled={true}
-						/>
+						<TextInput pre="" value={city} changeHandler={changeCity} size={'middle'} disabled={true} />
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
 					<FormItem label="State">
-						<TextInput
-							pre=""
-							value={state}
-							changeHandler={changeState}
-							size={"middle"}
-							disabled={true}
-						/>
+						<TextInput pre="" value={state} changeHandler={changeState} size={'middle'} disabled={true} />
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
 					<FormItem label="Pincode">
-						<TextInput
-							pre=""
-							value={pin}
-							changeHandler={changePin}
-							size={"middle"}
-						/>
+						<TextInput pre="" value={pin} changeHandler={changePin} size={'middle'} />
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
@@ -320,19 +275,13 @@ export default function AddPropertyInput({
 							picker="month"
 							changeHandler={changePurchaseDate}
 							defaultVal={purchaseDate}
-							size={"middle"}
+							size={'middle'}
 						/>
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
 					<FormItem label="Appreciation Rate">
-						<InputNumber
-							onChange={changeRate}
-							min={1}
-							max={50}
-							value={rate}
-							step={0.1}
-						/>
+						<InputNumber onChange={changeRate} min={1} max={50} value={rate} step={0.1} />
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
@@ -353,9 +302,9 @@ export default function AddPropertyInput({
 				{own &&
 					own[0] &&
 					own.map((own: Ownership, i: number) => (
-						<Col key={"own" + i} xs={24} md={12}>
-							<Row gutter={[10, 10]}>
-								<Col key={"own" + i}>
+						<Col key={'own' + i} xs={24} md={12}>
+							<Row gutter={[ 10, 10 ]}>
+								<Col key={'own' + i}>
 									<SelectInput
 										pre={<UserOutlined />}
 										value={own.fId as string}
@@ -372,7 +321,7 @@ export default function AddPropertyInput({
 										onChange={(val: number) => changePer(i, val)}
 									/>
 								</Col>
-								<Button type="link" onClick={() => removeTgt(i)} danger>
+								<Button type="link" onClick={() => removeOwner(i)} danger>
 									<DeleteOutlined />
 								</Button>
 							</Row>
