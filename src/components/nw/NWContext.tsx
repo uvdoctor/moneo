@@ -663,8 +663,8 @@ function NWContextProvider() {
 		calculateNPV(insurance, setTotalInsurance);
 	};
 
-	const calculateCompundingIncome = (records: Array<HoldingInput>, setRecords: Function) => {
-		if(!records.length) return setRecords(0);
+	const calculateCompundingIncome = (records: Array<HoldingInput>, setTotal: Function) => {
+		if(!records.length) return setTotal(0);
 		let total = 0;
 		records.forEach((record: HoldingInput)=>{
 			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
@@ -677,14 +677,14 @@ function NWContextProvider() {
 					if(record.chgF===12 && duration?.months > record.pur[0].qty) return;
 					if(!record.chgF) {
 						total+=record.pur[0].amt;
-						return setTotalLendings(total);
+						return setTotal(total);
 					};
 					const value = getCompoundedIncome(record.chg, record.pur[0].amt, duration.years, record.chgF );
 					total+= value;
 				}
 			};
 		})
-		setRecords(total);
+		setTotal(total);
 	};
 
 	const priceLendings = () => {
