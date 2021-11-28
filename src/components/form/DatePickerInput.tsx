@@ -23,9 +23,9 @@ export default function DatePickerInput(props: DatePickerInputProps) {
 		return `${today.getFullYear()-20}-${today.getMonth() + 1}-${today.getDate()}`;
 	};
 
-	const getMonthDate = () => `${new Date().getFullYear() - 5}-4`;
+	const getMonthDate = () => `Apr-${new Date().getFullYear() - 5}`;
 
-	const dateFormat = props.picker === 'month' ? 'yyyy-MM' : props.picker === 'year' ? 'yyyy' : 'yyyy-MM-dd';
+	const dateFormat = props.picker === 'month' ? 'MMM-yyyy' : props.picker === 'year' ? 'yyyy' : 'yyyy-MM-dd';
 	const defaultDate = props.picker === 'month' ? getMonthDate() : props.picker === 'year' ? '2000' : getTodayDate();
 
 	return (
