@@ -1,9 +1,8 @@
-import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined';
-import UserAddOutlined from '@ant-design/icons/lib/icons/UserAddOutlined';
-import UserOutlined from '@ant-design/icons/lib/icons/UserOutlined';
-import { Form, Button, Checkbox, Col, InputNumber, Row, Alert } from 'antd';
+import { PlusOutlined, DeleteOutlined, UserOutlined } from '@ant-design/icons';
+import { Form, Button, Checkbox, Col, InputNumber, Row, Alert, Tooltip } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { OwnershipInput, PropertyInput } from '../../api/goals';
+import { COLORS } from '../../CONSTANTS';
 import { getCompoundedIncome } from '../calc/finance';
 import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
@@ -30,17 +29,19 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	const [ city, setCity ] = useState<string>('');
 	const [ address, setAddress ] = useState<string>('');
 	const [ mv, setMv ] = useState<number>(0);
-	const [ mvy, setMvy ] = useState<number>(0);
-	const [ mvm, setMvm ] = useState<number>(1);
+	const [ mvy, setMvy ] = useState<number>(new Date().getFullYear());
+	const [ mvm, setMvm ] = useState<number>(new Date().getMonth() + 1);
 	const [ state, setState ] = useState<string>('');
 	const [ name, setName ] = useState<string>('');
 	const [ res, setRes ] = useState<boolean>(false);
 	const [ error, setError ] = useState<boolean>(false);
 
 	const duration = () => {
-		const data = getRemainingDuration(Number(purchaseDate.slice(0, purchaseDate.indexOf('-'))),
-					Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1)));
-		return data?.years;
+		let rec = getNewRec();
+		if(rec.purchase) {
+			const data = getRemainingDuration(rec.purchase.year,rec.purchase.month);
+			return data?.years;
+		}
 	}
 	
 	const ownerPercent = () => {
@@ -52,6 +53,13 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	useEffect(() => {
 		// @ts-ignore
 		setMv(Math.round(getCompoundedIncome(rate, amount, duration())));
+		setMvm(new Date().getMonth() + 1);
+		setMvy(new Date().getFullYear());
+		let rec = getNewRec();
+		rec.mv = mv;
+		rec.mvm = mvm;
+		rec.mvy = mvy;
+		setInput(rec);
 	}, [amount, rate, purchaseDate])
 
 	const changeRate = (val: number) => {
@@ -358,12 +366,16 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 							</Row>
 						</Col>
 					))}
-				<Col xs={24}>
-					<Button onClick={onAddBtnClick}>
-						Add Owners
-						<UserAddOutlined />
-					</Button>
-				</Col>
+					<Col xs={24}>
+						<Tooltip title='Add Owners'>
+							<Button 
+								shape={'circle'} 
+								onClick={onAddBtnClick} 
+								style={{background: COLORS.GREEN}} 
+								icon={<PlusOutlined />} 
+								disabled={Object.keys(allFamily).length === 1}/>
+						</Tooltip>
+					</Col>
 				{/*</Col>*/}
 			</Row>
 			{error && <Alert type={'error'} message={'Owner percentage combination should equal to 100'} />}

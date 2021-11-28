@@ -1,15 +1,14 @@
-import { Button, Checkbox, Col, InputNumber, Row, Table } from 'antd';
+import { Button, Checkbox, Col, InputNumber, Row, Table, Tooltip } from 'antd';
 import React, { Fragment, useContext, useState } from 'react';
 import { OwnershipInput, PropertyInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
 import { NWContext } from './NWContext';
-import { DeleteOutlined } from '@ant-design/icons';
 import TextInput from '../form/textinput';
-import UserOutlined from '@ant-design/icons/lib/icons/UserOutlined';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
-import UserAddOutlined from '@ant-design/icons/lib/icons/UserAddOutlined';
+import { PlusOutlined, DeleteOutlined, UserOutlined } from '@ant-design/icons';
 import NumberInput from '../form/numberinput';
 import DatePickerInput from '../form/DatePickerInput';
+import { COLORS } from '../../CONSTANTS';
 
 interface ListPropertiesProps {
 	data: Array<PropertyInput>;
@@ -144,9 +143,14 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 						)})}
 						&nbsp;&nbsp;
 						<Col>
-							<Button onClick={() => onAddBtnClick(i)}>
-								Add Owners<UserAddOutlined />
-							</Button>
+							<Tooltip title='Add Owners'>
+								<Button 
+									shape={'circle'} 
+									onClick={() => onAddBtnClick(i)}
+									style={{background: COLORS.GREEN}} 
+									icon={<PlusOutlined />} 
+									disabled={Object.keys(allFamily).length === 1}/>
+							</Tooltip>
 						</Col>
 				</Row>
 			</Fragment>

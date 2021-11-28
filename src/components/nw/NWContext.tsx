@@ -6,6 +6,7 @@ import {
 	addHoldings,
 	doesHoldingMatch,
 	doesMemberMatch,
+	doesOwnershipMatch,
 	getCommodityRate,
 	getCryptoRate,
 	getNPSData,
@@ -633,8 +634,8 @@ function NWContextProvider() {
 		}
 	};
 
-	const calculateNPV = (records: Array<HoldingInput>, setRecords: Function,) => {
-		if(!records.length) return setRecords(0);			
+	const calculateNPV = (records: Array<HoldingInput>, setTotal: Function,) => {
+		if(!records.length) return setTotal(0);			
 		let total = 0;
 		let isMonth = true;
 		records.forEach((record: HoldingInput) => {
@@ -652,7 +653,7 @@ function NWContextProvider() {
 					}
 				}
 			})
-		setRecords(total);
+		setTotal(total);
 	}
 
 	const priceLoans = () => {
@@ -727,9 +728,13 @@ function NWContextProvider() {
 		if(!properties.length) return setTotalProperties(0);
 		let total = 0;
 		properties.forEach((property: PropertyInput) => {
-			// if(properties && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
-			if(property.mv) total += property.mv;
-			// }
+			if(property && doesOwnershipMatch(property.own, allFamily)) {
+				// @ts-ignore
+				const duration = getRemainingDuration(property.mvy, property.mvm);
+				// @ts-ignore
+				const value = getCompoundedIncome(property.rate, property.mv, duration?.years);
+				total += value;
+			}
 		})
 		setTotalProperties(total);
 	};

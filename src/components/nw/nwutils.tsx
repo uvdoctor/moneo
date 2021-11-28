@@ -8,6 +8,7 @@ import { getFXRate } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
 import { LOCAL_DATA_TTL, LOCAL_INSTRUMENT_RAW_DATA_KEY } from "../AppContext";
+import { OwnershipInput } from "../../api/goals";
 
 interface OptionTableMap {
   [Stock: string]: string;
@@ -99,6 +100,18 @@ export const doesHoldingMatch = (
 ) =>
   doesMemberMatch(instrument, selectedMembers) &&
   instrument.curr === selectedCurrency;
+
+export const doesOwnershipMatch = (
+  owners: Array<OwnershipInput>,
+  allFamily: Array<string>,
+) => {
+  const members = Object.keys(allFamily);
+  owners.map((item: OwnershipInput) => {
+    const data = members.includes(item.fId);
+    if(!data) return false;
+  })
+  return true;
+};
 
 export const addMemberIfNeeded = async (
   allFamily: any,
