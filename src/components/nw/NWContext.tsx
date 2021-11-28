@@ -139,6 +139,7 @@ function NWContextProvider() {
 	const [ uname, setUname ] = useState<string | null | undefined>(owner);
 	const [ childTab, setChildTab ] = useState<string>('');
 	const [ npsData, setNPSData] = useState<Array<CreateNPSInput>>([]);	
+	const [ isDirty, setIsDirty]  = useState<boolean>(false);
 
 	const loadNPSSubCategories = async () => {
 		let npsData: Array<CreateNPSInput> | undefined = await getNPSData();
@@ -498,36 +499,15 @@ function NWContextProvider() {
 	useEffect(
 		() => {
 			setTotalAssets(
-				totalInstruments +
-					totalVehicles +
-					totalPM +
-					totalProperties +
-					totalCrypto +
+					totalAlternative +
 					totalSavings +
 					totalDeposits +
 					totalLendings +
-					totalPPF +
-					totalEPF +
-					totalNPS +
-					totalOthers +
-					totalAngel
+					totalEquity +	
+					totalFixed
 			);
 		},
-		[
-			totalInstruments,
-			totalVehicles,
-			totalPM,
-			totalProperties,
-			totalCrypto,
-			totalSavings,
-			totalDeposits,
-			totalLendings,
-			totalPPF,
-			totalEPF,
-			totalNPS,
-			totalOthers,
-			totalAngel
-		]
+		[totalSavings, totalDeposits, totalLendings, totalAlternative, totalEquity, totalFixed,]
 	);
 
 	useEffect(() => {
@@ -601,7 +581,7 @@ function NWContextProvider() {
 		setTotalInstruments(total);
 		setTotalFGold(totalFGold);
 		setTotalFEquity(totalFEquity);
-		setTotalFixed(totalFFixed);
+		setTotalFFixed(totalFFixed);
 		setTotalFRE(totalFRE);
 	};
 
@@ -632,6 +612,7 @@ function NWContextProvider() {
 		} catch(e) {
 			notification.error({message: 'Unable to save holdings', description: 'Sorry! An unexpected error occurred while trying to save the data.'});
 		}
+		setIsDirty(false);
 	};
 
 	const calculateNPV = (records: Array<HoldingInput>, setTotal: Function,) => {
@@ -806,8 +787,8 @@ function NWContextProvider() {
 			}
 		})
 		setTotalNPS(total);
-		setTotalFEquity(totalNPSEquity);
-		setTotalFixed(totalNPSFixed);
+		setTotalNPSEquity(totalNPSEquity);
+		setTotalNPSFixed(totalNPSFixed);
 	};
 
 	useEffect(() => {
@@ -815,8 +796,8 @@ function NWContextProvider() {
 	}, [totalAngel, totalFEquity, totalNPSEquity]);
 
 	useEffect(() => {
-		setTotalFixed(totalFFixed + totalNPSFixed);
-	}, [totalFFixed, totalNPSFixed])
+		setTotalFixed(totalFFixed + totalNPSFixed + totalPPF + totalVPF + totalEPF);
+	}, [totalEPF, totalFFixed, totalNPSFixed, totalPPF, totalVPF])
 
 	useEffect(() => {
 		priceInstruments();
@@ -904,6 +885,30 @@ function NWContextProvider() {
 	useEffect(() => {
 		priceLendings();
 	}, [lendings]);
+
+	useEffect(() => {
+		priceSavings();
+	}, [savings]);
+
+	useEffect(()=>{
+		setIsDirty(true);
+	},[instruments, 
+		deposits, 
+		savings, 
+		lendings, 
+		properties, 
+		preciousMetals, 
+		crypto, 
+		vpf, 
+		epf, 
+		ppf, 
+		loans, 
+		insurance, 
+		credit, 
+		angel, 
+		others, 
+		nps, 
+		vehicles])
 
 	return (
 		<NWContext.Provider
@@ -997,6 +1002,8 @@ function NWContextProvider() {
 				credit,
 				setCredit,
 				totalCredit,
+				isDirty,
+				setIsDirty
 			}}
 		>
 			<NWView />

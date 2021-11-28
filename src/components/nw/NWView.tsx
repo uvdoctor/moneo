@@ -2,9 +2,9 @@ import React, { Fragment, useContext, useEffect } from 'react';
 import HoldingTabView from './HoldingTabView';
 import DataSwitcher from '../DataSwitcher';
 import { NWContext } from './NWContext';
-import { Avatar, Button, Col, PageHeader, Row, Skeleton, Tooltip } from 'antd';
+import { Avatar, Col, PageHeader, Row, Skeleton, Tooltip } from 'antd';
 import SelectInput from '../form/selectinput';
-import { SaveOutlined, UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 
 require('./nw.less');
 import FamilyInput, { ALL_FAMILY } from './FamilyInput';
@@ -25,7 +25,6 @@ export default function NWView() {
 		loadingHoldings,
 		loadingFamily,
 		currencyList,
-		saveHoldings,
 		selectedMembers,
 		allFamily
 	}: any = useContext(NWContext);
@@ -46,31 +45,21 @@ export default function NWView() {
 						<PageHeader
 							title="Real-time Analysis"
 							extra={[
-								<Button
-									key="save"
-									icon={<SaveOutlined />}
-									onClick={() => saveHoldings()}
-									size="large"
-									className="steps-start-btn"
-								>
-									Save
-								</Button>
+								<SelectInput
+									key='currency'
+									pre=""
+									value={selectedCurrency}
+									changeHandler={setSelectedCurrency}
+									options={currencyList}
+									loading={loadingHoldings}
+								/>
 							]}
 						/>
 					</Col>
 				</Row>
-				<Row justify="space-between" align="middle" className="secondary-header">
+				<Row justify="center" align="middle" className="secondary-header">
 					<Col>
 						<FamilyInput />
-					</Col>
-					<Col>
-						<SelectInput
-							pre="Currency"
-							value={selectedCurrency}
-							changeHandler={setSelectedCurrency}
-							options={currencyList}
-							loading={loadingHoldings}
-						/>
 					</Col>
 				</Row>
 			</div>

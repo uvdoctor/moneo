@@ -19,6 +19,7 @@ export default function HoldingTabView() {
 		setChildTab,
 		npsData,
 		loadNPSSubCategories,
+		setIsDirty,
 	}: any = useContext(NWContext);
 	const [ npsSubCat, setNPSSubCat ] = useState<any>({});
 	const { TabPane } = Tabs;
@@ -35,6 +36,10 @@ export default function HoldingTabView() {
 		const children = tabs[activeTab].children ? tabs[activeTab].children : '';
 		children ? setChildTab(Object.keys(children)[0]) : setChildTab('');
 	}, [activeTab])
+
+	useEffect(()=>{
+		setIsDirty(false);
+	},[])
 
 	function renderTabs(tabsData: any, defaultActiveKey: string, isRoot?: boolean) {
 		return (

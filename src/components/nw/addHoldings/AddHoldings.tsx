@@ -28,7 +28,7 @@ export default function AddHoldings({
 	const [isModalVisible, setModalVisibility] = useState<boolean>(false);
 	const [okDisabled, setOkDisabled] = useState<boolean>(true);
 	const [newRec, setNewRec] = useState<any>({});
-	const { activeTab, setInstruments, instruments, childTab, saveHoldings }: any = useContext(
+	const { activeTab, setInstruments, instruments, childTab, saveHoldings, isDirty }: any = useContext(
 		NWContext
 	);
 	const [instrumentsList, setInstrumentsList] = useState<any>([]);
@@ -65,6 +65,8 @@ export default function AddHoldings({
 			&nbsp;&nbsp;
 			<Button
 				key="save"
+				type='primary'
+				disabled={!isDirty}
 				icon={<SaveOutlined />}
 				onClick={() => saveHoldings()}
 				className="steps-start-btn"
