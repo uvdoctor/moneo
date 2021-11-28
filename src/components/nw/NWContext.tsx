@@ -280,10 +280,6 @@ function NWContextProvider() {
 					data: ppf,
 					setData: setPPF,
 					total: totalPPF,
-					categoryOptions: {
-						1: 'Yearly',
-						12: 'Monthly'
-					},
 					viewComp: ViewHoldingInput
 				},
 				[TAB.EPF]: {
@@ -677,8 +673,8 @@ function NWContextProvider() {
 		calculateCompundingIncome(deposits, setTotalDeposits)
 	};
 
-	const calculateBalance = (records: Array<HoldingInput>, setRecords: Function) => {
-		if(!records.length) return setRecords(0);			
+	const calculateBalance = (records: Array<HoldingInput>, setTotal: Function) => {
+		if(!records.length) return setTotal(0);			
 		let total = 0;
 		records.forEach((record: HoldingInput) => {
 			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
@@ -686,7 +682,7 @@ function NWContextProvider() {
 				total += value;
 			}
 		})
-		setRecords(total);
+		setTotal(total);
 	};
 
 	const priceCredit = () => {
@@ -751,16 +747,35 @@ function NWContextProvider() {
 		setTotalCrypto(total);
 	};
 
+	const calculatePensionFund = (records: Array<HoldingInput>, setTotal: Function) => {
+		if(!records.length) return setTotal(0);
+		let total = 0;
+		const month = new Date().getMonth()+1;
+		records.forEach((record: HoldingInput) => {
+			if(record.pur && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
+				const amount = record.pur[0].amt;
+				if (month === 4) {
+					const duration = getRemainingDuration(record.pur[0].year, record.pur[0].month);
+					if(!duration?.months) return;
+					// @ts-ignore
+					const value = amount + (amount * (1+(record.chg*(duration?.months/12))));
+					total += value;
+				}else total+= amount;
+			}
+		})
+		setTotal(total);
+	}
+
 	const pricePPF = () => {
-		setTotalPPF(0);
+		calculatePensionFund(ppf, setTotalPPF);
 	};
 
 	const priceEPF = () => {
-		setTotalEPF(0);
+		calculatePensionFund(epf, setTotalEPF);
 	};
 
 	const priceVPF = () => {
-		setTotalVPF(0);
+		calculatePensionFund(vpf, setTotalVPF);
 	};
 
 	const priceNPS = () => {

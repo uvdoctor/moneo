@@ -37,6 +37,7 @@ export default function AddHoldingInput({
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
+		const today = new Date();
 		const pur = { amt: qty, 
 					  month: getMonthIndex(date.substring(0, 3)),
 					  year: Number(date.substring(date.length-4)), 
@@ -70,12 +71,12 @@ export default function AddHoldingInput({
 			case PPF:
 			case EPF:
 			case VPF:
-				newRec.qty = qty;
 				newRec.chg = rate;
-				newRec.chgF = childTab === PPF ? Number(category) : 12;
+				newRec.chgF = 1;
 				newRec.type = AssetType.F;
 				newRec.subt = childTab;
 				newRec.name = name;
+				newRec.pur = [{ amt: qty, month: today.getMonth()+1, year: today.getFullYear(), qty: 1 }];
 				break;
 			case VEHICLE:
 				newRec.chg = 15;
@@ -187,6 +188,8 @@ export default function AddHoldingInput({
 
 	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE, LOAN, INS].includes(childTab);
 
+	const hasRetirement = (childTab: string) => [VPF, PPF, EPF].includes(childTab);
+
 	return (
 		<div>
 			<p>
@@ -222,7 +225,7 @@ export default function AddHoldingInput({
 				{hasQtyWithRate(childTab) 
 					? <QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={subCat}/>
 					: <NumberInput 
-						pre={'Amount'} 
+						pre={hasRetirement(childTab) ? 'Contribution per year' : 'Amount'} 
 						min={0} 
 						max={10000} 
 						value={qty} 

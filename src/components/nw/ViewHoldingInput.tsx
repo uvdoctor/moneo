@@ -38,8 +38,13 @@ export default function ViewHoldingInput({
 	};
 	
 	const changeQty = (quantity: number) => {
-		if(record.pur) record.pur[0].amt = quantity;
-		else record.qty = quantity;
+		if(record.pur) {
+			record.pur[0].amt = quantity;
+			if(hasRetirement(childTab)) {
+				record.pur[0].month = new Date().getMonth()+1;
+				record.pur[0].year = new Date().getFullYear();
+			}
+		}else record.qty = quantity;
 		changeData([ ...data ]);
 	};
 
@@ -88,13 +93,15 @@ export default function ViewHoldingInput({
 
 	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE, LOAN, INS].includes(childTab);
 
+	const hasRetirement = (childTab: string) => [VPF, PPF, EPF].includes(childTab);
+
 	return (
 		<Fragment>
 			{categoryOptions && 
 			<Col>
 				 <SelectInput
 					pre=""
-					value={(childTab === PPF ) ? record.chgF as number : record.subt as string}
+					value={record.subt as string}
 					options={categoryOptions}
 					changeHandler={(val: string) => changeCategory(val)}
 				/>
@@ -136,7 +143,7 @@ export default function ViewHoldingInput({
 				</Col> :
 				<Col>
 				<NumberInput
-					pre={'Amount'}
+					pre={hasRetirement(childTab) ? 'Contribution per year' : 'Amount'}
 					min={10}
 					max={100000000}
 					value={record.pur ? record.pur[0].amt : record.qty}
