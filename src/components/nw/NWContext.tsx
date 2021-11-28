@@ -728,12 +728,14 @@ function NWContextProvider() {
 		if(!properties.length) return setTotalProperties(0);
 		let total = 0;
 		properties.forEach((property: PropertyInput) => {
-			if(property && doesOwnershipMatch(property.own, allFamily)) {
-				// @ts-ignore
-				const duration = getRemainingDuration(property.mvy, property.mvm);
-				// @ts-ignore
-				const value = getCompoundedIncome(property.rate, property.mv, duration?.years);
-				total += value;
+			if(allFamily){
+				if(property && doesOwnershipMatch(property.own, allFamily)) {
+					// @ts-ignore
+					const duration = getRemainingDuration(property.mvy, property.mvm);
+					// @ts-ignore
+					const value = getCompoundedIncome(property.rate, property.mv, duration?.years);
+					total += value;
+				}
 			}
 		})
 		setTotalProperties(total);

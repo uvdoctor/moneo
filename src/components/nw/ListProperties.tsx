@@ -1,14 +1,16 @@
 import { Button, Checkbox, Col, InputNumber, Row, Table, Tooltip } from 'antd';
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { OwnershipInput, PropertyInput } from '../../api/goals';
 import SelectInput from '../form/selectinput';
 import { NWContext } from './NWContext';
 import TextInput from '../form/textinput';
-import { getDefaultMember, getFamilyOptions } from './nwutils';
+import { getDefaultMember, getFamilyOptions, getRemainingDuration } from './nwutils';
 import { PlusOutlined, DeleteOutlined, UserOutlined } from '@ant-design/icons';
 import NumberInput from '../form/numberinput';
 import DatePickerInput from '../form/DatePickerInput';
 import { COLORS } from '../../CONSTANTS';
+import { getMonthName, getMonthIndex } from '../utils';
+import { getCompoundedIncome } from '../calc/finance';
 
 interface ListPropertiesProps {
 	data: Array<PropertyInput>;
@@ -18,6 +20,7 @@ interface ListPropertiesProps {
 
 export default function ListProperties({ data, changeData, categoryOptions }: ListPropertiesProps) {
     const { selectedCurrency, allFamily, selectedMembers }: any = useContext(NWContext);
+	const [ indexForMv, setIndexForMv ] = useState<number | null>(null);
     const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 
 	const removeHolding = (i: number) => {
@@ -59,11 +62,45 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 
 	const changePurchaseDate = (val: string, i:number) => {
 		// @ts-ignore
-		data[i].purchase.month = Number(val.slice(0, val.indexOf('-')));
+		data[i].purchase.month = getMonthIndex(val.substring(0, 3));
 		// @ts-ignore
-		data[i].purchase.year = Number(val.slice(val.indexOf('-') + 1));
+		data[i].purchase.year = Number(val.substring(val.length-4));
+		setIndexForMv(i);
 		changeData([ ...data ])
 	};
+
+	const changeMv = (i: number, val: number) => {
+		data[i].mv = val; 
+		data[i].mvm = new Date().getMonth() + 1;
+		data[i].mvy = new Date().getFullYear();
+		changeData([ ...data ]);
+	}
+
+	useEffect(() => {
+		if(indexForMv !== null){
+			// @ts-ignore
+			const duration = getRemainingDuration(data[indexForMv].purchase.year,data[indexForMv].purchase.month);
+			// @ts-ignore
+			data[indexForMv].mv = Math.round(getCompoundedIncome(data[indexForMv].rate, data[indexForMv].purchase?.amt, duration?.years));	
+			data[indexForMv].mvm = new Date().getMonth() + 1;
+			data[indexForMv].mvy = new Date().getFullYear();
+			changeData([ ...data ]);
+			setIndexForMv(null);
+		}
+	}, [changeData, data, indexForMv])
+
+	const changeAmt = (i: number, val: number) => {
+		// @ts-ignore
+		data[i].purchase?.amt = val; 
+		changeData([ ...data ]); 
+		setIndexForMv(i); 
+	}
+
+	const changeRate = (i: number, val: number) => {
+		data[i].rate = val; 
+		changeData([ ...data ]); 
+		setIndexForMv(i);
+	}
 
 	const expandedRow = (i: number) => {
 		const owners = data[i].own;
@@ -77,8 +114,7 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 						min={10}
 						max={1000000000}
 						value={data[i].purchase?.amt as number}
-						// @ts-ignore
-						changeHandler={(val: number) => { data[i].purchase?.amt = val; changeData([ ...data ]) }}
+						changeHandler={(val: number) => changeAmt(i, val)}
 						currency={selectedCurrency}
 						step={10}
 						noSlider
@@ -89,7 +125,8 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 						picker="month"
 						title={'Date'}
 						changeHandler={(val:string)=>changePurchaseDate(val, i)}
-						defaultVal={`${data[i].purchase?.year}-${data[i].purchase?.month}` as string}
+						// @ts-ignore
+						defaultVal={`${getMonthName(data[i].purchase?.month, true)}-${data[i].purchase?.year}` as string}
 						size={'middle'}
 					/>
 				</Col>
@@ -177,13 +214,13 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 	                options={categoryOptions}
 	                changeHandler={(val: any) => { data[i].type = val; changeData([ ...data ]) }} /> ,
             mv: <InputNumber
-                    onChange={(val: number) => { data[i].mv = val; changeData([ ...data ]) }}
+                    onChange={(val: number) => changeMv(i, val)}
                     min={10}
                     max={100000000000}
                     value={data[i].mv as number}
                     step={100} />,
 			rate: <InputNumber
-					onChange={(val: number) => { data[i].rate = val; changeData([ ...data ]) }}
+					onChange={(val: number) => changeRate(i, val)}
 					min={1}
 					max={50}
 					value={data[i].rate as number}

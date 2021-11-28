@@ -8,6 +8,7 @@ import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
+import { getMonthIndex } from '../utils';
 import { NWContext } from './NWContext';
 import { getDefaultMember, getFamilyOptions, getRemainingDuration } from './nwutils';
 
@@ -25,7 +26,7 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(8);
 	const [ amount, setAmount ] = useState<number>(0);
-	const [ purchaseDate, setPurchaseDate ] = useState<string>(`Apr-${new Date().getFullYear() - 5}`);
+	const [ purchaseDate, setPurchaseDate ] = useState<string>('');
 	const [ city, setCity ] = useState<string>('');
 	const [ address, setAddress ] = useState<string>('');
 	const [ mv, setMv ] = useState<number>(0);
@@ -50,22 +51,9 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 		return count;
 	};
 
-	useEffect(() => {
-		// @ts-ignore
-		setMv(Math.round(getCompoundedIncome(rate, amount, duration())));
-		setMvm(new Date().getMonth() + 1);
-		setMvy(new Date().getFullYear());
-		let rec = getNewRec();
-		rec.mv = mv;
-		rec.mvm = mvm;
-		rec.mvy = mvy;
-		setInput(rec);
-	}, [amount, rate, purchaseDate])
-
 	const changeRate = (val: number) => {
 		setRate(val);
 		disableOk(val <= 0);
-		// @ts-ignore
 		let rec = getNewRec();
 		rec.rate = val;
 		setInput(rec);
@@ -111,9 +99,10 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 	const changePurchaseDate = (val: any) => {
 		setPurchaseDate(val);
 		let rec = getNewRec();
+		const month = getMonthIndex(val.substring(0, 3));
 		if (rec.purchase) {
-			rec.purchase.year = Number(val.slice(0, val.indexOf('-')));
-			rec.purchase.month = Number(val.slice(val.indexOf('-') + 1));
+			rec.purchase.month = month;
+			rec.purchase.year = Number(val.substring(val.length-4));
 		}
 		setInput(rec);
 	};
@@ -122,17 +111,6 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 		setAddress(val);
 		let rec = getNewRec();
 		rec.address = val;
-		setInput(rec);
-	};
-
-	const changeMv = (val: number) => {
-		setMv(val);
-		setMvm(new Date().getMonth() + 1);
-		setMvy(new Date().getFullYear());
-		let rec = getNewRec();
-		rec.mv = val;
-		rec.mvm = mvm;
-		rec.mvy = mvy;
 		setInput(rec);
 	};
 
@@ -164,8 +142,8 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 			pin: pin,
 			purchase: {
 				amt: amount,
-				month: Number(purchaseDate.slice(purchaseDate.indexOf('-') + 1)),
-				year: Number(purchaseDate.slice(0, purchaseDate.indexOf('-'))),
+				month: getMonthIndex(purchaseDate.substring(0, 3)),
+				year: Number(purchaseDate.substring(purchaseDate.length-4)),
 				qty: 1
 			},
 			address: address,
@@ -233,6 +211,23 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 		},
 		[ own, disableOk ]
 	);
+
+	
+	useEffect(() => {
+		changeMv();
+	}, [amount, rate, purchaseDate])
+
+	const changeMv = (val?: number) => {
+		// @ts-ignore
+		val ? setMv(val) : Math.round(getCompoundedIncome(rate, amount, duration()));
+		setMvm(new Date().getMonth() + 1);
+		setMvy(new Date().getFullYear());
+		let rec = getNewRec();
+		rec.mv = mv;
+		rec.mvm = mvm;
+		rec.mvy = mvy;
+		setInput(rec);
+	};
 
 	const removeOwner = (index: number) => {
 		own.splice(index, 1);
@@ -320,7 +315,7 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 				</Col>
 				<Col xs={24} md={12}>
 					<FormItem label="Appreciation Rate">
-						<InputNumber onChange={changeRate} min={1} max={50} value={rate} step={0.1} />
+						<NumberInput pre={''} min={1} max={50} value={rate} changeHandler={changeRate} step={0.1} noSlider unit='%'/>
 					</FormItem>
 				</Col>
 				<Col xs={24} md={12}>
@@ -352,6 +347,7 @@ export default function AddPropertyInput({ setInput, disableOk, categoryOptions 
 									/>
 								</Col>
 								<Col>
+									{/* <NumberInput pre='' min={1} max={100} value={own.per} changeHandler={(val:number)=>changePer(i,val)} step={0.1} noSlider unit='%'/> */}
 									<InputNumber
 										placeholder="Percentage"
 										min={1}

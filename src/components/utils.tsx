@@ -338,11 +338,15 @@ export const MONTHS: any = {
   12: "December",
 };
 
+const months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+
 export const getMonthName = (monthNum: number, shortForm: boolean = false) => {
   if (monthNum < 1 || monthNum > 12) return "";
   let monthName: string = MONTHS[monthNum];
   return shortForm ? monthName.substring(0, 3) : monthName;
 };
+
+export const getMonthIndex = (monthName: string) => months.indexOf(monthName)+1;
 
 export const toHumanFriendlyCurrency = (val: number, currency: string) => {
   if (val < 100000) return toCurrency(val, currency);
