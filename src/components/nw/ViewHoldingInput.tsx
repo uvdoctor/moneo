@@ -5,6 +5,7 @@ import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
+import { getMonthIndex, getMonthName } from '../utils';
 import { NWContext, TAB } from './NWContext';
 import QuantityWithRate from './QuantityWithRate';
 
@@ -71,8 +72,8 @@ export default function ViewHoldingInput({
 
 	const changePurchaseDate = (val: string) => {
 		if (record.pur) {
-			record.pur[0].year = Number(val.slice(0, val.indexOf('-')));
-			record.pur[0].month = Number(val.slice(val.indexOf('-') + 1));
+			record.pur[0].year = Number(val.substring(val.length-4));
+			record.pur[0].month = getMonthIndex(val.substring(0, 3));
 			changeData([ ...data ])
 		}
 	};
@@ -160,7 +161,7 @@ export default function ViewHoldingInput({
 					picker="month"
 					title={'Date'}
 					changeHandler={(val:string)=>changePurchaseDate(val)}
-					defaultVal={`${record.pur[0].year}-${record.pur[0].month}` as string}
+					defaultVal={`${getMonthName(record.pur[0].month, true)}-${record.pur[0].year}`}
 					size={'middle'}
 				/>&nbsp;&nbsp;
 				{hasDuration(childTab) && 

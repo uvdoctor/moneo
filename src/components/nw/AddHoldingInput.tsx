@@ -6,6 +6,7 @@ import DatePickerInput from '../form/DatePickerInput';
 import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
+import { getMonthIndex } from '../utils';
 import { NWContext, TAB } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
 import QuantityWithRate from './QuantityWithRate';
@@ -31,14 +32,14 @@ export default function AddHoldingInput({
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(0);
-	const [ date, setDate ] = useState<string>(`Apr-${new Date().getFullYear() - 5}`);
+	const [ date, setDate ] = useState<string>('');
 	const [ duration, setDuration ] = useState<number>(12);
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
 		const pur = { amt: qty, 
-					  month: Number(date.slice(date.indexOf('-') + 1)),
-					  year: Number(date.slice(0, date.indexOf('-'))), 
+					  month: getMonthIndex(date.substring(0, 3)),
+					  year: Number(date.substring(date.length-4)), 
 					  qty: childTab === VEHICLE ? 1 : duration };
 
 		switch (childTab) {
@@ -109,9 +110,10 @@ export default function AddHoldingInput({
 	const changeDate = (val: any) => {
 		setDate(val);
 		let rec = getNewRec();
+		const month = getMonthIndex(val.substring(0, 3));
 		if (rec.pur) {
-			rec.pur[0].year = Number(val.slice(0, val.indexOf('-')));
-			rec.pur[0].month = Number(val.slice(val.indexOf('-') + 1));
+			rec.pur[0].year = Number(val.substring(val.length-4));
+			rec.pur[0].month = month;
 		}
 		setInput(rec);
 	};

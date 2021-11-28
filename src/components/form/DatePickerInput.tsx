@@ -4,7 +4,6 @@ import generatePicker from 'antd/lib/date-picker/generatePicker';
 import 'antd/lib/date-picker/style/index';
 import { parse } from 'date-fns';
 import { SizeType } from 'antd/lib/config-provider/SizeContext';
-import { getMonthName } from '../utils';
 
 const DatePicker = generatePicker<Date>(dateFnsGenerateConfig);
 
@@ -21,12 +20,12 @@ interface DatePickerInputProps {
 export default function DatePickerInput(props: DatePickerInputProps) {
 	const getTodayDate = () => {
 		const today = new Date();
-		return `${today.getFullYear() - 20}-${getMonthName(today.getMonth() + 1,true)}-${today.getDate()}`;
+		return `${today.getFullYear() - 20}-${today.getMonth() + 1}-${today.getDate()}`;
 	};
 
 	const getMonthDate = () => `Apr-${new Date().getFullYear() - 5}`;
 
-	const dateFormat = props.picker === 'month' ? 'MMM-yyyy' : props.picker === 'year' ? 'yyyy' : 'yyyy-MMM-dd';
+	const dateFormat = props.picker === 'month' ? 'MMM-yyyy' : props.picker === 'year' ? 'yyyy' : 'yyyy-MM-dd';
 	const defaultDate = props.picker === 'month' ? getMonthDate() : props.picker === 'year' ? '2000' : getTodayDate();
 
 	return (
