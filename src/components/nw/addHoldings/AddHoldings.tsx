@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useContext } from "react";
 import { Modal, Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, SaveOutlined } from "@ant-design/icons";
 import AddHoldingInput from "../AddHoldingInput";
 import AddHoldingFiancialInput from "../AddHoldingFinancialInput";
 import { NWContext, TAB } from "../NWContext";
@@ -28,7 +28,7 @@ export default function AddHoldings({
 	const [isModalVisible, setModalVisibility] = useState<boolean>(false);
 	const [okDisabled, setOkDisabled] = useState<boolean>(true);
 	const [newRec, setNewRec] = useState<any>({});
-	const { activeTab, setInstruments, instruments, childTab }: any = useContext(
+	const { activeTab, setInstruments, instruments, childTab, saveHoldings }: any = useContext(
 		NWContext
 	);
 	const [instrumentsList, setInstrumentsList] = useState<any>([]);
@@ -61,6 +61,15 @@ export default function AddHoldings({
 				onClick={() => setModalVisibility(true)}
 			>
 				{isPrimary ? "Add" : "Add Manually"}
+			</Button>
+			&nbsp;&nbsp;
+			<Button
+				key="save"
+				icon={<SaveOutlined />}
+				onClick={() => saveHoldings()}
+				className="steps-start-btn"
+			>
+				Save
 			</Button>
 			<Modal
 				className="add-holdings"
