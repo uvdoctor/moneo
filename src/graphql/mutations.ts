@@ -352,24 +352,6 @@ export const createUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      deposits {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       lendings {
         id
         qty
@@ -643,24 +625,6 @@ export const updateUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      deposits {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       lendings {
         id
         qty
@@ -917,24 +881,6 @@ export const deleteUserHoldings = /* GraphQL */ `
     deleteUserHoldings(input: $input, condition: $condition) {
       uname
       instruments {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      deposits {
         id
         qty
         pur {

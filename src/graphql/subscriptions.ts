@@ -783,24 +783,6 @@ export const onCreateUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      deposits {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       lendings {
         id
         qty
@@ -1071,24 +1053,6 @@ export const onUpdateUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      deposits {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       lendings {
         id
         qty
@@ -1342,24 +1306,6 @@ export const onDeleteUserHoldings = /* GraphQL */ `
     onDeleteUserHoldings(owner: $owner) {
       uname
       instruments {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      deposits {
         id
         qty
         pur {

@@ -466,7 +466,6 @@ enum MFSchemeType {
 type UserHoldings @model @aws_iam @key(fields: ["uname"]) @auth(rules: [{ allow: owner }, { allow: private, provider: iam, operations: [read] }]) {
 	uname: String!
 	instruments: [Holding!]
-	deposits: [Holding!]
 	lendings: [Holding!]
 	loans: [Holding!]
 	credit: [Holding!]

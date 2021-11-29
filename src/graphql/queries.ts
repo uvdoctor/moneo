@@ -724,24 +724,6 @@ export const getUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      deposits {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       lendings {
         id
         qty
@@ -1008,17 +990,6 @@ export const listUserHoldingss = /* GraphQL */ `
       items {
         uname
         instruments {
-          id
-          qty
-          name
-          fId
-          curr
-          chg
-          chgF
-          type
-          subt
-        }
-        deposits {
           id
           qty
           name

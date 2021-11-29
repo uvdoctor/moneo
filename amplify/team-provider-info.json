@@ -15,7 +15,7 @@
       "function": {
         "insprice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/insprice-453733317a6a36644736-build.zip"
+          "s3Key": "amplify-builds/insprice-4c4d56777a512b4a4e4a-build.zip"
         },
         "EODPrice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
@@ -42,7 +42,7 @@
         },
         "IndicePrice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/IndicePrice-66396554707038757051-build.zip"
+          "s3Key": "amplify-builds/IndicePrice-52592f51335457534839-build.zip"
         },
         "INExchgPrice": {
           "deploymentBucketName": "amplify-moneo-newdev-204906-deployment",
