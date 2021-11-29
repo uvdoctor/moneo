@@ -1,5 +1,5 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Form, Row, Col, InputNumber } from 'antd';
+import { Form, Row, Col } from 'antd';
 import React, { useContext, useState } from 'react';
 import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
 import DatePickerInput from '../form/DatePickerInput';
@@ -7,6 +7,7 @@ import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
 import { getMonthIndex } from '../utils';
+import Duration from './addHoldings/Duration';
 import { NWContext, TAB } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
 import QuantityWithRate from './QuantityWithRate';
@@ -27,13 +28,15 @@ export default function AddHoldingInput({
 	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
 	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
-	const [ subCat, setSubCat ] = useState<string>((subCategoryOptions && subCategoryOptions[category]) ? Object.keys(subCategoryOptions[category])[0] : '');
+	const [ subCat, setSubCat ] = useState<string>(
+		subCategoryOptions && subCategoryOptions[category] ? Object.keys(subCategoryOptions[category])[0] : ''
+	);
 	const [ name, setName ] = useState<string>('');
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(0);
-	const [ date, setDate ] = useState<string>('');
-	const [ duration, setDuration ] = useState<number>(12);
+	const [ date, setDate ] = useState<string>(`Apr-${new Date().getFullYear() - 5}`);
+	const [ duration, setDuration ] = useState<number>(5);
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
@@ -284,11 +287,20 @@ export default function AddHoldingInput({
 										size={'middle'}
 									/>
 								</Col>
-								<Col>
-									{hasDuration(childTab) && (
-										<InputNumber onChange={changeDuration} value={duration} />
-									)}
-								</Col>
+								{hasDuration(childTab) && (
+									<Duration
+										value={duration}
+										changeHandler={changeDuration}
+										option={
+											category === 'NSE' ? (
+												{
+													5: 'Five Years',
+													10: 'Ten Years'
+												}
+											) : null
+										}
+									/>
+								)}
 							</Row>
 						</FormItem>
 					</Col>
@@ -296,7 +308,7 @@ export default function AddHoldingInput({
 				{hasRate(childTab) && (
 					<Col xs={24} md={12}>
 						<FormItem label="Rate">
-							<InputNumber onChange={changeRate} min={1} max={50} value={rate} step={0.1} />
+							<NumberInput pre={''} min={1} max={50} value={rate} changeHandler={changeRate} step={0.1} noSlider unit='%'/>
 						</FormItem>
 					</Col>
 				)}

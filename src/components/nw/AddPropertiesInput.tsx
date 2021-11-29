@@ -46,7 +46,7 @@ export default function AddPropertyInput({
 	);
 	const [rate, setRate] = useState<number>(8);
 	const [amount, setAmount] = useState<number>(0);
-	const [purchaseDate, setPurchaseDate] = useState<string>("");
+	const [purchaseDate, setPurchaseDate] = useState<string>(`Apr-${new Date().getFullYear() - 5}`);
 	const [city, setCity] = useState<string>("");
 	const [address, setAddress] = useState<string>("");
 	const [mv, setMv] = useState<number>(0);

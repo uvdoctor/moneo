@@ -1,4 +1,4 @@
-import { Col, InputNumber } from 'antd';
+import { Col } from 'antd';
 import React, { Fragment, useContext } from 'react';
 import { AssetSubType, HoldingInput } from '../../api/goals';
 import DatePickerInput from '../form/DatePickerInput';
@@ -6,6 +6,7 @@ import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
 import { getMonthIndex, getMonthName } from '../utils';
+import Duration from './addHoldings/Duration';
 import { NWContext, TAB } from './NWContext';
 import QuantityWithRate from './QuantityWithRate';
 
@@ -152,13 +153,13 @@ export default function ViewHoldingInput({
 			}
 			{hasRate(childTab) && 
 				<Col>
-					<label>Rate</label>&nbsp;
-					<InputNumber
-						onChange={(val: number)=>changeChg(val)}
-						min={1}
-						max={50}
-						value={record.chg as number}
-						step={0.1} />
+					<NumberInput 
+						pre={'Rate'} 
+						min={1} 
+						max={50} 
+						value={record.chg as number} 
+						changeHandler={changeChg} 
+						step={0.1} noSlider unit='%'/>
 				</Col>}
 			{hasDate(childTab) && record.pur && <Col>
 				<DatePickerInput
@@ -169,9 +170,10 @@ export default function ViewHoldingInput({
 					size={'middle'}
 				/>&nbsp;&nbsp;
 				{hasDuration(childTab) && 
-					<><label>Duration</label><InputNumber 
-						onChange={(val: number)=>changeDuration(val)} 
-						value={record.pur[0].qty as number} /></>}
+					<><label>Duration</label>
+					<Duration value={record.pur[0].qty as number} changeHandler={changeDuration}
+						option={record.subt === 'NSE' ? ({5: 'Five Years', 10: 'Ten Years'}) : null}/>
+					</>}
 			</Col>}
 			</Fragment>
 	);
