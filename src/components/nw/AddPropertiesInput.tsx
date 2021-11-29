@@ -11,7 +11,6 @@ import {
 } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput } from "../../api/goals";
-import { COLORS } from "../../CONSTANTS";
 import { getCompoundedIncome } from "../calc/finance";
 import DatePickerInput from "../form/DatePickerInput";
 import NumberInput from "../form/numberinput";
@@ -92,20 +91,6 @@ export default function AddPropertyInput({
 		setName(val);
 		let rec = getNewRec();
 		rec.name = val;
-		setInput(rec);
-	};
-
-	const changeState = (val: string) => {
-		setState(val);
-		let rec = getNewRec();
-		rec.state = val;
-		setInput(rec);
-	};
-
-	const changeCity = (val: string) => {
-		setCity(val);
-		let rec = getNewRec();
-		rec.city = val;
 		setInput(rec);
 	};
 
@@ -238,9 +223,7 @@ export default function AddPropertyInput({
 
 	const changeMv = (val?: number) => {
 		// @ts-ignore
-		val
-			? setMv(val)
-			: Math.round(getCompoundedIncome(rate, amount, duration()));
+		val ? setMv(val) : Math.round(getCompoundedIncome(rate, amount, duration()));
 		setMvm(new Date().getMonth() + 1);
 		setMvy(new Date().getFullYear());
 		let rec = getNewRec();
@@ -421,7 +404,15 @@ export default function AddPropertyInput({
 										/>
 									</Col>
 									<Col>
-										{/* <NumberInput pre='' min={1} max={100} value={own.per} changeHandler={(val:number)=>changePer(i,val)} step={0.1} noSlider unit='%'/> */}
+										{/* <NumberInput 
+											pre='' 
+											min={1} 
+											max={100} 
+											value={own.per} 
+											changeHandler={(val:number)=>changePer(i,val)} 
+											step={0.1} 
+											noSlider 
+											unit='%'/> */}
 										<InputNumber
 											placeholder="Percentage"
 											min={1}
