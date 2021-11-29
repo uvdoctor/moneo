@@ -66,9 +66,7 @@ export const TAB = {
 	ML: 'Money Lent',
 	OTHER: 'Others',
 	NPS: 'NPS',
-	PPF: 'PPF',
-	EPF: 'Employee PF',
-	VPF: 'Voluntary PF',
+	PF: 'Provident Funds',
 	VEHICLE: 'Vehicles',
 	ANGEL: 'Angel Investments',
 	PROP: 'Properties',
@@ -87,10 +85,8 @@ function NWContextProvider() {
 	const [ deposits, setDeposits ] = useState<Array<HoldingInput>>([]);
 	const [ lendings, setLendings ] = useState<Array<HoldingInput>>([]);
 	const [ savings, setSavings ] = useState<Array<HoldingInput>>([]);
-	const [ ppf, setPPF ] = useState<Array<HoldingInput>>([]);
+	const [ pf, setPF ] = useState<Array<HoldingInput>>([]);
 	const [ nps, setNPS ] = useState<Array<HoldingInput>>([]);
-	const [ epf, setEPF ] = useState<Array<HoldingInput>>([]);
-	const [ vpf, setVPF ] = useState<Array<HoldingInput>>([]);
 	const [ others, setOthers ] = useState<Array<HoldingInput>>([]);
 	const [ crypto, setCrypto ] = useState<Array<HoldingInput>>([]);
 	const [ angel, setAngel ] = useState<Array<HoldingInput>>([]);
@@ -114,9 +110,9 @@ function NWContextProvider() {
 	const [ totalCrypto, setTotalCrypto ] = useState<number>(0);
 	const [ totalSavings, setTotalSavings ] = useState<number>(0);
 	const [ totalDeposits, setTotalDeposits ] = useState<number>(0);
-	const [ totalPPF, setTotalPPF ] = useState<number>(0);
-	const [ totalEPF, setTotalEPF ] = useState<number>(0);
-	const [ totalVPF, setTotalVPF ] = useState<number>(0);
+	const [ totalPF, setTotalPF ] = useState<number>(0);
+	// const [ totalEPF, setTotalEPF ] = useState<number>(0);
+	// const [ totalVPF, setTotalVPF ] = useState<number>(0);
 	const [ totalNPS, setTotalNPS ] = useState<number>(0);
 	const [ totalAngel, setTotalAngel ] = useState<number>(0);
 	const [ totalLendings, setTotalLendings ] = useState<number>(0);
@@ -275,25 +271,16 @@ function NWContextProvider() {
 		Retirement: {
 			label: 'Retirement',
 			children: {
-				[TAB.PPF]: {
-					label: TAB.PPF,
-					data: ppf,
-					setData: setPPF,
-					total: totalPPF,
-					viewComp: ViewHoldingInput
-				},
-				[TAB.EPF]: {
-					label: TAB.EPF,
-					data: epf,
-					setData: setEPF,
-					total: totalEPF,
-					viewComp: ViewHoldingInput
-				},
-				[TAB.VPF]: {
-					label: TAB.VPF,
-					data: vpf,
-					setData: setVPF,
-					total: totalVPF,
+				[TAB.PF]: {
+					label: TAB.PF,
+					data: pf,
+					setData: setPF,
+					total: totalPF,
+					categoryOptions : {
+						PF: 'Pension Fund',
+						EF: 'Employee Fund',
+						VF: 'Voluntary Fund',
+					},
 					viewComp: ViewHoldingInput
 				},
 				[TAB.NPS]: {
@@ -452,9 +439,7 @@ function NWContextProvider() {
 			await initializeInsData(allHoldings?.instruments);
 		setInstruments([ ...(allHoldings?.instruments ? allHoldings.instruments : []) ]);
 		setPreciousMetals([ ...(allHoldings?.pm ? allHoldings.pm : []) ]);
-		setPPF([ ...(allHoldings?.ppf ? allHoldings.ppf : []) ]);
-		setEPF([ ...(allHoldings?.epf ? allHoldings.epf : []) ]);
-		setVPF([ ...(allHoldings?.vpf ? allHoldings.vpf : []) ]);
+		setPF([ ...(allHoldings?.pf ? allHoldings.pf : []) ]);
 		setNPS([ ...(allHoldings?.nps ? allHoldings.nps : []) ]);
 		setCrypto([ ...(allHoldings?.crypto ? allHoldings.crypto : []) ]);
 		setVehicles([ ...(allHoldings?.vehicles ? allHoldings.vehicles : []) ]);
@@ -588,9 +573,7 @@ function NWContextProvider() {
 		updatedHoldings.deposits = deposits;
 		updatedHoldings.lendings = lendings;
 		updatedHoldings.angel = angel;
-		updatedHoldings.epf = epf;
-		updatedHoldings.ppf = ppf;
-		updatedHoldings.vpf = vpf;
+		updatedHoldings.pf = pf;
 		updatedHoldings.loans = loans;
 		updatedHoldings.pm = preciousMetals;
 		updatedHoldings.vehicles = vehicles;
@@ -766,16 +749,8 @@ function NWContextProvider() {
 		setTotal(total);
 	}
 
-	const pricePPF = () => {
-		calculatePensionFund(ppf, setTotalPPF);
-	};
-
-	const priceEPF = () => {
-		calculatePensionFund(epf, setTotalEPF);
-	};
-
-	const priceVPF = () => {
-		calculatePensionFund(vpf, setTotalVPF);
+	const pricePF = () => {
+		calculatePensionFund(pf, setTotalPF);
 	};
 
 	const priceNPS = () => {
@@ -811,16 +786,14 @@ function NWContextProvider() {
 	}, [totalAngel, totalFEquity, totalNPSEquity]);
 
 	useEffect(() => {
-		setTotalFixed(totalFFixed + totalNPSFixed + totalPPF + totalVPF + totalEPF);
-	}, [totalEPF, totalFFixed, totalNPSFixed, totalPPF, totalVPF])
+		setTotalFixed(totalFFixed + totalNPSFixed + totalPF);
+	}, [totalPF, totalFFixed, totalNPSFixed])
 
 	useEffect(() => {
 		priceInstruments();
 		pricePM();
-		pricePPF();
+		pricePF();
 		priceNPS();
-		priceEPF();
-		priceVPF();
 		priceProperties();
 		priceVehicles();
 		priceOthers();
@@ -854,16 +827,8 @@ function NWContextProvider() {
 	}, [others]);
 
 	useEffect(() => {
-		pricePPF();
-	}, [ppf]);
-
-	useEffect(() => {
-		priceEPF();
-	}, [epf]);
-
-	useEffect(() => {
-		priceVPF();
-	}, [vpf]);
+		pricePF();
+	}, [pf]);
 
 	useEffect(() => {
 		priceNPS();
@@ -913,10 +878,8 @@ function NWContextProvider() {
 		lendings, 
 		properties, 
 		preciousMetals, 
-		crypto, 
-		vpf, 
-		epf, 
-		ppf, 
+		crypto,
+		pf, 
 		loans, 
 		insurance, 
 		credit, 
@@ -960,9 +923,7 @@ function NWContextProvider() {
 				totalPM,
 				totalDeposits,
 				totalSavings,
-				totalPPF,
-				totalEPF,
-				totalVPF,
+				totalPF,
 				totalNPS,
 				totalAngel,
 				totalLendings,
@@ -979,12 +940,8 @@ function NWContextProvider() {
 				setInsurance,
 				vehicles,
 				setVehicles,
-				ppf,
-				setPPF,
-				epf,
-				setEPF,
-				vpf,
-				setVPF,
+				pf,
+				setPF,
 				nps,
 				setNPS,
 				crypto,

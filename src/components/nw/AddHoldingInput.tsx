@@ -25,7 +25,7 @@ export default function AddHoldingInput({
 	subCategoryOptions
 }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
-	const { PM, CRYPTO, DEPO, ML, NPS, PPF, EPF, VPF, VEHICLE, LOAN, INS, OTHER } = TAB;
+	const { PM, CRYPTO, DEPO, ML, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
 	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
 	const [ subCat, setSubCat ] = useState<string>(childTab === ML || childTab === DEPO ? '' : subCategoryOptions ? Object.keys(subCategoryOptions[category])[0] : '1');
 	const [ name, setName ] = useState<string>('');
@@ -68,13 +68,11 @@ export default function AddHoldingInput({
 				newRec.subt = category;
 				newRec.name = subCat;
 				break;
-			case PPF:
-			case EPF:
-			case VPF:
+			case PF:
+				newRec.subt = category;
 				newRec.chg = rate;
 				newRec.chgF = 1;
 				newRec.type = AssetType.F;
-				newRec.subt = childTab;
 				newRec.name = name;
 				newRec.pur = [{ amt: qty, month: today.getMonth()+1, year: today.getFullYear(), qty: 1 }];
 				break;
@@ -178,7 +176,7 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const hasRate = (childTab: string) => [PPF, VPF, EPF, ML, DEPO, LOAN].includes(childTab);
+	const hasRate = (childTab: string) => [PF, ML, DEPO, LOAN].includes(childTab);
 
 	const hasName = (childTab: string) => ![PM, NPS, CRYPTO, INS].includes(childTab);
 
@@ -188,7 +186,7 @@ export default function AddHoldingInput({
 
 	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE, LOAN, INS].includes(childTab);
 
-	const hasRetirement = (childTab: string) => [VPF, PPF, EPF].includes(childTab);
+	const hasPF = (childTab: string) => [PF].includes(childTab);
 
 	return (
 		<div>
@@ -225,7 +223,7 @@ export default function AddHoldingInput({
 				{hasQtyWithRate(childTab) 
 					? <QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={subCat}/>
 					: <NumberInput 
-						pre={hasRetirement(childTab) ? 'Contribution per year' : 'Amount'} 
+						pre={hasPF(childTab) ? 'Contribution per year' : 'Amount'} 
 						min={0} 
 						max={10000} 
 						value={qty} 
