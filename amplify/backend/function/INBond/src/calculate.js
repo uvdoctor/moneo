@@ -100,7 +100,7 @@ const calc = {
 };
 
 const calcYTM = (record, codes) => {
-  const reset = record[codes.rate];
+  const reset = record[codes.rate] ? record[codes.rate] : 0;
   const rate = reset.includes("RESET") || reset >= 20 ? 0 : parseFloat(reset);
   const fv = 100;
   const matrMonth = calc.calcMM(record[codes.mDate]);

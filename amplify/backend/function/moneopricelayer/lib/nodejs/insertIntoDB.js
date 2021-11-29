@@ -56,7 +56,7 @@ const appendGenericFields = (schema, tableName) => {
 	let dateStr = new Date().toISOString();
 	schema.createdAt = dateStr;
 	schema.updatedAt = dateStr;
-	schema.__typename = tableName.slice(0, tableName.indexOf('-'));
+	schema.__typename = tableName;
 	return schema;
 };
 
