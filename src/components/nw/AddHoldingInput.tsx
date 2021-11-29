@@ -230,44 +230,46 @@ export default function AddHoldingInput({
 					{ xs: 15, sm: 15, md: 15 },
 				]}
 			>
-				<Col xs={24} md={12}>
-					<FormItem label="Type">
-						<Row gutter={[10, 0]}>
-							<Col>
-								{categoryOptions && (
-									<SelectInput
-										pre=""
-										value={category}
-										options={categoryOptions}
-										changeHandler={(val: string) => changeCategory(val)}
-									/>
-								)}
-							</Col>
-							<Col>
-								{subCategoryOptions &&
-									subCategoryOptions[category as string] && (
+				{categoryOptions && (
+					<Col xs={24} md={12}>
+						<FormItem label="Type">
+							<Row gutter={[10, 0]}>
+								<Col>
+									{categoryOptions && (
 										<SelectInput
 											pre=""
-											value={subCat as string}
-											options={subCategoryOptions[category as string]}
-											changeHandler={(val: string) => changeSubCat(val)}
-											post={category === AssetSubType.Gold ? "karat" : ""}
+											value={category}
+											options={categoryOptions}
+											changeHandler={(val: string) => changeCategory(val)}
 										/>
 									)}
-							</Col>
-							<Col>
-								{childTab === INS && (
-									<SelectInput
-										pre={""}
-										options={{ 1: "Yearly", 12: "Monthly" }}
-										value={subCat as string}
-										changeHandler={(val: string) => changeSubCat(val)}
-									/>
-								)}
-							</Col>
-						</Row>
-					</FormItem>
-				</Col>
+								</Col>
+								<Col>
+									{subCategoryOptions &&
+										subCategoryOptions[category as string] && (
+											<SelectInput
+												pre=""
+												value={subCat as string}
+												options={subCategoryOptions[category as string]}
+												changeHandler={(val: string) => changeSubCat(val)}
+												post={category === AssetSubType.Gold ? "karat" : ""}
+											/>
+										)}
+								</Col>
+								<Col>
+									{childTab === INS && (
+										<SelectInput
+											pre={""}
+											options={{ 1: "Yearly", 12: "Monthly" }}
+											value={subCat as string}
+											changeHandler={(val: string) => changeSubCat(val)}
+										/>
+									)}
+								</Col>
+							</Row>
+						</FormItem>
+					</Col>
+				)}
 				{hasName(childTab) && (
 					<Col xs={24} md={12}>
 						<FormItem label="Name">
