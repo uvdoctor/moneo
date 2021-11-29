@@ -86,7 +86,7 @@ export default function ViewHoldingInput({
 	const changeType = (val: string) => {
 		record.type = val;
 		changeData([ ...data ])
-	}
+	};
 
 	const hasRate = (childTab: string) => [PF, LENT, LOAN].includes(childTab);
 

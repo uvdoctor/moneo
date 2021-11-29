@@ -24,31 +24,18 @@ export default function AddHoldingInput({
 	categoryOptions,
 	subCategoryOptions,
 }: AddHoldingInputProps) {
-<<<<<<< HEAD
-	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
-	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
-	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
-	const [ subCat, setSubCat ] = useState<string>(childTab === LENT ? '' : subCategoryOptions ? Object.keys(subCategoryOptions[category])[0] : '1');
-	const [ name, setName ] = useState<string>('');
-	const [ qty, setQty ] = useState<number>(0);
-	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
-	const [ rate, setRate ] = useState<number>(0);
-	const [ date, setDate ] = useState<string>('');
-	const [ duration, setDuration ] = useState<number>(12);
-	const [ type, setType ] = useState<string>('D');
-=======
 	const {
 		allFamily,
 		childTab,
 		selectedMembers,
 		selectedCurrency,
 	}: any = useContext(NWContext);
-	const { PM, CRYPTO, DEPO, ML, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
+	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
 	const [category, setCategory] = useState<string>(
 		categoryOptions ? Object.keys(categoryOptions)[0] : ""
 	);
 	const [subCat, setSubCat] = useState<string>(
-		childTab === ML || childTab === DEPO
+		childTab === LENT
 			? ""
 			: subCategoryOptions
 			? Object.keys(subCategoryOptions[category])[0]
@@ -62,7 +49,7 @@ export default function AddHoldingInput({
 	const [rate, setRate] = useState<number>(0);
 	const [date, setDate] = useState<string>("");
 	const [duration, setDuration] = useState<number>(12);
->>>>>>> 9fdc73ab98a96ac1101e8e26fcef417d33057b14
+	const [type, setType] = useState<string>('D');
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: "", qty: 0, fId: "" };
@@ -175,13 +162,9 @@ export default function AddHoldingInput({
 	const changeSubCat = (val: string) => {
 		setSubCat(val);
 		let rec = getNewRec();
-<<<<<<< HEAD
-		(childTab === LENT || childTab === INS) ? rec.chgF = Number(subCat) : rec.name = val;
-=======
-		childTab === ML || childTab === DEPO || childTab === INS
+		childTab === LENT || childTab === INS
 			? (rec.chgF = Number(subCat))
 			: (rec.name = val);
->>>>>>> 9fdc73ab98a96ac1101e8e26fcef417d33057b14
 		setInput(rec);
 	};
 
@@ -237,33 +220,17 @@ export default function AddHoldingInput({
 	const hasQtyWithRate = (childTab: string) =>
 		[PM, NPS, CRYPTO].includes(childTab);
 
-<<<<<<< HEAD
-	const hasDuration = (childTab: string) => [LENT, LOAN, INS].includes(childTab);
-
-	const hasDate = (childTab: string) => [LENT, VEHICLE, LOAN, INS].includes(childTab);
-=======
 	const hasDuration = (childTab: string) =>
-		[ML, DEPO, LOAN, INS].includes(childTab);
+		[LENT, LOAN, INS].includes(childTab);
 
 	const hasDate = (childTab: string) =>
-		[ML, DEPO, VEHICLE, LOAN, INS].includes(childTab);
->>>>>>> 9fdc73ab98a96ac1101e8e26fcef417d33057b14
+		[LENT, VEHICLE, LOAN, INS].includes(childTab);
 
 	const hasPF = (childTab: string) => [PF].includes(childTab);
 
 	const { Item: FormItem } = Form;
 
 	return (
-<<<<<<< HEAD
-		<div>
-			<p>
-				{childTab===LENT && 
-					<SelectInput pre={''} 
-					options={{D: 'Deposits', ML: 'Money Lendings', NSE: 'National Saving Certificate'}} 
-					value={type as string} 
-					changeHandler={(val: string) => changeType(val)}/>
-				}&nbsp;
-=======
 		<Form layout="vertical">
 			<Row
 				gutter={[
@@ -271,11 +238,16 @@ export default function AddHoldingInput({
 					{ xs: 15, sm: 15, md: 15 },
 				]}
 			>
->>>>>>> 9fdc73ab98a96ac1101e8e26fcef417d33057b14
 				{categoryOptions && (
 					<Col xs={24} md={12}>
 						<FormItem label="Type">
 							<Row gutter={[10, 0]}>
+								{childTab===LENT && <Col>
+									<SelectInput pre={''} 
+									options={{D: 'Deposits', ML: 'Money Lendings', NSE: 'National Saving Certificate'}} 
+									value={type as string} 
+									changeHandler={(val: string) => changeType(val)}/>
+								</Col>}
 								<Col>
 									{categoryOptions && (
 										<SelectInput
