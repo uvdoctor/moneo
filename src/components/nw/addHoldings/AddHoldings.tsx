@@ -35,8 +35,10 @@ export default function AddHoldings({
 		setModalVisibility(false);
 	};
 
+	const hasInstruments = (childTab: string) => [ TAB.BOND, TAB.STOCK, TAB.ETF, TAB.MF, TAB.GOLDB ].includes(childTab);
+
 	const addHolding = () => {
-		if (childTab === TAB.FIN) {
+		if (hasInstruments(childTab)) {
 			setInstruments(instrumentsList);
 			setInstrumentsList([]);
 		} else {
@@ -49,8 +51,6 @@ export default function AddHoldings({
 	const updateInstruments = (instrumentsToAdd: []) => {
 		setInstrumentsList([ ...instrumentsToAdd, ...instruments ]);
 	};
-
-	const hasInstruments = (childTab: string) => [ TAB.BOND, TAB.STOCK, TAB.ETF, TAB.MF, TAB.GOLDB ].includes(childTab);
 
 	return (
 		<Fragment>

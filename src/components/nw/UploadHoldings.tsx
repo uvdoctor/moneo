@@ -94,7 +94,7 @@ export default function UploadHoldings() {
 			} else unmatched[key] = instrument;
 			if(!instrument.type) instrument.type = AssetType.F;
 			instrument.curr = 'INR'
-			instrument.fIds = [memberKey];
+			instrument.fId = memberKey;
 			filteredIns.push(instrument);
 		})
 		return unmatched;

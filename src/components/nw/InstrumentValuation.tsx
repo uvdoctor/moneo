@@ -1,9 +1,9 @@
-import { Empty, Table, Tag } from 'antd';
+import { Empty, Table } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { HoldingInput, AssetType } from '../../api/goals';
+import { HoldingInput } from '../../api/goals';
 import { NWContext } from './NWContext';
 import Holding from './Holding';
-import { doesHoldingMatch, getAssetTypes, getColourForAssetType } from './nwutils';
+import { doesHoldingMatch } from './nwutils';
 import { toHumanFriendlyCurrency } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
@@ -14,10 +14,7 @@ export default function InstrumentValuation() {
 	const { instruments, setInstruments, selectedMembers, selectedCurrency, totalInstruments }: any = useContext(
 		NWContext
 	);
-	const { CheckableTag } = Tag;
 	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([ ...instruments ]);
-	const assetTypes = Object.keys(getAssetTypes());
-	const [ selectedAssetTypes, setSelectedAssetTypes ] = useState<Array<string>>(assetTypes);
 	const [ nameFilterValues, setNameFilterValues ] = useState<Array<any>>([ {} ]);
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
 	const [ total, setTotal ] = useState<number>(totalInstruments);
@@ -40,9 +37,9 @@ export default function InstrumentValuation() {
 			filteredValue: filteredInfo.id || null,
 			filters: nameFilterValues,
 			onFilter: (values: Array<string>, record: any) => values.indexOf(record.id) > -1,
-			render: (record: any) => (
-				<Holding key={record.id} holding={record as HoldingInput} onDelete={delRecord} showPrice />
-			)
+			render: (record: any) => {
+				return <Holding key={record.id} holding={record as HoldingInput} onDelete={delRecord} showPrice />
+			}
 		}
 	];
 
@@ -62,14 +59,15 @@ export default function InstrumentValuation() {
 			let ids = filteredInfo && filteredInfo.id && filteredInfo.id.length ? filteredInfo.id : null;
 			let filteredData: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => {
 				if (ids && ids.indexOf(instrument.id) < 0) return false;
-				return (
-					doesHoldingMatch(instrument, selectedMembers, selectedCurrency) &&
-					selectedAssetTypes.indexOf(instrument.type as string) > -1
-				);
+				if(doesHoldingMatch(instrument, selectedMembers, selectedCurrency)){
+					return true;
+					// console.log(instrument, instrument.subt , childTab, instrument.type);
+					// return instrument.subt === childTab
+				}
 			});
 			setFilteredInstruments([ ...filteredData ]);
 		},
-		[ instruments, selectedMembers, selectedCurrency, selectedAssetTypes, filteredInfo ]
+		[ instruments, selectedMembers, selectedCurrency, filteredInfo ]
 	);
 
 	useEffect(
@@ -101,22 +99,6 @@ export default function InstrumentValuation() {
 	return instruments.length ? (
 		<Fragment>
 			<p style={{ textAlign: 'center' }}>
-				{assetTypes.map((tag: string) => (
-					<CheckableTag
-						key={tag}
-						style={{backgroundColor: getColourForAssetType(tag as AssetType), 
-							opacity: selectedAssetTypes.indexOf(tag) > -1 ? 1 : 0.5}}
-						checked={selectedAssetTypes.indexOf(tag) > -1}
-						onChange={(checked: boolean) => {
-							if (checked) {
-								selectedAssetTypes.push(tag);
-								setSelectedAssetTypes([ ...selectedAssetTypes ]);
-							} else setSelectedAssetTypes([ ...selectedAssetTypes.filter((t: string) => t !== tag) ]);
-						}}
-					>
-						{getAssetTypes()[tag as AssetType]}
-					</CheckableTag>
-				))}
 			</p>
 			{filteredInstruments.length ? (
 				<Table

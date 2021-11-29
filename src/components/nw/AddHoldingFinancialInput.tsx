@@ -41,6 +41,7 @@ export default function AddHoldingFinancialInput(props: any) {
     setHoldings(mergedHoldings);
     updateInstruments(mergedHoldings);
     setInsData(mergedInsData);
+
     simpleStorage.set(LOCAL_INS_DATA_KEY, mergedInsData, LOCAL_DATA_TTL);
     disableOk(mergedHoldings.length > 0 ? false : true);
   };

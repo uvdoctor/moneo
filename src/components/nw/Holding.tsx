@@ -14,7 +14,7 @@ require('./Holding.less');
 import { toCurrency, toHumanFriendlyCurrency, toReadableNumber } from '../utils';
 import { AssetType, HoldingInput } from '../../api/goals';
 import { useEffect } from 'react';
-import { getAssetSubTypes, getColourForAssetType } from './nwutils';
+import { getColourForAssetType } from './nwutils';
 import { COLORS } from '../../CONSTANTS';
 import { AppContext } from '../AppContext';
 import { NWContext } from './NWContext';
@@ -34,7 +34,6 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 	const [ price, setPrice ] = useState<number>(insData[holding.id] ? insData[holding.id].price : 0);
 	const [ total, setTotal ] = useState<number>(holding.qty * price);
 	const [ isEditMode, setEditMode ] = useState(false);
-	const assetSubTypes: any = getAssetSubTypes();
 
 	function onEdit() {
 		setEditMode(true);
@@ -56,8 +55,8 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 		if(ins) setPrice(ins.price);
 	}, [ insData ]);
 
-	const getInsTypeStr = (id: string) =>
-		insData[id].itype ? `${insData[holding.id].itype} - ` : holding.id.startsWith('INF') ? 'Mutual Fund - ' : '';
+	// const getInsTypeStr = (id: string) =>
+	// 	insData[id].itype ? `${insData[holding.id].itype} - ` : holding.id.startsWith('INF') ? 'Mutual Fund - ' : '';
 
 	return (
 		<Row className="holding" align="middle" justify="space-between" gutter={[ 5, 5 ]}>
@@ -65,9 +64,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 				<Col span={24}>
 					<Row justify="space-between">
 						<Col>
-							{insData[holding.id] ? (
-								`${getInsTypeStr(holding.id)}${assetSubTypes[insData[holding.id].subt]}`
-							) : (
+							{!insData[holding.id] && (
 								<h4 style={{ color: COLORS.RED }}>Sorry, unable to find price for this one!</h4>
 							)}
 						</Col>

@@ -52,7 +52,7 @@ const holdingReducer = (
         ...{
           qty: 0,
           name: "",
-          fIds: '',
+          fId: '',
           id: "",
           curr: "INR",
           subt: "",
@@ -98,7 +98,7 @@ export default function HoldingInput(props: any) {
   const [holdingState, dispatch] = useReducer(holdingReducer, {
     qty: 0,
     name: "",
-    fIds: '',
+    fId: '',
     id: "",
     curr: "INR",
     subt: "",

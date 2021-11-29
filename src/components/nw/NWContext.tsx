@@ -60,7 +60,6 @@ export const STELLAR = 'XLM';
 export const TAB = {
 	PM: 'Precious Metals',
 	CRYPTO: 'Crypto',
-	FIN: 'Financial',
 	STOCK: 'Stock',
 	MF: 'Mutual Fund',
 	BOND: 'Bond',
@@ -127,7 +126,7 @@ function NWContextProvider() {
 	const [ totalPGold, setTotalPGold ] = useState<number>(0);
 	const [ totalFGold, setTotalFGold ] = useState<number>(0);
 	const [ showInsUpload, setShowInsUpload ] = useState<boolean>(false);
-	const [ activeTab, setActiveTab ] = useState<string>(TAB.FIN);
+	const [ activeTab, setActiveTab ] = useState<string>('Financial');
 	const [ activeTabSum, setActiveTabSum ] = useState<number>(0);
 	const [ results, setResults ] = useState<Array<any>>([]);
 	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
