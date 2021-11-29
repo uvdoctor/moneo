@@ -101,9 +101,9 @@ const calcSchema = (record, codes, schema, exchg, isinMap, table) => {
       case "name":
         return (schema.name = name.trim());
       case "price":
-        return (schema[key] = parse(record[codes[key]]));
+        return (schema[key] = (record[codes[key]] ? parse(record[codes[key]]) : 0));
       case "prev":
-        return (schema[key] = parse(record[codes[key]]));
+        return (schema[key] = (record[codes[key]] ? parse(record[codes[key]]) : 0));
       case "type":
         return (schema.type = calc[exchg].calcType(type, subt, name));
       case "subt":
