@@ -67,8 +67,7 @@ export const TAB = {
 	ETF: 'ETF',
 	GOLDB: 'Gold Bond',
 	SAV: 'Saving Accounts',
-	DEPO: 'Deposits',
-	ML: 'Money Lent',
+	LENT: 'Lendings',
 	OTHER: 'Others',
 	NPS: 'NPS',
 	PF: 'Provident Funds',
@@ -87,7 +86,6 @@ function NWContextProvider() {
 	const [ preciousMetals, setPreciousMetals ] = useState<Array<HoldingInput>>([]);
 	const [ properties, setProperties ] = useState<Array<PropertyInput>>([]);
 	const [ vehicles, setVehicles ] = useState<Array<HoldingInput>>([]);
-	const [ deposits, setDeposits ] = useState<Array<HoldingInput>>([]);
 	const [ lendings, setLendings ] = useState<Array<HoldingInput>>([]);
 	const [ savings, setSavings ] = useState<Array<HoldingInput>>([]);
 	const [ pf, setPF ] = useState<Array<HoldingInput>>([]);
@@ -114,7 +112,6 @@ function NWContextProvider() {
 	const [ totalVehicles, setTotalVehicles ] = useState<number>(0);
 	const [ totalCrypto, setTotalCrypto ] = useState<number>(0);
 	const [ totalSavings, setTotalSavings ] = useState<number>(0);
-	const [ totalDeposits, setTotalDeposits ] = useState<number>(0);
 	const [ totalPF, setTotalPF ] = useState<number>(0);
 	const [ totalNPS, setTotalNPS ] = useState<number>(0);
 	const [ totalAngel, setTotalAngel ] = useState<number>(0);
@@ -157,11 +154,11 @@ function NWContextProvider() {
 		Cash: {
 			label: 'Cash',
 			children: {
-				[TAB.DEPO]: {
-					label: TAB.DEPO,
-					data: deposits,
-					setData: setDeposits,
-					total: totalDeposits,
+				[TAB.LENT]: {
+					label: TAB.LENT,
+					data: lendings,
+					setData: setLendings,
+					total: totalLendings,
 					categoryOptions: { No : 'Non-Cummulative', Yes: 'Cummulative' },
 					subCategoryOptions:{ Yes: {
 						1: 'Anually',
@@ -177,20 +174,6 @@ function NWContextProvider() {
 					total: totalSavings,
 					viewComp: ViewHoldingInput,
 				},
-				[TAB.ML]: {
-					label: TAB.ML,
-					data: lendings,
-					setData: setLendings,
-					total: totalLendings,
-					categoryOptions: { No : 'Non-Cummulative', Yes: 'Cummulative' },
-					subCategoryOptions:{ Yes: {
-						1: 'Anually',
-						2: 'Bi-Anually',
-						4: 'Quarterly',
-						12: 'Monthly'}},
-					viewComp: ViewHoldingInput
-				},
-				// National Saving Certificate
 			}
 		},
 		Physical: {
@@ -483,7 +466,6 @@ function NWContextProvider() {
 		setLoans([ ...(allHoldings?.loans ? allHoldings.loans : []) ]);
 		setInsurance([ ...(allHoldings?.ins ? allHoldings.ins : []) ]);
 		setCredit([...(allHoldings?.credit ? allHoldings.credit : []) ]);
-		setDeposits([ ...(allHoldings?.deposits ? allHoldings.deposits : []) ]);
 		setSavings([ ...(allHoldings?.savings ? allHoldings.savings : []) ]);
 		setLendings([ ...(allHoldings?.lendings ? allHoldings.lendings : []) ]);
 		setOthers([ ...(allHoldings?.other ? allHoldings.other : []) ]);
@@ -518,13 +500,12 @@ function NWContextProvider() {
 			setTotalAssets(
 					totalAlternative +
 					totalSavings +
-					totalDeposits +
 					totalLendings +
 					totalEquity +	
 					totalFixed
 			);
 		},
-		[totalSavings, totalDeposits, totalLendings, totalAlternative, totalEquity, totalFixed,]
+		[totalSavings, totalAlternative, totalEquity, totalFixed, totalLendings]
 	);
 
 	useEffect(() => {
@@ -606,7 +587,6 @@ function NWContextProvider() {
 		let updatedHoldings: CreateUserHoldingsInput = { uname: owner };
 		updatedHoldings.instruments = instruments;
 		updatedHoldings.savings = savings;
-		updatedHoldings.deposits = deposits;
 		updatedHoldings.lendings = lendings;
 		updatedHoldings.angel = angel;
 		updatedHoldings.pf = pf;
@@ -686,10 +666,6 @@ function NWContextProvider() {
 
 	const priceLendings = () => {
 		calculateCompundingIncome(lendings, setTotalLendings);
-	};
-
-	const priceDeposits = () => {
-		calculateCompundingIncome(deposits, setTotalDeposits)
 	};
 
 	const calculateBalance = (records: Array<HoldingInput>, setTotal: Function) => {
@@ -839,7 +815,6 @@ function NWContextProvider() {
 		priceLoans();
 		priceCredit();
 		priceSavings();
-		priceDeposits();
 	}, [selectedMembers, selectedCurrency]);
 
 	useEffect(() => {
@@ -891,10 +866,6 @@ function NWContextProvider() {
 	}, [vehicles]);
 
 	useEffect(() => {
-		priceDeposits();
-	}, [deposits]);
-
-	useEffect(() => {
 		priceInstruments();
 	}, [instruments]);
 
@@ -909,7 +880,6 @@ function NWContextProvider() {
 	useEffect(()=>{
 		setIsDirty(true);
 	},[instruments, 
-		deposits, 
 		savings, 
 		lendings, 
 		properties, 
@@ -957,7 +927,6 @@ function NWContextProvider() {
 				totalCrypto,
 				totalVehicles,
 				totalPM,
-				totalDeposits,
 				totalSavings,
 				totalPF,
 				totalNPS,
@@ -984,8 +953,6 @@ function NWContextProvider() {
 				setCrypto,
 				savings,
 				setSavings,
-				deposits,
-				setDeposits,
 				lendings,
 				setLendings,
 				properties,

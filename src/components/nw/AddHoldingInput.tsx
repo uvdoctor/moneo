@@ -25,15 +25,16 @@ export default function AddHoldingInput({
 	subCategoryOptions
 }: AddHoldingInputProps) {
 	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
-	const { PM, CRYPTO, DEPO, ML, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
+	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
 	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
-	const [ subCat, setSubCat ] = useState<string>(childTab === ML || childTab === DEPO ? '' : subCategoryOptions ? Object.keys(subCategoryOptions[category])[0] : '1');
+	const [ subCat, setSubCat ] = useState<string>(childTab === LENT ? '' : subCategoryOptions ? Object.keys(subCategoryOptions[category])[0] : '1');
 	const [ name, setName ] = useState<string>('');
 	const [ qty, setQty ] = useState<number>(0);
 	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
 	const [ rate, setRate ] = useState<number>(0);
 	const [ date, setDate ] = useState<string>('');
 	const [ duration, setDuration ] = useState<number>(12);
+	const [ type, setType ] = useState<string>('D');
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
@@ -55,8 +56,8 @@ export default function AddHoldingInput({
 				newRec.pur = [pur];
 				newRec.name = name;
 				break;
-			case DEPO:
-			case ML:
+			case LENT:
+				newRec.type = type;
 				newRec.subt = category;
 				newRec.chg = rate;
 				newRec.chgF = category === 'No' ? 0 : Number(subCat);
@@ -135,7 +136,7 @@ export default function AddHoldingInput({
 	const changeSubCat = (val: string) => {
 		setSubCat(val);
 		let rec = getNewRec();
-		(childTab === ML || childTab === DEPO || childTab === INS) ? rec.chgF = Number(subCat) : rec.name = val;
+		(childTab === LENT || childTab === INS) ? rec.chgF = Number(subCat) : rec.name = val;
 		setInput(rec);
 	};
 
@@ -176,21 +177,34 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const hasRate = (childTab: string) => [PF, ML, DEPO, LOAN].includes(childTab);
+	const changeType = (val: string) => {
+		setType(val);
+		let rec = getNewRec();
+		rec.type = type;
+		setInput(rec);
+	}
+
+	const hasRate = (childTab: string) => [PF, LENT, LOAN].includes(childTab);
 
 	const hasName = (childTab: string) => ![PM, NPS, CRYPTO, INS].includes(childTab);
 
 	const hasQtyWithRate = (childTab: string) => [PM, NPS, CRYPTO].includes(childTab);
 
-	const hasDuration = (childTab: string) => [ML, DEPO, LOAN, INS].includes(childTab);
+	const hasDuration = (childTab: string) => [LENT, LOAN, INS].includes(childTab);
 
-	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE, LOAN, INS].includes(childTab);
+	const hasDate = (childTab: string) => [LENT, VEHICLE, LOAN, INS].includes(childTab);
 
 	const hasPF = (childTab: string) => [PF].includes(childTab);
 
 	return (
 		<div>
 			<p>
+				{childTab===LENT && 
+					<SelectInput pre={''} 
+					options={{D: 'Deposits', ML: 'Money Lendings', NSE: 'National Saving Certificate'}} 
+					value={type as string} 
+					changeHandler={(val: string) => changeType(val)}/>
+				}&nbsp;
 				{categoryOptions && (
 					<SelectInput
 						pre=""
