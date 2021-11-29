@@ -222,9 +222,9 @@ export default function AddPropertyInput({
 	}, [amount, rate, purchaseDate]);
 
 	const changeMv = (val?: number) => {
-		// @ts-ignore
 		val
 			? setMv(val)
+			// @ts-ignore
 			: Math.round(getCompoundedIncome(rate, amount, duration()));
 		setMvm(new Date().getMonth() + 1);
 		setMvy(new Date().getFullYear());

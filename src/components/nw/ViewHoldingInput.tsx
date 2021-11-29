@@ -25,7 +25,7 @@ export default function ViewHoldingInput({
 	record,
 }: ViewHoldingInputProps) {
 	const { childTab }: any = useContext(NWContext);
-	const { PM, CRYPTO, DEPO, ML, NPS, PF, VEHICLE, LOAN, INS } = TAB;
+	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS } = TAB;
 
 	const changeDuration = (val: any) => {
 		if(record.pur) record.pur[0].qty = val;
@@ -56,7 +56,7 @@ export default function ViewHoldingInput({
 	const changeCategory = (subtype: string) => {
 		record.subt = subtype;
 		if(subCategoryOptions) {
-			if(childTab === ML || childTab === DEPO) {
+			if(childTab === LENT) {
 				if (subtype === 'No') record.chgF === 0;
 				else { 
 					let opts = subCategoryOptions[subtype];
@@ -71,7 +71,7 @@ export default function ViewHoldingInput({
 	};
 
 	const changeSubCategory = (val: string) => {
-		(childTab === ML || childTab === DEPO || childTab === INS ) ? record.chgF = Number(val) : record.name = val;
+		(childTab === LENT || childTab === INS ) ? record.chgF = Number(val) : record.name = val;
 		changeData([ ...data ]);
 	};
 
@@ -83,20 +83,32 @@ export default function ViewHoldingInput({
 		}
 	};
 
-	const hasRate = (childTab: string) => [PF, ML, DEPO, LOAN].includes(childTab);
+	const changeType = (val: string) => {
+		record.type = val;
+		changeData([ ...data ])
+	};
+
+	const hasRate = (childTab: string) => [PF, LENT, LOAN].includes(childTab);
 
 	const hasName = (childTab: string) => ![PM, NPS, CRYPTO, INS].includes(childTab);
 
 	const hasQtyWithRate = (childTab: string) => [PM, NPS, CRYPTO].includes(childTab);
 
-	const hasDuration = (childTab: string) => [ML, DEPO, LOAN, INS].includes(childTab);
+	const hasDuration = (childTab: string) => [LENT, LOAN, INS].includes(childTab);
 
-	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE, LOAN, INS].includes(childTab);
+	const hasDate = (childTab: string) => [LENT, VEHICLE, LOAN, INS].includes(childTab);
 
 	const hasPF = (childTab: string) => [PF].includes(childTab);
 
 	return (
 		<Fragment>
+			{childTab===LENT && <Col>
+				<SelectInput 
+					pre={''} 
+					options={{D: 'Deposits', ML: 'Money Lendings', NSE: 'National Saving Certificate'}} 
+					value={record.type as string} 
+					changeHandler={(val: string) => changeType(val)}/>
+			</Col>}
 			{categoryOptions && 
 			<Col>
 				 <SelectInput
@@ -109,7 +121,7 @@ export default function ViewHoldingInput({
 				<Fragment>&nbsp;
 					<SelectInput
 						pre=""
-						value={(childTab === DEPO || childTab === ML) ? record.chgF as number : record.name as string}
+						value={(childTab === LENT) ? record.chgF as number : record.name as string}
 						options={subCategoryOptions[record.subt as string]}
 						changeHandler={(val: string) => changeSubCategory(val)}
 						post={record.subt === AssetSubType.Gold ? 'karat' : ''}

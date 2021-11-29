@@ -30,12 +30,12 @@ export default function AddHoldingInput({
 		selectedMembers,
 		selectedCurrency,
 	}: any = useContext(NWContext);
-	const { PM, CRYPTO, DEPO, ML, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
+	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
 	const [category, setCategory] = useState<string>(
 		categoryOptions ? Object.keys(categoryOptions)[0] : ""
 	);
 	const [subCat, setSubCat] = useState<string>(
-		childTab === ML || childTab === DEPO
+		childTab === LENT
 			? ""
 			: subCategoryOptions
 			? Object.keys(subCategoryOptions[category])[0]
@@ -49,6 +49,7 @@ export default function AddHoldingInput({
 	const [rate, setRate] = useState<number>(0);
 	const [date, setDate] = useState<string>("");
 	const [duration, setDuration] = useState<number>(12);
+	const [type, setType] = useState<string>('D');
 
 	const getNewRec = () => {
 		let newRec: HoldingInput = { id: "", qty: 0, fId: "" };
@@ -72,8 +73,8 @@ export default function AddHoldingInput({
 				newRec.pur = [pur];
 				newRec.name = name;
 				break;
-			case DEPO:
-			case ML:
+			case LENT:
+				newRec.type = type;
 				newRec.subt = category;
 				newRec.chg = rate;
 				newRec.chgF = category === "No" ? 0 : Number(subCat);
@@ -161,7 +162,7 @@ export default function AddHoldingInput({
 	const changeSubCat = (val: string) => {
 		setSubCat(val);
 		let rec = getNewRec();
-		childTab === ML || childTab === DEPO || childTab === INS
+		childTab === LENT || childTab === INS
 			? (rec.chgF = Number(subCat))
 			: (rec.name = val);
 		setInput(rec);
@@ -204,7 +205,14 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const hasRate = (childTab: string) => [PF, ML, DEPO, LOAN].includes(childTab);
+	const changeType = (val: string) => {
+		setType(val);
+		let rec = getNewRec();
+		rec.type = type;
+		setInput(rec);
+	}
+
+	const hasRate = (childTab: string) => [PF, LENT, LOAN].includes(childTab);
 
 	const hasName = (childTab: string) =>
 		![PM, NPS, CRYPTO, INS].includes(childTab);
@@ -213,10 +221,10 @@ export default function AddHoldingInput({
 		[PM, NPS, CRYPTO].includes(childTab);
 
 	const hasDuration = (childTab: string) =>
-		[ML, DEPO, LOAN, INS].includes(childTab);
+		[LENT, LOAN, INS].includes(childTab);
 
 	const hasDate = (childTab: string) =>
-		[ML, DEPO, VEHICLE, LOAN, INS].includes(childTab);
+		[LENT, VEHICLE, LOAN, INS].includes(childTab);
 
 	const hasPF = (childTab: string) => [PF].includes(childTab);
 
@@ -234,6 +242,12 @@ export default function AddHoldingInput({
 					<Col xs={24} md={12}>
 						<FormItem label="Type">
 							<Row gutter={[10, 0]}>
+								{childTab===LENT && <Col>
+									<SelectInput pre={''} 
+									options={{D: 'Deposits', ML: 'Money Lendings', NSE: 'National Saving Certificate'}} 
+									value={type as string} 
+									changeHandler={(val: string) => changeType(val)}/>
+								</Col>}
 								<Col>
 									{categoryOptions && (
 										<SelectInput
