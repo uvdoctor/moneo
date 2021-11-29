@@ -159,12 +159,25 @@ function NWContextProvider() {
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
-					categoryOptions: { No : 'Non-Cummulative', Yes: 'Cummulative' },
-					subCategoryOptions:{ Yes: {
-						1: 'Anually',
-						2: 'Bi-Anually',
-						4: 'Quarterly',
-						12: 'Monthly'}},
+					categoryOptions: {
+						BD: 'Bank Deposits', 
+						ML: 'Peer-to-Peer Lendings', 
+						NSE: 'National Saving Certificate'
+					},
+					subCategoryOptions:{ 
+						BD: {
+							0: 'Pay Out',
+							1: 'Accumulates Every Year',
+							2: 'Accumulates Every Six Months',
+							4: 'Accumulates Every Three Months',
+							12: 'Accumulates Every Month' },
+						ML: {
+							0: 'Pay Out',
+							1: 'Accumulates Every Year',
+							2: 'Accumulates Every Six Months',
+							4: 'Accumulates Every Three Months',
+							12: 'Accumulates Every Month' },
+						},
 					viewComp: ViewHoldingInput
 				},
 				[TAB.SAV]: {

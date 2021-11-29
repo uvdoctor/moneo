@@ -56,15 +56,12 @@ export default function ViewHoldingInput({
 	const changeCategory = (subtype: string) => {
 		record.subt = subtype;
 		if(subCategoryOptions) {
-			if(childTab === LENT) {
-				if (subtype === 'No') record.chgF === 0;
-				else { 
-					let opts = subCategoryOptions[subtype];
-					if (!opts[record.chgF as number]) record.chgF = Number(Object.keys(opts)[0]);
-				}
-			} else {
 			let opts = subCategoryOptions[subtype];
-			if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
+			if(!opts) return changeData([ ...data ]);
+			if (childTab === LENT) {
+				if (!opts[record.chgF as number]) record.chgF = Number(Object.keys(opts)[0]);
+			}else{
+				if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
 			}
 		}
 		changeData([ ...data ]);
@@ -83,11 +80,6 @@ export default function ViewHoldingInput({
 		}
 	};
 
-	const changeType = (val: string) => {
-		record.type = val;
-		changeData([ ...data ])
-	};
-
 	const hasRate = (childTab: string) => [PF, LENT, LOAN].includes(childTab);
 
 	const hasName = (childTab: string) => ![PM, NPS, CRYPTO, INS].includes(childTab);
@@ -102,13 +94,6 @@ export default function ViewHoldingInput({
 
 	return (
 		<Fragment>
-			{childTab===LENT && <Col>
-				<SelectInput 
-					pre={''} 
-					options={{D: 'Deposits', ML: 'Money Lendings', NSE: 'National Saving Certificate'}} 
-					value={record.type as string} 
-					changeHandler={(val: string) => changeType(val)}/>
-			</Col>}
 			{categoryOptions && 
 			<Col>
 				 <SelectInput

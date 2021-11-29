@@ -1,15 +1,15 @@
-import { UserOutlined } from "@ant-design/icons";
-import { Form, Row, Col, InputNumber } from "antd";
-import React, { useContext, useState } from "react";
-import { AssetSubType, AssetType, HoldingInput } from "../../api/goals";
-import DatePickerInput from "../form/DatePickerInput";
-import NumberInput from "../form/numberinput";
-import SelectInput from "../form/selectinput";
-import TextInput from "../form/textinput";
-import { getMonthIndex } from "../utils";
-import { NWContext, TAB } from "./NWContext";
-import { getDefaultMember, getFamilyOptions } from "./nwutils";
-import QuantityWithRate from "./QuantityWithRate";
+import { UserOutlined } from '@ant-design/icons';
+import { Form, Row, Col, InputNumber } from 'antd';
+import React, { useContext, useState } from 'react';
+import { AssetSubType, AssetType, HoldingInput } from '../../api/goals';
+import DatePickerInput from '../form/DatePickerInput';
+import NumberInput from '../form/numberinput';
+import SelectInput from '../form/selectinput';
+import TextInput from '../form/textinput';
+import { getMonthIndex } from '../utils';
+import { NWContext, TAB } from './NWContext';
+import { getDefaultMember, getFamilyOptions } from './nwutils';
+import QuantityWithRate from './QuantityWithRate';
 
 interface AddHoldingInputProps {
 	setInput: Function;
@@ -22,63 +22,46 @@ export default function AddHoldingInput({
 	setInput,
 	disableOk,
 	categoryOptions,
-	subCategoryOptions,
+	subCategoryOptions
 }: AddHoldingInputProps) {
-	const {
-		allFamily,
-		childTab,
-		selectedMembers,
-		selectedCurrency,
-	}: any = useContext(NWContext);
+	const { allFamily, childTab, selectedMembers, selectedCurrency }: any = useContext(NWContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS, OTHER } = TAB;
-	const [category, setCategory] = useState<string>(
-		categoryOptions ? Object.keys(categoryOptions)[0] : ""
-	);
-	const [subCat, setSubCat] = useState<string>(
-		childTab === LENT
-			? ""
-			: subCategoryOptions
-			? Object.keys(subCategoryOptions[category])[0]
-			: "1"
-	);
-	const [name, setName] = useState<string>("");
-	const [qty, setQty] = useState<number>(0);
-	const [memberKey, setMemberKey] = useState<string>(
-		getDefaultMember(allFamily, selectedMembers)
-	);
-	const [rate, setRate] = useState<number>(0);
-	const [date, setDate] = useState<string>("");
-	const [duration, setDuration] = useState<number>(12);
-	const [type, setType] = useState<string>('D');
+	const [ category, setCategory ] = useState<string>(categoryOptions ? Object.keys(categoryOptions)[0] : '');
+	const [ subCat, setSubCat ] = useState<string>((subCategoryOptions && subCategoryOptions[category]) ? Object.keys(subCategoryOptions[category])[0] : '');
+	const [ name, setName ] = useState<string>('');
+	const [ qty, setQty ] = useState<number>(0);
+	const [ memberKey, setMemberKey ] = useState<string>(getDefaultMember(allFamily, selectedMembers));
+	const [ rate, setRate ] = useState<number>(0);
+	const [ date, setDate ] = useState<string>('');
+	const [ duration, setDuration ] = useState<number>(12);
 
 	const getNewRec = () => {
-		let newRec: HoldingInput = { id: "", qty: 0, fId: "" };
+		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
 		const today = new Date();
 		const pur = {
 			amt: qty,
 			month: getMonthIndex(date.substring(0, 3)),
 			year: Number(date.substring(date.length - 4)),
-			qty: childTab === VEHICLE ? 1 : duration,
+			qty: childTab === VEHICLE ? 1 : duration
 		};
 
 		switch (childTab) {
 			case INS:
 				newRec.chg = 10;
 				newRec.chgF = Number(subCat);
-				newRec.pur = [pur];
+				newRec.pur = [ pur ];
 				break;
 			case LOAN:
 				newRec.chg = rate;
 				newRec.chgF = 12;
-				newRec.pur = [pur];
+				newRec.pur = [ pur ];
 				newRec.name = name;
 				break;
 			case LENT:
-				newRec.type = type;
 				newRec.subt = category;
 				newRec.chg = rate;
-				newRec.chgF = category === "No" ? 0 : Number(subCat);
-				newRec.pur = [pur];
+				newRec.chgF = Number(subCat);
+				newRec.pur = [ pur ];
 				newRec.name = name;
 				break;
 			case NPS:
@@ -97,8 +80,8 @@ export default function AddHoldingInput({
 						amt: qty,
 						month: today.getMonth() + 1,
 						year: today.getFullYear(),
-						qty: 1,
-					},
+						qty: 1
+					}
 				];
 				break;
 			case VEHICLE:
@@ -106,7 +89,7 @@ export default function AddHoldingInput({
 				newRec.chgF = 1;
 				newRec.type = AssetType.A;
 				newRec.subt = category;
-				newRec.pur = [pur];
+				newRec.pur = [ pur ];
 				newRec.name = name;
 				break;
 			case PM:
@@ -126,9 +109,7 @@ export default function AddHoldingInput({
 				break;
 		}
 		if (childTab === INS) newRec.subt = category;
-		childTab === PM || childTab === CRYPTO
-			? (newRec.curr = "USD")
-			: (newRec.curr = selectedCurrency);
+		childTab === PM || childTab === CRYPTO ? (newRec.curr = 'USD') : (newRec.curr = selectedCurrency);
 		newRec.fId = memberKey;
 		return newRec;
 	};
@@ -162,9 +143,7 @@ export default function AddHoldingInput({
 	const changeSubCat = (val: string) => {
 		setSubCat(val);
 		let rec = getNewRec();
-		childTab === LENT || childTab === INS
-			? (rec.chgF = Number(subCat))
-			: (rec.name = val);
+		childTab === LENT || childTab === INS ? (rec.chgF = Number(subCat)) : (rec.name = val);
 		setInput(rec);
 	};
 
@@ -205,49 +184,27 @@ export default function AddHoldingInput({
 		setInput(rec);
 	};
 
-	const changeType = (val: string) => {
-		setType(val);
-		let rec = getNewRec();
-		rec.type = type;
-		setInput(rec);
-	}
+	const hasRate = (childTab: string) => [ PF, LENT, LOAN ].includes(childTab);
 
-	const hasRate = (childTab: string) => [PF, LENT, LOAN].includes(childTab);
+	const hasName = (childTab: string) => ![ PM, NPS, CRYPTO, INS ].includes(childTab);
 
-	const hasName = (childTab: string) =>
-		![PM, NPS, CRYPTO, INS].includes(childTab);
+	const hasQtyWithRate = (childTab: string) => [ PM, NPS, CRYPTO ].includes(childTab);
 
-	const hasQtyWithRate = (childTab: string) =>
-		[PM, NPS, CRYPTO].includes(childTab);
+	const hasDuration = (childTab: string) => [ LENT, LOAN, INS ].includes(childTab);
 
-	const hasDuration = (childTab: string) =>
-		[LENT, LOAN, INS].includes(childTab);
+	const hasDate = (childTab: string) => [ LENT, VEHICLE, LOAN, INS ].includes(childTab);
 
-	const hasDate = (childTab: string) =>
-		[LENT, VEHICLE, LOAN, INS].includes(childTab);
-
-	const hasPF = (childTab: string) => [PF].includes(childTab);
+	const hasPF = (childTab: string) => [ PF ].includes(childTab);
 
 	const { Item: FormItem } = Form;
 
 	return (
 		<Form layout="vertical">
-			<Row
-				gutter={[
-					{ xs: 0, sm: 0, md: 35 },
-					{ xs: 15, sm: 15, md: 15 },
-				]}
-			>
+			<Row gutter={[ { xs: 0, sm: 0, md: 35 }, { xs: 15, sm: 15, md: 15 } ]}>
 				{categoryOptions && (
 					<Col xs={24} md={12}>
 						<FormItem label="Type">
-							<Row gutter={[10, 0]}>
-								{childTab===LENT && <Col>
-									<SelectInput pre={''} 
-									options={{D: 'Deposits', ML: 'Money Lendings', NSE: 'National Saving Certificate'}} 
-									value={type as string} 
-									changeHandler={(val: string) => changeType(val)}/>
-								</Col>}
+							<Row gutter={[ 10, 0 ]}>
 								<Col>
 									{categoryOptions && (
 										<SelectInput
@@ -260,21 +217,21 @@ export default function AddHoldingInput({
 								</Col>
 								<Col>
 									{subCategoryOptions &&
-										subCategoryOptions[category as string] && (
-											<SelectInput
-												pre=""
-												value={subCat as string}
-												options={subCategoryOptions[category as string]}
-												changeHandler={(val: string) => changeSubCat(val)}
-												post={category === AssetSubType.Gold ? "karat" : ""}
-											/>
-										)}
+									subCategoryOptions[category as string] && (
+										<SelectInput
+											pre=""
+											value={subCat as string}
+											options={subCategoryOptions[category as string]}
+											changeHandler={(val: string) => changeSubCat(val)}
+											post={category === AssetSubType.Gold ? 'karat' : ''}
+										/>
+									)}
 								</Col>
 								<Col>
 									{childTab === INS && (
 										<SelectInput
-											pre={""}
-											options={{ 1: "Yearly", 12: "Monthly" }}
+											pre={''}
+											options={{ 1: 'Yearly', 12: 'Monthly' }}
 											value={subCat as string}
 											changeHandler={(val: string) => changeSubCat(val)}
 										/>
@@ -287,32 +244,19 @@ export default function AddHoldingInput({
 				{hasName(childTab) && (
 					<Col xs={24} md={12}>
 						<FormItem label="Name">
-							<TextInput
-								pre=""
-								value={name}
-								changeHandler={changeName}
-								size={"middle"}
-								width={250}
-							/>
+							<TextInput pre="" value={name} changeHandler={changeName} size={'middle'} width={250} />
 						</FormItem>
 					</Col>
 				)}
 				{hasQtyWithRate(childTab) ? (
 					<Col xs={24} md={12}>
 						<FormItem label="Qty">
-							<QuantityWithRate
-								quantity={qty}
-								onChange={changeQty}
-								subtype={category}
-								name={subCat}
-							/>
+							<QuantityWithRate quantity={qty} onChange={changeQty} subtype={category} name={subCat} />
 						</FormItem>
 					</Col>
 				) : (
 					<Col xs={24} md={12}>
-						<FormItem
-							label={hasPF(childTab) ? "Contribution per year" : "Amount"}
-						>
+						<FormItem label={hasPF(childTab) ? 'Contribution per year' : 'Amount'}>
 							<NumberInput
 								pre=""
 								min={0}
@@ -329,17 +273,15 @@ export default function AddHoldingInput({
 
 				{hasDate(childTab) && (
 					<Col xs={24} md={12}>
-						<FormItem
-							label={`Date & ${hasDuration(childTab) ? "Duration" : ""}`}
-						>
-							<Row gutter={[10, 0]}>
+						<FormItem label={`Date & ${hasDuration(childTab) ? 'Duration' : ''}`}>
+							<Row gutter={[ 10, 0 ]}>
 								<Col>
 									<DatePickerInput
 										picker="month"
 										title=""
 										changeHandler={changeDate}
 										defaultVal={date}
-										size={"middle"}
+										size={'middle'}
 									/>
 								</Col>
 								<Col>
@@ -354,13 +296,7 @@ export default function AddHoldingInput({
 				{hasRate(childTab) && (
 					<Col xs={24} md={12}>
 						<FormItem label="Rate">
-							<InputNumber
-								onChange={changeRate}
-								min={1}
-								max={50}
-								value={rate}
-								step={0.1}
-							/>
+							<InputNumber onChange={changeRate} min={1} max={50} value={rate} step={0.1} />
 						</FormItem>
 					</Col>
 				)}
