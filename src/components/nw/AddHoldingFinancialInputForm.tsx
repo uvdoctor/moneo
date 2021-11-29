@@ -1,7 +1,7 @@
-import React, { useReducer, useContext, useState } from "react";
+import React, { useReducer, useContext, useState, useEffect } from "react";
 import { Row, Col, Button, Select, Input, AutoComplete, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { getInstrumentDataWithKey, financialAssetTypes } from "./nwutils";
+import { getInstrumentDataWithKey } from "./nwutils";
 import { NWContext } from "./NWContext";
 
 interface InstrumentsData {
@@ -92,7 +92,7 @@ const dataReducer = (
 };
 
 export default function HoldingInput(props: any) {
-  const { allFamily }: any = useContext(NWContext);
+  const { allFamily, childTab }: any = useContext(NWContext);
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
   const [rawDetails, setRawDetails] = useState<{}>({});
   const [holdingState, dispatch] = useReducer(holdingReducer, {
@@ -191,29 +191,20 @@ export default function HoldingInput(props: any) {
     });
   };
 
+  const changeAssetType = (option: string) => {
+    const data = { assetType: option };
+    dispatchDataState({ type: "formUpdate", data });
+    updateOptions(option);
+    updateButtonStatus(data);
+  }; 
+
+  useEffect(() => {
+    const option = childTab;
+    changeAssetType(option);
+  }, [childTab])
+
   return (
     <Row gutter={[16, 16]}>
-      <Col flex={5}>
-        <label htmlFor="assetType">Type</label> <br />
-        <Select
-          id="assetType"
-          style={{ width: 130 }}
-          onSelect={async (option: string) => {
-            const data = { assetType: option };
-            dispatchDataState({ type: "formUpdate", data });
-            updateOptions(option);
-            updateButtonStatus(data);
-          }}
-          value={assetType}
-        >
-          {financialAssetTypes.map((assetType) => (
-            <Option key={assetType} value={assetType}>
-              {assetType}
-            </Option>
-          ))}
-        </Select>
-      </Col>
-
       <Col flex={6}>
         <label htmlFor="familyMember">Family member</label> <br />
         <Select

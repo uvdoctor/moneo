@@ -1,12 +1,12 @@
-import React, { Fragment, useState, useContext } from "react";
-import { Modal, Button } from "antd";
-import { PlusOutlined, SaveOutlined } from "@ant-design/icons";
-import AddHoldingInput from "../AddHoldingInput";
-import AddHoldingFiancialInput from "../AddHoldingFinancialInput";
-import { NWContext, TAB } from "../NWContext";
-import AddPropertiesInput from "../AddPropertiesInput";
+import React, { Fragment, useState, useContext } from 'react';
+import { Modal, Button } from 'antd';
+import { PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import AddHoldingInput from '../AddHoldingInput';
+import AddHoldingFiancialInput from '../AddHoldingFinancialInput';
+import { NWContext, TAB } from '../NWContext';
+import AddPropertiesInput from '../AddPropertiesInput';
 
-require("./AddHoldings.less");
+require('./AddHoldings.less');
 
 interface AddHoldingsProps {
 	data: Array<any>;
@@ -23,49 +23,49 @@ export default function AddHoldings({
 	isPrimary,
 	title,
 	categoryOptions,
-	subCategoryOptions,
+	subCategoryOptions
 }: AddHoldingsProps) {
-	const [isModalVisible, setModalVisibility] = useState<boolean>(false);
-	const [okDisabled, setOkDisabled] = useState<boolean>(true);
-	const [newRec, setNewRec] = useState<any>({});
-	const { activeTab, setInstruments, instruments, childTab, saveHoldings, isDirty }: any = useContext(
-		NWContext
-	);
-	const [instrumentsList, setInstrumentsList] = useState<any>([]);
+	const [ isModalVisible, setModalVisibility ] = useState<boolean>(false);
+	const [ okDisabled, setOkDisabled ] = useState<boolean>(true);
+	const [ newRec, setNewRec ] = useState<any>({});
+	const { setInstruments, instruments, childTab, saveHoldings, isDirty }: any = useContext(NWContext);
+	const [ instrumentsList, setInstrumentsList ] = useState<any>([]);
 
 	const close = () => {
 		setModalVisibility(false);
 	};
 
 	const addHolding = () => {
-		if (activeTab === "Financial") {
+		if (childTab === TAB.FIN) {
 			setInstruments(instrumentsList);
 			setInstrumentsList([]);
 		} else {
 			data.push(newRec);
-			changeData([...data]);
+			changeData([ ...data ]);
 		}
 		close();
 	};
 
 	const updateInstruments = (instrumentsToAdd: []) => {
-		setInstrumentsList([...instrumentsToAdd, ...instruments]);
+		setInstrumentsList([ ...instrumentsToAdd, ...instruments ]);
 	};
+
+	const hasInstruments = (childTab: string) => [ TAB.BOND, TAB.STOCK, TAB.ETF, TAB.MF, TAB.GOLDB ].includes(childTab);
 
 	return (
 		<Fragment>
 			&nbsp;&nbsp;
 			<Button
-				type={isPrimary ? "primary" : "default"}
+				type={isPrimary ? 'primary' : 'default'}
 				icon={<PlusOutlined />}
 				onClick={() => setModalVisibility(true)}
 			>
-				{isPrimary ? "Add" : "Add Manually"}
+				{isPrimary ? 'Add' : 'Add Manually'}
 			</Button>
 			&nbsp;&nbsp;
 			<Button
 				key="save"
-				type='primary'
+				type="primary"
 				disabled={!isDirty}
 				icon={<SaveOutlined />}
 				onClick={() => saveHoldings()}
@@ -84,11 +84,8 @@ export default function AddHoldings({
 				centered
 				width="800px"
 			>
-				{activeTab === "Financial" ? (
-					<AddHoldingFiancialInput
-						updateInstruments={updateInstruments}
-						disableOk={setOkDisabled}
-					/>
+				{hasInstruments(childTab) ? (
+					<AddHoldingFiancialInput updateInstruments={updateInstruments} disableOk={setOkDisabled} />
 				) : childTab === TAB.PROP ? (
 					<AddPropertiesInput
 						setInput={setNewRec}

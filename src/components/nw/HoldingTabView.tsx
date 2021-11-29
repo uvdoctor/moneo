@@ -52,9 +52,10 @@ export default function HoldingTabView() {
 						setActiveTab(activeKey);
 					} else setChildTab(activeKey);
 				}}
+				tabBarExtraContent={!isRoot && activeTab === 'Financial' ? <UploadHoldings />: null}
 			>
 				{Object.keys(tabsData).map((tabName) => {
-					const { label, hasUploader, children } = tabsData[tabName];
+					const { label, children, hasUploader } = tabsData[tabName];
 					return (
 						<TabPane key={label} tab={label}>
 							{children ? (
@@ -72,7 +73,6 @@ export default function HoldingTabView() {
 													</h2>
 										</Col>
 										<Col>
-											{hasUploader && <UploadHoldings />}
 											<AddHoldings
 												isPrimary={!hasUploader}
 												data={tabsData[tabName].data}
