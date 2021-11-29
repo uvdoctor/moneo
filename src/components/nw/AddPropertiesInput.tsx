@@ -11,7 +11,6 @@ import {
 } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput } from "../../api/goals";
-import { COLORS } from "../../CONSTANTS";
 import { getCompoundedIncome } from "../calc/finance";
 import DatePickerInput from "../form/DatePickerInput";
 import NumberInput from "../form/numberinput";
@@ -95,7 +94,7 @@ export default function AddPropertyInput({
 		setInput(rec);
 	};
 
-	const changeState = (val: string) => {
+	/*const changeState = (val: string) => {
 		setState(val);
 		let rec = getNewRec();
 		rec.state = val;
@@ -107,7 +106,7 @@ export default function AddPropertyInput({
 		let rec = getNewRec();
 		rec.city = val;
 		setInput(rec);
-	};
+	};*/
 
 	const changeAmount = (amt: number) => {
 		setAmount(amt);
