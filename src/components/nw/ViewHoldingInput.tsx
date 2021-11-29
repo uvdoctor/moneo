@@ -25,7 +25,7 @@ export default function ViewHoldingInput({
 	record,
 }: ViewHoldingInputProps) {
 	const { childTab }: any = useContext(NWContext);
-	const { PM, CRYPTO, DEPO, ML, NPS, PPF, EPF, VPF, VEHICLE, LOAN, INS } = TAB;
+	const { PM, CRYPTO, DEPO, ML, NPS, PF, VEHICLE, LOAN, INS } = TAB;
 
 	const changeDuration = (val: any) => {
 		if(record.pur) record.pur[0].qty = val;
@@ -40,7 +40,7 @@ export default function ViewHoldingInput({
 	const changeQty = (quantity: number) => {
 		if(record.pur) {
 			record.pur[0].amt = quantity;
-			if(hasRetirement(childTab)) {
+			if(hasPF(childTab)) {
 				record.pur[0].month = new Date().getMonth()+1;
 				record.pur[0].year = new Date().getFullYear();
 			}
@@ -83,7 +83,7 @@ export default function ViewHoldingInput({
 		}
 	};
 
-	const hasRate = (childTab: string) => [PPF, VPF, EPF, ML, DEPO, LOAN].includes(childTab);
+	const hasRate = (childTab: string) => [PF, ML, DEPO, LOAN].includes(childTab);
 
 	const hasName = (childTab: string) => ![PM, NPS, CRYPTO, INS].includes(childTab);
 
@@ -93,7 +93,7 @@ export default function ViewHoldingInput({
 
 	const hasDate = (childTab: string) => [ML, DEPO, VEHICLE, LOAN, INS].includes(childTab);
 
-	const hasRetirement = (childTab: string) => [VPF, PPF, EPF].includes(childTab);
+	const hasPF = (childTab: string) => [PF].includes(childTab);
 
 	return (
 		<Fragment>
@@ -143,7 +143,7 @@ export default function ViewHoldingInput({
 				</Col> :
 				<Col>
 				<NumberInput
-					pre={hasRetirement(childTab) ? 'Contribution per year' : 'Amount'}
+					pre={hasPF(childTab) ? 'Contribution per year' : 'Amount'}
 					min={10}
 					max={100000000}
 					value={record.pur ? record.pur[0].amt : record.qty}

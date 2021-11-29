@@ -935,43 +935,7 @@ export const onCreateUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      ppf {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      epf {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      vpf {
+      pf {
         id
         qty
         pur {
@@ -1259,43 +1223,7 @@ export const onUpdateUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      ppf {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      epf {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      vpf {
+      pf {
         id
         qty
         pur {
@@ -1583,43 +1511,7 @@ export const onDeleteUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      ppf {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      epf {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      vpf {
+      pf {
         id
         qty
         pur {
