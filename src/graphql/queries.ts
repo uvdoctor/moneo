@@ -876,43 +876,7 @@ export const getUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      ppf {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      epf {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
-      vpf {
+      pf {
         id
         qty
         pur {
@@ -1146,29 +1110,7 @@ export const listUserHoldingss = /* GraphQL */ `
           type
           subt
         }
-        ppf {
-          id
-          qty
-          name
-          fId
-          curr
-          chg
-          chgF
-          type
-          subt
-        }
-        epf {
-          id
-          qty
-          name
-          fId
-          curr
-          chg
-          chgF
-          type
-          subt
-        }
-        vpf {
+        pf {
           id
           qty
           name
