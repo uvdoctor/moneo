@@ -94,20 +94,6 @@ export default function AddPropertyInput({
 		setInput(rec);
 	};
 
-	/*const changeState = (val: string) => {
-		setState(val);
-		let rec = getNewRec();
-		rec.state = val;
-		setInput(rec);
-	};
-
-	const changeCity = (val: string) => {
-		setCity(val);
-		let rec = getNewRec();
-		rec.city = val;
-		setInput(rec);
-	};*/
-
 	const changeAmount = (amt: number) => {
 		setAmount(amt);
 		disableOk(amt <= 0);
@@ -420,7 +406,15 @@ export default function AddPropertyInput({
 										/>
 									</Col>
 									<Col>
-										{/* <NumberInput pre='' min={1} max={100} value={own.per} changeHandler={(val:number)=>changePer(i,val)} step={0.1} noSlider unit='%'/> */}
+										{/* <NumberInput 
+											pre='' 
+											min={1} 
+											max={100} 
+											value={own.per} 
+											changeHandler={(val:number)=>changePer(i,val)} 
+											step={0.1} 
+											noSlider 
+											unit='%'/> */}
 										<InputNumber
 											placeholder="Percentage"
 											min={1}

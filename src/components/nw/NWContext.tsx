@@ -61,6 +61,11 @@ export const TAB = {
 	PM: 'Precious Metals',
 	CRYPTO: 'Crypto',
 	FIN: 'Financial',
+	STOCK: 'Stock',
+	MF: 'Mutual Fund',
+	BOND: 'Bond',
+	ETF: 'ETF',
+	GOLDB: 'Gold Bond',
 	SAV: 'Saving Accounts',
 	DEPO: 'Deposits',
 	ML: 'Money Lent',
@@ -111,8 +116,6 @@ function NWContextProvider() {
 	const [ totalSavings, setTotalSavings ] = useState<number>(0);
 	const [ totalDeposits, setTotalDeposits ] = useState<number>(0);
 	const [ totalPF, setTotalPF ] = useState<number>(0);
-	// const [ totalEPF, setTotalEPF ] = useState<number>(0);
-	// const [ totalVPF, setTotalVPF ] = useState<number>(0);
 	const [ totalNPS, setTotalNPS ] = useState<number>(0);
 	const [ totalAngel, setTotalAngel ] = useState<number>(0);
 	const [ totalLendings, setTotalLendings ] = useState<number>(0);
@@ -187,6 +190,7 @@ function NWContextProvider() {
 						12: 'Monthly'}},
 					viewComp: ViewHoldingInput
 				},
+				// National Saving Certificate
 			}
 		},
 		Physical: {
@@ -257,46 +261,66 @@ function NWContextProvider() {
 						[PALLADIUM]: 'Palladium',
 					},
 					viewComp: ViewHoldingInput,
-				}
+				},
+				[TAB.OTHER]: {
+					label: TAB.OTHER,
+					data: others,
+					setData: setOthers,
+					total: totalOthers,
+					categoryOptions: {
+						Art: 'Art',
+						Watch: 'Watch',
+						Club: 'Club Membership',
+						Time: 'Time Sharing Membership',
+						Other: 'Other'
+					},
+					viewComp: ViewHoldingInput,
+				}, 
 			},
 		},
-		[TAB.FIN]: {
-			label: TAB.FIN,
-			hasUploader: true,
-			data: instruments,
-			setData: setInstruments,
-			total: totalInstruments,
-			contentComp: <InstrumentValuation />
-		},
-		Retirement: {
-			label: 'Retirement',
+		Financial: {
+			label: 'Financial',
 			children: {
-				[TAB.PF]: {
-					label: TAB.PF,
-					data: pf,
-					setData: setPF,
-					total: totalPF,
-					categoryOptions : {
-						PF: 'Pension Fund',
-						EF: 'Employee Fund',
-						VF: 'Voluntary Fund',
-					},
-					viewComp: ViewHoldingInput
+				[TAB.STOCK]: {
+					label: TAB.STOCK,
+					hasUploader: true,
+					data: instruments,
+					setData: setInstruments,
+					total: totalInstruments,
+					contentComp: <InstrumentValuation />
 				},
-				[TAB.NPS]: {
-					label: TAB.NPS,
-					data: nps,
-					setData: setNPS,
-					total: totalNPS,
-					categoryOptions: getNPSFundManagers(),
-					subCategoryOptions: loadNPSSubCategories,
-					viewComp: ViewHoldingInput
+				[TAB.MF]: {
+					label: TAB.MF,
+					hasUploader: true,
+					data: instruments,
+					setData: setInstruments,
+					total: totalInstruments,
+					contentComp: <InstrumentValuation />
 				},
-			}
-		},
-		Exotic: {
-			label: 'Exotic',
-			children: {
+				[TAB.BOND]: {
+					label: TAB.BOND,
+					hasUploader: true,
+					data: instruments,
+					setData: setInstruments,
+					total: totalInstruments,
+					contentComp: <InstrumentValuation />
+				},
+				[TAB.GOLDB]: {
+					label: TAB.GOLDB,
+					hasUploader: true,
+					data: instruments,
+					setData: setInstruments,
+					total: totalInstruments,
+					contentComp: <InstrumentValuation />
+				},
+				[TAB.ETF]: {
+					label: TAB.ETF,
+					hasUploader: true,
+					data: instruments,
+					setData: setInstruments,
+					total: totalInstruments,
+					contentComp: <InstrumentValuation />
+				},
 				[TAB.CRYPTO]: {
 					label: TAB.CRYPTO,
 					data: crypto,
@@ -323,20 +347,32 @@ function NWContextProvider() {
 					total: totalAngel,
 					viewComp: ViewHoldingInput,
 				}, 
-				[TAB.OTHER]: {
-					label: TAB.OTHER,
-					data: others,
-					setData: setOthers,
-					total: totalOthers,
-					categoryOptions: {
-						Art: 'Art',
-						Watch: 'Watch',
-						Club: 'Club Membership',
-						Time: 'Time Sharing Membership',
-						Other: 'Other'
+			}
+		},
+		Retirement: {
+			label: 'Retirement',
+			children: {
+				[TAB.PF]: {
+					label: TAB.PF,
+					data: pf,
+					setData: setPF,
+					total: totalPF,
+					categoryOptions : {
+						PF: 'Pension Fund',
+						EF: 'Employee Fund',
+						VF: 'Voluntary Fund',
 					},
-					viewComp: ViewHoldingInput,
-				}, 
+					viewComp: ViewHoldingInput
+				},
+				[TAB.NPS]: {
+					label: TAB.NPS,
+					data: nps,
+					setData: setNPS,
+					total: totalNPS,
+					categoryOptions: getNPSFundManagers(),
+					subCategoryOptions: loadNPSSubCategories,
+					viewComp: ViewHoldingInput
+				},
 			}
 		},
 		Liabilities: {
