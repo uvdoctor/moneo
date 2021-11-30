@@ -44,7 +44,7 @@ const getData = () => {
 				subt: getSubType(element),
 				price: price,
 				mftype: mfType(element['Scheme Type']),
-				mcap: mCap(element['Scheme Type']),
+				mcap: mCap(element),
 				tf: element['Scheme Name'].includes('Tax') ? true : false,
 			};
 			dataToPush = appendGenericFields(dataToPush, table)

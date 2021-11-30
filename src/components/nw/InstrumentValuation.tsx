@@ -7,7 +7,7 @@ import { toHumanFriendlyCurrency } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
 import { AppContext } from '../AppContext';
-import { HoldingInput } from '../../api/goals';
+import { AssetType, HoldingInput } from '../../api/goals';
 
 export default function InstrumentValuation() {
 	const { insData }: any = useContext(AppContext);
@@ -17,7 +17,7 @@ export default function InstrumentValuation() {
 		selectedCurrency,
 		totalInstruments,
 		childTab,
-		selectedMembers,
+		selectedMembers
 	}: any = useContext(NWContext);
 	const { CheckableTag } = Tag;
 	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([ ...instruments ]);
@@ -27,17 +27,15 @@ export default function InstrumentValuation() {
 	const [ total, setTotal ] = useState<number>(totalInstruments);
 	const [ tags, setTags ] = useState<any>({});
 	const [ selectedTags, setSelectedTags ] = useState<Array<string>>([]);
+	const [ nestedTags, setNestedTags ] = useState<any>({});
+	const [ selectedNestedTags, setSelectedNestedTags ] = useState<Array<string>>([]);
 
 	const delRecord = (id: string) => setInstruments([ ...instruments.filter((record: any) => record.id !== id) ]);
 
 	const columns = [
 		{
 			title: (
-				<strong
-					style={{
-						color: COLORS.GREEN
-					}}
-				>
+				<strong style={{color: COLORS.GREEN}}>
 					Total ~ {toHumanFriendlyCurrency(total, selectedCurrency)}
 				</strong>
 			),
@@ -53,10 +51,7 @@ export default function InstrumentValuation() {
 	];
 
 	const getFilterItem = (id: string, name: string) => {
-		return {
-			text: name,
-			value: id
-		};
+		return { text: name, value: id };
 	};
 
 	//@ts-ignore
@@ -95,14 +90,23 @@ export default function InstrumentValuation() {
 			if (childTab === TAB.STOCK) setTags(getMarketCap());
 			else if (childTab === TAB.MF) setTags(getAssetTypes());
 			else if (childTab === TAB.BOND) setTags({ CB: 'Corporate Bond', GB: 'Government Bond' });
-			else setTags([]);
+			else setTags({});
 		},
 		[ childTab ]
 	);
 
-	const filterInstrumentsByTab = () => {
+	useEffect(
+		() => {
+			if (childTab === TAB.MF && selectedTags.includes(AssetType.E)) {
+				setNestedTags(getMarketCap());
+			}
+		},
+		[ selectedTags ]
+	);
+
+	const filterInstrumentsByTabs = () => {
 		if (!instruments.length) return;
-		
+
 		let filteredData: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => {
 			const data = insData[instrument.id];
 			if (doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
@@ -116,27 +120,39 @@ export default function InstrumentValuation() {
 			}
 		});
 
-		setFilteredInstruments([ ...filteredData ])
+		setFilteredInstruments([ ...filteredData ]);
 	};
 
-	const filterInstrumentsByCheckTag = () => {
+	const filterInstrumentsByTags = () => {
 		if (!selectedTags.length) return;
 		let filterDataByTag = filteredInstruments.filter((instrument: HoldingInput) => {
 			const data = insData[instrument.id];
-			if (childTab === TAB.MF) return selectedTags.indexOf(instrument.type as string) > -1;
-			else if (childTab === TAB.STOCK && data.meta) return selectedTags.indexOf(data.meta.mcap as string) > -1;
+			if (childTab === TAB.MF) {
+				if (selectedNestedTags.length) {
+					return (
+						selectedTags.indexOf(instrument.type as string) > -1 &&
+						selectedNestedTags.indexOf(data.mcap as string) > -1
+					);
+				} else return selectedTags.indexOf(instrument.type as string) > -1;
+			} else if (childTab === TAB.STOCK && data.meta) return selectedTags.indexOf(data.meta.mcap as string) > -1;
 			else if (childTab === TAB.BOND) return selectedTags.indexOf(instrument.subt as string) > -1;
 		});
-		setFilterByTag([...filterDataByTag]);
+		setFilterByTag([ ...filterDataByTag ]);
 	};
 
-	useEffect(() => {
-		filterInstrumentsByTab();
-	},[ childTab, instruments, selectedTags ]);
+	useEffect(
+		() => {
+			filterInstrumentsByTabs();
+		},
+		[ childTab, instruments ]
+	);
 
-	useEffect(() => {
-		filterInstrumentsByCheckTag();
-	},[ selectedTags ]);
+	useEffect(
+		() => {
+			filterInstrumentsByTags();
+		},
+		[ selectedTags, selectedNestedTags ]
+	);
 
 	return instruments.length ? (
 		<Fragment>
@@ -159,6 +175,29 @@ export default function InstrumentValuation() {
 						{tags[tag]}
 					</CheckableTag>
 				))}
+			</p>
+			<p style={{ textAlign: 'center' }}>
+				{childTab === TAB.MF &&
+					selectedTags.includes(AssetType.E) &&
+					Object.keys(nestedTags).map((tag: string) => (
+						<CheckableTag
+							key={tag}
+							style={{
+								backgroundColor: getColourForAssetType(tag),
+								opacity: selectedNestedTags.indexOf(tag) > -1 ? 1 : 0.5
+							}}
+							checked={selectedNestedTags.indexOf(tag) > -1}
+							onChange={(checked: boolean) => {
+								if (checked) {
+									selectedNestedTags.push(tag);
+									setSelectedNestedTags([ ...selectedNestedTags ]);
+								} else
+									setSelectedNestedTags([ ...selectedNestedTags.filter((t: string) => t !== tag) ]);
+							}}
+						>
+							{nestedTags[tag]}
+						</CheckableTag>
+					))}
 			</p>
 			{filteredInstruments.length ? (
 				<Table

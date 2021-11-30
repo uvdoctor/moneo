@@ -59,11 +59,27 @@ const mfType = (data) => {
 };
 
 const mCap = (element) => {
-  const type = element.toLowerCase();
+  const type = element["Scheme Type"].toLowerCase();
+  const name = element["Scheme Name"].toLowerCase();
   if (type.includes("equity") && type.includes("large")) return "L";
   if (type.includes("equity") && type.includes("mid")) return "M";
   if (type.includes("equity") && type.includes("small")) return "S";
   if (type.includes("equity")) return "H";
+  if (name.includes('index')) {
+    if (name.includes('next 50')) return 'L';
+    if (name.includes('sensex')) return 'L';
+    if (name.includes('nifty 500')) return 'H';
+    if (name.includes('nifty')) return 'L';
+    if (name.includes('next')) return 'L';
+    if (name.includes('mid')) return 'M';
+    if (name.includes('small')) return 'S';
+    else return 'L';
+  };
+  if (name.includes('micro')) return 'S';
+  if (name.includes('small')) return 'S';
+  if (name.includes('multicap')) return 'H';
+  if (name.includes('mid')) return 'M';
+  if (name.includes('large')) return 'L';
   return null;
 };
 
