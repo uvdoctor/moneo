@@ -314,7 +314,7 @@ function NWContextProvider() {
 					data: instruments,
 					setData: setInstruments,
 					total: totalInstruments,
-					contentComp: <InstrumentValuation />
+					contentComp: <InstrumentValuation/>
 				},
 				[TAB.CRYPTO]: {
 					label: TAB.CRYPTO,
@@ -642,7 +642,7 @@ function NWContextProvider() {
 				}
 			})
 		setTotal(total);
-	}
+	};
 
 	const priceLoans = () => {
 		calculateNPV(loans, setTotalLoans);
@@ -990,7 +990,7 @@ function NWContextProvider() {
 				setCredit,
 				totalCredit,
 				isDirty,
-				setIsDirty
+				setIsDirty,
 			}}
 		>
 			<NWView />

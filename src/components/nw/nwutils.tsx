@@ -262,6 +262,15 @@ export const getAssetTypes = () => {
   };
 };
 
+export const getMarketCap = () => {
+  return {
+    [APIt.MCap.L]: 'Large Cap',
+    [APIt.MCap.M]: 'Mid Cap',
+    [APIt.MCap.S]: 'Small Cap',
+    [APIt.MCap.H]: 'Hybrid Cap'
+  }
+}
+
 export const getAssetSubTypes = () => {
   return {
     [APIt.AssetSubType.CB]: "Corporate Bond",
@@ -294,7 +303,7 @@ export const getGoldTypes = () => {
   };
 };
 
-export const getColourForAssetType = (at: APIt.AssetType) => {
+export const getColourForAssetType = (at: string) => {
   switch (at) {
     case APIt.AssetType.E:
       return COLORS.ORANGE;
@@ -302,6 +311,14 @@ export const getColourForAssetType = (at: APIt.AssetType) => {
       return COLORS.BLUE;
     case APIt.AssetType.A:
       return "#f6e05e";
+    case APIt.MCap.L:
+      return "#fdd0cb";
+    case APIt.MCap.M:
+      return "#e78284";
+    case APIt.MCap.S:
+      return "#cf544e";
+    // case APIt.AssetSubType.CB:
+      // return COLORS.WHITE;
     default:
       return "#f9aaa6";
   }
