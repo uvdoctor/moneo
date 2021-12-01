@@ -1,7 +1,9 @@
 import { Badge, Col, Empty, Row, Skeleton } from 'antd';
 import dynamic from 'next/dynamic';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { COLORS } from '../../CONSTANTS';
+import { AssetType, HoldingInput, MCap, PropertyInput } from '../../api/goals';
+import { ASSET_TYPES, COLORS } from '../../CONSTANTS';
+import { AppContext } from '../AppContext';
 import { toHumanFriendlyCurrency, toReadableNumber } from '../utils';
 import { NWContext } from './NWContext';
 
@@ -20,22 +22,37 @@ export default function CurrentAA() {
 		totalFGold,
 		totalPGold,
 		totalFRE,
-        totalPPF,
-        totalEPF,
+		totalPPF,
+		totalEPF,
 		totalVPF,
 		totalProperties,
 		selectedCurrency,
 		loadingHoldings,
-		totalAssets
+		totalAssets,
+		instruments,
+		totalAngel,
+		totalFFixed,
+		totalNPSFixed,
+		totalOthers,
+		totalVehicles,
+		properties
 	}: any = useContext(NWContext);
+	const { insData }: any = useContext(AppContext);
 	const [ totalCash, setTotalCash ] = useState<number>(totalSavings + totalDeposits + totalLendings);
 	const [ data, setData ] = useState<Array<any>>([]);
+	const [ largeCap, setLargeCap ] = useState<number>(0);
+	const [ midCap, setMidCap ] = useState<number>(0);
+	const [ smallCap, setSmallCap ] = useState<number>(0);
+	const [ hybridCap, setHybridCap ] = useState<number>(0);
+	const [ commercialProperty, setCommercialProperty ] = useState<number>(0);
+	const [ residentialProperty, setResidentialProperty ] = useState<number>(0);
 	const categories: any = {
 		Equity: { color: COLORS.ORANGE, total: totalEquity },
 		Fixed: { color: COLORS.BLUE, total: totalFixed + totalPPF + totalEPF + totalVPF },
-		'Real-estate': { color: '#7cd9fd', total: totalFRE + totalProperties },
+		'Real-estate': { color: '#7cd9fd', total: totalProperties },
+		REIT: { color: '#7cd9fd', total: totalFRE },
 		Gold: { color: '#f6e05e', total: totalFGold + totalPGold },
-		Others: { color: '#aa8dfa', total: totalAlternative - totalFGold - totalPGold - totalProperties - totalFRE	}
+		Others: { color: '#aa8dfa', total: totalAlternative - totalFGold - totalPGold - totalProperties - totalFRE }
 	};
 
 	const initChartData = () => {
@@ -47,7 +64,7 @@ export default function CurrentAA() {
 		Object.keys(categories).forEach((cat) => {
 			data.push({
 				name: cat,
-				value: (categories[cat].total / totalAssets) * 100,
+				value: categories[cat].total / totalAssets * 100
 			});
 		});
 		setData([ ...data ]);
@@ -60,29 +77,106 @@ export default function CurrentAA() {
 		[ totalSavings, totalDeposits, totalLendings ]
 	);
 
-    useEffect(() => {
-        initChartData();
-    }, [totalAssets]);
+	useEffect(
+		() => {
+			initChartData();
+		},
+		[ totalAssets ]
+	);
 
-	return !loadingHoldings ? (
-		totalAssets ? <Fragment>
+	useEffect(
+		() => {
+			let largeCap = 0;
+			let midCap = 0;
+			let smallCap = 0;
+			let hybridCap = 0;
+			instruments.map((instrument: HoldingInput) => {
+				const data = insData[instrument.id];
+				const price = instrument.qty * (data ? data.price : 0);
+				if (instrument.type === AssetType.E) {
+					if (data.meta) {
+						if (data.meta.mcap === MCap.L) largeCap += price;
+						if (data.meta.mcap === MCap.M) midCap += price;
+						if (data.meta.mcap === MCap.S) smallCap += price;
+						if (data.meta.mcap === MCap.H) hybridCap += price;
+						else smallCap += price;
+					}
+					if (data.mcap === MCap.L) largeCap += price;
+					if (data.mcap === MCap.M) midCap += price;
+					if (data.mcap === MCap.S) smallCap += price;
+					if (data.mcap === MCap.H) hybridCap += price;
+				}
+			});
+			setLargeCap(largeCap);
+			setMidCap(midCap);
+			setSmallCap(smallCap);
+			setHybridCap(hybridCap);
+		},
+		[ instruments ]
+	);
+
+	useEffect(
+		() => {
+			let commercial = 0;
+			let residential = 0;
+			properties.map((property: PropertyInput) => {
+				//  @ts-ignore
+				property.res ? (residential += property.purchase?.amt) : (commercial += property.purchase?.amt);
+			});
+			setCommercialProperty(commercial);
+			setResidentialProperty(residential);
+		},
+		[ properties ]
+	);
+
+	const pattern = (records: Array<any>) => {
+		let data = '';
+		records.map((record) => {
+			data += `<strong>${toHumanFriendlyCurrency(record.value, selectedCurrency)}</strong>
+					(${toReadableNumber(record.value / totalAssets * 100, 2)}%) of ${record.desc}<br/><br/>`;
+		});
+		return data;
+	};
+
+	const breakdownAssetInfo = (asset: string) => {
+		if (asset === 'Gold')
+			return pattern([ { value: totalPGold, desc: 'Physical Gold' }, { value: totalFGold, desc: 'Gold Bonds' } ]);
+		if (asset === 'Equity')
+			return pattern([
+				{ value: largeCap, desc: ASSET_TYPES.LARGE_CAP_STOCKS },
+				{ value: midCap, desc: ASSET_TYPES.MID_CAP_STOCKS },
+				{ value: smallCap, desc: ASSET_TYPES.SMALL_CAP_STOCKS },
+				{ value: hybridCap, desc: 'Funds spread across Large, Mid and Small Cap Stocks' },
+				{ value: totalAngel, desc: 'Angel Investment' }
+			]);
+		if (asset === 'Fixed')
+			return pattern([
+				{ value: totalFFixed, desc: 'Fixed Income' },
+				{ value: totalNPSFixed, desc: 'National Pension System' }
+			]);
+		if (asset === 'Real Estate')
+			return pattern([
+				{ value: commercialProperty, desc: 'Commercial Property' },
+				{ value: residentialProperty, desc: 'Residential Property' }
+			]);
+		if (asset === 'Others')
+			return pattern([ { value: totalOthers, desc: 'Others' }, { value: totalVehicles, desc: 'Vehicles' } ]);
+		return '';
+	};
+
+	return !loadingHoldings ? totalAssets ? (
+		<Fragment>
 			<p>Total Asset Allocation of {toHumanFriendlyCurrency(totalAssets, selectedCurrency)}</p>
 			<Row>
-				<Col xs={24} sm={8}>
+				<Col xs={24} sm={12}>
 					<div className="cash deposits">
-						Deposits <Badge count={`${toReadableNumber(totalDeposits / totalAssets*100,2)} %`} />
-						<strong>{toHumanFriendlyCurrency(totalDeposits, selectedCurrency)}</strong>
-					</div>
-				</Col>
-				<Col xs={24} sm={8}>
-					<div className="cash deposits">
-						Lent <Badge count={`${toReadableNumber(totalLendings / totalAssets*100,2)} %`} />
+						Deposits <Badge count={`${toReadableNumber(totalLendings / totalAssets * 100, 2)} %`} />
 						<strong>{toHumanFriendlyCurrency(totalLendings, selectedCurrency)}</strong>
 					</div>
 				</Col>
-				<Col xs={24} sm={8}>
+				<Col xs={24} sm={12}>
 					<div className="cash">
-						Savings <Badge count={`${toReadableNumber(totalSavings / totalAssets*100, 2)} %`} />
+						Savings <Badge count={`${toReadableNumber(totalSavings / totalAssets * 100, 2)} %`} />
 						<strong>{toHumanFriendlyCurrency(totalSavings, selectedCurrency)}</strong>
 					</div>
 				</Col>
@@ -120,7 +214,10 @@ export default function CurrentAA() {
 							value: `<strong>${toHumanFriendlyCurrency(
 								categories[name].total,
 								selectedCurrency
-							)}</strong> (${toReadableNumber(value, 2)}%)`
+							)}</strong> (${toReadableNumber(
+								value,
+								2
+							)}%)<br/><br/>Includes<br/><br/> ${breakdownAssetInfo(name)}`
 						};
 					}
 				}}
@@ -131,7 +228,9 @@ export default function CurrentAA() {
 					}
 				]}
 			/>
-		</Fragment> : <Empty />
+		</Fragment>
+	) : (
+		<Empty />
 	) : (
 		<Skeleton active />
 	);
