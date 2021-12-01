@@ -17,7 +17,6 @@ export default function InstrumentValuation() {
 		selectedCurrency,
 		childTab,
 		selectedMembers,
-		totalFilterInstruments,
 		setTotalFilterInstruments
 	}: any = useContext(NWContext);
 	const { CheckableTag } = Tag;
@@ -29,6 +28,7 @@ export default function InstrumentValuation() {
 	const [ selectedTags, setSelectedTags ] = useState<Array<string>>([]);
 	const [ nestedTags, setNestedTags ] = useState<any>({});
 	const [ selectedNestedTags, setSelectedNestedTags ] = useState<Array<string>>([]);
+	const [ totalFilterAmt, setTotalFilterAmt ] = useState<number>(0);
 
 	const delRecord = (id: string) => setInstruments([ ...instruments.filter((record: any) => record.id !== id) ]);
 
@@ -36,23 +36,19 @@ export default function InstrumentValuation() {
 		{
 			title: (
 				<strong style={{color: COLORS.GREEN}}>
-					Total ~ {toHumanFriendlyCurrency(totalFilterInstruments, selectedCurrency)}
+					Total ~ {toHumanFriendlyCurrency(totalFilterAmt, selectedCurrency)}
 				</strong>
 			),
 			key: 'id',
 			filterIcon: <FilterTwoTone twoToneColor={filteredInfo?.id ? COLORS.GREEN : COLORS.DEFAULT} style={{ fontSize: 20 }} />,
 			filteredValue: filteredInfo.id || null,
 			filters: nameFilterValues,
-			onFilter: (values: Array<string>, record: any) => values.indexOf(record.id) > -1,
+			onFilter: (values: Array<string>, record: any) => values.indexOf(record.id)>-1,
 			render: (record: any) => {
 				return <Holding key={record.id} holding={record as HoldingInput} onDelete={delRecord} showPrice />
 			}
 		}
 	];
-
-	const getFilterItem = (id: string, name: string) => {
-		return { text: name, value: id };
-	};
 
 	//@ts-ignore
 	const handleChange = (pagination: any, filters: any, sorters: any) => setFilteredInfo(filters);
@@ -61,12 +57,9 @@ export default function InstrumentValuation() {
 		() => {
 			let filteredNames: Array<any> = [];
 			let ids: Set<string> = new Set();
-			filteredInstruments.forEach((filteredInstruments: HoldingInput) => {
-				if (!ids.has(filteredInstruments.id))
-					filteredNames.push(
-						getFilterItem(filteredInstruments.id as string, filteredInstruments.name as string)
-					);
-				ids.add(filteredInstruments.id);
+			filteredInstruments.forEach((instrument: HoldingInput) => {
+				if (!ids.has(instrument.id)) filteredNames.push({ text: instrument.name, value: instrument.id });
+				ids.add(instrument.id);
 			});
 			setNameFilterValues([ ...filteredNames ]);
 		},
@@ -76,13 +69,19 @@ export default function InstrumentValuation() {
 	useEffect(
 		() => {
 			let total = 0;
-			filteredInstruments.forEach(
-				(instrument: HoldingInput) =>
-					(total += instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0))
-			);
+			let filterAmt = 0;
+			filteredInstruments.map((instrument: HoldingInput) => {
+				const price = instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
+				if (filteredInfo.id) {
+					const id = filteredInfo.id.some((item: string) => item === instrument.id);
+					if (id) filterAmt += price;
+				}
+				total += price;
+			});
 			setTotalFilterInstruments(total);
+			!filteredInfo.id ? setTotalFilterAmt(total) : setTotalFilterAmt(filterAmt);
 		},
-		[ filteredInstruments ]
+		[ filteredInstruments, filteredInfo ]
 	);
 
 	useEffect(
@@ -106,7 +105,6 @@ export default function InstrumentValuation() {
 
 	const filterInstrumentsByTabs = () => {
 		if (!instruments.length) return;
-
 		let filteredData: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => {
 			const data = insData[instrument.id];
 			if (doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
