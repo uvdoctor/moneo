@@ -313,12 +313,14 @@ export default function AddHoldingInput({
 					</Col>
 				)}
 				<Col xs={24} md={12}>
-					<SelectInput
-						pre={<UserOutlined />}
-						value={memberKey}
-						options={getFamilyOptions(allFamily)}
-						changeHandler={(key: string) => changeMember(key)}
-					/>
+					<FormItem label="">
+						<SelectInput
+							pre={<UserOutlined />}
+							value={memberKey}
+							options={getFamilyOptions(allFamily)}
+							changeHandler={(key: string) => changeMember(key)}
+						/>
+					</FormItem>
 				</Col>
 			</Row>
 		</Form>

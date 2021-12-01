@@ -15,16 +15,16 @@ export default function InstrumentValuation() {
 		instruments,
 		setInstruments,
 		selectedCurrency,
-		totalInstruments,
 		childTab,
-		selectedMembers
+		selectedMembers,
+		totalFilterInstruments,
+		setTotalFilterInstruments
 	}: any = useContext(NWContext);
 	const { CheckableTag } = Tag;
 	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([ ...instruments ]);
 	const [ filterByTag, setFilterByTag ] = useState<Array<any>>([]);
 	const [ nameFilterValues, setNameFilterValues ] = useState<Array<any>>([ {} ]);
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
-	const [ total, setTotal ] = useState<number>(totalInstruments);
 	const [ tags, setTags ] = useState<any>({});
 	const [ selectedTags, setSelectedTags ] = useState<Array<string>>([]);
 	const [ nestedTags, setNestedTags ] = useState<any>({});
@@ -36,7 +36,7 @@ export default function InstrumentValuation() {
 		{
 			title: (
 				<strong style={{color: COLORS.GREEN}}>
-					Total ~ {toHumanFriendlyCurrency(total, selectedCurrency)}
+					Total ~ {toHumanFriendlyCurrency(totalFilterInstruments, selectedCurrency)}
 				</strong>
 			),
 			key: 'id',
@@ -80,7 +80,7 @@ export default function InstrumentValuation() {
 				(instrument: HoldingInput) =>
 					(total += instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0))
 			);
-			setTotal(total);
+			setTotalFilterInstruments(total);
 		},
 		[ filteredInstruments ]
 	);
