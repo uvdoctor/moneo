@@ -35,7 +35,7 @@ export default function AddHoldings({
 		setModalVisibility(false);
 	};
 
-	const hasInstruments = (childTab: string) => [ TAB.BOND, TAB.STOCK, TAB.ETF, TAB.MF, TAB.GOLDB ].includes(childTab);
+	const hasInstruments = (childTab: string) => [ TAB.BOND, TAB.STOCK, TAB.ETF, TAB.MF, TAB.GOLDB, TAB.IT ].includes(childTab);
 
 	const addHolding = () => {
 		if (hasInstruments(childTab)) {

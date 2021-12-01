@@ -108,6 +108,7 @@ export default function InstrumentValuation() {
 		let filteredData: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => {
 			const data = insData[instrument.id];
 			if (doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
+				if (childTab === TAB.IT) return data.itype === 'InvIt' || data.itype === 'REIT';
 				if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
 				else if (childTab === TAB.STOCK) return instrument.subt === 'S' && !instrument.id.startsWith('INF');
 				else if (childTab === TAB.BOND)

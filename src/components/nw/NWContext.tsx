@@ -76,7 +76,8 @@ export const TAB = {
 	PROP: 'Properties',
 	LOAN: 'Loans',
 	INS: 'Insurance',
-	CREDIT: 'Credit'
+	CREDIT: 'Credit',
+	IT: 'Investment Trust'
 };
 
 function NWContextProvider() {
@@ -106,6 +107,7 @@ function NWContextProvider() {
 	const [ totalPM, setTotalPM ] = useState<number>(0);
 	const [ totalProperties, setTotalProperties ] = useState<number>(0);
 	const [ totalFRE, setTotalFRE ] = useState<number>(0);
+	const [ totalFInv, setTotalFInv ] = useState<number>(0);
 	const [ totalFEquity, setTotalFEquity ] = useState<number>(0);
 	const [ totalNPSEquity, setTotalNPSEquity ] = useState<number>(0);
 	const [ totalFFixed, setTotalFFixed ] = useState<number>(0);
@@ -137,6 +139,13 @@ function NWContextProvider() {
 	const [ childTab, setChildTab ] = useState<string>('');
 	const [ npsData, setNPSData] = useState<Array<CreateNPSInput>>([]);	
 	const [ isDirty, setIsDirty]  = useState<boolean>(false);
+	const [ totalOtherProperty, setTotalOtherProperty ] = useState<number>(0);
+	const [ totalResidential, setTotalResidential ] = useState<number>(0);
+	const [ totalCommercial, setTotalCommercial ] = useState<number>(0);
+	const [ totalPlot, setTotalPolt ] = useState<number>(0);
+	const [ totalPPF, setTotalPPF ] = useState<number>(0);
+	const [ totalVPF, setTotalVPF ] = useState<number>(0);
+	const [ totalEPF, setTotalEPF ] = useState<number>(0);
 
 	const loadNPSSubCategories = async () => {
 		let npsData: Array<CreateNPSInput> | undefined = await getNPSData();
@@ -340,9 +349,19 @@ function NWContextProvider() {
 					total: totalFilterInstruments,
 					contentComp: <InstrumentValuation/>
 				},
+				[TAB.IT]: {
+					label: TAB.IT,
+					info: "Investment Trust",
+					link: ROUTES.POLICYPRIVACY,
+					hasUploader: true,
+					data: instruments,
+					setData: setInstruments,
+					total: totalFilterInstruments,
+					contentComp: <InstrumentValuation/>
+				},
 				[TAB.CRYPTO]: {
 					label: TAB.CRYPTO,
-					info: "Example",
+					info: 'Example',
 					link: ROUTES.POLICYPRIVACY,
 					data: crypto,
 					setData: setCrypto,
@@ -559,8 +578,8 @@ function NWContextProvider() {
 	);
 
 	useEffect(() => {
-		setTotalAlternative(totalOthers + totalVehicles + totalProperties + totalPM + totalCrypto + totalFGold + totalFRE);
-	}, [totalOthers, totalVehicles, totalProperties, totalCrypto, totalPM, totalFGold, totalFRE]);
+		setTotalAlternative(totalOthers + totalVehicles + totalProperties + totalPM + totalCrypto + totalFGold + totalFRE + totalFInv);
+	}, [totalOthers, totalVehicles, totalProperties, totalCrypto, totalPM, totalFGold, totalFRE, totalFInv]);
 
 	const pricePM = () => {
 		if(!preciousMetals.length) {
@@ -586,6 +605,7 @@ function NWContextProvider() {
 			setTotalInstruments(0);
 			setTotalFGold(0);
 			setTotalFRE(0);
+			setTotalFInv(0);
 			setTotalFEquity(0);
 			setTotalFFixed(0);
 			return;
@@ -593,6 +613,7 @@ function NWContextProvider() {
 		let total = 0;
 		let totalFGold = 0;
 		let totalFRE = 0;
+		let totalInv = 0;
 		let totalFFixed = 0;
 		let totalFEquity = 0;
 		let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
@@ -604,6 +625,8 @@ function NWContextProvider() {
 				if(instrument.subt === AssetSubType.GoldB) totalFGold += value;
 				else if(insData[instrument.id].itype && cachedData[instrument.id].itype === InsType.REIT) 
 					totalFRE += value;
+				else if(insData[instrument.id].itype && cachedData[instrument.id].itype === InsType.InvIT) 
+					totalInv += value;
 				else if(instrument.type === AssetType.E) 
 					totalFEquity += value;
 				else if(instrument.type === AssetType.F)
@@ -631,6 +654,7 @@ function NWContextProvider() {
 		setTotalFEquity(totalFEquity);
 		setTotalFFixed(totalFFixed);
 		setTotalFRE(totalFRE);
+		setTotalFInv(totalInv);
 	};
 
 	const saveHoldings = async () => {
@@ -749,6 +773,10 @@ function NWContextProvider() {
 	const priceProperties = () => {
 		if(!properties.length) return setTotalProperties(0);
 		let total = 0;
+		let totalOtherProperty = 0;
+		let totalCommercial = 0;
+		let totalResidential = 0;
+		let totalPlot = 0;
 		properties.forEach((property: PropertyInput) => {
 			if(allFamily){
 				if(property && doesOwnershipMatch(property.own, allFamily)) {
@@ -757,10 +785,19 @@ function NWContextProvider() {
 					// @ts-ignore
 					const value = getCompoundedIncome(property.rate, property.mv, duration?.years);
 					total += value;
+					if(property.type === 'P') totalPlot += value;
+					if(property.type === 'OTHER') totalOtherProperty += value;
+					if(property.type === 'A' || property.type === 'H' || 
+						property.type === 'C' || property.type === 'T') totalResidential += value;
+					if(property.type === 'O') totalCommercial += value;
 				}
 			}
 		})
 		setTotalProperties(total);
+		setTotalOtherProperty(totalOtherProperty);
+		setTotalCommercial(totalCommercial);
+		setTotalResidential(totalResidential);
+		setTotalPolt(totalPlot);
 	};
 
 	const priceVehicles = () => {
@@ -795,6 +832,9 @@ function NWContextProvider() {
 	const calculatePensionFund = (records: Array<HoldingInput>, setTotal: Function) => {
 		if(!records.length) return setTotal(0);
 		let total = 0;
+		let totalPPF = 0;
+		let totalVPF = 0;
+		let totalEPF = 0;
 		const month = new Date().getMonth()+1;
 		records.forEach((record: HoldingInput) => {
 			if(record.pur && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
@@ -806,9 +846,15 @@ function NWContextProvider() {
 					const value = amount + (amount * (1+(record.chg*(duration?.months/12))));
 					total += value;
 				}else total+= amount;
+				if(record.subt === 'PF') totalPPF += total;
+				if(record.subt === 'VF') totalVPF += total;
+				if(record.subt === 'EF') totalEPF += total;
 			}
 		})
 		setTotal(total);
+		setTotalPPF(totalPPF);
+		setTotalVPF(totalVPF);
+		setTotalEPF(totalEPF);
 	}
 
 	const pricePF = () => {
@@ -1017,6 +1063,7 @@ function NWContextProvider() {
 				totalFixed,
 				totalAlternative,
 				totalFRE,
+				totalFInv,
 				totalFEquity,
 				saveHoldings,
 				childTab,
@@ -1030,7 +1077,14 @@ function NWContextProvider() {
 				isDirty,
 				setIsDirty,
 				setTotalFilterInstruments,
-				totalFilterInstruments
+				totalFilterInstruments,
+				totalOtherProperty,
+				totalCommercial,
+				totalResidential,
+				totalPlot,
+				totalEPF,
+				totalVPF,
+				totalPPF
 			}}
 		>
 			<NWView />

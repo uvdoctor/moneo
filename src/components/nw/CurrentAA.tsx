@@ -1,7 +1,7 @@
-import { Badge, Col, Empty, Row, Skeleton } from 'antd';
+import { Badge, Col, Empty, Row, Skeleton, Tooltip } from 'antd';
 import dynamic from 'next/dynamic';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { AssetType, HoldingInput, MCap, PropertyInput } from '../../api/goals';
+import { AssetType, HoldingInput, MCap } from '../../api/goals';
 import { ASSET_TYPES, COLORS } from '../../CONSTANTS';
 import { AppContext } from '../AppContext';
 import { toHumanFriendlyCurrency, toReadableNumber } from '../utils';
@@ -16,15 +16,11 @@ export default function CurrentAA() {
 		totalSavings,
 		totalDeposits,
 		totalEquity,
-		totalFixed,
 		totalAlternative,
 		totalLendings,
 		totalFGold,
 		totalPGold,
 		totalFRE,
-		totalPPF,
-		totalEPF,
-		totalVPF,
 		totalProperties,
 		selectedCurrency,
 		loadingHoldings,
@@ -35,7 +31,14 @@ export default function CurrentAA() {
 		totalNPSFixed,
 		totalOthers,
 		totalVehicles,
-		properties
+		totalPF,
+		totalOtherProperty,
+		totalCommercial,
+		totalResidential,
+		totalPlot,
+		totalEPF,
+		totalVPF,
+		totalPPF
 	}: any = useContext(NWContext);
 	const { insData }: any = useContext(AppContext);
 	const [ totalCash, setTotalCash ] = useState<number>(totalSavings + totalDeposits + totalLendings);
@@ -44,11 +47,9 @@ export default function CurrentAA() {
 	const [ midCap, setMidCap ] = useState<number>(0);
 	const [ smallCap, setSmallCap ] = useState<number>(0);
 	const [ hybridCap, setHybridCap ] = useState<number>(0);
-	const [ commercialProperty, setCommercialProperty ] = useState<number>(0);
-	const [ residentialProperty, setResidentialProperty ] = useState<number>(0);
 	const categories: any = {
 		Equity: { color: COLORS.ORANGE, total: totalEquity },
-		Fixed: { color: COLORS.BLUE, total: totalFixed + totalPPF + totalEPF + totalVPF },
+		Fixed: { color: COLORS.BLUE, total: totalFFixed + totalNPSFixed },
 		'Real-estate': { color: '#7cd9fd', total: totalProperties },
 		REIT: { color: '#7cd9fd', total: totalFRE },
 		Gold: { color: '#f6e05e', total: totalFGold + totalPGold },
@@ -77,12 +78,9 @@ export default function CurrentAA() {
 		[ totalSavings, totalDeposits, totalLendings ]
 	);
 
-	useEffect(
-		() => {
-			initChartData();
-		},
-		[ totalAssets ]
-	);
+	useEffect(() => {
+		initChartData();
+	},[ totalAssets ]);
 
 	useEffect(
 		() => {
@@ -115,25 +113,11 @@ export default function CurrentAA() {
 		[ instruments ]
 	);
 
-	useEffect(
-		() => {
-			let commercial = 0;
-			let residential = 0;
-			properties.map((property: PropertyInput) => {
-				//  @ts-ignore
-				property.res ? (residential += property.purchase?.amt) : (commercial += property.purchase?.amt);
-			});
-			setCommercialProperty(commercial);
-			setResidentialProperty(residential);
-		},
-		[ properties ]
-	);
-
 	const pattern = (records: Array<any>) => {
-		let data = '';
+		let data: any = '';
 		records.map((record) => {
 			data += `<strong>${toHumanFriendlyCurrency(record.value, selectedCurrency)}</strong>
-					(${toReadableNumber(record.value / totalAssets * 100, 2)}%) of ${record.desc}<br/><br/>`;
+				(${toReadableNumber(record.value / totalAssets * 100, 2)}%) of ${record.desc}<br/><br/>`;
 		});
 		return data;
 	};
@@ -154,13 +138,24 @@ export default function CurrentAA() {
 				{ value: totalFFixed, desc: 'Fixed Income' },
 				{ value: totalNPSFixed, desc: 'National Pension System' }
 			]);
-		if (asset === 'Real Estate')
+		if (asset === 'Real-estate')
 			return pattern([
-				{ value: commercialProperty, desc: 'Commercial Property' },
-				{ value: residentialProperty, desc: 'Residential Property' }
+				{ value: totalCommercial, desc: 'Commercial' },
+				{ value: totalResidential, desc: 'Residential' },
+				{ value: totalPlot, desc: 'Plot' },
+				{ value: totalOtherProperty, desc: 'Other' },
 			]);
 		if (asset === 'Others')
 			return pattern([ { value: totalOthers, desc: 'Others' }, { value: totalVehicles, desc: 'Vehicles' } ]);
+		if (asset === 'PF')
+			return (<>Includes<br/><br/>
+				<strong>${toHumanFriendlyCurrency(totalPPF, selectedCurrency)}</strong>
+				({toReadableNumber(totalPPF / totalAssets * 100, 2)}%) of Pension PF<br/><br/>
+				<strong>${toHumanFriendlyCurrency(totalVPF, selectedCurrency)}</strong>
+				({toReadableNumber(totalVPF / totalAssets * 100, 2)}%) of Voluntary PF<br/><br/>
+				<strong>${toHumanFriendlyCurrency(totalEPF, selectedCurrency)}</strong>
+				({toReadableNumber(totalEPF / totalAssets * 100, 2)}%) of Employee PF<br/><br/>
+			</> );
 		return '';
 	};
 
@@ -168,17 +163,25 @@ export default function CurrentAA() {
 		<Fragment>
 			<p>Total Asset Allocation of {toHumanFriendlyCurrency(totalAssets, selectedCurrency)}</p>
 			<Row>
-				<Col xs={24} sm={12}>
+				<Col xs={24} sm={8}>
 					<div className="cash deposits">
 						Deposits <Badge count={`${toReadableNumber(totalLendings / totalAssets * 100, 2)} %`} />
 						<strong>{toHumanFriendlyCurrency(totalLendings, selectedCurrency)}</strong>
 					</div>
 				</Col>
-				<Col xs={24} sm={12}>
+				<Col xs={24} sm={8}>
 					<div className="cash">
 						Savings <Badge count={`${toReadableNumber(totalSavings / totalAssets * 100, 2)} %`} />
 						<strong>{toHumanFriendlyCurrency(totalSavings, selectedCurrency)}</strong>
 					</div>
+				</Col>
+				<Col xs={24} sm={8}>
+					<Tooltip title={breakdownAssetInfo('PF')}>
+						<div className="cash deposits">
+							Provident Fund <Badge count={`${toReadableNumber(totalPF / totalAssets * 100, 2)} %`} />
+							<strong>{toHumanFriendlyCurrency(totalPF, selectedCurrency)}</strong>
+						</div>
+					</Tooltip>
 				</Col>
 			</Row>
 			<TreemapChart
