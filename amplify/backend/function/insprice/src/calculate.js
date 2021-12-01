@@ -95,15 +95,16 @@ const calcSchema = (record, codes, schema, exchg, isinMap, table) => {
   const type = record[codes.type];
   const subt = record[codes.subt];
   const name = record[codes.name];
-  const parse = (data) => (parseFloat(data) ? parseFloat(data) : null);
+  const parse = (data) => (parseFloat(data) ? parseFloat(data) : 0);
   Object.keys(schema).map((key) => {
     switch (key) {
       case "name":
         return (schema.name = name.trim());
       case "price":
-        return (schema[key] = (record[codes[key]] ? parseFloat(record[codes[key]]) : 0));
+        console.log(record[codes[key]])
+        return (schema[key] = parse(record[codes[key]]));
       case "prev":
-        return (schema[key] = (record[codes[key]] ? parseFloat(record[codes[key]]) : 0));
+        return (schema[key] = parse(record[codes[key]]));
       case "type":
         return (schema.type = calc[exchg].calcType(type, subt, name));
       case "subt":
