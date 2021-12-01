@@ -40,7 +40,6 @@ import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
 import { getCompoundedIncome, getNPV } from '../calc/finance';
 import { ROUTES } from '../../CONSTANTS';
-import TabInfo from './TabInfo';
 
 const NWContext = createContext({});
 
@@ -158,7 +157,8 @@ function NWContextProvider() {
 			children: {
 				[TAB.LENT]: {
 					label: TAB.LENT,
-					info: <TabInfo infoData={'Lendings'} link={ROUTES.POLICYPRIVACY} />,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
@@ -185,7 +185,8 @@ function NWContextProvider() {
 				},
 				[TAB.SAV]: {
 					label: TAB.SAV,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: savings,
 					setData: setSavings,
 					total: totalSavings,
@@ -198,7 +199,8 @@ function NWContextProvider() {
 			children: {
 				[TAB.PROP]: {
 					label: TAB.PROP,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: properties,
 					setData: setProperties,
 					total: totalProperties,
@@ -214,7 +216,8 @@ function NWContextProvider() {
 				},
 				[TAB.VEHICLE]: {
 					label: TAB.VEHICLE,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: vehicles,
 					setData: setVehicles,
 					total: totalVehicles,
@@ -227,7 +230,8 @@ function NWContextProvider() {
 				},
 				[TAB.PM]: {
 					label: TAB.PM,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: preciousMetals,
 					setData: setPreciousMetals,
 					total: totalPM,
@@ -267,7 +271,8 @@ function NWContextProvider() {
 				},
 				[TAB.OTHER]: {
 					label: TAB.OTHER,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: others,
 					setData: setOthers,
 					total: totalOthers,
@@ -287,7 +292,8 @@ function NWContextProvider() {
 			children: {
 				[TAB.STOCK]: {
 					label: TAB.STOCK,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -296,7 +302,8 @@ function NWContextProvider() {
 				},
 				[TAB.MF]: {
 					label: TAB.MF,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -305,7 +312,8 @@ function NWContextProvider() {
 				},
 				[TAB.BOND]: {
 					label: TAB.BOND,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -314,7 +322,8 @@ function NWContextProvider() {
 				},
 				[TAB.GOLDB]: {
 					label: TAB.GOLDB,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -323,7 +332,8 @@ function NWContextProvider() {
 				},
 				[TAB.ETF]: {
 					label: TAB.ETF,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -332,7 +342,8 @@ function NWContextProvider() {
 				},
 				[TAB.CRYPTO]: {
 					label: TAB.CRYPTO,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: crypto,
 					setData: setCrypto,
 					total: totalCrypto,
@@ -352,7 +363,8 @@ function NWContextProvider() {
 				},
 				[TAB.ANGEL]: {
 					label: TAB.ANGEL,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: angel,
 					setData: setAngel,
 					total: totalAngel,
@@ -365,7 +377,8 @@ function NWContextProvider() {
 			children: {
 				[TAB.PF]: {
 					label: TAB.PF,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: pf,
 					setData: setPF,
 					total: totalPF,
@@ -378,7 +391,8 @@ function NWContextProvider() {
 				},
 				[TAB.NPS]: {
 					label: TAB.NPS,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: nps,
 					setData: setNPS,
 					total: totalNPS,
@@ -393,7 +407,8 @@ function NWContextProvider() {
 			children: {
 				[TAB.LOAN] : {
 					label: TAB.LOAN,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: loans,
 					setData: setLoans,
 					total: totalLoans,
@@ -401,7 +416,8 @@ function NWContextProvider() {
 				},
 				[TAB.INS]: {
 					label: TAB.INS,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: insurance,
 					total: totalInsurance,
 					setData: setInsurance,
@@ -416,7 +432,8 @@ function NWContextProvider() {
 				},
 				[TAB.CREDIT]:{
 					label: TAB.CREDIT,
-					info: <>Example <a href={ROUTES.POLICYPRIVACY} rel="noreferrer">link</a></>,
+					info: "Example",
+					link: ROUTES.POLICYPRIVACY,
 					data: credit,
 					total: totalCredit,
 					setData: setCredit,

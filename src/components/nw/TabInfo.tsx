@@ -1,16 +1,16 @@
 import React, { Fragment } from 'react';
 
 interface TabInfoProps {
-	infoData: string;
+	info: string;
 	link: string;
 }
 
-export default function TabInfo({ infoData, link }: TabInfoProps) {
+export default function TabInfo({ info, link }: TabInfoProps) {
 	return (
 		<Fragment>
-			{infoData}
+			{info}&nbsp;&nbsp;
 			<a href={link} rel="noreferrer">
-				link
+				Read more
 			</a>
 		</Fragment>
 	);

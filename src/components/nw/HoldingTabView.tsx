@@ -8,6 +8,7 @@ import ListHoldings from './ListHoldings';
 import { COLORS } from '../../CONSTANTS';
 import ListProperties from './ListProperties';
 import InfoCircleOutlined from '@ant-design/icons/lib/icons/InfoCircleOutlined';
+import TabInfo from './TabInfo';
 
 export default function HoldingTabView() {
 	const {
@@ -62,14 +63,14 @@ export default function HoldingTabView() {
 				tabBarExtraContent={!isRoot && activeTab === 'Financial' ? <UploadHoldings /> : null}
 			>
 				{Object.keys(tabsData).map((tabName) => {
-					const { label, children, hasUploader, info } = tabsData[tabName];
+					const { label, children, hasUploader, info, link } = tabsData[tabName];
 					return (
 						<TabPane
 							key={label}
 							tab={
 								<Fragment>
 									{label}
-									<Tooltip title={info} color={COLORS.DEFAULT}>
+									<Tooltip title={<TabInfo info={info} link={link}/>} color={COLORS.DEFAULT}>
 										{children ? '' : <InfoCircleOutlined />}
 									</Tooltip>
 								</Fragment>
