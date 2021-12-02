@@ -61,11 +61,11 @@ export const STELLAR = 'XLM';
 export const TAB = {
 	PM: 'Precious Metals',
 	CRYPTO: 'Crypto',
-	STOCK: 'Stock',
-	MF: 'Mutual Fund',
-	BOND: 'Bond',
-	ETF: 'ETF',
-	GOLDB: 'Gold Bond',
+	STOCK: 'Stocks',
+	MF: 'Mutual Funds',
+	BOND: 'Bonds',
+	ETF: 'ETFs',
+	GOLDB: 'Gold Bonds',
 	SAV: 'Saving Accounts',
 	LENT: 'Lendings',
 	OTHER: 'Others',
@@ -77,7 +77,7 @@ export const TAB = {
 	LOAN: 'Loans',
 	INS: 'Insurance',
 	CREDIT: 'Credit',
-	IT: 'Investment Trust'
+	IT: 'Investment Trusts'
 };
 
 function NWContextProvider() {

@@ -34,12 +34,12 @@ interface OptionTableMap {
 }
 
 const optionTableMap: OptionTableMap = {
-  Stock: "listInExchgs",
-  "Gold Bond": "listInExchgs",
-  ETF: "listInExchgs",
-  Bond: "listInBonds",
-  "Mutual Fund": "listInMutuals",
-  'Investment Trust': "listInExchgs"
+  Stocks: "listInExchgs",
+  "Gold Bonds": "listInExchgs",
+  ETFs: "listInExchgs",
+  Bonds: "listInBonds",
+  "Mutual Funds": "listInMutuals",
+  'Investment Trusts': "listInExchgs"
 } as const;
 
 const holdingReducer = (

@@ -118,7 +118,7 @@ export default function CurrentAA() {
 		records.map((record) => {
 			const amount = toHumanFriendlyCurrency(record.value, selectedCurrency);
 			const percentage = toReadableNumber(record.value / totalAssets * 100, 2);
-			if(amount) data += `<strong>${amount}</strong>(${percentage}%) of ${record.desc}<br/><br/>`;
+			if(record.value) data += `<strong>${amount}</strong>(${percentage}%) of ${record.desc}<br/><br/>`;
 		});
 		return data;
 	};
