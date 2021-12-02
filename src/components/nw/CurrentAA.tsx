@@ -116,8 +116,9 @@ export default function CurrentAA() {
 	const pattern = (records: Array<any>) => {
 		let data: any = '';
 		records.map((record) => {
-			data += `<strong>${toHumanFriendlyCurrency(record.value, selectedCurrency)}</strong>
-				(${toReadableNumber(record.value / totalAssets * 100, 2)}%) of ${record.desc}<br/><br/>`;
+			const amount = toHumanFriendlyCurrency(record.value, selectedCurrency);
+			const percentage = toReadableNumber(record.value / totalAssets * 100, 2);
+			if(amount) data += `<strong>${amount}</strong>(${percentage}%) of ${record.desc}<br/><br/>`;
 		});
 		return data;
 	};
