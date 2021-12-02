@@ -282,7 +282,7 @@ export default function AddPropertyInput({
 								)}
 							</Col>
 							<Col xs={24} md={12}>
-								{subtype === "O" || subtype === "P" ? null : (
+								{subtype === "O" ? null : (
 									<Checkbox onChange={(e) => changeRes(e.target.checked)}>
 										Residential
 									</Checkbox>

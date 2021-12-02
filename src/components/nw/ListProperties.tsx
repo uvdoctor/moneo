@@ -207,7 +207,7 @@ export default function ListProperties({ data, changeData, categoryOptions }: Li
 	for (let i = 0; i < data.length; ++i) {
 	    dataSource.push({
             key: i,
-			res: data[i].type === 'P' || data[i].type === 'O' ? 'Non-residential' : <Checkbox checked={data[i].res} onChange={(e)=>changeRes(e.target.checked, i)}/>,
+			res: data[i].type === 'O' ? 'Non-residential' : <Checkbox checked={data[i].res} onChange={(e)=>changeRes(e.target.checked, i)}/>,
             type: categoryOptions && <SelectInput
 	                pre=""
 	                value={data[i].type as string}
