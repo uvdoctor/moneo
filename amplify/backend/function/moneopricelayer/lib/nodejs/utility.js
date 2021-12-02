@@ -23,7 +23,7 @@ const utility = (num) => {
     const customDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - parseInt(num));
     const monthChar = monthsArray[customDate.getMonth()];
     const yearFull = customDate.getFullYear();
-    const date = customDate.getDate();
+    const date = getStr(customDate.getDate());
     const month = getStr(customDate.getMonth() + 1);
     const year = customDate.getYear().toString().charAt(1) + customDate.getYear().toString().charAt(2);
     return { date, month, monthChar, year, yearFull };
