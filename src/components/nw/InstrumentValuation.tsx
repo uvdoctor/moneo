@@ -188,7 +188,7 @@ export default function InstrumentValuation() {
 				))}
 			</p>
 			<p style={{ textAlign: 'center' }}>
-				{childTab === TAB.MF && selectedNestedTags.includes('E') || selectedNestedTags.includes('F') && 
+				{(childTab === TAB.MF && (selectedTags.includes(AssetType.E) || selectedTags.includes(AssetType.F))) && 
 					Object.keys(nestedTags).map((tag: string) => (
 						<CheckableTag
 							key={tag}
