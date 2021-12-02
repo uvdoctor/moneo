@@ -38,7 +38,8 @@ export default function CurrentAA() {
 		totalPlot,
 		totalEPF,
 		totalVPF,
-		totalPPF
+		totalPPF,
+		totalNPSEquity
 	}: any = useContext(NWContext);
 	const { insData }: any = useContext(AppContext);
 	const [ totalCash, setTotalCash ] = useState<number>(totalSavings + totalDeposits + totalLendings);
@@ -132,11 +133,21 @@ export default function CurrentAA() {
 				{ value: midCap, desc: ASSET_TYPES.MID_CAP_STOCKS },
 				{ value: smallCap, desc: ASSET_TYPES.SMALL_CAP_STOCKS },
 				{ value: hybridCap, desc: 'Funds spread across Large, Mid and Small Cap Stocks' },
-				{ value: totalAngel, desc: 'Angel Investment' }
+				{ value: totalAngel, desc: 'Angel Investment' },
+				{ value: totalNPSEquity, desc: 'National Pension Scheme'}
+				// LCap
 			]);
 		if (asset === 'Fixed')
 			return pattern([
 				{ value: totalFFixed, desc: 'Fixed Income' },
+				// { value: FMP, desc: 'Fixed Maturity Plan' },
+				// { value: IF, desc: 'Interval Funds' },
+				// { value: GB, desc: 'Government Bonds' },
+				// { value: CB, desc: 'Corporate Bonds' },
+				// { value: I, desc: 'Index Funds' },
+				// { value: L, desc: 'Liquid Funds' },
+				// FMP hybrid - c
+				// Interval - hb - I
 				{ value: totalNPSFixed, desc: 'National Pension System' }
 			]);
 		if (asset === 'Real-estate')

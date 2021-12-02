@@ -1,4 +1,4 @@
-import { Empty, Table, Tag } from 'antd';
+import { Badge, Empty, Table, Tag } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { NWContext, TAB } from './NWContext';
 import Holding from './Holding';
@@ -19,6 +19,14 @@ export default function InstrumentValuation() {
 		selectedMembers,
 		setTotalFilterInstruments
 	}: any = useContext(NWContext);
+	const getFixedTags = {
+		CB: 'Corporate Bonds', 
+		GB: 'Government Bonds',
+		L: 'Liquid',
+		I: 'Index',
+		IF: 'Interval Funds',
+		FMP: 'Fixed Maturity Plans'
+	};
 	const { CheckableTag } = Tag;
 	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([ ...instruments ]);
 	const [ filterByTag, setFilterByTag ] = useState<Array<any>>([]);
@@ -26,9 +34,10 @@ export default function InstrumentValuation() {
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
 	const [ tags, setTags ] = useState<any>({});
 	const [ selectedTags, setSelectedTags ] = useState<Array<string>>([]);
-	const [ nestedTags, setNestedTags ] = useState<any>({});
+	const [ nestedTags, setNestedTags ] = useState<any>(selectedTags.includes('E') ? getMarketCap() : selectedTags.includes('F') ? getFixedTags : '');
 	const [ selectedNestedTags, setSelectedNestedTags ] = useState<Array<string>>([]);
 	const [ totalFilterAmt, setTotalFilterAmt ] = useState<number>(0);
+
 
 	const delRecord = (id: string) => setInstruments([ ...instruments.filter((record: any) => record.id !== id) ]);
 
@@ -96,11 +105,10 @@ export default function InstrumentValuation() {
 
 	useEffect(
 		() => {
-			if (childTab === TAB.MF && selectedTags.includes(AssetType.E)) {
-				setNestedTags(getMarketCap());
-			}
+			if (childTab === TAB.MF && selectedTags.includes(AssetType.E)) setNestedTags(getMarketCap());
+			if (childTab === TAB.MF && selectedTags.includes(AssetType.F)) setNestedTags(getFixedTags);
 		},
-		[ selectedTags ]
+		[ selectedTags, childTab ]
 	);
 
 	const filterInstrumentsByTabs = () => {
@@ -128,11 +136,17 @@ export default function InstrumentValuation() {
 			const data = insData[instrument.id];
 			if (childTab === TAB.MF) {
 				if (selectedNestedTags.length) {
-					return (
-						selectedTags.indexOf(instrument.type as string) > -1 &&
-						selectedNestedTags.indexOf(data.mcap as string) > -1
-					);
-				} else return selectedTags.indexOf(instrument.type as string) > -1;
+					if(selectedTags.indexOf(instrument.type as string) > -1) {
+						if(instrument.type === 'E') return (selectedNestedTags.indexOf(data.mcap as string) > -1); 
+						if(selectedNestedTags.includes('CB')) return (data.subt === 'CB');
+						if(selectedNestedTags.includes('GB')) return (data.subt === 'GB' || data.subt === 'GBO');
+						if(selectedNestedTags.includes('I')) return (data.subt === 'I');
+						if(selectedNestedTags.includes('IF')) return (data.mftype === 'I' && data.subt === 'HB');
+						if(selectedNestedTags.includes('FMP')) return (data.subt === 'HB' && data.mftype === 'C');
+						if(selectedNestedTags.includes('L')) return (data.subt === 'L');
+					}
+				} 
+				else return selectedTags.indexOf(instrument.type as string) > -1;
 			} else if (childTab === TAB.STOCK && data.meta) return selectedTags.indexOf(data.meta.mcap as string) > -1;
 			else if (childTab === TAB.BOND) return selectedTags.indexOf(instrument.subt as string) > -1;
 		});
@@ -155,14 +169,12 @@ export default function InstrumentValuation() {
 
 	return instruments.length ? (
 		<Fragment>
-			<p style={{ textAlign: 'center' }}>
+			<p style={{ textAlign: 'center' }} >
 				{Object.keys(tags).map((tag: string) => (
 					<CheckableTag
-						key={tag}
-						style={{
-							backgroundColor: getColourForAssetType(tag),
-							opacity: selectedTags.indexOf(tag) > -1 ? 1 : 0.5
-						}}
+						key={tag}	
+						style={{backgroundColor: COLORS.WHITE,
+								opacity: selectedTags.indexOf(tag) > -1 ? 1 : 0.5}}
 						checked={selectedTags.indexOf(tag) > -1}
 						onChange={(checked: boolean) => {
 							if (checked) {
@@ -171,18 +183,17 @@ export default function InstrumentValuation() {
 							} else setSelectedTags([ ...selectedTags.filter((t: string) => t !== tag) ]);
 						}}
 					>
-						{tags[tag]}
+						<Badge count={tags[tag]} style={{ background: COLORS.LIGHT_GRAY , color: 'black' }}/>
 					</CheckableTag>
 				))}
 			</p>
 			<p style={{ textAlign: 'center' }}>
-				{childTab === TAB.MF &&
-					selectedTags.includes(AssetType.E) &&
+				{childTab === TAB.MF && nestedTags && 
 					Object.keys(nestedTags).map((tag: string) => (
 						<CheckableTag
 							key={tag}
 							style={{
-								backgroundColor: getColourForAssetType(tag),
+								backgroundColor: COLORS.WHITE,
 								opacity: selectedNestedTags.indexOf(tag) > -1 ? 1 : 0.5
 							}}
 							checked={selectedNestedTags.indexOf(tag) > -1}
@@ -194,7 +205,7 @@ export default function InstrumentValuation() {
 									setSelectedNestedTags([ ...selectedNestedTags.filter((t: string) => t !== tag) ]);
 							}}
 						>
-							{nestedTags[tag]}
+							<Badge count={nestedTags[tag]} style={{ background: getColourForAssetType(tag) , color: 'black' }}/>
 						</CheckableTag>
 					))}
 			</p>
