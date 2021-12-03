@@ -8,7 +8,7 @@ Amplify Params - DO NOT EDIT *//* Amplify Params - DO NOT EDIT
 	ENV
 	REGION
 // Amplify Params - DO NOT EDIT */
-const { pushData, pushDataForFeed, appendGenericFields } = require("/opt/nodejs/insertIntoDB");
+const { pushData, pushDataForFeed, appendGenericFields, getTableNameFromInitialWord } = require("/opt/nodejs/insertIntoDB");
 const eodData = require("./eodData");
 const apiListData = require("./apiList");
 const { commodityAbbr, cryptoAbbr, currencyAbbr, apiToCall } = apiListData;
@@ -64,8 +64,10 @@ const eodPrice = () => {
 
 exports.handler = async (event) => {
   let data = await eodPrice();
+  const tableName = await getTableNameFromInitialWord(table);
+	console.log('Table name fetched: ', tableName);
   for (let batch in data) {
-    const results = await pushData(data[batch], table);
+    const results = await pushData(data[batch], tableName);
     console.log(results);
   }
   await pushDataForFeed(table, data);
