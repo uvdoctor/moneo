@@ -3,13 +3,17 @@
 	API_GOALS_GRAPHQLAPIIDOUTPUT
 	ENV
 	REGION
-Amplify Params - DO NOT EDIT *//* Amplify Params - DO NOT EDIT
+Amplify Params - DO NOT EDIT */ /* Amplify Params - DO NOT EDIT
 	AUTH_MONEO3E6273BC_USERPOOLID
 	ENV
 	REGION
 Amplify Params - DO NOT EDIT */ const mfData = require('india-mutual-fund-info');
-const { pushData, pushDataForFeed } = require('/opt/nodejs/insertIntoDB');
-const { appendGenericFields } = require('/opt/nodejs/insertIntoDB');
+const {
+	pushData,
+	pushDataForFeed,
+	getTableNameFromInitialWord,
+	appendGenericFields
+} = require('/opt/nodejs/insertIntoDB');
 const { directISIN, getDirISIN } = require('./data');
 const { getType, getSubType, mfType, mCap, getName } = require('./calculate');
 const table = 'INMutual';
@@ -45,9 +49,9 @@ const getData = () => {
 				price: price,
 				mftype: mfType(element['Scheme Type']),
 				mcap: mCap(element),
-				tf: element['Scheme Name'].includes('Tax') ? true : false,
+				tf: element['Scheme Name'].includes('Tax') ? true : false
 			};
-			dataToPush = appendGenericFields(dataToPush, table)
+			dataToPush = appendGenericFields(dataToPush, table);
 			batches.push({ PutRequest: { Item: dataToPush } });
 			isinMap[id] = id;
 			count++;

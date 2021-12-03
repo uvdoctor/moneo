@@ -10,7 +10,7 @@ Amplify Params - DO NOT EDIT *//* Amplify Params - DO NOT EDIT
 Amplify Params - DO NOT EDIT */ const fs = require('fs');
 const fsPromise = require('fs/promises');
 const { cleanDirectory, downloadZip, unzipDownloads } = require('/opt/nodejs/bhavUtils');
-const { getDataFromTable, pushData, pushDataForFeed } = require('/opt/nodejs/insertIntoDB');
+const { getDataFromTable, pushData, pushDataForFeed, getTableNameFromInitialWord } = require('/opt/nodejs/insertIntoDB');
 const { tempDir, zipFile } = require('/opt/nodejs/utility');
 const constructedApiArray = require('./utils');
 const { extractPartOfData, extractDataFromCSV, addMetaData } = require('./bhavUtils');

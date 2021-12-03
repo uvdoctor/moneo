@@ -3,13 +3,13 @@
 	API_GOALS_GRAPHQLAPIIDOUTPUT
 	ENV
 	REGION
-Amplify Params - DO NOT EDIT *//* Amplify Params - DO NOT EDIT
+Amplify Params - DO NOT EDIT */ /* Amplify Params - DO NOT EDIT
 	AUTH_MONEO3E6273BC_USERPOOLID
 	ENV
 	REGION
 Amplify Params - DO NOT EDIT */ const fs = require('fs');
 const fsPromise = require('fs/promises');
-const { pushData, pushDataForFeed } = require('/opt/nodejs/insertIntoDB');
+const { pushData, pushDataForFeed, getTableNameFromInitialWord } = require('/opt/nodejs/insertIntoDB');
 const { downloadZip, unzipDownloads, cleanDirectory } = require('/opt/nodejs/bhavUtils');
 const { tempDir, zipFile } = require('/opt/nodejs/utility');
 const calc = require('./calculate');
