@@ -95,7 +95,7 @@ const calcSchema = (record, codes, schema, exchg, isinMap, table) => {
   const type = record[codes.type];
   const subt = record[codes.subt];
   const name = record[codes.name];
-  const parse = (data) => (parseFloat(data) ? parseFloat(data) : 0);
+  const parse = (data) => (parseFloat(data) ? parseFloat(data) : parseFloat(0));
   Object.keys(schema).map((key) => {
     switch (key) {
       case "name":
