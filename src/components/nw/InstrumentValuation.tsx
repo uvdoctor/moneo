@@ -7,7 +7,7 @@ import { toHumanFriendlyCurrency } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
 import { AppContext } from '../AppContext';
-import { AssetType, HoldingInput } from '../../api/goals';
+import { HoldingInput } from '../../api/goals';
 
 export default function InstrumentValuation() {
 	const { insData }: any = useContext(AppContext);
@@ -26,9 +26,20 @@ export default function InstrumentValuation() {
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
 	const [ tags, setTags ] = useState<any>({});
 	const [ selectedTags, setSelectedTags ] = useState<Array<string>>([]);
-	const [ nestedTags, setNestedTags ] = useState<any>({});
-	const [ selectedNestedTags, setSelectedNestedTags ] = useState<Array<string>>([]);
+	const [ subtTags, setSubtTags ] = useState<any>({});
+	const [ selectedSubtTags, setSelectedSubtTags ] = useState<Array<string>>([]);
 	const [ totalFilterAmt, setTotalFilterAmt ] = useState<number>(0);
+
+	const bondTags = { CB: 'Corporate Bond', GB: 'Government Bond' };
+	const itTags = { REIT: 'Real Estate', InvIT: 'Infrastructure' };
+	const tagsData: any = {
+		Stocks: { tags: getMarketCap() },
+		'Mutual Funds': { tags: getAssetTypes(), subt: { E: getMarketCap(), F: getFixedCategories() } },
+		Bonds: { tags: bondTags },
+		'Investment Trusts': { tags: itTags }
+	};
+
+	const hasTags = (childTab: string) => [ TAB.STOCK, TAB.MF, TAB.BOND, TAB.IT ].includes(childTab);
 
 	const delRecord = (id: string) => setInstruments([ ...instruments.filter((record: any) => record.id !== id) ]);
 
@@ -66,6 +77,31 @@ export default function InstrumentValuation() {
 		[ filteredInstruments ]
 	);
 
+	const subtTagsData = () => {
+		// @ts-ignore
+		if (selectedTags.includes('E') && selectedTags.includes('F')) {
+			setSubtTags({ ...tagsData[childTab].subt.E, ...tagsData[childTab].subt.F });
+			setSelectedSubtTags([
+				...Object.keys(tagsData[childTab].subt.E),
+				...Object.keys(tagsData[childTab].subt.F)
+			]);
+			return;
+		}
+		if (selectedTags.includes('E')) {
+			setSubtTags(tagsData[childTab].subt.E);
+			setSelectedSubtTags([ ...Object.keys(tagsData[childTab].subt.E) ]);
+			return;
+		}
+		if (selectedTags.includes('F')) {
+			setSubtTags(tagsData[childTab].subt.F);
+			setSelectedSubtTags([ ...Object.keys(tagsData[childTab].subt.F) ]);
+			return;
+		}
+		setSubtTags({});
+		setSelectedSubtTags([]);
+		return;
+	};
+
 	useEffect(
 		() => {
 			let total = 0;
@@ -86,24 +122,17 @@ export default function InstrumentValuation() {
 
 	useEffect(
 		() => {
-			if (childTab === TAB.STOCK) setTags(getMarketCap());
-			else if (childTab === TAB.MF) setTags(getAssetTypes());
-			else if (childTab === TAB.BOND) setTags({ CB: 'Corporate Bond', GB: 'Government Bond' });
-			else if (childTab === TAB.IT) setTags({ REIT: 'Real Estate', InvIT: 'Infrastructure' });
-			else setTags({});
+			if (hasTags(childTab)) {
+				const tags = tagsData[childTab].tags;
+				tags ? setTags(tags) : setTags({});
+			}
 		},
 		[ childTab ]
 	);
 
 	useEffect(
 		() => {
-			if (childTab === TAB.MF) {
-				if(selectedTags.includes(AssetType.E)) setNestedTags(getMarketCap());
-				else if (selectedTags.includes(AssetType.F)) setNestedTags(getFixedCategories());
-				else if(selectedTags.includes(AssetType.F) || selectedTags.includes(AssetType.E)) {
-					setNestedTags({...getMarketCap(), ...getFixedCategories() })
-				}
-			}
+			if (childTab === TAB.MF) subtTagsData();
 		},
 		[ selectedTags ]
 	);
@@ -116,8 +145,9 @@ export default function InstrumentValuation() {
 				if (childTab === TAB.IT) return data.itype === 'InvIT' || data.itype === 'REIT';
 				if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
 				else if (childTab === TAB.STOCK) return instrument.subt === 'S' && !instrument.id.startsWith('INF');
-				// @ts-ignore
-				else if (childTab === TAB.BOND) return [ 'CB', 'GB', 'GBO' ].includes(instrument.subt) && !data.itype;
+				else if (childTab === TAB.BOND)
+					// @ts-ignore
+					return [ 'CB', 'GB', 'GBO' ].includes(instrument.subt) && !data.itype;
 				else if (childTab === TAB.GOLDB) return instrument.subt === 'GoldB';
 				else if (childTab === TAB.ETF) return data.itype === 'ETF';
 			}
@@ -130,24 +160,25 @@ export default function InstrumentValuation() {
 		let filterDataByTag = filteredInstruments.filter((instrument: HoldingInput) => {
 			const data = insData[instrument.id];
 			if (childTab === TAB.MF) {
-				if (selectedNestedTags.length) {
-					if(selectedTags.indexOf(instrument.type as string) > -1) {
-						if(instrument.type === 'E') return (selectedNestedTags.indexOf(data.mcap as string) > -1); 
-						if(selectedNestedTags.includes('CB')) return (data.subt === 'CB');
-						if(selectedNestedTags.includes('GB')) return (data.subt === 'GB' || data.subt === 'GBO');
-						if(selectedNestedTags.includes('I')) return (data.subt === 'I');
-						if(selectedNestedTags.includes('IF')) return (data.mftype === 'I' && data.subt === 'HB');
-						if(selectedNestedTags.includes('FMP')) return (data.subt === 'HB' && data.mftype === 'C');
-						if(selectedNestedTags.includes('L')) return (data.subt === 'L');
+				if (selectedSubtTags.length) {
+					if (selectedTags.indexOf(instrument.type as string) > -1) {
+						if (instrument.type === 'E') return selectedSubtTags.indexOf(data.mcap as string) > -1;
+						if (instrument.type === 'F') {
+							if (selectedSubtTags.includes('CB')) return data.subt === 'CB';
+							if (selectedSubtTags.includes('GB')) return data.subt === 'GB' || data.subt === 'GBO';
+							if (selectedSubtTags.includes('I')) return data.subt === 'I';
+							if (selectedSubtTags.includes('IF')) return data.mftype === 'I' && data.subt === 'HB';
+							if (selectedSubtTags.includes('FMP')) return data.subt === 'HB' && data.mftype === 'C';
+							if (selectedSubtTags.includes('L')) return data.subt === 'L';
+						}
 					}
-				} 
-				else return selectedTags.indexOf(instrument.type as string) > -1;
-			} else if (childTab === TAB.STOCK && data.meta) return selectedTags.indexOf(data.meta.mcap as string) > -1;
+				}
+			} 
+			else if (childTab === TAB.STOCK && data.meta) return selectedTags.indexOf(data.meta.mcap as string) > -1;
 			else if (childTab === TAB.BOND) {
-				if(selectedTags.includes('GB')) return (data.subt === 'GB' || data.subt === 'GBO');
+				if (selectedTags.includes('GB')) return data.subt === 'GB' || data.subt === 'GBO';
 				return selectedTags.indexOf(instrument.subt as string) > -1;
-			}
-			else if (childTab === TAB.IT && data ) return selectedTags.indexOf(data.itype as string) > -1;
+			} else if (childTab === TAB.IT && data) return selectedTags.indexOf(data.itype as string) > -1;
 		});
 		setFilterByTag([ ...filterDataByTag ]);
 	};
@@ -163,17 +194,19 @@ export default function InstrumentValuation() {
 		() => {
 			filterInstrumentsByTags();
 		},
-		[ selectedTags, selectedNestedTags ]
+		[ selectedTags, selectedSubtTags ]
 	);
 
 	return instruments.length ? (
 		<Fragment>
-			<p style={{ textAlign: 'center' }} >
+			<p style={{ textAlign: 'center' }}>
 				{Object.keys(tags).map((tag: string) => (
 					<CheckableTag
-						key={tag}	
-						style={{backgroundColor: COLORS.WHITE,
-								opacity: selectedTags.indexOf(tag) > -1 ? 1 : 0.5}}
+						key={tag}
+						style={{
+							backgroundColor: COLORS.WHITE,
+							opacity: selectedTags.indexOf(tag) > -1 ? 1 : 0.5
+						}}
 						checked={selectedTags.indexOf(tag) > -1}
 						onChange={(checked: boolean) => {
 							if (checked) {
@@ -182,29 +215,32 @@ export default function InstrumentValuation() {
 							} else setSelectedTags([ ...selectedTags.filter((t: string) => t !== tag) ]);
 						}}
 					>
-						<Badge count={tags[tag]} style={{ background: COLORS.LIGHT_GRAY , color: 'black' }}/>
+						<Badge count={tags[tag]} style={{ background: COLORS.LIGHT_GRAY, color: 'black' }} />
 					</CheckableTag>
 				))}
 			</p>
 			<p style={{ textAlign: 'center' }}>
-				{(childTab === TAB.MF && (selectedTags.includes(AssetType.E) || selectedTags.includes(AssetType.F))) && 
-					Object.keys(nestedTags).map((tag: string) => (
+				{childTab === TAB.MF &&
+					subtTags &&
+					Object.keys(subtTags).map((tag: string) => (
 						<CheckableTag
 							key={tag}
 							style={{
 								backgroundColor: COLORS.WHITE,
-								opacity: selectedNestedTags.indexOf(tag) > -1 ? 1 : 0.5
+								opacity: selectedSubtTags.indexOf(tag) > -1 ? 1 : 0.5
 							}}
-							checked={selectedNestedTags.indexOf(tag) > -1}
+							checked={selectedSubtTags.indexOf(tag) > -1}
 							onChange={(checked: boolean) => {
 								if (checked) {
-									selectedNestedTags.push(tag);
-									setSelectedNestedTags([ ...selectedNestedTags ]);
-								} else
-									setSelectedNestedTags([ ...selectedNestedTags.filter((t: string) => t !== tag) ]);
+									selectedSubtTags.push(tag);
+									setSelectedSubtTags([ ...selectedSubtTags ]);
+								} else setSelectedSubtTags([ ...selectedSubtTags.filter((t: string) => t !== tag) ]);
 							}}
 						>
-							<Badge count={nestedTags[tag]} style={{ background: getColourForAssetType(tag) , color: 'black' }}/>
+							<Badge
+								count={subtTags[tag]}
+								style={{ background: getColourForAssetType(tag), color: 'black' }}
+							/>
 						</CheckableTag>
 					))}
 			</p>
