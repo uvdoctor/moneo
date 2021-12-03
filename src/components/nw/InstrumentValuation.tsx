@@ -26,7 +26,7 @@ export default function InstrumentValuation() {
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
 	const [ tags, setTags ] = useState<any>({});
 	const [ selectedTags, setSelectedTags ] = useState<Array<string>>([]);
-	const [ nestedTags, setNestedTags ] = useState<any>(selectedTags.includes('E') ? getMarketCap() : selectedTags.includes('F') ? getFixedCategories : '');
+	const [ nestedTags, setNestedTags ] = useState<any>({});
 	const [ selectedNestedTags, setSelectedNestedTags ] = useState<Array<string>>([]);
 	const [ totalFilterAmt, setTotalFilterAmt ] = useState<number>(0);
 
@@ -89,6 +89,7 @@ export default function InstrumentValuation() {
 			if (childTab === TAB.STOCK) setTags(getMarketCap());
 			else if (childTab === TAB.MF) setTags(getAssetTypes());
 			else if (childTab === TAB.BOND) setTags({ CB: 'Corporate Bond', GB: 'Government Bond' });
+			else if (childTab === TAB.IT) setTags({ REIT: 'Real Estate', InvIT: 'Infrastructure' });
 			else setTags({});
 		},
 		[ childTab ]
@@ -99,25 +100,23 @@ export default function InstrumentValuation() {
 			if (childTab === TAB.MF && selectedTags.includes(AssetType.E)) setNestedTags(getMarketCap());
 			if (childTab === TAB.MF && selectedTags.includes(AssetType.F)) setNestedTags(getFixedCategories());
 		},
-		[ selectedTags, childTab ]
+		[ selectedTags ]
 	);
 
 	const filterInstrumentsByTabs = () => {
 		if (!instruments.length) return;
 		let filteredData: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => {
 			const data = insData[instrument.id];
-			if (doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
+			if (data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
 				if (childTab === TAB.IT) return data.itype === 'InvIT' || data.itype === 'REIT';
 				if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
 				else if (childTab === TAB.STOCK) return instrument.subt === 'S' && !instrument.id.startsWith('INF');
-				else if (childTab === TAB.BOND)
-					// @ts-ignore
-					return [ 'CB', 'GB', 'GBO' ].includes(instrument.subt) && !data.itype;
+				// @ts-ignore
+				else if (childTab === TAB.BOND) return [ 'CB', 'GB', 'GBO' ].includes(instrument.subt) && !data.itype;
 				else if (childTab === TAB.GOLDB) return instrument.subt === 'GoldB';
 				else if (childTab === TAB.ETF) return data.itype === 'ETF';
 			}
 		});
-
 		setFilteredInstruments([ ...filteredData ]);
 	};
 
@@ -139,7 +138,11 @@ export default function InstrumentValuation() {
 				} 
 				else return selectedTags.indexOf(instrument.type as string) > -1;
 			} else if (childTab === TAB.STOCK && data.meta) return selectedTags.indexOf(data.meta.mcap as string) > -1;
-			else if (childTab === TAB.BOND) return selectedTags.indexOf(instrument.subt as string) > -1;
+			else if (childTab === TAB.BOND) {
+				if(selectedTags.includes('GB')) return (data.subt === 'GB' || data.subt === 'GBO');
+				return selectedTags.indexOf(instrument.subt as string) > -1;
+			}
+			else if (childTab === TAB.IT && data ) return selectedTags.indexOf(data.itype as string) > -1;
 		});
 		setFilterByTag([ ...filterDataByTag ]);
 	};

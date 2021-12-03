@@ -55,9 +55,6 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 		if(ins) setPrice(ins.price);
 	}, [ insData ]);
 
-	// const getInsTypeStr = (id: string) =>
-	// 	insData[id].itype ? `${insData[holding.id].itype} - ` : holding.id.startsWith('INF') ? 'Mutual Fund - ' : '';
-
 	return (
 		<Row className="holding" align="middle" justify="space-between" gutter={[ 5, 5 ]}>
 			{showPrice && (
