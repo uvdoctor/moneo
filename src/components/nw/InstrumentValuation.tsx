@@ -97,8 +97,13 @@ export default function InstrumentValuation() {
 
 	useEffect(
 		() => {
-			if (childTab === TAB.MF && selectedTags.includes(AssetType.E)) setNestedTags(getMarketCap());
-			if (childTab === TAB.MF && selectedTags.includes(AssetType.F)) setNestedTags(getFixedCategories());
+			if (childTab === TAB.MF) {
+				if(selectedTags.includes(AssetType.E)) setNestedTags(getMarketCap());
+				else if (selectedTags.includes(AssetType.F)) setNestedTags(getFixedCategories());
+				else if(selectedTags.includes(AssetType.F) || selectedTags.includes(AssetType.E)) {
+					setNestedTags({...getMarketCap(), ...getFixedCategories() })
+				}
+			}
 		},
 		[ selectedTags ]
 	);
