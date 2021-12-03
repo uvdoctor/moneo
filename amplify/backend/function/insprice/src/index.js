@@ -21,6 +21,8 @@ const dataToPushInFeeds = [];
 
 const getAndPushData = (diff) => {
 	return new Promise(async (resolve, reject) => {
+		const tableName = await getTableNameFromInitialWord(table);
+		console.log('Table name fetched: ', tableName);
 		const { apiArray, partOfDataApiArray } = constructedApiArray(diff);
 		const nameMap = {};
 		const weekHLMap = {};
@@ -54,7 +56,7 @@ const getAndPushData = (diff) => {
 				);
 				const data = await addMetaData(exchgData, getDataFromTable);
 				for (let batch in data) {
-					await pushData(data[batch], table);
+					await pushData(data[batch], tableName);
 				}
 				dataToPushInFeeds.push({ table, dataCount: data, identifier: exchg, url, exchg });
 			}

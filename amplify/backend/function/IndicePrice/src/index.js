@@ -20,6 +20,8 @@ const table = 'Indices';
 let dataFromNse;
 
 const getAndPushData = async (diff) => {
+	const tableName = await getTableNameFromInitialWord(table);
+	console.log('Table name fetched: ', tableName);
 	const apiArray = constructedApiArray(diff);
 	for (let i = 0; i < apiArray.length; i++) {
 		try {
@@ -35,7 +37,7 @@ const getAndPushData = async (diff) => {
 			}
 			const data = await getData(dataFromNse, table, url, cat, type, subt, schema, codes, exchg);
 			for (let batch in data) {
-				const results = await pushData(data[batch], table);
+				const results = await pushData(data[batch], tableName);
 				console.log(results);
 			}
 			await pushDataForFeed(table, data, cat, url, exchg);

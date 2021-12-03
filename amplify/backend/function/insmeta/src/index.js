@@ -20,6 +20,8 @@ const isinMap = {};
 
 const getAndPushData = (diff) => {
 	return new Promise(async (resolve, reject) => {
+		const tableName = await getTableNameFromInitialWord(table);
+		console.log('Table name fetched: ', tableName);
 		const apiArray = constructedApiArray(diff);
 		for (let i = 0; i < apiArray.length; i++) {
 			try {
@@ -32,7 +34,7 @@ const getAndPushData = (diff) => {
 				await downloadZip(url, tempDir, csvFile);
 				const data = await extractData(fileName, codes, isinMap, table);
 				for (let batch in data) {
-					await pushData(data[batch], table);
+					await pushData(data[batch], tableName);
 				}
 				await pushDataForFeed(table, data, `${exchg}${i + 1}`, url, exchg);
 			} catch (err) {

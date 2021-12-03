@@ -65,9 +65,11 @@ const getData = () => {
 };
 
 exports.handler = async (event) => {
+	const tableName = await getTableNameFromInitialWord(table);
+	console.log('Table name fetched: ', tableName);
 	const data = await getData();
 	for (let batch in data) {
-		await pushData(data[batch], table);
+		await pushData(data[batch], tableName);
 	}
 	await pushDataForFeed(table, data);
 };

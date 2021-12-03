@@ -20,6 +20,8 @@ const table = 'NPS';
 
 const getAndPushData = (diff) => {
 	return new Promise(async (resolve, reject) => {
+		const tableName = await getTableNameFromInitialWord(table);
+		console.log('Table name fetched: ', tableName);
 		const apiArray = constructedApiArray(diff);
 		try {
 			if (fs.existsSync(tempDir)) {
@@ -31,7 +33,7 @@ const getAndPushData = (diff) => {
 			await unzipDownloads(zipFile, tempDir);
 			const data = await getDataFromTxtFile(fileName, calc, table);
 			for (let batch in data) {
-				await pushData(data[batch], table);
+				await pushData(data[batch], tableName);
 			}
 			await pushDataForFeed(table, data, '', url);
 		} catch (err) {
