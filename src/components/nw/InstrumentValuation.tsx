@@ -2,7 +2,7 @@ import { Badge, Empty, Table, Tag } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { NWContext, TAB } from './NWContext';
 import Holding from './Holding';
-import { doesHoldingMatch, getAssetTypes, getColourForAssetType, getMarketCap } from './nwutils';
+import { doesHoldingMatch, getAssetTypes, getColourForAssetType, getMarketCap, getFixedCategories } from './nwutils';
 import { toHumanFriendlyCurrency } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
@@ -19,14 +19,6 @@ export default function InstrumentValuation() {
 		selectedMembers,
 		setTotalFilterInstruments
 	}: any = useContext(NWContext);
-	const getFixedTags = {
-		CB: 'Corporate Bonds', 
-		GB: 'Government Bonds',
-		L: 'Liquid',
-		I: 'Index',
-		IF: 'Interval Funds',
-		FMP: 'Fixed Maturity Plans'
-	};
 	const { CheckableTag } = Tag;
 	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([ ...instruments ]);
 	const [ filterByTag, setFilterByTag ] = useState<Array<any>>([]);
@@ -34,10 +26,9 @@ export default function InstrumentValuation() {
 	const [ filteredInfo, setFilteredInfo ] = useState<any | null>({});
 	const [ tags, setTags ] = useState<any>({});
 	const [ selectedTags, setSelectedTags ] = useState<Array<string>>([]);
-	const [ nestedTags, setNestedTags ] = useState<any>(selectedTags.includes('E') ? getMarketCap() : selectedTags.includes('F') ? getFixedTags : '');
+	const [ nestedTags, setNestedTags ] = useState<any>(selectedTags.includes('E') ? getMarketCap() : selectedTags.includes('F') ? getFixedCategories : '');
 	const [ selectedNestedTags, setSelectedNestedTags ] = useState<Array<string>>([]);
 	const [ totalFilterAmt, setTotalFilterAmt ] = useState<number>(0);
-
 
 	const delRecord = (id: string) => setInstruments([ ...instruments.filter((record: any) => record.id !== id) ]);
 
@@ -106,7 +97,7 @@ export default function InstrumentValuation() {
 	useEffect(
 		() => {
 			if (childTab === TAB.MF && selectedTags.includes(AssetType.E)) setNestedTags(getMarketCap());
-			if (childTab === TAB.MF && selectedTags.includes(AssetType.F)) setNestedTags(getFixedTags);
+			if (childTab === TAB.MF && selectedTags.includes(AssetType.F)) setNestedTags(getFixedCategories());
 		},
 		[ selectedTags, childTab ]
 	);
@@ -116,7 +107,7 @@ export default function InstrumentValuation() {
 		let filteredData: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => {
 			const data = insData[instrument.id];
 			if (doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
-				if (childTab === TAB.IT) return data.itype === 'InvIt' || data.itype === 'REIT';
+				if (childTab === TAB.IT) return data.itype === 'InvIT' || data.itype === 'REIT';
 				if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
 				else if (childTab === TAB.STOCK) return instrument.subt === 'S' && !instrument.id.startsWith('INF');
 				else if (childTab === TAB.BOND)
