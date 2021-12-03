@@ -162,15 +162,13 @@ export default function InstrumentValuation() {
 			if (childTab === TAB.MF) {
 				if (selectedSubtTags.length) {
 					if (selectedTags.indexOf(instrument.type as string) > -1) {
-						if (instrument.type === 'E') return selectedSubtTags.indexOf(data.mcap as string) > -1;
-						if (instrument.type === 'F') {
-							if (selectedSubtTags.includes('CB')) return data.subt === 'CB';
-							if (selectedSubtTags.includes('GB')) return data.subt === 'GB' || data.subt === 'GBO';
-							if (selectedSubtTags.includes('I')) return data.subt === 'I';
-							if (selectedSubtTags.includes('IF')) return data.mftype === 'I' && data.subt === 'HB';
-							if (selectedSubtTags.includes('FMP')) return data.subt === 'HB' && data.mftype === 'C';
-							if (selectedSubtTags.includes('L')) return data.subt === 'L';
-						}
+						 return selectedSubtTags.indexOf(data.mcap as string) > -1 ||
+						 (selectedSubtTags.includes('CB') && (data.subt === 'CB')) || 
+						 (selectedSubtTags.includes('I') && (data.type === 'F' && data.subt === 'I')) || 
+						(selectedSubtTags.includes('GovB') && (data.subt === 'GB' || data.subt === 'GBO')) || 
+						(selectedSubtTags.includes('IF') && (data.subt === 'HB' && data.mftype === 'I')) ||
+						(selectedSubtTags.includes('FMP') && (data.subt === 'HB' && data.mftype === 'C')) ||
+						(selectedSubtTags.includes('LF') && (data.subt === 'L')) 
 					}
 				}
 			} 
@@ -180,6 +178,8 @@ export default function InstrumentValuation() {
 				return selectedTags.indexOf(instrument.subt as string) > -1;
 			} else if (childTab === TAB.IT && data) return selectedTags.indexOf(data.itype as string) > -1;
 		});
+
+		
 		setFilterByTag([ ...filterDataByTag ]);
 	};
 

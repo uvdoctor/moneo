@@ -274,8 +274,8 @@ export const getMarketCap = () => {
 export const getFixedCategories = () => {
   return {
     CB: 'Corporate Bonds', 
-		GB: 'Government Bonds',
-		L: 'Liquid Funds',
+		GovB: 'Government Bonds',
+		LF: 'Liquid Funds',
 		I: 'Index Funds',
 		IF: 'Interval Funds',
 		FMP: 'Fixed Maturity Plans'
