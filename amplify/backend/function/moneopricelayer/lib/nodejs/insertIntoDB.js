@@ -3,17 +3,14 @@ var dynamodb = new AWS.DynamoDB();
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 const getTableNameFromInitialWord = async (tableInitial) => {
-	var params = {
-		ExclusiveStartTableName: tableInitial,
-		Limit: 1
-	  };
+	var params = { ExclusiveStartTableName: tableInitial, Limit: 1 };
 	try {
-	   const table = await dynamodb.listTables(params).promise();
-	   return table.TableNames[0];
-	} catch(err){
+		const table = await dynamodb.listTables(params).promise();
+		return table.TableNames[0];
+	} catch (err) {
 		console.log(err);
 	}
-}
+};
 
 const getDataFromTable = async (table) => {
 	const params = { TableName: table };
@@ -38,11 +35,9 @@ const pushDataSingly = (schema, tableName) => {
 	});
 };
 
-const pushData = async (data, tableInitial) => {
+const pushData = async (data, table) => {
 	return new Promise(async (resolve, reject) => {
-		const table = await getTableNameFromInitialWord(tableInitial);
-		console.log("Table name fetched: ", table);
-		const params = { RequestItems: { [table]: data }};
+		const params = { RequestItems: { [table]: data } };
 		try {
 			const updateRecord = await docClient.batchWrite(params).promise();
 			resolve(updateRecord);
@@ -80,4 +75,26 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 	const results = await pushDataSingly(schema, tableName);
 	console.log(results, 'Data Pushed into Feeds Table');
 };
-module.exports = { getDataFromTable, pushData, pushDataForFeed, pushDataSingly, appendGenericFields, getTableNameFromInitialWord };
+
+const deleteData = async (data, table) => {
+	return new Promise(async (resolve, reject) => {
+		const params = { RequestItems: { [table]: data } };
+		try {
+			const updateRecord = await docClient.batchWrite(params).promise();
+			console.log(updateRecord);
+			resolve(updateRecord);
+		} catch (error) {
+			reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
+		}
+	});
+};
+
+module.exports = {
+	getDataFromTable,
+	pushData,
+	pushDataForFeed,
+	pushDataSingly,
+	appendGenericFields,
+	getTableNameFromInitialWord,
+	deleteData
+};

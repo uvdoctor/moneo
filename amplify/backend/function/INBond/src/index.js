@@ -1,15 +1,6 @@
-/* Amplify Params - DO NOT EDIT
-	API_GOALS_GRAPHQLAPIENDPOINTOUTPUT
-	API_GOALS_GRAPHQLAPIIDOUTPUT
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT *//* Amplify Params - DO NOT EDIT
-	AUTH_MONEO3E6273BC_USERPOOLID
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */ const fs = require('fs');
+const fs = require('fs');
 const fsPromise = require('fs/promises');
-const { pushData, pushDataForFeed } = require('/opt/nodejs/insertIntoDB');
+const { pushData, pushDataForFeed, getTableNameFromInitialWord } = require('/opt/nodejs/insertIntoDB');
 const { tempDir, zipFile } = require('/opt/nodejs/utility');
 const { cleanDirectory, downloadZip, unzipDownloads } = require('/opt/nodejs/bhavUtils');
 const constructedApiArray = require('./utils');
@@ -20,6 +11,8 @@ const isinMap = {};
 
 const getAndPushData = (diff) => {
 	return new Promise(async (resolve, reject) => {
+		const tableName = await getTableNameFromInitialWord(table);
+		console.log('Table name fetched: ', tableName);
 		const apiArray = constructedApiArray(diff);
 		for (let i = 0; i < apiArray.length; i++) {
 			try {
@@ -37,7 +30,7 @@ const getAndPushData = (diff) => {
 				}
 				const data = await extractDataFromCSV(fileName, typeExchg, codes, schema, isinMap, table);
 				for (let batch in data) {
-					await pushData(data[batch], table);
+					await pushData(data[batch], tableName);
 				}
 				await pushDataForFeed(table, data, `${typeExchg}${i}`, url, typeExchg);
 			} catch (err) {
