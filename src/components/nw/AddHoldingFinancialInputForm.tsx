@@ -140,11 +140,11 @@ export default function HoldingInput(props: any) {
 
   const getFilters = (option: string) => {
     switch (option) {
-      case "Gold Bond":
+      case "Gold Bonds":
         return { prop: "subt", value: "GoldB" };
-      case "ETF":
+      case "ETFs":
         return { prop: "itype", value: "ETF" };
-      case "Investment Trust":
+      case "Investment Trusts":
         return { prop: 'subt', value: 'R'};
       default:
         return null;
