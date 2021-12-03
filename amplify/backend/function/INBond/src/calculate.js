@@ -78,14 +78,14 @@ const calcYTM = (record, codes) => {
 	const couponAmt = fv * Number(rate) / 100;
 	const ytm = (couponAmt + (fv - mPrice) / numOfYear) / ((fv + mPrice) / 2);
 	const ytmFinal = Math.round(ytm * 1000) / 1000;
-	if (ytmFinal === -0) return 0;
+	if (ytmFinal < 0) return 0;
 	return ytmFinal;
 };
 
 const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
 	if (!record[codes.id] || record[codes.subt] === 'MC') return;
 	schema.id = record[codes.id];
-  if(!schema.id.startsWith('IN')) return;
+  	if(!schema.id.startsWith('IN')) return;
 	schema.sid = record[codes.sid];
 	schema.name = record[codes.name] ? record[codes.name] : record[codes.sid];
 	schema.price = calc.calcPrice(record[codes.price]);
@@ -99,7 +99,7 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
 	schema.tf = calc.calcTF(record[codes.subt]);
 	schema.cr = calc.calcCR(record[codes.crstr]);
 	const reset = record[codes.rate];
-  if(!reset) console.log(reset)
+  	if(!reset) console.log(reset)
 	schema.rate = reset.includes('RESET') || reset > 20 ? 0 : reset === '' ? null : parseFloat(reset);
 	schema.fv = 100;
 	schema.ytm = calcYTM(record, codes);
