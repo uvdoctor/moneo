@@ -9,8 +9,8 @@
     }
   ],
   "permissions": {
-    "api": {
-      "goals": [
+    "function": {
+      "insmeta": [
         "read"
       ]
     }

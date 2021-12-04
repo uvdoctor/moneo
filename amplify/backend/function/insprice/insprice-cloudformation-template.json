@@ -24,17 +24,13 @@
       "Type": "String",
       "Default": "functionmoneopriceutilsArn"
     },
-    "apigoalsGraphQLAPIIdOutput": {
-      "Type": "String",
-      "Default": "apigoalsGraphQLAPIIdOutput"
-    },
-    "apigoalsGraphQLAPIEndpointOutput": {
-      "Type": "String",
-      "Default": "apigoalsGraphQLAPIEndpointOutput"
-    },
     "functionmoneopricelayerArn": {
       "Type": "String",
       "Default": "functionmoneopricelayerArn"
+    },
+    "functioninsmetaName": {
+      "Type": "String",
+      "Default": "functioninsmetaName"
     }
   },
   "Conditions": {
@@ -90,11 +86,8 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "API_GOALS_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apigoalsGraphQLAPIIdOutput"
-            },
-            "API_GOALS_GRAPHQLAPIENDPOINTOUTPUT": {
-              "Ref": "apigoalsGraphQLAPIEndpointOutput"
+            "FUNCTION_INSMETA_NAME": {
+              "Ref": "functioninsmetaName"
             }
           }
         },
@@ -252,15 +245,16 @@
             {
               "Effect": "Allow",
               "Action": [
-                "appsync:Get*",
-                "appsync:List*"
+                "lambda:Get*",
+                "lambda:List*",
+                "lambda:Invoke*"
               ],
               "Resource": [
                 {
                   "Fn::Join": [
                     "",
                     [
-                      "arn:aws:appsync:",
+                      "arn:aws:lambda:",
                       {
                         "Ref": "AWS::Region"
                       },
@@ -268,9 +262,9 @@
                       {
                         "Ref": "AWS::AccountId"
                       },
-                      ":apis/",
+                      ":function:",
                       {
-                        "Ref": "apigoalsGraphQLAPIIdOutput"
+                        "Ref": "functioninsmetaName"
                       }
                     ]
                   ]

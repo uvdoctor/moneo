@@ -86,17 +86,16 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "moneopricelayer",
+          "resourceName": "insmeta",
           "attributes": [
-            "Arn"
+            "Name"
           ]
         },
         {
-          "category": "api",
-          "resourceName": "goals",
+          "category": "function",
+          "resourceName": "moneopricelayer",
           "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
+            "Arn"
           ]
         }
       ]
