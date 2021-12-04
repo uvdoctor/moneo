@@ -5,9 +5,9 @@ import { getInstrumentDataWithKey } from "./nwutils";
 import { NWContext } from "./NWContext";
 
 interface InstrumentsData {
-  listInExchgs: [];
-  listInBonds: [];
-  listInMutuals: [];
+  listInExchgPrices: [];
+  listInBondPrices: [];
+  listInmfPrices: [];
 }
 
 interface Holding {
@@ -34,12 +34,12 @@ interface OptionTableMap {
 }
 
 const optionTableMap: OptionTableMap = {
-  Stocks: "listInExchgs",
-  "Gold Bonds": "listInExchgs",
-  ETFs: "listInExchgs",
-  Bonds: "listInBonds",
-  "Mutual Funds": "listInMutuals",
-  'Investment Trusts': "listInExchgs"
+  Stocks: "listInExchgPrices",
+  "Gold Bonds": "listInExchgPrices",
+  ETFs: "listInExchgPrices",
+  Bonds: "listInBondPrices",
+  "Mutual Funds": "listInmfPrices",
+  'Investment Trusts': "listInExchgPrices"
 } as const;
 
 const holdingReducer = (
@@ -111,9 +111,9 @@ export default function HoldingInput(props: any) {
     familyMember: "",
     type: "",
     instrumentData: {
-      listInExchgs: [],
-      listInBonds: [],
-      listInMutuals: [],
+      listInExchgPrices: [],
+      listInBondPrices: [],
+      listInmfPrices: [],
     },
     suggestions: [],
     buttonState: true,

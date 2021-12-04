@@ -193,62 +193,62 @@ const getORIdList = (list: Array<any>, ids: Array<string>) => {
 
 export const loadMatchingINExchange = async (isins: Array<string>) => {
   if (!isins.length) return null;
-  let idList: Array<APIt.ModelINExchgFilterInput> = [];
+  let idList: Array<APIt.ModelINExchgPriceFilterInput> = [];
   const {
-    data: { listINExchgs },
+    data: { listINExchgPrices },
   } = (await API.graphql(
-    graphqlOperation(queries.listInExchgs, {
+    graphqlOperation(queries.listInExchgPrices, {
       limit: 10000,
       filter: getORIdList(idList, isins),
     })
   )) as {
-    data: APIt.ListInExchgsQuery;
+    data: APIt.ListInExchgPricesQuery;
   };
-  return listINExchgs?.items?.length
-    ? (listINExchgs.items as Array<APIt.INExchg>)
+  return listINExchgPrices?.items?.length
+    ? (listINExchgPrices.items as Array<APIt.INExchgPrice>)
     : null;
 };
 
 export const loadMatchingINMutual = async (isins: Array<string>) => {
   if (!isins.length) return null;
-  let idList: Array<APIt.ModelINMutualFilterInput> = [];
-  let returnList: Array<APIt.INMutual> = [];
+  let idList: Array<APIt.ModelINMFPriceFilterInput> = [];
+  let returnList: Array<APIt.INMFPrice> = [];
   let nextToken = null;
   do {
     let variables: any = { limit: 20000, filter: getORIdList(idList, isins) };
     if (nextToken) variables.nextToken = nextToken;
     const {
-      data: { listINMutuals },
+      data: { listINMFPrices },
     } = (await API.graphql(
-      graphqlOperation(queries.listInMutuals, variables)
+      graphqlOperation(queries.listInmfPrices, variables)
     )) as {
-      data: APIt.ListInMutualsQuery;
+      data: APIt.ListInmfPricesQuery;
     };
-    if (listINMutuals?.items?.length)
-      returnList.push(...(listINMutuals.items as Array<APIt.INMutual>));
-    nextToken = listINMutuals?.nextToken;
+    if (listINMFPrices?.items?.length)
+      returnList.push(...(listINMFPrices.items as Array<APIt.INMFPrice>));
+    nextToken = listINMFPrices?.nextToken;
   } while (nextToken);
   return returnList.length ? returnList : null;
 };
 
 export const loadMatchingINBond = async (isins: Array<string>) => {
   if (!isins.length) return null;
-  let idList: Array<APIt.ModelINBondFilterInput> = [];
-  let returnList: Array<APIt.INBond> = [];
+  let idList: Array<APIt.ModelINBondPriceFilterInput> = [];
+  let returnList: Array<APIt.INBondPrice> = [];
   let nextToken = null;
   do {
     let variables: any = { limit: 10000, filter: getORIdList(idList, isins) };
     if (nextToken) variables.nextToken = nextToken;
     const {
-      data: { listINBonds },
+      data: { listINBondPrices },
     } = (await API.graphql(
-      graphqlOperation(queries.listInBonds, variables)
+      graphqlOperation(queries.listInBondPrices, variables)
     )) as {
-      data: APIt.ListInBondsQuery;
+      data: APIt.ListInBondPricesQuery;
     };
-    if (listINBonds?.items?.length)
-      returnList.push(...(listINBonds.items as Array<APIt.INBond>));
-    nextToken = listINBonds?.nextToken;
+    if (listINBondPrices?.items?.length)
+      returnList.push(...(listINBondPrices.items as Array<APIt.INBondPrice>));
+    nextToken = listINBondPrices?.nextToken;
   } while (nextToken);
   return returnList.length ? returnList : null;
 };
@@ -415,11 +415,11 @@ export const financialAssetTypes = [
 export const getNPSData = async () => {
   try {
     const {
-      data: { listNPSs },
+      data: { listNPSPrices },
     } = (await API.graphql({
-      query: queries.listNpSs,
-    })) as { data: APIt.ListNpSsQuery };
-    return listNPSs?.items;
+      query: queries.listNpsPrices,
+    })) as { data: APIt.ListNpsPricesQuery };
+    return listNPSPrices?.items;
   } catch (e) {
     console.log("Error while fetching NPS data: ", e);
   }
@@ -432,9 +432,9 @@ export const getInstrumentDataWithKey = async (
   const instrumentData = simpleStorage.get("instrumentData") || {};
   const newQueries: OptionTableMap = Object.assign({}, queries);
   const dataKeys: OptionTableMap = {
-    listInExchgs: "listINExchgs",
-    listInBonds: "listINBonds",
-    listInMutuals: "listINMutuals",
+    listInExchgPrices: "listInExchgPrices",
+    listInBondPrices: "listInBondPrices",
+    listInmfPrices: "listInmfPrices",
   };
   const getData = async (query: any, nextToken: any) => {
     const data: any = await API.graphql({

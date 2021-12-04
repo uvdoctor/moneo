@@ -25,11 +25,11 @@ import {
 	AssetSubType,
 	AssetType,
 	CreateUserHoldingsInput,
-	CreateNPSInput,
+	CreateNPSPriceInput,
 	HoldingInput,
-	INBond,
-	INExchg,
-	INMutual,
+	INBondPrice,
+	INExchgPrice,
+	INMFPrice,
 	InsType,
 	PropertyInput,
 	UpdateUserHoldingsInput
@@ -137,7 +137,7 @@ function NWContextProvider() {
 	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
 	const [ uname, setUname ] = useState<string | null | undefined>(owner);
 	const [ childTab, setChildTab ] = useState<string>('');
-	const [ npsData, setNPSData] = useState<Array<CreateNPSInput>>([]);	
+	const [ npsData, setNPSData] = useState<Array<CreateNPSPriceInput>>([]);	
 	const [ isDirty, setIsDirty]  = useState<boolean>(false);
 	const [ totalOtherProperty, setTotalOtherProperty ] = useState<number>(0);
 	const [ totalResidential, setTotalResidential ] = useState<number>(0);
@@ -148,7 +148,7 @@ function NWContextProvider() {
 	const [ totalEPF, setTotalEPF ] = useState<number>(0);
 
 	const loadNPSSubCategories = async () => {
-		let npsData: Array<CreateNPSInput> | undefined = await getNPSData();
+		let npsData: Array<CreateNPSPriceInput> | undefined = await getNPSData();
 		if (npsData) {
 			setNPSData([...npsData]);
 			let subCategories: any = getNPSFundManagers();
@@ -489,22 +489,22 @@ function NWContextProvider() {
 		});
 		if(!initFromDB) return insData;
 		let insCache: any = {};
-		let bonds: Array<INBond> | null = null;
+		let bonds: Array<INBondPrice> | null = null;
 		if(bondIds.size) bonds = await loadMatchingINBond(Array.from(bondIds));
-		if(bonds) bonds.forEach((bond: INBond) => {
+		if(bonds) bonds.forEach((bond: INBondPrice) => {
 			insCache[bond.id as string] = bond;
 			bondIds.delete(bond.id as string);
 		});
 		bondIds.forEach((id:string) => otherIds.add(id));
-		let mfs: Array<INMutual> | null = null;
+		let mfs: Array<INMFPrice> | null = null;
 		if(otherIds.size) mfs = await loadMatchingINMutual(Array.from(otherIds));
-		if(mfs) mfs.forEach((mf: INMutual) => {
+		if(mfs) mfs.forEach((mf: INMFPrice) => {
 			insCache[mf.id as string] = mf;
 			otherIds.delete(mf.id as string);
 		});
 		if(otherIds.size) {
-			let exchgEntries: Array<INExchg> | null = await loadMatchingINExchange(Array.from(otherIds));
-			exchgEntries?.forEach((entry: INExchg) => insCache[entry.id as string] = entry);
+			let exchgEntries: Array<INExchgPrice> | null = await loadMatchingINExchange(Array.from(otherIds));
+			exchgEntries?.forEach((entry: INExchgPrice) => insCache[entry.id as string] = entry);
 		}
 		setInsData(insCache);
 		simpleStorage.set(LOCAL_INS_DATA_KEY, insCache, LOCAL_DATA_TTL);
