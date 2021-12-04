@@ -297,9 +297,19 @@
           "Version": "2012-10-17",
           "Statement": [
             {
+              "Sid": "ListAndDescribe",
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:List*"
+              ],
+              "Resource": "*"
+            },
+            {
               "Sid": "ReadWriteTable",
               "Effect": "Allow",
-              "Action": "dynamodb:*",
+              "Action": [
+                "dynamodb:*"
+              ],
               "Resource": "arn:aws:dynamodb:*:*:table/InsMeta"
             }
           ]
