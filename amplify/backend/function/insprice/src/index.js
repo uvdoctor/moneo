@@ -6,7 +6,7 @@ Amplify Params - DO NOT EDIT */ const fs = require('fs');
 const fsPromise = require('fs/promises');
 const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda');
 const { cleanDirectory, downloadZip, unzipDownloads } = require('/opt/nodejs/bhavUtils');
-const { getDataFromTable, pushData, pushDataForFeed, getTableNameFromInitialWord } = require('/opt/nodejs/insertIntoDB');
+const { pushData, pushDataForFeed, getTableNameFromInitialWord } = require('/opt/nodejs/insertIntoDB');
 const { tempDir, zipFile } = require('/opt/nodejs/utility');
 const constructedApiArray = require('./utils');
 const { extractPartOfData, extractDataFromCSV, addMetaData } = require('./bhavUtils');
@@ -50,7 +50,24 @@ const getAndPushData = (diff) => {
 					nameMap,
 					weekHLMap
 				);
-				const data = await addMetaData(exchgData, getDataFromTable);
+				const client = new LambdaClient({ region: process.env.REGION });
+				const params = {
+					FunctionName: process.env.FUNCTION_INSMETA_NAME,
+					InvocationType: 'RequestResponse',
+					LogType: 'Tail',
+					Payload: '{ "data": "get" }',
+					};
+				const command = new InvokeCommand(params);
+				const asciiDecoder = new TextDecoder('ascii');
+				let metaData = {} ;
+				try {
+					const { Payload } = await client.send(command);
+					metaData = asciiDecoder.decode(Payload);
+					} catch (error) {
+					console.error(error.message);
+					throw error;
+					}
+				const data = await addMetaData(exchgData, metaData);
 				for (let batch in data) {
 					await pushData(data[batch], tableName);
 				}
@@ -67,23 +84,5 @@ const getAndPushData = (diff) => {
 };
 
 exports.handler = async (event) => {
-	// return await getAndPushData(event.diff);
-	const client = new LambdaClient({ region: process.env.REGION });
-		const params = {
-			FunctionName: process.env.FUNCTION_INSMETA_NAME,
-			InvocationType: 'RequestResponse',
-			LogType: 'Tail',
-			Payload: '',
-			};
-		const command = new InvokeCommand(params);
-		const asciiDecoder = new TextDecoder('ascii');
-		try {
-			const { Payload } = await client.send(command);
-			const data = asciiDecoder.decode(Payload);
-			console.log(data);
-			return data;
-			} catch (error) {
-			console.error(error.message);
-			throw error;
-			}
+	return await getAndPushData(event.diff);
 };

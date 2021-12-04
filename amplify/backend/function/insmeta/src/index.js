@@ -9,7 +9,7 @@ Amplify Params - DO NOT EDIT *//* Amplify Params - DO NOT EDIT
 	REGION
 Amplify Params - DO NOT EDIT */ const fs = require('fs');
 const fsPromise = require('fs/promises');
-const { pushData, pushDataForFeed, getTableNameFromInitialWord } = require('/opt/nodejs/insertIntoDB');
+const { pushData, pushDataForFeed, getTableNameFromInitialWord, getDataFromTable } = require('/opt/nodejs/insertIntoDB');
 const { tempDir } = require('/opt/nodejs/utility');
 const { cleanDirectory, downloadZip } = require('/opt/nodejs/bhavUtils');
 const constructedApiArray = require('./utils');
@@ -18,10 +18,8 @@ const { mkdir } = fsPromise;
 const table = 'InsMeta';
 const isinMap = {};
 
-const getAndPushData = (diff) => {
+const getAndPushData = (diff, tableName) => {
 	return new Promise(async (resolve, reject) => {
-		const tableName = await getTableNameFromInitialWord(table);
-		console.log('Table name fetched: ', tableName);
 		const apiArray = constructedApiArray(diff);
 		for (let i = 0; i < apiArray.length; i++) {
 			try {
@@ -46,6 +44,8 @@ const getAndPushData = (diff) => {
 };
 
 exports.handler = async (event) => {
-	// return await getAndPushData(event.diff);
-	console.log('Lambda Getting Trigger', event)
+	const tableName = await getTableNameFromInitialWord(table);
+	console.log('Table name fetched: ', tableName);
+	if(event.diff) return await getAndPushData(event.diff, tableName);
+	if(event.data) return await getDataFromTable(tableName);
 };

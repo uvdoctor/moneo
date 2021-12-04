@@ -291,18 +291,18 @@
           "Version": "2012-10-17",
           "Statement": [
             {
-              "Sid": "ReadWriteTable",
-              "Effect": "Allow",
-              "Action": "*",
-              "Resource": "arn:aws:dynamodb:*:*:table/INExchgPrice"
-            },
-            {
               "Sid": "ListTables",
               "Effect": "Allow",
               "Action": [
                 "dynamodb:ListTables"
               ],
-              "Resource": "arn:aws:dynamodb:*:*:*"
+              "Resource": "*"
+            },
+            {
+              "Sid": "ReadWriteTable",
+              "Effect": "Allow",
+              "Action": "dynamodb:*",
+              "Resource": "arn:aws:dynamodb:*:*:table/INExchgPrice"
             }
           ]
         }
