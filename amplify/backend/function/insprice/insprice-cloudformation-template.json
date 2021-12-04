@@ -296,7 +296,13 @@
               "Action": [
                 "dynamodb:List*"
               ],
-              "Resource": "*"
+              "Resource": "arn:aws:dynamodb:*:*:*"
+            },
+            {
+              "Sid": "ReadWriteFeedsTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/Feeds-*"
             },
             {
               "Sid": "ReadWriteTable",

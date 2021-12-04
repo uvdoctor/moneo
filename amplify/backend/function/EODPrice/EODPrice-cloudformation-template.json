@@ -312,7 +312,7 @@
               "Sid": "ReadWriteTable",
               "Effect": "Allow",
               "Action": "*",
-              "Resource": "arn:aws:dynamodb:*:*:table/EODPrices"
+              "Resource": "arn:aws:dynamodb:*:*:table/EODPrices-*"
             },
             {
               "Sid": "ListTables",
@@ -321,6 +321,12 @@
                 "dynamodb:ListTables"
               ],
               "Resource": "arn:aws:dynamodb:*:*:*"
+            },
+            {
+              "Sid": "ReadWriteFeedsTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/Feeds-*"
             }
           ]
         }

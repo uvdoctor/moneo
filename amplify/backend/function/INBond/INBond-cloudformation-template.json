@@ -300,7 +300,13 @@
               "Sid": "ReadWriteTable",
               "Effect": "Allow",
               "Action": "*",
-              "Resource": "arn:aws:dynamodb:*:*:table/INBondPrice"
+              "Resource": "arn:aws:dynamodb:*:*:table/INBondPrice-*"
+            },
+            {
+              "Sid": "ReadWriteFeedsTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/Feeds-*"
             },
             {
               "Sid": "ListTables",
