@@ -305,7 +305,9 @@
             {
               "Sid": "ListTables",
               "Effect": "Allow",
-              "Action": [ "dynamodb:ListTables" ],
+              "Action": [
+                "dynamodb:ListTables"
+              ],
               "Resource": "arn:aws:dynamodb:*:*:*"
             }
           ]
