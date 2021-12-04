@@ -310,7 +310,7 @@
               "Action": [
                 "dynamodb:*"
               ],
-              "Resource": "arn:aws:dynamodb:*:*:table/InsMeta"
+              "Resource": "arn:aws:dynamodb:*:*:table/InsMeta:*"
             }
           ]
         }
