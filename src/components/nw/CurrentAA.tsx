@@ -48,6 +48,12 @@ export default function CurrentAA() {
 	const [ midCap, setMidCap ] = useState<number>(0);
 	const [ smallCap, setSmallCap ] = useState<number>(0);
 	const [ hybridCap, setHybridCap ] = useState<number>(0);
+	const [ fmp, setFmp ] = useState<number>(0);
+	const [ govBonds, setGovBonds ] = useState<number>(0);
+	const [ corporateBonds, setCorporateBonds ] = useState<number>(0);
+	const [ intervalFunds, setIntervalFunds ] = useState<number>(0);
+	const [ indexFunds, setIndexFunds ] = useState<number>(0);
+	const [ liquidFunds, setLiquidFunds ] = useState<number>(0);
 	const categories: any = {
 		Equity: { color: COLORS.ORANGE, total: totalEquity },
 		Fixed: { color: COLORS.BLUE, total: totalFFixed + totalNPSFixed },
@@ -89,6 +95,12 @@ export default function CurrentAA() {
 			let midCap = 0;
 			let smallCap = 0;
 			let hybridCap = 0;
+			let fmp = 0;
+			let corporateBonds = 0;
+			let intervalFunds = 0;
+			let govBonds = 0;
+			let indexFunds = 0;
+			let liquidFunds = 0;
 			instruments.map((instrument: HoldingInput) => {
 				const data = insData[instrument.id];
 				const price = instrument.qty * (data ? data.price : 0);
@@ -105,11 +117,25 @@ export default function CurrentAA() {
 					if (data.mcap === MCap.S) smallCap += price;
 					if (data.mcap === MCap.H) hybridCap += price;
 				}
+				if (instrument.type === AssetType.F && data) {
+					if (data.subt === 'CB') corporateBonds += price;
+					if (data.subt === 'GB' || data.subt === 'GBO') govBonds += price;
+					if (data.subt === 'I') indexFunds += price;
+					if (data.subt === 'L') liquidFunds += price;
+					if (data.mftype && data.subt === 'HB' && data.mftype === 'I') intervalFunds += price;
+					if (data.mftype && data.subt === 'HB' && data.mftype === 'C') fmp += price;
+				}
 			});
 			setLargeCap(largeCap);
 			setMidCap(midCap);
 			setSmallCap(smallCap);
 			setHybridCap(hybridCap);
+			setIndexFunds(indexFunds);
+			setLiquidFunds(liquidFunds);
+			setGovBonds(govBonds);
+			setCorporateBonds(corporateBonds);
+			setIntervalFunds(intervalFunds);
+			setFmp(fmp);
 		},
 		[ instruments ]
 	);
@@ -137,15 +163,12 @@ export default function CurrentAA() {
 			]);
 		if (asset === 'Fixed')
 			return pattern([
-				{ value: totalFFixed, desc: 'Fixed Income' },
-				// { value: FMP, desc: 'Fixed Maturity Plan' },
-				// { value: IF, desc: 'Interval Funds' },
-				// { value: GB, desc: 'Government Bonds' },
-				// { value: CB, desc: 'Corporate Bonds' },
-				// { value: I, desc: 'Index Funds' },
-				// { value: L, desc: 'Liquid Funds' },
-				// FMP hybrid - c
-				// Interval - hb - I
+				{ value: fmp, desc: 'Fixed Maturity Plan' },
+				{ value: intervalFunds, desc: 'Interval Funds' },
+				{ value: govBonds, desc: 'Government Bonds' },
+				{ value: corporateBonds, desc: 'Corporate Bonds' },
+				{ value: indexFunds, desc: 'Index Funds' },
+				{ value: liquidFunds, desc: 'Liquid Funds' },
 				{ value: totalNPSFixed, desc: 'National Pension System' }
 			]);
 		if (asset === 'Real-estate')
