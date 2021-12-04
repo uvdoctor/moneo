@@ -129,13 +129,11 @@ export default function CurrentAA() {
 			return pattern([ { value: totalPGold, desc: 'Physical Gold' }, { value: totalFGold, desc: 'Gold Bonds' } ]);
 		if (asset === 'Equity')
 			return pattern([
-				{ value: largeCap, desc: ASSET_TYPES.LARGE_CAP_STOCKS },
+				{ value: largeCap + totalNPSEquity, desc: ASSET_TYPES.LARGE_CAP_STOCKS },
 				{ value: midCap, desc: ASSET_TYPES.MID_CAP_STOCKS },
 				{ value: smallCap, desc: ASSET_TYPES.SMALL_CAP_STOCKS },
 				{ value: hybridCap, desc: 'Funds spread across Large, Mid and Small Cap Stocks' },
 				{ value: totalAngel, desc: 'Angel Investment' },
-				{ value: totalNPSEquity, desc: 'National Pension Scheme'}
-				// LCap
 			]);
 		if (asset === 'Fixed')
 			return pattern([

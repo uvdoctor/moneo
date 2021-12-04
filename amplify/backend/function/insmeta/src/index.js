@@ -15,7 +15,7 @@ const { cleanDirectory, downloadZip } = require('/opt/nodejs/bhavUtils');
 const constructedApiArray = require('./utils');
 const extractData = require('./bhavUtils');
 const { mkdir } = fsPromise;
-const table = 'INExchgMeta';
+const table = 'InsMeta';
 const isinMap = {};
 
 const getAndPushData = (diff) => {

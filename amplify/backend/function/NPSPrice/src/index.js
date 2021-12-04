@@ -16,7 +16,7 @@ const calc = require('./calculate');
 const getDataFromTxtFile = require('./bhavUtils');
 const constructedApiArray = require('./utils');
 const { mkdir } = fsPromise;
-const table = 'NPS';
+const table = 'NPSPrice';
 
 const getAndPushData = (diff) => {
 	return new Promise(async (resolve, reject) => {

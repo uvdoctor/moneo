@@ -15,7 +15,7 @@ const { tempDir, zipFile } = require('/opt/nodejs/utility');
 const constructedApiArray = require('./utils');
 const { extractPartOfData, extractDataFromCSV, addMetaData } = require('./bhavUtils');
 const { mkdir } = fsPromise;
-const table = 'INExchg';
+const table = 'INExchgPrice';
 const isinMap = {};
 const dataToPushInFeeds = [];
 

@@ -6,7 +6,7 @@ const { cleanDirectory, downloadZip, unzipDownloads } = require('/opt/nodejs/bha
 const constructedApiArray = require('./utils');
 const extractDataFromCSV = require('./bhavUtils');
 const { mkdir } = fsPromise;
-const table = 'INBond';
+const table = 'INBondPrice';
 const isinMap = {};
 
 const getAndPushData = (diff) => {

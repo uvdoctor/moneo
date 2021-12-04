@@ -16,7 +16,7 @@ const {
 } = require('/opt/nodejs/insertIntoDB');
 const { directISIN, getDirISIN } = require('./data');
 const { getType, getSubType, mfType, mCap, getName } = require('./calculate');
-const table = 'INMutual';
+const table = 'INMFPrice';
 
 const getData = () => {
 	return new Promise(async (resolve, reject) => {
