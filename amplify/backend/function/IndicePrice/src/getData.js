@@ -28,7 +28,7 @@ const getData = async (
           case "price":
             return (schema[key] = record[codes[key]] ? (Math.round(record[codes[key]] * 100) / 100) : 0);
           case "prev":
-            return (schema[key] = (record[codes[key]] ? parse(record[codes[key]]) : 0));
+            return (schema[key] = (record[codes[key]] ? parseFloat(record[codes[key]]) : 0));
           case "name":
             return (schema[key] = record[codes[key]].trim());
           case "yhigh":
