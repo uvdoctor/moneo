@@ -23,20 +23,16 @@
     "LambdaLayerVersion0899f71c": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
-        "CompatibleRuntimes": {
-          "Ref": "runtimes"
-        },
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
         "Content": {
           "S3Bucket": {
             "Ref": "deploymentBucketName"
           },
-          "S3Key": {
-            "Ref": "s3Key"
-          }
+          "S3Key": "amplify-builds/moneopricelayer-LambdaLayerVersion0899f71c-build.zip"
         },
-        "Description": {
-          "Ref": "description"
-        },
+        "Description": "Updated layer version 2021-12-04T08:20:46.015Z",
         "LayerName": {
           "Fn::Sub": [
             "moneopricelayer-${env}",
@@ -55,194 +51,7 @@
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": {
-          "Ref": "LambdaLayerVersion0899f71c"
-        },
-        "Principal": {
-          "Ref": "AWS::AccountId"
-        }
-      }
-    },
-    "LambdaLayerVersion0b997587": {
-      "Type": "AWS::Lambda::LayerVersion",
-      "Properties": {
-        "CompatibleRuntimes": [
-          "nodejs14.x"
-        ],
-        "Content": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": "amplify-builds/moneopricelayer-LambdaLayerVersion0b997587-build.zip"
-        },
-        "Description": "Updated layer version 2021-12-04T04:44:35.166Z",
-        "LayerName": {
-          "Fn::Sub": [
-            "moneopricelayer-${env}",
-            {
-              "env": {
-                "Ref": "env"
-              }
-            }
-          ]
-        }
-      },
-      "DeletionPolicy": "Delete",
-      "UpdateReplacePolicy": "Retain"
-    },
-    "LambdaLayerPermissionPrivate0b997587": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneopricelayer-dev:10",
-        "Principal": {
-          "Ref": "AWS::AccountId"
-        }
-      }
-    },
-    "LambdaLayerVersionfd02f357": {
-      "Type": "AWS::Lambda::LayerVersion",
-      "Properties": {
-        "CompatibleRuntimes": [
-          "nodejs14.x"
-        ],
-        "Content": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": "amplify-builds/moneopricelayer-LambdaLayerVersionfd02f357-build.zip"
-        },
-        "Description": "Updated layer version 2021-12-02T07:37:21.210Z",
-        "LayerName": {
-          "Fn::Sub": [
-            "moneopricelayer-${env}",
-            {
-              "env": {
-                "Ref": "env"
-              }
-            }
-          ]
-        }
-      },
-      "DeletionPolicy": "Delete",
-      "UpdateReplacePolicy": "Retain"
-    },
-    "LambdaLayerPermissionPrivatefd02f357": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneopricelayer-dev:8",
-        "Principal": {
-          "Ref": "AWS::AccountId"
-        }
-      }
-    },
-    "LambdaLayerVersion34bc4a47": {
-      "Type": "AWS::Lambda::LayerVersion",
-      "Properties": {
-        "CompatibleRuntimes": [
-          "nodejs14.x"
-        ],
-        "Content": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": "amplify-builds/moneopricelayer-LambdaLayerVersion34bc4a47-build.zip"
-        },
-        "Description": "Updated layer version 2021-12-01T11:04:21.041Z",
-        "LayerName": {
-          "Fn::Sub": [
-            "moneopricelayer-${env}",
-            {
-              "env": {
-                "Ref": "env"
-              }
-            }
-          ]
-        }
-      },
-      "DeletionPolicy": "Delete",
-      "UpdateReplacePolicy": "Retain"
-    },
-    "LambdaLayerPermissionPrivate34bc4a47": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneopricelayer-dev:7",
-        "Principal": {
-          "Ref": "AWS::AccountId"
-        }
-      }
-    },
-    "LambdaLayerVersion52127337": {
-      "Type": "AWS::Lambda::LayerVersion",
-      "Properties": {
-        "CompatibleRuntimes": [
-          "nodejs14.x"
-        ],
-        "Content": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": "amplify-builds/moneopricelayer-LambdaLayerVersion52127337-build.zip"
-        },
-        "Description": "Updated layer version 2021-11-25T06:36:40.597Z",
-        "LayerName": {
-          "Fn::Sub": [
-            "moneopricelayer-${env}",
-            {
-              "env": {
-                "Ref": "env"
-              }
-            }
-          ]
-        }
-      },
-      "DeletionPolicy": "Delete",
-      "UpdateReplacePolicy": "Retain"
-    },
-    "LambdaLayerPermissionPrivate52127337": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneopricelayer-dev:6",
-        "Principal": {
-          "Ref": "AWS::AccountId"
-        }
-      }
-    },
-    "LambdaLayerVersionf07002a3": {
-      "Type": "AWS::Lambda::LayerVersion",
-      "Properties": {
-        "CompatibleRuntimes": [
-          "nodejs14.x"
-        ],
-        "Content": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": "amplify-builds/moneopricelayer-LambdaLayerVersionf07002a3-build.zip"
-        },
-        "Description": "Updated layer version 2021-11-25T06:08:36.539Z",
-        "LayerName": {
-          "Fn::Sub": [
-            "moneopricelayer-${env}",
-            {
-              "env": {
-                "Ref": "env"
-              }
-            }
-          ]
-        }
-      },
-      "DeletionPolicy": "Delete",
-      "UpdateReplacePolicy": "Retain"
-    },
-    "LambdaLayerPermissionPrivatef07002a3": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneopricelayer-dev:5",
+        "LayerVersionArn": "arn:aws:lambda:us-east-1:099259607472:layer:moneopricelayer-dev:11",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
