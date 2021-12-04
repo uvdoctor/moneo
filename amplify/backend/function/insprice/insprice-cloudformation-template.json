@@ -291,14 +291,6 @@
           "Version": "2012-10-17",
           "Statement": [
             {
-              "Sid": "ListTables",
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:ListTables"
-              ],
-              "Resource": "*"
-            },
-            {
               "Sid": "ReadWriteTable",
               "Effect": "Allow",
               "Action": "dynamodb:*",
