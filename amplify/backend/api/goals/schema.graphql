@@ -233,7 +233,7 @@ type Feeds
 	count: Int!
 }
 
-type INExchg
+type INExchgPrice
 	@model
 	@aws_iam
 	@key(fields: ["id"])
@@ -252,14 +252,14 @@ type INExchg
 	itype: InsType
 	price: Float!
 	prev: Float!
-	meta: INExchgMeta
+	meta: InsMeta
 	fv: Int
 	under: String
 	yhigh: Float
 	ylow: Float
 }
 
-type INExchgMeta
+type InsMeta
 	@model
 	@aws_iam
 	@key(fields: ["id"])
@@ -274,7 +274,7 @@ type INExchgMeta
 	ind: String
 }
 
-type Indices
+type AllIndices
 	@model
 	@aws_iam
 	@key(fields: ["id"])
@@ -299,7 +299,7 @@ type Indices
 	ind: Industry
 }
 
-type INBond
+type INBondPrice
 	@model
 	@aws_iam
 	@key(fields: ["id"])
@@ -328,7 +328,7 @@ type INBond
 	ytm: Float
 }
 
-type INMutual
+type INMFPrice
 	@model
 	@aws_iam
 	@key(fields: ["id"])
@@ -371,7 +371,7 @@ enum NPSSchemeType {
 	CCG
 }
 
-type NPS
+type NPSPrice
 	@model
 	@aws_iam
 	@key(fields: ["id"])

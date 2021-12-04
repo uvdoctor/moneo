@@ -404,9 +404,9 @@ export const onDeleteFeeds = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInExchg = /* GraphQL */ `
-  subscription OnCreateInExchg {
-    onCreateINExchg {
+export const onCreateInExchgPrice = /* GraphQL */ `
+  subscription OnCreateInExchgPrice {
+    onCreateINExchgPrice {
       id
       sid
       name
@@ -432,9 +432,9 @@ export const onCreateInExchg = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateInExchg = /* GraphQL */ `
-  subscription OnUpdateInExchg {
-    onUpdateINExchg {
+export const onUpdateInExchgPrice = /* GraphQL */ `
+  subscription OnUpdateInExchgPrice {
+    onUpdateINExchgPrice {
       id
       sid
       name
@@ -460,9 +460,9 @@ export const onUpdateInExchg = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteInExchg = /* GraphQL */ `
-  subscription OnDeleteInExchg {
-    onDeleteINExchg {
+export const onDeleteInExchgPrice = /* GraphQL */ `
+  subscription OnDeleteInExchgPrice {
+    onDeleteINExchgPrice {
       id
       sid
       name
@@ -488,9 +488,9 @@ export const onDeleteInExchg = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInExchgMeta = /* GraphQL */ `
-  subscription OnCreateInExchgMeta {
-    onCreateINExchgMeta {
+export const onCreateInsMeta = /* GraphQL */ `
+  subscription OnCreateInsMeta {
+    onCreateInsMeta {
       id
       mcap
       ind
@@ -499,9 +499,9 @@ export const onCreateInExchgMeta = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateInExchgMeta = /* GraphQL */ `
-  subscription OnUpdateInExchgMeta {
-    onUpdateINExchgMeta {
+export const onUpdateInsMeta = /* GraphQL */ `
+  subscription OnUpdateInsMeta {
+    onUpdateInsMeta {
       id
       mcap
       ind
@@ -510,9 +510,9 @@ export const onUpdateInExchgMeta = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteInExchgMeta = /* GraphQL */ `
-  subscription OnDeleteInExchgMeta {
-    onDeleteINExchgMeta {
+export const onDeleteInsMeta = /* GraphQL */ `
+  subscription OnDeleteInsMeta {
+    onDeleteInsMeta {
       id
       mcap
       ind
@@ -521,9 +521,9 @@ export const onDeleteInExchgMeta = /* GraphQL */ `
     }
   }
 `;
-export const onCreateIndices = /* GraphQL */ `
-  subscription OnCreateIndices {
-    onCreateIndices {
+export const onCreateAllIndices = /* GraphQL */ `
+  subscription OnCreateAllIndices {
+    onCreateAllIndices {
       id
       name
       exchg
@@ -542,9 +542,9 @@ export const onCreateIndices = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateIndices = /* GraphQL */ `
-  subscription OnUpdateIndices {
-    onUpdateIndices {
+export const onUpdateAllIndices = /* GraphQL */ `
+  subscription OnUpdateAllIndices {
+    onUpdateAllIndices {
       id
       name
       exchg
@@ -563,9 +563,9 @@ export const onUpdateIndices = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteIndices = /* GraphQL */ `
-  subscription OnDeleteIndices {
-    onDeleteIndices {
+export const onDeleteAllIndices = /* GraphQL */ `
+  subscription OnDeleteAllIndices {
+    onDeleteAllIndices {
       id
       name
       exchg
@@ -584,9 +584,9 @@ export const onDeleteIndices = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInBond = /* GraphQL */ `
-  subscription OnCreateInBond {
-    onCreateINBond {
+export const onCreateInBondPrice = /* GraphQL */ `
+  subscription OnCreateInBondPrice {
+    onCreateINBondPrice {
       id
       sid
       name
@@ -609,9 +609,9 @@ export const onCreateInBond = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateInBond = /* GraphQL */ `
-  subscription OnUpdateInBond {
-    onUpdateINBond {
+export const onUpdateInBondPrice = /* GraphQL */ `
+  subscription OnUpdateInBondPrice {
+    onUpdateINBondPrice {
       id
       sid
       name
@@ -634,9 +634,9 @@ export const onUpdateInBond = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteInBond = /* GraphQL */ `
-  subscription OnDeleteInBond {
-    onDeleteINBond {
+export const onDeleteInBondPrice = /* GraphQL */ `
+  subscription OnDeleteInBondPrice {
+    onDeleteINBondPrice {
       id
       sid
       name
@@ -659,9 +659,9 @@ export const onDeleteInBond = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInMutual = /* GraphQL */ `
-  subscription OnCreateInMutual {
-    onCreateINMutual {
+export const onCreateInmfPrice = /* GraphQL */ `
+  subscription OnCreateInmfPrice {
+    onCreateINMFPrice {
       id
       sid
       tid
@@ -678,9 +678,9 @@ export const onCreateInMutual = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateInMutual = /* GraphQL */ `
-  subscription OnUpdateInMutual {
-    onUpdateINMutual {
+export const onUpdateInmfPrice = /* GraphQL */ `
+  subscription OnUpdateInmfPrice {
+    onUpdateINMFPrice {
       id
       sid
       tid
@@ -697,9 +697,9 @@ export const onUpdateInMutual = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteInMutual = /* GraphQL */ `
-  subscription OnDeleteInMutual {
-    onDeleteINMutual {
+export const onDeleteInmfPrice = /* GraphQL */ `
+  subscription OnDeleteInmfPrice {
+    onDeleteINMFPrice {
       id
       sid
       tid
@@ -716,9 +716,9 @@ export const onDeleteInMutual = /* GraphQL */ `
     }
   }
 `;
-export const onCreateNps = /* GraphQL */ `
-  subscription OnCreateNps {
-    onCreateNPS {
+export const onCreateNpsPrice = /* GraphQL */ `
+  subscription OnCreateNpsPrice {
+    onCreateNPSPrice {
       id
       pfm
       st
@@ -731,9 +731,9 @@ export const onCreateNps = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateNps = /* GraphQL */ `
-  subscription OnUpdateNps {
-    onUpdateNPS {
+export const onUpdateNpsPrice = /* GraphQL */ `
+  subscription OnUpdateNpsPrice {
+    onUpdateNPSPrice {
       id
       pfm
       st
@@ -746,9 +746,9 @@ export const onUpdateNps = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteNps = /* GraphQL */ `
-  subscription OnDeleteNps {
-    onDeleteNPS {
+export const onDeleteNpsPrice = /* GraphQL */ `
+  subscription OnDeleteNpsPrice {
+    onDeleteNPSPrice {
       id
       pfm
       st
