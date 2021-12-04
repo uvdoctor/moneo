@@ -92,7 +92,7 @@ export default function CurrentAA() {
 			instruments.map((instrument: HoldingInput) => {
 				const data = insData[instrument.id];
 				const price = instrument.qty * (data ? data.price : 0);
-				if (instrument.type === AssetType.E) {
+				if (instrument.type === AssetType.E && data) {
 					if (data.meta) {
 						if (data.meta.mcap === MCap.L) largeCap += price;
 						if (data.meta.mcap === MCap.M) midCap += price;
