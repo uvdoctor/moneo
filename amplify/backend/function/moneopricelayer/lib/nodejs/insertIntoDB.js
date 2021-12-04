@@ -3,10 +3,9 @@ var dynamodb = new AWS.DynamoDB();
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 const getTableNameFromInitialWord = async (tableInitial) => {
-	var params = { ExclusiveStartTableName: tableInitial, Limit: 1 };
 	try {
-		const table = await dynamodb.listTables(params).promise();
-		return table.TableNames[0];
+		const table = await dynamodb.listTables().promise();
+		return table.TableNames.find((item)=> item.startsWith(tableInitial));
 	} catch (err) {
 		console.log(err);
 	}
