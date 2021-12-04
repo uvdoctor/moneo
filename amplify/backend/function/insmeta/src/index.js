@@ -47,5 +47,5 @@ const getAndPushData = (diff) => {
 
 exports.handler = async (event) => {
 	// return await getAndPushData(event.diff);
-	console.log('Lambda Getting Trigger')
+	console.log('Lambda Getting Trigger', event)
 };
