@@ -300,7 +300,13 @@
               "Sid": "ReadWriteTable",
               "Effect": "Allow",
               "Action": "*",
-              "Resource": "arn:aws:dynamodb:*:*:table/AllIndices"
+              "Resource": "arn:aws:dynamodb:*:*:table/AllIndices-*"
+            },
+            {
+              "Sid": "ReadWriteFeedsTable",
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "arn:aws:dynamodb:*:*:table/Feeds-*"
             },
             {
               "Sid": "ListTables",
