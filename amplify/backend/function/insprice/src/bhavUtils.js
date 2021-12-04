@@ -96,7 +96,7 @@ const extractPartOfData = async (fileName, codes, nameMap, weekHLMap) => {
 };
 
 const addMetaData = async (exchgData, getDataFromTable) => {
-	const table = await getTableNameFromInitialWord('INExchgMeta');
+	const table = await getTableNameFromInitialWord('InsMeta');
 	const data = await getDataFromTable(table);
 	exchgData.map((element) => {
 		element.map((item) => {
