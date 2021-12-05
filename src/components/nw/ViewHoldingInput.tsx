@@ -1,14 +1,14 @@
-import { Col } from 'antd';
-import React, { Fragment, useContext } from 'react';
-import { AssetSubType, HoldingInput } from '../../api/goals';
-import DatePickerInput from '../form/DatePickerInput';
-import NumberInput from '../form/numberinput';
-import SelectInput from '../form/selectinput';
-import TextInput from '../form/textinput';
-import { getMonthIndex, getMonthName } from '../utils';
-import Duration from './addHoldings/Duration';
-import { NWContext, TAB } from './NWContext';
-import QuantityWithRate from './QuantityWithRate';
+import { Row, Col } from "antd";
+import React, { Fragment, useContext } from "react";
+import { AssetSubType, HoldingInput } from "../../api/goals";
+import DatePickerInput from "../form/DatePickerInput";
+import NumberInput from "../form/numberinput";
+import SelectInput from "../form/selectinput";
+import TextInput from "../form/textinput";
+import { getMonthIndex, getMonthName } from "../utils";
+import Duration from "./addHoldings/Duration";
+import { NWContext, TAB } from "./NWContext";
+import QuantityWithRate from "./QuantityWithRate";
 
 interface ViewHoldingInputProps {
 	data: Array<HoldingInput>;
@@ -29,152 +29,198 @@ export default function ViewHoldingInput({
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS } = TAB;
 
 	const changeDuration = (val: any) => {
-		if(record.pur) record.pur[0].qty = val;
-		changeData([ ...data ]);
+		if (record.pur) record.pur[0].qty = val;
+		changeData([...data]);
 	};
 
 	const changeName = (val: any) => {
 		record.name = val;
-		changeData([ ...data ]);
+		changeData([...data]);
 	};
-	
+
 	const changeQty = (quantity: number) => {
-		if(record.pur) {
+		if (record.pur) {
 			record.pur[0].amt = quantity;
-			if(hasPF(childTab)) {
-				record.pur[0].month = new Date().getMonth()+1;
+			if (hasPF(childTab)) {
+				record.pur[0].month = new Date().getMonth() + 1;
 				record.pur[0].year = new Date().getFullYear();
 			}
-		}else record.qty = quantity;
-		changeData([ ...data ]);
+		} else record.qty = quantity;
+		changeData([...data]);
 	};
 
 	const changeChg = (chg: number) => {
 		record.chg = chg;
-		changeData([ ...data ]);
+		changeData([...data]);
 	};
 
 	const changeCategory = (subtype: string) => {
 		record.subt = subtype;
-		if(subCategoryOptions) {
+		if (subCategoryOptions) {
 			let opts = subCategoryOptions[subtype];
-			if(!opts) return changeData([ ...data ]);
+			if (!opts) return changeData([...data]);
 			if (childTab === LENT) {
-				if (!opts[record.chgF as number]) record.chgF = Number(Object.keys(opts)[0]);
-			}else{
+				if (!opts[record.chgF as number])
+					record.chgF = Number(Object.keys(opts)[0]);
+			} else {
 				if (!opts[record.name as string]) record.name = Object.keys(opts)[0];
 			}
 		}
-		changeData([ ...data ]);
+		changeData([...data]);
 	};
 
 	const changeSubCategory = (val: string) => {
-		(childTab === LENT || childTab === INS ) ? record.chgF = Number(val) : record.name = val;
-		changeData([ ...data ]);
+		childTab === LENT || childTab === INS
+			? (record.chgF = Number(val))
+			: (record.name = val);
+		changeData([...data]);
 	};
 
 	const changePurchaseDate = (val: string) => {
 		if (record.pur) {
-			record.pur[0].year = Number(val.substring(val.length-4));
+			record.pur[0].year = Number(val.substring(val.length - 4));
 			record.pur[0].month = getMonthIndex(val.substring(0, 3));
-			changeData([ ...data ])
+			changeData([...data]);
 		}
 	};
 
 	const hasRate = (childTab: string) => [PF, LENT, LOAN].includes(childTab);
 
-	const hasName = (childTab: string) => ![PM, NPS, CRYPTO, INS].includes(childTab);
+	const hasName = (childTab: string) =>
+		![PM, NPS, CRYPTO, INS].includes(childTab);
 
-	const hasQtyWithRate = (childTab: string) => [PM, NPS, CRYPTO].includes(childTab);
+	const hasQtyWithRate = (childTab: string) =>
+		[PM, NPS, CRYPTO].includes(childTab);
 
-	const hasDuration = (childTab: string) => [LENT, LOAN, INS].includes(childTab);
+	const hasDuration = (childTab: string) =>
+		[LENT, LOAN, INS].includes(childTab);
 
-	const hasDate = (childTab: string) => [LENT, VEHICLE, LOAN, INS].includes(childTab);
+	const hasDate = (childTab: string) =>
+		[LENT, VEHICLE, LOAN, INS].includes(childTab);
 
 	const hasPF = (childTab: string) => [PF].includes(childTab);
 
 	return (
 		<Fragment>
-			{categoryOptions && 
-			<Col>
-				 <SelectInput
-					pre=""
-					value={record.subt as string}
-					options={categoryOptions}
-					changeHandler={(val: string) => changeCategory(val)}
-				/>
-			{subCategoryOptions ? subCategoryOptions[record.subt as string] && (	
-				<Fragment>&nbsp;
+			{categoryOptions && (
+				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
 					<SelectInput
 						pre=""
-						value={(childTab === LENT) ? record.chgF as number : record.name as string}
-						options={subCategoryOptions[record.subt as string]}
-						changeHandler={(val: string) => changeSubCategory(val)}
-						post={record.subt === AssetSubType.Gold ? 'karat' : ''}
+						value={record.subt as string}
+						options={categoryOptions}
+						changeHandler={(val: string) => changeCategory(val)}
 					/>
-				</Fragment>)
-				: null}
-			{childTab===INS && 
-				<SelectInput pre={''} 
-				options={{1: 'Yearly', 12: 'Monthly'}} 
-				value={record.chgF as number} 
-				changeHandler={(val: string) => changeSubCategory(val)}/>
-			}
-			</Col>}
-			{hasName(childTab) && 
-				<Col>
-					<TextInput 
-						pre="Name" 
-						changeHandler={(val: string)=>changeName(val)} 
-						value={record.name as string} 
-						size={'middle'} 
-						width={200}/>
+					{subCategoryOptions
+						? subCategoryOptions[record.subt as string] && (
+								<SelectInput
+									pre=""
+									value={
+										childTab === LENT
+											? (record.chgF as number)
+											: (record.name as string)
+									}
+									options={subCategoryOptions[record.subt as string]}
+									changeHandler={(val: string) => changeSubCategory(val)}
+									post={record.subt === AssetSubType.Gold ? "karat" : ""}
+								/>
+						  )
+						: null}
+					{childTab === INS && (
+						<SelectInput
+							pre={""}
+							options={{ 1: "Yearly", 12: "Monthly" }}
+							value={record.chgF as number}
+							changeHandler={(val: string) => changeSubCategory(val)}
+						/>
+					)}
 				</Col>
-			}
-			{hasQtyWithRate(childTab) ?
-				<Col>
-					<QuantityWithRate 
-						quantity={record.qty} 
-						name={record.name as string} 
-						subtype={record.subt as string} 
-						onChange={(val: number)=>changeQty(val)} />
-				</Col> :
-				<Col>
-				<NumberInput
-					pre={hasPF(childTab) ? 'Contribution per year' : 'Amount'}
-					min={10}
-					max={100000000}
-					value={record.pur ? record.pur[0].amt : record.qty}
-					changeHandler={(val: number)=>changeQty(val)}
-					currency={record.curr as string}
-					step={1}
-					noSlider />
+			)}
+			{hasName(childTab) && (
+				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
+					<Row align="middle" gutter={[5, 0]}>
+						<Col>Name</Col>
+						<Col>
+							<TextInput
+								pre=""
+								changeHandler={(val: string) => changeName(val)}
+								value={record.name as string}
+								size={"middle"}
+								width={200}
+							/>
+						</Col>
+					</Row>
 				</Col>
-			}
-			{hasRate(childTab) && 
-				<Col>
-					<NumberInput 
-						pre={'Rate'} 
-						min={1} 
-						max={50} 
-						value={record.chg as number} 
-						changeHandler={changeChg} 
-						step={0.1} noSlider unit='%'/>
-				</Col>}
-			{hasDate(childTab) && record.pur && <Col>
-				<DatePickerInput
-					picker="month"
-					title={'Date'}
-					changeHandler={(val:string)=>changePurchaseDate(val)}
-					defaultVal={`${getMonthName(record.pur[0].month, true)}-${record.pur[0].year}`}
-					size={'middle'}
-				/>&nbsp;&nbsp;
-				{hasDuration(childTab) && 
-					<><label>Duration</label>
-					<Duration value={record.pur[0].qty as number} changeHandler={changeDuration}
-						option={record.subt === 'NSE' ? ({5: 'Five Years', 10: 'Ten Years'}) : null}/>
-					</>}
-			</Col>}
-			</Fragment>
+			)}
+			{hasQtyWithRate(childTab) ? (
+				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
+					<QuantityWithRate
+						quantity={record.qty}
+						name={record.name as string}
+						subtype={record.subt as string}
+						onChange={(val: number) => changeQty(val)}
+					/>
+				</Col>
+			) : (
+				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
+					<NumberInput
+						pre={hasPF(childTab) ? "Contribution per year" : "Amount"}
+						min={10}
+						max={100000000}
+						value={record.pur ? record.pur[0].amt : record.qty}
+						changeHandler={(val: number) => changeQty(val)}
+						currency={record.curr as string}
+						step={1}
+						noSlider
+					/>
+				</Col>
+			)}
+			{hasRate(childTab) && (
+				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
+					<NumberInput
+						pre={"Rate"}
+						min={1}
+						max={50}
+						value={record.chg as number}
+						changeHandler={changeChg}
+						step={0.1}
+						noSlider
+						unit="%"
+					/>
+				</Col>
+			)}
+			{hasDate(childTab) && record.pur && (
+				<>
+					<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
+						<DatePickerInput
+							picker="month"
+							title="Date "
+							changeHandler={(val: string) => changePurchaseDate(val)}
+							defaultVal={`${getMonthName(record.pur[0].month, true)}-${
+								record.pur[0].year
+							}`}
+							size={"middle"}
+						/>
+					</Col>
+					{hasDuration(childTab) && (
+						<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
+							<Row align="middle" gutter={[5, 0]}>
+								<Col>Duration</Col>
+								<Col>
+									<Duration
+										value={record.pur[0].qty as number}
+										changeHandler={changeDuration}
+										option={
+											record.subt === "NSE"
+												? { 5: "Five Years", 10: "Ten Years" }
+												: null
+										}
+									/>
+								</Col>
+							</Row>
+						</Col>
+					)}
+				</>
+			)}
+		</Fragment>
 	);
 }

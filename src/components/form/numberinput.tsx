@@ -99,7 +99,7 @@ export default function NumberInput(props: NumberInputProps) {
 	};
 
 	return (
-		<div style={{ minWidth: "250px" }}>
+		<>
 			<Col span={24}>
 				{!props.noSlider && (
 					<Row justify="space-between" align="middle">
@@ -125,9 +125,9 @@ export default function NumberInput(props: NumberInputProps) {
 			</Col>
 			<Col span={24}>
 				<Row
+					className="align-left"
 					justify={props.noSlider ? "center" : "space-between"}
 					align="top"
-					style={{ marginBottom: "1.5rem" }}
 				>
 					{props.noSlider && <Col>{props.pre}&nbsp;</Col>}
 					{(props.currency || props.step < 1) && (
@@ -216,6 +216,6 @@ export default function NumberInput(props: NumberInputProps) {
 				</Row>
 			</Col>
 			{props.note && <Col span={24}>{props.note}</Col>}
-		</div>
+		</>
 	);
 }

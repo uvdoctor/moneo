@@ -1,62 +1,72 @@
-import { Button, Col, Row } from 'antd';
-import React, { Fragment, useContext } from 'react';
-import { HoldingInput } from '../../api/goals';
-import SelectInput from '../form/selectinput';
-import { NWContext } from './NWContext';
-import { getFamilyOptions } from './nwutils';
-import { DeleteOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Col, Row } from "antd";
+import React, { Fragment, useContext } from "react";
+import { HoldingInput } from "../../api/goals";
+import SelectInput from "../form/selectinput";
+import { NWContext } from "./NWContext";
+import { getFamilyOptions } from "./nwutils";
+import { DeleteOutlined, UserOutlined } from "@ant-design/icons";
+
+require("./ListHoldings.less");
 
 interface ListHoldingsProps {
-	data: Array<HoldingInput>  ;
+	data: Array<HoldingInput>;
 	changeData: Function;
 	categoryOptions: any;
 	viewComp: any;
 	subCategoryOptions?: any;
 }
 
-export default function ListHoldings({ data, changeData, categoryOptions, viewComp, subCategoryOptions }: ListHoldingsProps) {
+export default function ListHoldings({
+	data,
+	changeData,
+	categoryOptions,
+	viewComp,
+	subCategoryOptions,
+}: ListHoldingsProps) {
 	const { allFamily }: any = useContext(NWContext);
 
 	const changeOwner = (ownerKey: string, i: number) => {
 		data[i].fId = ownerKey;
-		changeData([ ...data ]);
+		changeData([...data]);
 	};
 
 	const removeHolding = (i: number) => {
 		data.splice(i, 1);
-		changeData([ ...data ]);
+		changeData([...data]);
 	};
 
 	return (
-		<Row>
+		<Row
+			className="list-holdings"
+			gutter={[
+				{ xs: 10, sm: 10, md: 10 },
+				{ xs: 10, sm: 10, md: 10 },
+			]}
+		>
 			{data &&
 				data[0] &&
 				data.map((holding: HoldingInput, i: number) => (
-					<Fragment key={''+i}>
+					<Fragment key={"" + i}>
 						<Col span={24} className="fields-divider" />
-						<Col span={24}>
-							<Row justify="space-between">
-								{React.createElement(viewComp, {
-									record: holding,
-									data: data,
-									changeData: changeData,
-									categoryOptions: categoryOptions,
-									subCategoryOptions: subCategoryOptions,
-								})}
-								<Col>
-									<SelectInput
-										pre={<UserOutlined />}
-										value={holding.fId ? holding.fId : ''}
-										options={getFamilyOptions(allFamily)}
-										changeHandler={(key: string) => changeOwner(key, i)}
-										post={
-											<Button type="link" onClick={() => removeHolding(i)} danger>
-												<DeleteOutlined />
-											</Button>
-										}
-									/>
-								</Col>
-							</Row>
+						{React.createElement(viewComp, {
+							record: holding,
+							data: data,
+							changeData: changeData,
+							categoryOptions: categoryOptions,
+							subCategoryOptions: subCategoryOptions,
+						})}
+						<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
+							<SelectInput
+								pre={<UserOutlined />}
+								value={holding.fId ? holding.fId : ""}
+								options={getFamilyOptions(allFamily)}
+								changeHandler={(key: string) => changeOwner(key, i)}
+								post={
+									<Button type="link" onClick={() => removeHolding(i)} danger>
+										<DeleteOutlined />
+									</Button>
+								}
+							/>
 						</Col>
 					</Fragment>
 				))}
