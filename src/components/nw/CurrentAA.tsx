@@ -162,11 +162,8 @@ export default function CurrentAA() {
 				{ value: fmp, desc: 'Fixed Maturity Plan' },
 				{ value: intervalFunds, desc: 'Interval Funds' },
 				{ value: bonds, desc: 'Bonds'},
-				// { value: govBonds, desc: 'Government Bonds' },
-				// { value: corporateBonds, desc: 'Corporate Bonds' },
 				{ value: indexFunds, desc: 'Index Funds' },
 				{ value: liquidFunds, desc: 'Liquid Funds' },
-				// { value: totalNPSFixed, desc: 'National Pension System' }
 			]);
 		if (asset === 'Real-estate')
 			return pattern([
