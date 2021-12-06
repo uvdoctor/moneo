@@ -49,8 +49,7 @@ export default function CurrentAA() {
 	const [ smallCap, setSmallCap ] = useState<number>(0);
 	const [ hybridCap, setHybridCap ] = useState<number>(0);
 	const [ fmp, setFmp ] = useState<number>(0);
-	const [ govBonds, setGovBonds ] = useState<number>(0);
-	const [ corporateBonds, setCorporateBonds ] = useState<number>(0);
+	const [ bonds, setBonds ] = useState<number>(0);
 	const [ intervalFunds, setIntervalFunds ] = useState<number>(0);
 	const [ indexFunds, setIndexFunds ] = useState<number>(0);
 	const [ liquidFunds, setLiquidFunds ] = useState<number>(0);
@@ -96,9 +95,8 @@ export default function CurrentAA() {
 			let smallCap = 0;
 			let hybridCap = 0;
 			let fmp = 0;
-			let corporateBonds = 0;
+			let bonds = 0;
 			let intervalFunds = 0;
-			let govBonds = 0;
 			let indexFunds = 0;
 			let liquidFunds = 0;
 			instruments.map((instrument: HoldingInput) => {
@@ -118,8 +116,7 @@ export default function CurrentAA() {
 					if (data.mcap === MCap.H) hybridCap += price;
 				}
 				if (instrument.type === AssetType.F && data) {
-					if (data.subt === 'CB') corporateBonds += price;
-					if (data.subt === 'GB' || data.subt === 'GBO') govBonds += price;
+					if (data.subt === 'CB' || data.subt === 'GB' || data.subt === 'GBO' || data.subt === 'HB') bonds += price;
 					if (data.subt === 'I') indexFunds += price;
 					if (data.subt === 'L') liquidFunds += price;
 					if (data.mftype && data.subt === 'HB' && data.mftype === 'I') intervalFunds += price;
@@ -132,8 +129,7 @@ export default function CurrentAA() {
 			setHybridCap(hybridCap);
 			setIndexFunds(indexFunds);
 			setLiquidFunds(liquidFunds);
-			setGovBonds(govBonds);
-			setCorporateBonds(corporateBonds);
+			setBonds(bonds);
 			setIntervalFunds(intervalFunds);
 			setFmp(fmp);
 		},
@@ -165,11 +161,12 @@ export default function CurrentAA() {
 			return pattern([
 				{ value: fmp, desc: 'Fixed Maturity Plan' },
 				{ value: intervalFunds, desc: 'Interval Funds' },
-				{ value: govBonds, desc: 'Government Bonds' },
-				{ value: corporateBonds, desc: 'Corporate Bonds' },
+				{ value: bonds, desc: 'Bonds'},
+				// { value: govBonds, desc: 'Government Bonds' },
+				// { value: corporateBonds, desc: 'Corporate Bonds' },
 				{ value: indexFunds, desc: 'Index Funds' },
 				{ value: liquidFunds, desc: 'Liquid Funds' },
-				{ value: totalNPSFixed, desc: 'National Pension System' }
+				// { value: totalNPSFixed, desc: 'National Pension System' }
 			]);
 		if (asset === 'Real-estate')
 			return pattern([
