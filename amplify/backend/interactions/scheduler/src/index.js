@@ -1,7 +1,10 @@
 const response = require('./cfn-response');
-const aws = require('aws-sdk');
-const iam = new aws.IAM();
-const lambdaClient = new aws.Lambda({ apiVersion: '2017-04-19' });
+const { IAMClient, CreateServiceLinkedRoleCommand, GetRoleCommand } = require("@aws-sdk/client-iam");
+const { LambdaClient, AddPermissionCommand } = require("@aws-sdk/client-lambda");
+// const aws = require('aws-sdk');
+// const lambdaClient = new aws.Lambda({ apiVersion: '2017-04-19' });
+const iam = new IAMClient();
+const lambdaClient = new LambdaClient({ apiVersion: '2017-04-19' });
 exports.handler = function(event, context) {
     const lex = new aws.LexModelBuildingService({ apiVersion: '2017-04-19', region: event.ResourceProperties.lexRegion });
     if (event.RequestType == 'Delete') {
@@ -206,34 +209,50 @@ function checkAndCreateLexServiceRole() {
     });
 }
 
-function createNewLexServiceRole() {
+async function createNewLexServiceRole() {
  
     // Lex service automatically creates the needed polcies and truust relationships   
     const params = {
       AWSServiceName: 'lex.amazonaws.com',
       Description: 'Allows Amazon Lex to create and manage voice enabled bots on your behalf'
     };
+
+    try {
+        const data = await iam.send(new CreateServiceLinkedRoleCommand(params));
+        return data;
+    } catch(err) {
+        console.log('Error:-', err)
+    }
     
-    return iam.createServiceLinkedRole(params).promise();
-    
+    // return iam.createServiceLinkedRole(params).promise();
 }
 
-function checkIfLexServiceRoleExists() {
+async function checkIfLexServiceRoleExists() {
     let rolePresent;
     
     const params = {
         RoleName: "AWSServiceRoleForLexBots"
     };
-    
-    return iam.getRole(params).promise()
-    .then((result) => {
+
+    try {
+        await iam.send(new GetRoleCommand(params));
         rolePresent = true;
         return rolePresent;
-    })
-    .catch((e) => {
+    } catch(err) {
+        console.log('Error:-', err)
         rolePresent = false;
         return rolePresent;
-    });
+    }
+    
+    // return iam.getRole(params).promise()
+    // .then((result) => {
+    //     rolePresent = true;
+    //     return rolePresent;
+    // })
+    // .catch((e) => {
+    //     rolePresent = false;
+    //     return rolePresent;
+    // });
 }
 
 function getSlotTypes(newSlotTypeParams, lex){
@@ -329,15 +348,24 @@ function ensureLambdaFunctionAccess(intent){
             SourceArn: `arn:aws:lex:${region}:${accountId}:intent:${intent.name}:*`,
         }
 
-        return lambdaClient.addPermission(params).promise()
-                .then((data)=>{
-                    console.log(data);
-                    return data; 
-                })
-                .catch((err)=>{
-                    console.log(err); 
-                    throw err; 
-                });
+        return lambdaClient.send(new AddPermissionCommand(params))
+            .then((data)=>{
+                console.log(data);
+                return data;
+            }).catch((err)=>{
+                console.log(err); 
+                throw err;
+            });
+
+        // return lambdaClient.addPermission(params).promise()
+        //         .then((data)=>{
+        //             console.log(data);
+        //             return data; 
+        //         })
+        //         .catch((err)=>{
+        //             console.log(err); 
+        //             throw err; 
+                // });
     }else{
         return Promise.resolve(undefined);
     }
