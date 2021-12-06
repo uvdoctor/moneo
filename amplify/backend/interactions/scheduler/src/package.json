@@ -6,6 +6,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "@aws-sdk/client-iam": "latest",
-        "@aws-sdk/client-lambda": "latest"
+        "@aws-sdk/client-lambda": "latest",
+        "@aws-sdk/client-lex-model-building-service": "latest"
     }
 }

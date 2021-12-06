@@ -1,12 +1,14 @@
 const response = require('./cfn-response');
 const { IAMClient, CreateServiceLinkedRoleCommand, GetRoleCommand } = require("@aws-sdk/client-iam");
 const { LambdaClient, AddPermissionCommand } = require("@aws-sdk/client-lambda");
+const { LexModelBuildingServiceClient, GetBotCommand, PutBotCommand, GetSlotTypeCommand, PutSlotTypeCommand, GetIntentCommand, PutIntentCommand } = require("@aws-sdk/client-lex-model-building-service");
 // const aws = require('aws-sdk');
 // const lambdaClient = new aws.Lambda({ apiVersion: '2017-04-19' });
 const iam = new IAMClient();
 const lambdaClient = new LambdaClient({ apiVersion: '2017-04-19' });
 exports.handler = function(event, context) {
-    const lex = new aws.LexModelBuildingService({ apiVersion: '2017-04-19', region: event.ResourceProperties.lexRegion });
+    const lex = new LexModelBuildingServiceClient({ apiVersion: '2017-04-19', region: event.ResourceProperties.lexRegion });
+    // const lex = new aws.LexModelBuildingService({ apiVersion: '2017-04-19', region: event.ResourceProperties.lexRegion });
     if (event.RequestType == 'Delete') {
         response.send(event, context, response.SUCCESS);
         return;
@@ -186,7 +188,7 @@ exports.handler = function(event, context) {
     .then(()=>{ return getSlotTypes(newSlotTypeParams, lex);})
     .then(()=>{ return putSlotTypes(newSlotTypeParams, lex);})
     .then(()=>{ return getIntents(intentParams, lex);})
-    .then(()=>{ return putIntents(intentParams, lex);})
+    .then(async ()=>{ return await putIntents(intentParams, lex);})
     .then(()=>{ return getBot(botParams, lex);})
     .then(()=>{ return putBot(botParams, lex);})
     .then((res) => {
@@ -199,12 +201,12 @@ exports.handler = function(event, context) {
     });
 };
 
-function checkAndCreateLexServiceRole() {
+async function checkAndCreateLexServiceRole() {
     
-    return checkIfLexServiceRoleExists()
-    .then((roleExists) => {
+    return await checkIfLexServiceRoleExists()
+    .then(async(roleExists) => {
         if(!roleExists) {
-            return createNewLexServiceRole();
+            return await createNewLexServiceRole();
         }
     });
 }
@@ -263,7 +265,7 @@ function getSlotTypes(newSlotTypeParams, lex){
             'version': '$LATEST'
         };
         tasks.push(
-            lex.getSlotType(params).promise()
+            lex.send(new GetSlotTypeCommand(params))
             .then((data)=>{
                 slotType['checksum'] = data.checksum;
             })
@@ -278,7 +280,7 @@ function putSlotTypes(newSlotTypeParams, lex){
     const tasks = []; 
     newSlotTypeParams.forEach( slotType => {
         tasks.push(
-            lex.putSlotType(slotType).promise()
+            lex.send(new PutSlotTypeCommand(slotType))
             .then((data)=>{
                 console.log(data);
             })
@@ -299,7 +301,7 @@ function getIntents(intentParams, lex){
             'name': intent.name
         };
         tasks.push(
-            lex.getIntent(params).promise()
+            lex.send(new GetIntentCommand(params))
             .then((data)=>{
                 intent['checksum'] = data.checksum;
             })
@@ -310,14 +312,14 @@ function getIntents(intentParams, lex){
     return Promise.all(tasks);
 }
 
-function putIntents(intentParams, lex){
+async function putIntents(intentParams, lex){
     const tasks = []; 
     intentParams.forEach( intent => {
         tasks.push(
             ensureLambdaFunctionAccess(intent)
-            .then(()=>{
+            .then(async()=>{
                 delete intent.fulfillmentLambda;
-                return lex.putIntent(intent).promise();
+                return await lex.send(new PutIntentCommand(intent));
             })
             .then((data)=>{
                 console.log(data);
@@ -376,7 +378,7 @@ function getBot(botParams, lex){
         'name': botParams.name,
         'versionOrAlias': '$LATEST'
     }; 
-    return  lex.getBot(params).promise()
+    return  lex.send(new GetBotCommand(params))
             .then((data)=>{
                 botParams['checksum'] = data.checksum;
             })
@@ -385,7 +387,7 @@ function getBot(botParams, lex){
 }
 
 function putBot(botParams, lex){
-    return lex.putBot(botParams).promise()
+    return lex.send(new PutBotCommand(botParams))
             .then((data)=>{
                 console.log(data);
                 return data; 
