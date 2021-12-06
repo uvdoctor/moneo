@@ -93,14 +93,11 @@ export default function ListProperties({
 	useEffect(() => {
 		if (indexForMv !== null) {
 			// @ts-ignore
-			const duration = getRemainingDuration(
-				data[indexForMv].purchase.year,
-				data[indexForMv].purchase.month
-			);
-			// @ts-ignore
+			const duration = getRemainingDuration(data[indexForMv].purchase.year,data[indexForMv].purchase.month);
 			data[indexForMv].mv = Math.round(
 				getCompoundedIncome(
 					data[indexForMv].rate,
+					// @ts-ignore
 					data[indexForMv].purchase?.amt,
 					duration?.years
 				)
@@ -148,8 +145,8 @@ export default function ListProperties({
 							picker="month"
 							title={"Date"}
 							changeHandler={(val: string) => changePurchaseDate(val, i)}
-							// @ts-ignore
 							defaultVal={
+								// @ts-ignore
 								`${getMonthName(data[i].purchase?.month, true)}-${
 									data[i].purchase?.year
 								}` as string
