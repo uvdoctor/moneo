@@ -9,8 +9,8 @@
     "test": "jest --config ../../jest.config.json"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.44.0",
-    "@aws-sdk/lib-dynamodb": "^3.44.0",
+    "@aws-sdk/client-dynamodb": "latest",
+    "@aws-sdk/lib-dynamodb": "latest",
     "extract-zip": "latest"
   }
 }
