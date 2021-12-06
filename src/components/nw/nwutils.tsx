@@ -432,9 +432,9 @@ export const getInstrumentDataWithKey = async (
   const instrumentData = simpleStorage.get("instrumentData") || {};
   const newQueries: OptionTableMap = Object.assign({}, queries);
   const dataKeys: OptionTableMap = {
-    listInExchgPrices: "listInExchgPrices",
-    listInBondPrices: "listInBondPrices",
-    listInmfPrices: "listInmfPrices",
+    listInExchgPrices: "listINExchgPrices",
+    listInBondPrices: "listINBondPrices",
+    listInmfPrices: "listINMFPrices",
   };
   const getData = async (query: any, nextToken: any) => {
     const data: any = await API.graphql({
