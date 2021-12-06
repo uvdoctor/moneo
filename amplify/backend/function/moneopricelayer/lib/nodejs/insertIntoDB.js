@@ -1,49 +1,46 @@
-const AWS = require('aws-sdk');
-var dynamodb = new AWS.DynamoDB();
-const docClient = new AWS.DynamoDB.DocumentClient();
+const { DynamoDB } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBDocumentClient, BatchWriteCommand, PutCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
+const dynamodb = new DynamoDB({});
+const docClient = DynamoDBDocumentClient.from(dynamodb);
 
-const getTableNameFromInitialWord = async (tableInitial) => {
-	try {
-		const table = await dynamodb.listTables().promise();
-		return table.TableNames.find((item)=> item.startsWith(tableInitial));
-	} catch (err) {
-		console.log(err);
-	}
+const getTableNameFromInitialWord = (tableInitial) => {
+	return new Promise((resolve, reject) => {
+		dynamodb.listTables({}, (err, table) => {
+			if (err) reject(err);
+			const tableName = table.TableNames.find((item) => item.startsWith(tableInitial));
+			resolve(tableName);
+		});
+	});
 };
 
 const getDataFromTable = async (table) => {
 	const params = { TableName: table };
 	try {
-		const data = await docClient.scan(params).promise();
+		const data = await docClient.send(new ScanCommand(params));
 		return data;
 	} catch (err) {
-		console.log(`Error in dynamoDB: ${JSON.stringify(err)}`);
-		return `Error in dynamoDB: ${JSON.stringify(err)}`;
+		console.log('Error in dynamoDB:', err);
 	}
 };
 
-const pushDataSingly = (schema, tableName) => {
-	return new Promise(async (resolve, reject) => {
-		const params = { TableName: tableName, Item: schema };
-		try {
-			const data = await docClient.put(params).promise();
-			resolve(data);
-		} catch (err) {
-			reject(err);
-		}
-	});
+const pushDataSingly = async (schema, tableName) => {
+	const params = { TableName: tableName, Item: schema };
+	try {
+		const data = await docClient.send(new PutCommand(params));
+		return data;
+	} catch (err) {
+		console.log('Error in dynamoDB:', err);
+	}
 };
 
 const pushData = async (data, table) => {
-	return new Promise(async (resolve, reject) => {
-		const params = { RequestItems: { [table]: data } };
-		try {
-			const updateRecord = await docClient.batchWrite(params).promise();
-			resolve(updateRecord);
-		} catch (error) {
-			reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
-		}
-	});
+	const params = { RequestItems: { [table]: data } };
+	try {
+		const data = await docClient.send(new BatchWriteCommand(params));
+		return data;
+	} catch (err) {
+		console.log('Error in dynamoDB:', err);
+	}
 };
 
 const appendGenericFields = (schema, tableName) => {
@@ -76,16 +73,13 @@ const pushDataForFeed = async (table, data, identifier, url, exchg) => {
 };
 
 const deleteData = async (data, table) => {
-	return new Promise(async (resolve, reject) => {
-		const params = { RequestItems: { [table]: data } };
-		try {
-			const updateRecord = await docClient.batchWrite(params).promise();
-			console.log(updateRecord);
-			resolve(updateRecord);
-		} catch (error) {
-			reject(`Error in dynamoDB: ${JSON.stringify(error)}`);
-		}
-	});
+	const params = { RequestItems: { [table]: data } };
+	try {
+		const data = await docClient.send(new BatchWriteCommand(params));
+		return data;
+	} catch (error) {
+		console.log('Error in dynamoDB:', err);
+	}
 };
 
 module.exports = {
