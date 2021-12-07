@@ -1,4 +1,4 @@
-const AWS = require('aws-sdk-mock');
+const AWS = require('../src/node_modules/aws-sdk-mock');
 const { getDataFromEventAndPush } = require('../src/operation');
 
 describe('Post Confirmation Trigger', () => {
