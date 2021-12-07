@@ -1,5 +1,5 @@
 import { Button, Checkbox, Col, InputNumber, Row, Table, Tooltip } from "antd";
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput } from "../../api/goals";
 import SelectInput from "../form/selectinput";
 import { NWContext } from "./NWContext";
@@ -93,7 +93,10 @@ export default function ListProperties({
 	useEffect(() => {
 		if (indexForMv !== null) {
 			// @ts-ignore
-			const duration = getRemainingDuration(data[indexForMv].purchase.year,data[indexForMv].purchase.month);
+			const duration = getRemainingDuration(
+				data[indexForMv].purchase.year,
+				data[indexForMv].purchase.month
+			);
 			data[indexForMv].mv = Math.round(
 				getCompoundedIncome(
 					data[indexForMv].rate,
@@ -124,128 +127,148 @@ export default function ListProperties({
 
 	const expandedRow = (i: number) => {
 		const owners = data[i].own;
-		return (
-			<Fragment>
-				<Row>
-					<h3>Purchase:-</h3>
-					<Col>
-						<NumberInput
-							pre={"Amount"}
-							min={10}
-							max={1000000000}
-							value={data[i].purchase?.amt as number}
-							changeHandler={(val: number) => changeAmt(i, val)}
-							currency={selectedCurrency}
-							step={10}
-							noSlider
-						/>
-					</Col>
-					<Col>
-						<DatePickerInput
-							picker="month"
-							title={"Date"}
-							changeHandler={(val: string) => changePurchaseDate(val, i)}
-							defaultVal={
-								// @ts-ignore
-								`${getMonthName(data[i].purchase?.month, true)}-${
-									data[i].purchase?.year
-								}` as string
-							}
-							size={"middle"}
-						/>
-					</Col>
-					<Col>
-						<TextInput
-							pre={"Name"}
-							value={data[i].name as string}
-							changeHandler={(val: string) => {
-								data[i].name = val;
-								changeData([...data]);
-							}}
-							size={"middle"}
-						/>
-					</Col>
-				</Row>
-				<Row>
-					<h3>Address:-</h3>
-					<Col>
-						<TextInput
-							pre={""}
-							value={data[i].address as string}
-							changeHandler={(val: string) => {
-								data[i].address = val;
-								changeData([...data]);
-							}}
-							size={"middle"}
-						/>
-					</Col>
-					<Col>
-						<TextInput
-							pre={""}
-							value={String(data[i].pin)}
-							changeHandler={(val: string) => {
-								changePin(val, i);
-							}}
-							size={"middle"}
-						/>
-					</Col>
-					<Col>
-						<label>{data[i].city}</label>
-					</Col>
-					<Col>
-						<label>{data[i].state}</label>
-					</Col>
-				</Row>
 
-				<Row>
-					<h3>Own By:-</h3>
-					{owners &&
-						owners.map((own: OwnershipInput, ind: number) => {
-							return (
-								<Col key={`owners-${ind}`}>
-									<SelectInput
-										pre={<UserOutlined />}
-										value={own.fId as string}
-										options={getFamilyOptions(allFamily)}
-										changeHandler={(val: string) => {
-											own.fId = val;
-											setMemberKey(val);
-											changeData([...data]);
-										}}
-									/>
-									<InputNumber
-										min={1}
-										max={100}
-										value={own.per}
-										onChange={(val: number) => {
-											own.per = val;
-											changeData([...data]);
-										}}
-									/>
-									<Button
-										type="link"
-										onClick={() => removeOwners(i, ind)}
-										danger
-									>
-										<DeleteOutlined />
-									</Button>
-								</Col>
-							);
-						})}
-					&nbsp;&nbsp;
-					<Col>
-						<Tooltip title="Add Owners">
-							<Button
-								shape={"circle"}
-								onClick={() => onAddBtnClick(i)}
-								style={{ background: COLORS.GREEN }}
-								icon={<PlusOutlined />}
-								disabled={Object.keys(allFamily).length === 1}
+		return (
+			<Row
+				gutter={[
+					{ xs: 0, sm: 10, md: 30 },
+					{ xs: 20, sm: 10, md: 0 },
+				]}
+			>
+				<Col xs={24} sm={12} md={8}>
+					<Row>
+						<Col xs={24}>
+							<strong>Purchase</strong>
+							<hr />
+						</Col>
+						<Col xs={24}>
+							<NumberInput
+								pre="Amount"
+								min={10}
+								max={1000000000}
+								value={data[i].purchase?.amt as number}
+								changeHandler={(val: number) => changeAmt(i, val)}
+								currency={selectedCurrency}
+								step={10}
+								noSlider
 							/>
-						</Tooltip>
-					</Col>
-				</Row>
-			</Fragment>
+						</Col>
+						<Col xs={24}>
+							<DatePickerInput
+								picker="month"
+								title={"Date"}
+								changeHandler={(val: string) => changePurchaseDate(val, i)}
+								defaultVal={
+									// @ts-ignore
+									`${getMonthName(data[i].purchase?.month, true)}-${
+										data[i].purchase?.year
+									}` as string
+								}
+								size={"middle"}
+							/>
+						</Col>
+						<Col xs={24}>
+							<TextInput
+								pre={"Name"}
+								value={data[i].name as string}
+								changeHandler={(val: string) => {
+									data[i].name = val;
+									changeData([...data]);
+								}}
+								size={"middle"}
+							/>
+						</Col>
+					</Row>
+				</Col>
+				<Col xs={24} sm={12} md={8}>
+					<Row>
+						<Col xs={24}>
+							<strong>Address</strong>
+							<hr />
+						</Col>
+						<Col>
+							<TextInput
+								pre={""}
+								value={data[i].address as string}
+								changeHandler={(val: string) => {
+									data[i].address = val;
+									changeData([...data]);
+								}}
+								size={"middle"}
+							/>
+						</Col>
+						<Col>
+							<TextInput
+								pre={""}
+								value={String(data[i].pin)}
+								changeHandler={(val: string) => {
+									changePin(val, i);
+								}}
+								size={"middle"}
+							/>
+						</Col>
+						<Col>
+							<label>{data[i].city}</label>
+						</Col>
+						<Col>
+							<label>{data[i].state}</label>
+						</Col>
+					</Row>
+				</Col>
+				<Col xs={24} sm={12} md={8}>
+					<Row>
+						<Col xs={24}>
+							<strong>Own By</strong>
+							<hr />
+						</Col>
+						{owners &&
+							owners.map((own: OwnershipInput, ind: number) => {
+								return (
+									<Col key={`owners-${ind}`}>
+										<SelectInput
+											pre={<UserOutlined />}
+											value={own.fId as string}
+											options={getFamilyOptions(allFamily)}
+											changeHandler={(val: string) => {
+												own.fId = val;
+												setMemberKey(val);
+												changeData([...data]);
+											}}
+										/>
+										<InputNumber
+											min={1}
+											max={100}
+											value={own.per}
+											onChange={(val: number) => {
+												own.per = val;
+												changeData([...data]);
+											}}
+										/>
+										<Button
+											type="link"
+											onClick={() => removeOwners(i, ind)}
+											danger
+										>
+											<DeleteOutlined />
+										</Button>
+									</Col>
+								);
+							})}
+						&nbsp;&nbsp;
+						<Col>
+							<Tooltip title="Add Owners">
+								<Button
+									shape={"circle"}
+									onClick={() => onAddBtnClick(i)}
+									style={{ background: COLORS.GREEN }}
+									icon={<PlusOutlined />}
+									disabled={Object.keys(allFamily).length === 1}
+								/>
+							</Tooltip>
+						</Col>
+					</Row>
+				</Col>
+			</Row>
 		);
 	};
 
