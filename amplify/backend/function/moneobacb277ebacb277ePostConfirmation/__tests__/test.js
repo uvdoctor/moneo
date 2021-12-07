@@ -1,7 +1,10 @@
-const { getDataFromEventAndPush, pushDataSingly } = require('../src/operation');
+const AWS = require('aws-sdk-mock');
+const { getDataFromEventAndPush } = require('../src/operation');
 
 describe('Inserting Data', () => {
 	test('Insert', async () => {
+		AWS.mock('DynamoDB', 'listTables', 'getTableNameFromInitialWord');
+		AWS.mock('DynamoDB.DocumentClient', 'PutCommand', 'pushDataSingly');
 		const context = {
 			done: (abc, event) => {
 				return event;
@@ -17,12 +20,8 @@ describe('Inserting Data', () => {
 			},
 			response: {}
 		};
-		const pushDataSingly = jest.fn().mockImplementation(() => {
-			return 'Success';
-		});
-		// const getTableNameFromInitialWord = jest.fn().mockImplementation(() => {
-		// 	return 'Contacts';
-		// });
-		expect(getDataFromEventAndPush(event, context)).toEqual({});
+		expect(await getDataFromEventAndPush(event, context)).toEqual('Success');
+		AWS.restore('DynamoDB');
+		AWS.restore('DynamoDB.DocumentClient');
 	},10000);
 });
