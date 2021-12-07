@@ -120,69 +120,64 @@ export default function NumberInput(props: NumberInputProps) {
 			)}
 			<Col flex="auto">
 				<Row gutter={[15, 15]}>
-					<Col xs={24} sm={24} md={12}>
-						<Row align="middle" gutter={[15, 15]}>
-							{props.noSlider && <Col>{props.pre} </Col>}
-							{(props.currency || props.step < 1) && (
-								<>
-									<Col>
-										<InputNumber
-											ref={inputRef}
-											value={props.value}
-											min={minNum}
-											max={maxNum}
-											step={stepNum}
-											onChange={(val) => {
-												provideFeedback(val as number);
-												props.changeHandler(val as number);
-											}}
-											formatter={(val) =>
-												props.currency
-													? toCurrency(val as number, props.currency as string)
-													: toReadableNumber(val as number, 2)
-											}
-											parser={(val) =>
-												props.currency
-													? parseFloat(
-															parseNumber(val as string, props.currency)
-													  )
-													: parseFloat(val as string)
-											}
-											onPressEnter={(e: any) => {
-												e.preventDefault();
-												//@ts-ignore
-												inputRef.current.blur();
-											}}
-											onBlur={(e: any) => {
-												let num = props.currency
-													? parseInt(
-															parseNumber(e.currentTarget.value, props.currency)
-													  )
-													: parseFloat(e.currentTarget.value);
-												if (!num || num < props.min)
-													props.changeHandler(props.min);
-											}}
-											style={{ width: "100%", marginBottom: "0px" }}
-										/>
-									</Col>
-									<Col>
-										{!props.currency && <>{props.unit}</>}
+					{props.noSlider && <Col>{props.pre} </Col>}
+					<Col className="number-input">
+						{(props.currency || props.step < 1) && (
+							<Row align="middle" gutter={[15, 0]}>
+								<Col xs={24}>
+									<InputNumber
+										ref={inputRef}
+										value={props.value}
+										min={minNum}
+										max={maxNum}
+										step={stepNum}
+										onChange={(val) => {
+											provideFeedback(val as number);
+											props.changeHandler(val as number);
+										}}
+										formatter={(val) =>
+											props.currency
+												? toCurrency(val as number, props.currency as string)
+												: toReadableNumber(val as number, 2)
+										}
+										parser={(val) =>
+											props.currency
+												? parseFloat(parseNumber(val as string, props.currency))
+												: parseFloat(val as string)
+										}
+										onPressEnter={(e: any) => {
+											e.preventDefault();
+											//@ts-ignore
+											inputRef.current.blur();
+										}}
+										onBlur={(e: any) => {
+											let num = props.currency
+												? parseInt(
+														parseNumber(e.currentTarget.value, props.currency)
+												  )
+												: parseFloat(e.currentTarget.value);
+											if (!num || num < props.min)
+												props.changeHandler(props.min);
+										}}
+										style={{ minWidth: "100%" }}
+									/>
 
-										{props.currency && props.value >= 100000 && (
-											<>{`~ ${toHumanFriendlyCurrency(
-												props.value,
-												props.currency
-											)}`}</>
-										)}
-									</Col>
-								</>
-							)}
-						</Row>
+									{!props.currency && <> {props.unit}</>}
+								</Col>
+
+								{props.currency && props.value >= 100000 && (
+									<Col>{`~ ${toHumanFriendlyCurrency(
+										props.value,
+										props.currency
+									)}`}</Col>
+								)}
+							</Row>
+						)}
 					</Col>
-					<Col xs={24} sm={24} md={12}>
+					<Col span={props.currency || props.step < 1 ? 13 : 24}>
 						{!props.noSlider && (
 							<>
-								{/*<Col span={props.currency || props.step < 1 ? 13 : 24}>*/}
+								{/*<Col >*/}
 								{/*@ts-ignore: JSX element class does not support attributes because it does not have a 'props' property.*/}
 								<Slider
 									min={props.min * rangeFactor}
