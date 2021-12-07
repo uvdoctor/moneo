@@ -6,6 +6,7 @@ import { COLORS } from '../../CONSTANTS';
 import TextInput from '../form/textinput';
 import { addFamilyMember, updateFamilyMember } from './nwutils';
 import { CreateFamilyInput, UpdateFamilyInput } from '../../api/goals';
+import SelectInput from '../form/selectinput';
 
 export const ALL_FAMILY = 'All';
 
@@ -13,7 +14,7 @@ const ADD_MODE = 'Add';
 const EDIT_MODE = 'Edit';
 
 export default function FamilyInput() {
-	const { allFamily, selectedMembers, setSelectedMembers, setAllFamily, loadingFamily }: any = useContext(NWContext);
+	const { allFamily, selectedMembers, setSelectedMembers, loadingFamily }: any = useContext(NWContext);
 	const { Option } = Select;
     const [ mode, setMode ] = useState<string>('');
     const [ id, setId ] = useState<string>('');
@@ -24,22 +25,10 @@ export default function FamilyInput() {
 
     useEffect(() => {
         if(loadingFamily) return;
-        console.log(Object.keys(allFamily));
-        setMemberKeys([...Object.keys(allFamily)]);
-        setSelectedMembers([...allFamily ? Object.keys(allFamily).length > 1 ? [ALL_FAMILY] : [allFamily[0] && Object.keys(allFamily[0])]: []]);
-    }, [loadingFamily]);
-
-	useEffect(() => {
-        if(!allFamily) {
-            setSelectedMembers([...[]]);
-            return;
-        }
         let allFamilyKeys = Object.keys(allFamily);
-        if(allFamilyKeys.length === 1) {
-            setSelectedMembers([...[allFamilyKeys[0]]]);
-        }
         setMemberKeys([...allFamilyKeys]);
-    }, [ allFamily ]);
+        setSelectedMembers([... [allFamilyKeys.length > 1 ? ALL_FAMILY: allFamilyKeys[0]]]);
+    }, [loadingFamily]);
 
 	const selectMember = (val: string[]) => {
         if (!val.length) {
@@ -59,6 +48,12 @@ export default function FamilyInput() {
         setName('');
         setTaxId('');
     };
+
+    const getFamilyMemberOptions = () => {
+        let opts: any = {};
+        memberKeys.forEach((key: string) => opts[key] = allFamily[key].name)
+        return opts;
+    }
 
     useEffect(() => {
         if(!mode || mode !== EDIT_MODE) {
@@ -82,8 +77,10 @@ export default function FamilyInput() {
         try {
             member = await addFamilyMember(name, taxId);
             if(member) allFamily[member?.id as string] = {name: member.name, taxId: member.tid};
-            setAllFamily(allFamily);
             setMode('');
+            setSelectedMembers([...[member?.id]]);
+            memberKeys.push(member?.id as string);
+            setMemberKeys([...memberKeys]);
             notification.success({ message: 'New Family Member Added', description: `Success! ${name} has been added to your family list.`});
             return true;
         } catch (err) {
@@ -97,7 +94,6 @@ export default function FamilyInput() {
         try {
             member = await updateFamilyMember({id: id, name: name, tid: taxId});
             if(member) allFamily[id] = {name: member.name, taxId: member.tid};
-            setAllFamily(allFamily);
             setMode('');
             notification.success({ message: 'Family Member Updated', description: `Success! Family member details have been updated.`})
             return true;
@@ -111,10 +107,8 @@ export default function FamilyInput() {
         <Fragment>
             {memberKeys.length ? <Row align="middle">
                     <Col>
-                        Family List &nbsp;
-                    </Col>
-                    <Col>
-                     <Select showSearch
+                    {memberKeys.length > 1 ? 
+                    <Select showSearch
                         mode="multiple"
                         value={selectedMembers}
                         onChange={(val: string[]) => selectMember(val)}
@@ -131,12 +125,11 @@ export default function FamilyInput() {
                                 {allFamily[key].name}
                             </Option>
                         ))}
-                        {memberKeys.length > 1 ? 
-                            <Option key={ALL_FAMILY} value={ALL_FAMILY} disabled>
-                                All Members
-                            </Option>
-                        : null}
+                        <Option key={ALL_FAMILY} value={ALL_FAMILY} disabled>
+                            All Members
+                        </Option>
                     </Select>
+                    : <label>{allFamily[memberKeys[0]].name}</label>}
                     </Col>
                     <Col>
                     <Tooltip title='Add Family Member'>
@@ -160,21 +153,10 @@ export default function FamilyInput() {
                             <p>&nbsp;</p> 
                         </Fragment>
                     : null}
-                    {id ? 
-                        <Fragment>
-                         Family Member &nbsp;   
-                        <Select showSearch
-                            value={id}
-                            onChange={(val: string) => setId(val)}
-                        >
-                            {memberKeys.map((key: string) => 
-                                <Option key={key} value={key}>
-                                    {allFamily[key].name}
-                                </Option>
-                            )}
-                        </Select>
-                        <p>&nbsp;</p>
-                        </Fragment>
+                    {memberKeys.length && id ? 
+                        <SelectInput pre="Family Member" value={id}
+                            changeHandler={setId} options={getFamilyMemberOptions()}
+                        />
                     : null}
                     <TextInput pre={<UserOutlined />} placeholder="Member Name" value={name} changeHandler={setName} minLength={3} 
                         setError={setError} fieldName="Member name" />
