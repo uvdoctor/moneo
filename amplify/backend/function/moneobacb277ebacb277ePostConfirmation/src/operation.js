@@ -42,7 +42,9 @@ const getDataFromEventAndPush = (event) => {
 			const response = await pushDataSingly(params, email);
 			console.log(response);
 		} else {
-			console.log('Error: Nothing was written to table as email is not verified');
+			const error = 'Error: Nothing was written to table as email is not verified';
+			console.log(error);
+			reject(error);
 		}
 		resolve('Success');
 	});
