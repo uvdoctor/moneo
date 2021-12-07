@@ -31,11 +31,11 @@ const getDataFromEventAndPush = (event) => {
 			const table = await getTableNameFromInitialWord('Contacts');
 			let params = {
 				Item: {
-					__typename: { S: 'Contacts' },
-					email: { S: email },
-					notify: { BOOL: !notify || notify.length === 1 ? false : true },
-					createdAt: { S: date.toISOString() },
-					updatedAt: { S: date.toISOString() }
+					__typename: 'Contacts',
+					email: email,
+					notify: !notify || notify.length === 1 ? false : true,
+					createdAt: date.toISOString(),
+					updatedAt: date.toISOString()
 				},
 				TableName: table
 			};
@@ -44,8 +44,8 @@ const getDataFromEventAndPush = (event) => {
 		} else {
 			console.log('Error: Nothing was written to table as email is not verified');
 		}
-		resolve();
+		resolve('Success');
 	});
 };
 
-module.exports = { getDataFromEventAndPush, pushDataSingly };
+module.exports = { getDataFromEventAndPush, pushDataSingly, getTableNameFromInitialWord };
