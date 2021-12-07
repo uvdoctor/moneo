@@ -1,4 +1,4 @@
-const utility = require('../lib/nodejs/utility');
+const { utility } = require('../lib/nodejs/utility');
 const monthsArray = [
   "JAN",
   "FEB",
@@ -13,11 +13,11 @@ const monthsArray = [
   "NOV",
   "DEC",
 ];
+const getStr = (num) => num < 10 ? `0${num}` : '' + num;
 const today = new Date();
 const monthChar = monthsArray[today.getMonth()];
-const today = new Date();
-const date = today.getDate();
-const month = today.getMonth();
+const date = getStr(today.getDate());
+const month = getStr(today.getMonth()+1);
 const yearFull = today.getFullYear();
 const year = yearFull.toString().substr(-2);
 
@@ -35,9 +35,9 @@ describe('Test Date, Month, Year, MonthChar and Fullyear', () => {
 		});
 	});
 	test('Subtracting Days from todayDate to get previous Days data', () => {
-		const data = utility(2);
+		const data = utility(1);
 		expect(data).toEqual({
-			date: date-1,
+			date: getStr(date-1),
 			month: month,
 			monthChar: monthChar,
 			year: year,
