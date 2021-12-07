@@ -218,6 +218,14 @@
               "Effect": "Allow",
               "Action": "*",
               "Resource": "arn:aws:dynamodb:*:*:table/Contacts-*"
+            },
+            {
+              "Sid": "ListTables",
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:ListTables"
+              ],
+              "Resource": "arn:aws:dynamodb:*:*:*"
             }
           ]
         }
