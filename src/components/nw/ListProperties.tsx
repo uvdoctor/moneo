@@ -1,5 +1,5 @@
 import { Button, Checkbox, Col, InputNumber, Row, Table, Tooltip } from "antd";
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput } from "../../api/goals";
 import SelectInput from "../form/selectinput";
 import { NWContext } from "./NWContext";
@@ -131,18 +131,19 @@ export default function ListProperties({
 		return (
 			<Row
 				gutter={[
-					{ xs: 10, sm: 10, md: 10 },
-					{ xs: 10, sm: 10, md: 10 },
+					{ xs: 0, sm: 10, md: 30 },
+					{ xs: 20, sm: 10, md: 0 },
 				]}
 			>
-				<Col>
+				<Col xs={24} sm={12} md={8}>
 					<Row>
 						<Col xs={24}>
 							<strong>Purchase</strong>
+							<hr />
 						</Col>
-						<Col>
+						<Col xs={24}>
 							<NumberInput
-								pre={"Amount"}
+								pre="Amount"
 								min={10}
 								max={1000000000}
 								value={data[i].purchase?.amt as number}
@@ -152,7 +153,7 @@ export default function ListProperties({
 								noSlider
 							/>
 						</Col>
-						<Col>
+						<Col xs={24}>
 							<DatePickerInput
 								picker="month"
 								title={"Date"}
@@ -166,7 +167,7 @@ export default function ListProperties({
 								size={"middle"}
 							/>
 						</Col>
-						<Col>
+						<Col xs={24}>
 							<TextInput
 								pre={"Name"}
 								value={data[i].name as string}
@@ -179,10 +180,11 @@ export default function ListProperties({
 						</Col>
 					</Row>
 				</Col>
-				<Col>
+				<Col xs={24} sm={12} md={8}>
 					<Row>
 						<Col xs={24}>
 							<strong>Address</strong>
+							<hr />
 						</Col>
 						<Col>
 							<TextInput
@@ -213,10 +215,11 @@ export default function ListProperties({
 						</Col>
 					</Row>
 				</Col>
-				<Col>
+				<Col xs={24} sm={12} md={8}>
 					<Row>
 						<Col xs={24}>
 							<strong>Own By</strong>
+							<hr />
 						</Col>
 						{owners &&
 							owners.map((own: OwnershipInput, ind: number) => {
