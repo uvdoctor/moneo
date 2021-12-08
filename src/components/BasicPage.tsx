@@ -79,7 +79,8 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
         <title>{props.title}</title>
       </Head>
       <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_CLIENT_TOKEN}>
-        {props.secure ? (
+      <AppContextProvider>
+        {props.secure ? 
           <BasicAuthenticator>
             <BasicLayout
               className={props.className}
@@ -93,21 +94,18 @@ finance plan, personal finance management, Banking App, Mobile Banking, Budgetin
               {props.children}
             </BasicLayout>
           </BasicAuthenticator>
-        ) : (
-          <AppContextProvider>
-            <BasicLayout
-              className={props.className}
-              onBack={props.onBack}
-              fixedNav={props.fixedNav}
-              navScrollable={props.navScrollable}
-              noFooter={props.noFooter}
-              hideMenu={props.hideMenu}
-              title={props.menuTitle}
-            >
-              {props.children}
-            </BasicLayout>
-          </AppContextProvider>
-        )}
+        : <BasicLayout
+            className={props.className}
+            onBack={props.onBack}
+            fixedNav={props.fixedNav}
+            navScrollable={props.navScrollable}
+            noFooter={props.noFooter}
+            hideMenu={props.hideMenu}
+            title={props.menuTitle}
+          >
+            {props.children}
+          </BasicLayout>}
+      </AppContextProvider>
       </GoogleReCaptchaProvider>
     </Fragment>
   );
