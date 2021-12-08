@@ -364,17 +364,15 @@ export const toHumanFriendlyCurrency = (val: number, currency: string) => {
   )} ${unit}`;
 };
 
-export const sendMail = async (to: String, from: String, template: String, templateData: any) => {
+export const sendMail = async (template: any, subject: string) => {
   await fetch('/api/sendemail', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
     },
     body: JSON.stringify({
-      to: to.split(";"),
-      from: from.split(";"),
       template: template,
-      templateData: templateData
+      subject: subject
     })
   }).then((res: any) => 
     res.json()
@@ -384,6 +382,20 @@ export const sendMail = async (to: String, from: String, template: String, templ
     return false;
   });
 }
+
+export const emailTemplate = (template: any) => {
+  const lastName = template.lastName ? template.lastName : '';
+  return `<html>
+    <body>
+      <h3>${template.firstName} ${lastName}</h3>
+      <div>
+        <p>User:- ${template.reg}</p>
+        <p>Email: -${template.email}</p>
+        <p>${template.content}</p>
+      </div>
+    </body>
+    </html>`
+};
 
 const dateToUTC = (date: string) => {
   let constituents = date.split("/");

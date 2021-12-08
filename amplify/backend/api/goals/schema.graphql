@@ -28,7 +28,12 @@ type Feedback
 	@model
 	@aws_iam
 	@aws_cognito_user_pools
-	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
+	@auth(
+		rules: [
+			{ allow: public, provider: iam, operations: [create] }
+			{ allow: private, operations: [create] }
+		]
+	) {
 	id: ID!
 	type: FeedbackType!
 	email: String!
@@ -40,7 +45,12 @@ type Rating
 	@model
 	@aws_iam
 	@aws_cognito_user_pools
-	@auth(rules: [{ allow: public, provider: iam, operations: [create, read, update] }]) {
+	@auth(
+		rules: [
+			{ allow: public, provider: iam, operations: [create] }
+			{ allow: private, operations: [create] }
+		]
+	) {
 	id: ID!
 	type: CalcType!
 	rating: Int!
@@ -125,8 +135,8 @@ type Contacts
 	@aws_iam
 	@aws_cognito_user_pools
 	@key(fields: ["email"])
-	@key(name: "ByIM", fields:["im"], queryField: "regByIM")
-	@key(name: "ByMob", fields:["mob"], queryField: "regByMob")
+	@key(name: "ByIM", fields: ["im"], queryField: "regByIM")
+	@key(name: "ByMob", fields: ["mob"], queryField: "regByMob")
 	@auth(
 		rules: [
 			{ allow: public, provider: iam, operations: [read] }
@@ -463,7 +473,11 @@ enum MFSchemeType {
 	I
 }
 
-type UserHoldings @model @aws_iam @key(fields: ["uname"]) @auth(rules: [{ allow: owner }, { allow: private, provider: iam, operations: [read] }]) {
+type UserHoldings
+	@model
+	@aws_iam
+	@key(fields: ["uname"])
+	@auth(rules: [{ allow: owner }, { allow: private, provider: iam, operations: [read] }]) {
 	uname: String!
 	instruments: [Holding!]
 	lendings: [Holding!]

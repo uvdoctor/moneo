@@ -93,10 +93,7 @@ export default function ListProperties({
 	useEffect(() => {
 		if (indexForMv !== null) {
 			// @ts-ignore
-			const duration = getRemainingDuration(
-				data[indexForMv].purchase.year,
-				data[indexForMv].purchase.month
-			);
+			const duration = getRemainingDuration(data[indexForMv].purchase.year,data[indexForMv].purchase.month);
 			data[indexForMv].mv = Math.round(
 				getCompoundedIncome(
 					data[indexForMv].rate,

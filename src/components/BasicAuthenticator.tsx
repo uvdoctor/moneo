@@ -1,14 +1,14 @@
 import { AmplifyAuthContainer, AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
 import Amplify, { Auth, Hub } from "aws-amplify";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { AuthState, Translations, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import { Alert, Checkbox, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import Title from "antd/lib/typography/Title";
 import { doesEmailExist } from "./contactutils";
 import Nav from "./Nav";
-import { AppContextProvider } from "./AppContext";
+import { AppContext } from "./AppContext";
 import { Form, Input, Button } from "antd";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import awsconfig from '../aws-exports';
@@ -21,11 +21,11 @@ Amplify.configure(awsconfig);
 Auth.configure({authenticationFlowType: "USER_PASSWORD_AUTH"});
 
 export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {
+  const { user }: any = useContext(AppContext);
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [disabledSubmit, setDisabledSubmit] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [emailError, setEmailError] = useState<any>("");
-  const [user, setUser] = useState<any | null>(null);
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [notify, setNotify] = useState<boolean>(true);
@@ -57,24 +57,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
     return result;
   };
 
-  const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
-  
-  useEffect(() => {
-    Hub.listen("auth", initUser);
-    initUser();
-    return () => Hub.remove("auth", initUser);
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await Auth.signOut();
-      Hub.dispatch("auth", { event: "signOut" });
-      setUser(null);
-    } catch (error) {
-      console.log("error signing out: ", error);
-    } 
-  };
-
   const generateFromEmail = (email: string) => {
     // Retrive name from email address
     const nameParts = email.replace(/@.+/, "");
@@ -89,7 +71,6 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
       console.log("Next auth state: ", nextAuthState);
       console.log("Auth data: ", authData);
       setAuthState(nextAuthState);
-      setUser(authData);
     });
   }, []);
 
@@ -343,13 +324,8 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                 </Row>
               )}
             </Form>
-        </AmplifySection>
-      }
-      {user ? (
-          <AppContextProvider user={user} handleLogout={handleLogout}>
-            {children}
-          </AppContextProvider>
-      ) : null}
+        </AmplifySection>}
+      {children}
       </AmplifyAuthenticator>
       </AmplifyAuthContainer>
     </Fragment>

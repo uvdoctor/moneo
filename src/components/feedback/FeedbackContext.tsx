@@ -1,15 +1,15 @@
 import React, { createContext, useContext, useState } from 'react';
 import * as mutations from '../../graphql/mutations';
 import awsconfig from '../../aws-exports';
-import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import Amplify, { API } from 'aws-amplify';
-import { CreateFeedbackMutation, FeedbackType } from '../../api/goals';
+import { CreateFeedbackMutation } from '../../api/goals';
 import { Form, notification } from 'antd';
 import { sendMail } from '../utils';
 import { AppContext } from '../AppContext';
+import { emailTemplate  } from '../../components/utils';
+import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 
 Amplify.configure(awsconfig);
-
 const FeedbackContext = createContext({});
 
 interface FeedbackContextProviderProps {
@@ -17,12 +17,7 @@ interface FeedbackContextProviderProps {
 }
 
 function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
-	const { user }: any = useContext(AppContext);
-	const [ feedbackType, setFeedbackType ] = useState<FeedbackType>(FeedbackType.C);
-	const [ feedback, setFeedback ] = useState<String>('');
-	const [ firstName, setFirstName ] = useState<String>('');
-	const [ lastName, setLastName ] = useState<String>('');
-	const [ email, setEmail ] = useState<String>('');
+	const { user, validateCaptcha, owner }: any = useContext(AppContext);
 	const [ isLoading, setLoading ] = useState<boolean>(false);
 	const [ feedbackId, setFeedbackId ] = useState<String | undefined>('');
 	const [ error, setError ] = useState({});
@@ -35,70 +30,61 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 			description: description
 		});
 	};
-
+	
 	const onFormSubmit = async ({ feedbackType, feedback, firstName, lastName, email }: any) => {
-		let emailAddress = user ? user.attributes.email : email;
 		setLoading(true);
-		setFeedbackType(feedbackType);
-		setFeedback(feedback);
-		setFirstName(firstName);
-		setLastName(lastName);
-		setEmail(emailAddress);
-		try {
-			const { data }  = (await API.graphql({
+		validateCaptcha("feedback_change").then(async(success: boolean) => {
+			if(!success) return;
+			let emailAddress = user ? user.attributes.email : email;
+			let fn = user && user?.attributes.name ? user?.attributes.name : owner ? owner : firstName; 
+			try {
+				const { data }  = (await API.graphql({
 				query: mutations.createFeedback,
-				variables: {
-					input: {
-						type: feedbackType,
-						feedback: feedback,
-						name: {
-							fn: firstName,
-							ln: lastName
-						},
-						email: emailAddress
-					}
-				},
-				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
-			})) as {
-			data: CreateFeedbackMutation;
-			};
-			setFeedbackId(data.createFeedback?.id);
-			form.resetFields();
-			const mailTemplate = {
-				firstName : data.createFeedback?.name.fn,
-				lastName : data.createFeedback?.name.ln,
-				email: data.createFeedback?.email,
-				content: data.createFeedback?.feedback,
-				type: (data.createFeedback?.type==='C'?'comment':(data.createFeedback?.type==='S'?'suggestion':'question'))
+					variables: {
+						input: {
+							type: feedbackType,
+							feedback: feedback,
+							name: {
+								fn: fn,
+								ln: lastName
+							},
+							email: emailAddress
+						}
+					},
+					authMode: !user ? GRAPHQL_AUTH_MODE.AWS_IAM : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS
+				})) as {
+				data: CreateFeedbackMutation;
+				};
+				setFeedbackId(data.createFeedback?.id);
+				form.resetFields();
+				const mailTemplate = {
+					firstName : data.createFeedback?.name.fn,
+					lastName : data.createFeedback?.name.ln,
+					email: data.createFeedback?.email,
+					content: data.createFeedback?.feedback,
+					type: (data.createFeedback?.type==='C'?'comment':(data.createFeedback?.type==='S'?'suggestion':'question')),
+					reg: user && user.attributes?.email ? "Registered" : "Not Registered"
+				}
+				const template = emailTemplate(mailTemplate);
+				sendMail(template, mailTemplate.type);
+				openNotificationWithIcon('success', 'Success', 'Feedback saved successfully');
+			} catch (e) {
+				console.log(e)
+				setError({
+					title: 'Error while creating feedback',
+					//@ts-ignore
+					message: e.errors ? e.errors[0].message : e.toString()
+				});
+				openNotificationWithIcon('error', 'Error', 'Error while saving feedback');
+			} finally {
+				setLoading(false);
 			}
-			sendMail(`21.ramit@gmail.com;emailumangdoctor@gmail.com`, mailTemplate.email as string , 'FeedbackTemplate', mailTemplate);
-			openNotificationWithIcon('success', 'Success', 'Feedback saved successfully');
-		} catch (e) {
-			setError({
-				title: 'Error while creating feedback',
-				//@ts-ignore
-				message: e.errors ? e.errors[0].message : e.toString()
-			});
-			openNotificationWithIcon('error', 'Error', 'Error while saving feedback');
-		} finally {
-			setLoading(false);
-		}
+		})
 	};
 
 	return (
 		<FeedbackContext.Provider
-			value={{
-				feedbackType,
-				feedback,
-				firstName,
-				lastName,
-				isLoading,
-				onFormSubmit,
-				email,
-        form,
-        feedbackId,
-				error
-			}}
+			value={{ isLoading, onFormSubmit, form, feedbackId, error}}
 		>
 			{children}
 		</FeedbackContext.Provider>

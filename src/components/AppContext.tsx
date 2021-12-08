@@ -1,4 +1,4 @@
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, Auth, graphqlOperation, Hub } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import React, { createContext, useEffect, useState } from 'react';
 import simpleStorage from "simplestorage.js";
@@ -14,12 +14,11 @@ export const LOCAL_INSTRUMENT_RAW_DATA_KEY = "instrumentData";
 export const LOCAL_DATA_TTL = {TTL: 86400000}; //1 day
 interface AppContextProviderProps {
 	children: any;
-	user?: any
-	handleLogout?: Function;
 }
 
-function AppContextProvider({ children, user, handleLogout }: AppContextProviderProps) {
+function AppContextProvider({ children }: AppContextProviderProps) {
 	const { executeRecaptcha } = useGoogleReCaptcha();
+	const [user, setUser] = useState<any | null>(null);
 	const [ defaultCountry, setDefaultCountry ] = useState<string>('US');
 	const [ defaultCurrency, setDefaultCurrency ] = useState<string>('USD');
 	const [ appContextLoaded, setAppContextLoaded ] = useState<boolean>(false);
@@ -88,6 +87,16 @@ function AppContextProvider({ children, user, handleLogout }: AppContextProvider
 		}
 	};
 
+	const handleLogout = async () => {
+		try {
+		  await Auth.signOut();
+		  Hub.dispatch("auth", { event: "signOut" });
+		  setUser(null);
+		} catch (error) {
+		  console.log("error signing out: ", error);
+		} 
+	};
+
 	useEffect(() => {
 		const host = window.location.hostname;
 		setDefaultCountry(host.endsWith('.in') || host.endsWith('host') ? 'IN' : host.endsWith('.uk') ? 'UK' : 'US');
@@ -97,14 +106,25 @@ function AppContextProvider({ children, user, handleLogout }: AppContextProvider
 		if(!user) setAppContextLoaded(true);
 	}, []);
 
+	const initUser = async () => setUser(await Auth.currentAuthenticatedUser());
+  
 	useEffect(() => {
-		if(user) { 
+		Hub.listen("auth", initUser);
+		initUser();
+		return () => Hub.remove("auth", initUser);
+	}, []);
+
+	useEffect(() => {
+		if(user) {
 			initData().then(() => setAppContextLoaded(true));
-			//setOwner((JSON.parse(user?.storage[user.userDataKey])).Username)
-			if(user.storage[user.userDataKey])
-				setOwner((JSON.parse(user.storage[user.userDataKey])).Username)
 		}
 	}, [user]);
+
+	useEffect(() => {
+		if(user && user.storage[user.userDataKey]) {
+			setOwner((JSON.parse(user.storage[user.userDataKey])).Username)
+		}
+	}, [owner, user]);
 
 	return (
 		<AppContext.Provider
@@ -120,7 +140,7 @@ function AppContextProvider({ children, user, handleLogout }: AppContextProvider
 				setInsData,
 				handleLogout,
 				validateCaptcha,
-				owner
+				owner,
 			}}
 		>
 			{children}
