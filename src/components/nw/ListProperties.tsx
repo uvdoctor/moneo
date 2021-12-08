@@ -136,7 +136,7 @@ export default function ListProperties({
 				]}
 			>
 				<Col xs={24} sm={12} md={8}>
-					<Row>
+					<Row gutter={[0, 10]}>
 						<Col xs={24}>
 							<strong>Purchase</strong>
 							<hr />
@@ -168,25 +168,30 @@ export default function ListProperties({
 							/>
 						</Col>
 						<Col xs={24}>
-							<TextInput
-								pre={"Name"}
-								value={data[i].name as string}
-								changeHandler={(val: string) => {
-									data[i].name = val;
-									changeData([...data]);
-								}}
-								size={"middle"}
-							/>
+							<Row gutter={[10, 0]}>
+								<Col>Name</Col>
+								<Col>
+									<TextInput
+										pre=""
+										value={data[i].name as string}
+										changeHandler={(val: string) => {
+											data[i].name = val;
+											changeData([...data]);
+										}}
+										size={"middle"}
+									/>
+								</Col>
+							</Row>
 						</Col>
 					</Row>
 				</Col>
 				<Col xs={24} sm={12} md={8}>
-					<Row>
+					<Row gutter={[0, 10]}>
 						<Col xs={24}>
 							<strong>Address</strong>
 							<hr />
 						</Col>
-						<Col>
+						<Col xs={24}>
 							<TextInput
 								pre={""}
 								value={data[i].address as string}
@@ -197,7 +202,7 @@ export default function ListProperties({
 								size={"middle"}
 							/>
 						</Col>
-						<Col>
+						<Col xs={24}>
 							<TextInput
 								pre={""}
 								value={String(data[i].pin)}
@@ -216,7 +221,7 @@ export default function ListProperties({
 					</Row>
 				</Col>
 				<Col xs={24} sm={12} md={8}>
-					<Row>
+					<Row gutter={[0, 10]}>
 						<Col xs={24}>
 							<strong>Own By</strong>
 							<hr />

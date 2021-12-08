@@ -1,4 +1,5 @@
-import React, { Fragment } from "react";
+import React from "react";
+import { Row, Col } from "antd";
 import dateFnsGenerateConfig from "rc-picker/lib/generate/dateFns";
 import generatePicker from "antd/lib/date-picker/generatePicker";
 import "antd/lib/date-picker/style/index";
@@ -41,19 +42,21 @@ export default function DatePickerInput(props: DatePickerInputProps) {
 			: getTodayDate();
 
 	return (
-		<Fragment>
-			<label className={props.className || "date"}>{props.title}</label>
-			<DatePicker
-				picker={props.picker ? props.picker : "date"}
-				size={props.size ? props.size : "large"}
-				defaultValue={parse(
-					props.defaultVal || defaultDate,
-					dateFormat,
-					new Date()
-				)}
-				format={dateFormat}
-				onChange={(_, ds) => props.changeHandler(ds.toString())}
-			/>
-		</Fragment>
+		<Row gutter={[10, 0]}>
+			<Col className={props.className || "date"}>{props.title}</Col>
+			<Col>
+				<DatePicker
+					picker={props.picker ? props.picker : "date"}
+					size={props.size ? props.size : "large"}
+					defaultValue={parse(
+						props.defaultVal || defaultDate,
+						dateFormat,
+						new Date()
+					)}
+					format={dateFormat}
+					onChange={(_, ds) => props.changeHandler(ds.toString())}
+				/>
+			</Col>
+		</Row>
 	);
 }
