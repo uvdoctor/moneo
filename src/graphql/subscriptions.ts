@@ -2,6 +2,90 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateFeedback = /* GraphQL */ `
+  subscription OnCreateFeedback {
+    onCreateFeedback {
+      id
+      type
+      email
+      name {
+        fn
+        ln
+      }
+      feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFeedback = /* GraphQL */ `
+  subscription OnUpdateFeedback {
+    onUpdateFeedback {
+      id
+      type
+      email
+      name {
+        fn
+        ln
+      }
+      feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFeedback = /* GraphQL */ `
+  subscription OnDeleteFeedback {
+    onDeleteFeedback {
+      id
+      type
+      email
+      name {
+        fn
+        ln
+      }
+      feedback
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateRating = /* GraphQL */ `
+  subscription OnCreateRating {
+    onCreateRating {
+      id
+      type
+      rating
+      feedbackId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateRating = /* GraphQL */ `
+  subscription OnUpdateRating {
+    onUpdateRating {
+      id
+      type
+      rating
+      feedbackId
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteRating = /* GraphQL */ `
+  subscription OnDeleteRating {
+    onDeleteRating {
+      id
+      type
+      rating
+      feedbackId
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateGoal = /* GraphQL */ `
   subscription OnCreateGoal($owner: String!) {
     onCreateGoal(owner: $owner) {
@@ -242,90 +326,6 @@ export const onDeleteFamily = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-    }
-  }
-`;
-export const onCreateFeedback = /* GraphQL */ `
-  subscription OnCreateFeedback {
-    onCreateFeedback {
-      id
-      type
-      email
-      name {
-        fn
-        ln
-      }
-      feedback
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateFeedback = /* GraphQL */ `
-  subscription OnUpdateFeedback {
-    onUpdateFeedback {
-      id
-      type
-      email
-      name {
-        fn
-        ln
-      }
-      feedback
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteFeedback = /* GraphQL */ `
-  subscription OnDeleteFeedback {
-    onDeleteFeedback {
-      id
-      type
-      email
-      name {
-        fn
-        ln
-      }
-      feedback
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateRating = /* GraphQL */ `
-  subscription OnCreateRating {
-    onCreateRating {
-      id
-      type
-      rating
-      feedbackId
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateRating = /* GraphQL */ `
-  subscription OnUpdateRating {
-    onUpdateRating {
-      id
-      type
-      rating
-      feedbackId
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteRating = /* GraphQL */ `
-  subscription OnDeleteRating {
-    onDeleteRating {
-      id
-      type
-      rating
-      feedbackId
-      createdAt
-      updatedAt
     }
   }
 `;
