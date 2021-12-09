@@ -20,6 +20,7 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 	const { user, validateCaptcha, owner }: any = useContext(AppContext);
 	const [ isLoading, setLoading ] = useState<boolean>(false);
 	const [ feedbackId, setFeedbackId ] = useState<String | undefined>('');
+	const [ rating, setRating ] = useState<number>(0);
 	const [ error, setError ] = useState({});
 	const [ form ] = Form.useForm();
 
@@ -38,23 +39,18 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 			let emailAddress = user ? user.attributes.email : email;
 			let fn = user && user?.attributes.name ? user?.attributes.name : owner ? owner : firstName; 
 			try {
-				const { data }  = (await API.graphql({
-				query: mutations.createFeedback,
+				const { data }  = await API.graphql({
+					query: mutations.createFeedback,
 					variables: {
 						input: {
 							type: feedbackType,
 							feedback: feedback,
-							name: {
-								fn: fn,
-								ln: lastName
-							},
+							name: { fn: fn, ln: lastName },
 							email: emailAddress
 						}
 					},
-					authMode: !user ? GRAPHQL_AUTH_MODE.AWS_IAM : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS
-				})) as {
-				data: CreateFeedbackMutation;
-				};
+					authMode: !user ? GRAPHQL_AUTH_MODE.AWS_IAM : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS }) as 
+				{ data: CreateFeedbackMutation };
 				setFeedbackId(data.createFeedback?.id);
 				form.resetFields();
 				const mailTemplate = {
@@ -63,10 +59,12 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 					email: data.createFeedback?.email,
 					content: data.createFeedback?.feedback,
 					type: (data.createFeedback?.type==='C'?'comment':(data.createFeedback?.type==='S'?'suggestion':'question')),
-					reg: user && user.attributes?.email ? "Registered" : "Not Registered"
+					reg: user && user.attributes?.email ? "Registered" : "Not Registered",
+					rating: rating ? rating : ''
 				}
-				const template = emailTemplate(mailTemplate);
-				sendMail(template, mailTemplate.type);
+				const template = rating ? emailTemplate(mailTemplate, rating) : emailTemplate(mailTemplate);
+				const subject = rating ? `Rating-${mailTemplate.type}` : mailTemplate.type;
+				sendMail(template, subject);
 				openNotificationWithIcon('success', 'Success', 'Feedback saved successfully');
 			} catch (e) {
 				console.log(e)
@@ -84,7 +82,7 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 
 	return (
 		<FeedbackContext.Provider
-			value={{ isLoading, onFormSubmit, form, feedbackId, error}}
+			value={{ isLoading, onFormSubmit, form, feedbackId, error, setRating }}
 		>
 			{children}
 		</FeedbackContext.Provider>

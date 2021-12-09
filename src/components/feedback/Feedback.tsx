@@ -1,17 +1,20 @@
 import { Button, Col, Form, Input, Radio, Row, Skeleton } from "antd";
-import React, { Fragment, useContext, useRef } from "react";
+import React, { Fragment, useContext, useEffect, useRef } from "react";
 import Content from "../Content";
 import { FeedbackType } from "../../api/goals";
 import { FormInstance } from "antd/lib/form";
 import { FeedbackContext } from "./FeedbackContext";
 import TextArea from "antd/lib/input/TextArea";
-
-require("./Feedback.less");
 import { AppContext } from "../AppContext";
+require("./Feedback.less");
 
-export default function Feedback() {
+interface FeedbackProps {
+  rating?: number;
+}
+
+export default function Feedback({ rating }: FeedbackProps) {
   const { user, appContextLoaded }: any = useContext(AppContext);
-  const { isLoading, onFormSubmit, form }: any = useContext(FeedbackContext);
+  const { isLoading, onFormSubmit, form, setRating }: any = useContext(FeedbackContext);
   const formRef = useRef<FormInstance>(null);
 
   const isValidFeedback = () => {
@@ -19,6 +22,12 @@ export default function Feedback() {
     if(!user && (!formRef.current?.getFieldValue("firstName") || !formRef.current?.getFieldValue("email"))) return false;
     return true;
   };
+
+  useEffect(() => {
+    if(rating) {
+      setRating(rating)
+    }
+  }, [])
 
   return (
     <Content className="feedback">
@@ -106,7 +115,7 @@ export default function Feedback() {
                   },
                 ]}
               >
-              <Input placeholder="Enter email address" disabled={user?.attributes.email}/>
+              <Input placeholder="Enter email address" />
               </Form.Item>
             </Fragment> : 
             <Skeleton active />}

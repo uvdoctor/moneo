@@ -135,7 +135,7 @@ export default function CalcHeader() {
 					maskClosable
 					onCancel={closeModal}
 				>
-					<Feedback />
+					<Feedback rating={rating} />
 				</Modal>
 			)}
 		</Fragment>

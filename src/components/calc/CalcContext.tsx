@@ -60,7 +60,7 @@ function CalcContextProvider({
   calculateFor,
   summary
 }: CalcContextProviderProps) {
-  const { defaultCurrency }: any = useContext(AppContext);
+  const { defaultCurrency, user }: any = useContext(AppContext);
   const { rr, addGoal, updateGoal, setGoal, isPublicCalc, allCFs, ffResult, oppCostCache, setOppCostCache }: any = useContext(PlanContext);
   let { goal, allGoals }: any = useContext(PlanContext);
   if (calculateFor && !goal) goal = calculateFor;
@@ -274,7 +274,7 @@ function CalcContextProvider({
 						rating: rating
 					}
 				},
-				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
+				authMode: !user ? GRAPHQL_AUTH_MODE.AWS_IAM : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS
 			})) as {
       data: CreateRatingMutation;
     }
@@ -295,14 +295,13 @@ function CalcContextProvider({
             feedbackId: feedbackId
 					}
 				},
-				authMode: GRAPHQL_AUTH_MODE.AWS_IAM
+				authMode: !user ? GRAPHQL_AUTH_MODE.AWS_IAM : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS
       });
-      
-		} catch (e) {
+    } catch (e) {
       console.log('Error while updating rating', e)
 		} 
   }
-
+      
   const uploadGoalImage = async (file: any) => {
     goalImgStorage.validateImg(file)
     try {
