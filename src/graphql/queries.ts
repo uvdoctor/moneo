@@ -337,6 +337,71 @@ export const regByMob = /* GraphQL */ `
     }
   }
 `;
+export const regByEmail = /* GraphQL */ `
+  query RegByEmail(
+    $email: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserInfoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    regByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        uname
+        email
+        im
+        mob
+        notify
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getUniverse = /* GraphQL */ `
+  query GetUniverse($id: String!) {
+    getUniverse(id: $id) {
+      id
+      sid
+      exchg
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUniverses = /* GraphQL */ `
+  query ListUniverses(
+    $id: String
+    $filter: ModelUniverseFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniverses(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sid
+        exchg
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getFeeds = /* GraphQL */ `
   query GetFeeds($id: String!) {
     getFeeds(id: $id) {

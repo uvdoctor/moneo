@@ -286,6 +286,22 @@ export const deleteGoal = /* GraphQL */ `
     }
   }
 `;
+export const createUserInfo = /* GraphQL */ `
+  mutation CreateUserInfo(
+    $input: CreateUserInfoInput!
+    $condition: ModelUserInfoConditionInput
+  ) {
+    createUserInfo(input: $input, condition: $condition) {
+      uname
+      email
+      im
+      mob
+      notify
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const updateUserInfo = /* GraphQL */ `
   mutation UpdateUserInfo(
     $input: UpdateUserInfoInput!
@@ -1216,17 +1232,43 @@ export const createRating = /* GraphQL */ `
     }
   }
 `;
-export const createUserInfo = /* GraphQL */ `
-  mutation CreateUserInfo(
-    $input: CreateUserInfoInput!
-    $condition: ModelUserInfoConditionInput
+export const createUniverse = /* GraphQL */ `
+  mutation CreateUniverse(
+    $input: CreateUniverseInput!
+    $condition: ModelUniverseConditionInput
   ) {
-    createUserInfo(input: $input, condition: $condition) {
-      uname
-      email
-      im
-      mob
-      notify
+    createUniverse(input: $input, condition: $condition) {
+      id
+      sid
+      exchg
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUniverse = /* GraphQL */ `
+  mutation UpdateUniverse(
+    $input: UpdateUniverseInput!
+    $condition: ModelUniverseConditionInput
+  ) {
+    updateUniverse(input: $input, condition: $condition) {
+      id
+      sid
+      exchg
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUniverse = /* GraphQL */ `
+  mutation DeleteUniverse(
+    $input: DeleteUniverseInput!
+    $condition: ModelUniverseConditionInput
+  ) {
+    deleteUniverse(input: $input, condition: $condition) {
+      id
+      sid
+      exchg
       createdAt
       updatedAt
     }

@@ -151,6 +151,20 @@ type UserInfo
 	notify: Boolean!
 }
 
+type Universe 
+	@model
+	@aws_iam
+	@key(fields: ["id"])
+	@auth(
+		rules: [
+			{ allow: private, provider: iam, operations: [create, read, update, delete] }
+		]
+	) {
+	id: String!
+	sid: String
+	exchg: Exchange!
+}
+
 enum AssetType {
 	E
 	F

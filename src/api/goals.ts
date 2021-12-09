@@ -402,12 +402,12 @@ export type DeleteGoalInput = {
   id: string,
 };
 
-export type UpdateUserInfoInput = {
+export type CreateUserInfoInput = {
   uname: string,
-  email?: string | null,
+  email: string,
   im?: number | null,
   mob?: number | null,
-  notify?: boolean | null,
+  notify: boolean,
 };
 
 export type ModelUserInfoConditionInput = {
@@ -429,6 +429,14 @@ export type UserInfo = {
   notify?: boolean,
   createdAt?: string,
   updatedAt?: string,
+};
+
+export type UpdateUserInfoInput = {
+  uname: string,
+  email?: string | null,
+  im?: number | null,
+  mob?: number | null,
+  notify?: boolean | null,
 };
 
 export type DeleteUserInfoInput = {
@@ -655,12 +663,48 @@ export type CreateRatingInput = {
   feedbackId?: string | null,
 };
 
-export type CreateUserInfoInput = {
-  uname: string,
-  email: string,
-  im?: number | null,
-  mob?: number | null,
-  notify: boolean,
+export type CreateUniverseInput = {
+  id: string,
+  sid?: string | null,
+  exchg: Exchange,
+};
+
+export enum Exchange {
+  NSE = "NSE",
+  BSE = "BSE",
+}
+
+
+export type ModelUniverseConditionInput = {
+  sid?: ModelStringInput | null,
+  exchg?: ModelExchangeInput | null,
+  and?: Array< ModelUniverseConditionInput | null > | null,
+  or?: Array< ModelUniverseConditionInput | null > | null,
+  not?: ModelUniverseConditionInput | null,
+};
+
+export type ModelExchangeInput = {
+  eq?: Exchange | null,
+  ne?: Exchange | null,
+};
+
+export type Universe = {
+  __typename: "Universe",
+  id?: string,
+  sid?: string | null,
+  exchg?: Exchange,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateUniverseInput = {
+  id: string,
+  sid?: string | null,
+  exchg?: Exchange | null,
+};
+
+export type DeleteUniverseInput = {
+  id: string,
 };
 
 export type CreateFeedsInput = {
@@ -671,12 +715,6 @@ export type CreateFeedsInput = {
   count: number,
 };
 
-export enum Exchange {
-  NSE = "NSE",
-  BSE = "BSE",
-}
-
-
 export type ModelFeedsConditionInput = {
   tname?: ModelStringInput | null,
   exchg?: ModelExchangeInput | null,
@@ -685,11 +723,6 @@ export type ModelFeedsConditionInput = {
   and?: Array< ModelFeedsConditionInput | null > | null,
   or?: Array< ModelFeedsConditionInput | null > | null,
   not?: ModelFeedsConditionInput | null,
-};
-
-export type ModelExchangeInput = {
-  eq?: Exchange | null,
-  ne?: Exchange | null,
 };
 
 export type Feeds = {
@@ -1415,6 +1448,21 @@ export type ModelUserInfoConnection = {
   nextToken?: string | null,
 };
 
+export type ModelUniverseFilterInput = {
+  id?: ModelStringInput | null,
+  sid?: ModelStringInput | null,
+  exchg?: ModelExchangeInput | null,
+  and?: Array< ModelUniverseFilterInput | null > | null,
+  or?: Array< ModelUniverseFilterInput | null > | null,
+  not?: ModelUniverseFilterInput | null,
+};
+
+export type ModelUniverseConnection = {
+  __typename: "ModelUniverseConnection",
+  items?:  Array<Universe >,
+  nextToken?: string | null,
+};
+
 export type ModelFeedsFilterInput = {
   id?: ModelStringInput | null,
   tname?: ModelStringInput | null,
@@ -1911,6 +1959,24 @@ export type DeleteGoalMutation = {
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
+  } | null,
+};
+
+export type CreateUserInfoMutationVariables = {
+  input?: CreateUserInfoInput,
+  condition?: ModelUserInfoConditionInput | null,
+};
+
+export type CreateUserInfoMutation = {
+  createUserInfo?:  {
+    __typename: "UserInfo",
+    uname: string,
+    email: string,
+    im?: number | null,
+    mob?: number | null,
+    notify: boolean,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 
@@ -2952,19 +3018,49 @@ export type CreateRatingMutation = {
   } | null,
 };
 
-export type CreateUserInfoMutationVariables = {
-  input?: CreateUserInfoInput,
-  condition?: ModelUserInfoConditionInput | null,
+export type CreateUniverseMutationVariables = {
+  input?: CreateUniverseInput,
+  condition?: ModelUniverseConditionInput | null,
 };
 
-export type CreateUserInfoMutation = {
-  createUserInfo?:  {
-    __typename: "UserInfo",
-    uname: string,
-    email: string,
-    im?: number | null,
-    mob?: number | null,
-    notify: boolean,
+export type CreateUniverseMutation = {
+  createUniverse?:  {
+    __typename: "Universe",
+    id: string,
+    sid?: string | null,
+    exchg: Exchange,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateUniverseMutationVariables = {
+  input?: UpdateUniverseInput,
+  condition?: ModelUniverseConditionInput | null,
+};
+
+export type UpdateUniverseMutation = {
+  updateUniverse?:  {
+    __typename: "Universe",
+    id: string,
+    sid?: string | null,
+    exchg: Exchange,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteUniverseMutationVariables = {
+  input?: DeleteUniverseInput,
+  condition?: ModelUniverseConditionInput | null,
+};
+
+export type DeleteUniverseMutation = {
+  deleteUniverse?:  {
+    __typename: "Universe",
+    id: string,
+    sid?: string | null,
+    exchg: Exchange,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3885,6 +3981,69 @@ export type RegByMobQuery = {
       im?: number | null,
       mob?: number | null,
       notify: boolean,
+      createdAt: string,
+      updatedAt: string,
+    } >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type RegByEmailQueryVariables = {
+  email?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelUserInfoFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type RegByEmailQuery = {
+  regByEmail?:  {
+    __typename: "ModelUserInfoConnection",
+    items:  Array< {
+      __typename: "UserInfo",
+      uname: string,
+      email: string,
+      im?: number | null,
+      mob?: number | null,
+      notify: boolean,
+      createdAt: string,
+      updatedAt: string,
+    } >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetUniverseQueryVariables = {
+  id?: string,
+};
+
+export type GetUniverseQuery = {
+  getUniverse?:  {
+    __typename: "Universe",
+    id: string,
+    sid?: string | null,
+    exchg: Exchange,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListUniversesQueryVariables = {
+  id?: string | null,
+  filter?: ModelUniverseFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListUniversesQuery = {
+  listUniverses?:  {
+    __typename: "ModelUniverseConnection",
+    items:  Array< {
+      __typename: "Universe",
+      id: string,
+      sid?: string | null,
+      exchg: Exchange,
       createdAt: string,
       updatedAt: string,
     } >,
@@ -5211,6 +5370,39 @@ export type OnDeleteUserInfoSubscription = {
     im?: number | null,
     mob?: number | null,
     notify: boolean,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateUniverseSubscription = {
+  onCreateUniverse?:  {
+    __typename: "Universe",
+    id: string,
+    sid?: string | null,
+    exchg: Exchange,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateUniverseSubscription = {
+  onUpdateUniverse?:  {
+    __typename: "Universe",
+    id: string,
+    sid?: string | null,
+    exchg: Exchange,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteUniverseSubscription = {
+  onDeleteUniverse?:  {
+    __typename: "Universe",
+    id: string,
+    sid?: string | null,
+    exchg: Exchange,
     createdAt: string,
     updatedAt: string,
   } | null,
