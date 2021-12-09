@@ -51,7 +51,7 @@
         "moneobacb277ebacb277ePostConfirmation": {
           "GROUP": "free",
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/moneobacb277ebacb277ePostConfirmation-716744376861786e5761-build.zip"
+          "s3Key": "amplify-builds/moneobacb277ebacb277ePostConfirmation-49396d50706c344d7379-build.zip"
         },
         "moneopricelayer": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
