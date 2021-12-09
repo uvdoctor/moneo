@@ -62,7 +62,8 @@ const getAndPushData = (diff) => {
 				let metaData = {} ;
 				try {
 					const { Payload } = await client.send(command);
-					metaData = asciiDecoder.decode(Payload);
+					const data = asciiDecoder.decode(Payload);
+					metaData = JSON.parse(data);
 					} catch (error) {
 					console.error(error.message);
 					throw error;
