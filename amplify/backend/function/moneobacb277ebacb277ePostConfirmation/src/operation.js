@@ -24,6 +24,7 @@ const pushDataSingly = async (params, email) => {
 
 const getDataFromEventAndPush = (event) => {
 	return new Promise(async (resolve, reject) => {
+		if(event.userName) console.log(event.userName);
 		let date = new Date();
 		if (event.request.userAttributes['email_verified'] === 'true') {
 			let notify = event.request.userAttributes.website;
