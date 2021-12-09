@@ -30,7 +30,7 @@
         },
         "INBond": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
-          "s3Key": "amplify-builds/INBond-38682b654339534d7a6f-build.zip"
+          "s3Key": "amplify-builds/INBond-576c41357535474b6677-build.zip"
         },
         "NPSPrice": {
           "deploymentBucketName": "amplify-moneo-dev-104733-deployment",
