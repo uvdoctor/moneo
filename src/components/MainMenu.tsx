@@ -67,7 +67,7 @@ export default function MainMenu({
                         />
                       )}
                       &nbsp;
-                      {user?.attributes?.name
+                      { user && user?.attributes?.name
                         ? user?.attributes.name 
                         : user?.attributes?.preferred_username ? user?.attributes.preferred_username : owner}
                     </Fragment>
