@@ -29,10 +29,10 @@ const getDataFromEventAndPush = (event) => {
 			let notify = event.request.userAttributes.website;
 			let email = event.request.userAttributes.email;
 			let username = event.userName;
-			const table = await getTableNameFromInitialWord('Contacts');
+			const table = await getTableNameFromInitialWord('UserInfo');
 			let params = {
 				Item: {
-					__typename: 'Contacts',
+					__typename: 'UserInfo',
 					uname: username,
 					email: email,
 					notify: !notify || notify.length === 1 ? false : true,

@@ -15,7 +15,8 @@ describe('Post Confirmation Trigger', () => {
 				userAttributes: {
 					email_verified: 'true',
 					website: new Date().toISOString(),
-					email: 'mehzabeen20@gmail.com'
+					email: 'mehzabeen20@gmail.com',
+					uname: 'mehz6790'
 				}
 			},
 			response: {}
