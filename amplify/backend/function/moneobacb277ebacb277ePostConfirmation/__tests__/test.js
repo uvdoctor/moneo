@@ -11,15 +11,15 @@ describe('Post Confirmation Trigger', () => {
 			}
 		};
 		const event = {
+			userName: "mehz1234",
 			request: {
 				userAttributes: {
 					email_verified: 'true',
 					website: new Date().toISOString(),
 					email: 'mehzabeen20@gmail.com',
-					uname: 'mehz6790'
-				}
+				},
 			},
-			response: {}
+			response: {},
 		};
 		expect(await getDataFromEventAndPush(event, context)).toEqual('Success');
 		AWS.restore('DynamoDB');
@@ -36,7 +36,7 @@ describe('Post Confirmation Trigger', () => {
 				userAttributes: {
 					email_verified: 'false',
 					website: new Date().toISOString(),
-					email: 'mehzabeen20@gmail.com'
+					email: 'mehzabeen20@gmail.com',
 				}
 			},
 			response: {}
