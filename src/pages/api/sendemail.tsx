@@ -30,7 +30,7 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
   if (method === 'POST') {
     const params = {
       Destination: {
-        ToAddresses: [ "emailumangdoctor@gmail.com" ]
+        ToAddresses: [ "emailumangdoctor@gmail.com", "mehzabeen1526@gmail.com" ]
       },
       Source: "no-reply@moneo.money",
       Message: {
