@@ -81,7 +81,7 @@ export const TAB = {
 };
 
 function NWContextProvider() {
-	const { defaultCurrency, appContextLoaded, insData, setInsData, ratesData, owner }: any = useContext(AppContext);
+	const { defaultCurrency, insData, setInsData, ratesData, owner, user }: any = useContext(AppContext);
 	const [ allFamily, setAllFamily ] = useState<any | null>(null);
 	const [ instruments, setInstruments ] = useState<Array<HoldingInput>>([]);
 	const [ preciousMetals, setPreciousMetals ] = useState<Array<HoldingInput>>([]);
@@ -544,10 +544,10 @@ function NWContextProvider() {
 
 	useEffect(
 		() => {
-			if (appContextLoaded) initializeHoldings();
+			if (user) initializeHoldings();
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[ appContextLoaded, owner ]
+		[ user ]
 	);
 
 	useEffect(

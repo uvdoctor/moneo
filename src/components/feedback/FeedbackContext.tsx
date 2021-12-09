@@ -51,7 +51,7 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 					},
 					authMode: !user ? GRAPHQL_AUTH_MODE.AWS_IAM : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS }) as 
 				{ data: CreateFeedbackMutation };
-				setFeedbackId(data.createFeedback?.id);
+				if (rating && rating < 4) setFeedbackId(data.createFeedback?.id); 
 				form.resetFields();
 				const mailTemplate = {
 					firstName : data.createFeedback?.name.fn,
@@ -75,6 +75,7 @@ function FeedbackContextProvider({ children }: FeedbackContextProviderProps) {
 				});
 				openNotificationWithIcon('error', 'Error', 'Error while saving feedback');
 			} finally {
+				setFeedbackId('');
 				setLoading(false);
 			}
 		})

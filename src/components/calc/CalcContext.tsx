@@ -88,7 +88,6 @@ function CalcContextProvider({
   const [results, setResults] = useState<Array<any>>([]);
   const [timer, setTimer] = useState<any>(null);
   const [analyzeFor, setAnalyzeFor] = useState<number>(30);
-  const [ratingId, setRatingId] = useState<String | undefined>('');
   const [ffImpactYears, setFFImpactYears] = useState<number | null>(null);
   const [oppCost, setOppCost] = useState<number>(0);
   const [ wipGoal, setWipGoal ] = useState<CreateGoalInput | null>(goal);
@@ -271,36 +270,19 @@ function CalcContextProvider({
 				variables: {
 					input: {
 						type: getCalcType(),
-						rating: rating
+						rating: rating,
+            feedbackId: feedbackId
 					}
 				},
 				authMode: !user ? GRAPHQL_AUTH_MODE.AWS_IAM : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS
 			})) as {
       data: CreateRatingMutation;
     }
-    setRatingId(data.createRating?.id);
-  }
-  catch (e) {
+    console.log("Rating submitted successfully", data);
+    } catch (e) {
       console.log('Error')
 		} 
   };
-
-  const updateRating = async () => {
-    try {
-			await API.graphql({
-				query: mutations.updateRating,
-				variables: {
-					input: {
-            id: ratingId,
-            feedbackId: feedbackId
-					}
-				},
-				authMode: !user ? GRAPHQL_AUTH_MODE.AWS_IAM : GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS
-      });
-    } catch (e) {
-      console.log('Error while updating rating', e)
-		} 
-  }
       
   const uploadGoalImage = async (file: any) => {
     goalImgStorage.validateImg(file)
@@ -317,12 +299,13 @@ function CalcContextProvider({
   
   useEffect(() => {
     if (!rating) return;
-    submitRating(rating);
-    setShowFeedbackModal(rating && rating < 4 ? true : false);
+    if (rating && rating < 4) setShowFeedbackModal(true);
+    else submitRating(rating);
     }, [rating]);
   
   useEffect(() => {
-    if(feedbackId) updateRating();
+    if(feedbackId) submitRating(rating);
+    setShowFeedbackModal(false);
   }, [feedbackId]);
   
 	return (
