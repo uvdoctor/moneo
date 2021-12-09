@@ -547,7 +547,7 @@ function NWContextProvider() {
 			if (appContextLoaded) initializeHoldings();
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[ appContextLoaded ]
+		[ appContextLoaded, owner ]
 	);
 
 	useEffect(
