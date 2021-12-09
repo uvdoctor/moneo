@@ -99,13 +99,12 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
 	schema.tf = calc.calcTF(record[codes.subt]);
 	schema.cr = calc.calcCR(record[codes.crstr]);
 	const reset = record[codes.rate];
-  	if(!reset) console.log(reset)
 	schema.rate = reset.includes('RESET') || reset > 20 ? 0 : reset === '' ? null : parseFloat(reset);
 	schema.fv = 100;
 	schema.ytm = calcYTM(record, codes);
 	appendGenericFields(schema, table);
 	isinMap[record[codes.id]] = record[codes.id];
-	if (schema.rate === null) schema.name.startsWith('0') ? (schema.rate = parseFloat(0)) : delete schema.rate;
+	if (schema.rate === null) schema.name.startsWith('0') ? (schema.rate = parseFloat(0)) : -1;
 	return schema;
 };
 module.exports = { calcSchema, calc, calcYTM };
