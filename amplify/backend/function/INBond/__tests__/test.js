@@ -1,4 +1,59 @@
-const { calcSchema, calc, calcYTM } = require("../src/calculate");
+const { calcSchema, calc, calcYTM } = require('../src/calculate');
+
+// describe('CalcSchema', () => {
+// 	test('Schema', () => {
+// 		const data = calcSchema(
+// 			{
+// 				Security_cd: 'S12324',
+// 				'ISIN No.': 'IN09239434',
+// 				sc_name: '0security',
+// 				'Close Price': 124,
+// 				'COUP0N (%)': '',
+// 				'COUP0N (%)': '',
+// 				'FACE VALUE': 10
+// 			},
+// 			{
+// 				sid: 'Security_cd',
+// 				id: 'ISIN No.',
+// 				name: 'sc_name',
+// 				price: 'Close Price',
+// 				subt: '',
+// 				rate: 'COUP0N (%)',
+// 				frate: 'COUP0N (%)',
+// 				fv: 'FACE VALUE',
+// 				sDate: '',
+// 				mDate: '',
+// 				crstr: ''
+// 			},
+// 			{
+// 				id: '',
+// 				sid: '',
+// 				name: '',
+// 				subt: '',
+// 				price: 0,
+// 				exchg: '',
+// 				sm: 0,
+// 				sy: 0,
+// 				mm: 0,
+// 				my: 0,
+// 				rate: 0,
+// 				fr: '',
+// 				tf: '',
+// 				fv: 0,
+// 				cr: null,
+// 				crstr: null,
+// 				ytm: 0,
+// 				createdAt: '',
+// 				updatedAt: ''
+// 			},
+// 			'BSE',
+// 			{},
+// 			'Table'
+// 		);
+// 		console.log(data);
+// 		expect(data).toEqual('GBO');
+// 	});
+// });
 
 describe("Test Asset Subtype", () => {
   test("Other Gov. Bond", () => {
