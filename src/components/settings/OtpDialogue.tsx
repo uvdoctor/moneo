@@ -5,7 +5,7 @@ import { COLORS } from '../../CONSTANTS';
 import { AppContext } from '../AppContext';
 import TextInput from '../form/textinput';
 import { Auth } from 'aws-amplify';
-import { createContact, updateMobInContact } from '../contactutils';
+import { updateEmail, updateMobile } from '../userinfoutils';
 import Countdown from 'antd/lib/statistic/Countdown';
 
 interface OtpInputProps {
@@ -15,14 +15,11 @@ interface OtpInputProps {
 	email?: any;
 	mob?: any;
 	im?: any;
-	notify?: any;
-	cc?: any;
 	resendOtp?: Function;
-	user?: any;
 }
 
 export default function OtpDialogue(props: OtpInputProps) {
-	const { validateCaptcha }: any = useContext(AppContext);
+	const { validateCaptcha, owner }: any = useContext(AppContext);
 	const [ isModalVisible, setIsModalVisible ] = useState<boolean>(false);
 	const [ loading, setLoading ] = useState<boolean>(false);
 	const [ otp, setOtp ] = useState<any>();
@@ -33,8 +30,8 @@ export default function OtpDialogue(props: OtpInputProps) {
 		Auth.verifyCurrentUserAttributeSubmit(attr, otp)
 			.then(async () => {
 				notification.success({ message: 'Otp Verified Successfully' });
-				if (attr === 'phone_number') await updateMobInContact(props.email, props.mob);
-				else await createContact(props.email, props.mob, props.im, props.notify);
+				if (attr === 'phone_number') await updateMobile(owner, props.mob);
+				else await updateEmail(owner, props.email);
 				setLoading(false);
 				setIsModalVisible(false);
 			})

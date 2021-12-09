@@ -12,11 +12,11 @@ import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
-import { deleteContact, doesEmailExist, doesImExist, doesMobExist, updateImInContact } from "../contactutils";
+import { doesEmailExist, doesImExist, doesMobExist, updateIm } from "../userinfoutils";
 import DatePickerInput from "../form/DatePickerInput";
 
 export default function UserSettings(): JSX.Element {
-  const { user, appContextLoaded, defaultCountry, validateCaptcha }: any = useContext(AppContext);
+  const { user, appContextLoaded, defaultCountry, validateCaptcha, owner }: any = useContext(AppContext);
   const [email, setEmail] = useState<string>("");
   const [mobile, setMobile] = useState<any>('');
   const [error, setError] = useState<any>("");
@@ -32,7 +32,6 @@ export default function UserSettings(): JSX.Element {
   const failure = (message: any) => notification.error({ message });
 
   const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
-  const notify = !user || !user?.attributes.website || user?.attributes.website ==='N' ? false : true;
   const disableButton = (prevValue: any, currValue: any) => prevValue === currValue ? true : error.length > 0 ? true : false;
 
   const counCodeWithOutPlusSign = counCode?.value.slice(1);
@@ -68,7 +67,7 @@ export default function UserSettings(): JSX.Element {
       };
       await Auth.updateUserAttributes(user, { nickname: counCode?.value+whatsapp });
       success("Whatsapp number updated successfully. Enter Otp to verify");
-      await updateImInContact(user?.attributes.email, im);
+      await updateIm(owner, im);
       return true;
     } catch (error) {
       failure(`Unable to update, ${error}`);
@@ -82,7 +81,6 @@ export default function UserSettings(): JSX.Element {
         failure('Please use another email address as this one is already used by another account.');
         return false;
       }
-      await deleteContact(user?.attributes.email);
       await Auth.updateUserAttributes(user, { email: email });
       success("Email updated successfully. Enter Otp to verify");
       return true;
@@ -118,7 +116,6 @@ export default function UserSettings(): JSX.Element {
     }
   };
   
-
   useEffect(() => {
     if (!user) return;
     setEmail(user?.attributes.email || '');
@@ -260,7 +257,7 @@ export default function UserSettings(): JSX.Element {
                       post={
                         <OtpDialogue
                           disableButton={disableButton(user?.attributes.phone_number, counCode?.value+mobile)}
-                          action={"phone_number"} user={user}
+                          action={"phone_number"}
                           email={email}
                           mob={parseFloat(counCodeWithOutPlusSign+mobile)}
                           onClickAction={updatePhoneNumber}
@@ -320,7 +317,6 @@ export default function UserSettings(): JSX.Element {
                           email={email}
                           mob={parseFloat(counCodeWithOutPlusSign + mobile)}
                           im={parseFloat(counCodeWithOutPlusSign + whatsapp)}
-                          notify={notify}    
                           resendOtp={sendOtp}/>}
                       />
                   </Col>

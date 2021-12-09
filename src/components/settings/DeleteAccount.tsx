@@ -5,7 +5,7 @@ import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined';
 import Text from 'antd/lib/typography/Text';
 import TextInput from '../form/textinput';
 import Auth from '@aws-amplify/auth';
-import { deleteContact } from '../contactutils';
+import { deleteContact } from '../userinfoutils';
 import { GoalContext } from '../goals/GoalContext';
 import { API, graphqlOperation, Storage } from 'aws-amplify';
 import * as mutations from '../../graphql/mutations';
@@ -86,7 +86,7 @@ export default function DeleteAccount() {
 					await deleteFamilyList();
 					user.attributes.profile ? await Storage.remove(user.attributes.profile) : null;
 					goalImgKey ? await Storage.remove(goalImgKey) : null;
-					await deleteContact(user.attributes.email);
+					await deleteContact(owner);
 					user.deleteUser((error: any, data: any) => {
 						if (error) {
 							console.log(error);

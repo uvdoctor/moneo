@@ -6,7 +6,7 @@ import { AuthState, Translations, onAuthUIStateChange } from "@aws-amplify/ui-co
 import { Alert, Checkbox, Row } from "antd";
 import { ROUTES } from "../CONSTANTS";
 import Title from "antd/lib/typography/Title";
-import { doesEmailExist } from "./contactutils";
+import { doesEmailExist } from "./userinfoutils";
 import Nav from "./Nav";
 import { AppContext } from "./AppContext";
 import { Form, Input, Button } from "antd";

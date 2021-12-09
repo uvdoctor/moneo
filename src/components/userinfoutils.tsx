@@ -2,7 +2,7 @@ import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 import { API } from 'aws-amplify';
-import { ListContactssQuery, RegByImQuery, RegByMobQuery } from '../api/goals';
+import { RegByImQuery, RegByMobQuery, RegByEmailQuery } from '../api/goals';
 import { float } from 'aws-sdk/clients/lightsail';
 
 export const doesEmailExist = async (email: string, authMode?: string) => {
@@ -11,19 +11,18 @@ export const doesEmailExist = async (email: string, authMode?: string) => {
 		do {
 			let variables: any = { limit: 20000, email: email };
 			if (nextToken) variables.nextToken = nextToken;
-			const { data: { listContactss } } = (await API.graphql({
-				query: queries.listContactss,
+			const { data: { regByEmail } } = (await API.graphql({
+				query: queries.regByEmail,
 				variables: variables,
-				authMode: authMode === 'AWS_IAM' ? GRAPHQL_AUTH_MODE.AWS_IAM :GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
-			})) as { data: ListContactssQuery };
-			console.log(listContactss?.items);
-			
-			if(listContactss?.items?.length) return true;
-			nextToken = listContactss?.nextToken;
+				authMode: authMode === 'AWS_IAM' ? GRAPHQL_AUTH_MODE.AWS_IAM :GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS
+			})) as { data: RegByEmailQuery };
+			console.log(regByEmail?.items);
+			if(regByEmail?.items?.length) return true;
+			nextToken = regByEmail?.nextToken;
 		} while (nextToken);
 		return false;
 	} catch (e) {
-		console.log('Error while checking if email address is unique: ', e);
+		console.log('Error while checking if mobile number is unique: ', e);
 	}
 };
 
@@ -67,23 +66,11 @@ export const doesImExist = async (im: float) => {
 	}
 };
 
-export const createContact = async (email: string, mob: float, im: float, notify: boolean ) => {
+export const updateMobile = async (uname:string, mob: float) => {
 	try {
 		const data = await API.graphql({
-			query: mutations.createContacts,
-			variables: { input: { email, mob: mob ? mob : 0, im: im ? im : 0, notify } },
-		});
-		console.log(data);
-	} catch (e) {
-		console.log('Error while adding email in table', e);
-	}
-};
-
-export const updateMobInContact = async (email:string, mob: float) => {
-	try {
-		const data = await API.graphql({
-			query: mutations.updateContacts,
-			variables: { input: { email, mob } },
+			query: mutations.updateUserInfo,
+			variables: { input: { uname, mob } },
 		});
 		console.log(data);
 	} catch (e) {
@@ -91,11 +78,11 @@ export const updateMobInContact = async (email:string, mob: float) => {
 	}
 };
 
-export const updateImInContact = async (email: string, im: float) => {
+export const updateIm = async (uname: string, im: float) => {
 	try {
 		const data = await API.graphql({
-			query: mutations.updateContacts,
-			variables: { input: { email, im } },
+			query: mutations.updateUserInfo,
+			variables: { input: { uname, im } },
 		});
 		console.log(data);
 	} catch (e) {
@@ -103,11 +90,11 @@ export const updateImInContact = async (email: string, im: float) => {
 	}
 };
 
-export const updateEmailInContact = async (email: string, mob: float, im: float, notify: boolean ) => {
+export const updateEmail = async (uname: string, email: string) => {
 	try {
 		const data = await API.graphql({
-			query: mutations.updateContacts,
-			variables: { input: { email, mob, im, notify } }
+			query: mutations.updateUserInfo,
+			variables: { input: { uname, email } }
 		});
 		console.log(data);
 	} catch (e) {
@@ -115,11 +102,11 @@ export const updateEmailInContact = async (email: string, mob: float, im: float,
 	}
 };
 
-export const deleteContact = async (email: string) => {
+export const deleteContact = async (uname: string) => {
 	try {
 		const data = await API.graphql({
-			query: mutations.deleteContacts,
-			variables: { input: { email } },
+			query: mutations.deleteUserInfo,
+			variables: { input: { uname } },
 		});
 		console.log(data);
 	} catch (e) {
