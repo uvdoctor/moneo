@@ -402,24 +402,27 @@ export type DeleteGoalInput = {
   id: string,
 };
 
-export type UpdateContactsInput = {
-  email: string,
+export type UpdateUserInfoInput = {
+  uname: string,
+  email?: string | null,
   im?: number | null,
   mob?: number | null,
   notify?: boolean | null,
 };
 
-export type ModelContactsConditionInput = {
+export type ModelUserInfoConditionInput = {
+  email?: ModelStringInput | null,
   im?: ModelFloatInput | null,
   mob?: ModelFloatInput | null,
   notify?: ModelBooleanInput | null,
-  and?: Array< ModelContactsConditionInput | null > | null,
-  or?: Array< ModelContactsConditionInput | null > | null,
-  not?: ModelContactsConditionInput | null,
+  and?: Array< ModelUserInfoConditionInput | null > | null,
+  or?: Array< ModelUserInfoConditionInput | null > | null,
+  not?: ModelUserInfoConditionInput | null,
 };
 
-export type Contacts = {
-  __typename: "Contacts",
+export type UserInfo = {
+  __typename: "UserInfo",
+  uname?: string,
   email?: string,
   im?: number | null,
   mob?: number | null,
@@ -428,8 +431,8 @@ export type Contacts = {
   updatedAt?: string,
 };
 
-export type DeleteContactsInput = {
-  email: string,
+export type DeleteUserInfoInput = {
+  uname: string,
 };
 
 export type CreateFamilyInput = {
@@ -652,7 +655,8 @@ export type CreateRatingInput = {
   feedbackId?: string | null,
 };
 
-export type CreateContactsInput = {
+export type CreateUserInfoInput = {
+  uname: string,
   email: string,
   im?: number | null,
   mob?: number | null,
@@ -1388,14 +1392,15 @@ export type ModelFamilyConnection = {
   nextToken?: string | null,
 };
 
-export type ModelContactsFilterInput = {
+export type ModelUserInfoFilterInput = {
+  uname?: ModelStringInput | null,
   email?: ModelStringInput | null,
   im?: ModelFloatInput | null,
   mob?: ModelFloatInput | null,
   notify?: ModelBooleanInput | null,
-  and?: Array< ModelContactsFilterInput | null > | null,
-  or?: Array< ModelContactsFilterInput | null > | null,
-  not?: ModelContactsFilterInput | null,
+  and?: Array< ModelUserInfoFilterInput | null > | null,
+  or?: Array< ModelUserInfoFilterInput | null > | null,
+  not?: ModelUserInfoFilterInput | null,
 };
 
 export enum ModelSortDirection {
@@ -1404,9 +1409,9 @@ export enum ModelSortDirection {
 }
 
 
-export type ModelContactsConnection = {
-  __typename: "ModelContactsConnection",
-  items?:  Array<Contacts >,
+export type ModelUserInfoConnection = {
+  __typename: "ModelUserInfoConnection",
+  items?:  Array<UserInfo >,
   nextToken?: string | null,
 };
 
@@ -1909,14 +1914,15 @@ export type DeleteGoalMutation = {
   } | null,
 };
 
-export type UpdateContactsMutationVariables = {
-  input?: UpdateContactsInput,
-  condition?: ModelContactsConditionInput | null,
+export type UpdateUserInfoMutationVariables = {
+  input?: UpdateUserInfoInput,
+  condition?: ModelUserInfoConditionInput | null,
 };
 
-export type UpdateContactsMutation = {
-  updateContacts?:  {
-    __typename: "Contacts",
+export type UpdateUserInfoMutation = {
+  updateUserInfo?:  {
+    __typename: "UserInfo",
+    uname: string,
     email: string,
     im?: number | null,
     mob?: number | null,
@@ -1926,14 +1932,15 @@ export type UpdateContactsMutation = {
   } | null,
 };
 
-export type DeleteContactsMutationVariables = {
-  input?: DeleteContactsInput,
-  condition?: ModelContactsConditionInput | null,
+export type DeleteUserInfoMutationVariables = {
+  input?: DeleteUserInfoInput,
+  condition?: ModelUserInfoConditionInput | null,
 };
 
-export type DeleteContactsMutation = {
-  deleteContacts?:  {
-    __typename: "Contacts",
+export type DeleteUserInfoMutation = {
+  deleteUserInfo?:  {
+    __typename: "UserInfo",
+    uname: string,
     email: string,
     im?: number | null,
     mob?: number | null,
@@ -2945,14 +2952,15 @@ export type CreateRatingMutation = {
   } | null,
 };
 
-export type CreateContactsMutationVariables = {
-  input?: CreateContactsInput,
-  condition?: ModelContactsConditionInput | null,
+export type CreateUserInfoMutationVariables = {
+  input?: CreateUserInfoInput,
+  condition?: ModelUserInfoConditionInput | null,
 };
 
-export type CreateContactsMutation = {
-  createContacts?:  {
-    __typename: "Contacts",
+export type CreateUserInfoMutation = {
+  createUserInfo?:  {
+    __typename: "UserInfo",
+    uname: string,
     email: string,
     im?: number | null,
     mob?: number | null,
@@ -3792,13 +3800,14 @@ export type ListFamilysQuery = {
   } | null,
 };
 
-export type GetContactsQueryVariables = {
-  email?: string,
+export type GetUserInfoQueryVariables = {
+  uname?: string,
 };
 
-export type GetContactsQuery = {
-  getContacts?:  {
-    __typename: "Contacts",
+export type GetUserInfoQuery = {
+  getUserInfo?:  {
+    __typename: "UserInfo",
+    uname: string,
     email: string,
     im?: number | null,
     mob?: number | null,
@@ -3808,19 +3817,20 @@ export type GetContactsQuery = {
   } | null,
 };
 
-export type ListContactssQueryVariables = {
-  email?: string | null,
-  filter?: ModelContactsFilterInput | null,
+export type ListUserInfosQueryVariables = {
+  uname?: string | null,
+  filter?: ModelUserInfoFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListContactssQuery = {
-  listContactss?:  {
-    __typename: "ModelContactsConnection",
+export type ListUserInfosQuery = {
+  listUserInfos?:  {
+    __typename: "ModelUserInfoConnection",
     items:  Array< {
-      __typename: "Contacts",
+      __typename: "UserInfo",
+      uname: string,
       email: string,
       im?: number | null,
       mob?: number | null,
@@ -3835,16 +3845,17 @@ export type ListContactssQuery = {
 export type RegByImQueryVariables = {
   im?: number | null,
   sortDirection?: ModelSortDirection | null,
-  filter?: ModelContactsFilterInput | null,
+  filter?: ModelUserInfoFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
 export type RegByImQuery = {
   regByIM?:  {
-    __typename: "ModelContactsConnection",
+    __typename: "ModelUserInfoConnection",
     items:  Array< {
-      __typename: "Contacts",
+      __typename: "UserInfo",
+      uname: string,
       email: string,
       im?: number | null,
       mob?: number | null,
@@ -3859,16 +3870,17 @@ export type RegByImQuery = {
 export type RegByMobQueryVariables = {
   mob?: number | null,
   sortDirection?: ModelSortDirection | null,
-  filter?: ModelContactsFilterInput | null,
+  filter?: ModelUserInfoFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
 export type RegByMobQuery = {
   regByMob?:  {
-    __typename: "ModelContactsConnection",
+    __typename: "ModelUserInfoConnection",
     items:  Array< {
-      __typename: "Contacts",
+      __typename: "UserInfo",
+      uname: string,
       email: string,
       im?: number | null,
       mob?: number | null,
@@ -5165,9 +5177,10 @@ export type OnDeleteFamilySubscription = {
   } | null,
 };
 
-export type OnCreateContactsSubscription = {
-  onCreateContacts?:  {
-    __typename: "Contacts",
+export type OnCreateUserInfoSubscription = {
+  onCreateUserInfo?:  {
+    __typename: "UserInfo",
+    uname: string,
     email: string,
     im?: number | null,
     mob?: number | null,
@@ -5177,9 +5190,10 @@ export type OnCreateContactsSubscription = {
   } | null,
 };
 
-export type OnUpdateContactsSubscription = {
-  onUpdateContacts?:  {
-    __typename: "Contacts",
+export type OnUpdateUserInfoSubscription = {
+  onUpdateUserInfo?:  {
+    __typename: "UserInfo",
+    uname: string,
     email: string,
     im?: number | null,
     mob?: number | null,
@@ -5189,9 +5203,10 @@ export type OnUpdateContactsSubscription = {
   } | null,
 };
 
-export type OnDeleteContactsSubscription = {
-  onDeleteContacts?:  {
-    __typename: "Contacts",
+export type OnDeleteUserInfoSubscription = {
+  onDeleteUserInfo?:  {
+    __typename: "UserInfo",
+    uname: string,
     email: string,
     im?: number | null,
     mob?: number | null,

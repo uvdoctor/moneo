@@ -286,12 +286,13 @@ export const deleteGoal = /* GraphQL */ `
     }
   }
 `;
-export const updateContacts = /* GraphQL */ `
-  mutation UpdateContacts(
-    $input: UpdateContactsInput!
-    $condition: ModelContactsConditionInput
+export const updateUserInfo = /* GraphQL */ `
+  mutation UpdateUserInfo(
+    $input: UpdateUserInfoInput!
+    $condition: ModelUserInfoConditionInput
   ) {
-    updateContacts(input: $input, condition: $condition) {
+    updateUserInfo(input: $input, condition: $condition) {
+      uname
       email
       im
       mob
@@ -301,12 +302,13 @@ export const updateContacts = /* GraphQL */ `
     }
   }
 `;
-export const deleteContacts = /* GraphQL */ `
-  mutation DeleteContacts(
-    $input: DeleteContactsInput!
-    $condition: ModelContactsConditionInput
+export const deleteUserInfo = /* GraphQL */ `
+  mutation DeleteUserInfo(
+    $input: DeleteUserInfoInput!
+    $condition: ModelUserInfoConditionInput
   ) {
-    deleteContacts(input: $input, condition: $condition) {
+    deleteUserInfo(input: $input, condition: $condition) {
+      uname
       email
       im
       mob
@@ -1214,12 +1216,13 @@ export const createRating = /* GraphQL */ `
     }
   }
 `;
-export const createContacts = /* GraphQL */ `
-  mutation CreateContacts(
-    $input: CreateContactsInput!
-    $condition: ModelContactsConditionInput
+export const createUserInfo = /* GraphQL */ `
+  mutation CreateUserInfo(
+    $input: CreateUserInfoInput!
+    $condition: ModelUserInfoConditionInput
   ) {
-    createContacts(input: $input, condition: $condition) {
+    createUserInfo(input: $input, condition: $condition) {
+      uname
       email
       im
       mob

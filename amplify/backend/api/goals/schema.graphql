@@ -130,20 +130,21 @@ type Goal @model @auth(rules: [{ allow: owner }]) {
 	img: String
 }
 
-type Contacts
+type UserInfo
 	@model
 	@aws_iam
 	@aws_cognito_user_pools
-	@key(fields: ["email"])
+	@key(fields: ["uname"])
 	@key(name: "ByIM", fields: ["im"], queryField: "regByIM")
 	@key(name: "ByMob", fields: ["mob"], queryField: "regByMob")
+	@key(name: "ByEmail", fields: ["email"], queryField: "regByEmail")
 	@auth(
 		rules: [
 			{ allow: public, provider: iam, operations: [read] }
-			{ allow: private, provider: iam, operations: [create, read] }
 			{ allow: private, operations: [create, read, update, delete] }
 		]
 	) {
+	uname: String!	
 	email: String!
 	im: Float
 	mob: Float

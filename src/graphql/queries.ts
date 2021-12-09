@@ -240,9 +240,10 @@ export const listFamilys = /* GraphQL */ `
     }
   }
 `;
-export const getContacts = /* GraphQL */ `
-  query GetContacts($email: String!) {
-    getContacts(email: $email) {
+export const getUserInfo = /* GraphQL */ `
+  query GetUserInfo($uname: String!) {
+    getUserInfo(uname: $uname) {
+      uname
       email
       im
       mob
@@ -252,22 +253,23 @@ export const getContacts = /* GraphQL */ `
     }
   }
 `;
-export const listContactss = /* GraphQL */ `
-  query ListContactss(
-    $email: String
-    $filter: ModelContactsFilterInput
+export const listUserInfos = /* GraphQL */ `
+  query ListUserInfos(
+    $uname: String
+    $filter: ModelUserInfoFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listContactss(
-      email: $email
+    listUserInfos(
+      uname: $uname
       filter: $filter
       limit: $limit
       nextToken: $nextToken
       sortDirection: $sortDirection
     ) {
       items {
+        uname
         email
         im
         mob
@@ -283,7 +285,7 @@ export const regByIm = /* GraphQL */ `
   query RegByIm(
     $im: Float
     $sortDirection: ModelSortDirection
-    $filter: ModelContactsFilterInput
+    $filter: ModelUserInfoFilterInput
     $limit: Int
     $nextToken: String
   ) {
@@ -295,6 +297,7 @@ export const regByIm = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
+        uname
         email
         im
         mob
@@ -310,7 +313,7 @@ export const regByMob = /* GraphQL */ `
   query RegByMob(
     $mob: Float
     $sortDirection: ModelSortDirection
-    $filter: ModelContactsFilterInput
+    $filter: ModelUserInfoFilterInput
     $limit: Int
     $nextToken: String
   ) {
@@ -322,6 +325,7 @@ export const regByMob = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
+        uname
         email
         im
         mob

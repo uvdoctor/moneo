@@ -329,9 +329,10 @@ export const onDeleteFamily = /* GraphQL */ `
     }
   }
 `;
-export const onCreateContacts = /* GraphQL */ `
-  subscription OnCreateContacts {
-    onCreateContacts {
+export const onCreateUserInfo = /* GraphQL */ `
+  subscription OnCreateUserInfo {
+    onCreateUserInfo {
+      uname
       email
       im
       mob
@@ -341,9 +342,10 @@ export const onCreateContacts = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateContacts = /* GraphQL */ `
-  subscription OnUpdateContacts {
-    onUpdateContacts {
+export const onUpdateUserInfo = /* GraphQL */ `
+  subscription OnUpdateUserInfo {
+    onUpdateUserInfo {
+      uname
       email
       im
       mob
@@ -353,9 +355,10 @@ export const onUpdateContacts = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteContacts = /* GraphQL */ `
-  subscription OnDeleteContacts {
-    onDeleteContacts {
+export const onDeleteUserInfo = /* GraphQL */ `
+  subscription OnDeleteUserInfo {
+    onDeleteUserInfo {
+      uname
       email
       im
       mob
