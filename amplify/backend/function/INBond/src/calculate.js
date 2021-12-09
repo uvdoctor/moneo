@@ -104,7 +104,7 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
 	schema.ytm = calcYTM(record, codes);
 	appendGenericFields(schema, table);
 	isinMap[record[codes.id]] = record[codes.id];
-	if (schema.rate === null) schema.name.startsWith('0') ? (schema.rate = parseFloat(0)) : -1;
+	if (schema.rate === null) schema.name.startsWith('0') ? (schema.rate = parseFloat(0)) : schema.rate = -1;
 	return schema;
 };
 module.exports = { calcSchema, calc, calcYTM };
