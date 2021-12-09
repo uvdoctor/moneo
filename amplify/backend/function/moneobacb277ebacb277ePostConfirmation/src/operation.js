@@ -24,15 +24,16 @@ const pushDataSingly = async (params, email) => {
 
 const getDataFromEventAndPush = (event) => {
 	return new Promise(async (resolve, reject) => {
-		if(event.userName) console.log(event.userName);
 		let date = new Date();
 		if (event.request.userAttributes['email_verified'] === 'true') {
 			let notify = event.request.userAttributes.website;
 			let email = event.request.userAttributes.email;
+			let username = event.userName;
 			const table = await getTableNameFromInitialWord('Contacts');
 			let params = {
 				Item: {
 					__typename: 'Contacts',
+					uname: username,
 					email: email,
 					notify: !notify || notify.length === 1 ? false : true,
 					createdAt: date.toISOString(),
