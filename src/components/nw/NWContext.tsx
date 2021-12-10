@@ -142,6 +142,7 @@ function NWContextProvider() {
 	const [ loadingFamily, setLoadingFamily ] = useState<boolean>(true);
 	const [ loadingHoldings, setLoadingHoldings ] = useState<boolean>(true);
 	const [ uname, setUname ] = useState<string | null | undefined>(owner);
+	const [ insUname, setInsUname ] = useState<string | null | undefined>(owner);
 	const [ childTab, setChildTab ] = useState<string>('');
 	const [ npsData, setNPSData] = useState<Array<CreateNPSPriceInput>>([]);	
 	const [ isDirty, setIsDirty]  = useState<boolean>(false);
@@ -531,6 +532,7 @@ function NWContextProvider() {
 		setSelectedCurrency(Object.keys(currencyList)[0]);
 		setCurrencyList(currencyList);
 		setUname(allHoldings?.uname);
+		setInsUname(insHoldings?.uname);
 		if(insHoldings?.uname && insHoldings?.ins?.length) 
 			await initializeInsData(insHoldings?.ins);
 		setInstruments([ ...(insHoldings?.ins ? insHoldings.ins : []) ]);
@@ -686,13 +688,10 @@ function NWContextProvider() {
 		updatedHoldings.ins = insurance;
 		if(uname) updatedHoldings.uname = uname;
 		try {
-			if(uname) {
-				await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
-				if (instruments.length)  await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
-			} else {
-				if (instruments.length) await addInsHoldings(updatedInsHoldings);
-				await addHoldings(updatedHoldings);
-			}
+			if(uname) await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
+			else await addHoldings(updatedHoldings);
+			if (instruments.length > 0 && insUname)  await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
+			else if (instruments.length > 0) await addInsHoldings(updatedInsHoldings);
 			notification.success({message: 'Data saved', description: 'All holdings data has been saved.'})
 		} catch(e) {
 			notification.error({message: 'Unable to save holdings', description: 'Sorry! An unexpected error occurred while trying to save the data.'});
