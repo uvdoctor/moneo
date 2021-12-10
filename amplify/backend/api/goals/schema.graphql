@@ -508,7 +508,7 @@ type UserHoldings
 	ins: [Holding!]
 	other: [Holding!]
 	angel: [Holding!]
-	uniCheck: Boolean!
+	uni: Boolean!
 }
 
 type EODPrices

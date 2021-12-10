@@ -1035,7 +1035,7 @@ export const getUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      uniCheck
+      uni
       createdAt
       updatedAt
       owner
@@ -1217,7 +1217,7 @@ export const listUserHoldingss = /* GraphQL */ `
           type
           subt
         }
-        uniCheck
+        uni
         createdAt
         updatedAt
         owner

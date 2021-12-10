@@ -493,7 +493,7 @@ export type CreateUserHoldingsInput = {
   ins?: Array< HoldingInput > | null,
   other?: Array< HoldingInput > | null,
   angel?: Array< HoldingInput > | null,
-  uniCheck: boolean,
+  uni: boolean,
 };
 
 export type HoldingInput = {
@@ -552,7 +552,7 @@ export type OwnershipInput = {
 };
 
 export type ModelUserHoldingsConditionInput = {
-  uniCheck?: ModelBooleanInput | null,
+  uni?: ModelBooleanInput | null,
   and?: Array< ModelUserHoldingsConditionInput | null > | null,
   or?: Array< ModelUserHoldingsConditionInput | null > | null,
   not?: ModelUserHoldingsConditionInput | null,
@@ -575,7 +575,7 @@ export type UserHoldings = {
   ins?:  Array<Holding > | null,
   other?:  Array<Holding > | null,
   angel?:  Array<Holding > | null,
-  uniCheck?: boolean,
+  uni?: boolean,
   createdAt?: string,
   updatedAt?: string,
   owner?: string | null,
@@ -645,7 +645,7 @@ export type UpdateUserHoldingsInput = {
   ins?: Array< HoldingInput > | null,
   other?: Array< HoldingInput > | null,
   angel?: Array< HoldingInput > | null,
-  uniCheck?: boolean | null,
+  uni?: boolean | null,
 };
 
 export type DeleteUserHoldingsInput = {
@@ -1622,7 +1622,7 @@ export type ModelNPSPriceConnection = {
 
 export type ModelUserHoldingsFilterInput = {
   uname?: ModelStringInput | null,
-  uniCheck?: ModelBooleanInput | null,
+  uni?: ModelBooleanInput | null,
   and?: Array< ModelUserHoldingsFilterInput | null > | null,
   or?: Array< ModelUserHoldingsFilterInput | null > | null,
   not?: ModelUserHoldingsFilterInput | null,
@@ -2370,7 +2370,7 @@ export type CreateUserHoldingsMutation = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uniCheck: boolean,
+    uni: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2675,7 +2675,7 @@ export type UpdateUserHoldingsMutation = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uniCheck: boolean,
+    uni: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2980,7 +2980,7 @@ export type DeleteUserHoldingsMutation = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uniCheck: boolean,
+    uni: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -4734,7 +4734,7 @@ export type GetUserHoldingsQuery = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uniCheck: boolean,
+    uni: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -4927,7 +4927,7 @@ export type ListUserHoldingssQuery = {
         type?: string | null,
         subt?: string | null,
       } > | null,
-      uniCheck: boolean,
+      uni: boolean,
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
@@ -6114,7 +6114,7 @@ export type OnCreateUserHoldingsSubscription = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uniCheck: boolean,
+    uni: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -6418,7 +6418,7 @@ export type OnUpdateUserHoldingsSubscription = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uniCheck: boolean,
+    uni: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -6722,7 +6722,7 @@ export type OnDeleteUserHoldingsSubscription = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uniCheck: boolean,
+    uni: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
