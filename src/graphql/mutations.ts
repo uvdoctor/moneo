@@ -1244,6 +1244,7 @@ export const createUniverse = /* GraphQL */ `
       id
       sid
       exchg
+      users
       createdAt
       updatedAt
     }
@@ -1258,6 +1259,7 @@ export const updateUniverse = /* GraphQL */ `
       id
       sid
       exchg
+      users
       createdAt
       updatedAt
     }
@@ -1272,6 +1274,7 @@ export const deleteUniverse = /* GraphQL */ `
       id
       sid
       exchg
+      users
       createdAt
       updatedAt
     }

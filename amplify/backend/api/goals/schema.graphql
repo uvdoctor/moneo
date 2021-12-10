@@ -162,7 +162,8 @@ type Universe
 	) {
 	id: String!
 	sid: String
-	exchg: Exchange!
+	exchg: Exchange
+	users: [String]!
 }
 
 enum AssetType {

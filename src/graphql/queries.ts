@@ -371,6 +371,7 @@ export const getUniverse = /* GraphQL */ `
       id
       sid
       exchg
+      users
       createdAt
       updatedAt
     }
@@ -395,6 +396,7 @@ export const listUniverses = /* GraphQL */ `
         id
         sid
         exchg
+        users
         createdAt
         updatedAt
       }
