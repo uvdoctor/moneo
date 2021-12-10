@@ -428,7 +428,7 @@ type Holding {
 	pur: Purchase
 	name: String
 	fId: String!
-	curr: String
+	curr: String!
 	chg: Float
 	chgF: Int
 	type: String
@@ -441,7 +441,7 @@ type Instrument {
 	qty: Float!
 	pur: [Purchase!]
 	fId: String!
-	curr: String
+	curr: String!
 }
 
 enum PropertyType {
