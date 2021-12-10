@@ -103,7 +103,7 @@ export default function UploadHoldings() {
 		}
 		setSelectedCurrency(currency);
 		if(equitiesNum || mfsNum || bondsNum || etfsNum) {
-			let filteredInsByCurr: Array<InstrumentInput> = instruments.filter((instrument: InstrumentInput) => instrument.curr !== instrument.curr);
+			let filteredInsByCurr: Array<InstrumentInput> = instruments.filter((instrument: InstrumentInput) => instrument.curr === currency);
 			await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, member as string, filteredInsByCurr);
 			let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, member as string, filteredInsByCurr);
 			if(unmatchedBonds && Object.keys(unmatchedBonds).length) 
@@ -112,7 +112,7 @@ export default function UploadHoldings() {
 				Object.keys(etfs).forEach((key: string) => equities[key] = etfs[key]);
 			await loadInstrumentPrices(loadMatchingINExchange, equities, member as string, filteredInsByCurr);
 			simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
-			let filteredIns: Array<InstrumentInput> = filteredInsByCurr.filter((instrument: InstrumentInput) => instrument?.fId !== member);
+			let filteredIns: Array<InstrumentInput> = filteredInsByCurr.filter((instrument: InstrumentInput) => instrument?.fId === member);
 			setInstruments([...filteredIns]);
 		}
 		resetState();
@@ -220,6 +220,7 @@ export default function UploadHoldings() {
 					recordBroken = false;
 					isin = retVal;
 					insType = getInsTypeFromISIN(isin, insType);
+					
 				}
 				if (!isin) continue;
 				let qty: number | null = getQty(value);
