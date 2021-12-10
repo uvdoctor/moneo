@@ -646,6 +646,7 @@ export const createUserHoldings = /* GraphQL */ `
         type
         subt
       }
+      uniCheck
       createdAt
       updatedAt
       owner
@@ -919,6 +920,7 @@ export const updateUserHoldings = /* GraphQL */ `
         type
         subt
       }
+      uniCheck
       createdAt
       updatedAt
       owner
@@ -1192,6 +1194,7 @@ export const deleteUserHoldings = /* GraphQL */ `
         type
         subt
       }
+      uniCheck
       createdAt
       updatedAt
       owner
