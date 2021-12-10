@@ -8,7 +8,7 @@ import { NWContext } from "./NWContext";
 import { getInsTypeFromISIN, getUploaderSettings } from "./parseutils";
 import { isMobileDevice } from "../utils";
 import simpleStorage from "simplestorage.js";
-import { AssetSubType, AssetType, HoldingInput } from "../../api/goals";
+import { AssetSubType, AssetType, InstrumentInput } from "../../api/goals";
 import { UserOutlined } from "@ant-design/icons";
 import {
 	completeRecord,
@@ -72,27 +72,21 @@ export default function UploadHoldings() {
 		setShowInsUpload(false);
 	}
 
-	const loadInstrumentPrices = async (fun: Function, input: any, memberKey: string, filteredIns: Array<HoldingInput>) => {
+	const loadInstrumentPrices = async (fun: Function, input: any, memberKey: string, filteredIns: Array<InstrumentInput>) => {
 		if(!input || !Object.keys(input).length || !memberKey) return null;
 		let unmatched: any = {};
-		let queryIds: Array<string> = [];
-		Object.keys(input).forEach((key) => {
-			if(!insData[key]) queryIds.push(key);
-		});
 		let matchingList: Array<any> | null = null;
-		if(queryIds.length) matchingList = await fun(queryIds);
+		Object.keys(input).forEach(async(key) => {
+			if(!insData[key]) return matchingList = await fun(Object.keys(input));
+		});
 		Object.keys(input).forEach((key) => {
 			let instrument = input[key];
-			let matchingEntry: HoldingInput | null = insData[key] ? insData[key] : null;
+			let matchingEntry: InstrumentInput | null = insData[key] ? insData[key] : null;
 			if(!matchingEntry && matchingList && matchingList.length) 
 				matchingEntry = matchingList?.find((match) => match?.id === key);
 			if(matchingEntry) {
 				insData[key] = matchingEntry;
-				instrument.name = matchingEntry.name;
-				instrument.type = matchingEntry.type;
-				instrument.subt = matchingEntry.subt;
 			} else unmatched[key] = instrument;
-			if(!instrument.type) instrument.type = AssetType.F;
 			instrument.curr = 'INR'
 			instrument.fId = memberKey;
 			filteredIns.push(instrument);
@@ -110,15 +104,16 @@ export default function UploadHoldings() {
 		}
 		setSelectedCurrency(currency);
 		if(equitiesNum || mfsNum || bondsNum || etfsNum) {
-			let filteredIns: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => instrument.curr !== instrument.curr || instrument?.fId !== member);
-			await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, member as string, filteredIns);
-			let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, member as string, filteredIns);
+			let filteredInsByCurr: Array<InstrumentInput> = instruments.filter((instrument: InstrumentInput) => instrument.curr !== instrument.curr);
+			await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, member as string, filteredInsByCurr);
+			let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, member as string, filteredInsByCurr);
 			if(unmatchedBonds && Object.keys(unmatchedBonds).length) 
 				Object.keys(unmatchedBonds).forEach((key: string) => equities[key] = unmatchedBonds[key]);
 			if(etfs && Object.keys(etfs).length)
 				Object.keys(etfs).forEach((key: string) => equities[key] = etfs[key]);
-			await loadInstrumentPrices(loadMatchingINExchange, equities, member as string, filteredIns);
+			await loadInstrumentPrices(loadMatchingINExchange, equities, member as string, filteredInsByCurr);
 			simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
+			let filteredIns: Array<InstrumentInput> = instruments.filter((instrument: InstrumentInput) => instrument.curr !== instrument.curr || instrument?.fId !== member);
 			setInstruments([...filteredIns]);
 		}
 		resetState();
