@@ -163,7 +163,7 @@ type Universe
 	id: String!
 	sid: String
 	exchg: Exchange
-	users: [String]!
+	users: [String!]!
 }
 
 enum AssetType {
@@ -425,7 +425,7 @@ type Family @model @auth(rules: [{ allow: owner }]) {
 type Holding {
 	id: String!
 	qty: Float!
-	pur: [Purchase!]
+	pur: Purchase
 	name: String
 	fId: String!
 	curr: String
@@ -433,6 +433,15 @@ type Holding {
 	chgF: Int
 	type: String
 	subt: String
+}
+
+type Instrument {
+	id: String!
+	sid: String
+	qty: Float!
+	pur: [Purchase!]
+	fId: String!
+	curr: String
 }
 
 enum PropertyType {
@@ -495,7 +504,6 @@ type UserHoldings
 	@key(fields: ["uname"])
 	@auth(rules: [{ allow: owner }, { allow: private, provider: iam, operations: [read] }]) {
 	uname: String!
-	instruments: [Holding!]
 	lendings: [Holding!]
 	loans: [Holding!]
 	credit: [Holding!]
@@ -509,7 +517,15 @@ type UserHoldings
 	ins: [Holding!]
 	other: [Holding!]
 	angel: [Holding!]
-	uni: Boolean!
+}
+
+type UserIns
+	@model
+	@aws_iam
+	@key(fields: ["uname"])
+	@auth(rules: [{ allow: owner }, { allow: private, provider: iam, operations: [read] }]) {
+	uname: String!
+	ins: [Instrument!]!
 }
 
 type EODPrices

@@ -79,12 +79,6 @@ export type AmplifyDependentResourcesAttributes = {
         },
         "moneopricelayer": {
             "Arn": "string"
-        },
-        "InsUniverse": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
         }
     },
     "storage": {

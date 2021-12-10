@@ -479,7 +479,6 @@ export type DeleteFamilyInput = {
 
 export type CreateUserHoldingsInput = {
   uname: string,
-  instruments?: Array< HoldingInput > | null,
   lendings?: Array< HoldingInput > | null,
   loans?: Array< HoldingInput > | null,
   credit?: Array< HoldingInput > | null,
@@ -493,13 +492,12 @@ export type CreateUserHoldingsInput = {
   ins?: Array< HoldingInput > | null,
   other?: Array< HoldingInput > | null,
   angel?: Array< HoldingInput > | null,
-  uni: boolean,
 };
 
 export type HoldingInput = {
   id: string,
   qty: number,
-  pur?: Array< PurchaseInput > | null,
+  pur?: PurchaseInput | null,
   name?: string | null,
   fId: string,
   curr?: string | null,
@@ -552,7 +550,6 @@ export type OwnershipInput = {
 };
 
 export type ModelUserHoldingsConditionInput = {
-  uni?: ModelBooleanInput | null,
   and?: Array< ModelUserHoldingsConditionInput | null > | null,
   or?: Array< ModelUserHoldingsConditionInput | null > | null,
   not?: ModelUserHoldingsConditionInput | null,
@@ -561,7 +558,6 @@ export type ModelUserHoldingsConditionInput = {
 export type UserHoldings = {
   __typename: "UserHoldings",
   uname?: string,
-  instruments?:  Array<Holding > | null,
   lendings?:  Array<Holding > | null,
   loans?:  Array<Holding > | null,
   credit?:  Array<Holding > | null,
@@ -575,7 +571,6 @@ export type UserHoldings = {
   ins?:  Array<Holding > | null,
   other?:  Array<Holding > | null,
   angel?:  Array<Holding > | null,
-  uni?: boolean,
   createdAt?: string,
   updatedAt?: string,
   owner?: string | null,
@@ -585,7 +580,7 @@ export type Holding = {
   __typename: "Holding",
   id?: string,
   qty?: number,
-  pur?:  Array<Purchase > | null,
+  pur?: Purchase,
   name?: string | null,
   fId?: string,
   curr?: string | null,
@@ -631,7 +626,6 @@ export type Ownership = {
 
 export type UpdateUserHoldingsInput = {
   uname: string,
-  instruments?: Array< HoldingInput > | null,
   lendings?: Array< HoldingInput > | null,
   loans?: Array< HoldingInput > | null,
   credit?: Array< HoldingInput > | null,
@@ -645,10 +639,57 @@ export type UpdateUserHoldingsInput = {
   ins?: Array< HoldingInput > | null,
   other?: Array< HoldingInput > | null,
   angel?: Array< HoldingInput > | null,
-  uni?: boolean | null,
 };
 
 export type DeleteUserHoldingsInput = {
+  uname: string,
+};
+
+export type CreateUserInsInput = {
+  uname: string,
+  ins: Array< InstrumentInput >,
+};
+
+export type InstrumentInput = {
+  id: string,
+  sid?: string | null,
+  qty: number,
+  pur?: Array< PurchaseInput > | null,
+  fId: string,
+  curr?: string | null,
+};
+
+export type ModelUserInsConditionInput = {
+  and?: Array< ModelUserInsConditionInput | null > | null,
+  or?: Array< ModelUserInsConditionInput | null > | null,
+  not?: ModelUserInsConditionInput | null,
+};
+
+export type UserIns = {
+  __typename: "UserIns",
+  uname?: string,
+  ins?:  Array<Instrument >,
+  createdAt?: string,
+  updatedAt?: string,
+  owner?: string | null,
+};
+
+export type Instrument = {
+  __typename: "Instrument",
+  id?: string,
+  sid?: string | null,
+  qty?: number,
+  pur?:  Array<Purchase > | null,
+  fId?: string,
+  curr?: string | null,
+};
+
+export type UpdateUserInsInput = {
+  uname: string,
+  ins?: Array< InstrumentInput > | null,
+};
+
+export type DeleteUserInsInput = {
   uname: string,
 };
 
@@ -671,7 +712,7 @@ export type CreateUniverseInput = {
   id: string,
   sid?: string | null,
   exchg?: Exchange | null,
-  users: Array< string | null >,
+  users: Array< string >,
 };
 
 export enum Exchange {
@@ -699,7 +740,7 @@ export type Universe = {
   id?: string,
   sid?: string | null,
   exchg?: Exchange | null,
-  users?: Array< string | null >,
+  users?: Array< string >,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -708,7 +749,7 @@ export type UpdateUniverseInput = {
   id: string,
   sid?: string | null,
   exchg?: Exchange | null,
-  users?: Array< string | null > | null,
+  users?: Array< string > | null,
 };
 
 export type DeleteUniverseInput = {
@@ -1627,7 +1668,6 @@ export type ModelNPSPriceConnection = {
 
 export type ModelUserHoldingsFilterInput = {
   uname?: ModelStringInput | null,
-  uni?: ModelBooleanInput | null,
   and?: Array< ModelUserHoldingsFilterInput | null > | null,
   or?: Array< ModelUserHoldingsFilterInput | null > | null,
   not?: ModelUserHoldingsFilterInput | null,
@@ -1636,6 +1676,19 @@ export type ModelUserHoldingsFilterInput = {
 export type ModelUserHoldingsConnection = {
   __typename: "ModelUserHoldingsConnection",
   items?:  Array<UserHoldings >,
+  nextToken?: string | null,
+};
+
+export type ModelUserInsFilterInput = {
+  uname?: ModelStringInput | null,
+  and?: Array< ModelUserInsFilterInput | null > | null,
+  or?: Array< ModelUserInsFilterInput | null > | null,
+  not?: ModelUserInsFilterInput | null,
+};
+
+export type ModelUserInsConnection = {
+  __typename: "ModelUserInsConnection",
+  items?:  Array<UserIns >,
   nextToken?: string | null,
 };
 
@@ -2086,38 +2139,18 @@ export type CreateUserHoldingsMutation = {
   createUserHoldings?:  {
     __typename: "UserHoldings",
     uname: string,
-    instruments?:  Array< {
-      __typename: "Holding",
-      id: string,
-      qty: number,
-      pur?:  Array< {
-        __typename: "Purchase",
-        amt: number,
-        day?: number | null,
-        month: number,
-        year: number,
-        qty: number,
-      } > | null,
-      name?: string | null,
-      fId: string,
-      curr?: string | null,
-      chg?: number | null,
-      chgF?: number | null,
-      type?: string | null,
-      subt?: string | null,
-    } > | null,
     lendings?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2130,14 +2163,14 @@ export type CreateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2150,14 +2183,14 @@ export type CreateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2170,14 +2203,14 @@ export type CreateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2219,14 +2252,14 @@ export type CreateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2239,14 +2272,14 @@ export type CreateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2259,14 +2292,14 @@ export type CreateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2279,14 +2312,14 @@ export type CreateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2299,14 +2332,14 @@ export type CreateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2319,14 +2352,14 @@ export type CreateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2339,14 +2372,14 @@ export type CreateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2359,14 +2392,14 @@ export type CreateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2375,7 +2408,6 @@ export type CreateUserHoldingsMutation = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uni: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2391,38 +2423,18 @@ export type UpdateUserHoldingsMutation = {
   updateUserHoldings?:  {
     __typename: "UserHoldings",
     uname: string,
-    instruments?:  Array< {
-      __typename: "Holding",
-      id: string,
-      qty: number,
-      pur?:  Array< {
-        __typename: "Purchase",
-        amt: number,
-        day?: number | null,
-        month: number,
-        year: number,
-        qty: number,
-      } > | null,
-      name?: string | null,
-      fId: string,
-      curr?: string | null,
-      chg?: number | null,
-      chgF?: number | null,
-      type?: string | null,
-      subt?: string | null,
-    } > | null,
     lendings?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2435,14 +2447,14 @@ export type UpdateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2455,14 +2467,14 @@ export type UpdateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2475,14 +2487,14 @@ export type UpdateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2524,14 +2536,14 @@ export type UpdateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2544,14 +2556,14 @@ export type UpdateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2564,14 +2576,14 @@ export type UpdateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2584,14 +2596,14 @@ export type UpdateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2604,14 +2616,14 @@ export type UpdateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2624,14 +2636,14 @@ export type UpdateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2644,14 +2656,14 @@ export type UpdateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2664,14 +2676,14 @@ export type UpdateUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2680,7 +2692,6 @@ export type UpdateUserHoldingsMutation = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uni: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2696,38 +2707,18 @@ export type DeleteUserHoldingsMutation = {
   deleteUserHoldings?:  {
     __typename: "UserHoldings",
     uname: string,
-    instruments?:  Array< {
-      __typename: "Holding",
-      id: string,
-      qty: number,
-      pur?:  Array< {
-        __typename: "Purchase",
-        amt: number,
-        day?: number | null,
-        month: number,
-        year: number,
-        qty: number,
-      } > | null,
-      name?: string | null,
-      fId: string,
-      curr?: string | null,
-      chg?: number | null,
-      chgF?: number | null,
-      type?: string | null,
-      subt?: string | null,
-    } > | null,
     lendings?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2740,14 +2731,14 @@ export type DeleteUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2760,14 +2751,14 @@ export type DeleteUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2780,14 +2771,14 @@ export type DeleteUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2829,14 +2820,14 @@ export type DeleteUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2849,14 +2840,14 @@ export type DeleteUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2869,14 +2860,14 @@ export type DeleteUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2889,14 +2880,14 @@ export type DeleteUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2909,14 +2900,14 @@ export type DeleteUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2929,14 +2920,14 @@ export type DeleteUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2949,14 +2940,14 @@ export type DeleteUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2969,14 +2960,14 @@ export type DeleteUserHoldingsMutation = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -2985,7 +2976,99 @@ export type DeleteUserHoldingsMutation = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uni: boolean,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type CreateUserInsMutationVariables = {
+  input?: CreateUserInsInput,
+  condition?: ModelUserInsConditionInput | null,
+};
+
+export type CreateUserInsMutation = {
+  createUserIns?:  {
+    __typename: "UserIns",
+    uname: string,
+    ins:  Array< {
+      __typename: "Instrument",
+      id: string,
+      sid?: string | null,
+      qty: number,
+      pur?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        day?: number | null,
+        month: number,
+        year: number,
+        qty: number,
+      } > | null,
+      fId: string,
+      curr?: string | null,
+    } >,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateUserInsMutationVariables = {
+  input?: UpdateUserInsInput,
+  condition?: ModelUserInsConditionInput | null,
+};
+
+export type UpdateUserInsMutation = {
+  updateUserIns?:  {
+    __typename: "UserIns",
+    uname: string,
+    ins:  Array< {
+      __typename: "Instrument",
+      id: string,
+      sid?: string | null,
+      qty: number,
+      pur?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        day?: number | null,
+        month: number,
+        year: number,
+        qty: number,
+      } > | null,
+      fId: string,
+      curr?: string | null,
+    } >,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteUserInsMutationVariables = {
+  input?: DeleteUserInsInput,
+  condition?: ModelUserInsConditionInput | null,
+};
+
+export type DeleteUserInsMutation = {
+  deleteUserIns?:  {
+    __typename: "UserIns",
+    uname: string,
+    ins:  Array< {
+      __typename: "Instrument",
+      id: string,
+      sid?: string | null,
+      qty: number,
+      pur?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        day?: number | null,
+        month: number,
+        year: number,
+        qty: number,
+      } > | null,
+      fId: string,
+      curr?: string | null,
+    } >,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -3042,7 +3125,7 @@ export type CreateUniverseMutation = {
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string | null >,
+    users: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3059,7 +3142,7 @@ export type UpdateUniverseMutation = {
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string | null >,
+    users: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3076,7 +3159,7 @@ export type DeleteUniverseMutation = {
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string | null >,
+    users: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4039,7 +4122,7 @@ export type GetUniverseQuery = {
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string | null >,
+    users: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4061,7 +4144,7 @@ export type ListUniversesQuery = {
       id: string,
       sid?: string | null,
       exchg?: Exchange | null,
-      users: Array< string | null >,
+      users: Array< string >,
       createdAt: string,
       updatedAt: string,
     } >,
@@ -4455,38 +4538,18 @@ export type GetUserHoldingsQuery = {
   getUserHoldings?:  {
     __typename: "UserHoldings",
     uname: string,
-    instruments?:  Array< {
-      __typename: "Holding",
-      id: string,
-      qty: number,
-      pur?:  Array< {
-        __typename: "Purchase",
-        amt: number,
-        day?: number | null,
-        month: number,
-        year: number,
-        qty: number,
-      } > | null,
-      name?: string | null,
-      fId: string,
-      curr?: string | null,
-      chg?: number | null,
-      chgF?: number | null,
-      type?: string | null,
-      subt?: string | null,
-    } > | null,
     lendings?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -4499,14 +4562,14 @@ export type GetUserHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -4519,14 +4582,14 @@ export type GetUserHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -4539,14 +4602,14 @@ export type GetUserHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -4588,14 +4651,14 @@ export type GetUserHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -4608,14 +4671,14 @@ export type GetUserHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -4628,14 +4691,14 @@ export type GetUserHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -4648,14 +4711,14 @@ export type GetUserHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -4668,14 +4731,14 @@ export type GetUserHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -4688,14 +4751,14 @@ export type GetUserHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -4708,14 +4771,14 @@ export type GetUserHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -4728,14 +4791,14 @@ export type GetUserHoldingsQuery = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -4744,7 +4807,6 @@ export type GetUserHoldingsQuery = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uni: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -4765,18 +4827,6 @@ export type ListUserHoldingssQuery = {
     items:  Array< {
       __typename: "UserHoldings",
       uname: string,
-      instruments?:  Array< {
-        __typename: "Holding",
-        id: string,
-        qty: number,
-        name?: string | null,
-        fId: string,
-        curr?: string | null,
-        chg?: number | null,
-        chgF?: number | null,
-        type?: string | null,
-        subt?: string | null,
-      } > | null,
       lendings?:  Array< {
         __typename: "Holding",
         id: string,
@@ -4937,7 +4987,66 @@ export type ListUserHoldingssQuery = {
         type?: string | null,
         subt?: string | null,
       } > | null,
-      uni: boolean,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetUserInsQueryVariables = {
+  uname?: string,
+};
+
+export type GetUserInsQuery = {
+  getUserIns?:  {
+    __typename: "UserIns",
+    uname: string,
+    ins:  Array< {
+      __typename: "Instrument",
+      id: string,
+      sid?: string | null,
+      qty: number,
+      pur?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        day?: number | null,
+        month: number,
+        year: number,
+        qty: number,
+      } > | null,
+      fId: string,
+      curr?: string | null,
+    } >,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListUserInssQueryVariables = {
+  uname?: string | null,
+  filter?: ModelUserInsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListUserInssQuery = {
+  listUserInss?:  {
+    __typename: "ModelUserInsConnection",
+    items:  Array< {
+      __typename: "UserIns",
+      uname: string,
+      ins:  Array< {
+        __typename: "Instrument",
+        id: string,
+        sid?: string | null,
+        qty: number,
+        fId: string,
+        curr?: string | null,
+      } >,
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
@@ -5401,7 +5510,7 @@ export type OnCreateUniverseSubscription = {
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string | null >,
+    users: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5413,7 +5522,7 @@ export type OnUpdateUniverseSubscription = {
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string | null >,
+    users: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5425,7 +5534,7 @@ export type OnDeleteUniverseSubscription = {
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string | null >,
+    users: Array< string >,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5838,38 +5947,18 @@ export type OnCreateUserHoldingsSubscription = {
   onCreateUserHoldings?:  {
     __typename: "UserHoldings",
     uname: string,
-    instruments?:  Array< {
-      __typename: "Holding",
-      id: string,
-      qty: number,
-      pur?:  Array< {
-        __typename: "Purchase",
-        amt: number,
-        day?: number | null,
-        month: number,
-        year: number,
-        qty: number,
-      } > | null,
-      name?: string | null,
-      fId: string,
-      curr?: string | null,
-      chg?: number | null,
-      chgF?: number | null,
-      type?: string | null,
-      subt?: string | null,
-    } > | null,
     lendings?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -5882,14 +5971,14 @@ export type OnCreateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -5902,14 +5991,14 @@ export type OnCreateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -5922,14 +6011,14 @@ export type OnCreateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -5971,14 +6060,14 @@ export type OnCreateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -5991,14 +6080,14 @@ export type OnCreateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6011,14 +6100,14 @@ export type OnCreateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6031,14 +6120,14 @@ export type OnCreateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6051,14 +6140,14 @@ export type OnCreateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6071,14 +6160,14 @@ export type OnCreateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6091,14 +6180,14 @@ export type OnCreateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6111,14 +6200,14 @@ export type OnCreateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6127,7 +6216,6 @@ export type OnCreateUserHoldingsSubscription = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uni: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -6142,38 +6230,18 @@ export type OnUpdateUserHoldingsSubscription = {
   onUpdateUserHoldings?:  {
     __typename: "UserHoldings",
     uname: string,
-    instruments?:  Array< {
-      __typename: "Holding",
-      id: string,
-      qty: number,
-      pur?:  Array< {
-        __typename: "Purchase",
-        amt: number,
-        day?: number | null,
-        month: number,
-        year: number,
-        qty: number,
-      } > | null,
-      name?: string | null,
-      fId: string,
-      curr?: string | null,
-      chg?: number | null,
-      chgF?: number | null,
-      type?: string | null,
-      subt?: string | null,
-    } > | null,
     lendings?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6186,14 +6254,14 @@ export type OnUpdateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6206,14 +6274,14 @@ export type OnUpdateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6226,14 +6294,14 @@ export type OnUpdateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6275,14 +6343,14 @@ export type OnUpdateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6295,14 +6363,14 @@ export type OnUpdateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6315,14 +6383,14 @@ export type OnUpdateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6335,14 +6403,14 @@ export type OnUpdateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6355,14 +6423,14 @@ export type OnUpdateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6375,14 +6443,14 @@ export type OnUpdateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6395,14 +6463,14 @@ export type OnUpdateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6415,14 +6483,14 @@ export type OnUpdateUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6431,7 +6499,6 @@ export type OnUpdateUserHoldingsSubscription = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uni: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -6446,38 +6513,18 @@ export type OnDeleteUserHoldingsSubscription = {
   onDeleteUserHoldings?:  {
     __typename: "UserHoldings",
     uname: string,
-    instruments?:  Array< {
-      __typename: "Holding",
-      id: string,
-      qty: number,
-      pur?:  Array< {
-        __typename: "Purchase",
-        amt: number,
-        day?: number | null,
-        month: number,
-        year: number,
-        qty: number,
-      } > | null,
-      name?: string | null,
-      fId: string,
-      curr?: string | null,
-      chg?: number | null,
-      chgF?: number | null,
-      type?: string | null,
-      subt?: string | null,
-    } > | null,
     lendings?:  Array< {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6490,14 +6537,14 @@ export type OnDeleteUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6510,14 +6557,14 @@ export type OnDeleteUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6530,14 +6577,14 @@ export type OnDeleteUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6579,14 +6626,14 @@ export type OnDeleteUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6599,14 +6646,14 @@ export type OnDeleteUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6619,14 +6666,14 @@ export type OnDeleteUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6639,14 +6686,14 @@ export type OnDeleteUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6659,14 +6706,14 @@ export type OnDeleteUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6679,14 +6726,14 @@ export type OnDeleteUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6699,14 +6746,14 @@ export type OnDeleteUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6719,14 +6766,14 @@ export type OnDeleteUserHoldingsSubscription = {
       __typename: "Holding",
       id: string,
       qty: number,
-      pur?:  Array< {
+      pur?:  {
         __typename: "Purchase",
         amt: number,
         day?: number | null,
         month: number,
         year: number,
         qty: number,
-      } > | null,
+      } | null,
       name?: string | null,
       fId: string,
       curr?: string | null,
@@ -6735,7 +6782,96 @@ export type OnDeleteUserHoldingsSubscription = {
       type?: string | null,
       subt?: string | null,
     } > | null,
-    uni: boolean,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateUserInsSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnCreateUserInsSubscription = {
+  onCreateUserIns?:  {
+    __typename: "UserIns",
+    uname: string,
+    ins:  Array< {
+      __typename: "Instrument",
+      id: string,
+      sid?: string | null,
+      qty: number,
+      pur?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        day?: number | null,
+        month: number,
+        year: number,
+        qty: number,
+      } > | null,
+      fId: string,
+      curr?: string | null,
+    } >,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateUserInsSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnUpdateUserInsSubscription = {
+  onUpdateUserIns?:  {
+    __typename: "UserIns",
+    uname: string,
+    ins:  Array< {
+      __typename: "Instrument",
+      id: string,
+      sid?: string | null,
+      qty: number,
+      pur?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        day?: number | null,
+        month: number,
+        year: number,
+        qty: number,
+      } > | null,
+      fId: string,
+      curr?: string | null,
+    } >,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteUserInsSubscriptionVariables = {
+  owner?: string | null,
+};
+
+export type OnDeleteUserInsSubscription = {
+  onDeleteUserIns?:  {
+    __typename: "UserIns",
+    uname: string,
+    ins:  Array< {
+      __typename: "Instrument",
+      id: string,
+      sid?: string | null,
+      qty: number,
+      pur?:  Array< {
+        __typename: "Purchase",
+        amt: number,
+        day?: number | null,
+        month: number,
+        year: number,
+        qty: number,
+      } > | null,
+      fId: string,
+      curr?: string | null,
+    } >,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,

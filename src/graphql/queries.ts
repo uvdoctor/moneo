@@ -777,24 +777,6 @@ export const getUserHoldings = /* GraphQL */ `
   query GetUserHoldings($uname: String!) {
     getUserHoldings(uname: $uname) {
       uname
-      instruments {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       lendings {
         id
         qty
@@ -1037,7 +1019,6 @@ export const getUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      uni
       createdAt
       updatedAt
       owner
@@ -1061,17 +1042,6 @@ export const listUserHoldingss = /* GraphQL */ `
     ) {
       items {
         uname
-        instruments {
-          id
-          qty
-          name
-          fId
-          curr
-          chg
-          chgF
-          type
-          subt
-        }
         lendings {
           id
           qty
@@ -1219,7 +1189,62 @@ export const listUserHoldingss = /* GraphQL */ `
           type
           subt
         }
-        uni
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getUserIns = /* GraphQL */ `
+  query GetUserIns($uname: String!) {
+    getUserIns(uname: $uname) {
+      uname
+      ins {
+        id
+        sid
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        fId
+        curr
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listUserInss = /* GraphQL */ `
+  query ListUserInss(
+    $uname: String
+    $filter: ModelUserInsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUserInss(
+      uname: $uname
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        uname
+        ins {
+          id
+          sid
+          qty
+          fId
+          curr
+        }
         createdAt
         updatedAt
         owner

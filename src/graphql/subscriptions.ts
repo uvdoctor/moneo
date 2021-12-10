@@ -804,24 +804,6 @@ export const onCreateUserHoldings = /* GraphQL */ `
   subscription OnCreateUserHoldings($owner: String) {
     onCreateUserHoldings(owner: $owner) {
       uname
-      instruments {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       lendings {
         id
         qty
@@ -1064,7 +1046,6 @@ export const onCreateUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      uni
       createdAt
       updatedAt
       owner
@@ -1075,24 +1056,6 @@ export const onUpdateUserHoldings = /* GraphQL */ `
   subscription OnUpdateUserHoldings($owner: String) {
     onUpdateUserHoldings(owner: $owner) {
       uname
-      instruments {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       lendings {
         id
         qty
@@ -1335,7 +1298,6 @@ export const onUpdateUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      uni
       createdAt
       updatedAt
       owner
@@ -1346,24 +1308,6 @@ export const onDeleteUserHoldings = /* GraphQL */ `
   subscription OnDeleteUserHoldings($owner: String) {
     onDeleteUserHoldings(owner: $owner) {
       uname
-      instruments {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       lendings {
         id
         qty
@@ -1606,7 +1550,78 @@ export const onDeleteUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      uni
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateUserIns = /* GraphQL */ `
+  subscription OnCreateUserIns($owner: String) {
+    onCreateUserIns(owner: $owner) {
+      uname
+      ins {
+        id
+        sid
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        fId
+        curr
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateUserIns = /* GraphQL */ `
+  subscription OnUpdateUserIns($owner: String) {
+    onUpdateUserIns(owner: $owner) {
+      uname
+      ins {
+        id
+        sid
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        fId
+        curr
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteUserIns = /* GraphQL */ `
+  subscription OnDeleteUserIns($owner: String) {
+    onDeleteUserIns(owner: $owner) {
+      uname
+      ins {
+        id
+        sid
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        fId
+        curr
+      }
       createdAt
       updatedAt
       owner

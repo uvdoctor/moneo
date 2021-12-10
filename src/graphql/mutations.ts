@@ -386,24 +386,6 @@ export const createUserHoldings = /* GraphQL */ `
   ) {
     createUserHoldings(input: $input, condition: $condition) {
       uname
-      instruments {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       lendings {
         id
         qty
@@ -646,7 +628,6 @@ export const createUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      uni
       createdAt
       updatedAt
       owner
@@ -660,24 +641,6 @@ export const updateUserHoldings = /* GraphQL */ `
   ) {
     updateUserHoldings(input: $input, condition: $condition) {
       uname
-      instruments {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       lendings {
         id
         qty
@@ -920,7 +883,6 @@ export const updateUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      uni
       createdAt
       updatedAt
       owner
@@ -934,24 +896,6 @@ export const deleteUserHoldings = /* GraphQL */ `
   ) {
     deleteUserHoldings(input: $input, condition: $condition) {
       uname
-      instruments {
-        id
-        qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
-        name
-        fId
-        curr
-        chg
-        chgF
-        type
-        subt
-      }
       lendings {
         id
         qty
@@ -1194,7 +1138,87 @@ export const deleteUserHoldings = /* GraphQL */ `
         type
         subt
       }
-      uni
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createUserIns = /* GraphQL */ `
+  mutation CreateUserIns(
+    $input: CreateUserInsInput!
+    $condition: ModelUserInsConditionInput
+  ) {
+    createUserIns(input: $input, condition: $condition) {
+      uname
+      ins {
+        id
+        sid
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        fId
+        curr
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateUserIns = /* GraphQL */ `
+  mutation UpdateUserIns(
+    $input: UpdateUserInsInput!
+    $condition: ModelUserInsConditionInput
+  ) {
+    updateUserIns(input: $input, condition: $condition) {
+      uname
+      ins {
+        id
+        sid
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        fId
+        curr
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteUserIns = /* GraphQL */ `
+  mutation DeleteUserIns(
+    $input: DeleteUserInsInput!
+    $condition: ModelUserInsConditionInput
+  ) {
+    deleteUserIns(input: $input, condition: $condition) {
+      uname
+      ins {
+        id
+        sid
+        qty
+        pur {
+          amt
+          day
+          month
+          year
+          qty
+        }
+        fId
+        curr
+      }
       createdAt
       updatedAt
       owner
