@@ -56,7 +56,7 @@ export default function InstrumentValuation() {
 			filters: nameFilterValues,
 			onFilter: (values: Array<string>, record: any) => values.indexOf(record.id)>-1,
 			render: (record: any) => {
-				return <Holding key={record.id} holding={record as HoldingInput} onDelete={delRecord} showPrice />
+				return <Holding key={record.id} holding={record as HoldingInput} onDelete={delRecord} showPrice onChange={()=>setTotal()}/>
 			}
 		}
 	];
@@ -102,23 +102,24 @@ export default function InstrumentValuation() {
 		return;
 	};
 
-	useEffect(
-		() => {
-			let total = 0;
-			let filterAmt = 0;
-			filteredInstruments.map((instrument: HoldingInput) => {
-				const price = instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
-				if (filteredInfo.id) {
-					const id = filteredInfo.id.some((item: string) => item === instrument.id);
-					if (id) filterAmt += price;
-				}
-				total += price;
-			});
-			setTotalFilterInstruments(total);
-			!filteredInfo.id ? setTotalFilterAmt(total) : setTotalFilterAmt(filterAmt);
-		},
-		[ filteredInstruments, filteredInfo ]
-	);
+	const setTotal = () => {
+		let total = 0;
+		let filterAmt = 0;
+		filteredInstruments.map((instrument: HoldingInput) => {
+			const price = instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
+			if (filteredInfo.id) {
+				const id = filteredInfo.id.some((item: string) => item === instrument.id);
+				if (id) filterAmt += price;
+			}
+			total += price;
+		});
+		setTotalFilterInstruments(total);
+		!filteredInfo.id ? setTotalFilterAmt(total) : setTotalFilterAmt(filterAmt);
+	}
+
+	useEffect(() => {
+		setTotal();
+	},[ filteredInstruments, filteredInfo ]);
 
 	useEffect(
 		() => {

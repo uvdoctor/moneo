@@ -47,7 +47,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 		() => {
 			setTotal(holding.qty * price);
 		},
-		[ price ]
+		[ price, holding.qty ]
 	);
 
 	useEffect(() => {
