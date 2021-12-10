@@ -225,7 +225,7 @@ export default function AddPropertyInput({
 		val
 			? setMv(val)
 			// @ts-ignore
-			: Math.round(getCompoundedIncome(rate, amount, duration()));
+			: setMv(Math.round(getCompoundedIncome(rate, amount, duration())));
 		setMvm(new Date().getMonth() + 1);
 		setMvy(new Date().getFullYear());
 		let rec = getNewRec();
