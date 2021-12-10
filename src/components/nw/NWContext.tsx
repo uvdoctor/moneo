@@ -146,6 +146,7 @@ function NWContextProvider() {
 	const [ totalPPF, setTotalPPF ] = useState<number>(0);
 	const [ totalVPF, setTotalVPF ] = useState<number>(0);
 	const [ totalEPF, setTotalEPF ] = useState<number>(0);
+	const [ unicheck, setUnicheck ] = useState<boolean>(false);
 
 	const loadNPSSubCategories = async () => {
 		let npsData: Array<CreateNPSPriceInput> | undefined = await getNPSData();
@@ -657,8 +658,15 @@ function NWContextProvider() {
 		setTotalFInv(totalInv);
 	};
 
+	useEffect(() => {
+		setUnicheck(true);
+	}, [instruments]);
+
 	const saveHoldings = async () => {
-		let updatedHoldings: CreateUserHoldingsInput = { uname: owner };
+		let updatedHoldings: CreateUserHoldingsInput = {
+			uname: owner,
+			uni: unicheck
+		};
 		updatedHoldings.instruments = instruments;
 		updatedHoldings.savings = savings;
 		updatedHoldings.lendings = lendings;
