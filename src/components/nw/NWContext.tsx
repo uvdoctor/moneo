@@ -4,6 +4,7 @@ import NWView from './NWView';
 import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from '../AppContext';
 import {
 	addHoldings,
+	addInsHoldings,
 	doesHoldingMatch,
 	doesMemberMatch,
 	doesOwnershipMatch,
@@ -14,11 +15,13 @@ import {
 	getRelatedCurrencies,
 	getRemainingDuration,
 	loadAllFamilyMembers,
-	loadHoldings,
+	loadAllHoldings,
+	loadInsHoldings,
 	loadMatchingINBond,
 	loadMatchingINExchange,
 	loadMatchingINMutual,
-	updateHoldings
+	updateHoldings,
+	updateInsHoldings
 } from './nwutils';
 import { notification } from 'antd';
 import {
@@ -32,7 +35,10 @@ import {
 	INMFPrice,
 	InsType,
 	PropertyInput,
-	UpdateUserHoldingsInput
+	UpdateUserHoldingsInput,
+	InstrumentInput,
+	CreateUserInsInput,
+	UpdateUserInsInput
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
 import { includesAny, initOptions } from '../utils';
@@ -83,7 +89,7 @@ export const TAB = {
 function NWContextProvider() {
 	const { defaultCurrency, insData, setInsData, ratesData, owner, user }: any = useContext(AppContext);
 	const [ allFamily, setAllFamily ] = useState<any | null>(null);
-	const [ instruments, setInstruments ] = useState<Array<HoldingInput>>([]);
+	const [ instruments, setInstruments ] = useState<Array<InstrumentInput>>([]);
 	const [ preciousMetals, setPreciousMetals ] = useState<Array<HoldingInput>>([]);
 	const [ properties, setProperties ] = useState<Array<PropertyInput>>([]);
 	const [ vehicles, setVehicles ] = useState<Array<HoldingInput>>([]);
@@ -146,7 +152,6 @@ function NWContextProvider() {
 	const [ totalPPF, setTotalPPF ] = useState<number>(0);
 	const [ totalVPF, setTotalVPF ] = useState<number>(0);
 	const [ totalEPF, setTotalEPF ] = useState<number>(0);
-	const [ unicheck, setUnicheck ] = useState<boolean>(false);
 
 	const loadNPSSubCategories = async () => {
 		let npsData: Array<CreateNPSPriceInput> | undefined = await getNPSData();
@@ -479,29 +484,29 @@ function NWContextProvider() {
 		}
 	};
 
-	const initializeInsData = async (instruments: Array<HoldingInput>) => {
-		let bondIds: Set<string> = new Set();
+	const initializeInsData = async (instruments: Array<InstrumentInput>) => {
+		let mfIds: Set<string> = new Set();
 		let otherIds: Set<string> = new Set();
 		let initFromDB = false;
-		instruments.forEach((ins: HoldingInput) => {
-			if(ins.type === AssetType.F) bondIds.add(ins.id);
+		instruments.forEach((ins: InstrumentInput) => {
+			if(ins.id.startsWith('INF')) mfIds.add(ins.id);
 			else otherIds.add(ins.id);
 			if(!initFromDB && insData && !insData[ins.id]) initFromDB = true;
 		});
 		if(!initFromDB) return insData;
 		let insCache: any = {};
-		let bonds: Array<INBondPrice> | null = null;
-		if(bondIds.size) bonds = await loadMatchingINBond(Array.from(bondIds));
-		if(bonds) bonds.forEach((bond: INBondPrice) => {
-			insCache[bond.id as string] = bond;
-			bondIds.delete(bond.id as string);
-		});
-		bondIds.forEach((id:string) => otherIds.add(id));
 		let mfs: Array<INMFPrice> | null = null;
-		if(otherIds.size) mfs = await loadMatchingINMutual(Array.from(otherIds));
+		if(mfIds.size) mfs = await loadMatchingINMutual(Array.from(mfIds));
 		if(mfs) mfs.forEach((mf: INMFPrice) => {
 			insCache[mf.id as string] = mf;
-			otherIds.delete(mf.id as string);
+			mfIds.delete(mf.id as string);
+		});
+		mfIds.forEach((id:string) => otherIds.add(id));
+		let bonds: Array<INBondPrice> | null = null;
+		if(otherIds.size) bonds = await loadMatchingINBond(Array.from(otherIds));
+		if(bonds) bonds.forEach((bond: INBondPrice) => {
+			insCache[bond.id as string] = bond;
+			otherIds.delete(bond.id as string);
 		});
 		if(otherIds.size) {
 			let exchgEntries: Array<INExchgPrice> | null = await loadMatchingINExchange(Array.from(otherIds));
@@ -515,8 +520,10 @@ function NWContextProvider() {
 	const initializeHoldings = async () => {
 		initializeFamilyList();
 		let allHoldings: CreateUserHoldingsInput | null = null;
+		let insHoldings: CreateUserInsInput | null = null;
 		try {
-			allHoldings = await loadHoldings(owner);
+			allHoldings = await loadAllHoldings(owner);
+			insHoldings = await loadInsHoldings(owner);
 		} catch (err) {
 			notification.error({ message: 'Holdings not loaded', description: 'Sorry! Unable to fetch holdings.' });
 		}
@@ -524,9 +531,9 @@ function NWContextProvider() {
 		setSelectedCurrency(Object.keys(currencyList)[0]);
 		setCurrencyList(currencyList);
 		setUname(allHoldings?.uname);
-		if(allHoldings?.uname && allHoldings?.instruments?.length) 
-			await initializeInsData(allHoldings?.instruments);
-		setInstruments([ ...(allHoldings?.instruments ? allHoldings.instruments : []) ]);
+		if(insHoldings?.uname && insHoldings?.ins?.length) 
+			await initializeInsData(insHoldings?.ins);
+		setInstruments([ ...(insHoldings?.ins ? insHoldings.ins : []) ]);
 		setPreciousMetals([ ...(allHoldings?.pm ? allHoldings.pm : []) ]);
 		setPF([ ...(allHoldings?.pf ? allHoldings.pf : []) ]);
 		setNPS([ ...(allHoldings?.nps ? allHoldings.nps : []) ]);
@@ -619,28 +626,28 @@ function NWContextProvider() {
 		let totalFEquity = 0;
 		let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
 		if(!cachedData) cachedData = insData;
-		instruments.forEach((instrument: HoldingInput) => {
+		instruments.forEach((instrument: InstrumentInput) => {
 			if(insData[instrument.id] && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
 				let value = instrument.qty * cachedData[instrument.id].price;
 				total += value;
-				if(instrument.subt === AssetSubType.GoldB) totalFGold += value;
+				if(insData[instrument.id].subt === AssetSubType.GoldB) totalFGold += value;
 				else if(insData[instrument.id].itype && cachedData[instrument.id].itype === InsType.REIT) 
 					totalFRE += value;
 				else if(insData[instrument.id].itype && cachedData[instrument.id].itype === InsType.InvIT) 
 					totalInv += value;
-				else if(instrument.type === AssetType.E) 
+				else if(insData[instrument.id].type === AssetType.E) 
 					totalFEquity += value;
-				else if(instrument.type === AssetType.F)
+				else if(insData[instrument.id].type === AssetType.F)
 					totalFFixed += value;
-				else if(instrument.type === AssetType.H) {
-					if(includesAny(instrument.name as string, ["conservative"])) {
+				else if(insData[instrument.id].type === AssetType.H) {
+					if(includesAny(insData[instrument.id].name as string, ["conservative"])) {
 						totalFFixed += 0.7 * value;
 						totalFEquity += 0.3 * value;
-					} else if(includesAny(instrument.name as string, ["multi-asset"])) {
+					} else if(includesAny(insData[instrument.id].name as string, ["multi-asset"])) {
 						totalFGold += 0.1 * value;
 						totalFEquity += 0.6 * value;
 						totalFFixed += 0.3 * value;
-					} else if(includesAny(instrument.name as string, ["balanced"])) {
+					} else if(includesAny(insData[instrument.id].name as string, ["balanced"])) {
 						totalFEquity += 0.6 * value;
 						totalFFixed += 0.4 * value;
 					} else {
@@ -658,16 +665,12 @@ function NWContextProvider() {
 		setTotalFInv(totalInv);
 	};
 
-	useEffect(() => {
-		setUnicheck(true);
-	}, [instruments]);
-
 	const saveHoldings = async () => {
-		let updatedHoldings: CreateUserHoldingsInput = {
+		let updatedInsHoldings: CreateUserInsInput = {
 			uname: owner,
-			uni: unicheck
+			ins: instruments
 		};
-		updatedHoldings.instruments = instruments;
+		let updatedHoldings: CreateUserHoldingsInput = { uname: owner };
 		updatedHoldings.savings = savings;
 		updatedHoldings.lendings = lendings;
 		updatedHoldings.angel = angel;
@@ -683,8 +686,13 @@ function NWContextProvider() {
 		updatedHoldings.ins = insurance;
 		if(uname) updatedHoldings.uname = uname;
 		try {
-			if(uname) await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
-			else await addHoldings(updatedHoldings);
+			if(uname) {
+				await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
+				if (instruments.length)  await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
+			} else {
+				if (instruments.length) await addInsHoldings(updatedInsHoldings);
+				await addHoldings(updatedHoldings);
+			}
 			notification.success({message: 'Data saved', description: 'All holdings data has been saved.'})
 		} catch(e) {
 			notification.error({message: 'Unable to save holdings', description: 'Sorry! An unexpected error occurred while trying to save the data.'});
@@ -700,10 +708,10 @@ function NWContextProvider() {
 			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
 				if ( record.pur && record.chg ) {
 					if(record.chgF === 1) isMonth = false;
-					const duration = getRemainingDuration(record.pur[0].year, record.pur[0].month, record.pur[0].qty, isMonth);
+					const duration = getRemainingDuration(record.pur.year, record.pur.month, record.pur.qty, isMonth);
 						if(duration) {
-							const durLeft = record.pur[0].qty - (isMonth ? duration.months : duration.years);
-							const getCashFlows = Array(Math.round(durLeft)).fill(record.pur[0].amt);
+							const durLeft = record.pur.qty - (isMonth ? duration.months : duration.years);
+							const getCashFlows = Array(Math.round(durLeft)).fill(record.pur.amt);
 							console.log(getCashFlows);
 							const value = getNPV(record.chg, getCashFlows, 0, (isMonth ? true : false), true);
 							total += value;
@@ -728,17 +736,17 @@ function NWContextProvider() {
 		records.forEach((record: HoldingInput)=>{
 			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
 				if(record.chg && record.pur) {
-					const duration = getRemainingDuration(record.pur[0].year, record.pur[0].month);
+					const duration = getRemainingDuration(record.pur.year, record.pur.month);
 					if(!duration) return;
-					if(record.chgF===1 && duration?.years > record.pur[0].qty) return;
-					if(record.chgF===2 && duration?.months/6 > record.pur[0].qty) return;
-					if(record.chgF===4 && duration?.months/4 > record.pur[0].qty) return;
-					if(record.chgF===12 && duration?.months > record.pur[0].qty) return;
+					if(record.chgF===1 && duration?.years > record.pur.qty) return;
+					if(record.chgF===2 && duration?.months/6 > record.pur.qty) return;
+					if(record.chgF===4 && duration?.months/4 > record.pur.qty) return;
+					if(record.chgF===12 && duration?.months > record.pur.qty) return;
 					if(!record.chgF) {
-						total+=record.pur[0].amt;
+						total+=record.pur.amt;
 						return setTotal(total);
 					};
-					const value = getCompoundedIncome(record.chg, record.pur[0].amt, duration.years, record.chgF );
+					const value = getCompoundedIncome(record.chg, record.pur.amt, duration.years, record.chgF );
 					total+= value;
 				}
 			};
@@ -814,9 +822,9 @@ function NWContextProvider() {
 		vehicles.forEach((vehicle: HoldingInput) => {
 			if(vehicle && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
 				if(vehicle.pur && vehicle.chg) {
-					const duration = getRemainingDuration(vehicle.pur[0].year, vehicle.pur[0].month);
+					const duration = getRemainingDuration(vehicle.pur.year, vehicle.pur.month);
 					if(duration) {
-						const value = getCompoundedIncome(-(vehicle.chg), vehicle.pur[0].amt, duration.years) ;
+						const value = getCompoundedIncome(-(vehicle.chg), vehicle.pur.amt, duration.years) ;
 						total += value;
 					}
 				}
@@ -846,9 +854,9 @@ function NWContextProvider() {
 		const month = new Date().getMonth()+1;
 		records.forEach((record: HoldingInput) => {
 			if(record.pur && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
-				const amount = record.pur[0].amt;
+				const amount = record.pur.amt;
 				if (month === 4) {
-					const duration = getRemainingDuration(record.pur[0].year, record.pur[0].month);
+					const duration = getRemainingDuration(record.pur.year, record.pur.month);
 					if(!duration?.months) return;
 					// @ts-ignore
 					const value = amount + (amount * (1+(record.chg*(duration?.months/12))));

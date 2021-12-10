@@ -10,7 +10,7 @@ import { GoalContext } from '../goals/GoalContext';
 import { API, graphqlOperation, Storage } from 'aws-amplify';
 import * as mutations from '../../graphql/mutations';
 import { getGoalsList } from '../goals/goalutils';
-import { getFamilysList, loadHoldings } from '../nw/nwutils';
+import { getFamilysList, loadAllHoldings } from '../nw/nwutils';
 
 export default function DeleteAccount() {
 	const { handleLogout, owner }: any = useContext(AppContext);
@@ -62,7 +62,7 @@ export default function DeleteAccount() {
 
 	const deleteHoldings = async (uname: string) => {
 		try {
-			const holdings = await loadHoldings(uname);
+			const holdings = await loadAllHoldings(uname);
 			if (holdings) {
 				const result = await API.graphql(
 					graphqlOperation(mutations.deleteUserHoldings, { input: { uname: holdings.uname } })

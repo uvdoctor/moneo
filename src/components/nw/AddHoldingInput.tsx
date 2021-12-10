@@ -52,19 +52,19 @@ export default function AddHoldingInput({
 			case INS:
 				newRec.chg = 10;
 				newRec.chgF = Number(subCat);
-				newRec.pur = [ pur ];
+				newRec.pur = pur;
 				break;
 			case LOAN:
 				newRec.chg = rate;
 				newRec.chgF = 12;
-				newRec.pur = [ pur ];
+				newRec.pur = pur;
 				newRec.name = name;
 				break;
 			case LENT:
 				newRec.subt = category;
 				newRec.chg = rate;
 				newRec.chgF = Number(subCat);
-				newRec.pur = [ pur ];
+				newRec.pur = pur;
 				newRec.name = name;
 				break;
 			case NPS:
@@ -78,21 +78,19 @@ export default function AddHoldingInput({
 				newRec.chgF = 1;
 				newRec.type = AssetType.F;
 				newRec.name = name;
-				newRec.pur = [
-					{
+				newRec.pur = {
 						amt: qty,
 						month: today.getMonth() + 1,
 						year: today.getFullYear(),
 						qty: 1
-					}
-				];
+					};
 				break;
 			case VEHICLE:
 				newRec.chg = 15;
 				newRec.chgF = 1;
 				newRec.type = AssetType.A;
 				newRec.subt = category;
-				newRec.pur = [ pur ];
+				newRec.pur = pur;
 				newRec.name = name;
 				break;
 			case PM:
@@ -122,8 +120,8 @@ export default function AddHoldingInput({
 		let rec = getNewRec();
 		const month = getMonthIndex(val.substring(0, 3));
 		if (rec.pur) {
-			rec.pur[0].year = Number(val.substring(val.length - 4));
-			rec.pur[0].month = month;
+			rec.pur.year = Number(val.substring(val.length - 4));
+			rec.pur.month = month;
 		}
 		setInput(rec);
 	};
@@ -132,7 +130,7 @@ export default function AddHoldingInput({
 		setDuration(val);
 		disableOk(val <= 0);
 		let rec = getNewRec();
-		if (rec.pur) rec.pur[0].qty = val;
+		if (rec.pur) rec.pur.qty = val;
 		setInput(rec);
 	};
 

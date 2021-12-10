@@ -29,7 +29,7 @@ export default function ViewHoldingInput({
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS } = TAB;
 
 	const changeDuration = (val: any) => {
-		if (record.pur) record.pur[0].qty = val;
+		if (record.pur) record.pur.qty = val;
 		changeData([...data]);
 	};
 
@@ -40,10 +40,10 @@ export default function ViewHoldingInput({
 
 	const changeQty = (quantity: number) => {
 		if (record.pur) {
-			record.pur[0].amt = quantity;
+			record.pur.amt = quantity;
 			if (hasPF(childTab)) {
-				record.pur[0].month = new Date().getMonth() + 1;
-				record.pur[0].year = new Date().getFullYear();
+				record.pur.month = new Date().getMonth() + 1;
+				record.pur.year = new Date().getFullYear();
 			}
 		} else record.qty = quantity;
 		changeData([...data]);
@@ -78,8 +78,8 @@ export default function ViewHoldingInput({
 
 	const changePurchaseDate = (val: string) => {
 		if (record.pur) {
-			record.pur[0].year = Number(val.substring(val.length - 4));
-			record.pur[0].month = getMonthIndex(val.substring(0, 3));
+			record.pur.year = Number(val.substring(val.length - 4));
+			record.pur.month = getMonthIndex(val.substring(0, 3));
 			changeData([...data]);
 		}
 	};
@@ -166,7 +166,7 @@ export default function ViewHoldingInput({
 						pre={hasPF(childTab) ? "Contribution per year" : "Amount"}
 						min={10}
 						max={100000000}
-						value={record.pur ? record.pur[0].amt : record.qty}
+						value={record.pur ? record.pur.amt : record.qty}
 						changeHandler={(val: number) => changeQty(val)}
 						currency={record.curr as string}
 						step={1}
@@ -195,8 +195,8 @@ export default function ViewHoldingInput({
 							picker="month"
 							title="Date "
 							changeHandler={(val: string) => changePurchaseDate(val)}
-							defaultVal={`${getMonthName(record.pur[0].month, true)}-${
-								record.pur[0].year
+							defaultVal={`${getMonthName(record.pur.month, true)}-${
+								record.pur.year
 							}`}
 							size={"middle"}
 						/>
@@ -207,7 +207,7 @@ export default function ViewHoldingInput({
 								<Col>Duration</Col>
 								<Col>
 									<Duration
-										value={record.pur[0].qty as number}
+										value={record.pur.qty as number}
 										changeHandler={changeDuration}
 										option={
 											record.subt === "NSE"

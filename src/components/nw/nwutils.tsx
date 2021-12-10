@@ -44,12 +44,20 @@ export const loadAllFamilyMembers = async () => {
   return Object.keys(familyList).length ? familyList : null;
 };
 
-export const loadHoldings = async (uname: string) => {
+export const loadAllHoldings = async (uname: string) => {
   const { data: { getUserHoldings }} = 
     await API.graphql(graphqlOperation(queries.getUserHoldings, { uname: uname })) as {
     data: APIt.GetUserHoldingsQuery;
   };
   return getUserHoldings ? getUserHoldings : null;
+};
+
+export const loadInsHoldings = async (uname: string) => {
+  const { data: { getUserIns }} = 
+    await API.graphql(graphqlOperation(queries.getUserIns, { uname: uname })) as {
+    data: APIt.GetUserInsQuery;
+  };
+  return getUserIns ? getUserIns : null;
 };
 
 export const addFamilyMember = async (name: string, taxId: string) => {
@@ -87,14 +95,14 @@ export const getDefaultMember = (
 };
 
 export const doesMemberMatch = (
-  instrument: APIt.HoldingInput,
+  instrument: APIt.HoldingInput | APIt.InstrumentInput,
   selectedMembers: Array<string>
 ) =>
   selectedMembers.indexOf(ALL_FAMILY) > -1 ||
   selectedMembers.indexOf(instrument.fId) > -1;
 
 export const doesHoldingMatch = (
-  instrument: APIt.HoldingInput,
+  instrument: APIt.HoldingInput | APIt.InstrumentInput,
   selectedMembers: Array<string>,
   selectedCurrency: string
 ) =>
@@ -136,6 +144,34 @@ export const updateFamilyMember = async (member: APIt.UpdateFamilyInput) => {
     return data.updateFamily as APIt.UpdateFamilyInput;
   } catch (e) {
     console.log("Error while updating family member: ", e);
+    return null;
+  }
+};
+
+export const addInsHoldings = async (holdings: APIt.CreateUserInsInput) => {
+  try {
+    const { data } = (await API.graphql(
+      graphqlOperation(mutations.createUserIns, { input: holdings })
+    )) as {
+      data: APIt.CreateUserInsMutation;
+    };
+    return data.createUserIns as APIt.CreateUserInsInput;
+  } catch (e) {
+    console.log("Error while adding holdings: ", e);
+    return null;
+  }
+};
+
+export const updateInsHoldings = async (holdings: APIt.UpdateUserInsInput) => {
+  try {
+    const { data } = (await API.graphql(
+      graphqlOperation(mutations.updateUserIns, { input: holdings })
+    )) as {
+      data: APIt.UpdateUserHoldingsMutation;
+    };
+    return data.updateUserHoldings as APIt.UpdateUserHoldingsInput;
+  } catch (e) {
+    console.log("Error while updating holdings: ", e);
     return null;
   }
 };
