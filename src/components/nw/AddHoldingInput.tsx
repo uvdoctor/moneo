@@ -39,7 +39,7 @@ export default function AddHoldingInput({
 	const [ duration, setDuration ] = useState<number>(5);
 
 	const getNewRec = () => {
-		let newRec: HoldingInput = { id: '', qty: 0, fId: '' };
+		let newRec: HoldingInput = { id: '', qty: 0, fId: '', curr: '' };
 		const today = new Date();
 		const pur = {
 			amt: qty,
