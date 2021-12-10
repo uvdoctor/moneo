@@ -3,7 +3,7 @@ import { Empty } from 'antd';
 import Holding from './Holding';
 
 require('./HoldingsTable.less');
-import { HoldingInput } from '../../api/goals';
+import { InstrumentInput } from '../../api/goals';
 
 interface HoldingsTableProp {
 	data: any;
@@ -20,7 +20,7 @@ export default function HoldingsTable({ data, num, onChange, onNumChange }: Hold
 		onNumChange(num - 1);
 	};
 
-	const editHolding = (holding: HoldingInput) => {
+	const editHolding = (holding: InstrumentInput) => {
 		data[holding.id] = holding;
 		onChange(data);
 	};

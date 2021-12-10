@@ -4,7 +4,7 @@ import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { HoldingInput, AssetSubType, InsType, AssetType } from "../../api/goals";
+import { InstrumentInput, AssetSubType, InsType, AssetType } from "../../api/goals";
 
 const { confirm } = Modal;
 
@@ -115,7 +115,7 @@ export const completeRecord = (recordBroken: boolean, mode: string, equities: an
 		appendValue(
 			mode === AssetSubType.S ? equities : mode === 'M' ? mfs : mode === InsType.ETF ? etfs : bonds,
 			isin as string,
-			{id: isin, qty: quantity as number, name: isin, type: mode !== AssetType.F ? AssetType.E : AssetType.F, subt: mode === AssetType.F ? AssetSubType.CB : mode, fId: taxId, curr: currency} as HoldingInput
+			{id: isin, qty: quantity as number, fId: taxId, curr: currency} as InstrumentInput
 	  	);
   	}
 	console.log("Record completed for...", isin);

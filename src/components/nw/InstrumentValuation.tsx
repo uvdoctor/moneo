@@ -7,7 +7,7 @@ import { toHumanFriendlyCurrency } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
 import { AppContext } from '../AppContext';
-import { HoldingInput } from '../../api/goals';
+import { InstrumentInput } from '../../api/goals';
 
 export default function InstrumentValuation() {
 	const { insData }: any = useContext(AppContext);
@@ -56,7 +56,7 @@ export default function InstrumentValuation() {
 			filters: nameFilterValues,
 			onFilter: (values: Array<string>, record: any) => values.indexOf(record.id)>-1,
 			render: (record: any) => {
-				return <Holding key={record.id} holding={record as HoldingInput} onDelete={delRecord} showPrice onChange={()=>setTotal()}/>
+				return <Holding key={record.id} holding={record as InstrumentInput} onDelete={delRecord} showPrice onChange={()=>setTotal()}/>
 			}
 		}
 	];
@@ -68,8 +68,8 @@ export default function InstrumentValuation() {
 		() => {
 			let filteredNames: Array<any> = [];
 			let ids: Set<string> = new Set();
-			filteredInstruments.forEach((instrument: HoldingInput) => {
-				if (!ids.has(instrument.id)) filteredNames.push({ text: instrument.name, value: instrument.id });
+			filteredInstruments.forEach((instrument: InstrumentInput) => {
+				if (!ids.has(instrument.id)) filteredNames.push({ text: insData[instrument.id].name, value: instrument.id });
 				ids.add(instrument.id);
 			});
 			setNameFilterValues([ ...filteredNames ]);
@@ -105,7 +105,7 @@ export default function InstrumentValuation() {
 	const setTotal = () => {
 		let total = 0;
 		let filterAmt = 0;
-		filteredInstruments.map((instrument: HoldingInput) => {
+		filteredInstruments.map((instrument: InstrumentInput) => {
 			const price = instrument.qty * (insData[instrument.id] ? insData[instrument.id].price : 0);
 			if (filteredInfo.id) {
 				const id = filteredInfo.id.some((item: string) => item === instrument.id);
@@ -140,16 +140,16 @@ export default function InstrumentValuation() {
 
 	const filterInstrumentsByTabs = () => {
 		if (!instruments.length) return;
-		let filteredData: Array<HoldingInput> = instruments.filter((instrument: HoldingInput) => {
+		let filteredData: Array<InstrumentInput> = instruments.filter((instrument: InstrumentInput) => {
 			const data = insData[instrument.id];
 			if (data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
 				if (childTab === TAB.IT) return data.itype === 'InvIT' || data.itype === 'REIT';
 				if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
-				else if (childTab === TAB.STOCK) return instrument.subt === 'S' && !instrument.id.startsWith('INF');
+				else if (childTab === TAB.STOCK) return data.subt === 'S' && !instrument.id.startsWith('INF');
 				else if (childTab === TAB.BOND)
 					// @ts-ignore
 					return [ 'CB', 'GB', 'GBO' ].includes(instrument.subt) && !data.itype;
-				else if (childTab === TAB.GOLDB) return instrument.subt === 'GoldB';
+				else if (childTab === TAB.GOLDB) return data.subt === 'GoldB';
 				else if (childTab === TAB.ETF) return data.itype === 'ETF';
 			}
 		});
@@ -158,11 +158,11 @@ export default function InstrumentValuation() {
 
 	const filterInstrumentsByTags = () => {
 		if (!selectedTags.length) return;
-		let filterDataByTag = filteredInstruments.filter((instrument: HoldingInput) => {
+		let filterDataByTag = filteredInstruments.filter((instrument: InstrumentInput) => {
 			const data = insData[instrument.id];
 			if (childTab === TAB.MF) {
 				if (selectedSubtTags.length) {
-					if (selectedTags.indexOf(instrument.type as string) > -1) {
+					if (selectedTags.indexOf(data.type as string) > -1) {
 						 return selectedSubtTags.indexOf(data.mcap as string) > -1 ||
 						 (selectedSubtTags.includes('CB') && (data.subt === 'CB')) || 
 						 (selectedSubtTags.includes('I') && (data.type === 'F' && data.subt === 'I')) || 
@@ -176,7 +176,7 @@ export default function InstrumentValuation() {
 			else if (childTab === TAB.STOCK && data.meta) return selectedTags.indexOf(data.meta.mcap as string) > -1;
 			else if (childTab === TAB.BOND) {
 				if (selectedTags.includes('GB')) return data.subt === 'GB' || data.subt === 'GBO';
-				return selectedTags.indexOf(instrument.subt as string) > -1;
+				return selectedTags.indexOf(data.subt as string) > -1;
 			} else if (childTab === TAB.IT && data) return selectedTags.indexOf(data.itype as string) > -1;
 		});
 

@@ -1,7 +1,7 @@
 import { Badge, Col, Empty, Row, Skeleton, Tooltip } from 'antd';
 import dynamic from 'next/dynamic';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { AssetType, HoldingInput, MCap } from '../../api/goals';
+import { AssetType, InstrumentInput, MCap } from '../../api/goals';
 import { ASSET_TYPES, COLORS } from '../../CONSTANTS';
 import { AppContext } from '../AppContext';
 import { toHumanFriendlyCurrency, toReadableNumber } from '../utils';
@@ -99,10 +99,10 @@ export default function CurrentAA() {
 			let intervalFunds = 0;
 			let indexFunds = 0;
 			let liquidFunds = 0;
-			instruments.map((instrument: HoldingInput) => {
+			instruments.map((instrument: InstrumentInput) => {
 				const data = insData[instrument.id];
 				const price = instrument.qty * (data ? data.price : 0);
-				if (instrument.type === AssetType.E && data) {
+				if (data.type === AssetType.E && data) {
 					if (data.meta) {
 						if (data.meta.mcap === MCap.L) largeCap += price;
 						if (data.meta.mcap === MCap.M) midCap += price;
@@ -115,7 +115,7 @@ export default function CurrentAA() {
 					if (data.mcap === MCap.S) smallCap += price;
 					if (data.mcap === MCap.H) hybridCap += price;
 				}
-				if (instrument.type === AssetType.F && data) {
+				if (data.type === AssetType.F && data) {
 					if (data.subt === 'CB' || data.subt === 'GB' || data.subt === 'GBO' || data.subt === 'HB') bonds += price;
 					if (data.subt === 'I') indexFunds += price;
 					if (data.subt === 'L') liquidFunds += price;

@@ -12,7 +12,7 @@ import {
 
 require('./Holding.less');
 import { toCurrency, toHumanFriendlyCurrency, toReadableNumber } from '../utils';
-import { AssetType, HoldingInput } from '../../api/goals';
+import { AssetType, InstrumentInput } from '../../api/goals';
 import { useEffect } from 'react';
 import { getColourForAssetType } from './nwutils';
 import { COLORS } from '../../CONSTANTS';
@@ -22,7 +22,7 @@ import { faCoins, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface HoldingProp {
-	holding: HoldingInput;
+	holding: InstrumentInput;
 	showPrice?: boolean;
 	onDelete: Function;
 	onChange?: Function;
@@ -65,7 +65,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 								<h4 style={{ color: COLORS.RED }}>Sorry, unable to find price for this one!</h4>
 							)}
 						</Col>
-						{insData[holding.id] && holding.type !== AssetType.H && (
+						{insData[holding.id] && insData[holding.id].type !== AssetType.H && (
 							<Col>
 								{insData[holding.id].rate && (
 									<Tooltip title="Interest rate">
@@ -105,7 +105,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 			)}
 			<Col span={24}>
 				<Row justify="space-between">
-					<Col>{holding.name}</Col>
+					<Col>{insData[holding.id].name}</Col>
 					{showPrice && (
 						<Col className="quantity">
 							<strong>{toHumanFriendlyCurrency(total, holding.curr as string)}</strong>
@@ -118,7 +118,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 					count={holding.id}
 					style={
 						showPrice ? (
-							{ color: COLORS.WHITE, backgroundColor: getColourForAssetType(holding.type as AssetType) }
+							{ color: COLORS.WHITE, backgroundColor: getColourForAssetType(insData[holding.id].type as AssetType) }
 						) : (
 							{}
 						)
