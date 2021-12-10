@@ -76,9 +76,8 @@ export default function UploadHoldings() {
 		if(!input || !Object.keys(input).length || !memberKey) return null;
 		let unmatched: any = {};
 		let matchingList: Array<any> | null = null;
-		Object.keys(input).forEach(async(key) => {
-			if(!insData[key]) return matchingList = await fun(Object.keys(input));
-		});
+		const keysExistInInsdata = Object.keys(input).filter( key => !insData[key]);
+		if(keysExistInInsdata.length > 0) matchingList = await fun(Object.keys(input));
 		Object.keys(input).forEach((key) => {
 			let instrument = input[key];
 			let matchingEntry: InstrumentInput | null = insData[key] ? insData[key] : null;
@@ -113,7 +112,7 @@ export default function UploadHoldings() {
 				Object.keys(etfs).forEach((key: string) => equities[key] = etfs[key]);
 			await loadInstrumentPrices(loadMatchingINExchange, equities, member as string, filteredInsByCurr);
 			simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
-			let filteredIns: Array<InstrumentInput> = instruments.filter((instrument: InstrumentInput) => instrument.curr !== instrument.curr || instrument?.fId !== member);
+			let filteredIns: Array<InstrumentInput> = filteredInsByCurr.filter((instrument: InstrumentInput) => instrument?.fId !== member);
 			setInstruments([...filteredIns]);
 		}
 		resetState();
