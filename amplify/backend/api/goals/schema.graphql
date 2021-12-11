@@ -151,10 +151,10 @@ type UserInfo
 	notify: Boolean!
 }
 
-type Universe 
+type InsUni 
 	@model
 	@aws_iam
-	@key(fields: ["id"])
+	@key(fields: ["id", "user"])
 	@auth(
 		rules: [
 			{ allow: private, provider: iam, operations: [create, read, update, delete] }
@@ -163,7 +163,7 @@ type Universe
 	id: String!
 	sid: String
 	exchg: Exchange
-	users: [String!]!
+	user: String!
 }
 
 enum AssetType {

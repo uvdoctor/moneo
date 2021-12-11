@@ -1259,46 +1259,46 @@ export const createRating = /* GraphQL */ `
     }
   }
 `;
-export const createUniverse = /* GraphQL */ `
-  mutation CreateUniverse(
-    $input: CreateUniverseInput!
-    $condition: ModelUniverseConditionInput
+export const createInsUni = /* GraphQL */ `
+  mutation CreateInsUni(
+    $input: CreateInsUniInput!
+    $condition: ModelInsUniConditionInput
   ) {
-    createUniverse(input: $input, condition: $condition) {
+    createInsUni(input: $input, condition: $condition) {
       id
       sid
       exchg
-      users
+      user
       createdAt
       updatedAt
     }
   }
 `;
-export const updateUniverse = /* GraphQL */ `
-  mutation UpdateUniverse(
-    $input: UpdateUniverseInput!
-    $condition: ModelUniverseConditionInput
+export const updateInsUni = /* GraphQL */ `
+  mutation UpdateInsUni(
+    $input: UpdateInsUniInput!
+    $condition: ModelInsUniConditionInput
   ) {
-    updateUniverse(input: $input, condition: $condition) {
+    updateInsUni(input: $input, condition: $condition) {
       id
       sid
       exchg
-      users
+      user
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteUniverse = /* GraphQL */ `
-  mutation DeleteUniverse(
-    $input: DeleteUniverseInput!
-    $condition: ModelUniverseConditionInput
+export const deleteInsUni = /* GraphQL */ `
+  mutation DeleteInsUni(
+    $input: DeleteInsUniInput!
+    $condition: ModelInsUniConditionInput
   ) {
-    deleteUniverse(input: $input, condition: $condition) {
+    deleteInsUni(input: $input, condition: $condition) {
       id
       sid
       exchg
-      users
+      user
       createdAt
       updatedAt
     }
