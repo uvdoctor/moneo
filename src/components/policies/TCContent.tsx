@@ -1,7 +1,8 @@
 import { Typography } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
+import MajorAssumptions from "../calc/blog/MajorAssumptions";
 
-const tcConent = [
+const tcContent = [
   {
     title: "Introduction",
     content: (
@@ -663,4 +664,6 @@ const tcConent = [
   },
 ];
 
-export default tcConent;
+export default function TCContent() {
+  return <MajorAssumptions elements={[ ...tcContent ]} />
+}

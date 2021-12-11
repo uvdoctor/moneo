@@ -2,6 +2,7 @@ import { Typography } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import Text from "antd/lib/typography/Text";
 import Title from "antd/lib/typography/Title";
+import MajorAssumptions from "../calc/blog/MajorAssumptions";
 
 const privacyContent = [
     {
@@ -816,4 +817,6 @@ const privacyContent = [
     },
   ];
 
-export default privacyContent;
+export default function PrivacyContent() {
+  return <MajorAssumptions elements={[ ...privacyContent ]} />
+}

@@ -1,5 +1,6 @@
 import { Typography } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
+import MajorAssumptions from "../calc/blog/MajorAssumptions";
 
 const securityContent = [
   {
@@ -254,4 +255,6 @@ const securityContent = [
   },
 ];
 
-export default securityContent;
+export default function SecurityContent() {
+  return <MajorAssumptions elements={[...securityContent]} />
+}

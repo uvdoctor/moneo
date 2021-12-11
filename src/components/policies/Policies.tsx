@@ -1,13 +1,12 @@
 import { Col, Row, Tabs } from 'antd';
 import React, { Fragment } from 'react';
-import MajorAssumptions from '../calc/blog/MajorAssumptions';
 import { isMobileDevice } from '../utils';
 import { useFullScreenBrowser } from 'react-browser-hooks';
-import privacyContent from './PrivacyContent';
-import securityContent from './SecurityContent';
-import tcConent from './TCContent';
 import Link from 'next/link';
 import { ROUTES } from '../../CONSTANTS';
+import TCContent from './TCContent';
+import PrivacyContent from './PrivacyContent';
+import SecurityContent from './SecurityContent';
 
 interface PoliciesProps {
 	type: string;
@@ -18,9 +17,9 @@ export default function Policies({ type }: PoliciesProps) {
 	const { TabPane } = Tabs;
 
 	const sections: any = {
-		'Terms & Conditions': <MajorAssumptions elements={[ ...tcConent ]} />,
-		Privacy: <MajorAssumptions elements={[ ...privacyContent ]} />,
-		Security: <MajorAssumptions elements={[ ...securityContent ]} />
+		'Terms & Conditions':  <TCContent />,
+		Privacy: <PrivacyContent />,
+		Security: <SecurityContent />
 	};
 
 	return (
