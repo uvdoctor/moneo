@@ -13,6 +13,7 @@ export default function Bond() {
       noFooter
       menuTitle={"Financial Education"}
     >
+        <h1>Finance</h1>
     </BasicPage>
   );
 }
