@@ -254,7 +254,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                       I accept the{" "}
                       <a
                         target="_blank"
-                        href={ROUTES.POLICYTC}
+                        href={ROUTES.TC}
                         rel="noreferrer"
                       >
                         Terms & Conditions
@@ -262,7 +262,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                       ,&nbsp;
                       <a
                         target="_blank"
-                        href={ROUTES.POLICYPRIVACY}
+                        href={ROUTES.PRIVACY}
                         rel="noreferrer"
                       >
                         Privacy Policy
@@ -270,7 +270,7 @@ export default function BasicAuthenticator({ children }: BasicAuthenticatorProps
                       &nbsp;and&nbsp;
                       <a
                         target="_blank"
-                        href={ROUTES.POLICYSECURITY}
+                        href={ROUTES.SECURITY}
                         rel="noreferrer"
                       >
                         Security Policy
