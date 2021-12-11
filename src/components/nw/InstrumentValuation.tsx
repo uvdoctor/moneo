@@ -146,8 +146,7 @@ export default function InstrumentValuation() {
 				if (childTab === TAB.MF && instrument.id === "INF") return instrument.id;
 				else if (childTab === TAB.STOCK) return instrument.id;
 			} 
-			if (data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
-				
+			if (data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {		
 				if (childTab === TAB.IT) return data.itype === 'InvIT' || data.itype === 'REIT';
 				if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
 				else if (childTab === TAB.STOCK) return data.subt === 'S' && !instrument.id.startsWith('INF');
@@ -176,11 +175,13 @@ export default function InstrumentValuation() {
 					}
 				}
 			} 
-			else if (childTab === TAB.STOCK && data.meta) return selectedTags.indexOf(data.meta.mcap as string) > -1;
-			else if (childTab === TAB.BOND) {
-				if (selectedTags.includes('GB')) return data.subt === 'GB' || data.subt === 'GBO';
-				return selectedTags.indexOf(data.subt as string) > -1;
-			} else if (childTab === TAB.IT && data) return selectedTags.indexOf(data.itype as string) > -1;
+			else if (childTab === TAB.STOCK) {
+				if(data) return selectedTags.indexOf(data?.meta && data.meta.mcap as string) > -1;
+			}
+			else if (childTab === TAB.BOND && data) {
+				if (selectedTags.includes('GB')) return data?.subt === 'GB' || data?.subt === 'GBO';
+				return selectedTags.indexOf(data?.subt as string) > -1;
+			} else if (childTab === TAB.IT) return selectedTags.indexOf(data && data?.itype as string) > -1;
 		});
 
 		
