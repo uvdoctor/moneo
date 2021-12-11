@@ -39,7 +39,8 @@ export default function CurrentAA() {
 		totalEPF,
 		totalVPF,
 		totalPPF,
-		totalNPSEquity
+		totalNPSEquity,
+		totalCrypto
 	}: any = useContext(NWContext);
 	const { insData }: any = useContext(AppContext);
 	const [ totalCash, setTotalCash ] = useState<number>(totalSavings + totalDeposits + totalLendings);
@@ -59,7 +60,8 @@ export default function CurrentAA() {
 		'Real-estate': { color: '#7cd9fd', total: totalProperties },
 		REIT: { color: '#7cd9fd', total: totalFRE },
 		Gold: { color: '#f6e05e', total: totalFGold + totalPGold },
-		Others: { color: '#aa8dfa', total: totalAlternative - totalFGold - totalPGold - totalProperties - totalFRE }
+		Others: { color: '#aa8dfa', total: totalAlternative - totalFGold - totalPGold - totalProperties - totalFRE },
+		Crypto: { color: COLORS.RED, total: totalCrypto }
 	};
 
 	const initChartData = () => {
@@ -138,12 +140,16 @@ export default function CurrentAA() {
 
 	const pattern = (records: Array<any>) => {
 		let data: any = '';
-		records.map((record) => {
+		let doesValueExist: boolean = false;
+		records.map((record) => { 
 			const amount = toHumanFriendlyCurrency(record.value, selectedCurrency);
 			const percentage = toReadableNumber(record.value / totalAssets * 100, 2);
-			if(record.value) data += `<strong>${amount}</strong>(${percentage}%) of ${record.desc}<br/><br/>`;
+			if(record.value) {
+				doesValueExist = (true);
+				data += `<strong>${amount}</strong>(${percentage}%) of ${record.desc}<br/><br/>`;
+			}
 		});
-		return data;
+		return doesValueExist ? `<br/><br/>Includes<br/><br/>${data}` : '';
 	};
 
 	const breakdownAssetInfo = (asset: string) => {
@@ -247,7 +253,7 @@ export default function CurrentAA() {
 							)}</strong> (${toReadableNumber(
 								value,
 								2
-							)}%)<br/><br/>Includes<br/><br/> ${breakdownAssetInfo(name)}`
+							)}%)${breakdownAssetInfo(name)}`
 						};
 					}
 				}}
