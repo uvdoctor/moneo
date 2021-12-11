@@ -10,7 +10,7 @@ import { GoalContext } from '../goals/GoalContext';
 import { API, graphqlOperation, Storage } from 'aws-amplify';
 import * as mutations from '../../graphql/mutations';
 import { getGoalsList } from '../goals/goalutils';
-import { getFamilysList, loadAllHoldings } from '../nw/nwutils';
+import { getFamilysList } from '../nw/nwutils';
 
 export default function DeleteAccount() {
 	const { handleLogout, owner }: any = useContext(AppContext);
@@ -62,15 +62,21 @@ export default function DeleteAccount() {
 
 	const deleteHoldings = async (uname: string) => {
 		try {
-			const holdings = await loadAllHoldings(uname);
-			if (holdings) {
-				const result = await API.graphql(
-					graphqlOperation(mutations.deleteUserHoldings, { input: { uname: holdings.uname } })
-				);
-				console.log(result);
-			}
+			const result = await API.graphql(
+				graphqlOperation(mutations.deleteUserHoldings, { input: { uname: uname } })
+			);
+			console.log(result);
 		} catch (e) {
-			console.log('Error while deleting: ', e);
+			console.log('Error while deleting holdings: ', e);
+		}
+	};
+
+	const deleteInsHolding = async (uname: string) => {
+		try {
+			const result = await API.graphql(graphqlOperation(mutations.deleteUserIns, { input: { uname: uname } }));
+			console.log(result);
+		} catch (e) {
+			console.log('Error while deleting instrument holding: ', e);
 		}
 	};
 
@@ -83,6 +89,7 @@ export default function DeleteAccount() {
 					const user = await Auth.currentAuthenticatedUser();
 					await deleteGoal();
 					await deleteHoldings(owner);
+					await deleteInsHolding(owner);
 					await deleteFamilyList();
 					user.attributes.profile ? await Storage.remove(user.attributes.profile) : null;
 					goalImgKey ? await Storage.remove(goalImgKey) : null;
@@ -114,7 +121,9 @@ export default function DeleteAccount() {
 
 	return (
 		<Fragment>
-			<Menu.Item onClick={showModal} key='delete'>Delete Account</Menu.Item>
+			<Menu.Item onClick={showModal} key="delete">
+				Delete Account
+			</Menu.Item>
 			<Modal
 				title={'Delete Account'}
 				visible={isModalVisible}
