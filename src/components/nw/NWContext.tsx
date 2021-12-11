@@ -174,7 +174,7 @@ function NWContextProvider() {
 				[TAB.LENT]: {
 					label: TAB.LENT,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
@@ -202,7 +202,7 @@ function NWContextProvider() {
 				[TAB.SAV]: {
 					label: TAB.SAV,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: savings,
 					setData: setSavings,
 					total: totalSavings,
@@ -216,7 +216,7 @@ function NWContextProvider() {
 				[TAB.PROP]: {
 					label: TAB.PROP,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: properties,
 					setData: setProperties,
 					total: totalProperties,
@@ -233,7 +233,7 @@ function NWContextProvider() {
 				[TAB.VEHICLE]: {
 					label: TAB.VEHICLE,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: vehicles,
 					setData: setVehicles,
 					total: totalVehicles,
@@ -247,7 +247,7 @@ function NWContextProvider() {
 				[TAB.PM]: {
 					label: TAB.PM,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: preciousMetals,
 					setData: setPreciousMetals,
 					total: totalPM,
@@ -288,7 +288,7 @@ function NWContextProvider() {
 				[TAB.OTHER]: {
 					label: TAB.OTHER,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: others,
 					setData: setOthers,
 					total: totalOthers,
@@ -309,7 +309,7 @@ function NWContextProvider() {
 				[TAB.STOCK]: {
 					label: TAB.STOCK,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -319,7 +319,7 @@ function NWContextProvider() {
 				[TAB.MF]: {
 					label: TAB.MF,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -329,7 +329,7 @@ function NWContextProvider() {
 				[TAB.BOND]: {
 					label: TAB.BOND,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -339,7 +339,7 @@ function NWContextProvider() {
 				[TAB.GOLDB]: {
 					label: TAB.GOLDB,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -349,7 +349,7 @@ function NWContextProvider() {
 				[TAB.ETF]: {
 					label: TAB.ETF,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -359,7 +359,7 @@ function NWContextProvider() {
 				[TAB.IT]: {
 					label: TAB.IT,
 					info: "Investment Trust",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -369,7 +369,7 @@ function NWContextProvider() {
 				[TAB.CRYPTO]: {
 					label: TAB.CRYPTO,
 					info: 'Example',
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: crypto,
 					setData: setCrypto,
 					total: totalCrypto,
@@ -390,7 +390,7 @@ function NWContextProvider() {
 				[TAB.ANGEL]: {
 					label: TAB.ANGEL,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: angel,
 					setData: setAngel,
 					total: totalAngel,
@@ -404,7 +404,7 @@ function NWContextProvider() {
 				[TAB.PF]: {
 					label: TAB.PF,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: pf,
 					setData: setPF,
 					total: totalPF,
@@ -418,7 +418,7 @@ function NWContextProvider() {
 				[TAB.NPS]: {
 					label: TAB.NPS,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: nps,
 					setData: setNPS,
 					total: totalNPS,
@@ -434,7 +434,7 @@ function NWContextProvider() {
 				[TAB.LOAN] : {
 					label: TAB.LOAN,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: loans,
 					setData: setLoans,
 					total: totalLoans,
@@ -443,7 +443,7 @@ function NWContextProvider() {
 				[TAB.INS]: {
 					label: TAB.INS,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: insurance,
 					total: totalInsurance,
 					setData: setInsurance,
@@ -459,7 +459,7 @@ function NWContextProvider() {
 				[TAB.CREDIT]:{
 					label: TAB.CREDIT,
 					info: "Example",
-					link: ROUTES.POLICYPRIVACY,
+					link: ROUTES.TC,
 					data: credit,
 					total: totalCredit,
 					setData: setCredit,
