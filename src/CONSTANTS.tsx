@@ -14,9 +14,9 @@ export const ROUTES = {
   FEATURES: "/features",
   IA: "/ia",
   SETTINGS: "/settings",
-  POLICYTC: "/policy/terms-and-conditions",
-  POLICYSECURITY: "/policy/security",
-  POLICYPRIVACY: "/policy/privacy",
+  TC: "/policies/terms-and-conditions",
+  SECURITY: "/policies/security",
+  PRIVACY: "/policies/privacy",
 };
 
 export const CALC_NAMES = {
