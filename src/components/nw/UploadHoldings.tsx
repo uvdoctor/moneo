@@ -105,7 +105,7 @@ export default function UploadHoldings() {
 		if(equitiesNum || mfsNum || bondsNum || etfsNum) {
 			let filteredInsByCurr: Array<InstrumentInput> = instruments.filter((instrument: InstrumentInput) => instrument.curr === currency);
 			let unmatchedMfs = await loadInstrumentPrices(loadMatchingINMutual, mutualFunds, member as string, filteredInsByCurr);
-			if(unmatchedMfs && Object.keys(unmatchedMfs.length))
+			if(unmatchedMfs && Object.keys(unmatchedMfs).length)
 				Object.keys(unmatchedMfs).forEach((key: string) => equities[key] = unmatchedMfs[key]);
 			let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bonds, member as string, filteredInsByCurr);
 			if(unmatchedBonds && Object.keys(unmatchedBonds).length) 
