@@ -5,23 +5,23 @@ const getAndPushData = async(records) => {
 
   records.forEach(record => {
     const uname =  record.dynamodb.Keys.uname.S;
-    if(record.eventName === 'INSERT') {
-      record.dynamodb.NewImage.ins.L.map((item)=> {
-        const doesExist = universeData.find((item) => item.id === item.M.id.S);
-        if(!doesExist) pushData();
-      })
-    if(record.eventName === 'MODIFY') {
-      let isUnique = [];
-      record.dynamodb.NewImage.ins.L.map((item)=> {
+  //   if(record.eventName === 'INSERT') {
+  //     record.dynamodb.NewImage.ins.L.map((item)=> {
+  //       const doesExist = universeData.find((item) => item.id === item.M.id.S);
+  //       if(!doesExist) pushData();
+  //     })
+  //   if(record.eventName === 'MODIFY') {
+  //     let isUnique = [];
+  //     record.dynamodb.NewImage.ins.L.map((item)=> {
 
 
-      })
+  //     })
 
-    }
-    if(record.eventName === 'REMOVE') {
-      // OldImage
+  //   }
+  //   if(record.eventName === 'REMOVE') {
+  //     // OldImage
 
-    }
+  //   }
   })
 }
 
