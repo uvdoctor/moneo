@@ -174,11 +174,7 @@ function NWContextProvider() {
 				[TAB.LENT]: {
 					label: TAB.LENT,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: lendings,
 					setData: setLendings,
 					total: totalLendings,
@@ -206,11 +202,7 @@ function NWContextProvider() {
 				[TAB.SAV]: {
 					label: TAB.SAV,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: savings,
 					setData: setSavings,
 					total: totalSavings,
@@ -224,11 +216,7 @@ function NWContextProvider() {
 				[TAB.PROP]: {
 					label: TAB.PROP,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: properties,
 					setData: setProperties,
 					total: totalProperties,
@@ -245,11 +233,7 @@ function NWContextProvider() {
 				[TAB.VEHICLE]: {
 					label: TAB.VEHICLE,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: vehicles,
 					setData: setVehicles,
 					total: totalVehicles,
@@ -263,11 +247,7 @@ function NWContextProvider() {
 				[TAB.PM]: {
 					label: TAB.PM,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: preciousMetals,
 					setData: setPreciousMetals,
 					total: totalPM,
@@ -308,11 +288,7 @@ function NWContextProvider() {
 				[TAB.OTHER]: {
 					label: TAB.OTHER,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: others,
 					setData: setOthers,
 					total: totalOthers,
@@ -333,11 +309,7 @@ function NWContextProvider() {
 				[TAB.STOCK]: {
 					label: TAB.STOCK,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -347,11 +319,7 @@ function NWContextProvider() {
 				[TAB.MF]: {
 					label: TAB.MF,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -361,11 +329,7 @@ function NWContextProvider() {
 				[TAB.BOND]: {
 					label: TAB.BOND,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -375,11 +339,7 @@ function NWContextProvider() {
 				[TAB.GOLDB]: {
 					label: TAB.GOLDB,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -389,11 +349,7 @@ function NWContextProvider() {
 				[TAB.ETF]: {
 					label: TAB.ETF,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -403,11 +359,7 @@ function NWContextProvider() {
 				[TAB.IT]: {
 					label: TAB.IT,
 					info: "Investment Trust",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
@@ -417,11 +369,7 @@ function NWContextProvider() {
 				[TAB.CRYPTO]: {
 					label: TAB.CRYPTO,
 					info: 'Example',
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: crypto,
 					setData: setCrypto,
 					total: totalCrypto,
@@ -442,11 +390,7 @@ function NWContextProvider() {
 				[TAB.ANGEL]: {
 					label: TAB.ANGEL,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: angel,
 					setData: setAngel,
 					total: totalAngel,
@@ -460,11 +404,7 @@ function NWContextProvider() {
 				[TAB.PF]: {
 					label: TAB.PF,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: pf,
 					setData: setPF,
 					total: totalPF,
@@ -478,11 +418,7 @@ function NWContextProvider() {
 				[TAB.NPS]: {
 					label: TAB.NPS,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: nps,
 					setData: setNPS,
 					total: totalNPS,
@@ -498,11 +434,7 @@ function NWContextProvider() {
 				[TAB.LOAN] : {
 					label: TAB.LOAN,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: loans,
 					setData: setLoans,
 					total: totalLoans,
@@ -511,11 +443,7 @@ function NWContextProvider() {
 				[TAB.INS]: {
 					label: TAB.INS,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: insurance,
 					total: totalInsurance,
 					setData: setInsurance,
@@ -531,11 +459,7 @@ function NWContextProvider() {
 				[TAB.CREDIT]:{
 					label: TAB.CREDIT,
 					info: "Example",
-<<<<<<< HEAD
-					link: ROUTES.TC,
-=======
 					link: ROUTES.PRIVACY,
->>>>>>> 63500d28e3d360add711ff0b6b668d4a0a79d2a8
 					data: credit,
 					total: totalCredit,
 					setData: setCredit,
