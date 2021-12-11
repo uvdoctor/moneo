@@ -14,7 +14,7 @@ export default function PolicyPrivacy() {
       noFooter
       menuTitle={"Policies"}
     >
-      <Policies type={"privacy"} />
+      <Policies type={"Privacy"} />
     </BasicPage>
   );
 }

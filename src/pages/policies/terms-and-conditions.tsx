@@ -14,7 +14,7 @@ export default function PolicyTC() {
       noFooter
       menuTitle="Policies"
     >
-      <Policies type="terms-and-conditions" />
+      <Policies type="Terms & Conditions" />
     </BasicPage>
   );
 }

@@ -14,7 +14,7 @@ export default function PolicySecurity() {
       noFooter
       menuTitle={"Policies"}
     >
-        <Policies type='security' />
+        <Policies type='Security' />
 		</BasicPage>
 	);
 }
