@@ -105,7 +105,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 			)}
 			<Col span={24}>
 				<Row justify="space-between">
-					<Col>{insData[holding.id].name}</Col>
+					<Col>{insData[holding.id] ? insData[holding.id].name : holding.id}</Col>
 					{showPrice && (
 						<Col className="quantity">
 							<strong>{toHumanFriendlyCurrency(total, holding.curr as string)}</strong>
@@ -118,7 +118,7 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 					count={holding.id}
 					style={
 						showPrice ? (
-							{ color: COLORS.WHITE, backgroundColor: getColourForAssetType(insData[holding.id].type as AssetType) }
+							{ color: COLORS.WHITE, backgroundColor: getColourForAssetType(insData[holding.id] ? insData[holding.id].type : '' as AssetType) }
 						) : (
 							{}
 						)

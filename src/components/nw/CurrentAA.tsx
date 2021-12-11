@@ -103,26 +103,28 @@ export default function CurrentAA() {
 			let liquidFunds = 0;
 			instruments.map((instrument: InstrumentInput) => {
 				const data = insData[instrument.id];
-				const price = instrument.qty * (data ? data.price : 0);
-				if (data.type === AssetType.E && data) {
-					if (data.meta) {
-						if (data.meta.mcap === MCap.L) largeCap += price;
-						if (data.meta.mcap === MCap.M) midCap += price;
-						if (data.meta.mcap === MCap.S) smallCap += price;
-						if (data.meta.mcap === MCap.H) hybridCap += price;
-						else smallCap += price;
+				if(data){
+					const price = instrument.qty * (data ? data.price : 0);
+					if (data.type === AssetType.E) {
+						if (data.meta) {
+							if (data.meta.mcap === MCap.L) largeCap += price;
+							if (data.meta.mcap === MCap.M) midCap += price;
+							if (data.meta.mcap === MCap.S) smallCap += price;
+							if (data.meta.mcap === MCap.H) hybridCap += price;
+							else smallCap += price;
+						}
+						if (data.mcap === MCap.L) largeCap += price;
+						if (data.mcap === MCap.M) midCap += price;
+						if (data.mcap === MCap.S) smallCap += price;
+						if (data.mcap === MCap.H) hybridCap += price;
 					}
-					if (data.mcap === MCap.L) largeCap += price;
-					if (data.mcap === MCap.M) midCap += price;
-					if (data.mcap === MCap.S) smallCap += price;
-					if (data.mcap === MCap.H) hybridCap += price;
-				}
-				if (data.type === AssetType.F && data) {
-					if (data.subt === 'CB' || data.subt === 'GB' || data.subt === 'GBO' || data.subt === 'HB') bonds += price;
-					if (data.subt === 'I') indexFunds += price;
-					if (data.subt === 'L') liquidFunds += price;
-					if (data.mftype && data.subt === 'HB' && data.mftype === 'I') intervalFunds += price;
-					if (data.mftype && data.subt === 'HB' && data.mftype === 'C') fmp += price;
+					if (data.type === AssetType.F) {
+						if (data.subt === 'CB' || data.subt === 'GB' || data.subt === 'GBO' || data.subt === 'HB') bonds += price;
+						if (data.subt === 'I') indexFunds += price;
+						if (data.subt === 'L') liquidFunds += price;
+						if (data.mftype && data.subt === 'HB' && data.mftype === 'I') intervalFunds += price;
+						if (data.mftype && data.subt === 'HB' && data.mftype === 'C') fmp += price;
+					}
 				}
 			});
 			setLargeCap(largeCap);

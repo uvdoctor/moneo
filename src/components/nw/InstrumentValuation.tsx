@@ -69,7 +69,7 @@ export default function InstrumentValuation() {
 			let filteredNames: Array<any> = [];
 			let ids: Set<string> = new Set();
 			filteredInstruments.forEach((instrument: InstrumentInput) => {
-				if (!ids.has(instrument.id)) filteredNames.push({ text: insData[instrument.id].name, value: instrument.id });
+				if (!ids.has(instrument.id)) filteredNames.push({ text: insData[instrument.id] ? insData[instrument.id].name : instrument.id, value: instrument.id });
 				ids.add(instrument.id);
 			});
 			setNameFilterValues([ ...filteredNames ]);
@@ -142,6 +142,10 @@ export default function InstrumentValuation() {
 		if (!instruments.length) return;
 		let filteredData: Array<InstrumentInput> = instruments.filter((instrument: InstrumentInput) => {
 			const data = insData[instrument.id];
+			if(!data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
+				if (childTab === TAB.MF && instrument.id === "INF") return instrument.id;
+				else if (childTab === TAB.STOCK) return instrument.id;
+			} 
 			if (data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
 				if (childTab === TAB.IT) return data.itype === 'InvIT' || data.itype === 'REIT';
 				if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
