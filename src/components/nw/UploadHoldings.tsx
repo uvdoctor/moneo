@@ -56,12 +56,6 @@ export default function UploadHoldings() {
 
 	useEffect(() => setDrawerVisibility(!Object.keys(instruments).length), []);
 
-	useEffect(() => {
-		if(showInsUpload) {
-			setDrawerVisibility(false);
-		}
-	}, [showInsUpload]);
-
 	const onShowDrawer = () => setDrawerVisibility(true);
 
 	const resetState = () => {
@@ -70,6 +64,7 @@ export default function UploadHoldings() {
 		setError('');
 		setProcessing(false);
 		setShowInsUpload(false);
+		setDrawerVisibility(false);
 	}
 
 	const loadInstrumentPrices = async (fun: Function, input: any, memberKey: string, filteredIns: Array<InstrumentInput>) => {
