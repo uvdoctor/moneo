@@ -147,14 +147,13 @@ export default function InstrumentValuation() {
 				else if (childTab === TAB.STOCK) return instrument.id;
 			} 
 			if (data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
+				
 				if (childTab === TAB.IT) return data.itype === 'InvIT' || data.itype === 'REIT';
 				if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
-				else if (childTab === TAB.BOND)
-					// @ts-ignore
-					return [ 'CB', 'GB', 'GBO' ].includes(instrument.subt) && !data.itype;
+				else if (childTab === TAB.STOCK) return data.subt === 'S' && !instrument.id.startsWith('INF');
+				else if (childTab === TAB.BOND) return [ 'CB', 'GB', 'GBO' ].includes(data.subt) && !data.itype; 
 				else if (childTab === TAB.GOLDB) return data.subt === 'GoldB';
 				else if (childTab === TAB.ETF) return data.itype === 'ETF';
-				else if (childTab === TAB.STOCK) return data.subt === 'S' && !instrument.id.startsWith('INF');
 			}
 		});
 		setFilteredInstruments([ ...filteredData ]);
