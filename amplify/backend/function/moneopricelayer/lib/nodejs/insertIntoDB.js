@@ -1,5 +1,11 @@
 const { DynamoDB } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, BatchWriteCommand, PutCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
+const {
+	DynamoDBDocumentClient,
+	BatchWriteCommand,
+	PutCommand,
+	ScanCommand,
+	UpdateCommand
+} = require('@aws-sdk/lib-dynamodb');
 const dynamodb = new DynamoDB({});
 const docClient = DynamoDBDocumentClient.from(dynamodb);
 
@@ -11,6 +17,27 @@ const getTableNameFromInitialWord = (tableInitial) => {
 			resolve(tableName);
 		});
 	});
+};
+
+const updateItem = async (table, id, fields) => {
+	let exp = { UpdateExpression: 'set', ExpressionAttributeValues: {} };
+	Object.entries(fields).forEach(([ key, item ]) => {
+		const valKey = `:${key}`;
+		exp.UpdateExpression += ` ${key} = ${valKey}, `;
+		exp.ExpressionAttributeValues[valKey] = item;
+	});
+	exp.UpdateExpression = exp.UpdateExpression.slice(0, -1);
+	const params = {
+		TableName: table,
+		Key: { id: id },
+		...exp
+	};
+	try {
+		const data = await docClient.send(new UpdateCommand(params));
+		console.log('Success - item added or updated', data);
+	} catch (err) {
+		console.log('Error', err);
+	}
 };
 
 const getDataFromTable = async (table) => {
@@ -89,5 +116,6 @@ module.exports = {
 	pushDataSingly,
 	appendGenericFields,
 	getTableNameFromInitialWord,
-	deleteData
+	deleteData,
+	updateItem
 };
