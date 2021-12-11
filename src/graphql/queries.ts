@@ -365,30 +365,26 @@ export const regByEmail = /* GraphQL */ `
     }
   }
 `;
-export const getInsUni = /* GraphQL */ `
-  query GetInsUni($id: String!, $user: String!) {
-    getInsUni(id: $id, user: $user) {
+export const getInsAnalytics = /* GraphQL */ `
+  query GetInsAnalytics($id: String!) {
+    getInsAnalytics(id: $id) {
       id
-      sid
-      exchg
-      user
+      analytics
       createdAt
       updatedAt
     }
   }
 `;
-export const listInsUnis = /* GraphQL */ `
-  query ListInsUnis(
+export const listInsAnalyticss = /* GraphQL */ `
+  query ListInsAnalyticss(
     $id: String
-    $user: ModelStringKeyConditionInput
-    $filter: ModelInsUniFilterInput
+    $filter: ModelInsAnalyticsFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listInsUnis(
+    listInsAnalyticss(
       id: $id
-      user: $user
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -396,9 +392,7 @@ export const listInsUnis = /* GraphQL */ `
     ) {
       items {
         id
-        sid
-        exchg
-        user
+        analytics
         createdAt
         updatedAt
       }

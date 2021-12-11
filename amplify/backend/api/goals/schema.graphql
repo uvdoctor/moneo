@@ -151,19 +151,17 @@ type UserInfo
 	notify: Boolean!
 }
 
-type InsUni 
+type InsAnalytics
 	@model
 	@aws_iam
-	@key(fields: ["id", "user"])
+	@key(fields: ["id"])
 	@auth(
 		rules: [
 			{ allow: private, provider: iam, operations: [create, read, update, delete] }
 		]
 	) {
 	id: String!
-	sid: String
-	exchg: Exchange
-	user: String!
+	analytics: AWSJSON!
 }
 
 enum AssetType {

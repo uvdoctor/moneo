@@ -708,52 +708,33 @@ export type CreateRatingInput = {
   feedbackId?: string | null,
 };
 
-export type CreateInsUniInput = {
+export type CreateInsAnalyticsInput = {
   id: string,
-  sid?: string | null,
-  exchg?: Exchange | null,
-  user: string,
+  analytics: string,
 };
 
-export enum Exchange {
-  NSE = "NSE",
-  BSE = "BSE",
-}
-
-
-export type ModelInsUniConditionInput = {
-  sid?: ModelStringInput | null,
-  exchg?: ModelExchangeInput | null,
-  and?: Array< ModelInsUniConditionInput | null > | null,
-  or?: Array< ModelInsUniConditionInput | null > | null,
-  not?: ModelInsUniConditionInput | null,
+export type ModelInsAnalyticsConditionInput = {
+  analytics?: ModelStringInput | null,
+  and?: Array< ModelInsAnalyticsConditionInput | null > | null,
+  or?: Array< ModelInsAnalyticsConditionInput | null > | null,
+  not?: ModelInsAnalyticsConditionInput | null,
 };
 
-export type ModelExchangeInput = {
-  eq?: Exchange | null,
-  ne?: Exchange | null,
-};
-
-export type InsUni = {
-  __typename: "InsUni",
+export type InsAnalytics = {
+  __typename: "InsAnalytics",
   id?: string,
-  sid?: string | null,
-  exchg?: Exchange | null,
-  user?: string,
+  analytics?: string,
   createdAt?: string,
   updatedAt?: string,
 };
 
-export type UpdateInsUniInput = {
+export type UpdateInsAnalyticsInput = {
   id: string,
-  sid?: string | null,
-  exchg?: Exchange | null,
-  user: string,
+  analytics?: string | null,
 };
 
-export type DeleteInsUniInput = {
+export type DeleteInsAnalyticsInput = {
   id: string,
-  user: string,
 };
 
 export type CreateFeedsInput = {
@@ -764,6 +745,12 @@ export type CreateFeedsInput = {
   count: number,
 };
 
+export enum Exchange {
+  NSE = "NSE",
+  BSE = "BSE",
+}
+
+
 export type ModelFeedsConditionInput = {
   tname?: ModelStringInput | null,
   exchg?: ModelExchangeInput | null,
@@ -772,6 +759,11 @@ export type ModelFeedsConditionInput = {
   and?: Array< ModelFeedsConditionInput | null > | null,
   or?: Array< ModelFeedsConditionInput | null > | null,
   not?: ModelFeedsConditionInput | null,
+};
+
+export type ModelExchangeInput = {
+  eq?: Exchange | null,
+  ne?: Exchange | null,
 };
 
 export type Feeds = {
@@ -1497,29 +1489,17 @@ export type ModelUserInfoConnection = {
   nextToken?: string | null,
 };
 
-export type ModelStringKeyConditionInput = {
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-};
-
-export type ModelInsUniFilterInput = {
+export type ModelInsAnalyticsFilterInput = {
   id?: ModelStringInput | null,
-  sid?: ModelStringInput | null,
-  exchg?: ModelExchangeInput | null,
-  user?: ModelStringInput | null,
-  and?: Array< ModelInsUniFilterInput | null > | null,
-  or?: Array< ModelInsUniFilterInput | null > | null,
-  not?: ModelInsUniFilterInput | null,
+  analytics?: ModelStringInput | null,
+  and?: Array< ModelInsAnalyticsFilterInput | null > | null,
+  or?: Array< ModelInsAnalyticsFilterInput | null > | null,
+  not?: ModelInsAnalyticsFilterInput | null,
 };
 
-export type ModelInsUniConnection = {
-  __typename: "ModelInsUniConnection",
-  items?:  Array<InsUni >,
+export type ModelInsAnalyticsConnection = {
+  __typename: "ModelInsAnalyticsConnection",
+  items?:  Array<InsAnalytics >,
   nextToken?: string | null,
 };
 
@@ -3124,52 +3104,46 @@ export type CreateRatingMutation = {
   } | null,
 };
 
-export type CreateInsUniMutationVariables = {
-  input?: CreateInsUniInput,
-  condition?: ModelInsUniConditionInput | null,
+export type CreateInsAnalyticsMutationVariables = {
+  input?: CreateInsAnalyticsInput,
+  condition?: ModelInsAnalyticsConditionInput | null,
 };
 
-export type CreateInsUniMutation = {
-  createInsUni?:  {
-    __typename: "InsUni",
+export type CreateInsAnalyticsMutation = {
+  createInsAnalytics?:  {
+    __typename: "InsAnalytics",
     id: string,
-    sid?: string | null,
-    exchg?: Exchange | null,
-    user: string,
+    analytics: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateInsUniMutationVariables = {
-  input?: UpdateInsUniInput,
-  condition?: ModelInsUniConditionInput | null,
+export type UpdateInsAnalyticsMutationVariables = {
+  input?: UpdateInsAnalyticsInput,
+  condition?: ModelInsAnalyticsConditionInput | null,
 };
 
-export type UpdateInsUniMutation = {
-  updateInsUni?:  {
-    __typename: "InsUni",
+export type UpdateInsAnalyticsMutation = {
+  updateInsAnalytics?:  {
+    __typename: "InsAnalytics",
     id: string,
-    sid?: string | null,
-    exchg?: Exchange | null,
-    user: string,
+    analytics: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteInsUniMutationVariables = {
-  input?: DeleteInsUniInput,
-  condition?: ModelInsUniConditionInput | null,
+export type DeleteInsAnalyticsMutationVariables = {
+  input?: DeleteInsAnalyticsInput,
+  condition?: ModelInsAnalyticsConditionInput | null,
 };
 
-export type DeleteInsUniMutation = {
-  deleteInsUni?:  {
-    __typename: "InsUni",
+export type DeleteInsAnalyticsMutation = {
+  deleteInsAnalytics?:  {
+    __typename: "InsAnalytics",
     id: string,
-    sid?: string | null,
-    exchg?: Exchange | null,
-    user: string,
+    analytics: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4122,41 +4096,35 @@ export type RegByEmailQuery = {
   } | null,
 };
 
-export type GetInsUniQueryVariables = {
+export type GetInsAnalyticsQueryVariables = {
   id?: string,
-  user?: string,
 };
 
-export type GetInsUniQuery = {
-  getInsUni?:  {
-    __typename: "InsUni",
+export type GetInsAnalyticsQuery = {
+  getInsAnalytics?:  {
+    __typename: "InsAnalytics",
     id: string,
-    sid?: string | null,
-    exchg?: Exchange | null,
-    user: string,
+    analytics: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListInsUnisQueryVariables = {
+export type ListInsAnalyticssQueryVariables = {
   id?: string | null,
-  user?: ModelStringKeyConditionInput | null,
-  filter?: ModelInsUniFilterInput | null,
+  filter?: ModelInsAnalyticsFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListInsUnisQuery = {
-  listInsUnis?:  {
-    __typename: "ModelInsUniConnection",
+export type ListInsAnalyticssQuery = {
+  listInsAnalyticss?:  {
+    __typename: "ModelInsAnalyticsConnection",
     items:  Array< {
-      __typename: "InsUni",
+      __typename: "InsAnalytics",
       id: string,
-      sid?: string | null,
-      exchg?: Exchange | null,
-      user: string,
+      analytics: string,
       createdAt: string,
       updatedAt: string,
     } >,
@@ -5516,37 +5484,31 @@ export type OnDeleteUserInfoSubscription = {
   } | null,
 };
 
-export type OnCreateInsUniSubscription = {
-  onCreateInsUni?:  {
-    __typename: "InsUni",
+export type OnCreateInsAnalyticsSubscription = {
+  onCreateInsAnalytics?:  {
+    __typename: "InsAnalytics",
     id: string,
-    sid?: string | null,
-    exchg?: Exchange | null,
-    user: string,
+    analytics: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateInsUniSubscription = {
-  onUpdateInsUni?:  {
-    __typename: "InsUni",
+export type OnUpdateInsAnalyticsSubscription = {
+  onUpdateInsAnalytics?:  {
+    __typename: "InsAnalytics",
     id: string,
-    sid?: string | null,
-    exchg?: Exchange | null,
-    user: string,
+    analytics: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteInsUniSubscription = {
-  onDeleteInsUni?:  {
-    __typename: "InsUni",
+export type OnDeleteInsAnalyticsSubscription = {
+  onDeleteInsAnalytics?:  {
+    __typename: "InsAnalytics",
     id: string,
-    sid?: string | null,
-    exchg?: Exchange | null,
-    user: string,
+    analytics: string,
     createdAt: string,
     updatedAt: string,
   } | null,

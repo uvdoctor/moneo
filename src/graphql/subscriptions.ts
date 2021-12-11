@@ -368,37 +368,31 @@ export const onDeleteUserInfo = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInsUni = /* GraphQL */ `
-  subscription OnCreateInsUni {
-    onCreateInsUni {
+export const onCreateInsAnalytics = /* GraphQL */ `
+  subscription OnCreateInsAnalytics {
+    onCreateInsAnalytics {
       id
-      sid
-      exchg
-      user
+      analytics
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateInsUni = /* GraphQL */ `
-  subscription OnUpdateInsUni {
-    onUpdateInsUni {
+export const onUpdateInsAnalytics = /* GraphQL */ `
+  subscription OnUpdateInsAnalytics {
+    onUpdateInsAnalytics {
       id
-      sid
-      exchg
-      user
+      analytics
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteInsUni = /* GraphQL */ `
-  subscription OnDeleteInsUni {
-    onDeleteInsUni {
+export const onDeleteInsAnalytics = /* GraphQL */ `
+  subscription OnDeleteInsAnalytics {
+    onDeleteInsAnalytics {
       id
-      sid
-      exchg
-      user
+      analytics
       createdAt
       updatedAt
     }

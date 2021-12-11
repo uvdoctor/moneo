@@ -1259,46 +1259,40 @@ export const createRating = /* GraphQL */ `
     }
   }
 `;
-export const createInsUni = /* GraphQL */ `
-  mutation CreateInsUni(
-    $input: CreateInsUniInput!
-    $condition: ModelInsUniConditionInput
+export const createInsAnalytics = /* GraphQL */ `
+  mutation CreateInsAnalytics(
+    $input: CreateInsAnalyticsInput!
+    $condition: ModelInsAnalyticsConditionInput
   ) {
-    createInsUni(input: $input, condition: $condition) {
+    createInsAnalytics(input: $input, condition: $condition) {
       id
-      sid
-      exchg
-      user
+      analytics
       createdAt
       updatedAt
     }
   }
 `;
-export const updateInsUni = /* GraphQL */ `
-  mutation UpdateInsUni(
-    $input: UpdateInsUniInput!
-    $condition: ModelInsUniConditionInput
+export const updateInsAnalytics = /* GraphQL */ `
+  mutation UpdateInsAnalytics(
+    $input: UpdateInsAnalyticsInput!
+    $condition: ModelInsAnalyticsConditionInput
   ) {
-    updateInsUni(input: $input, condition: $condition) {
+    updateInsAnalytics(input: $input, condition: $condition) {
       id
-      sid
-      exchg
-      user
+      analytics
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteInsUni = /* GraphQL */ `
-  mutation DeleteInsUni(
-    $input: DeleteInsUniInput!
-    $condition: ModelInsUniConditionInput
+export const deleteInsAnalytics = /* GraphQL */ `
+  mutation DeleteInsAnalytics(
+    $input: DeleteInsAnalyticsInput!
+    $condition: ModelInsAnalyticsConditionInput
   ) {
-    deleteInsUni(input: $input, condition: $condition) {
+    deleteInsAnalytics(input: $input, condition: $condition) {
       id
-      sid
-      exchg
-      user
+      analytics
       createdAt
       updatedAt
     }
