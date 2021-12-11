@@ -365,28 +365,30 @@ export const regByEmail = /* GraphQL */ `
     }
   }
 `;
-export const getUniverse = /* GraphQL */ `
-  query GetUniverse($id: String!) {
-    getUniverse(id: $id) {
+export const getInsUni = /* GraphQL */ `
+  query GetInsUni($id: String!, $user: String!) {
+    getInsUni(id: $id, user: $user) {
       id
       sid
       exchg
-      users
+      user
       createdAt
       updatedAt
     }
   }
 `;
-export const listUniverses = /* GraphQL */ `
-  query ListUniverses(
+export const listInsUnis = /* GraphQL */ `
+  query ListInsUnis(
     $id: String
-    $filter: ModelUniverseFilterInput
+    $user: ModelStringKeyConditionInput
+    $filter: ModelInsUniFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listUniverses(
+    listInsUnis(
       id: $id
+      user: $user
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -396,7 +398,7 @@ export const listUniverses = /* GraphQL */ `
         id
         sid
         exchg
-        users
+        user
         createdAt
         updatedAt
       }

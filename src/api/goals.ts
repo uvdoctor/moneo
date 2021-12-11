@@ -708,11 +708,11 @@ export type CreateRatingInput = {
   feedbackId?: string | null,
 };
 
-export type CreateUniverseInput = {
+export type CreateInsUniInput = {
   id: string,
   sid?: string | null,
   exchg?: Exchange | null,
-  users: Array< string >,
+  user: string,
 };
 
 export enum Exchange {
@@ -721,13 +721,12 @@ export enum Exchange {
 }
 
 
-export type ModelUniverseConditionInput = {
+export type ModelInsUniConditionInput = {
   sid?: ModelStringInput | null,
   exchg?: ModelExchangeInput | null,
-  users?: ModelStringInput | null,
-  and?: Array< ModelUniverseConditionInput | null > | null,
-  or?: Array< ModelUniverseConditionInput | null > | null,
-  not?: ModelUniverseConditionInput | null,
+  and?: Array< ModelInsUniConditionInput | null > | null,
+  or?: Array< ModelInsUniConditionInput | null > | null,
+  not?: ModelInsUniConditionInput | null,
 };
 
 export type ModelExchangeInput = {
@@ -735,25 +734,26 @@ export type ModelExchangeInput = {
   ne?: Exchange | null,
 };
 
-export type Universe = {
-  __typename: "Universe",
+export type InsUni = {
+  __typename: "InsUni",
   id?: string,
   sid?: string | null,
   exchg?: Exchange | null,
-  users?: Array< string >,
+  user?: string,
   createdAt?: string,
   updatedAt?: string,
 };
 
-export type UpdateUniverseInput = {
+export type UpdateInsUniInput = {
   id: string,
   sid?: string | null,
   exchg?: Exchange | null,
-  users?: Array< string > | null,
+  user: string,
 };
 
-export type DeleteUniverseInput = {
+export type DeleteInsUniInput = {
   id: string,
+  user: string,
 };
 
 export type CreateFeedsInput = {
@@ -1497,19 +1497,29 @@ export type ModelUserInfoConnection = {
   nextToken?: string | null,
 };
 
-export type ModelUniverseFilterInput = {
+export type ModelStringKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+};
+
+export type ModelInsUniFilterInput = {
   id?: ModelStringInput | null,
   sid?: ModelStringInput | null,
   exchg?: ModelExchangeInput | null,
-  users?: ModelStringInput | null,
-  and?: Array< ModelUniverseFilterInput | null > | null,
-  or?: Array< ModelUniverseFilterInput | null > | null,
-  not?: ModelUniverseFilterInput | null,
+  user?: ModelStringInput | null,
+  and?: Array< ModelInsUniFilterInput | null > | null,
+  or?: Array< ModelInsUniFilterInput | null > | null,
+  not?: ModelInsUniFilterInput | null,
 };
 
-export type ModelUniverseConnection = {
-  __typename: "ModelUniverseConnection",
-  items?:  Array<Universe >,
+export type ModelInsUniConnection = {
+  __typename: "ModelInsUniConnection",
+  items?:  Array<InsUni >,
   nextToken?: string | null,
 };
 
@@ -3114,52 +3124,52 @@ export type CreateRatingMutation = {
   } | null,
 };
 
-export type CreateUniverseMutationVariables = {
-  input?: CreateUniverseInput,
-  condition?: ModelUniverseConditionInput | null,
+export type CreateInsUniMutationVariables = {
+  input?: CreateInsUniInput,
+  condition?: ModelInsUniConditionInput | null,
 };
 
-export type CreateUniverseMutation = {
-  createUniverse?:  {
-    __typename: "Universe",
+export type CreateInsUniMutation = {
+  createInsUni?:  {
+    __typename: "InsUni",
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string >,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateUniverseMutationVariables = {
-  input?: UpdateUniverseInput,
-  condition?: ModelUniverseConditionInput | null,
+export type UpdateInsUniMutationVariables = {
+  input?: UpdateInsUniInput,
+  condition?: ModelInsUniConditionInput | null,
 };
 
-export type UpdateUniverseMutation = {
-  updateUniverse?:  {
-    __typename: "Universe",
+export type UpdateInsUniMutation = {
+  updateInsUni?:  {
+    __typename: "InsUni",
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string >,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteUniverseMutationVariables = {
-  input?: DeleteUniverseInput,
-  condition?: ModelUniverseConditionInput | null,
+export type DeleteInsUniMutationVariables = {
+  input?: DeleteInsUniInput,
+  condition?: ModelInsUniConditionInput | null,
 };
 
-export type DeleteUniverseMutation = {
-  deleteUniverse?:  {
-    __typename: "Universe",
+export type DeleteInsUniMutation = {
+  deleteInsUni?:  {
+    __typename: "InsUni",
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string >,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4112,39 +4122,41 @@ export type RegByEmailQuery = {
   } | null,
 };
 
-export type GetUniverseQueryVariables = {
+export type GetInsUniQueryVariables = {
   id?: string,
+  user?: string,
 };
 
-export type GetUniverseQuery = {
-  getUniverse?:  {
-    __typename: "Universe",
+export type GetInsUniQuery = {
+  getInsUni?:  {
+    __typename: "InsUni",
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string >,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListUniversesQueryVariables = {
+export type ListInsUnisQueryVariables = {
   id?: string | null,
-  filter?: ModelUniverseFilterInput | null,
+  user?: ModelStringKeyConditionInput | null,
+  filter?: ModelInsUniFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListUniversesQuery = {
-  listUniverses?:  {
-    __typename: "ModelUniverseConnection",
+export type ListInsUnisQuery = {
+  listInsUnis?:  {
+    __typename: "ModelInsUniConnection",
     items:  Array< {
-      __typename: "Universe",
+      __typename: "InsUni",
       id: string,
       sid?: string | null,
       exchg?: Exchange | null,
-      users: Array< string >,
+      user: string,
       createdAt: string,
       updatedAt: string,
     } >,
@@ -5504,37 +5516,37 @@ export type OnDeleteUserInfoSubscription = {
   } | null,
 };
 
-export type OnCreateUniverseSubscription = {
-  onCreateUniverse?:  {
-    __typename: "Universe",
+export type OnCreateInsUniSubscription = {
+  onCreateInsUni?:  {
+    __typename: "InsUni",
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string >,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateUniverseSubscription = {
-  onUpdateUniverse?:  {
-    __typename: "Universe",
+export type OnUpdateInsUniSubscription = {
+  onUpdateInsUni?:  {
+    __typename: "InsUni",
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string >,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteUniverseSubscription = {
-  onDeleteUniverse?:  {
-    __typename: "Universe",
+export type OnDeleteInsUniSubscription = {
+  onDeleteInsUni?:  {
+    __typename: "InsUni",
     id: string,
     sid?: string | null,
     exchg?: Exchange | null,
-    users: Array< string >,
+    user: string,
     createdAt: string,
     updatedAt: string,
   } | null,

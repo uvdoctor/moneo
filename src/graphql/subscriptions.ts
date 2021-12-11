@@ -368,37 +368,37 @@ export const onDeleteUserInfo = /* GraphQL */ `
     }
   }
 `;
-export const onCreateUniverse = /* GraphQL */ `
-  subscription OnCreateUniverse {
-    onCreateUniverse {
+export const onCreateInsUni = /* GraphQL */ `
+  subscription OnCreateInsUni {
+    onCreateInsUni {
       id
       sid
       exchg
-      users
+      user
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateUniverse = /* GraphQL */ `
-  subscription OnUpdateUniverse {
-    onUpdateUniverse {
+export const onUpdateInsUni = /* GraphQL */ `
+  subscription OnUpdateInsUni {
+    onUpdateInsUni {
       id
       sid
       exchg
-      users
+      user
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteUniverse = /* GraphQL */ `
-  subscription OnDeleteUniverse {
-    onDeleteUniverse {
+export const onDeleteInsUni = /* GraphQL */ `
+  subscription OnDeleteInsUni {
+    onDeleteInsUni {
       id
       sid
       exchg
-      users
+      user
       createdAt
       updatedAt
     }
