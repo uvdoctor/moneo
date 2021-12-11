@@ -176,11 +176,11 @@ export default function InstrumentValuation() {
 				}
 			} 
 			else if (childTab === TAB.STOCK) {
-				if(data && data?.meta) {
-					return (selectedSubtTags.includes('L') && data.meta.mcap === "L" ) || 
-					(selectedSubtTags.includes('M') && data.meta.mcap === "M" ) ||
-					(selectedSubtTags.includes('H') && data.meta.mcap === "H" ) ||
-					(selectedSubtTags.includes('S') && data.meta.mcap === null ) 
+				if(data) {
+					return (selectedTags.includes('L') && data.meta && data?.meta.mcap === "L" ) || 
+					(selectedTags.includes('M') && data.meta && data?.meta.mcap === "M" ) ||
+					(selectedTags.includes('H') && data.meta && data?.meta.mcap === "H" ) ||
+					(selectedTags.includes('S') && data.meta && data?.meta.mcap === null ) 
 				}
 			}
 			else if (childTab === TAB.BOND && data) {
