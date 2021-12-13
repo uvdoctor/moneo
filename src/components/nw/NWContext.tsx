@@ -721,7 +721,7 @@ function NWContextProvider() {
 					const duration = getRemainingDuration(record.pur.year, record.pur.month, record.pur.qty, isMonth);
 						if(duration) {
 							const durLeft = record.pur.qty - (isMonth ? duration.months : duration.years);
-							if(durLeft) {
+							if(durLeft > 0) {
 								const getCashFlows = Array(Math.round(durLeft)).fill(record.pur.amt);
 								console.log(getCashFlows);
 								const value = getNPV(record.chg, getCashFlows, 0, (isMonth ? true : false), true);
