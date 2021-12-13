@@ -67,11 +67,11 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 						</Col>
 						{insData[holding.id] && insData[holding.id].type !== AssetType.H && (
 							<Col>
-								{insData[holding.id].rate && (
+								{insData[holding.id].rate && insData[holding.id].rate !== -1 && (
 									<Tooltip title="Interest rate">
 										&nbsp;&nbsp;
 										<FontAwesomeIcon icon={faCoins} />
-										{insData[holding.id].rate === -1  ? "" : ` ${insData[holding.id].rate}%`}
+										{` ${insData[holding.id].rate}%`}
 									</Tooltip>
 								)}
 								{insData[holding.id].my && (
