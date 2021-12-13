@@ -114,6 +114,7 @@ const calcSchema = (record, codes, schema, exchg, isinMap, table) => {
         schema[key] = record[codes[key]];
     }
   });
+  if(schema.id.startsWith('INF')) schema.itype = "ETF";
   schema.exchg = exchg;
   appendGenericFields(schema, table)
   isinMap[record[codes.id]] = record[codes.id];
