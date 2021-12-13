@@ -149,7 +149,7 @@ export default function InstrumentValuation() {
 				if (childTab === TAB.OIT) return data.itype === 'InvIT';
 				if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
 				else if (childTab === TAB.STOCK) return data.subt === 'S' && !instrument.id.startsWith('INF');
-				else if (childTab === TAB.BOND) return [ 'CB', 'GB', 'GBO' ].includes(data.subt) && !data.itype; 
+				else if (childTab === TAB.BOND) return [ 'CB', 'GB', 'GBO' ].includes(data.subt) && !data.itype && !instrument.id.startsWith('INF'); 
 				else if (childTab === TAB.GOLDB) return data.subt === 'GoldB';
 				else if (childTab === TAB.ETF) return data.itype === 'ETF';
 			}
