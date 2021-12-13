@@ -288,14 +288,12 @@ export default function ListProperties({
 		dataSource.push({
 			key: i,
 			res:
-				data[i].type === "O" ? (
-					"Non-residential"
-				) : (
-					<Checkbox
-						checked={data[i].res}
-						onChange={(e) => changeRes(e.target.checked, i)}
-					/>
-				),
+				<Checkbox
+					checked={data[i].res}
+					disabled={data[i].type === "O"}
+					onChange={(e) => changeRes(e.target.checked, i)}
+				/>
+			,
 			type: categoryOptions && (
 				<SelectInput
 					pre=""
