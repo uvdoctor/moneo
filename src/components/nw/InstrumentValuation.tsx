@@ -31,15 +31,13 @@ export default function InstrumentValuation() {
 	const [ totalFilterAmt, setTotalFilterAmt ] = useState<number>(0);
 
 	const bondTags = { CB: 'Corporate Bond', GB: 'Government Bond' };
-	const itTags = { REIT: 'Real Estate', InvIT: 'Infrastructure' };
 	const tagsData: any = {
 		Stocks: { tags: getMarketCap() },
 		'Mutual Funds': { tags: getAssetTypes(), subt: { E: getMarketCap(), F: getFixedCategories() } },
 		Bonds: { tags: bondTags },
-		'Investment Trusts': { tags: itTags }
 	};
 
-	const hasTags = (childTab: string) => [ TAB.STOCK, TAB.MF, TAB.BOND, TAB.IT ].includes(childTab);
+	const hasTags = (childTab: string) => [ TAB.STOCK, TAB.MF, TAB.BOND ].includes(childTab);
 
 	const delRecord = (id: string) => setInstruments([ ...instruments.filter((record: any) => record.id !== id) ]);
 
@@ -147,7 +145,8 @@ export default function InstrumentValuation() {
 				else if (childTab === TAB.STOCK) return instrument.id;
 			} 
 			if (data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {		
-				if (childTab === TAB.IT) return data.itype === 'InvIT' || data.itype === 'REIT';
+				if (childTab === TAB.REIT) return data.itype === 'REIT';
+				if (childTab === TAB.OIT) return data.itype === 'InvIT';
 				if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
 				else if (childTab === TAB.STOCK) return data.subt === 'S' && !instrument.id.startsWith('INF');
 				else if (childTab === TAB.BOND) return [ 'CB', 'GB', 'GBO' ].includes(data.subt) && !data.itype; 
@@ -186,7 +185,7 @@ export default function InstrumentValuation() {
 			else if (childTab === TAB.BOND && data) {
 				if (selectedTags.includes('GB')) return data?.subt === 'GB' || data?.subt === 'GBO';
 				return selectedTags.indexOf(data?.subt as string) > -1;
-			} else if (childTab === TAB.IT) return selectedTags.indexOf(data && data?.itype as string) > -1;
+			}
 		});
 
 		

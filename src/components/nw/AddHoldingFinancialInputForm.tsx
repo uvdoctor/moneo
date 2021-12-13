@@ -39,7 +39,8 @@ const optionTableMap: OptionTableMap = {
   ETFs: "listInExchgPrices",
   Bonds: "listInBondPrices",
   "Mutual Funds": "listInmfPrices",
-  'Investment Trusts': "listInExchgPrices"
+  'Real Estate Investment Trusts': "listInExchgPrices",
+  'Other Investment Trusts': "listInExchgPrices"
 } as const;
 
 const holdingReducer = (
@@ -144,8 +145,10 @@ export default function HoldingInput(props: any) {
         return { prop: "subt", value: "GoldB" };
       case "ETFs":
         return { prop: "itype", value: "ETF" };
-      case "Investment Trusts":
-        return { prop: 'subt', value: 'R'};
+      case "Real Estate Investment Trusts":
+        return { prop: 'itype', value: 'REIT'};
+      case "Other Investment Trusts":
+        return { prop: 'itype', value: 'InvIT'};
       default:
         return null;
     }

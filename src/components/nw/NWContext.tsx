@@ -83,7 +83,8 @@ export const TAB = {
 	LOAN: 'Loans',
 	INS: 'Insurance',
 	CREDIT: 'Credit',
-	IT: 'Investment Trusts'
+	REIT: 'Real Estate Investment Trusts',
+	OIT: 'Other Investment Trusts'
 };
 
 function NWContextProvider() {
@@ -356,8 +357,18 @@ function NWContextProvider() {
 					total: totalFilterInstruments,
 					contentComp: <InstrumentValuation/>
 				},
-				[TAB.IT]: {
-					label: TAB.IT,
+				[TAB.REIT]: {
+					label: TAB.REIT,
+					info: "Investment Trust",
+					link: ROUTES.PRIVACY,
+					hasUploader: true,
+					data: instruments,
+					setData: setInstruments,
+					total: totalFilterInstruments,
+					contentComp: <InstrumentValuation/>
+				},
+				[TAB.OIT]: {
+					label: TAB.OIT,
 					info: "Investment Trust",
 					link: ROUTES.PRIVACY,
 					hasUploader: true,

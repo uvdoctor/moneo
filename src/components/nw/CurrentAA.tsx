@@ -21,6 +21,7 @@ export default function CurrentAA() {
 		totalFGold,
 		totalPGold,
 		totalFRE,
+		totalFInv,
 		totalProperties,
 		selectedCurrency,
 		loadingHoldings,
@@ -58,9 +59,10 @@ export default function CurrentAA() {
 		Equity: { color: COLORS.ORANGE, total: totalEquity },
 		Fixed: { color: COLORS.BLUE, total: totalFFixed + totalNPSFixed },
 		'Real-estate': { color: '#7cd9fd', total: totalProperties },
-		REIT: { color: '#7cd9fd', total: totalFRE },
+		'Real Estate Investment Trusts': { color: '#7cd9fd', total: totalFRE },
+		'Other Investment Trusts': { color: COLORS.SILVER, total: totalFInv },
 		Gold: { color: '#f6e05e', total: totalFGold + totalPGold },
-		Others: { color: '#aa8dfa', total: totalAlternative - totalFGold - totalPGold - totalProperties - totalFRE },
+		Others: { color: '#aa8dfa', total: totalAlternative - totalFGold - totalPGold - totalProperties - totalFRE - totalCrypto - totalFInv },
 		Crypto: { color: COLORS.RED, total: totalCrypto }
 	};
 
