@@ -89,13 +89,12 @@ export default function UploadHoldings() {
 		let otherIts: any = {};
 		uploadedInstruments.forEach((ins: InstrumentInput) => {
 			let id = ins.id;
-			const isFund = id.substring(2, 1) === 'F';
 			let instrument: any = insData[id];
-			if (!instrument) isFund ? mfs[id] = ins : equities[id] = ins;
+			if (!instrument) isFund(id) ? mfs[id] = ins : equities[id] = ins;
 			else if (instrument.itype === InsType.REIT) reits[id] = ins;
 			else if (instrument.itype === InsType.InvIT) otherIts[id] = ins;
 			else if (instrument.itype === InsType.ETF) etfs[id] = ins;
-			else if (isFund && !instrument.itype) mfs[id] = ins;
+			else if (isFund(id) && !instrument.itype) mfs[id] = ins;
 			else if (instrument.subt === AssetSubType.GoldB) gbs[id] = ins;
 			else if(instrument.type === AssetType.F) bonds[id] = ins;
 			else equities[id] = ins;
@@ -122,19 +121,22 @@ export default function UploadHoldings() {
 
 	const loadInstrumentPrices = async (fun: Function, ids: Array<string>, allInsData: any) => {
 		if (!ids.length) return null;
-		let unmatched: any = [];
-		let matchingList: Array<any> | null = null;
-		const isinNotExistInInsData = ids.filter((id: string) => !allInsData[id]);
-		if (isinNotExistInInsData.length) matchingList = await fun(ids);
-		ids.forEach((id: string) => {
-			let matchingEntry: InstrumentInput | null = allInsData[id] ? allInsData[id] : null;
-			if (!matchingEntry && matchingList && matchingList.length) {
-				matchingEntry = matchingList?.find((match) => match?.id === id) }
-			if (matchingEntry) {
-				allInsData[id] = matchingEntry;
-			} else unmatched.push(id);
-		});
-		return unmatched;
+		for(let id of ids) {
+			if(!allInsData[id]) {
+				let matchingList: Array<any> | null = await fun(ids);
+				let unmatched: Array<string> = [];
+				ids.forEach((id: string) => {
+					let matchingEntry: InstrumentInput | null = allInsData[id] ? allInsData[id] : null;
+					if (!matchingEntry && matchingList && matchingList.length) {
+						matchingEntry = matchingList?.find((match) => match?.id === id) }
+					if (matchingEntry) {
+						allInsData[id] = matchingEntry;
+					} else unmatched.push(id);
+				});
+				return unmatched;
+			}
+		}
+		return null;
 	};
 
 	const selectCurrency = () => {
@@ -166,15 +168,17 @@ export default function UploadHoldings() {
 		resetState();
 	};
 
+	const isFund = (id: string) => id.substring(2, 3) === 'F';
+
 	const loadInstruments = async (ids: Array<string>) => {
 		let mfIds: Array<string> = [];
 		let bondIds: Array<string> = [];
 		let exchangeIds: Array<string> = [];
 		ids.forEach((id: string) => {
-			id.substring(2, 1) === 'F' ? mfIds.push(id) : bondIds.push(id);
+			isFund(id) ? mfIds.push(id) : bondIds.push(id);
 		});
 		let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
-		let unmatchedIds: Array<string> = [];
+		let unmatchedIds: Array<string> | null = [];
 		if(mfIds.length) unmatchedIds = await loadInstrumentPrices(loadMatchingINMutual, mfIds, allInsData);
 		if(unmatchedIds?.length) exchangeIds.push(...unmatchedIds);
 		if(bondIds.length) unmatchedIds = await loadInstrumentPrices(loadMatchingINBond, bondIds, allInsData);
@@ -200,7 +204,6 @@ export default function UploadHoldings() {
 		});
 		setShowInsUpload(true);
 		setUploadedInstruments([...uploadedInstruments]);
-		console.log("Uploaded instruments: ", uploadedInstruments);
 	};
 
 	const parseHoldings = async (pdf: any) => {
@@ -256,7 +259,6 @@ export default function UploadHoldings() {
 					continue;
 				}
 				if (value.length > 100) continue;
-				console.log("Value is: ", value);
 				if (includesAny(value, [ 'end of report' ])) {
 					eof = true;
 					break;
