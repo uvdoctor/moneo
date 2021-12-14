@@ -5,7 +5,6 @@ import AddHoldingInput from '../AddHoldingInput';
 import AddHoldingFiancialInput from '../AddHoldingFinancialInput';
 import { NWContext, TAB } from '../NWContext';
 import AddPropertiesInput from '../AddPropertiesInput';
-import { InstrumentInput } from '../../../api/goals';
 
 require('./AddHoldings.less');
 
