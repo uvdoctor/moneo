@@ -75,6 +75,7 @@ export default function UploadHoldings() {
 		setShowInsUpload(false);
 		setDrawerVisibility(false);
 		setPdfInstrumnets([]);
+		setOverwrite(0);
 	};
 
 	const loadInstrumentPrices = async (fun: Function, input: any, memberKey: string) => {
