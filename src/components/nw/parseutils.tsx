@@ -102,25 +102,6 @@ export const getInsTypeFromISIN = (isin: string, insType: string | null) => {
 	return insType;
 };
 
-export const completeRecord = (recordBroken: boolean, mode: string, equities: any, mfs: any, etfs: any, bonds: any, isin: string | null, quantity: number | null, taxId: string, currency: string) => {
-  	if (recordBroken) {
-    	recordBroken = false;
-  	}
-  	let existingEntry = null;
-	let list = mode === AssetSubType.S ? equities : mode === 'M' ? mfs : mode === InsType.ETF ? etfs : bonds;
-	if(list[isin as string]) existingEntry = list[isin as string];
-  	if(existingEntry)
-  		existingEntry.qty += quantity as number;
-  	else {
-		appendValue(
-			mode === AssetSubType.S ? equities : mode === 'M' ? mfs : mode === InsType.ETF ? etfs : bonds,
-			isin as string,
-			{id: isin, qty: quantity as number, fId: taxId, curr: currency} as InstrumentInput
-	  	);
-  	}
-	console.log("Record completed for...", isin);
-}
-
 const processPDF = (file: File, parsePDF: Function) => {
 	const reader = new FileReader();
 	reader.readAsArrayBuffer(file);
