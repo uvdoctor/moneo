@@ -698,6 +698,7 @@ function NWContextProvider() {
 		updatedHoldings.credit = credit; 
 		updatedHoldings.ins = insurance;
 		if(uname) updatedHoldings.uname = uname;
+		if(insUname) updatedInsHoldings.uname = insUname;
 		try {
 			if(uname) await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
 			else await addHoldings(updatedHoldings);

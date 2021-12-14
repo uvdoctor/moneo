@@ -5,6 +5,7 @@ import AddHoldingInput from '../AddHoldingInput';
 import AddHoldingFiancialInput from '../AddHoldingFinancialInput';
 import { NWContext, TAB } from '../NWContext';
 import AddPropertiesInput from '../AddPropertiesInput';
+import { InstrumentInput } from '../../../api/goals';
 
 require('./AddHoldings.less');
 
@@ -29,7 +30,7 @@ export default function AddHoldings({
 	const [ okDisabled, setOkDisabled ] = useState<boolean>(true);
 	const [ newRec, setNewRec ] = useState<any>({});
 	const { setInstruments, instruments, childTab, saveHoldings, isDirty }: any = useContext(NWContext);
-	const [ instrumentsList, setInstrumentsList ] = useState<any>([]);
+	const [ instrumentsList, setInstrumentsList ] = useState<Array<InstrumentInput>>([]);
 
 	const close = () => {
 		setModalVisibility(false);
@@ -49,6 +50,11 @@ export default function AddHoldings({
 	};
 
 	const updateInstruments = (instrumentsToAdd: []) => {
+		instrumentsToAdd.map((item: any) => {
+			if(item.name) delete item.name;
+			if(item.type) delete item.type;
+			if(item.subt) delete item.subt;
+		})
 		setInstrumentsList([ ...instrumentsToAdd, ...instruments ]);
 	};
 
