@@ -1,10 +1,10 @@
 import { Modal, notification, Input } from "antd";
-import { appendValue, includesAny, replaceIfFound } from "../utils";
+import { includesAny, replaceIfFound } from "../utils";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { InstrumentInput, AssetSubType, InsType, AssetType } from "../../api/goals";
+import { AssetSubType, InsType, AssetType } from "../../api/goals";
 
 const { confirm } = Modal;
 
