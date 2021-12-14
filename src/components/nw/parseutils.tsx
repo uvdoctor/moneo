@@ -16,14 +16,16 @@ export const isValidPAN = (val: string) =>
 	!val.includes(" ") &&
 	val.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/);
 
-export const contains = (val: string, type: string = "ISIN") => {
+export const containsPAN = (val: string) => {
 	let values = val.split(" ");
 	for (let value of values) {
 		value = value.trim();
-		if (type === "PAN") {
-			value = replaceIfFound(value, ["PAN", ":", "(", ")"]);
+		value = replaceIfFound(value, ["PAN", ":"]);
+		if (value.startsWith('PAN')) {
+			value = value.slice(value.indexOf('(')+1, value.indexOf(')'))
+			isValidPAN(value)
+			return value;
 		}
-		if (type === "ISIN" ? isValidISIN(value) : isValidPAN(value)) return value;
 	}
 	return null;
 };

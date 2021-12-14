@@ -10,7 +10,7 @@ import { isMobileDevice } from '../utils';
 import simpleStorage from 'simplestorage.js';
 import { AssetSubType, AssetType, InstrumentInput } from '../../api/goals';
 import { UserOutlined } from '@ant-design/icons';
-import { contains, getISIN, getQty, hasHoldingStarted } from './parseutils';
+import { containsPAN, getISIN, getQty, hasHoldingStarted } from './parseutils';
 import { includesAny } from '../utils';
 import {
 	addMemberIfNeeded,
@@ -240,7 +240,7 @@ export default function UploadHoldings() {
 				let value = textContent.items[j].str.trim();
 				if (!value.length) continue;
 				if (value.length >= 10 && value.length < 100 && !taxId) {
-					taxId = contains(value, 'PAN');
+					taxId = containsPAN(value);
 					if (taxId) {
 						setTaxId(taxId);
 						continue;
