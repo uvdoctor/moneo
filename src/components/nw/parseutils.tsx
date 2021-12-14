@@ -8,8 +8,15 @@ import { AssetSubType, InsType, AssetType } from "../../api/goals";
 
 const { confirm } = Modal;
 
-export const isValidISIN = (val: string) =>
-	val.length === 12 && val.startsWith("IN") && !val.includes(" ");
+export const extractISIN = (val: string) => {
+	val = val.trim();
+	if(!val.length || val.length < 12) return null;
+	let isinStr = val.substring(0,12);
+	if(isValidISIN(isinStr)) return isinStr;
+	return null;
+};
+
+const isValidISIN = (val: string) => val.match(/^[A-Z]{2}([A-Z0-9]){9}[0-9]$/);
 
 export const isValidPAN = (val: string) =>
 	val.length === 10 &&
@@ -21,13 +28,10 @@ export const extractPAN = (val: string) => {
 	if(values.length < 2) return null;
 	let value = values[1].trim();
 	if(value.length < 10) return null;
-	console.log("pan evaluation: ", value);
 	for(let i = 0; i < value.length; i++) {
 		let asciiVal = value.charCodeAt(i);
-		console.log("Ascii val:", asciiVal);
 		if(asciiVal > 64 && asciiVal < 91 && (value.length - i > 9)) {
 			let panStr = value.substring(i, i + 10);
-			console.log("potential pan: ", panStr);
 			if(isValidPAN(panStr)) return panStr;
 		}
 	}
@@ -52,7 +56,8 @@ export const hasHoldingStarted = (value: string) =>
 		"holding details",
 		"as of",
 		"as on",
-		"holdings"
+		"holdings",
+		"holdings of"
 	]);
 
 export const getInsTypeFromISIN = (isin: string, insType: string | null) => {

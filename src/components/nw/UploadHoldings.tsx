@@ -5,10 +5,10 @@ import { useFullScreenBrowser } from 'react-browser-hooks';
 import HoldingsTable from './HoldingsTable';
 import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from '../AppContext';
 import { NWContext } from './NWContext';
-import { getInsTypeFromISIN, getUploaderSettings, isValidISIN } from './parseutils';
+import { extractISIN, getInsTypeFromISIN, getUploaderSettings } from './parseutils';
 import { isMobileDevice } from '../utils';
 import simpleStorage from 'simplestorage.js';
-import { AssetSubType, AssetType, InstrumentInput } from '../../api/goals';
+import { AssetSubType, AssetType, InstrumentInput, InsType } from '../../api/goals';
 import { UserOutlined } from '@ant-design/icons';
 import { extractPAN, getQty, hasHoldingStarted } from './parseutils';
 import { includesAny } from '../utils';
@@ -60,8 +60,8 @@ export default function UploadHoldings() {
 	const [ taxId, setTaxId ] = useState<string | null>(null);
 	const [ memberKey, setMemberKey ] = useState<string | null>(null);
 	const [ error, setError ] = useState<string>('');
-	const [ overwrite, setOverwrite ] = useState<number>(0);
-	const [ pdfInstruments, setPdfInstrumnets ] = useState<Array<any>>([]);
+	const [ overwrite, setOverwrite ] = useState<number>(1);
+	const [ uploadedInstruments, setUploadedInstruments ] = useState<Array<any>>([]);
 
 	useEffect(() => setDrawerVisibility(!Object.keys(instruments).length), []);
 
@@ -74,13 +74,12 @@ export default function UploadHoldings() {
 		setProcessing(false);
 		setShowInsUpload(false);
 		setDrawerVisibility(false);
-		setPdfInstrumnets([]);
 		setOverwrite(0);
+		setUploadedInstruments([...[]]);
 	};
 
-	const loadInstrumentPrices = async (fun: Function, input: any, memberKey: string) => {
+	const loadInstrumentPrices = async (fun: Function, input: any) => {
 		if (!input.length || !memberKey) return null;
-		let member = await addMemberIfNeeded(allFamily, setAllFamily, memberKey);
 		let unmatched: any = [];
 		let matchingList: Array<any> | null = null;
 		let ids: any = [];
@@ -88,62 +87,95 @@ export default function UploadHoldings() {
 		const isinNotExistInInsData = input.filter((key: any) => !insData[key.id]);
 		if (isinNotExistInInsData.length > 0) matchingList = await fun(ids);
 		input.forEach((key: any) => {
-			let instrument: any = key;
 			let matchingEntry: InstrumentInput | null = insData[key.id] ? insData[key.id] : null;
 			if (!matchingEntry && matchingList && matchingList.length) {
 				matchingEntry = matchingList?.find((match) => match?.id === key.id) }
 			if (matchingEntry) {
 				insData[key.id] = matchingEntry;
 			} else unmatched.push(key);
-			instrument.curr = 'INR';
-			instrument.fId = member;
-			pdfInstruments.push(instrument);
-			setPdfInstrumnets([ ...pdfInstruments ]);
 		});
 		return unmatched;
 	};
 
-	const setCurrency = () => {
+	const identifyCurrency = () => {
 		let currency = 'INR';
 		if (!currencyList[currency]) {
 			currencyList[currency] = currency;
 			setCurrencyList(currencyList);
 		}
 		setSelectedCurrency(currency);
+		return currency;
 	};
 
 	const addInstruments = async () => {
 		setProcessing(true);
-		setCurrency();
+		const currency = identifyCurrency();
 		let member = taxId ? await addMemberIfNeeded(allFamily, setAllFamily, taxId) : memberKey;
-		if (equitiesNum || mfsNum || bondsNum || etfsNum || gbsNum || reitsNum || otherItsNum) {
+		if (uploadedInstruments.length) {
 			let condition = (instrument: any) => overwrite ? instrument?.fId !== member : instrument?.fId === member;
 			let filteredIns: Array<InstrumentInput> = instruments.filter(
 				(instrument: InstrumentInput) => instrument.curr === selectedCurrency && condition(instrument)
 			);
-			filteredIns.length > 0
-				? setInstruments([ ...filteredIns, ...pdfInstruments ])
-				: setInstruments([ ...pdfInstruments ]);
+			uploadedInstruments.forEach((instrument: InstrumentInput) => {
+				instrument.curr = currency;
+				instrument.fId = member as string;
+			})
+			filteredIns.push(...uploadedInstruments);
+			setInstruments(filteredIns);
 		}
 		resetState();
 	};
 
-	const loadInstruments = async (data: any, member: string) => {
+	const loadInstruments = async (ids: Array<string>) => {
 		let unmatchedIds: any = [];
-		let mfIds: any = [];
-		let bondIds: any = [];
-		data.forEach((key: number, value: string) => {
-			value.startsWith('INF') ? mfIds.push({ id: value, qty: key }) : value.startsWith('IN0') ? bondIds.push({ id: value, qty: key }) : unmatchedIds.push({ id: value, qty: key });
+		let mfIds: Array<string> = [];
+		let bondIds: Array<string> = [];
+		ids.forEach((id: string) => {
+			id.startsWith('INF') ? mfIds.push(id) : id.startsWith('IN0') ? bondIds.push(id) : unmatchedIds.push(id);
 		});
-		let unmatchedMfs = await loadInstrumentPrices(loadMatchingINMutual, mfIds, member);
+		let unmatchedMfs = await loadInstrumentPrices(loadMatchingINMutual, mfIds);
 		unmatchedMfs ? unmatchedIds.push(...unmatchedMfs) : null;
-		let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bondIds, member);
+		let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bondIds);
 		unmatchedBonds ? unmatchedIds.push(...unmatchedBonds) : null;
-		await loadInstrumentPrices(loadMatchingINExchange, unmatchedIds, member);
+		await loadInstrumentPrices(loadMatchingINExchange, unmatchedIds);
 		simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
+		return insData;
 	};
 
-	const setValues = (equities: any, mfs: any, bonds: any, etfs: any, gbs: any, reits: any, otherIts: any) => {
+	const loadData = async (
+		insMap: Map<string, number>,
+		currency: string,
+		equities: any,
+		mfs: any,
+		bonds: any,
+		etfs: any,
+		gbs: any,
+		reits: any,
+		otherIts: any
+	) => {
+		let insData = await loadInstruments(Array.from(insMap.keys()));
+		insMap.forEach((value: number, id: string) => {
+			let instrument: any = insData[id];
+			if(!instrument) {
+				instrument = {
+					id: id,
+					qty: value,
+					fId: '',
+					curr: currency
+				}
+			}
+			if (!instrument) equities[id] = instrument;
+			else if (instrument.itype === InsType.REIT) reits[id] = instrument;
+			else if (instrument.itype === InsType.InvIT) otherIts[id] = instrument;
+			else if (instrument.itype === InsType.ETF) etfs[id] = instrument;
+			else if (instrument.id.startsWith('INF') && !instrument.itype) mfs[id] = instrument;
+			else if (instrument.subt === AssetSubType.GoldB) gbs[id] = instrument;
+			else if(instrument.type === AssetType.F) bonds[id] = instrument;
+			else equities[id] = instrument;
+			instrument.qty = value;
+			instrument.curr = currency;
+			uploadedInstruments.push(instrument);
+		});
 		setBonds(bonds);
 		setEquities(equities);
 		setMFs(mfs);
@@ -159,30 +191,8 @@ export default function UploadHoldings() {
 		setREITsNum(Object.keys(reits).length);
 		setOtherItsNum(Object.keys(otherIts).length);
 		setShowInsUpload(true);
-	};
-
-	const getInsdata = async (
-		data: any,
-		equities: any,
-		mfs: any,
-		bonds: any,
-		etfs: any,
-		gbs: any,
-		reits: any,
-		otherIts: any,
-		taxId: any
-	) => {
-		await loadInstruments(data, taxId);
-		pdfInstruments.forEach((instrument: InstrumentInput) => {
-			const data = insData[instrument.id];
-			if (!data || (data.type === AssetType.E && !data.itype)) equities[instrument.id] = instrument;
-			else if (data.itype === 'REIT') reits[instrument.id] = instrument;
-			else if (data.itype === 'InvIT') otherIts[instrument.id] = instrument;
-			else if (data.itype === 'ETF') etfs[instrument.id] = instrument;
-			else if (data.id.startsWith('INF') && !data.itype) mfs[instrument.id] = instrument;
-			else if (data.subt === AssetSubType.GoldB) gbs[instrument.id] = instrument;
-			else if(data.type === AssetType.F) bonds[instrument.id] = instrument;
-		});
+		setUploadedInstruments([...uploadedInstruments]);
+		console.log("Uploaded instruments: ", uploadedInstruments);
 	};
 
 	const parseHoldings = async (pdf: any) => {
@@ -203,17 +213,13 @@ export default function UploadHoldings() {
 		let hasFV = false;
 		let hasData = false;
 		let taxId: string | null = null;
+		let insMap: Map<string, number> = new Map();
 		let eof = false;
-		let data = new Map();
 		for (let i = 1; i <= pdf.numPages && !eof; i++) {
 			lastQtyCapture = null;
 			if (i > 1) {
 				if (
-					(Object.keys(equities).length ||
-						Object.keys(mfs).length ||
-						Object.keys(etfs).length ||
-						Object.keys(bonds).length) &&
-					(isin || quantity)
+					insMap.size && isin && !quantity
 				) {
 					recordBroken = true;
 					console.log('Detected broken record...');
@@ -249,6 +255,7 @@ export default function UploadHoldings() {
 					continue;
 				}
 				if (value.length > 100) continue;
+				console.log("Value is: ", value);
 				if (includesAny(value, [ 'end of report' ])) {
 					eof = true;
 					break;
@@ -273,13 +280,15 @@ export default function UploadHoldings() {
 					hasFV = true;
 					continue;
 				}
-				if (isValidISIN(value)) {
-					console.log('Detected ISIN: ', value);
-					quantity = null;
-					fv = null;
-					recordBroken = false;
-					isin = value;
-					insType = getInsTypeFromISIN(isin as string, insType);
+				if(!isin) {
+					isin = extractISIN(value);
+					if (isin) {
+						console.log('Detected ISIN: ', isin);
+						quantity = null;
+						fv = null;
+						recordBroken = false;
+						insType = getInsTypeFromISIN(isin as string, insType);
+					}
 				}
 				if (!isin) continue;
 				let qty: number | null = getQty(value);
@@ -295,12 +304,12 @@ export default function UploadHoldings() {
 				lastQtyCapture = j;
 				quantity = qty;
 				if (hasFV) fv = null;
-				if (data.has(isin)) {
-					const qty = data.get(isin);
-					quantity += qty;
-					data.delete(isin);
+				if (insMap.has(isin)) {
+					const qty = insMap.get(isin);
+					if(qty) quantity += qty;
+					insMap.delete(isin);
 				}
-				data.set(isin, quantity);
+				insMap.set(isin, quantity);
 				isin = null;
 				quantity = null;
 				hasData = true;
@@ -309,8 +318,7 @@ export default function UploadHoldings() {
 		if (!taxId) {
 			setError('Please select approriate family member');
 		}
-		await getInsdata(data, equities, mfs, bonds, etfs, gbs, reits, otherIts, taxId);
-		setValues(equities, mfs, bonds, etfs, gbs, reits, otherIts);
+		await loadData(insMap, 'INR', equities, mfs, bonds, etfs, gbs, reits, otherIts);
 	};
 
 	const contentWithBadge = (count: number, content: string) => {
@@ -351,7 +359,7 @@ export default function UploadHoldings() {
 				className="upload-holdings-drawer"
 				width={isMobileDevice(fsb) ? 320 : 550}
 				title={
-					equitiesNum || etfsNum || mfsNum || bondsNum ? (
+					uploadedInstruments.length ? (
 						<Fragment>
 							{error && (
 								<p>
@@ -408,7 +416,7 @@ export default function UploadHoldings() {
 					</div>
 				}
 			>
-				{equitiesNum || etfsNum || mfsNum || bondsNum || etfsNum || gbsNum || reitsNum || otherItsNum ? (
+				{uploadedInstruments.length ? (
 					<Tabs defaultActiveKey="E" type="card">
 						<TabPane key="E" tab={contentWithBadge(equitiesNum, 'Equities')}>
 							<HoldingsTable
@@ -430,7 +438,7 @@ export default function UploadHoldings() {
 						<TabPane key="ETF" tab={contentWithBadge(etfsNum, 'ETFs')}>
 							<HoldingsTable data={etfs} onChange={setETFs} num={etfsNum} onNumChange={setETFsNum} />
 						</TabPane>
-						<TabPane key="REIT" tab={contentWithBadge(reitsNum, 'Real Estate Investment Trusts')}>
+						<TabPane key="REIT" tab={contentWithBadge(reitsNum, 'REITs')}>
 							<HoldingsTable data={reits} onChange={setREITs} num={reitsNum} onNumChange={setREITsNum} />
 						</TabPane>
 						<TabPane key="INVIT" tab={contentWithBadge(otherItsNum, 'Other Investment Trusts')}>
