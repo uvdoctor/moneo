@@ -90,7 +90,7 @@ export default function UploadHoldings() {
 		uploadedInstruments.forEach((ins: InstrumentInput) => {
 			let id = ins.id;
 			let instrument: any = insData[id];
-			if (!instrument) isFund(id) ? mfs[id] = ins : equities[id] = ins;
+			if (!instrument) isFund(id) ? mfs[id] = ins : isBond(id) ? bonds[id] = ins : equities[id] = ins;
 			else if (instrument.itype === InsType.REIT) reits[id] = ins;
 			else if (instrument.itype === InsType.InvIT) otherIts[id] = ins;
 			else if (instrument.itype === InsType.ETF) etfs[id] = ins;
@@ -169,6 +169,8 @@ export default function UploadHoldings() {
 	};
 
 	const isFund = (id: string) => id.substring(2, 3) === 'F';
+
+	const isBond = (id: string) => id.substring(2, 3) === '0';
 
 	const loadInstruments = async (ids: Array<string>) => {
 		let mfIds: Array<string> = [];
