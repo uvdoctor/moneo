@@ -3,7 +3,7 @@ import { Button, Upload, Drawer, Tabs, Row, Badge, Col, Alert, Empty } from 'ant
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import HoldingsTable from './HoldingsTable';
-import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from '../AppContext';
+import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from '../AppContext';
 import { NWContext } from './NWContext';
 import { extractISIN, getInsTypeFromISIN, getUploaderSettings } from './parseutils';
 import { isMobileDevice } from '../utils';
@@ -25,7 +25,6 @@ import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import HSwitch from '../HSwitch';
 
 export default function UploadHoldings() {
-	const { insData }: any = useContext(AppContext);
 	const {
 		showInsUpload,
 		setShowInsUpload,
@@ -74,107 +73,32 @@ export default function UploadHoldings() {
 		setProcessing(false);
 		setShowInsUpload(false);
 		setDrawerVisibility(false);
-		setOverwrite(0);
+		setOverwrite(1);
 		setUploadedInstruments([...[]]);
 	};
 
-	const loadInstrumentPrices = async (fun: Function, input: any) => {
-		if (!input.length || !memberKey) return null;
-		let unmatched: any = [];
-		let matchingList: Array<any> | null = null;
-		let ids: any = [];
-		input.map((item: any) => ids.push(item.id));
-		const isinNotExistInInsData = input.filter((key: any) => !insData[key.id]);
-		if (isinNotExistInInsData.length > 0) matchingList = await fun(ids);
-		input.forEach((key: any) => {
-			let matchingEntry: InstrumentInput | null = insData[key.id] ? insData[key.id] : null;
-			if (!matchingEntry && matchingList && matchingList.length) {
-				matchingEntry = matchingList?.find((match) => match?.id === key.id) }
-			if (matchingEntry) {
-				insData[key.id] = matchingEntry;
-			} else unmatched.push(key);
-		});
-		return unmatched;
-	};
-
-	const identifyCurrency = () => {
-		let currency = 'INR';
-		if (!currencyList[currency]) {
-			currencyList[currency] = currency;
-			setCurrencyList(currencyList);
-		}
-		setSelectedCurrency(currency);
-		return currency;
-	};
-
-	const addInstruments = async () => {
-		setProcessing(true);
-		const currency = identifyCurrency();
-		let member = taxId ? await addMemberIfNeeded(allFamily, setAllFamily, taxId) : memberKey;
-		if (uploadedInstruments.length) {
-			let condition = (instrument: any) => overwrite ? instrument?.fId !== member : instrument?.fId === member;
-			let filteredIns: Array<InstrumentInput> = instruments.filter(
-				(instrument: InstrumentInput) => instrument.curr === selectedCurrency && condition(instrument)
-			);
-			uploadedInstruments.forEach((instrument: InstrumentInput) => {
-				instrument.curr = currency;
-				instrument.fId = member as string;
-			})
-			filteredIns.push(...uploadedInstruments);
-			setInstruments(filteredIns);
-		}
-		resetState();
-	};
-
-	const loadInstruments = async (ids: Array<string>) => {
-		let unmatchedIds: any = [];
-		let mfIds: Array<string> = [];
-		let bondIds: Array<string> = [];
-		ids.forEach((id: string) => {
-			id.startsWith('INF') ? mfIds.push(id) : id.startsWith('IN0') ? bondIds.push(id) : unmatchedIds.push(id);
-		});
-		let unmatchedMfs = await loadInstrumentPrices(loadMatchingINMutual, mfIds);
-		unmatchedMfs ? unmatchedIds.push(...unmatchedMfs) : null;
-		let unmatchedBonds = await loadInstrumentPrices(loadMatchingINBond, bondIds);
-		unmatchedBonds ? unmatchedIds.push(...unmatchedBonds) : null;
-		await loadInstrumentPrices(loadMatchingINExchange, unmatchedIds);
-		simpleStorage.set(LOCAL_INS_DATA_KEY, insData, LOCAL_DATA_TTL);
-		return insData;
-	};
-
-	const loadData = async (
-		insMap: Map<string, number>,
-		currency: string,
-		equities: any,
-		mfs: any,
-		bonds: any,
-		etfs: any,
-		gbs: any,
-		reits: any,
-		otherIts: any
-	) => {
-		let insData = await loadInstruments(Array.from(insMap.keys()));
-		insMap.forEach((value: number, id: string) => {
+	const allocateInstruments = () => {
+		if(!uploadedInstruments || !uploadedInstruments.length) return;
+		let insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
+		console.log("Instrument data: ", insData);
+		let equities: any = {};
+		let mfs: any = {};
+		let bonds: any = {};
+		let etfs: any = {};
+		let gbs: any = {};
+		let reits: any = {};
+		let otherIts: any = {};
+		uploadedInstruments.forEach((ins: InstrumentInput) => {
+			let id = ins.id;
 			let instrument: any = insData[id];
-			if(!instrument) {
-				instrument = {
-					id: id,
-					qty: value,
-					fId: '',
-					curr: currency
-				}
-			}
-			if (!instrument) equities[id] = instrument;
-			else if (instrument.itype === InsType.REIT) reits[id] = instrument;
-			else if (instrument.itype === InsType.InvIT) otherIts[id] = instrument;
-			else if (instrument.itype === InsType.ETF) etfs[id] = instrument;
-			else if (instrument.id.startsWith('INF') && !instrument.itype) mfs[id] = instrument;
-			else if (instrument.subt === AssetSubType.GoldB) gbs[id] = instrument;
-			else if(instrument.type === AssetType.F) bonds[id] = instrument;
-			else equities[id] = instrument;
-			instrument.qty = value;
-			instrument.curr = currency;
-			uploadedInstruments.push(instrument);
+			if (!instrument) equities[id] = ins;
+			else if (instrument.itype === InsType.REIT) reits[id] = ins;
+			else if (instrument.itype === InsType.InvIT) otherIts[id] = ins;
+			else if (instrument.itype === InsType.ETF) etfs[id] = ins;
+			else if (instrument.id.substring(2, 1) === 'F' && !instrument.itype) mfs[id] = ins;
+			else if (instrument.subt === AssetSubType.GoldB) gbs[id] = ins;
+			else if(instrument.type === AssetType.F) bonds[id] = ins;
+			else equities[id] = ins;
 		});
 		setBonds(bonds);
 		setEquities(equities);
@@ -190,19 +114,96 @@ export default function UploadHoldings() {
 		setGBsNum(Object.keys(gbs).length);
 		setREITsNum(Object.keys(reits).length);
 		setOtherItsNum(Object.keys(otherIts).length);
+	}
+
+	useEffect(() => {
+		allocateInstruments();
+	}, [uploadedInstruments]);
+
+	const loadInstrumentPrices = async (fun: Function, ids: Array<string>, allInsData: any) => {
+		if (!ids.length) return null;
+		let unmatched: any = [];
+		let matchingList: Array<any> | null = null;
+		const isinNotExistInInsData = ids.filter((id: string) => !allInsData[id]);
+		if (isinNotExistInInsData.length) matchingList = await fun(ids);
+		ids.forEach((id: string) => {
+			let matchingEntry: InstrumentInput | null = allInsData[id] ? allInsData[id] : null;
+			if (!matchingEntry && matchingList && matchingList.length) {
+				matchingEntry = matchingList?.find((match) => match?.id === id) }
+			if (matchingEntry) {
+				allInsData[id] = matchingEntry;
+			} else unmatched.push(id);
+		});
+		return unmatched;
+	};
+
+	const selectCurrency = () => {
+		let currency = 'INR';
+		if (!currencyList[currency]) {
+			currencyList[currency] = currency;
+			setCurrencyList(currencyList);
+		}
+		setSelectedCurrency(currency);
+		return currency;
+	};
+
+	const addInstruments = async () => {
+		setProcessing(true);
+		let currency = selectCurrency();
+		let member = taxId ? await addMemberIfNeeded(allFamily, setAllFamily, taxId) : memberKey;
+		if (uploadedInstruments.length) {
+			let condition = (instrument: any) => overwrite ? instrument?.fId !== member : instrument?.fId === member;
+			let filteredIns: Array<InstrumentInput> = instruments.filter(
+				(instrument: InstrumentInput) => instrument.curr === selectedCurrency && condition(instrument)
+			);
+			uploadedInstruments.forEach((instrument: InstrumentInput) => {
+				instrument.curr = currency;
+				instrument.fId = member as string;
+			})
+			filteredIns.push(...uploadedInstruments);
+			setInstruments([...filteredIns]);
+		}
+		resetState();
+	};
+
+	const loadInstruments = async (ids: Array<string>) => {
+		let mfIds: Array<string> = [];
+		let bondIds: Array<string> = [];
+		let exchangeIds: Array<string> = [];
+		ids.forEach((id: string) => {
+			id.substring(2, 1) === 'F' ? mfIds.push(id) : bondIds.push(id);
+		});
+		let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
+		let unmatchedIds: Array<string> = [];
+		if(mfIds.length) unmatchedIds = await loadInstrumentPrices(loadMatchingINMutual, mfIds, allInsData);
+		if(unmatchedIds?.length) exchangeIds.push(...unmatchedIds);
+		if(bondIds.length) unmatchedIds = await loadInstrumentPrices(loadMatchingINBond, bondIds, allInsData);
+		if(unmatchedIds?.length) exchangeIds.push(...unmatchedIds);
+		if(exchangeIds.length) await loadInstrumentPrices(loadMatchingINExchange, exchangeIds, allInsData);
+		simpleStorage.set(LOCAL_INS_DATA_KEY, allInsData, LOCAL_DATA_TTL);
+		return allInsData;
+	};
+
+	const loadData = async (
+		insMap: Map<string, number>,
+		currency: string,
+	) => {
+		await loadInstruments(Array.from(insMap.keys()));
+		let uploadedInstruments: Array<InstrumentInput> = [];
+		insMap.forEach((value: number, id: string) => {
+			uploadedInstruments.push({
+				id: id,
+				qty: value,
+				fId: '',
+				curr: currency
+			});
+		});
 		setShowInsUpload(true);
 		setUploadedInstruments([...uploadedInstruments]);
 		console.log("Uploaded instruments: ", uploadedInstruments);
 	};
 
 	const parseHoldings = async (pdf: any) => {
-		let equities: any = {};
-		let mfs: any = {};
-		let bonds: any = {};
-		let etfs: any = {};
-		let gbs: any = {};
-		let reits: any = {};
-		let otherIts: any = {};
 		let insType: string | null = null;
 		let holdingStarted = false;
 		let recordBroken = false;
@@ -318,7 +319,7 @@ export default function UploadHoldings() {
 		if (!taxId) {
 			setError('Please select approriate family member');
 		}
-		await loadData(insMap, 'INR', equities, mfs, bonds, etfs, gbs, reits, otherIts);
+		await loadData(insMap, 'INR');
 	};
 
 	const contentWithBadge = (count: number, content: string) => {
@@ -418,37 +419,37 @@ export default function UploadHoldings() {
 			>
 				{uploadedInstruments.length ? (
 					<Tabs defaultActiveKey="E" type="card">
-						<TabPane key="E" tab={contentWithBadge(equitiesNum, 'Equities')}>
+						{equitiesNum && <TabPane key="E" tab={contentWithBadge(equitiesNum, 'Equities')}>
 							<HoldingsTable
 								data={equities}
 								onChange={setEquities}
 								num={equitiesNum}
 								onNumChange={setEquitiesNum}
 							/>
-						</TabPane>
-						<TabPane key="M" tab={contentWithBadge(mfsNum, 'Mutual Funds')}>
+						</TabPane>}
+						{mfsNum && <TabPane key="M" tab={contentWithBadge(mfsNum, 'Mutual Funds')}>
 							<HoldingsTable data={mfs} onChange={setMFs} num={mfsNum} onNumChange={setMFsNum} />
-						</TabPane>
-						<TabPane key="B" tab={contentWithBadge(bondsNum, 'Bonds')}>
+						</TabPane>}
+						{bondsNum && <TabPane key="B" tab={contentWithBadge(bondsNum, 'Bonds')}>
 							<HoldingsTable data={bonds} onChange={setBonds} num={bondsNum} onNumChange={setBondsNum} />
-						</TabPane>
-						<TabPane key="GB" tab={contentWithBadge(gbsNum, 'Gold Bonds')}>
+						</TabPane>}
+						{gbsNum && <TabPane key="GB" tab={contentWithBadge(gbsNum, 'Gold Bonds')}>
 							<HoldingsTable data={gbs} onChange={setGBs} num={gbsNum} onNumChange={setGBsNum} />
-						</TabPane>
-						<TabPane key="ETF" tab={contentWithBadge(etfsNum, 'ETFs')}>
+						</TabPane>}
+						{etfsNum && <TabPane key="ETF" tab={contentWithBadge(etfsNum, 'ETFs')}>
 							<HoldingsTable data={etfs} onChange={setETFs} num={etfsNum} onNumChange={setETFsNum} />
-						</TabPane>
-						<TabPane key="REIT" tab={contentWithBadge(reitsNum, 'REITs')}>
+						</TabPane>}
+						{reitsNum && <TabPane key="REIT" tab={contentWithBadge(reitsNum, 'REITs')}>
 							<HoldingsTable data={reits} onChange={setREITs} num={reitsNum} onNumChange={setREITsNum} />
-						</TabPane>
-						<TabPane key="INVIT" tab={contentWithBadge(otherItsNum, 'Other Investment Trusts')}>
+						</TabPane>}
+						{otherItsNum && <TabPane key="INVIT" tab={contentWithBadge(otherItsNum, 'Other Investment Trusts')}>
 							<HoldingsTable
 								data={otherIts}
 								onChange={setOtherIts}
 								num={otherItsNum}
 								onNumChange={setOtherItsNum}
 							/>
-						</TabPane>
+						</TabPane>}
 					</Tabs>
 				) : (
 					<Empty

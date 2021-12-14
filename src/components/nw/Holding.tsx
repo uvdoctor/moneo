@@ -16,10 +16,11 @@ import { AssetType, InstrumentInput } from '../../api/goals';
 import { useEffect } from 'react';
 import { getColourForAssetType } from './nwutils';
 import { COLORS } from '../../CONSTANTS';
-import { AppContext } from '../AppContext';
+import { LOCAL_INS_DATA_KEY } from '../AppContext';
 import { NWContext } from './NWContext';
 import { faCoins, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import simpleStorage from 'simplestorage.js';
 
 interface HoldingProp {
 	holding: InstrumentInput;
@@ -28,7 +29,7 @@ interface HoldingProp {
 }
 
 export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
-	const { insData }: any = useContext(AppContext);
+	const insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
 	const { allFamily }: any = useContext(NWContext);
 	const [
 		price,
@@ -61,14 +62,6 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 		]
 	);
 
-	useEffect(
-		() => {
-			let ins = insData[holding.id];
-			if (ins) setPrice(ins.price);
-		},
-		[insData]
-	);
-
 	return (
 		<Row
 			className="holding"
@@ -86,6 +79,7 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 						)}
 					</Col>
 					{insData[holding.id] &&
+					allFamily[holding.fId] &&
 					insData[holding.id].type !== AssetType.H && (
 						<Col>
 							{insData[holding.id].rate &&
