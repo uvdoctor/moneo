@@ -54,7 +54,7 @@ export default function InstrumentValuation() {
 			filters: nameFilterValues,
 			onFilter: (values: Array<string>, record: any) => values.indexOf(record.id)>-1,
 			render: (record: any) => {
-				return <Holding key={record.id} holding={record as InstrumentInput} onDelete={delRecord} showPrice onChange={()=>setTotal()}/>
+				return <Holding key={record.id} holding={record as InstrumentInput} onDelete={delRecord} onChange={()=>setTotal()}/>
 			}
 		}
 	];
