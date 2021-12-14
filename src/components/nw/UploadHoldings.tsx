@@ -79,8 +79,7 @@ export default function UploadHoldings() {
 
 	const allocateInstruments = () => {
 		if(!uploadedInstruments || !uploadedInstruments.length) return;
-		let insData = simpleStorage.get(LOCAL_INS_DATA_KEY);
-		console.log("Instrument data: ", insData);
+		let insData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
 		let equities: any = {};
 		let mfs: any = {};
 		let bonds: any = {};
@@ -90,12 +89,13 @@ export default function UploadHoldings() {
 		let otherIts: any = {};
 		uploadedInstruments.forEach((ins: InstrumentInput) => {
 			let id = ins.id;
+			const isFund = id.substring(2, 1) === 'F';
 			let instrument: any = insData[id];
-			if (!instrument) equities[id] = ins;
+			if (!instrument) isFund ? mfs[id] = ins : equities[id] = ins;
 			else if (instrument.itype === InsType.REIT) reits[id] = ins;
 			else if (instrument.itype === InsType.InvIT) otherIts[id] = ins;
 			else if (instrument.itype === InsType.ETF) etfs[id] = ins;
-			else if (instrument.id.substring(2, 1) === 'F' && !instrument.itype) mfs[id] = ins;
+			else if (isFund && !instrument.itype) mfs[id] = ins;
 			else if (instrument.subt === AssetSubType.GoldB) gbs[id] = ins;
 			else if(instrument.type === AssetType.F) bonds[id] = ins;
 			else equities[id] = ins;
@@ -324,8 +324,9 @@ export default function UploadHoldings() {
 
 	const contentWithBadge = (count: number, content: string) => {
 		return (
-			<Badge count={count} offset={[ 10, 0 ]} showZero>
+			<Badge count={count} offset={[ 10, 0 ]} showZero style={{marginRight: count > 9 ? 10 : 0}}>
 				{content}
+				&nbsp;
 			</Badge>
 		);
 	};
