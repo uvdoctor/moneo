@@ -57,52 +57,50 @@ export default function Holding({ holding, showPrice, onDelete, onChange }: Hold
 
 	return (
 		<Row className="holding" align="middle" justify="space-between" gutter={[ 5, 5 ]}>
-			{showPrice && (
-				<Col span={24}>
-					<Row justify="space-between">
+			<Col span={24}>
+				<Row justify="space-between">
+					<Col>
+						{!insData[holding.id] && (
+							<h4 style={{ color: COLORS.RED }}>Sorry, unable to find price for this one!</h4>
+						)}
+					</Col>
+					{insData[holding.id] && insData[holding.id].type !== AssetType.H && (
 						<Col>
-							{!insData[holding.id] && (
-								<h4 style={{ color: COLORS.RED }}>Sorry, unable to find price for this one!</h4>
+							{insData[holding.id].rate && insData[holding.id].rate !== -1 && (
+								<Tooltip title="Interest rate">
+									&nbsp;&nbsp;
+									<FontAwesomeIcon icon={faCoins} />
+									{` ${insData[holding.id].rate}%`}
+								</Tooltip>
+							)}
+							{insData[holding.id].my && (
+								<Tooltip title="Maturity Year">
+									&nbsp;&nbsp;
+									<HourglassOutlined />
+									{insData[holding.id].my}
+								</Tooltip>
+							)}
+							{insData[holding.id].ytm && (
+								<Tooltip title="Annual rate of return of this bond if it is bought today and held till maturity">
+									&nbsp;&nbsp;
+									<FontAwesomeIcon icon={faHandHoldingUsd} />
+									{` ${insData[holding.id].ytm * 100}%`}
+								</Tooltip>
+							)}
+							{insData[holding.id].cr && (
+								<Tooltip title="Credit rating">
+									&nbsp;&nbsp;
+									<Rate value={4} />
+									{insData[holding.id].crstr}
+								</Tooltip>
 							)}
 						</Col>
-						{insData[holding.id] && insData[holding.id].type !== AssetType.H && (
-							<Col>
-								{insData[holding.id].rate && insData[holding.id].rate !== -1 && (
-									<Tooltip title="Interest rate">
-										&nbsp;&nbsp;
-										<FontAwesomeIcon icon={faCoins} />
-										{` ${insData[holding.id].rate}%`}
-									</Tooltip>
-								)}
-								{insData[holding.id].my && (
-									<Tooltip title="Maturity Year">
-										&nbsp;&nbsp;
-										<HourglassOutlined />
-										{insData[holding.id].my}
-									</Tooltip>
-								)}
-								{insData[holding.id].ytm && (
-									<Tooltip title="Annual rate of return of this bond if it is bought today and held till maturity">
-										&nbsp;&nbsp;
-										<FontAwesomeIcon icon={faHandHoldingUsd} />
-										{` ${insData[holding.id].ytm * 100}%`}
-									</Tooltip>
-								)}
-								{insData[holding.id].cr && (
-									<Tooltip title="Credit rating">
-										&nbsp;&nbsp;
-										<Rate value={4} />
-										{insData[holding.id].crstr}
-									</Tooltip>
-								)}
-							</Col>
-						)}
-						<Col>
-							<UserOutlined />&nbsp;{allFamily[holding.fId].name}
-						</Col>
-					</Row>
-				</Col>
-			)}
+					)}
+					<Col>
+						<UserOutlined />&nbsp;{allFamily[holding.fId].name}
+					</Col>
+				</Row>
+			</Col>
 			<Col span={24}>
 				<Row justify="space-between">
 					<Col>{insData[holding.id] ? insData[holding.id].name : holding.id}</Col>
