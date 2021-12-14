@@ -5,12 +5,12 @@ import { useFullScreenBrowser } from 'react-browser-hooks';
 import HoldingsTable from './HoldingsTable';
 import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from '../AppContext';
 import { NWContext } from './NWContext';
-import { getInsTypeFromISIN, getUploaderSettings } from './parseutils';
+import { getInsTypeFromISIN, getUploaderSettings, isValidISIN } from './parseutils';
 import { isMobileDevice } from '../utils';
 import simpleStorage from 'simplestorage.js';
 import { AssetSubType, AssetType, InstrumentInput } from '../../api/goals';
 import { UserOutlined } from '@ant-design/icons';
-import { containsPAN, getISIN, getQty, hasHoldingStarted } from './parseutils';
+import { extractPAN, getQty, hasHoldingStarted } from './parseutils';
 import { includesAny } from '../utils';
 import {
 	addMemberIfNeeded,
@@ -128,7 +128,7 @@ export default function UploadHoldings() {
 		resetState();
 	};
 
-	const setInsdata = async (data: any, member: string) => {
+	const loadInstruments = async (data: any, member: string) => {
 		let unmatchedIds: any = [];
 		let mfIds: any = [];
 		let bondIds: any = [];
@@ -172,18 +172,16 @@ export default function UploadHoldings() {
 		otherIts: any,
 		taxId: any
 	) => {
-		await setInsdata(data, taxId);
+		await loadInstruments(data, taxId);
 		pdfInstruments.forEach((instrument: InstrumentInput) => {
 			const data = insData[instrument.id];
-			if (!data) equities[instrument.id] = instrument;
+			if (!data || (data.type === AssetType.E && !data.itype)) equities[instrument.id] = instrument;
 			else if (data.itype === 'REIT') reits[instrument.id] = instrument;
 			else if (data.itype === 'InvIT') otherIts[instrument.id] = instrument;
 			else if (data.itype === 'ETF') etfs[instrument.id] = instrument;
 			else if (data.id.startsWith('INF') && !data.itype) mfs[instrument.id] = instrument;
-			else if (data.subt === 'CB' || data.subt === 'GBO' || data.subt === 'GB' || data.subt === 'HB')
-				bonds[instrument.id] = instrument;
-			else if (data.subt === 'GoldB') gbs[instrument.id] = instrument;
-			else if (data.subt === 'S' && !data.itype) equities[instrument.id] = instrument;
+			else if (data.subt === AssetSubType.GoldB) gbs[instrument.id] = instrument;
+			else if(data.type === AssetType.F) bonds[instrument.id] = instrument;
 		});
 	};
 
@@ -240,7 +238,7 @@ export default function UploadHoldings() {
 				let value = textContent.items[j].str.trim();
 				if (!value.length) continue;
 				if (value.length >= 10 && value.length < 100 && !taxId) {
-					taxId = containsPAN(value);
+					taxId = extractPAN(value);
 					if (taxId) {
 						setTaxId(taxId);
 						continue;
@@ -275,14 +273,13 @@ export default function UploadHoldings() {
 					hasFV = true;
 					continue;
 				}
-				let retVal = getISIN(value);
-				if (retVal) {
-					console.log('Detected ISIN: ', retVal);
+				if (isValidISIN(value)) {
+					console.log('Detected ISIN: ', value);
 					quantity = null;
 					fv = null;
 					recordBroken = false;
-					isin = retVal;
-					insType = getInsTypeFromISIN(isin, insType);
+					isin = value;
+					insType = getInsTypeFromISIN(isin as string, insType);
 				}
 				if (!isin) continue;
 				let qty: number | null = getQty(value);
