@@ -30,7 +30,7 @@ export default function AddHoldings({
 	const [ okDisabled, setOkDisabled ] = useState<boolean>(true);
 	const [ newRec, setNewRec ] = useState<any>({});
 	const { setInstruments, instruments, childTab, saveHoldings, isDirty }: any = useContext(NWContext);
-	const [ instrumentsList, setInstrumentsList ] = useState<Array<InstrumentInput>>([]);
+	const [ instrumentsList, setInstrumentsList ] = useState<Array<any>>([]);
 
 	const close = () => {
 		setModalVisibility(false);
