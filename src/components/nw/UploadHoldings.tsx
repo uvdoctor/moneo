@@ -35,7 +35,8 @@ export default function UploadHoldings() {
 		currencyList,
 		setCurrencyList,
 		setSelectedCurrency,
-		selectedCurrency
+		selectedCurrency,
+		setSelectedMembers,
 	}: any = useContext(NWContext);
 	const fsb = useFullScreenBrowser();
 	const { TabPane } = Tabs;
@@ -164,6 +165,7 @@ export default function UploadHoldings() {
 			})
 			filteredIns.push(...uploadedInstruments);
 			setInstruments([...filteredIns]);
+			setSelectedMembers([...[member]]);
 		}
 		resetState();
 	};
