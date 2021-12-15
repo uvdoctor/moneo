@@ -196,7 +196,7 @@ export default function InstrumentValuation() {
 		() => {
 			filterInstrumentsByTabs();
 		},
-		[ childTab, instruments ]
+		[ childTab, instruments, selectedMembers, selectedCurrency ]
 	);
 
 	useEffect(
