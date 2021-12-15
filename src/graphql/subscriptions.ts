@@ -623,6 +623,7 @@ export const onCreateInBondPrice = /* GraphQL */ `
       id
       sid
       name
+      type
       subt
       price
       exchg
@@ -648,6 +649,7 @@ export const onUpdateInBondPrice = /* GraphQL */ `
       id
       sid
       name
+      type
       subt
       price
       exchg
@@ -673,6 +675,7 @@ export const onDeleteInBondPrice = /* GraphQL */ `
       id
       sid
       name
+      type
       subt
       price
       exchg
