@@ -37,7 +37,7 @@ export default function ListHoldings({
 	};
 
 	useEffect(() => {
-		setDataToRender([...data.filter((data: any) => data && doesHoldingMatch(data, selectedMembers, selectedCurrency))]);
+		setDataToRender([...data.filter((holding: HoldingInput) => doesHoldingMatch(holding, selectedMembers, selectedCurrency))]);
 	}, [selectedCurrency, selectedMembers, data])
 
 	return (

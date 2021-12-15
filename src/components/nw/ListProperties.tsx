@@ -5,6 +5,7 @@ import SelectInput from "../form/selectinput";
 import { NWContext } from "./NWContext";
 import TextInput from "../form/textinput";
 import {
+	doesHoldingMatch,
 	getDefaultMember,
 	getFamilyOptions,
 	getRemainingDuration,
@@ -34,6 +35,11 @@ export default function ListProperties({
 	const [memberKey, setMemberKey] = useState<string>(
 		getDefaultMember(allFamily, selectedMembers)
 	);
+	const [ filteredRecords, setFilteredRecords ] = useState<Array<PropertyInput>>([]);
+
+	useEffect(() => {
+		setFilteredRecords([...data.filter((data: any) => doesHoldingMatch(data, selectedMembers, selectedCurrency))]);
+	}, [selectedCurrency, selectedMembers, data])
 
 	const removeHolding = (i: number) => {
 		data.splice(i, 1);
