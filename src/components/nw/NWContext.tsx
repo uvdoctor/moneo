@@ -531,7 +531,7 @@ function NWContextProvider() {
 	};
 
 	const initializeHoldings = async () => {
-		initializeFamilyList();
+		await initializeFamilyList();
 		let allHoldings: CreateUserHoldingsInput | null = null;
 		let insHoldings: CreateUserInsInput | null = null;
 		try {
