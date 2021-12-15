@@ -8,7 +8,6 @@ import { getFXRate } from "../utils";
 import { COLORS } from "../../CONSTANTS";
 import simpleStorage from "simplestorage.js";
 import { LOCAL_DATA_TTL, LOCAL_INSTRUMENT_RAW_DATA_KEY } from "../AppContext";
-import { OwnershipInput } from "../../api/goals";
 
 interface OptionTableMap {
   [Stock: string]: string;
