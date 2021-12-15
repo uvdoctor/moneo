@@ -38,7 +38,8 @@ import {
 	UpdateUserHoldingsInput,
 	InstrumentInput,
 	CreateUserInsInput,
-	UpdateUserInsInput
+	UpdateUserInsInput,
+	PropertyType
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
 import { includesAny, initOptions } from '../utils';
@@ -222,13 +223,13 @@ function NWContextProvider() {
 					setData: setProperties,
 					total: totalProperties,
 					categoryOptions: {
-						P: "Plot",
-						A: "Apartment",
-						H: "Home",
-						C: "Condominium",	
-						O: "Office",
-						T: "Townhouse",
-						OTHER: 'Others'
+						[PropertyType.P]: "Plot",
+						[PropertyType.A]: "Apartment",
+						[PropertyType.H]: "Home",
+						[PropertyType.C]: "Condominium",	
+						[PropertyType.O]: "Office",
+						[PropertyType.T]: "Townhouse",
+						[PropertyType.OTHER]: 'Others'
 					},
 				},
 				[TAB.VEHICLE]: {
@@ -814,11 +815,11 @@ function NWContextProvider() {
 					// @ts-ignore
 					const value = getCompoundedIncome(property.rate, property.mv, duration?.years);
 					total += value;
-					if(property.type === 'P') totalPlot += value;
-					if(property.type === 'OTHER') totalOtherProperty += value;
-					if(property.type === 'A' || property.type === 'H' || 
-						property.type === 'C' || property.type === 'T') totalResidential += value;
-					if(property.type === 'O') totalCommercial += value;
+					if(property.type === PropertyType.P) totalPlot += value;
+					if(property.type === PropertyType.OTHER) totalOtherProperty += value;
+					if(property.type === PropertyType.A || property.type === PropertyType.H || 
+						property.type === PropertyType.C || property.type === PropertyType.T) totalResidential += value;
+					if(property.type === PropertyType.O) totalCommercial += value;
 				}
 			}
 		})

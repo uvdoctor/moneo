@@ -179,7 +179,7 @@ export default function InstrumentValuation() {
 					return (selectedTags.includes(MCap.L) && data.meta && data?.meta.mcap === MCap.L ) || 
 					(selectedTags.includes(MCap.M) && data.meta && data?.meta.mcap === MCap.M ) ||
 					(selectedTags.includes(MCap.H) && data.meta && data?.meta.mcap === MCap.H ) ||
-					(selectedTags.includes('S') && data.meta && data?.meta.mcap === null ) 
+					(selectedTags.includes(MCap.S) && data.meta && data?.meta.mcap === null ) 
 				}
 			}
 			else if (childTab === TAB.BOND && data) {
