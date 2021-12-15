@@ -184,7 +184,7 @@ export default function InstrumentValuation() {
 			}
 			else if (childTab === TAB.BOND && data) {
 				if (selectedTags.includes(AssetSubType.GB)) return data?.subt === AssetSubType.GB || data?.subt === AssetSubType.GBO;
-				return selectedTags.indexOf(data?.subt as string) > -1;
+				else return data?.subt === AssetSubType.CB; 
 			}
 		});
 
