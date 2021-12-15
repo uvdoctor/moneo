@@ -105,7 +105,6 @@ export default function FamilyInput() {
 
 	return (
         <Fragment>
-            {console.log(memberKeys, "memberKeys")}
             {memberKeys.length ? <Row align="middle">
                     <Col>
                     {memberKeys.length > 1 ? 
@@ -123,7 +122,6 @@ export default function FamilyInput() {
                     >
                         {memberKeys.length && memberKeys.map((key: string) => (
                             allFamily[key] && <Option key={key} value={key}>
-                                {console.log(key, "key")}
                                 {allFamily[key].name}
                             </Option>
                         ))}
