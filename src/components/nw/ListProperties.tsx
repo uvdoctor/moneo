@@ -1,4 +1,13 @@
-import { Button, Checkbox, Col, Empty, InputNumber, Row, Table, Tooltip } from "antd";
+import {
+	Button,
+	Checkbox,
+	Col,
+	Empty,
+	InputNumber,
+	Row,
+	Table,
+	Tooltip,
+} from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { OwnershipInput, PropertyInput } from "../../api/goals";
 import SelectInput from "../form/selectinput";
@@ -144,9 +153,10 @@ export default function ListProperties({
 						</Col>
 						<Col xs={24}>
 							<Row gutter={[10, 0]}>
+								<Col>Amount</Col>
 								<Col>
 									<NumberInput
-										pre="Amount"
+										pre=""
 										isBasic={true}
 										min={10}
 										max={1000000000}
@@ -294,16 +304,17 @@ export default function ListProperties({
 	useEffect(() => {
 		let dataSource: Array<any> = [];
 		for (let i = 0; i < data.length; ++i) {
-			if(!doesPropertyMatch(data[i], selectedMembers, selectedCurrency)) continue;
+			if (!doesPropertyMatch(data[i], selectedMembers, selectedCurrency))
+				continue;
 			dataSource.push({
 				key: i,
-				res:
+				res: (
 					<Checkbox
 						checked={data[i].res}
 						disabled={data[i].type === "O"}
 						onChange={(e) => changeRes(e.target.checked, i)}
 					/>
-				,
+				),
 				type: categoryOptions && (
 					<SelectInput
 						pre=""
@@ -343,15 +354,17 @@ export default function ListProperties({
 		setDataSource([...dataSource]);
 	}, [data, selectedMembers, selectedCurrency]);
 
-	return (
-		dataSource.length ? <Table
+	return dataSource.length ? (
+		<Table
 			className="property-nested-table"
 			columns={columns}
 			expandable={{
-				expandedRowRender: (record) => expandedRow(record.key)
+				expandedRowRender: (record) => expandedRow(record.key),
 			}}
 			dataSource={dataSource}
 			size="small"
-		/> : <Empty description={<p>No property found.</p>} />
+		/>
+	) : (
+		<Empty description={<p>No property found.</p>} />
 	);
 }
