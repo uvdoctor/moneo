@@ -1,9 +1,9 @@
 import { Button, Col, Row } from "antd";
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { HoldingInput } from "../../api/goals";
 import SelectInput from "../form/selectinput";
 import { NWContext } from "./NWContext";
-import { getFamilyOptions } from "./nwutils";
+import { doesHoldingMatch, getFamilyOptions } from "./nwutils";
 import { DeleteOutlined, UserOutlined } from "@ant-design/icons";
 
 require("./ListHoldings.less");
@@ -23,7 +23,8 @@ export default function ListHoldings({
 	viewComp,
 	subCategoryOptions,
 }: ListHoldingsProps) {
-	const { allFamily }: any = useContext(NWContext);
+	const { allFamily, selectedMembers , selectedCurrency }: any = useContext(NWContext);
+	const [ dataToRender, setDataToRender ] = useState<Array<HoldingInput>>([]);
 
 	const changeOwner = (ownerKey: string, i: number) => {
 		data[i].fId = ownerKey;
@@ -35,6 +36,10 @@ export default function ListHoldings({
 		changeData([...data]);
 	};
 
+	useEffect(() => {
+		setDataToRender([...data.filter((data: any) => data && doesHoldingMatch(data, selectedMembers, selectedCurrency))]);
+	}, [selectedCurrency, selectedMembers, data])
+
 	return (
 		<Row
 			className="list-holdings"
@@ -43,9 +48,9 @@ export default function ListHoldings({
 				{ xs: 10, sm: 10, md: 10 },
 			]}
 		>
-			{data &&
-				data[0] &&
-				data.map((holding: HoldingInput, i: number) => (
+			{dataToRender &&
+				dataToRender[0] &&
+				dataToRender.map((holding: HoldingInput, i: number) => (
 					<Fragment key={"" + i}>
 						<Col span={24} className="fields-divider" />
 						{React.createElement(viewComp, {
