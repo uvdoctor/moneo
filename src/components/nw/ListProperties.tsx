@@ -93,7 +93,10 @@ export default function ListProperties({
 	useEffect(() => {
 		if (indexForMv !== null) {
 			// @ts-ignore
-			const duration = getRemainingDuration(data[indexForMv].purchase.year,data[indexForMv].purchase.month);
+			const duration = getRemainingDuration(
+				data[indexForMv].purchase.year,
+				data[indexForMv].purchase.month
+			);
 			data[indexForMv].mv = Math.round(
 				getCompoundedIncome(
 					data[indexForMv].rate,
@@ -139,16 +142,21 @@ export default function ListProperties({
 							<hr />
 						</Col>
 						<Col xs={24}>
-							<NumberInput
-								pre="Amount"
-								min={10}
-								max={1000000000}
-								value={data[i].purchase?.amt as number}
-								changeHandler={(val: number) => changeAmt(i, val)}
-								currency={selectedCurrency}
-								step={10}
-								noSlider
-							/>
+							<Row gutter={[10, 0]}>
+								<Col>Amount</Col>
+								<Col>
+									<NumberInput
+										isBasic={true}
+										min={10}
+										max={1000000000}
+										value={data[i].purchase?.amt as number}
+										changeHandler={(val: number) => changeAmt(i, val)}
+										currency={selectedCurrency}
+										step={10}
+										noSlider
+									/>
+								</Col>
+							</Row>
 						</Col>
 						<Col xs={24}>
 							<DatePickerInput
@@ -287,13 +295,13 @@ export default function ListProperties({
 	for (let i = 0; i < data.length; ++i) {
 		dataSource.push({
 			key: i,
-			res:
+			res: (
 				<Checkbox
 					checked={data[i].res}
 					disabled={data[i].type === "O"}
 					onChange={(e) => changeRes(e.target.checked, i)}
 				/>
-			,
+			),
 			type: categoryOptions && (
 				<SelectInput
 					pre=""
