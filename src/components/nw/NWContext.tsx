@@ -703,8 +703,8 @@ function NWContextProvider() {
 		try {
 			if(uname) await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
 			else await addHoldings(updatedHoldings);
-			if (instruments.length > 0 && insUname)  await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
-			else if (instruments.length > 0) await addInsHoldings(updatedInsHoldings);
+			if (insUname)  await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
+			else await addInsHoldings(updatedInsHoldings);
 			notification.success({message: 'Data saved', description: 'All holdings data has been saved.'})
 		} catch(e) {
 			notification.error({message: 'Unable to save holdings', description: 'Sorry! An unexpected error occurred while trying to save the data.'});
