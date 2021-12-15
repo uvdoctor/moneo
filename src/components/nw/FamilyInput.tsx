@@ -26,7 +26,6 @@ export default function FamilyInput() {
     useEffect(() => {
         if(loadingFamily) return;
         let allFamilyKeys = Object.keys(allFamily);
-        console.log(allFamily, "all family useeffect")
         setMemberKeys([...allFamilyKeys]);
         setSelectedMembers([... [allFamilyKeys.length > 1 ? ALL_FAMILY: allFamilyKeys[0]]]);
     }, [loadingFamily]);
@@ -106,7 +105,7 @@ export default function FamilyInput() {
 
 	return (
         <Fragment>
-            {console.log(allFamily, "allfamily")}
+            {console.log(memberKeys, "memberKeys")}
             {memberKeys.length ? <Row align="middle">
                     <Col>
                     {memberKeys.length > 1 ? 
@@ -123,7 +122,7 @@ export default function FamilyInput() {
                         maxTagCount={1}
                     >
                         {memberKeys.map((key: string) => (
-                            <Option key={key} value={key}>
+                            allFamily[key] && <Option key={key} value={key}>
                                 {console.log(key, "key")}
                                 {allFamily[key].name}
                             </Option>
