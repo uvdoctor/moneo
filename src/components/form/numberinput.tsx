@@ -156,6 +156,7 @@ export default function NumberInput({
 
 	return isBasic ? (
 		<>
+			{/*@ts-ignore*/}
 			<InputNumber {...inputConfig} />
 			{convertInputToString() && <div>{convertInputToString()}</div>}
 		</>
@@ -187,6 +188,7 @@ export default function NumberInput({
 						{(currency || step < 1) && (
 							<Row align="middle" gutter={[15, 0]}>
 								<Col xs={24}>
+									{/*@ts-ignore*/}
 									<InputNumber {...inputConfig} />
 								</Col>
 
