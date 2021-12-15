@@ -368,7 +368,7 @@ export default function UploadHoldings() {
 				visible={showDrawer}
 			>
 				<Dragger {...getUploaderSettings(parseHoldings)}>
-					{loading ? <Spin tip='Loading...'/> : uploadContent()}
+					{loading ? <Spin tip='Loading...' size='large'/> : uploadContent()}
 				</Dragger>
 			</Drawer>
 			<Drawer

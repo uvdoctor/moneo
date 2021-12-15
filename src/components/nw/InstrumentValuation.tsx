@@ -121,10 +121,7 @@ export default function InstrumentValuation() {
 
 	useEffect(
 		() => {
-			if (hasTags(childTab)) {
-				const tags = tagsData[childTab].tags;
-				tags ? setTags(tags) : setTags({});
-			}
+			hasTags(childTab) ? setTags(tagsData[childTab].tags) : setTags({});
 		},
 		[ childTab ]
 	);
