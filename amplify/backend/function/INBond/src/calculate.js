@@ -89,6 +89,7 @@ const calcSchema = (record, codes, schema, typeExchg, isinMap, table) => {
 	schema.sid = record[codes.sid];
 	schema.name = record[codes.name] ? record[codes.name] : record[codes.sid];
 	schema.price = calc.calcPrice(record[codes.price]);
+	schema.type = 'F';
 	schema.subt = calc.calcSubType(record[codes.subt]);
 	schema.exchg = typeExchg;
 	schema.sm = calc.calcSM(record[codes.sDate]);

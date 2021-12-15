@@ -1,36 +1,40 @@
 import { Modal, notification, Input } from "antd";
-import { appendValue, includesAny, replaceIfFound } from "../utils";
+import { includesAny } from "../utils";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { InstrumentInput, AssetSubType, InsType, AssetType } from "../../api/goals";
+import { AssetSubType, InsType, AssetType } from "../../api/goals";
 
 const { confirm } = Modal;
 
-export const isValidISIN = (val: string) =>
-	val.length === 12 && val.startsWith("IN") && !val.includes(" ");
+export const extractISIN = (val: string) => {
+	val = val.trim();
+	if(!val.length || val.length < 12) return null;
+	let isinStr = val.substring(0,12);
+	if(isValidISIN(isinStr)) return isinStr;
+	return null;
+};
+
+const isValidISIN = (val: string) => val.match(/^[A-Z]{2}([A-Z0-9]){9}[0-9]$/);
 
 export const isValidPAN = (val: string) =>
 	val.length === 10 &&
 	!val.includes(" ") &&
 	val.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/);
 
-export const contains = (val: string, type: string = "ISIN") => {
-	let values = val.split(" ");
-	for (let value of values) {
-		value = value.trim();
-		if (type === "PAN") {
-			value = replaceIfFound(value, ["PAN", ":", "(", ")"]);
+export const extractPAN = (val: string) => {
+	let values = val.split("PAN");
+	if(values.length < 2) return null;
+	let value = values[1].trim();
+	if(value.length < 10) return null;
+	for(let i = 0; i < value.length; i++) {
+		let asciiVal = value.charCodeAt(i);
+		if(asciiVal > 64 && asciiVal < 91 && (value.length - i > 9)) {
+			let panStr = value.substring(i, i + 10);
+			if(isValidPAN(panStr)) return panStr;
 		}
-		if (type === "ISIN" ? isValidISIN(value) : isValidPAN(value)) return value;
 	}
-	return null;
-};
-
-export const getISIN = (val: string) => {
-	if (val.length < 12) return null;
-	if (isValidISIN(val)) return val;
 	return null;
 };
 
@@ -52,46 +56,8 @@ export const hasHoldingStarted = (value: string) =>
 		"holding details",
 		"as of",
 		"as on",
-		"holdings"
-	]);
-
-export const shouldIgnore = (value: string) => 
-	includesAny(value, [
-		"closing",
-		"opening",
-		"summary",
-		"year",
-		"portfolio",
-		"total",
-		"+",
-		"^",
-		"pledged",
-		"equities",
-		"listed",
-		"not",
-		"value (",
-		"value in",
-		"free b",
-		"consolidated",
-		"statement",
-		"account",
-		"available",
-		"name",
-		"about",
-		"no.",
-		"year",
-		"invested",
-		"registration",
-		"status",
-		"frozen",
-		"`",
-		"individual",
-		"valuation",
-		"negative",
-		"positive",
-		"nomination",
-		"category",
-		"client"
+		"holdings",
+		"holdings of"
 	]);
 
 export const getInsTypeFromISIN = (isin: string, insType: string | null) => {
@@ -101,25 +67,6 @@ export const getInsTypeFromISIN = (isin: string, insType: string | null) => {
 	else if(isin.startsWith("INE")) return AssetSubType.S;
 	return insType;
 };
-
-export const completeRecord = (recordBroken: boolean, mode: string, equities: any, mfs: any, etfs: any, bonds: any, isin: string | null, quantity: number | null, taxId: string, currency: string) => {
-  	if (recordBroken) {
-    	recordBroken = false;
-  	}
-  	let existingEntry = null;
-	let list = mode === AssetSubType.S ? equities : mode === 'M' ? mfs : mode === InsType.ETF ? etfs : bonds;
-	if(list[isin as string]) existingEntry = list[isin as string];
-  	if(existingEntry)
-  		existingEntry.qty += quantity as number;
-  	else {
-		appendValue(
-			mode === AssetSubType.S ? equities : mode === 'M' ? mfs : mode === InsType.ETF ? etfs : bonds,
-			isin as string,
-			{id: isin, qty: quantity as number, fId: taxId, curr: currency} as InstrumentInput
-	  	);
-  	}
-	console.log("Record completed for...", isin);
-}
 
 const processPDF = (file: File, parsePDF: Function) => {
 	const reader = new FileReader();

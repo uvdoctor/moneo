@@ -7,7 +7,7 @@ import { toHumanFriendlyCurrency } from '../utils';
 import { COLORS } from '../../CONSTANTS';
 import { FilterTwoTone } from '@ant-design/icons';
 import { AppContext } from '../AppContext';
-import { InstrumentInput } from '../../api/goals';
+import { AssetSubType, AssetType, InstrumentInput, InsType, MCap, MFSchemeType } from '../../api/goals';
 
 export default function InstrumentValuation() {
 	const { insData }: any = useContext(AppContext);
@@ -54,7 +54,7 @@ export default function InstrumentValuation() {
 			filters: nameFilterValues,
 			onFilter: (values: Array<string>, record: any) => values.indexOf(record.id)>-1,
 			render: (record: any) => {
-				return <Holding key={record.id} holding={record as InstrumentInput} onDelete={delRecord} showPrice onChange={()=>setTotal()}/>
+				return <Holding key={record.id} holding={record as InstrumentInput} onDelete={delRecord} onChange={()=>setTotal()}/>
 			}
 		}
 	];
@@ -77,7 +77,7 @@ export default function InstrumentValuation() {
 
 	const subtTagsData = () => {
 		// @ts-ignore
-		if (selectedTags.includes('E') && selectedTags.includes('F')) {
+		if (selectedTags.includes(AssetType.E) && selectedTags.includes(AssetType.F)) {
 			setSubtTags({ ...tagsData[childTab].subt.E, ...tagsData[childTab].subt.F });
 			setSelectedSubtTags([
 				...Object.keys(tagsData[childTab].subt.E),
@@ -85,12 +85,12 @@ export default function InstrumentValuation() {
 			]);
 			return;
 		}
-		if (selectedTags.includes('E')) {
+		if (selectedTags.includes(AssetType.E)) {
 			setSubtTags(tagsData[childTab].subt.E);
 			setSelectedSubtTags([ ...Object.keys(tagsData[childTab].subt.E) ]);
 			return;
 		}
-		if (selectedTags.includes('F')) {
+		if (selectedTags.includes(AssetType.F)) {
 			setSubtTags(tagsData[childTab].subt.F);
 			setSelectedSubtTags([ ...Object.keys(tagsData[childTab].subt.F) ]);
 			return;
@@ -117,14 +117,11 @@ export default function InstrumentValuation() {
 
 	useEffect(() => {
 		setTotal();
-	},[ filteredInstruments, filteredInfo ]);
+	},[ filteredInstruments, filteredInfo, instruments ]);
 
 	useEffect(
 		() => {
-			if (hasTags(childTab)) {
-				const tags = tagsData[childTab].tags;
-				tags ? setTags(tags) : setTags({});
-			}
+			hasTags(childTab) ? setTags(tagsData[childTab].tags) : setTags({});
 		},
 		[ childTab ]
 	);
@@ -141,17 +138,17 @@ export default function InstrumentValuation() {
 		let filteredData: Array<InstrumentInput> = instruments.filter((instrument: InstrumentInput) => {
 			const data = insData[instrument.id];
 			if(!data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
-				if (childTab === TAB.MF && instrument.id === "INF") return instrument.id;
+				if (childTab === TAB.MF && instrument.id.startsWith("INF")) return instrument.id;
 				else if (childTab === TAB.STOCK) return instrument.id;
 			} 
 			if (data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {		
-				if (childTab === TAB.REIT) return data.itype === 'REIT';
-				if (childTab === TAB.OIT) return data.itype === 'InvIT';
-				if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
-				else if (childTab === TAB.STOCK) return data.subt === 'S' && !instrument.id.startsWith('INF');
-				else if (childTab === TAB.BOND) return [ 'CB', 'GB', 'GBO' ].includes(data.subt) && !data.itype && !instrument.id.startsWith('INF'); 
-				else if (childTab === TAB.GOLDB) return data.subt === 'GoldB';
-				else if (childTab === TAB.ETF) return data.itype === 'ETF';
+				if (childTab === TAB.REIT) return data.itype === InsType.REIT;
+				else if (childTab === TAB.OIT) return data.itype === InsType.InvIT;
+				else if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
+				else if (childTab === TAB.STOCK) return data.subt === AssetSubType.S && !instrument.id.startsWith('INF');
+				else if (childTab === TAB.GOLDB) return data.subt === AssetSubType.GoldB;
+				else if (childTab === TAB.BOND) return data.type === AssetType.F && !data.itype && !instrument.id.startsWith('INF'); 
+				else if (childTab === TAB.ETF) return data.itype === InsType.ETF;
 			}
 		});
 		setFilteredInstruments([ ...filteredData ]);
@@ -165,26 +162,26 @@ export default function InstrumentValuation() {
 				if (selectedSubtTags.length) {
 					if (selectedTags.indexOf(data.type as string) > -1) {
 						 return selectedSubtTags.indexOf(data.mcap as string) > -1 ||
-						 (selectedSubtTags.includes('CB') && (data.subt === 'CB')) || 
-						 (selectedSubtTags.includes('I') && (data.type === 'F' && data.subt === 'I')) || 
-						(selectedSubtTags.includes('GovB') && (data.subt === 'GB' || data.subt === 'GBO')) || 
-						(selectedSubtTags.includes('IF') && (data.subt === 'HB' && data.mftype === 'I')) ||
-						(selectedSubtTags.includes('FMP') && (data.subt === 'HB' && data.mftype === 'C')) ||
-						(selectedSubtTags.includes('LF') && (data.subt === 'L')) 
+						 (selectedSubtTags.includes(AssetSubType.CB) && (data.subt === AssetSubType.CB)) || 
+						 (selectedSubtTags.includes(AssetSubType.I) && (data.type === AssetType.F && data.subt === AssetSubType.I)) || 
+						(selectedSubtTags.includes('GovB') && (data.subt === AssetSubType.GB || data.subt === AssetSubType.GBO)) || 
+						(selectedSubtTags.includes('IF') && (data.subt === AssetSubType.HB && data.mftype === MFSchemeType.I)) ||
+						(selectedSubtTags.includes('FMP') && (data.subt === AssetSubType.HB && data.mftype === MFSchemeType.C)) ||
+						(selectedSubtTags.includes('LF') && (data.subt === AssetSubType.L)) 
 					}
 				}
 			} 
 			else if (childTab === TAB.STOCK) {
 				if(data) {
-					return (selectedTags.includes('L') && data.meta && data?.meta.mcap === "L" ) || 
-					(selectedTags.includes('M') && data.meta && data?.meta.mcap === "M" ) ||
-					(selectedTags.includes('H') && data.meta && data?.meta.mcap === "H" ) ||
-					(selectedTags.includes('S') && data.meta && data?.meta.mcap === null ) 
+					return (selectedTags.includes(MCap.L) && data.meta && data?.meta.mcap === MCap.L ) || 
+					(selectedTags.includes(MCap.M) && data.meta && data?.meta.mcap === MCap.M ) ||
+					(selectedTags.includes(MCap.H) && data.meta && data?.meta.mcap === MCap.H ) ||
+					(selectedTags.includes(MCap.S) && data.meta && data?.meta.mcap === null ) 
 				}
 			}
 			else if (childTab === TAB.BOND && data) {
-				if (selectedTags.includes('GB')) return data?.subt === 'GB' || data?.subt === 'GBO';
-				return selectedTags.indexOf(data?.subt as string) > -1;
+				if (selectedTags.includes(AssetSubType.GB)) return data?.subt === AssetSubType.GB || data?.subt === AssetSubType.GBO;
+				else return data?.subt === AssetSubType.CB; 
 			}
 		});
 
@@ -196,7 +193,7 @@ export default function InstrumentValuation() {
 		() => {
 			filterInstrumentsByTabs();
 		},
-		[ childTab, instruments ]
+		[ childTab, instruments, selectedMembers, selectedCurrency ]
 	);
 
 	useEffect(

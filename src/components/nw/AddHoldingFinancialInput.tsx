@@ -14,7 +14,7 @@ import {
   toHumanFriendlyCurrency,
   toReadableNumber,
 } from "../utils";
-import { getAssetSubTypes, getColourForAssetType } from "./nwutils";
+import { getColourForAssetType } from "./nwutils";
 import { NWContext } from "./NWContext";
 import { AppContext, LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from "../AppContext";
 
@@ -41,35 +41,27 @@ export default function AddHoldingFinancialInput(props: any) {
     setHoldings(mergedHoldings);
     updateInstruments(mergedHoldings);
     setInsData(mergedInsData);
-
     simpleStorage.set(LOCAL_INS_DATA_KEY, mergedInsData, LOCAL_DATA_TTL);
     disableOk(mergedHoldings.length > 0 ? false : true);
   };
 
   const HoldingsRow = (props: { holding: any; key: number }) => {
     const {
-      holding: { curr, name, qty, id, subt, fId },
+      holding: { curr, qty, id, fId },
       key,
     } = props;
-    const { itype, price, type } = insData[id];
-    const assetSubTypes: any = getAssetSubTypes();
-    const getInsTypeStr = (id: string) =>
-      itype ? `${itype} - ` : id.startsWith("INF") ? "Mutual Fund - " : "";
-
+    const { price, type } = insData[id];
     return (
       <Row className="holding" gutter={[16, 50]} key={key}>
         <Col span={24}>
           <Row justify="space-between">
             <Col>
-              {insData[id] ? (
-                `${getInsTypeStr(id)}${assetSubTypes[subt]}`
-              ) : (
+              {!insData[id] &&
                 <h4 style={{ color: COLORS.RED }}>
                   Sorry, unable to find price for this one!
                 </h4>
-              )}
+              }
             </Col>
-
             <Col>
               <UserOutlined />
               &nbsp;{allFamily[fId].name}
@@ -77,7 +69,7 @@ export default function AddHoldingFinancialInput(props: any) {
           </Row>
 
           <Row justify="space-between">
-            <Col>{name}</Col>
+            <Col>{insData[id].name}</Col>
 
             <Col className="quantity">
               <strong>

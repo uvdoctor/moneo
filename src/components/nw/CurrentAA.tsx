@@ -1,7 +1,7 @@
 import { Badge, Col, Empty, Row, Skeleton, Tooltip } from 'antd';
 import dynamic from 'next/dynamic';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { AssetType, InstrumentInput, MCap } from '../../api/goals';
+import { AssetSubType, AssetType, InstrumentInput, MCap, MFSchemeType } from '../../api/goals';
 import { ASSET_TYPES, COLORS } from '../../CONSTANTS';
 import { AppContext } from '../AppContext';
 import { toHumanFriendlyCurrency, toReadableNumber } from '../utils';
@@ -121,11 +121,13 @@ export default function CurrentAA() {
 						if (data.mcap === MCap.H) hybridCap += price;
 					}
 					if (data.type === AssetType.F) {
-						if (data.subt === 'CB' || data.subt === 'GB' || data.subt === 'GBO' || data.subt === 'HB') bonds += price;
-						if (data.subt === 'I') indexFunds += price;
-						if (data.subt === 'L') liquidFunds += price;
-						if (data.mftype && data.subt === 'HB' && data.mftype === 'I') intervalFunds += price;
-						if (data.mftype && data.subt === 'HB' && data.mftype === 'C') fmp += price;
+						if (data.subt === AssetSubType.CB || data.subt === AssetSubType.GB || data.subt === AssetSubType.GBO || data.subt === AssetSubType.HB) bonds += price;
+						if (data.subt === AssetSubType.I) indexFunds += price;
+						if (data.subt === AssetSubType.L) liquidFunds += price;
+						if (data.mftype && data.subt === AssetSubType.HB) {
+							if(data.mftype === MFSchemeType.I) intervalFunds += price;
+							if(data.mftype === MFSchemeType.C) fmp += price;
+						} 
 					}
 				}
 			});

@@ -38,7 +38,8 @@ import {
 	UpdateUserHoldingsInput,
 	InstrumentInput,
 	CreateUserInsInput,
-	UpdateUserInsInput
+	UpdateUserInsInput,
+	PropertyType
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
 import { includesAny, initOptions } from '../utils';
@@ -222,13 +223,13 @@ function NWContextProvider() {
 					setData: setProperties,
 					total: totalProperties,
 					categoryOptions: {
-						P: "Plot",
-						A: "Apartment",
-						H: "Home",
-						C: "Condominium",	
-						O: "Office",
-						T: "Townhouse",
-						OTHER: 'Others'
+						[PropertyType.P]: "Plot",
+						[PropertyType.A]: "Apartment",
+						[PropertyType.H]: "Home",
+						[PropertyType.C]: "Condominium",	
+						[PropertyType.O]: "Office",
+						[PropertyType.T]: "Townhouse",
+						[PropertyType.OTHER]: 'Others'
 					},
 				},
 				[TAB.VEHICLE]: {
@@ -530,7 +531,7 @@ function NWContextProvider() {
 	};
 
 	const initializeHoldings = async () => {
-		initializeFamilyList();
+		await initializeFamilyList();
 		let allHoldings: CreateUserHoldingsInput | null = null;
 		let insHoldings: CreateUserInsInput | null = null;
 		try {
@@ -697,12 +698,12 @@ function NWContextProvider() {
 		updatedHoldings.crypto = crypto;
 		updatedHoldings.credit = credit; 
 		updatedHoldings.ins = insurance;
-		if(uname) updatedHoldings.uname = uname;
 		try {
-			if(uname) await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
-			else await addHoldings(updatedHoldings);
-			if (instruments.length > 0 && insUname)  await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
-			else if (instruments.length > 0) await addInsHoldings(updatedInsHoldings);
+			uname ? await updateHoldings(updatedHoldings as UpdateUserHoldingsInput) : await addHoldings(updatedHoldings);
+			if (instruments.length)  {
+				insUname ? await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput)
+						 : await addInsHoldings(updatedInsHoldings);
+			}
 			notification.success({message: 'Data saved', description: 'All holdings data has been saved.'})
 		} catch(e) {
 			notification.error({message: 'Unable to save holdings', description: 'Sorry! An unexpected error occurred while trying to save the data.'});
@@ -723,7 +724,6 @@ function NWContextProvider() {
 							const durLeft = record.pur.qty - (isMonth ? duration.months : duration.years);
 							if(durLeft > 0) {
 								const getCashFlows = Array(Math.round(durLeft)).fill(record.pur.amt);
-								console.log(getCashFlows);
 								const value = getNPV(record.chg, getCashFlows, 0, (isMonth ? true : false), true);
 								total += value;
 							}
@@ -813,11 +813,11 @@ function NWContextProvider() {
 					// @ts-ignore
 					const value = getCompoundedIncome(property.rate, property.mv, duration?.years);
 					total += value;
-					if(property.type === 'P') totalPlot += value;
-					if(property.type === 'OTHER') totalOtherProperty += value;
-					if(property.type === 'A' || property.type === 'H' || 
-						property.type === 'C' || property.type === 'T') totalResidential += value;
-					if(property.type === 'O') totalCommercial += value;
+					if(property.type === PropertyType.P) totalPlot += value;
+					if(property.type === PropertyType.OTHER) totalOtherProperty += value;
+					if(property.type === PropertyType.A || property.type === PropertyType.H || 
+						property.type === PropertyType.C || property.type === PropertyType.T) totalResidential += value;
+					if(property.type === PropertyType.O) totalCommercial += value;
 				}
 			}
 		})
