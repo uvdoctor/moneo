@@ -104,13 +104,13 @@ export default function NumberInput({
 			let allSortedKeys = allKeys
 				.map((k) => parseFloat(k))
 				.sort((a, b) => a - b);
-			let feedback: any = feedback[getClosestKey(val, allSortedKeys)];
-			if (!feedback || !feedback.label) {
+			let closestFeedback: any = feedback[getClosestKey(val, allSortedKeys)];
+			if (!closestFeedback || !closestFeedback.label) {
 				setSliderBorderColor("white");
 				setFeedbackText("");
 			} else {
-				setSliderBorderColor(feedback.color);
-				setFeedbackText(feedback.label);
+				setSliderBorderColor(closestFeedback.color);
+				setFeedbackText(closestFeedback.label);
 			}
 		}
 	};
@@ -121,15 +121,15 @@ export default function NumberInput({
 		min: minNum,
 		max: maxNum,
 		step: stepNum,
-		onChange: (val) => {
+		onChange: (val: number) => {
 			provideFeedback(val as number);
 			changeHandler(val as number);
 		},
-		formatter: (val) =>
+		formatter: (val: number) =>
 			currency
 				? toCurrency(val as number, currency as string)
 				: toReadableNumber(val as number, 2),
-		parser: (val) =>
+		parser: (val: string) =>
 			currency
 				? parseFloat(parseNumber(val as string, currency))
 				: parseFloat(val as string),
