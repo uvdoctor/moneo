@@ -182,6 +182,7 @@ export default function UploadHoldings() {
 			isFund(id) ? mfIds.push(id) : bondIds.push(id);
 		});
 		let allInsData: any = simpleStorage.get(LOCAL_INS_DATA_KEY);
+		if(!allInsData) allInsData = {};
 		let unmatchedIds: Array<string> | null = [];
 		if(mfIds.length) unmatchedIds = await loadInstrumentPrices(loadMatchingINMutual, mfIds, allInsData);
 		if(unmatchedIds?.length) exchangeIds.push(...unmatchedIds);
