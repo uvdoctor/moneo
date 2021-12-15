@@ -612,6 +612,7 @@ export const getInBondPrice = /* GraphQL */ `
       id
       sid
       name
+      type
       subt
       price
       exchg
@@ -650,6 +651,7 @@ export const listInBondPrices = /* GraphQL */ `
         id
         sid
         name
+        type
         subt
         price
         exchg

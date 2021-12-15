@@ -336,6 +336,7 @@ type INBondPrice
 	id: String!
 	sid: String!
 	name: String!
+	type: AssetType!
 	subt: AssetSubType!
 	price: Float!
 	exchg: Exchange!
