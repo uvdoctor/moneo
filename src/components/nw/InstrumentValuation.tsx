@@ -117,7 +117,7 @@ export default function InstrumentValuation() {
 
 	useEffect(() => {
 		setTotal();
-	},[ filteredInstruments, filteredInfo ]);
+	},[ filteredInstruments, filteredInfo, instruments ]);
 
 	useEffect(
 		() => {
