@@ -698,13 +698,12 @@ function NWContextProvider() {
 		updatedHoldings.crypto = crypto;
 		updatedHoldings.credit = credit; 
 		updatedHoldings.ins = insurance;
-		if(uname) updatedHoldings.uname = uname;
-		if(insUname) updatedInsHoldings.uname = insUname;
 		try {
-			if(uname) await updateHoldings(updatedHoldings as UpdateUserHoldingsInput);
-			else await addHoldings(updatedHoldings);
-			if (insUname)  await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput);
-			else await addInsHoldings(updatedInsHoldings);
+			uname ? await updateHoldings(updatedHoldings as UpdateUserHoldingsInput) : await addHoldings(updatedHoldings);
+			if (instruments.length)  {
+				insUname ? await updateInsHoldings(updatedInsHoldings as UpdateUserInsInput)
+						 : await addInsHoldings(updatedInsHoldings);
+			}
 			notification.success({message: 'Data saved', description: 'All holdings data has been saved.'})
 		} catch(e) {
 			notification.error({message: 'Unable to save holdings', description: 'Sorry! An unexpected error occurred while trying to save the data.'});
