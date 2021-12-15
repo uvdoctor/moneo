@@ -121,7 +121,7 @@ export default function FamilyInput() {
                         size="middle"
                         maxTagCount={1}
                     >
-                        {memberKeys.map((key: string) => (
+                        {memberKeys.length && memberKeys.map((key: string) => (
                             allFamily[key] && <Option key={key} value={key}>
                                 {console.log(key, "key")}
                                 {allFamily[key].name}
