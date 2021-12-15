@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, Fragment } from 'react';
-import { Button, Upload, Drawer, Tabs, Row, Badge, Col, Alert, Empty } from 'antd';
+import { Button, Upload, Drawer, Tabs, Row, Badge, Col, Alert, Empty, Spin } from 'antd';
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import { useFullScreenBrowser } from 'react-browser-hooks';
 import HoldingsTable from './HoldingsTable';
@@ -62,6 +62,7 @@ export default function UploadHoldings() {
 	const [ error, setError ] = useState<string>('');
 	const [ overwrite, setOverwrite ] = useState<number>(1);
 	const [ uploadedInstruments, setUploadedInstruments ] = useState<Array<any>>([]);
+	const [ loading, setLoading ] = useState<boolean>(false);
 
 	useEffect(() => setDrawerVisibility(!Object.keys(instruments).length), []);
 
@@ -197,6 +198,7 @@ export default function UploadHoldings() {
 		insMap: Map<string, number>,
 		currency: string,
 	) => {
+		setLoading(true);
 		await loadInstruments(Array.from(insMap.keys()));
 		let uploadedInstruments: Array<InstrumentInput> = [];
 		insMap.forEach((value: number, id: string) => {
@@ -207,6 +209,7 @@ export default function UploadHoldings() {
 				curr: currency
 			});
 		});
+		setLoading(false);
 		setShowInsUpload(true);
 		setUploadedInstruments([...uploadedInstruments]);
 	};
@@ -338,6 +341,16 @@ export default function UploadHoldings() {
 		);
 	};
 
+	const uploadContent = () => {
+		return (<><p className="ant-upload-drag-icon">
+			<InboxOutlined className="upload-icon" />
+		</p>
+		<p className="ant-upload-text">Click or drag the pdf file to this area to upload</p>
+		<p className="ant-upload-hint">
+			Supports single pdf upload only. Please upload the latest file to get relevant results.
+		</p></>)
+	}
+
 	return (
 		<Fragment>
 			<Button icon={<UploadOutlined />} onClick={onShowDrawer} type="primary">
@@ -355,13 +368,7 @@ export default function UploadHoldings() {
 				visible={showDrawer}
 			>
 				<Dragger {...getUploaderSettings(parseHoldings)}>
-					<p className="ant-upload-drag-icon">
-						<InboxOutlined className="upload-icon" />
-					</p>
-					<p className="ant-upload-text">Click or drag the pdf file to this area to upload</p>
-					<p className="ant-upload-hint">
-						Supports single pdf upload only. Please upload the latest file to get relevant results.
-					</p>
+					{loading ? <Spin tip='Loading...'/> : uploadContent()}
 				</Dragger>
 			</Drawer>
 			<Drawer
