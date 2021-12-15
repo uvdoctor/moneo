@@ -24,7 +24,7 @@ export default function ListHoldings({
 	subCategoryOptions,
 }: ListHoldingsProps) {
 	const { allFamily, selectedMembers , selectedCurrency }: any = useContext(NWContext);
-	const [ dataToRender, setDataToRender ] = useState<Array<HoldingInput>>([]);
+	const [ filteredHoldings, setFilteredHoldings ] = useState<Array<HoldingInput>>([]);
 
 	const changeOwner = (ownerKey: string, i: number) => {
 		data[i].fId = ownerKey;
@@ -37,7 +37,7 @@ export default function ListHoldings({
 	};
 
 	useEffect(() => {
-		setDataToRender([...data.filter((holding: HoldingInput) => doesHoldingMatch(holding, selectedMembers, selectedCurrency))]);
+		setFilteredHoldings([...data.filter((holding: HoldingInput) => doesHoldingMatch(holding, selectedMembers, selectedCurrency))]);
 	}, [selectedCurrency, selectedMembers, data])
 
 	return (
@@ -48,9 +48,9 @@ export default function ListHoldings({
 				{ xs: 10, sm: 10, md: 10 },
 			]}
 		>
-			{dataToRender &&
-				dataToRender[0] &&
-				dataToRender.map((holding: HoldingInput, i: number) => (
+			{filteredHoldings &&
+				filteredHoldings[0] &&
+				filteredHoldings.map((holding: HoldingInput, i: number) => (
 					<Fragment key={"" + i}>
 						<Col span={24} className="fields-divider" />
 						{React.createElement(viewComp, {

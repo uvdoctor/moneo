@@ -109,17 +109,24 @@ export const doesHoldingMatch = (
   doesMemberMatch(instrument, selectedMembers) &&
   instrument.curr === selectedCurrency;
 
-export const doesOwnershipMatch = (
-  owners: Array<OwnershipInput>,
-  allFamily: Array<string>,
+export const doesPropertyMatch = (
+    property: APIt.PropertyInput,
+    selectedMembers: Array<string>,
+    selectedCurrency: string
+  ) =>
+    doesPropertyOwnerMatch(property, selectedMembers) &&
+    property.curr === selectedCurrency;
+
+export const doesPropertyOwnerMatch = (
+  property: APIt.PropertyInput,
+  selectedMembers: Array<string>
 ) => {
-  const members = Object.keys(allFamily);
-  owners.map((item: OwnershipInput) => {
-    const data = members.includes(item.fId);
-    if(!data) return false;
-  })
-  return true;
-};
+  if(selectedMembers.indexOf(ALL_FAMILY) > -1) return true;
+  for(let owner of property.own) {
+    if(selectedMembers.indexOf(owner.fId) > -1) return true;
+  }
+  return false;
+}
 
 export const addMemberIfNeeded = async (
   allFamily: any,
