@@ -7,7 +7,7 @@ import {
 	addInsHoldings,
 	doesHoldingMatch,
 	doesMemberMatch,
-	doesOwnershipMatch,
+	doesPropertyMatch,
 	getCommodityRate,
 	getCryptoRate,
 	getNPSData,
@@ -806,20 +806,17 @@ function NWContextProvider() {
 		let totalResidential = 0;
 		let totalPlot = 0;
 		properties.forEach((property: PropertyInput) => {
-			if(allFamily){
-				if(property && doesOwnershipMatch(property.own, allFamily)) {
-					// @ts-ignore
-					const duration = getRemainingDuration(property.mvy, property.mvm);
-					// @ts-ignore
-					const value = getCompoundedIncome(property.rate, property.mv, duration?.years);
-					total += value;
-					if(property.type === PropertyType.P) totalPlot += value;
-					if(property.type === PropertyType.OTHER) totalOtherProperty += value;
-					if(property.type === PropertyType.A || property.type === PropertyType.H || 
-						property.type === PropertyType.C || property.type === PropertyType.T) totalResidential += value;
-					if(property.type === PropertyType.O) totalCommercial += value;
-				}
-			}
+			if(!doesPropertyMatch(property, selectedMembers, selectedCurrency)) return;
+			// @ts-ignore
+			const duration = getRemainingDuration(property.mvy, property.mvm);
+			// @ts-ignore
+			const value = getCompoundedIncome(property.rate, property.mv, duration?.years);
+			total += value;
+			if(property.type === PropertyType.P) totalPlot += value;
+			if(property.type === PropertyType.OTHER) totalOtherProperty += value;
+			if(property.type === PropertyType.A || property.type === PropertyType.H || 
+				property.type === PropertyType.C || property.type === PropertyType.T) totalResidential += value;
+			if(property.type === PropertyType.O) totalCommercial += value;
 		})
 		setTotalProperties(total);
 		setTotalOtherProperty(totalOtherProperty);
