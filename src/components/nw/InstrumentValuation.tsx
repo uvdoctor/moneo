@@ -139,7 +139,7 @@ export default function InstrumentValuation() {
 			const data = insData[instrument.id];
 			if(!data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
 				if (childTab === TAB.MF && instrument.id.startsWith("INF")) return instrument.id;
-				else if (childTab === TAB.STOCK) return instrument.id;
+				else if (childTab === TAB.STOCK && !instrument.id.startsWith("INF")) return instrument.id;
 			} 
 			if (data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {		
 				if (childTab === TAB.REIT) return data.itype === InsType.REIT;
