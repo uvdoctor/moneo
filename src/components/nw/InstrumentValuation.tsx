@@ -151,7 +151,7 @@ export default function InstrumentValuation() {
 				else if (childTab === TAB.ETF) return data.itype === InsType.ETF;
 				else if (childTab === TAB.MF) return isFund(instrument.id) && !data.itype;
 				else if (childTab === TAB.GOLDB) return data.subt === AssetSubType.GoldB;
-				else if (childTab === TAB.BOND) return data.type === AssetType.F && !data.itype && isBond(instrument.id);
+				else if (childTab === TAB.BOND) return data.type === AssetType.F;
 				else if (childTab === TAB.STOCK) return data.subt === AssetSubType.S && !isFund(instrument.id) && !isBond(instrument.id);
 			}
 		});
