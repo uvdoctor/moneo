@@ -37,6 +37,10 @@ export default function InstrumentValuation() {
 		Bonds: { tags: bondTags },
 	};
 
+	const isFund = (id: string) => id.substring(2, 3) === 'F';
+
+	const isBond = (id: string) => id.substring(2, 3) === '0';
+
 	const hasTags = (childTab: string) => [ TAB.STOCK, TAB.MF, TAB.BOND ].includes(childTab);
 
 	const delRecord = (id: string) => setInstruments([ ...instruments.filter((record: any) => record.id !== id) ]);
@@ -144,11 +148,11 @@ export default function InstrumentValuation() {
 			if (data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {		
 				if (childTab === TAB.REIT) return data.itype === InsType.REIT;
 				else if (childTab === TAB.OIT) return data.itype === InsType.InvIT;
-				else if (childTab === TAB.MF) return instrument.id.startsWith('INF') && !data.itype;
-				else if (childTab === TAB.STOCK) return data.subt === AssetSubType.S && !instrument.id.startsWith('INF');
-				else if (childTab === TAB.GOLDB) return data.subt === AssetSubType.GoldB;
-				else if (childTab === TAB.BOND) return data.type === AssetType.F && !data.itype && !instrument.id.startsWith('INF'); 
 				else if (childTab === TAB.ETF) return data.itype === InsType.ETF;
+				else if (childTab === TAB.MF) return isFund(instrument.id) && !data.itype;
+				else if (childTab === TAB.GOLDB) return data.subt === AssetSubType.GoldB;
+				else if (childTab === TAB.BOND) return data.type === AssetType.F && !data.itype && isBond(instrument.id);
+				else if (childTab === TAB.STOCK) return data.subt === AssetSubType.S && !isFund(instrument.id) && !isBond(instrument.id);
 			}
 		});
 		setFilteredInstruments([ ...filteredData ]);
