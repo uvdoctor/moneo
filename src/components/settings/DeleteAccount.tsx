@@ -6,7 +6,6 @@ import Text from 'antd/lib/typography/Text';
 import TextInput from '../form/textinput';
 import Auth from '@aws-amplify/auth';
 import { deleteContact } from '../userinfoutils';
-import { GoalContext } from '../goals/GoalContext';
 import { API, graphqlOperation, Storage } from 'aws-amplify';
 import * as mutations from '../../graphql/mutations';
 import { getGoalsList } from '../goals/goalutils';
@@ -14,69 +13,40 @@ import { getFamilysList } from '../nw/nwutils';
 
 export default function DeleteAccount() {
 	const { handleLogout, owner }: any = useContext(AppContext);
-	const { goalImgKey }: any = useContext(GoalContext);
 	const { validateCaptcha }: any = useContext(AppContext);
 	const [ loading, setLoading ] = useState<boolean>(false);
 	const [ isModalVisible, setIsModalVisible ] = useState<boolean>(false);
 	const [ input, setInput ] = useState<string>('');
 
-	const handleCancel = () => {
-		setIsModalVisible(false);
-	};
-
-	const showModal = () => {
-		setIsModalVisible(true);
-	};
-
-	const deleteGoal = async () => {
+	const deleteUserDetails = async (func: Function, mutation: String, type: String) => {
+		const goalImg = [];
 		try {
-			const goalList = await getGoalsList();
-			if (goalList) {
-				for (const goal of goalList) {
-					const result = await API.graphql(
-						graphqlOperation(mutations.deleteGoal, { input: { id: goal.id } })
-					);
-					console.log(result);
+			const listOfData = await func();
+			if (!listOfData) return;
+			for (let data of listOfData) {
+				if (type === 'Goals') {
+					goalImg.push(data.img);
+				}
+				// @ts-ignore
+				await API.graphql(graphqlOperation(mutations[mutation], { input: { id: data.id } }));
+			}
+			if (goalImg.length) {
+				for (let img of goalImg) {
+					if (!img) return;
+					await Storage.remove(img);
 				}
 			}
 		} catch (e) {
-			console.log('Error while deleting: ', e);
+			console.log(`Error while deleting: ${type}`, e);
 		}
 	};
 
-	const deleteFamilyList = async () => {
+	const deleteHoldings = async (uname: string, mutation: String, type: String) => {
 		try {
-			const familyList = await getFamilysList();
-			if (familyList) {
-				for (const family of familyList) {
-					const result = await API.graphql(
-						graphqlOperation(mutations.deleteFamily, { input: { id: family.id } })
-					);
-					console.log(result);
-				}
-			}
+			// @ts-ignore
+			const result = await API.graphql(graphqlOperation(mutations[mutation], { input: { uname: uname } }));
 		} catch (e) {
-			console.log('Error while deleting: ', e);
-		}
-	};
-
-	const deleteHoldings = async (uname: string) => {
-		try {
-			const result = await API.graphql(
-				graphqlOperation(mutations.deleteUserHoldings, { input: { uname: uname } })
-			);
-			console.log(result);
-		} catch (e) {
-			console.log('Error while deleting holdings: ', e);
-		}
-	};
-
-	const deleteInsHolding = async (uname: string) => {
-		try {
-			const result = await API.graphql(graphqlOperation(mutations.deleteUserIns, { input: { uname: uname } }));
-			console.log(result);
-		} catch (e) {
-			console.log('Error while deleting instrument holding: ', e);
+			console.log(`Error while deleting ${type}: `, e);
 		}
 	};
 
@@ -87,12 +57,11 @@ export default function DeleteAccount() {
 				validateCaptcha('delete_change').then(async (success: boolean) => {
 					if (!success) return;
 					const user = await Auth.currentAuthenticatedUser();
-					await deleteGoal();
-					await deleteHoldings(owner);
-					await deleteInsHolding(owner);
-					await deleteFamilyList();
+					await deleteUserDetails(getGoalsList, 'deleteGoal', 'Goals');
+					await deleteUserDetails(getFamilysList, 'deleteFamily', 'FamilyList');
+					await deleteHoldings(owner, 'deleteUserHoldings', 'AllHoldings');
+					await deleteHoldings(owner, 'deleteUserIns', 'Instrument Holdings');
 					user.attributes.profile ? await Storage.remove(user.attributes.profile) : null;
-					goalImgKey ? await Storage.remove(goalImgKey) : null;
 					await deleteContact(owner);
 					user.deleteUser((error: any, data: any) => {
 						if (error) {
@@ -121,7 +90,7 @@ export default function DeleteAccount() {
 
 	return (
 		<Fragment>
-			<Menu.Item onClick={showModal} key="delete">
+			<Menu.Item onClick={() => setIsModalVisible(true)} key="delete">
 				Delete Account
 			</Menu.Item>
 			<Modal
@@ -130,7 +99,7 @@ export default function DeleteAccount() {
 				onCancel={() => setIsModalVisible(false)}
 				okText={'Delete My Account'}
 				footer={[
-					<Button key="cancel" type="link" onClick={handleCancel}>
+					<Button key="cancel" type="link" onClick={() => setIsModalVisible(false)}>
 						Cancel
 					</Button>,
 					<Button

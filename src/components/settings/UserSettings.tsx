@@ -2,18 +2,17 @@ import { Alert, Col, Row, notification, Skeleton, Tabs, PageHeader, Button, Chec
 import React, { useContext, useState, useEffect } from "react";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { Auth } from "aws-amplify";
-import { isMobileDevice } from "../utils";
+import { countrylist, isMobileDevice } from "../utils";
 import { AppContext } from "../AppContext";
-import { countrylist } from "./CountryCode";
 import TextInput from "../form/textinput";
 import PasswordInput from "./PasswordInput";
-require("./Settings.less");
 import ImageInput from "./ImageInput";
 import { COLORS } from "../../CONSTANTS";
 import SaveOutlined from "@ant-design/icons/lib/icons/SaveOutlined";
 import OtpDialogue from "./OtpDialogue";
 import { doesEmailExist, doesImExist, doesMobExist, updateIm } from "../userinfoutils";
 import DatePickerInput from "../form/DatePickerInput";
+require("./Settings.less");
 
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha, owner }: any = useContext(AppContext);
