@@ -142,8 +142,8 @@ export default function InstrumentValuation() {
 		let filteredData: Array<InstrumentInput> = instruments.filter((instrument: InstrumentInput) => {
 			const data = insData[instrument.id];
 			if(!data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
-				if (childTab === TAB.MF && instrument.id.startsWith("INF")) return instrument.id;
-				else if (childTab === TAB.STOCK && !instrument.id.startsWith("INF")) return instrument.id;
+				if (childTab === TAB.MF && isFund(instrument.id)) return instrument.id;
+				else if (childTab === TAB.STOCK && !isFund(instrument.id)) return instrument.id;
 			} 
 			if (data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {		
 				if (childTab === TAB.REIT) return data.itype === InsType.REIT;
@@ -176,16 +176,20 @@ export default function InstrumentValuation() {
 				}
 			} 
 			else if (childTab === TAB.STOCK) {
-				if(data) {
-					return (selectedTags.includes(MCap.L) && data.meta && data?.meta.mcap === MCap.L ) || 
-					(selectedTags.includes(MCap.M) && data.meta && data?.meta.mcap === MCap.M ) ||
-					(selectedTags.includes(MCap.H) && data.meta && data?.meta.mcap === MCap.H ) ||
-					(selectedTags.includes(MCap.S) && data.meta && data?.meta.mcap === null ) 
+				if(data && data.meta) {
+					return (selectedTags.includes(MCap.L) && data?.meta?.mcap === MCap.L ) || 
+					(selectedTags.includes(MCap.M) && data?.meta?.mcap === MCap.M ) ||
+					(selectedTags.includes(MCap.H) && data?.meta?.mcap === MCap.H ) ||
+					(selectedTags.includes(MCap.S) && data?.meta?.mcap === null ) 
 				}
 			}
 			else if (childTab === TAB.BOND && data) {
-				if (selectedTags.includes(AssetSubType.GB)) return data?.subt === AssetSubType.GB || data?.subt === AssetSubType.GBO;
-				else return data?.subt === AssetSubType.CB; 
+				if (selectedTags.includes(AssetSubType.GB)) {
+					return data?.subt === AssetSubType.GB || data?.subt === AssetSubType.GBO;
+				}
+				else {
+					return data?.subt === AssetSubType.CB; 
+				}
 			}
 		});
 
