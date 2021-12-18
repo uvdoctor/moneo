@@ -3,7 +3,6 @@ import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 import { API } from 'aws-amplify';
 import { RegByImQuery, RegByMobQuery, RegByEmailQuery } from '../api/goals';
-import { float } from 'aws-sdk/clients/lightsail';
 
 export const doesEmailExist = async (email: string, authMode?: string) => {
 	let nextToken = null;
@@ -26,7 +25,7 @@ export const doesEmailExist = async (email: string, authMode?: string) => {
 	}
 };
 
-export const doesMobExist = async (mob: float) => {
+export const doesMobExist = async (mob: Number) => {
 	let nextToken = null;
 	try {
 		do {
@@ -46,7 +45,7 @@ export const doesMobExist = async (mob: float) => {
 	}
 };
 
-export const doesImExist = async (im: float) => {
+export const doesImExist = async (im: Number) => {
 	let nextToken = null;
 	try {
 		do {
@@ -66,7 +65,7 @@ export const doesImExist = async (im: float) => {
 	}
 };
 
-export const updateMobile = async (uname:string, mob: float) => {
+export const updateMobile = async (uname:string, mob: Number) => {
 	try {
 		const data = await API.graphql({
 			query: mutations.updateUserInfo,
@@ -78,7 +77,7 @@ export const updateMobile = async (uname:string, mob: float) => {
 	}
 };
 
-export const updateIm = async (uname: string, im: float) => {
+export const updateIm = async (uname: string, im: Number) => {
 	try {
 		const data = await API.graphql({
 			query: mutations.updateUserInfo,
