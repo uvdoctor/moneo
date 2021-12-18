@@ -1,6 +1,6 @@
 import { AmplifyAuthContainer, AmplifyAuthenticator, AmplifySection } from "@aws-amplify/ui-react";
 import { useForm } from "antd/lib/form/Form";
-import Amplify, { Auth, Hub } from "aws-amplify";
+import { Auth, Hub } from "aws-amplify";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { AuthState, Translations, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import { Alert, Checkbox, Row } from "antd";
@@ -11,13 +11,11 @@ import Nav from "./Nav";
 import { AppContext } from "./AppContext";
 import { Form, Input, Button } from "antd";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
-import awsconfig from '../aws-exports';
 
 interface BasicAuthenticatorProps {
   children: React.ReactNode;
 }
 
-Amplify.configure(awsconfig);
 Auth.configure({authenticationFlowType: "USER_PASSWORD_AUTH"});
 
 export default function BasicAuthenticator({ children }: BasicAuthenticatorProps) {

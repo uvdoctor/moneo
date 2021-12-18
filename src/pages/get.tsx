@@ -1,10 +1,10 @@
 import React from "react";
 import { NWContextProvider } from "../components/nw/NWContext";
 import Amplify from "aws-amplify";
-import awsmobile from "../aws-exports";
+import awsexports from "../aws-exports";
 import BasicPage from "../components/BasicPage";
 
-Amplify.configure(awsmobile);
+Amplify.configure({...awsexports, ssr: true});
 
 export default function Get() {
   return (

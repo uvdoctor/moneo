@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import * as mutations from '../../graphql/mutations';
-import awsconfig from '../../aws-exports';
-import Amplify, { API } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import { CreateFeedbackMutation } from '../../api/goals';
 import { Form, notification } from 'antd';
 import { sendMail } from '../utils';
@@ -9,7 +8,6 @@ import { AppContext } from '../AppContext';
 import { emailTemplate  } from '../../components/utils';
 import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
 
-Amplify.configure(awsconfig);
 const FeedbackContext = createContext({});
 
 interface FeedbackContextProviderProps {

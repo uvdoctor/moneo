@@ -1,10 +1,10 @@
 import { withAuthenticator } from "@aws-amplify/ui-react";
 import Amplify from "aws-amplify";
 import React from "react";
-import awsmobile from "../aws-exports";
+import awsexports from "../aws-exports";
 import BasicPage from "../components/BasicPage";
 
-Amplify.configure(awsmobile);
+Amplify.configure({...awsexports, ssr: true});
 
 const Invest = () => {
 	return (

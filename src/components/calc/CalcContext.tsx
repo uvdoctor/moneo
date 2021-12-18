@@ -22,17 +22,14 @@ import DynamicAAChart from '../goals/DynamicAAChart';
 import FIMonthlyInvTargetChart from './FIMonthlyInvTargetChart';
 import { AppContext } from '../AppContext';
 import * as mutations from '../../graphql/mutations';
-import awsconfig from '../../aws-exports';
 import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api-graphql';
-import Amplify, { API } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import { CALC_NAMES } from '../../CONSTANTS';
 import { FeedbackContext } from '../feedback/FeedbackContext';
 import { PlanContext } from '../goals/PlanContext';
 import FIPortfolioChart from '../goals/FIPortfolioChart';
 import { Modal } from 'antd';
 import { WarningOutlined } from '@ant-design/icons';
-
-Amplify.configure(awsconfig);
 
 const CalcContext = createContext({});
 

@@ -12,7 +12,6 @@ export const ROUTES = {
   ABOUT: "/about",
   CONTACT_US: "/contact-us",
   FEATURES: "/features",
-  IA: "/ia",
   SETTINGS: "/settings",
   TC: "/policies/terms-and-conditions",
   SECURITY: "/policies/security",

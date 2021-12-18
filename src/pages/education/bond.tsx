@@ -1,9 +1,5 @@
 import React from "react";
-import Amplify from "aws-amplify";
-import awsmobile from "../../aws-exports";
 import BasicPage from "../../components/BasicPage";
-
-Amplify.configure(awsmobile);
 
 export default function Bond() {
   return (
@@ -11,7 +7,7 @@ export default function Bond() {
       title="Bond"
       hideMenu
       noFooter
-      menuTitle={"Financial Education"}
+      menuTitle="Financial Education"
     >
         <h1>Finance</h1>
     </BasicPage>

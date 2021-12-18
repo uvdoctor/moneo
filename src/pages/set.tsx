@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import SetPlan from "../components/goals/SetPlan";
 import Amplify from "aws-amplify";
-import awsmobile from "../aws-exports";
+import awsexports from "../aws-exports";
 import { CreateGoalInput } from "../api/goals";
 import { PlanContextProvider } from "../components/goals/PlanContext";
 import BasicPage from "../components/BasicPage";
 
-Amplify.configure(awsmobile);
+Amplify.configure({...awsexports, ssr: true});
 
-const Set = () => {
+export default function Set() {
   const [goal, setGoal] = useState<CreateGoalInput | null>(null);
 
   return (
@@ -25,5 +25,3 @@ const Set = () => {
     </BasicPage>
   );
 };
-
-export default Set;
