@@ -180,31 +180,6 @@ export const getOrderByTabLabel = (tabOptions: Array<any>, label: string) => {
 	return null;
 };
 
-/*const createSellGoalInput = () => {
-    let nowYear = new Date().getFullYear()
-    return {
-        name: name,
-        sy: nowYear - 5,
-        ey: nowYear,
-        by: nowYear,
-        tdr: 0,
-        tdl: 0,
-        ccy: 'USD',
-        cp: 0,
-        chg: 3,
-        type: APIt.GoalType.S,
-        tgts: [],
-        dr: 6,
-        imp: APIt.LMH.L,
-        manual: 0,
-        amper: 2,
-        amsy: nowYear,
-        aiper: 0,
-        aisy: nowYear,
-        tbr: 0
-    }
-}*/
-
 export const isLoanEligible = (goalType: APIt.GoalType) =>
 	goalType !== APIt.GoalType.D && goalType !== APIt.GoalType.R && goalType !== APIt.GoalType.FF;
 
