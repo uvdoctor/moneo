@@ -18,7 +18,7 @@ interface OtpInputProps {
 	resendOtp?: Function;
 }
 
-export default function OtpDialogue(props: OtpInputProps) {
+export default function OtpDialogue({ onClickAction, disableButton, action, email, mob, resendOtp }: OtpInputProps) {
 	const { validateCaptcha, owner }: any = useContext(AppContext);
 	const [ isModalVisible, setIsModalVisible ] = useState<boolean>(false);
 	const [ loading, setLoading ] = useState<boolean>(false);
@@ -30,8 +30,11 @@ export default function OtpDialogue(props: OtpInputProps) {
 		Auth.verifyCurrentUserAttributeSubmit(attr, otp)
 			.then(async () => {
 				notification.success({ message: 'Otp Verified Successfully' });
-				if (attr === 'phone_number') await updateMobile(owner, props.mob);
-				else await updateEmail(owner, props.email);
+				if (attr === 'phone_number') {
+					await updateMobile(owner, mob);
+				} else {
+					await updateEmail(owner, email);
+				}
 				setLoading(false);
 				setIsModalVisible(false);
 			})
@@ -42,38 +45,30 @@ export default function OtpDialogue(props: OtpInputProps) {
 			});
 	};
 
-	const onFinish = () => {
-		setViewResendOtp(true);
-	};
-
-	const callResendOtp = async () => {
-		props.resendOtp && await props.resendOtp();
+	const callResendOtp = async (resendOtp: Function | undefined) => {
+		resendOtp && (await resendOtp());
 		setViewResendOtp(false);
 	};
 
-	const handleOk = () => {
+	const handleOk = (action: string) => {
 		setLoading(true);
-		confirmOtp(props.action);
+		confirmOtp(action);
 	};
 
 	const handleCancel = () => {
 		setLoading(false);
-    setViewResendOtp(false);
+		setViewResendOtp(false);
 		setIsModalVisible(false);
-	};
-
-	const showModal = () => {
-		setIsModalVisible(true);
 	};
 
 	const onClick = () => {
 		setLoading(true);
-		validateCaptcha(props.action).then(async (success: boolean) => {
+		validateCaptcha(action).then(async (success: boolean) => {
 			if (!success) return;
-			const data = await props.onClickAction();
+			const data = await onClickAction();
 			setLoading(false);
 			if (!data) return;
-			showModal();
+			setIsModalVisible(true);
 		});
 	};
 
@@ -84,31 +79,40 @@ export default function OtpDialogue(props: OtpInputProps) {
 					type="link"
 					style={{ color: COLORS.GREEN }}
 					icon={<SaveOutlined />}
-					disabled={props.disableButton}
+					disabled={disableButton}
 					onClick={onClick}
 					loading={loading}
 				/>
 			</Tooltip>
 			<Modal
-        centered={true}
+				centered={true}
 				title={'Enter Otp'}
 				visible={isModalVisible}
-        onCancel={handleCancel}
+				onCancel={handleCancel}
 				footer={[
-          <Button type="dashed" key="resend" onClick={callResendOtp}>
-            {viewResendOtp 
-              ? 'Resend Otp' 
-              : <Countdown
-                  valueStyle={{ fontSize: '15px', color:COLORS.GREEN}}
-                  value={targetTime}
-                  format={'mm:ss'}
-                  onFinish={onFinish}/>
-        }
-          </Button>,
+					<Button type="dashed" key="resend" onClick={() => callResendOtp(resendOtp)}>
+						{viewResendOtp ? (
+							'Resend Otp'
+						) : (
+							<Countdown
+								valueStyle={{ fontSize: '15px', color: COLORS.GREEN }}
+								value={targetTime}
+								format={'mm:ss'}
+								onFinish={() => setViewResendOtp(true)}
+							/>
+						)}
+					</Button>,
 					<Button type="link" key="cancel" onClick={handleCancel}>
-            Cancel
-          </Button>,
-					<Button type="primary" key="submit" onClick={handleOk} icon={<SaveOutlined />} disabled={!otp} loading={loading}>
+						Cancel
+					</Button>,
+					<Button
+						type="primary"
+						key="submit"
+						onClick={() => handleOk(action)}
+						icon={<SaveOutlined />}
+						disabled={!otp}
+						loading={loading}
+					>
 						Submit
 					</Button>
 				]}
