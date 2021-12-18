@@ -45,7 +45,7 @@ export default function OtpDialogue({ onClickAction, disableButton, action, emai
 			});
 	};
 
-	const callResendOtp = async (resendOtp: Function | undefined) => {
+	const callResendOtp = async () => {
 		resendOtp && (await resendOtp());
 		setViewResendOtp(false);
 	};
@@ -90,7 +90,7 @@ export default function OtpDialogue({ onClickAction, disableButton, action, emai
 				visible={isModalVisible}
 				onCancel={handleCancel}
 				footer={[
-					<Button type="dashed" key="resend" onClick={() => callResendOtp(resendOtp)}>
+					<Button type="dashed" key="resend" onClick={callResendOtp}>
 						{viewResendOtp ? (
 							'Resend Otp'
 						) : (
