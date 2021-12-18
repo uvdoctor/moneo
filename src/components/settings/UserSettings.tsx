@@ -53,74 +53,42 @@ export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha, owner }: any = useContext(AppContext);
   const [userState, dispatch] = useReducer(userReducer, initialState);
   const { email, mobile, error, name, lastName, prefuser, dob, whatsapp } = userState;
-  const { TabPane } = Tabs;
   const fsb = useFullScreenBrowser();
+  const { TabPane } = Tabs;
+
+  const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
+  const counCodeWithOutPlusSign = counCode?.value.slice(1);
 
   const success = (message: any) => notification.success({ message });
   const failure = (message: any) => notification.error({ message });
-
-  const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
   const disableButton = (prevValue: any, currValue: any) => prevValue === currValue ? true : error.length > 0 ? true : false;
 
-  const counCodeWithOutPlusSign = counCode?.value.slice(1);
-
   const sendOtp = async () => {
-    const data = await Auth.resendSignUp(user?.attributes?.phone_number);
-    console.log(data);
+    await Auth.resendSignUp(user?.attributes?.phone_number);
   }
 
-  const updatePhoneNumber = async () => {
+  const updateAccountTab = async (input: string, func: Function, attr: String, updateAttr: any) => {
     try {
-      const mob = parseFloat(counCodeWithOutPlusSign+mobile);
-      const exist = await doesMobExist(mob);
-      if(exist) { 
-        failure('Please use another mobile as this one is already used by another account.');
+      const data = attr === "Email" ? input : Number(counCodeWithOutPlusSign+input);
+      if(await func(data)) { 
+        failure(`${attr} is already used by another account`);
         return false;
       }
-      await Auth.updateUserAttributes(user, { phone_number: counCode?.value+mobile });
-      success("Mobile number updated successfully. Enter Otp to verify");
-      return true;
-    } catch (error) {
-      failure(`Unable to update, ${error}`);
-    }
-  };
-
-  const updateWhatsapp = async (number: string) => {
-    try {
-      const im = parseFloat(counCodeWithOutPlusSign+number);
-      const exist = await doesImExist(im);
-      if(exist) { 
-        failure('Please use another whatsapp number as this one is already used by another account.');
-        return false;
-      };
-      await Auth.updateUserAttributes(user, { nickname: counCode?.value+number });
-      success("Whatsapp number updated successfully. Enter Otp to verify");
-      await updateIm(owner, im);
-      return true;
-    } catch (error) {
-      failure(`Unable to update, ${error}`);
-    }
-  };
-
-  const updateEmail = async () => {
-    try {
-      const exist = await doesEmailExist(email);
-      if(exist) { 
-        failure('Please use another email address as this one is already used by another account.');
-        return false;
+      await Auth.updateUserAttributes(user, updateAttr );
+      success(`${attr} updated successfully. Enter Otp to verify`);
+      if(attr === "Whatsapp Number") {
+        await updateIm(owner, data as number);
       }
-      await Auth.updateUserAttributes(user, { email: email });
-      success("Email updated successfully. Enter Otp to verify");
       return true;
     } catch (error) {
       failure(`Unable to update, ${error}`);
     }
-  };
+  }
 
   const updateImIfSameAsMob = async () => {
     if(user?.attributes?.phone_number) {
       dispatch({ type: "userUpdate", data: { whatsapp: mobile }});
-      await updateWhatsapp(mobile);
+      await updateAccountTab(mobile, doesImExist, "Whatsapp Number", { nickname: counCode?.value+mobile });
     }else{
       failure('Update your mobile, your mobile number is empty.');
     }
@@ -289,9 +257,8 @@ export default function UserSettings(): JSX.Element {
                         <OtpDialogue
                           disableButton={disableButton(user?.attributes?.phone_number, counCode?.value+mobile)}
                           action={"phone_number"}
-                          email={email}
                           mob={parseFloat(counCodeWithOutPlusSign+mobile)}
-                          onClickAction={updatePhoneNumber}
+                          onClickAction={()=>updateAccountTab(mobile, doesMobExist, "Mobile Number", { phone_number: counCode?.value+mobile })}
                           resendOtp={sendOtp}             
                         />
                       }
@@ -320,11 +287,10 @@ export default function UserSettings(): JSX.Element {
                       maxLength={10}
                       post={
                         <OtpDialogue
-                          disableButton={disableButton(user?.attributes?.nickname, counCode?.value+mobile)}
+                          disableButton={disableButton(user?.attributes?.nickname, counCode?.value+whatsapp)}
                           action={"whatsapp_number"}
-                          email={email}
                           im={parseFloat(counCodeWithOutPlusSign+mobile)}
-                          onClickAction={()=>updateWhatsapp(whatsapp)}              
+                          onClickAction={()=>updateAccountTab(whatsapp, doesImExist, "Whatsapp Number", { nickname: counCode?.value+whatsapp })}              
                         />}
                     />
                   </Col>
@@ -344,7 +310,7 @@ export default function UserSettings(): JSX.Element {
                         <OtpDialogue
                           disableButton={disableButton(email, user?.attributes?.email)}
                           action={"email"}
-                          onClickAction={updateEmail}
+                          onClickAction={()=>updateAccountTab(email, doesEmailExist, "Email", { email: email })}
                           email={email}
                           mob={parseFloat(counCodeWithOutPlusSign + mobile)}
                           im={parseFloat(counCodeWithOutPlusSign + whatsapp)}
