@@ -15,7 +15,7 @@ export interface CustomDocProps {
 }
 
 class CustomDoc extends NextDocument<CustomDocProps> {
-	static async getInitialProps(ctx: DocumentContext) {
+	static async getStaticProps(ctx: DocumentContext) {
 		const initialProps = await NextDocument.getInitialProps(ctx);
 		const isProduction = process.env.NODE_ENV === "production";
 		return {
