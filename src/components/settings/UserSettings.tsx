@@ -1,5 +1,5 @@
 import { Alert, Col, Row, notification, Skeleton, Tabs, PageHeader, Button, Checkbox } from "antd";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect, useReducer } from "react";
 import { useFullScreenBrowser } from "react-browser-hooks";
 import { Auth } from "aws-amplify";
 import { countrylist, isMobileDevice } from "../utils";
@@ -14,16 +14,45 @@ import { doesEmailExist, doesImExist, doesMobExist, updateIm } from "../userinfo
 import DatePickerInput from "../form/DatePickerInput";
 require("./Settings.less");
 
+const initialState = {
+  email: "",
+  mobile: "",
+  error: "",
+  name: "",
+  lastName: "",
+  prefuser: "",
+  dob: "",
+  whatsapp: "",
+}
+
+const userReducer = ( userState: any, { type, data }: { type: string; data: any }) => {
+  switch (type) {
+    case "reset":
+      return {
+        ...userState,
+        ...{
+          email: "",
+          mobile: "",
+          error: "",
+          name: "",
+          lastName: "",
+          prefuser: "",
+          dob: "",
+          whatsapp: "",
+        },
+      };
+    default:
+      return {
+        ...userState,
+        ...data,
+      };
+  }  
+};
+
 export default function UserSettings(): JSX.Element {
   const { user, appContextLoaded, defaultCountry, validateCaptcha, owner }: any = useContext(AppContext);
-  const [email, setEmail] = useState<string>("");
-  const [mobile, setMobile] = useState<any>('');
-  const [error, setError] = useState<any>("");
-  const [name, setName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [prefuser, setPrefuser] = useState<string>('');
-  const [dob, setDob] = useState<string>();
-  const [whatsapp, setWhatsapp] = useState<string>('');
+  const [userState, dispatch] = useReducer(userReducer, initialState);
+  const { email, mobile, error, name, lastName, prefuser, dob, whatsapp } = userState;
   const { TabPane } = Tabs;
   const fsb = useFullScreenBrowser();
 
@@ -36,7 +65,7 @@ export default function UserSettings(): JSX.Element {
   const counCodeWithOutPlusSign = counCode?.value.slice(1);
 
   const sendOtp = async () => {
-    const data = await Auth.resendSignUp(user?.attributes.phone_number);
+    const data = await Auth.resendSignUp(user?.attributes?.phone_number);
     console.log(data);
   }
 
@@ -56,15 +85,15 @@ export default function UserSettings(): JSX.Element {
     }
   };
 
-  const updateWhatsapp = async () => {
+  const updateWhatsapp = async (number: string) => {
     try {
-      const im = parseFloat(counCodeWithOutPlusSign+whatsapp);
+      const im = parseFloat(counCodeWithOutPlusSign+number);
       const exist = await doesImExist(im);
       if(exist) { 
         failure('Please use another whatsapp number as this one is already used by another account.');
         return false;
       };
-      await Auth.updateUserAttributes(user, { nickname: counCode?.value+whatsapp });
+      await Auth.updateUserAttributes(user, { nickname: counCode?.value+number });
       success("Whatsapp number updated successfully. Enter Otp to verify");
       await updateIm(owner, im);
       return true;
@@ -89,9 +118,9 @@ export default function UserSettings(): JSX.Element {
   };
 
   const updateImIfSameAsMob = async () => {
-    if(user?.attributes.phone_number) {
-      setWhatsapp(mobile);
-      await updateWhatsapp();
+    if(user?.attributes?.phone_number) {
+      dispatch({ type: "userUpdate", data: { whatsapp: mobile }});
+      await updateWhatsapp(mobile);
     }else{
       failure('Update your mobile, your mobile number is empty.');
     }
@@ -99,7 +128,7 @@ export default function UserSettings(): JSX.Element {
 
   const updatePrefUsername = async () => {
     try {
-      await Auth.updateUserAttributes(user, { preferred_username:prefuser });
+      await Auth.updateUserAttributes(user, { preferred_username: prefuser });
       success("Preferred username updated successfully");
     } catch (error) {
       failure(`Unable to update ${error}`);
@@ -117,13 +146,16 @@ export default function UserSettings(): JSX.Element {
   
   useEffect(() => {
     if (!user) return;
-    setEmail(user?.attributes.email || '');
-    setName(user?.attributes.name || '');
-    setLastName(user?.attributes.family_name || '');
-    setDob(user?.attributes.birthdate || '');
-    setPrefuser(user?.attributes.preferred_username || '');
-    user?.attributes.nickname && setWhatsapp(user?.attributes.nickname.replace(counCode?.value, ""));
-    user?.attributes.phone_number && setMobile(user?.attributes.phone_number.replace(counCode?.value, ""));
+    const mobile = user?.attributes?.phone_number ? user?.attributes?.phone_number.replace(counCode?.value, "") : '';
+    const whatsapp = user?.attributes?.nickname ? user?.attributes?.nickname.replace(counCode?.value, "") : '';
+    dispatch({ type: "userUpdate", data: { 
+      email: user?.attributes?.email || '',
+      mobile: mobile,
+      name: user?.attributes?.name || '',
+      lastName: user?.attributes?.family_name || '',
+      prefuser: user?.attributes?.preferred_username || '',
+      dob: user?.attributes?.birthdate || '',
+      whatsapp: whatsapp }});
   }, [appContextLoaded, counCode?.value, user]);
 
   return (
@@ -156,11 +188,11 @@ export default function UserSettings(): JSX.Element {
                           pre="First Name"
                           placeholder="Name"
                           value={name}
-                          changeHandler={setName}
+                          changeHandler={(value: any)=>dispatch({ type: "userUpdate", data: { name: value}})}
                           width={300}
                           minLength={2}
                           maxLength={20}
-                          setError={setError}
+                          setError={(value: any)=>dispatch({ type: "userUpdate", data: { error: value}})}
                           fieldName="firstname"
                           pattern="^[a-zA-Z'-.,]+$"
                         />
@@ -173,11 +205,11 @@ export default function UserSettings(): JSX.Element {
                           pre="Last Name"
                           placeholder="Last Name"
                           value={lastName}
-                          changeHandler={setLastName}
+                          changeHandler={(value: any)=>dispatch({ type: "userUpdate", data: { lastName: value}})}
                           width={300}
                           minLength={2}
                           maxLength={20}
-                          setError={setError}
+                          setError={(value: any)=>dispatch({ type: "userUpdate", data: { error: value}})}
                           fieldName="lastname"
                           pattern="^[a-zA-Z'-.,]+$"
                         />
@@ -186,7 +218,7 @@ export default function UserSettings(): JSX.Element {
                     <span>&nbsp;</span>
                     <Row justify="center">
                       <Col>
-                        <DatePickerInput title={"Date of birth"} className="dob" defaultVal={user?.attributes.birthdate} changeHandler={setDob}/>
+                        <DatePickerInput title={"Date of birth"} className="dob" defaultVal={user?.attributes?.birthdate} changeHandler={(value: any)=>dispatch({ type: "userUpdate", data: { dob: value}})}/>
                       </Col>
                     </Row>
                     <p>&nbsp;</p>
@@ -220,9 +252,9 @@ export default function UserSettings(): JSX.Element {
                     <TextInput
                       pre="Login Name"
                       value={prefuser}
-                      changeHandler={setPrefuser}
+                      changeHandler={(value: any)=>dispatch({ type: "userUpdate", data: { prefuser: value}})}
                       fieldName="prefusername"
-                      setError={setError}
+                      setError={(value: any)=>dispatch({ type: "userUpdate", data: { error: value}})}
                       post={
                         <Button
                           type="link"
@@ -247,15 +279,15 @@ export default function UserSettings(): JSX.Element {
                       pre="Mobile"
                       prefix={counCode?.value}
                       value={mobile}
-                      changeHandler={setMobile}
+                      changeHandler={(value: any)=>dispatch({ type: "userUpdate", data: { mobile: value}})}
                       fieldName="mobile"
                       pattern="^[0-9]"
-                      setError={setError}
+                      setError={(value: any)=>dispatch({ type: "userUpdate", data: { error: value}})}
                       minLength={10}
                       maxLength={10}
                       post={
                         <OtpDialogue
-                          disableButton={disableButton(user?.attributes.phone_number, counCode?.value+mobile)}
+                          disableButton={disableButton(user?.attributes?.phone_number, counCode?.value+mobile)}
                           action={"phone_number"}
                           email={email}
                           mob={parseFloat(counCodeWithOutPlusSign+mobile)}
@@ -280,19 +312,19 @@ export default function UserSettings(): JSX.Element {
                       pre="Whatsapp"
                       prefix={counCode?.value}
                       value={whatsapp}
-                      changeHandler={setWhatsapp}
+                      changeHandler={(value: any)=>dispatch({ type: "userUpdate", data: { whatsapp: value}})}
                       fieldName="whatsapp"
                       pattern="^[0-9]"
-                      setError={setError}
+                      setError={(value: any)=>dispatch({ type: "userUpdate", data: { error: value}})}
                       minLength={10}
                       maxLength={10}
                       post={
                         <OtpDialogue
-                          disableButton={disableButton(user?.attributes.nickname, counCode?.value+mobile)}
+                          disableButton={disableButton(user?.attributes?.nickname, counCode?.value+mobile)}
                           action={"whatsapp_number"}
                           email={email}
                           im={parseFloat(counCodeWithOutPlusSign+mobile)}
-                          onClickAction={updateWhatsapp}              
+                          onClickAction={()=>updateWhatsapp(whatsapp)}              
                         />}
                     />
                   </Col>
@@ -304,13 +336,13 @@ export default function UserSettings(): JSX.Element {
                       pre="Email Id"
                       placeholder={"abc@xyz.com"}
                       value={email}
-                      changeHandler={setEmail}
+                      changeHandler={(value: any)=>dispatch({ type: "userUpdate", data: { email: value}})}
                       pattern={"^(?!.*(?:.-|-.))[^@]+@[^W_](?:[w-]*[^W_])?(?:.[^W_](?:[w-]*[^W_])?)+$"}
-                      setError={setError}
+                      setError={(value: any)=>dispatch({ type: "userUpdate", data: { error: value}})}
                       fieldName="email"
                       post={
                         <OtpDialogue
-                          disableButton={disableButton(email, user?.attributes.email)}
+                          disableButton={disableButton(email, user?.attributes?.email)}
                           action={"email"}
                           onClickAction={updateEmail}
                           email={email}
