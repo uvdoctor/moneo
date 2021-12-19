@@ -79,11 +79,11 @@ export default function AddHoldingInput({
 				newRec.type = AssetType.F;
 				newRec.name = name;
 				newRec.pur = {
-						amt: qty,
-						month: today.getMonth() + 1,
-						year: today.getFullYear(),
-						qty: 1
-					};
+					amt: qty,
+					month: today.getMonth() + 1,
+					year: today.getFullYear(),
+					qty: 1
+				};
 				break;
 			case VEHICLE:
 				newRec.chg = 15;
@@ -271,10 +271,9 @@ export default function AddHoldingInput({
 						</FormItem>
 					</Col>
 				)}
-
 				{hasDate(childTab) && (
 					<Col xs={24} md={12}>
-						<FormItem label={`Date & ${hasDuration(childTab) ? 'Duration' : ''}`}>
+						<FormItem label={'Date'}>
 							<Row gutter={[ 10, 0 ]}>
 								<Col>
 									<DatePickerInput
@@ -285,7 +284,15 @@ export default function AddHoldingInput({
 										size={'middle'}
 									/>
 								</Col>
-								{hasDuration(childTab) && (
+							</Row>
+						</FormItem>
+					</Col>
+				)}
+				{hasDuration(childTab) && (
+					<Col xs={24} md={12}>
+						<FormItem label={'Duration'}>
+							<Row gutter={[ 10, 0 ]}>
+								<Col>
 									<Duration
 										value={duration}
 										changeHandler={changeDuration}
@@ -298,7 +305,7 @@ export default function AddHoldingInput({
 											) : null
 										}
 									/>
-								)}
+								</Col>
 							</Row>
 						</FormItem>
 					</Col>
@@ -306,7 +313,16 @@ export default function AddHoldingInput({
 				{hasRate(childTab) && (
 					<Col xs={24} md={12}>
 						<FormItem label="Rate">
-							<NumberInput pre={''} min={1} max={50} value={rate} changeHandler={changeRate} step={0.1} noSlider unit='%'/>
+							<NumberInput
+								pre={''}
+								min={1}
+								max={50}
+								value={rate}
+								changeHandler={changeRate}
+								step={0.1}
+								noSlider
+								unit="%"
+							/>
 						</FormItem>
 					</Col>
 				)}
