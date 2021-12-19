@@ -24,15 +24,15 @@ export const isValidPAN = (val: string) =>
 	val.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/);
 
 export const extractPAN = (val: string) => {
-	let values = val.split("PAN");
-	if(values.length < 2) return null;
-	let value = values[1].trim();
-	if(value.length < 10) return null;
-	for(let i = 0; i < value.length; i++) {
-		let asciiVal = value.charCodeAt(i);
-		if(asciiVal > 64 && asciiVal < 91 && (value.length - i > 9)) {
-			let panStr = value.substring(i, i + 10);
-			if(isValidPAN(panStr)) return panStr;
+	let values = val.split(" ");
+	for(let value of values) {
+		if(value.length < 10) continue;
+		for(let i = 0; i < value.length; i++) {
+			let asciiVal = value.charCodeAt(i);
+			if(asciiVal > 64 && asciiVal < 91 && (value.length - i > 9)) {
+				let panStr = value.substring(i, i + 10);
+				if(isValidPAN(panStr)) return panStr;
+			}
 		}
 	}
 	return null;
