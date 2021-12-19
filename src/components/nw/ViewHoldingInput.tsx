@@ -162,16 +162,22 @@ export default function ViewHoldingInput({
 				</Col>
 			) : (
 				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
-					<NumberInput
-						pre={hasPF(childTab) ? "Contribution per year" : "Amount"}
-						min={10}
-						max={100000000}
-						value={record.pur ? record.pur.amt : record.qty}
-						changeHandler={(val: number) => changeQty(val)}
-						currency={record.curr as string}
-						step={1}
-						noSlider
-					/>
+					<Row align="middle" gutter={[5, 0]}>
+						<Col>{hasPF(childTab) ? "Contribution per year" : "Amount"}</Col>
+						<Col>
+							<NumberInput
+								isBasic={true}
+								pre=""
+								min={10}
+								max={100000000}
+								value={record.pur ? record.pur.amt : record.qty}
+								changeHandler={(val: number) => changeQty(val)}
+								currency={record.curr as string}
+								step={1}
+								noSlider
+							/>
+						</Col>
+					</Row>
 				</Col>
 			)}
 			{hasRate(childTab) && (

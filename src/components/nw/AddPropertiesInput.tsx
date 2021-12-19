@@ -46,7 +46,9 @@ export default function AddPropertyInput({
 	);
 	const [rate, setRate] = useState<number>(8);
 	const [amount, setAmount] = useState<number>(0);
-	const [purchaseDate, setPurchaseDate] = useState<string>(`Apr-${new Date().getFullYear() - 5}`);
+	const [purchaseDate, setPurchaseDate] = useState<string>(
+		`Apr-${new Date().getFullYear() - 5}`
+	);
 	const [city, setCity] = useState<string>("");
 	const [address, setAddress] = useState<string>("");
 	const [mv, setMv] = useState<number>(0);
@@ -224,8 +226,8 @@ export default function AddPropertyInput({
 	const changeMv = (val?: number) => {
 		val
 			? setMv(val)
-			// @ts-ignore
-			: setMv(Math.round(getCompoundedIncome(rate, amount, duration())));
+			: // @ts-ignore
+			  setMv(Math.round(getCompoundedIncome(rate, amount, duration())));
 		setMvm(new Date().getMonth() + 1);
 		setMvy(new Date().getFullYear());
 		let rec = getNewRec();
@@ -294,6 +296,7 @@ export default function AddPropertyInput({
 				<Col xs={24} md={12}>
 					<FormItem label="Purchase Amount">
 						<NumberInput
+							isBasic={true}
 							pre=""
 							min={1}
 							max={1000000000}
@@ -319,6 +322,7 @@ export default function AddPropertyInput({
 				<Col xs={24} md={12}>
 					<FormItem label="Appreciation Rate">
 						<NumberInput
+							isBasic={true}
 							pre={""}
 							min={1}
 							max={50}
@@ -333,6 +337,7 @@ export default function AddPropertyInput({
 				<Col xs={24} md={12}>
 					<FormItem label="Market Value">
 						<NumberInput
+							isBasic={true}
 							pre=""
 							min={1}
 							max={1000000000}

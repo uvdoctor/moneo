@@ -124,19 +124,15 @@ export default function UploadHoldings() {
 	const loadInstrumentPrices = async (fun: Function, ids: Array<string>, allInsData: any) => {
 		if (!ids.length) return null;
 		for(let id of ids) {
-			if(!allInsData[id]) {
-				let matchingList: Array<any> | null = await fun(ids);
-				let unmatched: Array<string> = [];
-				ids.forEach((id: string) => {
-					let matchingEntry: InstrumentInput | null = allInsData[id] ? allInsData[id] : null;
-					if (!matchingEntry && matchingList && matchingList.length) {
-						matchingEntry = matchingList?.find((match) => match?.id === id) }
-					if (matchingEntry) {
-						allInsData[id] = matchingEntry;
-					} else unmatched.push(id);
-				});
-				return unmatched;
-			}
+			if(allInsData[id]) continue;
+			let matchingList: Array<any> | null = await fun(ids);
+			let unmatched: Array<string> = [];
+			ids.forEach((id: string) => {
+				let matchingEntry: InstrumentInput | null = matchingList?.find((match) => match?.id === id); 
+				if (matchingEntry) allInsData[id] = matchingEntry;
+				else unmatched.push(id);
+			});
+			return unmatched;
 		}
 		return null;
 	};
@@ -223,7 +219,6 @@ export default function UploadHoldings() {
 		let lastQtyCapture: number | null = null;
 		let fv: number | null = null;
 		let hasFV = false;
-		let hasData = false;
 		let taxId: string | null = null;
 		let insMap: Map<string, number> = new Map();
 		let eof = false;
@@ -258,6 +253,7 @@ export default function UploadHoldings() {
 				if (value.length >= 10 && value.length < 100 && !taxId) {
 					taxId = extractPAN(value);
 					if (taxId) {
+						console.log("Detected PAN: ", taxId);
 						setTaxId(taxId);
 						continue;
 					}
@@ -287,9 +283,15 @@ export default function UploadHoldings() {
 					lastQtyCapture = null;
 					continue;
 				}
-				if (holdingStarted && !hasData && !isin && includesAny(value, [ 'face value', 'coupon rate' ])) {
-					hasFV = true;
-					continue;
+				console.log("Value: ", value);
+				if (holdingStarted && !isin) {
+					if(includesAny(value, [ 'nav', 'bonds', 'face value per bond', 'face value per unit' ])) {
+						hasFV = false;
+						continue;
+					} else if(includesAny(value, [ 'face value', 'coupon rate' ])) {
+						hasFV = true;
+						continue;
+					}
 				}
 				if(!isin) {
 					isin = extractISIN(value);
@@ -323,7 +325,6 @@ export default function UploadHoldings() {
 				insMap.set(isin, quantity);
 				isin = null;
 				quantity = null;
-				hasData = true;
 			}
 		}
 		if (!taxId) {
