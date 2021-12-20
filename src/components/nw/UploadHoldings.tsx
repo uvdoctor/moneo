@@ -213,41 +213,17 @@ export default function UploadHoldings() {
 	const parseHoldings = async (pdf: any) => {
 		let insType: string | null = null;
 		let holdingStarted = false;
-		let recordBroken = false;
 		let isin: string | null = null;
 		let quantity: number | null = null;
-		let lastQtyCapture: number | null = null;
 		let fv: number | null = null;
-		let hasFV = false;
+		let skipFirstNumber = false;
 		let taxId: string | null = null;
 		let insMap: Map<string, number> = new Map();
 		let eof = false;
 		for (let i = 1; i <= pdf.numPages && !eof; i++) {
-			lastQtyCapture = null;
-			if (i > 1) {
-				if (
-					insMap.size && isin && !quantity
-				) {
-					recordBroken = true;
-					console.log('Detected broken record...');
-				} else recordBroken = false;
-				if (!recordBroken) {
-					isin = null;
-					quantity = null;
-				}
-			}
 			const page = await pdf.getPage(i);
 			const textContent = await page.getTextContent();
 			for (let j = 0; j < textContent.items.length; j++) {
-				if (
-					quantity &&
-					((!recordBroken && lastQtyCapture === null) || (lastQtyCapture !== null && j - lastQtyCapture > 9))
-				) {
-					console.log('Detected unrelated qty capture: ', lastQtyCapture);
-					quantity = null;
-					lastQtyCapture = null;
-					fv = null;
-				}
 				let value = textContent.items[j].str.trim();
 				if (!value.length) continue;
 				if (value.length >= 10 && value.length < 100 && !taxId) {
@@ -280,16 +256,15 @@ export default function UploadHoldings() {
 					isin = null;
 					quantity = null;
 					holdingStarted = false;
-					lastQtyCapture = null;
 					continue;
 				}
 				console.log("Value: ", value);
 				if (holdingStarted && !isin) {
 					if(includesAny(value, [ 'nav', 'bonds', 'face value per bond', 'face value per unit' ])) {
-						hasFV = false;
+						skipFirstNumber = false;
 						continue;
 					} else if(includesAny(value, [ 'face value', 'coupon rate' ])) {
-						hasFV = true;
+						skipFirstNumber = true;
 						continue;
 					}
 				}
@@ -299,30 +274,31 @@ export default function UploadHoldings() {
 						console.log('Detected ISIN: ', isin);
 						quantity = null;
 						fv = null;
-						recordBroken = false;
 						insType = getInsTypeFromISIN(isin as string, insType);
 					}
 				}
 				if (!isin) continue;
 				let qty: number | null = getQty(value);
-				if (!qty) continue;
-				if (insType === 'M' && !value.includes('.')) continue;
-				if (hasFV && !fv && (insType === AssetSubType.S || insType === AssetType.F)) {
+				console.log("Quantity parsed: ", qty);
+				if (qty == null) continue;
+				//if (insType === 'M' && !value.includes('.')) continue;
+				if (skipFirstNumber && fv == null) {
 					console.log('Detected fv: ', qty);
 					fv = qty;
 					continue;
 				}
-				if (insType === AssetType.F && !Number.isInteger(qty)) continue;
+				//if (insType === AssetType.F && !Number.isInteger(qty)) continue;
 				console.log('Detected quantity: ', qty);
-				lastQtyCapture = j;
-				quantity = qty;
-				if (hasFV) fv = null;
-				if (insMap.has(isin)) {
-					const qty = insMap.get(isin);
-					if(qty) quantity += qty;
-					insMap.delete(isin);
+				if(qty) {
+					
 				}
+				quantity = qty;
+				if (quantity && insMap.has(isin)) {
+
+				}
+					quantity += insMap.get(isin) as number;
 				insMap.set(isin, quantity);
+				if (skipFirstNumber) fv = null;
 				isin = null;
 				quantity = null;
 			}

@@ -778,74 +778,70 @@ export const getUserHoldings = /* GraphQL */ `
       lendings {
         id
         qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
         name
         fId
         curr
         chg
         chgF
+        payF
         type
         subt
+        sm
+        sy
+        em
+        ey
+        amt
       }
       loans {
         id
         qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
         name
         fId
         curr
         chg
         chgF
+        payF
         type
         subt
+        sm
+        sy
+        em
+        ey
+        amt
       }
       credit {
         id
         qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
         name
         fId
         curr
         chg
         chgF
+        payF
         type
         subt
+        sm
+        sy
+        em
+        ey
+        amt
       }
       savings {
         id
         qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
         name
         fId
         curr
         chg
         chgF
+        payF
         type
         subt
+        sm
+        sy
+        em
+        ey
+        amt
       }
       property {
         type
@@ -876,146 +872,138 @@ export const getUserHoldings = /* GraphQL */ `
       vehicles {
         id
         qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
         name
         fId
         curr
         chg
         chgF
+        payF
         type
         subt
+        sm
+        sy
+        em
+        ey
+        amt
       }
       pm {
         id
         qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
         name
         fId
         curr
         chg
         chgF
+        payF
         type
         subt
+        sm
+        sy
+        em
+        ey
+        amt
       }
       pf {
         id
         qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
         name
         fId
         curr
         chg
         chgF
+        payF
         type
         subt
+        sm
+        sy
+        em
+        ey
+        amt
       }
       nps {
         id
         qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
         name
         fId
         curr
         chg
         chgF
+        payF
         type
         subt
+        sm
+        sy
+        em
+        ey
+        amt
       }
       crypto {
         id
         qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
         name
         fId
         curr
         chg
         chgF
+        payF
         type
         subt
+        sm
+        sy
+        em
+        ey
+        amt
       }
       ins {
         id
         qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
         name
         fId
         curr
         chg
         chgF
+        payF
         type
         subt
+        sm
+        sy
+        em
+        ey
+        amt
       }
       other {
         id
         qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
         name
         fId
         curr
         chg
         chgF
+        payF
         type
         subt
+        sm
+        sy
+        em
+        ey
+        amt
       }
       angel {
         id
         qty
-        pur {
-          amt
-          day
-          month
-          year
-          qty
-        }
         name
         fId
         curr
         chg
         chgF
+        payF
         type
         subt
+        sm
+        sy
+        em
+        ey
+        amt
       }
       createdAt
       updatedAt
@@ -1048,8 +1036,14 @@ export const listUserHoldingss = /* GraphQL */ `
           curr
           chg
           chgF
+          payF
           type
           subt
+          sm
+          sy
+          em
+          ey
+          amt
         }
         loans {
           id
@@ -1059,8 +1053,14 @@ export const listUserHoldingss = /* GraphQL */ `
           curr
           chg
           chgF
+          payF
           type
           subt
+          sm
+          sy
+          em
+          ey
+          amt
         }
         credit {
           id
@@ -1070,8 +1070,14 @@ export const listUserHoldingss = /* GraphQL */ `
           curr
           chg
           chgF
+          payF
           type
           subt
+          sm
+          sy
+          em
+          ey
+          amt
         }
         savings {
           id
@@ -1081,8 +1087,14 @@ export const listUserHoldingss = /* GraphQL */ `
           curr
           chg
           chgF
+          payF
           type
           subt
+          sm
+          sy
+          em
+          ey
+          amt
         }
         property {
           type
@@ -1107,8 +1119,14 @@ export const listUserHoldingss = /* GraphQL */ `
           curr
           chg
           chgF
+          payF
           type
           subt
+          sm
+          sy
+          em
+          ey
+          amt
         }
         pm {
           id
@@ -1118,8 +1136,14 @@ export const listUserHoldingss = /* GraphQL */ `
           curr
           chg
           chgF
+          payF
           type
           subt
+          sm
+          sy
+          em
+          ey
+          amt
         }
         pf {
           id
@@ -1129,8 +1153,14 @@ export const listUserHoldingss = /* GraphQL */ `
           curr
           chg
           chgF
+          payF
           type
           subt
+          sm
+          sy
+          em
+          ey
+          amt
         }
         nps {
           id
@@ -1140,8 +1170,14 @@ export const listUserHoldingss = /* GraphQL */ `
           curr
           chg
           chgF
+          payF
           type
           subt
+          sm
+          sy
+          em
+          ey
+          amt
         }
         crypto {
           id
@@ -1151,8 +1187,14 @@ export const listUserHoldingss = /* GraphQL */ `
           curr
           chg
           chgF
+          payF
           type
           subt
+          sm
+          sy
+          em
+          ey
+          amt
         }
         ins {
           id
@@ -1162,8 +1204,14 @@ export const listUserHoldingss = /* GraphQL */ `
           curr
           chg
           chgF
+          payF
           type
           subt
+          sm
+          sy
+          em
+          ey
+          amt
         }
         other {
           id
@@ -1173,8 +1221,14 @@ export const listUserHoldingss = /* GraphQL */ `
           curr
           chg
           chgF
+          payF
           type
           subt
+          sm
+          sy
+          em
+          ey
+          amt
         }
         angel {
           id
@@ -1184,8 +1238,14 @@ export const listUserHoldingss = /* GraphQL */ `
           curr
           chg
           chgF
+          payF
           type
           subt
+          sm
+          sy
+          em
+          ey
+          amt
         }
         createdAt
         updatedAt

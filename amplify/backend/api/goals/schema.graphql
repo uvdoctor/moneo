@@ -424,14 +424,19 @@ type Family @model @auth(rules: [{ allow: owner }]) {
 type Holding {
 	id: String!
 	qty: Float!
-	pur: Purchase
 	name: String
 	fId: String!
 	curr: String!
 	chg: Float
 	chgF: Int
+	payF: Int
 	type: String
 	subt: String
+	sm: Int
+	sy: Int
+	em: Int
+	ey: Int
+	amt: Float
 }
 
 type Instrument {

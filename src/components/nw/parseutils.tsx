@@ -41,7 +41,11 @@ export const extractPAN = (val: string) => {
 export const getQty = (val: string) => {
 	val = val.replace(/,/g, "");
 	let result = parseInt(val);
-	if (Number.isNaN(result)) return null;
+	if (Number.isNaN(result)) {
+		val = val.trim();
+		if(val === "--") return 0;
+		return null;
+	}
 	if (result < 0) return null;
 	if (!val.includes(".")) 
 		return val.length > 6 || !result ? null : result;
