@@ -2,6 +2,7 @@ import { Menu } from "antd";
 import Link from "next/link";
 import { ASSET_CATEGORIES, ASSET_TYPES, COLORS } from "../CONSTANTS";
 import { getQty } from "./nw/parseutils";
+import { differenceInCalendarYears, addYears, differenceInCalendarMonths } from 'date-fns'
 
 export function getCurrencyList() {
   return {
@@ -706,3 +707,20 @@ export const countrylist = [
 	{ countryCode: 'ZM', value: '+260', label: 'Zambia (+260)' },
 	{ countryCode: 'ZW', value: '+263', label: 'Zimbabwe (+263)' },
 ];
+
+export const calculateDifferenceInYears = (em: number, ey: number, sm: number, sy: number) => {
+  const diff = differenceInCalendarYears(new Date(ey, em-1, 30), new Date(sy, sm-1, 1));
+  return diff;
+}
+
+export const calculateDifferenceInMonths = (em: number, ey: number, sm: number, sy: number) => {
+  const diff = differenceInCalendarMonths(new Date(ey, em-1, 30), new Date(sy, sm-1, 1));
+  return diff;
+}
+
+export const calculateAddYears = (mon: number, yr: number, yearsToAdd: number) => {
+  const result = addYears(new Date(yr, mon, 1), yearsToAdd)
+  const year = result.getFullYear();
+  const month = result.getMonth();
+  return {year, month}
+}

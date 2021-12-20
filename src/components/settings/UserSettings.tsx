@@ -56,20 +56,20 @@ export default function UserSettings(): JSX.Element {
   const fsb = useFullScreenBrowser();
   const { TabPane } = Tabs;
 
-  const counCode = countrylist.find((item) => item.countryCode === defaultCountry);
-  const counCodeWithOutPlusSign = counCode?.value.slice(1);
+  const countryCode = countrylist.find((item) => item.countryCode === defaultCountry);
+  const countryCodeWithoutPlusSign = countryCode ? countryCode.value.slice(1) : "91";
 
   const success = (message: any) => notification.success({ message });
   const failure = (message: any) => notification.error({ message });
   const disableButton = (prevValue: any, currValue: any) => prevValue === currValue ? true : error.length > 0 ? true : false;
 
   const sendOtp = async () => {
-    await Auth.resendSignUp(user?.attributes?.phone_number);
+    user?.attributes?.phone_number && await Auth.resendSignUp(user.attributes.phone_number);
   }
 
   const updateAccountTab = async (input: string, func: Function, attr: String, updateAttr: any) => {
     try {
-      const data = attr === "Email" ? input : Number(counCodeWithOutPlusSign+input);
+      const data = attr === "Email" ? input : Number(countryCodeWithoutPlusSign+input);
       if(await func(data)) { 
         failure(`${attr} is already used by another account`);
         return false;
@@ -88,7 +88,7 @@ export default function UserSettings(): JSX.Element {
   const updateImIfSameAsMob = async () => {
     if(user?.attributes?.phone_number) {
       dispatch({ type: "userUpdate", data: { whatsapp: mobile }});
-      await updateAccountTab(mobile, doesImExist, "Whatsapp Number", { nickname: counCode?.value+mobile });
+      await updateAccountTab(mobile, doesImExist, "Whatsapp Number", { nickname: countryCode?.value+mobile });
     }else{
       failure('Update your mobile, your mobile number is empty.');
     }
@@ -114,8 +114,8 @@ export default function UserSettings(): JSX.Element {
   
   useEffect(() => {
     if (!user) return;
-    const mobile = user?.attributes?.phone_number ? user?.attributes?.phone_number.replace(counCode?.value, "") : '';
-    const whatsapp = user?.attributes?.nickname ? user?.attributes?.nickname.replace(counCode?.value, "") : '';
+    const mobile = user?.attributes?.phone_number ? user?.attributes?.phone_number.replace(countryCode?.value, "") : '';
+    const whatsapp = user?.attributes?.nickname ? user?.attributes?.nickname.replace(countryCode?.value, "") : '';
     dispatch({ type: "userUpdate", data: { 
       email: user?.attributes?.email || '',
       mobile: mobile,
@@ -124,7 +124,7 @@ export default function UserSettings(): JSX.Element {
       prefuser: user?.attributes?.preferred_username || '',
       dob: user?.attributes?.birthdate || '',
       whatsapp: whatsapp }});
-  }, [appContextLoaded, counCode?.value, user]);
+  }, [appContextLoaded, countryCode?.value, user]);
 
   return (
     <>
@@ -186,7 +186,7 @@ export default function UserSettings(): JSX.Element {
                     <span>&nbsp;</span>
                     <Row justify="center">
                       <Col>
-                        <DatePickerInput title={"Date of birth"} className="dob" defaultVal={user?.attributes?.birthdate} changeHandler={(value: any)=>dispatch({ type: "userUpdate", data: { dob: value}})}/>
+                        <DatePickerInput title={"Date of birth"} className="dob" value={dob} changeHandler={(value: any)=>dispatch({ type: "userUpdate", data: { dob: value}})}/>
                       </Col>
                     </Row>
                     <p>&nbsp;</p>
@@ -245,7 +245,7 @@ export default function UserSettings(): JSX.Element {
                   <Col>
                     <TextInput
                       pre="Mobile"
-                      prefix={counCode?.value}
+                      prefix={countryCode?.value}
                       value={mobile}
                       changeHandler={(value: any)=>dispatch({ type: "userUpdate", data: { mobile: value}})}
                       fieldName="mobile"
@@ -255,10 +255,10 @@ export default function UserSettings(): JSX.Element {
                       maxLength={10}
                       post={
                         <OtpDialogue
-                          disableButton={disableButton(user?.attributes?.phone_number, counCode?.value+mobile)}
+                          disableButton={disableButton(user?.attributes?.phone_number, countryCode?.value+mobile)}
                           action={"phone_number"}
-                          mob={parseFloat(counCodeWithOutPlusSign+mobile)}
-                          onClickAction={()=>updateAccountTab(mobile, doesMobExist, "Mobile Number", { phone_number: counCode?.value+mobile })}
+                          mob={parseFloat(countryCodeWithoutPlusSign+mobile)}
+                          onClickAction={()=>updateAccountTab(mobile, doesMobExist, "Mobile Number", { phone_number: countryCode?.value+mobile })}
                           resendOtp={sendOtp}             
                         />
                       }
@@ -277,7 +277,7 @@ export default function UserSettings(): JSX.Element {
                   <Col>
                     <TextInput
                       pre="Whatsapp"
-                      prefix={counCode?.value}
+                      prefix={countryCode?.value}
                       value={whatsapp}
                       changeHandler={(value: any)=>dispatch({ type: "userUpdate", data: { whatsapp: value}})}
                       fieldName="whatsapp"
@@ -287,10 +287,10 @@ export default function UserSettings(): JSX.Element {
                       maxLength={10}
                       post={
                         <OtpDialogue
-                          disableButton={disableButton(user?.attributes?.nickname, counCode?.value+whatsapp)}
+                          disableButton={disableButton(user?.attributes?.nickname, countryCode?.value+whatsapp)}
                           action={"whatsapp_number"}
-                          im={parseFloat(counCodeWithOutPlusSign+mobile)}
-                          onClickAction={()=>updateAccountTab(whatsapp, doesImExist, "Whatsapp Number", { nickname: counCode?.value+whatsapp })}              
+                          im={parseFloat(countryCodeWithoutPlusSign+mobile)}
+                          onClickAction={()=>updateAccountTab(whatsapp, doesImExist, "Whatsapp Number", { nickname: countryCode?.value+whatsapp })}              
                         />}
                     />
                   </Col>
@@ -312,8 +312,8 @@ export default function UserSettings(): JSX.Element {
                           action={"email"}
                           onClickAction={()=>updateAccountTab(email, doesEmailExist, "Email", { email: email })}
                           email={email}
-                          mob={parseFloat(counCodeWithOutPlusSign + mobile)}
-                          im={parseFloat(counCodeWithOutPlusSign + whatsapp)}
+                          mob={parseFloat(countryCodeWithoutPlusSign + mobile)}
+                          im={parseFloat(countryCodeWithoutPlusSign + whatsapp)}
                           resendOtp={sendOtp}/>}
                       />
                   </Col>
