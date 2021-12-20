@@ -301,8 +301,8 @@ export default function AddHoldingInput({
 										picker="month"
 										value={startdate}
 										changeHandler={changeStartdate}
-										setEnddate={changeEnddate}
-										enddate={enddate}
+										setEnddate={hasRangePicker(childTab) && changeEnddate}
+										enddate={hasRangePicker(childTab) && enddate}
 										size="middle"
 									/>
 								</Col>

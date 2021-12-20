@@ -17,7 +17,7 @@ interface DatePickerInputProps {
 	picker?: any;
 	size?: SizeType;
 	isRangePicker?: boolean;
-	setEnddate?: Function;
+	setEnddate?: any;
 	enddate?: any;
 }
 
