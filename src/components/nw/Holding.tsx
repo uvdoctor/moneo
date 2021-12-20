@@ -73,11 +73,6 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 			]}>
 			<Col span={24}>
 				<Row justify="space-between">
-					<Col>
-						{!insData[holding.id] && (
-							<h4 style={{ color: COLORS.RED }}>Sorry, unable to find price for this one!</h4>
-						)}
-					</Col>
 					{insData[holding.id] &&
 					allFamily[holding.fId] &&
 					insData[holding.id].type !== AssetType.H && (
@@ -122,9 +117,12 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 			</Col>
 			<Col span={24}>
 				<Row justify="space-between">
-					<Col>{insData[holding.id] ? insData[holding.id].name : holding.id}</Col>
+					<Col>{insData[holding.id] ? insData[holding.id].name : 
+					<h4 style={{ color: COLORS.RED }}>Not listed</h4>}</Col>
 					<Col className="quantity">
-						<strong>{toHumanFriendlyCurrency(total, holding.curr as string)}</strong>
+						{total ? 
+							<strong>{toHumanFriendlyCurrency(total, holding.curr as string)}</strong>
+						: ''}
 					</Col>
 				</Row>
 			</Col>
@@ -168,18 +166,18 @@ export default function Holding({ holding, onDelete, onChange }: HoldingProp) {
 					) : (
 						<Col>
 							<span className="quantity">
-								{toCurrency(price, holding.curr as string, true)}
+								{price ? toCurrency(price, holding.curr as string, true) : ''}
 								<ShoppingCartOutlined />{' '}
 								{toReadableNumber(holding.qty, ('' + holding.qty).includes('.') ? 3 : 0)}
 							</span>
 						</Col>
 					)}
 					<Col>
-						<Button
+						{insData[holding.id] && <Button
 							type="link"
 							icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
 							onClick={isEditMode ? onCancel : onEdit}
-						/>
+						/>}
 						<Button
 							type="link"
 							icon={isEditMode ? <CloseOutlined /> : <DeleteOutlined />}

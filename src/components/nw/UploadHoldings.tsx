@@ -276,15 +276,12 @@ export default function UploadHoldings() {
 				}
 				if (!isin) continue;
 				let qty: number | null = getQty(value);
-				console.log("Quantity parsed: ", qty);
 				if (qty == null) continue;
-				//if (insType === 'M' && !value.includes('.')) continue;
 				if (skipFirstNumber && fv == null) {
-					console.log('Detected fv: ', qty);
+					console.log('Detected skip quantity: ', qty);
 					fv = qty;
 					continue;
 				}
-				//if (insType === AssetType.F && !Number.isInteger(qty)) continue;
 				console.log('Detected quantity: ', qty);
 				if(qty) {
 					if(insMap.has(isin))
@@ -303,7 +300,7 @@ export default function UploadHoldings() {
 
 	const contentWithBadge = (count: number, content: string) => {
 		return (
-			<Badge count={count} offset={[ 10, 0 ]} showZero style={{marginRight: count > 9 ? 10 : 0}}>
+			<Badge count={count} offset={[ 10, 0 ]} style={{marginRight: count > 9 ? 8 : 2}}>
 				{content}
 				&nbsp;
 			</Badge>
@@ -369,7 +366,7 @@ export default function UploadHoldings() {
 									)}
 								</Col>
 								<Col>
-									<Badge count={equitiesNum + mfsNum + etfsNum + bondsNum} showZero />
+									<Badge count={uploadedInstruments.length} />
 								</Col>
 							</Row>
 							<Row>
