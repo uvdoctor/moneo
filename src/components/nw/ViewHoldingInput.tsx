@@ -214,10 +214,10 @@ export default function ViewHoldingInput({
 							value={`${getMonthName(record.sm as number, true)}-${
 								record.sy
 							}`}
-							enddate={hasRangePicker(childTab) ? `${getMonthName(record.em as number, true)}-${
+							enddate={record.em && `${getMonthName(record.em as number, true)}-${
 								record.ey
-							}` : ''}
-							setEnddate={hasRangePicker(childTab) ? (val: string) => changeEnddate(val) : ''}
+							}`}
+							setEnddate={(val: string) => changeEnddate(val)}
 							size={"middle"}
 						/>
 					</Col>
