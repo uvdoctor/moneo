@@ -42,7 +42,7 @@ import {
 	PropertyType
 } from '../../api/goals';
 import InstrumentValuation from './InstrumentValuation';
-import { includesAny, initOptions } from '../utils';
+import { calculateDifferenceInMonths, calculateDifferenceInYears, includesAny, initOptions } from '../utils';
 import ViewHoldingInput from './ViewHoldingInput';
 import simpleStorage from "simplestorage.js";
 import { getCompoundedIncome, getNPV } from '../calc/finance';
@@ -717,17 +717,19 @@ function NWContextProvider() {
 		let isMonth = true;
 		records.forEach((record: HoldingInput) => {
 			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
-				if ( record.pur && record.chg ) {
+				if ( record.chg ) {
 					if(record.chgF === 1) isMonth = false;
-					const duration = getRemainingDuration(record.pur.year, record.pur.month, record.pur.qty, isMonth);
+					const today = new Date();
+					const duration = isMonth 
+									? calculateDifferenceInMonths(record.em as number, record.ey as number, today.getMonth()+1, today.getFullYear())
+									: calculateDifferenceInYears(record.em as number, record.ey as number, today.getMonth()+1, today.getFullYear())
 						if(duration) {
-							const durLeft = record.pur.qty - (isMonth ? duration.months : duration.years);
-							if(durLeft > 0) {
-								const getCashFlows = Array(Math.round(durLeft)).fill(record.pur.amt);
-								const value = getNPV(record.chg, getCashFlows, 0, (isMonth ? true : false), true);
+								// monthly = health = year;y compun size,cf
+								// vehicles = discout cf = true;
+								const getCashFlows = Array(Math.round(duration)).fill(record.amt);
+								const value = getNPV(10, getCashFlows, 0, (isMonth ? true : false), true);
 								total += value;
 							}
-						}
 					}
 				}
 			})
@@ -747,18 +749,19 @@ function NWContextProvider() {
 		let total = 0;
 		records.forEach((record: HoldingInput)=>{
 			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
-				if(record.chg && record.pur) {
-					const duration = getRemainingDuration(record.pur.year, record.pur.month);
+				if(record.chg) {
+					const today = new Date();
+					const duration = calculateDifferenceInYears(record.em as number, record.ey as number, today.getMonth()+1, today.getFullYear())
 					if(!duration) return;
-					if(record.chgF===1 && duration?.years > record.pur.qty) return;
-					if(record.chgF===2 && duration?.months/6 > record.pur.qty) return;
-					if(record.chgF===4 && duration?.months/4 > record.pur.qty) return;
-					if(record.chgF===12 && duration?.months > record.pur.qty) return;
+					// if(record.chgF===1 && duration <= 0) return;
+					// if(record.chgF===2 && duration/6 <= 0) return;
+					// if(record.chgF===4 && duration/4 <= 0) return;
+					// if(record.chgF===12 && duration <= 0) return;
 					if(!record.chgF) {
-						total+=record.pur.amt;
+						total+=record.amt as number;
 						return setTotal(total);
 					};
-					const value = getCompoundedIncome(record.chg, record.pur.amt, duration.years, record.chgF );
+					const value = getCompoundedIncome(record.chg, record.amt as number, duration, record.chgF );
 					total+= value;
 				}
 			};
@@ -830,10 +833,11 @@ function NWContextProvider() {
 		let total = 0;
 		vehicles.forEach((vehicle: HoldingInput) => {
 			if(vehicle && doesHoldingMatch(vehicle, selectedMembers, selectedCurrency)) {
-				if(vehicle.pur && vehicle.chg) {
-					const duration = getRemainingDuration(vehicle.pur.year, vehicle.pur.month);
+				const today = new Date();
+				if(vehicle.chg) {
+					const duration = calculateDifferenceInYears(today.getMonth()+1, today.getFullYear(), vehicle.sm as number, vehicle.sy as number)
 					if(duration) {
-						const value = getCompoundedIncome(-(vehicle.chg), vehicle.pur.amt, duration.years) ;
+						const value = getCompoundedIncome(-(vehicle.chg), vehicle.amt as number, duration) ;
 						total += value;
 					}
 				}
@@ -862,13 +866,13 @@ function NWContextProvider() {
 		let totalEPF = 0;
 		const month = new Date().getMonth()+1;
 		records.forEach((record: HoldingInput) => {
-			if(record.pur && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
-				const amount = record.pur.amt;
+			if(doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
+				const amount = record.amt as number;
+				const today = new Date();
 				if (month === 4) {
-					const duration = getRemainingDuration(record.pur.year, record.pur.month);
-					if(!duration?.months) return;
-					// @ts-ignore
-					const value = amount + (amount * (1+(record.chg*(duration?.months/12))));
+					const duration = calculateDifferenceInMonths(today.getMonth()+1, today.getFullYear(), record.sm as number, record.sy as number)
+					if(!duration) return;
+					const value = amount + (amount * (1+(record.chg as number*(duration/12))));
 					total += value;
 				}else total+= amount;
 				if(record.subt === 'PF') totalPPF += total;

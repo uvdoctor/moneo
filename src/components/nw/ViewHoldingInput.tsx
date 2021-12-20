@@ -1,12 +1,11 @@
 import { Row, Col } from "antd";
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import { AssetSubType, HoldingInput } from "../../api/goals";
 import DatePickerInput from "../form/DatePickerInput";
 import NumberInput from "../form/numberinput";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
-import { getMonthIndex, getMonthName } from "../utils";
-import Duration from "./addHoldings/Duration";
+import { calculateAddYears, calculateDifferenceInYears, getMonthIndex, getMonthName } from "../utils";
 import { NWContext, TAB } from "./NWContext";
 import QuantityWithRate from "./QuantityWithRate";
 
@@ -27,9 +26,25 @@ export default function ViewHoldingInput({
 }: ViewHoldingInputProps) {
 	const { childTab }: any = useContext(NWContext);
 	const { PM, CRYPTO, LENT, NPS, PF, VEHICLE, LOAN, INS } = TAB;
+	const [duration, setDuration] = useState<number>(calculateDifferenceInYears(record.em as number, record.ey as number, record.sm as number, record.sy as number));
 
-	const changeDuration = (val: any) => {
-		if (record.pur) record.pur.qty = val;
+	const changeDuration = (val: number) => {
+		setDuration(val)
+		const { year, month } = calculateAddYears(record.sm as number, record.sy as number, duration);
+		record.em = month;
+		record.ey = year;
+		changeData([...data]);
+	}
+
+	const changeEnddate = (val: any) => {
+		record.ey = Number(val.substring(val.length - 4));
+		record.em = getMonthIndex(val.substring(0, 3));
+		changeData([...data]);
+	};
+
+	const changeStartdate = (val: string) => {
+		record.sy = Number(val.substring(val.length - 4));
+		record.sm = getMonthIndex(val.substring(0, 3));
 		changeData([...data]);
 	};
 
@@ -38,16 +53,19 @@ export default function ViewHoldingInput({
 		changeData([...data]);
 	};
 
-	const changeQty = (quantity: number) => {
-		if (record.pur) {
-			record.pur.amt = quantity;
-			if (hasPF(childTab)) {
-				record.pur.month = new Date().getMonth() + 1;
-				record.pur.year = new Date().getFullYear();
-			}
-		} else record.qty = quantity;
+	const changeAmt = (amt: number) => {
+		record.amt = amt;
+		if (hasPF(childTab)) {
+			record.sm = new Date().getMonth() + 1;
+			record.sy = new Date().getFullYear();
+		}
 		changeData([...data]);
 	};
+
+	const changeQty = (qty: number) => {
+			record.qty = qty;
+			changeData([...data]);
+	}
 
 	const changeChg = (chg: number) => {
 		record.chg = chg;
@@ -76,15 +94,9 @@ export default function ViewHoldingInput({
 		changeData([...data]);
 	};
 
-	const changePurchaseDate = (val: string) => {
-		if (record.pur) {
-			record.pur.year = Number(val.substring(val.length - 4));
-			record.pur.month = getMonthIndex(val.substring(0, 3));
-			changeData([...data]);
-		}
-	};
-
 	const hasRate = (childTab: string) => [PF, LENT, LOAN].includes(childTab);
+
+	const hasRangePicker = (childTab: string) => [ LENT, LOAN, INS ].includes(childTab);
 
 	const hasName = (childTab: string) =>
 		![PM, NPS, CRYPTO, INS].includes(childTab);
@@ -92,11 +104,8 @@ export default function ViewHoldingInput({
 	const hasQtyWithRate = (childTab: string) =>
 		[PM, NPS, CRYPTO].includes(childTab);
 
-	const hasDuration = (childTab: string) =>
-		[LENT, LOAN, INS].includes(childTab);
-
 	const hasDate = (childTab: string) =>
-		[LENT, VEHICLE, LOAN, INS].includes(childTab);
+		[VEHICLE, LENT, LOAN, INS].includes(childTab);
 
 	const hasPF = (childTab: string) => [PF].includes(childTab);
 
@@ -170,8 +179,8 @@ export default function ViewHoldingInput({
 								pre=""
 								min={10}
 								max={100000000}
-								value={record.pur ? record.pur.amt : record.qty}
-								changeHandler={(val: number) => changeQty(val)}
+								value={record.amt as number}
+								changeHandler={(val: number) => changeAmt(val)}
 								currency={record.curr as string}
 								step={1}
 								noSlider
@@ -194,33 +203,34 @@ export default function ViewHoldingInput({
 					/>
 				</Col>
 			)}
-			{hasDate(childTab) && record.pur && (
+			{hasDate(childTab) && (
 				<>
 					<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
 						<DatePickerInput
+							isRangePicker={hasRangePicker(childTab) && record.subt !== "NSE"}
 							picker="month"
 							title="Date "
-							changeHandler={(val: string) => changePurchaseDate(val)}
-							defaultVal={`${getMonthName(record.pur.month, true)}-${
-								record.pur.year
+							changeHandler={(val: string) => changeStartdate(val)}
+							value={`${getMonthName(record.sm as number, true)}-${
+								record.sy
 							}`}
+							enddate={`${getMonthName(record.em as number, true)}-${
+								record.ey
+							}`}
+							setEnddate={(val: string) => changeEnddate(val)}
 							size={"middle"}
 						/>
 					</Col>
-					{hasDuration(childTab) && (
+					{record.subt === "NSE" && (
 						<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
 							<Row align="middle" gutter={[5, 0]}>
 								<Col>Duration</Col>
 								<Col>
-									<Duration
-										value={record.pur.qty as number}
-										changeHandler={changeDuration}
-										option={
-											record.subt === "NSE"
-												? { 5: "Five Years", 10: "Ten Years" }
-												: null
-										}
-									/>
+									<SelectInput 
+										pre={''} 
+										value={duration} 
+										changeHandler={(val: number)=>changeDuration(val)} 	
+										options={{5: "Five Years", 10: "Ten Years" }}/>
 								</Col>
 							</Row>
 						</Col>
