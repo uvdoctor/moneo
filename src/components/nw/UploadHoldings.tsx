@@ -5,12 +5,12 @@ import { useFullScreenBrowser } from 'react-browser-hooks';
 import HoldingsTable from './HoldingsTable';
 import { LOCAL_DATA_TTL, LOCAL_INS_DATA_KEY } from '../AppContext';
 import { NWContext } from './NWContext';
-import { extractISIN, getInsTypeFromISIN, getUploaderSettings } from './parseutils';
+import { extractISIN, getUploaderSettings } from './parseutils';
 import { isMobileDevice } from '../utils';
 import simpleStorage from 'simplestorage.js';
 import { AssetSubType, AssetType, InstrumentInput, InsType } from '../../api/goals';
 import { UserOutlined } from '@ant-design/icons';
-import { extractPAN, getQty, hasHoldingStarted } from './parseutils';
+import { extractPAN, getQty } from './parseutils';
 import { includesAny } from '../utils';
 import {
 	addMemberIfNeeded,
@@ -211,7 +211,6 @@ export default function UploadHoldings() {
 	};
 
 	const parseHoldings = async (pdf: any) => {
-		let insType: string | null = null;
 		let holdingStarted = false;
 		let isin: string | null = null;
 		let fv: number | null = null;
@@ -224,8 +223,8 @@ export default function UploadHoldings() {
 			const textContent = await page.getTextContent();
 			for (let j = 0; j < textContent.items.length; j++) {
 				let value = textContent.items[j].str.trim();
-				if (!value.length) continue;
-				if (value.length >= 10 && value.length < 100 && !taxId) {
+				if (!value.length || value.length > 100) continue;
+				if (!taxId && value.length >= 10) {
 					taxId = extractPAN(value);
 					if (taxId) {
 						console.log("Detected PAN: ", taxId);
@@ -234,22 +233,20 @@ export default function UploadHoldings() {
 					}
 				}
 				if (!holdingStarted) {
-					holdingStarted = hasHoldingStarted(value);
+					holdingStarted = includesAny(value, ["holding"]);
+					if(holdingStarted) console.log("holding started...", value);
 					continue;
 				}
-				if (value.length > 100) continue;
 				if (includesAny(value, [ 'end of report' ])) {
 					eof = true;
 					break;
 				}
 				if (
 					includesAny(value, [
-						'transaction details',
-						'commission paid',
-						'transaction particulars',
-						'statement of transactions',
+						'transaction',
+						'commission',
 						'other details',
-						'transactions for the period'
+						'txn:'
 					])
 				) {
 					isin = null;
@@ -271,7 +268,6 @@ export default function UploadHoldings() {
 					if (isin) {
 						console.log('Detected ISIN: ', isin);
 						fv = null;
-						insType = getInsTypeFromISIN(isin as string, insType);
 					}
 				}
 				if (!isin) continue;

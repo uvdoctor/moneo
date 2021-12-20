@@ -1,10 +1,8 @@
 import { Modal, notification, Input } from "antd";
-import { includesAny } from "../utils";
 import * as pdfjsLib from "pdfjs-dist";
 //@ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { AssetSubType, InsType, AssetType } from "../../api/goals";
 
 const { confirm } = Modal;
 
@@ -53,23 +51,6 @@ export const getQty = (val: string) => {
 	if (numbers.length > 2) return null;
 	if (numbers[0].length > 6 || numbers[1].length > 3) return null;
 	return parseFloat(val);
-};
-
-export const hasHoldingStarted = (value: string) =>
-	includesAny(value, [
-		"holding details",
-		"as of",
-		"as on",
-		"holdings",
-		"holdings of"
-	]);
-
-export const getInsTypeFromISIN = (isin: string, insType: string | null) => {
-	if (isin.startsWith("INF")) {
-		if (insType !== InsType.ETF) return 'M';
-	} else if (isin.startsWith("IN0")) return AssetType.F;
-	else if(isin.startsWith("INE")) return AssetSubType.S;
-	return insType;
 };
 
 const processPDF = (file: File, parsePDF: Function) => {
