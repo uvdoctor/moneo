@@ -214,7 +214,6 @@ export default function UploadHoldings() {
 		let insType: string | null = null;
 		let holdingStarted = false;
 		let isin: string | null = null;
-		let quantity: number | null = null;
 		let fv: number | null = null;
 		let skipFirstNumber = false;
 		let taxId: string | null = null;
@@ -254,7 +253,6 @@ export default function UploadHoldings() {
 					])
 				) {
 					isin = null;
-					quantity = null;
 					holdingStarted = false;
 					continue;
 				}
@@ -272,7 +270,6 @@ export default function UploadHoldings() {
 					isin = extractISIN(value);
 					if (isin) {
 						console.log('Detected ISIN: ', isin);
-						quantity = null;
 						fv = null;
 						insType = getInsTypeFromISIN(isin as string, insType);
 					}
@@ -290,17 +287,12 @@ export default function UploadHoldings() {
 				//if (insType === AssetType.F && !Number.isInteger(qty)) continue;
 				console.log('Detected quantity: ', qty);
 				if(qty) {
-					
+					if(insMap.has(isin))
+						qty += insMap.get(isin) as number;
+					insMap.set(isin, qty);
 				}
-				quantity = qty;
-				if (quantity && insMap.has(isin)) {
-
-				}
-					quantity += insMap.get(isin) as number;
-				insMap.set(isin, quantity);
 				if (skipFirstNumber) fv = null;
 				isin = null;
-				quantity = null;
 			}
 		}
 		if (!taxId) {
