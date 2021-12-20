@@ -174,7 +174,7 @@ export default function ListProperties({
 								picker="month"
 								title={"Date"}
 								changeHandler={(val: string) => changePurchaseDate(val, i)}
-								defaultVal={
+								value={
 									// @ts-ignore
 									`${getMonthName(data[i].purchase?.month, true)}-${
 										data[i].purchase?.year

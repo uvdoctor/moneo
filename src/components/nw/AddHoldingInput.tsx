@@ -55,8 +55,7 @@ export default function AddHoldingInput({
 		const today = new Date();
 		switch (childTab) {
 			case INS:
-				// chg if health insurance
-				newRec.chg = 10;
+				newRec.chg = category === "H" ? rate : 0;
 				newRec.chgF = Number(subCat);
 				break;
 			case LOAN:
@@ -330,7 +329,7 @@ export default function AddHoldingInput({
 						</FormItem>
 					</Col>
 				)}
-				{hasRate(childTab) && (
+				{hasRate(childTab) || (category === "H" && childTab === INS) && (
 					<Col xs={24} md={12}>
 						<FormItem label="Rate">
 							<NumberInput

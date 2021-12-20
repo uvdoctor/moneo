@@ -314,7 +314,7 @@ export default function AddPropertyInput({
 							title=""
 							picker="month"
 							changeHandler={changePurchaseDate}
-							defaultVal={purchaseDate}
+							value={purchaseDate}
 							size={"middle"}
 						/>
 					</FormItem>

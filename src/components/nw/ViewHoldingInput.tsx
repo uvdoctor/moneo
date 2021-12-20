@@ -189,7 +189,7 @@ export default function ViewHoldingInput({
 					</Row>
 				</Col>
 			)}
-			{hasRate(childTab) && (
+			{hasRate(childTab) || (childTab === INS && record.subt === "H") && (
 				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
 					<NumberInput
 						pre={"Rate"}
