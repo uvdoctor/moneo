@@ -55,7 +55,7 @@ export default function AddHoldingInput({
 		const today = new Date();
 		switch (childTab) {
 			case INS:
-				newRec.chg = category === "H" ? rate : 0;
+				newRec.chg = category === 'H' ? rate : 0;
 				newRec.chgF = Number(subCat);
 				break;
 			case LOAN:
@@ -151,8 +151,8 @@ export default function AddHoldingInput({
 		setDuration(val);
 		let rec = getNewRec();
 		const { year, month } = calculateAddYears(rec.sm as number, rec.sy as number, duration);
-		rec.em = month
-		rec.ey = year
+		rec.em = month;
+		rec.ey = year;
 		setInput(rec);
 	};
 
@@ -188,11 +188,11 @@ export default function AddHoldingInput({
 
 	const changeAmt = (amt: number) => {
 		setQty(amt);
-		disableOk(amt<=0);
+		disableOk(amt <= 0);
 		let rec = getNewRec();
 		rec.amt = amt;
 		setInput(rec);
-	}
+	};
 
 	const changeCategory = (subtype: string) => {
 		setCategory(subtype);
@@ -329,23 +329,25 @@ export default function AddHoldingInput({
 						</FormItem>
 					</Col>
 				)}
-				{hasRate(childTab) || (category === "H" && childTab === INS) && (
-					<Col xs={24} md={12}>
-						<FormItem label="Rate">
-							<NumberInput
-								isBasic={true}
-								pre={''}
-								min={1}
-								max={50}
-								value={rate}
-								changeHandler={changeRate}
-								step={0.1}
-								noSlider
-								unit="%"
-							/>
-						</FormItem>
-					</Col>
-				)}
+				{hasRate(childTab) ||
+					(category === 'H' &&
+					childTab === INS && (
+						<Col xs={24} md={12}>
+							<FormItem label="Rate">
+								<NumberInput
+									isBasic={true}
+									pre={''}
+									min={1}
+									max={50}
+									value={rate}
+									changeHandler={changeRate}
+									step={0.1}
+									noSlider
+									unit="%"
+								/>
+							</FormItem>
+						</Col>
+					))}
 				<Col xs={24} md={12}>
 					<FormItem label="">
 						<SelectInput
