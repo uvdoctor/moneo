@@ -211,10 +211,10 @@ export default function ViewHoldingInput({
 							picker="month"
 							title="Date "
 							changeHandler={(val: string) => changeStartdate(val)}
-							value={`${getMonthName(record.sm as number, true)}-${
+							value={record.sm && record.sy && `${getMonthName(record.sm as number, true)}-${
 								record.sy
 							}`}
-							enddate={record.em && `${getMonthName(record.em as number, true)}-${
+							enddate={record.em && record.ey && `${getMonthName(record.em as number, true)}-${
 								record.ey
 							}`}
 							setEnddate={(val: string) => changeEnddate(val)}
