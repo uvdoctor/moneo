@@ -66,7 +66,7 @@ export default function NWView() {
 					<Fragment>
 						<Row justify="center">
 							<Radio.Group value={view} onChange={(e) => setView(e.target.value)} size="large">
-								<Radio.Button value={ASSETS_VIEW} style={{paddingTop: 2}}>
+								<Radio.Button value={ASSETS_VIEW} style={{paddingTop: 8}}>
 									<ItemDisplay
 										label="You Own"
 										result={totalAssets}
@@ -75,7 +75,7 @@ export default function NWView() {
 										pl
 									/>
 								</Radio.Button>
-								<Radio.Button value={LIABILITIES_VIEW} style={{paddingTop: 2}}>
+								<Radio.Button value={LIABILITIES_VIEW} style={{paddingTop: 8}}>
 									<ItemDisplay
 										label="You Owe"
 										result={totalLiabilities}
