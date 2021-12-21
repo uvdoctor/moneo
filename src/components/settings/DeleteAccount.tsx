@@ -18,10 +18,10 @@ export default function DeleteAccount() {
 	const [ isModalVisible, setIsModalVisible ] = useState<boolean>(false);
 	const [ input, setInput ] = useState<string>('');
 
-	const deleteUserDetails = async (func: Function, mutation: String, type: String) => {
+	const deleteUserDetails = async (getData: Function, mutation: String, type: String) => {
 		const goalImg = [];
 		try {
-			const listOfData = await func();
+			const listOfData = await getData();
 			if (!listOfData) return;
 			for (let data of listOfData) {
 				if (type === 'Goals') {
