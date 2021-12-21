@@ -715,20 +715,39 @@ function NWContextProvider() {
 		if(!records.length) return setTotal(0);			
 		let total = 0;
 		let isMonth = true;
+		let cashflows: any = [];
 		records.forEach((record: HoldingInput) => {
 			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
 				if ( record.chg ) {
 					if(record.chgF === 1) isMonth = false;
 					const today = new Date();
 					const duration = isMonth 
-									? calculateDifferenceInMonths(record.em as number, record.ey as number, today.getMonth()+1, today.getFullYear())
-									: calculateDifferenceInYears(record.em as number, record.ey as number, today.getMonth()+1, today.getFullYear())
+						? calculateDifferenceInMonths(record.em as number, record.ey as number, today.getMonth()+1, today.getFullYear())
+						: calculateDifferenceInYears(record.em as number, record.ey as number, today.getMonth()+1, today.getFullYear())
 						if(duration) {
-								// monthly = health = year;y compun size,cf
-								// vehicles = discout cf = true;
-								const getCashFlows = Array(Math.round(duration)).fill(record.amt);
-								const value = getNPV(10, getCashFlows, 0, (isMonth ? true : false), true);
-								total += value;
+							// let amt = record.amt as number; 
+							// let mon = today.getMonth()+1;
+								if (record.subt === "H") {
+									//  for (let index = 0; index <= duration; index++ ) {
+									// 	 if (isMonth) {
+									// 			if(index%12===0){
+									// 				const compoundedIncome = getCompoundedIncome(record.chg, amt, index+1,  12);
+									// 				amt = compoundedIncome;
+									// 				const cfs = Array(Math.round(12-mon)).fill(amt);
+									// 				cashflows = cashflows.concat(cfs);
+									// 				mon = 0
+									// 		 }
+									// 	 }else {
+									// 		const ci = getCompoundedIncome(record.chg, amt, index+1,  1);
+									// 		amt = ci;
+									// 		cashflows.push(amt);
+									// 	 }
+									//  }
+								} else {
+									cashflows = Array(Math.round(duration)).fill(record.amt);
+								}
+								const npv = getNPV(10, cashflows, 0, (isMonth ? true : false), true);
+								total += npv;
 							}
 					}
 				}
