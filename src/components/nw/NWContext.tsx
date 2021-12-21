@@ -79,13 +79,13 @@ export const TAB = {
 	NPS: 'NPS',
 	PF: 'Provident Funds',
 	VEHICLE: 'Vehicles',
-	ANGEL: 'Angel Investments',
+	ANGEL: 'Start-ups',
 	PROP: 'Properties',
 	LOAN: 'Loans',
 	INS: 'Insurance',
 	CREDIT: 'Credit',
 	REIT: 'REITs',
-	OIT: 'Others'
+	OIT: 'Other Investments'
 };
 
 export const LIABILITIES_TAB = 'Liabilities';
@@ -607,7 +607,7 @@ function NWContextProvider() {
 	useEffect(() => {
 		setTotalRetirement(totalPPF + totalVPF + totalEPF + totalNPS);
 	}, [totalPPF, totalVPF, totalEPF, totalNPS]);
-	
+
 	useEffect(
 		() => {
 			setTotalLiabilities(totalLoans + totalInsurance + totalCredit);
