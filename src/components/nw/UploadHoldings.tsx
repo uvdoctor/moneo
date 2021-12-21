@@ -243,8 +243,10 @@ export default function UploadHoldings() {
 				}
 				if (
 					includesAny(value, [
-						'transaction',
+						'transaction details',
 						'commission',
+						'transaction statement',
+						'statement of transactions',
 						'other details',
 						'txn:'
 					])
