@@ -84,9 +84,11 @@ export const TAB = {
 	LOAN: 'Loans',
 	INS: 'Insurance',
 	CREDIT: 'Credit',
-	REIT: 'Real Estate Investment Trusts',
-	OIT: 'Other Investment Trusts'
+	REIT: 'REITs',
+	OIT: 'Others'
 };
+
+export const LIABILITIES_TAB = 'Liabilities';
 
 function NWContextProvider() {
 	const { defaultCurrency, insData, setInsData, ratesData, owner, user }: any = useContext(AppContext);
@@ -111,7 +113,6 @@ function NWContextProvider() {
 	const [ nw, setNW ] = useState<number>(0);
 	const [ totalAssets, setTotalAssets ] = useState<number>(0);
 	const [ totalInstruments, setTotalInstruments ] = useState<number>(0);
-	const [ totalFilterInstruments, setTotalFilterInstruments ] = useState<number>(0);
 	const [ totalPM, setTotalPM ] = useState<number>(0);
 	const [ totalProperties, setTotalProperties ] = useState<number>(0);
 	const [ totalFRE, setTotalFRE ] = useState<number>(0);
@@ -134,9 +135,17 @@ function NWContextProvider() {
 	const [ totalOthers, setTotalOthers ] = useState<number>(0);
 	const [ totalEquity, setTotalEquity ] = useState<number>(0);
 	const [ totalFixed, setTotalFixed ] = useState<number>(0);
+	const [ totalMFs, setTotalMFs ] = useState<number>(0);
+	const [ totalETFs, setTotalETFs ] = useState<number>(0);
+	const [ totalStocks, setTotalStocks ] = useState<number>(0);
+	const [ totalBonds, setTotalBonds ] = useState<number>(0);
 	const [ totalAlternative, setTotalAlternative ] = useState<number>(0);
 	const [ totalPGold, setTotalPGold ] = useState<number>(0);
 	const [ totalFGold, setTotalFGold ] = useState<number>(0);
+	const [ totalCash, setTotalCash ] = useState<number>(0);
+	const [ totalPhysical, setTotalPhysical ] = useState<number>(0);
+	const [ totalFinancial, setTotalFinancial ] = useState<number>(0);
+	const [ totalRetirement, setTotalRetirement ] = useState<number>(0);
 	const [ showInsUpload, setShowInsUpload ] = useState<boolean>(false);
 	const [ activeTab, setActiveTab ] = useState<string>('Financial');
 	const [ activeTabSum, setActiveTabSum ] = useState<number>(0);
@@ -172,6 +181,7 @@ function NWContextProvider() {
 	const tabs = {
 		Cash: {
 			label: 'Cash',
+			total: totalCash,
 			children: {
 				[TAB.LENT]: {
 					label: TAB.LENT,
@@ -214,6 +224,7 @@ function NWContextProvider() {
 		},
 		Physical: {
 			label: 'Physical',
+			total: totalPhysical,
 			children: {
 				[TAB.PROP]: {
 					label: TAB.PROP,
@@ -307,6 +318,7 @@ function NWContextProvider() {
 		},
 		Financial: {
 			label: 'Financial',
+			total: totalFinancial,
 			children: {
 				[TAB.STOCK]: {
 					label: TAB.STOCK,
@@ -315,7 +327,7 @@ function NWContextProvider() {
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
-					total: totalFilterInstruments,
+					total: totalStocks,
 					contentComp: <InstrumentValuation />
 				},
 				[TAB.MF]: {
@@ -325,7 +337,7 @@ function NWContextProvider() {
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
-					total: totalFilterInstruments,
+					total: totalMFs,
 					contentComp: <InstrumentValuation />
 				},
 				[TAB.BOND]: {
@@ -335,7 +347,7 @@ function NWContextProvider() {
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
-					total: totalFilterInstruments,
+					total: totalBonds,
 					contentComp: <InstrumentValuation />
 				},
 				[TAB.GOLDB]: {
@@ -345,7 +357,7 @@ function NWContextProvider() {
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
-					total: totalFilterInstruments,
+					total: totalFGold,
 					contentComp: <InstrumentValuation />
 				},
 				[TAB.ETF]: {
@@ -355,7 +367,7 @@ function NWContextProvider() {
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
-					total: totalFilterInstruments,
+					total: totalETFs,
 					contentComp: <InstrumentValuation/>
 				},
 				[TAB.REIT]: {
@@ -365,17 +377,7 @@ function NWContextProvider() {
 					hasUploader: true,
 					data: instruments,
 					setData: setInstruments,
-					total: totalFilterInstruments,
-					contentComp: <InstrumentValuation/>
-				},
-				[TAB.OIT]: {
-					label: TAB.OIT,
-					info: "Investment Trust",
-					link: ROUTES.PRIVACY,
-					hasUploader: true,
-					data: instruments,
-					setData: setInstruments,
-					total: totalFilterInstruments,
+					total: totalFRE,
 					contentComp: <InstrumentValuation/>
 				},
 				[TAB.CRYPTO]: {
@@ -408,10 +410,21 @@ function NWContextProvider() {
 					total: totalAngel,
 					viewComp: ViewHoldingInput,
 				}, 
+				[TAB.OIT]: {
+					label: TAB.OIT,
+					info: "Investment Trust",
+					link: ROUTES.PRIVACY,
+					hasUploader: true,
+					data: instruments,
+					setData: setInstruments,
+					total: totalFInv,
+					contentComp: <InstrumentValuation/>
+				}
 			}
 		},
 		Retirement: {
 			label: 'Retirement',
+			total: totalRetirement,
 			children: {
 				[TAB.PF]: {
 					label: TAB.PF,
@@ -441,7 +454,7 @@ function NWContextProvider() {
 			}
 		},
 		Liabilities: {
-			label: 'Liabilities',
+			label: LIABILITIES_TAB,
 			children: {
 				[TAB.LOAN] : {
 					label: TAB.LOAN,
@@ -579,6 +592,22 @@ function NWContextProvider() {
 		[ totalAssets, totalLiabilities ]
 	);
 
+	useEffect(() => {
+		setTotalCash(totalSavings + totalLendings);
+	}, [totalSavings, totalLendings]);
+
+	useEffect(() => {
+		setTotalPhysical(totalProperties + totalVehicles + totalPM + totalOthers);
+	}, [totalProperties, totalVehicles, totalPM, totalOthers]);
+
+	useEffect(() => {
+		setTotalFinancial(totalInstruments + totalAngel + totalCrypto);
+	}, [totalInstruments, totalAngel, totalCrypto]);
+
+	useEffect(() => {
+		setTotalRetirement(totalPPF + totalVPF + totalEPF + totalNPS);
+	}, [totalPPF, totalVPF, totalEPF, totalNPS]);
+	
 	useEffect(
 		() => {
 			setTotalLiabilities(totalLoans + totalInsurance + totalCredit);
@@ -589,14 +618,13 @@ function NWContextProvider() {
 	useEffect(
 		() => {
 			setTotalAssets(
-					totalAlternative +
-					totalSavings +
-					totalLendings +
-					totalEquity +	
-					totalFixed
+					totalCash +
+					totalPhysical +
+					totalFinancial +
+					totalRetirement	
 			);
 		},
-		[totalSavings, totalAlternative, totalEquity, totalFixed, totalLendings]
+		[totalCash, totalPhysical, totalFinancial, totalRetirement]
 	);
 
 	useEffect(() => {
@@ -622,46 +650,48 @@ function NWContextProvider() {
 		setTotalPGold(totalPGold);
 	};
 
+	const isFund = (id: string) => id.substring(2, 3) === 'F';
+
 	const priceInstruments = () => {
-		if(!instruments.length) {
-			setTotalInstruments(0);
-			setTotalFGold(0);
-			setTotalFRE(0);
-			setTotalFInv(0);
-			setTotalFEquity(0);
-			setTotalFFixed(0);
-			return;
-		}
 		let total = 0;
 		let totalFGold = 0;
 		let totalFRE = 0;
 		let totalInv = 0;
 		let totalFFixed = 0;
 		let totalFEquity = 0;
+		let totalBonds = 0;
+		let totalStocks = 0;
+		let totalMFs = 0;
+		let totalETFs = 0;
 		let cachedData = simpleStorage.get(LOCAL_INS_DATA_KEY);
 		if(!cachedData) cachedData = insData;
 		instruments.forEach((instrument: InstrumentInput) => {
-			if(insData[instrument.id] && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
+			const data = insData[instrument.id];
+			if(data && doesHoldingMatch(instrument, selectedMembers, selectedCurrency)) {
 				let value = instrument.qty * cachedData[instrument.id].price;
 				total += value;
-				if(insData[instrument.id].subt === AssetSubType.GoldB) totalFGold += value;
-				else if(insData[instrument.id].itype && cachedData[instrument.id].itype === InsType.REIT) 
+				if(data.itype === InsType.ETF) totalETFs += value;
+				else if(isFund(instrument.id)) totalMFs += value;
+				if(data.subt === AssetSubType.GoldB) totalFGold += value;
+				else if(data.itype && cachedData[instrument.id].itype === InsType.REIT) 
 					totalFRE += value;
-				else if(insData[instrument.id].itype && cachedData[instrument.id].itype === InsType.InvIT) 
+				else if(data.itype && cachedData[instrument.id].itype === InsType.InvIT) 
 					totalInv += value;
-				else if(insData[instrument.id].type === AssetType.E) 
+				else if(data.type === AssetType.E) {
 					totalFEquity += value;
-				else if(insData[instrument.id].type === AssetType.F)
+					if(!isFund(instrument.id) && !data.itype) totalStocks += value;
+				} else if(data.type === AssetType.F) {
 					totalFFixed += value;
-				else if(insData[instrument.id].type === AssetType.H) {
-					if(includesAny(insData[instrument.id].name as string, ["conservative"])) {
+					if(!isFund(instrument.id) && !data.itype) totalBonds += value;
+				} else if(data.type === AssetType.H) {
+					if(includesAny(data.name as string, ["conservative"])) {
 						totalFFixed += 0.7 * value;
 						totalFEquity += 0.3 * value;
-					} else if(includesAny(insData[instrument.id].name as string, ["multi-asset"])) {
+					} else if(includesAny(data.name as string, ["multi-asset"])) {
 						totalFGold += 0.1 * value;
 						totalFEquity += 0.6 * value;
 						totalFFixed += 0.3 * value;
-					} else if(includesAny(insData[instrument.id].name as string, ["balanced"])) {
+					} else if(includesAny(data.name as string, ["balanced"])) {
 						totalFEquity += 0.6 * value;
 						totalFFixed += 0.4 * value;
 					} else {
@@ -677,6 +707,10 @@ function NWContextProvider() {
 		setTotalFFixed(totalFFixed);
 		setTotalFRE(totalFRE);
 		setTotalFInv(totalInv);
+		setTotalStocks(totalStocks);
+		setTotalBonds(totalBonds);
+		setTotalETFs(totalETFs);
+		setTotalMFs(totalMFs);
 	};
 
 	const saveHoldings = async () => {
@@ -1105,8 +1139,6 @@ function NWContextProvider() {
 				totalCredit,
 				isDirty,
 				setIsDirty,
-				setTotalFilterInstruments,
-				totalFilterInstruments,
 				totalOtherProperty,
 				totalCommercial,
 				totalResidential,

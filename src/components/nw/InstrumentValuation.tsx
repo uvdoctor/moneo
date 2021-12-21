@@ -17,7 +17,6 @@ export default function InstrumentValuation() {
 		selectedCurrency,
 		childTab,
 		selectedMembers,
-		setTotalFilterInstruments
 	}: any = useContext(NWContext);
 	const { CheckableTag } = Tag;
 	const [ filteredInstruments, setFilteredInstruments ] = useState<Array<any>>([ ...instruments ]);
@@ -115,7 +114,6 @@ export default function InstrumentValuation() {
 			}
 			total += price;
 		});
-		setTotalFilterInstruments(total);
 		!filteredInfo.id ? setTotalFilterAmt(total) : setTotalFilterAmt(filterAmt);
 	}
 

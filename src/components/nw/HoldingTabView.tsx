@@ -1,9 +1,9 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { Col, Empty, Row, Skeleton, Tabs, Tooltip } from 'antd';
-import { TAB, NWContext } from './NWContext';
+import { Badge, Col, Empty, Row, Skeleton, Tabs, Tooltip } from 'antd';
+import { TAB, NWContext, LIABILITIES_TAB } from './NWContext';
 import AddHoldings from './addHoldings/AddHoldings';
 import UploadHoldings from './UploadHoldings';
-import { toHumanFriendlyCurrency } from '../utils';
+import { toHumanFriendlyCurrency, toReadableNumber } from '../utils';
 import ListHoldings from './ListHoldings';
 import { COLORS } from '../../CONSTANTS';
 import ListProperties from './ListProperties';
@@ -21,9 +21,14 @@ export default function HoldingTabView() {
 		setChildTab,
 		npsData,
 		loadNPSSubCategories,
-		setIsDirty
+		setIsDirty,
+		totalAssets,
+		totalLiabilities
 	}: any = useContext(NWContext);
-	const [ npsSubCat, setNPSSubCat ] = useState<any>({});
+	const [
+		npsSubCat,
+		setNPSSubCat
+	] = useState<any>({});
 	const { TabPane } = Tabs;
 
 	useEffect(
@@ -34,7 +39,9 @@ export default function HoldingTabView() {
 				}
 			}
 		},
-		[ childTab ]
+		[
+			childTab
+		]
 	);
 
 	useEffect(
@@ -42,7 +49,9 @@ export default function HoldingTabView() {
 			const children = tabs[activeTab].children ? tabs[activeTab].children : '';
 			children ? setChildTab(Object.keys(children)[0]) : setChildTab('');
 		},
-		[ activeTab ]
+		[
+			activeTab
+		]
 	);
 
 	useEffect(() => {
@@ -60,22 +69,23 @@ export default function HoldingTabView() {
 						setActiveTab(activeKey);
 					} else setChildTab(activeKey);
 				}}
-				tabBarExtraContent={!isRoot && activeTab === 'Financial' ? <UploadHoldings /> : null}
-			>
+				tabBarExtraContent={!isRoot && activeTab === 'Financial' ? <UploadHoldings /> : null}>
 				{Object.keys(tabsData).map((tabName) => {
-					const { label, children, hasUploader, info, link } = tabsData[tabName];
+					const { label, children, hasUploader, info, link, total } = tabsData[tabName];
+					const allTotal = activeTab === LIABILITIES_TAB ? totalLiabilities : totalAssets;
+					const allocationPer = total && allTotal ? total * 100 / allTotal : 0;
 					return (
 						<TabPane
 							key={label}
 							tab={
 								<Fragment>
 									{label}
-									<Tooltip title={<TabInfo info={info} link={link}/>} color={COLORS.DEFAULT}>
+									<Tooltip title={<TabInfo info={info} link={link} />} color={COLORS.DEFAULT}>
 										{children ? '' : <InfoCircleOutlined />}
 									</Tooltip>
+									{allocationPer ? <Badge count={toReadableNumber(allocationPer) + '%'} offset={[ 0, -5 ]} showZero /> : null}
 								</Fragment>
-							}
-						>
+							}>
 							{children ? (
 								renderTabs(children, Object.keys(children)[0])
 							) : (
