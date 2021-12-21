@@ -1,41 +1,38 @@
-import React, { Fragment, useContext, useEffect } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import HoldingTabView from './HoldingTabView';
 import DataSwitcher from '../DataSwitcher';
 import { NWContext } from './NWContext';
-import { Avatar, Col, PageHeader, Row, Skeleton, Tooltip } from 'antd';
+import { Avatar, Col, PageHeader, Radio, Row, Skeleton, Tooltip } from 'antd';
 import SelectInput from '../form/selectinput';
 import { UserOutlined } from '@ant-design/icons';
 
 require('./nw.less');
 import FamilyInput, { ALL_FAMILY } from './FamilyInput';
-import ResultCarousel from '../ResultCarousel';
-import TotalAssets from './TotalAssets';
 import TotalNetWorth from './TotalNetWorth';
-import TotalLiabilities from './TotalLiabilities';
 import CurrentAA from './CurrentAA';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import ItemDisplay from '../calc/ItemDisplay';
 
 export default function NWView() {
 	const {
-		results,
-		setResults,
 		selectedCurrency,
 		setSelectedCurrency,
 		loadingHoldings,
 		loadingFamily,
 		currencyList,
 		selectedMembers,
-		allFamily
+		allFamily,
+		totalAssets,
+		totalLiabilities
 	}: any = useContext(NWContext);
 	const { Chart, List: DataSwitcherList } = DataSwitcher;
-
-	useEffect(
-		() => {
-			if (!loadingHoldings) setResults([ ...[ <TotalNetWorth key="tnw" />, <TotalAssets key="ta" />, <TotalLiabilities key="tl" /> ] ]);
-		},
-		[ loadingHoldings ]
-	);
+	const ASSETS_VIEW = 'assets';
+	const LIABILITIES_VIEW = 'liabilities';
+	const [
+		view,
+		setView
+	] = useState<string>(ASSETS_VIEW);
 
 	return (
 		<Fragment>
@@ -46,7 +43,7 @@ export default function NWView() {
 							title="Real-time Analysis"
 							extra={[
 								<SelectInput
-									key='currency'
+									key="currency"
 									pre=""
 									value={selectedCurrency}
 									changeHandler={setSelectedCurrency}
@@ -64,44 +61,67 @@ export default function NWView() {
 				</Row>
 			</div>
 			<div className="nw-container">
-				<ResultCarousel results={results} />
+				<TotalNetWorth />
 				{!loadingHoldings && !loadingFamily ? (
-					<DataSwitcher
-						title={
-							<Row>
-								{selectedMembers.length && (
+					<Fragment>
+						<Row justify="center">
+							<Radio.Group value={view} onChange={(e) => setView(e.target.value)} size="large">
+								<Radio.Button value={ASSETS_VIEW} style={{paddingTop: 2}}>
+									<ItemDisplay
+										label="You Own"
+										result={totalAssets}
+										currency={selectedCurrency}
+										info="ABC"
+										pl
+									/>
+								</Radio.Button>
+								<Radio.Button value={LIABILITIES_VIEW} style={{paddingTop: 2}}>
+									<ItemDisplay
+										label="You Owe"
+										result={totalLiabilities}
+										currency={selectedCurrency}
+										info="ABC"
+										pl
+									/>
+								</Radio.Button>
+							</Radio.Group>
+						</Row>
+						<DataSwitcher
+							title={
+								<Row>
+									{selectedMembers.length && (
+										<Col>
+											{selectedMembers.indexOf(ALL_FAMILY) > -1 ? (
+												<Tooltip title="Family">
+													<Avatar icon={<FontAwesomeIcon icon={faUserFriends} />} />
+												</Tooltip>
+											) : (
+												<Avatar.Group maxCount={2}>
+													{selectedMembers.forEach(
+														(key: string) =>
+															allFamily[key] && (
+																<Tooltip title={allFamily[key]}>
+																	<Avatar icon={<UserOutlined />} />
+																</Tooltip>
+															)
+													)}
+												</Avatar.Group>
+											)}
+										</Col>
+									)}
 									<Col>
-										{selectedMembers.indexOf(ALL_FAMILY) > -1 ? (
-											<Tooltip title="Family">
-												<Avatar icon={<FontAwesomeIcon icon={faUserFriends} />} />
-											</Tooltip>
-										) : (
-											<Avatar.Group maxCount={2}>
-												{selectedMembers.forEach(
-													(key: string) =>
-														allFamily[key] && (
-															<Tooltip title={allFamily[key]}>
-																<Avatar icon={<UserOutlined />} />
-															</Tooltip>
-														)
-												)}
-											</Avatar.Group>
-										)}
+										<h2>&nbsp;{view === ASSETS_VIEW ? 'You Own' : 'You Owe'}</h2>
 									</Col>
-								)}
-								<Col>
-									<h2>&nbsp;Holdings</h2>
-								</Col>
-							</Row>
-						}
-					>
-						<Chart>
-							<CurrentAA />
-						</Chart>
-						<DataSwitcherList>
-							<HoldingTabView />
-						</DataSwitcherList>
-					</DataSwitcher>
+								</Row>
+							}>
+							<Chart>
+								<CurrentAA />
+							</Chart>
+							<DataSwitcherList>
+								<HoldingTabView liabilities={view !== ASSETS_VIEW} />
+							</DataSwitcherList>
+						</DataSwitcher>
+					</Fragment>
 				) : (
 					<Skeleton active />
 				)}

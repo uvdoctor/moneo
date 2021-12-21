@@ -10,7 +10,11 @@ import ListProperties from './ListProperties';
 import InfoCircleOutlined from '@ant-design/icons/lib/icons/InfoCircleOutlined';
 import TabInfo from './TabInfo';
 
-export default function HoldingTabView() {
+interface HoldingTabViewProps {
+	liabilities?: boolean;
+}
+
+export default function HoldingTabView({liabilities}: HoldingTabViewProps) {
 	const {
 		tabs,
 		activeTab,
@@ -46,8 +50,9 @@ export default function HoldingTabView() {
 
 	useEffect(
 		() => {
-			const children = tabs[activeTab].children ? tabs[activeTab].children : '';
-			children ? setChildTab(Object.keys(children)[0]) : setChildTab('');
+			if(liabilities) return;
+			const children = tabs[activeTab].children;
+			setChildTab(children ? Object.keys(children)[0] : '');
 		},
 		[
 			activeTab
@@ -71,6 +76,7 @@ export default function HoldingTabView() {
 				}}
 				tabBarExtraContent={!isRoot && activeTab === 'Financial' ? <UploadHoldings /> : null}>
 				{Object.keys(tabsData).map((tabName) => {
+					if(!liabilities && tabName === LIABILITIES_TAB) return; 
 					const { label, children, hasUploader, info, link, total } = tabsData[tabName];
 					const allTotal = activeTab === LIABILITIES_TAB ? totalLiabilities : totalAssets;
 					const allocationPer = total && allTotal ? total * 100 / allTotal : 0;
@@ -147,5 +153,5 @@ export default function HoldingTabView() {
 		);
 	}
 
-	return renderTabs(tabs, activeTab, true);
+	return renderTabs(liabilities ? tabs[LIABILITIES_TAB].children : tabs, liabilities ? TAB.LOAN : activeTab, true);
 }

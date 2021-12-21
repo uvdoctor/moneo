@@ -453,7 +453,7 @@ function NWContextProvider() {
 				},
 			}
 		},
-		Liabilities: {
+		[LIABILITIES_TAB]: {
 			label: LIABILITIES_TAB,
 			children: {
 				[TAB.LOAN] : {
