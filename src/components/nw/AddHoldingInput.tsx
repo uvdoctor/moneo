@@ -292,7 +292,9 @@ export default function AddHoldingInput({
 							<Row gutter={[ 10, 0 ]}>
 								<Col>
 									<DatePickerInput
-										isRangePicker={hasRangePicker(childTab) && category !== NATIONAL_SAVINGS_CERTIFICATE}
+										isRangePicker={
+											hasRangePicker(childTab) && category !== NATIONAL_SAVINGS_CERTIFICATE
+										}
 										title={''}
 										picker="month"
 										value={startdate}
@@ -325,25 +327,23 @@ export default function AddHoldingInput({
 						</FormItem>
 					</Col>
 				)}
-				{hasRate(childTab) ||
-					(category === 'H' &&
-					childTab === INS) && (
-						<Col xs={24} md={12}>
-							<FormItem label="Rate">
-								<NumberInput
-									isBasic={true}
-									pre={''}
-									min={0}
-									max={50}
-									value={rate}
-									changeHandler={changeRate}
-									step={0.1}
-									noSlider
-									unit="%"
-								/>
-							</FormItem>
-						</Col>
-					)}
+				{(hasRate(childTab) || (category === 'H' && childTab === INS)) && (
+					<Col xs={24} md={12}>
+						<FormItem label="Rate">
+							<NumberInput
+								isBasic={true}
+								pre={''}
+								min={0}
+								max={50}
+								value={rate}
+								changeHandler={changeRate}
+								step={0.1}
+								noSlider
+								unit="%"
+							/>
+						</FormItem>
+					</Col>
+				)}
 				<Col xs={24} md={12}>
 					<FormItem label="">
 						<SelectInput
