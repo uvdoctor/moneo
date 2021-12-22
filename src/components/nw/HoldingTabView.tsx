@@ -9,7 +9,7 @@ import { COLORS } from '../../CONSTANTS';
 import ListProperties from './ListProperties';
 import InfoCircleOutlined from '@ant-design/icons/lib/icons/InfoCircleOutlined';
 import TabInfo from './TabInfo';
-import CurrentAA from './CurrentAA';
+import AAChart from './AAChart';
 
 interface HoldingTabViewProps {
 	liabilities?: boolean;
@@ -54,7 +54,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 	useEffect(
 		() => {
 			if (activeTab === LIABILITIES_TAB) {
-				setChildTab(TAB.SUMMARY);
+				setChildTab(TAB.LOAN);
 				return;
 			}
 			const children = tabs[activeTab]?.children;
@@ -83,10 +83,10 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 					}
 				}}
 				tabBarExtraContent={!isRoot && activeTab === 'Financial' ? <UploadHoldings /> : null}>
-					{(isRoot || liabilities) && <TabPane
+					{isRoot && !liabilities && <TabPane
 						key={TAB.SUMMARY}
 						tab={TAB.SUMMARY}>
-							<CurrentAA />
+							<AAChart />
 					</TabPane>}
 					{Object.keys(tabsData).map((tabName) => {
 						if (!liabilities && tabName === LIABILITIES_TAB) return;
@@ -180,7 +180,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 
 	return renderTabs(
 		liabilities ? tabs[LIABILITIES_TAB].children : tabs,
-		TAB.SUMMARY,
+		liabilities ? TAB.LOAN : TAB.SUMMARY,
 		!liabilities
 	);
 }

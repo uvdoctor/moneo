@@ -11,7 +11,7 @@ const TreemapChart = dynamic(() => import('bizcharts/lib/plots/TreemapChart'), {
 	ssr: false
 });
 
-export default function CurrentAA() {
+export default function AAChart() {
 	const {
 		totalSavings,
 		totalDeposits,
@@ -166,8 +166,8 @@ export default function CurrentAA() {
 				{ value: largeCap + totalNPSEquity, desc: ASSET_TYPES.LARGE_CAP_STOCKS },
 				{ value: midCap, desc: ASSET_TYPES.MID_CAP_STOCKS },
 				{ value: smallCap, desc: ASSET_TYPES.SMALL_CAP_STOCKS },
-				{ value: hybridCap, desc: 'Funds spread across Large, Mid and Small Cap Stocks' },
-				{ value: totalAngel, desc: 'Angel Investment' },
+				{ value: hybridCap, desc: 'Funds consisting of large, medium and small company stocks' },
+				{ value: totalAngel, desc: 'Start-up Investments' },
 			]);
 		if (asset === 'Fixed')
 			return pattern([

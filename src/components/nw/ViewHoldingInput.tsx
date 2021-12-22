@@ -6,7 +6,7 @@ import NumberInput from "../form/numberinput";
 import SelectInput from "../form/selectinput";
 import TextInput from "../form/textinput";
 import { calculateAddYears, calculateDifferenceInYears, getMonthIndex, getMonthName } from "../utils";
-import { NWContext, TAB } from "./NWContext";
+import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from "./NWContext";
 import QuantityWithRate from "./QuantityWithRate";
 
 interface ViewHoldingInputProps {
@@ -207,7 +207,7 @@ export default function ViewHoldingInput({
 				<>
 					<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
 						<DatePickerInput
-							isRangePicker={hasRangePicker(childTab) && record.subt !== "NSE"}
+							isRangePicker={hasRangePicker(childTab) && record.subt !== NATIONAL_SAVINGS_CERTIFICATE}
 							picker="month"
 							title="Date "
 							changeHandler={(val: string) => changeStartdate(val)}
@@ -221,7 +221,7 @@ export default function ViewHoldingInput({
 							size={"middle"}
 						/>
 					</Col>
-					{record.subt === "NSE" && (
+					{record.subt === NATIONAL_SAVINGS_CERTIFICATE && (
 						<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
 							<Row align="middle" gutter={[5, 0]}>
 								<Col>Duration</Col>
