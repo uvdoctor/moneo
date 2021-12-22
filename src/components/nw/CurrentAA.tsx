@@ -1,6 +1,6 @@
 import { Badge, Col, Empty, Row, Skeleton, Tooltip } from 'antd';
 import dynamic from 'next/dynamic';
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AssetSubType, AssetType, InstrumentInput, MCap, MFSchemeType } from '../../api/goals';
 import { ASSET_TYPES, COLORS } from '../../CONSTANTS';
 import { AppContext } from '../AppContext';
