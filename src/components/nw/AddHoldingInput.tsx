@@ -277,15 +277,11 @@ export default function AddHoldingInput({
 					<Col xs={24} md={12}>
 						<FormItem label={hasPF(childTab) ? 'Contribution per year' : 'Amount'}>
 							<NumberInput
-								isBasic={true}
+								isBasic
 								pre=""
-								min={0}
-								max={10000}
 								value={qty}
 								changeHandler={changeAmt}
 								currency={selectedCurrency}
-								step={1}
-								noSlider
 							/>
 						</FormItem>
 					</Col>
@@ -337,7 +333,7 @@ export default function AddHoldingInput({
 								<NumberInput
 									isBasic={true}
 									pre={''}
-									min={1}
+									min={0}
 									max={50}
 									value={rate}
 									changeHandler={changeRate}

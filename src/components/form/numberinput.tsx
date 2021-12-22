@@ -14,14 +14,14 @@ interface NumberInputProps {
 	info?: string;
 	pre: any;
 	post?: string;
-	min: number;
-	max: number;
+	min?: number;
+	max?: number;
 	value: number;
 	currency?: string;
 	unit?: string;
 	changeHandler: any;
 	note?: any;
-	step: number;
+	step?: number;
 	feedback?: any;
 	additionalMarks?: Array<number>;
 	noRangeFactor?: boolean;
@@ -33,14 +33,14 @@ export default function NumberInput({
 	info,
 	pre,
 	post,
-	min,
-	max,
+	min = 0,
+	max = 100000000,
 	value,
 	currency,
 	unit,
 	changeHandler,
 	note,
-	step,
+	step = 1,
 	feedback,
 	additionalMarks,
 	noRangeFactor,
