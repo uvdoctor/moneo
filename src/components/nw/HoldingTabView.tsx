@@ -10,7 +10,6 @@ import ListProperties from './ListProperties';
 import InfoCircleOutlined from '@ant-design/icons/lib/icons/InfoCircleOutlined';
 import TabInfo from './TabInfo';
 import CurrentAA from './CurrentAA';
-import SummaryView from '../goals/SummaryView';
 
 interface HoldingTabViewProps {
 	liabilities?: boolean;
