@@ -54,24 +54,29 @@ export default function NWView() {
 						<TotalNetWorth />
 						<Row justify="center">
 							<Radio.Group value={view} onChange={(e) => setView(e.target.value)} size="large">
-								<Radio.Button value={ASSETS_VIEW} style={{paddingTop: 8}}>
-									<ItemDisplay
-										label="You Own"
-										result={totalAssets}
-										currency={selectedCurrency}
-										info="ABC"
-										pl
-									/>
-								</Radio.Button>
-								<Radio.Button value={LIABILITIES_VIEW} style={{paddingTop: 8}}>
-									<ItemDisplay
-										label="You Owe"
-										result={totalLiabilities}
-										currency={selectedCurrency}
-										info="ABC"
-										pl
-									/>
-								</Radio.Button>
+								<Row>
+									<Col>
+										<Radio.Button value={ASSETS_VIEW} className="dd-stat">
+											<ItemDisplay
+												label="You Own"
+												result={totalAssets}
+												currency={selectedCurrency}
+												info="This is the total valuation of the assets you own."
+											/>
+										</Radio.Button>
+									</Col>
+									<Col>
+										<Radio.Button value={LIABILITIES_VIEW} className="dd-stat">
+											<ItemDisplay
+												label="You Owe"
+												result={totalLiabilities}
+												currency={selectedCurrency}
+												info="This is the total valuation of all the money you owe."
+												pl
+											/>
+										</Radio.Button>
+									</Col>
+								</Row>
 							</Radio.Group>
 						</Row>
 						<HoldingTabView liabilities={view !== ASSETS_VIEW} />

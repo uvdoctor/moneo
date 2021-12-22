@@ -837,8 +837,7 @@ function NWContextProvider() {
 		let total = 0;
 		records.forEach((record: HoldingInput) => {
 			if(record && doesHoldingMatch(record, selectedMembers, selectedCurrency)) {
-				const value = record.qty;
-				total += value;
+				total += record.amt as number;
 			}
 		})
 		setTotal(total);
