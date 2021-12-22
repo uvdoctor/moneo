@@ -197,6 +197,78 @@ svg {
 	padding: 24px 50px;
 }
 
+.chart {
+	& .cash {
+		background-color: #befe95;
+		border: #f0f2f5 1px solid;
+		box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+		border-radius: 4px;
+		padding: 5px 15px;
+	
+		& .deposits {
+			background-color: #82d949;
+		}
+	
+		& .ant-badge {
+			vertical-align: sub;
+		}
+	
+		& .active {
+			position: relative;
+			background: @primary-color;
+			color: #fff;
+			margin-right: 25px;
+	
+			& strong {
+				color: #fff;
+			}
+	
+			& .arrow-right {
+				position: absolute;
+				width: 0;
+				height: 0;
+				border-top: 15px solid transparent;
+				border-bottom: 15px solid transparent;
+				border-left: 15px solid @primary-color;
+				top: 50%;
+				margin-top: -15px;
+				right: -8px;
+			}
+		}
+		& strong {
+			font-size: 14px;
+			font-weight: bold;
+			float: right;
+		}
+	}
+} 
+
+@media all and (max-width: 1199.98px) {
+	.chart {
+		& .cash {
+			& .ant-badge > sup {
+				font-size: 11px;
+			}
+
+			&.active {
+				margin-right: 0;
+
+				& .arrow-right {
+					display: none;
+				}
+			}
+
+			& strong {
+				font-size: 12px;
+			}
+		}
+
+		& .ant-radio-button-wrapper {
+			padding: 0 5px;
+		}
+	}
+}
+
 /* Chrome, Safari and Opera syntax */
 :-webkit-full-screen {
 	background-color: #ffffff;

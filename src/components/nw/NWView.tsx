@@ -1,17 +1,12 @@
 import React, { Fragment, useContext } from 'react';
 import HoldingTabView from './HoldingTabView';
-import DataSwitcher from '../DataSwitcher';
 import { ASSETS_VIEW, LIABILITIES_VIEW, NWContext } from './NWContext';
-import { Avatar, Col, PageHeader, Radio, Row, Skeleton, Tooltip } from 'antd';
+import { Col, PageHeader, Radio, Row, Skeleton } from 'antd';
 import SelectInput from '../form/selectinput';
-import { UserOutlined } from '@ant-design/icons';
 
 require('./nw.less');
-import FamilyInput, { ALL_FAMILY } from './FamilyInput';
+import FamilyInput from './FamilyInput';
 import TotalNetWorth from './TotalNetWorth';
-import CurrentAA from './CurrentAA';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import ItemDisplay from '../calc/ItemDisplay';
 
 export default function NWView() {
@@ -21,14 +16,11 @@ export default function NWView() {
 		loadingHoldings,
 		loadingFamily,
 		currencyList,
-		selectedMembers,
-		allFamily,
 		totalAssets,
 		totalLiabilities,
 		view,
 		setView
 	}: any = useContext(NWContext);
-	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
 	return (
 		<Fragment>
@@ -82,41 +74,7 @@ export default function NWView() {
 								</Radio.Button>
 							</Radio.Group>
 						</Row>
-						<DataSwitcher
-							title={
-								<Row>
-									{selectedMembers.length && (
-										<Col>
-											{selectedMembers.indexOf(ALL_FAMILY) > -1 ? (
-												<Tooltip title="Family">
-													<Avatar icon={<FontAwesomeIcon icon={faUserFriends} />} />
-												</Tooltip>
-											) : (
-												<Avatar.Group maxCount={2}>
-													{selectedMembers.forEach(
-														(key: string) =>
-															allFamily[key] && (
-																<Tooltip title={allFamily[key]}>
-																	<Avatar icon={<UserOutlined />} />
-																</Tooltip>
-															)
-													)}
-												</Avatar.Group>
-											)}
-										</Col>
-									)}
-									<Col>
-										<h2>&nbsp;{view === ASSETS_VIEW ? 'You Own' : 'You Owe'}</h2>
-									</Col>
-								</Row>
-							}>
-							<Chart>
-								<CurrentAA />
-							</Chart>
-							<DataSwitcherList>
-								<HoldingTabView liabilities={view !== ASSETS_VIEW} />
-							</DataSwitcherList>
-						</DataSwitcher>
+						<HoldingTabView liabilities={view !== ASSETS_VIEW} />
 					</Fragment>
 				) : (
 					<Skeleton active />

@@ -59,7 +59,7 @@ export default function CurrentAA() {
 		Equity: { color: COLORS.ORANGE, total: totalEquity },
 		Fixed: { color: COLORS.BLUE, total: totalFFixed + totalNPSFixed },
 		'Real-estate': { color: '#7cd9fd', total: totalProperties },
-		'Real Estate Investment Trusts': { color: '#7cd9fd', total: totalFRE },
+		'REITs': { color: '#7cd9fd', total: totalFRE },
 		'Other Investment Trusts': { color: COLORS.SILVER, total: totalFInv },
 		Gold: { color: '#f6e05e', total: totalFGold + totalPGold },
 		Others: { color: '#aa8dfa', total: totalAlternative - totalFGold - totalPGold - totalProperties - totalFRE - totalCrypto - totalFInv },
@@ -199,19 +199,19 @@ export default function CurrentAA() {
 	};
 
 	return !loadingHoldings ? totalAssets ? (
-		<Fragment>
+		<div className="container chart">
 			<p>Total Asset Allocation of {toHumanFriendlyCurrency(totalAssets, selectedCurrency)}</p>
 			<Row>
-				<Col xs={24} sm={8}>
-					<div className="cash deposits">
-						Deposits <Badge count={`${toReadableNumber(totalLendings / totalAssets * 100, 2)} %`} />
-						<strong>{toHumanFriendlyCurrency(totalLendings, selectedCurrency)}</strong>
-					</div>
-				</Col>
 				<Col xs={24} sm={8}>
 					<div className="cash">
 						Savings <Badge count={`${toReadableNumber(totalSavings / totalAssets * 100, 2)} %`} />
 						<strong>{toHumanFriendlyCurrency(totalSavings, selectedCurrency)}</strong>
+					</div>
+				</Col>
+				<Col xs={24} sm={8}>
+					<div className="cash deposits">
+						Deposits <Badge count={`${toReadableNumber(totalLendings / totalAssets * 100, 2)} %`} />
+						<strong>{toHumanFriendlyCurrency(totalLendings, selectedCurrency)}</strong>
 					</div>
 				</Col>
 				<Col xs={24} sm={8}>
@@ -270,7 +270,7 @@ export default function CurrentAA() {
 					}
 				]}
 			/>
-		</Fragment>
+		</div>
 	) : (
 		<Empty />
 	) : (

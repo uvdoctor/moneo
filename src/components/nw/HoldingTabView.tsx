@@ -9,6 +9,8 @@ import { COLORS } from '../../CONSTANTS';
 import ListProperties from './ListProperties';
 import InfoCircleOutlined from '@ant-design/icons/lib/icons/InfoCircleOutlined';
 import TabInfo from './TabInfo';
+import CurrentAA from './CurrentAA';
+import SummaryView from '../goals/SummaryView';
 
 interface HoldingTabViewProps {
 	liabilities?: boolean;
@@ -38,6 +40,7 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 
 	useEffect(() => {
 		if(view === LIABILITIES_VIEW) setActiveTab(LIABILITIES_TAB);
+		else setActiveTab(TAB.SUMMARY);
 	}, [view]);
 
 	useEffect(
@@ -52,10 +55,10 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 	useEffect(
 		() => {
 			if (activeTab === LIABILITIES_TAB) {
-				setChildTab(TAB.LOAN);
+				setChildTab(TAB.SUMMARY);
 				return;
 			}
-			const children = tabs[activeTab].children;
+			const children = tabs[activeTab]?.children;
 			setChildTab(children ? Object.keys(children)[0] : '');
 		},
 		[
@@ -81,99 +84,104 @@ export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 					}
 				}}
 				tabBarExtraContent={!isRoot && activeTab === 'Financial' ? <UploadHoldings /> : null}>
-				{Object.keys(tabsData).map((tabName) => {
-					if (!liabilities && tabName === LIABILITIES_TAB) return;
-					const { label, children, hasUploader, info, link, total } = tabsData[tabName];
-					const allTotal = activeTab === LIABILITIES_TAB ? totalLiabilities : totalAssets;
-					const allocationPer = total && allTotal ? total * 100 / allTotal : 0;
-					return (
-						<TabPane
-							key={label}
-							tab={
-								<Fragment>
-									{label}
-									{!children &&
-									!liabilities && (
-										<Tooltip title={<TabInfo info={info} link={link} />} color={COLORS.DEFAULT}>
-											<InfoCircleOutlined />
-										</Tooltip>
-									)}
-									{allocationPer ? (
-										<Badge
-											count={toReadableNumber(allocationPer) + '%'}
-											offset={[
-												0,
-												-5
-											]}
-											showZero
-										/>
-									) : null}
-								</Fragment>
-							}>
-							{children ? (
-								renderTabs(children, Object.keys(children)[0])
-							) : (
-								<Fragment>
-									<Row justify="space-between">
-										<Col>
-											<h2 style={{ color: COLORS.GREEN }}>
-												&nbsp;&nbsp;
-												{toHumanFriendlyCurrency(tabsData[tabName].total, selectedCurrency)}
-											</h2>
-										</Col>
-										<Col>
-											<AddHoldings
-												isPrimary={!hasUploader}
+					{(isRoot || liabilities) && <TabPane
+						key={TAB.SUMMARY}
+						tab={TAB.SUMMARY}>
+							<CurrentAA />
+					</TabPane>}
+					{Object.keys(tabsData).map((tabName) => {
+						if (!liabilities && tabName === LIABILITIES_TAB) return;
+						const { label, children, hasUploader, info, link, total } = tabsData[tabName];
+						const allTotal = activeTab === LIABILITIES_TAB ? totalLiabilities : totalAssets;
+						const allocationPer = total && allTotal ? total * 100 / allTotal : 0;
+						return (
+							<TabPane
+								key={label}
+								tab={
+									<Fragment>
+										{label}
+										{!children &&
+										!liabilities && (
+											<Tooltip title={<TabInfo info={info} link={link} />} color={COLORS.DEFAULT}>
+												<InfoCircleOutlined />
+											</Tooltip>
+										)}
+										{allocationPer ? (
+											<Badge
+												count={toReadableNumber(allocationPer) + '%'}
+												offset={[
+													0,
+													-5
+												]}
+												showZero
+											/>
+										) : null}
+									</Fragment>
+								}>
+								{children ? (
+									renderTabs(children, Object.keys(children)[0])
+								) : (
+									<Fragment>
+										<Row justify="space-between">
+											<Col>
+												<h2 style={{ color: COLORS.GREEN }}>
+													&nbsp;&nbsp;
+													{toHumanFriendlyCurrency(tabsData[tabName].total, selectedCurrency)}
+												</h2>
+											</Col>
+											<Col>
+												<AddHoldings
+													isPrimary={!hasUploader}
+													data={tabsData[tabName].data}
+													changeData={tabsData[tabName].setData}
+													title={`${tabsData[tabName].label} - Add Record`}
+													categoryOptions={tabsData[tabName].categoryOptions}
+													subCategoryOptions={
+														childTab === TAB.NPS ? (
+															npsSubCat
+														) : (
+															tabsData[tabName].subCategoryOptions
+														)
+													}
+												/>
+											</Col>
+										</Row>
+										{!loadingHoldings ? tabsData[tabName].data.length ? tabsData[tabName]
+											.contentComp ? (
+											tabsData[tabName].contentComp
+										) : tabsData[tabName].label === TAB.PROP ? (
+											<ListProperties
 												data={tabsData[tabName].data}
 												changeData={tabsData[tabName].setData}
-												title={`${tabsData[tabName].label} - Add Record`}
+												categoryOptions={tabsData[tabName].categoryOptions}
+											/>
+										) : (
+											<ListHoldings
+												data={tabsData[tabName].data}
+												changeData={tabsData[tabName].setData}
+												viewComp={tabsData[tabName].viewComp}
 												categoryOptions={tabsData[tabName].categoryOptions}
 												subCategoryOptions={
-													childTab === TAB.NPS ? (
-														npsSubCat
-													) : (
-														tabsData[tabName].subCategoryOptions
-													)
+													childTab === TAB.NPS ? npsSubCat : tabsData[tabName].subCategoryOptions
 												}
 											/>
-										</Col>
-									</Row>
-									{!loadingHoldings ? tabsData[tabName].data.length ? tabsData[tabName]
-										.contentComp ? (
-										tabsData[tabName].contentComp
-									) : tabsData[tabName].label === TAB.PROP ? (
-										<ListProperties
-											data={tabsData[tabName].data}
-											changeData={tabsData[tabName].setData}
-											categoryOptions={tabsData[tabName].categoryOptions}
-										/>
-									) : (
-										<ListHoldings
-											data={tabsData[tabName].data}
-											changeData={tabsData[tabName].setData}
-											viewComp={tabsData[tabName].viewComp}
-											categoryOptions={tabsData[tabName].categoryOptions}
-											subCategoryOptions={
-												childTab === TAB.NPS ? npsSubCat : tabsData[tabName].subCategoryOptions
-											}
-										/>
-									) : (
-										<Empty description="No data found." />
-									) : (
-										<Skeleton loading />
-									)}
-								</Fragment>
-							)}
-						</TabPane>
-					);
-				})}
+										) : (
+											<Empty description="No data found." />
+										) : (
+											<Skeleton loading />
+										)}
+									</Fragment>
+								)}
+							</TabPane>
+						);
+					})}
 			</Tabs>
 		);
 	}
 
 	return renderTabs(
 		liabilities ? tabs[LIABILITIES_TAB].children : tabs,
-		liabilities ? TAB.LOAN : activeTab,
+		TAB.SUMMARY,
 		!liabilities
 	);
 }

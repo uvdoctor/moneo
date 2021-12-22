@@ -74,7 +74,7 @@ export const TAB = {
 	ETF: 'ETFs',
 	GOLDB: 'Gold Bonds',
 	SAV: 'Saving Accounts',
-	LENT: 'Lendings',
+	LENT: 'Deposits',
 	OTHER: 'Others',
 	NPS: 'NPS',
 	PF: 'Provident Funds',
@@ -85,12 +85,15 @@ export const TAB = {
 	INS: 'Insurance',
 	CREDIT: 'Credit',
 	REIT: 'REITs',
-	OIT: 'Other Investments'
+	OIT: 'Other Investments',
+	SUMMARY: 'Summary'
 };
 
 export const LIABILITIES_TAB = 'Liabilities';
 export const ASSETS_VIEW = 'assets';
 export const LIABILITIES_VIEW = 'liabilities';
+
+export const NATIONAL_SAVINGS_CERTIFICATE = 'NSC';
 
 function NWContextProvider() {
 	const { defaultCurrency, insData, setInsData, ratesData, owner, user }: any = useContext(AppContext);
@@ -194,9 +197,9 @@ function NWContextProvider() {
 					setData: setLendings,
 					total: totalLendings,
 					categoryOptions: {
-						BD: 'Bank Deposits', 
-						ML: 'Peer-to-Peer Lendings', 
-						NSE: 'National Saving Certificate'
+						BD: 'Deposit', 
+						[NATIONAL_SAVINGS_CERTIFICATE]: 'National Savings Certificate',
+						P2P: 'Lent to an individual', 
 					},
 					subCategoryOptions:{ 
 						BD: {

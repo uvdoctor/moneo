@@ -7,7 +7,7 @@ import NumberInput from '../form/numberinput';
 import SelectInput from '../form/selectinput';
 import TextInput from '../form/textinput';
 import { calculateAddYears, getMonthIndex } from '../utils';
-import { NWContext, TAB } from './NWContext';
+import { NATIONAL_SAVINGS_CERTIFICATE, NWContext, TAB } from './NWContext';
 import { getDefaultMember, getFamilyOptions } from './nwutils';
 import QuantityWithRate from './QuantityWithRate';
 
@@ -111,7 +111,7 @@ export default function AddHoldingInput({
 		if (hasRangePicker(childTab)) {
 			newRec.sm = getMonthIndex(startdate.substring(0, 3));
 			newRec.sy = Number(startdate.substring(startdate.length - 4));
-			if (category === 'NSE') {
+			if (category === NATIONAL_SAVINGS_CERTIFICATE) {
 				const { year, month } = calculateAddYears(newRec.sm as number, newRec.sy as number, duration);
 				newRec.em = month;
 				newRec.ey = year;
@@ -296,7 +296,7 @@ export default function AddHoldingInput({
 							<Row gutter={[ 10, 0 ]}>
 								<Col>
 									<DatePickerInput
-										isRangePicker={hasRangePicker(childTab) && category !== 'NSE'}
+										isRangePicker={hasRangePicker(childTab) && category !== NATIONAL_SAVINGS_CERTIFICATE}
 										title={''}
 										picker="month"
 										value={startdate}
@@ -310,7 +310,7 @@ export default function AddHoldingInput({
 						</FormItem>
 					</Col>
 				)}
-				{category === 'NSE' && (
+				{category === NATIONAL_SAVINGS_CERTIFICATE && (
 					<Col xs={24} md={12}>
 						<FormItem label={'Duration'}>
 							<Row gutter={[ 10, 0 ]}>
