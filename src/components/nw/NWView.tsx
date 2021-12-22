@@ -61,9 +61,9 @@ export default function NWView() {
 				</Row>
 			</div>
 			<div className="nw-container">
-				<TotalNetWorth />
 				{!loadingHoldings && !loadingFamily ? (
 					<Fragment>
+						<TotalNetWorth />
 						<Row justify="center">
 							<Radio.Group value={view} onChange={(e) => setView(e.target.value)} size="large">
 								<Radio.Button value={ASSETS_VIEW} style={{paddingTop: 8}}>
