@@ -327,7 +327,7 @@ export default function AddHoldingInput({
 				)}
 				{hasRate(childTab) ||
 					(category === 'H' &&
-					childTab === INS && (
+					childTab === INS) && (
 						<Col xs={24} md={12}>
 							<FormItem label="Rate">
 								<NumberInput
@@ -343,7 +343,7 @@ export default function AddHoldingInput({
 								/>
 							</FormItem>
 						</Col>
-					))}
+					)}
 				<Col xs={24} md={12}>
 					<FormItem label="">
 						<SelectInput
