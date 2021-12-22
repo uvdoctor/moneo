@@ -1,7 +1,7 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, useContext } from 'react';
 import HoldingTabView from './HoldingTabView';
 import DataSwitcher from '../DataSwitcher';
-import { NWContext } from './NWContext';
+import { ASSETS_VIEW, LIABILITIES_VIEW, NWContext } from './NWContext';
 import { Avatar, Col, PageHeader, Radio, Row, Skeleton, Tooltip } from 'antd';
 import SelectInput from '../form/selectinput';
 import { UserOutlined } from '@ant-design/icons';
@@ -24,15 +24,11 @@ export default function NWView() {
 		selectedMembers,
 		allFamily,
 		totalAssets,
-		totalLiabilities
-	}: any = useContext(NWContext);
-	const { Chart, List: DataSwitcherList } = DataSwitcher;
-	const ASSETS_VIEW = 'assets';
-	const LIABILITIES_VIEW = 'liabilities';
-	const [
+		totalLiabilities,
 		view,
 		setView
-	] = useState<string>(ASSETS_VIEW);
+	}: any = useContext(NWContext);
+	const { Chart, List: DataSwitcherList } = DataSwitcher;
 
 	return (
 		<Fragment>

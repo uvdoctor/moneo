@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Badge, Col, Empty, Row, Skeleton, Tabs, Tooltip } from 'antd';
-import { TAB, NWContext, LIABILITIES_TAB } from './NWContext';
+import { TAB, NWContext, LIABILITIES_TAB, LIABILITIES_VIEW } from './NWContext';
 import AddHoldings from './addHoldings/AddHoldings';
 import UploadHoldings from './UploadHoldings';
 import { toHumanFriendlyCurrency, toReadableNumber } from '../utils';
@@ -14,7 +14,7 @@ interface HoldingTabViewProps {
 	liabilities?: boolean;
 }
 
-export default function HoldingTabView({liabilities}: HoldingTabViewProps) {
+export default function HoldingTabView({ liabilities }: HoldingTabViewProps) {
 	const {
 		tabs,
 		activeTab,
@@ -27,7 +27,8 @@ export default function HoldingTabView({liabilities}: HoldingTabViewProps) {
 		loadNPSSubCategories,
 		setIsDirty,
 		totalAssets,
-		totalLiabilities
+		totalLiabilities,
+		view
 	}: any = useContext(NWContext);
 	const [
 		npsSubCat,
@@ -35,13 +36,13 @@ export default function HoldingTabView({liabilities}: HoldingTabViewProps) {
 	] = useState<any>({});
 	const { TabPane } = Tabs;
 
+	useEffect(() => {
+		if(view === LIABILITIES_VIEW) setActiveTab(LIABILITIES_TAB);
+	}, [view]);
+
 	useEffect(
 		() => {
-			if (childTab === TAB.NPS) {
-				if (npsData.length === 0) {
-					(async () => setNPSSubCat(await loadNPSSubCategories()))();
-				}
-			}
+			if (childTab === TAB.NPS && !npsData.length) (async () => setNPSSubCat(await loadNPSSubCategories()))();
 		},
 		[
 			childTab
@@ -50,7 +51,10 @@ export default function HoldingTabView({liabilities}: HoldingTabViewProps) {
 
 	useEffect(
 		() => {
-			if(liabilities) return;
+			if (activeTab === LIABILITIES_TAB) {
+				setChildTab(TAB.LOAN);
+				return;
+			}
 			const children = tabs[activeTab].children;
 			setChildTab(children ? Object.keys(children)[0] : '');
 		},
@@ -68,15 +72,17 @@ export default function HoldingTabView({liabilities}: HoldingTabViewProps) {
 			<Tabs
 				defaultActiveKey={defaultActiveKey}
 				activeKey={isRoot ? activeTab : childTab ? childTab : defaultActiveKey}
-				type={isRoot ? 'card' : 'line'}
+				type={isRoot || liabilities ? 'card' : 'line'}
 				onChange={(activeKey) => {
 					if (isRoot) {
 						setActiveTab(activeKey);
-					} else setChildTab(activeKey);
+					} else {
+						setChildTab(activeKey);
+					}
 				}}
 				tabBarExtraContent={!isRoot && activeTab === 'Financial' ? <UploadHoldings /> : null}>
 				{Object.keys(tabsData).map((tabName) => {
-					if(!liabilities && tabName === LIABILITIES_TAB) return; 
+					if (!liabilities && tabName === LIABILITIES_TAB) return;
 					const { label, children, hasUploader, info, link, total } = tabsData[tabName];
 					const allTotal = activeTab === LIABILITIES_TAB ? totalLiabilities : totalAssets;
 					const allocationPer = total && allTotal ? total * 100 / allTotal : 0;
@@ -86,10 +92,22 @@ export default function HoldingTabView({liabilities}: HoldingTabViewProps) {
 							tab={
 								<Fragment>
 									{label}
-									<Tooltip title={<TabInfo info={info} link={link} />} color={COLORS.DEFAULT}>
-										{children ? '' : <InfoCircleOutlined />}
-									</Tooltip>
-									{allocationPer ? <Badge count={toReadableNumber(allocationPer) + '%'} offset={[ 0, -5 ]} showZero /> : null}
+									{!children &&
+									!liabilities && (
+										<Tooltip title={<TabInfo info={info} link={link} />} color={COLORS.DEFAULT}>
+											<InfoCircleOutlined />
+										</Tooltip>
+									)}
+									{allocationPer ? (
+										<Badge
+											count={toReadableNumber(allocationPer) + '%'}
+											offset={[
+												0,
+												-5
+											]}
+											showZero
+										/>
+									) : null}
 								</Fragment>
 							}>
 							{children ? (
@@ -153,5 +171,9 @@ export default function HoldingTabView({liabilities}: HoldingTabViewProps) {
 		);
 	}
 
-	return renderTabs(liabilities ? tabs[LIABILITIES_TAB].children : tabs, liabilities ? TAB.LOAN : activeTab, true);
+	return renderTabs(
+		liabilities ? tabs[LIABILITIES_TAB].children : tabs,
+		liabilities ? TAB.LOAN : activeTab,
+		!liabilities
+	);
 }

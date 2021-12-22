@@ -89,6 +89,8 @@ export const TAB = {
 };
 
 export const LIABILITIES_TAB = 'Liabilities';
+export const ASSETS_VIEW = 'assets';
+export const LIABILITIES_VIEW = 'liabilities';
 
 function NWContextProvider() {
 	const { defaultCurrency, insData, setInsData, ratesData, owner, user }: any = useContext(AppContext);
@@ -164,6 +166,7 @@ function NWContextProvider() {
 	const [ totalPPF, setTotalPPF ] = useState<number>(0);
 	const [ totalVPF, setTotalVPF ] = useState<number>(0);
 	const [ totalEPF, setTotalEPF ] = useState<number>(0);
+	const [	view, setView ] = useState<string>(ASSETS_VIEW);
 
 	const loadNPSSubCategories = async () => {
 		let npsData: Array<CreateNPSPriceInput> | undefined = await getNPSData();
@@ -1164,7 +1167,9 @@ function NWContextProvider() {
 				totalPlot,
 				totalEPF,
 				totalVPF,
-				totalPPF
+				totalPPF,
+				view,
+				setView
 			}}
 		>
 			<NWView />
