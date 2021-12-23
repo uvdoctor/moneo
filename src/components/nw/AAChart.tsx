@@ -155,59 +155,49 @@ export default function AAChart() {
 		[ instruments ]
 	);
 
-	const getTooltipDesc = (records: Array<any>) => {
+	const getTooltipDesc = (records: any) => {
 		let data: any = '';
-		let doesValueExist: boolean = false;
-		records.map((record) => {
-			const amount = toHumanFriendlyCurrency(record.value, selectedCurrency);
-			const percentage = toReadableNumber(record.value / totalAssets * 100, 2);
-			if (record.value) {
-				doesValueExist = true;
-				data += `${amount} (${percentage}%) of ${record.desc}<br/><br/>`;
-			}
+		Object.keys(records).map((value) => {
+			if (!records[value]) return;
+			const amount = toHumanFriendlyCurrency(records[value], selectedCurrency);
+			const percentage = toReadableNumber(records[value] / totalAssets * 100, 2);
+			data += `${amount} (${percentage}%) of ${value}<br/><br/>`;
 		});
-		return doesValueExist ? `<br/><br/>Includes<br/><br/>${data}` : '';
+		return data ? `<br/><br/>Includes<br/><br/>${data}` : '';
 	};
 
 	const breakdownAssetInfo = (asset: string) => {
-		if (asset === 'Gold') {
-			return getTooltipDesc([
-				{ value: totalPGold, desc: 'Physical Gold' },
-				{ value: totalFGold, desc: 'Gold Bonds' }
-			]);
-		}
+		if (asset === 'Gold') return getTooltipDesc({ 'Physical Gold': totalPGold, 'Gold Bonds': totalFGold });
 		if (asset === 'Equity') {
-			return getTooltipDesc([
-				{ value: largeCap + totalNPSEquity, desc: ASSET_TYPES.LARGE_CAP_STOCKS },
-				{ value: midCap, desc: ASSET_TYPES.MID_CAP_STOCKS },
-				{ value: smallCap, desc: ASSET_TYPES.SMALL_CAP_STOCKS },
-				{ value: hybridCap, desc: 'Funds consisting of large, medium and small company stocks' },
-				{ value: totalAngel, desc: 'Start-up Investments' }
-			]);
+			return getTooltipDesc({
+				[ASSET_TYPES.LARGE_CAP_STOCKS]: largeCap + totalNPSEquity,
+				[ASSET_TYPES.MID_CAP_STOCKS]: midCap,
+				[ASSET_TYPES.SMALL_CAP_STOCKS]: smallCap,
+				'Funds consisting of large, medium and small company stocks': hybridCap,
+				'Start-up Investments': totalAngel
+			});
 		}
-		if (asset === 'Fixed') {
-			return getTooltipDesc([
-				{ value: fmp, desc: 'Fixed Maturity Plan' },
-				{ value: intervalFunds, desc: 'Interval Funds' },
-				{ value: bonds, desc: 'Bonds' },
-				{ value: indexFunds, desc: 'Index Funds' }
-			]);
-		}
-		if (asset === 'Real-estate') {
-			return getTooltipDesc([
-				{ value: totalCommercial, desc: 'Commercial' },
-				{ value: totalResidential, desc: 'Residential' },
-				{ value: totalPlot, desc: 'Plot' },
-				{ value: totalOtherProperty, desc: 'Other' }
-			]);
-		}
-		if (asset === 'Others') {
-			return getTooltipDesc([
-				{ value: totalOthers, desc: 'Others' },
-				{ value: totalVehicles, desc: 'Vehicles' },
-				{ value: totalFInv, desc: 'Other Investment Trusts' }
-			]);
-		}
+		if (asset === 'Fixed')
+			return getTooltipDesc({
+				'Fixed Maturity Plan': fmp,
+				'Interval Funds': intervalFunds,
+				Bonds: bonds,
+				'Index Funds': indexFunds
+			});
+		if (asset === 'Real-estate')
+			return getTooltipDesc({
+				Commercial: totalCommercial,
+				Residential: totalResidential,
+				Plot: totalPlot,
+				Other: totalOtherProperty
+			});
+		if (asset === 'Others')
+			return getTooltipDesc({
+				'Other Investment Trusts': totalFInv,
+				Vehicles: totalVehicles,
+				Others: totalOthers
+			});
+
 		if (asset === 'PF') {
 			return (<>Includes<br/><br/>
 				<strong>{toHumanFriendlyCurrency(totalPPF, selectedCurrency)}</strong>
