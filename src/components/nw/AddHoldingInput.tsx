@@ -55,6 +55,7 @@ export default function AddHoldingInput({
 		const today = new Date();
 		switch (childTab) {
 			case INS:
+				newRec.amt = qty
 				newRec.chg = category === 'H' ? rate : 0;
 				newRec.chgF = Number(subCat);
 				break;
@@ -62,6 +63,7 @@ export default function AddHoldingInput({
 				newRec.chg = rate;
 				newRec.chgF = 12;
 				newRec.name = name;
+				newRec.amt = qty
 				break;
 			case LENT:
 				newRec.type = AssetType.F;
@@ -69,6 +71,7 @@ export default function AddHoldingInput({
 				newRec.chg = rate;
 				newRec.chgF = Number(subCat);
 				newRec.name = name;
+				newRec.amt = qty
 				break;
 			case NPS:
 				newRec.qty = qty;
@@ -83,6 +86,7 @@ export default function AddHoldingInput({
 				newRec.name = name;
 				newRec.sm = today.getMonth() + 1;
 				newRec.sy = today.getFullYear();
+				newRec.amt = qty
 				break;
 			case VEHICLE:
 				newRec.chg = 15;
@@ -92,6 +96,7 @@ export default function AddHoldingInput({
 				newRec.sm = getMonthIndex(startdate.substring(0, 3));
 				newRec.sy = Number(startdate.substring(startdate.length - 4));
 				newRec.name = name;
+				newRec.amt = qty
 				break;
 			case PM:
 				newRec.qty = qty;
@@ -109,11 +114,11 @@ export default function AddHoldingInput({
 				newRec.type = AssetType.A;
 				newRec.subt = category;
 				newRec.name = name;
-				newRec.qty = qty;
+				newRec.amt = qty
 				break;
 			default:
 				newRec.name = name;
-				newRec.qty = qty;
+				newRec.amt = qty
 				break;
 		}
 		if (hasRangePicker(childTab)) {
