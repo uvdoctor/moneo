@@ -257,9 +257,7 @@ export default function AAChart() {
 				}}
 				label={{
 					visible: true,
-					formatter: (v: any) => {
-						return `<b>${v.name}</b>`;
-					},
+					formatter: (v: any) => v.name,
 					style: {
 						fontFamily: "'Jost', sans-serif",
 						fontSize: 14,
