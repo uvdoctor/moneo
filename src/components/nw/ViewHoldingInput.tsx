@@ -191,18 +191,24 @@ export default function ViewHoldingInput({
 					</Row>
 				</Col>
 			)}
-			{hasRate(childTab) || (childTab === INS && record.subt === "H") && (
+			{(hasRate(childTab) || (childTab === INS && record.subt === "H")) && (
 				<Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={3}>
+				<Row align="middle" gutter={[5, 0]}>
+				<Col>Rate</Col>
+				<Col>
 					<NumberInput
-						pre={"Rate"}
-						min={1}
+						isBasic={true}
+						pre=""
+						min={0}
 						max={50}
 						value={record.chg as number}
-						changeHandler={changeChg}
+						changeHandler={(val: number) =>changeChg(val)}
 						step={0.1}
 						noSlider
 						unit="%"
 					/>
+				</Col>
+				</Row>
 				</Col>
 			)}
 			{hasDate(childTab) && (
